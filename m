@@ -2,57 +2,53 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC61C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Nov 2022 03:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42612C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Nov 2022 03:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231802AbiKKDNG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Nov 2022 22:13:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
+        id S232019AbiKKDUO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Nov 2022 22:20:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232667AbiKKDND (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 22:13:03 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FC2F5CD29;
-        Thu, 10 Nov 2022 19:13:00 -0800 (PST)
+        with ESMTP id S229757AbiKKDUO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Nov 2022 22:20:14 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D16EB47301
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Nov 2022 19:20:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668136380; x=1699672380;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Y00FqPXd0tXMVfbMPOYOFfjRtaD0786m2Qc/OlOfGUE=;
-  b=IUdDeEcWfeS9KM33cf7hVpD8Az0gL3y3vfxU+Fdsb/MJyFviz3FLIoc4
-   cWZKLYlVg8Y0FM88FSzBw9vZAVE1vsPIGhFu5Lr8Ce0mc4VA/dARTEOjX
-   WYefm52/CWHIPPhsaAsDFZ9l7kwJRJMOXfGXMe39WhE2bMzeajtRigpWQ
-   dQBhP8LU2lxYyhh6e0CCegh+SAXh/mP+c4cJZDZqpErXu6m39qnd+j44k
-   FHg5ubgQA7PTMhD0ADaP+pb8upN0lgv3SsyTK9iqyTV5UZcZyj4rSOnoc
-   ycT1a7EUUmvJ5Uy/MHebiwf4Wj78WVpPIW/W7rGrpBna/tEIa26F9MlzU
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="310224419"
+  t=1668136811; x=1699672811;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jUkCAYfbxlEUpB+Kch5mmsGnTydZUzk+4WocmIT1Hm4=;
+  b=aHcn41O+PKGHWLAgI1jaBeMMd8AtJOhfSxQk9Wpr+0plQSNP0U5yvHfx
+   gjmyRG4rUDKhHNy5mNFcGagYbme9XE1eb5iT0l58zIn7o7nfHuTdF5Qxy
+   zvN6fe1D329h2AlYfdR6qrVB97OFEp+yHTIXvztlrjXwEfvxAePEjGqsw
+   i8I51fs6UvBliam9Xv0R3anmS6mpqMn9GNKW89pPy8tnNKWNuoQt7NtSb
+   crI6bTo0AK5lvotyIw5ntcjHza5VF4AqEqC03Hf3nldFivfbEurQfJOyb
+   Tt54NlrFn4kMIcs1KUkxDdK3bMBkpBaHmxYjRXhQBv+SSqAht14+BGgV2
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="397807323"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="310224419"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 19:13:00 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="812296108"
+   d="scan'208";a="397807323"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 19:20:11 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="743129950"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="812296108"
+   d="scan'208";a="743129950"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.161.45])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 19:12:59 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 19:20:11 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
+        Ben Widawsky <bwidawsk@kernel.org>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] tools/testing/cxl: Mock the Get Poison List mbox command
-Date:   Thu, 10 Nov 2022 19:12:44 -0800
-Message-Id: <7accc4b25613bd04ded1c48fa317dcf08803575f.1668115235.git.alison.schofield@intel.com>
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH 0/3] Support poison list retrieval
+Date:   Thu, 10 Nov 2022 19:20:03 -0800
+Message-Id: <cover.1668133294.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
-In-Reply-To: <cover.1668115235.git.alison.schofield@intel.com>
-References: <cover.1668115235.git.alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -61,71 +57,113 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Return fake poison error records when the get poison list mbox
-command is issued. This supports testing the kernel tracing
-and cxl list capabilities for media errors.
+Changes RFC->v1:
+- Resync with DaveJ's v5 monitor patchset. [1]
+  (It provides the event tracing functionality used here.)
+- Resync with the kernel patchset adding poison list support. [2]
+- Add cxl-get-poison.sh unit test to cxl test suite.
+- JSON object naming cleanups, replace spaces with '_'.
+- Use common event pid field to restrict events to this cxl list instance.
+- Use json_object_get_int64() for addresses.
+- Remove empty hpa fields. Add back with dpa->hpa translation.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- tools/testing/cxl/test/mem.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+[1] https://lore.kernel.org/linux-cxl/166803877747.145141.11853418648969334939.stgit@djiang5-desk3.ch.intel.com/
+[2] https://lore.kernel.org/linux-cxl/cover.1668115235.git.alison.schofield@intel.com/
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index f0704d090073..f729e055605d 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -38,6 +38,10 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
- 		.effect = cpu_to_le16(0),
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
-+		.effect = cpu_to_le16(0),
-+	},
- };
- 
- /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-@@ -207,6 +211,30 @@ static int mock_health_info(struct cxl_dev_state *cxlds,
- 	return 0;
- }
- 
-+static int mock_get_poison(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
-+{
-+	struct {
-+		struct cxl_mbox_poison_payload_out poison_out;
-+		struct cxl_poison_record record;
-+	} mock_poison_list = {
-+		.poison_out = {
-+			.count = cpu_to_le16(1),
-+		},
-+		.record = {
-+			/* .address encodes DPA and poison source bits */
-+			.address = cpu_to_le64(CXL_POISON_SOURCE_INTERNAL),
-+			.length = cpu_to_le32(1),
-+		},
-+	};
-+
-+	if (cmd->size_out < sizeof(mock_poison_list))
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, &mock_poison_list, sizeof(mock_poison_list));
-+	cmd->size_out = sizeof(mock_poison_list);
-+	return 0;
-+}
-+
- static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct device *dev = cxlds->dev;
-@@ -234,6 +262,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_GET_HEALTH_INFO:
- 		rc = mock_health_info(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_GET_POISON:
-+		rc = mock_get_poison(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
+The first patch adds a libcxl API for triggering the read of a
+poison list from a memory device. Users of that API will need to
+trace the kernel events to collect the error records.
+
+Patches 2 adds a PID filtering option to event tracing and then
+patches 3 & 4 add a pretty option, --media-errors to cxl list.
+The last patch (5) adds a unit test to the cxl test suite.
+
+Examples:
+cxl list -m mem2 --media-errors
+[
+  {
+    "memdev":"mem2",
+    "pmem_size":1073741824,
+    "ram_size":0,
+    "serial":2,
+    "host":"cxl_mem.2",
+    "media_errors":{
+      "nr_media_errors":2,
+      "media_error_records":[
+        {
+          "dpa":64,
+          "length":128,
+          "source":"Injected",
+          "flags":"Overflow,",
+          "overflow_time":1656711046
+        },
+        {
+          "dpa":192,
+          "length":192,
+          "source":"Internal",
+          "flags":"Overflow,",
+          "overflow_time":1656711046
+        },
+      ]
+    }
+  }
+]
+
+# cxl list -r region5 --media-errors
+[
+  {
+    "region":"region5",
+    "resource":1035623989248,
+    "size":2147483648,
+    "interleave_ways":2,
+    "interleave_granularity":4096,
+    "decode_state":"commit",
+    "media_errors":{
+      "nr_media_errors":2,
+      "media_error_records":[
+        {
+          "memdev":"mem2",
+          "dpa":0,
+          "length":64,
+          "source":"Internal",
+          "flags":"",
+          "overflow_time":0
+        },
+	{
+          "memdev":"mem5",
+          "dpa":0,
+          "length":256,
+          "source":"Injected",
+          "flags":"",
+          "overflow_time":0
+        }
+      ]
+    }
+  }
+]
+
+Alison Schofield (5):
+  libcxl: add interfaces for GET_POISON_LIST mailbox commands
+  cxl: add an optional pid check to event parsing
+  cxl/list: collect and parse the poison list records
+  cxl/list: add --media-errors option to cxl list
+  test: add a cxl-get-poison test
+
+ Documentation/cxl/cxl-list.txt |  64 ++++++++++++
+ cxl/event_trace.c              |   5 +
+ cxl/event_trace.h              |   1 +
+ cxl/filter.c                   |   2 +
+ cxl/filter.h                   |   1 +
+ cxl/json.c                     | 185 +++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.c               |  44 ++++++++
+ cxl/lib/libcxl.sym             |   6 ++
+ cxl/libcxl.h                   |   2 +
+ cxl/list.c                     |   2 +
+ test/cxl-get-poison.sh         |  78 ++++++++++++++
+ test/meson.build               |   2 +
+ 12 files changed, 392 insertions(+)
+ create mode 100644 test/cxl-get-poison.sh
+
 -- 
 2.37.3
 
