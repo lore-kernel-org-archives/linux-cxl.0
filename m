@@ -2,78 +2,158 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC1CC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 20:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8644C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 20:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235786AbiKNU2D (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 15:28:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48566 "EHLO
+        id S236559AbiKNUdH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Nov 2022 15:33:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237583AbiKNU2B (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:28:01 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF21E30A
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:28:00 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id be13so21244956lfb.4
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:28:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:subject:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yI0Z0WUF25vAdUAzb99i8mXCOtV3NrfXMXkKeMX9q0w=;
-        b=ixww5z2q3xSJU1fXd9z3oHe0bnavvQp8HB33LPJ+I7IirlgcGyFvpMDGWhdj7hme1F
-         7OlPJvXn6cN4+lGsdQqowf98hHbsM59mtbAD3FpfLRqM5/hijgds0r5r/biJsIhC00qR
-         sI9QZSV7rRHQgVzJLZghWKdzvpon3l3+tOSzlYOzjbYbg57prDNkcn0SgP0Y98II8xt0
-         P6Yz2mbwph1/R3jCeMqwxrfWO/xGQ4Gr2I5bskaw6eNZnpkkP+m0SFa+y14UpBuT0evn
-         qRlyQ1tui0CkM9qZH7ToTHiyFTK6IANeIcZ+PPMapFWKb4gWx6KRlwN+ALA54Tp2UOPE
-         Zn+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:subject:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yI0Z0WUF25vAdUAzb99i8mXCOtV3NrfXMXkKeMX9q0w=;
-        b=D90o3v2xPKViOvVWQchIV4BjKZo0zCpPPZFeoWoZSOvyCiSGnOKq6yWtK7Qkre7ASb
-         uz1awFOLAL0MXG+xZjbFbcSfzncWBYTK6SRTAmwEos1/2Rld0nRZ1DtLLe0owvygCEWu
-         dov5R3WvdCMBLNw4bJii1gV/7EDiRIvQFFUs0kcC1zF8fzMyGpku3qJcWkP/pgjzsggQ
-         n4+6XTp5t7xaOMlywpe7Ucya6WiEDmzRa4UX4hIX0AuGxoa19JpbpwlUb6du33NPxoox
-         8SsvGwZjR1HupOBPcCbW4gTY+cBq65Cm06B7IQ9jGYM2wAHC3a5PTEJx/t6U3uawL9tD
-         +KoA==
-X-Gm-Message-State: ANoB5plDAN7CkxuXqSkGqtgMByDnTt5YW3uvP4Fn9/pTJJG3NcW1ARql
-        9/1roV0wJCWj9S/Tf/VM5vU91AEKEqSuZYmi
-X-Google-Smtp-Source: AA0mqf7rouyshFFxPBr/1NgXCvSVRhFW17XzLdZ1PhdOdNLVmKOuKeTz17bDFF8lwiJbwD9mTuLFxA==
-X-Received: by 2002:a05:6512:718:b0:4b1:b7d0:21e4 with SMTP id b24-20020a056512071800b004b1b7d021e4mr4970962lfs.72.1668457678922;
-        Mon, 14 Nov 2022 12:27:58 -0800 (PST)
-Received: from ubuntu.armcompdev.pub.tds.tieto.com ([89.46.86.70])
-        by smtp.gmail.com with ESMTPSA id cf13-20020a056512280d00b004a4731f75a5sm1935891lfb.250.2022.11.14.12.27.58
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 12:27:58 -0800 (PST)
-Date:   Mon, 14 Nov 2022 20:27:57 +0000
-From:   Marek Bykowski <marek.bykowski@gmail.com>
-To:     linux-cxl@vger.kernel.org
-Subject: trace events
-Message-ID: <20221114202242.5f9023d3@ubuntu.armcompdev.pub.tds.tieto.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S236128AbiKNUdG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:33:06 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93C601EF
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:33:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668457985; x=1699993985;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=E8Rr3mADoof22kJWnF+B/FAQoyH5UJJfNW/o4UBmNHY=;
+  b=iiiv9lChtBULhGmXr5hDJt/+LPyNZAp2gp8piwSVZ5/4btyH8hFYZs/3
+   F1PIYCK8RPKtt5hehhhnGjgLXf33Pp5vEH4NuAW8r1mskxyu1hc8LiwIP
+   llGU0uSrQcINW6K1jN6quOHa3wVU8aLE7sPrW6L52MifR0yGFEj1tLln0
+   esUXjJfb12iUbUghXLRDBpYvrMPpV86EBIEZ4J+hQdtmsXhQwCOc6Yh5t
+   gnI+mo1AylPmwXtDkqEHau61OahaitJoewRcwbSDqtyNfGJWvOHCbiPKM
+   AQU8tl1UNovZ72v1LHo99XO0OSJyF3jfIs7a7x34hYtqdig2EBTovuieI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="309705058"
+X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
+   d="scan'208";a="309705058"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:33:05 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="640919854"
+X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
+   d="scan'208";a="640919854"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:33:04 -0800
+Subject: [PATCH v4 00/18] Introduce security commands for CXL pmem device
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com, dave@stgolabs.net
+Date:   Mon, 14 Nov 2022 13:33:04 -0700
+Message-ID: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello cxl mailing list,
+This series adds the support for "Persistent Memory Data-at-rest Security"
+block of command set for the CXL Memory Devices. The enabling is done through
+the nvdimm_security_ops as the operations are very similar to the same
+operations that the persistent memory devices through NFIT provider support.
+This enabling does not include the security pass-through commands nor the
+Santize commands.
 
-I just started a project for validating the RTL of the CXL root bridge
-from Intel. One of my first goals is to better understand the
-SW/protocol flows, so that we better validate it. I'm going to use
-the tracpoints for it and possibly lttng. Are you considering adding
-some of it shortly? If not would you be interested into the patches for
-it?
+Under the nvdimm_security_ops, this patch series will enable get_flags(),
+freeze(), change_key(), unlock(), disable(), and erase(). The disable() API
+does not support disabling of the master passphrase. To maintain established
+user ABI through the sysfs attribute "security", the "disable" command is
+left untouched and a new "disable_master" command is introduced with a new
+disable_master() API call for the nvdimm_security_ops().
 
-On the list I'm seeing include/trace/events/cxl.h but on the repository
-kernel/git/cxl/cxl.git seeing none for example with:
+This series does not include plumbing to directly handle the security commands
+through cxl control util. The enabled security commands will still go through
+ndctl tool with this enabling.
 
- git cat-file -e origin:include/trace/events/cxl.h
+The first commit is from Davidlohr [1]. It's submitted separately and can be
+dropped. It's here for reference and 0-day testing convenience. The series does
+have dependency on the patch.
 
-Thanks,
-Marek
+[1]: https://lore.kernel.org/linux-cxl/166698148737.3132474.5901874516011784201.stgit@dwillia2-xfh.jf.intel.com/
+
+v4:
+- Revert check for master passphrase check in mock secure erase. (Jonathan)
+- Add user passphrase check for user password limit in mock secure erase. (Jonathan)
+- Add master passphrase check for master password limit in mock secure erase.
+
+v3:
+- Change all spec reference to v3. (Jonathan)
+- Remove errant commit log in patch 1. (Davidlohr)
+- Change return to -EINVAL for cpu_cache_has_invalidate_memregion() error. (Davidlohr)
+- Fix mock_freeze_security() to be spec compliant. (Jonathan)
+- Change OP_PASSPHRASE_ERASE to OP_PASSPHRASE_SECURE_ERASE. (Jonathan)
+- Fix mock_passphrase_erase to be spec compliant. (Jonathan)
+- Change password retry limit handling to helper function.
+- Add ABI documentation to new sysfs attribs. (Jonathan)
+- Have security_lock_show() emit 0 or 1 instead of "locked or "unlocked". (Jonathan)
+- Set pdev->dev.groups instead of using device_add_groups(). (Jonathan)
+- Add context to NVDIMM_SECURITY_TEST on possible side effects. (Jonathan)
+
+v2:
+- Rebased against Davidlohr's memregion flush call
+- Remove SECURITY Kconfig and merge with PMEM (Davidlohr & Jonathan)
+- Remove inclusion of ndctl.h from security.c (Davidlohr)
+- Return errno and leave out return_code for error cases not in spec for mock device (Jonathan)
+- Add comment for using NVDIMM_PASSPHRASE_LEN (Jonathan)
+- Put 'struct cxl_set_pass' on the stack instead of kmalloc (Jonathan)
+- Directly return in mock_set_passphrase() when done. (Jonathan)
+- Tie user interface change commenting for passphrase disable. (Jonathan)
+- Pass passphrase directly in command and remove copy. (Jonathan)
+- Remove state check to enable first time passphrase set in mock device.
+- Fix missing ptr assignment in mock secure erase
+- Tested against cxl_test with new cxl security test.
+
+---
+
+Dave Jiang (18):
+      cxl/pmem: Introduce nvdimm_security_ops with ->get_flags() operation
+      tools/testing/cxl: Add "Get Security State" opcode support
+      cxl/pmem: Add "Set Passphrase" security command support
+      tools/testing/cxl: Add "Set Passphrase" opcode support
+      cxl/pmem: Add Disable Passphrase security command support
+      tools/testing/cxl: Add "Disable" security opcode support
+      cxl/pmem: Add "Freeze Security State" security command support
+      tools/testing/cxl: Add "Freeze Security State" security opcode support
+      cxl/pmem: Add "Unlock" security command support
+      tools/testing/cxl: Add "Unlock" security opcode support
+      cxl/pmem: Add "Passphrase Secure Erase" security command support
+      tools/testing/cxl: Add "passphrase secure erase" opcode support
+      nvdimm/cxl/pmem: Add support for master passphrase disable security command
+      cxl/pmem: add id attribute to CXL based nvdimm
+      tools/testing/cxl: add mechanism to lock mem device for testing
+      cxl/pmem: add provider name to cxl pmem dimm attribute group
+      libnvdimm: Introduce CONFIG_NVDIMM_SECURITY_TEST flag
+      cxl: add dimm_id support for __nvdimm_create()
+
+
+ Documentation/ABI/testing/sysfs-bus-nvdimm |  12 +
+ drivers/cxl/Makefile                       |   2 +-
+ drivers/cxl/core/mbox.c                    |   6 +
+ drivers/cxl/cxlmem.h                       |  44 +++
+ drivers/cxl/pci.c                          |   4 +
+ drivers/cxl/pmem.c                         |  44 ++-
+ drivers/cxl/security.c                     | 186 +++++++++++++
+ drivers/nvdimm/Kconfig                     |  12 +
+ drivers/nvdimm/dimm_devs.c                 |   9 +-
+ drivers/nvdimm/security.c                  |  37 ++-
+ include/linux/libnvdimm.h                  |   2 +
+ include/uapi/linux/cxl_mem.h               |   6 +
+ tools/testing/cxl/Kbuild                   |   1 +
+ tools/testing/cxl/test/cxl.c               |  58 ++++
+ tools/testing/cxl/test/mem.c               | 309 +++++++++++++++++++++
+ tools/testing/cxl/test/mem_pdata.h         |  16 ++
+ tools/testing/nvdimm/Kbuild                |   1 -
+ tools/testing/nvdimm/dimm_devs.c           |  30 --
+ 18 files changed, 737 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/cxl/security.c
+ create mode 100644 tools/testing/cxl/test/mem_pdata.h
+ delete mode 100644 tools/testing/nvdimm/dimm_devs.c
+
+--
+
