@@ -2,114 +2,112 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83CDC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 19:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BBDC433FE
+	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 20:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236579AbiKNTaR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 14:30:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
+        id S235738AbiKNULi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Nov 2022 15:11:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235865AbiKNTaQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 14:30:16 -0500
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BCF528E09
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 11:30:14 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id CC383880074;
-        Mon, 14 Nov 2022 19:20:16 +0000 (UTC)
-Received: from pdx1-sub0-mail-a235.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 258E5880533;
-        Mon, 14 Nov 2022 19:20:16 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1668453616; a=rsa-sha256;
-        cv=none;
-        b=Ne1IveFcfADekSjB1/rYiMiMDqpdKjnwMPBiccRLZ3aHGvndQxjO2HwCylF3UVlsvfjlfE
-        R2ccOwkZ4QIeLGRi9e0E6gd2dhiaOgAKGpeA1TqrreY9zdhPhgU/e8Ybijm4UJbu6Ridpa
-        RrmtJYUR+zTKmpIjqJhvYuc18LZAZi04TWpvNPvKs6CUO9EtVcRkdCq59S2S07xG9/zaRg
-        0qqVmSPN/vVg+Z9NynU62fhuuC6ZfWVD1fMhMVL0a7eMqW4KY/vk0Qa77Kmf/emuWKvOm0
-        /MQs3GIvokmheyDtZJxIjtqGGzorgjv/iOgh+hwvByFHGnXMUhtGhdJieHLSCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1668453616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=gJQIF4DHLl6uR72I07psSEJXqpy7tjvgat+xpJTCYhg=;
-        b=83+n3973pgtY4BDIzt2v6HT3i1hDAhKqmy7is1BPUn1FBG5uu0M0RWuWIpiFYcdrF0JyFc
-        SoJsTJVe4dD+gepJ25SubPJLy3BTTzVfm1ja0FRbPK8Ry0bwPOScCOISvNZptXaNf+xFde
-        4nsUSPErBUwjk+cyL3+11/GSfKpA+s896KEjU2+8J0H7H4OuhIx3nIc1kv2MHKumLIv57T
-        darOR3UAFszAmegVbCRqGwhR4mG2qhmrbt1FYt2tTg5vc8icreEth1jjDt1t7u/K+UkX+a
-        W37JC5ShcWciLLM4IZjvaHuGCmIK1B9ghTGDePQqOq2ypXum920xgMLr+VAgNQ==
-ARC-Authentication-Results: i=1;
-        rspamd-5cb65d95c4-ktmnm;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Turn-Attack: 79a85a49491a1374_1668453616579_3054163854
-X-MC-Loop-Signature: 1668453616579:508425783
-X-MC-Ingress-Time: 1668453616579
-Received: from pdx1-sub0-mail-a235.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.126.30.12 (trex/6.7.1);
-        Mon, 14 Nov 2022 19:20:16 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a235.dreamhost.com (Postfix) with ESMTPSA id 4N9zfR3DjPz2T;
-        Mon, 14 Nov 2022 11:20:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1668453615;
-        bh=gJQIF4DHLl6uR72I07psSEJXqpy7tjvgat+xpJTCYhg=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=QyRwurvx0FEmPWCmTfXqJl4oO+RboPWu0+C3wxvO5zVDldUuMjuZk/QuwFO7PdWuy
-         N4VmoE+2eFnYwGtDJsmlHMB5v7sEjOqZHaDqOPZHBVGTt6yopbE2DcP15mVZT6GboX
-         WQanIq4V+EMBiFUymhpqQmk39pqEmeRSVlN1GJtVLwx2H1Zq41gLsxS3GbM5Pmn/Dl
-         YfGN510eNMkekIm4nGLeFH5nZeBJjUQsGlAuiYPA2r6X0uOvVXlHkYmsqP4dqLvw/b
-         rxI6kk5JVai/NRRWjVLg/8JhzHD6EfzAImVENKuMHgm0LYPRI86qpEv8tpvQDhlin2
-         PtCMx46y5zvTw==
-Date:   Mon, 14 Nov 2022 10:57:29 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
-Message-ID: <20221114185729.nxahgs66ybe2x5mr@offworld>
-References: <cover.1668227077.git.alison.schofield@intel.com>
- <37ac2e3d3580af13755edd6f8e0bbdf11d5c206b.1668227077.git.alison.schofield@intel.com>
- <20221112062823.4mrp4kz6hxsd3uxw@offworld>
- <Y3J9NCmVX7t34DYD@aschofie-mobl2>
+        with ESMTP id S236156AbiKNULQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:11:16 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 839F11A07B
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:11:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668456675; x=1699992675;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0gzDFXM5TUyGWZMAJXpEPh985GnFX9qB0GK8cJZk4tg=;
+  b=C1bOH5DpnYJvcV/8wHZLTeVONsI2fl9rKHjVTLzeSJhYtX8K2VSU7RXR
+   jugGOQObcnVL+k7dIjCZLKUIFFHbLi2y6BgEf4NC795nauUjtueOd9sUt
+   /HSkdBoMqXyr/CDikrGuxGiXMHvAnc8B83fJ7UgBMn4a+DkMW6Lap0XQN
+   xrB337bZfg4GgbgyUvpxyIMBqg92TZbftmNtfvZhwHl60DBapDtSwcs4Y
+   uR2HUgayHdnNBfdf7DNmkyRylBV5a2N6oC+IicVjhEsJjoFEHYTKlwV7k
+   wtpBsupsX8xFN9cfo9fdmCQ2xLTBLHVNB/xILmxd4onnjBXu/ol826Oan
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="374201838"
+X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
+   d="scan'208";a="374201838"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:11:15 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="707454201"
+X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
+   d="scan'208";a="707454201"
+Received: from shahr-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.78.174])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:11:14 -0800
+Subject: [PATCH] tools/testing/cxl: Add bridge mocking support
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Robert Richter <rrichter@amd.com>
+Date:   Mon, 14 Nov 2022 12:11:13 -0800
+Message-ID: <166845667383.1449826.14492184009399164787.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <20221018132341.76259-6-rrichter@amd.com>
+References: <20221018132341.76259-6-rrichter@amd.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Y3J9NCmVX7t34DYD@aschofie-mobl2>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 14 Nov 2022, Alison Schofield wrote:
+In preparation for cxl_acpi walking pci_root->bus->bridge, add that
+association to the mock pci_root instances.
 
->The reasoning behind removing the check, versus expanding it, is that the
->check shouldn't have been there in the first place. The ACPI driver is
->responsible for parsing the CFMWS's but it is the responsibility of the
->region driver to decide which CFMWS's it can use.
->
->If you believe that premise, then we let all interleave arithmetics
->'get through' to the region driver.
+Note that the missing 3rd entry in mock_pci_root[] was not noticed until
+now given that the test version of to_cxl_host_bridge()
+(tools/testing/cxl/mock_acpi.c), obviated the need for that entry.
+However, "cxl/acpi: Improve debug messages in cxl_acpi_probe()" [1]
+needs pci_root->bus->bridge to be populated.
 
-The way I see it, acpi should be setting the callback because it is a _direct_
-consequence of parsing the cfmws, and that's really the same logic as we have
-now, in that it sets it when allocating the rp decoder. And that doesn't take
-away from the region driver responsibility of choosing the actual host bridge.
+Link: https://lore.kernel.org/r/20221018132341.76259-6-rrichter@amd.com [1]
+Cc: Robert Richter <rrichter@amd.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ tools/testing/cxl/test/cxl.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Thanks,
-Davidlohr
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index a5146d80ecc4..facfcd11cb67 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -439,14 +439,18 @@ mock_acpi_evaluate_integer(acpi_handle handle, acpi_string pathname,
+ 	return AE_OK;
+ }
+ 
+-static struct pci_bus mock_pci_bus[NR_CXL_HOST_BRIDGES];
+-static struct acpi_pci_root mock_pci_root[NR_CXL_HOST_BRIDGES] = {
++static struct pci_bus mock_pci_bus[NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST];
++static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
+ 	[0] = {
+ 		.bus = &mock_pci_bus[0],
+ 	},
+ 	[1] = {
+ 		.bus = &mock_pci_bus[1],
+ 	},
++	[2] = {
++		.bus = &mock_pci_bus[2],
++	},
++
+ };
+ 
+ static bool is_mock_bus(struct pci_bus *bus)
+@@ -744,6 +748,7 @@ static __init int cxl_single_init(void)
+ 		}
+ 
+ 		cxl_hb_single[i] = pdev;
++		mock_pci_bus[i + NR_CXL_HOST_BRIDGES].bridge = &pdev->dev;
+ 		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
+ 				       "physical_node");
+ 		if (rc)
+@@ -910,6 +915,7 @@ static __init int cxl_test_init(void)
+ 		}
+ 
+ 		cxl_host_bridge[i] = pdev;
++		mock_pci_bus[i].bridge = &pdev->dev;
+ 		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
+ 				       "physical_node");
+ 		if (rc)
+
