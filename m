@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CDFC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 20:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C39C4167D
+	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 20:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237438AbiKNUek (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 15:34:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
+        id S237555AbiKNUel (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Nov 2022 15:34:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237645AbiKNUeV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:34:21 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0BDBF78
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:34:21 -0800 (PST)
+        with ESMTP id S237659AbiKNUei (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:34:38 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA66645C
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:34:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668458061; x=1699994061;
+  t=1668458077; x=1699994077;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MWWbi2BrfZhyE1iRThYja9wcsQqyw2vvKpgAU1vDrjo=;
-  b=no1HFgfQV3u6Mhwic+30cb8nqETsJSi+nLvkvyFzm3fLIOO8+ogrGdPL
-   g7yUPsXJg0sKFpqhe7f3if95sQZqfwIXchnbJyr/7lbQ2oftJ7NvgjCFe
-   KNws5rnv22teRXFiG3ym9NciyddhBVy+Mtct5B/58wljQmdRo+9pnepNA
-   h2RzynLRVy3UuBRlZFmj2h1bdq2QQKlrv7Wh8sCGw59aQ1CjdVBpHpvJu
-   SllQ4mKzhQzGgr2Rsd772jIIQV10JF88EQlOX6AQqBdqxgQKlKkYVqHh2
-   YQjGnn/krv/RFevn4maUoIg87mWXMeJGbGX9mugH74pistybzjSjx34dZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="310785242"
+  bh=tSd4pI/aJIfzbjPmYNaJo/fOcKhBZhna/+CZzU+JRsk=;
+  b=Q/kDqUGyyhEUnP13m4DFq3DeCuPu7DBww1Ai9LwPuFUh3Q2FlUlsDVeX
+   CdoRuq3BP8CotuepICyk+Nmu38zU1kK5ibkGL5dhaNCN/F0B77YzwIUfl
+   0ajCG4R5f//Ts8BDeKohE97K7Dp/7NJfpCDKhFzLq96xaCB5b4MK6gfrw
+   ALEFTGc8yJfh7iIkSo/f4/Zt4UErsYtDvGgLdlgXTTaYYhxRU0Q935zxx
+   gm/XwHyJiTd4+ClMH1CF9XNr+d9KVJraIVE6Z9EGIeu/4hauo39wpo3zK
+   E4YJxdSw3EUE2JaN4VpwFZuqsgTegP8I9CsJrjM30tX4DHPjcc1yf6Rlg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="291790162"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="310785242"
+   d="scan'208";a="291790162"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:34:20 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="702155033"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:34:37 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="702155112"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="702155033"
+   d="scan'208";a="702155112"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:34:20 -0800
-Subject: [PATCH v4 13/18] nvdimm/cxl/pmem: Add support for master passphrase
- disable security command
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:34:37 -0800
+Subject: [PATCH v4 16/18] cxl/pmem: add provider name to cxl pmem dimm
+ attribute group
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date:   Mon, 14 Nov 2022 13:34:19 -0700
-Message-ID: <166845805988.2496228.8804764265372893076.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 14 Nov 2022 13:34:37 -0700
+Message-ID: <166845807706.2496228.28014749187387664.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
 References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,161 +56,57 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The original nvdimm_security_ops ->disable() only supports user passphrase
-for security disable. The CXL spec introduced the disabling of master
-passphrase. Add a ->disable_master() callback to support this new operation
-and leaving the old ->disable() mechanism alone. A "disable_master" command
-is added for the sysfs attribute in order to allow command to be issued
-from userspace. ndctl will need enabling in order to utilize this new
-operation.
+Add provider name in order to associate cxl test dimm from cxl_test to the
+cxl pmem device when going through sysfs for security testing.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/security.c    |   20 ++++++++++++++++++--
- drivers/nvdimm/security.c |   33 ++++++++++++++++++++++++++-------
- include/linux/libnvdimm.h |    2 ++
- 3 files changed, 46 insertions(+), 9 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-nvdimm |    6 ++++++
+ drivers/cxl/pmem.c                         |   10 ++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-index 631a474939d6..f4df7d38e4cd 100644
---- a/drivers/cxl/security.c
-+++ b/drivers/cxl/security.c
-@@ -71,8 +71,9 @@ static int cxl_pmem_security_change_key(struct nvdimm *nvdimm,
- 	return rc;
+diff --git a/Documentation/ABI/testing/sysfs-bus-nvdimm b/Documentation/ABI/testing/sysfs-bus-nvdimm
+index 91945211e53b..d78e4553d9af 100644
+--- a/Documentation/ABI/testing/sysfs-bus-nvdimm
++++ b/Documentation/ABI/testing/sysfs-bus-nvdimm
+@@ -47,3 +47,9 @@ Date:		November 2022
+ KernelVersion:	6.2
+ Contact:	Dave Jiang <dave.jiang@intel.com>
+ Description:	(RO) Show the id (serial) of the device.
++
++What:		/sys/bus/nd/devices/nmemX/provider
++Date:		November 2022
++KernelVersion:	6.2
++Contact:	Dave Jiang <dave.jiang@intel.com>
++Description:	(RO) Shows the provider for the device. (i.e. ACPI.NFIT, ACPI.CXL)
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 9209c7dd72d0..322f834cc27d 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -48,6 +48,15 @@ static void unregister_nvdimm(void *nvdimm)
+ 	cxl_nvd->bridge = NULL;
  }
  
--static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
--				     const struct nvdimm_key_data *key_data)
-+static int __cxl_pmem_security_disable(struct nvdimm *nvdimm,
-+				       const struct nvdimm_key_data *key_data,
-+				       enum nvdimm_passphrase_type ptype)
- {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
- 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
-@@ -88,6 +89,8 @@ static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
- 	 * will only support disable of user passphrase. The disable master passphrase
- 	 * ability will need to be added as a new callback.
- 	 */
-+	dis_pass.type = ptype == NVDIMM_MASTER ?
-+		CXL_PMEM_SEC_PASS_MASTER : CXL_PMEM_SEC_PASS_USER;
- 	dis_pass.type = CXL_PMEM_SEC_PASS_USER;
- 	memcpy(dis_pass.pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
- 
-@@ -96,6 +99,18 @@ static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
- 	return rc;
- }
- 
-+static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
-+				     const struct nvdimm_key_data *key_data)
++static ssize_t provider_show(struct device *dev, struct device_attribute *attr, char *buf)
 +{
-+	return __cxl_pmem_security_disable(nvdimm, key_data, NVDIMM_USER);
-+}
++	struct nvdimm *nvdimm = to_nvdimm(dev);
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
 +
-+static int cxl_pmem_security_disable_master(struct nvdimm *nvdimm,
-+					    const struct nvdimm_key_data *key_data)
-+{
-+	return __cxl_pmem_security_disable(nvdimm, key_data, NVDIMM_MASTER);
++	return sysfs_emit(buf, "%s\n", dev_name(&cxl_nvd->dev));
 +}
++static DEVICE_ATTR_RO(provider);
 +
- static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
+ static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *buf)
  {
- 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
-@@ -163,6 +178,7 @@ static const struct nvdimm_security_ops __cxl_security_ops = {
- 	.freeze = cxl_pmem_security_freeze,
- 	.unlock = cxl_pmem_security_unlock,
- 	.erase = cxl_pmem_security_passphrase_erase,
-+	.disable_master = cxl_pmem_security_disable_master,
+ 	struct nvdimm *nvdimm = to_nvdimm(dev);
+@@ -60,6 +69,7 @@ static DEVICE_ATTR_RO(id);
+ 
+ static struct attribute *cxl_dimm_attributes[] = {
+ 	&dev_attr_id.attr,
++	&dev_attr_provider.attr,
+ 	NULL
  };
  
- const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index 8aefb60c42ff..92af4c3ca0d3 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -239,7 +239,8 @@ static int check_security_state(struct nvdimm *nvdimm)
- 	return 0;
- }
- 
--static int security_disable(struct nvdimm *nvdimm, unsigned int keyid)
-+static int security_disable(struct nvdimm *nvdimm, unsigned int keyid,
-+			    enum nvdimm_passphrase_type pass_type)
- {
- 	struct device *dev = &nvdimm->dev;
- 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
-@@ -250,8 +251,13 @@ static int security_disable(struct nvdimm *nvdimm, unsigned int keyid)
- 	/* The bus lock should be held at the top level of the call stack */
- 	lockdep_assert_held(&nvdimm_bus->reconfig_mutex);
- 
--	if (!nvdimm->sec.ops || !nvdimm->sec.ops->disable
--			|| !nvdimm->sec.flags)
-+	if (!nvdimm->sec.ops || !nvdimm->sec.flags)
-+		return -EOPNOTSUPP;
-+
-+	if (pass_type == NVDIMM_USER && !nvdimm->sec.ops->disable)
-+		return -EOPNOTSUPP;
-+
-+	if (pass_type == NVDIMM_MASTER && !nvdimm->sec.ops->disable_master)
- 		return -EOPNOTSUPP;
- 
- 	rc = check_security_state(nvdimm);
-@@ -263,12 +269,21 @@ static int security_disable(struct nvdimm *nvdimm, unsigned int keyid)
- 	if (!data)
- 		return -ENOKEY;
- 
--	rc = nvdimm->sec.ops->disable(nvdimm, data);
--	dev_dbg(dev, "key: %d disable: %s\n", key_serial(key),
-+	if (pass_type == NVDIMM_MASTER) {
-+		rc = nvdimm->sec.ops->disable_master(nvdimm, data);
-+		dev_dbg(dev, "key: %d disable_master: %s\n", key_serial(key),
- 			rc == 0 ? "success" : "fail");
-+	} else {
-+		rc = nvdimm->sec.ops->disable(nvdimm, data);
-+		dev_dbg(dev, "key: %d disable: %s\n", key_serial(key),
-+			rc == 0 ? "success" : "fail");
-+	}
- 
- 	nvdimm_put_key(key);
--	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
-+	if (pass_type == NVDIMM_MASTER)
-+		nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-+	else
-+		nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
- 	return rc;
- }
- 
-@@ -473,6 +488,7 @@ void nvdimm_security_overwrite_query(struct work_struct *work)
- #define OPS							\
- 	C( OP_FREEZE,		"freeze",		1),	\
- 	C( OP_DISABLE,		"disable",		2),	\
-+	C( OP_DISABLE_MASTER,	"disable_master",	2),	\
- 	C( OP_UPDATE,		"update",		3),	\
- 	C( OP_ERASE,		"erase",		2),	\
- 	C( OP_OVERWRITE,	"overwrite",		2),	\
-@@ -524,7 +540,10 @@ ssize_t nvdimm_security_store(struct device *dev, const char *buf, size_t len)
- 		rc = nvdimm_security_freeze(nvdimm);
- 	} else if (i == OP_DISABLE) {
- 		dev_dbg(dev, "disable %u\n", key);
--		rc = security_disable(nvdimm, key);
-+		rc = security_disable(nvdimm, key, NVDIMM_USER);
-+	} else if (i == OP_DISABLE_MASTER) {
-+		dev_dbg(dev, "disable_master %u\n", key);
-+		rc = security_disable(nvdimm, key, NVDIMM_MASTER);
- 	} else if (i == OP_UPDATE || i == OP_MASTER_UPDATE) {
- 		dev_dbg(dev, "%s %u %u\n", ops[i].name, key, newkey);
- 		rc = security_update(nvdimm, key, newkey, i == OP_UPDATE
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index c74acfa1a3fe..3bf658a74ccb 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -183,6 +183,8 @@ struct nvdimm_security_ops {
- 	int (*overwrite)(struct nvdimm *nvdimm,
- 			const struct nvdimm_key_data *key_data);
- 	int (*query_overwrite)(struct nvdimm *nvdimm);
-+	int (*disable_master)(struct nvdimm *nvdimm,
-+			      const struct nvdimm_key_data *key_data);
- };
- 
- enum nvdimm_fwa_state {
 
 
