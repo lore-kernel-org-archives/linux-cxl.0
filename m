@@ -2,341 +2,289 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3FEC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 21:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80927C433FE
+	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 22:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236690AbiKNVaN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 16:30:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
+        id S237153AbiKNW1Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Nov 2022 17:27:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbiKNVaL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 16:30:11 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E501318E1B;
-        Mon, 14 Nov 2022 13:30:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668461410; x=1699997410;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=oXHKfoks2zNkNvRY/9LF8u+sFxSH+ew36VXQ2eDlR+Q=;
-  b=R9yqMnKi7OyQXX7uUxgYCAy1Ay8RqGAwsU6mjFOCno66C5PcxRr2QzFH
-   d05ej+0rjoehmjLps2OgusKhCrbfDVaiic5OHboxSx0XrfHuQ9rOXbf+G
-   oVylDdJnivTMZWvfm0r622m0s2ZdrNg+oC6Twn/HAIGRpHxuCMZC7AcPh
-   DYj4rH0ELg1fC/NGB2AjuPTj0cf3g9Zs+vcNQ0sAS2JhfkyiZYj5E5rWO
-   uFmI3Yrb8IVPK0gcIgn1EgClfOyNH1Q06gNAwa2EK6aQeYRNwVXBwIT+t
-   OyuNt3W7u3TWIWrCzfLxOjbMpEeRLP9SoMcvTPlIoCcERcqMsisY84hXu
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="398378048"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="398378048"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 13:30:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="616478993"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="616478993"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga006.jf.intel.com with ESMTP; 14 Nov 2022 13:30:10 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 14 Nov 2022 13:30:09 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Mon, 14 Nov 2022 13:30:09 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Mon, 14 Nov 2022 13:30:08 -0800
+        with ESMTP id S237029AbiKNW1X (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 17:27:23 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2085.outbound.protection.outlook.com [40.107.220.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41969FADC
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 14:27:22 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SVX6JCuydoElohsnUnfqjik+L9N0+9KctCeHdJmOJXRUqWGY7U38MONtwu1rNGO1Ajuk0rAmrUJr2kW24kFZSqBtDLdWX80lzJM2AbuFqbugN4dECoAXvtVGS4Bfa7rOvhUG+SmRlNB/DSR7ynoHIvj4zMKZ5uhyJ2OanJ5Qjg7Yb7gR1BO4TBlxchOc12i62G/52CYUf6xX5AwJgGQdplzHLKc0eMpMcnK6Shvz0y/IJL+4fcMhtb6P+PiscIWBTegO/J2D7jJB7Tr8Xn+Xe1aOFHkYbHA8pmsRaJDIj+jjQsxroR6g+KgrfqBHk0hhCXYvHJ1cULwOxv8M2Kx2LQ==
+ b=W64g2tRccBQofjsZVYyJay/g0dslfZMWuifMM4/1QA3sypGW6/rp20UIMkVASgLjYxqcC5lD66DOPCeaGyoBJsyL1MrfMO0c/FRWDRr2TStGWsMhge1GMwocy9nfCp3pVDgWZTmsac/ibG8qFHzWQP+AIkT3sbqPIRChWJbeCizZSM3IWkm91pA/C1w/zV+mkHgGclILbPX6J9SdiQbLEkAnJEFRX40Bc4jrwfLGhmCgjGiZJ8TF7kxjl1LeEW9/HbhQkithgM/mfrvGuiP3Tw6LNcRNpp6+nUqqHcE14VWwZsmiPICQjkj5M9kdx3kB38gXd0MDzL0BdGqb2VxH5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2U+m72Q45m8aQ8A2ZkZhRRYTGnSc2yJ4SJnPdWG6I/o=;
- b=XwXSe/kPJGAjDWgmIQyVLx10W+xulYXbZ/snt0xhBSpCAnVC80rw4OeRhgcL6A4sTpe24dcIzwMI1nsau7QDNLxFvTCLXko3jvKgiE/EpPdbnaaAeOmLXEJm3EjH/JiQVHVtFiR9PeUnzWw8afLwp5TgzVa1jcz4z0ufe+QsJ+qjVonWjS3N4B2gNhAa4nQvr9PUQFKaAMcxJsTHex64SorgoX59WiI182B5y5zIsT4mqPcrdsHUU3STCCWGOYztkPeLLxyt9qwZkpckpyHlyDuYesxqlnahp7BO0mugO/toKfLB03uSQyMbF4AyqxjQ5/4xIp4O3g9AZpPjDQWNSw==
+ bh=zR9k63Kl0uKEhsfe1Ury1xFPc7BoMFR/wl+Bsr8gTbg=;
+ b=Vozp2hIChPqua+r/3WJIRupR7O89J0UT2ICInJ47ghufdKjklKmKB8gaZ5EmUQfyu+94DQYMDWxuF5CRqy/HbfBCrhPP5SrXuXhXyaqUcpunACeM5qbYsQ+A2jjbhsP2ye3gwFGu/Q7JsnJKHEJEjTGdBN3QJnP5Hbu/+pKyTUcjib6RhLMmMoTWfRZ5ct6uiEZo/GO9ck4jYm4JboWSR9uA7nfCHFOvmQuPg/xkloMU+dwjJ7838zglwFzdX5U6aQwmAvaWGfg0/IEkqXLftn4p/eUCFNcCTydOzdokdPcKTHwdlBRN4dwLSljJBqf/ErBftEJGWEkzrwSGTAvJ/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zR9k63Kl0uKEhsfe1Ury1xFPc7BoMFR/wl+Bsr8gTbg=;
+ b=oNPBhl6BaD16uR58LMDnmKFlUH2KdJWk8S0QAzmHHee41l2YCnJRdBif14p0ent1KIrw7vK0ONkfwtvxXTiq8Z4xrZCxuZq0E6q0tCSmaSgBIIuOXJWNfqUNGkGYoupoJT0vLsGjF4E2ZuvAocoApcnqjT2RpcJyvtgaPc97WQc=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by MN2PR11MB4599.namprd11.prod.outlook.com
- (2603:10b6:208:26d::22) with Microsoft SMTP Server (version=TLS1_2,
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3268.namprd12.prod.outlook.com (2603:10b6:408:6c::18)
+ by SJ0PR12MB5676.namprd12.prod.outlook.com (2603:10b6:a03:42e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Mon, 14 Nov
- 2022 21:30:04 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::b058:673:c228:3e95]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::b058:673:c228:3e95%8]) with mapi id 15.20.5813.013; Mon, 14 Nov 2022
- 21:30:03 +0000
-Date:   Mon, 14 Nov 2022 13:30:01 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Robert Richter <rrichter@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>
-Subject: RE: [PATCH v3 2/9] cxl/acpi: Extract component registers of
- restricted hosts from RCRB
-Message-ID: <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221109104059.766720-1-rrichter@amd.com>
- <20221109104059.766720-3-rrichter@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20221109104059.766720-3-rrichter@amd.com>
-X-ClientProxiedBy: BYAPR11CA0066.namprd11.prod.outlook.com
- (2603:10b6:a03:80::43) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+ 2022 22:27:20 +0000
+Received: from BN8PR12MB3268.namprd12.prod.outlook.com
+ ([fe80::e433:d24d:69d8:7daf]) by BN8PR12MB3268.namprd12.prod.outlook.com
+ ([fe80::e433:d24d:69d8:7daf%5]) with mapi id 15.20.5813.017; Mon, 14 Nov 2022
+ 22:27:20 +0000
+Message-ID: <1cc14f3f-6500-778a-087c-e7601f82adf3@amd.com>
+Date:   Mon, 14 Nov 2022 16:27:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v4 13/18] nvdimm/cxl/pmem: Add support for master
+ passphrase disable security command
+Content-Language: en-US
+To:     Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com, dave@stgolabs.net
+References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
+ <166845805988.2496228.8804764265372893076.stgit@djiang5-desk3.ch.intel.com>
+From:   Ben Cheatham <benjamin.cheatham@amd.com>
+In-Reply-To: <166845805988.2496228.8804764265372893076.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR06CA0025.namprd06.prod.outlook.com
+ (2603:10b6:208:23d::30) To BN8PR12MB3268.namprd12.prod.outlook.com
+ (2603:10b6:408:6c::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|MN2PR11MB4599:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2141c058-daef-453a-4615-08dac6876492
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3268:EE_|SJ0PR12MB5676:EE_
+X-MS-Office365-Filtering-Correlation-Id: d2047866-eedb-4d1a-28ca-08dac68f64fa
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CODdh2Dcr8qHlRhSys2Y8vLFxGPiWiYmeCfWnmlFLQxmr4EFhm2pbOi1dQeyAyVKKY6+D3Q/KnBISBLCifL3PXheGAAAhWxqtKIu4UdNfhaVHsWkd/m8PDl8gwtGSloFjgLZpQno3I7o5oKRzQIm1wiPx6Jgdav5jTbOd1FiUxMxeVspf/BSxPkLrNL487kU6+QLXYCrWXWukbkuX0sp7g8+Bd9KHWG21MifhjFLu8OVRbBk99PjSiZ6Q9AnoaPNKpvfGFZ6WgtjsGXNzJunQfhYxvAsMXTRMw4KLltURYJmT44tHFJzkc04vUN2YMHPYykPRiROaaKNy752d7kwGAx/fDDDZZ47BcQigtVt4rtXptJik7XU5O8rxcL0wQKBB/KzVELqQHy1PKsLJFj6m+1voWMKbLao0KnYq6EDg5NGMg2dd/AaWbCBiQt8GWOcDaFFT+XVsY6KYLJk+pO+FeWuDpJTAwvQlX/whY5CkrVaGFTDG3AIZIvcvDvNsnZWEzkoXGu4nfNwJeSY1/gzr4DnO8STuid21MYFJW4HHIutpoYMPHvvHB/fGsJuq3gt4IyogdXy7CAkiE+JpBTHKqWYQ+svkiq/NMx4UfV7otPZTYcU4iZGoWjXZ+9+IlkZMS/4PdW2di5p+gB6zsB49fIX40rqlY9eEKwni6TOSRct72nv4Oo5h+MXURwul+65u1lDAqh1CNju+4hGJRCNgA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(136003)(366004)(346002)(39860400002)(396003)(451199015)(8936002)(83380400001)(5660300002)(186003)(7416002)(6506007)(26005)(6512007)(4326008)(9686003)(478600001)(6486002)(66556008)(8676002)(110136005)(54906003)(86362001)(41300700001)(316002)(2906002)(66476007)(38100700002)(66946007)(82960400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 7W7wmnwXjiOxwbt8o2/NxWG1qoh2nRuRw9axbi+bw8Tkd9UV/OAWuK/kfpASu2ZP989GqJ2nm7VSYAkUICS1+8gwiriAJSq2p4NbQht8PMmwuelLOg99DSk/rBVYwetmHHsM2pPBENzaDcm+GZTK9MzdCIGZkD47tUVseyxBE2PRdXCbHig0DacmCZ+20gGdFLHdocYE+Ej6P44YvWa0ACTGozklyXWLfH928OTIKoFIgvzx2yWGby3W4MWd9pb3SmX4/3uciTh4zEgOhV1gEx3xtmPOlKYxMjBCf3YKwQLQDG4ZcEwohgirh6YPcgMtCQC3y1dnGWsac7nEiZbnFF8zi5m2CZneIpQyaSWlNGHWXITca8o4QPjAthsPCqgYkFCMj4P27hOe0k7fnx5O24I2wBT3dafMx9AbyGYPXxdKPrucivN7DOmifq1Y0nqaC6D/XqVG5JqF7N8b9+AnKlagmW0JrPZBWaNWYxN5FYTaZ+slOw4cygwMzZNy1Ut1VENQKLxq9rl/sMx/e+cAGWaxvRFMgoqSuz4Hhf6G6uT2if0nAQd4nbDD9S2BsfXGRR2zzycOq4bFjIKANXIF6wHaxTN5wjm401rlv5A2qjKFJhY3GLA31Mlum7kupe+aZ5xsZCePjWuMwb8l63mfgXNpFxSUt/DSYIZa/+6qJkHoHEpAfzEYnwmlSnlFvWjVX4tJZ3bblek3asMAkhQhcYhE+Yv64FUcfgc2E+7GNbHWsDtio8Kb/MSY5kZMyU7TJ6AchNuUQM5YjamJAphkZNQHuYwKkVfe4saPSQ8lVVo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3268.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(136003)(366004)(39860400002)(396003)(451199015)(316002)(31686004)(36756003)(26005)(6512007)(53546011)(2906002)(6506007)(6666004)(86362001)(31696002)(15650500001)(66476007)(8676002)(186003)(66556008)(83380400001)(8936002)(66946007)(2616005)(41300700001)(5660300002)(478600001)(4326008)(6486002)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pE9wWl8eAo1XGixCo3D3DYPpTEclf4NNM8CogMPxXSq/DwxauaAKCcuE2KlF?=
- =?us-ascii?Q?XZYga/Nk7wCfZQLiJS+HgeVIypIyOMfWJ1G9op99KGP0OW/BVnmazHGlnh2D?=
- =?us-ascii?Q?qxHlskM87ZUua1tVFfjzjTauj0SBb14X+Ps1NCalz4xzWOEdy0ZCqig9aRu8?=
- =?us-ascii?Q?GHWpvzZcVbgOol6oCNYTkDuTfkqhubseB0E4bo4U5fV0qslq6h90Gb1yKHQb?=
- =?us-ascii?Q?DX3joH2Y1f29/GQXfWKyk+5VHY6vReV2o1glw7Z+RmbSOu+/Fax8fr7rIlsT?=
- =?us-ascii?Q?gZg0h7HQktPpUFegNpyp3eC0UObRclFf8a3HgX/iZNlC5KDKpi0+++rSfqo8?=
- =?us-ascii?Q?55eANvKpH6haJ/HkJHe+J0o59w+lEe6pnWbEdFjKicauSDAG2WZC/W2IRGqP?=
- =?us-ascii?Q?JuvGSNO2T00q3spXb0hBMORPHebKZeySvv8Img+vTDy9mEALjSx0TZ2o+/NI?=
- =?us-ascii?Q?j61J3ZOIcmilNjmOWvLXf4eSbBH2tBYJ9V8OPLfdDO3UjauhA3Rd0C49hR0K?=
- =?us-ascii?Q?ZNzbJZdiMz6WdOcoDBZzFj+/3IK1VXW7GLeKvwC9xcVE765+8HCqcQyUFGB8?=
- =?us-ascii?Q?vYtOSPmKqlDDka05SI99plTZ1lE64lDT9P0ZGheMKqJMuPbIsePZ+XLUfwfW?=
- =?us-ascii?Q?sTfBlVaZX8tdBvkyLTCPMQughTNYUCYQy4f0ROkdiR9m+TP0TxK5tRznrFV+?=
- =?us-ascii?Q?nDvH1xouiIrutypH+GfSoD6fXrt6AsqxAOG122erRfv3ld7E3plnNH9/HQ4j?=
- =?us-ascii?Q?ek9EKVnYojZlUijhdrx9dDuljypECwCsLHecVybysNFCouH/XRsWzoWxypBj?=
- =?us-ascii?Q?JC2AXBbQi+DRZYBqzIPE++jVRAHsvgVZqKMagaZC1R4dYr3hp7tS6sNWhhGl?=
- =?us-ascii?Q?c3WjMQMB7dwwImUQuAmIPfLyuwUY/5eIwk63sH827JnpFsgs2GX5KE3HXVjv?=
- =?us-ascii?Q?Rxd+mugsqOLTw/8J5resrcHfobeuRGl3xJBA2f+x17Yn1vfbk4kxsvkJK31e?=
- =?us-ascii?Q?heNPH6YeEaLHaOrJh7/BgU96FycC4Hhd9qDy/0e0vAVABo9ee+j3L6z6mMug?=
- =?us-ascii?Q?CGIXvOXDGHJQMf+MmxrORYGEOmgmZAPHltBGrlJi3kygU9WHjBL3NVjGZyFo?=
- =?us-ascii?Q?N6nji19iltE+LqRETmLGoPaQr4yKqoz9v3VQ2IIsGYfC2P4fhMT4wnrRiTYL?=
- =?us-ascii?Q?In3ZHid55q35N9gaU7c19Czq8KjH4DPNdGgfHlsEi9eOeB4wVkjKp9gT6qTI?=
- =?us-ascii?Q?qYTFEQWoysBmYM1MKQmKUvxtQNVXH6+PaIvxlGnDh3QJO+eim+TGnUDHAPZy?=
- =?us-ascii?Q?JA8R/vNnI4xZwwpimvcRE6rP5ki5ENErN5a+i/qCQSR9jK1P/IVv6YRzCD5s?=
- =?us-ascii?Q?niLeQHtS7a+IlAc5hPiRAo9/p2axOnS4cLU9o+hX0cbORLucN2g7szW2sDQy?=
- =?us-ascii?Q?APsetg2ictIOKnXElkpac0v/CyPcLHtxsClSEsBtV/DCy/+qeDWLBcjZXcv5?=
- =?us-ascii?Q?jvO+ZspTAJm1fY+Z5CAWAXmwEn7chpReL3GXzHUuM1qcZ6LVMVWZPKlyN+Tl?=
- =?us-ascii?Q?2M2ZFl5KB2rIEq9ViuXcYLBoz4CUJsz9esJ6t58t5Hr/qmkrmBu7R1T4GIGB?=
- =?us-ascii?Q?1w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2141c058-daef-453a-4615-08dac6876492
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M1lra1Qway9SbjdzNkM0dnNDSUVEZmtRTWNuR0pkajR2SWYrMnJ1VENhWm9Y?=
+ =?utf-8?B?YjJZUGY1SExPd1BmM0YwbFZDcE5IYkxkYkxvZ2FveWtZSXBmMjQySlI5ZDZI?=
+ =?utf-8?B?UHdsRHludnRNQXBqS1V1SFlWOHVGWWJzNzFsWEFGZFdLVHFRNVlhZ0hUTEJo?=
+ =?utf-8?B?aUF1bWdJUFBIRG1jOStzT0ZMcXpxS21ZMjJzUnFMZHY0d1NiQVcvQUJ0QkUw?=
+ =?utf-8?B?TWt0NURybnNLbExlYmdRRnFHQzZ1K1A4Ymo1RnRxZmVxeE1MVE5kVGZlZngx?=
+ =?utf-8?B?V1ZjN29LYm5kL1JrTVpSc3lwYnl1UDBRWkQwcjZsYzk3K2Q2cWVVM2xRTnBn?=
+ =?utf-8?B?V1pidUM2WitRWFlnVGtmNi9zVHc2cE5vMG9IZkMvUzdoMFdJb2ZBZFV1QVdE?=
+ =?utf-8?B?d0Z4ZWZ0UWYrUE9WditRWk1GWXVpUER6dzcxOTdaY0o5ZWxGV2pjS05zSTB4?=
+ =?utf-8?B?K01YK0RyOU5wU2ZzNy9iUWl0YmM3alVOaGxIOGRXeXdVb3BKRTFkVHBPczR0?=
+ =?utf-8?B?d0ZwUlE4UlZkM3pTWEVlUWFPODl0NlB0RlBVdmpQc1haT25hNzNRdVFvRlJH?=
+ =?utf-8?B?ajZpUnJCN0pteG1SdDZ4d3RVSzJIa1VLTWZ6Z1lKbVhndHRTUk8vVzhVditH?=
+ =?utf-8?B?MFZXL1IvZGk4ZnZlZ28vL2lUamZPUDR2V2sxc243T0dxNTZTcjJzS3FaNXJi?=
+ =?utf-8?B?RnVwdzM2NFdxVGtXdWFHdHQzWkoySTBpU2FuZTNEaWxLWmEvbjV6RDkzTCtC?=
+ =?utf-8?B?eEprOU1US3JscnlacEV4SmQzcjhwQlc3ajZLOXgycFNJRUd6Q0YrTS9MVjRL?=
+ =?utf-8?B?MU1taVM2MjRIcnplYjBzVWpyZGpVcGNxaGRBUnhXMzR6SGtWNGhEVC94TTFU?=
+ =?utf-8?B?L1R6OE5jTEVCZ3VLODlZWGNoL0FEd1loa0Uza205MndNdmNxdXMrWWFUN1VM?=
+ =?utf-8?B?L0YvOFhSeW9FNllQY01vRkJKTDNwSUZWYzBxV1hSbXFndWI2Z1J3dGFmQysy?=
+ =?utf-8?B?bFlhM2NHQUc1NVpTQXByYisyWVdZSWdHNUdmd0R5R3AySEZ5ZXg4SlROMmsz?=
+ =?utf-8?B?ZmVmNDlZY0I4QlRES1RKK1pjMzBiWis1WnZBQ3VPOFBsWVM1N2gwWmEyS0dl?=
+ =?utf-8?B?c2RMdEJIT3JWTWUvQkNiY3Bqblk1RnJNRVNlN0xMNDJQYWZVMGlRUjNpdVhq?=
+ =?utf-8?B?MHZnRFpYZHBkY2JhS2FDejhwMi9XUG9La2s2cVJSTmN2MWdjR3UzTHhvVWNy?=
+ =?utf-8?B?SXVBSTFsRWtON3VRa1pzRVpkY1c1U3NlNk8wV0k0UGQzaXZpZURCWi9ZRGxh?=
+ =?utf-8?B?eUlNQXlIa0ZoeUZHU0o3Q1hqeDdOR2FUa2Y3RXZtL2o0TklkU1RBREd3WDlz?=
+ =?utf-8?B?dWRHTS8xQXR4Rm8zdFl6L2o3aXlPSWhjYWhZUFNrTzFFQWpydmZkNEZYbjY0?=
+ =?utf-8?B?c2VwUkx2cmxxc0hOOTNvVlZIdlJLZHdTc1NGa0twd0w1aFFMWlZnUmJ6eDBn?=
+ =?utf-8?B?QXhJelJXNWVCVmRiQkttalFDWE5QbjFYdXBDM1B0VFR2QUVZNytQK0FLZHZr?=
+ =?utf-8?B?cE93ODd1NTFDa0llSEw5RmRiTnovcG1aM3JoT3d1RzJSdlQvbEh5WEJVcFdJ?=
+ =?utf-8?B?czM4cVNhTlhXNmtLN1BHRFNiblM4YlNrNlVONXJONWwvZTY2WUd6SURMZ01Z?=
+ =?utf-8?B?c2M0dlROcGVWSENKcnEyd3V1amU2bXdtd3pmMlI5WWZ2WnhIamtRRlNKZGlo?=
+ =?utf-8?B?QVN0eEk1cEZLTm5rbWIydmlHSXVIeEVSRTN0dmt6aThkZ2dheFFySkl1SURy?=
+ =?utf-8?B?c0dsdUcvOHJPcWdBU0FWN3FEdkR1VmtjMDExTklFZVVheWlYcnBaM3VvZlR1?=
+ =?utf-8?B?ZjJtb3hGQ2lkcjFDRVRONm1CczFBWmtwdjdBY2hJNStNazFucXpKd28yVnBw?=
+ =?utf-8?B?WFc2NlNsZnZyb29mVUFQYS9GbXovdTk3ZGlLZEcxU0VaVkFTZUd3cDFCRTUx?=
+ =?utf-8?B?R1ppL0E3NmRYOE5zb0g4ZlBDbGhhVVVBSDQ1WTZQOVdxL0ZqWC9GNHZ6eVl1?=
+ =?utf-8?B?dFpsY3RCMDZlOEhZT0VqK0ZGOE5qTFp4S2FxekIrbURhZU9aVjJYOXBCVHB6?=
+ =?utf-8?Q?AeucT4yAJ9UAyHaiS09VCTifn?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2047866-eedb-4d1a-28ca-08dac68f64fa
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3268.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 21:30:03.8413
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 22:27:20.4335
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nHlcllTDrRcV/ZF0blQL0cZGK0MsHUjVnzQFV10tbawV295EL0HBdS3/OaDlmsKSoXxVUKeTzZVhHEDk6VP6Jt8U0ObotIGJS2PK6zw/Ka0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4599
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: qb4Wl+Y7oqEVZLDOvxXf8BrCJxJSSYw0vIP1zYvoGbie4XWWMyLL6YgSyGyAW7NN7ZMsK5xLc03I7ROQimw/sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5676
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Robert Richter wrote:
-> A downstream port must be connected to a component register block.
-> For restricted hosts the base address is determined from the RCRB. The
-> RCRB is provided by the host's CEDT CHBS entry. Rework CEDT parser to
-> get the RCRB and add code to extract the component register block from
-> it.
-> 
-> RCRB's BAR[0..1] point to the component block containing CXL subsystem
-> component registers. MEMBAR extraction follows the PCI base spec here,
-> esp. 64 bit extraction and memory range alignment (6.0, 7.5.1.2.1).
-> 
-> Note: Right now the component register block is used for HDM decoder
-> capability only which is optional for RCDs. If unsupported by the RCD,
-> the HDM init will fail. It is future work to bypass it in this case.
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+On 11/14/22 2:34 PM, Dave Jiang wrote:
+> The original nvdimm_security_ops ->disable() only supports user passphrase
+> for security disable. The CXL spec introduced the disabling of master
+> passphrase. Add a ->disable_master() callback to support this new operation
+> and leaving the old ->disable() mechanism alone. A "disable_master" command
+> is added for the sysfs attribute in order to allow command to be issued
+> from userspace. ndctl will need enabling in order to utilize this new
+> operation.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/acpi.c      | 43 +++++++++++++++++++++++++++++---------
->  drivers/cxl/core/regs.c | 46 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h       |  8 +++++++
->  3 files changed, 87 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 06150c953f58..caea42cf9522 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -9,6 +9,8 @@
->  #include "cxlpci.h"
->  #include "cxl.h"
->  
-> +#define CXL_RCRB_SIZE	SZ_8K
-> +
->  static unsigned long cfmws_to_decoder_flags(int restrictions)
->  {
->  	unsigned long flags = CXL_DECODER_F_ENABLE;
-> @@ -240,27 +242,46 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->  struct cxl_chbs_context {
->  	struct device *dev;
->  	unsigned long long uid;
-> -	resource_size_t chbcr;
-> +	struct acpi_cedt_chbs chbs;
->  };
->  
-> -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> -			 const unsigned long end)
-> +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
-> +			const unsigned long end)
->  {
->  	struct cxl_chbs_context *ctx = arg;
->  	struct acpi_cedt_chbs *chbs;
->  
-> -	if (ctx->chbcr)
-> +	if (ctx->chbs.base)
->  		return 0;
->  
->  	chbs = (struct acpi_cedt_chbs *) header;
->  
->  	if (ctx->uid != chbs->uid)
->  		return 0;
-> -	ctx->chbcr = chbs->base;
-> +	ctx->chbs = *chbs;
->  
->  	return 0;
->  }
->  
-> +static resource_size_t cxl_get_chbcr(struct cxl_chbs_context *ctx)
+>   drivers/cxl/security.c    |   20 ++++++++++++++++++--
+>   drivers/nvdimm/security.c |   33 ++++++++++++++++++++++++++-------
+>   include/linux/libnvdimm.h |    2 ++
+>   3 files changed, 46 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+> index 631a474939d6..f4df7d38e4cd 100644
+> --- a/drivers/cxl/security.c
+> +++ b/drivers/cxl/security.c
+> @@ -71,8 +71,9 @@ static int cxl_pmem_security_change_key(struct nvdimm *nvdimm,
+>   	return rc;
+>   }
+>   
+> -static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
+> -				     const struct nvdimm_key_data *key_data)
+> +static int __cxl_pmem_security_disable(struct nvdimm *nvdimm,
+> +				       const struct nvdimm_key_data *key_data,
+> +				       enum nvdimm_passphrase_type ptype)
+>   {
+>   	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+>   	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+> @@ -88,6 +89,8 @@ static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
+>   	 * will only support disable of user passphrase. The disable master passphrase
+>   	 * ability will need to be added as a new callback.
+>   	 */
+> +	dis_pass.type = ptype == NVDIMM_MASTER ?
+> +		CXL_PMEM_SEC_PASS_MASTER : CXL_PMEM_SEC_PASS_USER;
+>   	dis_pass.type = CXL_PMEM_SEC_PASS_USER;
+
+Hey Dave,
+
+I noticed that you are overwriting dis_pass.type with 
+CXL_PMEM_SEC_PASS_USER after your added change here. I imagine that's 
+not intentional considering the rest of the work in this patch!
+
+Ben
+>   	memcpy(dis_pass.pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
+>   
+> @@ -96,6 +99,18 @@ static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
+>   	return rc;
+>   }
+>   
+> +static int cxl_pmem_security_disable(struct nvdimm *nvdimm,
+> +				     const struct nvdimm_key_data *key_data)
 > +{
-> +	struct acpi_cedt_chbs *chbs = &ctx->chbs;
-> +
-> +	if (!chbs->base)
-> +		return CXL_RESOURCE_NONE;
-> +
-> +	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11)
-> +		return chbs->base;
-> +
-> +	if (chbs->length != CXL_RCRB_SIZE)
-> +		return CXL_RESOURCE_NONE;
-> +
-> +	dev_dbg(ctx->dev, "RCRB found for UID %lld: 0x%08llx\n",
-> +		ctx->uid, (u64)chbs->base);
-> +
-> +	return cxl_rcrb_to_component(ctx->dev, chbs->base, CXL_RCRB_DOWNSTREAM);
+> +	return __cxl_pmem_security_disable(nvdimm, key_data, NVDIMM_USER);
 > +}
 > +
->  static int add_host_bridge_dport(struct device *match, void *arg)
->  {
->  	acpi_status status;
-> @@ -272,6 +293,7 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->  	struct acpi_pci_root *pci_root = to_cxl_pci_root(host, match);
->  	struct device *bridge;
->  	acpi_handle handle;
-> +	resource_size_t component_reg_phys;
->  
->  	if (!pci_root)
->  		return 0;
-> @@ -287,19 +309,20 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->  	dev_dbg(match, "UID found: %lld\n", uid);
->  
->  	ctx = (struct cxl_chbs_context) {
-> -		.dev = host,
-> +		.dev = match,
->  		.uid = uid,
->  	};
-> -	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbcr, &ctx);
-> +	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs, &ctx);
->  
-> -	if (ctx.chbcr == 0) {
-> +	component_reg_phys = cxl_get_chbcr(&ctx);
-> +	if (component_reg_phys == CXL_RESOURCE_NONE) {
->  		dev_warn(match, "No CHBS found for Host Bridge (UID %lld)\n", uid);
->  		return 0;
->  	}
->  
-> -	dev_dbg(match, "CHBCR found: 0x%08llx\n", (u64)ctx.chbcr);
-> +	dev_dbg(match, "CHBCR found: 0x%08llx\n", (u64)component_reg_phys);
->  
-> -	dport = devm_cxl_add_dport(root_port, bridge, uid, ctx.chbcr);
-> +	dport = devm_cxl_add_dport(root_port, bridge, uid, component_reg_phys);
->  	if (IS_ERR(dport))
->  		return PTR_ERR(dport);
->  
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index ec178e69b18f..7a5bde81e949 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -307,3 +307,49 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->  	return -ENODEV;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
-> +
-> +resource_size_t cxl_rcrb_to_component(struct device *dev,
-> +				      resource_size_t rcrb,
-> +				      enum cxl_rcrb which)
+> +static int cxl_pmem_security_disable_master(struct nvdimm *nvdimm,
+> +					    const struct nvdimm_key_data *key_data)
 > +{
-> +	resource_size_t component_reg_phys;
-> +	u32 bar0, bar1;
-> +	void *addr;
+> +	return __cxl_pmem_security_disable(nvdimm, key_data, NVDIMM_MASTER);
+> +}
 > +
-> +	if (which == CXL_RCRB_UPSTREAM)
-> +		rcrb += SZ_4K;
+>   static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
+>   {
+>   	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+> @@ -163,6 +178,7 @@ static const struct nvdimm_security_ops __cxl_security_ops = {
+>   	.freeze = cxl_pmem_security_freeze,
+>   	.unlock = cxl_pmem_security_unlock,
+>   	.erase = cxl_pmem_security_passphrase_erase,
+> +	.disable_master = cxl_pmem_security_disable_master,
+>   };
+>   
+>   const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
+> diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+> index 8aefb60c42ff..92af4c3ca0d3 100644
+> --- a/drivers/nvdimm/security.c
+> +++ b/drivers/nvdimm/security.c
+> @@ -239,7 +239,8 @@ static int check_security_state(struct nvdimm *nvdimm)
+>   	return 0;
+>   }
+>   
+> -static int security_disable(struct nvdimm *nvdimm, unsigned int keyid)
+> +static int security_disable(struct nvdimm *nvdimm, unsigned int keyid,
+> +			    enum nvdimm_passphrase_type pass_type)
+>   {
+>   	struct device *dev = &nvdimm->dev;
+>   	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
+> @@ -250,8 +251,13 @@ static int security_disable(struct nvdimm *nvdimm, unsigned int keyid)
+>   	/* The bus lock should be held at the top level of the call stack */
+>   	lockdep_assert_held(&nvdimm_bus->reconfig_mutex);
+>   
+> -	if (!nvdimm->sec.ops || !nvdimm->sec.ops->disable
+> -			|| !nvdimm->sec.flags)
+> +	if (!nvdimm->sec.ops || !nvdimm->sec.flags)
+> +		return -EOPNOTSUPP;
 > +
-> +	/*
-> +	 * RCRB's BAR[0..1] point to component block containing CXL
-> +	 * subsystem component registers. MEMBAR extraction follows
-> +	 * the PCI Base spec here, esp. 64 bit extraction and memory
-> +	 * ranges alignment (6.0, 7.5.1.2.1).
-> +	 */
-
-A request_mem_region() is needed here to ensure ownership and expected
-sequencing of accessing the RCRB to locate the component registers, and
-accessing the RCRB to manipulate the component registers. It also helps
-to sanity check that the BIOS mapped an exclusive range for the RCRB.
-
-> +	addr = ioremap(rcrb, PCI_BASE_ADDRESS_0 + SZ_8);
-
-That PCI_BASE_ADDRESS_0 does not belong there. It ends up being benign
-and forcing ioremap to map 12K instead of 8K, but it is a
-config-register offset, not part of the RCRB size.
-
-> +	if (!addr) {
-> +		dev_err(dev, "Failed to map region %pr\n", addr);
-> +		return CXL_RESOURCE_NONE;
+> +	if (pass_type == NVDIMM_USER && !nvdimm->sec.ops->disable)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (pass_type == NVDIMM_MASTER && !nvdimm->sec.ops->disable_master)
+>   		return -EOPNOTSUPP;
+>   
+>   	rc = check_security_state(nvdimm);
+> @@ -263,12 +269,21 @@ static int security_disable(struct nvdimm *nvdimm, unsigned int keyid)
+>   	if (!data)
+>   		return -ENOKEY;
+>   
+> -	rc = nvdimm->sec.ops->disable(nvdimm, data);
+> -	dev_dbg(dev, "key: %d disable: %s\n", key_serial(key),
+> +	if (pass_type == NVDIMM_MASTER) {
+> +		rc = nvdimm->sec.ops->disable_master(nvdimm, data);
+> +		dev_dbg(dev, "key: %d disable_master: %s\n", key_serial(key),
+>   			rc == 0 ? "success" : "fail");
+> +	} else {
+> +		rc = nvdimm->sec.ops->disable(nvdimm, data);
+> +		dev_dbg(dev, "key: %d disable: %s\n", key_serial(key),
+> +			rc == 0 ? "success" : "fail");
 > +	}
-> +
-> +	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
-> +	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> +	iounmap(addr);
-
-...corresponding release_mem_region() would go here.
-
-> +
-> +	/* sanity check */
-> +	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
-> +		return CXL_RESOURCE_NONE;
-
-I would have also expected:
-
-- a sanity check for "Memory Space Enable" being set in the command
-  register.
-
-- an explicit check for 0xffffffff for the case when the upstream-port
-  implements "no RCRB" mode.
-
-- some check that BIOS initialized the BAR values post reset given these
-  BARs are invisible to the PCI core resource assignment 
+>   
+>   	nvdimm_put_key(key);
+> -	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+> +	if (pass_type == NVDIMM_MASTER)
+> +		nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+> +	else
+> +		nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+>   	return rc;
+>   }
+>   
+> @@ -473,6 +488,7 @@ void nvdimm_security_overwrite_query(struct work_struct *work)
+>   #define OPS							\
+>   	C( OP_FREEZE,		"freeze",		1),	\
+>   	C( OP_DISABLE,		"disable",		2),	\
+> +	C( OP_DISABLE_MASTER,	"disable_master",	2),	\
+>   	C( OP_UPDATE,		"update",		3),	\
+>   	C( OP_ERASE,		"erase",		2),	\
+>   	C( OP_OVERWRITE,	"overwrite",		2),	\
+> @@ -524,7 +540,10 @@ ssize_t nvdimm_security_store(struct device *dev, const char *buf, size_t len)
+>   		rc = nvdimm_security_freeze(nvdimm);
+>   	} else if (i == OP_DISABLE) {
+>   		dev_dbg(dev, "disable %u\n", key);
+> -		rc = security_disable(nvdimm, key);
+> +		rc = security_disable(nvdimm, key, NVDIMM_USER);
+> +	} else if (i == OP_DISABLE_MASTER) {
+> +		dev_dbg(dev, "disable_master %u\n", key);
+> +		rc = security_disable(nvdimm, key, NVDIMM_MASTER);
+>   	} else if (i == OP_UPDATE || i == OP_MASTER_UPDATE) {
+>   		dev_dbg(dev, "%s %u %u\n", ops[i].name, key, newkey);
+>   		rc = security_update(nvdimm, key, newkey, i == OP_UPDATE
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index c74acfa1a3fe..3bf658a74ccb 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -183,6 +183,8 @@ struct nvdimm_security_ops {
+>   	int (*overwrite)(struct nvdimm *nvdimm,
+>   			const struct nvdimm_key_data *key_data);
+>   	int (*query_overwrite)(struct nvdimm *nvdimm);
+> +	int (*disable_master)(struct nvdimm *nvdimm,
+> +			      const struct nvdimm_key_data *key_data);
+>   };
+>   
+>   enum nvdimm_fwa_state {
+>
+>
