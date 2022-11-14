@@ -2,50 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FCEC4167B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A99BC43219
 	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 20:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236612AbiKNUeL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 15:34:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51740 "EHLO
+        id S237554AbiKNUeK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Nov 2022 15:34:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237316AbiKNUeE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:34:04 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7F6299
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:34:04 -0800 (PST)
+        with ESMTP id S236612AbiKNUd6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 15:33:58 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2B6B9C
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Nov 2022 12:33:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668458044; x=1699994044;
+  t=1668458037; x=1699994037;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=X3A6u296BD6wlOLz01NAstcJwYf5ODnG496xihrE6K4=;
-  b=JV7DUtSJ+MP0HZtaNApSTzT3Ukv2Pq6Lxq7zD8ef3DPTfUWd+n3OxFr2
-   YFKSlwpmOkkaaQ49dYSuFDIDndNrOwjUwIYDKX7lbFArN0Gp6URCAnfdR
-   f34PFg/J6v+S1K+KZgbuLimTGCmjZD4lxIfJur4beeNUw4EEliRwSvZeZ
-   6Wh4dsX37JREwJ3ygTm8AyUMO8jKuJiKE2EWZ5iuC+hZsSV1+90bVVS+Q
-   bIcB3Lp9B2QeF3zUQ2T+jNE6pNfR8NmX1D2NbuXrC+UjvJaSJeqQKxyai
-   Nkgz5V+odFilcmaimrg/R5yfzITH9T7RMw/BJhfQ86CDtwVjHLPG7eMfi
+  bh=ArEBJRqluQxIXbJ0kEcWUlXVansImUJdkEv18Dor6Hg=;
+  b=jV34lZN1E5y9w5aJLftpyL0oMl1qOQoK+JOJ/gwgLNrfI9u2q8xQGUBn
+   jV4YuW8rPZXkrvGtPqenuF4TxD2durMTt+/rw64LCj86cfkNzizYQMLuE
+   UZpYk+lNMdPzlX4NzdRktn2y+s6zcFxfnTqj1w5brtdMwiARGRNRNlBDj
+   p+2XBSooEoDsX/SHegEY+wspPuuyn1hGjtPV55GAECY8yE5jdB2uUfG1w
+   xANicgEhBxFRtixzsrJzBDlZMG4v5maEr5XKMxfxrIeTqM1nlSwtIGRb0
+   t7sE+dL58hrifQl/PG6ZnAybz8hfF/M6DS5BOaD6ET9E9kzakPnUQi4q0
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="299596807"
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="291789982"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="299596807"
+   d="scan'208";a="291789982"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:34:03 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="707460624"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:33:57 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="707460595"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="707460624"
+   d="scan'208";a="707460595"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:34:02 -0800
-Subject: [PATCH v4 10/18] tools/testing/cxl: Add "Unlock" security opcode
- support
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 12:33:57 -0800
+Subject: [PATCH v4 09/18] cxl/pmem: Add "Unlock" security command support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date:   Mon, 14 Nov 2022 13:34:02 -0700
-Message-ID: <166845804266.2496228.12502338922736446162.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 14 Nov 2022 13:33:56 -0700
+Message-ID: <166845803689.2496228.17436304942184713447.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
 References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
@@ -56,76 +55,111 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add support to emulate a CXL mem device support the "Unlock" operation.
+Create callback function to support the nvdimm_security_ops() ->unlock()
+callback. Translate the operation to send "Unlock" security command for CXL
+mem device.
 
+When the mem device is unlocked, cpu_cache_invalidate_memregion() is called
+in order to invalidate all CPU caches before attempting to access the mem
+device.
+
+See CXL rev3.0 spec section 8.2.9.8.6.4 for reference.
+
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/mem.c |   45 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ drivers/cxl/core/mbox.c      |    1 +
+ drivers/cxl/cxlmem.h         |    1 +
+ drivers/cxl/security.c       |   27 +++++++++++++++++++++++++++
+ include/uapi/linux/cxl_mem.h |    1 +
+ 4 files changed, 30 insertions(+)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 0cb2e3035636..90607597b9a4 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -320,6 +320,48 @@ static int mock_freeze_security(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd
- 	return 0;
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 6b8f118b2604..243b01e2de85 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -69,6 +69,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(SET_PASSPHRASE, 0x60, 0, 0),
+ 	CXL_CMD(DISABLE_PASSPHRASE, 0x40, 0, 0),
+ 	CXL_CMD(FREEZE_SECURITY, 0, 0, 0),
++	CXL_CMD(UNLOCK, 0x20, 0, 0),
+ };
+ 
+ /*
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 9007158969fe..4e6897e8eb7d 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -276,6 +276,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+ 	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+ 	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
++	CXL_MBOX_OP_UNLOCK		= 0x4503,
+ 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+ 	CXL_MBOX_OP_MAX			= 0x10000
+ };
+diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+index d991cbee3531..cf20d58ac1b3 100644
+--- a/drivers/cxl/security.c
++++ b/drivers/cxl/security.c
+@@ -5,6 +5,7 @@
+ #include <linux/module.h>
+ #include <linux/async.h>
+ #include <linux/slab.h>
++#include <linux/memregion.h>
+ #include "cxlmem.h"
+ #include "cxl.h"
+ 
+@@ -104,11 +105,37 @@ static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
+ 	return cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_FREEZE_SECURITY, NULL, 0, NULL, 0);
  }
  
-+static int mock_unlock_security(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
++static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
++				    const struct nvdimm_key_data *key_data)
 +{
-+	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
++	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
++	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	u8 pass[NVDIMM_PASSPHRASE_LEN];
++	int rc;
 +
-+	if (cmd->size_in != NVDIMM_PASSPHRASE_LEN)
++	if (!cpu_cache_has_invalidate_memregion())
 +		return -EINVAL;
 +
-+	if (cmd->size_out != 0)
-+		return -EINVAL;
++	memcpy(pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
++	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_UNLOCK,
++			       pass, NVDIMM_PASSPHRASE_LEN, NULL, 0);
++	if (rc < 0)
++		return rc;
 +
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (!(mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET)) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (!(mdata->security_state & CXL_PMEM_SEC_STATE_LOCKED)) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (memcmp(cmd->payload_in, mdata->user_pass, NVDIMM_PASSPHRASE_LEN)) {
-+		if (++mdata->user_limit == PASS_TRY_LIMIT)
-+			mdata->security_state |= CXL_PMEM_SEC_STATE_USER_PLIMIT;
-+		cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-+		return -ENXIO;
-+	}
-+
-+	mdata->user_limit = 0;
-+	mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
++	/* DIMM unlocked, invalidate all CPU caches before we read it */
++	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
 +	return 0;
 +}
 +
- static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-@@ -425,6 +467,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_FREEZE_SECURITY:
- 		rc = mock_freeze_security(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_UNLOCK:
-+		rc = mock_unlock_security(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
+ static const struct nvdimm_security_ops __cxl_security_ops = {
+ 	.get_flags = cxl_pmem_get_security_flags,
+ 	.change_key = cxl_pmem_security_change_key,
+ 	.disable = cxl_pmem_security_disable,
+ 	.freeze = cxl_pmem_security_freeze,
++	.unlock = cxl_pmem_security_unlock,
+ };
+ 
+ const struct nvdimm_security_ops *cxl_security_ops = &__cxl_security_ops;
++
++MODULE_IMPORT_NS(DEVMEM);
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index 7c0adcd68f4c..95dca8d4584f 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -45,6 +45,7 @@
+ 	___C(SET_PASSPHRASE, "Set Passphrase"),				  \
+ 	___C(DISABLE_PASSPHRASE, "Disable Passphrase"),			  \
+ 	___C(FREEZE_SECURITY, "Freeze Security"),			  \
++	___C(UNLOCK, "Unlock"),						  \
+ 	___C(MAX, "invalid / last command")
+ 
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 
 
