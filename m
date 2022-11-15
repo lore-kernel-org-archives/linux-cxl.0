@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2E0C4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 10:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E997C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 10:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232405AbiKOKd7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Nov 2022 05:33:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
+        id S232839AbiKOKhf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Nov 2022 05:37:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236993AbiKOKdt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 05:33:49 -0500
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2074.outbound.protection.outlook.com [40.107.102.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F601142
-        for <linux-cxl@vger.kernel.org>; Tue, 15 Nov 2022 02:33:48 -0800 (PST)
+        with ESMTP id S232786AbiKOKhf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 05:37:35 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2054.outbound.protection.outlook.com [40.107.237.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5F865B8;
+        Tue, 15 Nov 2022 02:37:34 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nZf2jCaxJD6TiLtzHy/N5N/6Iq+3GLLkLP3eaFxBkdFIMilpdjPdeBtLtCtYQZPO7iGX2HtGs6ccWY9AmWJ+TXcYldmSy49ID9pD2sHt1CfzO4UkGAlUDCNYpsmlxQvACqwJKF7Jc38rvUR2o029xI8BadgIeyk4oggp6UNM4BV9+7TQ7E3guc44FKLthtiPLOZfwuFA9gn5sMS00VJDOc9qRtl6I89VQcuPtZ52Tm/qFHOJyss8UncGtfV9e1n/sPAGoZ3zAOumHmL7BNoH2xYm1QhePVu2r6QxmtZihJrl1sEb/xu9Pxq2b0rCWGhmCg9Taq3JDNp5EHFTuWTFDA==
+ b=Yb5SwGiv8oj7qVhsfMxAzMZeS0jhXUmfU4SdD0/Gcj1d6SE/k+bjelQ2bNZGwVXQwTMo4jG4AsnCwOhfs0gGMjTvN69nSncLgUQs3n2Uedy3PHCOiSMBJ/ZQmkw2f3EvLyj7Snv7orAk7MDBNWp/q0hcecUQO1EFUYJQuAgqmPWP55Jg42eFmGfASGs+ZJMzxwVx+oPWonggMRFvTxKeBloBuBdrLakdCF565tZd8aGhGIYnyaCr8TTI4Fjy+6GLDHRzEyXYg8J+d777Zr9cNnksWBsCU+m/XnA6mbET6X0rdvy7vtVrGAj1THXjLOlBH6pgq2W6Gy2P86vflGxfqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=11TM5zBMqMoPgMg2q5cV47W6T+WQAmRT49U9OYZ+u2M=;
- b=TN99/h0UivrO4hQyHrsxjmzVR5y4t4Nr3rlsL0g5PUyLoOajSKjfKxFcITohe1CrmquwylPbJSXGfTbljbxrzmujdmgDdTK6oM5ocNk+TDNRFo0S+kH7op0sXOslYpZoSlAxNhEdu/jR+IHFvuwULQKmdzoyha1jzg0SRnhyQrRDiGUflSuIS/BlSI6605cwa9+vqzUplvpK7YCu0uswC23FFj3ZjGY0u/c/bUzj4Jms4XL+lQSXnu6sIQPddPgiw3vE4qtNOoqeyy0EddOe+ch4OcAmGV0N49c+lmWfWfGWXelRHM1pO6ot1WDeB8kjwha7ot4r1sudpAxraFagfQ==
+ bh=cytf0qlk7TSUvZrbe16FzvUPaOeW7sNJpLVyKBA4dWI=;
+ b=da2QFZKyV8RrhNM8Q5EDklTpGWCAX6uDoHH0n0cw1cOvKdX19OusOBoamonoYOq2tWpYTFXRR9earMFMU8BAur2iMd7jFdXpDy6v35+kf16KOjRvQ6v+36svULmQFCqC4vKLbfI/tjOnNEHpeMqZRdc+AxSC0J1FmP97h8EhgY2qsBkSopAHyUw/5NR0iTrwZygQM3Ixg8H71ZdyRuhChTNj9PnXc9vIdCaaL5Vhutq7vr5Hs304AED0X28MRde2MsyJsJNrbH/XoLmJqPhV2tKGpdh6xq5gwOFA+H6gMz2ijtrU5sI6q3sZZkUy6qKQnzm6scKgy9iq1Iyb6yT6DQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=11TM5zBMqMoPgMg2q5cV47W6T+WQAmRT49U9OYZ+u2M=;
- b=a16K7WLWRO7Vgh+YZWB7IiaUz94L98UdGNGLaql51y5kUkqVnJEx+TRAhk9eOPrSeDO61ylP7+5F3fE0nMT7lI1BLAgKeFjxYAcKi5ARbNEvRrfSOpjvzELDPYEftMb0awlZb6+m72cnZoOKvbTZDfthV+ZR7x34kYMpMD1iCRo=
-Received: from DS7PR05CA0067.namprd05.prod.outlook.com (2603:10b6:8:57::12) by
- SN7PR12MB7451.namprd12.prod.outlook.com (2603:10b6:806:29b::20) with
+ bh=cytf0qlk7TSUvZrbe16FzvUPaOeW7sNJpLVyKBA4dWI=;
+ b=1ABc7GYSPttyEtyumLQzdfSZdawekP6dEwbs/VLfUsy5M3eFREbo+yzqDY0bqpWtO9ejMejFjnp4Oc28RFLGFG/7pnEVAGFsE56j/TT4XHvN25Ik0dzBS1VEclQ8aZzLO9UonUUUdM9tDn+OTZIy+m8Q1LKpMcWssstii1RzwMo=
+Received: from MW4P220CA0006.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:115::11)
+ by MW3PR12MB4522.namprd12.prod.outlook.com (2603:10b6:303:5f::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Tue, 15 Nov
- 2022 10:33:46 +0000
-Received: from DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:57:cafe::f4) by DS7PR05CA0067.outlook.office365.com
- (2603:10b6:8:57::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.14 via Frontend
- Transport; Tue, 15 Nov 2022 10:33:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.18; Tue, 15 Nov
+ 2022 10:37:31 +0000
+Received: from CO1NAM11FT064.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:115:cafe::78) by MW4P220CA0006.outlook.office365.com
+ (2603:10b6:303:115::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
+ Transport; Tue, 15 Nov 2022 10:37:31 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,71 +46,173 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT076.mail.protection.outlook.com (10.13.173.204) with Microsoft SMTP
+ CO1NAM11FT064.mail.protection.outlook.com (10.13.175.77) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 10:33:46 +0000
+ 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 10:37:31 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 15 Nov
- 2022 04:33:44 -0600
-Date:   Tue, 15 Nov 2022 11:33:42 +0100
+ 2022 04:37:28 -0600
+Date:   Tue, 15 Nov 2022 11:37:26 +0100
 From:   Robert Richter <rrichter@amd.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] tools/testing/cxl: Add bridge mocking support
-Message-ID: <Y3NebjaQzcHTvmtk@rric.localdomain>
-References: <20221018132341.76259-6-rrichter@amd.com>
- <166845667383.1449826.14492184009399164787.stgit@dwillia2-xfh.jf.intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 1/9] cxl/acpi: Register CXL host ports by bridge device
+Message-ID: <Y3Nr5t2XpK8Ek0as@rric.localdomain>
+References: <20221109104059.766720-1-rrichter@amd.com>
+ <20221109104059.766720-2-rrichter@amd.com>
+ <6372a399b3400_12cdff2945b@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <166845667383.1449826.14492184009399164787.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <6372a399b3400_12cdff2945b@dwillia2-xfh.jf.intel.com.notmuch>
 X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT076:EE_|SN7PR12MB7451:EE_
-X-MS-Office365-Filtering-Correlation-Id: 423fc91b-fa5f-40cd-de59-08dac6f4e052
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT064:EE_|MW3PR12MB4522:EE_
+X-MS-Office365-Filtering-Correlation-Id: 999e62d0-d0b0-42c3-df72-08dac6f5669f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N9NeVOKFIjJtHT5BRd3Y9VoKm+BaKL440SnykuEVjEMaHB0Reyft6v8knikirTTPXpLD2WhLQMguxNq2o6ZJAvHqZt4ZzS7qsoOOi2Iw6foQoVnHGNTk6QOIWWcz7tDt+HmvR+obUhJufN/Kf4Tv4ArOetTiHoFmxwa7WVw33peBTTUkpGNtX9l7jsJDKX9RX3Ea9TWLVkCgkjI5Xj/EuZaKKwLFVmJJHiwAAeePlpBOOaHyncDQVkKPM1qV1EJV0SE+X7MzwRLZs1NwnSXGKzSxVtzKWnpHtKg6HHWAajrmQxjtnStM4/p6A4hscIKajjIm9HpTj+6H7zhYHVUNBo2DOHwDbpw4mcqRBNDJnyyHbT2eks71gEXVM+/iZ+uZe1RXaFDC2bGpVfsjbu5GI0IqYHaFTfRAEjFZkdPJRa3UzYnGURPpgt/u8y+0o019WoA8l4xM3wfNzfeP0nS/IL+rYIoczFwtjmwX46myhN2k0FA6qYM8eAZI5eSNHx2aYfWjpouCyfipyMyYsxTvOKMQyY2JKiX6Eqf90kUIz20aoQ+M6aZYgX9LzYrZmfgFfXBP9/6FEDJabTNd3a9roHvlQ8sBL++5Ou2Vpoif3D0p2yCGuUtYlLAlIiatz55luWXQ265SgHSvCme/PK/OQNG5YW4KRSTicnIcIwVo1OTDW1jUmK5fce+tPf38NIOEGJe5smw1OuHnOX05z+pY7wYWyq7ghb8h/XuwdSIGUl+wb5cVrit4+s6DkvjtHk515aBBx2S/ksfxPEmIaEqoIiidBzEykBlff7wimhgnbcpamLuM9WVRcTYOj2RnwcGii3BgLkrPUYo9M+HOnbEq7g==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(136003)(376002)(396003)(451199015)(40470700004)(46966006)(36840700001)(9686003)(55016003)(6916009)(316002)(53546011)(36860700001)(7696005)(81166007)(2906002)(356005)(40460700003)(26005)(16526019)(70586007)(4744005)(8676002)(186003)(5660300002)(47076005)(8936002)(426003)(70206006)(41300700001)(336012)(4326008)(82310400005)(966005)(478600001)(40480700001)(82740400003)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: loJcBQ9rfE1GSMfeDj84pQLRLLOP6CMahTIyaNofEDOYX/8/UCCcqpu4MwAmftMGPYsvIkpAG2W923sTi5qpyEYaoeMVd+re5MUqPUH6R/qudgrD0X5PkDn9yFU3Bs6sv9tJ65x8OamqoPKwqYRqmQb5Q7pcLjnAU6wObdhGY0cRctkptSRfKWTqSisKJflPkpPlC8nqla/glHjOGXI/7guvk62KoXjc2d6mlQnV37sL8b7zvoPzwDAow6nlbXTstgH84XzoiiWHQ1TWhk91hIFgjkzx4/jfJWCNdqgd90GNgOjwFpzRRTcR9nGvTwPlUHu+2UTGYTg25RE7AaKvNsSXgrlPVB/l4ihZEjSd6/f1aH4HpzBA5MfOnnYuf4PVd9ehGnmXAh/YNdEiIpDFEzJ4XvD45IbISELYLY8QbI2Ek2ixzUTevsnSgDlVsZ9VYOLJ6cr8Dhajd8B8IImRM3Zsz8E0+vV6O1Zjprhi2PzmvGoPwqWUh8m5JRFAd9eTvUou17w5mNOM7FKSCDwvAGyL56XWYqChp33u4l5HoWZJxun4Psf4yirj59AhsD9AbcSPR+R7t0nGEqPcuPEGZbdQQ/uSGgw9dZAri/SEO+zHUaR5MrdWsrhowiEVbw6XWu29d+o+aY/1oBPOgcBnOZS4alRs7ix4AO9p60L31XzOflQE+binkDdPro40lED2O6NcCaexSqWiuMWgixRv0G6ljGXo6dBGAwNFt3gVR3wpROANfvF96od+lF5I1dR6KzcHFtmyVOed07yOmkPjbNg0fFFgowoe3dXODkJS2pxVQggT2IRUzqV1DYtvdkyIzfSQwaTB1a5dhBf1ujWTLg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(396003)(39860400002)(136003)(451199015)(46966006)(40470700004)(36840700001)(82310400005)(336012)(478600001)(966005)(83380400001)(36860700001)(426003)(47076005)(40460700003)(82740400003)(7416002)(5660300002)(8936002)(4326008)(70586007)(70206006)(8676002)(316002)(6916009)(81166007)(356005)(54906003)(41300700001)(40480700001)(2906002)(26005)(16526019)(9686003)(55016003)(53546011)(186003)(7696005)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 10:33:46.3256
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 10:37:31.5668
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 423fc91b-fa5f-40cd-de59-08dac6f4e052
+X-MS-Exchange-CrossTenant-Network-Message-Id: 999e62d0-d0b0-42c3-df72-08dac6f5669f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT064.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7451
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4522
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 14.11.22 12:11:13, Dan Williams wrote:
-> In preparation for cxl_acpi walking pci_root->bus->bridge, add that
-> association to the mock pci_root instances.
+On 14.11.22 12:22:49, Dan Williams wrote:
+> Robert Richter wrote:
+> > A port of a CXL host bridge links to the bridge's acpi device
+> > (&adev->dev) with its corresponding uport/dport device (uport_dev and
+> > dport_dev respectively). The device is not a direct parent device in
+> > the PCI topology as pdev->dev.parent points to a PCI bridge's (struct
+> > pci_host_bridge) device. The following CXL memory device hierarchy
+> > would be valid for an endpoint once an RCD EP would be enabled (note
+> > this will be done in a later patch):
+> > 
+> > VH mode:
+> > 
+> >  cxlmd->dev.parent->parent
+> >         ^^^\^^^^^^\ ^^^^^^\
+> >             \      \       pci_dev (Type 1, Downstream Port)
+> >              \      pci_dev (Type 0, PCI Express Endpoint)
+> >               cxl mem device
+> > 
+> > RCD mode:
+> > 
+> >  cxlmd->dev.parent->parent
+> >         ^^^\^^^^^^\ ^^^^^^\
+> >             \      \       pci_host_bridge
+> >              \      pci_dev (Type 0, RCiEP)
+> >               cxl mem device
+> > 
+> > In VH mode a downstream port is created by port enumeration and thus
+> > always exists.
+> > 
+> > Now, in RCD mode the host bridge also already exists but it references
+> > to an ACPI device. A port lookup by the PCI device's parent device
+> > will fail as a direct link to the registered port is missing. The ACPI
+> > device of the bridge must be determined first.
+> > 
+> > To prevent this, change port registration of a CXL host to use the
+> > bridge device instead. Do this also for the VH case as port topology
+> > will better reflect the PCI topology then.
+> > 
+> > If a mock device is registered by a test driver, the bridge pointer
+> > can be NULL. Keep using the matching ACPI device (&adev->dev) as a
+> > fallback in this case.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > ---
+> >  drivers/cxl/acpi.c | 48 ++++++++++++++++++++++++++++++----------------
+> >  1 file changed, 31 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index fb9f72813067..06150c953f58 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -185,6 +185,17 @@ __mock struct acpi_device *to_cxl_host_bridge(struct device *host,
+> >  	return NULL;
+> >  }
+> >  
+> > +static inline struct acpi_pci_root *to_cxl_pci_root(struct device *host,
+> > +						    struct device *match)
+> > +{
+> > +	struct acpi_device *adev = to_cxl_host_bridge(host, match);
+> > +
+> > +	if (!adev)
+> > +		return NULL;
+> > +
+> > +	return acpi_pci_find_root(adev->handle);
+> > +}
+> > +
+> >  /*
+> >   * A host bridge is a dport to a CFMWS decode and it is a uport to the
+> >   * dport (PCIe Root Ports) in the host bridge.
+> > @@ -193,35 +204,35 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> >  {
+> >  	struct cxl_port *root_port = arg;
+> >  	struct device *host = root_port->dev.parent;
+> > -	struct acpi_device *bridge = to_cxl_host_bridge(host, match);
+> > -	struct acpi_pci_root *pci_root;
+> > +	struct acpi_pci_root *pci_root = to_cxl_pci_root(host, match);
+> >  	struct cxl_dport *dport;
+> >  	struct cxl_port *port;
+> > +	struct device *bridge;
+> >  	int rc;
+> >  
+> > -	if (!bridge)
+> > +	if (!pci_root)
+> >  		return 0;
+> >  
+> > -	dport = cxl_find_dport_by_dev(root_port, match);
+> > +	/*
+> > +	 * If it is a mock dev, the bridge can be NULL, use matching
+> > +	 * device (&adev->dev) as a fallback then then.
+> > +	 */
+> > +	bridge = pci_root->bus->bridge ?: match;
 > 
-> Note that the missing 3rd entry in mock_pci_root[] was not noticed until
-> now given that the test version of to_cxl_host_bridge()
-> (tools/testing/cxl/mock_acpi.c), obviated the need for that entry.
-> However, "cxl/acpi: Improve debug messages in cxl_acpi_probe()" [1]
-> needs pci_root->bus->bridge to be populated.
+> While I appreciate that you ran this against the unit tests, production
+> code should not know or care about the presence of mock devices. So,
+> this was showing a gap in the mock implementation, now addressed here:
+> 
+> http://lore.kernel.org/r/166845667383.1449826.14492184009399164787.stgit@dwillia2-xfh.jf.intel.com
 
-Patch looks good to me, though we might want to move the
-mock_pci_root[] fix into e41c8452b9b2 or on top as a separate change.
+Yes, with that update the above check can be dropped and the code can
+be implemented now without the helper. The patch below looks good to
+me. Going to run a test with it.
 
-For patch logistics, could you merge that changes into the rch tree as
-a new base? Right now I have cherry picked e41c8452b9b2 and this one
-as pre-requisites of my series.
+> 
+> With that, this approach can be simplified to the following:
+> 
+> -- >8 --
+> >From 3cb7a46e100d016132727ad32904b629061e40d5 Mon Sep 17 00:00:00 2001
+> From: Robert Richter <rrichter@amd.com>
+> Date: Mon, 14 Nov 2022 12:20:27 -0800
+> Subject: [PATCH v4] cxl/acpi: Register CXL host ports by bridge device
+
+Thanks,
 
 -Robert
-
-> 
-> Link: https://lore.kernel.org/r/20221018132341.76259-6-rrichter@amd.com [1]
-> Cc: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
