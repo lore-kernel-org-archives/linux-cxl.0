@@ -2,199 +2,193 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DF0C433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 11:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D070C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 12:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbiKOLPE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Nov 2022 06:15:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51898 "EHLO
+        id S229793AbiKOMSW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Nov 2022 07:18:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230309AbiKOLOt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 06:14:49 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6935F65;
-        Tue, 15 Nov 2022 03:13:30 -0800 (PST)
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NBNlY659Gz6H72s;
-        Tue, 15 Nov 2022 19:11:05 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 15 Nov 2022 12:13:28 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 15 Nov
- 2022 11:13:28 +0000
-Date:   Tue, 15 Nov 2022 11:13:27 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Alison Schofield <alison.schofield@intel.com>,
+        with ESMTP id S238306AbiKOMSC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 07:18:02 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5232122BE7;
+        Tue, 15 Nov 2022 04:18:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D+5XEWpQYlDl6ZiMt7/OGcLJFn3iqn+nj0SonF7+1yNFcLPrP7B55t5oJWGbR6NwyiL5VxcHKN9WGAqxeCy7z0iEd+wcqReWdncyEBOGclzStJ33swkzMuLr7nFfWpvFB8JKC7H/QhgSfYo8o0wYAwST5+s5m8xg3aA2gXiyajyRJyKcNajNCaRlIte/LW1MM4Yc0M759TZbpQYFa+1NkLSDaC6Z6wHyERM4i/wm76CyyAeMEg7Aa5nEwC+5aGj4VaZhw+H9WhdQ7Cv3rn7jyfd2C+yEib/I/NBIRIc1/WvI3KKG+CNzxdJ0zrVw7W2H/3UDMymg997JQJqa/5s8KQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YPhzcKUQ8q5aoBwIl8+t062FIBd3QnNoHXC03T5/p2s=;
+ b=c9V86INZ8ED6bdLO2b8fn/Bb8TgCSmIa9+8fJg3V8uhEnsA3N5pKquqT+Ji04zCg8/qEZ3tCYeU0XI1UwZB+UW0iauY+IB6nxvE8Ry/RuVG874oSsitVVSbaIH4Cbz+MiWNWc1J6tZwZ3pqh9p67yubCXsdRkmduJUecC+lgehQPFmtU2cVErkPyYyRJvHToBKrS6aVXoqbfkutfpPlbRyVGhyFbgQcyJ2MdF2UFeBaceGKHQAe+BdCeBHsjGm4mSPpE8rt1cwPxUTwUr9dpMSOgDZEauvvfUn6x+zVqCqNaFwHb8mnGClrlsi8Pgm69vJndg7cFc7mpsOQmClSCqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YPhzcKUQ8q5aoBwIl8+t062FIBd3QnNoHXC03T5/p2s=;
+ b=Rb3myLLOeNC0InQ9oZjGzEV02yGaU05Tftvy5kAvb2ECVN4fauQjfYddxE1CcQMYCtrbXKDPHzivOL6miIE554auX66Uawdd7yBrBXgfqJdTRkuVKGyNxpYexEAMirWIw0acs5ov0wVfwYCJXL0tYl/LlZFfJ7mmAoMfSUh6lAM=
+Received: from DS7PR05CA0090.namprd05.prod.outlook.com (2603:10b6:8:56::13) by
+ DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5813.17; Tue, 15 Nov 2022 12:17:57 +0000
+Received: from DM6NAM11FT100.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:56:cafe::60) by DS7PR05CA0090.outlook.office365.com
+ (2603:10b6:8:56::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.8 via Frontend
+ Transport; Tue, 15 Nov 2022 12:17:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT100.mail.protection.outlook.com (10.13.172.247) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 12:17:57 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 15 Nov
+ 2022 06:17:54 -0600
+Date:   Tue, 15 Nov 2022 13:17:51 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI/doe: Fix work struct declaration
-Message-ID: <20221115111327.00000899@Huawei.com>
-In-Reply-To: <20221115011943.1051039-1-ira.weiny@intel.com>
-References: <20221115011943.1051039-1-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v3 2/9] cxl/acpi: Extract component registers of
+ restricted hosts from RCRB
+Message-ID: <Y3ODbwk+12JvWyhJ@rric.localdomain>
+References: <20221109104059.766720-1-rrichter@amd.com>
+ <20221109104059.766720-3-rrichter@amd.com>
+ <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT100:EE_|DS7PR12MB6095:EE_
+X-MS-Office365-Filtering-Correlation-Id: 179b7604-4681-4714-04e8-08dac7036e56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8TZrWDMupoKHkgqMy29aEJzeQw3X5Wv0c0qkwT1AeGYymUpFbtExzPSc0as/rGBs9um2rKOVagkRR+00v2HfwJV/VThvxY1ojVIsdqfznnNfci1Kik5Mo6s7iS9OM/9UOhl2sGPvXfJ7KhzUe1Jkxzrg9TM+DyYCyTjxciETPmT+whlIlyafeRqmdh3mOszN2FaFLVwW6PNTOFPdzNSgtZclxW0sygyRfrnZND6okGbhVQHyqLRyI7tP6zFhWZ958DSCofKB72pZDqEFs6evyeIKqgvzmBy2AQDNiGwTbWe1+FaoVlEWdJ25+4Io3cdzecIqnZ/6qqIoCJ7L1jTSXM1/ek1iGwolc2s5IZ5FyukB+mP/PYDTo7BPM5UfLs3kYUn2vNf8JEVF9A+wPIedBaIgHVut/9HFfBor9uTGxqvO+p5KZDvrZTgpmipV1G/8ziiZ18sByhESEn7tR2F24zSUDaPXJTFAAPyiaiaKb9cSAgAQXr5/en/A+LI6bVtBbqtfBgfOkpNayxqqzU1CbWgDk4WiOW86uXxqNQuTYKbDSJR5Yi1BRI/JVHwVT6B8b5FhdkJFfgf/p4PrEt93xZiddRNK5nl6u0zz3CDc+QJHJBjWPabr0XYU1oUJ0znG6nG8uUBQXxCZhCc5bQyzC2btO1lrJc8sh7sTWf7Zn91DR2GwahLgMwrR+7IBDDB3nXSy2w+xPDnGjX6T+iZFMnmHRd9HXnXm5LoZrTrajWUjd7U2m4m5ZhAesV/sn0Nw51Hx/jnP7TtzahjoIABbGrsteJREg81FtkZXgi1uxTCZ48WpidPTzJ2mXlWAMyzf4qz5tEuuTOHe9gDryizFNg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(376002)(136003)(346002)(451199015)(36840700001)(40470700004)(46966006)(82310400005)(8936002)(478600001)(356005)(6666004)(316002)(81166007)(6916009)(55016003)(40460700003)(2906002)(54906003)(83380400001)(41300700001)(40480700001)(4326008)(70586007)(70206006)(82740400003)(5660300002)(186003)(7416002)(16526019)(26005)(47076005)(9686003)(8676002)(53546011)(336012)(7696005)(36860700001)(426003)(36900700001)(67856001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 12:17:57.5525
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 179b7604-4681-4714-04e8-08dac7036e56
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT100.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6095
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 14 Nov 2022 17:19:43 -0800
-ira.weiny@intel.com wrote:
+On 14.11.22 13:30:01, Dan Williams wrote:
+> Robert Richter wrote:
 
-> From: Ira Weiny <ira.weiny@intel.com>
+> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > index ec178e69b18f..7a5bde81e949 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -307,3 +307,49 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> >  	return -ENODEV;
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+> > +
+> > +resource_size_t cxl_rcrb_to_component(struct device *dev,
+> > +				      resource_size_t rcrb,
+> > +				      enum cxl_rcrb which)
+> > +{
+> > +	resource_size_t component_reg_phys;
+> > +	u32 bar0, bar1;
+> > +	void *addr;
+> > +
+> > +	if (which == CXL_RCRB_UPSTREAM)
+> > +		rcrb += SZ_4K;
+> > +
+> > +	/*
+> > +	 * RCRB's BAR[0..1] point to component block containing CXL
+> > +	 * subsystem component registers. MEMBAR extraction follows
+> > +	 * the PCI Base spec here, esp. 64 bit extraction and memory
+> > +	 * ranges alignment (6.0, 7.5.1.2.1).
+> > +	 */
 > 
-> The callers of pci_doe_submit_task() allocate the pci_doe_task on the
-> stack.  This causes the work structure to be allocated on the stack
-> without pci_doe_submit_task() knowing.  Work item initialization needs
-> to be done with either INIT_WORK_ONSTACK() or INIT_WORK() depending on
-> how the work item is allocated.
-> 
-> Jonathan suggested creating doe task allocation macros such as
-> DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-> function is not known to the callers and must be initialized correctly.
-> 
-> A follow up suggestion was to have an internal 'pci_doe_work' item
-> allocated by pci_doe_submit_task().[2]  This requires an allocation which
-> could restrict the context where tasks are used.
-> 
-> Compromise with an intermediate step to initialize the task struct with
-> a new call pci_doe_init_task() which must be called prior to submit
-> task.
-> 
-> [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-> [2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
-> 
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Reported-by: Gregory Price <gregory.price@memverge.com>
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Looks like a good solution to me.
+> A request_mem_region() is needed here to ensure ownership and expected
+> sequencing of accessing the RCRB to locate the component registers, and
+> accessing the RCRB to manipulate the component registers. It also helps
+> to sanity check that the BIOS mapped an exclusive range for the RCRB.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Right, that is missing.
 
-
-> ---
->  drivers/cxl/core/pci.c  |  2 ++
->  drivers/pci/doe.c       | 14 ++++++++++++--
->  include/linux/pci-doe.h |  8 +++++---
->  3 files changed, 19 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9240df53ed87..a19c1fa0e2f4 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -525,6 +525,7 @@ static int cxl_cdat_get_length(struct device *dev,
->  	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
->  	int rc;
->  
-> +	pci_doe_init_task(cdat_doe, &t.task, true);
->  	rc = pci_doe_submit_task(cdat_doe, &t.task);
->  	if (rc < 0) {
->  		dev_err(dev, "DOE submit failed: %d", rc);
-> @@ -554,6 +555,7 @@ static int cxl_cdat_read_table(struct device *dev,
->  		u32 *entry;
->  		int rc;
->  
-> +		pci_doe_init_task(cdat_doe, &t.task, true);
->  		rc = pci_doe_submit_task(cdat_doe, &t.task);
->  		if (rc < 0) {
->  			dev_err(dev, "DOE submit failed: %d", rc);
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index e402f05068a5..cabeae4ae955 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -319,6 +319,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
->  	};
->  	int rc;
->  
-> +	pci_doe_init_task(doe_mb, &task, true);
->  	rc = pci_doe_submit_task(doe_mb, &task);
->  	if (rc < 0)
->  		return rc;
-> @@ -495,6 +496,14 @@ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
->  }
->  EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
->  
-> +void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-> +		       bool onstack)
-> +{
-> +	task->doe_mb = doe_mb;
-> +	__INIT_WORK(&task->work, doe_statemachine_work, onstack);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_doe_init_task);
-> +
->  /**
->   * pci_doe_submit_task() - Submit a task to be processed by the state machine
->   *
-> @@ -517,6 +526,9 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
->  		return -EINVAL;
->  
-> +	if (WARN_ON_ONCE(task->work.func != doe_statemachine_work))
-> +		return -EINVAL;
-> +
->  	/*
->  	 * DOE requests must be a whole number of DW and the response needs to
->  	 * be big enough for at least 1 DW
-> @@ -528,8 +540,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
->  		return -EIO;
->  
-> -	task->doe_mb = doe_mb;
-> -	INIT_WORK(&task->work, doe_statemachine_work);
->  	queue_work(doe_mb->work_queue, &task->work);
->  	return 0;
->  }
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index ed9b4df792b8..457fc0e53d64 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -31,8 +31,8 @@ struct pci_doe_mb;
->   * @rv: Return value.  Length of received response or error (bytes)
->   * @complete: Called when task is complete
->   * @private: Private data for the consumer
-> - * @work: Used internally by the mailbox
-> - * @doe_mb: Used internally by the mailbox
-> + * @work: Used internally by the mailbox [see pci_doe_init_task()]
-> + * @doe_mb: Used internally by the mailbox [see pci_doe_init_task()]
->   *
->   * The payload sizes and rv are specified in bytes with the following
->   * restrictions concerning the protocol.
-> @@ -53,7 +53,7 @@ struct pci_doe_task {
->  	void (*complete)(struct pci_doe_task *task);
->  	void *private;
->  
-> -	/* No need for the user to initialize these fields */
-> +	/* Call pci_doe_init_task() for these */
->  	struct work_struct work;
->  	struct pci_doe_mb *doe_mb;
->  };
-> @@ -72,6 +72,8 @@ struct pci_doe_task {
->  
->  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
->  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-> +void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-> +		       bool onstack);
->  int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
->  
->  #endif
+> > +	addr = ioremap(rcrb, PCI_BASE_ADDRESS_0 + SZ_8);
 > 
-> base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
+> That PCI_BASE_ADDRESS_0 does not belong there. It ends up being benign
+> and forcing ioremap to map 12K instead of 8K, but it is a
+> config-register offset, not part of the RCRB size.
 
+Note this is BAR0 + 8 bytes, not 8k, and it does not map the whole
+RCRB region but instead the first part of the config space up to
+including the 64 bit BAR.
+
+> 
+> > +	if (!addr) {
+> > +		dev_err(dev, "Failed to map region %pr\n", addr);
+> > +		return CXL_RESOURCE_NONE;
+> > +	}
+> > +
+> > +	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
+> > +	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
+> > +	iounmap(addr);
+> 
+> ...corresponding release_mem_region() would go here.
+> 
+> > +
+> > +	/* sanity check */
+> > +	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
+> > +		return CXL_RESOURCE_NONE;
+> 
+> I would have also expected:
+> 
+> - a sanity check for "Memory Space Enable" being set in the command
+>   register.
+
+Ok.
+
+> 
+> - an explicit check for 0xffffffff for the case when the upstream-port
+>   implements "no RCRB" mode.
+
+Yes, I left support for this to a later patch, but it's better to
+check it here already and possibly fall back to reg loc DVSEC then.
+
+> 
+> - some check that BIOS initialized the BAR values post reset given these
+>   BARs are invisible to the PCI core resource assignment 
+
+What check do you have in mind here? There is already the NULL check
+which would be the out-of-reset value.
+
+Thanks,
+
+-Robert
