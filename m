@@ -2,165 +2,231 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DFBC43217
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 13:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DCCC433FE
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 15:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238225AbiKON2R (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Nov 2022 08:28:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
+        id S229995AbiKOP5l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Nov 2022 10:57:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238130AbiKON2M (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 08:28:12 -0500
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2081.outbound.protection.outlook.com [40.107.102.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCD714038;
-        Tue, 15 Nov 2022 05:28:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IjKr2VbO2GnT+u6bKBLQiPHaNkyeJkCfrmj4rNH9Ny+cVW3JeyKhuVE1qgjqG7wj2ckxRD6P8PIZavAt7nqTmljNnJvx2PWH86s7JqX1ckXF+NlnS+NJ9qG1nHhdg22kWL1JW90GwTEjIQIS7K4oq8gPmAtUTJ2AMx8u/ps676ktuBvtsAsjdws0+TtdQ74rPyOOE+1YuAMEnQBumHYU5B5Y6rUPOSz5sRcClPNU63pSFaZYnETW1ZojxRNV2YDyZszQr1HcJd5Cmo5+isHWvDIfDEMODbv/ZASkRZxzRj/3X9UmH0K5dPeBYpTRf70rt/41SR5yuCjAecyGmIs4JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=INi1Ik1Y3bUiC4Q+FXbZDcftOmmCWIgJnxrhJxYp1iQ=;
- b=XGu4unAO4lTfVJf0HEdorP5Bo4n+pEDt1lYpTKiPiQxtk+gOe9bHUQ1MESo3CB46JoNNhar/7z5q8dvQM86FcrUA/KHNDQ8bPEL4TEGfzCoED2VSRv707tigr2+QIwWSIYpUBmpJC0NxIuRBnvX6nlhaV6paR8weyxIQWeUBqhfGGctAQPQwU4JZlitEWKQ/UHPS22V9OsfEPTO60q9vB9iJ86VRvMGN5aMKh3g2cCOg8Tlj3pkhgDKDplXYSNYVaIk2efufP1vIuoenmM4i1qznPoqQxhMhKFDwge4EIg1q7ZbHlAuQpV4n640O/h4gTCBqlpj2c98TePRo5N0jFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=INi1Ik1Y3bUiC4Q+FXbZDcftOmmCWIgJnxrhJxYp1iQ=;
- b=OWQW7jWZJssutAHp4OLacYHIMN5EpJR2QMN8+zaMBp/00E0evE9GGyqv36tKRRqN+G5klx2jONvkd0KskhTDwMth2wNuAsJg4d6vrHWqDomOdIcDD0DWT1wLVGeOtZeb0waWm0nV0IdpPi1+nVYvsCe8xzIsVtk9qD52Z/pEswI=
-Received: from MW4PR03CA0123.namprd03.prod.outlook.com (2603:10b6:303:8c::8)
- by SA0PR12MB7002.namprd12.prod.outlook.com (2603:10b6:806:2c0::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.16; Tue, 15 Nov
- 2022 13:28:09 +0000
-Received: from CO1NAM11FT077.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8c:cafe::98) by MW4PR03CA0123.outlook.office365.com
- (2603:10b6:303:8c::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
- Transport; Tue, 15 Nov 2022 13:28:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT077.mail.protection.outlook.com (10.13.175.55) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 13:28:09 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 15 Nov
- 2022 07:28:05 -0600
-Date:   Tue, 15 Nov 2022 14:28:02 +0100
-From:   Robert Richter <rrichter@amd.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v3 4/9] cxl/mem: Skip intermediate port enumeration of
- restricted endpoints (RCDs)
-Message-ID: <Y3OT4oz6aR6hyvSt@rric.localdomain>
-References: <20221109104059.766720-1-rrichter@amd.com>
- <20221109104059.766720-5-rrichter@amd.com>
- <6372dc26c8f2f_12cdff294e4@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S230226AbiKOP5k (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 10:57:40 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628522CE2B
+        for <linux-cxl@vger.kernel.org>; Tue, 15 Nov 2022 07:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668527859; x=1700063859;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MmlB9p6ACDuC24rvlkrv0KnEf7bzI4wPNap4YB0zozo=;
+  b=DO5qVGpngvsYOVLuZcYV6FNSAQj0ackOpFd6MOy6qD42oK+uX9OR7JQo
+   gDA3L4KyhqfmIpEsm9NxU4uf/stuKmTcRTK+jHnN6gA+ggotmYtFVaxC6
+   EENC+NRFKmNDjJ9xRPm3JHwA6fFUUg929/NOspUgL/O79P7aNZu7IdDuV
+   5lQNFKp2Ev6NHzoa0ZiQquHop+a+lpktzapSxdqF5fPrX7/SUa7H5mrpL
+   KDKhriuaO56x1puVNNemjB/jiJpxgYKVwR9Mp3sEvY8eulh9A8qm0I4Js
+   uiy2PF5j89+sdkCCIp8PYj02c25hhg6OCw8n+nKfleruh5JDWsRd5TNZm
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="292681328"
+X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
+   d="scan'208";a="292681328"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 07:57:39 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="781385320"
+X-IronPort-AV: E=Sophos;i="5.96,166,1665471600"; 
+   d="scan'208";a="781385320"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.7.249]) ([10.212.7.249])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 07:57:38 -0800
+Message-ID: <a8ed61db-9bf1-410c-b4e6-7042f48a67ff@intel.com>
+Date:   Tue, 15 Nov 2022 08:57:38 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6372dc26c8f2f_12cdff294e4@dwillia2-xfh.jf.intel.com.notmuch>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT077:EE_|SA0PR12MB7002:EE_
-X-MS-Office365-Filtering-Correlation-Id: fcb4ca7f-2750-4312-90d5-08dac70d3cb3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i77lxq8PaNFmtAAcA0ZSzKYTIFXwTT4GKg3YxM7lQR8vBS1AAq/Us8XPQoDikTLPllgOWylt315zabjCQl8Qptned/klGQZcVsyDSMqdeRVhPHL69asTxoeNin9OlStDyRZtcRJ+3THWSFcdX5KIPzM2/2nmxP9ycKKSsgUkQRipFu5xJtW+za5+570og/vhrx/0amVOE7oozVK9JBIhPPjdLSmB/Icm4PQljorz8EmfKFw8emDqp07GR3968NScrR0zu3gIideu06y20+1uQ0+Ar+dfX6CJrw33fEdhux1FXM1RK2bDOInM8l8dzfPVIIKwpBQc1GOSnid1xbh4aUrCSk+3KZsuSb7hvmObfku4o3Al4XzqugKODqWZkDQRFqlmoEAYqv3S7c9CRJ3X+gTZ/0uk7B1nldfzmL43Oi4fOLCSHqJnsgmttucaaTXke7J9auIam7yPv6j3WHCdp1rfmjCuzlofmbAb0/9i61GXrUot2aIk4OCxXLAc8cy5UYlmDSR3R40C5G/w70S1bA9RX99w/5qbPdPAJBBcYGHKxs28yuzCUThfpA71DdjgbyEsFI6loVHIzxkJdWAvdppDY5e+o256VVZWBfVDoTeMPAB0Nb2Aihn5KfaBRGMxtlCr4ctDCxQMCNWTsZQL2lV9g7MMRjnJpJgazY0Tb9HWj5/OjTQrP2W3BmVvnWjwTvAEZWJj8m7rvGSpF5AfdXrphkvOrW4pR+zoURT/puexYS/UZVlnfmBaZlIsMUafnBXTGsJWhvkB+8Tjy/S5pBI/BXEhRCVA/5av1qag5IUn8Ilx4Ub0F6V+UrBak7CS
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(376002)(346002)(396003)(451199015)(36840700001)(40470700004)(46966006)(70206006)(82310400005)(81166007)(2906002)(36860700001)(82740400003)(8936002)(70586007)(7416002)(356005)(40460700003)(8676002)(4326008)(5660300002)(83380400001)(41300700001)(478600001)(40480700001)(6666004)(9686003)(7696005)(53546011)(26005)(55016003)(336012)(186003)(426003)(16526019)(6916009)(47076005)(54906003)(316002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 13:28:09.1687
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcb4ca7f-2750-4312-90d5-08dac70d3cb3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT077.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7002
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.1
+Subject: Re: [PATCH v4 12/18] tools/testing/cxl: Add "passphrase secure erase"
+ opcode support
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        dave@stgolabs.net
+References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
+ <166845805415.2496228.732168029765896218.stgit@djiang5-desk3.ch.intel.com>
+ <20221115110831.00001fa4@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221115110831.00001fa4@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 14.11.22 16:24:06, Dan Williams wrote:
-> Robert Richter wrote:
-> > When an endpoint is found, all ports in beetween the endpoint and the
-> > CXL host bridge need to be created. In the RCH case there are no ports
-> > in between a host bridge and the endpoint. Skip the enumeration of
-> > intermediate ports.
-> > 
-> > The port enumeration does not only create all ports, it also
-> > initializes the endpoint chain by adding the endpoint to every
-> > downstream port up to the root bridge. This must be done also in RCD
-> > mode, but is much more simple as the endpoint only needs to be added
-> > to the host bridge's dport.
-> > 
-> > Note: For endpoint removal the cxl_detach_ep() is not needed as it is
-> > released in cxl_port_release().
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/cxl/core/port.c | 18 ++++++++++++++++--
-> >  1 file changed, 16 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index d10c3580719b..e21a9c3fe4da 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -1366,8 +1366,24 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> >  {
-> >  	struct device *dev = &cxlmd->dev;
-> >  	struct device *iter;
-> > +	struct cxl_dport *dport;
-> > +	struct cxl_port *port;
-> >  	int rc;
-> >  
-> > +	/*
-> > +	 * Skip intermediate port enumeration in the RCH case, there
-> > +	 * are no ports in between a host bridge and an endpoint. Only
-> > +	 * initialize the EP chain.
-> > +	 */
-> > +	if (is_cxl_restricted(cxlmd)) {
-> > +		port = cxl_mem_find_port(cxlmd, &dport);
-> > +		if (!port)
-> > +			return -ENXIO;
-> > +		rc = cxl_add_ep(dport, &cxlmd->dev);
+
+
+On 11/15/2022 3:08 AM, Jonathan Cameron wrote:
+> On Mon, 14 Nov 2022 13:34:14 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> On second look, this seems problematic. While yes it will be deleted
-> when the root CXL port dies, it will not be deleted if the cxl_pci
-> driver is reloaded. I will code up a unit test to double check.
+>> Add support to emulate a CXL mem device support the "passphrase secure
+>> erase" operation.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> The logic in here gives me a headache but I'm not sure it's correct yet...
 > 
-> I note that cxl_add_ep() for the VH case is skipped for the root CXL
-> port, so I do not suspect it is needed here either. Did you add it for a
-> specific reason?
+> If you can figure out what is supposed to happen if this is called
+> with Passphrase Type == master before the master passphrase has been set
+> then you are doing better than me.
+> 
+> Unlike for the User passphrase, where the language " .. and the user passphrase
+> is not currently set or is not supported by the device, this value is ignored."
+> to me implies we wipe the device and clear the non existent user pass phrase,
+> the not set master passphrase case isn't covered as far as I can see.
+> 
+> The user passphrase question raises a futher question (see inline)
+> 
+> Thoughts?
 
-Yes, all endpoint iterators need to be reworked. Also true, the first
-endpoint is skipped in the chain. So only intermediate EP structs are
-touched by the loops actually.
+Guess this is what happens when you bolt on master passphrase support 
+after defining the spec without its existence, and then move it to a 
+different spec and try to maintain compatibility between the two in 
+order to not fork the hardware/firmware....
 
-In particular, cxl_ep_load() returned NULL for the first lookup if the
-ep is missing. We could stop the iteration then. I tried to avoid a
-rework here, but maybe it is not too extensive as I expected first.
+Should we treat the no passphrase set instance the same as sending a 
+Secure Erase (Opcode 4401h)? And then the only case left is no master 
+pass set but user pass is set.
 
--Robert
+if (!master_pass_set && pass_type_master) {
+	if (user_pass_set)
+		return -EINVAL;
+	else
+		secure_erase;
+}
+
+> 
+> Other than that some suggestions inline but nothing functional, so up to you.
+> Either way
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+>> ---
+>>   tools/testing/cxl/test/mem.c |   65 ++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 65 insertions(+)
+>>
+>> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+>> index 90607597b9a4..fc28f7cc147a 100644
+>> --- a/tools/testing/cxl/test/mem.c
+>> +++ b/tools/testing/cxl/test/mem.c
+>> @@ -362,6 +362,68 @@ static int mock_unlock_security(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd
+>>   	return 0;
+>>   }
+>>   
+>> +static int mock_passphrase_secure_erase(struct cxl_dev_state *cxlds,
+>> +					struct cxl_mbox_cmd *cmd)
+>> +{
+>> +	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
+>> +	struct cxl_pass_erase *erase;
+>> +
+>> +	if (cmd->size_in != sizeof(*erase))
+>> +		return -EINVAL;
+>> +
+>> +	if (cmd->size_out != 0)
+>> +		return -EINVAL;
+>> +
+>> +	erase = cmd->payload_in;
+>> +	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
+>> +		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT &&
+>> +	    erase->type == CXL_PMEM_SEC_PASS_USER) {
+>> +		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT &&
+>> +	    erase->type == CXL_PMEM_SEC_PASS_MASTER) {
+>> +		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	if (erase->type == CXL_PMEM_SEC_PASS_MASTER &&
+>> +	    mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
+>> +		if (memcmp(mdata->master_pass, erase->pass, NVDIMM_PASSPHRASE_LEN)) {
+>> +			master_plimit_check(mdata);
+>> +			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
+>> +			return -ENXIO;
+>> +		}
+>> +		mdata->master_limit = 0;
+>> +		mdata->user_limit = 0;
+>> +		mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
+>> +		memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
+>> +		mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
+>> +		return 0;
+>> +	}
+> What to do if the masterpass phrase isn't set?
+> Even if we return 0, I'd slightly prefer to see that done locally so refactor as
+> 	if (erase->type == CXL_PMEM_SEC_PASS_MASTER) {
+> 		if (!(mdata->security_state & CXL_PMEM_SEC_STATATE_MASTER_PASS_SET)) {
+> 			return 0; /* ? */
+> 		if (memcmp)...
+> 	} else { /* CXL_PMEM_SEC_PASS_USER */ //or make it a switch.
+> 
+>> +
+>> +	if (erase->type == CXL_PMEM_SEC_PASS_USER &&
+>> +	    mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
+> 
+> Given we aren't actually scrambling the encryption keys (as we don't have any ;)
+> it doesn't make a functional difference, but to line up with the spec, I would
+> consider changing this to explicitly have the path for no user passphrase set.
+> 
+> 	if (erase->type == CXL_PMEM_SEC_PASS_USER) {
+> 		if (mdata->security_state & CXL_MEM_SEC_STATE_USER_PASS_SET) {
+> 		    	if (memcmp(mdata->user_pass, erase->pass, NVDIMM_PASSPHRASE_LEN)) {
+> 				user_plimit_check(mdata);
+> 				cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
+> 				return -ENXIO;
+>   			}	
+> 
+> 			mdata->user_limit = 0;
+> 			mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
+> 			memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
+> 		}
+> 		/* Change encryption keys */
+> 		return 0;
+> 	}
+> 
+>> +		if (memcmp(mdata->user_pass, erase->pass, NVDIMM_PASSPHRASE_LEN)) {
+>> +			user_plimit_check(mdata);
+>> +			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
+>> +			return -ENXIO;
+>> +		}
+>> +
+>> +		mdata->user_limit = 0;
+>> +		mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
+>> +		memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
+>> +		return 0;
+>> +	}
+>> +
+>> +	return 0;
+> 
+> With above changes you can never reach here.
+> 
+>> +}
+>> +
+>>   static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+>>   {
+>>   	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
+>> @@ -470,6 +532,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+>>   	case CXL_MBOX_OP_UNLOCK:
+>>   		rc = mock_unlock_security(cxlds, cmd);
+>>   		break;
+>> +	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
+>> +		rc = mock_passphrase_secure_erase(cxlds, cmd);
+>> +		break;
+>>   	default:
+>>   		break;
+>>   	}
+>>
+>>
+> 
