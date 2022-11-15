@@ -2,87 +2,83 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B666FC433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Nov 2022 23:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63891C433FE
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 00:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237423AbiKNXpd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 18:45:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49472 "EHLO
+        id S229733AbiKOAIH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Nov 2022 19:08:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236922AbiKNXpa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 18:45:30 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1819398;
-        Mon, 14 Nov 2022 15:45:26 -0800 (PST)
+        with ESMTP id S229484AbiKOAIG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 19:08:06 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55E25F68;
+        Mon, 14 Nov 2022 16:08:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668469526; x=1700005526;
+  t=1668470885; x=1700006885;
   h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=8n+/CimoUDQSp2BaM1P+8Ew095q2zUWSY9zpVIEs+aI=;
-  b=jRnlEn/o6ct6DNYGXNSJu3Aot7mPq7PKrJn3cGCgLWjr1dB74BvOrvhC
-   ULfaTaGznCq4b5M50vbn6Tc25ShjZDKDn0SvRTWiStC2A8P2wHUcm+kLs
-   FjTA4H4mAufPjuGSajgqsIPmpcaMGa0LUq2eB+F4Z5TRSJQDf2w/qqKMs
-   vhHy4wTMHZqfMuVhj26eFWqt4HQl1GJN2lu5oTQ/TcUIpRT/6gglEvdhN
-   4otQdAOCzYvSue9rRb1GGU2NOOdl2nlF5ARMx2E5dhf29F1g/dwU555OH
-   hzmlK+N0kiYU72EiUC9w2fPfdn3alZX9gewOdFmFLV2GSLnOnwMc7TU0/
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="313260516"
+   in-reply-to:mime-version;
+  bh=JJ4oTVvqL0LkPYYOZfVnmlpNjuH/rXAkxvix1m6pS4I=;
+  b=oFtHSd0fYQTV8TMMOIrUVSk0mpB7GMrxJlidzWtmMQrqjeLCg04MuEn0
+   en9WixgFxeBVvXUDIrWO/RPDHBxVSRfpy7FfsMfFOl5pmtbbWmwdP3LnN
+   y0t+2a3oEQtILserb0wEvauaGf62HzH4BhVc6XraOcmQn7d/MzT51zQvg
+   sxGOodQTSo9f+3PDa8piKPdDxN2Gpdn7/JTMt9zYrwkzLsrFoxE8DGx+O
+   WgVlUjSyoajrF62rcR6zVn/P0/+4DpZ0wK6Yam+MormzJiwtBNVX1hGnp
+   53eNoSf3tTuWqGeSzbeujCjW1iOx2WeRkaK/JQopVgUj3CrzyshCHVy6T
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="374246232"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="313260516"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 15:45:26 -0800
+   d="scan'208";a="374246232"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 16:08:05 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="967768410"
+X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="633014965"
 X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="967768410"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Nov 2022 15:45:25 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="633014965"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga007.jf.intel.com with ESMTP; 14 Nov 2022 16:08:04 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 14 Nov 2022 15:45:25 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2375.31; Mon, 14 Nov 2022 16:08:04 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 14 Nov 2022 15:45:24 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Mon, 14 Nov 2022 15:45:24 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2375.31 via Frontend Transport; Mon, 14 Nov 2022 16:08:04 -0800
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Mon, 14 Nov 2022 15:45:24 -0800
+ 15.1.2375.31; Mon, 14 Nov 2022 16:08:04 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GyWduhJU09MOrBvWb2IQRwEGar+m8oH7Ba5o8QyvxjMumt3yLfwLk/Yf6h8DRVgqAFB5wuk8y/x0IMDz0kGNKqQpjfePb5CPbol3EEyFBZUpFtX48aPpNhsWAcZSmqjJxlAKUxjSMiQhibhLLmeo3+n0YHp5rBwnpkU7PxT37HVYEvJ+tkLimfiUkVntYS8FDlDfnJHPIohA0+449LMUxLbBh/nDlnC7Jz13cddyQ2s7KZ0sHWJy7Cs3sl1Y982qKPwEOyFGnDJuS/tK9AXUTMsm1sGfiRArpypc1SrHPfEhG16y8DkPlNCxHG6kTbj8KroE1waYWwX5g//DnlQMIQ==
+ b=kvnH4nkk+7sQmUW2JDvhN4V8rJmc+INTVJPu+tHIHygwcOy+p5ETLR+B01tKYRGPUamRuZbufBekWK21h0CD4z9IDvTWOgVuTntofIocIMuj4e9HiWP0cw5G09SKrnAJJSl27ophmHT92sowVBNikpLmh8e5/IMhRxHaIyTRheavurKMvwUflzexmM32EYBfikQketkyhTqEZyMQM0MgITncPV2NUn4oyUGQ1cejNiA80Mt3P998l2rw2h/osNI9An387mwLwYzXbz45VUSKlTYSo8JSrjp2UJlwsvSg67a1RyJ1aJLbR6a0nzBTzznCCXb8BxbiQInXtQze9yALtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c7q1YSOVw/CX7b5B9X2T0nehUqvFpAc2UKma91DN6Tw=;
- b=hhoDr89WuHwhUOINJKpYCr3T8JoJT+8hKk1jPfW9lsK+DPSwbkVzsZlhAk6yald7QcMs5607VWmGlCRW8q2FPL49FUI/c5QqG00QB+z/ElIkF3j6jLhkkGPpn0gYBM7gQbwK2srsO5dEFvHiolmr1C6xyIQey00AdoOEKxVlcX87LDRfMXhZbUGjfSUPd5UBSpn8/ejhjg9iLU2sdq/oA7g2AHmrWqUr65rQwmlqPC2up0AV38FLJ1q4+JSDKXshyyoWSAcn5pCg+HWh8V7CaIyYxl78EURTFkK/A+bOn7HoK5QZy8xYXJ7iMO9rPgYDG1TeIICY4lb5kNtuxB0xpA==
+ bh=qdbNfvqRqk1ZTZncgso+K8Camzk9R2nkRRlD5a8VaOc=;
+ b=N8qUqUFDcV1S07D2fe/IdS7RlVxhMJ6bNCR/GZeLzotlpdm6i/3KFq7KmXZgVjVornGpk4pAWIw0XaRW3n/sCnEEotV0J1VjNMPO45ruvBtte4pYTo8JEKE8FwgkUivEMcq+uzo479yjqVJdFUzOopLnm4SxNA6ijK8xcW1p1v2oDWHsmnh0bc/hL3gf2EkPerpqNxhaEnUqlRJyemVPX16hFDRpMpQqjB75hZ0ukJemJUGLpR2yx7owmhpHFcYthVHpxLu4N8nccXwI6LTpJDfEamNZiRpV8oYtbeDs4cGIjdmMd/4kLaQGpIdg5AO+ZAovrPSdsBkh5F95/HBUlQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by SA0PR11MB4669.namprd11.prod.outlook.com
- (2603:10b6:806:99::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Mon, 14 Nov
- 2022 23:45:22 +0000
+ (2603:10b6:301:50::20) by SA0PR11MB4687.namprd11.prod.outlook.com
+ (2603:10b6:806:96::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Tue, 15 Nov
+ 2022 00:08:02 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::b058:673:c228:3e95]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::b058:673:c228:3e95%8]) with mapi id 15.20.5813.013; Mon, 14 Nov 2022
- 23:45:22 +0000
-Date:   Mon, 14 Nov 2022 15:45:19 -0800
+ ([fe80::b058:673:c228:3e95%8]) with mapi id 15.20.5813.013; Tue, 15 Nov 2022
+ 00:08:02 +0000
+Date:   Mon, 14 Nov 2022 16:07:58 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     Robert Richter <rrichter@amd.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        "Dan Williams" <dan.j.williams@intel.com>
+        Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -91,208 +87,143 @@ CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Davidlohr Bueso" <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         Robert Richter <rrichter@amd.com>
-Subject: RE: [PATCH v3 3/9] cxl/mem: Adjust cxl_mem_find_port() to find an
- RCH's port
-Message-ID: <6372d30ef4152_12cdff29452@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: RE: [PATCH v3 4/9] cxl/mem: Skip intermediate port enumeration of
+ restricted endpoints (RCDs)
+Message-ID: <6372d85ed793f_12cdff294f@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20221109104059.766720-1-rrichter@amd.com>
- <20221109104059.766720-4-rrichter@amd.com>
-Content-Type: text/plain; charset="utf-8"
+ <20221109104059.766720-5-rrichter@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221109104059.766720-4-rrichter@amd.com>
-X-ClientProxiedBy: BY3PR03CA0025.namprd03.prod.outlook.com
- (2603:10b6:a03:39a::30) To MWHPR1101MB2126.namprd11.prod.outlook.com
+In-Reply-To: <20221109104059.766720-5-rrichter@amd.com>
+X-ClientProxiedBy: BYAPR02CA0009.namprd02.prod.outlook.com
+ (2603:10b6:a02:ee::22) To MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SA0PR11MB4669:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8441e31c-1b74-461f-b8ea-08dac69a4b01
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SA0PR11MB4687:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c100c57-43c0-4895-06c4-08dac69d760e
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: M7EI3TAz4w/hRu8I18Nwa1k+jJW8tVODthjbr/2mrwP4yyRq97q11mVi7oFwfKueeup5RunAgH6yCg2G+es8D408LdbqfqxhM+qlubWqlxyHw65LkKF7F7gJFITvrojdB/Iv60PM5r6xozOLQ6wb8SzV0kY9GsW0MXb+7BADmgR2UQLiNgU53oAnFaZx+yeQw5nnxHyoQjiA68BbRd3a7e/8MaUk6AUJPRCEihfz88qWlqImDmLCQxmCGGpSszauGTT6qI2HR8fU+Cozx7NGMRIEFy5sTsNkXUY8jcGcE/Mg43bFVY5j5s4PpW0UdO4d6FxUPLR6ebBi5p6UzOxiVz7sJ/+WBDfAnJVSTelfC7YxjsJFdj/jsbV+HQd31PnJkDpVjWFCoxVjKe29aGEjkbdpRpoVNWb8vyxiK46vZu/fDw8ZTLzNRgHtihgEMF69hDiFcryYE7wiyR4JXkMFls5YZKHikB0NvpP93hy4MG1X7QiCxxpqg85ilbTw2TlGVIZZwqWyXGe4rtcP0dJIHcBHjjBv345jEHoqyfb4zGHDStqsfoyr/hT/KNXQ0PWa8h5M5paMVIpx1/yCKylmHQPEna1uZ8e8kXVZOEuoCAYcSbLuGZDbj8q7paWshQDDEwKk0UFMImZ2R6ERc1W6i+C2ar/OHAxoxXbfY0ktm5yVINcbm+DPA9omPLkRp42UgUWyudhYageykGBW0LAyiTzCCmsR4aeBFafgM/MX/Qmc7+TDXGknCv5rp3eRd8NI
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(39860400002)(396003)(346002)(376002)(366004)(451199015)(6666004)(186003)(4326008)(66476007)(2906002)(54906003)(110136005)(66556008)(66946007)(6486002)(8676002)(26005)(6512007)(8936002)(9686003)(38100700002)(82960400001)(5660300002)(86362001)(316002)(6506007)(41300700001)(478600001)(37363002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: P18Kp3nERjVRdTuMSnKEfIQIzpf2L1JCeNwRfcedDx5GE5yQBJX3iBzAYa4mNuhjaZrgKUc3p3RPkeU7qfG3lEqe9QvL00LQGfV9n54KjxXaainZKmrf2bbMqpklZW418uWRJmq1BDNAI+mYMkkalLQ0+TkgjxpcEWpFf75tqAEKNROgWEUaFT3w09PQWbQMAFeiNOFsaNneR14GcKrObrF31wDPAXWQanZOXx0FFKPusihLXNg5UNjTGY2jKgLVFE8wanV6PxljQeb3pyLbmUfuHsaGprPHSgF+EwsEcEfU56subNoi2uaqUH97umObTGNXwoW18kr3UWhJiqQk3i2PuAchU0Q4cqJC9DXHy16A6g2NDcNxu1e+nTxsUVJJ5bezR4IpbvPF0LWNA2p+XAoYAez9cBrYpb7MusByUFmZhiZ6MYTRf8v+VkWatWD1FuTDyb1uDpNQYx+D2hcn/ADlSYqwlrDimMViK3bMZpr0b6cxYhHzyELSuvtns//1lgKPdg+xGZka3XdQb3OLeDzia79PFgfq8/niNPl3dcRqQzr+7nyc/wN9YnwpZwK37Y2cWJKdC9BnZHGZVAd6zZR+vumOmih7zLRSaE6WCOYrIDHZ9ebpYwF7lV3jNS4a3aOJmm69unuAhbeqbpJpsZrVjDE9OK7xb0WoQcumAfj2rSAROcgUPdx++1PgmzbsrGfYEF7U1EloiJmfV8e+Jw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(346002)(136003)(376002)(39860400002)(451199015)(6486002)(6666004)(478600001)(54906003)(110136005)(6506007)(186003)(9686003)(8676002)(5660300002)(6512007)(66946007)(26005)(66476007)(4326008)(66556008)(316002)(8936002)(41300700001)(83380400001)(2906002)(82960400001)(38100700002)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dERQcHVRM1FEUEMwaG9SZjg0bDA0NzFseTdTbmRiMlRPSFNGWUtTN211Mit4?=
- =?utf-8?B?eVJLV3JyanJ6R0hXOTlqMUxZd1V6MjJsczRESXorUk94VXJXa1pvTGFic3U2?=
- =?utf-8?B?ZEVLSGJCM1ZjY0QzTGRsYzhCZGlUNEpHOTZRUFByN0drTkI0RXpnNkszS3pY?=
- =?utf-8?B?UkRXRVUvTC83ZXhJMWJ4Z25CRFM4VGxWUkVvdGlmZERibDNFRjJ6aEFEZzVT?=
- =?utf-8?B?MVBZYnE2UmZPQkFwTFpzMnIxQ3pCNnNuMUNydjByYUI4VmJ1ZTNzZHdnejE2?=
- =?utf-8?B?SFhiOUYzVW9CWlV2bnJyMDV0NnIzemdsWXU4UndpcmF2UHFrNldCcndCcE0v?=
- =?utf-8?B?Nk00dWdDOHBHTVdRNzZmVFlhczF1T2FxaE10aHdWN3NLQ20yN3hLMUYyb3dj?=
- =?utf-8?B?MFVvUzNMS1prdFc4OVFSMUFiWi9xbW5SY0ZFMVVBVkdIU1BOS3N0c3ZPUk13?=
- =?utf-8?B?MFlKUk5IRWJVaU9xRGJPbDFnKy9maFp0Qk95d3p4amw0RzJzQndoaEVweFJv?=
- =?utf-8?B?YVdPWUpUU0g2eGp5NEhlNzRKbFB5emZycFdiMnZiUUhDVFRGcnVyRkZRZEo4?=
- =?utf-8?B?K3RJN0ZjblMyc3R4QitTekx1MG5uNUMzNWs0bE1JeU42SEJ1V0t1UnBjVU94?=
- =?utf-8?B?YU9kYmdJdzdOeGdSSW9La2ZpbkszSzlrZ3pOMXk3SGJ6Y1BqTzlzRWlRQjZp?=
- =?utf-8?B?RVNKUVE3SHZBTEo3QXVDbUsvTDJ5Y3Vjc3hNMFlHQjZad25XZkNNZElVUUF6?=
- =?utf-8?B?THhRNkhFKzNFQldQbEQvcjh6QSswcFg5bVZHdlU4M0wvOWZCNmVOdEFIZlVW?=
- =?utf-8?B?UldISWFmRHFPS3YxV0MrMXZkaVNQU2IwY0Y3Z0dCUkM5bSsrVU5qc0l4b1JI?=
- =?utf-8?B?VWR4SS82ZytNQmNXYmRIakZUZUVDSnhWNWRTdWRibGZmcVpJWklHemdvZ3V5?=
- =?utf-8?B?Tk5XR28zNERYNW9ObVBNTUhOVS9ZUkM3eVNXdWxFbU13WVQ0MDVta05uWEhC?=
- =?utf-8?B?dDUwZzZaVWtxbmpGMGZUaC9qOWFxZlFDSnY0a1dTOVdOZk5VeFdWb2JvRU9H?=
- =?utf-8?B?WFkzQStlZDZxYWJkWUZHVExDYnl5UEVQZFEzN1pDTFUxYXM4U0hwRTczWUZS?=
- =?utf-8?B?ZzhQbVpIakJraDJ3L0V4VGFNOEozVG5PUXB0ak9wUC9GbGZvbGFpdit2MExU?=
- =?utf-8?B?Z0hXYnVhK0hFdWwzRXJiMnFjbXBGYVpKRkh4eS94NHMxTGo2MlBUVnhuYkxI?=
- =?utf-8?B?aHRNdzFPblRWbGE3QS9qWVQ1MDlHbWNRdElvZUpFekRITCs2YzlhZjdQL3RQ?=
- =?utf-8?B?bDlXYlk1M2pqU0VabVVQck1kVVVLUDFHOC92ODArMGRnOHBBU1FEc1BXYkQ1?=
- =?utf-8?B?dk8rZlJLc3VMVWJ0eWUwWklmT045V1VCQ1g4VmFldUFQQ1NvRmVUd1ppSEVB?=
- =?utf-8?B?OTZ5eUNSQy8vYjBOeEJvdlZMY0x1WGk5M0hUMkZlbkRLS1NsVU9wOWwrSXpj?=
- =?utf-8?B?UDBFRFF1M2NZK3daRXE4ejdvWG5PZ3pCTXhHdEJtRVY3bG1uQkxDaDBxQ2RQ?=
- =?utf-8?B?MFRXV1lDSjY1R1NIdXQ1UllDNG4wTi8vTjJ1WmoyRFY5Z0tvYjljd3VsQ2hj?=
- =?utf-8?B?TUpacW54TmJLdkZwNzNTWDluOW8vYVRmSVhML2xnZ1p3Z2hEQmF0U21OTWFK?=
- =?utf-8?B?MzVXTUdTL3VEU2NkYktBMEpSTFBWbkxhYmJWUWxodzdDeGF0bElDbGczY0Zj?=
- =?utf-8?B?WU92VGswRnFjU0JkV3Jvc2RreVZicmQwdFdMYU4xdksvcFo0dEdUbERiUmFl?=
- =?utf-8?B?ZjY1Tk5IK1djT3VUUUFyaFFoUjVWamtLN1hXMEtWRmk0ajVlZjBhK25lTUtm?=
- =?utf-8?B?TlhlZkpKRU9qd2M0YVFRSXR6SEZETzdoOFRBcG03UW1HTndRekJjUTAxczls?=
- =?utf-8?B?OWd5b2hHaGlmSEgwZjd2dnd2VDgxUUhNNWlNVVV0WjN0eUFLcC9yZXJPc1lF?=
- =?utf-8?B?dnhjb09Pd1hjTnlONE9pdmFMbDcyY3l3Z0JsdDBtTngvRmRRaDRJaGx3WHRC?=
- =?utf-8?B?Kzl3d25XL3BJQmduUmZMOFducWVROHovVnVPMkpqck5lUHVvSVJHU1lxb1da?=
- =?utf-8?B?djg2RmNnZnU2NXNMbUJjZGtzaG55U1VORlVZQjZ6VWdybVZPQmdSZVRyN3pE?=
- =?utf-8?B?MVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8441e31c-1b74-461f-b8ea-08dac69a4b01
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MRd5Cv0SBhxg1IeHx2NIo7fKfLfQXv5ZjRzxRZvL9ayr7zxY3lMWXR+vLlBI?=
+ =?us-ascii?Q?9bu41VcRuP9TFHi12ZXrFFnYvBaJ0HRZMACXOs7B4WYJrxFuJMVnSRRvXhXj?=
+ =?us-ascii?Q?BDeEWrOleqRx6mXwqNXL+jPRhFO9y6b5RdIp70hOwf7wje3V2PpYQ7pWkBnQ?=
+ =?us-ascii?Q?NAofe9MPoOPxYAPjG3MurHO38ek1Tw/v4fwuNdu6a4PaBiDlBo2nYywd+n9B?=
+ =?us-ascii?Q?WMmYWercD25udpeAQrC58UcnWUIOAAUAbfW40o0GwKq42KqcFxn7kkN3DBWY?=
+ =?us-ascii?Q?0lbVTotPllF4cS6XGzqmMncJN0qN3hZvYW9gRra/k5EhoZ4caAABN+JQ9tFE?=
+ =?us-ascii?Q?wue1JBivoCM3Z/4E6KW4eBKGWJBYruQmOXIEIQrADfWcobmNPOye6mBoO3vw?=
+ =?us-ascii?Q?CstE0z+sNWuodYJaX0a6ILdEqwB5OaNi34RoJO6CiGIAwZ/lkHQJ/O8r6s37?=
+ =?us-ascii?Q?UNH9+t3tg4tqz2eSN+dd8z/3+ZG7U0Nhjq+pave+fP9anWzYOLrpqOsYzWYA?=
+ =?us-ascii?Q?CRleRUpIDd83C24cpmHJNweqny8TZCsdX2/0diwe3drSjdNp7oYA5Hhsmw1q?=
+ =?us-ascii?Q?kyTbVQ+T5UEmM5CkL9dP6qkR7zFWJDOorNMi3Je0a4YhDs6zzFMd3i0w7Y6p?=
+ =?us-ascii?Q?aX8wbJW6+6/6LZ9ss6vi2Bcj6OVyfV+5HUZfje53yAMfd8zvdsytmCBEHncq?=
+ =?us-ascii?Q?yu/wIpSHJkGkgb58QM4al1JdtPeBOJBGkGolIeVingrjNnvUNSA705zGOwM+?=
+ =?us-ascii?Q?XxuDpuh40eUt0+EcKt8f86hAArhwcIoS37tsjKHrlCs2HR9hhbiQbWRHU7OF?=
+ =?us-ascii?Q?DscLxmO8TCZHw/bRjC8PAJKqU0kqFGodaliismQfZdju/8PN0Kd7XVWbXagg?=
+ =?us-ascii?Q?QzWSfo1rz2zBHexCsN5+Z9uTxpL7fMFR3XXfeQqdM7dCecJJVWrbHhB95n2U?=
+ =?us-ascii?Q?E0AqBUpUEfdPjQJA2N1y7EmFv2I/+QXU//Vzxun0AryERVMufoGXIEmefHwJ?=
+ =?us-ascii?Q?15qS2sX/JH3KkvTVzOL7nEnKZVUFLrG7h001wj94bpGJd4FW6wx9sUFy+F42?=
+ =?us-ascii?Q?6Qa+IZXr9wCS6QRY64VcMJt//F0zojdpFwiotx6sUCFb5hP1PamuoXOb74Iz?=
+ =?us-ascii?Q?M8ek7yutlDPJXyxiPJAtfytB+bAhMo2/FMARvhd3MQX+ssNsU6ObIab5fYJ7?=
+ =?us-ascii?Q?Nt9fhsk7CY90fcdgv5CKJQVIfZo4kvhGazjPLNtijkkRRkXKnTchr7HjIVTG?=
+ =?us-ascii?Q?fYdSdw8cP2xM0ia9IHnNRdo8g/C5684R/tCGH34KjulWT5GkgsWECaxxITl8?=
+ =?us-ascii?Q?GPUdrPuzCz4nExzotOv20sO86yMoToLYTVZ/zk5S/aWe1tVygu0x4VcTcJHr?=
+ =?us-ascii?Q?oMbCsZ2KwfAPwv4B0BZtG2vQ9YEBRALfwZ3jIoFgfJGILkJpCcs4724/mH/c?=
+ =?us-ascii?Q?skuTI84PUzGscA8TZeIMG3eLX56bir6nzEyKEBdANchkZ2Iyvhhb2DwkyNPG?=
+ =?us-ascii?Q?ynU+OzIoeYW5JFu89lmAvtvO6yGRhtcBq7UiiFvKjW9qVtJw006E+Eib1vok?=
+ =?us-ascii?Q?wGJwaXOXgOqnaOM8ZUqUKMXmtY7Xg75qma0/0eW96dabSrAprar4WHHd8cNI?=
+ =?us-ascii?Q?Zg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c100c57-43c0-4895-06c4-08dac69d760e
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Nov 2022 23:45:22.6856
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 00:08:02.0860
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BTPRfcDPXEn9QO83Go/afnMahjRf3Gw/xi9B1nS5pZjGpjuFNfc0iTBnLtye2VPwyt0mhyAaHc/rfO2BOkldcbMFKdUFYP825jfewU4G9LY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4669
+X-MS-Exchange-CrossTenant-UserPrincipalName: RMnFLjsFpGzbx23kPaTkHdzgidtXIC0LZxeFI8Ryv1O/f3Ey2fUXx9MJCpfHA7qaEF0KugSVgzV0KG3rawRdsb1Ufa0FqmPkBfXFiUp7BYY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4687
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 Robert Richter wrote:
-> The PCIe software view of an RCH and RCD is different to VH mode. An
-> RCD is paired with an RCH and shows up as RCiEP with a parent already
-> pointing to a PCI bridge (struct pci_host_bridge). In contrast, in VH
-> mode an PCI Express Endpoint is a PCI type 0 device with a PCI type 1
-> device as parent (struct pci_dev, most of the time a downstream switch
-> port, but could also be a root port). The following hierarchy applies
-> in VH mode:
+> When an endpoint is found, all ports in beetween the endpoint and the
+> CXL host bridge need to be created. In the RCH case there are no ports
+> in between a host bridge and the endpoint. Skip the enumeration of
+> intermediate ports.
 > 
->  CXL memory device, cxl_memdev                               endpoint
->  └──PCIe Endpoint (type 0), pci_dev                           |
->     └──Downstream Port (type 1), pci_dev (Nth switch)        portN
->        └──Upstream Port (type 1), pci_dev (Nth switch)        |
->           :                                                   :
->           └──Downstream Port (type 1), pci_dev (1st switch)  port1
->              └──Upstream Port (type 1), pci_dev (1st switch)  |
->                 └──Root Port (type 1), pci_dev                |
->                    └──PCI host bridge, pci_host_bridge       port0
->                       :                                       |
->                       :..ACPI0017, acpi_dev                  root
+> The port enumeration does not only create all ports, it also
+> initializes the endpoint chain by adding the endpoint to every
+> downstream port up to the root bridge. This must be done also in RCD
+> mode, but is much more simple as the endpoint only needs to be added
+> to the host bridge's dport.
 > 
->  (There can be zero or any other number of switches in between.)
-> 
-> An iterator through the grandparents takes us to the root port which
-> is registered as dport to the bridge. The next port an endpoint is
-> connected to can be determined by using the grandparent of the memory
-> device as a dport_dev in cxl_mem_find_port().
-> 
-> The same does not work in RCD mode where only an RCiEP is connected to
-> the host bridge:
-> 
->  CXL memory device, cxl_memdev                               endpoint
->  └──PCIe Endpoint (type 0), pci_dev                           |
->     └──PCI host bridge, pci_host_bridge                      port0
->        :                                                      |
->        :..ACPI0017, acpi_dev                                 root
-> 
-> Here, an endpoint is directly connected to the host bridge without a
-> type 1 PCI device (root or downstream port) in between. To link the
-> endpoint to the correct port, the endpoint's PCI device (parent of the
-> memory device) must be taken as dport_dev arg in cxl_mem_find_port().
-> 
-> Change cxl_mem_find_port() to find an RCH's port.
+> Note: For endpoint removal the cxl_detach_ep() is not needed as it is
+> released in cxl_port_release().
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > ---
->  drivers/cxl/core/port.c | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+>  drivers/cxl/core/port.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 0431ed860d8e..d10c3580719b 100644
+> index d10c3580719b..e21a9c3fe4da 100644
 > --- a/drivers/cxl/core/port.c
 > +++ b/drivers/cxl/core/port.c
-> @@ -1354,6 +1354,14 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
->  	return rc;
->  }
->  
-> +static inline bool is_cxl_restricted(struct cxl_memdev *cxlmd)
-> +{
-> +	struct device *parent = cxlmd->dev.parent;
-> +	if (!dev_is_pci(parent))
-> +		return false;
-> +	return pci_pcie_type(to_pci_dev(parent)) == PCI_EXP_TYPE_RC_END;
-> +}
-> +
->  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+> @@ -1366,8 +1366,24 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
 >  {
 >  	struct device *dev = &cxlmd->dev;
-> @@ -1433,9 +1441,39 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
->  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, CXL);
+>  	struct device *iter;
+> +	struct cxl_dport *dport;
+> +	struct cxl_port *port;
+>  	int rc;
 >  
-> +/*
-> + * CXL memory device and port hierarchy:
-> + *
-> + * VH mode:
-> + *
-> + * CXL memory device, cxl_memdev                               endpoint
-> + * └──PCIe Endpoint (type 0), pci_dev                           |
-> + *    └──Downstream Port (type 1), pci_dev (Nth switch)        portN
-> + *       └──Upstream Port (type 1), pci_dev (Nth switch)        |
-> + *          :                                                   :
-> + *          └──Downstream Port (type 1), pci_dev (1st switch)  port1
-> + *             └──Upstream Port (type 1), pci_dev (1st switch)  |
-> + *                └──Root Port (type 1), pci_dev                |
-> + *                   └──PCI host bridge, pci_host_bridge       port0
-> + *                      :                                       |
-> + *                      :..ACPI0017, acpi_dev                  root
-> + *
-> + * (There can be zero or any other number of switches in between.)
-> + *
-> + * RCD mode:
-> + *
-> + * CXL memory device, cxl_memdev                               endpoint
-> + * └──PCIe Endpoint (type 0), pci_dev                           |
-> + *    └──PCI host bridge, pci_host_bridge                      port0
-> + *       :                                                      |
-> + *       :..ACPI0017, acpi_dev                                 root
-> + */
->  struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
->  				   struct cxl_dport **dport)
->  {
-> +	if (is_cxl_restricted(cxlmd))
-> +		return find_cxl_port(cxlmd->dev.parent, dport);
+> +	/*
+> +	 * Skip intermediate port enumeration in the RCH case, there
+> +	 * are no ports in between a host bridge and an endpoint. Only
+> +	 * initialize the EP chain.
+> +	 */
+> +	if (is_cxl_restricted(cxlmd)) {
+
+I changed this to:
+
+	if (cxlmd->cxlds->rcd) {
+
+...where the cxl_pci driver sets that rcd flag. Aside from keeping some
+PCI specifics out of this helper it also allows RCH/RCD configurations
+to be mocked with cxl_test.
+
+> +		port = cxl_mem_find_port(cxlmd, &dport);
+> +		if (!port)
+> +			return -ENXIO;
+> +		rc = cxl_add_ep(dport, &cxlmd->dev);
+
+Ah, good catch, I had missed this detail previously.
+
+> +		put_device(&port->dev);
+> +		return rc;
+> +	}
 > +
->  	return find_cxl_port(grandparent(&cxlmd->dev), dport);
+>  	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_detach_ep, cxlmd);
+>  	if (rc)
+>  		return rc;
+> @@ -1381,8 +1397,6 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+>  	for (iter = dev; iter; iter = grandparent(iter)) {
+>  		struct device *dport_dev = grandparent(iter);
+>  		struct device *uport_dev;
+> -		struct cxl_dport *dport;
+> -		struct cxl_port *port;
+>  
+>  		if (!dport_dev)
+>  			return 0;
+> -- 
+> 2.30.2
+> 
 
-I do not see why this change is needed. For example:
 
-# readlink -f /sys/bus/cxl/devices/mem0
-/sys/devices/pci0000:38/0000:38:00.0/mem0
-# cxl list -BT
-[
-  {
-    "bus":"root0",
-    "provider":"ACPI.CXL",
-    "nr_dports":1,
-    "dports":[
-      {
-        "dport":"pci0000:38",
-        "id":49
-      }
-    ]
-  }
-]
-
-...so, in this case, the grandparent of "mem0" is "pci0000:38", and
-"pci0000:38" is a dport. Unmodified cxl_mem_find_port() will do the
-right thing and find that this CXL RCIEP is directly connected to
-"root0".
