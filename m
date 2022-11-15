@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908C3C4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 13:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DFBC43217
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 13:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230322AbiKONRM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 15 Nov 2022 08:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
+        id S238225AbiKON2R (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Nov 2022 08:28:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiKONRL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 08:17:11 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2072.outbound.protection.outlook.com [40.107.244.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8852D4;
-        Tue, 15 Nov 2022 05:17:10 -0800 (PST)
+        with ESMTP id S238130AbiKON2M (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 08:28:12 -0500
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2081.outbound.protection.outlook.com [40.107.102.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCD714038;
+        Tue, 15 Nov 2022 05:28:11 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZOC+2h7u+r7l9ej7CqT3+3yZFUV6xECfMHrohai/sBPoe+xX5iZTRJOEUuIAbcuHJ0IpUUJX73Hi7Ja2zRJVpGREPsaFuNAoeAchFTk27Gi7xvioXQ9xL7toXCsfJGk8HE3EgdfXtufBrdLNeihmeacac3NBff5jZmRgEoOgI8Wy/HcdcUx9ZzjcHf6rkjj4ct6bZwefmUETrRu5mC5qa8P1A1wE+uX7Mcp13T1jf/PaUPwQXy2KW3D6FerTg+/NbEXxuwILVwD1ZOv46XjsXjzYv5hEhgf5FJHF27GgnU7pa5W4ccIWVvH8DFScNBGdYqoq0wQP/NmzrxTyson8wA==
+ b=IjKr2VbO2GnT+u6bKBLQiPHaNkyeJkCfrmj4rNH9Ny+cVW3JeyKhuVE1qgjqG7wj2ckxRD6P8PIZavAt7nqTmljNnJvx2PWH86s7JqX1ckXF+NlnS+NJ9qG1nHhdg22kWL1JW90GwTEjIQIS7K4oq8gPmAtUTJ2AMx8u/ps676ktuBvtsAsjdws0+TtdQ74rPyOOE+1YuAMEnQBumHYU5B5Y6rUPOSz5sRcClPNU63pSFaZYnETW1ZojxRNV2YDyZszQr1HcJd5Cmo5+isHWvDIfDEMODbv/ZASkRZxzRj/3X9UmH0K5dPeBYpTRf70rt/41SR5yuCjAecyGmIs4JA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/CkHGiuMGfsyWQZN7ajbK7a0DHD+clc0/kQD4EaVk3g=;
- b=YV6Y456qrujsMGL10LOfUuYLaPQvGwIl+thEPZmO5XdRD92KmmN+pm9ft+NsDwFwsqryGK0ppgWT/F8KpIMCA1CXh1lPcFbvKG6Eur/sjtzHai51SeM3V7VZ3wqV1hhXR7lqNwnMK86I6aMmU4+9rMCGxFLsz2CiNJzJxGuHUo3ywDTyM3MW8iUMsPvXSQz96aeER26Qr9AEKnJVmQudJchU7hTauM1F+22x1453HIU+C2GUpHk3x7xWjA7u3DekAqlyE54grRgbT7vkX30pFpL4Usd77lEMWC8eeGOtz+HrY7Mee7l6yJgAP1MH4OfJoYl7baN7FTczvgC0QLfZqA==
+ bh=INi1Ik1Y3bUiC4Q+FXbZDcftOmmCWIgJnxrhJxYp1iQ=;
+ b=XGu4unAO4lTfVJf0HEdorP5Bo4n+pEDt1lYpTKiPiQxtk+gOe9bHUQ1MESo3CB46JoNNhar/7z5q8dvQM86FcrUA/KHNDQ8bPEL4TEGfzCoED2VSRv707tigr2+QIwWSIYpUBmpJC0NxIuRBnvX6nlhaV6paR8weyxIQWeUBqhfGGctAQPQwU4JZlitEWKQ/UHPS22V9OsfEPTO60q9vB9iJ86VRvMGN5aMKh3g2cCOg8Tlj3pkhgDKDplXYSNYVaIk2efufP1vIuoenmM4i1qznPoqQxhMhKFDwge4EIg1q7ZbHlAuQpV4n640O/h4gTCBqlpj2c98TePRo5N0jFQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/CkHGiuMGfsyWQZN7ajbK7a0DHD+clc0/kQD4EaVk3g=;
- b=5tPw9f2s9PPPCLnjF41/aH7vt5ZesacwHsBtShlzMV/f52lXi3pqmI1MOn9d1s/Duucf7dOWoXMtaInaFcWMizirqIIacHXQpAXCqVKZ4cZF+j+J9CfXHhreM0rslivX/wYL4JdzZeWfVYQbWnGY+P41DZ/oV0q7Obw1N0YoUpk=
-Received: from MW4PR04CA0090.namprd04.prod.outlook.com (2603:10b6:303:6b::35)
- by MW4PR12MB7143.namprd12.prod.outlook.com (2603:10b6:303:222::19) with
+ bh=INi1Ik1Y3bUiC4Q+FXbZDcftOmmCWIgJnxrhJxYp1iQ=;
+ b=OWQW7jWZJssutAHp4OLacYHIMN5EpJR2QMN8+zaMBp/00E0evE9GGyqv36tKRRqN+G5klx2jONvkd0KskhTDwMth2wNuAsJg4d6vrHWqDomOdIcDD0DWT1wLVGeOtZeb0waWm0nV0IdpPi1+nVYvsCe8xzIsVtk9qD52Z/pEswI=
+Received: from MW4PR03CA0123.namprd03.prod.outlook.com (2603:10b6:303:8c::8)
+ by SA0PR12MB7002.namprd12.prod.outlook.com (2603:10b6:806:2c0::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Tue, 15 Nov
- 2022 13:17:07 +0000
-Received: from CO1NAM11FT038.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:6b:cafe::53) by MW4PR04CA0090.outlook.office365.com
- (2603:10b6:303:6b::35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.16; Tue, 15 Nov
+ 2022 13:28:09 +0000
+Received: from CO1NAM11FT077.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8c:cafe::98) by MW4PR03CA0123.outlook.office365.com
+ (2603:10b6:303:8c::8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17 via Frontend
- Transport; Tue, 15 Nov 2022 13:17:07 +0000
+ Transport; Tue, 15 Nov 2022 13:28:09 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,14 +46,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT038.mail.protection.outlook.com (10.13.174.231) with Microsoft SMTP
+ CO1NAM11FT077.mail.protection.outlook.com (10.13.175.55) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 13:17:07 +0000
+ 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 13:28:09 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 15 Nov
- 2022 07:17:04 -0600
-Date:   Tue, 15 Nov 2022 14:17:02 +0100
+ 2022 07:28:05 -0600
+Date:   Tue, 15 Nov 2022 14:28:02 +0100
 From:   Robert Richter <rrichter@amd.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -69,41 +69,41 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Dave Jiang <dave.jiang@intel.com>
 Subject: Re: [PATCH v3 4/9] cxl/mem: Skip intermediate port enumeration of
  restricted endpoints (RCDs)
-Message-ID: <Y3ORTv/1YbTFJQzq@rric.localdomain>
+Message-ID: <Y3OT4oz6aR6hyvSt@rric.localdomain>
 References: <20221109104059.766720-1-rrichter@amd.com>
  <20221109104059.766720-5-rrichter@amd.com>
- <6372d85ed793f_12cdff294f@dwillia2-xfh.jf.intel.com.notmuch>
+ <6372dc26c8f2f_12cdff294e4@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <6372d85ed793f_12cdff294f@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <6372dc26c8f2f_12cdff294e4@dwillia2-xfh.jf.intel.com.notmuch>
 X-Originating-IP: [10.180.168.240]
 X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT038:EE_|MW4PR12MB7143:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93d3dbaf-ab4b-4569-900f-08dac70bb275
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT077:EE_|SA0PR12MB7002:EE_
+X-MS-Office365-Filtering-Correlation-Id: fcb4ca7f-2750-4312-90d5-08dac70d3cb3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vbQMbnQnuEFSHcGe72w/4ssl9OYHl0HRU/b3/tnjE4LHOPAMDgESSftLw+u/25+BPgSn0nv1bzDPPouEj++4UZId/4mSQX9mNMnCJeHGsFx3Gv8oB+hoNpsVYJSfuACgpR4ww4V022SCGoUgvPdImV/rsLuv9yG5t0Nx0LuXfurEcpghNth0o5F9Jiktoo4y6OdRIoOqVbSHFKcEd0D63mMS6sacTRyhc/ntToqZ4lCJ7JD5mYagzRSg3h+DDNq0YzoOpTwkCwleuQfQoO2GtESBeTbWtcMjH87ZCedwM3iJ9dY5JK2EZPoMcIisfC0atfZuzXMj+HJQJhwF3pSwP/cT7kUTXQRxmoyhTdRAP1jOnejn8zY8ey6JbW6aVkG89kwcHx4S7fMjasYPvmxKSMDf0QKltFJQOUALnFL+kLFbAeZIHDLGlrxclpYx04593d2sSv/9TSqcmFx2d73UrQErYIt6MXRKp6+rqBn4UGkTJB+o2aRkqef1yWbBLnZn3u+bhCoyawuyAk4/8n1KHL511/CSRGptorPlkXhqmb6Qz0KAPRyrRJlxKj3P48nDqYpCGdyyO4JoQjkJ4hGlyWTjv4M/X4vdQve4cAfKTnEVIj5yNRYA38qwwFiKEJNE1P2d2Bda3ypPzhfz4N5o6tKbEJ4xKMknFbxRYsbeFqVOzSUIJiXoJMD8KmmDt30Fm5vyBrrVThu3plymrzRM6lpt9F3nEA/aD9YTgaRXonXn2dASVonn4YyVrQp5T2dhrj+i+8AEtqbreraiFfH/MVNji+73U+VGiLgLqldGLHWqggKlWQ6LBKQENfot57wD
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(376002)(39860400002)(136003)(451199015)(46966006)(36840700001)(40470700004)(9686003)(55016003)(70586007)(6916009)(70206006)(81166007)(356005)(40480700001)(40460700003)(82740400003)(36860700001)(16526019)(41300700001)(336012)(186003)(53546011)(26005)(478600001)(7696005)(316002)(82310400005)(2906002)(54906003)(5660300002)(426003)(4326008)(8676002)(83380400001)(7416002)(8936002)(47076005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: i77lxq8PaNFmtAAcA0ZSzKYTIFXwTT4GKg3YxM7lQR8vBS1AAq/Us8XPQoDikTLPllgOWylt315zabjCQl8Qptned/klGQZcVsyDSMqdeRVhPHL69asTxoeNin9OlStDyRZtcRJ+3THWSFcdX5KIPzM2/2nmxP9ycKKSsgUkQRipFu5xJtW+za5+570og/vhrx/0amVOE7oozVK9JBIhPPjdLSmB/Icm4PQljorz8EmfKFw8emDqp07GR3968NScrR0zu3gIideu06y20+1uQ0+Ar+dfX6CJrw33fEdhux1FXM1RK2bDOInM8l8dzfPVIIKwpBQc1GOSnid1xbh4aUrCSk+3KZsuSb7hvmObfku4o3Al4XzqugKODqWZkDQRFqlmoEAYqv3S7c9CRJ3X+gTZ/0uk7B1nldfzmL43Oi4fOLCSHqJnsgmttucaaTXke7J9auIam7yPv6j3WHCdp1rfmjCuzlofmbAb0/9i61GXrUot2aIk4OCxXLAc8cy5UYlmDSR3R40C5G/w70S1bA9RX99w/5qbPdPAJBBcYGHKxs28yuzCUThfpA71DdjgbyEsFI6loVHIzxkJdWAvdppDY5e+o256VVZWBfVDoTeMPAB0Nb2Aihn5KfaBRGMxtlCr4ctDCxQMCNWTsZQL2lV9g7MMRjnJpJgazY0Tb9HWj5/OjTQrP2W3BmVvnWjwTvAEZWJj8m7rvGSpF5AfdXrphkvOrW4pR+zoURT/puexYS/UZVlnfmBaZlIsMUafnBXTGsJWhvkB+8Tjy/S5pBI/BXEhRCVA/5av1qag5IUn8Ilx4Ub0F6V+UrBak7CS
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(376002)(346002)(396003)(451199015)(36840700001)(40470700004)(46966006)(70206006)(82310400005)(81166007)(2906002)(36860700001)(82740400003)(8936002)(70586007)(7416002)(356005)(40460700003)(8676002)(4326008)(5660300002)(83380400001)(41300700001)(478600001)(40480700001)(6666004)(9686003)(7696005)(53546011)(26005)(55016003)(336012)(186003)(426003)(16526019)(6916009)(47076005)(54906003)(316002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 13:17:07.7400
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 13:28:09.1687
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93d3dbaf-ab4b-4569-900f-08dac70bb275
+X-MS-Exchange-CrossTenant-Network-Message-Id: fcb4ca7f-2750-4312-90d5-08dac70d3cb3
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT038.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT077.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7143
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7002
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 14.11.22 16:07:58, Dan Williams wrote:
+On 14.11.22 16:24:06, Dan Williams wrote:
 > Robert Richter wrote:
 > > When an endpoint is found, all ports in beetween the endpoint and the
 > > CXL host bridge need to be created. In the RCH case there are no ports
@@ -142,48 +142,25 @@ On 14.11.22 16:07:58, Dan Williams wrote:
 > > +	 * initialize the EP chain.
 > > +	 */
 > > +	if (is_cxl_restricted(cxlmd)) {
-> 
-> I changed this to:
-> 
-> 	if (cxlmd->cxlds->rcd) {
-
-I a mail to Bjorn I suggested to have cxl_dev_cap and a cxl_port_cap
-in the pci_dev struct that could be looked up too including RCD mode.
-Checking the pci_dev looks more reasonable to me here, though we could
-have a flag of it in cxlds too.
-
--Robert
-
-> 
-> ...where the cxl_pci driver sets that rcd flag. Aside from keeping some
-> PCI specifics out of this helper it also allows RCH/RCD configurations
-> to be mocked with cxl_test.
-> 
 > > +		port = cxl_mem_find_port(cxlmd, &dport);
 > > +		if (!port)
 > > +			return -ENXIO;
 > > +		rc = cxl_add_ep(dport, &cxlmd->dev);
 > 
-> Ah, good catch, I had missed this detail previously.
+> On second look, this seems problematic. While yes it will be deleted
+> when the root CXL port dies, it will not be deleted if the cxl_pci
+> driver is reloaded. I will code up a unit test to double check.
 > 
-> > +		put_device(&port->dev);
-> > +		return rc;
-> > +	}
-> > +
-> >  	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_detach_ep, cxlmd);
-> >  	if (rc)
-> >  		return rc;
-> > @@ -1381,8 +1397,6 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> >  	for (iter = dev; iter; iter = grandparent(iter)) {
-> >  		struct device *dport_dev = grandparent(iter);
-> >  		struct device *uport_dev;
-> > -		struct cxl_dport *dport;
-> > -		struct cxl_port *port;
-> >  
-> >  		if (!dport_dev)
-> >  			return 0;
-> > -- 
-> > 2.30.2
-> > 
-> 
-> 
+> I note that cxl_add_ep() for the VH case is skipped for the root CXL
+> port, so I do not suspect it is needed here either. Did you add it for a
+> specific reason?
+
+Yes, all endpoint iterators need to be reworked. Also true, the first
+endpoint is skipped in the chain. So only intermediate EP structs are
+touched by the loops actually.
+
+In particular, cxl_ep_load() returned NULL for the first lookup if the
+ep is missing. We could stop the iteration then. I tried to avoid a
+rework here, but maybe it is not too extensive as I expected first.
+
+-Robert
