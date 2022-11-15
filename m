@@ -2,197 +2,115 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F196EC433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 01:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2E0C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Nov 2022 10:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbiKOBT5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Nov 2022 20:19:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33764 "EHLO
+        id S232405AbiKOKd7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 15 Nov 2022 05:33:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230109AbiKOBTs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Nov 2022 20:19:48 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9FB13DCC;
-        Mon, 14 Nov 2022 17:19:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668475187; x=1700011187;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9i9GneyN5wzD0q5QGpre3W00YKsgyhnQ1SvEvL9knhc=;
-  b=FCrCuSzJMbBBE2i2v8aUFEGqLSiGzPlbuBgrxqAENVCMSpaSkUf6WVeR
-   qzLrYdiVmO3gov5Sv1ugRdHj7gHwQnbCu6S9UJNwpE9Ltbiuj7/e8ivsH
-   iBqSQq+RwPG2BdfL+3w9Mtok09XqIBvGhA+SiKNZgIuEFVVtD5JSdntAi
-   XjGsieZTcccDtGOW3VXAYP/KGDFJfZg8CZxt147NLvAzYCGk2qCs0xphL
-   IeGhXfMNaAlpX/I5IgOgDjWYLxRKSZfJrG4OfGxyjUJvr1j16DRHjekBH
-   M0VTaO9CR7U02S5W8/U2ZuaE84NXY+wFH8TLTq4Q+c8//C4XKYorMrJ7w
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="374258102"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="374258102"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 17:19:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="744378892"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="744378892"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.91.132])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 17:19:45 -0800
-From:   ira.weiny@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI/doe: Fix work struct declaration
-Date:   Mon, 14 Nov 2022 17:19:43 -0800
-Message-Id: <20221115011943.1051039-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S236993AbiKOKdt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 15 Nov 2022 05:33:49 -0500
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2074.outbound.protection.outlook.com [40.107.102.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F601142
+        for <linux-cxl@vger.kernel.org>; Tue, 15 Nov 2022 02:33:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nZf2jCaxJD6TiLtzHy/N5N/6Iq+3GLLkLP3eaFxBkdFIMilpdjPdeBtLtCtYQZPO7iGX2HtGs6ccWY9AmWJ+TXcYldmSy49ID9pD2sHt1CfzO4UkGAlUDCNYpsmlxQvACqwJKF7Jc38rvUR2o029xI8BadgIeyk4oggp6UNM4BV9+7TQ7E3guc44FKLthtiPLOZfwuFA9gn5sMS00VJDOc9qRtl6I89VQcuPtZ52Tm/qFHOJyss8UncGtfV9e1n/sPAGoZ3zAOumHmL7BNoH2xYm1QhePVu2r6QxmtZihJrl1sEb/xu9Pxq2b0rCWGhmCg9Taq3JDNp5EHFTuWTFDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=11TM5zBMqMoPgMg2q5cV47W6T+WQAmRT49U9OYZ+u2M=;
+ b=TN99/h0UivrO4hQyHrsxjmzVR5y4t4Nr3rlsL0g5PUyLoOajSKjfKxFcITohe1CrmquwylPbJSXGfTbljbxrzmujdmgDdTK6oM5ocNk+TDNRFo0S+kH7op0sXOslYpZoSlAxNhEdu/jR+IHFvuwULQKmdzoyha1jzg0SRnhyQrRDiGUflSuIS/BlSI6605cwa9+vqzUplvpK7YCu0uswC23FFj3ZjGY0u/c/bUzj4Jms4XL+lQSXnu6sIQPddPgiw3vE4qtNOoqeyy0EddOe+ch4OcAmGV0N49c+lmWfWfGWXelRHM1pO6ot1WDeB8kjwha7ot4r1sudpAxraFagfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=11TM5zBMqMoPgMg2q5cV47W6T+WQAmRT49U9OYZ+u2M=;
+ b=a16K7WLWRO7Vgh+YZWB7IiaUz94L98UdGNGLaql51y5kUkqVnJEx+TRAhk9eOPrSeDO61ylP7+5F3fE0nMT7lI1BLAgKeFjxYAcKi5ARbNEvRrfSOpjvzELDPYEftMb0awlZb6+m72cnZoOKvbTZDfthV+ZR7x34kYMpMD1iCRo=
+Received: from DS7PR05CA0067.namprd05.prod.outlook.com (2603:10b6:8:57::12) by
+ SN7PR12MB7451.namprd12.prod.outlook.com (2603:10b6:806:29b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Tue, 15 Nov
+ 2022 10:33:46 +0000
+Received: from DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:57:cafe::f4) by DS7PR05CA0067.outlook.office365.com
+ (2603:10b6:8:57::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.14 via Frontend
+ Transport; Tue, 15 Nov 2022 10:33:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT076.mail.protection.outlook.com (10.13.173.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5813.12 via Frontend Transport; Tue, 15 Nov 2022 10:33:46 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 15 Nov
+ 2022 04:33:44 -0600
+Date:   Tue, 15 Nov 2022 11:33:42 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] tools/testing/cxl: Add bridge mocking support
+Message-ID: <Y3NebjaQzcHTvmtk@rric.localdomain>
+References: <20221018132341.76259-6-rrichter@amd.com>
+ <166845667383.1449826.14492184009399164787.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <166845667383.1449826.14492184009399164787.stgit@dwillia2-xfh.jf.intel.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT076:EE_|SN7PR12MB7451:EE_
+X-MS-Office365-Filtering-Correlation-Id: 423fc91b-fa5f-40cd-de59-08dac6f4e052
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: N9NeVOKFIjJtHT5BRd3Y9VoKm+BaKL440SnykuEVjEMaHB0Reyft6v8knikirTTPXpLD2WhLQMguxNq2o6ZJAvHqZt4ZzS7qsoOOi2Iw6foQoVnHGNTk6QOIWWcz7tDt+HmvR+obUhJufN/Kf4Tv4ArOetTiHoFmxwa7WVw33peBTTUkpGNtX9l7jsJDKX9RX3Ea9TWLVkCgkjI5Xj/EuZaKKwLFVmJJHiwAAeePlpBOOaHyncDQVkKPM1qV1EJV0SE+X7MzwRLZs1NwnSXGKzSxVtzKWnpHtKg6HHWAajrmQxjtnStM4/p6A4hscIKajjIm9HpTj+6H7zhYHVUNBo2DOHwDbpw4mcqRBNDJnyyHbT2eks71gEXVM+/iZ+uZe1RXaFDC2bGpVfsjbu5GI0IqYHaFTfRAEjFZkdPJRa3UzYnGURPpgt/u8y+0o019WoA8l4xM3wfNzfeP0nS/IL+rYIoczFwtjmwX46myhN2k0FA6qYM8eAZI5eSNHx2aYfWjpouCyfipyMyYsxTvOKMQyY2JKiX6Eqf90kUIz20aoQ+M6aZYgX9LzYrZmfgFfXBP9/6FEDJabTNd3a9roHvlQ8sBL++5Ou2Vpoif3D0p2yCGuUtYlLAlIiatz55luWXQ265SgHSvCme/PK/OQNG5YW4KRSTicnIcIwVo1OTDW1jUmK5fce+tPf38NIOEGJe5smw1OuHnOX05z+pY7wYWyq7ghb8h/XuwdSIGUl+wb5cVrit4+s6DkvjtHk515aBBx2S/ksfxPEmIaEqoIiidBzEykBlff7wimhgnbcpamLuM9WVRcTYOj2RnwcGii3BgLkrPUYo9M+HOnbEq7g==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(136003)(376002)(396003)(451199015)(40470700004)(46966006)(36840700001)(9686003)(55016003)(6916009)(316002)(53546011)(36860700001)(7696005)(81166007)(2906002)(356005)(40460700003)(26005)(16526019)(70586007)(4744005)(8676002)(186003)(5660300002)(47076005)(8936002)(426003)(70206006)(41300700001)(336012)(4326008)(82310400005)(966005)(478600001)(40480700001)(82740400003)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2022 10:33:46.3256
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 423fc91b-fa5f-40cd-de59-08dac6f4e052
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7451
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On 14.11.22 12:11:13, Dan Williams wrote:
+> In preparation for cxl_acpi walking pci_root->bus->bridge, add that
+> association to the mock pci_root instances.
+> 
+> Note that the missing 3rd entry in mock_pci_root[] was not noticed until
+> now given that the test version of to_cxl_host_bridge()
+> (tools/testing/cxl/mock_acpi.c), obviated the need for that entry.
+> However, "cxl/acpi: Improve debug messages in cxl_acpi_probe()" [1]
+> needs pci_root->bus->bridge to be populated.
 
-The callers of pci_doe_submit_task() allocate the pci_doe_task on the
-stack.  This causes the work structure to be allocated on the stack
-without pci_doe_submit_task() knowing.  Work item initialization needs
-to be done with either INIT_WORK_ONSTACK() or INIT_WORK() depending on
-how the work item is allocated.
+Patch looks good to me, though we might want to move the
+mock_pci_root[] fix into e41c8452b9b2 or on top as a separate change.
 
-Jonathan suggested creating doe task allocation macros such as
-DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-function is not known to the callers and must be initialized correctly.
+For patch logistics, could you merge that changes into the rch tree as
+a new base? Right now I have cherry picked e41c8452b9b2 and this one
+as pre-requisites of my series.
 
-A follow up suggestion was to have an internal 'pci_doe_work' item
-allocated by pci_doe_submit_task().[2]  This requires an allocation which
-could restrict the context where tasks are used.
+-Robert
 
-Compromise with an intermediate step to initialize the task struct with
-a new call pci_doe_init_task() which must be called prior to submit
-task.
-
-[1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-[2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
-
-Cc: Bjorn Helgaas <helgaas@kernel.org>
-Reported-by: Gregory Price <gregory.price@memverge.com>
-Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/cxl/core/pci.c  |  2 ++
- drivers/pci/doe.c       | 14 ++++++++++++--
- include/linux/pci-doe.h |  8 +++++---
- 3 files changed, 19 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9240df53ed87..a19c1fa0e2f4 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -525,6 +525,7 @@ static int cxl_cdat_get_length(struct device *dev,
- 	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
- 	int rc;
- 
-+	pci_doe_init_task(cdat_doe, &t.task, true);
- 	rc = pci_doe_submit_task(cdat_doe, &t.task);
- 	if (rc < 0) {
- 		dev_err(dev, "DOE submit failed: %d", rc);
-@@ -554,6 +555,7 @@ static int cxl_cdat_read_table(struct device *dev,
- 		u32 *entry;
- 		int rc;
- 
-+		pci_doe_init_task(cdat_doe, &t.task, true);
- 		rc = pci_doe_submit_task(cdat_doe, &t.task);
- 		if (rc < 0) {
- 			dev_err(dev, "DOE submit failed: %d", rc);
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index e402f05068a5..cabeae4ae955 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -319,6 +319,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
- 	};
- 	int rc;
- 
-+	pci_doe_init_task(doe_mb, &task, true);
- 	rc = pci_doe_submit_task(doe_mb, &task);
- 	if (rc < 0)
- 		return rc;
-@@ -495,6 +496,14 @@ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
- }
- EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
- 
-+void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-+		       bool onstack)
-+{
-+	task->doe_mb = doe_mb;
-+	__INIT_WORK(&task->work, doe_statemachine_work, onstack);
-+}
-+EXPORT_SYMBOL_GPL(pci_doe_init_task);
-+
- /**
-  * pci_doe_submit_task() - Submit a task to be processed by the state machine
-  *
-@@ -517,6 +526,9 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
- 	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
- 		return -EINVAL;
- 
-+	if (WARN_ON_ONCE(task->work.func != doe_statemachine_work))
-+		return -EINVAL;
-+
- 	/*
- 	 * DOE requests must be a whole number of DW and the response needs to
- 	 * be big enough for at least 1 DW
-@@ -528,8 +540,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
- 	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
- 		return -EIO;
- 
--	task->doe_mb = doe_mb;
--	INIT_WORK(&task->work, doe_statemachine_work);
- 	queue_work(doe_mb->work_queue, &task->work);
- 	return 0;
- }
-diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-index ed9b4df792b8..457fc0e53d64 100644
---- a/include/linux/pci-doe.h
-+++ b/include/linux/pci-doe.h
-@@ -31,8 +31,8 @@ struct pci_doe_mb;
-  * @rv: Return value.  Length of received response or error (bytes)
-  * @complete: Called when task is complete
-  * @private: Private data for the consumer
-- * @work: Used internally by the mailbox
-- * @doe_mb: Used internally by the mailbox
-+ * @work: Used internally by the mailbox [see pci_doe_init_task()]
-+ * @doe_mb: Used internally by the mailbox [see pci_doe_init_task()]
-  *
-  * The payload sizes and rv are specified in bytes with the following
-  * restrictions concerning the protocol.
-@@ -53,7 +53,7 @@ struct pci_doe_task {
- 	void (*complete)(struct pci_doe_task *task);
- 	void *private;
- 
--	/* No need for the user to initialize these fields */
-+	/* Call pci_doe_init_task() for these */
- 	struct work_struct work;
- 	struct pci_doe_mb *doe_mb;
- };
-@@ -72,6 +72,8 @@ struct pci_doe_task {
- 
- struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
- bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-+void pci_doe_init_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task,
-+		       bool onstack);
- int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
- 
- #endif
-
-base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
--- 
-2.37.2
-
+> 
+> Link: https://lore.kernel.org/r/20221018132341.76259-6-rrichter@amd.com [1]
+> Cc: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
