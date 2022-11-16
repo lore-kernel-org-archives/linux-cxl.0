@@ -2,334 +2,83 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046BBC4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 21:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04487C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 22:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbiKPVyN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 16:54:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57138 "EHLO
+        id S231564AbiKPWXB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 17:23:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233204AbiKPVyH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 16:54:07 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837C4E60
-        for <linux-cxl@vger.kernel.org>; Wed, 16 Nov 2022 13:54:06 -0800 (PST)
+        with ESMTP id S234299AbiKPWXA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 17:23:00 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1732C6A69C
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Nov 2022 14:23:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668635646; x=1700171646;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ssNnKW3m1VbQSW7lIz2fC3HQt73/AjS03MpiKrdcyQQ=;
-  b=fVoh6BSCCHjlMvG6mntabawutNiNlaN+ffYO+yGp5h2qpUkf3xeoQAvd
-   /I1lFfMPIN/wQouYjYquptYOPWnc37jSBPu5LjqSdXovwxQUrWhgOgV4j
-   aOYuEU+35Zs+MxDd7683PpSYTRY0AYJW1rbX7GP8eJTQZu9lugcvRZFRo
-   JNBXB9A8cnfoy2aWSN2hAAzyRVzQWeTLz1txdHRd/yaV6o/XCFMC2fpNg
-   DK/BLfniKSeSK0ANU2sv2zc0MrYAfeYPVfqUj+VKWMU17sfAEIqz9oDrx
-   hXueUkarQYiAinJXUw9v2YwyHqsNzwRmvWWRuxslQjEaOVluxF6BhhK8b
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="398964669"
+  t=1668637380; x=1700173380;
+  h=message-id:date:mime-version:from:to:cc:subject:
+   content-transfer-encoding;
+  bh=ZzTYmJjMiKsOBmeMipwH/7JGpbSJPgk7RhIbR+sNUWk=;
+  b=leIC+nzDf5powiuRF2MsJrhtnXekcpWq3GNIiApW1IugL0hD84mvE4m9
+   Z8qCPah6NO4GJKqxb2UDZmwTIJ7eRR6yX9aU9BDAFrOsRwv+b+ANsOaOb
+   GzbX2f1ZCB2xHUMQjK+Vp32DuCOKv7EP1/FAK0UCoKJ9TOQRe8fELilDD
+   yHPmGq4ZEEJ5nLw0mZLwQl2CA3yS/rUqkTfACPKwTUprGddOv2deSWxyD
+   BRjIvj/ssH0UzyqpefM/OnVm0ZobIRRGSup35ufSbZFJ9FhycgXRQQo++
+   YOeV4HRBAH4Smv2IVRLT1xwbi6Tgl0wQvbeyPksjAnuIy4VDOcpQA/ZjU
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="296049090"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="398964669"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 13:54:04 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="639527338"
+   d="scan'208";a="296049090"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 14:22:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="884588484"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="639527338"
+   d="scan'208";a="884588484"
 Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.31.244]) ([10.212.31.244])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 13:54:03 -0800
-Message-ID: <bbe4be20-5f2e-077f-009a-4ece6b1c9324@intel.com>
-Date:   Wed, 16 Nov 2022 14:54:02 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 14:22:58 -0800
+Message-ID: <775fd36b-1945-b286-b911-ea41371b1f94@intel.com>
+Date:   Wed, 16 Nov 2022 15:22:58 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.4.1
-Subject: Re: [PATCH v4 12/18] tools/testing/cxl: Add "passphrase secure erase"
- opcode support
 Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        dave@stgolabs.net
-References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
- <166845805415.2496228.732168029765896218.stgit@djiang5-desk3.ch.intel.com>
- <20221115110831.00001fa4@Huawei.com>
- <a8ed61db-9bf1-410c-b4e6-7042f48a67ff@intel.com>
- <14ae41bc-2d63-460b-5ac5-a4d94aa39982@intel.com>
- <20221116114335.00006a3d@Huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221116114335.00006a3d@Huawei.com>
+To:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: RFC: Seeking to collect CXL spec v3.0 questions and clarifications
+ against implementation
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Hi All,
+As Jonathan suggested [1], we should start a discussion thread to gather 
+up questions / clarifications from the process of implementing CXL 
+software against spec 3.0 so they can be fed back to the CXL SSWG.
 
+I'll start with some from the implementation of persistent memory 
+security commands:
 
-On 11/16/2022 3:43 AM, Jonathan Cameron wrote:
-> On Tue, 15 Nov 2022 10:01:53 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> On 11/15/2022 7:57 AM, Dave Jiang wrote:
->>>
->>>
->>> On 11/15/2022 3:08 AM, Jonathan Cameron wrote:
->>>> On Mon, 14 Nov 2022 13:34:14 -0700
->>>> Dave Jiang <dave.jiang@intel.com> wrote:
->>>>   
->>>>> Add support to emulate a CXL mem device support the "passphrase secure
->>>>> erase" operation.
->>>>>
->>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>> The logic in here gives me a headache but I'm not sure it's correct
->>>> yet...
->>>>
->>>> If you can figure out what is supposed to happen if this is called
->>>> with Passphrase Type == master before the master passphrase has been set
->>>> then you are doing better than me.
->>>>
->>>> Unlike for the User passphrase, where the language " .. and the user
->>>> passphrase
->>>> is not currently set or is not supported by the device, this value is
->>>> ignored."
->>>> to me implies we wipe the device and clear the non existent user pass
->>>> phrase,
->>>> the not set master passphrase case isn't covered as far as I can see.
->>>>
->>>> The user passphrase question raises a futher question (see inline)
->>>>
->>>> Thoughts?
->>>
->>> Guess this is what happens when you bolt on master passphrase support
->>> after defining the spec without its existence, and then move it to a
->>> different spec and try to maintain compatibility between the two in
->>> order to not fork the hardware/firmware....
->>>
->>> Should we treat the no passphrase set instance the same as sending a
->>> Secure Erase (Opcode 4401h)? And then the only case left is no master
->>> pass set but user pass is set.
->>>
->>> if (!master_pass_set && pass_type_master) {
->>>       if (user_pass_set)
->>>           return -EINVAL;
->>>       else
->>>           secure_erase;
->>> }
->>>   
->> This is the current change:
->>
->> +       switch (erase->type) {
->> +       case CXL_PMEM_SEC_PASS_MASTER:
->> +               if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
->> +                       if (memcmp(mdata->master_pass, erase->pass,
->> +                                  NVDIMM_PASSPHRASE_LEN)) {
->> +                               master_plimit_check(mdata);
->> +                               cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
->> +                               return -ENXIO;
->> +                       }
->> +                       mdata->master_limit = 0;
->> +                       mdata->user_limit = 0;
->> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
->> +                       memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
->> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
-> 
->> +               } else if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
->> +                       return -EINVAL;
->> +               }
+CXL memdev Passphrase Secure Erase:
+1. Command sent with master passphrase, but master passphrase disabled. 
+While in v3 8.2.9.8.6.3 Disable Passphrase, it states clearly that "When 
+the master passphrase is disabled, the device shall return invalid Input 
+for the Passphrase Secure Erase command with the master passphrase", 
+this sentence could be duplicated under 8.2.9.8.6.6 Passphrase Secure 
+Erase to provide better clarity of device behavior.
 
-So while looking at 8.2.9.8.6.3 I stumbled on this line: "When the 
-master passphrase is disabled, the device shall return Invalid Input for 
-the Passphrase Secure Erase command with the master passphrase". I 
-suppose the above would reduce to just else {} instead? And it probably 
-wouldn't hurt to have the spec duplicate this line under the passphrase 
-secure erase section as well.
+2. Command sent with user passphrase, but user passphrase disabled. 
+Needs clarification in 8.2.9.8.6.6 on device behavior. Under the 
+"current passphrase" it indicates the field is ignored. Does this mean 
+the secure erase proceed same as a "secure erase" command? This behavior 
+is different than the master passphrase scenario above.
 
-> I would add a comment here to say what we aren't faking.  The aim being to show that
-> in all the good paths this happens, even though we don't do the other stuff in
-> some of them.
-> 
-> /* Scramble encryption keys so that data is effectively erased */
-> 
->> +
->> +               return 0;
->> +       case CXL_PMEM_SEC_PASS_USER:
->> +               if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
->> +                       if (memcmp(mdata->user_pass, erase->pass,
->> +                                  NVDIMM_PASSPHRASE_LEN)) {
->> +                               user_plimit_check(mdata);
->> +                               cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
->> +                               return -ENXIO;
->> +                       }
->> +                       mdata->user_limit = 0;
->> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
->> +                       memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
->> +               }
->> +
-> 
-> /* Scramble encryption keys so that data is effectively erased */
-> here as well for the same reason.
-> 
->> +               return 0;
->> +       default:
->> +               fallthrough;
-> 
-> Might as well return -EINVAL; here and drop the below one.
-> 
-> Otherwise looks good to me.  We could sprinkle some comments in here to
-> hightlight why we have concluded it ought to behave like this.
-> If nothing else, I doubt either of us will remember when we look at this
-> code in more than a few days time ;)
-> 
-> Otherwise looks good to me.
-> 
-> Jonathan
-> 
-> 
->> +       }
->> +
->> +       return -EINVAL;
->>
->>
->>
->>>>
->>>> Other than that some suggestions inline but nothing functional, so up
->>>> to you.
->>>> Either way
->>>>
->>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>   
->>>>> ---
->>>>>    tools/testing/cxl/test/mem.c |   65
->>>>> ++++++++++++++++++++++++++++++++++++++++++
->>>>>    1 file changed, 65 insertions(+)
->>>>>
->>>>> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
->>>>> index 90607597b9a4..fc28f7cc147a 100644
->>>>> --- a/tools/testing/cxl/test/mem.c
->>>>> +++ b/tools/testing/cxl/test/mem.c
->>>>> @@ -362,6 +362,68 @@ static int mock_unlock_security(struct
->>>>> cxl_dev_state *cxlds, struct cxl_mbox_cmd
->>>>>        return 0;
->>>>>    }
->>>>> +static int mock_passphrase_secure_erase(struct cxl_dev_state *cxlds,
->>>>> +                    struct cxl_mbox_cmd *cmd)
->>>>> +{
->>>>> +    struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
->>>>> +    struct cxl_pass_erase *erase;
->>>>> +
->>>>> +    if (cmd->size_in != sizeof(*erase))
->>>>> +        return -EINVAL;
->>>>> +
->>>>> +    if (cmd->size_out != 0)
->>>>> +        return -EINVAL;
->>>>> +
->>>>> +    erase = cmd->payload_in;
->>>>> +    if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
->>>>> +        cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
->>>>> +        return -ENXIO;
->>>>> +    }
->>>>> +
->>>>> +    if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT &&
->>>>> +        erase->type == CXL_PMEM_SEC_PASS_USER) {
->>>>> +        cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
->>>>> +        return -ENXIO;
->>>>> +    }
->>>>> +
->>>>> +    if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT &&
->>>>> +        erase->type == CXL_PMEM_SEC_PASS_MASTER) {
->>>>> +        cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
->>>>> +        return -ENXIO;
->>>>> +    }
->>>>> +
->>>>> +    if (erase->type == CXL_PMEM_SEC_PASS_MASTER &&
->>>>> +        mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
->>>>> +        if (memcmp(mdata->master_pass, erase->pass,
->>>>> NVDIMM_PASSPHRASE_LEN)) {
->>>>> +            master_plimit_check(mdata);
->>>>> +            cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
->>>>> +            return -ENXIO;
->>>>> +        }
->>>>> +        mdata->master_limit = 0;
->>>>> +        mdata->user_limit = 0;
->>>>> +        mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
->>>>> +        memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
->>>>> +        mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
->>>>> +        return 0;
->>>>> +    }
->>>> What to do if the masterpass phrase isn't set?
->>>> Even if we return 0, I'd slightly prefer to see that done locally so
->>>> refactor as
->>>>      if (erase->type == CXL_PMEM_SEC_PASS_MASTER) {
->>>>          if (!(mdata->security_state &
->>>> CXL_PMEM_SEC_STATATE_MASTER_PASS_SET)) {
->>>>              return 0; /* ? */
->>>>          if (memcmp)...
->>>>      } else { /* CXL_PMEM_SEC_PASS_USER */ //or make it a switch.
->>>>   
->>>>> +
->>>>> +    if (erase->type == CXL_PMEM_SEC_PASS_USER &&
->>>>> +        mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
->>>>
->>>> Given we aren't actually scrambling the encryption keys (as we don't
->>>> have any ;)
->>>> it doesn't make a functional difference, but to line up with the spec,
->>>> I would
->>>> consider changing this to explicitly have the path for no user
->>>> passphrase set.
->>>>
->>>>      if (erase->type == CXL_PMEM_SEC_PASS_USER) {
->>>>          if (mdata->security_state & CXL_MEM_SEC_STATE_USER_PASS_SET) {
->>>>                  if (memcmp(mdata->user_pass, erase->pass,
->>>> NVDIMM_PASSPHRASE_LEN)) {
->>>>                  user_plimit_check(mdata);
->>>>                  cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
->>>>                  return -ENXIO;
->>>>                }
->>>>
->>>>              mdata->user_limit = 0;
->>>>              mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
->>>>              memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
->>>>          }
->>>>          /* Change encryption keys */
->>>>          return 0;
->>>>      }
->>>>   
->>>>> +        if (memcmp(mdata->user_pass, erase->pass,
->>>>> NVDIMM_PASSPHRASE_LEN)) {
->>>>> +            user_plimit_check(mdata);
->>>>> +            cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
->>>>> +            return -ENXIO;
->>>>> +        }
->>>>> +
->>>>> +        mdata->user_limit = 0;
->>>>> +        mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
->>>>> +        memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
->>>>> +        return 0;
->>>>> +    }
->>>>> +
->>>>> +    return 0;
->>>>
->>>> With above changes you can never reach here.
->>>>   
->>>>> +}
->>>>> +
->>>>>    static int mock_get_lsa(struct cxl_dev_state *cxlds, struct
->>>>> cxl_mbox_cmd *cmd)
->>>>>    {
->>>>>        struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
->>>>> @@ -470,6 +532,9 @@ static int cxl_mock_mbox_send(struct
->>>>> cxl_dev_state *cxlds, struct cxl_mbox_cmd *
->>>>>        case CXL_MBOX_OP_UNLOCK:
->>>>>            rc = mock_unlock_security(cxlds, cmd);
->>>>>            break;
->>>>> +    case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
->>>>> +        rc = mock_passphrase_secure_erase(cxlds, cmd);
->>>>> +        break;
->>>>>        default:
->>>>>            break;
->>>>>        }
->>>>>
->>>>>   
->>>>   
-> 
-> 
+[1]: https://lore.kernel.org/linux-cxl/20221116113724.00006171@Huawei.com/
