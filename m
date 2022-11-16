@@ -2,83 +2,237 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6390C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 10:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F2C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 11:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbiKPKJm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 05:09:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45168 "EHLO
+        id S229757AbiKPLuL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 06:50:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiKPKJm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 05:09:42 -0500
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D0F1DDC0;
-        Wed, 16 Nov 2022 02:09:40 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 390A13000BA01;
-        Wed, 16 Nov 2022 11:09:39 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 269184378B; Wed, 16 Nov 2022 11:09:39 +0100 (CET)
-Date:   Wed, 16 Nov 2022 11:09:39 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/doe: Fix work struct declaration
-Message-ID: <20221116100939.GA32050@wunner.de>
-References: <20221115011943.1051039-1-ira.weiny@intel.com>
+        with ESMTP id S233902AbiKPLto (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 06:49:44 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB0131365
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Nov 2022 03:37:28 -0800 (PST)
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC1Dj0ks8z683fS;
+        Wed, 16 Nov 2022 19:35:01 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 16 Nov 2022 12:37:25 +0100
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
+ 2022 11:37:24 +0000
+Date:   Wed, 16 Nov 2022 11:37:24 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <dave@stgolabs.net>
+Subject: Re: [PATCH v4 12/18] tools/testing/cxl: Add "passphrase secure
+ erase" opcode support
+Message-ID: <20221116113724.00006171@Huawei.com>
+In-Reply-To: <a8ed61db-9bf1-410c-b4e6-7042f48a67ff@intel.com>
+References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
+        <166845805415.2496228.732168029765896218.stgit@djiang5-desk3.ch.intel.com>
+        <20221115110831.00001fa4@Huawei.com>
+        <a8ed61db-9bf1-410c-b4e6-7042f48a67ff@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221115011943.1051039-1-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 05:19:43PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The callers of pci_doe_submit_task() allocate the pci_doe_task on the
-> stack.  This causes the work structure to be allocated on the stack
-> without pci_doe_submit_task() knowing.  Work item initialization needs
-> to be done with either INIT_WORK_ONSTACK() or INIT_WORK() depending on
-> how the work item is allocated.
-> 
-> Jonathan suggested creating doe task allocation macros such as
-> DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-> function is not known to the callers and must be initialized correctly.
-> 
-> A follow up suggestion was to have an internal 'pci_doe_work' item
-> allocated by pci_doe_submit_task().[2]  This requires an allocation which
-> could restrict the context where tasks are used.
-> 
-> Compromise with an intermediate step to initialize the task struct with
-> a new call pci_doe_init_task() which must be called prior to submit
-> task.
-> 
-> [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-> [2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
+On Tue, 15 Nov 2022 08:57:38 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-We have object_is_on_stack(), included from <linux/sched/task_stack.h>.
+> On 11/15/2022 3:08 AM, Jonathan Cameron wrote:
+> > On Mon, 14 Nov 2022 13:34:14 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> Add support to emulate a CXL mem device support the "passphrase secure
+> >> erase" operation.
+> >>
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
+> > The logic in here gives me a headache but I'm not sure it's correct yet...
+> > 
+> > If you can figure out what is supposed to happen if this is called
+> > with Passphrase Type == master before the master passphrase has been set
+> > then you are doing better than me.
+> > 
+> > Unlike for the User passphrase, where the language " .. and the user passphrase
+> > is not currently set or is not supported by the device, this value is ignored."
+> > to me implies we wipe the device and clear the non existent user pass phrase,
+> > the not set master passphrase case isn't covered as far as I can see.
+> > 
+> > The user passphrase question raises a futher question (see inline)
+> > 
+> > Thoughts?  
+> 
+> Guess this is what happens when you bolt on master passphrase support 
+> after defining the spec without its existence, and then move it to a 
+> different spec and try to maintain compatibility between the two in 
+> order to not fork the hardware/firmware....
 
-So you could just autosense in pci_doe_submit_task() whether
-pci_doe_task is on the stack and call the appropriate INIT_WORK
-variant.
+:) 
 
-Any reason not to do that?
+> 
+> Should we treat the no passphrase set instance the same as sending a 
+> Secure Erase (Opcode 4401h)? And then the only case left is no master 
+> pass set but user pass is set.
+> 
+> if (!master_pass_set && pass_type_master) {
+> 	if (user_pass_set)
+> 		return -EINVAL;
+> 	else
+> 		secure_erase;
+> }
 
-Thanks,
+Let's do this for now, but also gather up a set of questions / clarifications
+to take to CXL SSWG.  Can gather that on linux-cxl as discussing public
+stuff only, then one of us can have the pleasure of seeking clarifications
+in SSWG / possibly leading to future spec changes / Errata.
 
-Lukas
+Jonathan
+
+
+> 
+> > 
+> > Other than that some suggestions inline but nothing functional, so up to you.
+> > Either way
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >   
+> >> ---
+> >>   tools/testing/cxl/test/mem.c |   65 ++++++++++++++++++++++++++++++++++++++++++
+> >>   1 file changed, 65 insertions(+)
+> >>
+> >> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> >> index 90607597b9a4..fc28f7cc147a 100644
+> >> --- a/tools/testing/cxl/test/mem.c
+> >> +++ b/tools/testing/cxl/test/mem.c
+> >> @@ -362,6 +362,68 @@ static int mock_unlock_security(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd
+> >>   	return 0;
+> >>   }
+> >>   
+> >> +static int mock_passphrase_secure_erase(struct cxl_dev_state *cxlds,
+> >> +					struct cxl_mbox_cmd *cmd)
+> >> +{
+> >> +	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
+> >> +	struct cxl_pass_erase *erase;
+> >> +
+> >> +	if (cmd->size_in != sizeof(*erase))
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (cmd->size_out != 0)
+> >> +		return -EINVAL;
+> >> +
+> >> +	erase = cmd->payload_in;
+> >> +	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
+> >> +		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
+> >> +		return -ENXIO;
+> >> +	}
+> >> +
+> >> +	if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT &&
+> >> +	    erase->type == CXL_PMEM_SEC_PASS_USER) {
+> >> +		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
+> >> +		return -ENXIO;
+> >> +	}
+> >> +
+> >> +	if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT &&
+> >> +	    erase->type == CXL_PMEM_SEC_PASS_MASTER) {
+> >> +		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
+> >> +		return -ENXIO;
+> >> +	}
+> >> +
+> >> +	if (erase->type == CXL_PMEM_SEC_PASS_MASTER &&
+> >> +	    mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
+> >> +		if (memcmp(mdata->master_pass, erase->pass, NVDIMM_PASSPHRASE_LEN)) {
+> >> +			master_plimit_check(mdata);
+> >> +			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
+> >> +			return -ENXIO;
+> >> +		}
+> >> +		mdata->master_limit = 0;
+> >> +		mdata->user_limit = 0;
+> >> +		mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
+> >> +		memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
+> >> +		mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
+> >> +		return 0;
+> >> +	}  
+> > What to do if the masterpass phrase isn't set?
+> > Even if we return 0, I'd slightly prefer to see that done locally so refactor as
+> > 	if (erase->type == CXL_PMEM_SEC_PASS_MASTER) {
+> > 		if (!(mdata->security_state & CXL_PMEM_SEC_STATATE_MASTER_PASS_SET)) {
+> > 			return 0; /* ? */
+> > 		if (memcmp)...
+> > 	} else { /* CXL_PMEM_SEC_PASS_USER */ //or make it a switch.
+> >   
+> >> +
+> >> +	if (erase->type == CXL_PMEM_SEC_PASS_USER &&
+> >> +	    mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {  
+> > 
+> > Given we aren't actually scrambling the encryption keys (as we don't have any ;)
+> > it doesn't make a functional difference, but to line up with the spec, I would
+> > consider changing this to explicitly have the path for no user passphrase set.
+> > 
+> > 	if (erase->type == CXL_PMEM_SEC_PASS_USER) {
+> > 		if (mdata->security_state & CXL_MEM_SEC_STATE_USER_PASS_SET) {
+> > 		    	if (memcmp(mdata->user_pass, erase->pass, NVDIMM_PASSPHRASE_LEN)) {
+> > 				user_plimit_check(mdata);
+> > 				cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
+> > 				return -ENXIO;
+> >   			}	
+> > 
+> > 			mdata->user_limit = 0;
+> > 			mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
+> > 			memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
+> > 		}
+> > 		/* Change encryption keys */
+> > 		return 0;
+> > 	}
+> >   
+> >> +		if (memcmp(mdata->user_pass, erase->pass, NVDIMM_PASSPHRASE_LEN)) {
+> >> +			user_plimit_check(mdata);
+> >> +			cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
+> >> +			return -ENXIO;
+> >> +		}
+> >> +
+> >> +		mdata->user_limit = 0;
+> >> +		mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
+> >> +		memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	return 0;  
+> > 
+> > With above changes you can never reach here.
+> >   
+> >> +}
+> >> +
+> >>   static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> >>   {
+> >>   	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
+> >> @@ -470,6 +532,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+> >>   	case CXL_MBOX_OP_UNLOCK:
+> >>   		rc = mock_unlock_security(cxlds, cmd);
+> >>   		break;
+> >> +	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
+> >> +		rc = mock_passphrase_secure_erase(cxlds, cmd);
+> >> +		break;
+> >>   	default:
+> >>   		break;
+> >>   	}
+> >>
+> >>  
+> >   
+
