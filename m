@@ -2,46 +2,44 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397ABC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 12:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A173AC433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 12:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233056AbiKPMw7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 07:52:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        id S231437AbiKPM4r (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 07:56:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232931AbiKPMw6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 07:52:58 -0500
+        with ESMTP id S229868AbiKPM4o (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 07:56:44 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74BC91B9D2;
-        Wed, 16 Nov 2022 04:52:57 -0800 (PST)
-Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC2vq0HJRz6H74y;
-        Wed, 16 Nov 2022 20:50:31 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81F813F4D
+        for <linux-cxl@vger.kernel.org>; Wed, 16 Nov 2022 04:56:43 -0800 (PST)
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC30B0jN6z6HJbh;
+        Wed, 16 Nov 2022 20:54:18 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 13:52:55 +0100
+ 15.1.2375.31; Wed, 16 Nov 2022 13:56:41 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
- 2022 12:52:55 +0000
-Date:   Wed, 16 Nov 2022 12:52:54 +0000
+ 2022 12:56:41 +0000
+Date:   Wed, 16 Nov 2022 12:56:40 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <alison.schofield@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/6] tools/testing/cxl: Mock the Get Poison List mbox
- command
-Message-ID: <20221116125254.00003466@Huawei.com>
-In-Reply-To: <7accc4b25613bd04ded1c48fa317dcf08803575f.1668115235.git.alison.schofield@intel.com>
-References: <cover.1668115235.git.alison.schofield@intel.com>
-        <7accc4b25613bd04ded1c48fa317dcf08803575f.1668115235.git.alison.schofield@intel.com>
+        Ben Widawsky <bwidawsk@kernel.org>, <nvdimm@lists.linux.dev>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [ndctl PATCH 1/5] libcxl: add interfaces for GET_POISON_LIST
+ mailbox commands
+Message-ID: <20221116125640.00006a68@Huawei.com>
+In-Reply-To: <73b2edf5ded979cb3164bcf2b76c4f300cdf2250.1668133294.git.alison.schofield@intel.com>
+References: <cover.1668133294.git.alison.schofield@intel.com>
+        <73b2edf5ded979cb3164bcf2b76c4f300cdf2250.1668133294.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -55,76 +53,130 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Nov 2022 19:12:44 -0800
+On Thu, 10 Nov 2022 19:20:04 -0800
 alison.schofield@intel.com wrote:
 
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Return fake poison error records when the get poison list mbox
-> command is issued. This supports testing the kernel tracing
-> and cxl list capabilities for media errors.
+> CXL devices maintain a list of locations that are poisoned or result
+> in poison if the addresses are accessed by the host.
+> 
+> Per the spec (CXL 3.0 8.2.9.8.4.1), the device returns this Poison
+> list as a set of  Media Error Records that include the source of the
+> error, the starting device physical address and length.
+> 
+> Trigger the retrieval of the poison list by writing to the device
+> sysfs attribute: trigger_poison_list.
+> 
+> Retrieval is offered by memdev or by region:
+> int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev);
+> int cxl_region_trigger_poison_list(struct cxl_region *region);
+> 
+> This interface triggers the retrieval of the poison list from the
+> devices and logs the error records as kernel trace events named
+> 'cxl_poison'.
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Trivial comment inline + I haven't been tracking closely development
+of this tool closely so hopefully this will get other eyes on it who
+are more familiar.  With that in mind:
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  tools/testing/cxl/test/mem.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
+>  cxl/lib/libcxl.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  cxl/lib/libcxl.sym |  6 ++++++
+>  cxl/libcxl.h       |  2 ++
+>  3 files changed, 52 insertions(+)
 > 
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index f0704d090073..f729e055605d 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -38,6 +38,10 @@ static struct cxl_cel_entry mock_cel[] = {
->  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
->  		.effect = cpu_to_le16(0),
->  	},
-> +	{
-> +		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
-> +		.effect = cpu_to_le16(0),
-> +	},
->  };
->  
->  /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-> @@ -207,6 +211,30 @@ static int mock_health_info(struct cxl_dev_state *cxlds,
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index e8c5d4444dd0..1a8a8eb0ffcb 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -1331,6 +1331,50 @@ CXL_EXPORT int cxl_memdev_disable_invalidate(struct cxl_memdev *memdev)
 >  	return 0;
 >  }
 >  
-> +static int mock_get_poison(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> +CXL_EXPORT int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev)
 > +{
-> +	struct {
-> +		struct cxl_mbox_poison_payload_out poison_out;
-> +		struct cxl_poison_record record;
-> +	} mock_poison_list = {
-> +		.poison_out = {
-> +			.count = cpu_to_le16(1),
-> +		},
-> +		.record = {
-> +			/* .address encodes DPA and poison source bits */
-> +			.address = cpu_to_le64(CXL_POISON_SOURCE_INTERNAL),
-> +			.length = cpu_to_le32(1),
-> +		},
-> +	};
+> +	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
+> +	char *path = memdev->dev_buf;
+> +	int len = memdev->buf_len, rc;
 > +
-> +	if (cmd->size_out < sizeof(mock_poison_list))
-> +		return -EINVAL;
-> +
-> +	memcpy(cmd->payload_out, &mock_poison_list, sizeof(mock_poison_list));
-> +	cmd->size_out = sizeof(mock_poison_list);
+> +	if (snprintf(path, len, "%s/trigger_poison_list", memdev->dev_path) >=
+> +	    len) {
+
+Ugly line break choice to break mid argument..
+	if (snprintf(path, len, "%s/trigger_poison_list",
+		     memdev->dev_path) >= len) {
+would be better.
+
+> +		err(ctx, "%s: buffer too small\n",
+> +		    cxl_memdev_get_devname(memdev));
+> +		return -ENXIO;
+> +	}
+> +	rc = sysfs_write_attr(ctx, path, "1\n");
+> +	if (rc < 0) {
+> +		fprintf(stderr,
+> +			"%s: Failed write sysfs attr trigger_poison_list\n",
+> +			cxl_memdev_get_devname(memdev));
+> +		return rc;
+> +	}
 > +	return 0;
 > +}
 > +
->  static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+> +CXL_EXPORT int cxl_region_trigger_poison_list(struct cxl_region *region)
+> +{
+> +	struct cxl_ctx *ctx = cxl_region_get_ctx(region);
+> +	char *path = region->dev_buf;
+> +	int len = region->buf_len, rc;
+> +
+> +	if (snprintf(path, len, "%s/trigger_poison_list", region->dev_path) >=
+> +	    len) {
+as above.
+
+> +		err(ctx, "%s: buffer too small\n",
+> +		    cxl_region_get_devname(region));
+> +		return -ENXIO;
+> +	}
+> +	rc = sysfs_write_attr(ctx, path, "1\n");
+> +	if (rc < 0) {
+> +		fprintf(stderr,
+> +			"%s: Failed write sysfs attr trigger_poison_list\n",
+> +			cxl_region_get_devname(region));
+> +		return rc;
+> +	}
+> +	return 0;
+> +}
+> +
+>  CXL_EXPORT int cxl_memdev_enable(struct cxl_memdev *memdev)
 >  {
->  	struct device *dev = cxlds->dev;
-> @@ -234,6 +262,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
->  	case CXL_MBOX_OP_GET_HEALTH_INFO:
->  		rc = mock_health_info(cxlds, cmd);
->  		break;
-> +	case CXL_MBOX_OP_GET_POISON:
-> +		rc = mock_get_poison(cxlds, cmd);
-> +		break;
->  	default:
->  		break;
->  	}
+>  	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
+> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+> index 8bb91e05638b..ecf98e6c7af2 100644
+> --- a/cxl/lib/libcxl.sym
+> +++ b/cxl/lib/libcxl.sym
+> @@ -217,3 +217,9 @@ global:
+>  	cxl_decoder_get_max_available_extent;
+>  	cxl_decoder_get_region;
+>  } LIBCXL_2;
+> +
+> +LIBCXL_4 {
+> +global:
+> +	cxl_memdev_trigger_poison_list;
+> +	cxl_region_trigger_poison_list;
+> +} LIBCXL_3;
+> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+> index 9fe4e99263dd..5ebdf0879325 100644
+> --- a/cxl/libcxl.h
+> +++ b/cxl/libcxl.h
+> @@ -375,6 +375,8 @@ enum cxl_setpartition_mode {
+>  
+>  int cxl_cmd_partition_set_mode(struct cxl_cmd *cmd,
+>  		enum cxl_setpartition_mode mode);
+> +int cxl_memdev_trigger_poison_list(struct cxl_memdev *memdev);
+> +int cxl_region_trigger_poison_list(struct cxl_region *region);
+>  
+>  #ifdef __cplusplus
+>  } /* extern "C" */
 
