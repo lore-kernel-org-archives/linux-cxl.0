@@ -2,144 +2,94 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4BFC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 16:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3781C43217
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 18:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233330AbiKPQKW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 11:10:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48826 "EHLO
+        id S238685AbiKPSUp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 13:20:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233839AbiKPQKM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 11:10:12 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5E14C279;
-        Wed, 16 Nov 2022 08:10:11 -0800 (PST)
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC7Dn50JNz687hk;
-        Thu, 17 Nov 2022 00:05:29 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 17:10:09 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
- 2022 16:10:08 +0000
-Date:   Wed, 16 Nov 2022 16:10:08 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S238721AbiKPSUo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 13:20:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB644299B;
+        Wed, 16 Nov 2022 10:20:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C7627B81DFB;
+        Wed, 16 Nov 2022 18:20:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25648C433C1;
+        Wed, 16 Nov 2022 18:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668622839;
+        bh=52xx2cxMjYfYYtzcGVPoVln7tb0sgoWGLZmi9fAr4go=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ww2k/scGtapdtys5K2gcUYKS8Vp1Yxq9BnwvvbuwB4F0J1h7DZfFpPW77ePZvuUSv
+         wO1Hx4qGsfRcdrpkRyWN4TUfoAo4/E1eLE5lcE91aC1NSd1RFhIGKZg52bE4Xa/hA6
+         YcCPc5gWWB6nlJGwxIMUZ8HLuH8ZE76AM5+hl83sPv3XZUbNY8/oLHaW4Ihkk3KsK8
+         JVrmD5skUyi4qDf/Wa5mTmvLe7cpaP0ADnCLUpFyuxXaNXlsE7wRr/878CNDcrti75
+         iq+hX28bwPscDMEboURMgvrNW0RAiqZwsmgAyslR06o9YcZum0qcTh3XBlcitncW6+
+         6L+cEj03x788g==
+Date:   Wed, 16 Nov 2022 12:20:37 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 11/11] cxl/test: Simulate event log overflow
-Message-ID: <20221116161008.00004f71@Huawei.com>
-In-Reply-To: <20221110185758.879472-12-ira.weiny@intel.com>
-References: <20221110185758.879472-1-ira.weiny@intel.com>
-        <20221110185758.879472-12-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI/doe: Fix work struct declaration
+Message-ID: <20221116182037.GA1127308@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221116100939.GA32050@wunner.de>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Nov 2022 10:57:58 -0800
-ira.weiny@intel.com wrote:
+On Wed, Nov 16, 2022 at 11:09:39AM +0100, Lukas Wunner wrote:
+> On Mon, Nov 14, 2022 at 05:19:43PM -0800, ira.weiny@intel.com wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > The callers of pci_doe_submit_task() allocate the pci_doe_task on the
+> > stack.  This causes the work structure to be allocated on the stack
+> > without pci_doe_submit_task() knowing.  Work item initialization needs
+> > to be done with either INIT_WORK_ONSTACK() or INIT_WORK() depending on
+> > how the work item is allocated.
+> > 
+> > Jonathan suggested creating doe task allocation macros such as
+> > DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
+> > function is not known to the callers and must be initialized correctly.
+> > 
+> > A follow up suggestion was to have an internal 'pci_doe_work' item
+> > allocated by pci_doe_submit_task().[2]  This requires an allocation which
+> > could restrict the context where tasks are used.
+> > 
+> > Compromise with an intermediate step to initialize the task struct with
+> > a new call pci_doe_init_task() which must be called prior to submit
+> > task.
+> > 
+> > [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
+> > [2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
+> 
+> We have object_is_on_stack(), included from <linux/sched/task_stack.h>.
+> 
+> So you could just autosense in pci_doe_submit_task() whether
+> pci_doe_task is on the stack and call the appropriate INIT_WORK
+> variant.
 
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Log overflow is marked by a separate trace message.
-> 
-> Simulate a log with lots of messages and flag overflow until it is
-> drained a bit.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Looks fine to me
+Nifty, I had no idea object_is_on_stack() existed, thank you!
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> ---
-> Changes from RFC
-> 	Adjust for new struct changes
-> ---
->  tools/testing/cxl/test/events.c | 37 +++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/tools/testing/cxl/test/events.c b/tools/testing/cxl/test/events.c
-> index 8693f3fb9cbb..5ce257114f4e 100644
-> --- a/tools/testing/cxl/test/events.c
-> +++ b/tools/testing/cxl/test/events.c
-> @@ -69,11 +69,21 @@ static void event_store_add_event(struct mock_event_store *mes,
->  	log->nr_events++;
->  }
->  
-> +static u16 log_overflow(struct mock_event_log *log)
-> +{
-> +	int cnt = log_rec_left(log) - 5;
-> +
-> +	if (cnt < 0)
-> +		return 0;
-> +	return cnt;
-> +}
-> +
->  int mock_get_event(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
->  {
->  	struct cxl_get_event_payload *pl;
->  	struct mock_event_log *log;
->  	u8 log_type;
-> +	u16 nr_overflow;
->  
->  	/* Valid request? */
->  	if (cmd->size_in != sizeof(log_type))
-> @@ -95,6 +105,20 @@ int mock_get_event(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
->  	if (log_rec_left(log) > 1)
->  		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
->  
-> +	nr_overflow = log_overflow(log);
-> +	if (nr_overflow) {
-> +		u64 ns;
-> +
-> +		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
-> +		pl->overflow_err_count = cpu_to_le16(nr_overflow);
-> +		ns = ktime_get_real_ns();
-> +		ns -= 5000000000; /* 5s ago */
-> +		pl->first_overflow_timestamp = cpu_to_le64(ns);
-> +		ns = ktime_get_real_ns();
-> +		ns -= 1000000000; /* 1s ago */
-> +		pl->last_overflow_timestamp = cpu_to_le64(ns);
-> +	}
-> +
->  	memcpy(&pl->record[0], get_cur_event(log), sizeof(pl->record[0]));
->  	pl->record[0].hdr.handle = get_cur_event_handle(log);
->  	return 0;
-> @@ -274,6 +298,19 @@ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
->  			      (struct cxl_event_record_raw *)&mem_module);
->  	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
->  
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&dram);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&gen_media);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&mem_module);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&dram);
-> +	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
-> +
->  	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
->  	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL,
->  			      (struct cxl_event_record_raw *)&dram);
+I wonder if there's an opportunity to use object_is_on_stack()
+somewhere in the INIT_WORK() path to find usage mistakes.
 
+Adding it in pci_doe_submit_task() would add some complexity, so I'm
+not sure whether it's worth adding it unless we actually have uses for
+both cases.
+
+Bjorn
