@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2713BC4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 15:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EE8C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 15:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbiKPPfd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:35:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50522 "EHLO
+        id S229586AbiKPPpt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 10:45:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232190AbiKPPfb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 10:35:31 -0500
+        with ESMTP id S230115AbiKPPpt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 10:45:49 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB0914D0C;
-        Wed, 16 Nov 2022 07:35:31 -0800 (PST)
-Received: from frapeml100004.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC6Sn4FSgz67KSc;
-        Wed, 16 Nov 2022 23:30:49 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2232613E;
+        Wed, 16 Nov 2022 07:45:47 -0800 (PST)
+Received: from fraeml739-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC6hd0VM5z67KvJ;
+        Wed, 16 Nov 2022 23:41:05 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml100004.china.huawei.com (7.182.85.167) with Microsoft SMTP Server
+ fraeml739-chm.china.huawei.com (10.206.15.220) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 16:35:29 +0100
+ 15.1.2375.31; Wed, 16 Nov 2022 16:45:44 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
- 2022 15:35:28 +0000
-Date:   Wed, 16 Nov 2022 15:35:28 +0000
+ 2022 15:45:44 +0000
+Date:   Wed, 16 Nov 2022 15:45:43 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,11 +35,12 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 07/11] cxl/mem: Trace Memory Module Event Record
-Message-ID: <20221116153528.00005af7@Huawei.com>
-In-Reply-To: <20221110185758.879472-8-ira.weiny@intel.com>
+Subject: Re: [PATCH 03/11] cxl/mem: Implement Clear Event Records command
+Message-ID: <20221116154543.00003c6a@Huawei.com>
+In-Reply-To: <20221116152426.0000626b@Huawei.com>
 References: <20221110185758.879472-1-ira.weiny@intel.com>
-        <20221110185758.879472-8-ira.weiny@intel.com>
+        <20221110185758.879472-4-ira.weiny@intel.com>
+        <20221116152426.0000626b@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -53,37 +54,94 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Nov 2022 10:57:54 -0800
-ira.weiny@intel.com wrote:
+On Wed, 16 Nov 2022 15:24:26 +0000
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> From: Ira Weiny <ira.weiny@intel.com>
+> On Thu, 10 Nov 2022 10:57:50 -0800
+> ira.weiny@intel.com wrote:
 > 
-> CXL rev 3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > CXL rev 3.0 section 8.2.9.2.3 defines the Clear Event Records mailbox
+> > command.  After an event record is read it needs to be cleared from the
+> > event log.
+> > 
+> > Implement cxl_clear_event_record() and call it for each record retrieved
+> > from the device.
+> > 
+> > Each record is cleared individually.  A clear all bit is specified but
+> > events could arrive between a get and the final clear all operation.
+> > Therefore each event is cleared specifically.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> >   
+> Some follow through comment updates needed from changes in earlier patches +
+> one comment you can ignore if you prefer to keep it as is.
 > 
-> Determine if the event read is memory module record and if so trace the
-> record.
+> >  static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> >  				    enum cxl_event_log_type type)
+> >  {
+> > @@ -728,14 +750,23 @@ static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> >  		}
+> >  
+> >  		pl_nr = le16_to_cpu(payload.record_count);
+> > -		if (trace_cxl_generic_event_enabled()) {  
 > 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> To simplify this patch, maybe push this check down in the previous patch so this
+> one doesn't move code around?  It'll look a tiny bit odd there of course..
 > 
-Noticed that we have a mixture of fully capitalized and not for flags.
-With that either explained or tidied up:
+> > +		if (pl_nr > 0) {
+> >  			u16 nr_rec = min_t(u16, pl_nr, CXL_GET_EVENT_NR_RECORDS);
+> >  			int i;
+> >  
+> > -			for (i = 0; i < nr_rec; i++)
+> > -				trace_cxl_generic_event(dev_name(cxlds->dev),
+> > -							type,
+> > -							&payload.record[i]);
+> > +			if (trace_cxl_generic_event_enabled()) {
+> > +				for (i = 0; i < nr_rec; i++)
+> > +					trace_cxl_generic_event(dev_name(cxlds->dev),
+> > +								type,
+> > +								&payload.record[i]);
+> > +			}
+> > +
+> > +			rc = cxl_clear_event_record(cxlds, type, &payload, nr_rec);
+> > +			if (rc) {
+> > +				dev_err(cxlds->dev, "Event log '%s': Failed to clear events : %d",
+> > +					cxl_event_log_type_str(type), rc);
+> > +				return;
+> > +			}
+> >  		}
+> >    
+> 
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index da64ba0f156b..28a114c7cf69 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h  
+> 
+> >  
+> > +/*
+> > + * Clear Event Records input payload
+> > + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
+> > + *
+> > + * Space given for 1 record  
+> 
+> Nope...
+> 
+> 
+> > + */
+> > +struct cxl_mbox_clear_event_payload {
+> > +	u8 event_log;		/* enum cxl_event_log_type */
+> > +	u8 clear_flags;
+> > +	u8 nr_recs;		/* 1 for this struct */  
+> Nope :)  Delete the comments so they can't be wrong if this changes in future!
+Ah. You only use one. So should hard code that in the array size below.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> +/*
-> + * Device Health Information - DHI
-> + *
-> + * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
-> + */
-> +#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
-> +#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
-> +#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
-> +#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
-> +	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"Maintenance Needed"	}, \
-> +	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"Performance Degraded"	}, \
-> +	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"Replacement Needed"	}  \
-
-Why are we sometime using capitals for flags (e.g patch 5) and not other times?
-
-> +)
+> 
+> > +	u8 reserved[3];
+> > +	__le16 handle[CXL_GET_EVENT_NR_RECORDS];
+> > +};
+> > +  
+> 
 
