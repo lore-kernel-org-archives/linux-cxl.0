@@ -2,313 +2,190 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADBEC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 11:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57E7C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 12:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232951AbiKPLxa convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 06:53:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        id S231301AbiKPMXR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 07:23:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbiKPLxG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 06:53:06 -0500
+        with ESMTP id S233305AbiKPMWm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 07:22:42 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B795AE6A
-        for <linux-cxl@vger.kernel.org>; Wed, 16 Nov 2022 03:43:38 -0800 (PST)
-Received: from frapeml100008.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC1KF3QtNz68BcV;
-        Wed, 16 Nov 2022 19:38:57 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1F327CFD;
+        Wed, 16 Nov 2022 04:19:46 -0800 (PST)
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC26w365Wz67QRR;
+        Wed, 16 Nov 2022 20:15:04 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml100008.china.huawei.com (7.182.85.131) with Microsoft SMTP Server
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 12:43:36 +0100
+ 15.1.2375.31; Wed, 16 Nov 2022 13:19:43 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
- 2022 11:43:36 +0000
-Date:   Wed, 16 Nov 2022 11:43:35 +0000
+ 2022 12:19:43 +0000
+Date:   Wed, 16 Nov 2022 12:19:42 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <dave@stgolabs.net>
-Subject: Re: [PATCH v4 12/18] tools/testing/cxl: Add "passphrase secure
- erase" opcode support
-Message-ID: <20221116114335.00006a3d@Huawei.com>
-In-Reply-To: <14ae41bc-2d63-460b-5ac5-a4d94aa39982@intel.com>
-References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
-        <166845805415.2496228.732168029765896218.stgit@djiang5-desk3.ch.intel.com>
-        <20221115110831.00001fa4@Huawei.com>
-        <a8ed61db-9bf1-410c-b4e6-7042f48a67ff@intel.com>
-        <14ae41bc-2d63-460b-5ac5-a4d94aa39982@intel.com>
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/6] trace, cxl: Introduce a TRACE_EVENT for CXL
+ poison records
+Message-ID: <20221116121942.00003a3e@Huawei.com>
+In-Reply-To: <5746274c905f57f117987c8268c9f6dc9bd33337.1668115235.git.alison.schofield@intel.com>
+References: <cover.1668115235.git.alison.schofield@intel.com>
+        <5746274c905f57f117987c8268c9f6dc9bd33337.1668115235.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 15 Nov 2022 10:01:53 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Thu, 10 Nov 2022 19:12:39 -0800
+alison.schofield@intel.com wrote:
 
-> On 11/15/2022 7:57 AM, Dave Jiang wrote:
-> > 
-> > 
-> > On 11/15/2022 3:08 AM, Jonathan Cameron wrote:  
-> >> On Mon, 14 Nov 2022 13:34:14 -0700
-> >> Dave Jiang <dave.jiang@intel.com> wrote:
-> >>  
-> >>> Add support to emulate a CXL mem device support the "passphrase secure
-> >>> erase" operation.
-> >>>
-> >>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
-> >> The logic in here gives me a headache but I'm not sure it's correct 
-> >> yet...
-> >>
-> >> If you can figure out what is supposed to happen if this is called
-> >> with Passphrase Type == master before the master passphrase has been set
-> >> then you are doing better than me.
-> >>
-> >> Unlike for the User passphrase, where the language " .. and the user 
-> >> passphrase
-> >> is not currently set or is not supported by the device, this value is 
-> >> ignored."
-> >> to me implies we wipe the device and clear the non existent user pass 
-> >> phrase,
-> >> the not set master passphrase case isn't covered as far as I can see.
-> >>
-> >> The user passphrase question raises a futher question (see inline)
-> >>
-> >> Thoughts?  
-> > 
-> > Guess this is what happens when you bolt on master passphrase support 
-> > after defining the spec without its existence, and then move it to a 
-> > different spec and try to maintain compatibility between the two in 
-> > order to not fork the hardware/firmware....
-> > 
-> > Should we treat the no passphrase set instance the same as sending a 
-> > Secure Erase (Opcode 4401h)? And then the only case left is no master 
-> > pass set but user pass is set.
-> > 
-> > if (!master_pass_set && pass_type_master) {
-> >      if (user_pass_set)
-> >          return -EINVAL;
-> >      else
-> >          secure_erase;
-> > }
-> >  
-> This is the current change:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> +       switch (erase->type) {
-> +       case CXL_PMEM_SEC_PASS_MASTER:
-> +               if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
-> +                       if (memcmp(mdata->master_pass, erase->pass,
-> +                                  NVDIMM_PASSPHRASE_LEN)) {
-> +                               master_plimit_check(mdata);
-> +                               cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-> +                               return -ENXIO;
-> +                       }
-> +                       mdata->master_limit = 0;
-> +                       mdata->user_limit = 0;
-> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-> +                       memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
+> CXL devices may support the retrieval of a device poison list.
+> Introduce a trace event that the CXL subsystem can use to log
+> the poison error records.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Only thing I wondered a bit about in here is the philosophy of whether it is
+useful to include the pcidev and region given they can both be established
+fairly easily via other paths..  Meh. Seems reasonable to me to have the
+in here so.
 
-> +               } else if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
-> +                       return -EINVAL;
-> +               }
-I would add a comment here to say what we aren't faking.  The aim being to show that
-in all the good paths this happens, even though we don't do the other stuff in
-some of them.
-
-/* Scramble encryption keys so that data is effectively erased */
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/cxlmem.h       | 14 +++++++
+>  include/trace/events/cxl.h | 80 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 94 insertions(+)
+>  create mode 100644 include/trace/events/cxl.h
+> 
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 88e3a8e54b6a..669868cc1553 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -347,6 +347,20 @@ struct cxl_mbox_set_partition_info {
+>  
+>  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+>  
+> +/* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
 > +
-> +               return 0;
-> +       case CXL_PMEM_SEC_PASS_USER:
-> +               if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
-> +                       if (memcmp(mdata->user_pass, erase->pass,
-> +                                  NVDIMM_PASSPHRASE_LEN)) {
-> +                               user_plimit_check(mdata);
-> +                               cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-> +                               return -ENXIO;
-> +                       }
-> +                       mdata->user_limit = 0;
-> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-> +                       memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-> +               }
+> +/* Get Poison List: Payload out flags */
+> +#define CXL_POISON_FLAG_MORE            BIT(0)
+> +#define CXL_POISON_FLAG_OVERFLOW        BIT(1)
+> +#define CXL_POISON_FLAG_SCANNING        BIT(2)
 > +
-
-/* Scramble encryption keys so that data is effectively erased */
-here as well for the same reason.
-
-> +               return 0;
-> +       default:
-> +               fallthrough;
-
-Might as well return -EINVAL; here and drop the below one.
-
-Otherwise looks good to me.  We could sprinkle some comments in here to
-hightlight why we have concluded it ought to behave like this.
-If nothing else, I doubt either of us will remember when we look at this
-code in more than a few days time ;)
-
-Otherwise looks good to me.
-
-Jonathan
-
-
-> +       }
+> +/* Get Poison List: Poison Source */
+> +#define CXL_POISON_SOURCE_UNKNOWN	0
+> +#define CXL_POISON_SOURCE_EXTERNAL	1
+> +#define CXL_POISON_SOURCE_INTERNAL	2
+> +#define CXL_POISON_SOURCE_INJECTED	3
+> +#define CXL_POISON_SOURCE_VENDOR	7
 > +
-> +       return -EINVAL;
-> 
-> 
-> 
-> >>
-> >> Other than that some suggestions inline but nothing functional, so up 
-> >> to you.
-> >> Either way
-> >>
-> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >>  
-> >>> ---
-> >>>   tools/testing/cxl/test/mem.c |   65 
-> >>> ++++++++++++++++++++++++++++++++++++++++++
-> >>>   1 file changed, 65 insertions(+)
-> >>>
-> >>> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> >>> index 90607597b9a4..fc28f7cc147a 100644
-> >>> --- a/tools/testing/cxl/test/mem.c
-> >>> +++ b/tools/testing/cxl/test/mem.c
-> >>> @@ -362,6 +362,68 @@ static int mock_unlock_security(struct 
-> >>> cxl_dev_state *cxlds, struct cxl_mbox_cmd
-> >>>       return 0;
-> >>>   }
-> >>> +static int mock_passphrase_secure_erase(struct cxl_dev_state *cxlds,
-> >>> +                    struct cxl_mbox_cmd *cmd)
-> >>> +{
-> >>> +    struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
-> >>> +    struct cxl_pass_erase *erase;
-> >>> +
-> >>> +    if (cmd->size_in != sizeof(*erase))
-> >>> +        return -EINVAL;
-> >>> +
-> >>> +    if (cmd->size_out != 0)
-> >>> +        return -EINVAL;
-> >>> +
-> >>> +    erase = cmd->payload_in;
-> >>> +    if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
-> >>> +        cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-> >>> +        return -ENXIO;
-> >>> +    }
-> >>> +
-> >>> +    if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT &&
-> >>> +        erase->type == CXL_PMEM_SEC_PASS_USER) {
-> >>> +        cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-> >>> +        return -ENXIO;
-> >>> +    }
-> >>> +
-> >>> +    if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT &&
-> >>> +        erase->type == CXL_PMEM_SEC_PASS_MASTER) {
-> >>> +        cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-> >>> +        return -ENXIO;
-> >>> +    }
-> >>> +
-> >>> +    if (erase->type == CXL_PMEM_SEC_PASS_MASTER &&
-> >>> +        mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
-> >>> +        if (memcmp(mdata->master_pass, erase->pass, 
-> >>> NVDIMM_PASSPHRASE_LEN)) {
-> >>> +            master_plimit_check(mdata);
-> >>> +            cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-> >>> +            return -ENXIO;
-> >>> +        }
-> >>> +        mdata->master_limit = 0;
-> >>> +        mdata->user_limit = 0;
-> >>> +        mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-> >>> +        memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-> >>> +        mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
-> >>> +        return 0;
-> >>> +    }  
-> >> What to do if the masterpass phrase isn't set?
-> >> Even if we return 0, I'd slightly prefer to see that done locally so 
-> >> refactor as
-> >>     if (erase->type == CXL_PMEM_SEC_PASS_MASTER) {
-> >>         if (!(mdata->security_state & 
-> >> CXL_PMEM_SEC_STATATE_MASTER_PASS_SET)) {
-> >>             return 0; /* ? */
-> >>         if (memcmp)...
-> >>     } else { /* CXL_PMEM_SEC_PASS_USER */ //or make it a switch.
-> >>  
-> >>> +
-> >>> +    if (erase->type == CXL_PMEM_SEC_PASS_USER &&
-> >>> +        mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {  
-> >>
-> >> Given we aren't actually scrambling the encryption keys (as we don't 
-> >> have any ;)
-> >> it doesn't make a functional difference, but to line up with the spec, 
-> >> I would
-> >> consider changing this to explicitly have the path for no user 
-> >> passphrase set.
-> >>
-> >>     if (erase->type == CXL_PMEM_SEC_PASS_USER) {
-> >>         if (mdata->security_state & CXL_MEM_SEC_STATE_USER_PASS_SET) {
-> >>                 if (memcmp(mdata->user_pass, erase->pass, 
-> >> NVDIMM_PASSPHRASE_LEN)) {
-> >>                 user_plimit_check(mdata);
-> >>                 cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-> >>                 return -ENXIO;
-> >>               }
-> >>
-> >>             mdata->user_limit = 0;
-> >>             mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-> >>             memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-> >>         }
-> >>         /* Change encryption keys */
-> >>         return 0;
-> >>     }
-> >>  
-> >>> +        if (memcmp(mdata->user_pass, erase->pass, 
-> >>> NVDIMM_PASSPHRASE_LEN)) {
-> >>> +            user_plimit_check(mdata);
-> >>> +            cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-> >>> +            return -ENXIO;
-> >>> +        }
-> >>> +
-> >>> +        mdata->user_limit = 0;
-> >>> +        mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-> >>> +        memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-> >>> +        return 0;
-> >>> +    }
-> >>> +
-> >>> +    return 0;  
-> >>
-> >> With above changes you can never reach here.
-> >>  
-> >>> +}
-> >>> +
-> >>>   static int mock_get_lsa(struct cxl_dev_state *cxlds, struct 
-> >>> cxl_mbox_cmd *cmd)
-> >>>   {
-> >>>       struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-> >>> @@ -470,6 +532,9 @@ static int cxl_mock_mbox_send(struct 
-> >>> cxl_dev_state *cxlds, struct cxl_mbox_cmd *
-> >>>       case CXL_MBOX_OP_UNLOCK:
-> >>>           rc = mock_unlock_security(cxlds, cmd);
-> >>>           break;
-> >>> +    case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
-> >>> +        rc = mock_passphrase_secure_erase(cxlds, cmd);
-> >>> +        break;
-> >>>       default:
-> >>>           break;
-> >>>       }
-> >>>
-> >>>  
-> >>  
+>  /**
+>   * struct cxl_mem_command - Driver representation of a memory device command
+>   * @info: Command information as it exists for the UAPI
+> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
+> new file mode 100644
+> index 000000000000..03428125573f
+> --- /dev/null
+> +++ b/include/trace/events/cxl.h
+> @@ -0,0 +1,80 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM cxl
+> +
+> +#if !defined(_CXL_TRACE_H) ||  defined(TRACE_HEADER_MULTI_READ)
+> +#define _CXL_TRACE_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <cxlmem.h>
+> +
+> +#define __show_poison_source(source)                          \
+> +	__print_symbolic(source,                              \
+> +		{ CXL_POISON_SOURCE_UNKNOWN,   "Unknown"  },  \
+> +		{ CXL_POISON_SOURCE_EXTERNAL,  "External" },  \
+> +		{ CXL_POISON_SOURCE_INTERNAL,  "Internal" },  \
+> +		{ CXL_POISON_SOURCE_INJECTED,  "Injected" },  \
+> +		{ CXL_POISON_SOURCE_VENDOR,    "Vendor"   })
+> +
+> +#define show_poison_source(source)			     \
+> +	(((source > CXL_POISON_SOURCE_INJECTED) &&	     \
+> +	 (source != CXL_POISON_SOURCE_VENDOR)) ? "Reserved"  \
+> +	 : __show_poison_source(source))
+> +
+> +#define show_poison_flags(flags)                             \
+> +	__print_flags(flags, "|",                            \
+> +		{ CXL_POISON_FLAG_MORE,      "More"     },   \
+> +		{ CXL_POISON_FLAG_OVERFLOW,  "Overflow"  },  \
+> +		{ CXL_POISON_FLAG_SCANNING,  "Scanning"  })
+> +
+> +TRACE_EVENT(cxl_poison,
+> +
+> +	    TP_PROTO(const char *memdev, const char *pcidev, const char *region,
+> +		     const uuid_t *uuid, u64 dpa, u32 length, u8 source,
+> +		     u8 flags, u64 overflow_t),
+> +
+> +	    TP_ARGS(memdev, pcidev, region, uuid, dpa, length, source,
+> +		    flags, overflow_t),
+> +
+> +	    TP_STRUCT__entry(
+> +		__string(memdev, memdev)
+> +		__string(pcidev, pcidev)
+> +		__string(region, region ? region : "")
+> +		__array(char, uuid, 16)
+> +		__field(u64, dpa)
+> +		__field(u32, length)
+> +		__field(u8, source)
+> +		__field(u8, flags)
+> +		__field(u64, overflow_t)
+> +	    ),
+> +
+> +	    TP_fast_assign(
+> +		__assign_str(memdev, memdev);
+> +		__assign_str(pcidev, pcidev);
+> +		__assign_str(region, region ? region : "");
+> +		if (uuid)
+> +			memcpy(__entry->uuid, uuid, 16);
+> +		__entry->dpa = dpa;
+> +		__entry->length = length;
+> +		__entry->source = source;
+> +		__entry->flags = flags;
+> +		__entry->overflow_t = overflow_t;
+> +	    ),
+> +
+> +	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
+> +		__get_str(memdev),
+> +		__get_str(pcidev),
+> +		__get_str(region),
+> +		__entry->uuid,
+> +		__entry->dpa,
+> +		__entry->length,
+> +		show_poison_source(__entry->source),
+> +		show_poison_flags(__entry->flags),
+> +		__entry->overflow_t)
+> +);
+> +#endif /* _CXL_TRACE_H */
+> +
+> +/* This part must be outside protection */
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE cxl
+> +#include <trace/define_trace.h>
 
