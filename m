@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E9C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 15:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2713BC4332F
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 15:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbiKPPbM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:31:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48536 "EHLO
+        id S229489AbiKPPfd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 10:35:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbiKPPbL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 10:31:11 -0500
+        with ESMTP id S232190AbiKPPfb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 10:35:31 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495D41B1F9;
-        Wed, 16 Nov 2022 07:31:10 -0800 (PST)
-Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC6QM2WF9z68735;
-        Wed, 16 Nov 2022 23:28:43 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB0914D0C;
+        Wed, 16 Nov 2022 07:35:31 -0800 (PST)
+Received: from frapeml100004.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC6Sn4FSgz67KSc;
+        Wed, 16 Nov 2022 23:30:49 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
+ frapeml100004.china.huawei.com (7.182.85.167) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 16:31:07 +0100
+ 15.1.2375.31; Wed, 16 Nov 2022 16:35:29 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
- 2022 15:31:07 +0000
-Date:   Wed, 16 Nov 2022 15:31:06 +0000
+ 2022 15:35:28 +0000
+Date:   Wed, 16 Nov 2022 15:35:28 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,11 +35,11 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 05/11] cxl/mem: Trace General Media Event Record
-Message-ID: <20221116153106.000025d7@Huawei.com>
-In-Reply-To: <20221110185758.879472-6-ira.weiny@intel.com>
+Subject: Re: [PATCH 07/11] cxl/mem: Trace Memory Module Event Record
+Message-ID: <20221116153528.00005af7@Huawei.com>
+In-Reply-To: <20221110185758.879472-8-ira.weiny@intel.com>
 References: <20221110185758.879472-1-ira.weiny@intel.com>
-        <20221110185758.879472-6-ira.weiny@intel.com>
+        <20221110185758.879472-8-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -53,54 +53,37 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Nov 2022 10:57:52 -0800
+On Thu, 10 Nov 2022 10:57:54 -0800
 ira.weiny@intel.com wrote:
 
 > From: Ira Weiny <ira.weiny@intel.com>
 > 
-> CXL rev 3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
+> CXL rev 3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
 > 
-> Determine if the event read is a general media record and if so trace
-> the record as a General Media Event Record.
+> Determine if the event read is memory module record and if so trace the
+> record.
 > 
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-A few v2.0 references left in here that should be updated given it's new code.
+Noticed that we have a mixture of fully capitalized and not for flags.
+With that either explained or tidied up:
 
-With those tidied up
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-
-> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-> index 60dec9a84918..a0c20e110708 100644
-> --- a/include/trace/events/cxl.h
-> +++ b/include/trace/events/cxl.h
-> @@ -119,6 +119,130 @@ TRACE_EVENT(cxl_generic_event,
->  		__print_hex(__entry->data, CXL_EVENT_RECORD_DATA_LENGTH))
->  );
->  
 > +/*
-> + * Physical Address field masks
+> + * Device Health Information - DHI
 > + *
-> + * General Media Event Record
-> + * CXL v2.0 Section 8.2.9.1.1.1; Table 154
-
-Update to CXL rev 3.0 as I think we are preferring latest
-spec references on any new code.
-
-> + *
-> + * DRAM Event Record
-> + * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+> + * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
 > + */
+> +#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
+> +#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
+> +#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
+> +#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
+> +	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"Maintenance Needed"	}, \
+> +	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"Performance Degraded"	}, \
+> +	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"Replacement Needed"	}  \
 
-> +
-> +/*
-> + * General Media Event Record - GMER
-> + * CXL v2.0 Section 8.2.9.1.1.1; Table 154
-Update ref to r3.0
-Never v or the spec folk will get irritable :)
+Why are we sometime using capitals for flags (e.g patch 5) and not other times?
 
-> + */
-
-
+> +)
 
