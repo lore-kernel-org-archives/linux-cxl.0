@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B7BC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 15:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E9C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 15:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231403AbiKPPYb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 10:24:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
+        id S230123AbiKPPbM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 10:31:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230123AbiKPPYa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 10:24:30 -0500
+        with ESMTP id S231231AbiKPPbL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 10:31:11 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A848E7C;
-        Wed, 16 Nov 2022 07:24:29 -0800 (PST)
-Received: from frapeml500003.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC6Gf3KQhz6H7XT;
-        Wed, 16 Nov 2022 23:22:02 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495D41B1F9;
+        Wed, 16 Nov 2022 07:31:10 -0800 (PST)
+Received: from fraeml715-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NC6QM2WF9z68735;
+        Wed, 16 Nov 2022 23:28:43 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
+ fraeml715-chm.china.huawei.com (10.206.15.34) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 16:24:27 +0100
+ 15.1.2375.31; Wed, 16 Nov 2022 16:31:07 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Wed, 16 Nov
- 2022 15:24:26 +0000
-Date:   Wed, 16 Nov 2022 15:24:26 +0000
+ 2022 15:31:07 +0000
+Date:   Wed, 16 Nov 2022 15:31:06 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,105 +35,72 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 03/11] cxl/mem: Implement Clear Event Records command
-Message-ID: <20221116152426.0000626b@Huawei.com>
-In-Reply-To: <20221110185758.879472-4-ira.weiny@intel.com>
+Subject: Re: [PATCH 05/11] cxl/mem: Trace General Media Event Record
+Message-ID: <20221116153106.000025d7@Huawei.com>
+In-Reply-To: <20221110185758.879472-6-ira.weiny@intel.com>
 References: <20221110185758.879472-1-ira.weiny@intel.com>
-        <20221110185758.879472-4-ira.weiny@intel.com>
+        <20221110185758.879472-6-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 10 Nov 2022 10:57:50 -0800
+On Thu, 10 Nov 2022 10:57:52 -0800
 ira.weiny@intel.com wrote:
 
 > From: Ira Weiny <ira.weiny@intel.com>
 > 
-> CXL rev 3.0 section 8.2.9.2.3 defines the Clear Event Records mailbox
-> command.  After an event record is read it needs to be cleared from the
-> event log.
+> CXL rev 3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
 > 
-> Implement cxl_clear_event_record() and call it for each record retrieved
-> from the device.
+> Determine if the event read is a general media record and if so trace
+> the record as a General Media Event Record.
 > 
-> Each record is cleared individually.  A clear all bit is specified but
-> events could arrive between a get and the final clear all operation.
-> Therefore each event is cleared specifically.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-Some follow through comment updates needed from changes in earlier patches +
-one comment you can ignore if you prefer to keep it as is.
+A few v2.0 references left in here that should be updated given it's new code.
 
->  static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
->  				    enum cxl_event_log_type type)
->  {
-> @@ -728,14 +750,23 @@ static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
->  		}
->  
->  		pl_nr = le16_to_cpu(payload.record_count);
-> -		if (trace_cxl_generic_event_enabled()) {
+With those tidied up
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-To simplify this patch, maybe push this check down in the previous patch so this
-one doesn't move code around?  It'll look a tiny bit odd there of course..
 
-> +		if (pl_nr > 0) {
->  			u16 nr_rec = min_t(u16, pl_nr, CXL_GET_EVENT_NR_RECORDS);
->  			int i;
->  
-> -			for (i = 0; i < nr_rec; i++)
-> -				trace_cxl_generic_event(dev_name(cxlds->dev),
-> -							type,
-> -							&payload.record[i]);
-> +			if (trace_cxl_generic_event_enabled()) {
-> +				for (i = 0; i < nr_rec; i++)
-> +					trace_cxl_generic_event(dev_name(cxlds->dev),
-> +								type,
-> +								&payload.record[i]);
-> +			}
-> +
-> +			rc = cxl_clear_event_record(cxlds, type, &payload, nr_rec);
-> +			if (rc) {
-> +				dev_err(cxlds->dev, "Event log '%s': Failed to clear events : %d",
-> +					cxl_event_log_type_str(type), rc);
-> +				return;
-> +			}
->  		}
->  
-
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index da64ba0f156b..28a114c7cf69 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-
+> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
+> index 60dec9a84918..a0c20e110708 100644
+> --- a/include/trace/events/cxl.h
+> +++ b/include/trace/events/cxl.h
+> @@ -119,6 +119,130 @@ TRACE_EVENT(cxl_generic_event,
+>  		__print_hex(__entry->data, CXL_EVENT_RECORD_DATA_LENGTH))
+>  );
 >  
 > +/*
-> + * Clear Event Records input payload
-> + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
+> + * Physical Address field masks
 > + *
-> + * Space given for 1 record
+> + * General Media Event Record
+> + * CXL v2.0 Section 8.2.9.1.1.1; Table 154
 
-Nope...
+Update to CXL rev 3.0 as I think we are preferring latest
+spec references on any new code.
 
+> + *
+> + * DRAM Event Record
+> + * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
+> + */
+
+> +
+> +/*
+> + * General Media Event Record - GMER
+> + * CXL v2.0 Section 8.2.9.1.1.1; Table 154
+Update ref to r3.0
+Never v or the spec folk will get irritable :)
 
 > + */
-> +struct cxl_mbox_clear_event_payload {
-> +	u8 event_log;		/* enum cxl_event_log_type */
-> +	u8 clear_flags;
-> +	u8 nr_recs;		/* 1 for this struct */
-Nope :)  Delete the comments so they can't be wrong if this changes in future!
 
-> +	u8 reserved[3];
-> +	__le16 handle[CXL_GET_EVENT_NR_RECORDS];
-> +};
-> +
+
+
