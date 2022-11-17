@@ -2,47 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4F8C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 11:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F242C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 11:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233622AbiKQLUQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 06:20:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36700 "EHLO
+        id S234862AbiKQLWj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 06:22:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239221AbiKQLUP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 06:20:15 -0500
+        with ESMTP id S234299AbiKQLWi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 06:22:38 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36CB2CE2C;
-        Thu, 17 Nov 2022 03:20:12 -0800 (PST)
-Received: from fraeml703-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NCclh1RtQz687SH;
-        Thu, 17 Nov 2022 19:15:28 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2380C2F3B6;
+        Thu, 17 Nov 2022 03:22:38 -0800 (PST)
+Received: from frapeml100004.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NCcs62FtSz67bjw;
+        Thu, 17 Nov 2022 19:20:10 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Thu, 17 Nov 2022 12:20:10 +0100
+ frapeml100004.china.huawei.com (7.182.85.167) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 12:22:36 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 17 Nov
- 2022 11:20:10 +0000
-Date:   Thu, 17 Nov 2022 11:20:09 +0000
+ 2022 11:22:35 +0000
+Date:   Thu, 17 Nov 2022 11:22:35 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Ben Widawsky" <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 01/11] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221117112009.00005f1d@Huawei.com>
-In-Reply-To: <Y3V24PrgL0aN9P08@iweiny-desk3>
+Subject: Re: [PATCH 07/11] cxl/mem: Trace Memory Module Event Record
+Message-ID: <20221117112235.00003243@Huawei.com>
+In-Reply-To: <Y3WNLtyZYLQNMZzj@iweiny-desk3>
 References: <20221110185758.879472-1-ira.weiny@intel.com>
-        <20221110185758.879472-2-ira.weiny@intel.com>
-        <20221116145341.00006411@Huawei.com>
-        <Y3V24PrgL0aN9P08@iweiny-desk3>
+        <20221110185758.879472-8-ira.weiny@intel.com>
+        <20221116153528.00005af7@Huawei.com>
+        <Y3WNLtyZYLQNMZzj@iweiny-desk3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -56,219 +55,84 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 16 Nov 2022 15:48:48 -0800
+On Wed, 16 Nov 2022 17:23:58 -0800
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Wed, Nov 16, 2022 at 02:53:41PM +0000, Jonathan Cameron wrote:
-> > On Thu, 10 Nov 2022 10:57:48 -0800
+> On Wed, Nov 16, 2022 at 03:35:28PM +0000, Jonathan Cameron wrote:
+> > On Thu, 10 Nov 2022 10:57:54 -0800
 > > ira.weiny@intel.com wrote:
 > >   
-> > > From: Davidlohr Bueso <dave@stgolabs.net>
+> > > From: Ira Weiny <ira.weiny@intel.com>
 > > > 
-> > > Currently the only CXL features targeted for irq support require their
-> > > message numbers to be within the first 16 entries.  The device may
-> > > however support less than 16 entries depending on the support it
-> > > provides.
+> > > CXL rev 3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
 > > > 
-> > > Attempt to allocate these 16 irq vectors.  If the device supports less
-> > > then the PCI infrastructure will allocate that number.  Store the number
-> > > of vectors actually allocated in the device state for later use
-> > > by individual functions.  
-> > See later patch review, but I don't think we need to store the number
-> > allocated because any vector is guaranteed to be below that point  
-> 
-> Only as long as we stick to those functions which are guaranteed to be under
-> 16.  If a device supports more than 16 and code is added to try and enable that
-> irq this base support will not cover that.
-
-It matters only if this enable is changed.  If this remains at 16, the vectors
-are guaranteed to be under 16..
-
-> 
-> > (QEMU code is wrong on this at the momemt, but there are very few vectors
-> >  so it hasn't mattered yet).  
-> 
-> How so?  Does the spec state that a device must report at least 16 vectors?
-
-Technically QEMU upstream today uses 1 vector I think, so failure to get that
-is the same as no irqs.
-
-As we expand to more possible vectors, QEMU should adjust the reported msgnums
-to fit in whatever vectors are enabled (if using msi, logic is handled
-elsewhere for msix as there is an indirection in the way and I think it
-is down to the OS to program that indirection correctly).  See spec language
-referred to in review of the patch using the irqs.  We may never implement
-that magic. but it is done correctly for other devices.
-
-https://elixir.bootlin.com/qemu/latest/source/hw/pci-bridge/ioh3420.c#L47
-is an example where aer is on vector 1 unless there is only one vector in which
-case it falls back to vector 0.
-
-Jonathan
-
-
-> 
-> > 
-> > Otherwise, pcim fun deals with some of the cleanup you are doing again
-> > here for us so can simplify this somewhat. See inline.  
-> 
-> Yea it is broken.
-> 
-> > 
-> > Jonathan
-> > 
-> > 
-> >   
+> > > Determine if the event read is memory module record and if so trace the
+> > > record.
 > > > 
-> > > Upon successful allocation, users can plug in their respective isr at
-> > > any point thereafter, for example, if the irq setup is not done in the
-> > > PCI driver, such as the case of the CXL-PMU.
-> > > 
-> > > Cc: Bjorn Helgaas <helgaas@kernel.org>
-> > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
 > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > > 
-> > > ---
-> > > Changes from Ira
-> > > 	Remove reviews
-> > > 	Allocate up to a static 16 vectors.
-> > > 	Change cover letter
-> > > ---
-> > >  drivers/cxl/cxlmem.h |  3 +++
-> > >  drivers/cxl/cxlpci.h |  6 ++++++
-> > >  drivers/cxl/pci.c    | 32 ++++++++++++++++++++++++++++++++
-> > >  3 files changed, 41 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > index 88e3a8e54b6a..b7b955ded3ac 100644
-> > > --- a/drivers/cxl/cxlmem.h
-> > > +++ b/drivers/cxl/cxlmem.h
-> > > @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
-> > >   * @info: Cached DVSEC information about the device.
-> > >   * @serial: PCIe Device Serial Number
-> > >   * @doe_mbs: PCI DOE mailbox array
-> > > + * @nr_irq_vecs: Number of MSI-X/MSI vectors available
-> > >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> > >   *
-> > >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > > @@ -247,6 +248,8 @@ struct cxl_dev_state {
-> > >  
-> > >  	struct xarray doe_mbs;
-> > >  
-> > > +	int nr_irq_vecs;
-> > > +
-> > >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> > >  };
-> > >  
-> > > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> > > index eec597dbe763..b7f4e2f417d3 100644
-> > > --- a/drivers/cxl/cxlpci.h
-> > > +++ b/drivers/cxl/cxlpci.h
-> > > @@ -53,6 +53,12 @@
-> > >  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
-> > >  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
-> > >  
+> > >   
+> > Noticed that we have a mixture of fully capitalized and not for flags.
+> > With that either explained or tidied up:
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >   
 > > > +/*
-> > > + * NOTE: Currently all the functions which are enabled for CXL require their
-> > > + * vectors to be in the first 16.  Use this as the max.
+> > > + * Device Health Information - DHI
+> > > + *
+> > > + * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
 > > > + */
-> > > +#define CXL_PCI_REQUIRED_VECTORS 16
-> > > +
-> > >  /* Register Block Identifier (RBI) */
-> > >  enum cxl_regloc_type {
-> > >  	CXL_REGLOC_RBI_EMPTY = 0,
-> > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > > index faeb5d9d7a7a..62e560063e50 100644
-> > > --- a/drivers/cxl/pci.c
-> > > +++ b/drivers/cxl/pci.c
-> > > @@ -428,6 +428,36 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
-> > >  	}
-> > >  }
-> > >  
-> > > +static void cxl_pci_free_irq_vectors(void *data)
-> > > +{
-> > > +	pci_free_irq_vectors(data);
-> > > +}
-> > > +
-> > > +static void cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> > > +{
-> > > +	struct device *dev = cxlds->dev;
-> > > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > > +	int nvecs;
-> > > +	int rc;
-> > > +
-> > > +	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_REQUIRED_VECTORS,
-> > > +				   PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> > > +	if (nvecs < 0) {
-> > > +		dev_dbg(dev, "Not enough interrupts; use polling instead.\n");
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	rc = devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);  
-> > The pci managed code always gives me a headache because there is a lot of magic
-> > under the hood if you ever called pcim_enable_device() which we did.
+> > > +#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
+> > > +#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
+> > > +#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
+> > > +#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
+> > > +	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"Maintenance Needed"	}, \
+> > > +	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"Performance Degraded"	}, \
+> > > +	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"Replacement Needed"	}  \  
 > > 
-> > Chasing through
-> > 
-> > pci_alloc_irq_vectors_affinity()->
-> > either
-> > 	__pci_enable_msix_range()
-> > or
-> > 	__pci_enable_msi_range()
-> > 
-> > they are similar
-> > 	pci_setup_msi_context()
-> > 		pci_setup_msi_release()
-> > 			adds pcmi_msi_release devm action.
-> > and that frees the vectors for us.
-> > So we don't need to do it here.  
+> > Why are we sometime using capitals for flags (e.g patch 5) and not other times?  
 > 
-> :-/
+> Not sure what you mean.  Do you mean this from patch 5?
+Nope
+
++#define CXL_DPA_VOLATILE			BIT(0)
++#define CXL_DPA_NOT_REPAIRABLE			BIT(1)
++#define show_dpa_flags(flags)	__print_flags(flags, "|",		   \
++	{ CXL_DPA_VOLATILE,			"VOLATILE"		}, \
++	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
++)
++
+
+Where they are all capitals.  I thought that was maybe a flags vs other fields
+thing but it doesn't seem to be.
+
+
 > 
-> So what is the point of pci_free_irq_vectors()?  This is very confusing to have
-> a function not called pcim_* [pci_alloc_irq_vectors()] do 'pcim stuff'.
+> ...
+>         { CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,         "Uncorrectable Event"   }, \
+>         { CXL_GMER_EVT_DESC_THRESHOLD_EVENT,            "Threshold event"       }, \
+>         { CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW,       "Poison List Overflow"  }  \
+> ...
 > 
-> Ok I'll drop this extra because I see it now.
+> Threshold event was a mistake.  This is the capitalization the spec uses.
 > 
-> > 
-> >   
-> > > +	if (rc) {
-> > > +		dev_dbg(dev, "Device managed call failed; interrupts disabled.\n");
-> > > +		/* some got allocated, clean them up */
-> > > +		cxl_pci_free_irq_vectors(pdev);  
-> > We could just leave them lying around for devm cleanup to sweep up eventually
-> > or free them as you have done here.  
+> Bit[0]: Uncorrectable Event: When set, indicates the reported event is
+>         ^^^^^^^^^^^^^^^^^^^
+> uncorrectable by the device. When cleared, indicates the reported
+> event was corrected by the device.
 > 
-> And besides this extra call is flat out broken.  cxl_pci_free_irq_vectors() is
-> already called at this point if devm_add_action_or_reset() failed...  But I see
-> this is not required.
+> Bit[1]: Threshold Event: When set, the event is the result of a
+>         ^^^^^^^^^^^^^^^
+> threshold on the device having been reached. When cleared, the event
+> is not the result of a threshold limit.
 > 
-> I do plan to add a big ol' comment as to why we don't need to mirror the call
-> with the corresponding 'free'.
+> Bit[2]: Poison List Overflow Event: When set, the Poison List has
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+> overflowed, and this event is not in the Poison List. When cleared, the
+> Poison List has not overflowed.
 > 
-> I'll respin,
+> 
+> I'll update this 'Event' in patch 5.  Probably need to add 'Event' to the
+> Poison List...
+> 
 > Ira
-> 
-> >   
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	cxlds->nr_irq_vecs = nvecs;
-> > > +}
-> > > +
-> > >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > >  {
-> > >  	struct cxl_register_map map;
-> > > @@ -494,6 +524,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > >  	if (rc)
-> > >  		return rc;
-> > >  
-> > > +	cxl_pci_alloc_irq_vectors(cxlds);
-> > > +
-> > >  	cxlmd = devm_cxl_add_memdev(cxlds);
-> > >  	if (IS_ERR(cxlmd))
-> > >  		return PTR_ERR(cxlmd);  
-> >   
 
