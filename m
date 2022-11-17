@@ -2,146 +2,216 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6142DC43217
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 11:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3912FC43217
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 12:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239238AbiKQL0K convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 06:26:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38758 "EHLO
+        id S234665AbiKQMr1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 07:47:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239203AbiKQL0K (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 06:26:10 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C8345A24
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 03:26:09 -0800 (PST)
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NCcx92D98z67bjw;
-        Thu, 17 Nov 2022 19:23:41 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 17 Nov 2022 12:26:07 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 17 Nov
- 2022 11:26:06 +0000
-Date:   Thu, 17 Nov 2022 11:26:06 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <dave@stgolabs.net>
-Subject: Re: [PATCH v4 12/18] tools/testing/cxl: Add "passphrase secure
- erase" opcode support
-Message-ID: <20221117112606.00000f17@Huawei.com>
-In-Reply-To: <bbe4be20-5f2e-077f-009a-4ece6b1c9324@intel.com>
-References: <166845791969.2496228.8357488385523295841.stgit@djiang5-desk3.ch.intel.com>
-        <166845805415.2496228.732168029765896218.stgit@djiang5-desk3.ch.intel.com>
-        <20221115110831.00001fa4@Huawei.com>
-        <a8ed61db-9bf1-410c-b4e6-7042f48a67ff@intel.com>
-        <14ae41bc-2d63-460b-5ac5-a4d94aa39982@intel.com>
-        <20221116114335.00006a3d@Huawei.com>
-        <bbe4be20-5f2e-077f-009a-4ece6b1c9324@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S240307AbiKQMrM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 07:47:12 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C81F74CC0;
+        Thu, 17 Nov 2022 04:44:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lEBfbCItdR0evu0NiJlWdrZrVK/ALQIuvbAOx/QOq95suJGiegLL2kIwewztOF2+hx9KZU8PzwfKMVVIvCUxieabNi6mdzYL21TvuWL0iXjuUVT5YYUB8cs4bTh9OGQ4vVARjotMEYWIAj1pPHAcVeiR1lhwkuWWpmtD1y5Ode90Whk6ciT0w8jPABTHIi2wm0/pNfgtc+F7kz7L6d17cyLIr5PvA3cPvXcE3oVe9Xf2FwxyLULytv9IMUSFizSVoHAfR5Y5rR7J8OqSF5kKMWogLlaufEpfllm7gO7FwwGHgvfni+BkkGiyQ1VmauFCQpD2tzh1KQXg62zLOhoHPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qzVSVHJjD87v1GYXFZ7p4Znu0AqFaVbaUa99N9wB6wk=;
+ b=f9PO4bmRmEkaNs8Z4bWIm4mQcmvkJz4HGjp2fdPYvNaVicn8kI6d7gMdpAC9Shjkw8eB7A6fJQARHB7CvgPmdttXqsjpg2w3qpHz2oqxeumIHajNI2AKsi7V+QQ2JjBlBVIY0F1xn4HeBskcK5+zeagNvY2OrhXzjRk7r/o2jsiEpW/15UfhgAmKw3VStkyGtgRyDpoe7y+xeT92ia6rBrDh8zMn20TtPmW0dml/uK9w97Ra9I1+O8jnA8wy4rv/gJNFDBCn92lQp1ekYbffgrDFlVKSc9fPYp/laXy3Ie4I5v+nNOKLOB9MYgUEaewxWv3Hp00vnkYMufue/iBkMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qzVSVHJjD87v1GYXFZ7p4Znu0AqFaVbaUa99N9wB6wk=;
+ b=RzSJVjVJznIDvUZd5CU2NyWC4YYPtULUSY7N4pytaXvQ8H/uftQOUJSebBsAQTP7AHJWaDdoHRx1ifCv6jol8U+PzLbPhuL9BDT53joIZ3NLMb65vLi2c9a0GbCtH0kApY8GL+6mESORBaOxD/gm4tSDHOkDj0R8wmh8WpvNOBA=
+Received: from BN7PR06CA0062.namprd06.prod.outlook.com (2603:10b6:408:34::39)
+ by LV2PR12MB5725.namprd12.prod.outlook.com (2603:10b6:408:14c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Thu, 17 Nov
+ 2022 12:44:07 +0000
+Received: from BN8NAM11FT049.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:34:cafe::8c) by BN7PR06CA0062.outlook.office365.com
+ (2603:10b6:408:34::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
+ Transport; Thu, 17 Nov 2022 12:44:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT049.mail.protection.outlook.com (10.13.177.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5834.8 via Frontend Transport; Thu, 17 Nov 2022 12:44:07 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 17 Nov
+ 2022 06:44:04 -0600
+Date:   Thu, 17 Nov 2022 13:43:52 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v3 2/9] cxl/acpi: Extract component registers of
+ restricted hosts from RCRB
+Message-ID: <Y3YoBpIsgRRbRyLk@rric.localdomain>
+References: <20221109104059.766720-1-rrichter@amd.com>
+ <20221109104059.766720-3-rrichter@amd.com>
+ <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3ODbwk+12JvWyhJ@rric.localdomain>
+ <6373d24866bc9_12cdff294e3@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6373d24866bc9_12cdff294e3@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT049:EE_|LV2PR12MB5725:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4aec258c-e5ca-409d-d655-08dac8996ac5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XY8Oi1actovMHr7hRc4utmhUEUbCAGJ1pPdwKXyq3HHIZYODuE64sYA2tt6tcMP60NajT0usTOhXDn9snyT98YxRoRg3o8WPCJhmWHiqk9gpBnkz8VZ77FBtftl4U/4D6AOX1fXHTSwRYgdR09nMCnDAQ1tot36xKrqaVjljwUNoODhhtrdvX+aaKftN2tPS3UpBeumqCs2Aq6Z/up7JeWGRmknjDlELh37d/6hiYc7gIVr1EzCsarnjv5kAeW/2/p2kAPM6sRi0a8pvf3/32r356p35W/WRUQaJGP5UZmJqT2f808A0ZvRS/IuRwtUdYg5CzhTA2GR1e5xzJ2Rw1ZNnSU4hFcYrTI8TsWX651kUocjTMHnX49nnI73vFYudJTf4YA89b3rEf1mxeEkstw5+IBMknK0N9kcTX+VvmDx30FeRFdPPiXirvdIYd6WOLCNPQCbmzFYZLKjjJonwOSSi5DFaBW4Ldlb6VuZUTedHwknbTIgbJLs5djfPGSlud6Xz1Zd8T87bPeTcKY5K7O0f1z6eaWNz/pQJuX11Jx7RBTCh88E6rDXufC/g/NYleEMuE6HKR9yGUqNhGVFDHPmUJBF8wvOrg4dmCr4/KhJB5u0D09xGFr/7/Bcf4h0NeSgssolZ8RumabY6YteClqsD6CfeuM3gAk2+is3zERC14OcghtGHDVoLBsbm0C+qx5Htc4GqXoXPtyToxpPcabV/f+3E7IBwz5uRXLFThOU=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(346002)(396003)(136003)(451199015)(36840700001)(40470700004)(46966006)(186003)(16526019)(7696005)(356005)(81166007)(82740400003)(36860700001)(82310400005)(55016003)(7416002)(336012)(426003)(40460700003)(53546011)(9686003)(26005)(2906002)(47076005)(8936002)(5660300002)(6666004)(478600001)(40480700001)(41300700001)(316002)(54906003)(70586007)(83380400001)(6916009)(70206006)(4326008)(8676002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 12:44:07.2779
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4aec258c-e5ca-409d-d655-08dac8996ac5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT049.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5725
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 16 Nov 2022 14:54:02 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 11/16/2022 3:43 AM, Jonathan Cameron wrote:
-> > On Tue, 15 Nov 2022 10:01:53 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> On 11/15/2022 7:57 AM, Dave Jiang wrote:  
-> >>>
-> >>>
-> >>> On 11/15/2022 3:08 AM, Jonathan Cameron wrote:  
-> >>>> On Mon, 14 Nov 2022 13:34:14 -0700
-> >>>> Dave Jiang <dave.jiang@intel.com> wrote:
-> >>>>     
-> >>>>> Add support to emulate a CXL mem device support the "passphrase secure
-> >>>>> erase" operation.
-> >>>>>
-> >>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
-> >>>> The logic in here gives me a headache but I'm not sure it's correct
-> >>>> yet...
-> >>>>
-> >>>> If you can figure out what is supposed to happen if this is called
-> >>>> with Passphrase Type == master before the master passphrase has been set
-> >>>> then you are doing better than me.
-> >>>>
-> >>>> Unlike for the User passphrase, where the language " .. and the user
-> >>>> passphrase
-> >>>> is not currently set or is not supported by the device, this value is
-> >>>> ignored."
-> >>>> to me implies we wipe the device and clear the non existent user pass
-> >>>> phrase,
-> >>>> the not set master passphrase case isn't covered as far as I can see.
-> >>>>
-> >>>> The user passphrase question raises a futher question (see inline)
-> >>>>
-> >>>> Thoughts?  
-> >>>
-> >>> Guess this is what happens when you bolt on master passphrase support
-> >>> after defining the spec without its existence, and then move it to a
-> >>> different spec and try to maintain compatibility between the two in
-> >>> order to not fork the hardware/firmware....
-> >>>
-> >>> Should we treat the no passphrase set instance the same as sending a
-> >>> Secure Erase (Opcode 4401h)? And then the only case left is no master
-> >>> pass set but user pass is set.
-> >>>
-> >>> if (!master_pass_set && pass_type_master) {
-> >>>       if (user_pass_set)
-> >>>           return -EINVAL;
-> >>>       else
-> >>>           secure_erase;
-> >>> }
-> >>>     
-> >> This is the current change:
-> >>
-> >> +       switch (erase->type) {
-> >> +       case CXL_PMEM_SEC_PASS_MASTER:
-> >> +               if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
-> >> +                       if (memcmp(mdata->master_pass, erase->pass,
-> >> +                                  NVDIMM_PASSPHRASE_LEN)) {
-> >> +                               master_plimit_check(mdata);
-> >> +                               cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-> >> +                               return -ENXIO;
-> >> +                       }
-> >> +                       mdata->master_limit = 0;
-> >> +                       mdata->user_limit = 0;
-> >> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-> >> +                       memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-> >> +                       mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;  
-> >   
-> >> +               } else if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
-> >> +                       return -EINVAL;
-> >> +               }  
+On 15.11.22 09:54:16, Dan Williams wrote:
+> Robert Richter wrote:
+> > On 14.11.22 13:30:01, Dan Williams wrote:
+> > > Robert Richter wrote:
+> > 
+> > > > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > > > index ec178e69b18f..7a5bde81e949 100644
+> > > > --- a/drivers/cxl/core/regs.c
+> > > > +++ b/drivers/cxl/core/regs.c
+> > > > @@ -307,3 +307,49 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> > > >  	return -ENODEV;
+> > > >  }
+> > > >  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+> > > > +
+> > > > +resource_size_t cxl_rcrb_to_component(struct device *dev,
+> > > > +				      resource_size_t rcrb,
+> > > > +				      enum cxl_rcrb which)
+> > > > +{
+> > > > +	resource_size_t component_reg_phys;
+> > > > +	u32 bar0, bar1;
+> > > > +	void *addr;
+> > > > +
+> > > > +	if (which == CXL_RCRB_UPSTREAM)
+> > > > +		rcrb += SZ_4K;
+> > > > +
+> > > > +	/*
+> > > > +	 * RCRB's BAR[0..1] point to component block containing CXL
+> > > > +	 * subsystem component registers. MEMBAR extraction follows
+> > > > +	 * the PCI Base spec here, esp. 64 bit extraction and memory
+> > > > +	 * ranges alignment (6.0, 7.5.1.2.1).
+> > > > +	 */
+> > > 
+> > > A request_mem_region() is needed here to ensure ownership and expected
+> > > sequencing of accessing the RCRB to locate the component registers, and
+> > > accessing the RCRB to manipulate the component registers. It also helps
+> > > to sanity check that the BIOS mapped an exclusive range for the RCRB.
+> > 
+> > Right, that is missing.
+> > 
+> > > 
+> > > > +	addr = ioremap(rcrb, PCI_BASE_ADDRESS_0 + SZ_8);
+> > > 
+> > > That PCI_BASE_ADDRESS_0 does not belong there. It ends up being benign
+> > > and forcing ioremap to map 12K instead of 8K, but it is a
+> > > config-register offset, not part of the RCRB size.
+> > 
+> > Note this is BAR0 + 8 bytes, not 8k, and it does not map the whole
+> > RCRB region but instead the first part of the config space up to
+> > including the 64 bit BAR.
 > 
-> So while looking at 8.2.9.8.6.3 I stumbled on this line: "When the 
-> master passphrase is disabled, the device shall return Invalid Input for 
-> the Passphrase Secure Erase command with the master passphrase". I 
-> suppose the above would reduce to just else {} instead?
+> Oh, sorry, yes, my mistake. However, there is not much value in mapping
+> less than 4K since all ioremap requests are rounded up to PAGE_SIZE.
+> Since an RCRB is only 4K per port lets just map the whole thing.
 
-Good spot. Agreed, this one is just an else.  Definitely a case for a reference
-to the spec though!
+I was going to keep the ranges small to avoid conflicts with other
+requests for the same page (though request_mem_region() was missing
+yet).
 
-> And it probably 
-> wouldn't hurt to have the spec duplicate this line under the passphrase 
-> secure erase section as well.
+> 
+> > > > +	if (!addr) {
+> > > > +		dev_err(dev, "Failed to map region %pr\n", addr);
+> > > > +		return CXL_RESOURCE_NONE;
+> > > > +	}
+> > > > +
+> > > > +	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
+> > > > +	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
+> > > > +	iounmap(addr);
+> > > 
+> > > ...corresponding release_mem_region() would go here.
+> > > 
+> > > > +
+> > > > +	/* sanity check */
+> > > > +	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
+> > > > +		return CXL_RESOURCE_NONE;
+> > > 
+> > > I would have also expected:
+> > > 
+> > > - a sanity check for "Memory Space Enable" being set in the command
+> > >   register.
+> > 
+> > Ok.
+> > 
+> > > 
+> > > - an explicit check for 0xffffffff for the case when the upstream-port
+> > >   implements "no RCRB" mode.
+> > 
+> > Yes, I left support for this to a later patch, but it's better to
+> > check it here already and possibly fall back to reg loc DVSEC then.
+> 
+> Yeah, I think simply failing on 0xffffffff is sufficient for now.
+> 
+> > > 
+> > > - some check that BIOS initialized the BAR values post reset given these
+> > >   BARs are invisible to the PCI core resource assignment 
+> > 
+> > What check do you have in mind here? There is already the NULL check
+> > which would be the out-of-reset value.
+> 
+> I was thinking more along the lines of sanity checking that the
+> programmed RCRB range falls within the assigned MMIO space of the
+> host-bridge, but perhaps that is overkill since it would just be
+> validating self consistency between 2 BIOS provided values. Robustness
+> principle would say try to continue if those disagree.
 
-Would be nice :)
+Ok, will drop a check here.
 
+Thanks,
+
+-Robert
