@@ -2,228 +2,168 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA6CC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 18:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33CF3C43217
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 18:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240121AbiKQShu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 13:37:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40322 "EHLO
+        id S240121AbiKQSqp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 13:46:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234811AbiKQSht (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 13:37:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A18E85175
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 10:37:47 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A4E6060AAF
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 18:37:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634F1C433C1;
-        Thu, 17 Nov 2022 18:37:45 +0000 (UTC)
-Date:   Thu, 17 Nov 2022 13:37:43 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com
-Subject: Re: [PATCH v4 05/10] cxl: add monitor function for event trace
- events
-Message-ID: <20221117133743.67ecd167@gandalf.local.home>
-In-Reply-To: <166793221692.3768752.18351228388707416243.stgit@djiang5-desk3.ch.intel.com>
-References: <166793212765.3768752.4370741471494095451.stgit@djiang5-desk3.ch.intel.com>
-        <166793221692.3768752.18351228388707416243.stgit@djiang5-desk3.ch.intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S240652AbiKQSqo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 13:46:44 -0500
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6680587571;
+        Thu, 17 Nov 2022 10:46:43 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jvMw4bVZ1l+x2NZwbpP5Dflf3zpZlDCsw+3cHvcH3nSJ8AlfC48YCFGdNFTrHc0pEEMqUVjT02F+blWAW4BUaS1a3oxEP4bTgzybTvTNp+Vd5w8ZGFTE6Z15npLIdxNKdqhHoiRYl7AdYRjGZ99R2Fas3TmMqyR3JpSnQCYbucdixJsqdZmbVqpKKSfAc9E0OHqzxVr0d30JAV1Qi3yAN571Y/9qJY7EQlmbCd78xYCqNjmBXwc8PGQqXENsFhFzoiEc7f00AXf4ugbL+XgDgD9/N1h4ejtcA5YKqf8xx1tkmKtmhKCKBhgckIc9wPj6TmgKcYTZtD/2bXIghSX12w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SzDjRtF8vthBr1vLTjMNdlkq3Z20jXR/o1NiKpQUdqY=;
+ b=FqTcx2rgxglPvjvvcvSJMBJ1X3EeySRR50aKNoWBS9Olfp2bZmoYX9lXWz8AoE58rgaaa3LGgq5yx8eHiQWblIg0dOWRMABA6uEY/B3YLH04UbnE7Wj5pP5wrZxrTbd2H0uM1tU5Fu+h+MX9SgSAGRaqPb0VOrhNcz9QdFtVQYbiTAr5E3zWwJfrJ0N4su+YhA52XSgrp7fUD80Z47zVSNNp+NoGAbhFSmTj50U0qPvjfQvNFieWT1Z6nldDxfKrpB4ClaEDNt62/Sz8tr8RV7YSaeWCbzT26Zc5XAAHjxsrqWyS5Jo0yYVV/Ju77Yo1fns89V790iOh/3aD28Qj3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SzDjRtF8vthBr1vLTjMNdlkq3Z20jXR/o1NiKpQUdqY=;
+ b=Jq2gA7DjHS1vRektMy8INTYFAmBNf9DsXJawIvMYTkndgb/KnGhcJTNlj0hcDWzzFbAXj+ZbxnplStvILmc6d4Oh15RJCvUvIowVnXfq2pPRpDVamq06esCj0rfXYgO6NECn9PiTQvWg+iQWTXDFLOrKchFWBfmHVtccRKvgAKU=
+Received: from BN0PR02CA0022.namprd02.prod.outlook.com (2603:10b6:408:e4::27)
+ by PH0PR12MB5404.namprd12.prod.outlook.com (2603:10b6:510:d7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Thu, 17 Nov
+ 2022 18:46:39 +0000
+Received: from BN8NAM11FT045.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e4:cafe::7b) by BN0PR02CA0022.outlook.office365.com
+ (2603:10b6:408:e4::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
+ Transport; Thu, 17 Nov 2022 18:46:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT045.mail.protection.outlook.com (10.13.177.47) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5834.8 via Frontend Transport; Thu, 17 Nov 2022 18:46:39 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 17 Nov
+ 2022 12:46:36 -0600
+Date:   Thu, 17 Nov 2022 19:46:33 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 4/9] cxl/mem: Skip intermediate port enumeration of
+ restricted endpoints (RCDs)
+Message-ID: <Y3aBibty5mDTSmzx@rric.localdomain>
+References: <20221109104059.766720-1-rrichter@amd.com>
+ <20221109104059.766720-5-rrichter@amd.com>
+ <6372d85ed793f_12cdff294f@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3ORTv/1YbTFJQzq@rric.localdomain>
+ <6373d5b332214_12cdff2948@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6373d5b332214_12cdff2948@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT045:EE_|PH0PR12MB5404:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6056b23d-b687-4aab-090a-08dac8cc1003
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TpZLokjS7jjUyyNtCWP8Ws8O1PgAadklRbtTYs+7yOG5su6gOD6rx7pune+t/EYTzWf7L38JGDvv0K06BLiBMphTzGImTQboWmat1VlsJbbNXVHnZZvhg3Ku6P7zXlmWsjeOss2CqDbrK3dz1XkgTgOmiG0QzaMWqHcsRdKKhufBGnahlS/ybLTfHqMmlQ6b1XL10am6RgbDGy3PjPpj5j/AcD9Bof5wqUu9kTrcm3D4zj719ocSxlA7+A6JccVETdDKTlDX4wlKM7QiSsVnug0tHTm0IRdVVPmZHGYddtcDFeOAqJZOXMXE7b54apzSl46FfhPCZVosanz5/PVEA4EaCDIf9OBItrkBt8060UHNJ9lP+juIS5dtx/Onlglq30BN3CexMeLd5rSoNcJd+b5wyJx7HgFohFZMGYjNgJSu3K4z0QqeiWvcJD0470I44jsvjKsS1Y6R2tiO1kaK0+U2KNTZ3lKkuwhl5LYp06sI/OFCt31RKmvXpGU3lijCLaOUyjz68lBf3D4Jt37rBIDdP0VlYgLnIMFAIyLidkDad/+RgMybeXIAmqDieCE6KOMt8bpZ8qVsD7mtzuZI7UjFvj8118Al1TlUE5muIFMs6Y0KiJKH11zU3hiSyaBjMMq9pZ2mFbwWPo0EVpTisYZC7OzdQKM2D52ZVpIhrWWl7nlW0UsAteRTLur6zQLTsuZ0aJz1UFECtQ/kJ4yLXki8fGd7Sq1u7RC+eOoMUXM=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(376002)(396003)(136003)(451199015)(36840700001)(46966006)(40470700004)(82310400005)(36860700001)(40460700003)(83380400001)(82740400003)(81166007)(478600001)(40480700001)(356005)(7696005)(53546011)(55016003)(6666004)(4326008)(70206006)(70586007)(41300700001)(8676002)(26005)(316002)(6916009)(54906003)(186003)(16526019)(9686003)(426003)(336012)(47076005)(2906002)(8936002)(5660300002)(7416002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 18:46:39.3395
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6056b23d-b687-4aab-090a-08dac8cc1003
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT045.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5404
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 08 Nov 2022 11:30:16 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> Add function that creates an event trace instance and utilize the cxl event
-> trace common functions to extract interested events from the trace buffer.
-> The monitoring function will pend on an epoll fd and wait for new events
-> to appear in the trace buffer.
+On 15.11.22 10:08:51, Dan Williams wrote:
+> Robert Richter wrote:
+> > On 14.11.22 16:07:58, Dan Williams wrote:
+> > > Robert Richter wrote:
+> > > > When an endpoint is found, all ports in beetween the endpoint and the
+> > > > CXL host bridge need to be created. In the RCH case there are no ports
+> > > > in between a host bridge and the endpoint. Skip the enumeration of
+> > > > intermediate ports.
+> > > > 
+> > > > The port enumeration does not only create all ports, it also
+> > > > initializes the endpoint chain by adding the endpoint to every
+> > > > downstream port up to the root bridge. This must be done also in RCD
+> > > > mode, but is much more simple as the endpoint only needs to be added
+> > > > to the host bridge's dport.
+> > > > 
+> > > > Note: For endpoint removal the cxl_detach_ep() is not needed as it is
+> > > > released in cxl_port_release().
+> > > > 
+> > > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > > ---
+> > > >  drivers/cxl/core/port.c | 18 ++++++++++++++++--
+> > > >  1 file changed, 16 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > > > index d10c3580719b..e21a9c3fe4da 100644
+> > > > --- a/drivers/cxl/core/port.c
+> > > > +++ b/drivers/cxl/core/port.c
+> > > > @@ -1366,8 +1366,24 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
+> > > >  {
+> > > >  	struct device *dev = &cxlmd->dev;
+> > > >  	struct device *iter;
+> > > > +	struct cxl_dport *dport;
+> > > > +	struct cxl_port *port;
+> > > >  	int rc;
+> > > >  
+> > > > +	/*
+> > > > +	 * Skip intermediate port enumeration in the RCH case, there
+> > > > +	 * are no ports in between a host bridge and an endpoint. Only
+> > > > +	 * initialize the EP chain.
+> > > > +	 */
+> > > > +	if (is_cxl_restricted(cxlmd)) {
+> > > 
+> > > I changed this to:
+> > > 
+> > > 	if (cxlmd->cxlds->rcd) {
+> > 
+> > I a mail to Bjorn I suggested to have cxl_dev_cap and a cxl_port_cap
+> > in the pci_dev struct that could be looked up too including RCD mode.
+> > Checking the pci_dev looks more reasonable to me here, though we could
+> > have a flag of it in cxlds too.
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  cxl/meson.build |    1 
->  cxl/monitor.c   |  140 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 141 insertions(+)
->  create mode 100644 cxl/monitor.c
-> 
-> diff --git a/cxl/meson.build b/cxl/meson.build
-> index c59876262e76..eb8b2b1070ed 100644
-> --- a/cxl/meson.build
-> +++ b/cxl/meson.build
-> @@ -8,6 +8,7 @@ cxl_src = [
->    'json.c',
->    'filter.c',
->    'event_trace.c',
-> +  'monitor.c',
->  ]
->  
->  cxl_tool = executable('cxl',
-> diff --git a/cxl/monitor.c b/cxl/monitor.c
-> new file mode 100644
-> index 000000000000..c3f7e3639ec0
-> --- /dev/null
-> +++ b/cxl/monitor.c
-> @@ -0,0 +1,140 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2022, Intel Corp. All rights reserved.
-> +/* Some bits copied from ndctl monitor code */
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +#include <errno.h>
-> +#include <json-c/json.h>
-> +#include <libgen.h>
-> +#include <time.h>
-> +#include <dirent.h>
-> +#include <ccan/list/list.h>
-> +#include <util/json.h>
-> +#include <util/util.h>
-> +#include <util/parse-options.h>
-> +#include <util/parse-configs.h>
-> +#include <util/strbuf.h>
-> +#include <sys/epoll.h>
-> +#include <sys/stat.h>
-> +#include <traceevent/event-parse.h>
-> +#include <tracefs/tracefs.h>
-> +#include <cxl/libcxl.h>
-> +
-> +/* reuse the core log helpers for the monitor logger */
-> +#ifndef ENABLE_LOGGING
-> +#define ENABLE_LOGGING
-> +#endif
-> +#ifndef ENABLE_DEBUG
-> +#define ENABLE_DEBUG
-> +#endif
-> +#include <util/log.h>
-> +
-> +#include "event_trace.h"
-> +
-> +static const char *cxl_system = "cxl";
-> +
-> +static struct monitor {
-> +	struct log_ctx ctx;
-> +	FILE *log_file;
-> +	bool human;
-> +} monitor;
-> +
-> +static int monitor_event(struct cxl_ctx *ctx)
-> +{
-> +	int fd, epollfd, rc = 0, timeout = -1;
-> +	struct epoll_event ev, *events;
-> +	struct tracefs_instance *inst;
-> +	struct event_ctx ectx;
-> +	int jflag;
-> +
-> +	events = calloc(1, sizeof(struct epoll_event));
-> +	if (!events) {
-> +		err(&monitor, "alloc for events error\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	epollfd = epoll_create1(0);
-> +	if (epollfd == -1) {
-> +		rc = -errno;
-> +		err(&monitor, "epoll_create1() error: %d\n", rc);
-> +		goto epoll_err;
-> +	}
-> +
-> +	inst = tracefs_instance_create("cxl_monitor");
-> +	if (!inst) {
-> +		rc = -errno;
-> +		err(&monitor, "tracefs_instance_create( failed: %d\n", rc);
-> +		goto inst_err;
-> +	}
-> +
-> +	fd = tracefs_instance_file_open(inst, "trace_pipe", -1);
+> Would that not need the PCI core to understand how to walk the RCRB
+> generically? As far as I understand the RCRB association is ACPI.CEDT
+> specific.
 
-FYI, libtracefs now has an API to read the raw trace file directly.
+I am thinking of doing some sort of cxl_setup_pci_dev(pdev) in
+cxl_pci_probe() which extracts the caps and writes them into a struct
+pci_dev. Possibly the CXL 68B Flit and VH Capable/Enable bit could be
+used for RCD mode. But if that is not feasible for some reason a flag
+somewhere could work too.
 
-  https://www.trace-cmd.org/Documentation/libtracefs-doc/libtracefs-cpu.html
-
-as well iterate over the live stream:
-
-  https://www.trace-cmd.org/Documentation/libtracefs-doc/libtracefs-iterator.html
-
--- Steve
-
-> +	if (fd < 0) {
-> +		rc = fd;
-> +		err(&monitor, "tracefs_instance_file_open() err: %d\n", rc);
-> +		goto inst_file_err;
-> +	}
-> +
-> +	memset(&ev, 0, sizeof(ev));
-> +	ev.events = EPOLLIN;
-> +	ev.data.fd = fd;
-> +
-> +	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) != 0) {
-> +		rc = -errno;
-> +		err(&monitor, "epoll_ctl() error: %d\n", rc);
-> +		goto epoll_ctl_err;
-> +	}
-> +
-> +	rc = cxl_event_tracing_enable(inst, cxl_system, NULL);
-> +	if (rc < 0) {
-> +		err(&monitor, "cxl_trace_event_enable() failed: %d\n", rc);
-> +		goto event_en_err;
-> +	}
-> +
-> +	memset(&ectx, 0, sizeof(ectx));
-> +	ectx.system = cxl_system;
-> +	if (monitor.human)
-> +		jflag = JSON_C_TO_STRING_PRETTY;
-> +	else
-> +		jflag = JSON_C_TO_STRING_PLAIN;
-> +
-> +	while (1) {
-> +		struct jlist_node *jnode, *next;
-> +
-> +		rc = epoll_wait(epollfd, events, 1, timeout);
-> +		if (rc < 0) {
-> +			rc = -errno;
-> +			if (errno != EINTR)
-> +				err(&monitor, "epoll_wait error: %d\n", -errno);
-> +			break;
-> +		}
-> +
-> +		list_head_init(&ectx.jlist_head);
-> +		rc = cxl_parse_events(inst, &ectx);
-> +		if (rc < 0)
-> +			goto parse_err;
-> +
-> +		if (list_empty(&ectx.jlist_head))
-> +			continue;
-> +
-> +		list_for_each_safe(&ectx.jlist_head, jnode, next, list) {
-> +			notice(&monitor, "%s\n",
-> +				json_object_to_json_string_ext(jnode->jobj, jflag));
-> +			list_del(&jnode->list);
-> +			json_object_put(jnode->jobj);
-> +			free(jnode);
-> +		}
-> +	}
-> +
-> +parse_err:
-> +	rc = cxl_event_tracing_disable(inst);
-> +event_en_err:
-> +epoll_ctl_err:
-> +	close(fd);
-> +inst_file_err:
-> +	tracefs_instance_free(inst);
-> +inst_err:
-> +	close(epollfd);
-> +epoll_err:
-> +	free(events);
-> +	return rc;
-> +}
-> 
-
+-Robert
