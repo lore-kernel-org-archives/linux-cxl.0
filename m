@@ -2,216 +2,319 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3912FC43217
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 12:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C815C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 13:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234665AbiKQMr1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 07:47:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44004 "EHLO
+        id S239478AbiKQNuf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 08:50:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240307AbiKQMrM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 07:47:12 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C81F74CC0;
-        Thu, 17 Nov 2022 04:44:53 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lEBfbCItdR0evu0NiJlWdrZrVK/ALQIuvbAOx/QOq95suJGiegLL2kIwewztOF2+hx9KZU8PzwfKMVVIvCUxieabNi6mdzYL21TvuWL0iXjuUVT5YYUB8cs4bTh9OGQ4vVARjotMEYWIAj1pPHAcVeiR1lhwkuWWpmtD1y5Ode90Whk6ciT0w8jPABTHIi2wm0/pNfgtc+F7kz7L6d17cyLIr5PvA3cPvXcE3oVe9Xf2FwxyLULytv9IMUSFizSVoHAfR5Y5rR7J8OqSF5kKMWogLlaufEpfllm7gO7FwwGHgvfni+BkkGiyQ1VmauFCQpD2tzh1KQXg62zLOhoHPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qzVSVHJjD87v1GYXFZ7p4Znu0AqFaVbaUa99N9wB6wk=;
- b=f9PO4bmRmEkaNs8Z4bWIm4mQcmvkJz4HGjp2fdPYvNaVicn8kI6d7gMdpAC9Shjkw8eB7A6fJQARHB7CvgPmdttXqsjpg2w3qpHz2oqxeumIHajNI2AKsi7V+QQ2JjBlBVIY0F1xn4HeBskcK5+zeagNvY2OrhXzjRk7r/o2jsiEpW/15UfhgAmKw3VStkyGtgRyDpoe7y+xeT92ia6rBrDh8zMn20TtPmW0dml/uK9w97Ra9I1+O8jnA8wy4rv/gJNFDBCn92lQp1ekYbffgrDFlVKSc9fPYp/laXy3Ie4I5v+nNOKLOB9MYgUEaewxWv3Hp00vnkYMufue/iBkMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qzVSVHJjD87v1GYXFZ7p4Znu0AqFaVbaUa99N9wB6wk=;
- b=RzSJVjVJznIDvUZd5CU2NyWC4YYPtULUSY7N4pytaXvQ8H/uftQOUJSebBsAQTP7AHJWaDdoHRx1ifCv6jol8U+PzLbPhuL9BDT53joIZ3NLMb65vLi2c9a0GbCtH0kApY8GL+6mESORBaOxD/gm4tSDHOkDj0R8wmh8WpvNOBA=
-Received: from BN7PR06CA0062.namprd06.prod.outlook.com (2603:10b6:408:34::39)
- by LV2PR12MB5725.namprd12.prod.outlook.com (2603:10b6:408:14c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Thu, 17 Nov
- 2022 12:44:07 +0000
-Received: from BN8NAM11FT049.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:34:cafe::8c) by BN7PR06CA0062.outlook.office365.com
- (2603:10b6:408:34::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
- Transport; Thu, 17 Nov 2022 12:44:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT049.mail.protection.outlook.com (10.13.177.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Thu, 17 Nov 2022 12:44:07 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 17 Nov
- 2022 06:44:04 -0600
-Date:   Thu, 17 Nov 2022 13:43:52 +0100
-From:   Robert Richter <rrichter@amd.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v3 2/9] cxl/acpi: Extract component registers of
- restricted hosts from RCRB
-Message-ID: <Y3YoBpIsgRRbRyLk@rric.localdomain>
-References: <20221109104059.766720-1-rrichter@amd.com>
- <20221109104059.766720-3-rrichter@amd.com>
- <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
- <Y3ODbwk+12JvWyhJ@rric.localdomain>
- <6373d24866bc9_12cdff294e3@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S239716AbiKQNud (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 08:50:33 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 390DA31351
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 05:50:30 -0800 (PST)
+Received: from frapeml500004.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NCh7j5B0Gz6H7M1;
+        Thu, 17 Nov 2022 21:48:01 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ frapeml500004.china.huawei.com (7.182.85.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 14:50:27 +0100
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 17 Nov
+ 2022 13:50:27 +0000
+Date:   Thu, 17 Nov 2022 13:50:26 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <shiju.jose@huawei.com>,
+        <rrichter@amd.com>
+Subject: Re: [PATCH RFC v2 0/9] cxl/pci: Add fundamental error handling
+Message-ID: <20221117135026.00006422@Huawei.com>
+In-Reply-To: <eb64ef4f-6680-8983-81cc-06c470422c50@intel.com>
+References: <166336972295.3803215.1047199449525031921.stgit@djiang5-desk3.ch.intel.com>
+        <20221011151744.00005278@huawei.com>
+        <1e4de3fa-4e80-cc99-7fbf-3f6669766648@intel.com>
+        <20221011181915.000031a1@huawei.com>
+        <20221019183012.00007201@huawei.com>
+        <ae8330db-ab77-7952-e846-de7dc527890c@intel.com>
+        <20221024170102.00000c4b@huawei.com>
+        <20221103125851.00000ce9@huawei.com>
+        <20221103132720.000051bb@huawei.com>
+        <eb64ef4f-6680-8983-81cc-06c470422c50@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6373d24866bc9_12cdff294e3@dwillia2-xfh.jf.intel.com.notmuch>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT049:EE_|LV2PR12MB5725:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4aec258c-e5ca-409d-d655-08dac8996ac5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XY8Oi1actovMHr7hRc4utmhUEUbCAGJ1pPdwKXyq3HHIZYODuE64sYA2tt6tcMP60NajT0usTOhXDn9snyT98YxRoRg3o8WPCJhmWHiqk9gpBnkz8VZ77FBtftl4U/4D6AOX1fXHTSwRYgdR09nMCnDAQ1tot36xKrqaVjljwUNoODhhtrdvX+aaKftN2tPS3UpBeumqCs2Aq6Z/up7JeWGRmknjDlELh37d/6hiYc7gIVr1EzCsarnjv5kAeW/2/p2kAPM6sRi0a8pvf3/32r356p35W/WRUQaJGP5UZmJqT2f808A0ZvRS/IuRwtUdYg5CzhTA2GR1e5xzJ2Rw1ZNnSU4hFcYrTI8TsWX651kUocjTMHnX49nnI73vFYudJTf4YA89b3rEf1mxeEkstw5+IBMknK0N9kcTX+VvmDx30FeRFdPPiXirvdIYd6WOLCNPQCbmzFYZLKjjJonwOSSi5DFaBW4Ldlb6VuZUTedHwknbTIgbJLs5djfPGSlud6Xz1Zd8T87bPeTcKY5K7O0f1z6eaWNz/pQJuX11Jx7RBTCh88E6rDXufC/g/NYleEMuE6HKR9yGUqNhGVFDHPmUJBF8wvOrg4dmCr4/KhJB5u0D09xGFr/7/Bcf4h0NeSgssolZ8RumabY6YteClqsD6CfeuM3gAk2+is3zERC14OcghtGHDVoLBsbm0C+qx5Htc4GqXoXPtyToxpPcabV/f+3E7IBwz5uRXLFThOU=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(346002)(396003)(136003)(451199015)(36840700001)(40470700004)(46966006)(186003)(16526019)(7696005)(356005)(81166007)(82740400003)(36860700001)(82310400005)(55016003)(7416002)(336012)(426003)(40460700003)(53546011)(9686003)(26005)(2906002)(47076005)(8936002)(5660300002)(6666004)(478600001)(40480700001)(41300700001)(316002)(54906003)(70586007)(83380400001)(6916009)(70206006)(4326008)(8676002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 12:44:07.2779
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4aec258c-e5ca-409d-d655-08dac8996ac5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT049.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5725
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 15.11.22 09:54:16, Dan Williams wrote:
-> Robert Richter wrote:
-> > On 14.11.22 13:30:01, Dan Williams wrote:
-> > > Robert Richter wrote:
-> > 
-> > > > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> > > > index ec178e69b18f..7a5bde81e949 100644
-> > > > --- a/drivers/cxl/core/regs.c
-> > > > +++ b/drivers/cxl/core/regs.c
-> > > > @@ -307,3 +307,49 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-> > > >  	return -ENODEV;
-> > > >  }
-> > > >  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
-> > > > +
-> > > > +resource_size_t cxl_rcrb_to_component(struct device *dev,
-> > > > +				      resource_size_t rcrb,
-> > > > +				      enum cxl_rcrb which)
-> > > > +{
-> > > > +	resource_size_t component_reg_phys;
-> > > > +	u32 bar0, bar1;
-> > > > +	void *addr;
-> > > > +
-> > > > +	if (which == CXL_RCRB_UPSTREAM)
-> > > > +		rcrb += SZ_4K;
-> > > > +
-> > > > +	/*
-> > > > +	 * RCRB's BAR[0..1] point to component block containing CXL
-> > > > +	 * subsystem component registers. MEMBAR extraction follows
-> > > > +	 * the PCI Base spec here, esp. 64 bit extraction and memory
-> > > > +	 * ranges alignment (6.0, 7.5.1.2.1).
-> > > > +	 */
-> > > 
-> > > A request_mem_region() is needed here to ensure ownership and expected
-> > > sequencing of accessing the RCRB to locate the component registers, and
-> > > accessing the RCRB to manipulate the component registers. It also helps
-> > > to sanity check that the BIOS mapped an exclusive range for the RCRB.
-> > 
-> > Right, that is missing.
-> > 
-> > > 
-> > > > +	addr = ioremap(rcrb, PCI_BASE_ADDRESS_0 + SZ_8);
-> > > 
-> > > That PCI_BASE_ADDRESS_0 does not belong there. It ends up being benign
-> > > and forcing ioremap to map 12K instead of 8K, but it is a
-> > > config-register offset, not part of the RCRB size.
-> > 
-> > Note this is BAR0 + 8 bytes, not 8k, and it does not map the whole
-> > RCRB region but instead the first part of the config space up to
-> > including the 64 bit BAR.
-> 
-> Oh, sorry, yes, my mistake. However, there is not much value in mapping
-> less than 4K since all ioremap requests are rounded up to PAGE_SIZE.
-> Since an RCRB is only 4K per port lets just map the whole thing.
+On Wed, 16 Nov 2022 16:20:20 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-I was going to keep the ranges small to avoid conflicts with other
-requests for the same page (though request_mem_region() was missing
-yet).
-
-> 
-> > > > +	if (!addr) {
-> > > > +		dev_err(dev, "Failed to map region %pr\n", addr);
-> > > > +		return CXL_RESOURCE_NONE;
-> > > > +	}
-> > > > +
-> > > > +	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
-> > > > +	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> > > > +	iounmap(addr);
-> > > 
-> > > ...corresponding release_mem_region() would go here.
-> > > 
-> > > > +
-> > > > +	/* sanity check */
-> > > > +	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
-> > > > +		return CXL_RESOURCE_NONE;
-> > > 
-> > > I would have also expected:
-> > > 
-> > > - a sanity check for "Memory Space Enable" being set in the command
-> > >   register.
+> On 11/3/2022 6:27 AM, Jonathan Cameron wrote:
+> > On Thu, 3 Nov 2022 12:58:51 +0000
+> > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >   
+> >> On Mon, 24 Oct 2022 17:01:02 +0100
+> >> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >>  
+> >>> On Wed, 19 Oct 2022 10:38:13 -0700
+> >>> Dave Jiang <dave.jiang@intel.com> wrote:
+> >>>      
+> >>>> On 10/19/2022 10:30 AM, Jonathan Cameron wrote:  
+> >>>>> On Tue, 11 Oct 2022 18:19:15 +0100
+> >>>>> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> >>>>>         
+> >>>>>> On Tue, 11 Oct 2022 08:18:34 -0700
+> >>>>>> Dave Jiang <dave.jiang@intel.com> wrote:
+> >>>>>>         
+> >>>>>>> On 10/11/2022 7:17 AM, Jonathan Cameron wrote:  
+> >>>>>>>> On Fri, 16 Sep 2022 16:10:53 -0700
+> >>>>>>>> Dave Jiang <dave.jiang@intel.com> wrote:
+> >>>>>>>>              
+> >>>>>>>>> Series set to RFC since there's no means to test. Would like to get opinion
+> >>>>>>>>> on whether going with using trace events as reporting mechanism is ok.
+> >>>>>>>>>
+> >>>>>>>>> Jonathan,
+> >>>>>>>>> We currently don't have any ways to test AER events. Do you have any plans
+> >>>>>>>>> to support AER events via QEMU emulation?  
+> >>>>>>>> Sorry - missed this entirely as gotten a bit behind reading CXL emails.  
+> >>>>> Hi Dave,
+> >>>>>
+> >>>>> Quick update.
+> >>>>>
+> >>>>> Working QEMU emulation - but needs some/lots of cleanup. Particularly fun was
+> >>>>> figuring out why I wasn't getting messages past the upstream switch port.
+> >>>>> Turned out the serial number ECAP was on top of the AER ECAP. Oops - thankfully
+> >>>>> that patch isn't upstream yet.
+> >>>>> Also QEMU AER rooting seems to be based on some older PCIE spec
+> >>>>> so needed some tweaks to get the device to actually issue ERR_FATAL etc.
+> >>>>>
+> >>>>> Anyhow, should have something you can play with in a day or two.  
+> >>>>
+> >>>> Awesome! Thanks! :)  
+> >>>
+> >>> Took a little longer than expected..
+> >>>
+> >>> Anyhow, now at
+> >>> https://gitlab.com/jic23/qemu/-/commits/cxl-2022-10-24
+> >>>
+> >>> That tree is carrying far too many things right now for it make much sense
+> >>> to me to email this to qemu-devel - though I may pull
+> >>> hw/pci/aer: Add missing routing for AER errors
+> >>> out in advance as that's closing a spec different between QEMU emulation of AER
+> >>> and what the PCI spec says.
+> >>>
+> >>> Hopefully set of out of tree patches will start to shrink soon - v9 of the DOE
+> >>> patches have been on list for a week or so.
+> >>>
+> >>> Top patch includes a very short 'how to' in patch description.  Basically fire
+> >>> up QMP: Add something like -qmp tcp:localhost:444,server=on,wait=off to your
+> >>> qemu commandline and use commands like:
+> >>>
+> >>> { "execute": "qmp_capabilities" }
+> >>> ...
+> >>> { "execute": "cxl-inject-uncorrectable-error",
+> >>>      "arguments": {
+> >>>          "path": "/machine/peripheral/cxl-pmem0",
+> >>>          "type": "cache-address-parity",
+> >>>          "header": [ 3, 4]
+> >>>      } }
+> >>> ...
+> >>> { "execute": "cxl-inject-correctable-error",
+> >>>      "arguments": {
+> >>>          "path": "/machine/peripheral/cxl-pmem0",
+> >>>          "type": "physical",
+> >>>          "header": [ 3, 4]
+> >>>      } }
+> >>>      
+> >>
+> >> So Dave reported that this wasn't working on x86 qemu machines.
+> >>
+> >> A fun bit of debugging later (I hate AML) and I think I have find the issue +
+> >> have a hack to workaround it for now.
+> >>
+> >> So need some background.
+> >> 1) CXL code is based on QEMU's pci expander bridge root bridge - there is a complex
+> >>     bit of handling to create appropriate ACPI DSDT magic.
+> >> 2) The CXL root port is based on pcie_root_port.c
+> >> 3) Both CXL root port and pcie root port use traditional PCI interrupts, not MSI/MSIX
+> >>     for their signaling.
+> >> 4) Q35 machine uses an IOAPIC and the resulting PCI bus interrupt routing lands the
+> >>     actual interrupt on line 23 for my particular configuration
+> >> 5) The ACPI table says it's on line 11.
+> >> 6) x86 code for creating the PRT has an informative comment...
+> >> https://elixir.bootlin.com/qemu/latest/source/hw/i386/acpi-build.c#L697
+> >>   * The main goal is to equaly distribute the interrupts
+> >>   * over the 4 existing ACPI links (works only for i440fx).
+> >>
+> >> So the hack I'm running is below (note the UID thing is a separate bug that stops
+> >> iasl from disassembling the DSDT due to a duplicate entry - I'll send out a fix
+> >> for that shortly).
+> >>
+> >> There are a bunch of possible approaches to fix this if my identification of
+> >> the issue is correct.
+> >>
+> >> 1) Clean equivalent of this hack that runs on appropriate machines only.
+> >> 2) Use MSI instead. (ioh3420 root port takes this approach I think).  
 > > 
-> > Ok.
+> > This turned out to be trivial case of cut and pate.  So MSI support it is (mostly because it doesn't
+> > involve fixing AML generation :)
 > > 
-> > > 
-> > > - an explicit check for 0xffffffff for the case when the upstream-port
-> > >   implements "no RCRB" mode.
+> > Very lightly tested on one config of x86 machine and one of arm64.
+> > I've not thought about this at all yet, so it's a direct copy of the ioh3420 with
+> > appropriate renames for it being in the cxl_rp code.  
+> 
+> Hi Jonathan, do you have a qemu branch with the latest code? Maybe I'll 
+> give it a try. Thanks.
+> 
+
+https://gitlab.com/jic23/qemu/-/tree/cxl-2022-11-17
+
+should work... (famous last words).
+
+Jonathan
+
+
+
 > > 
-> > Yes, I left support for this to a later patch, but it's better to
-> > check it here already and possibly fall back to reg loc DVSEC then.
-> 
-> Yeah, I think simply failing on 0xffffffff is sufficient for now.
-> 
-> > > 
-> > > - some check that BIOS initialized the BAR values post reset given these
-> > >   BARs are invisible to the PCI core resource assignment 
 > > 
-> > What check do you have in mind here? There is already the NULL check
-> > which would be the out-of-reset value.
-> 
-> I was thinking more along the lines of sanity checking that the
-> programmed RCRB range falls within the assigned MMIO space of the
-> host-bridge, but perhaps that is overkill since it would just be
-> validating self consistency between 2 BIOS provided values. Robustness
-> principle would say try to continue if those disagree.
+> >  From a5e85d90cb734fc1de81e0d99e443747348e65e7 Mon Sep 17 00:00:00 2001
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Date: Thu, 3 Nov 2022 13:10:24 +0000
+> > Subject: [PATCH] hw: pci-bridge: cxl_root_port: Write up MSI
+> > 
+> > Done to avoid fixing ACPI rout description of traditional PCI interrupts on q35.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >   hw/pci-bridge/cxl_root_port.c | 63 +++++++++++++++++++++++++++++++++++
+> >   1 file changed, 63 insertions(+)
+> > 
+> > diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
+> > index 1a9363a6de..a7475c427e 100644
+> > --- a/hw/pci-bridge/cxl_root_port.c
+> > +++ b/hw/pci-bridge/cxl_root_port.c
+> > @@ -22,6 +22,7 @@
+> >   #include "qemu/range.h"
+> >   #include "hw/pci/pci_bridge.h"
+> >   #include "hw/pci/pcie_port.h"
+> > +#include "hw/pci/msi.h"
+> >   #include "hw/qdev-properties.h"
+> >   #include "hw/sysbus.h"
+> >   #include "qapi/error.h"
+> > @@ -29,6 +30,10 @@
+> >   
+> >   #define CXL_ROOT_PORT_DID 0x7075
+> >   
+> > +#define CXL_RP_MSI_OFFSET               0x60
+> > +#define CXL_RP_MSI_SUPPORTED_FLAGS      PCI_MSI_FLAGS_MASKBIT
+> > +#define CXL_RP_MSI_NR_VECTOR            2
+> > +
+> >   /* Copied from the gen root port which we derive */
+> >   #define GEN_PCIE_ROOT_PORT_AER_OFFSET 0x100
+> >   #define GEN_PCIE_ROOT_PORT_ACS_OFFSET \
+> > @@ -36,6 +41,7 @@
+> >   #define CXL_ROOT_PORT_DVSEC_OFFSET \
+> >       (GEN_PCIE_ROOT_PORT_ACS_OFFSET + PCI_ACS_SIZEOF)
+> >   
+> > +
+> >   typedef struct CXLRootPort {
+> >       /*< private >*/
+> >       PCIESlot parent_obj;
+> > @@ -47,6 +53,50 @@ typedef struct CXLRootPort {
+> >   #define TYPE_CXL_ROOT_PORT "cxl-rp"
+> >   DECLARE_INSTANCE_CHECKER(CXLRootPort, CXL_ROOT_PORT, TYPE_CXL_ROOT_PORT)
+> >   
+> > +/*
+> > + * If two MSI vector are allocated, Advanced Error Interrupt Message Number
+> > + * is 1. otherwise 0.
+> > + * 17.12.5.10 RPERRSTS,  32:27 bit Advanced Error Interrupt Message Number.
+> > + */
+> > +static uint8_t cxl_rp_aer_vector(const PCIDevice *d)
+> > +{
+> > +    switch (msi_nr_vectors_allocated(d)) {
+> > +    case 1:
+> > +        return 0;
+> > +    case 2:
+> > +        return 1;
+> > +    case 4:
+> > +    case 8:
+> > +    case 16:
+> > +    case 32:
+> > +    default:
+> > +        break;
+> > +    }
+> > +    abort();
+> > +    return 0;
+> > +}
+> > +
+> > +static int cxl_rp_interrupts_init(PCIDevice *d, Error **errp)
+> > +{
+> > +    int rc;
+> > +
+> > +    rc = msi_init(d, CXL_RP_MSI_OFFSET, CXL_RP_MSI_NR_VECTOR,
+> > +                  CXL_RP_MSI_SUPPORTED_FLAGS & PCI_MSI_FLAGS_64BIT,
+> > +                  CXL_RP_MSI_SUPPORTED_FLAGS & PCI_MSI_FLAGS_MASKBIT,
+> > +                  errp);
+> > +    if (rc < 0) {
+> > +        assert(rc == -ENOTSUP);
+> > +    }
+> > +
+> > +    return rc;
+> > +}
+> > +
+> > +static void cxl_rp_interrupts_uninit(PCIDevice *d)
+> > +{
+> > +    msi_uninit(d);
+> > +}
+> > +
+> > +
+> >   static void latch_registers(CXLRootPort *crp)
+> >   {
+> >       uint32_t *reg_state = crp->cxl_cstate.crb.cache_mem_registers;
+> > @@ -177,6 +227,15 @@ static void cxl_rp_dvsec_write_config(PCIDevice *dev, uint32_t addr,
+> >       }
+> >   }
+> >   
+> > +static void cxl_rp_aer_vector_update(PCIDevice *d)
+> > +{
+> > +    PCIERootPortClass *rpc = PCIE_ROOT_PORT_GET_CLASS(d);
+> > +
+> > +    if (rpc->aer_vector) {
+> > +        pcie_aer_root_set_vector(d, rpc->aer_vector(d));
+> > +    }
+> > +}
+> > +
+> >   static void cxl_rp_write_config(PCIDevice *d, uint32_t address, uint32_t val,
+> >                                   int len)
+> >   {
+> > @@ -203,6 +262,7 @@ static void cxl_rp_write_config(PCIDevice *d, uint32_t address, uint32_t val,
+> >           }
+> >       }
+> >       pci_bridge_write_config(d, address, val, len);
+> > +    cxl_rp_aer_vector_update(d);
+> >       pcie_cap_flr_write_config(d, address, val, len);
+> >       pcie_cap_slot_write_config(d, slt_ctl, slt_sta, address, val, len);
+> >       pcie_aer_write_config(d, address, val, len);
+> > @@ -229,6 +289,9 @@ static void cxl_root_port_class_init(ObjectClass *oc, void *data)
+> >   
+> >       rpc->aer_offset = GEN_PCIE_ROOT_PORT_AER_OFFSET;
+> >       rpc->acs_offset = GEN_PCIE_ROOT_PORT_ACS_OFFSET;
+> > +    rpc->aer_vector = cxl_rp_aer_vector;
+> > +    rpc->interrupts_init = cxl_rp_interrupts_init;
+> > +    rpc->interrupts_uninit = cxl_rp_interrupts_uninit;
+> >   
+> >       dc->hotpluggable = false;
+> >   }  
 
-Ok, will drop a check here.
-
-Thanks,
-
--Robert
