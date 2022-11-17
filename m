@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F871C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 18:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD48C433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 18:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240521AbiKQSOX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 13:14:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52026 "EHLO
+        id S240485AbiKQSZe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 13:25:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234940AbiKQSOD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 13:14:03 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83789B64;
-        Thu, 17 Nov 2022 10:13:25 -0800 (PST)
+        with ESMTP id S240291AbiKQSZd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 13:25:33 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB058514D;
+        Thu, 17 Nov 2022 10:25:30 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O3BqwORfOF0g+oThwW5dScFk9C/Idlh8BgEdz7fUugqfG/yhpmJh8i3iuEMvgG5HAypumGqdxyL0ib6jN3nVbpjkS69Fw8RyD9CROkABlbs0FVmu8R+XJF+gIhnJ0k5XEaUsQ35kcshH9fi8wM6rz/MpZPlVlChBr6rU/o15iBRXDsjo4UzIvWa5dJrwJ6fZAJT/ud+6PRFwyz5wRB/Uhl1ang62ZpFRg8SqCmzRzXs5ymtiQIVclFA/7ZBsA9YN5ezZwg0NVd7jxoIPPGAlbIHrzspFR+UDzfXr10ad+NY3EDLtfXfRMp3Y4hEK+29Ft6ClTtVj8iQQo9guAVC9Kw==
+ b=d4VswUHbPW9PZDNE+1NzSvMMCCnPbygtxu3FhEM16UubDQevxzt5nBMlS1Tavj4r9rJ+xUUd4ijotU0mV2lIjN6H+frYs959zolLUae15psk1dHda3GenaZcRgDVhsxykQ8QhRb+e24zLEaiGZKv909iljl4EtwMv60Bz6U/IV7qEOajtl6DH37iJ/l49kFPjfhY9pK4gCaoUnBcPL9AaSPpYkIkqWQZ6qmXJs53W2d5PQnrrUq87mjFT5n+vaR7I7UCz/Tox+OdS2VW/Uq6EJNiqcIZIIUYJu/xS6kdencXMgXKXSV5jWP4VELBG+9sy2XWTb7TRbMB8YlCRFHZOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yh4hRVZ+TuFpIpeoN4Cy8vDqTDXqhfLmjthxmNbWB7k=;
- b=G3XNjLPShMzd6OLOf+oOzSHCBtxasElkJnjMX/QHpwMXGomGXXQSdUDBkqBZEHe445KNyPayA9HIYa1wTVztdJ3w48w1L4kBBN/gjXFNvoCvO5fiCKU31A78z1+rR2ATu378lgyaA9XjlkQPJGx+dTidviwgQrxktmu06NstZSUtQ3bmYe43da05QMMmWQXxb0CDIIfIa2Vd2qoRh5RfC4KHPok3WeVhJLCjkHwEWXmAmMHpeOoQCmt9XRdTpef0+yP04VGIJMtZejA5auUSZKd/+X4+TW/GPqTmXf9c1mApWSCkx711FKuzLs4iXBIUEFo5dpbxarCqmWO+jAY3uQ==
+ bh=9BL1PbecmUkUq6YIxLKNsPjR07bkN1QItazwLIEv1uY=;
+ b=SNMYdbQm7ONvTFaorPO6+p3KiQKlsxIgx2PSSUfjrHZ678USiHolQeBisy0sIc469FhHWI6KdlA12awsUC8oZXxcdryad10xQE1/NtVp6oia1bP5or3WzqZDrM6kPL8oNdmYuYTyA2e+wzxrU4p0o2UbP09YguwwZvv30Tu5ku3i4LAG4s/UnhZmsxkpA0IkmRmN6LlEgCz4p3RvUPAhXnXaA9apggpJqcfTYyvn0BKPL6A+zzBMqADHT2r8reSunTbW40clCN4xILkLUGswc0H7SjICTm3NvRodggUNb11OFs98dG6fC1S5PuKgY3q/pmKwrtekktmAjDjy41MIGQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yh4hRVZ+TuFpIpeoN4Cy8vDqTDXqhfLmjthxmNbWB7k=;
- b=Fuh6WgwZ8VlMUHJx8vrSJH/gmhK5u+Gn5T08BDTo40g2NEoiHG4vnwi8ai+XNUfcUpdWdihZcinrBBCs1QqlOqQy/YbehKZ/f2Znri/t8IxGWJkfC7rVPaXMxy7nPa81oZQtOrp8KNRtL9X2MGtUwbO2/94CH8PBRdBfL5oKVKI=
-Received: from BN7PR06CA0037.namprd06.prod.outlook.com (2603:10b6:408:34::14)
- by BN9PR12MB5356.namprd12.prod.outlook.com (2603:10b6:408:105::23) with
+ bh=9BL1PbecmUkUq6YIxLKNsPjR07bkN1QItazwLIEv1uY=;
+ b=VycT7lKh5yqtPJ1U0G4BzHuNp6Qf4QwBA5IGhWl20qbgqr/Bvg7jG3bz+Bvb6YCMVUP1S2xZC6+zGXsS7xophNvPT6GhNVwPFwW9zeboXAheFaPDYezyL8bXX8tBPu9yQQZdOPBdyMnVRC5IjTAZwnrfG6blqP2bymxdWk0ls84=
+Received: from DM6PR02CA0079.namprd02.prod.outlook.com (2603:10b6:5:1f4::20)
+ by MN2PR12MB4287.namprd12.prod.outlook.com (2603:10b6:208:1dd::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Thu, 17 Nov
- 2022 18:13:20 +0000
-Received: from BN8NAM11FT071.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:34:cafe::11) by BN7PR06CA0037.outlook.office365.com
- (2603:10b6:408:34::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.18; Thu, 17 Nov
+ 2022 18:25:28 +0000
+Received: from DS1PEPF0000B078.namprd05.prod.outlook.com
+ (2603:10b6:5:1f4:cafe::7e) by DM6PR02CA0079.outlook.office365.com
+ (2603:10b6:5:1f4::20) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
- Transport; Thu, 17 Nov 2022 18:13:20 +0000
+ Transport; Thu, 17 Nov 2022 18:25:28 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,14 +46,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT071.mail.protection.outlook.com (10.13.177.92) with Microsoft SMTP
+ DS1PEPF0000B078.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Thu, 17 Nov 2022 18:13:20 +0000
+ 15.20.5813.11 via Frontend Transport; Thu, 17 Nov 2022 18:25:27 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 17 Nov
- 2022 12:13:13 -0600
-Date:   Thu, 17 Nov 2022 19:13:11 +0100
+ 2022 12:25:24 -0600
+Date:   Thu, 17 Nov 2022 19:25:21 +0100
 From:   Robert Richter <rrichter@amd.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -64,195 +64,120 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v3 3/9] cxl/mem: Adjust cxl_mem_find_port() to find an
- RCH's port
-Message-ID: <Y3Z5tzp66HmJy3Cd@rric.localdomain>
+        Dave Jiang <dave.jiang@intel.com>,
+        Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v3 2/9] cxl/acpi: Extract component registers of
+ restricted hosts from RCRB
+Message-ID: <Y3Z8kZym/37P6/yg@rric.localdomain>
 References: <20221109104059.766720-1-rrichter@amd.com>
- <20221109104059.766720-4-rrichter@amd.com>
- <6372d30ef4152_12cdff29452@dwillia2-xfh.jf.intel.com.notmuch>
- <Y3OQUAriOj2NxLfO@rric.localdomain>
- <6373d524a1a1b_12cdff294e7@dwillia2-xfh.jf.intel.com.notmuch>
+ <20221109104059.766720-3-rrichter@amd.com>
+ <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3ODbwk+12JvWyhJ@rric.localdomain>
+ <6373d24866bc9_12cdff294e3@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3YoBpIsgRRbRyLk@rric.localdomain>
+ <63766d77d1ece_12cdff29499@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6373d524a1a1b_12cdff294e7@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <63766d77d1ece_12cdff29499@dwillia2-xfh.jf.intel.com.notmuch>
 X-Originating-IP: [10.180.168.240]
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT071:EE_|BN9PR12MB5356:EE_
-X-MS-Office365-Filtering-Correlation-Id: de0e2482-d049-4409-61da-08dac8c76855
+X-MS-TrafficTypeDiagnostic: DS1PEPF0000B078:EE_|MN2PR12MB4287:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11acf30f-63a9-476d-00fa-08dac8c91a34
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FM6MfP09kG0iQuGSpI05xyudD5u0vnFBYJ53dKjJj2so+WIeJ9FTHI0rlfh7t7QzId+8HrQeoQfk7VCHTvU04AOt1OUBcwlbkXJ12Xbk+AryG+3vP9ZoXnQblxEq4l/mMbtmdjB838gOXltwLgIb/G5fsLkewOlqHSKlTJQIE7z621ud1BNslP20WlUYOQqKQMhPJ2J+E9wD/nJxI6EDThfpDNkJ345OZiji0kIwAe/X/KXFI5xGA8vPN35wZjmGoBbIIdluYXAtHjZ/bW61nwCLUdqAfpitUVdE8HeQuL27Y8UKA1MvUCkgeL4n6zbdYAv6L9pwZzwkeNABls/HX5EBwYgDipLYOp7B/IE0rtRQVBwpFzy+Rj/ppoIEyUpLyjK7LetsZ7puzvZ2ee59a1cSNjNwhggxShb5pXQ3Li3f+n7GrjUdKS0NhrPiGCkQpCv+5TGSB7/aWhcoGKN56TBTY4i0ly0fUETn/yyCgB3DmVPUGPllT6HYEQjwQtNt2WswY4hqtH3AjGc8M8FOTWKzW2zAZd5Tjsu+qeRIFjeb7QvNdFE2D4xZmWcBh+SsSkZ81JM0fc2z6hjZSpeyUnEmZvLymFRWvuvD/ijdcicnSS2JsHZ7xsrA53kh0KxXdRaJCdfwphsSLG85GWilrshyqL9DKeSL7GXWP8PjzyX0HO5pphy+6EU9P70GR95vq62SDAHbpH+lTat+OgMOWhylab6c0JXyCjFdIoJ0BWZWOdSvfunmmLiRf9G3OB3xxHuzcMXgxm62aF6v1XJjeA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(396003)(39860400002)(376002)(451199015)(46966006)(40470700004)(36840700001)(478600001)(26005)(6916009)(7696005)(41300700001)(54906003)(2906002)(53546011)(70586007)(70206006)(9686003)(4326008)(8676002)(186003)(316002)(8936002)(47076005)(5660300002)(426003)(336012)(7416002)(16526019)(36860700001)(82310400005)(356005)(82740400003)(81166007)(55016003)(40460700003)(40480700001)(37363002)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: cKVxxtViTNNibrIbWf7An1MKwFmUZM0Ym/iADvEu8QTyP9ZqTHPdHZ+8AzGrjlb5Myoe+lqE7OmTYY4pzm+XeChuQoeB2rMtecqJKZdnM7gU1WM2sFJUMkVMoBtNQKEFReGv7ojliu9oZ5Pp3FiPweg4IoCcft4ep4aPkl3USy+xarwHMLkuBsviBg7Gtenhl1tM5p5XGi15ijml2e83aSLSPdn9vCLev4h5SLhHjoZGwr5Qf715db+PFUbzrJIajqxR9p/6bINBrREBUEHbpFnNuvyKKvCXygHQgEi3PtUeiq8olZrsY6CTNpksX8It+5hhOJbF+UhYY7u9otIR6SPCKfu0Ithv2M2YkcSKtH4SKOUZ5WmEnm3leBsPI7rSmV2EupAin5GHOeEJDtXA1I1Ps+OkonhpAPUiRftSyp7fEjQ+zYTxUmcm/2GyOC5Pl33dfcZCA0rXc+5TNXpMKxBC+4Y+KLxGI581u9qCK41r71ONiGPy01k+W7T7F7MYVHp2sNI+iOlALYMOC3XcAO1TqQudmm/EwNNRCDE09f4vEz/6Q1i5Rquxex4jDuT7VmLMnmbNC7f8hShj81h16VriDSlCuFwQUp7SJ5fyvO1pwke1Ruf4z4OuYSnGxUDShXclaQA0ZMzMGJsmz87KUOXOROzx6z+5aMtU6OGKujE/RDLKlO04pbuDXsJFvgLeWyv09HA+YUeeqH4PeVaDSdbj/zvRF0wBwTkZCII3uFA=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(396003)(136003)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(356005)(81166007)(5660300002)(2906002)(8936002)(7416002)(55016003)(4326008)(16526019)(336012)(186003)(82310400005)(36860700001)(47076005)(53546011)(40460700003)(41300700001)(8676002)(70586007)(70206006)(478600001)(82740400003)(9686003)(40480700001)(83380400001)(26005)(6666004)(426003)(7696005)(54906003)(316002)(6916009)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 18:13:20.0350
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 18:25:27.9318
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: de0e2482-d049-4409-61da-08dac8c76855
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11acf30f-63a9-476d-00fa-08dac8c91a34
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT071.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000B078.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5356
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4287
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 15.11.22 10:06:28, Dan Williams wrote:
+On 17.11.22 09:20:55, Dan Williams wrote:
 > Robert Richter wrote:
-> > On 14.11.22 15:45:19, Dan Williams wrote:
+> > On 15.11.22 09:54:16, Dan Williams wrote:
 > > > Robert Richter wrote:
-> > > > The PCIe software view of an RCH and RCD is different to VH mode. An
-> > > > RCD is paired with an RCH and shows up as RCiEP with a parent already
-> > > > pointing to a PCI bridge (struct pci_host_bridge). In contrast, in VH
-> > > > mode an PCI Express Endpoint is a PCI type 0 device with a PCI type 1
-> > > > device as parent (struct pci_dev, most of the time a downstream switch
-> > > > port, but could also be a root port). The following hierarchy applies
-> > > > in VH mode:
+> > > > On 14.11.22 13:30:01, Dan Williams wrote:
+> > > > > Robert Richter wrote:
 > > > > 
-> > > >  CXL memory device, cxl_memdev                               endpoint
-> > > >  └──PCIe Endpoint (type 0), pci_dev                           |
-> > > >     └──Downstream Port (type 1), pci_dev (Nth switch)        portN
-> > > >        └──Upstream Port (type 1), pci_dev (Nth switch)        |
-> > > >           :                                                   :
-> > > >           └──Downstream Port (type 1), pci_dev (1st switch)  port1
-> > > >              └──Upstream Port (type 1), pci_dev (1st switch)  |
-> > > >                 └──Root Port (type 1), pci_dev                |
-> > > >                    └──PCI host bridge, pci_host_bridge       port0
-> > > >                       :                                       |
-> > > >                       :..ACPI0017, acpi_dev                  root
+> > > > > > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > > > > > index ec178e69b18f..7a5bde81e949 100644
+> > > > > > --- a/drivers/cxl/core/regs.c
+> > > > > > +++ b/drivers/cxl/core/regs.c
+> > > > > > @@ -307,3 +307,49 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> > > > > >  	return -ENODEV;
+> > > > > >  }
+> > > > > >  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+> > > > > > +
+> > > > > > +resource_size_t cxl_rcrb_to_component(struct device *dev,
+> > > > > > +				      resource_size_t rcrb,
+> > > > > > +				      enum cxl_rcrb which)
+> > > > > > +{
+> > > > > > +	resource_size_t component_reg_phys;
+> > > > > > +	u32 bar0, bar1;
+> > > > > > +	void *addr;
+> > > > > > +
+> > > > > > +	if (which == CXL_RCRB_UPSTREAM)
+> > > > > > +		rcrb += SZ_4K;
+> > > > > > +
+> > > > > > +	/*
+> > > > > > +	 * RCRB's BAR[0..1] point to component block containing CXL
+> > > > > > +	 * subsystem component registers. MEMBAR extraction follows
+> > > > > > +	 * the PCI Base spec here, esp. 64 bit extraction and memory
+> > > > > > +	 * ranges alignment (6.0, 7.5.1.2.1).
+> > > > > > +	 */
+> > > > > 
+> > > > > A request_mem_region() is needed here to ensure ownership and expected
+> > > > > sequencing of accessing the RCRB to locate the component registers, and
+> > > > > accessing the RCRB to manipulate the component registers. It also helps
+> > > > > to sanity check that the BIOS mapped an exclusive range for the RCRB.
 > > > > 
-> > > >  (There can be zero or any other number of switches in between.)
+> > > > Right, that is missing.
 > > > > 
-> > > > An iterator through the grandparents takes us to the root port which
-> > > > is registered as dport to the bridge. The next port an endpoint is
-> > > > connected to can be determined by using the grandparent of the memory
-> > > > device as a dport_dev in cxl_mem_find_port().
+> > > > > 
+> > > > > > +	addr = ioremap(rcrb, PCI_BASE_ADDRESS_0 + SZ_8);
+> > > > > 
+> > > > > That PCI_BASE_ADDRESS_0 does not belong there. It ends up being benign
+> > > > > and forcing ioremap to map 12K instead of 8K, but it is a
+> > > > > config-register offset, not part of the RCRB size.
 > > > > 
-> > > > The same does not work in RCD mode where only an RCiEP is connected to
-> > > > the host bridge:
-> > > > 
-> > > >  CXL memory device, cxl_memdev                               endpoint
-> > > >  └──PCIe Endpoint (type 0), pci_dev                           |
-> > > >     └──PCI host bridge, pci_host_bridge                      port0
-> > > >        :                                                      |
-> > > >        :..ACPI0017, acpi_dev                                 root
-> > > > 
-> > > > Here, an endpoint is directly connected to the host bridge without a
-> > > > type 1 PCI device (root or downstream port) in between. To link the
-> > > > endpoint to the correct port, the endpoint's PCI device (parent of the
-> > > > memory device) must be taken as dport_dev arg in cxl_mem_find_port().
-> > > > 
-> > > > Change cxl_mem_find_port() to find an RCH's port.
-> > > > 
-> > > > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > > > ---
-> > > >  drivers/cxl/core/port.c | 38 ++++++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 38 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > > > index 0431ed860d8e..d10c3580719b 100644
-> > > > --- a/drivers/cxl/core/port.c
-> > > > +++ b/drivers/cxl/core/port.c
-> > > > @@ -1354,6 +1354,14 @@ static int add_port_attach_ep(struct cxl_memdev *cxlmd,
-> > > >  	return rc;
-> > > >  }
-> > > >  
-> > > > +static inline bool is_cxl_restricted(struct cxl_memdev *cxlmd)
-> > > > +{
-> > > > +	struct device *parent = cxlmd->dev.parent;
-> > > > +	if (!dev_is_pci(parent))
-> > > > +		return false;
-> > > > +	return pci_pcie_type(to_pci_dev(parent)) == PCI_EXP_TYPE_RC_END;
-> > > > +}
-> > > > +
-> > > >  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> > > >  {
-> > > >  	struct device *dev = &cxlmd->dev;
-> > > > @@ -1433,9 +1441,39 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> > > >  }
-> > > >  EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, CXL);
-> > > >  
-> > > > +/*
-> > > > + * CXL memory device and port hierarchy:
-> > > > + *
-> > > > + * VH mode:
-> > > > + *
-> > > > + * CXL memory device, cxl_memdev                               endpoint
-> > > > + * └──PCIe Endpoint (type 0), pci_dev                           |
-> > > > + *    └──Downstream Port (type 1), pci_dev (Nth switch)        portN
-> > > > + *       └──Upstream Port (type 1), pci_dev (Nth switch)        |
-> > > > + *          :                                                   :
-> > > > + *          └──Downstream Port (type 1), pci_dev (1st switch)  port1
-> > > > + *             └──Upstream Port (type 1), pci_dev (1st switch)  |
-> > > > + *                └──Root Port (type 1), pci_dev                |
-> > > > + *                   └──PCI host bridge, pci_host_bridge       port0
-> > > > + *                      :                                       |
-> > > > + *                      :..ACPI0017, acpi_dev                  root
-> > > > + *
-> > > > + * (There can be zero or any other number of switches in between.)
-> > > > + *
-> > > > + * RCD mode:
-> > > > + *
-> > > > + * CXL memory device, cxl_memdev                               endpoint
-> > > > + * └──PCIe Endpoint (type 0), pci_dev                           |
-> > > > + *    └──PCI host bridge, pci_host_bridge                      port0
-> > > > + *       :                                                      |
-> > > > + *       :..ACPI0017, acpi_dev                                 root
-> > > > + */
-> > > >  struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
-> > > >  				   struct cxl_dport **dport)
-> > > >  {
-> > > > +	if (is_cxl_restricted(cxlmd))
-> > > > +		return find_cxl_port(cxlmd->dev.parent, dport);
-> > > > +
-> > > >  	return find_cxl_port(grandparent(&cxlmd->dev), dport);
+> > > > Note this is BAR0 + 8 bytes, not 8k, and it does not map the whole
+> > > > RCRB region but instead the first part of the config space up to
+> > > > including the 64 bit BAR.
 > > > 
-> > > I do not see why this change is needed. For example:
-> > > 
-> > > # readlink -f /sys/bus/cxl/devices/mem0
-> > > /sys/devices/pci0000:38/0000:38:00.0/mem0
-> > > # cxl list -BT
-> > > [
-> > >   {
-> > >     "bus":"root0",
-> > >     "provider":"ACPI.CXL",
-> > >     "nr_dports":1,
-> > >     "dports":[
-> > >       {
-> > >         "dport":"pci0000:38",
-> > >         "id":49
-> > >       }
-> > >     ]
-> > >   }
-> > > ]
-> > > 
-> > > ...so, in this case, the grandparent of "mem0" is "pci0000:38", and
-> > > "pci0000:38" is a dport. Unmodified cxl_mem_find_port() will do the
-> > > right thing and find that this CXL RCIEP is directly connected to
-> > > "root0".
+> > > Oh, sorry, yes, my mistake. However, there is not much value in mapping
+> > > less than 4K since all ioremap requests are rounded up to PAGE_SIZE.
+> > > Since an RCRB is only 4K per port lets just map the whole thing.
 > > 
-> > find_cxl_port() uses the dport_dev, not the uport_dev. A lookup of
-> > pci0000:38 gives the cxl root (ACPI.CXL).
+> > I was going to keep the ranges small to avoid conflicts with other
+> > requests for the same page (though request_mem_region() was missing
+> > yet).
 > 
-> ...but that is what I would expect. I.e. that RCDs appear directly
-> connected to the cxl root with no intervening cxl_port instance, and RCH
-> host-bridges only serve the role of dport devices. This also matches the
-> diagram from 9.11.8 CXL Devices Attached to an RCH where a
-> downstream-port RCRB in the host bridge is directly connected to the
-> RCIEP endpoint.
+> What else will be conflicting the RCRB? Linux has never accessed an RCRB
+> in the past as far as I can see. If there is a conflict then we may need
+> to move this mapping to the PCI core so that it is managed like other
+> mmconf space.
 
-All devices connected to ACPI.CXL? IMO this needs to be bound to the
-host bridge. The hierarchy should show a host/device mapping. In fact,
-in a VH the root port is also not part of the mapping, instead the
-host bridge shows up there. Also, there can be multiple RCHs.
+The capabilities (PCIe and DVSEC) could be used by various subsystems
+and parts of the driver. I am thinking of the various RAS caps (UP,
+DP, CXL, AER variants) that are accessed from different parts of the
+driver. Of curse, access could be delegated but else there is the
+option to directly map and access that parts. In the component reg
+block we already see issues with that broad mappings.
 
 -Robert
