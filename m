@@ -2,341 +2,325 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC38CC433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 16 Nov 2022 23:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06034C433FE
+	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 00:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233325AbiKPXtD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 16 Nov 2022 18:49:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41006 "EHLO
+        id S234308AbiKQAtn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 16 Nov 2022 19:49:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234276AbiKPXtA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 18:49:00 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC48424F16;
-        Wed, 16 Nov 2022 15:48:58 -0800 (PST)
+        with ESMTP id S238829AbiKQAt0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 16 Nov 2022 19:49:26 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A2D66C71B;
+        Wed, 16 Nov 2022 16:47:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668642538; x=1700178538;
+  t=1668646049; x=1700182049;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=vT8ss5VTS1uEKBDjcGV+klz5xg2oF17SGKsc0ydfIfk=;
-  b=IVjO+mhA/SYqrQw59l46xXStchmMo5hzpSCoIKxgGs4+IsKz5lraWz9Y
-   wHbLsoB9tRF+UOeOkW3Q6XkUrz/OVjYDvwfaceOtZwIeilHqMaZAkam2W
-   SiZ+VdGNs7oH80HBVQRWFEmkorpoYF4n97AIyIxeYB06F0PRyYEwsZF5x
-   RoAPIvO3Rk3s+PoKTiimBk7qhm7XsZO4u8D78+W12nfV1w7KCFl962BIB
-   wi0qFiTNilm0+kzQXmKRSgw/7I7BBK8rAbDT9t2pIF5g8vi0Bg4ULxZi2
-   IK0dlGSHuH5kzjCoX/KWxSyBQh/EepLci7BbLSqbMhiO5Ie4Bt1BWk4Ts
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="313849386"
+  bh=i89mYylvvffIYCnulvPrlzoXsy4ed8b1zLh+AEV2x4E=;
+  b=A+XYHxvQzxYFBUMoBLOKZdjGmU8/NGagpWCrGngyk4cDRQHeabsSE7Ln
+   J2kao0BjjcslBq7oeYZBQt6jdrnbnCHTPr1OH3XyawASzbq6VGgXExIC9
+   mFe8KhZUaF/A/sHviQvC6BrDHnLI/MXxKWYppc0wkPhLOrMtnocDqeAVR
+   bR4ZC8khm8kdX2LvbNvwqRxtGGcf2eP+aDob3+mPhPwI08QpoYQIZDS+m
+   fLQOdhOo8QWz3qd8HDWLZfzqv9dDyYypIDL9IXKnCoeW2IRr7e291Vklx
+   pPrr5w6JS87mQYP4mhX7vSsuENgeNoLvirBRXOLXHTeW7VWZkMpo8Srku
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="311417350"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="313849386"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 15:48:58 -0800
+   d="scan'208";a="311417350"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 16:47:28 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="703080824"
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="670709432"
 X-IronPort-AV: E=Sophos;i="5.96,169,1665471600"; 
-   d="scan'208";a="703080824"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Nov 2022 15:48:58 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="670709432"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga008.jf.intel.com with ESMTP; 16 Nov 2022 16:47:28 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 15:48:57 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2375.31; Wed, 16 Nov 2022 16:47:28 -0800
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 16 Nov 2022 15:48:57 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ 15.1.2375.31; Wed, 16 Nov 2022 16:47:27 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Wed, 16 Nov 2022 15:48:57 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.102)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2375.31 via Frontend Transport; Wed, 16 Nov 2022 16:47:27 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.105)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Wed, 16 Nov 2022 15:48:56 -0800
+ 15.1.2375.31; Wed, 16 Nov 2022 16:47:27 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BfJaAm2BwrUeNWV9S9VTP7sX972J0JCdym5+weDVdUCbsevSRO0+z2FSidPQ+C9GanoAE8evk/Bp7bOdUSfNFrtQYhdGsZeoLFKdTFW+YuBFn/MaJMaY55Qumel8l+eNuiRTvOW7AhFYXnAq26BbCXPluXewa4tDfznrdENHxq1236k3wyRh5i+50BJ+Ucq/LUGeIscY2fQd11xtD923UdBMWAT4F6S8cpKfwKwZeUdAUnrgq8FwpIo3IudUCMLATx5mNWlNkS8aZp2stcRy5so/6kD389GO28fQ7Z6ad68sS5LKVDHvOYKcy600IQe9oODikKqwwvyD15NUN+YvdA==
+ b=Kt/A9KbSrRbM9nAdrLPhfrd5eDyyCt/8+ACCWfMjcJngMBMH8rmssHb28RyASxxx2EKkpRGSZsvkPMw/Wihlpgf313qcLD5nSYZ1axgO0YDTBAdXklhO6VUmDf6stlExxpNxIMM5FWyb/Z/hq4QD+OurhA3Y/BD8HMltCfG1qIyq8bGBblJ9HlFGVA3rTeeMsrSc7l1ZZecZWG/Y5i3HMYhsMNfM4qfZgGxFyK/Q4hJ3GSgzTyK4EFx1HR+QkRHQf8hmBGdx95U+3q8eFnuuzjiWv/7mua85p0ejSOalyo7UlSUht9/rrNBfABa8tBtX1BuFtArt1V+pLuuuGwPABg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d6hfCfNlbu7aCLsUS+JzCl8f/GfbErZ/f0Q8Jmifj5Y=;
- b=T0O599nDwIOXDfTbOEY/BXhdHsQrnuyEc9HKqG3B9SGg0ICq0nn1PTKK5k7Z9kVkZ279ox2xac53tg6tqSQ0pHGGXi+SX4Es5v0QRihoPpZPsImx5gKYtsWH50403n/1/HhcWDUMZv3gCMM7Og6LBbodQ5P2qrkXaxyaaWtDBwp2xk3QZn9DWNdGyzS3fWP06gHBxTuksWdMCMIX5HKSRGo26nbc/KTMea+9yS5geVUH1MQVpfx7s6EDObkiGfe213VTRTQ5QJdcVtO8GvpCnJ2MsAyl0Kff8XU/R+Hoekb8i9RMBtb6082rqx2z3CPMxT5fmtt4r0+WTRDKtvxCig==
+ bh=Eni19mgdeb9CtbXkkPqzN1j/cui7WAcQ+3Du5ToVU+0=;
+ b=DtJiE7q0UEO57V2MntKsEk7awAeCAKhkr/vzhh2NJcnfw0PyIXFwlNHAtfiFOygaatOBW9YTPz8rgnQzEwCHXzNYMCYumMnNhhbrVuDxl5cBXVoNYoRcztihwFpfJEzqoQQMFQ+zCoKfjTwiH/qupucuC69vk7SpMKOOeGeEexmsThX/P05daZ4/qOuA21g4Xnk9C6hXA6rHPHj0jMbah2sAHjLRQPLqk2j/H4I9bU2zFuZkqGppI5ZRQKIoVg+ckBS4HPLa0J3zmd1k1Vo56QjqM2Av4+0pgOeK4Xq2ziVQLSPkq7JWwwctk1fo4qXo/Tr36fBSg6ExXoXI599MgQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by LV2PR11MB6021.namprd11.prod.outlook.com (2603:10b6:408:17e::12) with
+ by SA1PR11MB6687.namprd11.prod.outlook.com (2603:10b6:806:25a::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.18; Wed, 16 Nov
- 2022 23:48:53 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.18; Thu, 17 Nov
+ 2022 00:47:25 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f%5]) with mapi id 15.20.5813.019; Wed, 16 Nov 2022
- 23:48:53 +0000
-Date:   Wed, 16 Nov 2022 15:48:48 -0800
+ ([fe80::5236:c530:cc10:68f%5]) with mapi id 15.20.5813.019; Thu, 17 Nov 2022
+ 00:47:25 +0000
+Date:   Wed, 16 Nov 2022 16:47:20 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 01/11] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <Y3V24PrgL0aN9P08@iweiny-desk3>
+Subject: Re: [PATCH 02/11] cxl/mem: Implement Get Event Records command
+Message-ID: <Y3WEmMlLfPoYG1R5@iweiny-desk3>
 References: <20221110185758.879472-1-ira.weiny@intel.com>
- <20221110185758.879472-2-ira.weiny@intel.com>
- <20221116145341.00006411@Huawei.com>
+ <20221110185758.879472-3-ira.weiny@intel.com>
+ <20221116151936.0000662f@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20221116145341.00006411@Huawei.com>
-X-ClientProxiedBy: BYAPR02CA0006.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::19) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <20221116151936.0000662f@Huawei.com>
+X-ClientProxiedBy: BY3PR03CA0026.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::31) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV2PR11MB6021:EE_
-X-MS-Office365-Filtering-Correlation-Id: 943fc4ce-4d50-4657-3de6-08dac82d1e38
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA1PR11MB6687:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6abcc5d5-afa0-4221-1ad5-08dac8354b58
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: X/LulyycB26WGikZg6wmwSSyJ07W9m/6PLcRS6CoJzlD1zidS69iPZQLpJoC05J/QQlRHkQ4ZsntrsWoz1WxELNDrNR2kVDhORlRq+8LReQtpQUsSsLHbkwF7+/PqP93o1np0CwW2kpj2QI67FxqijD0zENixRu8+hcmLC/eQXa6XtsSaqyAcMYGs0B32kshVlAtqa4lcfIZL2WT7QWp872sHRUPge3HUssf0UMRPyaWMACzrNYYwlLdeAL8pIGQ4VO+OvwaqWtJcLy6xz/dUIfwAwqiWIhJtgNaaZV2UADSFySi9nyTW36arVj36wZLkujzQgIB7iWOCduEzXznGpmTF7ZyPwN696tbLuuOzdtL9GGru3vJ/ak1/1FLAv8INYECAKvvtV1dyGH68nCIcr/QUisRTERZ+YZdppiXaJX6y6n+3cubCdRh053i3Y/ARBsFJZntAHEk9yAUJLlXxPmdbeQF5ydmjWgw5zkX7QXzEJrlnT0dt+TAZRe5OHzur2RWAShJc6HtOAsnXFKYx/Chxmkor5WavJqmrRceOrUujuqKK6GuBJAEKPZUcqUxBJohl4vTKDJGmqW1E1QTByyVaxdMbhQMEmRS39M5zZ00ZEd+kQTZCvqf1sCypRiK0+rr+QbNGMMI/Rya8FyJd1JC6u90HVsTsX3NG7yLJfzhLJgzZn92h9pswRYVLHjjaFcPKKogF3NIK3O9UINY7vKn06uLF8p7vF7xg4VTXwceSg6X1S7sr1G8cLxuIM0R
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(376002)(346002)(39860400002)(136003)(366004)(396003)(451199015)(82960400001)(9686003)(26005)(6506007)(6512007)(6486002)(8676002)(4326008)(66556008)(66946007)(66476007)(83380400001)(478600001)(6666004)(5660300002)(86362001)(41300700001)(186003)(44832011)(8936002)(33716001)(2906002)(38100700002)(316002)(6916009)(54906003)(66899015)(41533002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: JfMN/aCYB9cYg52JZOwcAB+A2bm97fMMT34Mt9euXuH8CTNT6hQEc/WgoD03s+TSkJOshriqt+5HakA2JaTCfOiqa9OvToo181suz4791C7Hhz0gjKHwX4JdiQhBawLKf5QKKFgfmUugtPihOdSt2a+sXX+0rL4j/gR70sn1cxGnEB2wDrcYLsjFqo7RDcWGri6v4O80CNCNYW6NXTePftFPptxNz3PIbql4uL4fXFU0M6iCW1Lu533tmel5LxqDmi4+8sW0NBTcRrDVI6+ZpNuTmVXSw7RRlQv3wS8pA2QzqpeqAF+n8FNAQIcRaoAmZD7944XZWWKe7gyEfu6wUzXzhBRbSNk9AnLh75h/p2lxSrAikrZDvQz3TCiDhAeU0Mhr4hawivucA8SBwfuJQozM8AGW1e6jz76UXhbNq+BQWAI/ez6SM4YfC4bd4CigMd+DSYv/dl5rExabfptfGEhJSLujO+bvU9AnaTZ2PdyiSPQHzfzYavFQ8B+fqkynfAd2yW8UZMS5gNJwKsx2a9VW8gswB2tsj7gYEGwJ8nlIDg8ORdnBfv9jX639+ughAT277UXWmlSU17heW4jT/mtcoVh6ZWUCwqNdlWj1fJRIPq/VT17ufEraafyKIumCE1Y3kcnQ7+jcky+2+m6hed0c1dkYXRQ4EIe/iDaHg7eNR85F5yB/kqZwp8m9HS1RI6g0CUXe0VQNUsDbORJPtQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(346002)(39860400002)(396003)(136003)(376002)(366004)(451199015)(6486002)(478600001)(6666004)(54906003)(6916009)(66556008)(9686003)(8676002)(6512007)(66946007)(66476007)(4326008)(8936002)(33716001)(26005)(41300700001)(38100700002)(186003)(6506007)(5660300002)(316002)(44832011)(82960400001)(2906002)(83380400001)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5Z4BfdDQ2CIm2A/fXq3ZnbCyGO5a7Ikb0s1kK/fIuMI/4BxG4Nm4eANHhCe7?=
- =?us-ascii?Q?/8cj8gXL3XjxIGm6K1LtRfngl8ftswPZQ4QiR6vDJxz/G32OakkGkr5n1wl2?=
- =?us-ascii?Q?+rGFNVikrNzZ1ksLqcgCwp9H9AiqUAPr9LqXNxiAMsyW3viFTf4yHJ9GNDHJ?=
- =?us-ascii?Q?QS+QaOE+NNUFnMjXoBd2qd4WESSmKcGBECsTSgjAyJwbAgL3/+aJXFFsaIiH?=
- =?us-ascii?Q?aHYH2CisQ0VYRAylyV9ZYGVk9n7mJv+1HoVmkSzyDo56dcEtSjBHvpdXLP+p?=
- =?us-ascii?Q?c/pkqhMhTsN/PfnHgNHidg3uPBfgRWI5Par+0csaAFA14vhK12SRBZFQfW6Y?=
- =?us-ascii?Q?yrUx/R60MOkR0rKDvpsHVB5jlSWorPZtP/hhse6WGif9gYHRsv4KU6ciqzHi?=
- =?us-ascii?Q?JRfHUbahNndY2nygB4oXHVuhlrgA87tFUcfn+i/TISPEqcmWD80f841J/amt?=
- =?us-ascii?Q?15ScXhIG9STh1OtysbONbe4ohH17zD4bpyY0Z8NbP0vUEU8jWapMEXHrtW7O?=
- =?us-ascii?Q?EmmscPvwyCgWbjxwTnjyRPPQrh4McGFEg0HkYnyJswX01MGYMWx6C4RSfKN9?=
- =?us-ascii?Q?cFyedtWkbx+8VL0eNnY4ga2hmsjCJ6hZa+p2wog5vjhOWJOcvcuCx6KbkdNC?=
- =?us-ascii?Q?D7wTXPgIfhS5pw+50L42iegVAYMUM+2Bxw5ZnNfw7hD2H9GPKNFNfD6QUmIL?=
- =?us-ascii?Q?V34OAcHEuo0vxqI/ahH4/rbRMbZAfh+7uQ6yKIEHzsAkPYSEKv3FaO3Hzeir?=
- =?us-ascii?Q?ABS5eUDiDw+HvU6ERd1mvE850Rb9O8y0YqoPDNtfl4ZyP4xortOplhkY1iNp?=
- =?us-ascii?Q?5Ew0J6gWUFYh2MGxJBkyjNDzJDgmxBP3RyemZC3q4vgEHq/eSgPgWM/k0kKY?=
- =?us-ascii?Q?ikW2PVJIdP7xEVxgRMsSSzGex1EhDvZFYj0bPCrpCR0jyII24cpsUbSUIVJ1?=
- =?us-ascii?Q?yCmj0CvKFAhWEE0Tx29cMYz1ke4lCYsNLURDvYnWaW9lmViNYqSowbGTfdch?=
- =?us-ascii?Q?5UsI58+zsvE0I5cogQ9HE3xXnRazbt88AZOOGHf1663d32Z3sIQvZdqZBPv3?=
- =?us-ascii?Q?65mIk8JUGIwpXtuYzG2Ko3Ot7ri+uRZz+VDufZlyWsCO1jFzELrAS8MHbcJR?=
- =?us-ascii?Q?eZIh+ptZTdO5Rn1XNJ3qqRa6p8J6R14Uawc1tshmL6O7k8Eunn1R/jKUMIFz?=
- =?us-ascii?Q?vi6egHCvmfRx4AjX4U5I7/kEzott98BcysQHvbd3qlrniN2Na4gVmvCFoSLi?=
- =?us-ascii?Q?BMtyrwD0JMxg6J1vfQhWvtRsJLJmFkws0eeGz6EC92vRCQmK9KXnk92S4CaN?=
- =?us-ascii?Q?GgaOBx/9wRMsTjlh4tu/0czIBnjVKix8IWN5QhW3xN+YTjS/T4jsNc7IPFtG?=
- =?us-ascii?Q?TUZQh09Rz8B6U2zvXlpi+30sn5HIsv+yuoqRtb+tvyBuZc1yjfaYMLNWAaHx?=
- =?us-ascii?Q?VJ9hzS8ZUbxKsNqU55DnKzwfOaSEaLjyeYaSBp28cOCuJv3qoggssXnuKUpC?=
- =?us-ascii?Q?sACS3g9LREDRouwiGK3Jdz+cRQ8DmAHZ2R8Zg8jv6SzSOhEfQtCV2c3jXKC/?=
- =?us-ascii?Q?HmI4Qy87kLXcrUgU7WQaxCzQtaw6z1hYKVV69+Ga?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 943fc4ce-4d50-4657-3de6-08dac82d1e38
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LZHJoYaHqJ2SZUZlzUBc9pj3jPOn31MgB4TGfAj8J0YH7MwNTDbUyfwE7Uxx?=
+ =?us-ascii?Q?JdL5hRfmFBcPgtnYgjzkl6ZhOMprO6renRUIfI04aC41AxA6P9q9EK8APmXJ?=
+ =?us-ascii?Q?oLYRA9zgW5fUrvRDwTLBIB0JGNAGKNpIt7GJibCic3/WGgR0ce7qPi/6XLyQ?=
+ =?us-ascii?Q?xJwEnR1xXPZGK2IypMUQSYRcfexUGq6Cti4zLXhkMPOuUoAE7rj3rt/CZ+7k?=
+ =?us-ascii?Q?VtIJ+qu1zgwWJZsAnuvxqGzS03KGyKW8Elfdd1pCIEIfCxc6kHNL4k1sjUIA?=
+ =?us-ascii?Q?z//lO0Z0oGsGZyKxkBrcuPYxcIN0iSn1++VDY4rEExWiwiLbS7dmgDWPm+Jl?=
+ =?us-ascii?Q?RvomKGLxZupIR+7OhXpKURW7gJHLOEUCAz+rIuv/6kaD26mCzmIsevJRF0Ih?=
+ =?us-ascii?Q?Lovk1tunNd3jVYIlVLCpiQ/1J/MbBdDbwUQ6kMSjS3EY/f7DeD/3IONXAOrl?=
+ =?us-ascii?Q?xpjojDs7JVjgHJtPPeU736B5RHmt4gysF7L2W9pg/sRCig0ApZsKklvHyPmi?=
+ =?us-ascii?Q?rZAh0He/aS3MdQwjaJI6FRZ6O3FyAumOw4xS2r7Y0tnpqG6JW9kyr03duYkQ?=
+ =?us-ascii?Q?arPqhzaD9DKiofBYwwuHQRrhSBc152scFWSmK+1Scu56JmMLOK2DV91fdRsE?=
+ =?us-ascii?Q?TD0Ph6MHSCjfeo1Jy7+l1uCvaa4IBmnF2ts57Hcrbwv6aRDfYmtFvr9dKTy1?=
+ =?us-ascii?Q?C6bOpY6kDk0iH4HUigZAV5bmArVRwXrRX9WXy76GWo05j71wKXpYBeD/K8Bo?=
+ =?us-ascii?Q?0/Ds+Iwgm6bZEaJgHFaKKe4JQPu0ZVe6Pz7ErFTWJGJ3SGGdjnyZVonjwFJG?=
+ =?us-ascii?Q?An+2phh6eM6dIlKGz2Q3fCPMFaQ4DZFfR+3tKduAvT7+04y82HjkO+wbwOgv?=
+ =?us-ascii?Q?XCWcM61wEi1lgLl6h757K9WH2mF5zya64/GV5kbhFIf/8aUMlB5OxU1aCtHu?=
+ =?us-ascii?Q?sYfYJ+yH+CEH9+9xeXcIckbV3IQM1p839+nJKYLd8xgPTDKQ9PQCElCDIG5P?=
+ =?us-ascii?Q?rfRVscUe860xnT7fs2rwc/0CAeNqIxjknG3XoqyYgf5Nfoc1PwvZ1R2DomoD?=
+ =?us-ascii?Q?gDPQTw4YoJLfs/+ld8ukvvVsagg/Vm+/WZS7NsIlX8dIUuw1iG22iW/O+ExG?=
+ =?us-ascii?Q?7ZsjhF+WFSwDvLF7nBBMlO1wkOGbUxK/bnkNYqaCvxVDBdzLFrl3thUKRd+y?=
+ =?us-ascii?Q?gGysQTVStRnJ+XLJZBiP6oKW1pzQhNAE+UVwIOSRZJx4AcKgjNe3vUOQu+Eq?=
+ =?us-ascii?Q?wzc0CkoEdWkZBWx7bQoQSXs8Hyc82cdwRY90idT3XHZr1k9TF733sIGkQaBP?=
+ =?us-ascii?Q?J9e8m/1j1bpXnWCqasyALdTQ9WSGtAyqyJMAgqaO7FLdk4nn+eT1o+gOcGJv?=
+ =?us-ascii?Q?XfAlSjJiqfpJHYTUjf1U8rzOK349+sKAX01DYtKG/NzDy+fs9jIk4H40b4BN?=
+ =?us-ascii?Q?LGo3XIjG+VIXTBl8g+Im/PvlV1GhdBlPja8a/FhjuCcnRZK1XZhpAzsVK5YG?=
+ =?us-ascii?Q?o0bjwsuVXMxVP92HXQgrDW2rrvlb6Ya9fACEKHGrOzbhDXEbGcCDx+DVkIry?=
+ =?us-ascii?Q?wKQj+r7aAfDyVKqKiBt3C4Tjh1E1+RRraQ9CuzTK?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6abcc5d5-afa0-4221-1ad5-08dac8354b58
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2022 23:48:53.4775
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2022 00:47:25.0483
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1t5lzvJSnMpQWv+ObqUVnaCMdEandkc0j/6R6FNuVYfVb5M9y0d8dzG3ZFKEvL0nBHI2VXPkRxwRHMZtDwRo6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6021
+X-MS-Exchange-CrossTenant-UserPrincipalName: RyQ0TQrvUOJdJjNymVSFzyXoulPUCuMeCz2159ADNN+cYfsrDdgBDoNmYO5LaMstU2I+6m+R1GxvIbl6eDOX3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6687
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 02:53:41PM +0000, Jonathan Cameron wrote:
-> On Thu, 10 Nov 2022 10:57:48 -0800
+On Wed, Nov 16, 2022 at 03:19:36PM +0000, Jonathan Cameron wrote:
+> On Thu, 10 Nov 2022 10:57:49 -0800
 > ira.weiny@intel.com wrote:
 > 
-> > From: Davidlohr Bueso <dave@stgolabs.net>
+> > From: Ira Weiny <ira.weiny@intel.com>
 > > 
-> > Currently the only CXL features targeted for irq support require their
-> > message numbers to be within the first 16 entries.  The device may
-> > however support less than 16 entries depending on the support it
-> > provides.
+> > CXL devices have multiple event logs which can be queried for CXL event
+> > records.  Devices are required to support the storage of at least one
+> > event record in each event log type.
 > > 
-> > Attempt to allocate these 16 irq vectors.  If the device supports less
-> > then the PCI infrastructure will allocate that number.  Store the number
-> > of vectors actually allocated in the device state for later use
-> > by individual functions.
-> See later patch review, but I don't think we need to store the number
-> allocated because any vector is guaranteed to be below that point
-
-Only as long as we stick to those functions which are guaranteed to be under
-16.  If a device supports more than 16 and code is added to try and enable that
-irq this base support will not cover that.
-
-> (QEMU code is wrong on this at the momemt, but there are very few vectors
->  so it hasn't mattered yet).
-
-How so?  Does the spec state that a device must report at least 16 vectors?
-
+> > Devices track event log overflow by incrementing a counter and tracking
+> > the time of the first and last overflow event seen.
+> > 
+> > Software queries events via the Get Event Record mailbox command; CXL
+> > rev 3.0 section 8.2.9.2.2.
+> > 
+> > Issue the Get Event Record mailbox command on driver load.  Trace each
+> > record found with a generic record trace.  Trace any overflow
+> > conditions.
+> > 
+> > The device can return up to 1MB worth of event records per query.  This
+> > presents complications with allocating a huge buffers to potentially
+> > capture all the records.  It is not anticipated that these event logs
+> > will be very deep and reading them does not need to be performant.
+> > Process only 3 records at a time.  3 records was chosen as it fits
+> > comfortably on the stack to prevent dynamic allocation while still
+> > cutting down on extra mailbox messages.
+> > 
+> > This patch traces a raw event record only and leaves the specific event
+> > record types to subsequent patches.
+> > 
+> > Macros are created to use for tracing the common CXL Event header
+> > fields.
+> > 
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> Otherwise, pcim fun deals with some of the cleanup you are doing again
-> here for us so can simplify this somewhat. See inline.
-
-Yea it is broken.
-
+> Hi Ira,
+> 
+> A question inline about whether some of the conditions you are checking
+> for can actually happen. Otherwise looks good to me.
 > 
 > Jonathan
 > 
-> 
-> 
-> > 
-> > Upon successful allocation, users can plug in their respective isr at
-> > any point thereafter, for example, if the irq setup is not done in the
-> > PCI driver, such as the case of the CXL-PMU.
-> > 
-> > Cc: Bjorn Helgaas <helgaas@kernel.org>
-> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > 
-> > ---
-> > Changes from Ira
-> > 	Remove reviews
-> > 	Allocate up to a static 16 vectors.
-> > 	Change cover letter
-> > ---
-> >  drivers/cxl/cxlmem.h |  3 +++
-> >  drivers/cxl/cxlpci.h |  6 ++++++
-> >  drivers/cxl/pci.c    | 32 ++++++++++++++++++++++++++++++++
-> >  3 files changed, 41 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 88e3a8e54b6a..b7b955ded3ac 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
-> >   * @info: Cached DVSEC information about the device.
-> >   * @serial: PCIe Device Serial Number
-> >   * @doe_mbs: PCI DOE mailbox array
-> > + * @nr_irq_vecs: Number of MSI-X/MSI vectors available
-> >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> >   *
-> >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > @@ -247,6 +248,8 @@ struct cxl_dev_state {
-> >  
-> >  	struct xarray doe_mbs;
-> >  
-> > +	int nr_irq_vecs;
-> > +
-> >  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> >  };
-> >  
-> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> > index eec597dbe763..b7f4e2f417d3 100644
-> > --- a/drivers/cxl/cxlpci.h
-> > +++ b/drivers/cxl/cxlpci.h
-> > @@ -53,6 +53,12 @@
-> >  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
-> >  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
-> >  
-> > +/*
-> > + * NOTE: Currently all the functions which are enabled for CXL require their
-> > + * vectors to be in the first 16.  Use this as the max.
-> > + */
-> > +#define CXL_PCI_REQUIRED_VECTORS 16
-> > +
-> >  /* Register Block Identifier (RBI) */
-> >  enum cxl_regloc_type {
-> >  	CXL_REGLOC_RBI_EMPTY = 0,
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index faeb5d9d7a7a..62e560063e50 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -428,6 +428,36 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
-> >  	}
-> >  }
-> >  
-> > +static void cxl_pci_free_irq_vectors(void *data)
+
+[snip]
+
+> > +static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> > +				    enum cxl_event_log_type type)
 > > +{
-> > +	pci_free_irq_vectors(data);
+> > +	struct cxl_get_event_payload payload;
+> > +	u16 pl_nr;
+> > +
+> > +	do {
+> > +		u8 log_type = type;
+> > +		int rc;
+> > +
+> > +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_EVENT_RECORD,
+> > +				       &log_type, sizeof(log_type),
+> > +				       &payload, sizeof(payload));
+> > +		if (rc) {
+> > +			dev_err(cxlds->dev, "Event log '%s': Failed to query event records : %d",
+> > +				cxl_event_log_type_str(type), rc);
+> > +			return;
+> > +		}
+> > +
+> > +		pl_nr = le16_to_cpu(payload.record_count);
+> > +		if (trace_cxl_generic_event_enabled()) {
+> > +			u16 nr_rec = min_t(u16, pl_nr, CXL_GET_EVENT_NR_RECORDS);
+> 
+> Either I'm misreading the spec, or it can't be greater than NR_RECORDS.
+
+Well...  I could have read the spec wrong as well.  But after reading very
+carefully I think this is actually correct.
+
+> "The number of event records in the Event Records list...."
+
+Where is this quote from?  I don't see that in the spec.
+
+> Event Records being the field inside this payload which is not big enough to
+> take more than CXL_GET_EVENT_NR_RECORDS and the intro to Get Event Records
+> refers to the number being restricted by the mailbox output payload provided.
+
+My understanding is that the output payload is only limited by the Payload Size
+reported in the Mailbox Capability Register.Payload Size.  (Section 8.2.8.4.3)
+
+This can be up to 1MB.  So the device could fill up to 1MB's worth of Event
+Records while still being in compliance.  The generic mailbox code in the
+driver caps the data based on the size passed into cxl_mbox_send_cmd() however,
+the number of records reported is not changed.
+
+> 
+> I'm in favor of defense against broken hardware, but don't paper over any
+> such error - scream about it.
+
+I don't think this is out of spec unless the device is trying to write more
+than 1MB and I think the core mailbox code will scream about that.
+
+> 
+> > +			int i;
+> > +
+> > +			for (i = 0; i < nr_rec; i++)
+> > +				trace_cxl_generic_event(dev_name(cxlds->dev),
+> > +							type,
+> > +							&payload.record[i]);
+> > +		}
+> > +
+> > +		if (trace_cxl_overflow_enabled() &&
+> > +		    (payload.flags & CXL_GET_EVENT_FLAG_OVERFLOW))
+> > +			trace_cxl_overflow(dev_name(cxlds->dev), type, &payload);
+> > +
+> > +	} while (pl_nr > CXL_GET_EVENT_NR_RECORDS ||
+> 
+> Isn't pl_nr > CXL_GET_EVENT_NR_RECORDS a hardware bug? It's the number in returned
+> payload not the total number.
+
+I don't think so.  The only value passed to the device is the _input_ payload
+size.  The output payload size is not passed to the device and is not included
+in the Get Event Records Input Payload.  (Table 8-49)
+
+So my previous code was wrong.  Here is an example I think which is within the
+spec but would result in the more records flag not being set.
+
+	Device log depth == 10
+	nr log entries == 7
+	nr log entries in 1MB ~= (1M - hdr size) / 128 ~= 8000
+
+Device sets Output Payload.Event Record Count == 7 (which is < 8000).  Common
+mailbox code truncates that to 3.  More Event Records == 0 because it sent all
+7 that it had.
+
+This code will clear 3 and read again 2 more times.
+
+Am I reading that wrong?
+
+> 
+> > +		 payload.flags & CXL_GET_EVENT_FLAG_MORE_RECORDS);
 > > +}
+> 
+> 
+> > diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
+> > new file mode 100644
+> > index 000000000000..60dec9a84918
+> > --- /dev/null
+> > +++ b/include/trace/events/cxl.h
+> > @@ -0,0 +1,127 @@
+> 
+> 
+> > +#define CXL_EVT_TP_fast_assign(dname, l, hdr)					\
+> > +	__assign_str(dev_name, (dname));					\
+> > +	__entry->log = (l);							\
+> > +	memcpy(&__entry->hdr_uuid, &(hdr).id, sizeof(uuid_t));			\
+> > +	__entry->hdr_length = (hdr).length;					\
+> > +	__entry->hdr_flags = get_unaligned_le24((hdr).flags);			\
+> > +	__entry->hdr_handle = le16_to_cpu((hdr).handle);			\
+> > +	__entry->hdr_related_handle = le16_to_cpu((hdr).related_handle);	\
+> > +	__entry->hdr_timestamp = le64_to_cpu((hdr).timestamp);			\
+> > +	__entry->hdr_maint_op_class = (hdr).maint_op_class
 > > +
-> > +static void cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
-> > +{
-> > +	struct device *dev = cxlds->dev;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	int nvecs;
-> > +	int rc;
-> > +
-> > +	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_REQUIRED_VECTORS,
-> > +				   PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> > +	if (nvecs < 0) {
-> > +		dev_dbg(dev, "Not enough interrupts; use polling instead.\n");
-> > +		return;
-> > +	}
-> > +
-> > +	rc = devm_add_action_or_reset(dev, cxl_pci_free_irq_vectors, pdev);
-> The pci managed code always gives me a headache because there is a lot of magic
-> under the hood if you ever called pcim_enable_device() which we did.
-> 
-> Chasing through
-> 
-> pci_alloc_irq_vectors_affinity()->
-> either
-> 	__pci_enable_msix_range()
-> or
-> 	__pci_enable_msi_range()
-> 
-> they are similar
-> 	pci_setup_msi_context()
-> 		pci_setup_msi_release()
-> 			adds pcmi_msi_release devm action.
-> and that frees the vectors for us.
-> So we don't need to do it here.
+> Trivial: Maybe one blank line is enough?
 
-:-/
-
-So what is the point of pci_free_irq_vectors()?  This is very confusing to have
-a function not called pcim_* [pci_alloc_irq_vectors()] do 'pcim stuff'.
-
-Ok I'll drop this extra because I see it now.
-
-> 
-> 
-> > +	if (rc) {
-> > +		dev_dbg(dev, "Device managed call failed; interrupts disabled.\n");
-> > +		/* some got allocated, clean them up */
-> > +		cxl_pci_free_irq_vectors(pdev);
-> We could just leave them lying around for devm cleanup to sweep up eventually
-> or free them as you have done here.
-
-And besides this extra call is flat out broken.  cxl_pci_free_irq_vectors() is
-already called at this point if devm_add_action_or_reset() failed...  But I see
-this is not required.
-
-I do plan to add a big ol' comment as to why we don't need to mirror the call
-with the corresponding 'free'.
-
-I'll respin,
+Yea I'll adjust,
 Ira
 
-> 
-> > +		return;
-> > +	}
 > > +
-> > +	cxlds->nr_irq_vecs = nvecs;
-> > +}
-> > +
-> >  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  {
-> >  	struct cxl_register_map map;
-> > @@ -494,6 +524,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	cxl_pci_alloc_irq_vectors(cxlds);
-> > +
-> >  	cxlmd = devm_cxl_add_memdev(cxlds);
-> >  	if (IS_ERR(cxlmd))
-> >  		return PTR_ERR(cxlmd);
+> > +#define CXL_EVT_TP_printk(fmt, ...) \
+> > +	TP_printk("%s log=%s : time=%llu uuid=%pUb len=%d flags='%s' "		\
+> > +		"handle=%x related_handle=%x maint_op_class=%u"			\
+> > +		" : " fmt,							\
+> > +		__get_str(dev_name), cxl_event_log_type_str(__entry->log),	\
+> > +		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry->hdr_length,\
+> > +		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,	\
+> > +		__entry->hdr_related_handle, __entry->hdr_maint_op_class,	\
+> > +		##__VA_ARGS__)
 > 
