@@ -2,505 +2,221 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4835BC4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 19:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7B9C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 19:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235279AbiKRTqN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Nov 2022 14:46:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58102 "EHLO
+        id S234918AbiKRTzL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Nov 2022 14:55:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235220AbiKRTqM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 14:46:12 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39B7FDEBC;
-        Fri, 18 Nov 2022 11:46:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668800771; x=1700336771;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=iKUJqYqRB5J6MjBTwYmRdI/WznIHQ+3guFxiZ3fGxhM=;
-  b=YnXx5Z1eof/ULOqwmjl+SmOQEWUqmfR8ONyq1FTYSWaNmysi1v5grzJ9
-   x1AcOddzAM3YJLBPVMhu73PNMmjOvVjRDokM2FzN4dL4vRsq83xB3CAg3
-   n+s2aCszBvDXjUrjOu579UP8a8LBf1v3zx9C+uw+DeDKBOQfHqvtsunKo
-   tn29q6PxiZ3k8+qjAQGbx7GFRZrsBsrfgi6QJrSXRe85/wh/a4Ts/dnT8
-   euj2cEpPHSxYBt3yulqU6mbCP3nWkFAf5+JLS0qSFx0J/Jh2zRkkFPHAo
-   Z9BWZ3mbSvFBAcAzStPFjFY2dVbdzszBbD94CaKV0sG1za++yxp3lakRm
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="313238596"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="313238596"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 11:46:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="765272336"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="765272336"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga004.jf.intel.com with ESMTP; 18 Nov 2022 11:46:10 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 18 Nov 2022 11:46:10 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 18 Nov 2022 11:46:09 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Fri, 18 Nov 2022 11:46:09 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Fri, 18 Nov 2022 11:46:09 -0800
+        with ESMTP id S235327AbiKRTyn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 14:54:43 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2056.outbound.protection.outlook.com [40.107.237.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA062B97D0;
+        Fri, 18 Nov 2022 11:54:09 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZUlHuz0yYcTaNmzQL8l4ijvFKwME9upSJcZ+UEAs+RSqIZ9uKcGGnIVZrx1LykB8yF9nVsc7s0a0Xveq2GKWajCHdIA0+W+aZJ6wkePaqmxKa1de61oI8ZgvL7eL1z1HB4TcQ4XJzB6CVx8Xm+cbxoFfTkcIjz59RUgmWKNMp8K9SjiNLv7vFW2buogproyHp1k8YzUT3FZBquOvISrRjY+aUYVphqFwFVv+h8HgvGilr6vIfHhY3YCHLHRHyQ8oL84gRBIsyiKZyf01gmeySYcl2K4KOceliE+g8ByOLN0iHISlF3a29l59pznYGsJgfjm3A+HQNABfs2212eP/+A==
+ b=VwjCswUuuwf/7EBr/1sg0IfneaYKWBqYA6n71pfS23GGEeUGxY50x2XBjYZVZxcEA+NZq5iTZkgOrZz+uxZxxxrNfgtr1nWTFOYzg9vV610FCX7Yq4ZM/Ss9+iA+u4g1Z5VKnjXnVFPS3P7uB0gjeZxsMSVoDznk4bndTndsMcU/5TWfSlRnuGoX8mrlHOuNwv2f6dShebiPvj128kqvXjcBetOH2Wo7g/P99yLlExJDWVNCu6UmYGs6o3jCiew36YwBnuQrzu7eM8fd1wSgt7rlxoRSEwvowr2H1f45Q5vQgBxeIPV8eqzSPtVJJ2ntH2rJdgiBysYIs8oi1E7NgA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KFVJD/456T6WeIxyLYL7tYX2gImFmyPRKol99/u0kCA=;
- b=KqhDW4pF0pWKJlfdRm40ht6fZu1zquIctDqT/5QNZ5YBCVxg0G6ePx4+vUqhFvM0mXZfN7OvTpHUK5NUfZHX97BWLgRcIVXWEGNWgetHVD6u5LgimfYpwlZNDhxWaFVAsK+rGzdiAz/BEnv9vFW/OmcwbFy1aOoJLZmguBjPklFwo9OTWrmMApk11vS1SM5lYLl9FXKpzlcm0OMWuBQCAFjC309YwZHMbhwuwYeU69K4cWAue7I6CsJuPoYJkHtx6C9w1hQpTtWMS0ZPt80uF8rqvmiXhGXuIRCFEUxHRRsuf5O4DJkKwANjB0KD2hJgsJb6ghxnJ3dRbKcCFp1eEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by PH0PR11MB5016.namprd11.prod.outlook.com
- (2603:10b6:510:32::23) with Microsoft SMTP Server (version=TLS1_2,
+ bh=BctSm0Mo3RU+gErGoQIbc1ZegNgjvQsU1U2fBBSCy8U=;
+ b=IqhPXJIO2GN0KX17h/3Jp8s6zX7VSsRyYxkiRsD3xZqiloQKzYqMte8ZFFhh9Z16ZruzXCsoRKyIP3WZ1c4tmmLZvj9RQHal0uMgU03vUPEFSU4bWIEVDCDEYt2qKmpVPBiwA1sLmfNx47FQzbLp+iRmrA16rpNXC9KhiLfJ5/7olQcUCq5engRDUGM6CSLPNjohFjH+p7fdFSDiZvM7BsAGi6yz2SoHq2jDzWqZcgD6QZvyf0O/GjQiuCP/Hxf81qmvw/TFJzVMnNDx4cwx6OoW3osJgub8dKdyAVjFwzzi/Q6QijS0rWHCaNr0zDm5OGe29uE+R3skPYIIcMj7Bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BctSm0Mo3RU+gErGoQIbc1ZegNgjvQsU1U2fBBSCy8U=;
+ b=ZUFkgClVpc7Yr17+I8QDaIBwY8rijjW84yr36R0fXxFpemupKGXoyXN80zWowG12+GVIHcewWuqll6SCnVReR/0Zk7G7aCyTmMRHYPVvj5uUUL4GmzKG+WxNeohnPbbFa5g0WjdC18lAt0Wh2LvFa4sj9UaxzbA1/cxzv6kLoT0=
+Received: from DS7PR03CA0264.namprd03.prod.outlook.com (2603:10b6:5:3b3::29)
+ by DS7PR12MB6310.namprd12.prod.outlook.com (2603:10b6:8:95::21) with
+ Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.17; Fri, 18 Nov
- 2022 19:46:07 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::b058:673:c228:3e95]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::b058:673:c228:3e95%9]) with mapi id 15.20.5834.009; Fri, 18 Nov 2022
- 19:46:07 +0000
-Date:   Fri, 18 Nov 2022 11:46:02 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>,
-        David Laight <David.Laight@aculab.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
+ 2022 19:54:07 +0000
+Received: from DM6NAM11FT110.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b3:cafe::8) by DS7PR03CA0264.outlook.office365.com
+ (2603:10b6:5:3b3::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
+ Transport; Fri, 18 Nov 2022 19:54:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT110.mail.protection.outlook.com (10.13.173.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5834.8 via Frontend Transport; Fri, 18 Nov 2022 19:54:07 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 18 Nov
+ 2022 13:54:04 -0600
+Date:   Fri, 18 Nov 2022 20:53:49 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2] PCI/DOE: Detect on stack work items automatically
-Message-ID: <6377e0fa50f1d_12cdff29425@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221118000524.1477383-1-ira.weiny@intel.com>
- <e59f83f3ca4149d098efe43b48fecd1b@AcuMS.aculab.com>
- <Y3fSRbpjeC1CTPA1@iweiny-desk3>
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 5/9] cxl/pci: Only register RCDs with device 0,
+ function 0 as CXL memory device
+Message-ID: <Y3fitR3+8SvErb9v@rric.localdomain>
+References: <20221109104059.766720-1-rrichter@amd.com>
+ <20221109104059.766720-6-rrichter@amd.com>
+ <63753900717c6_12cdff29439@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3ZZqZ2kPS1yyOtd@rric.localdomain>
+ <63766efb7ceac_12cdff294c3@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3dB4quvaSzRzsT/@rric.localdomain>
+ <6377b8f1be5e5_12cdff2941d@dwillia2-xfh.jf.intel.com.notmuch>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <Y3fSRbpjeC1CTPA1@iweiny-desk3>
-X-ClientProxiedBy: SJ0PR03CA0082.namprd03.prod.outlook.com
- (2603:10b6:a03:331::27) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
-MIME-Version: 1.0
+In-Reply-To: <6377b8f1be5e5_12cdff2941d@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|PH0PR11MB5016:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a1a013c-2670-433c-f427-08dac99d8838
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT110:EE_|DS7PR12MB6310:EE_
+X-MS-Office365-Filtering-Correlation-Id: f59bdd4b-da4b-47dd-d001-08dac99ea75b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nDf83qAgOEU+pyvr11AMsawr4qhd7yWyCmtJbBj1fkWvlO91H8QjOYTN27/3OTV1KXqq5wYpyOAz889R6o3G7FMGshQLnjUeSyjUnXpqf/bA76FwOXbiK1MhADd3jBT13EN+gMRGCax1x8H4LWZ5QK1ievW/0QMHpIsVk2N5HFatSNTVNiBZrlew7EyYDuB5IIyn+gVbDJgGWq1/4VeUUSvmdp8jXkubboLb7w4J09is3zFyeCalpxv7VirdKdYX/RhLydbbwwBb7zkp2vTxqdMlU2nTNLnX8d5shX4ZD6doMzv1FbC40Ygnn40R6Yj/aoDlfigmpzkFQkotKB1rFuq8lvS5r1nk1KSGuv7wyAARqKtb4wyp5b2QMxpNzH/m8k0m7wvp9bNeOgxOOyBOpEpLn3S87UFvz4nhi3Ys56+1fMRXMslFXfOzkYuegSPOdEnsORJH/R0i6Pf5r9wHnj1Ji3hwaPm9Jg3CSSKi+dIJxfb+eRykXA7nWv48DP8w1qD/E7rkvwi9HLzSkGQsdOXHjWrSoIrIry/gdLXDNt+qPcnEbIG+NnQ1ILk8qOD7eVdOT9r+Dakn0qw9iepzpPjsoQq488ZueIe3H3zPGJXrm9n/I57dv+GYi0llYzAhilx9ErLWqB7Uy5uE9ihddnS7QtIS4y6m4hwtT15M84U=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(346002)(376002)(396003)(39860400002)(136003)(451199015)(38100700002)(82960400001)(26005)(6666004)(2906002)(6512007)(4326008)(110136005)(54906003)(316002)(83380400001)(966005)(6486002)(66946007)(478600001)(66476007)(8676002)(66556008)(8936002)(9686003)(186003)(86362001)(30864003)(41300700001)(6506007)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lblEpUaxSlweg2yPlWeqK0eM97tVtXlraNy7uHJZF0KhHUSUeYPD7O1ZAbtV?=
- =?us-ascii?Q?vRh3e4IwfBnFqOIIwfWrt1kAVchch7OjPka4EGNF2tCdoLSBC3k/9w/tKNvZ?=
- =?us-ascii?Q?wptGvq00OCp4qA6XtyXZuIrd/yYkZrEitKD6V2qUs0f+KxUjs9TYrVnaLEZx?=
- =?us-ascii?Q?M7cjYLbyLr6o/F2Nd70l6C+Ng/VZw9Y5QH8NzRpvbvYlpz56R2oObnywElrd?=
- =?us-ascii?Q?SMnkN52ybxESwgV8tL9wUu1gmUc8BeCN9DzWllIZFybLDlE7Sv8vXLGy0Q5O?=
- =?us-ascii?Q?DiVys4cmHTF2xm3lLrvCysx7yOs2Iai1st6eiII3lUeAuI15hzxKszpLGe2C?=
- =?us-ascii?Q?gQ11ernoRLZSIcWU0M7CV7ALwJSPim7ecUCiQ87ROujaVX46nhtt3aXgybeD?=
- =?us-ascii?Q?pOEJwm8cqig92+4B0bFHH1NOsIPox3dubjRqxGpo18A3/C4VjzN0a+njPbwD?=
- =?us-ascii?Q?wVIr4I6dIoA40xzFJNXZpx5XB+hc0PhdvFIKLj1wxTxUcvPhSgsbQ2hJkmFU?=
- =?us-ascii?Q?rImQbK1JBYKFMvtjvEIcY2/n+9LhRI/hj8dVI5jrIpcn0uMRo4UDclwc0XFV?=
- =?us-ascii?Q?n7y/GFeyZacySZ97raahGPRNg55WNPmq+o2UW3ivub6yWaMcdNhIB0jaQQmt?=
- =?us-ascii?Q?MJq39Ap8196xW6aQF/s7IW9T6fu4FVgOcUWd20g0WrlpYhjqgPRaLsB1Lr2D?=
- =?us-ascii?Q?nm432UWcNsiEydlrcpCuo8R8qJdz3uwZ6IQkaTQ2yKuftqknnCV7AZG8pxQL?=
- =?us-ascii?Q?ovGfmeYgQmzCHmAVLRVr6UuuTKIWtaHFDceGP0ZKZuChgwRyRl4Xn5TWB2oX?=
- =?us-ascii?Q?1NI1o6yPJHzBqk6h2+yf4fugb3vXhciTT2CpjQLwXTSI8G4TdAyPMUbOMbdL?=
- =?us-ascii?Q?f3crx1AHqlXHt1mxlMq3AiqkfJ8iT+q5srppBleqvHaCcpssKKSDsrJcImLa?=
- =?us-ascii?Q?nhiqCQb5SV/6ygZM6OLwPY0OR5E68Tzs7nRhgl21XjXYrOah4nsV65pBtZON?=
- =?us-ascii?Q?SULAH+QVHu52svKTnxdJ3rTyXR6PHvVeTMXzJG1N7m0tctKs2toT+KlanZsO?=
- =?us-ascii?Q?UsIcBKUKsD3eLIr+yYEKPBRVZE/CDCqt3rPWDPd9HjHHGECZ7Nm9Ow4AHQzq?=
- =?us-ascii?Q?euzHIcWY3uN7vIyJ6xpNWUyye3jnBcF+9RRNyEBu2zOKR/v6+SPZCtqCGEDd?=
- =?us-ascii?Q?ClvrEeXvUHLAzlTRJ+8pAky8ldzvFIpEu4jUwAcvPlc/0K9KTDsEVVlS/XMv?=
- =?us-ascii?Q?K5Ay14fPklHExZKpv3aHBUzWJwkn3LqoiBn5gh9LUU0H40uU+git5Hd63lkg?=
- =?us-ascii?Q?x8j24b5+eXsoL03/XsqkmB82Onh1LLYtR3ofiiZG0RN9I9YSHCxM1IHEb2J1?=
- =?us-ascii?Q?xMoilSuVPHWDtGCzLAbWw06PJN9m3w4ckMuYbvQoQtPOoxGZ7uo3nmkAuyTg?=
- =?us-ascii?Q?4zJcebIA5WNrHaQuWD9f4H6z39NG3Vm3XedfEYHPiSIL/QWuEuCrl3xL08PE?=
- =?us-ascii?Q?ZzKp5nwsErGbdQD7sPRnEudd68HJJgbpL3Kl6egchZPhFpHXi1JyyrIKrIXQ?=
- =?us-ascii?Q?KkmaHf2Sf6xpDcQDagl0T0VZq0AKrzaUPoG+NBsduc+0fXIqvsPQfOvqiWPu?=
- =?us-ascii?Q?zQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a1a013c-2670-433c-f427-08dac99d8838
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2022 19:46:07.6483
+X-Microsoft-Antispam-Message-Info: MP8Yf3NdsJ91MFfJ/PGuVD1vzqRTRkW6fh5oHrL3d63FGGRzD7MxIHUuhyKEKYoov8cuhv1A34iskF+t3VHhFG109a7PxFrTpxaLPfNf1Aud2AQuEz7IuDgHLy/6iIRx9QiHai074qepIzjwLhb+0hcbX7+xi6PJZT9GWM3/eqy+qz3O/3ZVoqb3vW2cut4zy/Nkd6ATWJVKzKYcAKqzpAR6h2G1GmrViJGXGc2WCeslsKyRJNrFW4j4wjszzkRUAeNst6U3ujO31adCruuX7t0YsS+5yibLwc8gvHjX6h0mgh8rdWMDtnNwDI5CuvwPsjDQHapIt/Fo2dF/67QzUFWlBavOGNcnO22XUREeQ/0jGt/e5GOW+isVRqPJzryl/7lker17oomnxfCMBpSeUko4HjEP0ljyAjjZq3XiZHvcuR2SoBl/pHNNxoSXK/Fai2oco7ThA/zzvlDfHfyvOPLJr/+/3Jvfn33bA+8MbVYKxLgt68eElmgTKn4x254CMz1vEMhtNbv7MflKZKOoDum3mIUlhkZpSMAqgSPTjykesN77wi14pvtWdTlvA1Ns/A70e3H6uueIXFPhn4Vqtz4EyWVE8O/AoVI1R6zMsjouxTgqGF+pw8xZq4+uZKKU0IVPPM5GFQrXOCrWuQkv486PIwNJo1ded1G7j6XnGRDDeQl2LAkKd0Z2QoE8Olma5RcpxjQbIU5M2oxK6Kcic2s2je/a4bA014ATPr7s8RYDpO0IxxGgkC4hggladdB7V3gmm09tP+kLYiHGrZSnLg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(39860400002)(376002)(136003)(451199015)(36840700001)(46966006)(40470700004)(36860700001)(70206006)(81166007)(70586007)(186003)(7416002)(26005)(16526019)(8936002)(47076005)(82740400003)(6666004)(426003)(6916009)(40480700001)(40460700003)(336012)(4326008)(8676002)(356005)(5660300002)(54906003)(7696005)(316002)(9686003)(53546011)(41300700001)(83380400001)(2906002)(478600001)(55016003)(82310400005)(67856001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2022 19:54:07.5236
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JgPQXFuqVNd2Acbwn1vlTKB6dV0SKNgASMlXZaL2OHQwpM2W3pwxpkMSGhUpbUNS00fiS2kvVTYiK+QpPHUl/FqcGyukgVcUDBTeKM1Gqkw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5016
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f59bdd4b-da4b-47dd-d001-08dac99ea75b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT110.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6310
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ira Weiny wrote:
-> On Fri, Nov 18, 2022 at 09:20:38AM +0000, David Laight wrote:
-> > From: ira.weiny@intel.com
-> > > Sent: 18 November 2022 00:05
+On 18.11.22 08:55:13, Dan Williams wrote:
+> Robert Richter wrote:
+> > On 17.11.22 09:27:23, Dan Williams wrote:
+> > > Robert Richter wrote:
+> > > > On 16.11.22 11:24:48, Dan Williams wrote:
+> > > > > Robert Richter wrote:
+> > > > > > The Device 0, Function 0 DVSEC controls the CXL functionality of the
+> > > > > > entire device. Add a check to prevent registration of any other PCI
+> > > > > > device on the bus as a CXL memory device.
+> > > > > 
+> > > > > Can you reference the specification wording that indicates that the OS
+> > > > > needs to actively avoid these situations, or otherwise point to the real
+> > > > > world scenario where this filtering is needed?
+> > > > 
+> > > > CXL 3.0
+> > > > 
+> > > > 8.1.3 PCIe DVSEC for CXL Device
+> > > > 
+> > > > """
+> > > > An RCD creates a new PCIe enumeration hierarchy. As such, it spawns a new Root Bus
+> > > > and can expose one or more PCIe device numbers and function numbers at this bus
+> > > > number. These are exposed as Root Complex Integrated Endpoints (RCiEP). The PCIe
+> > > > Configuration Space of Device 0, Function 0 shall include the CXL PCIe DVSEC as shown
+> > > > in Figure 8-1.
+> > > > """
+> > > > 
+> > > > """
+> > > > In either case, the capability, status, and control fields in Device 0, Function 0 DVSEC
+> > > > control the CXL functionality of the entire device.
+> > > > """
+> > > > 
+> > > > There are some other occurrences. I think this is even true for VH
+> > > > mode, as multiple CXL devices on the bus are exposed through multiple
+> > > > DSPs or Root Ports.
+> > > > 
+> > > > Anyway, I limited this to an RCD only, esp. because its counterpart
+> > > > would be missing and thus port mapping would fail otherwise. See
+> > > > restricted_host_enumerate_dport() of this series.
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > > > > ---
+> > > > > >  drivers/cxl/pci.c | 25 +++++++++++++++++++++++--
+> > > > > >  1 file changed, 23 insertions(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > > > > index faeb5d9d7a7a..cc4f206f24b3 100644
+> > > > > > --- a/drivers/cxl/pci.c
+> > > > > > +++ b/drivers/cxl/pci.c
+> > > > > > @@ -428,11 +428,26 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+> > > > > >  	}
+> > > > > >  }
+> > > > > >  
+> > > > > > +static int check_restricted_device(struct pci_dev *pdev, u16 pcie_dvsec)
+> > > > > > +{
+> > > > > > +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
+> > > > > > +		return 0;		/* no RCD */
+> > > > > > +
+> > > > > > +	if (pdev->devfn == PCI_DEVFN(0, 0) && pcie_dvsec)
+> > > > > > +		return 0;		/* ok */
+> > > > > > +
+> > > > > > +	dev_warn(&pdev->dev, "Skipping RCD: devfn=0x%02x dvsec=%u\n",
+> > > > > 
+> > > > > s/0x%02x/%#02x/
+> > > > > 
+> > > > > > +		pdev->devfn, pcie_dvsec);
+> > > > 
+> > > > Ok.
+> > > > 
+> > > > > This looks like a dev_dbg() to me. Otherwise a warning will always fire
+> > > > > on a benign condition.
+> > > > 
+> > > > I have chosen dev_warn() here as this is a non-compliant unexpected
+> > > > behavior of the device. There are no (legal) cases this may happen. I
+> > > > suppose you are worried about spamming the console here, but that
+> > > > error should be reported somewhere and thus being visible.
 > > > 
-> > > Work item initialization needs to be done with either
-> > > INIT_WORK_ONSTACK() or INIT_WORK() depending on how the work item is
-> > > allocated.
+> > > There are so many spec illegal values and conditions that the driver
+> > > could checki, but does not. The reason I am poking here is why does the
+> > > driver need to be explicit about *this* illegal condition versus all the
+> > > other potential conditions? What is the practical end user impact if
+> > > Linux does not include this change? For example, if it is just one
+> > > vendor that made this mistake that can be an explicit quirk.
 > > > 
-> > > The callers of pci_doe_submit_task() allocate struct pci_doe_task on the
-> > > stack and pci_doe_submit_task() incorrectly used INIT_WORK().
-> > > 
-> > > Jonathan suggested creating doe task allocation macros such as
-> > > DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
-> > > function is not known to the callers and must be initialized correctly.
-> > > 
-> > > A follow up suggestion was to have an internal 'pci_doe_work' item
-> > > allocated by pci_doe_submit_task().[2]  This requires an allocation which
-> > > could restrict the context where tasks are used.
-> > > 
-> > > Another idea was to have an intermediate step to initialize the task
-> > > struct with a new call.[3]  This added a lot of complexity.
-> > > 
-> > > Lukas pointed out that object_is_on_stack() is available to detect this
-> > > automatically.
-> > > 
-> > > Use object_is_on_stack() to determine the correct init work function to
-> > > call.
+> > > A dev_warn() is not necessary for simple quirks.
 > > 
-> > This is all a bit strange.
-> > The 'onstack' flag is needed for the diagnostic check:
-> > 	is_on_stack = object_is_on_stack(addr);
-> > 	if (is_on_stack == onstack)
-> > 		return;
-> > 	pr_warn(...);
-> > 	WARN_ON(1);
+> > This is not simply a cross check, the driver prevents enablement of
+> > CXL mem devs other than PCI_DEVFN(0, 0). It shouldn't silently drop
+> > out then. It's a device malfunction which should appropriate reported
+> > and not only visible if dbg is enabled.
 > > 
+> > As written above, the check is necessary as the counterpart is missing
 > 
-> :-(
-> 
-> > So setting the flag to the location of the buffer just subverts the check.
-> > It that is sane there ought to be a proper way to do it.
-> 
-> Ok this brings me back to my previous point and suggested patch.[*]  The
-> fundamental bug is that the work item is allocated in different code from
-> the code which uses it.  Separating the work item from the task.
-> 
-> [*] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
-> 
-> Bjorn would this solution be acceptable and just use GFP_KERNEL and mark the
-> required context for pci_doe_submit_task()?
+> It is only necessary if this condition happens in practice, not a
+> theoretically. So I am asking, are you seeing this with an actual device
+> that someone will use in production? If so, that's what pci quirks are
+> for to keep those workarounds organized in a common location.
 
-It is a waste to have an allocation when one is not needed. The value of
-having INIT_WORK_ONSTACK and DECLARE_COMPLETION_ONSTACK is to be clear
-at the call site that an async context cares about this stack frame not
-going out of scope.
+I can make it a dev_dbg() message. But I do not understand the ratio
+behind this. This is not a quirk nor a workaround or a fix for
+something. The likely paths are the conditions checked that return 0.
+Only if the unlikely case happens where a CXL mem dev is not a dev 0,
+func 0, a warning is shown to inform the user that this dev is not
+enabled. So yes, this might be theoretical similar to that a driver
+cannot allocate memory. But why not print this as a warning message
+then?
 
-However, coming full circle, we have zero async users today, and having
-the completion and work struct in the task are causing a maintenance
-burden. So let's just rip it out for now with something like the
-following and circle back to add async support later when it becomes
-necessary: (only compile tested)
+Anyway, let's make it a dev_dbg().
 
+Thanks,
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 0dbbe8d39b07..69873cdcc911 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -488,21 +488,14 @@ static struct pci_doe_mb *find_cdat_doe(struct device *uport)
- 		    CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |		\
- 	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
- 
--static void cxl_doe_task_complete(struct pci_doe_task *task)
--{
--	complete(task->private);
--}
--
- struct cdat_doe_task {
- 	u32 request_pl;
- 	u32 response_pl[32];
--	struct completion c;
- 	struct pci_doe_task task;
- };
- 
- #define DECLARE_CDAT_DOE_TASK(req, cdt)                       \
- struct cdat_doe_task cdt = {                                  \
--	.c = COMPLETION_INITIALIZER_ONSTACK(cdt.c),           \
- 	.request_pl = req,				      \
- 	.task = {                                             \
- 		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,        \
-@@ -511,8 +504,6 @@ struct cdat_doe_task cdt = {                                  \
- 		.request_pl_sz = sizeof(cdt.request_pl),      \
- 		.response_pl = cdt.response_pl,               \
- 		.response_pl_sz = sizeof(cdt.response_pl),    \
--		.complete = cxl_doe_task_complete,            \
--		.private = &cdt.c,                            \
- 	}                                                     \
- }
- 
-@@ -523,12 +514,12 @@ static int cxl_cdat_get_length(struct device *dev,
- 	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
- 	int rc;
- 
--	rc = pci_doe_submit_task(cdat_doe, &t.task);
-+	rc = pci_doe_submit_task_wait(cdat_doe, &t.task);
- 	if (rc < 0) {
- 		dev_err(dev, "DOE submit failed: %d", rc);
- 		return rc;
- 	}
--	wait_for_completion(&t.c);
-+
- 	if (t.task.rv < sizeof(u32))
- 		return -EIO;
- 
-@@ -552,12 +543,11 @@ static int cxl_cdat_read_table(struct device *dev,
- 		u32 *entry;
- 		int rc;
- 
--		rc = pci_doe_submit_task(cdat_doe, &t.task);
-+		rc = pci_doe_submit_task_wait(cdat_doe, &t.task);
- 		if (rc < 0) {
- 			dev_err(dev, "DOE submit failed: %d", rc);
- 			return rc;
- 		}
--		wait_for_completion(&t.c);
- 		/* 1 DW header + 1 DW data min */
- 		if (t.task.rv < (2 * sizeof(u32)))
- 			return -EIO;
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index e402f05068a5..115a8ff14afc 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -18,7 +18,6 @@
- #include <linux/mutex.h>
- #include <linux/pci.h>
- #include <linux/pci-doe.h>
--#include <linux/workqueue.h>
- 
- #define PCI_DOE_PROTOCOL_DISCOVERY 0
- 
-@@ -40,7 +39,6 @@
-  * @cap_offset: Capability offset
-  * @prots: Array of protocols supported (encoded as long values)
-  * @wq: Wait queue for work item
-- * @work_queue: Queue of pci_doe_work items
-  * @flags: Bit array of PCI_DOE_FLAG_* flags
-  */
- struct pci_doe_mb {
-@@ -49,7 +47,6 @@ struct pci_doe_mb {
- 	struct xarray prots;
- 
- 	wait_queue_head_t wq;
--	struct workqueue_struct *work_queue;
- 	unsigned long flags;
- };
- 
-@@ -211,7 +208,6 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
- static void signal_task_complete(struct pci_doe_task *task, int rv)
- {
- 	task->rv = rv;
--	task->complete(task);
- }
- 
- static void signal_task_abort(struct pci_doe_task *task, int rv)
-@@ -231,10 +227,9 @@ static void signal_task_abort(struct pci_doe_task *task, int rv)
- 	signal_task_complete(task, rv);
- }
- 
--static void doe_statemachine_work(struct work_struct *work)
-+
-+static void exec_task(struct pci_doe_task *task)
- {
--	struct pci_doe_task *task = container_of(work, struct pci_doe_task,
--						 work);
- 	struct pci_doe_mb *doe_mb = task->doe_mb;
- 	struct pci_dev *pdev = doe_mb->pdev;
- 	int offset = doe_mb->cap_offset;
-@@ -295,18 +290,12 @@ static void doe_statemachine_work(struct work_struct *work)
- 	signal_task_complete(task, rc);
- }
- 
--static void pci_doe_task_complete(struct pci_doe_task *task)
--{
--	complete(task->private);
--}
--
- static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
- 			     u8 *protocol)
- {
- 	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
- 				    *index);
- 	u32 response_pl;
--	DECLARE_COMPLETION_ONSTACK(c);
- 	struct pci_doe_task task = {
- 		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
- 		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
-@@ -314,17 +303,13 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
- 		.request_pl_sz = sizeof(request_pl),
- 		.response_pl = &response_pl,
- 		.response_pl_sz = sizeof(response_pl),
--		.complete = pci_doe_task_complete,
--		.private = &c,
- 	};
- 	int rc;
- 
--	rc = pci_doe_submit_task(doe_mb, &task);
-+	rc = pci_doe_submit_task_wait(doe_mb, &task);
- 	if (rc < 0)
- 		return rc;
- 
--	wait_for_completion(&c);
--
- 	if (task.rv != sizeof(response_pl))
- 		return -EIO;
- 
-@@ -376,13 +361,6 @@ static void pci_doe_xa_destroy(void *mb)
- 	xa_destroy(&doe_mb->prots);
- }
- 
--static void pci_doe_destroy_workqueue(void *mb)
--{
--	struct pci_doe_mb *doe_mb = mb;
--
--	destroy_workqueue(doe_mb->work_queue);
--}
--
- static void pci_doe_flush_mb(void *mb)
- {
- 	struct pci_doe_mb *doe_mb = mb;
-@@ -393,9 +371,6 @@ static void pci_doe_flush_mb(void *mb)
- 	/* Cancel an in progress work item, if necessary */
- 	set_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags);
- 	wake_up(&doe_mb->wq);
--
--	/* Flush all work items */
--	flush_workqueue(doe_mb->work_queue);
- }
- 
- /**
-@@ -429,19 +404,6 @@ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
- 	if (rc)
- 		return ERR_PTR(rc);
- 
--	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
--						dev_driver_string(&pdev->dev),
--						pci_name(pdev),
--						doe_mb->cap_offset);
--	if (!doe_mb->work_queue) {
--		pci_err(pdev, "[%x] failed to allocate work queue\n",
--			doe_mb->cap_offset);
--		return ERR_PTR(-ENOMEM);
--	}
--	rc = devm_add_action_or_reset(dev, pci_doe_destroy_workqueue, doe_mb);
--	if (rc)
--		return ERR_PTR(rc);
--
- 	/* Reset the mailbox by issuing an abort */
- 	rc = pci_doe_abort(doe_mb);
- 	if (rc) {
-@@ -496,23 +458,20 @@ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
- EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
- 
- /**
-- * pci_doe_submit_task() - Submit a task to be processed by the state machine
-+ * pci_doe_submit_task_wait() - Submit and execute a task
-  *
-  * @doe_mb: DOE mailbox capability to submit to
-- * @task: task to be queued
-+ * @task: task to be run
-  *
-- * Submit a DOE task (request/response) to the DOE mailbox to be processed.
-- * Returns upon queueing the task object.  If the queue is full this function
-- * will sleep until there is room in the queue.
-- *
-- * task->complete will be called when the state machine is done processing this
-- * task.
-+ * Submit and run DOE task (request/response) to the DOE mailbox to be
-+ * processed.
-  *
-  * Excess data will be discarded.
-  *
-- * RETURNS: 0 when task has been successfully queued, -ERRNO on error
-+ * RETURNS: 0 when task was executed, the @task->rv holds the status
-+ * result of the executed opertion, -ERRNO on failure to submit.
-  */
--int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-+int pci_doe_submit_task_wait(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
- {
- 	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
- 		return -EINVAL;
-@@ -529,8 +488,8 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
- 		return -EIO;
- 
- 	task->doe_mb = doe_mb;
--	INIT_WORK(&task->work, doe_statemachine_work);
--	queue_work(doe_mb->work_queue, &task->work);
-+	exec_task(task);
-+
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(pci_doe_submit_task);
-+EXPORT_SYMBOL_GPL(pci_doe_submit_task_wait);
-diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-index ed9b4df792b8..c94122a66221 100644
---- a/include/linux/pci-doe.h
-+++ b/include/linux/pci-doe.h
-@@ -30,8 +30,6 @@ struct pci_doe_mb;
-  * @response_pl_sz: Size of the response payload (bytes)
-  * @rv: Return value.  Length of received response or error (bytes)
-  * @complete: Called when task is complete
-- * @private: Private data for the consumer
-- * @work: Used internally by the mailbox
-  * @doe_mb: Used internally by the mailbox
-  *
-  * The payload sizes and rv are specified in bytes with the following
-@@ -50,11 +48,6 @@ struct pci_doe_task {
- 	u32 *response_pl;
- 	size_t response_pl_sz;
- 	int rv;
--	void (*complete)(struct pci_doe_task *task);
--	void *private;
--
--	/* No need for the user to initialize these fields */
--	struct work_struct work;
- 	struct pci_doe_mb *doe_mb;
- };
- 
-@@ -72,6 +65,5 @@ struct pci_doe_task {
- 
- struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
- bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
--int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
--
-+int pci_doe_submit_task_wait(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
- #endif
-
-
-> > OTOH using an on-stack structure for INIT_WORK seems rather strange.
-> > Since the kernel thread must sleep waiting for the 'work' to complete
-> > why not just perform the required code there.
-> 
-> It is not strange if some task submitters want to wait while others do not.  It
-> was suggested that all submit task operations be async and the callers who
-> wanted to be synchronous would wait like this.
-> 
-> As Dan said there is a difference between submit_bio() and submit_bio_wait().
-> 
-> We have simply left the wait part up to the users who all wait right now.
-
-Yeah, my bad for jumping ahead to worry about async when it is not yet
-needed.
+-Robert
