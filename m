@@ -2,52 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC41DC41535
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 17:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE01C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 17:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241840AbiKRRLO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Nov 2022 12:11:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
+        id S240445AbiKRRMt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Nov 2022 12:12:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242483AbiKRRKz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 12:10:55 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8B08CF1F;
-        Fri, 18 Nov 2022 09:10:51 -0800 (PST)
+        with ESMTP id S242535AbiKRRMb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 12:12:31 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C89F894A4C;
+        Fri, 18 Nov 2022 09:12:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668791451; x=1700327451;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AoJjM3jm7bTAXnU843/6R27G+YFILoydcful/8XeAbE=;
-  b=ddJft9gvxdopBavSUpFAsWjM/VpgQN1BDjGg0rM/6Bcobslx5FXTx3bc
-   O4x9UHvV6U2KC/RURzZx34GpJd/vI6zsOsFIjDfEFVR8yOpK3QCFUDUpR
-   u7oM/ZMAY3HWcuQ8K85qHxIXdi6zZ5WOig76Bx69oS9V9vK+VrmPycSde
-   +kU6/QdWeK8TcUAF0kOrVW4RNffPbR0Mv1sg6rHpwZ6M9NHsASAdPGNXM
-   u4sgox0aehoirdMF8Bmal2g+61CAlGuGXbSMxVMC2fq9sUZNg5L7Eslv9
-   5aLcbctJJlL8szqtT6UhfQGNAB4aABZxNraSJHqxJe7Y1IczRMeuau0oU
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="296545896"
+  t=1668791550; x=1700327550;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AOUPUafwcDNPcstCUTPlMTYyUtwrTx1nKmLprMS+Uno=;
+  b=Io80ruMMt4AwiL6Y8ssILVHfKTZKfYGi8SpNXrgK4C39tQNv0+Zr00WO
+   Y6lsVkRxQFQgHH3ceC7bqoz7QK1ikGwWrWZpUmc7KTeEkiEhg44SW9dxf
+   T4XWGmlN7XiNFxRVQxyCChZXT6w3Y5s98yCnsaL6E9M37KBfLZeeiXWkI
+   uWnMrD/ke/FU4j2zvtUnljrcj192ErQBBCCI4/T9x1rC4hGFApdg6VD+T
+   h8GDMKdb7ec+0qi+A1RBTCrG8o6iM1cHaVbkkfAznH8weTUX9n2aPivd7
+   KrgmXs7mSgMmv726dInVfTj1mED+bsoANJX8POXqUOgH4nM4F7FmesVxH
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="310814658"
 X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
-   d="scan'208";a="296545896"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:08:45 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="765224106"
+   d="scan'208";a="310814658"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:08:03 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="703807300"
 X-IronPort-AV: E=Sophos;i="5.96,174,1665471600"; 
-   d="scan'208";a="765224106"
+   d="scan'208";a="703807300"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:08:44 -0800
-Subject: [PATCH v3 07/11] cxl/pci: Find and map the RAS Capability Structure
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 09:08:03 -0800
+Subject: [PATCH v3 00/11] cxl/pci: Add fundamental error handling
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
         terry.bowman@amd.com, bhelgaas@google.com
-Date:   Fri, 18 Nov 2022 10:08:44 -0700
-Message-ID: <166879132403.674819.18076013362977711472.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
-References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
+Date:   Fri, 18 Nov 2022 10:08:02 -0700
+Message-ID: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,126 +54,114 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+Hi Bjorn,
+I added a new optional callback for AER error handler to allow the PCI
+device driver to do additional logging. Please Ack the patch if it looks
+reasonable to you. Thank you!
 
-The RAS Capability Structure has some ancillary information that may be
-relevant with respect to AER events, link and protcol error status
-registers. Map the RAS Capability Registers in support of defining a
-'struct pci_error_handlers' instance for the cxl_pci driver.
+Hi Steve,
+Please review the trace event implementation and Ack if it looks ok.
+Thank you!
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+v3:
+- Copy header log in 32bit chunks (Jonathan)
+- Export header log whole as raw data (Jonathan)
+- Added callback in PCI AER err handler for correctable errors (Jonathan)
+- Tested on qemu thanks to Jonathan's CXL AER injection enabling!
+
+v2:
+- Convert error reporting via printk to trace events
+- Drop ".rmap =" initialization (Jonathan)
+- return PCI_ERS_RESULT_NEED_RESET for UE in pci_channel_io_normal (Shiju)
+
+Add a 'struct pci_error_handlers' instance for the cxl_pci driver.
+Section 8.2.4.16 "CXL RAS Capability Structure" of the CXL rev3.0
+specification defines the error sources considered in this
+implementation. The RAS Capability Structure defines protocol, link and
+internal errors which are distinct from memory poison errors that are
+conveyed via direct consumption and/or media scanning.
+
+The errors reported by the RAS registers are categorized into
+correctable and uncorrectable errors, where the uncorrectable errors are
+optionally steered to either fatal or non-fatal AER events. Table 12-2 
+"Device Specific Error Reporting and Nomenclature Guidelines" in the CXL
+rev3.0 specification outlines that the remediation for uncorrectable errors
+is a reset to recover. This matches how the Linux PCIe AER core treats
+uncorrectable errors as occasions to reset the device to recover
+operation.
+
+While the specification notes "CXL Reset" or "Secondary Bus Reset" as
+theoretical recovery options, they are not feasible in practice since
+in-flight CXL.mem operations may not terminate and cause knock-on system
+fatal events. Reset is only reliable for recovering CXL.io, it is not
+reliable for recovering CXL.mem. Assuming the system survives, a reset
+causes CXL.mem operation to restart from scratch.
+
+The "ECN: Error Isolation on CXL.mem and CXL.cache" [1] document
+recognizes the CXL Reset vs CXL.mem operational conflict and helps to at
+least provide a mechanism for the Root Port to terminate in flight
+CXL.mem operations with completions. That still poses problems in
+practice if the kernel is running out of "System RAM" backed by the CXL
+device and poison is used to convey the data lost to the protocol error.
+
+Regardless of whether the reset and restart of CXL.mem operations is
+feasible / successful, the logging is still useful. So, the
+implementation reads, reports, and clears the status in the RAS
+Capability Structure registers, and it notifies the 'struct cxl_memdev'
+associated with the given PCIe endpoint to reattach to its driver over
+the reset so that the HDM decoder configuration can be reconstructed.
+
+The first half of the series reworks component register mapping so that
+the cxl_pci driver can own the RAS Capability while the cxl_port driver
+continues to own the HDM Decoder Capability. The last half implements
+the RAS Capability Structure mapping and reporting via 'struct
+pci_error_handlers'.
+
+The reporting of error information is done through event tracing. A new
+cxl_ras event is introduced to report the Uncorrectable and Correctable
+errors raised by CXL. The expectation is a monitoring user daemon such as
+"cxl monitor" will harvest those events and record them in a log in a
+format (JSON) that's consumable by management applications.
+
+For correctable errors, current Linux implementation does not provide any
+means to reach the pci device driver. Add an optional callback with the
+PCI aer error handler to allow the pci device driver to log additional
+information from the device.
+
+[1]: https://www.computeexpresslink.org/spec-landing
+
 ---
- drivers/cxl/core/regs.c |    7 +++++++
- drivers/cxl/cxl.h       |   19 +++++++++++++++++++
- drivers/cxl/pci.c       |    8 ++++++++
- 3 files changed, 34 insertions(+)
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 97e8f4201493..b10f8b79ec40 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -83,6 +83,12 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
- 			rmap = &map->hdm_decoder;
- 			break;
- 		}
-+		case CXL_CM_CAP_CAP_ID_RAS:
-+			dev_dbg(dev, "found RAS capability (0x%x)\n",
-+				offset);
-+			length = CXL_RAS_CAPABILITY_LENGTH;
-+			rmap = &map->ras;
-+			break;
- 		default:
- 			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
- 				offset);
-@@ -196,6 +202,7 @@ int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
- 		void __iomem **addr;
- 	} mapinfo[] = {
- 		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
-+		{ &map->component_map.ras, &regs->ras },
- 	};
- 	int i;
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index fb719a5e83b2..d453aeb92cb0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -33,6 +33,7 @@
- #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
- #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
- 
-+#define   CXL_CM_CAP_CAP_ID_RAS 0x2
- #define   CXL_CM_CAP_CAP_ID_HDM 0x5
- #define   CXL_CM_CAP_CAP_HDM_VERSION 1
- 
-@@ -123,6 +124,21 @@ static inline int ways_to_cxl(unsigned int ways, u8 *iw)
- 	return 0;
- }
- 
-+/* RAS Registers CXL 2.0 8.2.5.9 CXL RAS Capability Structure */
-+#define CXL_RAS_UNCORRECTABLE_STATUS_OFFSET 0x0
-+#define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
-+#define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
-+#define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
-+#define   CXL_RAS_CORRECTABLE_STATUS_MASK GENMASK(6, 0)
-+#define CXL_RAS_CORRECTABLE_MASK_OFFSET 0x10
-+#define   CXL_RAS_CORRECTABLE_MASK_MASK GENMASK(6, 0)
-+#define CXL_RAS_CAP_CONTROL_OFFSET 0x14
-+#define CXL_RAS_HEADER_LOG_OFFSET 0x18
-+#define CXL_RAS_CAPABILITY_LENGTH 0x58
-+
- /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
- #define CXLDEV_CAP_ARRAY_OFFSET 0x0
- #define   CXLDEV_CAP_ARRAY_CAP_ID 0
-@@ -157,9 +173,11 @@ struct cxl_regs {
- 	/*
- 	 * Common set of CXL Component register block base pointers
- 	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
-+	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
- 	 */
- 	struct_group_tagged(cxl_component_regs, component,
- 		void __iomem *hdm_decoder;
-+		void __iomem *ras;
- 	);
- 	/*
- 	 * Common set of CXL Device register block base pointers
-@@ -181,6 +199,7 @@ struct cxl_reg_map {
- 
- struct cxl_component_reg_map {
- 	struct cxl_reg_map hdm_decoder;
-+	struct cxl_reg_map ras;
- };
- 
- struct cxl_device_reg_map {
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 8cad9d5fd49a..9428f3e0d99b 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -311,6 +311,9 @@ static int cxl_probe_regs(struct pci_dev *pdev, struct cxl_register_map *map)
- 			return -ENXIO;
- 		}
- 
-+		if (!comp_map->ras.valid)
-+			dev_dbg(dev, "RAS registers not found\n");
-+
- 		dev_dbg(dev, "Set up component registers\n");
- 		break;
- 	case CXL_REGLOC_RBI_MEMDEV:
-@@ -449,6 +452,11 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	devm_cxl_pci_create_doe(cxlds);
- 
-+	rc = cxl_map_component_regs(&pdev->dev, &cxlds->regs.component,
-+				    &map, BIT(CXL_CM_CAP_CAP_ID_RAS));
-+	if (rc)
-+		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
-+
- 	rc = cxl_pci_setup_mailbox(cxlds);
- 	if (rc)
- 		return rc;
+Dan Williams (8):
+      cxl/pci: Cleanup repeated code in cxl_probe_regs() helpers
+      cxl/pci: Cleanup cxl_map_device_regs()
+      cxl/pci: Kill cxl_map_regs()
+      cxl/core/regs: Make cxl_map_{component, device}_regs() device generic
+      cxl/port: Limit the port driver to just the HDM Decoder Capability
+      cxl/pci: Prepare for mapping RAS Capability Structure
+      cxl/pci: Find and map the RAS Capability Structure
+      cxl/pci: Add (hopeful) error handling support
 
+Dave Jiang (3):
+      cxl/pci: add tracepoint events for CXL RAS
+      PCI/AER: Add optional logging callback for correctable error
+      cxl/pci: Add callback to log AER correctable error
+
+
+ drivers/cxl/core/hdm.c     |  33 +++---
+ drivers/cxl/core/memdev.c  |   1 +
+ drivers/cxl/core/pci.c     |   3 +-
+ drivers/cxl/core/port.c    |   2 +-
+ drivers/cxl/core/regs.c    | 172 +++++++++++++++++-------------
+ drivers/cxl/cxl.h          |  38 +++++--
+ drivers/cxl/cxlmem.h       |   2 +
+ drivers/cxl/cxlpci.h       |   9 --
+ drivers/cxl/pci.c          | 212 ++++++++++++++++++++++++++++++-------
+ drivers/pci/pcie/aer.c     |   8 +-
+ include/linux/pci.h        |   3 +
+ include/trace/events/cxl.h | 110 +++++++++++++++++++
+ 12 files changed, 443 insertions(+), 150 deletions(-)
+ create mode 100644 include/trace/events/cxl.h
+
+--
 
