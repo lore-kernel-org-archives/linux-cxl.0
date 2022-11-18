@@ -2,132 +2,135 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E44C433FE
-	for <linux-cxl@archiver.kernel.org>; Thu, 17 Nov 2022 23:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F85C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231768AbiKQX4L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 18:56:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53006 "EHLO
+        id S229580AbiKRAFb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 19:05:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233266AbiKQX4K (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 18:56:10 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2143F07C;
-        Thu, 17 Nov 2022 15:56:10 -0800 (PST)
+        with ESMTP id S233270AbiKRAFa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:05:30 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C7ABC0;
+        Thu, 17 Nov 2022 16:05:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668729370; x=1700265370;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n0qUJOG0byq0SPUuwsEBJ84opL30x/2Du43C1wJEuyA=;
-  b=ZyndG8WyOBkeZPGFXtGlh3Md41RJTP4jTxuBMFgdznsBH/35YsKQ4EFP
-   zCDcqp4ueL298vhPpqvpWGb9q0TS0S5Yy2PLxzeJ0dbdtOqW0CPZecEZw
-   Kc0xWvV2PyYfuckYRvPe0iJRQRBI+Or43VT8TcU5rnbF+gwyWVo43BL4+
-   MGRXWTIDl682KiQdqZIbnhj7zNa4dqoDnCciKc8YfsTZtTqXTBvrC/0jg
-   DRlsbPRDjY8ZODAknozi9tRaGS1zC3ejMY9uupymWUbN1dE6RV+FK+Kjn
-   6/gK+6cpvL05UDhdPJxEZT9+4k7726uuT7HbJtqaipG7Bs78BxgXrhrRL
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="296372045"
+  t=1668729929; x=1700265929;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hWL8ZNgUOuvv1B4SV56p3dDMPMbvsjEleV962v2qcqc=;
+  b=RjVMaBgDDUqIB3RA8JHiiYYKXgzaF/Dm8V9C71i0jLSP8h8khC+XCr+n
+   T8gZwQ5yv36gaA+29UvaxC8ndzzzEHGg+OyaIiTOJH1py68nvwhsjT+HT
+   tmJiJs9e91MFG2uajznUD+JGZ2BqrLXOu1BId21OpDnrxvMQBwXWKonyH
+   u6gdWwt9IP4FCdLrk9163NVysTjheBROnmnNKXNkzxJiQJxQssU2xuoNg
+   gohLESHOCwNM7lY0twhvbxmr2Q/4K7t+5eJadzxijGBW3hndfrKnmD2xB
+   8DbXMV4wZi0zgvf87ErURkvO3wPzbzLCcSJ/yZ08y+duU2MYr23Zj7F4r
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="300546400"
 X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="296372045"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 15:55:18 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="729027474"
+   d="scan'208";a="300546400"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:05:28 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="590814123"
 X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="729027474"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.84.12])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 15:55:17 -0800
-Date:   Thu, 17 Nov 2022 15:55:15 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+   d="scan'208";a="590814123"
+Received: from jmartin2-mobl.amr.corp.intel.com (HELO localhost) ([10.209.2.15])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:05:27 -0800
+From:   ira.weiny@intel.com
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] cxl/mbox: Add GET_POISON_LIST mailbox command
-Message-ID: <Y3bJ4/Vt2LTFy443@aschofie-mobl2>
-References: <cover.1668115235.git.alison.schofield@intel.com>
- <46c7c7339224744fce424b196da3e5566effec17.1668115235.git.alison.schofield@intel.com>
- <20221116124118.0000144b@Huawei.com>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH V2] PCI/DOE: Detect on stack work items automatically
+Date:   Thu, 17 Nov 2022 16:05:24 -0800
+Message-Id: <20221118000524.1477383-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221116124118.0000144b@Huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 12:41:18PM +0000, Jonathan Cameron wrote:
-> On Thu, 10 Nov 2022 19:12:40 -0800
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > CXL devices maintain a list of locations that are poisoned or result
-> > in poison if the addresses are accessed by the host.
-> > 
-> > Per the spec (CXL 3.0 8.2.9.8.4.1), the device returns this Poison
-> > list as a set of  Media Error Records that include the source of the
-> > error, the starting device physical address and length. The length is
-> > the number of adjacent DPAs in the record and is in units of 64 bytes.
-> > 
-> > Retrieve the list and log each Media Error Record as a trace event of
-> > type 'cxl_poison'.
-> > 
-> > When the poison list is requested by region, include the region name
-> > and uuid in the trace event.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Hi Alison,
-> 
-> I've forgotten most of previous discussions around versions of this series
-> so I may well repeat things that were covered earlier!
-> 
-> A few things inline.
-> 
-> Thanks,
-> 
-> Jonathan
-Thanks Jonathan. Got 'em all.
-> 
-> 
-> > ---
-snip
-> > 
-> >  
-> > +	memcpy(&val, id.poison_list_max_mer, 3);
-> 
-> This is ugly.  I've lost track of last discussion about get_unaligned_le24()
-> and using it on elements of a packed structure.  At very least can we
-> do a memcpy to a u8[3] array and then use get_unaligned_le24() on that if
-> we can't use it directly on the structure element?
-> 
+From: Ira Weiny <ira.weiny@intel.com>
 
-Done, like this -
-val = get_unaligned_le24(id.poison_list_max_mer);
+Work item initialization needs to be done with either
+INIT_WORK_ONSTACK() or INIT_WORK() depending on how the work item is
+allocated.
 
-> 
-snip
-> > +
-> > +int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> > +		       struct cxl_region *cxlr)
-> > +{
-> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > +	const char *memdev_name = dev_name(&cxlmd->dev);
-> Could just do this where it's used rather than here.
-> 
-> > +	const char *pcidev_name = dev_name(cxlds->dev);
-> Same with this.
-> 
+The callers of pci_doe_submit_task() allocate struct pci_doe_task on the
+stack and pci_doe_submit_task() incorrectly used INIT_WORK().
 
-Done.
+Jonathan suggested creating doe task allocation macros such as
+DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
+function is not known to the callers and must be initialized correctly.
 
-> 
-snip
-> ...
-> 
-> 
+A follow up suggestion was to have an internal 'pci_doe_work' item
+allocated by pci_doe_submit_task().[2]  This requires an allocation which
+could restrict the context where tasks are used.
+
+Another idea was to have an intermediate step to initialize the task
+struct with a new call.[3]  This added a lot of complexity.
+
+Lukas pointed out that object_is_on_stack() is available to detect this
+automatically.
+
+Use object_is_on_stack() to determine the correct init work function to
+call.
+
+[1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
+[2] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m63c636c5135f304480370924f4d03c00357be667
+[3] https://lore.kernel.org/all/20221115011943.1051039-1-ira.weiny@intel.com/
+
+Cc: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Gregory Price <gregory.price@memverge.com>
+Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+Changes from V1
+	Update oneliner
+	Use object_is_on_stack() to make this a simple fix
+---
+ drivers/pci/doe.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index e402f05068a5..42de517022d9 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -19,6 +19,7 @@
+ #include <linux/pci.h>
+ #include <linux/pci-doe.h>
+ #include <linux/workqueue.h>
++#include <linux/sched/task_stack.h>
+ 
+ #define PCI_DOE_PROTOCOL_DISCOVERY 0
+ 
+@@ -529,7 +530,10 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+ 		return -EIO;
+ 
+ 	task->doe_mb = doe_mb;
+-	INIT_WORK(&task->work, doe_statemachine_work);
++	if (object_is_on_stack(&task->work))
++		INIT_WORK_ONSTACK(&task->work, doe_statemachine_work);
++	else
++		INIT_WORK(&task->work, doe_statemachine_work);
+ 	queue_work(doe_mb->work_queue, &task->work);
+ 	return 0;
+ }
+
+base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
+prerequisite-patch-id: dfea657e07f37aa9d7c3d477d68b07f64fe78721
+prerequisite-patch-id: e27264e76e637214ee50cdab0e5854b223d44b4e
+-- 
+2.37.2
+
