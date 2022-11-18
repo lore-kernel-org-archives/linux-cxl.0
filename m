@@ -2,55 +2,50 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF0FC4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 04:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7AFC433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 04:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235042AbiKREdk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 23:33:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
+        id S240260AbiKRExp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 23:53:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234794AbiKREdh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 23:33:37 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CACBC30
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 20:33:35 -0800 (PST)
+        with ESMTP id S234922AbiKRExi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 23:53:38 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D19A4A456
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 20:53:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668746015; x=1700282015;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lpRLTPl2SE69uU6JVBTffT9AY6g0GPR3KrY7U8pH2jU=;
-  b=hwpOEwO5XloMi107xteYP0VrzpdV2ayfpqNgx5yIkE75YT/OHRyE7XQI
-   3cUjn+xZkdYJVbuaaITTcLr8CsrOL4PXc8XUSMJZthYnts8WJLhJAgNkj
-   MuZwNxyaHb2HZYOyNAFjTswihpiV/cE2jL7Muka/QQAfkZ+L4JOmDTweJ
-   jnFg53FCTNTeOtudICTtl3AzLXYbWIt+QxS/rulSA+mCmOoyhX/jkL+ga
-   3vW4aXnT8hBXZkOhbguFePAuNA6REy/sywvM8l5oXrpW0WeaV+M7Azwgl
-   f3gUpzoJ2azX207opzILLChoMtnJFrir80G/89OJchW4xkxmQvK4cwj/3
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="296416366"
+  t=1668747215; x=1700283215;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TTq049knGqsgKEZMsehbGAZj3jxH2M7B/X4fPk5L/Oo=;
+  b=WM0RyNNqMngCU0HT7iFqFPuBJV73dxwlPt7XkOGL2KdqhOcXmlwjAbTd
+   H/7QeBDpJnOe7FnkWeXzgceLrcqlgSNk+CBH7ykPdcyPRkDoz1kbijftC
+   6/maRAks4/frQsPBU9j6IHAZS3mB9g6Hy53NJnzUILgaLr3/5hehGkLg8
+   QB/y1VP6WdRhRthDhzNeHikUiTIu23ykCY1bamyECwaCV58JYTRzz2drc
+   yXYe0yDN8yxHIUd2c2uUbk+QvNSn72nQQxtXm/KaWCPBgXq95lMuldF/+
+   aJVppEIZJ1t7lL4mkbtNfr55ArmsSbEsfVFq9/yOnM+TqXuR5CIuP1u3v
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="300592093"
 X-IronPort-AV: E=Sophos;i="5.96,173,1665471600"; 
-   d="scan'208";a="296416366"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 20:33:34 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="782508631"
+   d="scan'208";a="300592093"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 20:53:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="969148088"
 X-IronPort-AV: E=Sophos;i="5.96,173,1665471600"; 
-   d="scan'208";a="782508631"
+   d="scan'208";a="969148088"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.84.12])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 20:33:34 -0800
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 20:53:34 -0800
 From:   alison.schofield@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v7 3/3] tools/testing/cxl: Add XOR Math support to cxl_test
-Date:   Thu, 17 Nov 2022 20:33:29 -0800
-Message-Id: <ad92ca4c279271dfbad9a17d1fa9fa8ddf6a7963.1668745515.git.alison.schofield@intel.com>
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: [ndctl PATCH v3] cxl/test: add cxl_xor_region test
+Date:   Thu, 17 Nov 2022 20:53:32 -0800
+Message-Id: <20221118045332.1330804-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
-In-Reply-To: <cover.1668745515.git.alison.schofield@intel.com>
-References: <cover.1668745515.git.alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -59,206 +54,164 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Expand the cxl_test topology to include CFMWS's that use XOR math
-for interleave arithmetic, as defined in the CXL Specification 3.0.
+Exercise the kernel driver support of XOR math by creating regions
+with 1,2, and 4-way interleaves using XOR interleave arithmetic.
 
-With this expanded topology, cxl_test is useful for testing:
-x1,x2,x4 ways with XOR interleave arithmetic.
+Use module parameter "interleave_arithmetic=1" to select the cxl_test
+topology that supports XOR math. XOR math is not used in the default
+cxl_test module.
 
-Define the additional XOR CFMWS entries to appear only with the
-module parameter interleave_arithmetic=1. The cxl_test default
-continues to be modulo math.
-
-modprobe cxl_test interleave_arithmetic=1
+Add this test to the 'cxl' suite so that it gets exercised routinely.
+If the topology defined in cxl_test changes, this test may require
+an update.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 118 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 115 insertions(+), 3 deletions(-)
+Depends on kernel patches here [1]
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 7edce12fd2ce..97849e9753f5 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -11,6 +11,8 @@
- #include <cxlmem.h>
- #include "mock.h"
- 
-+static int interleave_arithmetic;
+Changes in v3
+- s/create_region/create_and_destroy_region (DaveJ)
+- Built on ndctl: release v74 plus Dan's cxl-cli test and usability updates [2]
+
+Changes in v2
+- Update to match cxl_test topology changes
+- Remove 3-way interleave
+- Small naming updates
+
+[1] https://lore.kernel.org/linux-cxl/cover.1668745515.git.alison.schofield@intel.com/
+[2] https://lore.kernel.org/nvdimm/166777840496.1238089.5601286140872803173.stgit@dwillia2-xfh.jf.intel.com/
+
+
+ test/cxl-xor-region.sh | 99 ++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build       |  2 +
+ 2 files changed, 101 insertions(+)
+ create mode 100644 test/cxl-xor-region.sh
+
+diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
+new file mode 100644
+index 000000000000..5c2108c821e2
+--- /dev/null
++++ b/test/cxl-xor-region.sh
+@@ -0,0 +1,99 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2022 Intel Corporation. All rights reserved.
 +
- #define NR_CXL_HOST_BRIDGES 2
- #define NR_CXL_SINGLE_HOST 1
- #define NR_CXL_ROOT_PORTS 2
-@@ -122,6 +124,22 @@ static struct {
- 		struct acpi_cedt_cfmws cfmws;
- 		u32 target[1];
- 	} cfmws4;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[1];
-+	} cfmws5;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[2];
-+	} cfmws6;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[4];
-+	} cfmws7;
-+	struct {
-+		struct acpi_cedt_cxims cxims;
-+		u64 xormap_list[2];
-+	} cxims0;
- } __packed mock_cedt = {
- 	.cedt = {
- 		.header = {
-@@ -229,14 +247,89 @@ static struct {
- 		},
- 		.target = { 2 },
- 	},
-+	/* .cfmws5,6,7 use XOR Math (interleave_arithmetic == 1) */
-+	.cfmws5 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws5),
-+			},
-+			.interleave_arithmetic = 1,
-+			.interleave_ways = 0,
-+			.granularity = 4,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = 0,
-+			.window_size = SZ_256M * 8UL,
-+		},
-+		.target = { 0 },
-+	},
-+	.cfmws6 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws6),
-+			},
-+			.interleave_arithmetic = 1,
-+			.interleave_ways = 1,
-+			.granularity = 0,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = 1,
-+			.window_size = SZ_256M * 8UL,
-+		},
-+		.target = { 0, 1, },
-+	},
-+	.cfmws7 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws7),
-+			},
-+			.interleave_arithmetic = 1,
-+			.interleave_ways = 2,
-+			.granularity = 0,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = 0,
-+			.window_size = SZ_256M * 16UL,
-+		},
-+		.target = { 0, 1, 0, 1, },
-+	},
-+	.cxims0 = {
-+		.cxims = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CXIMS,
-+				.length = sizeof(mock_cedt.cxims0),
-+			},
-+			.hbig = 0,
-+			.nr_xormaps = 2,
-+		},
-+		.xormap_list = { 0x404100, 0x808200 },
-+	},
- };
- 
--struct acpi_cedt_cfmws *mock_cfmws[] = {
-+struct acpi_cedt_cfmws *mock_cfmws[8] = {
- 	[0] = &mock_cedt.cfmws0.cfmws,
- 	[1] = &mock_cedt.cfmws1.cfmws,
- 	[2] = &mock_cedt.cfmws2.cfmws,
- 	[3] = &mock_cedt.cfmws3.cfmws,
- 	[4] = &mock_cedt.cfmws4.cfmws,
-+	/* Modulo Math above, XOR Math below */
-+	[5] = &mock_cedt.cfmws5.cfmws,
-+	[6] = &mock_cedt.cfmws6.cfmws,
-+	[7] = &mock_cedt.cfmws7.cfmws,
-+};
++. $(dirname $0)/common
 +
-+static int cfmws_start;
-+static int cfmws_end;
-+#define CFMWS_MOD_ARRAY_START 0
-+#define CFMWS_MOD_ARRAY_END   4
-+#define CFMWS_XOR_ARRAY_START 5
-+#define CFMWS_XOR_ARRAY_END   7
++rc=1
 +
-+struct acpi_cedt_cxims *mock_cxims[1] = {
-+	[0] = &mock_cedt.cxims0.cxims,
- };
- 
- struct cxl_mock_res {
-@@ -308,7 +401,7 @@ static int populate_cedt(void)
- 		chbs->length = size;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
-+	for (i = cfmws_start; i <= cfmws_end; i++) {
- 		struct acpi_cedt_cfmws *window = mock_cfmws[i];
- 
- 		res = alloc_mock_res(window->window_size);
-@@ -351,12 +444,19 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
- 		}
- 
- 	if (id == ACPI_CEDT_TYPE_CFMWS)
--		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
-+		for (i = cfmws_start; i <= cfmws_end; i++) {
- 			h = (union acpi_subtable_headers *) mock_cfmws[i];
- 			end = (unsigned long) h + mock_cfmws[i]->header.length;
- 			handler_arg(h, arg, end);
- 		}
- 
-+	if (id == ACPI_CEDT_TYPE_CXIMS)
-+		for (i = 0; i < ARRAY_SIZE(mock_cxims); i++) {
-+			h = (union acpi_subtable_headers *)mock_cxims[i];
-+			end = (unsigned long)h + mock_cxims[i]->header.length;
-+			handler_arg(h, arg, end);
-+		}
++set -ex
 +
- 	return 0;
- }
- 
-@@ -897,6 +997,16 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_gen_pool_add;
- 
-+	if (interleave_arithmetic == 1) {
-+		cfmws_start = CFMWS_XOR_ARRAY_START;
-+		cfmws_end = CFMWS_XOR_ARRAY_END;
-+		dev_dbg(NULL, "cxl_test loading xor math option\n");
-+	} else {
-+		cfmws_start = CFMWS_MOD_ARRAY_START;
-+		cfmws_end = CFMWS_MOD_ARRAY_END;
-+		dev_dbg(NULL, "cxl_test loading modulo math option\n");
-+	}
++trap 'err $LINENO' ERR
 +
- 	rc = populate_cedt();
- 	if (rc)
- 		goto err_populate;
-@@ -1073,6 +1183,8 @@ static __exit void cxl_test_exit(void)
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
- }
++check_prereq "jq"
++
++modprobe -r cxl_test
++modprobe cxl_test interleave_arithmetic=1
++udevadm settle
++
++# THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
++# option of the CXL driver. As with other cxl_test tests, changes to the
++# CXL topology in tools/testing/cxl/test/cxl.c may require an update here.
++
++create_and_destroy_region()
++{
++	region=$($CXL create-region -d $decoder -m $memdevs | jq -r ".region")
++
++	if [[ ! $region ]]; then
++		echo "create-region failed for $decoder"
++		err "$LINENO"
++	fi
++
++	$CXL destroy-region -f -b cxl_test "$region"
++}
++
++setup_x1()
++{
++        # Find an x1 decoder
++        decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
++          select(.pmem_capable == true) |
++          select(.nr_targets == 1) |
++          .decoder")
++
++        # Find a memdev for this host-bridge
++        port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 0) | .target")
++        mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
++        memdevs="$mem0"
++}
++
++setup_x2()
++{
++        # Find an x2 decoder
++        decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
++          select(.pmem_capable == true) |
++          select(.nr_targets == 2) |
++          .decoder")
++
++        # Find a memdev for each host-bridge interleave position
++        port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 0) | .target")
++        port_dev1=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 1) | .target")
++        mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
++        mem1=$($CXL list -M -p $port_dev1 | jq -r ".[0].memdev")
++        memdevs="$mem0 $mem1"
++}
++
++setup_x4()
++{
++        # find x4 decoder
++        decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
++          select(.pmem_capable == true) |
++          select(.nr_targets == 4) |
++          .decoder")
++
++        # Find a memdev for each host-bridge interleave position
++        port_dev0=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 0) | .target")
++        port_dev1=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 1) | .target")
++        port_dev2=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 2) | .target")
++        port_dev3=$($CXL list -T -d $decoder | jq -r ".[] |
++            .targets | .[] | select(.position == 3) | .target")
++        mem0=$($CXL list -M -p $port_dev0 | jq -r ".[0].memdev")
++        mem1=$($CXL list -M -p $port_dev1 | jq -r ".[1].memdev")
++        mem2=$($CXL list -M -p $port_dev2 | jq -r ".[2].memdev")
++        mem3=$($CXL list -M -p $port_dev3 | jq -r ".[3].memdev")
++        memdevs="$mem0 $mem1 $mem2 $mem3"
++}
++
++setup_x1
++create_and_destroy_region
++setup_x2
++create_and_destroy_region
++setup_x4
++create_and_destroy_region
++
++modprobe -r cxl_test
+diff --git a/test/meson.build b/test/meson.build
+index c31d8eac66c5..e0aaf5c6eaa9 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -154,6 +154,7 @@ cxl_topo = find_program('cxl-topology.sh')
+ cxl_sysfs = find_program('cxl-region-sysfs.sh')
+ cxl_labels = find_program('cxl-labels.sh')
+ cxl_create_region = find_program('cxl-create-region.sh')
++cxl_xor_region = find_program('cxl-xor-region.sh')
  
-+module_param(interleave_arithmetic, int, 0000);
-+MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
- MODULE_LICENSE("GPL v2");
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -181,6 +182,7 @@ tests = [
+   [ 'cxl-region-sysfs.sh',    cxl_sysfs,	  'cxl'   ],
+   [ 'cxl-labels.sh',          cxl_labels,	  'cxl'   ],
+   [ 'cxl-create-region.sh',   cxl_create_region,  'cxl'   ],
++  [ 'cxl-xor-region.sh',      cxl_xor_region,     'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
 -- 
 2.37.3
 
