@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21BCC433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 08:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3652C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 08:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240934AbiKRIMq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Nov 2022 03:12:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38804 "EHLO
+        id S235221AbiKRI2W (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Nov 2022 03:28:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241304AbiKRIMp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 03:12:45 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1661582BDF;
-        Fri, 18 Nov 2022 00:12:41 -0800 (PST)
+        with ESMTP id S241358AbiKRI2V (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 03:28:21 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072.outbound.protection.outlook.com [40.107.93.72])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41789682BB;
+        Fri, 18 Nov 2022 00:28:20 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BXghgDr9LFpGvsTib5MLip7/sU7INysyLJ3KbwaxTFA2kmIOl9M1GXh8t1U+dxzeu983uvSAh2nUSwEv3cldjDLPu/Awmhu1yEfem9aPIUToDgUVfd3H1EanZt1inBfpjdyUURjRPeW557giEhlWhDYShg/dRL3c1sZ5r8COzyxv+rrmGDvAQ97CdfA9nNeTA1TtkFoW493AOvFiiw03+UHsbw5OSoge5Bb+0RmYCbquj84HhJjczPRiXHx3ymDzXn4ooozKXaaKw+1ungONE83BUQc6+KsbOftM2yd2b2rxvgkOu6lZFfuwHNX9xaAl09M1/WOw7l/NkyOqOLyzmw==
+ b=iwL7lhcXBc81QhmVO70S7jbHKAbhSOwWPWvtXrWZQKKc1fABvS2t7qvIN/4lQB0aV6AKSCdUTFE2MzUcCM3Vdd/wc2baftt3XY6f3yFJauvzBzmwSDBGqnSzfJqBZGv9h2WZo9Bykr+e6I7TuJCsMr8I+Hc8JoR4ftZqbYftzLdPHfNgVrNTxnqDtC2UP9SbXKQ3kvK72wcM73K7R/of5B2oh9QY/FNX24Whjn9IuC9QN4T5RMyvbV7JTJwcXIshHC9drk0qKt9m22+46bAoGByZPPlsgemz43prnY1mCFaFIMqZMp8D/IUulRxMISD0y4n7YLcpv3CX9jortP4UTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=etKnFGbDIFEhYjhCQGGReithEuXp/hkMA7DwAtrB4Gw=;
- b=TQy42rcarisghxo/pJVpcOHxmkNxiLfCTacZA5hHFLhtcauYFMUHHwNCePNa36lbhRGOQWg0MTBye+pyso4tDYHOFJjV++iK19dPEgeI/3NcYrIFRWGObEQ+bhGtA1oI02x6UExyJoxMUBINCYd9WtM6WzuHNxDUnaxxZQd7D5qSubjKN0nmw+UougURcD3KelkIPh+voJlToBaNDtM8vurs/2622h97i3wf/dKylJriRPgBStVb/DuQwejbsTVlpFT942WxpZDKYR+hVSXz1XV/l2ini4eiWO3lP8yh2cIM6V82BEfJmQaagNCaQp9PYj/hoN50mk2Mw3jwSmCriA==
+ bh=7//Q5+RMPbDX0kEd/rAdw1EZsTnMG6y4PY/ik7Rht5c=;
+ b=a5tauBNR8jcPoYCsNIsVk88Uv8QsDHpiKp8tpRnosz6YDOiGO8Vy26O3yAW+64nrcP0uJNLBQrEhkZRBk9DDtjLXdNjlQbV9r7999oRqcW2AoTxRaP6PnGuynZjQ/jLsj81RVBu1FJh6U2h11UD0BTjHb54wiLqup3lbU7FQXv2skJa0Zo/mdYv8NKnwuhp8N6/U772+9vV0q1aP9Yrc8Jc+OUVDkvtl3v0NOX4hjNl0nXPElcN0suj5KF3Jl2/LzEeAQanScxgq1RmupxcsJLdP1/+CiEurX6DWQqM4hDb6YDEHxPNo18gqsnZnobgUB2wHhYHcs/lBR0TcDOGZWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=etKnFGbDIFEhYjhCQGGReithEuXp/hkMA7DwAtrB4Gw=;
- b=Rvwcf3/Ru9c0pBC9A1dwEE9KVJ27P2EvTkE7XgFnEvVloDaKVpyrglPLhBwFJuLsJ/VlNEYUx+u82efr7TpTI1RBxuc7xRH+6L44q1xRAxOF20R1H1mTnfrx8tcjBpPV//VqWS3fWYMxemjEbkEm2+yMqog2i6liO05fyCh+Uwo=
-Received: from BN0PR04CA0045.namprd04.prod.outlook.com (2603:10b6:408:e8::20)
- by SJ0PR12MB5470.namprd12.prod.outlook.com (2603:10b6:a03:3bd::5) with
+ bh=7//Q5+RMPbDX0kEd/rAdw1EZsTnMG6y4PY/ik7Rht5c=;
+ b=wU0u6CocuAQYNCGaNz1RVyMr8+EkE8tykn97nmsFTcpEjtrg9HWBMGe3j0YZobOPkv7IGAaTSJJ4iFcAmYA2LCW9kAjXYc4n61vZz4czftfwI538JUzN7180SeKn+eOAJ9aIftm36AXk+mHC1/udPu2+ZI7xRTVfrs32+zrGuKw=
+Received: from BN1PR12CA0011.namprd12.prod.outlook.com (2603:10b6:408:e1::16)
+ by IA1PR12MB6386.namprd12.prod.outlook.com (2603:10b6:208:38a::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.19; Fri, 18 Nov
- 2022 08:12:38 +0000
-Received: from BN8NAM11FT051.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:e8:cafe::ee) by BN0PR04CA0045.outlook.office365.com
- (2603:10b6:408:e8::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20 via Frontend
- Transport; Fri, 18 Nov 2022 08:12:38 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.20; Fri, 18 Nov
+ 2022 08:27:57 +0000
+Received: from BN8NAM11FT067.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e1:cafe::4) by BN1PR12CA0011.outlook.office365.com
+ (2603:10b6:408:e1::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.9 via Frontend
+ Transport; Fri, 18 Nov 2022 08:27:57 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,14 +46,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT051.mail.protection.outlook.com (10.13.177.66) with Microsoft SMTP
+ BN8NAM11FT067.mail.protection.outlook.com (10.13.177.159) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Fri, 18 Nov 2022 08:12:37 +0000
+ 15.20.5834.8 via Frontend Transport; Fri, 18 Nov 2022 08:27:57 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 18 Nov
- 2022 02:12:32 -0600
-Date:   Fri, 18 Nov 2022 09:12:21 +0100
+ 2022 02:27:24 -0600
+Date:   Fri, 18 Nov 2022 09:27:14 +0100
 From:   Robert Richter <rrichter@amd.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     Alison Schofield <alison.schofield@intel.com>,
@@ -64,91 +64,139 @@ CC:     Alison Schofield <alison.schofield@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v3 2/9] cxl/acpi: Extract component registers of
- restricted hosts from RCRB
-Message-ID: <Y3c+BwrT3wCMsv7Q@rric.localdomain>
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 5/9] cxl/pci: Only register RCDs with device 0,
+ function 0 as CXL memory device
+Message-ID: <Y3dB4quvaSzRzsT/@rric.localdomain>
 References: <20221109104059.766720-1-rrichter@amd.com>
- <20221109104059.766720-3-rrichter@amd.com>
- <6372b35953580_12cdff294b7@dwillia2-xfh.jf.intel.com.notmuch>
- <Y3ODbwk+12JvWyhJ@rric.localdomain>
- <6373d24866bc9_12cdff294e3@dwillia2-xfh.jf.intel.com.notmuch>
- <Y3YoBpIsgRRbRyLk@rric.localdomain>
- <63766d77d1ece_12cdff29499@dwillia2-xfh.jf.intel.com.notmuch>
- <Y3Z8kZym/37P6/yg@rric.localdomain>
- <63768a244a14_12cdff29469@dwillia2-xfh.jf.intel.com.notmuch>
+ <20221109104059.766720-6-rrichter@amd.com>
+ <63753900717c6_12cdff29439@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y3ZZqZ2kPS1yyOtd@rric.localdomain>
+ <63766efb7ceac_12cdff294c3@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <63768a244a14_12cdff29469@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <63766efb7ceac_12cdff294c3@dwillia2-xfh.jf.intel.com.notmuch>
 X-Originating-IP: [10.180.168.240]
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT051:EE_|SJ0PR12MB5470:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68d41aed-d760-4de5-4228-08dac93ca7e6
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT067:EE_|IA1PR12MB6386:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12c20c1b-c779-47ed-eae6-08dac93ecc06
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FARiyyUJKZuNbQ+OvAT/mjNRXE+v2CBmyvx5zmK2WMUrZNhJdst6AjH1eGaA9OYVyvbuNgZ2Fm2hsID3rdpbhU/Y/DsCcWNJsbatBPc2oXwacUJ+uH5bfybKPPvN5EyVCzbAhUzd1mo7iwa4CiwcTVOo7Fn1PD/SXlOehmSyibJYtEEN5cf7GWxTaYNcO8LTk/JkRAf1aUCuEPBUOHrvRR7ZFEMx6xWVVIhwbMttoTCncu2hurVohs885JBFO/qJsWAfVQwEJ7XVq0JFwhHWbZMz3o1mXyRP/k7T7b9jP0PUF3at2dXpqmGGlkrpBgGE1fMkuVI1iUUqBUicgcblsQ/2UxSiAaH40gv+3A8TxUhkb7jRsDKoPeqZufLkx8MxHesdXWbMgGiiTGgPY/oVmb3Zr+hLgbZ9+85Hzp8krhOmNgH1mfUgCbBESW0iYgUg8ehJZZGczntLbnTJFf/qSNtoEvaQPCjoBDIoXesCY5jBkUKONXplzjsImXLhx5lTpmxzjmmdCte3JC5KSwREoKjlMjdoIFIUaVeFFrWb3dY7+ifHPiP0+ghuM8xptOipJNm8/j8x38eu06tBKcFIdehPHDhLHjAPTO3zHZ9bhZlpIfG1o6wM0EHr19iGWRnxwK41poley/3JBMclgA0xJjTjyhCvOnPEOqSWk8gXoM5yswBnOawhSc677ZfpgR7aLppUUw7ckc3nNqJO0cPR3N9kHIOaF2GUgwZ249IDwEScR6dTsJtA4Lk+5qRayiGbcbfalN7N1NR9R9o2NQs2lA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(396003)(39860400002)(451199015)(40470700004)(36840700001)(46966006)(40480700001)(478600001)(356005)(81166007)(83380400001)(40460700003)(82310400005)(36860700001)(70206006)(6666004)(7416002)(5660300002)(336012)(186003)(8936002)(2906002)(16526019)(426003)(4326008)(316002)(82740400003)(55016003)(8676002)(7696005)(47076005)(9686003)(53546011)(54906003)(6916009)(26005)(70586007)(41300700001)(36900700001)(67856001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: YGujR7rgPbiK9xocem8ckt1heXQWM8uV+1zNFqVmb7QSMkyYwi/v20KHcYMQjFM1CnvdRqfaDJHEMd9YO2oUosLC0Cpv7dBb0ECIkhPXXXb3ztfYaqJVtOnyud1uTMLCZtExvgT3IxI7R1N7XLT0IC0k7wtNUy9TYAHdzo9z8P6D9dix/Slrt8fxOooAvh0hlxUW5tig/4dWIimX1EnBFf8HwVILbICb7psZ1HbkVdmw6Qam/iRQAmJMO2iadngW3vNps169J562gW4S2ODHTNIPyACmBZtEKBwbq/7YGTnU2ync7tcLQ8d7VBS6GXIdcUeDcTb8rtqFd332FCcYFRekwPvS46Tv5DkG3nkeTvTjYb1bligkWAX0I4PBuMnKG4AOW6XiO09e00bDoOo0b2m8aSqv0k8pUaxQ6+2rstlcOFnxGZd6PicrhwczIeD/yCfVyRYPYNIazmS38ikVNKrkI6EbP/uiyfLyOE700O9YbgGRCu2/EcM0UhX5XjNEhA8BGu1j64kjuSQzGRJuKbrCq+EWSnN8xy8HrV3/Hdku6PjBbxuoHpgsdg/nzVyCGioyug/dqc6BZdXTf7B20M6WZzF4LKU/+BrvfXx7tady8qdaRwNW1c0XI5MCM8rjWFHH9jf8/3EA0CLc3X8mTmb0lXsD8Q0VQ0epmqe3hRDCwtuOHw8XrkT7rnlHd+twPAOg24Rp5GuT5Za6So8jgkCrP2FbPIEkJhelY1HFyXg=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(346002)(396003)(376002)(451199015)(46966006)(40470700004)(36840700001)(2906002)(36860700001)(83380400001)(40460700003)(40480700001)(41300700001)(70206006)(70586007)(55016003)(8936002)(82310400005)(6916009)(53546011)(7696005)(54906003)(81166007)(356005)(26005)(186003)(5660300002)(7416002)(336012)(16526019)(8676002)(426003)(4326008)(47076005)(82740400003)(316002)(9686003)(478600001)(6666004)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2022 08:12:37.7983
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2022 08:27:57.3257
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68d41aed-d760-4de5-4228-08dac93ca7e6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12c20c1b-c779-47ed-eae6-08dac93ecc06
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT051.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT067.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5470
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6386
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 17.11.22 11:23:16, Dan Williams wrote:
+On 17.11.22 09:27:23, Dan Williams wrote:
 > Robert Richter wrote:
-> > On 17.11.22 09:20:55, Dan Williams wrote:
+> > On 16.11.22 11:24:48, Dan Williams wrote:
 > > > Robert Richter wrote:
-> > > > On 15.11.22 09:54:16, Dan Williams wrote:
-> > > > > Robert Richter wrote:
-> > > > > > On 14.11.22 13:30:01, Dan Williams wrote:
-
-> > > > > Oh, sorry, yes, my mistake. However, there is not much value in mapping
-> > > > > less than 4K since all ioremap requests are rounded up to PAGE_SIZE.
-> > > > > Since an RCRB is only 4K per port lets just map the whole thing.
-> > > > 
-> > > > I was going to keep the ranges small to avoid conflicts with other
-> > > > requests for the same page (though request_mem_region() was missing
-> > > > yet).
+> > > > The Device 0, Function 0 DVSEC controls the CXL functionality of the
+> > > > entire device. Add a check to prevent registration of any other PCI
+> > > > device on the bus as a CXL memory device.
 > > > 
-> > > What else will be conflicting the RCRB? Linux has never accessed an RCRB
-> > > in the past as far as I can see. If there is a conflict then we may need
-> > > to move this mapping to the PCI core so that it is managed like other
-> > > mmconf space.
+> > > Can you reference the specification wording that indicates that the OS
+> > > needs to actively avoid these situations, or otherwise point to the real
+> > > world scenario where this filtering is needed?
 > > 
-> > The capabilities (PCIe and DVSEC) could be used by various subsystems
-> > and parts of the driver. I am thinking of the various RAS caps (UP,
-> > DP, CXL, AER variants) that are accessed from different parts of the
-> > driver. Of curse, access could be delegated but else there is the
-> > option to directly map and access that parts. In the component reg
-> > block we already see issues with that broad mappings.
+> > CXL 3.0
+> > 
+> > 8.1.3 PCIe DVSEC for CXL Device
+> > 
+> > """
+> > An RCD creates a new PCIe enumeration hierarchy. As such, it spawns a new Root Bus
+> > and can expose one or more PCIe device numbers and function numbers at this bus
+> > number. These are exposed as Root Complex Integrated Endpoints (RCiEP). The PCIe
+> > Configuration Space of Device 0, Function 0 shall include the CXL PCIe DVSEC as shown
+> > in Figure 8-1.
+> > """
+> > 
+> > """
+> > In either case, the capability, status, and control fields in Device 0, Function 0 DVSEC
+> > control the CXL functionality of the entire device.
+> > """
+> > 
+> > There are some other occurrences. I think this is even true for VH
+> > mode, as multiple CXL devices on the bus are exposed through multiple
+> > DSPs or Root Ports.
+> > 
+> > Anyway, I limited this to an RCD only, esp. because its counterpart
+> > would be missing and thus port mapping would fail otherwise. See
+> > restricted_host_enumerate_dport() of this series.
+> > 
+> > > 
+> > > > 
+> > > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > > ---
+> > > >  drivers/cxl/pci.c | 25 +++++++++++++++++++++++--
+> > > >  1 file changed, 23 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > > index faeb5d9d7a7a..cc4f206f24b3 100644
+> > > > --- a/drivers/cxl/pci.c
+> > > > +++ b/drivers/cxl/pci.c
+> > > > @@ -428,11 +428,26 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+> > > >  	}
+> > > >  }
+> > > >  
+> > > > +static int check_restricted_device(struct pci_dev *pdev, u16 pcie_dvsec)
+> > > > +{
+> > > > +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
+> > > > +		return 0;		/* no RCD */
+> > > > +
+> > > > +	if (pdev->devfn == PCI_DEVFN(0, 0) && pcie_dvsec)
+> > > > +		return 0;		/* ok */
+> > > > +
+> > > > +	dev_warn(&pdev->dev, "Skipping RCD: devfn=0x%02x dvsec=%u\n",
+> > > 
+> > > s/0x%02x/%#02x/
+> > > 
+> > > > +		pdev->devfn, pcie_dvsec);
+> > 
+> > Ok.
+> > 
+> > > This looks like a dev_dbg() to me. Otherwise a warning will always fire
+> > > on a benign condition.
+> > 
+> > I have chosen dev_warn() here as this is a non-compliant unexpected
+> > behavior of the device. There are no (legal) cases this may happen. I
+> > suppose you are worried about spamming the console here, but that
+> > error should be reported somewhere and thus being visible.
 > 
-> Sure, but lets cross that bridge when we get to that point. Something is
-> broken if these competing usages can not at least have their own page
-> mapping since that limits being able to hand out control across security
-> boundaries (like VMs or userspace). Any ioremap less than PAGE_SIZE is
-> somewhat suspect.
+> There are so many spec illegal values and conditions that the driver
+> could checki, but does not. The reason I am poking here is why does the
+> driver need to be explicit about *this* illegal condition versus all the
+> other potential conditions? What is the practical end user impact if
+> Linux does not include this change? For example, if it is just one
+> vendor that made this mistake that can be an explicit quirk.
 > 
-> The cxl_port driver so far seems to be sufficient for owning the entire
-> component register space.
+> A dev_warn() is not necessary for simple quirks.
 
-Ok, I can change that.
+This is not simply a cross check, the driver prevents enablement of
+CXL mem devs other than PCI_DEVFN(0, 0). It shouldn't silently drop
+out then. It's a device malfunction which should appropriate reported
+and not only visible if dbg is enabled.
 
-Thanks,
+As written above, the check is necessary as the counterpart is missing
+otherwise and init would fail later with a more obfuscating error
+message.
 
 -Robert
