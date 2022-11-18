@@ -2,84 +2,74 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70692C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A37C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240604AbiKRAc4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 19:32:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
+        id S233894AbiKRAuL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 19:50:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234802AbiKRAc4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:32:56 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BA14C240
-        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 16:32:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668731575; x=1700267575;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=up2Y27e9dvoWmqcMckHh0Q2rX64pZyhonVD/GA2J+aA=;
-  b=aCaiODfwiUhI7CdJllHcoyTbtXKSBI1913Px2sF4BxEJE6FYovVPQn4W
-   hk3estvkWEv6OkmZemDsJ4Ihzom4nxlBQd/EJ4uY2Qafu6iSJuntsUikd
-   qwFcwkSG9sb7FSH7n3aELVsa0POHfXVb8vTjvzJVy7VIR6R21P6D1eaiG
-   8DP83G85g/vq6GQ04/1ShUXNPdmnuEdHH2GxKmPoWRqybwG5iMyFcMCDH
-   8rwml+JL6bOC57fn/B9pD4+JglphkE9wML0W/xJMDy/Q69DyLqT47OvQU
-   AjOLsODfLxxVz9xsL10thB7Tx6micDsbhHBJP7WmhEeUpB1cKkTqK7i42
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="310645175"
-X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="310645175"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:32:55 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="642307619"
-X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="642307619"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.84.12])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:32:54 -0800
-Date:   Thu, 17 Nov 2022 16:32:53 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+        with ESMTP id S232659AbiKRAuL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:50:11 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BE074CE1;
+        Thu, 17 Nov 2022 16:50:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A7518B82259;
+        Fri, 18 Nov 2022 00:50:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7D8C433D6;
+        Fri, 18 Nov 2022 00:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668732607;
+        bh=YB0VTDTLdeMcVGmJnbUJT6TnuUos5PpaqgZkkvIjgAU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=phYzzgW2g18bK0oC9PzOKmLPG8BhBhE48z9G5pD3tUOP6B/OaeViCXhEuGSpRjuYr
+         /YBPHMY2D6KZPwM3EXukpmiNn0CJV0RHtF35vvJGkMvwcvgCogOLUu3uR2r8/FT4l9
+         r03h9MrfVPa9TF+IYjJiqY7e94OVRHX0DlFpWfNk4ZW9w2xhUDkKyREH51GUFYT/Wo
+         2fb6Gg8eDqVzyK8ZkYtRluBCNkH5J/1zcC7DB+DQzgHng5g9ktyxkP+u5+A63nhTqo
+         3CK5T0c2FzP7fC17YCdBB2yKZTLoDFb/ddDE1JtuzByl6BEmo6XViST6/7qgoB988f
+         Bxkee+hGlkDbg==
+Date:   Thu, 17 Nov 2022 18:50:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lukas Wunner <lukas@wunner.de>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
-Message-ID: <Y3bStbK7whfEPXah@aschofie-mobl2>
-References: <cover.1668227077.git.alison.schofield@intel.com>
- <37ac2e3d3580af13755edd6f8e0bbdf11d5c206b.1668227077.git.alison.schofield@intel.com>
- <20221112062823.4mrp4kz6hxsd3uxw@offworld>
- <Y3J9NCmVX7t34DYD@aschofie-mobl2>
- <20221114185729.nxahgs66ybe2x5mr@offworld>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH V2] PCI/DOE: Detect on stack work items automatically
+Message-ID: <20221118005005.GA1234446@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221114185729.nxahgs66ybe2x5mr@offworld>
+In-Reply-To: <Y3bM1NkVUhCe6/Vo@iweiny-mobl>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 10:57:29AM -0800, Davidlohr Bueso wrote:
-> On Mon, 14 Nov 2022, Alison Schofield wrote:
+On Thu, Nov 17, 2022 at 04:07:48PM -0800, Ira Weiny wrote:
+> On Thu, Nov 17, 2022 at 04:05:24PM -0800, Ira wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
 > 
-> > The reasoning behind removing the check, versus expanding it, is that the
-> > check shouldn't have been there in the first place. The ACPI driver is
-> > responsible for parsing the CFMWS's but it is the responsibility of the
-> > region driver to decide which CFMWS's it can use.
-> > 
-> > If you believe that premise, then we let all interleave arithmetics
-> > 'get through' to the region driver.
-> 
-> The way I see it, acpi should be setting the callback because it is a _direct_
-> consequence of parsing the cfmws, and that's really the same logic as we have
-> now, in that it sets it when allocating the rp decoder. And that doesn't take
-> away from the region driver responsibility of choosing the actual host bridge.
+> Sorry about the extra pre-patches listed below.  They are not needed.
+> ...
 
-With a little help from my friends ;) I'm hopeful the next version
-meets your expectation by setting the calc_hb only once when allocating
-that root port decoder.
-
+> > base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
 > 
-> Thanks,
-> Davidlohr
+> This is correct.
+> 
+> > prerequisite-patch-id: dfea657e07f37aa9d7c3d477d68b07f64fe78721
+> > prerequisite-patch-id: e27264e76e637214ee50cdab0e5854b223d44b4e
+> 
+> These are not needed...
+> 
+> Sorry, should I resend?
+
+No worries, no need to resend it!
+
+Bjorn
