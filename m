@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B57C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1C2C433FE
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234053AbiKRAPk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 19:15:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
+        id S239229AbiKRAYl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 19:24:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234063AbiKRAPi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:15:38 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD3D3F055;
-        Thu, 17 Nov 2022 16:15:37 -0800 (PST)
+        with ESMTP id S240604AbiKRAYh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:24:37 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6C56B3B5;
+        Thu, 17 Nov 2022 16:24:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668730537; x=1700266537;
+  t=1668731075; x=1700267075;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4D8EQNaryw9BA8CmQt73Epq0oJa7CxH/hx9+wFn8YdY=;
-  b=ZXyzoAvkA+zbsErbHOyU2DAjekhLQ+zzoishi7gJ4bAbr1NPAbmphrjX
-   r/+yyQ8QboAGjILirQaFRQtixqP/2co89v58HMwx/9jzHvbVyveN1dxen
-   58GWJ0Ou0+/9gu3NDE8Uy4azeYZ/HqJsE/l0wW1Iqm6XzwS1vtQJj/VhW
-   9h2dXIE1u1OraLTMljum3CBVhqQmSZhb56g6j/urN6k3j//3mWdSlpLQV
-   VRhP8wJ0Jf2qUkbcVOIUu3u9WvGZUt2jCBRVKCndj1+azfYkQSYJUX27B
-   /r+onsTBiv5ISqmUgKycN2AIsBd9XyJx8CgGFDCZ9n2FeCouHmJ8Sy9Q7
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="375145523"
+   mime-version:in-reply-to;
+  bh=9c5T7Id5N/dIrGsW19u1DxMTz5rLx41JpV24RUmXqUA=;
+  b=DGIfVz3VD6Mkv3jSR822pa7OlYpA0H0BbJ4LLqGFg392Esb0hcD6GVLx
+   bP6xEotf5qKVvyZ0340cnKTJbCDt4Djhel53KXD/5/dtxb+PNCwIJ2i8i
+   g94FiLrYvuiiqlZEeWYS1jk5Swrjrv0IQZU3e2sQDHKihySg98u7uGjcn
+   l0Usbtx0ltMNyrFgYTysqiKHKoqqG/9ZLQ2N+4veN0cVmbOgC7I8civeu
+   QZJlsZFhwqzMu/D6OfA2cgQTl2xdQL/IzCwy0pPuJ6mwkb8O/+Kh9ubRW
+   Tzb5Lh32+/20S1zDXNh4v0Dya4Ox/SRWHdvVaaY0ui3TZ+BF7mdI2VTcC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="314831141"
 X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="375145523"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:15:37 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="642303497"
+   d="scan'208";a="314831141"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:24:34 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="708834634"
 X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
-   d="scan'208";a="642303497"
+   d="scan'208";a="708834634"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.84.12])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:15:36 -0800
-Date:   Thu, 17 Nov 2022 16:15:34 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:24:33 -0800
+Date:   Thu, 17 Nov 2022 16:24:31 -0800
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -48,177 +48,120 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/6] cxl/memdev: Add trigger_poison_list sysfs
+Subject: Re: [PATCH v3 4/6] cxl/region: Add trigger_poison_list sysfs
  attribute
-Message-ID: <Y3bOpj/3SYUGVajf@aschofie-mobl2>
+Message-ID: <Y3bQvywgOxBJUtbm@aschofie-mobl2>
 References: <cover.1668115235.git.alison.schofield@intel.com>
- <5055dd47526d900f85f43bb0d85f4ccd4c9502b6.1668115235.git.alison.schofield@intel.com>
- <20221116124855.00002f58@Huawei.com>
+ <a696d91e34fc845673345a6b024545df849a8fef.1668115235.git.alison.schofield@intel.com>
+ <20221116125038.00006273@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221116124855.00002f58@Huawei.com>
+In-Reply-To: <20221116125038.00006273@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 12:48:55PM +0000, Jonathan Cameron wrote:
-> On Thu, 10 Nov 2022 19:12:41 -0800
+On Wed, Nov 16, 2022 at 12:50:38PM +0000, Jonathan Cameron wrote:
+> On Thu, 10 Nov 2022 19:12:42 -0800
 > alison.schofield@intel.com wrote:
 > 
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > When a boolean 'true' is written to this attribute the memdev driver
-> > retrieves the poison list from the device. The list includes addresses
-> > that are poisoned, or would result in poison if accessed, and the
-> > source of the poison. This attribute is only visible for devices
-> > supporting the capability. The retrieved errors are logged as kernel
-> > trace events with the label 'cxl_poison'.
+> > When a boolean 'true' is written to this attribute the region driver
+> > retrieves the poison list for the capacity each device contributes
+> > to this region. The list includes addresses that are poisoned, or
+> > would result in poison if accessed, and the source of the poison.
+> > The retrieved errors are logged as kernel trace events with the
+> > label 'cxl_poison'.
+> > 
+> > Devices not supporting the poison list capability are ignored.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Hi Alison,
+> Trivial comment inline you might want to consider.
+
+Thanks, got it!  I will 'include' your tag going forward.
 > 
-> A few comments inline.
-> 
-> Jonathan
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
 > > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl | 14 +++++++++
-> >  drivers/cxl/core/memdev.c               | 41 +++++++++++++++++++++++++
-> >  2 files changed, 55 insertions(+)
+> >  Documentation/ABI/testing/sysfs-bus-cxl | 14 +++++++++++
+> >  drivers/cxl/core/region.c               | 33 +++++++++++++++++++++++++
+> >  2 files changed, 47 insertions(+)
 > > 
 > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > index 8494ef27e8d2..1c5f4a853ba2 100644
+> > index 1c5f4a853ba2..54fad3bdcb2b 100644
 > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
 > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -388,3 +388,17 @@ Description:
-> >  		1), and checks that the hardware accepts the commit request.
-> >  		Reading this value indicates whether the region is committed or
-> >  		not.
+> > @@ -402,3 +402,17 @@ Description:
+> >  		attribute is only visible for devices supporting the
+> >  		capability. The retrieved errors are logged as kernel
+> >  		trace events with the label 'cxl_poison'.
 > > +
 > > +
-> > +What:		/sys/bus/cxl/devices/memX/trigger_poison_list
+> > +What:		/sys/bus/cxl/devices/regionZ/trigger_poison_list
 > > +Date:		November, 2022
 > > +KernelVersion:	v6.2
 > > +Contact:	linux-cxl@vger.kernel.org
 > > +Description:
 > > +		(WO) When a boolean 'true' is written to this attribute the
-> > +		memdev driver retrieves the poison list from the device. The
-> > +		list includes addresses that are poisoned or would result in
-> > +		poison if accessed, and the source of the poison. This
+> > +		region driver retrieves the poison list for the capacity
+> > +		each device contributes to this region. The list includes
+> Trivial: Same as in previous patch. "includes" is too vague.
 > 
-> Trivial, but 'includes' kind of implies it might have other things as well.
-> 
-> The list consists of addresses that are... perhaps?
-> 
-
-Changed that to consists. Now, I will be on the lookout for other
-usages of includes with unintended implications ;)
-
-
-> > +		attribute is only visible for devices supporting the
-> > +		capability. The retrieved errors are logged as kernel
-> > +		trace events with the label 'cxl_poison'.
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index 20ce488a7754..06d265db5127 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -106,12 +106,45 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+> > +		addresses that are poisoned, or would result in poison if
+> > +		accessed, and the source of the poison. The retrieved
+> > +		errors are logged as kernel trace events with the label
+> > +		'cxl_poison'.
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index f9ae5ad284ff..68821238491e 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -72,6 +72,38 @@ static int is_dup(struct device *match, void *data)
+> >  	return 0;
 > >  }
-> >  static DEVICE_ATTR_RO(numa_node);
 > >  
 > > +static ssize_t trigger_poison_list_store(struct device *dev,
 > > +					 struct device_attribute *attr,
 > > +					 const char *buf, size_t len)
 > > +{
-> > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > +	struct cxl_region *cxlr = to_cxl_region(dev);
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	struct cxl_endpoint_decoder *cxled;
+> > +	struct cxl_memdev *cxlmd;
 > > +	u64 offset, length;
+> > +	int rc, i;
 > > +	bool tmp;
-> > +	int rc;
 > > +
 > > +	if (kstrtobool(buf, &tmp))
 > > +		return -EINVAL;
 > > +
-> > +	/* Per CXL Spec, separate the pmem and ram poison list reads */
-
-/* Per CXL Spec 8.2.9.8.4.1 separate the pmem and ram requests */
-
-Added this ^
-
-> 
-> Reference?  I assume this is the bit about what happens if the
-> device doesn't support poison list retrieval for volatile memory?
-> I can't find anything more specific but maybe I'm looking in wrong place.
-> 
-Section 8.2.9.8.4.1
-Says this: 
-The device may reject this command if the requested range spans the
-device’s volatile and persistent partitions.
-
-And this -
-If the device does not support poison list for volatile ranges and
-any location in the requested list maps to volatile, the device
-shall return Invalid Physical Address.
-
-And, the device only reports that it supports the Get Poison 
-command, in general, not specifically for pmem or volatile.
-
-So, we split the requests along ram and pmem boundaries.
-
-> > +	if (resource_size(&cxlds->pmem_res)) {
-> > +		offset = cxlds->pmem_res.start;
-> > +		length = resource_size(&cxlds->pmem_res);
-> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> > +	for (i = 0; i <  p->nr_targets; i++) {
+> > +		cxled = p->targets[i];
+> > +		cxlmd = cxled_to_memdev(cxled);
+> > +		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
+> > +			      cxlmd->cxlds->enabled_cmds))
+> > +			continue;
+> > +
+> > +		offset = cxl_dpa_resource_start(cxled);
+> > +		length = cxl_dpa_size(cxled);
+> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, cxlr);
 > > +		if (rc)
 > > +			return rc;
-> > +	}
-> > +	if (resource_size(&cxlds->ram_res)) {
-> > +		offset = cxlds->ram_res.start;
-> > +		length = resource_size(&cxlds->ram_res);
-> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-> > +		if (rc)
-> > +			return rc;
-> 
-> Hmm.  So should we handle the return of Invalid Physical Address as an
-> error or not?  I think not given it's optional to support the poison
-> list for volatile memory.
->
-Double hmmm. It wasn't obvious what to do here. Users can look for the
-events to see if anything was traced, regardless of the rc. But, if an
-'rc' stopped a user from looking for results, that would be bad.
-
-I'll go with no error return on ram failure.
-
 > > +	}
 > > +	return len;
 > > +}
 > > +static DEVICE_ATTR_WO(trigger_poison_list);
 > > +
-> >  static struct attribute *cxl_memdev_attributes[] = {
-> >  	&dev_attr_serial.attr,
-> >  	&dev_attr_firmware_version.attr,
-> >  	&dev_attr_payload_max.attr,
-> >  	&dev_attr_label_storage_size.attr,
-> >  	&dev_attr_numa_node.attr,
+> >  static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
+> >  			  const char *buf, size_t len)
+> >  {
+> > @@ -570,6 +602,7 @@ static struct attribute *cxl_region_attrs[] = {
+> >  	&dev_attr_interleave_granularity.attr,
+> >  	&dev_attr_resource.attr,
+> >  	&dev_attr_size.attr,
 > > +	&dev_attr_trigger_poison_list.attr,
 > >  	NULL,
 > >  };
-> >  
-> > @@ -130,6 +163,14 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
-> >  {
-> >  	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
-> >  		return 0;
-> > +
-> > +	if (a == &dev_attr_trigger_poison_list.attr) {
-> > +		struct device *dev = kobj_to_dev(kobj);
-> > +
-> > +		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
-> > +			      to_cxl_memdev(dev)->cxlds->enabled_cmds))
-> > +			return 0;
-> > +	}
-> >  	return a->mode;
-> >  }
 > >  
 > 
