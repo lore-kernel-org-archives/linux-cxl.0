@@ -2,74 +2,86 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A37C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688C2C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 00:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233894AbiKRAuL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 17 Nov 2022 19:50:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
+        id S232330AbiKRAvP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 17 Nov 2022 19:51:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232659AbiKRAuL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:50:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BE074CE1;
-        Thu, 17 Nov 2022 16:50:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A7518B82259;
-        Fri, 18 Nov 2022 00:50:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A7D8C433D6;
-        Fri, 18 Nov 2022 00:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668732607;
-        bh=YB0VTDTLdeMcVGmJnbUJT6TnuUos5PpaqgZkkvIjgAU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=phYzzgW2g18bK0oC9PzOKmLPG8BhBhE48z9G5pD3tUOP6B/OaeViCXhEuGSpRjuYr
-         /YBPHMY2D6KZPwM3EXukpmiNn0CJV0RHtF35vvJGkMvwcvgCogOLUu3uR2r8/FT4l9
-         r03h9MrfVPa9TF+IYjJiqY7e94OVRHX0DlFpWfNk4ZW9w2xhUDkKyREH51GUFYT/Wo
-         2fb6Gg8eDqVzyK8ZkYtRluBCNkH5J/1zcC7DB+DQzgHng5g9ktyxkP+u5+A63nhTqo
-         3CK5T0c2FzP7fC17YCdBB2yKZTLoDFb/ddDE1JtuzByl6BEmo6XViST6/7qgoB988f
-         Bxkee+hGlkDbg==
-Date:   Thu, 17 Nov 2022 18:50:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH V2] PCI/DOE: Detect on stack work items automatically
-Message-ID: <20221118005005.GA1234446@bhelgaas>
+        with ESMTP id S240604AbiKRAvO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 17 Nov 2022 19:51:14 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0F174CF4
+        for <linux-cxl@vger.kernel.org>; Thu, 17 Nov 2022 16:51:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668732673; x=1700268673;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g+Vn1yHKB2Uuaq8jiyGZHi2dxKJlfO/lPkotgcENZb0=;
+  b=S+Tr99jdYJpnVUuC2K8WaBX+C5EYdjaT/KrBVVmabRk8CYY21+TzNl/l
+   7z6mke/7ppl2EEmXeyESnlG6gGU4L7FG9dREgd6dyKMMk8jBwE4WrQQg+
+   SHf5ONi/g00aGM3qkMtos/79uht9qPEiEzSvxRkfFbGmXfJqZxMdmHR7T
+   2t888yo6HdihvhIaYZUhlOVlKX/UqgOTS7ldHo0wQ3/+pGEjCb2thDUrW
+   qNt7xyQA/8j5kJrdnKYhw+64lL4nQv/IwX+fAmnD78dUf9MbUL9uK1TyQ
+   0fqVjLanYYiIq7ptFfo2UQ8ZiPjt2KKKWfD70n5/ysJAteF1PvPJiv3cH
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="375151179"
+X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
+   d="scan'208";a="375151179"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:50:58 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="814724845"
+X-IronPort-AV: E=Sophos;i="5.96,172,1665471600"; 
+   d="scan'208";a="814724845"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.84.12])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 16:50:58 -0800
+Date:   Thu, 17 Nov 2022 16:50:56 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Marek Bykowski <marek.bykowski@gmail.com>
+Cc:     linux-cxl@vger.kernel.org
+Subject: Re: trace events
+Message-ID: <Y3bW8CLw8xcbrfav@aschofie-mobl2>
+References: <20221114202242.5f9023d3@ubuntu.armcompdev.pub.tds.tieto.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3bM1NkVUhCe6/Vo@iweiny-mobl>
+In-Reply-To: <20221114202242.5f9023d3@ubuntu.armcompdev.pub.tds.tieto.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 04:07:48PM -0800, Ira Weiny wrote:
-> On Thu, Nov 17, 2022 at 04:05:24PM -0800, Ira wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+On Mon, Nov 14, 2022 at 08:27:57PM +0000, Marek Bykowski wrote:
+> Hello cxl mailing list,
 > 
-> Sorry about the extra pre-patches listed below.  They are not needed.
-> ...
+> I just started a project for validating the RTL of the CXL root bridge
+> from Intel. One of my first goals is to better understand the
+> SW/protocol flows, so that we better validate it. I'm going to use
+> the tracpoints for it and possibly lttng. Are you considering adding
+> some of it shortly? If not would you be interested into the patches for
+> it?
+> 
+> On the list I'm seeing include/trace/events/cxl.h but on the repository
+> kernel/git/cxl/cxl.git seeing none for example with:
+> 
+>  git cat-file -e origin:include/trace/events/cxl.h
 
-> > base-commit: 30a0b95b1335e12efef89dd78518ed3e4a71a763
-> 
-> This is correct.
-> 
-> > prerequisite-patch-id: dfea657e07f37aa9d7c3d477d68b07f64fe78721
-> > prerequisite-patch-id: e27264e76e637214ee50cdab0e5854b223d44b4e
-> 
-> These are not needed...
-> 
-> Sorry, should I resend?
+Hi Marek,
 
-No worries, no need to resend it!
+There are a few patchsets under review that are using trace events
+in CXL. I'm working on one for CXL Poison Retrieval.
 
-Bjorn
+There is also tool support, the monitor patchset, making its way
+upstream for ndctl that uses the trace events.
+
+I haven't looked at lttng.
+
+Can you share more about your project?
+
+Thanks,
+Alison
+
+> 
+> Thanks,
+> Marek
