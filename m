@@ -2,194 +2,102 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06022C433FE
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 22:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02013C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Nov 2022 22:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbiKRWHJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Nov 2022 17:07:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33682 "EHLO
+        id S231609AbiKRWj2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Nov 2022 17:39:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbiKRWHI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 17:07:08 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4553A9736E
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Nov 2022 14:07:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668809227; x=1700345227;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mWQZ3PVAGchY87Zz3Kb5JxiQou2wQeFBeO8vWJo/3fc=;
-  b=ACMLPCtMunRrRbfzU0fVgjPDzTHGpdiWV3GNSBW2KxoaLf/lPD4+on/0
-   eUwYVMcOsZx8bG7METWjUtYfndCS8Zw9lgoYqgIhSW6Fyb5l7XlMUDrk3
-   2B7PbptSlQzmn3MCwYMstXna23olUtfXuftP5KBXmtiSwyB3fPt/Xo4g0
-   v8oCSzwDJvZBV1myi9Uk6PEg8NkcdCAbgrHX9kY+dJl23W40qeLh/Dvpy
-   YVG1/pr1qQL6dfhVVzVKb8WfpCFH/JyTJ9A9ckmJRJYNCr8ni89YZ9b8x
-   nHqPF5mDNBxpDFdjIRhmYmw67F3HkP+BGrb3M2gSfOKY1dl18bI2DrqSt
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="311949779"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="311949779"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 14:07:07 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="671467163"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="671467163"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 14:07:06 -0800
-Subject: [PATCH v6] tools/testing/cxl: Add "passphrase secure erase" opcode
- support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com
-Date:   Fri, 18 Nov 2022 15:07:05 -0700
-Message-ID: <166880914520.808133.4307384879965818528.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <20221117135738.00005557@Huawei.com>
-References: <20221117135738.00005557@Huawei.com>
-User-Agent: StGit/1.4
+        with ESMTP id S231593AbiKRWj0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Nov 2022 17:39:26 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF609A5DC
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Nov 2022 14:39:22 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id be13so10497774lfb.4
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Nov 2022 14:39:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IOiJtYZeQVIXzLgp6qBI5UX5u94grwOq5OhhDbn0tUc=;
+        b=W/oZ38tL+oI3keP+X/RXHKGUjusG0XHH5SRl4WO/Vppv0otayTr9RfIuPFhX19Mczq
+         OOqomMKcIqpVdpwRSLvJruFlkj1n8eu9tbL7ausp78U1OaSyKgBwJBg4g6xpXrUiCB2l
+         gslsv8MUI4PCyV53pta2U+8kV2euG7zlhGfXQZac46e/UwtOjK47FXkghX8vPyjxV17V
+         w25Z91XybB2fsq0b+2B0geEDw2UiuKpaNxTUQiTie+miFXQWTq2SQ7u6WaUkqtU9zVRy
+         H7FhaPlVDRWgrYSLzYyh4T4vf/NAQYmC/7ZoyCEHexUpICuiSE9Edsx43QOlEIa1WC6R
+         IQEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IOiJtYZeQVIXzLgp6qBI5UX5u94grwOq5OhhDbn0tUc=;
+        b=cmODeWM/bW1+Mh18Ig5TCr+9XKY2Ci7cKj5lfMzzB16Ovt4FOwWC6EBDeN40Z9U24r
+         upQe7M5pYOq+k4BeFTCqEKn+jmOHlA4vHxZckySVPetDu14WMPw3z2bYrKea5Swddp66
+         PTqQcUkwmMxHKUKp8qlDlQxQBKFcBUahq99gGE7GbFAUqc1UngmZVNFHpXU0gnUi3Snd
+         aiz8T8J8v/G5RMWes19eVGQuN0YikDSn3pqnPf2hYovzkPBiGjJP+x7iuYOO5DSquzmY
+         kEx7kMkqIbYu0thuUYTELZar1326WC4F95xniO3cAaiLbI11ER5nUHQ9CAi1VELlmaTw
+         GD/g==
+X-Gm-Message-State: ANoB5pnzgCxcBU5hpNeF9KBqBCrCOYFp+ET4SneNu+u/Apb4bWqrAliX
+        6QtGrYFgEYKE+oxCrnSKU8c=
+X-Google-Smtp-Source: AA0mqf67Dh1A71sI4ZnF2QL0zpmcCbpKb9+bCgfe0OeeJdEBCW1izx7x0Y/XoL5qDr34k2iHNiEfxA==
+X-Received: by 2002:a05:6512:786:b0:4a2:44c7:ee58 with SMTP id x6-20020a056512078600b004a244c7ee58mr2949326lfr.127.1668811160564;
+        Fri, 18 Nov 2022 14:39:20 -0800 (PST)
+Received: from ubuntu.armcompdev.pub.tds.tieto.com ([89.46.86.70])
+        by smtp.gmail.com with ESMTPSA id e30-20020a19691e000000b004a05402c5c3sm840193lfc.93.2022.11.18.14.39.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 14:39:20 -0800 (PST)
+Date:   Fri, 18 Nov 2022 22:39:13 +0000
+From:   Marek Bykowski <marek.bykowski@gmail.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: Re: trace events
+Message-ID: <20221118223913.075752fd@ubuntu.armcompdev.pub.tds.tieto.com>
+In-Reply-To: <c71a8cea-b2d1-8190-51d0-754f80aa96a0@intel.com>
+References: <20221114202242.5f9023d3@ubuntu.armcompdev.pub.tds.tieto.com>
+        <Y3bW8CLw8xcbrfav@aschofie-mobl2>
+        <20221118135311.12cb241d@ubuntu.armcompdev.pub.tds.tieto.com>
+        <c71a8cea-b2d1-8190-51d0-754f80aa96a0@intel.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add support to emulate a CXL mem device support the "passphrase secure
-erase" operation.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-
-v6:
-- Change behavior for no master set while issue secure erase per spec.
-- Add spec references in comments (Jonathan)
-- Add Jonathan review tag.
-
- tools/testing/cxl/test/mem.c |  102 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
-
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 90607597b9a4..fbd033afb7af 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -362,6 +362,105 @@ static int mock_unlock_security(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd
- 	return 0;
- }
- 
-+static int mock_passphrase_secure_erase(struct cxl_dev_state *cxlds,
-+					struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mock_mem_pdata *mdata = dev_get_platdata(cxlds->dev);
-+	struct cxl_pass_erase *erase;
-+
-+	if (cmd->size_in != sizeof(*erase))
-+		return -EINVAL;
-+
-+	if (cmd->size_out != 0)
-+		return -EINVAL;
-+
-+	erase = cmd->payload_in;
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_FROZEN) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PLIMIT &&
-+	    erase->type == CXL_PMEM_SEC_PASS_USER) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT &&
-+	    erase->type == CXL_PMEM_SEC_PASS_MASTER) {
-+		cmd->return_code = CXL_MBOX_CMD_RC_SECURITY;
-+		return -ENXIO;
-+	}
-+
-+	switch (erase->type) {
-+	case CXL_PMEM_SEC_PASS_MASTER:
-+		/*
-+		 * The spec does not clearly define the behavior of the scenario
-+		 * where a master passphrase is passed in while the master
-+		 * passphrase is not set and user passphrase is not set. The
-+		 * code will take the assumption that it will behave the same
-+		 * as a CXL secure erase command without passphrase (0x4401).
-+		 */
-+		if (mdata->security_state & CXL_PMEM_SEC_STATE_MASTER_PASS_SET) {
-+			if (memcmp(mdata->master_pass, erase->pass,
-+				   NVDIMM_PASSPHRASE_LEN)) {
-+				master_plimit_check(mdata);
-+				cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-+				return -ENXIO;
-+			}
-+			mdata->master_limit = 0;
-+			mdata->user_limit = 0;
-+			mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-+			memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-+			mdata->security_state &= ~CXL_PMEM_SEC_STATE_LOCKED;
-+		} else {
-+			/*
-+			 * CXL rev3 8.2.9.8.6.3 Disable Passphrase
-+			 * When master passphrase is disabled, the device shall
-+			 * return Invalid Input for the Passphrase Secure Erase
-+			 * command with master passphrase.
-+			 */
-+			return -EINVAL;
-+		}
-+		/* Scramble encryption keys so that data is effectively erased */
-+		break;
-+	case CXL_PMEM_SEC_PASS_USER:
-+		/*
-+		 * The spec does not clearly define the behavior of the scenario
-+		 * where a user passphrase is passed in while the user
-+		 * passphrase is not set. The code will take the assumption that
-+		 * it will behave the same as a CXL secure erase command without
-+		 * passphrase (0x4401).
-+		 */
-+		if (mdata->security_state & CXL_PMEM_SEC_STATE_USER_PASS_SET) {
-+			if (memcmp(mdata->user_pass, erase->pass,
-+				   NVDIMM_PASSPHRASE_LEN)) {
-+				user_plimit_check(mdata);
-+				cmd->return_code = CXL_MBOX_CMD_RC_PASSPHRASE;
-+				return -ENXIO;
-+			}
-+			mdata->user_limit = 0;
-+			mdata->security_state &= ~CXL_PMEM_SEC_STATE_USER_PASS_SET;
-+			memset(mdata->user_pass, 0, NVDIMM_PASSPHRASE_LEN);
-+		}
-+
-+		/*
-+		 * CXL rev3 Table 8-118
-+		 * If user passphrase is not set or supported by device, current
-+		 * passphrase value is ignored. Will make the assumption that
-+		 * the operation will proceed as secure erase w/o passphrase
-+		 * since spec is not explicit.
-+		 */
-+
-+		/* Scramble encryption keys so that data is effectively erased */
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int mock_get_lsa(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_mbox_get_lsa *get_lsa = cmd->payload_in;
-@@ -470,6 +569,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_UNLOCK:
- 		rc = mock_unlock_security(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
-+		rc = mock_passphrase_secure_erase(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
+On Fri, 18 Nov 2022 08:18:43 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
 
+> 
+> Hi Marek. Have you looked into enabling ftrace? Maybe that would be
+> the right starting point for what you are looking for?
+> 
+> https://lwn.net/Articles/365835/
+> 
+
+That was my initial idea but if there are no trace events defined for
+the CXL what am I to enable? At least I cannot find any events for CXL,
+there is no file include/trace/events/cxl.h in kernel/git/cxl/cxl.git.
+Also
+
+  find /sys/kernel/debug/tracing/events/ -name "*cxl*"
+
+on linux-cxl returns nothing.
+
+Alison mentioned she is working on some but these are yet in review.
+
+As putting the trace events throughput the CXL driver/s takes time I
+took a shortcut and added trace_printk scattered around for now. With
+libtraceevent, trace-cmd and kernelshark and it is looking fantastic,
+except it is not the CXL events as per-se.
+
+root@localhost:~# trace-cmd show |tail -n 2
+   systemd-udevd-520 [004] ..... 21.236650: devm_cxl_enumerate_decoders: \
+			success adding decoder to port endpoint5
+   systemd-udevd-520 [004] ..... 21.240517: devm_cxl_enumerate_ports.cold: \
+			find_cxl_port() returned port port2
