@@ -2,143 +2,93 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922FAC4332F
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Nov 2022 10:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26E5C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon, 21 Nov 2022 11:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbiKUK5Q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Nov 2022 05:57:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
+        id S230030AbiKULMQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Nov 2022 06:12:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbiKUK5P (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Nov 2022 05:57:15 -0500
+        with ESMTP id S230340AbiKULLh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Nov 2022 06:11:37 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52D3A1FF9B
-        for <linux-cxl@vger.kernel.org>; Mon, 21 Nov 2022 02:57:14 -0800 (PST)
-Received: from fraeml708-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NG45r5ypVz686xt;
-        Mon, 21 Nov 2022 18:54:40 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF402250E;
+        Mon, 21 Nov 2022 03:07:45 -0800 (PST)
+Received: from frapeml500003.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NG4KS3Rplz6H7TF;
+        Mon, 21 Nov 2022 19:04:44 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml708-chm.china.huawei.com (10.206.15.36) with Microsoft SMTP Server
+ frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 11:57:12 +0100
+ 15.1.2375.31; Mon, 21 Nov 2022 12:07:16 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
- 2022 10:57:11 +0000
-Date:   Mon, 21 Nov 2022 10:57:11 +0000
+ 2022 11:07:15 +0000
+Date:   Mon, 21 Nov 2022 11:07:14 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [ndctl PATCH 4/5] cxl/list: add --media-errors option to cxl
- list
-Message-ID: <20221121105711.0000770c@Huawei.com>
-In-Reply-To: <Y3bG884BuHoGnbuE@aschofie-mobl2>
-References: <cover.1668133294.git.alison.schofield@intel.com>
-        <762edeab529125d3048cf13721360b1a07260531.1668133294.git.alison.schofield@intel.com>
-        <20221116130345.000007a8@Huawei.com>
-        <Y3bG884BuHoGnbuE@aschofie-mobl2>
+To:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+CC:     "Weiny, Ira" <ira.weiny@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Gregory Price" <gregory.price@memverge.com>,
+        "Li, Ming4" <ming4.li@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI/DOE: Remove asynchronous task support
+Message-ID: <20221121110714.0000720a@Huawei.com>
+In-Reply-To: <IA1PR11MB6171B27750AB469AFE47CD5E890A9@IA1PR11MB6171.namprd11.prod.outlook.com>
+References: <20221119222527.1799836-1-ira.weiny@intel.com>
+        <IA1PR11MB6171B27750AB469AFE47CD5E890A9@IA1PR11MB6171.namprd11.prod.outlook.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 17 Nov 2022 15:42:43 -0800
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Mon, 21 Nov 2022 02:01:32 +0000
+"Zhuo, Qiuxu" <qiuxu.zhuo@intel.com> wrote:
 
-> On Wed, Nov 16, 2022 at 01:03:45PM +0000, Jonathan Cameron wrote:
-> > On Thu, 10 Nov 2022 19:20:07 -0800
-> > alison.schofield@intel.com wrote:
-> >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > The --media-errors option to 'cxl list' retrieves poison lists
-> > > from memory devices (supporting the capability) and displays
-> > > the returned media-error records in the cxl list json. This
-> > > option can apply to memdevs or regions.
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > > ---
-> > >  Documentation/cxl/cxl-list.txt | 64 ++++++++++++++++++++++++++++++++++
-> > >  cxl/filter.c                   |  2 ++
-> > >  cxl/filter.h                   |  1 +
-> > >  cxl/list.c                     |  2 ++
-> > >  4 files changed, 69 insertions(+)
-> > > 
-> > > diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-> > > index 14a2b4bb5c2a..24a0cf97cef2 100644
-> > > --- a/Documentation/cxl/cxl-list.txt
-> > > +++ b/Documentation/cxl/cxl-list.txt
-> > > @@ -344,6 +344,70 @@ OPTIONS
-> > >  --region::
-> > >  	Specify CXL region device name(s), or device id(s), to filter the listing.
-> > >  
-> > > +-a::
-> > > +--media-errors::
-> > > +	Include media-error information. The poison list is retrieved
-> > > +	from the device(s) and media error records are added to the
-> > > +	listing. This option applies to memdevs and regions where
-> > > +	devices support the poison list capability.  
+> > From: Ira Weiny <ira.weiny@intel.com>  
+> ＞　...
 > > 
-> > I'm not sure media errors is a good name.  The poison doesn't have to originate
-> > in the device.  Given we are logging poison with "external" as the source
-> > those definitely don't come from the device and may have nothing to do
-> > with 'media' as such.
-> > 
-> > Why not just call it poison?
-> >   
-> --media-errors probably originated from ndctl tool which used
-> that same option name, but it fits in with the CXL Spec language.
+> > @@ -423,25 +399,13 @@ struct pci_doe_mb
+> > *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
+> >  	doe_mb->pdev = pdev;
+> >  	doe_mb->cap_offset = cap_offset;
+> >  	init_waitqueue_head(&doe_mb->wq);
+> > +	mutex_init(&doe_mb->exec_lock);  
 > 
-> The CXL Spec calls the records returned from the 'Get Poison List'
-> command Media Error Records. It refers to poison as media errors.
-> So, here, in a command that lists things - the thing(s) being listed
-> is(are) 'media error record(s)'. 
-> 
-> I see what you're saying about 'External' source. Does that mean
-> an 'External' source caused an actual media error?
+> In real world, not sure whether there is a case that pcim_doe_create_mb() is invoked by 
+> multiple drivers to create multiple DOE mailbox instances? If there is such a case, we may 
+> need to ensure there is only one DOE mailbox instance for a physical DOE of pdev @cap_offset.
 
-Hmm. I suspect this all evolved.  An External source need not have
-anything to do with media (could be corruption in some random cache
-or on interconnect or even that a link collapsed potentially).
+I think if that happened we'd have a lot of mess.  The main PCI driver for a given
+EP, switch port etc needs to handle this part.
 
-Ah well, I'm fine with any naming you prefer.  No idea if the NVDIMM
-equivalent has a the same issue with externally generated poison.
+Sub drivers can then do similar to
+https://elixir.bootlin.com/linux/latest/source/drivers/cxl/core/pci.c#L465
+to find a DOE instance that supports what they need and use it.
+The DOE code 'should' work fine when doing this - the request/response pairs
+will be serialized.
 
-> 
-> So, that 'Why not poison?' answer. I'm easily swayed either way.
-> Would you suggest:
-> > > +
-> > > +----
-> > > +# cxl list -m mem11 --media-errors  
-> 
-> cxl list -m mem1 --poison
-> 
-> > > +    "media_errors":{
-> > > +      "nr_media_errors":1,
-> > > +      "media_error_records":[  
-> 
-> and rename the fields above:
-> 	"poison_errors"
-> 	"nr_poison_errors"
-> 	"poison_error_records"
-> 
-> 
-That works for me, but if it's going to confuse people familiar with
-other similar cases, then I don't mind the original naming that much.
+We have discussed moving that 'find' logic and the xarray into the PCI core
+and that will need to happen to support CMA etc. For the first submission it
+was easier to just do it in the CXL drivers..
 
 Jonathan
 
+> 
+> -Qiuxu
 
