@@ -2,148 +2,114 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F1C4332F
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Nov 2022 17:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A4C433FE
+	for <linux-cxl@archiver.kernel.org>; Mon, 21 Nov 2022 22:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbiKURl5 convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Nov 2022 12:41:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33520 "EHLO
+        id S230235AbiKUWLR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Nov 2022 17:11:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbiKURlx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Nov 2022 12:41:53 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1088BC696D;
-        Mon, 21 Nov 2022 09:41:52 -0800 (PST)
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGF4b0yPPz67PMv;
-        Tue, 22 Nov 2022 01:39:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 18:41:49 +0100
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
- 2022 17:41:48 +0000
-Date:   Mon, 21 Nov 2022 17:41:48 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-CC:     "Weiny, Ira" <ira.weiny@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Gregory Price" <gregory.price@memverge.com>,
-        "Li, Ming4" <ming4.li@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI/DOE: Remove asynchronous task support
-Message-ID: <20221121174148.0000647d@Huawei.com>
-In-Reply-To: <IA1PR11MB6171444A263C4ABB216FF1F5890A9@IA1PR11MB6171.namprd11.prod.outlook.com>
-References: <20221119222527.1799836-1-ira.weiny@intel.com>
-        <IA1PR11MB6171B27750AB469AFE47CD5E890A9@IA1PR11MB6171.namprd11.prod.outlook.com>
-        <20221121110714.0000720a@Huawei.com>
-        <IA1PR11MB6171444A263C4ABB216FF1F5890A9@IA1PR11MB6171.namprd11.prod.outlook.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229624AbiKUWLQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Nov 2022 17:11:16 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D39C80D7;
+        Mon, 21 Nov 2022 14:11:15 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id E1E3D102005;
+        Mon, 21 Nov 2022 22:11:14 +0000 (UTC)
+Received: from pdx1-sub0-mail-a277.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 33B081008B4;
+        Mon, 21 Nov 2022 22:11:14 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669068674; a=rsa-sha256;
+        cv=none;
+        b=AlHIGaKJjWcqSfqv9muvgxoNCZOYzEtSyKUifOga7oDFICG09vCqy1SAuEPWkZJrwMd+TP
+        k58SbDfzl/4AUA/77/PNZcq5RiiICIH6YjMiIuq/n7TxN4eoc6OoOkpy0seL773/CmqXYD
+        ZARGZ9pr6Wxx1g4nNzZjup88uEhkammLX774Yt2kXzOXTj2RoS6Gb3oQV9HckUgWewQ47X
+        2Cb3FFiSK4jkAkx08Ve2+8eEOij8fKBmGD7PuDuBZvWl2nSQ5wdYH6AohZClXvgeD4qxql
+        UEm4hS5wBinnbqadEebAGuHVIFbqTUoD8/gb0TucUYDpT5sOblrU+g0ddHZGJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1669068674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=dXY4YIB/wDJAi95L74t01ijuWPqACaPO27Z8NICnvuQ=;
+        b=CyYqsrqJE1jlGMpH3sDP05KGMlW0WkoRiNplqBDJIz8R7goFW4LJv/HhyvqVfqd0Ffms6v
+        XM11eeIyy7I3E1ysz0jwGwwW6bDH4f6Dui2q4YeTpFsVHbVp82V42GKIr4zYYSJD6m/4jM
+        Z/aPS0rGR7mnNDZloiza3hLP2LT/cGMkXT7nVkvTN1PYWfK5B7/tDvjphuneiot+ot/JNT
+        7vHFjacrWmE0cP1gDdHonCOEAoEHsqUiw8+cMzQ6ckxq3Qit7mdhdfbBg1EFbgwKUq/bAS
+        0XB8Ugrh0P66CQxnEWIfTrY7nsvg0NPFE2m9/vfOB2gd5PFvZ6qJRNJ12pDckA==
+ARC-Authentication-Results: i=1;
+        rspamd-65567d767-pkj8f;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Absorbed-Eight: 43b35e344d9cb504_1669068674589_3648091160
+X-MC-Loop-Signature: 1669068674589:809164092
+X-MC-Ingress-Time: 1669068674589
+Received: from pdx1-sub0-mail-a277.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.103.24.54 (trex/6.7.1);
+        Mon, 21 Nov 2022 22:11:14 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a277.dreamhost.com (Postfix) with ESMTPSA id 4NGM6T26xNz2D;
+        Mon, 21 Nov 2022 14:11:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1669068674;
+        bh=dXY4YIB/wDJAi95L74t01ijuWPqACaPO27Z8NICnvuQ=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=WZEV3VZ7xYJV1dlg6OtwWXBxE6wkd8a+pRlD+mEotkbi5DdeR+esp0zKahmIE/z/5
+         Ta2KbTYbdCzC4LTIUt+NCQhW5T+Zmtj4s1hUjQ0QzVGDvr3THATIKQGoFyqf7zDQ+u
+         v6vQl3f6QUD3CbFN+dwXwAAdwz1snTz16aV9WjR5D8WaW++/cRsk3tBwgKlHEUswxo
+         tTSVcor3iorLcq8Q54bbtZYPaX6UmEks89X0EkBFANuP2AgLEJBCyiFVFaz9erdw99
+         H1WCF2SgPvTeWbKM7XYEbvVFRt558cbAaj+dWbkncpod7A1aUjP/T05oAklvDmpta7
+         NKT6cJWJKiXSg==
+Date:   Mon, 21 Nov 2022 13:48:04 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+        bwidawsk@kernel.org, ira.weiny@intel.com,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        a.manzanares@samsung.com, mcgrof@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cxl/mbox: Add background operation handling machinery
+Message-ID: <20221121214804.zy6i5basztlim66t@offworld>
+References: <20220804045029.2905056-1-dave@stgolabs.net>
+ <20220804045029.2905056-2-dave@stgolabs.net>
+ <20220825134152.00005244@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20220825134152.00005244@huawei.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 21 Nov 2022 14:17:37 +0000
-"Zhuo, Qiuxu" <qiuxu.zhuo@intel.com> wrote:
+On Thu, 25 Aug 2022, Jonathan Cameron wrote:
 
-> > From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> > ...
-> > On Mon, 21 Nov 2022 02:01:32 +0000
-> > "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com> wrote:
-> >   
-> > > > From: Ira Weiny <ira.weiny@intel.com>  
-> > > ＞　...  
-> > > >
-> > > > @@ -423,25 +399,13 @@ struct pci_doe_mb  
-> > *pcim_doe_create_mb(struct  
-> > > > pci_dev *pdev, u16 cap_offset)
-> > > >  	doe_mb->pdev = pdev;
-> > > >  	doe_mb->cap_offset = cap_offset;
-> > > >  	init_waitqueue_head(&doe_mb->wq);
-> > > > +	mutex_init(&doe_mb->exec_lock);  
-> > >
-> > > In real world, not sure whether there is a case that
-> > > pcim_doe_create_mb() is invoked by multiple drivers to create multiple
-> > > DOE mailbox instances? If there is such a case, we may need to ensure  
-> > there is only one DOE mailbox instance for a physical DOE of pdev
-> > @cap_offset.
-> > 
-> > I think if that happened we'd have a lot of mess.  The main PCI driver for a
-> > given EP, switch port etc needs to handle this part.
-> > 
-> > Sub drivers can then do similar to
-> > https://elixir.bootlin.com/linux/latest/source/drivers/cxl/core/pci.c#L465
-> > to find a DOE instance that supports what they need and use it.
-> > The DOE code 'should' work fine when doing this - the request/response
-> > pairs will be serialized.
-> > 
-> > We have discussed moving that 'find' logic and the xarray into the PCI core
-> > and that will need to happen to support CMA etc. For the first submission it
-> > was easier to just do it in the CXL drivers..  
-> 
-> For the 1st submission, yes, it's easier in current way.
-> 
-> > 
-> > Jonathan  
-> 
-> It's good that this potential issue has been noticed. I think moving the 'find' logic and the xarray 
-> from CXL to the PCI core should save a lot of such duplicated works for other drivers using DOE.
-> 
-> One more though:
-> For a driver, I think it's only interested in getting a DOE mailbox from a PCI device with specified VID+protocol and using it.
-> The driver doesn't care how is the DOE mailbox instance created and the driver also doesn't want to maintain it.
-> After using the DOE mailbox instance then the driver puts it back. 
-> A pair of get-put APIs implemented in the PCI core like below might make drivers' lives easy 😊
-> 
->          struct pci_doe_mb *mb = pci_doe_get(struct pci_dev *pdev, u16 vid, u8 protocol); 
->          // if (!mb) return;
->          // The driver uses the 'mb' to send requests and receive responses ...
->         pci_doe_put(mb);
-> 
-> The creation and all the heavy maintenance works on the 'mb' are hidden in the get-put APIs.
+>> +/*
+>> + * Ensure that ->mbox_send() can run safely when a background
+>> + * command is running. If so, returns zero, otherwise -EBUSY.
+>
+>As above, I'm not sure this is necessary given you should get
+>a sensible error code in response to any such message.
+>E.g. media disabled.
 
-It will want to look like something along those lines - I'm not 100% sure we'll ever care
-about the put, but we may do if there are resource to refcount - or we need to maintain
-per DOE access controls (maybe only one user of a given protocol at a time for example).
-Whether to have a driver call an init, or do it on first access as you suggest is an
-open question - for example we may want to expose debug info on support protocols even
-though none are currently in use.  There is also a dance around interrupts (once those
-are supported for DOEs in general).  Until the PCI driver has requested interrupts
-we can't use them for DOE, but we may want to poll it before that stage then switch
-over.
+So this is necessary to prevent mischief in the polling case
+where you can have windows where the driver is out of sync
+with the hardware - hw finishes async command but driver
+(sleeping poller) has not acknowledged this. In the irq case,
+yeah this would be redundant and not needed.
 
-There are added complexities in that the outcome of the SPDM discussion at plumbers was
-that we probably want to run some DOE stuff before probing a driver at all - to allow
-userspace to block driver probe if the attestation fails.  Not yet sure exactly what
-that will look like yet.
-
-Jonathan
-
-
-> 
-> -Qiuxu
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-
+Thanks,
+Davidlohr
