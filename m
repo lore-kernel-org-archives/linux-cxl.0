@@ -2,120 +2,67 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497FBC4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 22:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DCAC4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 22:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235088AbiKVWGP convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Nov 2022 17:06:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49782 "EHLO
+        id S230365AbiKVWgV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Nov 2022 17:36:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234853AbiKVWGM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 17:06:12 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3869B6C737
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Nov 2022 14:06:08 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-254-sgcAsR24PNu03owwWGE96w-1; Tue, 22 Nov 2022 22:06:05 +0000
-X-MC-Unique: sgcAsR24PNu03owwWGE96w-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 22 Nov
- 2022 22:06:04 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.044; Tue, 22 Nov 2022 22:06:04 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Dan Williams' <dan.j.williams@intel.com>,
-        Lukas Wunner <lukas@wunner.de>
-CC:     "'ira.weiny@intel.com'" <ira.weiny@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        with ESMTP id S234134AbiKVWgU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 17:36:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE571C67E1;
+        Tue, 22 Nov 2022 14:36:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 74290B81DC6;
+        Tue, 22 Nov 2022 22:36:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A89C433D6;
+        Tue, 22 Nov 2022 22:36:16 +0000 (UTC)
+Date:   Tue, 22 Nov 2022 17:36:14 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     ira.weiny@intel.com
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: RE: [PATCH V2] PCI/DOE: Detect on stack work items automatically
-Thread-Topic: [PATCH V2] PCI/DOE: Detect on stack work items automatically
-Thread-Index: AQHY+uF8IwLsQKEiakO+LlTXtrnK365EZJiQgAcGD4iAABtQEA==
-Date:   Tue, 22 Nov 2022 22:06:04 +0000
-Message-ID: <f2beb27f87d44ae180d1fe9f040442a0@AcuMS.aculab.com>
-References: <20221118000524.1477383-1-ira.weiny@intel.com>
- <e59f83f3ca4149d098efe43b48fecd1b@AcuMS.aculab.com>
- <20221122171309.GA11310@wunner.de> <20221122171406.GC11310@wunner.de>
- <637d2f98db8b_12cdff29464@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <637d2f98db8b_12cdff29464@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 07/11] cxl/mem: Trace Memory Module Event Record
+Message-ID: <20221122173614.3f5c10e7@gandalf.local.home>
+In-Reply-To: <20221110185758.879472-8-ira.weiny@intel.com>
+References: <20221110185758.879472-1-ira.weiny@intel.com>
+        <20221110185758.879472-8-ira.weiny@intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Dan Williams
-> Sent: 22 November 2022 20:23
-...
-> > > > > Lukas pointed out that object_is_on_stack() is available to detect this
-> > > > > automatically.
-> > > > >
-> > > > > Use object_is_on_stack() to determine the correct init work function to
-> > > > > call.
-> > > >
-> > > > This is all a bit strange.
-> > > > The 'onstack' flag is needed for the diagnostic check:
-> > > > 	is_on_stack = object_is_on_stack(addr);
-> > > > 	if (is_on_stack == onstack)
-> > > > 		return;
-> > > > 	pr_warn(...);
-> > > > 	WARN_ON(1);
-> > > >
-> > > > So setting the flag to the location of the buffer just subverts the check.
-> > > > It that is sane there ought to be a proper way to do it.
-> > >
-> > > If object_is_on_stack() is sufficient to check whether a struct
-> > > is on the stack or not, why doesn't __init_work() use it to
-> > > auto-detect whether to call debug_object_init_on_stack() or
-> > > debug_object_init()?
-> > >
-> > > Forcing developers to use a specific initializer for something
-> > > that can be auto-detected is akin to treating them like kids
-> > > and telling them "You didn't say the magic word."
-> > >
-> > > What's the point?
-> 
-> I had this initial reaction as well, but INIT_WORK_ONSTACK() documents
-> an important detail of the object's lifetime. Here are 2 examples of
-> functions that would become trickier to read if the kernel did a
-> global s/INIT_WORK_ONSTACK()/INIT_WORK()/
-> 
->     synchronize_rcu_expedited_queue_work()
->     insert_wq_barrier()
-> 
-> ...where those take arguments that are known to come from the stack and
-> be used in async context.
+On Thu, 10 Nov 2022 10:57:54 -0800
+ira.weiny@intel.com wrote:
 
-I suspect the check was added in response to some code that added
-on on-stack item and then slept after returning from that function.
+>  static bool cxl_event_tracing_enabled(void)
+>  {
+>  	return trace_cxl_generic_event_enabled() ||
+>  	       trace_cxl_general_media_enabled() ||
+> -	       trace_cxl_dram_enabled();
+> +	       trace_cxl_dram_enabled() ||
+> +	       trace_cxl_memory_module_enabled();
+>  }
+>  
 
-One option would be to change the diagnostic check to:
-	is_on_stack != !object_is_on_stack(addr)
-and then pass in 2 so the test always succeeds.
-But I suspect that won't be liked.
+My only concern with this patch set is that gcc may decide to not inline
+this function and you will lose the performance of the static branches
+provided by the trace_cxl_*enabled() functions.
 
-	David
+Other than that, for patches 5-7 from a tracing perspective:
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
+-- Steve
