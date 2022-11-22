@@ -2,39 +2,39 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B8FC433FE
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 22:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC24C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 22:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235319AbiKVWxp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Nov 2022 17:53:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54200 "EHLO
+        id S235266AbiKVWxq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Nov 2022 17:53:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235247AbiKVWxa (ORCPT
+        with ESMTP id S235289AbiKVWxa (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 17:53:30 -0500
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A174363E5
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Nov 2022 14:52:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15A163E1
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Nov 2022 14:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1669157557; x=1700693557;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=lpRLTPl2SE69uU6JVBTffT9AY6g0GPR3KrY7U8pH2jU=;
-  b=N963l19sJwRCOnxKp+3xlpnnNHeHuDIfEJeJExOVZyX9x4OxC/XqEj9a
-   1e5ybGrIsXDTGRr3z34Qwu+HnguLECHnOipJmxoI/btbhAtS/JUAjRK1X
-   KW9Nxt1/vCgHOjT2TPdDxhLF0Wzy6VTKgkn9utWURLhmqyYQTg5hTvzVm
-   NKmZ/jniqazXc/vD8Ojpv9SLBwgD/V+ReFleLb3pNfTIMygkuvcV4mwmg
-   C1tqzyuC52Uifvpze+nc7h8sCXfor88lARbQSn/sFO6c+G5KKrz8CvcCh
-   N9G0DycxAXucC9nfT47IqvfN1UNeHr62MML65BD9Z5o5Qw+cT9NHyEa+Y
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="301487482"
+  bh=JZQ5CmJT0ykuwNf+EeL1+r3YHCYXWEVKuJ7Gq+w8jhg=;
+  b=gB9PevSoOXaxfGfTvaoA3Z7wsULNjPvJMWy9+JGXWpqri71lfzk60w0Y
+   hRlT+oh77fuSKEE6Bo7Fk96SuOkJB1eX2I2BPlCQvgCwGQ87O+3obPgEs
+   qWGL+1Ujt0jn+kOsh+OvoQFCP1I+KD4YUUDofSCG5Sfk4v4UpJ2tawteG
+   fjDktDx+tsbS6tUBuJWo5KsKZOPckHtCzyc9ulKvjMwZtIgAJci2zAKAk
+   MdUDee07DzkibNqqwMupxmaIkdM2skJ49YEoKJtznEacN+wEaF6S808S5
+   Uq/fUeoE0DANmFj3x7MyUbgWLqPGJPdH5UFe7tq8LGI9/IQ8XmuLIcomN
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="301487476"
 X-IronPort-AV: E=Sophos;i="5.96,185,1665471600"; 
-   d="scan'208";a="301487482"
+   d="scan'208";a="301487476"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 14:52:32 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="674506320"
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 14:52:31 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="674506307"
 X-IronPort-AV: E=Sophos;i="5.96,185,1665471600"; 
-   d="scan'208";a="674506320"
+   d="scan'208";a="674506307"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.144.204])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 14:52:31 -0800
 From:   alison.schofield@intel.com
@@ -45,9 +45,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: [PATCH v8 3/3] tools/testing/cxl: Add XOR Math support to cxl_test
-Date:   Tue, 22 Nov 2022 14:52:25 -0800
-Message-Id: <7293239bdf2f23f5d25b4019e3937dbf2547026c.1669153633.git.alison.schofield@intel.com>
+Subject: [PATCH v8 2/3] cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
+Date:   Tue, 22 Nov 2022 14:52:24 -0800
+Message-Id: <168ca3d06756bade7d2d11f2fc9122c19206ff9a.1669153633.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <cover.1669153633.git.alison.schofield@intel.com>
 References: <cover.1669153633.git.alison.schofield@intel.com>
@@ -59,206 +59,284 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Expand the cxl_test topology to include CFMWS's that use XOR math
-for interleave arithmetic, as defined in the CXL Specification 3.0.
+When the CFMWS is using XOR math, parse the corresponding
+CXIMS structure and store the xormaps in the root decoder
+structure. Use the xormaps in a new lookup, cxl_hb_xor(),
+to find a targets entry in the host bridge interleave
+target list.
 
-With this expanded topology, cxl_test is useful for testing:
-x1,x2,x4 ways with XOR interleave arithmetic.
-
-Define the additional XOR CFMWS entries to appear only with the
-module parameter interleave_arithmetic=1. The cxl_test default
-continues to be modulo math.
-
-modprobe cxl_test interleave_arithmetic=1
+Defined in CXL Specfication 3.0 Section: 9.17.1
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 118 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 115 insertions(+), 3 deletions(-)
+ drivers/cxl/acpi.c      | 126 +++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/port.c |   9 ++-
+ drivers/cxl/cxl.h       |  13 ++++-
+ 3 files changed, 140 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 7edce12fd2ce..97849e9753f5 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -11,6 +11,8 @@
- #include <cxlmem.h>
- #include "mock.h"
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index fb649683dd3a..98c84942ed37 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -6,9 +6,107 @@
+ #include <linux/kernel.h>
+ #include <linux/acpi.h>
+ #include <linux/pci.h>
++#include <asm/div64.h>
+ #include "cxlpci.h"
+ #include "cxl.h"
  
-+static int interleave_arithmetic;
-+
- #define NR_CXL_HOST_BRIDGES 2
- #define NR_CXL_SINGLE_HOST 1
- #define NR_CXL_ROOT_PORTS 2
-@@ -122,6 +124,22 @@ static struct {
- 		struct acpi_cedt_cfmws cfmws;
- 		u32 target[1];
- 	} cfmws4;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[1];
-+	} cfmws5;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[2];
-+	} cfmws6;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[4];
-+	} cfmws7;
-+	struct {
-+		struct acpi_cedt_cxims cxims;
-+		u64 xormap_list[2];
-+	} cxims0;
- } __packed mock_cedt = {
- 	.cedt = {
- 		.header = {
-@@ -229,14 +247,89 @@ static struct {
- 		},
- 		.target = { 2 },
- 	},
-+	/* .cfmws5,6,7 use XOR Math (interleave_arithmetic == 1) */
-+	.cfmws5 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws5),
-+			},
-+			.interleave_arithmetic = 1,
-+			.interleave_ways = 0,
-+			.granularity = 4,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = 0,
-+			.window_size = SZ_256M * 8UL,
-+		},
-+		.target = { 0 },
-+	},
-+	.cfmws6 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws6),
-+			},
-+			.interleave_arithmetic = 1,
-+			.interleave_ways = 1,
-+			.granularity = 0,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = 1,
-+			.window_size = SZ_256M * 8UL,
-+		},
-+		.target = { 0, 1, },
-+	},
-+	.cfmws7 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws7),
-+			},
-+			.interleave_arithmetic = 1,
-+			.interleave_ways = 2,
-+			.granularity = 0,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = 0,
-+			.window_size = SZ_256M * 16UL,
-+		},
-+		.target = { 0, 1, 0, 1, },
-+	},
-+	.cxims0 = {
-+		.cxims = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CXIMS,
-+				.length = sizeof(mock_cedt.cxims0),
-+			},
-+			.hbig = 0,
-+			.nr_xormaps = 2,
-+		},
-+		.xormap_list = { 0x404100, 0x808200 },
-+	},
- };
- 
--struct acpi_cedt_cfmws *mock_cfmws[] = {
-+struct acpi_cedt_cfmws *mock_cfmws[8] = {
- 	[0] = &mock_cedt.cfmws0.cfmws,
- 	[1] = &mock_cedt.cfmws1.cfmws,
- 	[2] = &mock_cedt.cfmws2.cfmws,
- 	[3] = &mock_cedt.cfmws3.cfmws,
- 	[4] = &mock_cedt.cfmws4.cfmws,
-+	/* Modulo Math above, XOR Math below */
-+	[5] = &mock_cedt.cfmws5.cfmws,
-+	[6] = &mock_cedt.cfmws6.cfmws,
-+	[7] = &mock_cedt.cfmws7.cfmws,
++struct cxl_cxims_data {
++	int nr_maps;
++	u64 xormaps[];
 +};
 +
-+static int cfmws_start;
-+static int cfmws_end;
-+#define CFMWS_MOD_ARRAY_START 0
-+#define CFMWS_MOD_ARRAY_END   4
-+#define CFMWS_XOR_ARRAY_START 5
-+#define CFMWS_XOR_ARRAY_END   7
++/*
++ * Find a targets entry (n) in the host bridge interleave list.
++ * CXL Specfication 3.0 Table 9-22
++ */
++static struct cxl_dport *cxl_hb_xor(struct cxl_root_decoder *cxlrd, int pos)
++{
++	struct cxl_cxims_data *cximsd = cxlrd->platform_data;
++	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
++	struct cxl_decoder *cxld = &cxlsd->cxld;
++	int ig = cxld->interleave_granularity;
++	int iw = cxld->interleave_ways;
++	int eiw, i = 0, n = 0;
++	u64 hpa;
 +
-+struct acpi_cedt_cxims *mock_cxims[1] = {
-+	[0] = &mock_cedt.cxims0.cxims,
- };
- 
- struct cxl_mock_res {
-@@ -308,7 +401,7 @@ static int populate_cedt(void)
- 		chbs->length = size;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
-+	for (i = cfmws_start; i <= cfmws_end; i++) {
- 		struct acpi_cedt_cfmws *window = mock_cfmws[i];
- 
- 		res = alloc_mock_res(window->window_size);
-@@ -351,12 +444,19 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
- 		}
- 
- 	if (id == ACPI_CEDT_TYPE_CFMWS)
--		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
-+		for (i = cfmws_start; i <= cfmws_end; i++) {
- 			h = (union acpi_subtable_headers *) mock_cfmws[i];
- 			end = (unsigned long) h + mock_cfmws[i]->header.length;
- 			handler_arg(h, arg, end);
- 		}
- 
-+	if (id == ACPI_CEDT_TYPE_CXIMS)
-+		for (i = 0; i < ARRAY_SIZE(mock_cxims); i++) {
-+			h = (union acpi_subtable_headers *)mock_cxims[i];
-+			end = (unsigned long)h + mock_cxims[i]->header.length;
-+			handler_arg(h, arg, end);
++	if (dev_WARN_ONCE(&cxld->dev,
++			  cxld->interleave_ways != cxlsd->nr_targets,
++			  "misconfigured root decoder\n"))
++		return NULL;
++
++	if (iw == 1)
++		/* Entry is always 0 for no interleave */
++		return cxlrd->cxlsd.target[0];
++
++	hpa = cxlrd->res->start + pos * ig;
++
++	if (iw == 3)
++		goto no_map;
++
++	/* IW: 2,4,6,8,12,16 begin building 'n' using xormaps */
++	for (i = 0; i < cximsd->nr_maps; i++)
++		n |= (hweight64(hpa & cximsd->xormaps[i]) & 1) << i;
++
++no_map:
++	/* IW: 3,6,12 add a modulo calculation to 'n' */
++	if (!is_power_of_2(iw)) {
++		eiw = ilog2(iw / 3) + 8;
++		hpa &= GENMASK_ULL(51, eiw + ig);
++		n |= do_div(hpa, 3) << i;
++	}
++	return cxlrd->cxlsd.target[n];
++}
++
++struct cxl_cxims_context {
++	struct device *dev;
++	struct cxl_root_decoder *cxlrd;
++};
++
++static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
++			   const unsigned long end)
++{
++	struct acpi_cedt_cxims *cxims = (struct acpi_cedt_cxims *)header;
++	struct cxl_cxims_context *ctx = arg;
++	struct cxl_root_decoder *cxlrd = ctx->cxlrd;
++	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
++	struct device *dev = ctx->dev;
++	struct cxl_cxims_data *cximsd;
++	unsigned int hbig, nr_maps;
++	int rc;
++
++	rc = cxl_to_granularity(cxims->hbig, &hbig);
++	if (rc)
++		return rc;
++
++	if (hbig == cxld->interleave_granularity) {
++		/* IW 1,3 do not use xormaps and skip this parsing entirely */
++
++		if (is_power_of_2(cxld->interleave_ways))
++			/* 2, 4, 8, 16 way */
++			nr_maps = ilog2(cxld->interleave_ways);
++		else
++			/* 6, 12 way */
++			nr_maps = ilog2(cxld->interleave_ways / 3);
++
++		if (cxims->nr_xormaps < nr_maps) {
++			dev_dbg(dev, "CXIMS nr_xormaps[%d] expected[%d]\n",
++				cxims->nr_xormaps, nr_maps);
++			return -ENXIO;
 +		}
 +
- 	return 0;
- }
- 
-@@ -897,6 +997,16 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_gen_pool_add;
- 
-+	if (interleave_arithmetic == 1) {
-+		cfmws_start = CFMWS_XOR_ARRAY_START;
-+		cfmws_end = CFMWS_XOR_ARRAY_END;
-+		dev_dbg(NULL, "cxl_test loading xor math option\n");
-+	} else {
-+		cfmws_start = CFMWS_MOD_ARRAY_START;
-+		cfmws_end = CFMWS_MOD_ARRAY_END;
-+		dev_dbg(NULL, "cxl_test loading modulo math option\n");
++		cximsd = devm_kzalloc(dev,
++				      struct_size(cximsd, xormaps, nr_maps),
++				      GFP_KERNEL);
++		if (!cximsd)
++			return -ENOMEM;
++		memcpy(cximsd->xormaps, cxims->xormap_list,
++		       nr_maps * sizeof(*cximsd->xormaps));
++		cximsd->nr_maps = nr_maps;
++		cxlrd->platform_data = cximsd;
 +	}
++	return 0;
++}
 +
- 	rc = populate_cedt();
+ static unsigned long cfmws_to_decoder_flags(int restrictions)
+ {
+ 	unsigned long flags = CXL_DECODER_F_ENABLE;
+@@ -33,8 +131,10 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
+ 	int rc, expected_len;
+ 	unsigned int ways;
+ 
+-	if (cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_MODULO) {
+-		dev_err(dev, "CFMWS Unsupported Interleave Arithmetic\n");
++	if (cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_MODULO &&
++	    cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
++		dev_err(dev, "CFMWS Unknown Interleave Arithmetic: %d\n",
++			cfmws->interleave_arithmetic);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -84,9 +184,11 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 	struct cxl_cfmws_context *ctx = arg;
+ 	struct cxl_port *root_port = ctx->root_port;
+ 	struct resource *cxl_res = ctx->cxl_res;
++	struct cxl_cxims_context cxims_ctx;
+ 	struct cxl_root_decoder *cxlrd;
+ 	struct device *dev = ctx->dev;
+ 	struct acpi_cedt_cfmws *cfmws;
++	cxl_calc_hb_fn cxl_calc_hb;
+ 	struct cxl_decoder *cxld;
+ 	unsigned int ways, i, ig;
+ 	struct resource *res;
+@@ -128,7 +230,12 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
  	if (rc)
- 		goto err_populate;
-@@ -1073,6 +1183,8 @@ static __exit void cxl_test_exit(void)
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
+ 		goto err_insert;
+ 
+-	cxlrd = cxl_root_decoder_alloc(root_port, ways);
++	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO)
++		cxl_calc_hb = cxl_hb_modulo;
++	else
++		cxl_calc_hb = cxl_hb_xor;
++
++	cxlrd = cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb);
+ 	if (IS_ERR(cxlrd))
+ 		return 0;
+ 
+@@ -148,7 +255,20 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 		ig = CXL_DECODER_MIN_GRANULARITY;
+ 	cxld->interleave_granularity = ig;
+ 
++	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
++		if (ways != 1 && ways != 3) {
++			cxims_ctx = (struct cxl_cxims_context) {
++				.dev = dev,
++				.cxlrd = cxlrd,
++			};
++			rc = acpi_table_parse_cedt(ACPI_CEDT_TYPE_CXIMS,
++						   cxl_parse_cxims, &cxims_ctx);
++			if (rc < 0)
++				goto err_xormap;
++		}
++	}
+ 	rc = cxl_decoder_add(cxld, target_map);
++err_xormap:
+ 	if (rc)
+ 		put_device(&cxld->dev);
+ 	else
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index e7556864ea80..42cdf224a85d 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1428,7 +1428,7 @@ static int decoder_populate_targets(struct cxl_switch_decoder *cxlsd,
+ 	return rc;
  }
  
-+module_param(interleave_arithmetic, int, 0000);
-+MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
- MODULE_LICENSE("GPL v2");
+-static struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos)
++struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos)
+ {
+ 	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
+ 	struct cxl_decoder *cxld = &cxlsd->cxld;
+@@ -1441,6 +1441,7 @@ static struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos)
+ 
+ 	return cxlrd->cxlsd.target[pos % iw];
+ }
++EXPORT_SYMBOL_NS_GPL(cxl_hb_modulo, CXL);
+ 
+ static struct lock_class_key cxl_decoder_key;
+ 
+@@ -1502,6 +1503,7 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+  * cxl_root_decoder_alloc - Allocate a root level decoder
+  * @port: owning CXL root of this decoder
+  * @nr_targets: static number of downstream targets
++ * @calc_hb: which host bridge covers the n'th position by granularity
+  *
+  * Return: A new cxl decoder to be registered by cxl_decoder_add(). A
+  * 'CXL root' decoder is one that decodes from a top-level / static platform
+@@ -1509,7 +1511,8 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
+  * topology.
+  */
+ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+-						unsigned int nr_targets)
++						unsigned int nr_targets,
++						cxl_calc_hb_fn calc_hb)
+ {
+ 	struct cxl_root_decoder *cxlrd;
+ 	struct cxl_switch_decoder *cxlsd;
+@@ -1531,7 +1534,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 		return ERR_PTR(rc);
+ 	}
+ 
+-	cxlrd->calc_hb = cxl_hb_modulo;
++	cxlrd->calc_hb = calc_hb;
+ 
+ 	cxld = &cxlsd->cxld;
+ 	cxld->dev.type = &cxl_decoder_root_type;
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index ac75554b5d76..d03aa1776fc8 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -324,18 +324,24 @@ struct cxl_switch_decoder {
+ 	struct cxl_dport *target[];
+ };
+ 
++struct cxl_root_decoder;
++struct cxl_endpoint_decoder;
++typedef struct cxl_dport *(*cxl_calc_hb_fn)(struct cxl_root_decoder *cxlrd,
++					    int pos);
+ 
+ /**
+  * struct cxl_root_decoder - Static platform CXL address decoder
+  * @res: host / parent resource for region allocations
+  * @region_id: region id for next region provisioning event
+  * @calc_hb: which host bridge covers the n'th position by granularity
++ * @platform_data: platform specific configuration data
+  * @cxlsd: base cxl switch decoder
+  */
+ struct cxl_root_decoder {
+ 	struct resource *res;
+ 	atomic_t region_id;
+-	struct cxl_dport *(*calc_hb)(struct cxl_root_decoder *cxlrd, int pos);
++	cxl_calc_hb_fn calc_hb;
++	void *platform_data;
+ 	struct cxl_switch_decoder cxlsd;
+ };
+ 
+@@ -580,8 +586,11 @@ struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
+ struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev);
+ bool is_root_decoder(struct device *dev);
+ bool is_endpoint_decoder(struct device *dev);
++
+ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+-						unsigned int nr_targets);
++						unsigned int nr_targets,
++						cxl_calc_hb_fn calc_hb);
++struct cxl_dport *cxl_hb_modulo(struct cxl_root_decoder *cxlrd, int pos);
+ struct cxl_switch_decoder *cxl_switch_decoder_alloc(struct cxl_port *port,
+ 						    unsigned int nr_targets);
+ int cxl_decoder_add(struct cxl_decoder *cxld, int *target_map);
 -- 
 2.37.3
 
