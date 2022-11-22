@@ -2,45 +2,48 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD5FC4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 09:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A851FC4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 09:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbiKVJod (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Nov 2022 04:44:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45690 "EHLO
+        id S232624AbiKVJqg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Nov 2022 04:46:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232343AbiKVJob (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 04:44:31 -0500
+        with ESMTP id S232469AbiKVJqc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 04:46:32 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE30D2CE;
-        Tue, 22 Nov 2022 01:44:29 -0800 (PST)
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGfRP5y2Bz6H7VF;
-        Tue, 22 Nov 2022 17:41:53 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6034B1B1ED;
+        Tue, 22 Nov 2022 01:46:31 -0800 (PST)
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGfTd0WRvz67yhs;
+        Tue, 22 Nov 2022 17:43:49 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2375.31; Tue, 22 Nov 2022 10:44:26 +0100
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 22 Nov 2022 10:46:29 +0100
 Received: from localhost (10.45.149.88) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 22 Nov
- 2022 09:44:26 +0000
-Date:   Tue, 22 Nov 2022 09:44:22 +0000
+ 2022 09:46:28 +0000
+Date:   Tue, 22 Nov 2022 09:46:27 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
-        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <a.manzanares@samsung.com>, <mcgrof@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] cxl/mbox: Add background operation handling
- machinery
-Message-ID: <20221122094422.000032f0@Huawei.com>
-In-Reply-To: <20221121214804.zy6i5basztlim66t@offworld>
-References: <20220804045029.2905056-1-dave@stgolabs.net>
-        <20220804045029.2905056-2-dave@stgolabs.net>
-        <20220825134152.00005244@huawei.com>
-        <20221121214804.zy6i5basztlim66t@offworld>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     "Li, Ming" <ming4.li@intel.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Lukas Wunner" <lukas@wunner.de>,
+        Alison Schofield <alison.schofield@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI/DOE: Remove asynchronous task support
+Message-ID: <20221122094627.00003f2c@Huawei.com>
+In-Reply-To: <Y3wC4kX6SCr90FGY@iweiny-desk3>
+References: <20221119222527.1799836-1-ira.weiny@intel.com>
+        <750c2096-fe2f-0597-a635-78cbe6b0ee0d@intel.com>
+        <e7db6aea-4146-33f2-9490-9b5b902e0ec1@intel.com>
+        <Y3wC4kX6SCr90FGY@iweiny-desk3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -54,35 +57,107 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 21 Nov 2022 13:48:04 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Mon, 21 Nov 2022 14:59:46 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Thu, 25 Aug 2022, Jonathan Cameron wrote:
+> On Mon, Nov 21, 2022 at 10:07:56AM +0800, Li, Ming wrote:
+> > On 11/21/2022 9:39 AM, Li, Ming wrote:  
 > 
-> >> +/*
-> >> + * Ensure that ->mbox_send() can run safely when a background
-> >> + * command is running. If so, returns zero, otherwise -EBUSY.  
-> >
-> >As above, I'm not sure this is necessary given you should get
-> >a sensible error code in response to any such message.
-> >E.g. media disabled.  
+> [snip]
 > 
-> So this is necessary to prevent mischief in the polling case
-> where you can have windows where the driver is out of sync
-> with the hardware - hw finishes async command but driver
-> (sleeping poller) has not acknowledged this. In the irq case,
-> yeah this would be redundant and not needed.
+> > >> @@ -529,8 +492,18 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> > >>  		return -EIO;
+> > >>  
+> > >>  	task->doe_mb = doe_mb;
+> > >> -	INIT_WORK(&task->work, doe_statemachine_work);
+> > >> -	queue_work(doe_mb->work_queue, &task->work);
+> > >> +
+> > >> +again:
+> > >> +	if (!mutex_trylock(&doe_mb->exec_lock)) {
+> > >> +		if (wait_event_timeout(task->doe_mb->wq,
+> > >> +				test_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags),
+> > >> +				PCI_DOE_POLL_INTERVAL))
+> > >> +			return -EIO;  
+> > > 
+> > > We already implemented a pci_doe_wait(), I think we can use it to instead of this wait_event_timeout.
+> > > 
+> > > Thanks
+> > > Ming
+> > >   
+> > 
+> > This wait_event_timeout() only check PCI_DOE_FLAG_CANCEL, that means it only detects the signal which the doe_mb has being destroyed.
+> > If current doe task is done correctly, I think we should wake up next task. Current implementation just waits utill timeout happens and try it again.
+> > Besides, If two threads are waiting a same doe_mb, thread #1 waited firstly, thread #2 waited secondly, there is a chance that thread #2 is processed before thread #1.
+> >   
 > 
+> Agreed.
+> 
+> However, the real problem is that the doe_mb is probably free'ed at this point
+> and all this is going to crash and burn anyway.  The implementation of
+> PCI_DOE_FLAG_CANCEL was fundamentally flawed even for the current work queue
+> implementation.
+> 
+> This patch incorrectly tried to use that mechanism but upon looking closer I
+> see it does not work.
+> 
+> I saw in another thread Jonathan discussing some sort of get/put on the doe_mb.
+> That is not currently necessary as the creators of doe_mb objects currently
+> hold references to the PCI device any time they call submit.
 
-Ok.  A worked example might be useful for where this matters
-at a higher level.  For example, if there is no conflict at
-the hardware level what goes wrong in the software as a result
-of dropping the protection on the one that we haven't yet detected
-as finished...
-
-Jonathan
-
-
-> Thanks,
-> Davidlohr
+The get / put would only matter if we wanted to manage the DOE resources separately
+from those of the PCI device.  It may well never make sense to do so as they
+aren't substantial anyway.
+> 
+> :-(
+> 
+> For now all PCI_DOE_FLAG_CANCEL stuff needs to go away,
+> Ira
+> 
+> > Thanks
+> > Ming
+> >   
+> > >> +		goto again;
+> > >> +	}
+> > >> +	exec_task(task);
+> > >> +	mutex_unlock(&doe_mb->exec_lock);
+> > >> +
+> > >>  	return 0;
+> > >>  }
+> > >> -EXPORT_SYMBOL_GPL(pci_doe_submit_task);
+> > >> +EXPORT_SYMBOL_GPL(pci_doe_submit_task_wait);
+> > >> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> > >> index ed9b4df792b8..c94122a66221 100644
+> > >> --- a/include/linux/pci-doe.h
+> > >> +++ b/include/linux/pci-doe.h
+> > >> @@ -30,8 +30,6 @@ struct pci_doe_mb;
+> > >>   * @response_pl_sz: Size of the response payload (bytes)
+> > >>   * @rv: Return value.  Length of received response or error (bytes)
+> > >>   * @complete: Called when task is complete
+> > >> - * @private: Private data for the consumer
+> > >> - * @work: Used internally by the mailbox
+> > >>   * @doe_mb: Used internally by the mailbox
+> > >>   *
+> > >>   * The payload sizes and rv are specified in bytes with the following
+> > >> @@ -50,11 +48,6 @@ struct pci_doe_task {
+> > >>  	u32 *response_pl;
+> > >>  	size_t response_pl_sz;
+> > >>  	int rv;
+> > >> -	void (*complete)(struct pci_doe_task *task);
+> > >> -	void *private;
+> > >> -
+> > >> -	/* No need for the user to initialize these fields */
+> > >> -	struct work_struct work;
+> > >>  	struct pci_doe_mb *doe_mb;
+> > >>  };
+> > >>  
+> > >> @@ -72,6 +65,5 @@ struct pci_doe_task {
+> > >>  
+> > >>  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
+> > >>  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
+> > >> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> > >> -
+> > >> +int pci_doe_submit_task_wait(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> > >>  #endif
+> > >>
+> > >> base-commit: b6e7fdfd6f6a8bf88fcdb4a45da52c42ba238c25  
 
