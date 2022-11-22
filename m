@@ -2,60 +2,87 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CE5C433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Nov 2022 23:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD5FC4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 09:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbiKUXFy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Nov 2022 18:05:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57208 "EHLO
+        id S229527AbiKVJod (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Nov 2022 04:44:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbiKUXFw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Nov 2022 18:05:52 -0500
-X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 21 Nov 2022 15:05:50 PST
-Received: from EIP-1NEX03.cdiholdings.net (sender.chungdahm.com [119.207.73.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF25CB94D
-        for <linux-cxl@vger.kernel.org>; Mon, 21 Nov 2022 15:05:49 -0800 (PST)
-Received: from [127.0.0.1] (103.109.178.28) by EIP-CAS02.cdiholdings.net
- (192.168.1.126) with Microsoft SMTP Server id 8.1.436.0; Tue, 22 Nov 2022
- 08:04:40 +0900
-Message-ID: <6Cvku1h-YbyBoWDKIP1b_c@chungdahm.com>
-Date:   Tue, 22 Nov 2022 00:04:40 +0100
-Subject: You're in very huge troubles therefore, you much better read through
- this
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="UTF-8"
-From:   Raymond <gwanakaprilhi@chungdahm.com>
+        with ESMTP id S232343AbiKVJob (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 04:44:31 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE30D2CE;
+        Tue, 22 Nov 2022 01:44:29 -0800 (PST)
+Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGfRP5y2Bz6H7VF;
+        Tue, 22 Nov 2022 17:41:53 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Tue, 22 Nov 2022 10:44:26 +0100
+Received: from localhost (10.45.149.88) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 22 Nov
+ 2022 09:44:26 +0000
+Date:   Tue, 22 Nov 2022 09:44:22 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <a.manzanares@samsung.com>, <mcgrof@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] cxl/mbox: Add background operation handling
+ machinery
+Message-ID: <20221122094422.000032f0@Huawei.com>
+In-Reply-To: <20221121214804.zy6i5basztlim66t@offworld>
+References: <20220804045029.2905056-1-dave@stgolabs.net>
+        <20220804045029.2905056-2-dave@stgolabs.net>
+        <20220825134152.00005244@huawei.com>
+        <20221121214804.zy6i5basztlim66t@offworld>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-To:     <linux-cxl@vger.kernel.org>
-X-Complaints-To: whitelistcomplaints@chungdahm.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.149.88]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello,
+On Mon, 21 Nov 2022 13:48:04 -0800
+Davidlohr Bueso <dave@stgolabs.net> wrote:
+
+> On Thu, 25 Aug 2022, Jonathan Cameron wrote:
+> 
+> >> +/*
+> >> + * Ensure that ->mbox_send() can run safely when a background
+> >> + * command is running. If so, returns zero, otherwise -EBUSY.  
+> >
+> >As above, I'm not sure this is necessary given you should get
+> >a sensible error code in response to any such message.
+> >E.g. media disabled.  
+> 
+> So this is necessary to prevent mischief in the polling case
+> where you can have windows where the driver is out of sync
+> with the hardware - hw finishes async command but driver
+> (sleeping poller) has not acknowledged this. In the irq case,
+> yeah this would be redundant and not needed.
+> 
+
+Ok.  A worked example might be useful for where this matters
+at a higher level.  For example, if there is no conflict at
+the hardware level what goes wrong in the software as a result
+of dropping the protection on the one that we haven't yet detected
+as finished...
+
+Jonathan
 
 
-Your personal  information from  your gadgets  was copied  to my  very own  storing with  a assistance of my  bespoken trojan via  the wireless network,  I was  able to gain  access to your  computer  thru the  wireless device  you have  been  linked to,  a few  weeks earlier  & now have  all the  passwords  & access  to  your social media  e-mail, contacts, etc. 
-
-
-The  authorised driver  type as  well as  its  other on-line fingerprints  constantly changes &  isn't  trackable nor  it's  visible by  other anti-virus  apps. There is  more, however.,  i  additionally have  an admission  to  your webcam and  your  internet browser  history and  what is  occurring on  your  display. And so  I  noticed that you  love to  see some  mature web  sites  and you  do that  often  and it  is  likely you now know  why  I hung  around this  long messaging you.  Hence anyway  I pasted  a  few of your  masturbating videos plus  the display video  and right now  I demand  an academy  award. Now  it is  under  your control  to  be able  to decide if  this specific  video clip  along  with a  lot of your sensitive  info will  be revealed to  all your contacts online  community close  friends or  maybe not. I  am thinking  this  can  definitely damage  your reputation.  
-
-
-
-But there  is  definitely a way  to correct  this matter:  You  will need  to drop  me 1000  $ (USD)  using BTC  (equivalent at  the date  of the  swap itself).  
-When this  will happen I  guarantee to  delete your  entire data  from my  host  space  and i will  forget about  you. 
-
-
-
-My  personal BTC  transfer address:  35o5Fw4cYLcycAvTSpjy9CnAzzwbAtum4x
-Simply  google  how to  get or  forward bitcoin  if you  don't  know how. This is  a trackable  text and  i'll  know  once it's open.  The email  is likewise not tracked  & there  isn't any  point  in responding  to  me. You  got now 2  days from the  time you  see this to  transmit  me the  finances. 
-
-
-
-
-The data will  be  released to  the public  if you  try get in  touch with  the  authorities  or find  additional 3rd party  solutions, &  there is  also zero  reason  for altering  online passwords to  your social  networks, gadgets,  or whatever,  as i  have previously  downloaded  every single  thing to the  host. 
-
-
-
-It's  now your call to  perhaps behave  dumb  or  carefully consider your  feasible destiny  and act  wise.
+> Thanks,
+> Davidlohr
 
