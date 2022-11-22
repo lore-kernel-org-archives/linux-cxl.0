@@ -2,102 +2,105 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B5BC4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 16:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745B2C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 17:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232465AbiKVQxj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Nov 2022 11:53:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53338 "EHLO
+        id S234401AbiKVRNO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Nov 2022 12:13:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234273AbiKVQxi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 11:53:38 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94A813F9C
-        for <linux-cxl@vger.kernel.org>; Tue, 22 Nov 2022 08:53:36 -0800 (PST)
-Received: from frapeml100005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGqyY1Nk6z6883d;
-        Wed, 23 Nov 2022 00:51:01 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml100005.china.huawei.com (7.182.85.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 22 Nov 2022 17:53:34 +0100
-Received: from localhost (10.45.149.88) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 22 Nov
- 2022 16:53:34 +0000
-Date:   Tue, 22 Nov 2022 16:53:31 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Julien BERAUD <jberaud@sasfermat.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: Prototyping on CXL hardware
-Message-ID: <20221122165331.00006923@Huawei.com>
-In-Reply-To: <40fbb3ef-ccf5-bfbb-675c-861948beba56@sasfermat.com>
-References: <40fbb3ef-ccf5-bfbb-675c-861948beba56@sasfermat.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233436AbiKVRNN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 12:13:13 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDBB6E577;
+        Tue, 22 Nov 2022 09:13:11 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 15070100DA1A0;
+        Tue, 22 Nov 2022 18:13:10 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D6296A072C; Tue, 22 Nov 2022 18:13:09 +0100 (CET)
+Date:   Tue, 22 Nov 2022 18:13:09 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'ira.weiny@intel.com'" <ira.weiny@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2] PCI/DOE: Detect on stack work items automatically
+Message-ID: <20221122171309.GA11310@wunner.de>
+References: <20221118000524.1477383-1-ira.weiny@intel.com>
+ <e59f83f3ca4149d098efe43b48fecd1b@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.149.88]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e59f83f3ca4149d098efe43b48fecd1b@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 22 Nov 2022 10:54:52 +0100
-Julien BERAUD <jberaud@sasfermat.com> wrote:
+[+cc Thomas Gleixner, author of dc186ad741c1]
 
-> Hello Everyone,
+On Fri, Nov 18, 2022 at 09:20:38AM +0000, David Laight wrote:
+> > From: ira.weiny@intel.com
+> > Sent: 18 November 2022 00:05
+> > 
+> > Work item initialization needs to be done with either
+> > INIT_WORK_ONSTACK() or INIT_WORK() depending on how the work item is
+> > allocated.
+> > 
+> > The callers of pci_doe_submit_task() allocate struct pci_doe_task on the
+> > stack and pci_doe_submit_task() incorrectly used INIT_WORK().
+> > 
+> > Jonathan suggested creating doe task allocation macros such as
+> > DECLARE_CDAT_DOE_TASK_ONSTACK().[1]  The issue with this is the work
+> > function is not known to the callers and must be initialized correctly.
+> > 
+> > A follow up suggestion was to have an internal 'pci_doe_work' item
+> > allocated by pci_doe_submit_task().[2]  This requires an allocation which
+> > could restrict the context where tasks are used.
+> > 
+> > Another idea was to have an intermediate step to initialize the task
+> > struct with a new call.[3]  This added a lot of complexity.
+> > 
+> > Lukas pointed out that object_is_on_stack() is available to detect this
+> > automatically.
+> > 
+> > Use object_is_on_stack() to determine the correct init work function to
+> > call.
 > 
+> This is all a bit strange.
+> The 'onstack' flag is needed for the diagnostic check:
+> 	is_on_stack = object_is_on_stack(addr);
+> 	if (is_on_stack == onstack)
+> 		return;
+> 	pr_warn(...);
+> 	WARN_ON(1);
+> 
+> So setting the flag to the location of the buffer just subverts the check.
+> It that is sane there ought to be a proper way to do it.
 
-Hi Julien, Nice to 'meet' you.
+If object_is_on_stack() is sufficient to check whether a struct
+is on the stack or not, why doesn't __init_work() use it to
+auto-detect whether to call debug_object_init_on_stack() or
+debug_object_init()?
 
-> I'm currently trying to prototype with a simple use-case on a CXL type 3 device
-> directly connected to a CXL 2.0 capable server.
-> 
-> Since I have seen many patches being integrated in the mainline kernel, I am 
-> running a 6.0.1 release.
-> 
-> The init phase of the drivers fails with the following trace:
-> 
-> cxl_mem mem0: at mem0 no parent for dport: pci0000:16
-> 
-> It occurs at the first iteration of the loop in devm_cxl_enumerate_ports 
-> 
-> The previous steps have been succeding as far as I know.
-> 
-> ---------------------------------------------------------------------------------
-> So I have a few questions that I hope someone can answer here, I am sorry if they
-> sound naive :
-> 
-> - What is supposed to fill the device's ancestry, and what does it means if there
-> is none ?
-> 
-> - More generally, is a CXL type 3 device directly connected to a CXL capable
-> server supposed to initialize correctly on a 6.0.1 kernel or should I use a more
-> advanced branch ?
+Forcing developers to use a specific initializer for something
+that can be auto-detected is akin to treating them like kids
+and telling them "You didn't say the magic word."
 
-To take a lazy punt in the dark as it end of day here.
+What's the point?
 
-Do you have an ACPI CEDT table and required ACPI stuff such as ACPI0017 in DSDT?
-Otherwise the root of the created CXL topology will be missing - I haven't checked
-the code paths, but that might well give the above result.
+Thanks,
 
-There are a few fixes you will want on top of 6.0.1 - but those are all around
-region creation I think, so you aren't getting that far.
-I've not been tracking progress of those. Dan, what's the current status?
-
-For reference you could take a look at the upstream QEMU (very recent needed as we
-had a fix going through on x86).  That should work and gives you something to compare
-with when bringing up real hardware.
-
-Jonathan
-
-> 
-> 
-> Thanks in advance for your answers,
-> Julien
-
+Lukas
