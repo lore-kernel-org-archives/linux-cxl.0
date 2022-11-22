@@ -2,45 +2,38 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CD3C4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 16:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B5BC4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Nov 2022 16:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233609AbiKVQnK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Nov 2022 11:43:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
+        id S232465AbiKVQxj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Nov 2022 11:53:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234291AbiKVQnI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 11:43:08 -0500
+        with ESMTP id S234273AbiKVQxi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Nov 2022 11:53:38 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD65445ED8;
-        Tue, 22 Nov 2022 08:43:05 -0800 (PST)
-Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGqkQ2BJyz67NJj;
-        Wed, 23 Nov 2022 00:40:30 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94A813F9C
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Nov 2022 08:53:36 -0800 (PST)
+Received: from frapeml100005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NGqyY1Nk6z6883d;
+        Wed, 23 Nov 2022 00:51:01 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ frapeml100005.china.huawei.com (7.182.85.132) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 22 Nov 2022 17:43:03 +0100
+ 15.1.2375.31; Tue, 22 Nov 2022 17:53:34 +0100
 Received: from localhost (10.45.149.88) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 22 Nov
- 2022 16:43:02 +0000
-Date:   Tue, 22 Nov 2022 16:43:01 +0000
+ 2022 16:53:34 +0000
+Date:   Tue, 22 Nov 2022 16:53:31 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Price <gregory.price@memverge.com>,
-        "Li, Ming" <ming4.li@intel.com>, Lukas Wunner <lukas@wunner.de>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 2/2] PCI/DOE: Remove asynchronous task support
-Message-ID: <20221122164301.00002346@Huawei.com>
-In-Reply-To: <20221122155324.1878416-3-ira.weiny@intel.com>
-References: <20221122155324.1878416-1-ira.weiny@intel.com>
-        <20221122155324.1878416-3-ira.weiny@intel.com>
+To:     Julien BERAUD <jberaud@sasfermat.com>
+CC:     <linux-cxl@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: Prototyping on CXL hardware
+Message-ID: <20221122165331.00006923@Huawei.com>
+In-Reply-To: <40fbb3ef-ccf5-bfbb-675c-861948beba56@sasfermat.com>
+References: <40fbb3ef-ccf5-bfbb-675c-861948beba56@sasfermat.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -54,110 +47,57 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 22 Nov 2022 07:53:24 -0800
-ira.weiny@intel.com wrote:
+On Tue, 22 Nov 2022 10:54:52 +0100
+Julien BERAUD <jberaud@sasfermat.com> wrote:
 
-> From: Ira Weiny <ira.weiny@intel.com>
+> Hello Everyone,
 > 
-> Gregory Price and Jonathan Cameron reported a bug within
-> pci_doe_submit_task().[1]  The issue was that work item initialization
-> needs to be done with either INIT_WORK_ONSTACK() or INIT_WORK()
-> depending on how the work item is allocated.
-> 
-> Initially, it was anticipated that DOE tasks were going to need to be
-> submitted asynchronously and the code was designed thusly.  Many
-> alternatives were discussed to fix the work initialization issue.[2]
-> 
-> However, all current users submit tasks synchronously and this has
-> therefore become an unneeded maintenance burden.  Remove the extra
-> maintenance burden by replacing asynchronous task submission with
-> a synchronous wait function.[3]
-> 
-> [1] https://lore.kernel.org/linux-cxl/20221014151045.24781-1-Jonathan.Cameron@huawei.com/T/#m88a7f50dcce52f30c8bf5c3dcc06fa9843b54a2d
-> [2] https://lore.kernel.org/linux-cxl/Y3kSDQDur+IUDs2O@iweiny-mobl/T/#m0f057773d9c75432fcfcc54a2604483fe82abe92
-> [3] https://lore.kernel.org/linux-cxl/Y3kSDQDur+IUDs2O@iweiny-mobl/T/#m32d3f9b208ef7486bc148d94a326b26b2d3e69ff
-> 
-> Reported-by: Gregory Price <gregory.price@memverge.com>
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Suggested-by: "Li, Ming" <ming4.li@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-Hi Ira,
 
-A few things inline.
+Hi Julien, Nice to 'meet' you.
+
+> I'm currently trying to prototype with a simple use-case on a CXL type 3 device
+> directly connected to a CXL 2.0 capable server.
+> 
+> Since I have seen many patches being integrated in the mainline kernel, I am 
+> running a 6.0.1 release.
+> 
+> The init phase of the drivers fails with the following trace:
+> 
+> cxl_mem mem0: at mem0 no parent for dport: pci0000:16
+> 
+> It occurs at the first iteration of the loop in devm_cxl_enumerate_ports 
+> 
+> The previous steps have been succeding as far as I know.
+> 
+> ---------------------------------------------------------------------------------
+> So I have a few questions that I hope someone can answer here, I am sorry if they
+> sound naive :
+> 
+> - What is supposed to fill the device's ancestry, and what does it means if there
+> is none ?
+> 
+> - More generally, is a CXL type 3 device directly connected to a CXL capable
+> server supposed to initialize correctly on a 6.0.1 kernel or should I use a more
+> advanced branch ?
+
+To take a lazy punt in the dark as it end of day here.
+
+Do you have an ACPI CEDT table and required ACPI stuff such as ACPI0017 in DSDT?
+Otherwise the root of the created CXL topology will be missing - I haven't checked
+the code paths, but that might well give the above result.
+
+There are a few fixes you will want on top of 6.0.1 - but those are all around
+region creation I think, so you aren't getting that far.
+I've not been tracking progress of those. Dan, what's the current status?
+
+For reference you could take a look at the upstream QEMU (very recent needed as we
+had a fix going through on x86).  That should work and gives you something to compare
+with when bringing up real hardware.
 
 Jonathan
 
+> 
+> 
+> Thanks in advance for your answers,
+> Julien
 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 260313e9052e..41c7bf5794a5 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -18,7 +18,6 @@
->  #include <linux/mutex.h>
->  #include <linux/pci.h>
->  #include <linux/pci-doe.h>
-> -#include <linux/workqueue.h>
->  
->  #define PCI_DOE_PROTOCOL_DISCOVERY 0
->  
-> @@ -39,7 +38,7 @@
->   * @cap_offset: Capability offset
->   * @prots: Array of protocols supported (encoded as long values)
->   * @wq: Wait queue for work item
-> - * @work_queue: Queue of pci_doe_work items
-> + * @lock: Lock state of doe_mb during task processing
->   * @flags: Bit array of PCI_DOE_FLAG_* flags
->   */
->  struct pci_doe_mb {
-> @@ -48,7 +47,7 @@ struct pci_doe_mb {
->  	struct xarray prots;
->  
->  	wait_queue_head_t wq;
-> -	struct workqueue_struct *work_queue;
-> +	struct mutex lock;
->  	unsigned long flags;
->  };
->  
-> @@ -198,7 +197,6 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
->  static void signal_task_complete(struct pci_doe_task *task, int rv)
-
-Given this doesn't signal anything any more, perhaps rename the function,
-or just push the task->rv = ... inline.?
-
->  {
->  	task->rv = rv;
-> -	task->complete(task);
->  }
-
-...
-
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index ed9b4df792b8..c94122a66221 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -30,8 +30,6 @@ struct pci_doe_mb;
->   * @response_pl_sz: Size of the response payload (bytes)
->   * @rv: Return value.  Length of received response or error (bytes)
->   * @complete: Called when task is complete
-
-complete is gone as well.
-
-> - * @private: Private data for the consumer
-> - * @work: Used internally by the mailbox
->   * @doe_mb: Used internally by the mailbox
->   *
->   * The payload sizes and rv are specified in bytes with the following
-> @@ -50,11 +48,6 @@ struct pci_doe_task {
->  	u32 *response_pl;
->  	size_t response_pl_sz;
->  	int rv;
-> -	void (*complete)(struct pci_doe_task *task);
-> -	void *private;
-> -
-> -	/* No need for the user to initialize these fields */
-> -	struct work_struct work;
->  	struct pci_doe_mb *doe_mb;
->  };
-...
