@@ -2,129 +2,175 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13929C433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 28 Nov 2022 18:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E793EC433FE
+	for <linux-cxl@archiver.kernel.org>; Mon, 28 Nov 2022 18:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232533AbiK1S12 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 28 Nov 2022 13:27:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34726 "EHLO
+        id S234269AbiK1S2g (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 28 Nov 2022 13:28:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234421AbiK1S1G (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 28 Nov 2022 13:27:06 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DBA32066;
-        Mon, 28 Nov 2022 10:19:32 -0800 (PST)
+        with ESMTP id S234259AbiK1S2S (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 28 Nov 2022 13:28:18 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6582F4508C
+        for <linux-cxl@vger.kernel.org>; Mon, 28 Nov 2022 10:20:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669659572; x=1701195572;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KOVqni/ZwutMEZlCR+c8xAkaOfSr6ifVETx41oX673w=;
-  b=lT55kz4uukImTTryCZI8RqkOgNxKuctdC71U+Z1NdApGRW17zSC/6iPE
-   t3+pzV4i2J5Bq6D2H4fLDJaFI3skWVOxKAJ0JldOnfejBq7fZxya8VR8v
-   4UnoO4Us85uL0A37J+cEfIPjxWnwuxNUSydVlfTTWhB3uflwqCzlE50UM
-   nKowaHnV/pMH8fGzdm1JfQCi9qHp404yYqR3Li/uU/1llvGXMB+oJIgXC
-   ENZwvXbrMsJTP2sHqRAch0Sd8TEU/g9Y+desFYVQl+vSEjbymBjRQ9cn3
-   cDNLjZOqNpzfZt9bEgK8r0Qw4OFhep5yZnfFhA45694Ri6hnbjjEWIF1L
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="312540880"
+  t=1669659640; x=1701195640;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NLDi8d0jli8L2v1N6DYnjREatDJezrYUfs6aH31bPc4=;
+  b=HsxeeX9k+UW9cC3MXbcoX3ysiWSVQQP+Urhg8MNrhWCnr4Nt6kptJ+B9
+   rvdprhncR9ozdNQQRjlUFLU+jOC1rT25Yh9I4XFDFTMVYt3cx3W3DQ5af
+   hFxneVex9qiIuFVPwnzkRjknP70iMHBXKYoRaz3W9aIDJqZqRrnoAVRGJ
+   da28x6idEWnd98MN5xaX9NHrlX6NBdpThtllWZMzgyD9MZEHEBYEkjh9i
+   X9/7j7iedgYiLetc23U5C1iHotCXqNjwrW1i67q7DgKbLL97rvd4G39yJ
+   MpLPldHsiWp4jSq3Ko+VV5Wy33LVf9kZ8ZzmYqi0p0mJvoZYYyFZhWD+l
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="377061564"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="312540880"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 10:19:32 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="706893081"
+   d="scan'208";a="377061564"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 10:20:39 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="712071276"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="706893081"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.209.161.118]) ([10.209.161.118])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 10:19:31 -0800
-Message-ID: <a1942dac-12be-c2d0-e1dd-51d4fbbebac6@intel.com>
-Date:   Mon, 28 Nov 2022 11:19:31 -0700
+   d="scan'208";a="712071276"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.3.241])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 10:20:39 -0800
+Date:   Mon, 28 Nov 2022 10:20:37 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, rrichter@amd.com, terry.bowman@amd.com,
+        bhelgaas@google.com, dave.jiang@intel.com, nvdimm@lists.linux.dev
+Subject: Re: [PATCH v4 06/12] tools/testing/cxl: Make mock CEDT parsing more
+ robust
+Message-ID: <Y4T79QhJR2WzwEgY@aschofie-mobl2>
+References: <166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com>
+ <166931491054.2104015.16722069708509650823.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.0
-Subject: Re: [PATCH v3 10/11] PCI/AER: Add optional logging callback for
- correctable error
-Content-Language: en-US
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
-        terry.bowman@amd.com, bhelgaas@google.com
-References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
- <166879134199.674819.15564186577122699358.stgit@djiang5-desk3.ch.intel.com>
- <0eeb70d7-8f97-bd72-6db2-266fc2b0ba1b@linux.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0eeb70d7-8f97-bd72-6db2-266fc2b0ba1b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166931491054.2104015.16722069708509650823.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, Nov 24, 2022 at 10:35:10AM -0800, Dan Williams wrote:
+> Accept any cxl_test topology device as the first argument in
+> cxl_chbs_context. This is in preparation for reworking the detection of
+> the component registers across VH and RCH topologies. Move
+> mock_acpi_table_parse_cedt() beneath the definition of is_mock_port()
+> and use is_mock_port() instead of the explicit mock cxl_acpi device
+> check.
 
+I'll ACK this change, alhtough I don't appreciate the code move and modify
+in the same patch. It hides the diff.
 
-On 11/18/2022 6:08 PM, Sathyanarayanan Kuppuswamy wrote:
-> Hi,
-> 
-> On 11/18/22 9:09 AM, Dave Jiang wrote:
->> Some new devices such as CXL devices may want to record additional error
->> information on a corrected error. Add a callback to allow the PCI device
->> driver to do additional logging and/or error handling.
-> 
-> Change looks good. But I am not sure whether this needs to be documented
-> in Documentation/PCI/pci-error-recovery.rst with usage example. I will let
-> Bjorn make a call on it.
-
-Ok I'll add documentation. Thanks for the review!
+The commit msg seems needlessly vague. Why not state what was done?
+Something like: 'Accept any topology device in cxl_chbs_context'
 
 > 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  tools/testing/cxl/test/cxl.c |   80 +++++++++++++++++++++---------------------
+>  1 file changed, 40 insertions(+), 40 deletions(-)
 > 
->>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/pci/pcie/aer.c |    8 +++++++-
->>   include/linux/pci.h    |    3 +++
->>   2 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index e2d8a74f83c3..af1b5eecbb11 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -961,8 +961,14 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->>   		if (aer)
->>   			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
->>   					info->status);
->> -		if (pcie_aer_is_native(dev))
->> +		if (pcie_aer_is_native(dev)) {
->> +			struct pci_driver *pdrv = dev->driver;
->> +
->> +			if (pdrv && pdrv->err_handler &&
->> +			    pdrv->err_handler->cor_error_log)
->> +				pdrv->err_handler->cor_error_log(dev);
->>   			pcie_clear_device_status(dev);
->> +		}
->>   	} else if (info->severity == AER_NONFATAL)
->>   		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
->>   	else if (info->severity == AER_FATAL)
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 575849a100a3..54939b3426a9 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -844,6 +844,9 @@ struct pci_error_handlers {
->>   
->>   	/* Device driver may resume normal operations */
->>   	void (*resume)(struct pci_dev *dev);
->> +
->> +	/* Allow device driver to record more details of a correctable error */
->> +	void (*cor_error_log)(struct pci_dev *dev);
->>   };
->>   
->>   
->>
->>
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index facfcd11cb67..42a34650dd2f 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -320,46 +320,6 @@ static int populate_cedt(void)
+>  	return 0;
+>  }
+>  
+> -/*
+> - * WARNING, this hack assumes the format of 'struct
+> - * cxl_cfmws_context' and 'struct cxl_chbs_context' share the property that
+> - * the first struct member is the device being probed by the cxl_acpi
+> - * driver.
+> - */
+> -struct cxl_cedt_context {
+> -	struct device *dev;
+> -};
+> -
+> -static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+> -				      acpi_tbl_entry_handler_arg handler_arg,
+> -				      void *arg)
+> -{
+> -	struct cxl_cedt_context *ctx = arg;
+> -	struct device *dev = ctx->dev;
+> -	union acpi_subtable_headers *h;
+> -	unsigned long end;
+> -	int i;
+> -
+> -	if (dev != &cxl_acpi->dev)
+> -		return acpi_table_parse_cedt(id, handler_arg, arg);
+> -
+> -	if (id == ACPI_CEDT_TYPE_CHBS)
+> -		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
+> -			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
+> -			end = (unsigned long)&mock_cedt.chbs[i + 1];
+> -			handler_arg(h, arg, end);
+> -		}
+> -
+> -	if (id == ACPI_CEDT_TYPE_CFMWS)
+> -		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
+> -			h = (union acpi_subtable_headers *) mock_cfmws[i];
+> -			end = (unsigned long) h + mock_cfmws[i]->header.length;
+> -			handler_arg(h, arg, end);
+> -		}
+> -
+> -	return 0;
+> -}
+> -
+>  static bool is_mock_bridge(struct device *dev)
+>  {
+>  	int i;
+> @@ -410,6 +370,46 @@ static bool is_mock_port(struct device *dev)
+>  	return false;
+>  }
+>  
+> +/*
+> + * WARNING, this hack assumes the format of 'struct cxl_cfmws_context'
+> + * and 'struct cxl_chbs_context' share the property that the first
+> + * struct member is cxl_test device being probed by the cxl_acpi
+> + * driver.
+> + */
+> +struct cxl_cedt_context {
+> +	struct device *dev;
+> +};
+> +
+> +static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+> +				      acpi_tbl_entry_handler_arg handler_arg,
+> +				      void *arg)
+> +{
+> +	struct cxl_cedt_context *ctx = arg;
+> +	struct device *dev = ctx->dev;
+> +	union acpi_subtable_headers *h;
+> +	unsigned long end;
+> +	int i;
+> +
+> +	if (!is_mock_port(dev) && !is_mock_dev(dev))
+> +		return acpi_table_parse_cedt(id, handler_arg, arg);
+> +
+> +	if (id == ACPI_CEDT_TYPE_CHBS)
+> +		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
+> +			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
+> +			end = (unsigned long)&mock_cedt.chbs[i + 1];
+> +			handler_arg(h, arg, end);
+> +		}
+> +
+> +	if (id == ACPI_CEDT_TYPE_CFMWS)
+> +		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
+> +			h = (union acpi_subtable_headers *) mock_cfmws[i];
+> +			end = (unsigned long) h + mock_cfmws[i]->header.length;
+> +			handler_arg(h, arg, end);
+> +		}
+> +
+> +	return 0;
+> +}
+> +
+>  static int host_bridge_index(struct acpi_device *adev)
+>  {
+>  	return adev - host_bridge;
 > 
