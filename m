@@ -2,126 +2,132 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8862C433FE
-	for <linux-cxl@archiver.kernel.org>; Mon, 28 Nov 2022 20:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC745C4321E
+	for <linux-cxl@archiver.kernel.org>; Mon, 28 Nov 2022 21:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233300AbiK1Uf6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 28 Nov 2022 15:35:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
+        id S233442AbiK1VBr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 28 Nov 2022 16:01:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232860AbiK1Uf5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 28 Nov 2022 15:35:57 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F072B620
-        for <linux-cxl@vger.kernel.org>; Mon, 28 Nov 2022 12:35:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LxRzJLhvEu5rQbxPJ2PF6tQta67I27yPwrnedbaSHPqHcpvt5uBQcvtUztdaAEFxdIBdMQI6k0C5PeTP7J2zqYKkuTiaJ688uGy/yNKX+/tRVdJxdnIyc3HEztzpmWp3YqBVIPVM/afomMWdJIw8DmOU7PbfKp7iKf5Ua3NxhSiaHFZ5SRj1Eb75FipWMEr06dUzkLB3u2Xj9deqhjSQP3JZXfy6dcvOc171E5lc9UHwwyZ+s8jEnKexez4stBVas6yL4sewEl3c39laDOHy1IwupFyBVPgbKLIxYnfD3ci9RgDel4Jf5rOgcPalG/f/1LThh4mGFfsEqTuTSn/i+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wXAZlbN6xn/Wer7hQdU/vpz+Rmc1AIUqOQFKjGPhFg0=;
- b=dRLW4He+532+KKv03W7tp4zFQcw5k51Df3IZicJaJNe+80+F4Sez9R1bo0U7RcZ6rqzZ+SP9oFvLx+7mblfiYCTZ4dWtOAuq/K4q5QzzVcKLnt+M2RK9INnfX7gQHx2tusfndjJZUPIBBB6nsiyYWNpb41kqugH+OPYGLfWrlZDU8PfZ4ph5+pBNg3B8bjYv3nnCcz4/q/QD2QHWE/E8TWguYothyXANE6zuz18CYR0QXq6ZCc+EeOF7aOdlLk4xQ518vslHoPJcYmU8CBLoQYiWKHlVsegWY/Pcdq5lB2vDvEvZzRWRPOoYOaKq9M4RwbFZMFIzQHFvXY/m50DRVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wXAZlbN6xn/Wer7hQdU/vpz+Rmc1AIUqOQFKjGPhFg0=;
- b=DAWAR5eJWuHWaKuc4+EdVCzcIz+W6ExOCymusEhEJGfW7/2Wt+1v+8Z++B/My3PBMWqyE8H7lLpfRS2jcYrSOHNhzM86HatnILbuPzqsuZzW5Unvg7826TUVvPEah9Bml2Ca9hc1fGaA1riViEV8BY3or8KS44c1WeHKvJBVbkY=
-Received: from BN8PR12CA0030.namprd12.prod.outlook.com (2603:10b6:408:60::43)
- by DM4PR12MB7647.namprd12.prod.outlook.com (2603:10b6:8:105::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Mon, 28 Nov
- 2022 20:35:55 +0000
-Received: from BN8NAM11FT074.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:60::4) by BN8PR12CA0030.outlook.office365.com
- (2603:10b6:408:60::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23 via Frontend
- Transport; Mon, 28 Nov 2022 20:35:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT074.mail.protection.outlook.com (10.13.176.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5834.8 via Frontend Transport; Mon, 28 Nov 2022 20:35:54 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 28 Nov
- 2022 14:35:53 -0600
-Date:   Mon, 28 Nov 2022 21:35:50 +0100
-From:   Robert Richter <rrichter@amd.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <terry.bowman@amd.com>,
-        <bhelgaas@google.com>, <dave.jiang@intel.com>,
-        <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v4 09/12] cxl/mem: Move devm_cxl_add_endpoint() from
- cxl_core to cxl_mem
-Message-ID: <Y4Ubpkz50vJI1Q76@rric.localdomain>
-References: <166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com>
- <166931492718.2104015.1866183528350401708.stgit@dwillia2-xfh.jf.intel.com>
- <Y4UQ85/KAmuaZXFq@rric.localdomain>
+        with ESMTP id S234366AbiK1VBp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 28 Nov 2022 16:01:45 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 790662EF50;
+        Mon, 28 Nov 2022 13:01:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669669296; x=1701205296;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hIQ49By2HhsonQCK2A56x2bA3imymIkTPuRSOj8yaQA=;
+  b=G+zFvKw4yxdU3vnK6rEJRGOT/XTW5xfRAda2JmpXT1fATKw8TxhI8P6O
+   zYt6Xc/YNr/ZUUbIaMZ0cuxyNJ/AVAhUN3SpFEnooUs9ewxlZhsXTMO6K
+   40eCgIxns0BZO6fMC/ba2tMtJ+tO7f0N96Ks/oJZLXbbADnx+m054JSaj
+   Z1Gt2XAail7L5BoBEY7xekWQr8N+MO34lF7hsjdrw8u2JMIIDSMoi7hPE
+   nFJMkqB/65N+V6bNaqR/fUPTplOhfKE/p3ilRnd7wSil2eMSv8UVfBHSF
+   cV/YaJXqggSfN/vA6QA0641JfdAor+xAPDvRRiLOqDgLo3JEcoJO8wWZM
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="313653971"
+X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
+   d="scan'208";a="313653971"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 13:01:24 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="643538671"
+X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
+   d="scan'208";a="643538671"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.209.161.118]) ([10.209.161.118])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 13:01:23 -0800
+Message-ID: <b360aba7-d1e4-7d9b-685f-5c910e13fed2@intel.com>
+Date:   Mon, 28 Nov 2022 14:01:22 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Y4UQ85/KAmuaZXFq@rric.localdomain>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT074:EE_|DM4PR12MB7647:EE_
-X-MS-Office365-Filtering-Correlation-Id: b32a97e5-60a9-4c0b-c60e-08dad18025eb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E7zwAeKOB9hT21AsJsTULIi9oeN4gup400hnzJldMd3y1gkTpbsMTcbPFeWPwaiHnX7IiY0ewpnPRkW7MKm8alUp4+FtH5NdR8So3ZopVO33T3MkKRYNOdXryMLbTagRpI7k2OCSH+aIwstaOMeBkbLejdxnvZK+esPmhB4Ua0i1mAIx95+hi0jHMvjG5zLAil1N+wEOwXjeOv4SduCqtO1NXYJXKKHA2c2kSNQ77zsRlL7k7GaW0EfS+W8oueL2Od08nGSjJXRyr4sHmBD/2AtJTIuOaSaYQh1TSozW/p+8vY+2bi0lBOwVeqWHgHyzYL6zwhECSYNWFc8l2qDy0wOCXR9Qi9zcCjS2ExHk1W24diCFAxoaFrxr6wUVNsPC7l5jJktHWbnGrw2cBgAS4PRQsqPMQ3/dSScGkoomblquy9eTx1Ic91r94Ue9rhAyZeoo+7gkyfOUH12DkHVBlz60j7HyA9a71O0DSI+BPKOsjPKu48rNqSPBnWOVUZk0Ntfp315m+Z6WOAnZHxNHQ1QSJL/nsG56pG6uEkkLkYMfxzutojISHINC9DuWIU+Icej3+714y8js2QaCEQKqnoIVoy1VP83cfO0RPKtGVGJPGcQ2n1uyM6ztQImz/dFcI+lZkvaqKT6hO3SN6U9Y0ohiMOHo5mh6T0drLZczqcVX/Tt4qF/nbHpi6WqLp60B/UptxPOS/b2yAql8NX3Prh7BGweBcJHN4enab35oeqo=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(39860400002)(376002)(396003)(346002)(451199015)(46966006)(40470700004)(36840700001)(8936002)(36860700001)(2906002)(6916009)(40460700003)(40480700001)(55016003)(336012)(426003)(478600001)(186003)(82740400003)(82310400005)(356005)(81166007)(5660300002)(83380400001)(70206006)(70586007)(54906003)(316002)(41300700001)(7696005)(16526019)(47076005)(9686003)(53546011)(4326008)(8676002)(26005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2022 20:35:54.8105
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b32a97e5-60a9-4c0b-c60e-08dad18025eb
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT074.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7647
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.0
+Subject: Re: [PATCH v3 10/11] PCI/AER: Add optional logging callback for
+ correctable error
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        rostedt@goodmis.org, terry.bowman@amd.com, bhelgaas@google.com
+References: <166879123216.674819.3578187187954311721.stgit@djiang5-desk3.ch.intel.com>
+ <166879134199.674819.15564186577122699358.stgit@djiang5-desk3.ch.intel.com>
+ <20221121120527.0000608e@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221121120527.0000608e@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 28.11.22 20:50:16, Robert Richter wrote:
-> On 24.11.22 10:35:27, Dan Williams wrote:
-> > In preparation for devm_cxl_add_endpoint() to call out to
-> > cxl_rcrb_to_component() to map the upstream port component registers,
-> > move devm_cxl_add_endpoint() from the cxl_core to the cxl_mem driver.
-> > This is due to the organization of cxl_test that mandates that the
-> > cxl_core not call out to any mocked symbols. It also cleans up the
-> > export of devm_cxl_add_endpoint() which is just a wrapper around
-> > devm_cxl_add_port().
-> 
-> The last sentense is unclear to me? I see you just make it static as
-> there is only a single user, do you mean that here? The change itself
-> looks good.
 
-Looking at the next patch I think you mean the change of the function
-i/f of devm_cxl_add_endpoint() here. Please update description.
+
+On 11/21/2022 5:05 AM, Jonathan Cameron wrote:
+> On Fri, 18 Nov 2022 10:09:02 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Some new devices such as CXL devices may want to record additional error
+>> information on a corrected error. Add a callback to allow the PCI device
+>> driver to do additional logging and/or error handling.
+> 
+> Probably want to be a little careful about talking about error handling for
+> corrected errors.  It does make sense if you are doing stats based offlining
+> of flaky parts of devices (we do this on some of our crypto and similar
+> accelerators), but that isn't really 'error handling'.
+
+I'll remove the text of error handling and make it to be for optional 
+additional logging only.
 
 > 
-> > 
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Agreed with other review that it might warrant some documentation but as
+> said their, Bjorn's call to make!
 > 
-> Reviewed-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> > ---
-> >  drivers/cxl/core/core.h |    8 --------
-> >  drivers/cxl/core/port.c |   39 ---------------------------------------
-> >  drivers/cxl/cxl.h       |    2 --
-> >  drivers/cxl/cxlmem.h    |    9 +++++++++
-> >  drivers/cxl/mem.c       |   38 ++++++++++++++++++++++++++++++++++++++
-> >  5 files changed, 47 insertions(+), 49 deletions(-)
+>>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/pci/pcie/aer.c |    8 +++++++-
+>>   include/linux/pci.h    |    3 +++
+>>   2 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index e2d8a74f83c3..af1b5eecbb11 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -961,8 +961,14 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>>   		if (aer)
+>>   			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+>>   					info->status);
+>> -		if (pcie_aer_is_native(dev))
+>> +		if (pcie_aer_is_native(dev)) {
+>> +			struct pci_driver *pdrv = dev->driver;
+>> +
+>> +			if (pdrv && pdrv->err_handler &&
+>> +			    pdrv->err_handler->cor_error_log)
+>> +				pdrv->err_handler->cor_error_log(dev);
+>>   			pcie_clear_device_status(dev);
+>> +		}
+>>   	} else if (info->severity == AER_NONFATAL)
+>>   		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+>>   	else if (info->severity == AER_FATAL)
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 575849a100a3..54939b3426a9 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -844,6 +844,9 @@ struct pci_error_handlers {
+>>   
+>>   	/* Device driver may resume normal operations */
+>>   	void (*resume)(struct pci_dev *dev);
+>> +
+>> +	/* Allow device driver to record more details of a correctable error */
+>> +	void (*cor_error_log)(struct pci_dev *dev);
+>>   };
+>>   
+>>   
+>>
+>>
+> 
