@@ -2,348 +2,440 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8AFC43217
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Nov 2022 00:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D7FC4321E
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Nov 2022 12:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234129AbiK2AZ1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 28 Nov 2022 19:25:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51854 "EHLO
+        id S230128AbiK2M0a (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Nov 2022 07:26:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbiK2AZ0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 28 Nov 2022 19:25:26 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8941610FD7
-        for <linux-cxl@vger.kernel.org>; Mon, 28 Nov 2022 16:25:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669681525; x=1701217525;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=z22RyWcuvGSPycgrliWH5mHE3DpU6DwOFR4g91UtbXM=;
-  b=WpBhE4VcnyoUkxp2sNTv5/HrdhG0xHSkGpWA+yz4/vxFlqVvqqY0vH1f
-   9xQdwcTTR/Sd1rN7iyh41kfjVRZ2tdd89zxbJI7xjjXrxoUrXEvrpLoxY
-   A1EiBmb0rDnlSu/Q/W83iJcmMWp4aXpE5eHUiOBxCpl7TvuLqvtGjJ9Jd
-   V1/Ypg5gN/3VHYMEo14+9uwX3aD0MXIp4vl9cHKdH5sfdSB3jvQIbbclm
-   qNd3QC7HgAVEwbLUMmNS78iFtP20wJPh5q+dC2fqsXqFRVmVm4UmboBlc
-   HgUolbpTzR0xKFDVWShMC1mUtzhxKX7y8Da/Lg47F4lQ3Djb+uhWyWX+E
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="312607032"
-X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
-   d="scan'208";a="312607032"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 16:25:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="785839957"
-X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
-   d="scan'208";a="785839957"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Nov 2022 16:25:25 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+        with ESMTP id S231856AbiK2M02 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Nov 2022 07:26:28 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8323357B72;
+        Tue, 29 Nov 2022 04:26:26 -0800 (PST)
+Received: from fraeml745-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NM1hr6qNnz67PjK;
+        Tue, 29 Nov 2022 20:23:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ fraeml745-chm.china.huawei.com (10.206.15.226) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 28 Nov 2022 16:25:24 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 28 Nov 2022 16:25:24 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 28 Nov 2022 16:25:24 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 28 Nov 2022 16:25:23 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kZyZirZy0fQ5MEV+TrDry3oLroDr71f2fuRlem5iDsYNPC8CFPj/miF4sc+Cp8wW+ruwMhrSXD2U1FyX86WAIN8phL80z2gpd2I08PxCutZ2SUm/FqaCb7VRyeuHH+7VAu3VV7WQ8yskYsJuoybYK5cpyg905Tqzv87MIonNIz2lX1xO8XDIwnyu0gyErPkt428sdegyb9CB3juTVzIDR9HNDRLmp5dvK3IsI6O1ByfXqKH2l+IYg2bEawP7YxYcjkMg9ESijWg4DdmqcIxX7yq/0e01bSf4c3sbZF+iDOmUjvpuv/41uJ/oZtdvTT6B9N0H8Swiugq1bm18jUfoWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4hSIXV3FkydL4UKjd+doW1SVp3zKAGi8DzIZ7tw9AxY=;
- b=AfuRuiUVY3JW9gf/YZlpbWkxf2jyuaJElrM1md3eV/JX0Gfby5DGlq5uPTG8wQnVI+dBYSn5U4dlVKYlVwTPAbptrkD/w0+f0fzrNnEMd7cfdW5+ho10EaGrpfz83oYCoz+zLDdyeuxpG9D49aoQ3IdMgRTx0Xrj3tWUjkr5iLo6PuT+X5QfMBwbNlIJ5WNTM3uCu6vHw/QWHoChdZrEcbXh+upEUoUxl/FClRldhZDE40IyXxsdYLL/H+y5A++Dl7TJNMNzh1nRZ3qqvej5NQ1/AvdbFuudcimrFJwgGM8yGWT4R9oKbIFPWdcq31PaF+YfarN7H3pk91/A6W1bmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by PH7PR11MB6674.namprd11.prod.outlook.com
- (2603:10b6:510:1ac::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Tue, 29 Nov
- 2022 00:25:21 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5857.023; Tue, 29 Nov 2022
- 00:25:21 +0000
-Date:   Mon, 28 Nov 2022 16:25:18 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Robert Richter <rrichter@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <terry.bowman@amd.com>,
-        <bhelgaas@google.com>, <dave.jiang@intel.com>,
-        <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v4 10/12] cxl/port: Add RCD endpoint port enumeration
-Message-ID: <6385516eaa45a_3cbe02944d@dwillia2-xfh.jf.intel.com.notmuch>
-References: <166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com>
- <166931493266.2104015.8062923429837042172.stgit@dwillia2-xfh.jf.intel.com>
- <Y4U+92BzA+O7fjNE@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y4U+92BzA+O7fjNE@rric.localdomain>
-X-ClientProxiedBy: SJ0PR13CA0128.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::13) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+ 15.1.2375.31; Tue, 29 Nov 2022 13:26:24 +0100
+Received: from localhost (10.45.149.100) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 29 Nov
+ 2022 12:26:23 +0000
+Date:   Tue, 29 Nov 2022 12:26:20 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 02/11] cxl/mem: Implement Get Event Records command
+Message-ID: <20221129122620.00002cf0@Huawei.com>
+In-Reply-To: <Y4VEhNNTbXj5EwOm@iweiny-desk3>
+References: <20221110185758.879472-1-ira.weiny@intel.com>
+        <20221110185758.879472-3-ira.weiny@intel.com>
+        <20221116151936.0000662f@Huawei.com>
+        <Y3WEmMlLfPoYG1R5@iweiny-desk3>
+        <20221117104337.00001a3f@Huawei.com>
+        <Y3gUmSuR3OxUwkDm@iweiny-desk3>
+        <20221121104714.00003bab@Huawei.com>
+        <Y4VEhNNTbXj5EwOm@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|PH7PR11MB6674:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd71f301-52a1-45e7-c24e-08dad1a03370
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +yXC9AIn9HsRkNe+mSIlLQe3NjbZ7E8RCC9FxVSFEQeE1E0Nc68S9Aody1x1PfZkFwA3j2o/0YNBLTtQZ4fMdpZ+u9LbuDEFXLtL9ZyxYf5mhTsvo09nTs0SD8z8E8kuzmHvdeKxJQJS8vgyUqj+UxueALE9d6WOmvaD9lEDlOxdVx3PLo5JkcjxopTcrrqeQjQ7SVJ9dPNuaLqRTAEBpiUxbSWytsNRGgzWsyVj5ljlvrmURwVILlbM/CoCDA7FIG/RESvJWyvHXzPC21/3wvVQKTXUsMUa3ybsOBTyF0Sw1jyNJI2UlKY2R+qpqJJsAd+LduL/96KfkhGLXeQUmp0zHMMkMJw6SPnBL6gNLYCh/wNTkXDvSnv4yJTGatp1BtDrz1/TOpk84tIOoQk//GfLyq3XV5vio7c+DCuzQqP/cifft9ugcrRVJc6FN3pemcGPDXT+iPdTsq5s7VypukMFrDSe7jexw+ErGMdPv7yCYLm6z73B7jpo5rCY5OZNqcHvZQVfnx5piufaMKyI9/FSLTVF3gGiXDlzbHL3B144x/tjJSGRMvbZ1skoLuricx3O167vcbQclJDYY1fDVwfnoYN/jK8fk4UVnTIza29Rq4Stgd2FKu0YPn3bAvaRz35HiFRgtKBtED0/47A2Jw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(39860400002)(346002)(136003)(366004)(396003)(451199015)(5660300002)(8936002)(110136005)(316002)(9686003)(41300700001)(186003)(66556008)(8676002)(66476007)(4326008)(66946007)(2906002)(38100700002)(6512007)(26005)(82960400001)(83380400001)(86362001)(6506007)(6486002)(53546011)(478600001)(6666004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bTFNMVFZeHN6amlidVdtbEl4SUROUG5rVjBIYy9tRHZraldTakhXWHBwSlN2?=
- =?utf-8?B?NWtjRTlqQ2liMjdoZU5iR3dIZjZZbUZnb1VNTWdUc3dtWFBMZDJKRTcyMzN2?=
- =?utf-8?B?T0RCd1o1ajZRVUp4dkZrdkMyelgyUENuQUlka1RrdUhpSUxyV092QUU3NzJa?=
- =?utf-8?B?a1VVZlpUNFd1UGttWUl2MUt1MlBMd0I4Tm53R1N0aTl6eDZmbWpmbTZHTEZP?=
- =?utf-8?B?akxPVGN4SFZObFlveEQzTHA5blRvTnU2bGZuYzkwWWl5ejZQb1hvYVBDU1JB?=
- =?utf-8?B?dU1uZUFWanc4YTdiSHZmUVYzR3NJMGx0S3NlRThackgydWJGRHJ5YVN6VnFB?=
- =?utf-8?B?Q1BRV0dQOEdJK3daWXJFRWhGVzNvc1haQ3VLUE41eDMydTdzd3J1YVI1UHVF?=
- =?utf-8?B?L2FWSVMvQlpWZ2ZEODhRaS9iYkVTMU9QVENyT3gvYUgvRm0zOVRxbHV2Q1pT?=
- =?utf-8?B?OUV1WXAwWWxCaEJFSU9jdWwzVHJhcXhuNEVUc0xRUTVrVG04bllqQW4xeHgw?=
- =?utf-8?B?S2VmemxLT0VMQ0MxUGFscVZER01OY2l1SkpONWtTUVJIcUl6OU91RnBSK3BF?=
- =?utf-8?B?SVdSbTRUSVVOMHh3b1F6QWczWGc3Q1o5SElvUW5DTzV6dUlodjl2MEl5Q05C?=
- =?utf-8?B?YXgrSnZQWkd3ZExhWWtybGtIUmhEUS83MlhLb3BxSm9tMTlNczROL3gwYmlS?=
- =?utf-8?B?OS94ZU1Pa2ZIaW1QNHEwdzJoVGxqZGlNdmkvMVBSeXdZTkNrdEhpQ3N2SVJs?=
- =?utf-8?B?cURhemxxVVp1N1ZtcXJFNHRHNHRZRHNaNG5sVWFWbG5XZGNVQVpzV3JOcWkr?=
- =?utf-8?B?NHI2TzJrYUVOWFVtdjk3MTNDNlpuMTltK3AwVjNtRHloLzRnNkdMbS8rRjNH?=
- =?utf-8?B?MUdnZ2p2TE1nUkRBZVRqOGlqWkF5WndtMUJld2hBa0dYa0hzQnhYUnphaUhy?=
- =?utf-8?B?aFVTZWYxMXNya054ejBSNS9mOFRtWForSWN6azhMVVgyMWlWQ0kxZnRxaCt6?=
- =?utf-8?B?Zmh6bFVDYm1qb1NFbGF2K1BkWUFVajBTc3JTcU1lYjJUUjMxRWh4TStFYXV0?=
- =?utf-8?B?bFhiQW1tSW42MFpiaURrV3BRTE5pclNzbGlMTnVscWt3aWd3RzFtZkF4ZEdi?=
- =?utf-8?B?SXdWSWFGdFFkSk5wSld4STExS05KMXc2KzFTMHliTjhDYTVEa1o2RnVGRWNp?=
- =?utf-8?B?bS9XSEhnbWJyL0IyTXhiVnVGZ0NoNGF3Yk5aT1FVRE9tZEorb2pMcXNVSVdT?=
- =?utf-8?B?b3pUdzhtRlhPSHZJNG1rc3g2RDcrVnE0Q3ZDVWFLNEdSbFh6VlJ1NGxxM01i?=
- =?utf-8?B?R0tjWWxGR0Z1cnZCRGpUVVh3dlY4ZHNWTkZ3SExlVnJCNWdidUlFckc5bi9G?=
- =?utf-8?B?WEJGTWVzOEt5VTNNa2h1SktQY0d4QUhHN1NHSWxoWWo1T2lkYUU5bDZQRjdp?=
- =?utf-8?B?SzYvT3hVZS9LUTd0TFY1dWdJaUxHU0g1b1JkWS9Gc1JLc3V0bTBqTSszNnlT?=
- =?utf-8?B?WEVDOGdldVowQzNveFlKQ3Zkcm1uMHJ5eXd2dGN5bmQrWjZId1JUZlN3L3hR?=
- =?utf-8?B?bXhLa2w1VER3VkFEeTRxbzBoQWNHSzcwcDR1VFFuWTA4Q0V5a25Cc3ArOW5X?=
- =?utf-8?B?OHFjTFdHazFYYlBmVTcyL0ZyeDBPdWpiZXgvSGlHblExMTRxKzJrV3prMVNH?=
- =?utf-8?B?anZ6a3k0WWMyV1FvVDVnS2p6TVlRaFpUbjlvR3pFTkcxZnA4MklWWEZ6aWw2?=
- =?utf-8?B?dE5LdG5Dd1prQWtxWVZKU3RaVHg5RHFKd1Z5VVJCdTN0T0tFN3NJV0xqbVVI?=
- =?utf-8?B?c3N0eVpSZ0VoWGpzNUphYUZJa1BuWXczOXZDeFVuN2pPYW5xcjltVFB5UDRz?=
- =?utf-8?B?bFRES2t2T3FWRmJZTDEzSnFKQ1BnemExbHRpMS92aE1oeXF2MzJJdGQ0b1g5?=
- =?utf-8?B?MitLTEdRTUpEV2N5L2tLQXNtcVpBYmVlcmVZU3ZzcnFobEV0a2I4S0pKNDRp?=
- =?utf-8?B?OGxhS3E2ZkJDckhmRUk1RGpwUWV5Rml1aDlrOVJ4emdUbDg0R3A5U25UTzFi?=
- =?utf-8?B?Y0lUdzYvVDU1WngrQ3hPdFBaRkNzbVAvVDZmWVdvYXBTWjExL1BSQzNTc29m?=
- =?utf-8?B?L3BFUEZtZHQvbzNJVThaSTVSaG9ZclplRVB3cU5jakJid2V3VEUxQi8xUzcw?=
- =?utf-8?B?WlE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd71f301-52a1-45e7-c24e-08dad1a03370
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2022 00:25:21.6065
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1pKoGxlacVQ/K+6rH4m4d196tIWEHj80zRTz6iSMPzCHzDegObR/Q8NERcsRsVSxOuMzRtu0YzSf67IVYD71GqujLzZVI7/BZE1UFIjbxjc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6674
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.149.100]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Robert Richter wrote:
-> On 24.11.22 10:35:32, Dan Williams wrote:
-> > Unlike a CXL memory expander in a VH topology that has at least one
-> > intervening 'struct cxl_port' instance between itself and the CXL root
-> > device, an RCD attaches one-level higher. For example:
-> > 
-> >                VH
-> >           ┌──────────┐
-> >           │ ACPI0017 │
-> >           │  root0   │
-> >           └─────┬────┘
-> >                 │
-> >           ┌─────┴────┐
-> >           │  dport0  │
-> >     ┌─────┤ ACPI0016 ├─────┐
-> >     │     │  port1   │     │
-> >     │     └────┬─────┘     │
-> >     │          │           │
-> >  ┌──┴───┐   ┌──┴───┐   ┌───┴──┐
-> >  │dport0│   │dport1│   │dport2│
-> >  │ RP0  │   │ RP1  │   │ RP2  │
-> >  └──────┘   └──┬───┘   └──────┘
-> >                │
-> >            ┌───┴─────┐
-> >            │endpoint0│
-> >            │  port2  │
-> >            └─────────┘
-> > 
-> > ...vs:
-> > 
-> >               RCH
-> >           ┌──────────┐
-> >           │ ACPI0017 │
-> >           │  root0   │
-> >           └────┬─────┘
-> >                │
-> >            ┌───┴────┐
-> >            │ dport0 │
-> >            │ACPI0016│
-> >            └───┬────┘
-> >                │
-> >           ┌────┴─────┐
-> >           │endpoint0 │
-> >           │  port1   │
-> >           └──────────┘
-> > 
-> > So arrange for endpoint port in the RCH/RCD case to appear directly
-> > connected to the host-bridge in its singular role as a dport. Compare
-> > that to the VH case where the host-bridge serves a dual role as a
-> > 'cxl_dport' for the CXL root device *and* a 'cxl_port' upstream port for
-> > the Root Ports in the Root Complex that are modeled as 'cxl_dport'
-> > instances in the CXL topology.
-> > 
-> > Another deviation from the VH case is that RCDs may need to look up
-> > their component registers from the Root Complex Register Block (RCRB).
-> > That platform firmware specified RCRB area is cached by the cxl_acpi
-> > driver and conveyed via the host-bridge dport to the cxl_mem driver to
-> > perform the cxl_rcrb_to_component() lookup for the endpoint port
-> > (See 9.11.8 CXL Devices Attached to an RCH for the lookup of the
-> > upstream port component registers).
-> > 
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/cxl/core/port.c |   11 +++++++++--
-> >  drivers/cxl/cxlmem.h    |    2 ++
-> >  drivers/cxl/mem.c       |   31 ++++++++++++++++++++++++-------
-> >  drivers/cxl/pci.c       |   10 ++++++++++
-> >  4 files changed, 45 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index c7f58282b2c1..2385ee00eb9a 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -1358,8 +1358,17 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> >  {
-> >  	struct device *dev = &cxlmd->dev;
-> >  	struct device *iter;
-> > +	struct cxl_dport *dport;
-> > +	struct cxl_port *port;
-> 
-> There is no direct need to move that code here.
-> 
-> If you want to clean that up in this patch too, then leave a comment
-> in the change log?
+On Mon, 28 Nov 2022 15:30:12 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-Oh, good point, must have been left over from an earlier revision of the
-patch, dropped it.
+> On Mon, Nov 21, 2022 at 10:47:14AM +0000, Jonathan Cameron wrote:
+> > On Fri, 18 Nov 2022 15:26:17 -0800
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >   
+> > > On Thu, Nov 17, 2022 at 10:43:37AM +0000, Jonathan Cameron wrote:  
+> > > > On Wed, 16 Nov 2022 16:47:20 -0800
+> > > > Ira Weiny <ira.weiny@intel.com> wrote:
+> > > > 
+> > > >     
+> > > 
+> > > [snip]
+> > >   
+> > > > >     
+> > > > > >       
+> > > > > > > +			int i;
+> > > > > > > +
+> > > > > > > +			for (i = 0; i < nr_rec; i++)
+> > > > > > > +				trace_cxl_generic_event(dev_name(cxlds->dev),
+> > > > > > > +							type,
+> > > > > > > +							&payload.record[i]);
+> > > > > > > +		}
+> > > > > > > +
+> > > > > > > +		if (trace_cxl_overflow_enabled() &&
+> > > > > > > +		    (payload.flags & CXL_GET_EVENT_FLAG_OVERFLOW))
+> > > > > > > +			trace_cxl_overflow(dev_name(cxlds->dev), type, &payload);
+> > > > > > > +
+> > > > > > > +	} while (pl_nr > CXL_GET_EVENT_NR_RECORDS ||      
+> > > > > > 
+> > > > > > Isn't pl_nr > CXL_GET_EVENT_NR_RECORDS a hardware bug? It's the number in returned
+> > > > > > payload not the total number.      
+> > > > > 
+> > > > > I don't think so.  The only value passed to the device is the _input_ payload
+> > > > > size.  The output payload size is not passed to the device and is not included
+> > > > > in the Get Event Records Input Payload.  (Table 8-49)
+> > > > > 
+> > > > > So my previous code was wrong.  Here is an example I think which is within the
+> > > > > spec but would result in the more records flag not being set.
+> > > > > 
+> > > > > 	Device log depth == 10
+> > > > > 	nr log entries == 7
+> > > > > 	nr log entries in 1MB ~= (1M - hdr size) / 128 ~= 8000
+> > > > > 
+> > > > > Device sets Output Payload.Event Record Count == 7 (which is < 8000).  Common
+> > > > > mailbox code truncates that to 3.  More Event Records == 0 because it sent all
+> > > > > 7 that it had.
+> > > > > 
+> > > > > This code will clear 3 and read again 2 more times.
+> > > > > 
+> > > > > Am I reading that wrong?    
+> > > > 
+> > > > I think this is still wrong, but for a different reason. :)    
+> > > 
+> > > I hope not...  :-/
+> > >   
+> > > > If we don't clear the records and more records is set, that means it didn't
+> > > > fit in the mailbox payload (potentially 1MB)  then the next read
+> > > > will return the next set of records from there.    
+> > > 
+> > > That is not how I read the Get Event Records command:
+> > > 
+> > > From 8.2.9.2.2 Get Event Records
+> > > 
+> > > ... "Devices shall return event records to the host in the temporal order the
+> > > device detected the events in. The event occurring the earliest in time, in the
+> > > specific event log, shall be returned first."
+> > > 
+> > > If item 3 below is earlier than 4 then it must be returned if we have not
+> > > cleared it.  At least that is how I read the above.  :-/  
+> > 
+> > In general that doesn't work.  Imagine we cleared no records.
+> > In that case we'd return 4 despite there being earlier records.
+> > There is no language to cover this particular case of clearing
+> > part of what was returned.  The device did return the records
+> > in temporal order, we just didn't notice some of them.
+> > 
+> > The wonders of slightly loose spec wording.  Far as I can tell
+> > we are stuck with having to come with all things that could be
+> > read as being valid implementations.  
+> 
+> So I've been thinking about this for a while.
+> 
+> Lets take this example:
+> 
+> > > > 
+> > > > Taking this patch only, let's say the mailbox takes 4 records.
+> > > > Read 1: Records 0, 1, 2, 3 More set.
+> > > >    We handle 0, 1, 2
+> > > > Read 2: Records 4, 5, 6 More not set.
+> > > >    We handle 4, 5, 6
+> > > >   
+> 
+> In this case what happens if you do a 3rd read?  Does the device return
+> nothing?  Or does it return 0, 1, 2, 3 again?
+> 
+> It must start from the beginning right?  But that is no longer in temporal
+> order by your definition either.
+
+Agreed that is not clearly specified either.  I assume it works the same
+way as poison where we raised the question and conclusion was it starts again
+at the beginning. In fact we have to loop twice to guarantee that we have
+all the records (as other software may have crashed half way through reading
+the poison list so we don't know if we have the first record or not)..
 
 > 
-> >  	int rc;
-> >  
-> > +	/*
-> > +	 * Skip intermediate port enumeration in the RCH case, there
-> > +	 * are no ports in between a host bridge and an endpoint.
-> > +	 */
-> > +	if (cxlmd->cxlds->rcd)
-> > +		return 0;
-> > +
-> >  	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_detach_ep, cxlmd);
-> >  	if (rc)
-> >  		return rc;
-> > @@ -1373,8 +1382,6 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> >  	for (iter = dev; iter; iter = grandparent(iter)) {
-> >  		struct device *dport_dev = grandparent(iter);
-> >  		struct device *uport_dev;
-> > -		struct cxl_dport *dport;
-> > -		struct cxl_port *port;
-> >  
-> >  		if (!dport_dev)
-> >  			return 0;
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index e082991bc58c..35d485d041f0 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -201,6 +201,7 @@ struct cxl_endpoint_dvsec_info {
-> >   * @dev: The device associated with this CXL state
-> >   * @regs: Parsed register blocks
-> >   * @cxl_dvsec: Offset to the PCIe device DVSEC
-> > + * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-> >   * @payload_size: Size of space for payload
-> >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> >   * @lsa_size: Size of Label Storage Area
-> > @@ -235,6 +236,7 @@ struct cxl_dev_state {
-> >  	struct cxl_regs regs;
-> >  	int cxl_dvsec;
-> >  
-> > +	bool rcd;
-> >  	size_t payload_size;
-> >  	size_t lsa_size;
-> >  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index aa63ce8c7ca6..9a655b4b5e52 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -45,12 +45,13 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
-> >  	return 0;
-> >  }
-> >  
-> > -static int devm_cxl_add_endpoint(struct cxl_memdev *cxlmd,
-> > +static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
-> >  				 struct cxl_dport *parent_dport)
-> >  {
-> >  	struct cxl_port *parent_port = parent_dport->port;
-> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> >  	struct cxl_port *endpoint, *iter, *down;
-> > +	resource_size_t component_reg_phys;
-> >  	int rc;
-> >  
-> >  	/*
-> > @@ -65,8 +66,18 @@ static int devm_cxl_add_endpoint(struct cxl_memdev *cxlmd,
-> >  		ep->next = down;
-> >  	}
-> >  
-> > -	endpoint = devm_cxl_add_port(&parent_port->dev, &cxlmd->dev,
-> > -				     cxlds->component_reg_phys, parent_dport);
-> > +	/*
-> > +	 * The component registers for an RCD might come from the
-> > +	 * host-bridge RCRB if they are not already mapped via the
-> > +	 * typical register locator mechanism.
-> > +	 */
-> > +	if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
-> > +		component_reg_phys = cxl_rcrb_to_component(
-> > +			&cxlmd->dev, parent_dport->rcrb, CXL_RCRB_DOWNSTREAM);
+> And if it returns nothing then there is no way to recover them except on device
+> reset?
 > 
-> As already commented: this must be the upstream RCRB here.
-> 
-> > +	else
-> > +		component_reg_phys = cxlds->component_reg_phys;
-> > +	endpoint = devm_cxl_add_port(host, &cxlmd->dev, component_reg_phys,
-> > +				     parent_dport);
-> 
-> Looking at CXL 3.0 spec, table 8-22, there are the various sources of
-> component registers listed. For RCD we need: D1, DP1, UP1 (optional
-> R).
-> 
-> 	D1:	endpoint->component_reg_phys;
-> 	UP1:	parent_port-component_reg_phys; (missing in RCH topology)
-> 	DP1:	parent_dport->component_reg_phys;
-> 
-> I don't see how all of them could be stored in this data layout as the
-> cxl host port is missing.
+> FWIW I'm altering the patch set to do what you say and allocate a buffer large
+> enough to get all the records.  Because I am thinking you are correct.
 
-If I am understanding your concern correctly, that's handled here:
+Horrible, but maybe the best we can do (subject to suggested hack below ;)
 
-    if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
+> 
+> However, considering the buffer may be large, I fear we may run afoul of memory
+> allocation failures.  And that will require some more tricky error recovery to
+> continue reading the log because the irq settings state:
+> 
 
-In the D1 case cxlds->component_reg_phys will be valid since the
-component registers were visible via the register locator DVSEC and
-retrieved by cxl_pci. In the UP1 case cxlds->component_reg_phys is
-invalid and the driver falls back to the RCRB. DP1 is handled in
-cxl_acpi. I.e. the D1 and UP1 cases do not co-exist.
+We could implement cleverer mailbox handling to avoid the large allocation requirement.
+Would be messy though as we'd effectively have to lock the mailbox whilst we did
+multiple reads of the content into a smaller buffer.
+
+> "... Settings: Specifies the settings for the interrupt when the <event> event
+> log transitions from having no entries to having one or more entries."
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> This means that no more interrupts will happen until the log is empty and
+> additional events occur.  So if an allocation failure happens I'll have to put
+> a task on a work queue to wake up and continue to try.  Otherwise the log will
+> stall.  Or we could just put a WARN_ON_ONCE() in and hope this never happens...
+
+I think the WARN_ON_ONCE() is probably fine.  If we are paranoid vmalloc one
+when we initially connect device as failure less likely...
+
+As a side note, seems like we should maybe take a request to SSWG for devices
+to optionally be told to use a smaller mailbox than they support - in order to allow
+for corners like this. There is such a command but it's prohibited on primary and
+secondary mailboxes (Set Response Message Limit).  That is allowed on switch CCIs,
+I guess because it is assumed they may be connected to a BMC without much memory.
+
+> 
+> I still believe that with a clear operation defined my method makes more sense.
+> But I agree with you that the language is not strong.
+
+Absolutely agree!  Your method would be the one I'd push for if we were starting
+from scratch (or another similar method looking like what I can't talk about
+for a similar case...)
+
+> 
+> :-(
+> 
+> > > > Record 3 is never handled.
+> > > > 
+> > > > If we add in clearing as happens later in the series,    
+> > > 
+> > > I suppose I should squash the patches as this may not work without the
+> > > clearing.  :-/
+> > >   
+> > > > the current
+> > > > assumption is that if we clear some records a subsequent read will
+> > > > start again.  I'm not sure that is true. If it is spec reference needed.
+> > > > 
+> > > > So assumption is
+> > > > Read 1: Records 0, 1, 2, 3 More set
+> > > >   Clear 0, 1, 2
+> > > > Read 2: Records 3, 4, 5, 6
+> > > >   Clear 3, 4, 5 More not set, but catch it with the condition above.
+> > > > Read 3: 6 only
+> > > >   Clear 6
+> > > > 
+> > > > However, I think a valid implementation could do the following
+> > > > (imagine a ring buffer with a pointer to the 'next' record to read out and
+> > > >  each record has a 'valid' flag to deal with corner cases around
+> > > >  sequences such as read log once, start reading again and some
+> > > >  clears occur using handles obtained from first read - not that
+> > > >  case isn't ruled out by the spec as far as I can see).    
+> > > 
+> > > I believe this is a violation because the next pointer can't be advanced until
+> > > the record is cleared.  Otherwise the device is not returning items in temporal
+> > > order based on what is in the log.  
+> > 
+> > Ah. This is where we disagree.  The temporal order is (potentially?) unconnected
+> > from the clearing.  The device did return them in temporal order, we just didn't
+> > take any novice of record 3 being returned.  
+> 
+> :-/
+> 
+> > A valid reading of that temporal order comment is actually the other way around
+> > that the device must not reset it's idea of temporal order until all records
+> > have been read (reading 3 twice is not in temporal order - imagine we had
+> > read 5 each time and it becomes more obvious as the read order becomes
+> > 0,1,2,3,4,3,4,5,6,7 etc which is clearly not in temporal order by any normal
+> > reading of the term.  
+> 
+> Well I guess.  My reading was that it must return the first element temporally
+> within the list at the time of the Get operation.
+> 
+> So in this example since 3 is still in the list it must return it first.  Each
+> read is considered atomic from the others.  Yes as long as 0 is in the queue it
+> will be returned.
+> 
+> But I can see it your way too...
+
+That pesky text under More Event Records flag doesn't mention clearing when it
+says "The host should continue to retrieve 
+records using this command, until this indicator is no longer set by the 
+device."
+
+I wish it did :(
+
+> 
+> >
+> > The more I read this, the more I think the current implementation
+> > is not compliant with the specification at all.
+> > 
+> > I'm not seeing a spec mention of 'reseting' the ordering on clearing records
+> > (which might have been a good thing in the first place but too late now).  
+> 
+> There is no resetting of order.  Only that the device does not consider the
+> previous reads on determining which events to return on any individual Get
+> call.
+
+Sure, see above quote though. 
+
+> 
+> >   
+> > >   
+> > > > 
+> > > > Read 1: Records 0, 1, 2, 3 More set.  'next' pointer points to record 4.
+> > > >   Clear 0, 1, 2
+> > > > Read 2: Records 4, 5, 6 More not set. 'next' pointer points to record 7.
+> > > >   Clear 4, 5, 6
+> > > > 
+> > > > Skipping record 3.
+> > > > 
+> > > > So I think we have to absorb the full mailbox payload each time to guarantee
+> > > > we don't skip events or process them out of order (which is what would happen
+> > > > if we relied on a retry loop - we aren't allowed to clear them out of
+> > > > order anyway 8.2.9.2.3 "Events shall be cleared in temporal order. The device
+> > > > shall verify the event record handles specified in the input payload are in
+> > > > temporal order. ... "). 
+> > > > Obviously that temporal order thing is only relevant if we get my second
+> > > > example occurring on real hardware.  I think the spec is vague enough
+> > > > to allow that implementation.  Would have been easy to specify this originally
+> > > > but it probably won't go in as errata so we need to cope with all the
+> > > > flexibility that is present.    
+> > > 
+> > > :-(  Yea coulda, woulda, shoulda...  ;-)
+> > >   
+> > > > 
+> > > > What fun and oh for a parameter to control how many records are returned!    
+> > > 
+> > > Yea.  But I really don't think there is a problem unless someone really take
+> > > liberty with the spec.  I think it boils down to how one interprets _when_ a
+> > > record is removed from the log.  
+> > 
+> > This is nothing to do with removal. The wording we have is just about reading
+> > and I think a strict reading of the spec would say your assumption of a reset of the
+> > read pointer on clear is NOT a valid implementation.  There is separate wording
+> > about clears being in temporal order, but that doesn't effect the Get Event
+> > Records handling.
+> >   
+> > > 
+> > > If the record is removed when it is returned (as in your 'next' pointer
+> > > example) then why have a clear at all?  
+> > 
+> > Because if your software crashes, you don't have a handshake to reestablish
+> > state.  If that happens you read the whole log until MORE is not set and
+> > then read it again to get a clean list.  It's messy situation that has
+> > been discussed before for GET POISON LIST which has the same nasty handing
+> > of MORE.  (look in appropriate forum for resolution to that one that we can't
+> > yet discuss here!)  
+> 
+> I can see the similarities but I think events are a more ephemeral item which
+> makes sense to clear once they are consumed.  The idea that they should be left
+> for others to consume does not make sense to me.  Where Poison is something
+> which could be a permanent marker which should be left in a list.
+
+Agreed - but sections use same wording for the More flag.. So we need to interpret
+the same.
+
+> 
+> > 
+> > Also, allows for non destructive readback (debugging tools might take a look
+> > having paused the normal handling).  
+> 
+> That is true.
+> 
+> >   
+> > > If my interpretation is correct then
+> > > the next available entry is the one which has not been cleared.  
+> > 
+> > If that is the case the language in "More Event Records" doesn't work
+> > "The host should continue to retrieve records using this command, until
+> > this indicator is no longer set by the device"
+> > 
+> > With your reading of the spec, if we clear nothing, we'd keep getting the
+> > first set of records and only be able to read more by clearing them...
+> >   
+> 
+> Yea.
+> 
+> >   
+> > >  Therefore in
+> > > your example 'next' is not incremented until clear has been called.  I think
+> > > that implementation is also supported by the idea that records must be cleared
+> > > in temporal order.  Otherwise I think devices would get confused.  
+> > 
+> > Not hard for device to do this (how I now read the spec) properly.
+> > 
+> > Two pointers:
+> > 1) Next to clear: CLEAR
+> > 2) Next to read:  READ
+> > 
+> > Advance the the READ pointer on Get Event Records  
+> 
+> And loop back to the start on a further read...  I'm looking at changing the
+> code for this but I think making it fully robust under a memory allocation
+> failure is going to be more tedious or we punt.
+
+If we get a memory allocation failure, perhaps we could do the follow horrible hack.
+
+1 Allocate a small buffer.
+2 Read once.
+3 Hopefully we get the full record - in which case success.
+4 Clear those records.
+5 If not dealt with all records - read again until More Event Records not set
+  (may already not be if it fitted in the buffer)
+6 Go back to 2.
+
+If we think a valid implementation might reset the read pointer on clear then
+there is a variant where we make use of the fact the handles are constant
+ - read 3 records, clear 2 and then use the handle of remaining one to identify
+   if we have the next 3 to clear or not... 
+
+> 
+> > For CLEAR, check that the requested clears are handled in order and that
+> > they are before the READ pointer.
+> > 
+> > Maybe we should just take it to appropriate spec forum to seek a clarification?  
+> 
+> Probably.  I've not paid attention lately.
+> 
+> I've sent a separate email with you cc'ed.  Perhaps we can get some
+> clarification before I completely rework this.
+
+Fingers crossed.
+
+Thanks,
+
+Jonathan
+
+> 
+> Ira
+> 
+> > 
+> > Jonathan
+> >   
+> > > 
+> > > FWIW the qemu implementation is based on my interpretation ATM.
+> > > 
+> > > Ira
+> > >   
+> > > > 
+> > > > Jonathan
+> > > > 
+> > > >     
+> > > > >     
+> > > > > >       
+> > > > > > > +		 payload.flags & CXL_GET_EVENT_FLAG_MORE_RECORDS);
+> > > > > > > +}      
+> > > > > >     
+> > > >     
+> > > > >     
+> > > >     
+> >   
+
