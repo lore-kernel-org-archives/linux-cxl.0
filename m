@@ -2,171 +2,175 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52514C4321E
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 21:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B02EC4321E
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 21:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbiK3VC4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 16:02:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
+        id S229513AbiK3VhS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 16:37:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiK3VCs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 16:02:48 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A095BA0
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 13:02:43 -0800 (PST)
+        with ESMTP id S229477AbiK3VhR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 16:37:17 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0985991379;
+        Wed, 30 Nov 2022 13:37:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669842164; x=1701378164;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=rspaHfjVxehPepr5IvBAx/k94OUZYxzoLAGEpOd84Fo=;
-  b=Y0ORFmvEHVGYMqb9NEXzkZl06Wb9cTVZyqOd7ld71I5ycrnDqkSFrc5f
-   kNzg/PXDBJlJyYtIST0P/Ys3WpGsU7q1ryv6CtdA90OE/PT/bbfJlAcVr
-   kjJwBe1UXQ0kkyJD1Ql98b+IY8CfTWyqW8I3NfafY6wqLt7xOLVfb2dxX
-   1XGkNh2WuGsro4M7V//jHgwDJUPMnuhUmOmdmFGgCaYQu+njuIoZbzR3f
-   kRuuoJYrG8fGUgmFSaNBvWMYc3FBftlEe10Dox/j1LNNfZJKI/nLRdTHs
-   ENc15Y6U5MGlRG/Dxg5NDlhAR2f4Xb32064tkCASCAaQ0GflqcR37UI+s
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="316665078"
+  t=1669844237; x=1701380237;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=S8wZqdIjr5FpmOoemumOiOZUT8ftw3oFGWnSoeT/3WI=;
+  b=DNZeVofFgZOj7DXLmmlLQ8ZckzZJz3Rd9YfWUkuLSUtZLGfqWL+UDHMi
+   MtVp/G7g7gH/W58j5Zd0g+omYYNiuTiA1TQWJ5LOA7cYDLcE/MwQ9xgce
+   HKgBQJGqCWsfTVUlRKowJUj7cM6mkCSdPp+DhtRV4Rlb688Xuz77vZ9fv
+   bq2f4tnjOTaK5xI0OTpVzE+B1gRi9EPG29j58gmz9FtBfezb4de2xmsIO
+   AoypBqTRyQ6b+iWoDajwG2rXATOTdxhYhzRJvnWg8HW4Tj5QuyVam51co
+   EdWmvWOsWRBZ6w4WlJ1EAjydTPTG5Bxx6r9aA+RrOO5EYIgHPeykyLP4S
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="379795103"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="316665078"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 13:02:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="768974981"
+   d="scan'208";a="379795103"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 13:37:16 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="712971066"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="768974981"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga004.jf.intel.com with ESMTP; 30 Nov 2022 13:02:42 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Wed, 30 Nov 2022 13:02:42 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Wed, 30 Nov 2022 13:02:42 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Wed, 30 Nov 2022 13:02:42 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Wed, 30 Nov 2022 13:02:41 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EYgWb4xyoh7QQwuF7ygRCwfE1yNBxdZFz6+5T3rwLe3WhtarEBFwu1DN3femAJ1Au2H7y8YX0D8kqEmnLLhTdIkTRYy0XD1KEcbvvxGGn2LSK0H9Zxtzx8U3nGiHwSknDJLjE4g4lNdT25Fw7bUBgS9pUhv90ckAKm94aB6iiHoZXywgncy/jPd8u3IIEiRldkE1lB8unNG9kJfAw9jn0bVQm/i2EoCZIhdiy4k6fxlZLSN98O50hVr6clfRVhuGH03zHC88kPpzjAx5yfC5ThUEVbrxi1HGFOxQYufsprlJ1jkGR/zwekpOz1NHpA4PgHfoUNgcqUWMGUxFEECIDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=764Yw/Iv2F5fg//dZMdSpMDort/JHJefsHW5sPVHU0k=;
- b=g7Vo/GqM+ZuiPK9wPoo+44fxbAZR1QfNwYRzcddFr2ZVwyl0vdPFblm6RdX6FRInechodIBSHI4OiOpHdCR/bPaqCcn5BF5atuJkW5A0q8k5LZrlDi6B/EmtR4yzsgpUd0uV7HF0evJJHDcsoBRct8ZOu4OvMSidHpYxy+jginRS60F9ElvBdLDsh09m19mI41Fi+WYBaGjaw5Gf1RSFnSkZrzDzYz3gsMWjajSB/LyM2w7FOh0Lx3KluLfY48An46V7vhhnXz5nA0m/XT6x0SP+BgO2x/PMvSbHMdnnDdBlfZFsYjp14vPWlrU1vXySD2BZ/peMdbkmADIcaEc9pQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by SJ0PR11MB5199.namprd11.prod.outlook.com
- (2603:10b6:a03:2dd::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Wed, 30 Nov
- 2022 21:02:40 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5857.023; Wed, 30 Nov 2022
- 21:02:40 +0000
-Date:   Wed, 30 Nov 2022 13:02:38 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Robert Richter <rrichter@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Terry Bowman <terry.bowman@amd.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        <bhelgaas@google.com>, <dave.jiang@intel.com>,
-        <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v4 12/12] cxl/acpi: Set ACPI's CXL _OSC to indicate
- CXL1.1 support
-Message-ID: <6387c4ee43ebd_3cbe0294ca@dwillia2-xfh.jf.intel.com.notmuch>
-References: <166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com>
- <166931494367.2104015.9411254827419714457.stgit@dwillia2-xfh.jf.intel.com>
- <Y4cRV/Sj0epVW7bE@rric.localdomain>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Y4cRV/Sj0epVW7bE@rric.localdomain>
-X-ClientProxiedBy: SJ0PR03CA0252.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::17) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+   d="scan'208";a="712971066"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.104.222]) ([10.212.104.222])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 13:37:15 -0800
+Message-ID: <1669ae81-e3fa-0401-1a18-dd77961bb8a9@intel.com>
+Date:   Wed, 30 Nov 2022 14:37:14 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SJ0PR11MB5199:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2309a87-762c-4839-23ba-08dad31637a9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pdCQweDMx8ylrqKKwDJE8DVRHiCSdHaAEKMvqa43dJxr5KR4FGQw9RY7f63OfA5H9p4v3i1483YxMHLc59whjc/GyxE3hr1k50pSryLXDrPuxI2P+KIa6FxT+eOdBpRzV+vqbc2m0FtUatI+2TlCsoh1iJXbMV9zCKNtoJaWaIbsazocOlDRieY0IOpYl8NAmHh0w1mvpFc2U2YjfDiha8T5YVxO6OMulpyFBvqVHDJg238RNkf00gkTqOjDpAemTNoEM/o5Vm8QzXBwZUd5W4upqFrK7VZGeIDs1dkXhDTbzGWfNhczaIF8CQTO/FMew8IFt91+uxLGqeSc4yzvEMXopctE5dJLJUSnYv9Z8tUOeizdEtYYS8EuEGXtY0q3vaUp6cMxhn1XazXgo0gGmVp24ysWlnW4zoV17M59/TNOc1OAW67cY2AcVCzHm1rNNYpAYLP+/hLe2E4eze4sOZxvlICtyzistzbJp9ykJuXU++WiT/iSFRztHjCkS9Od2FFwMmjWRU1m3OI4Kzc5BzzhOxWa69f8NMI/q2HEoGltWUd4FJ01sSOAUXRPriFp2sZ6THNyNSY1KcwhLHc0GIm+8OFdsTfo3cbXi818/3pio7saTHgstr34U8prkQQ34rtz6Od5SqcvCpQG/LYlwA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(346002)(376002)(396003)(39860400002)(366004)(451199015)(5660300002)(4744005)(54906003)(41300700001)(9686003)(6512007)(316002)(110136005)(82960400001)(66556008)(8676002)(66946007)(4326008)(66476007)(38100700002)(186003)(8936002)(26005)(2906002)(86362001)(6506007)(6486002)(478600001)(53546011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?clQAsD2jSlotrUfCMCLR7xEraQm5WNK0B8qihVBsy0XsY9vex/0c8kHJN8Bt?=
- =?us-ascii?Q?x8gWaL2cWO5XGJRSsbSEwIcNj5xr6Wue8WVd8VVnqqgR9Wd3KShL/lWbzrzs?=
- =?us-ascii?Q?3Itn4UP4+7v96/jMvS9mj5AtPRDrdFwKcAe6l+ubyi01IhhUBfiz/9sTz2P0?=
- =?us-ascii?Q?SKKD7MMf+Y5xo9bt0m5rpifUXNewsVNqyE7jD/uwx4bYzh0SA192IKu2elRA?=
- =?us-ascii?Q?a3BhYpAEnGDf1RG6/+WEoJFEaSU1paGEesWlCNj58Z7Jt+kRqeeGcV7ROKPu?=
- =?us-ascii?Q?JKVWRVU6ic3XnOd54pwkJuWNgZUr1BrIUMuONobkRvg7kaiEuNug+2YkJfRm?=
- =?us-ascii?Q?koDtSJEKwylfjcBMHKSobyr005a077xJQY1+atZBs3P/F7m9+Ri3b25E9EYe?=
- =?us-ascii?Q?7lOwpEzGfQJmM3YFB6cfZq0tEzFRSFrZmJKKV51vSKt0Mue7y4/qQUvd1EzI?=
- =?us-ascii?Q?TF7hEjFH9bmAkNjuA8m2LfuaTJhbgOCpKjDNTgtNCHoNnPAjWLMx05JimZ8b?=
- =?us-ascii?Q?NsWA2ECfMDbVxCjqmJWR9r8a86C+li//5YbbXZz6u1dLPz8WGgydWWtLVoV0?=
- =?us-ascii?Q?oQlNscQyLgxYTMqsKPPNNk6zxEoSHoCzRjnGO35+9hrO36LEIPXyb9wpzVIQ?=
- =?us-ascii?Q?uoK9kTo3D4ZJutNzxTtobmMWl+i63I9LhOWY2xjIop2txLZk7GnnYb5kE1o/?=
- =?us-ascii?Q?FTIX7FXfv1DywbEoQKXy6p2JdWre7xLTtlwxA9ZCc/GKnR2rdbylRIALISEZ?=
- =?us-ascii?Q?WP41fgDqTSDlDh7J0R0bNgo7eAfaiQu30iXbu3MpQ97G39g7F9CP3tT7yaeh?=
- =?us-ascii?Q?Yl/ttXAlEMU7s4d08r+bYTw1uIlXfbIUW75eOMSNdvy/Dx4h+TjI0gDye/dO?=
- =?us-ascii?Q?Jaccn/o3mpYymaN66GxfBa5J8ZybqTkBemH51zprgGQcZChjQfGgllSgIFAo?=
- =?us-ascii?Q?dg63F4DGUM0c2mlJ6k70WYz1BTsXReyFsxa8hkw/y3/pRDvp60Ek1p62GvpH?=
- =?us-ascii?Q?HGhMit7JbjZv0jlyVKlQ6/8mwkXnnQzd1dsw187hCk0Z3bxh5ewE/Jx6cWer?=
- =?us-ascii?Q?XcBiiam1TYVVSkkWdMeMK1XEYX7MOS6083e61HbLmlt8GCB0X25J1hmRWNnn?=
- =?us-ascii?Q?N4kDxFZSpTqJqTkKxo153MBdxrXcBtOdTrYWxSX5DpVN7rXjcXOQFL4DWMTj?=
- =?us-ascii?Q?og6DtSyO26eR484JboEm8Mlm6hTipy/dOw1v5WmUcBAs3evLc080edQZO8+m?=
- =?us-ascii?Q?kyBU/9duC5sXExnWTtV/39WM7zQZo2AiXDjVXSiIolydtSSu+prbt9cHwUXi?=
- =?us-ascii?Q?UtvCts6M5KmpitUsY/TysNzT7Ws/n9ronVF+Si2JmV7rXt15u4WbboJF8Xbe?=
- =?us-ascii?Q?8M20EM91shfwPqC84B29oxHnNUg8eXIrLe9PS5Iosejbb93Q2b276Cr6XhlC?=
- =?us-ascii?Q?hMvEfeD+DtamYmJY8A7SxzA1HM5W/Y3nPQwARR54/cZBQhdAfgXeGRE5ZKgq?=
- =?us-ascii?Q?hGFTr/gyTG/oLYetMXJGFSkJvcd3ddfkfPFU+NAQRkeoZcUnZ9gJM8eS7xbr?=
- =?us-ascii?Q?BDjmVpKw3c7vfELhzbt+lPijOw1ylBvjwaJ8XHeXFoatQ0Um81ie8zhqeqbp?=
- =?us-ascii?Q?qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2309a87-762c-4839-23ba-08dad31637a9
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2022 21:02:40.4637
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Xt0HJ9IdRZGeUkYkTqCf7irvY0/Ej96o678oIcl/UhjKsyqPTkh2x6/oruG+Sd4oH7aWyBxDLQ6++diQ/ZkbT+qTFxPmIax5yqG/PcdrG+A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5199
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.0
+Subject: Re: [PATCH v4 10/11] PCI/AER: Add optional logging callback for
+ correctable error
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
+        terry.bowman@amd.com, bhelgaas@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, shiju.jose@huawei.com
+References: <20221130194521.GA829038@bhelgaas>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221130194521.GA829038@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Robert Richter wrote:
-> On 24.11.22 10:35:43, Dan Williams wrote:
-> > From: Terry Bowman <terry.bowman@amd.com>
-> > 
-> > ACPI includes a CXL _OSC for the OS to communicate what it knows of CXL
-> > device topologies. To date Linux has added support for CXL 2.0 (VH) port
-> > topologies, hotplug, and error handling. Now that the driver also know
-> > how to enumerate CXL 1.1 (RCH) port topologies, indicate that capability
-> > via CXL _OSC. See CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support
-> > Field'
-> > 
-> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > [djbw: wordsmith changelog]
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> 
-> I have had a reworded version of this in the pipe too, esp. version
-> strings were dropped in favor of VH and RCD mode. You might want to
-> consider that one:
 
-Sure, looks good to me.
+
+On 11/30/2022 12:45 PM, Bjorn Helgaas wrote:
+> On Tue, Nov 29, 2022 at 10:49:05AM -0700, Dave Jiang wrote:
+>> Some new devices such as CXL devices may want to record additional error
+>> information on a corrected error. Add a callback to allow the PCI device
+>> driver to do additional logging such as providing additional stats for user
+>> space RAS monitoring.
+>>
+>> For CXL device, this is actually a need due to CXL needing to write to the
+>> device AER status register in order to clear the unmasked CEs.
+> 
+> s/CE/correctable error/ since it's the first use and not common in
+> PCI-land.
+> 
+
+Ok
+
+> "device AER status register" sounds like the PCIe AER Correctable
+> Error Status Register (PCIe r6.0, sec 7.8.4.5), but I think you mean
+> something else, maybe a CXL-specific register?
+
+Yes. It's part of the CXL device RAS structure. I'll add more details.
+
+> 
+> The PCIe core needs to own the AER one (PCI_ERR_COR_STATUS) so it can
+> coordinate ownership between firmware and Linux.
+> 
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thank you!
+
+> 
+>> ---
+>>   Documentation/PCI/pci-error-recovery.rst |    7 +++++++
+>>   drivers/pci/pcie/aer.c                   |    8 +++++++-
+>>   include/linux/pci.h                      |    3 +++
+>>   3 files changed, 17 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+>> index 187f43a03200..690220255d5e 100644
+>> --- a/Documentation/PCI/pci-error-recovery.rst
+>> +++ b/Documentation/PCI/pci-error-recovery.rst
+>> @@ -83,6 +83,7 @@ This structure has the form::
+>>   		int (*mmio_enabled)(struct pci_dev *dev);
+>>   		int (*slot_reset)(struct pci_dev *dev);
+>>   		void (*resume)(struct pci_dev *dev);
+>> +		void (*cor_error_log)(struct pci_dev *dev);
+> 
+> I think I would remove "log" from the name because it suggests this
+> hook should *only* log, and you need to actually clear some status.
+> Maybe "cor_error_detected()" to be analogous to error_detected()?
+
+Ok I'll change.
+
+> 
+>>   	};
+>>   
+>>   The possible channel states are::
+>> @@ -422,5 +423,11 @@ That is, the recovery API only requires that:
+>>      - drivers/net/cxgb3
+>>      - drivers/net/s2io.c
+>>   
+>> +   The cor_error_log() callback is invoked in handle_error_source() when
+>> +   the error severity is "correctable". The callback is optional and allows
+>> +   additional logging to be done if desired. See example:
+>> +
+>> +   - drivers/cxl/pci.c
+>> +
+>>   The End
+>>   -------
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index e2d8a74f83c3..af1b5eecbb11 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -961,8 +961,14 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>>   		if (aer)
+>>   			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+>>   					info->status);
+>> -		if (pcie_aer_is_native(dev))
+>> +		if (pcie_aer_is_native(dev)) {
+>> +			struct pci_driver *pdrv = dev->driver;
+>> +
+>> +			if (pdrv && pdrv->err_handler &&
+>> +			    pdrv->err_handler->cor_error_log)
+>> +				pdrv->err_handler->cor_error_log(dev);
+>>   			pcie_clear_device_status(dev);
+>> +		}
+>>   	} else if (info->severity == AER_NONFATAL)
+>>   		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+>>   	else if (info->severity == AER_FATAL)
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 575849a100a3..54939b3426a9 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -844,6 +844,9 @@ struct pci_error_handlers {
+>>   
+>>   	/* Device driver may resume normal operations */
+>>   	void (*resume)(struct pci_dev *dev);
+>> +
+>> +	/* Allow device driver to record more details of a correctable error */
+>> +	void (*cor_error_log)(struct pci_dev *dev);
+>>   };
+>>   
+>>   
+>>
+>>
