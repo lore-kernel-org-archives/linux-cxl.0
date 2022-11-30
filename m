@@ -2,187 +2,150 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B835BC4321E
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 19:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93D5C47089
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 19:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbiK3TXv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 14:23:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
+        id S229760AbiK3Tps (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 14:45:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbiK3TXU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 14:23:20 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD972BB35
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 11:23:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669836199; x=1701372199;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=88azzkZzbVlSHS6kW7zwXOr9B3rybc+KeSXbL0S7NOQ=;
-  b=V1mSxkxs+b00Fe0mjrHKQRfT0m3tgv8m2hfN+xY0ezYmeVmx0UIswMtt
-   XdK3TqxhN9C1Y2fIE+W3g0qW2Ij8AkHChDktV2Gh3dmKGy6ZXRPhSrWla
-   lOte4YRmHpMWHgw9DsElyVg+IAySIX9+hzbnUlRGNWDLUA4g9SLjpTWRW
-   lEB1ElKdrYhsqvsR9Rep2kbrW/xzB/UugEBUplnra5KAxehMD8RI5Y2M+
-   Uox94E4DrLDiOs/lRpjdLJ1LkwISXCwygioYfYvptjN9MFPDGPcPhU6a9
-   k7HZURJM526Csj9AFxn6Pw4Iz6EcKrKSwezYk0q3y8X1QUklpuLr8y8YF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="313118776"
-X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="313118776"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 11:23:19 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="889415487"
-X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="889415487"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 11:23:19 -0800
-Subject: [PATCH v7 19/20] acpi/nfit: bypass cpu_cache_invalidate_memregion()
- when in test config
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        with ESMTP id S229771AbiK3Tp0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 14:45:26 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5117D54343;
+        Wed, 30 Nov 2022 11:45:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ECB1DB81CAF;
+        Wed, 30 Nov 2022 19:45:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB0CC433D6;
+        Wed, 30 Nov 2022 19:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669837522;
+        bh=uNNXGBb4FjBVyKDxuAWjBnHecN+PDevZMiRfEDecVE8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jaY6fmGRj/bMNVgts24I4U7+WMeUHFy/gSMzUAgJONxpRtci19Cdm3ChVVaQIG3nh
+         4JFc+pKthb2EYoCZmi1MgLXAwgl1mE55mBDe7ImSxBcejCXeMXAYaMsO/y5ZSl5Qed
+         3NUzPMZ/5pKgRKccbr80H5xYnS2J7MYhGevMJOk52+eKgj63UDJ5cb2XKXrZkX+RVY
+         1VYl2I0OBCblQXiZcV0fVTw/tgmv97NOryG+OlmWWCvkfhkkyIHuQsByywRXHUXtnG
+         HprZ29ZQwddo7DeEQdN4+LyE0oJuOkeDjWj5iQv48VaKDl0tB4dE1K7Bkiq/MfO6O9
+         XMyDu/R2sOoGg==
+Date:   Wed, 30 Nov 2022 13:45:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com, dave@stgolabs.net
-Date:   Wed, 30 Nov 2022 12:23:18 -0700
-Message-ID: <166983619896.2734609.7192339006218947870.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <166983606451.2734609.4050644229630259452.stgit@djiang5-desk3.ch.intel.com>
-References: <166983606451.2734609.4050644229630259452.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.4
+        Jonathan.Cameron@huawei.com, rostedt@goodmis.org,
+        terry.bowman@amd.com, bhelgaas@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, shiju.jose@huawei.com
+Subject: Re: [PATCH v4 10/11] PCI/AER: Add optional logging callback for
+ correctable error
+Message-ID: <20221130194521.GA829038@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166974414546.1608150.4142682712102935008.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Bypass cpu_cache_invalidate_memregion() and checks when doing testing
-using CONFIG_NVDIMM_SECURITY_TEST flag. The bypass allows testing on
-QEMU where cpu_cache_has_invalidate_memregion() fails. Usage of
-cpu_cache_invalidate_memregion() is not needed for nfit_test security
-testing.
+On Tue, Nov 29, 2022 at 10:49:05AM -0700, Dave Jiang wrote:
+> Some new devices such as CXL devices may want to record additional error
+> information on a corrected error. Add a callback to allow the PCI device
+> driver to do additional logging such as providing additional stats for user
+> space RAS monitoring.
+> 
+> For CXL device, this is actually a need due to CXL needing to write to the
+> device AER status register in order to clear the unmasked CEs.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/acpi/nfit/intel.c |   51 +++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 42 insertions(+), 9 deletions(-)
+s/CE/correctable error/ since it's the first use and not common in
+PCI-land.
 
-diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-index fa0e57e35162..38069f10c316 100644
---- a/drivers/acpi/nfit/intel.c
-+++ b/drivers/acpi/nfit/intel.c
-@@ -191,6 +191,39 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
- 	}
- }
- 
-+static bool intel_has_invalidate_memregion(struct nvdimm *nvdimm)
-+{
-+	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-+	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-+	struct device *dev = acpi_desc->dev;
-+
-+	if (!cpu_cache_has_invalidate_memregion()) {
-+		if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
-+			dev_warn_once(dev,
-+				      "Bypassing cpu_cache_has_invalidate_memregion() check for testing!\n");
-+			return true;
-+		}
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static void intel_invalidate_memregion(struct nvdimm *nvdimm)
-+{
-+	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-+	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-+	struct device *dev = acpi_desc->dev;
-+
-+	if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
-+		dev_warn_once(dev,
-+			      "Bypassing cpu_cache_invalidate_memergion() for testing!\n");
-+		return;
-+	}
-+
-+	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-+}
-+
- static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
- 		const struct nvdimm_key_data *key_data)
- {
-@@ -212,7 +245,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
- 	if (!test_bit(NVDIMM_INTEL_UNLOCK_UNIT, &nfit_mem->dsm_mask))
- 		return -ENOTTY;
- 
--	if (!cpu_cache_has_invalidate_memregion())
-+	if (!intel_has_invalidate_memregion(nvdimm))
- 		return -EINVAL;
- 
- 	memcpy(nd_cmd.cmd.passphrase, key_data->data,
-@@ -230,7 +263,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
- 	}
- 
- 	/* DIMM unlocked, invalidate all CPU caches before we read it */
--	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-+	intel_invalidate_memregion(nvdimm);
- 
- 	return 0;
- }
-@@ -299,11 +332,11 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
- 	if (!test_bit(cmd, &nfit_mem->dsm_mask))
- 		return -ENOTTY;
- 
--	if (!cpu_cache_has_invalidate_memregion())
-+	if (!intel_has_invalidate_memregion(nvdimm))
- 		return -EINVAL;
- 
- 	/* flush all cache before we erase DIMM */
--	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-+	intel_invalidate_memregion(nvdimm);
- 	memcpy(nd_cmd.cmd.passphrase, key->data,
- 			sizeof(nd_cmd.cmd.passphrase));
- 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-@@ -323,7 +356,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
- 	}
- 
- 	/* DIMM erased, invalidate all CPU caches before we read it */
--	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-+	intel_invalidate_memregion(nvdimm);
- 	return 0;
- }
- 
-@@ -346,7 +379,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
- 	if (!test_bit(NVDIMM_INTEL_QUERY_OVERWRITE, &nfit_mem->dsm_mask))
- 		return -ENOTTY;
- 
--	if (!cpu_cache_has_invalidate_memregion())
-+	if (!intel_has_invalidate_memregion(nvdimm))
- 		return -EINVAL;
- 
- 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-@@ -363,7 +396,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
- 	}
- 
- 	/* flush all cache before we make the nvdimms available */
--	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-+	intel_invalidate_memregion(nvdimm);
- 	return 0;
- }
- 
-@@ -388,11 +421,11 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
- 	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
- 		return -ENOTTY;
- 
--	if (!cpu_cache_has_invalidate_memregion())
-+	if (!intel_has_invalidate_memregion(nvdimm))
- 		return -EINVAL;
- 
- 	/* flush all cache before we erase DIMM */
--	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-+	intel_invalidate_memregion(nvdimm);
- 	memcpy(nd_cmd.cmd.passphrase, nkey->data,
- 			sizeof(nd_cmd.cmd.passphrase));
- 	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
+"device AER status register" sounds like the PCIe AER Correctable
+Error Status Register (PCIe r6.0, sec 7.8.4.5), but I think you mean
+something else, maybe a CXL-specific register?
 
+The PCIe core needs to own the AER one (PCI_ERR_COR_STATUS) so it can
+coordinate ownership between firmware and Linux.
 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  Documentation/PCI/pci-error-recovery.rst |    7 +++++++
+>  drivers/pci/pcie/aer.c                   |    8 +++++++-
+>  include/linux/pci.h                      |    3 +++
+>  3 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+> index 187f43a03200..690220255d5e 100644
+> --- a/Documentation/PCI/pci-error-recovery.rst
+> +++ b/Documentation/PCI/pci-error-recovery.rst
+> @@ -83,6 +83,7 @@ This structure has the form::
+>  		int (*mmio_enabled)(struct pci_dev *dev);
+>  		int (*slot_reset)(struct pci_dev *dev);
+>  		void (*resume)(struct pci_dev *dev);
+> +		void (*cor_error_log)(struct pci_dev *dev);
+
+I think I would remove "log" from the name because it suggests this
+hook should *only* log, and you need to actually clear some status.
+Maybe "cor_error_detected()" to be analogous to error_detected()?
+
+>  	};
+>  
+>  The possible channel states are::
+> @@ -422,5 +423,11 @@ That is, the recovery API only requires that:
+>     - drivers/net/cxgb3
+>     - drivers/net/s2io.c
+>  
+> +   The cor_error_log() callback is invoked in handle_error_source() when
+> +   the error severity is "correctable". The callback is optional and allows
+> +   additional logging to be done if desired. See example:
+> +
+> +   - drivers/cxl/pci.c
+> +
+>  The End
+>  -------
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index e2d8a74f83c3..af1b5eecbb11 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -961,8 +961,14 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  		if (aer)
+>  			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+>  					info->status);
+> -		if (pcie_aer_is_native(dev))
+> +		if (pcie_aer_is_native(dev)) {
+> +			struct pci_driver *pdrv = dev->driver;
+> +
+> +			if (pdrv && pdrv->err_handler &&
+> +			    pdrv->err_handler->cor_error_log)
+> +				pdrv->err_handler->cor_error_log(dev);
+>  			pcie_clear_device_status(dev);
+> +		}
+>  	} else if (info->severity == AER_NONFATAL)
+>  		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+>  	else if (info->severity == AER_FATAL)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 575849a100a3..54939b3426a9 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -844,6 +844,9 @@ struct pci_error_handlers {
+>  
+>  	/* Device driver may resume normal operations */
+>  	void (*resume)(struct pci_dev *dev);
+> +
+> +	/* Allow device driver to record more details of a correctable error */
+> +	void (*cor_error_log)(struct pci_dev *dev);
+>  };
+>  
+>  
+> 
+> 
