@@ -2,113 +2,223 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B13C46467
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 15:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A727C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 16:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbiK3PhO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 10:37:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59600 "EHLO
+        id S230183AbiK3Q1m (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 11:27:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229952AbiK3PhE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 10:37:04 -0500
+        with ESMTP id S229528AbiK3Q1m (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 11:27:42 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 970D76248;
-        Wed, 30 Nov 2022 07:37:01 -0800 (PST)
-Received: from frapeml500006.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NMjsv6pb5z6HJZX;
-        Wed, 30 Nov 2022 23:33:55 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CFDD10D2
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 08:27:39 -0800 (PST)
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NMl0K3dXSz6HJGs;
+        Thu,  1 Dec 2022 00:24:33 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml500006.china.huawei.com (7.182.85.219) with Microsoft SMTP Server
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 30 Nov 2022 16:36:59 +0100
+ 15.1.2375.31; Wed, 30 Nov 2022 17:27:37 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 30 Nov
- 2022 15:36:59 +0000
-Date:   Wed, 30 Nov 2022 15:36:58 +0000
+ 2022 16:27:37 +0000
+Date:   Wed, 30 Nov 2022 16:27:36 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        "Gregory Price" <gregory.price@memverge.com>,
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI/DOE: Silence WARN splat upon task submission
-Message-ID: <20221130153658.00006674@Huawei.com>
-In-Reply-To: <9eb6af0763f1ec05673a7dd6731d9fd646cf1dd4.1669608950.git.lukas@wunner.de>
-References: <cover.1669608950.git.lukas@wunner.de>
-        <9eb6af0763f1ec05673a7dd6731d9fd646cf1dd4.1669608950.git.lukas@wunner.de>
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/4] cxl/region: Add a DPA to HPA translation helper
+Message-ID: <20221130162736.0000333f@Huawei.com>
+In-Reply-To: <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
+References: <cover.1669153711.git.alison.schofield@intel.com>
+        <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Nov 2022 05:25:51 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+On Tue, 22 Nov 2022 15:07:48 -0800
+alison.schofield@intel.com wrote:
 
-> Gregory Price reports a WARN splat with CONFIG_DEBUG_OBJECTS=y upon CXL
-> probing because pci_doe_submit_task() invokes INIT_WORK() instead of
-> INIT_WORK_ONSTACK() for a work_struct that was allocated on the stack.
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> All callers of pci_doe_submit_task() allocate the work_struct on the
-> stack, so replace INIT_WORK() with INIT_WORK_ONSTACK() as a backportable
-> short-term fix.
+> CXL devices may report errors and events using their DPA (device
+> physical address). When a CXL device contributes capacity to a
+> CXL region, the device's physical addresses are mapped to HPA's.
+> (host physical addresses)
 > 
-> Stacktrace for posterity:
+> Provide a helper to calculate the HPA when given a DPA, a region,
+> and the devices position in the region interleave.
+
+device's 
+
 > 
-> WARNING: CPU: 0 PID: 23 at lib/debugobjects.c:545 __debug_object_init.cold+0x18/0x183
-> CPU: 0 PID: 23 Comm: kworker/u2:1 Not tainted 6.1.0-0.rc1.20221019gitaae703b02f92.17.fc38.x86_64 #1
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
-> Call Trace:
->  pci_doe_submit_task+0x5d/0xd0
->  pci_doe_discovery+0xb4/0x100
->  pcim_doe_create_mb+0x219/0x290
->  cxl_pci_probe+0x192/0x430
->  local_pci_probe+0x41/0x80
->  pci_device_probe+0xb3/0x220
->  really_probe+0xde/0x380
->  __driver_probe_device+0x78/0x170
->  driver_probe_device+0x1f/0x90
->  __driver_attach_async_helper+0x5c/0xe0
->  async_run_entry_fn+0x30/0x130
->  process_one_work+0x294/0x5b0
+> Verify that the HPA is within the expected ranges that this device
+> contributes to the region interleave set.
 > 
-> Fixes: 9d24322e887b ("PCI/DOE: Add DOE mailbox support functions")
-> Link: https://lore.kernel.org/linux-cxl/Y1bOniJliOFszvIK@memverge.com/
-> Reported-by: Gregory Price <gregory.price@memverge.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v6.0+
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> The initial use case is translating the DPAs that CXL devices
+> report in media error records.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+
+I'm not following the maths for the 3/6/12 way interleave cases.
+
 > ---
->  drivers/pci/doe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/cxl/core/core.h   |  3 ++
+>  drivers/cxl/core/region.c | 80 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 83 insertions(+)
 > 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 66d9ab288646..52541eac17f1 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -541,7 +541,7 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  		return -EIO;
->  
->  	task->doe_mb = doe_mb;
-> -	INIT_WORK(&task->work, doe_statemachine_work);
-> +	INIT_WORK_ONSTACK(&task->work, doe_statemachine_work);
-
-If we go this way, add a comment to say 'why' it is ONSTACK
-or add to the function description to say it 'must be on stack'.
-
->  	queue_work(doe_mb->work_queue, &task->work);
->  	return 0;
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 1d8f87be283f..72b58e53c394 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -67,6 +67,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+>  	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
 >  }
+>  
+> +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
+> +		   struct cxl_endpoint_decoder *cxled);
+> +
+>  int cxl_memdev_init(void);
+>  void cxl_memdev_exit(void);
+>  void cxl_mbox_init(void);
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index f9ae5ad284ff..c847517e766c 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1865,6 +1865,86 @@ static void cxlr_pmem_unregister(void *dev)
+>  	device_unregister(dev);
+>  }
+>  
+> +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int gran = p->interleave_granularity;
+> +	int ways = p->interleave_ways;
+> +	u64 stride;
+> +
+> +	/* Is the hpa within this region at all */
+> +	if (hpa < p->res->start || hpa > p->res->end) {
+> +		dev_dbg(&cxlr->dev,
+> +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> +		return false;
+> +	}
+> +	/* Is the hpa in an expected stride for its pos(-ition) */
+> +	stride = p->res->start + pos * gran;
+> +	do {
+> +		if (hpa >= stride && hpa <= stride + gran - 1)
+	< stride + gran seems simpler.
+
+> +			return true;
+> +
+> +		stride = stride + ways * gran;
+> +	} while (stride < p->res->end);
+
+That's going to take a 'while' with a large region.  Can we do something quicker
+along the lines of...
+
+Something like (untested)
+	u64 offset = hpa - p->res_start;
+
+	/* Offset within the right 'stride' */
+	offset = offset % (gran * ways);
+
+	if (offset >= pos * gran && offset < (pos + 1) * gran)
+		return true;
+
+..
+> +
+> +	dev_dbg(&cxlr->dev,
+> +		"Addr trans fail: hpa 0x%llx not in any stride\n", hpa);
+> +
+> +	return false;
+> +}
+> +
+> +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
+> +		   struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	u64 dpa_offset, hpa_offset, hpa;
+> +	int rc, pos = cxled->pos;
+> +	u16 eig;
+> +	u8 eiw;
+> +
+> +	rc = ways_to_cxl(p->interleave_ways, &eiw);
+I lost track a bit, but I think we ended up with einw?
+> +	if (rc)
+> +		return rc;
+> +	rc = granularity_to_cxl(p->interleave_granularity, &eig);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * Reverse the HPA->DPA decode logic defined
+> +	 * in the CXL Spec 3.0 Section 8.2.4.19.13
+> +	 * Implementation Note: Device Decode Logic
+Short line wrap. Probably want to go nearer 80 chars
+
+> +	 *
+> +	 * The device position in the region interleave
+> +	 * set was removed in the HPA->DPA translation.
+> +	 * Put it back to reconstruct the HPA.
+> +	 */
+> +
+> +	/* Remove the dpa base */
+> +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +
+> +	/* Restore the position */
+> +	if (eiw <= 8) {
+
+This looks to be the power of 2 version, so should that be eiw < 8?
+
+> +		hpa_offset = (dpa_offset & GENMASK_ULL(51, eig + 8)) << eiw;
+> +		hpa_offset |= GENMASK_ULL(eig + 8 + eiw, eig + 8)
+> +			      & (pos << (eig + 8));
+
+Why is the masking needed here?  I think pos should always fit in the iw bits.
+
+> +	}
+> +	if (eiw == 9)
+
+else if would show clearly that only one of these ifs is true.
+ 
+> +		hpa_offset |= BIT(eig + eiw) & (pos & 0x01);
+
+I don't follow this logic. hpa_offset hasn't been set to anything before
+this point + the right hand side of the above will always be 0 (I think...)
+
+
+> +	if (eiw == 10)
+else if
+> +		hpa_offset |= GENMASK_ULL(eig + eiw, eig + 8) & (pos & 0x03);
+> +
+> +	/* The lower bits remain unchanged */
+> +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+> +
+> +	/* Apply the hpa_offset to region base address */
+> +	hpa = hpa_offset + p->res->start;
+> +
+> +	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
+> +		return 0;
+> +
+> +	return hpa;
+> +}
+> +
+>  /**
+>   * devm_cxl_add_pmem_region() - add a cxl_region-to-nd_region bridge
+>   * @cxlr: parent CXL region for this pmem region bridge device
 
