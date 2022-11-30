@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FD7C4321E
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 22:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D2BC47088
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 22:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbiK3Wrg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S229477AbiK3Wrg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 30 Nov 2022 17:47:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54798 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbiK3Wrf (ORCPT
+        with ESMTP id S229633AbiK3Wrf (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 17:47:35 -0500
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014A691369
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 14:47:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164D527D
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 14:47:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669848451; x=1701384451;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GbqJW+5DBoU/gul+oWbjUVYC1rkA2hpxZ3IZ9fYOQME=;
-  b=YXLl+7IoXxEpkmw6DOPQcz1zfddH2jfNbadqGMBgKjz3BFBpBvODmF1+
-   xqzH0eHXDt+Hn5BiGv+ldllhraI14PRSigxpBJzf8YZrArWJbJihKopEJ
-   Nlhv3U/6cJSL0F+NXG1FljFRH8+/FM26YzwPF7aLaZpfSiLXaSA4X2fAF
-   KE9IZfynecLr8mCgKPvCLMoCcneLeITt70tBkmfEcrVapx5PKIbmkHm3X
-   UcasqDN8x4TBU9h9vUlzIGeXI3uLXYqXn28ovms48Zpt/UE0rcQvKkPDm
-   PsS6I62YUO39wkxKOe74hRZg2MJ8vATklTRMIseLmi73VEieLrGkZc5Mu
+  t=1669848452; x=1701384452;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kU9CQf5le4qcPUecfPa2rwZNfYfqviF4g10RYcJgAsQ=;
+  b=la3yzuBdyO8SP2BWOcM8GrzT0wZ+m406vPKb9wL5fJMFOsPFwnKLlLGi
+   yDhrfVUmfkCw7llSGLmFcws0snrqofPB7XJMu98KT4g2YKTZwhEkt9sf7
+   Z+ShI6ahsISynZhMfXTKtl3348qqc2mquuXG194nV5Z8Xy0VWTnWvLsgA
+   uZtGMgyWXioSlkcn/rHnt4kCcZGBDb7R5eodo4kHJ9iIvB9KBX8TAwI8z
+   67GBarJrKhId0IwKtmRqjhLvOnI8zHKtNAUrE4n1PH7ENhC2TBD4YO8Ye
+   xoTw01szWEJFrA7/Q7cDdYWJ3ii1KW54AfA7SYNe+KVD7RV/NTzVJ2P1M
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="316682630"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="316682635"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="316682630"
+   d="scan'208";a="316682635"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:30 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="769003135"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="769003140"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="769003135"
+   d="scan'208";a="769003140"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.3.88])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:29 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:30 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -45,10 +45,12 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: [PATCH v9 0/3] CXL XOR Interleave Arithmetic
-Date:   Wed, 30 Nov 2022 14:47:23 -0800
-Message-Id: <cover.1669847017.git.alison.schofield@intel.com>
+Subject: [PATCH v9 1/3] ACPICA commit 2d8dc0383d3c908389053afbdc329bbd52f009ce
+Date:   Wed, 30 Nov 2022 14:47:24 -0800
+Message-Id: <62d3f6a43fb8ef892965a8257fad17dbfb1afae4.1669847017.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
+In-Reply-To: <cover.1669847017.git.alison.schofield@intel.com>
+References: <cover.1669847017.git.alison.schofield@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -57,72 +59,87 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Add support for the new 'XOR' Interleave Arithmetic as defined
-in the CXL 3.0 Specification:
-https://www.computeexpresslink.org/download-the-specification
+The CXL 3.0 Specification [1] adds two new structures to
+the CXL Early Discovery Table (CEDT). The CEDT may include
+zero or more entries of these types:
 
-Changes in v9:
-- Add Jonathan's Reviewed-by tags to Patches 2/3
-- Move calc of n to separate func (Jonathan)
-- Use ways_to_cxl() for self-documentation, despite overkill (Jonathan)
-- Use the #define ACPI_CEDT_CFMWS_ARITHMETIC_XOR in cxl_test (Jonathan)
-- Tidy up whitespace and trailing commas (Jonathan)
-  *I went w trailing commas, because we should always expect more :)
-  
-Changes in v8:
-- Move typedef of cxl_cal_hb_fn in cxl.h earlier for use in cxl_root_decoder
-  (It's a bit soon, and a bit small, for rev'ing without awaiting review,
-  but want this to be in sync with the address translation patchset
-  that follows.)
+CXIMS: CXL XOR Interleave Math Structure
+       Enables the host to find a targets position in an
+       Interleave Target List when XOR Math is used.
 
-Changes in v7:
-- Set calc_hb only once (DavidL, Dan)
-- Refactor to eliminate the decoder_add goto (DavidL)
-- dev_err() and fail on unknown interleave arithmetic (DavidL)
-- Add NULL check after devm_zalloc() of cximsd (DavidL)
-- Rename struct cxims_data cxl_cxims_data
+RDPAS: RCEC Downstream Post Association Structure
+       Enables the host to locate the Downstream Port(s)
+       that report errors to a given Root Complex Event
+       Collector (RCEC).
 
-Changes in v6:
-- Rebase on 6.1-rc4, merging with Dan's latest cxl_test work.
-- ACPI patch is now the 'official' linuxized version, not yet merged.
+Link: https://www.computeexpresslink.org/spec-landing # [1]
+Link: https://github.com/acpica/acpica/commit/2d8dc038
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Removed Bob and Rafael SOBs to prevent spamming them on my every rev.
+---
+ include/acpi/actbl1.h | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-Changes in v5:
-- Add to 'n' for 6 & 12 way. (v3->v4 broke it)
-- Clean up x3 index init. (Dan)
-- Remove unneeded HB's from cxl_test topology.
-- Remove dependency on stale patch in cxl_test.
-
-Changes in v4:
-- Use GENMASK_ULL to fix i386 arch build (0-day)
-- Use do_div to fix ARM arch build (0-day)
-- Update comments in ACPICA patch to reflect new state of the
-  ACPICA patch - pending again in github.
-
-Changes in v3:
-- Fix the 3, 6, 12 way interleave (again).
-- Do not look for a CXIMS when not needed for x1 & x3 interleaves
-- New cxl_test patch: Add cxl_test module support for this feature
-- In a separate ndctl patch, cxl test: cxl_xor_region is added
-
-Changes in v2:
-- Use ilog2() of the decoded interleave ways to determine number
-  of xormaps, instead of using encoded ways directly. This fixes
-  3, 6, and 12 way interleaves. (Dan)
-
-Alison Schofield (3):
-  ACPICA commit 2d8dc0383d3c908389053afbdc329bbd52f009ce
-  cxl/acpi: Support CXL XOR Interleave Math (CXIMS)
-  tools/testing/cxl: Add XOR Math support to cxl_test
-
- drivers/cxl/acpi.c           | 136 ++++++++++++++++++++++++++++++++++-
- drivers/cxl/core/port.c      |   9 ++-
- drivers/cxl/cxl.h            |  11 ++-
- include/acpi/actbl1.h        |  35 ++++++++-
- tools/testing/cxl/test/cxl.c | 118 +++++++++++++++++++++++++++++-
- 5 files changed, 297 insertions(+), 12 deletions(-)
-
-
-base-commit: f0c4d9fc9cc9462659728d168387191387e903cc
+diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+index 15c78678c5d3..2aba6f516e70 100644
+--- a/include/acpi/actbl1.h
++++ b/include/acpi/actbl1.h
+@@ -329,7 +329,9 @@ struct acpi_cedt_header {
+ enum acpi_cedt_type {
+ 	ACPI_CEDT_TYPE_CHBS = 0,
+ 	ACPI_CEDT_TYPE_CFMWS = 1,
+-	ACPI_CEDT_TYPE_RESERVED = 2,
++	ACPI_CEDT_TYPE_CXIMS = 2,
++	ACPI_CEDT_TYPE_RDPAS = 3,
++	ACPI_CEDT_TYPE_RESERVED = 4,
+ };
+ 
+ /* Values for version field above */
+@@ -380,6 +382,7 @@ struct acpi_cedt_cfmws_target_element {
+ /* Values for Interleave Arithmetic field above */
+ 
+ #define ACPI_CEDT_CFMWS_ARITHMETIC_MODULO   (0)
++#define ACPI_CEDT_CFMWS_ARITHMETIC_XOR      (1)
+ 
+ /* Values for Restrictions field above */
+ 
+@@ -389,6 +392,36 @@ struct acpi_cedt_cfmws_target_element {
+ #define ACPI_CEDT_CFMWS_RESTRICT_PMEM       (1<<3)
+ #define ACPI_CEDT_CFMWS_RESTRICT_FIXED      (1<<4)
+ 
++/* 2: CXL XOR Interleave Math Structure */
++
++struct acpi_cedt_cxims {
++	struct acpi_cedt_header header;
++	u16 reserved1;
++	u8 hbig;
++	u8 nr_xormaps;
++	u64 xormap_list[];
++};
++
++/* 3: CXL RCEC Downstream Port Association Structure */
++
++struct acpi_cedt_rdpas {
++	struct acpi_cedt_header header;
++	u8 reserved1;
++	u16 length;
++	u16 segment;
++	u16 bdf;
++	u8 protocol;
++	u64 address;
++};
++
++/* Masks for bdf field above */
++#define ACPI_CEDT_RDPAS_BUS_MASK            0xff00
++#define ACPI_CEDT_RDPAS_DEVICE_MASK         0x00f8
++#define ACPI_CEDT_RDPAS_FUNCTION_MASK       0x0007
++
++#define ACPI_CEDT_RDPAS_PROTOCOL_IO        (0)
++#define ACPI_CEDT_RDPAS_PROTOCOL_CACHEMEM  (1)
++
+ /*******************************************************************************
+  *
+  * CPEP - Corrected Platform Error Polling table (ACPI 4.0)
 -- 
 2.37.3
 
