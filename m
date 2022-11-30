@@ -2,225 +2,156 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B06C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 05:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949FEC4321E
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 08:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232978AbiK3FKK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 00:10:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55374 "EHLO
+        id S234157AbiK3IQs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 03:16:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233168AbiK3FKI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 00:10:08 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEBC5F841;
-        Tue, 29 Nov 2022 21:10:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669785007; x=1701321007;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=l261xuR375LCoCkXoCico+/DVNhEZ3aBHJqC0ku+8dU=;
-  b=PYOVvUycvd32Qo/EDNGWP1uy2o12GE2S9S3SbbPAxt4mH3C68Z6yqDTf
-   DJj7DXZQw42Q7zAAyaC7t/YBS850cVWo0UZO3SEqSJAVy1+Ao5EDAuEC4
-   UnHHNxnm6hBE3AvkxjHooUML/6N6k7RLjT3Ee5dfyJPZQnXHagEzO213n
-   hCKzCwHQZe5ArUwGYmR13wiPOf1V6eVx0s+ELqwFx9StPzra5qCyI/igr
-   XCenkuoqlPp/dUcV0/AlXukOBYkvDBr24c2QJCsYYx0e939p3ULJT2rVn
-   7YDCuDhCh103TeSZD22UKv91LcWXiufeR7zyUgusNF/CZIzI7UIs+JzkB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="295667898"
-X-IronPort-AV: E=Sophos;i="5.96,205,1665471600"; 
-   d="scan'208";a="295667898"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 21:10:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="786327039"
-X-IronPort-AV: E=Sophos;i="5.96,205,1665471600"; 
-   d="scan'208";a="786327039"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2022 21:10:07 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 29 Nov 2022 21:10:06 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 29 Nov 2022 21:10:06 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Tue, 29 Nov 2022 21:10:06 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Tue, 29 Nov 2022 21:10:05 -0800
+        with ESMTP id S233930AbiK3IQo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 03:16:44 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBB85214C
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 00:16:42 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e3GSO29SAaBDGehVu7ntQVfhaBnhnZGSFB/UEQ2Hsmg0KRFygij+caxpuccETgXyg7skn22TaZqCmi7jTBjOuQcPzhOQB9AIvoUS2I9ug3mtOGlODYTwT612tF5kI76NSY99qw2Hsa8RWSYURVZsuFg4XiQK0aWO0G1KOuI9trcBsiTNZlluDmjSlf1zVdZc9dQHdKOm9SvNMhCKeN6dEOUGPmQnos2JI0zV0ANpHIbXywuKnHy3Bf8s0IRfVOR/YhlBH2p8Z3TL+HwLeHitoW+UkxgeKYrJ07jHq91i0Nn+yg8lepgUzu+HbHcd10BghRCSvYEOtSZrFe73lSev2Q==
+ b=jseitvNI8I63G0DI/p8Jcvrb3VZ18geg6abWPfBSF4CwyGTNt+jRR/nWTAtJffONDAOGD1QMDCxWe/igu//hjRs0nVYkZ0RWXHIuvg2jiTKMkGGRciuoNxz3eWRIB0AalhchO4oS5sydDIY8hCP196smQbzmXT+sO4MxxTbGiJvrddquE6iNHgEpk+iABGeGJFJPYYN0gh9X1DuNiADRepDKU8i9ipRr6UpoTnDdJptnvtvQUT18GYQocmBdtqKLYD5Kxo8+NAi88FtACd0rP4T3aM8vZyiurgrq3+L/83MwQVvHlZV+1Jz6yiXmsrsiPk6awd/ioS/b1HTHyzduCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZtrYFGj3sApqRvxSAXHinod8ZDoqVTHeHw3yUmvyopc=;
- b=mJenDRsO+chlz+zCEaeDLjAMubaQySshI5ibLcT3a2Int+Dfu397oxE80RHuLM+NNu1qpF7x53HgMP6pTGdj5xjN3nto3y3LlsKvGSvdoonDaMFVw3LK8smqRljDTjW6/3u0IitmacuEcxWAk+bsXm4Ey4wAYpIpoHai54pl9ovoP8BCB0Wrv901OCdLBifQaAly446Yrqa4Opln0I40nkdZPVUKUkZM1DnJdrfhq6xvssiw0kc5lQm09/DVAKGG81AJvkTleTjvR4hrPK54NCW9rqSnMLlEiaa5kVQkTkjyBSXLI28cMNTWHNo0DPfcCt5s4N5WQOfYk+C6M+Bheg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH7PR11MB7430.namprd11.prod.outlook.com (2603:10b6:510:274::20) with
+ bh=SirpUZr4CB0Y9NbeDZUiTitO21tkgNOg7RqruX9RlNo=;
+ b=E+euxxTj9vVqyJbaYcJYaJ0H8vG7Yvm9UkVW3au9tEMrRY8hLYxAef5Be5X25UnYlmjmHxUaWXJsTdFdg2He1IRv/8HwhQb3k4QfWprIK/EzRYvPtRcmnnWYrJEDYcrjHKyNd4cskQuTJyw7z/D5E0EcoEMioTCdzGNaOYH/Vdtp9fAydDSwLF+geccOkgMeYS2COBuOVkD7K47bqL1ouVahCeEtAGXZUzK4rpzo9E865uVbFdSBvVpAYARluiZrL5Cz07sjPkMpZsq0lUz9dfneJyIPwIh1ftVwzcJGdand+SNFFUtEsdyY/TmB9ACsumRonaNqaXEt9NJNuaSGoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SirpUZr4CB0Y9NbeDZUiTitO21tkgNOg7RqruX9RlNo=;
+ b=Wflb9foZGMkz6YtbR+3keQ3pE84UH/eJs7q4CcL26CMIyHh9W8m4FO0qF3dKRBpLQ15q21gCX0YTOtrXNpcoSX6VzxH/EssYwaFFTZ53rDQa8s6aCAnx+s81GWt6xqpoQtBU8M8ggObEtViBeYdDOx2APo2aqnraPvzSOxEjCUI=
+Received: from DM6PR06CA0032.namprd06.prod.outlook.com (2603:10b6:5:120::45)
+ by IA1PR12MB6065.namprd12.prod.outlook.com (2603:10b6:208:3ef::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Wed, 30 Nov
- 2022 05:10:04 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f%4]) with mapi id 15.20.5857.023; Wed, 30 Nov 2022
- 05:10:04 +0000
-Date:   Tue, 29 Nov 2022 21:09:58 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 02/11] cxl/mem: Implement Get Event Records command
-Message-ID: <Y4blpk/esXJMe79Y@iweiny-desk3>
-References: <20221110185758.879472-1-ira.weiny@intel.com>
- <20221110185758.879472-3-ira.weiny@intel.com>
- <20221116151936.0000662f@Huawei.com>
- <Y3WEmMlLfPoYG1R5@iweiny-desk3>
- <20221117104337.00001a3f@Huawei.com>
- <Y3gUmSuR3OxUwkDm@iweiny-desk3>
- <20221121104714.00003bab@Huawei.com>
- <Y4VEhNNTbXj5EwOm@iweiny-desk3>
- <20221129122620.00002cf0@Huawei.com>
+ 2022 08:16:40 +0000
+Received: from DS1PEPF0000E631.namprd02.prod.outlook.com
+ (2603:10b6:5:120:cafe::a6) by DM6PR06CA0032.outlook.office365.com
+ (2603:10b6:5:120::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23 via Frontend
+ Transport; Wed, 30 Nov 2022 08:16:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0000E631.mail.protection.outlook.com (10.167.17.135) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5857.17 via Frontend Transport; Wed, 30 Nov 2022 08:16:40 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 30 Nov
+ 2022 02:16:38 -0600
+Date:   Wed, 30 Nov 2022 09:16:23 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, Terry Bowman <terry.bowman@amd.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        <bhelgaas@google.com>, <dave.jiang@intel.com>,
+        <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH v4 12/12] cxl/acpi: Set ACPI's CXL _OSC to indicate
+ CXL1.1 support
+Message-ID: <Y4cRV/Sj0epVW7bE@rric.localdomain>
+References: <166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com>
+ <166931494367.2104015.9411254827419714457.stgit@dwillia2-xfh.jf.intel.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20221129122620.00002cf0@Huawei.com>
-X-ClientProxiedBy: SJ0PR13CA0120.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::35) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
-MIME-Version: 1.0
+In-Reply-To: <166931494367.2104015.9411254827419714457.stgit@dwillia2-xfh.jf.intel.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH7PR11MB7430:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a6669f6-0358-471a-84f9-08dad2912380
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: DS1PEPF0000E631:EE_|IA1PR12MB6065:EE_
+X-MS-Office365-Filtering-Correlation-Id: eb767e15-c67d-43f1-5b26-08dad2ab356e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yhr1E53vFDdar+5bBJpHbcefdRCPqFAbbg9Q+n/JK1kjl1hPgAPYxGrIp3qeyCpiva4P1YA7TtQlVQfCZrz0nG07l8BOHfCDa5tBnslr6NTqBBzVmNtfOCkqi19GW8gC3vZDrGdjUGFVoU2BzYgxsd82OPVOWab7QVzKAkwExibfetDI8Jx28iWnqi5PTlzvmHhf88sAH1dP0wQD00vSwUlwQyq1BGV4xB9ioCzwyGBetJIw6cqdgSaV94iO/id44JUXgURxrflyLnhW9q96wV5g3xI6Gi+yZAyyfoDiqbuVuGK7vAG+cG75P+HwlZvestiDtzZ5tLll02LRYc/zCSMaZdFOcrKBXLLbnjistnQAqgBYBd7C5G1Y3U9nOib5yajOcCNt1f+l73HgtNeXoPSLVaDV9EElLHVvYkI2xZtwZ3aujLf0XiZIMp+fpGtyNaV2JauzRzv524uRAnOQTTBDchR7xMweyG4JN2dOFg/YDHDa2lENuByMh12y580o7H4kX4YZFR9Z9vZFrCdX/iQurubL8kqe+kSwrLjdB63t/20rUEnFnYLZNEmFOxasN3C05WqdKGUndjbvVyZR79WYWLKuUjCiWFALdzAshMszndIZlPQ8O96S0UROohBxYhOJ3yZu577Zw4EyqhsQUg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(39860400002)(136003)(366004)(376002)(396003)(346002)(451199015)(2906002)(44832011)(6506007)(41300700001)(66476007)(6916009)(66556008)(4326008)(54906003)(186003)(316002)(8676002)(8936002)(33716001)(9686003)(5660300002)(86362001)(478600001)(26005)(6512007)(6486002)(6666004)(66946007)(38100700002)(82960400001)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KjGJg1wMQOYD5/VDik72/vLaOzwOxKYRyFBNIpW6y0kLiokBrxpl66dGmIhM?=
- =?us-ascii?Q?6acCroTQKoXGleS2k7cQy66WGiO+cRYKG+itCGA3/GoVkT4kpcbWnWiXdm3F?=
- =?us-ascii?Q?i4Km31zHlAWTrCoTxaFx1NNQ7bkIQsGxLIr7tUhgJMJg+V/Aoej33CdTDi3W?=
- =?us-ascii?Q?weeKTL2mfGXiGd/sWHBNHbZUCtm0sd/87pju1XwbhvbMtRuu2ld7jKtOKGJG?=
- =?us-ascii?Q?O8ZBBzsoAoEsDkJyEJKneOeb8c79x/AuHOa+axjVKrwDh2cU3+HAxmaqMe1p?=
- =?us-ascii?Q?UcdC0nZdvzTuWXD96PtiV+XBHTEbZlX4QHIWbdcMXE7vwOxNpnGC3qVz9X7S?=
- =?us-ascii?Q?y1xWVhXvF1dq43bV62yI/LzxA3F8IBVU9Gf90V4uGp6OWV7fsbxnqS5Mgr1m?=
- =?us-ascii?Q?0mpJHN+KF64+FKX8RemEs8DSv1AXytytY5hh+KhlZW3z244PKL1HQiJxQvNf?=
- =?us-ascii?Q?cOcMgj3L54PdGW20oDfzUuiqR++5y6DaBhbO8dd60j6TbuymGUOQuGHhu+Nn?=
- =?us-ascii?Q?of2pDA58GUSJD1bzZd28aVodJUZ7fTABy/pAQIZXUmc6dMY2pIhdWBLBJ2eO?=
- =?us-ascii?Q?gKy7l4gj1m/OiDmBc9FoSkWQP9ALcoMnx+7e+gOAfsdtLSyr/Le7sPLVU8jj?=
- =?us-ascii?Q?Q7ZVr1GR9aRPfm3IUdj6HBJR0ks2XAsoDrXRURzKjGLAUREI2EtVJr2z3Djp?=
- =?us-ascii?Q?8B7nvV8zhs5e4fM0KMYhcB4eKGhRt73DMtDMVyDb1W7tO5n3KBRWTjIYp0k9?=
- =?us-ascii?Q?C/Jmp+eSG8H7AV3gaBNi7hpD6Ly5CdGlLqd0nvSnBhwi6HaO6XJEorARvEXl?=
- =?us-ascii?Q?ytGyu2Pe82IXQKccBLIap+RQogwbSdiCPmeOkzVKt8zPF8pVnSj19rcMT/bG?=
- =?us-ascii?Q?5/rjjEJD1gkzNq0JD7qYaUnWVu9Y8dlHIAQHLzshqq/gNCl8sQJw6x8Bjigw?=
- =?us-ascii?Q?Qt+ZIY6EVNFc+d6MWZGJBwXCbU2H6I3Vu2diPGQhtXD6qxdP0VfRRYA6nBKf?=
- =?us-ascii?Q?E/fxyEGcQ8xJJJyYIl6o3hrrhBxScZZCYX2aN2fEvWUANiT0aNrsI+9Txrco?=
- =?us-ascii?Q?VUxHQ/eeW2gZ1cW/w1d3hpqGtEo1uHB9u0NxLTvsDrYpTZZLnbVWtvfQrc/B?=
- =?us-ascii?Q?d99gXv9t1Bmah5M8G4HAp5CCet3pee20H3FwHIhodAwnIezx5S2zrP7GkrlR?=
- =?us-ascii?Q?P0TIX9AUh8Cd5apX9/gyloUQdSmpOTACCw5bgIBXYhJqC8t4vZNLS843yLi1?=
- =?us-ascii?Q?GCKAbeRmJ5ElixcmCDFbURrxLaV6q5+M13tbyYq51faPSq49cd5Flt0T/VpK?=
- =?us-ascii?Q?Fy2biTehtuPNrrZ+DAi1xpHy5SQHO+YcAnWD+gfMNYthgStap9d8GM60rQrF?=
- =?us-ascii?Q?YRjLkzMcjQ2qJYrm+9ainWBPFJUW306r+Jh5O9Ljq8MCDtLhE7QieAeWkXNY?=
- =?us-ascii?Q?/NGqw7Q7/9SWzvT4ydJVZ+xoBFeQmMYEOTtkXCCJsBb4RKwTElhxMoCSP5PC?=
- =?us-ascii?Q?T45i1O7nRSMc6gWkn/zyat0e785SQJseqj6rrTpgk+J3zDc6QrzCNrH6cG3y?=
- =?us-ascii?Q?RWTnKvHJj3OxNy/7IjrW0dSVeuHzyhKKuA7XOXIt?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a6669f6-0358-471a-84f9-08dad2912380
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2022 05:10:03.5624
+X-Microsoft-Antispam-Message-Info: 0WvEYGDJOiVMUiYTU5nU/51qvdjDdauorgHprQq/P82nUErqa2vQNKn6mujuReUSIGrVf4E5L1Cp9Xgw4jtyQmQTWDQCV50qzV7cwcVhJnzcEr3oUafs5H5GyV19YyLSUQ+IhvrFgqyMhPjek6/R5oRWKXKVCZz+Cj49dRT0WGfajJdZV7Ze8SdcNdyPzlfrLr+uwWrB0RkcyKuEQ9RqJCWwqm1MVDHlw9OmQI/0DMYvI8wqLxScfr5ozCC77bykKuqsJyrHWp3S0oXPbj6BbahI3J5uEjiUCaiFrFD2bwiNMK//16L1ASLjvimBnH9xKd0+5zmrOaDix2cr5VoDSPlTFiDZRb+nHBjTahpbLokuLT6+FvS3uADnOHUFY6W4kKqT3Zzv7HeXCVvTij4zDte2s/DlYYegHuVvm+yaW8+0QFl0y5kjesiPQaX2eVzslk1R2nBCVmmTjSTtdP3rE2g5W2oZy17Dyr/YJzBi5V8FE1R+1j29bJB3ueAPUTbJ8ZZmlYzu6bp/W3Bs4o2GK4ichLc1ZyNDRh+LnINm9+zHnf6ilmLOjRyMH7RYDFEA0snpwSYCPBwJsYplvPg81yNlEk1QYukWjG6Xk6SzZ18Z0VwFO/DpvJuV9NCyImsqfqSeDyvCulBj6vlOCYl5JJ2dOMKoCKUautUp+KME0YivSyVjJ6EDpQxqWRcSEYvVPA7uJlZW8SvTaSk89P44mMmzdvdqCUq3PlfWsduTEtQ=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(396003)(136003)(39860400002)(451199015)(46966006)(36840700001)(40470700004)(81166007)(40480700001)(55016003)(356005)(7696005)(9686003)(26005)(41300700001)(8936002)(4326008)(8676002)(478600001)(70206006)(70586007)(40460700003)(6666004)(36860700001)(316002)(5660300002)(82740400003)(2906002)(426003)(83380400001)(54906003)(53546011)(47076005)(336012)(6916009)(186003)(16526019)(82310400005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Nov 2022 08:16:40.3230
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 84cHfbQYYw3gjjyr7EvT1Ychzs88AEBT4xRwjJcsyedUhE8lW4epucRBqQvxXnE+J+IC+whhuI+74EWZMph3Sg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7430
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb767e15-c67d-43f1-5b26-08dad2ab356e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000E631.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6065
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 12:26:20PM +0000, Jonathan Cameron wrote:
-> On Mon, 28 Nov 2022 15:30:12 -0800
-> Ira Weiny <ira.weiny@intel.com> wrote:
+On 24.11.22 10:35:43, Dan Williams wrote:
+> From: Terry Bowman <terry.bowman@amd.com>
 > 
-
-[snip]
-
-> > > A valid reading of that temporal order comment is actually the other way around
-> > > that the device must not reset it's idea of temporal order until all records
-> > > have been read (reading 3 twice is not in temporal order - imagine we had
-> > > read 5 each time and it becomes more obvious as the read order becomes
-> > > 0,1,2,3,4,3,4,5,6,7 etc which is clearly not in temporal order by any normal
-> > > reading of the term.  
-> > 
-> > Well I guess.  My reading was that it must return the first element temporally
-> > within the list at the time of the Get operation.
-> > 
-> > So in this example since 3 is still in the list it must return it first.  Each
-> > read is considered atomic from the others.  Yes as long as 0 is in the queue it
-> > will be returned.
-> > 
-> > But I can see it your way too...
+> ACPI includes a CXL _OSC for the OS to communicate what it knows of CXL
+> device topologies. To date Linux has added support for CXL 2.0 (VH) port
+> topologies, hotplug, and error handling. Now that the driver also know
+> how to enumerate CXL 1.1 (RCH) port topologies, indicate that capability
+> via CXL _OSC. See CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support
+> Field'
 > 
-> That pesky text under More Event Records flag doesn't mention clearing when it
-> says "The host should continue to retrieve 
-> records using this command, until this indicator is no longer set by the 
-> device."
-> 
-> I wish it did :(
-> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> [djbw: wordsmith changelog]
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-As I have reviewed these in my head again I have come to the conclusion that
-the More Event Records flags is useless.  Let me explain:
+I have had a reworded version of this in the pipe too, esp. version
+strings were dropped in favor of VH and RCD mode. You might want to
+consider that one:
 
-The Clear all Records flag is useless because if an event which occurs between the
-Get and Clear all operation will be dropped without the host having seen it.
+-- >8 --
 
-However, while clearing records based on the handles read, additional events
-could come in.  Because of the way the interrupts are specified the host can't
-be sure that those new events will cause a zero to non-zero transition.  This
-is because there is no way to guarantee all the events were cleared at the
-moment the events came in.
+From 260e04d5d34c6d37a1866b73a5e229d1ceddf272 Mon Sep 17 00:00:00 2001
+From: Terry Bowman <terry.bowman@amd.com>
+Date: Mon, 14 Nov 2022 10:03:30 -0600
+Subject: [PATCH v5] cxl/acpi: Set ACPI's CXL _OSC to indicate RCD mode support
 
-I believe this is what you mentioned in another email about needing an 'extra
-read' at the end to ensure there was nothing more to be read.  But based on
-that logic the only thing that matters is the Get Event.Record
-Count.  If it is not 0 keep on reading because while the host is clearing the
-records another event could come in.
+ACPI uses the CXL _OSC support method to communicate the available CXL
+functionality to FW. The CXL _OSC support method includes a field to
+indicate the OS is capable of RCD mode. FW can potentially change it's
+operation depending on the _OSC support method reported by the OS.
 
-In other words, the only way to be sure that all records are seen is to do a
-Get and see the number of records equal to 0.  Thus any further events will
-trigger an interrupt and we can safely exit the loop.
+The ACPI driver currently only sets the ACPI _OSC support method to
+indicate CXL VH mode. Change the capability reported to also include
+CXL RCD mode.
 
-Ira
+[1] CXL3.0 Table 9-26 'Interpretation of CXL _OSC Support Field'
 
-Basically the loop looks like:
+Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+[rrichter@amd.com: Reworded patch description.]
+Signed-off-by: Robert Richter <rrichter@amd.com>
+---
+ drivers/acpi/pci_root.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-	int nr_rec;
-
-	do {
-		... <Get Events> ...
-
-		nr_rec = le16_to_cpu(payload->record_count);
-
-		... <for each record trace> ...
-		... <for each record clear> ...
-
-	} while (nr_rec);
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 4e3db20e9cbb..b3c202d2a433 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -493,6 +493,7 @@ static u32 calculate_cxl_support(void)
+ 	u32 support;
+ 
+ 	support = OSC_CXL_2_0_PORT_DEV_REG_ACCESS_SUPPORT;
++	support |= OSC_CXL_1_1_PORT_REG_ACCESS_SUPPORT;
+ 	if (pci_aer_available())
+ 		support |= OSC_CXL_PROTOCOL_ERR_REPORTING_SUPPORT;
+ 	if (IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+-- 
+2.30.2
 
