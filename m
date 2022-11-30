@@ -2,30 +2,30 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A727C433FE
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 16:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C85C433FE
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 16:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230183AbiK3Q1m (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 11:27:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47794 "EHLO
+        id S229720AbiK3QiR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 11:38:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiK3Q1m (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 11:27:42 -0500
+        with ESMTP id S229634AbiK3QiP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 11:38:15 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CFDD10D2
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 08:27:39 -0800 (PST)
-Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NMl0K3dXSz6HJGs;
-        Thu,  1 Dec 2022 00:24:33 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9349C4B748
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 08:38:13 -0800 (PST)
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NMlDt1yQ8z68967;
+        Thu,  1 Dec 2022 00:35:26 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 30 Nov 2022 17:27:37 +0100
+ 15.1.2375.31; Wed, 30 Nov 2022 17:38:10 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 30 Nov
- 2022 16:27:37 +0000
-Date:   Wed, 30 Nov 2022 16:27:36 +0000
+ 2022 16:38:10 +0000
+Date:   Wed, 30 Nov 2022 16:38:09 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <alison.schofield@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -34,7 +34,7 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
 Subject: Re: [PATCH 1/4] cxl/region: Add a DPA to HPA translation helper
-Message-ID: <20221130162736.0000333f@Huawei.com>
+Message-ID: <20221130163809.00005535@Huawei.com>
 In-Reply-To: <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
 References: <cover.1669153711.git.alison.schofield@intel.com>
         <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
@@ -63,9 +63,6 @@ alison.schofield@intel.com wrote:
 > 
 > Provide a helper to calculate the HPA when given a DPA, a region,
 > and the devices position in the region interleave.
-
-device's 
-
 > 
 > Verify that the HPA is within the expected ranges that this device
 > contributes to the region interleave set.
@@ -74,9 +71,6 @@ device's
 > report in media error records.
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-I'm not following the maths for the 3/6/12 way interleave cases.
-
 > ---
 >  drivers/cxl/core/core.h   |  3 ++
 >  drivers/cxl/core/region.c | 80 +++++++++++++++++++++++++++++++++++++++
@@ -121,26 +115,10 @@ I'm not following the maths for the 3/6/12 way interleave cases.
 > +	stride = p->res->start + pos * gran;
 > +	do {
 > +		if (hpa >= stride && hpa <= stride + gran - 1)
-	< stride + gran seems simpler.
-
 > +			return true;
 > +
 > +		stride = stride + ways * gran;
 > +	} while (stride < p->res->end);
-
-That's going to take a 'while' with a large region.  Can we do something quicker
-along the lines of...
-
-Something like (untested)
-	u64 offset = hpa - p->res_start;
-
-	/* Offset within the right 'stride' */
-	offset = offset % (gran * ways);
-
-	if (offset >= pos * gran && offset < (pos + 1) * gran)
-		return true;
-
-..
 > +
 > +	dev_dbg(&cxlr->dev,
 > +		"Addr trans fail: hpa 0x%llx not in any stride\n", hpa);
@@ -158,19 +136,18 @@ Something like (untested)
 > +	u8 eiw;
 > +
 > +	rc = ways_to_cxl(p->interleave_ways, &eiw);
-I lost track a bit, but I think we ended up with einw?
 > +	if (rc)
 > +		return rc;
 > +	rc = granularity_to_cxl(p->interleave_granularity, &eig);
 > +	if (rc)
 > +		return rc;
+returning integer as u64, so it won't end up as a useful error code.
+
 > +
 > +	/*
 > +	 * Reverse the HPA->DPA decode logic defined
 > +	 * in the CXL Spec 3.0 Section 8.2.4.19.13
 > +	 * Implementation Note: Device Decode Logic
-Short line wrap. Probably want to go nearer 80 chars
-
 > +	 *
 > +	 * The device position in the region interleave
 > +	 * set was removed in the HPA->DPA translation.
@@ -182,28 +159,13 @@ Short line wrap. Probably want to go nearer 80 chars
 > +
 > +	/* Restore the position */
 > +	if (eiw <= 8) {
-
-This looks to be the power of 2 version, so should that be eiw < 8?
-
 > +		hpa_offset = (dpa_offset & GENMASK_ULL(51, eig + 8)) << eiw;
 > +		hpa_offset |= GENMASK_ULL(eig + 8 + eiw, eig + 8)
 > +			      & (pos << (eig + 8));
-
-Why is the masking needed here?  I think pos should always fit in the iw bits.
-
 > +	}
 > +	if (eiw == 9)
-
-else if would show clearly that only one of these ifs is true.
- 
 > +		hpa_offset |= BIT(eig + eiw) & (pos & 0x01);
-
-I don't follow this logic. hpa_offset hasn't been set to anything before
-this point + the right hand side of the above will always be 0 (I think...)
-
-
 > +	if (eiw == 10)
-else if
 > +		hpa_offset |= GENMASK_ULL(eig + eiw, eig + 8) & (pos & 0x03);
 > +
 > +	/* The lower bits remain unchanged */
