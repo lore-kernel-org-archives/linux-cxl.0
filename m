@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D2BC47088
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 22:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56D1C352A1
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Nov 2022 22:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbiK3Wrg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 17:47:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
+        id S229633AbiK3Wri (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 17:47:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbiK3Wrf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 17:47:35 -0500
+        with ESMTP id S229689AbiK3Wrh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 17:47:37 -0500
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164D527D
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 14:47:32 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BA6CC4
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Nov 2022 14:47:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669848452; x=1701384452;
+  t=1669848455; x=1701384455;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kU9CQf5le4qcPUecfPa2rwZNfYfqviF4g10RYcJgAsQ=;
-  b=la3yzuBdyO8SP2BWOcM8GrzT0wZ+m406vPKb9wL5fJMFOsPFwnKLlLGi
-   yDhrfVUmfkCw7llSGLmFcws0snrqofPB7XJMu98KT4g2YKTZwhEkt9sf7
-   Z+ShI6ahsISynZhMfXTKtl3348qqc2mquuXG194nV5Z8Xy0VWTnWvLsgA
-   uZtGMgyWXioSlkcn/rHnt4kCcZGBDb7R5eodo4kHJ9iIvB9KBX8TAwI8z
-   67GBarJrKhId0IwKtmRqjhLvOnI8zHKtNAUrE4n1PH7ENhC2TBD4YO8Ye
-   xoTw01szWEJFrA7/Q7cDdYWJ3ii1KW54AfA7SYNe+KVD7RV/NTzVJ2P1M
+  bh=p2LdZi+lyzE4i1tG9E/e45aNJh8Er2DUaK3EsJMBfqw=;
+  b=nU9n5IzX3cfWW30S/qIMhudGRlkCFNE32SpuOO/xYE5xttkqhXntzLp9
+   JFDsu9jxaGo0+hTX95OWPNYz94slilbDdfxFt2F8n/pnaJJ8aRiCVc8qE
+   xXnix7KXJuuv64hBIRpYUerFTWtg5F3zDSIagrX1jiyTBGnWKwZXpuiwR
+   mfYAJJsirLgU0COdOPhTe4xLCid8WGQmZw0QYMQxOowc5pOUVyrsxLXsi
+   AEWiWxJgSZtwdSddQ+7+oPFBEZ31877e0pEBGjDIGIyOcH59E/WXvicWu
+   drCrQ8svP337DNbrGhBQeaXdvUr5MmGazpS+gFsriG/c4uznzJ+8s8bKW
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="316682635"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="316682652"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="316682635"
+   d="scan'208";a="316682652"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:30 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="769003140"
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:32 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="769003152"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="769003140"
+   d="scan'208";a="769003152"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.3.88])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:30 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 14:47:31 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -44,10 +44,11 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Dave Jiang <dave.jiang@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v9 1/3] ACPICA commit 2d8dc0383d3c908389053afbdc329bbd52f009ce
-Date:   Wed, 30 Nov 2022 14:47:24 -0800
-Message-Id: <62d3f6a43fb8ef892965a8257fad17dbfb1afae4.1669847017.git.alison.schofield@intel.com>
+        linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v9 3/3] tools/testing/cxl: Add XOR Math support to cxl_test
+Date:   Wed, 30 Nov 2022 14:47:26 -0800
+Message-Id: <54670400cd48ba7fcc6d8ee0d6ae2276d3f51aad.1669847017.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <cover.1669847017.git.alison.schofield@intel.com>
 References: <cover.1669847017.git.alison.schofield@intel.com>
@@ -59,87 +60,207 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-The CXL 3.0 Specification [1] adds two new structures to
-the CXL Early Discovery Table (CEDT). The CEDT may include
-zero or more entries of these types:
+Expand the cxl_test topology to include CFMWS's that use XOR math
+for interleave arithmetic, as defined in the CXL Specification 3.0.
 
-CXIMS: CXL XOR Interleave Math Structure
-       Enables the host to find a targets position in an
-       Interleave Target List when XOR Math is used.
+With this expanded topology, cxl_test is useful for testing:
+x1,x2,x4 ways with XOR interleave arithmetic.
 
-RDPAS: RCEC Downstream Post Association Structure
-       Enables the host to locate the Downstream Port(s)
-       that report errors to a given Root Complex Event
-       Collector (RCEC).
+Define the additional XOR CFMWS entries to appear only with the
+module parameter interleave_arithmetic=1. The cxl_test default
+continues to be modulo math.
 
-Link: https://www.computeexpresslink.org/spec-landing # [1]
-Link: https://github.com/acpica/acpica/commit/2d8dc038
+modprobe cxl_test interleave_arithmetic=1
+
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Removed Bob and Rafael SOBs to prevent spamming them on my every rev.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- include/acpi/actbl1.h | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ tools/testing/cxl/test/cxl.c | 118 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 115 insertions(+), 3 deletions(-)
 
-diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-index 15c78678c5d3..2aba6f516e70 100644
---- a/include/acpi/actbl1.h
-+++ b/include/acpi/actbl1.h
-@@ -329,7 +329,9 @@ struct acpi_cedt_header {
- enum acpi_cedt_type {
- 	ACPI_CEDT_TYPE_CHBS = 0,
- 	ACPI_CEDT_TYPE_CFMWS = 1,
--	ACPI_CEDT_TYPE_RESERVED = 2,
-+	ACPI_CEDT_TYPE_CXIMS = 2,
-+	ACPI_CEDT_TYPE_RDPAS = 3,
-+	ACPI_CEDT_TYPE_RESERVED = 4,
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 7edce12fd2ce..c7dba7550106 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -11,6 +11,8 @@
+ #include <cxlmem.h>
+ #include "mock.h"
+ 
++static int interleave_arithmetic;
++
+ #define NR_CXL_HOST_BRIDGES 2
+ #define NR_CXL_SINGLE_HOST 1
+ #define NR_CXL_ROOT_PORTS 2
+@@ -122,6 +124,22 @@ static struct {
+ 		struct acpi_cedt_cfmws cfmws;
+ 		u32 target[1];
+ 	} cfmws4;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[1];
++	} cfmws5;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[2];
++	} cfmws6;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[4];
++	} cfmws7;
++	struct {
++		struct acpi_cedt_cxims cxims;
++		u64 xormap_list[2];
++	} cxims0;
+ } __packed mock_cedt = {
+ 	.cedt = {
+ 		.header = {
+@@ -229,14 +247,89 @@ static struct {
+ 		},
+ 		.target = { 2 },
+ 	},
++	/* .cfmws5,6,7 use ACPI_CEDT_CFMWS_ARITHMETIC_XOR */
++	.cfmws5 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws5),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 0,
++			.granularity = 4,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = 0,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, },
++	},
++	.cfmws6 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws6),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 1,
++			.granularity = 0,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = 1,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, 1, },
++	},
++	.cfmws7 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws7),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 2,
++			.granularity = 0,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_TYPE3 |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = 0,
++			.window_size = SZ_256M * 16UL,
++		},
++		.target = { 0, 1, 0, 1, },
++	},
++	.cxims0 = {
++		.cxims = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CXIMS,
++				.length = sizeof(mock_cedt.cxims0),
++			},
++			.hbig = 0,
++			.nr_xormaps = 2,
++		},
++		.xormap_list = { 0x404100, 0x808200, },
++	},
  };
  
- /* Values for version field above */
-@@ -380,6 +382,7 @@ struct acpi_cedt_cfmws_target_element {
- /* Values for Interleave Arithmetic field above */
- 
- #define ACPI_CEDT_CFMWS_ARITHMETIC_MODULO   (0)
-+#define ACPI_CEDT_CFMWS_ARITHMETIC_XOR      (1)
- 
- /* Values for Restrictions field above */
- 
-@@ -389,6 +392,36 @@ struct acpi_cedt_cfmws_target_element {
- #define ACPI_CEDT_CFMWS_RESTRICT_PMEM       (1<<3)
- #define ACPI_CEDT_CFMWS_RESTRICT_FIXED      (1<<4)
- 
-+/* 2: CXL XOR Interleave Math Structure */
-+
-+struct acpi_cedt_cxims {
-+	struct acpi_cedt_header header;
-+	u16 reserved1;
-+	u8 hbig;
-+	u8 nr_xormaps;
-+	u64 xormap_list[];
+-struct acpi_cedt_cfmws *mock_cfmws[] = {
++struct acpi_cedt_cfmws *mock_cfmws[8] = {
+ 	[0] = &mock_cedt.cfmws0.cfmws,
+ 	[1] = &mock_cedt.cfmws1.cfmws,
+ 	[2] = &mock_cedt.cfmws2.cfmws,
+ 	[3] = &mock_cedt.cfmws3.cfmws,
+ 	[4] = &mock_cedt.cfmws4.cfmws,
++	/* Modulo Math above, XOR Math below */
++	[5] = &mock_cedt.cfmws5.cfmws,
++	[6] = &mock_cedt.cfmws6.cfmws,
++	[7] = &mock_cedt.cfmws7.cfmws,
 +};
 +
-+/* 3: CXL RCEC Downstream Port Association Structure */
++static int cfmws_start;
++static int cfmws_end;
++#define CFMWS_MOD_ARRAY_START 0
++#define CFMWS_MOD_ARRAY_END   4
++#define CFMWS_XOR_ARRAY_START 5
++#define CFMWS_XOR_ARRAY_END   7
 +
-+struct acpi_cedt_rdpas {
-+	struct acpi_cedt_header header;
-+	u8 reserved1;
-+	u16 length;
-+	u16 segment;
-+	u16 bdf;
-+	u8 protocol;
-+	u64 address;
-+};
++struct acpi_cedt_cxims *mock_cxims[1] = {
++	[0] = &mock_cedt.cxims0.cxims,
+ };
+ 
+ struct cxl_mock_res {
+@@ -308,7 +401,7 @@ static int populate_cedt(void)
+ 		chbs->length = size;
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
++	for (i = cfmws_start; i <= cfmws_end; i++) {
+ 		struct acpi_cedt_cfmws *window = mock_cfmws[i];
+ 
+ 		res = alloc_mock_res(window->window_size);
+@@ -351,12 +444,19 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+ 		}
+ 
+ 	if (id == ACPI_CEDT_TYPE_CFMWS)
+-		for (i = 0; i < ARRAY_SIZE(mock_cfmws); i++) {
++		for (i = cfmws_start; i <= cfmws_end; i++) {
+ 			h = (union acpi_subtable_headers *) mock_cfmws[i];
+ 			end = (unsigned long) h + mock_cfmws[i]->header.length;
+ 			handler_arg(h, arg, end);
+ 		}
+ 
++	if (id == ACPI_CEDT_TYPE_CXIMS)
++		for (i = 0; i < ARRAY_SIZE(mock_cxims); i++) {
++			h = (union acpi_subtable_headers *)mock_cxims[i];
++			end = (unsigned long)h + mock_cxims[i]->header.length;
++			handler_arg(h, arg, end);
++		}
 +
-+/* Masks for bdf field above */
-+#define ACPI_CEDT_RDPAS_BUS_MASK            0xff00
-+#define ACPI_CEDT_RDPAS_DEVICE_MASK         0x00f8
-+#define ACPI_CEDT_RDPAS_FUNCTION_MASK       0x0007
+ 	return 0;
+ }
+ 
+@@ -897,6 +997,16 @@ static __init int cxl_test_init(void)
+ 	if (rc)
+ 		goto err_gen_pool_add;
+ 
++	if (interleave_arithmetic == 1) {
++		cfmws_start = CFMWS_XOR_ARRAY_START;
++		cfmws_end = CFMWS_XOR_ARRAY_END;
++		dev_dbg(NULL, "cxl_test loading xor math option\n");
++	} else {
++		cfmws_start = CFMWS_MOD_ARRAY_START;
++		cfmws_end = CFMWS_MOD_ARRAY_END;
++		dev_dbg(NULL, "cxl_test loading modulo math option\n");
++	}
 +
-+#define ACPI_CEDT_RDPAS_PROTOCOL_IO        (0)
-+#define ACPI_CEDT_RDPAS_PROTOCOL_CACHEMEM  (1)
-+
- /*******************************************************************************
-  *
-  * CPEP - Corrected Platform Error Polling table (ACPI 4.0)
+ 	rc = populate_cedt();
+ 	if (rc)
+ 		goto err_populate;
+@@ -1073,6 +1183,8 @@ static __exit void cxl_test_exit(void)
+ 	unregister_cxl_mock_ops(&cxl_mock_ops);
+ }
+ 
++module_param(interleave_arithmetic, int, 0000);
++MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
+ module_init(cxl_test_init);
+ module_exit(cxl_test_exit);
+ MODULE_LICENSE("GPL v2");
 -- 
 2.37.3
 
