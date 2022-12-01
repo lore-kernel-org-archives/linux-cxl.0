@@ -2,319 +2,283 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2380DC4321E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 15:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6EBC63704
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 15:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231638AbiLAPX5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 10:23:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
+        id S231802AbiLAPbJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 10:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231682AbiLAPXw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 10:23:52 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2043.outbound.protection.outlook.com [40.107.237.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AACC9CAB7C
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 07:23:50 -0800 (PST)
+        with ESMTP id S231862AbiLAPaz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 10:30:55 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83999B0A10;
+        Thu,  1 Dec 2022 07:30:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669908654; x=1701444654;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=6UdgQzG6FK8nMTxZet3qPS2L2PMcpAo4aT4ngOPoqP4=;
+  b=dbFamNtCXlr9KkbIMaATYvVUOZOeMMxUtiQU8tn/nxRk8pKmIP+18u3d
+   KUpHQ38Y8QQX5OUfqeAddU4CczRJd+6UNKUnpdWvded16mZnD5IWQYU3c
+   Jp3fWKFUu6Ks+bXsAJXT7UqTF85DXqAiNZiROX6VTgIQwDfjIA0cdM3U6
+   fEtLkR9CQA5+2xepjEpYoAr8NCHEdCBA1imHaeQEeU/05JhBDAzRMmMUo
+   Ph4RlUUh2AO/pPFT0s+tp04n2ZfcgKoF5HVI6uP2EtqCWZEWS7rOCGFkg
+   2YN3vu2bBPYLQZAC06BRVh1W+2bybzJwc/Wi4oogpLGUVjkEX5jRiL0YR
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="314410510"
+X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
+   d="scan'208";a="314410510"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 07:30:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="675474654"
+X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
+   d="scan'208";a="675474654"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga008.jf.intel.com with ESMTP; 01 Dec 2022 07:30:43 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 1 Dec 2022 07:30:43 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Thu, 1 Dec 2022 07:30:43 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Thu, 1 Dec 2022 07:30:40 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kww9gz5rY9nbSeUXaivvJ7df5STC312eLSt9HISma958FvbJyRrt5plx1zTpwU3DRbwXEnfS3gBuYiAhgdscMkL5DGr2fErpo6/Iypquoq3bo/iWwELQUjMW+tmJslfkwXzgVpXG9Ih7E4nclk06QZrZUtiuCPi4xrOvwAxGD0AH0rCgz/I5R8e8b1SVU1RnilX907FRZjtCW74IBwxFqTdKVCPTmhSHikY4zCc8OTFV/7iWv/c13fbxr460p5erZSY3UsqntJ4iaG3kt5moktLyCSQFNpARiegp89Wl49iZQ0I7rrwhO/xfiTAyer2jPVhELqHNgKbgs1J5JSD+9Q==
+ b=OI5Tgh7BLb8KjdDyXqqwISopev8zl/92LsSUfJvNwbl0URjSywa3wL3St+O8JEhiOhX4T6OeN7+P/lSjX3l0wHvjOhViYh/ZrvQJdCCmTNv36E1RcnK7UnfuGgHjmb5h3ONCufKbc4mVVENJJPAgPWzMfqlPlBE57ozhczwDQVDlWePVP9y3KbnbvJ0uhbfYs62aMICzuQwvB778lo8b+RjVlx2yYfcvVXV4fUq8l0EiXUriiZk9wUDcT/POBG3dVejnzNjO8oCTbrwT93ksOXrM6Am6SbQwQXzwsdjLTTkTJaahS4Fb0GrcB7E0hKrRbKNCBeRdTA0YZC8wTiqjBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UTA5ns9FOeivGcmFfbJEsUp6qAAzg9fCrLYJPXMANKY=;
- b=UpMulcT4NuBnd0YA5ysvwW8dKILAuZAwSncw1dre2C5TNKfNIoiYpZgRVkxOSCvP123ztNrZ2ZLpNsanbKObwEEi8RtXkglViHTRA1F4ggsY8/+ZMTCU1/rsrctpMPeY/ZQTRK7OazHXuI3HuwQ0Qjz2K4yxOGYJ/9imVDrffCozmT6PV98kyGVskJLSzXMLilzLOflOkbynV/j9S7IRvol/qgQu1LlhdVpoXX+0BpGEX6ALC0VVd6/tQGznpV+nYz6UosoBKrsl2kVTmnsG4Mc+IyI17kMDNbUx+ZFNlV0ly9UD5N0FuH7qjRtKppwLRr2F7IUqedIfr2qHciZ93w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UTA5ns9FOeivGcmFfbJEsUp6qAAzg9fCrLYJPXMANKY=;
- b=zO66WyfQUzZSd5NfyXT2gyjeDYSX9YS6ueAy1UmVl3TNR+G0vO2FTgIp1JUSCGZGlV9dZReDUJ8Tgexg1lDraf3QHAtumutYtr4rbdPYTUTQsSc7w6Cz5Zotk3LX7DCBxoOT6aKG5iiV+e+Tr31Tjf3DjsP0HN5WwSZ249xcCMs=
-Received: from DM6PR12CA0029.namprd12.prod.outlook.com (2603:10b6:5:1c0::42)
- by IA1PR12MB6308.namprd12.prod.outlook.com (2603:10b6:208:3e4::14) with
+ bh=vpaWI2374TTxuTt3oqYpmjJ9AX4fGc/zzdd9+rYSmJ4=;
+ b=j9pwj9EXTb7Jq5XATcfopcgiS4E6uN/GwsDAIh6Di0d4Izawr5afhSvghWuaHLEDAapOJQt9Dy6Svk+clBSFKB1cOwyQ/+Z2LqUG1dQCQ312Epqyt/ktrsgT6SF3rzZuOmSbiRYcWP0ngzz/ynpgIc1H9Q0cuTv9lWW3u5puPcafPqpw2Rp0YiKBL5yN83ZsKB7h4Bk0KAMO+kFBJAp1HFL0wBJ2i4PvjRwa8ShV8Sap7st07emttoZxn6fMLYJtVlWFB5FYh3/KPCMGX3bEo3QG3B5qc+zXgxlYtdKUB9cmJO87lcVp0I8zZutayhrF83tOuTSqGprUWAylRLZAtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by MW5PR11MB5884.namprd11.prod.outlook.com (2603:10b6:303:1a0::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Thu, 1 Dec
- 2022 15:23:48 +0000
-Received: from DS1PEPF0000E656.namprd02.prod.outlook.com
- (2603:10b6:5:1c0:cafe::60) by DM6PR12CA0029.outlook.office365.com
- (2603:10b6:5:1c0::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.8 via Frontend
- Transport; Thu, 1 Dec 2022 15:23:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0000E656.mail.protection.outlook.com (10.167.18.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5880.8 via Frontend Transport; Thu, 1 Dec 2022 15:23:47 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 1 Dec
- 2022 09:23:44 -0600
-Date:   Thu, 1 Dec 2022 16:23:41 +0100
-From:   Robert Richter <rrichter@amd.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <terry.bowman@amd.com>,
-        <bhelgaas@google.com>, <dave.jiang@intel.com>,
-        <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH v4 10/12] cxl/port: Add RCD endpoint port enumeration
-Message-ID: <Y4jG/WElCcO3wYD5@rric.localdomain>
-References: <166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com>
- <166931493266.2104015.8062923429837042172.stgit@dwillia2-xfh.jf.intel.com>
- <Y4U+92BzA+O7fjNE@rric.localdomain>
- <6385516eaa45a_3cbe02944d@dwillia2-xfh.jf.intel.com.notmuch>
- <Y4Z4I4madYxKNT7g@rric.localdomain>
- <6387bf64519d1_3cbe0294de@dwillia2-xfh.jf.intel.com.notmuch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+ 2022 15:30:35 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f%4]) with mapi id 15.20.5857.023; Thu, 1 Dec 2022
+ 15:30:35 +0000
+Date:   Thu, 1 Dec 2022 07:30:30 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2 03/11] cxl/mem: Implement Clear Event Records command
+Message-ID: <Y4jIlte0qPbCJNFE@iweiny-desk3>
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+ <20221201002719.2596558-4-ira.weiny@intel.com>
+ <20221201132618.00006602@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6387bf64519d1_3cbe0294de@dwillia2-xfh.jf.intel.com.notmuch>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+In-Reply-To: <20221201132618.00006602@Huawei.com>
+X-ClientProxiedBy: BY5PR04CA0029.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::39) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0000E656:EE_|IA1PR12MB6308:EE_
-X-MS-Office365-Filtering-Correlation-Id: a6f3e44a-b9cf-4072-086d-08dad3b00afd
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW5PR11MB5884:EE_
+X-MS-Office365-Filtering-Correlation-Id: c24fc237-0f2f-4707-469d-08dad3b0fdf2
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b18y6B5rHvTzABpcN1w6/RacVS4k6bco314+8MWQiuCxYd79zkx419AMVcC5im0RGCQ6m8S7RgbjRkL6yYjGzzEuwHYVafSMCfWtor6tJS/Nh5aAlmeZL+sGnrDrqkSY2MkBzdWJThJluluXzBXDi3CYrrCiiz81Hp8Ramzh0mOS1ef1C7MYhxdMN8dYDGwpGErTdSEasnfZot7LLV4MdYdMQ3HD6uBZQLoy0BhPujDhmwb6idrgVn7P2hW5OLI11fWm9evhoA6Yh0jkUGdM2UPgdtI1aiY9wAJdXHcd0AwKElUOUu4WiVkfi/TvkOmK1NMRel4k70oAiLI+C4twb0rwBE8Ss3+bDO1dF58hiUJBZHrIfs83sQ7iZaKe/av+cGZX7JsYCURl9qmWB68oDuaZ1JH1gOwV/U396Dk7m12YJ7wjvgQKI0C96jsTiNVi2MEQsMtMKHscWsnqQHvLqszzChEgh4nnvFAYYEZc27yVndelVsJLxf8QYyxvg0p59tQ4bZZtBpgObt76Eby1qm6cv4t7xxsFv8EcSR1WHZq69UkzAJYo459UCZDHNBDcer84tN1bIA63NMA7fr1tFfeX9OF5oGdwqTmSsq1UQkPhi+fdk7L+TsMKnjsOuh2Fexv4p1INv/LcHmFGM57PgTRrmJuNb0EQqeA5alDHOw6BEwuqBNNavHG2vZUsVQV09vC3xy50AHh6Dvf8zbT6kGEoQLOwNazJHyPWnJc9Zqo=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(346002)(396003)(136003)(451199015)(46966006)(40470700004)(36840700001)(426003)(47076005)(9686003)(81166007)(7696005)(478600001)(16526019)(356005)(55016003)(6666004)(40460700003)(40480700001)(2906002)(186003)(82740400003)(82310400005)(53546011)(83380400001)(336012)(70586007)(5660300002)(26005)(316002)(36860700001)(8676002)(8936002)(54906003)(4326008)(41300700001)(70206006)(6916009)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2022 15:23:47.7625
+X-Microsoft-Antispam-Message-Info: ahMbZCZO7n2zMT/q5SfmYy4KglZD6Ix6wRL59RBDEISyg2c49swJv85WQEthVxKd03ljRPGqTVQEWEXpfvpJXdMSAyr7jFqtXOen0wB2GN+FfGZA9kSr+724BDdA44r3zBvVakVWFspP65CIg9bKDWKKf8q86li1ZLM4gOE7tmjJbBs74MmhGgPVEh2Nf1QwYYcG9piE2hofw6Ff9CeGiFzRGrc5GVcAPHEGczPgMh90pLw0haqeGXnQDQNnxIZS/GcvNnOTNA7XocwogCnIWXoDPDWk7Dn0gvc0UNPz9oGD6lcRp5LgJ385ktCv1un7VFhRJT0tr3B7OxbuTaTMvpzTxCs+RxTybF/6tRDwT0yX16KXw6hNTuuix1J4jnHWGXXvgpOArxuYUY/6lQLFuxEJdhG8Qo6jn0c/z7xgXeVMdragCHUlxPvogb2gv+e1JvHYgidGdRYdwBjxC09NeJzpTLIcHQiFGbvC4FjfL96drGMRMezUFdTFLJeZy34HGcWcAb6OcxVbaGYZMTedVwJq9P/P2XE/HI2MoxMF9KD/ARqHvv8MIFniemW/HSAaMNhJOSpu3ocOEoyCbqLpLIiskoaQWpz2zEdZSbewIDRYEswadB9VAhviIb1ka33+E70FiS5ZNtcbp1Tl9Eac4Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(39860400002)(396003)(366004)(376002)(346002)(136003)(451199015)(44832011)(66556008)(8936002)(41300700001)(66476007)(4326008)(66946007)(6506007)(478600001)(6512007)(8676002)(6666004)(186003)(9686003)(86362001)(26005)(5660300002)(33716001)(6916009)(316002)(83380400001)(54906003)(38100700002)(6486002)(2906002)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1jbavGrIkhqWwYXLdAKIHqSXROXN5NgfhjjMYwKH9nHRbfIJY+GspyDDD22y?=
+ =?us-ascii?Q?0W5joxSn1bBhxVOxGOGl9Mvt4Bvxbq0hi5QhYc5S+u17ENvzEI3ikbfrwQ8e?=
+ =?us-ascii?Q?X63yiahJ1j2iptTbsufweScqHtWISWqC9RzdsxC2ztRyZd4BSMdQRXj7GTQg?=
+ =?us-ascii?Q?Z3kaI7RSC/rexYeD5NLYU3g5vGpGZEorsWZJvd3EHyq6cZPV9aJlnZkbVPee?=
+ =?us-ascii?Q?KthLu1mwmybx7fsmKf/jQE6G/KP0GHsV0nPuI+NzfjlOzE91DDzCd3OVH+Wy?=
+ =?us-ascii?Q?wJ6XU/dzrB8q15aMPTfLP9Z2C3chgmzzIfGf4HHL9krANlAeEuvSi6WYPo7v?=
+ =?us-ascii?Q?ubkzcgSw7h8XCx9TR5w9SfediQ8A7LEb7yxnjEuFnPxLK/GXThWEPxuRJ7kU?=
+ =?us-ascii?Q?A71lyZYExCgh5etN5/AW9jlxn0IwsgIA6PfgWBFcd7tv/P7EglE4l7wD1nwW?=
+ =?us-ascii?Q?NQ6AzXNeQGAzU/Ywy61RFBFZuSrfMemJc3RzfmNdR8UOCqOqMdixCzGQdLUO?=
+ =?us-ascii?Q?gyJKqsd20XVJWICSg0crmPXNhyhSnYjvOCkUlmhtMpWkBg6awABeT6ZvVyuT?=
+ =?us-ascii?Q?nGEG1Rl3sggR1/E2tdpIkE3nY8eotFx3swlMA9z9ricwFYKt0z2e8SjMYkWT?=
+ =?us-ascii?Q?6hT7YG2Pl6wUc/7CT0c+qILJww+JX3Ae+ioStz47qudttStpDJ+ewTAY+3oW?=
+ =?us-ascii?Q?PAv++A7nn/sCUN4wK3bCvZBMGzRGsw2KXYmqGnctr+rhHauldDfOQFWppMzd?=
+ =?us-ascii?Q?hwiPdhMM7xWj/cBZF3DOtAS1bqMTqQbHKwz4wh5Rg7VOrzSyWhVsWWLHgS9Y?=
+ =?us-ascii?Q?iSTtrpHMO57jIXtetL98jOr78aMlPIEXXCsJvjN0yYhvl3JdI0ae5ATlrPHU?=
+ =?us-ascii?Q?rFwAMVgMM9+5PeCB4VVTg/s8/uNRV9RePVQqdTNb5T9CX/QfBqf/2ZQt6ok2?=
+ =?us-ascii?Q?oR0sdLbHc81EA55OMXNa9dPdBRJParmI+iAP+r3gzM0i38i6RETx22KUZyGq?=
+ =?us-ascii?Q?QAjfuvvn2HCYXCXEQ4VX8Z/mEBdF717YmvXWKC9uq0WOOgldxOBYnz6H7O5M?=
+ =?us-ascii?Q?6rNMpioPSOct2YIBnVe+GYvtszTyb9bEVksn+GRoASlZEy6IsltlG0Fh3xTE?=
+ =?us-ascii?Q?2blgB8wJSCio+Uijs9+stllj4UTjbGk/HyJKnIYfdqzqjzIi8a1IG6UHirAS?=
+ =?us-ascii?Q?HbzGatUZj2yPkjfQXnqax6223UiyX+MmJ6MA2Xl3AGG+bRpUU0bQ/wDxM0x0?=
+ =?us-ascii?Q?CCDtcSRy4PBVt+tcOrOP6Uzhs531SCnhx0Wb1QLZLMNK3ImyoBJ0POJOaqlp?=
+ =?us-ascii?Q?GHf7Ek+V+iD5KtmVBXObn9qaOz+y6O+h4pw+NXA+Ki3NzxWCG1r3X+2DF+1f?=
+ =?us-ascii?Q?uVmQN+tTNfeuFqQVv1jNNAqdGYaZSWzxNBGk8xiCET47+Oo1quZC5443zLY4?=
+ =?us-ascii?Q?ygmUp/6pkljS3/mMxZPsWB5PWr9gFc8jk9xG9fXZhKT8jvN8guQepu3wNR7X?=
+ =?us-ascii?Q?r+h5aLEfTzm/QfJqCFWPTna79Ys5uqm9X0WqO+4mLWxLRFZcyXHpkvKyUvYO?=
+ =?us-ascii?Q?lk5RH3lZ4uRlKfDgrlMiZ2SOpWtyvfyDWzaC38pA?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c24fc237-0f2f-4707-469d-08dad3b0fdf2
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2022 15:30:35.6283
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6f3e44a-b9cf-4072-086d-08dad3b00afd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000E656.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6308
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H6kCE3rPO+8YE9L2p5o2nz6eQwoypMBwBfPEuVd1U3q5KTzzlA2ZdTVAdpl6NKpMdMfagVHMMyHzM70GIALlwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5884
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 30.11.22 12:39:00, Dan Williams wrote:
-> Robert Richter wrote:
-> > On 28.11.22 16:25:18, Dan Williams wrote:
-> > > Robert Richter wrote:
-> > > > On 24.11.22 10:35:32, Dan Williams wrote:
-> > > > > Unlike a CXL memory expander in a VH topology that has at least one
-> > > > > intervening 'struct cxl_port' instance between itself and the CXL root
-> > > > > device, an RCD attaches one-level higher. For example:
-> > > > > 
-> > > > >                VH
-> > > > >           ┌──────────┐
-> > > > >           │ ACPI0017 │
-> > > > >           │  root0   │
-> > > > >           └─────┬────┘
-> > > > >                 │
-> > > > >           ┌─────┴────┐
-> > > > >           │  dport0  │
-> > > > >     ┌─────┤ ACPI0016 ├─────┐
-> > > > >     │     │  port1   │     │
-> > > > >     │     └────┬─────┘     │
-> > > > >     │          │           │
-> > > > >  ┌──┴───┐   ┌──┴───┐   ┌───┴──┐
-> > > > >  │dport0│   │dport1│   │dport2│
-> > > > >  │ RP0  │   │ RP1  │   │ RP2  │
-> > > > >  └──────┘   └──┬───┘   └──────┘
-> > > > >                │
-> > > > >            ┌───┴─────┐
-> > > > >            │endpoint0│
-> > > > >            │  port2  │
-> > > > >            └─────────┘
-> > > > > 
-> > > > > ...vs:
-> > > > > 
-> > > > >               RCH
-> > > > >           ┌──────────┐
-> > > > >           │ ACPI0017 │
-> > > > >           │  root0   │
-> > > > >           └────┬─────┘
-> > > > >                │
-> > > > >            ┌───┴────┐
-> > > > >            │ dport0 │
-> > > > >            │ACPI0016│
-> > > > >            └───┬────┘
-> > > > >                │
-> > > > >           ┌────┴─────┐
-> > > > >           │endpoint0 │
-> > > > >           │  port1   │
-> > > > >           └──────────┘
-> > > > > 
-> > > > > So arrange for endpoint port in the RCH/RCD case to appear directly
-> > > > > connected to the host-bridge in its singular role as a dport. Compare
-> > > > > that to the VH case where the host-bridge serves a dual role as a
-> > > > > 'cxl_dport' for the CXL root device *and* a 'cxl_port' upstream port for
-> > > > > the Root Ports in the Root Complex that are modeled as 'cxl_dport'
-> > > > > instances in the CXL topology.
-> > > > > 
-> > > > > Another deviation from the VH case is that RCDs may need to look up
-> > > > > their component registers from the Root Complex Register Block (RCRB).
-> > > > > That platform firmware specified RCRB area is cached by the cxl_acpi
-> > > > > driver and conveyed via the host-bridge dport to the cxl_mem driver to
-> > > > > perform the cxl_rcrb_to_component() lookup for the endpoint port
-> > > > > (See 9.11.8 CXL Devices Attached to an RCH for the lookup of the
-> > > > > upstream port component registers).
-> > > > > 
-> > > > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > > > ---
-> > > > >  drivers/cxl/core/port.c |   11 +++++++++--
-> > > > >  drivers/cxl/cxlmem.h    |    2 ++
-> > > > >  drivers/cxl/mem.c       |   31 ++++++++++++++++++++++++-------
-> > > > >  drivers/cxl/pci.c       |   10 ++++++++++
-> > > > >  4 files changed, 45 insertions(+), 9 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > > > > index c7f58282b2c1..2385ee00eb9a 100644
-> > > > > --- a/drivers/cxl/core/port.c
-> > > > > +++ b/drivers/cxl/core/port.c
-> > > > > @@ -1358,8 +1358,17 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> > > > >  {
-> > > > >  	struct device *dev = &cxlmd->dev;
-> > > > >  	struct device *iter;
-> > > > > +	struct cxl_dport *dport;
-> > > > > +	struct cxl_port *port;
-> > > > 
-> > > > There is no direct need to move that code here.
-> > > > 
-> > > > If you want to clean that up in this patch too, then leave a comment
-> > > > in the change log?
-> > > 
-> > > Oh, good point, must have been left over from an earlier revision of the
-> > > patch, dropped it.
-> > > 
-> > > > 
-> > > > >  	int rc;
-> > > > >  
-> > > > > +	/*
-> > > > > +	 * Skip intermediate port enumeration in the RCH case, there
-> > > > > +	 * are no ports in between a host bridge and an endpoint.
-> > > > > +	 */
-> > > > > +	if (cxlmd->cxlds->rcd)
-> > > > > +		return 0;
-> > > > > +
-> > > > >  	rc = devm_add_action_or_reset(&cxlmd->dev, cxl_detach_ep, cxlmd);
-> > > > >  	if (rc)
-> > > > >  		return rc;
-> > > > > @@ -1373,8 +1382,6 @@ int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd)
-> > > > >  	for (iter = dev; iter; iter = grandparent(iter)) {
-> > > > >  		struct device *dport_dev = grandparent(iter);
-> > > > >  		struct device *uport_dev;
-> > > > > -		struct cxl_dport *dport;
-> > > > > -		struct cxl_port *port;
-> > > > >  
-> > > > >  		if (!dport_dev)
-> > > > >  			return 0;
-> > > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > > index e082991bc58c..35d485d041f0 100644
-> > > > > --- a/drivers/cxl/cxlmem.h
-> > > > > +++ b/drivers/cxl/cxlmem.h
-> > > > > @@ -201,6 +201,7 @@ struct cxl_endpoint_dvsec_info {
-> > > > >   * @dev: The device associated with this CXL state
-> > > > >   * @regs: Parsed register blocks
-> > > > >   * @cxl_dvsec: Offset to the PCIe device DVSEC
-> > > > > + * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-> > > > >   * @payload_size: Size of space for payload
-> > > > >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> > > > >   * @lsa_size: Size of Label Storage Area
-> > > > > @@ -235,6 +236,7 @@ struct cxl_dev_state {
-> > > > >  	struct cxl_regs regs;
-> > > > >  	int cxl_dvsec;
-> > > > >  
-> > > > > +	bool rcd;
-> > > > >  	size_t payload_size;
-> > > > >  	size_t lsa_size;
-> > > > >  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
-> > > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > > index aa63ce8c7ca6..9a655b4b5e52 100644
-> > > > > --- a/drivers/cxl/mem.c
-> > > > > +++ b/drivers/cxl/mem.c
-> > > > > @@ -45,12 +45,13 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
-> > > > >  	return 0;
-> > > > >  }
-> > > > >  
-> > > > > -static int devm_cxl_add_endpoint(struct cxl_memdev *cxlmd,
-> > > > > +static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
-> > > > >  				 struct cxl_dport *parent_dport)
-> > > > >  {
-> > > > >  	struct cxl_port *parent_port = parent_dport->port;
-> > > > >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > > > >  	struct cxl_port *endpoint, *iter, *down;
-> > > > > +	resource_size_t component_reg_phys;
-> > > > >  	int rc;
-> > > > >  
-> > > > >  	/*
-> > > > > @@ -65,8 +66,18 @@ static int devm_cxl_add_endpoint(struct cxl_memdev *cxlmd,
-> > > > >  		ep->next = down;
-> > > > >  	}
-> > > > >  
-> > > > > -	endpoint = devm_cxl_add_port(&parent_port->dev, &cxlmd->dev,
-> > > > > -				     cxlds->component_reg_phys, parent_dport);
-> > > > > +	/*
-> > > > > +	 * The component registers for an RCD might come from the
-> > > > > +	 * host-bridge RCRB if they are not already mapped via the
-> > > > > +	 * typical register locator mechanism.
-> > > > > +	 */
-> > > > > +	if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
-> > > > > +		component_reg_phys = cxl_rcrb_to_component(
-> > > > > +			&cxlmd->dev, parent_dport->rcrb, CXL_RCRB_DOWNSTREAM);
-> > > > 
-> > > > As already commented: this must be the upstream RCRB here.
-> > > > 
-> > > > > +	else
-> > > > > +		component_reg_phys = cxlds->component_reg_phys;
-> > > > > +	endpoint = devm_cxl_add_port(host, &cxlmd->dev, component_reg_phys,
-> > > > > +				     parent_dport);
-> > > > 
-> > > > Looking at CXL 3.0 spec, table 8-22, there are the various sources of
-> > > > component registers listed. For RCD we need: D1, DP1, UP1 (optional
-> > > > R).
-> > > > 
-> > > > 	D1:	endpoint->component_reg_phys;
-> > > > 	UP1:	parent_port-component_reg_phys; (missing in RCH topology)
-> > > > 	DP1:	parent_dport->component_reg_phys;
-> > > > 
-> > > > I don't see how all of them could be stored in this data layout as the
-> > > > cxl host port is missing.
-> > > 
-> > > If I am understanding your concern correctly, that's handled here:
-> > > 
-> > >     if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
-> > > 
-> > > In the D1 case cxlds->component_reg_phys will be valid since the
-> > > component registers were visible via the register locator DVSEC and
-> > > retrieved by cxl_pci. In the UP1 case cxlds->component_reg_phys is
-> > > invalid and the driver falls back to the RCRB. DP1 is handled in
-> > > cxl_acpi. I.e. the D1 and UP1 cases do not co-exist.
-> > 
-> > What I mean is we must store all 3 component reg base addresses for
-> > later access. E.g., if there is an AER error of a pci dev or the host,
-> > we must (depending on the error details) access CXL RAS status of
-> > either D1, UP1 or DP1. So for all 3 of them there must be a way to
-> > determine this walking through the port hierarchy. In the above list
-> > of locations I don't where UP1's component reg base address is stored.
+On Thu, Dec 01, 2022 at 01:26:18PM +0000, Jonathan Cameron wrote:
+> On Wed, 30 Nov 2022 16:27:11 -0800
+> ira.weiny@intel.com wrote:
 > 
-> So I think we are reading the specification differently. I am comparing
-> Figure 9-7 "CXL Device Remaps Upstream Port and Component Registers" and
-> Figure Figure 9-8 "CXL Device that Does Not Remap Upstream Port and
-> Component Registers" and noting that there is never a case where three
-> sets of component registers are visible. It is either DP1 connected to
-> UP1 (Figure 9-7) or DP1 connected to D1 (Figure 9-8). There is never a
-> case where the code needs to consider UP1 and D1 component registers at
-> the same time because those things are identical just enumerated
-> differently depending on how the endpoint is implemented.
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > CXL rev 3.0 section 8.2.9.2.3 defines the Clear Event Records mailbox
+> > command.  After an event record is read it needs to be cleared from the
+> > event log.
+> > 
+> > Implement cxl_clear_event_record() to clear all record retrieved from
+> > the device.
+> > 
+> > Each record is cleared explicitly.  A clear all bit is specified but
+> > events could arrive between a get and any final clear all operation.
+> > This means events would be missed.
+> > Therefore each event is cleared specifically.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> I think there is a type issue on the min_t() calculation with that addressed
+> this looks good to me.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> > 
+> > ---
+> > Changes from V1:
+> > 	Clear Event Record allows for u8 handles while Get Event Record
+> > 	allows for u16 records to be returned.  Based on Jonathan's
+> > 	feedback; allow for all event records to be handled in this
+> > 	clear.  Which means a double loop with potentially multiple
+> > 	Clear Event payloads being sent to clear all events sent.
+> > 
+> > Changes from RFC:
+> > 	Jonathan
+> > 		Clean up init of payload and use return code.
+> > 		Also report any error to clear the event.
+> > 		s/v3.0/rev 3.0
+> > ---
+> >  drivers/cxl/core/mbox.c      | 61 +++++++++++++++++++++++++++++++-----
+> >  drivers/cxl/cxlmem.h         | 14 +++++++++
+> >  include/uapi/linux/cxl_mem.h |  1 +
+> >  3 files changed, 69 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 70b681027a3d..076a3df0ba38 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -52,6 +52,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+> >  #endif
+> >  	CXL_CMD(GET_SUPPORTED_LOGS, 0, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
+> >  	CXL_CMD(GET_EVENT_RECORD, 1, CXL_VARIABLE_PAYLOAD, 0),
+> > +	CXL_CMD(CLEAR_EVENT_RECORD, CXL_VARIABLE_PAYLOAD, 0, 0),
+> >  	CXL_CMD(GET_FW_INFO, 0, 0x50, 0),
+> >  	CXL_CMD(GET_PARTITION_INFO, 0, 0x20, 0),
+> >  	CXL_CMD(GET_LSA, 0x8, CXL_VARIABLE_PAYLOAD, 0),
+> > @@ -708,6 +709,42 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+> >  
+> > +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
+> > +				  enum cxl_event_log_type log,
+> > +				  struct cxl_get_event_payload *get_pl,
+> > +				  u16 total)
+> > +{
+> > +	struct cxl_mbox_clear_event_payload payload = {
+> > +		.event_log = log,
+> > +	};
+> > +	int cnt;
+> > +
+> > +	/*
+> > +	 * Clear Event Records uses u8 for the handle cnt while Get Event
+> > +	 * Record can return up to 0xffff records.
+> > +	 */
+> > +	for (cnt = 0; cnt < total; /* cnt incremented internally */) {
+> > +		u8 nr_recs = min_t(u8, (total - cnt),
+> > +				   CXL_CLEAR_EVENT_MAX_HANDLES);
+> 
+> I might be half asleep but isn't this assuming that (total - cnt)
+> fits in an u8?  Shouldn't this be min_t(u16, ..) 
 
-Yes, the spec is ambiguous here. Looking at CXL 3.0, Figure 12-3 I
-also tend to agree the RCiEP's CXL RAS cap is used for that ("UP Z
-sends an error message to all CXL.io Functions that are affected by
-this error."). Unfortunately 12.2.1.2 does not state where the CXL RAS
-Capability that logs the error resides.
+This cast will ensure the value is never out of range for nr_recs which needs
+to be u8 and (total - cnt) will never be negative.
 
--Robert
+But now you have me double thinking myself.
 
+> Also, maybe u16 cnt would be simpler.
+> 
+> Hmm.  This is safe but only because of how you call it alongside
+> handling of a particular Get event records response (which must
+> have fitted in the mailbox and has a longer header).
+> 
+> Looking at this function in isolation, I think the mailbox could be
+> small enough that we might not fit 255 records + the header.
+> Perhaps we need a comment to say that, or at minimum a check and error
+> return if it won't fit?
+
+I did not realize that Payload Size applied to input payloads as well.  :-/
+There is no check in the send command for that ATM.  Looking at the spec I
+think you are right.
+
+I'll further limit the payload size here too.
+
+And with this I might get rid of the min_t() and just cap based on that value.
+
+> 
+> > +		int i, rc;
+> > +
+> > +		for (i = 0; i < nr_recs; i++, cnt++) {
+> > +			payload.handle[i] = get_pl->records[cnt].hdr.handle;
+> > +			dev_dbg(cxlds->dev, "Event log '%s': Clearning %u\n",
+> > +				cxl_event_log_type_str(log),
+> > +				le16_to_cpu(payload.handle[i]));
+> > +		}
+> > +		payload.nr_recs = nr_recs;
+> > +
+> > +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_CLEAR_EVENT_RECORD,
+> > +				       &payload, sizeof(payload), NULL, 0);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> >  				    enum cxl_event_log_type type)
+> >  {
+> > @@ -732,13 +769,22 @@ static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+> This feels miss named now but I can't immediately think of better naming so on that
+> basis fine to leave it as is if you don't have a better idea!.
+
+So we leave it.  Naming is hard!  :-D
+
+Thanks for the quick review, V3 coming ASAP.
+Ira
