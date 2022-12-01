@@ -2,115 +2,167 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC890C47088
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 00:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C00C4321E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 00:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbiLAAIN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 19:08:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
+        id S229613AbiLAA1a (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 19:27:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbiLAAGb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 19:06:31 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931A695817;
-        Wed, 30 Nov 2022 16:02:29 -0800 (PST)
+        with ESMTP id S229612AbiLAA1a (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 19:27:30 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8BBF5803E;
+        Wed, 30 Nov 2022 16:27:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669852949; x=1701388949;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=a7Q19w1eNvdrsRPi8yRiG+pDxwSC8c5/WmkbQ9ncDiM=;
-  b=YLy9n0DWgZWfStRs+2t6vBwaOdTZo21+49mwuNFzXxkkRY1ZUwKpYMt6
-   Ae60nvwwptmd3y0INREkETorsvTM7MadyjPjBtezDeMa16HHTz2J8vuYn
-   EyWHM/jqpCbaT2rcCFcBq29udapOfDagXIbS/V+tcN647VP7CLu1R7rUL
-   9OkSIjBGc8FMsKpOdG9ELJxND+swq89Wcr0MYhUGeS7xqliE8VsWf1gZJ
-   oeW2coWm6qdQxQk7guj6N2s/ryeXV0sRYahlMriuPfAUb2p5ll0klOaVo
-   DCOqX0KZ8i/05hq2mMcCaUSdfnblhtpf+yvbl4OR4EASXKTzC2Y6yQk85
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="295236931"
+  t=1669854448; x=1701390448;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DNX3WxwJVVhAyY+gP2btOneyIgKiZaVH8GpVBETvHjA=;
+  b=Dfcq9Q10pAEQfwS8BJnBJEuMsq3ie7XQtfG6zdhUInOQTjqmH3CwZEr5
+   EOoNsesLHUXjGY+4N1HW0cjpUtbEm0Djqv3+THPW8G74faavEC6HNqjcM
+   fTithaxwyQFugmT413/Y/Y4F9FtS3d8aIDIYQGraKnPrfEgMWbldtMiie
+   e3kwGUqyrT9UGDM+yWKxZum90BzotHR3jwp+sRakgLh6wDgHMDMxLCtXW
+   rJOOES/B2t0VC6IHB4SLGQYipBVzKK4Iv1apHFC8FUKw9NyCJXflewVrM
+   8rKuNA7ssAoeypixVYw/Z0+UnogQsvPRTjq6VGTiU6wT1n6ziPHmc5UiK
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="317400816"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="295236931"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:02:27 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="638186625"
+   d="scan'208";a="317400816"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:27:26 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="622085198"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="638186625"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:02:26 -0800
-Subject: [v6 11/11 PATCH] cxl/pci: Add callback to log AER correctable error
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        Jonathan.Cameron@huawei.com, bhelgaas@google.com
-Date:   Wed, 30 Nov 2022 17:02:25 -0700
-Message-ID: <166985287203.2871899.13605149073500556137.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <20221130224714.GA846634@bhelgaas>
-References: <20221130224714.GA846634@bhelgaas>
-User-Agent: StGit/1.4
+   d="scan'208";a="622085198"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.251.1.240])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:27:25 -0800
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: [PATCH V2 00/11] CXL: Process event logs
+Date:   Wed, 30 Nov 2022 16:27:08 -0800
+Message-Id: <20221201002719.2596558-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add AER error handler callback to read the RAS capability structure
-correctable error (CE) status register for the CXL device. Log the
-error as a trace event and clear the error. For CXL devices, the driver
-also needs to write back to the status register to clear the
-unmasked correctable errors.
+From: Ira Weiny <ira.weiny@intel.com>
 
-See CXL spec rev3.0 8.2.4.16 for RAS capability structure CE Status
-Register.
+Changes from V1
+	Address comments, from Jonathan, Dave, and Alison
+		Main comment was to allow for a full payload size number of
+		event records to be processed on each Get event cyle.
+	Pick up tags
 
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
 
-v6:
-- Update commit log to point to RAS capability structure. (Bjorn)
-- Change cxl_correctable_error_logging() to cxl_cor_error_detected().
-  (Bjorn)
+This code has been tested with a newer qemu which allows for more events to be
+returned at a time as well ad additional QMP event and interrupt injection.
+Thos patches will follow once they have been cleaned up.
 
- drivers/cxl/pci.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+The series is in 5 parts:
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 11f842df9807..02342830b612 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -622,10 +622,30 @@ static void cxl_error_resume(struct pci_dev *pdev)
- 		 dev->driver ? "successful" : "failed");
- }
- 
-+static void cxl_cor_error_detected(struct pci_dev *pdev)
-+{
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-+	struct device *dev = &cxlmd->dev;
-+	void __iomem *addr;
-+	u32 status;
-+
-+	if (!cxlds->regs.ras)
-+		return;
-+
-+	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-+	status = le32_to_cpu(readl(addr));
-+	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-+		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-+		trace_cxl_aer_correctable_error(dev_name(dev), status);
-+	}
-+}
-+
- static const struct pci_error_handlers cxl_error_handlers = {
- 	.error_detected	= cxl_error_detected,
- 	.slot_reset	= cxl_slot_reset,
- 	.resume		= cxl_error_resume,
-+	.cor_error_detected	= cxl_cor_error_detected,
- };
- 
- static struct pci_driver cxl_pci_driver = {
+	0) Davidlohrs irq patch modified for 16 vectors
+	1) Base functionality
+	2) Parsing specific events (Dynamic Capacity Event Record is defered)
+	3) Event interrupt support
+	4) cxl-test infrastructure for basic tests
 
+While I believe this entire series is ready to be merged I realize that the
+interrupt support may still have some discussion around it.  Therefor parts 1,
+2, and 4 could be merged without irq support as cxl-test provides testing for
+that.  Interrupt testing requires Qemu but it too is fully tested and ready to
+go.
+
+
+Changes from RFC v2
+	Integrated Davidlohr's irq patch, allocate up to 16 vectors, and base
+		my irq support on modifications to that patch.
+	Smita
+		Check event status before reading each log.
+	Jonathan
+		Process more than 1 record at a time
+		Remove reserved fields
+	Steven
+		Prefix trace points with 'cxl_'
+	Davidlohr
+		PUll in his patch
+
+Changes from RFC v1
+	Add event irqs
+	General simplification of the code.
+	Resolve field alignment questions
+	Update to rev 3.0 for comments and structures
+	Add reserved fields and output them
+
+Event records inform the OS of various device events.  Events are not needed
+for any kernel operation but various user level software will want to track
+events.
+
+Add event reporting through the trace event mechanism.  On driver load read and
+clear all device events.
+
+Enable all event logs for interrupts and process each log on interrupt.
+
+
+TESTING:
+
+Testing of this was performed with additions to QEMU in the following repo:
+
+	https://github.com/weiny2/qemu/tree/ira-cxl-events-latest
+
+Changes to this repo are not finalized yet so I'm not posting those patches
+right away.  But there is enough functionality added to further test this.
+
+	1) event status register
+	2) additional event injection capabilities
+	3) Process more than 1 record at a time in Get/Clear mailbox commands
+
+Davidlohr Bueso (1):
+  cxl/pci: Add generic MSI-X/MSI irq support
+
+Ira Weiny (10):
+  cxl/mem: Implement Get Event Records command
+  cxl/mem: Implement Clear Event Records command
+  cxl/mem: Clear events on driver load
+  cxl/mem: Trace General Media Event Record
+  cxl/mem: Trace DRAM Event Record
+  cxl/mem: Trace Memory Module Event Record
+  cxl/mem: Wire up event interrupts
+  cxl/test: Add generic mock events
+  cxl/test: Add specific events
+  cxl/test: Simulate event log overflow
+
+ MAINTAINERS                     |   1 +
+ drivers/cxl/core/mbox.c         | 260 +++++++++++++++++
+ drivers/cxl/cxl.h               |   7 +
+ drivers/cxl/cxlmem.h            | 188 ++++++++++++
+ drivers/cxl/cxlpci.h            |   6 +
+ drivers/cxl/pci.c               | 155 ++++++++++
+ include/trace/events/cxl.h      | 486 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/cxl_mem.h    |   4 +
+ tools/testing/cxl/test/Kbuild   |   2 +-
+ tools/testing/cxl/test/events.c | 362 ++++++++++++++++++++++++
+ tools/testing/cxl/test/events.h |   9 +
+ tools/testing/cxl/test/mem.c    |  35 +++
+ 12 files changed, 1514 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/cxl.h
+ create mode 100644 tools/testing/cxl/test/events.c
+ create mode 100644 tools/testing/cxl/test/events.h
+
+
+base-commit: aae703b02f92bde9264366c545e87cec451de471
+-- 
+2.37.2
 
