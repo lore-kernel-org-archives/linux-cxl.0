@@ -2,55 +2,55 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BB7C47088
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 00:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1137BC4321E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 00:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiLAA14 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Nov 2022 19:27:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47172 "EHLO
+        id S229895AbiLAA15 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Nov 2022 19:27:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbiLAA1q (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 19:27:46 -0500
+        with ESMTP id S229804AbiLAA1z (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Nov 2022 19:27:55 -0500
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EEE11038;
-        Wed, 30 Nov 2022 16:27:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A93A5FE6;
+        Wed, 30 Nov 2022 16:27:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669854454; x=1701390454;
+  t=1669854457; x=1701390457;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=N2Pnv35xaqzly1ZNfOAl5sXRfQfPg0As2QV0Hxxe2ZI=;
-  b=D+7BHsq94Cb+GBwl+1WJRm8Flyeh9zKI9T8jflHm37tU8/CwCbV65Nnf
-   YnbcXcjtmHbaA4eGk/VTMZ3VakgD9+7NsIPFx2I8qJWSKozWxr3dOaEyC
-   LKCaVmz1/mwFNLmHICvhdX+WmxijpzjzlwiTbJ7vBYIRgVXjACc5d1CX2
-   YZsPTEp7sZXnkBDYYoO1ZJBhIy/u2eCLXG/WCOJOZq7/Tqd8ppmvD9XBm
-   jhb+BuuJ9K9yB2CuHurPhWWNV71a/yU2/+aTwzrvn8O2JoGXOj+V5rcpR
-   k/vi3T9kJVRarKmKkTB4wSDDKpUrmfydhHLOUqeFI9y/fVIjmSBHjb9QV
+  bh=MIt8u5M8Ue6CxDEWxdx1n9xx/jT7kbKrMNIRbSJ2oXA=;
+  b=i8hO6rW2LYuq67wuOJasAhmlX6SDKKU9YGSwxXH10I2knZHRB4F64GEA
+   MOEoLdam9N8/gj4PyFHZDP5poUhB4NeprmukDyQjQ2wqqTh+mswdMRTb2
+   ps5IH0NUIfr8wN6jvrJMOTdumaBJV+Oe6sNObGF+Asai1m+fMimk1PK5k
+   ugHwJgFlQGC857dfJKEp4cWoQEOoAQoXE+wu+MvJJzKOs3+h9xhuzh9eR
+   rQLExTeU5tWVOcXMecP5S4MEunM1LjAI6X9tGtiTd1wtKdifM3OdTFeaW
+   dJQll3mG7vaSD3QrbLSHwes5j1oAqUCxVTV/eXntG36WEGtgTupwPbawm
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="317400859"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="317400892"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="317400859"
+   d="scan'208";a="317400892"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:27:31 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="622085229"
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:27:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="622085248"
 X-IronPort-AV: E=Sophos;i="5.96,207,1665471600"; 
-   d="scan'208";a="622085229"
+   d="scan'208";a="622085248"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.251.1.240])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:27:30 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 16:27:35 -0800
 From:   ira.weiny@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: [PATCH V2 05/11] cxl/mem: Trace General Media Event Record
-Date:   Wed, 30 Nov 2022 16:27:13 -0800
-Message-Id: <20221201002719.2596558-6-ira.weiny@intel.com>
+Subject: [PATCH V2 10/11] cxl/test: Add specific events
+Date:   Wed, 30 Nov 2022 16:27:18 -0800
+Message-Id: <20221201002719.2596558-11-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221201002719.2596558-1-ira.weiny@intel.com>
 References: <20221201002719.2596558-1-ira.weiny@intel.com>
@@ -62,268 +62,122 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-CXL rev 3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
+Each type of event has different trace point outputs.
 
-Determine if the event read is a general media record and if so trace
-the record as a General Media Event Record.
+Add mock General Media Event, DRAM event, and Memory Module Event
+records to the mock list of events returned.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes from V1:
 	Jonathan
-		fix spec references for CXL rev 3.0
-		Make flags all caps
-
-Changes from RFC v2:
-	Output DPA flags as a single field
-	Ensure names of fields match what TP_print outputs
-	Steven
-		prefix TRACE_EVENT with 'cxl_'
-	Jonathan
-		Remove Reserved field
+		use put_unaligned_le16()
+		fix spacing
 
 Changes from RFC:
-	Add reserved byte array
-	Use common CXL event header record macros
-	Jonathan
-		Use unaligned_le{24,16} for unaligned fields
-		Don't use the inverse of phy addr mask
-	Dave Jiang
-		s/cxl_gen_media_event/general_media
-		s/cxl_evt_gen_media/cxl_event_gen_media
+	Adjust for struct changes
+	adjust for unaligned fields
 ---
- drivers/cxl/core/mbox.c    |  40 ++++++++++--
- drivers/cxl/cxlmem.h       |  19 ++++++
- include/trace/events/cxl.h | 124 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 179 insertions(+), 4 deletions(-)
+ tools/testing/cxl/test/events.c | 73 +++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 076a3df0ba38..20191fe55bba 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -709,6 +709,38 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
- 
-+/*
-+ * General Media Event Record
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ */
-+static const uuid_t gen_media_event_uuid =
-+	UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
-+		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6);
-+
-+static bool cxl_event_tracing_enabled(void)
-+{
-+	return trace_cxl_generic_event_enabled() ||
-+	       trace_cxl_general_media_enabled();
-+}
-+
-+static void cxl_trace_event_record(const char *dev_name,
-+				   enum cxl_event_log_type type,
-+				   struct cxl_event_record_raw *record)
-+{
-+	uuid_t *id = &record->hdr.id;
-+
-+	if (uuid_equal(id, &gen_media_event_uuid)) {
-+		struct cxl_event_gen_media *rec =
-+				(struct cxl_event_gen_media *)record;
-+
-+		trace_cxl_general_media(dev_name, type, rec);
-+		return;
-+	}
-+
-+	/* For unknown record types print just the header */
-+	trace_cxl_generic_event(dev_name, type, record);
-+}
-+
- static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
- 				  enum cxl_event_log_type log,
- 				  struct cxl_get_event_payload *get_pl,
-@@ -772,11 +804,11 @@ static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
- 		if (nr_rec > 0) {
- 			int i;
- 
--			if (trace_cxl_generic_event_enabled()) {
-+			if (cxl_event_tracing_enabled()) {
- 				for (i = 0; i < nr_rec; i++)
--					trace_cxl_generic_event(dev_name(cxlds->dev),
--								type,
--								&payload->records[i]);
-+					cxl_trace_event_record(dev_name(cxlds->dev),
-+							       type,
-+							       &payload->records[i]);
- 			}
- 
- 			rc = cxl_clear_event_record(cxlds, type, payload, nr_rec);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 1ae9962c5a06..10696debefa8 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -410,6 +410,25 @@ struct cxl_mbox_clear_event_payload {
- 	__le16 handle[CXL_CLEAR_EVENT_MAX_HANDLES];
+diff --git a/tools/testing/cxl/test/events.c b/tools/testing/cxl/test/events.c
+index a3d2ec7cc9fe..0bcc485e07da 100644
+--- a/tools/testing/cxl/test/events.c
++++ b/tools/testing/cxl/test/events.c
+@@ -206,6 +206,66 @@ struct cxl_event_record_raw hardware_replace = {
+ 	.data = { 0xDE, 0xAD, 0xBE, 0xEF },
  };
  
-+/*
-+ * General Media Event Record
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ */
-+#define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
-+struct cxl_event_gen_media {
-+	struct cxl_event_record_hdr hdr;
-+	__le64 phys_addr;
-+	u8 descriptor;
-+	u8 type;
-+	u8 transaction_type;
-+	u8 validity_flags[2];
-+	u8 channel;
-+	u8 rank;
-+	u8 device[3];
-+	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-+	u8 reserved[0x2e];
-+} __packed;
++struct cxl_event_gen_media gen_media = {
++	.hdr = {
++		.id = UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
++				0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
++		.length = sizeof(struct cxl_event_gen_media),
++		.flags[0] = CXL_EVENT_RECORD_FLAG_PERMANENT,
++		/* .handle = Set dynamically */
++		.related_handle = cpu_to_le16(0),
++	},
++	.phys_addr = cpu_to_le64(0x2000),
++	.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
++	.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
++	.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
++	/* .validity_flags = <set below> */
++	.channel = 1,
++	.rank = 30
++};
 +
- struct cxl_mbox_get_partition_info {
- 	__le64 active_volatile_cap;
- 	__le64 active_persistent_cap;
-diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-index c03a1a894af8..a4d6bd64e9bc 100644
---- a/include/trace/events/cxl.h
-+++ b/include/trace/events/cxl.h
-@@ -118,6 +118,130 @@ TRACE_EVENT(cxl_generic_event,
- 		__print_hex(__entry->data, CXL_EVENT_RECORD_DATA_LENGTH))
- );
++struct cxl_event_dram dram = {
++	.hdr = {
++		.id = UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
++				0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
++		.length = sizeof(struct cxl_event_dram),
++		.flags[0] = CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
++		/* .handle = Set dynamically */
++		.related_handle = cpu_to_le16(0),
++	},
++	.phys_addr = cpu_to_le64(0x8000),
++	.descriptor = CXL_GMER_EVT_DESC_THRESHOLD_EVENT,
++	.type = CXL_GMER_MEM_EVT_TYPE_INV_ADDR,
++	.transaction_type = CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,
++	/* .validity_flags = <set below> */
++	.channel = 1,
++	.bank_group = 5,
++	.bank = 2,
++	.column = {0xDE, 0xAD},
++};
++
++struct cxl_event_mem_module mem_module = {
++	.hdr = {
++		.id = UUID_INIT(0xfe927475, 0xdd59, 0x4339,
++				0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74),
++		.length = sizeof(struct cxl_event_mem_module),
++		/* .handle = Set dynamically */
++		.related_handle = cpu_to_le16(0),
++	},
++	.event_type = CXL_MMER_TEMP_CHANGE,
++	.info = {
++		.health_status = CXL_DHI_HS_PERFORMANCE_DEGRADED,
++		.media_status = CXL_DHI_MS_ALL_DATA_LOST,
++		.add_status = (CXL_DHI_AS_CRITICAL << 2) |
++			      (CXL_DHI_AS_WARNING << 4) |
++			      (CXL_DHI_AS_WARNING << 5),
++		.device_temp = { 0xDE, 0xAD},
++		.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
++		.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
++		.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
++	}
++};
++
+ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
+ {
+ 	struct device *dev = cxlds->dev;
+@@ -223,10 +283,23 @@ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
+ 		return 0;
+ 	}
  
-+/*
-+ * Physical Address field masks
-+ *
-+ * General Media Event Record
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ *
-+ * DRAM Event Record
-+ * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
-+ */
-+#define CXL_DPA_FLAGS_MASK			0x3F
-+#define CXL_DPA_MASK				(~CXL_DPA_FLAGS_MASK)
++	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
++			   &gen_media.validity_flags);
 +
-+#define CXL_DPA_VOLATILE			BIT(0)
-+#define CXL_DPA_NOT_REPAIRABLE			BIT(1)
-+#define show_dpa_flags(flags)	__print_flags(flags, "|",		   \
-+	{ CXL_DPA_VOLATILE,			"VOLATILE"		}, \
-+	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
-+)
++	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
++			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
++			   &dram.validity_flags);
 +
-+/*
-+ * General Media Event Record - GMER
-+ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-+ */
-+#define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
-+#define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
-+#define CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW		BIT(2)
-+#define show_event_desc_flags(flags)	__print_flags(flags, "|",		   \
-+	{ CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,		"UNCORRECTABLE_EVENT"	}, \
-+	{ CXL_GMER_EVT_DESC_THRESHOLD_EVENT,		"THRESHOLD_EVENT"	}, \
-+	{ CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW,	"POISON_LIST_OVERFLOW"	}  \
-+)
-+
-+#define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
-+#define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
-+#define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
-+#define show_mem_event_type(type)	__print_symbolic(type,			\
-+	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },		\
-+	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },	\
-+	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" }	\
-+)
-+
-+#define CXL_GMER_TRANS_UNKNOWN				0x00
-+#define CXL_GMER_TRANS_HOST_READ			0x01
-+#define CXL_GMER_TRANS_HOST_WRITE			0x02
-+#define CXL_GMER_TRANS_HOST_SCAN_MEDIA			0x03
-+#define CXL_GMER_TRANS_HOST_INJECT_POISON		0x04
-+#define CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB		0x05
-+#define CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT	0x06
-+#define show_trans_type(type)	__print_symbolic(type,					\
-+	{ CXL_GMER_TRANS_UNKNOWN,			"Unknown" },			\
-+	{ CXL_GMER_TRANS_HOST_READ,			"Host Read" },			\
-+	{ CXL_GMER_TRANS_HOST_WRITE,			"Host Write" },			\
-+	{ CXL_GMER_TRANS_HOST_SCAN_MEDIA,		"Host Scan Media" },		\
-+	{ CXL_GMER_TRANS_HOST_INJECT_POISON,		"Host Inject Poison" },		\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,		"Internal Media Scrub" },	\
-+	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" }	\
-+)
-+
-+#define CXL_GMER_VALID_CHANNEL				BIT(0)
-+#define CXL_GMER_VALID_RANK				BIT(1)
-+#define CXL_GMER_VALID_DEVICE				BIT(2)
-+#define CXL_GMER_VALID_COMPONENT			BIT(3)
-+#define show_valid_flags(flags)	__print_flags(flags, "|",		   \
-+	{ CXL_GMER_VALID_CHANNEL,			"CHANNEL"	}, \
-+	{ CXL_GMER_VALID_RANK,				"RANK"		}, \
-+	{ CXL_GMER_VALID_DEVICE,			"DEVICE"	}, \
-+	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}  \
-+)
-+
-+TRACE_EVENT(cxl_general_media,
-+
-+	TP_PROTO(const char *dev_name, enum cxl_event_log_type log,
-+		 struct cxl_event_gen_media *rec),
-+
-+	TP_ARGS(dev_name, log, rec),
-+
-+	TP_STRUCT__entry(
-+		CXL_EVT_TP_entry
-+		/* General Media */
-+		__field(u64, dpa)
-+		__field(u8, descriptor)
-+		__field(u8, type)
-+		__field(u8, transaction_type)
-+		__field(u8, channel)
-+		__field(u32, device)
-+		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
-+		__field(u16, validity_flags)
-+		/* Following are out of order to pack trace record */
-+		__field(u8, rank)
-+		__field(u8, dpa_flags)
-+	),
-+
-+	TP_fast_assign(
-+		CXL_EVT_TP_fast_assign(dev_name, log, rec->hdr);
-+
-+		/* General Media */
-+		__entry->dpa = le64_to_cpu(rec->phys_addr);
-+		__entry->dpa_flags = __entry->dpa & CXL_DPA_FLAGS_MASK;
-+		/* Mask after flags have been parsed */
-+		__entry->dpa &= CXL_DPA_MASK;
-+		__entry->descriptor = rec->descriptor;
-+		__entry->type = rec->type;
-+		__entry->transaction_type = rec->transaction_type;
-+		__entry->channel = rec->channel;
-+		__entry->rank = rec->rank;
-+		__entry->device = get_unaligned_le24(rec->device);
-+		memcpy(__entry->comp_id, &rec->component_id,
-+			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
-+		__entry->validity_flags = get_unaligned_le16(&rec->validity_flags);
-+	),
-+
-+	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
-+		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
-+		"device=%x comp_id=%s validity_flags='%s'",
-+		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
-+		show_event_desc_flags(__entry->descriptor),
-+		show_mem_event_type(__entry->type),
-+		show_trans_type(__entry->transaction_type),
-+		__entry->channel, __entry->rank, __entry->device,
-+		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
-+		show_valid_flags(__entry->validity_flags)
-+	)
-+);
-+
- #endif /* _CXL_TRACE_EVENTS_H */
+ 	event_store_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
++	event_store_add_event(mes, CXL_EVENT_TYPE_INFO,
++			      (struct cxl_event_record_raw *)&gen_media);
++	event_store_add_event(mes, CXL_EVENT_TYPE_INFO,
++			      (struct cxl_event_record_raw *)&mem_module);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
  
- /* This part must be outside protection */
+ 	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
++	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL,
++			      (struct cxl_event_record_raw *)&dram);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
+ 
+ 	return mes->ev_status;
 -- 
 2.37.2
 
