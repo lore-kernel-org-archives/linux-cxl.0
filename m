@@ -2,180 +2,152 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63867C43217
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 10:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA1FC43217
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 11:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230362AbiLAKTK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 05:19:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
+        id S229737AbiLALRU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 06:17:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiLAKSv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 05:18:51 -0500
+        with ESMTP id S229764AbiLALQr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 06:16:47 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DC952896;
-        Thu,  1 Dec 2022 02:18:40 -0800 (PST)
-Received: from frapeml100005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNBm40ZnTz6HJbY;
-        Thu,  1 Dec 2022 18:15:32 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627E1AD9BD
+        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 03:12:03 -0800 (PST)
+Received: from fraeml744-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNCy26jWSz6H710;
+        Thu,  1 Dec 2022 19:09:14 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml100005.china.huawei.com (7.182.85.132) with Microsoft SMTP Server
+ fraeml744-chm.china.huawei.com (10.206.15.225) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 1 Dec 2022 11:18:38 +0100
+ 15.1.2375.31; Thu, 1 Dec 2022 12:12:01 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 1 Dec
- 2022 10:18:37 +0000
-Date:   Thu, 1 Dec 2022 10:18:36 +0000
+ 2022 11:12:00 +0000
+Date:   Thu, 1 Dec 2022 11:11:59 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 01/11] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221201101836.00004582@Huawei.com>
-In-Reply-To: <20221201002719.2596558-2-ira.weiny@intel.com>
-References: <20221201002719.2596558-1-ira.weiny@intel.com>
-        <20221201002719.2596558-2-ira.weiny@intel.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <dave@stgolabs.net>
+Subject: Re: [PATCH v7 18/20] cxl: bypass cpu_cache_invalidate_memregion()
+ when in test config
+Message-ID: <20221201111159.00002ce5@Huawei.com>
+In-Reply-To: <166983619332.2734609.2800078343178136915.stgit@djiang5-desk3.ch.intel.com>
+References: <166983606451.2734609.4050644229630259452.stgit@djiang5-desk3.ch.intel.com>
+        <166983619332.2734609.2800078343178136915.stgit@djiang5-desk3.ch.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 30 Nov 2022 16:27:09 -0800
-ira.weiny@intel.com wrote:
+On Wed, 30 Nov 2022 12:23:13 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> From: Davidlohr Bueso <dave@stgolabs.net>
+> Bypass cpu_cache_invalidate_memregion() and checks when doing testing
+> using CONFIG_NVDIMM_SECURITY_TEST flag. The bypass allows testing on
+> QEMU where cpu_cache_has_invalidate_memregion() fails. Usage of
+> cpu_cache_invalidate_memregion() is not needed for cxl_test security
+> testing.
 > 
-> Currently the only CXL features targeted for irq support require their
-> message numbers to be within the first 16 entries.  The device may
-> however support less than 16 entries depending on the support it
-> provides.
-> 
-> Attempt to allocate these 16 irq vectors.  If the device supports less
-> then the PCI infrastructure will allocate that number.  Store the number
-> of vectors actually allocated in the device state for later use
-> by individual functions.
-> 
-> Upon successful allocation, users can plug in their respective isr at
-> any point thereafter, for example, if the irq setup is not done in the
-> PCI driver, such as the case of the CXL-PMU.
-> 
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Subject to naming discussion resolving, this looks good to me..
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> 
 > ---
-> Changes from V1:
-> 	Jonathan
-> 		pci_alloc_irq_vectors() cleans up the vectors automatically
-> 		use msi_enabled rather than nr_irq_vecs
+>  drivers/cxl/security.c |   35 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 30 insertions(+), 5 deletions(-)
 > 
-> Changes from Ira
-> 	Remove reviews
-> 	Allocate up to a static 16 vectors.
-> 	Change cover letter
-> ---
->  drivers/cxl/cxlmem.h |  3 +++
->  drivers/cxl/cxlpci.h |  6 ++++++
->  drivers/cxl/pci.c    | 23 +++++++++++++++++++++++
->  3 files changed, 32 insertions(+)
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 88e3a8e54b6a..cd35f43fedd4 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
->   * @info: Cached DVSEC information about the device.
->   * @serial: PCIe Device Serial Number
->   * @doe_mbs: PCI DOE mailbox array
-> + * @msi_enabled: MSI-X/MSI has been enabled
->   * @mbox_send: @dev specific transport for transmitting mailbox commands
->   *
->   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> @@ -247,6 +248,8 @@ struct cxl_dev_state {
->  
->  	struct xarray doe_mbs;
->  
-> +	bool msi_enabled;
-> +
->  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
->  };
->  
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index eec597dbe763..b7f4e2f417d3 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -53,6 +53,12 @@
->  #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
->  #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
->  
-> +/*
-> + * NOTE: Currently all the functions which are enabled for CXL require their
-> + * vectors to be in the first 16.  Use this as the max.
-> + */
-> +#define CXL_PCI_REQUIRED_VECTORS 16
-> +
->  /* Register Block Identifier (RBI) */
->  enum cxl_regloc_type {
->  	CXL_REGLOC_RBI_EMPTY = 0,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index faeb5d9d7a7a..8f86f85d89c7 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -428,6 +428,27 @@ static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
->  	}
+> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+> index cbd005ceb091..2b5088af8fc4 100644
+> --- a/drivers/cxl/security.c
+> +++ b/drivers/cxl/security.c
+> @@ -111,6 +111,31 @@ static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
+>  	return cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_FREEZE_SECURITY, NULL, 0, NULL, 0);
 >  }
 >  
-> +static void cxl_pci_alloc_irq_vectors(struct cxl_dev_state *cxlds)
+> +static bool cxl_has_invalidate_memregion(struct cxl_nvdimm *cxl_nvd)
 > +{
-> +	struct device *dev = cxlds->dev;
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	int nvecs;
+> +	if (!cpu_cache_has_invalidate_memregion()) {
+> +		if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
+> +			dev_warn_once(&cxl_nvd->dev,
+> +				      "Bypassing cpu_cache_has_invalidate_memregion() check for testing!\n");
+> +			return true;
+> +		}
+> +		return false;
+> +	}
 > +
-> +	/*
-> +	 * NOTE: pci_alloc_irq_vectors() handles calling pci_free_irq_vectors()
-> +	 * automatically despite not being called pcim_*.  See
-> +	 * pci_setup_msi_context().
-> +	 */
-> +	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_REQUIRED_VECTORS,
-> +				   PCI_IRQ_MSIX | PCI_IRQ_MSI);
-> +	if (nvecs < 0) {
-> +		dev_dbg(dev, "Failed to alloc irq vectors; use polling instead.\n");
+> +	return true;
+> +}
+> +
+> +static void cxl_invalidate_memregion(struct cxl_nvdimm *cxl_nvd)
+> +{
+> +	if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
+> +		dev_warn_once(&cxl_nvd->dev,
+> +			      "Bypassing cpu_cache_invalidate_memergion() for testing!\n");
 > +		return;
 > +	}
 > +
-> +	cxlds->msi_enabled = true;
+> +	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
 > +}
 > +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
+>  				    const struct nvdimm_key_data *key_data)
 >  {
->  	struct cxl_register_map map;
-> @@ -494,6 +515,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
+> @@ -120,7 +145,7 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
+>  	u8 pass[NVDIMM_PASSPHRASE_LEN];
+>  	int rc;
+>  
+> -	if (!cpu_cache_has_invalidate_memregion())
+> +	if (!cxl_has_invalidate_memregion(cxl_nvd))
+>  		return -EINVAL;
+>  
+>  	memcpy(pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
+> @@ -130,7 +155,7 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
 >  		return rc;
 >  
-> +	cxl_pci_alloc_irq_vectors(cxlds);
-> +
->  	cxlmd = devm_cxl_add_memdev(cxlds);
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
+>  	/* DIMM unlocked, invalidate all CPU caches before we read it */
+> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+> +	cxl_invalidate_memregion(cxl_nvd);
+>  	return 0;
+>  }
+>  
+> @@ -144,21 +169,21 @@ static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
+>  	struct cxl_pass_erase erase;
+>  	int rc;
+>  
+> -	if (!cpu_cache_has_invalidate_memregion())
+> +	if (!cxl_has_invalidate_memregion(cxl_nvd))
+>  		return -EINVAL;
+>  
+>  	erase.type = ptype == NVDIMM_MASTER ?
+>  		CXL_PMEM_SEC_PASS_MASTER : CXL_PMEM_SEC_PASS_USER;
+>  	memcpy(erase.pass, key->data, NVDIMM_PASSPHRASE_LEN);
+>  	/* Flush all cache before we erase mem device */
+> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+> +	cxl_invalidate_memregion(cxl_nvd);
+>  	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE,
+>  			       &erase, sizeof(erase), NULL, 0);
+>  	if (rc < 0)
+>  		return rc;
+>  
+>  	/* mem device erased, invalidate all CPU caches before data is read */
+> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+> +	cxl_invalidate_memregion(cxl_nvd);
+>  	return 0;
+>  }
+>  
+> 
+> 
 
