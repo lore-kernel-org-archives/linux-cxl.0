@@ -2,208 +2,187 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E968C43217
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 20:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0816EC47089
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 21:01:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiLAUOk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 15:14:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
+        id S230083AbiLAVBD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 16:01:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbiLAUOj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 15:14:39 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206B0BEE05
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 12:14:39 -0800 (PST)
+        with ESMTP id S230197AbiLAVBA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 16:01:00 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA500B392B;
+        Thu,  1 Dec 2022 13:00:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669925679; x=1701461679;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LyVYWQ2afrYOXoPuOEaoKtwUOfxyh/tUIQBnz/uxyuo=;
-  b=mSE4D+b6tpp8cMHwwcfLhBDLeZCS542TCznmRVq7DPicly/02XrgUOLd
-   fZP/Q/bNIhzmWBiwKt9ERU9ImY1jxPVa3gOg6mYhbSGmiBsLNj7Wd0Eaa
-   FxEq5PqjgQx8+nFWwiS5siVwBWAPhmrts6YNsaQvv8kbgRTU1WjOhceaI
-   Pm//alcmZnLBe4/xbhWUw4jMjYUXvxZbzJfEz1HM8Tld4K2mrCcVjbVMl
-   p5NXQ8WUXFv98Zrr1CFi5U4iabqDcA+MbnPWFIJkQFFCEGY72oCKdB6Sc
-   hjpCzZl1Ob5zVV+XFOjGFXLcU91oXWu8P/VqX0SOIewNY2ITpnufZwE6F
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="342722117"
+  t=1669928458; x=1701464458;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RwLBuJ7tAQPPAwuukhX/HBcaEjPiFmF8DmRsU1Vz3NA=;
+  b=fz2mKMUjU6675MbXiQzbyP0Zbcx6+pc9YU7KhOxIJZs44bOKjhguJ1Q6
+   9KmOkP+7pdPWIXphcQD4b5+77Yy0PwirXcjZR3qzWyEN3/+UdQx2W7bqS
+   luoIxF1zS3PiP/r8ucUTcKmnJmXmbDtuv/oN7u/MW83tbL7LlF3EKf1wC
+   OQAFkwi0OwTooW8tcxHTjP9kS/KBbXfxb9bKxy8Xn6seDneNhvDI4oelc
+   3xeZWrW7bdlpqsY1mHAZxgZioDiGJXK0PZv2xz+HhXEvLevF5NUsEJrMd
+   rsrBMXvdEuhFkDNhNBNzYpqrXAc0+92Ise7DfRwbQSZFO48MlJycvmZ3J
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="316947735"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="342722117"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 12:14:38 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="622437608"
+   d="scan'208";a="316947735"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:00:58 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="646909977"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="622437608"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.213.80])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 12:14:37 -0800
-Date:   Thu, 1 Dec 2022 12:14:36 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+   d="scan'208";a="646909977"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.66.184]) ([10.212.66.184])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:00:57 -0800
+Message-ID: <02f2b2fa-c3b9-21c3-5ee7-53445779f955@intel.com>
+Date:   Thu, 1 Dec 2022 14:00:56 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.0
+Subject: Re: [PATCH V2 10/11] cxl/test: Add specific events
+Content-Language: en-US
+To:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/5] cxl/memdev: Add support for the Clear Poison mailbox
- command
-Message-ID: <Y4kLLOb+cESnaH+s@aschofie-mobl2>
-References: <cover.1669781852.git.alison.schofield@intel.com>
- <091f50b2644f220f0607633a4a953184e9c88b53.1669781852.git.alison.schofield@intel.com>
- <20221130144330.00002709@Huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221130144330.00002709@Huawei.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+ <20221201002719.2596558-11-ira.weiny@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221201002719.2596558-11-ira.weiny@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 02:43:30PM +0000, Jonathan Cameron wrote:
-> On Tue, 29 Nov 2022 20:34:34 -0800
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > CXL devices optionally support the CLEAR POISON mailbox command. Add
-> > a sysfs attribute and memdev driver support for clearing poison.
-> > 
-> > When a Device Physical Address (DPA) is written to the clear_poison
-> > sysfs attribute send a clear poison command to the device for the
-> > specified address.
-> > 
-> > Per the CXL Specification (8.2.9.8.4.3), after receiving a valid clear
-> > poison request, the device removes the address from the device's Poison
-> > List and writes 0 (zero) for 64 bytes starting at address. If the device
-> > cannot clear poison from the address, it returns a permanent media error
-> > and ENXIO is returned to the user.
-> 
-> -ENXIO
-> 
-> > 
-> > Additionally, and per the spec also, it is not an error to clear poison
-> > of an address that is not poisoned. No error is returned and the address
-> > is not overwritten. The memdev driver performs basic sanity checking on
-> > the address, however, it does not go as far as reading the poison list to
-> > see if the address is poisoned before clearing. That discovery is left to
-> > the device. The device safely handles that case.
-> > 
-> > Implementation note: Although the CXL specification defines the clear
-> > command to accept 64 bytes of 'write-data' to be used when clearing
-> > the poisoned address, this implementation always uses 0 (zeros) for
-> > the write-data.
-> 
-> Maybe put a * above to refer to this note given the spec is referenced
-> for stuff different from what you are doing with it.  Nice to flag
-> up to anyone reading this that they shouldn't write a 'no that's not
-> what it says' comment before reading on. (who would do something
-> silly like that? :)
-> 
 
-Rereading the 2 paragraphs above, it's not flowing for me now either.
-I hop between 'spec says' and 'driver does'. Let me give that another
-pass.
 
-> > 
-> > The clear_poison attribute is only visible for devices supporting the
-> > capability.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> Otherwise, a few really trivial things inline + it made me notice I'd missread
-> the code for patch 1, hence the reply to my reply.
+On 11/30/2022 5:27 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> With this stuff tweaked.
+> Each type of event has different trace point outputs.
+> 
+> Add mock General Media Event, DRAM event, and Memory Module Event
+> records to the mock list of events returned.
 > 
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-I'll pick up the stuff below too.
-Thanks!
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > 
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl | 17 +++++++++
-> >  drivers/cxl/core/memdev.c               | 47 +++++++++++++++++++++++++
-> >  drivers/cxl/cxlmem.h                    |  6 ++++
-> >  3 files changed, 70 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > index 20db97f7a1aa..9d2b0fa07e17 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -435,3 +435,20 @@ Description:
-> >  		poison into an address that already has poison present and no
-> >  		error is returned. The inject_poison attribute is only visible
-> >                  for devices supporting the capability.
-> > +
-> > +
-> > +What:		/sys/bus/cxl/devices/memX/clear_poison
-> > +Date:		December, 2022
-> > +KernelVersion:	v6.2
-> > +Contact:	linux-cxl@vger.kernel.org
-> > +Description:
-> > +		(WO) When a Device Physical Address (DPA) is written to this
-> > +		attribute the memdev driver sends a clear poison command to the
-> > +		device for the specified address. Clearing poison removes the
-> > +		address from the device's Poison List and writes 0 (zero)
-> > +		for 64 bytes starting at address. It is not an error to clear
-> > +		poison from an address that does not have poison set, and if
-> > +		poison was not set, the address is not overwritten. If the
-> > +		device cannot clear poison from the address, ENXIO is returned.
+> ---
+> Changes from V1:
+> 	Jonathan
+> 		use put_unaligned_le16()
+> 		fix spacing
 > 
-> -ENXIO ?
+> Changes from RFC:
+> 	Adjust for struct changes
+> 	adjust for unaligned fields
+> ---
+>   tools/testing/cxl/test/events.c | 73 +++++++++++++++++++++++++++++++++
+>   1 file changed, 73 insertions(+)
 > 
-> > +		The clear_poison attribute is only visible for devices
-> > +		supporting the capability.
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index 71130813030f..85caffd5a85c 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -187,6 +187,44 @@ static ssize_t inject_poison_store(struct device *dev,
-> >  }
-> >  static DEVICE_ATTR_WO(inject_poison);
-> >  
-> > +static ssize_t clear_poison_store(struct device *dev,
-> > +				  struct device_attribute *attr,
-> > +				  const char *buf, size_t len)
-> > +{
-> > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > +	struct cxl_mbox_clear_poison *pi;
-> > +	u64 dpa;
-> > +	int rc;
-> > +
-> > +	rc = kstrtou64(buf, 0, &dpa);
-> > +	if (rc)
-> > +		return rc;
-> > +	rc = cxl_validate_poison_dpa(cxlds, dpa);
-> > +	if (rc)
-> > +		return rc;
-> Trivial:
-> blank line here.  Kind of make sense to keep the string parser and validation in
-> one block, but good to then separate that from the next bit of code.
-> 
-> > +	pi = kzalloc(sizeof(*pi), GFP_KERNEL);
-> > +	if (!pi)
-> > +		return -ENOMEM;
-> > +	/*
-> > +	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
-> > +	 * is defined to accept 64 bytes of 'write-data', along with the
-> > +	 * address to clear. The device writes 'write-data' into the DPA,
-> > +	 * atomically, while clearing poison if the location is marked as
-> > +	 * being poisoned.
-> > +	 *
-> > +	 * Always use '0' for the write-data.
-> > +	 */
-> > +	pi->address = cpu_to_le64(dpa);
-> > +	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_CLEAR_POISON, pi,
-> > +			       sizeof(*pi), NULL, cxlds->payload_size);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	return len;
-> > +}
-> > +static DEVICE_ATTR_WO(clear_poison);
-> ...
-> 
-> 
-> 
+> diff --git a/tools/testing/cxl/test/events.c b/tools/testing/cxl/test/events.c
+> index a3d2ec7cc9fe..0bcc485e07da 100644
+> --- a/tools/testing/cxl/test/events.c
+> +++ b/tools/testing/cxl/test/events.c
+> @@ -206,6 +206,66 @@ struct cxl_event_record_raw hardware_replace = {
+>   	.data = { 0xDE, 0xAD, 0xBE, 0xEF },
+>   };
+>   
+> +struct cxl_event_gen_media gen_media = {
+> +	.hdr = {
+> +		.id = UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
+> +				0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
+> +		.length = sizeof(struct cxl_event_gen_media),
+> +		.flags[0] = CXL_EVENT_RECORD_FLAG_PERMANENT,
+> +		/* .handle = Set dynamically */
+> +		.related_handle = cpu_to_le16(0),
+> +	},
+> +	.phys_addr = cpu_to_le64(0x2000),
+> +	.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
+> +	.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
+> +	.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
+> +	/* .validity_flags = <set below> */
+> +	.channel = 1,
+> +	.rank = 30
+> +};
+> +
+> +struct cxl_event_dram dram = {
+> +	.hdr = {
+> +		.id = UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
+> +				0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
+> +		.length = sizeof(struct cxl_event_dram),
+> +		.flags[0] = CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
+> +		/* .handle = Set dynamically */
+> +		.related_handle = cpu_to_le16(0),
+> +	},
+> +	.phys_addr = cpu_to_le64(0x8000),
+> +	.descriptor = CXL_GMER_EVT_DESC_THRESHOLD_EVENT,
+> +	.type = CXL_GMER_MEM_EVT_TYPE_INV_ADDR,
+> +	.transaction_type = CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,
+> +	/* .validity_flags = <set below> */
+> +	.channel = 1,
+> +	.bank_group = 5,
+> +	.bank = 2,
+> +	.column = {0xDE, 0xAD},
+> +};
+> +
+> +struct cxl_event_mem_module mem_module = {
+> +	.hdr = {
+> +		.id = UUID_INIT(0xfe927475, 0xdd59, 0x4339,
+> +				0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74),
+> +		.length = sizeof(struct cxl_event_mem_module),
+> +		/* .handle = Set dynamically */
+> +		.related_handle = cpu_to_le16(0),
+> +	},
+> +	.event_type = CXL_MMER_TEMP_CHANGE,
+> +	.info = {
+> +		.health_status = CXL_DHI_HS_PERFORMANCE_DEGRADED,
+> +		.media_status = CXL_DHI_MS_ALL_DATA_LOST,
+> +		.add_status = (CXL_DHI_AS_CRITICAL << 2) |
+> +			      (CXL_DHI_AS_WARNING << 4) |
+> +			      (CXL_DHI_AS_WARNING << 5),
+> +		.device_temp = { 0xDE, 0xAD},
+> +		.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
+> +		.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+> +		.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
+> +	}
+> +};
+> +
+>   u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
+>   {
+>   	struct device *dev = cxlds->dev;
+> @@ -223,10 +283,23 @@ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
+>   		return 0;
+>   	}
+>   
+> +	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
+> +			   &gen_media.validity_flags);
+> +
+> +	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
+> +			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
+> +			   &dram.validity_flags);
+> +
+>   	event_store_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+> +	event_store_add_event(mes, CXL_EVENT_TYPE_INFO,
+> +			      (struct cxl_event_record_raw *)&gen_media);
+> +	event_store_add_event(mes, CXL_EVENT_TYPE_INFO,
+> +			      (struct cxl_event_record_raw *)&mem_module);
+>   	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
+>   
+>   	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+> +	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL,
+> +			      (struct cxl_event_record_raw *)&dram);
+>   	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
+>   
+>   	return mes->ev_status;
