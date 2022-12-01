@@ -2,45 +2,45 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918C7C43217
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 13:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738AFC43217
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 13:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231500AbiLAN0Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 08:26:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
+        id S229734AbiLANam (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 08:30:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbiLAN0X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 08:26:23 -0500
+        with ESMTP id S230482AbiLANai (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 08:30:38 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F142A895F;
-        Thu,  1 Dec 2022 05:26:22 -0800 (PST)
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNGwd4xxqz67yhg;
-        Thu,  1 Dec 2022 21:23:13 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABABAB006;
+        Thu,  1 Dec 2022 05:30:36 -0800 (PST)
+Received: from frapeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNH1X1gN1z682sK;
+        Thu,  1 Dec 2022 21:27:28 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 1 Dec 2022 14:26:20 +0100
+ 15.1.2375.31; Thu, 1 Dec 2022 14:30:34 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 1 Dec
- 2022 13:26:19 +0000
-Date:   Thu, 1 Dec 2022 13:26:18 +0000
+ 2022 13:30:34 +0000
+Date:   Thu, 1 Dec 2022 13:30:33 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 03/11] cxl/mem: Implement Clear Event Records command
-Message-ID: <20221201132618.00006602@Huawei.com>
-In-Reply-To: <20221201002719.2596558-4-ira.weiny@intel.com>
+Subject: Re: [PATCH V2 04/11] cxl/mem: Clear events on driver load
+Message-ID: <20221201133033.0000090f@Huawei.com>
+In-Reply-To: <20221201002719.2596558-5-ira.weiny@intel.com>
 References: <20221201002719.2596558-1-ira.weiny@intel.com>
-        <20221201002719.2596558-4-ira.weiny@intel.com>
+        <20221201002719.2596558-5-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -54,145 +54,70 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 30 Nov 2022 16:27:11 -0800
+On Wed, 30 Nov 2022 16:27:12 -0800
 ira.weiny@intel.com wrote:
 
 > From: Ira Weiny <ira.weiny@intel.com>
 > 
-> CXL rev 3.0 section 8.2.9.2.3 defines the Clear Event Records mailbox
-> command.  After an event record is read it needs to be cleared from the
-> event log.
+> The information contained in the events prior to the driver loading can
+> be queried at any time through other mailbox commands.
 > 
-> Implement cxl_clear_event_record() to clear all record retrieved from
-> the device.
+> Ensure a clean slate of events by reading and clearing the events.  The
+> events are sent to the trace buffer but it is not anticipated to have
+> anyone listening to it at driver load time.
 > 
-> Each record is cleared explicitly.  A clear all bit is specified but
-> events could arrive between a get and any final clear all operation.
-> This means events would be missed.
-> Therefore each event is cleared specifically.
-> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-I think there is a type issue on the min_t() calculation with that addressed
-this looks good to me.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Probably not worth addressing but there is a corner case where this might fail
+if some broken software already messed with reading out the events.
 
-> 
+Imagine it read the first mailbox sized chunk, but didn't clear them...
+
+If that happens, then we'd end up seeing the whole list, but in non
+temporal order and hence trying to clear them out of order with predictable
+fails.
+
+Maybe this is the category of things we 'fix' if we ever hear of it actually
+happening.
+
+So with that caveat called out so I can say 'I told you so' :), fine to keep my tag on this.
+
+Thanks,
+
+Jonathan
+
+
 > ---
-> Changes from V1:
-> 	Clear Event Record allows for u8 handles while Get Event Record
-> 	allows for u16 records to be returned.  Based on Jonathan's
-> 	feedback; allow for all event records to be handled in this
-> 	clear.  Which means a double loop with potentially multiple
-> 	Clear Event payloads being sent to clear all events sent.
+>  drivers/cxl/pci.c            | 2 ++
+>  tools/testing/cxl/test/mem.c | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
-> Changes from RFC:
-> 	Jonathan
-> 		Clean up init of payload and use return code.
-> 		Also report any error to clear the event.
-> 		s/v3.0/rev 3.0
-> ---
->  drivers/cxl/core/mbox.c      | 61 +++++++++++++++++++++++++++++++-----
->  drivers/cxl/cxlmem.h         | 14 +++++++++
->  include/uapi/linux/cxl_mem.h |  1 +
->  3 files changed, 69 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 70b681027a3d..076a3df0ba38 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -52,6 +52,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  #endif
->  	CXL_CMD(GET_SUPPORTED_LOGS, 0, CXL_VARIABLE_PAYLOAD, CXL_CMD_FLAG_FORCE_ENABLE),
->  	CXL_CMD(GET_EVENT_RECORD, 1, CXL_VARIABLE_PAYLOAD, 0),
-> +	CXL_CMD(CLEAR_EVENT_RECORD, CXL_VARIABLE_PAYLOAD, 0, 0),
->  	CXL_CMD(GET_FW_INFO, 0, 0x50, 0),
->  	CXL_CMD(GET_PARTITION_INFO, 0, 0x20, 0),
->  	CXL_CMD(GET_LSA, 0x8, CXL_VARIABLE_PAYLOAD, 0),
-> @@ -708,6 +709,42 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 8f86f85d89c7..11e95a95195a 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -521,6 +521,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (IS_ERR(cxlmd))
+>  		return PTR_ERR(cxlmd);
 >  
-> +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
-> +				  enum cxl_event_log_type log,
-> +				  struct cxl_get_event_payload *get_pl,
-> +				  u16 total)
-> +{
-> +	struct cxl_mbox_clear_event_payload payload = {
-> +		.event_log = log,
-> +	};
-> +	int cnt;
+> +	cxl_mem_get_event_records(cxlds);
 > +
-> +	/*
-> +	 * Clear Event Records uses u8 for the handle cnt while Get Event
-> +	 * Record can return up to 0xffff records.
-> +	 */
-> +	for (cnt = 0; cnt < total; /* cnt incremented internally */) {
-> +		u8 nr_recs = min_t(u8, (total - cnt),
-> +				   CXL_CLEAR_EVENT_MAX_HANDLES);
-
-I might be half asleep but isn't this assuming that (total - cnt)
-fits in an u8?  Shouldn't this be min_t(u16, ..) 
-Also, maybe u16 cnt would be simpler.
-
-Hmm.  This is safe but only because of how you call it alongside
-handling of a particular Get event records response (which must
-have fitted in the mailbox and has a longer header).
-
-Looking at this function in isolation, I think the mailbox could be
-small enough that we might not fit 255 records + the header.
-Perhaps we need a comment to say that, or at minimum a check and error
-return if it won't fit?
-
-> +		int i, rc;
-> +
-> +		for (i = 0; i < nr_recs; i++, cnt++) {
-> +			payload.handle[i] = get_pl->records[cnt].hdr.handle;
-> +			dev_dbg(cxlds->dev, "Event log '%s': Clearning %u\n",
-> +				cxl_event_log_type_str(log),
-> +				le16_to_cpu(payload.handle[i]));
-> +		}
-> +		payload.nr_recs = nr_recs;
-> +
-> +		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_CLEAR_EVENT_RECORD,
-> +				       &payload, sizeof(payload), NULL, 0);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
->  				    enum cxl_event_log_type type)
->  {
-> @@ -732,13 +769,22 @@ static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
-This feels miss named now but I can't immediately think of better naming so on that
-basis fine to leave it as is if you don't have a better idea!.
-
->  		}
+>  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
+>  		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
 >  
->  		nr_rec = le16_to_cpu(payload->record_count);
-> -		if (trace_cxl_generic_event_enabled()) {
-> +		if (nr_rec > 0) {
->  			int i;
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index aa2df3a15051..e2f5445d24ff 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -285,6 +285,8 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+>  	if (IS_ERR(cxlmd))
+>  		return PTR_ERR(cxlmd);
 >  
-> -			for (i = 0; i < nr_rec; i++)
-> -				trace_cxl_generic_event(dev_name(cxlds->dev),
-> -							type,
-> -							&payload->records[i]);
-> +			if (trace_cxl_generic_event_enabled()) {
-> +				for (i = 0; i < nr_rec; i++)
-> +					trace_cxl_generic_event(dev_name(cxlds->dev),
-> +								type,
-> +								&payload->records[i]);
-> +			}
+> +	cxl_mem_get_event_records(cxlds);
 > +
-> +			rc = cxl_clear_event_record(cxlds, type, payload, nr_rec);
-> +			if (rc) {
-> +				dev_err(cxlds->dev, "Event log '%s': Failed to clear events : %d",
-> +					cxl_event_log_type_str(type), rc);
-> +				return;
-> +			}
->  		}
+>  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
+>  		rc = devm_cxl_add_nvdimm(dev, cxlmd);
+>  
 
