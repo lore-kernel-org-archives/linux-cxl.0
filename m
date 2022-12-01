@@ -2,66 +2,67 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E145C43217
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 20:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E968C43217
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 20:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230425AbiLAUJ0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 15:09:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40904 "EHLO
+        id S229816AbiLAUOk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 15:14:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbiLAUJZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 15:09:25 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C03B8C692
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 12:09:24 -0800 (PST)
+        with ESMTP id S229553AbiLAUOj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 15:14:39 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206B0BEE05
+        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 12:14:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669925364; x=1701461364;
+  t=1669925679; x=1701461679;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=I6RDSs0iKUEgKDzmnOzQcClEMr1etB1Dbv+H0TFzcEg=;
-  b=dvYB5sn+3UovXNuUrpf+sehpvfwazkIhNN6R9VKzz9Cg8R/eHVvVptvE
-   2T5PTmSrf3f7YkaGFPI0gNf6BtIeNC3w83RM9Sx5ht3/lyvgAd5tzdP+j
-   l8I1kUVeTn4Btcn0OIsR6uyUZUg9n4Kykqm3znnEyjSB8n/atwaqVIolJ
-   j72mtEkfwAJh2sUYLbifnlPrZTY/1tvdEIdx0bAXcXcDFnETDZGuCE1UM
-   bP6fetj4gkPlrad5aHP6lgFc0j+fUT+QDIk7NK8RhR5eY2t/rz+xNz2Xg
-   EzxIS9Rgj5kIDd9xHpspNRzBUN2ajkBNPi2B2vILGiCht7Fjozlr+8gpd
+  bh=LyVYWQ2afrYOXoPuOEaoKtwUOfxyh/tUIQBnz/uxyuo=;
+  b=mSE4D+b6tpp8cMHwwcfLhBDLeZCS542TCznmRVq7DPicly/02XrgUOLd
+   fZP/Q/bNIhzmWBiwKt9ERU9ImY1jxPVa3gOg6mYhbSGmiBsLNj7Wd0Eaa
+   FxEq5PqjgQx8+nFWwiS5siVwBWAPhmrts6YNsaQvv8kbgRTU1WjOhceaI
+   Pm//alcmZnLBe4/xbhWUw4jMjYUXvxZbzJfEz1HM8Tld4K2mrCcVjbVMl
+   p5NXQ8WUXFv98Zrr1CFi5U4iabqDcA+MbnPWFIJkQFFCEGY72oCKdB6Sc
+   hjpCzZl1Ob5zVV+XFOjGFXLcU91oXWu8P/VqX0SOIewNY2ITpnufZwE6F
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="295484215"
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="342722117"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="295484215"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 12:09:24 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="819182028"
+   d="scan'208";a="342722117"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 12:14:38 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="622437608"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="819182028"
+   d="scan'208";a="622437608"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.213.80])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 12:09:23 -0800
-Date:   Thu, 1 Dec 2022 12:09:22 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 12:14:37 -0800
+Date:   Thu, 1 Dec 2022 12:14:36 -0800
 From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
 Subject: Re: [PATCH 2/5] cxl/memdev: Add support for the Clear Poison mailbox
  command
-Message-ID: <Y4kJ8tjTQ8saKv20@aschofie-mobl2>
+Message-ID: <Y4kLLOb+cESnaH+s@aschofie-mobl2>
 References: <cover.1669781852.git.alison.schofield@intel.com>
  <091f50b2644f220f0607633a4a953184e9c88b53.1669781852.git.alison.schofield@intel.com>
- <c803589c-7808-a8d2-7f48-e97e5bbfa844@intel.com>
+ <20221130144330.00002709@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c803589c-7808-a8d2-7f48-e97e5bbfa844@intel.com>
+In-Reply-To: <20221130144330.00002709@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Dec 01, 2022 at 10:54:47AM -0700, Dave Jiang wrote:
+On Wed, Nov 30, 2022 at 02:43:30PM +0000, Jonathan Cameron wrote:
+> On Tue, 29 Nov 2022 20:34:34 -0800
+> alison.schofield@intel.com wrote:
 > 
-> 
-> On 11/29/2022 9:34 PM, alison.schofield@intel.com wrote:
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
 > > CXL devices optionally support the CLEAR POISON mailbox command. Add
@@ -69,23 +70,16 @@ On Thu, Dec 01, 2022 at 10:54:47AM -0700, Dave Jiang wrote:
 > > 
 > > When a Device Physical Address (DPA) is written to the clear_poison
 > > sysfs attribute send a clear poison command to the device for the
-> 
-> comma between 'attribute' and 'send'
-
-Thanks for the review Dave!  Addressed this and your suggestions
-below also.
-
-> 
 > > specified address.
 > > 
 > > Per the CXL Specification (8.2.9.8.4.3), after receiving a valid clear
-> 
-> Please add spec version.
-> 
 > > poison request, the device removes the address from the device's Poison
 > > List and writes 0 (zero) for 64 bytes starting at address. If the device
 > > cannot clear poison from the address, it returns a permanent media error
 > > and ENXIO is returned to the user.
+> 
+> -ENXIO
+> 
 > > 
 > > Additionally, and per the spec also, it is not an error to clear poison
 > > of an address that is not poisoned. No error is returned and the address
@@ -98,25 +92,48 @@ below also.
 > > command to accept 64 bytes of 'write-data' to be used when clearing
 > > the poisoned address, this implementation always uses 0 (zeros) for
 > > the write-data.
+> 
+> Maybe put a * above to refer to this note given the spec is referenced
+> for stuff different from what you are doing with it.  Nice to flag
+> up to anyone reading this that they shouldn't write a 'no that's not
+> what it says' comment before reading on. (who would do something
+> silly like that? :)
+> 
+
+Rereading the 2 paragraphs above, it's not flowing for me now either.
+I hop between 'spec says' and 'driver does'. Let me give that another
+pass.
+
 > > 
 > > The clear_poison attribute is only visible for devices supporting the
 > > capability.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Otherwise, a few really trivial things inline + it made me notice I'd missread
+> the code for patch 1, hence the reply to my reply.
+> 
+> With this stuff tweaked.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+I'll pick up the stuff below too.
+Thanks!
+
+> 
 > > ---
-> >   Documentation/ABI/testing/sysfs-bus-cxl | 17 +++++++++
-> >   drivers/cxl/core/memdev.c               | 47 +++++++++++++++++++++++++
-> >   drivers/cxl/cxlmem.h                    |  6 ++++
-> >   3 files changed, 70 insertions(+)
+> >  Documentation/ABI/testing/sysfs-bus-cxl | 17 +++++++++
+> >  drivers/cxl/core/memdev.c               | 47 +++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h                    |  6 ++++
+> >  3 files changed, 70 insertions(+)
 > > 
 > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
 > > index 20db97f7a1aa..9d2b0fa07e17 100644
 > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
 > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
 > > @@ -435,3 +435,20 @@ Description:
-> >   		poison into an address that already has poison present and no
-> >   		error is returned. The inject_poison attribute is only visible
-> >                   for devices supporting the capability.
+> >  		poison into an address that already has poison present and no
+> >  		error is returned. The inject_poison attribute is only visible
+> >                  for devices supporting the capability.
 > > +
 > > +
 > > +What:		/sys/bus/cxl/devices/memX/clear_poison
@@ -126,17 +143,15 @@ below also.
 > > +Description:
 > > +		(WO) When a Device Physical Address (DPA) is written to this
 > > +		attribute the memdev driver sends a clear poison command to the
-> 
-> comma between 'attribute' and 'the'.
-> 
-> DJ
-> 
 > > +		device for the specified address. Clearing poison removes the
 > > +		address from the device's Poison List and writes 0 (zero)
 > > +		for 64 bytes starting at address. It is not an error to clear
 > > +		poison from an address that does not have poison set, and if
 > > +		poison was not set, the address is not overwritten. If the
 > > +		device cannot clear poison from the address, ENXIO is returned.
+> 
+> -ENXIO ?
+> 
 > > +		The clear_poison attribute is only visible for devices
 > > +		supporting the capability.
 > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
@@ -144,8 +159,9 @@ below also.
 > > --- a/drivers/cxl/core/memdev.c
 > > +++ b/drivers/cxl/core/memdev.c
 > > @@ -187,6 +187,44 @@ static ssize_t inject_poison_store(struct device *dev,
-> >   }
-> >   static DEVICE_ATTR_WO(inject_poison);
+> >  }
+> >  static DEVICE_ATTR_WO(inject_poison);
+> >  
 > > +static ssize_t clear_poison_store(struct device *dev,
 > > +				  struct device_attribute *attr,
 > > +				  const char *buf, size_t len)
@@ -162,6 +178,10 @@ below also.
 > > +	rc = cxl_validate_poison_dpa(cxlds, dpa);
 > > +	if (rc)
 > > +		return rc;
+> Trivial:
+> blank line here.  Kind of make sense to keep the string parser and validation in
+> one block, but good to then separate that from the next bit of code.
+> 
 > > +	pi = kzalloc(sizeof(*pi), GFP_KERNEL);
 > > +	if (!pi)
 > > +		return -ENOMEM;
@@ -183,44 +203,7 @@ below also.
 > > +	return len;
 > > +}
 > > +static DEVICE_ATTR_WO(clear_poison);
-> > +
-> >   static struct attribute *cxl_memdev_attributes[] = {
-> >   	&dev_attr_serial.attr,
-> >   	&dev_attr_firmware_version.attr,
-> > @@ -195,6 +233,7 @@ static struct attribute *cxl_memdev_attributes[] = {
-> >   	&dev_attr_numa_node.attr,
-> >   	&dev_attr_trigger_poison_list.attr,
-> >   	&dev_attr_inject_poison.attr,
-> > +	&dev_attr_clear_poison.attr,
-> >   	NULL,
-> >   };
-> > @@ -228,6 +267,14 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
-> >   			      to_cxl_memdev(dev)->cxlds->enabled_cmds))
-> >   			return 0;
-> >   	}
-> > +	if (a == &dev_attr_clear_poison.attr) {
-> > +		struct device *dev = kobj_to_dev(kobj);
-> > +
-> > +		if (!test_bit(CXL_MEM_COMMAND_ID_CLEAR_POISON,
-> > +			      to_cxl_memdev(dev)->cxlds->enabled_cmds)) {
-> > +			return 0;
-> > +		}
-> > +	}
-> >   	return a->mode;
-> >   }
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 0d4c34be7335..532adf9c3afd 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -399,6 +399,12 @@ struct cxl_mbox_poison_payload_out {
-> >   /* Inject & Clear Poison  CXL 3.0 Spec 8.2.9.8.4.2/3 */
-> >   #define CXL_POISON_INJECT_RESERVED	GENMASK_ULL(5, 0)
-> > +/* Clear Poison  CXL 3.0 Spec 8.2.9.8.4.3 */
-> > +struct cxl_mbox_clear_poison {
-> > +	__le64 address;
-> > +	u8 write_data[64];
-> > +} __packed;
-> > +
-> >   /**
-> >    * struct cxl_mem_command - Driver representation of a memory device command
-> >    * @info: Command information as it exists for the UAPI
+> ...
+> 
+> 
+> 
