@@ -2,254 +2,227 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1144C47088
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 17:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10244C47088
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 17:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbiLARxh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 12:53:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44472 "EHLO
+        id S229515AbiLARzV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 12:55:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230105AbiLARxT (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 12:53:19 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA0DB7DE7;
-        Thu,  1 Dec 2022 09:50:01 -0800 (PST)
+        with ESMTP id S229629AbiLARzB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 12:55:01 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E231D671
+        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 09:54:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669917001; x=1701453001;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Oi0zP2NemjSQEOUh/vxvoOdPwCu+00KKWfQ9uMDYljI=;
-  b=RmcT+ylumpdAYrtJmP0tI12GO/INmKHlX0Olv9pBCAxu+E+Ro3wwuSi4
-   2vXucEnrvv3LJDwFHTsixJRAx8txsIetN7ZWp+7I4ZW4alMuarhTnFTer
-   RW10SceeluRXT2RjiUQv5rq5uN9A8rkE22kpxUJfroAImLD5M3pjj2wBq
-   +EFxxzOWxR7v67pBm0AYb+BUBgNknLQdyHximeru03IIlXnpewOJ278ZA
-   xftwhpHgkVKZgC8Lu+qfa3Uj7OwwA2foQyrF/TOCp+EAb7uiI5uKQHnS7
-   aFQf7Vq98x3m/9/bWM1SIbyEcORBc+H0QldEZ+Mg/PxLNbX6tcF17xVTt
+  t=1669917289; x=1701453289;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KJ0QhsxSQMBud6c1D/P30da9Dj71+KK5C0N/F5A1Zy4=;
+  b=UedIgouoV1PdtXeuRTtVuPWmtG1DWs1PxAzdyDV9IvJ7eyWOhk1agGHb
+   e4RuBX3awlI1B5llaRuDC2kZbwdi1OvewqSi1xc5nqJqEBnDqAKhAdyWS
+   gpmU2LqBKyMYcBffFQnX/BeMXCp3j79ARbfH3G3v2+Kgdlphsttvl+iq6
+   ZRye6cbV77zDshks6XHGRl2d8gARWOwO+66xBzp9NMSqNSQ5UFkVUYAp/
+   kwpPc4Y2aPdqlrkQEwEEdEH853Wzq/aXsr4pHafFUkSAeGRSpihulWj20
+   TmlGGvt9Z8aVOHVaDOyoWpKHHo1+5NUJg7i08FjyPPGAryiZunyPZbUoj
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="303355621"
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="296109426"
 X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="303355621"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 09:49:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="708164314"
+   d="scan'208";a="296109426"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 09:54:48 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="769318739"
 X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="708164314"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Dec 2022 09:49:58 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 1 Dec 2022 09:49:58 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Thu, 1 Dec 2022 09:49:58 -0800
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.45) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Thu, 1 Dec 2022 09:49:57 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PA/M24z3zuKeddJt6t16BJZvQ2BFQBvdejjxh27QLcxwNQX9OYj9EsbrWt+iRp/lgPU8lEJOkZ14BIFUfgIEf2PE9GKO4CFEobW/XWr1xATKc3fm/AVbRlSBR+PfT2Ru5+gsRcuEDcPhezVryS9IS6aM8niZaeC/uakoQxCiAY0plN+BwIZqzv+oz+yxGLLyb4y8FfsMG733GdnwlyYju8AOAaGgkXA1uZTlqame4achO4grgYSEfHNntSq5GdLTlz+LixcemyrYDrhZG2/e/uHLrotq5MqBTKxatNb3YUampuV3ouOyz3H7WmKvJm5Yt96n15jKaFYLpu1s4+IcBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eaKmkMqIBcX2dspMmOAps/XFo47Y57aE2WRRC60zLIU=;
- b=cBK+vCbDPj2wq+k2gnbNOIJXOEOC8KVBRuK9aPDA49kcnStAoiNR8GPzm4r9KUsHOlaNOew7lEvhxMGQRD9RZB5nSXvJCDPTMojxau2dw5eCpLPKd4rcVD99m/6ibRI5n28mnldq6LtKO4CbCIZ4cmnmlPrPjDSMIhHx1xMXBOLFdyo7C7MHnE5vEZsesK4iBtb84uhsgyKpcb0BgV6o+fgCCh+BiH8xwTczQTB+4+L/Pa9Ac0UiQYu5N1l1REhFpX14gh0lUImmYXDT4xFHI2P0ePx44Fnjs7IhVZHAs9S6BilOODdRwfD9kWW20NufOAtLAwUf+5O0IwebWRlsfQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by MW4PR11MB6740.namprd11.prod.outlook.com (2603:10b6:303:209::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Thu, 1 Dec
- 2022 17:49:54 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5236:c530:cc10:68f%4]) with mapi id 15.20.5857.023; Thu, 1 Dec 2022
- 17:49:54 +0000
-Date:   Thu, 1 Dec 2022 09:49:49 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 09/11] cxl/test: Add generic mock events
-Message-ID: <Y4jpPVSX9/89x3PH@iweiny-desk3>
-References: <20221201002719.2596558-1-ira.weiny@intel.com>
- <20221201002719.2596558-10-ira.weiny@intel.com>
- <20221201143727.0000255c@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20221201143727.0000255c@Huawei.com>
-X-ClientProxiedBy: SJ0PR03CA0103.namprd03.prod.outlook.com
- (2603:10b6:a03:333::18) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+   d="scan'208";a="769318739"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.66.184]) ([10.212.66.184])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 09:54:47 -0800
+Message-ID: <c803589c-7808-a8d2-7f48-e97e5bbfa844@intel.com>
+Date:   Thu, 1 Dec 2022 10:54:47 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW4PR11MB6740:EE_
-X-MS-Office365-Filtering-Correlation-Id: 53c4edf2-14f1-4eef-d794-08dad3c47411
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v+FFnas6cLfNKKRSiHLuRch0M+LB9ZHl5I4dx+IFa3nw4BsEybHF4434aFASotUH3CYVDVyr8wm/h3KaH9enyOQHTCg/xYQUBM8UhJVhKSNw3XyCRxW7MBTNofT1vITQdZ1XHRWSY97vzJvbfFTUhAobH8TFIoei2oQ7rUbsg+73Q187cOWSQQTFVcUSANvjF34KuD6XmcfOVOy6KeeD7uO/JlNWYIRJ7ssQVOuzqIc83cY3LgvjmQYs/7xzvtQgKO8YwzwPD26MaxyG1ikybfCuRmBPEh+1tQOm5z2qQrZSqmJvUmLDTFOOrCnF0sqwcRv0NRT4qfmCmwPu3oQ4cV5DQcT4GuR5q4TjyQsT+ezJMCl+9oL44YBmmV3UeoSCC8Dyk/HoXWOJ+6UJn5lZx5k8pvLAss4Aj6kzlOmcn4iCSpLasdLJ12vQBoru8FAk8ZDXWZYzq9siTsn9qcp1P8hQgcv/FaWNFX9RGXZe0h3Yi35oV4aw3lPBkNowuFxioKDjDoAc7colEu17/8wrC985sQXYFElXmTvRsb7H9dklfBQ6+jsuZ1hFnZ1v2mHhNvMuwY4yvkP3x+Ho4JllDSf56l2CNskqjjE7xVc5jLKHJ7PJnRPzQmtkOFRfjd/7UgNackVaqjp/nwwBwZRSWEKAiBYoGpbvYUKwTPLXbJ9daWGg66VI2Y2aeWbY1jGa
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(366004)(396003)(346002)(376002)(136003)(39860400002)(451199015)(2906002)(6486002)(41300700001)(33716001)(186003)(478600001)(6506007)(26005)(86362001)(82960400001)(66899015)(38100700002)(8676002)(6666004)(54906003)(8936002)(44832011)(6916009)(9686003)(316002)(6512007)(5660300002)(66476007)(4326008)(66556008)(66946007)(41533002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?d48XdMK/9RVJSSlbsElqBHQdBYVP9dZjkf1H6r/jdCrhmO+4bXzNOwhcDZsg?=
- =?us-ascii?Q?TjBpC10Tq3YMhhKIMG8o89dNRgKwJSbgxG3ViW7Jueb2yRBUi35uyiUqPJv1?=
- =?us-ascii?Q?PSpay+g19ajSqp4wAYecxTau1gTE/QJ/TxYfxkNALeJJyO0BHSr8g5to0Vqo?=
- =?us-ascii?Q?dX2B1UbEN0RmS7xzFj5lKngzlUzt/Ua7nnRamCA77v3b7GmpfsmxejwzdTqm?=
- =?us-ascii?Q?488CblNbIAXTk+6ADlaLiqZ8/Zs2Asn56lJRtQWT8SDQUMtQEZtBnVPQ3kPm?=
- =?us-ascii?Q?oLzqGv8HYEwRncUHkMr/ks1hUs/K5c66S3vIrmD+n1ijTXXnYMG0rJTAG06G?=
- =?us-ascii?Q?JsN/26glffvAK6XArV1euQfmx3DjWd9JifXcHMAmLH1MbJiN/k4yxHICV69Z?=
- =?us-ascii?Q?N28prFkOACZuvVnfuhXEbhY9r1p//0HDu3hNO401fwRmAkzvghtRGJ/6kFf0?=
- =?us-ascii?Q?2ukj/wmUf/54MO5G7VpbuHQAfGfmvGI9COF23ZJomxD8W4mSJyA8Kk6m7/jP?=
- =?us-ascii?Q?kK7HomqUU8LwbdgamBQPJ6hT0js2qty+b8rlfLFCgZmHLolPzYMRhZ3946dj?=
- =?us-ascii?Q?bxBNS1brPRt0ULa6SrDGbRp3G4Wj1KRscG3j5f8D7wvTbDOx/zKorc4xA0so?=
- =?us-ascii?Q?38hDgdJusOGWGB0qNRZJldWK2gd22AH6OzIWuiYunvYA9mBBx84d4bhVKzeE?=
- =?us-ascii?Q?A16LcDSbTGFHF1ZcK+mYvmzgSD07KoKwh9CnDpd6gw6JQKfC7somIO/GzKIc?=
- =?us-ascii?Q?8ULtJCmKajiZmDm1r+uVaKhwcyaYPohqHw+WGDigHsjksTJDahtVawjBN2Pd?=
- =?us-ascii?Q?lZWjy4vSa7ulFUUKzcfCvoXuf8+jo09m02wt5QD07roNLrom8JwsslJyspyk?=
- =?us-ascii?Q?OThW7bm05hvktkhHj5CaPq+mdaB7KyDlOdGGTNOoC7HngoytcLRvKxqGeP2W?=
- =?us-ascii?Q?itxz3FordzZv8w9HCYS32km27hlOo6q0z+AK6kPpdPm4Cahuf7B39rRxiPeC?=
- =?us-ascii?Q?WcIxfERBN1Fv9KjgLMpgVTKOTSWHXKoLlKJMJqbyxtkoeTLhFGyHkEUCLz+N?=
- =?us-ascii?Q?Eg6GwYyTp8/zvUPWTsVWWmJQk+B8sfPi822XhUKJvyvuD8afoGmFcq5/VWlT?=
- =?us-ascii?Q?6RxIu+ZHhvVIY1te4T3jJFKyyPU5reG9Xdswy+Z6o4TRVlJ60Uvuyk9l8SWp?=
- =?us-ascii?Q?59bzR8IfUZV9M14mx6JlCBI4Sa+O5MpOAeoIFY89rbgS1Whlwvz4CBK3Rhtd?=
- =?us-ascii?Q?+SNDSaWqxa2ZCTafNP1K+yOGRZ4UuBjbO1eocIiFnrDDY4gISNbeQpY4g1aV?=
- =?us-ascii?Q?qmxIamzxsM4T9u4ydcMOXf24JYMe+o+DJIX4C+INyfaamcPZd3nrP2Db4oP+?=
- =?us-ascii?Q?KUJJqQdiTkCV5TNu8aMeqWp9rLunwrNmDUpKYnMnDPPgpf+KUCdeYFoK09f4?=
- =?us-ascii?Q?UA/gNQFBy7xQiiXyHmxEjZqNO6qEYNvhdvF4KXqWw34YPysBLctZkpsZYgfR?=
- =?us-ascii?Q?3u1mXRvxIOrdsucDjqxG2ygecNsRsvZ5io4RADRp/1tlvUIbnmawPTTXCwGu?=
- =?us-ascii?Q?S2wtnomm5+3/nxKv7lPzcvD57Ly94R2h+Ta3kKFv?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53c4edf2-14f1-4eef-d794-08dad3c47411
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2022 17:49:54.2129
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TE6CDcbkiYOFiMWh1TL2F3uvpam/+BvX4MhtZj+If14sAWRQUZPkMJD+0PBDvqtZeuFTVEyvgBBrhaAAcl3KKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6740
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.0
+Subject: Re: [PATCH 2/5] cxl/memdev: Add support for the Clear Poison mailbox
+ command
+Content-Language: en-US
+To:     alison.schofield@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+Cc:     linux-cxl@vger.kernel.org
+References: <cover.1669781852.git.alison.schofield@intel.com>
+ <091f50b2644f220f0607633a4a953184e9c88b53.1669781852.git.alison.schofield@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <091f50b2644f220f0607633a4a953184e9c88b53.1669781852.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Dec 01, 2022 at 02:37:27PM +0000, Jonathan Cameron wrote:
-> On Wed, 30 Nov 2022 16:27:17 -0800
-> ira.weiny@intel.com wrote:
-> 
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > Facilitate testing basic Get/Clear Event functionality by creating
-> > multiple logs and generic events with made up UUID's.
-> > 
-> > Data is completely made up with data patterns which should be easy to
-> > spot in trace output.
-> > 
-> > A single sysfs entry resets the event data and triggers collecting the
-> > events for testing.
-> > 
-> > Events are returned one at a time which is within the specification even
-> > though it does not exercise the full capabilities of what a device may
-> > do.
-> > 
-> > Test traces are easy to obtain with a small script such as this:
-> > 
-> > 	#!/bin/bash -x
-> > 
-> > 	devices=`find /sys/devices/platform -name cxl_mem*`
-> > 
-> > 	# Turn on tracing
-> > 	echo "" > /sys/kernel/tracing/trace
-> > 	echo 1 > /sys/kernel/tracing/events/cxl/enable
-> > 	echo 1 > /sys/kernel/tracing/tracing_on
-> > 
-> > 	# Generate fake interrupt
-> > 	for device in $devices; do
-> > 	        echo 1 > $device/event_trigger
-> > 	done
-> > 
-> > 	# Turn off tracing and report events
-> > 	echo 0 > /sys/kernel/tracing/tracing_on
-> > 	cat /sys/kernel/tracing/trace
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> 
-> A minor comment on xarray cleanup inline
-> 
-> Jonathan
-> 
-> 
-> > +void cxl_mock_remove_event_logs(struct device *dev)
-> > +{
-> > +	struct mock_event_store *mes;
-> > +
-> > +	mes = xa_erase(&mock_dev_event_store, (unsigned long)dev);
-> 
-> As below, I'd move this into a devm_add_action_or_reset() so
-> that we don't need to deal with doing it manually.
 
-yea
 
+On 11/29/2022 9:34 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> > +}
-> > +EXPORT_SYMBOL_GPL(cxl_mock_remove_event_logs);
+> CXL devices optionally support the CLEAR POISON mailbox command. Add
+> a sysfs attribute and memdev driver support for clearing poison.
 > 
-> ...
-> 
-> >  static int cxl_mock_mem_probe(struct platform_device *pdev)
-> >  {
-> >  	struct device *dev = &pdev->dev;
-> >  	struct cxl_memdev *cxlmd;
-> >  	struct cxl_dev_state *cxlds;
-> > +	u32 ev_status;
-> >  	void *lsa;
-> >  	int rc;
-> >  
-> > @@ -281,11 +304,13 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	ev_status = cxl_mock_add_event_logs(cxlds);
-> 
-> On error later in this function these leak.  Just use devm_add_action_or_reset()
-> inside cxl_mock_add_event_logs() so we don't have to care about that.
+> When a Device Physical Address (DPA) is written to the clear_poison
+> sysfs attribute send a clear poison command to the device for the
 
-I see it now.  There is an entry in the xarray which is leaked.
+comma between 'attribute' and 'send'
 
+> specified address.
 > 
-> > +
-> >  	cxlmd = devm_cxl_add_memdev(cxlds);
-> >  	if (IS_ERR(cxlmd))
-> >  		return PTR_ERR(cxlmd);
-> >  
-> > -	cxl_mem_get_event_records(cxlds);
-> > +	__cxl_mem_get_event_records(cxlds, ev_status);
-> >  
-> >  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
-> >  		rc = devm_cxl_add_nvdimm(dev, cxlmd);
-> > @@ -293,6 +318,12 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
-> >  	return 0;
-> >  }
-> >  
-> > +static int cxl_mock_mem_remove(struct platform_device *pdev)
-> > +{
-> > +	cxl_mock_remove_event_logs(&pdev->dev);
-> Why not use devm_add_action_or_reset()?
+> Per the CXL Specification (8.2.9.8.4.3), after receiving a valid clear
 
-Yea that is a better pattern.
+Please add spec version.
 
-Ira
+> poison request, the device removes the address from the device's Poison
+> List and writes 0 (zero) for 64 bytes starting at address. If the device
+> cannot clear poison from the address, it returns a permanent media error
+> and ENXIO is returned to the user.
+> 
+> Additionally, and per the spec also, it is not an error to clear poison
+> of an address that is not poisoned. No error is returned and the address
+> is not overwritten. The memdev driver performs basic sanity checking on
+> the address, however, it does not go as far as reading the poison list to
+> see if the address is poisoned before clearing. That discovery is left to
+> the device. The device safely handles that case.
+> 
+> Implementation note: Although the CXL specification defines the clear
+> command to accept 64 bytes of 'write-data' to be used when clearing
+> the poisoned address, this implementation always uses 0 (zeros) for
+> the write-data.
+> 
+> The clear_poison attribute is only visible for devices supporting the
+> capability.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>   Documentation/ABI/testing/sysfs-bus-cxl | 17 +++++++++
+>   drivers/cxl/core/memdev.c               | 47 +++++++++++++++++++++++++
+>   drivers/cxl/cxlmem.h                    |  6 ++++
+>   3 files changed, 70 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 20db97f7a1aa..9d2b0fa07e17 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -435,3 +435,20 @@ Description:
+>   		poison into an address that already has poison present and no
+>   		error is returned. The inject_poison attribute is only visible
+>                   for devices supporting the capability.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/memX/clear_poison
+> +Date:		December, 2022
+> +KernelVersion:	v6.2
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(WO) When a Device Physical Address (DPA) is written to this
+> +		attribute the memdev driver sends a clear poison command to the
+
+comma between 'attribute' and 'the'.
+
+DJ
+
+> +		device for the specified address. Clearing poison removes the
+> +		address from the device's Poison List and writes 0 (zero)
+> +		for 64 bytes starting at address. It is not an error to clear
+> +		poison from an address that does not have poison set, and if
+> +		poison was not set, the address is not overwritten. If the
+> +		device cannot clear poison from the address, ENXIO is returned.
+> +		The clear_poison attribute is only visible for devices
+> +		supporting the capability.
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 71130813030f..85caffd5a85c 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -187,6 +187,44 @@ static ssize_t inject_poison_store(struct device *dev,
+>   }
+>   static DEVICE_ATTR_WO(inject_poison);
+>   
+> +static ssize_t clear_poison_store(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  const char *buf, size_t len)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	struct cxl_mbox_clear_poison *pi;
+> +	u64 dpa;
+> +	int rc;
+> +
+> +	rc = kstrtou64(buf, 0, &dpa);
+> +	if (rc)
+> +		return rc;
+> +	rc = cxl_validate_poison_dpa(cxlds, dpa);
+> +	if (rc)
+> +		return rc;
+> +	pi = kzalloc(sizeof(*pi), GFP_KERNEL);
+> +	if (!pi)
+> +		return -ENOMEM;
+> +	/*
+> +	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
+> +	 * is defined to accept 64 bytes of 'write-data', along with the
+> +	 * address to clear. The device writes 'write-data' into the DPA,
+> +	 * atomically, while clearing poison if the location is marked as
+> +	 * being poisoned.
+> +	 *
+> +	 * Always use '0' for the write-data.
+> +	 */
+> +	pi->address = cpu_to_le64(dpa);
+> +	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_CLEAR_POISON, pi,
+> +			       sizeof(*pi), NULL, cxlds->payload_size);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_WO(clear_poison);
+> +
+>   static struct attribute *cxl_memdev_attributes[] = {
+>   	&dev_attr_serial.attr,
+>   	&dev_attr_firmware_version.attr,
+> @@ -195,6 +233,7 @@ static struct attribute *cxl_memdev_attributes[] = {
+>   	&dev_attr_numa_node.attr,
+>   	&dev_attr_trigger_poison_list.attr,
+>   	&dev_attr_inject_poison.attr,
+> +	&dev_attr_clear_poison.attr,
+>   	NULL,
+>   };
+>   
+> @@ -228,6 +267,14 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+>   			      to_cxl_memdev(dev)->cxlds->enabled_cmds))
+>   			return 0;
+>   	}
+> +	if (a == &dev_attr_clear_poison.attr) {
+> +		struct device *dev = kobj_to_dev(kobj);
+> +
+> +		if (!test_bit(CXL_MEM_COMMAND_ID_CLEAR_POISON,
+> +			      to_cxl_memdev(dev)->cxlds->enabled_cmds)) {
+> +			return 0;
+> +		}
+> +	}
+>   	return a->mode;
+>   }
+>   
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 0d4c34be7335..532adf9c3afd 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -399,6 +399,12 @@ struct cxl_mbox_poison_payload_out {
+>   /* Inject & Clear Poison  CXL 3.0 Spec 8.2.9.8.4.2/3 */
+>   #define CXL_POISON_INJECT_RESERVED	GENMASK_ULL(5, 0)
+>   
+> +/* Clear Poison  CXL 3.0 Spec 8.2.9.8.4.3 */
+> +struct cxl_mbox_clear_poison {
+> +	__le64 address;
+> +	u8 write_data[64];
+> +} __packed;
+> +
+>   /**
+>    * struct cxl_mem_command - Driver representation of a memory device command
+>    * @info: Command information as it exists for the UAPI
