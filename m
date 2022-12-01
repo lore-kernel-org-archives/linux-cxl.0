@@ -2,203 +2,177 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F271C4708E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 11:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0C9C4321E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 13:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbiLALXa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 06:23:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37872 "EHLO
+        id S229631AbiLANHC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 08:07:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230339AbiLALXE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 06:23:04 -0500
+        with ESMTP id S229728AbiLANHC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 08:07:02 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99734115A
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 03:22:30 -0800 (PST)
-Received: from frapeml100006.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NND9j51Xbz6HJV2;
-        Thu,  1 Dec 2022 19:19:21 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23366589;
+        Thu,  1 Dec 2022 05:06:53 -0800 (PST)
+Received: from frapeml500001.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNGV90wjpz687L9;
+        Thu,  1 Dec 2022 21:03:45 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ frapeml500001.china.huawei.com (7.182.85.94) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 1 Dec 2022 12:22:27 +0100
+ 15.1.2375.31; Thu, 1 Dec 2022 14:06:51 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 1 Dec
- 2022 11:22:27 +0000
-Date:   Thu, 1 Dec 2022 11:22:26 +0000
+ 2022 13:06:50 +0000
+Date:   Thu, 1 Dec 2022 13:06:50 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <dave@stgolabs.net>
-Subject: Re: [PATCH v7 19/20] acpi/nfit: bypass
- cpu_cache_invalidate_memregion() when in test config
-Message-ID: <20221201112226.000069fe@Huawei.com>
-In-Reply-To: <166983619896.2734609.7192339006218947870.stgit@djiang5-desk3.ch.intel.com>
-References: <166983606451.2734609.4050644229630259452.stgit@djiang5-desk3.ch.intel.com>
-        <166983619896.2734609.7192339006218947870.stgit@djiang5-desk3.ch.intel.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2 02/11] cxl/mem: Implement Get Event Records command
+Message-ID: <20221201130650.00007f3d@Huawei.com>
+In-Reply-To: <20221201002719.2596558-3-ira.weiny@intel.com>
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+        <20221201002719.2596558-3-ira.weiny@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 30 Nov 2022 12:23:18 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Wed, 30 Nov 2022 16:27:10 -0800
+ira.weiny@intel.com wrote:
 
-> Bypass cpu_cache_invalidate_memregion() and checks when doing testing
-> using CONFIG_NVDIMM_SECURITY_TEST flag. The bypass allows testing on
-> QEMU where cpu_cache_has_invalidate_memregion() fails. 
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> CXL devices have multiple event logs which can be queried for CXL event
+> records.  Devices are required to support the storage of at least one
+> event record in each event log type.
+> 
+> Devices track event log overflow by incrementing a counter and tracking
+> the time of the first and last overflow event seen.
+> 
+> Software queries events via the Get Event Record mailbox command; CXL
+> rev 3.0 section 8.2.9.2.2.
+> 
+> Issue the Get Event Record mailbox command on driver load.  Trace each
+> record found with a generic record trace.  Trace any overflow
+> conditions.
+> 
+> The device can return up to 1MB worth of event records per query.
+> Allocate a shared large buffer to handle the max number of records based
+> on the mailbox payload size.
+> 
+> This patch traces a raw event record only and leaves the specific event
+> record types to subsequent patches.
+> 
+> Macros are created to use for tracing the common CXL Event header
+> fields.
+> 
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-We should probably look at what is required to get that to not fail on QEMU
-at least when running fully emulated on x86.
+Hi Ira,
 
-Longer term we'll figure out other architecture solutions for this...
-
-FWIW this looks consistent with what you are aiming to do so.
-So subject to the usual I've no idea how this intel specific code works in
-general, so only focusing on the corner this patch touches...
+Looks good to me.  A few trivial suggestions inline. Either way,
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
-Jonathan
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 16176b9278b4..70b681027a3d 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -7,6 +7,9 @@
 
+...
 
-> Usage of
-> cpu_cache_invalidate_memregion() is not needed for nfit_test security
-> testing.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/acpi/nfit/intel.c |   51 +++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 42 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> index fa0e57e35162..38069f10c316 100644
-> --- a/drivers/acpi/nfit/intel.c
-> +++ b/drivers/acpi/nfit/intel.c
-> @@ -191,6 +191,39 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
->  	}
->  }
->  
-> +static bool intel_has_invalidate_memregion(struct nvdimm *nvdimm)
+> +
+> +static void cxl_mem_free_event_buffer(void *data)
 > +{
-> +	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> +	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-> +	struct device *dev = acpi_desc->dev;
+> +	struct cxl_dev_state *cxlds = data;
 > +
-> +	if (!cpu_cache_has_invalidate_memregion()) {
-> +		if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
-> +			dev_warn_once(dev,
-> +				      "Bypassing cpu_cache_has_invalidate_memregion() check for testing!\n");
-> +			return true;
-> +		}
-> +		return false;
-> +	}
-> +
-> +	return true;
+> +	kvfree(cxlds->event_buf);
+
+Trivial, but why not just pass in the event_buf?
+
 > +}
 > +
-> +static void intel_invalidate_memregion(struct nvdimm *nvdimm)
+> +/*
+> + * There is a single buffer for reading event logs from the mailbox.  All logs
+> + * share this buffer protected by the cxlds->event_buf_lock.
+> + */
+> +static struct cxl_get_event_payload *alloc_event_buf(struct cxl_dev_state *cxlds)
 > +{
-> +	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> +	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-> +	struct device *dev = acpi_desc->dev;
+> +	struct cxl_get_event_payload *buf;
 > +
-> +	if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
-> +		dev_warn_once(dev,
-> +			      "Bypassing cpu_cache_invalidate_memergion() for testing!\n");
-> +		return;
-> +	}
+> +	dev_dbg(cxlds->dev, "Allocating event buffer size %zu\n",
+> +		cxlds->payload_size);
 > +
-> +	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+> +	buf = kvmalloc(cxlds->payload_size, GFP_KERNEL);
+
+huh. I assumed there would be a devm_kvmalloc() but apparently not..  Ah well
+- whilst it might makes sense to add one, let's not tie that up with this series.
+
+> +	if (buf && devm_add_action_or_reset(cxlds->dev,
+> +			cxl_mem_free_event_buffer, cxlds))
+> +		return NULL;
+
+Trivial, but I'd go for a more wordy but more conventional pattern of
+	if (!buf)
+		return NULL;
+
+	if (devm_add_action_or_reset())
+		return NULL
+	
+	return buff;
+	
+> +	return buf;
 > +}
 > +
->  static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
->  		const struct nvdimm_key_data *key_data)
->  {
-> @@ -212,7 +245,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
->  	if (!test_bit(NVDIMM_INTEL_UNLOCK_UNIT, &nfit_mem->dsm_mask))
->  		return -ENOTTY;
+
+...
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index cd35f43fedd4..55d57f5a64bc 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -4,6 +4,7 @@
+>  #define __CXL_MEM_H__
+>  #include <uapi/linux/cxl_mem.h>
+>  #include <linux/cdev.h>
+> +#include <linux/uuid.h>
+>  #include "cxl.h"
 >  
-> -	if (!cpu_cache_has_invalidate_memregion())
-> +	if (!intel_has_invalidate_memregion(nvdimm))
->  		return -EINVAL;
+>  /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+> @@ -250,12 +251,16 @@ struct cxl_dev_state {
 >  
->  	memcpy(nd_cmd.cmd.passphrase, key_data->data,
-> @@ -230,7 +263,7 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
->  	}
+>  	bool msi_enabled;
 >  
->  	/* DIMM unlocked, invalidate all CPU caches before we read it */
-> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-> +	intel_invalidate_memregion(nvdimm);
+> +	struct cxl_get_event_payload *event_buf;
+Whilst it is obvious (and document at point of allocation),
+I think one of the static checkers still warns that all locks must
+have comments.  Probably easier to add one now than wait for the
+inevitable warning report.
+
+> +	struct mutex event_buf_lock;
+> +
+>  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+>  };
 >  
->  	return 0;
->  }
-> @@ -299,11 +332,11 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
->  	if (!test_bit(cmd, &nfit_mem->dsm_mask))
->  		return -ENOTTY;
->  
-> -	if (!cpu_cache_has_invalidate_memregion())
-> +	if (!intel_has_invalidate_memregion(nvdimm))
->  		return -EINVAL;
->  
->  	/* flush all cache before we erase DIMM */
-> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-> +	intel_invalidate_memregion(nvdimm);
->  	memcpy(nd_cmd.cmd.passphrase, key->data,
->  			sizeof(nd_cmd.cmd.passphrase));
->  	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-> @@ -323,7 +356,7 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
->  	}
->  
->  	/* DIMM erased, invalidate all CPU caches before we read it */
-> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-> +	intel_invalidate_memregion(nvdimm);
->  	return 0;
->  }
->  
-> @@ -346,7 +379,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
->  	if (!test_bit(NVDIMM_INTEL_QUERY_OVERWRITE, &nfit_mem->dsm_mask))
->  		return -ENOTTY;
->  
-> -	if (!cpu_cache_has_invalidate_memregion())
-> +	if (!intel_has_invalidate_memregion(nvdimm))
->  		return -EINVAL;
->  
->  	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-> @@ -363,7 +396,7 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
->  	}
->  
->  	/* flush all cache before we make the nvdimms available */
-> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-> +	intel_invalidate_memregion(nvdimm);
->  	return 0;
->  }
->  
-> @@ -388,11 +421,11 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
->  	if (!test_bit(NVDIMM_INTEL_OVERWRITE, &nfit_mem->dsm_mask))
->  		return -ENOTTY;
->  
-> -	if (!cpu_cache_has_invalidate_memregion())
-> +	if (!intel_has_invalidate_memregion(nvdimm))
->  		return -EINVAL;
->  
->  	/* flush all cache before we erase DIMM */
-> -	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
-> +	intel_invalidate_memregion(nvdimm);
->  	memcpy(nd_cmd.cmd.passphrase, nkey->data,
->  			sizeof(nd_cmd.cmd.passphrase));
->  	rc = nvdimm_ctl(nvdimm, ND_CMD_CALL, &nd_cmd, sizeof(nd_cmd), NULL);
-> 
-> 
+
 
