@@ -2,182 +2,200 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD03C4321E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 21:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8C4C4321E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 21:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbiLAV3I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 16:29:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51374 "EHLO
+        id S230378AbiLAVdX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 16:33:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231393AbiLAV2a (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 16:28:30 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8FE3ABA2E;
-        Thu,  1 Dec 2022 13:28:21 -0800 (PST)
+        with ESMTP id S230087AbiLAVdX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 16:33:23 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B97BC3589
+        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 13:33:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669930101; x=1701466101;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CZihDRocHMOT+JYXZESRl5AwDmyjKtqc0Mx+Iop7JLg=;
-  b=noIDimK1Jy6soxQDzHhzuGc4u8Be88EqLP+Dws9m4CFeHwYRnMJVqkdu
-   WB1eJ5Mnu181W0/bNOoawol6u7+ncf7ulk/njxQ/TueWrHUbAu06+vdWm
-   JW7yZm1Z+ij3mngUwH57uAcTP2gzh2bgqV18CGSa5Hx/sGzBBlhn6X8Yi
-   Z8Eq8aasDzWy0D/YnSEU4jHiOStKJzewDA44/aNDzvkm6rA2LTe2RIuv/
-   9kdvJByU5eaPajMWOQGYhVzow3UJnuGoFYDCEalLK6Zr56QlURSkADUFf
-   9145rlrXvOO42WVyXtQM+zzxxB5rl0EDu2rDubPj6gYCmXCG+0kCEOetG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="313442035"
+  t=1669930402; x=1701466402;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EOzVpZvcPedSKydE9UWbDa4FKQFCg546LS1qmj+8Sjo=;
+  b=imYfwLZ/916YnfUk+uAj8BBe7aeHjRyS+ltNinSzNXkYnq1rHPNukKGW
+   s/aiDEkbh/fS2sc6mx2G4gOdzpNoGPqtLqY3jEDczMpuZ2UB8WwsNfJ9T
+   bGglQvc7whi3B5M2P/QAZuaDTPVrsqYciZy1qkOI1ylwYmp+xTwOuG0FD
+   AJEDJ0u8h6umwYZkkeIlUWb7jEcZlh+ZyUuLliB+srzIN2snT2OXir1yU
+   HFPfzkK/X1gpqA+Dy2XYvzKESJV3spF75DEAJKxLlkKMuc4PaFYDnRdcW
+   uOVjEwN0VHeXF38nZvn4ZStDNcGLoS5K9ZOji59bOI1ja3tZuqeODxjMI
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="315831213"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="313442035"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:28:21 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="595223011"
+   d="scan'208";a="315831213"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:33:21 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="677368111"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="595223011"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.66.184]) ([10.212.66.184])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:28:20 -0800
-Message-ID: <18ae6119-1265-11d1-9f0b-996239644a40@intel.com>
-Date:   Thu, 1 Dec 2022 14:28:19 -0700
+   d="scan'208";a="677368111"
+Received: from navarrof-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.177.235])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 13:33:21 -0800
+Subject: [PATCH v6 00/12] cxl: Add support for Restricted CXL hosts (RCD
+ mode)
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Robert Richter <rrichter@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>, rrichter@amd.com,
+        terry.bowman@amd.com, bhelgaas@google.com, dave.jiang@intel.com,
+        nvdimm@lists.linux.dev
+Date:   Thu, 01 Dec 2022 13:33:21 -0800
+Message-ID: <166993040066.1882361.5484659873467120859.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.0
-Subject: Re: [PATCH V2 11/11] cxl/test: Simulate event log overflow
-Content-Language: en-US
-To:     ira.weiny@intel.com, Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20221201002719.2596558-1-ira.weiny@intel.com>
- <20221201002719.2596558-12-ira.weiny@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221201002719.2596558-12-ira.weiny@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Changes since v4 [1] (v5 was a partial re-roll)
+- Add commentary in cxl_nvd_unregister() to clarify the locking
+  (Jonathan)
+- Improve the comment about why there are 2 devm_add_action_or_reset()
+  calls in devm_cxl_add_nvdimm() (Jonathan)
+- Fix devm_cxl_add_nvdimm() error exit ordering to mirror the init order
+  (Jonathan)
+- Add a comment to clarify why the nvdimm bridge lookup only needs to be
+  performed on one device in the region in cxl_pmem_region_alloc()
+  (Jonathan)
+- Add a comment to clarify the locking in cxlr_pmem_unregister()
+  (Jonathan)
+- cxl_nvdimm_bridge_probe() whitespace fixup (Jonathan)
+- Exit add_host_bridge_uport() before devm_cxl_register_pci_bus() since
+  that registration is unused in the RCH case (Robert)
+- Fold RCRB retrieval into cxl_get_chbcr() (Robert)
+- Drop 'enum cxl_dport_mode' and just assume it based on whether @rcrb
+  is valid (Robert)
+- Add kdoc for devm_cxl_add_rch_dport() (Robert)
+- Move Upstream Port RCRB detection to offset0 returning < U32_MAX (Robert)
+- Add an error message for failure to access Downstream Port RCRB
+  (Robert)
+- Improve changelog for "[PATCH v6 9/12] cxl/mem: Move
+  devm_cxl_add_endpoint() from cxl_core to cxl_mem" (Robert)
+- Drop unnecessary movement of @dport and @port variable declarations
+  (Robert)
+- Fix cxl_mem call to cxl_rcrb_to_component() to use CXL_RCRB_UPSTREAM
+  (Dave)
+- Fix up changelog of "[PATCH v6 12/12] cxl/acpi: Set ACPI's CXL _OSC to
+  indicate CXL1.1 support" (Robert)
+
+[1]: http://lore.kernel.org/r/166931487492.2104015.15204324083515120776.stgit@dwillia2-xfh.jf.intel.com
+
+I note that the cxl_pmem_wq still appears to be proving difficult to
+review. Open to ideas about how to move that along. Otherwise, since folks
+seem to be happy with "[PATCH v6 10/12] cxl/port: Add RCD endpoint port
+enumeration" that depends on that rework, I might just move ahead with
+that implict ack, but do holler if anything looks amiss.
+
+---
+
+>From [PATCH v6 10/12] cxl/port: Add RCD endpoint port enumeration
+
+Unlike a CXL memory expander in a VH topology that has at least one
+intervening 'struct cxl_port' instance between itself and the CXL root
+device, an RCD attaches one-level higher. For example:
+
+               VH
+          ┌──────────┐
+          │ ACPI0017 │
+          │  root0   │
+          └─────┬────┘
+                │
+          ┌─────┴────┐
+          │  dport0  │
+    ┌─────┤ ACPI0016 ├─────┐
+    │     │  port1   │     │
+    │     └────┬─────┘     │
+    │          │           │
+ ┌──┴───┐   ┌──┴───┐   ┌───┴──┐
+ │dport0│   │dport1│   │dport2│
+ │ RP0  │   │ RP1  │   │ RP2  │
+ └──────┘   └──┬───┘   └──────┘
+               │
+           ┌───┴─────┐
+           │endpoint0│
+           │  port2  │
+           └─────────┘
+
+...vs:
+
+              RCH
+          ┌──────────┐
+          │ ACPI0017 │
+          │  root0   │
+          └────┬─────┘
+               │
+           ┌───┴────┐
+           │ dport0 │
+           │ACPI0016│
+           └───┬────┘
+               │
+          ┌────┴─────┐
+          │endpoint0 │
+          │  port1   │
+          └──────────┘
+
+So arrange for endpoint port in the RCH/RCD case to appear directly
+connected to the host-bridge in its singular role as a dport. Compare
+that to the VH case where the host-bridge serves a dual role as a
+'cxl_dport' for the CXL root device *and* a 'cxl_port' upstream port for
+the Root Ports in the Root Complex that are modeled as 'cxl_dport'
+instances in the CXL topology.
+
+Another deviation from the VH case is that RCDs may need to look up
+their component registers from the Root Complex Register Block (RCRB).
+That platform firmware specified RCRB area is cached by the cxl_acpi
+driver and conveyed via the host-bridge dport to the cxl_mem driver to
+perform the cxl_rcrb_to_component() lookup for the endpoint port
+(See 9.11.8 CXL Devices Attached to an RCH for the lookup of the
+upstream port component registers).
+
+---
+
+Dan Williams (9):
+      cxl/acpi: Simplify cxl_nvdimm_bridge probing
+      cxl/region: Drop redundant pmem region release handling
+      cxl/pmem: Refactor nvdimm device registration, delete the workqueue
+      cxl/pmem: Remove the cxl_pmem_wq and related infrastructure
+      cxl/acpi: Move rescan to the workqueue
+      tools/testing/cxl: Make mock CEDT parsing more robust
+      cxl/mem: Move devm_cxl_add_endpoint() from cxl_core to cxl_mem
+      cxl/port: Add RCD endpoint port enumeration
+      tools/testing/cxl: Add an RCH topology
+
+Robert Richter (2):
+      cxl/ACPI: Register CXL host ports by bridge device
+      cxl/acpi: Extract component registers of restricted hosts from RCRB
+
+Terry Bowman (1):
+      cxl/acpi: Set ACPI's CXL _OSC to indicate RCD mode support
 
 
-On 11/30/2022 5:27 PM, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Log overflow is marked by a separate trace message.
-> 
-> Simulate a log with lots of messages and flag overflow until it is
-> drained a bit.
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+ drivers/acpi/pci_root.c       |    1 
+ drivers/cxl/acpi.c            |  102 +++++++++---
+ drivers/cxl/core/core.h       |    8 -
+ drivers/cxl/core/pmem.c       |  102 ++++++++----
+ drivers/cxl/core/port.c       |  118 ++++++++------
+ drivers/cxl/core/region.c     |   64 +++++++
+ drivers/cxl/core/regs.c       |   64 +++++++
+ drivers/cxl/cxl.h             |   46 +++--
+ drivers/cxl/cxlmem.h          |   15 ++
+ drivers/cxl/mem.c             |   72 ++++++++
+ drivers/cxl/pci.c             |   13 +-
+ drivers/cxl/pmem.c            |  351 +++++------------------------------------
+ tools/testing/cxl/Kbuild      |    1 
+ tools/testing/cxl/test/cxl.c  |  171 ++++++++++++++++++--
+ tools/testing/cxl/test/mem.c  |   40 ++++-
+ tools/testing/cxl/test/mock.c |   19 ++
+ tools/testing/cxl/test/mock.h |    3 
+ 17 files changed, 711 insertions(+), 479 deletions(-)
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> 
-> ---
-> Changes from RFC
-> 	Adjust for new struct changes
-> ---
->   tools/testing/cxl/test/events.c | 49 ++++++++++++++++++++++++++++++++-
->   1 file changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/cxl/test/events.c b/tools/testing/cxl/test/events.c
-> index 0bcc485e07da..ceabefb526c2 100644
-> --- a/tools/testing/cxl/test/events.c
-> +++ b/tools/testing/cxl/test/events.c
-> @@ -15,6 +15,8 @@ struct mock_event_log {
->   	u16 clear_idx;
->   	u16 cur_idx;
->   	u16 nr_events;
-> +	u16 nr_overflow;
-> +	u16 overflow_reset;
->   	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX];
->   };
->   
-> @@ -45,6 +47,7 @@ void reset_event_log(struct mock_event_log *log)
->   {
->   	log->cur_idx = 0;
->   	log->clear_idx = 0;
-> +	log->nr_overflow = log->overflow_reset;
->   }
->   
->   /* Handle can never be 0 use 1 based indexing for handle */
-> @@ -76,8 +79,12 @@ static void event_store_add_event(struct mock_event_store *mes,
->   		return;
->   
->   	log = &mes->mock_logs[log_type];
-> -	if (WARN_ON(log->nr_events >= CXL_TEST_EVENT_CNT_MAX))
-> +
-> +	if ((log->nr_events + 1) > CXL_TEST_EVENT_CNT_MAX) {
-> +		log->nr_overflow++;
-> +		log->overflow_reset = log->nr_overflow;
->   		return;
-> +	}
->   
->   	log->events[log->nr_events] = event;
->   	log->nr_events++;
-> @@ -87,6 +94,7 @@ int mock_get_event(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
->   {
->   	struct cxl_get_event_payload *pl;
->   	struct mock_event_log *log;
-> +	u16 nr_overflow;
->   	u8 log_type;
->   	int i;
->   
-> @@ -118,6 +126,21 @@ int mock_get_event(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
->   	if (!log_empty(log))
->   		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
->   
-> +	if (log->nr_overflow) {
-> +		u64 ns;
-> +
-> +		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
-> +		pl->overflow_err_count = cpu_to_le16(nr_overflow);
-> +		ns = ktime_get_real_ns();
-> +		ns -= 5000000000; /* 5s ago */
-> +		pl->first_overflow_timestamp = cpu_to_le64(ns);
-> +		ns = ktime_get_real_ns();
-> +		ns -= 1000000000; /* 1s ago */
-> +		pl->last_overflow_timestamp = cpu_to_le64(ns);
-> +
-> +		log->nr_overflow = 0;
-> +	}
-> +
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(mock_get_event);
-> @@ -297,6 +320,30 @@ u32 cxl_mock_add_event_logs(struct cxl_dev_state *cxlds)
->   			      (struct cxl_event_record_raw *)&mem_module);
->   	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
->   
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&dram);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&gen_media);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&mem_module);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +			      (struct cxl_event_record_raw *)&dram);
-> +	/* Overflow this log */
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	event_store_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
-> +
->   	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
->   	event_store_add_event(mes, CXL_EVENT_TYPE_FATAL,
->   			      (struct cxl_event_record_raw *)&dram);
+base-commit: 3b39fd6cf12ceda2a2582dcb9b9ee9f4d197b857
