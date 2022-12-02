@@ -2,91 +2,90 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F74AC3A5A7
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 02:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD4C3A5A7
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 02:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231873AbiLBCJR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 21:09:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60086 "EHLO
+        id S230170AbiLBCN1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 21:13:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231379AbiLBCJQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 21:09:16 -0500
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C945CD4246;
-        Thu,  1 Dec 2022 18:09:10 -0800 (PST)
+        with ESMTP id S231887AbiLBCN0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 21:13:26 -0500
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74AA8B392
+        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 18:13:24 -0800 (PST)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 9812E101F76;
-        Fri,  2 Dec 2022 02:09:09 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id DE3E9102167;
+        Fri,  2 Dec 2022 02:13:20 +0000 (UTC)
 Received: from pdx1-sub0-mail-a256.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 24498101F31;
-        Fri,  2 Dec 2022 02:09:09 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669946949; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 69DD8102131;
+        Fri,  2 Dec 2022 02:13:20 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669947200; a=rsa-sha256;
         cv=none;
-        b=Rqvy3RUSlLLa1RQOEU22fZ7AV80iuQ7Wy/8IdK5FPljgzU2eUxma1LTDKt5g9uHTxTqnsb
-        kr8yK/MrTOZYA4T+AGAeeeQDdn2Ow3QXcRI6+sY9wnyrGySyA+wADenyBRFPJpfLV5FA7+
-        QwHTbS9MCN6YxvL9ofYwImsuJCbNjErXE94ZyvO8lCOg6saS3NYlkEDPncVYSF1oULPLJx
-        bq/8TXM7aARHuB/P7duZcaYZtIl5ts/BROptyz9ljgoG+1T3cTXTjm0L0BzUCuCzoaS082
-        EcbwRSSni3Diyei/xIqqP6rzMCKhbMfXiClL9XetTilbgku8bkj+NgM+Z5TRww==
+        b=3AXdu4HoGtOSHZMEZWaaIV/2gOAKSrLR5vFSuzF5CWYeulcf4HjhkQE6baFwnCc823io2/
+        oF3lImZc4mIM1wY+4FukNB5SKVQuFNVuahAAxl5YAWWp+zWSVDCEjPNkGMWJQlKEqrcujV
+        20W2Rq7pb0ZSjAuQ/rhykyFCU6e6Bt8t5rDyw/NzvD2i87AEGG/weuEmwZAxbB3ZGOT7Mv
+        g5Fbo5Y2PkL1s/nvxBjwhrS2fiUpXKmdMXMb66G8sDRLZWEIpqZ2GfW1jzFz/5M7na47mZ
+        gx//IIeJIuVO5gmhK9d7gvO9y45+FYlz2SVDLe3zt2HME5Lg00wSGek4eShbBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1669946949;
+        s=arc-2022; t=1669947200;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=ZEGf0dZSGTElTTBmwy85ZHKSEGx6K8XIitMKRvHd7lA=;
-        b=NQtP8yK3QZxfOr8w4QVGidLb0hMoqL1pn+7jeGljl/usH8/8IdMesZtK4glfPtQ0YwJGAy
-        TirOi5rPjtbxXx5LG4iV8yBjWs6jUAGehEJ/ixa49qptFVaAMdZt0J7mmJaoNIugtfA8kq
-        pnqPAYvpOATLuYGvsbJ7iF2dybf5BP7KyCyOb+kvuEbM+Tz5LFSmojjfb3aLiIwMpcePZd
-        ALzP4FWYIVOP1OGJa3ZbkAJ6W1//nIOFrMkAIvChHkFlbcdEcGO+w7wJKs9ZzgoC1lgVep
-        2XPLXQbbzS4AT2Oop9QsKhlZT1QdDcgEzGYzmQCGsY4zirsSHcPbb9QWIYy7gg==
+        bh=UQji+z74f4E6soM9sGBl4GiPXuleBXwxbQN44q+9BAw=;
+        b=XTWAPXWs7Gf1GAKF9bMUDv1rPizapIaE0RLgXiTYM1l+cPRftroAW5bmniufBo56s1tTxC
+        mhu+XkwVSwsTvuXVG23uWQDvCexrUHwD946F/GTk2la02KJTcS6HMBD4bVHGingi8N6l1k
+        GpWE6fVI/3kO99KYY6II/aG8rmOMustD9MFGjeaNm6MzgHpmraYCgrnhZluA7BqKduqHcH
+        c9XKunchNSASclPWqWc4OAeEJC7z5aRfhTQzBQ2wP8RQYL6dWX9ItmGjYn8KhK3zC8AKTC
+        T3rg74Z8i9QmWiGYExvBOvnTy6CXsL4ndmUdSBlCvuHQw+e74SWA5sFQ08McAQ==
 ARC-Authentication-Results: i=1;
-        rspamd-7bd68c5946-vwsx5;
+        rspamd-7bd68c5946-5928w;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Exultant-Stretch: 2cb3d65d6964c8a5_1669946949419_331043249
-X-MC-Loop-Signature: 1669946949418:1109263677
-X-MC-Ingress-Time: 1669946949418
+X-Vacuous-Obese: 53cc19cf68824da6_1669947200698_2625663902
+X-MC-Loop-Signature: 1669947200698:2343190255
+X-MC-Ingress-Time: 1669947200697
 Received: from pdx1-sub0-mail-a256.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.109.138.39 (trex/6.7.1);
-        Fri, 02 Dec 2022 02:09:09 +0000
+        by 100.103.24.20 (trex/6.7.1);
+        Fri, 02 Dec 2022 02:13:20 +0000
 Received: from offworld (unknown [104.36.25.245])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a256.dreamhost.com (Postfix) with ESMTPSA id 4NNbwN0nYYz1s;
-        Thu,  1 Dec 2022 18:09:08 -0800 (PST)
+        by pdx1-sub0-mail-a256.dreamhost.com (Postfix) with ESMTPSA id 4NNc1C5VfQz1s;
+        Thu,  1 Dec 2022 18:13:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1669946948;
-        bh=ZEGf0dZSGTElTTBmwy85ZHKSEGx6K8XIitMKRvHd7lA=;
+        s=dreamhost; t=1669947200;
+        bh=UQji+z74f4E6soM9sGBl4GiPXuleBXwxbQN44q+9BAw=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=qQ1TMm+NboCLDR0I2LRIjg5DbGDH0h2lBxZH7vUaXsBLFvegjTIO/EOsmT5PCDpnV
-         Ygta8ZlHHZmIezzZmSot9+W380OAHkqkB18m7+Gg5fpfzrxLSON7n/xfsM9DoeonxK
-         LmYj0hj8gHF5iRV42dL57llZoYw351vEhOGpPFqzLgdo+cWQk9EkImUJY2eg+qQMJP
-         OSEC/ABR6gPTqXDlSEstHDMc5cUBffKV26erqyKEbJgndOao30IvEMMWmh8Pzp2H19
-         GwhV25ian8JUstRdIL+PufhLHbS9fcphS97W2L7XyiqpYdiYV9UsgyZpQIWBAFO2Sg
-         XSB6Je020S7EQ==
-Date:   Thu, 1 Dec 2022 17:45:23 -0800
+        b=k1/CRQnmwLCCYTJ7jy4/8DxX+G/aCUPbW2htf/R8xYqdFhSQhbg5iBczbqTliB3eV
+         bkHfhM3dULI/4iQX6B80bxp2utmgeBmlIkFkbW+IQRrwlB4yfyLKlu+pyzEjduXkj8
+         lVg7ggpFzwEB2y2B4cdlNUasffDD245PpJOLB5EVoDhgMVWCL3JrRYHLuqTeo6w6pa
+         nNfzVcuWW6C2E909HMyzk6SLTwarwzY1BJWuT/nLbK7OGDZk/M0zUykrAvZN0Hv9ni
+         G1jGCOjXuJP+dogW+kLXBDYjgQjwbd/lKIKoCqdFZ1AuVQopn4im4xel+dvHYoisC4
+         vUwRWY4pSJVbw==
+Date:   Thu, 1 Dec 2022 17:49:34 -0800
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, stable@vger.kernel.org,
-        Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
-        nvdimm@lists.linux.dev
-Subject: Re: [PATCH 2/5] cxl/region: Fix missing probe failure
-Message-ID: <20221202014523.twkiqa3ewkhp6zdb@offworld>
+Cc:     linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        dave.jiang@intel.com, nvdimm@lists.linux.dev
+Subject: Re: [PATCH 3/5] cxl/pmem: Enforce keyctl ABI for PMEM security
+Message-ID: <20221202014934.bwcfdmzg773zfemb@offworld>
 References: <166993219354.1995348.12912519920112533797.stgit@dwillia2-xfh.jf.intel.com>
- <166993220462.1995348.1698008475198427361.stgit@dwillia2-xfh.jf.intel.com>
+ <166993221008.1995348.11651567302609703175.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <166993220462.1995348.1698008475198427361.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <166993221008.1995348.11651567302609703175.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -94,33 +93,38 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Thu, 01 Dec 2022, Dan Williams wrote:
 
->cxl_region_probe() allows for regions not in the 'commit' state to be
->enabled. Fail probe when the region is not committed otherwise the
->kernel may indicate that an address range is active when none of the
->decoders are active.
+>Preclude the possibility of user tooling sending device secrets in the
+>clear into the kernel by marking the security commands as exclusive.
+>This mandates the usage of the keyctl ABI for managing the device
+>passphrase.
 >
->Fixes: 8d48817df6ac ("cxl/region: Add region driver boiler plate")
->Cc: <stable@vger.kernel.org>
 >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
 Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
 >---
-> drivers/cxl/core/region.c |    3 +++
-> 1 file changed, 3 insertions(+)
+> drivers/cxl/core/mbox.c |   10 ++++++++++
+> 1 file changed, 10 insertions(+)
 >
->diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->index f9ae5ad284ff..1bc2ebefa2a5 100644
->--- a/drivers/cxl/core/region.c
->+++ b/drivers/cxl/core/region.c
->@@ -1923,6 +1923,9 @@ static int cxl_region_probe(struct device *dev)
->	 */
->	up_read(&cxl_region_rwsem);
+>diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>index 8747db329087..35dd889f1d3a 100644
+>--- a/drivers/cxl/core/mbox.c
+>+++ b/drivers/cxl/core/mbox.c
+>@@ -704,6 +704,16 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+> 		rc = 0;
+> 	}
 >
->+	if (rc)
->+		return rc;
+>+	/*
+>+	 * Setup permanently kernel exclusive commands, i.e. the
+>+	 * mechanism is driven through sysfs, keyctl, etc...
+>+	 */
+>+	set_bit(CXL_MEM_COMMAND_ID_SET_PASSPHRASE, cxlds->exclusive_cmds);
+>+	set_bit(CXL_MEM_COMMAND_ID_DISABLE_PASSPHRASE, cxlds->exclusive_cmds);
+>+	set_bit(CXL_MEM_COMMAND_ID_UNLOCK, cxlds->exclusive_cmds);
+>+	set_bit(CXL_MEM_COMMAND_ID_PASSPHRASE_SECURE_ERASE,
+>+		cxlds->exclusive_cmds);
 >+
->	switch (cxlr->mode) {
->	case CXL_DECODER_PMEM:
->		return devm_cxl_add_pmem_region(cxlr);
+> out:
+> 	kvfree(gsl);
+> 	return rc;
 >
