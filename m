@@ -2,506 +2,521 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51586C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Dec 2022 23:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF39BC4332F
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 00:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbiLAXz1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 18:55:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58120 "EHLO
+        id S230309AbiLBAJa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 19:09:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiLAXz1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 18:55:27 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88ECEC4CD0
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 15:55:25 -0800 (PST)
+        with ESMTP id S231926AbiLBAJ2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 19:09:28 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2493C56EC8;
+        Thu,  1 Dec 2022 16:09:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669938925; x=1701474925;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dlKv2RCSzi1cG1c6J+OZDJYtNwY/hYQjEHwcXnVjQgo=;
-  b=L9B9bNJ+dt9sF26kZm0h+zv+uOUXjqG/jxUfbI1rhqfs8WGaQMJQF59O
-   NsRpPow4rcNOxT86bJcYTJaIHB3y9gVM4vCRawnUpwlKlxy3e4lLf5YgN
-   RTj5Zg+UiuU7r5UpLpAAqzjtkFzsNgnuAqmiGJJGXVGIv9Ct+Ge2QX15N
-   glyuaqM/n+rcK+g7RNyixr83X/6jlD1ZQjzUfk3AydKVO+VZjqYGJFoQn
-   QYyB5sQQoCUKmtBh0tjc4dfiCGtQQvgS5bSPmUnwVETCwv8lEBnI7d+dF
-   k8K6iilvwPM0mHP3whHeT1XNqE1biqc4Uh3V3knm3iQaoDZmCblvs4ENi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="314530805"
+  t=1669939767; x=1701475767;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=bDt32+2hmvT0Rp4NbtQ+4pOZKS2R8b6lh+jJ38p4ROs=;
+  b=T7sYvP2nylIThQA9ZjpQK1T8p15EVT90a/z47dJANwF0CmNp3o0SEQAp
+   XkrlXsjnv80bzNKC9kQj6f4DKtpnKVVs/7EDdKh2irYulpHmd8PZxntNH
+   OG+adp7V2z1yhXDiYlBRpJuaQ85yqdoXfVSUiDhTspKxCUuk0W8Ohk/w7
+   v5sW/HyIL8Mj2hcsxczRY2Tn6K3zlgaFpRxB0lAQD01rlqb6qfMyOgF2h
+   FfK7Enhj0b3qPG7mSWcyYOKx3u5nq2UJQQie/CXAYnBxfv9e+2kLqC+Kf
+   oWhl8RxLEj7mVmNwMmrxVBQZxQewid1e48XZGdt2xLOOZBiTjdvFwV3xT
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="296184145"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="314530805"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 15:55:25 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="973709159"
+   d="scan'208";a="296184145"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 16:09:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="646958909"
 X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="973709159"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.66.184]) ([10.212.66.184])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 15:55:24 -0800
-Message-ID: <38c2f273-b449-8247-3a84-1caa24fd657c@intel.com>
-Date:   Thu, 1 Dec 2022 16:55:24 -0700
+   d="scan'208";a="646958909"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Dec 2022 16:09:26 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 1 Dec 2022 16:09:25 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 1 Dec 2022 16:09:25 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Thu, 1 Dec 2022 16:09:25 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Thu, 1 Dec 2022 16:09:25 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mEfFHGYMt1V3JeruScyWAOHgnfyVEm/ab9pQlt65+LjuaQmNsw5GtXsgU857cZNbfrDIK00/Ekjx9KL2WAKBUd7yCnO5REbsFy/nAVKvtAKotjcKlCEpoE0EMG/R0DeHHgovWWRjOg1gsYmGahMx8SeUaMgVx3YYBq6aAaHKwx+aOHFk4nFOJcd5cWrSw3CuQRFybSiB+F9yp2kXRMpze3sEwzunmu/JxZFAsTbHMvBn3Tth7iPgtn92aHEq6CXx03oyRfYn66pX51VHlpqcR9uicupzRvl/d76KnqFw+NyCm3/67SPjRkzxnfQJuXsPb0gxx580Wk2CBaeVVPJHeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Lp51AFYAPxLHFHM4QHV09T/8DkS5TwwhIWGYmR59ho8=;
+ b=CscpW+HxxfxBTl5c1IKDjO4Pzg76m2Mn60wH87dpPur30zLYMQGvOE7i2Ru/zNtqjbzvDNwqc7amgqhG1nax/siKSiWy5eXI9ifws85gsHwu3uD0jvejh2JNPlKEhoRuc7S/KclvtbFIX/N7o8qTPd8y9AU/7CfCJIQbCOIwRQ5lKdv+RkzeEG+29b7WWl22I6ykU5AeNdu6hUE24KgbLTgr5RqHtCdgXIp8G9v5MWFIriE8YuY+h7pq5Opr1GnfOJU4Uv4c4GGqVq1caymzAmz9CNhcO56Wu0K7ycUWT0kYSV31dEEZPwi5WduHl8jSt0IDp8BPFIZ567lWoBmUwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by PH0PR11MB4984.namprd11.prod.outlook.com (2603:10b6:510:34::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.8; Fri, 2 Dec
+ 2022 00:09:22 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5236:c530:cc10:68f%4]) with mapi id 15.20.5857.023; Fri, 2 Dec 2022
+ 00:09:22 +0000
+Date:   Thu, 1 Dec 2022 16:09:17 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2 02/11] cxl/mem: Implement Get Event Records command
+Message-ID: <Y4lCLfQrjyRtLmDM@iweiny-desk3>
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+ <20221201002719.2596558-3-ira.weiny@intel.com>
+ <20221201123849.0f7802ce@gandalf.local.home>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221201123849.0f7802ce@gandalf.local.home>
+X-ClientProxiedBy: SJ0PR13CA0186.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::11) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.0
-Subject: Re: [PATCH v6 08/12] cxl/acpi: Extract component registers of
- restricted hosts from RCRB
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Terry Bowman <terry.bowman@amd.com>,
-        Robert Richter <rrichter@amd.com>, alison.schofield@intel.com,
-        bhelgaas@google.com, nvdimm@lists.linux.dev
-References: <166993040066.1882361.5484659873467120859.stgit@dwillia2-xfh.jf.intel.com>
- <166993044524.1882361.2539922887413208807.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <166993044524.1882361.2539922887413208807.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB4984:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cbded18-7c65-4a77-ee0e-08dad3f97720
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: It38qvFFqyOORcUvna6r8d6uNkcOxDT5GHBfLkOxh1xKBP43lhuAV2wBqRVOX6mKiUguQde47uFMptGnaAt7keO2N8FvKFB0ktsvJrSDlzf7o8mdKX6muXD659hlcHaOynQtBuRt6D62Li54lMiesMiLdRHIpJJRiyokLX6lH6PYbTTYn3zGIzc2jAREXufjrl1UyKZUYygtmVYKEXXSG6GpUHBT69D+RcOw0sSSOyQmJflDoz5ntEvTIJqNahfmCrvpsEBDjPzkuTi3WffQgvIN+dHMeP0YvXbz+xHAeQnVTWU6pvvvsosAoTgxr7x6jZmhFMp9A07ukrUdILW5BKR5lZ3d3DNmDWkjor39NQo56g//X9wDDlxCkxKR0YVfEq0mQRraxZ65jOIRya9WDbH06cUudnE63mEI5OUQR8TFPMZY8BrhXW5KGLb8Ob672p0F80IJsCteXSg7C7jjanT79DG95yik4iplXLem67wiIfh71gotEzRMkCDVp3g66/TmCYu2r1M0nNlgimCUoT3OG3M6FfM9uDJqQqW0DfVY0PrnWaWod0THqaxt8mOPbCzM9HlEzF3xSqQaPp7JHrenf0rBOSsJLVYFsU9RqmsRkPbV7WX4QZIH0lTH/+lpYWVl1m5f7WZE/ZKFfmGzAw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(396003)(346002)(136003)(376002)(39860400002)(366004)(451199015)(478600001)(6666004)(33716001)(38100700002)(82960400001)(6506007)(6486002)(86362001)(6916009)(2906002)(54906003)(8936002)(316002)(6512007)(9686003)(26005)(186003)(41300700001)(66946007)(66556008)(4326008)(8676002)(66476007)(30864003)(44832011)(5660300002)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R1QwdDhaYlRDaW5XUVdzVmJQV0FZbUEvaHhJY3A2NmxoTG1PNnFYRXhrN2gz?=
+ =?utf-8?B?YWFlemdSZG81Mk5BQmhiRGgza2lXYUd4MGxVc2JDYzdLTXdvZFRwRkdzVTFD?=
+ =?utf-8?B?RG4wSnVCdm1FejRnQXRRUTFQYjg5QTRZVzZoMVhrVTBYdXlaSkNYR3kxTFdV?=
+ =?utf-8?B?QStwM1gvU3A5WHFaWmtld0hEdVBmL2F2WW5ZMENWNUNhWTFmL1lFQ0VDZy9y?=
+ =?utf-8?B?WEcwc01ZWUV0S0xVZkJJN1FzVDZzN2x1VklDbE9nS0RaUk1CVXUrT3BYUXBO?=
+ =?utf-8?B?NEp3MHY4WHppTkhpMUthQitkSkNCaG54QUpuZnQzNDlGb2dzOVRHdmY3WUlB?=
+ =?utf-8?B?bC9RWmQwNkozVVBLbE40SjJzUkhHL3pFM280MGhNS1VsWXB3U0FHSHBuM1Zr?=
+ =?utf-8?B?cHNBeXFENEMva2N4VDI2VFN4OGZ2Y0srRkpSNFJrMFZyeGxsSGRRRXorWVZj?=
+ =?utf-8?B?bjZhOStFeXl6bHhLNHg1aGhubjdjdnNlLzA0VGJSTnltS0tnVkhFY0k2SnBD?=
+ =?utf-8?B?OFE5RmlWQnFMUUdYS1FnVzdDYkprQXVmeTV5SnN5MmR2NjdwOXFJTFNLSnFw?=
+ =?utf-8?B?YktoY0xPdFB1amJUbzdHSndGNlM5QVMzNkdDaTJtQWlkRnUvY1VLUElJN3dq?=
+ =?utf-8?B?L3lKd294T09mcytTUjByV2d0aG5lVTkvOEZnZDN3d1JvN0lJbXhHUkd1WEVy?=
+ =?utf-8?B?RGV1ZXNQbWYwZTJtalJNdmlwaUV1Z1U0VkxBVjZ6QlRZcThpdlJDb3Z4cFFy?=
+ =?utf-8?B?RHdMcm54cjFTa2ZkQ0paT2hwVENmNjJ3VHA5bFlWaHZ2T0tFSlpRNFU4QjBC?=
+ =?utf-8?B?TTByaDVDclNkSU5CcmN3UnA1SEIvTnVVODVQNE80bEpwK1VnUFdRMldVYVVS?=
+ =?utf-8?B?RHI3dmRiQVFtYnBDbUhQc1l3WFhzVlEwV2lMRDdIS2dMckFsam5lb3ExUXpq?=
+ =?utf-8?B?NTRCWURMcHpscGI4elRFRVE3OStmZVNSZGMxa1M4YmNVZVZsR0JwVENXcTZT?=
+ =?utf-8?B?NkRZUHlRL2Z0U2RLQlpuZ1FqbnUzMHZwMHZMb01samZ2blVjMXVSQWtNMEhy?=
+ =?utf-8?B?Zjh2ZVZMRExuTnp3Rm54clpoUjI5U2VwY0N6ZFYvNStXZmhNTTI5VWZldTAr?=
+ =?utf-8?B?aDZrTnB6ZFpCa3hSR212TVJaenQ1WWNITURtYmtHVlcybFJaYkd6blRNUFRS?=
+ =?utf-8?B?ZDNEMldkYjV0UUJ2RUdGTnIwQVFOWi9wMldDS0d1ek9hY0dtTjd6QkVtVyt0?=
+ =?utf-8?B?S2ZVOGhUWDRzRW9ycTIxL2g4azh1dHNHUHNuU084VlBSbzlUeDJMbUppT3E2?=
+ =?utf-8?B?RUJabDdzRC9ZVnVRcXkyaldSMWhBbGtkYkorRzN3RGhqTWVkbWttVTM3L1Ax?=
+ =?utf-8?B?RXdCMi8veEl3NGpMaFk1ZGJLa0RHODBEczBsVTZMMmsyeUxMa2dyYzg1b2pn?=
+ =?utf-8?B?L3Z4c3JiNFovd2xvS3c5TG5vNlFkSzB5QW1ZTXl5SnFVN1oxYnJzdVp2dml5?=
+ =?utf-8?B?Q1lYbXZwZDVidHltSUcvVzlBK2pxSDdVelVxdHdUQ1Mwb1ArVVFFeG5DcC9N?=
+ =?utf-8?B?TVRpQngwWEtUQTRhTjl3MWhmaEM4Nm15NjJYZGRwbnVpNys1dFBCdkFnRGFU?=
+ =?utf-8?B?VGlmWjYrWkVGVG5PckVodmRkTGowb3N5TXpOeC9xTnBDdXhrVUVSaWRZQnI5?=
+ =?utf-8?B?Z05TM1laek9zamtVTHhYb3hSNTJTMC9JUWpnOWtMT1RTY29aT1I1NGZrK3h6?=
+ =?utf-8?B?a1ByRDJZVkF5U0xGYm13WmVyZHM5SDFwSk1yN3FTTHFucDRITnJkb2N1R1pa?=
+ =?utf-8?B?Vzl6Z25rSSt0b1RpRTBUbUlqNGhHQmFpNGJ0ZERpMEY0VllzWEQzSG4za2Uw?=
+ =?utf-8?B?RjJPVGV2YXdVNWI3a3FKSTArYTNlV2I5d1B6NXpteVg3c0luYjlVZUJ0dFZL?=
+ =?utf-8?B?NU53YnEzazFjK0huMG9YQzlWQ2Z3Y3RHWG5TRlZubGFjeE5GNW83TFcwQkgr?=
+ =?utf-8?B?dUxyU0ZtYUs3RjhYZXUzdjFPNzErUjVGamxvVFVBTlBINGhBbWNUbzhsNWY5?=
+ =?utf-8?B?V1ZIdHhMOUd0ajVXdWFmY29reEUzS1VEV0V3YnIwRnV6U0V5NXNRalNodkta?=
+ =?utf-8?Q?qV9hPSgZ1BiKRKY4nAL5uxyiC?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cbded18-7c65-4a77-ee0e-08dad3f97720
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2022 00:09:22.6872
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k+P1bJC0fqq2uA2PN34uc/t7zpW+U9p1rsr+Iaes2Hm9UBF3Z7JB1G0E+MF2nvLqaUP8y2UaWsKOiTMjqkQ89g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4984
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, Dec 01, 2022 at 12:38:49PM -0500, Steven Rostedt wrote:
+> On Wed, 30 Nov 2022 16:27:10 -0800
+> ira.weiny@intel.com wrote:
+> 
+
+[snip]
+
+> > +
+> > +/*
+> > + * CXL rev 3.0 section 8.2.9.2.2; Table 8-49
+> > + */
+> > +enum cxl_event_log_type {
+> > +	CXL_EVENT_TYPE_INFO = 0x00,
+> > +	CXL_EVENT_TYPE_WARN,
+> > +	CXL_EVENT_TYPE_FAIL,
+> > +	CXL_EVENT_TYPE_FATAL,
+> > +	CXL_EVENT_TYPE_MAX
+> > +};
+> > +
+> > +static inline const char *cxl_event_log_type_str(enum cxl_event_log_type type)
+> > +{
+> > +	switch (type) {
+> > +	case CXL_EVENT_TYPE_INFO:
+> > +		return "Informational";
+> > +	case CXL_EVENT_TYPE_WARN:
+> > +		return "Warning";
+> > +	case CXL_EVENT_TYPE_FAIL:
+> > +		return "Failure";
+> > +	case CXL_EVENT_TYPE_FATAL:
+> > +		return "Fatal";
+> > +	default:
+> > +		break;
+> > +	}
+> > +	return "<unknown>";
+> > +}
+> 
+> So you are using this in a TP_printk() section, which means perf and
+> trace-cmd have no idea how to parse it. Can I recommend instead having:
+> 
+> #define cxl_event_log_type_str(type)				\
+> 	__print_symbolic(type,					\
+> 		{ CXL_EVENT_TYPE_INFO, "Informational" },	\
+> 		{ CXL_EVENT_TYPE_WARN, "Warning" },		\
+> 		{ CXL_EVENT_TYPE_FAIL, "Failure" },		\
+> 		{ CXL_EVENT_TYPE_FATAL, "Fatal" })
+> 
+> #ifndef CREATE_TRACE_POINTS
+> static inline const char *__cxl_event_log_type_str(enum cxl_event_log_type type,
+> 			struct trace_print_flags *symbols)
+> {
+> 	for (; symbols->mask >= 0; symbols++) {
+> 		if (type == symbols->mask)
+> 			return symbols->name;
+> 	}
+> 	return "<unknown>";
+> }
+> #define __print_symbolic(value, symbol_array...)			\
+> 	({								\
+> 		static const struct trace_print_flags symbols[] =	\
+> 			{ symbol_array, { -1, NULL }};			\
+> 		__cxl_event_log_type_str(value, symbols);		\
+> 	})
+> #endif		
+> 
+> Note, I did not even try to compile the above. But it should be close to
+> working.
+
+Dropping that into cxlmem.h does not compile.  I've given it another go but
+because I use cxl_event_log_type_str() in a file where trace points are used
+CREATE_TRACE_POINTS is defined and I get the following error.
+
+|| drivers/cxl/core/mbox.c: In function ‘cxl_mem_get_records_log’:
+drivers/cxl/cxlmem.h|386 col 7| error: implicit declaration of function ‘__print_symbolic’; did you mean ‘sprint_symbol’?  [-Werror=implicit-function-declaration]                        
+||   386 |       __print_symbolic(type,                            \
+||       |       ^~~~~~~~~~~~~~~~
+
+I got it to work with the patch below on top of this one.[3]  But it is kind of
+ugly.  The only way I could get __print_symbolic() to be defined was to
+redefine it in mbox.c.[1]  Then throw it in it's own header as in [3]
+
+NOTE that patch [2] which I think _should_ work on top of patch [1] does not.
+I can't understand why.
+
+> 
+> This way, the cxl_event_log_type_str() for trace events will be converted
+> into the __print_symbolic() which can be parsed by perf and trace-cmd. For
+> all other use cases, it is converted into the function above to return the
+> string.
+
+I would like to have this support.  I really tried to share this code a while
+back.  What you have is seems nicer than what I remember coming up with but it
+is still a bit hacky IMO.  And I'm afraid of how fragile this seems right now.
+
+At this point I'm just going to define cxl_event_log_type_str() separate from
+the __print_symbolic() in the trace code.  Comment that they should both be
+updated if changed and move forward.
+
+Thanks for the suggestion but I think it is going to be more complicated than
+it is worth.  At least for mere mortals such as myself.
+
+Ira
+
+[1]
+
+For mbox.c I have to have the special redefinition of __print_symbolic() in the
+c file itself.  Code including cxlmem.h without CREATE_TRACE_POINTS defined
+(like pci.c) works just fine with what you had.
 
 
-On 12/1/2022 2:34 PM, Dan Williams wrote:
-> From: Robert Richter <rrichter@amd.com>
-> 
-> A downstream port must be connected to a component register block.
-> For restricted hosts the base address is determined from the RCRB. The
-> RCRB is provided by the host's CEDT CHBS entry. Rework CEDT parser to
-> get the RCRB and add code to extract the component register block from
-> it.
-> 
-> RCRB's BAR[0..1] point to the component block containing CXL subsystem
-> component registers. MEMBAR extraction follows the PCI base spec here,
-> esp. 64 bit extraction and memory range alignment (6.0, 7.5.1.2.1). The
-> RCRB base address is cached in the cxl_dport per-host bridge so that the
-> upstream port component registers can be retrieved later by an RCD
-> (RCIEP) associated with the host bridge.
-> 
-> Note: Right now the component register block is used for HDM decoder
-> capability only which is optional for RCDs. If unsupported by the RCD,
-> the HDM init will fail. It is future work to bypass it in this case.
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Link: https://lore.kernel.org/r/Y4dsGZ24aJlxSfI1@rric.localdomain
-> [djbw: introduce devm_cxl_add_rch_dport()]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+commit 43a30047962312be2e532dff542d47a132949c08
+Author: Ira Weiny <ira.weiny@intel.com>
+Date:   Thu Dec 1 13:50:14 2022 -0800
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+    squash: Redefine __print_symbolic to have a central define of the log string print function.
 
-> ---
->   drivers/cxl/acpi.c            |   51 ++++++++++++++++++++++++++++-----
->   drivers/cxl/core/port.c       |   53 ++++++++++++++++++++++++++++++----
->   drivers/cxl/core/regs.c       |   64 +++++++++++++++++++++++++++++++++++++++++
->   drivers/cxl/cxl.h             |   16 ++++++++++
->   tools/testing/cxl/Kbuild      |    1 +
->   tools/testing/cxl/test/cxl.c  |   10 ++++++
->   tools/testing/cxl/test/mock.c |   19 ++++++++++++
->   tools/testing/cxl/test/mock.h |    3 ++
->   8 files changed, 203 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 50d82376097c..db8173f3ee10 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -9,6 +9,8 @@
->   #include "cxlpci.h"
->   #include "cxl.h"
->   
-> +#define CXL_RCRB_SIZE	SZ_8K
-> +
->   static unsigned long cfmws_to_decoder_flags(int restrictions)
->   {
->   	unsigned long flags = CXL_DECODER_F_ENABLE;
-> @@ -211,6 +213,11 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->   		return 0;
->   	}
->   
-> +	if (dport->rch) {
-> +		dev_info(bridge, "host supports CXL (restricted)\n");
-> +		return 0;
-> +	}
-> +
->   	rc = devm_cxl_register_pci_bus(host, bridge, pci_root->bus);
->   	if (rc)
->   		return rc;
-> @@ -226,9 +233,11 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->   }
->   
->   struct cxl_chbs_context {
-> -	struct device *dev;
-> -	unsigned long long uid;
-> -	resource_size_t chbcr;
-> +	struct device		*dev;
-> +	unsigned long long	uid;
-> +	resource_size_t		rcrb;
-> +	resource_size_t		chbcr;
-> +	u32			cxl_version;
->   };
->   
->   static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> @@ -244,7 +253,25 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
->   
->   	if (ctx->uid != chbs->uid)
->   		return 0;
-> -	ctx->chbcr = chbs->base;
-> +
-> +	ctx->cxl_version = chbs->cxl_version;
-> +	ctx->rcrb = CXL_RESOURCE_NONE;
-> +	ctx->chbcr = CXL_RESOURCE_NONE;
-> +
-> +	if (!chbs->base)
-> +		return 0;
-> +
-> +	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11) {
-> +		ctx->chbcr = chbs->base;
-> +		return 0;
-> +	}
-> +
-> +	if (chbs->length != CXL_RCRB_SIZE)
-> +		return 0;
-> +
-> +	ctx->rcrb = chbs->base;
-> +	ctx->chbcr = cxl_rcrb_to_component(ctx->dev, chbs->base,
-> +					   CXL_RCRB_DOWNSTREAM);
->   
->   	return 0;
->   }
-> @@ -274,21 +301,29 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->   	dev_dbg(match, "UID found: %lld\n", uid);
->   
->   	ctx = (struct cxl_chbs_context) {
-> -		.dev = host,
-> +		.dev = match,
->   		.uid = uid,
->   	};
->   	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbcr, &ctx);
->   
-> -	if (ctx.chbcr == 0) {
-> +	if (ctx.rcrb != CXL_RESOURCE_NONE)
-> +		dev_dbg(match, "RCRB found for UID %lld: %pa\n", uid, &ctx.rcrb);
-> +
-> +	if (ctx.chbcr == CXL_RESOURCE_NONE) {
->   		dev_warn(match, "No CHBS found for Host Bridge (UID %lld)\n", uid);
->   		return 0;
->   	}
->   
-> -	dev_dbg(match, "CHBCR found: 0x%08llx\n", (u64)ctx.chbcr);
-> +	dev_dbg(match, "CHBCR found: %pa\n", &ctx.chbcr);
->   
->   	pci_root = acpi_pci_find_root(hb->handle);
->   	bridge = pci_root->bus->bridge;
-> -	dport = devm_cxl_add_dport(root_port, bridge, uid, ctx.chbcr);
-> +	if (ctx.cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11)
-> +		dport = devm_cxl_add_rch_dport(root_port, bridge, uid,
-> +					       ctx.chbcr, ctx.rcrb);
-> +	else
-> +		dport = devm_cxl_add_dport(root_port, bridge, uid,
-> +					   ctx.chbcr);
->   	if (IS_ERR(dport))
->   		return PTR_ERR(dport);
->   
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index d225267c69bb..dae2ca31885e 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -628,6 +628,8 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
->   			iter = to_cxl_port(iter->dev.parent);
->   		if (iter->host_bridge)
->   			port->host_bridge = iter->host_bridge;
-> +		else if (parent_dport->rch)
-> +			port->host_bridge = parent_dport->dport;
->   		else
->   			port->host_bridge = iter->uport;
->   		dev_dbg(uport, "host-bridge: %s\n", dev_name(port->host_bridge));
-> @@ -899,10 +901,10 @@ static void cxl_dport_unlink(void *data)
->   	sysfs_remove_link(&port->dev.kobj, link_name);
->   }
->   
-> -static struct cxl_dport *__devm_cxl_add_dport(struct cxl_port *port,
-> -					      struct device *dport_dev,
-> -					      int port_id,
-> -					      resource_size_t component_reg_phys)
-> +static struct cxl_dport *
-> +__devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
-> +		     int port_id, resource_size_t component_reg_phys,
-> +		     resource_size_t rcrb)
->   {
->   	char link_name[CXL_TARGET_STRLEN];
->   	struct cxl_dport *dport;
-> @@ -932,6 +934,9 @@ static struct cxl_dport *__devm_cxl_add_dport(struct cxl_port *port,
->   	dport->port_id = port_id;
->   	dport->component_reg_phys = component_reg_phys;
->   	dport->port = port;
-> +	if (rcrb != CXL_RESOURCE_NONE)
-> +		dport->rch = true;
-> +	dport->rcrb = rcrb;
->   
->   	cond_cxl_root_lock(port);
->   	rc = add_dport(port, dport);
-> @@ -956,7 +961,7 @@ static struct cxl_dport *__devm_cxl_add_dport(struct cxl_port *port,
->   }
->   
->   /**
-> - * devm_cxl_add_dport - append downstream port data to a cxl_port
-> + * devm_cxl_add_dport - append VH downstream port data to a cxl_port
->    * @port: the cxl_port that references this dport
->    * @dport_dev: firmware or PCI device representing the dport
->    * @port_id: identifier for this dport in a decoder's target list
-> @@ -973,7 +978,7 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
->   	struct cxl_dport *dport;
->   
->   	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
-> -				     component_reg_phys);
-> +				     component_reg_phys, CXL_RESOURCE_NONE);
->   	if (IS_ERR(dport)) {
->   		dev_dbg(dport_dev, "failed to add dport to %s: %ld\n",
->   			dev_name(&port->dev), PTR_ERR(dport));
-> @@ -986,6 +991,42 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
->   }
->   EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, CXL);
->   
-> +/**
-> + * devm_cxl_add_rch_dport - append RCH downstream port data to a cxl_port
-> + * @port: the cxl_port that references this dport
-> + * @dport_dev: firmware or PCI device representing the dport
-> + * @port_id: identifier for this dport in a decoder's target list
-> + * @component_reg_phys: optional location of CXL component registers
-> + * @rcrb: mandatory location of a Root Complex Register Block
-> + *
-> + * See CXL 3.0 9.11.8 CXL Devices Attached to an RCH
-> + */
-> +struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
-> +					 struct device *dport_dev, int port_id,
-> +					 resource_size_t component_reg_phys,
-> +					 resource_size_t rcrb)
-> +{
-> +	struct cxl_dport *dport;
-> +
-> +	if (rcrb == CXL_RESOURCE_NONE) {
-> +		dev_dbg(&port->dev, "failed to add RCH dport, missing RCRB\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
-> +				     component_reg_phys, rcrb);
-> +	if (IS_ERR(dport)) {
-> +		dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
-> +			dev_name(&port->dev), PTR_ERR(dport));
-> +	} else {
-> +		dev_dbg(dport_dev, "RCH dport added to %s\n",
-> +			dev_name(&port->dev));
-> +	}
-> +
-> +	return dport;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_rch_dport, CXL);
-> +
->   static int add_ep(struct cxl_ep *new)
->   {
->   	struct cxl_port *port = new->dport->port;
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index ec178e69b18f..28ed0ec8ee3e 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -307,3 +307,67 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->   	return -ENODEV;
->   }
->   EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
-> +
-> +resource_size_t cxl_rcrb_to_component(struct device *dev,
-> +				      resource_size_t rcrb,
-> +				      enum cxl_rcrb which)
-> +{
-> +	resource_size_t component_reg_phys;
-> +	u32 bar0, bar1;
-> +	void *addr;
-> +	u16 cmd;
-> +	u32 id;
-> +
-> +	if (which == CXL_RCRB_UPSTREAM)
-> +		rcrb += SZ_4K;
-> +
-> +	/*
-> +	 * RCRB's BAR[0..1] point to component block containing CXL
-> +	 * subsystem component registers. MEMBAR extraction follows
-> +	 * the PCI Base spec here, esp. 64 bit extraction and memory
-> +	 * ranges alignment (6.0, 7.5.1.2.1).
-> +	 */
-> +	if (!request_mem_region(rcrb, SZ_4K, "CXL RCRB"))
-> +		return CXL_RESOURCE_NONE;
-> +	addr = ioremap(rcrb, SZ_4K);
-> +	if (!addr) {
-> +		dev_err(dev, "Failed to map region %pr\n", addr);
-> +		release_mem_region(rcrb, SZ_4K);
-> +		return CXL_RESOURCE_NONE;
-> +	}
-> +
-> +	id = readl(addr + PCI_VENDOR_ID);
-> +	cmd = readw(addr + PCI_COMMAND);
-> +	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
-> +	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
-> +	iounmap(addr);
-> +	release_mem_region(rcrb, SZ_4K);
-> +
-> +	/*
-> +	 * Sanity check, see CXL 3.0 Figure 9-8 CXL Device that Does Not
-> +	 * Remap Upstream Port and Component Registers
-> +	 */
-> +	if (id == U32_MAX) {
-> +		if (which == CXL_RCRB_DOWNSTREAM)
-> +			dev_err(dev, "Failed to access Downstream Port RCRB\n");
-> +		return CXL_RESOURCE_NONE;
-> +	}
-> +	if (!(cmd & PCI_COMMAND_MEMORY))
-> +		return CXL_RESOURCE_NONE;
-> +	if (bar0 & (PCI_BASE_ADDRESS_MEM_TYPE_1M | PCI_BASE_ADDRESS_SPACE_IO))
-> +		return CXL_RESOURCE_NONE;
-> +
-> +	component_reg_phys = bar0 & PCI_BASE_ADDRESS_MEM_MASK;
-> +	if (bar0 & PCI_BASE_ADDRESS_MEM_TYPE_64)
-> +		component_reg_phys |= ((u64)bar1) << 32;
-> +
-> +	if (!component_reg_phys)
-> +		return CXL_RESOURCE_NONE;
-> +
-> +	/* MEMBAR is block size (64k) aligned. */
-> +	if (!IS_ALIGNED(component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE))
-> +		return CXL_RESOURCE_NONE;
-> +
-> +	return component_reg_phys;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_component, CXL);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 281b1db5a271..1342e4e61537 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -223,6 +223,14 @@ enum cxl_regloc_type;
->   int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->   		      struct cxl_register_map *map);
->   
-> +enum cxl_rcrb {
-> +	CXL_RCRB_DOWNSTREAM,
-> +	CXL_RCRB_UPSTREAM,
-> +};
-> +resource_size_t cxl_rcrb_to_component(struct device *dev,
-> +				      resource_size_t rcrb,
-> +				      enum cxl_rcrb which);
-> +
->   #define CXL_RESOURCE_NONE ((resource_size_t) -1)
->   #define CXL_TARGET_STRLEN 20
->   
-> @@ -486,12 +494,16 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
->    * @dport: PCI bridge or firmware device representing the downstream link
->    * @port_id: unique hardware identifier for dport in decoder target list
->    * @component_reg_phys: downstream port component registers
-> + * @rcrb: base address for the Root Complex Register Block
-> + * @rch: Indicate whether this dport was enumerated in RCH or VH mode
->    * @port: reference to cxl_port that contains this downstream port
->    */
->   struct cxl_dport {
->   	struct device *dport;
->   	int port_id;
->   	resource_size_t component_reg_phys;
-> +	resource_size_t rcrb;
-> +	bool rch;
->   	struct cxl_port *port;
->   };
->   
-> @@ -561,6 +573,10 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd);
->   struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
->   				     struct device *dport, int port_id,
->   				     resource_size_t component_reg_phys);
-> +struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
-> +					 struct device *dport_dev, int port_id,
-> +					 resource_size_t component_reg_phys,
-> +					 resource_size_t rcrb);
->   
->   struct cxl_decoder *to_cxl_decoder(struct device *dev);
->   struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 500be85729cc..9e4d94e81723 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -10,6 +10,7 @@ ldflags-y += --wrap=devm_cxl_add_passthrough_decoder
->   ldflags-y += --wrap=devm_cxl_enumerate_decoders
->   ldflags-y += --wrap=cxl_await_media_ready
->   ldflags-y += --wrap=cxl_hdm_decode_init
-> +ldflags-y += --wrap=cxl_rcrb_to_component
->   
->   DRIVERS := ../../../drivers
->   CXL_SRC := $(DRIVERS)/cxl
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 8acf52b7dab2..c1e395a5b8f7 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -696,6 +696,15 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
->   	return 0;
->   }
->   
-> +resource_size_t mock_cxl_rcrb_to_component(struct device *dev,
-> +					   resource_size_t rcrb,
-> +					   enum cxl_rcrb which)
-> +{
-> +	dev_dbg(dev, "rcrb: %pa which: %d\n", &rcrb, which);
-> +
-> +	return 0;
-> +}
-> +
->   static struct cxl_mock_ops cxl_mock_ops = {
->   	.is_mock_adev = is_mock_adev,
->   	.is_mock_bridge = is_mock_bridge,
-> @@ -704,6 +713,7 @@ static struct cxl_mock_ops cxl_mock_ops = {
->   	.is_mock_dev = is_mock_dev,
->   	.acpi_table_parse_cedt = mock_acpi_table_parse_cedt,
->   	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
-> +	.cxl_rcrb_to_component = mock_cxl_rcrb_to_component,
->   	.acpi_pci_find_root = mock_acpi_pci_find_root,
->   	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
->   	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
-> diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-> index bce6a21df0d5..5dface08e0de 100644
-> --- a/tools/testing/cxl/test/mock.c
-> +++ b/tools/testing/cxl/test/mock.c
-> @@ -224,6 +224,25 @@ int __wrap_cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
->   }
->   EXPORT_SYMBOL_NS_GPL(__wrap_cxl_hdm_decode_init, CXL);
->   
-> +resource_size_t __wrap_cxl_rcrb_to_component(struct device *dev,
-> +					     resource_size_t rcrb,
-> +					     enum cxl_rcrb which)
-> +{
-> +	int index;
-> +	resource_size_t component_reg_phys;
-> +	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
-> +
-> +	if (ops && ops->is_mock_port(dev))
-> +		component_reg_phys =
-> +			ops->cxl_rcrb_to_component(dev, rcrb, which);
-> +	else
-> +		component_reg_phys = cxl_rcrb_to_component(dev, rcrb, which);
-> +	put_cxl_mock_ops(index);
-> +
-> +	return component_reg_phys;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(__wrap_cxl_rcrb_to_component, CXL);
-> +
->   MODULE_LICENSE("GPL v2");
->   MODULE_IMPORT_NS(ACPI);
->   MODULE_IMPORT_NS(CXL);
-> diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
-> index 738f24e3988a..ef33f159375e 100644
-> --- a/tools/testing/cxl/test/mock.h
-> +++ b/tools/testing/cxl/test/mock.h
-> @@ -15,6 +15,9 @@ struct cxl_mock_ops {
->   					     acpi_string pathname,
->   					     struct acpi_object_list *arguments,
->   					     unsigned long long *data);
-> +	resource_size_t (*cxl_rcrb_to_component)(struct device *dev,
-> +						 resource_size_t rcrb,
-> +						 enum cxl_rcrb which);
->   	struct acpi_pci_root *(*acpi_pci_find_root)(acpi_handle handle);
->   	bool (*is_mock_bus)(struct pci_bus *bus);
->   	bool (*is_mock_port)(struct device *dev);
-> 
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 63ee0fd5f4c2..55938d530a21 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -4,12 +4,30 @@
+ #include <linux/security.h>
+ #include <linux/debugfs.h>
+ #include <linux/mutex.h>
+-#include <cxlmem.h>
+ #include <cxl.h>
+ 
+ #define CREATE_TRACE_POINTS
++/* Must be after CREATE_TRACE_POINTS */
++#include <cxlmem.h>
+ #include <trace/events/cxl.h>
+ 
++static inline const char *__cxl_event_log_type_str(enum cxl_event_log_type type,
++                      const struct trace_print_flags *symbols)
++{
++      for (; symbols->mask >= 0; symbols++) {
++              if (type == symbols->mask)
++                      return symbols->name;
++      }
++      return "<unknown>";
++}
++
++#define __print_symbolic(value, symbol_array...)			\
++      ({								\
++              static const struct trace_print_flags symbols[] =		\
++                      { symbol_array, { -1, NULL }};			\
++              __cxl_event_log_type_str(value, symbols);			\
++      })
++
+ #include "core.h"
+ 
+ static bool cxl_raw_allow_all;
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index a701a2e9bcba..34e7d8ae6cfd 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -381,23 +381,32 @@ enum cxl_event_log_type {
+ 	CXL_EVENT_TYPE_MAX
+ };
+ 
+-static inline const char *cxl_event_log_type_str(enum cxl_event_log_type type)
++#define cxl_event_log_type_str(type)			\
++      __print_symbolic(type,				\
++              { CXL_EVENT_TYPE_INFO, "Informational" },	\
++              { CXL_EVENT_TYPE_WARN, "Warning" },	\
++              { CXL_EVENT_TYPE_FAIL, "Failure" },	\
++              { CXL_EVENT_TYPE_FATAL, "Fatal" })
++
++#ifndef CREATE_TRACE_POINTS
++static inline const char *__cxl_event_log_type_str(enum cxl_event_log_type type,
++                      const struct trace_print_flags *symbols)
+ {
+-	switch (type) {
+-	case CXL_EVENT_TYPE_INFO:
+-		return "Informational";
+-	case CXL_EVENT_TYPE_WARN:
+-		return "Warning";
+-	case CXL_EVENT_TYPE_FAIL:
+-		return "Failure";
+-	case CXL_EVENT_TYPE_FATAL:
+-		return "Fatal";
+-	default:
+-		break;
+-	}
+-	return "<unknown>";
++      for (; symbols->mask >= 0; symbols++) {
++              if (type == symbols->mask)
++                      return symbols->name;
++      }
++      return "<unknown>";
+ }
+ 
++#define __print_symbolic(value, symbol_array...)			\
++      ({								\
++              static const struct trace_print_flags symbols[] =		\
++                      { symbol_array, { -1, NULL }};			\
++              __cxl_event_log_type_str(value, symbols);			\
++      })
++#endif
++
+ struct cxl_mbox_get_partition_info {
+ 	__le64 active_volatile_cap;
+ 	__le64 active_persistent_cap;
+
+
+
+[2]
+
+Why can't this work?  Why does the undef of CREATE_TRACE_POINTS not work?
+
+I've also tried to include __cxl_event_log_type_str() and this redefintion of
+__print_symbolic() in trace/events/cxl.h and that does not work.
+
+I'm also worried this somehow breaks the support you want.  But I'm still not
+sure how the trace headers and multiple passes work.
+
+commit ad08110d2432fb24d4513fe9e75bb9be94870e6f
+Author: Ira Weiny <ira.weiny@intel.com>
+Date:   Thu Dec 1 15:01:05 2022 -0800
+
+    squash: broken!
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 55938d530a21..04117afe9fbf 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -7,26 +7,10 @@
+ #include <cxl.h>
+ 
+ #define CREATE_TRACE_POINTS
+-/* Must be after CREATE_TRACE_POINTS */
+-#include <cxlmem.h>
+ #include <trace/events/cxl.h>
+ 
+-static inline const char *__cxl_event_log_type_str(enum cxl_event_log_type type,
+-                      const struct trace_print_flags *symbols)
+-{
+-      for (; symbols->mask >= 0; symbols++) {
+-              if (type == symbols->mask)
+-                      return symbols->name;
+-      }
+-      return "<unknown>";
+-}
+-
+-#define __print_symbolic(value, symbol_array...)			\
+-      ({								\
+-              static const struct trace_print_flags symbols[] =		\
+-                      { symbol_array, { -1, NULL }};			\
+-              __cxl_event_log_type_str(value, symbols);			\
+-      })
++#undef CREATE_TRACE_POINTS
++#include <cxlmem.h>
+ 
+ #include "core.h"
+ 
+
+
+
+[3]
+
+This seems to be the cleanest thing I have gotten to work.  Work == compiles
+and trace points still print the strings.
+
+
+commit c04f87639164737605c9ff503f8060b901c1b83a
+Author: Ira Weiny <ira.weiny@intel.com>
+Date:   Thu Dec 1 13:50:14 2022 -0800
+
+    squash: Redefine __print_symbolic to have a central define of the log string print function.
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 63ee0fd5f4c2..31a65106e93c 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -4,12 +4,19 @@
+ #include <linux/security.h>
+ #include <linux/debugfs.h>
+ #include <linux/mutex.h>
+-#include <cxlmem.h>
+ #include <cxl.h>
+ 
+ #define CREATE_TRACE_POINTS
++/* Must be after CREATE_TRACE_POINTS */
++#include <cxlmem.h>
+ #include <trace/events/cxl.h>
+ 
++/*
++ * Must be included explicitly after trace header
++ * because CREATE_TRACE_POINTS can't be undefined for cxlmem.h???
++ */
++#include <cxl_event_log.h>
++
+ #include "core.h"
+ 
+ static bool cxl_raw_allow_all;
+diff --git a/drivers/cxl/cxl_event_log.h b/drivers/cxl/cxl_event_log.h
+new file mode 100644
+index 000000000000..e8357bfeecdf
+--- /dev/null
++++ b/drivers/cxl/cxl_event_log.h
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
++
++/*
++ * Redefine __print_symbolic() from the trace code to be used in regular C code
++ * This compliments the define of cxl_event_log_type_str() in cxlmem.h
++ */
++static inline const char *__cxl_event_log_type_str(enum cxl_event_log_type type,
++                      const struct trace_print_flags *symbols)
++{
++      for (; symbols->mask >= 0; symbols++) {
++              if (type == symbols->mask)
++                      return symbols->name;
++      }
++      return "<unknown>";
++}
++
++#define __print_symbolic(value, symbol_array...)			\
++      ({								\
++              static const struct trace_print_flags symbols[] =		\
++                      { symbol_array, { -1, NULL }};			\
++              __cxl_event_log_type_str(value, symbols);			\
++      })
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index a701a2e9bcba..15222a0ceb3f 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -381,22 +381,16 @@ enum cxl_event_log_type {
+ 	CXL_EVENT_TYPE_MAX
+ };
+ 
+-static inline const char *cxl_event_log_type_str(enum cxl_event_log_type type)
+-{
+-	switch (type) {
+-	case CXL_EVENT_TYPE_INFO:
+-		return "Informational";
+-	case CXL_EVENT_TYPE_WARN:
+-		return "Warning";
+-	case CXL_EVENT_TYPE_FAIL:
+-		return "Failure";
+-	case CXL_EVENT_TYPE_FATAL:
+-		return "Fatal";
+-	default:
+-		break;
+-	}
+-	return "<unknown>";
+-}
++#define cxl_event_log_type_str(type)			\
++      __print_symbolic(type,				\
++              { CXL_EVENT_TYPE_INFO, "Informational" },	\
++              { CXL_EVENT_TYPE_WARN, "Warning" },	\
++              { CXL_EVENT_TYPE_FAIL, "Failure" },	\
++              { CXL_EVENT_TYPE_FATAL, "Fatal" })
++
++#ifndef CREATE_TRACE_POINTS
++#include "cxl_event_log.h"
++#endif
+ 
+ struct cxl_mbox_get_partition_info {
+ 	__le64 active_volatile_cap;
