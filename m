@@ -2,211 +2,219 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C6CC47088
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 02:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C31C4167B
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 03:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231453AbiLBCsW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 21:48:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
+        id S232310AbiLBDp0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 22:45:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232069AbiLBCsT (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 21:48:19 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2408A4331;
-        Thu,  1 Dec 2022 18:48:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669949298; x=1701485298;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=K8Eb4nWl10yvVPIml7NJMpmT/mP3lkEmvj4Cbp0Yrec=;
-  b=QFw72hQIwFLPs/tD6tN1y3gn2urYNjBEo50wRucSvnWQVewvn2OxzoN/
-   N77W+RHW7jIL8KX/uJdZ3xMOyrf1Gh7iizmt5oApjQbKkF1/WvQv3I6gx
-   OziFxJFE+PcOzJqtVNXZrzjOmUNFgaNmM8VNst1aps9ZYicgvqOif5utw
-   xFFYYnrL9ww1020j7SSdX0h5WXi8sYvLW8yDmUDTohyYmJLt24+EE0Ct/
-   LnLOTIBEcac2ID64TAt+a98EDmNCvLqbZZIIGtkTaQBWPi2L2dK0QZnvf
-   h+9HK4isKMs3wBPFJGY1Erb72YHYnoJWMSD53Gf3aRvkMCKn1WlV9GfZX
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="315881527"
-X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="315881527"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 18:48:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="647001220"
-X-IronPort-AV: E=Sophos;i="5.96,210,1665471600"; 
-   d="scan'208";a="647001220"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Dec 2022 18:48:18 -0800
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 1 Dec 2022 18:48:17 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Thu, 1 Dec 2022 18:48:17 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.102)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Thu, 1 Dec 2022 18:48:17 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KMp9UTf6X50phEsbDinKD0CD6HjNZFirBFASmsMGYIs+8FiqP7mKv7VpKbH+NIfiAxME7SG95jnzEmSoYGmYuE/4G7tTB17iIgLKVI4BqkQzIOW3ij7VAJvrcyhh1wFchosD9OzfbpeH5Meog6rhrFKcC63duGPZ7H/RG5M9FX1KAn0wTHO4CEK4Q2HwHSWfZeAvyko7jrQ4h2pRt7vhJ/eRwXj5pHsVjVv47BYUlF9EuWdJVsh1L6fmCqrmtSF3aZ/ZVWL5JDoZ3++2Pprf0ukPgn/WZQAjRvNzhtABz/MzghHioTKEBuNtwf924JnMFG3mLjtDTj2jIhPmbhX7Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xeXfHFYSseaOHfkpMpB/2xE5n1Vls9PQ22UQSWlCojs=;
- b=jKZboPpGqfuDIZBlD/0HydBXWOObFc48RvlfPC9nFGURf5IuncLTyrU2VRC04LOIV2tWzQaCiKRn/XGMa83CqpcCzo7wJUF0ZCTuN6B9cc2bv8jdl+hZetYf/MCJEZ8CXflgUHT5mP/Nn++HtLuILehG5nPRLPDOuBJG2lbaVZxuEgizj6XutccV28gToxDwcF7ZDAF1tPyMo+Xr6MjuSX+wvlbHl6ONKFF2YERqASs9J1pMgMb8SZHTWtucFIecnxD4tYE8UhAUQETCe6ldAXT3LKmkFCzN9lKzsdtTyi8EvEXppmxrtI8XENt3ekga2OZ13/LfXuZqH3l5vKiP7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by SJ0PR11MB5920.namprd11.prod.outlook.com
- (2603:10b6:a03:42e::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Fri, 2 Dec
- 2022 02:48:15 +0000
-Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5880.008; Fri, 2 Dec 2022
- 02:48:15 +0000
-Date:   Thu, 1 Dec 2022 18:48:12 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH V2 04/11] cxl/mem: Clear events on driver load
-Message-ID: <6389676c60d39_3cbe029487@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221201002719.2596558-1-ira.weiny@intel.com>
- <20221201002719.2596558-5-ira.weiny@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20221201002719.2596558-5-ira.weiny@intel.com>
-X-ClientProxiedBy: SJ0PR03CA0217.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::12) To MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20)
+        with ESMTP id S232348AbiLBDpV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 22:45:21 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E48DB90758
+        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 19:45:17 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 1CB4A6C13AC;
+        Fri,  2 Dec 2022 03:45:17 +0000 (UTC)
+Received: from pdx1-sub0-mail-a219.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id A00FE6C146D;
+        Fri,  2 Dec 2022 03:45:16 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669952716; a=rsa-sha256;
+        cv=none;
+        b=inqf9npvKLMHZOJtCx1JJFM1F7WMJChdSU+g2KywgM2ALsx5ilDNfbY9wJlJqfPJuBBgcL
+        3IIVM8TZJom9ncwe97qUigrCpDLLAwfIvLPau+ShOodf3jotyp17uW/1Asrr5czUS35MYh
+        0KZeo5EyAQ2Iw/h+mNxcPEOlLvpccrYgA6BBXrap/H9+f6p8Fo0LMFQFB9O1ob0XmDQvs0
+        mNrPgCjr0tRTS2PM1k4uFRewaurW+Nv5MfP8SlW091XBZqEr44o6IvA/9nG7DhGHAacjeY
+        nt/qm9K50GAr1p4b/UIGQzLhjrDKeQ2LeJxoZT/g25i7zavwZ+9RypAgTnrvCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1669952716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=6K6ihOYAD3agdJnFNENKJ8DqruC36ig0EqssysxJ5uY=;
+        b=83U3sweEae5fFLAaPdV8rV3+UFw5eFcI8/rO2380x0PA1hsUW3bIDTdELbXIpU5uPogjpr
+        VpA1q/OMBcfMMoLZ0p3WFp74xE7tptsojWpSUpYFK074e5ZcfGkIn7RnuWojDS+ShuF+Qf
+        U4ErgF89Td5vDsA1xfPwBe6YVTI2lgc/R9OWEspnKa1ZO1HKSQL5XkRIqgowME93G/OwiE
+        csoHND9kVL9QlsJnhy6TqElg6pKT07P4dAE8pNPhcdxH8aarGcSInv9j2Y4qWZieDbrqlL
+        GYIZ2SW0UK0ucODOU5Kf/paTdzOmsthIWK9TlX/vBxXpVuoQZ1HZGYv22dTKUw==
+ARC-Authentication-Results: i=1;
+        rspamd-7bd68c5946-5928w;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Battle-Skirt: 74f7a46d58f5c4d4_1669952716921_1173322837
+X-MC-Loop-Signature: 1669952716921:783466651
+X-MC-Ingress-Time: 1669952716921
+Received: from pdx1-sub0-mail-a219.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.120.227.191 (trex/6.7.1);
+        Fri, 02 Dec 2022 03:45:16 +0000
+Received: from offworld (unknown [104.36.25.245])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a219.dreamhost.com (Postfix) with ESMTPSA id 4NNf3H5hyGzK2;
+        Thu,  1 Dec 2022 19:45:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1669952716;
+        bh=6K6ihOYAD3agdJnFNENKJ8DqruC36ig0EqssysxJ5uY=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=gJPwvRziiPmBUlCg3CQ9+RyfH8ls5/LWqv0dIRnvY05Kamti0YqyDxaTXP2tgjTJW
+         j76m9epbT4AZlFkIr0a4GSZuvuQ8sBdx6yaDol0oYuF0hzIODi7OWq1zEzFGnwL62z
+         ZFS5LYYMbq+sIkQoseMpFhyepStipTxeReFJ9foEc2W4uEJ+44ASIuwkSvEbPMWGng
+         e6sZZGdgf5LKwaJqXXF2u9f7AKNQTlCLs2kjVpRXEYqWLjBJUC+4Bi+rZIu9d14TJt
+         5jAzgvFvlfGFKPOLX0wqlRwjNTlC6n5VdyDAy/cGBP2y6AzHNl+If6YlPv03B9fZ4E
+         4ochF5Wd81jdA==
+Date:   Thu, 1 Dec 2022 19:21:31 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        dave.jiang@intel.com, nvdimm@lists.linux.dev
+Subject: Re: [PATCH 4/5] nvdimm/region: Move cache management to the region
+ driver
+Message-ID: <20221202032131.hmy7ydpddjrlpd4u@offworld>
+References: <166993219354.1995348.12912519920112533797.stgit@dwillia2-xfh.jf.intel.com>
+ <166993221550.1995348.16843505129579060258.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SJ0PR11MB5920:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35512954-1ac7-49dd-c95d-08dad40fa8ec
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rufFzpOWAYqTL14GOdqJCX1mraCH2RMYgA3+3Ovr+8Jf8vjB1f0tu1Bel0MxjVzH51fKqyJ34q2qUGVQtAmj1Mrw9RQnQnOXJ4Zt5HQvm7pJQ68BTIXTG5eOAG+GeSLEoj19OSQI4VSLW/nMhAvG5EiS0U3PETRioKEqoij5ATHHd527ztv/ZeCKzRomM5S1DzrynUS3KMJTSZm61mfnUInOajauEjL2kuAHN59BuZiqfxk3YQWfc46ZE4Si+6m6aVw/GCXO7I1i70dl1Nzu/N6rf2z64OP2W83F7raH/UhePbaRrAN7H1Urwq2h63tl911A12yN7A8su6Q//jLDD88+xe0EWxycs3ffRGUTgz9sfatrBv4xG+vgAeVQLiQYddiSnn4g2alKHjJntHlHBtJdReXtOE2FmgorwlwwL0PM6eELYmrsgZnnGpe0MF4B/JuDz/K5rWSyGTIexEZFyrBZgosaauynQ5KLp37RVN+WJWceiXceffYMH5nqdSKdkeXhDuPsftYrwADQbxy5/cMQSoBBeqUucDhLQOo8Ta4c19kZp7C3pJhC34QMjGvXdFuWEkqpc8bhTYeV6e02bdyIZMmy4CR+yUz6eVEnE7YO7/oSfqbbq3AvaQ5C8EAViJ5rg7v51BwuzAbWD+G9+g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(396003)(346002)(366004)(136003)(39860400002)(451199015)(6200100001)(26005)(2906002)(86362001)(66476007)(6486002)(316002)(83380400001)(38100700002)(8936002)(6862004)(54906003)(4326008)(6666004)(9686003)(186003)(41300700001)(478600001)(66946007)(66556008)(6512007)(6506007)(82960400001)(8676002)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YSP29MQ1OTFqaW1SekJy8z7wisNYVMuWEv03Tlgf8HAGr+u5jPtpLWSY7Qro?=
- =?us-ascii?Q?sH1kjVWTQ9hBOPjlJ1Hu+8rC78shTkwekILc/RADvyIlhz6E0zyx7O+EhPUo?=
- =?us-ascii?Q?eSUpmUstY0s15LlZxtQ6hfMQPoDCD1GAFFUoCQKK1qnZopEwFydAN3yU1ggg?=
- =?us-ascii?Q?VKAg39EFh/exDuq+Jk4bsekLdl6wOuN+ZrFaIJeJckb6Av1wC6TLL3OjvoSy?=
- =?us-ascii?Q?0SZeAMNgc01fMXExH7JXn2p+UE7v0+CSQ8FOg3j89IhAq9dMW43xdMNP9vCZ?=
- =?us-ascii?Q?wGLwHBB/a7cFLrgIn9ABUYzVFRvCg5xs1ZI7iURmnZwQpe54Rne/X8f7swIe?=
- =?us-ascii?Q?9nDP95nDtSi9nVhRoHhXMitB61LTe7G+imTxvs7819lHghrwMTHUZVOyL9GA?=
- =?us-ascii?Q?YKmnE1gJT4JmihVyjgRS6uACx4vf/yY0fux1gMepJ4ffuW1yRxNf5MqKh/zz?=
- =?us-ascii?Q?Wh7IR6Rq2ZWtiUU8M/8JwDnLzrBIhwbXPTHexdAVgXVV1JRQB6AEAd8hfn9t?=
- =?us-ascii?Q?EfyYsropkR+6/NFQ4FNWwGGD2+GE02ib9q+rtbJ/7VcEsjOBQhJFxgHh5cdm?=
- =?us-ascii?Q?Ixx8ndzSBMe3hQ5cX3VHCgQwHTYaU42k5VZnOvSiyh3eCU/yIqnT6k5DiQG1?=
- =?us-ascii?Q?On4csJ7a0WsneMFs4m394UVPIgjTEBGPjRVncfeIGouBLucOLd1eEKRdfhzX?=
- =?us-ascii?Q?c/o7y7IV1PocP4qYFOst1HjK4LHHwoG1YLNUHLNdCDL/Hy3NwDY+89Lu1Sz+?=
- =?us-ascii?Q?rLTDAYeYqkpWW3GopFi1Mc8Q1kx4ZAL7nmkog40mbH9F3DDmm0Y1SddoAhTm?=
- =?us-ascii?Q?Gs4yAoCx7/35v4tshfOoSA7o3QYrXWPAqsztnuc3++Wz0Fv2lSWlY4mddHdH?=
- =?us-ascii?Q?xHsYgEJBQ7Wk6mKnGYZY9vZvJtMlzLV2Hpy2IlHdBmS/CDn8EKJgH1o1xd7Q?=
- =?us-ascii?Q?JrN990bolvnybaWeb9CY0qDY6KIxYMVWKF9WQ2/R409nqA9EokmrbL+Ug0qd?=
- =?us-ascii?Q?IwuJNFP0xkcyLae1qd27yFAmchdf4MrTr13OwzBabohkvLeMREjKxh1wx8TM?=
- =?us-ascii?Q?LAw52usBRYcdWODQOZAPxI3XVHOWsX74E5P6x4jpA4xxA9azGtBqnBgHV4KH?=
- =?us-ascii?Q?GoZr6UwkkOC4IyW6RV8ieylJcfdqiaVDB6F4qEQeXKOgBRbqyR+D3S/l357k?=
- =?us-ascii?Q?AEVswaRasG1So1WtB7CS7yjtEv3KlMUwxyUSuj0omlb/4akh7ti6cajL6HUE?=
- =?us-ascii?Q?gOAemAzWl4CyL4YFBcDMeGy8E+DSpx3S7vTFhww/lsuoFGu7Qj02TNfssCLA?=
- =?us-ascii?Q?X83e06HMl8bbibSmz89x02K3Njl2HwdhIirs3MtUTAHyh8tuohm5bb2S413A?=
- =?us-ascii?Q?vR7KxIopk5qED0+7JiAu5EAmbZjpvolzv2EgZ9LsNbjKmskqvqo7sX4X091F?=
- =?us-ascii?Q?UhMSf+FeJLZysPBqTMVMFA3dLKmFTIZdiyctDToYcK//ZlTjtPxoBfK90KJa?=
- =?us-ascii?Q?ZUH+ps/KuLPAbnMqHspy7QR2Sdsy1PIXRk4tVUYHfkcZK3fT45w6+EIYBU8z?=
- =?us-ascii?Q?6uwgyK3j0vOovGQ37qM6MGAZrAYQe9u59X2NstX6vGCrjAkZhVjCMpMKNffE?=
- =?us-ascii?Q?lg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35512954-1ac7-49dd-c95d-08dad40fa8ec
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2022 02:48:15.1597
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U1l6Osz4KVx5TOa7of8NvhZ72RQdtxPceB280TSM4Ajonp4OMhPSLk37ZMrl3oXllGShdzvAHFLGLSR8cJV2byk7p4Tu8kGivYFSqbI9eR0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5920
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <166993221550.1995348.16843505129579060258.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-cxl/mem is cxl_mem.ko, This is cxl/pci.
+On Thu, 01 Dec 2022, Dan Williams wrote:
 
-ira.weiny@ wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> The information contained in the events prior to the driver loading can
-> be queried at any time through other mailbox commands.
-> 
-> Ensure a clean slate of events by reading and clearing the events.  The
-> events are sent to the trace buffer but it is not anticipated to have
-> anyone listening to it at driver load time.
+>Now that cpu_cache_invalidate_memregion() is generically available, use
+>it to centralize CPU cache management in the nvdimm region driver.
+>
+>This trades off removing redundant per-dimm CPU cache flushing with an
+>opportunistic flush on every region disable event to cover the case of
+>sensitive dirty data in the cache being written back to media after a
+>secure erase / overwrite event.
 
-This is easy to guarantee with modprobe policy, so I am not sure it is
-worth stating.
+Very nifty.
 
-This breakdown feels odd. I would split the trace event definitions into
-its own lead in patch since that is a pile of definitions that can be
-merged on their own. Then squash get, clear, and this patch into one
-patch as they don't have much reason to go in separately.
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  drivers/cxl/pci.c            | 2 ++
->  tools/testing/cxl/test/mem.c | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 8f86f85d89c7..11e95a95195a 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -521,6 +521,8 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> +	cxl_mem_get_event_records(cxlds);
-> +
->  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
->  		rc = devm_cxl_add_nvdimm(&pdev->dev, cxlmd);
->  
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index aa2df3a15051..e2f5445d24ff 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -285,6 +285,8 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> +	cxl_mem_get_event_records(cxlds);
-> +
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-This hunk likely goes with the first patch that actually implements some
-mocked events.
+with a few notes below.
 
->  	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM))
->  		rc = devm_cxl_add_nvdimm(dev, cxlmd);
->  
-> -- 
-> 2.37.2
-> 
+>+static int nd_region_invalidate_memregion(struct nd_region *nd_region)
+>+{
+>+	int i, incoherent = 0;
+>+
+>+	for (i = 0; i < nd_region->ndr_mappings; i++) {
+>+		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+>+		struct nvdimm *nvdimm = nd_mapping->nvdimm;
+>+
+>+		if (test_bit(NDD_INCOHERENT, &nvdimm->flags))
+>+			incoherent++;
 
+No need to compute the rest, just break out here?
 
+>+	}
+>+
+>+	if (!incoherent)
+>+		return 0;
+>+
+>+	if (!cpu_cache_has_invalidate_memregion()) {
+>+		if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
+>+			dev_warn(
+>+				&nd_region->dev,
+>+				"Bypassing cpu_cache_invalidate_memergion() for testing!\n");
+>+			goto out;
+>+		} else {
+>+			dev_err(&nd_region->dev,
+>+				"Failed to synchronize CPU cache state\n");
+>+			return -ENXIO;
+>+		}
+>+	}
+>+
+>+	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
+>+out:
+>+	for (i = 0; i < nd_region->ndr_mappings; i++) {
+>+		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+>+		struct nvdimm *nvdimm = nd_mapping->nvdimm;
+>+
+>+		clear_bit(NDD_INCOHERENT, &nvdimm->flags);
+>+	}
+>+
+>+	return 0;
+>+}
+>+
+> int nd_region_activate(struct nd_region *nd_region)
+> {
+>-	int i, j, num_flush = 0;
+>+	int i, j, rc, num_flush = 0;
+>	struct nd_region_data *ndrd;
+>	struct device *dev = &nd_region->dev;
+>	size_t flush_data_size = sizeof(void *);
+>
+>+	rc = nd_region_invalidate_memregion(nd_region);
+>+	if (rc)
+>+		return rc;
+>+
+>	nvdimm_bus_lock(&nd_region->dev);
+>	for (i = 0; i < nd_region->ndr_mappings; i++) {
+>		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
+>@@ -85,6 +129,7 @@ int nd_region_activate(struct nd_region *nd_region)
+>	}
+>	nvdimm_bus_unlock(&nd_region->dev);
+>
+>+
+>	ndrd = devm_kzalloc(dev, sizeof(*ndrd) + flush_data_size, GFP_KERNEL);
+>	if (!ndrd)
+>		return -ENOMEM;
+>@@ -1222,3 +1267,5 @@ int nd_region_conflict(struct nd_region *nd_region, resource_size_t start,
+>
+>	return device_for_each_child(&nvdimm_bus->dev, &ctx, region_conflict);
+> }
+>+
+>+MODULE_IMPORT_NS(DEVMEM);
+>diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+>index 6814339b3dab..a03e3c45f297 100644
+>--- a/drivers/nvdimm/security.c
+>+++ b/drivers/nvdimm/security.c
+>@@ -208,6 +208,8 @@ static int __nvdimm_security_unlock(struct nvdimm *nvdimm)
+>	rc = nvdimm->sec.ops->unlock(nvdimm, data);
+>	dev_dbg(dev, "key: %d unlock: %s\n", key_serial(key),
+>			rc == 0 ? "success" : "fail");
+>+	if (rc == 0)
+>+		set_bit(NDD_INCOHERENT, &nvdimm->flags);
+>
+>	nvdimm_put_key(key);
+>	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+>@@ -374,6 +376,8 @@ static int security_erase(struct nvdimm *nvdimm, unsigned int keyid,
+>		return -ENOKEY;
+>
+>	rc = nvdimm->sec.ops->erase(nvdimm, data, pass_type);
+>+	if (rc == 0)
+>+		set_bit(NDD_INCOHERENT, &nvdimm->flags);
+>	dev_dbg(dev, "key: %d erase%s: %s\n", key_serial(key),
+>			pass_type == NVDIMM_MASTER ? "(master)" : "(user)",
+>			rc == 0 ? "success" : "fail");
+>@@ -408,6 +412,8 @@ static int security_overwrite(struct nvdimm *nvdimm, unsigned int keyid)
+>		return -ENOKEY;
+>
+>	rc = nvdimm->sec.ops->overwrite(nvdimm, data);
+>+	if (rc == 0)
+>+		set_bit(NDD_INCOHERENT, &nvdimm->flags);
+
+Are you relying on hw preventing an incoming region_activate() while the overwrite
+operation is in progress to ensure that the flags are stable throughout the whole
+op? Currently query-overwrite also provides the flushing guarantees for when the
+command is actually complete (at least from a user pov).
+
+Thanks,
+Davidlohr
