@@ -2,219 +2,124 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C31C4167B
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 03:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E7EC4332F
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 04:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbiLBDp0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Dec 2022 22:45:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34202 "EHLO
+        id S231195AbiLBElB convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Dec 2022 23:41:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232348AbiLBDpV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 22:45:21 -0500
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E48DB90758
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Dec 2022 19:45:17 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 1CB4A6C13AC;
-        Fri,  2 Dec 2022 03:45:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a219.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id A00FE6C146D;
-        Fri,  2 Dec 2022 03:45:16 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1669952716; a=rsa-sha256;
-        cv=none;
-        b=inqf9npvKLMHZOJtCx1JJFM1F7WMJChdSU+g2KywgM2ALsx5ilDNfbY9wJlJqfPJuBBgcL
-        3IIVM8TZJom9ncwe97qUigrCpDLLAwfIvLPau+ShOodf3jotyp17uW/1Asrr5czUS35MYh
-        0KZeo5EyAQ2Iw/h+mNxcPEOlLvpccrYgA6BBXrap/H9+f6p8Fo0LMFQFB9O1ob0XmDQvs0
-        mNrPgCjr0tRTS2PM1k4uFRewaurW+Nv5MfP8SlW091XBZqEr44o6IvA/9nG7DhGHAacjeY
-        nt/qm9K50GAr1p4b/UIGQzLhjrDKeQ2LeJxoZT/g25i7zavwZ+9RypAgTnrvCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1669952716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=6K6ihOYAD3agdJnFNENKJ8DqruC36ig0EqssysxJ5uY=;
-        b=83U3sweEae5fFLAaPdV8rV3+UFw5eFcI8/rO2380x0PA1hsUW3bIDTdELbXIpU5uPogjpr
-        VpA1q/OMBcfMMoLZ0p3WFp74xE7tptsojWpSUpYFK074e5ZcfGkIn7RnuWojDS+ShuF+Qf
-        U4ErgF89Td5vDsA1xfPwBe6YVTI2lgc/R9OWEspnKa1ZO1HKSQL5XkRIqgowME93G/OwiE
-        csoHND9kVL9QlsJnhy6TqElg6pKT07P4dAE8pNPhcdxH8aarGcSInv9j2Y4qWZieDbrqlL
-        GYIZ2SW0UK0ucODOU5Kf/paTdzOmsthIWK9TlX/vBxXpVuoQZ1HZGYv22dTKUw==
-ARC-Authentication-Results: i=1;
-        rspamd-7bd68c5946-5928w;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Battle-Skirt: 74f7a46d58f5c4d4_1669952716921_1173322837
-X-MC-Loop-Signature: 1669952716921:783466651
-X-MC-Ingress-Time: 1669952716921
-Received: from pdx1-sub0-mail-a219.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.120.227.191 (trex/6.7.1);
-        Fri, 02 Dec 2022 03:45:16 +0000
-Received: from offworld (unknown [104.36.25.245])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S230211AbiLBElA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Dec 2022 23:41:00 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C690C9365;
+        Thu,  1 Dec 2022 20:40:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a219.dreamhost.com (Postfix) with ESMTPSA id 4NNf3H5hyGzK2;
-        Thu,  1 Dec 2022 19:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1669952716;
-        bh=6K6ihOYAD3agdJnFNENKJ8DqruC36ig0EqssysxJ5uY=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=gJPwvRziiPmBUlCg3CQ9+RyfH8ls5/LWqv0dIRnvY05Kamti0YqyDxaTXP2tgjTJW
-         j76m9epbT4AZlFkIr0a4GSZuvuQ8sBdx6yaDol0oYuF0hzIODi7OWq1zEzFGnwL62z
-         ZFS5LYYMbq+sIkQoseMpFhyepStipTxeReFJ9foEc2W4uEJ+44ASIuwkSvEbPMWGng
-         e6sZZGdgf5LKwaJqXXF2u9f7AKNQTlCLs2kjVpRXEYqWLjBJUC+4Bi+rZIu9d14TJt
-         5jAzgvFvlfGFKPOLX0wqlRwjNTlC6n5VdyDAy/cGBP2y6AzHNl+If6YlPv03B9fZ4E
-         4ochF5Wd81jdA==
-Date:   Thu, 1 Dec 2022 19:21:31 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
-        dave.jiang@intel.com, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 4/5] nvdimm/region: Move cache management to the region
- driver
-Message-ID: <20221202032131.hmy7ydpddjrlpd4u@offworld>
-References: <166993219354.1995348.12912519920112533797.stgit@dwillia2-xfh.jf.intel.com>
- <166993221550.1995348.16843505129579060258.stgit@dwillia2-xfh.jf.intel.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2B941B8203C;
+        Fri,  2 Dec 2022 04:40:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07E9C433C1;
+        Fri,  2 Dec 2022 04:40:55 +0000 (UTC)
+Date:   Thu, 1 Dec 2022 23:40:52 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2 02/11] cxl/mem: Implement Get Event Records command
+Message-ID: <20221201234052.35e5a001@gandalf.local.home>
+In-Reply-To: <Y4lCLfQrjyRtLmDM@iweiny-desk3>
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+        <20221201002719.2596558-3-ira.weiny@intel.com>
+        <20221201123849.0f7802ce@gandalf.local.home>
+        <Y4lCLfQrjyRtLmDM@iweiny-desk3>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <166993221550.1995348.16843505129579060258.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 01 Dec 2022, Dan Williams wrote:
+On Thu, 1 Dec 2022 16:09:17 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
->Now that cpu_cache_invalidate_memregion() is generically available, use
->it to centralize CPU cache management in the nvdimm region driver.
->
->This trades off removing redundant per-dimm CPU cache flushing with an
->opportunistic flush on every region disable event to cover the case of
->sensitive dirty data in the cache being written back to media after a
->secure erase / overwrite event.
+> Dropping that into cxlmem.h does not compile.  I've given it another go but
+> because I use cxl_event_log_type_str() in a file where trace points are used
+> CREATE_TRACE_POINTS is defined and I get the following error.
+> 
+> || drivers/cxl/core/mbox.c: In function ‘cxl_mem_get_records_log’:
+> drivers/cxl/cxlmem.h|386 col 7| error: implicit declaration of function ‘__print_symbolic’; did you mean ‘sprint_symbol’?  [-Werror=implicit-function-declaration]                        
+> ||   386 |       __print_symbolic(type,                            \
+> ||       |       ^~~~~~~~~~~~~~~~
+> 
+> I got it to work with the patch below on top of this one.[3]  But it is kind of
+> ugly.  The only way I could get __print_symbolic() to be defined was to
+> redefine it in mbox.c.[1]  Then throw it in it's own header as in [3]
 
-Very nifty.
+I played around a bit, and with the below patch, you can just have:
 
->Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+#define cxl_event_log_type_str(type)				\
+	__print_symbolic(type,					\
+		{ CXL_EVENT_TYPE_INFO, "Informational" },	\
+		{ CXL_EVENT_TYPE_WARN, "Warning" },		\
+		{ CXL_EVENT_TYPE_FAIL, "Failure" },		\
+		{ CXL_EVENT_TYPE_FATAL, "Fatal" })
 
-with a few notes below.
+And everything else should "just work" :-)
 
->+static int nd_region_invalidate_memregion(struct nd_region *nd_region)
->+{
->+	int i, incoherent = 0;
->+
->+	for (i = 0; i < nd_region->ndr_mappings; i++) {
->+		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
->+		struct nvdimm *nvdimm = nd_mapping->nvdimm;
->+
->+		if (test_bit(NDD_INCOHERENT, &nvdimm->flags))
->+			incoherent++;
+I can work on a more formal patch if this works for you. And thinking about
+this, perhaps we could add this throughout the kernel!
 
-No need to compute the rest, just break out here?
+-- Steve
 
->+	}
->+
->+	if (!incoherent)
->+		return 0;
->+
->+	if (!cpu_cache_has_invalidate_memregion()) {
->+		if (IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST)) {
->+			dev_warn(
->+				&nd_region->dev,
->+				"Bypassing cpu_cache_invalidate_memergion() for testing!\n");
->+			goto out;
->+		} else {
->+			dev_err(&nd_region->dev,
->+				"Failed to synchronize CPU cache state\n");
->+			return -ENXIO;
->+		}
->+	}
->+
->+	cpu_cache_invalidate_memregion(IORES_DESC_PERSISTENT_MEMORY);
->+out:
->+	for (i = 0; i < nd_region->ndr_mappings; i++) {
->+		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
->+		struct nvdimm *nvdimm = nd_mapping->nvdimm;
->+
->+		clear_bit(NDD_INCOHERENT, &nvdimm->flags);
->+	}
->+
->+	return 0;
->+}
->+
-> int nd_region_activate(struct nd_region *nd_region)
-> {
->-	int i, j, num_flush = 0;
->+	int i, j, rc, num_flush = 0;
->	struct nd_region_data *ndrd;
->	struct device *dev = &nd_region->dev;
->	size_t flush_data_size = sizeof(void *);
->
->+	rc = nd_region_invalidate_memregion(nd_region);
->+	if (rc)
->+		return rc;
->+
->	nvdimm_bus_lock(&nd_region->dev);
->	for (i = 0; i < nd_region->ndr_mappings; i++) {
->		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
->@@ -85,6 +129,7 @@ int nd_region_activate(struct nd_region *nd_region)
->	}
->	nvdimm_bus_unlock(&nd_region->dev);
->
->+
->	ndrd = devm_kzalloc(dev, sizeof(*ndrd) + flush_data_size, GFP_KERNEL);
->	if (!ndrd)
->		return -ENOMEM;
->@@ -1222,3 +1267,5 @@ int nd_region_conflict(struct nd_region *nd_region, resource_size_t start,
->
->	return device_for_each_child(&nvdimm_bus->dev, &ctx, region_conflict);
-> }
->+
->+MODULE_IMPORT_NS(DEVMEM);
->diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
->index 6814339b3dab..a03e3c45f297 100644
->--- a/drivers/nvdimm/security.c
->+++ b/drivers/nvdimm/security.c
->@@ -208,6 +208,8 @@ static int __nvdimm_security_unlock(struct nvdimm *nvdimm)
->	rc = nvdimm->sec.ops->unlock(nvdimm, data);
->	dev_dbg(dev, "key: %d unlock: %s\n", key_serial(key),
->			rc == 0 ? "success" : "fail");
->+	if (rc == 0)
->+		set_bit(NDD_INCOHERENT, &nvdimm->flags);
->
->	nvdimm_put_key(key);
->	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
->@@ -374,6 +376,8 @@ static int security_erase(struct nvdimm *nvdimm, unsigned int keyid,
->		return -ENOKEY;
->
->	rc = nvdimm->sec.ops->erase(nvdimm, data, pass_type);
->+	if (rc == 0)
->+		set_bit(NDD_INCOHERENT, &nvdimm->flags);
->	dev_dbg(dev, "key: %d erase%s: %s\n", key_serial(key),
->			pass_type == NVDIMM_MASTER ? "(master)" : "(user)",
->			rc == 0 ? "success" : "fail");
->@@ -408,6 +412,8 @@ static int security_overwrite(struct nvdimm *nvdimm, unsigned int keyid)
->		return -ENOKEY;
->
->	rc = nvdimm->sec.ops->overwrite(nvdimm, data);
->+	if (rc == 0)
->+		set_bit(NDD_INCOHERENT, &nvdimm->flags);
-
-Are you relying on hw preventing an incoming region_activate() while the overwrite
-operation is in progress to ensure that the flags are stable throughout the whole
-op? Currently query-overwrite also provides the flushing guarantees for when the
-command is actually complete (at least from a user pov).
-
-Thanks,
-Davidlohr
+diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
+index 00723935dcc7..ee41057674a2 100644
+--- a/include/trace/define_trace.h
++++ b/include/trace/define_trace.h
+@@ -132,4 +132,25 @@
+ /* We may be processing more files */
+ #define CREATE_TRACE_POINTS
+ 
++#ifndef __DEFINE_PRINT_SYMBOLIC_STR
++#define __DEFINE_PRINT_SYMBOLIC_STR
++static inline const char *
++__print_symbolic_str(int type, struct trace_print_flags *symbols)
++{
++	for (; symbols->name != NULL; symbols++) {
++		if (type == symbols->mask)
++			return symbols->name;
++	}
++	return "<invalid>";
++}
++#endif
++
++#undef __print_symbolic
++#define __print_symbolic(value, symbol_array...)			\
++	({								\
++		static const struct trace_print_flags symbols[] =	\
++			{ symbol_array, { -1, NULL }};			\
++		__print_symbolic_str(value, symbols);			\
++	})
++
+ #endif /* CREATE_TRACE_POINTS */
+diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
+index 8a7ec24c246d..6fe83397f65d 100644
+--- a/include/trace/stages/stage7_class_define.h
++++ b/include/trace/stages/stage7_class_define.h
+@@ -6,7 +6,6 @@
+ #define __entry REC
+ 
+ #undef __print_flags
+-#undef __print_symbolic
+ #undef __print_hex
+ #undef __print_hex_str
+ #undef __get_dynamic_array
