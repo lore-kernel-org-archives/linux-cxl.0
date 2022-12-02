@@ -2,49 +2,46 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C3C47088
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 13:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98219C4167B
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Dec 2022 13:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233660AbiLBNEt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 2 Dec 2022 08:04:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37298 "EHLO
+        id S233062AbiLBNSs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 2 Dec 2022 08:18:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233651AbiLBNEs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Dec 2022 08:04:48 -0500
+        with ESMTP id S232705AbiLBNSq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Dec 2022 08:18:46 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65890D78D4;
-        Fri,  2 Dec 2022 05:04:46 -0800 (PST)
-Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNtPc2Ct8z6H7G9;
-        Fri,  2 Dec 2022 21:01:56 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFC55A1C3A;
+        Fri,  2 Dec 2022 05:18:42 -0800 (PST)
+Received: from fraeml702-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NNtmL5LLfz6J68q;
+        Fri,  2 Dec 2022 21:18:10 +0800 (CST)
 Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Dec 2022 14:04:43 +0100
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2375.31; Fri, 2 Dec 2022 14:18:40 +0100
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 2 Dec
- 2022 13:04:43 +0000
-Date:   Fri, 2 Dec 2022 13:04:42 +0000
+ 2022 13:18:40 +0000
+Date:   Fri, 2 Dec 2022 13:18:36 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+CC:     <ira.weiny@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        "Dave Jiang" <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
         <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 01/11] cxl/pci: Add generic MSI-X/MSI irq support
-Message-ID: <20221202130442.0000088a@Huawei.com>
-In-Reply-To: <63895c5b40770_3cbe029432@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [PATCH V2 03/11] cxl/mem: Implement Clear Event Records command
+Message-ID: <20221202131836.00000f35@Huawei.com>
+In-Reply-To: <6389630036769_3cbe02947d@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20221201002719.2596558-1-ira.weiny@intel.com>
-        <20221201002719.2596558-2-ira.weiny@intel.com>
-        <63894579bf550_3cbe029458@dwillia2-xfh.jf.intel.com.notmuch>
-        <Y4lIE7Fyctj6GagE@iweiny-desk3>
-        <63895c5b40770_3cbe029432@dwillia2-xfh.jf.intel.com.notmuch>
+        <20221201002719.2596558-4-ira.weiny@intel.com>
+        <6389630036769_3cbe02947d@dwillia2-xfh.jf.intel.com.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -58,115 +55,67 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 1 Dec 2022 18:00:59 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Ira Weiny wrote:
-> > On Thu, Dec 01, 2022 at 04:23:21PM -0800, Dan Williams wrote:  
-> > > ira.weiny@ wrote:  
-> > > > From: Davidlohr Bueso <dave@stgolabs.net>
-> > > > 
-> > > > Currently the only CXL features targeted for irq support require their
-> > > > message numbers to be within the first 16 entries.  The device may
-> > > > however support less than 16 entries depending on the support it
-> > > > provides.
-> > > > 
-> > > > Attempt to allocate these 16 irq vectors.  If the device supports less
-> > > > then the PCI infrastructure will allocate that number.  
-> > > 
-> > > What happens if the device supports 16, but irq-core allocates less? I
-> > > believe the answer is with the first user, but this patch does not
-> > > include a user.
-> > >   
-> > > > Store the number of vectors actually allocated in the device state for
-> > > > later use by individual functions.  
-> > > 
-> > > The patch does not do that.  
-> > 
-> > Sorry missed updating this message.
-> >   
-> > > 
-> > > I know this patch has gone through a lot of discussion, but this
-> > > mismatch shows it should really be squashed with the first user because
-> > > it does not stand on its own anymore.  
-> > 
-> > It is separate because it was Davidlohr's to begin with.
-> > 
-> > I'll squash it back.
-> >   
-> > >   
-> > > > Upon successful allocation, users can plug in their respective isr at
-> > > > any point thereafter, for example, if the irq setup is not done in the
-> > > > PCI driver, such as the case of the CXL-PMU.
-> > > > 
-> > > > Cc: Bjorn Helgaas <helgaas@kernel.org>
-> > > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > > > 
-> > > > ---
-> > > > Changes from V1:
-> > > > 	Jonathan
-> > > > 		pci_alloc_irq_vectors() cleans up the vectors automatically
-> > > > 		use msi_enabled rather than nr_irq_vecs
-> > > > 
-> > > > Changes from Ira
-> > > > 	Remove reviews
-> > > > 	Allocate up to a static 16 vectors.
-> > > > 	Change cover letter
-> > > > ---
-> > > >  drivers/cxl/cxlmem.h |  3 +++
-> > > >  drivers/cxl/cxlpci.h |  6 ++++++
-> > > >  drivers/cxl/pci.c    | 23 +++++++++++++++++++++++
-> > > >  3 files changed, 32 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > index 88e3a8e54b6a..cd35f43fedd4 100644
-> > > > --- a/drivers/cxl/cxlmem.h
-> > > > +++ b/drivers/cxl/cxlmem.h
-> > > > @@ -211,6 +211,7 @@ struct cxl_endpoint_dvsec_info {
-> > > >   * @info: Cached DVSEC information about the device.
-> > > >   * @serial: PCIe Device Serial Number
-> > > >   * @doe_mbs: PCI DOE mailbox array
-> > > > + * @msi_enabled: MSI-X/MSI has been enabled
-> > > >   * @mbox_send: @dev specific transport for transmitting mailbox commands
-> > > >   *
-> > > >   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> > > > @@ -247,6 +248,8 @@ struct cxl_dev_state {
-> > > >  
-> > > >  	struct xarray doe_mbs;
-> > > >  
-> > > > +	bool msi_enabled;
-> > > > +  
-> > > 
-> > > This goes unused in this patch and it also duplicates what the core
-> > > offers with pdev->{msi,msix}_enabled.  
-> > 
-> > I tried to argue that with Jonathan and lost.  What I had in V1 was to store
-> > the number actually allocated.  Then if a function reports something higher
-> > later it can't be used.  
+> > +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
+> > +				  enum cxl_event_log_type log,
+> > +				  struct cxl_get_event_payload *get_pl,
+> > +				  u16 total)
+> > +{
+> > +	struct cxl_mbox_clear_event_payload payload = {
+> > +		.event_log = log,
+> > +	};
+> > +	int cnt;
+> > +
+> > +	/*
+> > +	 * Clear Event Records uses u8 for the handle cnt while Get Event
+> > +	 * Record can return up to 0xffff records.
+> > +	 */
+> > +	for (cnt = 0; cnt < total; /* cnt incremented internally */) {
+> > +		u8 nr_recs = min_t(u8, (total - cnt),
+> > +				   CXL_CLEAR_EVENT_MAX_HANDLES);  
 > 
-> A successful pci_alloc_irq_vectors() call assigns a vector number to all
-> interrupt sources on the device regardless of how many interrupt sources
-> there are. If the device has 32 interrupt sources and 16 irqs are returned
-> from pci_alloc_irq_vectors() then each interrupt source will be sharing
-> a vector with one or more other vectors. All PCI IRQ vectors are shared.
-
-Assuming my understanding is correct...
-Subtle tweak to that description (not that it matters in practice).
-Some of the vectors will be shared. For MSI at least it is up to the
-device to assign msgnums in whatever way it likes such that they are
-fit in the number that were enabled.  So it 'could' put them all on the
-first msgnum if it wants to, or put any that would otherwise have been
-greater than 16 on msgnum 15.  Impdef how it decides that spread.
-
-MSIX is has a layer of indirection in control of software, so it gets
-more complex...
+> This seems overly complicated. @total is a duplicate of
+> @get_pl->record_count, and the 2 loops feel like it could be cut
+> down to one.
 
 
+You could do something nasty like
+	for (i = 0; i < total; i++) {
 
+		...
+		payload.handle[i % CLEAR_EVENT_MAX_HANDLES] = ...
+		if (i % CXL_CLEAR_EVENT_MAX_HANDLES == CXL_CLEAR_EVENT_MAX_HANDLE - 1) {
+			send command.
+		}
+	}
+
+but that looks worse to me than the double loop.
+
+Making outer loop
+	for (j = 0; j <= total / CXL_CLEAR_EVENT_MAX_HANDLES; j++)
+might bet clearer but then you'd have to do
+records[j * CXL_CLEAR_EVENT_MAX_HANDLES + i] which isn't nice.
+
+Ah well, Ira gets to try and find a happy compromise.
+
+
+...
+
+> > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> > index 70459be5bdd4..7c1ad8062792 100644
+> > --- a/include/uapi/linux/cxl_mem.h
+> > +++ b/include/uapi/linux/cxl_mem.h
+> > @@ -25,6 +25,7 @@
+> >  	___C(RAW, "Raw device command"),                                  \
+> >  	___C(GET_SUPPORTED_LOGS, "Get Supported Logs"),                   \
+> >  	___C(GET_EVENT_RECORD, "Get Event Record"),                       \
+> > +	___C(CLEAR_EVENT_RECORD, "Clear Event Record"),                   \
+> >  	___C(GET_FW_INFO, "Get FW Info"),                                 \
+> >  	___C(GET_PARTITION_INFO, "Get Partition Information"),            \
+> >  	___C(GET_LSA, "Get Label Storage Area"),                          \  
 > 
-> So I do not see the point of this msi_enabled flag cxl_dev_state. If
-> pci_alloc_irq_vectors() returns at least 1 then you are good to go.
+> Same, "yikes" / "must be at the end of the enum" feedback.
+
+Macro magic makes that non obvious.. Not that I'd ever said I thought this trick
+was a bad idea ;) 
 
