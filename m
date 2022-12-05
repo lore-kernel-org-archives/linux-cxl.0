@@ -2,109 +2,136 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D27CC4321E
-	for <linux-cxl@archiver.kernel.org>; Mon,  5 Dec 2022 12:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4068FC4321E
+	for <linux-cxl@archiver.kernel.org>; Mon,  5 Dec 2022 13:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbiLEMDK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Dec 2022 07:03:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42728 "EHLO
+        id S231168AbiLENBq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 5 Dec 2022 08:01:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbiLEMDJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 07:03:09 -0500
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2073.outbound.protection.outlook.com [40.107.100.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B204A11158
-        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 04:03:07 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HyfmP7mYnedZm9U0x4j8W2eg9m1CE9nECEn0HgDUWo8Q4DvsfuF4ynvOKwOVRQ0jwZnKmr312tMM464hv7htXH14GyxidAvyo52Al5zaopXUAe9qbkQLHIlxfNYOBhh/vOEkciz4Xezuz3U1MW8in0rQHguHP5KwmbjeK1szOKheIdl493iry5BLrVchqWzYLRrU/enL5eH7Eif1AtWOH1v1IBL58gOLT5UWaUC+MGTc69i7w9A8fabggBDN7XiwV4hu25DhawznEB4CtRmBkrMwvJcfqyLIbJlb8B91DBE4Im5i/CtZVEPcWdXMOhz6zGdNzlv1EHsV0HG2anHcxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yuz8ea7MH9PxJ+jIHekjUONp3GhEKeYJfgWHfEjorhk=;
- b=bbupR37SpH+4elt0DVveUup0LuJF4W/st0gsgcu7EHmmReZ0NJ5U54PH88gsp6B4IhX0ETPbVtXASLpTLCJfRKAYAcd2wcPMbEhc8/uvAD0S3EQvkZyB4gcm0R4QMr7Z99am+wwtEPmdzzvRlmTKHLjwaNkuP5SKJWTUEE2nxuEzjEB4q2iC5WA7xv6c1cXa+BYnUTLQRTjKjxCU7Qa6eKAzRHgkkDkasRfjf7Cmsu/MxZa4DDOki3TZIp7L28Ajm/14Y3q26unW7d7EgkOLrtmeoKk8z+5uzsBh8kzZES2bcv+ovNiD5MnvFav1MM6pkVTWkcTXc3f04qAZLhSKyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yuz8ea7MH9PxJ+jIHekjUONp3GhEKeYJfgWHfEjorhk=;
- b=J5V8sSH/d1w6byVrYrCz0l2kqIndl4Q8GjKKdeOKlXTBzf25hOHKoBkXJMVcDyt74Po69X2qIPmIlHuoV25y0MIX8lnrv3LpRTMC1cL1V2+JRDB/SRpJVqZoKFRWcKRCKcCDl/nH4MCjT4jY86eRJ5jgo5ZZ6uxNHsNbYOjpktM=
-Received: from BN9PR03CA0163.namprd03.prod.outlook.com (2603:10b6:408:f4::18)
- by CY5PR12MB6251.namprd12.prod.outlook.com (2603:10b6:930:21::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Mon, 5 Dec
- 2022 12:03:05 +0000
-Received: from BN8NAM11FT115.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:f4:cafe::12) by BN9PR03CA0163.outlook.office365.com
- (2603:10b6:408:f4::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14 via Frontend
- Transport; Mon, 5 Dec 2022 12:03:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT115.mail.protection.outlook.com (10.13.177.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5880.14 via Frontend Transport; Mon, 5 Dec 2022 12:03:05 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+        with ESMTP id S231783AbiLENBi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 08:01:38 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D681BEBB;
+        Mon,  5 Dec 2022 05:01:33 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NQkDz2G48z685ZJ;
+        Mon,  5 Dec 2022 21:00:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 5 Dec
- 2022 06:03:02 -0600
-Date:   Mon, 5 Dec 2022 13:02:58 +0100
-From:   Robert Richter <rrichter@amd.com>
+ 2022 13:01:30 +0000
+Date:   Mon, 5 Dec 2022 13:01:29 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, kernel test robot <lkp@intel.com>,
-        <terry.bowman@amd.com>
-Subject: Re: [PATCH] cxl/regs: Fix sparse warning
-Message-ID: <Y43dznqBLltQ+RXL@rric.localdomain>
-References: <167008768190.2516013.11918622906007677341.stgit@dwillia2-xfh.jf.intel.com>
+CC:     <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2 08/11] cxl/mem: Wire up event interrupts
+Message-ID: <20221205130129.00000cc1@Huawei.com>
+In-Reply-To: <638a55611405d_3cbe02942c@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+        <20221201002719.2596558-9-ira.weiny@intel.com>
+        <6389ab5156083_c9572947c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+        <20221202141901.00003016@Huawei.com>
+        <638a55611405d_3cbe02942c@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <167008768190.2516013.11918622906007677341.stgit@dwillia2-xfh.jf.intel.com>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT115:EE_|CY5PR12MB6251:EE_
-X-MS-Office365-Filtering-Correlation-Id: b5708861-73e7-454e-0f46-08dad6b8aac1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0VTx/DeEsEWQntXA3aO/vn04h1Bw4VjT10ukxhvqEP2gLoanlXUAc4djv6OcnpkRVR/6VoKBtdYoRalnr4fReP3M+t6eS5u2YhkRqmpPsAE3jbqG5FBOWWwQpzosBPBUOe4Ez/zXU1Dh4J9KG/P3IPaPhAB6ozxdGZxyAl/EwJ6gqOofO5JbMDf5S+dRz7/4qJ0CZqsoxYR5hYKkq+0Hvi3c2t9x6OkwkjD3noe5HQfqoEb1rxEGBkEauuRMvcGoRDktIdgp/qdH/v3HJWroqUgS2sP7yesOSEp6kvXkUECDROvLTOWp1P96bg2k/CmEs/dgFMUHfWYxQIJRj+IaFdcqXQl1P4YXmPWRfJr4JxhpBWW+wXSf8jxZne7lnp4NT4fL+rR6vMvy9XmtnmQaxVNmxSmeQjtsyLGtOXF1fodT9WsMLKkCdsBIsQosJxvM+YzOGMfOhuZhoKrhHsXXlTYe7+Pg7mXG8vEYIU1T40wfC/O52QEuGmbpF1hDcMqc5974S8jUWlzRxvuOd8IfTvfEYHqK9oFHvb7VsSbUxOjnPUEvdoVppkDIPCFvI4MJOdXTd1ZTZUDhgvm7r9Ff2D7FMj2HIW9NvMWHJyEiPbEn0EKfcaIe3V/OOL7tVuD1eylTOmlmpnIyP5DHVEZzeA3pJfP7SUtzdHL3Fvgtc46XGGfrHa0mGPH0F38EFp9Uu5vFujRd0KFexeATv5xBP3IaDEyxD8ePqUhhLD7S3RapYZIRgboLGyO3ewpxhjqEkSmdlzcfj87rfP/8uHsZSg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(136003)(39860400002)(376002)(451199015)(46966006)(40470700004)(36840700001)(16526019)(186003)(41300700001)(336012)(356005)(81166007)(82740400003)(2906002)(47076005)(83380400001)(82310400005)(36860700001)(426003)(5660300002)(8936002)(40460700003)(4744005)(7696005)(478600001)(6666004)(9686003)(8676002)(4326008)(26005)(55016003)(316002)(70586007)(70206006)(54906003)(6916009)(53546011)(40480700001)(67856001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2022 12:03:05.2983
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5708861-73e7-454e-0f46-08dad6b8aac1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT115.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6251
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 03.12.22 09:14:41, Dan Williams wrote:
-> The 0day robot belatedly points out that @addr is not properly tagged as
-> an iomap pointer:
-> 
-> "drivers/cxl/core/regs.c:332:14: sparse: sparse: incorrect type in
-> assignment (different address spaces) @@     expected void *addr @@
-> got void [noderef] __iomem * @@"
-> 
-> Fixes: 1168271ca054 ("cxl/acpi: Extract component registers of restricted hosts from RCRB")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Fri, 2 Dec 2022 11:43:29 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Reviewed-by: Robert Richter <rrichter@amd.com>
+> Jonathan Cameron wrote:
+> >   
+> > > > +int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
+> > > > +			     struct cxl_event_interrupt_policy *policy)
+> > > > +{
+> > > > +	int rc;
+> > > > +
+> > > > +	policy->info_settings = CXL_INT_MSI_MSIX;
+> > > > +	policy->warn_settings = CXL_INT_MSI_MSIX;
+> > > > +	policy->failure_settings = CXL_INT_MSI_MSIX;
+> > > > +	policy->fatal_settings = CXL_INT_MSI_MSIX;    
+> > > 
+> > > I think this needs to be careful not to undo events that the BIOS
+> > > steered to itself in firmware-first mode, which raises another question,
+> > > does firmware-first mean more the OS needs to backoff on some event-log
+> > > handling as well?  
+> > 
+> > Hmm. Does the _OSC cover these.  There is one for Memory error reporting
+> > that I think covers it (refers to 12.2.3.2)
+> > 
+> > Note that should cover any means of obtaining these, not just interrupt
+> > driven - so including the initial record clear.
+> > 
+> > ..
+> >   
+> > > > +
+> > > > +static irqreturn_t cxl_event_failure_thread(int irq, void *id)
+> > > > +{
+> > > > +	struct cxl_dev_state *cxlds = id;
+> > > > +
+> > > > +	cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_FAIL);
+> > > > +	return IRQ_HANDLED;
+> > > > +}    
+> > > 
+> > > So I think one of the nice side effects of moving log priorty handling
+> > > inside of cxl_mem_get_records_log() and looping through all log types in
+> > > priority order until all status is clear is that an INFO interrupt also
+> > > triggers a check of the FATAL status for free.
+> > >   
+> > 
+> > I go the opposite way on this in thinking that an interrupt should only
+> > ever be used to handle the things it was registered for - so we should
+> > not be clearing fatal records in the handler triggered for info events.  
+> 
+> I would agree with you if this was a fast path and if the hardware
+> mechanism did not involve shared status register that tells you
+> that both FATAL and INFO are pending retrieval through a mechanism.
+> Compare that to the separation between admin and IO queues in NVME.
+> 
+> If the handler is going to loop on the status register then it must be
+> careful not to starve out FATAL while processing INFO.
+> 
+> > Doing other actions like this relies on subtlies of the generic interrupt
+> > handling code which happens to force interrupt threads on a shared interrupt
+> > line to be serialized.  I'm not sure we are safe at all the interrupt
+> > isn't shared unless we put a lock around the whole thing (we have one
+> > because of the buffer mutex though).  
+> 
+> The interrupt is likely shared since there is no performance benefit to
+> entice hardware vendors spend transistor budget on more vector space for
+> events. The events architecture does not merit that spend.
+> 
+> > If going this way I think the lock needs a rename.
+> > It's not just protecting the buffer used, but also serialize multiple
+> > interrupt threads.  
+> 
+> I will let Ira decide if he wants to rename, but in my mind the shared
+> event buffer *is* the data being locked, the fact that multiple threads
+> might be contending for it is immaterial.
 
-> ---
->  drivers/cxl/core/regs.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+It isn't he only thing being protected.  Access to the device is also
+being serialized including the data in it's registers.
+
+If someone comes along later and decides to implement multiple buffers
+and there for gets rid of the lock. boom.
+
+
+Jonathan
+
