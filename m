@@ -2,84 +2,128 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2FBC4332F
-	for <linux-cxl@archiver.kernel.org>; Mon,  5 Dec 2022 19:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F168C4708E
+	for <linux-cxl@archiver.kernel.org>; Mon,  5 Dec 2022 19:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235160AbiLETyL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Dec 2022 14:54:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        id S233802AbiLET4A (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 5 Dec 2022 14:56:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233927AbiLETxY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 14:53:24 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F364CBDE
-        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 11:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670269956; x=1701805956;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=etNmnpEYFyZhjQmxjVUcyTuNGE69eFiZY3nz35oqob0=;
-  b=RjwNQ8j7V8ZlqD4FzogImE+DiX4SBpUBxSRPqZRVSrkDq4+I2B4xkL4V
-   ItbAZ0Qg7M4CtpuvESIW59eNIVW2gj49Si/asXl6FLVHvwfPbvBL/uVQ6
-   3ctHZF4Pf5EDUGkNKiqpNAAM4CmChPfkOuTwvSfVXtddce2anWcJXvkik
-   CP7Jp5kaBM38JANcbNPxd06mu0xeJuROy5l4GzpjRdkLGg6JvRgAM3elv
-   FqjK/yvbtJHOZWplx5EC/6CCTbAHR7BGCJjUFr6vFlsrp601p1Cdjykpc
-   OnPyrmjJtvpvmAW/W0J1VN9q2kjbImqRXVfRqz2JiGCBg7gI8xnBBMEtC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="317592279"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="317592279"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 11:52:35 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="770468614"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="770468614"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.26.166]) ([10.212.26.166])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 11:52:34 -0800
-Message-ID: <e131cc43-8638-0ece-b61d-dc9f81f53bfc@intel.com>
-Date:   Mon, 5 Dec 2022 12:52:34 -0700
+        with ESMTP id S232206AbiLETza (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 14:55:30 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFAEB7D
+        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 11:54:10 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id AD2D36410D7;
+        Mon,  5 Dec 2022 19:44:52 +0000 (UTC)
+Received: from pdx1-sub0-mail-a218.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 332F964121D;
+        Mon,  5 Dec 2022 19:44:52 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1670269492; a=rsa-sha256;
+        cv=none;
+        b=2ke4FJU/Gun4ChIsB8WpnB2E9P0lfhP0wsdl9am9hkD7iOfPibpD3znJ5ccLGfF6/vFXmB
+        bhUigQ436WgjFxBMbAXWTWYBXSbgaXBWlqyikOptRdyQO5PX+V0nVGUOsGl7dgy9Yq7XY7
+        ViBfnPc2Q0xorTWueqFFAVkFuXoHpzMQO8CSna7JIffc/5YdXcL3E+7kOo/s7VYB5Nyz2G
+        YzpaKwNTv+QHVcEEkvGiaFxNhABevjOucJ18sh+rYJG/OPUKvy6mYUWSUdWvagc8TmvnTj
+        +E7A0Rmer/y5X7F00bPYfweyFT4MPUChdZKjtNHwrn9btFvqTXQyGOpZwHbI1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1670269492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=fqN+U92L8+vPyfHj+mA9XaRgexau2UhdUetBK3hNQMk=;
+        b=jtrAcW8MCztOdRx1TuVXzPzyawymL+dU6y3/fPSGRO4giQ0hkR+Ho66Kid3EdFGeh2iphr
+        24bUbbCqsl1U4n7F0psSo/HZZbRtJYi+MHuUdYpCv5pupWg6nWDKCKQ0dVIJ4VpyO28d7U
+        gBOBQM9GrqQU94bgkv6uirZhtUj6/boOoHZDa/WfisOeAATEjiq0zXfWnpI4e9RxRNQxzu
+        i+eDP5sllN0tY2sHpEeQcCKMefsw6zLDBM3ajbxtlIMfX5VKoJ4k5WvZS2I+4mRgEbgZYd
+        /WSlNBj7JAXv2lRMAZ9Xz8rko9kbPOadGTOl1SMuBK/85Pyjy5hz4N3/ajRi0A==
+ARC-Authentication-Results: i=1;
+        rspamd-7bd68c5946-dtxhm;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Blushing-Madly: 105b53433fe5c3f7_1670269492496_2829289219
+X-MC-Loop-Signature: 1670269492496:2332268954
+X-MC-Ingress-Time: 1670269492496
+Received: from pdx1-sub0-mail-a218.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.120.227.191 (trex/6.7.1);
+        Mon, 05 Dec 2022 19:44:52 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a218.dreamhost.com (Postfix) with ESMTPSA id 4NQvC72ZHsz27;
+        Mon,  5 Dec 2022 11:44:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1670269491;
+        bh=fqN+U92L8+vPyfHj+mA9XaRgexau2UhdUetBK3hNQMk=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=fmGYVrY4HWSlBPKjm8YXPyIaOjrngJu/dJiD33PvqYA9XMVAnbZM3ZD2e/igG2kQR
+         MfWR8RtPr4q7Vj8rKGnlYVNOollrkYaCphzqBF5FBbliUPNVQxdu1dGsiUjDkVytQM
+         cOHhMgBAA4rmQZlbDnRHoIMr8jVfA4QGkhko5u1Lmwnz1M+xGhg8G2+r6C9QW2m6uK
+         Powmw+z36O9Uqg2C1Oot1Pl3eKzBTXy6gIaAQW3g8CgUOHw4ZDDRWWbzfxLtfsTUZj
+         XxMRFTrko2d4Iz4tkXMJ15uTjVmbMYYx00/9wfA/7pFUPXwA85XdQ2UTqGeyrWBs/j
+         dZj0MnKpl806g==
+Date:   Mon, 5 Dec 2022 11:20:54 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Jonathan.Cameron@huawei.com,
+        dave.jiang@intel.com, nvdimm@lists.linux.dev
+Subject: Re: [PATCH 5/5] cxl/region: Manage CPU caches relative to DPA
+ invalidation events
+Message-ID: <20221205192054.mwhzyjrfwfn3tma5@offworld>
+References: <166993219354.1995348.12912519920112533797.stgit@dwillia2-xfh.jf.intel.com>
+ <166993222098.1995348.16604163596374520890.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.1
-Subject: Re: [PATCH] tools/testing/cxl: Require cache invalidation bypass
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Alison Schofield <alison.schofield@intel.com>
-References: <167026948179.3527561.4535373655515827457.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <167026948179.3527561.4535373655515827457.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <166993222098.1995348.16604163596374520890.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, 01 Dec 2022, Dan Williams wrote:
 
+>A "DPA invalidation event" is any scenario where the contents of a DPA
+>(Device Physical Address) is modified in a way that is incoherent with
+>CPU caches, or if the HPA (Host Physical Address) to DPA association
+>changes due to a remapping event.
+>
+>PMEM security events like Unlock and Passphrase Secure Erase already
+>manage caches through LIBNVDIMM,
 
-On 12/5/2022 12:44 PM, Dan Williams wrote:
-> The typical environment where cxl_test is run, QEMU, does not support
-> cpu_cache_invalidate_memregion(). Add the 'test' bypass symbols to the
-> configuration check.
-> 
-> Reported-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Just to be clear, is this is why you get rid of the explicit flushing
+for the respective commands in security.c?
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>so that leaves HPA to DPA remap events
+>that need cache management by the CXL core. Those only happen when the
+>boot time CXL configuration has changed. That event occurs when
+>userspace attaches an endpoint decoder to a region configuration, and
+>that region is subsequently activated.
+>
+>The implications of not invalidating caches between remap events is that
+>reads from the region at different points in time may return different
+>results due to stale cached data from the previous HPA to DPA mapping.
+>Without a guarantee that the region contents after cxl_region_probe()
+>are written before being read (a layering-violation assumption that
+>cxl_region_probe() can not make) the CXL subsystem needs to ensure that
+>reads that precede writes see consistent results.
 
-> ---
->   tools/testing/cxl/config_check.c |    2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/testing/cxl/config_check.c b/tools/testing/cxl/config_check.c
-> index de5e5b3652fd..c4c457e59841 100644
-> --- a/tools/testing/cxl/config_check.c
-> +++ b/tools/testing/cxl/config_check.c
-> @@ -10,4 +10,6 @@ void check(void)
->   	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_BUS));
->   	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_ACPI));
->   	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_PMEM));
-> +	BUILD_BUG_ON(!IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST));
-> +	BUILD_BUG_ON(!IS_ENABLED(CONFIG_NVDIMM_SECURITY_TEST));
->   }
-> 
+Hmm where does this leave us remaping under arm64 which is doesn't have
+ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION?
+
+Back when we were discussing this it was all related to the security stuff,
+which under arm it could just be easily discarded as not available feature.
+
+Thanks,
+Davidlohr
