@@ -2,136 +2,108 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4068FC4321E
-	for <linux-cxl@archiver.kernel.org>; Mon,  5 Dec 2022 13:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6B4C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon,  5 Dec 2022 15:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231168AbiLENBq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Dec 2022 08:01:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
+        id S231918AbiLEPyp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 5 Dec 2022 10:54:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231783AbiLENBi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 08:01:38 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D681BEBB;
-        Mon,  5 Dec 2022 05:01:33 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NQkDz2G48z685ZJ;
-        Mon,  5 Dec 2022 21:00:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 5 Dec
- 2022 13:01:30 +0000
-Date:   Mon, 5 Dec 2022 13:01:29 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 08/11] cxl/mem: Wire up event interrupts
-Message-ID: <20221205130129.00000cc1@Huawei.com>
-In-Reply-To: <638a55611405d_3cbe02942c@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221201002719.2596558-1-ira.weiny@intel.com>
-        <20221201002719.2596558-9-ira.weiny@intel.com>
-        <6389ab5156083_c9572947c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-        <20221202141901.00003016@Huawei.com>
-        <638a55611405d_3cbe02942c@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230235AbiLEPyn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 10:54:43 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C9613D44
+        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 07:54:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670255682; x=1701791682;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=t6+ntCM1cR1hnfO3IWXwlZYRI1wFY/xNf9nhRyMZV5o=;
+  b=dZW/PQMczITlWn3qs4IedGZn/adiABzucrGpMaht7xsyZlSGWg3aiPA1
+   KbxALPmJB3PGVjZuySazxhl83jKtysMa8mchjBCpjlfD8dsRZ4aOQKmU+
+   kv4ajzWtiV451effR1BX+Scfv3eHJ/b2zrtLy/VfVpa28CNCnUsu5UBAz
+   mjsZ8UhfFXrm/aGnLPY+kFC07MACk20VZ7QISGXN23uNlt3sAT9zhgESj
+   UDwPTE0G9Ea0gIsRKtij+7wt8bqDvs2Qct1lfPd/EWnmv7phgzIZ0javv
+   Fw5MbDwAqDe5r3ITQ89yPO2TIZJQKwrxlJWJm9poj2L48NckGZKavPfd+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="380675856"
+X-IronPort-AV: E=Sophos;i="5.96,219,1665471600"; 
+   d="scan'208";a="380675856"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 07:54:42 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="788121901"
+X-IronPort-AV: E=Sophos;i="5.96,219,1665471600"; 
+   d="scan'208";a="788121901"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.26.166]) ([10.212.26.166])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 07:54:38 -0800
+Message-ID: <55150f8b-f1ea-c41d-4c54-970e2c86fe2a@intel.com>
+Date:   Mon, 5 Dec 2022 08:54:37 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.1
+Subject: Re: [PATCH] cxl/acpi: Fail decoder add if CXIMS for HBIG is missing
+Content-Language: en-US
+To:     alison.schofield@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+Cc:     linux-cxl@vger.kernel.org
+References: <20221205002951.1788783-1-alison.schofield@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221205002951.1788783-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 2 Dec 2022 11:43:29 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Jonathan Cameron wrote:
-> >   
-> > > > +int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
-> > > > +			     struct cxl_event_interrupt_policy *policy)
-> > > > +{
-> > > > +	int rc;
-> > > > +
-> > > > +	policy->info_settings = CXL_INT_MSI_MSIX;
-> > > > +	policy->warn_settings = CXL_INT_MSI_MSIX;
-> > > > +	policy->failure_settings = CXL_INT_MSI_MSIX;
-> > > > +	policy->fatal_settings = CXL_INT_MSI_MSIX;    
-> > > 
-> > > I think this needs to be careful not to undo events that the BIOS
-> > > steered to itself in firmware-first mode, which raises another question,
-> > > does firmware-first mean more the OS needs to backoff on some event-log
-> > > handling as well?  
-> > 
-> > Hmm. Does the _OSC cover these.  There is one for Memory error reporting
-> > that I think covers it (refers to 12.2.3.2)
-> > 
-> > Note that should cover any means of obtaining these, not just interrupt
-> > driven - so including the initial record clear.
-> > 
-> > ..
-> >   
-> > > > +
-> > > > +static irqreturn_t cxl_event_failure_thread(int irq, void *id)
-> > > > +{
-> > > > +	struct cxl_dev_state *cxlds = id;
-> > > > +
-> > > > +	cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_FAIL);
-> > > > +	return IRQ_HANDLED;
-> > > > +}    
-> > > 
-> > > So I think one of the nice side effects of moving log priorty handling
-> > > inside of cxl_mem_get_records_log() and looping through all log types in
-> > > priority order until all status is clear is that an INFO interrupt also
-> > > triggers a check of the FATAL status for free.
-> > >   
-> > 
-> > I go the opposite way on this in thinking that an interrupt should only
-> > ever be used to handle the things it was registered for - so we should
-> > not be clearing fatal records in the handler triggered for info events.  
-> 
-> I would agree with you if this was a fast path and if the hardware
-> mechanism did not involve shared status register that tells you
-> that both FATAL and INFO are pending retrieval through a mechanism.
-> Compare that to the separation between admin and IO queues in NVME.
-> 
-> If the handler is going to loop on the status register then it must be
-> careful not to starve out FATAL while processing INFO.
-> 
-> > Doing other actions like this relies on subtlies of the generic interrupt
-> > handling code which happens to force interrupt threads on a shared interrupt
-> > line to be serialized.  I'm not sure we are safe at all the interrupt
-> > isn't shared unless we put a lock around the whole thing (we have one
-> > because of the buffer mutex though).  
-> 
-> The interrupt is likely shared since there is no performance benefit to
-> entice hardware vendors spend transistor budget on more vector space for
-> events. The events architecture does not merit that spend.
-> 
-> > If going this way I think the lock needs a rename.
-> > It's not just protecting the buffer used, but also serialize multiple
-> > interrupt threads.  
-> 
-> I will let Ira decide if he wants to rename, but in my mind the shared
-> event buffer *is* the data being locked, the fact that multiple threads
-> might be contending for it is immaterial.
-
-It isn't he only thing being protected.  Access to the device is also
-being serialized including the data in it's registers.
-
-If someone comes along later and decides to implement multiple buffers
-and there for gets rid of the lock. boom.
 
 
-Jonathan
+On 12/4/2022 5:29 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> The BIOS provided CXIMS (CXL XOR Interleave Math Structure) is required
+> for calculating a targets position in an interleave list during region
+> creation. The CXL driver expects to discover a CXIMS that matches the
+> HBIG (Host Bridge Interleave Granularity) and stores the xormaps found
+> in that CXIMS for retrieval during region creation.
+> 
+> If there is no CXIMS for an HBIG, no maps are stored. That leads to a
+> NULL pointer dereference at xormap retrieval during region creation.
+> 
+> Add a check during ACPI probe for the case of no matching CXIMS. Emit
+> an error message and fail to add the decoder.
+> 
+> Fixes: f9db85bfec0d ("cxl/acpi: Support CXL XOR Interleave Math (CXIMS)")
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+> 
+> Not sure the Commit-ID in Fixes tag will persist. (from cxl/pending)
+> 
+>   drivers/cxl/acpi.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 657ef250d848..420e322c85a1 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -282,6 +282,11 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>   						   cxl_parse_cxims, &cxims_ctx);
+>   			if (rc < 0)
+>   				goto err_xormap;
+> +			if (!cxlrd->platform_data) {
+> +				dev_err(dev, "No CXIMS for HBIG %u\n", ig);
+> +				rc = -EINVAL;
+> +				goto err_xormap;
+> +			}
+>   		}
+>   	}
+>   	rc = cxl_decoder_add(cxld, target_map);
+> 
+> base-commit: d72a5b810410c076d4dd63fe542a5a4d6c145cfa
