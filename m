@@ -2,49 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC4AC352A1
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 04:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2305BC3A5A7
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 04:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231349AbiLFEWv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Dec 2022 23:22:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
+        id S230151AbiLFE2h (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 5 Dec 2022 23:28:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbiLFEWq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 23:22:46 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCBD63B7
-        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 20:22:45 -0800 (PST)
+        with ESMTP id S229982AbiLFE2g (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 23:28:36 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE1FDED
+        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 20:28:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670300565; x=1701836565;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=paKg0JMaXH9lUCsgDLg85e+zF9XyHEaF5GwLWjjl21A=;
-  b=cwphgOXLesyjhvxvw3KQFkDhKHe9WtfsL7OE0OcCT16smDiQJzkOZuT4
-   AW9Kv1TmfMELX9TUnbuWQkBW5HuIqfoSY6568YY34pV+V4KibVhYaQl2N
-   xH/f+pRijVPNn61tn8x9G3SDIeDNr/Ovijmo8jfUDQULSJk9Mv0t/fxWq
-   ROZ9zHx70axesLAc/bucSgwa3Td2XEpa1gtrhOx8MvAtE8j+AXPeDCwBO
-   vfuHgjSs3mpjaBoWrmOLADv8oE4UY8q/qErNE1cYtdpUWS749nBlo2z80
-   Mv4R3b2rX0Sivm9EAjnLtHfd6A35UEZqt3B+uR6DxPVsQYfa5l4eWLfhR
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="315238707"
+  t=1670300915; x=1701836915;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gKuiejftp69CnAOqkD8ogn8wDc3jkatpT6H8j++RQms=;
+  b=GN2qP3GyEIAfpJt7KEm28Xv+rzJqb358LDStb9pnMU/hCz5QNsrKimoS
+   6/lvqAC7sLPCHYBlTmLVWVcqOXHRk9iAFrTznbrJf/+6ucoJrHxxcR0io
+   W9fGb+I31MPGFmYbEjmkbqqhnqQUW/O3qbRIA1Zdf6KUoxOD07t745h+k
+   ZSgiXoSnHgjUJE84+g67kykYcTjS2B7tmIRpej0ONrxSMw+mGUYwu9j7E
+   Yqqy63H6eHbjSiUJKNOHAhHXN4tPq4b8HV2eviyyoKZbtNX6tgEOYO8e1
+   A6AtUyMGpaPkzuGHufgMmf7U+keaw32gdPCTQU+JJEh2KYNdYh8OCEVRq
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="304152040"
 X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="315238707"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:22:45 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="639733785"
+   d="scan'208";a="304152040"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:28:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="770591578"
 X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="639733785"
+   d="scan'208";a="770591578"
 Received: from bmnebren-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.114.171])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:22:44 -0800
-Subject: [PATCH 4/4] cxl/security: Drop security command ioctl uapi
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:28:35 -0800
+Subject: [PATCH] cxl/pci: Add some type-safety to the AER trace points
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     dave.jiang@intel.com, ira.weiny@intel.com
-Date:   Mon, 05 Dec 2022 20:22:44 -0800
-Message-ID: <167030056464.4044561.11486507095384253833.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <167030054261.4044561.2164047490200738083.stgit@dwillia2-xfh.jf.intel.com>
-References: <167030054261.4044561.2164047490200738083.stgit@dwillia2-xfh.jf.intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>, dave.jiang@intel.com
+Date:   Mon, 05 Dec 2022 20:28:34 -0800
+Message-ID: <167030091477.4045167.15174636482098463885.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,74 +53,83 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL PMEM security operations are routed through the NVDIMM sysfs
-interface. For this reason the corresponding commands are marked
-"exclusive" to preclude collisions between the ioctl ABI and the sysfs
-ABI. However, a better way to preclude that collision is to simply
-remove the ioctl ABI (command-id definitions) for those operations.
+The first argument to the CXL AER trace points is the source device.
+Pass a 'const struct device *' rather than a 'const char *' for more
+type precision / safety.
 
-Now that cxl_internal_send_cmd() (formerly cxl_mbox_send_cmd()) no
-longer needs to talk the cxl_mem_commands array, all of the uapi
-definitions for the security commands can be dropped.
-
-These never appeared in a released kernel, so no regression risk.
-
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/mbox.c      |   17 -----------------
- include/uapi/linux/cxl_mem.h |    6 ------
- 2 files changed, 23 deletions(-)
+ drivers/cxl/pci.c          |    4 ++--
+ include/trace/events/cxl.h |   16 ++++++++--------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index c36a3589377a..b03fba212799 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -65,12 +65,6 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
- 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
- 	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
- 	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
--	CXL_CMD(GET_SECURITY_STATE, 0, 0x4, 0),
--	CXL_CMD(SET_PASSPHRASE, 0x60, 0, 0),
--	CXL_CMD(DISABLE_PASSPHRASE, 0x40, 0, 0),
--	CXL_CMD(FREEZE_SECURITY, 0, 0, 0),
--	CXL_CMD(UNLOCK, 0x20, 0, 0),
--	CXL_CMD(PASSPHRASE_SECURE_ERASE, 0x40, 0, 0),
- };
- 
- /*
-@@ -717,17 +711,6 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
- 		/* Found the required CEL */
- 		rc = 0;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 6cec9fa9326c..cced4a0df3d1 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -562,7 +562,7 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
  	}
--
--	/*
--	 * Setup permanently kernel exclusive commands, i.e. the
--	 * mechanism is driven through sysfs, keyctl, etc...
--	 */
--	set_bit(CXL_MEM_COMMAND_ID_SET_PASSPHRASE, cxlds->exclusive_cmds);
--	set_bit(CXL_MEM_COMMAND_ID_DISABLE_PASSPHRASE, cxlds->exclusive_cmds);
--	set_bit(CXL_MEM_COMMAND_ID_UNLOCK, cxlds->exclusive_cmds);
--	set_bit(CXL_MEM_COMMAND_ID_PASSPHRASE_SECURE_ERASE,
--		cxlds->exclusive_cmds);
--
- out:
- 	kvfree(gsl);
- 	return rc;
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 82bdad4ce5de..c71021a2a9ed 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -41,12 +41,6 @@
- 	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
- 	___C(SCAN_MEDIA, "Scan Media"),                                   \
- 	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
--	___C(GET_SECURITY_STATE, "Get Security State"),			  \
--	___C(SET_PASSPHRASE, "Set Passphrase"),				  \
--	___C(DISABLE_PASSPHRASE, "Disable Passphrase"),			  \
--	___C(FREEZE_SECURITY, "Freeze Security"),			  \
--	___C(UNLOCK, "Unlock"),						  \
--	___C(PASSPHRASE_SECURE_ERASE, "Passphrase Secure Erase"),	  \
- 	___C(MAX, "invalid / last command")
  
- #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+ 	header_log_copy(cxlds, hl);
+-	trace_cxl_aer_uncorrectable_error(dev_name(dev), status, fe, hl);
++	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
+ 	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+ 
+ 	return true;
+@@ -644,7 +644,7 @@ static void cxl_cor_error_detected(struct pci_dev *pdev)
+ 	status = le32_to_cpu(readl(addr));
+ 	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+ 		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+-		trace_cxl_aer_correctable_error(dev_name(dev), status);
++		trace_cxl_aer_correctable_error(dev, status);
+ 	}
+ }
+ 
+diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
+index 72c3e2870a9e..ad085a2534ef 100644
+--- a/include/trace/events/cxl.h
++++ b/include/trace/events/cxl.h
+@@ -45,16 +45,16 @@
+ )
+ 
+ TRACE_EVENT(cxl_aer_uncorrectable_error,
+-	TP_PROTO(const char *dev_name, u32 status, u32 fe, u32 *hl),
+-	TP_ARGS(dev_name, status, fe, hl),
++	TP_PROTO(const struct device *dev, u32 status, u32 fe, u32 *hl),
++	TP_ARGS(dev, status, fe, hl),
+ 	TP_STRUCT__entry(
+-		__string(dev_name, dev_name)
++		__string(dev_name, dev_name(dev))
+ 		__field(u32, status)
+ 		__field(u32, first_error)
+ 		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+ 	),
+ 	TP_fast_assign(
+-		__assign_str(dev_name, dev_name);
++		__assign_str(dev_name, dev_name(dev));
+ 		__entry->status = status;
+ 		__entry->first_error = fe;
+ 		/*
+@@ -89,14 +89,14 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+ )
+ 
+ TRACE_EVENT(cxl_aer_correctable_error,
+-	TP_PROTO(const char *dev_name, u32 status),
+-	TP_ARGS(dev_name, status),
++	TP_PROTO(const struct device *dev, u32 status),
++	TP_ARGS(dev, status),
+ 	TP_STRUCT__entry(
+-		__string(dev_name, dev_name)
++		__string(dev_name, dev_name(dev))
+ 		__field(u32, status)
+ 	),
+ 	TP_fast_assign(
+-		__assign_str(dev_name, dev_name);
++		__assign_str(dev_name, dev_name(dev));
+ 		__entry->status = status;
+ 	),
+ 	TP_printk("%s: status: '%s'",
 
