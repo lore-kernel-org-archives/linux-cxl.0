@@ -2,179 +2,103 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75A6C352A1
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 15:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA33C352A1
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 16:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235386AbiLFPUE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Dec 2022 10:20:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46114 "EHLO
+        id S231434AbiLFQWL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Dec 2022 11:22:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235401AbiLFPTh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 10:19:37 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F8351115
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 07:17:53 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DE4023A;
-        Tue,  6 Dec 2022 07:17:59 -0800 (PST)
-Received: from [10.1.197.38] (eglon.cambridge.arm.com [10.1.197.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C2E63F73B;
-        Tue,  6 Dec 2022 07:17:51 -0800 (PST)
-Message-ID: <40cd479b-f0f8-5dba-0e41-4cef73693927@arm.com>
-Date:   Tue, 6 Dec 2022 15:17:43 +0000
+        with ESMTP id S235073AbiLFQVn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 11:21:43 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4FA2E690
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 08:21:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670343682; x=1701879682;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iX19FGa2POMrqGY7TFecqWCYxE9y0jwi/7EcRWe4pUI=;
+  b=ia+riEOKnZQfYliPejSKHBI6Y6U1LuoG7dYSau2tgLWZC59gUlR3FVke
+   oiY6/iiasqSi9Yy/Y5ZbT2icwAIZJjUPG2Y+5ysbraA9TJQrYs7ueFTq+
+   mfOPSLS5pAQXdMj46kHn0Pe3Fy7PVSg6rkpg+dNtKc1Uol7iwh0IbC1Ph
+   srFL58fRvvyBj9BVYYAbJOtdBNcnpvCucL+xfJLVPLXQT3plO46IVGuku
+   ZnqJp8SsIK+ELEn8uSdSartzd2E9H+f4f1+SKptx8x8y3vtBuxeKPwD3s
+   Ojeg/Aa0ODr88IotfZ40RoL/Cm+rzmO8gzJ9tnms3hPWxorpNih+Fq7Qa
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="314307679"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="314307679"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 08:21:21 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="891438980"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="891438980"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.108.100]) ([10.212.108.100])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 08:21:21 -0800
+Message-ID: <df8849a7-fc73-210c-179d-2b9536711fd0@intel.com>
+Date:   Tue, 6 Dec 2022 09:21:21 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH 5/5] cxl/region: Manage CPU caches relative to DPA
- invalidation events
-Content-Language: en-GB
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-        dave.jiang@intel.com, nvdimm@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will@kernel.org>, catalin.marinas@arm.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        anthony.jebson@huawei.com, ardb@kernel.org
-References: <166993219354.1995348.12912519920112533797.stgit@dwillia2-xfh.jf.intel.com>
- <166993222098.1995348.16604163596374520890.stgit@dwillia2-xfh.jf.intel.com>
- <20221205192054.mwhzyjrfwfn3tma5@offworld>
- <638e502e1904a_3cbe0294e2@dwillia2-xfh.jf.intel.com.notmuch>
- <20221206094733.00007ed2@Huawei.com>
-From:   James Morse <james.morse@arm.com>
-In-Reply-To: <20221206094733.00007ed2@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.1
+Subject: Re: [PATCH 1/4] cxl/security: Fix Get Security State output payload
+ endian handling
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>, ira.weiny@intel.com
+References: <167030054261.4044561.2164047490200738083.stgit@dwillia2-xfh.jf.intel.com>
+ <167030054822.4044561.4917796262037689553.stgit@dwillia2-xfh.jf.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <167030054822.4044561.4917796262037689553.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi guys,
 
-On 06/12/2022 09:47, Jonathan Cameron wrote:
-> On Mon, 5 Dec 2022 12:10:22 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
+
+On 12/5/2022 9:22 PM, Dan Williams wrote:
+> Multi-byte integer values in CXL mailbox payloads are little endian. Add
+> a definition of the Get Security State output payload and convert the
+> value before testing flags.
 > 
->> [ add linux-arm-kernel@lists.infradead.org ]
->>
->> Background for ARM folks, CXL can dynamically reconfigure the target
->> devices that back a given physical memory region. When that happens the
->> CPU cache can be holding cache data from a previous configuration. The
->> mitigation for that scenario on x86 is wbinvd, ARM does not have an
->> equivalent. The result, dynamic region creation is disabled on ARM. In
->> the near term, most CXL is configured pre-boot, but going forward this
->> restriction is untenable.
->>
->> Davidlohr Bueso wrote:
->>> On Thu, 01 Dec 2022, Dan Williams wrote:
->>>   
->>>> A "DPA invalidation event" is any scenario where the contents of a DPA
->>>> (Device Physical Address) is modified in a way that is incoherent with
->>>> CPU caches, or if the HPA (Host Physical Address) to DPA association
->>>> changes due to a remapping event.
->>>>
->>>> PMEM security events like Unlock and Passphrase Secure Erase already
->>>> manage caches through LIBNVDIMM,  
->>>
->>> Just to be clear, is this is why you get rid of the explicit flushing
->>> for the respective commands in security.c?  
->>
->> Correct, because those commands can only be executed through libnvdimm.
->>
->>>   
->>>> so that leaves HPA to DPA remap events
->>>> that need cache management by the CXL core. Those only happen when the
->>>> boot time CXL configuration has changed. That event occurs when
->>>> userspace attaches an endpoint decoder to a region configuration, and
->>>> that region is subsequently activated.
->>>>
->>>> The implications of not invalidating caches between remap events is that
->>>> reads from the region at different points in time may return different
->>>> results due to stale cached data from the previous HPA to DPA mapping.
->>>> Without a guarantee that the region contents after cxl_region_probe()
->>>> are written before being read (a layering-violation assumption that
->>>> cxl_region_probe() can not make) the CXL subsystem needs to ensure that
->>>> reads that precede writes see consistent results.  
->>>
->>> Hmm where does this leave us remaping under arm64 which is doesn't have
->>> ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION?
+> Fixes: 328281155539 ("cxl/pmem: Introduce nvdimm_security_ops with ->get_flags() operation")
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-For those reading along at home, ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION is wbinvd.
-https://lore.kernel.org/linux-cxl/20220919110605.3696-1-dave@stgolabs.net/
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-We don't have an instruction for arm64 that 'invalidates all caches'.
+Looks like I missed the endian conversion. Thanks!
 
-
->>> Back when we were discussing this it was all related to the security stuff,
->>> which under arm it could just be easily discarded as not available feature.  
->>
->> I can throw out a few strawman options, but really need help from ARM
->> folks to decide where to go next.
-
-> +Cc bunch of relevant people. There are discussions underway but I'm not sure
-> anyone will want to give more details here yet.
-
-The best we can do today is to use the by-VA invalidate operations in the kernel.
-This isn't guaranteed to invalidate 'invisible' system caches, which means its not enough
-for a one-size-fits-all kernel interface.
-For the NVDIMM secure-erase users of this thing, if there were a system-cache between the
-CPUs and the NVDIMM, there is nothing the kernel can do to invalidate it.
-
-If its CXL specific this would be okay for testing in Qemu, but performance would scale
-with the size of the region, which would hurt in real world cases.
-
-The plan is to add a firmware call so firmware can do things that don't scale with the
-size of the mapping, and do something platform-specific to the 'invisible' system cache,
-if there is one.
-
-
-Ideally we wait for the PSCI spec update that describes the firmware call, and make
-support dependent on that. It looks like the timeline will be March-ish, but there should
-be an alpha of the spec available much sooner.
-
-
->> 1/ Map and loop cache flushing line by line. It works, but for Terabytes
->>    of CXL the cost is 10s of seconds of latency to reconfigure a region.
->>    That said, region configuration, outside of test scenarios, is typically
->>    a "once per bare metal provisioning" event.
-
-It works for CXL because you'd never have a system-cache in front of the CXL window.
-Those things don't necessarily receive cache-maintenance because they are supposed to be
-invisible.
-
-D7.4.11 of DDI0487I.a "System level caches" has this horror:
-| System caches which lie beyond the point of coherency and so are invisible to the
-| software. The management of such caches is outside the scope of the architecture.
-
-(The PoP stuff reaches beyond the PoC, but there isn't a DC CIVAP instruction)
-
-Detecting which regions we can't do this for is problematic.
-
-
->> 2/ Set a configuration dependency that mandates that all CXL memory be
->>    routed through the page allocator where it is guaranteed that the memory
->>    will be written (zeroed) before use. This restricts some planned use
->>    cases for the "Dynamic Capacity Device" capability.
-
-> This is the only case that's really a problem (to my mind) I hope we will have
-> a more general solution before there is much hardware out there, particularly
-> where sharing is involved. 
-
-
-Thanks,
-
-James
-
-
->> 3/ Work with the CXL consortium to extend the back-invalidate concept
->>    for general purpose usage to make devices capable of invalidating caches
->>    for a new memory region they joined, and mandate it for ARM. This one
->>    has a long lead time and a gap for every device in flight currently.
+> ---
+>   drivers/cxl/security.c |    6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> There are significant disadvantages in doing this that I suspect will mean
-> this never happens for some classes of device, or is turned off for performance
-> reasons. For anyone curious, go look at the protocol requirements of back
-> invalidate in the CXL 3.0 spec.
+> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+> index 5484d4eecfd1..ebb78b8944f5 100644
+> --- a/drivers/cxl/security.c
+> +++ b/drivers/cxl/security.c
+> @@ -16,14 +16,18 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
+>   	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   	unsigned long security_flags = 0;
+> +	struct cxl_get_security_output {
+> +		__le32 flags;
+> +	} out;
+>   	u32 sec_out;
+>   	int rc;
+>   
+>   	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE, NULL, 0,
+> -			       &sec_out, sizeof(sec_out));
+> +			       &out, sizeof(out));
+>   	if (rc < 0)
+>   		return 0;
+>   
+> +	sec_out = le32_to_cpu(out.flags);
+>   	if (ptype == NVDIMM_MASTER) {
+>   		if (sec_out & CXL_PMEM_SEC_STATE_MASTER_PASS_SET)
+>   			set_bit(NVDIMM_SECURITY_UNLOCKED, &security_flags);
 > 
-> Jonathan
-
