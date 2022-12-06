@@ -2,176 +2,153 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42E7C3A5A7
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 09:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD6EC352A1
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 09:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231144AbiLFJbB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Dec 2022 04:31:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
+        id S235061AbiLFJi3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Dec 2022 04:38:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234958AbiLFJbA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 04:31:00 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474C71D332
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 01:31:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670319060; x=1701855060;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=riFGuCT8GJiTysaBUWtmvzIfivvpA2DSmnXPx291BSY=;
-  b=Yo9jENg9bMhwRt0HRLgCk9vniauy1fMx/JKcqZK8vfBXTN1XRKYUtL8G
-   y4riTkJSwLg4wYDpKj2N/2ibF6NYWyRy/SDvqR7iRZWlZw7jHFlbmp4q0
-   CZYsQNVvsJSMa6Yop5iLZGwl6iwPKPK5D6VH/cH4unv+SchIoyiimJOut
-   5yh8+kasro4FV2i63NKEEv847LdC7nrw1E+V5jw+Efvzpe0zSZCiljaWI
-   Rm23D2IhTPZgPsUPM//iF7W6k40c7JllzdBEXf6iJYSTVp1fr0WB6S8IY
-   C+Y/wF8WhJGuQIXDsvZXRtoq7tkf6bBiojhNl7nP2Be2YcIvvwFyv1QNR
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="318440409"
-X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="318440409"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 01:30:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="820519005"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="820519005"
-Received: from lkp-server01.sh.intel.com (HELO b3c45e08cbc1) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 06 Dec 2022 01:30:57 -0800
-Received: from kbuild by b3c45e08cbc1 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p2UHx-0000oL-0E;
-        Tue, 06 Dec 2022 09:30:57 +0000
-Date:   Tue, 06 Dec 2022 17:30:11 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S234609AbiLFJiZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 04:38:25 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA98E1CFF9;
+        Tue,  6 Dec 2022 01:38:19 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NRFdR5tPZz6H7X0;
+        Tue,  6 Dec 2022 17:35:23 +0800 (CST)
+Received: from localhost (10.45.155.47) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 6 Dec
+ 2022 09:38:16 +0000
+Date:   Tue, 6 Dec 2022 09:38:15 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+CC:     <ira.weiny@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:for-6.2/cxl-rch] BUILD SUCCESS
- da8380bbbe90f69bec4be69af4d0deb7cf2bbcfe
-Message-ID: <638f0ba3.uvILkJo2WPBhRx4l%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V2 08/11] cxl/mem: Wire up event interrupts
+Message-ID: <20221206093815.00000156@Huawei.com>
+In-Reply-To: <638e1dd6aa7bb_25af829435@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20221201002719.2596558-1-ira.weiny@intel.com>
+        <20221201002719.2596558-9-ira.weiny@intel.com>
+        <6389ab5156083_c9572947c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+        <20221202141901.00003016@Huawei.com>
+        <638a55611405d_3cbe02942c@dwillia2-xfh.jf.intel.com.notmuch>
+        <20221205130129.00000cc1@Huawei.com>
+        <638e1dd6aa7bb_25af829435@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.155.47]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.2/cxl-rch
-branch HEAD: da8380bbbe90f69bec4be69af4d0deb7cf2bbcfe  cxl/acpi: Set ACPI's CXL _OSC to indicate RCD mode support
+On Mon, 5 Dec 2022 08:35:34 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-elapsed time: 729m
+> Jonathan Cameron wrote:
+> > On Fri, 2 Dec 2022 11:43:29 -0800
+> > Dan Williams <dan.j.williams@intel.com> wrote:
+> >   
+> > > Jonathan Cameron wrote:  
+> > > >     
+> > > > > > +int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
+> > > > > > +			     struct cxl_event_interrupt_policy *policy)
+> > > > > > +{
+> > > > > > +	int rc;
+> > > > > > +
+> > > > > > +	policy->info_settings = CXL_INT_MSI_MSIX;
+> > > > > > +	policy->warn_settings = CXL_INT_MSI_MSIX;
+> > > > > > +	policy->failure_settings = CXL_INT_MSI_MSIX;
+> > > > > > +	policy->fatal_settings = CXL_INT_MSI_MSIX;      
+> > > > > 
+> > > > > I think this needs to be careful not to undo events that the BIOS
+> > > > > steered to itself in firmware-first mode, which raises another question,
+> > > > > does firmware-first mean more the OS needs to backoff on some event-log
+> > > > > handling as well?    
+> > > > 
+> > > > Hmm. Does the _OSC cover these.  There is one for Memory error reporting
+> > > > that I think covers it (refers to 12.2.3.2)
+> > > > 
+> > > > Note that should cover any means of obtaining these, not just interrupt
+> > > > driven - so including the initial record clear.
+> > > > 
+> > > > ..
+> > > >     
+> > > > > > +
+> > > > > > +static irqreturn_t cxl_event_failure_thread(int irq, void *id)
+> > > > > > +{
+> > > > > > +	struct cxl_dev_state *cxlds = id;
+> > > > > > +
+> > > > > > +	cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_FAIL);
+> > > > > > +	return IRQ_HANDLED;
+> > > > > > +}      
+> > > > > 
+> > > > > So I think one of the nice side effects of moving log priorty handling
+> > > > > inside of cxl_mem_get_records_log() and looping through all log types in
+> > > > > priority order until all status is clear is that an INFO interrupt also
+> > > > > triggers a check of the FATAL status for free.
+> > > > >     
+> > > > 
+> > > > I go the opposite way on this in thinking that an interrupt should only
+> > > > ever be used to handle the things it was registered for - so we should
+> > > > not be clearing fatal records in the handler triggered for info events.    
+> > > 
+> > > I would agree with you if this was a fast path and if the hardware
+> > > mechanism did not involve shared status register that tells you
+> > > that both FATAL and INFO are pending retrieval through a mechanism.
+> > > Compare that to the separation between admin and IO queues in NVME.
+> > > 
+> > > If the handler is going to loop on the status register then it must be
+> > > careful not to starve out FATAL while processing INFO.
+> > >   
+> > > > Doing other actions like this relies on subtlies of the generic interrupt
+> > > > handling code which happens to force interrupt threads on a shared interrupt
+> > > > line to be serialized.  I'm not sure we are safe at all the interrupt
+> > > > isn't shared unless we put a lock around the whole thing (we have one
+> > > > because of the buffer mutex though).    
+> > > 
+> > > The interrupt is likely shared since there is no performance benefit to
+> > > entice hardware vendors spend transistor budget on more vector space for
+> > > events. The events architecture does not merit that spend.
+> > >   
+> > > > If going this way I think the lock needs a rename.
+> > > > It's not just protecting the buffer used, but also serialize multiple
+> > > > interrupt threads.    
+> > > 
+> > > I will let Ira decide if he wants to rename, but in my mind the shared
+> > > event buffer *is* the data being locked, the fact that multiple threads
+> > > might be contending for it is immaterial.  
+> > 
+> > It isn't he only thing being protected.  Access to the device is also
+> > being serialized including the data in it's registers.
+> > 
+> > If someone comes along later and decides to implement multiple buffers
+> > and there for gets rid of the lock. boom.  
+> 
+> That's what the mailbox mutex is protecting against. If there is an
+> aspect of the hardware state that is not protected by that then that's a
+> bug.
+> 
+Wrong level of locking. This is about a race on multiple commands
+1) Read data from interrupt thread 1.
+2) Read same data from interrupt thread 2.
+3) Clear data from interrupt thread 1.
+4) Clear data from interrupt thread 2. Boom (well minor error we
+probably eat but not good practice).
 
-configs tested: 97
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-gcc tested configs:
-arc                                 defconfig
-alpha                               defconfig
-x86_64                          rhel-8.3-func
-x86_64               randconfig-a011-20221205
-x86_64                    rhel-8.3-kselftests
-x86_64               randconfig-a012-20221205
-x86_64               randconfig-a014-20221205
-x86_64                           rhel-8.3-kvm
-i386                                defconfig
-x86_64                           rhel-8.3-syz
-x86_64               randconfig-a013-20221205
-x86_64                         rhel-8.3-kunit
-x86_64               randconfig-a015-20221205
-x86_64               randconfig-a016-20221205
-x86_64                               rhel-8.3
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-arm                  randconfig-r046-20221206
-ia64                             allmodconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-arm                                 defconfig
-arc                  randconfig-r043-20221206
-x86_64                           allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-arm                              allyesconfig
-i386                 randconfig-a013-20221205
-i386                 randconfig-a012-20221205
-arm64                            allyesconfig
-i386                 randconfig-a011-20221205
-i386                 randconfig-a014-20221205
-i386                 randconfig-a016-20221205
-i386                             allyesconfig
-i386                 randconfig-a015-20221205
-s390                             allyesconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-x86_64                            allnoconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-m68k                       m5208evb_defconfig
-sh                           se7705_defconfig
-i386                 randconfig-c001-20221205
-arm                        oxnas_v6_defconfig
-microblaze                      mmu_defconfig
-arc                           tb10x_defconfig
-loongarch                         allnoconfig
-xtensa                generic_kc705_defconfig
-arm                           stm32_defconfig
-openrisc                         alldefconfig
-mips                         rt305x_defconfig
-mips                           gcw0_defconfig
-sh                          rsk7264_defconfig
-riscv             nommu_k210_sdcard_defconfig
-parisc                              defconfig
-x86_64               randconfig-k001-20221205
-loongarch                           defconfig
-csky                                defconfig
-nios2                               defconfig
-sparc                               defconfig
-x86_64                                  kexec
 
-clang tested configs:
-x86_64               randconfig-a003-20221205
-x86_64               randconfig-a004-20221205
-x86_64               randconfig-a006-20221205
-x86_64               randconfig-a005-20221205
-hexagon              randconfig-r045-20221206
-hexagon              randconfig-r041-20221206
-x86_64               randconfig-a001-20221205
-x86_64               randconfig-a002-20221205
-riscv                randconfig-r042-20221206
-s390                 randconfig-r044-20221206
-i386                 randconfig-a001-20221205
-i386                 randconfig-a002-20221205
-i386                 randconfig-a005-20221205
-i386                 randconfig-a004-20221205
-i386                 randconfig-a003-20221205
-i386                 randconfig-a006-20221205
-mips                     loongson1c_defconfig
-powerpc                      katmai_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                        neponset_defconfig
-powerpc                 mpc8313_rdb_defconfig
-mips                  cavium_octeon_defconfig
-mips                     cu1830-neo_defconfig
-arm                    vt8500_v6_v7_defconfig
-hexagon              randconfig-r041-20221205
-arm                  randconfig-r046-20221205
-hexagon              randconfig-r045-20221205
-riscv                          rv32_defconfig
-hexagon              randconfig-r041-20221204
-riscv                randconfig-r042-20221204
-hexagon              randconfig-r045-20221204
-s390                 randconfig-r044-20221204
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
