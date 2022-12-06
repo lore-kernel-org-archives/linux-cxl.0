@@ -2,46 +2,43 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD6EC352A1
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 09:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8761C3A5A7
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 09:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235061AbiLFJi3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Dec 2022 04:38:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
+        id S235187AbiLFJtW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Dec 2022 04:49:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234609AbiLFJiZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 04:38:25 -0500
+        with ESMTP id S234944AbiLFJsj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 04:48:39 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA98E1CFF9;
-        Tue,  6 Dec 2022 01:38:19 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9C0BF5
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 01:47:37 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NRFdR5tPZz6H7X0;
-        Tue,  6 Dec 2022 17:35:23 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NRFr96sD3z686fV;
+        Tue,  6 Dec 2022 17:44:41 +0800 (CST)
 Received: from localhost (10.45.155.47) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 6 Dec
- 2022 09:38:16 +0000
-Date:   Tue, 6 Dec 2022 09:38:15 +0000
+ 2022 09:47:34 +0000
+Date:   Tue, 6 Dec 2022 09:47:33 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V2 08/11] cxl/mem: Wire up event interrupts
-Message-ID: <20221206093815.00000156@Huawei.com>
-In-Reply-To: <638e1dd6aa7bb_25af829435@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20221201002719.2596558-1-ira.weiny@intel.com>
-        <20221201002719.2596558-9-ira.weiny@intel.com>
-        <6389ab5156083_c9572947c@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-        <20221202141901.00003016@Huawei.com>
-        <638a55611405d_3cbe02942c@dwillia2-xfh.jf.intel.com.notmuch>
-        <20221205130129.00000cc1@Huawei.com>
-        <638e1dd6aa7bb_25af829435@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+CC:     Davidlohr Bueso <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+        <dave.jiang@intel.com>, <nvdimm@lists.linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, <catalin.marinas@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        <anthony.jebson@huawei.com>, <ardb@kernel.org>
+Subject: Re: [PATCH 5/5] cxl/region: Manage CPU caches relative to DPA
+ invalidation events
+Message-ID: <20221206094733.00007ed2@Huawei.com>
+In-Reply-To: <638e502e1904a_3cbe0294e2@dwillia2-xfh.jf.intel.com.notmuch>
+References: <166993219354.1995348.12912519920112533797.stgit@dwillia2-xfh.jf.intel.com>
+        <166993222098.1995348.16604163596374520890.stgit@dwillia2-xfh.jf.intel.com>
+        <20221205192054.mwhzyjrfwfn3tma5@offworld>
+        <638e502e1904a_3cbe0294e2@dwillia2-xfh.jf.intel.com.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -55,100 +52,86 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 5 Dec 2022 08:35:34 -0800
+On Mon, 5 Dec 2022 12:10:22 -0800
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > On Fri, 2 Dec 2022 11:43:29 -0800
-> > Dan Williams <dan.j.williams@intel.com> wrote:
+> [ add linux-arm-kernel@lists.infradead.org ]
+> 
+> Background for ARM folks, CXL can dynamically reconfigure the target
+> devices that back a given physical memory region. When that happens the
+> CPU cache can be holding cache data from a previous configuration. The
+> mitigation for that scenario on x86 is wbinvd, ARM does not have an
+> equivalent. The result, dynamic region creation is disabled on ARM. In
+> the near term, most CXL is configured pre-boot, but going forward this
+> restriction is untenable.
+> 
+> Davidlohr Bueso wrote:
+> > On Thu, 01 Dec 2022, Dan Williams wrote:
 > >   
-> > > Jonathan Cameron wrote:  
-> > > >     
-> > > > > > +int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
-> > > > > > +			     struct cxl_event_interrupt_policy *policy)
-> > > > > > +{
-> > > > > > +	int rc;
-> > > > > > +
-> > > > > > +	policy->info_settings = CXL_INT_MSI_MSIX;
-> > > > > > +	policy->warn_settings = CXL_INT_MSI_MSIX;
-> > > > > > +	policy->failure_settings = CXL_INT_MSI_MSIX;
-> > > > > > +	policy->fatal_settings = CXL_INT_MSI_MSIX;      
-> > > > > 
-> > > > > I think this needs to be careful not to undo events that the BIOS
-> > > > > steered to itself in firmware-first mode, which raises another question,
-> > > > > does firmware-first mean more the OS needs to backoff on some event-log
-> > > > > handling as well?    
-> > > > 
-> > > > Hmm. Does the _OSC cover these.  There is one for Memory error reporting
-> > > > that I think covers it (refers to 12.2.3.2)
-> > > > 
-> > > > Note that should cover any means of obtaining these, not just interrupt
-> > > > driven - so including the initial record clear.
-> > > > 
-> > > > ..
-> > > >     
-> > > > > > +
-> > > > > > +static irqreturn_t cxl_event_failure_thread(int irq, void *id)
-> > > > > > +{
-> > > > > > +	struct cxl_dev_state *cxlds = id;
-> > > > > > +
-> > > > > > +	cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_FAIL);
-> > > > > > +	return IRQ_HANDLED;
-> > > > > > +}      
-> > > > > 
-> > > > > So I think one of the nice side effects of moving log priorty handling
-> > > > > inside of cxl_mem_get_records_log() and looping through all log types in
-> > > > > priority order until all status is clear is that an INFO interrupt also
-> > > > > triggers a check of the FATAL status for free.
-> > > > >     
-> > > > 
-> > > > I go the opposite way on this in thinking that an interrupt should only
-> > > > ever be used to handle the things it was registered for - so we should
-> > > > not be clearing fatal records in the handler triggered for info events.    
-> > > 
-> > > I would agree with you if this was a fast path and if the hardware
-> > > mechanism did not involve shared status register that tells you
-> > > that both FATAL and INFO are pending retrieval through a mechanism.
-> > > Compare that to the separation between admin and IO queues in NVME.
-> > > 
-> > > If the handler is going to loop on the status register then it must be
-> > > careful not to starve out FATAL while processing INFO.
-> > >   
-> > > > Doing other actions like this relies on subtlies of the generic interrupt
-> > > > handling code which happens to force interrupt threads on a shared interrupt
-> > > > line to be serialized.  I'm not sure we are safe at all the interrupt
-> > > > isn't shared unless we put a lock around the whole thing (we have one
-> > > > because of the buffer mutex though).    
-> > > 
-> > > The interrupt is likely shared since there is no performance benefit to
-> > > entice hardware vendors spend transistor budget on more vector space for
-> > > events. The events architecture does not merit that spend.
-> > >   
-> > > > If going this way I think the lock needs a rename.
-> > > > It's not just protecting the buffer used, but also serialize multiple
-> > > > interrupt threads.    
-> > > 
-> > > I will let Ira decide if he wants to rename, but in my mind the shared
-> > > event buffer *is* the data being locked, the fact that multiple threads
-> > > might be contending for it is immaterial.  
+> > >A "DPA invalidation event" is any scenario where the contents of a DPA
+> > >(Device Physical Address) is modified in a way that is incoherent with
+> > >CPU caches, or if the HPA (Host Physical Address) to DPA association
+> > >changes due to a remapping event.
+> > >
+> > >PMEM security events like Unlock and Passphrase Secure Erase already
+> > >manage caches through LIBNVDIMM,  
 > > 
-> > It isn't he only thing being protected.  Access to the device is also
-> > being serialized including the data in it's registers.
+> > Just to be clear, is this is why you get rid of the explicit flushing
+> > for the respective commands in security.c?  
+> 
+> Correct, because those commands can only be executed through libnvdimm.
+> 
+> >   
+> > >so that leaves HPA to DPA remap events
+> > >that need cache management by the CXL core. Those only happen when the
+> > >boot time CXL configuration has changed. That event occurs when
+> > >userspace attaches an endpoint decoder to a region configuration, and
+> > >that region is subsequently activated.
+> > >
+> > >The implications of not invalidating caches between remap events is that
+> > >reads from the region at different points in time may return different
+> > >results due to stale cached data from the previous HPA to DPA mapping.
+> > >Without a guarantee that the region contents after cxl_region_probe()
+> > >are written before being read (a layering-violation assumption that
+> > >cxl_region_probe() can not make) the CXL subsystem needs to ensure that
+> > >reads that precede writes see consistent results.  
 > > 
-> > If someone comes along later and decides to implement multiple buffers
-> > and there for gets rid of the lock. boom.  
+> > Hmm where does this leave us remaping under arm64 which is doesn't have
+> > ARCH_HAS_CPU_CACHE_INVALIDATE_MEMREGION?
+> > 
+> > Back when we were discussing this it was all related to the security stuff,
+> > which under arm it could just be easily discarded as not available feature.  
 > 
-> That's what the mailbox mutex is protecting against. If there is an
-> aspect of the hardware state that is not protected by that then that's a
-> bug.
+> I can throw out a few strawman options, but really need help from ARM
+> folks to decide where to go next.
+
++Cc bunch of relevant people. There are discussions underway but I'm not sure
+anyone will want to give more details here yet.
+
 > 
-Wrong level of locking. This is about a race on multiple commands
-1) Read data from interrupt thread 1.
-2) Read same data from interrupt thread 2.
-3) Clear data from interrupt thread 1.
-4) Clear data from interrupt thread 2. Boom (well minor error we
-probably eat but not good practice).
+> 1/ Map and loop cache flushing line by line. It works, but for Terabytes
+>    of CXL the cost is 10s of seconds of latency to reconfigure a region.
+>    That said, region configuration, outside of test scenarios, is typically
+>    a "once per bare metal provisioning" event.
+> 
+> 2/ Set a configuration dependency that mandates that all CXL memory be
+>    routed through the page allocator where it is guaranteed that the memory
+>    will be written (zeroed) before use. This restricts some planned use
+>    cases for the "Dynamic Capacity Device" capability.
 
+This is the only case that's really a problem (to my mind) I hope we will have
+a more general solution before there is much hardware out there, particularly
+where sharing is involved. 
 
+> 
+> 3/ Work with the CXL consortium to extend the back-invalidate concept
+>    for general purpose usage to make devices capable of invalidating caches
+>    for a new memory region they joined, and mandate it for ARM. This one
+>    has a long lead time and a gap for every device in flight currently.
 
+There are significant disadvantages in doing this that I suspect will mean
+this never happens for some classes of device, or is turned off for performance
+reasons. For anyone curious, go look at the protocol requirements of back
+invalidate in the CXL 3.0 spec.
 
+Jonathan
