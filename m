@@ -2,143 +2,89 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5958C352A1
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 17:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C37DC3A5A7
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 22:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232037AbiLFRG2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Dec 2022 12:06:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42614 "EHLO
+        id S229489AbiLFWrN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Dec 2022 17:47:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233776AbiLFRGZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 12:06:25 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69431134
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 09:06:24 -0800 (PST)
+        with ESMTP id S229961AbiLFWqy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 17:46:54 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054DC4AF11
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 14:46:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670346384; x=1701882384;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xsWNOOGhWB3DEReUjhEKGcgAF88zwmJ9SANSTf4HMdQ=;
-  b=impz9U2avIHQy0zKg9GV1QRfSosR2CyuFuKrGNQOYFeexWpOWO7s8giV
-   tBDqxgBMT4xzXBp0Cvt2woGtxpy/cTaf6TUtOIq+lR6oftAngDtxdY3lE
-   22iH2VnGZRsxGuJsFV7od/sLfhUGIPt25XGUuFSO1HQBcP8y3f5xD9DL4
-   P+c3CaXQOfONXIrpHg28cAxLL1uqnNpJb2dPsqGBiSMU60iamF9lU8nKv
-   ODu359mP32RpP3PHIqBIDQfJx7+/iTvM4E7radEuRE0jb6ksNlLKcGBwE
-   QkphVJetrVWyPaS85Yg6AxOSEZES5hO2RCOZabeZnY8YpTedch3GvAB/9
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="316697572"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="316697572"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 09:06:24 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="677043197"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="677043197"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.108.100]) ([10.212.108.100])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 09:06:23 -0800
-Message-ID: <231c12a4-eb10-9c29-5fff-898fa7072ba2@intel.com>
-Date:   Tue, 6 Dec 2022 10:06:22 -0700
+  t=1670366803; x=1701902803;
+  h=subject:mime-version:content-transfer-encoding:from:date:
+   message-id:to:cc;
+  bh=LfnGne5nqpKqVmYbhyqRfp+t/XhB6rxG8HipNM237sc=;
+  b=J4K8szFDP9GarrZ1Me6/cFXfG41ZXxG5dLtyf7fjPCshT1tsJBXk6NYq
+   lWJCQ687EtRsOlUMOVXZf3gfym42krAzjQ4POQFIWNTrpRCFTsrmssth3
+   WcbyQjjN0q8wVV05+Sv1N2fcNr1iyIaZxHzI+R72FC2ke0xI73/PEbpqr
+   0rP1U9kiJYDBs+mfIwK0FHh1u7j4gnFJEUtP6KFfvPPQIkxWWL921YisU
+   5T8vsHM5Gis7g3tcA+hbKwgeBQ/9EFhtDu8Pp4OxC27RUV7PS5f67Yiuf
+   MPuhzq740fZanIwlaZdJJnjHHdADWn2x05RbhRiAthPYIna64HDTv2uLZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="315462736"
+X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
+   d="scan'208";a="315462736"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 14:46:26 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="714967825"
+X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
+   d="scan'208";a="714967825"
+Received: from yguo-mobl1.amr.corp.intel.com (HELO vverma7-desk1.local) ([10.212.82.140])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 14:46:26 -0800
+Subject: [PATCH ndctl 0/2] misc meson.build and clang-format updates
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.1
-Subject: Re: [PATCH] cxl/pci: Add some type-safety to the AER trace points
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <167030091477.4045167.15174636482098463885.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <167030091477.4045167.15174636482098463885.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD7Gj2MC/x2NMQrDMAwAvxI0V2BpyNCvhA6OLSeCVA1WMYWQv8
+ fpeNzBHeBSVRyewwFVmrp+rAM9BkhrtEVQc2fgwEwcRmwN3+oJiUvJFEaSEKHXc3TBuUZL693vYl
+ ltuc1epejv/5jAcvpu8DrPC53/9ap6AAAA
+From:   Vishal Verma <vishal.l.verma@intel.com>
+Date:   Tue, 06 Dec 2022 15:46:22 -0700
+Message-Id: <20221206-vv-misc-v1-0-4c5bd58c90ca@intel.com>
+To:     nvdimm@lists.linux.dev
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org
+X-Mailer: b4 0.11.0-dev-b6525
+X-Developer-Signature: v=1; a=openpgp-sha256; l=662;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=LfnGne5nqpKqVmYbhyqRfp+t/XhB6rxG8HipNM237sc=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDMn9xxxvTFqTp7Tg5FODLzG3fBhc9aL0V5krfu/hSxEsd/bT
+ d+LrKGVhEONikBVTZPm75yPjMbnt+TyBCY4wc1iZQIYwcHEKwEQmf2Rk2HCg0TDWrv5j6xarwlNbfX
+ 8dcTNrKnkT75hSuZXly+upfIwM37I5/kSs3h63eP2fLTfWSjxPiq5WvfFq5rQ19bFs2fti2AA=
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Patch 1 adds a .clang-format option to reformat macros for aligning
 
+Patch 2 squelches a warning from a meson update.
 
-On 12/5/2022 9:28 PM, Dan Williams wrote:
-> The first argument to the CXL AER trace points is the source device.
-> Pass a 'const struct device *' rather than a 'const char *' for more
-> type precision / safety.
-> 
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+Vishal Verma (2):
+      clang-format: Align consecutive macros and #defines
+      meson.build: add a check argument to run_command
 
-> ---
->   drivers/cxl/pci.c          |    4 ++--
->   include/trace/events/cxl.h |   16 ++++++++--------
->   2 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 6cec9fa9326c..cced4a0df3d1 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -562,7 +562,7 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
->   	}
->   
->   	header_log_copy(cxlds, hl);
-> -	trace_cxl_aer_uncorrectable_error(dev_name(dev), status, fe, hl);
-> +	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
->   	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
->   
->   	return true;
-> @@ -644,7 +644,7 @@ static void cxl_cor_error_detected(struct pci_dev *pdev)
->   	status = le32_to_cpu(readl(addr));
->   	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
->   		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(dev_name(dev), status);
-> +		trace_cxl_aer_correctable_error(dev, status);
->   	}
->   }
->   
-> diff --git a/include/trace/events/cxl.h b/include/trace/events/cxl.h
-> index 72c3e2870a9e..ad085a2534ef 100644
-> --- a/include/trace/events/cxl.h
-> +++ b/include/trace/events/cxl.h
-> @@ -45,16 +45,16 @@
->   )
->   
->   TRACE_EVENT(cxl_aer_uncorrectable_error,
-> -	TP_PROTO(const char *dev_name, u32 status, u32 fe, u32 *hl),
-> -	TP_ARGS(dev_name, status, fe, hl),
-> +	TP_PROTO(const struct device *dev, u32 status, u32 fe, u32 *hl),
-> +	TP_ARGS(dev, status, fe, hl),
->   	TP_STRUCT__entry(
-> -		__string(dev_name, dev_name)
-> +		__string(dev_name, dev_name(dev))
->   		__field(u32, status)
->   		__field(u32, first_error)
->   		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
->   	),
->   	TP_fast_assign(
-> -		__assign_str(dev_name, dev_name);
-> +		__assign_str(dev_name, dev_name(dev));
->   		__entry->status = status;
->   		__entry->first_error = fe;
->   		/*
-> @@ -89,14 +89,14 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
->   )
->   
->   TRACE_EVENT(cxl_aer_correctable_error,
-> -	TP_PROTO(const char *dev_name, u32 status),
-> -	TP_ARGS(dev_name, status),
-> +	TP_PROTO(const struct device *dev, u32 status),
-> +	TP_ARGS(dev, status),
->   	TP_STRUCT__entry(
-> -		__string(dev_name, dev_name)
-> +		__string(dev_name, dev_name(dev))
->   		__field(u32, status)
->   	),
->   	TP_fast_assign(
-> -		__assign_str(dev_name, dev_name);
-> +		__assign_str(dev_name, dev_name(dev));
->   		__entry->status = status;
->   	),
->   	TP_printk("%s: status: '%s'",
-> 
+ .clang-format | 1 +
+ meson.build   | 1 +
+ 2 files changed, 2 insertions(+)
+---
+base-commit: 3591a1bea2bd90349963b02aeb9064dc3fbd3d83
+change-id: 20221206-vv-misc-12ffd1061e0a
+
+Best regards,
+-- 
+Vishal Verma <vishal.l.verma@intel.com>
