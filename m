@@ -2,48 +2,47 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331FDC352A1
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 04:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC4AC352A1
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 04:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbiLFEWn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Dec 2022 23:22:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
+        id S231349AbiLFEWv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 5 Dec 2022 23:22:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231812AbiLFEWl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 23:22:41 -0500
+        with ESMTP id S230352AbiLFEWq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 23:22:46 -0500
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB29E1115
-        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 20:22:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCBD63B7
+        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 20:22:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670300559; x=1701836559;
+  t=1670300565; x=1701836565;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=1wsyPflUNXkyD4TFxvZT7C8vWqE6R+TZbyHta73BM5Y=;
-  b=eMw/7JJCOaGkVDLiDu/Y5WTHYU6WSq63jNCJmaAi1U+Y6F6Yz7RDWMJs
-   JkgueU0dW752dCf2unxVAD/sEiON2ePV2BSi5EVGd5bQcB6iHUL+Z+Mi9
-   bP7GgDM3+8iR0cynwsB9SQq3EmYJCK1k7Ae+4YKnFBQVD1B7ferTrxtU+
-   9SQt0rE7fqVRUN/Udn++B6q59wCLEvmMbvp7+9qZWVLCgzs5P+mnDqlLY
-   Ormycr54lmDRvX9FSTNvwo91b/6rwWVUEWchaHz/okTyTd8Z0BmQnahKx
-   ERl0U8/ugknFIaHBPv9mZBGpcu3lff9m/W2+doYkGNSspOKwWS2mvBVvZ
+  bh=paKg0JMaXH9lUCsgDLg85e+zF9XyHEaF5GwLWjjl21A=;
+  b=cwphgOXLesyjhvxvw3KQFkDhKHe9WtfsL7OE0OcCT16smDiQJzkOZuT4
+   AW9Kv1TmfMELX9TUnbuWQkBW5HuIqfoSY6568YY34pV+V4KibVhYaQl2N
+   xH/f+pRijVPNn61tn8x9G3SDIeDNr/Ovijmo8jfUDQULSJk9Mv0t/fxWq
+   ROZ9zHx70axesLAc/bucSgwa3Td2XEpa1gtrhOx8MvAtE8j+AXPeDCwBO
+   vfuHgjSs3mpjaBoWrmOLADv8oE4UY8q/qErNE1cYtdpUWS749nBlo2z80
+   Mv4R3b2rX0Sivm9EAjnLtHfd6A35UEZqt3B+uR6DxPVsQYfa5l4eWLfhR
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="315238679"
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="315238707"
 X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="315238679"
+   d="scan'208";a="315238707"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:22:39 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="639733751"
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:22:45 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10552"; a="639733785"
 X-IronPort-AV: E=Sophos;i="5.96,220,1665471600"; 
-   d="scan'208";a="639733751"
+   d="scan'208";a="639733785"
 Received: from bmnebren-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.114.171])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:22:39 -0800
-Subject: [PATCH 3/4] cxl/mbox: Add variable output size validation for
- internal commands
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 20:22:44 -0800
+Subject: [PATCH 4/4] cxl/security: Drop security command ioctl uapi
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     dave.jiang@intel.com, ira.weiny@intel.com
-Date:   Mon, 05 Dec 2022 20:22:39 -0800
-Message-ID: <167030055918.4044561.10339573829837910505.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Mon, 05 Dec 2022 20:22:44 -0800
+Message-ID: <167030056464.4044561.11486507095384253833.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <167030054261.4044561.2164047490200738083.stgit@dwillia2-xfh.jf.intel.com>
 References: <167030054261.4044561.2164047490200738083.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -54,104 +53,74 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-cxl_internal_send_cmd() skips output size validation for variable output
-commands which is not ideal. Most of the time internal usages want to
-fail if the output size does not match what was requested. For other
-commands where the caller cannot predict the size there is usually a
-a header that conveys how much vaild data is in the payload. For those
-cases add @min_out as a parameter to specify what the minimum response
-payload needs to be for the caller to parse the rest of the payload.
+CXL PMEM security operations are routed through the NVDIMM sysfs
+interface. For this reason the corresponding commands are marked
+"exclusive" to preclude collisions between the ioctl ABI and the sysfs
+ABI. However, a better way to preclude that collision is to simply
+remove the ioctl ABI (command-id definitions) for those operations.
 
-In this patch only Get Supported Logs has that behavior, but going
-forward records retrieval commands like Get Poison List and Get Event
-Records can use @min_out to retrieve a variable amount of records.
+Now that cxl_internal_send_cmd() (formerly cxl_mbox_send_cmd()) no
+longer needs to talk the cxl_mem_commands array, all of the uapi
+definitions for the security commands can be dropped.
 
-Critically, this validation scheme skips the needs to interrogate the
-cxl_mem_commands array which in turn frees up the implementation to
-support internal command enabling without also enabling external / user
-commands.
+These never appeared in a released kernel, so no regression risk.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/mbox.c |   23 ++++++++++++++---------
- drivers/cxl/cxlmem.h    |    2 ++
- 2 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/cxl/core/mbox.c      |   17 -----------------
+ include/uapi/linux/cxl_mem.h |    6 ------
+ 2 files changed, 23 deletions(-)
 
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index ed451ca60ce5..c36a3589377a 100644
+index c36a3589377a..b03fba212799 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -166,9 +166,7 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
- int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
- 			  struct cxl_mbox_cmd *mbox_cmd)
- {
--	const struct cxl_mem_command *cmd =
--		cxl_mem_find_command(mbox_cmd->opcode);
--	size_t out_size;
-+	size_t out_size, min_out;
- 	int rc;
- 
- 	if (mbox_cmd->size_in > cxlds->payload_size ||
-@@ -176,6 +174,7 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
- 		return -E2BIG;
- 
- 	out_size = mbox_cmd->size_out;
-+	min_out = mbox_cmd->min_out;
- 	rc = cxlds->mbox_send(cxlds, mbox_cmd);
- 	if (rc)
- 		return rc;
-@@ -183,14 +182,18 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
- 	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS)
- 		return cxl_mbox_cmd_rc2errno(mbox_cmd);
- 
-+	if (!out_size)
-+		return 0;
-+
- 	/*
--	 * Variable sized commands can't be validated and so it's up to the
--	 * caller to do that if they wish.
-+	 * Variable sized output needs to at least satisfy the caller's
-+	 * minimum if not the fully requested size.
- 	 */
--	if (cmd->info.size_out != CXL_VARIABLE_PAYLOAD) {
--		if (mbox_cmd->size_out != out_size)
--			return -EIO;
--	}
-+	if (min_out == 0)
-+		min_out = out_size;
-+
-+	if (mbox_cmd->size_out < min_out)
-+		return -EIO;
- 	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_internal_send_cmd, CXL);
-@@ -635,6 +638,8 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxl
- 		.opcode = CXL_MBOX_OP_GET_SUPPORTED_LOGS,
- 		.size_out = cxlds->payload_size,
- 		.payload_out = ret,
-+		/* At least the record number field must be valid */
-+		.min_out = 2,
- 	};
- 	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
- 	if (rc < 0) {
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index c447577f5ad5..ab138004f644 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -101,6 +101,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
-  *            outputs commands this is always expected to be deterministic. For
-  *            variable sized output commands, it tells the exact number of bytes
-  *            written.
-+ * @min_out: (input) internal command output payload size validation
-  * @return_code: (output) Error code returned from hardware.
-  *
-  * This is the primary mechanism used to send commands to the hardware.
-@@ -115,6 +116,7 @@ struct cxl_mbox_cmd {
- 	void *payload_out;
- 	size_t size_in;
- 	size_t size_out;
-+	size_t min_out;
- 	u16 return_code;
+@@ -65,12 +65,6 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+ 	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
+ 	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
+-	CXL_CMD(GET_SECURITY_STATE, 0, 0x4, 0),
+-	CXL_CMD(SET_PASSPHRASE, 0x60, 0, 0),
+-	CXL_CMD(DISABLE_PASSPHRASE, 0x40, 0, 0),
+-	CXL_CMD(FREEZE_SECURITY, 0, 0, 0),
+-	CXL_CMD(UNLOCK, 0x20, 0, 0),
+-	CXL_CMD(PASSPHRASE_SECURE_ERASE, 0x40, 0, 0),
  };
  
+ /*
+@@ -717,17 +711,6 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+ 		/* Found the required CEL */
+ 		rc = 0;
+ 	}
+-
+-	/*
+-	 * Setup permanently kernel exclusive commands, i.e. the
+-	 * mechanism is driven through sysfs, keyctl, etc...
+-	 */
+-	set_bit(CXL_MEM_COMMAND_ID_SET_PASSPHRASE, cxlds->exclusive_cmds);
+-	set_bit(CXL_MEM_COMMAND_ID_DISABLE_PASSPHRASE, cxlds->exclusive_cmds);
+-	set_bit(CXL_MEM_COMMAND_ID_UNLOCK, cxlds->exclusive_cmds);
+-	set_bit(CXL_MEM_COMMAND_ID_PASSPHRASE_SECURE_ERASE,
+-		cxlds->exclusive_cmds);
+-
+ out:
+ 	kvfree(gsl);
+ 	return rc;
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index 82bdad4ce5de..c71021a2a9ed 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -41,12 +41,6 @@
+ 	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+ 	___C(SCAN_MEDIA, "Scan Media"),                                   \
+ 	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
+-	___C(GET_SECURITY_STATE, "Get Security State"),			  \
+-	___C(SET_PASSPHRASE, "Set Passphrase"),				  \
+-	___C(DISABLE_PASSPHRASE, "Disable Passphrase"),			  \
+-	___C(FREEZE_SECURITY, "Freeze Security"),			  \
+-	___C(UNLOCK, "Unlock"),						  \
+-	___C(PASSPHRASE_SECURE_ERASE, "Passphrase Secure Erase"),	  \
+ 	___C(MAX, "invalid / last command")
+ 
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 
