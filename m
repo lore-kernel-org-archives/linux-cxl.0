@@ -2,86 +2,86 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B09C63703
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 01:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48266C4708E
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Dec 2022 01:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233056AbiLFBPc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S230154AbiLFBPc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Mon, 5 Dec 2022 20:15:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40388 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233105AbiLFBPa (ORCPT
+        with ESMTP id S233056AbiLFBPa (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Dec 2022 20:15:30 -0500
 Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134E41C43A
-        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 17:15:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E72941EC44
+        for <linux-cxl@vger.kernel.org>; Mon,  5 Dec 2022 17:15:17 -0800 (PST)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id CD6C75C10CB;
-        Tue,  6 Dec 2022 01:15:14 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 567ED6C1D3F;
+        Tue,  6 Dec 2022 01:15:17 +0000 (UTC)
 Received: from pdx1-sub0-mail-a242.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 4DA9E5C17A5;
-        Tue,  6 Dec 2022 01:15:10 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTPA id B40E56C14C4;
+        Tue,  6 Dec 2022 01:15:09 +0000 (UTC)
 ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1670289310; a=rsa-sha256;
         cv=none;
-        b=2yDTD0fH1KCQEia8GvaihgZrajK/ipfX/7quAHa1hUZqCehGJeHwVr4HyqZy8M6TQb+CcO
-        0k2zbnaEwQ/Kw5pwCEWdCQiR7pBIe2n9dHQNMXtx0ULEAvhsITS9W7a+JWGe+rqrX4+RMR
-        GX5refLjhd/rW4pfeOkl62JTLDpUjTTuHsOq9o4VLitoExoAp5tJ/vdJMfrnQl6E0XpYhQ
-        0iANqocx7SPN/jCfVK33ZaJhrhu/ECFAAfSKcy9d8vFhBDqH03TKJ+BJmRYCRdNllIRFWZ
-        LIJ6VTgD4lnGYP8Fc8mEcM9CNUZE0ej8pJaWJLxBBA8Ps1KYVtP7cw4PvOo2zA==
+        b=OYkfVgJm/PUrMH+EN4TeTGatY9GVSqdHEpP9H8RN67BagCmmvwOPwdloXWubYhzM+t5A19
+        pafpAaPPag5sBGg+U8JKlsuxHwzy30WszXiFAHHNE/4DPR0BKoUXCUAb5Dnet770db9U2e
+        JRLDxgZvbgnw1D0GEqYD0NFrVKZS8gvXtqoNM1BlcPh8UI/IREcCoxpZkXf/NSR/ddioOd
+        nwTIOeMBQvM3IRUaaqCQEA9vDcMqW8bwq0/KgGG1sEC9rXSin0O+hJqck4UbkFVvmYDdfA
+        yP1lQ7sBqH5S1JYDK+br9xW3a5QBBq5OmNJqA2FlJwMENBuFAY98QSQrTbguow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1670289310;
+        s=arc-2022; t=1670289309;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=7OhDJEkZsxI44+tm9bGiRQCVVJ5T6AGtZVD0+CZgVlQ=;
-        b=a4/3DT1/A/061bl4+xKiI7TcK6RTto5Xwem5k1HMjPjRnrV97FHKsXDgFa1H7nDslWvMtZ
-        oWmzIXx9kiiPEyBHz7GhejEJDzQ3w62btv4QQRRRsZ/HMjl8zcXychrJZDp3cdClQs/wd9
-        i8mmnTgaBZ2r79QSvUpU8uffCvn9LQnWVjq3KL8WvwkwULspd7fD5BCblXJSyc58zZoo5P
-        5kV+UgwugDUx3JmIQrgT1TnNOoQs6HTevbfw6ez7DH0riljapJAtdw/60RuJl9wUhjd+S6
-        35lBjp4LCGXLF0/GD15jSvn4ALlQoZyPSL1jDUwntR2GOpaloXUXExQVzcj9SA==
+        bh=tb6om8zADAa++dyya+hTJtRm+uSK6TexL8wF6UgSwAY=;
+        b=l52d9imVlZFL4AXWolPMrmTSEvzyAGhPD2sdZz0qahRbF0+tMJGDvL9OEjdfAP5Y9VdYR4
+        HPvimmBidcqA8dWyYnBlDHinOtl2ycyUNFArMh5jgDkkjMJOxYbjU9842GP8p6bxHr9rj9
+        xWmFLpeQGuLwBUJZmGEtsGxk3fz9R+2bncobYq2XMIrhd1LKN7Kof9Velm2QAGZhrPDZsh
+        DaWt+ViHQShxQV1hbP5rivuGyhjI8VGF8NgswT1NNL0rjIXMOXjeocanzKIAKh5sBB+Bp8
+        0KVEHlkoI9x9MEQhdvfVBJaUBIprcTrqals5pD5I9W/ZZo8Yn2tlylZDJ6ELVQ==
 ARC-Authentication-Results: i=1;
-        rspamd-7bd68c5946-5mzh2;
+        rspamd-7bd68c5946-5dcr7;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Lyrical-Language: 28ef28492b7fffb4_1670289310648_3915094672
-X-MC-Loop-Signature: 1670289310648:320980742
-X-MC-Ingress-Time: 1670289310648
+X-Daffy-Desert: 2c35ccb556199937_1670289313106_1198104745
+X-MC-Loop-Signature: 1670289313106:1254382729
+X-MC-Ingress-Time: 1670289313106
 Received: from pdx1-sub0-mail-a242.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.126.30.34 (trex/6.7.1);
-        Tue, 06 Dec 2022 01:15:10 +0000
+        by 100.103.24.82 (trex/6.7.1);
+        Tue, 06 Dec 2022 01:15:13 +0000
 Received: from offworld.. (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a242.dreamhost.com (Postfix) with ESMTPSA id 4NR2XF4SPKzHn;
-        Mon,  5 Dec 2022 17:15:09 -0800 (PST)
+        by pdx1-sub0-mail-a242.dreamhost.com (Postfix) with ESMTPSA id 4NR2XD6yVmzYP;
+        Mon,  5 Dec 2022 17:15:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1670289310;
-        bh=7OhDJEkZsxI44+tm9bGiRQCVVJ5T6AGtZVD0+CZgVlQ=;
+        s=dreamhost; t=1670289309;
+        bh=tb6om8zADAa++dyya+hTJtRm+uSK6TexL8wF6UgSwAY=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=KQ9lr3YW+f4NV7FgGjPSi1a7stGlOWKn24eSSmZWP3MOhE9WcUIOrsmwjff6hmnoH
-         OwZsH2t7eh0mmDxzYvJEdSlwPfzlL/VL9Qzu/S9af/xBlOSJldsfCvIKF8MyAch9Pe
-         b+YKWZxkKa8+NtO6jQDIx3hZUcXxfz3HL4V7FWB3qAR01PeZ5ac8tN9Mg86AUCfV+b
-         8eJiiy6q2MyzMDU3te2uB3baLq6Ix/LHSozxg2Y7lZrWqrdWjBT/36KU+xZEAa+fNU
-         tuOtFnW1gqlS42vAvr9PJgtLzYFoRjAE2ztkeJq2O3hho9W/ym/JVlMavCb026zov3
-         k5q1A4UfDhbZA==
+        b=YBx7J+9YqXmimTrXcuTECNeUHPquB4/Ne+FxNyE3H+qaMEw/9jxQw0Lu26WrFZa3V
+         aY0HAHy3etJPE5MQ5RFIJXWaVv/70jGyD8EAl9OdP+9z5BB78XJFrAJyGCnmaAEesX
+         RMN6Aqp15OJVaiTEB5mtYyKA8LRu1zwe+022yf4g8NLEq8idGfiQWk0SIufzu/X8Ut
+         qt7iQdi0ByDGRbiK9Pn1ymSwlL0U1kMhg4fH+N7lSr2af40NILJyYzyYFFLUKZ9JfR
+         +pocEOvoyRkC751Qz8X4Z1uERXYkAXLlihfiSsNR8lJQg6FyzqxUQUoOrpBO1QqCa0
+         Qka9sk7pi/dHQ==
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     dan.j.williams@intel.com
 Cc:     ira.weiny@intel.com, dave.jiang@intel.com,
         Jonathan.Cameron@huawei.com, dave@stgolabs.net,
         linux-cxl@vger.kernel.org
-Subject: [PATCH 2/3] cxl/mem: Support sanitation commands
-Date:   Mon,  5 Dec 2022 17:15:00 -0800
-Message-Id: <20221206011501.464916-3-dave@stgolabs.net>
+Subject: [PATCH 1/3] cxl/mbox: Add background operation handling machinery
+Date:   Mon,  5 Dec 2022 17:14:59 -0800
+Message-Id: <20221206011501.464916-2-dave@stgolabs.net>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221206011501.464916-1-dave@stgolabs.net>
 References: <20221206011501.464916-1-dave@stgolabs.net>
@@ -91,345 +91,663 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Implement support for the non-pmem exclusive sanitize (aka overwrite)
-and secure erase commands, per CXL specs.
+This adds support for handling background operations, as defined in
+the CXL 3.0 spec. Commands that can take too long (over ~2 seconds)
+can run asynchronously in the background, these are limited to:
+transfer/activate firmware, scan media, sanitize (aka overwrite)
+and VPPB bind/unbind.
 
-To properly support this feature, create a 'security' sysfs file that
-when read will list the current pmem security state or overwrite, and
-when written to, perform the requested operation.
+Completion of background operations, successful or not, can be handled
+via irq or poll based. This patch deals only with polling, which
+introduces some complexities as we need to handle the window in which
+the original background command completed, then a new one is
+successfully started before the poller wakes up and checks. This,
+in theory, can occur any amount of times. One of the problems is
+that previous states cannot be tracked as hw background status
+registers always deal with the last command.
 
-As with ndctl-speak, the use cases here would be:
+So in order to keep hardware and the driver in sync, there can be
+windows where the hardware is ready but the driver won't be, and
+thus must serialize/handle it accordingly. While this polling cost
+may not be ideal: 1) background commands are rare/limited and
+2) the extra busy time should be small compared to the overall
+command duration and 3) devices that support mailbox interrupts
+do not use this.
 
-$> cxl sanitize --erase memX
-$> cxl sanitize --overwrite memX
-$> cxl sanitize --wait-overwrite memX
+The implementation extends struct cxl_mem_command to become aware
+of background-capable commands in a generic fashion and presents
+some interfaces:
 
-Where userspace can implement entirely the wait/query mechanism for
-waiting for the sanitize to complete (albeit no poll support for
-the security sysfs file).
+- Calls for bg operations, where each bg command can choose to implement
+  whatever needed based on the nature of the operation. For example,
+  while running, overwrite may only allow certain related commands to
+  occur, while scan media does not have any such limitations.
+  Delay times can also be different, for which ad-hoc hinting can
+  be defined - for example, scan media could use some value based on
+  GET_SCAN_MEDIA_CAPS and overwrite has predefined values based on
+  pmem DSM specs[0]. Similarly some commands need to execute tasks
+  once the command finishes, such as overwriting requires CPU flushing
+  when successfully done. These are:
+
+  cxl_mbox_bgcmd_conflicts()
+  cxl_mbox_bgcmd_delay()
+  cxl_mbox_bgcmd_post()
+
+- cxl_mbox_send_cmd() is extended such that callers can distinguish,
+  upon rc == 0, between completed and successfully started in the
+  background.
+
+- cxl_mbox_bgcmd_running() will atomically tell which command is
+  running in the background, if any. This allows easy querying
+  functionality. Similarly, there are cxl_mbox_bgcmd_start() and
+  cxl_mbox_bgcmd_done() to safely mark the in-flight operation.
+  While x86 serializes atomics, care must be taken with arm64, for
+  example, ensuring, minimally, release/acquire semantics.
+
+There are currently no supported commands.
+
+[0] https://pmem.io/documents/IntelOptanePMem_DSM_Interface-V2.0.pdf
 
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl |  19 +++++
- drivers/cxl/core/mbox.c                 | 104 +++++++++++++++++++++++-
- drivers/cxl/core/memdev.c               |  54 ++++++++++++
- drivers/cxl/cxlmem.h                    |  10 +++
- include/uapi/linux/cxl_mem.h            |   2 +
- 5 files changed, 188 insertions(+), 1 deletion(-)
+ drivers/cxl/core/core.h |   3 +-
+ drivers/cxl/core/mbox.c | 213 ++++++++++++++++++++++++++++++++++++++--
+ drivers/cxl/core/port.c |   1 +
+ drivers/cxl/cxl.h       |   8 ++
+ drivers/cxl/cxlmem.h    |  55 ++++++++++-
+ drivers/cxl/pci.c       |   4 +
+ drivers/cxl/pmem.c      |   5 +-
+ drivers/cxl/security.c  |  13 +--
+ 8 files changed, 282 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 8494ef27e8d2..18e26ae3d75f 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -58,6 +58,25 @@ Description:
- 		affinity for this device.
+diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+index 1d8f87be283f..2a71664a0668 100644
+--- a/drivers/cxl/core/core.h
++++ b/drivers/cxl/core/core.h
+@@ -69,6 +69,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
  
+ int cxl_memdev_init(void);
+ void cxl_memdev_exit(void);
+-void cxl_mbox_init(void);
++int cxl_mbox_init(void);
++void cxl_mbox_exit(void);
  
-+What:		/sys/bus/cxl/devices/memX/security
-+Date:		December, 2022
-+KernelVersion:	v6.2
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		Reading this file will display the security state for that
-+		device. The following states are available: disabled, frozen,
-+		locked, unlocked and overwrite. When writing to the file, the
-+		following commands are supported:
-+		* overwrite - Sanitize the device to securely re-purpose or
-+		  decommission it. This is done by ensuring that all user data
-+		  and meta-data, whether it resides in persistent capacity,
-+		  volatile capacity, or the label storage area, is made
-+		  permanently unavailable by whatever means is appropriate for
-+		  the media type. This causes all CPU caches to be flushed.
-+		* erase - Secure Erase user data by changing the media encryption
-+		  keys for all user data areas of the device. This causes all
-+		  CPU caches to be flushed.
-+
- What:		/sys/bus/cxl/devices/*/devtype
- Date:		June, 2021
- KernelVersion:	v5.14
+ #endif /* __CXL_CORE_H__ */
 diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index bfee9251c81c..5ffdab10073d 100644
+index 35dd889f1d3a..bfee9251c81c 100644
 --- a/drivers/cxl/core/mbox.c
 +++ b/drivers/cxl/core/mbox.c
-@@ -4,6 +4,7 @@
- #include <linux/security.h>
- #include <linux/debugfs.h>
- #include <linux/mutex.h>
-+#include <linux/memregion.h>
- #include <cxlmem.h>
- #include <cxl.h>
- 
-@@ -11,6 +12,7 @@
+@@ -10,6 +10,7 @@
+ #include "core.h"
  
  static bool cxl_raw_allow_all;
- static struct workqueue_struct *cxl_mbox_bgpoll_wq;
-+static struct cxl_mem_bgcommand_ops sanitize_bgops;
++static struct workqueue_struct *cxl_mbox_bgpoll_wq;
  
  /**
   * DOC: cxl mbox
-@@ -70,6 +72,8 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+@@ -24,7 +25,7 @@ static bool cxl_raw_allow_all;
+ 	for ((cmd) = &cxl_mem_commands[0];                                     \
+ 	     ((cmd) - cxl_mem_commands) < ARRAY_SIZE(cxl_mem_commands); (cmd)++)
+ 
+-#define CXL_CMD(_id, sin, sout, _flags)                                        \
++#define __CXL_CMD(_id, sin, sout, _flags, _bgops)                              \
+ 	[CXL_MEM_COMMAND_ID_##_id] = {                                         \
+ 	.info =	{                                                              \
+ 			.id = CXL_MEM_COMMAND_ID_##_id,                        \
+@@ -33,8 +34,13 @@ static bool cxl_raw_allow_all;
+ 		},                                                             \
+ 	.opcode = CXL_MBOX_OP_##_id,                                           \
+ 	.flags = _flags,                                                       \
++	.bgops = _bgops,						       \
+ 	}
+ 
++#define CXL_CMD(_id, sin, sout, _flags) __CXL_CMD(_id, sin, sout, _flags, NULL)
++#define CXL_BGCMD(_id, sin, sout, _flags, _bgops)                              \
++	__CXL_CMD(_id, sin, sout, _flags | CXL_CMD_FLAG_BACKGROUND, _bgops)
++
+ #define CXL_VARIABLE_PAYLOAD	~0U
+ /*
+  * This table defines the supported mailbox commands for the driver. This table
+@@ -63,7 +69,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(INJECT_POISON, 0x8, 0, 0),
  	CXL_CMD(CLEAR_POISON, 0x48, 0, 0),
  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
- 	CXL_BGCMD(SCAN_MEDIA, 0x11, 0, 0, NULL),
-+	CXL_BGCMD(SANITIZE, 0, 0, 0, &sanitize_bgops),
-+	CXL_CMD(SECURE_ERASE, 0, 0, 0),
+-	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
++	CXL_BGCMD(SCAN_MEDIA, 0x11, 0, 0, NULL),
  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
  	CXL_CMD(GET_SECURITY_STATE, 0, 0x4, 0),
  	CXL_CMD(SET_PASSPHRASE, 0x60, 0, 0),
-@@ -136,7 +140,6 @@ static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
- 	cxl_for_each_cmd(c)
- 		if (c->opcode == opcode)
- 			return c;
--
- 	return NULL;
+@@ -145,6 +151,136 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
+ 	return cxl_command_names[c->info.id].name;
  }
  
-@@ -887,6 +890,8 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
- 	 * Setup permanently kernel exclusive commands, i.e. the
- 	 * mechanism is driven through sysfs, keyctl, etc...
- 	 */
-+	set_bit(CXL_MEM_COMMAND_ID_SANITIZE, cxlds->exclusive_cmds);
-+	set_bit(CXL_MEM_COMMAND_ID_SECURE_ERASE, cxlds->exclusive_cmds);
- 	set_bit(CXL_MEM_COMMAND_ID_SET_PASSPHRASE, cxlds->exclusive_cmds);
- 	set_bit(CXL_MEM_COMMAND_ID_DISABLE_PASSPHRASE, cxlds->exclusive_cmds);
- 	set_bit(CXL_MEM_COMMAND_ID_UNLOCK, cxlds->exclusive_cmds);
-@@ -970,6 +975,103 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
- 
-+static int sanitize_bgcmd_conflicts(u16 new)
++static unsigned long __maybe_unused
++cxl_mbox_bgcmd_delay(struct cxl_dev_state *cxlds, u16 opcode)
 +{
-+	/* forbid anyone but health related commands */
-+	if (new == CXL_MBOX_OP_GET_HEALTH_INFO)
++	struct cxl_mem_command *c;
++	unsigned long ret = 0;
++
++	c = cxl_mem_find_command(opcode);
++	if (!c || !(c->flags & CXL_CMD_FLAG_BACKGROUND)) {
++		dev_WARN_ONCE(cxlds->dev, true,
++			      "Not a background command\n");
 +		return 0;
-+	return -EBUSY;
++	}
++
++	if (c->bgops && c->bgops->delay)
++		ret = c->bgops->delay(cxlds);
++
++	return ret * HZ;
 +}
 +
-+static unsigned long sanitize_bgcmd_delay(struct cxl_dev_state *cxlds)
++static void cxl_mbox_bgcmd_post(struct cxl_dev_state *cxlds,
++				u16 opcode, bool success)
 +{
-+	unsigned int tmo;
++	struct cxl_mem_command *c;
 +
-+	if (!cxlds)
-+		return 0;
++	c = cxl_mem_find_command(opcode);
++	if (!c || !(c->flags & CXL_CMD_FLAG_BACKGROUND)) {
++		dev_WARN_ONCE(cxlds->dev, true,
++			      "Not a background command\n");
++		return;
++	}
 +
-+	tmo = cxlds->sec.sanitize_tmo + 10;
-+	cxlds->sec.sanitize_tmo = min(15U * 60U, tmo);
-+	return tmo * HZ;
++	if (c->bgops && c->bgops->post)
++		c->bgops->post(cxlds, success);
 +}
 +
-+static void sanitize_bgcmd_post(struct cxl_dev_state *cxlds, bool success)
-+{
-+	if (!cxlds->mbox_irq)
-+		cxlds->sec.sanitize_tmo = 0;
-+	if (success)
-+		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-+}
-+
-+static struct cxl_mem_bgcommand_ops sanitize_bgops = {
-+	.conflicts = sanitize_bgcmd_conflicts,
-+	.delay = sanitize_bgcmd_delay,
-+	.post = sanitize_bgcmd_post,
-+};
-+
-+/**
-+ * cxl_mem_sanitize() - Send sanitation related commands to the device.
-+ * @cxlds: The device data for the operation
-+ * @op: The command opcode to send
++/*
++ * Ensure that ->mbox_send(@new) can run safely when a background
++ * command is running. If so, returns zero, otherwise error.
 + *
-+ * Return: 0 if the command was executed successfully, regardless of
-+ * whether or not the actual security operation is done in the background.
-+ * Upon error, return the result of the mailbox command or -EINVAL if
-+ * security requirements are not met. CPU caches are flushed before and
-+ * after succesful completion of each command.
-+ *
-+ * See CXL 2.0 @8.2.9.5.5 Sanitize.
++ * check 1. bg cmd running. If not running it is fine to
++ *	    send any command. If one is running then there
++ *	    may be restrictions.
++ * check 2. @new incoming command is capable of running
++ *          in the background. If there is an in-flight bg
++ *          operation, all these are forbidden as we need
++ *          to serialize when polling.
++ * check 3. @new incoming command is not blacklisted by the
++ *          current running command.
 + */
-+int cxl_mem_sanitize(struct cxl_dev_state *cxlds, u16 op)
++static int __maybe_unused
++cxl_mbox_check_cmd_bgcmd(struct cxl_dev_state *cxlds, u16 new)
 +{
-+	int rc;
-+	u32 sec_out;
-+	struct cxl_mem_command *cmd;
++	struct cxl_mem_command *c;
 +
-+	cmd = cxl_mem_find_command(op);
-+	if (!cmd || !test_bit(cmd->info.id, cxlds->enabled_cmds))
++	/* 1 */
++	if (likely(!cxl_mbox_bgcmd_running(cxlds)))
++		return 0;
++
++	c = cxl_mem_find_command(new);
++	if (!c)
 +		return -EINVAL;
 +
-+	if (!cpu_cache_has_invalidate_memregion())
-+		return -EINVAL;
++	/* 2 */
++	if (c->flags & CXL_CMD_FLAG_BACKGROUND)
++		return -EBUSY;
 +
-+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
-+			       NULL, 0, &sec_out, sizeof(sec_out), NULL);
-+	if (rc)
-+		return rc;
++	/* 3 */
++	if (c->bgops && c->bgops->conflicts)
++		return c->bgops->conflicts(new);
 +
++	return 0;
++}
++
++/*
++ * Background operation polling mode.
++ */
++void cxl_mbox_bgcmd_work(struct work_struct *work)
++{
++	struct cxl_dev_state *cxlds;
++	u64 bgcmd_status_reg;
++	u16 opcode;
++	u32 pct;
++
++	cxlds = container_of(work, struct cxl_dev_state, mbox_bgpoll.work);
++
++	dev_WARN_ONCE(cxlds->dev, !!cxlds->mbox_irq,
++		      "Polling mailbox when IRQs are supported\n");
++
++	bgcmd_status_reg = readq(cxlds->regs.mbox +
++				 CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
++	opcode = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK,
++			   bgcmd_status_reg);
++
++	pct = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, bgcmd_status_reg);
++	if (pct != 100) {
++		unsigned long hint;
++		u64 status_reg;
++
++		status_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_STATUS_OFFSET);
++		if (!FIELD_GET(CXLDEV_MBOX_STATUS_BACKGROUND_OPERATION,
++			       status_reg))
++			dev_WARN(cxlds->dev,
++				 "No background operation running (%u%%).\n",
++				 pct);
++
++		hint = cxl_mbox_bgcmd_delay(cxlds, opcode);
++		if (hint == 0) {
++			/*
++			 * TODO: try to do better(?). pct is updated every
++			 * ~1 sec, maybe use a heurstic based on that.
++			 */
++			hint = 5 * HZ;
++		}
++
++		queue_delayed_work(cxl_mbox_bgpoll_wq,
++				   &cxlds->mbox_bgpoll, hint);
++	} else { /* bg operation completed */
++		u16 return_code;
++
++		return_code = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
++					bgcmd_status_reg);
++		cxl_mbox_bgcmd_post(cxlds, opcode,
++				    return_code == CXL_MBOX_CMD_RC_SUCCESS);
++
++		put_device(cxlds->dev);
++		cxl_mbox_bgcmd_done(cxlds);
++	}
++}
++EXPORT_SYMBOL_NS_GPL(cxl_mbox_bgcmd_work, CXL);
++
+ /**
+  * cxl_mbox_send_cmd() - Send a mailbox command to a device.
+  * @cxlds: The device data for the operation
+@@ -153,6 +289,7 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
+  * @in_size: The length of the input payload
+  * @out: Caller allocated buffer for the output.
+  * @out_size: Expected size of output.
++ * @return_code: (optional output) HW returned code.
+  *
+  * Context: Any context.
+  * Return:
+@@ -167,8 +304,9 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
+  * error. While this distinction can be useful for commands from userspace, the
+  * kernel will only be able to use results when both are successful.
+  */
+-int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
+-		      size_t in_size, void *out, size_t out_size)
++int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode,
++		      void *in, size_t in_size,
++		      void *out, size_t out_size, u16 *return_code)
+ {
+ 	const struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+ 	struct cxl_mbox_cmd mbox_cmd = {
+@@ -183,12 +321,53 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
+ 	if (in_size > cxlds->payload_size || out_size > cxlds->payload_size)
+ 		return -E2BIG;
+ 
 +	/*
-+	 * Prior to using these commands, any security applied to
-+	 * the user data areas of the device shall be DISABLED (or
-+	 * UNLOCKED for secure erase case).
++	 * With bg polling this can overlap a scenario where the
++	 * hardware can receive new requests but the driver is
++	 * not ready. Handle accordingly.
 +	 */
-+	if (sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET)
-+		return -EINVAL;
++	if (!cxlds->mbox_irq) {
++		rc = cxl_mbox_check_cmd_bgcmd(cxlds, opcode);
++		if (rc)
++			return rc;
++	}
 +
-+	if (op == CXL_MBOX_OP_SANITIZE) {
-+		u16 ret_code; /* hw */
+ 	rc = cxlds->mbox_send(cxlds, &mbox_cmd);
++	if (return_code)
++		*return_code = mbox_cmd.return_code;
+ 	if (rc)
+ 		return rc;
+ 
+-	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
++	switch (mbox_cmd.return_code) {
++	case CXL_MBOX_CMD_RC_BACKGROUND:
++	{
++		int err;
 +
-+		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
++		dev_dbg(cxlds->dev, "Opcode 0x%04x: %s\n", opcode,
++			cxl_mbox_cmd_rc2str(&mbox_cmd));
 +
-+		rc = cxl_mbox_send_cmd(cxlds, op, NULL, 0, NULL, 0, &ret_code);
-+		if (rc == 0 && ret_code != CXL_MBOX_CMD_RC_BACKGROUND)
-+			cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-+	} else if (op == CXL_MBOX_OP_SECURE_ERASE) {
-+		if (sec_out & CXL_PMEM_SEC_STATE_LOCKED)
-+			return -EINVAL;
++		err = cxl_mbox_bgcmd_begin(cxlds, opcode);
++		if (err) {
++			dev_WARN(cxlds->dev,
++				 "Corrupted background cmd (opcode 0x%04x)\n",
++				 err);
++			return -ENXIO;
++		}
 +
-+		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
++		get_device(cxlds->dev);
 +
-+		rc = cxl_mbox_send_cmd(cxlds, op, NULL, 0, NULL, 0, NULL);
-+		if (rc == 0)
-+			cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-+	} else
-+		rc = -EINVAL;
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_sanitize, CXL);
-+
- static int add_dpa_res(struct device *dev, struct resource *parent,
- 		       struct resource *res, resource_size_t start,
- 		       resource_size_t size, const char *type)
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 20ce488a7754..0b79c2b6720e 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -106,12 +106,66 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
++		if (!cxlds->mbox_irq) {
++			/* do first poll check asap before using any hinting */
++			queue_delayed_work(cxl_mbox_bgpoll_wq,
++					   &cxlds->mbox_bgpoll, 0);
++		}
++		break;
++	}
++	case CXL_MBOX_CMD_RC_SUCCESS:
++		break;
++	default:
+ 		return cxl_mbox_cmd_rc2errno(&mbox_cmd);
++	}
+ 
+ 	/*
+ 	 * Variable sized commands can't be validated and so it's up to the
+@@ -575,7 +754,7 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
+ 		int rc;
+ 
+ 		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_LOG, &log, sizeof(log),
+-				       out, xfer_size);
++				       out, xfer_size, NULL);
+ 		if (rc < 0)
+ 			return rc;
+ 
+@@ -628,7 +807,7 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxl
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SUPPORTED_LOGS, NULL, 0, ret,
+-			       cxlds->payload_size);
++			       cxlds->payload_size, NULL);
+ 	if (rc < 0) {
+ 		kvfree(ret);
+ 		return ERR_PTR(rc);
+@@ -738,7 +917,7 @@ static int cxl_mem_get_partition_info(struct cxl_dev_state *cxlds)
+ 	int rc;
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_PARTITION_INFO, NULL, 0,
+-			       &pi, sizeof(pi));
++			       &pi, sizeof(pi), NULL);
+ 
+ 	if (rc)
+ 		return rc;
+@@ -771,7 +950,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+ 	int rc;
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_IDENTIFY, NULL, 0, &id,
+-			       sizeof(id));
++			       sizeof(id), NULL);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -868,11 +1047,25 @@ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
  }
- static DEVICE_ATTR_RO(numa_node);
+ EXPORT_SYMBOL_NS_GPL(cxl_dev_state_create, CXL);
  
-+static ssize_t security_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	u32 sec_out = 0;
-+	int rc;
+-void __init cxl_mbox_init(void)
++int __init cxl_mbox_init(void)
+ {
+ 	struct dentry *mbox_debugfs;
+ 
+ 	mbox_debugfs = cxl_debugfs_create_dir("mbox");
+ 	debugfs_create_bool("raw_allow_all", 0600, mbox_debugfs,
+ 			    &cxl_raw_allow_all);
 +
-+	if (cxl_mbox_bgcmd_running(cxlds) == CXL_MBOX_OP_SANITIZE)
-+		return sprintf(buf, "overwrite\n");
++	/* background commands can run concurrently on different devices */
++	cxl_mbox_bgpoll_wq = alloc_workqueue("cxl_mbox_bgcmd", WQ_UNBOUND, 0);
++	if (!cxl_mbox_bgpoll_wq) {
++		debugfs_remove_recursive(mbox_debugfs);
++		return -ENOMEM;
++	}
 +
-+	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
-+			       NULL, 0, &sec_out, sizeof(sec_out), NULL);
-+	if (rc)
-+		return rc;
-+
-+	if (!(sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET))
-+		return sprintf(buf, "disabled\n");
-+	if (sec_out & CXL_PMEM_SEC_STATE_FROZEN)
-+		return sprintf(buf, "frozen\n");
-+	if (sec_out & CXL_PMEM_SEC_STATE_LOCKED)
-+		return sprintf(buf, "locked\n");
-+	else
-+		return sprintf(buf, "unlocked\n");
++	return 0;
 +}
 +
-+#define CXL_SEC_CMD_SIZE 32
-+static ssize_t security_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t len)
++void cxl_mbox_exit(void)
 +{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	char cmd[CXL_SEC_CMD_SIZE+1];
-+	ssize_t rc;
-+
-+	rc = sscanf(buf, "%"__stringify(CXL_SEC_CMD_SIZE)"s", cmd);
-+	if (rc < 1)
-+		return -EINVAL;
-+
-+	if (sysfs_streq(cmd, "overwrite"))
-+		rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SANITIZE);
-+	else if (sysfs_streq(cmd, "erase"))
-+		rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SECURE_ERASE);
-+	else
-+		rc = -EINVAL;
-+
-+	if (rc == 0)
-+		rc = len;
-+	return rc;
-+}
-+static DEVICE_ATTR_RW(security);
-+
- static struct attribute *cxl_memdev_attributes[] = {
- 	&dev_attr_serial.attr,
- 	&dev_attr_firmware_version.attr,
- 	&dev_attr_payload_max.attr,
- 	&dev_attr_label_storage_size.attr,
- 	&dev_attr_numa_node.attr,
-+	&dev_attr_security.attr,
- 	NULL,
- };
++	destroy_workqueue(cxl_mbox_bgpoll_wq);
+ }
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 0d2f5eaaca7d..449767bfb5aa 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1945,6 +1945,7 @@ static void cxl_core_exit(void)
+ 	destroy_workqueue(cxl_bus_wq);
+ 	cxl_memdev_exit();
+ 	debugfs_remove_recursive(cxl_debugfs);
++	cxl_mbox_exit();
+ }
  
+ module_init(cxl_core_init);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index e5e1abceeca7..a10e979ef3a4 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -139,14 +139,22 @@ static inline int ways_to_cxl(unsigned int ways, u8 *iw)
+ /* CXL 2.0 8.2.8.4 Mailbox Registers */
+ #define CXLDEV_MBOX_CAPS_OFFSET 0x00
+ #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
++#define   CXLDEV_MBOX_CAP_BG_CMD_IRQNUM_MASK GENMASK(10, 7)
++#define   CXLDEV_MBOX_CAP_BG_CMD_IRQ BIT(6)
+ #define CXLDEV_MBOX_CTRL_OFFSET 0x04
+ #define   CXLDEV_MBOX_CTRL_DOORBELL BIT(0)
++#define   CXLDEV_MBOX_CTRL_BGCMD_IRQ BIT(2)
+ #define CXLDEV_MBOX_CMD_OFFSET 0x08
+ #define   CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
+ #define   CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK GENMASK_ULL(36, 16)
+ #define CXLDEV_MBOX_STATUS_OFFSET 0x10
++#define   CXLDEV_MBOX_STATUS_BACKGROUND_OPERATION BIT(0)
+ #define   CXLDEV_MBOX_STATUS_RET_CODE_MASK GENMASK_ULL(47, 32)
++/* CXL 3.0 8.2.8.4.7 Background Command Status Register */
+ #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
++#define   CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
++#define   CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK GENMASK_ULL(22, 16)
++#define   CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK GENMASK_ULL(47, 32)
+ #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
+ 
+ /*
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index e7cb2f2fadc4..1dd1caabd41c 100644
+index 75baeb0bbe57..e7cb2f2fadc4 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -215,6 +215,7 @@ struct cxl_endpoint_dvsec_info {
-  * @mbox_irq: @dev supports mailbox interrupts
-  * @mbox_bg: opcode for the in-flight background operation on @dev
-  * @mbox_bgpoll: self-polling delayed work item
-+ * @sec: device security
+@@ -212,6 +212,9 @@ struct cxl_endpoint_dvsec_info {
+  * @serial: PCIe Device Serial Number
+  * @doe_mbs: PCI DOE mailbox array
+  * @mbox_send: @dev specific transport for transmitting mailbox commands
++ * @mbox_irq: @dev supports mailbox interrupts
++ * @mbox_bg: opcode for the in-flight background operation on @dev
++ * @mbox_bgpoll: self-polling delayed work item
   *
   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
   * details on capacity parameters.
-@@ -254,6 +255,10 @@ struct cxl_dev_state {
- 	bool mbox_irq;
- 	atomic_t mbox_bg;
- 	struct delayed_work __maybe_unused mbox_bgpoll;
-+
-+	struct {
-+		unsigned int __maybe_unused sanitize_tmo;
-+	} sec;
+@@ -248,6 +251,9 @@ struct cxl_dev_state {
+ 	struct xarray doe_mbs;
+ 
+ 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
++	bool mbox_irq;
++	atomic_t mbox_bg;
++	struct delayed_work __maybe_unused mbox_bgpoll;
  };
  
  enum cxl_opcode {
-@@ -279,6 +284,8 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
- 	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
- 	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
-+	CXL_MBOX_OP_SANITIZE		= 0x4400,
-+	CXL_MBOX_OP_SECURE_ERASE	= 0x4401,
- 	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
- 	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
- 	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
-@@ -473,6 +480,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
- struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
- void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
- void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+@@ -290,6 +296,26 @@ enum cxl_opcode {
+ 	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+ 		  0x40, 0x3d, 0x86)
+ 
++/*
++ * Supported CXL mailbox commands that can run in the background.
++ *
++ * Barriers pair with release/acquire semantics. When done,
++ * clearing ->mbox_bg must be the very last operation before
++ * finishing the command.
++ */
++static inline int cxl_mbox_bgcmd_begin(struct cxl_dev_state *cxlds, u16 opcode)
++{
++	return atomic_xchg(&cxlds->mbox_bg, opcode);
++}
++static inline int cxl_mbox_bgcmd_running(struct cxl_dev_state *cxlds)
++{
++	return atomic_read_acquire(&cxlds->mbox_bg);
++}
++static inline void cxl_mbox_bgcmd_done(struct cxl_dev_state *cxlds)
++{
++	atomic_set_release(&cxlds->mbox_bg, 0);
++}
 +
- #ifdef CONFIG_CXL_SUSPEND
- void cxl_mem_active_inc(void);
- void cxl_mem_active_dec(void);
-@@ -487,6 +495,8 @@ static inline void cxl_mem_active_dec(void)
+ struct cxl_mbox_get_supported_logs {
+ 	__le16 entries;
+ 	u8 rsvd[6];
+@@ -353,16 +379,38 @@ struct cxl_mbox_set_partition_info {
  
- void cxl_mbox_bgcmd_work(struct work_struct *work);
+ #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
  
-+int cxl_mem_sanitize(struct cxl_dev_state *cxlds, u16 cmd);
++/**
++ * struct cxl_mbox_bgcmd_ops - Optional ad-hoc handling of background cmds
++ * @post: Execute after the command completes
++ * @conflicts: How to handle a @new command when one is currently executing
++ *             (only for polling mode)
++ * @delay: Delay hint for polling on command completion
++ */
++struct cxl_mem_bgcommand_ops {
++	void (*post)(struct cxl_dev_state *cxlds, bool success);
++	int (*conflicts)(u16 new);
++	unsigned long (*delay)(struct cxl_dev_state *cxlds);
++};
++
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
+  * @opcode: The actual bits used for the mailbox protocol
+  * @flags: Set of flags effecting driver behavior.
++ * @bg_ops: Set of optional callbacks to handle commands that can run in
++ *          the background.
+  *
+  *  * %CXL_CMD_FLAG_FORCE_ENABLE: In cases of error, commands with this flag
+  *    will be enabled by the driver regardless of what hardware may have
+  *    advertised.
+  *
++ *  * %CXL_CMD_FLAG_BACKGROUND: The command may execute asynchronously in the
++ *    background if the operation takes longer than ~2 seconds. The semantics
++ *    are:
++ *      - Only a single of these commands can run at a time.
++ *      - Depending on the nature of the operation, devices may continue to
++ *        accept new non-background commands.
++ *
+  * The cxl_mem_command is the driver's internal representation of commands that
+  * are supported by the driver. Some of these commands may not be supported by
+  * the hardware. The driver will use @info to validate the fields passed in by
+@@ -374,8 +422,10 @@ struct cxl_mem_command {
+ 	struct cxl_command_info info;
+ 	enum cxl_opcode opcode;
+ 	u32 flags;
++	struct cxl_mem_bgcommand_ops __maybe_unused *bgops;
+ #define CXL_CMD_FLAG_NONE 0
+ #define CXL_CMD_FLAG_FORCE_ENABLE BIT(0)
++#define CXL_CMD_FLAG_BACKGROUND BIT(1)
+ };
+ 
+ #define CXL_PMEM_SEC_STATE_USER_PASS_SET	0x01
+@@ -414,7 +464,8 @@ enum {
+ };
+ 
+ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
+-		      size_t in_size, void *out, size_t out_size);
++		      size_t in_size, void *out, size_t out_size,
++		      u16 *return_code);
+ int cxl_dev_state_identify(struct cxl_dev_state *cxlds);
+ int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds);
+@@ -434,6 +485,8 @@ static inline void cxl_mem_active_dec(void)
+ }
+ #endif
+ 
++void cxl_mbox_bgcmd_work(struct work_struct *work);
 +
  struct cxl_hdm {
  	struct cxl_component_regs regs;
  	unsigned int decoder_count;
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 82bdad4ce5de..fbf619976eb7 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -40,6 +40,8 @@
- 	___C(CLEAR_POISON, "Clear Poison"),                               \
- 	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
- 	___C(SCAN_MEDIA, "Scan Media"),                                   \
-+	___C(SANITIZE, "Sanitize"),                                       \
-+	___C(SECURE_ERASE, "Secure Erase"),				  \
- 	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
- 	___C(GET_SECURITY_STATE, "Get Security State"),			  \
- 	___C(SET_PASSPHRASE, "Set Passphrase"),				  \
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 621a0522b554..b21d8681beac 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -268,6 +268,10 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+ 		return -ENXIO;
+ 	}
+ 
++	atomic_set(&cxlds->mbox_bg, 0);
++	if (!cxlds->mbox_irq)
++		INIT_DELAYED_WORK(&cxlds->mbox_bgpoll, cxl_mbox_bgcmd_work);
++
+ 	dev_dbg(cxlds->dev, "Mailbox payload sized %zu",
+ 		cxlds->payload_size);
+ 
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index ab40c93c44e5..c6a6d3fd6883 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -173,7 +173,8 @@ static int cxl_pmem_get_config_data(struct cxl_dev_state *cxlds,
+ 	};
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_LSA, &get_lsa,
+-			       sizeof(get_lsa), cmd->out_buf, cmd->in_length);
++			       sizeof(get_lsa), cmd->out_buf,
++			       cmd->in_length, NULL);
+ 	cmd->status = 0;
+ 
+ 	return rc;
+@@ -205,7 +206,7 @@ static int cxl_pmem_set_config_data(struct cxl_dev_state *cxlds,
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_SET_LSA, set_lsa,
+ 			       struct_size(set_lsa, data, cmd->in_length),
+-			       NULL, 0);
++			       NULL, 0, NULL);
+ 
+ 	/*
+ 	 * Set "firmware" status (4-packed bytes at the end of the input
+diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+index 5484d4eecfd1..825d1bd1dd16 100644
+--- a/drivers/cxl/security.c
++++ b/drivers/cxl/security.c
+@@ -20,7 +20,7 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
+ 	int rc;
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE, NULL, 0,
+-			       &sec_out, sizeof(sec_out));
++			       &sec_out, sizeof(sec_out), NULL);
+ 	if (rc < 0)
+ 		return 0;
+ 
+@@ -67,7 +67,7 @@ static int cxl_pmem_security_change_key(struct nvdimm *nvdimm,
+ 	memcpy(set_pass.new_pass, new_data->data, NVDIMM_PASSPHRASE_LEN);
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_SET_PASSPHRASE,
+-			       &set_pass, sizeof(set_pass), NULL, 0);
++			       &set_pass, sizeof(set_pass), NULL, 0, NULL);
+ 	return rc;
+ }
+ 
+@@ -86,7 +86,7 @@ static int __cxl_pmem_security_disable(struct nvdimm *nvdimm,
+ 	memcpy(dis_pass.pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
+ 
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_DISABLE_PASSPHRASE,
+-			       &dis_pass, sizeof(dis_pass), NULL, 0);
++			       &dis_pass, sizeof(dis_pass), NULL, 0, NULL);
+ 	return rc;
+ }
+ 
+@@ -108,7 +108,8 @@ static int cxl_pmem_security_freeze(struct nvdimm *nvdimm)
+ 	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	return cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_FREEZE_SECURITY, NULL, 0, NULL, 0);
++	return cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_FREEZE_SECURITY,
++				 NULL, 0, NULL, 0, NULL);
+ }
+ 
+ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
+@@ -122,7 +123,7 @@ static int cxl_pmem_security_unlock(struct nvdimm *nvdimm,
+ 
+ 	memcpy(pass, key_data->data, NVDIMM_PASSPHRASE_LEN);
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_UNLOCK,
+-			       pass, NVDIMM_PASSPHRASE_LEN, NULL, 0);
++			       pass, NVDIMM_PASSPHRASE_LEN, NULL, 0, NULL);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -143,7 +144,7 @@ static int cxl_pmem_security_passphrase_erase(struct nvdimm *nvdimm,
+ 		CXL_PMEM_SEC_PASS_MASTER : CXL_PMEM_SEC_PASS_USER;
+ 	memcpy(erase.pass, key->data, NVDIMM_PASSPHRASE_LEN);
+ 	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE,
+-			       &erase, sizeof(erase), NULL, 0);
++			       &erase, sizeof(erase), NULL, 0, NULL);
+ 	if (rc < 0)
+ 		return rc;
+ 
 -- 
 2.38.1
 
