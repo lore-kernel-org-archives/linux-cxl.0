@@ -2,540 +2,510 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BB0C352A1
-	for <linux-cxl@archiver.kernel.org>; Wed,  7 Dec 2022 01:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D363C3A5A7
+	for <linux-cxl@archiver.kernel.org>; Wed,  7 Dec 2022 02:21:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiLGBza (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Dec 2022 20:55:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38478 "EHLO
+        id S229750AbiLGCVE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Dec 2022 21:21:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbiLGBz2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 20:55:28 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04FD72ED
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 17:55:27 -0800 (PST)
+        with ESMTP id S229743AbiLGCUx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Dec 2022 21:20:53 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554CF5437C
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Dec 2022 18:20:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670378126; x=1701914126;
+  t=1670379651; x=1701915651;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=tRj8DAvf7t/UdxfLWW6yVvgq1VEBtpCv6zu8qrdw6+c=;
-  b=LNaj82G/261rnTnp67FN7fqdeJbooVSbUfZ7sVuQhEnMXDnZRm3T0O29
-   CmNRkxyk68zbXExip6omKmYSAv+XjSP8/rkLMrLClftJei9NXw5vzTTCf
-   sePUJX8HMqscH4LkWXeGXPUcYsdFcrCR8lv1WPBqHC2wUrYusQynIf15w
-   VfLwr3j6wMyCE9n8yaKETRx/45i9CDL5rCyvkTvBXLdBzlRDa1sZSCiYs
-   q84fI6NI3Xd76wbGcai18gWLJkJlFRm9n9hwVPpJCdTCb4QuleoT9zxMF
-   aaoJTnYMjQT1ShqqJ0l9an1Ni7P9UoW6PSNnDA76mL89sITwinboja94N
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="315495833"
+  bh=1gI5UmUmEIIRdCXnFln5PQg+VdtkFyIusahkI16oDrw=;
+  b=eWlTYnr2u1qElW63EUJTGwdhxjoRbi0COvu5+SeBZSyRax8CQu3rBwGZ
+   aqd5U2Jog6dQzisqfJ6/RW+PSdjV0HoR/KV/eMol7nkjS+7qJPWbk4kFr
+   bLcejMGvfldhWn5r6QFTx7yFlBlR+uHZB7J5vHJeRMcopHGkEJtwHN/bV
+   Rg4hjIsa3YY2jygk4EeUOn18apswfgtdX5/IVspu/RCRYzMmFFU0Kc817
+   /bnkQZ2AjNjU2FMgJ35zMErK2EvQM9fic8677hGzV3b42RLkcJyDXyTJn
+   Lk9nSLScRd44itOZgRlLHATHWjEGSzajMuhfjfB8H33gGSA/g8xdXMgZm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="378949792"
 X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
-   d="scan'208";a="315495833"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 17:55:25 -0800
+   d="scan'208";a="378949792"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 18:20:40 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="788710604"
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="596799355"
 X-IronPort-AV: E=Sophos;i="5.96,223,1665471600"; 
-   d="scan'208";a="788710604"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga001.fm.intel.com with ESMTP; 06 Dec 2022 17:55:24 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="596799355"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga003.jf.intel.com with ESMTP; 06 Dec 2022 18:20:36 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 6 Dec 2022 17:55:24 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ 15.1.2507.16; Tue, 6 Dec 2022 18:20:36 -0800
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 6 Dec 2022 17:55:23 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.16; Tue, 6 Dec 2022 18:20:35 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Tue, 6 Dec 2022 17:55:23 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.16 via Frontend Transport; Tue, 6 Dec 2022 18:20:35 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Tue, 6 Dec 2022 17:55:23 -0800
+ 15.1.2507.16; Tue, 6 Dec 2022 18:20:35 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RsKhil6Mxbr/jyrv6lLHl669UxM4+62I1PpsCpuLWBAup8zBDh9tCKj4LJ0DeYkap86eL7rg2wmqdaK2gfUikT+0LSPf/GwCo7UnaBKEOOyAy+GDhZNg9K2Z4BvUs/VjMDr4bpsrMtvp7jTHntjUtm5nwEXvwfv0QQlTQQt66l+A2MeVmarYzk1B41HyqFEmYDsbu+4Oi/RtyEJqBCLNozcKyOmGadZD0sQjCVsARUrC1P3RZ8HP1GBprSWL6dM0fFEseylxhNpgYACta++9GEdAGK2Bi2rauNnSsmD/pdRgIQtzIf1aDXDr69SImYyGX+y5/0x8RKW+i0l47DEWhg==
+ b=axkgiVvP/F7rxrtyAeNFiwF2y9tTVXMkNdj0oDdIN3zENHG4k4sY67yKF0uuZ/ogflBRP1ZFa41GrrohUhNTcjpU0HWD87ermZycbYLYmCcja4kejKsx4LmHZ6sieMUmePIuB2tAOB5+Jj68gILokS01dwrQKnP1JHtRCgoCSlmlR5KXJDxZveu3wF+WSC3PJoSzdUU0ENPb8T+B6HorB1h3pAW8AjEwoxpxKO0zXyvEbeKX7CbhQ73pZf7LiXqETFT7uEXWV1jdZay5QBV3NRLjV3kQ7ED80fyA1rUZcsALhMSuEdkEI5WKo7UWhkAcFMx9/JEgt9R3MIGC3pcqBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HRN1+1Nij2oxdgoF4NFiIQt6f3jHKuSKb7T5eqRPDS0=;
- b=IPZca+sojFcdCL3JIsJhYaCjYA9y7wzWZLscB2x+QE2yodkiavXbVbPNBPNdQTj4rOOGw8Hr+yuJ22gBNavGpTZbLwgMTQJJaC5uYMKUuNiLYIVCxa304txJSUJrUdSJ5DRDNSiAI2Fb9ZCrNYM3Sb8IbZKAmShBZxSFNnAyhCYHI+OkfCWqXOYOKN4ylaXNzY1lmagdV8+uOd6j8suEkA4Ahl/41/PyRLHqnrp/GK8exXt63w1gfMAgs4MsQ1UkgM4PKJxtoNzjS7F7erWd3WaQy5rQhcyaVSpBRP07aOn1xX3w47AgaIhKtGQkK+XbKAeeYmHye6Xu25vqX4AHaA==
+ bh=4EEIdw+RfLyBIxzi/9Z0HEAwLI9pz/hkguJPTXXQ6+k=;
+ b=aJuv9mabjvfzJmAa/0eBZPr9QVbQsSNKmJa3xT72Vj9oGvp75FHyUc3EnZHmxkG8Q37AfoWFhxYdx82UK382ORCn9woBsZDjSYjGZeKRVu/GMvzFl+8yChD9jVAi2FqgMu220XXWP4ul55X02yHO26NHSP0XKZOH/v8zS4UeVeow6HGRDc2E9xWN2NrIKIQwLJz3acivZs/RBVVPmoYR9tQGrF24PGbTQBPfajP+R9GJOvphYjDJWY23ywkFIwT868oSK4AJXJje+QQgXrazPNdhLruGLkJOfJ9zlg4hAjEd51mrQPAoSrXyFoaMOYPo1mZ/53IGjcm0+835uIbL0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by SN7PR11MB7068.namprd11.prod.outlook.com
- (2603:10b6:806:29b::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Wed, 7 Dec
- 2022 01:55:21 +0000
+ (2603:10b6:301:50::20) by BL3PR11MB6364.namprd11.prod.outlook.com
+ (2603:10b6:208:3b7::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.11; Wed, 7 Dec
+ 2022 02:20:33 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5880.014; Wed, 7 Dec 2022
- 01:55:21 +0000
-Date:   Tue, 6 Dec 2022 17:55:17 -0800
+ 02:20:33 +0000
+Date:   Tue, 6 Dec 2022 18:20:30 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     Davidlohr Bueso <dave@stgolabs.net>, <dan.j.williams@intel.com>
 CC:     <ira.weiny@intel.com>, <dave.jiang@intel.com>,
         <Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>,
         <linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH 1/3] cxl/mbox: Add background operation handling machinery
-Message-ID: <638ff285d426e_3cbe0294af@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: RE: [PATCH 2/3] cxl/mem: Support sanitation commands
+Message-ID: <638ff86e7e44c_3cbe0294fd@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20221206011501.464916-1-dave@stgolabs.net>
- <20221206011501.464916-2-dave@stgolabs.net>
+ <20221206011501.464916-3-dave@stgolabs.net>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20221206011501.464916-2-dave@stgolabs.net>
-X-ClientProxiedBy: SJ0PR03CA0128.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::13) To MWHPR1101MB2126.namprd11.prod.outlook.com
+In-Reply-To: <20221206011501.464916-3-dave@stgolabs.net>
+X-ClientProxiedBy: BYAPR07CA0043.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::20) To MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|SN7PR11MB7068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ef27e3c-a98b-47ba-edb1-08dad7f61893
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|BL3PR11MB6364:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03f2ecc1-3b58-41f0-afc4-08dad7f99e13
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b/yFN5gnPFFX++zWwmSvs5l/8Qj786aTKzYBrviJ/qpJuL/RHlPQWjhA7mOaxRWTw70f33ceLIvks2W7DM1isdIaDoZN32coCo632GzDMqIDknkDlzYo9hKmQM7IZYgaiYz0Qk0Q9wlJR/N0aswbSHpnlQ5gG9ovXoNEmeqUPoHWG2cDGFO6iDyNwL+q2+ecvGk7gvYPnd65Eti/KJvTPWAi+jaOooQ0Fuzufq60FCMt7cvuYlNaxTXretb1IV5a08gdbBEByWaRNjkcEMLwJ0dxZ8girYH6SUZJBSAP2LmG2xBtbkTofCX/+36VlkMIsTacK3i4jH0CKSqZBhlGlPQyZoXCN69wwMpVdKl9mHr6sXBw+9MTY4wI2GTgOoU2gL9PCrx3+Ehu88vT/Ny8EMvLpKhcJfShi9jDkZqNnxA1QqP65C3EapR3bXQ7Yio9aq7zmFR3QurzTfkUwpmEzn88hcTxORRDZrMQdl9/U0t96coP7lfe64dELsmYt1QCmfQ2N113gmX/G+dAYfi3yeCbyEy7FjLG8IXUrg/CrmrkA+0FlPRFwKdcGWWGAexFwFTrt+2xS7co+OehEPcP8HN/qnTt9g4JpQZrLA6evD8CuigsnVY6Js5/lDhzUpU6GsOb1iQUaNNjkVNz5E+joctxKVh9zL7qHpdeebcVQxo7zy1hpf3yDUAek7IzfOH7J1dHdDPBvM4rsRllTgdGtTO3o6OE5Fd0heRHc0bYgbxLsfaUfYg1xPuw/sLgboK/BFV6NN5LEbQAO5tZjBe73Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(376002)(136003)(366004)(346002)(39860400002)(451199015)(66899015)(86362001)(8936002)(66946007)(66556008)(4326008)(41300700001)(2906002)(8676002)(30864003)(66476007)(83380400001)(38100700002)(316002)(82960400001)(5660300002)(478600001)(966005)(6486002)(6666004)(6512007)(26005)(6506007)(9686003)(186003)(309714004);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: fcVADwCh75UisHtTers5ZU1Pnbpjq15T8A1nFLCrawjd3+hUlGwSk9FxYk/SXCMSR26yfPafCiEgv6cXO65fTyvSP/Wkb6mGfuv0mNxSjqVtjkLIW5oHXQg0oep3o6xZXSaR0l7Cu2Mlh9IzNkSXcr4HJQSZCsDJb+kFfwTwt0kBPv3rMYaJe1H9dcb4thda4FqoPqElcy2SYLtF+qKhG/OZOUIpIv6utgjWxRJidspyzgX1FXcAFLquYNEadf2B0mhCB6VfJ2DvwW7pMPyX0/MQayyrbt0bSAsTNr3VXCv80FgWKyifQ5dAWtOKG1Yjy8JwRwJnkh4JD1mi7O6LKYHcFRIfvE8h+9VCQyfYHfOi2K3O2DujAVfLQiNHQKHrghPofpmUd3kfvm93m2HcEy7/hMGY/W6HtqAxMGLbf0tM1eNObOib9A65e+qIUzCVdebm5FNqg7Xyw32BxRqvtNdodyt7nR6LtMxeVoFVJq7igN5KyZfFy49N4rUscvpgv3tpVMSKsUcfpI597YNiIV+mlOxpEJ2BvXKzrgw2os8KNSQG3hPi7IZyjJYy3sNzLDEv1vIKP0Gb+vjCCIVzsGIHkYcQ9a2cOH7wYUNDELvUBVwvbfyBl+7ACgH4F60g8uoP7ZtLuP5tmOdWtLZINrHQ9MtjrvjjZ0+Tt5Bi8hrwDAnt9GNsHIc8ggT8sRrT
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(136003)(39860400002)(366004)(376002)(451199015)(2906002)(86362001)(6506007)(83380400001)(9686003)(316002)(6486002)(6512007)(186003)(26005)(66946007)(82960400001)(5660300002)(30864003)(478600001)(8676002)(8936002)(41300700001)(4326008)(38100700002)(66556008)(66476007)(47845001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rCPn5ZNFt1Zx0x9efFzFMSTyFEs6Nr7UGkyW12nJXFiuriGfj5WtQhpot9Hb?=
- =?us-ascii?Q?CiQtYbyie2GoEPjAdU5Cvp9xqi4Ae3/Tozs7AmL4GeSrChhh51v9Q3eUnk5X?=
- =?us-ascii?Q?oj+8pAY1y+zzG3KGCffoAplJSu6UD5/WHhPaZX4G0ofPimbhGdKl6jhJXPtK?=
- =?us-ascii?Q?YSFJBc6kWMFNfIOQJY6IUYYF6/2KzU/s7eYl8utwRojPtILN5anNxss4XEow?=
- =?us-ascii?Q?vqZ0FXHTr5nu7qLs2UnOToFAaP0Tg/79lLN4PVMxl95ue2jrLRMjTb2PZ0Da?=
- =?us-ascii?Q?nYpEpKff2yhTU5fcGOTrK+7chkiWvlYk2TvvNZvoXEsQ669DdI87llh0RPAX?=
- =?us-ascii?Q?OnvS6g65ghhLXgTMWcwQGCIiOwO+Ohmx7rP7Zqv1o4pZ4eedaPmhZVe+uMTa?=
- =?us-ascii?Q?ikDR7hHcvVHkG0FNVnvRJgXt+pD/HDao6+qI+5XHUizhnl6CUkxfYYmnt4A8?=
- =?us-ascii?Q?R27bINJqK/WhO/ml2Cwae+OkT8f5x8ZKplGoPBz+6HghP9dDMWi5WpbPWFEj?=
- =?us-ascii?Q?a01vPJN7qdj5NVG+nw5mefWgYfWgKLkrc4gsGvlOz7o0YtkzxF3XnlK2ZXf0?=
- =?us-ascii?Q?x8idEBOzjzENPgU67pb4V0+I2M2IQ4zj3wU+ZMn5DyvaBju2VMf4Z2YXKm7z?=
- =?us-ascii?Q?/JAPSLtX5VWoVgYKVIzZBtlBvxFGC5o/RuHe1bWhP3zyc7MCC+0lI2qBV/Ru?=
- =?us-ascii?Q?6ttRMvHMwppM51wVX4Be7mlc69ClNJ8Cz1eLQgqK12ktVpppBMt2vOOcl7wb?=
- =?us-ascii?Q?2IxNWEOAFmuTKt0HtXMKvIeSu9S2uaSpyN9lPxhrcuKwPw67X/iqoh19CnzH?=
- =?us-ascii?Q?V3i6MgLIfVfR2LKs9aLs6SW5fYfIdIsMHTCQXpcPyH16EushBQZNBDaW+PrN?=
- =?us-ascii?Q?iCR4HWrXvwXJ2mfvo4QI4OQ6Xv+Mhc/rquSi5YWGaoVkmNEtuiITGApBjWqL?=
- =?us-ascii?Q?HVxhRv93u7ZUqurew86gcxZsBoTRYuFsDYdd3i7Nxr20sgkxQeA/y8dG0nW5?=
- =?us-ascii?Q?mRqQREoGxe2Mi2913yRIzSfWfeq8XEjYfF+cEDsAF6U2kGTnkgO+DVz+DigK?=
- =?us-ascii?Q?LJYO912HF5CFN3lM9vIU50EISdqRsGzMu+aGxgbI0woiUj0rbDtlGhZr72Wr?=
- =?us-ascii?Q?yPs0iN+1HjEfc3q41V4P4swpsR458OKda6pFWsaksF7ELoGhKK1xMI3VEUoA?=
- =?us-ascii?Q?LQSzhodKlgDK7/ymcIOV7/0ReI40QiFjUBM1iDHU70HpfJqFI3cMFagH89oq?=
- =?us-ascii?Q?sA/bwgr4FhMMX1saR6qmajOZm2yTTM3QbXBPF6oLIFyDJsWNTSi0WBtMDKwL?=
- =?us-ascii?Q?hZkseh7b5S/vWMHaD3K+SbjINnkdk6M337vJAGP4oxMMuwNJzwP1p9UdEpCD?=
- =?us-ascii?Q?c1hDTnStMnsQgZmuERG43PQHGYtvEJRF/6gJMJXD66DHmGwR5N7lsyXWdIlt?=
- =?us-ascii?Q?gOZ6gasyxmiF4/dc6SmJYuLnYeoWeRe+Eq+x3Y4jFopE3O98bCDyAkTp0V+q?=
- =?us-ascii?Q?VVa0Pm+ibx2YjM8fX6Xo+Olafy5X5u4eT62pRxLysBlkhy1RYpZn3dyFFA5O?=
- =?us-ascii?Q?1rEVnyN24yp8u2xrEUIA35OHNEc8Xjt9BbYP0+iUymFi/I7pB0Hph5gbElSh?=
- =?us-ascii?Q?+Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ef27e3c-a98b-47ba-edb1-08dad7f61893
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hRzar8ZO/MCg60KT7o/Ewx7CVADWzJL4TbO9wGt3BtX7CP8xx86loTRkXxBP?=
+ =?us-ascii?Q?3iwVtmJa4JsLuKuhMVo0Bxw7McFIctRUDrO5M4GhmEt9eshsdLlVeq51zZbe?=
+ =?us-ascii?Q?JFdnIJf3Hfz3suMJu9H6F2bhZfqpaRUCnMtj7IiizG8JXkkN9wwCvaNKIYRo?=
+ =?us-ascii?Q?EgXeBHSiBDXj6q9SKjn81kM0X3fI893FrwH6QBs54RKYJcD/yfSpTqu2wAwH?=
+ =?us-ascii?Q?Gpe1j3cIauvxWVxVm/Psh/aDopYIDHp1YurrU2ggxn+7mmnGDpU5edOz5V2g?=
+ =?us-ascii?Q?MUD5RFJsvz6gHC/JwgcQgmLhPxcbSxJWuqsOwxQP+3vUorD7SOX/ydK9n8+4?=
+ =?us-ascii?Q?jcIqRhjx3yhsXZOODht1WYs2IP+QMuO+pWuWr8eVI/ptZwviSJBW8YcwDf6b?=
+ =?us-ascii?Q?CeFUkDNp9xxUIR4isMLMcm8yUolDFBVqhD/XhPgC6SGpxxH1BVNJuO/MwfXs?=
+ =?us-ascii?Q?UdFJrgEDv0ymZEBXPT/kz+orfRX0sEpbH4Qv9vY9a4eQy4e2bTjGFRl2/L2N?=
+ =?us-ascii?Q?W+lhptQqjfFW642IM3wuJtISZRexJpf98AxJeHeFMi5L/h5OLk2oFO4wzAda?=
+ =?us-ascii?Q?lZ8KkF1hF73AXtvYnlPCMi5kSZerg8mGnMPC/qJX/PeJae/9ou1F0gzAfSCc?=
+ =?us-ascii?Q?DVtTQg9EqgRiBPQgVRvBWi5NTNlecWy8+PnHGnC030qFPJzLiRhMiH7z090O?=
+ =?us-ascii?Q?r5Au4AVNFaXV1C6OkX6sAR/MO6RdFmnCf9O6oSTPY9ikDRLmj6rGosFK+iH7?=
+ =?us-ascii?Q?MDRATrD5fxB6dBJ/qsQ3xKw5EpOdYAQQ7iO7I3NcAoNBk24iohyxfK0ZCD4z?=
+ =?us-ascii?Q?kZuY5bYh+0pALinTKndppGsmeWABCf37uCK9zsoAYlRJSMrP2H/PKivdRvho?=
+ =?us-ascii?Q?KCOm30xf8K9qQsRFgauJeQ0//RO5Va07zqvL59IE11vRVnuL1a7lx5gLTAUg?=
+ =?us-ascii?Q?UPIT0XHHsUkJmDyFmfu9tFhLO85w0IFQ5iMQvVfl1nyURL8V3xj+RvtjRYlf?=
+ =?us-ascii?Q?nkZ0/NmjWjABBKjrZYwxqAwGa3fYmy1yqdp2B2I54mxxUPnWIhUzWnfWTPyP?=
+ =?us-ascii?Q?j7q33IpHwDfEsSVBmBw/KlFpTlUpnDowEF4UZxirvwBAi9hHoMj1r8isJWqP?=
+ =?us-ascii?Q?Iv4jAuJ/R3mYgdbDl0HcNzEuq28JS7HXbCY1vaCx9qynPeJf4xCLsW0h+MCD?=
+ =?us-ascii?Q?/zceHEkWwqVLcwIylV62h0AJrsQRG1+vcVQxjo6vL8vitYBMd8t9Lo3Ri7g6?=
+ =?us-ascii?Q?zEQLrSgERZcjd+LkzbsDMeUca/Jy5EjTf3ucI8KfTDX/32uVDI+ps4DSp3lA?=
+ =?us-ascii?Q?oOrA2tlKa3r7zbrB7gXCnTpMyAGv9exumEF+wDp4E8zcvKivl7OQkN6x5kVq?=
+ =?us-ascii?Q?FNJDNWPLAYNm+4S3FGM2ZlXf7Pp4lU+s5FPbnsZD+7Bvvs3VYG4GET0qJ58o?=
+ =?us-ascii?Q?K1uUIIscB5yAXa8RosqocWI6pyRTdPjGaTMSkkyryoPid4pviJPwJLRaLYgX?=
+ =?us-ascii?Q?aQ38bHrjHBTOcno/4TU/IHbJvA13qYnWRiO0w6aFb2L5ZWcQD2F8SCVgzKBa?=
+ =?us-ascii?Q?C1CH3A4jhZSbuEdnI8+UrNg2Xb+NJ7WJVCtlFebsC06IzQZAn0i4LsoKZWXt?=
+ =?us-ascii?Q?Sg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03f2ecc1-3b58-41f0-afc4-08dad7f99e13
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2022 01:55:21.4682
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2022 02:20:32.7452
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rGFjgir6plS+j0qOhzYFrV8+Rt4ReBg3zWjj3F698R7XVn/J6sq2+Tzgn6+FF0LXqkv0AhXla/CxD6PLK0TGqTlbZu1GYSD+hB4pnvF0Zps=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7068
+X-MS-Exchange-CrossTenant-UserPrincipalName: baJ/PxtpVMzNB5bOdKSE2ZBNbchyYlApQCJmdZx+wR8v5OU1qzYPvr7u2zQj8/iTVjYAFV3hy7F4VKsSJeM3jGvC6ZoL9es1oBTMANr5Q6w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6364
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 Davidlohr Bueso wrote:
-> This adds support for handling background operations, as defined in
-> the CXL 3.0 spec. Commands that can take too long (over ~2 seconds)
-> can run asynchronously in the background, these are limited to:
-> transfer/activate firmware, scan media, sanitize (aka overwrite)
-> and VPPB bind/unbind.
+> Implement support for the non-pmem exclusive sanitize (aka overwrite)
+> and secure erase commands, per CXL specs.
 > 
-> Completion of background operations, successful or not, can be handled
-> via irq or poll based. This patch deals only with polling, which
-> introduces some complexities as we need to handle the window in which
-> the original background command completed, then a new one is
-> successfully started before the poller wakes up and checks. This,
-> in theory, can occur any amount of times. One of the problems is
-> that previous states cannot be tracked as hw background status
-> registers always deal with the last command.
+> To properly support this feature, create a 'security' sysfs file that
+> when read will list the current pmem security state or overwrite, and
+> when written to, perform the requested operation.
 > 
-> So in order to keep hardware and the driver in sync, there can be
-> windows where the hardware is ready but the driver won't be, and
-> thus must serialize/handle it accordingly. While this polling cost
-> may not be ideal: 1) background commands are rare/limited and
-> 2) the extra busy time should be small compared to the overall
-> command duration and 3) devices that support mailbox interrupts
-> do not use this.
+> As with ndctl-speak, the use cases here would be:
 > 
-> The implementation extends struct cxl_mem_command to become aware
-> of background-capable commands in a generic fashion and presents
-> some interfaces:
+> $> cxl sanitize --erase memX
+> $> cxl sanitize --overwrite memX
+> $> cxl sanitize --wait-overwrite memX
 > 
-> - Calls for bg operations, where each bg command can choose to implement
->   whatever needed based on the nature of the operation. For example,
->   while running, overwrite may only allow certain related commands to
->   occur, while scan media does not have any such limitations.
->   Delay times can also be different, for which ad-hoc hinting can
->   be defined - for example, scan media could use some value based on
->   GET_SCAN_MEDIA_CAPS and overwrite has predefined values based on
->   pmem DSM specs[0]. Similarly some commands need to execute tasks
->   once the command finishes, such as overwriting requires CPU flushing
->   when successfully done. These are:
-> 
->   cxl_mbox_bgcmd_conflicts()
->   cxl_mbox_bgcmd_delay()
->   cxl_mbox_bgcmd_post()
-> 
-> - cxl_mbox_send_cmd() is extended such that callers can distinguish,
->   upon rc == 0, between completed and successfully started in the
->   background.
-> 
-> - cxl_mbox_bgcmd_running() will atomically tell which command is
->   running in the background, if any. This allows easy querying
->   functionality. Similarly, there are cxl_mbox_bgcmd_start() and
->   cxl_mbox_bgcmd_done() to safely mark the in-flight operation.
->   While x86 serializes atomics, care must be taken with arm64, for
->   example, ensuring, minimally, release/acquire semantics.
-> 
-> There are currently no supported commands.
-> 
-> [0] https://pmem.io/documents/IntelOptanePMem_DSM_Interface-V2.0.pdf
+> Where userspace can implement entirely the wait/query mechanism for
+> waiting for the sanitize to complete (albeit no poll support for
+> the security sysfs file).
 > 
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  drivers/cxl/core/core.h |   3 +-
->  drivers/cxl/core/mbox.c | 213 ++++++++++++++++++++++++++++++++++++++--
->  drivers/cxl/core/port.c |   1 +
->  drivers/cxl/cxl.h       |   8 ++
->  drivers/cxl/cxlmem.h    |  55 ++++++++++-
->  drivers/cxl/pci.c       |   4 +
->  drivers/cxl/pmem.c      |   5 +-
->  drivers/cxl/security.c  |  13 +--
->  8 files changed, 282 insertions(+), 20 deletions(-)
+>  Documentation/ABI/testing/sysfs-bus-cxl |  19 +++++
+>  drivers/cxl/core/mbox.c                 | 104 +++++++++++++++++++++++-
+>  drivers/cxl/core/memdev.c               |  54 ++++++++++++
+>  drivers/cxl/cxlmem.h                    |  10 +++
+>  include/uapi/linux/cxl_mem.h            |   2 +
+>  5 files changed, 188 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 1d8f87be283f..2a71664a0668 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -69,6 +69,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 8494ef27e8d2..18e26ae3d75f 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -58,6 +58,25 @@ Description:
+>  		affinity for this device.
 >  
->  int cxl_memdev_init(void);
->  void cxl_memdev_exit(void);
-> -void cxl_mbox_init(void);
-> +int cxl_mbox_init(void);
-> +void cxl_mbox_exit(void);
 >  
->  #endif /* __CXL_CORE_H__ */
+> +What:		/sys/bus/cxl/devices/memX/security
+> +Date:		December, 2022
+> +KernelVersion:	v6.2
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		Reading this file will display the security state for that
+> +		device. The following states are available: disabled, frozen,
+> +		locked, unlocked and overwrite. When writing to the file, the
+> +		following commands are supported:
+> +		* overwrite - Sanitize the device to securely re-purpose or
+> +		  decommission it. This is done by ensuring that all user data
+> +		  and meta-data, whether it resides in persistent capacity,
+> +		  volatile capacity, or the label storage area, is made
+> +		  permanently unavailable by whatever means is appropriate for
+> +		  the media type. This causes all CPU caches to be flushed.
+> +		* erase - Secure Erase user data by changing the media encryption
+> +		  keys for all user data areas of the device. This causes all
+> +		  CPU caches to be flushed.
+> +
+>  What:		/sys/bus/cxl/devices/*/devtype
+>  Date:		June, 2021
+>  KernelVersion:	v5.14
 > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 35dd889f1d3a..bfee9251c81c 100644
+> index bfee9251c81c..5ffdab10073d 100644
 > --- a/drivers/cxl/core/mbox.c
 > +++ b/drivers/cxl/core/mbox.c
-> @@ -10,6 +10,7 @@
->  #include "core.h"
+> @@ -4,6 +4,7 @@
+>  #include <linux/security.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/mutex.h>
+> +#include <linux/memregion.h>
+>  #include <cxlmem.h>
+>  #include <cxl.h>
+>  
+> @@ -11,6 +12,7 @@
 >  
 >  static bool cxl_raw_allow_all;
-> +static struct workqueue_struct *cxl_mbox_bgpoll_wq;
+>  static struct workqueue_struct *cxl_mbox_bgpoll_wq;
+> +static struct cxl_mem_bgcommand_ops sanitize_bgops;
 >  
 >  /**
 >   * DOC: cxl mbox
-> @@ -24,7 +25,7 @@ static bool cxl_raw_allow_all;
->  	for ((cmd) = &cxl_mem_commands[0];                                     \
->  	     ((cmd) - cxl_mem_commands) < ARRAY_SIZE(cxl_mem_commands); (cmd)++)
->  
-> -#define CXL_CMD(_id, sin, sout, _flags)                                        \
-> +#define __CXL_CMD(_id, sin, sout, _flags, _bgops)                              \
->  	[CXL_MEM_COMMAND_ID_##_id] = {                                         \
->  	.info =	{                                                              \
->  			.id = CXL_MEM_COMMAND_ID_##_id,                        \
-> @@ -33,8 +34,13 @@ static bool cxl_raw_allow_all;
->  		},                                                             \
->  	.opcode = CXL_MBOX_OP_##_id,                                           \
->  	.flags = _flags,                                                       \
-> +	.bgops = _bgops,						       \
->  	}
->  
-> +#define CXL_CMD(_id, sin, sout, _flags) __CXL_CMD(_id, sin, sout, _flags, NULL)
-> +#define CXL_BGCMD(_id, sin, sout, _flags, _bgops)                              \
-> +	__CXL_CMD(_id, sin, sout, _flags | CXL_CMD_FLAG_BACKGROUND, _bgops)
-> +
->  #define CXL_VARIABLE_PAYLOAD	~0U
->  /*
->   * This table defines the supported mailbox commands for the driver. This table
-> @@ -63,7 +69,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(INJECT_POISON, 0x8, 0, 0),
+> @@ -70,6 +72,8 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
 >  	CXL_CMD(CLEAR_POISON, 0x48, 0, 0),
 >  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-> -	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
-> +	CXL_BGCMD(SCAN_MEDIA, 0x11, 0, 0, NULL),
-
-One of the recent revelations with this patch:
-
-https://lore.kernel.org/linux-cxl/167030056464.4044561.11486507095384253833.stgit@dwillia2-xfh.jf.intel.com/
-
-...is that commands that are not meant to be called from userspace
-should simply never appear in CXL_CMDS nor cxl_mem_commands. The
-motivation for defining SCAN_MEDIA and friends was to use their
-definitions to block the RAW command passthrough, but ironically that
-enables the ioctl path which is also unwanted.
-
-So I think this patchset first needs to mark those uapi command numbers
-deprecated. Then ensure that all other background commands can not be
-submitted via the ioctl path. 
-
+>  	CXL_BGCMD(SCAN_MEDIA, 0x11, 0, 0, NULL),
+> +	CXL_BGCMD(SANITIZE, 0, 0, 0, &sanitize_bgops),
+> +	CXL_CMD(SECURE_ERASE, 0, 0, 0),
 >  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
 >  	CXL_CMD(GET_SECURITY_STATE, 0, 0x4, 0),
 >  	CXL_CMD(SET_PASSPHRASE, 0x60, 0, 0),
-> @@ -145,6 +151,136 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
->  	return cxl_command_names[c->info.id].name;
+> @@ -136,7 +140,6 @@ static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+>  	cxl_for_each_cmd(c)
+>  		if (c->opcode == opcode)
+>  			return c;
+> -
+>  	return NULL;
 >  }
 >  
-> +static unsigned long __maybe_unused
-> +cxl_mbox_bgcmd_delay(struct cxl_dev_state *cxlds, u16 opcode)
+> @@ -887,6 +890,8 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+>  	 * Setup permanently kernel exclusive commands, i.e. the
+>  	 * mechanism is driven through sysfs, keyctl, etc...
+>  	 */
+> +	set_bit(CXL_MEM_COMMAND_ID_SANITIZE, cxlds->exclusive_cmds);
+> +	set_bit(CXL_MEM_COMMAND_ID_SECURE_ERASE, cxlds->exclusive_cmds);
+>  	set_bit(CXL_MEM_COMMAND_ID_SET_PASSPHRASE, cxlds->exclusive_cmds);
+>  	set_bit(CXL_MEM_COMMAND_ID_DISABLE_PASSPHRASE, cxlds->exclusive_cmds);
+>  	set_bit(CXL_MEM_COMMAND_ID_UNLOCK, cxlds->exclusive_cmds);
+> @@ -970,6 +975,103 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
+>  
+> +static int sanitize_bgcmd_conflicts(u16 new)
 > +{
-> +	struct cxl_mem_command *c;
-> +	unsigned long ret = 0;
-> +
-> +	c = cxl_mem_find_command(opcode);
-
-Per that change above, cxl_mem_find_command() is only for the uapi.
-
-> +	if (!c || !(c->flags & CXL_CMD_FLAG_BACKGROUND)) {
-> +		dev_WARN_ONCE(cxlds->dev, true,
-> +			      "Not a background command\n");
+> +	/* forbid anyone but health related commands */
+> +	if (new == CXL_MBOX_OP_GET_HEALTH_INFO)
 > +		return 0;
-> +	}
-> +
-> +	if (c->bgops && c->bgops->delay)
-> +		ret = c->bgops->delay(cxlds);
-> +
-> +	return ret * HZ;
+> +	return -EBUSY;
 > +}
-
-In general I worry that this is a bit too flexible. Instead of callback
-ops I think this wants to be straight line code with something like a
-poll_interval argument in 'struct cxl_mbox_cmd' where 0 means the
-command is immediate and non-zero is a number of jiffies between
-background operation polling intervals.
-
 > +
-> +static void cxl_mbox_bgcmd_post(struct cxl_dev_state *cxlds,
-> +				u16 opcode, bool success)
+> +static unsigned long sanitize_bgcmd_delay(struct cxl_dev_state *cxlds)
 > +{
-> +	struct cxl_mem_command *c;
+> +	unsigned int tmo;
 > +
-> +	c = cxl_mem_find_command(opcode);
-> +	if (!c || !(c->flags & CXL_CMD_FLAG_BACKGROUND)) {
-> +		dev_WARN_ONCE(cxlds->dev, true,
-> +			      "Not a background command\n");
-> +		return;
-> +	}
+> +	if (!cxlds)
+> +		return 0;
 > +
-> +	if (c->bgops && c->bgops->post)
-> +		c->bgops->post(cxlds, success);
+> +	tmo = cxlds->sec.sanitize_tmo + 10;
+> +	cxlds->sec.sanitize_tmo = min(15U * 60U, tmo);
+> +	return tmo * HZ;
 > +}
 > +
-> +/*
-> + * Ensure that ->mbox_send(@new) can run safely when a background
-> + * command is running. If so, returns zero, otherwise error.
+> +static void sanitize_bgcmd_post(struct cxl_dev_state *cxlds, bool success)
+> +{
+> +	if (!cxlds->mbox_irq)
+> +		cxlds->sec.sanitize_tmo = 0;
+> +	if (success)
+> +		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +}
+> +
+> +static struct cxl_mem_bgcommand_ops sanitize_bgops = {
+> +	.conflicts = sanitize_bgcmd_conflicts,
+> +	.delay = sanitize_bgcmd_delay,
+> +	.post = sanitize_bgcmd_post,
+> +};
+> +
+> +/**
+> + * cxl_mem_sanitize() - Send sanitation related commands to the device.
+> + * @cxlds: The device data for the operation
+> + * @op: The command opcode to send
 > + *
-> + * check 1. bg cmd running. If not running it is fine to
-> + *	    send any command. If one is running then there
-> + *	    may be restrictions.
-> + * check 2. @new incoming command is capable of running
-> + *          in the background. If there is an in-flight bg
-> + *          operation, all these are forbidden as we need
-> + *          to serialize when polling.
-> + * check 3. @new incoming command is not blacklisted by the
-> + *          current running command.
+> + * Return: 0 if the command was executed successfully, regardless of
+> + * whether or not the actual security operation is done in the background.
+> + * Upon error, return the result of the mailbox command or -EINVAL if
+> + * security requirements are not met. CPU caches are flushed before and
+> + * after succesful completion of each command.
+> + *
+> + * See CXL 2.0 @8.2.9.5.5 Sanitize.
 > + */
-> +static int __maybe_unused
-> +cxl_mbox_check_cmd_bgcmd(struct cxl_dev_state *cxlds, u16 new)
+> +int cxl_mem_sanitize(struct cxl_dev_state *cxlds, u16 op)
 > +{
-> +	struct cxl_mem_command *c;
+> +	int rc;
+> +	u32 sec_out;
+> +	struct cxl_mem_command *cmd;
 > +
-> +	/* 1 */
-> +	if (likely(!cxl_mbox_bgcmd_running(cxlds)))
-> +		return 0;
-> +
-> +	c = cxl_mem_find_command(new);
-> +	if (!c)
+> +	cmd = cxl_mem_find_command(op);
+> +	if (!cmd || !test_bit(cmd->info.id, cxlds->enabled_cmds))
 > +		return -EINVAL;
 > +
-> +	/* 2 */
-> +	if (c->flags & CXL_CMD_FLAG_BACKGROUND)
-> +		return -EBUSY;
+> +	if (!cpu_cache_has_invalidate_memregion())
+> +		return -EINVAL;
 > +
-> +	/* 3 */
-> +	if (c->bgops && c->bgops->conflicts)
-> +		return c->bgops->conflicts(new);
+> +	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
+> +			       NULL, 0, &sec_out, sizeof(sec_out), NULL);
+> +	if (rc)
+> +		return rc;
 > +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Background operation polling mode.
-> + */
-> +void cxl_mbox_bgcmd_work(struct work_struct *work)
-
-Is a workqueue needed? If the goal is to make it so that all the kernel
-background command use cases chop up their work so that one command can
-not monopolize the mailbox for a long amount of time then the
-implementation can also assume that foreground commands that collide
-with an in-flight background operation can just wait synchronously for
-their time slice.
-
-That makes the handling simple, acquire lock, poll for completion,
-and everyone else just queues up on the lock.
-
-> +{
-> +	struct cxl_dev_state *cxlds;
-> +	u64 bgcmd_status_reg;
-> +	u16 opcode;
-> +	u32 pct;
-> +
-> +	cxlds = container_of(work, struct cxl_dev_state, mbox_bgpoll.work);
-> +
-> +	dev_WARN_ONCE(cxlds->dev, !!cxlds->mbox_irq,
-> +		      "Polling mailbox when IRQs are supported\n");
-> +
-> +	bgcmd_status_reg = readq(cxlds->regs.mbox +
-> +				 CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
-> +	opcode = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK,
-> +			   bgcmd_status_reg);
-> +
-> +	pct = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, bgcmd_status_reg);
-> +	if (pct != 100) {
-> +		unsigned long hint;
-> +		u64 status_reg;
-> +
-> +		status_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_STATUS_OFFSET);
-> +		if (!FIELD_GET(CXLDEV_MBOX_STATUS_BACKGROUND_OPERATION,
-> +			       status_reg))
-> +			dev_WARN(cxlds->dev,
-> +				 "No background operation running (%u%%).\n",
-> +				 pct);
-> +
-> +		hint = cxl_mbox_bgcmd_delay(cxlds, opcode);
-> +		if (hint == 0) {
-> +			/*
-> +			 * TODO: try to do better(?). pct is updated every
-> +			 * ~1 sec, maybe use a heurstic based on that.
-> +			 */
-> +			hint = 5 * HZ;
-> +		}
-> +
-> +		queue_delayed_work(cxl_mbox_bgpoll_wq,
-> +				   &cxlds->mbox_bgpoll, hint);
-> +	} else { /* bg operation completed */
-> +		u16 return_code;
-> +
-> +		return_code = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
-> +					bgcmd_status_reg);
-> +		cxl_mbox_bgcmd_post(cxlds, opcode,
-> +				    return_code == CXL_MBOX_CMD_RC_SUCCESS);
-> +
-> +		put_device(cxlds->dev);
-> +		cxl_mbox_bgcmd_done(cxlds);
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_mbox_bgcmd_work, CXL);
-> +
->  /**
->   * cxl_mbox_send_cmd() - Send a mailbox command to a device.
->   * @cxlds: The device data for the operation
-> @@ -153,6 +289,7 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
->   * @in_size: The length of the input payload
->   * @out: Caller allocated buffer for the output.
->   * @out_size: Expected size of output.
-> + * @return_code: (optional output) HW returned code.
->   *
->   * Context: Any context.
->   * Return:
-> @@ -167,8 +304,9 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
->   * error. While this distinction can be useful for commands from userspace, the
->   * kernel will only be able to use results when both are successful.
->   */
-> -int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
-> -		      size_t in_size, void *out, size_t out_size)
-> +int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode,
-> +		      void *in, size_t in_size,
-> +		      void *out, size_t out_size, u16 *return_code)
->  {
->  	const struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
->  	struct cxl_mbox_cmd mbox_cmd = {
-> @@ -183,12 +321,53 @@ int cxl_mbox_send_cmd(struct cxl_dev_state *cxlds, u16 opcode, void *in,
->  	if (in_size > cxlds->payload_size || out_size > cxlds->payload_size)
->  		return -E2BIG;
->  
 > +	/*
-> +	 * With bg polling this can overlap a scenario where the
-> +	 * hardware can receive new requests but the driver is
-> +	 * not ready. Handle accordingly.
+> +	 * Prior to using these commands, any security applied to
+> +	 * the user data areas of the device shall be DISABLED (or
+> +	 * UNLOCKED for secure erase case).
 > +	 */
-> +	if (!cxlds->mbox_irq) {
-> +		rc = cxl_mbox_check_cmd_bgcmd(cxlds, opcode);
-> +		if (rc)
-> +			return rc;
-> +	}
-
-Can't happen with the straight-line approach as all an interrupt will do
-is wake up a wait_event_timeout() instance for the currently executing
-background command.
-
+> +	if (sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET)
+> +		return -EINVAL;
 > +
->  	rc = cxlds->mbox_send(cxlds, &mbox_cmd);
-> +	if (return_code)
-> +		*return_code = mbox_cmd.return_code;
->  	if (rc)
->  		return rc;
+> +	if (op == CXL_MBOX_OP_SANITIZE) {
+> +		u16 ret_code; /* hw */
+> +
+> +		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +
+> +		rc = cxl_mbox_send_cmd(cxlds, op, NULL, 0, NULL, 0, &ret_code);
+> +		if (rc == 0 && ret_code != CXL_MBOX_CMD_RC_BACKGROUND)
+> +			cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +	} else if (op == CXL_MBOX_OP_SECURE_ERASE) {
+> +		if (sec_out & CXL_PMEM_SEC_STATE_LOCKED)
+> +			return -EINVAL;
+> +
+> +		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +
+> +		rc = cxl_mbox_send_cmd(cxlds, op, NULL, 0, NULL, 0, NULL);
+> +		if (rc == 0)
+> +			cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +	} else
+> +		rc = -EINVAL;
+> +
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_sanitize, CXL);
+> +
+>  static int add_dpa_res(struct device *dev, struct resource *parent,
+>  		       struct resource *res, resource_size_t start,
+>  		       resource_size_t size, const char *type)
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 20ce488a7754..0b79c2b6720e 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -106,12 +106,66 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(numa_node);
 >  
-> -	if (mbox_cmd.return_code != CXL_MBOX_CMD_RC_SUCCESS)
-> +	switch (mbox_cmd.return_code) {
-> +	case CXL_MBOX_CMD_RC_BACKGROUND:
-> +	{
-> +		int err;
+> +static ssize_t security_show(struct device *dev,
+> +			     struct device_attribute *attr, char *buf)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	u32 sec_out = 0;
+> +	int rc;
 > +
-> +		dev_dbg(cxlds->dev, "Opcode 0x%04x: %s\n", opcode,
-> +			cxl_mbox_cmd_rc2str(&mbox_cmd));
+> +	if (cxl_mbox_bgcmd_running(cxlds) == CXL_MBOX_OP_SANITIZE)
+> +		return sprintf(buf, "overwrite\n");
 > +
-> +		err = cxl_mbox_bgcmd_begin(cxlds, opcode);
-> +		if (err) {
-> +			dev_WARN(cxlds->dev,
-> +				 "Corrupted background cmd (opcode 0x%04x)\n",
-> +				 err);
-> +			return -ENXIO;
-> +		}
+> +	rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_SECURITY_STATE,
+> +			       NULL, 0, &sec_out, sizeof(sec_out), NULL);
+> +	if (rc)
+> +		return rc;
 > +
-> +		get_device(cxlds->dev);
+> +	if (!(sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET))
+> +		return sprintf(buf, "disabled\n");
+> +	if (sec_out & CXL_PMEM_SEC_STATE_FROZEN)
+> +		return sprintf(buf, "frozen\n");
+> +	if (sec_out & CXL_PMEM_SEC_STATE_LOCKED)
+> +		return sprintf(buf, "locked\n");
+> +	else
+> +		return sprintf(buf, "unlocked\n");
+> +}
 > +
-> +		if (!cxlds->mbox_irq) {
-> +			/* do first poll check asap before using any hinting */
-> +			queue_delayed_work(cxl_mbox_bgpoll_wq,
-> +					   &cxlds->mbox_bgpoll, 0);
-> +		}
-> +		break;
-> +	}
-> +	case CXL_MBOX_CMD_RC_SUCCESS:
-> +		break;
-> +	default:
->  		return cxl_mbox_cmd_rc2errno(&mbox_cmd);
-> +	}
->  
->  	/*
->  	 * Variable sized commands can't be validated and so it's up to the
-> @@ -575,7 +754,7 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
->  		int rc;
->  
->  		rc = cxl_mbox_send_cmd(cxlds, CXL_MBOX_OP_GET_LOG, &log, sizeof(log),
-> -				       out, xfer_size);
-> +				       out, xfer_size, NULL);
+> +#define CXL_SEC_CMD_SIZE 32
+> +static ssize_t security_store(struct device *dev,
+> +			      struct device_attribute *attr,
+> +			      const char *buf, size_t len)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	char cmd[CXL_SEC_CMD_SIZE+1];
+> +	ssize_t rc;
+> +
+> +	rc = sscanf(buf, "%"__stringify(CXL_SEC_CMD_SIZE)"s", cmd);
+> +	if (rc < 1)
+> +		return -EINVAL;
+> +
+> +	if (sysfs_streq(cmd, "overwrite"))
+> +		rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SANITIZE);
+> +	else if (sysfs_streq(cmd, "erase"))
+> +		rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SECURE_ERASE);
 
-In the above referenced patch I fixed up cxl_internal_send_cmd() to
-derive all its parameters from a passed in 'struct cxl_mbox_cmd', that
-should make it easier to add new parameters.
+The above needs quite a bit more safety that the device is not currently
+actively decoding any HPA ranges.
 
-I'll stop here until we can come to consensus on how general this
-solution needs to be. I think this really wants to have a single
-background command use case in mind to answer some of the use case case
-questions.
+I realize now after sending the comments in patch1 that Sanitize defeats
+the dream of being able to timeslice background operations. On the other
+hand, it really is a special case that is only meant to be run before
+decommissioning the device. I think it is fine that it monopolizes the
+device because the device is literally unusable during the process.
+
+> +	else
+> +		rc = -EINVAL;
+> +
+> +	if (rc == 0)
+> +		rc = len;
+> +	return rc;
+> +}
+> +static DEVICE_ATTR_RW(security);
+> +
+>  static struct attribute *cxl_memdev_attributes[] = {
+>  	&dev_attr_serial.attr,
+>  	&dev_attr_firmware_version.attr,
+>  	&dev_attr_payload_max.attr,
+>  	&dev_attr_label_storage_size.attr,
+>  	&dev_attr_numa_node.attr,
+> +	&dev_attr_security.attr,
+
+This likely wants is_visible() handling to hide the attribute if the
+device does not support security operations.
+
+>  	NULL,
+>  };
+>  
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index e7cb2f2fadc4..1dd1caabd41c 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -215,6 +215,7 @@ struct cxl_endpoint_dvsec_info {
+>   * @mbox_irq: @dev supports mailbox interrupts
+>   * @mbox_bg: opcode for the in-flight background operation on @dev
+>   * @mbox_bgpoll: self-polling delayed work item
+> + * @sec: device security
+>   *
+>   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+>   * details on capacity parameters.
+> @@ -254,6 +255,10 @@ struct cxl_dev_state {
+>  	bool mbox_irq;
+>  	atomic_t mbox_bg;
+>  	struct delayed_work __maybe_unused mbox_bgpoll;
+> +
+> +	struct {
+> +		unsigned int __maybe_unused sanitize_tmo;
+> +	} sec;
+
+I missed this on the last patch, but __maybe_unused has no effect at
+declaration time, only at definition time. Otherwise, I wish I had a
+facility that would tell me which of my structure members are no longer
+used in code.
+
+>  };
+>  
+>  enum cxl_opcode {
+> @@ -279,6 +284,8 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
+>  	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+>  	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+> +	CXL_MBOX_OP_SANITIZE		= 0x4400,
+> +	CXL_MBOX_OP_SECURE_ERASE	= 0x4401,
+>  	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>  	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>  	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+> @@ -473,6 +480,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+>  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+>  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+>  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+> +
+>  #ifdef CONFIG_CXL_SUSPEND
+>  void cxl_mem_active_inc(void);
+>  void cxl_mem_active_dec(void);
+> @@ -487,6 +495,8 @@ static inline void cxl_mem_active_dec(void)
+>  
+>  void cxl_mbox_bgcmd_work(struct work_struct *work);
+>  
+> +int cxl_mem_sanitize(struct cxl_dev_state *cxlds, u16 cmd);
+> +
+>  struct cxl_hdm {
+>  	struct cxl_component_regs regs;
+>  	unsigned int decoder_count;
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index 82bdad4ce5de..fbf619976eb7 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -40,6 +40,8 @@
+>  	___C(CLEAR_POISON, "Clear Poison"),                               \
+>  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+>  	___C(SCAN_MEDIA, "Scan Media"),                                   \
+> +	___C(SANITIZE, "Sanitize"),                                       \
+> +	___C(SECURE_ERASE, "Secure Erase"),				  \
+>  	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
+>  	___C(GET_SECURITY_STATE, "Get Security State"),			  \
+>  	___C(SET_PASSPHRASE, "Set Passphrase"),				  \
+> -- 
+> 2.38.1
+> 
+
+
