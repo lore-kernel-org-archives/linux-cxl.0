@@ -2,149 +2,249 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C12C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 03:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FD0C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 04:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbiLHDrl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Dec 2022 22:47:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47586 "EHLO
+        id S229806AbiLHEJt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 7 Dec 2022 23:09:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbiLHDrj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Dec 2022 22:47:39 -0500
+        with ESMTP id S229811AbiLHEJp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Dec 2022 23:09:45 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7839BF48;
-        Wed,  7 Dec 2022 19:47:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E3E8C6BC
+        for <linux-cxl@vger.kernel.org>; Wed,  7 Dec 2022 20:09:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670471257; x=1702007257;
+  t=1670472583; x=1702008583;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rK8J3bc+OBp75ihGNvVIlZln4+9cNadZcCz8MTxE/l8=;
-  b=SxQ4pHJzd+k6cxLrsSejRzdgQbIvBnH6ssdDOp58pkdJtCr8FSYo+0iq
-   Wlf9mAEuPZt4l5KHuaY1jTUgZoXIGsFVpRAL/QLMeJ+pekACtGD06ui4i
-   IP6UqUZ1Hh9YDdAoXyIindAa7ks2I6uyedS/y3Yw53WXsINU3pkRTbUH5
-   KqA4bTCfghLfoPyoH6Php0X68kAG7XoxV1iZmzJE8eaTra3LIe6Gt9gni
-   g7tIUMZilLanxB/JWsiNW8ujEhI0dQD55MpQpQ1g6Zv02CF2KozMfaqze
-   dNYzWfKkBg0NH1+nDx2HaiVNSieGDnpji7BMc4L8o+Z2DzwA2j++jCgn7
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="296759120"
+   in-reply-to:mime-version;
+  bh=iRdz1g/qcdwC/9bktX5ZIP5y+ui2mQ9dEnDiaquL0cg=;
+  b=na4NlLwUaw1yInD3flcC5gl2euK+YXbZuPcy5S8RDh04UNP71D887o8B
+   PnHyiMZHjHkUdHEkhwyYYVLK1diPIC0EnTteabTHc4ZCpN8XuJTfimNih
+   5V/W1sQmRRlqTGJxWoZEfd/c2S7x5ATNjWiknEb4cm0/6RyWYk2nEK9XW
+   xtp4O4rLd8roBNvIkStt+cmFVlac42qA6zcoQA72NeQPeOO2Y2fVbrvfi
+   NVss39N3pKSObnN+59l31PAdhhk+TofW/ON9KPOl/eSiJZQamsv8YQPq3
+   VqQbrhr/Jov5xet5Gsligl683Lm+8MxqyC/WGYXjlZCaGm8Ptzj8Nz732
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="296761694"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="296759120"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 19:47:37 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="789143584"
+   d="scan'208";a="296761694"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 20:09:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="892062103"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="789143584"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.198.95])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 19:47:36 -0800
-Date:   Wed, 7 Dec 2022 19:47:35 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] cxl/mbox: Add GET_POISON_LIST mailbox command
-Message-ID: <Y5FeVySReYXU6E2p@aschofie-mobl2>
-References: <cover.1668115235.git.alison.schofield@intel.com>
- <46c7c7339224744fce424b196da3e5566effec17.1668115235.git.alison.schofield@intel.com>
- <638ffd5eaa3a7_c95729426@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <Y5C7EYz1VrG2H7jh@aschofie-mobl2>
- <6391082ed3374_3cbe02947d@dwillia2-xfh.jf.intel.com.notmuch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+   d="scan'208";a="892062103"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Dec 2022 20:09:43 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 7 Dec 2022 20:09:43 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 7 Dec 2022 20:09:42 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Wed, 7 Dec 2022 20:09:42 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Wed, 7 Dec 2022 20:09:42 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g5olhjkGfRKxSFth8uiMUQm+qCCzNSKd0bY/1Vaj+mIe6M6mkmyXznWnrOtQKQ+SD6mtQK2EOSUSbGQ11/CrPp61dGZIolz5oIpUAalmUvDZttKI6AcjaepkxVM/Hd2W2HGUR61RXLDpDgqDrU9mYHrqTrOMkbTFMQ0nqjSZBo73f/fS2hoOFvnidE1wVw31QUUjIJX2jq5qjinxBDJy8xe8EgP//OB13IJTPwtYh4jhN3osTHevvmAfILoinW806ibmfNXUTVhHsi58zM6lPfVNCQqwuECvLHjjPKkSnDWvPcBY8TTgBMAzLakoCQ7luNPRIuKW68EwDrNM2SHV3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r86NQjxJzcx1HFa+UbrowewnElLBNPqV7psPxqQwMVk=;
+ b=PypVvFg+PVaADK8gKsHaMUxnQy1hP3iaFFAdyycG/dpC5UofzHDCtg2zm/04qhzX1cPTqQb1brwrc0T3MhqGFPlbOR9gryIm+ZJMU+gvg+HLvp+8Nv6V0AQFoaRqkUp55iT8m0iKNz+NSyFbD1uYrEFnnmyAPmsOHbv8SClM30rsI07LpQhz33xADvUy+KAVwqjVypllh3ZlQZEctOlrKRghF5Xy/dL5enx7/70NwCjpy+IQJ9YRvPFhvAovWDaasOF/MLe7dQGJyX/DTFtelzSRD8huWz/aVDQU5t1joFLVxpV1F5baghd4ONwjp7372Ksam5/6VKYNl/pmtJP9Hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by CH3PR11MB7893.namprd11.prod.outlook.com
+ (2603:10b6:610:12e::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Thu, 8 Dec
+ 2022 04:09:40 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5880.014; Thu, 8 Dec 2022
+ 04:09:40 +0000
+Date:   Wed, 7 Dec 2022 20:09:36 -0800
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <vishal.l.verma@intel.com>, <linux-cxl@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>
+Subject: Re: [ndctl PATCH 13/15] cxl/region: Default to memdev mode for
+ create with no arguments
+Message-ID: <639163807f5c_c9572948@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <166777840496.1238089.5601286140872803173.stgit@dwillia2-xfh.jf.intel.com>
+ <166777848122.1238089.2150948506074701593.stgit@dwillia2-xfh.jf.intel.com>
+ <Y2lsYawI3eQayact@aschofie-mobl2>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <6391082ed3374_3cbe02947d@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <Y2lsYawI3eQayact@aschofie-mobl2>
+X-ClientProxiedBy: SJ0PR03CA0049.namprd03.prod.outlook.com
+ (2603:10b6:a03:33e::24) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|CH3PR11MB7893:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae130821-07d4-48b5-7dab-08dad8d20647
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cAydn2AZdh4SzAv8fGLtF/8e77QoJjTZrjmKUWRXvEWT8kMAzRmbjk1BI2WDA8B6sNHqNCKIFCiP95IBx9m7P73Y3V93IXqliZHlPrq7+ErgQZBlFYViwl/FjUt7QD7rSudgsx2gZMnMvHoHS+KH4DBYWiLknTbaZDmWWevYaQKv8pRia+YMYVB3JHNNx4FdPDUWdqBkSKPITRlZN/WK8PoB+wrt9ZDI8irbPxy5odIK0K0A+AlP9hDIx/FnRnghlGn13vIlimAU14EQ/sYTOvfeCjMh268gOpTgDYz7G6v2ltw2tC+zUZ7ji2+vRn2Eti2sWuz+8aInieDmNSMZnoNchuEpBDaZiKJ7ExH8ND0TiCI9LGNW9z1rA7gWQP+bnauyF9gPWI7FPEXDkhflqkaJUN1mdROvk55qeBNVZpH9EHSLo5KQnGqlkweH6HJ8RtL1ejXl6cjzdiyAIOATcAVbQxVA41S+ZqmE2qVbxkpB8GStbCpyLavSlerJAdYPFOJn/kH1d6EZBI7ZPezX9nr3IJD/zol5Jg3CBcsNhu3oOhY0x+mmJ492NIEvEN0rYUeZtuChWB9esQRcwNgpophAbBcOV0kQqr+JHaoWQRDFs708FlztgNvrpDCiD9XTzGOWJz0Z4G/xLPw8E+OW3A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(376002)(366004)(346002)(396003)(136003)(451199015)(86362001)(6486002)(6506007)(478600001)(8936002)(26005)(5660300002)(6666004)(82960400001)(4326008)(316002)(41300700001)(83380400001)(6512007)(2906002)(66476007)(110136005)(66946007)(66556008)(9686003)(38100700002)(8676002)(186003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uFyIavAcSRpI/z/NwIkUMgObttpb4gK8jTHY+3R2DY47soDAnlqYPGsicnHu?=
+ =?us-ascii?Q?9lJvmKvTC3qhaN3jNjHhmzf6uGSJ1DiqRFDf6pkd4ZXx4ILVkCtXnrjnO1bx?=
+ =?us-ascii?Q?dLDp7YHwHxN0hT0pnWF2WppalLzYYTD3XtgrgTrT2bSArzUQpZ/m1lWcK8z4?=
+ =?us-ascii?Q?HUCwCcxkvwIapxWuGfSUNzo7JSvFpldGVyFOk47P0aZWtN3KWXuVt7FyvwUq?=
+ =?us-ascii?Q?mCi5JLskjVUoXVjbJi9rBM3uibvnhCnvIlxBF/l8SP96bYsjKVGl7YAcF3UG?=
+ =?us-ascii?Q?+AbV+7v05LFvSq4sF7+BFyrWjMvJW9pYEhxHCEcypbp3SLSfsap1ZpTk7iYO?=
+ =?us-ascii?Q?XN3MU/wT7vhUpsfV42biRnwLXV0Am32hV7FW0qE1+WbtY6IX7q53/i1zE+gf?=
+ =?us-ascii?Q?hIdX/OgTr4PrdQtJGsbuV152CODB6QSDo+HMMri3ATqqcZw2E8jlfyNgZrMz?=
+ =?us-ascii?Q?RH5W+NmHF2JA9akhH5dZz7Eqo47VSU3MjztM9qZev1Q38gBLRGqi8k5R0blZ?=
+ =?us-ascii?Q?dmGUW03/SkV/Jm0eQNaTHVHYaJYFFmY0hSf/O/Iqoul/hVhcIKNE5v4K4ycm?=
+ =?us-ascii?Q?2xCZdd+K4bDIH3iQV0fSFmp23qCNeFm/HVQWbap1Ahnoj4gOeN4okvTeiwJk?=
+ =?us-ascii?Q?n3CE7a80WcjHz1sTJhYk+ixNsZMVWvsXVqwfBg9DWVyIXMs3RtDy0Ooi7CVF?=
+ =?us-ascii?Q?g5CNsychoCr0pv1U6iH+KdoqSyvDxC/U9zejuoV+R4L3EeIHFbTzKJnsFvMj?=
+ =?us-ascii?Q?8SX0hu/DpKt33yJwKTorOhd5o/Nm3YvyvXDtqwOR71L++49Mm5L+eyPDy/Gc?=
+ =?us-ascii?Q?GLizYVx9PCn4NlK/LkHUssSOw2NKoAUgA5d2Kurw5gf949XL3P3brZz6Kb5c?=
+ =?us-ascii?Q?f6mZzV9kr4celKeivoaHizg7StClqsvX0hPPlaKxBdI0M183dapVZQ53LBVG?=
+ =?us-ascii?Q?sFuu8mXGs0365ibyhlK151vrl4SFR6G7WWRf3yfwpV/MU5Az00D3K4sBnuT7?=
+ =?us-ascii?Q?WegMH0pmDgKYUlIZrzODYdTbqo9Y7rKpERmlneuYmxsvSRGhSO7ZgTXFL+TT?=
+ =?us-ascii?Q?b/w3v/6MECxeLpaVhYQIVeW4cHwygPUJJ441fy6REHo6kaxzS8h+pcgzIrkY?=
+ =?us-ascii?Q?HvBM5tSsdSF0iuUP20Etjexyk0I5/aOW6LsxHsdXx2h+6oNnE1FMhGG7oiqi?=
+ =?us-ascii?Q?uk21HDfa6hAcdeM0O4RgVheZPAPmXq6Zkl4zewPr1IBdCNh3KeaMG++Wx9Wp?=
+ =?us-ascii?Q?CVWj4RbKOapXsZ2SIDGQ//i6sPEjjrxscj2jnxthTd/QF3jezH9/w+XEwwDA?=
+ =?us-ascii?Q?dV2dwWoD8nVBmtfNtnlLgf7B0HKqRpU0VhLlIqj2IKTFu1wLUDrNCJXcMQyB?=
+ =?us-ascii?Q?fddk8epc9JllIFv6KLOdTdD6Z59jkfeLDoe7EE//dXAO3dUjl0bGVrfWRdny?=
+ =?us-ascii?Q?QEof9KtrXp7NCEQn9wSapaO4IkoRcCJQVPhnX2lR3WoX2wh4A+zXsO2bPNB6?=
+ =?us-ascii?Q?mZwvcSMms6kVzVVfaNvGao6u5RG0OtHf5So5tUZD7TT10d22rqZaZx+Ect7z?=
+ =?us-ascii?Q?tGpmX7ZerirMflw5vNvOp5pIb50D3Bvnx7rdujZ89LlMw0JueSHfK+3UXfRk?=
+ =?us-ascii?Q?Jw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae130821-07d4-48b5-7dab-08dad8d20647
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2022 04:09:39.6894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nbFBjKZsgaVZ7k+fcyd/z5A1bSObV1AvWpGbgtvURJs0hjM4kiUWvDdPhvtEX3uBWSRqwq8PscYNorl0l55aPtWMOFGp1r01qNxho53QKVs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7893
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Dec 07, 2022 at 01:39:58PM -0800, Dan Williams wrote:
-> Alison Schofield wrote:
-> > On Tue, Dec 06, 2022 at 06:41:34PM -0800, Dan Williams wrote:
-> > > alison.schofield@ wrote:
-> [..]
-> > > > +int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> > > > +		       struct cxl_region *cxlr)
-> > > > +{
-> > > > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > > > +	const char *memdev_name = dev_name(&cxlmd->dev);
-> > > > +	const char *pcidev_name = dev_name(cxlds->dev);
-> > > > +	struct cxl_mbox_poison_payload_out *po;
-> > > > +	struct cxl_mbox_poison_payload_in pi;
-> > > > +	int nr_records = 0;
-> > > > +	int rc;
-> > > > +
-> > > > +	po = kvmalloc(cxlds->payload_size, GFP_KERNEL);
-> > > > +	if (!po)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	pi.offset = cpu_to_le64(offset);
-> > > > +	pi.length = cpu_to_le64(len);
-> > > > +
-> > > > +	rc = mutex_lock_interruptible(&cxlds->poison_list_mutex);
-> > > 
-> > > So I do not know what this mutex is protecting if there is an allocation
-> > > per cxl_mem_get_poison() invocation. Although I suspect that's somewhat
-> > > wasteful. Just allocate one buffer at the beginning of time and then use
-> > > the lock to protect that buffer.
+Alison Schofield wrote:
+> On Sun, Nov 06, 2022 at 03:48:01PM -0800, Dan Williams wrote:
+> > Allow for:
 > > 
-> > Intent was a single lock on the device to protect the state of the
-> > poison list retrieval - do not allow > 1 reader. With > 1 reader
-> > software may not know if it retrieved the complete list.
+> >    cxl create-region -d decoderX.Y
 > > 
-> > I'm not understanding about protecting a buffer, instead of protecting
-> > the state. Here I try to protect the state.
+> > ...to assume (-m -w $(count of memdevs beneath decoderX.Y))
 > 
-> Ah, sorry I read cxlds->poison_list_mutex and assumed it was serializing
-> access to the buffer, not a state machine. I do think it would be
-> worthwhile to make this a self contained structure with its own kdoc to
-> explain what is going on, something like:
+> I'm not understanding what the change is here. Poked around a bit
+> and still didn't get it. Help!
 > 
+> Leaving out the -m leads to this:
+> $ cxl create-region -d decoder3.3 mem0 mem1
+> cxl region: parse_create_options: must specify option for target object types (-m)
+> cxl region: cmd_create_region: created 0 regions
+> 
+> Leaving out the the -m and the memdevs fails because the memdev order is
+> not correct. 
+> $ cxl create-region -d decoder3.3
+> cxl region: create_region: region5: failed to set target0 to mem1
+> cxl region: cmd_create_region: created 0 regions
+> 
+> This still works, where I give the -m and the correct order of memdevs.
+> cxl create-region -m -d decoder3.3 mem0 mem1
 
-OK thanks, it's getting through to me now. 
-Will do !
+I fixed up the man page to clarify that this is a possibility when
+eliding the target list:
 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index ab138004f644..02697d1d951c 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -193,6 +193,19 @@ struct cxl_endpoint_dvsec_info {
->         struct range dvsec_range[2];
->  };
->  
-> +/**
-> + * struct cxl_poison_state - summary
-> + * @payload: ...
-> + * @lock: ...
-> + *
-> + * A bit more description of why state needs to be held over successive
-> + * mbox commands...
-> + */
-> +struct cxl_poison_state {
-> +       void *payload;
-> +       struct mutex lock;
-> +};
-> +
->  /**
->   * struct cxl_dev_state - The driver device state
->   *
-> @@ -210,6 +223,7 @@ struct cxl_endpoint_dvsec_info {
->   * @lsa_size: Size of Label Storage Area
->   *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
->   * @mbox_mutex: Mutex to synchronize mailbox access.
-> + * @poison: Poison list retrieval and tracing
->   * @firmware_version: Firmware version for the memory device.
->   * @enabled_cmds: Hardware commands found enabled in CEL.
->   * @exclusive_cmds: Commands that are kernel-internal only
-> @@ -244,6 +258,7 @@ struct cxl_dev_state {
->         size_t payload_size;
->         size_t lsa_size;
->         struct mutex mbox_mutex; /* Protects device mailbox and firmware */
-> +       struct cxl_poison_state poison;
->         char firmware_version[0x10];
->         DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
->         DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
+index e0e6818cfdd1..286779eff9ed 100644
+--- a/Documentation/cxl/cxl-create-region.txt
++++ b/Documentation/cxl/cxl-create-region.txt
+@@ -53,16 +53,18 @@ OPTIONS
+ -------
+ <target(s)>::
+ The CXL targets that should be used to form the region. The number of
+-'target' arguments must match the '--ways' option (if provided). The
+-targets are memdev names such as 'mem0', 'mem1' etc.
++'target' arguments must match the '--ways' option (if provided).
+ 
+ include::bus-option.txt[]
+ 
+ -m::
+ --memdevs::
+        Indicate that the non-option arguments for 'target(s)' refer to memdev
+-       names. Currently this is the only option supported, and must be
+-       specified.
++       device names. If this option is omitted and no targets are specified
++       then create-region uses the equivalent of 'cxl list -M -d $decoder'
++       internally as the target list. Note that depending on the topology, for
++       example with switches, the automatic target list ordering may not be
++       valid and manual specification of the target list is required.
+ 
+ -s::
+ --size=::
+
+> 
+> > 
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  cxl/region.c |   16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/cxl/region.c b/cxl/region.c
+> > index aa0735194fa1..c0cf4ab350da 100644
+> > --- a/cxl/region.c
+> > +++ b/cxl/region.c
+> > @@ -227,10 +227,13 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
+> >  	}
+> >  
+> >  	/*
+> > -	 * For all practical purposes, -m is the default target type, but
+> > -	 * hold off on actively making that decision until a second target
+> > -	 * option is available.
+> > +	 * For all practical purposes, -m is the default target type, but hold
+> > +	 * off on actively making that decision until a second target option is
+> > +	 * available. Unless there are no arguments then just assume memdevs.
+> >  	 */
+> > +	if (!count)
+> > +		param.memdevs = true;
+> > +
+> >  	if (!param.memdevs) {
+> >  		log_err(&rl,
+> >  			"must specify option for target object types (-m)\n");
+> > @@ -272,11 +275,8 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
+> >  		p->ways = count;
+> >  		if (!validate_ways(p, count))
+> >  			return -EINVAL;
+> > -	} else {
+> > -		log_err(&rl,
+> > -			"couldn't determine interleave ways from options or arguments\n");
+> > -		return -EINVAL;
+> > -	}
+> > +	} else
+> > +		p->ways = p->num_memdevs;
+> >  
+> >  	if (param.granularity < INT_MAX) {
+> >  		if (param.granularity <= 0) {
+> > 
+
+
