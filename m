@@ -2,251 +2,254 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EBFC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 14:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F413AC4332F
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 16:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbiLHOzB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Dec 2022 09:55:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44746 "EHLO
+        id S230199AbiLHQ61 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Dec 2022 11:58:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiLHOy7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 09:54:59 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A2723EB4
-        for <linux-cxl@vger.kernel.org>; Thu,  8 Dec 2022 06:54:58 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NSccH3836z689xQ;
-        Thu,  8 Dec 2022 22:54:07 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 8 Dec
- 2022 14:54:56 +0000
-Date:   Thu, 8 Dec 2022 14:54:55 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 5/5] tools/testing/cxl: Use injected poison for Get
- Poison List
-Message-ID: <20221208145455.000079e9@Huawei.com>
-In-Reply-To: <Y5FobB26MzM/MHO3@aschofie-mobl2>
-References: <cover.1669781852.git.alison.schofield@intel.com>
-        <2c068669b1b31a94b319f60c413c2169bb854111.1669781852.git.alison.schofield@intel.com>
-        <20221130151522.00007c28@Huawei.com>
-        <Y5FobB26MzM/MHO3@aschofie-mobl2>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230246AbiLHQ6W (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 11:58:22 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D297681D
+        for <linux-cxl@vger.kernel.org>; Thu,  8 Dec 2022 08:58:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670518701; x=1702054701;
+  h=subject:from:to:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kae5VifZrT9gzyfsGgTvij8HwuuZp8cFzVDOFu7TL0k=;
+  b=AW1t/Nwnb91RVY/lZRccjTaXu9QXvE6p79IDXvPb+EDMMxcl+BQKi0AZ
+   P4zk7gLWSo4WiaOBQqPZxt7eo1SCMSpH4XRedl/G1am1xA4paoOxt2m5e
+   eAyCaOxfVMIIUJy1C3FxKzOxzL0qqNwQzehWskvFCClEcXjGf8kbZDnYd
+   wqgDOEx81puETcFCobFeBEs8SU+mSXZoz/ZkFZvjLrydYWP0tFtOcVYPm
+   F1IVfUMppEle9HNBGOLIQ5F5TJ9vBeYOHFa3XN+Rm7bNyS3Y7Eo6fJufL
+   fn1O8KouUdOwzd/+c4LxSllWXMBh+g6Y1Z/f3gtfoM4IoYDpZTDW32fhy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="315942710"
+X-IronPort-AV: E=Sophos;i="5.96,227,1665471600"; 
+   d="scan'208";a="315942710"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 08:58:21 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="715679309"
+X-IronPort-AV: E=Sophos;i="5.96,227,1665471600"; 
+   d="scan'208";a="715679309"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 08:58:21 -0800
+Subject: [ndctl PATCH v2] ndctl: create disable master passphrase support
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        vishal.l.verma@intel.com
+Date:   Thu, 08 Dec 2022 09:58:20 -0700
+Message-ID: <167051867684.1382144.2464381152738802540.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 7 Dec 2022 20:30:36 -0800
-Alison Schofield <alison.schofield@intel.com> wrote:
+The cxl spec supports disabling of master passphrase. This is a new command
+that previously was not supported through nvdimm. Add support command to
+support "master passhprase disable".
 
-> On Wed, Nov 30, 2022 at 03:15:22PM +0000, Jonathan Cameron wrote:
-> > On Tue, 29 Nov 2022 20:34:37 -0800
-> > alison.schofield@intel.com wrote:
-> >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > Prior to poison inject & clear support, the mock of 'Get Poison List'
-> > > returned a list containing a single mocked error record.
-> > > 
-> > > Now that the mock of Inject and Clear poison maintains a mock_poison[]
-> > > list, use that when available for the device. Otherwise, return the
-> > > existing default mocked error record.
-> > > 
-> > > This enables roundtrip userspace testing of the inject, clear, and
-> > > poison list support.  
-> > 
-> > I'm not that keen on having an unclearable record, unless you handle that
-> > with the right error flow for clear poison.
-> > Plus I think you should always return that as well as the injected poison list
-> > so this is consistent.
-> > 
-> > Whether it matters to model it that well in the mocking code?  Up to you...
-> > 
-> > Jonathan
-> >   
-> I think I went off the rails here ;)
-> With this mock of Inject and Clear, returning totally fake errors is
-> useless. So, I would change my above statement to say:
-> 
-> "Now that the mock of Inject and Clear poison maintains a mock_poison[]
-> ist, use that when available for the device."
-> 
-> Do you agree with that usage Jonathan?  If the user wants to get errors
-> when they read the poison list, they need to inject them.
-> I guess I also could flip the order of these patchsets and do away
-> with the fake poison list entirely.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
 
-Sounds good.
+v2:
+- Add man page (Vishal)
 
-> 
-> a bit more below...
-> 
-> > 
-> >   
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > > ---
-> > >  tools/testing/cxl/test/mem.c | 97 +++++++++++++++++++++++++-----------
-> > >  1 file changed, 69 insertions(+), 28 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > > index 9d794fbe5ee1..31c147cf2d5b 100644
-> > > --- a/tools/testing/cxl/test/mem.c
-> > > +++ b/tools/testing/cxl/test/mem.c
-> > > @@ -224,6 +224,75 @@ static struct mock_poison {
-> > >  	u64 dpa;
-> > >  } mock_poison[MOCK_INJECT_POISON_MAX];
-> > >  
-> > > +struct mock_poison_po {
-> > > +	struct cxl_mbox_poison_payload_out poison_out;
-> > > +	struct cxl_poison_record record[MOCK_INJECT_POISON_MAX];  
-> > 
-> > Maybe use a variable length final element [] so that you can then
-> > create a 1 record version on demand where it is used for
-> > the default record.
-> >   
-> > > +};
-> > > +
-> > > +/*
-> > > + * Use the default poison payload when no injected poison is currently
-> > > + * mocked for this device. Mock one poison record with length 64 bytes.
-> > > + */
-> > > +static struct mock_poison_po default_poison_po = {
-> > > +	.poison_out.count = cpu_to_le16(1),
-> > > +	.record[0].length = cpu_to_le32(1),
-> > > +};
-> > > +
-> > > +static struct mock_poison_po *cxl_get_injected_po(struct cxl_dev_state *cxlds,
-> > > +						  u64 offset, u64 length)
-> > > +{
-> > > +	struct mock_poison_po *po;
-> > > +	int nr_records = 0;
-> > > +	u64 dpa;
-> > > +
-> > > +	po = kzalloc(sizeof(*po), GFP_KERNEL);
-> > > +	if (!po)
-> > > +		return NULL;
-> > > +
-> > > +	for (int i = 0; i < MOCK_INJECT_POISON_MAX; i++) {
-> > > +		if (mock_poison[i].cxlds != cxlds)
-> > > +			continue;
-> > > +		if (mock_poison[i].dpa < offset ||
-> > > +		    mock_poison[i].dpa > offset + length - 1)
-> > > +			continue;
-> > > +		dpa = cpu_to_le64(mock_poison[i].dpa |
-> > > +				  CXL_POISON_SOURCE_INJECTED);
-> > > +		po->record[nr_records].address = dpa;
-> > > +		po->record[nr_records].length = cpu_to_le32(1);
-> > > +		nr_records++;
-> > > +	}
-> > > +	if (!nr_records) {
-> > > +		kfree(po);
-> > > +		return NULL;
-> > > +	}
-> > > +	po->poison_out.count = cpu_to_le16(nr_records);
-> > > +	return po;
-> > > +}
-> > > +
-> > > +static int mock_get_poison(struct cxl_dev_state *cxlds,
-> > > +			   struct cxl_mbox_cmd *cmd)
-> > > +{  
-> > 
-> > Why the function move?  If you want to do this, a trivial move only
-> > patch first would have bad it slightly easier to review. But given it's small
-> > not worth doing now, particularly as most of the function changes anyway.
-> >   
-> 
-> Let me see how this cleans up, including your feedback below, when 
-> I get rid of the either injected or default choice.
-> 
-> >   
-> > > +	struct cxl_mbox_poison_payload_in *pi = cmd->payload_in;
-> > > +	struct mock_poison_po *po;
-> > > +
-> > > +	po = cxl_get_injected_po(cxlds, pi->offset, pi->length);
-> > > +	if (!po) {
-> > > +		po = &default_poison_po;  
-> > 
-> > Keep the comment from below on what this value is. It is weird enough
-> > to be worth a comment.
-> > 
-> > I'd be tempted to make the default_poison_po const and use a copy
-> > of it here to avoid fun races on reads from multiple devices.
-> > Or just allocate a 1 element version and fill it here.  However,
-> > I think we should really have both the default and injected elements.
-> >   
-> > > +		po->record[0].address = cpu_to_le64(pi->offset |
-> > > +						    CXL_POISON_SOURCE_INTERNAL);
-> > > +	}
-> > > +	if (cmd->size_out < sizeof(po))
-> > > +		return -EINVAL;  
-> > 
-> > This isn't technically correct, though it's probably fine for how we currently
-> > use it. Should really assume full mailbox size and fill on that basis (record
-> > count etc) but only copy the size of the target buffer.
-> > Not sure we care enough about this being 'right' as opposed to useful.
-> >   
-> > > +
-> > > +	memcpy(cmd->payload_out, po, sizeof(*po));
-> > > +	cmd->size_out = sizeof(po);
-> > > +
-> > > +	if (po != &default_poison_po)
-> > > +		kfree(po);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static bool mock_poison_add(struct cxl_dev_state *cxlds, u64 dpa)
-> > >  {
-> > >  	for (int i = 0; i < MOCK_INJECT_POISON_MAX; i++) {
-> > > @@ -293,34 +362,6 @@ static int mock_inject_poison(struct cxl_dev_state *cxlds,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > -static int mock_get_poison(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
-> > > -{
-> > > -	struct cxl_mbox_poison_payload_in *pi = cmd->payload_in;
-> > > -
-> > > -	struct {
-> > > -		struct cxl_mbox_poison_payload_out poison_out;
-> > > -		struct cxl_poison_record record;
-> > > -	} mock_poison_list = {
-> > > -		.poison_out = {
-> > > -			.count = cpu_to_le16(1),
-> > > -		},
-> > > -		/* Mock one poison record at pi.offset for 64 bytes */
-> > > -		.record = {
-> > > -			/* .address encodes DPA and poison source bits */
-> > > -			.address = cpu_to_le64(pi->offset |
-> > > -					       CXL_POISON_SOURCE_INTERNAL),
-> > > -			.length = cpu_to_le32(1),
-> > > -		},
-> > > -	};
-> > > -
-> > > -	if (cmd->size_out < sizeof(mock_poison_list))
-> > > -		return -EINVAL;
-> > > -
-> > > -	memcpy(cmd->payload_out, &mock_poison_list, sizeof(mock_poison_list));
-> > > -	cmd->size_out = sizeof(mock_poison_list);
-> > > -	return 0;
-> > > -}
-> > > -
-> > >  static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
-> > >  {
-> > >  	struct device *dev = cxlds->dev;  
-> >   
+ Documentation/ndctl/meson.build |    1 +
+ ndctl/builtin.h                 |    1 +
+ ndctl/dimm.c                    |   25 ++++++++++++++++++++++++-
+ ndctl/keys.c                    |   15 +++++++++++----
+ ndctl/keys.h                    |    5 +++--
+ ndctl/lib/dimm.c                |    9 +++++++++
+ ndctl/lib/libndctl.sym          |    4 ++++
+ ndctl/libndctl.h                |    1 +
+ ndctl/ndctl.c                   |    1 +
+ 9 files changed, 55 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/ndctl/meson.build b/Documentation/ndctl/meson.build
+index b82635a4cc4b..a22060538632 100644
+--- a/Documentation/ndctl/meson.build
++++ b/Documentation/ndctl/meson.build
+@@ -57,6 +57,7 @@ ndctl_manpages = [
+   'ndctl-setup-passphrase.txt',
+   'ndctl-update-passphrase.txt',
+   'ndctl-remove-passphrase.txt',
++  'ndctl-remove-master-passphrase.txt',
+   'ndctl-freeze-security.txt',
+   'ndctl-sanitize-dimm.txt',
+   'ndctl-load-keys.txt',
+diff --git a/ndctl/builtin.h b/ndctl/builtin.h
+index d3dbbb1afbdd..af759ef0cbfa 100644
+--- a/ndctl/builtin.h
++++ b/ndctl/builtin.h
+@@ -39,6 +39,7 @@ int cmd_inject_smart(int argc, const char **argv, struct ndctl_ctx *ctx);
+ int cmd_setup_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
+ int cmd_update_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
+ int cmd_remove_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
++int cmd_remove_master_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
+ int cmd_freeze_security(int argc, const char **argv, struct ndctl_ctx *ctx);
+ int cmd_sanitize_dimm(int argc, const char **argv, struct ndctl_ctx *ctx);
+ int cmd_load_keys(int argc, const char **argv, struct ndctl_ctx *ctx);
+diff --git a/ndctl/dimm.c b/ndctl/dimm.c
+index ac7c5270e971..df95ac895458 100644
+--- a/ndctl/dimm.c
++++ b/ndctl/dimm.c
+@@ -1028,7 +1028,19 @@ static int action_remove_passphrase(struct ndctl_dimm *dimm,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	return ndctl_dimm_remove_key(dimm);
++	return ndctl_dimm_remove_key(dimm, ND_USER_KEY);
++}
++
++static int action_remove_master_passphrase(struct ndctl_dimm *dimm,
++		struct action_context *actx)
++{
++	if (ndctl_dimm_get_security(dimm) < 0) {
++		error("%s: security operation not supported\n",
++				ndctl_dimm_get_devname(dimm));
++		return -EOPNOTSUPP;
++	}
++
++	return ndctl_dimm_remove_key(dimm, ND_MASTER_KEY);
+ }
+ 
+ static int action_security_freeze(struct ndctl_dimm *dimm,
+@@ -1595,6 +1607,17 @@ int cmd_remove_passphrase(int argc, const char **argv, void *ctx)
+ 	return count >= 0 ? 0 : EXIT_FAILURE;
+ }
+ 
++int cmd_remove_master_passphrase(int argc, const char **argv, void *ctx)
++{
++	int count = dimm_action(argc, argv, ctx, action_remove_master_passphrase,
++			base_options,
++			"ndctl remove-master-passphrase <nmem0> [<nmem1>..<nmemN>] [<options>]");
++
++	fprintf(stderr, "master passphrase removed for %d nmem%s.\n", count >= 0 ? count : 0,
++			count > 1 ? "s" : "");
++	return count >= 0 ? 0 : EXIT_FAILURE;
++}
++
+ int cmd_freeze_security(int argc, const char **argv, void *ctx)
+ {
+ 	int count = dimm_action(argc, argv, ctx, action_security_freeze, base_options,
+diff --git a/ndctl/keys.c b/ndctl/keys.c
+index 2f33b8fb488c..9bc558802bc4 100644
+--- a/ndctl/keys.c
++++ b/ndctl/keys.c
+@@ -602,17 +602,24 @@ static int discard_key(struct ndctl_dimm *dimm)
+ 	return 0;
+ }
+ 
+-int ndctl_dimm_remove_key(struct ndctl_dimm *dimm)
++int ndctl_dimm_remove_key(struct ndctl_dimm *dimm, enum ndctl_key_type key_type)
+ {
+ 	key_serial_t key;
+ 	int rc;
+ 
+-	key = check_dimm_key(dimm, true, ND_USER_KEY);
++	key = check_dimm_key(dimm, true, key_type);
+ 	if (key < 0)
+ 		return key;
+ 
+-	rc = run_key_op(dimm, key, ndctl_dimm_disable_passphrase,
+-			"remove passphrase");
++	if (key_type == ND_USER_KEY)
++		rc = run_key_op(dimm, key, ndctl_dimm_disable_passphrase,
++				"remove passphrase");
++	else if (key_type == ND_MASTER_KEY)
++		rc = run_key_op(dimm, key, ndctl_dimm_disable_master_passphrase,
++				"remove master passphrase");
++	else
++		return -EINVAL;
++
+ 	if (rc < 0)
+ 		return rc;
+ 
+diff --git a/ndctl/keys.h b/ndctl/keys.h
+index 03cb509e6404..9e77319c2ae6 100644
+--- a/ndctl/keys.h
++++ b/ndctl/keys.h
+@@ -25,7 +25,7 @@ int ndctl_dimm_setup_key(struct ndctl_dimm *dimm, const char *kek,
+ 				enum ndctl_key_type key_type);
+ int ndctl_dimm_update_key(struct ndctl_dimm *dimm, const char *kek,
+ 				enum ndctl_key_type key_type);
+-int ndctl_dimm_remove_key(struct ndctl_dimm *dimm);
++int ndctl_dimm_remove_key(struct ndctl_dimm *dimm, enum ndctl_key_type key_type);
+ int ndctl_dimm_secure_erase_key(struct ndctl_dimm *dimm,
+ 		enum ndctl_key_type key_type);
+ int ndctl_dimm_overwrite_key(struct ndctl_dimm *dimm);
+@@ -47,7 +47,8 @@ static inline int ndctl_dimm_update_key(struct ndctl_dimm *dimm,
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline int ndctl_dimm_remove_key(struct ndctl_dimm *dimm)
++static inline int ndctl_dimm_remove_key(struct ndctl_dimm *dimm,
++		enum ndctl_key_type key_type)
+ {
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/ndctl/lib/dimm.c b/ndctl/lib/dimm.c
+index 9e36e289dcc2..9936183af292 100644
+--- a/ndctl/lib/dimm.c
++++ b/ndctl/lib/dimm.c
+@@ -757,6 +757,15 @@ NDCTL_EXPORT int ndctl_dimm_disable_passphrase(struct ndctl_dimm *dimm,
+ 	return write_security(dimm, buf);
+ }
+ 
++NDCTL_EXPORT int ndctl_dimm_disable_master_passphrase(struct ndctl_dimm *dimm,
++		long key)
++{
++	char buf[SYSFS_ATTR_SIZE];
++
++	sprintf(buf, "disable_master %ld\n", key);
++	return write_security(dimm, buf);
++}
++
+ NDCTL_EXPORT int ndctl_dimm_freeze_security(struct ndctl_dimm *dimm)
+ {
+ 	return write_security(dimm, "freeze");
+diff --git a/ndctl/lib/libndctl.sym b/ndctl/lib/libndctl.sym
+index f1f9edd4b6ff..c933163c0380 100644
+--- a/ndctl/lib/libndctl.sym
++++ b/ndctl/lib/libndctl.sym
+@@ -462,3 +462,7 @@ LIBNDCTL_26 {
+ LIBNDCTL_27 {
+ 	ndctl_dimm_refresh_flags;
+ } LIBNDCTL_26;
++
++LIBNDCTL_28 {
++	ndctl_dimm_disable_master_passphrase;
++} LIBNDCTL_27;
+diff --git a/ndctl/libndctl.h b/ndctl/libndctl.h
+index 57cf93d8d151..c52e82a6f826 100644
+--- a/ndctl/libndctl.h
++++ b/ndctl/libndctl.h
+@@ -765,6 +765,7 @@ bool ndctl_dimm_security_is_frozen(struct ndctl_dimm *dimm);
+ int ndctl_dimm_update_passphrase(struct ndctl_dimm *dimm,
+ 		long ckey, long nkey);
+ int ndctl_dimm_disable_passphrase(struct ndctl_dimm *dimm, long key);
++int ndctl_dimm_disable_master_passphrase(struct ndctl_dimm *dimm, long key);
+ int ndctl_dimm_freeze_security(struct ndctl_dimm *dimm);
+ int ndctl_dimm_secure_erase(struct ndctl_dimm *dimm, long key);
+ int ndctl_dimm_overwrite(struct ndctl_dimm *dimm, long key);
+diff --git a/ndctl/ndctl.c b/ndctl/ndctl.c
+index 31d2c5e35939..eebcaf7aa915 100644
+--- a/ndctl/ndctl.c
++++ b/ndctl/ndctl.c
+@@ -84,6 +84,7 @@ static struct cmd_struct commands[] = {
+ 	{ "setup-passphrase", { cmd_setup_passphrase } },
+ 	{ "update-passphrase", { cmd_update_passphrase } },
+ 	{ "remove-passphrase", { cmd_remove_passphrase } },
++	{ "remove-master-passphrase", { cmd_remove_master_passphrase } },
+ 	{ "freeze-security", { cmd_freeze_security } },
+ 	{ "sanitize-dimm", { cmd_sanitize_dimm } },
+ #ifdef ENABLE_KEYUTILS
+
 
