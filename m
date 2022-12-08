@@ -2,165 +2,144 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEAAC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 21:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608D5C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 21:28:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiLHVYh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Dec 2022 16:24:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39108 "EHLO
+        id S229739AbiLHV2B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Dec 2022 16:28:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbiLHVYg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 16:24:36 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC68786B4
-        for <linux-cxl@vger.kernel.org>; Thu,  8 Dec 2022 13:24:34 -0800 (PST)
+        with ESMTP id S229478AbiLHV2A (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 16:28:00 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726067E827
+        for <linux-cxl@vger.kernel.org>; Thu,  8 Dec 2022 13:27:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670534675; x=1702070675;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XKfQTKadLBtSO2Boa0p4UBzZ1VlQJkvOvKN2/8N5fZ4=;
-  b=AXMOZ+Hk5NQholxbbPNdFcDOyyVouXfp+NInf6jEPWNe0v90AmGZJeHj
-   xoUiUfajQIR8RweRrimwnk5TP/HRL3KO8UYVEiWsDKdmi5DzE7MilyCy+
-   vX+V/tMAlNyVAmlpsVnU5ciQQ3L0ciq2eJQ14i77kQmB5o/MvhB3iLf2+
-   WItp+CP4ivsAsbSzLFi6IQTs5g5OFzMqjFww5WMqqbXyaJrZC8tIzGDVJ
-   acL3uwONL7OLgtf9hWwJH8008ZVhB53MauA/otXw7EMMebJ5KrOLexEq+
-   brAJdxaCGGMrUdbzHjKNmMhQvZd5g4zilF/NcRkqJzX1lHJURLPaI6OxO
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="381614108"
+  t=1670534879; x=1702070879;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vw3oms0hnl8LXxP/apk+TW2e4HdqRS+/eafSIfXtQtA=;
+  b=TCiIYGXDcEZRONXIvcTA+u7Hf9ZR+znFjsCSuXx/dBiLzlNAL6IrKhGf
+   xKx4a+MxTonW9yhg1sA3DYQJTYVXMFPlnT6WQZ8Mgt634UaqyK39JbrDy
+   mT7Vkfq5JBqt+7Q5nhIu5R09a/8JZ4M+5WkINqkoZLurDsgJWb6wDi6j3
+   exHtvgnAlcoqidyAobu4b5VdeqTJaIbOiP3bc5RDYtoLeL9qo/Iywf5Sb
+   nuv2aLyH1BKZ3aFFuOx4ZdYUq7yzdJFpPCd1XMeDh6c1vhvmFcNQAqiaZ
+   ejOqtTK1vzJkPyXTYCmsCa1v+y5gt2HBjcZ3V+ySYYW2rZyVNCvnYmoj2
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="318458696"
 X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="381614108"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 13:24:34 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="597505098"
+   d="scan'208";a="318458696"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 13:27:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="976046954"
 X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="597505098"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.199.197])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 13:24:34 -0800
-Date:   Thu, 8 Dec 2022 13:24:28 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, dave.jiang@intel.com,
-        ira.weiny@intel.com
-Subject: Re: [PATCH 3/4] cxl/mbox: Add variable output size validation for
- internal commands
-Message-ID: <Y5JWDCBVDYTwuZWF@aschofie-mobl2>
-References: <167030054261.4044561.2164047490200738083.stgit@dwillia2-xfh.jf.intel.com>
- <167030055918.4044561.10339573829837910505.stgit@dwillia2-xfh.jf.intel.com>
+   d="scan'208";a="976046954"
+Received: from kputnam-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.251.25.149])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 13:27:58 -0800
+Subject: [ndctl PATCH v2 00/18] cxl-cli test and usability updates
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Yi Zhang <yi.zhang@redhat.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Bobo WL <lmw.bobo@gmail.com>, nvdimm@lists.linux.dev,
+        vishal.l.verma@intel.com
+Date:   Thu, 08 Dec 2022 13:27:57 -0800
+Message-ID: <167053487710.582963.17616889985000817682.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <167030055918.4044561.10339573829837910505.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 08:22:39PM -0800, Dan Williams wrote:
-> cxl_internal_send_cmd() skips output size validation for variable output
-> commands which is not ideal. Most of the time internal usages want to
-> fail if the output size does not match what was requested. For other
-> commands where the caller cannot predict the size there is usually a
-> a header that conveys how much vaild data is in the payload. For those
-> cases add @min_out as a parameter to specify what the minimum response
-> payload needs to be for the caller to parse the rest of the payload.
-> 
-> In this patch only Get Supported Logs has that behavior, but going
-> forward records retrieval commands like Get Poison List and Get Event
-> Records can use @min_out to retrieve a variable amount of records.
-> 
-> Critically, this validation scheme skips the needs to interrogate the
-> cxl_mem_commands array which in turn frees up the implementation to
-> support internal command enabling without also enabling external / user
-> commands.
+Changes since v1 [1]:
+- Clarify the changelog as to why emitting pmem_size on non-pmem capable
+  device is confusing, and clean up the man page to remove stale example
+  of "{pmem,ram}_size: 0" (Alison)
+- Update the man page for cxl create-region to make it clear that the
+  tool maybe able to select the possible memdevs, but it may not still
+  require a manual specification of the ordering until the tool can do
+  that automatically. (Alison)
+- Support specification of the region order in either individual args, a
+  comma separated list, or space separated list. (Vishal)
+- Fixup count of the target list in the presence of list args. (Vishal)
+- Fixup test/cxl-topology.sh to use consistent 'math' context for comparisons
+  (Vishal)
+- Include some more documentation fixups and list enhancements
 
-I tested (tripped upon) this while rebasing the Get Poison List patchset.
-This commit log answers something I wondered - why a default min_out
-value was not assigned in the cxl_mem_commands array. I get it now.
+[1]: http://lore.kernel.org/r/166777840496.1238089.5601286140872803173.stgit@dwillia2-xfh.jf.intel.com
 
-Tested-by: Alison Schofield <alison.schofield@intel.com>
+---
+The v6.1 kernel picks up new cxl_test infrastructure for a switch
+attached to a single-port host-bridge. While extending the region
+creation and topology tests for that change, some additional updates
+were identified. The main one is the ability to elide the "ways"
+"memdevs" arguments to 'cxl create-region'. Those parameters are now
+derived by the result of a topology walk under the given root decoder.
+I.e.:
 
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/mbox.c |   23 ++++++++++++++---------
->  drivers/cxl/cxlmem.h    |    2 ++
->  2 files changed, 16 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index ed451ca60ce5..c36a3589377a 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -166,9 +166,7 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
->  int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
->  			  struct cxl_mbox_cmd *mbox_cmd)
->  {
-> -	const struct cxl_mem_command *cmd =
-> -		cxl_mem_find_command(mbox_cmd->opcode);
-> -	size_t out_size;
-> +	size_t out_size, min_out;
->  	int rc;
->  
->  	if (mbox_cmd->size_in > cxlds->payload_size ||
-> @@ -176,6 +174,7 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
->  		return -E2BIG;
->  
->  	out_size = mbox_cmd->size_out;
-> +	min_out = mbox_cmd->min_out;
->  	rc = cxlds->mbox_send(cxlds, mbox_cmd);
->  	if (rc)
->  		return rc;
-> @@ -183,14 +182,18 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
->  	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS)
->  		return cxl_mbox_cmd_rc2errno(mbox_cmd);
->  
-> +	if (!out_size)
-> +		return 0;
-> +
->  	/*
-> -	 * Variable sized commands can't be validated and so it's up to the
-> -	 * caller to do that if they wish.
-> +	 * Variable sized output needs to at least satisfy the caller's
-> +	 * minimum if not the fully requested size.
->  	 */
-> -	if (cmd->info.size_out != CXL_VARIABLE_PAYLOAD) {
-> -		if (mbox_cmd->size_out != out_size)
-> -			return -EIO;
-> -	}
-> +	if (min_out == 0)
-> +		min_out = out_size;
-> +
-> +	if (mbox_cmd->size_out < min_out)
-> +		return -EIO;
->  	return 0;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_internal_send_cmd, CXL);
-> @@ -635,6 +638,8 @@ static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxl
->  		.opcode = CXL_MBOX_OP_GET_SUPPORTED_LOGS,
->  		.size_out = cxlds->payload_size,
->  		.payload_out = ret,
-> +		/* At least the record number field must be valid */
-> +		.min_out = 2,
->  	};
->  	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
->  	if (rc < 0) {
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index c447577f5ad5..ab138004f644 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -101,6 +101,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
->   *            outputs commands this is always expected to be deterministic. For
->   *            variable sized output commands, it tells the exact number of bytes
->   *            written.
-> + * @min_out: (input) internal command output payload size validation
->   * @return_code: (output) Error code returned from hardware.
->   *
->   * This is the primary mechanism used to send commands to the hardware.
-> @@ -115,6 +116,7 @@ struct cxl_mbox_cmd {
->  	void *payload_out;
->  	size_t size_in;
->  	size_t size_out;
-> +	size_t min_out;
->  	u16 return_code;
->  };
->  
-> 
+    cxl create-region -d decoder3.4
+
+...will internally perform a:
+
+    cxl list -M -d decoder3.4
+
+...operation and use those memdevs as region targets.
+
+This also updates 'create-region' size detection to be maximum free
+extent in the decoder, or the available capacity in the target memdevs,
+whichever is smaller.
+
+Some miscellaneous fixes and updates are included as well.
+
+---
+
+Dan Williams (18):
+      ndctl/test: Move firmware-update.sh to the 'destructive' set
+      ndctl/test: Add kernel backtrace detection to some dax tests
+      ndctl/clang-format: Move minimum version to 6
+      ndctl/clang-format: Fix space after for_each macros
+      cxl/list: Always attempt to collect child objects
+      cxl/list: Add a 'firmware_node' alias
+      cxl/list: Add parent_dport attribute to port listings
+      cxl/list: Skip emitting pmem_size when it is zero
+      cxl/filter: Return json-c topology
+      cxl/list: Record cxl objects in json objects
+      cxl/region: Make ways an integer argument
+      cxl/region: Make granularity an integer argument
+      cxl/region: Use cxl_filter_walk() to gather create-region targets
+      cxl/region: Trim region size by max available extent
+      cxl/Documentation: Fix whitespace typos in create-region man page
+      cxl/region: Autoselect memdevs for create-region
+      cxl/test: Extend cxl-topology.sh for a single root-port host-bridge
+      cxl/test: Test single-port host-bridge region creation
+
+
+ .clang-format                           |   38 +--
+ Documentation/cxl/cxl-create-region.txt |   12 +
+ Documentation/cxl/cxl-list.txt          |    5 
+ cxl/filter.c                            |   36 +--
+ cxl/filter.h                            |   22 ++
+ cxl/json.c                              |   57 ++++
+ cxl/lib/libcxl.c                        |   69 +++++
+ cxl/lib/libcxl.sym                      |    7 +
+ cxl/lib/private.h                       |    4 
+ cxl/libcxl.h                            |    3 
+ cxl/list.c                              |    7 -
+ cxl/region.c                            |  406 ++++++++++++++++++++-----------
+ test/common                             |   10 +
+ test/cxl-create-region.sh               |   28 ++
+ test/cxl-region-sysfs.sh                |    4 
+ test/cxl-topology.sh                    |   53 ++--
+ test/dax.sh                             |    2 
+ test/daxdev-errors.sh                   |    2 
+ test/meson.build                        |    2 
+ test/multi-dax.sh                       |    2 
+ util/util.h                             |    9 +
+ 21 files changed, 537 insertions(+), 241 deletions(-)
+
+base-commit: 1d4dbf6ff6eb988864d154792aaa098a2b11a244
