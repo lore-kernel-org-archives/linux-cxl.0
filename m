@@ -2,159 +2,141 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC751C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 04:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F91C3A5A7
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 05:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbiLHErk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 7 Dec 2022 23:47:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44738 "EHLO
+        id S229717AbiLHFVU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Dec 2022 00:21:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiLHEre (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 7 Dec 2022 23:47:34 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3714277
-        for <linux-cxl@vger.kernel.org>; Wed,  7 Dec 2022 20:47:32 -0800 (PST)
+        with ESMTP id S229575AbiLHFVU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 00:21:20 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EEB888B69;
+        Wed,  7 Dec 2022 21:21:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670474852; x=1702010852;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pdQzG1yYD5tPAY5DEEJEs7Ik+sx8S+ib4HobamWwAJk=;
-  b=gmIPcyyjvw9LebRN07p3+KFpJOwdsKxzrdGrUljzToCcNn5GJBWDSm+V
-   s38AkE4Vxqm1cNdeEhqjmx8ZmgId80S9e0MGaZPx7BwbYG3LNfF6f1rbS
-   F9AS4PFadtTBIbyzH5ikq+zTeeVksfAO3z1xP+EryYNCYun5UgWIx8kW1
-   Q1Me8izWh4ocfLY9Khgd/UeUbAKOZjUpsCzAFcXOJtGCA2yk5/PhUwta3
-   8r0CmkCDGdTS+oeCWNdSDIGeWDhaCQRHS/QArrEYi8rqYe3ffBUwDIjLG
-   LgwikRWBsAI79Xg4//Fs1KCXEoBV1+x1U/n+r/nuHjzJEmigXxqYkv+Vk
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="318210292"
+  t=1670476879; x=1702012879;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4anARoAcZ+FMWx+rU/JO2ajIw8NyiGsHus+CHa4WuRw=;
+  b=c6U/npNmxwBCt3qWygl8Q7QxsVVJMQLS4snCKBW90hVVrQAP2QprQZK1
+   rFG2nyEYXGbzbEJTBa44zyFElQuZhtth/5lzGJsR30DxAoEZ2EciDZNsv
+   oqCi5XKHQdBxiEcZygceU/rdfZy+S/l4qpf5qTCCfuKer3r3fMDSKxGZn
+   cfH+ZlkZI8TxkcGKBxX8MsopxYVqjIZD01Di5ukD54l/m85AgS9qYU/Hl
+   5nFnJ9sTrUybj3evTJXG3E4mheu9CMkFeCuNbWSfKbSCZVVAsG/FUmVKS
+   kLS4UHQAkN0Bn7gxmXcg6m4LDd7hI2huTZgBtM/EFSv2jGtpZryUG3pHG
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="381367216"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="318210292"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 20:47:32 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="597210607"
+   d="scan'208";a="381367216"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 21:21:18 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="710324444"
 X-IronPort-AV: E=Sophos;i="5.96,226,1665471600"; 
-   d="scan'208";a="597210607"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.198.95])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 20:47:30 -0800
-Date:   Wed, 7 Dec 2022 20:47:27 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+   d="scan'208";a="710324444"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.25.22])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 21:21:17 -0800
+From:   ira.weiny@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/5] tools/testing/cxl: Mock the Inject Poison mailbox
- command
-Message-ID: <Y5FsX+aRbB0Erlfp@aschofie-mobl2>
-References: <cover.1669781852.git.alison.schofield@intel.com>
- <08eddfad079afbab1f80f17d9670b40b2a7bdea8.1669781852.git.alison.schofield@intel.com>
- <20221130145847.00007ae4@Huawei.com>
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: [PATCH V3 0/8] CXL: Process event logs
+Date:   Wed,  7 Dec 2022 21:21:06 -0800
+Message-Id: <20221208052115.800170-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221130145847.00007ae4@Huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 02:58:47PM +0000, Jonathan Cameron wrote:
-> On Tue, 29 Nov 2022 20:34:35 -0800
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > Mock the injection of poison by storing the device:address entry in a
-> > cxl_test array: mock_poison[]. Limit the array to 64 entries and fail
-> > new inject requests when full.
-> > 
-> > Introducing the mock_poison[] list here, makes it available for use in
-> > the mock of Clear Poison, and the mock of Get Poison List.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> Main question I have here is whether we want to mock per device injected poison
-> lists, or just one global.  I think we want per device so we can reflect
-> the limits as would be retrieved from Identify Memory Device Output Payload.
-> Whilst we don't do anything useful with it yet, we should also update
-> the mocked response to that command to reflect this.
-> 
-> Perhaps we should have a sysfs attribute to read how many entries we can
-> inject?  Seems like that would be useful for testing flows on real devices,
-> particularly if the device only supports a very small number!
+From: Ira Weiny <ira.weiny@intel.com>
 
-Jonathan,
+This code has been tested with a newer qemu which allows for more events to be
+returned at a time as well an additional QMP event and interrupt injection.
+Those patches will follow once they have been cleaned up.
 
-Thanks for the review and helping me see the use case. I see the usefulness of
-the per device model but am not clear on the sysfs attr for number of entries.
+The series is now in 3 parts:
 
-If user wants to know how many entries can be injected, just inject til I tell
-you no more!  Remember that count, run your test w it.
+	1) Base functionality including interrupts
+	2) Tracing specific events (Dynamic Capacity Event Record is defered)
+	3) cxl-test infrastructure for basic tests
 
-If user wants to dial down that number to something custom, then I can
-see RW attr being useful. Mock driver sets it to a max, and user can
-lower it.
+Changes from V2
+	Rebased on pending 6.3 changes
+		CXL security patches from Dave J.
+		Moving tracing to cxl core from Dan
+	Feed back from Dan, Steven, Jonathan, and Dave.
+	The series looks very different now with a lot of the patches squashed
+	per Dan's feedback.
 
-Is that useful?
+- Link to v2: https://lore.kernel.org/r/20221201002719.2596558-1-ira.weiny@intel.com
 
-Alison
+Changes from V1
+	Address comments, from Jonathan, Dave, and Alison
+		Main comment was to allow for a full payload size number of
+		event records to be processed on each Get event cyle.
+	Pick up tags
 
-> 
-> > ---
-> >  tools/testing/cxl/test/mem.c | 53 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> > 
-> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> > index a4f81915ec03..98acb9a644df 100644
-> > --- a/tools/testing/cxl/test/mem.c
-> > +++ b/tools/testing/cxl/test/mem.c
-> > @@ -13,6 +13,7 @@
-> >  #define LSA_SIZE SZ_128K
-> >  #define DEV_SIZE SZ_2G
-> >  #define EFFECT(x) (1U << x)
-> > +#define MOCK_INJECT_POISON_MAX 64
-> >  
-> >  static struct cxl_cel_entry mock_cel[] = {
-> >  	{
-> > @@ -43,6 +44,10 @@ static struct cxl_cel_entry mock_cel[] = {
-> >  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
-> >  		.effect = cpu_to_le16(0),
-> >  	},
-> > +	{
-> > +		.opcode = cpu_to_le16(CXL_MBOX_OP_INJECT_POISON),
-> > +		.effect = cpu_to_le16(0),
-> > +	},
-> >  };
-> >  
-> >  /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-> > @@ -210,6 +215,51 @@ static int mock_health_info(struct cxl_dev_state *cxlds,
-> >  	return 0;
-> >  }
-> >  
-> > +static struct mock_poison {
-> > +	struct cxl_dev_state *cxlds;
-> > +	u64 dpa;
-> > +} mock_poison[MOCK_INJECT_POISON_MAX];
-> 
-> Don't we want one of these per device instance?
-> 
-> > +
-> > +static bool mock_poison_add(struct cxl_dev_state *cxlds, u64 dpa)
-> > +{
-> > +	for (int i = 0; i < MOCK_INJECT_POISON_MAX; i++) {
-> > +		if (!mock_poison[i].cxlds) {
-> > +			mock_poison[i].cxlds = cxlds;
-> > +			mock_poison[i].dpa = dpa;
-> > +			return true;
-> > +		}
-> > +	}
-> > +	dev_dbg(cxlds->dev, "Mock poison list full: %d\n",
-> > +		MOCK_INJECT_POISON_MAX);
-> Slightly nicer maybe to use the text from
-> https://elixir.bootlin.com/linux/latest/source/drivers/cxl/cxlmem.h#L128
-> and have: "Mock poison injection limit has been reached: %d\n" ..
-> 
-> > +	return false;
-> > +}
-> 
+Changes from RFC v2
+	Integrated Davidlohr's irq patch, allocate up to 16 vectors, and base
+		my irq support on modifications to that patch.
+	Smita
+		Check event status before reading each log.
+	Jonathan
+		Process more than 1 record at a time
+		Remove reserved fields
+	Steven
+		Prefix trace points with 'cxl_'
+	Davidlohr
+		PUll in his patch
+
+Changes from RFC v1
+	Add event irqs
+	General simplification of the code.
+	Resolve field alignment questions
+	Update to rev 3.0 for comments and structures
+	Add reserved fields and output them
+
+Davidlohr Bueso (1):
+  cxl/mem: Wire up event interrupts
+
+Ira Weiny (7):
+  cxl/mem: Read, trace, and clear events on driver load
+  cxl/mem: Trace General Media Event Record
+  cxl/mem: Trace DRAM Event Record
+  cxl/mem: Trace Memory Module Event Record
+  cxl/test: Add generic mock events
+  cxl/test: Add specific events
+  cxl/test: Simulate event log overflow
+
+ drivers/acpi/pci_root.c         |   3 +
+ drivers/cxl/core/mbox.c         | 233 ++++++++++++++++
+ drivers/cxl/core/trace.h        | 479 ++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h               |  12 +
+ drivers/cxl/cxlmem.h            | 180 ++++++++++++
+ drivers/cxl/cxlpci.h            |   6 +
+ drivers/cxl/pci.c               | 130 +++++++++
+ include/linux/pci.h             |   1 +
+ tools/testing/cxl/test/Kbuild   |   4 +-
+ tools/testing/cxl/test/events.c | 314 +++++++++++++++++++++
+ tools/testing/cxl/test/events.h |  34 +++
+ tools/testing/cxl/test/mem.c    |  33 ++-
+ tools/testing/cxl/test/mock.h   |  12 +
+ 13 files changed, 1429 insertions(+), 12 deletions(-)
+ create mode 100644 tools/testing/cxl/test/events.c
+ create mode 100644 tools/testing/cxl/test/events.h
+
+
+base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e
+-- 
+2.37.2
+
