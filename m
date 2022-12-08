@@ -2,470 +2,319 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C17C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 17:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DFCC4167B
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 19:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229743AbiLHRom (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Dec 2022 12:44:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52024 "EHLO
+        id S229575AbiLHTSA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Dec 2022 14:18:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbiLHRok (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 12:44:40 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F6562E83;
-        Thu,  8 Dec 2022 09:44:38 -0800 (PST)
+        with ESMTP id S229470AbiLHTR6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 14:17:58 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB912D1FD
+        for <linux-cxl@vger.kernel.org>; Thu,  8 Dec 2022 11:17:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670521478; x=1702057478;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ikEZLSZ/sWag+Pv/+CqTNKDeC4Yyikz8tJAeE45mccc=;
-  b=F28vw4u030ukFSiS0FU0XKLBDr2Ukmtdj9l+QnR6UEOcHB6xv4MmhiHh
-   sf/c3ACnghgATd5YczJSViNWGg5WzLw9AusyjqBDMMN70rEgGA0XTHklu
-   C8yNXPVJHg37pLZ/hzBBkrKNxfEdMwj89A/aoRakPJglHxdzVzJ5QMvQc
-   YxZBP+wZ5kUpO/vjvGSjP+FldGcbOT7B5jAaGMMkQviYzmKbUZLONkizd
-   NqlPBJRAbtKpFEzG+REdrUKnufgR5vMBrf7jCIYQtod8+YkRwUu1lA2qL
-   GUqogCn3O4rutxQKUHX5GolPQZ3kYBDRDM3u5dr/GLwBIDsoGkPnOQw6a
+  t=1670527074; x=1702063074;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version;
+  bh=BxkypKFYlNLtKGZM3PZlsdd92hbTT56OjdgDb2kUwtw=;
+  b=IDw3TPPbwtd/w8Bc3soZoAmMeu4jHc1rLq06Rj91AW53u7fdPdzDD9aQ
+   AJdHF2VFIdjgPomi13b6+dpSuOZBAMmTVtPURoniDJINlCi5fdPlQV22C
+   SpxSE6vgTDfzAzveGNcFr/tWq1tmMkdxzowD+3bteZ1UNGvPt/s1BqvIZ
+   TtHKQbpCyiiAo83VRE2LJKsrH/XmnJ2QSu9N/6XNEte5H8xUYegylREW+
+   2k6hGWlaQf/v4eEJ3NOKlK2Ae29x+CiH/xQlW0q6YITfUrUhM5pcNLDtJ
+   5vzPJV3V80g2nqdh4rH0rqtC2iXWbchC0NIGyZICXTG8wwpdeVdeuRW2S
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="344285774"
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="381583585"
 X-IronPort-AV: E=Sophos;i="5.96,227,1665471600"; 
-   d="scan'208";a="344285774"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 09:44:38 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="771565528"
+   d="scan'208";a="381583585"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 11:17:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="735930575"
 X-IronPort-AV: E=Sophos;i="5.96,227,1665471600"; 
-   d="scan'208";a="771565528"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.107.194]) ([10.212.107.194])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 09:44:37 -0800
-Message-ID: <df3ca022-f6d6-c3cf-f6b1-a88eb3eeb199@intel.com>
-Date:   Thu, 8 Dec 2022 10:44:37 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.1
-Subject: Re: [PATCH] cxl/pci: Move tracepoint definitions to drivers/cxl/core/
+   d="scan'208";a="735930575"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Dec 2022 11:17:38 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 8 Dec 2022 11:17:38 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Thu, 8 Dec 2022 11:17:38 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Thu, 8 Dec 2022 11:17:38 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oCLqKsFZLU22W7APMiqERJD5hwbZ9Vldpa0F5dZqWpbiuVYwHTyUFqTU/mz0toSCTVOgK1ahmdZorZMQ2fP2otV4woSX3P/gUsGaH4JLvGJoOXkjp2F+dA8lp8Eb4yGylJrdlR3UV89U7VJJ08+5f5p2d1S+kjC8/nN1ZOIIT9WXrPjudJjSlnZEOC8xSgL2wGvjsrqmBjoMfKhjSz2dY0Fb2eMpBDnuXn+8PlWlEQAdHVGqJlT+79e2qHYrQEd1KFciQUvrFufDM5KG1LUngHy/g7+31kQWW2xolgVP3OSLOGHqIEhXqzS+Oue4oTnW6VYIB6GxpOsQi5FYs3De0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BxkypKFYlNLtKGZM3PZlsdd92hbTT56OjdgDb2kUwtw=;
+ b=L4B+F7VOmeupsqql4NJFpgY40NOOsY7ERe8fcTb76qqSrfgxPwrs8uYThLTE+b1D7Q7ALGz5gpKEhPIohbgSURW/VKELJUVspedNsOfvA9Fzy81Vr9LfO+9hqFKOWuLiCgYbFvmVAv6ywqH7vVoRaLUZdTnv+N/uzpj2AF+pbWcDDZNz+baCabS/yK9loMOBngfIQu5Wf/MCzimhZaH7U6VzZBcA0OfeLyesCu8BwtZFsLnVEjUR81ZhGiW+BCWtVOm9BuioGAcs0bJleGabR8WpJ88Beo4WuprCiCIUMdnWOZNQbHKfjDn3Zj3smPVOLJiXkMBh3G3ZQ2bie7reeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by BL3PR11MB6508.namprd11.prod.outlook.com (2603:10b6:208:38f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Thu, 8 Dec
+ 2022 19:17:36 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::82bb:46b:3969:c919]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::82bb:46b:3969:c919%4]) with mapi id 15.20.5880.014; Thu, 8 Dec 2022
+ 19:17:36 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Subject: Re: [ndctl PATCH v2] ndctl: create disable master passphrase support
+Thread-Topic: [ndctl PATCH v2] ndctl: create disable master passphrase support
+Thread-Index: AQHZCyZNtZffYuPK9UCxXzax+MI4TK5kXSYA
+Date:   Thu, 8 Dec 2022 19:17:36 +0000
+Message-ID: <c71b3a90ec0d98a82c1b43c42498289458ef9eb4.camel@intel.com>
+References: <167051867684.1382144.2464381152738802540.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <167051867684.1382144.2464381152738802540.stgit@djiang5-desk3.ch.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-References: <167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.46.2 (3.46.2-1.fc37) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR11MB3999:EE_|BL3PR11MB6508:EE_
+x-ms-office365-filtering-correlation-id: cba5f76a-c5b5-47ac-6eb4-08dad950dd60
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RXnL5lTZldTmyrVb6Q0Uv844FU+EKmOrtV38lAh+g6Gp4Xs+eOqJJmzWkqWZNxO5j5d2HMTjAP3SpbasEZPXsusCkX8dyjybQqJyxnXGrq8lIW6F3tShbRQwTUQUbNRG4JsUx+DlqNzhIMjYK03SNK1RggkGrxsukae9HYu4AdFeDy2KNZGYrdoJqFPy4nf0cEsCQ221wV46dOA5hlNiuFXB0/MvW9U+k9YDJasL1JZXEogH8wziMI17Trwq70gGoZZuVmZfMhrN3lG1xN/VMPn7qJEO/ExIrqXIxgHuiDDgT0eD1qvau2JRskPbququmzmV00Rs+vQujGpBaSgyPLReCfm+MUwUVxgPL9Qqj13IHBWM8stlv/Q3S6jTAoyDp6K+/XycGoL98/L8kmY71u1L9YEMjk9fOXsp/MI9wrXxNfKQO4MM49erLUdYKsa/zKPp01PxjfIikPTnizAClOjh5dlDzBt6Q7hKxyVZhNbs/5ZNQGaeg8unoWnE2zIx45GKV6vxIiGYafky4Ysj2dyriwSLB5ZjzIwRxVL9q7BZ6YZBd9MpZdxMcB78gf+dstFpL6tCztwp9C9hG81CuRfkokGfI/b76wGz4Sr3TdYuvkAi514axf0ErFscJV8sLOnMk1D+BSCzTDKo2B6h6WQf4Y0IIH03iKIB99/yYjERCCtvR+h2Q0Ez02LlF8T7lKdMjR9lVUEo1ExKHu5gKA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(39860400002)(136003)(396003)(376002)(366004)(451199015)(83380400001)(38070700005)(6506007)(76116006)(186003)(6512007)(86362001)(2906002)(26005)(110136005)(71200400001)(2616005)(316002)(41300700001)(36756003)(5660300002)(8936002)(66946007)(64756008)(91956017)(66556008)(66476007)(122000001)(66446008)(478600001)(6486002)(82960400001)(8676002)(38100700002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?L2NuSHl3VmxsK2lESFluUEVFWjFKZEEzVHJlS1hweWh5Z3BsUTBTcFhpL1Fh?=
+ =?utf-8?B?NVNNYUt3RzZkWWx4WWRrWmpkMW9JQ29Kek5rSWs0MTU2eFV2ZWVnME1waXZ0?=
+ =?utf-8?B?cWIvREJDcDUxUExyNURoYjRHRTZNWU5CRGFET2tPdmQwTVBPd21ydWFwRDl0?=
+ =?utf-8?B?NHFZcldrMFg4eWVBQ1JhWHhjN2FUaUNXRFRERWM5NXV6YWVDUkJnNi9YRGtQ?=
+ =?utf-8?B?U0xQY0JyeGVoTzBzNXcwWkdtODEwNW40SkFPY1VCOVpBNWdNNUVrVG14alV0?=
+ =?utf-8?B?MFkyNkxDc2p2KzJzN0RVUkw4SVBSeTNFUDg3emtjRzdiZW5RL0VuVzdrRWRT?=
+ =?utf-8?B?UmdJdEJ4TVhIT2M1R2k5TWxCUXlZcGliSlc2TGlPM01Jd3RZbnI1RnFOcXJF?=
+ =?utf-8?B?VG84VFZQSWhBOGVVZ0NmVzl2dy9INHVyV3BNUE84VFI2Y3VuWFZid2tGZWs4?=
+ =?utf-8?B?RmhsdFVsZ1IwZDZNM1ZPY2JjTEkyTjdjZmNlZnBhZjY3TEs1b1Qxb0NzeFR5?=
+ =?utf-8?B?bDRJL0JYYkRUdHBpdlgvc2Z5MjJWVGRpbStzeWc3VytzMktyV3R5VE5BOHFG?=
+ =?utf-8?B?b1lzNUxxSlVSdDdJUlc5VWE3Q2tBOCtJQ1FLa29BRVVTdDAwU2xuWXlJcTM4?=
+ =?utf-8?B?WGpSTG5zSVUvNHJZVzQwU2l2QUkvbFNQSEIwWXhLSkdXVWNoaWl2T0djSzRs?=
+ =?utf-8?B?eW5ZZmlocTBRL05EVDBMNzBPdm9JVG5oRWtDNFcwY0ZmVWR5RHplakxwb1BD?=
+ =?utf-8?B?clo3UE5UNjR3citGMTJuQllxV0w5bElGZDRTRzV0ZHJpRzFFMEo5eFMxcDZ3?=
+ =?utf-8?B?UXFFMjVEUlNuL1J5M2J4cm1UUG44bVg1Zk9pMkExbjg1WGdCS0k2d3FxUUVW?=
+ =?utf-8?B?UWhSVVV5SEhua291V0dINDJUQ3p6OC93UDJsbUZVdUE0M2xyb0RPV3pzWkpI?=
+ =?utf-8?B?aFpUKzBOakwyVnNwM0xVSzdKeVo3eitmcjBEbS9GVGE5V3hZMitjNmUvYXZY?=
+ =?utf-8?B?bWhxczBKN2VxcktOM1BXQjBNTGVyYldobzRheWxVTTN0MkhmSGwvSkQwdmtq?=
+ =?utf-8?B?aUFxZTV1Uk1vb0I1Q0dIMnphakYvQmRqT093dWZJNEt0UlhWb0tCd21EOHQz?=
+ =?utf-8?B?b2ZzK3VZMUdpT1hHNnFEWFVJc0pleFVTT2lubnI0cUxVelV3blQ0YWlWL2hp?=
+ =?utf-8?B?MW5yNFlvVGxtVWF6T0c5bmduaUpJSFNrYnJ0S211NWdyOG0wZXZOaGZZOHpx?=
+ =?utf-8?B?RHE0ZW04NWx0akVUbTBTallvQzZmRVNJSTlxRVZTaXJub0Z0NytCVDdxNENF?=
+ =?utf-8?B?Zlp5WW15NFl2UUw5ZzdERTIrYzBsdWluRE03Sm9xL3Zwc0c0VEwvdlh4RDQ4?=
+ =?utf-8?B?dk1LUWhLbTRzOGJPTUtJY21vUTd6NHA1T1dGMjBqVUphSnhKZ3hRSkxJQ1Rz?=
+ =?utf-8?B?VmhkbTVzTnhXSmJRQ09MN0I1eWRUemJzRnNXWlhMQzlJQTdKQ2oydXZzN3NT?=
+ =?utf-8?B?dTFTekEzZ203aUp6QVZsdjk3VDB2UlNBYnZnVXd5QzZwVjljbVlUR1lFSkpF?=
+ =?utf-8?B?UTdTeENrM1VKZHhWUkgzNWZuNUlCTy9YUHJuN3o0WkVrMXU1ZnNtWHVUQVIy?=
+ =?utf-8?B?UnczWkpCOGxaV1ZldGJ3R1pQUDJLVTM3alU2eVBONVFaS2hsb1NXWXlVL2di?=
+ =?utf-8?B?dkdDVlBjNFQxdjFMZWxNcWI5ek8ySXpwSmdNdDZ0M0JlVXBDOVJ1SnhGQ1pt?=
+ =?utf-8?B?bEhIWjhLem5GT3VXeG8rOENvNWN4VXNrRFM2cHdtUGd1YXBnNnQrNHFUN3VX?=
+ =?utf-8?B?NlZGR1ZIdE1RM3BRMTRWeGFTOEVkVDhDSGVFSDQ3VWIrRnBHdDdZSlgrMG9N?=
+ =?utf-8?B?UGJrY2E0OERlczlsTUxLdWM5SFlGV2Y2ME90NjlYMTgxQjNsSmpkU3p5aERH?=
+ =?utf-8?B?d20wa3JiNWpjcVlmMm5SMGlCMmN3OFpnKzZhc1dER1Q2am9TVmo3MmlISTdF?=
+ =?utf-8?B?ZCtYVkphS2hPd0FFMWkxb1MvUmkzNklKR3EvaWxKbExkNHhML0RUZ1FnTUc3?=
+ =?utf-8?B?N1Z5eXRjZDdhV3k1VzVSZzJNTFM2bGljZWpMb0FVc1RES2dZeFNQeFk3WUpM?=
+ =?utf-8?B?bTFETDZ3NldlNkxudHVpeGxaQ01jR0VxeWJ6TUlWR1I2aU0vTWE5NXdia0tW?=
+ =?utf-8?B?VWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1EFFCF1146C7664CB1FB334F34CB3942@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cba5f76a-c5b5-47ac-6eb4-08dad950dd60
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Dec 2022 19:17:36.0729
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qxg+OJ1WAqUN/Ry4ikOK6JxUB8ycKx/611oiQlt2UHp4Wg8fuKU2xhWM2vBZoMxBnMnfwe4XQCNgvZJXBWUwVCFf0DzuT6kdk7W8Vv0C/1k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6508
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 12/8/2022 10:02 AM, Dan Williams wrote:
-> CXL is using tracepoints for reporting RAS capability register payloads
-> for AER events, and has plans to use tracepoints for the output payload
-> of Get Poison List and Get Event Records commands. For organization
-> purposes it would be nice to keep those all under a single + local CXL
-> trace system. This also organization also potentially helps in the
-> future when CXL drivers expand beyond generic memory expanders, however
-> that would also entail a move away from the expander-specific
-> cxl_dev_state context, save that for later.
-> 
-> Note that the powerpc-specific drivers/misc/cxl/ also defines a 'cxl'
-> trace system, however, it is unlikely that a single platform will ever
-> load both drivers simultaneously.
-> 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> This patch is targeting v6.3.  I am sending it out now to enable the
-> in-flight Event and Poison list patch sets to build upon. It will not
-> move to a non-rebasing branch until after v6.2-rc2, but in the meantime
-> I can throw it out on the list and the cxl/preview branch.
-> 
->   drivers/cxl/core/Makefile  |    3 +
->   drivers/cxl/core/pci.c     |  112 ++++++++++++++++++++++++++++++++++++++++++++
->   drivers/cxl/core/trace.c   |    5 ++
->   drivers/cxl/core/trace.h   |   11 ++--
->   drivers/cxl/cxl.h          |    2 +
->   drivers/cxl/cxlpci.h       |    3 +
->   drivers/cxl/pci.c          |  111 --------------------------------------------
->   tools/testing/cxl/Kbuild   |    2 +
->   8 files changed, 131 insertions(+), 118 deletions(-)
->   create mode 100644 drivers/cxl/core/trace.c
->   rename include/trace/events/cxl.h => drivers/cxl/core/trace.h (94%)
-> 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 79c7257f4107..ca4ae31d8f57 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -3,6 +3,8 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
->   obj-$(CONFIG_CXL_SUSPEND) += suspend.o
->   
->   ccflags-y += -I$(srctree)/drivers/cxl
-> +CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
-> +
->   cxl_core-y := port.o
->   cxl_core-y += pmem.o
->   cxl_core-y += regs.o
-> @@ -10,4 +12,5 @@ cxl_core-y += memdev.o
->   cxl_core-y += mbox.o
->   cxl_core-y += pci.o
->   cxl_core-y += hdm.o
-> +cxl_core-$(CONFIG_TRACING) += trace.o
->   cxl_core-$(CONFIG_CXL_REGION) += region.o
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 57764e9cd19d..1d1492440287 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -9,6 +9,7 @@
->   #include <cxlmem.h>
->   #include <cxl.h>
->   #include "core.h"
-> +#include "trace.h"
->   
->   /**
->    * DOC: cxl core pci
-> @@ -622,3 +623,114 @@ void read_cdat_data(struct cxl_port *port)
->   	}
->   }
->   EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-> +
-> +void cxl_cor_error_detected(struct pci_dev *pdev)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +	void __iomem *addr;
-> +	u32 status;
-> +
-> +	if (!cxlds->regs.ras)
-> +		return;
-> +
-> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-> +	status = readl(addr);
-> +	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> +		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +		trace_cxl_aer_correctable_error(dev, status);
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, CXL);
-> +
-> +/* CXL spec rev3.0 8.2.4.16.1 */
-> +static void header_log_copy(struct cxl_dev_state *cxlds, u32 *log)
-> +{
-> +	void __iomem *addr;
-> +	u32 *log_addr;
-> +	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
-> +
-> +	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
-> +	log_addr = log;
-> +
-> +	for (i = 0; i < log_u32_size; i++) {
-> +		*log_addr = readl(addr);
-> +		log_addr++;
-> +		addr += sizeof(u32);
-> +	}
-> +}
-> +
-> +/*
-> + * Log the state of the RAS status registers and prepare them to log the
-> + * next error status. Return 1 if reset needed.
-> + */
-> +static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +	u32 hl[CXL_HEADERLOG_SIZE_U32];
-> +	void __iomem *addr;
-> +	u32 status;
-> +	u32 fe;
-> +
-> +	if (!cxlds->regs.ras)
-> +		return false;
-> +
-> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
-> +	status = readl(addr);
-> +	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
-> +		return false;
-> +
-> +	/* If multiple errors, log header points to first error from ctrl reg */
-> +	if (hweight32(status) > 1) {
-> +		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
-> +		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
-> +	} else {
-> +		fe = status;
-> +	}
-> +
-> +	header_log_copy(cxlds, hl);
-> +	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
-> +	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
-> +
-> +	return true;
-> +}
-> +
-> +pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> +				    pci_channel_state_t state)
-> +{
-> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct device *dev = &cxlmd->dev;
-> +	bool ue;
-> +
-> +	/*
-> +	 * A frozen channel indicates an impending reset which is fatal to
-> +	 * CXL.mem operation, and will likely crash the system. On the off
-> +	 * chance the situation is recoverable dump the status of the RAS
-> +	 * capability registers and bounce the active state of the memdev.
-> +	 */
-> +	ue = cxl_report_and_clear(cxlds);
-> +
-> +	switch (state) {
-> +	case pci_channel_io_normal:
-> +		if (ue) {
-> +			device_release_driver(dev);
-> +			return PCI_ERS_RESULT_NEED_RESET;
-> +		}
-> +		return PCI_ERS_RESULT_CAN_RECOVER;
-> +	case pci_channel_io_frozen:
-> +		dev_warn(&pdev->dev,
-> +			 "%s: frozen state error detected, disable CXL.mem\n",
-> +			 dev_name(dev));
-> +		device_release_driver(dev);
-> +		return PCI_ERS_RESULT_NEED_RESET;
-> +	case pci_channel_io_perm_failure:
-> +		dev_warn(&pdev->dev,
-> +			 "failure state error detected, request disconnect\n");
-> +		return PCI_ERS_RESULT_DISCONNECT;
-> +	}
-> +	return PCI_ERS_RESULT_NEED_RESET;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
-> diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
-> new file mode 100644
-> index 000000000000..29ae7ce81dc5
-> --- /dev/null
-> +++ b/drivers/cxl/core/trace.c
-> @@ -0,0 +1,5 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> +
-> +#define CREATE_TRACE_POINTS
-> +#include "trace.h"
-> diff --git a/include/trace/events/cxl.h b/drivers/cxl/core/trace.h
-> similarity index 94%
-> rename from include/trace/events/cxl.h
-> rename to drivers/cxl/core/trace.h
-> index ad085a2534ef..20ca2fe2ca8e 100644
-> --- a/include/trace/events/cxl.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -1,15 +1,14 @@
-> -/* SPDX-License-Identifier: GPL-2.0 */
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
->   #undef TRACE_SYSTEM
->   #define TRACE_SYSTEM cxl
->   
->   #if !defined(_CXL_EVENTS_H) || defined(TRACE_HEADER_MULTI_READ)
->   #define _CXL_EVENTS_H
->   
-> +#include <cxl.h>
->   #include <linux/tracepoint.h>
->   
-> -#define CXL_HEADERLOG_SIZE		SZ_512
-> -#define CXL_HEADERLOG_SIZE_U32		SZ_512 / sizeof(u32)
-> -
->   #define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
->   #define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
->   #define CXL_RAS_UC_CACHE_BE_PARITY	BIT(2)
-> @@ -106,7 +105,5 @@ TRACE_EVENT(cxl_aer_correctable_error,
->   
->   #endif /* _CXL_EVENTS_H */
->   
-> -/* This part must be outside protection */
-> -#undef TRACE_INCLUDE_FILE
-> -#define TRACE_INCLUDE_FILE cxl
-> +#define TRACE_INCLUDE_FILE trace
->   #include <trace/define_trace.h>
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 1b1cf459ac77..aa3af3bb73b2 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -140,6 +140,8 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->   #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
->   #define CXL_RAS_HEADER_LOG_OFFSET 0x18
->   #define CXL_RAS_CAPABILITY_LENGTH 0x58
-> +#define CXL_HEADERLOG_SIZE SZ_512
-> +#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
->   
->   /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
->   #define CXLDEV_CAP_ARRAY_OFFSET 0x0
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 920909791bb9..77dbdb980b12 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -66,4 +66,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->   struct cxl_dev_state;
->   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
->   void read_cdat_data(struct cxl_port *port);
-> +void cxl_cor_error_detected(struct pci_dev *pdev);
-> +pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> +				    pci_channel_state_t state);
->   #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 33083a522fd1..3a66aadb4df0 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -14,8 +14,6 @@
->   #include "cxlmem.h"
->   #include "cxlpci.h"
->   #include "cxl.h"
-> -#define CREATE_TRACE_POINTS
-> -#include <trace/events/cxl.h>
->   
->   /**
->    * DOC: cxl pci
-> @@ -514,96 +512,6 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
->   };
->   MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
->   
-> -/* CXL spec rev3.0 8.2.4.16.1 */
-> -static void header_log_copy(struct cxl_dev_state *cxlds, u32 *log)
-> -{
-> -	void __iomem *addr;
-> -	u32 *log_addr;
-> -	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
-> -
-> -	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
-> -	log_addr = log;
-> -
-> -	for (i = 0; i < log_u32_size; i++) {
-> -		*log_addr = readl(addr);
-> -		log_addr++;
-> -		addr += sizeof(u32);
-> -	}
-> -}
-> -
-> -/*
-> - * Log the state of the RAS status registers and prepare them to log the
-> - * next error status. Return 1 if reset needed.
-> - */
-> -static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
-> -{
-> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> -	struct device *dev = &cxlmd->dev;
-> -	u32 hl[CXL_HEADERLOG_SIZE_U32];
-> -	void __iomem *addr;
-> -	u32 status;
-> -	u32 fe;
-> -
-> -	if (!cxlds->regs.ras)
-> -		return false;
-> -
-> -	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
-> -	status = readl(addr);
-> -	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
-> -		return false;
-> -
-> -	/* If multiple errors, log header points to first error from ctrl reg */
-> -	if (hweight32(status) > 1) {
-> -		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
-> -		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
-> -	} else {
-> -		fe = status;
-> -	}
-> -
-> -	header_log_copy(cxlds, hl);
-> -	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
-> -	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
-> -
-> -	return true;
-> -}
-> -
-> -static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> -					   pci_channel_state_t state)
-> -{
-> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> -	struct device *dev = &cxlmd->dev;
-> -	bool ue;
-> -
-> -	/*
-> -	 * A frozen channel indicates an impending reset which is fatal to
-> -	 * CXL.mem operation, and will likely crash the system. On the off
-> -	 * chance the situation is recoverable dump the status of the RAS
-> -	 * capability registers and bounce the active state of the memdev.
-> -	 */
-> -	ue = cxl_report_and_clear(cxlds);
-> -
-> -	switch (state) {
-> -	case pci_channel_io_normal:
-> -		if (ue) {
-> -			device_release_driver(dev);
-> -			return PCI_ERS_RESULT_NEED_RESET;
-> -		}
-> -		return PCI_ERS_RESULT_CAN_RECOVER;
-> -	case pci_channel_io_frozen:
-> -		dev_warn(&pdev->dev,
-> -			 "%s: frozen state error detected, disable CXL.mem\n",
-> -			 dev_name(dev));
-> -		device_release_driver(dev);
-> -		return PCI_ERS_RESULT_NEED_RESET;
-> -	case pci_channel_io_perm_failure:
-> -		dev_warn(&pdev->dev,
-> -			 "failure state error detected, request disconnect\n");
-> -		return PCI_ERS_RESULT_DISCONNECT;
-> -	}
-> -	return PCI_ERS_RESULT_NEED_RESET;
-> -}
-> -
->   static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
->   {
->   	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> @@ -628,25 +536,6 @@ static void cxl_error_resume(struct pci_dev *pdev)
->   		 dev->driver ? "successful" : "failed");
->   }
->   
-> -static void cxl_cor_error_detected(struct pci_dev *pdev)
-> -{
-> -	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-> -	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> -	struct device *dev = &cxlmd->dev;
-> -	void __iomem *addr;
-> -	u32 status;
-> -
-> -	if (!cxlds->regs.ras)
-> -		return;
-> -
-> -	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-> -	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(dev, status);
-> -	}
-> -}
-> -
->   static const struct pci_error_handlers cxl_error_handlers = {
->   	.error_detected	= cxl_error_detected,
->   	.slot_reset	= cxl_slot_reset,
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 0805f08af8b3..12af1c9270ff 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -17,6 +17,7 @@ CXL_SRC := $(DRIVERS)/cxl
->   CXL_CORE_SRC := $(DRIVERS)/cxl/core
->   ccflags-y := -I$(srctree)/drivers/cxl/
->   ccflags-y += -D__mock=__weak
-> +ccflags-y += -DTRACE_INCLUDE_PATH=$(CXL_CORE_SRC) -I$(srctree)/drivers/cxl/core/
->   
->   obj-m += cxl_acpi.o
->   
-> @@ -49,6 +50,7 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
->   cxl_core-y += $(CXL_CORE_SRC)/mbox.o
->   cxl_core-y += $(CXL_CORE_SRC)/pci.o
->   cxl_core-y += $(CXL_CORE_SRC)/hdm.o
-> +cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
->   cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
->   cxl_core-y += config_check.o
->   
-> 
+T24gVGh1LCAyMDIyLTEyLTA4IGF0IDA5OjU4IC0wNzAwLCBEYXZlIEppYW5nIHdyb3RlOgo+IFRo
+ZSBjeGwgc3BlYyBzdXBwb3J0cyBkaXNhYmxpbmcgb2YgbWFzdGVyIHBhc3NwaHJhc2UuIFRoaXMg
+aXMgYSBuZXcgY29tbWFuZAo+IHRoYXQgcHJldmlvdXNseSB3YXMgbm90IHN1cHBvcnRlZCB0aHJv
+dWdoIG52ZGltbS4gQWRkIHN1cHBvcnQgY29tbWFuZCB0bwo+IHN1cHBvcnQgIm1hc3RlciBwYXNz
+aHByYXNlIGRpc2FibGUiLgoKRXh0cmEgJ3N1cHBvcnQnIGluIHRoaXMgc2VudGVuY2U/Cgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IERhdmUgSmlhbmcgPGRhdmUuamlhbmdAaW50ZWwuY29tPgo+IC0tLQo+
+IAo+IHYyOgo+IC0gQWRkIG1hbiBwYWdlIChWaXNoYWwpCj4gCj4gwqBEb2N1bWVudGF0aW9uL25k
+Y3RsL21lc29uLmJ1aWxkIHzCoMKgwqAgMSArCj4gwqBuZGN0bC9idWlsdGluLmjCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDEgKwo+IMKgbmRjdGwvZGltbS5jwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMjUgKysrKysrKysrKysrKysr
+KysrKysrKysrLQo+IMKgbmRjdGwva2V5cy5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfMKgwqAgMTUgKysrKysrKysrKystLS0tCj4gwqBuZGN0bC9rZXlzLmjCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKgIDUgKysrLS0KPiDCoG5kY3Rs
+L2xpYi9kaW1tLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoCA5ICsrKysr
+KysrKwo+IMKgbmRjdGwvbGliL2xpYm5kY3RsLnN5bcKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoMKg
+IDQgKysrKwo+IMKgbmRjdGwvbGlibmRjdGwuaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCB8wqDCoMKgIDEgKwo+IMKgbmRjdGwvbmRjdGwuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCB8wqDCoMKgIDEgKwoKRGlkIHlvdSBmb3JnZXQgdG8gZ2l0LWFkZCBuZGN0bC1y
+ZW1vdmUtbWFzdGVyLXBhc3NwaHJhc2UudHh0PwoKPiDCoDkgZmlsZXMgY2hhbmdlZCwgNTUgaW5z
+ZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9uZGN0bC9tZXNvbi5idWlsZCBiL0RvY3VtZW50YXRpb24vbmRjdGwvbWVzb24uYnVpbGQKPiBp
+bmRleCBiODI2MzVhNGNjNGIuLmEyMjA2MDUzODYzMiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0
+aW9uL25kY3RsL21lc29uLmJ1aWxkCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9uZGN0bC9tZXNvbi5i
+dWlsZAo+IEBAIC01Nyw2ICs1Nyw3IEBAIG5kY3RsX21hbnBhZ2VzID0gWwo+IMKgwqAgJ25kY3Rs
+LXNldHVwLXBhc3NwaHJhc2UudHh0JywKPiDCoMKgICduZGN0bC11cGRhdGUtcGFzc3BocmFzZS50
+eHQnLAo+IMKgwqAgJ25kY3RsLXJlbW92ZS1wYXNzcGhyYXNlLnR4dCcsCj4gK8KgICduZGN0bC1y
+ZW1vdmUtbWFzdGVyLXBhc3NwaHJhc2UudHh0JywKPiDCoMKgICduZGN0bC1mcmVlemUtc2VjdXJp
+dHkudHh0JywKPiDCoMKgICduZGN0bC1zYW5pdGl6ZS1kaW1tLnR4dCcsCj4gwqDCoCAnbmRjdGwt
+bG9hZC1rZXlzLnR4dCcsCj4gZGlmZiAtLWdpdCBhL25kY3RsL2J1aWx0aW4uaCBiL25kY3RsL2J1
+aWx0aW4uaAo+IGluZGV4IGQzZGJiYjFhZmJkZC4uYWY3NTllZjBjYmZhIDEwMDY0NAo+IC0tLSBh
+L25kY3RsL2J1aWx0aW4uaAo+ICsrKyBiL25kY3RsL2J1aWx0aW4uaAo+IEBAIC0zOSw2ICszOSw3
+IEBAIGludCBjbWRfaW5qZWN0X3NtYXJ0KGludCBhcmdjLCBjb25zdCBjaGFyICoqYXJndiwgc3Ry
+dWN0IG5kY3RsX2N0eCAqY3R4KTsKPiDCoGludCBjbWRfc2V0dXBfcGFzc3BocmFzZShpbnQgYXJn
+YywgY29uc3QgY2hhciAqKmFyZ3YsIHN0cnVjdCBuZGN0bF9jdHggKmN0eCk7Cj4gwqBpbnQgY21k
+X3VwZGF0ZV9wYXNzcGhyYXNlKGludCBhcmdjLCBjb25zdCBjaGFyICoqYXJndiwgc3RydWN0IG5k
+Y3RsX2N0eCAqY3R4KTsKPiDCoGludCBjbWRfcmVtb3ZlX3Bhc3NwaHJhc2UoaW50IGFyZ2MsIGNv
+bnN0IGNoYXIgKiphcmd2LCBzdHJ1Y3QgbmRjdGxfY3R4ICpjdHgpOwo+ICtpbnQgY21kX3JlbW92
+ZV9tYXN0ZXJfcGFzc3BocmFzZShpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YsIHN0cnVjdCBu
+ZGN0bF9jdHggKmN0eCk7Cj4gwqBpbnQgY21kX2ZyZWV6ZV9zZWN1cml0eShpbnQgYXJnYywgY29u
+c3QgY2hhciAqKmFyZ3YsIHN0cnVjdCBuZGN0bF9jdHggKmN0eCk7Cj4gwqBpbnQgY21kX3Nhbml0
+aXplX2RpbW0oaW50IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2LCBzdHJ1Y3QgbmRjdGxfY3R4ICpj
+dHgpOwo+IMKgaW50IGNtZF9sb2FkX2tleXMoaW50IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2LCBz
+dHJ1Y3QgbmRjdGxfY3R4ICpjdHgpOwo+IGRpZmYgLS1naXQgYS9uZGN0bC9kaW1tLmMgYi9uZGN0
+bC9kaW1tLmMKPiBpbmRleCBhYzdjNTI3MGU5NzEuLmRmOTVhYzg5NTQ1OCAxMDA2NDQKPiAtLS0g
+YS9uZGN0bC9kaW1tLmMKPiArKysgYi9uZGN0bC9kaW1tLmMKPiBAQCAtMTAyOCw3ICsxMDI4LDE5
+IEBAIHN0YXRpYyBpbnQgYWN0aW9uX3JlbW92ZV9wYXNzcGhyYXNlKHN0cnVjdCBuZGN0bF9kaW1t
+ICpkaW1tLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIC1FT1BOT1RT
+VVBQOwo+IMKgwqDCoMKgwqDCoMKgwqB9Cj4gwqAKPiAtwqDCoMKgwqDCoMKgwqByZXR1cm4gbmRj
+dGxfZGltbV9yZW1vdmVfa2V5KGRpbW0pOwo+ICvCoMKgwqDCoMKgwqDCoHJldHVybiBuZGN0bF9k
+aW1tX3JlbW92ZV9rZXkoZGltbSwgTkRfVVNFUl9LRVkpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50
+IGFjdGlvbl9yZW1vdmVfbWFzdGVyX3Bhc3NwaHJhc2Uoc3RydWN0IG5kY3RsX2RpbW0gKmRpbW0s
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBhY3Rpb25fY29udGV4dCAq
+YWN0eCkKPiArewo+ICvCoMKgwqDCoMKgwqDCoGlmIChuZGN0bF9kaW1tX2dldF9zZWN1cml0eShk
+aW1tKSA8IDApIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZXJyb3IoIiVzOiBz
+ZWN1cml0eSBvcGVyYXRpb24gbm90IHN1cHBvcnRlZFxuIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZGN0bF9kaW1tX2dl
+dF9kZXZuYW1lKGRpbW0pKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJu
+IC1FT1BOT1RTVVBQOwo+ICvCoMKgwqDCoMKgwqDCoH0KPiArCj4gK8KgwqDCoMKgwqDCoMKgcmV0
+dXJuIG5kY3RsX2RpbW1fcmVtb3ZlX2tleShkaW1tLCBORF9NQVNURVJfS0VZKTsKPiDCoH0KPiDC
+oAo+IMKgc3RhdGljIGludCBhY3Rpb25fc2VjdXJpdHlfZnJlZXplKHN0cnVjdCBuZGN0bF9kaW1t
+ICpkaW1tLAo+IEBAIC0xNTk1LDYgKzE2MDcsMTcgQEAgaW50IGNtZF9yZW1vdmVfcGFzc3BocmFz
+ZShpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YsIHZvaWQgKmN0eCkKPiDCoMKgwqDCoMKgwqDC
+oMKgcmV0dXJuIGNvdW50ID49IDAgPyAwIDogRVhJVF9GQUlMVVJFOwo+IMKgfQo+IMKgCj4gK2lu
+dCBjbWRfcmVtb3ZlX21hc3Rlcl9wYXNzcGhyYXNlKGludCBhcmdjLCBjb25zdCBjaGFyICoqYXJn
+diwgdm9pZCAqY3R4KQo+ICt7Cj4gK8KgwqDCoMKgwqDCoMKgaW50IGNvdW50ID0gZGltbV9hY3Rp
+b24oYXJnYywgYXJndiwgY3R4LCBhY3Rpb25fcmVtb3ZlX21hc3Rlcl9wYXNzcGhyYXNlLAo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYmFzZV9vcHRpb25z
+LAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIm5kY3Rs
+IHJlbW92ZS1tYXN0ZXItcGFzc3BocmFzZSA8bm1lbTA+IFs8bm1lbTE+Li48bm1lbU4+XSBbPG9w
+dGlvbnM+XSIpOwo+ICsKPiArwqDCoMKgwqDCoMKgwqBmcHJpbnRmKHN0ZGVyciwgIm1hc3RlciBw
+YXNzcGhyYXNlIHJlbW92ZWQgZm9yICVkIG5tZW0lcy5cbiIsIGNvdW50ID49IDAgPyBjb3VudCA6
+IDAsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb3Vu
+dCA+IDEgPyAicyIgOiAiIik7Cj4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIGNvdW50ID49IDAgPyAw
+IDogRVhJVF9GQUlMVVJFOwo+ICt9Cj4gKwo+IMKgaW50IGNtZF9mcmVlemVfc2VjdXJpdHkoaW50
+IGFyZ2MsIGNvbnN0IGNoYXIgKiphcmd2LCB2b2lkICpjdHgpCj4gwqB7Cj4gwqDCoMKgwqDCoMKg
+wqDCoGludCBjb3VudCA9IGRpbW1fYWN0aW9uKGFyZ2MsIGFyZ3YsIGN0eCwgYWN0aW9uX3NlY3Vy
+aXR5X2ZyZWV6ZSwgYmFzZV9vcHRpb25zLAo+IGRpZmYgLS1naXQgYS9uZGN0bC9rZXlzLmMgYi9u
+ZGN0bC9rZXlzLmMKPiBpbmRleCAyZjMzYjhmYjQ4OGMuLjliYzU1ODgwMmJjNCAxMDA2NDQKPiAt
+LS0gYS9uZGN0bC9rZXlzLmMKPiArKysgYi9uZGN0bC9rZXlzLmMKPiBAQCAtNjAyLDE3ICs2MDIs
+MjQgQEAgc3RhdGljIGludCBkaXNjYXJkX2tleShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSkKPiDC
+oMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7Cj4gwqB9Cj4gwqAKPiAtaW50IG5kY3RsX2RpbW1fcmVt
+b3ZlX2tleShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSkKPiAraW50IG5kY3RsX2RpbW1fcmVtb3Zl
+X2tleShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSwgZW51bSBuZGN0bF9rZXlfdHlwZSBrZXlfdHlw
+ZSkKPiDCoHsKPiDCoMKgwqDCoMKgwqDCoMKga2V5X3NlcmlhbF90IGtleTsKPiDCoMKgwqDCoMKg
+wqDCoMKgaW50IHJjOwo+IMKgCj4gLcKgwqDCoMKgwqDCoMKga2V5ID0gY2hlY2tfZGltbV9rZXko
+ZGltbSwgdHJ1ZSwgTkRfVVNFUl9LRVkpOwo+ICvCoMKgwqDCoMKgwqDCoGtleSA9IGNoZWNrX2Rp
+bW1fa2V5KGRpbW0sIHRydWUsIGtleV90eXBlKTsKPiDCoMKgwqDCoMKgwqDCoMKgaWYgKGtleSA8
+IDApCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4ga2V5Owo+IMKgCj4g
+LcKgwqDCoMKgwqDCoMKgcmMgPSBydW5fa2V5X29wKGRpbW0sIGtleSwgbmRjdGxfZGltbV9kaXNh
+YmxlX3Bhc3NwaHJhc2UsCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAicmVtb3ZlIHBhc3NwaHJhc2UiKTsKPiArwqDCoMKgwqDCoMKgwqBpZiAoa2V5X3R5
+cGUgPT0gTkRfVVNFUl9LRVkpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJjID0g
+cnVuX2tleV9vcChkaW1tLCBrZXksIG5kY3RsX2RpbW1fZGlzYWJsZV9wYXNzcGhyYXNlLAo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCJyZW1vdmUgcGFzc3BocmFzZSIpOwo+ICvCoMKgwqDCoMKgwqDCoGVsc2UgaWYgKGtleV90
+eXBlID09IE5EX01BU1RFUl9LRVkpCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJj
+ID0gcnVuX2tleV9vcChkaW1tLCBrZXksIG5kY3RsX2RpbW1fZGlzYWJsZV9tYXN0ZXJfcGFzc3Bo
+cmFzZSwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAicmVtb3ZlIG1hc3RlciBwYXNzcGhyYXNlIik7Cj4gK8KgwqDCoMKgwqDC
+oMKgZWxzZQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVJTlZBTDsK
+PiArCj4gwqDCoMKgwqDCoMKgwqDCoGlmIChyYyA8IDApCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZXR1cm4gcmM7Cj4gwqAKPiBkaWZmIC0tZ2l0IGEvbmRjdGwva2V5cy5oIGIv
+bmRjdGwva2V5cy5oCj4gaW5kZXggMDNjYjUwOWU2NDA0Li45ZTc3MzE5YzJhZTYgMTAwNjQ0Cj4g
+LS0tIGEvbmRjdGwva2V5cy5oCj4gKysrIGIvbmRjdGwva2V5cy5oCj4gQEAgLTI1LDcgKzI1LDcg
+QEAgaW50IG5kY3RsX2RpbW1fc2V0dXBfa2V5KHN0cnVjdCBuZGN0bF9kaW1tICpkaW1tLCBjb25z
+dCBjaGFyICprZWssCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVudW0gbmRjdGxfa2V5X3R5cGUga2V5X3R5cGUpOwo+IMKg
+aW50IG5kY3RsX2RpbW1fdXBkYXRlX2tleShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSwgY29uc3Qg
+Y2hhciAqa2VrLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBlbnVtIG5kY3RsX2tleV90eXBlIGtleV90eXBlKTsKPiAtaW50
+IG5kY3RsX2RpbW1fcmVtb3ZlX2tleShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSk7Cj4gK2ludCBu
+ZGN0bF9kaW1tX3JlbW92ZV9rZXkoc3RydWN0IG5kY3RsX2RpbW0gKmRpbW0sIGVudW0gbmRjdGxf
+a2V5X3R5cGUga2V5X3R5cGUpOwo+IMKgaW50IG5kY3RsX2RpbW1fc2VjdXJlX2VyYXNlX2tleShz
+dHJ1Y3QgbmRjdGxfZGltbSAqZGltbSwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGVudW0gbmRjdGxfa2V5X3R5cGUga2V5X3R5cGUpOwo+IMKgaW50IG5kY3RsX2RpbW1fb3Zlcndy
+aXRlX2tleShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSk7Cj4gQEAgLTQ3LDcgKzQ3LDggQEAgc3Rh
+dGljIGlubGluZSBpbnQgbmRjdGxfZGltbV91cGRhdGVfa2V5KHN0cnVjdCBuZGN0bF9kaW1tICpk
+aW1tLAo+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gLUVPUE5PVFNVUFA7Cj4gwqB9Cj4gwqAKPiAt
+c3RhdGljIGlubGluZSBpbnQgbmRjdGxfZGltbV9yZW1vdmVfa2V5KHN0cnVjdCBuZGN0bF9kaW1t
+ICpkaW1tKQo+ICtzdGF0aWMgaW5saW5lIGludCBuZGN0bF9kaW1tX3JlbW92ZV9rZXkoc3RydWN0
+IG5kY3RsX2RpbW0gKmRpbW0sCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVudW0g
+bmRjdGxfa2V5X3R5cGUga2V5X3R5cGUpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiAt
+RU9QTk9UU1VQUDsKPiDCoH0KPiBkaWZmIC0tZ2l0IGEvbmRjdGwvbGliL2RpbW0uYyBiL25kY3Rs
+L2xpYi9kaW1tLmMKPiBpbmRleCA5ZTM2ZTI4OWRjYzIuLjk5MzYxODNhZjI5MiAxMDA2NDQKPiAt
+LS0gYS9uZGN0bC9saWIvZGltbS5jCj4gKysrIGIvbmRjdGwvbGliL2RpbW0uYwo+IEBAIC03NTcs
+NiArNzU3LDE1IEBAIE5EQ1RMX0VYUE9SVCBpbnQgbmRjdGxfZGltbV9kaXNhYmxlX3Bhc3NwaHJh
+c2Uoc3RydWN0IG5kY3RsX2RpbW0gKmRpbW0sCj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiB3cml0
+ZV9zZWN1cml0eShkaW1tLCBidWYpOwo+IMKgfQo+IMKgCj4gK05EQ1RMX0VYUE9SVCBpbnQgbmRj
+dGxfZGltbV9kaXNhYmxlX21hc3Rlcl9wYXNzcGhyYXNlKHN0cnVjdCBuZGN0bF9kaW1tICpkaW1t
+LAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBsb25nIGtleSkKPiArewo+ICvCoMKg
+wqDCoMKgwqDCoGNoYXIgYnVmW1NZU0ZTX0FUVFJfU0laRV07Cj4gKwo+ICvCoMKgwqDCoMKgwqDC
+oHNwcmludGYoYnVmLCAiZGlzYWJsZV9tYXN0ZXIgJWxkXG4iLCBrZXkpOwo+ICvCoMKgwqDCoMKg
+wqDCoHJldHVybiB3cml0ZV9zZWN1cml0eShkaW1tLCBidWYpOwo+ICt9Cj4gKwo+IMKgTkRDVExf
+RVhQT1JUIGludCBuZGN0bF9kaW1tX2ZyZWV6ZV9zZWN1cml0eShzdHJ1Y3QgbmRjdGxfZGltbSAq
+ZGltbSkKPiDCoHsKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHdyaXRlX3NlY3VyaXR5KGRpbW0s
+ICJmcmVlemUiKTsKPiBkaWZmIC0tZ2l0IGEvbmRjdGwvbGliL2xpYm5kY3RsLnN5bSBiL25kY3Rs
+L2xpYi9saWJuZGN0bC5zeW0KPiBpbmRleCBmMWY5ZWRkNGI2ZmYuLmM5MzMxNjNjMDM4MCAxMDA2
+NDQKPiAtLS0gYS9uZGN0bC9saWIvbGlibmRjdGwuc3ltCj4gKysrIGIvbmRjdGwvbGliL2xpYm5k
+Y3RsLnN5bQo+IEBAIC00NjIsMyArNDYyLDcgQEAgTElCTkRDVExfMjYgewo+IMKgTElCTkRDVExf
+Mjcgewo+IMKgwqDCoMKgwqDCoMKgwqBuZGN0bF9kaW1tX3JlZnJlc2hfZmxhZ3M7Cj4gwqB9IExJ
+Qk5EQ1RMXzI2Owo+ICsKPiArTElCTkRDVExfMjggewo+ICvCoMKgwqDCoMKgwqDCoG5kY3RsX2Rp
+bW1fZGlzYWJsZV9tYXN0ZXJfcGFzc3BocmFzZTsKPiArfSBMSUJORENUTF8yNzsKPiBkaWZmIC0t
+Z2l0IGEvbmRjdGwvbGlibmRjdGwuaCBiL25kY3RsL2xpYm5kY3RsLmgKPiBpbmRleCA1N2NmOTNk
+OGQxNTEuLmM1MmU4MmE2ZjgyNiAxMDA2NDQKPiAtLS0gYS9uZGN0bC9saWJuZGN0bC5oCj4gKysr
+IGIvbmRjdGwvbGlibmRjdGwuaAo+IEBAIC03NjUsNiArNzY1LDcgQEAgYm9vbCBuZGN0bF9kaW1t
+X3NlY3VyaXR5X2lzX2Zyb3plbihzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSk7Cj4gwqBpbnQgbmRj
+dGxfZGltbV91cGRhdGVfcGFzc3BocmFzZShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSwKPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGxvbmcgY2tleSwgbG9uZyBua2V5KTsKPiDCoGlu
+dCBuZGN0bF9kaW1tX2Rpc2FibGVfcGFzc3BocmFzZShzdHJ1Y3QgbmRjdGxfZGltbSAqZGltbSwg
+bG9uZyBrZXkpOwo+ICtpbnQgbmRjdGxfZGltbV9kaXNhYmxlX21hc3Rlcl9wYXNzcGhyYXNlKHN0
+cnVjdCBuZGN0bF9kaW1tICpkaW1tLCBsb25nIGtleSk7Cj4gwqBpbnQgbmRjdGxfZGltbV9mcmVl
+emVfc2VjdXJpdHkoc3RydWN0IG5kY3RsX2RpbW0gKmRpbW0pOwo+IMKgaW50IG5kY3RsX2RpbW1f
+c2VjdXJlX2VyYXNlKHN0cnVjdCBuZGN0bF9kaW1tICpkaW1tLCBsb25nIGtleSk7Cj4gwqBpbnQg
+bmRjdGxfZGltbV9vdmVyd3JpdGUoc3RydWN0IG5kY3RsX2RpbW0gKmRpbW0sIGxvbmcga2V5KTsK
+PiBkaWZmIC0tZ2l0IGEvbmRjdGwvbmRjdGwuYyBiL25kY3RsL25kY3RsLmMKPiBpbmRleCAzMWQy
+YzVlMzU5MzkuLmVlYmNhZjdhYTkxNSAxMDA2NDQKPiAtLS0gYS9uZGN0bC9uZGN0bC5jCj4gKysr
+IGIvbmRjdGwvbmRjdGwuYwo+IEBAIC04NCw2ICs4NCw3IEBAIHN0YXRpYyBzdHJ1Y3QgY21kX3N0
+cnVjdCBjb21tYW5kc1tdID0gewo+IMKgwqDCoMKgwqDCoMKgwqB7ICJzZXR1cC1wYXNzcGhyYXNl
+IiwgeyBjbWRfc2V0dXBfcGFzc3BocmFzZSB9IH0sCj4gwqDCoMKgwqDCoMKgwqDCoHsgInVwZGF0
+ZS1wYXNzcGhyYXNlIiwgeyBjbWRfdXBkYXRlX3Bhc3NwaHJhc2UgfSB9LAo+IMKgwqDCoMKgwqDC
+oMKgwqB7ICJyZW1vdmUtcGFzc3BocmFzZSIsIHsgY21kX3JlbW92ZV9wYXNzcGhyYXNlIH0gfSwK
+PiArwqDCoMKgwqDCoMKgwqB7ICJyZW1vdmUtbWFzdGVyLXBhc3NwaHJhc2UiLCB7IGNtZF9yZW1v
+dmVfbWFzdGVyX3Bhc3NwaHJhc2UgfSB9LAo+IMKgwqDCoMKgwqDCoMKgwqB7ICJmcmVlemUtc2Vj
+dXJpdHkiLCB7IGNtZF9mcmVlemVfc2VjdXJpdHkgfSB9LAo+IMKgwqDCoMKgwqDCoMKgwqB7ICJz
+YW5pdGl6ZS1kaW1tIiwgeyBjbWRfc2FuaXRpemVfZGltbSB9IH0sCj4gwqAjaWZkZWYgRU5BQkxF
+X0tFWVVUSUxTCj4gCj4gCgo=
