@@ -2,48 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F413AC4332F
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 16:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84C1C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Dec 2022 17:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbiLHQ61 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Dec 2022 11:58:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33566 "EHLO
+        id S229684AbiLHRFk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Dec 2022 12:05:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbiLHQ6W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 11:58:22 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D297681D
-        for <linux-cxl@vger.kernel.org>; Thu,  8 Dec 2022 08:58:21 -0800 (PST)
+        with ESMTP id S229523AbiLHRFj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Dec 2022 12:05:39 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5AB85D04;
+        Thu,  8 Dec 2022 09:05:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670518701; x=1702054701;
-  h=subject:from:to:date:message-id:mime-version:
+  t=1670519135; x=1702055135;
+  h=subject:from:to:cc:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=kae5VifZrT9gzyfsGgTvij8HwuuZp8cFzVDOFu7TL0k=;
-  b=AW1t/Nwnb91RVY/lZRccjTaXu9QXvE6p79IDXvPb+EDMMxcl+BQKi0AZ
-   P4zk7gLWSo4WiaOBQqPZxt7eo1SCMSpH4XRedl/G1am1xA4paoOxt2m5e
-   eAyCaOxfVMIIUJy1C3FxKzOxzL0qqNwQzehWskvFCClEcXjGf8kbZDnYd
-   wqgDOEx81puETcFCobFeBEs8SU+mSXZoz/ZkFZvjLrydYWP0tFtOcVYPm
-   F1IVfUMppEle9HNBGOLIQ5F5TJ9vBeYOHFa3XN+Rm7bNyS3Y7Eo6fJufL
-   fn1O8KouUdOwzd/+c4LxSllWXMBh+g6Y1Z/f3gtfoM4IoYDpZTDW32fhy
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="315942710"
+  bh=qGI+0aXxzgDSaArK2wdv8QWvhsHYNfEuGq7j7av1vIw=;
+  b=FlNuEDaKbwGfo2CJqh3AISiRLu3cvBDv6cZyMoBHMMidQ98rHvw/QDIw
+   zc0dlntMOjWu52LLig3g4jhRMuc7c9N018BnR7v3M2pMcbuim/L1E0kWv
+   lrjnUFKcUNbElD/D+AjwWiUVv8/99iEsOMT0oJCBClvuZWX62QeMHbuSr
+   PldsxqfF8RzLnU/kFlOrlLvdMHHLl4T7RbiwrtECcaiVYGeiiJDNVxiEN
+   shJ2NO4kHQX6l8E7I5mkgqeIPlRvmCciBCsfRYoNHwE5/AiaoPEFlG27a
+   GlhUXLRrEbSbB+kulREd92HLzKruYJQJbvW8eMV96kngu+Q7IpwUcK00c
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="304879666"
 X-IronPort-AV: E=Sophos;i="5.96,227,1665471600"; 
-   d="scan'208";a="315942710"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 08:58:21 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="715679309"
+   d="scan'208";a="304879666"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 09:02:01 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="624776441"
 X-IronPort-AV: E=Sophos;i="5.96,227,1665471600"; 
-   d="scan'208";a="715679309"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 08:58:21 -0800
-Subject: [ndctl PATCH v2] ndctl: create disable master passphrase support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        vishal.l.verma@intel.com
-Date:   Thu, 08 Dec 2022 09:58:20 -0700
-Message-ID: <167051867684.1382144.2464381152738802540.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.4
+   d="scan'208";a="624776441"
+Received: from kputnam-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.251.25.149])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 09:02:01 -0800
+Subject: [PATCH] cxl/pci: Move tracepoint definitions to drivers/cxl/core/
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
+Date:   Thu, 08 Dec 2022 09:02:00 -0800
+Message-ID: <167051869176.436579.9728373544811641087.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -51,205 +52,410 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The cxl spec supports disabling of master passphrase. This is a new command
-that previously was not supported through nvdimm. Add support command to
-support "master passhprase disable".
+CXL is using tracepoints for reporting RAS capability register payloads
+for AER events, and has plans to use tracepoints for the output payload
+of Get Poison List and Get Event Records commands. For organization
+purposes it would be nice to keep those all under a single + local CXL
+trace system. This also organization also potentially helps in the
+future when CXL drivers expand beyond generic memory expanders, however
+that would also entail a move away from the expander-specific
+cxl_dev_state context, save that for later.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Note that the powerpc-specific drivers/misc/cxl/ also defines a 'cxl'
+trace system, however, it is unlikely that a single platform will ever
+load both drivers simultaneously.
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
+This patch is targeting v6.3.  I am sending it out now to enable the
+in-flight Event and Poison list patch sets to build upon. It will not
+move to a non-rebasing branch until after v6.2-rc2, but in the meantime
+I can throw it out on the list and the cxl/preview branch.
 
-v2:
-- Add man page (Vishal)
+ drivers/cxl/core/Makefile  |    3 +
+ drivers/cxl/core/pci.c     |  112 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/trace.c   |    5 ++
+ drivers/cxl/core/trace.h   |   11 ++--
+ drivers/cxl/cxl.h          |    2 +
+ drivers/cxl/cxlpci.h       |    3 +
+ drivers/cxl/pci.c          |  111 --------------------------------------------
+ tools/testing/cxl/Kbuild   |    2 +
+ 8 files changed, 131 insertions(+), 118 deletions(-)
+ create mode 100644 drivers/cxl/core/trace.c
+ rename include/trace/events/cxl.h => drivers/cxl/core/trace.h (94%)
 
- Documentation/ndctl/meson.build |    1 +
- ndctl/builtin.h                 |    1 +
- ndctl/dimm.c                    |   25 ++++++++++++++++++++++++-
- ndctl/keys.c                    |   15 +++++++++++----
- ndctl/keys.h                    |    5 +++--
- ndctl/lib/dimm.c                |    9 +++++++++
- ndctl/lib/libndctl.sym          |    4 ++++
- ndctl/libndctl.h                |    1 +
- ndctl/ndctl.c                   |    1 +
- 9 files changed, 55 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/ndctl/meson.build b/Documentation/ndctl/meson.build
-index b82635a4cc4b..a22060538632 100644
---- a/Documentation/ndctl/meson.build
-+++ b/Documentation/ndctl/meson.build
-@@ -57,6 +57,7 @@ ndctl_manpages = [
-   'ndctl-setup-passphrase.txt',
-   'ndctl-update-passphrase.txt',
-   'ndctl-remove-passphrase.txt',
-+  'ndctl-remove-master-passphrase.txt',
-   'ndctl-freeze-security.txt',
-   'ndctl-sanitize-dimm.txt',
-   'ndctl-load-keys.txt',
-diff --git a/ndctl/builtin.h b/ndctl/builtin.h
-index d3dbbb1afbdd..af759ef0cbfa 100644
---- a/ndctl/builtin.h
-+++ b/ndctl/builtin.h
-@@ -39,6 +39,7 @@ int cmd_inject_smart(int argc, const char **argv, struct ndctl_ctx *ctx);
- int cmd_setup_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
- int cmd_update_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
- int cmd_remove_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
-+int cmd_remove_master_passphrase(int argc, const char **argv, struct ndctl_ctx *ctx);
- int cmd_freeze_security(int argc, const char **argv, struct ndctl_ctx *ctx);
- int cmd_sanitize_dimm(int argc, const char **argv, struct ndctl_ctx *ctx);
- int cmd_load_keys(int argc, const char **argv, struct ndctl_ctx *ctx);
-diff --git a/ndctl/dimm.c b/ndctl/dimm.c
-index ac7c5270e971..df95ac895458 100644
---- a/ndctl/dimm.c
-+++ b/ndctl/dimm.c
-@@ -1028,7 +1028,19 @@ static int action_remove_passphrase(struct ndctl_dimm *dimm,
- 		return -EOPNOTSUPP;
- 	}
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 79c7257f4107..ca4ae31d8f57 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -3,6 +3,8 @@ obj-$(CONFIG_CXL_BUS) += cxl_core.o
+ obj-$(CONFIG_CXL_SUSPEND) += suspend.o
  
--	return ndctl_dimm_remove_key(dimm);
-+	return ndctl_dimm_remove_key(dimm, ND_USER_KEY);
+ ccflags-y += -I$(srctree)/drivers/cxl
++CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
++
+ cxl_core-y := port.o
+ cxl_core-y += pmem.o
+ cxl_core-y += regs.o
+@@ -10,4 +12,5 @@ cxl_core-y += memdev.o
+ cxl_core-y += mbox.o
+ cxl_core-y += pci.o
+ cxl_core-y += hdm.o
++cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 57764e9cd19d..1d1492440287 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -9,6 +9,7 @@
+ #include <cxlmem.h>
+ #include <cxl.h>
+ #include "core.h"
++#include "trace.h"
+ 
+ /**
+  * DOC: cxl core pci
+@@ -622,3 +623,114 @@ void read_cdat_data(struct cxl_port *port)
+ 	}
+ }
+ EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
++
++void cxl_cor_error_detected(struct pci_dev *pdev)
++{
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++	void __iomem *addr;
++	u32 status;
++
++	if (!cxlds->regs.ras)
++		return;
++
++	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
++	status = readl(addr);
++	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
++		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
++		trace_cxl_aer_correctable_error(dev, status);
++	}
++}
++EXPORT_SYMBOL_NS_GPL(cxl_cor_error_detected, CXL);
++
++/* CXL spec rev3.0 8.2.4.16.1 */
++static void header_log_copy(struct cxl_dev_state *cxlds, u32 *log)
++{
++	void __iomem *addr;
++	u32 *log_addr;
++	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
++
++	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
++	log_addr = log;
++
++	for (i = 0; i < log_u32_size; i++) {
++		*log_addr = readl(addr);
++		log_addr++;
++		addr += sizeof(u32);
++	}
 +}
 +
-+static int action_remove_master_passphrase(struct ndctl_dimm *dimm,
-+		struct action_context *actx)
++/*
++ * Log the state of the RAS status registers and prepare them to log the
++ * next error status. Return 1 if reset needed.
++ */
++static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
 +{
-+	if (ndctl_dimm_get_security(dimm) < 0) {
-+		error("%s: security operation not supported\n",
-+				ndctl_dimm_get_devname(dimm));
-+		return -EOPNOTSUPP;
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++	u32 hl[CXL_HEADERLOG_SIZE_U32];
++	void __iomem *addr;
++	u32 status;
++	u32 fe;
++
++	if (!cxlds->regs.ras)
++		return false;
++
++	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
++	status = readl(addr);
++	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
++		return false;
++
++	/* If multiple errors, log header points to first error from ctrl reg */
++	if (hweight32(status) > 1) {
++		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
++		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
++	} else {
++		fe = status;
 +	}
 +
-+	return ndctl_dimm_remove_key(dimm, ND_MASTER_KEY);
- }
- 
- static int action_security_freeze(struct ndctl_dimm *dimm,
-@@ -1595,6 +1607,17 @@ int cmd_remove_passphrase(int argc, const char **argv, void *ctx)
- 	return count >= 0 ? 0 : EXIT_FAILURE;
- }
- 
-+int cmd_remove_master_passphrase(int argc, const char **argv, void *ctx)
-+{
-+	int count = dimm_action(argc, argv, ctx, action_remove_master_passphrase,
-+			base_options,
-+			"ndctl remove-master-passphrase <nmem0> [<nmem1>..<nmemN>] [<options>]");
++	header_log_copy(cxlds, hl);
++	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
++	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
 +
-+	fprintf(stderr, "master passphrase removed for %d nmem%s.\n", count >= 0 ? count : 0,
-+			count > 1 ? "s" : "");
-+	return count >= 0 ? 0 : EXIT_FAILURE;
++	return true;
 +}
 +
- int cmd_freeze_security(int argc, const char **argv, void *ctx)
- {
- 	int count = dimm_action(argc, argv, ctx, action_security_freeze, base_options,
-diff --git a/ndctl/keys.c b/ndctl/keys.c
-index 2f33b8fb488c..9bc558802bc4 100644
---- a/ndctl/keys.c
-+++ b/ndctl/keys.c
-@@ -602,17 +602,24 @@ static int discard_key(struct ndctl_dimm *dimm)
- 	return 0;
- }
- 
--int ndctl_dimm_remove_key(struct ndctl_dimm *dimm)
-+int ndctl_dimm_remove_key(struct ndctl_dimm *dimm, enum ndctl_key_type key_type)
- {
- 	key_serial_t key;
- 	int rc;
- 
--	key = check_dimm_key(dimm, true, ND_USER_KEY);
-+	key = check_dimm_key(dimm, true, key_type);
- 	if (key < 0)
- 		return key;
- 
--	rc = run_key_op(dimm, key, ndctl_dimm_disable_passphrase,
--			"remove passphrase");
-+	if (key_type == ND_USER_KEY)
-+		rc = run_key_op(dimm, key, ndctl_dimm_disable_passphrase,
-+				"remove passphrase");
-+	else if (key_type == ND_MASTER_KEY)
-+		rc = run_key_op(dimm, key, ndctl_dimm_disable_master_passphrase,
-+				"remove master passphrase");
-+	else
-+		return -EINVAL;
-+
- 	if (rc < 0)
- 		return rc;
- 
-diff --git a/ndctl/keys.h b/ndctl/keys.h
-index 03cb509e6404..9e77319c2ae6 100644
---- a/ndctl/keys.h
-+++ b/ndctl/keys.h
-@@ -25,7 +25,7 @@ int ndctl_dimm_setup_key(struct ndctl_dimm *dimm, const char *kek,
- 				enum ndctl_key_type key_type);
- int ndctl_dimm_update_key(struct ndctl_dimm *dimm, const char *kek,
- 				enum ndctl_key_type key_type);
--int ndctl_dimm_remove_key(struct ndctl_dimm *dimm);
-+int ndctl_dimm_remove_key(struct ndctl_dimm *dimm, enum ndctl_key_type key_type);
- int ndctl_dimm_secure_erase_key(struct ndctl_dimm *dimm,
- 		enum ndctl_key_type key_type);
- int ndctl_dimm_overwrite_key(struct ndctl_dimm *dimm);
-@@ -47,7 +47,8 @@ static inline int ndctl_dimm_update_key(struct ndctl_dimm *dimm,
- 	return -EOPNOTSUPP;
- }
- 
--static inline int ndctl_dimm_remove_key(struct ndctl_dimm *dimm)
-+static inline int ndctl_dimm_remove_key(struct ndctl_dimm *dimm,
-+		enum ndctl_key_type key_type)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/ndctl/lib/dimm.c b/ndctl/lib/dimm.c
-index 9e36e289dcc2..9936183af292 100644
---- a/ndctl/lib/dimm.c
-+++ b/ndctl/lib/dimm.c
-@@ -757,6 +757,15 @@ NDCTL_EXPORT int ndctl_dimm_disable_passphrase(struct ndctl_dimm *dimm,
- 	return write_security(dimm, buf);
- }
- 
-+NDCTL_EXPORT int ndctl_dimm_disable_master_passphrase(struct ndctl_dimm *dimm,
-+		long key)
++pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
++				    pci_channel_state_t state)
 +{
-+	char buf[SYSFS_ATTR_SIZE];
++	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
++	struct cxl_memdev *cxlmd = cxlds->cxlmd;
++	struct device *dev = &cxlmd->dev;
++	bool ue;
 +
-+	sprintf(buf, "disable_master %ld\n", key);
-+	return write_security(dimm, buf);
++	/*
++	 * A frozen channel indicates an impending reset which is fatal to
++	 * CXL.mem operation, and will likely crash the system. On the off
++	 * chance the situation is recoverable dump the status of the RAS
++	 * capability registers and bounce the active state of the memdev.
++	 */
++	ue = cxl_report_and_clear(cxlds);
++
++	switch (state) {
++	case pci_channel_io_normal:
++		if (ue) {
++			device_release_driver(dev);
++			return PCI_ERS_RESULT_NEED_RESET;
++		}
++		return PCI_ERS_RESULT_CAN_RECOVER;
++	case pci_channel_io_frozen:
++		dev_warn(&pdev->dev,
++			 "%s: frozen state error detected, disable CXL.mem\n",
++			 dev_name(dev));
++		device_release_driver(dev);
++		return PCI_ERS_RESULT_NEED_RESET;
++	case pci_channel_io_perm_failure:
++		dev_warn(&pdev->dev,
++			 "failure state error detected, request disconnect\n");
++		return PCI_ERS_RESULT_DISCONNECT;
++	}
++	return PCI_ERS_RESULT_NEED_RESET;
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
+diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+new file mode 100644
+index 000000000000..29ae7ce81dc5
+--- /dev/null
++++ b/drivers/cxl/core/trace.c
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
 +
- NDCTL_EXPORT int ndctl_dimm_freeze_security(struct ndctl_dimm *dimm)
++#define CREATE_TRACE_POINTS
++#include "trace.h"
+diff --git a/include/trace/events/cxl.h b/drivers/cxl/core/trace.h
+similarity index 94%
+rename from include/trace/events/cxl.h
+rename to drivers/cxl/core/trace.h
+index ad085a2534ef..20ca2fe2ca8e 100644
+--- a/include/trace/events/cxl.h
++++ b/drivers/cxl/core/trace.h
+@@ -1,15 +1,14 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM cxl
+ 
+ #if !defined(_CXL_EVENTS_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _CXL_EVENTS_H
+ 
++#include <cxl.h>
+ #include <linux/tracepoint.h>
+ 
+-#define CXL_HEADERLOG_SIZE		SZ_512
+-#define CXL_HEADERLOG_SIZE_U32		SZ_512 / sizeof(u32)
+-
+ #define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
+ #define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
+ #define CXL_RAS_UC_CACHE_BE_PARITY	BIT(2)
+@@ -106,7 +105,5 @@ TRACE_EVENT(cxl_aer_correctable_error,
+ 
+ #endif /* _CXL_EVENTS_H */
+ 
+-/* This part must be outside protection */
+-#undef TRACE_INCLUDE_FILE
+-#define TRACE_INCLUDE_FILE cxl
++#define TRACE_INCLUDE_FILE trace
+ #include <trace/define_trace.h>
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 1b1cf459ac77..aa3af3bb73b2 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -140,6 +140,8 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
+ #define CXL_RAS_HEADER_LOG_OFFSET 0x18
+ #define CXL_RAS_CAPABILITY_LENGTH 0x58
++#define CXL_HEADERLOG_SIZE SZ_512
++#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+ 
+ /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 920909791bb9..77dbdb980b12 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -66,4 +66,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+ struct cxl_dev_state;
+ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm);
+ void read_cdat_data(struct cxl_port *port);
++void cxl_cor_error_detected(struct pci_dev *pdev);
++pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
++				    pci_channel_state_t state);
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 33083a522fd1..3a66aadb4df0 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -14,8 +14,6 @@
+ #include "cxlmem.h"
+ #include "cxlpci.h"
+ #include "cxl.h"
+-#define CREATE_TRACE_POINTS
+-#include <trace/events/cxl.h>
+ 
+ /**
+  * DOC: cxl pci
+@@ -514,96 +512,6 @@ static const struct pci_device_id cxl_mem_pci_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
+ 
+-/* CXL spec rev3.0 8.2.4.16.1 */
+-static void header_log_copy(struct cxl_dev_state *cxlds, u32 *log)
+-{
+-	void __iomem *addr;
+-	u32 *log_addr;
+-	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
+-
+-	addr = cxlds->regs.ras + CXL_RAS_HEADER_LOG_OFFSET;
+-	log_addr = log;
+-
+-	for (i = 0; i < log_u32_size; i++) {
+-		*log_addr = readl(addr);
+-		log_addr++;
+-		addr += sizeof(u32);
+-	}
+-}
+-
+-/*
+- * Log the state of the RAS status registers and prepare them to log the
+- * next error status. Return 1 if reset needed.
+- */
+-static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
+-{
+-	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+-	struct device *dev = &cxlmd->dev;
+-	u32 hl[CXL_HEADERLOG_SIZE_U32];
+-	void __iomem *addr;
+-	u32 status;
+-	u32 fe;
+-
+-	if (!cxlds->regs.ras)
+-		return false;
+-
+-	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+-	status = readl(addr);
+-	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+-		return false;
+-
+-	/* If multiple errors, log header points to first error from ctrl reg */
+-	if (hweight32(status) > 1) {
+-		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
+-		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
+-	} else {
+-		fe = status;
+-	}
+-
+-	header_log_copy(cxlds, hl);
+-	trace_cxl_aer_uncorrectable_error(dev, status, fe, hl);
+-	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+-
+-	return true;
+-}
+-
+-static pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+-					   pci_channel_state_t state)
+-{
+-	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+-	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+-	struct device *dev = &cxlmd->dev;
+-	bool ue;
+-
+-	/*
+-	 * A frozen channel indicates an impending reset which is fatal to
+-	 * CXL.mem operation, and will likely crash the system. On the off
+-	 * chance the situation is recoverable dump the status of the RAS
+-	 * capability registers and bounce the active state of the memdev.
+-	 */
+-	ue = cxl_report_and_clear(cxlds);
+-
+-	switch (state) {
+-	case pci_channel_io_normal:
+-		if (ue) {
+-			device_release_driver(dev);
+-			return PCI_ERS_RESULT_NEED_RESET;
+-		}
+-		return PCI_ERS_RESULT_CAN_RECOVER;
+-	case pci_channel_io_frozen:
+-		dev_warn(&pdev->dev,
+-			 "%s: frozen state error detected, disable CXL.mem\n",
+-			 dev_name(dev));
+-		device_release_driver(dev);
+-		return PCI_ERS_RESULT_NEED_RESET;
+-	case pci_channel_io_perm_failure:
+-		dev_warn(&pdev->dev,
+-			 "failure state error detected, request disconnect\n");
+-		return PCI_ERS_RESULT_DISCONNECT;
+-	}
+-	return PCI_ERS_RESULT_NEED_RESET;
+-}
+-
+ static pci_ers_result_t cxl_slot_reset(struct pci_dev *pdev)
  {
- 	return write_security(dimm, "freeze");
-diff --git a/ndctl/lib/libndctl.sym b/ndctl/lib/libndctl.sym
-index f1f9edd4b6ff..c933163c0380 100644
---- a/ndctl/lib/libndctl.sym
-+++ b/ndctl/lib/libndctl.sym
-@@ -462,3 +462,7 @@ LIBNDCTL_26 {
- LIBNDCTL_27 {
- 	ndctl_dimm_refresh_flags;
- } LIBNDCTL_26;
-+
-+LIBNDCTL_28 {
-+	ndctl_dimm_disable_master_passphrase;
-+} LIBNDCTL_27;
-diff --git a/ndctl/libndctl.h b/ndctl/libndctl.h
-index 57cf93d8d151..c52e82a6f826 100644
---- a/ndctl/libndctl.h
-+++ b/ndctl/libndctl.h
-@@ -765,6 +765,7 @@ bool ndctl_dimm_security_is_frozen(struct ndctl_dimm *dimm);
- int ndctl_dimm_update_passphrase(struct ndctl_dimm *dimm,
- 		long ckey, long nkey);
- int ndctl_dimm_disable_passphrase(struct ndctl_dimm *dimm, long key);
-+int ndctl_dimm_disable_master_passphrase(struct ndctl_dimm *dimm, long key);
- int ndctl_dimm_freeze_security(struct ndctl_dimm *dimm);
- int ndctl_dimm_secure_erase(struct ndctl_dimm *dimm, long key);
- int ndctl_dimm_overwrite(struct ndctl_dimm *dimm, long key);
-diff --git a/ndctl/ndctl.c b/ndctl/ndctl.c
-index 31d2c5e35939..eebcaf7aa915 100644
---- a/ndctl/ndctl.c
-+++ b/ndctl/ndctl.c
-@@ -84,6 +84,7 @@ static struct cmd_struct commands[] = {
- 	{ "setup-passphrase", { cmd_setup_passphrase } },
- 	{ "update-passphrase", { cmd_update_passphrase } },
- 	{ "remove-passphrase", { cmd_remove_passphrase } },
-+	{ "remove-master-passphrase", { cmd_remove_master_passphrase } },
- 	{ "freeze-security", { cmd_freeze_security } },
- 	{ "sanitize-dimm", { cmd_sanitize_dimm } },
- #ifdef ENABLE_KEYUTILS
-
+ 	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+@@ -628,25 +536,6 @@ static void cxl_error_resume(struct pci_dev *pdev)
+ 		 dev->driver ? "successful" : "failed");
+ }
+ 
+-static void cxl_cor_error_detected(struct pci_dev *pdev)
+-{
+-	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+-	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+-	struct device *dev = &cxlmd->dev;
+-	void __iomem *addr;
+-	u32 status;
+-
+-	if (!cxlds->regs.ras)
+-		return;
+-
+-	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
+-	status = readl(addr);
+-	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
+-		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+-		trace_cxl_aer_correctable_error(dev, status);
+-	}
+-}
+-
+ static const struct pci_error_handlers cxl_error_handlers = {
+ 	.error_detected	= cxl_error_detected,
+ 	.slot_reset	= cxl_slot_reset,
+diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+index 0805f08af8b3..12af1c9270ff 100644
+--- a/tools/testing/cxl/Kbuild
++++ b/tools/testing/cxl/Kbuild
+@@ -17,6 +17,7 @@ CXL_SRC := $(DRIVERS)/cxl
+ CXL_CORE_SRC := $(DRIVERS)/cxl/core
+ ccflags-y := -I$(srctree)/drivers/cxl/
+ ccflags-y += -D__mock=__weak
++ccflags-y += -DTRACE_INCLUDE_PATH=$(CXL_CORE_SRC) -I$(srctree)/drivers/cxl/core/
+ 
+ obj-m += cxl_acpi.o
+ 
+@@ -49,6 +50,7 @@ cxl_core-y += $(CXL_CORE_SRC)/memdev.o
+ cxl_core-y += $(CXL_CORE_SRC)/mbox.o
+ cxl_core-y += $(CXL_CORE_SRC)/pci.o
+ cxl_core-y += $(CXL_CORE_SRC)/hdm.o
++cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o
+ cxl_core-y += config_check.o
+ 
 
