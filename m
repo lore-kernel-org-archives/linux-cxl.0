@@ -2,175 +2,203 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6030C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri,  9 Dec 2022 09:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D357FC4332F
+	for <linux-cxl@archiver.kernel.org>; Fri,  9 Dec 2022 16:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbiLIJjP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 9 Dec 2022 04:39:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        id S229530AbiLIQks (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 9 Dec 2022 11:40:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbiLIJjN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Dec 2022 04:39:13 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80C793A2DD
-        for <linux-cxl@vger.kernel.org>; Fri,  9 Dec 2022 01:39:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670578752; x=1702114752;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FVtmr2JoyzBzAnOuH7YYnQ/jb+eVbudhxnjyw1KhYGw=;
-  b=U96drYMsnivfqNyqGRsJAeOVD/O8UWR8N1N9Agr5sj8Slpkg6zYxFoPD
-   aw1H96R3w3B8F4EDZiudbvPHTnOwHkhWTr4tdPV7ri7TUJXEozB9QpH1K
-   doxikvB6iMTwG81wRrizdpBbwQjPy/wA/+Ax25GNL6gtr5mNRnD193XNT
-   +C7BjhLBBK6cfVQvEP2aN7qa9vpkB2LR12C40TuEqq7Iu74n9Gl0Al8dS
-   2MVe3t46bDVkwpW6SsZBH3H+CDNAdRnZ8zSq+R2JY/N9Od0WOfxCi5Vbd
-   gKsKbU68OZ788doQ1xSfCwMz1sn/adcg7xVqbCsRn2iWXF5oGqtKGA/gc
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="317450035"
-X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
-   d="scan'208";a="317450035"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 01:39:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="710827881"
-X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
-   d="scan'208";a="710827881"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Dec 2022 01:39:10 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p3ZqX-0001mS-25;
-        Fri, 09 Dec 2022 09:39:09 +0000
-Date:   Fri, 09 Dec 2022 17:38:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:next] BUILD SUCCESS f04facfb993de47e2133b2b842d72b97b1c50162
-Message-ID: <63930221.zsIVySsXPJsRLWMt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229488AbiLIQks (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Dec 2022 11:40:48 -0500
+Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A34D86F7C;
+        Fri,  9 Dec 2022 08:40:42 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 28E58200D78;
+        Fri,  9 Dec 2022 16:40:41 +0000 (UTC)
+Received: from pdx1-sub0-mail-a315.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 8775D200D15;
+        Fri,  9 Dec 2022 16:40:40 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1670604040; a=rsa-sha256;
+        cv=none;
+        b=5KbLf/EBq3w52y12Z7XVtBqNs8YsEde4weVTtlmE4M88XGX0cl44saGZB5AJINNv/BDFRn
+        9dV/oJlKifz1NQI4tcJYoe4aJvBIwKccfrX0peFcD5SmzXp7EuvQIIXY5blXgmscIvr2x6
+        fdJWmyFXmu5UMv0LxUrNclKkTTeqgu0hOvltqDutj/MRnSU5OIyMVJvbw9X/WvJFtgDses
+        iIRuPP5ehYFNrZ6yuDFi4iiY1F97nPSKLs8jNhasVJsYCW6gMGlfFWjjOEpgnmvIQ9HHMQ
+        t2IdcmykoX08QyzE0MbKkjHTyrchywz0N5lhaUL7JRpkgvxlV6h8Bzf9CK2Q3A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1670604040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=ZZY0SRPYTTcbUs02/UOaW9OEZ8kvhOaDT4X+CAXzZA0=;
+        b=TP75hlQlNySjtFFZdAf4HwRCG4xUVr0RW8RtgdkqszwdZIf8cYlQqIyc7Wq6YXi8oNZu3I
+        j7kJStHriBxmwNQZENw3b0avmk3igKwxjyq5yKBEMuC5XzkG3UaxEITHiuahGpjfsCm868
+        4YVcwXgndXlDYHtS+ExCO+WuZgGsiupA2a14xWPktosPiTSnS9S3s+ZheXGmt3pjLYlzRj
+        jRPVgLgG2OOloM/18DQ8RM+O6VVvxrZOS4WeWh5t2PVtXmVps0IdrLseZbYIdLJkUCgxXF
+        g3e7Yvi2vR6lienXO4SVD/hxBG5/Te7l63Y/0ytA2wmjJAumEY3STUtgmWcH3A==
+ARC-Authentication-Results: i=1;
+        rspamd-85f95c7974-8lndr;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Skirt-Reaction: 4a0b451e3e36a2d4_1670604040879_713008605
+X-MC-Loop-Signature: 1670604040879:17422609
+X-MC-Ingress-Time: 1670604040878
+Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.99.229.8 (trex/6.7.1);
+        Fri, 09 Dec 2022 16:40:40 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4NTGwl4ZqTz3b;
+        Fri,  9 Dec 2022 08:40:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1670604040;
+        bh=ZZY0SRPYTTcbUs02/UOaW9OEZ8kvhOaDT4X+CAXzZA0=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=hhYfFyjzcgQRkIUFZgsDjYoig5qhaqMKDnOxOdOF/PwzcSkH9Zf+NHsYhKTfAqbJo
+         oK8Zqxt3OGcrhvJ8xVgRJl2Lh03X+ltQELkX1Po+nuwEa7GL/Wos9hAg+RCxek3mJU
+         LyD5r3W1yQm73H/+b5yND771KJBE139F20P9RTvAFxu/mmVLSyu6s/KL6KVIK5S9SU
+         ASA6u/Qpfm9+KpIEO58wWPaJTqnjOyzD6tcI2//9BshkjZpgZ2m8F357JTW4VzeCqg
+         azjDLqTcxTJfCTEmqG58bmFUJrqqDIsCfnmDiFySIq2XBnrnfOi3OeV1inlSCLvJ+L
+         xkQXkUi1YjxlQ==
+Date:   Fri, 9 Dec 2022 08:16:28 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
+        a.manzanares@samsung.com, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/acpi: fix null dereference on probe for missing
+ ACPI_COMPANION()
+Message-ID: <20221209161628.ln4cqj3rgtvwcnqe@offworld>
+References: <20221209062919.1096779-1-mcgrof@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20221209062919.1096779-1-mcgrof@kernel.org>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: f04facfb993de47e2133b2b842d72b97b1c50162  cxl/region: Fix memdev reuse check
+On Thu, 08 Dec 2022, Luis Chamberlain wrote:
 
-elapsed time: 723m
+>Simply loading cxl_test ends up triggering a null pointer dereference
+>on next-20221207, and it happens because the fetched ACPI_COMPANION() can
+>end up not correct / missing. As with other code which uses ACPI_COMPANION()
+>(drivers/acpi/device_pm.c comes to mind) be defensive over the assumption
+>the companion is always present and bail right away.
+>
+>This can be easily reproduced with kdevops [0] with linux next-20221207 [1]
+>and cxl enabled workflows:
+>
+>make menuconfig      # enable cxl and linux-next
+>make                 # sets up variables, builds qemu from source
+>make linux           # builds and install next-20221207
+>make cxl             # installs cxl tool
+>make cxl-test-probe  # loads cxl_test
+>
+>The oops:
+>
+> # modprobe cxl_test
+>No TPM handle discovered.
+>failed to open file /etc/ndctl/keys/nvdimm-master.blob: No such file or directory
+>
+>[0] https://github.com/linux-kdevops/kdevops
+>[1] https://github.com/linux-kdevops/kdevops/blob/master/playbooks/roles/bootlinux/templates/config-next-20221207
+>
+>cxl_mock: loading out-of-tree module taints kernel.
+>cxl_mock: loading test module taints kernel.
+>cxl_mem mem0: at cxl_root_port.0 no parent for dport: platform
+>cxl_mem mem1: at cxl_root_port.1 no parent for dport: platform
+>cxl_mem mem2: at cxl_root_port.2 no parent for dport: platform
+>cxl_mem mem3: at cxl_root_port.3 no parent for dport: platform
+>cxl_mem mem4: at cxl_root_port.0 no parent for dport: platform
+>cxl_mem mem5: at cxl_root_port.1 no parent for dport: platform
+>cxl_mem mem6: at cxl_root_port.2 no parent for dport: platform
+>cxl_mem mem7: at cxl_root_port.3 no parent for dport: platform
+>cxl_mem mem8: at cxl_root_port.4 no parent for dport: platform
+>cxl_mem mem9: at cxl_root_port.4 no parent for dport: platform
+>cxl_mem mem10: CXL port topology not found
+>BUG: kernel NULL pointer dereference, address: 00000000000002c0
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+>PGD 0 P4D 0
+>Oops: 0000 [#1] PREEMPT SMP PTI
+>CPU: 4 PID: 1644 Comm: systemd-udevd Kdump: loaded Tainted: G           O     N 6.1.0-rc8-next-20221207 #5
+>Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.1-0-g3208b098f51a-prebuilt.qemu.org 04/01/2014
+>RIP: 0010:cxl_acpi_probe+0xeb/0x2f0 [cxl_acpi]
+>Code: ff ff ff 48 c7 40 08 ff ff ff ff 48 c7 40 18 00 02 00 00 e8 57 29 fd ff 49 89 c7 41 89 c4 48 3d 00 f0 ff ff 0f 87 73 ff ff ff <49> 8b bd c0 02 00 00 48 c7 c1 c0 64 e4 c0 48 89 c2 31 f6 e8 bd f1
+>RSP: 0018:ffffbe6d008b7c30 EFLAGS: 00010287
+>RAX: ffff97a7c6e01000 RBX: ffff97a7c51fd810 RCX: 0000000000000000
+>RDX: 0000000000000001 RSI: 0000000000000282 RDI: 00000000ffffffff
+>RBP: 0000000000000000 R08: ffff97a7c51fdaa8 R09: 0000000000000010
+>R10: 0000000000000002 R11: 00000000000013c7 R12: 00000000c6e01000
+>R13: 0000000000000000 R14: ffff97a7d9c653a8 R15: ffff97a7c6e01000
+>FS:  00007f34b038ed00(0000) GS:ffff97a83bd00000(0000) knlGS:0000000000000000
+>CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>CR2: 00000000000002c0 CR3: 0000000102f7e005 CR4: 0000000000770ee0
+>DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>PKRU: 55555554
+>Call Trace:
+> <TASK>
+> ? kernfs_create_link+0x5d/0xa0
+> platform_probe+0x41/0x90
+> really_probe+0xdb/0x380
+> ? pm_runtime_barrier+0x50/0x90
+> __driver_probe_device+0x78/0x170
+> driver_probe_device+0x1f/0x90
+> __driver_attach+0xce/0x1c0
+> ? __pfx___driver_attach+0x10/0x10
+> bus_for_each_dev+0x73/0xc0
+> bus_add_driver+0x1ae/0x200
+> driver_register+0x89/0xe0
+> ? __pfx_init_module+0x10/0x10 [cxl_acpi]
+> do_one_initcall+0x43/0x220
+> ? kmalloc_trace+0x26/0x90
+> do_init_module+0x4a/0x1f0
+> __do_sys_init_module+0x17f/0x1b0
+> do_syscall_64+0x37/0x90
+> entry_SYSCALL_64_after_hwframe+0x72/0xdc
+>RIP: 0033:0x7f34b061baaa
+>Code: 48 8b 0d 59 83 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 af 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 26 83 0c 00 f7 d8 64 89 01 48
+>RSP: 002b:00007fff6a198408 EFLAGS: 00000246 ORIG_RAX: 00000000000000af
+>RAX: ffffffffffffffda RBX: 00005635afc7e5e0 RCX: 00007f34b061baaa
+>RDX: 00007f34b07a5efd RSI: 0000000000060a29 RDI: 00005635afdd6510
+>RBP: 00007f34b07a5efd R08: 000000000001f5b3 R09: 0000000000000000
+>R10: 000000000000eb81 R11: 0000000000000246 R12: 00005635afdd6510
+>R13: 0000000000000000 R14: 00005635afca6f40 R15: 00005635af874e50
+> </TASK>
+>Modules linked in: cxl_acpi(+) cxl_pmem cxl_mem cxl_port cxl_mock_mem(ON) cxl_test(ON) cxl_mock(ON) cxl_core libnvdimm cbc encrypted_keys kvm_intel kvm 9p netfs irqbypass crct10dif_pclmul ghash_clmulni_intel sha512_ssse3 sha512_generic aesni_intel crypto_simd cryptd cirrus drm_shmem_helper 9pnet_virtio virtio_balloon i6300esb drm_kms_helper joydev evdev button serio_raw drm configfs ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 btrfs blake2b_generic raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1 raid0 md_mod virtio_net net_failover virtio_blk failover psmouse virtio_pci virtio_pci_legacy_dev nvme virtio_pci_modern_dev crc32_pclmul nvme_core virtio crc32c_intel t10_pi virtio_ring crc64_rocksoft crc64
+>
+>And gdb:
+>
+>(gdb) l *(cxl_acpi_probe+0xeb)
+>0xa8b is in cxl_acpi_probe (tools/testing/cxl/../../../drivers/cxl/acpi.c:648).
+>643
+>644             root_port = devm_cxl_add_port(host, host, CXL_RESOURCE_NONE, NULL);
+>645             if (IS_ERR(root_port))
+>646                     return PTR_ERR(root_port);
+>647
+>648             rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+>649                                   add_host_bridge_dport);
+>650             if (rc < 0)
+>651                     return rc;
+>652
+>
+>Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-configs tested: 96
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-x86_64                               rhel-8.3
-x86_64                              defconfig
-x86_64                        randconfig-a002
-arm                                 defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                        randconfig-a004
-x86_64                        randconfig-a013
-powerpc                           allnoconfig
-x86_64                        randconfig-a011
-um                             i386_defconfig
-x86_64                          rhel-8.3-func
-um                           x86_64_defconfig
-x86_64                          rhel-8.3-rust
-x86_64                        randconfig-a006
-x86_64                        randconfig-a015
-arc                                 defconfig
-s390                             allmodconfig
-x86_64                           allyesconfig
-alpha                               defconfig
-m68k                             allyesconfig
-s390                                defconfig
-i386                          randconfig-a014
-i386                                defconfig
-s390                             allyesconfig
-i386                          randconfig-a012
-arm                              allyesconfig
-sh                               allmodconfig
-arm64                            allyesconfig
-m68k                             allmodconfig
-mips                             allyesconfig
-i386                          randconfig-a016
-x86_64                            allnoconfig
-arc                              allyesconfig
-powerpc                          allmodconfig
-ia64                             allmodconfig
-alpha                            allyesconfig
-i386                          randconfig-a001
-i386                             allyesconfig
-i386                          randconfig-a003
-arc                  randconfig-r043-20221207
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-riscv                randconfig-r042-20221207
-x86_64                           rhel-8.3-kvm
-i386                          randconfig-a005
-s390                 randconfig-r044-20221207
-i386                          randconfig-c001
-m68k                        m5272c3_defconfig
-ia64                        generic_defconfig
-powerpc                  storcenter_defconfig
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-m68k                          hp300_defconfig
-sh                           se7712_defconfig
-i386                          debian-10.3-kvm
-m68k                        mvme147_defconfig
-powerpc                 canyonlands_defconfig
-m68k                          atari_defconfig
-sh                         ap325rxa_defconfig
-csky                                defconfig
-arm                            hisi_defconfig
-sh                          urquell_defconfig
-sparc                               defconfig
-arm                           corgi_defconfig
-arm                         lpc18xx_defconfig
-x86_64                                  kexec
-loongarch                         allnoconfig
-riscv                             allnoconfig
-riscv                    nommu_virt_defconfig
-riscv                    nommu_k210_defconfig
-arm                           h3600_defconfig
-arm                          iop32x_defconfig
-openrisc                            defconfig
-sh                         microdev_defconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20221207
-parisc                              defconfig
-loongarch                           defconfig
-nios2                               defconfig
-
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-a005
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-arm                  randconfig-r046-20221207
-i386                          randconfig-a002
-hexagon              randconfig-r041-20221207
-hexagon              randconfig-r045-20221207
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-k001
-arm                        vexpress_defconfig
-arm                                 defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
