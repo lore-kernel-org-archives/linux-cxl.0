@@ -2,197 +2,173 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455E9C4332F
-	for <linux-cxl@archiver.kernel.org>; Mon, 12 Dec 2022 17:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2639AC00145
+	for <linux-cxl@archiver.kernel.org>; Mon, 12 Dec 2022 17:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232154AbiLLRjH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 12 Dec 2022 12:39:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46976 "EHLO
+        id S232833AbiLLR6z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 12 Dec 2022 12:58:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232211AbiLLRjE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 12 Dec 2022 12:39:04 -0500
-Received: from beige.elm.relay.mailchannels.net (beige.elm.relay.mailchannels.net [23.83.212.16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F06F16402
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Dec 2022 09:39:02 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 3343664073A;
-        Mon, 12 Dec 2022 17:29:30 +0000 (UTC)
-Received: from pdx1-sub0-mail-a228.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 968246416D1;
-        Mon, 12 Dec 2022 17:29:29 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1670866169; a=rsa-sha256;
-        cv=none;
-        b=4isj0+763tqkdWxD9dTm2o3ZeKmLQB6LVSnA8GtgofTJBhWldvEWnkSxCVzRkL19B0+Ofn
-        O8Xm0A46P6tzljzS3NXHbHLImLRMAxOWuX5mRFXm2GNJRzvEi7AhuPYDL/SUAkguTkKWSW
-        u8a0n4+OiyDw5ZzLBJDDG07W44MZzjInOQxFSPI7jvvacY225N21jqSGV6e2c9YaIrkPxC
-        o5GejJtpX/NKEGcX+LubiAP+8iEgAi1sQrOmu4oGVX4Dn42T6NRMczrmBmeerlbJXCB+23
-        JDp6jwapdoV0Eh0BmL8EeswvWVdMGkRRjhmqTtB/ks2qsg2rmdIgah+Ze5sHIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1670866169;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=DLer8p7z6XkcZBBersr+cUHup0WgeIzlmEWgBw+poP0=;
-        b=GUkmPYNXGucL4t8XoBv9K4JDTeZuQedfLPSjmbWp176zR/Ldg/s5xnZ3wYR+Z0OIkA1jHF
-        NSUfNtuLIYu338PdE9HY8uGqTRpOzkvhw8UTbaMIVFJXSXKyVXW4h9LQmXf0pjz65UFncU
-        bOMhfPmAIXLrf+M1+cnhNL2xhhgdeq8nWNkDn5Gfr5tE+8QopMSyDh+iTPUQ3w17UINYco
-        0CXI5+mo1gvwtfIDyJ4v8kCE0pMR+Fa4H/+xkelY1vKEtL9ZGF+/BJ2vGNNTSHSUYcb251
-        kpqTe5wOzBdoYuk622RfXRuXI3kOCGxQZ/9tpROvL0X7EkZYZ5mEOXuXSA+h9Q==
-ARC-Authentication-Results: i=1;
-        rspamd-d48c5ddb-w5hfh;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Obese-Industry: 4c86941f30c4d44b_1670866169889_3203382878
-X-MC-Loop-Signature: 1670866169889:4282383029
-X-MC-Ingress-Time: 1670866169889
-Received: from pdx1-sub0-mail-a228.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.109.138.16 (trex/6.7.1);
-        Mon, 12 Dec 2022 17:29:29 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a228.dreamhost.com (Postfix) with ESMTPSA id 4NW7sh5McHz3d;
-        Mon, 12 Dec 2022 09:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1670866169;
-        bh=DLer8p7z6XkcZBBersr+cUHup0WgeIzlmEWgBw+poP0=;
-        h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
-        b=hM0ImLeAt3BR4J0IKMTX7JN3YwXFO26Myo7QR1Hp7218IyjuQv4+FR5O6Mtz1U4LE
-         8nJYtxJyR/xECzQ9lTRZlYy1/f+zBlOUVYOhj+qFlxHQnyVdqAx8ruY0WageTR2KR/
-         8jw855NHHPvIyZkIunOgPmY/UjCx5Zk11ftI+4f4/XREWE5Hn0/cyF6lBajfTq6MZu
-         cXF/EUNofBBO76flw6xQzjCS2pSGAa7XrPwIU7+kZhWqTnnth1Q2rIjhd8kI1qnyJQ
-         3KsV3/2/Upi/rgAzyt7L6Ld+N+DkE65c/LA9/IdPNHLVzO+EuWOZE7oCR+KnSOEUCw
-         xQnIL0bsWbJkA==
-Date:   Mon, 12 Dec 2022 09:05:07 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     ira.weiny@intel.com, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/3] cxl/mbox: Add background operation handling machinery
-Message-ID: <20221212170507.qn5pegj6s6q3nto6@offworld>
-References: <20221206011501.464916-1-dave@stgolabs.net>
- <20221206011501.464916-2-dave@stgolabs.net>
- <638ff285d426e_3cbe0294af@dwillia2-xfh.jf.intel.com.notmuch>
- <20221207161026.c2qpn4p7uplm5qkt@offworld>
- <639103c3b0853_3cbe02944d@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S231328AbiLLR6z (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 12 Dec 2022 12:58:55 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D5A117F;
+        Mon, 12 Dec 2022 09:58:52 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NW8RM4hlwz6HJTS;
+        Tue, 13 Dec 2022 01:55:11 +0800 (CST)
+Received: from localhost (10.45.147.154) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 12 Dec
+ 2022 17:58:49 +0000
+Date:   Mon, 12 Dec 2022 17:58:47 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V3 1/8] cxl/mem: Read, trace, and clear events on driver
+ load
+Message-ID: <20221212175847.00006f85@Huawei.com>
+In-Reply-To: <Y5PGEr4Ngrp07CMU@iweiny-desk3>
+References: <20221208052115.800170-1-ira.weiny@intel.com>
+        <20221208052115.800170-2-ira.weiny@intel.com>
+        <639376e1452bd_579c12945c@dwillia2-xfh.jf.intel.com.notmuch>
+        <Y5Oh89JFAWYIITUV@iweiny-desk3>
+        <6393b7b0e4953_579c1294af@dwillia2-xfh.jf.intel.com.notmuch>
+        <Y5PGEr4Ngrp07CMU@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <639103c3b0853_3cbe02944d@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.147.154]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 07 Dec 2022, Dan Williams wrote:
+On Fri, 9 Dec 2022 15:34:42 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
->Hmm, I'm just not (yet) grokking how the callbacks or irq support
->simplify the implementation. Perhaps I can explain better in code...
+> On Fri, Dec 09, 2022 at 02:33:20PM -0800, Dan Williams wrote:
+> > Ira Weiny wrote:
+> > [..]  
+> > > > > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > > > > index 3a66aadb4df0..86c84611a168 100644
+> > > > > --- a/drivers/cxl/pci.c
+> > > > > +++ b/drivers/cxl/pci.c
+> > > > > @@ -417,8 +417,44 @@ static void disable_aer(void *pdev)
+> > > > >  	pci_disable_pcie_error_reporting(pdev);
+> > > > >  }
+> > > > >  
+> > > > > +static void cxl_mem_free_event_buffer(void *buf)
+> > > > > +{
+> > > > > +	kvfree(buf);
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * There is a single buffer for reading event logs from the mailbox.  All logs
+> > > > > + * share this buffer protected by the cxlds->event_log_lock.
+> > > > > + */
+> > > > > +static void cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
+> > > > > +{
+> > > > > +	struct cxl_get_event_payload *buf;
+> > > > > +
+> > > > > +	dev_dbg(cxlds->dev, "Allocating event buffer size %zu\n",
+> > > > > +		cxlds->payload_size);
+> > > > > +
+> > > > > +	buf = kvmalloc(cxlds->payload_size, GFP_KERNEL);
+> > > > > +	if (WARN_ON_ONCE(!buf))  
+> > > > 
+> > > > No, why is event init so special that it behaves differently than all
+> > > > the other init-time allocations this driver does?  
+> > > 
+> > > Previous review agreed that a warn on once would be printed if this universal
+> > > buffer was not allocated.
+> > >   
+> > > >   
+> > > > > +		return;  
+> > > > 
+> > > > return -ENOMEM;
+> > > >   
+> > > > > +
+> > > > > +	if (WARN_ON_ONCE(devm_add_action_or_reset(cxlds->dev,
+> > > > > +			 cxl_mem_free_event_buffer, buf)))
+> > > > > +		return;  
+> > > > 
+> > > > ditto.  
+> > > 
+> > > I'll change both of these with a dev_err() and bail during init.  
+> > 
+> > No real need to dev_err() for a simple memory allocation faliure, but
+> > at least it is better than a WARN  
+> 
+> Ok no error then.
+> 
+> >   
+> > >   
+> > > >   
+> > > > > +
+> > > > > +	cxlds->event.buf = buf;
+> > > > > +}
+> > > > > +
+> > > > > +static void cxl_clear_event_logs(struct cxl_dev_state *cxlds)
+> > > > > +{
+> > > > > +	/* Force read and clear of all logs */
+> > > > > +	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
+> > > > > +	/* Ensure prior partial reads are handled, by starting over again */  
+> > > > 
+> > > > What partial reads? cxl_mem_get_event_records() reads every log until
+> > > > each returns an empty result. Any remaining events after this returns
+> > > > are events that fired during the retrieval.  
+> > > 
+> > > Jonathan was concerned that something could read part of the log and because of
+> > > the statefullness of the log processing this reading of the log could start in
+> > > the beginning.  Perhaps from a previous driver unload while reading?  
+> > 
+> > The driver will not unload without completing any current executions of
+> > the event retrieval thread otherwise that's an irq shutdown bug.
+> >   
+> > > I guess I was also thinking the BIOS could leave things this way?  But I think
+> > > we should not be here if the BIOS was ever involved right?  
+> > 
+> > If the OS has CXL Error control and all Event irqs are steered to the OS
+> > then the driver must be allowed to assume that it has exclusive control
+> > over event retrieval and clearing.
 
-So when I say that no polling at all makes the implementation simpler I'm
-referring to the fact that only some form of ->post() would be needed (in
-an async context of course). As such, most of the infrastructure in this
-series is to support polling, and without it we could do away with the
-other callbacks as well as the atomics. The hardware would take care
-"synchronizing" everything - which is similar to what Jonathan had
-highlighted in the rfc version and was wondering about the explicit
-checks.
+The OS has control once it's asked for it ;)  We have no idea what the firmware
+did before that.
 
->I see irq support as a small incremental extension of polling support,
->not something that precludes polling support. For example (untested /
->unfinished):
->
->diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->index 3a66aadb4df0..30b21ae4cbe5 100644
->--- a/drivers/cxl/pci.c
->+++ b/drivers/cxl/pci.c
->@@ -178,6 +178,19 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_sta=
-te *cxlds,
->        mbox_cmd->return_code =3D
->                FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
->
->+       if (mbox_cmd->return_code =3D=3D CXL_MBOX_CMD_RC_BACKGROUND) {
->+               int i;
->+
->+               for (i =3D 0; i < mbox_cmd->poll_count; i++)
->+                       rc =3D wait_event_interruptible_timeout(
->+                               &mbox_wait, cxl_background_complete(cxlds),
->+                               mbox_cmd->poll_interval);
->+
->+               if (!cxl_background_complete(cxlds))
->+                       cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
->+                                   "background timeout");
->+       }
->+
->        if (mbox_cmd->return_code !=3D CXL_MBOX_CMD_RC_SUCCESS) {
->                dev_dbg(dev, "Mailbox operation had an error: %s\n",
->                        cxl_mbox_cmd_rc2str(mbox_cmd));
->
->...where all irq support adds is a small handler that does:
->
->    wake_up(&mbox_wait);
->    return IRQ_HANDLED;
->
->...to short-circuit the wait in __cxl_pci_mbox_send_cmd().
+> >   
+> > > > So I do not think cxl_clear_event_logs() needs to exist, just call
+> > > > cxl_mem_get_event_records(CXLDEV_EVENT_STATUS_ALL) once and that's it.  
+> > > 
+> > > That was my inclination but Jonathan's comments got me thinking I was wrong.  
+> > 
+> > Perhaps that was before we realized the recent CXL _OSC entanglement.  
+> 
+> Yea that could have been.  I'm not clear on the order of the comments.
 
-I agree that under this synchronous scheme polling and irq are quite
-straightforward. I had always considered an async approach and not
-playing with timeouts, but just let the whole thing run to completion.
-I was also guided by the fact that the spec says:
+I'm just paranoid - particularly when my excellent firmware writing colleagues
+are involved (or our test teams who like to simulate weird sequences of events).
 
-"It is strongly recommended that devices continue to accept new non-
-background commands while the background operation is running."
+I'm fine crossing fingers until we know there is someone doing this sort of
+crazy in the wild.
 
-What I don't like about a synchronous approach is that you get the
-situation where the driver timesout, but the hw is still doing the
-background command, no? And there is no way to "cancel" it. Sure,
-any new incoming mbox commands during that time would self-serialize
-naturally by hw. But when the bg command is done and we have irqs enabled,
-the isr will be triggered and we no longer have the context. You would
-also have a discrepancy in a returned timeout error vs a different
-return code from the actual hw, specially if for example the operation
-was successful. afaict the only thing that would allow users to know
-the real status of the sent bg command would be the Background Operation
-Status command, but that is far from ideal.
+Jonathan
 
->The cxl_internal_send_cmd() caller gets a synchronous response and can
->handle it from there. No need for conflict detection nor async execution
->contexts. Caller is responsible for making sure ->poll_count and
->->poll_interval are reasonable.
 
-=2E..
+> 
+> Ok this should be good to go.  Reworking the rest of the series.
+> 
+> Thanks for the review!
+> Ira
 
->The complexity I see here is the synchronization needed to make sure
->that the isr is aligned with the current background command queued for
->execution and in turn synchronized with incoming commands. My
->observation is that current mailbox state synchronization is
->sufficient for:
->
->- Transfer FW: broken up into multiple transfers
->- Scan Media: broken up by Scan Media Physical Address Length values
->  that try to get the Estimated Scan Media Time below
->  CXL_MAILBOX_TIMEOUT_MS per iteration.
->- Sanitize: the device is effectively dead during this operation, so
->  there is little need to time-share
-
-But tbh I find it much more intuitive to get an error then having to
-block for who knows how long. Either way this would still require special
-cases such as sanitize where the poller should not timeout. Of course
-there is nothing in the approach from this series that prevents users
-=66rom being mindful of the background command and breaking things up,
-where possible.
-
-Thanks,
-Davidlohr
