@@ -2,644 +2,180 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F1AC4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 13 Dec 2022 06:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 029C6C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 13 Dec 2022 15:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234112AbiLMGyf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 13 Dec 2022 01:54:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39162 "EHLO
+        id S235161AbiLMPRw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 13 Dec 2022 10:17:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234524AbiLMGy3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Dec 2022 01:54:29 -0500
-X-Greylist: delayed 60 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 12 Dec 2022 22:54:28 PST
-Received: from usmail.montage-tech.com (usmail.montage-tech.com [12.176.92.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 30C022DD6
-        for <linux-cxl@vger.kernel.org>; Mon, 12 Dec 2022 22:54:27 -0800 (PST)
-X-MDAV-Result: clean
-X-MDAV-Processed: usmail.montage-tech.com, Mon, 12 Dec 2022 22:52:22 -0800
-Received: from shmail.montage-tech.com by usmail.montage-tech.com with ESMTP id md5001006403604.msg; 
-        Mon, 12 Dec 2022 22:52:22 -0800
-X-MDArrival-Date: Mon, 12 Dec 2022 22:52:22 -0800
-X-Return-Path: prvs=13467cd027=johnny.li@montage-tech.com
-X-Envelope-From: johnny.li@montage-tech.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=montage-tech.com;
-        s=MDaemon; t=1670914336; x=1671519136;
-        i=johnny.li@montage-tech.com; q=dns/txt; h=Date:From:To:Cc:
-        Subject:Message-ID:References:MIME-Version:Content-Type:
-        Content-Disposition:In-Reply-To; bh=T8yMrX/XLNHWA3ZQA5NR1Z2EK9/Z
-        CKVfL2QX7pvP+nw=; b=BegvyPD/pVvucisDce8SINWCUoV2wVbTQcysINa8LPih
-        5SsPaO1BkpZehZuxS/05CNwQbDVBayrOWWopHVXi7pFGzcKaBfF9LS/S+KnbVl6P
-        1JBoCdaBE3t3Yj9OIIyDiUuTSgKL1pABwWHbqJQ5ObFWjbi8NEy7xBiPmytTlqQ4
-        VGnJlHUUxCfYgVR/3EYA46eluEgrKhhdjywR0Vqr9kl+KY5BaRFQPa13OBeTZ42a
-        pPFUUStkknvg3jHRy7GTvCwJc4wC8j8zreYmaxxQ1T4Jo8aB+UX0FUwdCATTptGS
-        Vv3Q6GIG4xUyQOSftEeLG/ByzgyTytdWCUcUl0l61Q==
-X-MDAV-Result: clean
-X-MDAV-Processed: shmail.montage-tech.com, Tue, 13 Dec 2022 14:52:16 +0800
-Received: from SR651 by shmail.montage-tech.com with ESMTPA id pp5001019858305.msg; 
-        Tue, 13 Dec 2022 14:52:14 +0800
-Date:   Tue, 13 Dec 2022 14:49:02 +0800
-From:   johnny <johnny.li@montage-tech.com>
-To:     ira.weiny@intel.com
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH V4 2/9] cxl/mem: Read, trace, and clear events on driver
- load
-Message-ID: <Y5ggXi88HancP2LZ@SR651>
-References: <20221212070627.1372402-1-ira.weiny@intel.com>
- <20221212070627.1372402-3-ira.weiny@intel.com>
+        with ESMTP id S236059AbiLMPRv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Dec 2022 10:17:51 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F715FEC;
+        Tue, 13 Dec 2022 07:17:49 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NWhq168Gpz6HJRm;
+        Tue, 13 Dec 2022 23:14:05 +0800 (CST)
+Received: from localhost (10.45.149.116) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 13 Dec
+ 2022 15:17:45 +0000
+Date:   Tue, 13 Dec 2022 15:17:44 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <rostedt@goodmis.org>, <terry.bowman@amd.com>,
+        <bhelgaas@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <shiju.jose@huawei.com>
+Subject: Re: [PATCH v4 00/11] cxl/pci: Add fundamental error handling
+Message-ID: <20221213151744.00003e58@Huawei.com>
+In-Reply-To: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
+References: <166974401763.1608150.5424589924034481387.stgit@djiang5-desk3.ch.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221212070627.1372402-3-ira.weiny@intel.com>
-X-MDCFSigsAdded: montage-tech.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.149.116]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, Dec 11, 2022 at 11:06:20PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Tue, 29 Nov 2022 10:48:06 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> Hi Bjorn,
+> I added a new optional callback for AER error handler to allow the PCI
+> device driver to do additional logging. Please Ack the patch if it looks
+> reasonable to you and Dan can take the series through cxl tree. Thank you!
 > 
-> CXL devices have multiple event logs which can be queried for CXL event
-> records.  Devices are required to support the storage of at least one
-> event record in each event log type.
-> 
-> Devices track event log overflow by incrementing a counter and tracking
-> the time of the first and last overflow event seen.
-> 
-> Software queries events via the Get Event Record mailbox command; CXL
-> rev 3.0 section 8.2.9.2.2 and clears events via CXL rev 3.0 section
-> 8.2.9.2.3 Clear Event Records mailbox command.
-> 
-> If the result of negotiating CXL Error Reporting Control is OS control,
-> read and clear all event logs on driver load.
-> 
-> Ensure a clean slate of events by reading and clearing the events on
-> driver load.
-> 
-> The status register is not used because a device may continue to trigger
-> events and the only requirement is to empty the log at least once.  This
-> allows for the required transition from empty to non-empty for interrupt
-> generation.  Handling of interrupts is in a follow on patch.
-> 
-> The device can return up to 1MB worth of event records per query.
-> Allocate a shared large buffer to handle the max number of records based
-> on the mailbox payload size.
-> 
-> This patch traces a raw event record and leaves specific event record
-> type tracing to subsequent patches.  Macros are created to aid in
-> tracing the common CXL Event header fields.
-> 
-> Each record is cleared explicitly.  A clear all bit is specified but is
-> only valid when the log overflows.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from V3:
-> 	Dan
-> 		Split off _OSC pcie bits
-> 			Use existing style for host bridge flag in that
-> 			patch
-> 		Clean up event processing loop
-> 		Use dev_err_ratelimited()
-> 		Clean up version change log
-> 		Delete 'EVENT LOG OVERFLOW'
-> 		Remove cxl_clear_event_logs()
-> 		Add comment for native cxl control
-> 		Fail driver load on event buf allocation failure
-> 		Comment why events are not processed without _OSC flag
-> ---
->  drivers/cxl/core/mbox.c  | 136 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/trace.h | 120 ++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h        |  12 ++++
->  drivers/cxl/cxlmem.h     |  84 ++++++++++++++++++++++++
->  drivers/cxl/pci.c        |  40 ++++++++++++
->  5 files changed, 392 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index b03fba212799..9fb327370e08 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -8,6 +8,7 @@
->  #include <cxl.h>
->  
->  #include "core.h"
-> +#include "trace.h"
->  
->  static bool cxl_raw_allow_all;
->  
-> @@ -717,6 +718,140 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
->  
-> +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
-> +				  enum cxl_event_log_type log,
-> +				  struct cxl_get_event_payload *get_pl)
-> +{
-> +	struct cxl_mbox_clear_event_payload payload = {
-> +		.event_log = log,
-> +	};
-> +	u16 total = le16_to_cpu(get_pl->record_count);
-> +	u8 max_handles = CXL_CLEAR_EVENT_MAX_HANDLES;
-> +	size_t pl_size = sizeof(payload);
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	u16 cnt;
-> +	int rc;
-> +	int i;
-> +
-> +	/* Payload size may limit the max handles */
-> +	if (pl_size > cxlds->payload_size) {
-> +		max_handles = CXL_CLEAR_EVENT_LIMIT_HANDLES(cxlds->payload_size);
-> +		pl_size = cxlds->payload_size;
-> +	}
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_CLEAR_EVENT_RECORD,
-> +		.payload_in = &payload,
-> +		.size_in = pl_size,
-> +	};
-> +
-> +	/*
-> +	 * Clear Event Records uses u8 for the handle cnt while Get Event
-> +	 * Record can return up to 0xffff records.
-> +	 */
-> +	i = 0;
-> +	for (cnt = 0; cnt < total; cnt++) {
-> +		payload.handle[i++] = get_pl->records[cnt].hdr.handle;
-> +		dev_dbg(cxlds->dev, "Event log '%d': Clearing %u\n",
-> +			log, le16_to_cpu(payload.handle[i]));
-> +
-> +		if (i == max_handles) {
-> +			payload.nr_recs = i;
-> +			rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +			if (rc)
-> +				return rc;
-> +			i = 0;
-> +		}
-> +	}
-> +
-> +	/* Clear what is left if any */
-> +	if (i) {
-> +		payload.nr_recs = i;
-> +		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
-> +				    enum cxl_event_log_type type)
-> +{
-> +	struct cxl_get_event_payload *payload;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	u8 log_type = type;
-> +	u16 nr_rec;
-> +
-> +	mutex_lock(&cxlds->event.log_lock);
-> +	payload = cxlds->event.buf;
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
-> +		.payload_in = &log_type,
-> +		.size_in = sizeof(log_type),
-> +		.payload_out = payload,
-> +		.size_out = cxlds->payload_size,
-> +		.min_out = struct_size(payload, records, 0),
-> +	};
-> +
-> +	do {
-> +		int rc, i;
-> +
-> +		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +		if (rc) {
-> +			dev_err_ratelimited(cxlds->dev, "Event log '%d': Failed to query event records : %d",
-> +					    type, rc);
-> +			break;
-> +		}
-> +
-> +		nr_rec = le16_to_cpu(payload->record_count);
-> +		if (!nr_rec)
-> +			break;
-> +
-> +		for (i = 0; i < nr_rec; i++)
-> +			trace_cxl_generic_event(cxlds->dev, type,
-> +						&payload->records[i]);
-> +
-> +		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
-> +			trace_cxl_overflow(cxlds->dev, type, payload);
-> +
-> +		rc = cxl_clear_event_record(cxlds, type, payload);
-> +		if (rc) {
-> +			dev_err_ratelimited(cxlds->dev, "Event log '%d': Failed to clear events : %d",
-> +					    type, rc);
-> +			break;
-> +		}
-> +	} while (nr_rec);
-> +
-> +	mutex_unlock(&cxlds->event.log_lock);
-> +}
-> +
-> +/**
-> + * cxl_mem_get_event_records - Get Event Records from the device
-> + * @cxlds: The device data for the operation
-> + *
-> + * Retrieve all event records available on the device, report them as trace
-> + * events, and clear them.
-> + *
-> + * See CXL rev 3.0 @8.2.9.2.2 Get Event Records
-> + * See CXL rev 3.0 @8.2.9.2.3 Clear Event Records
-> + */
-> +void cxl_mem_get_event_records(struct cxl_dev_state *cxlds, u32 status)
-> +{
-> +	dev_dbg(cxlds->dev, "Reading event logs: %x\n", status);
-> +
-> +	if (status & CXLDEV_EVENT_STATUS_FATAL)
-> +		cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_FATAL);
-> +	if (status & CXLDEV_EVENT_STATUS_FAIL)
-> +		cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_FAIL);
-> +	if (status & CXLDEV_EVENT_STATUS_WARN)
-> +		cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_WARN);
-> +	if (status & CXLDEV_EVENT_STATUS_INFO)
-> +		cxl_mem_get_records_log(cxlds, CXL_EVENT_TYPE_INFO);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
-> +
->  /**
->   * cxl_mem_get_partition_info - Get partition info
->   * @cxlds: The device data for the operation
-> @@ -868,6 +1003,7 @@ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
->  	}
->  
->  	mutex_init(&cxlds->mbox_mutex);
-> +	mutex_init(&cxlds->event.log_lock);
->  	cxlds->dev = dev;
->  
->  	return cxlds;
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index 20ca2fe2ca8e..6898212fcb47 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -6,7 +6,9 @@
->  #if !defined(_CXL_EVENTS_H) || defined(TRACE_HEADER_MULTI_READ)
->  #define _CXL_EVENTS_H
->  
-> +#include <asm-generic/unaligned.h>
->  #include <cxl.h>
-> +#include <cxlmem.h>
->  #include <linux/tracepoint.h>
->  
->  #define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
-> @@ -103,6 +105,124 @@ TRACE_EVENT(cxl_aer_correctable_error,
->  	)
->  );
->  
-> +#include <linux/tracepoint.h>
-> +
-> +#define cxl_event_log_type_str(type)				\
-> +	__print_symbolic(type,					\
-> +		{ CXL_EVENT_TYPE_INFO, "Informational" },	\
-> +		{ CXL_EVENT_TYPE_WARN, "Warning" },		\
-> +		{ CXL_EVENT_TYPE_FAIL, "Failure" },		\
-> +		{ CXL_EVENT_TYPE_FATAL, "Fatal" })
-> +
-> +TRACE_EVENT(cxl_overflow,
-> +
-> +	TP_PROTO(const struct device *dev, enum cxl_event_log_type log,
-> +		 struct cxl_get_event_payload *payload),
-> +
-> +	TP_ARGS(dev, log, payload),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev_name, dev_name(dev))
-> +		__field(int, log)
-> +		__field(u64, first_ts)
-> +		__field(u64, last_ts)
-> +		__field(u16, count)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev_name, dev_name(dev));
-> +		__entry->log = log;
-> +		__entry->count = le16_to_cpu(payload->overflow_err_count);
-> +		__entry->first_ts = le64_to_cpu(payload->first_overflow_timestamp);
-> +		__entry->last_ts = le64_to_cpu(payload->last_overflow_timestamp);
-> +	),
-> +
-> +	TP_printk("%s: log=%s : %u records from %llu to %llu",
-> +		__get_str(dev_name), cxl_event_log_type_str(__entry->log),
-> +		__entry->count, __entry->first_ts, __entry->last_ts)
-> +
-> +);
-> +
-> +/*
-> + * Common Event Record Format
-> + * CXL 3.0 section 8.2.9.2.1; Table 8-42
-> + */
-> +#define CXL_EVENT_RECORD_FLAG_PERMANENT		BIT(2)
-> +#define CXL_EVENT_RECORD_FLAG_MAINT_NEEDED	BIT(3)
-> +#define CXL_EVENT_RECORD_FLAG_PERF_DEGRADED	BIT(4)
-> +#define CXL_EVENT_RECORD_FLAG_HW_REPLACE	BIT(5)
-> +#define show_hdr_flags(flags)	__print_flags(flags, " | ",			   \
-> +	{ CXL_EVENT_RECORD_FLAG_PERMANENT,	"PERMANENT_CONDITION"		}, \
-> +	{ CXL_EVENT_RECORD_FLAG_MAINT_NEEDED,	"MAINTENANCE_NEEDED"		}, \
-> +	{ CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,	"PERFORMANCE_DEGRADED"		}, \
-> +	{ CXL_EVENT_RECORD_FLAG_HW_REPLACE,	"HARDWARE_REPLACEMENT_NEEDED"	}  \
-> +)
-> +
-> +/*
-> + * Define macros for the common header of each CXL event.
-> + *
-> + * Tracepoints using these macros must do 3 things:
-> + *
-> + *	1) Add CXL_EVT_TP_entry to TP_STRUCT__entry
-> + *	2) Use CXL_EVT_TP_fast_assign within TP_fast_assign;
-> + *	   pass the dev, log, and CXL event header
-> + *	3) Use CXL_EVT_TP_printk() instead of TP_printk()
-> + *
-> + * See the generic_event tracepoint as an example.
-> + */
-> +#define CXL_EVT_TP_entry					\
-> +	__string(dev_name, dev_name(dev))			\
-> +	__field(int, log)					\
-> +	__field_struct(uuid_t, hdr_uuid)			\
-> +	__field(u32, hdr_flags)					\
-> +	__field(u16, hdr_handle)				\
-> +	__field(u16, hdr_related_handle)			\
-> +	__field(u64, hdr_timestamp)				\
-> +	__field(u8, hdr_length)					\
-> +	__field(u8, hdr_maint_op_class)
-> +
-> +#define CXL_EVT_TP_fast_assign(dev, l, hdr)					\
-> +	__assign_str(dev_name, dev_name(dev));					\
-> +	__entry->log = (l);							\
-> +	memcpy(&__entry->hdr_uuid, &(hdr).id, sizeof(uuid_t));			\
-> +	__entry->hdr_length = (hdr).length;					\
-> +	__entry->hdr_flags = get_unaligned_le24((hdr).flags);			\
-> +	__entry->hdr_handle = le16_to_cpu((hdr).handle);			\
-> +	__entry->hdr_related_handle = le16_to_cpu((hdr).related_handle);	\
-> +	__entry->hdr_timestamp = le64_to_cpu((hdr).timestamp);			\
-> +	__entry->hdr_maint_op_class = (hdr).maint_op_class
-> +
-> +#define CXL_EVT_TP_printk(fmt, ...) \
-> +	TP_printk("%s log=%s : time=%llu uuid=%pUb len=%d flags='%s' "		\
-> +		"handle=%x related_handle=%x maint_op_class=%u"			\
-> +		" : " fmt,							\
-> +		__get_str(dev_name), cxl_event_log_type_str(__entry->log),	\
-> +		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry->hdr_length,\
-> +		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,	\
-> +		__entry->hdr_related_handle, __entry->hdr_maint_op_class,	\
-> +		##__VA_ARGS__)
-> +
-> +TRACE_EVENT(cxl_generic_event,
-> +
-> +	TP_PROTO(const struct device *dev, enum cxl_event_log_type log,
-> +		 struct cxl_event_record_raw *rec),
-> +
-> +	TP_ARGS(dev, log, rec),
-> +
-> +	TP_STRUCT__entry(
-> +		CXL_EVT_TP_entry
-> +		__array(u8, data, CXL_EVENT_RECORD_DATA_LENGTH)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		CXL_EVT_TP_fast_assign(dev, log, rec->hdr);
-> +		memcpy(__entry->data, &rec->data, CXL_EVENT_RECORD_DATA_LENGTH);
-> +	),
-> +
-> +	CXL_EVT_TP_printk("%s",
-> +		__print_hex(__entry->data, CXL_EVENT_RECORD_DATA_LENGTH))
-> +);
-> +
->  #endif /* _CXL_EVENTS_H */
->  
->  #define TRACE_INCLUDE_FILE trace
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index aa3af3bb73b2..5974d1082210 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -156,6 +156,18 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->  #define CXLDEV_CAP_CAP_ID_SECONDARY_MAILBOX 0x3
->  #define CXLDEV_CAP_CAP_ID_MEMDEV 0x4000
->  
-> +/* CXL 3.0 8.2.8.3.1 Event Status Register */
-> +#define CXLDEV_DEV_EVENT_STATUS_OFFSET		0x00
-> +#define CXLDEV_EVENT_STATUS_INFO		BIT(0)
-> +#define CXLDEV_EVENT_STATUS_WARN		BIT(1)
-> +#define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
-> +#define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
-> +
-> +#define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
-> +				 CXLDEV_EVENT_STATUS_WARN |	\
-> +				 CXLDEV_EVENT_STATUS_FAIL |	\
-> +				 CXLDEV_EVENT_STATUS_FATAL)
-> +
->  /* CXL 2.0 8.2.8.4 Mailbox Registers */
->  #define CXLDEV_MBOX_CAPS_OFFSET 0x00
->  #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index ab138004f644..dd9aa3dd738e 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -4,6 +4,7 @@
->  #define __CXL_MEM_H__
->  #include <uapi/linux/cxl_mem.h>
->  #include <linux/cdev.h>
-> +#include <linux/uuid.h>
->  #include "cxl.h"
->  
->  /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-> @@ -193,6 +194,17 @@ struct cxl_endpoint_dvsec_info {
->  	struct range dvsec_range[2];
->  };
->  
-> +/**
-> + * struct cxl_event_state - Event log driver state
-> + *
-> + * @event_buf: Buffer to receive event data
-> + * @event_log_lock: Serialize event_buf and log use
-> + */
-> +struct cxl_event_state {
-> +	struct cxl_get_event_payload *buf;
-> +	struct mutex log_lock;
-> +};
-> +
->  /**
->   * struct cxl_dev_state - The driver device state
->   *
-> @@ -266,12 +278,16 @@ struct cxl_dev_state {
->  
->  	struct xarray doe_mbs;
->  
-> +	struct cxl_event_state event;
-> +
->  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
->  };
->  
->  enum cxl_opcode {
->  	CXL_MBOX_OP_INVALID		= 0x0000,
->  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
-> +	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
-> +	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
->  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
->  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
-> @@ -347,6 +363,73 @@ struct cxl_mbox_identify {
->  	u8 qos_telemetry_caps;
->  } __packed;
->  
-> +/*
-> + * Common Event Record Format
-> + * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
-> + */
-> +struct cxl_event_record_hdr {
-> +	uuid_t id;
-> +	u8 length;
-> +	u8 flags[3];
-> +	__le16 handle;
-> +	__le16 related_handle;
-> +	__le64 timestamp;
-> +	u8 maint_op_class;
-> +	u8 reserved[15];
-> +} __packed;
-> +
-> +#define CXL_EVENT_RECORD_DATA_LENGTH 0x50
-> +struct cxl_event_record_raw {
-> +	struct cxl_event_record_hdr hdr;
-> +	u8 data[CXL_EVENT_RECORD_DATA_LENGTH];
-> +} __packed;
-> +
-> +/*
-> + * Get Event Records output payload
-> + * CXL rev 3.0 section 8.2.9.2.2; Table 8-50
-> + */
-> +#define CXL_GET_EVENT_FLAG_OVERFLOW		BIT(0)
-> +#define CXL_GET_EVENT_FLAG_MORE_RECORDS		BIT(1)
-I don't see any code consumes this more flag, is anything I miss?
-Device shall set this more flag when single output payload can not fit in all records
-> +struct cxl_get_event_payload {
-> +	u8 flags;
-> +	u8 reserved1;
-> +	__le16 overflow_err_count;
-> +	__le64 first_overflow_timestamp;
-> +	__le64 last_overflow_timestamp;
-> +	__le16 record_count;
-> +	u8 reserved2[10];
-> +	struct cxl_event_record_raw records[];
-> +} __packed;
-> +
-> +/*
-> + * CXL rev 3.0 section 8.2.9.2.2; Table 8-49
-> + */
-> +enum cxl_event_log_type {
-> +	CXL_EVENT_TYPE_INFO = 0x00,
-> +	CXL_EVENT_TYPE_WARN,
-> +	CXL_EVENT_TYPE_FAIL,
-> +	CXL_EVENT_TYPE_FATAL,
-> +	CXL_EVENT_TYPE_MAX
-> +};
-> +
-> +/*
-> + * Clear Event Records input payload
-> + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
-> + */
-> +#define CXL_CLEAR_EVENT_MAX_HANDLES (0xff)
-> +struct cxl_mbox_clear_event_payload {
-> +	u8 event_log;		/* enum cxl_event_log_type */
-> +	u8 clear_flags;
-> +	u8 nr_recs;
-> +	u8 reserved[3];
-> +	__le16 handle[CXL_CLEAR_EVENT_MAX_HANDLES];
-> +} __packed;
-> +#define CXL_CLEAR_EVENT_LIMIT_HANDLES(payload_size)			\
-> +	(((payload_size) -						\
-> +		(sizeof(struct cxl_mbox_clear_event_payload) -		\
-> +		 (sizeof(__le16) * CXL_CLEAR_EVENT_MAX_HANDLES))) /	\
-> +		sizeof(__le16))
-> +
->  struct cxl_mbox_get_partition_info {
->  	__le64 active_volatile_cap;
->  	__le64 active_persistent_cap;
-> @@ -441,6 +524,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
->  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
->  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
->  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-> +void cxl_mem_get_event_records(struct cxl_dev_state *cxlds, u32 status);
->  #ifdef CONFIG_CXL_SUSPEND
->  void cxl_mem_active_inc(void);
->  void cxl_mem_active_dec(void);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 3a66aadb4df0..a2d8382bc593 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -417,8 +417,37 @@ static void disable_aer(void *pdev)
->  	pci_disable_pcie_error_reporting(pdev);
->  }
->  
-> +static void cxl_mem_free_event_buffer(void *buf)
-> +{
-> +	kvfree(buf);
-> +}
-> +
-> +/*
-> + * There is a single buffer for reading event logs from the mailbox.  All logs
-> + * share this buffer protected by the cxlds->event_log_lock.
-> + */
-> +static int cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_get_event_payload *buf;
-> +
-> +	dev_dbg(cxlds->dev, "Allocating event buffer size %zu\n",
-> +		cxlds->payload_size);
-> +
-> +	buf = kvmalloc(cxlds->payload_size, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	if (devm_add_action_or_reset(cxlds->dev, cxl_mem_free_event_buffer,
-> +				     buf))
-> +		return -ENOMEM;
-> +
-> +	cxlds->event.buf = buf;
-> +	return 0;
-> +}
-> +
->  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
->  	struct cxl_register_map map;
->  	struct cxl_memdev *cxlmd;
->  	struct cxl_dev_state *cxlds;
-> @@ -494,6 +523,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> +	rc = cxl_mem_alloc_event_buf(cxlds);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/*
-> +	 * When BIOS maintains CXL error reporting control, it will process
-> +	 * event records.  Only one agent can do so.
-> +	 */
-> +	if (host_bridge->native_cxl_error)
-> +		cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
-> +
->  	if (cxlds->regs.ras) {
->  		pci_enable_pcie_error_reporting(pdev);
->  		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
-> -- 
-> 2.37.2
-> 
+> Hi Steve,
+> Please review the trace event implementation and Ack if it looks ok.
+> Thank you!
 > 
 
+In the interests of avoiding possible duplication, this is a quick note that
+we are looking into the associated RAS daemon support for these errors.
+
+Jonathan
+
+> v4:
+> - Change header log for eventtrace to static array (Steve)
+> - Fix CE status bits (Shiju)
+> - Fix ECC capitalization (Shiju)
+> - Add PCI error handler callback documentation (Sathyanarayanan)
+> - Clarify callback as additional information capture only (Jonathan)
+> - Clarify need of callback to clear CE by CXL device (Jonathan)
+> - Fix 0-day complaint of __force __le32.
+> 
+> v3:
+> - Copy header log in 32bit chunks (Jonathan)
+> - Export header log whole as raw data (Jonathan)
+> - Added callback in PCI AER err handler for correctable errors (Jonathan)
+> - Tested on qemu thanks to Jonathan's CXL AER injection enabling!
+> 
+> v2:
+> - Convert error reporting via printk to trace events
+> - Drop ".rmap =" initialization (Jonathan)
+> - return PCI_ERS_RESULT_NEED_RESET for UE in pci_channel_io_normal (Shiju)
+> 
+> Add a 'struct pci_error_handlers' instance for the cxl_pci driver.
+> Section 8.2.4.16 "CXL RAS Capability Structure" of the CXL rev3.0
+> specification defines the error sources considered in this
+> implementation. The RAS Capability Structure defines protocol, link and
+> internal errors which are distinct from memory poison errors that are
+> conveyed via direct consumption and/or media scanning.
+> 
+> The errors reported by the RAS registers are categorized into
+> correctable and uncorrectable errors, where the uncorrectable errors are
+> optionally steered to either fatal or non-fatal AER events. Table 12-2 
+> "Device Specific Error Reporting and Nomenclature Guidelines" in the CXL
+> rev3.0 specification outlines that the remediation for uncorrectable errors
+> is a reset to recover. This matches how the Linux PCIe AER core treats
+> uncorrectable errors as occasions to reset the device to recover
+> operation.
+> 
+> While the specification notes "CXL Reset" or "Secondary Bus Reset" as
+> theoretical recovery options, they are not feasible in practice since
+> in-flight CXL.mem operations may not terminate and cause knock-on system
+> fatal events. Reset is only reliable for recovering CXL.io, it is not
+> reliable for recovering CXL.mem. Assuming the system survives, a reset
+> causes CXL.mem operation to restart from scratch.
+> 
+> The "ECN: Error Isolation on CXL.mem and CXL.cache" [1] document
+> recognizes the CXL Reset vs CXL.mem operational conflict and helps to at
+> least provide a mechanism for the Root Port to terminate in flight
+> CXL.mem operations with completions. That still poses problems in
+> practice if the kernel is running out of "System RAM" backed by the CXL
+> device and poison is used to convey the data lost to the protocol error.
+> 
+> Regardless of whether the reset and restart of CXL.mem operations is
+> feasible / successful, the logging is still useful. So, the
+> implementation reads, reports, and clears the status in the RAS
+> Capability Structure registers, and it notifies the 'struct cxl_memdev'
+> associated with the given PCIe endpoint to reattach to its driver over
+> the reset so that the HDM decoder configuration can be reconstructed.
+> 
+> The first half of the series reworks component register mapping so that
+> the cxl_pci driver can own the RAS Capability while the cxl_port driver
+> continues to own the HDM Decoder Capability. The last half implements
+> the RAS Capability Structure mapping and reporting via 'struct
+> pci_error_handlers'.
+> 
+> The reporting of error information is done through event tracing. A new
+> cxl_ras event is introduced to report the Uncorrectable and Correctable
+> errors raised by CXL. The expectation is a monitoring user daemon such as
+> "cxl monitor" will harvest those events and record them in a log in a
+> format (JSON) that's consumable by management applications.
+> 
+> For correctable errors, current Linux implementation does not provide any
+> means to reach the pci device driver. Add an optional callback with the
+> PCI aer error handler to allow the pci device driver to log additional
+> information from the device.
+> 
+> [1]: https://www.computeexpresslink.org/spec-landing
+> 
+> ---
+> 
+> Dan Williams (8):
+>       cxl/pci: Cleanup repeated code in cxl_probe_regs() helpers
+>       cxl/pci: Cleanup cxl_map_device_regs()
+>       cxl/pci: Kill cxl_map_regs()
+>       cxl/core/regs: Make cxl_map_{component, device}_regs() device generic
+>       cxl/port: Limit the port driver to just the HDM Decoder Capability
+>       cxl/pci: Prepare for mapping RAS Capability Structure
+>       cxl/pci: Find and map the RAS Capability Structure
+>       cxl/pci: Add (hopeful) error handling support
+> 
+> Dave Jiang (3):
+>       cxl/pci: add tracepoint events for CXL RAS
+>       PCI/AER: Add optional logging callback for correctable error
+>       cxl/pci: Add callback to log AER correctable error
+> 
+> 
+>  Documentation/PCI/pci-error-recovery.rst |   7 +
+>  drivers/cxl/core/hdm.c                   |  33 ++--
+>  drivers/cxl/core/memdev.c                |   1 +
+>  drivers/cxl/core/pci.c                   |   3 +-
+>  drivers/cxl/core/port.c                  |   2 +-
+>  drivers/cxl/core/regs.c                  | 172 ++++++++++--------
+>  drivers/cxl/cxl.h                        |  38 +++-
+>  drivers/cxl/cxlmem.h                     |   2 +
+>  drivers/cxl/cxlpci.h                     |   9 -
+>  drivers/cxl/pci.c                        | 213 ++++++++++++++++++-----
+>  drivers/pci/pcie/aer.c                   |   8 +-
+>  include/linux/pci.h                      |   3 +
+>  include/trace/events/cxl.h               | 112 ++++++++++++
+>  13 files changed, 453 insertions(+), 150 deletions(-)
+>  create mode 100644 include/trace/events/cxl.h
+> 
+> --
+> 
 
