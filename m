@@ -2,201 +2,210 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9202C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Dec 2022 02:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3389AC4167B
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Dec 2022 12:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236975AbiLNCke (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 13 Dec 2022 21:40:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42468 "EHLO
+        id S238413AbiLNMbb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Dec 2022 07:31:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236726AbiLNCkd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Dec 2022 21:40:33 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01352229D
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Dec 2022 18:40:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670985632; x=1702521632;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zqvfn8RMWF8loipg/fNFzxgDIQyWcSn2frl71a44CKw=;
-  b=IDQ0vNgLm9E+NrzGPP5DWqugivSuCUxZjb4agNozavsqkoCBmqP+HkSX
-   yG7KFqWFvKFso0XQgWuli5MYV6Dps4iRz7I4Ce8eHZzFnthgZPX98yjwa
-   UzP3kasxxA63M0pOE6TS75rkbsUzzAoqaZIetIghs4C8EmHWbLBheeHFN
-   hBwtkpGIynrvtzbFSPfiqYiLmagSzmHgt7v8wMQspWVQ4f6jOx4Xs5l7X
-   +AgC4jBJEnCwmdijMYGACdAfj1A1b8FvNCAF2n07K+hkiSPrye1w6wuhK
-   ThHrdubbuRzVzA495LLHN5wp0Kid1Voo/Fx5lWXsa69nUK3PnK3OgLIsA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10560"; a="382596296"
-X-IronPort-AV: E=Sophos;i="5.96,243,1665471600"; 
-   d="scan'208";a="382596296"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2022 18:40:32 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10560"; a="737574948"
-X-IronPort-AV: E=Sophos;i="5.96,243,1665471600"; 
-   d="scan'208";a="737574948"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.232.157])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2022 18:40:31 -0800
-Date:   Tue, 13 Dec 2022 18:40:29 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
+        with ESMTP id S238421AbiLNMbK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Dec 2022 07:31:10 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C3AD26AAE
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Dec 2022 04:28:23 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NXF406cnPz6J6BZ;
+        Wed, 14 Dec 2022 20:27:12 +0800 (CST)
+Received: from localhost (10.81.204.207) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 14 Dec
+ 2022 12:28:20 +0000
+Date:   Wed, 14 Dec 2022 12:28:16 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        vishal.l.verma@intel.com
-Subject: Re: [PATCH 1/4] ndctl: add cxl bus detection
-Message-ID: <Y5k3nRzfPbW+04MT@aschofie-mobl2>
-References: <166379397620.433612.13099557870939895846.stgit@djiang5-desk3.ch.intel.com>
- <166379416245.433612.3109623615684575549.stgit@djiang5-desk3.ch.intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>
+Subject: Re: [PATCH v2] cxl: add RAS status unmasking for CXL
+Message-ID: <20221214122816.00006404@Huawei.com>
+In-Reply-To: <167096738875.2861540.11815053323626849940.stgit@djiang5-desk3.ch.intel.com>
+References: <167096738875.2861540.11815053323626849940.stgit@djiang5-desk3.ch.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <166379416245.433612.3109623615684575549.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.204.207]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 02:02:42PM -0700, Dave Jiang wrote:
-> Add helper function to detect that the bus is cxl based.
+On Tue, 13 Dec 2022 14:36:28 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> By default the CXL RAS mask registers bits are defaulted to 1's and
+> suppress all error reporting. If the kernel has negotiated ownership
+> of error handling for CXL then unmask the mask registers by writing 0s.
 > 
-
-A couple of wonderings below about int vs bool usage.
-
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+A big oopsy from me.  As you've indirectly identified, the QEMU code completely
+ignores the mask register.  I'll fix that up.
+
+> 
 > ---
->  ndctl/lib/libndctl.c   |   53 ++++++++++++++++++++++++++++++++++++++++++++++++
->  ndctl/lib/libndctl.sym |    1 +
->  ndctl/lib/private.h    |    1 +
->  ndctl/libndctl.h       |    1 +
->  4 files changed, 56 insertions(+)
 > 
-> diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
-> index ad54f0626510..10422e24d38b 100644
-> --- a/ndctl/lib/libndctl.c
-> +++ b/ndctl/lib/libndctl.c
-> @@ -12,6 +12,7 @@
->  #include <ctype.h>
->  #include <fcntl.h>
->  #include <dirent.h>
-> +#include <libgen.h>
->  #include <sys/stat.h>
->  #include <sys/types.h>
->  #include <sys/ioctl.h>
-> @@ -876,6 +877,48 @@ static enum ndctl_fwa_method fwa_method_to_method(const char *fwa_method)
->  	return NDCTL_FWA_METHOD_RESET;
+> Based on patch posted by Ira [1] to export CXL native error reporting control.
+> 
+> [1]: https://lore.kernel.org/linux-cxl/20221212070627.1372402-2-ira.weiny@intel.com/
+> 
+> v2:
+> - Add definition of PCI_EXP_LNKSTA2_FLIT. (Dan)
+> - Return error for cxl_pci_ras_unmask(). (Dan)
+> - Add dev_dbg() for register bits to be cleared. (Dan)
+> - Check Flex Port DVSEC status. (Dan)
+> ---
+>  drivers/cxl/cxl.h             |    1 +
+>  drivers/cxl/cxlpci.h          |    4 +++
+>  drivers/cxl/pci.c             |   61 +++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h |    1 +
+>  4 files changed, 67 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1b1cf459ac77..31e795c6d537 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -130,6 +130,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>  #define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
+>  #define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+> +#define   CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK BIT(8)
+>  #define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
+>  #define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>  #define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 920909791bb9..d138d9cd8e33 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -45,6 +45,10 @@
+>  
+>  /* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
+>  #define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
+> +#define    CXL_DVSEC_PORT_STATUS_OFFSET			0xE
+> +#define      CXL_DVSEC_PORT_STATUS_CACHE_ENABLED	BIT(0)
+> +#define      CXL_DVSEC_PORT_STATUS_IO_ENABLED		BIT(1)
+> +#define      CXL_DVSEC_PORT_STATUS_MEM_ENABLED		BIT(2)
+>  
+>  /* CXL 2.0 8.1.9: Register Locator DVSEC */
+>  #define CXL_DVSEC_REG_LOCATOR					8
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 33083a522fd1..03691570649d 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -419,6 +419,66 @@ static void disable_aer(void *pdev)
+>  	pci_disable_pcie_error_reporting(pdev);
 >  }
 >  
-> +static int is_ndbus_cxl(const char *ctl_base)
-
-is_ndbus_cxl()  sounds like a boolean function.
-
+> +/*
+> + * CXL v3.0 6.2.3 Table 6-4
+> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+> + * mode, otherwise it's 68B flits mode.
+> + */
+> +static bool cxl_pci_flit_256(struct pci_dev *pdev)
 > +{
-> +	char *path, *ppath, *subsys;
-> +	char tmp_path[PATH_MAX];
-> +	int rc;
+> +	u32 lnksta2;
 > +
-> +	/* get the real path of ctl_base */
-> +	path = realpath(ctl_base, NULL);
-> +	if (!path)
-> +		return -errno;
-> +
-> +	/* setup to get the nd bridge device backing the ctl */
-> +	sprintf(tmp_path, "%s/device", path);
-> +	free(path);
-> +
-> +	path = realpath(tmp_path, NULL);
-> +	if (!path)
-> +		return -errno;
-> +
-> +	/* get the parent dir of the ndbus, which should be the nvdimm-bridge */
-> +	ppath = dirname(path);
-> +
-> +	/* setup to get the subsystem of the nvdimm-bridge */
-> +	sprintf(tmp_path, "%s/%s", ppath, "subsystem");
-> +	free(path);
-> +
-> +	path = realpath(tmp_path, NULL);
-> +	if (!path)
-> +		return -errno;
-> +
-> +	subsys = basename(path);
-> +
-> +	/* check if subsystem is cxl */
-> +	if (!strcmp(subsys, "cxl"))
-> +		rc = 1;
-> +	else
-> +		rc = 0;
-> +
-> +	free(path);
-> +	return rc;
+> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+> +	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
 > +}
 > +
->  static void *add_bus(void *parent, int id, const char *ctl_base)
->  {
->  	char buf[SYSFS_ATTR_SIZE];
-> @@ -919,6 +962,11 @@ static void *add_bus(void *parent, int id, const char *ctl_base)
->  	else
->  		bus->has_of_node = 1;
->  
-> +	if (is_ndbus_cxl(ctl_base))
-> +		bus->has_cxl = 1;
-> +	else
-> +		bus->has_cxl = 0;
-> +
->  	sprintf(path, "%s/device/nfit/dsm_mask", ctl_base);
->  	if (sysfs_read_attr(ctx, path, buf) < 0)
->  		bus->nfit_dsm_mask = 0;
-> @@ -1050,6 +1098,11 @@ NDCTL_EXPORT int ndctl_bus_has_of_node(struct ndctl_bus *bus)
->  	return bus->has_of_node;
->  }
->  
-> +NDCTL_EXPORT int ndctl_bus_has_cxl(struct ndctl_bus *bus)
+> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
 > +{
-> +	return bus->has_cxl;
+> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	void __iomem *addr;
+> +	int dvsec, rc;
+> +	u16 port_sta;
+> +	u32 val;
+> +
+> +	if (!cxlds->regs.ras)
+> +		return -ENODEV;
+> +
+> +	/* BIOS has CXL error control */
+> +	if (!host_bridge->native_cxl_error)
+> +		return -EOPNOTSUPP;
+> +
+> +	dvsec = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> +					  CXL_DVSEC_PCIE_FLEXBUS_PORT);
+> +	if (!dvsec)
+> +		return -ENODEV;
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_PORT_STATUS_OFFSET,
+> +				  &port_sta);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (!(port_sta & (CXL_DVSEC_PORT_STATUS_CACHE_ENABLED |
+> +			  CXL_DVSEC_PORT_STATUS_IO_ENABLED |
+> +			  CXL_DVSEC_PORT_STATUS_MEM_ENABLED)))
+> +		return -EOPNOTSUPP;
+
+confused. Why do we care about these?  If there is a spec reference
+to say don't turn on RAS reporting unless these are true, fair enough,
+but if we are in this state then far worse things are going on than
+just not having RAS. 
+
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
+> +	dev_dbg(&pdev->dev, "Unmasking Uncorrectable RAS errors: %#x\n",
+> +		readl(addr));
+> +	val = 0;
+
+Awkward corner.  We kind of want to blanket unmask, but the other
+bits are RsvdP so we should leave any we don't understand alone - in theory
+a future spec version could use them for something other than error mask bits.
+
+> +	if (!cxl_pci_flit_256(pdev))
+> +		val |= CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
+> +	writel(val, addr);
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
+> +	dev_dbg(&pdev->dev, "Unmasking Correctable RAS errors: %#x\n",
+> +		readl(addr));
+> +	val = 0;
+Same here - don't touch the bits we don't undestand.
+
+> +	writel(val, addr);
+> +	return 0;
 > +}
 > +
->  NDCTL_EXPORT int ndctl_bus_is_papr_scm(struct ndctl_bus *bus)
+>  static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 >  {
->  	char buf[SYSFS_ATTR_SIZE];
-> diff --git a/ndctl/lib/libndctl.sym b/ndctl/lib/libndctl.sym
-> index c933163c0380..3a3e8bbd63ef 100644
-> --- a/ndctl/lib/libndctl.sym
-> +++ b/ndctl/lib/libndctl.sym
-> @@ -465,4 +465,5 @@ LIBNDCTL_27 {
+>  	struct cxl_register_map map;
+> @@ -498,6 +558,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 >  
->  LIBNDCTL_28 {
->  	ndctl_dimm_disable_master_passphrase;
-> +	ndctl_bus_has_cxl;
->  } LIBNDCTL_27;
-> diff --git a/ndctl/lib/private.h b/ndctl/lib/private.h
-> index e5c56295556d..46bc8908bd90 100644
-> --- a/ndctl/lib/private.h
-> +++ b/ndctl/lib/private.h
-> @@ -163,6 +163,7 @@ struct ndctl_bus {
->  	int regions_init;
->  	int has_nfit;
->  	int has_of_node;
-> +	int has_cxl;
+>  	if (cxlds->regs.ras) {
+>  		pci_enable_pcie_error_reporting(pdev);
+> +		cxl_pci_ras_unmask(pdev);
+>  		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
+>  		if (rc)
+>  			return rc;
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 82a03ea954af..576ee2ec973f 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -693,6 +693,7 @@
+>  #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
+>  #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
+>  #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
+> +#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
+>  #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	0x32	/* end of v2 EPs w/ link */
+>  #define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
+>  #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
+> 
+> 
 
-I was going to say boolean again, but I see the pattern above.
-I guess, When in Rome...
-
->  	char *bus_path;
->  	char *bus_buf;
->  	size_t buf_len;
-> diff --git a/ndctl/libndctl.h b/ndctl/libndctl.h
-> index c52e82a6f826..91ef0f42f654 100644
-> --- a/ndctl/libndctl.h
-> +++ b/ndctl/libndctl.h
-> @@ -133,6 +133,7 @@ struct ndctl_bus *ndctl_bus_get_next(struct ndctl_bus *bus);
->  struct ndctl_ctx *ndctl_bus_get_ctx(struct ndctl_bus *bus);
->  int ndctl_bus_has_nfit(struct ndctl_bus *bus);
->  int ndctl_bus_has_of_node(struct ndctl_bus *bus);
-> +int ndctl_bus_has_cxl(struct ndctl_bus *bus);
->  int ndctl_bus_is_papr_scm(struct ndctl_bus *bus);
->  unsigned int ndctl_bus_get_major(struct ndctl_bus *bus);
->  unsigned int ndctl_bus_get_minor(struct ndctl_bus *bus);
-> 
-> 
-> 
