@@ -2,48 +2,49 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA46C4332F
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Dec 2022 22:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1189C4332F
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Dec 2022 22:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbiLNWAY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Dec 2022 17:00:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
+        id S229437AbiLNWAa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Dec 2022 17:00:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiLNWAX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Dec 2022 17:00:23 -0500
+        with ESMTP id S229460AbiLNWA1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Dec 2022 17:00:27 -0500
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAE8264AF
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Dec 2022 14:00:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F78C29827
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Dec 2022 14:00:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671055222; x=1702591222;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=b9nInYNWF4V2VIcLTOuK4u3ys24BJarN841RdTs0F60=;
-  b=ivP85nO2q7793p5YDxPm5d3JzDm+QIRg+34ItH2RQvzwAaptyAjJ1Vux
-   flpx5Or3OJZCJxSGHA5o0drSfCt8T5aIw46SSnEmSF8NU2jbET5Nvg4bI
-   JostG8nTvejEGS171dOmFDpwn0foks92cGVqgwqJgFjRCCy05xJ8/2JFh
-   dWAuJP1ND5NPSgRx6W/GANC37HJ+TQIq5jsb2zjQD0MOuDCVW6+JhFdm8
-   Rb+PPSsp67vqeJpT4IIy2fNTFqVvYFSm0n6IAYiBEvT//NaMmqoWhSDlM
-   FZA7Oy9Y+koSTUIoz4BjoI4jfcrHO9O6rlf7cE3dsEDLvTZC4TvGU75wR
+  t=1671055227; x=1702591227;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JccO0gN9kEfLD1TxKiyJlWK0f5UxLjSFMPXrUfOVJeA=;
+  b=DQnzIOGMZSmlvOBrJKVxKXJyIH43mFSqCisD3jIgy99drGpEo1ZoXyvI
+   6OMgy2JZI9whr4W5sbI593scD9n2itupfth4kuYvKGggvRCyekMhCrX38
+   OEv/9yJqc6uJHhb56qcxoydzRFFMVyVhR/lQz+BFDjNaUe5kaWaGdDCed
+   vhDNFHNEgde+gdiFIU4sjsPVHuYo6n9dH1qvI9DmkiWLQo8sTiUyrIekQ
+   DcUcwukLX4USZGv9skLpYLfIaRa9teTYPiUFGu/h0om6MjRSQmJBb0rPH
+   Gll0ORzRmq1vuUshpgSlAoBhkMCl1dkk2TPx4YRAg5FkDt7bDSz80WgrN
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="316159193"
+X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="316159211"
 X-IronPort-AV: E=Sophos;i="5.96,245,1665471600"; 
-   d="scan'208";a="316159193"
+   d="scan'208";a="316159211"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 14:00:22 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="679907578"
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 14:00:26 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="679907672"
 X-IronPort-AV: E=Sophos;i="5.96,245,1665471600"; 
-   d="scan'208";a="679907578"
+   d="scan'208";a="679907672"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 14:00:18 -0800
-Subject: [ndctl PATCH v2 0/4] ndctl: Add security test for cxl devices through
- nvdimm
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 14:00:26 -0800
+Subject: [ndctl PATCH v2 1/4] ndctl: add CXL bus detection
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
 Cc:     vishal.l.verma@intel.com
-Date:   Wed, 14 Dec 2022 15:00:18 -0700
-Message-ID: <167105505204.3034751.8113387624258581781.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 14 Dec 2022 15:00:25 -0700
+Message-ID: <167105522584.3034751.8329537593759406601.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <167105505204.3034751.8113387624258581781.stgit@djiang5-desk3.ch.intel.com>
+References: <167105505204.3034751.8113387624258581781.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/1.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,41 +53,140 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This ndctl series add support to test cxl pmem devices through the nvdimm
-interface. A new shell script is added for security test due to the
-discovery of cxl_test dimms are different than nfit_test based dimms.
-Common code are shared between nfit and cxl security testing.
+Add a CXL bus type, and detect whether a 'dimm' is backed by the CXL
+subsystem.
 
-v2:
-- Fix commit logs (Vishal)
-- Share common code for test (Vishal)
-- Add test to cxl suite (Dan)
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
+v2:
+- Improve commit log. (Vishal)
+---
+ ndctl/lib/libndctl.c   |   53 ++++++++++++++++++++++++++++++++++++++++++++++++
+ ndctl/lib/libndctl.sym |    1 +
+ ndctl/lib/private.h    |    1 +
+ ndctl/libndctl.h       |    1 +
+ 4 files changed, 56 insertions(+)
 
-Dave Jiang (4):
-      ndctl: add CXL bus detection
-      ndctl/libndctl: Add bus_prefix for CXL
-      ndctl/libndctl: Allow retrievng of unique_id for CXL mem dev
-      ndctl/test: Add CXL test for security
+diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
+index ad54f0626510..10422e24d38b 100644
+--- a/ndctl/lib/libndctl.c
++++ b/ndctl/lib/libndctl.c
+@@ -12,6 +12,7 @@
+ #include <ctype.h>
+ #include <fcntl.h>
+ #include <dirent.h>
++#include <libgen.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/ioctl.h>
+@@ -876,6 +877,48 @@ static enum ndctl_fwa_method fwa_method_to_method(const char *fwa_method)
+ 	return NDCTL_FWA_METHOD_RESET;
+ }
+ 
++static int is_ndbus_cxl(const char *ctl_base)
++{
++	char *path, *ppath, *subsys;
++	char tmp_path[PATH_MAX];
++	int rc;
++
++	/* get the real path of ctl_base */
++	path = realpath(ctl_base, NULL);
++	if (!path)
++		return -errno;
++
++	/* setup to get the nd bridge device backing the ctl */
++	sprintf(tmp_path, "%s/device", path);
++	free(path);
++
++	path = realpath(tmp_path, NULL);
++	if (!path)
++		return -errno;
++
++	/* get the parent dir of the ndbus, which should be the nvdimm-bridge */
++	ppath = dirname(path);
++
++	/* setup to get the subsystem of the nvdimm-bridge */
++	sprintf(tmp_path, "%s/%s", ppath, "subsystem");
++	free(path);
++
++	path = realpath(tmp_path, NULL);
++	if (!path)
++		return -errno;
++
++	subsys = basename(path);
++
++	/* check if subsystem is cxl */
++	if (!strcmp(subsys, "cxl"))
++		rc = 1;
++	else
++		rc = 0;
++
++	free(path);
++	return rc;
++}
++
+ static void *add_bus(void *parent, int id, const char *ctl_base)
+ {
+ 	char buf[SYSFS_ATTR_SIZE];
+@@ -919,6 +962,11 @@ static void *add_bus(void *parent, int id, const char *ctl_base)
+ 	else
+ 		bus->has_of_node = 1;
+ 
++	if (is_ndbus_cxl(ctl_base))
++		bus->has_cxl = 1;
++	else
++		bus->has_cxl = 0;
++
+ 	sprintf(path, "%s/device/nfit/dsm_mask", ctl_base);
+ 	if (sysfs_read_attr(ctx, path, buf) < 0)
+ 		bus->nfit_dsm_mask = 0;
+@@ -1050,6 +1098,11 @@ NDCTL_EXPORT int ndctl_bus_has_of_node(struct ndctl_bus *bus)
+ 	return bus->has_of_node;
+ }
+ 
++NDCTL_EXPORT int ndctl_bus_has_cxl(struct ndctl_bus *bus)
++{
++	return bus->has_cxl;
++}
++
+ NDCTL_EXPORT int ndctl_bus_is_papr_scm(struct ndctl_bus *bus)
+ {
+ 	char buf[SYSFS_ATTR_SIZE];
+diff --git a/ndctl/lib/libndctl.sym b/ndctl/lib/libndctl.sym
+index 75c32b9d4967..2892544d1985 100644
+--- a/ndctl/lib/libndctl.sym
++++ b/ndctl/lib/libndctl.sym
+@@ -464,4 +464,5 @@ LIBNDCTL_27 {
+ } LIBNDCTL_26;
+ LIBNDCTL_28 {
+ 	ndctl_dimm_disable_master_passphrase;
++	ndctl_bus_has_cxl;
+ } LIBNDCTL_27;
+diff --git a/ndctl/lib/private.h b/ndctl/lib/private.h
+index e5c56295556d..46bc8908bd90 100644
+--- a/ndctl/lib/private.h
++++ b/ndctl/lib/private.h
+@@ -163,6 +163,7 @@ struct ndctl_bus {
+ 	int regions_init;
+ 	int has_nfit;
+ 	int has_of_node;
++	int has_cxl;
+ 	char *bus_path;
+ 	char *bus_buf;
+ 	size_t buf_len;
+diff --git a/ndctl/libndctl.h b/ndctl/libndctl.h
+index c52e82a6f826..91ef0f42f654 100644
+--- a/ndctl/libndctl.h
++++ b/ndctl/libndctl.h
+@@ -133,6 +133,7 @@ struct ndctl_bus *ndctl_bus_get_next(struct ndctl_bus *bus);
+ struct ndctl_ctx *ndctl_bus_get_ctx(struct ndctl_bus *bus);
+ int ndctl_bus_has_nfit(struct ndctl_bus *bus);
+ int ndctl_bus_has_of_node(struct ndctl_bus *bus);
++int ndctl_bus_has_cxl(struct ndctl_bus *bus);
+ int ndctl_bus_is_papr_scm(struct ndctl_bus *bus);
+ unsigned int ndctl_bus_get_major(struct ndctl_bus *bus);
+ unsigned int ndctl_bus_get_minor(struct ndctl_bus *bus);
 
-
- ndctl/lib/libndctl.c   | 87 ++++++++++++++++++++++++++++++++++++++++++
- ndctl/lib/libndctl.sym |  1 +
- ndctl/lib/private.h    |  1 +
- ndctl/libndctl.h       |  1 +
- test/common            |  7 ++++
- test/cxl-security      | 40 +++++++++++++++++++
- test/cxl-security.sh   |  5 +++
- test/meson.build       |  6 ++-
- test/nfit-security     | 40 +++++++++++++++++++
- test/nfit-security.sh  |  5 +++
- test/security.sh       | 70 ++++++++++++---------------------
- 11 files changed, 216 insertions(+), 47 deletions(-)
- create mode 100644 test/cxl-security
- create mode 100755 test/cxl-security.sh
- create mode 100644 test/nfit-security
- create mode 100755 test/nfit-security.sh
-
---
 
