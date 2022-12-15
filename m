@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3128EC46467
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Dec 2022 21:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691AFC3DA71
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Dec 2022 21:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230014AbiLOVSH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Dec 2022 16:18:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55802 "EHLO
+        id S230012AbiLOVSG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Dec 2022 16:18:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229822AbiLOVSD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Dec 2022 16:18:03 -0500
+        with ESMTP id S229971AbiLOVSC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Dec 2022 16:18:02 -0500
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8325259142;
-        Thu, 15 Dec 2022 13:18:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60E6554F3;
+        Thu, 15 Dec 2022 13:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671139082; x=1702675082;
+  t=1671139081; x=1702675081;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aRw8JrUibr2BZHp3e7ft45UdfvnTap5W0KSsdC4zYxU=;
-  b=JAUZ7DCzF3bxV53TocT9ZlGnMyLX0en/O2G5eHnAZl17QEsFpH98FxCn
-   jDTsiuEAymdICB6WhdYragYEffE7tSBdVtwLPUwW+a6R8w4z5d1uKU9+U
-   ghp/IBEE/YZY8FNlritXaxyL+ABM7mhQmN2AW9lzN3tDPmzrdx+Vv/peU
-   SsvYsHLqWQd290qRqPb5xsuszL/FegNMS0LpKOTY3If1MltjcrUNxYd1W
-   +WarGG/aIekXe8cG5eLL9LQA3B//v8+xyeZ5mQjmqzXlV7sWFbmjb0EiD
-   A/oTOpyubPF4w4AG3QxaANVgp39t9y1xCfoLLzP1rQEXqtsMvZoY363KF
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="302230307"
+  bh=jAD7HB86AdlfinGuo2cHQHHsynQAWJBHzs/IYe0sxy4=;
+  b=Tt0tx0PY28AElQj9yCdeued4N0aKUsGSCD5h8+6LiFGklpHTlFC04ij4
+   DfeOse1Xizn8y6JdDj0yl+D8ZLSfgfHxMKRkEpcm7fn51xanXjr1FPtj6
+   PQvgUwARpiUo0HOD02v1MtQKKPvpHK/lfYbaZGZISJgQID9yVxA62uTzp
+   F9htJUGPc1EXoi/Jfi49H+mu93joUuYeq7/WshlZ+LykiU2mQaCzixJ7G
+   9eBQ+tQhHDCX+heXr5jnpkwo+3HNMYAPG+S29qjvfE/Wq1g32gElX+zEq
+   DOoWJnSK/aoWmu6xhd3cEG1zzpyluXh0S9FC8VoYWGBBE2mX85ANHq+v4
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="302230297"
 X-IronPort-AV: E=Sophos;i="5.96,248,1665471600"; 
-   d="scan'208";a="302230307"
+   d="scan'208";a="302230297"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 13:17:53 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="649570086"
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 13:17:51 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="649570080"
 X-IronPort-AV: E=Sophos;i="5.96,248,1665471600"; 
-   d="scan'208";a="649570086"
+   d="scan'208";a="649570080"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.55.178])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 13:17:52 -0800
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 13:17:50 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -47,9 +47,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v4 4/5] cxl/region: Add trigger_poison_list sysfs attribute
-Date:   Thu, 15 Dec 2022 13:17:46 -0800
-Message-Id: <35395936fc9b8fdcb1d75bf13c770dab3b2f94a9.1671135967.git.alison.schofield@intel.com>
+Subject: [PATCH v4 2/5] cxl/trace: Add TRACE support for CXL media-error records
+Date:   Thu, 15 Dec 2022 13:17:44 -0800
+Message-Id: <3417fd29fda6cd60b5a93a8f77dc57ad71693fa8.1671135967.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <cover.1671135967.git.alison.schofield@intel.com>
 References: <cover.1671135967.git.alison.schofield@intel.com>
@@ -61,95 +61,147 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-When a boolean 'true' is written to this attribute the region driver
-retrieves the poison list for the capacity each device contributes
-to this region. The list consists of addresses that are poisoned,
-or would result in poison if accessed, and the source of the poison.
-The retrieved errors are logged as kernel trace events with the
-label 'cxl_poison'.
+CXL devices may support the retrieval of a device poison list.
+Add a new trace event that the CXL subsystem may use to log
+the media-error records returned in the poison list.
 
-Devices not supporting the poison list capability are ignored.
+Log each media-error record as a trace event of type 'cxl_poison'.
+
+When the poison list is requested by region, include the region name
+and uuid in the trace event.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl | 14 +++++++++++
- drivers/cxl/core/region.c               | 33 +++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
+ drivers/cxl/core/mbox.c  |  6 ++-
+ drivers/cxl/core/trace.h | 83 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index df40ed09ea67..b715a4609718 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -402,3 +402,17 @@ Description:
- 		attribute is only visible for devices supporting the
- 		capability. The retrieved errors are logged as kernel
- 		trace events with the label 'cxl_poison'.
-+
-+
-+What:		/sys/bus/cxl/devices/regionZ/trigger_poison_list
-+Date:		November, 2022
-+KernelVersion:	v6.2
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(WO) When a boolean 'true' is written to this attribute the
-+		region driver retrieves the poison list for the capacity
-+		each device contributes to this region. The list consists
-+		of addresses that are poisoned, or would result in poison
-+		if accessed, and the source of the poison. The retrieved
-+		errors are logged as kernel trace events with the label
-+		'cxl_poison'.
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 02f28da519e3..62ba9aa6bbf8 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -72,6 +72,38 @@ static int is_dup(struct device *match, void *data)
- 	return 0;
- }
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index dfe24a2adfdb..c345af8a4afd 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -10,6 +10,7 @@
+ #include <cxl.h>
  
-+static ssize_t trigger_poison_list_store(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t len)
-+{
-+	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_memdev *cxlmd;
-+	u64 offset, length;
-+	int rc, i;
-+	bool tmp;
-+
-+	if (kstrtobool(buf, &tmp))
-+		return -EINVAL;
-+
-+	for (i = 0; i <  p->nr_targets; i++) {
-+		cxled = p->targets[i];
-+		cxlmd = cxled_to_memdev(cxled);
-+		if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON,
-+			      cxlmd->cxlds->enabled_cmds))
-+			continue;
-+
-+		offset = cxl_dpa_resource_start(cxled);
-+		length = cxl_dpa_size(cxled);
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, cxlr);
-+		if (rc)
-+			return rc;
-+	}
-+	return len;
-+}
-+static DEVICE_ATTR_WO(trigger_poison_list);
-+
- static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
- 			  const char *buf, size_t len)
- {
-@@ -570,6 +602,7 @@ static struct attribute *cxl_region_attrs[] = {
- 	&dev_attr_interleave_granularity.attr,
- 	&dev_attr_resource.attr,
- 	&dev_attr_size.attr,
-+	&dev_attr_trigger_poison_list.attr,
- 	NULL,
- };
+ #include "core.h"
++#include "trace.h"
  
+ static bool cxl_raw_allow_all;
+ 
+@@ -899,7 +900,10 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+ 		if (rc)
+ 			break;
+ 
+-		/* TODO TRACE the media error records */
++		for (int i = 0; i < le16_to_cpu(po->count); i++)
++			trace_cxl_poison(cxlmd, to_pci_dev(cxlds->dev),
++					 cxlr, &po->record[i], po->flags,
++					 po->overflow_t);
+ 
+ 		/* Protect against an uncleared _FLAG_MORE */
+ 		nr_records = nr_records + le16_to_cpu(po->count);
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index 20ca2fe2ca8e..c7958311ce5f 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -8,6 +8,9 @@
+ 
+ #include <cxl.h>
+ #include <linux/tracepoint.h>
++#include <linux/pci.h>
++
++#include <cxlmem.h>
+ 
+ #define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
+ #define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
+@@ -103,6 +106,86 @@ TRACE_EVENT(cxl_aer_correctable_error,
+ 	)
+ );
+ 
++#define __show_poison_source(source)                          \
++	__print_symbolic(source,                              \
++		{ CXL_POISON_SOURCE_UNKNOWN,   "Unknown"  },  \
++		{ CXL_POISON_SOURCE_EXTERNAL,  "External" },  \
++		{ CXL_POISON_SOURCE_INTERNAL,  "Internal" },  \
++		{ CXL_POISON_SOURCE_INJECTED,  "Injected" },  \
++		{ CXL_POISON_SOURCE_VENDOR,    "Vendor"   })
++
++#define show_poison_source(source)			     \
++	(((source > CXL_POISON_SOURCE_INJECTED) &&	     \
++	 (source != CXL_POISON_SOURCE_VENDOR)) ? "Reserved"  \
++	 : __show_poison_source(source))
++
++#define show_poison_flags(flags)                             \
++	__print_flags(flags, "|",                            \
++		{ CXL_POISON_FLAG_MORE,      "More"     },   \
++		{ CXL_POISON_FLAG_OVERFLOW,  "Overflow"  },  \
++		{ CXL_POISON_FLAG_SCANNING,  "Scanning"  })
++
++#define __cxl_poison_addr(record)					\
++	(le64_to_cpu(record->address))
++#define cxl_poison_record_dpa(record)					\
++	(__cxl_poison_addr(record) & CXL_POISON_START_MASK)
++#define cxl_poison_record_source(record)				\
++	(__cxl_poison_addr(record)  & CXL_POISON_SOURCE_MASK)
++#define cxl_poison_record_length(record)				\
++	(le32_to_cpu(record->length) * CXL_POISON_LEN_MULT)
++#define cxl_poison_overflow(flags, time)				\
++	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
++
++TRACE_EVENT(cxl_poison,
++
++	    TP_PROTO(struct cxl_memdev *memdev, const struct pci_dev *pcidev,
++		     struct cxl_region *region,
++		     const struct cxl_poison_record *record,
++		     u8 flags, __le64 overflow_t),
++
++	    TP_ARGS(memdev, pcidev, region, record, flags, overflow_t),
++
++	    TP_STRUCT__entry(
++		__string(memdev, dev_name(&memdev->dev))
++		__string(pcidev, dev_name(&pcidev->dev))
++		__string(region, region)
++		__field(u64, overflow_t)
++		__field(u64, dpa)
++		__field(u32, length)
++		__array(char, uuid, 16)
++		__field(u8, source)
++		__field(u8, flags)
++	    ),
++
++	    TP_fast_assign(
++		__assign_str(memdev, dev_name(&memdev->dev));
++		__assign_str(pcidev, dev_name(&pcidev->dev));
++		__entry->overflow_t = cxl_poison_overflow(flags, overflow_t);
++		__entry->dpa = cxl_poison_record_dpa(record);
++		__entry->length = cxl_poison_record_length(record);
++		__entry->source = cxl_poison_record_source(record);
++		__entry->flags = flags;
++		if (region) {
++			__assign_str(region, dev_name(&region->dev));
++			memcpy(__entry->uuid, &region->params.uuid, 16);
++		} else {
++			__assign_str(region, "");
++			memset(__entry->uuid, 0, 16);
++		}
++	    ),
++
++	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
++		__get_str(memdev),
++		__get_str(pcidev),
++		__get_str(region),
++		__entry->uuid,
++		__entry->dpa,
++		__entry->length,
++		show_poison_source(__entry->source),
++		show_poison_flags(__entry->flags),
++		__entry->overflow_t)
++);
++
+ #endif /* _CXL_EVENTS_H */
+ 
+ #define TRACE_INCLUDE_FILE trace
 -- 
 2.37.3
 
