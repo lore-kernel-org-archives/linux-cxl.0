@@ -2,136 +2,165 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9D5C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 04:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C631C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 09:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229867AbiLPEKL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Dec 2022 23:10:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
+        id S230141AbiLPJcO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Dec 2022 04:32:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbiLPEKK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Dec 2022 23:10:10 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D820B511C1;
-        Thu, 15 Dec 2022 20:10:04 -0800 (PST)
-Received: from leknes.fjasle.eu ([46.142.98.53]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MUXd0-1pWKJ61E0m-00QV56; Fri, 16 Dec 2022 05:09:04 +0100
-Received: from localhost.fjasle.eu (bergen.fjasle.eu [IPv6:fdda:8718:be81:0:6f0:21ff:fe91:394])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by leknes.fjasle.eu (Postfix) with ESMTPS id E1D3C3C1B9;
-        Fri, 16 Dec 2022 05:09:00 +0100 (CET)
-Authentication-Results: leknes.fjasle.eu; dkim=none; dkim-atps=neutral
-Received: by localhost.fjasle.eu (Postfix, from userid 1000)
-        id 8724637A; Fri, 16 Dec 2022 05:08:53 +0100 (CET)
-Date:   Fri, 16 Dec 2022 05:08:53 +0100
-From:   Nicolas Schier <nicolas@fjasle.eu>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        linux-kbuild@vger.kernel.org, alison.schofield@intel.com,
-        dan.j.williams@intel.com, dave@stgolabs.net,
-        a.manzanares@samsung.com, lucas.de.marchi@gmail.com,
-        linux-cxl@vger.kernel.org, linux-modules@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Modify default INSTALL_MOD_DIR from extra to
- updates
-Message-ID: <Y5vvVTwt+FfxTUke@bergen.fjasle.eu>
-References: <20221214231718.1002194-1-mcgrof@kernel.org>
+        with ESMTP id S230170AbiLPJbu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 04:31:50 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1B52125E
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 01:31:42 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYP075TFMz6HJW1;
+        Fri, 16 Dec 2022 17:27:51 +0800 (CST)
+Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 09:31:39 +0000
+Date:   Fri, 16 Dec 2022 09:31:36 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, <qemu-devel@nongnu.org>,
+        <linux-cxl@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v2] hw/cxl/device: Add Flex Bus Port DVSEC
+Message-ID: <20221216093136.000026c3@Huawei.com>
+In-Reply-To: <Y5tZPiiJQm4el40t@iweiny-desk3>
+References: <20221213-ira-flexbus-port-v2-1-eaa48d0e0700@intel.com>
+        <20221215171633.00000ac8@Huawei.com>
+        <Y5tZPiiJQm4el40t@iweiny-desk3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DbXiCwcHRBELdo3F"
-Content-Disposition: inline
-In-Reply-To: <20221214231718.1002194-1-mcgrof@kernel.org>
-Jabber-ID: nicolas@fjasle.eu
-X-Operating-System: Debian GNU/Linux bookworm/sid
-X-Provags-ID: V03:K1:9dqul9PcQlZBy+Bdz8/5WfZqSzxb5QxMVvaUCDKwbSzOBKgNPxo
- BbVvGIW97LnFh09CHh9In/dxDmDZtiaujkrwws9/eD/kGir576B8qIvSmTl/H2s5Ryao6WV
- JKcz9SqeqkLYb13uUSSWcjwLESqprhWkDH8CQ7FgWDXodI6fz9dxZvMdvcCFByvJnPhHgEQ
- elo/a1MORPkBjU4ZHmH4g==
-UI-OutboundReport: notjunk:1;M01:P0:c0LQFw2PteU=;U5LcO1ilgEDCVC1DODcq62IwXrN
- OfvybjSUEP2Zn6rXuzH0oUhKysoWhcLzXjI02MMZ5zi7KI6I0DNpHxVsl3yuexpVm6q8B31pB
- mXDUEdbVTiAXs4jfkVMrT0PJXJC87rPD5REK2jhud99phN0WECzqLd4SDno+29PXyA53Mc9J8
- 7yktHp2LRHlFBd0fXg/ICCIj+zT03N/XD/uENsNjhugKFq4onTkRpPXFk3GT8KN5OEG9aQi6A
- C1uxEsHKFK+mI85bWkFRPlU1E89bP5aSop858rjhtJH6Kk4fpIFPlj3FkwoSbD04NpGGnHxX5
- moBTPiSR+sVCEPsKlbzOOadpgkS3j0ryaCF1US5mlM7adlJ0uh75yxqUGIXWFemqgh89+Gumx
- jDTGzE3OMOG08KiJ0jryiC/tYnZ/23reCa6qcndNLl87aP6aPK47xaih/TtozEwQo7V6V7Mca
- jYReyl75h0LaDwMK2RJfAxssJUNfR5ip+x4bPc9GVlfZsZq4npyGJV2gE02IhZWUKFxQNhV/n
- 27T9Y4lopnzd0X6J3I6VHf0r9i9CmFzig0wvLr6rrqkxAt3KVo3v1buXBbH0NY1WyHcN86Y9U
- cXGVERp7R5A3cdDJohhExFtyZp7B6fTRGjKNEuR+T3jlWbJdXSh5/14PJLCQijQbHk6LU5TPH
- wDJRJudccY6qYBt/y+nFb/aUwmMcb7xaK4KcONpGAQ==
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.152.125]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Thu, 15 Dec 2022 09:28:30 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
---DbXiCwcHRBELdo3F
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Thu, Dec 15, 2022 at 05:16:33PM +0000, Jonathan Cameron wrote:
+> > On Wed, 14 Dec 2022 12:54:11 -0800
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >   
+> > > The Flex Bus Port DVSEC was missing on type 3 devices which was blocking
+> > > RAS checks.[1]
+> > > 
+> > > Add the Flex Bus Port DVSEC to type 3 devices as per CXL 3.0 8.2.1.3.
+> > > 
+> > > [1] https://lore.kernel.org/linux-cxl/167096738875.2861540.11815053323626849940.stgit@djiang5-desk3.ch.intel.com/
+> > > 
+> > > Cc: Dave Jiang <dave.jiang@intel.com>
+> > > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Cc: Ben Widawsky <bwidawsk@kernel.org>
+> > > Cc: qemu-devel@nongnu.org
+> > > Cc: linux-cxl@vger.kernel.org
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > Looks good to me.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > As Michael wasn't cc'd on patch posting, so might not get this directly I'll add
+> > it to the front of the series adding the RAS event emulation on basis that's the
+> > first time we'll see a failure in Linux (I think?)  
+> 
+> Ah thanks!
+> 
+> Sorry, I thought you were the 'maintainer' of the CXL stuff for qemu.
 
-On Wed 14 Dec 2022 15:17:18 GMT, Luis Chamberlain wrote:
-> The default INSTALL_MOD_DIR of using the /lib/modules/$(uname -r)/extra
-> directory for external modules assumes distributions will have something
-> like  /etc/depmod.d/dist.conf with:
->=20
-> search updates extra built-in
->=20
-> However, only some Red Hat release have and use the extra stuff for
-> years now. Meanwhile, the depmod.c tool in kmod has *forever* used
-> the "updates" directory as part of the search path by default *if*
-> your distribution does not have any depmod.d configuration.
->=20
-> If you compile and install an external module today, even upstream
-> kernel mock drivers (tools/testing/cxl) the modules_install target
-> will pick up the new drivers but will not allow override of drivers
-> from updates to override built-in ones.
->=20
-> Since module-init-tools was deprecated over 11 years ago and now kmod
-> has since its inception used the "updates" directory as part of its
-> default search path to allow overrides, and since the "extra" stuff
-> was in practice only used by Red Hat stuff, use the more distro
-> agnostic override path "updates" to allow external modules to
-> also override proper production kernel modules.
->=20
-> This would allow mocking drivers tools to not have to muck with
-> depmod.d config files or assume that your distro will have extra
-> on a configuration file over built-in.
->=20
-> With today's default you end up actually *crashing* Linux when
-> trying to load cxl_test with the default "extra" [0] directory being
-> used. This fixes that and allows other mocking drivers to do
-> less work.
->=20
-> [0] https://lkml.kernel.org/r/20221209062919.1096779-1-mcgrof@kernel.org
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  scripts/Makefile.modinst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
+Ah I am, but so far the CXL stuff has routed through Michael as PCI maintainer
+because of the high level of overlap. So far I've done that by grouping up
+patches and send them in sets to Michael. This one is more of a fix, so maybe
+wants to move quicker than I will.
 
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+This gives me a good opportunity to ask Michael:
+
+How do you want us to handle this in future? I'd expect the overlap with the PCI
+core stuff to reduce going forwards, as most of the infrastructure is now in
+place and obviously would want you to look at anything that does touch core PCI
+code, but for the rest of it, would you prefer that I send pull requests going
+forwards?  I'm more than happy to keep dumping this stuff on you, but seems
+rather mean!
+
+If we do move to pull requests, what scope of stuff do you want us to seek your
+review on?  If things go according to plan there will be a bunch of stuff related
+to the switch ports in the near future, some of which is going to add complex
+PCI topologies and new forms of hotplug so I'll definitely want your input on
+that, but we also have a bunch of stuff around memory error reporting etc which
+I'm thinking may be of less interest to you. Obviously I'd love it if you have
+time to review everything but don't want to impose unnecessarily.
+
+Jonathan
 
 
---DbXiCwcHRBELdo3F
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > 
+> > Michael, if you want to pick this up directly that's great too!  
+> 
+> Should I send directly to Michael in future?
+> 
+> > 
+> > As a side note the WTF? is because we made up a hardware related time delay
+> > number having no idea whatsoever on what a realistic value was. Cut and paste
+> > from the instances of this structure in the root port and the switch ports.
+> >   
+> 
+> Yep I just followed that based off the other code.
+> 
+> Ira
+> 
+> > Jonathan
+> > 
+> > 
+> >   
+> > > ---
+> > > Changes in v2:
+> > >         Jonathan                                                            
+> > >                 type 3 device does not support CACHE                        
+> > >                 Comment the 68B bit                                         
+> > > 
+> > > - Link to v1: https://lore.kernel.org/r/20221213-ira-flexbus-port-v1-1-86afd4f30be6@intel.com
+> > > ---
+> > >  hw/mem/cxl_type3.c | 11 +++++++++++
+> > >  1 file changed, 11 insertions(+)
+> > > 
+> > > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > > index 0317bd96a6fb..e6beac143fc1 100644
+> > > --- a/hw/mem/cxl_type3.c
+> > > +++ b/hw/mem/cxl_type3.c
+> > > @@ -416,6 +416,17 @@ static void build_dvsecs(CXLType3Dev *ct3d)
+> > >      cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
+> > >                                 GPF_DEVICE_DVSEC_LENGTH, GPF_DEVICE_DVSEC,
+> > >                                 GPF_DEVICE_DVSEC_REVID, dvsec);
+> > > +
+> > > +    dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
+> > > +        .cap                     = 0x26, /* 68B, IO, Mem, non-MLD */
+> > > +        .ctrl                    = 0x02, /* IO always enabled */
+> > > +        .status                  = 0x26, /* same as capabilities */
+> > > +        .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
+> > > +    };
+> > > +    cxl_component_create_dvsec(cxl_cstate, CXL2_TYPE3_DEVICE,
+> > > +                               PCIE_FLEXBUS_PORT_DVSEC_LENGTH_2_0,
+> > > +                               PCIE_FLEXBUS_PORT_DVSEC,
+> > > +                               PCIE_FLEXBUS_PORT_DVSEC_REVID_2_0, dvsec);
+> > >  }
+> > >  
+> > >  static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+> > > 
+> > > ---
+> > > base-commit: e11b57108b0cb746bb9f3887054f34a2f818ed79
+> > > change-id: 20221213-ira-flexbus-port-ce526de8111d
+> > > 
+> > > Best regards,  
+> >   
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmOb71UACgkQB1IKcBYm
-EmkVZhAA4v9HhQv9LTdDNzjlaXSAo9nWqfb192F9cRLFOWepHrPSqdJ2R2VJ7mLu
-B7HmgozmU9qDHiQwUUaVRAWEk6eU7kCtya7i5UvuKrSnu2o2/NukewCc2x9CAJLN
-BnF+j4C3Y0hEJlF83Qwb25QUcKKDhA5Q+uu1Icyb2UZ625fBM84X9FLewq9bx4gq
-/+qk4l+xDjytv9SX2kNmaNTzgSDtYjBfuXXKpJ3+HKpOSzUwmtG0XbtguSSR7dtm
-4P4FfCEf1iQwn5C+Mt/lK/Pfs5jMu6lDW4p2eq0T2qDeRVFUVut/kItbvPda09aN
-HzQDg4J34bYkjtQ+ZBYYAeNH+NuJObxtehi7Pk6GX5ufw9LpSWh4tYCM6LOhNrLN
-1bFeJwkRp36zJH6xtUto/dGmxzPiXGNJF3fv8b3aLiHii9VCVVNMuasNxvudAh9J
-Us3n8qqwAy6vvIzrrA3j34jKW1sUoTxu6YCBNsF1424pSMh8dJpq6vcTGaHWjXmO
-5br6O0hdaiQ5rU0BNYR1TtMgmRVOLMJKcbtGGH5Bu/zXgK76vEIZd0Zj8ivPVGea
-bBAy/TKCjBUtgFXwYtT8EWVdVVUU151xQzvGaKhu1/PncEQ4YJB39cik1qNUMgnr
-7XGe/AmS89yYcbwsok+/LHaKPw3SBYBHblesiUwN5k8Kpo4l9EI=
-=bv95
------END PGP SIGNATURE-----
-
---DbXiCwcHRBELdo3F--
