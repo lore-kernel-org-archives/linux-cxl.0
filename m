@@ -2,201 +2,232 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE9C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 15:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1D3C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 15:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbiLPPhO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Dec 2022 10:37:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
+        id S231320AbiLPPjt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Dec 2022 10:39:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231431AbiLPPhH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 10:37:07 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9E750D70
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 07:37:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671205026; x=1702741026;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Si23m594hOtmfQ8it1cl3XSAOphRn2jKK1dlb61fThY=;
-  b=bLKIAO0WWxzndA4Qvnl7lHtWJB9IsLwEIFxeivzOztRwLsaeI4eVXHhE
-   qJnBVX+Z9jp+XPOpBu14aW8EJwdO6eCIFf1ZHpuViSee+N56xkXgtXAl7
-   wuEYfgTl7HOQY4vF4YqXuT2h9GkA4MoEWZCaMkzBwjNLD+y89X8L2ssGm
-   Uv/0000wsHAtCp0usVabD9ax2G5B2gtgnAfqLJwZ7Zxrb58RzcuIv8gxs
-   LE2c/a5GA3dvfNFLmZTbcw9X2zgjiIwUqY3vWAI6Wj45AIMUvM5WoY8ac
-   q16qYjj+wSd8XQ2J0roWPeLvGoHxY9Ghbv3opCFNQsns2ykXqUZnExVY7
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="298661181"
-X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="298661181"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:37:05 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="718392549"
-X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="718392549"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.209.167.175]) ([10.209.167.175])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:37:05 -0800
-Message-ID: <8b1a1aea-717e-fcf1-4710-ff4531b01f04@intel.com>
-Date:   Fri, 16 Dec 2022 08:37:05 -0700
+        with ESMTP id S230365AbiLPPjr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 10:39:47 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8C550D6A;
+        Fri, 16 Dec 2022 07:39:45 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYY9b1GyVz688JN;
+        Fri, 16 Dec 2022 23:36:35 +0800 (CST)
+Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
+ 2022 15:39:42 +0000
+Date:   Fri, 16 Dec 2022 15:39:39 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 2/9] cxl/mem: Read, trace, and clear events on driver
+ load
+Message-ID: <20221216153939.00007c41@Huawei.com>
+In-Reply-To: <20221212070627.1372402-3-ira.weiny@intel.com>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+        <20221212070627.1372402-3-ira.weiny@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.1
-Subject: Re: [PATCH v4] cxl: add RAS status unmasking for CXL
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com
-References: <167112768345.3343090.11728168471813709343.stgit@djiang5-desk3.ch.intel.com>
- <20221216093629.00000b7b@Huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221216093629.00000b7b@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.152.125]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Sun, 11 Dec 2022 23:06:20 -0800
+ira.weiny@intel.com wrote:
+
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> CXL devices have multiple event logs which can be queried for CXL event
+> records.  Devices are required to support the storage of at least one
+> event record in each event log type.
+> 
+> Devices track event log overflow by incrementing a counter and tracking
+> the time of the first and last overflow event seen.
+> 
+> Software queries events via the Get Event Record mailbox command; CXL
+> rev 3.0 section 8.2.9.2.2 and clears events via CXL rev 3.0 section
+> 8.2.9.2.3 Clear Event Records mailbox command.
+> 
+> If the result of negotiating CXL Error Reporting Control is OS control,
+> read and clear all event logs on driver load.
+> 
+> Ensure a clean slate of events by reading and clearing the events on
+> driver load.
+> 
+> The status register is not used because a device may continue to trigger
+> events and the only requirement is to empty the log at least once.  This
+> allows for the required transition from empty to non-empty for interrupt
+> generation.  Handling of interrupts is in a follow on patch.
+> 
+> The device can return up to 1MB worth of event records per query.
+> Allocate a shared large buffer to handle the max number of records based
+> on the mailbox payload size.
+> 
+> This patch traces a raw event record and leaves specific event record
+> type tracing to subsequent patches.  Macros are created to aid in
+> tracing the common CXL Event header fields.
+> 
+> Each record is cleared explicitly.  A clear all bit is specified but is
+> only valid when the log overflows.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+A few things noticed inline.  I've tightened the QEMU code to reject the
+case of the input payload claims to be bigger than the mailbox size
+and hacked the size down to 256 bytes so it triggers the problem
+highlighted below.
+
+> 
+> ---
+> Changes from V3:
+> 	Dan
+> 		Split off _OSC pcie bits
+> 			Use existing style for host bridge flag in that
+> 			patch
+> 		Clean up event processing loop
+> 		Use dev_err_ratelimited()
+> 		Clean up version change log
+> 		Delete 'EVENT LOG OVERFLOW'
+> 		Remove cxl_clear_event_logs()
+> 		Add comment for native cxl control
+> 		Fail driver load on event buf allocation failure
+> 		Comment why events are not processed without _OSC flag
+> ---
+>  drivers/cxl/core/mbox.c  | 136 +++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/trace.h | 120 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h        |  12 ++++
+>  drivers/cxl/cxlmem.h     |  84 ++++++++++++++++++++++++
+>  drivers/cxl/pci.c        |  40 ++++++++++++
+>  5 files changed, 392 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index b03fba212799..9fb327370e08 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+
+> +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
+> +				  enum cxl_event_log_type log,
+> +				  struct cxl_get_event_payload *get_pl)
+> +{
+> +	struct cxl_mbox_clear_event_payload payload = {
+> +		.event_log = log,
+> +	};
+> +	u16 total = le16_to_cpu(get_pl->record_count);
+> +	u8 max_handles = CXL_CLEAR_EVENT_MAX_HANDLES;
+> +	size_t pl_size = sizeof(payload);
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	u16 cnt;
+> +	int rc;
+> +	int i;
+> +
+> +	/* Payload size may limit the max handles */
+> +	if (pl_size > cxlds->payload_size) {
+> +		max_handles = CXL_CLEAR_EVENT_LIMIT_HANDLES(cxlds->payload_size);
+> +		pl_size = cxlds->payload_size;
+> +	}
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_CLEAR_EVENT_RECORD,
+> +		.payload_in = &payload,
+> +		.size_in = pl_size,
+
+This payload size should be whatever we need to store the records,
+not the max size possible.  Particularly as that size is currently
+bigger than the mailbox might be.
+
+It shouldn't fail (I think) simply because a later version of the spec might
+add more to this message and things should still work, but definitely not
+good practice to tell the hardware this is much longer than it actually is.
 
 
-On 12/16/2022 2:36 AM, Jonathan Cameron wrote:
-> On Thu, 15 Dec 2022 11:08:03 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> By default the CXL RAS mask registers bits are defaulted to 1's and
->> suppress all error reporting. If the kernel has negotiated ownership
->> of error handling for CXL then unmask the mask registers by writing 0s.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>
-> 
-> One trivial comment inline that is up to you.
+> +	};
+> +
+> +	/*
+> +	 * Clear Event Records uses u8 for the handle cnt while Get Event
+> +	 * Record can return up to 0xffff records.
+> +	 */
+> +	i = 0;
+> +	for (cnt = 0; cnt < total; cnt++) {
+> +		payload.handle[i++] = get_pl->records[cnt].hdr.handle;
+> +		dev_dbg(cxlds->dev, "Event log '%d': Clearing %u\n",
+> +			log, le16_to_cpu(payload.handle[i]));
+> +
+> +		if (i == max_handles) {
+> +			payload.nr_recs = i;
+> +			rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> +			if (rc)
+> +				return rc;
+> +			i = 0;
+> +		}
+> +	}
+> +
+> +	/* Clear what is left if any */
+> +	if (i) {
+> +		payload.nr_recs = i;
+> +		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	return 0;
+> +}
 
-Not a problem. I'll roll that in with changes Dan is asking.
 
-> 
-> Dan's suggestion makes sense.
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
->> ---
->>
->> Based on patch posted by Ira [1] to export CXL native error reporting control.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20221212070627.1372402-2-ira.weiny@intel.com/
->>
->> v4:
->> - Fix masking of RAS register. (Jonathan)
->>
->> v3:
->> - Remove flex bus port status check. (Jonathan)
->> - Only unmask known mask bits. (Jonathan)
->>
->> v2:
->> - Add definition of PCI_EXP_LNKSTA2_FLIT. (Dan)
->> - Return error for cxl_pci_ras_unmask(). (Dan)
->> - Add dev_dbg() for register bits to be cleared. (Dan)
->> - Check Flex Port DVSEC status. (Dan)
->> ---
->>   drivers/cxl/cxl.h             |    1 +
->>   drivers/cxl/pci.c             |   48 +++++++++++++++++++++++++++++++++++++++++
->>   include/uapi/linux/pci_regs.h |    1 +
->>   3 files changed, 50 insertions(+)
->>
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index 1b1cf459ac77..31e795c6d537 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -130,6 +130,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->>   #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
->>   #define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
->>   #define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
->> +#define   CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK BIT(8)
->>   #define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
->>   #define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
->>   #define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index 33083a522fd1..64272db6a3fd 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -419,6 +419,53 @@ static void disable_aer(void *pdev)
->>   	pci_disable_pcie_error_reporting(pdev);
->>   }
->>   
->> +/*
->> + * CXL v3.0 6.2.3 Table 6-4
->> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
->> + * mode, otherwise it's 68B flits mode.
->> + */
->> +static bool cxl_pci_flit_256(struct pci_dev *pdev)
->> +{
->> +	u32 lnksta2;
->> +
->> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
->> +	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
->> +}
->> +
->> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->> +{
->> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
->> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->> +	void __iomem *addr;
->> +	u32 val, mask;
->> +
->> +	if (!cxlds->regs.ras)
->> +		return -ENODEV;
->> +
->> +	/* BIOS has CXL error control */
->> +	if (!host_bridge->native_cxl_error)
->> +		return -EOPNOTSUPP;
->> +
->> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
->> +	val = readl(addr);
->> +	dev_dbg(&pdev->dev, "Uncorrectable RAS Errors Mask: %#x\n", val);
->> +
->> +	mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
->> +	if (!cxl_pci_flit_256(pdev))
->> +		mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
->> +	val &= ~mask;
->> +	writel(val, addr);
->> +	dev_dbg(&pdev->dev, "Unmasked Uncorrectable RAS Errors Mask: %#x\n", val);
->> +
->> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
->> +	val = readl(addr);
->> +	dev_dbg(&pdev->dev, "Correctable RAS Errors Mask: %#x\n", val);
->> +	val &= ~CXL_RAS_CORRECTABLE_MASK_MASK;
->> +	writel(val, addr);
->> +	dev_dbg(&pdev->dev, "Unmasked Correctable RAS Errors Mask: %#x\n", val);
-> 
-> Real nitpick but I'd like a blank line here as the return isn't related to the
-> previous block of code.
-> 
->> +	return 0;
->> +}
->> +
->>   static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>   {
->>   	struct cxl_register_map map;
->> @@ -498,6 +545,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->>   
->>   	if (cxlds->regs.ras) {
->>   		pci_enable_pcie_error_reporting(pdev);
->> +		cxl_pci_ras_unmask(pdev);
->>   		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
->>   		if (rc)
->>   			return rc;
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index 82a03ea954af..576ee2ec973f 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -693,6 +693,7 @@
->>   #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
->>   #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
->>   #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
->> +#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
->>   #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	0x32	/* end of v2 EPs w/ link */
->>   #define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
->>   #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
->>
->>
-> 
+...
+
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index ab138004f644..dd9aa3dd738e 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+
+...
+
+> +
+> +/*
+> + * Clear Event Records input payload
+> + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
+> + */
+> +#define CXL_CLEAR_EVENT_MAX_HANDLES (0xff)
+> +struct cxl_mbox_clear_event_payload {
+> +	u8 event_log;		/* enum cxl_event_log_type */
+> +	u8 clear_flags;
+> +	u8 nr_recs;
+> +	u8 reserved[3];
+> +	__le16 handle[CXL_CLEAR_EVENT_MAX_HANDLES];
+
+Doesn't fit in the smallest possible payload buffer.
+It's 526 bytes long.  Payload buffer might be 256 bytes in total.
+(8.2.8.4.3 Mailbox capabilities)
+
+Lazy approach, make this smaller and do more loops when clearing.
+If we want to optimize this later can expand it to this size.
+
+> +} __packed;
+> +#define CXL_CLEAR_EVENT_LIMIT_HANDLES(payload_size)			\
+> +	(((payload_size) -						\
+> +		(sizeof(struct cxl_mbox_clear_event_payload) -		\
+> +		 (sizeof(__le16) * CXL_CLEAR_EVENT_MAX_HANDLES))) /	\
+> +		sizeof(__le16))
+> +
+
+...
+
