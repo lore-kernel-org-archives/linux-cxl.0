@@ -2,72 +2,119 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE76C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 11:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A18C4167B
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 12:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbiLPLQe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Dec 2022 06:16:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54142 "EHLO
+        id S229636AbiLPMZi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Dec 2022 07:25:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230492AbiLPLQL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 06:16:11 -0500
+        with ESMTP id S229620AbiLPMZg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 07:25:36 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0B15566CE
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 03:16:05 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYRKL5Bmwz6H74X;
-        Fri, 16 Dec 2022 19:12:54 +0800 (CST)
-Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB2514D19;
+        Fri, 16 Dec 2022 04:25:35 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYSsX4n5Fz6J6J6;
+        Fri, 16 Dec 2022 20:22:24 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
- 2022 11:16:02 +0000
-Date:   Fri, 16 Dec 2022 11:15:58 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <mcgrof@kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/region: Only warn about
- cpu_cache_invalidate_memregion() once
-Message-ID: <20221216111558.000003c3@Huawei.com>
-In-Reply-To: <20221215183836.24136-1-dave@stgolabs.net>
-References: <20221215183836.24136-1-dave@stgolabs.net>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+ 2022 12:25:32 +0000
+Date:   Fri, 16 Dec 2022 12:25:31 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V4 0/9] CXL: Process event logs
+Message-ID: <20221216122531.00001bef@huawei.com>
+In-Reply-To: <20221212070627.1372402-1-ira.weiny@intel.com>
+References: <20221212070627.1372402-1-ira.weiny@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.152.125]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 15 Dec 2022 10:38:36 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Sun, 11 Dec 2022 23:06:18 -0800
+ira.weiny@intel.com wrote:
 
-> No need for more than once per region.
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/cxl/core/region.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This code has been tested with a newer qemu which allows for more events to be
+> returned at a time as well an additional QMP event and interrupt injection.
+> Those patches will follow once they have been cleaned up.
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 02f28da519e3..c11a6ab5e48d 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1967,7 +1967,7 @@ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
->  
->  	if (!cpu_cache_has_invalidate_memregion()) {
->  		if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)) {
-> -			dev_warn(
-> +			dev_warn_once(
->  				&cxlr->dev,
->  				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
->  			clear_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
+> The series is now in 3 parts:
+> 
+> 	1) Base functionality including interrupts
+> 	2) Tracing specific events (Dynamic Capacity Event Record is defered)
+> 	3) cxl-test infrastructure for basic tests
+> 
+> Changes from V3
+> 	Feedback from Dan
+> 	Spit out ACPI changes for Bjorn
+> 
+> - Link to v3: https://lore.kernel.org/all/20221208052115.800170-1-ira.weiny@intel.com/
 
-Seems sensible.
+Because I'm in a grumpy mood (as my colleagues will attest!)...
+This is dependent on the patch that moves the trace definitions and
+that's not upstream yet except in cxl/preview which is optimistic
+place to use for a base commit.  The id isn't the one below either which
+isn't in either mailine or the current CXL trees.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Not that I actually checked the cover letter until it failed to apply
+(and hence already knew what was missing) but still, please call out
+dependencies unless they are in the branches Dan has queued up to push.
+
+I just want to play with Dave's fix for the RAS errors so having to jump
+through these other sets.
+
+Thanks,
+
+Jonathan
+
+> 
+> 
+> Davidlohr Bueso (1):
+>   cxl/mem: Wire up event interrupts
+> 
+> Ira Weiny (8):
+>   PCI/CXL: Export native CXL error reporting control
+>   cxl/mem: Read, trace, and clear events on driver load
+>   cxl/mem: Trace General Media Event Record
+>   cxl/mem: Trace DRAM Event Record
+>   cxl/mem: Trace Memory Module Event Record
+>   cxl/test: Add generic mock events
+>   cxl/test: Add specific events
+>   cxl/test: Simulate event log overflow
+> 
+>  drivers/acpi/pci_root.c       |   3 +
+>  drivers/cxl/core/mbox.c       | 186 +++++++++++++
+>  drivers/cxl/core/trace.h      | 479 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h             |  16 ++
+>  drivers/cxl/cxlmem.h          | 171 ++++++++++++
+>  drivers/cxl/cxlpci.h          |   6 +
+>  drivers/cxl/pci.c             | 236 +++++++++++++++++
+>  drivers/pci/probe.c           |   1 +
+>  include/linux/pci.h           |   1 +
+>  tools/testing/cxl/test/Kbuild |   2 +-
+>  tools/testing/cxl/test/mem.c  | 352 +++++++++++++++++++++++++
+>  11 files changed, 1452 insertions(+), 1 deletion(-)
+> 
+> 
+> base-commit: acb704099642bc822ef2aed223a0b8db1f7ea76e
+
