@@ -2,130 +2,208 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF385C001B2
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 14:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 037F0C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 15:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbiLPOYs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Dec 2022 09:24:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
+        id S231277AbiLPPg3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Dec 2022 10:36:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbiLPOYr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 09:24:47 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0AC1402D;
-        Fri, 16 Dec 2022 06:24:45 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NYWVF5WzBz688G2;
-        Fri, 16 Dec 2022 22:20:53 +0800 (CST)
-Received: from localhost (10.45.152.125) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 16 Dec
- 2022 14:24:42 +0000
-Date:   Fri, 16 Dec 2022 14:24:38 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V4 3/9] cxl/mem: Wire up event interrupts
-Message-ID: <20221216142438.00006588@Huawei.com>
-In-Reply-To: <20221212070627.1372402-4-ira.weiny@intel.com>
-References: <20221212070627.1372402-1-ira.weiny@intel.com>
-        <20221212070627.1372402-4-ira.weiny@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230365AbiLPPg2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 10:36:28 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BA350D5C
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 07:36:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671204987; x=1702740987;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ArHLZQwN4nLCaCUsfNqLZljvPI0VZMRIq0tohg70fQw=;
+  b=f2ga4gmwg25bFErYKc7YDiMw7q52EynWJ1ehMjl1Z3UqrYu2cVBGo+Ij
+   hEnYbKo1AYKakNhXWry/OYWgBkHHW7coeDmr9rTvgupHZSYVltVU120m1
+   W/jHzB32qBq371CRO6ZBx8hPFSxKQxUegR+IV276yKpPTnVf32Y4SS7gp
+   cEhQmQhfvSrQmkwkPfiyxRtfpFtJnkmlFXs6ywnLh3rm57pBEx1tYtWyo
+   d8gLSGVzwHCUHZsP9LTX2oh+lAORzxUqEBCaVztwVEoWSxYO93CG9HiFn
+   7JbWzZXQbxQn0QwvSWRQMJOSXB0mMAEOKQuiHdF4CGHHkKIiVO2FhKCiT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="298661071"
+X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
+   d="scan'208";a="298661071"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:36:26 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="718392489"
+X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
+   d="scan'208";a="718392489"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.209.167.175]) ([10.209.167.175])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:36:26 -0800
+Message-ID: <a7fbfa17-eb3a-05f4-5192-0e2f36357760@intel.com>
+Date:   Fri, 16 Dec 2022 08:36:25 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.5.1
+Subject: Re: [PATCH v4] cxl: add RAS status unmasking for CXL
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+References: <167112768345.3343090.11728168471813709343.stgit@djiang5-desk3.ch.intel.com>
+ <20221216123452.0000605e@huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221216123452.0000605e@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.45.152.125]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 11 Dec 2022 23:06:21 -0800
-ira.weiny@intel.com wrote:
 
-> From: Davidlohr Bueso <dave@stgolabs.net>
-> 
-> Currently the only CXL features targeted for irq support require their
-> message numbers to be within the first 16 entries.  The device may
-> however support less than 16 entries depending on the support it
-> provides.
-> 
-> Attempt to allocate these 16 irq vectors.  If the device supports less
-> then the PCI infrastructure will allocate that number.  Upon successful
-> allocation, users can plug in their respective isr at any point
-> thereafter.
-> 
-> CXL device events are signaled via interrupts.  Each event log may have
-> a different interrupt message number.  These message numbers are
-> reported in the Get Event Interrupt Policy mailbox command.
-> 
-> Add interrupt support for event logs.  Interrupts are allocated as
-> shared interrupts.  Therefore, all or some event logs can share the same
-> message number.
-> 
-> In addition all logs are queried on any interrupt in order of the most
-> to least severe based on the status register.
-> 
-> Cc: Bjorn Helgaas <helgaas@kernel.org>
-> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> 
 
-> +/**
-> + * Event Interrupt Policy
-> + *
-> + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
-> + */
-> +enum cxl_event_int_mode {
-> +	CXL_INT_NONE		= 0x00,
-> +	CXL_INT_MSI_MSIX	= 0x01,
-> +	CXL_INT_FW		= 0x02
-> +};
-> +struct cxl_event_interrupt_policy {
-> +	u8 info_settings;
-> +	u8 warn_settings;
-> +	u8 failure_settings;
-> +	u8 fatal_settings;
+On 12/16/2022 5:34 AM, Jonathan Cameron wrote:
+> On Thu, 15 Dec 2022 11:08:03 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> By default the CXL RAS mask registers bits are defaulted to 1's and
+>> suppress all error reporting. If the kernel has negotiated ownership
+>> of error handling for CXL then unmask the mask registers by writing 0s.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> ---
+>>
+>> Based on patch posted by Ira [1] to export CXL native error reporting control.
+> When you say based upon this, you mean cherry-picking just that patch off the
+> front of Ira's series?
 
-This is an issue for your QEMU code which has this set at 5 bytes.
-Guess our handling of record lengths needs updating now we have two different
-spec versions to support and hence these can have multiple lengths.
+Correct.
 
-Btw, do you have an updated version of the QEMU patches you can share?
-I was planning on just doing the AER type RAS stuff for the first pull this cycle
-but given this set means we never reach that code I probably need to do QEMU
-support for this and the stuff to support those all in one go - otherwise
-no one will be able to test it :)  We rather optimistically have the OSC set
-to say the OS can have control of these, but upstream code doesn't emulate
-anything yet. Oops. Should have pretended the hardware was handling them
-until we had this support in place in QEMU.
+> 
+> That raises the question - are we treating this as a fix? If not, probably better
+> to pull that change into this series that I think is simpler to land than Ira's one
+> and get that queued up then rebase Ira's.  If we aren't in a hurry, fine to queue
+> this one second but then you need to rebase on Ira's full series.
+> 
+> The two series are causing a bunch of fuzz for each other. Sure easy to repair
+> but it's going to require manual intervention.
 
-Jonathan
+I'll let Dan make the call on that. I don't have an issue with what you 
+suggested.
 
-> +} __packed;
-> +
->  /**
->   * struct cxl_event_state - Event log driver state
->   *
-> @@ -288,6 +305,8 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
->  	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
->  	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-> +	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
-> +	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
->  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
->  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+> 
+> Jonathan
+> 
+>>
+>> [1]: https://lore.kernel.org/linux-cxl/20221212070627.1372402-2-ira.weiny@intel.com/
+>>
+>> v4:
+>> - Fix masking of RAS register. (Jonathan)
+>>
+>> v3:
+>> - Remove flex bus port status check. (Jonathan)
+>> - Only unmask known mask bits. (Jonathan)
+>>
+>> v2:
+>> - Add definition of PCI_EXP_LNKSTA2_FLIT. (Dan)
+>> - Return error for cxl_pci_ras_unmask(). (Dan)
+>> - Add dev_dbg() for register bits to be cleared. (Dan)
+>> - Check Flex Port DVSEC status. (Dan)
+>> ---
+>>   drivers/cxl/cxl.h             |    1 +
+>>   drivers/cxl/pci.c             |   48 +++++++++++++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci_regs.h |    1 +
+>>   3 files changed, 50 insertions(+)
+>>
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 1b1cf459ac77..31e795c6d537 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -130,6 +130,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>>   #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>>   #define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
+>>   #define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>> +#define   CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK BIT(8)
+>>   #define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
+>>   #define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>>   #define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
+>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>> index 33083a522fd1..64272db6a3fd 100644
+>> --- a/drivers/cxl/pci.c
+>> +++ b/drivers/cxl/pci.c
+>> @@ -419,6 +419,53 @@ static void disable_aer(void *pdev)
+>>   	pci_disable_pcie_error_reporting(pdev);
+>>   }
+>>   
+>> +/*
+>> + * CXL v3.0 6.2.3 Table 6-4
+>> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+>> + * mode, otherwise it's 68B flits mode.
+>> + */
+>> +static bool cxl_pci_flit_256(struct pci_dev *pdev)
+>> +{
+>> +	u32 lnksta2;
+>> +
+>> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+>> +	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
+>> +}
+>> +
+>> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+>> +{
+>> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+>> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>> +	void __iomem *addr;
+>> +	u32 val, mask;
+>> +
+>> +	if (!cxlds->regs.ras)
+>> +		return -ENODEV;
+>> +
+>> +	/* BIOS has CXL error control */
+>> +	if (!host_bridge->native_cxl_error)
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
+>> +	val = readl(addr);
+>> +	dev_dbg(&pdev->dev, "Uncorrectable RAS Errors Mask: %#x\n", val);
+>> +
+>> +	mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
+>> +	if (!cxl_pci_flit_256(pdev))
+>> +		mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
+>> +	val &= ~mask;
+>> +	writel(val, addr);
+>> +	dev_dbg(&pdev->dev, "Unmasked Uncorrectable RAS Errors Mask: %#x\n", val);
+>> +
+>> +	addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
+>> +	val = readl(addr);
+>> +	dev_dbg(&pdev->dev, "Correctable RAS Errors Mask: %#x\n", val);
+>> +	val &= ~CXL_RAS_CORRECTABLE_MASK_MASK;
+>> +	writel(val, addr);
+>> +	dev_dbg(&pdev->dev, "Unmasked Correctable RAS Errors Mask: %#x\n", val);
+>> +	return 0;
+>> +}
+>> +
+>>   static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>   {
+>>   	struct cxl_register_map map;
+>> @@ -498,6 +545,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>   
+>>   	if (cxlds->regs.ras) {
+>>   		pci_enable_pcie_error_reporting(pdev);
+>> +		cxl_pci_ras_unmask(pdev);
+>>   		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
+>>   		if (rc)
+>>   			return rc;
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index 82a03ea954af..576ee2ec973f 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -693,6 +693,7 @@
+>>   #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
+>>   #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
+>>   #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
+>> +#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
+>>   #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	0x32	/* end of v2 EPs w/ link */
+>>   #define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
+>>   #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
+>>
+>>
+> 
