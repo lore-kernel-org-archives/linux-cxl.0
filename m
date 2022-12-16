@@ -2,319 +2,244 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DD3C4332F
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Dec 2022 22:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EF7C4167B
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 00:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbiLOW1y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Dec 2022 17:27:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59190 "EHLO
+        id S229544AbiLPABa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Dec 2022 19:01:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbiLOW1w (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Dec 2022 17:27:52 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C06552893
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Dec 2022 14:27:50 -0800 (PST)
+        with ESMTP id S229469AbiLPAB1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Dec 2022 19:01:27 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5614C319
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Dec 2022 16:01:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671143270; x=1702679270;
+  t=1671148886; x=1702684886;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=BzSXptmEVXFevgQT3QieCeVvD46LpN/SNgkGbh2LXbI=;
-  b=I7B+Vjg0cG7rzBXR0aJ7r8mpUDfhknTnm5ywccOpAM0LxTzxR2+CZNcR
-   kVx01QLMF3LAoYX0yCRz/PJVT7RtsDDFp+oJmToLg3pl7eDpQbo+aOkqN
-   GiMc1nXAMKw5B60Pc9tSsQ3Cj1jML53ygULzLAML+w21FXQKhrRNXgonL
-   W8G21F/nVzXYiScQ6TDMBwK4emTkLIZoKMxzva412chpeV5MXBp1+kDJZ
-   Iv7apFKyntSKsJ202Z5WnYGZV9x2mfMD+75q+Ho16bI0AF/gmganT/Bsi
-   662jxh1xtjeEd1Hs3kjVonz+0G3b4PNyuMOwQvJXQ75ks0vuvHbenjjdd
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="316458982"
+  bh=6+MZx/gK/xMFXHB6CRuPQzaKqiYXh5+L7H33pLZNn2c=;
+  b=aT5ZN1MPRu1WMOu28YJNUpk8lb30KKC4CMGR2c7Vgk7kz9H2V8L4ZuaR
+   +yC3NxL9cUkls92AQYaSK0wmjW5A8jur0i80N/QJdYfAxLI8DMYSNYWZh
+   IAbZyotsDKa2Gg0ySQSIaGrLi1j2A9Ps2L4IMwh5fPEwtchFn60TqYesz
+   Ts0Fm0Osbcy//ERdRFbd0cevEWeZNjY/Tje5sYk/J4HoJJmBMC0wugZku
+   ua2oPYycqPjTuv+6vXawGuFdKhU/Hz2YSMepLzSZNzcEuTAnRNtPOJ4O9
+   h39aB0n7Jbe4qhpY+fvnjEB4AeTjKeKQT0Xba2LMPnkRjlDss/Hn0iFWI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="306508693"
 X-IronPort-AV: E=Sophos;i="5.96,248,1665471600"; 
-   d="scan'208";a="316458982"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 14:27:49 -0800
+   d="scan'208";a="306508693"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 16:01:25 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="894967053"
+X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="718184875"
 X-IronPort-AV: E=Sophos;i="5.96,248,1665471600"; 
-   d="scan'208";a="894967053"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Dec 2022 14:27:49 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+   d="scan'208";a="718184875"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Dec 2022 16:01:25 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 15 Dec 2022 14:27:49 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ 15.1.2507.16; Thu, 15 Dec 2022 16:01:24 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Thu, 15 Dec 2022 14:27:49 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.16; Thu, 15 Dec 2022 16:01:23 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Thu, 15 Dec 2022 16:01:23 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Thu, 15 Dec 2022 14:27:49 -0800
+ 15.1.2507.16; Thu, 15 Dec 2022 16:01:21 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AuykVkiRlGLRdbgLf+skJkKEI5ZsjOB7INVyOg6lJcIjOBk27hG5TpWjdrE/Sx9kBDYkKIO/0EquNpwUmz2BIls0wT8Hc/eQ82im3rz1pIt/BrL30NzzVKY2UZO8x1KdtDjyYgvR0LtoLUydBfYFKJjDTXdNcOSLwZ3NI3A1nc3xPtv2Xnlh9hv//Gf8SOokf12xursC4iYL+GgJCM60Xt202LU0bGtzJ2/7gGgI/wA7e2lVvr4IvEYXmNtw7vu6PN/fX4qpFVygM3qF7mUJCnAYFHIiieuBCL7OrZPKrlRAEWtZSCJj8AA1q/4GcYx2II5K3JVKVScW8pNavLYOHw==
+ b=HyZ1KeA7kZZMkxrqrYLAvNrxNFu/K5b62r0DChllv/4UVsL8ISCsg2OTDZektBamxsWY/VxAFpF6g2H+QfR07TPOEfVPI3tkGvvHqOvZQmsP4q8Zyhqq1rINJZRB2F4jJxbOqsuytLxV274ZTJfhtXyeIiNo2SKlTrLVaxpPpC+x6J0adjXRWLUqpBy/Ed1D1pNp8KA3nERQMAinAkMMaKEN197wiqanQxZk4SwxwNwPUsobUb5ONLwp8Ft7kyP+RbARAZnU0oketYRQW8FqCo5gKcQSozFQst+Cr6LPMY1gnwWvFSwhSLRfT6dNxT0TAbFhqjyTECXrNfeO+r6DFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a8xa7wXHD2KPoILDoGt1qT2ChKIls+mW4HxXblblKf8=;
- b=A3a5G09uftdWoJDD7Quq3nf55t3lXJnQPXL2OsJjf1lxoun+g4aa3Tdnbp+X2yP2kIXZ+J5r2/txLrfWBzHv4jXHoAmDYmlePAOxoVqdByvc2UVyfM7i/Xtv4L7adTRNeWD2EbCJy0b7dnW9yudJF6gLezxAJLaFryExC3qORAwYbri7e+cY8ypqeuHLRVpCyAiBuTZdfYFmVBYWJ2EsibHUk8NULQyiHouVMORSI8no6xQCcsOo905Xs4xvo3PkVzApu5yYmBIZiVsOOjT9WZQzxQ30WZaFj11zy+HcgCU88cEbmJLambwPxTYOYoq2ttSbKkeYNQV1g8PH4j/GOw==
+ bh=ILWjpt68keRY9F76m0xhF1MUpMetCl7XjXFyarTEW7c=;
+ b=IIr+YPP6W+rVYDrnTTx5Hi/d2KCs6zpwUTK20aXiWkhiKq5nUcWs55FirFGHFfLYqaPFwMSBNlY2wFJIE/mfYGibw8Gj/Oe++kUS5mMOt1uRvJhbukJgM679OtgU/KhO/ygoT9nwhgVE2sg4XgyKKdwB0QZ7OGZDMBkgXByQSaYNy9dZeE3G6taS2pnG9iCQzJN7CNKtfy1obwA0IqvFI8Xz605c7tgd8XlATHpXF2jyZVYjmlneqYtyZPx4qoWgVp4i8yOwYk6Bf6CowpbWEp9WJy9xGnBupCrK1Ru5wDBNqIqYcwpnybeTqr+sgWeKld4AdfSXP3OhAIq1HpZxJw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
- (2603:10b6:301:50::20) by DM4PR11MB7397.namprd11.prod.outlook.com
- (2603:10b6:8:103::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.12; Thu, 15 Dec
- 2022 22:27:47 +0000
+ (2603:10b6:301:50::20) by PH8PR11MB6997.namprd11.prod.outlook.com
+ (2603:10b6:510:223::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.12; Fri, 16 Dec
+ 2022 00:01:19 +0000
 Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
  ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
- ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5924.011; Thu, 15 Dec 2022
- 22:27:47 +0000
-Date:   Thu, 15 Dec 2022 14:27:44 -0800
+ ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5924.011; Fri, 16 Dec 2022
+ 00:01:19 +0000
+Date:   Thu, 15 Dec 2022 16:01:16 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jeff Moyer <jmoyer@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <vishal.l.verma@intel.com>
-Subject: Re: [ndctl PATCH v2 1/4] ndctl: add CXL bus detection
-Message-ID: <639b9f6062c69_b05d12941f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <167105505204.3034751.8113387624258581781.stgit@djiang5-desk3.ch.intel.com>
- <167105522584.3034751.8329537593759406601.stgit@djiang5-desk3.ch.intel.com>
- <639b85df2197a_b05d1294fb@dwillia2-xfh.jf.intel.com.notmuch>
- <x49r0x0xt5r.fsf@segfault.boston.devel.redhat.com>
+To:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+CC:     <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <Jonathan.Cameron@huawei.com>
+Subject: RE: [PATCH v4] cxl: add RAS status unmasking for CXL
+Message-ID: <639bb54c55098_b05d129471@dwillia2-xfh.jf.intel.com.notmuch>
+References: <167112768345.3343090.11728168471813709343.stgit@djiang5-desk3.ch.intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <x49r0x0xt5r.fsf@segfault.boston.devel.redhat.com>
-X-ClientProxiedBy: BY3PR05CA0024.namprd05.prod.outlook.com
- (2603:10b6:a03:254::29) To MWHPR1101MB2126.namprd11.prod.outlook.com
+In-Reply-To: <167112768345.3343090.11728168471813709343.stgit@djiang5-desk3.ch.intel.com>
+X-ClientProxiedBy: BYAPR21CA0023.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::33) To MWHPR1101MB2126.namprd11.prod.outlook.com
  (2603:10b6:301:50::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|DM4PR11MB7397:EE_
-X-MS-Office365-Filtering-Correlation-Id: 128fb683-31f8-48d5-11d7-08dadeeb977b
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|PH8PR11MB6997:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a790475-0182-4177-b67d-08dadef8a8ac
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /+B/zVzFuMrjty6JLgNpPELi04xH8z+2Z/S3DUM4fVJLxrlB35pb+mcG1mAq1+kQjq3kOpFS40G1a5g67yjpIo/17mmB+Z5S8DKdfYVF8+26K8pbBz/hGtN5o5mbswQObO/RaBJm+27Xq/wS4Vwp5LlfeoFdY0LCwkmExrqsyVkMcXml/VXHjPQ1f2Rkbqc8HqUe7OgnC2OErVEU70H5pIphKEpsg0QxfzItc1mxXLCc1/v2JouLJwfEQSl+TyvaiDoiGjSBzRX68gvB2DlBuY75ShgaZm+U8vJ0vq3hX5QtTWK0UZjdMDxuCWxOU+8ax629ObIyidChdbeMkq8WDVpjJRn9E8lok3yy/wDjjdLvYuCVLoziF0UMfBiV/6Zr2Xmn90DdICZs8axEmQtSkZHkxT/QWtyMS5BWZTlAPQnviWvbK6ZfcMQzosdWJxjorc6lT1J2gaNrH3Ft2ydUxu+XRPyFl0bzR15XFbHRqmkgQy2j+1+sFRXa5LtSq1UQ98KAwNqYNsEyFncCjW9hGGp4ZbHlpBCfD26FkLvEZXvupHuRpQId93fij2G1QNX5JjWxqbcibmIAF2SuQJ4HWUnZOuK98BIIvgF2wtsOx0j4aPZJReAGfAT6Uvnd2PO6sCLB7pyp3MInvmiFgkEMXg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(39860400002)(346002)(366004)(376002)(136003)(451199015)(83380400001)(86362001)(8936002)(82960400001)(8676002)(38100700002)(5660300002)(66476007)(4326008)(2906002)(66556008)(66946007)(41300700001)(6512007)(6506007)(26005)(107886003)(9686003)(6666004)(186003)(110136005)(316002)(478600001)(6486002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: DYt0Uybs7FFE/1YwUTYxVqAa//fHPVgKzh30PNiaTq2zty70YN6KK3e4UCrj9efBHbcknZxXF1cAGoHdBtEo/XYCSMLAJMo6zXKYS+NzOXg+zk5pBvVNep5eeJ3sFNVttLhmL2WsXsAt2iB2AkpMrmA4Z0zfzCCuTQhifXZU9EKMi03osxjG74sC/0deEwgQ8PAEvrIaJDq/yCvtiuZpGv3a8woVXE/tZKiAsaOzL3k3YWJkZIJs6bM9lWhGCFUkChleDOZNLHEffgnnv2A667nyTIU4Jyq2h7WIznicaMQWUN5tDA+ff9jOB0+wPWDvDoCZzCjmoHaCguZYLEx++BVny+IDsURzGhUT8JJuAkEDogbu3lQNoY3Jq6JpdF0xo9MtH/CIPVrfROOD/2y3VW70fi8+91UDl3VC7GqPGc+sTGl/dSyPTKPie6UHFEPIAt2nLSHPa99B30QkPzT8aujCX9hb9raNsIDoU65A+0Ls4vl1K4l5rCwqZLUnwFKYNiTb2jdrLa53ioJzGIyqKiTKV9fzZvwCOMcrYGghutlSLm784p6I7qqI1J6HvF4hlgJWGXtn0eIGm+TQ+HNEFP2ZnuLpq2TwzK7v2aSseQ7iz7Wy/BFeJb4HWHjTYUQRgrigpdAeib67HQM5B0ZmHFBN0+tQuK8UcVplWUiWsak=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(396003)(376002)(39860400002)(366004)(346002)(451199015)(66556008)(316002)(9686003)(4326008)(8676002)(82960400001)(66476007)(66946007)(2906002)(38100700002)(86362001)(6506007)(6512007)(6486002)(966005)(186003)(26005)(5660300002)(41300700001)(8936002)(478600001)(6666004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gW6QP/fjZCeFcAyoXxCW+qH/+Pt+D7cGyHMjGmHPwYAn7LU1EXSzKdShV1Ez?=
- =?us-ascii?Q?Y7K9fHBFcCPAT1GJVSOZZqNx8nR3YuZmpG1vc1c26HtdNDrcDho0uHsv/fHQ?=
- =?us-ascii?Q?aRz2LMsEHl+AoDJ3+rZxSUgsF5wRkKdye9/EphwzTqZqM5JqoM9watUMXSsg?=
- =?us-ascii?Q?dC0NfeE0E9gRC890+OJiCftz+UkTFuk1toxk/Vm1Thz1tf5R3bpyN19tUseP?=
- =?us-ascii?Q?Jlj4osQGj9yLi3cgcW4m/PfNr1oy5T/u8WvwJpv2WW2LCQdxpGHTu1jXGzby?=
- =?us-ascii?Q?64T4eeKgB/WD+GWFNWLoDvJPs8FPzCFzKZTNOb3qesLawl4gazqulsUS4bG6?=
- =?us-ascii?Q?/J2sfjEhKkb/HKfy/na2Ep8KztPKXhHjUwRF521dlNa11BNkYEibwJSMkSiL?=
- =?us-ascii?Q?l82mSCVBPOlRa9LHmQ+qtFv0DUwswcSSfzImPcAVkizaSCw568FI1yjM0kIQ?=
- =?us-ascii?Q?YNJXw6dZQvUme8jre1maN9TWTO7+WA0kEw7soM1O5yJzSoZysvqgAjekEojm?=
- =?us-ascii?Q?BU17KXCjgbTZIJ3O1ppPeERo5W+kYITJugl581GJH4yoNN5r+DKh837htfiQ?=
- =?us-ascii?Q?5l6l0xFhkLdQ6Sz/xdCpq5327KYSYPt9u1Byjf76II51QTgfmNyEuT3X0KZ+?=
- =?us-ascii?Q?SvxhalljaTLnLDnK14fS6Fa+iYTCMIKwD4xsbCsdTj5rDq7ft+/YysPp1VG7?=
- =?us-ascii?Q?CgynUMqvEBbvtYCSVXHDIjvZ5EhsuZbNBMZyBcVjBISYT+NoU5TE8DMW050b?=
- =?us-ascii?Q?a09toFwDwC8nq7rwhfKytviob+wKJ2AqoHbLLryVzZ89dBsz6MFjatsg9TI7?=
- =?us-ascii?Q?GuCbolJWNvB7QPp8HiY/KTYHgWWHexPKeI12xsQZ4F1fXkt42S4a3MR8VfxV?=
- =?us-ascii?Q?ht7rUlRo+VF8npcZcqQEmScAb/pYueJyBE5xL91Em697TrZ+lvhzd+7mFeRU?=
- =?us-ascii?Q?BWQXraOgw99YkV2y6VpWKWlM1WTweOBY1IeqzvfWLfjAT7uBtUqVsOpTStmF?=
- =?us-ascii?Q?BWnrNYdo3PQIhzJUotxXl1h6hijqp31q4qRkR3NLkdEBB7ZnNYD9FTt4JvCA?=
- =?us-ascii?Q?xvq55jKIAEUUhMw1J5XSszw0lA4i13i7UiMQbzveiOr9zMcQ5O7mDVaSDnf8?=
- =?us-ascii?Q?hwKNXeBe4utIcF0yh0LyzGb8SDw8bXKFpeFQifAxLhJWMtZaGazHVTvWFU2J?=
- =?us-ascii?Q?lX8K7dZnGxrTH4dZYD4cQCgDBtsBN+3WxCvNwQBpPniPgcwvG5JFdaLFbOP+?=
- =?us-ascii?Q?N1RNK+BAMvasYck07dhFNjqEkYcKO9nYAc8X16ob6XaOLK/x3GCuiN7E2C1s?=
- =?us-ascii?Q?+tgmlLKxFrkgT+tyUD4f+D934iL/Ti+D+XwJAYl4YA+88UK+7jIsSMTObDpQ?=
- =?us-ascii?Q?+RVO0jAYMydwz2entZDjMQXBMPDb2/bddAy6Ur8nMxpnNUTuOxTc/KwMUj7N?=
- =?us-ascii?Q?oUHu5zQZFkjdqXW5W1DCT2UJnFCaiUgMq2g6LbzE41FNNGDxeAgpwP5bujGF?=
- =?us-ascii?Q?qlPvwr5Vab6IxL/jmMBVz0FRdy2exbJi7/twR4AIxBM6/gcOFqE6Q7Ofp/uR?=
- =?us-ascii?Q?MVILeV/KKH4Z86hLTTtOYZacAq4y9pEofLdX+kBNeJf9FUpXeJryw3t4b2oV?=
- =?us-ascii?Q?xg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 128fb683-31f8-48d5-11d7-08dadeeb977b
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MxqtAQQOhags/fQgjsH4NNRvc63YAZO3pJ4IBP+OW4iJh0vxv/hrHAYAabm9?=
+ =?us-ascii?Q?wXwQxDVi0GVrj+538L1uGtf2aK6CWmUKyJjjwKxI0MQ0Alp2UYx0LtA9IDMx?=
+ =?us-ascii?Q?NNbNZ5bZNVOB74KEUQzCjB0QCLelVmFeKs+BblsSfZRad0pa4mWJ+rMxViZf?=
+ =?us-ascii?Q?V9bFfpkCzR+H/JMwqaIQvv8OnR3Bur8H7Uz+RPFk0tR3pXDcwC+XvtVVA0aj?=
+ =?us-ascii?Q?RV4BgunolV4Mo1k4RE+z9BlRDyqiB2E4PxsEikykSBXISAXY4oxgyMSZBg5B?=
+ =?us-ascii?Q?669FZtjbU0tzNuDEF0IJTT9pw3yHzoYsP9HwBBYLsO/wMpB2KYMom/6Uv4xs?=
+ =?us-ascii?Q?NOrNWaNjMe48ZbpSCWsHMEMQhyd5Ci1+pT6os3oACddDlnC/I3s6GkTts6uB?=
+ =?us-ascii?Q?uhZLICoeCehjEmJ61DJBBrnnMRV0R1Pwkp0MvbXg6HNGDayhi0vwLhRuLPqX?=
+ =?us-ascii?Q?kbZqD06JatipyZ4/dva25p4tDBUKCanaMYC7sSC4hRxbpMS4AoOZ2U9yxi5d?=
+ =?us-ascii?Q?MIGZi4NOLv6sb6UqFf5EFUCLBQ0tfvAF1oVhJI2hEz3Jpgj3rj6GaRzY4XWt?=
+ =?us-ascii?Q?kj5VKwL611jTby3O6HZ/cXygGR3sxD5mqZpcMz70SVXE5q7A3U1QHMyzryyf?=
+ =?us-ascii?Q?vydtNMfotcbrgiaGqFivvB/EeSHxr+sMNughBCbIAZWKPlVcVllvrT29OktA?=
+ =?us-ascii?Q?EgZkOLGp6dKCq7rBPnQrcXdvhUu0uyGIxErKQkj0xBWDuyNfvhJ17mrBTUT9?=
+ =?us-ascii?Q?7oM168g7YR+cv8swTAIWihT2KRc5lIPRs2w5wtcp9s7TWTdaeX5qh9S0dvtT?=
+ =?us-ascii?Q?GMfqMrp7SokeqdKE9srdYzG2bOj9XfvTYZL1FCcxfShts/wh/kgoX0Duq9mz?=
+ =?us-ascii?Q?Z6xECh2WRKpnAdQ7sgWdHxtfhLvJpIz2Ccdc9LncAE3MORkuTXCzlfSvjTl3?=
+ =?us-ascii?Q?tEpys8qC5kI9EEHcfTle+SBSWNF0lGTPSNmDIng2eyZeLa8BerhM3D/4zPHP?=
+ =?us-ascii?Q?bv0uVPGK8Gs5872EmDnwNcIhvS4JIY2FajIRLlLlkLWSv7oyK9BIDYaVUEOC?=
+ =?us-ascii?Q?pMcqgBSDlzKHDjZUuQrYRAAC7qMBVeOPgPa1PAa3tf/h8lVZ44pQ6vtTJIdh?=
+ =?us-ascii?Q?TKH/o8MFu2zmZcRi9d8m7X+ppy7nH2gKFz8XNwZO6jGvhOfrs2wiq47Ehe+M?=
+ =?us-ascii?Q?xY/jBUSQLe1ZPqYSntcGMVf1Jppmo5e/w4quxxPoJwuSfzySzKP5CcenfGzC?=
+ =?us-ascii?Q?8Bl8Llw9q3zD3+/Z7MuvL+4xZEaedRdTvlgdl/5LILUPWyibajhlHvP1JzFJ?=
+ =?us-ascii?Q?dxzVNNNcibNTCzeDi80WeAu7HZ9x7X2u6/ABwAG1isTCx+AI7cfwL/Rh7Rmb?=
+ =?us-ascii?Q?3lpEisoWi6h7lFnowQBf/7z3aUdTHX1YwCYiB3H5iC8pPQq2bRkrr2uez6EL?=
+ =?us-ascii?Q?vj9W0L4Du0motp1mLAutDmj3GJ5FoZfGWieDjnvU1th5ayf6xxCBzFEqsHNU?=
+ =?us-ascii?Q?l1ILfKQu24iv69dzUaq6jX/8jGbpQFLMnXmVt4LlFd2UC624awR0gS1sNPtC?=
+ =?us-ascii?Q?aCoXw3XNojhbvA9GMH0jqGr+mbgmpGwjNzWIEPRh9aEs+p0usrjvx8KPjXb/?=
+ =?us-ascii?Q?Gg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a790475-0182-4177-b67d-08dadef8a8ac
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2022 22:27:46.9733
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Dec 2022 00:01:19.1524
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9RArKWj7lbtC+l+wL9CVTbTHWKo5NhaR/in5tLzE2crrWLsrjpXhgLD7N6w1cDDhj7Cx4t/FrHHJ/WoKa2OU/dxdQm+vu9vqVJv9IF/Nx1k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7397
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5A196tt/cSXE/diVkTgfMaRU9ZIglom9hoSIZ4o8t4iC9D7NQBL0HGtK3QfD48R6jTs0fk/KyJhtA9v1VGojdUvfZpr4ae5dVGliOtrE8fA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6997
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jeff Moyer wrote:
-> Dan Williams <dan.j.williams@intel.com> writes:
+Dave Jiang wrote:
+> By default the CXL RAS mask registers bits are defaulted to 1's and
+> suppress all error reporting. If the kernel has negotiated ownership
+> of error handling for CXL then unmask the mask registers by writing 0s.
 > 
-> > Dave Jiang wrote:
-> >> Add a CXL bus type, and detect whether a 'dimm' is backed by the CXL
-> >> subsystem.
-> >> 
-> >> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >> 
-> >> ---
-> >> v2:
-> >> - Improve commit log. (Vishal)
-> >> ---
-> >>  ndctl/lib/libndctl.c   |   53 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >>  ndctl/lib/libndctl.sym |    1 +
-> >>  ndctl/lib/private.h    |    1 +
-> >>  ndctl/libndctl.h       |    1 +
-> >>  4 files changed, 56 insertions(+)
-> >> 
-> >> diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
-> >> index ad54f0626510..10422e24d38b 100644
-> >> --- a/ndctl/lib/libndctl.c
-> >> +++ b/ndctl/lib/libndctl.c
-> >> @@ -12,6 +12,7 @@
-> >>  #include <ctype.h>
-> >>  #include <fcntl.h>
-> >>  #include <dirent.h>
-> >> +#include <libgen.h>
-> >
-> > This new include had me looking for why below...
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > 
-> man 3 basename
+> ---
 > 
-> >>  #include <sys/stat.h>
-> >>  #include <sys/types.h>
-> >>  #include <sys/ioctl.h>
-> >> @@ -876,6 +877,48 @@ static enum ndctl_fwa_method fwa_method_to_method(const char *fwa_method)
-> >>  	return NDCTL_FWA_METHOD_RESET;
-> >>  }
-> >>  
-> >> +static int is_ndbus_cxl(const char *ctl_base)
-> >> +{
-> >> +	char *path, *ppath, *subsys;
-> >> +	char tmp_path[PATH_MAX];
-> >> +	int rc;
-> >> +
-> >> +	/* get the real path of ctl_base */
-> >> +	path = realpath(ctl_base, NULL);
-> >> +	if (!path)
-> >> +		return -errno;
-> >> +
-> >> +	/* setup to get the nd bridge device backing the ctl */
-> >> +	sprintf(tmp_path, "%s/device", path);
-> >> +	free(path);
-> >> +
-> >> +	path = realpath(tmp_path, NULL);
-> >> +	if (!path)
-> >> +		return -errno;
-> >> +
-> >> +	/* get the parent dir of the ndbus, which should be the nvdimm-bridge */
-> >> +	ppath = dirname(path);
-> >> +
-> >> +	/* setup to get the subsystem of the nvdimm-bridge */
-> >> +	sprintf(tmp_path, "%s/%s", ppath, "subsystem");
-> >> +	free(path);
-> >> +
-> >> +	path = realpath(tmp_path, NULL);
-> >> +	if (!path)
-> >> +		return -errno;
-> >> +
-> >> +	subsys = basename(path);
-> >> +
-> >> +	/* check if subsystem is cxl */
-> >> +	if (!strcmp(subsys, "cxl"))
-> >> +		rc = 1;
-> >> +	else
-> >> +		rc = 0;
-> >> +
-> >> +	free(path);
-> >> +	return rc;
-> >> +}
-> >> +
-> >>  static void *add_bus(void *parent, int id, const char *ctl_base)
-> >>  {
-> >>  	char buf[SYSFS_ATTR_SIZE];
-> >> @@ -919,6 +962,11 @@ static void *add_bus(void *parent, int id, const char *ctl_base)
-> >>  	else
-> >>  		bus->has_of_node = 1;
-> >>  
-> >> +	if (is_ndbus_cxl(ctl_base))
-> >> +		bus->has_cxl = 1;
-> >> +	else
-> >> +		bus->has_cxl = 0;
-> >> +
-> >
-> > I think you can drop is_ndbus_cxl() and just do this:
-> >
-> > @@ -981,6 +976,11 @@ static void *add_bus(void *parent, int id, const char *ctl_base)
-> >         if (!bus->provider)
-> >                 goto err_read;
-> >  
-> > +       if (strcasestr("cxl", provider))
-> > +               bus->has_cxl = 1;
-> > +       else
-> > +               bus->has_cxl = 0;
-> > +
+> Based on patch posted by Ira [1] to export CXL native error reporting control.
 > 
-> Can you explain why this is preferred?
+> [1]: https://lore.kernel.org/linux-cxl/20221212070627.1372402-2-ira.weiny@intel.com/
+> 
+> v4:
+> - Fix masking of RAS register. (Jonathan)
+> 
+> v3:
+> - Remove flex bus port status check. (Jonathan)
+> - Only unmask known mask bits. (Jonathan)
+> 
+> v2:
+> - Add definition of PCI_EXP_LNKSTA2_FLIT. (Dan)
+> - Return error for cxl_pci_ras_unmask(). (Dan)
+> - Add dev_dbg() for register bits to be cleared. (Dan)
+> - Check Flex Port DVSEC status. (Dan)
+> ---
+>  drivers/cxl/cxl.h             |    1 +
+>  drivers/cxl/pci.c             |   48 +++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h |    1 +
+>  3 files changed, 50 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1b1cf459ac77..31e795c6d537 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -130,6 +130,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>  #define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
+>  #define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+> +#define   CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK BIT(8)
+>  #define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
+>  #define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
+>  #define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 33083a522fd1..64272db6a3fd 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -419,6 +419,53 @@ static void disable_aer(void *pdev)
+>  	pci_disable_pcie_error_reporting(pdev);
+>  }
+>  
+> +/*
+> + * CXL v3.0 6.2.3 Table 6-4
+> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+> + * mode, otherwise it's 68B flits mode.
+> + */
+> +static bool cxl_pci_flit_256(struct pci_dev *pdev)
+> +{
+> +	u32 lnksta2;
+> +
+> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+> +	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
+> +}
+> +
+> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+> +{
+> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	void __iomem *addr;
+> +	u32 val, mask;
+> +
+> +	if (!cxlds->regs.ras)
+> +		return -ENODEV;
+> +
+> +	/* BIOS has CXL error control */
+> +	if (!host_bridge->native_cxl_error)
+> +		return -EOPNOTSUPP;
+> +
+> +	addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
+> +	val = readl(addr);
+> +	dev_dbg(&pdev->dev, "Uncorrectable RAS Errors Mask: %#x\n", val);
+> +
+> +	mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
+> +	if (!cxl_pci_flit_256(pdev))
+> +		mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
+> +	val &= ~mask;
+> +	writel(val, addr);
+> +	dev_dbg(&pdev->dev, "Unmasked Uncorrectable RAS Errors Mask: %#x\n", val);
 
-Just less code to achieve a similar result. I do like the precision of
-looking at the subsytem of bus device parent, just not the multiple
-calls to realpath() with dirname() and basename() thrown in which struck
-me as unnecessary. How about this:
+I was thinking it would be useful to convey which bits are actually
+toggling, otherwise this is just printing
+CXL_RAS_UNCORRECTABLE_MASK_MASK which isn't very interesting from a
+debug perspective:
 
-diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
-index c569178b9a3a..76bd7167bc70 100644
---- a/ndctl/lib/libndctl.c
-+++ b/ndctl/lib/libndctl.c
-@@ -877,40 +877,16 @@ static enum ndctl_fwa_method fwa_method_to_method(const char *fwa_method)
-        return NDCTL_FWA_METHOD_RESET;
- }
- 
--static int is_ndbus_cxl(const char *ctl_base)
-+static int is_subsys_cxl(const char *subsys)
- {
--       char *path, *ppath, *subsys;
--       char tmp_path[PATH_MAX];
-+       char *path;
-        int rc;
- 
--       /* get the real path of ctl_base */
--       path = realpath(ctl_base, NULL);
-+       path = realpath(subsys, NULL);
-        if (!path)
-                return -errno;
- 
--       /* setup to get the nd bridge device backing the ctl */
--       sprintf(tmp_path, "%s/device", path);
--       free(path);
--
--       path = realpath(tmp_path, NULL);
--       if (!path)
--               return -errno;
--
--       /* get the parent dir of the ndbus, which should be the nvdimm-bridge */
--       ppath = dirname(path);
--
--       /* setup to get the subsystem of the nvdimm-bridge */
--       sprintf(tmp_path, "%s/%s", ppath, "subsystem");
--       free(path);
--
--       path = realpath(tmp_path, NULL);
--       if (!path)
--               return -errno;
--
--       subsys = basename(path);
--
--       /* check if subsystem is cxl */
--       if (!strcmp(subsys, "cxl"))
-+       if (!strcmp(subsys, "/sys/bus/cxl"))
-                rc = 1;
-        else
-                rc = 0;
-@@ -962,7 +938,8 @@ static void *add_bus(void *parent, int id, const char *ctl_base)
-        else
-                bus->has_of_node = 1;
- 
--       if (is_ndbus_cxl(ctl_base))
-+       sprintf(path, "%s/device/../subsys", ctl_base);
-+       if (is_subsys_cxl(path))
-                bus->has_cxl = 1;
-        else
-                bus->has_cxl = 0;
+Something like:
 
+dev_dbg(&pdev->dev, "Uncorrectable RAS Errors Mask: %#x -> %#x\n", orig, val);
 
+Otherwise, this looks good to me.
