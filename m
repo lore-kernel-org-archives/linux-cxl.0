@@ -2,56 +2,56 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037F0C4332F
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 15:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FE9C4332F
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Dec 2022 15:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbiLPPg3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Dec 2022 10:36:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52800 "EHLO
+        id S231338AbiLPPhO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Dec 2022 10:37:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230365AbiLPPg2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 10:36:28 -0500
+        with ESMTP id S231431AbiLPPhH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 10:37:07 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BA350D5C
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 07:36:27 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9E750D70
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 07:37:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671204987; x=1702740987;
+  t=1671205026; x=1702741026;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ArHLZQwN4nLCaCUsfNqLZljvPI0VZMRIq0tohg70fQw=;
-  b=f2ga4gmwg25bFErYKc7YDiMw7q52EynWJ1ehMjl1Z3UqrYu2cVBGo+Ij
-   hEnYbKo1AYKakNhXWry/OYWgBkHHW7coeDmr9rTvgupHZSYVltVU120m1
-   W/jHzB32qBq371CRO6ZBx8hPFSxKQxUegR+IV276yKpPTnVf32Y4SS7gp
-   cEhQmQhfvSrQmkwkPfiyxRtfpFtJnkmlFXs6ywnLh3rm57pBEx1tYtWyo
-   d8gLSGVzwHCUHZsP9LTX2oh+lAORzxUqEBCaVztwVEoWSxYO93CG9HiFn
-   7JbWzZXQbxQn0QwvSWRQMJOSXB0mMAEOKQuiHdF4CGHHkKIiVO2FhKCiT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="298661071"
+  bh=Si23m594hOtmfQ8it1cl3XSAOphRn2jKK1dlb61fThY=;
+  b=bLKIAO0WWxzndA4Qvnl7lHtWJB9IsLwEIFxeivzOztRwLsaeI4eVXHhE
+   qJnBVX+Z9jp+XPOpBu14aW8EJwdO6eCIFf1ZHpuViSee+N56xkXgtXAl7
+   wuEYfgTl7HOQY4vF4YqXuT2h9GkA4MoEWZCaMkzBwjNLD+y89X8L2ssGm
+   Uv/0000wsHAtCp0usVabD9ax2G5B2gtgnAfqLJwZ7Zxrb58RzcuIv8gxs
+   LE2c/a5GA3dvfNFLmZTbcw9X2zgjiIwUqY3vWAI6Wj45AIMUvM5WoY8ac
+   q16qYjj+wSd8XQ2J0roWPeLvGoHxY9Ghbv3opCFNQsns2ykXqUZnExVY7
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="298661181"
 X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="298661071"
+   d="scan'208";a="298661181"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:36:26 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="718392489"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:37:05 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="718392549"
 X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="718392489"
+   d="scan'208";a="718392549"
 Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.209.167.175]) ([10.209.167.175])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:36:26 -0800
-Message-ID: <a7fbfa17-eb3a-05f4-5192-0e2f36357760@intel.com>
-Date:   Fri, 16 Dec 2022 08:36:25 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 07:37:05 -0800
+Message-ID: <8b1a1aea-717e-fcf1-4710-ff4531b01f04@intel.com>
+Date:   Fri, 16 Dec 2022 08:37:05 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.5.1
 Subject: Re: [PATCH v4] cxl: add RAS status unmasking for CXL
 Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com
 References: <167112768345.3343090.11728168471813709343.stgit@djiang5-desk3.ch.intel.com>
- <20221216123452.0000605e@huawei.com>
+ <20221216093629.00000b7b@Huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221216123452.0000605e@huawei.com>
+In-Reply-To: <20221216093629.00000b7b@Huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -60,7 +60,7 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 
-On 12/16/2022 5:34 AM, Jonathan Cameron wrote:
+On 12/16/2022 2:36 AM, Jonathan Cameron wrote:
 > On Thu, 15 Dec 2022 11:08:03 -0700
 > Dave Jiang <dave.jiang@intel.com> wrote:
 > 
@@ -70,29 +70,18 @@ On 12/16/2022 5:34 AM, Jonathan Cameron wrote:
 >>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 >>
+> 
+> One trivial comment inline that is up to you.
+
+Not a problem. I'll roll that in with changes Dan is asking.
+
+> 
+> Dan's suggestion makes sense.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
 >> ---
 >>
 >> Based on patch posted by Ira [1] to export CXL native error reporting control.
-> When you say based upon this, you mean cherry-picking just that patch off the
-> front of Ira's series?
-
-Correct.
-
-> 
-> That raises the question - are we treating this as a fix? If not, probably better
-> to pull that change into this series that I think is simpler to land than Ira's one
-> and get that queued up then rebase Ira's.  If we aren't in a hurry, fine to queue
-> this one second but then you need to rebase on Ira's full series.
-> 
-> The two series are causing a bunch of fuzz for each other. Sure easy to repair
-> but it's going to require manual intervention.
-
-I'll let Dan make the call on that. I don't have an issue with what you 
-suggested.
-
-> 
-> Jonathan
-> 
 >>
 >> [1]: https://lore.kernel.org/linux-cxl/20221212070627.1372402-2-ira.weiny@intel.com/
 >>
@@ -178,6 +167,10 @@ suggested.
 >> +	val &= ~CXL_RAS_CORRECTABLE_MASK_MASK;
 >> +	writel(val, addr);
 >> +	dev_dbg(&pdev->dev, "Unmasked Correctable RAS Errors Mask: %#x\n", val);
+> 
+> Real nitpick but I'd like a blank line here as the return isn't related to the
+> previous block of code.
+> 
 >> +	return 0;
 >> +}
 >> +
