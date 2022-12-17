@@ -2,142 +2,160 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BDFC4332F
-	for <linux-cxl@archiver.kernel.org>; Sat, 17 Dec 2022 01:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DABC4332F
+	for <linux-cxl@archiver.kernel.org>; Sat, 17 Dec 2022 01:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbiLQBdq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Dec 2022 20:33:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
+        id S229545AbiLQBhG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Dec 2022 20:37:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbiLQBdp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 20:33:45 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFDF73319
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 17:33:44 -0800 (PST)
+        with ESMTP id S229488AbiLQBhF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Dec 2022 20:37:05 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37CCB2EF3A
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Dec 2022 17:37:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671240824; x=1702776824;
-  h=subject:from:to:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=yGN+M08U0rZUPTvJG3Yx5fNkmQnaUxvo5iUIr1ABqok=;
-  b=O9igpik3RnJTK0DICxO7koF5vpzwszsk/biF2Uad1Fc99lGPc33Efiev
-   snJSnOfkY0uRcRxUT6Ui00MbNt5X+19+y8N38YLk+DbXlPANlw6LwvwXM
-   hsGZGF09W3YW017gcwuvpgiUA2qeU8pGIdABrPLvMd9D5GTSlZvKbuwVA
-   WJY9MMb6YJv+FC+XVtK7sxe5fthDH9KLy7DwKDRsj91JpNbaSY00GTGGW
-   Fl2V5GqbvwSKaXRwg9RyCbE+wDVXusN6DwFKBONYB3qPwUrhvf/Zqdexo
-   QPr6Z71O6BQi7AlSWH/DEYpMkCnpiWwAq8Arjmct5gOX8MYYy8b2C/Lya
+  t=1671241025; x=1702777025;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=EyxDyTdWElyCWGTYJ2ezjSFp1UVdV0Zvzor+42+AXeE=;
+  b=bM/pKOoUF4/xH/9UAm+6tthBrgrjq8oosEUAwOt1MqDhIh9l+HmYgBCh
+   utU2PIXXpLYfx43cWfadBnQlXZcIIqjVduUgGMV79HMNSaa/HjciN5kDp
+   p5SwvxOHi6evjs2Y5WXiWcVQcCkFuZCSUnXnlNnmuJBdFOEt4LCknYygc
+   xchX6GKjqGTgMciNaqnnS164BJ7TgocP/8/rU7uMlq4pG51MuaAMqU3aJ
+   /Dp8zdAazUQLfVIzYcC4v3k18XNbcxt2VK97xNM7ObWkYJTUjEcA4MLAt
+   bUKrNs9CzuXH/01VIaILJR2/7qnlfLhSNzno6LL/iqIAAJePHCRIDsZ5g
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="302513805"
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="320267048"
 X-IronPort-AV: E=Sophos;i="5.96,251,1665471600"; 
-   d="scan'208";a="302513805"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 17:33:44 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="649993083"
+   d="scan'208";a="320267048"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 17:37:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="895456943"
 X-IronPort-AV: E=Sophos;i="5.96,251,1665471600"; 
-   d="scan'208";a="649993083"
-Received: from smukhe4-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.110.159])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 17:33:44 -0800
-Subject: [PATCH 3/3] cxl/port: Link the 'parent_dport' in portX/ and
- endpointX/ sysfs
+   d="scan'208";a="895456943"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Dec 2022 17:37:04 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 16 Dec 2022 17:37:04 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Fri, 16 Dec 2022 17:37:04 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Fri, 16 Dec 2022 17:37:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B6oBhOUiUjLWXNHZC4WiQvZo5h9w2REyp8OLJHHuChbA5fFWNDgm2MVaeCzVvmUKc46JV8LVdYoG99miBickw3AO+am7Vr/E8bODVCEwlBOeq/39YLEut0qGyewqIu1r3bejqdGqVHbFh7/3+5Yf3O+6+wfGy8JzhVmY/P2OrbcuE/QYMFDQuQKzJwE9iX7a4fDLDhEAy8jVHMm/kTJJa6VaJmr26+sAj/DgvmRWEv3MuZzgel8q1H0f+VBCk4yxOk5z009+Y9Yrp3t5WIB09kQKUPwIqfiz3TSANNmiypOnyJAFz+Okmx0DcIfjG5K4bJo1CQC3A6hBMzDgDm3udg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C6unTszqstyHpmtHteEMQhS67hge2hnseHay+f+AQU0=;
+ b=WeMXJ81MiQttTagFXu9f7pRPvFSGtlMyNjW6FdBzxNq9S5B/G6Wjc59xpR6JaN/PDkHoUyQUGjmUOoy4hG4wESmzL+a63jeRjWvgtVUfIUNKmvY/sR+Z/oGdqObLmnuwWQIXEerAYO+U1xEkczUWb89vZpaMIVMgkB9XGAF3BTJvvQLEtXfCISCHfGOL2RLQ1MPowLZMuc5Z/yELZS1fkUd0o/1iubvUhEQRZ6DkEqMLTZOCBi+ii+LuV/yc1ScIQ7x3e6+v4jlzfEQTulaIkZYwmRlLc9LXHoIT2KmB+gkal4v/4j3noUTgn7oyt6sy7khXsXk6U/V6kWBNZJWnvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20) by CO1PR11MB4916.namprd11.prod.outlook.com
+ (2603:10b6:303:9c::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.16; Sat, 17 Dec
+ 2022 01:37:01 +0000
+Received: from MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::340d:cb77:604d:b0b]) by MWHPR1101MB2126.namprd11.prod.outlook.com
+ ([fe80::340d:cb77:604d:b0b%9]) with mapi id 15.20.5924.011; Sat, 17 Dec 2022
+ 01:37:01 +0000
+Date:   Fri, 16 Dec 2022 17:36:59 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Date:   Fri, 16 Dec 2022 17:33:43 -0800
-Message-ID: <167124082375.1626103.6047000000121298560.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <167124080717.1626103.10654476222026614847.stgit@dwillia2-xfh.jf.intel.com>
-References: <167124080717.1626103.10654476222026614847.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+To:     Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>
+CC:     <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <nvdimm@lists.linux.dev>
+Subject: RE: [ndctl PATCH v2 07/18] cxl/list: Add parent_dport attribute to
+ port listings
+Message-ID: <639d1d3bc99a_b41e32948@dwillia2-xfh.jf.intel.com.notmuch>
+References: <167053487710.582963.17616889985000817682.stgit@dwillia2-xfh.jf.intel.com>
+ <167053491908.582963.7783814693644991382.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <167053491908.582963.7783814693644991382.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: SJ0PR05CA0115.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::30) To MWHPR1101MB2126.namprd11.prod.outlook.com
+ (2603:10b6:301:50::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1101MB2126:EE_|CO1PR11MB4916:EE_
+X-MS-Office365-Filtering-Correlation-Id: 704cd5ae-7605-4c63-68fc-08dadfcf31b1
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2L5pmdcZ85jwlkNvZpVyyHM3r99F2tj8QqXQ6JXbtAuUaPtjEnCy5hHB8IKH5dHJVnxcsYdGXxU0gLFGj7fNtPK0qeYfQH2WsHjZp/oJjstFm92GH8xpU0KykKEPiFwjt7Hyr8CdcadLaBAm/F5Jn8Z4qsY7Ct4lw2r42/Z8BwiZI0opH0uVGVZJ+Jogxt0mH0sZlz6Ob/ThbpQO1zI8xF8koiyqYbVICOwrSqYAVtNZm8rtzBXwJmsWjXJPYNyyq9ZCalBttoc8uHayHYBKupt+KuV/C85Pw95v8l1M+LtAujr64imY4ba4wvK32fAq77yQNzixeUo5X0pk4VIPua8doR7vFUwC1Q2ASyTlUnpvPPP9tI3lZ/GF8QHevhPwNgVv+3JDCSQLFUu30S4NkH4A2H9UxvYomWAMgrZx5PUdu1omjYVEDGjJLK8cUzsKqExXzFmk4z9D/KZTtKCcbIyi4Z8t1Q0TroLryDly87bVe6kljGXC7NsxB+dHq3Z3+HRlyUDiYwABgprNWQTNo4d1fH6OnZyeaiPIHIvCPjdiyJZQOWSYkesAx33fOp/kZG7X0CzSi6Wktgk6xS4QeqDKLokG8fLqA55Qlg9SOnnZJwdEqYE7nebO0ktbFuNeMwcxJfXfcOIlKOxC7sp9bW/gszb6T8E16ETz6bSiWYc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1101MB2126.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(366004)(39860400002)(396003)(376002)(346002)(451199015)(86362001)(478600001)(316002)(966005)(6486002)(4744005)(4326008)(66476007)(8676002)(66556008)(66946007)(5660300002)(41300700001)(8936002)(2906002)(38100700002)(82960400001)(9686003)(6506007)(6512007)(186003)(26005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sGuFSLmNurLbXdUtUKdjTjmDpsdP5NNiGkjaeTQZLg5cIObmhER63IrldpR7?=
+ =?us-ascii?Q?0vFYcDnhhB+1BMZhjfvUB+ewUinuOWIakqtTML/GVTLb+Nl2vnqJ57oj1PC0?=
+ =?us-ascii?Q?XhWhW1WRykcBzBkbq3DNgH6SgnuJ4H49Z42byeK2ART0sdWVxoZY+qoeIYwy?=
+ =?us-ascii?Q?HMf5bBRAdCOlM9hWhdos/g+rxCxffzedoWM0hmYnTes96ACxywlz50ykhFYv?=
+ =?us-ascii?Q?nky0GdsL9eWMJkw7szYuyVV8iu7BwRd8HhSgowAK2zA4AEz+3UmPnycz8LCJ?=
+ =?us-ascii?Q?QqBKCasPiyyYPKMdnYKsuc5YfkkhdtR3Kb7pMMuiMrruVagg/+gzvlbd46xy?=
+ =?us-ascii?Q?+Dws2+o+0SmvwFAg06Jr6u2ufET508W8BUZIj3OWtRK4E0mNrzGZ/1UTtVY2?=
+ =?us-ascii?Q?bPIqH9QR5wJ2pXRqocmmR4nVFsDEAGU204RiA5z5eBMZ4vqwikqm4vkWSLbh?=
+ =?us-ascii?Q?8ZWVzdCES8AvEc1tpvnD0x+yT0rqphkyIILOcc4RI3XTaXdhRt6tDZxspFUx?=
+ =?us-ascii?Q?+moSx7JlHIQehVYNOoJRXa9g0OjQxr67xRprQmIvQhVXpJ/r87wdDSsQ3RdC?=
+ =?us-ascii?Q?pcQNqw/PiT5KvJsQlS//YS4jIzPN/QBqSMSvFm2E89iFKVoy4kCtSS8u+91l?=
+ =?us-ascii?Q?ePhdsjyLvaMFRncWmihoLQhmLn38iavEKHFJ3wyQYHKmLlHKAblw+lRZsm2H?=
+ =?us-ascii?Q?auXK37U5MZ8a3LvBUwxnNHtJVyUj6EGLHI2pBdswu4hvJXOu3Jz7G2UfI3JS?=
+ =?us-ascii?Q?Rs7/EjbMYElFWKp6tjrVI00V3fjilMHpvQn/lRjjc2Laaj8DcxRu7grnc/qC?=
+ =?us-ascii?Q?FODRFSScDbJdjo7Q5+sf0i583N89UZhAYDS/VhLOekX6FU6q3lrQj1VCIw8I?=
+ =?us-ascii?Q?3bLuk1YSd2aMri4xWct9FATx2C1TZwGpIk3Iej/LW+3LLjXeHoJhmuYqi/VK?=
+ =?us-ascii?Q?wYHp5SWQj1fVztBE4d/Pzd0b9wZYc2GEHMctBUKk4yVv3M9KSFUDQJ+5zE/P?=
+ =?us-ascii?Q?qQrCs8a68Ha/e5CxPmsibbIQIJ1u1VdiaSBNAy9mF8IKETVHVrH7d3yvK99w?=
+ =?us-ascii?Q?WNbPh6R5KiwVD07QGJ3CSJ9ZfOtwbLB7yfWlsXbd4lDopvmHedNJGtvmP010?=
+ =?us-ascii?Q?mAMmq6qaEOHDThbW8dKe72ekda5uVFx0YWbq9ixsGcPuvXXfLVu6BEDe1xfN?=
+ =?us-ascii?Q?gqKcjI/r1bHfzLKgcIA0NzOAtIci4v9boxackasD0nj+Grbx6FOc+WlZXbeO?=
+ =?us-ascii?Q?cb5oxEAUvp8EIP8+BU43QDKfjs5fvetFjiONmIabUMbmhpDAaByflJu418EM?=
+ =?us-ascii?Q?uDAEgLpMKvEEXJMh6lmee3r6Nj7mgeEuq94nmi/uKsFWTL4FQoowaEa1j1wE?=
+ =?us-ascii?Q?lbBfUStv7T2hQ+dtMcS3fQJ0DLXJ6etQCsCpzt8RD1xtL4giDYaHO+6NQmox?=
+ =?us-ascii?Q?DaAUGSDPfVmQvTJtCCH62Q4d4RKCNX4aEceOLxJ3B3ES8IVWeuUQY/n6SuU1?=
+ =?us-ascii?Q?WYIJIQCpVHpeNF1CuBhgMA1T+mLzmIt8aWnukKl3LZTnrWtb9ShQd5k9xnXy?=
+ =?us-ascii?Q?CC7MKkctCl67C85KL+eVtHHQ2q1rBvJMMvB1gThWwOUGH6lH8yx6NquSeKPB?=
+ =?us-ascii?Q?dg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 704cd5ae-7605-4c63-68fc-08dadfcf31b1
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1101MB2126.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2022 01:37:01.3780
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Lw9eea69H9SFPSLhk3KE756nVkjvlZJ2ixSZ34t8iTnqtIHKh63PNpQAhfKQTELiziZwHNSUYtoBeey/mYDzbz6MYYYKzM1DBwuii4TpP9k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4916
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Similar to the justification in:
+Dan Williams wrote:
+> 
+> ---
+>  cxl/json.c         |    8 ++++++++
+>  cxl/lib/libcxl.c   |   38 ++++++++++++++++++++++++++++++++++++++
+>  cxl/lib/libcxl.sym |    1 +
+>  cxl/lib/private.h  |    2 ++
+>  cxl/libcxl.h       |    1 +
+>  5 files changed, 50 insertions(+)
 
-1b58b4cac6fc ("cxl/port: Record parent dport when adding ports")
+I should not have sent this out. It was sitting in my development tree
+for other work, but should have been held back until the kernel support
+landed.
 
-...userspace wants to know the routing information for ports for
-calculating the memdev order for region creation among other things.
-Cache the information the kernel discovers at enumeration time in a
-'parent_dport' attribute to save userspace the time of trawling sysfs
-to recover the same information.
+Drop this for now as the kernel support will not arrive until v6.3:
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-cxl |   15 +++++++++++++++
- drivers/cxl/core/port.c                 |   27 +++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 8494ef27e8d2..1b17c8cb48b5 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -90,6 +90,21 @@ Description:
- 		capability.
- 
- 
-+What:		/sys/bus/cxl/devices/{port,endpoint}X/parent_dport
-+Date:		October, 2022
-+KernelVersion:	v6.2
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) CXL port objects are instantiated for each upstream port in
-+		a CXL/PCIe switch, and for each endpoint to map the
-+		corresponding memory device into the CXL port hierarchy. When a
-+		descendant CXL port (switch or endpoint) is enumerated it is
-+		useful to know which 'dport' object in the parent CXL port
-+		routes to this descendant. The 'parent_dport' symlink points to
-+		the device representing the downstream port of a CXL switch that
-+		routes to {port,endpoint}X.
-+
-+
- What:		/sys/bus/cxl/devices/portX/dportY
- Date:		June, 2021
- KernelVersion:	v5.14
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 6296d2bc909a..729e4aab5308 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -586,6 +586,29 @@ static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
- 	return devm_add_action_or_reset(host, cxl_unlink_uport, port);
- }
- 
-+static void cxl_unlink_parent_dport(void *_port)
-+{
-+	struct cxl_port *port = _port;
-+
-+	sysfs_remove_link(&port->dev.kobj, "parent_dport");
-+}
-+
-+static int devm_cxl_link_parent_dport(struct device *host,
-+				      struct cxl_port *port,
-+				      struct cxl_dport *parent_dport)
-+{
-+	int rc;
-+
-+	if (!parent_dport)
-+		return 0;
-+
-+	rc = sysfs_create_link(&port->dev.kobj, &parent_dport->dport->kobj,
-+			       "parent_dport");
-+	if (rc)
-+		return rc;
-+	return devm_add_action_or_reset(host, cxl_unlink_parent_dport, port);
-+}
-+
- static struct lock_class_key cxl_port_key;
- 
- static struct cxl_port *cxl_port_alloc(struct device *uport,
-@@ -695,6 +718,10 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
- 	if (rc)
- 		return ERR_PTR(rc);
- 
-+	rc = devm_cxl_link_parent_dport(host, port, parent_dport);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
- 	return port;
- 
- err:
-
+http://lore.kernel.org/r/167124082375.1626103.6047000000121298560.stgit@dwillia2-xfh.jf.intel.com
