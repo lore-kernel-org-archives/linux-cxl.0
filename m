@@ -2,299 +2,239 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CDDDC4332F
-	for <linux-cxl@archiver.kernel.org>; Sun, 18 Dec 2022 15:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281FCC4332F
+	for <linux-cxl@archiver.kernel.org>; Sun, 18 Dec 2022 17:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbiLRP4A (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 18 Dec 2022 10:56:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
+        id S231319AbiLRRou (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 18 Dec 2022 12:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbiLRPz7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 18 Dec 2022 10:55:59 -0500
+        with ESMTP id S231128AbiLRRo2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 18 Dec 2022 12:44:28 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DF82F8;
-        Sun, 18 Dec 2022 07:55:57 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43CBD6CA3;
+        Sun, 18 Dec 2022 08:46:25 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NZnQS6pQrz689PR;
-        Sun, 18 Dec 2022 23:52:00 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NZnlw0Q8Bz67Q1W;
+        Mon, 19 Dec 2022 00:07:08 +0800 (CST)
 Received: from localhost (10.81.208.178) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Sun, 18 Dec
- 2022 15:55:55 +0000
-Date:   Sun, 18 Dec 2022 15:55:53 +0000
+ 2022 16:08:28 +0000
+Date:   Sun, 18 Dec 2022 16:08:24 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     johnny <johnny.li@montage-tech.com>
-CC:     "Ira Weiny (ira.weiny@intel.com)" <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V4 2/9] cxl/mem: Read, trace, and clear events on driver
- load
-Message-ID: <20221218155553.000043e5@Huawei.com>
-In-Reply-To: <Y55d/l1nTfpTX/1A@SR651>
-References: <20221212070627.1372402-1-ira.weiny@intel.com>
-        <20221212070627.1372402-3-ira.weiny@intel.com>
-        <20221216153939.00007c41@Huawei.com>
-        <Y5zo+UqOmGCE4ObC@iweiny-desk3>
-        <Y55d/l1nTfpTX/1A@SR651>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Luis Chamberlain <mcgrof@kernel.org>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dave@stgolabs.net>,
+        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] cxl_test: upgrade as a first class citizen selftests
+ capable driver
+Message-ID: <20221218160824.0000583d@Huawei.com>
+In-Reply-To: <639d4bb71bada_b41e329452@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20221217034947.1174795-1-mcgrof@kernel.org>
+        <639d4bb71bada_b41e329452@dwillia2-xfh.jf.intel.com.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.81.208.178]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 18 Dec 2022 08:25:34 +0800
-johnny <johnny.li@montage-tech.com> wrote:
+On Fri, 16 Dec 2022 20:55:19 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> On Fri, Dec 16, 2022 at 01:54:01PM -0800, Ira Weiny (ira.weiny@intel.com) wrote:
-> > On Fri, Dec 16, 2022 at 03:39:39PM +0000, Jonathan Cameron wrote:  
-> > > On Sun, 11 Dec 2022 23:06:20 -0800
-> > > ira.weiny@intel.com wrote:
-> > >   
-> > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > > > CXL devices have multiple event logs which can be queried for CXL event
-> > > > records.  Devices are required to support the storage of at least one
-> > > > event record in each event log type.
-> > > > 
-> > > > Devices track event log overflow by incrementing a counter and tracking
-> > > > the time of the first and last overflow event seen.
-> > > > 
-> > > > Software queries events via the Get Event Record mailbox command; CXL
-> > > > rev 3.0 section 8.2.9.2.2 and clears events via CXL rev 3.0 section
-> > > > 8.2.9.2.3 Clear Event Records mailbox command.
-> > > > 
-> > > > If the result of negotiating CXL Error Reporting Control is OS control,
-> > > > read and clear all event logs on driver load.
-> > > > 
-> > > > Ensure a clean slate of events by reading and clearing the events on
-> > > > driver load.
-> > > > 
-> > > > The status register is not used because a device may continue to trigger
-> > > > events and the only requirement is to empty the log at least once.  This
-> > > > allows for the required transition from empty to non-empty for interrupt
-> > > > generation.  Handling of interrupts is in a follow on patch.
-> > > > 
-> > > > The device can return up to 1MB worth of event records per query.
-> > > > Allocate a shared large buffer to handle the max number of records based
-> > > > on the mailbox payload size.
-> > > > 
-> > > > This patch traces a raw event record and leaves specific event record
-> > > > type tracing to subsequent patches.  Macros are created to aid in
-> > > > tracing the common CXL Event header fields.
-> > > > 
-> > > > Each record is cleared explicitly.  A clear all bit is specified but is
-> > > > only valid when the log overflows.
-> > > > 
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
-> > > 
-> > > A few things noticed inline.  I've tightened the QEMU code to reject the
-> > > case of the input payload claims to be bigger than the mailbox size
-> > > and hacked the size down to 256 bytes so it triggers the problem
-> > > highlighted below.  
+> Luis Chamberlain wrote:
+> > To unit test CXL today we make use of the ndctl meson test suite but
+> > this requires the cxl_test driver. There is however is no kconfig option
+> > for this driver as its required to be built as an external driver. To
+> > debug CXL with this framework is not inuitive as it departs itself from
+> > typical Linux kernel development debugging processes, requiring an
+> > external module build which also happens to *rebuild* all CXL related
+> > production drivers with some new magic incantations, and replacing
+> > your production CXL modules with the new ones.
 > > 
-> > I'm not sure what you did here.
-> >   
-> > >   
-> > > > 
-> > > > ---
-> > > > Changes from V3:
-> > > > 	Dan
-> > > > 		Split off _OSC pcie bits
-> > > > 			Use existing style for host bridge flag in that
-> > > > 			patch
-> > > > 		Clean up event processing loop
-> > > > 		Use dev_err_ratelimited()
-> > > > 		Clean up version change log
-> > > > 		Delete 'EVENT LOG OVERFLOW'
-> > > > 		Remove cxl_clear_event_logs()
-> > > > 		Add comment for native cxl control
-> > > > 		Fail driver load on event buf allocation failure
-> > > > 		Comment why events are not processed without _OSC flag
-> > > > ---
-> > > >  drivers/cxl/core/mbox.c  | 136 +++++++++++++++++++++++++++++++++++++++
-> > > >  drivers/cxl/core/trace.h | 120 ++++++++++++++++++++++++++++++++++
-> > > >  drivers/cxl/cxl.h        |  12 ++++
-> > > >  drivers/cxl/cxlmem.h     |  84 ++++++++++++++++++++++++
-> > > >  drivers/cxl/pci.c        |  40 ++++++++++++
-> > > >  5 files changed, 392 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > > index b03fba212799..9fb327370e08 100644
-> > > > --- a/drivers/cxl/core/mbox.c
-> > > > +++ b/drivers/cxl/core/mbox.c  
-> > >   
-> > > > +static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
-> > > > +				  enum cxl_event_log_type log,
-> > > > +				  struct cxl_get_event_payload *get_pl)
-> > > > +{
-> > > > +	struct cxl_mbox_clear_event_payload payload = {
-> > > > +		.event_log = log,
-> > > > +	};
-> > > > +	u16 total = le16_to_cpu(get_pl->record_count);
-> > > > +	u8 max_handles = CXL_CLEAR_EVENT_MAX_HANDLES;
-> > > > +	size_t pl_size = sizeof(payload);
-> > > > +	struct cxl_mbox_cmd mbox_cmd;
-> > > > +	u16 cnt;
-> > > > +	int rc;
-> > > > +	int i;
-> > > > +
-> > > > +	/* Payload size may limit the max handles */
-> > > > +	if (pl_size > cxlds->payload_size) {
-> > > > +		max_handles = CXL_CLEAR_EVENT_LIMIT_HANDLES(cxlds->payload_size);
-> > > > +		pl_size = cxlds->payload_size;  
+> > This is quite complex, departs ourselves from the typical build/boot
+> > debugging process most folks are used to, and requires a manual error-prone
+> > process which in some kernels / configurations can leads up to a kernel
+> > crash [0].
 > > 
-> > pl_size is only the max size possible if that size was smaller than the size of
-> > the record [sizeof(payload) above].
-> >   
-> > > > +	}
-> > > > +
-> > > > +	mbox_cmd = (struct cxl_mbox_cmd) {
-> > > > +		.opcode = CXL_MBOX_OP_CLEAR_EVENT_RECORD,
-> > > > +		.payload_in = &payload,
-> > > > +		.size_in = pl_size,  
-> > > 
-> > > This payload size should be whatever we need to store the records,
-> > > not the max size possible.  Particularly as that size is currently
-> > > bigger than the mailbox might be.  
+> > We can replace this by having the requirements be defined through proper
+> > kconfig symbols and having the cxl_test driver and requirements also become
+> > part of the standard Linux kernel build process. This matches most other
+> > kernel kernel debugging frameworks for subsystems, which don't require any
+> > external modules.
 > > 
-> > But the above check and set ensures that does not happen.
-> >   
-> > > 
-> > > It shouldn't fail (I think) simply because a later version of the spec might
-> > > add more to this message and things should still work, but definitely not
-> > > good practice to tell the hardware this is much longer than it actually is.  
+> > Let's review the current strategy today, first, so nothing is lost:
 > > 
-> > I don't follow.
+> >   * one must manually *build*, and then as a second step install
+> >     the cxl_test driver as an external modules:
 > > 
-> > The full payload is going to be sent even if we are just clearing 1 record
-> > which is inefficient but it should never overflow the hardware because it is
-> > limited by the check above.
+> >     make M=tools/testing/cxl/
+> >     sudo M=tools/testing/cxl/ modules_install
 > > 
-> > So why would this be a problem?
-> >   
+> >     Provided your depmod.d was configured correctly on your Linux
+> >     distribution you will end up with a complete set of CXL production
+> >     modules and cxl_test mock drivers to let you now use the ndctl
+> >     test suite. To be clear, you will not only end up with cxl_test
+> >     but also with a complete set of module replacements for your CXL
+> >     environment.
+> > 
+> >     This works by:
+> > 
+> >     a) allowing the external module to re-define the __mock macro
+> >        to __weak, used on to_cxl_host_bridge() and allows the mock driver
+> >        to provide a replacement for that single call.
+> > 
+> >     b) the external module build process *rebuilds* all production
+> >        modules *again* but uses the the binutils --wrap=symbol
+> >        feature [0] [1] to let the production CXL code use the mocked up
+> >        CXL features.
+> > 
+> > We can simplify all this considerably and do away with the external
+> > modules requirements. The __mock stuff is raplaced by addressing the
+> > to_cxl_host_bridge() mapping using a define based on your kernel
+> > configuration. If using the production code you use the produciton
+> > __to_cxl_host_bridge(), otherwise mock_to_cxl_host_bridge() will be
+> > used. This is the *only* eyesore in the CXL code to enable use of the
+> > mock driver.
+> > 
+> > The magic --wrap=symbol incantations are also just tucked in a new
+> > production drivers/cxl/Makefile.mock which is only read when the kernel
+> > has been configured for debugging using the CXl mock framework.
+> > 
+> > The last bit of work left is to move as built-in code shared code
+> > between a production environment (non-debugging) and between what is
+> > needed for the same code to run when doing mock debugging. Today the
+> > requirements are small:
+> > 
+> >   * The code to implement to_cxl_host_bridge()
+> >   * When mock debugging is enabled, just the code we need to
+> >     support mock_to_cxl_host_bridge()
+> > 
+> > For both cases this is needed you have CXL_ACPI enabled.
+> > 
+> > In the future if we wanted to then now use the kernel selftests,
+> > for example a tools/testing/sefltests/cxl/ directory, we can easily
+> > do so. This also enables us to separate out unit tests out from the
+> > ndctl tree and allow unit tests to also be developed and written
+> > upstream on the kernel.
+> > 
+> > Another benefit of this approach is that there is no bit rot,
+> > in the sense that now bots can go willy nilly test building this
+> > code, whereas before only those who knew the proper incantations
+> > actually were building this code and loading it properly.
+> > 
+> > [0] https://lkml.kernel.org/r/20221209062919.1096779-1-mcgrof@kernel.org
+> > [1] https://sourceware.org/binutils/docs-2.23.1/ld/Options.html#index-g_t_002d_002dwrap_003d_0040var_007bsymbol_007d-263
+> > [2] https://lwn.net/Articles/558106/
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > ---
+> > 
+> > What do folks think?
+> > 
+> > The test results:
+> > 
+> > https://gist.github.com/mcgrof/2ab7f1601141faa5ac7b16240b4ea652
+> > 
+> > The summary of test results:
+> > 
+> > Summary of Failures:
+> > 
+> > 1/5 ndctl:cxl / cxl-topology.sh      FAIL             0.50s   exit status 1
+> > 2/5 ndctl:cxl / cxl-region-sysfs.sh  FAIL             0.44s   exit status 1
+> > 5/5 ndctl:cxl / cxl-xor-region.sh    FAIL             0.45s   exit status 1  
 > 
-> per spec3.0, Event Record Handles field is "A list of Event Record Handles the 
-> host has consumed and the device shall now remove from its internal Event Log 
-> store.". Extra unused handle list does not folow above description. And also 
-> spec mentions "All event record handles shall be nonzero value. A value of 0 
-> shall be treated by the device as an invalid handle.". So if there is value 0 
-> in extra unused handles, device shall return invalid handle error code
+> At least for me the presented rationale and these results leaves me
+> cold. Yes, there are sharp edges but 0day groks this scheme when it runs
+> tools/testing/nvdimm/ (nfit_test) tests. The run_qemu script automates
+> cxl_test and nfit_test this as well. So the complexity has not proven
+> prohibitive. In the case of tools/testing/nvdimm/ it has not proven
+> prohibitive for years. In other words the suggestion that the current
+> organization ultimately leads to bit rot has not been substantiated in
+> practice.
+> 
+> The proposed direction to move tests out of the ndctl.git repo into the
+> kernel solves the wrong problem. It overlooks the fact that the tests
+> are more tightly coupled to libcxl changes than kernel changes. So in
+> terms of benefits of code being colocated, tests + libcxl + tools in the
+> same repo is more impactful than tests + kernel in the same repo.
+> 
+> I know Jonathan has some latent ideas about building up a CXL regression
+> suite on top of QEMU, but even there it's not clear that would benefit
+> from being developed in linux.git given the tight coupling to QEMU.git.
 
-I don't think we call into that particular corner as the number of event
-record handles is set correctly.  Otherwise I agree this isn't following the
-spec - though I think key here is that it won't be broken against CXL 3.0 devices
-(with that rather roundabout argument that a CXL 3.0 devices should handle later
-spec messages as those should be backwards compatible) but it might be broken
-against CXL 3.0+ ones that interpret the 0s at the end as having meaning.
+QEMU based CI should go two ways:
+1) QEMU CI would typically pin particular kernel version and verify that
+   QEMU changed don't break that. If we need new features for a new test,
+   we move that kernel version used.  Existing tests should never break
+   against a fixed kernel version as that's a regression in QEMU (or
+   maybe a bug elsewhere) Ultimately we should have this running in the
+   normal QEMU gitlab CI.
+2) Kernel CI against QEMU would typically pin particular QEMU version
+   and check that kernel changes don't break.  This will have rough edges
+   for a while yet as we are still adding mandatory features to the QEMU
+   emulation (e.g. events support).  Again, as we add new features / tests
+   may need to move the QEMU version forwards to support them.
 
-Thanks,
+I don't think we much care about backwards compatibility so once we've
+moved the pinned element forwards in the above, we won't care about the
+old version.  The aim here isn't really to ensure no regressions when
+running on QEMU (though that CI is nice to have), but more that we have
+no problems in kernel side of things.
+
+This is a way off yet.  Not seeing this as being part of linux.git.
+The QEMU CI stuff will be in the qemu.git and Kernel CI stuff probably
+sit out of tree - there shouldn't be a tight coupling beyond new tests
+wanting to check available features etc. I might ask a friendly
+CI project to add this to their normal runs.
+
+I don't have strong feelings on cxl_test. Tend not to use it myself
+and haven't yet contributed to it.
 
 Jonathan
 
 > 
-> 
-> > > 
-> > >   
-> > > > +	};
-> > > > +
-> > > > +	/*
-> > > > +	 * Clear Event Records uses u8 for the handle cnt while Get Event
-> > > > +	 * Record can return up to 0xffff records.
-> > > > +	 */
-> > > > +	i = 0;
-> > > > +	for (cnt = 0; cnt < total; cnt++) {
-> > > > +		payload.handle[i++] = get_pl->records[cnt].hdr.handle;
-> > > > +		dev_dbg(cxlds->dev, "Event log '%d': Clearing %u\n",
-> > > > +			log, le16_to_cpu(payload.handle[i]));
-> > > > +
-> > > > +		if (i == max_handles) {
-> > > > +			payload.nr_recs = i;
-> > > > +			rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> > > > +			if (rc)
-> > > > +				return rc;
-> > > > +			i = 0;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	/* Clear what is left if any */
-> > > > +	if (i) {
-> > > > +		payload.nr_recs = i;
-> > > > +		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> > > > +		if (rc)
-> > > > +			return rc;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}  
-> > > 
-> > > 
-> > > ...
-> > >   
-> > > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > > index ab138004f644..dd9aa3dd738e 100644
-> > > > --- a/drivers/cxl/cxlmem.h
-> > > > +++ b/drivers/cxl/cxlmem.h  
-> > > 
-> > > ...
-> > >   
-> > > > +
-> > > > +/*
-> > > > + * Clear Event Records input payload
-> > > > + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
-> > > > + */
-> > > > +#define CXL_CLEAR_EVENT_MAX_HANDLES (0xff)
-> > > > +struct cxl_mbox_clear_event_payload {
-> > > > +	u8 event_log;		/* enum cxl_event_log_type */
-> > > > +	u8 clear_flags;
-> > > > +	u8 nr_recs;
-> > > > +	u8 reserved[3];
-> > > > +	__le16 handle[CXL_CLEAR_EVENT_MAX_HANDLES];  
-> > > 
-> > > Doesn't fit in the smallest possible payload buffer.
-> > > It's 526 bytes long.  Payload buffer might be 256 bytes in total.
-> > > (8.2.8.4.3 Mailbox capabilities)
-> > > 
-> > > Lazy approach, make this smaller and do more loops when clearing.
-> > > If we want to optimize this later can expand it to this size.  
 > > 
-> > I agree but the code already checks for and adjusts this on the fly based on
-> > cxlds->payload_size?
+> > Ok:                 2   
+> > Expected Fail:      0   
+> > Fail:               3   
+> > Unexpected Pass:    0   
+> > Skipped:            0   
+> > Timeout:            0  
 > > 
-> >  +	/* Payload size may limit the max handles */
-> >  +	if (pl_size > cxlds->payload_size) {
-> >  +		max_handles = CXL_CLEAR_EVENT_LIMIT_HANDLES(cxlds->payload_size);
-> >  +		pl_size = cxlds->payload_size;
-> >  +	}
+> > I don't quite get the failures yet, but hey it's a start.
+> > This commit depends on Dan's patch:
 > > 
-> > Why is this not ok?  [Other than being potentially inefficient.]
+> > https://lkmll.kernel.org/r/6393a3a9d2882_579c1294b3@dwillia2-xfh.jf.intel.com.notmuch
 > > 
-> > Do you have a patch to qemu which causes this?
+> > But I can build another RFC if folks want without it.
 > > 
-> > Ira
-> >   
-> > > > +} __packed;
-> > > > +#define CXL_CLEAR_EVENT_LIMIT_HANDLES(payload_size)			\
-> > > > +	(((payload_size) -						\
-> > > > +		(sizeof(struct cxl_mbox_clear_event_payload) -		\
-> > > > +		 (sizeof(__le16) * CXL_CLEAR_EVENT_MAX_HANDLES))) /	\
-> > > > +		sizeof(__le16))
-> > > > +  
-> > > 
-> > > ...
-> > >   
-> >   
-> 
+> >  drivers/cxl/Kconfig                           | 23 +++++++
+> >  drivers/cxl/Makefile                          |  2 +
+> >  drivers/cxl/Makefile.mock                     | 15 +++++
+> >  drivers/cxl/acpi.c                            | 13 ----
+> >  drivers/cxl/core/Makefile                     |  4 ++
+> >  drivers/cxl/core/acpi.c                       | 30 +++++++++
+> >  drivers/cxl/cxl.h                             | 19 +++---
+> >  lib/Kconfig.debug                             |  8 +++
+> >  lib/Makefile                                  |  1 +
+> >  lib/test_cxl/Makefile                         | 13 ++++
+> >  lib/test_cxl/acpi.c                           | 28 +++++++++
+> >  lib/test_cxl/core.c                           | 37 +++++++++++
+> >  .../testing/cxl/test => lib/test_cxl}/cxl.c   |  7 ---
+> >  .../testing/cxl/test => lib/test_cxl}/mem.c   |  0
+> >  .../testing/cxl/test => lib/test_cxl}/mock.c  | 30 ---------
+> >  .../testing/cxl/test => lib/test_cxl}/mock.h  |  0  
+>  
+> I do not think cxl_test is suitable to ship as an in-tree capability, it
+> is intentionally second class to keep test logic distinct from
+> production code.
 
