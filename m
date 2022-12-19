@@ -2,103 +2,71 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ECFC10F1B
-	for <linux-cxl@archiver.kernel.org>; Mon, 19 Dec 2022 18:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE21C4332F
+	for <linux-cxl@archiver.kernel.org>; Mon, 19 Dec 2022 19:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232202AbiLSSVY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 19 Dec 2022 13:21:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
+        id S232256AbiLSTvG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 19 Dec 2022 14:51:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232207AbiLSSVW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Dec 2022 13:21:22 -0500
+        with ESMTP id S232268AbiLSTu5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Dec 2022 14:50:57 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D08614D;
-        Mon, 19 Dec 2022 10:21:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B50D117;
+        Mon, 19 Dec 2022 11:50:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6grkKqNpHqDjE2CxjSJFUJOEcpN2/JFfLlyRMhX3IhM=; b=1MiHKDKZ8dHEcqlhotvk+nQL5F
-        87OakpCd5BXDbVlsTmf945Oaq7TCDfTmYqW0GbWpz9mfCrOpkII52rykQWP8QNfRfvsnNVSaznBB/
-        +KgoF8d199MbGOtt+Eu4qoWoy9bPt4ESdhcgKbw2Vl52c8wpVUeb2tlZ/S4rpHtUN3EOLnr/dhh/u
-        7tIIisJhOBPcoDBPTvlIJoWeRaJLiuvBSNnpb+N0Qo8NMkDyOi+LkloSIGtg2rX2BuRkJPjUAthFl
-        aSPCTPfT0iLE39K/4auxFrBdK+0JlngkeOiO04v/flUBnVbuDPuIZm6q0HmfFfZnvq5WFdw4HhLyi
-        KbJh6y/g==;
+        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=AlvpYVcs/x5S41hvTdL+jGslAuM/L8CEpzIkpPoNAWg=; b=dJCjhk4sC2g9tG/uSFGrtuUSwT
+        HpWlXFxcvqRPHdwpBloZNZCHHWvGC8YbVA8mvQV8jemQxEKUQ6kOqbprKjiLBy/ViaDyDBgYaXK6G
+        BRgbXJFPm+eMP5jakYxWtcyLSqPcJXKk9Uo23YtoPncW24C7uR4V/Fz+RIeWtwWKHlKPiFNjTFYmL
+        m5vH7dqxWiF2TdHKoxaxj8DttEJNEtTo66QLMpg7HEkKVG/FsNScjTx9Clhtw8WD1SmvgKi7wrbll
+        tndVgcSmX8Ccefc5ySuASy7SOTR4tqHaMKJ566kDPhWZICTcysJ5rYNj9q07TnB4nHZ6TUQUFXd3Q
+        ZqLlIbMw==;
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1p7Kkx-00HMLW-9b; Mon, 19 Dec 2022 18:20:55 +0000
-Date:   Mon, 19 Dec 2022 10:20:55 -0800
+        id 1p7MA1-001MzD-2K; Mon, 19 Dec 2022 19:50:53 +0000
 From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dave@stgolabs.net,
-        a.manzanares@samsung.com, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] cxl_test: upgrade as a first class citizen selftests
- capable driver
-Message-ID: <Y6Crh5DiGPPzKoYp@bombadil.infradead.org>
-References: <20221217034947.1174795-1-mcgrof@kernel.org>
- <639d4bb71bada_b41e329452@dwillia2-xfh.jf.intel.com.notmuch>
- <20221218160824.0000583d@Huawei.com>
+To:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com
+Cc:     dave@stgolabs.net, a.manzanares@samsung.com, mcgrof@kernel.org,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl_test: require 64-bit
+Date:   Mon, 19 Dec 2022 11:50:50 -0800
+Message-Id: <20221219195050.325959-1-mcgrof@kernel.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221218160824.0000583d@Huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, Dec 18, 2022 at 04:08:24PM +0000, Jonathan Cameron wrote:
-> QEMU based CI should go two ways:
-> 1) QEMU CI would typically pin particular kernel version and verify that
->    QEMU changed don't break that. If we need new features for a new test,
->    we move that kernel version used.  Existing tests should never break
->    against a fixed kernel version as that's a regression in QEMU (or
->    maybe a bug elsewhere) Ultimately we should have this running in the
->    normal QEMU gitlab CI.
+size_t is limited to 32-bits and so the gen_pool_alloc() using
+the size of SZ_64G would map to 0, triggering a low allocation
+which is not expected. Force the dependency on 64-bit for cxl_test
+as that is what it was designed for.
 
-Sounds sensible.
+This issue was found by build test reports when converting this
+driver as a proper upstream driver.
 
-> 2) Kernel CI against QEMU would typically pin particular QEMU version
->    and check that kernel changes don't break.  This will have rough edges
->    for a while yet as we are still adding mandatory features to the QEMU
->    emulation (e.g. events support).  Again, as we add new features / tests
->    may need to move the QEMU version forwards to support them.
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ tools/testing/cxl/config_check.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Sure - but for this today other than ensuring a kernel does not crash upon
-bootup we also have cxl_test, but not much else.
+diff --git a/tools/testing/cxl/config_check.c b/tools/testing/cxl/config_check.c
+index c4c457e59841..99b56b5f6edf 100644
+--- a/tools/testing/cxl/config_check.c
++++ b/tools/testing/cxl/config_check.c
+@@ -7,6 +7,7 @@ void check(void)
+ 	 * These kconfig symbols must be set to "m" for cxl_test to load
+ 	 * and operate.
+ 	 */
++	BUILD_BUG_ON(!IS_ENABLED(CONFIG_64BIT));
+ 	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_BUS));
+ 	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_ACPI));
+ 	BUILD_BUG_ON(!IS_MODULE(CONFIG_CXL_PMEM));
+-- 
+2.35.1
 
-We'll want to exand a set of target tests on CXL enabled nodes, without
-cxl_test. Other than verifying the topology matches, we'll want to start
-mimicking actual use cases / performance stuff.
-
-> I don't think we much care about backwards compatibility so once we've
-> moved the pinned element forwards in the above, we won't care about the
-> old version. 
-
-Making tests simply skip if the feature is not available doens't take
-much effort but forward thinking.
-
-> The aim here isn't really to ensure no regressions when
-> running on QEMU (though that CI is nice to have), but more that we have
-> no problems in kernel side of things.
-
-Sure.
-
-> This is a way off yet.  Not seeing this as being part of linux.git.
-> The QEMU CI stuff will be in the qemu.git and Kernel CI stuff probably
-> sit out of tree - there shouldn't be a tight coupling beyond new tests
-> wanting to check available features etc. I might ask a friendly
-> CI project to add this to their normal runs.
-
-OK in case it helps, cxl-enabled qemu building bringup / ndctl building
-and install is all now automated and integratead as part of kdevops so
-patches welcomed to expand that coverage.
-
-> I don't have strong feelings on cxl_test. Tend not to use it myself
-> and haven't yet contributed to it.
-
-Thanks, this is useful information.
-
-  Luis
