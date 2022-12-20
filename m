@@ -2,117 +2,243 @@ Return-Path: <linux-cxl-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EA6C4332F
-	for <linux-cxl@archiver.kernel.org>; Tue, 20 Dec 2022 02:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9260C4332F
+	for <linux-cxl@archiver.kernel.org>; Tue, 20 Dec 2022 13:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiLTCol (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 19 Dec 2022 21:44:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37814 "EHLO
+        id S231648AbiLTNtl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 20 Dec 2022 08:49:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiLTCok (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Dec 2022 21:44:40 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3FF12D29;
-        Mon, 19 Dec 2022 18:44:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BkBtj6+8JJfQ50Ok+f9pDixvDCZzWD7kJYCtgoKR9wc=; b=I8Z9FHoNOAuKlHDWk42AqrJ9KV
-        r1NKhn/zMSDscGpZKKGvfdgjP/vhv2G+NFM8qb5qRPootNnSt4kUuYFZCIfHs02p+FsB+9JMuocBv
-        l2U9VDoxJQ/3kGJ3PNlMPKJIyZSCVAvcoE6JB9JfkAOsIjeFKbSn3GLDTw37A3u/QfVBmCaRq11ex
-        hIhUGulis+VRZPfhS4TTKF79kCxkKT064pnknKZ1/98BX+GWB3aiiww/tzeojnSt6CV5QPf6uTtSS
-        pxCKf8ZX/cXZOo3HBjNgOWj05vwWGqk0/dLD03d9v5tVS9Ypt3DvlV0Sje5Ngh9FZMyojDsArseZ0
-        aVgsJIKQ==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1p7ScF-007fgf-MJ; Tue, 20 Dec 2022 02:44:27 +0000
-Date:   Mon, 19 Dec 2022 18:44:27 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dave@stgolabs.net,
-        a.manzanares@samsung.com, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] cxl_test: upgrade as a first class citizen selftests
- capable driver
-Message-ID: <Y6Ehi2ihIgQd/aoR@bombadil.infradead.org>
-References: <20221217034947.1174795-1-mcgrof@kernel.org>
- <639d4bb71bada_b41e329452@dwillia2-xfh.jf.intel.com.notmuch>
- <Y6DDPGnwszUAiNh2@bombadil.infradead.org>
- <63a1015e6ec4a_1bf22944c@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S229563AbiLTNtj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Dec 2022 08:49:39 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D962E65F1;
+        Tue, 20 Dec 2022 05:49:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671544178; x=1703080178;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ILvH76aAgDaS9txxLdxKFTa4pafrJSu2zimzPO8hm0o=;
+  b=Q0KdwWehjyjPhPBo94tVDzcQdGxR0PM9AgDg0duQCGWm7jRZnZS+iuBe
+   qp4lNm7X3MYVznxy0Ui+Apl5th/L0h2dYj5cSB4LGhy+pUPBvW7bgYnAQ
+   jBI+81JULyi5bWE1yTdL8A1lnPaT3775wNAVAIeR9POnz5mnOQriY1fzU
+   poe3kSOQBhkGFfzTmWs4pnhm1hqch0Z8a3AnOQkofuUmDwpQpI5Ud077E
+   42EMkbFohsiDsHSTg7uNlYiNV43K+zbzrDRMqeUqon4NCHDk11P/jpYAo
+   R1t4oVTVcfwFK+i41u8eFgkDUsX0sawJ3AmBtW7/UIHGxqewZAvtbYWs7
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="299956961"
+X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
+   d="scan'208";a="299956961"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 05:49:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="714435955"
+X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
+   d="scan'208";a="714435955"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 20 Dec 2022 05:49:34 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1p7czu-0009XY-00;
+        Tue, 20 Dec 2022 13:49:34 +0000
+Date:   Tue, 20 Dec 2022 21:49:08 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     virtualization@lists.linux-foundation.org,
+        speakup@linux-speakup.org, netdev@vger.kernel.org,
+        loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+        linux-xfs@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-mm@kvack.org, linux-media@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ e45fb347b630ee76482fe938ba76cf8eab811290
+Message-ID: <63a1bd54.a88xtgO0grxGBbe+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63a1015e6ec4a_1bf22944c@dwillia2-xfh.jf.intel.com.notmuch>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Dec 19, 2022 at 04:27:10PM -0800, Dan Williams wrote:
-> Luis Chamberlain wrote:
-> > On Fri, Dec 16, 2022 at 08:55:19PM -0800, Dan Williams wrote:
-> > > In other words the suggestion that the current
-> > > organization ultimately leads to bit rot has not been substantiated in
-> > > practice.
-> > 
-> > On top of this patch I just added a custom debug patch to my tree which
-> > enables CXL_BUS and CXL_TEST by default when this is currently allowed
-> > and it got quite a bit of kernel build warnings. Although some of these
-> > are specific to my change, some of them do not seem to be related to
-> > that and likely could benefit from fixing:
-> > 
-> > https://gist.github.com/mcgrof/73dce72939590c6edc9413b0384ae4c2
-> > 
-> > And so although you may not see some build warnings so far, it does not
-> > negate my suggestion that having cxl_test as a proper upstream driver strategy
-> > gets you more build testing / coverage.
-> 
-> If autobuild coverage of test components is the main concern then
-> cxl_test can copy what nfit_test is doing with CONFIG_NVDIMM_TEST_BUILD.
-> No need for disruptive redesign of how this facility is integrated.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: e45fb347b630ee76482fe938ba76cf8eab811290  Add linux-next specific files for 20221220
 
-I've itemized a list of gains of having this properly integrated. What
-gains are there of this being an external module other than a few folks
-are used to it and it been done before for other subsystems?
+Error/Warning reports:
 
-> > > The proposed direction to move tests out of the ndctl.git repo into the
-> > > kernel solves the wrong problem.
-> > 
-> > That's not in any way what I suggested and is not the point to my patch.
-> > 
-> > The proposed patch does not suggest to ditch ndctl unit tests but to
-> > *enable* also sefltests to make use of cxl_test using the selftests
-> > framework, which is very different. It is not saying "abandon" ndctl
-> > unit tests, but rather, "also enable linux kernel selftests for CXL with
-> > cxl_test".
-> 
-> I think centralizing test scripts is a virtue, and right now the
-> momentum is with those located ndctl.git. This is why I jumped to the
-> conclusion that the long term direction would be to pick one location
-> for maintainer regression tests.
+https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212020520.0OkMIno3-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212040713.rVney9e8-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212061455.6GE7y0jg-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212090509.NjAl9tbo-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212191708.Xk9yBj52-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212201859.qUGugK1F-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202212202020.qL8Aaqu0-lkp@intel.com
 
-That's fine for ndctl unit tests.
+Error/Warning: (recently discovered and may have been fixed)
 
-> > But more importantly, it looks for the value of proper kernel
-> > integration and making use of kconfig for the actual dependencies
-> > and requirements. This is of high value.
-> > 
-> > In addition to this, one possible area I see of value with this change is the
-> > ability to also use the wrap feature later, even without cxl_test to enable
-> > error injection. What would this look like? You simply replace one built in
-> > routine as you do with another which has sprinkled in should_fail() calls,
-> > which otherwise would be an eyesore upstream. This shold also then not
-> > depend the rest of cxl_test stuff, but can make use of building
-> > alternative wrap routines which could be replacement for upstream ones.
-> > 
-> > Another benefit of this strategy is you can also test cxl_test *without*
-> > the need for for requiring modules, which some folks prefer for testing.
-> > At LSFMM this came up for instance and one of the biggest grudges with
-> > testing some frameworks was the dependency on modules.
-> 
-> I do think this is the void that QEMU CXL testing would attempt to fill.
+Documentation/gpu/drm-internals:179: ./include/drm/drm_file.h:411: WARNING: undefined label: drm_accel_node (if the link has no caption the label must precede a section header)
+Documentation/networking/devlink/etas_es58x.rst: WARNING: document isn't included in any toctree
+Warning: tools/power/cpupower/man/cpupower-powercap-info.1 references a file that doesn't exist: Documentation/power/powercap/powercap.txt
+arch/arm/kernel/entry-armv.S:485:5: warning: "CONFIG_ARM_THUMB" is not defined, evaluates to 0 [-Wundef]
+arch/loongarch/kernel/asm-offsets.c:265:6: warning: no previous prototype for 'output_pbe_defines' [-Wmissing-prototypes]
+arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
+arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
+drivers/regulator/tps65219-regulator.c:310:32: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
+drivers/regulator/tps65219-regulator.c:310:60: warning: parameter 'dev' set but not used [-Wunused-but-set-parameter]
+drivers/regulator/tps65219-regulator.c:370:26: warning: ordered comparison of pointer with integer zero [-Wextra]
+lib/dhry_run.c:61:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+mm/memfd.c:274:31: warning: unused variable 'ns' [-Wunused-variable]
 
-Not for error injection support. You need proper kernel support for that.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-  Luis
+drivers/accessibility/speakup/main.c:1290:26: sparse: sparse: obsolete array initializer, use C99 syntax
+drivers/cxl/core/mbox.c:832:18: sparse: sparse: cast from non-scalar
+drivers/cxl/core/mbox.c:832:18: sparse: sparse: cast to non-scalar
+drivers/i2c/busses/i2c-qcom-geni.c:1028:28: sparse: sparse: symbol 'i2c_master_hub' was not declared. Should it be static?
+drivers/media/platform/ti/davinci/vpif.c:483:20: sparse: sparse: cast from non-scalar
+drivers/media/platform/ti/davinci/vpif.c:483:20: sparse: sparse: cast to non-scalar
+fs/xfs/xfs_iomap.c:86:29: sparse: sparse: symbol 'xfs_iomap_page_ops' was not declared. Should it be static?
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arc-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- arm-buildonly-randconfig-r005-20221219
+|   `-- arch-arm-kernel-entry-armv.S:warning:CONFIG_ARM_THUMB-is-not-defined-evaluates-to
+|-- arm64-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- i386-buildonly-randconfig-r001-20221219
+|   `-- mm-memfd.c:warning:unused-variable-ns
+|-- ia64-allmodconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- loongarch-allyesconfig
+|   `-- arch-loongarch-kernel-asm-offsets.c:warning:no-previous-prototype-for-output_pbe_defines
+|-- loongarch-randconfig-s051-20221218
+|   |-- drivers-i2c-busses-i2c-qcom-geni.c:sparse:sparse:symbol-i2c_master_hub-was-not-declared.-Should-it-be-static
+|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
+|-- m68k-allmodconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- m68k-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- mips-allyesconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- powerpc-allmodconfig
+|   |-- arch-powerpc-kernel-kvm_emul.o:warning:objtool:kvm_template_end():can-t-find-starting-instruction
+|   |-- arch-powerpc-kernel-optprobes_head.o:warning:objtool:optprobe_template_end():can-t-find-starting-instruction
+|   |-- drivers-regulator-tps65219-regulator.c:warning:ordered-comparison-of-pointer-with-integer-zero
+|   `-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|-- riscv-randconfig-s041-20221218
+|   |-- drivers-accessibility-speakup-main.c:sparse:sparse:obsolete-array-initializer-use-C99-syntax
+|   `-- fs-xfs-xfs_iomap.c:sparse:sparse:symbol-xfs_iomap_page_ops-was-not-declared.-Should-it-be-static
+|-- riscv-randconfig-s042-20221218
+|   |-- drivers-cxl-core-mbox.c:sparse:sparse:cast-from-non-scalar
+|   |-- drivers-cxl-core-mbox.c:sparse:sparse:cast-to-non-scalar
+|   |-- drivers-net-thunderbolt.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-frame_id-got-unsigned-short-usertype
+|   |-- drivers-net-thunderbolt.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le16-usertype-frame_index-got-unsigned-short-usertype
+|   |-- drivers-net-thunderbolt.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-__le32-usertype-frame_count-got-unsigned-int-usertype
+clang_recent_errors
+|-- hexagon-allmodconfig
+|   |-- drivers-regulator-tps65219-regulator.c:warning:parameter-dev-set-but-not-used
+|   `-- lib-dhry_run.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-false
+`-- x86_64-rhel-8.3-rust
+    `-- vmlinux.o:warning:objtool:___ksymtab_gpl-_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont:data-relocation-to-ENDBR:_RNvNtCsfATHBUcknU9_6kernel5print16call_printk_cont
+
+elapsed time: 726m
+
+configs tested: 66
+configs skipped: 2
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+arc                                 defconfig
+x86_64                    rhel-8.3-kselftests
+s390                             allmodconfig
+x86_64                          rhel-8.3-func
+alpha                               defconfig
+i386                                defconfig
+s390                                defconfig
+arm                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+x86_64               randconfig-a002-20221219
+x86_64               randconfig-a003-20221219
+alpha                            allyesconfig
+x86_64               randconfig-a001-20221219
+m68k                             allyesconfig
+x86_64               randconfig-a004-20221219
+mips                             allyesconfig
+m68k                             allmodconfig
+powerpc                          allmodconfig
+arc                              allyesconfig
+x86_64               randconfig-a005-20221219
+arc                  randconfig-r043-20221220
+x86_64                           rhel-8.3-bpf
+x86_64               randconfig-a006-20221219
+x86_64                           rhel-8.3-syz
+riscv                randconfig-r042-20221220
+x86_64                         rhel-8.3-kunit
+ia64                             allmodconfig
+x86_64                            allnoconfig
+arm                              allyesconfig
+x86_64                           rhel-8.3-kvm
+arm64                            allyesconfig
+s390                 randconfig-r044-20221220
+i386                             allyesconfig
+i386                 randconfig-a001-20221219
+i386                 randconfig-a003-20221219
+i386                 randconfig-a002-20221219
+i386                 randconfig-a006-20221219
+i386                 randconfig-a005-20221219
+i386                 randconfig-a004-20221219
+powerpc                     ep8248e_defconfig
+powerpc                     rainier_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+hexagon              randconfig-r041-20221220
+arm                  randconfig-r046-20221220
+i386                 randconfig-a011-20221219
+i386                 randconfig-a014-20221219
+hexagon              randconfig-r045-20221220
+i386                 randconfig-a012-20221219
+i386                 randconfig-a013-20221219
+i386                 randconfig-a015-20221219
+i386                 randconfig-a016-20221219
+x86_64               randconfig-a014-20221219
+x86_64               randconfig-a015-20221219
+x86_64               randconfig-a012-20221219
+x86_64               randconfig-a011-20221219
+arm                             mxs_defconfig
+x86_64               randconfig-a016-20221219
+powerpc                     ppa8548_defconfig
+x86_64               randconfig-a013-20221219
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
