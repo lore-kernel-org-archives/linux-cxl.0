@@ -1,198 +1,161 @@
-Return-Path: <linux-cxl-owner@kernel.org>
+Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700FFC4167B
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Dec 2022 18:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578B8C4332F
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Dec 2022 04:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234606AbiLUS4s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 21 Dec 2022 13:56:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55336 "EHLO
+        id S231146AbiLVEZT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 21 Dec 2022 23:25:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234209AbiLUS4r (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Dec 2022 13:56:47 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E187647C
-        for <linux-cxl@vger.kernel.org>; Wed, 21 Dec 2022 10:56:47 -0800 (PST)
+        with ESMTP id S229742AbiLVEY4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 21 Dec 2022 23:24:56 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40295C15
+        for <linux-cxl@vger.kernel.org>; Wed, 21 Dec 2022 20:24:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671649007; x=1703185007;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=TObf4jfpdEpyh4xUTHNs6+1bboZZS8uiUd2IiXKOiHc=;
-  b=Lb+vDm90Nd7w8QVyhDHSGskclVTz25diZZfjR4yzM2YM9gZ7bDyDQWx7
-   crl2dIviynMyjLOTo1X8jgPOsKUvDwLaakx+fYd8qDKKahGlnwfIbfMcf
-   xJ53vNbeY4MHITW4OO5zy5Nv8W1aKvCXpWVQzPHENP89spTT0yoXTQK5/
-   adWszdhi+RVAGDLxD0awNhaRMFqN53Y+Fd4g/Osbhjbu6ZIAFEn6gTVM1
-   1AhYytwkUMp5bGY/dY0j8zcfmIu9Z7LNXcqpTFb1V/vmyW/gKTywv32Y6
-   Bn1vcXtlfzYQnk+5Pe7J6Ir4qVD+c8p5VZmqjc6YCeXUyEN4+j7zG2gx/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="303378423"
-X-IronPort-AV: E=Sophos;i="5.96,263,1665471600"; 
-   d="scan'208";a="303378423"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2022 10:56:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="793806092"
-X-IronPort-AV: E=Sophos;i="5.96,263,1665471600"; 
-   d="scan'208";a="793806092"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Dec 2022 10:56:46 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Wed, 21 Dec 2022 10:56:45 -0800
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Wed, 21 Dec 2022 10:56:45 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Wed, 21 Dec 2022 10:56:45 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Wed, 21 Dec 2022 10:56:44 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VTjXwoD4GczSdXG9lDoQQ8uZUh8SZT2UqThS2giIbdEsJV4UAT4OOn76GxioStiAoZaON1Z3rsYfwvJo0LqJNU1wpMDLsKnujHPXKFGVNMRQWVeRFSH5s0zCuUTsF5LFU+tDBauyhdAqJqMUJOZbA9aM5tlc9jp+2L04PLZf/Iemc4CkFt3uxek/OAu6rEKc9sPQxHYgLn6UOT2nLWdugS/CB8Y+vRJkecWOXKCL6JheeSmSxStE0t+alD93gryeNLi0N/1mnGt9TayZm+nt1VTSJ4kNCYT/iVuVln2qe2/BVg8wqaIZxGCI4C2XDIA7eP6Jz2DhGDoHmaYE5F7SZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ns3DTahGneYOUUfW+qatI0osxUU0aMrh8JeRlGttJbw=;
- b=kYE8lQJNYQNMy5k+ceejc1GUE82frUrYkViSFMUlhbEARh6xJ4AKQ7p+vnmblUzOhiKSNnKTv67UoYUQpNGeUJqepCt/+q2nfA64aFxOhrO6qpaDnKFsHH4XsDUd6gWk3ZEox2+gCy/x8OpS7Els8v4LgO2WENNgBK7IDhWV/ZZhP0DWhJXLC/O2UJWIL2Z4JeDjZtQq23EsS/k3n3Y2QcG2UuR+9tG85FBT9o3oFotKw5nEaJbk1Tv4y9KRjiqwi31o5pfTNktzm5hFKPS3sPK3y6CqM6s0CRKwJxLquUSY47oGQMtBzY+e54dz8cNBvASGDbz6ZhlFZOgcfRMutQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by CO6PR11MB5668.namprd11.prod.outlook.com (2603:10b6:5:355::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.16; Wed, 21 Dec
- 2022 18:56:42 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::288d:5cae:2f30:828b]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::288d:5cae:2f30:828b%6]) with mapi id 15.20.5924.016; Wed, 21 Dec 2022
- 18:56:42 +0000
-Date:   Wed, 21 Dec 2022 10:56:38 -0800
+  t=1671683095; x=1703219095;
+  h=date:from:subject:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=0cTOW4aQbeJrB4PyXJK/ul38tT7E9EdZZ3sSJioccjo=;
+  b=NAi0UtLw156zgLT60kHtjT9gvBfi7emj0Vw/HcBUL7fiWnZW4XW6LcqA
+   lUhQ3T5f5DoGHapUN4Z8Nmq/8tgW2rNBy5L8HjAZJtLfbzPMOort6odoh
+   DNpjBc+hgDw78Q2+euiqgV9Agcqhd0UAoKqWU9F3rrUyajAPX+1Xxt+oi
+   pH9P5aRltnTPHSCVeCLyYu1sDLnOTzIvhTgNWPr7Q20D3r0kfdWR6REBl
+   Xd+0Dtf4Zcjmbl3VAhDRfEnQBIkK/Raeggxi9vVIA9WWjv/NH3Kkhq39n
+   br28SnxnO3dW+ZOUUAI7juhu1A4QVwbNWDzqXvgsT7BPEWJeEYooMOK2o
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="321957575"
+X-IronPort-AV: E=Sophos;i="5.96,264,1665471600"; 
+   d="scan'208";a="321957575"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2022 20:24:54 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10568"; a="601733184"
+X-IronPort-AV: E=Sophos;i="5.96,264,1665471600"; 
+   d="scan'208";a="601733184"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.20.211])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2022 20:24:54 -0800
+Date:   Wed, 21 Dec 2022 20:24:53 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/6] hw/cxl/cxl-events: Add CXL mock events
-Message-ID: <Y6NW5hhNbGYUJJCZ@iweiny-desk3>
-References: <20221010222944.3923556-1-ira.weiny@intel.com>
- <20221010222944.3923556-4-ira.weiny@intel.com>
- <20221219100723.000021a9@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20221219100723.000021a9@Huawei.com>
-X-ClientProxiedBy: SJ0PR03CA0186.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::11) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+Subject: [PATCH v2 0/8] QEMU CXL Provide mock CXL events and irq support
+Message-Id: <20221221-ira-cxl-events-2022-11-17-v2-0-2ce2ecc06219@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CO6PR11MB5668:EE_
-X-MS-Office365-Filtering-Correlation-Id: 254df47a-6f36-4d4d-1c4a-08dae385195d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oOyQFOTQ25F5cJRzhVySRNUXjIRyxkUvcN89tX8lRGKSjSFyaM1I8BgWvVhtky2fqyhZx6roxXP0bDsaBlnhhGY5bnyieScqat5yInSO91iTpndLQJmWXQpy+1uh+HcpEbSJo2+v3GHk8uHQn4xD2HwHdzAbaihRxmHJKOZAFCECsUEJf4kW4jdQhRPolnAaHO2pSyREasNF6VLReY+WD/FBwAHSMpdqNDv/bwu7eLFjkw/D03lcmnDE/jcWYvdak6RiGHbv4M0aydswlHmzkILViNaROial9fRSHjpCIihe+977gQdQXvylyFTZefeJ2W7lsvXzSyX5SwtiNis6NULx6artJpyEWrgogBDKiO/RBtJlPZACbxYTQxSgydHVzPONDL64Z5Xxf20mfT/jDH7aUgu/mguYwWocAltQampHbnpAYZnC+vRxZwkh8xiT96YSaod5Ru0G4qxAGaxHyu6K5h8J5l36o1ART0Uf02x0/EKLE7iRH9u5UXym1zgS5y9Z8HWHqkIhV743/JxWf14e4Tb68iGC+L2CSSFyBHskklbS37GgyHgsatcghKEyJ4MA7fZ+nAbCTTRPs+RccupBaWjXiJtEV2eZjP8vdPWiWOEy51yKZuJA8S2yJ75aEEUyU5dGTw2tAmK7Vw23XA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(136003)(366004)(376002)(396003)(39860400002)(346002)(451199015)(44832011)(82960400001)(54906003)(38100700002)(478600001)(6916009)(6486002)(2906002)(4001150100001)(5660300002)(316002)(8936002)(86362001)(4326008)(66946007)(66556008)(66476007)(8676002)(26005)(186003)(41300700001)(6506007)(33716001)(9686003)(6666004)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Wf+bP7RGElascJk9tq49tIbnXDpreA37+U43DlErW7hjndipQSSsCzqo1Lk9?=
- =?us-ascii?Q?fp6q/k8YVFOQXObxsdw5m7RzCDz2egO/4iEHTOJVwJFPB/HQdIHPSebQUKi5?=
- =?us-ascii?Q?jOgf1qOHs4LmyygSOgjCF4HGHVIAHSVmAInBYzSAQpHPv8JV1UdhGuxZq93c?=
- =?us-ascii?Q?o2i217usuxSRXw7lCwVh+WJq9sqHTrsXQw5fMzOzFcGViV+o/LglybKSM2hm?=
- =?us-ascii?Q?V/IcNFvavbwpj4bWkeHk/mq+FIhSATn+3rfdRoYZBJzP7szSAWAXWLqvVtJ8?=
- =?us-ascii?Q?zLdA5ZHfF2Sen5MXs3LIpqql5CptuvtL6Y4MO5onzHD7WQoVlvkdwVpNyT/P?=
- =?us-ascii?Q?Kq6OwWg/iWzUh5Ub0WukUJJfViRSple0wXtoYv8SB4uHASlfTFcoOUfQsn55?=
- =?us-ascii?Q?8iMgoQKqk6TR/4l90q3x3ip1tBsZkoCnE9NpFyy4m0yruAbA+WCsixNTYPuw?=
- =?us-ascii?Q?Ad5yUKQ8gUq8T0OKZA11ycgOxS+QJFi1388e/7aOaj4dSMJeG5c/1cYnB5h1?=
- =?us-ascii?Q?9G3agZ4hmJerhnBbXoRuIOnF+WHxS/UnwGuJmQ2Ky7k8/ZDKhjb8fdoWzZ6r?=
- =?us-ascii?Q?K2oFuGqQx41LsM1eKU2SUkYUUXqSi5X8WNNpUsp+AMiEDw9CG6JDYVdLSfao?=
- =?us-ascii?Q?ZZHT/N50MdyAVh4jB9msdQcWPWxC7CV+MHzUhpyux0kZMzCT+sbfReQFHoxG?=
- =?us-ascii?Q?1MmGljXKauT0tmZ5SNKc980P8ZrBvfMNHaz63fNL6/QNXawhHKDfQJaA/oAQ?=
- =?us-ascii?Q?yxkIa4GPcjBQHrdKm42GAUpI4wWndEMpf8g9SC8wiKQAudSVhqk384UoG7wo?=
- =?us-ascii?Q?wcKXPrvnXE543jJ7dNhITC4ZNk0tWAeagvcwAUxnNtoNvPCQT+RDlc9XsEnh?=
- =?us-ascii?Q?Fbc0kTrsfWLZ5X4bKNlJ1JK8lvpDorOkBmTlCyn4aX6oaSog5pMlhpkwLz0t?=
- =?us-ascii?Q?UGanTwGA7n2S2vn9t5M3KJ1qttFFXzGofNIG6xN3L/d03EDY/WJ8mPqg0DZQ?=
- =?us-ascii?Q?1nBqum2xOFMfSJdoj4BLbCc+9X/usC7lAfDogh4rB02BZmSjn2v+OWbCOach?=
- =?us-ascii?Q?bySYzLOAa2FRmbeNlrXnqsUolsDZvoVJRkU6otVt8EJGpAGcHggKuVhg+mYy?=
- =?us-ascii?Q?+bFYqvQ8BPg5/eOLi8YtxWUq/av5jt4LoNY5UWWmnPJ7o6xTHJFcDIzIIMFz?=
- =?us-ascii?Q?t1l+XpFylJ+aB1mYtI29McUe+2AndWzBMfXG496N85StDBBJCUYfI6PpDTWs?=
- =?us-ascii?Q?0LlIKn0rT0glYZ9mJePGeDnKUy0uivJzCO4Sc5B3vcvbWV7AaMT9vtuumN2E?=
- =?us-ascii?Q?Jeuy9eGXBplyMpvvC4ZQxEUkP/My+BklHfcvTkLsFOsI/03mqSsbxDol6oOM?=
- =?us-ascii?Q?1L9BljIMT0eXk3Zol0mrbJOtdSg4my7MBNiwnhsNXsTRJ4eTbQto3x7dV3pT?=
- =?us-ascii?Q?gszoTfYAXt7G5MZaXkqqLSLFwJAVJdU2mPZ3D4qerlNnUCqps3RJAzxk3N9g?=
- =?us-ascii?Q?QAXJ1eJMdN2j18mtzHKOywQXK/yf5JL3EvA9D2dBG4sMM7G4Cdc7L5NpcoOW?=
- =?us-ascii?Q?7CIEM1/7gXS40LjUpFZNynRVO3eWb6Z+yp1n3dNt?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 254df47a-6f36-4d4d-1c4a-08dae385195d
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2022 18:56:42.4065
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9GOkF3uqycydZl1tqqA5g5QUPCh2IYMoxXSqghtH2ROXgtI4rnOtUnGQTNNtVyytZEKxlv4L1ajqxaBBfW2HYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR11MB5668
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP/bo2MC/yWNUQqDMAxAryL9XsRW3ei+do/hR+3SGejqaJ1Tp
+ HdfdBAC70HyNpEwEiZxLTYRcaZEY2BQp0LYwYQnAj2YhaqUkjxA0YBdPOCMYUqwe5AS5AUcurZ2
+ utfGKsH3vUkIfTTBDvwhfLxn+Y7oaDmC9455oDSNcT36s9ztP1VJ3ko3TVlrVbftGY50+UUK643
+ ChL6040t0OecfP/HoncUAAAA=
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>, qemu-devel@nongnu.org,
+        linux-cxl@vger.kernel.org, Peter Maydell <peter.maydell@linaro.org>
+X-Mailer: b4 0.11.0-dev-141d4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1671683093; l=3489;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=0cTOW4aQbeJrB4PyXJK/ul38tT7E9EdZZ3sSJioccjo=;
+ b=1iRz1qeQGo9GloWC0yIpbjh4y2y4jyPd9Ox7Gf1UGq1483JNGfW47IV4SQ+4UDjm1zZC6vDhfsoV
+ hbiqM4ikBZYW18Ot680pZjecuOH0CngXJlJfFOAXthrzxrOW9mll
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Dec 19, 2022 at 10:07:23AM +0000, Jonathan Cameron wrote:
-> On Mon, 10 Oct 2022 15:29:41 -0700
-> ira.weiny@intel.com wrote:
-> 
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > To facilitate testing of guest software add mock events and code to
-> > support iterating through the event logs.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> An FYI for the next version as I hit an issue with this when
-> testing resets (there are lots of other issues with resets
-> but this one crashed QEMU :)
-> 
-> > ---
-> 
-> > +static void event_store_add_event(CXLDeviceState *cxlds,
-> > +                                  enum cxl_event_log_type log_type,
-> > +                                  struct cxl_event_record_raw *event)
-> > +{
-> > +    struct cxl_event_log *log;
-> > +
-> > +    assert(log_type < CXL_EVENT_TYPE_MAX);
-> > +
-> > +    log = &cxlds->event_logs[log_type];
-> > +    assert(log->nr_events < CXL_TEST_EVENT_CNT_MAX);
-> 
-> This assert triggers on a reset as the function is called without
-> clearing the buffer first.
+CXL Event records inform the OS of various CXL device events.  Thus far CXL
+memory devices are emulated and therefore don't naturally generate events.
 
-Not quite sure what happened there. But this code is completely gone in the new
-version.  As is the mass insertion of events at start up.  I've jettisoned all
-that in favor of the QMP injection of individual events.
+Add an event infrastructure and mock event injection.  Previous versions
+included a bulk insertion of lots of events.  However, this series focuses on
+providing the ability to inject individual events through QMP.  Only the
+General Media Event is included in this series as an example.  Other events can
+be added pretty easily once the infrastructure is acceptable.
 
-I should be sending out a new version today.  It is based on cxl-2022-11-17.  I
-I believe it is much cleaner.  But I'm only supporting general media event
-right now.  The others can be added pretty easily but I want to get the
-infrastructure settled before working on those.
+In addition, this version updates the code to be in line with the
+specification based on discussions around the kernel patches.
 
-Ira
+This series is based on Jonathan's CXL branch here:
+https://gitlab.com/jic23/qemu/-/tree/cxl-2022-11-17
 
-> 
-> I'd suggest moving the setup of any dummy events over to a code
-> path that isn't run on reset.
-> 
-> 
-> > +
-> > +    log->events[log->nr_events] = event;
-> > +    log->nr_events++;
-> > +}
-> 
+Kernel code found here:
+https://lore.kernel.org/all/20221212070627.1372402-1-ira.weiny@intel.com/
+
+Previous RFC (V1) version:
+https://lore.kernel.org/linux-cxl/20221010222944.3923556-1-ira.weiny@intel.com/
+
+Instructions:
+
+Add qmp option to qemu:
+
+	<host> $ qemu-system-x86_64 ... -qmp unix:/tmp/run_qemu_qmp_0,server,nowait ...
+
+	OR
+
+	<host> $ run_qemu.sh ... --qmp ...
+
+Enable tracing of events within the guest:
+
+	<guest> $ echo "" > /sys/kernel/tracing/trace
+	<guest> $ echo 1 > /sys/kernel/tracing/events/cxl/enable
+	<guest> $ echo 1 > /sys/kernel/tracing/tracing_on
+
+	OPTIONAL: set up ndctl to monitor for events (events will show up as
+		  they are injected)
+
+	<guest> $ <path to ndctl>/cxl monitor
+
+Trigger event generation and interrupts in the host:
+
+	<host> $ qmpcmd="${qemusrcdir}/build/scripts/qmp/qmp-shell /tmp/run_qemu_qmp_0"
+
+	<host> $ echo "cxl-inject-gen-media-event path=cxl-dev0 log=0 flags=1 \
+			physaddr=1000 descriptor=127 type=3 transactiontype=192 \
+			channel=3 rank=-1 device=5 componentid='Iras mem'" | $qmpcmd
+
+	<Repeat for more events with different values>
+
+View events on the guest:
+
+	<guest> $ cat /sys/kernel/tracing/trace
+
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Michael Tsirkin <mst@redhat.com>
+Cc: Ben Widawsky <bwidawsk@kernel.org>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: qemu-devel@nongnu.org
+Cc: linux-cxl@vger.kernel.org
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+---
+Ira Weiny (8):
+      qemu/bswap: Add const_le64()
+      qemu/uuid: Add UUID static initializer
+      hw/cxl/mailbox: Use new UUID network order define for cel_uuid
+      hw/cxl/events: Add event status register
+      hw/cxl/events: Wire up get/clear event mailbox commands
+      hw/cxl/events: Add event interrupt support
+      bswap: Add the ability to store to an unaligned 24 bit field
+      hw/cxl/events: Add in inject general media event
+
+ hw/cxl/cxl-device-utils.c   |  54 ++++++++--
+ hw/cxl/cxl-events.c         | 252 ++++++++++++++++++++++++++++++++++++++++++++
+ hw/cxl/cxl-mailbox-utils.c  | 160 ++++++++++++++++++++++------
+ hw/cxl/meson.build          |   1 +
+ hw/mem/cxl_type3.c          |  96 ++++++++++++++++-
+ hw/mem/cxl_type3_stubs.c    |   8 ++
+ include/hw/cxl/cxl_device.h |  56 +++++++++-
+ include/hw/cxl/cxl_events.h | 126 ++++++++++++++++++++++
+ include/qemu/bswap.h        |  40 +++++++
+ include/qemu/uuid.h         |  12 +++
+ qapi/cxl.json               |  25 +++++
+ 11 files changed, 785 insertions(+), 45 deletions(-)
+---
+base-commit: 1b4133103d20fc3fea05c7ceca4a242468a5179d
+change-id: 20221221-ira-cxl-events-2022-11-17-fef53f9b9ac2
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
