@@ -2,217 +2,223 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6796C3DA7D
-	for <linux-cxl@archiver.kernel.org>; Tue,  3 Jan 2023 21:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1647FC4708E
+	for <linux-cxl@archiver.kernel.org>; Tue,  3 Jan 2023 21:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbjACVcV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 3 Jan 2023 16:32:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59220 "EHLO
+        id S233335AbjACVn0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 3 Jan 2023 16:43:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231156AbjACVcU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 3 Jan 2023 16:32:20 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923861261B
-        for <linux-cxl@vger.kernel.org>; Tue,  3 Jan 2023 13:32:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672781539; x=1704317539;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=CDEaJwEE9pGhTuvvkQh/hc43bteWNnavWF7gzw4BKrs=;
-  b=Hu6Ye5wJDjeXboUoiC0gASLUmTj791xPNn9a0aBEgwr7u8C/afCz0QF1
-   XXBsfZh5zr4uuF2yJUfPv+waDifups0B8uun80/DYx3IT9AJ+/Yt2jHok
-   4TqCPfmZIml6QA6DSCZybUCHxx+JuFGyr0024pRpW5bo4qDvnH2gEGnva
-   Ir3Xx7jkvXPmkotoWp/+TCRoaWolXCaRuJiLxQqhEcPpIsILpH59v+KIC
-   9cX7m3kYedprVnTO814R2NbUvLiIEV+fFCywDfpREQWon+8mZIkMuQ8bq
-   /ftRRs39XGX/l5vuUv1/c0I0AEEs+tt0CCzpgsaP/Akj2yKox7HCIQB1I
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="305266766"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="305266766"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 13:32:18 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="900319948"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="900319948"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.96.127]) ([10.212.96.127])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 13:32:17 -0800
-Message-ID: <0a126dca-fe40-5f3e-9c04-b6dae01c221a@intel.com>
-Date:   Tue, 3 Jan 2023 14:32:17 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [RFC PATCH 1/8] cxl: break out range register decoding from
- cxl_hdm_decode_init()
+        with ESMTP id S231949AbjACVnY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 3 Jan 2023 16:43:24 -0500
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A3AB48E
+        for <linux-cxl@vger.kernel.org>; Tue,  3 Jan 2023 13:43:20 -0800 (PST)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230103214314usoutp017ad40ecf154d3dcaf317c8532bf18e04~26or-OBUL2633926339usoutp01C;
+        Tue,  3 Jan 2023 21:43:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230103214314usoutp017ad40ecf154d3dcaf317c8532bf18e04~26or-OBUL2633926339usoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1672782194;
+        bh=Fb+AOtsztx2PL9uuG7lK4bgYrZE6XVdEyWZTIn8HsMY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=Zs2EvvnCd1EDw7Lj8QBEMsp+FYLNXJowQUjRl5VkxKiJdkka5FeT8ivVPM/UnnRGn
+         bNVwLO2A74gJPHkG+vjBuz2oNLL8isJAw/q8VNrYnCFyEgh3+g5NGVDnlrX4NJD1IB
+         YIgex6W6AW2M8hafGQF5pyWyZhp+6XiCDvNlpOcE=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230103214314uscas1p2b6624286967e849f08a4e16e3321d188~26or4_Zcz1282312823uscas1p27;
+        Tue,  3 Jan 2023 21:43:14 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges3new.samsung.com (USCPEMTA) with SMTP id 96.BB.34012.271A4B36; Tue, 
+        3 Jan 2023 16:43:14 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230103214313uscas1p17c4ed9498d0168080896001306548a96~26orqMDpD2956429564uscas1p1S;
+        Tue,  3 Jan 2023 21:43:13 +0000 (GMT)
+X-AuditID: cbfec370-70dfe700000284dc-78-63b4a172d439
+Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id FA.C2.03790.171A4B36; Tue, 
+        3 Jan 2023 16:43:13 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Tue, 3 Jan 2023 13:43:13 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
+        3 Jan 2023 13:43:13 -0800
+From:   Fan Ni <fan.ni@samsung.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "sunfishho12@gmail.com" <sunfishho12@gmail.com>
+Subject: Re: [ndctl PATCH 0/2] cxl-list: Construct CXL topology graph images
+Thread-Topic: [ndctl PATCH 0/2] cxl-list: Construct CXL topology graph
+        images
+Thread-Index: AQHZFKCOrtu2YggNCUSipmQFAN4BWK6NqYMAgAAsFAA=
+Date:   Tue, 3 Jan 2023 21:43:12 +0000
+Message-ID: <20230103214305.GA2878607@bgt-140510-bm03>
+In-Reply-To: <63b47c72a3cc4_5174129497@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, rrichter@amd.com, terry.bowman@amd.com
-References: <166984987659.2805382.17264896576424996856.stgit@djiang5-desk3.ch.intel.com>
- <166984994091.2805382.15976080608757662866.stgit@djiang5-desk3.ch.intel.com>
- <20221219155918.000008db@Huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221219155918.000008db@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <0472EB316367DB4DB527768C54C92B62@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzH+z7Pc3dPZzffrqaPWHTLhpSfcUJjY7L8aEOEHbfzLNE93e4p
+        lKZEzHNqhRPPhcrkR1eR0E9RVmSWEepEYzFHmx3LMa1xz5Pt/nt/P5/X5/t9fb/70qT6rCyI
+        TmJTGTOrT9bIldSd9qGucHNprWHW0TaFtsj6DGkreu1I2yV0UtpDv8uQ1lHQTiyVxdQLbxUx
+        l5qcRIzVlhXzoyY4jtqiXLyTSU7ay5hnRu9Q7ho4fMD0ImT/L2eRIhv9DuIRTQOeBz9zxvBI
+        SavxNQTNeRUKaZFLwJdHVjmPfEXI3cuLWY0rEYwcD5EgF4L+XispLS4jOFZRJFJyHAL3+Lti
+        DsBhUFj8QIRIPILA3vJdbPjj1VBqbyE8HgF4HeS50iQ+CupdxSJC4VA4ct9FeRAVng+ufJ2n
+        7ItXAf9HID0Z4XHg7rQTnkziQHAMXCQkaT8oszWRUh4HIw3vRy8TAv1up0LiZ0BJo2RD4mjg
+        j35DUg6D8tKv4qzq3z6Pzw1Q0ux4eHC1ZzQ/pOFZQ6j0isuh8NESqTwBXr62jh7LwZNzTvHm
+        gLMRVPX1yKTGIigdriYKUKjgpS14KQleSoKXkuClVIJk11FgGscZExluLsvsi+D0Ri6NTYww
+        pBhr0L/P82SkzVSHHA5XRCsiaNSKgCY1AaqTn2sMatVOfXoGY07Zbk5LZrhWNIGmNIEqy+2L
+        BjVO1KcyexjGxJj/dwnaNyibYLHc0iwou+91ZXZMzbXUDa6t7/hzel1ktLPKLpvbJc+5md7W
+        vX7mtkLAC/3irZE9yKcxcjihrH73tHabqaUif8Bh6zYMFx3I5xfqhqrmVKayMtJtD47T9TeF
+        ZeyIimc3PtYc22pe4R6bcEnXefJF+RRtVvWVAA3qiO3ZQw9N8r9VudIiPxW3+932T87zB+vC
+        eveNb2DjDT6hU2ZssW39NdH6XH+iUHsmY/7kgiS/E3SqLri224iiU0435Vq0fPEa18bwp5sH
+        H/bpuDdU1oLmO8KGvKiSVx82WdiPb68Zbzj3Z1abnMOD6XMac6pUseVLYi8YfFa8zFx2g5kN
+        fYKG4nbpZ08nzZz+L2GAIeirAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsWS2cA0Ubdw4ZZkg6aTxhbTp15gtFh9cw2j
+        xflZp1gsGn8uYrS4NeEYkwOrx85Zd9k9Fu95yeQxdXa9x+dNcgEsUVw2Kak5mWWpRfp2CVwZ
+        T5qrCy4rVvx4OZ29gfGnVBcjJ4eEgInE95tdbF2MXBxCAqsZJT52HWECSQgJfGSUOPYyFCKx
+        lFFiz4QFbCAJNgFFiX1d28FsEQFtiYlzDjKDFDEL/GOUWLP/E1hCWMBHYuGa/UwQRb4Sbace
+        M0LYVhI7P84Bq2ERUJFoOfCRpYuRg4NXwEziY18cxLIzjBK37p8Gq+EU8JTo+j2LGcRmFBCT
+        +H5qDdhMZgFxiVtP5jNBvCAgsWTPeWYIW1Ti5eN/rBC2osT97y/ZIep1JBbshriNWcBOoqvt
+        PSOErS2xbOFrsF5eAUGJkzOfsED0SkocXHGDZQKjxCwk62YhGTULyahZSEbNQjJqASPrKkbx
+        0uLi3PSKYsO81HK94sTc4tK8dL3k/NxNjMDYPf3vcOQOxqO3PuodYmTiYDzEKMHBrCTCO+nF
+        pmQh3pTEyqrUovz4otKc1OJDjNIcLErivEKuE+OFBNITS1KzU1MLUotgskwcnFINTJ0h6ncS
+        iyN1Zi9mKloyl6m1cM9VW2f230V8bf2zTdIvsefZGK8s5g10ev9R6a/x/f5nO9sXJHE/Vbl+
+        wa5m/ZTEi5a2vZsS34W8MA38vPbcqnmXsjjkzJWPbbgamfPINqZO0ML/7rdF+xd9+sw2/8ul
+        ss2ZcuKeH2VlZEVK9d6nsTNu3P35xNR5gT/fuFd/nLZRhkPvQCvzwg3ueRLstXWbNHKdrIwO
+        pM5WvDfrplGAvt+KnSYbNmzqs9O+Nu2sX/uGdJWf8sm7epVl5sp39K/zufzS86H63F0zb09n
+        z8/OdLvKLWwVp6loqdZVamxdV+d5Qs/X4LliPrvtpv32nXOk2Fyr939cFjvnFyODEktxRqKh
+        FnNRcSIAJ4wgp0wDAAA=
+X-CMS-MailID: 20230103214313uscas1p17c4ed9498d0168080896001306548a96
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20221220182621uscas1p22da97d084545a7b00f7bf7ea4df7ee3c
+References: <CGME20221220182621uscas1p22da97d084545a7b00f7bf7ea4df7ee3c@uscas1p2.samsung.com>
+        <20221220182510.2734032-1-fan.ni@samsung.com>
+        <63b47c72a3cc4_5174129497@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Tue, Jan 03, 2023 at 11:05:22AM -0800, Dan Williams wrote:
 
 
-On 12/19/22 8:59 AM, Jonathan Cameron wrote:
-> On Wed, 30 Nov 2022 16:12:20 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> There are 2 scenarios that requires additional handling. 1. A device that
->> has active ranges in DVSEC range registers (RR) but no HDM decoder register
->> block. 2. A device that has both RR active and HDM, but the HDM decoders are
->> not programmed. The goal is to create emulated decoder software structs
->> based on the RR.
->>
->> Move the CXL DVSEC range register decoding code block from
->> cxl_hdm_decode_init() to its own function. Refactor code in preparation for
->> the HDM decoder emulation.  There is no functionality change to the code.
->> Name the new function to cxl_dvsec_rr_decode().
->>
->> The only change is to set range->start to CXL_RESOURCE_NONE if the range is
->> not programmed correctly or active.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> Hi Dave,
-> 
-> I think this refactor, whilst fairly minimal reveals some places
-> where with a slightly more invasive set of changes we can improve the resulting
-> code.
-> 
-> Jonathan
-> 
->> ---
-> 
-> 
->> -int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
->> +
->> +static int cxl_dvsec_rr_decode(struct pci_dev *pdev, int d,
->> +			       struct cxl_endpoint_dvsec_info *info)
->>   {
-> ...
-> 
->>   	for (i = 0; i < hdm_count; i++) {
->>   		u64 base, size;
->> @@ -426,22 +417,44 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
->>   
->>   		base |= temp & CXL_DVSEC_MEM_BASE_LOW_MASK;
->>   
->> -		info.dvsec_range[i] = (struct range) {
->> +		info->dvsec_range[i] = (struct range) {
->>   			.start = base,
->>   			.end = base + size - 1
->>   		};
->>   
->>   		if (size)
->>   			ranges++;
->> +		else
->> +			info->dvsec_range[i].start = CXL_RESOURCE_NONE;
-> 
-> The following might become irrelevant after later patches in series...
-> 
-> Seems a little odd to do it this way for the !size case and set it
-> directly above for the case where size is non zero.  Also, is there any
-> purpose to setting end?
-> Perhaps just sent whole thing down here and set end to the magic flag?
-> 
-> 		if (size) {
-> 			info->dvsec_range[i] = (struct range) {
-> 				.start = base,
-> 				.end = base + size - 1,
-> 			};
-> 			ranges++;
-> 		} else {
-> 			info->dvsec_range[i] = (struct range) {
-> 				.start = CXL_RESOURCE_NONE,
-> 				.end = CXL_RESOURCE_NONE,
-> 			};
-> 		}
-> 
-> or for a more major refactor short cut the !size case and don't bother
-> reading the pci registers values that are going to be thrown away
-> anyway.
-> 
-> 		if (!size) {
-> 			info->dvsec_range[i] = (struct range) {
-> 				.start = CXL_RESOURCE_NONE,
-> 				.end = CXL_RESOURCE_NONE,
-> 			};
-> 			continue;
-> 		}
-> 
-> 		rc = pci_read_config_dword(
-> 			pdev, d + CXL_DVSEC_RANGE_BASE_HIGH(i), &temp);
-> 		if (rc)
-> 			return rc;
-> 
-> 		...
-> 
-> 		info->dvsec_range[i] = (struct range) {
-> 			.start = base,
-> 			.end = base + size - 1,
-> 		};
-> 		ranges++;
-> 	}
 
-Ok I like this optimization. It makes sense not reading the other 
-registers if the range is not enabled.
+> Fan Ni wrote:
+> > This patch series extends the `cxl list` subcommand to show the cxl
+> > topology visually. Mattew Ho first worked on the code and provided an
+> > initial patch as list below[1].
+>=20
+> Thanks for picking this up, it looks like a useful addition to me.
+>=20
+> >=20
+> > This patch series includes the following two patches,
+> > 1) Patch 1 adds a parent_dport attribute to ports and type 3 memory dev=
+ices to
+> > show which downstream port a component is attached. This attribute will=
+ be used
+> > in patch 2 to generate the cxl topology graph.
+>=20
+> I had a similar patch to do this here:
+>=20
+> https://urldefense.com/v3/__http://lore.kernel.org/r/167053491908.582963.=
+7783814693644991382.stgit@dwillia2-xfh.jf.intel.com__;!!EwVzqGoTKBqv-0DWAJB=
+m!Xc_tWtX0GBqionoq7JRQxQ39MytJEW3jP-JcQnLrj7Op9_u5mMRg_hUoUvQabHNT_IXi3MbHF=
+2d0TwCsiZckhvCToA$=20
+>=20
+> The biggest difference I see is that your version adds 'parent_dport' to
+> memdevs where mine keeps it purely an 'port' attribute. So the listing
+> needs to have --endpoints to get the memdev to 'parent_dport'
+> assocation.
 
-> 
->>   	}
->>   
->> -	info.ranges = ranges;
->> +	info->ranges = ranges;
-> 
-> Trivial but I would like a blank line here.
+Thanks for mentioning this, I missed the patch. It seems we can use this pa=
+tch
+to prepare the info for plotting the graph. Need to check more.
 
-ok
+>=20
+> > 2) Patch 2 extends the `cxl list` subcommand to dump the cxl topology t=
+o a
+> > json format file or generate a graph showing the cxl topology. To use t=
+he
+> > extended function, the option `-o output.suffix` is added. Acceptable o=
+utput
+> > suffixes include .jpeg, .jpg and .png for generating a graph and for ot=
+her
+> > suffix, it will dump the json-formatted cxl topology to the file, which
+> > can be used the input file (with --input option) to generate the graph
+> > later.
+>=20
+> I notice that the implementation enforces some implicit listing options,
+> disables --endpoints, and does some magic with looking at the suffix to
+> know what to write to the output file. That feels too restrictive and
+> makes the 'list' command a bit more difficult to reason about. How about
 
-> 
->> +	return 0;
->> +}
->> +
->> +/**
->> + * cxl_hdm_decode_init() - Setup HDM decoding for the endpoint
->> + * @cxlds: Device state
->> + * @cxlhdm: Mapped HDM decoder Capability
->> + *
->> + * Try to enable the endpoint's HDM Decoder Capability
->> + */
->> +int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
->> +{
->> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->> +	struct cxl_endpoint_dvsec_info info = { 0 };
->> +	int rc;
-> 
-> Trivial but probably want to reorder these to maintain the reverse xmas tree.
+Using file extention to decide whether to dump the output to a json-formatt=
+ed
+file or plot a cxl graph was suggested by Vishal in his previous
+comments to Mattew's patch (
+https://lore.kernel.org/all/093ebf126ad44920d9c7bfd1c30af5040e0c7020.camel@=
+intel.com/
+). We are neutral to either way as long as there is a consensus.
 
-ok
+About the enforcements placed on "cxl list" command option, it should be ea=
+sy to
+address. We should be able to remove them and fix in graph functions.
 
-> 
->> +	struct device *dev = &pdev->dev;
->> +	int d = cxlds->cxl_dvsec;
->> +
->> +	rc = cxl_dvsec_rr_decode(pdev, d, &info);
->> +	if (rc < 0)
->> +		return rc;
->>   
->>   	/*
->>   	 * If DVSEC ranges are being used instead of HDM decoder registers there
->>   	 * is no use in trying to manage those.
->>   	 */
->> -hdm_init:
->>   	if (!__cxl_hdm_decode_init(cxlds, cxlhdm, &info)) {
->>   		dev_err(dev,
->>   			"Legacy range registers configuration prevents HDM operation.\n");
->>
->>
-> 
+> decoupling the support from 'list'? I am thinking of a scheme like this:
+>=20
+>    cxl list -vvv | cxl graph -o png > cxl-topo.png
+>=20
+
+Currently, we can do similar things as you mentioned above.
+cxl list -vvv > cxl.json (with some changes to remove the option enforcemen=
+t.)
+cxl list -input cxl.json -o cxl-topo.png
+
+But I agree that using a separate subcommand may be a better idea as the
+advantage you mentioned below.
+
+> This has a few advantages:
+> - The graphviz build dependency can be made optional where the user can
+>   detect if the support is present in the build by the availability of
+>   the 'graph' subcommand.
+
+IMO, this is the main advantage to introduce a new subcommand.
+
+> - Listings can be created on one system and graphed on another which
+>   among other usages is useful for debugging topologies over email.
+
+Our current approach can achieve similar goal with "-input" option.
+
+> - The 'graph' subcommand can parse and optionally warn about the input
+>   json rather than implicit forcing of listing options.
+
+Agree.
+
+> - The json can go through additional filtering before being graphed:
+>=20
+>     cxl list -vvv $basic_filters | jq $advanced_filters | cxl graph -o pn=
+g > out
+>=20
+> Thoughts?
+
+Thanks for the comments. So based on the above comments and my
+understanding, I think we need to decide two things before acting
+further.
+1. whether we want to use suffix to determine plot behaviour or use
+explicit arguments.
+2. Whether we want to introduce an extra subcommand for the graph
+function or stick to existing approach and make changes as needed to
+achieve similar goal.=
