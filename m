@@ -2,164 +2,259 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E377C4708D
-	for <linux-cxl@archiver.kernel.org>; Wed,  4 Jan 2023 20:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B269C46467
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Jan 2023 20:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240157AbjADUa6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 4 Jan 2023 15:30:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42672 "EHLO
+        id S235325AbjADUpd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Jan 2023 15:45:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240281AbjADUa6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Jan 2023 15:30:58 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36F0C52
-        for <linux-cxl@vger.kernel.org>; Wed,  4 Jan 2023 12:30:56 -0800 (PST)
+        with ESMTP id S229464AbjADUpb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Jan 2023 15:45:31 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B301BE81
+        for <linux-cxl@vger.kernel.org>; Wed,  4 Jan 2023 12:45:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672864256; x=1704400256;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hd1ntTn2RqxxgOwywG/94b66ZkO5bd1rgc7M4D/4KnU=;
-  b=hE8aRnRlQwiMVPsAt0J2RNSg0Emg/OA2ypGh6S1GTXG0dwfoGVHsTf8u
-   hM4LkevKFT93ELdsBGOxeIOU0pOsOgmtYF6MCAvdCMzb0kO/MOHrktwYV
-   HsQ1fmkl0dZjECPLjgLdqAkWs5WjFfWmV6eJkIkKC7L2HtdCwM0E9aNxL
-   NvWjdDMJKypDWs/PbzWCuh2VS14MH7n02XhxCyrpYVN8bKztXPks92acw
-   JnTWCdJFNZGN6p4NdRJiwETNRiLVoAjbbzrHQYLBseM3/Iw8WqDRMOzi8
-   PjLaTrPcj7UlShFwkkVaNJ/W2O21+N9o+HmyPWVMhR5hRiSm16kQi8qQp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="324038124"
+  t=1672865130; x=1704401130;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JPhN81ERRIjZzS1z/TE/lkSjEk449sf/QV8soOROeBY=;
+  b=JDZnTD1cs4kYEm7mHEK6q3JoyxB/XN6dQmNeTjzcBdtCjuiRGNpI0Cs8
+   11eYd39awu38yMyjykfV5c6qauXjQfHhFvgi34+tEi2ToVECc5R93ITp+
+   /uCk10OYPBqhVpRG74KT2CFv3Q1sMtcL5uAWwgJmVtro5MvHSaS0uWbbz
+   XCt0KjSkb9c5zSfN0EeojVijLcQ4jwtVftx1JtinMbZS9DeUmWUeI5VMn
+   NbhwkepuXduaBeRSQZSY89cpM4ufI+05go3KvbRA4Aau1cCafXNdQ0Zii
+   aTTY65BqvwS6dQKg5U9DfEzWWCeEZ5pRFRUEXUkCupHH4DMNmQNidabVz
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="301729319"
 X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="324038124"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:30:56 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="632912046"
+   d="scan'208";a="301729319"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:45:29 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="687656569"
 X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="632912046"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:30:55 -0800
-Subject: [ndctl PATCH v4 1/4] ndctl: add CXL bus detection
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Cc:     vishal.l.verma@intel.com
-Date:   Wed, 04 Jan 2023 13:30:55 -0700
-Message-ID: <167286425552.57859.1567921582050695532.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <f804d081-abb9-cb46-e14f-a37f3ac63f21@intel.com>
-References: <f804d081-abb9-cb46-e14f-a37f3ac63f21@intel.com>
-User-Agent: StGit/1.4
+   d="scan'208";a="687656569"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.42.169])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:45:28 -0800
+Date:   Wed, 4 Jan 2023 12:45:27 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/4] cxl/region: Add a DPA to HPA translation helper
+Message-ID: <Y7XlZ8l5M+/1lMLl@aschofie-mobl2>
+References: <cover.1669153711.git.alison.schofield@intel.com>
+ <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
+ <20221130162736.0000333f@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221130162736.0000333f@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a CXL bus type, and detect whether a 'dimm' is backed by the CXL
-subsystem.
+On Wed, Nov 30, 2022 at 04:27:36PM +0000, Jonathan Cameron wrote:
+> On Tue, 22 Nov 2022 15:07:48 -0800
+> alison.schofield@intel.com wrote:
+> 
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > CXL devices may report errors and events using their DPA (device
+> > physical address). When a CXL device contributes capacity to a
+> > CXL region, the device's physical addresses are mapped to HPA's.
+> > (host physical addresses)
+> > 
+> > Provide a helper to calculate the HPA when given a DPA, a region,
+> > and the devices position in the region interleave.
+> 
+> device's 
+> 
+> > 
+> > Verify that the HPA is within the expected ranges that this device
+> > contributes to the region interleave set.
+> > 
+> > The initial use case is translating the DPAs that CXL devices
+> > report in media error records.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> 
+> I'm not following the maths for the 3/6/12 way interleave cases.
+> 
+Yeah, they were off. I reworked this to strictly follow the 
+spec.
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > ---
+> >  drivers/cxl/core/core.h   |  3 ++
+> >  drivers/cxl/core/region.c | 80 +++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 83 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> > index 1d8f87be283f..72b58e53c394 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -67,6 +67,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+> >  	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
+> >  }
+> >  
+> > +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
+> > +		   struct cxl_endpoint_decoder *cxled);
+> > +
+> >  int cxl_memdev_init(void);
+> >  void cxl_memdev_exit(void);
+> >  void cxl_mbox_init(void);
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index f9ae5ad284ff..c847517e766c 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -1865,6 +1865,86 @@ static void cxlr_pmem_unregister(void *dev)
+> >  	device_unregister(dev);
+> >  }
+> >  
+> > +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+> > +{
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	int gran = p->interleave_granularity;
+> > +	int ways = p->interleave_ways;
+> > +	u64 stride;
+> > +
+> > +	/* Is the hpa within this region at all */
+> > +	if (hpa < p->res->start || hpa > p->res->end) {
+> > +		dev_dbg(&cxlr->dev,
+> > +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> > +		return false;
+> > +	}
+> > +	/* Is the hpa in an expected stride for its pos(-ition) */
+> > +	stride = p->res->start + pos * gran;
+> > +	do {
+> > +		if (hpa >= stride && hpa <= stride + gran - 1)
+> 	< stride + gran seems simpler.
+> 
 
----
-v4:
-- Remove libgen.h include
-v3:
-- Simplify detecting cxl subsystem. (Dan)
-v2:
-- Improve commit log. (Vishal)
----
- ndctl/lib/libndctl.c   |   29 +++++++++++++++++++++++++++++
- ndctl/lib/libndctl.sym |    1 +
- ndctl/lib/private.h    |    1 +
- ndctl/libndctl.h       |    1 +
- 4 files changed, 32 insertions(+)
+Got it.
 
-diff --git a/ndctl/lib/libndctl.c b/ndctl/lib/libndctl.c
-index ad54f0626510..2b06dc8be81a 100644
---- a/ndctl/lib/libndctl.c
-+++ b/ndctl/lib/libndctl.c
-@@ -876,6 +876,24 @@ static enum ndctl_fwa_method fwa_method_to_method(const char *fwa_method)
- 	return NDCTL_FWA_METHOD_RESET;
- }
- 
-+static int is_subsys_cxl(const char *subsys)
-+{
-+	char *path;
-+	int rc;
-+
-+	path = realpath(subsys, NULL);
-+	if (!path)
-+		return -errno;
-+
-+	if (!strcmp(subsys, "/sys/bus/cxl"))
-+		rc = 1;
-+	else
-+		rc = 0;
-+
-+	free(path);
-+	return rc;
-+}
-+
- static void *add_bus(void *parent, int id, const char *ctl_base)
- {
- 	char buf[SYSFS_ATTR_SIZE];
-@@ -919,6 +937,12 @@ static void *add_bus(void *parent, int id, const char *ctl_base)
- 	else
- 		bus->has_of_node = 1;
- 
-+	sprintf(path, "%s/device/../subsys", ctl_base);
-+	if (is_subsys_cxl(path))
-+		bus->has_cxl = 1;
-+	else
-+		bus->has_cxl = 0;
-+
- 	sprintf(path, "%s/device/nfit/dsm_mask", ctl_base);
- 	if (sysfs_read_attr(ctx, path, buf) < 0)
- 		bus->nfit_dsm_mask = 0;
-@@ -1050,6 +1074,11 @@ NDCTL_EXPORT int ndctl_bus_has_of_node(struct ndctl_bus *bus)
- 	return bus->has_of_node;
- }
- 
-+NDCTL_EXPORT int ndctl_bus_has_cxl(struct ndctl_bus *bus)
-+{
-+	return bus->has_cxl;
-+}
-+
- NDCTL_EXPORT int ndctl_bus_is_papr_scm(struct ndctl_bus *bus)
- {
- 	char buf[SYSFS_ATTR_SIZE];
-diff --git a/ndctl/lib/libndctl.sym b/ndctl/lib/libndctl.sym
-index 75c32b9d4967..2892544d1985 100644
---- a/ndctl/lib/libndctl.sym
-+++ b/ndctl/lib/libndctl.sym
-@@ -464,4 +464,5 @@ LIBNDCTL_27 {
- } LIBNDCTL_26;
- LIBNDCTL_28 {
- 	ndctl_dimm_disable_master_passphrase;
-+	ndctl_bus_has_cxl;
- } LIBNDCTL_27;
-diff --git a/ndctl/lib/private.h b/ndctl/lib/private.h
-index e5c56295556d..46bc8908bd90 100644
---- a/ndctl/lib/private.h
-+++ b/ndctl/lib/private.h
-@@ -163,6 +163,7 @@ struct ndctl_bus {
- 	int regions_init;
- 	int has_nfit;
- 	int has_of_node;
-+	int has_cxl;
- 	char *bus_path;
- 	char *bus_buf;
- 	size_t buf_len;
-diff --git a/ndctl/libndctl.h b/ndctl/libndctl.h
-index c52e82a6f826..91ef0f42f654 100644
---- a/ndctl/libndctl.h
-+++ b/ndctl/libndctl.h
-@@ -133,6 +133,7 @@ struct ndctl_bus *ndctl_bus_get_next(struct ndctl_bus *bus);
- struct ndctl_ctx *ndctl_bus_get_ctx(struct ndctl_bus *bus);
- int ndctl_bus_has_nfit(struct ndctl_bus *bus);
- int ndctl_bus_has_of_node(struct ndctl_bus *bus);
-+int ndctl_bus_has_cxl(struct ndctl_bus *bus);
- int ndctl_bus_is_papr_scm(struct ndctl_bus *bus);
- unsigned int ndctl_bus_get_major(struct ndctl_bus *bus);
- unsigned int ndctl_bus_get_minor(struct ndctl_bus *bus);
+> > +			return true;
+> > +
+> > +		stride = stride + ways * gran;
+> > +	} while (stride < p->res->end);
+> 
+> That's going to take a 'while' with a large region.  Can we do something quicker
+> along the lines of...
+> 
+> Something like (untested)
+> 	u64 offset = hpa - p->res_start;
+> 
+> 	/* Offset within the right 'stride' */
+> 	offset = offset % (gran * ways);
+> 
+> 	if (offset >= pos * gran && offset < (pos + 1) * gran)
+> 		return true;
+> 
+> ..
 
+I did adopt this calc you offered up here.
 
+I kept this range check function in the new patch, so you'll see
+it again.
+
+> > +
+> > +	dev_dbg(&cxlr->dev,
+> > +		"Addr trans fail: hpa 0x%llx not in any stride\n", hpa);
+> > +
+> > +	return false;
+> > +}
+> > +
+> > +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
+> > +		   struct cxl_endpoint_decoder *cxled)
+> > +{
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	u64 dpa_offset, hpa_offset, hpa;
+> > +	int rc, pos = cxled->pos;
+> > +	u16 eig;
+> > +	u8 eiw;
+> > +
+> > +	rc = ways_to_cxl(p->interleave_ways, &eiw);
+> I lost track a bit, but I think we ended up with einw?
+
+Yes. Above and below are updated w latest names:
+ways_to_eiw() and granularity_to_eig()
+
+> > +	if (rc)
+> > +		return rc;
+> > +	rc = granularity_to_cxl(p->interleave_granularity, &eig);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	/*
+> > +	 * Reverse the HPA->DPA decode logic defined
+> > +	 * in the CXL Spec 3.0 Section 8.2.4.19.13
+> > +	 * Implementation Note: Device Decode Logic
+> Short line wrap. Probably want to go nearer 80 chars
+> 
+> > +	 *
+> > +	 * The device position in the region interleave
+> > +	 * set was removed in the HPA->DPA translation.
+> > +	 * Put it back to reconstruct the HPA.
+> > +	 */
+> > +
+> > +	/* Remove the dpa base */
+> > +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> > +
+> > +	/* Restore the position */
+> > +	if (eiw <= 8) {
+> 
+> This looks to be the power of 2 version, so should that be eiw < 8?
+> 
+
+This calc section got a rewrite w 2 cases eiw < 8 and 'all others'.
+
+> > +		hpa_offset = (dpa_offset & GENMASK_ULL(51, eig + 8)) << eiw;
+> > +		hpa_offset |= GENMASK_ULL(eig + 8 + eiw, eig + 8)
+> > +			      & (pos << (eig + 8));
+> 
+> Why is the masking needed here?  I think pos should always fit in the iw bits.
+Not needed.
+
+> 
+> > +	}
+> > +	if (eiw == 9)
+> 
+> else if would show clearly that only one of these ifs is true.
+>  
+> > +		hpa_offset |= BIT(eig + eiw) & (pos & 0x01);
+> 
+> I don't follow this logic. hpa_offset hasn't been set to anything before
+> this point + the right hand side of the above will always be 0 (I think...)
+> 
+> 
+> > +	if (eiw == 10)
+> else if
+> > +		hpa_offset |= GENMASK_ULL(eig + eiw, eig + 8) & (pos & 0x03);
+
+Rework has 2 cases (eiw < 8), else all others.
+I hope you can pick up the review in the new patch.
+
+Thanks Jonathan!
+Alison
+
+> > +
+> > +	/* The lower bits remain unchanged */
+> > +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+> > +
+> > +	/* Apply the hpa_offset to region base address */
+> > +	hpa = hpa_offset + p->res->start;
+> > +
+> > +	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
+> > +		return 0;
+> > +
+> > +	return hpa;
+> > +}
+> > +
+> >  /**
+> >   * devm_cxl_add_pmem_region() - add a cxl_region-to-nd_region bridge
+> >   * @cxlr: parent CXL region for this pmem region bridge device
+> 
