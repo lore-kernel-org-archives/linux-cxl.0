@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D1CC4708D
-	for <linux-cxl@archiver.kernel.org>; Wed,  4 Jan 2023 20:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F6C4708D
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Jan 2023 20:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235047AbjADU0C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 4 Jan 2023 15:26:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        id S234631AbjADU3o (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Jan 2023 15:29:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235198AbjADUZ4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Jan 2023 15:25:56 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0DC1C414
-        for <linux-cxl@vger.kernel.org>; Wed,  4 Jan 2023 12:25:54 -0800 (PST)
+        with ESMTP id S240262AbjADU3T (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Jan 2023 15:29:19 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A45395D8
+        for <linux-cxl@vger.kernel.org>; Wed,  4 Jan 2023 12:29:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672863954; x=1704399954;
+  t=1672864158; x=1704400158;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=IvitO1NUNviR5+jSRFUomsNZLGPn9HyazOoIDxLkthQ=;
-  b=BigKQP4VErZf7T6HGZm9hd5pcKxSi8xpikODmHLfpl/ofC20G5o58N92
-   iG4sofBkBvg/Sx5GCpkszxuADpeBXViNiVQ9vG0uT3uXg0aXnRPGM643J
-   4hh1v8OcLD2wHdOyonLJb1mEp4ItSJsHWCNf/dRYpNhRzOFPxVnnHvZd0
-   7DqoLPXLxCqMSlU0FPosa17cTBorkGsLXh2Ed+C/T06ORB3C9E6zw6XTJ
-   8Moo03Zp5UaApkomJexli68Nqbo5cNUzZpRRfvjNtrHNfpmhIG9wqT1ww
-   FmOi8l8PQpXZDv7CZvphWrOTd7+eiDpJsuCeV/Xha6b7StR+mlc73OapB
+  bh=LOGJBKZLx16xjqNZevaHTz/H3RvqyNcT+GKr/uZFYuY=;
+  b=XviGVDVJhgsC3T/Xsp0H75PzoImhA2H8XlRJyXasbVMmxvvf4+uFf+u2
+   KVylDYJJ//BUmlGDKysmCO7Y/C01XATi/XiRC/CM+sta9XuS2rm1cK1Ik
+   I8cRFQZBNfXYzZpLWdkLBQZRX5TPoN3C5M+v+TPfhAdyVL3EE4DeWy5ld
+   Gq6V4tr3JEt4e+C79HTSotM8en60i/+8WHttw3KadSb/Hb9yPDkdwc1/d
+   VMCqLZyfChOKmA/zf6wjDF4SnpxgS/ksQd/L35E1czvFcjvo97zu4LP77
+   PWsb97dMVHq+QVBps03hgSfP6i12jrQzgmb9yuRcTGfZ0D29RGluV/Gtb
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="386469688"
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="324037801"
 X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="386469688"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:25:53 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="984043340"
+   d="scan'208";a="324037801"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:29:17 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="723783721"
 X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="984043340"
+   d="scan'208";a="723783721"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.42.169])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:25:53 -0800
-Date:   Wed, 4 Jan 2023 12:25:51 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:29:16 -0800
+Date:   Wed, 4 Jan 2023 12:29:14 -0800
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -45,127 +45,119 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/4] cxl/region: Check addr trans at pmem region create
- (debug only)
-Message-ID: <Y7Xgz1e0lSXiaDDy@aschofie-mobl2>
+Subject: Re: [PATCH 1/4] cxl/region: Add a DPA to HPA translation helper
+Message-ID: <Y7Xhmrc9s/my7+Jh@aschofie-mobl2>
 References: <cover.1669153711.git.alison.schofield@intel.com>
- <48b8ab49a54597d56b1732fc4e2955b5e726d4c9.1669153711.git.alison.schofield@intel.com>
- <20221130164235.000064a5@Huawei.com>
+ <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
+ <20221130163809.00005535@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221130164235.000064a5@Huawei.com>
+In-Reply-To: <20221130163809.00005535@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 04:42:35PM +0000, Jonathan Cameron wrote:
-> On Tue, 22 Nov 2022 15:07:49 -0800
+On Wed, Nov 30, 2022 at 04:38:09PM +0000, Jonathan Cameron wrote:
+> On Tue, 22 Nov 2022 15:07:48 -0800
 > alison.schofield@intel.com wrote:
 > 
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > At the time of region creation, device physical addresses (DPA)
-> > are mapped to host physical addresses (HPA). The CXL driver
-> > translates DPA's to HPA's for user space consumption. In order
-> > to prove and exercise that translation functionality, perform
-> > a small sample of DPA to HPA translations whenever a pmem region
-> > is created in a debug kernel.
+> > CXL devices may report errors and events using their DPA (device
+> > physical address). When a CXL device contributes capacity to a
+> > CXL region, the device's physical addresses are mapped to HPA's.
+> > (host physical addresses)
+> > 
+> > Provide a helper to calculate the HPA when given a DPA, a region,
+> > and the devices position in the region interleave.
+> > 
+> > Verify that the HPA is within the expected ranges that this device
+> > contributes to the region interleave set.
+> > 
+> > The initial use case is translating the DPAs that CXL devices
+> > report in media error records.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> I'd drop this patch - it isn't doing a particularly useful check
-> as it only checks the resulting HPA is in range, not that it's
-> actually correct.
-
-Hi Jonathan,
-Belated thanks on this review. I've put this set aside and implemented
-the DPA -> HPA translation for the specific use case of adding an 
-HPA field to the cxl_poison TRACE EVENT. I'm about to post that
-patch, but want to respond to your feedback, which I did take
-into the new patch.
-
-more...
-
-
-> 
-> 
 > > ---
-> >  drivers/cxl/core/region.c | 34 +++++++++++++++++++++++++++++++++-
-> >  1 file changed, 33 insertions(+), 1 deletion(-)
+> >  drivers/cxl/core/core.h   |  3 ++
+> >  drivers/cxl/core/region.c | 80 +++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 83 insertions(+)
 > > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index c847517e766c..32216b5fe450 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1945,6 +1945,36 @@ u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
-> >  	return hpa;
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> > index 1d8f87be283f..72b58e53c394 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -67,6 +67,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+> >  	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
 > >  }
 > >  
-> > +static bool cxl_check_addrtrans(struct cxl_region *cxlr)
+> > +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
+> > +		   struct cxl_endpoint_decoder *cxled);
+> > +
+> >  int cxl_memdev_init(void);
+> >  void cxl_memdev_exit(void);
+> >  void cxl_mbox_init(void);
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index f9ae5ad284ff..c847517e766c 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -1865,6 +1865,86 @@ static void cxlr_pmem_unregister(void *dev)
+> >  	device_unregister(dev);
+> >  }
+> >  
+> > +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
 > > +{
 > > +	struct cxl_region_params *p = &cxlr->params;
-> > +	struct cxl_endpoint_decoder *cxled;
-> > +	u64 start, end, dpa;
+> > +	int gran = p->interleave_granularity;
+> > +	int ways = p->interleave_ways;
+> > +	u64 stride;
 > > +
-> > +	/*
-> > +	 * Translate a few DPAs (start,mid,end) to HPAs
-> > +	 * for each contributing endpoint decoder.
-> > +	 */
-> > +	for (int i = 0; i <  p->nr_targets; i++) {
-> > +		cxled = p->targets[i];
-> > +		start = cxl_dpa_resource_start(cxled);
-> > +		end = start + cxl_dpa_size(cxled) - 1;
-> > +
-> > +		dpa = start;
-> > +		if (!cxl_dpa_to_hpa(dpa, cxlr, cxled))
-> > +			return false;
-> Hmm. This verifies they are in range, but not that the
-> address is right.  Not sure that is particularly helpful.
-> Also - in theory, hpa address 0 is valid value, or does something
-> stop people putting a CFMWS at HPA 0 onwards?
-> Sure it's unlikely anyone will do so, but not impossible...
-> 
-
-Understand about the HPA 0 now, and use ULLONG_MAX as failure
-on non-translateable - in future patch.
-
-
-> > +
-> > +		dpa = start + cxl_dpa_size(cxled) / 2;
-> > +		if (!cxl_dpa_to_hpa(dpa, cxlr, cxled))
-> > +			return false;
-> > +
-> > +		dpa = end;
-> > +		if (!cxl_dpa_to_hpa(dpa, cxlr, cxled))
-> > +			return false;
-> Maybe more useful to check 1 higher and trip the 'out of range'
-> return?
-
-So, I've dropped this check on region create work entirely for now.
-
+> > +	/* Is the hpa within this region at all */
+> > +	if (hpa < p->res->start || hpa > p->res->end) {
+> > +		dev_dbg(&cxlr->dev,
+> > +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> > +		return false;
 > > +	}
-> > +	return true;
+> > +	/* Is the hpa in an expected stride for its pos(-ition) */
+> > +	stride = p->res->start + pos * gran;
+> > +	do {
+> > +		if (hpa >= stride && hpa <= stride + gran - 1)
+> > +			return true;
+> > +
+> > +		stride = stride + ways * gran;
+> > +	} while (stride < p->res->end);
+> > +
+> > +	dev_dbg(&cxlr->dev,
+> > +		"Addr trans fail: hpa 0x%llx not in any stride\n", hpa);
+> > +
+> > +	return false;
 > > +}
 > > +
-> >  /**
-> >   * devm_cxl_add_pmem_region() - add a cxl_region-to-nd_region bridge
-> >   * @cxlr: parent CXL region for this pmem region bridge device
-> > @@ -1973,8 +2003,10 @@ static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
-> >  	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
-> >  		dev_name(dev));
-> >  
-> > +	dev_dbg(&cxlr->dev, "Address translation check: %s\n",
-> > +		cxl_check_addrtrans(cxlr) ? "Pass" : "Fail");
+> > +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
+> > +		   struct cxl_endpoint_decoder *cxled)
+> > +{
+> > +	struct cxl_region_params *p = &cxlr->params;
+> > +	u64 dpa_offset, hpa_offset, hpa;
+> > +	int rc, pos = cxled->pos;
+> > +	u16 eig;
+> > +	u8 eiw;
 > > +
-> >  	return devm_add_action_or_reset(&cxlr->dev, cxlr_pmem_unregister, dev);
-> > -
+> > +	rc = ways_to_cxl(p->interleave_ways, &eiw);
+> > +	if (rc)
+> > +		return rc;
+> > +	rc = granularity_to_cxl(p->interleave_granularity, &eig);
+> > +	if (rc)
+> > +		return rc;
+> returning integer as u64, so it won't end up as a useful error code.
 > 
-> stray change
 
-Thanks
+You'll see use of ULLONG_MAX as the error rc in the next patch.
+Alas, I also decided NOT to keep checking the rc on these functions,
+as the validity was checked at the time of storage of ways and gran.
 
-> 
-> >  err:
-> >  	put_device(dev);
-> >  	return rc;
-> 
+Ducks a bit,
+Alison
+
+> > +
+snip
