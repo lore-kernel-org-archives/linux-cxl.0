@@ -2,259 +2,250 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B269C46467
-	for <linux-cxl@archiver.kernel.org>; Wed,  4 Jan 2023 20:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9214C46467
+	for <linux-cxl@archiver.kernel.org>; Wed,  4 Jan 2023 21:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235325AbjADUpd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 4 Jan 2023 15:45:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
+        id S235503AbjADVEJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 4 Jan 2023 16:04:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjADUpb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Jan 2023 15:45:31 -0500
+        with ESMTP id S235557AbjADVEI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 4 Jan 2023 16:04:08 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B301BE81
-        for <linux-cxl@vger.kernel.org>; Wed,  4 Jan 2023 12:45:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D39B1A223
+        for <linux-cxl@vger.kernel.org>; Wed,  4 Jan 2023 13:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672865130; x=1704401130;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JPhN81ERRIjZzS1z/TE/lkSjEk449sf/QV8soOROeBY=;
-  b=JDZnTD1cs4kYEm7mHEK6q3JoyxB/XN6dQmNeTjzcBdtCjuiRGNpI0Cs8
-   11eYd39awu38yMyjykfV5c6qauXjQfHhFvgi34+tEi2ToVECc5R93ITp+
-   /uCk10OYPBqhVpRG74KT2CFv3Q1sMtcL5uAWwgJmVtro5MvHSaS0uWbbz
-   XCt0KjSkb9c5zSfN0EeojVijLcQ4jwtVftx1JtinMbZS9DeUmWUeI5VMn
-   NbhwkepuXduaBeRSQZSY89cpM4ufI+05go3KvbRA4Aau1cCafXNdQ0Zii
-   aTTY65BqvwS6dQKg5U9DfEzWWCeEZ5pRFRUEXUkCupHH4DMNmQNidabVz
+  t=1672866247; x=1704402247;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rja9+I8lpRCqKl2YvoXfltJBfHQAzxC/iz1pMhV+SCE=;
+  b=gU8JA/TCoTn4lLeKY+kpRCFoPh3WRu2r/kfWQnXmZFDeLPrq0hHfMs8/
+   DLJxRW2eFCoyxYEud0c104sTovFWJUJkeXGBRvjECquRQVaozVdtzTe+z
+   6EU/K5zYVIVWRARxVE9aWHMlIuu+gk9W/i0Y7guJE6EjbyhYFtw0r6Xhq
+   ZSXnTeL6JZwAiahwlSUcteiib7qaeSz5KOlg7S5QbVf7U2nMHUA+wO9vZ
+   rJiU0fc25t1IsodszEK9lFdrYnTiyyzXI4ryYJDhrpdP07x407L9QsIei
+   KGeMlEOFFzHW4Z64Plbk9JbipTToP9kZMob16tQOTScJaQqPflbdWPUZ7
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="301729319"
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="301734103"
 X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="301729319"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:45:29 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="687656569"
+   d="scan'208";a="301734103"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 13:04:06 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="779336036"
 X-IronPort-AV: E=Sophos;i="5.96,301,1665471600"; 
-   d="scan'208";a="687656569"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.42.169])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 12:45:28 -0800
-Date:   Wed, 4 Jan 2023 12:45:27 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+   d="scan'208";a="779336036"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.42.169])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 13:04:06 -0800
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/4] cxl/region: Add a DPA to HPA translation helper
-Message-ID: <Y7XlZ8l5M+/1lMLl@aschofie-mobl2>
-References: <cover.1669153711.git.alison.schofield@intel.com>
- <31c38d6711cc3a000a5307b8ebf3b6e88675e17f.1669153711.git.alison.schofield@intel.com>
- <20221130162736.0000333f@Huawei.com>
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl/trace: Add an HPA to cxl_poison trace events
+Date:   Wed,  4 Jan 2023 13:04:01 -0800
+Message-Id: <20230104210401.195808-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221130162736.0000333f@Huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 04:27:36PM +0000, Jonathan Cameron wrote:
-> On Tue, 22 Nov 2022 15:07:48 -0800
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > CXL devices may report errors and events using their DPA (device
-> > physical address). When a CXL device contributes capacity to a
-> > CXL region, the device's physical addresses are mapped to HPA's.
-> > (host physical addresses)
-> > 
-> > Provide a helper to calculate the HPA when given a DPA, a region,
-> > and the devices position in the region interleave.
-> 
-> device's 
-> 
-> > 
-> > Verify that the HPA is within the expected ranges that this device
-> > contributes to the region interleave set.
-> > 
-> > The initial use case is translating the DPAs that CXL devices
-> > report in media error records.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> I'm not following the maths for the 3/6/12 way interleave cases.
-> 
-Yeah, they were off. I reworked this to strictly follow the 
-spec.
+From: Alison Schofield <alison.schofield@intel.com>
 
-> > ---
-> >  drivers/cxl/core/core.h   |  3 ++
-> >  drivers/cxl/core/region.c | 80 +++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 83 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > index 1d8f87be283f..72b58e53c394 100644
-> > --- a/drivers/cxl/core/core.h
-> > +++ b/drivers/cxl/core/core.h
-> > @@ -67,6 +67,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
-> >  	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
-> >  }
-> >  
-> > +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
-> > +		   struct cxl_endpoint_decoder *cxled);
-> > +
-> >  int cxl_memdev_init(void);
-> >  void cxl_memdev_exit(void);
-> >  void cxl_mbox_init(void);
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index f9ae5ad284ff..c847517e766c 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1865,6 +1865,86 @@ static void cxlr_pmem_unregister(void *dev)
-> >  	device_unregister(dev);
-> >  }
-> >  
-> > +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
-> > +{
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	int gran = p->interleave_granularity;
-> > +	int ways = p->interleave_ways;
-> > +	u64 stride;
-> > +
-> > +	/* Is the hpa within this region at all */
-> > +	if (hpa < p->res->start || hpa > p->res->end) {
-> > +		dev_dbg(&cxlr->dev,
-> > +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
-> > +		return false;
-> > +	}
-> > +	/* Is the hpa in an expected stride for its pos(-ition) */
-> > +	stride = p->res->start + pos * gran;
-> > +	do {
-> > +		if (hpa >= stride && hpa <= stride + gran - 1)
-> 	< stride + gran seems simpler.
-> 
+When a cxl_poison trace event is reported by region, the poisoned
+Device Physical Address (DPA) can be translated to a Host Physical
+Address (HPA) for consumption by user space.
 
-Got it.
+Translate and add the resulting HPA to the cxl_poison trace event.
+Follow the device decode logic as defined in the CXL Spec 3.0 Section
+8.2.4.19.13.
 
-> > +			return true;
-> > +
-> > +		stride = stride + ways * gran;
-> > +	} while (stride < p->res->end);
-> 
-> That's going to take a 'while' with a large region.  Can we do something quicker
-> along the lines of...
-> 
-> Something like (untested)
-> 	u64 offset = hpa - p->res_start;
-> 
-> 	/* Offset within the right 'stride' */
-> 	offset = offset % (gran * ways);
-> 
-> 	if (offset >= pos * gran && offset < (pos + 1) * gran)
-> 		return true;
-> 
-> ..
+When the poison request is by memdev, no HPA translation is performed
+and ULLONG_MAX is assigned to the cxl_poison hpa trace field.
 
-I did adopt this calc you offered up here.
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-I kept this range check function in the new patch, so you'll see
-it again.
+Built on cxl/preview plus Patchset: CXL Poison List Retrieval & Tracing [1]
 
-> > +
-> > +	dev_dbg(&cxlr->dev,
-> > +		"Addr trans fail: hpa 0x%llx not in any stride\n", hpa);
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +u64 cxl_dpa_to_hpa(u64 dpa, struct cxl_region *cxlr,
-> > +		   struct cxl_endpoint_decoder *cxled)
-> > +{
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	u64 dpa_offset, hpa_offset, hpa;
-> > +	int rc, pos = cxled->pos;
-> > +	u16 eig;
-> > +	u8 eiw;
-> > +
-> > +	rc = ways_to_cxl(p->interleave_ways, &eiw);
-> I lost track a bit, but I think we ended up with einw?
+Changes in v0:
+Unusual to have changes in a v0, but since this is based off a prior
+patchset [2] that Jonathan had reviewed, carrying the pertinent changelog
+here:
+- Use ULLONG_MAX as err return in translation (Jonathan)
+- HPA 0 is valid address, use ULLONG_MAX for invalid return (Jonathan)
+- Replace a slow chunk-checking do-while loop with suggested calc. (Jonathan)
+- Update the calcs to directly follow the CXL spec. (Jonathan)
 
-Yes. Above and below are updated w latest names:
-ways_to_eiw() and granularity_to_eig()
+[1] https://lore.kernel.org/linux-cxl/cover.1671135967.git.alison.schofield@intel.com/
+[2] https://lore.kernel.org/linux-cxl/cover.1669153711.git.alison.schofield@intel.com/
 
-> > +	if (rc)
-> > +		return rc;
-> > +	rc = granularity_to_cxl(p->interleave_granularity, &eig);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	/*
-> > +	 * Reverse the HPA->DPA decode logic defined
-> > +	 * in the CXL Spec 3.0 Section 8.2.4.19.13
-> > +	 * Implementation Note: Device Decode Logic
-> Short line wrap. Probably want to go nearer 80 chars
-> 
-> > +	 *
-> > +	 * The device position in the region interleave
-> > +	 * set was removed in the HPA->DPA translation.
-> > +	 * Put it back to reconstruct the HPA.
-> > +	 */
-> > +
-> > +	/* Remove the dpa base */
-> > +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
-> > +
-> > +	/* Restore the position */
-> > +	if (eiw <= 8) {
-> 
-> This looks to be the power of 2 version, so should that be eiw < 8?
-> 
+ drivers/cxl/core/trace.c | 94 ++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/trace.h |  9 +++-
+ 2 files changed, 102 insertions(+), 1 deletion(-)
 
-This calc section got a rewrite w 2 cases eiw < 8 and 'all others'.
+diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+index 29ae7ce81dc5..d0403dc3c8ab 100644
+--- a/drivers/cxl/core/trace.c
++++ b/drivers/cxl/core/trace.c
+@@ -1,5 +1,99 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+ 
++#include <cxl.h>
++#include "core.h"
++
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
++
++static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	int gran = p->interleave_granularity;
++	int ways = p->interleave_ways;
++	u64 offset;
++
++	/* Is the hpa within this region at all */
++	if (hpa < p->res->start || hpa > p->res->end) {
++		dev_dbg(&cxlr->dev,
++			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
++		return false;
++	}
++
++	/* Is the hpa in an expected chunk for its pos(-ition) */
++	offset = hpa - p->res->start;
++	offset = do_div(offset, gran * ways);
++	if ((offset >= pos * gran) && (offset < (pos + 1) * gran))
++		return true;
++
++	dev_dbg(&cxlr->dev,
++		"Addr trans fail: hpa 0x%llx not in expected chunk\n", hpa);
++
++	return false;
++}
++
++static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
++			  struct cxl_endpoint_decoder *cxled)
++{
++	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
++	struct cxl_region_params *p = &cxlr->params;
++	int pos = cxled->pos;
++	u16 eig = 0;
++	u8 eiw = 0;
++
++	ways_to_eiw(p->interleave_ways, &eiw);
++	granularity_to_eig(p->interleave_granularity, &eig);
++
++	/*
++	 * The device position in the region interleave set was removed
++	 * from the offset at HPA->DPA translation. To reconstruct the
++	 * HPA, place the 'pos' in the offset.
++	 *
++	 * The placement of 'pos' in the HPA is determined by interleave
++	 * ways and granularity and is defined in the CXL Spec 3.0 Section
++	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
++	 */
++
++	/* Remove the dpa base */
++	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
++
++	mask_upper = GENMASK_ULL(51, eig + 8);
++
++	if (eiw < 8) {
++		hpa_offset = (dpa_offset & mask_upper) << eiw;
++		hpa_offset |= pos << (eig + 8);
++	} else {
++		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
++		bits_upper = bits_upper * 3;
++		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
++	}
++
++	/* The lower bits remain unchanged */
++	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
++
++	/* Apply the hpa_offset to the region base address */
++	hpa = hpa_offset + p->res->start;
++
++	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
++		return ULLONG_MAX;
++
++	return hpa;
++}
++
++u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *cxlmd,
++		  u64 dpa)
++{
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_endpoint_decoder *cxled = NULL;
++
++	for (int i = 0; i <  p->nr_targets; i++) {
++		cxled = p->targets[i];
++		if (cxlmd == cxled_to_memdev(cxled))
++			break;
++	}
++	if (!cxled || cxlmd != cxled_to_memdev(cxled))
++		return ULLONG_MAX;
++
++	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
++}
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index c7958311ce5f..521b80f92e96 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -136,6 +136,8 @@ TRACE_EVENT(cxl_aer_correctable_error,
+ #define cxl_poison_overflow(flags, time)				\
+ 	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
+ 
++u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *memdev, u64 dpa);
++
+ TRACE_EVENT(cxl_poison,
+ 
+ 	    TP_PROTO(struct cxl_memdev *memdev, const struct pci_dev *pcidev,
+@@ -150,6 +152,7 @@ TRACE_EVENT(cxl_poison,
+ 		__string(pcidev, dev_name(&pcidev->dev))
+ 		__string(region, region)
+ 		__field(u64, overflow_t)
++		__field(u64, hpa)
+ 		__field(u64, dpa)
+ 		__field(u32, length)
+ 		__array(char, uuid, 16)
+@@ -168,17 +171,21 @@ TRACE_EVENT(cxl_poison,
+ 		if (region) {
+ 			__assign_str(region, dev_name(&region->dev));
+ 			memcpy(__entry->uuid, &region->params.uuid, 16);
++			__entry->hpa = cxl_trace_hpa(region, memdev,
++						     __entry->dpa);
+ 		} else {
+ 			__assign_str(region, "");
+ 			memset(__entry->uuid, 0, 16);
++			__entry->hpa = ULLONG_MAX;
+ 		}
+ 	    ),
+ 
+-	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
++	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU hpa=0x%llx dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
+ 		__get_str(memdev),
+ 		__get_str(pcidev),
+ 		__get_str(region),
+ 		__entry->uuid,
++		__entry->hpa,
+ 		__entry->dpa,
+ 		__entry->length,
+ 		show_poison_source(__entry->source),
 
-> > +		hpa_offset = (dpa_offset & GENMASK_ULL(51, eig + 8)) << eiw;
-> > +		hpa_offset |= GENMASK_ULL(eig + 8 + eiw, eig + 8)
-> > +			      & (pos << (eig + 8));
-> 
-> Why is the masking needed here?  I think pos should always fit in the iw bits.
-Not needed.
+base-commit: 9b5f77efb0dc71d95403b528756e39b6cae0b948
+prerequisite-patch-id: 9b1057bd203e74ccce389c8b564bcb587bdf96c2
+prerequisite-patch-id: 9575915f2ee75f6d3121dd0deff2e8e83fc9d65e
+prerequisite-patch-id: d1fff988bf70bbe437d448e32ffb582aedbce8fe
+prerequisite-patch-id: c7e7a448e543dbee69a3d7133f5074be12556abf
+prerequisite-patch-id: bb4baf87391645e151dc7c0becf11b8795f9f969
+prerequisite-patch-id: 6b0bb1d874e57e0007705b21460972723fd9be90
+prerequisite-patch-id: aa4578d50c0a406d3e87045eeb5b3b51ca2c5e83
+-- 
+2.37.3
 
-> 
-> > +	}
-> > +	if (eiw == 9)
-> 
-> else if would show clearly that only one of these ifs is true.
->  
-> > +		hpa_offset |= BIT(eig + eiw) & (pos & 0x01);
-> 
-> I don't follow this logic. hpa_offset hasn't been set to anything before
-> this point + the right hand side of the above will always be 0 (I think...)
-> 
-> 
-> > +	if (eiw == 10)
-> else if
-> > +		hpa_offset |= GENMASK_ULL(eig + eiw, eig + 8) & (pos & 0x03);
-
-Rework has 2 cases (eiw < 8), else all others.
-I hope you can pick up the review in the new patch.
-
-Thanks Jonathan!
-Alison
-
-> > +
-> > +	/* The lower bits remain unchanged */
-> > +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
-> > +
-> > +	/* Apply the hpa_offset to region base address */
-> > +	hpa = hpa_offset + p->res->start;
-> > +
-> > +	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
-> > +		return 0;
-> > +
-> > +	return hpa;
-> > +}
-> > +
-> >  /**
-> >   * devm_cxl_add_pmem_region() - add a cxl_region-to-nd_region bridge
-> >   * @cxlr: parent CXL region for this pmem region bridge device
-> 
