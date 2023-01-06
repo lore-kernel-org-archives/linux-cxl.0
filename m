@@ -2,92 +2,138 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9842EC54EBD
-	for <linux-cxl@archiver.kernel.org>; Fri,  6 Jan 2023 22:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62661C61DB3
+	for <linux-cxl@archiver.kernel.org>; Fri,  6 Jan 2023 22:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235581AbjAFWVW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 6 Jan 2023 17:21:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51286 "EHLO
+        id S230329AbjAFWii (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 6 Jan 2023 17:38:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232530AbjAFWVR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 6 Jan 2023 17:21:17 -0500
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9FD7DE1B
-        for <linux-cxl@vger.kernel.org>; Fri,  6 Jan 2023 14:20:54 -0800 (PST)
-Received: by mail-oi1-x234.google.com with SMTP id c133so2249400oif.1
-        for <linux-cxl@vger.kernel.org>; Fri, 06 Jan 2023 14:20:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5wC4C81PQaQbKjpN0OwmJQBjUegGeP3pjmqO60ZPeBI=;
-        b=03uEizZq8EP4LuxeClb6BodnINm7GcvWUeAjT0SeR6mYNw8phKR+hXqB7uhDkjMj2I
-         8g2ISFsYWnMMxwpdwx6StvPWN7CzVww3VQbT5OUQ4zBuP0MWQe5YZqK4FQGxENHuL9Ia
-         eq8FsQ+5cwhlHmeHsSA13kfMWmyj5J3VJf4O6abBwDyfIG5YSHpK2SUIqaJPvoWGGcc0
-         +iGDamfTC7WN6qAPgkZXUaLE068th3T1IeVCtvX1bJmpDonPuBzkcixZhHxgBqz4M0pl
-         qUCabxuGOfvHnQimF5FddTP5jTtVvlhibuNOqyjT7Ot0xdoEwugZuu0bpRc0goAvAs2I
-         H4Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5wC4C81PQaQbKjpN0OwmJQBjUegGeP3pjmqO60ZPeBI=;
-        b=5c+Obf1axv+AIbO+kPqFHZvAT2hMp8rGsxgzvL+rQe5qFZFBD3Ke5u+P0cUx/VKj6/
-         OJUMJvfFbKbpRKkipzDCnUyADEsUsmHOt/1YmTpsJyYwUo4ASOYnYTJiZKmMNRnF21JO
-         QXWo8dZEvDqMRaZ9vbZG1kJePhlfDZB6MXkw+n5mcU7rwh/Lk5zQy4lmLMwptdZ0u9JR
-         lYaMlGR2QEXj/XPmG9RW0D0AJaYiSGFhYS5TnyCbvTuFn9oZ7w2eHwxVgyXCH59B6h5i
-         1wJI4I4+4em0NvDqesbT7pkW0U6wJ79o+V+7d17yeZsuaOcuP3QPxIcgXt7tDvE6/nA7
-         PINA==
-X-Gm-Message-State: AFqh2kpyKP5BSsj0j9wWQRayFXpDcc6wldwyHVQZD0A6WJb9pyUQOOLo
-        60vkUcJIQGG/lIHMCblUx6/6yw==
-X-Google-Smtp-Source: AMrXdXvj6h+P6ZNKGSMy+N/UiCzilvhw7qohqhlOxZv9rpNzwYu8NHEb3woJe7PhWh3GlFLv+tYSjg==
-X-Received: by 2002:a05:6808:298c:b0:361:1a1:316 with SMTP id ex12-20020a056808298c00b0036101a10316mr23054395oib.33.1673043653934;
-        Fri, 06 Jan 2023 14:20:53 -0800 (PST)
-Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
-        by smtp.gmail.com with ESMTPSA id b19-20020a9d6b93000000b0066ca61230casm1116074otq.8.2023.01.06.14.20.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 06 Jan 2023 14:20:53 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
-Subject: Re: [LSF/MM/BPF BoF] Session for CXL memory
-From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
-In-Reply-To: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
-Date:   Fri, 6 Jan 2023 14:20:42 -0800
-Cc:     linux-cxl@vger.kernel.org, linux-mm@kvack.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Adam Manzanares <a.manzanares@samsung.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <38D49DA9-3C57-4951-8CBA-5D2BB0C40D9C@bytedance.com>
-References: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
-To:     lsf-pc@lists.linux-foundation.org
-X-Mailer: Apple Mail (2.3731.300.101.1.3)
+        with ESMTP id S229561AbjAFWih (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 6 Jan 2023 17:38:37 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1572A87291
+        for <linux-cxl@vger.kernel.org>; Fri,  6 Jan 2023 14:38:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673044717; x=1704580717;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nRt3oTR6vQJALVDDT+8PFiSyDMpDad28y509ve+iy+0=;
+  b=jtFt8KxIGPRMwIBFy3N37BFvV91Fz3HpBFWcqgO7u5SzAIdqDItqn0+W
+   ES+eiAhfC7MBwpdw8VceXlPxxR7gbjr9N9Da7w/now6Gb730etntv0t+c
+   9nLeeUivr519bNRtlQj6oWYjgREjK72WgTRRv+KffgXp94FdWtFNicaBi
+   ZoC8zuzahzWTTEuy70RJpI2AmEG/Tfxzl/LlM9RfVcf42PB7yKgqVXGEo
+   GdyWiQAVtIPqwyhjrZfvzasJUQmwYHiaSAVJj7PokSp1Pfs5g0tpptI6A
+   aVFdHKKsdiAa5XEYqsFbrG4uoAPjaTrNhyfUqMi8tHWeFhDK5qDJwNbY7
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="324593036"
+X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
+   d="scan'208";a="324593036"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 14:38:35 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="780115808"
+X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
+   d="scan'208";a="780115808"
+Received: from jmwrobel-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.237.240])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 14:38:34 -0800
+Subject: [ndctl PATCH] cxl/Documentation: Update man page for using 'host'
+ names in 'cxl list' filters
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     vishal.l.verma@intel.com
+Cc:     linux-cxl@vger.kernel.org
+Date:   Fri, 06 Jan 2023 14:38:34 -0800
+Message-ID: <167304471414.912245.3940402514315436804.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CC: LSF/MM/BPF mailing list. Sorry, missed the list.
+Commit cf0e0586bf45 ("cxl/list: Add support for filtering by host identifiers")
+added support for filtering based on host device name in addition to CXL
+object name, but it neglected to update the documentation for the same.
 
-> On Jan 6, 2023, at 11:51 AM, Viacheslav A.Dubeyko =
-<viacheslav.dubeyko@bytedance.com> wrote:
->=20
-> Hello,
->=20
-> I believe CXL memory is hot topic now. I believe we have multiple =
-topics
-> for discussion. I personally would like to discuss CXL Fabric Manager
-> and vision of FM architecture implementation. I am going to share the =
-topic
-> in separate email. I would like to suggest a special session for CXL =
-memory
-> related topics.
->=20
-> How everybody feels about it?
->=20
-> Thanks,
-> Slava.
->=20
+For example, if someone sees a CXL class device in lspci:
+
+$ lspci | grep CXL
+35:00.0 CXL: Intel Corporation Device 0d93 (rev 01)
+
+...they can use that device name with "cxl list":
+
+$ # cxl list -BPMu -m 0000:35:00.0
+{
+  "bus":"root0",
+  "provider":"ACPI.CXL",
+  "ports:root0":[
+    {
+      "port":"port1",
+      "host":"pci0000:34",
+      "depth":1,
+      "memdevs:port1":[
+        {
+          "memdev":"mem0",
+          "pmem_size":"512.00 MiB (536.87 MB)",
+          "serial":"0",
+          "host":"0000:35:00.0"
+        }
+      ]
+    }
+  ]
+}
+
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ Documentation/cxl/cxl-list.txt |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
+index 5cc37d5d0e26..3410d49af2db 100644
+--- a/Documentation/cxl/cxl-list.txt
++++ b/Documentation/cxl/cxl-list.txt
+@@ -75,6 +75,15 @@ configured.
+ }
+ ----
+ 
++Note that for the -m/--memdev=, -p/--port=, and -e/--endpoint= filters a
++host device name can be substituted for the CXL object identifier. For
++-m/--memdev= this is an endpoint PCI device name of the form
++"DDDD:bb:dd.f" (D: Domain b: Bus d: Device f: Function) (see
++/sys/bus/pci/devices), for -p/--port= this is an upstream switch port
++PCI device name of the form "DDDD:bb:dd.f", or a PCI bus name of the
++form "pciDDDD:bb", and for -e/--endpoint= the host device is CXL memory
++device object name of the form "memX".
++
+ The --human option in addition to reformatting some fields to more human
+ friendly strings also unwraps the array to reduce the number of lines of
+ output.
+@@ -119,7 +128,9 @@ OPTIONS
+ -------
+ -m::
+ --memdev=::
+-	Specify CXL memory device name(s), or device id(s), to filter the listing. For example:
++	Specify CXL memory device name(s) ("mem0"), device id(s) ("0"),
++	and/or host device name(s) ("0000:35:00.0") to filter the listing. For
++	example:
+ ----
+ # cxl list -M --memdev="0 mem3 5"
+ [
+@@ -281,10 +292,11 @@ OPTIONS
+ 
+ -p::
+ --port=::
+-	Specify CXL Port device name(s), device id(s), and or port type
+-	names to filter the listing. The supported port type names are "root"
+-	and "switch". Note that a bus object is also a port, so the
+-	following two syntaxes are equivalent:
++	Specify CXL Port device name(s) ("port2"), device id(s) ("2"), host
++	device name(s) ("pci0000:34"), and / or port type name(s) to filter the
++	listing. The supported port type names are "root" and "switch". Note
++	that a bus object is also a port, so the following two syntaxes are
++	equivalent:
+ ----
+ # cxl list -B
+ # cxl list -P -p root -S
 
