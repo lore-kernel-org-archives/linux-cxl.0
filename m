@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8509AC54EBD
-	for <linux-cxl@archiver.kernel.org>; Mon,  9 Jan 2023 19:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD937C61DB3
+	for <linux-cxl@archiver.kernel.org>; Mon,  9 Jan 2023 19:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237557AbjAITnJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 9 Jan 2023 14:43:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45988 "EHLO
+        id S234229AbjAITnI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 9 Jan 2023 14:43:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237550AbjAITmo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 Jan 2023 14:42:44 -0500
+        with ESMTP id S237601AbjAITmq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 Jan 2023 14:42:46 -0500
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061DF76ECB;
-        Mon,  9 Jan 2023 11:42:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D1677D30;
+        Mon,  9 Jan 2023 11:42:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673293361; x=1704829361;
+  t=1673293362; x=1704829362;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=i5p2IAuRIjBp0GK2dMkpBN9AEIvjxZfY2qt+4WKHctQ=;
-  b=MwZo7QWWuxyvpLnWH6zlAcJQX98ZNLJBDlKUN8DcOVu+T6Z7ZLrkNyfw
-   gF24iIjCpD8TVzn8Sb+yPUELcfIQwlSuh52bMbbgDA2b6gVQ2mqmoXyx4
-   alxujXLrEWw3soQItDt6RZ+Tdu+7yuNaj156O8zuFyS1NoX8ATr4CKo1X
-   byZ3kQye8dGRITJ8mOMxpQnw8f8OX6ryzGdfSlhej4yRDfKZD5XEgFseC
-   Jk8MuwY1gxBLFlMDMHL/ChXFQOl5YXPev5O5Wb8YHe9/WGC4OSn37jerI
-   jMQB4F9chzpbq5Kkt/AzA6qAhYao9wIimpkCe7PtieFlazPrJp4PHfxMK
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="385269874"
+  bh=8xAkiXUKVc9wJjWecuOx949frFybxs5dj3NeUk6AQhs=;
+  b=cSx+Gn2yOlS43YcPgnGq4SGGHtij0FJ1jWzfGnkb/stG40P/3L32hvhw
+   Yzj+TD1IYOqTBjexc1AlOCb1SBKOc8m/AeIU1CVXtqNlhZe6DO5cn0t/S
+   CeCiR8gU8QXuKZXsQGjlydnndceJ14DVi419LlOEx7UVDa2BbYX6y7AFD
+   0KZpp5wa8wu6eTVno7BWIhkPkLsXFS58s4CEftvEgPyfNppPwd2Uhtxo2
+   RV3YXm2v1BxVPbMyEyMMFAx7ZavX4UInR5nMhj5acLE6qxVFdriLNsool
+   v3dogiXs+brVVrq37hknQqoTFfQtHa6NU1SUrCRjSmbvvgmr7EH9t0Rrv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="385269899"
 X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
-   d="scan'208";a="385269874"
+   d="scan'208";a="385269899"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:42:34 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="656783496"
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:42:39 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="656783510"
 X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
-   d="scan'208";a="656783496"
+   d="scan'208";a="656783510"
 Received: from cwchen-mobl.amr.corp.intel.com (HELO localhost) ([10.212.45.225])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:42:33 -0800
-From:   ira.weiny@intel.com
-Date:   Mon, 09 Jan 2023 11:42:21 -0800
-Subject: [PATCH v6 2/8] cxl/mem: Wire up event interrupts
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:42:38 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Mon, 09 Jan 2023 11:42:24 -0800
+Subject: [PATCH v6 5/8] cxl/mem: Trace Memory Module Event Record
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20221216-cxl-ev-log-v6-2-346583105b30@intel.com>
+Message-Id: <20221216-cxl-ev-log-v6-5-346583105b30@intel.com>
 References: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
 In-Reply-To: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
@@ -57,381 +57,258 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
 X-Mailer: b4 0.12-dev-cc11a
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1673293350; l=10879;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1673293350; l=8548;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=+ZMGdzen1iqFCvOQ64yoqWZYLS2e15VCyQIMCJj50QU=;
- b=W/Cu+iT9v3l6AoHUB4sd/XOLP1eA4SeUrosNuNLXEC+mZV9twroTOmP3CPa5QvOoiLMb03jvAWH5
- oFX0haXZCRrFDBWdG9fKzrXHsoHMrcRSktQjiU+FW002+SA5wmN5
+ bh=8xAkiXUKVc9wJjWecuOx949frFybxs5dj3NeUk6AQhs=;
+ b=+F3wrvoc452KDiGVh8lFZn6ALVytEvXu6wCSifRrtjziUV4EKUDblPsx9wJA+iyTSLymkrNd0a//
+ 19rykwrQDCqygv2pnBjlG+C6C9ostA/gPYUtsEKD5QtDl+9KJz8J
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Davidlohr Bueso <dave@stgolabs.net>
+CXL rev 3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
 
-Currently the only CXL features targeted for irq support require their
-message numbers to be within the first 16 entries.  The device may
-however support less than 16 entries depending on the support it
-provides.
+Determine if the event read is memory module record and if so trace the
+record.
 
-Attempt to allocate these 16 irq vectors.  If the device supports less
-then the PCI infrastructure will allocate that number.  Upon successful
-allocation, users can plug in their respective isr at any point
-thereafter.
-
-CXL device events are signaled via interrupts.  Each event log may have
-a different interrupt message number.  These message numbers are
-reported in the Get Event Interrupt Policy mailbox command.
-
-Add interrupt support for event logs.  Interrupts are allocated as
-shared interrupts.  Therefore, all or some event logs can share the same
-message number.
-
-In addition all logs are queried on any interrupt in order of the most
-to least severe based on the status register.
-
-Finally place all event configuration logic into cxl_event_config().
-Previously the logic was a simple 'read all' on start up.  But
-interrupts must be configured prior to any reads to ensure no events are
-missed.  A single event configuration function results in a cleaner over
-all implementation.
-
-Cc: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
 ---
-Changes from V5:
-	Dan
-		Addressed missed comments on V4
-		https://lore.kernel.org/all/6398dd6ed80fa_b05d1294fc@dwillia2-xfh.jf.intel.com.notmuch/
+Changes from V4:
+	Pick up tag
 ---
- drivers/cxl/cxl.h    |   4 +
- drivers/cxl/cxlmem.h |  19 +++++
- drivers/cxl/cxlpci.h |   6 ++
- drivers/cxl/pci.c    | 213 +++++++++++++++++++++++++++++++++++++++++++++++++--
- 4 files changed, 236 insertions(+), 6 deletions(-)
+ drivers/cxl/core/mbox.c  |  13 +++++
+ drivers/cxl/core/trace.h | 143 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h     |  26 +++++++++
+ 3 files changed, 182 insertions(+)
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 5974d1082210..b3964149c77b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -168,6 +168,10 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- 				 CXLDEV_EVENT_STATUS_FAIL |	\
- 				 CXLDEV_EVENT_STATUS_FATAL)
- 
-+/* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
-+#define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
-+#define CXLDEV_EVENT_INT_MSGNUM_MASK	GENMASK(7, 4)
-+
- /* CXL 2.0 8.2.8.4 Mailbox Registers */
- #define CXLDEV_MBOX_CAPS_OFFSET 0x00
- #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index e0450b2a0f3f..e6b27e5d5009 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -194,6 +194,23 @@ struct cxl_endpoint_dvsec_info {
- 	struct range dvsec_range[2];
- };
- 
-+/**
-+ * Event Interrupt Policy
-+ *
-+ * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
-+ */
-+enum cxl_event_int_mode {
-+	CXL_INT_NONE		= 0x00,
-+	CXL_INT_MSI_MSIX	= 0x01,
-+	CXL_INT_FW		= 0x02
-+};
-+struct cxl_event_interrupt_policy {
-+	u8 info_settings;
-+	u8 warn_settings;
-+	u8 failure_settings;
-+	u8 fatal_settings;
-+} __packed;
-+
- /**
-  * struct cxl_event_state - Event log driver state
-  *
-@@ -288,6 +305,8 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
- 	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
- 	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-+	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
-+	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
- 	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
- 	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
- 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 77dbdb980b12..a8ea04f536ab 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -53,6 +53,12 @@
- #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
- #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 0101b4de700f..4ac9dc184ccf 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -734,6 +734,14 @@ static const uuid_t dram_event_uuid =
+ 	UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
+ 		  0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24);
  
 +/*
-+ * NOTE: Currently all the functions which are enabled for CXL require their
-+ * vectors to be in the first 16.  Use this as the default max.
++ * Memory Module Event Record
++ * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
 + */
-+#define CXL_PCI_DEFAULT_MAX_VECTORS 16
++static const uuid_t mem_mod_event_uuid =
++	UUID_INIT(0xfe927475, 0xdd59, 0x4339,
++		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74);
 +
- /* Register Block Identifier (RBI) */
- enum cxl_regloc_type {
- 	CXL_REGLOC_RBI_EMPTY = 0,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index a2d8382bc593..9e83f6b0ba26 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -445,6 +445,205 @@ static int cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
- 	return 0;
- }
+ static void cxl_event_trace_record(const struct device *dev,
+ 				   enum cxl_event_log_type type,
+ 				   struct cxl_event_record_raw *record)
+@@ -749,6 +757,11 @@ static void cxl_event_trace_record(const struct device *dev,
+ 		struct cxl_event_dram *rec = (struct cxl_event_dram *)record;
  
-+static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
-+{
-+	int nvecs;
+ 		trace_cxl_dram(dev, type, rec);
++	} else if (uuid_equal(id, &mem_mod_event_uuid)) {
++		struct cxl_event_mem_module *rec =
++				(struct cxl_event_mem_module *)record;
 +
-+	/*
-+	 * Per CXL 3.0 3.1.1 CXL.io Endpoint a function on a CXL device must
-+	 * not generate INTx messages if that function participates in
-+	 * CXL.cache or CXL.mem.
-+	 *
-+	 * Additionally pci_alloc_irq_vectors() handles calling
-+	 * pci_free_irq_vectors() automatically despite not being called
-+	 * pcim_*.  See pci_setup_msi_context().
-+	 */
-+	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
-+				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
-+	if (nvecs < 1) {
-+		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
-+		return -ENXIO;
-+	}
-+	return 0;
-+}
-+
-+struct cxl_dev_id {
-+	struct cxl_dev_state *cxlds;
-+};
-+
-+static irqreturn_t cxl_event_thread(int irq, void *id)
-+{
-+	struct cxl_dev_id *dev_id = id;
-+	struct cxl_dev_state *cxlds = dev_id->cxlds;
-+	u32 status;
-+
-+	do {
-+		/*
-+		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
-+		 * ignore the reserved upper 32 bits
-+		 */
-+		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-+		/* Ignore logs unknown to the driver */
-+		status &= CXLDEV_EVENT_STATUS_ALL;
-+		if (!status)
-+			break;
-+		cxl_mem_get_event_records(cxlds, status);
-+		cond_resched();
-+	} while (status);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
-+{
-+	struct device *dev = cxlds->dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct cxl_dev_id *dev_id;
-+	int irq;
-+
-+	if (FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting) != CXL_INT_MSI_MSIX)
-+		return -ENXIO;
-+
-+	/* dev_id must be globally unique and must contain the cxlds */
-+	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
-+	if (!dev_id)
-+		return -ENOMEM;
-+	dev_id->cxlds = cxlds;
-+
-+	irq =  pci_irq_vector(pdev,
-+			      FIELD_GET(CXLDEV_EVENT_INT_MSGNUM_MASK, setting));
-+	if (irq < 0)
-+		return irq;
-+
-+	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
-+					 IRQF_SHARED, NULL, dev_id);
-+}
-+
-+static int cxl_event_get_int_policy(struct cxl_dev_state *cxlds,
-+				    struct cxl_event_interrupt_policy *policy)
-+{
-+	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
-+		.payload_out = policy,
-+		.size_out = sizeof(*policy),
-+	};
-+	int rc;
-+
-+	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-+	if (rc < 0)
-+		dev_err(cxlds->dev, "Failed to get event interrupt policy : %d",
-+			rc);
-+
-+	return rc;
-+}
-+
-+static int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
-+				    struct cxl_event_interrupt_policy *policy)
-+{
-+	struct cxl_mbox_cmd mbox_cmd;
-+	int rc;
-+
-+	*policy = (struct cxl_event_interrupt_policy) {
-+		.info_settings = CXL_INT_MSI_MSIX,
-+		.warn_settings = CXL_INT_MSI_MSIX,
-+		.failure_settings = CXL_INT_MSI_MSIX,
-+		.fatal_settings = CXL_INT_MSI_MSIX,
-+	};
-+
-+	mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
-+		.payload_in = policy,
-+		.size_in = sizeof(*policy),
-+	};
-+
-+	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-+	if (rc < 0) {
-+		dev_err(cxlds->dev, "Failed to set event interrupt policy : %d",
-+			rc);
-+		return rc;
-+	}
-+
-+	/* Retrieve final interrupt settings */
-+	return cxl_event_get_int_policy(cxlds, policy);
-+}
-+
-+static int cxl_event_irqsetup(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_event_interrupt_policy policy;
-+	int rc;
-+
-+	rc = cxl_event_config_msgnums(cxlds, &policy);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_event_req_irq(cxlds, policy.info_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
-+		return rc;
-+	}
-+
-+	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
-+		return rc;
-+	}
-+
-+	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
-+		return rc;
-+	}
-+
-+	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static bool cxl_event_int_is_fw(u8 setting)
-+{
-+	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
-+
-+	return mode == CXL_INT_FW;
-+}
-+
-+static int cxl_event_config(struct pci_host_bridge *host_bridge,
-+			    struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_event_interrupt_policy policy;
-+	int rc;
-+
-+	/*
-+	 * When BIOS maintains CXL error reporting control, it will process
-+	 * event records.  Only one agent can do so.
-+	 */
-+	if (!host_bridge->native_cxl_error)
-+		return 0;
-+
-+	rc = cxl_event_get_int_policy(cxlds, &policy);
-+	if (rc)
-+		return rc;
-+
-+	if (cxl_event_int_is_fw(policy.info_settings) ||
-+	    cxl_event_int_is_fw(policy.warn_settings) ||
-+	    cxl_event_int_is_fw(policy.failure_settings) ||
-+	    cxl_event_int_is_fw(policy.fatal_settings)) {
-+		dev_err(cxlds->dev, "FW still in control of Event Logs despite _OSC settings\n");
-+		return -EBUSY;
-+	}
-+
-+	rc = cxl_event_irqsetup(cxlds);
-+	if (rc)
-+		return rc;
-+
-+	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
-+
-+	return 0;
-+}
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -463,6 +662,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	rc = pcim_enable_device(pdev);
- 	if (rc)
- 		return rc;
-+	pci_set_master(pdev);
++		trace_cxl_memory_module(dev, type, rec);
+ 	} else {
+ 		/* For unknown record types print just the header */
+ 		trace_cxl_generic_event(dev, type, record);
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index b6321cfb1d9f..ebb4c8ce8587 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -439,6 +439,149 @@ TRACE_EVENT(cxl_dram,
+ 	)
+ );
  
- 	cxlds = cxl_dev_state_create(&pdev->dev);
- 	if (IS_ERR(cxlds))
-@@ -519,6 +719,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_alloc_irq_vectors(pdev);
-+	if (rc)
-+		return rc;
++/*
++ * Memory Module Event Record - MMER
++ *
++ * CXL res 3.0 section 8.2.9.2.1.3; Table 8-45
++ */
++#define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
++#define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
++#define CXL_MMER_LIFE_USED_CHANGE		0x02
++#define CXL_MMER_TEMP_CHANGE			0x03
++#define CXL_MMER_DATA_PATH_ERROR		0x04
++#define CXL_MMER_LAS_ERROR			0x05
++#define show_dev_evt_type(type)	__print_symbolic(type,			   \
++	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
++	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
++	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
++	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
++	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
++	{ CXL_MMER_LAS_ERROR,			"LSA Error"		}  \
++)
 +
- 	cxlmd = devm_cxl_add_memdev(cxlds);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
-@@ -527,12 +731,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
++/*
++ * Device Health Information - DHI
++ *
++ * CXL res 3.0 section 8.2.9.8.3.1; Table 8-100
++ */
++#define CXL_DHI_HS_MAINTENANCE_NEEDED				BIT(0)
++#define CXL_DHI_HS_PERFORMANCE_DEGRADED				BIT(1)
++#define CXL_DHI_HS_HW_REPLACEMENT_NEEDED			BIT(2)
++#define show_health_status_flags(flags)	__print_flags(flags, "|",	   \
++	{ CXL_DHI_HS_MAINTENANCE_NEEDED,	"MAINTENANCE_NEEDED"	}, \
++	{ CXL_DHI_HS_PERFORMANCE_DEGRADED,	"PERFORMANCE_DEGRADED"	}, \
++	{ CXL_DHI_HS_HW_REPLACEMENT_NEEDED,	"REPLACEMENT_NEEDED"	}  \
++)
++
++#define CXL_DHI_MS_NORMAL							0x00
++#define CXL_DHI_MS_NOT_READY							0x01
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOST					0x02
++#define CXL_DHI_MS_ALL_DATA_LOST						0x03
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS			0x04
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN			0x05
++#define CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT				0x06
++#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS				0x07
++#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN				0x08
++#define CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT					0x09
++#define show_media_status(ms)	__print_symbolic(ms,			   \
++	{ CXL_DHI_MS_NORMAL,						   \
++		"Normal"						}, \
++	{ CXL_DHI_MS_NOT_READY,						   \
++		"Not Ready"						}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOST,				   \
++		"Write Persistency Lost"				}, \
++	{ CXL_DHI_MS_ALL_DATA_LOST,					   \
++		"All Data Lost"						}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_POWER_LOSS,		   \
++		"Write Persistency Loss in the Event of Power Loss"	}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_EVENT_SHUTDOWN,		   \
++		"Write Persistency Loss in Event of Shutdown"		}, \
++	{ CXL_DHI_MS_WRITE_PERSISTENCY_LOSS_IMMINENT,			   \
++		"Write Persistency Loss Imminent"			}, \
++	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_POWER_LOSS,		   \
++		"All Data Loss in Event of Power Loss"			}, \
++	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_EVENT_SHUTDOWN,		   \
++		"All Data loss in the Event of Shutdown"		}, \
++	{ CXL_DHI_MS_WRITE_ALL_DATA_LOSS_IMMINENT,			   \
++		"All Data Loss Imminent"				}  \
++)
++
++#define CXL_DHI_AS_NORMAL		0x0
++#define CXL_DHI_AS_WARNING		0x1
++#define CXL_DHI_AS_CRITICAL		0x2
++#define show_two_bit_status(as) __print_symbolic(as,	   \
++	{ CXL_DHI_AS_NORMAL,		"Normal"	}, \
++	{ CXL_DHI_AS_WARNING,		"Warning"	}, \
++	{ CXL_DHI_AS_CRITICAL,		"Critical"	}  \
++)
++#define show_one_bit_status(as) __print_symbolic(as,	   \
++	{ CXL_DHI_AS_NORMAL,		"Normal"	}, \
++	{ CXL_DHI_AS_WARNING,		"Warning"	}  \
++)
++
++#define CXL_DHI_AS_LIFE_USED(as)			(as & 0x3)
++#define CXL_DHI_AS_DEV_TEMP(as)				((as & 0xC) >> 2)
++#define CXL_DHI_AS_COR_VOL_ERR_CNT(as)			((as & 0x10) >> 4)
++#define CXL_DHI_AS_COR_PER_ERR_CNT(as)			((as & 0x20) >> 5)
++
++TRACE_EVENT(cxl_memory_module,
++
++	TP_PROTO(const struct device *dev, enum cxl_event_log_type log,
++		 struct cxl_event_mem_module *rec),
++
++	TP_ARGS(dev, log, rec),
++
++	TP_STRUCT__entry(
++		CXL_EVT_TP_entry
++
++		/* Memory Module Event */
++		__field(u8, event_type)
++
++		/* Device Health Info */
++		__field(u8, health_status)
++		__field(u8, media_status)
++		__field(u8, life_used)
++		__field(u32, dirty_shutdown_cnt)
++		__field(u32, cor_vol_err_cnt)
++		__field(u32, cor_per_err_cnt)
++		__field(s16, device_temp)
++		__field(u8, add_status)
++	),
++
++	TP_fast_assign(
++		CXL_EVT_TP_fast_assign(dev, log, rec->hdr);
++
++		/* Memory Module Event */
++		__entry->event_type = rec->event_type;
++
++		/* Device Health Info */
++		__entry->health_status = rec->info.health_status;
++		__entry->media_status = rec->info.media_status;
++		__entry->life_used = rec->info.life_used;
++		__entry->dirty_shutdown_cnt = get_unaligned_le32(rec->info.dirty_shutdown_cnt);
++		__entry->cor_vol_err_cnt = get_unaligned_le32(rec->info.cor_vol_err_cnt);
++		__entry->cor_per_err_cnt = get_unaligned_le32(rec->info.cor_per_err_cnt);
++		__entry->device_temp = get_unaligned_le16(rec->info.device_temp);
++		__entry->add_status = rec->info.add_status;
++	),
++
++	CXL_EVT_TP_printk("event_type='%s' health_status='%s' media_status='%s' " \
++		"as_life_used=%s as_dev_temp=%s as_cor_vol_err_cnt=%s " \
++		"as_cor_per_err_cnt=%s life_used=%u device_temp=%d " \
++		"dirty_shutdown_cnt=%u cor_vol_err_cnt=%u cor_per_err_cnt=%u",
++		show_dev_evt_type(__entry->event_type),
++		show_health_status_flags(__entry->health_status),
++		show_media_status(__entry->media_status),
++		show_two_bit_status(CXL_DHI_AS_LIFE_USED(__entry->add_status)),
++		show_two_bit_status(CXL_DHI_AS_DEV_TEMP(__entry->add_status)),
++		show_one_bit_status(CXL_DHI_AS_COR_VOL_ERR_CNT(__entry->add_status)),
++		show_one_bit_status(CXL_DHI_AS_COR_PER_ERR_CNT(__entry->add_status)),
++		__entry->life_used, __entry->device_temp,
++		__entry->dirty_shutdown_cnt, __entry->cor_vol_err_cnt,
++		__entry->cor_per_err_cnt
++	)
++);
++
+ #endif /* _CXL_EVENTS_H */
  
--	/*
--	 * When BIOS maintains CXL error reporting control, it will process
--	 * event records.  Only one agent can do so.
--	 */
--	if (host_bridge->native_cxl_error)
--		cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
-+	rc = cxl_event_config(host_bridge, cxlds);
-+	if (rc)
-+		return rc;
+ #define TRACE_INCLUDE_FILE trace
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 27dc89d84037..4eae1cf4e445 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -493,6 +493,32 @@ struct cxl_event_dram {
+ 	u8 reserved[0x17];
+ } __packed;
  
- 	if (cxlds->regs.ras) {
- 		pci_enable_pcie_error_reporting(pdev);
++/*
++ * Get Health Info Record
++ * CXL rev 3.0 section 8.2.9.8.3.1; Table 8-100
++ */
++struct cxl_get_health_info {
++	u8 health_status;
++	u8 media_status;
++	u8 add_status;
++	u8 life_used;
++	u8 device_temp[2];
++	u8 dirty_shutdown_cnt[4];
++	u8 cor_vol_err_cnt[4];
++	u8 cor_per_err_cnt[4];
++} __packed;
++
++/*
++ * Memory Module Event Record
++ * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
++ */
++struct cxl_event_mem_module {
++	struct cxl_event_record_hdr hdr;
++	u8 event_type;
++	struct cxl_get_health_info info;
++	u8 reserved[0x3d];
++} __packed;
++
+ struct cxl_mbox_get_partition_info {
+ 	__le64 active_volatile_cap;
+ 	__le64 active_persistent_cap;
 
 -- 
 2.39.0
