@@ -2,446 +2,436 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD07C5479D
-	for <linux-cxl@archiver.kernel.org>; Mon,  9 Jan 2023 19:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8509AC54EBD
+	for <linux-cxl@archiver.kernel.org>; Mon,  9 Jan 2023 19:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237654AbjAITQR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 9 Jan 2023 14:16:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54906 "EHLO
+        id S237557AbjAITnJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 9 Jan 2023 14:43:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237583AbjAITPz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 Jan 2023 14:15:55 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF60512AC4
-        for <linux-cxl@vger.kernel.org>; Mon,  9 Jan 2023 11:15:53 -0800 (PST)
+        with ESMTP id S237550AbjAITmo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 Jan 2023 14:42:44 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061DF76ECB;
+        Mon,  9 Jan 2023 11:42:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673291753; x=1704827753;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=lZVd7dZS0E2j5P1EiCtyUJtKYmbScLKjkUXiMxD0v0M=;
-  b=eaSdHMiA6Gclyp2sqWN3Gcxd0/WEhqxgtVi64Uf6uK2Mg2snpuB2Wr0v
-   u2XQTdWLAYRX0m3oldja0Djrc1dWNg9r4K0Fv4nfP+kTvFXrhscpWV/05
-   1nbgQ2RS9XFxAMPEVYGYSSyVNQ6dfYsOsz1FYj4SzDGOJzev8cSk9b3oN
-   4Gj3bG8mnFgNm4L1HKA0pJd3LvZBERAT8DYghnN4omguGYKd8U4uVbbnM
-   uD+EH2vltcI48dBwKfz9hPLY50scaKMm5zpot5aEhSk2RCfPoh9UziDvv
-   jR2GgtzNlY5OXzTcG1givANrrDmvgRma9NeMAf+quaHXdHYU6YjojYRab
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="320656824"
+  t=1673293361; x=1704829361;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=i5p2IAuRIjBp0GK2dMkpBN9AEIvjxZfY2qt+4WKHctQ=;
+  b=MwZo7QWWuxyvpLnWH6zlAcJQX98ZNLJBDlKUN8DcOVu+T6Z7ZLrkNyfw
+   gF24iIjCpD8TVzn8Sb+yPUELcfIQwlSuh52bMbbgDA2b6gVQ2mqmoXyx4
+   alxujXLrEWw3soQItDt6RZ+Tdu+7yuNaj156O8zuFyS1NoX8ATr4CKo1X
+   byZ3kQye8dGRITJ8mOMxpQnw8f8OX6ryzGdfSlhej4yRDfKZD5XEgFseC
+   Jk8MuwY1gxBLFlMDMHL/ChXFQOl5YXPev5O5Wb8YHe9/WGC4OSn37jerI
+   jMQB4F9chzpbq5Kkt/AzA6qAhYao9wIimpkCe7PtieFlazPrJp4PHfxMK
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="385269874"
 X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
-   d="scan'208";a="320656824"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:15:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="658712239"
+   d="scan'208";a="385269874"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:42:34 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="656783496"
 X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
-   d="scan'208";a="658712239"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Jan 2023 11:15:37 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 9 Jan 2023 11:15:36 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 9 Jan 2023 11:15:36 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 9 Jan 2023 11:15:36 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hVIWJtfNiETVI8GAAwbu9lyoMhwWpF6RfqoDe3MefYrMQlni+LQCEduW09qGdBtlN0wQR5IyaRQhTG2zpT8CBHRV8mV2dYC0dw8owhMICCfIlukYNEleHgMXdMX736tb6Jhj3wEWb73hB5ZQ+8TZZhe1a6fISPqA3oYrgAW2S0uo4rWx4Wg/lc14fOOqIsLNsE4VpW9hG7VVlUfUNZm/v8Sr61N5DHcqNkQzNhleG8qVs98PsaYP+VUwScV2f023b561yDIiE7bQgC6oQLwp1RCcITpz0pNpyHM59T4bJ5KmIDpbuCQObnFpH1Y85tYUU0F35lMDZ7KcPnVCB7H/Uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VqxILzVM7/1NCvot0T4XXYMXuI465xy9v3j18tC1Jkc=;
- b=MjAcuB9Gbw66s/Qc15oMWk9G5gFLoO/3AfDyRp8LLBxyrVz6gWfgy3PW4vN8yae6NmrD2TRNUPekhA7vH6Ph7DOvPnodghWPRZKtVQtK9r/BoybwOLmTD8ZSWPRX9/DjhUGZw/mEOezMMEMJJJJu0rzcDfdIvlHl7AyEl64mAftv/21uVE4sb/Gh/YwyJDv6fZguAb+VBvtkgikbxoi44iF4Jaai3RGuvpqTkW9gERZcRjU7c+UF3jno+tgqPxZMmEb9z2c1HLXpXTIaAYlSbdVuKtI8Q53sLgclVKNk7sSTS4Y5vW9j0YlJ1gYoIVr5GLBHZeF4Fj1JaNzx14UqSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by BL1PR11MB6025.namprd11.prod.outlook.com (2603:10b6:208:390::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18; Mon, 9 Jan
- 2023 19:15:33 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::288d:5cae:2f30:828b]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::288d:5cae:2f30:828b%8]) with mapi id 15.20.5986.018; Mon, 9 Jan 2023
- 19:15:33 +0000
-Date:   Mon, 9 Jan 2023 11:15:28 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>,
-        Peter Maydell <peter.maydell@linaro.org>
-Subject: Re: [PATCH v2 8/8] hw/cxl/events: Add in inject general media event
-Message-ID: <Y7xn0NNupucMou4b@iweiny-desk3>
-References: <20221221-ira-cxl-events-2022-11-17-v2-0-2ce2ecc06219@intel.com>
- <20221221-ira-cxl-events-2022-11-17-v2-8-2ce2ecc06219@intel.com>
- <20230103180719.00006437@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230103180719.00006437@huawei.com>
-X-ClientProxiedBy: SJ0PR13CA0199.namprd13.prod.outlook.com
- (2603:10b6:a03:2c3::24) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+   d="scan'208";a="656783496"
+Received: from cwchen-mobl.amr.corp.intel.com (HELO localhost) ([10.212.45.225])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 11:42:33 -0800
+From:   ira.weiny@intel.com
+Date:   Mon, 09 Jan 2023 11:42:21 -0800
+Subject: [PATCH v6 2/8] cxl/mem: Wire up event interrupts
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BL1PR11MB6025:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a2cab95-8fe0-4da5-6c22-08daf275e16c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /xXzt4XtTNE//f8UzgrXsJ/vJZO2oEkphBctyH95YApOZHrdz/QFn+nIcjl/rcWJOaYLSuRnzcRJlKb6EnwaifA5+EUvU0jAkuFSTmY3XDDfczc3GnbmRg/90Tk4mK641cyA/w67LOaExYSSMAcT8nVegoEH0p36GiOLm+syuQAQ+CBEJG61ERNU4S6Yo6ZOwsEGzo6sW1mbmIgxVbglDyvkILryvzEqVPk8YqjbIr3DplMcqvInlzTvSN8DSniIbCeP+Y2sBk3jJxz9NRuV38d5skr3NJOvvMKR96qaXNSFB7p1X4iVMultdhnN2K7RyG1nUjfmJrJ//+c3BAokeuB8ZywLGaWpZpr1epORQ7iw99BSXyHKwe072tTM43Vo8kadRNO5qqKXSIMcaCkHutkc3/Okl3vLRz4DUoeDHi9wEPbMW+PZ+VDlCOjHLvF5fZ9RH34v4DQhJxmtxB2aKNJCPmCynp6hM+VvDcHRIzj3T2D0UZnuPUGldHfM9rikcxQkYuwEFKkMK9xIFsvGakMJud/1kbQTLtLscKn8HITVVHzP4OUbcty6pmlPRBWTOfCV5hBQuuqzaW9iqDb+yt7UBVeQVw1rmGsH13hj5tZJ4jmDMWOKr3LGfvfutbVbGIxEZ1CwRAwFp0wyJpHMKLToAMAl7wZcjWyai0Yv3Ns=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(136003)(396003)(39860400002)(366004)(376002)(346002)(451199015)(38100700002)(82960400001)(83380400001)(6916009)(86362001)(66476007)(8676002)(4326008)(41300700001)(66556008)(66946007)(54906003)(316002)(44832011)(2906002)(5660300002)(8936002)(6512007)(33716001)(9686003)(966005)(6506007)(26005)(186003)(6486002)(478600001)(6666004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?gmEHQXwOD8wJNFH/I2WfGE6lLIapvYVjnZ2ESyN8CscT+5BjgyA/GwWUULMh?=
- =?us-ascii?Q?UZw6d3uqo3iVtC9RU3ZaVCGRJNmEghRsPOQxsV8p6iyeMLqdTichYKu2TPQs?=
- =?us-ascii?Q?lveV2ZeR0S7hSSm0x7fgqJy5T5GYApFQ2FxKixsr29SXg3Sa5tkr/AlNX2LZ?=
- =?us-ascii?Q?njXhJAyU1BWim34lFtEqhtNyJ58Yc3CNPaLN/F4rTdFTMcgNFUHh+2iP60Di?=
- =?us-ascii?Q?TvGEWQ8OifpWNavOImyqtzOu0qzPcyguhcLmLM1K/z+piUxnHj6wNQIyxABN?=
- =?us-ascii?Q?X1U7RMdE9/pKzxMAAU4dlyNSexERZqXw3dJnxknjA+WgkmSkLrW1JHvXe6qZ?=
- =?us-ascii?Q?dLxZBAI67piIf9T9ofNHhYbCqSWbVjbLMqL/NFnCzaj1/XMSVWt5VD8lqQjJ?=
- =?us-ascii?Q?Lv8Lt2VlTVXzxuhKcSoq+WoZmyLUK58fvTj9tjFIX6TRpHO7jwSPzlSXLZAL?=
- =?us-ascii?Q?Tb92YzyH+qNiBOFraGgh/aW3EWmY5BrBvp8OS33NZ3vhslZI15Et/1CcdB2n?=
- =?us-ascii?Q?g7Vl0mqM9ZczlGaKwXyFfn06aIqjkhusrm3T+IrRIjnrb4ft/V651DZSZaBY?=
- =?us-ascii?Q?DVhW+cr8fRG5BVC2TWrk3oXTRgpvp+MSewtpY1WeUFIuvqR223cSo2FrIs/w?=
- =?us-ascii?Q?ATLqdusHBf+SQN4bHeCIiz23oF9qJygZl0l4ugc7w7DNaHfgpgACBcOG6Zhm?=
- =?us-ascii?Q?xs8iXLP3Z/zT5HFNh5JL+Dkf7SOIXgR8wJVYEB1EwiGct9JtGSv7J5Y+Yd66?=
- =?us-ascii?Q?61Xa425UvyjFHuzJP6hinQg6hv1/yB5u0XrQ4BpUJ3cX188jekadJUL4VYPO?=
- =?us-ascii?Q?PbV8G9LdtVzLTE/EITxHcDa7ekKy3JLCGPruswJg5JOWzfPVv81zFSb3iAGA?=
- =?us-ascii?Q?BYBPG0agSEiYayBFukshyw1k5KFDgZoi6WlTi7E3QP6SV8b0h0TGasAATlrb?=
- =?us-ascii?Q?DAZu/bka0eYuo5FLReQc818hInN5Ws3lrgP5a7vBGiJGpfEWROOAHbGMosOM?=
- =?us-ascii?Q?mrGzP1yR8YmzgNdqgMQ3SeNHJJs06MPsg57qCTHwGL4ZmO9LtglEDyOBtmul?=
- =?us-ascii?Q?+y6lmJGtcf3d9CDhLNDP6tHcGRb8bMaZwx4saSrvATh/EJ2GSuqhnlt9t7IF?=
- =?us-ascii?Q?W3ePwvrqf10f8XEpX+s7Q0sx7C9Z3O0VbHWqn6dmv824TTI3nMRMPgoZf7WN?=
- =?us-ascii?Q?a9eCf6MOVgHsg7lGtEqIXmds9eGZ3H4wRCk8mJrlqjqwHEVd6gJ85RY8c7Y3?=
- =?us-ascii?Q?V79dMHVLw41cQR5HxY/T2z0xKjyzF747C80WhBb+K2yuJs3tijjkGIdRYNS4?=
- =?us-ascii?Q?JxcLn+xhf1kCN5cqQsz1Pzv73ZkPNWO1wu8KLGPh/7aIrMpnwAeWYJ/rqOl9?=
- =?us-ascii?Q?ScniOtwA127yJh8h0oC154oNST+on7Q9T5Hzwy6qI1knmqGhyqveeJy7rDhG?=
- =?us-ascii?Q?KSK+ylErbkuKRr5uWm1BR2bQOMFu8P91kNvkSPrX8lWc7iuXpN18iCpmrCNP?=
- =?us-ascii?Q?k5/0D+K4rGZZX456W7qfUzodQDXdlbdZrKREzXAABGtpQFGp35WE96qkyysK?=
- =?us-ascii?Q?MwaZb1LWEq6yBrFsxcAdWA8X3maK+AHUid6AynkZ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a2cab95-8fe0-4da5-6c22-08daf275e16c
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2023 19:15:33.4983
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6R6fYNKVe1ThzJ/OukhQ29VnrgYGDnUnhohO0WZfmjJ9YmJehZhe4LeHQcLEvXDgK4lCZtwox919qpkYx16/DQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB6025
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20221216-cxl-ev-log-v6-2-346583105b30@intel.com>
+References: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
+In-Reply-To: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: b4 0.12-dev-cc11a
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1673293350; l=10879;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=+ZMGdzen1iqFCvOQ64yoqWZYLS2e15VCyQIMCJj50QU=;
+ b=W/Cu+iT9v3l6AoHUB4sd/XOLP1eA4SeUrosNuNLXEC+mZV9twroTOmP3CPa5QvOoiLMb03jvAWH5
+ oFX0haXZCRrFDBWdG9fKzrXHsoHMrcRSktQjiU+FW002+SA5wmN5
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jan 03, 2023 at 06:07:19PM +0000, Jonathan Cameron wrote:
-> On Wed, 21 Dec 2022 20:24:38 -0800
-> Ira Weiny <ira.weiny@intel.com> wrote:
-> 
-> > To facilitate testing provide a QMP command to inject a general media
-> > event.  The event can be added to the log specified.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> Hi Ira,
-> 
-> Suggestion inline on how to more neatly handle optional arguments using
-> QMPs inbuilt handling.  Short version is stick a * in front of the
-> argument name in the json and you get a bonus parameter in the callback
-> bool has_<name> which lets you identify if it is provided or not.
-> 
-> Jonathan
-> 
-> > 
-> > ---
-> > Changes from RFC:
-> > 	Add all fields for this event
-> > 	irq happens automatically when log transitions from 0 to 1
-> > ---
-> >  hw/mem/cxl_type3.c          | 93 +++++++++++++++++++++++++++++++++++++++++++++
-> >  hw/mem/cxl_type3_stubs.c    |  8 ++++
-> >  include/hw/cxl/cxl_events.h | 20 ++++++++++
-> >  qapi/cxl.json               | 25 ++++++++++++
-> >  4 files changed, 146 insertions(+)
-> > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index a43949cab120..bedd09e500ba 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -916,6 +916,99 @@ static CXLPoisonList *get_poison_list(CXLType3Dev *ct3d)
-> >      return &ct3d->poison_list;
-> >  }
-> >  
-> > +static void cxl_assign_event_header(struct cxl_event_record_hdr *hdr,
-> > +                                    QemuUUID *uuid, uint8_t flags,
-> > +                                    uint8_t length)
-> > +{
-> > +    hdr->flags[0] = flags;
-> > +    hdr->length = length;
-> > +    memcpy(&hdr->id, uuid, sizeof(hdr->id));
-> > +    hdr->timestamp = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-> > +}
-> > +
-> > +QemuUUID gen_media_uuid = {
-> > +    .data = UUID(0xfbcd0a77, 0xc260, 0x417f,
-> > +                 0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
-> > +};
-> > +
-> > +#define CXL_GMER_VALID_CHANNEL                          BIT(0)
-> > +#define CXL_GMER_VALID_RANK                             BIT(1)
-> > +#define CXL_GMER_VALID_DEVICE                           BIT(2)
-> > +#define CXL_GMER_VALID_COMPONENT                        BIT(3)
-> > +
-> > +/*
-> > + * For channel, rank, and device; any value inside of the fields valid range
-> > + * will flag that field to be valid.  IE pass -1 to mark the field invalid.
-> > + *
-> > + * Component ID is device specific.  Define this as a string.
-> > + */
-> > +void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
-> > +                                    uint8_t flags, uint64_t physaddr,
-> > +                                    uint8_t descriptor, uint8_t type,
-> > +                                    uint8_t transaction_type,
-> > +                                    int16_t channel, int16_t rank,
-> > +                                    int32_t device,
-> > +                                    const char *component_id,
-> > +                                    Error **errp)
-> > +{
-> > +    Object *obj = object_resolve_path(path, NULL);
-> > +    struct cxl_event_gen_media gem;
-> > +    struct cxl_event_record_hdr *hdr = &gem.hdr;
-> > +    CXLDeviceState *cxlds;
-> > +    CXLType3Dev *ct3d;
-> > +    uint16_t valid_flags = 0;
-> > +
-> > +    if (log >= CXL_EVENT_TYPE_MAX) {
-> > +        error_setg(errp, "Invalid log type: %d", log);
-> > +        return;
-> > +    }
-> > +    if (!obj) {
-> > +        error_setg(errp, "Unable to resolve path");
-> > +        return;
-> > +    }
-> > +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-> > +        error_setg(errp, "Path does not point to a CXL type 3 device");
-> > +    }
-> > +    ct3d = CXL_TYPE3(obj);
-> > +    cxlds = &ct3d->cxl_dstate;
-> > +
-> > +    memset(&gem, 0, sizeof(gem));
-> > +    cxl_assign_event_header(hdr, &gen_media_uuid, flags,
-> > +                            sizeof(struct cxl_event_gen_media));
-> > +
-> > +    gem.phys_addr = physaddr;
-> > +    gem.descriptor = descriptor;
-> > +    gem.type = type;
-> > +    gem.transaction_type = transaction_type;
-> > +
-> > +    if (0 <= channel && channel <= 0xFF) {
-> > +        gem.channel = channel;
-> > +        valid_flags |= CXL_GMER_VALID_CHANNEL;
-> > +    }
-> > +
-> > +    if (0 <= rank && rank <= 0xFF) {
-> > +        gem.rank = rank;
-> > +        valid_flags |= CXL_GMER_VALID_RANK;
-> > +    }
-> > +
-> > +    if (0 <= device && device <= 0xFFFFFF) {
-> > +        st24_le_p(gem.device, device);
-> > +        valid_flags |= CXL_GMER_VALID_DEVICE;
-> > +    }
-> > +
-> > +    if (component_id && strcmp(component_id, "")) {
-> > +        strncpy((char *)gem.component_id, component_id,
-> > +                sizeof(gem.component_id) - 1);
-> > +        valid_flags |= CXL_GMER_VALID_COMPONENT;
-> > +    }
-> > +
-> > +    stw_le_p(gem.validity_flags, valid_flags);
-> > +
-> > +    if (cxl_event_insert(cxlds, log, (struct cxl_event_record_raw *)&gem)) {
-> > +        cxl_event_irq_assert(ct3d);
-> > +    }
-> > +}
-> > +
-> >  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-> >                             Error **errp)
-> >  {
-> > diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-> > index f2c9f48f4010..62f04d487031 100644
-> > --- a/hw/mem/cxl_type3_stubs.c
-> > +++ b/hw/mem/cxl_type3_stubs.c
-> > @@ -2,6 +2,14 @@
-> >  #include "qemu/osdep.h"
-> >  #include "qapi/qapi-commands-cxl.h"
-> >  
-> > +void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
-> > +                                    uint8_t flags, uint64_t physaddr,
-> > +                                    uint8_t descriptor, uint8_t type,
-> > +                                    uint8_t transaction_type,
-> > +                                    int16_t channel, int16_t rank,
-> > +                                    int32_t device,
-> > +                                    char *component_id,
-> > +                                    Error **errp) {}
-> >  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-> >                             Error **errp) {}
-> >  void qmp_cxl_inject_uncorrectable_error(const char *path,
-> > diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-> > index 2df40720320a..3175e9d9866d 100644
-> > --- a/include/hw/cxl/cxl_events.h
-> > +++ b/include/hw/cxl/cxl_events.h
-> > @@ -103,4 +103,24 @@ struct cxl_event_interrupt_policy {
-> >  /* DCD is optional but other fields are not */
-> >  #define CXL_EVENT_INT_SETTING_MIN_LEN 4
-> >  
-> > +/*
-> > + * General Media Event Record
-> > + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
-> > + */
-> > +#define CXL_EVENT_GEN_MED_COMP_ID_SIZE  0x10
-> > +#define CXL_EVENT_GEN_MED_RES_SIZE      0x2e
-> > +struct cxl_event_gen_media {
-> > +    struct cxl_event_record_hdr hdr;
-> > +    uint64_t phys_addr;
-> > +    uint8_t descriptor;
-> > +    uint8_t type;
-> > +    uint8_t transaction_type;
-> > +    uint8_t validity_flags[2];
-> > +    uint8_t channel;
-> > +    uint8_t rank;
-> > +    uint8_t device[3];
-> > +    uint8_t component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
-> > +    uint8_t reserved[CXL_EVENT_GEN_MED_RES_SIZE];
-> > +} QEMU_PACKED;
-> > +
-> >  #endif /* CXL_EVENTS_H */
-> > diff --git a/qapi/cxl.json b/qapi/cxl.json
-> > index b4836bb87f53..56e85a28d7e0 100644
-> > --- a/qapi/cxl.json
-> > +++ b/qapi/cxl.json
-> > @@ -5,6 +5,31 @@
-> >  # = CXL devices
-> >  ##
-> >  
-> > +##
-> > +# @cxl-inject-gen-media-event:
-> > +#
-> > +# @path: CXL type 3 device canonical QOM path
-> > +#
-> > +# @log: Event Log to add the event to
-> > +# @flags: header flags
-> > +# @physaddr: Physical Address
-> > +# @descriptor: Descriptor
-> > +# @type: Type
-> > +# @transactiontype: Transaction Type
-> > +# @channel: Channel
-> > +# @rank: Rank
-> > +# @device: Device
-> > +# @componentid: Device specific string
-> > +#
-> > +##
-> > +{ 'command': 'cxl-inject-gen-media-event',
-> > +  'data': { 'path': 'str', 'log': 'uint8', 'flags': 'uint8',
-> > +            'physaddr': 'uint64', 'descriptor': 'uint8',
-> > +            'type': 'uint8', 'transactiontype': 'uint8',
-> > +            'channel': 'int16', 'rank': 'int16',
-> > +            'device': 'int32', 'componentid': 'str'
-> > +            }}
-> 
-> From an interface cleanliness point of view I'd rather see
-> all the optional fields as optional.  That's done by marking them
-> with a * so
-> '*channel': 'int16'
-> 
-> Then the signature of the related qmp_cxl_inject_gen_media_event
-> gains a boolean has_channel parameter (before channel)
-> 
-> Those booleans can be used to set the flags etc.
+From: Davidlohr Bueso <dave@stgolabs.net>
 
-Ah!  Ok cool.  Yes this would make a lot more sense.  I did not realize QMP did
-this optional thing.  That makes scripting this easier as well!
+Currently the only CXL features targeted for irq support require their
+message numbers to be within the first 16 entries.  The device may
+however support less than 16 entries depending on the support it
+provides.
 
-Did you put all this on a branch or not?  I did not see anything new at:
+Attempt to allocate these 16 irq vectors.  If the device supports less
+then the PCI infrastructure will allocate that number.  Upon successful
+allocation, users can plug in their respective isr at any point
+thereafter.
 
-https://gitlab.com/jic23/qemu.git
+CXL device events are signaled via interrupts.  Each event log may have
+a different interrupt message number.  These message numbers are
+reported in the Get Event Interrupt Policy mailbox command.
 
-I can definitely respin but it sounds like you were going to make some changes.
+Add interrupt support for event logs.  Interrupts are allocated as
+shared interrupts.  Therefore, all or some event logs can share the same
+message number.
 
-Ira
+In addition all logs are queried on any interrupt in order of the most
+to least severe based on the status register.
 
-> 
-> Very lightly tested: 
-> 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 4660a44ef8..cb9bb0b166 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1203,8 +1203,9 @@ void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
->                                      uint8_t flags, uint64_t physaddr,
->                                      uint8_t descriptor, uint8_t type,
->                                      uint8_t transaction_type,
-> -                                    int16_t channel, int16_t rank,
-> -                                    int32_t device,
-> +                                    bool has_channel, uint8_t channel,
-> +                                    bool has_rank, uint8_t rank,
-> +                                    bool has_device, uint32_t device,
->                                      const char *component_id,
->                                      Error **errp)
->  {
-> @@ -1238,22 +1239,22 @@ void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
->      gem.type = type;
->      gem.transaction_type = transaction_type;
-> 
-> -    if (0 <= channel && channel <= 0xFF) {
-> +    if (has_channel) {
->          gem.channel = channel;
->          valid_flags |= CXL_GMER_VALID_CHANNEL;
->      }
-> 
-> -    if (0 <= rank && rank <= 0xFF) {
-> +    if (has_rank) {
->          gem.rank = rank;
->          valid_flags |= CXL_GMER_VALID_RANK;
->      }
-> 
-> -    if (0 <= device && device <= 0xFFFFFF) {
-> +    if (has_device) {
->          st24_le_p(gem.device, device);
->          valid_flags |= CXL_GMER_VALID_DEVICE;
->      }
-> 
-> -    if (component_id && strcmp(component_id, "")) {
-> +    if (component_id) {
->         strncpy((char *)gem.component_id, component_id,
->                  sizeof(gem.component_id) - 1);
->          valid_flags |= CXL_GMER_VALID_COMPONENT;
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 56e85a28d7..085f82e7da 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -26,8 +26,8 @@
->    'data': { 'path': 'str', 'log': 'uint8', 'flags': 'uint8',
->              'physaddr': 'uint64', 'descriptor': 'uint8',
->              'type': 'uint8', 'transactiontype': 'uint8',
-> -            'channel': 'int16', 'rank': 'int16',
-> -            'device': 'int32', 'componentid': 'str'
-> +            '*channel': 'uint8', '*rank': 'uint8',
-> +            '*device': 'uint32', '*componentid': 'str'
->              }}
-> 
->  ##
-> 
-> > +
-> >  ##
-> >  # @cxl-inject-poison:
-> >  #
-> > 
-> 
+Finally place all event configuration logic into cxl_event_config().
+Previously the logic was a simple 'read all' on start up.  But
+interrupts must be configured prior to any reads to ensure no events are
+missed.  A single event configuration function results in a cleaner over
+all implementation.
+
+Cc: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+
+---
+Changes from V5:
+	Dan
+		Addressed missed comments on V4
+		https://lore.kernel.org/all/6398dd6ed80fa_b05d1294fc@dwillia2-xfh.jf.intel.com.notmuch/
+---
+ drivers/cxl/cxl.h    |   4 +
+ drivers/cxl/cxlmem.h |  19 +++++
+ drivers/cxl/cxlpci.h |   6 ++
+ drivers/cxl/pci.c    | 213 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 236 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 5974d1082210..b3964149c77b 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -168,6 +168,10 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ 				 CXLDEV_EVENT_STATUS_FAIL |	\
+ 				 CXLDEV_EVENT_STATUS_FATAL)
+ 
++/* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
++#define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
++#define CXLDEV_EVENT_INT_MSGNUM_MASK	GENMASK(7, 4)
++
+ /* CXL 2.0 8.2.8.4 Mailbox Registers */
+ #define CXLDEV_MBOX_CAPS_OFFSET 0x00
+ #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index e0450b2a0f3f..e6b27e5d5009 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -194,6 +194,23 @@ struct cxl_endpoint_dvsec_info {
+ 	struct range dvsec_range[2];
+ };
+ 
++/**
++ * Event Interrupt Policy
++ *
++ * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
++ */
++enum cxl_event_int_mode {
++	CXL_INT_NONE		= 0x00,
++	CXL_INT_MSI_MSIX	= 0x01,
++	CXL_INT_FW		= 0x02
++};
++struct cxl_event_interrupt_policy {
++	u8 info_settings;
++	u8 warn_settings;
++	u8 failure_settings;
++	u8 fatal_settings;
++} __packed;
++
+ /**
+  * struct cxl_event_state - Event log driver state
+  *
+@@ -288,6 +305,8 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+ 	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+ 	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
++	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
++	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+ 	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+ 	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 77dbdb980b12..a8ea04f536ab 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -53,6 +53,12 @@
+ #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
+ #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+ 
++/*
++ * NOTE: Currently all the functions which are enabled for CXL require their
++ * vectors to be in the first 16.  Use this as the default max.
++ */
++#define CXL_PCI_DEFAULT_MAX_VECTORS 16
++
+ /* Register Block Identifier (RBI) */
+ enum cxl_regloc_type {
+ 	CXL_REGLOC_RBI_EMPTY = 0,
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index a2d8382bc593..9e83f6b0ba26 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -445,6 +445,205 @@ static int cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
+ 	return 0;
+ }
+ 
++static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
++{
++	int nvecs;
++
++	/*
++	 * Per CXL 3.0 3.1.1 CXL.io Endpoint a function on a CXL device must
++	 * not generate INTx messages if that function participates in
++	 * CXL.cache or CXL.mem.
++	 *
++	 * Additionally pci_alloc_irq_vectors() handles calling
++	 * pci_free_irq_vectors() automatically despite not being called
++	 * pcim_*.  See pci_setup_msi_context().
++	 */
++	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
++				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
++	if (nvecs < 1) {
++		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
++		return -ENXIO;
++	}
++	return 0;
++}
++
++struct cxl_dev_id {
++	struct cxl_dev_state *cxlds;
++};
++
++static irqreturn_t cxl_event_thread(int irq, void *id)
++{
++	struct cxl_dev_id *dev_id = id;
++	struct cxl_dev_state *cxlds = dev_id->cxlds;
++	u32 status;
++
++	do {
++		/*
++		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
++		 * ignore the reserved upper 32 bits
++		 */
++		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
++		/* Ignore logs unknown to the driver */
++		status &= CXLDEV_EVENT_STATUS_ALL;
++		if (!status)
++			break;
++		cxl_mem_get_event_records(cxlds, status);
++		cond_resched();
++	} while (status);
++
++	return IRQ_HANDLED;
++}
++
++static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
++{
++	struct device *dev = cxlds->dev;
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct cxl_dev_id *dev_id;
++	int irq;
++
++	if (FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting) != CXL_INT_MSI_MSIX)
++		return -ENXIO;
++
++	/* dev_id must be globally unique and must contain the cxlds */
++	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
++	if (!dev_id)
++		return -ENOMEM;
++	dev_id->cxlds = cxlds;
++
++	irq =  pci_irq_vector(pdev,
++			      FIELD_GET(CXLDEV_EVENT_INT_MSGNUM_MASK, setting));
++	if (irq < 0)
++		return irq;
++
++	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
++					 IRQF_SHARED, NULL, dev_id);
++}
++
++static int cxl_event_get_int_policy(struct cxl_dev_state *cxlds,
++				    struct cxl_event_interrupt_policy *policy)
++{
++	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
++		.payload_out = policy,
++		.size_out = sizeof(*policy),
++	};
++	int rc;
++
++	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
++	if (rc < 0)
++		dev_err(cxlds->dev, "Failed to get event interrupt policy : %d",
++			rc);
++
++	return rc;
++}
++
++static int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
++				    struct cxl_event_interrupt_policy *policy)
++{
++	struct cxl_mbox_cmd mbox_cmd;
++	int rc;
++
++	*policy = (struct cxl_event_interrupt_policy) {
++		.info_settings = CXL_INT_MSI_MSIX,
++		.warn_settings = CXL_INT_MSI_MSIX,
++		.failure_settings = CXL_INT_MSI_MSIX,
++		.fatal_settings = CXL_INT_MSI_MSIX,
++	};
++
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
++		.payload_in = policy,
++		.size_in = sizeof(*policy),
++	};
++
++	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
++	if (rc < 0) {
++		dev_err(cxlds->dev, "Failed to set event interrupt policy : %d",
++			rc);
++		return rc;
++	}
++
++	/* Retrieve final interrupt settings */
++	return cxl_event_get_int_policy(cxlds, policy);
++}
++
++static int cxl_event_irqsetup(struct cxl_dev_state *cxlds)
++{
++	struct cxl_event_interrupt_policy policy;
++	int rc;
++
++	rc = cxl_event_config_msgnums(cxlds, &policy);
++	if (rc)
++		return rc;
++
++	rc = cxl_event_req_irq(cxlds, policy.info_settings);
++	if (rc) {
++		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
++		return rc;
++	}
++
++	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
++	if (rc) {
++		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
++		return rc;
++	}
++
++	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
++	if (rc) {
++		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
++		return rc;
++	}
++
++	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
++	if (rc) {
++		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
++		return rc;
++	}
++
++	return 0;
++}
++
++static bool cxl_event_int_is_fw(u8 setting)
++{
++	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
++
++	return mode == CXL_INT_FW;
++}
++
++static int cxl_event_config(struct pci_host_bridge *host_bridge,
++			    struct cxl_dev_state *cxlds)
++{
++	struct cxl_event_interrupt_policy policy;
++	int rc;
++
++	/*
++	 * When BIOS maintains CXL error reporting control, it will process
++	 * event records.  Only one agent can do so.
++	 */
++	if (!host_bridge->native_cxl_error)
++		return 0;
++
++	rc = cxl_event_get_int_policy(cxlds, &policy);
++	if (rc)
++		return rc;
++
++	if (cxl_event_int_is_fw(policy.info_settings) ||
++	    cxl_event_int_is_fw(policy.warn_settings) ||
++	    cxl_event_int_is_fw(policy.failure_settings) ||
++	    cxl_event_int_is_fw(policy.fatal_settings)) {
++		dev_err(cxlds->dev, "FW still in control of Event Logs despite _OSC settings\n");
++		return -EBUSY;
++	}
++
++	rc = cxl_event_irqsetup(cxlds);
++	if (rc)
++		return rc;
++
++	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
++
++	return 0;
++}
++
+ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+ 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+@@ -463,6 +662,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	rc = pcim_enable_device(pdev);
+ 	if (rc)
+ 		return rc;
++	pci_set_master(pdev);
+ 
+ 	cxlds = cxl_dev_state_create(&pdev->dev);
+ 	if (IS_ERR(cxlds))
+@@ -519,6 +719,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_alloc_irq_vectors(pdev);
++	if (rc)
++		return rc;
++
+ 	cxlmd = devm_cxl_add_memdev(cxlds);
+ 	if (IS_ERR(cxlmd))
+ 		return PTR_ERR(cxlmd);
+@@ -527,12 +731,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
+-	/*
+-	 * When BIOS maintains CXL error reporting control, it will process
+-	 * event records.  Only one agent can do so.
+-	 */
+-	if (host_bridge->native_cxl_error)
+-		cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
++	rc = cxl_event_config(host_bridge, cxlds);
++	if (rc)
++		return rc;
+ 
+ 	if (cxlds->regs.ras) {
+ 		pci_enable_pcie_error_reporting(pdev);
+
+-- 
+2.39.0
