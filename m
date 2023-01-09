@@ -2,138 +2,89 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62661C61DB3
-	for <linux-cxl@archiver.kernel.org>; Fri,  6 Jan 2023 22:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A90BC54EBD
+	for <linux-cxl@archiver.kernel.org>; Mon,  9 Jan 2023 14:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjAFWii (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 6 Jan 2023 17:38:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
+        id S229530AbjAIOTt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 9 Jan 2023 09:19:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjAFWih (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 6 Jan 2023 17:38:37 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1572A87291
-        for <linux-cxl@vger.kernel.org>; Fri,  6 Jan 2023 14:38:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673044717; x=1704580717;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nRt3oTR6vQJALVDDT+8PFiSyDMpDad28y509ve+iy+0=;
-  b=jtFt8KxIGPRMwIBFy3N37BFvV91Fz3HpBFWcqgO7u5SzAIdqDItqn0+W
-   ES+eiAhfC7MBwpdw8VceXlPxxR7gbjr9N9Da7w/now6Gb730etntv0t+c
-   9nLeeUivr519bNRtlQj6oWYjgREjK72WgTRRv+KffgXp94FdWtFNicaBi
-   ZoC8zuzahzWTTEuy70RJpI2AmEG/Tfxzl/LlM9RfVcf42PB7yKgqVXGEo
-   GdyWiQAVtIPqwyhjrZfvzasJUQmwYHiaSAVJj7PokSp1Pfs5g0tpptI6A
-   aVFdHKKsdiAa5XEYqsFbrG4uoAPjaTrNhyfUqMi8tHWeFhDK5qDJwNbY7
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="324593036"
-X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
-   d="scan'208";a="324593036"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 14:38:35 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="780115808"
-X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
-   d="scan'208";a="780115808"
-Received: from jmwrobel-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.237.240])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 14:38:34 -0800
-Subject: [ndctl PATCH] cxl/Documentation: Update man page for using 'host'
- names in 'cxl list' filters
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     linux-cxl@vger.kernel.org
-Date:   Fri, 06 Jan 2023 14:38:34 -0800
-Message-ID: <167304471414.912245.3940402514315436804.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S230381AbjAIOTX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 9 Jan 2023 09:19:23 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C415D167EF
+        for <linux-cxl@vger.kernel.org>; Mon,  9 Jan 2023 06:19:20 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NrGGT4Xglz67PvV;
+        Mon,  9 Jan 2023 22:16:49 +0800 (CST)
+Received: from localhost (10.45.145.18) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 9 Jan
+ 2023 14:19:18 +0000
+Date:   Mon, 9 Jan 2023 14:19:18 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>
+Subject: Re: [PATCH] cxl: fix cxl_report_and_clear() RAS UE addr
+ mis-assignment
+Message-ID: <20230109141918.00001f48@Huawei.com>
+In-Reply-To: <167302318779.580155.15233596744650706167.stgit@djiang5-mobl3.local>
+References: <167302318779.580155.15233596744650706167.stgit@djiang5-mobl3.local>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.45.145.18]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Commit cf0e0586bf45 ("cxl/list: Add support for filtering by host identifiers")
-added support for filtering based on host device name in addition to CXL
-object name, but it neglected to update the documentation for the same.
+On Fri, 06 Jan 2023 09:39:49 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-For example, if someone sees a CXL class device in lspci:
+> 'addr' that contains RAS UE register address is re-assigned to
+> RAS_CAP_CONTROL offset if there are multiple UE errors. Use different addr
+> variable to avoid the reassignment mistake.
+> 
+> Fixes: 2905cb5236cb ("cxl/pci: Add (hopeful) error handling support")
+> Reported-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-$ lspci | grep CXL
-35:00.0 CXL: Intel Corporation Device 0d93 (rev 01)
+Exactly what I expected. Thanks for the quick turn around.
 
-...they can use that device name with "cxl list":
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-$ # cxl list -BPMu -m 0000:35:00.0
-{
-  "bus":"root0",
-  "provider":"ACPI.CXL",
-  "ports:root0":[
-    {
-      "port":"port1",
-      "host":"pci0000:34",
-      "depth":1,
-      "memdevs:port1":[
-        {
-          "memdev":"mem0",
-          "pmem_size":"512.00 MiB (536.87 MB)",
-          "serial":"0",
-          "host":"0000:35:00.0"
-        }
-      ]
-    }
-  ]
-}
+I'm working on adding multiple header log handling on top of your
+code.  Will hopefully have something to share on that later in the week.
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- Documentation/cxl/cxl-list.txt |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/cxl/cxl-list.txt b/Documentation/cxl/cxl-list.txt
-index 5cc37d5d0e26..3410d49af2db 100644
---- a/Documentation/cxl/cxl-list.txt
-+++ b/Documentation/cxl/cxl-list.txt
-@@ -75,6 +75,15 @@ configured.
- }
- ----
- 
-+Note that for the -m/--memdev=, -p/--port=, and -e/--endpoint= filters a
-+host device name can be substituted for the CXL object identifier. For
-+-m/--memdev= this is an endpoint PCI device name of the form
-+"DDDD:bb:dd.f" (D: Domain b: Bus d: Device f: Function) (see
-+/sys/bus/pci/devices), for -p/--port= this is an upstream switch port
-+PCI device name of the form "DDDD:bb:dd.f", or a PCI bus name of the
-+form "pciDDDD:bb", and for -e/--endpoint= the host device is CXL memory
-+device object name of the form "memX".
-+
- The --human option in addition to reformatting some fields to more human
- friendly strings also unwraps the array to reduce the number of lines of
- output.
-@@ -119,7 +128,9 @@ OPTIONS
- -------
- -m::
- --memdev=::
--	Specify CXL memory device name(s), or device id(s), to filter the listing. For example:
-+	Specify CXL memory device name(s) ("mem0"), device id(s) ("0"),
-+	and/or host device name(s) ("0000:35:00.0") to filter the listing. For
-+	example:
- ----
- # cxl list -M --memdev="0 mem3 5"
- [
-@@ -281,10 +292,11 @@ OPTIONS
- 
- -p::
- --port=::
--	Specify CXL Port device name(s), device id(s), and or port type
--	names to filter the listing. The supported port type names are "root"
--	and "switch". Note that a bus object is also a port, so the
--	following two syntaxes are equivalent:
-+	Specify CXL Port device name(s) ("port2"), device id(s) ("2"), host
-+	device name(s) ("pci0000:34"), and / or port type name(s) to filter the
-+	listing. The supported port type names are "root" and "switch". Note
-+	that a bus object is also a port, so the following two syntaxes are
-+	equivalent:
- ----
- # cxl list -B
- # cxl list -P -p root -S
+> ---
+>  drivers/cxl/pci.c |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 33083a522fd1..258004f34281 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -554,8 +554,11 @@ static bool cxl_report_and_clear(struct cxl_dev_state *cxlds)
+>  
+>  	/* If multiple errors, log header points to first error from ctrl reg */
+>  	if (hweight32(status) > 1) {
+> -		addr = cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
+> -		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK, readl(addr)));
+> +		void __iomem *rcc_addr =
+> +			cxlds->regs.ras + CXL_RAS_CAP_CONTROL_OFFSET;
+> +
+> +		fe = BIT(FIELD_GET(CXL_RAS_CAP_CONTROL_FE_MASK,
+> +				   readl(rcc_addr)));
+>  	} else {
+>  		fe = status;
+>  	}
+> 
+> 
 
