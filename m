@@ -2,174 +2,363 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6EBC54EBE
-	for <linux-cxl@archiver.kernel.org>; Tue, 10 Jan 2023 11:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47410C46467
+	for <linux-cxl@archiver.kernel.org>; Tue, 10 Jan 2023 15:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232558AbjAJLaA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 10 Jan 2023 06:30:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33702 "EHLO
+        id S231654AbjAJPjB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 10 Jan 2023 10:39:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230038AbjAJL37 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 10 Jan 2023 06:29:59 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E81482B9
-        for <linux-cxl@vger.kernel.org>; Tue, 10 Jan 2023 03:29:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673350198; x=1704886198;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=v00mcTKsUSyoee+vPGjG7dMd/q8mFIs0JWjlbDmIv5U=;
-  b=QOYD6yeWutc0jdeS9kOI75qUq6X1aBo6wKf4wmE0SGfDVz+1nDDvnxQY
-   cisc0/5Hh75/J639bHx1/XUejgEcwSVBnO+9RK5VaESMiTtx9366/DbtA
-   sFQFKR4fRD5wdmthMbgp/rponLzNozLiEL3kGR4W7iJqOCykZWh4ygbiT
-   knKpvNzxzTU4AOTy+B71p1cmTC50HqodRZB9S5wgIeO/zojcBbOfdtN/F
-   rPczAolvavEMoZMFLdAtbEwqurP/Q8T29y6gr4Van6KqFqh1NSmwgUl8e
-   rNkhcfuNHr7bhpzSVMuDdE7utwmvSUHx1wo1RLX3kfarp5+P7kT1eQ78K
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="306635715"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="306635715"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 03:29:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="764703727"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="764703727"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Jan 2023 03:29:54 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pFCpE-0007vA-1y;
-        Tue, 10 Jan 2023 11:29:53 +0000
-Date:   Tue, 10 Jan 2023 19:29:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:fixes] BUILD SUCCESS
- 2ec1b17f745b08526220f3c169d2eb9799a9be39
-Message-ID: <63bd4c1e.iuGgWkjslPsYeTXH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S238373AbjAJPi6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 10 Jan 2023 10:38:58 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7A343E61
+        for <linux-cxl@vger.kernel.org>; Tue, 10 Jan 2023 07:38:56 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Nrw2j3Nnnz6JB0K;
+        Tue, 10 Jan 2023 23:38:53 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 10 Jan
+ 2023 15:38:54 +0000
+Date:   Tue, 10 Jan 2023 15:38:53 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, <qemu-devel@nongnu.org>,
+        <linux-cxl@vger.kernel.org>,
+        Peter Maydell <peter.maydell@linaro.org>
+Subject: Re: [PATCH v2 8/8] hw/cxl/events: Add in inject general media event
+Message-ID: <20230110153853.00000945@huawei.com>
+In-Reply-To: <Y7xn0NNupucMou4b@iweiny-desk3>
+References: <20221221-ira-cxl-events-2022-11-17-v2-0-2ce2ecc06219@intel.com>
+        <20221221-ira-cxl-events-2022-11-17-v2-8-2ce2ecc06219@intel.com>
+        <20230103180719.00006437@huawei.com>
+        <Y7xn0NNupucMou4b@iweiny-desk3>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: 2ec1b17f745b08526220f3c169d2eb9799a9be39  cxl: fix cxl_report_and_clear() RAS UE addr mis-assignment
+On Mon, 9 Jan 2023 11:15:28 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-elapsed time: 726m
+> On Tue, Jan 03, 2023 at 06:07:19PM +0000, Jonathan Cameron wrote:
+> > On Wed, 21 Dec 2022 20:24:38 -0800
+> > Ira Weiny <ira.weiny@intel.com> wrote:
+> >   
+> > > To facilitate testing provide a QMP command to inject a general media
+> > > event.  The event can be added to the log specified.
+> > > 
+> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>  
+> > 
+> > Hi Ira,
+> > 
+> > Suggestion inline on how to more neatly handle optional arguments using
+> > QMPs inbuilt handling.  Short version is stick a * in front of the
+> > argument name in the json and you get a bonus parameter in the callback
+> > bool has_<name> which lets you identify if it is provided or not.
+> > 
+> > Jonathan
+> >   
+> > > 
+> > > ---
+> > > Changes from RFC:
+> > > 	Add all fields for this event
+> > > 	irq happens automatically when log transitions from 0 to 1
+> > > ---
+> > >  hw/mem/cxl_type3.c          | 93 +++++++++++++++++++++++++++++++++++++++++++++
+> > >  hw/mem/cxl_type3_stubs.c    |  8 ++++
+> > >  include/hw/cxl/cxl_events.h | 20 ++++++++++
+> > >  qapi/cxl.json               | 25 ++++++++++++
+> > >  4 files changed, 146 insertions(+)
+> > > 
+> > > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > > index a43949cab120..bedd09e500ba 100644
+> > > --- a/hw/mem/cxl_type3.c
+> > > +++ b/hw/mem/cxl_type3.c
+> > > @@ -916,6 +916,99 @@ static CXLPoisonList *get_poison_list(CXLType3Dev *ct3d)
+> > >      return &ct3d->poison_list;
+> > >  }
+> > >  
+> > > +static void cxl_assign_event_header(struct cxl_event_record_hdr *hdr,
+> > > +                                    QemuUUID *uuid, uint8_t flags,
+> > > +                                    uint8_t length)
+> > > +{
+> > > +    hdr->flags[0] = flags;
+> > > +    hdr->length = length;
+> > > +    memcpy(&hdr->id, uuid, sizeof(hdr->id));
+> > > +    hdr->timestamp = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
+> > > +}
+> > > +
+> > > +QemuUUID gen_media_uuid = {
+> > > +    .data = UUID(0xfbcd0a77, 0xc260, 0x417f,
+> > > +                 0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
+> > > +};
+> > > +
+> > > +#define CXL_GMER_VALID_CHANNEL                          BIT(0)
+> > > +#define CXL_GMER_VALID_RANK                             BIT(1)
+> > > +#define CXL_GMER_VALID_DEVICE                           BIT(2)
+> > > +#define CXL_GMER_VALID_COMPONENT                        BIT(3)
+> > > +
+> > > +/*
+> > > + * For channel, rank, and device; any value inside of the fields valid range
+> > > + * will flag that field to be valid.  IE pass -1 to mark the field invalid.
+> > > + *
+> > > + * Component ID is device specific.  Define this as a string.
+> > > + */
+> > > +void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
+> > > +                                    uint8_t flags, uint64_t physaddr,
+> > > +                                    uint8_t descriptor, uint8_t type,
+> > > +                                    uint8_t transaction_type,
+> > > +                                    int16_t channel, int16_t rank,
+> > > +                                    int32_t device,
+> > > +                                    const char *component_id,
+> > > +                                    Error **errp)
+> > > +{
+> > > +    Object *obj = object_resolve_path(path, NULL);
+> > > +    struct cxl_event_gen_media gem;
+> > > +    struct cxl_event_record_hdr *hdr = &gem.hdr;
+> > > +    CXLDeviceState *cxlds;
+> > > +    CXLType3Dev *ct3d;
+> > > +    uint16_t valid_flags = 0;
+> > > +
+> > > +    if (log >= CXL_EVENT_TYPE_MAX) {
+> > > +        error_setg(errp, "Invalid log type: %d", log);
+> > > +        return;
+> > > +    }
+> > > +    if (!obj) {
+> > > +        error_setg(errp, "Unable to resolve path");
+> > > +        return;
+> > > +    }
+> > > +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
+> > > +        error_setg(errp, "Path does not point to a CXL type 3 device");
+> > > +    }
+> > > +    ct3d = CXL_TYPE3(obj);
+> > > +    cxlds = &ct3d->cxl_dstate;
+> > > +
+> > > +    memset(&gem, 0, sizeof(gem));
+> > > +    cxl_assign_event_header(hdr, &gen_media_uuid, flags,
+> > > +                            sizeof(struct cxl_event_gen_media));
+> > > +
+> > > +    gem.phys_addr = physaddr;
+> > > +    gem.descriptor = descriptor;
+> > > +    gem.type = type;
+> > > +    gem.transaction_type = transaction_type;
+> > > +
+> > > +    if (0 <= channel && channel <= 0xFF) {
+> > > +        gem.channel = channel;
+> > > +        valid_flags |= CXL_GMER_VALID_CHANNEL;
+> > > +    }
+> > > +
+> > > +    if (0 <= rank && rank <= 0xFF) {
+> > > +        gem.rank = rank;
+> > > +        valid_flags |= CXL_GMER_VALID_RANK;
+> > > +    }
+> > > +
+> > > +    if (0 <= device && device <= 0xFFFFFF) {
+> > > +        st24_le_p(gem.device, device);
+> > > +        valid_flags |= CXL_GMER_VALID_DEVICE;
+> > > +    }
+> > > +
+> > > +    if (component_id && strcmp(component_id, "")) {
+> > > +        strncpy((char *)gem.component_id, component_id,
+> > > +                sizeof(gem.component_id) - 1);
+> > > +        valid_flags |= CXL_GMER_VALID_COMPONENT;
+> > > +    }
+> > > +
+> > > +    stw_le_p(gem.validity_flags, valid_flags);
+> > > +
+> > > +    if (cxl_event_insert(cxlds, log, (struct cxl_event_record_raw *)&gem)) {
+> > > +        cxl_event_irq_assert(ct3d);
+> > > +    }
+> > > +}
+> > > +
+> > >  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+> > >                             Error **errp)
+> > >  {
+> > > diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+> > > index f2c9f48f4010..62f04d487031 100644
+> > > --- a/hw/mem/cxl_type3_stubs.c
+> > > +++ b/hw/mem/cxl_type3_stubs.c
+> > > @@ -2,6 +2,14 @@
+> > >  #include "qemu/osdep.h"
+> > >  #include "qapi/qapi-commands-cxl.h"
+> > >  
+> > > +void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
+> > > +                                    uint8_t flags, uint64_t physaddr,
+> > > +                                    uint8_t descriptor, uint8_t type,
+> > > +                                    uint8_t transaction_type,
+> > > +                                    int16_t channel, int16_t rank,
+> > > +                                    int32_t device,
+> > > +                                    char *component_id,
+> > > +                                    Error **errp) {}
+> > >  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+> > >                             Error **errp) {}
+> > >  void qmp_cxl_inject_uncorrectable_error(const char *path,
+> > > diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> > > index 2df40720320a..3175e9d9866d 100644
+> > > --- a/include/hw/cxl/cxl_events.h
+> > > +++ b/include/hw/cxl/cxl_events.h
+> > > @@ -103,4 +103,24 @@ struct cxl_event_interrupt_policy {
+> > >  /* DCD is optional but other fields are not */
+> > >  #define CXL_EVENT_INT_SETTING_MIN_LEN 4
+> > >  
+> > > +/*
+> > > + * General Media Event Record
+> > > + * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
+> > > + */
+> > > +#define CXL_EVENT_GEN_MED_COMP_ID_SIZE  0x10
+> > > +#define CXL_EVENT_GEN_MED_RES_SIZE      0x2e
+> > > +struct cxl_event_gen_media {
+> > > +    struct cxl_event_record_hdr hdr;
+> > > +    uint64_t phys_addr;
+> > > +    uint8_t descriptor;
+> > > +    uint8_t type;
+> > > +    uint8_t transaction_type;
+> > > +    uint8_t validity_flags[2];
+> > > +    uint8_t channel;
+> > > +    uint8_t rank;
+> > > +    uint8_t device[3];
+> > > +    uint8_t component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
+> > > +    uint8_t reserved[CXL_EVENT_GEN_MED_RES_SIZE];
+> > > +} QEMU_PACKED;
+> > > +
+> > >  #endif /* CXL_EVENTS_H */
+> > > diff --git a/qapi/cxl.json b/qapi/cxl.json
+> > > index b4836bb87f53..56e85a28d7e0 100644
+> > > --- a/qapi/cxl.json
+> > > +++ b/qapi/cxl.json
+> > > @@ -5,6 +5,31 @@
+> > >  # = CXL devices
+> > >  ##
+> > >  
+> > > +##
+> > > +# @cxl-inject-gen-media-event:
+> > > +#
+> > > +# @path: CXL type 3 device canonical QOM path
+> > > +#
+> > > +# @log: Event Log to add the event to
+> > > +# @flags: header flags
+> > > +# @physaddr: Physical Address
+> > > +# @descriptor: Descriptor
+> > > +# @type: Type
+> > > +# @transactiontype: Transaction Type
+> > > +# @channel: Channel
+> > > +# @rank: Rank
+> > > +# @device: Device
+> > > +# @componentid: Device specific string
+> > > +#
+> > > +##
+> > > +{ 'command': 'cxl-inject-gen-media-event',
+> > > +  'data': { 'path': 'str', 'log': 'uint8', 'flags': 'uint8',
+> > > +            'physaddr': 'uint64', 'descriptor': 'uint8',
+> > > +            'type': 'uint8', 'transactiontype': 'uint8',
+> > > +            'channel': 'int16', 'rank': 'int16',
+> > > +            'device': 'int32', 'componentid': 'str'
+> > > +            }}  
+> > 
+> > From an interface cleanliness point of view I'd rather see
+> > all the optional fields as optional.  That's done by marking them
+> > with a * so
+> > '*channel': 'int16'
+> > 
+> > Then the signature of the related qmp_cxl_inject_gen_media_event
+> > gains a boolean has_channel parameter (before channel)
+> > 
+> > Those booleans can be used to set the flags etc.  
+> 
+> Ah!  Ok cool.  Yes this would make a lot more sense.  I did not realize QMP did
+> this optional thing.  That makes scripting this easier as well!
+> 
+> Did you put all this on a branch or not?  I did not see anything new at:
+> 
+> https://gitlab.com/jic23/qemu.git
+> 
+> I can definitely respin but it sounds like you were going to make some changes.
 
-configs tested: 95
-configs skipped: 3
+I got side tracked and reworked a few more things. Hopefully in have a branch
+up in a day or two.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Jonathan
 
-gcc tested configs:
-x86_64                            allnoconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-mips                             allyesconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                                defconfig
-x86_64                              defconfig
-alpha                            allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-x86_64                           rhel-8.3-bpf
-powerpc                          allmodconfig
-arc                              allyesconfig
-x86_64                           rhel-8.3-syz
-arc                                 defconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-alpha                               defconfig
-arm                                 defconfig
-s390                             allmodconfig
-ia64                             allmodconfig
-x86_64               randconfig-a011-20230109
-s390                                defconfig
-x86_64                               rhel-8.3
-x86_64               randconfig-a013-20230109
-i386                 randconfig-a011-20230109
-x86_64               randconfig-a012-20230109
-x86_64                           allyesconfig
-x86_64               randconfig-a014-20230109
-i386                 randconfig-a013-20230109
-x86_64               randconfig-a016-20230109
-x86_64               randconfig-a015-20230109
-s390                             allyesconfig
-i386                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-i386                 randconfig-a012-20230109
-x86_64                        randconfig-a004
-mips                           jazz_defconfig
-x86_64                        randconfig-a002
-x86_64                          rhel-8.3-func
-arc                         haps_hs_defconfig
-i386                 randconfig-a014-20230109
-x86_64                        randconfig-a006
-arm64                            allyesconfig
-sparc64                          alldefconfig
-i386                 randconfig-a016-20230109
-i386                 randconfig-a015-20230109
-arm                              allyesconfig
-m68k                          hp300_defconfig
-powerpc                         wii_defconfig
-powerpc                 canyonlands_defconfig
-riscv                randconfig-r042-20230109
-powerpc                         ps3_defconfig
-sparc                            alldefconfig
-sh                          polaris_defconfig
-s390                 randconfig-r044-20230109
-arm                             pxa_defconfig
-arm                             rpc_defconfig
-arm                        mvebu_v7_defconfig
-arm                  randconfig-r046-20230108
-arm                           corgi_defconfig
-arc                  randconfig-r043-20230108
-arm                           sama5_defconfig
-arc                  randconfig-r043-20230109
-arm64                               defconfig
-i386                        debian-10.3-kunit
-powerpc                     asp8347_defconfig
-i386                         debian-10.3-func
-xtensa                    xip_kc705_defconfig
-i386                          debian-10.3-kvm
-i386                          randconfig-c001
+> 
+> Ira
+> 
+> > 
+> > Very lightly tested: 
+> > 
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 4660a44ef8..cb9bb0b166 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -1203,8 +1203,9 @@ void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
+> >                                      uint8_t flags, uint64_t physaddr,
+> >                                      uint8_t descriptor, uint8_t type,
+> >                                      uint8_t transaction_type,
+> > -                                    int16_t channel, int16_t rank,
+> > -                                    int32_t device,
+> > +                                    bool has_channel, uint8_t channel,
+> > +                                    bool has_rank, uint8_t rank,
+> > +                                    bool has_device, uint32_t device,
+> >                                      const char *component_id,
+> >                                      Error **errp)
+> >  {
+> > @@ -1238,22 +1239,22 @@ void qmp_cxl_inject_gen_media_event(const char *path, uint8_t log,
+> >      gem.type = type;
+> >      gem.transaction_type = transaction_type;
+> > 
+> > -    if (0 <= channel && channel <= 0xFF) {
+> > +    if (has_channel) {
+> >          gem.channel = channel;
+> >          valid_flags |= CXL_GMER_VALID_CHANNEL;
+> >      }
+> > 
+> > -    if (0 <= rank && rank <= 0xFF) {
+> > +    if (has_rank) {
+> >          gem.rank = rank;
+> >          valid_flags |= CXL_GMER_VALID_RANK;
+> >      }
+> > 
+> > -    if (0 <= device && device <= 0xFFFFFF) {
+> > +    if (has_device) {
+> >          st24_le_p(gem.device, device);
+> >          valid_flags |= CXL_GMER_VALID_DEVICE;
+> >      }
+> > 
+> > -    if (component_id && strcmp(component_id, "")) {
+> > +    if (component_id) {
+> >         strncpy((char *)gem.component_id, component_id,
+> >                  sizeof(gem.component_id) - 1);
+> >          valid_flags |= CXL_GMER_VALID_COMPONENT;
+> > diff --git a/qapi/cxl.json b/qapi/cxl.json
+> > index 56e85a28d7..085f82e7da 100644
+> > --- a/qapi/cxl.json
+> > +++ b/qapi/cxl.json
+> > @@ -26,8 +26,8 @@
+> >    'data': { 'path': 'str', 'log': 'uint8', 'flags': 'uint8',
+> >              'physaddr': 'uint64', 'descriptor': 'uint8',
+> >              'type': 'uint8', 'transactiontype': 'uint8',
+> > -            'channel': 'int16', 'rank': 'int16',
+> > -            'device': 'int32', 'componentid': 'str'
+> > +            '*channel': 'uint8', '*rank': 'uint8',
+> > +            '*device': 'uint32', '*componentid': 'str'
+> >              }}
+> > 
+> >  ##
+> >   
+> > > +
+> > >  ##
+> > >  # @cxl-inject-poison:
+> > >  #
+> > >   
+> >   
 
-clang tested configs:
-x86_64                          rhel-8.3-rust
-hexagon              randconfig-r045-20230109
-x86_64                        randconfig-a005
-arm                  randconfig-r046-20230109
-x86_64                        randconfig-a001
-riscv                randconfig-r042-20230108
-x86_64                        randconfig-a003
-mips                      pic32mzda_defconfig
-powerpc                    socrates_defconfig
-powerpc                   lite5200b_defconfig
-hexagon              randconfig-r041-20230108
-hexagon              randconfig-r041-20230109
-i386                 randconfig-a005-20230109
-hexagon              randconfig-r045-20230108
-i386                 randconfig-a004-20230109
-s390                 randconfig-r044-20230108
-i386                 randconfig-a002-20230109
-i386                 randconfig-a003-20230109
-i386                 randconfig-a006-20230109
-mips                     loongson1c_defconfig
-i386                 randconfig-a001-20230109
-mips                      maltaaprp_defconfig
-x86_64                        randconfig-k001
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
