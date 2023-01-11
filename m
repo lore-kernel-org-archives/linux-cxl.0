@@ -2,88 +2,119 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9383C54EBC
-	for <linux-cxl@archiver.kernel.org>; Tue, 10 Jan 2023 23:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF35BC54EBE
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Jan 2023 09:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234339AbjAJXKD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 10 Jan 2023 18:10:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38376 "EHLO
+        id S232010AbjAKJt3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 11 Jan 2023 04:49:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234570AbjAJXJz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 10 Jan 2023 18:09:55 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB29DEB7
-        for <linux-cxl@vger.kernel.org>; Tue, 10 Jan 2023 15:09:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673392194; x=1704928194;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=P4hPdW8+bePoAaxzhoqscfaaJ238PGmVdQhKGufS+7Y=;
-  b=bPkspPORTOYXqHYrSYOpr3bUUj1cfNzhmIjLOiO+U4snCbEayd8lJWBh
-   BWZCISiAMEGXU1EMh0YpDiO+rMWEuWMAW2dwoeeINNfWDLAXYb65ST8LH
-   TfOxe7qLZtzPXbGTzOlBdbhny12fLguP7yroNofFPp/pbJMJ/jmgu8ONb
-   e2Xk/5iVcUG0al7tuR837EPG26sDqCjAlkA/ENOjfqXIy3EGHpPIfCNnV
-   W8VYW/45Adr6ZZ0ujTQ459A8qUHaUzhECkDP8d4YyH88cCAihWw5F6pG9
-   Z7UHagb9spaCEpRJOWY5RAw07AhtLX4eKmybmmvRM2z8AH0OgI92acIN2
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="321981273"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="321981273"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 15:09:53 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="659155916"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="659155916"
-Received: from ffallaha-mobl.amr.corp.intel.com (HELO vverma7-desk1.local) ([10.212.116.179])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 15:09:52 -0800
-From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Tue, 10 Jan 2023 16:09:17 -0700
-Subject: [PATCH ndctl 4/4] cxl/region: fix a comment typo
+        with ESMTP id S238827AbjAKJsM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Jan 2023 04:48:12 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9A011A29;
+        Wed, 11 Jan 2023 01:46:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A319D61B96;
+        Wed, 11 Jan 2023 09:46:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A035C433A8;
+        Wed, 11 Jan 2023 09:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1673430418;
+        bh=q0MTQbhS4MjxtbLiLzvG2UgbCXEINak0W4RxzYpWLNI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V2m3LQPz8klAo5lmv1lQnnS32RnpBjVnoIKlTX3SjDR1cz7SnWI2FoA6TzpQi58zc
+         cbIsfcZkcKAjQse33rc5b9J3K44+9PFwfLXbD375VhsfSt9ciFKVqIOtH8i6e4qyTR
+         jU1UyZW8M4dMLqbERhxH5Tp0aNoAnIQ48zo2IVaE=
+Date:   Wed, 11 Jan 2023 10:46:55 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jeremy Kerr <jk@ozlabs.org>, Joel Stanley <joel@jms.id.au>,
+        Alistar Popple <alistair@popple.id.au>,
+        Eddie James <eajames@linux.ibm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jilin Yuan <yuanjilin@cdjrlc.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Won Chung <wonchung@google.com>, linux-block@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 4/5] driver core: make struct device_type.devnode() take
+ a const *
+Message-ID: <Y76FjzouxRSfgiIC@kroah.com>
+References: <20221123122523.1332370-1-gregkh@linuxfoundation.org>
+ <20221123122523.1332370-4-gregkh@linuxfoundation.org>
+ <637e733838b5f_12cdff29466@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230110-vv-coverity-fixes-v1-4-c7ee6c76b200@intel.com>
-References: <20230110-vv-coverity-fixes-v1-0-c7ee6c76b200@intel.com>
-In-Reply-To: <20230110-vv-coverity-fixes-v1-0-c7ee6c76b200@intel.com>
-To:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-X-Mailer: b4 0.12-dev-cc11a
-X-Developer-Signature: v=1; a=openpgp-sha256; l=813;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=P4hPdW8+bePoAaxzhoqscfaaJ238PGmVdQhKGufS+7Y=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDMl7P9j/r16f9PzrvM5ly4XUb3J2ZxTtZuTbwnm5JnjBxVsp
- WVtndpSyMIhxMciKKbL83fOR8Zjc9nyewARHmDmsTCBDGLg4BWAiRnMZGbY/O7iLP3LWkt25mcxZ5f
- eeaIaI9LgWVXoeyTju12Q5SZmR4eP8cx/tX2y9N29qZ8x+Zp6HG753JGTNqzpbs/dos26DJysA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <637e733838b5f_12cdff29466@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Fix a typo: s/separted/separated/
+On Wed, Nov 23, 2022 at 11:23:36AM -0800, Dan Williams wrote:
+> Greg Kroah-Hartman wrote:
+> > The devnode() callback in struct device_type should not be modifying the
+> > device that is passed into it, so mark it as a const * and propagate the
+> > function signature changes out into all relevant subsystems that use
+> > this callback.
+> > 
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Alison Schofield <alison.schofield@intel.com>
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Ben Widawsky <bwidawsk@kernel.org>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Jeremy Kerr <jk@ozlabs.org>
+> > Cc: Joel Stanley <joel@jms.id.au>
+> > Cc: Alistar Popple <alistair@popple.id.au>
+> > Cc: Eddie James <eajames@linux.ibm.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Cc: Jilin Yuan <yuanjilin@cdjrlc.com>
+> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: Alan Stern <stern@rowland.harvard.edu>
+> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > Cc: Won Chung <wonchung@google.com>
+> > Cc: linux-block@vger.kernel.org
+> > Cc: linux-cxl@vger.kernel.org
+> > Cc: linux-fsi@lists.ozlabs.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-usb@vger.kernel.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> [..]
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index 20ce488a7754..6ae8d0bdc61b 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -27,7 +27,7 @@ static void cxl_memdev_release(struct device *dev)
+> >  	kfree(cxlmd);
+> >  }
+> >  
+> > -static char *cxl_memdev_devnode(struct device *dev, umode_t *mode, kuid_t *uid,
+> > +static char *cxl_memdev_devnode(const struct device *dev, umode_t *mode, kuid_t *uid,
+> >  				kgid_t *gid)
+> >  {
+> >  	return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
+> 
+> For the CXL bit:
+> 
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- cxl/region.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/cxl/region.c b/cxl/region.c
-index 89be9b5..efe05aa 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -103,7 +103,7 @@ static const struct option destroy_options[] = {
- 
- /*
-  * Convert an array of strings that can be a mixture of single items, a
-- * command separted list, or a space separated list, into a flattened
-+ * command separated list, or a space separated list, into a flattened
-  * comma-separated string. That single string can then be used as a
-  * filter argument to cxl_filter_walk(), or an ordering constraint for
-  * json_object_array_sort()
-
--- 
-2.39.0
+Thanks for the review!
