@@ -2,60 +2,59 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F9DC46467
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Jan 2023 14:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958FCC46467
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Jan 2023 15:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231602AbjAKOpI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 11 Jan 2023 09:45:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
+        id S239528AbjAKPta (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 11 Jan 2023 10:49:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229869AbjAKOpH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Jan 2023 09:45:07 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DE02D1
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 06:45:07 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id l26so11247502wme.5
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 06:45:06 -0800 (PST)
+        with ESMTP id S234422AbjAKPs4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Jan 2023 10:48:56 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35B5B04
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 07:48:55 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id r2so15477734wrv.7
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 07:48:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1hT0yCUFuOaktmsLkadVbzQZN/eHEXE/9G8TjF0C1TM=;
-        b=j1eadlbl5tD/uJy5yKiJ7JPH5yraYt8R2qs8QEItEOvCZUVBMvV6dtqAHLq/X8D7SG
-         AelZxX3wM8MfxEoUiS6cKiAmiQg+/5Y2zVJ1uQZmyUMM1W1OLDsAoOX4DyqWVEBqc+YU
-         sJchtflIJs+wtl8TbYqXyc8pms0iTAiIL+BDeieA8u2GcEUGKiz8rXI8FGJVrjjryhmN
-         mc16+rS7lFbr+lKn5I9oDP8X9rBjyBKDuQMpI6nKpGDpMEYQ+WBNVNWpnCFzqH7WBBCt
-         fAQ+HwumABHL7AmfNZK5DWBTCfEeKIu6nZw/DztRJ0HlxLnMZQ1/RITRAa/nKdGHnQeG
-         NZ1g==
+        bh=N6QKQsMkd0tEzgfZl/1XKTPgvNm9zkksrUQSlImCLXg=;
+        b=Fzac++Kx11k3sVfG3PP4A2YubERKKhD6cVA5T3EGQ4Me3m15e0PKO04TSjNYc/pOF3
+         JjKHLgv8HScQ9pQXkRgkELifLjgNG4MwUCyUvIxIf3xoO/S3E8O9Kesi844Qodm7TkNm
+         QCD1624Nts5b6F7nA5qyEe2hKIHvAaIJcxdmX9dPyFzCQYWiUmr9S4pSystuJdGg4G7n
+         xRreZzvxqT37a3mdLgfYK/uw1cFB+o+3YKYRISaWxTFznKZID9sLIw9BHDsjNa5ICE4G
+         PM4lHmM2OJHyqiPVootINMPHWsrlxXqksVVMt8jIKm1lVkchS87ScyZwTWiIuhDWRO9R
+         lmxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1hT0yCUFuOaktmsLkadVbzQZN/eHEXE/9G8TjF0C1TM=;
-        b=TcLpJVxOxG5o9iJDdUtEG/dpG2RX1gj6P9zmor2GFXJQ2vLwxUDoN4bRHMll7gBcQf
-         4l/itgwZ+Xvo+9N/DK/qsci8IGzedfNVGKb5+nZEp/7DVlVwbw26WjSQN7DRWg5/3PcC
-         1v6Vo/utzknJZIeq6zDz1VE64kKd0RNXrLYj7er86AKtGX5C960nNCmbwpRCu6tVNR79
-         HWVnJsCbWSovloAsorIbX2kvwpGQDqRa6xKgh+LmZ0+naYZkrereiWCNWFulzcJGmTb4
-         PNZHFZazRs3jtYFZpBkVqomPIqE12Xg7cUK7pG0uuEx9bMQ15q3K3I7sTOG5d2016IrI
-         w0Kw==
-X-Gm-Message-State: AFqh2kp5Ov9UA15ZtWq9KHbBfJ/1Dz9VgHb+nLMvSW9ZFAyLwEit5pBM
-        Xx/L4PKAK68BH/eUyOaPxbwvNg==
-X-Google-Smtp-Source: AMrXdXuT1Bvxl0IOjCQJ2HhE2XnVrmFMhS/YISpxYe4t2a8mZkC8xfkv3a2fMFU18flgIHPLTpWOHA==
-X-Received: by 2002:a05:600c:556f:b0:3d2:2a74:3a90 with SMTP id ja15-20020a05600c556f00b003d22a743a90mr55013398wmb.22.1673448305603;
-        Wed, 11 Jan 2023 06:45:05 -0800 (PST)
+        bh=N6QKQsMkd0tEzgfZl/1XKTPgvNm9zkksrUQSlImCLXg=;
+        b=YWalkrOXVs2Vraw6zBCoFjIKVDdFDyzd9u9I7ULUSK9CqewuEKGxt7iKC7KsLWu45D
+         jxQLCgS4g4Eis/2IIIEoTspRp4vmlHlBIxlbU+HQRz6d/kT7wctZfJXlaBFCWep0TtGb
+         PQ9JPtnf3+36hGlZi6+m26FG9v+jYNhonbk0kwD+DYavqrEWm741bcOHLnkr83kVFUlT
+         Xyv4Up/Qwc1O56BT0FabhD05w0twirXMLT+qcUDuv8mkZ0r/luKPvaYeaUfVCkHlEP2m
+         YBW5DSUC34fstlMQ9o1jsuKO3Td1bNDwkP3Z8KtRc0qnM565pgSN1fpUMYjNX+bBUjlY
+         fKTA==
+X-Gm-Message-State: AFqh2kpwEv0PEtsGdhm9WHLTCWG7S9PB0sAuuOrh1EmNA7oRrnmDQbDE
+        qqmVYdEygvxFFar6zYjYIyZ09Q==
+X-Google-Smtp-Source: AMrXdXuUsrvPHS5p4nQEPjja3xK1fq5S69K0Uvyh4ERcaI7Ry2EfcujmHfoPGbmbj2NkhmB2FFbjZw==
+X-Received: by 2002:adf:ee8f:0:b0:2bc:7f8e:40ba with SMTP id b15-20020adfee8f000000b002bc7f8e40bamr6930505wro.54.1673452134359;
+        Wed, 11 Jan 2023 07:48:54 -0800 (PST)
 Received: from [192.168.30.216] ([81.0.6.76])
-        by smtp.gmail.com with ESMTPSA id e2-20020a5d65c2000000b0027b35baf811sm13725966wrw.57.2023.01.11.06.45.04
+        by smtp.gmail.com with ESMTPSA id l1-20020adfe9c1000000b00289bdda07b7sm13731020wrn.92.2023.01.11.07.48.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 06:45:04 -0800 (PST)
-Message-ID: <517cfe71-8803-3fbf-265c-e13f32f3bd76@linaro.org>
-Date:   Wed, 11 Jan 2023 15:45:03 +0100
+        Wed, 11 Jan 2023 07:48:53 -0800 (PST)
+Message-ID: <cde5dfbf-da7d-7a1b-94b4-bf4bac7ca8ba@linaro.org>
+Date:   Wed, 11 Jan 2023 16:48:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH 2/8] hw/pci-bridge/cxl_downstream: Fix type naming
- mismatch
+Subject: Re: [PATCH 4/8] hw/cxl: Add CXL_CAPACITY_MULTIPLIER definition
 Content-Language: en-US
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>
@@ -63,52 +62,36 @@ Cc:     Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
         linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
         Gregory Price <gourry.memverge@gmail.com>
 References: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
- <20230111142440.24771-3-Jonathan.Cameron@huawei.com>
+ <20230111142440.24771-5-Jonathan.Cameron@huawei.com>
 From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230111142440.24771-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230111142440.24771-5-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 On 11/1/23 15:24, Jonathan Cameron via wrote:
-> Fix capitalization difference between struct name and typedef.
+> From: Gregory Price <gourry.memverge@gmail.com>
 > 
+> Remove usage of magic numbers when accessing capacity fields and replace
+> with CXL_CAPACITY_MULTIPLIER, matching the kernel definition.
+> 
+> Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->   hw/pci-bridge/cxl_downstream.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   hw/cxl/cxl-mailbox-utils.c | 14 ++++++++------
+>   1 file changed, 8 insertions(+), 6 deletions(-)
 > 
-> diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-> index 3d4e6b59cd..54f507318f 100644
-> --- a/hw/pci-bridge/cxl_downstream.c
-> +++ b/hw/pci-bridge/cxl_downstream.c
-> @@ -15,7 +15,7 @@
->   #include "hw/pci/pcie_port.h"
->   #include "qapi/error.h"
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index bc1bb18844..942de73bbc 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -14,6 +14,8 @@
+>   #include "qemu/log.h"
+>   #include "qemu/uuid.h"
 >   
-> -typedef struct CXLDownStreamPort {
-> +typedef struct CXLDownstreamPort {
->       /*< private >*/
->       PCIESlot parent_obj;
->   
+> +#define CXL_CAPACITY_MULTIPLIER   0x10000000 /* SZ_256M */
 
-I was going to post the same patch because when reworking some QOM
-definitions I'm getting:
-
-     ../../hw/pci-bridge/cxl_downstream.c:27:26: error: typedef 
-redefinition with different types ('struct CXLDownstreamPort' vs 'struct 
-CXLDownStreamPort')
-     DECLARE_INSTANCE_CHECKER(CXLDownstreamPort, CXL_DSP, TYPE_CXL_DSP)
-                              ^
-     ../../hw/pci-bridge/cxl_downstream.c:24:3: note: previous 
-definition is here
-     } CXLDownstreamPort;
-       ^
-
-So thanks!
-
-Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-
+Do you mind changing to the self-documenting (256 * MiB) ?
