@@ -2,126 +2,113 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99473C46467
-	for <linux-cxl@archiver.kernel.org>; Wed, 11 Jan 2023 14:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F9DC46467
+	for <linux-cxl@archiver.kernel.org>; Wed, 11 Jan 2023 14:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232757AbjAKObx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 11 Jan 2023 09:31:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42954 "EHLO
+        id S231602AbjAKOpI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 11 Jan 2023 09:45:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233785AbjAKObb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Jan 2023 09:31:31 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B6B1DDF2
-        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 06:28:45 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NsVLy1wqFz67bWy;
-        Wed, 11 Jan 2023 22:24:58 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Wed, 11 Jan 2023 14:28:43 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
-CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
-        Gregory Price <gourry.memverge@gmail.com>
-Subject: [PATCH 8/8] hw/cxl/mailbox: Use new UUID network order define for cel_uuid
-Date:   Wed, 11 Jan 2023 14:24:40 +0000
-Message-ID: <20230111142440.24771-9-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
-References: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S229869AbjAKOpH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 11 Jan 2023 09:45:07 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DE02D1
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 06:45:07 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id l26so11247502wme.5
+        for <linux-cxl@vger.kernel.org>; Wed, 11 Jan 2023 06:45:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1hT0yCUFuOaktmsLkadVbzQZN/eHEXE/9G8TjF0C1TM=;
+        b=j1eadlbl5tD/uJy5yKiJ7JPH5yraYt8R2qs8QEItEOvCZUVBMvV6dtqAHLq/X8D7SG
+         AelZxX3wM8MfxEoUiS6cKiAmiQg+/5Y2zVJ1uQZmyUMM1W1OLDsAoOX4DyqWVEBqc+YU
+         sJchtflIJs+wtl8TbYqXyc8pms0iTAiIL+BDeieA8u2GcEUGKiz8rXI8FGJVrjjryhmN
+         mc16+rS7lFbr+lKn5I9oDP8X9rBjyBKDuQMpI6nKpGDpMEYQ+WBNVNWpnCFzqH7WBBCt
+         fAQ+HwumABHL7AmfNZK5DWBTCfEeKIu6nZw/DztRJ0HlxLnMZQ1/RITRAa/nKdGHnQeG
+         NZ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1hT0yCUFuOaktmsLkadVbzQZN/eHEXE/9G8TjF0C1TM=;
+        b=TcLpJVxOxG5o9iJDdUtEG/dpG2RX1gj6P9zmor2GFXJQ2vLwxUDoN4bRHMll7gBcQf
+         4l/itgwZ+Xvo+9N/DK/qsci8IGzedfNVGKb5+nZEp/7DVlVwbw26WjSQN7DRWg5/3PcC
+         1v6Vo/utzknJZIeq6zDz1VE64kKd0RNXrLYj7er86AKtGX5C960nNCmbwpRCu6tVNR79
+         HWVnJsCbWSovloAsorIbX2kvwpGQDqRa6xKgh+LmZ0+naYZkrereiWCNWFulzcJGmTb4
+         PNZHFZazRs3jtYFZpBkVqomPIqE12Xg7cUK7pG0uuEx9bMQ15q3K3I7sTOG5d2016IrI
+         w0Kw==
+X-Gm-Message-State: AFqh2kp5Ov9UA15ZtWq9KHbBfJ/1Dz9VgHb+nLMvSW9ZFAyLwEit5pBM
+        Xx/L4PKAK68BH/eUyOaPxbwvNg==
+X-Google-Smtp-Source: AMrXdXuT1Bvxl0IOjCQJ2HhE2XnVrmFMhS/YISpxYe4t2a8mZkC8xfkv3a2fMFU18flgIHPLTpWOHA==
+X-Received: by 2002:a05:600c:556f:b0:3d2:2a74:3a90 with SMTP id ja15-20020a05600c556f00b003d22a743a90mr55013398wmb.22.1673448305603;
+        Wed, 11 Jan 2023 06:45:05 -0800 (PST)
+Received: from [192.168.30.216] ([81.0.6.76])
+        by smtp.gmail.com with ESMTPSA id e2-20020a5d65c2000000b0027b35baf811sm13725966wrw.57.2023.01.11.06.45.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jan 2023 06:45:04 -0800 (PST)
+Message-ID: <517cfe71-8803-3fbf-265c-e13f32f3bd76@linaro.org>
+Date:   Wed, 11 Jan 2023 15:45:03 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH 2/8] hw/pci-bridge/cxl_downstream: Fix type naming
+ mismatch
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>
+Cc:     Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>
+References: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
+ <20230111142440.24771-3-Jonathan.Cameron@huawei.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230111142440.24771-3-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On 11/1/23 15:24, Jonathan Cameron via wrote:
+> Fix capitalization difference between struct name and typedef.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   hw/pci-bridge/cxl_downstream.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
+> index 3d4e6b59cd..54f507318f 100644
+> --- a/hw/pci-bridge/cxl_downstream.c
+> +++ b/hw/pci-bridge/cxl_downstream.c
+> @@ -15,7 +15,7 @@
+>   #include "hw/pci/pcie_port.h"
+>   #include "qapi/error.h"
+>   
+> -typedef struct CXLDownStreamPort {
+> +typedef struct CXLDownstreamPort {
+>       /*< private >*/
+>       PCIESlot parent_obj;
+>   
 
-The cel_uuid was programatically generated previously because there was
-no static initializer for network order UUIDs.
+I was going to post the same patch because when reworking some QOM
+definitions I'm getting:
 
-Use the new network order initializer for cel_uuid.  Adjust
-cxl_initialize_mailbox() because it can't fail now.
+     ../../hw/pci-bridge/cxl_downstream.c:27:26: error: typedef 
+redefinition with different types ('struct CXLDownstreamPort' vs 'struct 
+CXLDownStreamPort')
+     DECLARE_INSTANCE_CHECKER(CXLDownstreamPort, CXL_DSP, TYPE_CXL_DSP)
+                              ^
+     ../../hw/pci-bridge/cxl_downstream.c:24:3: note: previous 
+definition is here
+     } CXLDownstreamPort;
+       ^
 
-Update specification reference.
+So thanks!
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/cxl/cxl-device-utils.c   |  2 +-
- hw/cxl/cxl-mailbox-utils.c  | 13 ++++++-------
- include/hw/cxl/cxl_device.h |  2 +-
- 3 files changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-index 83ce7a8270..4c5e88aaf5 100644
---- a/hw/cxl/cxl-device-utils.c
-+++ b/hw/cxl/cxl-device-utils.c
-@@ -267,5 +267,5 @@ void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
-     cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000);
-     memdev_reg_init_common(cxl_dstate);
- 
--    assert(cxl_initialize_mailbox(cxl_dstate) == 0);
-+    cxl_initialize_mailbox(cxl_dstate);
- }
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 942de73bbc..7ed344a754 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -192,7 +192,11 @@ static ret_code cmd_timestamp_set(struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--static QemuUUID cel_uuid;
-+/* CXL 3.0 8.2.9.5.2.1 Command Effects Log (CEL) */
-+static QemuUUID cel_uuid = {
-+        .data = UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
-+                     0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
-+};
- 
- /* 8.2.9.4.1 */
- static ret_code cmd_logs_get_supported(struct cxl_cmd *cmd,
-@@ -457,11 +461,8 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-                      DOORBELL, 0);
- }
- 
--int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
-+void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
- {
--    /* CXL 2.0: Table 169 Get Supported Logs Log Entry */
--    const char *cel_uuidstr = "0da9c0b5-bf41-4b78-8f79-96b1623b3f17";
--
-     for (int set = 0; set < 256; set++) {
-         for (int cmd = 0; cmd < 256; cmd++) {
-             if (cxl_cmd_set[set][cmd].handler) {
-@@ -475,6 +476,4 @@ int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
-             }
-         }
-     }
--
--    return qemu_uuid_parse(cel_uuidstr, &cel_uuid);
- }
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 250adf18b2..7e5ad65c1d 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -170,7 +170,7 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE,
-                                       CXL_DEVICE_CAP_HDR1_OFFSET +
-                                           CXL_DEVICE_CAP_REG_SIZE * 2)
- 
--int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
-+void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
- void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
- 
- #define cxl_device_cap_init(dstate, reg, cap_id)                           \
--- 
-2.37.2
+Tested-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
