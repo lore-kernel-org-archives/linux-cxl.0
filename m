@@ -2,128 +2,271 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE03CC54EBC
-	for <linux-cxl@archiver.kernel.org>; Thu, 12 Jan 2023 15:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FD1C54EBD
+	for <linux-cxl@archiver.kernel.org>; Thu, 12 Jan 2023 16:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240610AbjALPuR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 12 Jan 2023 10:50:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35660 "EHLO
+        id S232306AbjALQoy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 12 Jan 2023 11:44:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233181AbjALPtu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 12 Jan 2023 10:49:50 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6722D68C92
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Jan 2023 07:39:24 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gDkxf9oCqAKzp0eRQubIKs8r9S7Gmm8WaxpbTPevBNSUihCO4frfFNL1XPEUWs5uhKtJ6/YcGhJBPTYqYJ7E/redYGNDbbKU4lTbHiSbFOMnI2U4U7+nboaQ4lCo15Pn0SvIXMGGHM/6om0vaR1jNwDy8I2AOxZbV7cNU83Nv+YK1UZYvttnXMpBABUA85eR6z0YnC69W8wjfr+RDa2Ott68aR8uWZtLIewwSwvH31VozlHnfW1cZMw3nrQ/15dYeAJcljoxnkp8xAMlcVEBpWspnbS/wSDJU0WUmontMPytX+yEiZeWPfWjuAQoL00qrawAwiWjEAEuj2d/gsp9NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tEZ/x3ZJdK+RKPV9EzXaThgWSVHDYzAdwzwVoqqcsNw=;
- b=XcG3ZpxpMosq5Yp4A+WZ+xiD2aO0KVCx2VHsSr06KJDorML5hCm/4RnC64M1c9Z+nzYzCYEYfHqKnIsTV2cR/zXBWk8uYu1QMysOHkPpSjlhLW3oM3be9PSr/rn6+gE2rZRHHKdLAsJelc2CKIoUCBznLvKu8a0hePrtC5/9ohiNYmLPCgQx5jxmT6IRG4EAKzw9Y9xlmGUFMyfEAMKhBRspLJJvQUJvA/sur2/OypLZAVkF/aowsSA5lYt2VWjCgQ45sjJTzhWFcFdjrg2MdjAsXn/uQ4PLKLQCtv2klUl9ArR0eIQYTSbSVNXr+e3YoXRKJTzHz297JumBvofqBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tEZ/x3ZJdK+RKPV9EzXaThgWSVHDYzAdwzwVoqqcsNw=;
- b=Ey7eQ09BsHiKzuVrmSjLsFSBOjkESESA8uWKgzqGytnzDgfeWbuf2AmXwouUz/VhPXiMPsOUNbZC9DF97Sd84jp7rJAjVP2y5yqKxGWpTLENhW7juhIJ4NSzOap8m5Fsafihdd3FHKlZ2lRNF49gRkLv9Bo2s4iixz0zlkzNu74=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
- by DS0PR17MB6078.namprd17.prod.outlook.com (2603:10b6:8:ca::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18; Thu, 12 Jan
- 2023 15:39:21 +0000
-Received: from BN6PR17MB3121.namprd17.prod.outlook.com
- ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
- ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.5986.018; Thu, 12 Jan 2023
- 15:39:21 +0000
-Date:   Thu, 12 Jan 2023 10:39:17 -0500
-From:   Gregory Price <gregory.price@memverge.com>
+        with ESMTP id S240749AbjALQmo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 12 Jan 2023 11:42:44 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E4A6577;
+        Thu, 12 Jan 2023 08:37:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673541463; x=1705077463;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TSG4u748WjZJlHl+rwGyBIdChhQBX7AI0cR8Hc3k8hI=;
+  b=AG20ijXzWLeeinsGbt8nu5taLGLT6TVYYwGPkxf4Sh3jG5G+2cyx42Zm
+   IA84F4s9tsUIeADUKqQwTwixLZHnlLDsygEkwvHala5qJm6crJOzYHSqt
+   LrmKQq3rlMlZ0Iigwv33JxhoCft0sPKBBdBakrH7HqRdhiQfFrMM6Ov4Z
+   8lOX1G9VtZDbG2/9nsHNl3tP1M8ToebAr6jligMY7YDEJ/ZU7RghnKbMn
+   0XnNHbdFAi77t+kKDVDQccw1bPfzVbKmPRAiyUMlnHSaT4liQx1Rquxhw
+   7SlsDGk8oUbHE8Z9cpRFyMEAi+Yu0yq5dklwZZ1luzkpSFMoahG+z1Rxy
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="350983266"
+X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
+   d="scan'208";a="350983266"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 08:37:41 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="986655648"
+X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
+   d="scan'208";a="986655648"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.250.89])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 08:37:39 -0800
+Date:   Thu, 12 Jan 2023 08:37:38 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
-        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
-        Gregory Price <gourry.memverge@gmail.com>
-Subject: Re: [PATCH 0/8] hw/cxl: CXL emulation cleanups and minor fixes for
- upstream
-Message-ID: <Y8AppXP+eP9cEz+i@memverge.com>
-References: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shiju.jose@huawei.com
+Subject: Re: [PATCH v4 2/5] cxl/trace: Add TRACE support for CXL media-error
+ records
+Message-ID: <Y8A3Ulo/DnflNVQu@aschofie-mobl2>
+References: <cover.1671135967.git.alison.schofield@intel.com>
+ <3417fd29fda6cd60b5a93a8f77dc57ad71693fa8.1671135967.git.alison.schofield@intel.com>
+ <20230112111652.00000266@Huawei.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: YT3PR01CA0125.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:83::26) To BN6PR17MB3121.namprd17.prod.outlook.com
- (2603:10b6:405:7c::19)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|DS0PR17MB6078:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc2edb46-1001-4055-c63a-08daf4b32ccb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: K/UzDxyDCVfq0k7TzTVyQKm0bCGTzk7r8kRTtPKaSM72Xu5Ut9BgTouGLC11D13LhtYJQpLUd9WsVkDZiHRf+CsAiN7sMpsoWJ1zx1uwIVQjjAbeI+R96qFIz8viAMZREPuuYjh/seb6HK0fwz8qJ7SqvSx7xApCjT11MFjXzLbiVcQZ47+x1Xsa4YmjtCY7wGnm7Xcn48qOOQJymmgQbQB6HhjUN9O4IevdAYvC6vONMNpahgPF14ptvpsImMR6qwyYApMKj2wXea8itXEo+30+RaJBdVi1V5vMDP9w5xMp98NOdub6tBfzo65cUZVGlqJWGKIw7oaKVwV0+A8oh3V03I4m3fXu+4SpAWeSrJUImWh+itwqC7d11AxhUilGqUmjrwv0u7ZYy6SDwYFrQYOYUm7Lv4X2S+z/nc8Ln7PxA3EganWu8GouG6dRn+jPboxBEBrB+Nbzv+/KyVqfyhI097Dy/awE/qF7whnfOEdHWJvS6lWI5dfCE3YVFXVU0cIEQ6TRwum1EcfBmWBSq7aRLRe2K5rDvLfhIgvecXccw6y6XYfbacRrxoAYmyo8/LTJ3et/Ekc4sa0Ue4dA7BRiukl84oumuNqxIhhvD7ojjlvAj1OcFbL/nRJOEQXRvGRyrUF0Z03OQiWOaawMx2+7pHX40KTVCuTIKcGvR3I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39840400004)(346002)(366004)(136003)(396003)(376002)(451199015)(41300700001)(4326008)(66556008)(54906003)(2616005)(66476007)(316002)(36756003)(8676002)(66946007)(6916009)(86362001)(4744005)(38100700002)(5660300002)(44832011)(8936002)(83380400001)(6506007)(2906002)(6486002)(966005)(6666004)(26005)(186003)(478600001)(6512007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?x9l8bckpeti0y8IBHkfYoyXbpU8TyzOARwCRef1biEpqmD58K2u9fs3EUpB2?=
- =?us-ascii?Q?TUtS34gFGvUhtCNBqnottdmnrYtpDeMkQK1rE6DPDGEi0e1LIiwriaZtBnVD?=
- =?us-ascii?Q?XCVK525o/rcKA87AuXzpZal647XwQ7qLXfggdOP+lKSgzyyVZGx5ByWgBjKK?=
- =?us-ascii?Q?f3apj6TDIzfp0Xb1nGSY9jhMSZVOPPVwpvb/wmUWEMT0CUSjweim9JlV5RJG?=
- =?us-ascii?Q?VS//XG3OW0c/4nTQvc+6uFqEJWuQzCBhZ3T+2GzbU7msS/51FTTHyHTzfRok?=
- =?us-ascii?Q?dh+JLuTZmhAXmZ3xuQtiiOEwFKpR7Ux1LDdGf6tzwZblSHttrYuGI1BlUtNB?=
- =?us-ascii?Q?itmitU0J5EgWkwFsSMGT3jySBumIBAi1pytTAKZohOqC1Vp6DeWxAdQtEF6s?=
- =?us-ascii?Q?jZMR5qijSpfTwBpMEm16XjowCdW1WDP51W10qM2ZZpp9r8qGK8m9f8ZPvniP?=
- =?us-ascii?Q?SRBrOV55Pfb7zSdUlPSs7WXCUFqMtQHAVG02o3xIdkb9nGGY7XspnksQXaze?=
- =?us-ascii?Q?wEvW/vVlakYVlKbvnsh8DNxaigL4vj36OKcQnu5nQj+2iHNovrUlkMFa1qdg?=
- =?us-ascii?Q?AtTL+LGQrdG1LUUFTHXDpCiP0B3rYjuC/12/wtyc94O8LORHE+iNamlCgFGL?=
- =?us-ascii?Q?AxAndpoGMNdN+xnrSRqRHKXMsmlfUPHRHZS+dFsIg3FqJ1SG4Or+nbTU/zZk?=
- =?us-ascii?Q?bU897+pncut7rxlOmjxQWUtokrRFHLIJ8dtNWqevl5EQeVE+XnRiLz0ZmJmC?=
- =?us-ascii?Q?IdRai5d/CCjazxuJr39bwkcti4cWwluwc3p5wqDC0UpgG5CrhK9JtU1upRr3?=
- =?us-ascii?Q?CcMeTZ99fhulynorA/M4Pj0IUqeqkx8eduBuEfRlawrJvn9WT7v+TCNMgbVT?=
- =?us-ascii?Q?SsmifrcB4ah4qNYkCVPZMgBq+uteEXOqHUWH5nRbFcFwDj6SoaKOKhQywSc9?=
- =?us-ascii?Q?GfJK5/mYrw5V6Nyxpat6GfMDrHWT4IAiEDTk7hpoOIAE6ItO0TMUmClbJf2g?=
- =?us-ascii?Q?Bt9Eu7GiMJIpLlBWyXaohxPsSb3BMWMgonsDpdUaKkCvrhTHUVc6kdjypmS2?=
- =?us-ascii?Q?ElUlJEKAX7dDzCGKCn1E5siNOtqnlqnAqWlWVrZ/tKGTxGe1qOjpY6j1sPLu?=
- =?us-ascii?Q?DPlFaknlt083f6DaWlNKpytlk53yeuKHwfBtpX9ua2+owdlqGJzxSsbou2S3?=
- =?us-ascii?Q?wYVPnYab2nTXJqpvZeY0IU5iB9tqBTTcA2zRVk7TZ5rDwSp7kD788VFOCPEM?=
- =?us-ascii?Q?QNqqWzQcBjmxVvYvWkOgsJM25ocYurm96NT3Qp68TSUWgf9EKGlau4lOim7Y?=
- =?us-ascii?Q?pIaUFJx41SlTb+ofS8pplgOAlk7FayqCrBqenmH1hd4UKx0JrwXJIm6hNRXN?=
- =?us-ascii?Q?hO1QHOJIaD3eK8wWPnLtzlsSeiu85wVEOjGALriu9Oih6ruEVJtZtVSR4jdT?=
- =?us-ascii?Q?PeeR5gyrZEiQ8qKhfGulCCHU2SjbkS0rS1EBjtaUpzDQFfIOnuICcnovQUMD?=
- =?us-ascii?Q?xn2KGptYhETK19hEcNWy1X/4fi0x+iz9QcOzTbJ+D+thwHiDEYEFPiOllLPP?=
- =?us-ascii?Q?NcmsUygkfpF2XF53OQYYb3a8gP2YyrtaJ1PX9kh+jcJm1HZe9G4TxjH8Z0I6?=
- =?us-ascii?Q?8w=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc2edb46-1001-4055-c63a-08daf4b32ccb
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2023 15:39:21.6565
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TaGgc7PT4Te8f6WLj0G3e7izWAOLdwijERb+hKRjHVV0rLuf3cXUTCq11SJzB5RKnt//TQjPq5PMGdlw//XdWXLWJYDB4sBW6D37cuj9WGc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR17MB6078
+In-Reply-To: <20230112111652.00000266@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 02:24:32PM +0000, Jonathan Cameron via wrote:
-> Gregory's patches were posted as part of his work on adding volatile support.
-> https://lore.kernel.org/linux-cxl/20221006233702.18532-1-gregory.price@memverge.com/
-> https://lore.kernel.org/linux-cxl/20221128150157.97724-2-gregory.price@memverge.com/
-> I might propose this for upstream inclusion this cycle, but testing is
-> currently limited by lack of suitable kernel support.
+On Thu, Jan 12, 2023 at 11:16:52AM +0000, Jonathan Cameron wrote:
+> On Thu, 15 Dec 2022 13:17:44 -0800
+> alison.schofield@intel.com wrote:
+> 
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > CXL devices may support the retrieval of a device poison list.
+> > Add a new trace event that the CXL subsystem may use to log
+> > the media-error records returned in the poison list.
+> > 
+> > Log each media-error record as a trace event of type 'cxl_poison'.
+> > 
+> > When the poison list is requested by region, include the region name
+> > and uuid in the trace event.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> 
+> Hi Alison,
+> 
+> I'm wondering a bit if it makes sense to log/trace the MORE flag for each
+> record.  That has some unusual semantics.  Like the other flags it's a
+> characteristic of the underlying Get Poison List Output Payload, not a
+> particularly Poison list entry. Unlike overflow and scanning which are
+> reasonably a characteristic of each poison record in a given set read
+> in one command, MORE is not.
+> Imagine the following.
+> 
+> Read first N records, MORE set so we have that flag in all the trace
+> records.
+> Read next M records, MORE not set as list is less than N+M records.
+> 
+> Now userspace tooling has no idea about the mapping to underlying
+> mailbox commands. So it sees this bit set for first N which is fine
+> as there are more records following, but for the next M - 1 it might
+> reasonably expect to see MORE set (as more records are getting traced)
+> but it doesn't see it for any of them.
+> 
+> That seems less than intuitive. 
+> 
+> I'm not sure what to suggest... Seems wrong to 'make up a MORE flag' for
+> those M-1 records.  Does it make sense to expose this flag at all?  In
+> what way is it useful?
+> 
+> Jonathan
 
-fwiw the testing i've done suggests the problem isn't necessarily the
-implementation so much as either the EFI support or the ACPI tables.
+Thanks Jonathan - 
 
-For example, we see memory expanders come up no problem and turn into
-volatile memory on real hardware, with the same kernels with just a few
-commands.  My gut feeling is that either a mailbox command is missing or
-that the ACPI tables are missing/significantly different.
+The FLAGs field today simply reflects the contents of the flags
+field of the payload, which can be MORE, OVERFLOW, SCANNING.
 
-I haven't been able to investigate further at this point, but that's my
-current state with the voltile type-3 device testing.
+Understand that 'MORE' seems useless to userspace however, I lean
+towards giving userspace the complete truth, and letting userspace
+ignore what is of no interest.
+
+Perhaps a user wants to explore the boundaries of a devices
+poison handling capacity. ie...use inject and get_poison and
+see when the MORE flag appears. I don't know if it may appear
+before the inject_max is reached.
+
+So - I say keep MORE as is.
+
+This discussion triggers another thought...
+
+ATM, a devices max_mer - Max Media Error Records is not exposed in
+sysfs, and this conversation makes me think it should be. It also,
+comes to mind because I am exposing the inject_poison_limit to sysfs.
+
+Users wanting to explore poison capabilities would be interested in
+max_mer.
+
+I'll add the max_mer to syfs in next rev.
+
+Alison
+
+> 
+> 
+> > ---
+> >  drivers/cxl/core/mbox.c  |  6 ++-
+> >  drivers/cxl/core/trace.h | 83 ++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 88 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index dfe24a2adfdb..c345af8a4afd 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -10,6 +10,7 @@
+> >  #include <cxl.h>
+> >  
+> >  #include "core.h"
+> > +#include "trace.h"
+> >  
+> >  static bool cxl_raw_allow_all;
+> >  
+> > @@ -899,7 +900,10 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+> >  		if (rc)
+> >  			break;
+> >  
+> > -		/* TODO TRACE the media error records */
+> > +		for (int i = 0; i < le16_to_cpu(po->count); i++)
+> > +			trace_cxl_poison(cxlmd, to_pci_dev(cxlds->dev),
+> > +					 cxlr, &po->record[i], po->flags,
+> > +					 po->overflow_t);
+> >  
+> >  		/* Protect against an uncleared _FLAG_MORE */
+> >  		nr_records = nr_records + le16_to_cpu(po->count);
+> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> > index 20ca2fe2ca8e..c7958311ce5f 100644
+> > --- a/drivers/cxl/core/trace.h
+> > +++ b/drivers/cxl/core/trace.h
+> > @@ -8,6 +8,9 @@
+> >  
+> >  #include <cxl.h>
+> >  #include <linux/tracepoint.h>
+> > +#include <linux/pci.h>
+> > +
+> > +#include <cxlmem.h>
+> >  
+> >  #define CXL_RAS_UC_CACHE_DATA_PARITY	BIT(0)
+> >  #define CXL_RAS_UC_CACHE_ADDR_PARITY	BIT(1)
+> > @@ -103,6 +106,86 @@ TRACE_EVENT(cxl_aer_correctable_error,
+> >  	)
+> >  );
+> >  
+> > +#define __show_poison_source(source)                          \
+> > +	__print_symbolic(source,                              \
+> > +		{ CXL_POISON_SOURCE_UNKNOWN,   "Unknown"  },  \
+> > +		{ CXL_POISON_SOURCE_EXTERNAL,  "External" },  \
+> > +		{ CXL_POISON_SOURCE_INTERNAL,  "Internal" },  \
+> > +		{ CXL_POISON_SOURCE_INJECTED,  "Injected" },  \
+> > +		{ CXL_POISON_SOURCE_VENDOR,    "Vendor"   })
+> > +
+> > +#define show_poison_source(source)			     \
+> > +	(((source > CXL_POISON_SOURCE_INJECTED) &&	     \
+> > +	 (source != CXL_POISON_SOURCE_VENDOR)) ? "Reserved"  \
+> > +	 : __show_poison_source(source))
+> > +
+> > +#define show_poison_flags(flags)                             \
+> > +	__print_flags(flags, "|",                            \
+> > +		{ CXL_POISON_FLAG_MORE,      "More"     },   \
+> > +		{ CXL_POISON_FLAG_OVERFLOW,  "Overflow"  },  \
+> > +		{ CXL_POISON_FLAG_SCANNING,  "Scanning"  })
+> > +
+> > +#define __cxl_poison_addr(record)					\
+> > +	(le64_to_cpu(record->address))
+> > +#define cxl_poison_record_dpa(record)					\
+> > +	(__cxl_poison_addr(record) & CXL_POISON_START_MASK)
+> > +#define cxl_poison_record_source(record)				\
+> > +	(__cxl_poison_addr(record)  & CXL_POISON_SOURCE_MASK)
+> > +#define cxl_poison_record_length(record)				\
+> > +	(le32_to_cpu(record->length) * CXL_POISON_LEN_MULT)
+> > +#define cxl_poison_overflow(flags, time)				\
+> > +	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
+> > +
+> > +TRACE_EVENT(cxl_poison,
+> > +
+> > +	    TP_PROTO(struct cxl_memdev *memdev, const struct pci_dev *pcidev,
+> > +		     struct cxl_region *region,
+> > +		     const struct cxl_poison_record *record,
+> > +		     u8 flags, __le64 overflow_t),
+> > +
+> > +	    TP_ARGS(memdev, pcidev, region, record, flags, overflow_t),
+> > +
+> > +	    TP_STRUCT__entry(
+> > +		__string(memdev, dev_name(&memdev->dev))
+> > +		__string(pcidev, dev_name(&pcidev->dev))
+> > +		__string(region, region)
+> > +		__field(u64, overflow_t)
+> > +		__field(u64, dpa)
+> > +		__field(u32, length)
+> > +		__array(char, uuid, 16)
+> > +		__field(u8, source)
+> > +		__field(u8, flags)
+> > +	    ),
+> > +
+> > +	    TP_fast_assign(
+> > +		__assign_str(memdev, dev_name(&memdev->dev));
+> > +		__assign_str(pcidev, dev_name(&pcidev->dev));
+> > +		__entry->overflow_t = cxl_poison_overflow(flags, overflow_t);
+> > +		__entry->dpa = cxl_poison_record_dpa(record);
+> > +		__entry->length = cxl_poison_record_length(record);
+> > +		__entry->source = cxl_poison_record_source(record);
+> > +		__entry->flags = flags;
+> > +		if (region) {
+> > +			__assign_str(region, dev_name(&region->dev));
+> > +			memcpy(__entry->uuid, &region->params.uuid, 16);
+> > +		} else {
+> > +			__assign_str(region, "");
+> > +			memset(__entry->uuid, 0, 16);
+> > +		}
+> > +	    ),
+> > +
+> > +	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
+> > +		__get_str(memdev),
+> > +		__get_str(pcidev),
+> > +		__get_str(region),
+> > +		__entry->uuid,
+> > +		__entry->dpa,
+> > +		__entry->length,
+> > +		show_poison_source(__entry->source),
+> > +		show_poison_flags(__entry->flags),
+> > +		__entry->overflow_t)
+> > +);
+> > +
+> >  #endif /* _CXL_EVENTS_H */
+> >  
+> >  #define TRACE_INCLUDE_FILE trace
+> 
