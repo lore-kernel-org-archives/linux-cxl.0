@@ -2,132 +2,106 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AC4C54EBD
-	for <linux-cxl@archiver.kernel.org>; Thu, 12 Jan 2023 10:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A355C54EBC
+	for <linux-cxl@archiver.kernel.org>; Thu, 12 Jan 2023 10:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237183AbjALKhH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 12 Jan 2023 05:37:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38968 "EHLO
+        id S230098AbjALKoL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 12 Jan 2023 05:44:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235333AbjALKgY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 12 Jan 2023 05:36:24 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC90159D28
-        for <linux-cxl@vger.kernel.org>; Thu, 12 Jan 2023 02:30:50 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Nt13G4SGTz686rg;
-        Thu, 12 Jan 2023 18:28:10 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 12 Jan 2023 10:30:48 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
-CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
-        Gregory Price <gourry.memverge@gmail.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v2 8/8] hw/cxl/mailbox: Use new UUID network order define for cel_uuid
-Date:   Thu, 12 Jan 2023 10:26:44 +0000
-Message-ID: <20230112102644.27830-9-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230112102644.27830-1-Jonathan.Cameron@huawei.com>
-References: <20230112102644.27830-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S239734AbjALKms (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 12 Jan 2023 05:42:48 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1465F5130A
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Jan 2023 02:37:54 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id p3-20020a05600c1d8300b003d9ee5f125bso9745749wms.4
+        for <linux-cxl@vger.kernel.org>; Thu, 12 Jan 2023 02:37:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BNjH70h3YMyqRnnpci45rG2ziPjGcBrn9RpOXef1k7s=;
+        b=bqQXyZHpvFU1niarM6Kz3HgOx7H1S8ULA6+pHUB9jxvaH6cWR+d9AuSnkEPjQ66VaB
+         QpmjjjYub8HJLv8HiT4Hgj3E/UxxMNd1meXYA91O5z0CAwnlsEMvrYdaFNBgP7GxV6mO
+         UDNz0S/89bMxZBRRhVFxKue6E02/cCGw9p/ysCvZfE6q6avLPRZJi0eoD8tKWVBgDFn6
+         sd07liUFXaHjJsq0PRwTdxtlj6I2PfrYyM107sjfKvl9LQz3YkqxpVYNM2ObiaIKoZ/J
+         m1U7KUiRc3tcQNeTMjcHpMccQLqN5GpkNWdAPPfamTYDWpdEtUvd7vzlebaT9B69Btk/
+         kVkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BNjH70h3YMyqRnnpci45rG2ziPjGcBrn9RpOXef1k7s=;
+        b=AwmFyAL3yvANGiosF5coCbm6aGdYeu2BKD7p8VSJiV2LOqQy2QbJTPRkz2vVoNvORx
+         Db2bwFVDLWI+zRnlnXfvcLeOX1A3EtF7qZY3REyISk3sukEzG+wZcdWbuHY22CCZxdfB
+         CK+yV1pBasQaeDXfQcYdAtwn3eZOlTWB/qaUNqjPVPaZxwj/1y+z/DKetcM1pyYvVSEr
+         Hw1ii1VEkJVurfIet1tBi19bQoPHPzneODdfZbnnSLLJywqe2gGo8mXiQyTRAU+Pkj5w
+         cTTzoquZDjf3FTEH5oqlxaISKmaOD5xtqo+41Awv/V5hN3BqYvEqViVfOUYcFjsioXbr
+         09pA==
+X-Gm-Message-State: AFqh2krq9G46UN8xWsPtuOhkjZdnLIi6FPA5NrF8C6aNZIOwnOpEPX7s
+        /0Jyb3cciDpkXww5XnIdxVZof57oE4qdRS6D
+X-Google-Smtp-Source: AMrXdXt46ViFFh113j3Tm/tOMx1XgaGCQHlPl84IqscgJtG0u7enSG9GrkkakymxVmMwzWrE+3IuOw==
+X-Received: by 2002:a05:600c:600a:b0:3d1:ed41:57c0 with SMTP id az10-20020a05600c600a00b003d1ed4157c0mr58684652wmb.30.1673519873137;
+        Thu, 12 Jan 2023 02:37:53 -0800 (PST)
+Received: from [192.168.30.216] ([81.0.6.76])
+        by smtp.gmail.com with ESMTPSA id he5-20020a05600c540500b003d9ed40a512sm17938494wmb.45.2023.01.12.02.37.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Jan 2023 02:37:52 -0800 (PST)
+Message-ID: <9ef90fdb-1355-36f4-6308-9f19028f7706@linaro.org>
+Date:   Thu, 12 Jan 2023 11:37:51 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v2 4/8] hw/cxl: Add CXL_CAPACITY_MULTIPLIER definition
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>
+Cc:     Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>
+References: <20230112102644.27830-1-Jonathan.Cameron@huawei.com>
+ <20230112102644.27830-5-Jonathan.Cameron@huawei.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230112102644.27830-5-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On 12/1/23 11:26, Jonathan Cameron wrote:
+> From: Gregory Price <gourry.memverge@gmail.com>
+> 
+> Remove usage of magic numbers when accessing capacity fields and replace
+> with CXL_CAPACITY_MULTIPLIER, matching the kernel definition.
+> 
+> Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> ---
+> v2:
+> Change to 256 * MiB and include qemu/units.h (Philippe Mathieu-Daudé)
+> 
+>   hw/cxl/cxl-mailbox-utils.c | 15 +++++++++------
+>   1 file changed, 9 insertions(+), 6 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index bc1bb18844..3f67b665f5 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -12,8 +12,11 @@
+>   #include "hw/pci/pci.h"
+>   #include "qemu/cutils.h"
+>   #include "qemu/log.h"
+> +#include "qemu/units.h"
+>   #include "qemu/uuid.h"
+>   
+> +#define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
 
-The cel_uuid was programatically generated previously because there was
-no static initializer for network order UUIDs.
-
-Use the new network order initializer for cel_uuid.  Adjust
-cxl_initialize_mailbox() because it can't fail now.
-
-Update specification reference.
+Thanks, appreciated.
 
 Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
----
-v2:
-Make it const (Philippe)
-
- hw/cxl/cxl-device-utils.c   |  2 +-
- hw/cxl/cxl-mailbox-utils.c  | 13 ++++++-------
- include/hw/cxl/cxl_device.h |  2 +-
- 3 files changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-index 83ce7a8270..4c5e88aaf5 100644
---- a/hw/cxl/cxl-device-utils.c
-+++ b/hw/cxl/cxl-device-utils.c
-@@ -267,5 +267,5 @@ void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
-     cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000);
-     memdev_reg_init_common(cxl_dstate);
- 
--    assert(cxl_initialize_mailbox(cxl_dstate) == 0);
-+    cxl_initialize_mailbox(cxl_dstate);
- }
-diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 3f67b665f5..206e04a4b8 100644
---- a/hw/cxl/cxl-mailbox-utils.c
-+++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -193,7 +193,11 @@ static ret_code cmd_timestamp_set(struct cxl_cmd *cmd,
-     return CXL_MBOX_SUCCESS;
- }
- 
--static QemuUUID cel_uuid;
-+/* CXL 3.0 8.2.9.5.2.1 Command Effects Log (CEL) */
-+static const QemuUUID cel_uuid = {
-+    .data = UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
-+                 0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
-+};
- 
- /* 8.2.9.4.1 */
- static ret_code cmd_logs_get_supported(struct cxl_cmd *cmd,
-@@ -458,11 +462,8 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-                      DOORBELL, 0);
- }
- 
--int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
-+void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
- {
--    /* CXL 2.0: Table 169 Get Supported Logs Log Entry */
--    const char *cel_uuidstr = "0da9c0b5-bf41-4b78-8f79-96b1623b3f17";
--
-     for (int set = 0; set < 256; set++) {
-         for (int cmd = 0; cmd < 256; cmd++) {
-             if (cxl_cmd_set[set][cmd].handler) {
-@@ -476,6 +477,4 @@ int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
-             }
-         }
-     }
--
--    return qemu_uuid_parse(cel_uuidstr, &cel_uuid);
- }
-diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index 250adf18b2..7e5ad65c1d 100644
---- a/include/hw/cxl/cxl_device.h
-+++ b/include/hw/cxl/cxl_device.h
-@@ -170,7 +170,7 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE,
-                                       CXL_DEVICE_CAP_HDR1_OFFSET +
-                                           CXL_DEVICE_CAP_REG_SIZE * 2)
- 
--int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
-+void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
- void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
- 
- #define cxl_device_cap_init(dstate, reg, cap_id)                           \
--- 
-2.37.2
 
