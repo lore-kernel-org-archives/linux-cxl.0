@@ -2,101 +2,111 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5CCC678D4
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 18:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9701CC6379F
+	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 19:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjAMSDo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 13 Jan 2023 13:03:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43648 "EHLO
+        id S231205AbjAMTn6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 13 Jan 2023 14:43:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbjAMSCK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 13:02:10 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9877462CA
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Jan 2023 09:56:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673632594; x=1705168594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8AoNubCxV8QATo7GoGNTAFM149XOR7IH+9tkOEwnG+U=;
-  b=PTHqiVYF0zoFyV0GNNG3zBF/eKCz9wxDKY3G+qWDBXj/ieEl9w5qDQFX
-   SDp7pH6X0SJvGqNRQ6CwQIK+fKGjthSFpNEXBpwoV1PtpKTwJ7sfxrg+y
-   MD8xlzL78zlvekLUgkBbPFmbjoFr0k8XHpQkmy+dbn7rWGe4oyQ58ZvkH
-   Nzh+r224Um/qWTR+3CJwUWUFPbagq9dX21gDSqm+tpTb6Z2uYcpZ1NymT
-   uMAXfNsLpQOFf05xKNEhk8Qkd3qNlmjcXWb/lfVs9wSuAkGZNPNEyHAAf
-   K+SUgiEZGm51Fxz/rH3kro/SPWp0c3CuXsTfo66KQ7N9q2WycqnG/Wc4B
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="307602016"
-X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
-   d="scan'208";a="307602016"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 09:56:26 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="782235293"
-X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
-   d="scan'208";a="782235293"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.225.67])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 09:56:26 -0800
-Date:   Fri, 13 Jan 2023 09:56:24 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH ndctl] test/cxl-xor-region.sh: skip instead of fail for
- missing cxl_test
-Message-ID: <Y8GbSNR5Kbvn7HR0@aschofie-mobl2>
-References: <20230112-vv-xor-test-skip-v1-1-92ddc619ba6c@intel.com>
+        with ESMTP id S231309AbjAMTnh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 14:43:37 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F35A8B50B;
+        Fri, 13 Jan 2023 11:42:51 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 10D61141713;
+        Fri, 13 Jan 2023 19:35:57 +0000 (UTC)
+Received: from pdx1-sub0-mail-a315.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 233AA14116F;
+        Fri, 13 Jan 2023 19:35:56 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1673638556; a=rsa-sha256;
+        cv=none;
+        b=cG+Z2qAz4cvzhunoxANkxGEe2NGjw1Tb1TdfYu2QMjzlyT7iVB62nR8eeN2esf70BavIK7
+        naYklHrfGUZOhvh754wUsFVruu6YtoMoUc1Yp01e8Oso5WVh2s37MnQ8SEoxSPwBttS4YB
+        nt8rpCY3t3QOtcsPjU1yMyb/14YHz6Xz43HK66ngvjgtigvI419vU7orzk9a/et9LaBebI
+        c/nOK5I08t0KC42jqWFuUfYBvKJE7Rk8Yi7NF0prQu1TeEsLbhUeeniFHRyINsPb+aZOlD
+        5cgYfEyg9/eIdvGCTAVLz508L/PfgTeSfTpPTHEoNHg8vNVC8u0YSOmZseuGZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1673638556;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=4BLKm052qLnpFlYXMLi9U0yMb6GrF0x2PZhYEYe6tjs=;
+        b=SFsUmo4XcY0lL/gkoncDmDebZPTyS8N5n3LcP2g6aYoCX6VG20vOfk35q8vISx7EYk+5lR
+        EwHJryKFEeh6dvSOX/FlUC4GNH0/i3F4GEOby3/+n5sRpqlPVYEIGT7464xSUOdCzqaZSp
+        /hJex31XDhUG5rKggAyiFsLScbzc8JgPQDj/oF3Uobxn35FxiCahyTygXAV5Buf5/2I9w3
+        xWAZO1+tJYpUvM44u+Ja7Qca0DnStlieUwj6OgoQ41rDIOto4YTvVCAz6k9T7iyrBzHgfk
+        Er+xVvOjTnUm39D3s9Slcby3/ne1nWe+533FS2GVup18HnEwuiq93QL1DJfH0w==
+ARC-Authentication-Results: i=1;
+        rspamd-7cf955c847-95cc5;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Tangy-Tasty: 1331cd9b1eee83f2_1673638556780_816576564
+X-MC-Loop-Signature: 1673638556780:4214692273
+X-MC-Ingress-Time: 1673638556780
+Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.107.134.75 (trex/6.7.1);
+        Fri, 13 Jan 2023 19:35:56 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4Nts8p3FR4z3g;
+        Fri, 13 Jan 2023 11:35:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1673638555;
+        bh=4BLKm052qLnpFlYXMLi9U0yMb6GrF0x2PZhYEYe6tjs=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=ei7fzggKdsKBEfNTyASrwafKvnYprM7I18ZA+QVy1OkOR3FQv0Xl8bmPZxwsFQTNX
+         uV0BiixDIiwfGh8v3NtVtfZMhsR+wwA4FSYmdQjesHtOhiSMbW0ejInTVbNrENgKka
+         3KOiNFMzZLhaYEtPI/mJh62uof8KTGm62ZiKa2XY9b4LLbWlWKQrGAZ/r3rBa4BTTl
+         zzWnl4cr2F5a0D7P1QqAKs2ENLzz140giLXCFmzk5KyoayLDntVoqy6FGNfNmB3Bc/
+         3jHJglrAfmB6KvJrwaynZlwkSiIdJfUFALFLJfiu3GHmET9/UoZyjmgOqUxfNjOTdl
+         Rj+7PgX4zzfTA==
+Date:   Fri, 13 Jan 2023 11:09:50 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v6 4/8] cxl/mem: Trace DRAM Event Record
+Message-ID: <20230113190950.okeaanjymyhy4ec4@offworld>
+References: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
+ <20221216-cxl-ev-log-v6-4-346583105b30@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20230112-vv-xor-test-skip-v1-1-92ddc619ba6c@intel.com>
+In-Reply-To: <20221216-cxl-ev-log-v6-4-346583105b30@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 10:16:21AM -0700, Vishal Verma wrote:
-> Fix cxl-xor-region.sh to correctly skip if cxl_test is unavailable by
-> returning the special code '77' if the modprobe fails.
+On Mon, 09 Jan 2023, Ira Weiny wrote:
 
-Thanks Vishal!
+>CXL rev 3.0 section 8.2.9.2.1.2 defines the DRAM Event Record.
+>
+>Determine if the event read is a DRAM event record and if so trace the
+>record.
+>
+>Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-> 
-> Link: https://github.com/pmem/ndctl/issues/229
-> Fixes: 05486f8bf154 ("cxl/test: add cxl_xor_region test")
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  test/cxl-xor-region.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/test/cxl-xor-region.sh b/test/cxl-xor-region.sh
-> index 5c2108c..1962327 100644
-> --- a/test/cxl-xor-region.sh
-> +++ b/test/cxl-xor-region.sh
-> @@ -4,7 +4,7 @@
->  
->  . $(dirname $0)/common
->  
-> -rc=1
-> +rc=77
->  
->  set -ex
->  
-> @@ -15,6 +15,7 @@ check_prereq "jq"
->  modprobe -r cxl_test
->  modprobe cxl_test interleave_arithmetic=1
->  udevadm settle
-> +rc=1
->  
->  # THEORY OF OPERATION: Create x1,2,3,4 regions to exercise the XOR math
->  # option of the CXL driver. As with other cxl_test tests, changes to the
-> 
-> ---
-> base-commit: b73e4e0390aae822bc91b8bf72430e6f0e84d668
-> change-id: 20230112-vv-xor-test-skip-3ae4f5d065e4
-> 
-> Best regards,
-> -- 
-> Vishal Verma <vishal.l.verma@intel.com>
-> 
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
