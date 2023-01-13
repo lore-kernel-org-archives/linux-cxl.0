@@ -2,37 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D4CC61DB3
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 14:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9EEC67871
+	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 14:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241320AbjAMOMi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 13 Jan 2023 09:12:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40458 "EHLO
+        id S231287AbjAMOOG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 13 Jan 2023 09:14:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241624AbjAMOMQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 09:12:16 -0500
+        with ESMTP id S240363AbjAMONW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 09:13:22 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1768E995
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Jan 2023 06:08:21 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NtjpQ5Prlz67Qtq;
-        Fri, 13 Jan 2023 22:04:30 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40B7BE1E;
+        Fri, 13 Jan 2023 06:10:13 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ntjwp0l1rz6J9Zg;
+        Fri, 13 Jan 2023 22:10:02 +0800 (CST)
 Received: from localhost (10.81.201.219) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 13 Jan
- 2023 14:08:18 +0000
-Date:   Fri, 13 Jan 2023 14:08:17 +0000
+ 2023 14:10:11 +0000
+Date:   Fri, 13 Jan 2023 14:10:10 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>
-Subject: Re: [PATCH v2 8/8] cxl: remove locked check for
- dvsec_range_allowed()
-Message-ID: <20230113140817.000022b1@Huawei.com>
-In-Reply-To: <167330065180.975161.18302590071676919347.stgit@djiang5-mobl3.local>
-References: <167330048147.975161.8832707018372221375.stgit@djiang5-mobl3.local>
-        <167330065180.975161.18302590071676919347.stgit@djiang5-mobl3.local>
+To:     Robert Richter <rrichter@amd.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] cxl/mbox: Fix Payload Length check for Get Log
+ command
+Message-ID: <20230113141010.000075d8@Huawei.com>
+In-Reply-To: <Y8FfNA2Se9UIVJAJ@rric.localdomain>
+References: <20230104202954.1163366-1-rrichter@amd.com>
+        <20230113115354.00003d5a@Huawei.com>
+        <Y8FfNA2Se9UIVJAJ@rric.localdomain>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -46,35 +51,85 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 09 Jan 2023 14:44:13 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Fri, 13 Jan 2023 14:40:04 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
-> There is no reason that the CFMWS will always set the "Fixed Device
-> Configuration" bit in the "Window Restrictions" field. Remove the
-> CXL_DECODER_F_LOCK check.
+> On 13.01.23 11:53:54, Jonathan Cameron wrote:
+> > On Wed, 4 Jan 2023 21:29:54 +0100
+> > Robert Richter <rrichter@amd.com> wrote:
+> >   
+> > > Commit 2aeaf663b85e introduced strict checking for variable length
+> > > payload size validation. The payload length of received data must
+> > > match the size of the requested data by the caller except for the case
+> > > where the min_out value is set.
+> > > 
+> > > The Get Log command does not have a header with a length field set.
+> > > The Log size is determined by the Get Supported Logs command (CXL 3.0,
+> > > 8.2.9.5.1). However, the actual size can be smaller and the number of
+> > > valid bytes in the payload output must be determined reading the
+> > > Payload Length field (CXL 3.0, Table 8-36, Note 2).
+> > > 
+> > > Two issues arise: The command can successfully complete with a payload
+> > > length of zero. And, the valid payload length must then also be
+> > > consumed by the caller.
+> > > 
+> > > Change cxl_xfer_log() to pass the number of payload bytes back to the
+> > > caller to determine the number of log entries. Implement the payload
+> > > handling as a special case where mbox_cmd->size_out is consulted when
+> > > cxl_internal_send_cmd() returns -EIO. A WARN_ONCE() is added to check
+> > > that -EIO is only returned in case of an unexpected output size.
+> > > 
+> > > Logs can be bigger than the maximum payload length and multiple Get
+> > > Log commands can be issued. If the received payload size is smaller
+> > > than the maximum payload size we can assume all valid bytes have been
+> > > fetched. Stop sending further Get Log commands then.
+> > > 
+> > > On that occasion, change debug messages to also report the opcodes of
+> > > supported commands.
+> > > 
+> > > The variable payload commands GET_LSA and SET_LSA could be also
+> > > affected by this strict check, but SET_LSA cannot be broken because
+> > > SET_LSA does not return an output payload, and GET_LSA never expects
+> > > short reads.
+> > > 
+> > > Fixes: 2aeaf663b85e ("cxl/mbox: Add variable output size validation for internal commands")
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>  
+> > Hi Robert, a few comments inline.  
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Makes sense to me though I'd be curious why someone added the check in
-the first place...
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Oh, just found your comments here after replying to the other mail
+> thread.
+> 
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > >  drivers/cxl/core/mbox.c | 28 ++++++++++++++++++++--------
+> > >  1 file changed, 20 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > > index b03fba212799..e93df0d39022 100644
+> > > --- a/drivers/cxl/core/mbox.c
+> > > +++ b/drivers/cxl/core/mbox.c
+> > > @@ -170,6 +170,8 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
+> > >  	out_size = mbox_cmd->size_out;
+> > >  	min_out = mbox_cmd->min_out;
+> > >  	rc = cxlds->mbox_send(cxlds, mbox_cmd);
+> > > +	if (WARN_ONCE(rc == -EIO, "Bad return code: -EIO"))  
+> > 
+> > This is unusual. Why the WARN_ONCE?  How can an error code
+> > be bad?  It may well panic.  Fine to have a dev_err() or similar
+> > but this seems excessive.  
+> 
+> This function should only return -EIO if the size is unexpected. The
+> mbox_send() function doesn't have a size information and should never
+> return with -EIO. I think a comment is need here?
 
-> ---
->  drivers/cxl/core/pci.c |    2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index c6d6d7b720c5..931ac4be539a 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -228,8 +228,6 @@ static int dvsec_range_allowed(struct device *dev, void *arg)
->  
->  	cxld = to_cxl_decoder(dev);
->  
-> -	if (!(cxld->flags & CXL_DECODER_F_LOCK))
-> -		return 0;
->  	if (!(cxld->flags & CXL_DECODER_F_RAM))
->  		return 0;
->  
-> 
-> 
+Makes sense.  A comment so we don't forget the reasoning would be great.
+
+Thanks,
+
+Jonathan
+
 
