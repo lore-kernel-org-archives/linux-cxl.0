@@ -2,35 +2,40 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF9BC54EBE
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 11:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B6EC54EBE
+	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 12:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbjAMLti (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 13 Jan 2023 06:49:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35288 "EHLO
+        id S233153AbjAMMDL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 13 Jan 2023 07:03:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241163AbjAMLtO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 06:49:14 -0500
+        with ESMTP id S233993AbjAMMCL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 07:02:11 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E7FB8CBE3
-        for <linux-cxl@vger.kernel.org>; Fri, 13 Jan 2023 03:39:15 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NtfWg4MN8z6J67T;
-        Fri, 13 Jan 2023 19:36:31 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A17F82F88;
+        Fri, 13 Jan 2023 03:53:58 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ntfrf65VRz67RRb;
+        Fri, 13 Jan 2023 19:51:14 +0800 (CST)
 Received: from localhost (10.81.201.219) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 13 Jan
- 2023 11:39:12 +0000
-Date:   Fri, 13 Jan 2023 11:39:11 +0000
+ 2023 11:53:55 +0000
+Date:   Fri, 13 Jan 2023 11:53:54 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/3] cxl/port: Link the 'parent_dport' in portX/ and
- endpointX/ sysfs
-Message-ID: <20230113113911.00007348@Huawei.com>
-In-Reply-To: <167124082375.1626103.6047000000121298560.stgit@dwillia2-xfh.jf.intel.com>
-References: <167124080717.1626103.10654476222026614847.stgit@dwillia2-xfh.jf.intel.com>
-        <167124082375.1626103.6047000000121298560.stgit@dwillia2-xfh.jf.intel.com>
+To:     Robert Richter <rrichter@amd.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] cxl/mbox: Fix Payload Length check for Get Log
+ command
+Message-ID: <20230113115354.00003d5a@Huawei.com>
+In-Reply-To: <20230104202954.1163366-1-rrichter@amd.com>
+References: <20230104202954.1163366-1-rrichter@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -44,102 +49,140 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 16 Dec 2022 17:33:43 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Wed, 4 Jan 2023 21:29:54 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
-> Similar to the justification in:
+> Commit 2aeaf663b85e introduced strict checking for variable length
+> payload size validation. The payload length of received data must
+> match the size of the requested data by the caller except for the case
+> where the min_out value is set.
 > 
-> 1b58b4cac6fc ("cxl/port: Record parent dport when adding ports")
+> The Get Log command does not have a header with a length field set.
+> The Log size is determined by the Get Supported Logs command (CXL 3.0,
+> 8.2.9.5.1). However, the actual size can be smaller and the number of
+> valid bytes in the payload output must be determined reading the
+> Payload Length field (CXL 3.0, Table 8-36, Note 2).
 > 
-> ...userspace wants to know the routing information for ports for
-> calculating the memdev order for region creation among other things.
-> Cache the information the kernel discovers at enumeration time in a
-> 'parent_dport' attribute to save userspace the time of trawling sysfs
-> to recover the same information.
+> Two issues arise: The command can successfully complete with a payload
+> length of zero. And, the valid payload length must then also be
+> consumed by the caller.
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Change cxl_xfer_log() to pass the number of payload bytes back to the
+> caller to determine the number of log entries. Implement the payload
+> handling as a special case where mbox_cmd->size_out is consulted when
+> cxl_internal_send_cmd() returns -EIO. A WARN_ONCE() is added to check
+> that -EIO is only returned in case of an unexpected output size.
+> 
+> Logs can be bigger than the maximum payload length and multiple Get
+> Log commands can be issued. If the received payload size is smaller
+> than the maximum payload size we can assume all valid bytes have been
+> fetched. Stop sending further Get Log commands then.
+> 
+> On that occasion, change debug messages to also report the opcodes of
+> supported commands.
+> 
+> The variable payload commands GET_LSA and SET_LSA could be also
+> affected by this strict check, but SET_LSA cannot be broken because
+> SET_LSA does not return an output payload, and GET_LSA never expects
+> short reads.
+> 
+> Fixes: 2aeaf663b85e ("cxl/mbox: Add variable output size validation for internal commands")
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+Hi Robert, a few comments inline.
 
-I'm not totally sold on this being worth while as opposed to building reverse
-look up in userspace, but meh - seems harmless and is consistent and tiny
-amount of code so
+Thanks,
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Jonathan
 
 > ---
->  Documentation/ABI/testing/sysfs-bus-cxl |   15 +++++++++++++++
->  drivers/cxl/core/port.c                 |   27 +++++++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
+>  drivers/cxl/core/mbox.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 8494ef27e8d2..1b17c8cb48b5 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -90,6 +90,21 @@ Description:
->  		capability.
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index b03fba212799..e93df0d39022 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -170,6 +170,8 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
+>  	out_size = mbox_cmd->size_out;
+>  	min_out = mbox_cmd->min_out;
+>  	rc = cxlds->mbox_send(cxlds, mbox_cmd);
+> +	if (WARN_ONCE(rc == -EIO, "Bad return code: -EIO"))
+
+This is unusual. Why the WARN_ONCE?  How can an error code
+be bad?  It may well panic.  Fine to have a dev_err() or similar
+but this seems excessive.
+
+
+> +		return -ENXIO;
+>  	if (rc)
+>  		return rc;
 >  
+> @@ -576,6 +578,17 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
+>  		};
 >  
-> +What:		/sys/bus/cxl/devices/{port,endpoint}X/parent_dport
-> +Date:		October, 2022
-> +KernelVersion:	v6.2
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) CXL port objects are instantiated for each upstream port in
-> +		a CXL/PCIe switch, and for each endpoint to map the
-> +		corresponding memory device into the CXL port hierarchy. When a
-> +		descendant CXL port (switch or endpoint) is enumerated it is
-> +		useful to know which 'dport' object in the parent CXL port
-> +		routes to this descendant. The 'parent_dport' symlink points to
-> +		the device representing the downstream port of a CXL switch that
-> +		routes to {port,endpoint}X.
+>  		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
 > +
+> +		/*
+> +		 * The output payload length that indicates the number
+> +		 * of valid bytes can be smaller than the Log buffer
+> +		 * size.
+> +		 */
+> +		if (rc == -EIO && mbox_cmd.size_out < xfer_size) {
+> +			offset += mbox_cmd.size_out;
+> +			break;
+> +		}
 > +
->  What:		/sys/bus/cxl/devices/portX/dportY
->  Date:		June, 2021
->  KernelVersion:	v5.14
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 6296d2bc909a..729e4aab5308 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -586,6 +586,29 @@ static int devm_cxl_link_uport(struct device *host, struct cxl_port *port)
->  	return devm_add_action_or_reset(host, cxl_unlink_uport, port);
+>  		if (rc < 0)
+>  			return rc;
+>  
+> @@ -584,7 +597,7 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
+>  		offset += xfer_size;
+>  	}
+>  
+> -	return 0;
+> +	return offset;
 >  }
 >  
-> +static void cxl_unlink_parent_dport(void *_port)
-> +{
-> +	struct cxl_port *port = _port;
-> +
-> +	sysfs_remove_link(&port->dev.kobj, "parent_dport");
-> +}
-> +
-> +static int devm_cxl_link_parent_dport(struct device *host,
-> +				      struct cxl_port *port,
-> +				      struct cxl_dport *parent_dport)
-> +{
-> +	int rc;
-> +
-> +	if (!parent_dport)
-> +		return 0;
-> +
-> +	rc = sysfs_create_link(&port->dev.kobj, &parent_dport->dport->kobj,
-> +			       "parent_dport");
-> +	if (rc)
-> +		return rc;
-> +	return devm_add_action_or_reset(host, cxl_unlink_parent_dport, port);
-> +}
-> +
->  static struct lock_class_key cxl_port_key;
+>  /**
+> @@ -608,13 +621,11 @@ static void cxl_walk_cel(struct cxl_dev_state *cxlds, size_t size, u8 *cel)
+>  		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+>  		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
 >  
->  static struct cxl_port *cxl_port_alloc(struct device *uport,
-> @@ -695,6 +718,10 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
->  	if (rc)
->  		return ERR_PTR(rc);
+> -		if (!cmd) {
+> -			dev_dbg(cxlds->dev,
+> -				"Opcode 0x%04x unsupported by driver", opcode);
+> -			continue;
+> -		}
+> +		if (cmd)
+> +			set_bit(cmd->info.id, cxlds->enabled_cmds);
 >  
-> +	rc = devm_cxl_link_parent_dport(host, port, parent_dport);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
->  	return port;
+> -		set_bit(cmd->info.id, cxlds->enabled_cmds);
+> +		dev_dbg(cxlds->dev, "Opcode 0x%04x %ssupported by driver",
+> +			opcode, cmd ? "" : "un");
+
+Unrelated change so doesn't belong in this patch.   I'd also split the
+dev_dbg into two paths both to reduce modification and because people
+might grep for "unsupported by driver"
+
+
+>  	}
+>  }
 >  
->  err:
-> 
+> @@ -695,11 +706,12 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+>  		}
+>  
+>  		rc = cxl_xfer_log(cxlds, &uuid, size, log);
+> -		if (rc) {
+> +		if (rc < 0) {
+
+Feels like passing in size as a pointer that is then updated might be cleaner.
+
+>  			kvfree(log);
+>  			goto out;
+>  		}
+>  
+> +		size = (u32)rc;
+>  		cxl_walk_cel(cxlds, size, log);
+>  		kvfree(log);
+>  
 
