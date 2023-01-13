@@ -2,111 +2,91 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9701CC6379F
-	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 19:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7B5C3DA78
+	for <linux-cxl@archiver.kernel.org>; Fri, 13 Jan 2023 21:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231205AbjAMTn6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 13 Jan 2023 14:43:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        id S229660AbjAMVas (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 13 Jan 2023 16:30:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231309AbjAMTnh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 14:43:37 -0500
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F35A8B50B;
-        Fri, 13 Jan 2023 11:42:51 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 10D61141713;
-        Fri, 13 Jan 2023 19:35:57 +0000 (UTC)
-Received: from pdx1-sub0-mail-a315.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 233AA14116F;
-        Fri, 13 Jan 2023 19:35:56 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1673638556; a=rsa-sha256;
-        cv=none;
-        b=cG+Z2qAz4cvzhunoxANkxGEe2NGjw1Tb1TdfYu2QMjzlyT7iVB62nR8eeN2esf70BavIK7
-        naYklHrfGUZOhvh754wUsFVruu6YtoMoUc1Yp01e8Oso5WVh2s37MnQ8SEoxSPwBttS4YB
-        nt8rpCY3t3QOtcsPjU1yMyb/14YHz6Xz43HK66ngvjgtigvI419vU7orzk9a/et9LaBebI
-        c/nOK5I08t0KC42jqWFuUfYBvKJE7Rk8Yi7NF0prQu1TeEsLbhUeeniFHRyINsPb+aZOlD
-        5cgYfEyg9/eIdvGCTAVLz508L/PfgTeSfTpPTHEoNHg8vNVC8u0YSOmZseuGZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1673638556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=4BLKm052qLnpFlYXMLi9U0yMb6GrF0x2PZhYEYe6tjs=;
-        b=SFsUmo4XcY0lL/gkoncDmDebZPTyS8N5n3LcP2g6aYoCX6VG20vOfk35q8vISx7EYk+5lR
-        EwHJryKFEeh6dvSOX/FlUC4GNH0/i3F4GEOby3/+n5sRpqlPVYEIGT7464xSUOdCzqaZSp
-        /hJex31XDhUG5rKggAyiFsLScbzc8JgPQDj/oF3Uobxn35FxiCahyTygXAV5Buf5/2I9w3
-        xWAZO1+tJYpUvM44u+Ja7Qca0DnStlieUwj6OgoQ41rDIOto4YTvVCAz6k9T7iyrBzHgfk
-        Er+xVvOjTnUm39D3s9Slcby3/ne1nWe+533FS2GVup18HnEwuiq93QL1DJfH0w==
-ARC-Authentication-Results: i=1;
-        rspamd-7cf955c847-95cc5;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tangy-Tasty: 1331cd9b1eee83f2_1673638556780_816576564
-X-MC-Loop-Signature: 1673638556780:4214692273
-X-MC-Ingress-Time: 1673638556780
-Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.107.134.75 (trex/6.7.1);
-        Fri, 13 Jan 2023 19:35:56 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4Nts8p3FR4z3g;
-        Fri, 13 Jan 2023 11:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1673638555;
-        bh=4BLKm052qLnpFlYXMLi9U0yMb6GrF0x2PZhYEYe6tjs=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=ei7fzggKdsKBEfNTyASrwafKvnYprM7I18ZA+QVy1OkOR3FQv0Xl8bmPZxwsFQTNX
-         uV0BiixDIiwfGh8v3NtVtfZMhsR+wwA4FSYmdQjesHtOhiSMbW0ejInTVbNrENgKka
-         3KOiNFMzZLhaYEtPI/mJh62uof8KTGm62ZiKa2XY9b4LLbWlWKQrGAZ/r3rBa4BTTl
-         zzWnl4cr2F5a0D7P1QqAKs2ENLzz140giLXCFmzk5KyoayLDntVoqy6FGNfNmB3Bc/
-         3jHJglrAfmB6KvJrwaynZlwkSiIdJfUFALFLJfiu3GHmET9/UoZyjmgOqUxfNjOTdl
-         Rj+7PgX4zzfTA==
-Date:   Fri, 13 Jan 2023 11:09:50 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 4/8] cxl/mem: Trace DRAM Event Record
-Message-ID: <20230113190950.okeaanjymyhy4ec4@offworld>
-References: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
- <20221216-cxl-ev-log-v6-4-346583105b30@intel.com>
+        with ESMTP id S229706AbjAMVaq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 13 Jan 2023 16:30:46 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0604EB7CE
+        for <linux-cxl@vger.kernel.org>; Fri, 13 Jan 2023 13:30:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673645446; x=1705181446;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zubFUFYXvyNUYhr0fS3OT03QBEIGB9S9arm1PqISq7E=;
+  b=VJ3Amqo+VHKBdJZyTw4epubxId4YemXAzPRA7O1MSzqfwUn9D8y21u2B
+   6dwvNp15T7Zg5iXiYgoO9l0SXaqJxTIhslXyeiWpVPQ3cOP1Kgm6orc1l
+   0DoXOwKtUGR7bfl+r6q3vbyCxo3SpI0M7u5kbpqXrVikLVutN8j9Wy9BT
+   uBZgvl+acn2vrP2PvPpnrP5EgJ4w1+xElV1nPOwYaJ5ese88G13CmvkYx
+   Z+ziHHSzikgj6obYpShEhQvAIEs8Iu6LWgIlJbbcKfze6Ag0goe0dsA+P
+   ybfmtBP8l1pZoxOW4QT3gm05KGqX9zklM6P4E9wnfvpVM2YmP9HSU1M+c
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="325362660"
+X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
+   d="scan'208";a="325362660"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 13:30:36 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="660342252"
+X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
+   d="scan'208";a="660342252"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.60.10])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 13:30:35 -0800
+Subject: [PATCH] cxl: fix cdat_available state post error
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com
+Date:   Fri, 13 Jan 2023 14:30:34 -0700
+Message-ID: <167364543268.908947.8539778012050364814.stgit@djiang5-mobl3.local>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20221216-cxl-ev-log-v6-4-346583105b30@intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 09 Jan 2023, Ira Weiny wrote:
+Given that the sysfs attributre for CDAT_read() checks port->cdat_avilable,
+it indicates that the binary backing cdat must be present.
 
->CXL rev 3.0 section 8.2.9.2.1.2 defines the DRAM Event Record.
->
->Determine if the event read is a DRAM event record and if so trace the
->record.
->
->Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+port->cdat_available is set to true in read_cdat_data() before the data is
+actually read. When error happens during read, this state is never set to
+false. Move the setting of the attribute to after everything is done to
+ensure it's always true.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Fixes: c97006046c79 ("cxl/port: Read CDAT table")
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/core/pci.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 1d1492440287..91cdd6a00964 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -601,8 +601,6 @@ void read_cdat_data(struct cxl_port *port)
+ 		return;
+ 	}
+ 
+-	port->cdat_available = true;
+-
+ 	if (cxl_cdat_get_length(dev, cdat_doe, &cdat_length)) {
+ 		dev_dbg(dev, "No CDAT length\n");
+ 		return;
+@@ -621,6 +619,8 @@ void read_cdat_data(struct cxl_port *port)
+ 		port->cdat.length = 0;
+ 		dev_err(dev, "CDAT data read error\n");
+ 	}
++
++	port->cdat_available = true;
+ }
+ EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+ 
+
+
