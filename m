@@ -2,65 +2,56 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECAFC3DA78
-	for <linux-cxl@archiver.kernel.org>; Tue, 17 Jan 2023 17:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085D3C54E76
+	for <linux-cxl@archiver.kernel.org>; Tue, 17 Jan 2023 17:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235037AbjAQRPS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 17 Jan 2023 12:15:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
+        id S229616AbjAQRus (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 17 Jan 2023 12:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234637AbjAQROu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 17 Jan 2023 12:14:50 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE51A4E51C;
-        Tue, 17 Jan 2023 09:13:35 -0800 (PST)
+        with ESMTP id S232108AbjAQRsr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 17 Jan 2023 12:48:47 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBEA9582A2
+        for <linux-cxl@vger.kernel.org>; Tue, 17 Jan 2023 09:37:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673975616; x=1705511616;
+  t=1673977074; x=1705513074;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+BBmMXn1zgtdD10z98rWe17Kcp87pYxTLvybL2CPtMM=;
-  b=ZTUfIT2CQOXQ/tLbwv66OmcPT1mJCnYg/hnMR5JEkeo+ErR46BhRsIO9
-   Nh+mvG2B4BsHb8wHmDlmdzoDMEPRJ7N2ttG5I4WdMtVkwhI+gCyR51oyP
-   pDRUTI5P2gS6fBqXYQ2RLqyP7YT4//8ffW8ZsrPHvt3CbvPoXWjArfbgY
-   FiixrsqtpLs4gifDkoYdXV/s4Ba8blVqpbt7tYROHVE1jjWlTf5vbqSoH
-   dsZA9wGMzJ4/q+JzKCMlSz4Av0EKLs0O8IV6tHEg14xt4vxb87AIrO/bL
-   U95EfC9S7I4gQ3ODtplnqNPcLb8kXgosShXJgk6l1LQupzo9E+t4XPI77
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="308319637"
+  bh=DGXh4rfBNmr8eY/uZSrZIvQT5uaT0efds9z4LMBWAcU=;
+  b=UKrpainWuFWmwrrokr2A/sIXyE+/iYIkWVbMnGVAZqcPjcHUA7/yCwO9
+   /2UNQCGLo8xn0GfHqb9wW0Iage2Ph0Nupb6rDlb1VQlCU21Fhr03YMI4s
+   kRf1fUoJDmJbNR9r595sPVUMPbPI2yYEO/15yCXdudW9N9rNfzASdHPhL
+   tr1GoM6qc3l+5P+ChfGcdvg85DvGAbXiFeUeySkx7+uQNUgb75hgxubNS
+   DJ/g0JVD0WH74zOWk0AfeYyqAlBRmV8zto0vFPtzSRZr0wihyfJtzW8Dz
+   3WQhoPRd8arcDn658DChPAN4kigh1O4G7Dk9HtVWEfWrgTuPp42RaD2P1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="305139775"
 X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="308319637"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 09:12:14 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="691662949"
+   d="scan'208";a="305139775"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 09:37:01 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="659460797"
 X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="691662949"
+   d="scan'208";a="659460797"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.41.87]) ([10.212.41.87])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 09:12:13 -0800
-Message-ID: <021a7ba0-e15a-52b3-51cf-14a5ef850157@intel.com>
-Date:   Tue, 17 Jan 2023 10:12:12 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 09:36:59 -0800
+Message-ID: <d38de32e-a049-c020-4898-436add42e57e@intel.com>
+Date:   Tue, 17 Jan 2023 10:36:59 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] cxl/region: Fix null pointer dereference for resetting
- decoder
+Subject: Re: [RFC PATCH 0/2] CXL UE RAS Multiple Header Logging support
 Content-Language: en-US
-To:     Fan Ni <fan.ni@samsung.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CGME20221215170915uscas1p262ccdf32fb2ccd3840189376c2793d06@uscas1p2.samsung.com>
- <20221215170909.2650271-1-fan.ni@samsung.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, dan.j.williams@intel.com
+Cc:     linuxarm@huawei.com, ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+References: <20230113154011.16205-1-Jonathan.Cameron@huawei.com>
+ <20230113155338.00006b35@huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221215170909.2650271-1-fan.ni@samsung.com>
+In-Reply-To: <20230113155338.00006b35@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -69,69 +60,84 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 
-On 12/15/22 10:09 AM, Fan Ni wrote:
-> Not all decoders have a reset callback.
+On 1/13/23 8:53 AM, Jonathan Cameron wrote:
+> On Fri, 13 Jan 2023 15:40:09 +0000
+> Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
 > 
-> The CXL specification allows a host bridge with a single root port to
-> have no explicit HDM decoders. Currently the region driver assumes there
-> are none.  As such the CXL core creates a special pass through decoder
-> instance without a commit/reset callback.
-> 
-> Prior to this patch, the ->reset() callback was called unconditionally when
-> calling cxl_region_decode_reset. Thus a configuration with 1 Host Bridge,
-> 1 Root Port, and one directly attached CXL type 3 device or multiple CXL
-> type 3 devices attached to downstream ports of a switch can cause a null
-> pointer dereference.
-> 
-> Before the fix, a kernel crash was observed when we destroy the region, and
-> a pass through decoder is reset.
-> 
-> The issue can be reproduced as below,
->      1) create a region with a CXL setup which includes a HB with a
->      single root port under which a memdev is attached directly.
->      2) destroy the region with cxl destroy-region regionX -f.
-> 
-> Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> Missed Dave Jiang off cc so resent
+> (I thought I'd hit cancel fast enough but apparently not)
+> Sorry for the noise!
 
-Makes sense, especially with the emulated decoders coming w/o ->reset().
+No worries. I see them from the list either way.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   drivers/cxl/core/region.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index f9ae5ad284ff..3931793a13ac 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -131,7 +131,7 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
->   		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->   		struct cxl_port *iter = cxled_to_port(cxled);
->   		struct cxl_ep *ep;
-> -		int rc;
-> +		int rc = 0;
->   
->   		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
->   			iter = to_cxl_port(iter->dev.parent);
-> @@ -143,7 +143,8 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
->   
->   			cxl_rr = cxl_rr_load(iter, cxlr);
->   			cxld = cxl_rr->decoder;
-> -			rc = cxld->reset(cxld);
-> +			if (cxld->reset)
-> +				rc = cxld->reset(cxld);
->   			if (rc)
->   				return rc;
->   		}
-> @@ -186,7 +187,8 @@ static int cxl_region_decode_commit(struct cxl_region *cxlr)
->   			     iter = ep->next, ep = cxl_ep_load(iter, cxlmd)) {
->   				cxl_rr = cxl_rr_load(iter, cxlr);
->   				cxld = cxl_rr->decoder;
-> -				cxld->reset(cxld);
-> +				if (cxld->reset)
-> +					cxld->reset(cxld);
->   			}
->   
->   			cxled->cxld.reset(&cxled->cxld);
+>> CXL UE RAS Error reporting allows an EP to report the capability of
+>> recording Multiple Header Logs for uncorrectable errors.
+>> Unlike equivalent feature in PCIe, there is no enable control
+>> for this feature, so a supporting device may be expecting
+>> a more complex software flow than that necessary for devices
+>> that do not support this feature. Documentation of this feature
+>> is sparse, with assumption it works the same as PCIe.
+>>
+>> There are hardware implementation choices allowed in the
+>> equivalent PCIe r6.0 base spec section (6.4.2.4) that could
+>> be safely used with the existing code, even with Multiple
+>> Header Recording support but there are others that cannot.
+>>
+>> The issue is what happens when the EP is doing Multiple Header
+>> Recording but then the software writes 1 to clear more than one
+>> status bit at the time (PCIe spec warns against doing this
+>>   - but it is what the current kernel code will do):
+>> Option 1)
+>>    It does the nice thing and clears all matching errors.
+>>    Note this is a bit strange for the case where the device
+>>    supports logging multiple instances of a given error - so
+>>    the two can't be combined cleanly.  With that feature
+>>    I can't see how anyone could implement hardware that coped
+>>    cleanly with the wrong software flow.
+>> Option 2)
+>>    It clears only the first error bit leaving a bunch of error
+>>    bits set (note that if it has recorded multiple errors of
+>>    same type it might not even do that). These are sticky
+>>    across resets, so you will probably end up coming back up
+>>    and immediately seeing an error.
+>>
+>> So whilst you can design an EP to safe against non MH recording
+>> aware software, it isn't generally the case. As we don't have
+>> an explicit enable on CXL we have to handle anything reporting
+>> the capability in a MH safe fashion.
+>>
+>> This feature was developed against emulation in QEMU.
+>> The relevant patches have not yet been posted but can be found on
+>> https://gitlab.com/jic23/qemu/-/commits/cxl-2023-01-11
+>> along with description of how to inject errors in the patch
+>> descriptions.  I'll post them for review for QEMU inclusion
+>> shortly.
+>>
+>> RFC simply because the lack of specification detail means I am
+>> less sure on this code than I would normally be. Unfortunately it
+>> could be argued that the first patch is a fix for the
+>> current upstream CXL RAS support.  If we want a simpler fix
+>> one option would be to just fail to enable RAS support if
+>> Multiple Header recording capability bit is set.  Or we
+>> decide that it doesn't matter for now and add support for this
+>> feature via the normal merge cycle.
+>>
+>> Second patch is just there to make this easier to test as
+>> no additional software is needed to print the header log.
+>>
+>> Base is rather messy due to a clash between multiple cxl tree
+>> branches.
+>> cxl/fixes with the trace move on cxl/next cherry picked on top
+>> as it moves the code that was fixed.
+>>
+>> Jonathan Cameron (2):
+>>    cxl: RAS: Multiple header recording support
+>>    cxl: Add tprintk support for header log hex dump
+>>
+>>   drivers/cxl/core/pci.c   | 17 ++++++++++++-----
+>>   drivers/cxl/core/trace.h |  7 +++++--
+>>   drivers/cxl/cxl.h        |  1 +
+>>   3 files changed, 18 insertions(+), 7 deletions(-)
+>>
+> 
