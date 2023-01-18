@@ -2,180 +2,106 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB510C32793
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 Jan 2023 05:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C568C004D4
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 Jan 2023 10:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjARF5w (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 Jan 2023 00:57:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45824 "EHLO
+        id S229917AbjARKza (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 Jan 2023 05:55:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjARFy0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 Jan 2023 00:54:26 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93F8582B6;
-        Tue, 17 Jan 2023 21:54:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674021241; x=1705557241;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=655O1aIAPWsR+dipGRZIcJj8Rbea4py0JBUlU5nI76I=;
-  b=jDGW02VVsK48RTOjd17uqLm0tq4lZ07cxsLfuFTQwKCwMJbdqUZcOmdX
-   dCPOTrHWi3mEhk/o6/Uln/3a8WLn0Wbhp3qH6AB6m/e7S1J6GSe5v8Ixu
-   OFDCdKxqXYs7KSvMPSjpQTjDG5j+M9qPU+6UtHyONOUQpy8W8YrrNQNRl
-   q2Ju8u7gceyQRKMpDh4FzsQfzGuDCWOS/GH6g8xY0xWyOltbhngy6ueTF
-   R+s0ogpZi4dYLbFx5dej9nK+wnOjiG38fA6ZdGfgpV2+AFyxNNlZR5yIJ
-   49MKYJpyWDd9HLXEnIHErWAT0c9/WgSdBfbwhTZWQ3/MsE9seYysIV2w7
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="304586828"
-X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="304586828"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 21:54:01 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="802043307"
-X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="802043307"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.10.122])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 21:54:00 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-Date:   Tue, 17 Jan 2023 21:53:42 -0800
-Subject: [PATCH v7 7/8] cxl/test: Add specific events
+        with ESMTP id S229481AbjARKxH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 Jan 2023 05:53:07 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8369588752
+        for <linux-cxl@vger.kernel.org>; Wed, 18 Jan 2023 02:02:20 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Nxgh30KRdz6J6K5;
+        Wed, 18 Jan 2023 17:39:15 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 18 Jan
+ 2023 09:43:10 +0000
+Date:   Wed, 18 Jan 2023 09:43:09 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>
+Subject: Re: [RFC PATCH 2/2] cxl: Add tprintk support for header log hex
+ dump
+Message-ID: <20230118094309.0000008c@Huawei.com>
+In-Reply-To: <0907017b-a620-0089-8d10-b3dc92e145ed@intel.com>
+References: <20230113154058.16227-1-Jonathan.Cameron@huawei.com>
+        <20230113154058.16227-3-Jonathan.Cameron@huawei.com>
+        <0907017b-a620-0089-8d10-b3dc92e145ed@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20221216-cxl-ev-log-v7-7-2316a5c8f7d8@intel.com>
-References: <20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com>
-In-Reply-To: <20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-X-Mailer: b4 0.12-dev-cc11a
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1674021228; l=3696;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=655O1aIAPWsR+dipGRZIcJj8Rbea4py0JBUlU5nI76I=;
- b=uAez2jzCOxZoaf8X+/mgb+L8Y9939vAnbEHjs9i9ea1G3qOJE9iz1NxrJ8NrXYLY/bPfNTh3sESX
- utF/wOYnAj5XbZUevsqdAg2AHB9gV/n+kYLJCtFbpLtLPqb528eg
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Each type of event has different trace point outputs.
+On Tue, 17 Jan 2023 11:08:26 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Add mock General Media Event, DRAM event, and Memory Module Event
-records to the mock list of events returned.
+> On 1/13/23 8:40 AM, Jonathan Cameron wrote:
+> > May not make sense in general, but very helpful when writing multiple
+> > header logging support.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> 
+> The user logging software would be retrieving from the log data directly 
+> instead of parsing the trace output right? Will people visually inspect 
+> the formatted trace output? Useful for debugging?
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Rather depends on the use case and rate of expected errors + if you are
+trying to debug errors before your logging infrastructure is up.
 
----
-Changes in v7:
-        <no change>
----
- tools/testing/cxl/test/mem.c | 73 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+Sure in production, likely these tracepoints would just get stored to a DB for later
+querying.  But in debug, I often just use the kernel parameter
+to directly dump them in the main kernel log, or perf's own decoding of a trace.
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 90a463f83ae4..00bf19a68604 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -277,12 +277,85 @@ struct cxl_event_record_raw hardware_replace = {
- 	.data = { 0xDE, 0xAD, 0xBE, 0xEF },
- };
- 
-+struct cxl_event_gen_media gen_media = {
-+	.hdr = {
-+		.id = UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
-+				0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
-+		.length = sizeof(struct cxl_event_gen_media),
-+		.flags[0] = CXL_EVENT_RECORD_FLAG_PERMANENT,
-+		/* .handle = Set dynamically */
-+		.related_handle = cpu_to_le16(0),
-+	},
-+	.phys_addr = cpu_to_le64(0x2000),
-+	.descriptor = CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,
-+	.type = CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,
-+	.transaction_type = CXL_GMER_TRANS_HOST_WRITE,
-+	/* .validity_flags = <set below> */
-+	.channel = 1,
-+	.rank = 30
-+};
-+
-+struct cxl_event_dram dram = {
-+	.hdr = {
-+		.id = UUID_INIT(0x601dcbb3, 0x9c06, 0x4eab,
-+				0xb8, 0xaf, 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
-+		.length = sizeof(struct cxl_event_dram),
-+		.flags[0] = CXL_EVENT_RECORD_FLAG_PERF_DEGRADED,
-+		/* .handle = Set dynamically */
-+		.related_handle = cpu_to_le16(0),
-+	},
-+	.phys_addr = cpu_to_le64(0x8000),
-+	.descriptor = CXL_GMER_EVT_DESC_THRESHOLD_EVENT,
-+	.type = CXL_GMER_MEM_EVT_TYPE_INV_ADDR,
-+	.transaction_type = CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,
-+	/* .validity_flags = <set below> */
-+	.channel = 1,
-+	.bank_group = 5,
-+	.bank = 2,
-+	.column = {0xDE, 0xAD},
-+};
-+
-+struct cxl_event_mem_module mem_module = {
-+	.hdr = {
-+		.id = UUID_INIT(0xfe927475, 0xdd59, 0x4339,
-+				0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74),
-+		.length = sizeof(struct cxl_event_mem_module),
-+		/* .handle = Set dynamically */
-+		.related_handle = cpu_to_le16(0),
-+	},
-+	.event_type = CXL_MMER_TEMP_CHANGE,
-+	.info = {
-+		.health_status = CXL_DHI_HS_PERFORMANCE_DEGRADED,
-+		.media_status = CXL_DHI_MS_ALL_DATA_LOST,
-+		.add_status = (CXL_DHI_AS_CRITICAL << 2) |
-+			      (CXL_DHI_AS_WARNING << 4) |
-+			      (CXL_DHI_AS_WARNING << 5),
-+		.device_temp = { 0xDE, 0xAD},
-+		.dirty_shutdown_cnt = { 0xde, 0xad, 0xbe, 0xef },
-+		.cor_vol_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
-+		.cor_per_err_cnt = { 0xde, 0xad, 0xbe, 0xef },
-+	}
-+};
-+
- static void cxl_mock_add_event_logs(struct mock_event_store *mes)
- {
-+	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
-+			   &gen_media.validity_flags);
-+
-+	put_unaligned_le16(CXL_DER_VALID_CHANNEL | CXL_DER_VALID_BANK_GROUP |
-+			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
-+			   &dram.validity_flags);
-+
- 	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
-+	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
-+		      (struct cxl_event_record_raw *)&gen_media);
-+	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
-+		      (struct cxl_event_record_raw *)&mem_module);
- 	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
- 
- 	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
-+	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
-+		      (struct cxl_event_record_raw *)&dram);
- 	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
- }
- 
+The nearest equivalent to this is AER which does print the log.
+https://elixir.bootlin.com/linux/v6.2-rc4/source/include/ras/ras_event.h#L337
 
--- 
-2.39.0
+though that uses __print_array so maybe that's a better choice.
+Don't get the nice offsets though if we do that though...
+
+I'm not fussed about this patch going upstream or not, it just makes testing
+patch 1 a lot easier :)
+
+Jonathan
+
+
+> 
+> > ---
+> >   drivers/cxl/core/trace.h | 7 +++++--
+> >   1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> > index 20ca2fe2ca8e..64f6ad13529d 100644
+> > --- a/drivers/cxl/core/trace.h
+> > +++ b/drivers/cxl/core/trace.h
+> > @@ -62,10 +62,13 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+> >   		 */
+> >   		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> >   	),
+> > -	TP_printk("%s: status: '%s' first_error: '%s'",
+> > +	TP_printk("%s: status: '%s' first_error: '%s' header_log: %s",
+> >   		  __get_str(dev_name),
+> >   		  show_uc_errs(__entry->status),
+> > -		  show_uc_errs(__entry->first_error)
+> > +		  show_uc_errs(__entry->first_error),
+> > +		__print_hex_dump("", DUMP_PREFIX_OFFSET, 32, 4,
+> > +				(char *)__entry->header_log,
+> > +				CXL_HEADERLOG_SIZE_U32, false)
+> >   	)
+> >   );
+> >     
+
