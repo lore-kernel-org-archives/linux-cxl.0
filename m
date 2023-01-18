@@ -2,111 +2,143 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04474C32793
-	for <linux-cxl@archiver.kernel.org>; Wed, 18 Jan 2023 21:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2607C38147
+	for <linux-cxl@archiver.kernel.org>; Wed, 18 Jan 2023 23:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230057AbjARVA0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 18 Jan 2023 16:00:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58954 "EHLO
+        id S229834AbjARXTG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 18 Jan 2023 18:19:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230282AbjARU76 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 Jan 2023 15:59:58 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2623F6049C;
-        Wed, 18 Jan 2023 12:59:49 -0800 (PST)
+        with ESMTP id S229853AbjARXTA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 18 Jan 2023 18:19:00 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DA5654DC
+        for <linux-cxl@vger.kernel.org>; Wed, 18 Jan 2023 15:19:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674075589; x=1705611589;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UZr+y7YjygeR8zirILd/pq2MOnSrrVweQbKlUNOy8GU=;
-  b=SSYtiGZTVTtEJK7PJgyPQhIyt7rI4f49Q14oo2knSGq64ybvzPc7lk7U
-   yYPPW9fK5YkIiEMqK7zW5NR2QFzkzqQWxHcSdDrtplC518RfkZRDrCGp7
-   76y/EoSLaUbIJYlWzqs90BNZAhfTjrjYtVnIZc3HobfnzWH6gytAqnX9Z
-   fO+ZAh1QjLHonZIgMNy5EFIFO7UDL3GZLVGzCGxOkQ8ayGoiVdsoQzHkS
-   hYNK1AvjcyqWinnCbhz/9e5cgv+Q+6p6e9fze+bcTBTOUn6TV8sW70PdV
-   WHUIRxA71uub08CHZZ/Va53Qu3Yr5yGArH08RyGQesDM8VId4bmJnVVaP
+  t=1674083940; x=1705619940;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HrfjoYSO6jNGEjkonmaLp6BchdVhRCRvOob5L/T+si4=;
+  b=aoJpF6dI32eJMXhXzfCGSFLH31kLb5gCAHnkBNs0LTYIByKBG5i+VpWJ
+   2whvqhABJVLcatnavtT0XGHGITpj5w6XJQ5qZqmpcDZomOueRNOgJ+wdC
+   ww9AtFPpWZTzVNb7I1REGkqZ2rlP+IVo1fzGBIqzZn/tRUpWfVKzP984r
+   XgXPFZGew5415y/K8XCvu4ajgKRkz+ZmDBtAo/4PQJXVdYy+HL3hfFKm7
+   +4SeQRuVP2xfZPhjCr6OancmNTTldaOsNZ7h8/AnnMOMeTXrWcWBtmm/4
+   Abq7OD1ScIj8nw+tEo3SFKPSjdP+sEnsYju7FdZ4EcCde5cj8OVKLLnnI
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="308660500"
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="325180044"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="308660500"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 12:59:48 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="692160802"
+   d="scan'208";a="325180044"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 15:18:58 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="728430290"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="692160802"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.119.104])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 12:59:48 -0800
-From:   alison.schofield@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+   d="scan'208";a="728430290"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.119.104])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 15:18:57 -0800
+Date:   Wed, 18 Jan 2023 15:18:55 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/5] CXL Poison List Retrieval & Tracing
-Date:   Wed, 18 Jan 2023 12:59:45 -0800
-Message-Id: <cover.1674070170.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <cover.1674070170.git.alison.schofield@intel.com>
-References: 
+        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v9 3/3] tools/testing/cxl: Add XOR Math support to
+ cxl_test
+Message-ID: <Y8h+X/XdFYuLLgR1@aschofie-mobl2>
+References: <cover.1669847017.git.alison.schofield@intel.com>
+ <54670400cd48ba7fcc6d8ee0d6ae2276d3f51aad.1669847017.git.alison.schofield@intel.com>
+ <63c85497274b5_c81f02941e@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63c85497274b5_c81f02941e@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Wed, Jan 18, 2023 at 12:20:39PM -0800, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > Expand the cxl_test topology to include CFMWS's that use XOR math
+> > for interleave arithmetic, as defined in the CXL Specification 3.0.
+> > 
+> > With this expanded topology, cxl_test is useful for testing:
+> > x1,x2,x4 ways with XOR interleave arithmetic.
+> > 
+> > Define the additional XOR CFMWS entries to appear only with the
+> > module parameter interleave_arithmetic=1. The cxl_test default
+> > continues to be modulo math.
+> > 
+> > modprobe cxl_test interleave_arithmetic=1
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  tools/testing/cxl/test/cxl.c | 118 ++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 115 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> > index 7edce12fd2ce..c7dba7550106 100644
+> > --- a/tools/testing/cxl/test/cxl.c
+> > +++ b/tools/testing/cxl/test/cxl.c
+> [..]
+> > @@ -897,6 +997,16 @@ static __init int cxl_test_init(void)
+> >  	if (rc)
+> >  		goto err_gen_pool_add;
+> >  
+> > +	if (interleave_arithmetic == 1) {
+> > +		cfmws_start = CFMWS_XOR_ARRAY_START;
+> > +		cfmws_end = CFMWS_XOR_ARRAY_END;
+> > +		dev_dbg(NULL, "cxl_test loading xor math option\n");
+> > +	} else {
+> > +		cfmws_start = CFMWS_MOD_ARRAY_START;
+> > +		cfmws_end = CFMWS_MOD_ARRAY_END;
+> > +		dev_dbg(NULL, "cxl_test loading modulo math option\n");
+> > +	}
+> > +
+> 
+> Missed this earlier., but noticed now that I am running it. If no device
+> is available then just use pr_debug() instead of dev_dbg(). That said,
+> these messages could just be skipped altogher and make the value of
+> @interleave_arithmetic readable via sysfs if something really needs to
+> recall what mode the test module is running in. I.e.:
 
-**RESENDING this cover letter previously mis-threaded.
+Understand (now). I'll send a patch like you suggest.
+Thanks!
 
-Changes in v5:
-- Rebase on cxl/next 
-- Use struct_size() to calc mbox cmd payload .min_out
-- s/INTERNAL/INJECTED mocked poison record source
-- Added Jonathan Reviewed-by tag on Patch 3
-
-Link to v4:
-https://lore.kernel.org/linux-cxl/cover.1671135967.git.alison.schofield@intel.com/
-
-Add support for retrieving device poison lists and store the returned
-error records as kernel trace events.
-
-The handling of the poison list is guided by the CXL 3.0 Specification
-Section 8.2.9.8.4.1. [1] 
-
-Example, triggered by memdev:
-$ echo 1 > /sys/bus/cxl/devices/mem3/trigger_poison_list
-cxl_poison: memdev=mem3 pcidev=cxl_mem.3 region= region_uuid=00000000-0000-0000-0000-000000000000 dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-
-Example, triggered by region:
-$ echo 1 > /sys/bus/cxl/devices/region5/trigger_poison_list
-cxl_poison: memdev=mem0 pcidev=cxl_mem.0 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-
-[1]: https://www.computeexpresslink.org/download-the-specification
-
-Alison Schofield (5):
-  cxl/mbox: Add GET_POISON_LIST mailbox command
-  cxl/trace: Add TRACE support for CXL media-error records
-  cxl/memdev: Add trigger_poison_list sysfs attribute
-  cxl/region: Add trigger_poison_list sysfs attribute
-  tools/testing/cxl: Mock support for Get Poison List
-
- Documentation/ABI/testing/sysfs-bus-cxl | 28 +++++++++
- drivers/cxl/core/mbox.c                 | 78 +++++++++++++++++++++++
- drivers/cxl/core/memdev.c               | 45 ++++++++++++++
- drivers/cxl/core/region.c               | 33 ++++++++++
- drivers/cxl/core/trace.h                | 83 +++++++++++++++++++++++++
- drivers/cxl/cxlmem.h                    | 69 +++++++++++++++++++-
- drivers/cxl/pci.c                       |  4 ++
- tools/testing/cxl/test/mem.c            | 42 +++++++++++++
- 8 files changed, 381 insertions(+), 1 deletion(-)
-
-
-base-commit: 589c3357370a596ef7c99c00baca8ac799fce531
--- 
-2.37.3
-
+> 
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 14530fe1edc6..b7d7420e74ea 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -1265,11 +1265,9 @@ static __init int cxl_test_init(void)
+>         if (interleave_arithmetic == 1) {
+>                 cfmws_start = CFMWS_XOR_ARRAY_START;
+>                 cfmws_end = CFMWS_XOR_ARRAY_END;
+> -               dev_dbg(NULL, "cxl_test loading xor math option\n");
+>         } else {
+>                 cfmws_start = CFMWS_MOD_ARRAY_START;
+>                 cfmws_end = CFMWS_MOD_ARRAY_END;
+> -               dev_dbg(NULL, "cxl_test loading modulo math option\n");
+>         }
+>  
+>         rc = populate_cedt();
+> @@ -1456,7 +1454,7 @@ static __exit void cxl_test_exit(void)
+>         unregister_cxl_mock_ops(&cxl_mock_ops);
+>  }
+>  
+> -module_param(interleave_arithmetic, int, 0000);
+> +module_param(interleave_arithmetic, int, 0444);
+>  MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
+>  module_init(cxl_test_init);
+>  module_exit(cxl_test_exit);
+> 
+> Otherwise, the current code leads to a concerning:
+> 
+> "[  111.743246] (NULL device *): cxl_test loading modulo math option"
+> 
+> ...at startup.
