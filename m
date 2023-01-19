@@ -2,326 +2,129 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C353EC00A5A
-	for <linux-cxl@archiver.kernel.org>; Thu, 19 Jan 2023 12:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38649C00A5A
+	for <linux-cxl@archiver.kernel.org>; Thu, 19 Jan 2023 13:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbjASMo6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 19 Jan 2023 07:44:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
+        id S230337AbjASNGc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 19 Jan 2023 08:06:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjASMoB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 19 Jan 2023 07:44:01 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42C73589
-        for <linux-cxl@vger.kernel.org>; Thu, 19 Jan 2023 04:42:48 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NyMcn35Z7z6J7Yd;
-        Thu, 19 Jan 2023 20:38:49 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+        with ESMTP id S230398AbjASNF7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 19 Jan 2023 08:05:59 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2748B7ED43;
+        Thu, 19 Jan 2023 05:05:16 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lafcwe6ON+vqqxY2VzqdznyCpIzS7sU7C5uiEhzlHEk+onbwdlSZ3f1IegG33VrGdjEspAjD88UwSV+QNvbp/AlUOyg/1K4J57798HF5w3FJQdRbJUHbHZspDXSoEb87TUd9xsVOp9S4Tkt2pL2QIQXQJdepxnMUm7aN8ZNNkTZlkyPzQRs6mJauWhvPLQj95k4sY5pS7c+qg66FWjrWrZ32bcWWgCLj2Ni5R7sVONnVImIlFwpBxCbAijtSQT3oeojvM5OxCOSiAAO7dc4pXQZqP8IAsthZXYSQx/DjZIGNo+WcZ7BXlmVeLR1JnHlD4MTDab3DnWaKdcrYNcpAvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=I80IDrMETKSFhfzESFRMZXokS7MwFUuxK4/Sk3mH6eM=;
+ b=O7zgvHqaxbKWLEmBUU0XEZgnmoT//tufpbwa1lgPRoZQZIgrY6+hwW58ZkMyEVr5YPzL7cZPiqBnHm95oE0qyYpsrqVqSqhskYCtocCP6evcR5YYN82ZXPNQnJeUwBRgPhbcSEpJ4Pka1bnrwRW8SdlthaP1s7htPkyqlGfx4NuzkYrNLUT03jBMiQ0rTqZXF8AdcKUJ9qJ6M+rjxvvFIZACq6c0fO0JTCuHqyg/Ewm8zCNxUXeMpQGoctalDlTv9AMR21QZXZPOiLoQXbQxqFtpqbQ5DWT+HXGPVO6mNVTOhgqBux0jwWPJpcvi2IU+cxZTsyt4DkJBIrz3+qn05Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I80IDrMETKSFhfzESFRMZXokS7MwFUuxK4/Sk3mH6eM=;
+ b=AQmN4DV3kGjNJeCoKqfocMFTabp678x7leb4J1Ze7YA4+STJDI1raHXFEKwAscSdZdWhQWJ76M93LL4pyOz5LRiC25dcJt99N7ZHX7+XO4hTUEfSXUr2AuXmYLjSgmrOGNLCP1Twv4Sz4FT3zdTKwOkcFzBUj2NFWSPlKYsd67s=
+Received: from DS7PR05CA0075.namprd05.prod.outlook.com (2603:10b6:8:57::16) by
+ DS0PR12MB7874.namprd12.prod.outlook.com (2603:10b6:8:141::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6002.13; Thu, 19 Jan 2023 13:05:13 +0000
+Received: from DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:57:cafe::8b) by DS7PR05CA0075.outlook.office365.com
+ (2603:10b6:8:57::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.17 via Frontend
+ Transport; Thu, 19 Jan 2023 13:05:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT022.mail.protection.outlook.com (10.13.172.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6023.16 via Frontend Transport; Thu, 19 Jan 2023 13:05:13 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 19 Jan
- 2023 12:42:45 +0000
-Date:   Thu, 19 Jan 2023 12:42:44 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     Lukas Wunner <lukas@wunner.de>, <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+ 2023 07:05:11 -0600
+From:   Robert Richter <rrichter@amd.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Gregory Price <gourry.memverge@gmail.com>,
-        "Dan Williams" <dan.j.williams@intel.com>
-Subject: Re: [PATCH 0/8] hw/cxl: CXL emulation cleanups and minor fixes for
- upstream
-Message-ID: <20230119124244.000015b3@Huawei.com>
-In-Reply-To: <Y8hJKcy1993SFLLJ@memverge.com>
-References: <20230111142440.24771-1-Jonathan.Cameron@huawei.com>
-        <Y8AppXP+eP9cEz+i@memverge.com>
-        <20230112172130.0000391b@Huawei.com>
-        <Y8CNw/fZT5fZJZcK@memverge.com>
-        <20230113091213.00002146@Huawei.com>
-        <Y8Foj/12QNl0C96o@memverge.com>
-        <20230113144026.000001fb@Huawei.com>
-        <20230113144511.00001207@Huawei.com>
-        <20230113151206.GA20583@wunner.de>
-        <Y8hG4OyJL7l9oD2f@memverge.com>
-        <Y8hJKcy1993SFLLJ@memverge.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Robert Richter <rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] cxl/mbox: Add debug messages for supported mailbox commands
+Date:   Thu, 19 Jan 2023 14:04:50 +0100
+Message-ID: <20230119130450.107519-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT022:EE_|DS0PR12MB7874:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0bb196b7-3c2c-45a5-665b-08dafa1dcda5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 06PrbHP4lKtNtev7P8KOcjkDAGWFHC2VsVll8iLVCcsetqoYqgSa0GRf2Q7xUAccyu4LUHCQ6d00h3gB4kDdvTsLVegb9SuwAQ+CEFg8Szc/g0UmL/7yWFpAax65vwHQth7i4QfoHj+doOVvzY1Fos4ZgqTbhHVr7huZFRIvtLBFZW8iFnm05Bpz5dut+FdiJ5hO14CRIZ4BCl8gX38WioPzQpNS2NGZ8z8xEwgnjkH5kUZIa2SuCATK51I4rZlL2XJ+S2/ZPObqlHT1AKRseBRscoRq2uVYXQIceC8Vk+Ya/rRXB3s/M3Q79u0gqfS9pntDcuyjXCDX2smpFjDMJhziEGrYHKGR9Otxo+DvFzr3oR/JNA6xqpNCKOul2Vv06kJZkztmoTDNBMt5dQDYdDaIIrbNmeW7a86jXILL4dB5S31/zgsuCU6KnsSdSKjrKEIjkBP+r+zY7NKRJNxIui4Oyn05cUBbDlYRP8RQQARnFGtjqOTO2oSM4SWNOUIDu2nJ+5lMVOPw4WmNoNOLjZQndMFBllKz7daLxzKBReQXV2fHuuYwjT6AluHDNSIBLY0yqvKHrXQHkie2in8q4jvVIM9Uu75+m1/FgAhfgy3lkGGn1nvw3TGJE07efTbxBVkwmEcujh8WG4oGYcuGadVeDiSyrrTBVNXco/tHjAJxsN9ov+/mc7B9q3+IzKLhiWnRR+yQkOsAC7BY9+nr6RTGGCbx2FvEiEgcGgwUWBY=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(39860400002)(396003)(451199015)(40470700004)(36840700001)(46966006)(356005)(70206006)(2906002)(15650500001)(4744005)(5660300002)(8936002)(82740400003)(81166007)(36860700001)(70586007)(316002)(47076005)(54906003)(6666004)(110136005)(426003)(478600001)(36756003)(82310400005)(8676002)(40480700001)(4326008)(41300700001)(1076003)(16526019)(336012)(186003)(83380400001)(40460700003)(26005)(2616005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2023 13:05:13.6729
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bb196b7-3c2c-45a5-665b-08dafa1dcda5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7874
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 18 Jan 2023 14:31:53 -0500
-Gregory Price <gregory.price@memverge.com> wrote:
+Only unsupported mailbox commands are reported in debug messages. A
+list of supported commands is useful too. Change debug messages to
+also report the opcodes of supported commands.
 
-> I apparently forgot an intro lol
-> 
-> I tested the DOE linux branch with the 2023-1-11 QEMU branch with both
-> volatile, non-volatile, and "legacy" (pre-my-patch) non-volatile mode.
-> 
-> 1) *In volatile mode, there are no stack traces present (during boot*)
-> 
-> On Wed, Jan 18, 2023 at 02:22:08PM -0500, Gregory Price wrote:
-> > 
-> > 1) No stack traces present
-> > 2) Device usage appears to work, but cxl-cli fails to create a region, i
-> > haven't checked why yet (also tried ndctl-75, same results)
-> > 3) There seems to be some other regression with the cxl_pmem_init
-> > routine, because I get a stack trace in this setup regardless of whether
-> > I apply the type-3 device commit.
-> > 
-> > 
-> > All tests below with the previously posted DOE linux branch.
-> > Base QEMU branch was Jonathan's 2023-1-11
-> > 
-> > 
-> > DOE Branch - 2023-1-11 (HEAD) (all commits)
-> > 
-> > QEMU Config:
-> > sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
-> > -drive file=/var/lib/libvirt/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
-> > -m 3G,slots=4,maxmem=8G \
-> > -smp 4 \
-> > -machine type=q35,accel=kvm,cxl=on \
-> > -enable-kvm \
-> > -nographic \
-> > -object memory-backend-ram,id=mem0,size=1G,share=on \
-> > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> > -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 \
-> > -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
-> > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
-> > 
-> > Result:  This worked, but cxl-cli could not create a region (will look
-> > into this further later).
-> > 
-> > 
-> > 
-> > 
-> > When running with a persistent memory configuration, I'm seeing a
-> > kernel stack trace on cxl_pmem_init
-> > 
-> > Config:
-> > sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
-> > -drive file=/var/lib/libvirt/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
-> > -m 3G,slots=4,maxmem=4G \
-> > -smp 4 \
-> > -machine type=q35,accel=kvm,cxl=on \
-> > -enable-kvm \
-> > -nographic \
-> > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> > -device cxl-rp,port=0,id=rp0,bus=cxl.0,chassis=0,slot=0 \
-> > -object memory-backend-file,id=cxl-mem0,mem-path=/tmp/mem0,size=1G \
-> > -object memory-backend-file,id=cxl-lsa0,mem-path=/tmp/lsa0,size=1G \
-> > -device cxl-type3,bus=rp0,persistent-memdev=cxl-mem0,lsa=cxl-lsa0,id=cxl-pmem0 \
-> > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
-> > 
-> > 
-> > [   62.167518] BUG: kernel NULL pointer dereference, address: 00000000000004c0
-> > [   62.185069] #PF: supervisor read access in kernel mode
-> > [   62.198502] #PF: error_code(0x0000) - not-present page
-> > [   62.211019] PGD 0 P4D 0
-> > [   62.220521] Oops: 0000 [#1] PREEMPT SMP PTI
-> > [   62.233457] CPU: 3 PID: 558 Comm: systemd-udevd Not tainted 6.2.0-rc1+ #1
-> > [   62.252886] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.1-0-g3208b098f51a-prebuilt.qemu.org 04/01/2014
-> > [   62.258432] Adding 2939900k swap on /dev/zram0.  Priority:100 extents:1 across:2939900k SSDscFS
-> > [   62.285513] RIP: 0010:cxl_nvdimm_probe+0x8d/0x130 [cxl_pmem]
-> > [   62.285529] Code: 85 c0 0f 85 90 00 00 00 f0 80 0c 24 40 f0 80 4c 24 08 10 f0 80 4c 24 08 20 f0 80 4c 24 08 40 49 8d 84 24 b8 04 00 00 4c 89 0
-> > [   62.285531] RSP: 0018:ffffacff0141fc38 EFLAGS: 00010202
-> > [   62.285534] RAX: ffff97a8a37b84b8 RBX: ffff97a8a37b8000 RCX: 0000000000000000
-> > [   62.285536] RDX: 0000000000000001 RSI: ffff97a8a37b8000 RDI: 00000000ffffffff
-> > [   62.285537] RBP: ffff97a8a37b8000 R08: 0000000000000001 R09: 0000000000000001
-> > [   62.285538] R10: 0000000000000001 R11: 0000000000000000 R12: ffff97a8a37b8000
-> > [   62.285539] R13: ffff97a982c3dc28 R14: 0000000000000000 R15: 0000000000000000
-> > [   62.285541] FS:  00007f2619829580(0000) GS:ffff97a9bca00000(0000) knlGS:0000000000000000
-> > [   62.285542] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [   62.285544] CR2: 00000000000004c0 CR3: 00000001056a8000 CR4: 00000000000006e0
-> > [   62.285653] Call Trace:
-> > [   62.285656]  <TASK>
-> > [   62.285660]  cxl_bus_probe+0x17/0x50
-> > [   62.285691]  really_probe+0xde/0x380
-> > [   62.285695]  ? pm_runtime_barrier+0x50/0x90
-> > [   62.285700]  __driver_probe_device+0x78/0x170
-> > [   62.285846]  driver_probe_device+0x1f/0x90
-> > [   62.285850]  __driver_attach+0xd2/0x1c0
-> > [   62.285853]  ? __pfx___driver_attach+0x10/0x10
-> > [   62.285856]  bus_for_each_dev+0x76/0xa0
-> > [   62.285860]  bus_add_driver+0x1b1/0x200
-> > [   62.285863]  driver_register+0x89/0xe0
-> > [   62.285868]  ? __pfx_init_module+0x10/0x10 [cxl_pmem]
-> > [   62.285874]  cxl_pmem_init+0x50/0xff0 [cxl_pmem]
-> > [   62.285880]  do_one_initcall+0x6e/0x330
-> > [   62.285888]  do_init_module+0x4a/0x200
-> > [   62.285892]  __do_sys_finit_module+0x93/0xf0
-> > [   62.285899]  do_syscall_64+0x5b/0x80
-> > [   62.285904]  ? do_syscall_64+0x67/0x80
-> > [   62.285906]  ? asm_exc_page_fault+0x22/0x30
-> > [   62.285910]  ? lockdep_hardirqs_on+0x7d/0x100
-> > [   62.285914]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> > [   62.285917] RIP: 0033:0x7f2619b0afbd
-> > [   62.285920] Code: 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 8
-> > [   62.285922] RSP: 002b:00007ffcc516bf58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> > [   62.285924] RAX: ffffffffffffffda RBX: 00005557c0dcaa60 RCX: 00007f2619b0afbd
-> > [   62.285925] RDX: 0000000000000000 RSI: 00007f261a18743c RDI: 0000000000000006
-> > [   62.285926] RBP: 00007f261a18743c R08: 0000000000000000 R09: 00007f261a17bb52
-> > [   62.285927] R10: 0000000000000006 R11: 0000000000000246 R12: 0000000000020000
-> > [   62.285928] R13: 00005557c0dbbce0 R14: 0000000000000000 R15: 00005557c0dc18a0
-> > [   62.285932]  </TASK>
-> > [   62.285933] Modules linked in: cxl_pmem(+) snd_pcm libnvdimm snd_timer snd joydev bochs cxl_mem drm_vram_helper parport_pc soundcore drm_ttm_g
-> > [   62.285954] CR2: 00000000000004c0
-> > [   62.288385] ---[ end trace 0000000000000000 ]---
-> > [   63.203514] RIP: 0010:cxl_nvdimm_probe+0x8d/0x130 [cxl_pmem]
-> > [   63.203562] Code: 85 c0 0f 85 90 00 00 00 f0 80 0c 24 40 f0 80 4c 24 08 10 f0 80 4c 24 08 20 f0 80 4c 24 08 40 49 8d 84 24 b8 04 00 00 4c 89 0
-> > [   63.203565] RSP: 0018:ffffacff0141fc38 EFLAGS: 00010202
-> > [   63.203570] RAX: ffff97a8a37b84b8 RBX: ffff97a8a37b8000 RCX: 0000000000000000
-> > [   63.203572] RDX: 0000000000000001 RSI: ffff97a8a37b8000 RDI: 00000000ffffffff
-> > [   63.203574] RBP: ffff97a8a37b8000 R08: 0000000000000001 R09: 0000000000000001
-> > [   63.203576] R10: 0000000000000001 R11: 0000000000000000 R12: ffff97a8a37b8000
-> > [   63.203577] R13: ffff97a982c3dc28 R14: 0000000000000000 R15: 0000000000000000
-> > [   63.203580] FS:  00007f2619829580(0000) GS:ffff97a9bca00000(0000) knlGS:0000000000000000
-> > [   63.203583] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [   63.203585] CR2: 00000000000004c0 CR3: 00000001056a8000 CR4: 00000000000006e0
+On that occasion also add missing trailing newlines.
 
-Possibly replicated.  What I did was stop cxl_pmem.ko being probed automatically and
-added it manually later. Trace that results is certainly similar to yours.
+Signed-off-by: Robert Richter <rrichter@amd.com>
+---
+ drivers/cxl/core/mbox.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Now the MODULE_SOFTDEP() in drivers/cxl/acpi.c should stop that happening
-assuming you are letting autoloading run.
-I wonder if there is a path in which it doesn't?
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index a48ade466d6a..ffa9f84c2dce 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -629,11 +629,12 @@ static void cxl_walk_cel(struct cxl_dev_state *cxlds, size_t size, u8 *cel)
+ 
+ 		if (!cmd) {
+ 			dev_dbg(cxlds->dev,
+-				"Opcode 0x%04x unsupported by driver", opcode);
++				"Opcode 0x%04x unsupported by driver\n", opcode);
+ 			continue;
+ 		}
+ 
+ 		set_bit(cmd->info.id, cxlds->enabled_cmds);
++		dev_dbg(cxlds->dev, "Opcode 0x%04x supported by driver\n", opcode);
+ 	}
+ }
+ 
 
-Dan, any thoughts?
-
-There is another race that I can trigger by repeatedly injecting errors and
-causing resets, but the trace for that is very different and
-points at cxl_pmem_ctl() called via nvdimm_probe(). I was going to try
-and pin that one down a little more before posting a report but might
-as well muddy the waters :)
-
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000358
- Mem abort info:
- ESR = 0x0000000096000004
- EC = 0x25: DABT (current EL), IL = 32 bits
- SET = 0, FnV = 0
- EA = 0, S1PTW = 0
- FSC = 0x04: level 0 translation fault
- Data abort info:
- ISV = 0, ISS = 0x00000004
- CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=0000000102e12000
- [0000000000000358] pgd=0000000000000000, p4d=0000000000000000
- Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
- Modules linked in: cxl_mem cxl_port cxl_acpi cxl_pmem cxl_pci cxl_core
- CPU: 0 PID: 236 Comm: kworker/u8:3 Not tainted 6.2.0-rc3+ #598
- Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
- Workqueue: events_unbound async_run_entry_fn
- pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
- pc : cxl_pmem_ctl+0x74/0x244 [cxl_pmem]
- lr : cxl_pmem_ctl+0x60/0x244 [cxl_pmem]
- sp : ffff8000089239d0
- x29: ffff8000089239d0 x28: 0000000000000000 x27: 0000000000000000
- x26: ffffcd4f6b263000 x25: ffffcd4f6a25d9c8 x24: 0000000000000000
- kernel: Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
- x23: 0000000000000000 x22: 000000000000000c x21: ffff0000c5b95400
- x20: ffff0000c0d9ce0c x19: 0000000000000004 x18: 0000000000000000
- x17: 0000000000000000 x16: ffffcd4f698a5fa0 x15: 0000000000000000
- x14: 0000000000000002 x13: 0000000000000000 x12: 0000000000000000
- x11: 0000000000000001 x10: 409e5dd45a38ef72 x9 : ffffcd4f607531f0
- x8 : ffff0000c0d9ce80 x7 : 0000000000000000 x6 : 0000000000000000
- x5 : ffff800008923a84 x4 : 000000000000000c x3 : ffff800008923a10
- x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000070
- Call trace:
-  cxl_pmem_ctl+0x74/0x244 [cxl_pmem]
-  nvdimm_init_nsarea+0xb8/0xdc
-  nvdimm_probe+0xc0/0x1d0
-  nvdimm_bus_probe+0x90/0x200
-  really_probe+0xc8/0x3e0
-  __driver_probe_device+0x84/0x190
-  driver_probe_device+0x44/0x120
-  __device_attach_driver+0xc4/0x160
-  bus_for_each_drv+0x80/0xe0
-  __device_attach+0xa4/0x1cc
-  device_initial_probe+0x1c/0x2c
-  bus_probe_device+0xa4/0xb0
-  device_add+0x404/0x920
-  nd_async_device_register+0x20/0x70
-  async_run_entry_fn+0x3c/0x154
-  process_one_work+0x200/0x474
-  worker_thread+0x74/0x43c
-  kthread+0x110/0x114
-  ret_from_fork+0x10/0x20
-  Code: 53067e61 f90023e0 f9417aa2 f8617860 (f941ac57)
-  ---[ end trace 0000000000000000 ]---
-
-Note this seems to have gotten harder to hit for some reason - took
-about 50 resets.
-
-I'll keep digging
-
-Jonathan
-
-
-> > 
-> > 
-> > 
-> > Next i reverted the QEMU branch to the commit just before the type-3
-> > volatile commit and used the old method of launching with a type-3 pmem
-> > device
-> > 
-> > Config:
-> > sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
-> > -drive file=/var/lib/libvirt/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
-> > -m 2G,slots=4,maxmem=4G \
-> > -smp 4 \
-> > -machine type=q35,accel=kvm,cxl=on \
-> > -enable-kvm \
-> > -nographic \
-> > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> > -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,slot=0 \
-> > -object memory-backend-file,pmem=true,id=cxl-mem0,mem-path=/tmp/cxl-mem0,size=1G \
-> > -object memory-backend-file,pmem=true,id=lsa0,mem-path=/tmp/cxl-lsa0,size=1G \
-> > -device cxl-type3,bus=rp0,memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 \
-> > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
-> > 
-> > 
-> > Result: Similar stack trace
-> > [   29.850023] BUG: kernel NULL pointer dereference, address: 00000000000004c0
-> > [   29.882400] RIP: 0010:cxl_nvdimm_probe+0x8d/0x130 [cxl_pmem]
-> > [   29.957485] Call Trace:
-> > [   29.959067]  <TASK>
-> > [   29.962176]  cxl_bus_probe+0x17/0x50
-> > [   29.964940]  really_probe+0xde/0x380
-> > [   29.969065]  ? pm_runtime_barrier+0x50/0x90
-> > [   29.973419]  __driver_probe_device+0x78/0x170
-> > [   29.977183]  driver_probe_device+0x1f/0x90
-> > [   29.984212]  __driver_attach+0xd2/0x1c0
-> > [   29.988463]  ? __pfx___driver_attach+0x10/0x10
-> > [   29.992379]  bus_for_each_dev+0x76/0xa0
-> > [   29.997040]  bus_add_driver+0x1b1/0x200
-> > [   30.000368]  driver_register+0x89/0xe0
-> > [   30.004579]  ? __pfx_init_module+0x10/0x10 [cxl_pmem]
-> > [   30.012403]  cxl_pmem_init+0x50/0xff0 [cxl_pmem]
-> > [   30.019394]  do_one_initcall+0x6e/0x330
-> > [   30.024028]  do_init_module+0x4a/0x200
-> > [   30.029243]  __do_sys_finit_module+0x93/0xf0
-> > [   30.034943]  do_syscall_64+0x5b/0x80
-> > [   30.039844]  ? do_syscall_64+0x67/0x80
-> > [   30.045163]  ? do_syscall_64+0x67/0x80
-> > [   30.049729]  ? lock_release+0x14b/0x440
-> > [   30.054055]  ? seqcount_lockdep_reader_access.constprop.0+0x82/0x90
-> > [   30.061039]  ? lock_is_held_type+0xe8/0x140
-> > [   30.067625]  ? do_syscall_64+0x67/0x80
-> > [   30.071909]  ? lockdep_hardirqs_on+0x7d/0x100
-> > [   30.079037]  ? do_syscall_64+0x67/0x80
-> > [   30.084537]  ? do_syscall_64+0x67/0x80
-> > [   30.089091]  ? do_syscall_64+0x67/0x80
-> > [   30.094174]  ? lockdep_hardirqs_on+0x7d/0x100
-> > [   30.099224]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> > [   30.104446] RIP: 0033:0x7f000550afbd  
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+-- 
+2.30.2
 
