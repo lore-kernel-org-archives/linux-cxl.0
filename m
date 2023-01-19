@@ -2,129 +2,133 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38649C00A5A
-	for <linux-cxl@archiver.kernel.org>; Thu, 19 Jan 2023 13:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B1C004D4
+	for <linux-cxl@archiver.kernel.org>; Thu, 19 Jan 2023 14:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjASNGc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 19 Jan 2023 08:06:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
+        id S230410AbjASOVK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 19 Jan 2023 09:21:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbjASNF7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 19 Jan 2023 08:05:59 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2748B7ED43;
-        Thu, 19 Jan 2023 05:05:16 -0800 (PST)
+        with ESMTP id S231263AbjASOVJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 19 Jan 2023 09:21:09 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2085.outbound.protection.outlook.com [40.107.93.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA4D1BF2
+        for <linux-cxl@vger.kernel.org>; Thu, 19 Jan 2023 06:21:08 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lafcwe6ON+vqqxY2VzqdznyCpIzS7sU7C5uiEhzlHEk+onbwdlSZ3f1IegG33VrGdjEspAjD88UwSV+QNvbp/AlUOyg/1K4J57798HF5w3FJQdRbJUHbHZspDXSoEb87TUd9xsVOp9S4Tkt2pL2QIQXQJdepxnMUm7aN8ZNNkTZlkyPzQRs6mJauWhvPLQj95k4sY5pS7c+qg66FWjrWrZ32bcWWgCLj2Ni5R7sVONnVImIlFwpBxCbAijtSQT3oeojvM5OxCOSiAAO7dc4pXQZqP8IAsthZXYSQx/DjZIGNo+WcZ7BXlmVeLR1JnHlD4MTDab3DnWaKdcrYNcpAvg==
+ b=VeP5mfrBSZn0lsYZb47asyLktZgORlKXkLu/yymBFqSSuXBGd70Q8pWdY4OzOhekEX0WkMINVHWwTdhGzEme0EdlKfCY2ExzqR046/f2naZDt5DRZcWL+Iz/Jo989J/s4ETF7qS+1d6Xwbc2KhzHPmpTfC3t0upOmJRD9PAvaYFyjpuR1J4osmC3ChpE7uTZeWLaXHzdDlkgVdsT7TWZIJ4tsc130yeVGVCQKPHb0vZkLRP/4pnhoQd7YJWvepNF9aCKQb5QLlPyGNMeooIB/PUEnRmNfImS6LKIXQpYMPDewZgZTDkO9CHqT40q+WWhlFSNivlZ0z6TjDRTu2xuAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I80IDrMETKSFhfzESFRMZXokS7MwFUuxK4/Sk3mH6eM=;
- b=O7zgvHqaxbKWLEmBUU0XEZgnmoT//tufpbwa1lgPRoZQZIgrY6+hwW58ZkMyEVr5YPzL7cZPiqBnHm95oE0qyYpsrqVqSqhskYCtocCP6evcR5YYN82ZXPNQnJeUwBRgPhbcSEpJ4Pka1bnrwRW8SdlthaP1s7htPkyqlGfx4NuzkYrNLUT03jBMiQ0rTqZXF8AdcKUJ9qJ6M+rjxvvFIZACq6c0fO0JTCuHqyg/Ewm8zCNxUXeMpQGoctalDlTv9AMR21QZXZPOiLoQXbQxqFtpqbQ5DWT+HXGPVO6mNVTOhgqBux0jwWPJpcvi2IU+cxZTsyt4DkJBIrz3+qn05Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=2wPzZI2JTDSlzoJ03tS1DJYf+O5RJElZ+IOUoKEMlJg=;
+ b=mr5X68EzM0jSncqYbYLQjO2jJi9vqo7PG/GxF9LsuvyaJBUiISBG0PldrbrSRw2aXLg9IHzuFMJibU/3Pu9fFjCdHbfUiy+sLIKVB1kGFlVj2AbPWywoVfyjliAjQaHOa6dp2SYZvPNnsaUmfFCitOP8TQ5ldnj640A57dWjWcl9k6rc6UXlSwSdzcQwMmHBVxSQJwCyiqrB+9H+hupectN7lMPA1qM/AMkrjDM1HiN8AnGAnMevqB89FvAQ9P97s8RMaJ4k2gj97PPVjb61M10cp2BAcHw08FieilY05n8GrJrIubtMQeDjuxNECtziejRN7k8TQhSDb9o4V+yl7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I80IDrMETKSFhfzESFRMZXokS7MwFUuxK4/Sk3mH6eM=;
- b=AQmN4DV3kGjNJeCoKqfocMFTabp678x7leb4J1Ze7YA4+STJDI1raHXFEKwAscSdZdWhQWJ76M93LL4pyOz5LRiC25dcJt99N7ZHX7+XO4hTUEfSXUr2AuXmYLjSgmrOGNLCP1Twv4Sz4FT3zdTKwOkcFzBUj2NFWSPlKYsd67s=
-Received: from DS7PR05CA0075.namprd05.prod.outlook.com (2603:10b6:8:57::16) by
- DS0PR12MB7874.namprd12.prod.outlook.com (2603:10b6:8:141::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6002.13; Thu, 19 Jan 2023 13:05:13 +0000
-Received: from DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:57:cafe::8b) by DS7PR05CA0075.outlook.office365.com
- (2603:10b6:8:57::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.17 via Frontend
- Transport; Thu, 19 Jan 2023 13:05:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT022.mail.protection.outlook.com (10.13.172.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6023.16 via Frontend Transport; Thu, 19 Jan 2023 13:05:13 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 19 Jan
- 2023 07:05:11 -0600
-From:   Robert Richter <rrichter@amd.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Robert Richter <rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cxl/mbox: Add debug messages for supported mailbox commands
-Date:   Thu, 19 Jan 2023 14:04:50 +0100
-Message-ID: <20230119130450.107519-1-rrichter@amd.com>
-X-Mailer: git-send-email 2.30.2
+ bh=2wPzZI2JTDSlzoJ03tS1DJYf+O5RJElZ+IOUoKEMlJg=;
+ b=c3eRpEn/fnqwOMi0YlWf3ceyFdNarH7aMcWwmTxjmK7u8DacZz1QtVSm9RmzoTC906+2q3PlHNcMQRWjscMAQOrdSohKJ7RSMFjrpZxNm05ui4nZrA1+xOTBPxqHMNecwppZYmJ90980kyKvYPMmXKiD6ppVcT+B5LrBGXtGQXA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+ by PH7PR17MB6507.namprd17.prod.outlook.com (2603:10b6:510:2b5::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.23; Thu, 19 Jan
+ 2023 14:21:05 +0000
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.5986.023; Thu, 19 Jan 2023
+ 14:21:05 +0000
+Date:   Thu, 19 Jan 2023 09:20:59 -0500
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, qemu-devel@nongnu.org,
+        Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>
+Subject: Re: [PATCH 0/8] hw/cxl: CXL emulation cleanups and minor fixes for
+ upstream
+Message-ID: <Y8lRy7vSqgYfRgTL@memverge.com>
+References: <Y8AppXP+eP9cEz+i@memverge.com>
+ <20230112172130.0000391b@Huawei.com>
+ <Y8CNw/fZT5fZJZcK@memverge.com>
+ <20230113091213.00002146@Huawei.com>
+ <Y8Foj/12QNl0C96o@memverge.com>
+ <20230113144026.000001fb@Huawei.com>
+ <20230113144511.00001207@Huawei.com>
+ <20230113151206.GA20583@wunner.de>
+ <Y8hG4OyJL7l9oD2f@memverge.com>
+ <20230119101946.000079e5@Huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230119101946.000079e5@Huawei.com>
+X-ClientProxiedBy: SJ0PR13CA0171.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::26) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT022:EE_|DS0PR12MB7874:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0bb196b7-3c2c-45a5-665b-08dafa1dcda5
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|PH7PR17MB6507:EE_
+X-MS-Office365-Filtering-Correlation-Id: edc1a0c3-2877-4795-3290-08dafa28667a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 06PrbHP4lKtNtev7P8KOcjkDAGWFHC2VsVll8iLVCcsetqoYqgSa0GRf2Q7xUAccyu4LUHCQ6d00h3gB4kDdvTsLVegb9SuwAQ+CEFg8Szc/g0UmL/7yWFpAax65vwHQth7i4QfoHj+doOVvzY1Fos4ZgqTbhHVr7huZFRIvtLBFZW8iFnm05Bpz5dut+FdiJ5hO14CRIZ4BCl8gX38WioPzQpNS2NGZ8z8xEwgnjkH5kUZIa2SuCATK51I4rZlL2XJ+S2/ZPObqlHT1AKRseBRscoRq2uVYXQIceC8Vk+Ya/rRXB3s/M3Q79u0gqfS9pntDcuyjXCDX2smpFjDMJhziEGrYHKGR9Otxo+DvFzr3oR/JNA6xqpNCKOul2Vv06kJZkztmoTDNBMt5dQDYdDaIIrbNmeW7a86jXILL4dB5S31/zgsuCU6KnsSdSKjrKEIjkBP+r+zY7NKRJNxIui4Oyn05cUBbDlYRP8RQQARnFGtjqOTO2oSM4SWNOUIDu2nJ+5lMVOPw4WmNoNOLjZQndMFBllKz7daLxzKBReQXV2fHuuYwjT6AluHDNSIBLY0yqvKHrXQHkie2in8q4jvVIM9Uu75+m1/FgAhfgy3lkGGn1nvw3TGJE07efTbxBVkwmEcujh8WG4oGYcuGadVeDiSyrrTBVNXco/tHjAJxsN9ov+/mc7B9q3+IzKLhiWnRR+yQkOsAC7BY9+nr6RTGGCbx2FvEiEgcGgwUWBY=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(39860400002)(396003)(451199015)(40470700004)(36840700001)(46966006)(356005)(70206006)(2906002)(15650500001)(4744005)(5660300002)(8936002)(82740400003)(81166007)(36860700001)(70586007)(316002)(47076005)(54906003)(6666004)(110136005)(426003)(478600001)(36756003)(82310400005)(8676002)(40480700001)(4326008)(41300700001)(1076003)(16526019)(336012)(186003)(83380400001)(40460700003)(26005)(2616005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2023 13:05:13.6729
+X-Microsoft-Antispam-Message-Info: 4xogRgNuX6oktqEaD27tTOJIWB5vcd8YPx+gYvKE3kRz5SSBeZ+qnbcBA91oRt6gv9cs88o/pvK/fgSyhLQufwkmb4hB2iOUB3MDsu4swirRcuVTkg47Y/bSCqqbDfAe2mgRILD8E442vy1FyOQ+PcP0wkhv0MrKBWU9uT6ZCWL9M5E+Xlz+c/oBHv9ZxRjXP5qocpJE1J/O4IVpYWUyLvsmIHhL7zIOKinBNn3zcDJXw4J4bpUxGgwhLOyWcwCSfwzpHP/Dy7BaKysTVJkhXZSiK/6e0LiCZ4XF4KKduV+P0C+Vkr7wMxl4Ixgzk9x7cHaTcEpppjZnird62D90KLgeAYqeKJYq1gAQojtAnNI/lNtBbnOzJFXzMAO1Hdb2yb7TykvB6STi/flHcgTiGEfa7Y8NWs+lnKRScTSkvDDS6JtyM8LGxT5MisDC0ceQIgmKxTzZzUvrTAo+xHfopc3EqdR90u7XZgwKf2FT3WYr27yBEvzU5SOySZHUY3V+Tuni2fqThreTb/Ihi8aqDorVROxmb0wOA9arh+9LQ1s+lQaMC665jxhrdO4HVODuIWvVPiVabNwwrtaDGXfPjyL3tivJ3woli/OFbMusvxbUinjwqQdlJHmZTgym6pJbbHcAsh2CpRXyJmlTZ6AxLA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(376002)(136003)(366004)(396003)(39840400004)(451199015)(36756003)(2616005)(44832011)(66476007)(4326008)(5660300002)(4744005)(66556008)(6512007)(186003)(26005)(478600001)(66946007)(6486002)(8676002)(6506007)(6666004)(8936002)(6916009)(54906003)(316002)(41300700001)(2906002)(38100700002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QaGTmG1LjB12TlFhXJR9eMFvVXRQGSVV7Ufq35ohdjCE2K8iWfOtIM0k/J8I?=
+ =?us-ascii?Q?ejKm3AqZR31prmpIae/weoiaKAFtJ4fXxRl8+G4rthVOO0GpyMb4UjFkgqe9?=
+ =?us-ascii?Q?gzqtpQ/BUY0KYbuBA8di04ueztl9/8H0E9fXT9Lkwicp+RuEO9UN/UVz5hMS?=
+ =?us-ascii?Q?ABGOuW2WWUrOfNc3lOrGfL4mh8BWH1EuvnrHe5ujs9KJHvPQTsSYyeAG920+?=
+ =?us-ascii?Q?dFu6oFGDJ0dmw+32j/xpURLRZwmAN8Ak1v08CHW+qPC5AEekbrd0E9ZrsgyR?=
+ =?us-ascii?Q?0g7L75CFLQnlg8oB7PpvwfhvJvw03rZMli8jXetszBddp5DxufVmpC7ahz4F?=
+ =?us-ascii?Q?GFQJRJp38oGb13EGYzjTA9C2lxol7xcHd6gzzIJUQXzAGfAPPoBwGK1Rd1Tw?=
+ =?us-ascii?Q?OGvG150NGaAWPGewpDWFj8f8c3k+viAemzo+lYV5HrUYn1LRy+eq7JpJqHxm?=
+ =?us-ascii?Q?0pVHchKj0gJkoqUu5ui8rGGqGeqJ5vm0wTsv8Ks2cHhQOZ+5Q+8aPYTPJ0sG?=
+ =?us-ascii?Q?9euaTGN38/1aAxDYRpHvfauGcZ3pRo2Al7qxdQte5O9zIJ4N2AXcfPx56eH6?=
+ =?us-ascii?Q?tm2ktahOHoBBkltcGOxJogoGilCvi2cd8ZaUTW92qHTorIQnblF1TeK+9unR?=
+ =?us-ascii?Q?eXDQ55wXWzAKGHKMfZPLDCVTdQATgXv1L2LTqOaACfUE4mOwnFyVwChpxywJ?=
+ =?us-ascii?Q?XFYdJfXiJXAMzTS93FCyPGnuT20Oa27XonVa0fnK+5xhJPrf4935mbOzNiXF?=
+ =?us-ascii?Q?Xndbkhk9Ud25LHKBW+uUZLBGPlW70ozHHG57zqxkcuk0oeCE0j79YLjE8qgc?=
+ =?us-ascii?Q?5aYlHNr5k0gAd/y5LinjN+D1lkpSiWKD5pjm8asW30DMq6jiMruzNXKYCn3d?=
+ =?us-ascii?Q?+fYNHaveGA0fAiTWe80lywyitK7VTneOCmbjHDZ5XKp1oDDZnttrAOVbm9lW?=
+ =?us-ascii?Q?defmSusE23OjuTIKd13+uVrngij/W1MkLNrzZ/CluHxhC//0fJXS9ugbODAj?=
+ =?us-ascii?Q?OWSbPy92rHOKHISRrZPbiuEQH5kUXGPl0wXwU5EAxGnaQ3mmYLeWIhgPVpXs?=
+ =?us-ascii?Q?VVxhqG02WU8KK9H7eWdHN+4SEG5UvNIbCHxaI4S4Mb9wVRbvuVPR+kz5K1Wg?=
+ =?us-ascii?Q?XZKhwJRPFWg5/GVEdZl89QRyC5fOq0W1Lpx1U3eXMVvhkdeOyrGAY/+lhhuJ?=
+ =?us-ascii?Q?gqkZOMpIYhH0+B92WUia12sR3mQKepiJ4naVIDICiZF/MTIODGQMXPiuvc/C?=
+ =?us-ascii?Q?s6X3Lc/u2JY7cdfNEPyqBjFbS7kvA4ggyX5Pbi73KmmgUqPsbZGXII9tS6bR?=
+ =?us-ascii?Q?NUnk7Hm8ReLGwwp6qMFFRuAbFg45oY8k47xe4priFSPUXsnTBn0H5wPgHyFv?=
+ =?us-ascii?Q?oGTT8+gqJExJtfk4XFnN7OyFGqmmn4OFAYZBDCcQSD93rmJhFxb5CesT4OEJ?=
+ =?us-ascii?Q?gZeOowverCNyGJwhynrLW5ZMIOU0pqN3+u0Dm5NNu0BoPHrHmnfBMQ+zKHZt?=
+ =?us-ascii?Q?gQt84F3AQrMfU2OY8NqjmX9ekEHlhXvroTrcA6KLtVzlhZjX/4vYi1dqG5tj?=
+ =?us-ascii?Q?iwLi2fMOgGSlSn+GhaF6xjWU2n2qiDBiCikNW+h+y9A+KZE+bOtdx78bima/?=
+ =?us-ascii?Q?0w=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: edc1a0c3-2877-4795-3290-08dafa28667a
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2023 14:21:05.3297
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0bb196b7-3c2c-45a5-665b-08dafa1dcda5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT022.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7874
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: u5jhGA1pIk18SEhqwUjhkrDWIeV3aeOi8tlh+kY3NIrMnes98ntrbcOnl6ILA+LWSyBXtgAi9O81+fCi6nxrqbcl2Zkgiy3wbskVJLAA2G4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR17MB6507
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Only unsupported mailbox commands are reported in debug messages. A
-list of supported commands is useful too. Change debug messages to
-also report the opcodes of supported commands.
+On Thu, Jan 19, 2023 at 10:19:46AM +0000, Jonathan Cameron wrote:
+> Even if everything else worked, it will currently fail because of the
+> issue with pass through decoders.
+> (Kernel assumes always pass through for single rp, qemu assumes never
+>  pass through - both are valid under spec).
+> Add a second rp for now.  I should be able to post some patches
+> to work around that shortly. 
+> 
 
-On that occasion also add missing trailing newlines.
+*facepalm* i knew this and yet i still kept old configs around.
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/core/mbox.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index a48ade466d6a..ffa9f84c2dce 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -629,11 +629,12 @@ static void cxl_walk_cel(struct cxl_dev_state *cxlds, size_t size, u8 *cel)
- 
- 		if (!cmd) {
- 			dev_dbg(cxlds->dev,
--				"Opcode 0x%04x unsupported by driver", opcode);
-+				"Opcode 0x%04x unsupported by driver\n", opcode);
- 			continue;
- 		}
- 
- 		set_bit(cmd->info.id, cxlds->enabled_cmds);
-+		dev_dbg(cxlds->dev, "Opcode 0x%04x supported by driver\n", opcode);
- 	}
- }
- 
-
-base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
--- 
-2.30.2
-
+I'll do some more testing today with 2 root ports
