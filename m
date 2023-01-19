@@ -2,150 +2,208 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF57C38142
-	for <linux-cxl@archiver.kernel.org>; Thu, 19 Jan 2023 05:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683E3C004D4
+	for <linux-cxl@archiver.kernel.org>; Thu, 19 Jan 2023 08:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229790AbjASFI5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 19 Jan 2023 00:08:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46712 "EHLO
+        id S230055AbjASIVp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 19 Jan 2023 03:21:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbjASFIF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 19 Jan 2023 00:08:05 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4FDE7571F
-        for <linux-cxl@vger.kernel.org>; Wed, 18 Jan 2023 21:03:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674104589; x=1705640589;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lt8UNnjN9GtqzNvv9IUgmlMwC3LdSxDlhaDPgJFZncs=;
-  b=k95xtjno5qekiZgJhQTz5fAaEqBwf898yUbubcsYVbPD8oC54dK9Djkz
-   uEuw9a58bkThqXPq+iOSj3SVZQMYQS2niqE8XMt4RBMD6fXPMmGHIceKc
-   MtehDHU/aAuHnsi1WMSZZZYtZ+r2YRBmxFckfu27IcSxsuuDGYKkZ6xt/
-   pF04om7PQco4ShfCtsfa6hKIYNMdWqYJ6yLQeDjBCKMPllNt9qJsdgusO
-   hPrbySXtr73aKHT81Jye5xAmVxMJg0NNbNW1nD+FSfQp9jKmGAkyVRv0U
-   JJbHOJMoCOVGBwLgjd/KyIlF+l1YJE2nr5tbLEHkDg8QdGxIcdJ3Owbv1
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="304881278"
-X-IronPort-AV: E=Sophos;i="5.97,228,1669104000"; 
-   d="scan'208";a="304881278"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 21:00:29 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="783932587"
-X-IronPort-AV: E=Sophos;i="5.97,228,1669104000"; 
-   d="scan'208";a="783932587"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.119.104])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 21:00:29 -0800
-From:   alison.schofield@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+        with ESMTP id S230080AbjASIVi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 19 Jan 2023 03:21:38 -0500
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2083.outbound.protection.outlook.com [40.107.212.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D532654C1;
+        Thu, 19 Jan 2023 00:21:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nm6N0R0wwg9GK8+72ZW66J40zXZy7FQsxgVy1t7NBs4aKJu3Cf7GHPioos9e6KpQ3lOYkjmVOBnm605jaBwIfx78WA5EyXXCO+A0MfPhIskhIfvZapleTIBdrdlaxIt4DIFXxpImTtN7qkXtw8XEMdmSSMC5Ek6E2Hw/vG5VU2Ak4MospiVKvc0x3UN7vsfSL/vb3zdi12EGXndnar0r0KBe4uD7SEtLbchLBNSfz3FwsqoKcwiG4msrmiYj0Mi3WjIJekn034dQVLox0/9J/36ncP3AcGDY++JCrb2YWCaSNwORIyEtpw3vwvQSLvNVDKo/+OPc3Vzp5/F7ee7/Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2i5tzL6N4mKhgQeh2EiX4+nLLBN1fmo2IWKz502BQe4=;
+ b=HE92pdno2oz8l565R8Ue67PjkwqUHOYHrY7mnD/V0edKnrb1bc2pHJNhV2PKTvJxjRXNHii3OXrbzJKWaLaSvoztQtM2PgFOC9LrTMLjAtlUpcumv2/iTWan4xfh/B392qzfvcsRv/P1KeU7pYK2YAY9ozzjvzNCRy79XY4kuZ1ji82q36anVDimmEi2AjdS3nfL+buoibPy88msXstdXdDI0Hoqubs2ZJpiO3NXXUHSICb1BlU1540JQeylswKnE+hE0cTBxmP5l6C2zGcFWjFwk8pbrYL1mMIsdfdkROKwHUTshBunW+GG2itBPNWbYwqzDk0xpUIhjYBEMgtlWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2i5tzL6N4mKhgQeh2EiX4+nLLBN1fmo2IWKz502BQe4=;
+ b=2j7Di2uriiDXaOjOe94yNyYgKgwhhOepQmhzeytbJmC2P5IMpapAdMjJpmKQ+UJ8APQo5WgHSmc3Is1VT5SYSgBn96f90z7iXpsCX6IJHBaBE0qtNvgWHu+wjhK85n/ObOA4szriKuuNGuT/RvzMHxJAQoFPP7D3MAgIFfag6ag=
+Received: from DS7PR05CA0046.namprd05.prod.outlook.com (2603:10b6:8:2f::14) by
+ CY5PR12MB6623.namprd12.prod.outlook.com (2603:10b6:930:41::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5986.23; Thu, 19 Jan 2023 08:21:32 +0000
+Received: from DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:2f:cafe::aa) by DS7PR05CA0046.outlook.office365.com
+ (2603:10b6:8:2f::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.12 via Frontend
+ Transport; Thu, 19 Jan 2023 08:21:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT089.mail.protection.outlook.com (10.13.173.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6023.16 via Frontend Transport; Thu, 19 Jan 2023 08:21:32 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 19 Jan
+ 2023 02:21:29 -0600
+From:   Robert Richter <rrichter@amd.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v2 6/6] tools/testing/cxl: Add a param to test poison injection limits
-Date:   Wed, 18 Jan 2023 21:00:21 -0800
-Message-Id: <25a3d2a144a9dcc8ce1da241a72917eb7d6ad3f2.1674101475.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <cover.1674101475.git.alison.schofield@intel.com>
-References: <cover.1674101475.git.alison.schofield@intel.com>
+CC:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Robert Richter <rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] cxl/mbox: Fix Payload Length check for Get Log command
+Date:   Thu, 19 Jan 2023 09:20:53 +0100
+Message-ID: <20230119082054.80550-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT089:EE_|CY5PR12MB6623:EE_
+X-MS-Office365-Filtering-Correlation-Id: e08f5a57-d3d4-4ccf-2175-08daf9f62c08
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oIybUPksYAEUEzZlj7/G8z1YMawU1AqBpCw0qSyD/k2n8MQ9zDeoLiRiPNc3gMwx2GwTUX/pRFgBLm7uSWNXh2WKi68FjYDMlRJ8ZWzcomO09rUrOly62H5VeVsT7eADRkXNgL9yg/BMmoOUxU08XTB0i8InDYmtUmdPCtuuiWbIAfkTfbU+oTEeFHR5x/fp3EptyPOq3goMBgRb8wm8BeI/UyjpkCAxFqTfVxvYy1pp01bvm3drEeNLL19y1S5CAOjiPgVd+dizT2njLnOkN3brY2Two6rLG5k8SDof6QIMKlcBMKR8T1vwAVPdslfIVJV3dRc6WCq7eE9NlacMPh0+DhIs+droc+D0lU8aPVMVg7/KzlYi9oX5UYPv69LFxdmk3S/fqdHzyvoB/wp0hJ18L3yjQhnzFhdZu+K5a7H0nYXPNrWSTPWUOUncS6ig+hE4bPMU29TTgcO7osmVAsf4OpCI3EqsOazTSFVXQCXrCMiibaUk4ewpXNn60DHfn/e6qfenqB18ndc+z9oViMJi4aXwIcTqLfwkRn/DdpLuCk5qBfrWBo25+ZxFT7zerFhYkP6mza5LnqNjL15G9vMk68aRrrB0DWeohrxp6PfbqmceEZNmkYUxWIgw2RCsTZ3Zh0xKO3guMhpQftGwrXcuicHtdqwWzuUkfs+3TcH0KfJiKEEt5TiCqHu+wG1nZ9KCX8MEcnrG/Lyo0bBjz+rxfp128urpqzxnY65I/hA=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(70206006)(1076003)(70586007)(336012)(110136005)(2906002)(316002)(41300700001)(83380400001)(8936002)(4326008)(8676002)(47076005)(6666004)(5660300002)(426003)(36860700001)(36756003)(16526019)(2616005)(82310400005)(81166007)(186003)(82740400003)(54906003)(478600001)(26005)(356005)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2023 08:21:32.1410
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e08f5a57-d3d4-4ccf-2175-08daf9f62c08
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6623
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Commit 2aeaf663b85e introduced strict checking for variable length
+payload size validation. The payload length of received data must
+match the size of the requested data by the caller except for the case
+where the min_out value is set.
 
-CXL devices may report a maximum number of addresses that a device
-allows to be poisoned using poison injection. When cxl_test creates
-mock CXL memory devices, it uses MOCK_INJECT_DEV_MAX (8) for all
-mocked memdevs.
+The Get Log command does not have a header with a length field set.
+The Log size is determined by the Get Supported Logs command (CXL 3.0,
+8.2.9.5.1). However, the actual size can be smaller and the number of
+valid bytes in the payload output must be determined reading the
+Payload Length field (CXL 3.0, Table 8-36, Note 2).
 
-Add a module parameter, param_inject_dev_max to module cxl_mock_mem
-so that testers can set custom injection limits.
+Two issues arise: The command can successfully complete with a payload
+length of zero. And, the valid payload length must then also be
+consumed by the caller.
 
-Example: Set MOCK_INJECT_DEV_MAX to 7
-$ echo 7 > /sys/module/cxl_mock_mem/parameters/param_inject_dev_max
+Change cxl_xfer_log() to pass the number of payload bytes back to the
+caller to determine the number of log entries. Implement the payload
+handling as a special case where mbox_cmd->size_out is consulted when
+cxl_internal_send_cmd() returns -EIO. A WARN_ONCE() is added to check
+that -EIO is only returned in case of an unexpected output size.
 
-A simple usage model is to set it before running a test in order to
-emulate a device's poison handling. Changing the max value in the
-midst of inject, clear, and get poison flows, needs to be carefully
-managed by the user.
+Logs can be bigger than the maximum payload length and multiple Get
+Log commands can be issued. If the received payload size is smaller
+than the maximum payload size we can assume all valid bytes have been
+fetched. Stop sending further Get Log commands then.
 
-For example, if the max is reduced after more than max errors are
-injected, those errors will remain in the poison list and may need
-to be cleared out even though a request to read the poison list will
-not show more than max. The driver does not clear out the errors that
-are over max when this parameter changes.
+On that occasion, change debug messages to also report the opcodes of
+supported commands.
 
-Suggested-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+The variable payload commands GET_LSA and SET_LSA are not affected by
+this strict check: SET_LSA cannot be broken because SET_LSA does not
+return an output payload, and GET_LSA never expects short reads.
+
+Fixes: 2aeaf663b85e ("cxl/mbox: Add variable output size validation for internal commands")
+Signed-off-by: Robert Richter <rrichter@amd.com>
 ---
- tools/testing/cxl/test/mem.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+v3:
+ * Added comment to the WARN_ONCE(). (Jonathan)
+ * Passing a size pointer to report the payload size back. (Jonathan)
+ * Moved logging of supported opcodes out of this patch for a separate
+   change. (Jonathan)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 14d74bfb3124..5b938283c1d7 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -17,6 +17,8 @@
- #define MOCK_INJECT_DEV_MAX 8
- #define MOCK_INJECT_TEST_MAX 128
+ drivers/cxl/core/mbox.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index b03fba212799..395a96a3c696 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -170,6 +170,12 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
+ 	out_size = mbox_cmd->size_out;
+ 	min_out = mbox_cmd->min_out;
+ 	rc = cxlds->mbox_send(cxlds, mbox_cmd);
++	/*
++	 * EIO is reserved for a payload size mismatch and mbox_send()
++	 * may not return this error.
++	 */
++	if (WARN_ONCE(rc == -EIO, "Bad return code: -EIO"))
++		return -ENXIO;
+ 	if (rc)
+ 		return rc;
  
-+int param_inject_dev_max = MOCK_INJECT_DEV_MAX;
-+
- static struct cxl_cel_entry mock_cel[] = {
- 	{
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_LOGS),
-@@ -155,7 +157,7 @@ static int mock_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- 			cpu_to_le64(SZ_256M / CXL_CAPACITY_MULTIPLIER),
- 		.total_capacity =
- 			cpu_to_le64(DEV_SIZE / CXL_CAPACITY_MULTIPLIER),
--		.inject_poison_limit = cpu_to_le16(MOCK_INJECT_DEV_MAX),
-+		.inject_poison_limit = cpu_to_le16(param_inject_dev_max),
- 	};
- 
- 	put_unaligned_le24(CXL_POISON_LIST_MAX, id.poison_list_max_mer);
-@@ -589,7 +591,7 @@ static struct cxl_mbox_poison_payload_out
- 	int nr_records = 0;
- 	u64 dpa;
- 
--	po = kzalloc(struct_size(po, record, MOCK_INJECT_DEV_MAX), GFP_KERNEL);
-+	po = kzalloc(struct_size(po, record, param_inject_dev_max), GFP_KERNEL);
- 	if (!po)
- 		return NULL;
- 
-@@ -604,7 +606,7 @@ static struct cxl_mbox_poison_payload_out
- 		po->record[nr_records].address = cpu_to_le64(dpa);
- 		po->record[nr_records].length = cpu_to_le32(1);
- 		nr_records++;
--		if (nr_records == MOCK_INJECT_DEV_MAX)
-+		if (nr_records == param_inject_dev_max)
- 			break;
- 	}
- 
-@@ -638,7 +640,7 @@ static bool mock_poison_dev_max_injected(struct cxl_dev_state *cxlds)
- 		if (mock_poison_list[i].cxlds == cxlds)
- 			count++;
- 	}
--	return (count >= MOCK_INJECT_DEV_MAX);
-+	return (count >= param_inject_dev_max);
+@@ -550,7 +556,7 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
+ 	return 0;
  }
  
- static bool mock_poison_add(struct cxl_dev_state *cxlds, u64 dpa)
-@@ -909,6 +911,9 @@ static struct platform_driver cxl_mock_mem_driver = {
- 	},
- };
+-static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8 *out)
++static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 *size, u8 *out)
+ {
+ 	u32 remaining = size;
+ 	u32 offset = 0;
+@@ -576,6 +582,17 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
+ 		};
  
-+module_param(param_inject_dev_max, int, 0644);
-+MODULE_PARM_DESC(param_inject_dev_max, "Maximum number of physical addresses that can be poisoned in the mock device. The default is 8. The cxl_test driver limit is 128 across all mock devices.");
+ 		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
 +
- module_platform_driver(cxl_mock_mem_driver);
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
++		/*
++		 * The output payload length that indicates the number
++		 * of valid bytes can be smaller than the Log buffer
++		 * size.
++		 */
++		if (rc == -EIO && mbox_cmd.size_out < xfer_size) {
++			offset += mbox_cmd.size_out;
++			break;
++		}
++
+ 		if (rc < 0)
+ 			return rc;
+ 
+@@ -584,6 +601,8 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
+ 		offset += xfer_size;
+ 	}
+ 
++	*size = offset;
++
+ 	return 0;
+ }
+ 
+@@ -694,7 +713,7 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+ 			goto out;
+ 		}
+ 
+-		rc = cxl_xfer_log(cxlds, &uuid, size, log);
++		rc = cxl_xfer_log(cxlds, &uuid, &size, log);
+ 		if (rc) {
+ 			kvfree(log);
+ 			goto out;
+
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 -- 
-2.37.3
+2.30.2
 
