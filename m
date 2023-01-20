@@ -2,155 +2,151 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8046C05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 20 Jan 2023 10:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8A5C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 20 Jan 2023 14:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjATK75 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 20 Jan 2023 05:59:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59978 "EHLO
+        id S230333AbjATOZf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 20 Jan 2023 09:25:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbjATK74 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 Jan 2023 05:59:56 -0500
+        with ESMTP id S231192AbjATOZe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 20 Jan 2023 09:25:34 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96526CDC3
-        for <linux-cxl@vger.kernel.org>; Fri, 20 Jan 2023 02:59:54 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NyxHY6vx3z688Kq;
-        Fri, 20 Jan 2023 18:55:53 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 20 Jan
- 2023 10:59:51 +0000
-Date:   Fri, 20 Jan 2023 10:59:50 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     Gregory Price <gourry.memverge@gmail.com>, <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        <a.manzanares@samsung.com>, <hchkuo@avery-design.com.tw>,
-        <cbrowy@avery-design.com>, <ira.weiny@intel.com>,
-        <dan.j.williams@intel.com>
-Subject: Re: [RFC v4 3/3] hw/cxl: Multi-Region CXL Type-3 Devices (Volatile
- and Persistent)
-Message-ID: <20230120105950.00004d27@Huawei.com>
-In-Reply-To: <Y8nAlDYxCtC/vINL@memverge.com>
-References: <Y6CNcuIzUVmKL0SM@memverge.com>
-        <20221219172502.00001338@Huawei.com>
-        <Y6CloIiuruB/h7qp@memverge.com>
-        <20221220153453.00000436@Huawei.com>
-        <Y6IMoxKZOc7eUPCg@memverge.com>
-        <20230103155629.00007466@Huawei.com>
-        <CAD3UvdQ7nZab7Y+tbc1Ox-zqzse4C16dwv6qtOAgfe4dA6_crQ@mail.gmail.com>
-        <20230103181524.00003e14@huawei.com>
-        <Y8l6wYKstOB/iBzT@memverge.com>
-        <20230119173112.00005acc@Huawei.com>
-        <Y8nAlDYxCtC/vINL@memverge.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7567CD20A
+        for <linux-cxl@vger.kernel.org>; Fri, 20 Jan 2023 06:25:12 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Nz1r44bMyz67Qtq;
+        Fri, 20 Jan 2023 22:20:52 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Fri, 20 Jan 2023 14:24:50 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <alison.schofield@intel.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>
+Subject: [PATCH v2 0/7] hw/cxl: RAS error emulation and injection
+Date:   Fri, 20 Jan 2023 14:24:43 +0000
+Message-ID: <20230120142450.16089-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 19 Jan 2023 17:13:40 -0500
-Gregory Price <gregory.price@memverge.com> wrote:
+v2: Thanks to Mike Maslenkin for review.
+- Fix wrong parameter type to ct3d_qmp_cor_err_to_cxl()
+- Rework use of CXLError local variable in ct3d_reg_write() to improve
+  code readability.
 
-> On Thu, Jan 19, 2023 at 05:31:12PM +0000, Jonathan Cameron wrote:
-> > On Thu, 19 Jan 2023 12:15:45 -0500
-> > Gregory Price <gregory.price@memverge.com> wrote:
-> >   
-> > > Found a bug, not sure how we missed this, probably happed with rebasing
-> > > and some fixups. We're presently reporting the volatile region as
-> > > non-volatile, 1 line patch.
-> > > 
-> > > Jonathan do you want a separate patch shipped or would you rather just
-> > > apply a fixup to the commit in your current branch?  
-> > I'll fix up as I'd only squash the patch in anyway.
-> > 
-> > If tomorrow is slightly less crazy busy than today I'll push out a new
-> > tree with this and the pass through decoders support RFC
-> > (I'll post that to the lists as well)
-> > 
-> > Jonathan
-> >   
-> 
-> Aye aye! 
-> 
-> One other change to consider: the .EFI_memory_type_attr right now is set
-> to RESERVED.  Should this field actually be EFI_MEMORY_SP? Or is there a
-> reason for explicitly Reserved?
-> 
-> 0: EfiConventionalMemory
-> 1: EfiConventionalMemory w/ EFI_MEMORY_SP Attribute
-> 2: EfiReservedMemoryType
-> 
-> I remember reading a while back that the intended marking is
-> special-purpose rather than reserved, but i'm hitting my wall on
-> knowledge.  
-> 
-> Dan may know, but I couldn't divine the correct setting from the kernel
-> (obviously this is EFI level code, so i didn't expect to).
+CXL error reporting is complex. This series only covers the protocol
+related errors reported via PCIE AER - Ira Weiny has posted support for
+Event log based injection and I will post an update of Poison list injection
+shortly. My proposal is to upstream this one first, followed by Ira's Event
+Log series, then finally the Poison List handling. That is based on likely
+order of Linux kernel support (the support for this type of error reporting
+went in during the recent merge window, the others are still under review).
+Note we may propose other non error related features in between!
+The current revisions of all the error injection can be found at:
+https://gitlab.com/jic23/qemu/-/tree/cxl-2023-01-11
 
-Yes, would be better to report as EfiConventionalMemory + SP
-Shouldn't hugely matter from practical point of view though (I haven't
-checked) as both mean driver managed and this is more about
-policy than anything else.
+In order to test the kernel support for RAS error handling, I previously
+provided this series via gitlab, enabling David Jiang's kernel patches
+to be tested.
 
-> 
-> 
-> 
-> One other thing that I am noticing:  When a CFMW is registered, an
-> nvdimm_bridge device becomes present in /sys/bus/cxl/devices -
-> regardless of whether the type3 device is persistent or volatile.
-> 
+Now that Linux kernel support is upstream, this series is proposing the
+support for upstream inclusion in QEMU. Note that support for Multiple
+Header Recording has been added to QEMU the meantime and a kernel
+patch to use that feature sent out.
 
-That's one for Dan.  Key here is I don't think anyone is claiming the
-kernel code yet supports 'hot plug / cold plug' of volatile type 3
-devices.  I expect a non trivial amount of work to enable that
-simply because it hasn't previously been of interest.
+https://lore.kernel.org/linux-cxl/20230113154058.16227-1-Jonathan.Cameron@huawei.com/T/#t
 
-> This makes me believe we aren't setting something up correctly in the
-> CDAT or something, but other than the below changes everything else
-> looks correct.  This could imply a kernel driver bug, but i've been
-> validating against real hardware and this behavior is not seen, even
-> with functional CXL memory expander devices (which the BIOS obviously
-> has a hand in setting up).
-> 
-> I started validating the DVSECs, but likewise i didn't see any
-> indication of error either.
-> 
-> 
-> 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 919cdf141e..4daa0cf0f6 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -132,8 +132,9 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->              .length = sizeof(*dsemts),
->          },
->          .DSMAS_handle = dsmad_handle,
-> -        /* Reserved - the non volatile from DSMAS matters */
-> -        .EFI_memory_type_attr = 2,
-> +        /* Reserved if NV - the non volatile from DSMAS matters
-> +         * otherwise label this EFI_MEMORY_SP (special purpose) */
-> +        .EFI_memory_type_attr = is_pmem ? 2 : 1,
->          .DPA_offset = 0,
->          .DPA_length = int128_get64(mr->size),
->      };
-> @@ -187,7 +188,7 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->      /* Now fill them in */
->      if (volatile_mr) {
->          rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
-> -                                           true, 0);
-> +                                           false, 0);
->          if (rc < 0) {
->              return rc;
->          }
+There are two generic PCI AER precursor feature additions.
+1) The PCI_ERR_UCOR_MASK register has not been implemented until now
+   and is necessary for correct emulation.
+2) The routing for AER errors, via existing AER error injection, only
+   covered one of two paths given in the PCIe base specification,
+   unfortunately not the one used by the Linux kernel CXL support.
+
+The use of MSI for the CXL root ports, both makes sense from the point
+of view of how it may well be implemented, and works around the documented
+lack of PCI interrupt routing in i386/q35. I have a hack that lets
+us correctly route those interrupts but don't currently plan to post it.
+
+The actual CXL error injection uses a new QMP interface as documented
+in the final patch description. The existing AER error injection
+internals are reused though it's HMP interface is not.
+
+Injection via QMP:
+{ "execute": "qmp_capabilities" }
+...
+{ "execute": "cxl-inject-uncorrectable-errors",
+  "arguments": {
+    "path": "/machine/peripheral/cxl-pmem0",
+    "errors": [
+        {
+            "type": "cache-address-parity",
+            "header": [ 3, 4]
+        },
+        {
+            "type": "cache-data-parity",
+            "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+        },
+        {
+            "type": "internal",
+            "header": [ 1, 2, 4]
+        }
+        ]
+  }}
+...
+{ "execute": "cxl-inject-correctable-error",
+    "arguments": {
+        "path": "/machine/peripheral/cxl-pmem0",
+        "type": "physical",
+        "header": [ 3, 4]
+    } }
+
+Based on top of:
+https://lore.kernel.org/all/20230112102644.27830-1-Jonathan.Cameron@huawei.com/
+[PATCH v2 0/8] hw/cxl: CXL emulation cleanups and minor fixes for upstream
+
+Jonathan Cameron (7):
+  hw/pci/aer: Implement PCI_ERR_UNCOR_MASK register
+  hw/pci/aer: Add missing routing for AER errors
+  hw/pci-bridge/cxl_root_port: Wire up AER
+  hw/pci-bridge/cxl_root_port: Wire up MSI
+  hw/mem/cxl-type3: Add AER extended capability
+  hw/pci/aer: Make PCIE AER error injection facility available for other
+    emulation to use.
+  hw/mem/cxl_type3: Add CXL RAS Error Injection Support.
+
+ hw/cxl/cxl-component-utils.c   |   4 +-
+ hw/mem/cxl_type3.c             | 303 +++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3_stubs.c       |  10 ++
+ hw/mem/meson.build             |   2 +
+ hw/pci-bridge/cxl_root_port.c  |  64 +++++++
+ hw/pci/pci-internal.h          |   1 -
+ hw/pci/pcie_aer.c              |  14 +-
+ include/hw/cxl/cxl_component.h |  26 +++
+ include/hw/cxl/cxl_device.h    |  11 ++
+ include/hw/pci/pcie_aer.h      |   1 +
+ include/hw/pci/pcie_regs.h     |   3 +
+ qapi/cxl.json                  | 113 ++++++++++++
+ qapi/meson.build               |   1 +
+ qapi/qapi-schema.json          |   1 +
+ 14 files changed, 551 insertions(+), 3 deletions(-)
+ create mode 100644 hw/mem/cxl_type3_stubs.c
+ create mode 100644 qapi/cxl.json
+
+-- 
+2.37.2
 
