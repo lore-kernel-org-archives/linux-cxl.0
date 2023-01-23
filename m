@@ -2,271 +2,87 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18049C38142
-	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 11:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2640C54E94
+	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 12:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231496AbjAWLOL convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 Jan 2023 06:14:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        id S229502AbjAWMRR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 Jan 2023 07:17:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231294AbjAWLOK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 06:14:10 -0500
+        with ESMTP id S231529AbjAWMRQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 07:17:16 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F49A256;
-        Mon, 23 Jan 2023 03:14:08 -0800 (PST)
-Received: from lhrpeml100001.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P0nSW3lsYz67L8m;
-        Mon, 23 Jan 2023 19:10:03 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml100001.china.huawei.com (7.191.160.183) with Microsoft SMTP Server
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1648023873
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 04:17:14 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P0pxG4ZF7z67tG2;
+        Mon, 23 Jan 2023 20:16:34 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Mon, 23 Jan 2023 11:14:05 +0000
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2375.034;
- Mon, 23 Jan 2023 11:14:05 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [RFC PATCH 2/4] rasdaemon: Add support for the CXL poison events
-Thread-Topic: [RFC PATCH 2/4] rasdaemon: Add support for the CXL poison events
-Thread-Index: AQHZLCoOJbC9T/czmEWI0JFEpON+Rq6reT8AgABihDA=
-Date:   Mon, 23 Jan 2023 11:14:05 +0000
-Message-ID: <f0dc812ee02e4358b8c457cb2d558615@huawei.com>
-References: <20230119171809.1406-1-shiju.jose@huawei.com>
- <20230119171809.1406-3-shiju.jose@huawei.com>
- <Y84WZp4K3mLzLkwh@aschofie-mobl2>
-In-Reply-To: <Y84WZp4K3mLzLkwh@aschofie-mobl2>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.169.171]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+ 15.1.2375.34; Mon, 23 Jan 2023 12:17:12 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <alison.schofield@intel.com>, Fan Ni <fan.ni@samsung.com>
+Subject: [RFC PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
+Date:   Mon, 23 Jan 2023 12:17:10 +0000
+Message-ID: <20230123121712.29892-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Alison,
+Until now, testing using CXL has relied up always using two root ports
+below a host bridge, to work around a current assumption in the Linux
+kernel support that, in the single root port case, the implementation will
+use the allowed passthrough decoder implementation choice. If that choice
+is made all accesses are routed from the host bridge to the single
+root port that is present. Effectively we have a pass through decoder
+(it is called that in the kernel driver).
 
-Thanks for the feedback.
+This patch series implements that functionality and makes it the default
+See patch 2 for a discussion of why I think we can make this change
+without backwards compatibility issues (basically if it didn't work before
+who are we breaking by making it work?)
 
->-----Original Message-----
->From: Alison Schofield <alison.schofield@intel.com>
->Sent: 23 January 2023 05:09
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-edac@vger.kernel.org; linux-cxl@vger.kernel.org;
->mchehab@kernel.org; Jonathan Cameron
-><jonathan.cameron@huawei.com>; Linuxarm <linuxarm@huawei.com>
->Subject: Re: [RFC PATCH 2/4] rasdaemon: Add support for the CXL poison
->events
->
->On Thu, Jan 19, 2023 at 05:18:07PM +0000, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add support to log and record the CXL poison events.
->>
->> The corresponding Kernel patches here:
->> https://lore.kernel.org/lkml/cover.1668115235.git.alison.schofield@int
->> el.com/
->>
->> Presently RFC draft version for logging, could be extended for the
->> policy based recovery action for the frequent poison events depending
->> on the above kernel patches.
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  Makefile.am       |   8 ++-
->>  configure.ac      |  11 ++++
->>  ras-cxl-handler.c | 162
->> ++++++++++++++++++++++++++++++++++++++++++++++
->>  ras-cxl-handler.h |  24 +++++++
->>  ras-events.c      |  15 +++++
->>  ras-events.h      |   1 +
->>  ras-record.c      |  81 +++++++++++++++++++++++
->>  ras-record.h      |  20 ++++++
->>  ras-report.c      |  83 ++++++++++++++++++++++++
->>  ras-report.h      |   2 +
->>  10 files changed, 406 insertions(+), 1 deletion(-)  create mode
->> 100644 ras-cxl-handler.c  create mode 100644 ras-cxl-handler.h
->>
->> diff --git a/Makefile.am b/Makefile.am index a322b9a..4216370 100644
->> --- a/Makefile.am
->> +++ b/Makefile.am
->> @@ -69,13 +69,19 @@ endif
->>  if WITH_AMP_NS_DECODE
->>     rasdaemon_SOURCES += non-standard-ampere.c  endif
->> +
->> +if WITH_CXL
->> +   rasdaemon_SOURCES += ras-cxl-handler.c endif
->> +
->>  rasdaemon_LDADD = -lpthread $(SQLITE3_LIBS) libtrace/libtrace.a
->>
->>  include_HEADERS = config.h  ras-events.h  ras-logger.h  ras-mc-handler.h \
->>  		  ras-aer-handler.h ras-mce-handler.h ras-record.h bitfield.h
->ras-report.h \
->>  		  ras-extlog-handler.h ras-arm-handler.h ras-non-standard-
->handler.h \
->>  		  ras-devlink-handler.h ras-diskerror-handler.h rbtree.h ras-
->page-isolation.h \
->> -		  non-standard-hisilicon.h non-standard-ampere.h ras-
->memory-failure-handler.h
->> +		  non-standard-hisilicon.h non-standard-ampere.h ras-
->memory-failure-handler.h \
->> +		  ras-cxl-handler.h
->>
->>  # This rule can't be called with more than one Makefile job (like
->> make -j8)  # I can't figure out a way to fix that diff --git
->> a/configure.ac b/configure.ac index a77991f..c18a67d 100644
->> --- a/configure.ac
->> +++ b/configure.ac
->> @@ -161,6 +161,16 @@ AS_IF([test "x$enable_amp_ns_decode" = "xyes"
->||
->> test "x$enable_all" == "xyes"],
->AM_CONDITIONAL([WITH_AMP_NS_DECODE],
->> [test x$enable_amp_ns_decode = xyes || test x$enable_all == xyes])
->> AM_COND_IF([WITH_AMP_NS_DECODE], [USE_AMP_NS_DECODE="yes"],
->> [USE_AMP_NS_DECODE="no"])
->>
->> +AC_ARG_ENABLE([cxl],
->> +    AS_HELP_STRING([--enable-cxl], [enable CXL events (currently
->> +experimental)]))
->> +
->> +AS_IF([test "x$enable_cxl" = "xyes" || test "x$enable_all" ==
->> +"xyes"], [
->> +  AC_DEFINE(HAVE_CXL,1,"have CXL events collect")
->> +  AC_SUBST([WITH_CXL])
->> +])
->> +AM_CONDITIONAL([WITH_CXL], [test x$enable_cxl = xyes || test
->> +x$enable_all == xyes]) AM_COND_IF([WITH_CXL], [USE_CXL="yes"],
->> +[USE_CXL="no"])
->> +
->>  test "$sysconfdir" = '${prefix}/etc' && sysconfdir=/etc
->>
->>  CFLAGS="$CFLAGS -Wall -Wmissing-prototypes -Wstrict-prototypes"
->> @@ -201,4 +211,5 @@ compile time options summary
->>      Memory Failure      : $USE_MEMORY_FAILURE
->>      Memory CE PFA       : $USE_MEMORY_CE_PFA
->>      AMP RAS errors      : $USE_AMP_NS_DECODE
->> +    CXL events          : $USE_CXL
->>  EOF
->> diff --git a/ras-cxl-handler.c b/ras-cxl-handler.c new file mode
->> 100644 index 0000000..11531ef
->> --- /dev/null
->> +++ b/ras-cxl-handler.c
->> @@ -0,0 +1,162 @@
->> +/*
->> + * Copyright (c) Huawei Technologies Co., Ltd. 2023. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or
->> +modify
->> + * it under the terms of the GNU General Public License as published
->> +by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <stdio.h>
->> +#include <stdlib.h>
->> +#include <string.h>
->> +#include <unistd.h>
->> +#include "libtrace/kbuffer.h"
->> +#include "ras-cxl-handler.h"
->> +#include "ras-record.h"
->> +#include "ras-logger.h"
->> +#include "ras-report.h"
->> +
->> +/* Poison List: Payload out flags */
->> +#define CXL_POISON_FLAG_MORE            BIT(0)
->> +#define CXL_POISON_FLAG_OVERFLOW        BIT(1)
->> +#define CXL_POISON_FLAG_SCANNING        BIT(2)
->> +
->> +/* CXL poison - source types */
->> +enum cxl_poison_source {
->> +	CXL_POISON_SOURCE_UNKNOWN = 0,
->> +	CXL_POISON_SOURCE_EXTERNAL = 1,
->> +	CXL_POISON_SOURCE_INTERNAL = 2,
->> +	CXL_POISON_SOURCE_INJECTED = 3,
->> +	CXL_POISON_SOURCE_VENDOR = 7,
->> +};
->> +
->> +int ras_cxl_poison_event_handler(struct trace_seq *s,
->> +				 struct pevent_record *record,
->> +				 struct event_format *event, void *context) {
->> +	int len;
->> +	unsigned long long val;
->> +	struct ras_events *ras = context;
->> +	time_t now;
->> +	struct tm *tm;
->> +	struct ras_cxl_poison_event ev;
->> +
->> +	now = record->ts/user_hz + ras->uptime_diff;
->> +	tm = localtime(&now);
->> +	if (tm)
->> +		strftime(ev.timestamp, sizeof(ev.timestamp),
->> +			 "%Y-%m-%d %H:%M:%S %z", tm);
->> +	else
->> +		strncpy(ev.timestamp, "1970-01-01 00:00:00 +0000",
->sizeof(ev.timestamp));
->> +	trace_seq_printf(s, "%s ", ev.timestamp);
->> +
->> +	ev.memdev = pevent_get_field_raw(s, event, "memdev",
->> +					   record, &len, 1);
->> +	if (!ev.memdev)
->> +		return -1;
->> +	trace_seq_printf(s, "memdev:%s ", ev.memdev);
->> +
->> +	ev.pcidev = pevent_get_field_raw(s, event, "pcidev",
->> +					   record, &len, 1);
->> +	if (!ev.pcidev)
->> +		return -1;
->> +	trace_seq_printf(s, "pcidev:%s ", ev.pcidev);
->> +
->> +	ev.region = pevent_get_field_raw(s, event, "region",
->> +					   record, &len, 1);
->> +	if (!ev.region)
->> +		return -1;
->> +	trace_seq_printf(s, "region:%s ", ev.region);
->
->Hi Shiju,
->
->Does the above work OK when the region name is assigned a NULL string?
->That's what happens in the trace code (__assign_str(region, "");) when region
->is NULL.
->
-I checked. It work ok with NULL string in the region name because pevent_get_field_raw()
-returns the pointer to the data field.  
-   
->Not sure if this is different since you last tested w posted poison set. Latest
->are here:
->
->https://lore.kernel.org/linux-
->cxl/de11785ff05844299b40b100f8e0f56c7eef7f08.1674070170.git.alison.schofie
->ld@intel.com/
+Whilst this limitation has been known since the initial QEMU patch
+postings / kernel CXL region support, Fan Ni Ran into it recently reminding
+me that we should solve it.
 
-I tested today with the v5 patch set, it worked ok.
- 
->
->Alison
->
->> +
->> +	ev.uuid = pevent_get_field_raw(s, event, "uuid",
-...
->>
->> --
->> 2.25.1
->>
-Thanks,
-Shiju
+https://lore.kernel.org/linux-cxl/20230113171044.GA24788@bgt-140510-bm03/
+
+Tree with a large set of patches before this at:
+https://gitlab.com/jic23/qemu/-/tree/cxl-2023-01-20
+
+I've done some basic testing, though I did hit what appears to be
+a kernel race on region bring up of existing region / namespace in a
+1HB 2RP 2EP test case. That is proving hard to replicate consistently
+but doesn't seem to have anything to do with the emulation other than
+perhaps we are opening up a race by responding slowly to something.
+
+Jonathan Cameron (2):
+  hw/pci: Add pcie_count_ds_port() and pcie_find_port_first() helpers
+  hw/pxb-cxl: Support passthrough HDM Decoders unless overridden
+
+ hw/cxl/cxl-host.c                   | 31 +++++++++++++--------
+ hw/pci-bridge/pci_expander_bridge.c | 43 +++++++++++++++++++++++++----
+ hw/pci/pcie_port.c                  | 38 +++++++++++++++++++++++++
+ include/hw/cxl/cxl.h                |  1 +
+ include/hw/cxl/cxl_component.h      |  1 +
+ include/hw/pci/pci_bridge.h         |  1 +
+ include/hw/pci/pcie_port.h          |  2 ++
+ 7 files changed, 100 insertions(+), 17 deletions(-)
+
+-- 
+2.37.2
+
