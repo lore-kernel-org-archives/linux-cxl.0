@@ -2,37 +2,40 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3A0C25B50
-	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 10:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B28C38142
+	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 10:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231639AbjAWKUO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 Jan 2023 05:20:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49020 "EHLO
+        id S231468AbjAWK17 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 Jan 2023 05:27:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232004AbjAWKUN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 05:20:13 -0500
-X-Greylist: delayed 355 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 Jan 2023 02:20:10 PST
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583DA113E2;
-        Mon, 23 Jan 2023 02:20:10 -0800 (PST)
+        with ESMTP id S229548AbjAWK17 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 05:27:59 -0500
+X-Greylist: delayed 381 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 Jan 2023 02:27:57 PST
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91B6B126E8;
+        Mon, 23 Jan 2023 02:27:56 -0800 (PST)
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 1BF4410189E10;
-        Mon, 23 Jan 2023 11:14:13 +0100 (CET)
+        by mailout3.hostsharing.net (Postfix) with ESMTPS id 64FF8101E6B03;
+        Mon, 23 Jan 2023 11:21:31 +0100 (CET)
 Received: from localhost (unknown [89.246.108.87])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id EB416600D2E1;
-        Mon, 23 Jan 2023 11:14:12 +0100 (CET)
-X-Mailbox-Line: From 4dba01ff87d630abdd5a09d52e954d3c212d2018 Mon Sep 17 00:00:00 2001
-Message-Id: <cover.1674468099.git.lukas@wunner.de>
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 27548600D2E1;
+        Mon, 23 Jan 2023 11:21:31 +0100 (CET)
+X-Mailbox-Line: From cc4b61809e2520d835cf3d4f62e7d5ed00a9d031 Mon Sep 17 00:00:00 2001
+Message-Id: <cc4b61809e2520d835cf3d4f62e7d5ed00a9d031.1674468099.git.lukas@wunner.de>
+In-Reply-To: <cover.1674468099.git.lukas@wunner.de>
+References: <cover.1674468099.git.lukas@wunner.de>
 From:   Lukas Wunner <lukas@wunner.de>
-Date:   Mon, 23 Jan 2023 11:10:00 +0100
-Subject: [PATCH v2 00/10] Collection of DOE material
+Date:   Mon, 23 Jan 2023 11:11:00 +0100
+Subject: [PATCH v2 01/10] PCI/DOE: Silence WARN splat with
+ CONFIG_DEBUG_OBJECTS=y
 To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
 Cc:     Gregory Price <gregory.price@memverge.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -48,57 +51,70 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Collection of DOE material, v2:
+Gregory Price reports a WARN splat with CONFIG_DEBUG_OBJECTS=y upon CXL
+probing because pci_doe_submit_task() invokes INIT_WORK() instead of
+INIT_WORK_ONSTACK() for a work_struct that was allocated on the stack.
 
-* Fix WARN splat reported by Gregory Price
-* Migrate to synchronous API
-* Create DOE mailboxes in PCI core instead of in drivers
-* No longer require request and response size to be multiple of 4 bytes
+All callers of pci_doe_submit_task() allocate the work_struct on the
+stack, so replace INIT_WORK() with INIT_WORK_ONSTACK() as a backportable
+short-term fix.
 
-This is in preparation for CMA device authentication (PCIe r6.0, sec 6.31),
-which performs DOE exchanges of irregular size and is going to be handled
-in the PCI core.  The synchronous API reduces code size for DOE users.
+Stacktrace for posterity:
 
-Link to CMA development branch:
-https://github.com/l1k/linux/commits/doe
+WARNING: CPU: 0 PID: 23 at lib/debugobjects.c:545 __debug_object_init.cold+0x18/0x183
+CPU: 0 PID: 23 Comm: kworker/u2:1 Not tainted 6.1.0-0.rc1.20221019gitaae703b02f92.17.fc38.x86_64 #1
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ pci_doe_submit_task+0x5d/0xd0
+ pci_doe_discovery+0xb4/0x100
+ pcim_doe_create_mb+0x219/0x290
+ cxl_pci_probe+0x192/0x430
+ local_pci_probe+0x41/0x80
+ pci_device_probe+0xb3/0x220
+ really_probe+0xde/0x380
+ __driver_probe_device+0x78/0x170
+ driver_probe_device+0x1f/0x90
+ __driver_attach_async_helper+0x5c/0xe0
+ async_run_entry_fn+0x30/0x130
+ process_one_work+0x294/0x5b0
 
-
-Changes v1 -> v2:
-* [PATCH v2 01/10] PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y 
+Fixes: 9d24322e887b ("PCI/DOE: Add DOE mailbox support functions")
+Link: https://lore.kernel.org/linux-cxl/Y1bOniJliOFszvIK@memverge.com/
+Reported-by: Gregory Price <gregory.price@memverge.com>
+Tested-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v6.0+
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ Changes v1 -> v2:
   * Add note in kernel-doc of pci_doe_submit_task() that pci_doe_task must
     be allocated on the stack (Jonathan)
-* [PATCH v2 05/10] PCI/DOE: Make asynchronous API private
-  * Deduplicate note in kernel-doc of struct pci_doe_task that caller need
-    not initialize certain fields (Jonathan)
 
-Link to v1:
-https://lore.kernel.org/linux-pci/cover.1669608950.git.lukas@wunner.de/
+ drivers/pci/doe.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-
-Lukas Wunner (10):
-  PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y
-  PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y
-  PCI/DOE: Provide synchronous API and use it internally
-  cxl/pci: Use synchronous API for DOE
-  PCI/DOE: Make asynchronous API private
-  PCI/DOE: Allow mailbox creation without devres management
-  PCI/DOE: Create mailboxes on device enumeration
-  cxl/pci: Use CDAT DOE mailbox created by PCI core
-  PCI/DOE: Make mailbox creation API private
-  PCI/DOE: Relax restrictions on request and response size
-
- .clang-format           |   1 -
- drivers/cxl/core/pci.c  |  89 ++++--------
- drivers/cxl/cxlmem.h    |   3 -
- drivers/cxl/pci.c       |  49 -------
- drivers/pci/doe.c       | 315 ++++++++++++++++++++++++++++++----------
- drivers/pci/pci.h       |  10 ++
- drivers/pci/probe.c     |   1 +
- drivers/pci/remove.c    |   2 +
- include/linux/pci-doe.h |  62 +-------
- include/linux/pci.h     |   3 +
- 10 files changed, 283 insertions(+), 252 deletions(-)
-
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 66d9ab288646..12a6752351bf 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -520,6 +520,8 @@ EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+  * task->complete will be called when the state machine is done processing this
+  * task.
+  *
++ * @task must be allocated on the stack.
++ *
+  * Excess data will be discarded.
+  *
+  * RETURNS: 0 when task has been successfully queued, -ERRNO on error
+@@ -541,7 +543,7 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+ 		return -EIO;
+ 
+ 	task->doe_mb = doe_mb;
+-	INIT_WORK(&task->work, doe_statemachine_work);
++	INIT_WORK_ONSTACK(&task->work, doe_statemachine_work);
+ 	queue_work(doe_mb->work_queue, &task->work);
+ 	return 0;
+ }
 -- 
 2.39.1
 
