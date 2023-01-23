@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1A5C38142
-	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 14:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C057C05027
+	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 15:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbjAWO6y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 Jan 2023 09:58:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        id S231856AbjAWPKj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 Jan 2023 10:10:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbjAWO6y (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 09:58:54 -0500
+        with ESMTP id S231547AbjAWPKi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 10:10:38 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D2EE7DB5
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 06:58:52 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P0tWl60tfz67n8d;
-        Mon, 23 Jan 2023 22:58:11 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA78E3BC
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 07:10:36 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P0tnJ133Xz6J9th;
+        Mon, 23 Jan 2023 23:09:56 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 23 Jan
- 2023 14:58:49 +0000
-Date:   Mon, 23 Jan 2023 14:58:48 +0000
+ 2023 15:10:33 +0000
+Date:   Mon, 23 Jan 2023 15:10:32 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     <alison.schofield@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -29,201 +29,170 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Ben Widawsky" <bwidawsk@kernel.org>,
         Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/trace: Add an HPA to cxl_poison trace events
-Message-ID: <20230123145848.00007b5f@Huawei.com>
-In-Reply-To: <20230118201805.485232-1-alison.schofield@intel.com>
-References: <20230118201805.485232-1-alison.schofield@intel.com>
+Subject: Re: [PATCH v2 3/6] tools/testing/cxl: Mock the Inject Poison
+ mailbox command
+Message-ID: <20230123151032.00003d06@Huawei.com>
+In-Reply-To: <e7ee818cd52b702e69bca6cd2f07aa786245b88c.1674101475.git.alison.schofield@intel.com>
+References: <cover.1674101475.git.alison.schofield@intel.com>
+        <e7ee818cd52b702e69bca6cd2f07aa786245b88c.1674101475.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 18 Jan 2023 12:18:05 -0800
+On Wed, 18 Jan 2023 21:00:18 -0800
 alison.schofield@intel.com wrote:
 
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> When a cxl_poison trace event is reported by region, the poisoned
-> Device Physical Address (DPA) can be translated to a Host Physical
-> Address (HPA) for consumption by user space.
+> Mock the injection of poison by storing the device:address entries in
+> mock_poison_list[]. Enforce a limit of 8 poison injections per memdev
+> device and 128 total entries for the cxl_test mock driver.
 > 
-> Translate and add the resulting HPA to the cxl_poison trace event.
-> Follow the device decode logic as defined in the CXL Spec 3.0 Section
-> 8.2.4.19.13.
-> 
-> When the poison request is by memdev, no HPA translation is performed
-> and ULLONG_MAX is assigned to the cxl_poison hpa trace field.
+> Introducing the mock_poison[] list here, makes it available for use in
+> the mock of Clear Poison, and the mock of Get Poison List.
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-The offset stuff for non power of 2 gives me a headache, but I 'think'
-you have it right... We don't yet have support in QEMU for those
-modes, so I can't easily brute force test it.  With all that in mind.
-
+I'm not that keen on the global nature of the list, but maybe that's
+enough for this test for now at least. Nothing stops us making it more
+flexible later.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Trivial style comment inline.
-
 > ---
+>  tools/testing/cxl/test/mem.c | 77 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
 > 
-> Built on cxl/next plus Patchset: CXL Poison List Retrieval & Tracing [1]
-> 
-> Changes in v2:
-> - Rebased to cxl/next
-> 
-> Link to v1: https://lore.kernel.org/linux-cxl/20230104210401.195808-1-alison.schofield@intel.com/
-> 
-> [1] https://lore.kernel.org/linux-cxl/de11785ff05844299b40b100f8e0f56c7eef7f08.1674070170.git.alison.schofield@intel.com/
-> 
-> 
->  drivers/cxl/core/trace.c | 94 ++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/trace.h |  9 +++-
->  2 files changed, 102 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
-> index 29ae7ce81dc5..d0403dc3c8ab 100644
-> --- a/drivers/cxl/core/trace.c
-> +++ b/drivers/cxl/core/trace.c
-> @@ -1,5 +1,99 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index 09dc358bb33b..b0ecdc4e7c87 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -14,6 +14,9 @@
+>  #define DEV_SIZE SZ_2G
+>  #define EFFECT(x) (1U << x)
 >  
-> +#include <cxl.h>
-> +#include "core.h"
+> +#define MOCK_INJECT_DEV_MAX 8
+> +#define MOCK_INJECT_TEST_MAX 128
 > +
->  #define CREATE_TRACE_POINTS
->  #include "trace.h"
+>  static struct cxl_cel_entry mock_cel[] = {
+>  	{
+>  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_LOGS),
+> @@ -43,6 +46,10 @@ static struct cxl_cel_entry mock_cel[] = {
+>  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
+>  		.effect = cpu_to_le16(0),
+>  	},
+> +	{
+> +		.opcode = cpu_to_le16(CXL_MBOX_OP_INJECT_POISON),
+> +		.effect = cpu_to_le16(0),
+> +	},
+>  };
+>  
+>  /* See CXL 2.0 Table 181 Get Health Info Output Payload */
+> @@ -144,6 +151,7 @@ static int mock_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+>  			cpu_to_le64(SZ_256M / CXL_CAPACITY_MULTIPLIER),
+>  		.total_capacity =
+>  			cpu_to_le64(DEV_SIZE / CXL_CAPACITY_MULTIPLIER),
+> +		.inject_poison_limit = cpu_to_le16(MOCK_INJECT_DEV_MAX),
+>  	};
+>  
+>  	put_unaligned_le24(CXL_POISON_LIST_MAX, id.poison_list_max_mer);
+> @@ -565,6 +573,11 @@ static int mock_health_info(struct cxl_dev_state *cxlds,
+>  	return 0;
+>  }
+>  
+> +static struct mock_poison {
+> +	struct cxl_dev_state *cxlds;
+> +	u64 dpa;
+> +} mock_poison_list[MOCK_INJECT_TEST_MAX];
 > +
-> +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+>  static int mock_get_poison(struct cxl_dev_state *cxlds,
+>  			   struct cxl_mbox_cmd *cmd)
+>  {
+> @@ -593,6 +606,67 @@ static int mock_get_poison(struct cxl_dev_state *cxlds,
+>  	return 0;
+>  }
+>  
+> +static bool mock_poison_dev_max_injected(struct cxl_dev_state *cxlds)
 > +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	int gran = p->interleave_granularity;
-> +	int ways = p->interleave_ways;
-> +	u64 offset;
+> +	int count = 0;
 > +
-> +	/* Is the hpa within this region at all */
-
-For comments we could go with HPA... Doesn't really matter though.
-
- 
-> +	if (hpa < p->res->start || hpa > p->res->end) {
-> +		dev_dbg(&cxlr->dev,
-> +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> +	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
+> +		if (mock_poison_list[i].cxlds == cxlds)
+> +			count++;
+> +	}
+> +	return (count >= MOCK_INJECT_DEV_MAX);
+> +}
+> +
+> +static bool mock_poison_add(struct cxl_dev_state *cxlds, u64 dpa)
+> +{
+> +	if (mock_poison_dev_max_injected(cxlds)) {
+> +		dev_dbg(cxlds->dev,
+> +			"Device poison injection limit has been reached: %d\n",
+> +			MOCK_INJECT_DEV_MAX);
 > +		return false;
 > +	}
 > +
-> +	/* Is the hpa in an expected chunk for its pos(-ition) */
-> +	offset = hpa - p->res->start;
-> +	offset = do_div(offset, gran * ways);
-> +	if ((offset >= pos * gran) && (offset < (pos + 1) * gran))
-> +		return true;
-> +
-> +	dev_dbg(&cxlr->dev,
-> +		"Addr trans fail: hpa 0x%llx not in expected chunk\n", hpa);
+> +	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
+> +		if (!mock_poison_list[i].cxlds) {
+> +			mock_poison_list[i].cxlds = cxlds;
+> +			mock_poison_list[i].dpa = dpa;
+> +			return true;
+> +		}
+> +	}
+> +	dev_dbg(cxlds->dev,
+> +		"Mock test poison injection limit has been reached: %d\n",
+> +		MOCK_INJECT_TEST_MAX);
 > +
 > +	return false;
 > +}
 > +
-> +static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
-> +			  struct cxl_endpoint_decoder *cxled)
+> +static bool mock_poison_found(struct cxl_dev_state *cxlds, u64 dpa)
 > +{
-> +	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
-> +	struct cxl_region_params *p = &cxlr->params;
-> +	int pos = cxled->pos;
-> +	u16 eig = 0;
-> +	u8 eiw = 0;
-> +
-> +	ways_to_eiw(p->interleave_ways, &eiw);
-> +	granularity_to_eig(p->interleave_granularity, &eig);
-> +
-> +	/*
-> +	 * The device position in the region interleave set was removed
-> +	 * from the offset at HPA->DPA translation. To reconstruct the
-> +	 * HPA, place the 'pos' in the offset.
-> +	 *
-> +	 * The placement of 'pos' in the HPA is determined by interleave
-> +	 * ways and granularity and is defined in the CXL Spec 3.0 Section
-> +	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
-> +	 */
-> +
-> +	/* Remove the dpa base */
-> +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
-> +
-> +	mask_upper = GENMASK_ULL(51, eig + 8);
-> +
-> +	if (eiw < 8) {
-> +		hpa_offset = (dpa_offset & mask_upper) << eiw;
-> +		hpa_offset |= pos << (eig + 8);
-> +	} else {
-> +		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
-> +		bits_upper = bits_upper * 3;
-> +		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
+> +	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
+> +		if (mock_poison_list[i].cxlds == cxlds &&
+> +		    mock_poison_list[i].dpa == dpa)
+> +			return true;
 > +	}
-> +
-> +	/* The lower bits remain unchanged */
-> +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
-> +
-> +	/* Apply the hpa_offset to the region base address */
-> +	hpa = hpa_offset + p->res->start;
-> +
-> +	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
-> +		return ULLONG_MAX;
-> +
-> +	return hpa;
+> +	return false;
 > +}
 > +
-
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index c7958311ce5f..521b80f92e96 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -136,6 +136,8 @@ TRACE_EVENT(cxl_aer_correctable_error,
->  #define cxl_poison_overflow(flags, time)				\
->  	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
->  
-> +u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *memdev, u64 dpa);
+> +static int mock_inject_poison(struct cxl_dev_state *cxlds,
+> +			      struct cxl_mbox_cmd *cmd)
+> +{
+> +	struct cxl_mbox_inject_poison *pi = cmd->payload_in;
+> +	u64 dpa = le64_to_cpu(pi->address);
 > +
->  TRACE_EVENT(cxl_poison,
->  
->  	    TP_PROTO(struct cxl_memdev *memdev, const struct pci_dev *pcidev,
-> @@ -150,6 +152,7 @@ TRACE_EVENT(cxl_poison,
->  		__string(pcidev, dev_name(&pcidev->dev))
->  		__string(region, region)
->  		__field(u64, overflow_t)
-> +		__field(u64, hpa)
->  		__field(u64, dpa)
->  		__field(u32, length)
->  		__array(char, uuid, 16)
-> @@ -168,17 +171,21 @@ TRACE_EVENT(cxl_poison,
->  		if (region) {
->  			__assign_str(region, dev_name(&region->dev));
->  			memcpy(__entry->uuid, &region->params.uuid, 16);
-> +			__entry->hpa = cxl_trace_hpa(region, memdev,
-> +						     __entry->dpa);
->  		} else {
->  			__assign_str(region, "");
->  			memset(__entry->uuid, 0, 16);
-> +			__entry->hpa = ULLONG_MAX;
->  		}
->  	    ),
->  
-> -	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
-> +	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU hpa=0x%llx dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
->  		__get_str(memdev),
->  		__get_str(pcidev),
->  		__get_str(region),
->  		__entry->uuid,
-> +		__entry->hpa,
->  		__entry->dpa,
->  		__entry->length,
->  		show_poison_source(__entry->source),
+> +	if (mock_poison_found(cxlds, dpa)) {
+> +		/* Not an error to inject poison if already poisoned */
+> +		dev_dbg(cxlds->dev, "DPA: 0x%llx already poisoned\n", dpa);
+> +		return 0;
+> +	}
+> +	if (!mock_poison_add(cxlds, dpa))
+> +		return -ENXIO;
+> +
+> +	return 0;
+> +}
+> +
+>  static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
+>  {
+>  	struct device *dev = cxlds->dev;
+> @@ -644,6 +718,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
+>  	case CXL_MBOX_OP_GET_POISON:
+>  		rc = mock_get_poison(cxlds, cmd);
+>  		break;
+> +	case CXL_MBOX_OP_INJECT_POISON:
+> +		rc = mock_inject_poison(cxlds, cmd);
+> +		break;
+>  	default:
+>  		break;
+>  	}
 
