@@ -2,172 +2,139 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9EDC05027
-	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 17:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F72C05027
+	for <linux-cxl@archiver.kernel.org>; Mon, 23 Jan 2023 18:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232656AbjAWRxd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 Jan 2023 12:53:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        id S231597AbjAWSQk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 Jan 2023 13:16:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230128AbjAWRxc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 12:53:32 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA31A2BECF
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 09:53:28 -0800 (PST)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230123175325usoutp027e50b4d21a8c305282fe4dd944612a96~9AZv2xCtu0305803058usoutp02m;
-        Mon, 23 Jan 2023 17:53:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230123175325usoutp027e50b4d21a8c305282fe4dd944612a96~9AZv2xCtu0305803058usoutp02m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1674496405;
-        bh=GRvL4gXakwKMIDoKtUTjWt6yZPRkduZViqmeyuTVG3Q=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=JdbwwT5c+mg+YgiQwzBluZ4KMB7g/ug6DV0OqZAO9acqx8u25YCy5s9Ol4raLXVOB
-         Zv6n55q7CfWIN2/DMs//J9hAc7LsbHu04JPxn3Of3MbhZFdd8l+J744m54ipZFMHif
-         mBC39nwB0FLyQCK+q4XS9C1uQThqQ6M8AGlc1C14=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230123175325uscas1p26ff788d3798b9b9ad1f36cc886f960b5~9AZvthcGC0413304133uscas1p23;
-        Mon, 23 Jan 2023 17:53:25 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id 87.85.12196.599CEC36; Mon,
-        23 Jan 2023 12:53:25 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351~9AZvcJpuB2188521885uscas1p1H;
-        Mon, 23 Jan 2023 17:53:25 +0000 (GMT)
-X-AuditID: cbfec370-83dfe70000012fa4-ef-63cec9954309
-Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id F6.48.11378.599CEC36; Mon,
-        23 Jan 2023 12:53:25 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 23 Jan 2023 09:53:24 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        23 Jan 2023 09:53:24 -0800
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>
-Subject: Re: [RFC PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
-Thread-Topic: [RFC PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
-Thread-Index: AQHZLySkNAH6qX3/wkmwdVXQT9dTIK6szvqA
-Date:   Mon, 23 Jan 2023 17:53:24 +0000
-Message-ID: <20230123175315.GA168673@bgt-140510-bm03>
-In-Reply-To: <20230123121712.29892-1-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <59D01FB680A00541A2A9514160D0E097@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229848AbjAWSQj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 13:16:39 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E446B272C
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 10:16:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JA62oerronco/sBQdpCpej+o/jMO1H5JL0KEYX9cu4xyZ2duFPVJI7CulWIYBLnqD9gwFsiKJ2Jfu+/9SzVACpk5nc2kFHH1YIN2mjqZ3v47Cd2D51WssLhAANsJd1epNBDjyUzEyMqaCU87CIUU5eOHuO8CSXPSFPbY7blssC9YIx3RcQzktc+pucuFiMMCqLyZVN0aZlC9onusLJTEH8nJrRVjgI5/yVMV+qRvyUyZgMLrG5DP4e9MoaGLijtbufZQ66B1JfZuqPltbqv3QVxXnNe7x8HdrLK2lD7quZ3IxNLfjD6O0e8YjwJbPEPZ9MuyNykNUTViChBN1VeOtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mFPeE9iLGQlKjGuVDum49q/UVp55MTSSefFQaOogiJg=;
+ b=d4R67/1bOG6NzLjwQMAPlchapvKKZm6meyZRL5wLIjQg2VzEkUEtFXnjGOl30HtafrNoO0+RaF5YMr5YAe3+yi5LQ0kdye+YNcRsVeBjnh80nsngLq/0+6t/W/x+KrbmB4Q1l6Au4wk/xoopGA60jik24fgAqU+Blcysn+6S6o0rgI3AdLcebvxMM21A9u9xLZi9/QBHGDf5g8/ihWGVad7mmNW62oxLyfYoCCxQq61ViHUsPjh0gWRl71eC8fmLQMPsF6SspIcXME/ccbCmt2uyLMXri73eelYpnZ0EFk3M7SMaDUoNAmdLwDTUlA6FUTPPNe5HBmg9arHAwP2Bww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mFPeE9iLGQlKjGuVDum49q/UVp55MTSSefFQaOogiJg=;
+ b=CJxYBTMsh1+qN18c549fwbIEw+//08GRxGdo+x1fwxZPP0UDumlrpW7n+cQJmDDERRpWKtLofTkDck1tltOYiYqIoJnEI2vCQsNnbrtrhk6bPDw8+HdO7O5G/bwE69e4XYnoxZEtcVUL0MocQgFSaN+rOz0PR+JlT0Xt1VE1AMY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+ by BY1PR17MB6831.namprd17.prod.outlook.com (2603:10b6:a03:524::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Mon, 23 Jan
+ 2023 18:16:37 +0000
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.6002.033; Mon, 23 Jan 2023
+ 18:16:37 +0000
+Date:   Mon, 23 Jan 2023 13:16:31 -0500
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron via <qemu-devel@nongnu.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>
+Subject: Re: cxl nvdimm Potential probe ordering issues.
+Message-ID: <Y87O/3E/66XAhpls@memverge.com>
+References: <20230113144511.00001207@Huawei.com>
+ <20230113151206.GA20583@wunner.de>
+ <Y8hG4OyJL7l9oD2f@memverge.com>
+ <Y8hJKcy1993SFLLJ@memverge.com>
+ <20230119124244.000015b3@Huawei.com>
+ <20230119150449.000037f2@huawei.com>
+ <Y8oeYfyqNuSIIxCt@memverge.com>
+ <63cad185343a1_c81f029469@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y8sNfC1YQVj/DfBU@memverge.com>
+ <63cb1881b078a_3a36e5294ab@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63cb1881b078a_3a36e5294ab@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: BY3PR04CA0022.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::27) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNKsWRmVeSWpSXmKPExsWy7djXc7pTT55LNnjUqWxx9/EFNovmyYsZ
-        LU7cbGSzWH1zDaPF/qfPWSxWLbzGZnF+1ikWi8MbzzBZHO/dweLA6dFy5C2rx+I9L5k8Nq3q
-        ZPN4cm0zk8fU2fUenzfJBbBFcdmkpOZklqUW6dslcGVM37uDpWChcMXuq/uZGxhn8ncxcnJI
-        CJhIrOp6ztrFyMUhJLCSUeJ63yJmCKeVSaJn0QYWmKq1N9oYIRJrGSV2NLYzQTifGCVuH1vM
-        BuEsY5T4MPcfK0gLm4CixL6u7WwgtoiAkcS7G5PA2pkF5jJL3Hy0lhkkISzgJjHl3XyoIneJ
-        DWc2M8M0tJx6AGazCKhKvNo1D2wor4CpxOZNzWD1nAKOEm2T37CD2IwCYhLfT61hArGZBcQl
-        bj2ZzwRxt6DEotl7mCFsMYl/ux6yQdiKEve/v2SHqNeRWLD7ExuEbSfxrW06VFxbYtnC18wQ
-        ewUlTs58Ag0LSYmDK26wgDwjIfCCQ+Lpv3XsEAkXiYObn0IVSUtcvT4VqJkDyE6WWPWRCyKc
-        IzF/yRaoEmuJhX/WM01gVJmF5OxZSE6aheSkWUhOmoXkpAWMrKsYxUuLi3PTU4uN81LL9YoT
-        c4tL89L1kvNzNzEC09fpf4cLdjDeuvVR7xAjEwfjIUYJDmYlEd7peeeShXhTEiurUovy44tK
-        c1KLDzFKc7AoifMa2p5MFhJITyxJzU5NLUgtgskycXBKNTDlL2BUPnD95bWEVJajl07drZ81
-        ydC4dOo3YfmgzfHrf255MG/Wyq/ywrtn7Zuw3rvHzSL14Y1PW4ol7DYtd/Jx4XJ9c72ioCh3
-        okSOT6DZ8fTiGr6oHx/mff8hvSfaY86moPJX1m/uuD+6vu/NzgOXmM5X2NtwGqYfvNO+/EbU
-        9Qnu7Cp238XFg7M7zasuNbxcyvml8Pr8vQxbozcyBE6auOrljyPBl+90pm+ZyCwecdmiT8Po
-        ZhqDWH7usq4lJxfOin16Uy+6YLJq9Z+XXQc/MnhmsWw0lGJUDF1f8NhhNz9jzJeUE893Bc16
-        GH/4k8o+R99+wZtP7Yt+XzyYy2FZwnK6qcQnIjdCcV7tGYldSizFGYmGWsxFxYkAEg+ntc4D
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsWS2cA0UXfqyXPJBkcu8VvcfXyBzaJ58mJG
-        ixM3G9ksVt9cw2ix/+lzFotVC6+xWZyfdYrF4vDGM0wWx3t3sDhwerQcecvqsXjPSyaPTas6
-        2TyeXNvM5DF1dr3H501yAWxRXDYpqTmZZalF+nYJXBnT9+5gKVgoXLH76n7mBsaZ/F2MnBwS
-        AiYSa2+0MXYxcnEICaxmlLiy5SE7hPOJUWLv3wNMEM4yRolf/VtYQVrYBBQl9nVtZwOxRQSM
-        JN7dmATWziwwl1ni5qO1zCAJYQE3iSnv5kMVuUtsOLOZGaah5dQDMJtFQFXi1a55YEN5BUwl
-        Nm9qBqsXEnAAsmeA1XAKOEq0TX7DDmIzCohJfD+1hgnEZhYQl7j1ZD4TxA8CEkv2nGeGsEUl
-        Xj7+xwphK0rc//6SHaJeR2LB7k9sELadxLe26VBxbYllC18zQ9wgKHFy5hMWiF5JiYMrbrBM
-        YJSYhWTdLCSjZiEZNQvJqFlIRi1gZF3FKF5aXJybXlFsmJdarlecmFtcmpeul5yfu4kRGPun
-        /x2O3MF49NZHvUOMTByMhxglOJiVRHin551LFuJNSaysSi3Kjy8qzUktPsQozcGiJM4r5Dox
-        XkggPbEkNTs1tSC1CCbLxMEp1cDU3F0em/rft26e0ewnv7JfXL5yQpjz4T7zj0Vbve87PXLe
-        UG6dkx5tv5HbuDf+//yArdfLfgvvdtmo+SPudoq465UItbNesrP8eV2csy4q+W2Z3Lp3p1Xs
-        9iZrvpRg52gOaddu7uqar75bHLVfTxetaJu1k1UreqKF08b6niS+PxM+nI5/UNC96fbrg8Z/
-        ead8Evs1Zd8slyO6jxdHbU9t51jzccUbv8Xf9Z3WOE1+ndGpOjEp32ym+g5jzWAT0fr5yoXT
-        Z3Tm/b+3XarymonfNLGSJ/UCtR+Wtu2Y++rRstxVrEpbGf6azTVfHRqxYYufs5L06r2L435O
-        UNTcZ8p3fGZv7Btj3aLJ7i96OoyVWIozEg21mIuKEwHBqetcbAMAAA==
-X-CMS-MailID: 20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351
-References: <20230123121712.29892-1-Jonathan.Cameron@huawei.com>
-        <CGME20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351@uscas1p1.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|BY1PR17MB6831:EE_
+X-MS-Office365-Filtering-Correlation-Id: d5615194-4d2f-4f3a-5522-08dafd6df75d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zhijLZp2EDUYhSwN+41UmZxJBRC45FyUtFrH0u3DgiRdi2BcvGuiiPlOaUKRy3/aTWzCO1V21a29dt1pOcQ7VxifuI+qZIngP8yUb2wde+U+AsiJ8YH9EbCBGTHZGOHNO80NtjAX51H6CVlIiHs7CFIOFq7za7G0fZsMnKbEkzLE1Reqg1Bndorp+UM1mMXgHamBa7GvNOCwq1FG/y36UUXsXy50ZmqA1hdWUmvwJijBX9FP9eKsqLdgmz160g1Eyn1V8M/2lQs0/AzzTEbpTFO/a4I84y0GZOqN6ReQ8NCCtUHw10Kr3xhyNg+EjMIRsb3kS0VBZ+BLOTCNzTtFW5JpNgeoI2rXW8Fy46xKi1Z0shAuZXTyvxgiEV0oOhjuj/2LBcf2UNOAhYy6Gxdynrt2Y4YYdvx8S+8cNEtB2nM6MswFL6G3ffjDLGoSRm2FsS5MDwy8DnZ5AtJ6fmiWwaBM5CfkBYAgdykMdZet9sXjm/MVBsuMlmEcwP7W6vgG6whjgDhZKE2eCTj503dcWRWDt1fjBLxixXZsO3taZPQMHilNhUsnlHikAUWCILSG5gh7qmoLzfLBt1gnTYPNQ/lJCPzn8oSxRIGJNuM3iVJtd3Z9npeXqte4I+WtdErcfAeaMm/xh+i9nnbrvOjF8g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(366004)(346002)(39840400004)(376002)(136003)(451199015)(38100700002)(83380400001)(7416002)(41300700001)(86362001)(4744005)(2906002)(44832011)(8936002)(5660300002)(4326008)(6512007)(26005)(8676002)(6916009)(186003)(6506007)(6666004)(66476007)(66556008)(316002)(54906003)(2616005)(66946007)(478600001)(6486002)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ie7fKjXk6w5MJb9ssnscpvgqHRzOWXUYUSaTn6UZqUKYzuLWfEhXjR9iild9?=
+ =?us-ascii?Q?bP08qaubE9B8z5omtA7aOks4kGisn6ft8l78S0UaDplDFaX2BlpFoZwf5QvF?=
+ =?us-ascii?Q?prDxN0sg/TtNkuAR/1NVT10x8g8LtR3EpcSpzAMPpIasVdPwc023imbLkTL5?=
+ =?us-ascii?Q?yXDVtxCO7YHAvQKEoeNpqi9bei2ttvsBuS1V6+8iru7KTTFfcZDUNtf9zVBI?=
+ =?us-ascii?Q?STcmLrU3JEYlgfhKoKtupZ2kTFlfU+goNQundo5z5M8lkP1jGhCgzNjsUQnb?=
+ =?us-ascii?Q?VqO5k7163pUHPfB74kYsu5pXGGZY05okmzLz+xfXQKvd10uYilouz4KY1wUq?=
+ =?us-ascii?Q?Wm7UaSvbX4CK3didDg2gioP+yQ8thQHrRmImWIN1tR0eHql/Qpx0dTDGSU+Q?=
+ =?us-ascii?Q?KcVU9Rc5Xwn7pJu96zTlWirFTdh47054pUdBaajVJyi8TXNWfbTlcdbRnnhZ?=
+ =?us-ascii?Q?AqjehdJeotlKHaZXBeQd2LQmxw1vymnVvqigbCPB+uJba1JC1WG1128wPLsV?=
+ =?us-ascii?Q?mPDilOb1q33lYXsKxrHUP4Ywe1UOk25zKCidnkLA8dANNt1un10VBQMCd12Z?=
+ =?us-ascii?Q?nTa9+LFcll8GUewIbcV9MeVhYoC/bjDACgatIQxvEAPSrtqnS8GcoSwHUz71?=
+ =?us-ascii?Q?EAHcny0xb22veL/hSrumQdSyNUtj9898OMbWuAb+T3VSD/Ef8ti1Cs09OW7X?=
+ =?us-ascii?Q?PpOpXgj+rpbWAu9VAqtWctPFoSe9kENXca/V7mM+TCYvO1qy3pWy79neVk7f?=
+ =?us-ascii?Q?1/wwSsTHzwRMtdBolq8BSRC32LsXscLcKe621Y7/QSnPJuyZBm9LEELTyvn/?=
+ =?us-ascii?Q?jFpGbf0LytSCl1VJ9giESacQ8Jme6AK4IV86NCEMMLMDFOvuvCQ+1hFoub2E?=
+ =?us-ascii?Q?D/aQkzs8ycfO5bPghw2w/XM8dmYbyqI490joF2DMLlsnKnV44/lL3CjfJAAT?=
+ =?us-ascii?Q?9I70fsZJ3pBrFGAZM+kz+VD9uW+KPfaaBbpwmEOU0ErjPCPJFU67n65C5fe+?=
+ =?us-ascii?Q?8Tt6w2QRgf+qNd1sfDKEK24x9yvEHme9y9xuJJoh/3hHGP9KfUl5NtWMabrX?=
+ =?us-ascii?Q?Bn1jUJx2ncaXQDljBvZXIOEvpktZqLTPOcjB0mqzP5dcFx3Dx0WwrYRrBvnB?=
+ =?us-ascii?Q?k1oTAVhy/K1MJM0BpClkVM2GMQiRAWuzpx9kNhPhESQldxs7I+Mz0I1iO/sF?=
+ =?us-ascii?Q?mtaapZDLkDP1Sa/Mj7nfQc7AXiklPwdqBgytME7AZ29rx7Qv58tu9jJTO7eD?=
+ =?us-ascii?Q?4+WA3Nb4PYkoEUzU2mjRA+Y0S0Oc5vq2pB8BYyXOWSTwebGrdqcsq0wp7eNh?=
+ =?us-ascii?Q?vq35J8wEd3uq4ai42TwLUMb3vJydSup9Lw4Vs2nWHHIN+eEWodRkyRNt80vn?=
+ =?us-ascii?Q?+5QKqrRsixyqU46Ggtv9UKX5yi6cuUnT7KTmVuChUPhHw3gNmoqmqTl4AOBm?=
+ =?us-ascii?Q?g4SO3DfskyDGf7dACJ3nscQMpNDyq5QelYNqqnJDghQh0fsiuonOxEWMe2xN?=
+ =?us-ascii?Q?x3zgCqgGk6qPQy0QWD5eFdHprdoU/7leUfzZFtiPGYNMK8f0zO/xg2CgPxnQ?=
+ =?us-ascii?Q?2aSBJEXV5o1wm3eKbKcKCIISLMXDlaymkUS9bGoZe6TXvN88D8C9nzdG6uO3?=
+ =?us-ascii?Q?Nw=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5615194-4d2f-4f3a-5522-08dafd6df75d
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2023 18:16:37.1885
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oMvd2YeI4PK7O+09BlrOtFU7aTh/WMrpthgh9Oyo3mjJnWKPbuJU0LeF4qfRARP0yj8tyFTOU96fZm6swAiyyK8utzifq25+EjcoGkjCUHA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR17MB6831
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 12:17:10PM +0000, Jonathan Cameron wrote:
+On Fri, Jan 20, 2023 at 02:41:05PM -0800, Dan Williams wrote:
+> 
+> Which mode are you referring?
+> 
+> The next steps for the kernel enabling relevant to this thread are:
+> 
+> * ram region discovery (platform firmware or kexec established)
+> * ram region creation
+> * pmem region discovery (from labels)
 
+On some bios there is an option for "legacy cxl" which produces the
+nvdimm-esque behavior described above.  After further investigation,
+supporting this would require a bigger lift than i expected since the
+existing emulated CXL devices don't carry any kind of node assignment
+and we'd have to plumb that through
 
-
-> Until now, testing using CXL has relied up always using two root ports
-> below a host bridge, to work around a current assumption in the Linux
-> kernel support that, in the single root port case, the implementation wil=
-l
-> use the allowed passthrough decoder implementation choice. If that choice
-> is made all accesses are routed from the host bridge to the single
-> root port that is present. Effectively we have a pass through decoder
-> (it is called that in the kernel driver).
->=20
-> This patch series implements that functionality and makes it the default
-> See patch 2 for a discussion of why I think we can make this change
-> without backwards compatibility issues (basically if it didn't work befor=
-e
-> who are we breaking by making it work?)
->=20
-> Whilst this limitation has been known since the initial QEMU patch
-> postings / kernel CXL region support, Fan Ni Ran into it recently remindi=
-ng
-> me that we should solve it.
->=20
-> https://lore.kernel.org/linux-cxl/20230113171044.GA24788@bgt-140510-bm03/
->=20
-> Tree with a large set of patches before this at:
-> https://gitlab.com/jic23/qemu/-/tree/cxl-2023-01-20
->=20
-> I've done some basic testing, though I did hit what appears to be
-> a kernel race on region bring up of existing region / namespace in a
-> 1HB 2RP 2EP test case. That is proving hard to replicate consistently
-> but doesn't seem to have anything to do with the emulation other than
-> perhaps we are opening up a race by responding slowly to something.
->=20
-> Jonathan Cameron (2):
->   hw/pci: Add pcie_count_ds_port() and pcie_find_port_first() helpers
->   hw/pxb-cxl: Support passthrough HDM Decoders unless overridden
->=20
->  hw/cxl/cxl-host.c                   | 31 +++++++++++++--------
->  hw/pci-bridge/pci_expander_bridge.c | 43 +++++++++++++++++++++++++----
->  hw/pci/pcie_port.c                  | 38 +++++++++++++++++++++++++
->  include/hw/cxl/cxl.h                |  1 +
->  include/hw/cxl/cxl_component.h      |  1 +
->  include/hw/pci/pci_bridge.h         |  1 +
->  include/hw/pci/pcie_port.h          |  2 ++
->  7 files changed, 100 insertions(+), 17 deletions(-)
->=20
-> --=20
-> 2.37.2
->=20
->=20
-Tried three different cxl topology setups (1HB1RP, 1HB2RP2Memdev, with
-switch), the patch works fine for me.
-Btw, there seem some format issues with the patch, got warnings with
-checkpatch tool.=
+Not worth it, better off working towards the new stuff.
