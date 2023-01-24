@@ -2,110 +2,143 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3235C25B50
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 00:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523ECC54E94
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 00:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbjAXAWb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 23 Jan 2023 19:22:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
+        id S231681AbjAXAYN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 23 Jan 2023 19:24:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231371AbjAXAWa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 19:22:30 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 276EA367E8
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 16:22:29 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id v23so13179567plo.1
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 16:22:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQ4oslfHB0qpcy2XO48k4CBtTAPuNjBPY2V6lCxjAoQ=;
-        b=l+v3c67sQ6gkV2I8s7q8MhjFkAwrqJe26ugMi9mNmDs3XGfravmMc1I8VoJg+LQL8J
-         ZRe6IHV/GG/9bl77MONp9DOgI3qOpRzuFthFGnYMEbU8GAJrHlAueFYpkRJLFv1izMdx
-         +dSaSPSg4nBTBtDW2rkIVte2J9T+nAh+di3/DNVVd3FwRSJRKwldTLUdSsasJRIghVqH
-         WlhfUjJa01OSJ9FcT3EPeu9m0GwkMk+8MIrKAfcZG2yvGKK5hmz6mWaMklOz/Hc2vwzN
-         2EunoApDBBdNcwDleHd5A4+rcdX1ib9SUjMIbdApAmyonmHt7TAplvQt7/rWFBJm7A8J
-         1Ckg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IQ4oslfHB0qpcy2XO48k4CBtTAPuNjBPY2V6lCxjAoQ=;
-        b=NJNiiJnfvwadgm6TBaSQhJWhLm7mqluF4sPs7YJIZk3c/QApZwshUGSsezoPI3czak
-         XNU0s8rAsM3KK+/Zok4LyTz8cTsBhROKe1CM2kp5BtRtXVPJtv6hH9ebHYLiaNC9N0RY
-         0MpIRYvibirUngHGtFgvXd7t/IgiucJDVsUePwJuhyfD/a07V1C270LzUUP1Qk7yRtem
-         i+LzrGBsqVAJkjfcIT+zfeWafjID35L/91o4zA3hDtdR8HKE6rptYzhaDrUVkzwHap0G
-         KG54PiZTdYKBC5umxVQu/PLcyPspLDndYqgvnWhibJhkCNxyzwR8j+JMkeDwaU/8GLwV
-         8qtg==
-X-Gm-Message-State: AFqh2kr72XeDjqE0XTqTFWpbyDBZFVudRvchx8DCx30eN6j4N0xU60fb
-        bgA6Jx2zR5/QtblSWi9CXk3P0RgBV8182mmyM9s=
-X-Google-Smtp-Source: AK7set/9VdBU6WV2PDZw3ApUtxb0xj/i3jUsBdc0OYxamODH8lZgUhWNRWnZtN3pjUUBE9Ad5GhcO6fIJRfQe07WGao=
-X-Received: by 2002:a17:90a:1cc:b0:22b:e6e9:366c with SMTP id
- 12-20020a17090a01cc00b0022be6e9366cmr249588pjd.38.1674519748675; Mon, 23 Jan
- 2023 16:22:28 -0800 (PST)
+        with ESMTP id S230185AbjAXAYL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 23 Jan 2023 19:24:11 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD7E1EFC9
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Jan 2023 16:24:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674519850; x=1706055850;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BHZj8dhvvPl4lo5HESGnaJj2i0WUXysB3c68qblOnfw=;
+  b=RAamrX35gTY423KBfiVZRn+NHbb/DlRgF6o9rIYfFjdohaV+Zfy6snP4
+   kzulfAqPkMy+0e6NmgA1XMFJs4sFUH3Qfbdgf6dfAhF/ec+fJ0Sgqtn3t
+   1siThOuBrgpUBTcLYCUlyQy5SfLYVUXffSErnQ4HSBxuDlPOYwixnfsfI
+   qrV50WMhLT62FUuSWiEmM/2D7eAI1HLn+AV3MpLcPIXkVez/i79a1kEKi
+   mwxQsU8cE3u+dTZzDEOSCTcvgtcoVYxLAlmWT/5fgPyn8ss9ZU9TRgXKG
+   d6kpdNKDp/GfkNeBgIYmBxchK4tbiOLURsfRQSb3bOvHLMA5fCB5+1u1n
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="388545142"
+X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
+   d="scan'208";a="388545142"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 16:24:10 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="725276525"
+X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
+   d="scan'208";a="725276525"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.2.84])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 16:24:09 -0800
+Date:   Mon, 23 Jan 2023 16:24:07 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] tools/testing/cxl: Use injected poison for get
+ poison list
+Message-ID: <Y88lJ1k8GmCJz9xO@aschofie-mobl2>
+References: <cover.1674101475.git.alison.schofield@intel.com>
+ <e4c530ac9c073eb753a98a052216d58a571799e4.1674101475.git.alison.schofield@intel.com>
+ <20230123151653.00006eee@Huawei.com>
 MIME-Version: 1.0
-References: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
- <38D49DA9-3C57-4951-8CBA-5D2BB0C40D9C@bytedance.com> <dd0d92fd-51dc-f5ac-26f9-7446118d654e@google.com>
-In-Reply-To: <dd0d92fd-51dc-f5ac-26f9-7446118d654e@google.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 23 Jan 2023 16:22:17 -0800
-Message-ID: <CAHbLzkpJa=HYH7OAdFO6WGYXtX1Yzhv9sFE+MGfyZrd3KvUv=A@mail.gmail.com>
-Subject: Re: [LSF/MM/BPF BoF] Session for CXL memory
-To:     David Rientjes <rientjes@google.com>
-Cc:     "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>,
-        lsf-pc@lists.linux-foundation.org, linux-cxl@vger.kernel.org,
-        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Duen-wen Hsiao <duenwen@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230123151653.00006eee@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, Jan 22, 2023 at 9:51 PM David Rientjes <rientjes@google.com> wrote:
->
-> On Fri, 6 Jan 2023, Viacheslav A.Dubeyko wrote:
->
-> > CC: LSF/MM/BPF mailing list. Sorry, missed the list.
-> >
-> > > On Jan 6, 2023, at 11:51 AM, Viacheslav A.Dubeyko <viacheslav.dubeyko@bytedance.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > I believe CXL memory is hot topic now. I believe we have multiple topics
-> > > for discussion. I personally would like to discuss CXL Fabric Manager
-> > > and vision of FM architecture implementation. I am going to share the topic
-> > > in separate email. I would like to suggest a special session for CXL memory
-> > > related topics.
-> > >
-> > > How everybody feels about it?
-> > >
->
-> I think this makes a lot of sense, thanks for suggesting it.
->
-> Should this be a BoF or just a normal topic proposal?  I assume that there
-> could be several different topics of interest all related to CXL.mem.
->
-> Specifically interesting would be the division of work between the kernel
-> and userspace to manage memory placement on systems with locally attached
-> CXL.  And, further, what APIs userspace would have at its disposal for
-> explicit optimization of this placement that would exist beyond what is
-> available for NUMA.
+On Mon, Jan 23, 2023 at 03:16:53PM +0000, Jonathan Cameron wrote:
+> On Wed, 18 Jan 2023 21:00:20 -0800
+> alison.schofield@intel.com wrote:
+> 
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > Prior to poison inject support, the mock of 'Get Poison List'
+> > returned a poison list containing a single mocked error record.
+> > 
+> > Now, following the addition of poison inject and clear support,
+> > use the mock_poison_list[] as the source of records for 'Get
+> > Poison List' requests.
+> > 
+> > This supports confirmation of inject and clear poison commands.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> A comment inline.  Either way I'm fine with this.
 
-Yeah, in addition, how CXL hierarchy interacts with memory tiering may
-be an interesting topic too.
+replied below...
 
->
-> I assume we might also want to chat about CXL 2.0 extensions that would be
-> useful, especially for cloud providers.
->
-> I'd be happy to join in any of the proposals for these topics, just let me
-> know!
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> > ---
+> >  tools/testing/cxl/test/mem.c | 56 ++++++++++++++++++++++++------------
+> >  1 file changed, 38 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> > index bb0be9fe3fe9..14d74bfb3124 100644
+> > --- a/tools/testing/cxl/test/mem.c
+> > +++ b/tools/testing/cxl/test/mem.c
+> > @@ -582,31 +582,51 @@ static struct mock_poison {
+> >  	u64 dpa;
+> >  } mock_poison_list[MOCK_INJECT_TEST_MAX];
+> >  
+> > +static struct cxl_mbox_poison_payload_out
+> > +*cxl_get_injected_po(struct cxl_dev_state *cxlds, u64 offset, u64 length)
+> > +{
+> > +	struct cxl_mbox_poison_payload_out *po;
+> > +	int nr_records = 0;
+> > +	u64 dpa;
+> > +
+> > +	po = kzalloc(struct_size(po, record, MOCK_INJECT_DEV_MAX), GFP_KERNEL);
+> > +	if (!po)
+> > +		return NULL;
+> > +
+> > +	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
+> > +		if (mock_poison_list[i].cxlds != cxlds)
+> > +			continue;
+> > +		if (mock_poison_list[i].dpa < offset ||
+> > +		    mock_poison_list[i].dpa > offset + length - 1)
+> 
+> I was thinking that we could move this to the add side of things, but
+> perhaps it actually makes sense in both code paths?
+> 
 
-+1 for me.
+I'm not understanding what can be done in the add side wrt the above.
 
->
+The 'add side' is the inject, and it can only inject one 64byte length.
+
+Here, mocking get-poison-list, we look at each DPA stored for cxlds,
+and return it if it's in the offset/lenght requested.
+
+Am I missing something?
+Alison
+
+> > +			continue;
+> > +
+> > +		dpa = mock_poison_list[i].dpa + CXL_POISON_SOURCE_INJECTED;
+> > +		po->record[nr_records].address = cpu_to_le64(dpa);
+> > +		po->record[nr_records].length = cpu_to_le32(1);
+> > +		nr_records++;
+> > +		if (nr_records == MOCK_INJECT_DEV_MAX)
+> > +			break;
+> > +	}
+> > +
+> > +	/* Always return count, even when zero */
+> > +	po->count = cpu_to_le16(nr_records);
+> > +
+> > +	return po;
+> > +}
+> > +
+> 
