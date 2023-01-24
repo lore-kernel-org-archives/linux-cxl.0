@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F034EC38142
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 11:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF67C25B4E
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 12:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbjAXLDv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 06:03:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
+        id S233498AbjAXMQB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 07:16:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233512AbjAXLDZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 06:03:25 -0500
+        with ESMTP id S233524AbjAXMP5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 07:15:57 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE34C17CF7;
-        Tue, 24 Jan 2023 03:03:10 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1P9N5zzZz6J7br;
-        Tue, 24 Jan 2023 18:59:04 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D8444BCA;
+        Tue, 24 Jan 2023 04:15:46 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1Qn80N1Gz6J6KY;
+        Tue, 24 Jan 2023 20:11:40 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 24 Jan
- 2023 11:03:08 +0000
-Date:   Tue, 24 Jan 2023 11:03:08 +0000
+ 2023 12:15:43 +0000
+Date:   Tue, 24 Jan 2023 12:15:43 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Lukas Wunner <lukas@wunner.de>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
@@ -34,180 +34,254 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
         "Li, Ming" <ming4.li@intel.com>, "Hillf Danton" <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 05/10] PCI/DOE: Make asynchronous API private
-Message-ID: <20230124110308.0000052e@Huawei.com>
-In-Reply-To: <ec7155b88895ab6a644c0ba33aaa10012d0e4fd7.1674468099.git.lukas@wunner.de>
+Subject: Re: [PATCH v2 06/10] PCI/DOE: Allow mailbox creation without devres
+ management
+Message-ID: <20230124121543.00002600@Huawei.com>
+In-Reply-To: <291131574c9e625195e9c34591abf5fa75cd1279.1674468099.git.lukas@wunner.de>
 References: <cover.1674468099.git.lukas@wunner.de>
-        <ec7155b88895ab6a644c0ba33aaa10012d0e4fd7.1674468099.git.lukas@wunner.de>
+        <291131574c9e625195e9c34591abf5fa75cd1279.1674468099.git.lukas@wunner.de>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 23 Jan 2023 11:15:00 +0100
+On Mon, 23 Jan 2023 11:16:00 +0100
 Lukas Wunner <lukas@wunner.de> wrote:
 
-> A synchronous API for DOE has just been introduced.  CXL (the only
-> in-tree DOE user so far) was converted to use it instead of the
-> asynchronous API.
+> DOE mailbox creation is currently only possible through a devres-managed
+> API.  The lifetime of mailboxes thus ends with driver unbinding.
 > 
-> Consequently, pci_doe_submit_task() as well as the pci_doe_task struct
-> are only used internally, so make them private.
+> An upcoming commit will create DOE mailboxes upon device enumeration by
+> the PCI core.  Their lifetime shall not be limited by a driver.
+> 
+> Therefore rework pcim_doe_create_mb() into the non-devres-managed
+> pci_doe_create_mb().  Add pci_doe_destroy_mb() for mailbox destruction
+> on device removal.
+> 
+> Provide a devres-managed wrapper under the existing pcim_doe_create_mb()
+> name.
 > 
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Hi Lukas,
+
+A few comments inline.
+
+In particular I'd like to understand why flushing in the tear down
+can't always be done as that makes the code more complex.
+
+Might become clear in later patches though as I've not read ahead yet!
+
+Jonathan
 
 > ---
->  Changes v1 -> v2:
->  * Deduplicate note in kernel-doc of struct pci_doe_task that caller need
->    not initialize certain fields (Jonathan)
-> 
->  drivers/pci/doe.c       | 45 +++++++++++++++++++++++++++++++++++++++--
->  include/linux/pci-doe.h | 44 ----------------------------------------
->  2 files changed, 43 insertions(+), 46 deletions(-)
+>  drivers/pci/doe.c | 103 +++++++++++++++++++++++++++++++---------------
+>  1 file changed, 70 insertions(+), 33 deletions(-)
 > 
 > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index dce6af2ab574..066400531d09 100644
+> index 066400531d09..cc1fdd75ad2a 100644
 > --- a/drivers/pci/doe.c
 > +++ b/drivers/pci/doe.c
-> @@ -56,6 +56,47 @@ struct pci_doe_mb {
->  	unsigned long flags;
->  };
->  
-> +struct pci_doe_protocol {
-> +	u16 vid;
-> +	u8 type;
-> +};
-> +
-> +/**
-> + * struct pci_doe_task - represents a single query/response
-> + *
-> + * @prot: DOE Protocol
-> + * @request_pl: The request payload
-> + * @request_pl_sz: Size of the request payload (bytes)
-> + * @response_pl: The response payload
-> + * @response_pl_sz: Size of the response payload (bytes)
-> + * @rv: Return value.  Length of received response or error (bytes)
-> + * @complete: Called when task is complete
-> + * @private: Private data for the consumer
-> + * @work: Used internally by the mailbox
-> + * @doe_mb: Used internally by the mailbox
-> + *
-> + * The payload sizes and rv are specified in bytes with the following
-> + * restrictions concerning the protocol.
-> + *
-> + *	1) The request_pl_sz must be a multiple of double words (4 bytes)
-> + *	2) The response_pl_sz must be >= a single double word (4 bytes)
-> + *	3) rv is returned as bytes but it will be a multiple of double words
-> + */
-> +struct pci_doe_task {
-> +	struct pci_doe_protocol prot;
-> +	const u32 *request_pl;
-> +	size_t request_pl_sz;
-> +	u32 *response_pl;
-> +	size_t response_pl_sz;
-> +	int rv;
-> +	void (*complete)(struct pci_doe_task *task);
-> +	void *private;
-> +
-> +	/* initialized by pci_doe_submit_task() */
-> +	struct work_struct work;
-> +	struct pci_doe_mb *doe_mb;
-> +};
-> +
->  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
->  {
->  	if (wait_event_timeout(doe_mb->wq,
-> @@ -516,7 +557,8 @@ EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+> @@ -37,7 +37,7 @@
 >   *
->   * RETURNS: 0 when task has been successfully queued, -ERRNO on error
->   */
-> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> +static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
-> +			       struct pci_doe_task *task)
->  {
->  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
->  		return -EINVAL;
-> @@ -537,7 +579,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	queue_work(doe_mb->work_queue, &task->work);
+>   * This state is used to manage a single DOE mailbox capability.  All fields
+>   * should be considered opaque to the consumers and the structure passed into
+> - * the helpers below after being created by devm_pci_doe_create()
+> + * the helpers below after being created by pci_doe_create_mb().
+>   *
+>   * @pdev: PCI device this mailbox belongs to
+>   * @cap_offset: Capability offset
+> @@ -412,20 +412,6 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
 >  	return 0;
 >  }
-> -EXPORT_SYMBOL_GPL(pci_doe_submit_task);
+>  
+> -static void pci_doe_xa_destroy(void *mb)
+> -{
+> -	struct pci_doe_mb *doe_mb = mb;
+> -
+> -	xa_destroy(&doe_mb->prots);
+> -}
+> -
+> -static void pci_doe_destroy_workqueue(void *mb)
+> -{
+> -	struct pci_doe_mb *doe_mb = mb;
+> -
+> -	destroy_workqueue(doe_mb->work_queue);
+> -}
+> -
+>  static void pci_doe_flush_mb(void *mb)
+>  {
+>  	struct pci_doe_mb *doe_mb = mb;
+> @@ -442,7 +428,7 @@ static void pci_doe_flush_mb(void *mb)
+>  }
 >  
 >  /**
->   * pci_doe() - Perform Data Object Exchange
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index 1608e1536284..7f16749c6aa3 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -13,51 +13,8 @@
->  #ifndef LINUX_PCI_DOE_H
->  #define LINUX_PCI_DOE_H
+> - * pcim_doe_create_mb() - Create a DOE mailbox object
+> + * pci_doe_create_mb() - Create a DOE mailbox object
+>   *
+>   * @pdev: PCI device to create the DOE mailbox for
+>   * @cap_offset: Offset of the DOE mailbox
+> @@ -453,24 +439,20 @@ static void pci_doe_flush_mb(void *mb)
+>   * RETURNS: created mailbox object on success
+>   *	    ERR_PTR(-errno) on failure
+>   */
+> -struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
+> +static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+> +					    u16 cap_offset)
+>  {
+>  	struct pci_doe_mb *doe_mb;
+> -	struct device *dev = &pdev->dev;
+>  	int rc;
 >  
-> -struct pci_doe_protocol {
-> -	u16 vid;
-> -	u8 type;
-> -};
+> -	doe_mb = devm_kzalloc(dev, sizeof(*doe_mb), GFP_KERNEL);
+> +	doe_mb = kzalloc(sizeof(*doe_mb), GFP_KERNEL);
+>  	if (!doe_mb)
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	doe_mb->pdev = pdev;
+>  	doe_mb->cap_offset = cap_offset;
+>  	init_waitqueue_head(&doe_mb->wq);
 > -
->  struct pci_doe_mb;
+>  	xa_init(&doe_mb->prots);
+See below - I'd move xa_init() down to just above the pci_doe_cache_protocols()
+call.
+
+> -	rc = devm_add_action(dev, pci_doe_xa_destroy, doe_mb);
+> -	if (rc)
+> -		return ERR_PTR(rc);
 >  
-> -/**
-> - * struct pci_doe_task - represents a single query/response
-> - *
-> - * @prot: DOE Protocol
-> - * @request_pl: The request payload
-> - * @request_pl_sz: Size of the request payload (bytes)
-> - * @response_pl: The response payload
-> - * @response_pl_sz: Size of the response payload (bytes)
-> - * @rv: Return value.  Length of received response or error (bytes)
-> - * @complete: Called when task is complete
-> - * @private: Private data for the consumer
-> - * @work: Used internally by the mailbox
-> - * @doe_mb: Used internally by the mailbox
-> - *
-> - * The payload sizes and rv are specified in bytes with the following
-> - * restrictions concerning the protocol.
-> - *
-> - *	1) The request_pl_sz must be a multiple of double words (4 bytes)
-> - *	2) The response_pl_sz must be >= a single double word (4 bytes)
-> - *	3) rv is returned as bytes but it will be a multiple of double words
-> - *
-> - * NOTE there is no need for the caller to initialize work or doe_mb.
-> - */
-> -struct pci_doe_task {
-> -	struct pci_doe_protocol prot;
-> -	const u32 *request_pl;
-> -	size_t request_pl_sz;
-> -	u32 *response_pl;
-> -	size_t response_pl_sz;
-> -	int rv;
-> -	void (*complete)(struct pci_doe_task *task);
-> -	void *private;
+>  	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
+>  						dev_driver_string(&pdev->dev),
+> @@ -479,35 +461,90 @@ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
+>  	if (!doe_mb->work_queue) {
+>  		pci_err(pdev, "[%x] failed to allocate work queue\n",
+>  			doe_mb->cap_offset);
+> -		return ERR_PTR(-ENOMEM);
+> +		rc = -ENOMEM;
+> +		goto err_free;
+>  	}
+> -	rc = devm_add_action_or_reset(dev, pci_doe_destroy_workqueue, doe_mb);
+> -	if (rc)
+> -		return ERR_PTR(rc);
+>  
+>  	/* Reset the mailbox by issuing an abort */
+>  	rc = pci_doe_abort(doe_mb);
+>  	if (rc) {
+>  		pci_err(pdev, "[%x] failed to reset mailbox with abort command : %d\n",
+>  			doe_mb->cap_offset, rc);
+> -		return ERR_PTR(rc);
+> +		goto err_destroy_wq;
+>  	}
+>  
+>  	/*
+>  	 * The state machine and the mailbox should be in sync now;
+> -	 * Set up mailbox flush prior to using the mailbox to query protocols.
+> +	 * Use the mailbox to query protocols.
+>  	 */
+> -	rc = devm_add_action_or_reset(dev, pci_doe_flush_mb, doe_mb);
+> -	if (rc)
+> -		return ERR_PTR(rc);
 > -
-> -	/* No need for the user to initialize these fields */
-> -	struct work_struct work;
-> -	struct pci_doe_mb *doe_mb;
-> -};
-> -
->  /**
->   * pci_doe_for_each_off - Iterate each DOE capability
->   * @pdev: struct pci_dev to iterate
-> @@ -72,7 +29,6 @@ struct pci_doe_task {
+>  	rc = pci_doe_cache_protocols(doe_mb);
+>  	if (rc) {
+>  		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
+>  			doe_mb->cap_offset, rc);
+> +		goto err_flush;
+> +	}
+> +
+> +	return doe_mb;
+> +
+> +err_flush:
+> +	pci_doe_flush_mb(doe_mb);
+> +	xa_destroy(&doe_mb->prots);
+
+Why the reorder wrt to the original devm managed cleanup?
+I'd expect this to happen on any error path after the xa_init.
+
+It doesn't matter in practice because there isn't anything to
+do until after pci_doe_cache_protocols though.  Maybe
+simplest option would be move xa_init() down to just above
+the call to pci_doe_cache_protocols()?  That way the order
+you have here would meet the 'obviously correct' test.
+
+
+> +err_destroy_wq:
+> +	destroy_workqueue(doe_mb->work_queue);
+> +err_free:
+> +	kfree(doe_mb);
+> +	return ERR_PTR(rc);
+> +}
+> +
+> +/**
+> + * pci_doe_destroy_mb() - Destroy a DOE mailbox object
+> + *
+> + * @ptr: Pointer to DOE mailbox
+> + *
+> + * Destroy all internal data structures created for the DOE mailbox.
+
+Could you comment on why it doesn't make sense to flush the
+mb on this path?  Perhaps add a comment here to say what state
+we should be in before calling this?
+
+Not flushing here means you need more complex handling in
+error paths.
+
+> + */
+> +static void pci_doe_destroy_mb(void *ptr)
+> +{
+> +	struct pci_doe_mb *doe_mb = ptr;
+> +
+> +	xa_destroy(&doe_mb->prots);
+
+If making the change above, also push the xa_destroy() below
+the destroy_workqueue() here.
+
+> +	destroy_workqueue(doe_mb->work_queue);
+> +	kfree(doe_mb);
+> +}
+> +
+> +/**
+> + * pcim_doe_create_mb() - Create a DOE mailbox object
+> + *
+> + * @pdev: PCI device to create the DOE mailbox for
+> + * @cap_offset: Offset of the DOE mailbox
+> + *
+> + * Create a single mailbox object to manage the mailbox protocol at the
+> + * cap_offset specified.  The mailbox will automatically be destroyed on
+> + * driver unbinding from @pdev.
+> + *
+> + * RETURNS: created mailbox object on success
+> + *	    ERR_PTR(-errno) on failure
+> + */
+> +struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	int rc;
+> +
+> +	doe_mb = pci_doe_create_mb(pdev, cap_offset);
+> +	if (IS_ERR(doe_mb))
+> +		return doe_mb;
+> +
+> +	rc = devm_add_action(&pdev->dev, pci_doe_destroy_mb, doe_mb);
+> +	if (rc) {
+> +		pci_doe_flush_mb(doe_mb);
+> +		pci_doe_destroy_mb(doe_mb);
+>  		return ERR_PTR(rc);
+>  	}
 >  
->  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
->  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
->  
->  int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
->  	    const void *request, size_t request_sz,
+> +	rc = devm_add_action_or_reset(&pdev->dev, pci_doe_flush_mb, doe_mb);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+>  	return doe_mb;
+>  }
+>  EXPORT_SYMBOL_GPL(pcim_doe_create_mb);
 
