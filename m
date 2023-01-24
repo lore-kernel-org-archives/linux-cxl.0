@@ -2,40 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDD7C25B4E
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 09:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C37CC38142
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 09:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbjAXJeo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 04:34:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34936 "EHLO
+        id S233097AbjAXJrg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 04:47:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjAXJen (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 04:34:43 -0500
+        with ESMTP id S233590AbjAXJrf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 04:47:35 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF166E8D;
-        Tue, 24 Jan 2023 01:34:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EFA3EC64
+        for <linux-cxl@vger.kernel.org>; Tue, 24 Jan 2023 01:47:23 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1MCG2c5Rz6J7Jr;
-        Tue, 24 Jan 2023 17:30:34 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1MTx4rDXz6J7B6;
+        Tue, 24 Jan 2023 17:43:17 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 24 Jan
- 2023 09:34:37 +0000
-Date:   Tue, 24 Jan 2023 09:34:41 +0000
+ 2023 09:47:21 +0000
+Date:   Tue, 24 Jan 2023 09:47:20 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+To:     Fan Ni <fan.ni@samsung.com>
+CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] cxl/mbox: Fix Payload Length check for Get Log
- command
-Message-ID: <20230124093441.00000741@Huawei.com>
-In-Reply-To: <20230119094934.86067-1-rrichter@amd.com>
-References: <20230119094934.86067-1-rrichter@amd.com>
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>
+Subject: Re: [RFC PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
+Message-ID: <20230124094720.00005c97@Huawei.com>
+In-Reply-To: <20230123175315.GA168673@bgt-140510-bm03>
+References: <20230123121712.29892-1-Jonathan.Cameron@huawei.com>
+        <CGME20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351@uscas1p1.samsung.com>
+        <20230123175315.GA168673@bgt-140510-bm03>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,125 +52,69 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 19 Jan 2023 10:49:34 +0100
-Robert Richter <rrichter@amd.com> wrote:
+On Mon, 23 Jan 2023 17:53:24 +0000
+Fan Ni <fan.ni@samsung.com> wrote:
 
-> Commit 2aeaf663b85e introduced strict checking for variable length
-> payload size validation. The payload length of received data must
-> match the size of the requested data by the caller except for the case
-> where the min_out value is set.
+> On Mon, Jan 23, 2023 at 12:17:10PM +0000, Jonathan Cameron wrote:
 > 
-> The Get Log command does not have a header with a length field set.
-> The Log size is determined by the Get Supported Logs command (CXL 3.0,
-> 8.2.9.5.1). However, the actual size can be smaller and the number of
-> valid bytes in the payload output must be determined reading the
-> Payload Length field (CXL 3.0, Table 8-36, Note 2).
 > 
-> Two issues arise: The command can successfully complete with a payload
-> length of zero. And, the valid payload length must then also be
-> consumed by the caller.
 > 
-> Change cxl_xfer_log() to pass the number of payload bytes back to the
-> caller to determine the number of log entries. Implement the payload
-> handling as a special case where mbox_cmd->size_out is consulted when
-> cxl_internal_send_cmd() returns -EIO. A WARN_ONCE() is added to check
-> that -EIO is only returned in case of an unexpected output size.
-> 
-> Logs can be bigger than the maximum payload length and multiple Get
-> Log commands can be issued. If the received payload size is smaller
-> than the maximum payload size we can assume all valid bytes have been
-> fetched. Stop sending further Get Log commands then.
-> 
-> On that occasion, change debug messages to also report the opcodes of
-> supported commands.
-> 
-> The variable payload commands GET_LSA and SET_LSA are not affected by
-> this strict check: SET_LSA cannot be broken because SET_LSA does not
-> return an output payload, and GET_LSA never expects short reads.
-> 
-> Fixes: 2aeaf663b85e ("cxl/mbox: Add variable output size validation for internal commands")
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-LGTM
+> > Until now, testing using CXL has relied up always using two root ports
+> > below a host bridge, to work around a current assumption in the Linux
+> > kernel support that, in the single root port case, the implementation will
+> > use the allowed passthrough decoder implementation choice. If that choice
+> > is made all accesses are routed from the host bridge to the single
+> > root port that is present. Effectively we have a pass through decoder
+> > (it is called that in the kernel driver).
+> > 
+> > This patch series implements that functionality and makes it the default
+> > See patch 2 for a discussion of why I think we can make this change
+> > without backwards compatibility issues (basically if it didn't work before
+> > who are we breaking by making it work?)
+> > 
+> > Whilst this limitation has been known since the initial QEMU patch
+> > postings / kernel CXL region support, Fan Ni Ran into it recently reminding
+> > me that we should solve it.
+> > 
+> > https://lore.kernel.org/linux-cxl/20230113171044.GA24788@bgt-140510-bm03/
+> > 
+> > Tree with a large set of patches before this at:
+> > https://gitlab.com/jic23/qemu/-/tree/cxl-2023-01-20
+> > 
+> > I've done some basic testing, though I did hit what appears to be
+> > a kernel race on region bring up of existing region / namespace in a
+> > 1HB 2RP 2EP test case. That is proving hard to replicate consistently
+> > but doesn't seem to have anything to do with the emulation other than
+> > perhaps we are opening up a race by responding slowly to something.
+> > 
+> > Jonathan Cameron (2):
+> >   hw/pci: Add pcie_count_ds_port() and pcie_find_port_first() helpers
+> >   hw/pxb-cxl: Support passthrough HDM Decoders unless overridden
+> > 
+> >  hw/cxl/cxl-host.c                   | 31 +++++++++++++--------
+> >  hw/pci-bridge/pci_expander_bridge.c | 43 +++++++++++++++++++++++++----
+> >  hw/pci/pcie_port.c                  | 38 +++++++++++++++++++++++++
+> >  include/hw/cxl/cxl.h                |  1 +
+> >  include/hw/cxl/cxl_component.h      |  1 +
+> >  include/hw/pci/pci_bridge.h         |  1 +
+> >  include/hw/pci/pcie_port.h          |  2 ++
+> >  7 files changed, 100 insertions(+), 17 deletions(-)
+> > 
+> > -- 
+> > 2.37.2
+> > 
+> >   
+> Tried three different cxl topology setups (1HB1RP, 1HB2RP2Memdev, with
+> switch), the patch works fine for me.
+> Btw, there seem some format issues with the patch, got warnings with
+> checkpatch tool.
+Thanks! I'll clean those up.  Was being lazy on it as it's an RFC for
+now :)  Given this is small and useful I'll probably pull it nearer the
+head of the queue.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+When I repost, if you could give a Tested-by tag that would be great!
 
-> ---
-> v4:
->  * Fixed a build issue.
-> v3:
->  * Added comment to the WARN_ONCE(). (Jonathan)
->  * Passing a size pointer to report the payload size back. (Jonathan)
->  * Moved logging of supported opcodes out of this patch for a separate
->    change. (Jonathan)
-> 
->  drivers/cxl/core/mbox.c | 25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index b03fba212799..a48ade466d6a 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -170,6 +170,12 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
->  	out_size = mbox_cmd->size_out;
->  	min_out = mbox_cmd->min_out;
->  	rc = cxlds->mbox_send(cxlds, mbox_cmd);
-> +	/*
-> +	 * EIO is reserved for a payload size mismatch and mbox_send()
-> +	 * may not return this error.
-> +	 */
-> +	if (WARN_ONCE(rc == -EIO, "Bad return code: -EIO"))
-> +		return -ENXIO;
->  	if (rc)
->  		return rc;
->  
-> @@ -550,9 +556,9 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
->  	return 0;
->  }
->  
-> -static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8 *out)
-> +static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 *size, u8 *out)
->  {
-> -	u32 remaining = size;
-> +	u32 remaining = *size;
->  	u32 offset = 0;
->  
->  	while (remaining) {
-> @@ -576,6 +582,17 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
->  		};
->  
->  		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +
-> +		/*
-> +		 * The output payload length that indicates the number
-> +		 * of valid bytes can be smaller than the Log buffer
-> +		 * size.
-> +		 */
-> +		if (rc == -EIO && mbox_cmd.size_out < xfer_size) {
-> +			offset += mbox_cmd.size_out;
-> +			break;
-> +		}
-> +
->  		if (rc < 0)
->  			return rc;
->  
-> @@ -584,6 +601,8 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
->  		offset += xfer_size;
->  	}
->  
-> +	*size = offset;
-> +
->  	return 0;
->  }
->  
-> @@ -694,7 +713,7 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
->  			goto out;
->  		}
->  
-> -		rc = cxl_xfer_log(cxlds, &uuid, size, log);
-> +		rc = cxl_xfer_log(cxlds, &uuid, &size, log);
->  		if (rc) {
->  			kvfree(log);
->  			goto out;
-> 
-> base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+Thanks,
+
+Jonathan
 
