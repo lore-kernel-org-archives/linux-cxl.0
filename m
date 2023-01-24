@@ -2,143 +2,244 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EBDC38142
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 15:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0596C38142
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 16:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232381AbjAXPvl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 10:51:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
+        id S233605AbjAXQQq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 11:16:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233331AbjAXPvd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 10:51:33 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A4D49001
-        for <linux-cxl@vger.kernel.org>; Tue, 24 Jan 2023 07:51:32 -0800 (PST)
+        with ESMTP id S233702AbjAXQQo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 11:16:44 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDE547434
+        for <linux-cxl@vger.kernel.org>; Tue, 24 Jan 2023 08:16:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674575492; x=1706111492;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p6Z+468ZE9GkVUfzP/owAYLjTTdsLGHbRZ3r41ec6ng=;
-  b=iP9EEf8Ao7x2jN0kJusWiY8VZfky6OXQnNC+nyaC/V9EQB35MF0+jdrP
-   rLwu9PidJ2kcInj3px3rVmeAYbDxJ/kHAFock65J00P9HchZktxwe83Og
-   aUGgvjuG/1mpl8VULBR9Zov7lh7HM9WNqKSVZ2S9CXP8xQPRbzwD4iyr4
-   ZBVuRVa6XebSUkKjGmrVbKwD248duBuXlHZkpo1Gz9kcTJkTTx3iaO1ir
-   nJUHV657AumDGUnWNXy5vrl0uXWTsBf+rtdHcCZfI/jcAZdjAEtdgOETH
-   r/YqTPQPl6w7USb9WklvWbtS2hiJStf7fhg7FK8fdjaxMvo4zkT9yIiyk
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="309895784"
+  t=1674577003; x=1706113003;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gWnDhAysaEfifDlqZQ+awh+3OnMzrV8NIvzx49gIFVI=;
+  b=W4KXd81XGu4DBhocyCmrsTbD09OKrYlK6mS1aC6JDkDXiphoTF4uAWkp
+   uS26pSzHwgmN0HQ1bTvRkDIa0RWyBLINwnnerfvF3vxQVahENTd64yxEH
+   xb+45UqZGApmf3xdfyZK5zkIaB0Ig2prj5CRAMSTkLyzKR05UltYVjE+C
+   H3e/GF7E175MOYk4h1xewScO13miDOcFP85lOvx6kfzEplvhuW2C1fcKW
+   eAWCqSCE9mO+8Aned8nhnrXpEMQYGDpwx5N5OWZCNPWY4S4aG9Gj6b4jh
+   uSSDe463YCcx9BD+5qwTb3l7MmetsFvONG5N12RsEJDqg5OXs8TW5Ll8R
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="314233358"
 X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
-   d="scan'208";a="309895784"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 07:51:32 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="639615976"
+   d="scan'208";a="314233358"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 08:16:42 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="750873810"
 X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
-   d="scan'208";a="639615976"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.146.181])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 07:51:32 -0800
-Date:   Tue, 24 Jan 2023 07:51:30 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] tools/testing/cxl: Remove cxl_test modulo math loading
- messages
-Message-ID: <Y8/+giGil3Lmp+n1@aschofie-mobl2>
-References: <20230119232937.533986-1-alison.schofield@intel.com>
- <63cf26b6cb40e_4a9a294e4@iweiny-mobl.notmuch>
+   d="scan'208";a="750873810"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.182.87]) ([10.213.182.87])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 08:16:42 -0800
+Message-ID: <025041d2-2e18-fb5f-b8be-cbb49109a13d@intel.com>
+Date:   Tue, 24 Jan 2023 09:16:41 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63cf26b6cb40e_4a9a294e4@iweiny-mobl.notmuch>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH v2] cxl/trace: Add an HPA to cxl_poison trace events
+Content-Language: en-US
+To:     alison.schofield@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+Cc:     linux-cxl@vger.kernel.org
+References: <20230118201805.485232-1-alison.schofield@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230118201805.485232-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 04:30:46PM -0800, Ira Weiny wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > Commit "cxl/acpi: Support CXL XOR Interleave Math (CXIMS)" added
-> > a module parameter to cxl_test for the interleave_arithmetic option.
-> > In doing so, it also added this dev_dbg() message describing which
-> > option cxl_test used during load:
-> > "[  111.743246] (NULL device *): cxl_test loading modulo math option"
-> > 
-> > That "(NULL device *)" has raised needless user concern and the info
-> > emitted can be discovered elsewhere.
-> > 
-> > Remove the dev_dbg() messages and make the module_param readable via
-> > sysfs in case a lookup is wanted.
-> > 
-> > The default option is for standard modulo arithmetic, so when the
-> > interleave_arithmetic param is not present in sysfs, the cxl_test
-> > module is using standard modulo arithmetic.
-> 
-> Is this correct?  I'm always unsure of myself with the module_param code
-> but I believe the sysfs will always be there but the value would be
-> "Modulo:0", wouldn't it?
-> 
-You are right. I made that statement based on some trial/error, and I
-guess mostly error, because when I go back around to it now, it operates
-just like you say. Thanks!
 
-> > 
-> > Fixes: f9db85bfec0d ("cxl/acpi: Support CXL XOR Interleave Math (CXIMS)")
-> 
-> I'm not sure this is the correct patch for the fixes.
-> 
-> Would it be?
-> 
-> Fixes: 7a7e6edfca85 ("tools/testing/cxl: Add XOR Math support to cxl_test") 
 
-Yes. Thanks Ira.
+On 1/18/23 1:18 PM, alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> When a cxl_poison trace event is reported by region, the poisoned
+> Device Physical Address (DPA) can be translated to a Host Physical
+> Address (HPA) for consumption by user space.
+> 
+> Translate and add the resulting HPA to the cxl_poison trace event.
+> Follow the device decode logic as defined in the CXL Spec 3.0 Section
+> 8.2.4.19.13.
+> 
+> When the poison request is by memdev, no HPA translation is performed
+> and ULLONG_MAX is assigned to the cxl_poison hpa trace field.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-I'll rev this more carefully, and also update the commit msg.
-It should have said 'cxl_test module' not 'cxl_test modulo'.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Alison
-
+> ---
 > 
-> Ira
+> Built on cxl/next plus Patchset: CXL Poison List Retrieval & Tracing [1]
 > 
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  tools/testing/cxl/test/cxl.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> > index 30ee680d38ff..ede84de69f59 100644
-> > --- a/tools/testing/cxl/test/cxl.c
-> > +++ b/tools/testing/cxl/test/cxl.c
-> > @@ -1135,11 +1135,9 @@ static __init int cxl_test_init(void)
-> >  	if (interleave_arithmetic == 1) {
-> >  		cfmws_start = CFMWS_XOR_ARRAY_START;
-> >  		cfmws_end = CFMWS_XOR_ARRAY_END;
-> > -		dev_dbg(NULL, "cxl_test loading xor math option\n");
-> >  	} else {
-> >  		cfmws_start = CFMWS_MOD_ARRAY_START;
-> >  		cfmws_end = CFMWS_MOD_ARRAY_END;
-> > -		dev_dbg(NULL, "cxl_test loading modulo math option\n");
-> >  	}
-> >  
-> >  	rc = populate_cedt();
-> > @@ -1326,7 +1324,7 @@ static __exit void cxl_test_exit(void)
-> >  	unregister_cxl_mock_ops(&cxl_mock_ops);
-> >  }
-> >  
-> > -module_param(interleave_arithmetic, int, 0000);
-> > +module_param(interleave_arithmetic, int, 0444);
-> >  MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
-> >  module_init(cxl_test_init);
-> >  module_exit(cxl_test_exit);
-> > 
-> > base-commit: 589c3357370a596ef7c99c00baca8ac799fce531
-> > -- 
-> > 2.37.3
-> > 
+> Changes in v2:
+> - Rebased to cxl/next
+> 
+> Link to v1: https://lore.kernel.org/linux-cxl/20230104210401.195808-1-alison.schofield@intel.com/
+> 
+> [1] https://lore.kernel.org/linux-cxl/de11785ff05844299b40b100f8e0f56c7eef7f08.1674070170.git.alison.schofield@intel.com/
 > 
 > 
+>   drivers/cxl/core/trace.c | 94 ++++++++++++++++++++++++++++++++++++++++
+>   drivers/cxl/core/trace.h |  9 +++-
+>   2 files changed, 102 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
+> index 29ae7ce81dc5..d0403dc3c8ab 100644
+> --- a/drivers/cxl/core/trace.c
+> +++ b/drivers/cxl/core/trace.c
+> @@ -1,5 +1,99 @@
+>   // SPDX-License-Identifier: GPL-2.0-only
+>   /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>   
+> +#include <cxl.h>
+> +#include "core.h"
+> +
+>   #define CREATE_TRACE_POINTS
+>   #include "trace.h"
+> +
+> +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int gran = p->interleave_granularity;
+> +	int ways = p->interleave_ways;
+> +	u64 offset;
+> +
+> +	/* Is the hpa within this region at all */
+> +	if (hpa < p->res->start || hpa > p->res->end) {
+> +		dev_dbg(&cxlr->dev,
+> +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
+> +		return false;
+> +	}
+> +
+> +	/* Is the hpa in an expected chunk for its pos(-ition) */
+> +	offset = hpa - p->res->start;
+> +	offset = do_div(offset, gran * ways);
+> +	if ((offset >= pos * gran) && (offset < (pos + 1) * gran))
+> +		return true;
+> +
+> +	dev_dbg(&cxlr->dev,
+> +		"Addr trans fail: hpa 0x%llx not in expected chunk\n", hpa);
+> +
+> +	return false;
+> +}
+> +
+> +static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
+> +			  struct cxl_endpoint_decoder *cxled)
+> +{
+> +	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int pos = cxled->pos;
+> +	u16 eig = 0;
+> +	u8 eiw = 0;
+> +
+> +	ways_to_eiw(p->interleave_ways, &eiw);
+> +	granularity_to_eig(p->interleave_granularity, &eig);
+> +
+> +	/*
+> +	 * The device position in the region interleave set was removed
+> +	 * from the offset at HPA->DPA translation. To reconstruct the
+> +	 * HPA, place the 'pos' in the offset.
+> +	 *
+> +	 * The placement of 'pos' in the HPA is determined by interleave
+> +	 * ways and granularity and is defined in the CXL Spec 3.0 Section
+> +	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+> +	 */
+> +
+> +	/* Remove the dpa base */
+> +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
+> +
+> +	mask_upper = GENMASK_ULL(51, eig + 8);
+> +
+> +	if (eiw < 8) {
+> +		hpa_offset = (dpa_offset & mask_upper) << eiw;
+> +		hpa_offset |= pos << (eig + 8);
+> +	} else {
+> +		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
+> +		bits_upper = bits_upper * 3;
+> +		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
+> +	}
+> +
+> +	/* The lower bits remain unchanged */
+> +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
+> +
+> +	/* Apply the hpa_offset to the region base address */
+> +	hpa = hpa_offset + p->res->start;
+> +
+> +	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
+> +		return ULLONG_MAX;
+> +
+> +	return hpa;
+> +}
+> +
+> +u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *cxlmd,
+> +		  u64 dpa)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_endpoint_decoder *cxled = NULL;
+> +
+> +	for (int i = 0; i <  p->nr_targets; i++) {
+> +		cxled = p->targets[i];
+> +		if (cxlmd == cxled_to_memdev(cxled))
+> +			break;
+> +	}
+> +	if (!cxled || cxlmd != cxled_to_memdev(cxled))
+> +		return ULLONG_MAX;
+> +
+> +	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
+> +}
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index c7958311ce5f..521b80f92e96 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -136,6 +136,8 @@ TRACE_EVENT(cxl_aer_correctable_error,
+>   #define cxl_poison_overflow(flags, time)				\
+>   	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
+>   
+> +u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *memdev, u64 dpa);
+> +
+>   TRACE_EVENT(cxl_poison,
+>   
+>   	    TP_PROTO(struct cxl_memdev *memdev, const struct pci_dev *pcidev,
+> @@ -150,6 +152,7 @@ TRACE_EVENT(cxl_poison,
+>   		__string(pcidev, dev_name(&pcidev->dev))
+>   		__string(region, region)
+>   		__field(u64, overflow_t)
+> +		__field(u64, hpa)
+>   		__field(u64, dpa)
+>   		__field(u32, length)
+>   		__array(char, uuid, 16)
+> @@ -168,17 +171,21 @@ TRACE_EVENT(cxl_poison,
+>   		if (region) {
+>   			__assign_str(region, dev_name(&region->dev));
+>   			memcpy(__entry->uuid, &region->params.uuid, 16);
+> +			__entry->hpa = cxl_trace_hpa(region, memdev,
+> +						     __entry->dpa);
+>   		} else {
+>   			__assign_str(region, "");
+>   			memset(__entry->uuid, 0, 16);
+> +			__entry->hpa = ULLONG_MAX;
+>   		}
+>   	    ),
+>   
+> -	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
+> +	    TP_printk("memdev=%s pcidev=%s region=%s region_uuid=%pU hpa=0x%llx dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
+>   		__get_str(memdev),
+>   		__get_str(pcidev),
+>   		__get_str(region),
+>   		__entry->uuid,
+> +		__entry->hpa,
+>   		__entry->dpa,
+>   		__entry->length,
+>   		show_poison_source(__entry->source),
