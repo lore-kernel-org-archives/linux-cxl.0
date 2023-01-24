@@ -2,72 +2,99 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9DFC38142
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 23:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2121DC38142
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 23:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbjAXXeh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 18:34:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
+        id S233524AbjAXXwH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 18:52:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjAXXeg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 18:34:36 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94F9524B;
-        Tue, 24 Jan 2023 15:34:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=NsdAsF2PUF5UAK5t7f/F72faPpmR+nFRf2RtMk/vURo=; b=vypkss50JGh8cLkIxtQjDUnT27
-        xd4W9Ds12rCxfuczCom8Be+38i6+lObilN1pNgg5jOyw5Y3gU6dIWCrIV4o8o1UpdLoLCEx2mKC1T
-        hXQwZte/c4t36q9tNmbQIJy9S1UvH/wbeT2+ykac4qOjSvC0TkzRq1oPe8Y5TYOghwK4eh64InLfn
-        EnfaXzKiitL3jmJKvil0blHuzNyocnI0SJGiNXtc+IznhCpdtKl3IlrZIPLR1dWeEwidllkIAdDLE
-        ig6WutJZF9ZuT9U26q5qW/tGw3enG+43d9o49pAtHfBdzkFk8jnFcaUIWkKaIuJfnLWtJqj69lCWx
-        Auv2kyOg==;
-Received: from [2601:1c2:d80:3110::9307] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pKSoE-005eCD-Pf; Tue, 24 Jan 2023 23:34:34 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        with ESMTP id S232084AbjAXXwG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 18:52:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E9F4FADB;
+        Tue, 24 Jan 2023 15:51:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE693612E3;
+        Tue, 24 Jan 2023 23:51:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E0DC433D2;
+        Tue, 24 Jan 2023 23:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674604317;
+        bh=yGpuxXtkevLyK+dnh+ZmmDdXBFJtlRVtTJ6LLwAz0gE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eaA0V0M2B80gjzW09l4v/15fA6x+4QjmfXoYlIfwIAdjoE+1Y5bvzF20zJV7kz/zI
+         Mec5pliwqkfk/2k1N3j6k+ES5fQ1nVxsJZi156+7b49/3rb4mJLUj1fveFX3naF5Y3
+         m+zdDP+TpBe6t+G2zKLV5mTbqo5eBxMrTWcOiNCJULmFgJOOaQoFFTGH6OP4XtjD7R
+         86iEpjh8M6Oi6kaaRRLBwt+351eroLF2FvLSfpC1XlB+ccc6k9Cyme0nzAFBfpApDT
+         yAgOhYHnLJm00LGKPEX+0hwY9T+4AR+2lEtGemHQOSdFj0ALVLje5oBlNnYtREmL4b
+         SwmxKdEQtPLkA==
+Date:   Tue, 24 Jan 2023 17:51:55 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
         linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl: Kconfig: fix a spelling mistake
-Date:   Tue, 24 Jan 2023 15:34:31 -0800
-Message-Id: <20230124233431.21599-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.39.1
+Subject: Re: [PATCH v2 10/10] PCI/DOE: Relax restrictions on request and
+ response size
+Message-ID: <20230124235155.GA1114594@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230124124315.00000a5c@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Correct a spelling mistake (reported by codespell).
+On Tue, Jan 24, 2023 at 12:43:15PM +0000, Jonathan Cameron wrote:
+> On Mon, 23 Jan 2023 11:20:00 +0100
+> Lukas Wunner <lukas@wunner.de> wrote:
+> 
+> > An upcoming user of DOE is CMA (Component Measurement and Authentication,
+> > PCIe r6.0 sec 6.31).
+> > 
+> > It builds on SPDM (Security Protocol and Data Model):
+> > https://www.dmtf.org/dsp/DSP0274
+> > 
+> > SPDM message sizes are not always a multiple of dwords.  To transport
+> > them over DOE without using bounce buffers, allow sending requests and
+> > receiving responses whose final dword is only partially populated.
+> > 
+> > Tested-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Ah. This...
+> 
+> I can't immediately find the original discussion thread, but I'm fairly
+> sure we had a version of the DOE code that did this (maybe we just
+> discussed doing it and never had code...)
+> 
+> IIRC, at the time feedback was strongly in favour of making
+> the handling of non dword payloads a problem for the caller (e.g. PCI/CMA)
+> not the DOE core, mainly so that we could keep the layering simple.
+> DOE part of PCI spec says DWORD multiples only, CMA has non dword
+> entries.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Ben Widawsky <bwidawsk@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
----
- drivers/cxl/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I can't remember, but I might have been the voice in favor of making
+it the caller's problem.  Your argument about dealing with it here
+makes a lot of sense, and I'm OK with it, but I *would* like to add
+some text to the commit log and comments in the code about what is
+happening here.  Otherwise there's an unexplained disconnect between
+the DWORD spec language and the byte-oriented code.
 
-diff -- a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -116,7 +116,7 @@ config CXL_REGION_INVALIDATION_TEST
- 	depends on CXL_REGION
- 	help
- 	  CXL Region management and security operations potentially invalidate
--	  the content of CPU caches without notifiying those caches to
-+	  the content of CPU caches without notifying those caches to
- 	  invalidate the affected cachelines. The CXL Region driver attempts
- 	  to invalidate caches when those events occur.  If that invalidation
- 	  fails the region will fail to enable.  Reasons for cache
+> Personally I'm fully in favour of making our lives easier and handling
+> this at the DOE layer!  The CMA padding code is nasty as we have to deal
+> with caching just the right bits of the payload for the running hashes.
+> With it at this layer I'd imagine that code gets much simpler
+> 
+> Assuming resolution to Ira's question on endianness is resolved.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
