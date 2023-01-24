@@ -2,669 +2,199 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9FCC25B4E
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 16:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D5BC25B4E
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 17:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233490AbjAXQ6I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 11:58:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
+        id S234121AbjAXRAt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 12:00:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233451AbjAXQ6G (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 11:58:06 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6093B3FC;
-        Tue, 24 Jan 2023 08:58:01 -0800 (PST)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1Y2p5n14z6J6JM;
-        Wed, 25 Jan 2023 00:53:54 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.158.45) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Tue, 24 Jan 2023 16:57:58 +0000
-From:   <shiju.jose@huawei.com>
-To:     <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <mchehab@kernel.org>
-CC:     <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
-        <shiju.jose@huawei.com>
-Subject: [PATCH V2 2/4] rasdaemon: Add support for the CXL poison events
-Date:   Tue, 24 Jan 2023 16:57:31 +0000
-Message-ID: <20230124165733.1452-3-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20230124165733.1452-1-shiju.jose@huawei.com>
-References: <20230124165733.1452-1-shiju.jose@huawei.com>
+        with ESMTP id S234380AbjAXRAs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 12:00:48 -0500
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0591245F57
+        for <linux-cxl@vger.kernel.org>; Tue, 24 Jan 2023 09:00:37 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230124170034usoutp016f4b39e8af096842ea23dec8dccf6246~9TU4fKvfq3145731457usoutp01p;
+        Tue, 24 Jan 2023 17:00:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230124170034usoutp016f4b39e8af096842ea23dec8dccf6246~9TU4fKvfq3145731457usoutp01p
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1674579634;
+        bh=FMDrPaTF0+Vi9fjCCtYMriQMtblV6FJtS64E1cQbpFk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=ulEn8uCN44kljbp8hWzy+ryVJe4pRQNeyUup+JF4gGL53ax+Ovnd0iz2lTEweb6EY
+         0rDdpTkRRqBsYHfBEFWYGyd+cqH/iV59fanoRFq8TG89VLNkZUb79Oyk3Df4qao8Vr
+         8V9HLPUpAqwFlmgP+s/9BRhfKSGLugQepVQ/Yx6c=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230124170034uscas1p2fa263e7c5e873b4b347f427f2eff3b92~9TU4Q8jZo1958219582uscas1p27;
+        Tue, 24 Jan 2023 17:00:34 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id 9F.E2.49129.2BE00D36; Tue,
+        24 Jan 2023 12:00:34 -0500 (EST)
+Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
+        [203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230124170033uscas1p10baa61b555ae09696d2f5cfa74555913~9TU3-2xF11230912309uscas1p1r;
+        Tue, 24 Jan 2023 17:00:33 +0000 (GMT)
+X-AuditID: cbfec36f-6f006a800001bfe9-f4-63d00eb29eb9
+Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 75.5E.11346.1BE00D36; Tue,
+        24 Jan 2023 12:00:33 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Tue, 24 Jan 2023 09:00:33 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
+        24 Jan 2023 09:00:33 -0800
+From:   Fan Ni <fan.ni@samsung.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>
+Subject: Re: [RFC PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
+Thread-Topic: [RFC PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
+Thread-Index: AQHZLySkNAH6qX3/wkmwdVXQT9dTIK6szvqAgAEKjACAAHkEAA==
+Date:   Tue, 24 Jan 2023 17:00:32 +0000
+Message-ID: <20230124170008.GA173757@bgt-140510-bm03>
+In-Reply-To: <20230124094720.00005c97@Huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <209EB741507E2448A133E680AE32429C@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.48.158.45]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
 X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBKsWRmVeSWpSXmKPExsWy7djX87qb+C4kGxz/yWJx9/EFNovmyYsZ
+        LU7cbGSzWH1zDaPF/qfPWSxWLbzGZnF+1ikWi8MbzzBZHO/dweLA6dFy5C2rx+I9L5k8Nq3q
+        ZPN4cm0zk8fU2fUenzfJBbBFcdmkpOZklqUW6dslcGU8+Zte0C9dsevXE/YGxkWiXYycHBIC
+        JhLv9p1i6mLk4hASWMko8ff0ZyinlUniyJ5prDBVbR9bmEFsIYG1jBJfF3JBFH1ilGi8fBiq
+        YxmjxJ5ZXWAdbAKKEvu6trOB2CICRhJXlh1kByliFpjLLHHz0VqwUcICbhJT3s2HKnKX2HBm
+        MzOE7STxonMp2CAWAVWJOV2fGLsYOTh4BUwlOpYEgIQ5BQwlWp7tAytnFBCT+H5qDROIzSwg
+        LnHryXwmiKsFJRbN3sMMYYtJ/Nv1kA3CVpS4//0lO0S9jsSC3Z/YIGw7iZUXH7NC2NoSyxa+
+        BuvlBZpzcuYTFoheSYmDK26wgPwiIfCGQ+JK5zd2iISLRNfXeVC2tMT0NZdZQG6WEEiWWPWR
+        CyKcIzF/yRaoOdYSC/+sZ5rAqDILydmzkJw0C8lJs5CcNAvJSQsYWVcxipcWF+empxYb5aWW
+        6xUn5haX5qXrJefnbmIEJq7T/w7n72C8fuuj3iFGJg7GQ4wSHMxKIrw9s88nC/GmJFZWpRbl
+        xxeV5qQWH2KU5mBREuc1tD2ZLCSQnliSmp2aWpBaBJNl4uCUamCa6jzVSWLupD8XuireMZg/
+        lRLRzFwkuugSC98PZ+FLFRXfqxl2iPiJX2ROWvEsJfja09/hm+sZkmzPKr+xnPDz6zyzGy5b
+        MqYdmNs9Q+PPJfXi6ETmR46Lfbm+vTiQqiVTfbdxtmJD/4KV3uqLri1LZfSd9+ryPvsClyU7
+        jv14fMvVwMDY8naWx1zbaJkGTqPHicd+Hl2gV1I/QWseR4hd4LP4S2el7WucnrPKHEg947ao
+        N2XaHd7Fx1sM5B1sLAPXrHzN+eiusFXWohtbrEuu8m59N8FWtHibSVO587VOntbv1YIf2X7s
+        SNzuLPbv2QnF1SVSXw7s73os6G6Xe+HR5dZWmXKnkGkRfwrbZdiVWIozEg21mIuKEwH91OZ7
+        ywMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRmVeSWpSXmKPExsWS2cA0SXcj34Vkg9s7dS3uPr7AZtE8eTGj
+        xYmbjWwWq2+uYbTY//Q5i8WqhdfYLM7POsVicXjjGSaL4707WBw4PVqOvGX1WLznJZPHplWd
+        bB5Prm1m8pg6u97j8ya5ALYoLpuU1JzMstQifbsErownf9ML+qUrdv16wt7AuEi0i5GTQ0LA
+        RKLtYwtzFyMXh5DAakaJZW1nGCGcT4wS5w/eY4FwljFK7Pu9iA2khU1AUWJf13YwW0TASOLK
+        soPsIEXMAnOZJW4+WssMkhAWcJOY8m4+VJG7xIYzm5khbCeJF51LWUFsFgFViTldn4DWcXDw
+        CphKdCwJAAkLCTxnlFg/Vx/E5hQwlGh5tg+slVFATOL7qTVMIDazgLjErSfzmSBeEJBYsuc8
+        M4QtKvHy8T9WCFtR4v73l+wQ9ToSC3Z/YoOw7SRWXnzMCmFrSyxb+Bqsl1dAUOLkzCcsEL2S
+        EgdX3GCZwCgxC8m6WUhGzUIyahaSUbOQjFrAyLqKUby0uDg3vaLYOC+1XK84Mbe4NC9dLzk/
+        dxMjMO5P/zscs4Px3q2PeocYmTgYDzFKcDArifD2zD6fLMSbklhZlVqUH19UmpNafIhRmoNF
+        SZzXI3ZivJBAemJJanZqakFqEUyWiYNTqoHJeY7Vs829Fuy1ce2c5ayvsxnV+s8r9H5bzRJa
+        amd5dnvllK4am5net4xfN84vjG86VMMkwOt4O2bKlJWChQFR/LsfSruxbxFrnWucFW63+uZC
+        BVmLNz3HFksdtdOwlvCN+GlncOj88o3Nq1vf7ZDfdnOF/75Dh11qZ5197MbAMiPm+CbW3slu
+        SxctNzsrnuPLdcAu54Wp5Stdi1YpLpYnZ37dmTNNYrW67cLqe2Ic2h61/mdn9nYYMLf8n/lK
+        1OtXf2RF4c3E4oS6mM2cc9XMZkvPMbosLrC6//rMqvQFFyvSlrbUsJ8IylQIfsTQMO85t8/R
+        utSLDEKKnnnJqyWfXNrPrhc7vyj8Ts4eBiWW4oxEQy3mouJEALj1+1pqAwAA
+X-CMS-MailID: 20230124170033uscas1p10baa61b555ae09696d2f5cfa74555913
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351
+References: <20230123121712.29892-1-Jonathan.Cameron@huawei.com>
+        <CGME20230123175325uscas1p134d834ae3636c7c56e93299c01a4f351@uscas1p1.samsung.com>
+        <20230123175315.GA168673@bgt-140510-bm03>
+        <20230124094720.00005c97@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Tue, Jan 24, 2023 at 09:47:20AM +0000, Jonathan Cameron wrote:
 
-Add support to log and record the CXL poison events.
-
-The corresponding Kernel patches here:
-https://lore.kernel.org/linux-cxl/de11785ff05844299b40b100f8e0f56c7eef7f08.1674070170.git.alison.schofield@intel.com/
-
-Presently RFC draft version for logging, could be extended for the policy
-based recovery action for the frequent poison events depending on the above
-kernel patches.
-
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- Makefile.am       |   7 +-
- configure.ac      |  11 ++++
- ras-cxl-handler.c | 162 ++++++++++++++++++++++++++++++++++++++++++++++
- ras-cxl-handler.h |  24 +++++++
- ras-events.c      |  15 +++++
- ras-events.h      |   1 +
- ras-record.c      |  81 +++++++++++++++++++++++
- ras-record.h      |  20 ++++++
- ras-report.c      |  83 ++++++++++++++++++++++++
- ras-report.h      |   2 +
- 10 files changed, 405 insertions(+), 1 deletion(-)
- create mode 100644 ras-cxl-handler.c
- create mode 100644 ras-cxl-handler.h
-
-diff --git a/Makefile.am b/Makefile.am
-index a9832cc..bd7b2ae 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -73,6 +73,11 @@ endif
- if WITH_CPU_FAULT_ISOLATION
-    rasdaemon_SOURCES += ras-cpu-isolation.c queue.c
- endif
-+
-+if WITH_CXL
-+   rasdaemon_SOURCES += ras-cxl-handler.c
-+endif
-+
- rasdaemon_LDADD = -lpthread $(SQLITE3_LIBS) $(LIBTRACEEVENT_LIBS)
- rasdaemon_CFLAGS = $(SQLITE3_CFLAGS) $(LIBTRACEEVENT_CFLAGS)
- 
-@@ -81,7 +86,7 @@ include_HEADERS = config.h  ras-events.h  ras-logger.h  ras-mc-handler.h \
- 		  ras-extlog-handler.h ras-arm-handler.h ras-non-standard-handler.h \
- 		  ras-devlink-handler.h ras-diskerror-handler.h rbtree.h ras-page-isolation.h \
- 		  non-standard-hisilicon.h non-standard-ampere.h ras-memory-failure-handler.h \
--		  ras-cpu-isolation.h queue.h
-+		  ras-cxl-handler.h ras-cpu-isolation.h queue.h
- 
- # This rule can't be called with more than one Makefile job (like make -j8)
- # I can't figure out a way to fix that
-diff --git a/configure.ac b/configure.ac
-index c973aaf..028b9b3 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -127,6 +127,16 @@ AS_IF([test "x$enable_memory_failure" = "xyes" || test "x$enable_all" = "xyes"],
- AM_CONDITIONAL([WITH_MEMORY_FAILURE], [test x$enable_memory_failure = xyes || test x$enable_all = xyes])
- AM_COND_IF([WITH_MEMORY_FAILURE], [USE_MEMORY_FAILURE="yes"], [USE_MEMORY_FAILURE="no"])
- 
-+AC_ARG_ENABLE([cxl],
-+    AS_HELP_STRING([--enable-cxl], [enable CXL events (currently experimental)]))
-+
-+AS_IF([test "x$enable_cxl" = "xyes" || test "x$enable_all" == "xyes"], [
-+  AC_DEFINE(HAVE_CXL,1,"have CXL events collect")
-+  AC_SUBST([WITH_CXL])
-+])
-+AM_CONDITIONAL([WITH_CXL], [test x$enable_cxl = xyes || test x$enable_all == xyes])
-+AM_COND_IF([WITH_CXL], [USE_CXL="yes"], [USE_CXL="no"])
-+
- AC_ARG_ENABLE([abrt_report],
-     AS_HELP_STRING([--enable-abrt-report], [enable report event to ABRT (currently experimental)]))
- 
-@@ -215,6 +225,7 @@ compile time options summary
-     DEVLINK             : $USE_DEVLINK
-     Disk I/O errors     : $USE_DISKERROR
-     Memory Failure      : $USE_MEMORY_FAILURE
-+    CXL events          : $USE_CXL
-     Memory CE PFA       : $USE_MEMORY_CE_PFA
-     AMP RAS errors      : $USE_AMP_NS_DECODE
-     CPU fault isolation : $USE_CPU_FAULT_ISOLATION
-diff --git a/ras-cxl-handler.c b/ras-cxl-handler.c
-new file mode 100644
-index 0000000..0b7cdca
---- /dev/null
-+++ b/ras-cxl-handler.c
-@@ -0,0 +1,162 @@
-+/*
-+ * Copyright (c) Huawei Technologies Co., Ltd. 2023. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <traceevent/kbuffer.h>
-+#include "ras-cxl-handler.h"
-+#include "ras-record.h"
-+#include "ras-logger.h"
-+#include "ras-report.h"
-+
-+/* Poison List: Payload out flags */
-+#define CXL_POISON_FLAG_MORE            BIT(0)
-+#define CXL_POISON_FLAG_OVERFLOW        BIT(1)
-+#define CXL_POISON_FLAG_SCANNING        BIT(2)
-+
-+/* CXL poison - source types */
-+enum cxl_poison_source {
-+	CXL_POISON_SOURCE_UNKNOWN = 0,
-+	CXL_POISON_SOURCE_EXTERNAL = 1,
-+	CXL_POISON_SOURCE_INTERNAL = 2,
-+	CXL_POISON_SOURCE_INJECTED = 3,
-+	CXL_POISON_SOURCE_VENDOR = 7,
-+};
-+
-+int ras_cxl_poison_event_handler(struct trace_seq *s,
-+				 struct tep_record *record,
-+				 struct tep_event *event, void *context)
-+{
-+	int len;
-+	unsigned long long val;
-+	struct ras_events *ras = context;
-+	time_t now;
-+	struct tm *tm;
-+	struct ras_cxl_poison_event ev;
-+
-+	now = record->ts/user_hz + ras->uptime_diff;
-+	tm = localtime(&now);
-+	if (tm)
-+		strftime(ev.timestamp, sizeof(ev.timestamp),
-+			 "%Y-%m-%d %H:%M:%S %z", tm);
-+	else
-+		strncpy(ev.timestamp, "1970-01-01 00:00:00 +0000", sizeof(ev.timestamp));
-+	trace_seq_printf(s, "%s ", ev.timestamp);
-+
-+	ev.memdev = tep_get_field_raw(s, event, "memdev",
-+				      record, &len, 1);
-+	if (!ev.memdev)
-+		return -1;
-+	trace_seq_printf(s, "memdev:%s ", ev.memdev);
-+
-+	ev.pcidev = tep_get_field_raw(s, event, "pcidev",
-+				      record, &len, 1);
-+	if (!ev.pcidev)
-+		return -1;
-+	trace_seq_printf(s, "pcidev:%s ", ev.pcidev);
-+
-+	ev.region = tep_get_field_raw(s, event, "region",
-+				      record, &len, 1);
-+	if (!ev.region)
-+		return -1;
-+	trace_seq_printf(s, "region:%s ", ev.region);
-+
-+	ev.uuid = tep_get_field_raw(s, event, "uuid",
-+				    record, &len, 1);
-+	if (!ev.uuid)
-+		return -1;
-+	trace_seq_printf(s, "region_uuid:%s ", ev.uuid);
-+
-+	if (tep_get_field_val(s, event, "hpa", record, &val, 1) < 0)
-+		return -1;
-+	ev.hpa = val;
-+	trace_seq_printf(s, "poison list: hpa:0x%llx ", (unsigned long long)ev.hpa);
-+
-+	if (tep_get_field_val(s, event, "dpa", record, &val, 1) < 0)
-+		return -1;
-+	ev.dpa = val;
-+	trace_seq_printf(s, "dpa:0x%llx ", (unsigned long long)ev.dpa);
-+
-+	if (tep_get_field_val(s, event, "length", record, &val, 1) < 0)
-+		return -1;
-+	ev.length = val;
-+	trace_seq_printf(s, "length:%d ", ev.length);
-+
-+	if (tep_get_field_val(s,  event, "source", record, &val, 1) < 0)
-+		return -1;
-+
-+	switch (val) {
-+	case CXL_POISON_SOURCE_UNKNOWN:
-+		ev.source = "Unknown";
-+		break;
-+	case CXL_POISON_SOURCE_EXTERNAL:
-+		ev.source = "External";
-+		break;
-+	case CXL_POISON_SOURCE_INTERNAL:
-+		ev.source = "Internal";
-+		break;
-+	case CXL_POISON_SOURCE_INJECTED:
-+		ev.source = "Injected";
-+		break;
-+	case CXL_POISON_SOURCE_VENDOR:
-+		ev.source = "Vendor";
-+		break;
-+	default:
-+		ev.source = "Invalid";
-+	}
-+	trace_seq_printf(s, "source:%s ", ev.source);
-+
-+	if (tep_get_field_val(s,  event, "flags", record, &val, 1) < 0)
-+		return -1;
-+	ev.flags = val;
-+	trace_seq_printf(s, "flags:%d ", ev.flags);
-+
-+	if (ev.flags & CXL_POISON_FLAG_OVERFLOW) {
-+		if (tep_get_field_val(s,  event, "overflow_t", record, &val, 1) < 0)
-+			return -1;
-+		if (val) {
-+			/* CXL Specification 3.0
-+			 * Overflow timestamp - The number of unsigned nanoseconds
-+			 * that have elapsed since midnight, 01-Jan-1970 UTC
-+			 */
-+			time_t ovf_ts_secs = val / 1000000000ULL;
-+
-+			tm = localtime(&ovf_ts_secs);
-+			if (tm) {
-+				strftime(ev.overflow_ts, sizeof(ev.overflow_ts),
-+					 "%Y-%m-%d %H:%M:%S %z", tm);
-+			}
-+		}
-+		if (!val || !tm)
-+			strncpy(ev.overflow_ts, "1970-01-01 00:00:00 +0000",
-+				sizeof(ev.overflow_ts));
-+	} else
-+		strncpy(ev.overflow_ts, "1970-01-01 00:00:00 +0000", sizeof(ev.overflow_ts));
-+	trace_seq_printf(s, "overflow timestamp:%s ", ev.overflow_ts);
-+	trace_seq_printf(s, "\n");
-+
-+	/* Insert data into the SGBD */
-+#ifdef HAVE_SQLITE3
-+	ras_store_cxl_poison_event(ras, &ev);
-+#endif
-+
-+#ifdef HAVE_ABRT_REPORT
-+	/* Report event to ABRT */
-+	ras_report_cxl_poison_event(ras, &ev);
-+#endif
-+
-+	return 0;
-+}
-diff --git a/ras-cxl-handler.h b/ras-cxl-handler.h
-new file mode 100644
-index 0000000..84d5cc6
---- /dev/null
-+++ b/ras-cxl-handler.h
-@@ -0,0 +1,24 @@
-+/*
-+ * Copyright (c) Huawei Technologies Co., Ltd. 2023. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __RAS_CXL_HANDLER_H
-+#define __RAS_CXL_HANDLER_H
-+
-+#include "ras-events.h"
-+#include <traceevent/event-parse.h>
-+
-+int ras_cxl_poison_event_handler(struct trace_seq *s,
-+				 struct tep_record *record,
-+				 struct tep_event *event, void *context);
-+#endif
-diff --git a/ras-events.c b/ras-events.c
-index 39f9ce2..6555125 100644
---- a/ras-events.c
-+++ b/ras-events.c
-@@ -40,6 +40,7 @@
- #include "ras-devlink-handler.h"
- #include "ras-diskerror-handler.h"
- #include "ras-memory-failure-handler.h"
-+#include "ras-cxl-handler.h"
- #include "ras-record.h"
- #include "ras-logger.h"
- #include "ras-page-isolation.h"
-@@ -243,6 +244,10 @@ int toggle_ras_mc_event(int enable)
- 	rc |= __toggle_ras_mc_event(ras, "ras", "memory_failure_event", enable);
- #endif
- 
-+#ifdef HAVE_CXL
-+	rc |= __toggle_ras_mc_event(ras, "cxl", "cxl_poison", enable);
-+#endif
-+
- free_ras:
- 	free(ras);
- 	return rc;
-@@ -951,6 +956,16 @@ int handle_ras_events(int record_events)
- 		    "ras", "memory_failure_event");
- #endif
- 
-+#ifdef HAVE_CXL
-+	rc = add_event_handler(ras, pevent, page_size, "cxl", "cxl_poison",
-+			       ras_cxl_poison_event_handler, NULL, CXL_POISON_EVENT);
-+	if (!rc)
-+		num_events++;
-+	else
-+		log(ALL, LOG_ERR, "Can't get traces from %s:%s\n",
-+		    "cxl", "cxl_poison");
-+#endif
-+
- 	if (!num_events) {
- 		log(ALL, LOG_INFO,
- 		    "Failed to trace all supported RAS events. Aborting.\n");
-diff --git a/ras-events.h b/ras-events.h
-index 6c9f507..fc51070 100644
---- a/ras-events.h
-+++ b/ras-events.h
-@@ -39,6 +39,7 @@ enum {
- 	DEVLINK_EVENT,
- 	DISKERROR_EVENT,
- 	MF_EVENT,
-+	CXL_POISON_EVENT,
- 	NR_EVENTS
- };
- 
-diff --git a/ras-record.c b/ras-record.c
-index a367939..f54fb41 100644
---- a/ras-record.c
-+++ b/ras-record.c
-@@ -559,6 +559,67 @@ int ras_store_mf_event(struct ras_events *ras, struct ras_mf_event *ev)
- }
- #endif
- 
-+#ifdef HAVE_CXL
-+/*
-+ * Table and functions to handle cxl:cxl_poison
-+ */
-+static const struct db_fields cxl_poison_event_fields[] = {
-+	{ .name = "id",                   .type = "INTEGER PRIMARY KEY" },
-+	{ .name = "timestamp",            .type = "TEXT" },
-+	{ .name = "memdev",               .type = "TEXT" },
-+	{ .name = "pcidev",               .type = "TEXT" },
-+	{ .name = "region",               .type = "TEXT" },
-+	{ .name = "region_uuid",          .type = "TEXT" },
-+	{ .name = "hpa",                  .type = "INTEGER" },
-+	{ .name = "dpa",                  .type = "INTEGER" },
-+	{ .name = "length",               .type = "INTEGER" },
-+	{ .name = "source",               .type = "TEXT" },
-+	{ .name = "flags",                .type = "INTEGER" },
-+	{ .name = "overflow_ts",          .type = "TEXT" },
-+};
-+
-+static const struct db_table_descriptor cxl_poison_event_tab = {
-+	.name = "cxl_poison_event",
-+	.fields = cxl_poison_event_fields,
-+	.num_fields = ARRAY_SIZE(cxl_poison_event_fields),
-+};
-+
-+int ras_store_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev)
-+{
-+	int rc;
-+	struct sqlite3_priv *priv = ras->db_priv;
-+
-+	if (!priv || !priv->stmt_cxl_poison_event)
-+		return 0;
-+	log(TERM, LOG_INFO, "cxl_poison_event store: %p\n", priv->stmt_cxl_poison_event);
-+
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 1, ev->timestamp, -1, NULL);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 2, ev->memdev, -1, NULL);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 3, ev->pcidev, -1, NULL);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 4, ev->region, -1, NULL);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 5, ev->uuid, -1, NULL);
-+	sqlite3_bind_int64(priv->stmt_cxl_poison_event, 6, ev->hpa);
-+	sqlite3_bind_int64(priv->stmt_cxl_poison_event, 7, ev->dpa);
-+	sqlite3_bind_int(priv->stmt_cxl_poison_event, 8, ev->length);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 9, ev->source, -1, NULL);
-+	sqlite3_bind_int(priv->stmt_cxl_poison_event, 10, ev->flags);
-+	sqlite3_bind_text(priv->stmt_cxl_poison_event, 11, ev->overflow_ts, -1, NULL);
-+
-+	rc = sqlite3_step(priv->stmt_cxl_poison_event);
-+	if (rc != SQLITE_OK && rc != SQLITE_DONE)
-+		log(TERM, LOG_ERR,
-+		    "Failed to do cxl_poison_event step on sqlite: error = %d\n", rc);
-+	rc = sqlite3_reset(priv->stmt_cxl_poison_event);
-+	if (rc != SQLITE_OK && rc != SQLITE_DONE)
-+		log(TERM, LOG_ERR,
-+		    "Failed reset cxl_poison_event on sqlite: error = %d\n",
-+		    rc);
-+	log(TERM, LOG_INFO, "register inserted at db\n");
-+
-+	return rc;
-+}
-+#endif
-+
- /*
-  * Generic code
-  */
-@@ -896,6 +957,16 @@ int ras_mc_event_opendb(unsigned cpu, struct ras_events *ras)
- 	}
- #endif
- 
-+#ifdef HAVE_CXL
-+	rc = ras_mc_create_table(priv, &cxl_poison_event_tab);
-+	if (rc == SQLITE_OK) {
-+		rc = ras_mc_prepare_stmt(priv, &priv->stmt_cxl_poison_event,
-+					 &cxl_poison_event_tab);
-+		if (rc != SQLITE_OK)
-+			goto error;
-+	}
-+#endif
-+
- 	ras->db_priv = priv;
- 	return 0;
- 
-@@ -1008,6 +1079,16 @@ int ras_mc_event_closedb(unsigned int cpu, struct ras_events *ras)
- 	}
- #endif
- 
-+#ifdef HAVE_CXL
-+	if (priv->stmt_cxl_poison_event) {
-+		rc = sqlite3_finalize(priv->stmt_cxl_poison_event);
-+		if (rc != SQLITE_OK)
-+			log(TERM, LOG_ERR,
-+			    "cpu %u: Failed to finalize cxl_poison_event sqlite: error = %d\n",
-+			    cpu, rc);
-+	}
-+#endif
-+
- 	rc = sqlite3_close_v2(db);
- 	if (rc != SQLITE_OK)
- 		log(TERM, LOG_ERR,
-diff --git a/ras-record.h b/ras-record.h
-index 219f10b..e5bf483 100644
---- a/ras-record.h
-+++ b/ras-record.h
-@@ -114,6 +114,20 @@ struct ras_mf_event {
- 	const char *action_result;
- };
- 
-+struct ras_cxl_poison_event {
-+	char timestamp[64];
-+	const char *memdev;
-+	const char *pcidev;
-+	const char *region;
-+	const char *uuid;
-+	uint64_t hpa;
-+	uint64_t dpa;
-+	uint32_t length;
-+	const char *source;
-+	uint8_t flags;
-+	char overflow_ts[64];
-+};
-+
- struct ras_mc_event;
- struct ras_aer_event;
- struct ras_extlog_event;
-@@ -123,6 +137,7 @@ struct mce_event;
- struct devlink_event;
- struct diskerror_event;
- struct ras_mf_event;
-+struct ras_cxl_poison_event;
- 
- #ifdef HAVE_SQLITE3
- 
-@@ -155,6 +170,9 @@ struct sqlite3_priv {
- #ifdef HAVE_MEMORY_FAILURE
- 	sqlite3_stmt	*stmt_mf_event;
- #endif
-+#ifdef HAVE_CXL
-+	sqlite3_stmt	*stmt_cxl_poison_event;
-+#endif
- };
- 
- struct db_fields {
-@@ -182,6 +200,7 @@ int ras_store_arm_record(struct ras_events *ras, struct ras_arm_event *ev);
- int ras_store_devlink_event(struct ras_events *ras, struct devlink_event *ev);
- int ras_store_diskerror_event(struct ras_events *ras, struct diskerror_event *ev);
- int ras_store_mf_event(struct ras_events *ras, struct ras_mf_event *ev);
-+int ras_store_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev);
- 
- #else
- static inline int ras_mc_event_opendb(unsigned cpu, struct ras_events *ras) { return 0; };
-@@ -195,6 +214,7 @@ static inline int ras_store_arm_record(struct ras_events *ras, struct ras_arm_ev
- static inline int ras_store_devlink_event(struct ras_events *ras, struct devlink_event *ev) { return 0; };
- static inline int ras_store_diskerror_event(struct ras_events *ras, struct diskerror_event *ev) { return 0; };
- static inline int ras_store_mf_event(struct ras_events *ras, struct ras_mf_event *ev) { return 0; };
-+static inline int ras_store_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev) { return 0; };
- 
- #endif
- 
-diff --git a/ras-report.c b/ras-report.c
-index 62d5eb7..589e640 100644
---- a/ras-report.c
-+++ b/ras-report.c
-@@ -331,6 +331,42 @@ static int set_mf_event_backtrace(char *buf, struct ras_mf_event *ev)
- 	return 0;
- }
- 
-+static int set_cxl_poison_event_backtrace(char *buf, struct ras_cxl_poison_event *ev)
-+{
-+	char bt_buf[MAX_BACKTRACE_SIZE];
-+
-+	if (!buf || !ev)
-+		return -1;
-+
-+	sprintf(bt_buf, "BACKTRACE="	\
-+						"timestamp=%s\n"	\
-+						"memdev=%s\n"		\
-+						"pcidev=%s\n"		\
-+						"region=%s\n"		\
-+						"uuid=%s\n"		\
-+						"hpa=0x%lx\n"		\
-+						"dpa=0x%lx\n"		\
-+						"length=%d\n"		\
-+						"source=%s\n"		\
-+						"flags=%d\n"		\
-+						"overflow_timestamp=%s\n" \
-+						ev->timestamp,		\
-+						ev->memdev,		\
-+						ev->pcidev,		\
-+						ev->region,		\
-+						ev->uuid,		\
-+						ev->hpa,		\
-+						ev->dpa,		\
-+						ev->length,		\
-+						ev->source,		\
-+						ev->flags,		\
-+						ev->overflow_ts);
-+
-+	strcat(buf, bt_buf);
-+
-+	return 0;
-+}
-+
- static int commit_report_backtrace(int sockfd, int type, void *ev){
- 	char buf[MAX_BACKTRACE_SIZE];
- 	char *pbuf = buf;
-@@ -368,6 +404,9 @@ static int commit_report_backtrace(int sockfd, int type, void *ev){
- 	case MF_EVENT:
- 		rc = set_mf_event_backtrace(buf, (struct ras_mf_event *)ev);
- 		break;
-+	case CXL_POISON_EVENT:
-+		rc = set_cxl_poison_event_backtrace(buf, (struct ras_cxl_poison_event *)ev);
-+		break;
- 	default:
- 		return -1;
- 	}
-@@ -776,3 +815,47 @@ mf_fail:
- 	else
- 		return -1;
- }
-+
-+int ras_report_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev)
-+{
-+	char buf[MAX_MESSAGE_SIZE];
-+	int sockfd = 0;
-+	int done = 0;
-+	int rc = -1;
-+
-+	memset(buf, 0, sizeof(buf));
-+
-+	sockfd = setup_report_socket();
-+	if (sockfd < 0)
-+		return -1;
-+
-+	rc = commit_report_basic(sockfd);
-+	if (rc < 0)
-+		goto cxl_poison_fail;
-+
-+	rc = commit_report_backtrace(sockfd, CXL_POISON_EVENT, ev);
-+	if (rc < 0)
-+		goto cxl_poison_fail;
-+
-+	sprintf(buf, "ANALYZER=%s", "rasdaemon-cxl-poison");
-+	rc = write(sockfd, buf, strlen(buf) + 1);
-+	if (rc < strlen(buf) + 1)
-+		goto cxl_poison_fail;
-+
-+	sprintf(buf, "REASON=%s", "CXL poison");
-+	rc = write(sockfd, buf, strlen(buf) + 1);
-+	if (rc < strlen(buf) + 1)
-+		goto cxl_poison_fail;
-+
-+	done = 1;
-+
-+cxl_poison_fail:
-+
-+	if (sockfd >= 0)
-+		close(sockfd);
-+
-+	if (done)
-+		return 0;
-+	else
-+		return -1;
-+}
-diff --git a/ras-report.h b/ras-report.h
-index e605eb1..d1591ce 100644
---- a/ras-report.h
-+++ b/ras-report.h
-@@ -39,6 +39,7 @@ int ras_report_arm_event(struct ras_events *ras, struct ras_arm_event *ev);
- int ras_report_devlink_event(struct ras_events *ras, struct devlink_event *ev);
- int ras_report_diskerror_event(struct ras_events *ras, struct diskerror_event *ev);
- int ras_report_mf_event(struct ras_events *ras, struct ras_mf_event *ev);
-+int ras_report_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev);
- 
- #else
- 
-@@ -50,6 +51,7 @@ static inline int ras_report_arm_event(struct ras_events *ras, struct ras_arm_ev
- static inline int ras_report_devlink_event(struct ras_events *ras, struct devlink_event *ev) { return 0; };
- static inline int ras_report_diskerror_event(struct ras_events *ras, struct diskerror_event *ev) { return 0; };
- static inline int ras_report_mf_event(struct ras_events *ras, struct ras_mf_event *ev) { return 0; };
-+static inline int ras_report_cxl_poison_event(struct ras_events *ras, struct ras_cxl_poison_event *ev) { return 0; };
- 
- #endif
- 
--- 
-2.25.1
-
+> On Mon, 23 Jan 2023 17:53:24 +0000
+> Fan Ni <fan.ni@samsung.com> wrote:
+>=20
+> > On Mon, Jan 23, 2023 at 12:17:10PM +0000, Jonathan Cameron wrote:
+> >=20
+> >=20
+> >=20
+> > > Until now, testing using CXL has relied up always using two root port=
+s
+> > > below a host bridge, to work around a current assumption in the Linux
+> > > kernel support that, in the single root port case, the implementation=
+ will
+> > > use the allowed passthrough decoder implementation choice. If that ch=
+oice
+> > > is made all accesses are routed from the host bridge to the single
+> > > root port that is present. Effectively we have a pass through decoder
+> > > (it is called that in the kernel driver).
+> > >=20
+> > > This patch series implements that functionality and makes it the defa=
+ult
+> > > See patch 2 for a discussion of why I think we can make this change
+> > > without backwards compatibility issues (basically if it didn't work b=
+efore
+> > > who are we breaking by making it work?)
+> > >=20
+> > > Whilst this limitation has been known since the initial QEMU patch
+> > > postings / kernel CXL region support, Fan Ni Ran into it recently rem=
+inding
+> > > me that we should solve it.
+> > >=20
+> > > https://urldefense.com/v3/__https://lore.kernel.org/linux-cxl/2023011=
+3171044.GA24788@bgt-140510-bm03/__;!!EwVzqGoTKBqv-0DWAJBm!WsD6FV-KV_YnhhHWL=
+ll72cHLqLQ_8kpps3MlpAa6Bonsdz6aifuWT40-QnlRyFqWyeyaVb-RiC03_qajbeCGsI5DcPYv=
+$=20
+> > >=20
+> > > Tree with a large set of patches before this at:
+> > > https://urldefense.com/v3/__https://gitlab.com/jic23/qemu/-/tree/cxl-=
+2023-01-20__;!!EwVzqGoTKBqv-0DWAJBm!WsD6FV-KV_YnhhHWLll72cHLqLQ_8kpps3MlpAa=
+6Bonsdz6aifuWT40-QnlRyFqWyeyaVb-RiC03_qajbeCGsPjbv12T$=20
+> > >=20
+> > > I've done some basic testing, though I did hit what appears to be
+> > > a kernel race on region bring up of existing region / namespace in a
+> > > 1HB 2RP 2EP test case. That is proving hard to replicate consistently
+> > > but doesn't seem to have anything to do with the emulation other than
+> > > perhaps we are opening up a race by responding slowly to something.
+> > >=20
+> > > Jonathan Cameron (2):
+> > >   hw/pci: Add pcie_count_ds_port() and pcie_find_port_first() helpers
+> > >   hw/pxb-cxl: Support passthrough HDM Decoders unless overridden
+> > >=20
+> > >  hw/cxl/cxl-host.c                   | 31 +++++++++++++--------
+> > >  hw/pci-bridge/pci_expander_bridge.c | 43 +++++++++++++++++++++++++--=
+--
+> > >  hw/pci/pcie_port.c                  | 38 +++++++++++++++++++++++++
+> > >  include/hw/cxl/cxl.h                |  1 +
+> > >  include/hw/cxl/cxl_component.h      |  1 +
+> > >  include/hw/pci/pci_bridge.h         |  1 +
+> > >  include/hw/pci/pcie_port.h          |  2 ++
+> > >  7 files changed, 100 insertions(+), 17 deletions(-)
+> > >=20
+> > > --=20
+> > > 2.37.2
+> > >=20
+> > >  =20
+> > Tried three different cxl topology setups (1HB1RP, 1HB2RP2Memdev, with
+> > switch), the patch works fine for me.
+> > Btw, there seem some format issues with the patch, got warnings with
+> > checkpatch tool.
+> Thanks! I'll clean those up.  Was being lazy on it as it's an RFC for
+> now :)  Given this is small and useful I'll probably pull it nearer the
+> head of the queue.
+>=20
+> When I repost, if you could give a Tested-by tag that would be great!
+>=20
+> Thanks,
+>=20
+> Jonathan
+>=20
+Will do. Thanks.=
