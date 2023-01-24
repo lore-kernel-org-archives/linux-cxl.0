@@ -2,39 +2,45 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98343C38142
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 10:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ABCC54EAA
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 10:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbjAXKVd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 05:21:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58990 "EHLO
+        id S233165AbjAXKcR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 05:32:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231660AbjAXKVd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 05:21:33 -0500
+        with ESMTP id S233459AbjAXKcQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 05:32:16 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11305272
-        for <linux-cxl@vger.kernel.org>; Tue, 24 Jan 2023 02:21:31 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1NGG1MjTz6J696;
-        Tue, 24 Jan 2023 18:18:14 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3777D3F2AD;
+        Tue, 24 Jan 2023 02:32:12 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1NTd3wHZz6J7Cg;
+        Tue, 24 Jan 2023 18:28:05 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 24 Jan
- 2023 10:21:29 +0000
-Date:   Tue, 24 Jan 2023 10:21:28 +0000
+ 2023 10:32:09 +0000
+Date:   Tue, 24 Jan 2023 10:32:08 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        Gregory Price <gregory.price@memverge.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 0/6] cxl: CXL Inject & Clear Poison
-Message-ID: <20230124102128.00002316@Huawei.com>
-In-Reply-To: <Y88babGTKB91a5qV@aschofie-mobl2>
-References: <cover.1674101475.git.alison.schofield@intel.com>
-        <20230123171301.000071ba@huawei.com>
-        <Y88babGTKB91a5qV@aschofie-mobl2>
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, "Hillf Danton" <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 01/10] PCI/DOE: Silence WARN splat with
+ CONFIG_DEBUG_OBJECTS=y
+Message-ID: <20230124103208.00000675@Huawei.com>
+In-Reply-To: <63cf276083fe1_4a9a29468@iweiny-mobl.notmuch>
+References: <cover.1674468099.git.lukas@wunner.de>
+        <cc4b61809e2520d835cf3d4f62e7d5ed00a9d031.1674468099.git.lukas@wunner.de>
+        <63cf276083fe1_4a9a29468@iweiny-mobl.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -48,126 +54,87 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 23 Jan 2023 15:42:33 -0800
-Alison Schofield <alison.schofield@intel.com> wrote:
+On Mon, 23 Jan 2023 16:33:36 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> On Mon, Jan 23, 2023 at 05:13:01PM +0000, Jonathan Cameron wrote:
-> > On Wed, 18 Jan 2023 21:00:15 -0800
-> > alison.schofield@intel.com wrote:
+> Lukas Wunner wrote:
+> > Gregory Price reports a WARN splat with CONFIG_DEBUG_OBJECTS=y upon CXL
+> > probing because pci_doe_submit_task() invokes INIT_WORK() instead of
+> > INIT_WORK_ONSTACK() for a work_struct that was allocated on the stack.
+> > 
+> > All callers of pci_doe_submit_task() allocate the work_struct on the
+> > stack, so replace INIT_WORK() with INIT_WORK_ONSTACK() as a backportable
+> > short-term fix.
+> > 
+> > Stacktrace for posterity:
+> > 
+> > WARNING: CPU: 0 PID: 23 at lib/debugobjects.c:545 __debug_object_init.cold+0x18/0x183
+> > CPU: 0 PID: 23 Comm: kworker/u2:1 Not tainted 6.1.0-0.rc1.20221019gitaae703b02f92.17.fc38.x86_64 #1
+> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
+> > Call Trace:
+> >  pci_doe_submit_task+0x5d/0xd0
+> >  pci_doe_discovery+0xb4/0x100
+> >  pcim_doe_create_mb+0x219/0x290
+> >  cxl_pci_probe+0x192/0x430
+> >  local_pci_probe+0x41/0x80
+> >  pci_device_probe+0xb3/0x220
+> >  really_probe+0xde/0x380
+> >  __driver_probe_device+0x78/0x170
+> >  driver_probe_device+0x1f/0x90
+> >  __driver_attach_async_helper+0x5c/0xe0
+> >  async_run_entry_fn+0x30/0x130
+> >  process_one_work+0x294/0x5b0
+> > 
+> > Fixes: 9d24322e887b ("PCI/DOE: Add DOE mailbox support functions")
+> > Link: https://lore.kernel.org/linux-cxl/Y1bOniJliOFszvIK@memverge.com/
+> > Reported-by: Gregory Price <gregory.price@memverge.com>
+> > Tested-by: Ira Weiny <ira.weiny@intel.com>  
+> 
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+It's an unusual requirement, but this is indeed the minimal fix
+given current users.  Obviously becomes more sensible later in the
+series once you make the API synchronous only.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+
+> 
+> > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > Cc: stable@vger.kernel.org # v6.0+
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  Changes v1 -> v2:
+> >   * Add note in kernel-doc of pci_doe_submit_task() that pci_doe_task must
+> >     be allocated on the stack (Jonathan)
+> > 
+> >  drivers/pci/doe.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> > index 66d9ab288646..12a6752351bf 100644
+> > --- a/drivers/pci/doe.c
+> > +++ b/drivers/pci/doe.c
+> > @@ -520,6 +520,8 @@ EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+> >   * task->complete will be called when the state machine is done processing this
+> >   * task.
+> >   *
+> > + * @task must be allocated on the stack.
+> > + *
+> >   * Excess data will be discarded.
+> >   *
+> >   * RETURNS: 0 when task has been successfully queued, -ERRNO on error
+> > @@ -541,7 +543,7 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+> >  		return -EIO;
+> >  
+> >  	task->doe_mb = doe_mb;
+> > -	INIT_WORK(&task->work, doe_statemachine_work);
+> > +	INIT_WORK_ONSTACK(&task->work, doe_statemachine_work);
+> >  	queue_work(doe_mb->work_queue, &task->work);
+> >  	return 0;
+> >  }
+> > -- 
+> > 2.39.1
 > >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > Built on cxl/next plus Patchset: CXL Poison List Retrieval & Tracing:
-> > > https://lore.kernel.org/linux-cxl/de11785ff05844299b40b100f8e0f56c7eef7f08.1674070170.git.alison.schofield@intel.com/  
-> > 
-> > Only tangentially relevant, but I've only just registered
-> > as a result of getting a lot of 0 timestamps (which is what
-> > you return if the timestamp base is unknown) that I don't
-> > think we currently ever set the EP timestamp.
-> > 
-> > Recommendation in the spec (8.2.9.4.2) is:
-> > "It is recommended that the host set hte timestamp
-> > after ever Conventional or CXL Reset"
-> > 
-> > I'd go further and assume that if we are doing native error
-> > handling then it's up to the OS to initialize the timestamp.
-> > 
-> > Also relevant to Ira's series as events are timestamped.
-> > Currently Ira's QEMU code doesn't take this subtlety into
-> > account (poison doesn't either - but I have patches).
-> > 
-> > Jonathan
-> >   
 > 
-> Jonathan,
-> 
-> I hadn't seen the Set Timestamp cmd, but I think we are OK with
-> Get Poison List and it's overflow_t reporting, it does not use
-> a relative timestamp, but absolute since Jan-1970.
-
-I'd assume most devices have no ability to get that timestamp without
-a set timestamp command.  You might get some with an RTC that is factory
-set, but I doubt it will be common.
-
-> 
-> Table 8-106 says: 
-> Overflow Timestamp: The time that the device determined the poison
-> list overflowed. This field is only valid if the overflow indicator is set. The
-> number of unsigned nanoseconds that have elapsed since midnight, 01-
-> Jan-1970, UTC. If the device does not have a valid timestamp, return 0.
-
-Yup, but Table 8-60  Set Timestamp Input Payload has
-
-"Timestamp: The number of unsigned nanoseconds that have elapsed since midnight,
-01-Jan-1970, UTC."
-above that it is the text that says the host should set it on Conventional
-or CXL reset (which obviously includes boot).
-
-That's where the device idea of time is coming from so that it can be returned
-in places like the Overflow timestamp.  My reading of that bit about
-"not have a valid timestamp, return 0" is that is targeting the case where
-a timestamp has not been set since reset.
-
-All in all, we are fine (in that it 'works') but with out set timestamp
-the generated time stamps are going to be garbage on many devices.
-
-I'll spin an RFC patch adding the call and we can work out what
-conditions it should be called under in that thread.
-
-Jonathan
-
-
-
-> 
-> Alison
-> 
-> 
-> >   
-> > > 
-> > > Changes in v2:
-> > > - Add Jonathan Reviewed-by tags to Patches 1,2,4
-> > > - Clean up input payload structs for both inject and clear (Dan)
-> > > - Commit message cleanups, including spec references (Dave)
-> > > - Use CXL_POISON_LEN_MULT in define of clear write data
-> > > - Use IS_ALIGNED() for 64byte align check (Dan)
-> > > - Add Kconfig CXL_POISON_INJECT  (Dan)
-> > > - Trivial space cleanup (Jonathan)
-> > > - Doc/ABI cleanup (Dave, Dan)
-> > > - Mock: Only use injected errors for get poison list
-> > > - Mock: Use 'POISONLMT -ENXIO' text from CMD_CMD_RC_TABLE  (Jonathan)
-> > > - Mock: Add Patch 6/6: A module param to mock device inject limit
-> > > 
-> > > Link to v1: https://lore.kernel.org/linux-cxl/cover.1669781852.git.alison.schofield@intel.com/
-> > > 
-> > > Introducing Inject and Clear Poison support for CXL Devices.
-> > > 
-> > > These are optional commands, meaning not all CXL devices must support
-> > > them. The sysfs attributes, inject_poison and clear_poison, are only
-> > > visible for devices reporting support of the capability and when the
-> > > kernel Kconfig option CONFIG_CXL_POISON_INJECT is on. (Default: off)
-> > > 
-> > > Example:
-> > > # echo 0x40000000 > /sys/bus/cxl/devices/mem1/inject_poison
-> > > # echo 1 > /sys/bus/cxl/devices/mem1/trigger_poison_list
-> > > 
-> > > cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region= region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xffffffffffffffff dpa=0x40000000 length=0x40 source=Injected flags= overflow_time=0
-> > > 
-> > > 
-> > > Alison Schofield (6):
-> > >   cxl/memdev: Add support for the Inject Poison mailbox command
-> > >   cxl/memdev: Add support for the Clear Poison mailbox command
-> > >   tools/testing/cxl: Mock the Inject Poison mailbox command
-> > >   tools/testing/cxl: Mock the Clear Poison mailbox command
-> > >   tools/testing/cxl: Use injected poison for get poison list
-> > >   tools/testing/cxl: Add a param to test poison injection limits
-> > > 
-> > >  Documentation/ABI/testing/sysfs-bus-cxl |  40 ++++++
-> > >  drivers/cxl/Kconfig                     |  10 ++
-> > >  drivers/cxl/core/memdev.c               | 122 ++++++++++++++++
-> > >  drivers/cxl/cxlmem.h                    |  11 ++
-> > >  tools/testing/cxl/test/mem.c            | 178 +++++++++++++++++++++---
-> > >  5 files changed, 341 insertions(+), 20 deletions(-)
-> > >   
-> >   
 > 
 
