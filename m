@@ -2,182 +2,232 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36153C25B4E
-	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 16:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDBFC61D97
+	for <linux-cxl@archiver.kernel.org>; Tue, 24 Jan 2023 16:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbjAXQcA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 24 Jan 2023 11:32:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34080 "EHLO
+        id S234556AbjAXQpK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 24 Jan 2023 11:45:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbjAXQb7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 11:31:59 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921DD59D3;
-        Tue, 24 Jan 2023 08:31:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674577918; x=1706113918;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OvNpWuC+w4Wd0rSZuW0EhaDQzPNd74u6nMFDok7/of0=;
-  b=i6ZybJJgQVidlk4AbDZERpoEOu68bDGGmitRnRDAz5wHJHJ3XxUVtcTa
-   4m5VOJm6z1cmXl2gQkxrSGv+pzMfZ59VzzQePoemKGGef9s/0NZ67RC5q
-   KLNW33JKsS6MztWRFXgJDtAOjMw/K2nXuhU4F4g9FbDRTg38Pn5nMAwUc
-   l0qAvjRbnpBpInmvSlisk3KYjgWl1CXGhx8BzxV2ibYx7+EGd/macIsIB
-   RZj3CX1eqaZBgxGdbPA96ohTdBJFmnrI7+JDToAZKUhEsp5HKJL6yOiYu
-   Uj5ZsLkHBVhNHxMfOTkT7yT04T0MEt9tMDiTImgFKsem5A8FM16LHOnWX
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="309907034"
-X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
-   d="scan'208";a="309907034"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 08:31:57 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="907560712"
-X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
-   d="scan'208";a="907560712"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.182.87]) ([10.213.182.87])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 08:31:53 -0800
-Message-ID: <83d6db31-c75c-6d0f-0b31-7cd12a6816ae@intel.com>
-Date:   Tue, 24 Jan 2023 09:31:53 -0700
+        with ESMTP id S234672AbjAXQpF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 24 Jan 2023 11:45:05 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69619002
+        for <linux-cxl@vger.kernel.org>; Tue, 24 Jan 2023 08:44:56 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1Xqd1Sr7z6J9hC;
+        Wed, 25 Jan 2023 00:44:13 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 24 Jan
+ 2023 16:44:54 +0000
+Date:   Tue, 24 Jan 2023 16:44:53 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>,
+        Gregory Price <gregory.price@memverge.com>
+Subject: Re: [PATCH] cxl/pmem: Fix nvdimm unregistration when cxl_pmem
+ driver is absent
+Message-ID: <20230124164453.000029c6@Huawei.com>
+In-Reply-To: <26633055-4e38-01c3-19a5-ef83fd57b533@intel.com>
+References: <167426077263.3955046.9695309346988027311.stgit@dwillia2-xfh.jf.intel.com>
+        <26633055-4e38-01c3-19a5-ef83fd57b533@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v4] cxl/mbox: Fix Payload Length check for Get Log command
-Content-Language: en-US
-To:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230119094934.86067-1-rrichter@amd.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230119094934.86067-1-rrichter@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Tue, 24 Jan 2023 08:46:58 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> On 1/20/23 5:26 PM, Dan Williams wrote:
+> > The cxl_pmem.ko module houses the driver for both cxl_nvdimm_bridge
+> > objects and cxl_nvdimm objects. When the core creates a cxl_nvdimm it
+> > arranges for it to be autoremoved when the bridge goes down. However, if
+> > the bridge never initialized because the cxl_pmem.ko module never
+> > loaded, it sets up a the following crash scenario:
+> > 
+> >      BUG: kernel NULL pointer dereference, address: 0000000000000478
+> >      [..]
+> >      RIP: 0010:cxl_nvdimm_probe+0x99/0x140 [cxl_pmem]
+> >      [..]
+> >      Call Trace:
+> >       <TASK>
+> >       cxl_bus_probe+0x17/0x50 [cxl_core]
+> >       really_probe+0xde/0x380
+> >       __driver_probe_device+0x78/0x170
+> >       driver_probe_device+0x1f/0x90
+> >       __driver_attach+0xd2/0x1c0
+> >       bus_for_each_dev+0x79/0xc0
+> >       bus_add_driver+0x1b1/0x200
+> >       driver_register+0x89/0xe0
+> >       cxl_pmem_init+0x50/0xff0 [cxl_pmem]
+> > 
+> > It turns out the recent rework to simplify nvdimm probing obviated the
+> > need to unregister cxl_nvdimm objects at cxl_nvdimm_bridge ->remove()
+> > time. Leave the cxl_nvdimm device registered until the hosting
+> > cxl_memdev departs. The alternative is that the cxl_memdev needs to be
+> > reattached whenever the cxl_nvdimm_bridge attach state cycles, which is
+> > awkward and unnecessary.
+> > 
+> > The only requirement is to make sure that when the cxl_nvdimm_bridge
+> > goes away any dependent cxl_nvdimm objects are shutdown. Handle that in
+> > unregister_nvdimm_bus().
+> > 
+> > With these registration entanglements removed there is no longer a need
+> > to pre-load the cxl_pmem module in cxl_acpi.
+> > 
+> > Fixes: cb9cfff82f6a ("cxl/acpi: Simplify cxl_nvdimm_bridge probing")
+> > Reported-by: Gregory Price <gregory.price@memverge.com>
+> > Debugged-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>  
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+Took a bit of poking around to figure out how to get the device_release_driver
+to happen (rmmod cxl_acpi worked) but I've poked it in a bunch of simple ways
+and can't get anything to break any more :) So with that in mind
+
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
-On 1/19/23 2:49 AM, Robert Richter wrote:
-> Commit 2aeaf663b85e introduced strict checking for variable length
-> payload size validation. The payload length of received data must
-> match the size of the requested data by the caller except for the case
-> where the min_out value is set.
 > 
-> The Get Log command does not have a header with a length field set.
-> The Log size is determined by the Get Supported Logs command (CXL 3.0,
-> 8.2.9.5.1). However, the actual size can be smaller and the number of
-> valid bytes in the payload output must be determined reading the
-> Payload Length field (CXL 3.0, Table 8-36, Note 2).
-> 
-> Two issues arise: The command can successfully complete with a payload
-> length of zero. And, the valid payload length must then also be
-> consumed by the caller.
-> 
-> Change cxl_xfer_log() to pass the number of payload bytes back to the
-> caller to determine the number of log entries. Implement the payload
-> handling as a special case where mbox_cmd->size_out is consulted when
-> cxl_internal_send_cmd() returns -EIO. A WARN_ONCE() is added to check
-> that -EIO is only returned in case of an unexpected output size.
-> 
-> Logs can be bigger than the maximum payload length and multiple Get
-> Log commands can be issued. If the received payload size is smaller
-> than the maximum payload size we can assume all valid bytes have been
-> fetched. Stop sending further Get Log commands then.
-> 
-> On that occasion, change debug messages to also report the opcodes of
-> supported commands.
-> 
-> The variable payload commands GET_LSA and SET_LSA are not affected by
-> this strict check: SET_LSA cannot be broken because SET_LSA does not
-> return an output payload, and GET_LSA never expects short reads.
-> 
-> Fixes: 2aeaf663b85e ("cxl/mbox: Add variable output size validation for internal commands")
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> A side note, the naming of cxlmd->cxl_nvd and cxlmd->cxl_nvb makes it 
+> really difficult to read. I wonder if cxl_nv_bridge and cxl_nv_device 
+> would lead to clearer code.
+Absolutely agree!
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> > ---
+> >   drivers/cxl/acpi.c      |    1 -
+> >   drivers/cxl/core/pmem.c |   42 ++++--------------------------------------
+> >   drivers/cxl/pmem.c      |   24 ++++++++++++++++++++++++
+> >   3 files changed, 28 insertions(+), 39 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index ad0849af42d7..13cde44c6086 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -736,4 +736,3 @@ module_exit(cxl_acpi_exit);
+> >   MODULE_LICENSE("GPL v2");
+> >   MODULE_IMPORT_NS(CXL);
+> >   MODULE_IMPORT_NS(ACPI);
+> > -MODULE_SOFTDEP("pre: cxl_pmem");
+> > diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> > index f3d2169b6731..c2e4b1093788 100644
+> > --- a/drivers/cxl/core/pmem.c
+> > +++ b/drivers/cxl/core/pmem.c
+> > @@ -227,34 +227,16 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
+> >   	return cxl_nvd;
+> >   }
+> >   
+> > -static void cxl_nvd_unregister(void *_cxl_nvd)
+> > +static void cxlmd_release_nvdimm(void *_cxlmd)
+> >   {
+> > -	struct cxl_nvdimm *cxl_nvd = _cxl_nvd;
+> > -	struct cxl_memdev *cxlmd = cxl_nvd->cxlmd;
+> > +	struct cxl_memdev *cxlmd = _cxlmd;
+> > +	struct cxl_nvdimm *cxl_nvd = cxlmd->cxl_nvd;
+> >   	struct cxl_nvdimm_bridge *cxl_nvb = cxlmd->cxl_nvb;
+> >   
+> > -	/*
+> > -	 * Either the bridge is in ->remove() context under the device_lock(),
+> > -	 * or cxlmd_release_nvdimm() is cancelling the bridge's release action
+> > -	 * for @cxl_nvd and doing it itself (while manually holding the bridge
+> > -	 * lock).
+> > -	 */
+> > -	device_lock_assert(&cxl_nvb->dev);
+> >   	cxl_nvd->cxlmd = NULL;
+> >   	cxlmd->cxl_nvd = NULL;
+> > +	cxlmd->cxl_nvb = NULL;
+> >   	device_unregister(&cxl_nvd->dev);
+> > -}
+> > -
+> > -static void cxlmd_release_nvdimm(void *_cxlmd)
+> > -{
+> > -	struct cxl_memdev *cxlmd = _cxlmd;
+> > -	struct cxl_nvdimm_bridge *cxl_nvb = cxlmd->cxl_nvb;
+> > -
+> > -	device_lock(&cxl_nvb->dev);
+> > -	if (cxlmd->cxl_nvd)
+> > -		devm_release_action(&cxl_nvb->dev, cxl_nvd_unregister,
+> > -				    cxlmd->cxl_nvd);
+> > -	device_unlock(&cxl_nvb->dev);
+> >   	put_device(&cxl_nvb->dev);
+> >   }
+> >   
+> > @@ -293,22 +275,6 @@ int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
+> >   
+> >   	dev_dbg(&cxlmd->dev, "register %s\n", dev_name(dev));
+> >   
+> > -	/*
+> > -	 * The two actions below arrange for @cxl_nvd to be deleted when either
+> > -	 * the top-level PMEM bridge goes down, or the endpoint device goes
+> > -	 * through ->remove().
+> > -	 */
+> > -	device_lock(&cxl_nvb->dev);
+> > -	if (cxl_nvb->dev.driver)
+> > -		rc = devm_add_action_or_reset(&cxl_nvb->dev, cxl_nvd_unregister,
+> > -					      cxl_nvd);
+> > -	else
+> > -		rc = -ENXIO;
+> > -	device_unlock(&cxl_nvb->dev);
+> > -
+> > -	if (rc)
+> > -		goto err_alloc;
+> > -
+> >   	/* @cxlmd carries a reference on @cxl_nvb until cxlmd_release_nvdimm */
+> >   	return devm_add_action_or_reset(&cxlmd->dev, cxlmd_release_nvdimm, cxlmd);
+> >   
+> > diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> > index eedefebc4283..08bbbac9a6d0 100644
+> > --- a/drivers/cxl/pmem.c
+> > +++ b/drivers/cxl/pmem.c
+> > @@ -225,11 +225,35 @@ static int cxl_pmem_ctl(struct nvdimm_bus_descriptor *nd_desc,
+> >   	return cxl_pmem_nvdimm_ctl(nvdimm, cmd, buf, buf_len);
+> >   }
+> >   
+> > +static int detach_nvdimm(struct device *dev, void *data)
+> > +{
+> > +	struct cxl_nvdimm *cxl_nvd;
+> > +	bool release = false;
+> > +
+> > +	if (!is_cxl_nvdimm(dev))
+> > +		return 0;
+> > +
+> > +	device_lock(dev);
+> > +	if (!dev->driver)
+> > +		goto out;
+> > +
+> > +	cxl_nvd = to_cxl_nvdimm(dev);
+> > +	if (cxl_nvd->cxlmd && cxl_nvd->cxlmd->cxl_nvb == data)
+> > +		release = true;
+> > +out:
+> > +	device_unlock(dev);
+> > +	if (release)
+> > +		device_release_driver(dev);
+> > +	return 0;
+> > +}
+> > +
+> >   static void unregister_nvdimm_bus(void *_cxl_nvb)
+> >   {
+> >   	struct cxl_nvdimm_bridge *cxl_nvb = _cxl_nvb;
+> >   	struct nvdimm_bus *nvdimm_bus = cxl_nvb->nvdimm_bus;
+> >   
+> > +	bus_for_each_dev(&cxl_bus_type, NULL, cxl_nvb, detach_nvdimm);
+> > +
+> >   	cxl_nvb->nvdimm_bus = NULL;
+> >   	nvdimm_bus_unregister(nvdimm_bus);
+> >   }
+> >   
 
-> ---
-> v4:
->   * Fixed a build issue.
-> v3:
->   * Added comment to the WARN_ONCE(). (Jonathan)
->   * Passing a size pointer to report the payload size back. (Jonathan)
->   * Moved logging of supported opcodes out of this patch for a separate
->     change. (Jonathan)
-> 
->   drivers/cxl/core/mbox.c | 25 ++++++++++++++++++++++---
->   1 file changed, 22 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index b03fba212799..a48ade466d6a 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -170,6 +170,12 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
->   	out_size = mbox_cmd->size_out;
->   	min_out = mbox_cmd->min_out;
->   	rc = cxlds->mbox_send(cxlds, mbox_cmd);
-> +	/*
-> +	 * EIO is reserved for a payload size mismatch and mbox_send()
-> +	 * may not return this error.
-> +	 */
-> +	if (WARN_ONCE(rc == -EIO, "Bad return code: -EIO"))
-> +		return -ENXIO;
->   	if (rc)
->   		return rc;
->   
-> @@ -550,9 +556,9 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s)
->   	return 0;
->   }
->   
-> -static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8 *out)
-> +static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 *size, u8 *out)
->   {
-> -	u32 remaining = size;
-> +	u32 remaining = *size;
->   	u32 offset = 0;
->   
->   	while (remaining) {
-> @@ -576,6 +582,17 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
->   		};
->   
->   		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +
-> +		/*
-> +		 * The output payload length that indicates the number
-> +		 * of valid bytes can be smaller than the Log buffer
-> +		 * size.
-> +		 */
-> +		if (rc == -EIO && mbox_cmd.size_out < xfer_size) {
-> +			offset += mbox_cmd.size_out;
-> +			break;
-> +		}
-> +
->   		if (rc < 0)
->   			return rc;
->   
-> @@ -584,6 +601,8 @@ static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8
->   		offset += xfer_size;
->   	}
->   
-> +	*size = offset;
-> +
->   	return 0;
->   }
->   
-> @@ -694,7 +713,7 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
->   			goto out;
->   		}
->   
-> -		rc = cxl_xfer_log(cxlds, &uuid, size, log);
-> +		rc = cxl_xfer_log(cxlds, &uuid, &size, log);
->   		if (rc) {
->   			kvfree(log);
->   			goto out;
-> 
-> base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
