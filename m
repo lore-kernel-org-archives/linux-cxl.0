@@ -2,129 +2,105 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D0C54E94
-	for <linux-cxl@archiver.kernel.org>; Wed, 25 Jan 2023 15:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1297C54E94
+	for <linux-cxl@archiver.kernel.org>; Wed, 25 Jan 2023 16:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235722AbjAYPxT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 25 Jan 2023 10:53:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36552 "EHLO
+        id S235195AbjAYQeQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 25 Jan 2023 11:34:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235836AbjAYPxR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 25 Jan 2023 10:53:17 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 881B510AB4;
-        Wed, 25 Jan 2023 07:53:14 -0800 (PST)
+        with ESMTP id S234613AbjAYQeP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 25 Jan 2023 11:34:15 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22652E0CA;
+        Wed, 25 Jan 2023 08:34:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674661996; x=1706197996;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FLRml78XzfhODs7kyj7uTIE6eGuSRqNw+7OXE6QUWkM=;
-  b=gg+St4BvBSpN4wyI0kKlep30QurV4/kAjJyf4vLSUco0hWXkpsT9JYWv
-   QvdP7euF0oQetybuhIxItuem0eZ17ZGpx2qyXja2q1J/Kr087AoEdMKdk
-   VMy1H+pWPZyBZSsOwANMM2oy0R4aWCY9ask+7jJBBIGli9SGhgGZDdNCa
-   fLM23oJaccBSQAOtlrnOBgLNxdWCH3kxzwtEkXwCVSTYQjUfHtkqx45GI
-   ioo/unKdlRKosToDlRUdjQw6FQ4LWvDoqjPUhStwsSUNdUhFXjgRvXnXR
-   CX3q+0hoVGe8L3GOk8sbLUbYVm8gGQ6JqflTQzv5CbNuFvsxWpljG+wmr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="388932521"
+  t=1674664449; x=1706200449;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wawEQfNX2gaRXTv2GneaEoA/jaFamhbPObYDEvyVBoY=;
+  b=g0ZAHMf317jebkLqXfUWMpp/5cVvP2W+UofL7b+32kMj5nSISa0+Pahl
+   UCfgrw03jYLuhdn5nP0HiZibcaqko64aihvwViUzxNVhnixR/J5QYgUKr
+   NVpqRp4oVGpOq6xEcebNpZ7TNGxSrm018qg/2IUOk6aEXU9yDNfKOv4B7
+   86q0HcuP3ZAB9ryU6iyZUvAm+myZUWtQBOUChwhHmE6QSsJTV+56MJMI7
+   A6QiWsRmtc+JHM6PEwL7/Yc3p9Kb0wpwSKYfH7RQTS8oWx1hnFJV5G3Mr
+   Pk3OEp2kgYujLzsi/nkPQJzdOzOlX4HnvBpJ3U/NTGynOJUxNywNblFMz
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="412832341"
 X-IronPort-AV: E=Sophos;i="5.97,245,1669104000"; 
-   d="scan'208";a="388932521"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 07:53:14 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="907913698"
+   d="scan'208";a="412832341"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 08:34:09 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="693016463"
 X-IronPort-AV: E=Sophos;i="5.97,245,1669104000"; 
-   d="scan'208";a="907913698"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.71.142])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 07:53:13 -0800
-Date:   Wed, 25 Jan 2023 07:53:11 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl: fix spelling mistakes
-Message-ID: <Y9FQZ5f/7DDYzlI/@aschofie-mobl2>
-References: <20230125032221.21277-1-rdunlap@infradead.org>
+   d="scan'208";a="693016463"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.209.145.70]) ([10.209.145.70])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 08:34:08 -0800
+Message-ID: <97493ce9-cce2-5845-d952-fa696fa2404e@intel.com>
+Date:   Wed, 25 Jan 2023 09:34:07 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230125032221.21277-1-rdunlap@infradead.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH V2 1/4] rasdaemon: Move definition for BIT and BIT_ULL to
+ a common file
+Content-Language: en-US
+To:     shiju.jose@huawei.com, linux-edac@vger.kernel.org,
+        linux-cxl@vger.kernel.org, mchehab@kernel.org
+Cc:     jonathan.cameron@huawei.com, linuxarm@huawei.com
+References: <20230124165733.1452-1-shiju.jose@huawei.com>
+ <20230124165733.1452-2-shiju.jose@huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230124165733.1452-2-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 07:22:21PM -0800, Randy Dunlap wrote:
-> Correct spelling mistakes (reported by codespell).
+
+
+On 1/24/23 9:57 AM, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
 > 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Ben Widawsky <bwidawsk@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
+> Move definition for BIT() and BIT_ULL() to the
+> common file ras-record.h
+> 
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 > ---
-> v2: add corrections for other source-code spelling errors (Alison)
-
-Thanks Randy,
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
+>   ras-non-standard-handler.h | 3 ---
+>   ras-record.h               | 3 +++
+>   2 files changed, 3 insertions(+), 3 deletions(-)
 > 
->  drivers/cxl/Kconfig       |    2 +-
->  drivers/cxl/acpi.c        |    2 +-
->  drivers/cxl/core/port.c   |    2 +-
->  drivers/cxl/core/region.c |    2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff -- a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -116,7 +116,7 @@ config CXL_REGION_INVALIDATION_TEST
->  	depends on CXL_REGION
->  	help
->  	  CXL Region management and security operations potentially invalidate
-> -	  the content of CPU caches without notifiying those caches to
-> +	  the content of CPU caches without notifying those caches to
->  	  invalidate the affected cachelines. The CXL Region driver attempts
->  	  to invalidate caches when those events occur.  If that invalidation
->  	  fails the region will fail to enable.  Reasons for cache
-> diff -- a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -19,7 +19,7 @@ struct cxl_cxims_data {
->  
->  /*
->   * Find a targets entry (n) in the host bridge interleave list.
-> - * CXL Specfication 3.0 Table 9-22
-> + * CXL Specification 3.0 Table 9-22
->   */
->  static int cxl_xor_calc_n(u64 hpa, struct cxl_cxims_data *cximsd, int iw,
->  			  int ig)
-> diff -- a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -1137,7 +1137,7 @@ static struct cxl_port *find_cxl_port_at
->  }
->  
->  /*
-> - * All users of grandparent() are using it to walk PCIe-like swich port
-> + * All users of grandparent() are using it to walk PCIe-like switch port
->   * hierarchy. A PCIe switch is comprised of a bridge device representing the
->   * upstream switch port and N bridges representing downstream switch ports. When
->   * bridges stack the grand-parent of a downstream switch port is another
-> diff -- a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -399,7 +399,7 @@ static ssize_t interleave_granularity_st
->  	 * When the host-bridge is interleaved, disallow region granularity !=
->  	 * root granularity. Regions with a granularity less than the root
->  	 * interleave result in needing multiple endpoints to support a single
-> -	 * slot in the interleave (possible to suport in the future). Regions
-> +	 * slot in the interleave (possible to support in the future). Regions
->  	 * with a granularity greater than the root interleave result in invalid
->  	 * DPA translations (invalid to support).
->  	 */
+> diff --git a/ras-non-standard-handler.h b/ras-non-standard-handler.h
+> index 4d9f938..c360eaf 100644
+> --- a/ras-non-standard-handler.h
+> +++ b/ras-non-standard-handler.h
+> @@ -17,9 +17,6 @@
+>   #include "ras-events.h"
+>   #include <traceevent/event-parse.h>
+>   
+> -#define BIT(nr)                 (1UL << (nr))
+> -#define BIT_ULL(nr)             (1ULL << (nr))
+> -
+>   struct ras_ns_ev_decoder {
+>   	struct ras_ns_ev_decoder *next;
+>   	const char *sec_type;
+> diff --git a/ras-record.h b/ras-record.h
+> index d9f7733..219f10b 100644
+> --- a/ras-record.h
+> +++ b/ras-record.h
+> @@ -25,6 +25,9 @@
+>   
+>   #define ARRAY_SIZE(x) (sizeof(x)/sizeof(*(x)))
+>   
+> +#define BIT(nr)                 (1UL << (nr))
+> +#define BIT_ULL(nr)             (1ULL << (nr))
+> +
+>   extern long user_hz;
+>   
+>   struct ras_events;
