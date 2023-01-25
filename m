@@ -2,93 +2,106 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1483AC54E94
-	for <linux-cxl@archiver.kernel.org>; Wed, 25 Jan 2023 10:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84027C54E94
+	for <linux-cxl@archiver.kernel.org>; Wed, 25 Jan 2023 15:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235564AbjAYK3Q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 25 Jan 2023 05:29:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        id S235150AbjAYPEV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 25 Jan 2023 10:04:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235297AbjAYK3P (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 25 Jan 2023 05:29:15 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B23EE4C32;
-        Wed, 25 Jan 2023 02:29:13 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P20Mj69d9z688jJ;
-        Wed, 25 Jan 2023 18:25:05 +0800 (CST)
-Received: from localhost (10.81.208.142) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 25 Jan
- 2023 10:29:10 +0000
-Date:   Wed, 25 Jan 2023 10:29:09 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/mbox: Add debug messages for enabled mailbox
- commands
-Message-ID: <20230125102909.00002403@Huawei.com>
-In-Reply-To: <20230125085728.234697-1-rrichter@amd.com>
-References: <20230125085728.234697-1-rrichter@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S234999AbjAYPEV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 25 Jan 2023 10:04:21 -0500
+Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E1240F4
+        for <linux-cxl@vger.kernel.org>; Wed, 25 Jan 2023 07:04:19 -0800 (PST)
+Message-ID: <d733b3a4-757a-624f-18a4-ad27b1ef1f77@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1674659057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=065lIp5QoklAmpCqSepFXIoQ+hUmkGd7Jl709G0y4O4=;
+        b=CNpiEokPXOmbOYFb7mtzpMyIILFNQ+z/SxG+AVOAYqGi0OKyFunsWRjLPKsnEqX/ICaexg
+        QIlEfqJdQtMKw3qHh+Ht1RboAHSLTV7Pq9UVnuLlmEKS9JCwxKUWei+8IO7t8Gplzm7fVw
+        fde5R0qgeb0uOE5GMvCEhwoAze8DLbc=
+Date:   Wed, 25 Jan 2023 23:04:00 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.208.142]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Subject: Re: [LSF/MM/BPF BoF] Session for CXL memory
+To:     Wei Xu <weixugc@google.com>, Yang Shi <shy828301@gmail.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>,
+        lsf-pc@lists.linux-foundation.org, linux-cxl@vger.kernel.org,
+        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Duen-wen Hsiao <duenwen@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jerome Glisse <jglisse@google.com>
+References: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
+ <38D49DA9-3C57-4951-8CBA-5D2BB0C40D9C@bytedance.com>
+ <dd0d92fd-51dc-f5ac-26f9-7446118d654e@google.com>
+ <CAHbLzkpJa=HYH7OAdFO6WGYXtX1Yzhv9sFE+MGfyZrd3KvUv=A@mail.gmail.com>
+ <CAAPL-u9w2K6q4nF6+VKxafZYNr1WqsROYCQc6gqVS0BVXt0-Bg@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <CAAPL-u9w2K6q4nF6+VKxafZYNr1WqsROYCQc6gqVS0BVXt0-Bg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 25 Jan 2023 09:57:28 +0100
-Robert Richter <rrichter@amd.com> wrote:
+在 2023/1/24 8:57, Wei Xu 写道:
+> On Mon, Jan 23, 2023 at 4:22 PM Yang Shi <shy828301@gmail.com> wrote:
+>>
+>> On Sun, Jan 22, 2023 at 9:51 PM David Rientjes <rientjes@google.com> wrote:
+>>>
+>>> On Fri, 6 Jan 2023, Viacheslav A.Dubeyko wrote:
+>>>
+>>>> CC: LSF/MM/BPF mailing list. Sorry, missed the list.
+>>>>
+>>>>> On Jan 6, 2023, at 11:51 AM, Viacheslav A.Dubeyko <viacheslav.dubeyko@bytedance.com> wrote:
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> I believe CXL memory is hot topic now. I believe we have multiple topics
+>>>>> for discussion. I personally would like to discuss CXL Fabric Manager
+>>>>> and vision of FM architecture implementation. I am going to share the topic
+>>>>> in separate email. I would like to suggest a special session for CXL memory
+>>>>> related topics.
+>>>>>
+>>>>> How everybody feels about it?
+>>>>>
+>>>
+>>> I think this makes a lot of sense, thanks for suggesting it.
+>>>
+>>> Should this be a BoF or just a normal topic proposal?  I assume that there
+>>> could be several different topics of interest all related to CXL.mem.
+>>>
+>>> Specifically interesting would be the division of work between the kernel
+>>> and userspace to manage memory placement on systems with locally attached
+>>> CXL.  And, further, what APIs userspace would have at its disposal for
+>>> explicit optimization of this placement that would exist beyond what is
+>>> available for NUMA.
+>>
+>> Yeah, in addition, how CXL hierarchy interacts with memory tiering may
+>> be an interesting topic too.
+>>
+>>>
+>>> I assume we might also want to chat about CXL 2.0 extensions that would be
+>>> useful, especially for cloud providers.
+>>>
+>>> I'd be happy to join in any of the proposals for these topics, just let me
+>>> know!
+>>
+>> +1 for me.
+>>
+> 
+> I am also interested in these discussions.
 
-> Only unsupported mailbox commands are reported in debug messages. A
-> list of enabled commands is useful too. Change debug messages to also
-> report the opcodes of enabled commands. Esp. if card initialization
-> fails there is no way to get this information from userland.
-> 
-> On that occasion also add missing trailing newlines.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-Fine with change in message
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
++1， I am interested in this.
 
-> ---
-> v2:
->  * Changed message to "Opcode 0x%04x enabled\n". Updated patch
->    description accordingly.
 > 
->  drivers/cxl/core/mbox.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index a48ade466d6a..202d49dd9911 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -629,11 +629,12 @@ static void cxl_walk_cel(struct cxl_dev_state *cxlds, size_t size, u8 *cel)
->  
->  		if (!cmd) {
->  			dev_dbg(cxlds->dev,
-> -				"Opcode 0x%04x unsupported by driver", opcode);
-> +				"Opcode 0x%04x unsupported by driver\n", opcode);
->  			continue;
->  		}
->  
->  		set_bit(cmd->info.id, cxlds->enabled_cmds);
-> +		dev_dbg(cxlds->dev, "Opcode 0x%04x enabled\n", opcode);
->  	}
->  }
->  
-> 
-> base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 
