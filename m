@@ -2,210 +2,223 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796F6C54EAA
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 19:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290C7C05027
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 20:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229654AbjAZT7Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 Jan 2023 14:59:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53594 "EHLO
+        id S232502AbjAZUHA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Jan 2023 15:07:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjAZT7Y (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 14:59:24 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1D0410A3
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 11:59:23 -0800 (PST)
+        with ESMTP id S229546AbjAZUG6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 15:06:58 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3D0171F
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 12:06:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674763163; x=1706299163;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cZB+CPnYmbV2n1wL/MD8xedv1mfY4vPQzkN5nh3VUDw=;
-  b=gEZ+g730mQvQvaxJdGpLVaGJE519vjxd2ctwFahtSzPChLtph/Nyz7WC
-   Aq57F1OHu5wEcEk44XaPzdpz4WI/hDldcLyp24GdbAxqwLdROFT4KGJ1u
-   dOcTEaDTvPENeEKR7tPUo32U+ROEByBInF+biItfQb/oHrEt/oFOlF96c
-   VxzuOe+xhu0zkLbyWTIZK1OSLQHyAn2cRnLv1uHx3XN88pBxXAeBk2l1h
-   pvXScykuflmJpXLirfD8BPEGiqCrgzcu4O6c4zbDcsLUu5hD2xsq+wE5N
-   DRLEILcgHl1iWzsVzZquiqq3WmGMlPbfu8mQQfbECKdBB+kbm1DH0Pvz/
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="391454594"
+  t=1674763617; x=1706299617;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TEWoe3DkImlJxDqRDIgHY7u/rl530hRcMI2An7N4lTI=;
+  b=S+Uav4FNaISD79UMgpkZtVLvLenJrs+KfXstTXHcXKiaTZgxnc+HZa/2
+   Z4tmOhbBrrXRcew0Ab3f+8Vd+h1dyy9/1hbTvaqyaJYsn2KcA2rPWwjkC
+   nTGsecqn7k9bcp90wi0KhqHqM63dOZma8C80alyyY/1K80dJAMXfkuiog
+   vOColRPTwQv5C0233FuB4Af3r7SdW3+muPQ9g9xg1FgISzAKGz2go2sfp
+   ZQ04zF2lvuPe471MNeMHbVKq3XH6E2pXgr7sdWnycBWJkFGifwewsEdKU
+   dKb9famT5sTMguqPbmOhXMYZEhNpeBh4598TIrAno21WEhMT0sgZ6Jr4l
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="310530928"
 X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="391454594"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 11:59:23 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="662990902"
+   d="scan'208";a="310530928"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 12:06:57 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="731566999"
 X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="662990902"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.132.52])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 11:59:22 -0800
-Date:   Thu, 26 Jan 2023 11:59:21 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>, linuxarm@huawei.com
-Subject: Re: [PATCH] cxl/pci: Set the device timestamp
-Message-ID: <Y9LbmW9H3WWfqx2U@aschofie-mobl2>
-References: <20230126180458.5145-1-Jonathan.Cameron@huawei.com>
+   d="scan'208";a="731566999"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.112.115]) ([10.212.112.115])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 12:06:56 -0800
+Message-ID: <085c9b5f-ef94-aef3-76b4-7bcb29a09ca9@intel.com>
+Date:   Thu, 26 Jan 2023 13:06:56 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126180458.5145-1-Jonathan.Cameron@huawei.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH] hw/cxl: Add QTG _DSM support for ACPI0017 device
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     mst@redhat.com, bwidawsk@kernel.org, peter.maydell@linaro.org,
+        qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
+References: <167475645654.1386523.7101990863993668595.stgit@djiang5-mobl3.local>
+ <20230126182446.00001ce7@Huawei.com>
+ <d47600e7-e555-4624-b031-a9e46d9533f7@intel.com>
+ <20230126184715.0000474c@huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230126184715.0000474c@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 06:04:58PM +0000, Jonathan Cameron wrote:
-> CXL r3.0 section 8.2.9.4.2 "Set Timestamp" recommends that the host sets
-> the timestamp after every Conventional or CXL Reset to ensure accurate
-> timestamps. This should include on initial boot up. The time base that
-> is being set is used by a device for the poison list overflow timestamp
-> and all event timestamps.  Note that the command is optional and if
-> not supported and the device cannot return accurate timestamps it will
-> fill the fields in with an appropriate marker (see the specification
-> description of each timestamp).
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> ---
-> 
-> Open question: Should we only do this if Linux has control of the
-> error handling?  In theory it should be safe anyway given the
-> specification is clear that the timestamp base should always be the
-> same - so subject to small errors we shouldn't cause any firmware first
-> handling to get confused.
-> 
->  drivers/cxl/core/mbox.c      | 25 +++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h         |  7 +++++++
->  drivers/cxl/pci.c            |  5 +++++
->  include/uapi/linux/cxl_mem.h |  1 +
->  4 files changed, 38 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index b03fba212799..a7317bb142ed 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -65,6 +65,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
->  	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
->  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
-> +	CXL_CMD(SET_TIMESTAMP, 8, 0, 0),
->  };
->  
->  /*
-> @@ -93,6 +94,7 @@ static u16 cxl_disabled_raw_commands[] = {
->  	CXL_MBOX_OP_SET_SHUTDOWN_STATE,
->  	CXL_MBOX_OP_SCAN_MEDIA,
->  	CXL_MBOX_OP_GET_SCAN_MEDIA,
-> +	CXL_MBOX_OP_SET_TIMESTAMP,
->  };
->  
->  /*
-> @@ -857,6 +859,29 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
->  
-> +int cxl_set_timestamp(struct cxl_dev_state *cxlds, u64 ts)
-> +{
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	struct cxl_mbox_set_timestamp_in pi;
-> +
-> +	/*
-> +	 * Command is optional and functionality should not be affected if
-> +	 * the command is not available.
-> +	 */
-> +	if (!test_bit(CXL_MEM_COMMAND_ID_SET_TIMESTAMP, cxlds->enabled_cmds))
-> +		return 0;
 
-Jonathan,
 
-Would it be more efficient to call ktime_get_real_ns() right here,
-rather than pass in the call from cxl_pci_probe()?
-
-Alison
-> +
-> +	pi.timestamp = ts;
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_SET_TIMESTAMP,
-> +		.size_in = sizeof(pi),
-> +		.payload_in = &pi,
-> +	};
-> +
-> +	return cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
-> +
->  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
->  {
->  	struct cxl_dev_state *cxlds;
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index ab138004f644..0ca7a35de893 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -274,6 +274,7 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
->  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
->  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
-> +	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
->  	CXL_MBOX_OP_GET_LOG		= 0x0401,
->  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
-> @@ -372,6 +373,11 @@ struct cxl_mbox_set_partition_info {
->  
->  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
->  
-> +/* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
-> +struct cxl_mbox_set_timestamp_in {
-> +	__le64 timestamp;
-> +} __packed;
-> +
->  /**
->   * struct cxl_mem_command - Driver representation of a memory device command
->   * @info: Command information as it exists for the UAPI
-> @@ -441,6 +447,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
->  struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
->  void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
->  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
-> +int cxl_set_timestamp(struct cxl_dev_state *cxlds, u64 ts);
->  #ifdef CONFIG_CXL_SUSPEND
->  void cxl_mem_active_inc(void);
->  void cxl_mem_active_dec(void);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 2bbebbc7e032..30a2b231d970 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -2,6 +2,7 @@
->  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/moduleparam.h>
-> +#include <linux/timekeeping.h>
->  #include <linux/module.h>
->  #include <linux/delay.h>
->  #include <linux/sizes.h>
-> @@ -482,6 +483,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> +	rc = cxl_set_timestamp(cxlds, ktime_get_real_ns());
-> +	if (rc)
-> +		return rc;
-> +
->  	rc = cxl_dev_state_identify(cxlds);
->  	if (rc)
->  		return rc;
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index c71021a2a9ed..333301037b74 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -41,6 +41,7 @@
->  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
->  	___C(SCAN_MEDIA, "Scan Media"),                                   \
->  	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
-> +	___C(SET_TIMESTAMP, "Set Device Timestamp"),                      \
->  	___C(MAX, "invalid / last command")
->  
->  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+On 1/26/23 11:47 AM, Jonathan Cameron wrote:
+> On Thu, 26 Jan 2023 11:41:47 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> base-commit: 172738bbccdb4ef76bdd72fc72a315c741c39161
-> -- 
-> 2.37.2
+>> On 1/26/23 11:24 AM, Jonathan Cameron wrote:
+>>> On Thu, 26 Jan 2023 11:07:37 -0700
+>>> Dave Jiang <dave.jiang@intel.com> wrote:
+>>>
+>>> Hi Dave,
+>>>
+>>> That was quick!
+>>>    
+>>>> Add a simple _DSM call support for the ACPI0017 device to return a fake QTG
+>>>> ID value. Given the current CXL implementation does not involve switches,
+>>>
+>>> I don't follow.  What part doesn't involve switches?
+>>
+>> The devices are just behind the CXL host-bridge right? Do you think we
+>> need to provide anything beyond the fake value right now?
+> 
+> No problem with fake value. It was just the not involve switches statement.
+> Both kernel and QEMU support switches in general so I wasn't sure why
+> 'current' CXL implementation does not involve switches.
+
+Ok I'll remove the phrase.
+
+> 
+>>
+>>>    
+>>>> a faked value of 0 can be returned for the QTG ID. The enabling is for _DSM
+>>>> plumbing testing from the OS.
+>>>
+>>> Can you include a dump iasl -d for the DSDT chunk this generates. Much
+>>> easier to review with that available.
+>>
+>> Ok. Let me figure out how to do that.
+>>
+>>>
+>>> On that note, tests need updating I think
+>>> tests/qtest/bios-tables-test.c data which is in
+>>> tests/data/acpi/q35/DSDT.cxl
+>>
+>> ok
+>>
+>>>
+>>> We should update that test code as part of the volatile series as well
+>>> as it's using the deprecated memdev parameter - not critical
+>>> but never a good thing to leave old examples of what not to use in
+>>> the tests.
+>>>
+>>> Thanks,
+>>>
+>>> Jonathan
+>>>
+>>> p.s. I'm too lazy to look at the code without the AML to compare with
+>>> as I'll review the AML first then look at if there are any oddities
+>>> in the generation code.
+>>>    
+>>>>
+>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>> ---
+>>>>    hw/acpi/cxl.c         |   57 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>    hw/i386/acpi-build.c  |    1 +
+>>>>    include/hw/acpi/cxl.h |    1 +
+>>>>    3 files changed, 59 insertions(+)
+>>>>
+>>>> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
+>>>> index 2bf8c0799359..cd6839c24416 100644
+>>>> --- a/hw/acpi/cxl.c
+>>>> +++ b/hw/acpi/cxl.c
+>>>> @@ -30,6 +30,63 @@
+>>>>    #include "qapi/error.h"
+>>>>    #include "qemu/uuid.h"
+>>>>    
+>>>> +void build_cxl_dsm_method(Aml *dev)
+>>>> +{
+>>>> +    Aml *method, *ifctx, *ifctx2;
+>>>> +
+>>>> +    method = aml_method("_DSM", 4, AML_SERIALIZED);
+>>>> +    {
+>>>> +        Aml *function, *uuid;
+>>>> +
+>>>> +        uuid = aml_arg(0);
+>>>> +        function = aml_arg(2);
+>>>> +        /* CXL spec v3.0 9.17.3.1 *, QTG ID _DSM */
+>>>> +        ifctx = aml_if(aml_equal(
+>>>> +            uuid, aml_touuid("F365F9A6-A7DE-4071-A66A-B40C0B4F8E52")));
+>>>> +
+>>>> +        /* Function 0, standard DSM query function */
+>>>> +        ifctx2 = aml_if(aml_equal(function, aml_int(0)));
+>>>> +        {
+>>>> +            uint8_t byte_list[1] = { 0x01 }; /* functions 1 only */
+>>>> +
+>>>> +            aml_append(ifctx2,
+>>>> +                       aml_return(aml_buffer(sizeof(byte_list), byte_list)));
+>>>> +        }
+>>>> +        aml_append(ifctx, ifctx2);
+>>>> +
+>>>> +        /*
+>>>> +         * Function 1
+>>>> +         * A return value of {1, {0}} inciate that
+>>>> +         * max supported QTG ID of 1 and recommended QTG is 0.
+>>>> +         * The values here are faked to simplify emulation.
+>>>> +         */
+>>>> +        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
+>>>> +        {
+>>>> +            uint16_t word_list[1] = { 0x01 };
+>>>> +            uint16_t word_list2[1] = { 0 };
+>>>> +            uint8_t *byte_list = (uint8_t *)word_list;
+>>>> +            uint8_t *byte_list2 = (uint8_t *)word_list2;
+>>>> +            Aml *pak, *pak1;
+>>>> +
+>>>> +            /*
+>>>> +             * The return package is a package of a WORD and another package.
+>>>> +             * The embedded package contains 0 or more WORDs for the
+>>>> +             * recommended QTG IDs.
+>>>> +             */
+>>>> +            pak1 = aml_package(1);
+>>>> +            aml_append(pak1, aml_buffer(sizeof(uint16_t), byte_list2));
+>>>> +            pak = aml_package(2);
+>>>> +            aml_append(pak, aml_buffer(sizeof(uint16_t), byte_list));
+>>>> +            aml_append(pak, pak1);
+>>>> +
+>>>> +            aml_append(ifctx2, aml_return(pak));
+>>>> +        }
+>>>> +        aml_append(ifctx, ifctx2);
+>>>> +    }
+>>>> +    aml_append(method, ifctx);
+>>>> +    aml_append(dev, method);
+>>>> +}
+>>>> +
+>>>>    static void cedt_build_chbs(GArray *table_data, PXBDev *cxl)
+>>>>    {
+>>>>        SysBusDevice *sbd = SYS_BUS_DEVICE(cxl->cxl.cxl_host_bridge);
+>>>> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+>>>> index 285829802b1a..623f26a16db3 100644
+>>>> --- a/hw/i386/acpi-build.c
+>>>> +++ b/hw/i386/acpi-build.c
+>>>> @@ -1313,6 +1313,7 @@ static void build_acpi0017(Aml *table)
+>>>>        method = aml_method("_STA", 0, AML_NOTSERIALIZED);
+>>>>        aml_append(method, aml_return(aml_int(0x01)));
+>>>>        aml_append(dev, method);
+>>>> +    build_cxl_dsm_method(dev);
+>>>>    
+>>>>        aml_append(scope, dev);
+>>>>        aml_append(table, scope);
+>>>> diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
+>>>> index acf441888683..8f22c71530d8 100644
+>>>> --- a/include/hw/acpi/cxl.h
+>>>> +++ b/include/hw/acpi/cxl.h
+>>>> @@ -25,5 +25,6 @@ void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
+>>>>                        BIOSLinker *linker, const char *oem_id,
+>>>>                        const char *oem_table_id, CXLState *cxl_state);
+>>>>    void build_cxl_osc_method(Aml *dev);
+>>>> +void build_cxl_dsm_method(Aml *dev);
+>>>>    
+>>>>    #endif
+>>>>
+>>>>   
+>>>    
 > 
