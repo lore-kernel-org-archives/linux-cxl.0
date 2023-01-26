@@ -2,180 +2,110 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CB6C05027
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 11:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC47C05027
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 11:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237258AbjAZLlg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 Jan 2023 06:41:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51154 "EHLO
+        id S237354AbjAZLrt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Jan 2023 06:47:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236303AbjAZLlf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 06:41:35 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B4DD6227F
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 03:41:34 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P2f0Y4W2sz67JwR;
-        Thu, 26 Jan 2023 19:40:45 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+        with ESMTP id S236513AbjAZLrs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 06:47:48 -0500
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3BE46AA
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 03:47:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WzhahjUHD4fd9up15wo7ZGrvr4VVM6pjpk7RuCFOJA9Ghzfl7S19qGdyGdxaLNHuVRk7sUzCycHsqIopZWmdpiyi3Myr1daEg/wscIsMIpcjtY3xuuWbHXwE0T8bZYalcAGrLUzmV74hWqlMMf9ZyvvwbrppvH732jdnV4lS0aiMHnut4mriHDc0mJKmjoLWYumDJscW4ywIfxhLT4qW7YEMr76QaTS1doiqfQhQI+v8eqrFDEay0VwjMaMTJB49yOVXSOpj3hOUVhOVP4RPcll3nQNi7+e7Ek6e1h66OxsBbSMfJXyQHpxfMzy7uj3yXXfyksSzza/cLrJlkNjxOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hu8C7lbXi+xXuJ+UeJKHTzXf08u1P+TWS/mlNYMYhK0=;
+ b=BTi9irEQWrD5WNg+Tlkq/X7DU30RP0cA17K+BrvPb/ebvYxcUJcm1c0vWVD9hKoYhlye4OoCRUqyBDyWNx01KrXuXg3tqSxJ6lfIEbuHphdCDcp0F9HUr9/Hb7+cuvGGlMS0IBEwkcd4gNprDg7wKos2NQDYZ/8qIkz+henYza7fi5RuG85xokRetUVYyAJtN34E0JeLJjNMtnNiD+3cil4rYt7igslEdij7LNASdlNnoAAWOccnoJEOEjFOj98s4iZp7ywRNBEhg5zw86f3/HhLAhONfEo1eOUnoJzv6z5t0vKILLZ37kAN+hB4db+rYlUR4RngKPeAP64oRq47kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hu8C7lbXi+xXuJ+UeJKHTzXf08u1P+TWS/mlNYMYhK0=;
+ b=y9uR2po9HC+pQSw6AGS4lqcV63z+kBGJLRraV79zwT45H6tlut+0Gj78S/V6NYx35BgABYx8F2Fq9XB17TVn0HSxT8LG2bVQiexi+jpDF5RRh6Ov6R8mcA3qbP0JdbW96Z/k9b4b2wgHQJfL7rN4s+2O7ccpB8tyloBYiIEIijE=
+Received: from BN9PR03CA0673.namprd03.prod.outlook.com (2603:10b6:408:10e::18)
+ by PH0PR12MB8098.namprd12.prod.outlook.com (2603:10b6:510:29a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.22; Thu, 26 Jan
+ 2023 11:47:45 +0000
+Received: from BN8NAM11FT097.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:10e:cafe::22) by BN9PR03CA0673.outlook.office365.com
+ (2603:10b6:408:10e::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.22 via Frontend
+ Transport; Thu, 26 Jan 2023 11:47:45 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT097.mail.protection.outlook.com (10.13.176.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6023.16 via Frontend Transport; Thu, 26 Jan 2023 11:47:44 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 26 Jan
- 2023 11:41:31 +0000
-Date:   Thu, 26 Jan 2023 11:41:30 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/2] hw/cxl: Fix event log time stamp fields
-Message-ID: <20230126114130.00000b98@huawei.com>
-In-Reply-To: <20230125-ira-cxl-events-fixups-2023-01-11-v1-1-1931378515f5@intel.com>
-References: <20230125-ira-cxl-events-fixups-2023-01-11-v1-0-1931378515f5@intel.com>
-        <20230125-ira-cxl-events-fixups-2023-01-11-v1-1-1931378515f5@intel.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+ 2023 05:47:43 -0600
+Date:   Thu, 26 Jan 2023 12:47:40 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/3] cxl/mem: Quiet port walking warnings
+Message-ID: <Y9JoXPVjqTuEglfu@rric.localdomain>
+References: <20230113110441.0000657e@Huawei.com>
+ <167468465444.586774.9409731200278259584.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <167468465444.586774.9409731200278259584.stgit@dwillia2-xfh.jf.intel.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT097:EE_|PH0PR12MB8098:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23c33fd2-67e2-4a96-3fee-08daff93235a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pjC1ZRk2Df7YctTHimr+C2pz3kC0P8xd+IflJoQWjR5bj9COK5K02oA6qVCFwAdCN408el3PudLU8SAQhddJfxUnqrimY/fL4Zp61Fzw4p+Vbtawrm/xU76HRdMTHtPcmU9twdAcC1/mW2AWffe5QPQ+cu8tadCaFr8ee57h3RrQgDBjCMesTbwoT3mqHeMpRcBXdFFwpVSqnloJJ9PLQk8+FECRaaQE1mUAFgphAHVucyqquIv7OTAjEU88lDPCQm5MaTNNNbXwfP1UOKtyuzltBsF/pmaNnI/EstkiCiWZSZrZ83mZb+orDezDEX2W7E8mHb6ebgGDZjMMCKe/xRo9Xc8xFt99q4k5BMif5PGm6VEl5MU+a9KiSxXavM6lgaMned8z/pQswaGQbFFkkRmbdqobgMh9miMMr87rBRkQYjnxzipW+YINr0B5nYK9QK1YDwR1Sn+vgcFd0npkBiAcKbPvhCKOBaJycNIFMl7dP4k4G3p2/EKvyocS2jqMwrJDmTBbe+W4NASc5VydxXhJCQq6bdABCBguSbRqb3Yv5V2kLK5/nhuTnwjmfjp1O7otxBMY/zlOYq9sJFbwoV4Nm2S5rbV2+l1xWZgBHaY/ZDZMwe9hoVXC5o6nuqOE+/G80YNlgk4Cy48elIXC4g3wfUXETBZYhCdUqWMCYgwLRbzae6VN4KyUzhfiyIZca7NTiz/BgBz4muF4IekmqDmBcxNT5NGWw1mW9jgJ3EM=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(376002)(396003)(136003)(346002)(39860400002)(451199018)(40470700004)(46966006)(36840700001)(82310400005)(4744005)(81166007)(36860700001)(40460700003)(356005)(2906002)(316002)(8936002)(478600001)(54906003)(82740400003)(41300700001)(7696005)(40480700001)(55016003)(426003)(83380400001)(9686003)(26005)(16526019)(186003)(53546011)(70586007)(70206006)(8676002)(5660300002)(47076005)(336012)(4326008)(6916009)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2023 11:47:44.4270
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23c33fd2-67e2-4a96-3fee-08daff93235a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT097.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8098
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 25 Jan 2023 21:37:27 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
-
-> CXL 3.0 8.2.9.4.2 Set Timestamp and 8.2.9.4.1 Get Timestamp define the
-> way for software to set and get the time stamp of a device.  Events
-> should use a time stamp consistent with the Get Timestamp mailbox
-> command.
+On 25.01.23 14:11:17, Dan Williams wrote:
+> The cxl_mem driver attempts to establish, or revalidate, the cxl_port
+> hierarcy to attach a cxl_memdev to a CXL platform topology. There is a
+> natural race (on ACPI platforms) between when the cxl_mem driver
+> attempts to attach and when the cxl_acpi driver establishes the root of
+> the topology.
 > 
-> In addition avoid setting the time stamp twice.
+> If cxl_mem_probe() runs first it will iterate to the top of the device
+> topology without finding the CXL platform root. That situation is benign
+> / expected, so stop warning about it. The cxl_acpi driver will poke
+> cxl_mem_probe() to try again once the CXL platform root is established.
 > 
-> Fixes: fb64c5661d5f ("hw/cxl/events: Wire up get/clear event mailbox commands")
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Hi Ira,
-
-I'm going to split this patch as I am carrying a very similar
-utility function for an updated version of the poison list code
-and I'm not sure what order everything will go upstream in.
-
-So I'll split this into:
-1) Patch that adds cxl_device_get_timestamp() - adding the
-use of this in the GET_TIMESTAMP mailbox command.
-
-2) Changes pushed down into the patch you mention above.
-
-Given all the code is yours, just split up, I'll keep the SOB.
-Shout if you mind me doing that.
-
-Thanks,
-
-Jonathan
-
-> ---
->  hw/cxl/cxl-device-utils.c   | 15 +++++++++++++++
->  hw/cxl/cxl-events.c         |  4 +++-
->  hw/cxl/cxl-mailbox-utils.c  | 11 +----------
->  hw/mem/cxl_type3.c          |  1 -
->  include/hw/cxl/cxl_device.h |  2 ++
->  5 files changed, 21 insertions(+), 12 deletions(-)
+> Suppress any upper level errors by making it clear that this is merely a
+> probe deferral event, not a hard error.
 > 
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 7f29d40be04a..5876a3703e85 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -325,3 +325,18 @@ void cxl_device_register_init_swcci(CXLDeviceState *cxl_dstate)
->  
->      cxl_initialize_mailbox(cxl_dstate, true);
->  }
-> +
-> +uint64_t cxl_device_get_timestamp(CXLDeviceState *cxl_dstate)
-> +{
-> +    uint64_t time, delta;
-> +    uint64_t final_time = 0;
-> +
-> +    if (cxl_dstate->timestamp.set) {
-> +        /* First find the delta from the last time the host set the time. */
-> +        time = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-> +        delta = time - cxl_dstate->timestamp.last_set;
-> +        final_time = cxl_dstate->timestamp.host_set + delta;
-> +    }
-> +
-> +    return final_time;
-> +}
-> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
-> index 08fd52b66188..2536aafc55fb 100644
-> --- a/hw/cxl/cxl-events.c
-> +++ b/hw/cxl/cxl-events.c
-> @@ -100,7 +100,7 @@ bool cxl_event_insert(CXLDeviceState *cxlds,
->                        enum cxl_event_log_type log_type,
->                        struct cxl_event_record_raw *event)
->  {
-> -    uint64_t time = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-> +    uint64_t time;
->      struct cxl_event_log *log;
->      CXLEvent *entry;
->  
-> @@ -108,6 +108,8 @@ bool cxl_event_insert(CXLDeviceState *cxlds,
->          return false;
->      }
->  
-> +    time = cxl_device_get_timestamp(cxlds);
-> +
->      log = &cxlds->event_logs[log_type];
->  
->      QEMU_LOCK_GUARD(&log->lock);
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 75703023434b..0e64873c2395 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -394,17 +394,8 @@ static CXLRetCode cmd_timestamp_get(struct cxl_cmd *cmd,
->                                      CXLDeviceState *cxl_dstate,
->                                      uint16_t *len)
->  {
-> -    uint64_t time, delta;
-> -    uint64_t final_time = 0;
-> -
-> -    if (cxl_dstate->timestamp.set) {
-> -        /* First find the delta from the last time the host set the time. */
-> -        time = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-> -        delta = time - cxl_dstate->timestamp.last_set;
-> -        final_time = cxl_dstate->timestamp.host_set + delta;
-> -    }
-> +    uint64_t final_time = cxl_device_get_timestamp(cxl_dstate);
->  
-> -    /* Then adjust the actual time */
->      stq_le_p(cmd->payload, final_time);
->      *len = 8;
->  
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index a7b587780af2..42e291dd9f76 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1291,7 +1291,6 @@ static void cxl_assign_event_header(struct cxl_event_record_hdr *hdr,
->      hdr->flags[0] = flags;
->      hdr->length = length;
->      memcpy(&hdr->id, uuid, sizeof(hdr->id));
-> -    hdr->timestamp = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
->  }
->  
->  static const QemuUUID gen_media_uuid = {
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index cbb37c541c44..31579af342f1 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -426,4 +426,6 @@ CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
->  
->  void cxl_event_irq_assert(CXLType3Dev *ct3d);
->  
-> +uint64_t cxl_device_get_timestamp(CXLDeviceState *cxlds);
-> +
->  #endif
-> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
+Reviewed-by: Robert Richter <rrichter@amd.com>
