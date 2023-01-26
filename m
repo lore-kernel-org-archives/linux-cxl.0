@@ -2,120 +2,107 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B50AC52D11
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 17:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BC0C52D11
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 17:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjAZRGB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 Jan 2023 12:06:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43552 "EHLO
+        id S232020AbjAZRgE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Jan 2023 12:36:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbjAZRGA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 12:06:00 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E0B9EE2
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 09:06:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674752760; x=1706288760;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MWjf16lWWbhUuNrv55S6RxW/d0rZp8zZPrYD7SZ39bo=;
-  b=bKPtlcvRFylFiGxpsyqHdDtK6/0MeQtEITBJNnZDQJK1UFKrRi68ZQr7
-   3dSGRaXx3K+/gHnAL9fOLKMU9fsBNMUWGjkXX9c6zJfU3e5/p73gDiUnu
-   PsrfS3bVBwQODufLM2EyI3XPb9b+vWzCDtdI3gGXPADd+xDyN0MHikV7/
-   UCOqAW5zpPa2Qwut9mnvJdZC1ooavj28BGP3gek8TQiR4ZZVNdJ5fKRA5
-   AfTK+rZrOC5brkYPvwLz9VcohJ7puXEehL/Bp6gnKp8tMB3r/UBeS1yQF
-   2iAE5qXwt/gi4jAH134DjF570x9u1FQb/lVTjv6Z9F0W8Yj76hA1rUtKa
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="328137272"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="328137272"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 09:05:58 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="805435848"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="805435848"
-Received: from cgibbiso-mobl1.amr.corp.intel.com (HELO localhost) ([10.212.132.52])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 09:05:57 -0800
-From:   alison.schofield@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        with ESMTP id S232022AbjAZRf6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 12:35:58 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BB66C100
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 09:35:43 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P2npB3fV4z67bS0;
+        Fri, 27 Jan 2023 01:32:18 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 26 Jan
+ 2023 17:35:41 +0000
+Date:   Thu, 26 Jan 2023 17:35:39 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Jonathan Cameron via <qemu-devel@nongnu.org>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Michael Tsirkin <mst@redhat.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v3] tools/testing/cxl: Remove cxl_test module math loading message
-Date:   Thu, 26 Jan 2023 09:05:55 -0800
-Message-Id: <20230126170555.701240-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.37.3
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        <alison.schofield@intel.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>
+Subject: Re: [PATCH v2 7/7] hw/mem/cxl_type3: Add CXL RAS Error Injection
+ Support
+Message-ID: <20230126173539.00005cfd@huawei.com>
+In-Reply-To: <20230120142450.16089-8-Jonathan.Cameron@huawei.com>
+References: <20230120142450.16089-1-Jonathan.Cameron@huawei.com>
+        <20230120142450.16089-8-Jonathan.Cameron@huawei.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Fri, 20 Jan 2023 14:24:50 +0000
+Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
 
-Commit "tools/testing/cxl: Add XOR Math support to cxl_test" added
-a module parameter to cxl_test for the interleave_arithmetic option.
+> CXL uses PCI AER Internal errors to signal to the host that an error has
+> occurred. The host can then read more detailed status from the CXL RAS
+> capability.
+> 
+> For uncorrectable errors: support multiple injection in one operation
+> as this is needed to reliably test multiple header logging support in an
+> OS. The equivalent feature doesn't exist for correctable errors, so only
+> one error need be injected at a time.
+> 
+> Note:
+>  - Header content needs to be manually specified in a fashion that
+>    matches the specification for what can be in the header for each
+>    error type.
+> 
+> Injection via QMP:
+> { "execute": "qmp_capabilities" }
+> ...
+> { "execute": "cxl-inject-uncorrectable-errors",
+>   "arguments": {
+>     "path": "/machine/peripheral/cxl-pmem0",
+>     "errors": [
+>         {
+>             "type": "cache-address-parity",
+>             "header": [ 3, 4]
+>         },
+>         {
+>             "type": "cache-data-parity",
+>             "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+>         },
+>         {
+>             "type": "internal",
+>             "header": [ 1, 2, 4]
+>         }
+>         ]
+>   }}
+> ...
+> { "execute": "cxl-inject-correctable-error",
+>     "arguments": {
+>         "path": "/machine/peripheral/cxl-pmem0",
+>         "type": "physical",
+>         "header": [ 3, 4]
 
-In doing so, it also added this dev_dbg() message describing which
-option cxl_test used during load:
-"[  111.743246] (NULL device *): cxl_test loading modulo math option"
-That "(NULL device *)" has raised needless user concern.
+Correctable errors don't have header logging (I misread the spec a long time
+back and somehow didn't notice this was still here) I'll fix this up for v3
+along with cleaning up the messy endian handling that was pointed out off list.
+I don't intent (at this point) to deal with big endian support in general,
+but it would be good not to make the situation worse than it already is
+even if no one is shouting for big endian yet.
 
-Remove the dev_dbg() message and make the module_param readable via
-sysfs for users that need to know which math option is active.
+Thanks,
 
-Fixes: Fixes: 7a7e6edfca85 ("tools/testing/cxl: Add XOR Math support to cxl_test")
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
----
-
-Changes in v3:
-- New base commit 6.2-rc5.  Suggest for 6.3, not a 6.2 fix.
-- Update Commit log: explain why permission change is needed (DaveJ)
-- Add Vishal's Reviewed-by Tag (Vishal)
-- No change in code
-
-Changes in v2:
-- Use correct Fixes Tag in commit log. (Ira)
-- Param always appears in sysfs. Don't say otherwise in commit log. (Ira)
-- Commit msg: s/modulo/module, s/messages/message
-- No change in code
-
- tools/testing/cxl/test/cxl.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 30ee680d38ff..ede84de69f59 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1135,11 +1135,9 @@ static __init int cxl_test_init(void)
- 	if (interleave_arithmetic == 1) {
- 		cfmws_start = CFMWS_XOR_ARRAY_START;
- 		cfmws_end = CFMWS_XOR_ARRAY_END;
--		dev_dbg(NULL, "cxl_test loading xor math option\n");
- 	} else {
- 		cfmws_start = CFMWS_MOD_ARRAY_START;
- 		cfmws_end = CFMWS_MOD_ARRAY_END;
--		dev_dbg(NULL, "cxl_test loading modulo math option\n");
- 	}
- 
- 	rc = populate_cedt();
-@@ -1326,7 +1324,7 @@ static __exit void cxl_test_exit(void)
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
- }
- 
--module_param(interleave_arithmetic, int, 0000);
-+module_param(interleave_arithmetic, int, 0444);
- MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
-
-base-commit: 2241ab53cbb5cdb08a6b2d4688feb13971058f65
--- 
-2.37.3
-
+Jonathan
