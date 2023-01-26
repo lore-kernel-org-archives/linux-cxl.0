@@ -2,244 +2,151 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84622C05027
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 18:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68E5C05027
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 19:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231651AbjAZSvs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 Jan 2023 13:51:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
+        id S229871AbjAZTFM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Jan 2023 14:05:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231543AbjAZSvr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 13:51:47 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BCB49018
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 10:51:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674759101; x=1706295101;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KIH+PPKsKm0t7Ywpg0lnQOLotaoFzZeObvLCwdceQMY=;
-  b=fsLP5WK0V3Ans3Z1qHh0YjpaeKKJEdZfy8OTN6rpVbSpOdknPFCQonl+
-   4JEMnvl+vOfwsNBnr9UJwn5WsyKb8AeS0v7y/YLBBMBIW/Rqf0kviVnvY
-   FJynVVVclR0v5axOr8pbaGZPM6jl+IVCj9rJaYT1RngwyCS4IJ8H3OZO7
-   RpPgKL7NWHsxhR161Q6oIOxFz0YAXlfwO9OGYNSQC7omJ5JRpWpubY4xL
-   7MnkSZVObjrzk39HszNiGLzKvukUYwUn0nqjZA8mset4zJN9aBKQt76G8
-   rw48RgwO0Ug0YzN9Tt29R3Mn5yJnWpa6yxo9yE+c/U91SmySgRFZPzpCY
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="307257134"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="307257134"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 10:51:40 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="656279576"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="656279576"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.112.115]) ([10.212.112.115])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 10:51:39 -0800
-Message-ID: <d8cdd35d-4c35-07f7-0f7c-3b790ee8b3b5@intel.com>
-Date:   Thu, 26 Jan 2023 11:51:39 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] hw/cxl: Add QTG _DSM support for ACPI0017 device
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     mst@redhat.com, bwidawsk@kernel.org, peter.maydell@linaro.org,
-        qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
-References: <167475645654.1386523.7101990863993668595.stgit@djiang5-mobl3.local>
- <20230126182446.00001ce7@Huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230126182446.00001ce7@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S229940AbjAZTFL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 14:05:11 -0500
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E5053C34
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 11:05:10 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id 129so3262419ybb.0
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 11:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/rGkhJmSyXGRAv7yUIkT+up2AFBL4prNC/7g/FTZVKM=;
+        b=dJ1RVFuMJTrfuG8GWp3aIEWB/cLIb0RL9TkvOrjcSFBLXlMx3sW9Lgy7mbXo8aAG59
+         eN//lbfI+RhFwzd+vCwOSpiOPza/GX9KTK6qFeOj6XGgLMReYlSesp/tYixYaXiv9ZjB
+         fPSm+C3kZYSazvUMhBNCJh/nUVme2Ixk+5LB7uO2pLA5KjQ1bRIMP9Er39UbyEsX7+md
+         e5X9E1ssKv2s6iYyzBhRS0EtwckPj+So67XaBT06S4TTuc0c55p3peHUn5nGkVTrGtGs
+         0KqpEVpFnwjl+Xe1+C1Jpmle6LeacTY+202OkA6jTOMZ5c17XbLQhB27LW4i5SlcBHYT
+         LMdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/rGkhJmSyXGRAv7yUIkT+up2AFBL4prNC/7g/FTZVKM=;
+        b=NwJ9l/YKypSqoXWWOxCBHaqQRqQRSR11+2WJ+couo8rJljzwW4d82+bHGe/T22slPz
+         6Z8pEMUpvlqUPRt0CG/c4/CVsW1rEoaIo01GwBBs0GFam6TAM5r3GmV0Rq+g4/WNCrsi
+         8ajFzTkusnVoe32kGelr0SxdN8vm8Yn+pcbJ1gN1ORpjna3KpZNFxrzv3vGQGqrJuPWM
+         /qUBAUtcesDF2e2X/WXkfiq+hDMuekU14T/BwDEGxLtM1IJm3HPayFkyit8mYEuYQ+FM
+         9cWv60lLy7POIP5VE4FhC5A+gCUoJ03ZRqp4gyNEwAKyZzSinm5eVvegfr/2AOKjmszg
+         SXfQ==
+X-Gm-Message-State: AFqh2krH4wsvGuI1uq0dKe0N7Bg+z2FcL3ztFPxV5KZ1wN1GToL16CYf
+        QTwVqq+VlXZf57tzcl+qHI0ZPw==
+X-Google-Smtp-Source: AMrXdXsHIA6Pklm5FpldL3clK+R0KKU0s6iAW4CNncQuOb4DcoIWd5vcV9bzVf/mqCcFFwloKFH6sA==
+X-Received: by 2002:a25:c58c:0:b0:70b:60af:d182 with SMTP id v134-20020a25c58c000000b0070b60afd182mr22200082ybe.39.1674759909321;
+        Thu, 26 Jan 2023 11:05:09 -0800 (PST)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id j12-20020a05620a0a4c00b00706afbdeb01sm1426325qka.8.2023.01.26.11.05.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Jan 2023 11:05:08 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: Re: [External] [LSF/MM/BPF BoF] Session for CXL memory
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20230126165810.GA354177@bgt-140510-bm01>
+Date:   Thu, 26 Jan 2023 11:04:55 -0800
+Cc:     David Rientjes <rientjes@google.com>,
+        "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Duen-wen Hsiao <duenwen@google.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        Fan Ni <fan.ni@samsung.com>,
+        "ks0204.kim@samsung.com" <ks0204.kim@samsung.com>,
+        "kim1158@gmail.com" <kim1158@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8C14AC19-4D4C-49B4-85BA-BEA359D9FB3D@bytedance.com>
+References: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
+ <38D49DA9-3C57-4951-8CBA-5D2BB0C40D9C@bytedance.com>
+ <CGME20230123055124uscas1p24ec9bf64b225fa5d943dd94ff70311ba@uscas1p2.samsung.com>
+ <dd0d92fd-51dc-f5ac-26f9-7446118d654e@google.com>
+ <20230123174553.GA341216@bgt-140510-bm01>
+ <A1AF948D-C703-44E9-A668-602F9FE621C3@bytedance.com>
+ <20230126165810.GA354177@bgt-140510-bm01>
+To:     Adam Manzanares <a.manzanares@samsung.com>
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 
-On 1/26/23 11:24 AM, Jonathan Cameron wrote:
-> On Thu, 26 Jan 2023 11:07:37 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
-> Hi Dave,
-> 
-> That was quick!
-> 
->> Add a simple _DSM call support for the ACPI0017 device to return a fake QTG
->> ID value. Given the current CXL implementation does not involve switches,
-> 
-> I don't follow.  What part doesn't involve switches?
-> 
->> a faked value of 0 can be returned for the QTG ID. The enabling is for _DSM
->> plumbing testing from the OS.
-> 
-> Can you include a dump iasl -d for the DSDT chunk this generates. Much
-> easier to review with that available.
+> On Jan 26, 2023, at 8:58 AM, Adam Manzanares =
+<a.manzanares@samsung.com> wrote:
+>=20
+> On Mon, Jan 23, 2023 at 10:30:34AM -0800, Viacheslav A.Dubeyko wrote:
+>>=20
+>>=20
+>>> On Jan 23, 2023, at 9:46 AM, Adam Manzanares =
+<a.manzanares@samsung.com> wrote:
+>>>=20
+>>> On Sun, Jan 22, 2023 at 09:51:19PM -0800, David Rientjes wrote:
+>>>> On Fri, 6 Jan 2023, Viacheslav A.Dubeyko wrote:
+>>>>=20
+>>>>> CC: LSF/MM/BPF mailing list. Sorry, missed the list.
+>>>>>=20
+>>>>>> On Jan 6, 2023, at 11:51 AM, Viacheslav A.Dubeyko =
+<viacheslav.dubeyko@bytedance.com> wrote:
+>>>>>>=20
+>>>>>> Hello,
+>>>>>>=20
+>>>>>> I believe CXL memory is hot topic now. I believe we have multiple =
+topics
+>>>>>> for discussion. I personally would like to discuss CXL Fabric =
+Manager
+>>>>>> and vision of FM architecture implementation. I am going to share =
+the topic
+>>>>>> in separate email. I would like to suggest a special session for =
+CXL memory
+>>>>>> related topics.
+>>>>>>=20
+>>>>>> How everybody feels about it?
+>>>>>>=20
+>>>>=20
+>>>> I think this makes a lot of sense, thanks for suggesting it.
+>>>>=20
+>>>> Should this be a BoF or just a normal topic proposal?  I assume =
+that there=20
+>>>> could be several different topics of interest all related to =
+CXL.mem.
+>>>>=20
+>>>=20
+>>> +1 for a normal topic proposal.
+>>=20
+>> By the way, Samsung SMDK (memory development kit) suggested memory =
+model
+>> in user-space and kernel memory subsystem modification. I assume that =
+we need
+>> to discuss the memory model and kernel-space modification. So, it =
+could be one of
+>> the CXL related topic. Could we expect that Samsung guys deliver a =
+talk?
+>=20
+> +Kyungsan Kim
+>=20
+> It is my understanding that Kyungsan, who is the lead for the SMDK =
+project is=20
+> interested in sharing with the community some lessons learned from =
+working with=20
+> CXL attached memory and a CFP is planned.=20
+>=20
 
-         Device (CXLM)
-         {
-             Name (_HID, "ACPI0017")  // _HID: Hardware ID
-             Method (_STA, 0, NotSerialized)  // _STA: Status
-             {
-                 Return (One)
-             }
+Sounds pretty great for me. :)
 
-             Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-             {
-                 If ((Arg0 == ToUUID 
-("f365f9a6-a7de-4071-a66a-b40c0b4f8e52") /* Unknown UUID */))
-                 {
-                     If ((Arg2 == Zero))
-                     {
-                         Return (Buffer (One)
-                         {
-                              0x01 
-       // .
-                         })
-                     }
+Thanks,
+Slava.
 
-                     If ((Arg2 == One))
-                     {
-                         Return (Package (0x02)
-                         {
-                             Buffer (0x02)
-                             {
-                                  0x01, 0x00 
-           // ..
-                             },
-
-                             Package (0x01)
-                             {
-                                 Buffer (0x02)
-                                 {
-                                      0x00, 0x00 
-               // ..
-                                 }
-                             }
-                         })
-                     }
-                 }
-
-
-> 
-> On that note, tests need updating I think
-> tests/qtest/bios-tables-test.c data which is in
-> tests/data/acpi/q35/DSDT.cxl
-> 
-> We should update that test code as part of the volatile series as well
-> as it's using the deprecated memdev parameter - not critical
-> but never a good thing to leave old examples of what not to use in
-> the tests.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> p.s. I'm too lazy to look at the code without the AML to compare with
-> as I'll review the AML first then look at if there are any oddities
-> in the generation code.
-> 
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   hw/acpi/cxl.c         |   57 +++++++++++++++++++++++++++++++++++++++++++++++++
->>   hw/i386/acpi-build.c  |    1 +
->>   include/hw/acpi/cxl.h |    1 +
->>   3 files changed, 59 insertions(+)
->>
->> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
->> index 2bf8c0799359..cd6839c24416 100644
->> --- a/hw/acpi/cxl.c
->> +++ b/hw/acpi/cxl.c
->> @@ -30,6 +30,63 @@
->>   #include "qapi/error.h"
->>   #include "qemu/uuid.h"
->>   
->> +void build_cxl_dsm_method(Aml *dev)
->> +{
->> +    Aml *method, *ifctx, *ifctx2;
->> +
->> +    method = aml_method("_DSM", 4, AML_SERIALIZED);
->> +    {
->> +        Aml *function, *uuid;
->> +
->> +        uuid = aml_arg(0);
->> +        function = aml_arg(2);
->> +        /* CXL spec v3.0 9.17.3.1 *, QTG ID _DSM */
->> +        ifctx = aml_if(aml_equal(
->> +            uuid, aml_touuid("F365F9A6-A7DE-4071-A66A-B40C0B4F8E52")));
->> +
->> +        /* Function 0, standard DSM query function */
->> +        ifctx2 = aml_if(aml_equal(function, aml_int(0)));
->> +        {
->> +            uint8_t byte_list[1] = { 0x01 }; /* functions 1 only */
->> +
->> +            aml_append(ifctx2,
->> +                       aml_return(aml_buffer(sizeof(byte_list), byte_list)));
->> +        }
->> +        aml_append(ifctx, ifctx2);
->> +
->> +        /*
->> +         * Function 1
->> +         * A return value of {1, {0}} inciate that
->> +         * max supported QTG ID of 1 and recommended QTG is 0.
->> +         * The values here are faked to simplify emulation.
->> +         */
->> +        ifctx2 = aml_if(aml_equal(function, aml_int(1)));
->> +        {
->> +            uint16_t word_list[1] = { 0x01 };
->> +            uint16_t word_list2[1] = { 0 };
->> +            uint8_t *byte_list = (uint8_t *)word_list;
->> +            uint8_t *byte_list2 = (uint8_t *)word_list2;
->> +            Aml *pak, *pak1;
->> +
->> +            /*
->> +             * The return package is a package of a WORD and another package.
->> +             * The embedded package contains 0 or more WORDs for the
->> +             * recommended QTG IDs.
->> +             */
->> +            pak1 = aml_package(1);
->> +            aml_append(pak1, aml_buffer(sizeof(uint16_t), byte_list2));
->> +            pak = aml_package(2);
->> +            aml_append(pak, aml_buffer(sizeof(uint16_t), byte_list));
->> +            aml_append(pak, pak1);
->> +
->> +            aml_append(ifctx2, aml_return(pak));
->> +        }
->> +        aml_append(ifctx, ifctx2);
->> +    }
->> +    aml_append(method, ifctx);
->> +    aml_append(dev, method);
->> +}
->> +
->>   static void cedt_build_chbs(GArray *table_data, PXBDev *cxl)
->>   {
->>       SysBusDevice *sbd = SYS_BUS_DEVICE(cxl->cxl.cxl_host_bridge);
->> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
->> index 285829802b1a..623f26a16db3 100644
->> --- a/hw/i386/acpi-build.c
->> +++ b/hw/i386/acpi-build.c
->> @@ -1313,6 +1313,7 @@ static void build_acpi0017(Aml *table)
->>       method = aml_method("_STA", 0, AML_NOTSERIALIZED);
->>       aml_append(method, aml_return(aml_int(0x01)));
->>       aml_append(dev, method);
->> +    build_cxl_dsm_method(dev);
->>   
->>       aml_append(scope, dev);
->>       aml_append(table, scope);
->> diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
->> index acf441888683..8f22c71530d8 100644
->> --- a/include/hw/acpi/cxl.h
->> +++ b/include/hw/acpi/cxl.h
->> @@ -25,5 +25,6 @@ void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
->>                       BIOSLinker *linker, const char *oem_id,
->>                       const char *oem_table_id, CXLState *cxl_state);
->>   void build_cxl_osc_method(Aml *dev);
->> +void build_cxl_dsm_method(Aml *dev);
->>   
->>   #endif
->>
->>
-> 
