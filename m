@@ -2,47 +2,38 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BC0C52D11
-	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 17:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B757C05027
+	for <linux-cxl@archiver.kernel.org>; Thu, 26 Jan 2023 18:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232020AbjAZRgE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 26 Jan 2023 12:36:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
+        id S229823AbjAZSFF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 26 Jan 2023 13:05:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232022AbjAZRf6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 12:35:58 -0500
+        with ESMTP id S229572AbjAZSFE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 26 Jan 2023 13:05:04 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1BB66C100
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 09:35:43 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P2npB3fV4z67bS0;
-        Fri, 27 Jan 2023 01:32:18 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 26 Jan
- 2023 17:35:41 +0000
-Date:   Thu, 26 Jan 2023 17:35:39 +0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985F928D31
+        for <linux-cxl@vger.kernel.org>; Thu, 26 Jan 2023 10:05:02 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P2pW12BhJz6J9bx;
+        Fri, 27 Jan 2023 02:04:13 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Thu, 26 Jan 2023 18:04:59 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Jonathan Cameron via <qemu-devel@nongnu.org>
-CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+To:     <linux-cxl@vger.kernel.org>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <alison.schofield@intel.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>
-Subject: Re: [PATCH v2 7/7] hw/mem/cxl_type3: Add CXL RAS Error Injection
- Support
-Message-ID: <20230126173539.00005cfd@huawei.com>
-In-Reply-To: <20230120142450.16089-8-Jonathan.Cameron@huawei.com>
-References: <20230120142450.16089-1-Jonathan.Cameron@huawei.com>
-        <20230120142450.16089-8-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        Dan Williams <dan.j.williams@intel.com>, <linuxarm@huawei.com>
+Subject: [PATCH] cxl/pci: Set the device timestamp
+Date:   Thu, 26 Jan 2023 18:04:58 +0000
+Message-ID: <20230126180458.5145-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
@@ -51,58 +42,150 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 20 Jan 2023 14:24:50 +0000
-Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
+CXL r3.0 section 8.2.9.4.2 "Set Timestamp" recommends that the host sets
+the timestamp after every Conventional or CXL Reset to ensure accurate
+timestamps. This should include on initial boot up. The time base that
+is being set is used by a device for the poison list overflow timestamp
+and all event timestamps.  Note that the command is optional and if
+not supported and the device cannot return accurate timestamps it will
+fill the fields in with an appropriate marker (see the specification
+description of each timestamp).
 
-> CXL uses PCI AER Internal errors to signal to the host that an error has
-> occurred. The host can then read more detailed status from the CXL RAS
-> capability.
-> 
-> For uncorrectable errors: support multiple injection in one operation
-> as this is needed to reliably test multiple header logging support in an
-> OS. The equivalent feature doesn't exist for correctable errors, so only
-> one error need be injected at a time.
-> 
-> Note:
->  - Header content needs to be manually specified in a fashion that
->    matches the specification for what can be in the header for each
->    error type.
-> 
-> Injection via QMP:
-> { "execute": "qmp_capabilities" }
-> ...
-> { "execute": "cxl-inject-uncorrectable-errors",
->   "arguments": {
->     "path": "/machine/peripheral/cxl-pmem0",
->     "errors": [
->         {
->             "type": "cache-address-parity",
->             "header": [ 3, 4]
->         },
->         {
->             "type": "cache-data-parity",
->             "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
->         },
->         {
->             "type": "internal",
->             "header": [ 1, 2, 4]
->         }
->         ]
->   }}
-> ...
-> { "execute": "cxl-inject-correctable-error",
->     "arguments": {
->         "path": "/machine/peripheral/cxl-pmem0",
->         "type": "physical",
->         "header": [ 3, 4]
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Correctable errors don't have header logging (I misread the spec a long time
-back and somehow didn't notice this was still here) I'll fix this up for v3
-along with cleaning up the messy endian handling that was pointed out off list.
-I don't intent (at this point) to deal with big endian support in general,
-but it would be good not to make the situation worse than it already is
-even if no one is shouting for big endian yet.
+---
 
-Thanks,
+Open question: Should we only do this if Linux has control of the
+error handling?  In theory it should be safe anyway given the
+specification is clear that the timestamp base should always be the
+same - so subject to small errors we shouldn't cause any firmware first
+handling to get confused.
 
-Jonathan
+ drivers/cxl/core/mbox.c      | 25 +++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h         |  7 +++++++
+ drivers/cxl/pci.c            |  5 +++++
+ include/uapi/linux/cxl_mem.h |  1 +
+ 4 files changed, 38 insertions(+)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index b03fba212799..a7317bb142ed 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -65,6 +65,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+ 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+ 	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
+ 	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
++	CXL_CMD(SET_TIMESTAMP, 8, 0, 0),
+ };
+ 
+ /*
+@@ -93,6 +94,7 @@ static u16 cxl_disabled_raw_commands[] = {
+ 	CXL_MBOX_OP_SET_SHUTDOWN_STATE,
+ 	CXL_MBOX_OP_SCAN_MEDIA,
+ 	CXL_MBOX_OP_GET_SCAN_MEDIA,
++	CXL_MBOX_OP_SET_TIMESTAMP,
+ };
+ 
+ /*
+@@ -857,6 +859,29 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
+ 
++int cxl_set_timestamp(struct cxl_dev_state *cxlds, u64 ts)
++{
++	struct cxl_mbox_cmd mbox_cmd;
++	struct cxl_mbox_set_timestamp_in pi;
++
++	/*
++	 * Command is optional and functionality should not be affected if
++	 * the command is not available.
++	 */
++	if (!test_bit(CXL_MEM_COMMAND_ID_SET_TIMESTAMP, cxlds->enabled_cmds))
++		return 0;
++
++	pi.timestamp = ts;
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_SET_TIMESTAMP,
++		.size_in = sizeof(pi),
++		.payload_in = &pi,
++	};
++
++	return cxl_internal_send_cmd(cxlds, &mbox_cmd);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
++
+ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
+ {
+ 	struct cxl_dev_state *cxlds;
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index ab138004f644..0ca7a35de893 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -274,6 +274,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+ 	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+ 	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
++	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+ 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+ 	CXL_MBOX_OP_GET_LOG		= 0x0401,
+ 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+@@ -372,6 +373,11 @@ struct cxl_mbox_set_partition_info {
+ 
+ #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+ 
++/* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
++struct cxl_mbox_set_timestamp_in {
++	__le64 timestamp;
++} __packed;
++
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
+@@ -441,6 +447,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds);
+ struct cxl_dev_state *cxl_dev_state_create(struct device *dev);
+ void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+ void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
++int cxl_set_timestamp(struct cxl_dev_state *cxlds, u64 ts);
+ #ifdef CONFIG_CXL_SUSPEND
+ void cxl_mem_active_inc(void);
+ void cxl_mem_active_dec(void);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 2bbebbc7e032..30a2b231d970 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -2,6 +2,7 @@
+ /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/moduleparam.h>
++#include <linux/timekeeping.h>
+ #include <linux/module.h>
+ #include <linux/delay.h>
+ #include <linux/sizes.h>
+@@ -482,6 +483,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_set_timestamp(cxlds, ktime_get_real_ns());
++	if (rc)
++		return rc;
++
+ 	rc = cxl_dev_state_identify(cxlds);
+ 	if (rc)
+ 		return rc;
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index c71021a2a9ed..333301037b74 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -41,6 +41,7 @@
+ 	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+ 	___C(SCAN_MEDIA, "Scan Media"),                                   \
+ 	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
++	___C(SET_TIMESTAMP, "Set Device Timestamp"),                      \
+ 	___C(MAX, "invalid / last command")
+ 
+ #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+
+base-commit: 172738bbccdb4ef76bdd72fc72a315c741c39161
+-- 
+2.37.2
+
