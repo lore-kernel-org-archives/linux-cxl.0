@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCBAC54EAA
-	for <linux-cxl@archiver.kernel.org>; Fri, 27 Jan 2023 21:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D5BC38142
+	for <linux-cxl@archiver.kernel.org>; Fri, 27 Jan 2023 21:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbjA0VgN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 27 Jan 2023 16:36:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
+        id S229437AbjA0Vw6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 27 Jan 2023 16:52:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbjA0VgM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 Jan 2023 16:36:12 -0500
+        with ESMTP id S231611AbjA0Vw5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 Jan 2023 16:52:57 -0500
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C085A351;
-        Fri, 27 Jan 2023 13:36:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FB4126E3;
+        Fri, 27 Jan 2023 13:52:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674855368; x=1706391368;
+  t=1674856371; x=1706392371;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=Gkg6K5SC88XcNSOy70yqKkpx83kTBtchNgAEpKJ1XIQ=;
-  b=OzsWmyPGnck7vgKfWw0WiwReI0/yTAR+rm/f7mn4pLpLpedFkHp4F50o
-   AYWaZruD9cSjTeTlDHXPi2+7cqgXyVCF8JzJszzI57ErNUK+OBkmncMyE
-   L8z3pXdnebN99N6kK8da4OQPGaUelAWMydKsRfuKIBloxyqW9/+e7lVB8
-   wvWezqKe5rHtGQvitaBBeXpCq1mnp1bTcpW7vbJLXZQ07IzI8/OdddBQr
-   F1fbVxr3NxJnro2jLTTYcIp7VYxAWFYjcrhER55Qv+Jtz0Id6Xn6HnOQL
-   RdFFk3MPTzn+xXIYZ3opFTJizrOShFXAeS92h6qWxgRfqDqU9XJc+IIpW
+  bh=9Ii69Mw+ITtCryrVzceNJaInNNbxTdiKPALVlpnKbxQ=;
+  b=XFPKmMzzNIuVcBOniXO0gyo+vU5RrngZfQNvUmlLJo/aEN87SMMYJHKI
+   f9eHP0yGjBDaCi5bwvIxG1PCyh/LD8saF/HdsAEfZQC+Sdefb+vpiGVRB
+   +gPQOzcj58xrAzjcmtwo3W3XMZRS0Lsza4X8dcqZbKpeWXFCqL1czVyjU
+   zmAwlN/xh4cNz09W2fzbtVheAz8FqHLZ2Np+UR4P6qr6ts4u6h1pbQrC/
+   yjjR3k9YhVZNIDkLr/YWY9Uo+HmhW9sCTNBOqPmR6P+c/7ZDDPtvzEh7F
+   Ppz1MjMuESFO3gE8JYrook+T1x3JOC7BXldlbkAVi6DpVy61ENi2F+PfO
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="389577234"
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="389581092"
 X-IronPort-AV: E=Sophos;i="5.97,252,1669104000"; 
-   d="scan'208";a="389577234"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 13:36:07 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="805957947"
+   d="scan'208";a="389581092"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 13:52:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="693858269"
 X-IronPort-AV: E=Sophos;i="5.97,252,1669104000"; 
-   d="scan'208";a="805957947"
+   d="scan'208";a="693858269"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.161.50])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 13:36:07 -0800
-Date:   Fri, 27 Jan 2023 13:36:05 -0800
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 13:52:49 -0800
+Date:   Fri, 27 Jan 2023 13:52:47 -0800
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -45,124 +45,130 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re:
-Message-ID: <Y9RDxWwKX+OPl7V1@aschofie-mobl2>
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v5 3/5] cxl/memdev: Add trigger_poison_list sysfs
+ attribute
+Message-ID: <Y9RHr0kQqfLiT3Cq@aschofie-mobl2>
 References: <cover.1674070170.git.alison.schofield@intel.com>
- <63d32fe783ee2_ea2222949f@dwillia2-xfh.jf.intel.com.notmuch>
- <Y9P3ipL28W7N1bLm@aschofie-mobl2>
- <63d423218e854_3a36e5294fd@dwillia2-xfh.jf.intel.com.notmuch>
+ <fc1a2f51834888c2ea585efb0b4fa41cd251e52d.1674070170.git.alison.schofield@intel.com>
+ <63d429435984f_3a36e5294b2@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <63d423218e854_3a36e5294fd@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <63d429435984f_3a36e5294b2@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 11:16:49AM -0800, Dan Williams wrote:
-> Alison Schofield wrote:
-> > On Thu, Jan 26, 2023 at 05:59:03PM -0800, Dan Williams wrote:
-> > > alison.schofield@ wrote:
-> > > > From: Alison Schofield <alison.schofield@intel.com>
-> > > > 
-> > > > Subject: [PATCH v5 0/5] CXL Poison List Retrieval & Tracing
-> > > > 
-> > > > Changes in v5:
-> > > > - Rebase on cxl/next 
-> > > > - Use struct_size() to calc mbox cmd payload .min_out
-> > > > - s/INTERNAL/INJECTED mocked poison record source
-> > > > - Added Jonathan Reviewed-by tag on Patch 3
-> > > > 
-> > > > Link to v4:
-> > > > https://lore.kernel.org/linux-cxl/cover.1671135967.git.alison.schofield@intel.com/
-> > > > 
-> > > > Add support for retrieving device poison lists and store the returned
-> > > > error records as kernel trace events.
-> > > > 
-> > > > The handling of the poison list is guided by the CXL 3.0 Specification
-> > > > Section 8.2.9.8.4.1. [1] 
-> > > > 
-> > > > Example, triggered by memdev:
-> > > > $ echo 1 > /sys/bus/cxl/devices/mem3/trigger_poison_list
-> > > > cxl_poison: memdev=mem3 pcidev=cxl_mem.3 region= region_uuid=00000000-0000-0000-0000-000000000000 dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-> > > 
-> > > I think the pcidev= field wants to be called something like "host" or
-> > > "parent", because there is no strict requirement that a 'struct
-> > > cxl_memdev' is related to a 'struct pci_dev'. In fact in that example
-> > > "cxl_mem.3" is a 'struct platform_device'. Now that I think about it, I
-> > > think all CXL device events should be emitting the PCIe serial number
-> > > for the memdev.
-> > ]
+On Fri, Jan 27, 2023 at 11:42:59AM -0800, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > Will do, 'host' and add PCIe serial no.
+> > When a boolean 'true' is written to this attribute the memdev driver
+> > retrieves the poison list from the device. The list consists of
+> > addresses that are poisoned, or would result in poison if accessed,
+> > and the source of the poison. This attribute is only visible for
+> > devices supporting the capability. The retrieved errors are logged
+> > as kernel trace events with the label 'cxl_poison'.
 > > 
-> > > 
-> > > I will look in the implementation, but do region= and region_uuid= get
-> > > populated when mem3 is a member of the region?
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-cxl | 14 ++++++++
+> >  drivers/cxl/core/memdev.c               | 45 +++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h                    |  2 +-
+> >  3 files changed, 60 insertions(+), 1 deletion(-)
 > > 
-> > Not always.
-> > In the case above, where the trigger was by memdev, no.
-> > Region= and region_uuid= (and in the follow-on patch, hpa=) only get
-> > populated if the poison was triggered by region, like the case below.
-> > 
-> > It could be looked up for the by memdev cases. Is that wanted?
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > index 8494ef27e8d2..df40ed09ea67 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > @@ -388,3 +388,17 @@ Description:
+> >  		1), and checks that the hardware accepts the commit request.
+> >  		Reading this value indicates whether the region is committed or
+> >  		not.
+> > +
+> > +
+> > +What:		/sys/bus/cxl/devices/memX/trigger_poison_list
+> > +Date:		November, 2022
+> > +KernelVersion:	v6.2
+> > +Contact:	linux-cxl@vger.kernel.org
+> > +Description:
+> > +		(WO) When a boolean 'true' is written to this attribute the
+> > +		memdev driver retrieves the poison list from the device. The
+> > +		list consists of addresses that are poisoned, or would result
+> > +		in poison if accessed, and the source of the poison. This
+> > +		attribute is only visible for devices supporting the
+> > +		capability. The retrieved errors are logged as kernel
+> > +		trace events with the label 'cxl_poison'.
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index a74a93310d26..e0af7e9c9989 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -106,12 +106,49 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+> >  }
+> >  static DEVICE_ATTR_RO(numa_node);
+> >  
+> > +static ssize_t trigger_poison_list_store(struct device *dev,
+> > +					 struct device_attribute *attr,
+> > +					 const char *buf, size_t len)
+> > +{
+> > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > +	u64 offset, length;
+> > +	bool tmp;
+> > +	int rc;
+> > +
+> > +	if (kstrtobool(buf, &tmp))
+> > +		return -EINVAL;
 > 
-> Just trying to understand the semantics. However, I do think it makes sense
-> for a memdev trigger to lookup information on all impacted regions
-> across all of the device's DPA and the region trigger makes sense to
-> lookup all memdevs, but bounded by the DPA that contributes to that
-> region. I just want to avoid someone having to trigger the region to get
-> extra information that was readily available from a memdev listing.
+> Wait, where's the check for "if (tmp)"? Otherwise I can do "echo N >
+> trigger_poison_list" and it will still run. Should probably
+> s/tmp/trigger/.
+
+Got it.
+(I guess I was too loose w the trigger, thinking you write anything to
+it, I'm triggering.)
 > 
-
-Dan - 
-
-Confirming my take-away from this email, and our chat:
-
-Remove the by-region trigger_poison_list option entirely. User space
-needs to trigger by-memdev the memdevs participating in the region and
-filter those events by region.
-
-Add the region info (region name, uuid) to the TRACE_EVENTs when the
-poisoned DPA is part of any region.
-
-Alison
-
-> > 
-> > Thanks for the reviews Dan!
-> > > 
-> > > > 
-> > > > Example, triggered by region:
-> > > > $ echo 1 > /sys/bus/cxl/devices/region5/trigger_poison_list
-> > > > cxl_poison: memdev=mem0 pcidev=cxl_mem.0 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-> > > > cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-> > > > 
-> > > > [1]: https://www.computeexpresslink.org/download-the-specification
-> > > > 
-> > > > Alison Schofield (5):
-> > > >   cxl/mbox: Add GET_POISON_LIST mailbox command
-> > > >   cxl/trace: Add TRACE support for CXL media-error records
-> > > >   cxl/memdev: Add trigger_poison_list sysfs attribute
-> > > >   cxl/region: Add trigger_poison_list sysfs attribute
-> > > >   tools/testing/cxl: Mock support for Get Poison List
-> > > > 
-> > > >  Documentation/ABI/testing/sysfs-bus-cxl | 28 +++++++++
-> > > >  drivers/cxl/core/mbox.c                 | 78 +++++++++++++++++++++++
-> > > >  drivers/cxl/core/memdev.c               | 45 ++++++++++++++
-> > > >  drivers/cxl/core/region.c               | 33 ++++++++++
-> > > >  drivers/cxl/core/trace.h                | 83 +++++++++++++++++++++++++
-> > > >  drivers/cxl/cxlmem.h                    | 69 +++++++++++++++++++-
-> > > >  drivers/cxl/pci.c                       |  4 ++
-> > > >  tools/testing/cxl/test/mem.c            | 42 +++++++++++++
-> > > >  8 files changed, 381 insertions(+), 1 deletion(-)
-> > > > 
-> > > > 
-> > > > base-commit: 589c3357370a596ef7c99c00baca8ac799fce531
-> > > > -- 
-> > > > 2.37.3
-> > > > 
-> > > 
-> > > 
+> > +
+> > +	/* CXL 3.0 Spec 8.2.9.8.4.1 Separate pmem and ram poison requests */
+> > +	if (resource_size(&cxlds->pmem_res)) {
+> > +		offset = cxlds->pmem_res.start;
+> > +		length = resource_size(&cxlds->pmem_res);
+> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
 > 
+> Ah now I see why the region information is not provided in the memdev
+> triggers. I think while the scan needs to be done on partition boundary
+> basis, like you have here, I think the region lookup needs to happen on
+> a per-record basis.
 > 
+> However, that's a significant architectural change, so I am going to
+> think out loud about the implications.
+
+I'm thinking that adding region info to the trace event isn't starting
+here. That will be looked up when we log the event. Basically assuming
+assuming find regions memdev participates in, and look for which one
+maps this DPA.
+
+> 
+> A site operator wants to know "is FRU (field-replaceable-unit) X bad,
+> and if so what's the damage?". In that report I expect they want to know
+> if poison impacts media that is allocated to a region (an imminent
+> danger) or is in free space (a problem for a later date). If the memdev
+> trigger does all the region lookup per record it provides that
+> information. Further if the memdev trigger reliably provides region
+> information it allows the region trigger ABI to be deleted. The region
+> trigger can be replaced in userspace with logic that does:
+> 
+>    set tracepoint filter to look for region_id == $region
+>    for endpoint decoder in $region
+>        trigger associated memdev
+> 
+> ...so I do think the arch change is worth it, but I am willing to hear
+> counter arguments.
+
+My only counter argument was that we could let them have it both ways,
+but, simplifying and reducing code in kernel is good!
+
+
