@@ -2,242 +2,244 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0DDC54EAA
-	for <linux-cxl@archiver.kernel.org>; Fri, 27 Jan 2023 19:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 182DBC38142
+	for <linux-cxl@archiver.kernel.org>; Fri, 27 Jan 2023 19:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbjA0TRM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 27 Jan 2023 14:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
+        id S232845AbjA0Trp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 27 Jan 2023 14:47:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232132AbjA0TRL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 Jan 2023 14:17:11 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BDB7BE5A;
-        Fri, 27 Jan 2023 11:17:09 -0800 (PST)
+        with ESMTP id S232629AbjA0Tr0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 Jan 2023 14:47:26 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501D488F07;
+        Fri, 27 Jan 2023 11:44:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674847029; x=1706383029;
+  t=1674848695; x=1706384695;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=9YUO/twDytjEVRv6hm5dusdJMxrf2XeEBR+MHfdz/i4=;
-  b=iY5hS9A9GZq12qd1yRlWd0KO53UeG4cwa0w6mpTjPf1QjhsFnVAc3ero
-   WtGdNVsfPbpkwDlwHDiZ0N3lV5XicwPjvAwGC5lAu5wqQXwMMPjmIshPV
-   bqJWtVG098nz3d3FKK75w0HJT/+v8FwMBlrPV1hBWl5zIun4x7pTvOiUC
-   4RP9Au2QwToMo3v8SqxNszTmmQ7yxobXzaa4M52ZNqJ6o5hrkyqMecIck
-   M1WDm+7PwD2Gk5sflPia5OhCwIyief/MbI2hEniiBYcfAZ0QowI2KeGyH
-   xR4LBpVJih0L3+fhn0zaoaHoiL6Ooa/txm9Pl8vYsuiici+VXgOv7md0E
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="329293330"
+  bh=MRJRSLbRuYFxy7qAy3oiz9WuMsP8wPFQOsfysRdNXHA=;
+  b=RvbXsTku5kZEc+d/8uHOGpHMNbIsPN1YsJP2eHQhQi89tXELj4nCvMuB
+   a9+lcrrKpccdFwvpMTKSnuF4WRX17soBt6/NlDUdwCfNCDYQ1A/cZK2yL
+   diQZUO7KEbF/lFjjuPKdI3M+w0UxHImf5HaGy7OOCNLxDHRyHEBGWvwYh
+   RspBBCs+mbI5yruHtvoqTf1LpzAfbJLHHkfF36QF6GhcU1LJK+KbmnuLZ
+   RGZfLBiljtZ+vhPbuOPlzZlvlM7s2K0BRTdT64jAPFV/Pz1ah9WXB1R40
+   cNfrtHJ5D3+HrLa+VeL5yfdSmynvITGg55Wi0HBgtwbWdXUhvCqcSD4BL
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="354476137"
 X-IronPort-AV: E=Sophos;i="5.97,252,1669104000"; 
-   d="scan'208";a="329293330"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 11:16:59 -0800
+   d="scan'208";a="354476137"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 11:43:07 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="805921612"
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="908776236"
 X-IronPort-AV: E=Sophos;i="5.97,252,1669104000"; 
-   d="scan'208";a="805921612"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Jan 2023 11:16:56 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="908776236"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Jan 2023 11:43:07 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 27 Jan 2023 11:16:56 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ 15.1.2507.16; Fri, 27 Jan 2023 11:43:06 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 27 Jan 2023 11:16:55 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Fri, 27 Jan 2023 11:16:55 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.16 via Frontend Transport; Fri, 27 Jan 2023 11:43:06 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Fri, 27 Jan 2023 11:16:55 -0800
+ 15.1.2507.16; Fri, 27 Jan 2023 11:43:06 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WFhujgCY+2klt4B4dgx209cuXM6kgXRdzz7Qw1ab+Y/ZxxRdhGYq/viEc4S6rPrOuDx3FqSELR2nAcgbQLzk/oXDs6T7FbdTaFMDePgaQyyvLyKSt+FiKyRCH9UG3Pbu7i+CTDCtOsfy0yHSmOBDVaZE91izf7PhbDX9rMnTRzqCJwVnSOocZpPVgejxrlcNScZ2a9TsAQEJty79vzEaCdc1UVzhjqfptzFNKjXqqWihazu49sV0iQQmidkMZabYpISs9U64NeRP9g7yhOTbmtMZuMlwSlDX6DavBm6tS7yi0gW7JYKlyzWpYxXo+mlnFlkuL0jm5EPkabx/RLioxQ==
+ b=dLo6PeTgnqjtuVAP18JnZiRvtR0kksG+1aA30C+dCU4Y96ruBwGTQhvqX3bqYRYzmsWpJYkGOqYP8xa2eTtSfsNLSIIXG8I9GmuMQvAYuB9RWpI6JI6+g4FQkEg8f0IchNDsBvRJ3NIiuBRZEx43tQc/8bXTSdN0Z2Dy00W/E6uJFiQ85Cm+NIyaBRkk4ka0gWFGWlWavCUhnFrBUU/L7W7m9GNrufTRmX0ZMaTeFFaXcMGEtRF6o5IyKYFItLWXM1s2OiObJMUw56TEGn24sSmOcDC85PeZmeJ+U9t2KUbp3QIOnA6HBZibMXuukRfH4Xv2YGuXbcN0aT8LfEhSRQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NCJ+yLSwB5GdkMBT6WBErA/mGk9AeF1AUG+djnGEA20=;
- b=IRaBK6K5L4E+gbrZTOwjuID5X+f/dtBSnJBc1Bvkahcnp9ZUtjnCKSQ+rvrjh3X4ZaMXotQdI0voe/byhfuLLjVa+zG/aqKWhVZbTet4QZZctgdffeO1M7xbh/F9kbP7qunvBToKYPlLChD9rG5LeN+kI2ajK2dDpAxr3V0PVgGIF8XJ2aWmaHMssrFREl4G1+miKxKrK/81APBBvoFnqzuLM+ErGyXzBeTfqctqgnMsZEWvEW8s2v7TEBSpaUbqpEepD6NRm4yyoVo/qx0bhWDO3yAhSs49QvK4MzS8ls5Yo/NXEOHF9gbZqg2bnB9bTjE5KbB1a6inv0Wbo4rULQ==
+ bh=Ny+24VjjvcOOIiabUXX2wSUqD1CbR3GwQ32WXUFgVIQ=;
+ b=IMr0yIGExZKvu91j24D7O7UELsGuZZ3x/TO0olDTuAidWDB7Uha+Kqw6BXEqCcRlknSXayo7ET9vh/i23h/scL9x3EAJ8YVw55zW+3fPosPYvV/V5V+Sfq8iEIQfZpnIkydKCGvdbOxyfybzA2hvuZM3GephcuCY6+jZylijVIwowFq17nTSh/fIxI7mvXEXUqq4/HjyoCE3NFKu+/0Prt1EPwjntTKIHM9vuMt+A72Riz7ROxSkUIT1/TM+qlNf/fbtmnAT0ovhc6vYzl3ORzB/YosmCGstRGpYkK4D77/LeKbfDhujLE4WhVLXooZFV0uwFcxA0sLNZ1ZN1urZUA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5895.namprd11.prod.outlook.com (2603:10b6:a03:42b::19) with
+ by DS7PR11MB7690.namprd11.prod.outlook.com (2603:10b6:8:e6::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.21; Fri, 27 Jan
- 2023 19:16:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.22; Fri, 27 Jan
+ 2023 19:43:03 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6043.022; Fri, 27 Jan 2023
- 19:16:52 +0000
-Date:   Fri, 27 Jan 2023 11:16:49 -0800
+ 19:43:02 +0000
+Date:   Fri, 27 Jan 2023 11:42:59 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
+To:     <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re:
-Message-ID: <63d423218e854_3a36e5294fd@dwillia2-xfh.jf.intel.com.notmuch>
+        "Steven Rostedt" <rostedt@goodmis.org>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: RE: [PATCH v5 3/5] cxl/memdev: Add trigger_poison_list sysfs
+ attribute
+Message-ID: <63d429435984f_3a36e5294b2@dwillia2-xfh.jf.intel.com.notmuch>
 References: <cover.1674070170.git.alison.schofield@intel.com>
- <63d32fe783ee2_ea2222949f@dwillia2-xfh.jf.intel.com.notmuch>
- <Y9P3ipL28W7N1bLm@aschofie-mobl2>
+ <fc1a2f51834888c2ea585efb0b4fa41cd251e52d.1674070170.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <Y9P3ipL28W7N1bLm@aschofie-mobl2>
-X-ClientProxiedBy: BYAPR05CA0081.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::22) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <fc1a2f51834888c2ea585efb0b4fa41cd251e52d.1674070170.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MW3PR06CA0007.namprd06.prod.outlook.com
+ (2603:10b6:303:2a::12) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5895:EE_
-X-MS-Office365-Filtering-Correlation-Id: d890e6c5-0be9-4193-5355-08db009b0b89
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS7PR11MB7690:EE_
+X-MS-Office365-Filtering-Correlation-Id: 067f666a-cda4-45a2-11e9-08db009eb3b3
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pC4enOAGg3zswEoo1KETbw9e5eErPhKwKhgBcdFz5a7hr9yEU9ngXz2oMD0vui0hDWbVn1kM3koMdoh1M1JM7jkXfRtweI6aAV9EDchPg1KXw4IEvM5p3dsFzuzN5gTpjTAirS72iaymxO2cBS/tVtRkooyNzE4b6sKGY2L5iOi1NaDsJr/jK3qyZpe3g0t1/q/JDLgVNyI3/DTS/cX9ZVgypP/3K9ofgfPwyn1BqwMZk1FSWkqURlYfz3vaYZoJBir1G8YxCmW8+px68FYZUKQ3UwOY9ozYoOEoIQv/AKJPjPwBTri8A825LBqpRF/88LdfZ8fDaAqMsK2o/98J/9MBhJQOkNbPd+KG40s2uNi0Xja+urlDfvvpyaQ9AOTzVZYLMQOtuXmvbioCeJHsOq1YxqJ4O2JvyDlOXtq7AIUT6abzyVadSPA1SotKg/dmy2RDwQMpk0lAgkf/mXSizidNbYTrjtE6HJujxiI44O1U3XRiOQXdN5rHyKUAMUzq81L20u7dHml+5n5NtVE7LmVAofoNMMKVzEMqD/k4F+U9iQ8sUHlirlsBp4H9HIktrqGfCKm85m1xPH+LdKHXa16S2peLzjo/+PTaDPWG7pscdEnUW+5VNs79Gl5z6vU3JJHj8uro8V+/vIssd1SUA8D6YmdsSTpDKPR6P2Nv0bmWNo24BwnitQnJg2rM+J5B0EpPqRbuFhqQ11RLNkeMWw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(346002)(39860400002)(136003)(396003)(366004)(451199018)(5660300002)(7116003)(6512007)(66476007)(2906002)(66556008)(186003)(8676002)(66946007)(4326008)(8936002)(41300700001)(83380400001)(478600001)(6666004)(966005)(6506007)(9686003)(6486002)(26005)(316002)(38100700002)(3480700007)(82960400001)(110136005)(54906003)(86362001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: zgpTL1AXnMRfefchbKyuPcJMNFjM0wUUmH23YJkQu4nGQGTs7eBjFVxcI9zzZUDzYpAmoG5mbon85zKk4TvyDIYGhEDqDGVpjrRvOUZ9wwckPUSmlnfgX0fE65oAoOHM+5U1deF2D/E8v1FXOyFT8sdfJGZnhJm+cPE7c1XK5xxQViHOybTi0Xq14sUayrdllSsOCGLAz/e6dTH46XijLpm5IBjv/6IDDg98I1EH8VG0TtTVe4am4XVyuCXnWdk8/IUePeXlF5EB18oFFSdAMsanLj2nAKoaprt84Gorhli47+m0pltK91OLtbw+Vm3YULWwMz9T+mWCgEnSiVvugXKeZY/6S0ljOwa11LDkhA7r+3lVM3tmTQN+wk8rmZRO8jrBnngb6RnTBQImmAMVN/LUg3KYR9ujNV/e46LB7YQeQhb7w4np9rxqK7nooR2HIsrPnfZxqqx8OyS4BroqTB730G18wlvP5qfKRyS9AF35liJ2TqAYX7sAENwpQVUN9iVk5REEGeXVHQq4Rp22TktxAzr1Q6nQMk/cqx7xiFXsoJ1Ubw+if7uZU2+Vh0DpfJNNJlxaCwProEjMKc9LNVEkiAsPTiuXBA5VjG5Qsgd1JnUrgll8EeZHjAZTcAqEg+OSkm8JK/pO45cFqPbvlQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(346002)(376002)(366004)(39860400002)(136003)(451199018)(2906002)(41300700001)(5660300002)(8936002)(6506007)(6666004)(478600001)(9686003)(6512007)(8676002)(26005)(186003)(6486002)(83380400001)(86362001)(82960400001)(4326008)(316002)(66556008)(66476007)(54906003)(38100700002)(110136005)(66946007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?B3ibo1qVYS79091GjyFex0R8DhjxCair9DETpKNMTZXkgdmWSvCn6BVDGSRv?=
- =?us-ascii?Q?YajtpOGcP8pJNCFLcBJzaCUiHa7UFmwwMDYLXG3HEts9nDTCF4V836S8lMHE?=
- =?us-ascii?Q?Vk7xa/DSgq5hyhEykjvkAsGcsSXH+iubEdnc4Wp+iCByUMfjl9tw1OyVkX5m?=
- =?us-ascii?Q?mD3rSdnbjnHaZyhBcqO/eOWj0Tjx1WNJwsTEyKBnGyA8PaFJqBChdxdS+pwc?=
- =?us-ascii?Q?dA4CSen1y5YIx/jETZec3H08GsFbfHQaIE/5HUMwaZ4qbR3UeHqq0xkfcyjy?=
- =?us-ascii?Q?s+h6hBc9wRmJD3YBF/OwO8NqQh2JXtTJpGnq3vJPLW/P1oAy9ZJmR4qdj5WN?=
- =?us-ascii?Q?pYZmzS7lyYl4xCFeSEwzIn4jb6y5tx4mvl3i/iKdSF4QlM4mIo5cbPOlzWPd?=
- =?us-ascii?Q?OiOsk7WcAFqA0kONuRC08uyA+OViqtVMzZKK1HUKsF4Uuld5BS0VOTLenMCj?=
- =?us-ascii?Q?if9gzWWyUugroQr2yLtNTY/SCJr9Yx/l4+h0YOIUIxZP3XYtz92fEFYfudtR?=
- =?us-ascii?Q?kFtJlf8oUi85dZlD9Jt5RE/M04ITcdR0VubqmvUNwW0HpBg+s/XJu1Cc2wmR?=
- =?us-ascii?Q?j6UQmszOPUA4roixxpc3bdekGoYMW+g6Hi7Zf+R9GksYPWB97gnTakWZ07Zm?=
- =?us-ascii?Q?v1CuT0JqJ2ix8pp9fftT8Uy1YIblpSbj3KxxLGa3AdM8BIXusZXhOtWYiCYL?=
- =?us-ascii?Q?cz4ROwicY6JTENQKm/S3RpDjNH7TVubAexyhPQU/whWCSRRxjaqwIcEMo4R5?=
- =?us-ascii?Q?EvQUv+iW+zsWQkohgrD1SjJZOcHLDrUWz8R2soBY/WBInXnqypud1lFIexIG?=
- =?us-ascii?Q?6kpklb8vHW6kEvh/Up9E+iP0tmZAMWi0vC/q0ydSTthnZ5JniWXmORmR84CK?=
- =?us-ascii?Q?nyTk6z1Nt81VDtlMcbhO9Ag/oeq5mb94foPwGwRP9qBTg3vvze4rNDhunWjk?=
- =?us-ascii?Q?rxBHBEdvQkTh5jIfi/IJG3T20cx8IDTEqNQJ4KW8t+23R6VpP0ZdDRdH99DA?=
- =?us-ascii?Q?KHIc+fisiPuvgl7wWT//43126JET+yKS/b48MxMTJ/XkgXgHQj+wzubl6g/w?=
- =?us-ascii?Q?p+FxkxMXcbNSczRiUG5yL4IwgxPJk8XDCtkDfphS7bYJdzvojZMwjXdX/jE2?=
- =?us-ascii?Q?XH+7d1bG/1G2ZH3urd5HH4HNneiwSuh/iciPCsuKO1WcFgLh8a6GeaIMXH2m?=
- =?us-ascii?Q?81kKl3wbYFI9AnSns9XN57fOXUJCj8F+SLLx5RiB/qfT5JOo4kHfFwq7CcrU?=
- =?us-ascii?Q?USq3fFxInjaMRdOfXe5ew6kIyj1EhTlhoY3B5gWYyloTDHbNDU+sxkdzC65b?=
- =?us-ascii?Q?pyOPdPgs10eK3orFrvk/5DkquH36UOY9P6TZcBXjWCcQnLFXoIHcfd1og1tO?=
- =?us-ascii?Q?lZOcgK34ngukTU2fIpDbLYADkKHoOO9QEV0i3dleAsQvPCegq6QFNpP44ZQ7?=
- =?us-ascii?Q?wE8ITRe5B/WSytRLLwAdBtbFXaI3CL/cOHZyGjl8NkTyvV/9QK6D/Ir5RN7r?=
- =?us-ascii?Q?0cBbtSlF4bDnYYypJgPpOicNEF6RxR0GC+R6hm0VYxENQgeqUmqPz7iCgVnA?=
- =?us-ascii?Q?Lkyd/0B/teQZ//ehog2Q6HJT9uJBHbHN+UkacYwX0nAblLImyG4P5g/K2dix?=
- =?us-ascii?Q?Zg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d890e6c5-0be9-4193-5355-08db009b0b89
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?si24MDeHnirVKICnjU3YXyjY7u43u3rnskTrs+seZjVC+86fzTrpeCB9eECj?=
+ =?us-ascii?Q?qpf/liat2NGS2AFgt0v9EMBVflx2nk2sQpsdBtv4Q8BVGeb4UoWiSS2ULQkf?=
+ =?us-ascii?Q?x3vptiZY5rcPGRigEQgQsLeMsYuOM9xGATPtTnzBLJpLq6W7DcHbCts6tQAI?=
+ =?us-ascii?Q?u8MJeDq8xM2kCZjGL1taalGKr0zV7IMyM0jDmDNbE598cb2uao1HsqeUlFgc?=
+ =?us-ascii?Q?giqQIBwk2x+QWhQQwX9J8SdU//0gjFhOPww1c2rRYpU3is/JJ+Ccx7oRzzJU?=
+ =?us-ascii?Q?Av/zrtakcJDPV5uDTQCvbh+nUUylWWk54DLdkIM653uMGbhsq5nhgr3PubqJ?=
+ =?us-ascii?Q?SxPBhy3yVq6hAxEbinvwlc2a4JIoOzkU2EjSPGiLaGjh1mfgxNx6x81PifKV?=
+ =?us-ascii?Q?v2lKNWsz4cnXCcDe3qcuyjDxi2Khgl+EY+zhytvy3ORC6VNZ+bhpQaciIAa2?=
+ =?us-ascii?Q?kJALnqMgH0JFVzz54vEPKPA+xArDDFybzcNI7BlBDhmsm4qe+akEpcZU0rgg?=
+ =?us-ascii?Q?b6mgRxo3kJxXF8mM02id+D7H4SeT4Wm1NFc2MLnmNHa38Ohw5pPoVqliDGgi?=
+ =?us-ascii?Q?o5+FWiPArAFX96d7DMexk7wFBOY6Z+niqyTeWIKUeco1uderb3mImH/wxjgy?=
+ =?us-ascii?Q?v5GH0+e/ph8KJ4fzy0peaB9Ep8BbzDMV/adw7zd+L7to0vgHp4IFAWMbqYpY?=
+ =?us-ascii?Q?4L0CSUkTdv/KxZ2fGH9pKn63TO+t1fGIhU/7f+hjSiUDXFiirEaJyq1XFBYW?=
+ =?us-ascii?Q?DMT2X56jBQMb7+HUB34clUq62cfKD9RDLq13yPIYtf3FOTEfQwGX/5fk+NRV?=
+ =?us-ascii?Q?AE77c5aTz+USkXEBzrqeOFzVxvGiuYjzfCPR6Ln8xKsN0ssLwj7n+ZH0WFh9?=
+ =?us-ascii?Q?RxkrGLkfMNls3lR2kfj9tWETv3ytD8VBERRlKepzkg7Q7zw+u6Hl6p0nOYUo?=
+ =?us-ascii?Q?aTLVfvjPWI1gJU6Sm1eCzIZKZu0wIkYAmpSxy/GHl+cAkRQCSFhITZd0PLIY?=
+ =?us-ascii?Q?SDcbgWfnXMgOexvEjmLU0GXGEfHkYDKJpHySgxJOAjpt4/0AtEH5BrK1Bg9G?=
+ =?us-ascii?Q?e+gcOa+e9oDD4ue9zecVYG68P8KI284eL3EZgN9T2u9W7yacawUDuvl6puMy?=
+ =?us-ascii?Q?AKZiskyWVEk/Aq6Z0cucFxmoA7XvRvxymuXo91enlMlf0PCi8ApZgAkXPoOj?=
+ =?us-ascii?Q?OHdn4DI/EtYSJ0YTSiOqVrPg0jTBtdncKX2U/Op6eQ8SnmhgkFTvQrrkgKeB?=
+ =?us-ascii?Q?9ZJUe+oYAxoFBGKvjxVwSmjORRXqejSOwYvwziRDjbhaILKFT2piF+1cSk8L?=
+ =?us-ascii?Q?pxcEr8vNDqZnBqkqWEcl9dx+PIfMCqZUHsHCEBUPesX8To5FyLtImeeaomfU?=
+ =?us-ascii?Q?5c7TywYHcbCZvC0ZVKr9n6mAASCpXc3vUHpQ8JcmNqpHvU+TJWmz9V0BHV68?=
+ =?us-ascii?Q?9OXbr4Pd6rnXicC9ILVHT5v3QT01AzpRrsURST2JyEAZeJroGH6JDNkQE7en?=
+ =?us-ascii?Q?yHmFbv8J/E8Tv+9QGIOL41+S/WibwJwvYWBH1QgQ73W2l/aJ+VFKoBweTE93?=
+ =?us-ascii?Q?1Egp1AHhHFt7neldB8UXvF2tS7v7b9WwvKvxyUusvXDzETnzCCwin1VgWnd3?=
+ =?us-ascii?Q?mw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 067f666a-cda4-45a2-11e9-08db009eb3b3
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2023 19:16:51.8256
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2023 19:43:02.5247
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tqucZS1S1lpls6/jB7dCLiC5Es5xq/EsRFgyeesCtu5hgrTrW9Sf7rzR0dh2SZhKNX81NvGpt6aDYKDQ2eOO6we9CKhwhXPku+lO9n+t4kA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5895
+X-MS-Exchange-CrossTenant-UserPrincipalName: Lknj1h5txwjx1kZuoAU1mGjRlaDdNTwPcV6hXyKcfDkei96hQD6yXXPoHf7IZ6nJ7ohftqrtPJjgnOjL6/Bsf+RDwVFgMzlvJ/PDONejNJs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7690
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alison Schofield wrote:
-> On Thu, Jan 26, 2023 at 05:59:03PM -0800, Dan Williams wrote:
-> > alison.schofield@ wrote:
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > Subject: [PATCH v5 0/5] CXL Poison List Retrieval & Tracing
-> > > 
-> > > Changes in v5:
-> > > - Rebase on cxl/next 
-> > > - Use struct_size() to calc mbox cmd payload .min_out
-> > > - s/INTERNAL/INJECTED mocked poison record source
-> > > - Added Jonathan Reviewed-by tag on Patch 3
-> > > 
-> > > Link to v4:
-> > > https://lore.kernel.org/linux-cxl/cover.1671135967.git.alison.schofield@intel.com/
-> > > 
-> > > Add support for retrieving device poison lists and store the returned
-> > > error records as kernel trace events.
-> > > 
-> > > The handling of the poison list is guided by the CXL 3.0 Specification
-> > > Section 8.2.9.8.4.1. [1] 
-> > > 
-> > > Example, triggered by memdev:
-> > > $ echo 1 > /sys/bus/cxl/devices/mem3/trigger_poison_list
-> > > cxl_poison: memdev=mem3 pcidev=cxl_mem.3 region= region_uuid=00000000-0000-0000-0000-000000000000 dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-> > 
-> > I think the pcidev= field wants to be called something like "host" or
-> > "parent", because there is no strict requirement that a 'struct
-> > cxl_memdev' is related to a 'struct pci_dev'. In fact in that example
-> > "cxl_mem.3" is a 'struct platform_device'. Now that I think about it, I
-> > think all CXL device events should be emitting the PCIe serial number
-> > for the memdev.
-> ]
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Will do, 'host' and add PCIe serial no.
+> When a boolean 'true' is written to this attribute the memdev driver
+> retrieves the poison list from the device. The list consists of
+> addresses that are poisoned, or would result in poison if accessed,
+> and the source of the poison. This attribute is only visible for
+> devices supporting the capability. The retrieved errors are logged
+> as kernel trace events with the label 'cxl_poison'.
 > 
-> > 
-> > I will look in the implementation, but do region= and region_uuid= get
-> > populated when mem3 is a member of the region?
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 14 ++++++++
+>  drivers/cxl/core/memdev.c               | 45 +++++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h                    |  2 +-
+>  3 files changed, 60 insertions(+), 1 deletion(-)
 > 
-> Not always.
-> In the case above, where the trigger was by memdev, no.
-> Region= and region_uuid= (and in the follow-on patch, hpa=) only get
-> populated if the poison was triggered by region, like the case below.
-> 
-> It could be looked up for the by memdev cases. Is that wanted?
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 8494ef27e8d2..df40ed09ea67 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -388,3 +388,17 @@ Description:
+>  		1), and checks that the hardware accepts the commit request.
+>  		Reading this value indicates whether the region is committed or
+>  		not.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/memX/trigger_poison_list
+> +Date:		November, 2022
+> +KernelVersion:	v6.2
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(WO) When a boolean 'true' is written to this attribute the
+> +		memdev driver retrieves the poison list from the device. The
+> +		list consists of addresses that are poisoned, or would result
+> +		in poison if accessed, and the source of the poison. This
+> +		attribute is only visible for devices supporting the
+> +		capability. The retrieved errors are logged as kernel
+> +		trace events with the label 'cxl_poison'.
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index a74a93310d26..e0af7e9c9989 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -106,12 +106,49 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(numa_node);
+>  
+> +static ssize_t trigger_poison_list_store(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 const char *buf, size_t len)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	u64 offset, length;
+> +	bool tmp;
+> +	int rc;
+> +
+> +	if (kstrtobool(buf, &tmp))
+> +		return -EINVAL;
 
-Just trying to understand the semantics. However, I do think it makes sense
-for a memdev trigger to lookup information on all impacted regions
-across all of the device's DPA and the region trigger makes sense to
-lookup all memdevs, but bounded by the DPA that contributes to that
-region. I just want to avoid someone having to trigger the region to get
-extra information that was readily available from a memdev listing.
+Wait, where's the check for "if (tmp)"? Otherwise I can do "echo N >
+trigger_poison_list" and it will still run. Should probably
+s/tmp/trigger/.
 
-> 
-> Thanks for the reviews Dan!
-> > 
-> > > 
-> > > Example, triggered by region:
-> > > $ echo 1 > /sys/bus/cxl/devices/region5/trigger_poison_list
-> > > cxl_poison: memdev=mem0 pcidev=cxl_mem.0 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-> > > cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
-> > > 
-> > > [1]: https://www.computeexpresslink.org/download-the-specification
-> > > 
-> > > Alison Schofield (5):
-> > >   cxl/mbox: Add GET_POISON_LIST mailbox command
-> > >   cxl/trace: Add TRACE support for CXL media-error records
-> > >   cxl/memdev: Add trigger_poison_list sysfs attribute
-> > >   cxl/region: Add trigger_poison_list sysfs attribute
-> > >   tools/testing/cxl: Mock support for Get Poison List
-> > > 
-> > >  Documentation/ABI/testing/sysfs-bus-cxl | 28 +++++++++
-> > >  drivers/cxl/core/mbox.c                 | 78 +++++++++++++++++++++++
-> > >  drivers/cxl/core/memdev.c               | 45 ++++++++++++++
-> > >  drivers/cxl/core/region.c               | 33 ++++++++++
-> > >  drivers/cxl/core/trace.h                | 83 +++++++++++++++++++++++++
-> > >  drivers/cxl/cxlmem.h                    | 69 +++++++++++++++++++-
-> > >  drivers/cxl/pci.c                       |  4 ++
-> > >  tools/testing/cxl/test/mem.c            | 42 +++++++++++++
-> > >  8 files changed, 381 insertions(+), 1 deletion(-)
-> > > 
-> > > 
-> > > base-commit: 589c3357370a596ef7c99c00baca8ac799fce531
-> > > -- 
-> > > 2.37.3
-> > > 
-> > 
-> > 
+> +
+> +	/* CXL 3.0 Spec 8.2.9.8.4.1 Separate pmem and ram poison requests */
+> +	if (resource_size(&cxlds->pmem_res)) {
+> +		offset = cxlds->pmem_res.start;
+> +		length = resource_size(&cxlds->pmem_res);
+> +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
 
+Ah now I see why the region information is not provided in the memdev
+triggers. I think while the scan needs to be done on partition boundary
+basis, like you have here, I think the region lookup needs to happen on
+a per-record basis.
 
+However, that's a significant architectural change, so I am going to
+think out loud about the implications.
+
+A site operator wants to know "is FRU (field-replaceable-unit) X bad,
+and if so what's the damage?". In that report I expect they want to know
+if poison impacts media that is allocated to a region (an imminent
+danger) or is in free space (a problem for a later date). If the memdev
+trigger does all the region lookup per record it provides that
+information. Further if the memdev trigger reliably provides region
+information it allows the region trigger ABI to be deleted. The region
+trigger can be replaced in userspace with logic that does:
+
+   set tracepoint filter to look for region_id == $region
+   for endpoint decoder in $region
+       trigger associated memdev
+
+...so I do think the arch change is worth it, but I am willing to hear
+counter arguments.
