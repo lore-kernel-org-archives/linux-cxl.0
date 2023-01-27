@@ -2,73 +2,139 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D6C61DA4
-	for <linux-cxl@archiver.kernel.org>; Fri, 27 Jan 2023 12:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE38C54EAA
+	for <linux-cxl@archiver.kernel.org>; Fri, 27 Jan 2023 16:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbjA0M2U (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 27 Jan 2023 07:28:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59728 "EHLO
+        id S230423AbjA0QLQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 27 Jan 2023 11:11:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233814AbjA0M17 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 Jan 2023 07:27:59 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2CA16A47
-        for <linux-cxl@vger.kernel.org>; Fri, 27 Jan 2023 04:27:33 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P3GWL3lj1z6J6JM;
-        Fri, 27 Jan 2023 20:06:06 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 27 Jan
- 2023 12:10:14 +0000
-Date:   Fri, 27 Jan 2023 12:10:13 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+        with ESMTP id S234500AbjA0QLO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 27 Jan 2023 11:11:14 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB545CD2A;
+        Fri, 27 Jan 2023 08:11:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674835871; x=1706371871;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QOzaDuDJVI2iCLV4Lb3ob1aL5f7nt+w5a8r1p9mfh9w=;
+  b=YnLyyLOGBE7d5dw2L5yyHO3Ag9/UJct9XzbzvQjTZifJZaPy0YpnzBPr
+   4NXbosPw1sPBh8SvGDl2GJW1ogmlUnb02PK9cgRRsuIHBJfrrUjdbkiz1
+   i2T93KJbpISQztC7gGmQa3XYz6ZnG1gGJ7VbKizEH456gypRYTZr+kaXu
+   jsW/Gz2bCVhWU7+5gjcNGjKdMYHVk8uDX77HSSFh9J0qAeH0A0yf9/rgg
+   wigQyfgE1GFKbNg1NsDRmuYJ35FRbowkvfXZgj71B3/m5aVkWhO7g+P3f
+   1N5MCd6xMQC65KskqIkjL47c7JhmYuUosuVpDe/qQBC2tCsIlMP9UMECW
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="328407645"
+X-IronPort-AV: E=Sophos;i="5.97,251,1669104000"; 
+   d="scan'208";a="328407645"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 08:11:03 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="640745108"
+X-IronPort-AV: E=Sophos;i="5.97,251,1669104000"; 
+   d="scan'208";a="640745108"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.161.50])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 08:10:51 -0800
+Date:   Fri, 27 Jan 2023 08:10:50 -0800
+From:   Alison Schofield <alison.schofield@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
+Cc:     Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH] cxl/pci: Set the device timestamp
-Message-ID: <20230127121013.00007966@huawei.com>
-In-Reply-To: <20230127100406.00006c65@Huawei.com>
-References: <20230126180458.5145-1-Jonathan.Cameron@huawei.com>
-        <63d2e0f67eee9_ea222294b6@dwillia2-xfh.jf.intel.com.notmuch>
-        <20230127100406.00006c65@Huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re:
+Message-ID: <Y9P3ipL28W7N1bLm@aschofie-mobl2>
+References: <cover.1674070170.git.alison.schofield@intel.com>
+ <63d32fe783ee2_ea2222949f@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63d32fe783ee2_ea2222949f@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-> > >  /*
-> > > @@ -857,6 +859,29 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
-> > >  }
-> > >  EXPORT_SYMBOL_NS_GPL(cxl_mem_create_range_info, CXL);
-> > >  
-> > > +int cxl_set_timestamp(struct cxl_dev_state *cxlds, u64 ts)
-> > > +{
-> > > +	struct cxl_mbox_cmd mbox_cmd;
-> > > +	struct cxl_mbox_set_timestamp_in pi;
-> > > +
-> > > +	/*
-> > > +	 * Command is optional and functionality should not be affected if
-> > > +	 * the command is not available.
-> > > +	 */
-> > > +	if (!test_bit(CXL_MEM_COMMAND_ID_SET_TIMESTAMP, cxlds->enabled_cmds))
-> > > +		return 0;
+On Thu, Jan 26, 2023 at 05:59:03PM -0800, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > Subject: [PATCH v5 0/5] CXL Poison List Retrieval & Tracing
+> > 
+> > Changes in v5:
+> > - Rebase on cxl/next 
+> > - Use struct_size() to calc mbox cmd payload .min_out
+> > - s/INTERNAL/INJECTED mocked poison record source
+> > - Added Jonathan Reviewed-by tag on Patch 3
+> > 
+> > Link to v4:
+> > https://lore.kernel.org/linux-cxl/cover.1671135967.git.alison.schofield@intel.com/
+> > 
+> > Add support for retrieving device poison lists and store the returned
+> > error records as kernel trace events.
+> > 
+> > The handling of the poison list is guided by the CXL 3.0 Specification
+> > Section 8.2.9.8.4.1. [1] 
+> > 
+> > Example, triggered by memdev:
+> > $ echo 1 > /sys/bus/cxl/devices/mem3/trigger_poison_list
+> > cxl_poison: memdev=mem3 pcidev=cxl_mem.3 region= region_uuid=00000000-0000-0000-0000-000000000000 dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
+> 
+> I think the pcidev= field wants to be called something like "host" or
+> "parent", because there is no strict requirement that a 'struct
+> cxl_memdev' is related to a 'struct pci_dev'. In fact in that example
+> "cxl_mem.3" is a 'struct platform_device'. Now that I think about it, I
+> think all CXL device events should be emitting the PCIe serial number
+> for the memdev.
+]
 
-One side effect of dropping the userspace handling is we loose
-the presence in enabled_cmds (based on the CEL).  I've replaced
-this with specific handling of the Not Supported mailbox return code
-and suitable comments on why I'm not considering that an error.
+Will do, 'host' and add PCIe serial no.
 
-Hopefully that compromise makes sense.
+> 
+> I will look in the implementation, but do region= and region_uuid= get
+> populated when mem3 is a member of the region?
 
-Jonathan
+Not always.
+In the case above, where the trigger was by memdev, no.
+Region= and region_uuid= (and in the follow-on patch, hpa=) only get
+populated if the poison was triggered by region, like the case below.
+
+It could be looked up for the by memdev cases. Is that wanted?
+
+Thanks for the reviews Dan!
+> 
+> > 
+> > Example, triggered by region:
+> > $ echo 1 > /sys/bus/cxl/devices/region5/trigger_poison_list
+> > cxl_poison: memdev=mem0 pcidev=cxl_mem.0 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
+> > cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region=region5 region_uuid=bfcb7a29-890e-4a41-8236-fe22221fc75c dpa=0x0 length=0x40 source=Internal flags= overflow_time=0
+> > 
+> > [1]: https://www.computeexpresslink.org/download-the-specification
+> > 
+> > Alison Schofield (5):
+> >   cxl/mbox: Add GET_POISON_LIST mailbox command
+> >   cxl/trace: Add TRACE support for CXL media-error records
+> >   cxl/memdev: Add trigger_poison_list sysfs attribute
+> >   cxl/region: Add trigger_poison_list sysfs attribute
+> >   tools/testing/cxl: Mock support for Get Poison List
+> > 
+> >  Documentation/ABI/testing/sysfs-bus-cxl | 28 +++++++++
+> >  drivers/cxl/core/mbox.c                 | 78 +++++++++++++++++++++++
+> >  drivers/cxl/core/memdev.c               | 45 ++++++++++++++
+> >  drivers/cxl/core/region.c               | 33 ++++++++++
+> >  drivers/cxl/core/trace.h                | 83 +++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h                    | 69 +++++++++++++++++++-
+> >  drivers/cxl/pci.c                       |  4 ++
+> >  tools/testing/cxl/test/mem.c            | 42 +++++++++++++
+> >  8 files changed, 381 insertions(+), 1 deletion(-)
+> > 
+> > 
+> > base-commit: 589c3357370a596ef7c99c00baca8ac799fce531
+> > -- 
+> > 2.37.3
+> > 
+> 
+> 
