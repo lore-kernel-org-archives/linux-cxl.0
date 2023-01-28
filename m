@@ -2,58 +2,60 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21070C61DA4
-	for <linux-cxl@archiver.kernel.org>; Sat, 28 Jan 2023 05:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA49BC27C76
+	for <linux-cxl@archiver.kernel.org>; Sat, 28 Jan 2023 05:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjA1F3X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 28 Jan 2023 00:29:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55624 "EHLO
+        id S229985AbjA1FjY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 28 Jan 2023 00:39:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjA1F3W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 28 Jan 2023 00:29:22 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF127AE73
-        for <linux-cxl@vger.kernel.org>; Fri, 27 Jan 2023 21:29:21 -0800 (PST)
+        with ESMTP id S229966AbjA1FjX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 28 Jan 2023 00:39:23 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868EA78AE0
+        for <linux-cxl@vger.kernel.org>; Fri, 27 Jan 2023 21:39:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674883761; x=1706419761;
+  t=1674884361; x=1706420361;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=X0ptAT0cfSbvY5VVygGFU65u81HaZhs6kcj4hMF8xSw=;
-  b=AMQWu4F1aGRP3/yQh8cHL9PV/58FHqEoyMfvyOn+noMIQkqkMtTHoC31
-   sFfTqzt0mbXKKb3NimKTdtkgYhM5OMWcpzwt6pdaGefg7MaBbtkupyAvn
-   8//PRUjXKTlqBGJRXptd8U5H8aiDkpPgCknebkeO4ELKvJwlGt8cEjrUn
-   hLOpkj3c0l/R66cckYA8Rad/PVKVQ6RMHWJZdMPGa3MG9nJOmbuZCrIbM
-   gCOJG8XosAawD/bXMxxesv1ePdd8gWIog/JgUJGL4EgEQRIdvHaI2lXts
-   ERZ/cXUvntrci8NbGeyuIOwQjl0sBnr3MOLEnGIID+4qvX1Xwwyx6h5CG
+  bh=uH9xRg9/ZpKRPSrDgeyjwVSf2rEpxREJnIjexdlqyrc=;
+  b=dlCLPjfa386G+GgkJHzC0zBWmtltdDLlJ3p/12iH0bXQj5KKE7mfB0VM
+   LdAb83O3F93fihqsWJOVBiZtH952MuYsRhWk1iBZSMk0twNmnfZjpFx96
+   RXm7NNPHbuAfa8GYIHWvEM3Z3h5FUSZIOpKCsrGmIrTSTgmGwkEudQ6Np
+   BMYl49T36CHKr4AqAsTBLcaEwwZqY8gRXNbc3HTbhATgJRDPDA5Hm49lH
+   J2Q6Rxpy+EC4AaaXMRROU9M+tVWxsx8C+2SrX8FAeMPB3GnshugmZaxh3
+   cluVIMFZ+LWz735Qg43SFc4ztPeHqy7nsz3bWIAIdAstihfOTuiZieYuO
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="310887869"
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="354571972"
 X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
-   d="scan'208";a="310887869"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 21:29:20 -0800
+   d="scan'208";a="354571972"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2023 21:39:21 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="693952255"
+X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="665494599"
 X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
-   d="scan'208";a="693952255"
+   d="scan'208";a="665494599"
 Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 27 Jan 2023 21:29:18 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 27 Jan 2023 21:39:19 -0800
 Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pLdm9-0000Pt-24;
-        Sat, 28 Jan 2023 05:29:17 +0000
-Date:   Sat, 28 Jan 2023 13:28:43 +0800
+        id 1pLdvq-0000QD-0O;
+        Sat, 28 Jan 2023 05:39:18 +0000
+Date:   Sat, 28 Jan 2023 13:39:06 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+Cc:     oe-kbuild-all@lists.linux.dev,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: [cxl:for-6.3/cxl-ram-region 17/18] drivers/cxl/core/region.c:2404:6:
- warning: variable 'rc' is used uninitialized whenever 'if' condition is true
-Message-ID: <202301281313.kVrIreUj-lkp@intel.com>
+Subject: [cxl:for-6.3/cxl-ram-region 16/18] lib/stackinit_kunit.c:34:13:
+ error: conflicting types for 'range_contains'; have 'bool(char *, size_t,
+  char *, size_t)' {aka '_Bool(char *, long unsigned int,  char *, long
+ unsigned int)'}
+Message-ID: <202301281339.j8qhil5k-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -63,148 +65,59 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.3/cxl-ram-region
 head:   a7cf664d7e997ac36b0f466af2e2be33464ab598
-commit: 3c6c8594f9a2bcb4af19bc8de669ed43834b8d7f [17/18] cxl/region: Add region autodiscovery
-config: i386-randconfig-a012-20230123 (https://download.01.org/0day-ci/archive/20230128/202301281313.kVrIreUj-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+commit: b879b3c78181c4a89c4a15d6cd7fc75cb1a353a6 [16/18] kernel/range: Uplevel the cxl subsystem's range_contains() helper
+config: x86_64-rhel-8.3-kunit (https://download.01.org/0day-ci/archive/20230128/202301281339.j8qhil5k-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
 reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?id=3c6c8594f9a2bcb4af19bc8de669ed43834b8d7f
+        # https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?id=b879b3c78181c4a89c4a15d6cd7fc75cb1a353a6
         git remote add cxl https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
         git fetch --no-tags cxl for-6.3/cxl-ram-region
-        git checkout 3c6c8594f9a2bcb4af19bc8de669ed43834b8d7f
+        git checkout b879b3c78181c4a89c4a15d6cd7fc75cb1a353a6
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/cxl/core/
+        make W=1 O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash lib/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   drivers/cxl/core/region.c:1772:7: warning: variable 'rc' set but not used [-Wunused-but-set-variable]
-                   int rc;
-                       ^
-   drivers/cxl/core/region.c:1775:7: warning: variable 'rc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-                   if (!dev)
-                       ^~~~
-   drivers/cxl/core/region.c:1789:6: note: uninitialized use occurs here
-           if (rc < 0)
-               ^~
-   drivers/cxl/core/region.c:1775:3: note: remove the 'if' if its condition is always true
-                   if (!dev)
-                   ^~~~~~~~~
-   drivers/cxl/core/region.c:1766:8: note: initialize the variable 'rc' to silence this warning
-           int rc;
-                 ^
-                  = 0
->> drivers/cxl/core/region.c:2404:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
-           if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/cxl/core/region.c:2461:17: note: uninitialized use occurs here
-           return ERR_PTR(rc);
-                          ^~
-   drivers/cxl/core/region.c:2404:2: note: remove the 'if' if its condition is always false
-           if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
-           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/cxl/core/region.c:2387:8: note: initialize the variable 'rc' to silence this warning
-           int rc;
-                 ^
-                  = 0
-   3 warnings generated.
+>> lib/stackinit_kunit.c:34:13: error: conflicting types for 'range_contains'; have 'bool(char *, size_t,  char *, size_t)' {aka '_Bool(char *, long unsigned int,  char *, long unsigned int)'}
+      34 | static bool range_contains(char *haystack_start, size_t haystack_size,
+         |             ^~~~~~~~~~~~~~
+   In file included from arch/x86/include/asm/page.h:21,
+                    from arch/x86/include/asm/thread_info.h:12,
+                    from include/linux/thread_info.h:60,
+                    from arch/x86/include/asm/preempt.h:9,
+                    from include/linux/preempt.h:78,
+                    from include/linux/spinlock.h:56,
+                    from include/linux/kref.h:16,
+                    from include/kunit/test.h:21,
+                    from lib/stackinit_kunit.c:14:
+   include/linux/range.h:16:20: note: previous definition of 'range_contains' with type 'bool(struct range *, struct range *)' {aka '_Bool(struct range *, struct range *)'}
+      16 | static inline bool range_contains(struct range *r1, struct range *r2)
+         |                    ^~~~~~~~~~~~~~
 
 
-vim +2404 drivers/cxl/core/region.c
+vim +34 lib/stackinit_kunit.c
 
-  2376	
-  2377	/* Establish an empty region covering the given HPA range */
-  2378	static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-  2379						   struct cxl_endpoint_decoder *cxled)
-  2380	{
-  2381		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-  2382		struct cxl_port *port = cxlrd_to_port(cxlrd);
-  2383		struct range *hpa = &cxled->cxld.hpa_range;
-  2384		struct cxl_region_params *p;
-  2385		struct cxl_region *cxlr;
-  2386		struct resource *res;
-  2387		int rc;
-  2388	
-  2389		do {
-  2390			cxlr = __create_region(cxlrd, cxled->mode,
-  2391					       atomic_read(&cxlrd->region_id));
-  2392		} while (IS_ERR(cxlr) && PTR_ERR(cxlr) == -EBUSY);
-  2393	
-  2394		if (IS_ERR(cxlr)) {
-  2395			dev_err(cxlmd->dev.parent,
-  2396				"%s:%s: %s failed assign region: %ld\n",
-  2397				dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-  2398				__func__, PTR_ERR(cxlr));
-  2399			return cxlr;
-  2400		}
-  2401	
-  2402		down_write(&cxl_region_rwsem);
-  2403		p = &cxlr->params;
-> 2404		if (p->state >= CXL_CONFIG_INTERLEAVE_ACTIVE) {
-  2405			dev_err(cxlmd->dev.parent,
-  2406				"%s:%s: %s autodiscovery interrupted\n",
-  2407				dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-  2408				__func__);
-  2409			goto err_intr;
-  2410		}
-  2411	
-  2412		set_bit(CXL_REGION_F_AUTO, &cxlr->flags);
-  2413	
-  2414		res = kmalloc(sizeof(*res), GFP_KERNEL);
-  2415		if (!res) {
-  2416			rc = -ENOMEM;
-  2417			goto err_res;
-  2418		}
-  2419	
-  2420		*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
-  2421					    dev_name(&cxlr->dev));
-  2422		rc = insert_resource(cxlrd->res, res);
-  2423		if (rc) {
-  2424			dev_dbg(cxlmd->dev.parent, "%s:%s: %s resource conflict: %d\n",
-  2425				dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-  2426				__func__, rc);
-  2427			goto err_insert;
-  2428		}
-  2429	
-  2430		p->res = res;
-  2431		p->interleave_ways = cxled->cxld.interleave_ways;
-  2432		p->interleave_granularity = cxled->cxld.interleave_granularity;
-  2433		p->state = CXL_CONFIG_INTERLEAVE_ACTIVE;
-  2434		/*
-  2435		 * unregister_region() is now enabled and @res does not need
-  2436		 * separate cleanup
-  2437		 */
-  2438	
-  2439		rc = sysfs_update_group(&cxlr->dev.kobj, get_cxl_region_target_group());
-  2440		if (rc)
-  2441			goto err_sysfs;
-  2442	
-  2443		dev_dbg(cxlmd->dev.parent, "%s:%s: %s %s res: %pr iw: %d ig: %d\n",
-  2444			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev), __func__,
-  2445			dev_name(&cxlr->dev), p->res, p->interleave_ways,
-  2446			p->interleave_granularity);
-  2447	
-  2448		/* ...to match put_device() in cxl_add_to_region() */
-  2449		get_device(&cxlr->dev);
-  2450		up_write(&cxl_region_rwsem);
-  2451	
-  2452		return cxlr;
-  2453	
-  2454	err_insert:
-  2455		kfree(res);
-  2456	err_res:
-  2457	err_sysfs:
-  2458	err_intr:
-  2459		up_write(&cxl_region_rwsem);
-  2460		devm_release_action(port->uport, unregister_region, cxlr);
-  2461		return ERR_PTR(rc);
-  2462	}
-  2463	
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  33  
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23 @34  static bool range_contains(char *haystack_start, size_t haystack_size,
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  35  			   char *needle_start, size_t needle_size)
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  36  {
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  37  	if (needle_start >= haystack_start &&
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  38  	    needle_start + needle_size <= haystack_start + haystack_size)
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  39  		return true;
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  40  	return false;
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  41  }
+50ceaa95ea0970 lib/test_stackinit.c Kees Cook 2019-01-23  42  
+
+:::::: The code at line 34 was first introduced by commit
+:::::: 50ceaa95ea09703722b30b4afa617c972071cd7f lib: Introduce test_stackinit module
+
+:::::: TO: Kees Cook <keescook@chromium.org>
+:::::: CC: Kees Cook <keescook@chromium.org>
 
 -- 
 0-DAY CI Kernel Test Service
