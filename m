@@ -2,177 +2,368 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B98C38142
-	for <linux-cxl@archiver.kernel.org>; Sat, 28 Jan 2023 23:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135C0C61D97
+	for <linux-cxl@archiver.kernel.org>; Sun, 29 Jan 2023 03:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbjA1Xxd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 28 Jan 2023 18:53:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60314 "EHLO
+        id S229999AbjA2Dty (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 28 Jan 2023 22:49:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjA1Xxc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 28 Jan 2023 18:53:32 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D0023137;
-        Sat, 28 Jan 2023 15:53:30 -0800 (PST)
+        with ESMTP id S229924AbjA2Dtx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 28 Jan 2023 22:49:53 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F12821A39
+        for <linux-cxl@vger.kernel.org>; Sat, 28 Jan 2023 19:49:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674950010; x=1706486010;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=WnsGLIxFjTJ1BEKNYqyWsMB2NvFjwqQVENNM2IaSAsk=;
-  b=ctMoIL/DZbuNtpwogqfxlUSuplJWYTM4Wv6rnRIizDZKvz4Qr9rXFrht
-   9kL3pVxNc53uV2dQq7EbNDGAeL6denh3x09130/Si1xCBM7dWHGCZbfFP
-   yKaIBX+k3YZ8aJ5SaV0AdDhu6RZbuenQV9/eyWQbMN/xcKGQSnWZHlYYL
-   ssz+Y/CWvObz7YRLu1QtDLqTQJ/835Hz1D6SMyVGAqTRQCljwwkb22oyR
-   0GxPSn/o7QyHA1oebE3k1Z/9tHq8qnuHEKixaXOaNKIKXhInbHK2RtmwU
-   FYIVABPNVivRTwpMUCj0gHuUoMZqC0jwZAyxaebuqxOpTQWeSDrJFgCgn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="413567374"
+  t=1674964192; x=1706500192;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=IgvDu9Wj/Z2TB8Yk8oI4vxxjRlC/5G6VFcT/bl02WMc=;
+  b=TJwp5+WQ6QXJxW5aPYON3yTVG5dmbKipDSi6iHWA4IGjYXFhynThX3Og
+   z/tt9OJByNi6Nz9F79zvPo41Dz0OsB1aYrnFj+gL3mW83UodAAUies8UR
+   1BEQ87mq7zGa4kWLuzgdjCRccg21LB8QcaAhYSHB24JSklz4JE3lAWN1R
+   HCfvvj3iav4SBU/dsxQQjOU89cq+cPr5hkhaW3B4SUn6RIqgzb3cnUeoM
+   6Z1QdOrrk/CA82qonIJHhACuSETlOpTQ/Xdhp+S3WJaP4Sx5eSWdjtQyv
+   cRNgjpqtRN6B7t0voXOBzTHsGsMFYxKwGJw9PpV2bnw1RGgjh+5UsriQ0
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="307702378"
 X-IronPort-AV: E=Sophos;i="5.97,254,1669104000"; 
-   d="scan'208";a="413567374"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 15:53:30 -0800
+   d="scan'208";a="307702378"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 19:49:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="695954083"
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="732303647"
 X-IronPort-AV: E=Sophos;i="5.97,254,1669104000"; 
-   d="scan'208";a="695954083"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga001.jf.intel.com with ESMTP; 28 Jan 2023 15:53:30 -0800
+   d="scan'208";a="732303647"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Jan 2023 19:49:51 -0800
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Sat, 28 Jan 2023 15:53:29 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.16; Sat, 28 Jan 2023 19:49:51 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Sat, 28 Jan 2023 15:53:29 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.16; Sat, 28 Jan 2023 19:49:50 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Sat, 28 Jan 2023 19:49:50 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Sat, 28 Jan 2023 15:53:29 -0800
+ 15.1.2507.16; Sat, 28 Jan 2023 19:49:50 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QFg5KpycOZ779zMQyMeQZyVY+aZlN0e1b8WFgjSmg+Rrlb2Y5h+Sn/68N5eiFggOzf2buht4tj+LKHon6I213KsFHuUEEROWxR6BLhS1t6kC3qjA1Kd+xiWBhM2oy4MIbLdut5xZXrl2EdjoTq4EMZzz909jcukniUmjnCKeO6EZQy0lwi76+4ANiCY8EL0pkIC6oFxjpivj8EXbvo4M1VLJKOCn80+Gqnaxu3NC/B2YIXpEiyEJwrQVXx4lpfNbdGqMr/kWreF0wINDkaoiXZRcJNNmA9KIBZ3BKJAlTGLZ1vSsHrxB+NV2TQVwQ+A4zvjO66Qbr3YOeE5ptmCspQ==
+ b=lotxe/EIpL44IgsfAbK/QwG+gdnKRNF+usA5Bvx1AX4iHTwLUwL9OIuqvD1AYF8JiwK6HUkUVfBgUCgyY+EvJqbmrsMsaGntYC5MI0DtpH/PwQFHil00ayZYxzqM+yK5dd4XnGAZHF1ksdWCuu3cyYIPoOE99DZj0Le9xNxv2b+oF93AcjuQrJCzkcDg1DGUGVkr44JF1ADUC13mESutVyQH5P06zmCJRGlZ7RWLdfCDInso7YXq1U4DD9eUi6CDMHMvmuZhcUxPtzvhR6RCURkDJKGfPYRPFpZsvhXWdMF/8gnCxciWcF81E/Tge3pHErOCJUI0e+GF4+vfUlbn4w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XIiWm5Uv7kTyG0DQh4aWgve/FFJ9wB4NyXQXyTWiVts=;
- b=DokQpDQcPgiRlt3VLytU/mEXVADtGvsDJkxHhoOECpfPrl68i0onqzrdHg+pLzpucA5ijpgGfFr91yfeZjvtn1MWLbsmYHokwJMizrT1myZp6p9Z2uFOnWoXeERyj7FmEDg08c8Q/mncVqTsS3wz+/dJxMFJQIvblTojPw3pyVlKvJIXSEs81jWNKIhM9NG+S4W9oyLtJ963vns/Odm28gMZ4g60ca1nixS77lFZOeWTtFxpceSS3/wEi4Zaoq5vNlFUTwmcTt+thuC4IHppk4kO5q5sS4Np4BcT1k/A6g6pdhSQslZ6UIxG0r91EQisuXh4hXiB0JUb20B6P85VJg==
+ bh=+vqj+mroBHrkQ0EwD3SysRbwFNrJkw27BNlemznzsa0=;
+ b=kcYKX2VHtNQBpVmQ6zFgFv/BTJkzd/mUjw9fh84L7JHr3lf7waE3Jzjep6RVZUZC6h7nRC/ZgcA1a4oh+zocHjTA8gSBNyrF7YVOuh2UotdaD7kYMTQgvtDzjHwABSbDlrNX2xfuGqu0D62X6sc9K+T04rfoqMT6GcF6uHJMBxWx2wLeqT5o7XSuAbd5J8D8kYBuyE1NpecwLZkaQL0XZWEAYiXbxBoquZzuVQ8DkYG9zVcF1Uc80spHK5PNjY/AW9O6rWpGqeMzhcW1mW74OM7WZe81oqPVl3mbSBdyenCSiJEryvdwdg6Jbj0iNsLt2nifF2kURVst78sRIB0IqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ2PR11MB7546.namprd11.prod.outlook.com (2603:10b6:a03:4cc::8) with
+ by MW4PR11MB7055.namprd11.prod.outlook.com (2603:10b6:303:22b::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.30; Sat, 28 Jan
- 2023 23:53:27 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.30; Sun, 29 Jan
+ 2023 03:49:47 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6043.022; Sat, 28 Jan 2023
- 23:53:26 +0000
-Date:   Sat, 28 Jan 2023 15:53:22 -0800
+ ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6043.022; Sun, 29 Jan 2023
+ 03:49:46 +0000
+Date:   Sat, 28 Jan 2023 19:49:43 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     <torvalds@linux-foundation.org>
-CC:     <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Compute Express Link (CXL) fixes for 6.2-rc6
-Message-ID: <63d5b57256698_1e36329481@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/6] cxl/memdev: Add support for the Inject Poison
+ mailbox command
+Message-ID: <63d5ecd71307a_3a36e529481@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1674101475.git.alison.schofield@intel.com>
+ <97a0b128d0d0df56cea1a1a4ead65a40b9cf008e.1674101475.git.alison.schofield@intel.com>
+ <63d458e7eed85_ea222294af@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y9SMtfBK6FRrgW6f@aschofie-mobl2>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-X-ClientProxiedBy: BY5PR16CA0014.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::27) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <Y9SMtfBK6FRrgW6f@aschofie-mobl2>
+X-ClientProxiedBy: SJ0PR13CA0227.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c1::22) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7546:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cc131e4-847b-49e0-90f2-08db018ad91d
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB7055:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15e3a684-18a2-4760-bc50-08db01abdd07
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hr2beY8GrQm5lA4imD8WayCS9gnH3xMOBix45ZTdSVmoyxxaggRyKYwCdd3pUmwu/g+qiP3Duj4oqnBd6l6k67mUxSvKX/teJnO8DHh+HxaCiV3JZm06H6AR+Vok0hNjvPIEUxPIbOX3ZKYmIgZa06Hp78D/TDQnrv6/BzQEf8Mu9FXSFoTEDSx9DcNKK320xjqDOcapngYfAA65u2mDwQsklb+l84s+nMufyh0B0TAMC3DuxYdPIEoQ8Y/XfpBU//OGzE8fECAadI6UsdfskiHdjNMHUoDIAxhVx6nhRkKIx7swiPYKsyRqyDrSrCz9p1frjIKYFxg0V7bxBi0sm97bJQfPLjT7LqwM/7ePhsXuUMFUhaXrzhlLf9ThDZyhG3gHF2RUcM7nch/IBBhoi55Oyumhzx0yo0JHN3XPL9ks0xeh9l30R974HmfuDqng0lF0jbHki+kHwuN9UopUXQWmyJEbzICh4PW9C8EHfdObxnjdCl78UPuDDwIloEkbXpmaoz2Vj6T9duVOLUQQVX+1EsXEVzR5LCDcxVZ60KL8h0oc2QkK08BPTblT+u2QGwbR/b3HkTe8Ri68We62lI3MZnv8VVGSYo5ToUtocrAF8FEguDMrm44CAVS1CVRnDbAlE+tJotR/VO0sM2g1VQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(366004)(136003)(346002)(376002)(396003)(451199018)(5660300002)(2906002)(38100700002)(6486002)(6512007)(9686003)(186003)(478600001)(26005)(6506007)(86362001)(82960400001)(83380400001)(316002)(66476007)(66556008)(66946007)(6666004)(8676002)(6916009)(4326008)(41300700001)(8936002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: zGFJvl0u2S8HDsXdZwW7jmpi0YrHqzxNgndsBjWcDrONGReVr6dRh+ERf/blp2paJgSwXKOzRnedGsrBUMTfChsmPccQpa3oGly96TidvVW6bp9VGkY6GwSkY/81cR3iBI7tM8QoTfifnAAerzG9mpvAkxqCdQXvmICuMQiskXAqb9m9FWDzmNGJu0tLlYE2uoztPZwgdK8xdaQypXaR21zdxtzWvff1U47vKFRnbpHzeFHoKPnopwbAE5ziWPGd/x8PiyG1FaRyqJ6sEY2WDSWL1kacGWScNk1paK+SK8/N6LYUqqZypwQM8CpyfRbUEbDicWbrYAiGQMz7OQEwkRZ8ltjHvMB/mrtOSwg6XwSF9xEaYz464mxXNnNSTO6nmgUhoxMK9vdKgWlZB4/lVXr5bCicnbg0yCn7I9HINWAwvMndARQuaSy+Ba2CSrOB81vEsx87QOfj0IqkznqDJWzqEFHlKdBz1RnCyahw3zJrIbZrVX0MlUfF44tXGmjP+Kv7n+Ja/uhbvD7TOXOq5KyKEaGpfr9G2wtLeHVdkBG9mggmr8O2ly+3m2n1aKCNhOTJ3TD3SaxlsuoV46fPqZuzNBiNpPSQ/pWw99u7E1nvkhsRAmk7zRnn9FlB6WgsdtRVgS6Iz2QdBj8kWi7suQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(396003)(136003)(39860400002)(366004)(376002)(451199018)(4326008)(66946007)(66556008)(66476007)(41300700001)(8936002)(83380400001)(8676002)(15650500001)(6506007)(82960400001)(316002)(110136005)(54906003)(5660300002)(6512007)(9686003)(26005)(6486002)(186003)(86362001)(2906002)(38100700002)(478600001)(6666004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mNsC5FfZfV6P5VIGd1G0OUx5oNLUv7BHJrCHa1nsZArLrwuRwaxGOSxqIqSz?=
- =?us-ascii?Q?d5F0NVFfWJ3K4SSNmYEVh8cI+4Tq1Y+jPm+0VFqvopnNX40BZHp1YpZPkQ8s?=
- =?us-ascii?Q?e890iSJjllpQE1rffbWl5XSsHfu2V7y0PrXDT8Spe1KJvxX3vLG9RbHhtkSS?=
- =?us-ascii?Q?M2b3wdoZV9TvZoYCnHDkIulQVKCVMAEaTQ073q2eJSC+XvWsH33OKte70RLG?=
- =?us-ascii?Q?oMKR4m/zfiHlpOBVYh8OteK+5KiD7dpan6YEx8lYl6OFst5kn9hF1ZW5bGZQ?=
- =?us-ascii?Q?Q2s/Mbo58yy62HQ1cUCHQfZ/D4/i5jTrvVlWrTqXzZCFglS0FVNRDzqzBa4Z?=
- =?us-ascii?Q?ZjwG/heMhMNS+fIxw+lwX2ROWanIDXAm5M0VTD2/KDJXXgtDrZ69m0V9tc7J?=
- =?us-ascii?Q?vr4OljPvS/XJBJYDJEj9h7s+DSi3zk3jiUCVxHOoxhyMD4g7f264EZ76WLPJ?=
- =?us-ascii?Q?3msTH9oAdO3sjLQJnMwJEqOkBSv8H5MjqMUX4IEIb1SDnOyffF88LDdAcOlx?=
- =?us-ascii?Q?PucGR/SZfPu9+BGFw9q3pDZ3Pa+spNcRwm11zSsC+tJpqXcf1HPeOgk5ssA5?=
- =?us-ascii?Q?2XdIOAReYQCLZXyt/PeX10pIYayIP6S4F9V68ZDmzYEQlZbLlFrtLP6GBK8c?=
- =?us-ascii?Q?MNKapFdS5emxEPq1eaxJxzNBPw5/XowBoTE8+MBDQjTpPoevjJi2y6NDuKYY?=
- =?us-ascii?Q?zHLDNndVWFua0rgnBe0qpKsAcvii96Z0LyORotLrwwfOciZvFgNp+VITMoq9?=
- =?us-ascii?Q?mi+RtPKZAtcxzInCOwMh30kmtm11TwtdshKt2XBuLIbz6SfvJhB/Wo5/2CYD?=
- =?us-ascii?Q?3awBg6cqbi4H9qxrUcQokN9qLBP4Tp+q2891vC+ZE8D6dVcBFXOB7vXShX5i?=
- =?us-ascii?Q?rpQ2sKAlpi/kvYkKb8XPSyEjeERJpCkcM+VDo/R0id1N4G2ELs/m8nlv2WzT?=
- =?us-ascii?Q?DFR1qRX2UFaCnsejEQTiavEGby/iNUFian05BFd0/QkS20MZ0bM2Bdq//m61?=
- =?us-ascii?Q?RJQyw9RFspgheHGTc0NWFCt3WI7d++AmzkhoXeb3cr9QsNBbVKEqp35gkCir?=
- =?us-ascii?Q?rG6YzOme9wRQkBp/Tc3O6x++nPGVenNha381Z4Ezwj6Vt/5TsM30iygTNQrA?=
- =?us-ascii?Q?T6rsTPvXoMr/DKPdHe9+QKPG8P8XGrpCt8SsgJjK8/Znv5Kv+HtI/whN4hmV?=
- =?us-ascii?Q?drky8wB9S2guFU2mdjF4nCK5wXkQmHIJaUhmRXkQIJfO5Zv/uBhbH47rjQCm?=
- =?us-ascii?Q?qd8UOrGVpmIKwra9TNXZtDpBxNf+zjvh6tAPUR5WHTtbSowjRSZ2jD6CrGsh?=
- =?us-ascii?Q?6530i+HMreGic3oyk9LRdkxLRAcbOyVLj3Rlr+vUPBDri1GueOZ+zvcFmmUR?=
- =?us-ascii?Q?XC2atNPSPw7YdhKbbyaP/0gDV23OVXOd3Yu1pE/+chQsd1r838Uqs+kcLPra?=
- =?us-ascii?Q?KnpkLrvkxAwUJCC9Shv4K800pnLioxv3+FdIu/lf+DU3A5rVpUTUBHHCmfhA?=
- =?us-ascii?Q?nEBnyxF7sdQW0mKbNanY/ujFLx2m1gaP9u/TwAnOrFaJ9rpizR0BjQpbblv4?=
- =?us-ascii?Q?ol9NnHrdE9eW4UHYtCr3YpZcxzm5vt8QuSHPCKT5gZHEgze6dG7ScrSljrND?=
- =?us-ascii?Q?7g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cc131e4-847b-49e0-90f2-08db018ad91d
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aq1U+6ZJetcTMy/1FRcslnSfDRDwQL6IInKu7yc9BxaGAZWq1gCpfKY8nK+Y?=
+ =?us-ascii?Q?lSIMZiTU4EjSu1bnwPQeTeHDHVdX9VkY9mrkp77lqS71Tqom9CeOxBfbikDg?=
+ =?us-ascii?Q?7CfN8BheOklV4kIQs53ufrrK4X/nb/Gmhv+Sb0OQ0YxIU0uIujb7GtrOBKyg?=
+ =?us-ascii?Q?Kd4Fb7nizjauJ3r/237zu3v2XBMaOASX7dgfuMcMgPRfAOC6Tzss7TajXsEe?=
+ =?us-ascii?Q?voR99SWeDoSxlTWEUjkLgoeXwDpmS7PEUFfl40z/rlNcEWvPfJBH6U7rs46W?=
+ =?us-ascii?Q?bjTpCGpPhneB6Fr7iXTnS0XAwp0hmiDLee2aSUcCJZY12zARN2MMNjmpsL6F?=
+ =?us-ascii?Q?sRWqwdYzX+xHDrtDa6KsI0PfARAdSFW+aETedD2T3yh7ebO7kULiU90ryYSC?=
+ =?us-ascii?Q?H/cY7shMA124OHbFCNF3b8Un+c+DHY0jg+PLPajq5kbYScuKfNZUNgNEXZsJ?=
+ =?us-ascii?Q?tar5zy8fMqKWkalXpc6HmQsk6VXvF85nkrX/JTUq5uBAz/fQuXOCHpeqmvpa?=
+ =?us-ascii?Q?Y18XH0KThcE3gs+qsZ32R9x3WemSJlRyF855gQvtfGjjADWN69AEYTeI97KA?=
+ =?us-ascii?Q?vtW3HDBxezLV7rWVZ+yztpDoYzcHC5zK6ouNDl3rOJiml8rRZlksJow+gy7F?=
+ =?us-ascii?Q?YAwibw4jvJSOSiZDqwuAsZzl/A25JeAYm7vofWtwDNDghb3ck2kn5OF9lCJx?=
+ =?us-ascii?Q?JiLvP2z3+x0i2hBz2Ye2+bnTtzlH1VrjbFwjOoanPgKQI0NZcZXesDAYUYKA?=
+ =?us-ascii?Q?IF6CgarbIfiLxbfqH6p4XeBurvQMiRWbDEk5Qk5upt+hALmMgmsw2SUKByp7?=
+ =?us-ascii?Q?1OknrBoFPIHUXdgcC6TIIbpTIsz1WwW/r1NLMH77O9LXyPFbeiQeV5PXltVl?=
+ =?us-ascii?Q?XimO2PPojebHZQUdSgWcyLhJXv8Ul+YN0uE+bGHhS5BXFnn5MmPY6FAboQPd?=
+ =?us-ascii?Q?+p4W9lyjqRJNNbfJxUlxSeRIcVSrH9rZaif+Szyf4/npYE+jqxOjASlFY6Um?=
+ =?us-ascii?Q?8oJRyzs/uIko5c0qNw6ULeV3c5OJuFvQlFpqNN6pbDdzKq3e/gYVw8vk0Evj?=
+ =?us-ascii?Q?KGtq0cGTefBdXCGDOa6lwO63IPbN0P/FNbE1QoLprLQKV6ND5BcZ9JuYCJQK?=
+ =?us-ascii?Q?RXAeEeFXPmtywrZOuAZoyd6Z8p8fUH9nMgAkYHHgn0SqunOjeyDOacRA04Q0?=
+ =?us-ascii?Q?SQPnkVf4wn3L7FZ1mOMs2zg/zBbluIQ5XM+bKy3YnR42yyD1L6QWSJBjUgew?=
+ =?us-ascii?Q?+CkzSNkmzjvgC2vrQHfKizdHN2/0k5ilScZ8jFIWtagImKjdAQ6SmvJN8zVn?=
+ =?us-ascii?Q?G3eVAFhAakzhjzMRcrgxbdZxwNpaDnN+eZDU0zrE27KfFL8P9sKm9riOOtT9?=
+ =?us-ascii?Q?1p/+UFlEbCVKyGQf77Cv7sRqOCwhz0JOSav3vMVFajUN3+R9/Acj0aBjIJxX?=
+ =?us-ascii?Q?ByvDYDbgukvtKDvK2UA5ogDVNOJx6VDeV8tTA6ZR9oW5L8waYx95lqi+0wZI?=
+ =?us-ascii?Q?ePynwQA1eVfbeXJHK1Gx75pA/5kIaUPNDB1yjMzTbpcowkBCSYiPMOx6vqBv?=
+ =?us-ascii?Q?tzOZ3H446fST0tVQAEfyVuEtn9paNVE6W47e/s4Fk6F/4SUS9t+0rcxYDggn?=
+ =?us-ascii?Q?pQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15e3a684-18a2-4760-bc50-08db01abdd07
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2023 23:53:26.6047
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2023 03:49:46.5177
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GpiZnZV58uluf7c8y5wJajUEwoX0XeeWbDZv2zy1yJ5BqG2eh6oORinFtwggwH/2yKeC+m3ETQ6a+6HIbpeaW7tbWbRzxUYvyF9bEXg7Uzk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7546
+X-MS-Exchange-CrossTenant-UserPrincipalName: fzzO9HxhW/lQ24IXy/+rSCtkdbWOcOjmFKeYKlnNKLg1FBWzjsudZVPvfOZC5D4SwPbetWPlHZ9H53PDBwhtb29+mdCqDYiHbhdOMdxv5eM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7055
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Linus, please pull from:
+Alison Schofield wrote:
+> On Fri, Jan 27, 2023 at 03:06:16PM -0800, Dan Williams wrote:
+> > alison.schofield@ wrote:
+> > > From: Alison Schofield <alison.schofield@intel.com>
+> > > 
+> > > CXL devices optionally support the INJECT POISON mailbox command. Add
+> > > a sysfs attribute and memdev driver support for injecting poison.
+> > > 
+> > > When a Device Physical Address (DPA) is written to the inject_poison
+> > > sysfs attribute, send an inject poison command to the device for the
+> > > specified address.
+> > > 
+> > > Per the CXL Specification (3.0 8.2.9.8.4.2), after receiving a valid
+> > > inject poison request, the device will return poison when the address
+> > > is accessed through the CXL.mem bus. Injecting poison adds the address
+> > > to the device's Poison List and the error source is set to Injected.
+> > > In addition, the device adds a poison creation event to its internal
+> > > Informational Event log, updates the Event Status register, and if
+> > > configured, interrupts the host.
+> > > 
+> > > Also, per the CXL Specification, it is not an error to inject poison
+> > > into an address that already has poison present and no error is
+> > > returned from the device.
+> > > 
+> > > The inject_poison attribute is only visible for devices supporting
+> > > the capability when the kernel is built with CONFIG_CXL_POISON_INJECT.
+> > > 
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-cxl | 22 ++++++++
+> > >  drivers/cxl/Kconfig                     | 10 ++++
+> > >  drivers/cxl/core/memdev.c               | 67 +++++++++++++++++++++++++
+> > >  drivers/cxl/cxlmem.h                    |  5 ++
+> > >  4 files changed, 104 insertions(+)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > index b715a4609718..e9c6dd02bd09 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > > @@ -416,3 +416,25 @@ Description:
+> > >  		if accessed, and the source of the poison. The retrieved
+> > >  		errors are logged as kernel trace events with the label
+> > >  		'cxl_poison'.
+> > > +
+> > > +
+> > > +What:		/sys/bus/cxl/devices/memX/inject_poison
+> > > +Date:		January, 2023
+> > > +KernelVersion:	v6.3
+> > > +Contact:	linux-cxl@vger.kernel.org
+> > > +Description:
+> > > +		(WO) When a Device Physical Address (DPA) is written to this
+> > > +		attribute, the memdev driver sends an inject poison command to
+> > > +		the device for the specified address. The DPA must be 64-byte
+> > > +		aligned and the length of the injected poison is 64-bytes. If
+> > > +		successful, the device returns poison when the address is
+> > > +		accessed through the CXL.mem bus. Injecting poison adds the
+> > > +		address to the device's Poison List and the error source is set
+> > > +		to Injected. In addition, the device adds a poison creation
+> > > +		event to its internal Informational Event log, updates the
+> > > +		Event Status register, and if configured, interrupts the host.
+> > > +		It is not an error to inject poison into an address that
+> > > +		already has poison present and no error is returned. The
+> > > +		inject_poison attribute is only visible for devices supporting
+> > > +		the capability. Kconfig option CXL_POISON_INJECT must be on
+> > > +		to enable this option. The default is off.
+> > > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > > index 0ac53c422c31..6541f54725cd 100644
+> > > --- a/drivers/cxl/Kconfig
+> > > +++ b/drivers/cxl/Kconfig
+> > > @@ -129,4 +129,14 @@ config CXL_REGION_INVALIDATION_TEST
+> > >  	  If unsure, or if this kernel is meant for production environments,
+> > >  	  say N.
+> > >  
+> > > +config CXL_POISON_INJECT
+> > > +	bool "CXL: Support CXL Memory Device Poison Inject"
+> > > +	depends on CXL_MEM
+> > > +	help
+> > > +	  Selecting this option creates the sysfs attributes inject_poison
+> > > +	  and clear_poison for CXL memory devices supporting the capability.
+> > > +	  See Documentation/ABI/testing/sysfs-bus-cxl.
+> > 
+> > Could maybe clarify that this is meant for hardware debug scenarios so
+> > that is the reason it is disabled by default.
+> >
+> Got it. Thanks!
+> 
+> > > +
+> > > +	  If unsure, say N.
+> > > +
+> > >  endif
+> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > > index e0af7e9c9989..226662cf3331 100644
+> > > --- a/drivers/cxl/core/memdev.c
+> > > +++ b/drivers/cxl/core/memdev.c
+> > > @@ -142,6 +142,61 @@ static ssize_t trigger_poison_list_store(struct device *dev,
+> > >  }
+> > >  static DEVICE_ATTR_WO(trigger_poison_list);
+> > >  
+> > > +static int cxl_validate_poison_dpa(struct cxl_dev_state *cxlds, u64 dpa)
+> > > +{
+> > > +	if (!resource_size(&cxlds->dpa_res)) {
+> > > +		dev_dbg(cxlds->dev, "device has no dpa resource\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
+> > > +		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
+> > > +			dpa, &cxlds->dpa_res);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	if (!IS_ALIGNED(dpa, 64)) {
+> > > +		dev_dbg(cxlds->dev, "dpa:0x%llx is not 64-byte aligned\n",
+> > > +			dpa);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static ssize_t inject_poison_store(struct device *dev,
+> > > +				   struct device_attribute *attr,
+> > > +				   const char *buf, size_t len)
+> > > +{
+> > > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > > +	struct cxl_mbox_inject_poison inject;
+> > > +	struct cxl_mbox_cmd mbox_cmd;
+> > > +	u64 dpa;
+> > > +	int rc;
+> > > +
+> > > +	rc = kstrtou64(buf, 0, &dpa);
+> > > +	if (rc)
+> > > +		return rc;
+> > > +
+> > > +	rc = cxl_validate_poison_dpa(cxlds, dpa);
+> > > +	if (rc)
+> > > +		return rc;
+> > > +
+> > > +	inject = (struct cxl_mbox_inject_poison) {
+> > > +		.address = cpu_to_le64(dpa)
+> > > +	};
+> > > +	mbox_cmd = (struct cxl_mbox_cmd) {
+> > > +		.opcode = CXL_MBOX_OP_INJECT_POISON,
+> > > +		.size_in = sizeof(inject),
+> > > +		.payload_in = &inject,
+> > > +	};
+> > > +
+> > > +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> > > +	if (rc)
+> > > +		return rc;
+> > > +
+> > > +	return len;
+> > > +}
+> > > +static DEVICE_ATTR_WO(inject_poison);
+> > > +
+> > >  static struct attribute *cxl_memdev_attributes[] = {
+> > >  	&dev_attr_serial.attr,
+> > >  	&dev_attr_firmware_version.attr,
+> > > @@ -149,6 +204,7 @@ static struct attribute *cxl_memdev_attributes[] = {
+> > >  	&dev_attr_label_storage_size.attr,
+> > >  	&dev_attr_numa_node.attr,
+> > >  	&dev_attr_trigger_poison_list.attr,
+> > > +	&dev_attr_inject_poison.attr,
+> > >  	NULL,
+> > >  };
+> > >  
+> > > @@ -168,6 +224,10 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+> > >  	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
+> > >  		return 0;
+> > >  
+> > > +	if (!IS_ENABLED(CONFIG_CXL_POISON_INJECT) &&
+> > > +	    a == &dev_attr_inject_poison.attr)
+> > > +		return 0;
+> > > +
+> > >  	if (a == &dev_attr_trigger_poison_list.attr) {
+> > >  		struct device *dev = kobj_to_dev(kobj);
+> > >  
+> > > @@ -175,6 +235,13 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+> > >  			      to_cxl_memdev(dev)->cxlds->enabled_cmds))
+> > >  			return 0;
+> > >  	}
+> > > +	if (a == &dev_attr_inject_poison.attr) {
+> > > +		struct device *dev = kobj_to_dev(kobj);
+> > 
+> > I'd move the IS_ENABLED(CONFIG_CXL_POISON_INJECT) inside here so just
+> > one spot in this function handles the poison attribute.
+> 
+> OK
+> 
+> > 
+> > > +
+> > > +		if (!test_bit(CXL_MEM_COMMAND_ID_INJECT_POISON,
+> > > +			      to_cxl_memdev(dev)->cxlds->enabled_cmds))
+> > > +			return 0;
+> > 
+> > Ugh, this is a problem. So "inject poison" never should have been
+> > enabled for the ioctl path way back in:
+> > 
+> > 87815ee9d006 cxl/pci: Add media provisioning required commands
+> > 
+> > All the nice sysfs interface and compile option to turn it off in this
+> > patch is moot since userspace can just send the ioctl if the sysfs
+> > attribute is missing.
+> > 
+> > On the one hand this is already shipping ABI, but given cxl-cli has not
+> > been enabled it chances are high that it can be deleted without anyone
+> > caring (i.e. breaking deployed configurations). That would need to be a
+> > lead in patch.
+> 
+> I'm confused on how to kill it.
+> 
+> I see it in the enum here: include/uapi/linux/cxl_mem.h, and I also
+> see Ira's patch reminding us not to break backward compatibility on
+> that enum. Do I replace with dummy entries?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-for-6.2-rc6
-
-...to receive a couple fixes for bugs introduced during the merge
-window. One is a regression, the other was a bug in the CXL AER handler.
-
----
-
-The following changes since commit b7bfaa761d760e72a969d116517eaa12e404c262:
-
-  Linux 6.2-rc3 (2023-01-08 11:49:43 -0600)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-for-6.2-rc6
-
-for you to fetch changes up to 19398821b25a9cde564265262e680ae1c2351be7:
-
-  cxl/pmem: Fix nvdimm unregistration when cxl_pmem driver is absent (2023-01-25 15:35:26 -0800)
-
-----------------------------------------------------------------
-cxl fixes for 6.2-rc6
-
-- Fix a crash regression due to module load order of cxl_pmem.ko
-
-- Fix wrong register offset read in CXL AER handling path
-
-----------------------------------------------------------------
-Dan Williams (1):
-      cxl/pmem: Fix nvdimm unregistration when cxl_pmem driver is absent
-
-Dave Jiang (1):
-      cxl: fix cxl_report_and_clear() RAS UE addr mis-assignment
-
- drivers/cxl/acpi.c      |  1 -
- drivers/cxl/core/pmem.c | 42 ++++--------------------------------------
- drivers/cxl/pci.c       |  7 +++++--
- drivers/cxl/pmem.c      | 24 ++++++++++++++++++++++++
- 4 files changed, 33 insertions(+), 41 deletions(-)
+Right, they need to be converted to "deprecated" entries that keep the
+command id order intact.
