@@ -2,307 +2,263 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C00C636D3
-	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 19:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6972C636CD
+	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 20:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237898AbjA3TnI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 30 Jan 2023 14:43:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38068 "EHLO
+        id S235030AbjA3UKQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 30 Jan 2023 15:10:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjA3TnG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 14:43:06 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB2111E98
-        for <linux-cxl@vger.kernel.org>; Mon, 30 Jan 2023 11:43:05 -0800 (PST)
+        with ESMTP id S230444AbjA3UKP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 15:10:15 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C322FCDB
+        for <linux-cxl@vger.kernel.org>; Mon, 30 Jan 2023 12:10:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675107785; x=1706643785;
+  t=1675109413; x=1706645413;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=NJ6eWUj5Eh66FrqiL0wMBuSrA1DRmGnEz00F5lu8wuI=;
-  b=gmdL7keL8S8bbGtfuxPw+FPl1qbwTXn4hqVt8Jf7yomeJnLGb2GF6t0Y
-   WmWz37nAazdREain0Z2eRECF6bwfbpUefsDVBkPmnuwZ4Jtu1GfJWT/Tc
-   GsNse54/4WhRDKhg98VaprASg2AQjnPcFMjQjyjiDw3dqT9eI2zexUwQF
-   xetsQHYAZkn4eFkUEaVNqDm+wAyT9+9o3e6GJTagULcOaV6VUMdXqNf/E
-   T8hLZ+LYQKwoHyvB4whyMrvrN6Gfv1oSn/I6+iAex7KAmhlxxhrziJrHG
-   0VHzoQqXKTOaZnBbhtCI38l/2QCrbvbSAC+9qpk9erKof9GVr+ePZR9bJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="327676225"
+  bh=HwA2yIkoXD4L47BtZB8GRvXtdM6KvVEJpCAWg/wXnrQ=;
+  b=MhTSplHGGRX9W/jaghRE6UAuJIFITbOOEGoQHMFr4eXYlnXH0FB0mC6G
+   iTBrPw6n4iixKVuwRCLExmNIpZxb8uASDGNdb2/R+vMfNuHvOGVkHuPob
+   3H8H/Oi013kID/doitRYynzKmgHAfkoIvMbapLXpKSTppgjG/UztT45MK
+   Tds8eq6i612zFd04ocRH/KAh4UPtlE+3p0unzU0KAAGc81rv3uML8Rpth
+   dGuDAMEbOlJMnUBAZzrdjjIGCcTcFPzBNkUxT5Vqk5MCwG7FxugTvnGKj
+   D0FDZagenU8WKvymDEKaCqOGifk9qT5hR8q7Hc+NhdXw7ulmiC9k0y3/5
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="307315879"
 X-IronPort-AV: E=Sophos;i="5.97,259,1669104000"; 
-   d="scan'208";a="327676225"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 11:43:05 -0800
+   d="scan'208";a="307315879"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 12:10:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="806810651"
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="752962199"
 X-IronPort-AV: E=Sophos;i="5.97,259,1669104000"; 
-   d="scan'208";a="806810651"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Jan 2023 11:43:05 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="752962199"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Jan 2023 12:10:13 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 30 Jan 2023 11:43:05 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ 15.1.2507.16; Mon, 30 Jan 2023 12:10:12 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 30 Jan 2023 11:43:05 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2507.16; Mon, 30 Jan 2023 12:10:12 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Mon, 30 Jan 2023 12:10:12 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 30 Jan 2023 11:43:02 -0800
+ 15.1.2507.16; Mon, 30 Jan 2023 12:10:12 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hDOcXLnvx2E5gxpfDhFKNknIMW8zsYl8F4QJrNTHUCIz8eMLDGcq7bfJ4CtpWgfN/ii0TKF+tZKSKRrVizN9VAwuXFW6Sv2ck9nAKbFYzqeYbNNflRx675jKWiVYt+Fnfedmw280/s7nFWfimQ5Ebf7HyyHWtcVfffferSDQS7yLXa7IJnxnqwBB8DL8zXTShP2cAB+6qH+AZ7W1rux8T44REOYH5V4IpjganXeUpFQV8oCg7vvj+RjdYY0k+E6kwxwB4zGFtR15sRRs4i5FeqxriD6MBbNfgkRJqTx0wi2+9VNT3K1PPN0Tnyr0v2Pz3330gk24z7dkFtx1rojM9w==
+ b=F784kKw+AUtyh49I0098xV8wJsoNDwLzhk+eUDod4CQvZdQ0EMPBacSm4zHOrjhT3E292hiLWWmJbYntvdyA6tXFkQB9bH7a1MoxBVh//GzJzTclJBPADIBeHQbf3UPj8GuvaB0E7gRzaX7khGkNI4DpyU9iKHdyILiKCrIzMKVFCPnXyopszGF+A9kKHsObtsSv6MZa4xLn5EKcqbsY+hstYNfbgpd4eiGdGL+eclA9F9jLiz+6mhfGc63+aoKIRYdxtqzLWv/jjuTHNns3ev+GCEhazE2sHveg8u2snOnPnZyz7o8FwVFXfCXJUl+mya2+IWohhp/TJbvYSwZ0tw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/Zqu1pci5BJigjdr1hrfUYnO/iSWWMn1AC/evDbeuzY=;
- b=FgMQ4zglzrjO1FkZ2jkPkpr/vGfVUnOHWEy9tTWSuJrmaUHHNcFW63AsT7W46xj8Bx/n1FyoRPnRUISyE37VpQ7ycSb4zYnKhS2vrmSVT7Dmw5UJSTEx0PR3hxZdwYM7m0TAkmlrLLn2M13DD0tZxuTjojs6IUvcIQO3HCwwEu3XYJU4kECI3Q3fQOZCL2HoiHiZXZrAXFLQtxi0aue8dg62LRjpkd4fQ0cCrif0yirdEVaVHdjPNOwDMxSBvTtATD6KgKolRZv6VpVLA/LErQdsl0eu+ZLAcRn1ylK7p+YWU8JGGhQtlyYbv2DRM7syG9hnI96+8KzbjBnsL4Zu9g==
+ bh=hYJNv/djS0WeUrWT1nmYi9tmoiPW1w0Me4PYG5B/vhY=;
+ b=UUAT+Q7hmXH+kaiNR4UH81/a3LQO+JyJXqUjd4OK+TegwgryLO8Vv+7CwY8WJDcgO9qV881rXgHvtztwi3NbuVuuaj6SPqwfT9ZVhunDZLO2k6Zja+1/JgFxPjre2GzpLs7SP7mPxWkic3Ylh5hoMhBoWKNKLrybIJM6ewaTo239vsd3FfrXjQB44GVYGWMttShpQFWU3tkb58ATZAcsLmVKFlVbJ3/ywXJDfWLNw+KesWNjOhYvu8TbJHNqE0pKpqTmGAnUDtscajs1VlSuWr/Si4NpFxycYtlkxnQoAnAL9G7uZCvoaXy2D/QE0MvzesvXpMahMPH9KI+qDHPAaw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB7709.namprd11.prod.outlook.com (2603:10b6:510:296::6) with
+ by CY5PR11MB6283.namprd11.prod.outlook.com (2603:10b6:930:21::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
- 2023 19:43:00 +0000
+ 2023 20:10:10 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6043.022; Mon, 30 Jan 2023
- 19:43:00 +0000
-Date:   Mon, 30 Jan 2023 11:42:57 -0800
+ 20:10:10 +0000
+Date:   Mon, 30 Jan 2023 12:10:08 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "Robert Richter" <rrichter@amd.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] cxl/uapi: Only return valid commands from
- cxl_query_cmd()
-Message-ID: <63d81dc17dcd0_3a36e5294db@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221222-cxl-misc-v2-0-60403cc37257@intel.com>
- <20221222-cxl-misc-v2-3-60403cc37257@intel.com>
- <63d483332ff46_3a36e52942c@dwillia2-xfh.jf.intel.com.notmuch>
- <20230130150633.00005cd2@huawei.com>
+To:     Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [GIT preview] for-6.3/cxl-ram-region
+Message-ID: <63d8242084087_3a36e529420@dwillia2-xfh.jf.intel.com.notmuch>
+References: <63d21ce66e5c_ea22229446@dwillia2-xfh.jf.intel.com.notmuch>
+ <63d21dbb62f2f_ea22229441@dwillia2-xfh.jf.intel.com.notmuch>
+ <20230126185025.000016a0@huawei.com>
+ <20230126193424.00005034@huawei.com>
+ <Y9fRVu+yLza4d5Vt@memverge.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230130150633.00005cd2@huawei.com>
-X-ClientProxiedBy: SJ0PR05CA0204.namprd05.prod.outlook.com
- (2603:10b6:a03:330::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <Y9fRVu+yLza4d5Vt@memverge.com>
+X-ClientProxiedBy: BY5PR03CA0028.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::38) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB7709:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02c031c6-a336-4b40-9a57-08db02fa31a8
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6283:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb5efa70-6f71-47e6-b9ec-08db02fdfd5e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qdA5Xj3hqN0KBw/zONUNP1PZfnACmuBLzuYXb+3jaRZD/9exJvRPLrzBSX0yfPiTA6ec3rdePEI9yUDc4whz+VdHnSV7GkQyiXNHQft0XEwNpdG7pvP2QDCURXkVmM/MhbONpYE4jhCs14w+0cmiW830QnYF9mkqUx9Z872f+/+s8/3kAIJcwrpIJxQ7sl/q9A6SMpl6f7mVQ5p3JEMTLVPozRcyZR4acK8cm/9YfPVJ/DlNnjXY1xLy5f5u6hn4vRhqLV3gT/79qbvkNxU4HpHMeclP38UocjJ1TidNekyGPE2AChigorrkGvUu9OHC4IktEXSD2kyFZwpuWP4Thkju8W+z9cqZ9sFZdE6A3kI2jf/Mov/Elw1XCBQ8X5SQwsh2QaW2DSRYkRDIOQwk/qjb2I6Pz4FKXiFuB4SJTRNIoiYYWIH5U2qVt3DfLuSihhv8HESIqeSjgwmqbCnjj68oxiIJQSh297PpXbP+q2aqMPzKPDBvE/osH3vt6OGAjxWR3srDu4qdDS0nhX+CgCl0pk5aqyABStYU/TkkkEVvxWTDJai6buOzC0OYDTgS2Jk3ta7jymSlnUdgt3HsSfMyOSssDJ7qLN/z/FJCxxtNPPJ4BEe8FS6P1iwbq11V5qcXu+SvNsOxvVtITtwgMYW+tEGXPfu5XB73ruOZmhg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(366004)(136003)(396003)(39860400002)(346002)(451199018)(83380400001)(186003)(54906003)(110136005)(26005)(9686003)(6512007)(316002)(2906002)(38100700002)(82960400001)(478600001)(8676002)(66556008)(66476007)(66946007)(86362001)(966005)(6666004)(6506007)(6486002)(4326008)(41300700001)(8936002)(5660300002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: KBlldiR34NRnOq1UxuJ+R/SK5LmkF6GEgDrrDulIcmCnPlbV4JWHlA3Mn58CLFdRbZyx4ykQx4q8m8ScpRXbSHiTmKAUUNYfmjw1vRuX/9XpKBBdb5GSEHP4phWmHa7HzcR2M72zz3JlK10P+4ZAy1eloyVAMlvI4ofxlFIvs9RKUjwe+l1aegHknJl4iMNK6qneKFnUEI4fpW92e4wgLxzYz5VnMzkcGO7VcAJGBtfIwyf5vDtCSZLTFvAl6O+ohp4JwsPR2VbPk5yg92WD87Wi+wE8Wsvt3IQtAR3/xBl1DI8ZVfp9FMXQys9ZL6jsAsS6WLKuS3YmCxF+GfKJLJtbpHzQsZmAPn7wpOSPHnw+Krz4ifKXqIvjvrpWiLwb8WF5zstAMm7Wb4AjOW11W86Vy5+LSLyrNTjTcRvkrp3/o6kLPyGZ0UfX+lZddOfjJXbnqXiUKvYXbeJ4z5VZx4Qtkotw1YkImmKIWsOusaIJ/ztuSGoZWRBMnUmAfky4+Y2bUu3MSEeECb4UKIh8J2XcxSebPKSDlkrlg3rjdxCIHdaJWNMNANp5Zr0e3bFgu/zeUNDQhUXaMJVHRxTlETc0vZnVJK0W0HO7rBg5mrmoBfQkR/CB/TTM+7DPElK4a/We0HMFlOXBxRqcgcd60w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(396003)(346002)(39860400002)(136003)(376002)(451199018)(8936002)(4326008)(41300700001)(66556008)(66946007)(8676002)(66476007)(5660300002)(83380400001)(6506007)(6486002)(478600001)(110136005)(316002)(26005)(6512007)(9686003)(186003)(38100700002)(86362001)(2906002)(82960400001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yv02jUWUuM7+WTa9blS/jHuvQCWocQ7foeunxoYQQ2tYZbZgcMNXGS9l5OkA?=
- =?us-ascii?Q?hWatPM/VuBI0bx2vURlqFUKBKR4mq6z6kz3k/uPXNEWYQ3lwhysaH2Lh12S+?=
- =?us-ascii?Q?+RgSr7sXJtukyjEPe1sCLGrO5n+aVZ4vZ56IvX2dfHXlbFINbYhST7++Kejw?=
- =?us-ascii?Q?f11xjFfs+4ZqbBycf+mZFDNjqsu5kEZJ2kkwj7TkndStwtCMqKplPh+LQF09?=
- =?us-ascii?Q?j7b7vlhJij/wdik4D85dAtn4xMZNFzjUgF7wH4mR8HRt37taWeSFhE/3k+jb?=
- =?us-ascii?Q?1xU+RcF5goRjHsFUtVz8jc1IzRxKwHTZSHV78+JIVKYElrq+wsUaH1yTmGzd?=
- =?us-ascii?Q?QeIkjln8U0d6CTNGB26Tn8Dgvuf+4vpKesXTCZgumDizyw85HvgmWpUzNd4m?=
- =?us-ascii?Q?SXEx8/QsbppIPqRVsw9YgObzUf8qcs2oFvu7kEwhTJzMa2OYHrPtUOWXd7gI?=
- =?us-ascii?Q?pQT3UzYm/jnbtC0VAP8w0PRZnXg+28HIMOjFoMOh9Y92f8MusrPRsndimMl2?=
- =?us-ascii?Q?MLqPMqQKwpTZhP3210New/cBYNQMVPD4HaAN/qu4bReBqE06ecjguVNUodh7?=
- =?us-ascii?Q?xBk9KlBOUSyNWBX635I1I2LiOK5u2kpoR7pcyZD02Q+bjwzxLl2J/wnqjEAh?=
- =?us-ascii?Q?2VGLKJKYNjhWbQJAX/xEnukMZNXvb/l2oJM5EFuPepCSMEg+y5vmz13JAA7/?=
- =?us-ascii?Q?hX+HMFPYc0sqqFgi6ZG94kNO1FoaERqh0RmWwdX3NCYzST3KIP/iDXvii9lp?=
- =?us-ascii?Q?k2WLZtwCEp8I8+eFHA28JrhXZLbCs4O/POsjrm3tKjXe7wnhxpjGXJNA53eI?=
- =?us-ascii?Q?Hp7YwDRHIPeOQ5tKEA0IzFJexR8uPNmqNfkG2qRBRQ2Sa4jPgnRhUlgHTRIW?=
- =?us-ascii?Q?MKIJ09LcJmzy8o5J7XhliuniJUuQAWU7NT8bPZcIX5JkOtwIPohUF2cAnOqC?=
- =?us-ascii?Q?Y24f3tBd8STQwGzgY8IvDlo/oiiiNmOsyUMJ3W8u9ef8fP2j2Xf+phMOeClM?=
- =?us-ascii?Q?h8Th0u3Ha46LDTKpMvHvWCJw9pCO0KleTVxkgq1jZyluRzk3rCQSfyMHy2wE?=
- =?us-ascii?Q?44/Hn39MPHIl1WA8h13bnzpTxNqSFq9CnD2DJPOGI6Z2iG6G2ra1ywSiKK31?=
- =?us-ascii?Q?G2mB3pHN+pkozgE/reC51DP5c9pTFTPE2BiAEVHg9QshEjEaailEEtYDVQwU?=
- =?us-ascii?Q?Cv1ODDQQuSFRJhRU2YOUJfRE4pGHvAZGKuOR45Fjlp2skNDUK/66k8yV96R/?=
- =?us-ascii?Q?5rYH/sIkZp0gaXW1bZ9uQ0zWiAHjVVdikUK6gPrVUBF9e6sTrFsv47WfZJjw?=
- =?us-ascii?Q?/6D+yYxTt8fZ5RGMyyM1GLHbT/EqUZ+gkmYTC+O/EElp+ZNUZuks6NlhM1TN?=
- =?us-ascii?Q?1wMqsYf2dTI2SB2fZS7fApp/x4ayquL+ci5bWgrGM/lD6Y3ZW6RLllkQe6ZK?=
- =?us-ascii?Q?voAYTjaJn/PaXo7talPYb5rj+skNVOTpji/yY6NA5X5/SmRzhjKs7Gq0/F8x?=
- =?us-ascii?Q?TnTX9ri81O2+DLBpcQxgZEEF4y6GMhZ/3eze7/gimAQRCoMyaXAT6Q4fpQAi?=
- =?us-ascii?Q?/kHHxkfugM0Y2zqTgjX7iZKiJKFrrFy3+GL0SvbI/kWKEjhknm9F2kMExGqa?=
- =?us-ascii?Q?7A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02c031c6-a336-4b40-9a57-08db02fa31a8
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nW2P1CAOan2rwf6ECo5thpvedGUb5zIZORgI80UElnP9mtAaHusxMWFriOFK?=
+ =?us-ascii?Q?h6xIitDIuogdLYBDeaduY8C2fGBv02OIrCCeDA4HvebcnS/SFWu9Ek2eHFU8?=
+ =?us-ascii?Q?oGw1H6JYBjHoJIv7jWje+sKHM4qyp8Vcj2P9GCJnu+aPCiR5JQ0oCH3uWN8e?=
+ =?us-ascii?Q?Tx37If/4f2KkYB6NlW/6k1FtkFeKLxFEdYJJe88ItXVoheudm6+4/WbOrQRe?=
+ =?us-ascii?Q?fc1clrvDrbT9p4wQGnPMtgKbLT1G9pbr5gKZOqyPeD1V2OEx2vWwhZWXJhOU?=
+ =?us-ascii?Q?tN2HN8F2hglv2+x42ORDetGv2yi0+LoqFvfCDTMaLsH8LUvqv1dzBFs356xi?=
+ =?us-ascii?Q?uZ9IZ4UXpBO+obBIuAMXqZYZR6kiFmslueDWzFeoLPrBsX8ni88/DWGUjR8/?=
+ =?us-ascii?Q?KTMt+rdyzHaBlOzRkjp6NFAAWO4mqILKikUM6vaMJLIlppxHfhO4N2ePkLs4?=
+ =?us-ascii?Q?/p6pQLEMUmgRIho++YxFs9ENtobJ/e9F+cGv5CqlFjvj3AAcizOtVI6O6t8v?=
+ =?us-ascii?Q?KNPEKKIQH9iqcqUsW6abILMgqHWXLHlaokkbyMqD42XpSQIGwui89oO2rVMy?=
+ =?us-ascii?Q?New+7TtTunbbBQ9R6z6Dulx3LIwqAoB/NUFoNMrL7qNMamMfbPOXux2ZZWGV?=
+ =?us-ascii?Q?uWznSNAB3xIUDKYjqh90ezF6oOPQbVgzm83Sh/3JM9d2IsRUBFpiQfZjtk43?=
+ =?us-ascii?Q?5EiKIjyO8ws5haf7wWcCofuYxCCzjevgbP7Pu1pkiuHV5lnW0ki4V93l+ZKm?=
+ =?us-ascii?Q?u6uQ8m4UaezBXuK4di/ScFZ3OVaeKTF6fu1ml0/ghjgmurO+8WEdzs4kpKYS?=
+ =?us-ascii?Q?BLihCYMxVCMWhwT5SQf5dnjzWiq0M9FU2k5YIWOyMmy2bz7YCjlNpnqr3EQw?=
+ =?us-ascii?Q?MINPjhVXBUQpJVNKKJ52ggcOqjDL4hTEFZusY1xDEZ0bbaX9KIDmGkju9kPG?=
+ =?us-ascii?Q?2OL9LdpxzYFBGAifGNU//9r/CRPjPftGC+vErsEkQTvPzV956xNeUOVIfTWL?=
+ =?us-ascii?Q?u4lKms90eI676fIsoe18SojHuJ95XQClheevfexWTc19CLzJ83jBJpKrDbc9?=
+ =?us-ascii?Q?5JcbQkTRD3p8agL4bA85Sw1J8GXzbaqKtgdun13qL1ZVKiZjwhwSnyWqRRn6?=
+ =?us-ascii?Q?fX5eNsoLYd5gW1EO4acySmaHoiOQ6R6enOgWQN4HxmRw2JX3hd0lqfvE2O4M?=
+ =?us-ascii?Q?k582+BhNzDTnNk3QO0b3l0Tge0xbPleTFWUMf9tCxrS3Eb0JCFaVGn2lf/bE?=
+ =?us-ascii?Q?1VaozI2hfdeha0QCtUzlmzvXNMpcRlPTKbQTrk60jIu7CrGoABgNzKP1fqTn?=
+ =?us-ascii?Q?QliKHT5vsEkV4skTeETCF0N3s/imDTy3IYrFMwY4Aod8jHjJaXnLS61PqqF5?=
+ =?us-ascii?Q?Kzkm7IKd+rYRur7007KDSXyAe42gLjwwH+zgDjSVOfzIDsOmn/QbS6Q3/KAz?=
+ =?us-ascii?Q?TaEhcWucju2XgOG/RNTHC/LyTajFKQF0ph0o2put3ux2AWECd8CdKPNQIlWT?=
+ =?us-ascii?Q?BMG6t3B6Kcx7ejOLRfNOUBJOaHY1l0iMyGt1csofUbUqggsIGmJUsBfAdMKq?=
+ =?us-ascii?Q?sek2t6M/9QKiD8fwc/FkTK9tVg60u9o3pOeKajS9y/ulkxBlYJPOrO5gTEc1?=
+ =?us-ascii?Q?8g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb5efa70-6f71-47e6-b9ec-08db02fdfd5e
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 19:43:00.3301
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 20:10:10.5444
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gI8xAX8Eto5pI+uaxsd3nArsjZVj8vyEM8azVG6FJgCyxUpJXCsRw1lzF7xFvasXvMmCC2Zv33qi9q1BOLWxVGqSJcLe5k522q+q2j/apvA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7709
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q9Bau4k1n/buzasddVW/+FCcHmXI/8sNfPGifukbvgwyzyVZ5xWqjCwhV2whhveTWRen5Fq8I0n2F2YUXDWllhbytykwxynh8lYdioi4F2s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6283
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> On Fri, 27 Jan 2023 18:06:43 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
+Gregory Price wrote:
+[..]
+> I found the same results.
 > 
-> > Ira Weiny wrote:
-> > > It was pointed out that commands not supported by the device or excluded
-> > > by the kernel were being returned in cxl_query_cmd().[1]
-> > > 
-> > > While libcxl correctly handles failing commands, it is more efficient to
-> > > not issue an invalid command in the first place.
-> > > 
-> > > Exclude both kernel exclusive and disabled commands from the list of
-> > > commands returned by cxl_query_cmd().
-> > > 
-> > > [1] https://lore.kernel.org/all/63b4ec4e37cc1_5178e2941d@dwillia2-xfh.jf.intel.com.notmuch/
-> > > 
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > ---
-> > > Changes for v2:
-> > > 	New patch
-> > > ---
-> > >  drivers/cxl/core/mbox.c | 35 ++++++++++++++++++++++++++---------
-> > >  1 file changed, 26 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > index b03fba212799..a1618b7f01e5 100644
-> > > --- a/drivers/cxl/core/mbox.c
-> > > +++ b/drivers/cxl/core/mbox.c
-> > > @@ -326,12 +326,27 @@ static int cxl_to_mem_cmd_raw(struct cxl_mem_command *mem_cmd,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +/* Return 0 if the cmd id is available for userspace */
-> > > +static int cxl_cmd_id_user(__u32 id, struct cxl_dev_state *cxlds)
-> > > +{
-> > > +	/* Check that the command is enabled for hardware */
-> > > +	if (!test_bit(id, cxlds->enabled_cmds))
-> > > +		return -ENOTTY;
-> > > +
-> > > +	/* Check that the command is not claimed for exclusive kernel use */
-> > > +	if (test_bit(id, cxlds->exclusive_cmds))
-> > > +		return -EBUSY;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
-> > >  			  const struct cxl_send_command *send_cmd,
-> > >  			  struct cxl_dev_state *cxlds)
-> > >  {
-> > >  	struct cxl_mem_command *c = &cxl_mem_commands[send_cmd->id];
-> > >  	const struct cxl_command_info *info = &c->info;
-> > > +	int rc;
-> > >  
-> > >  	if (send_cmd->flags & ~CXL_MEM_COMMAND_FLAG_MASK)
-> > >  		return -EINVAL;
-> > > @@ -342,13 +357,9 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
-> > >  	if (send_cmd->in.rsvd || send_cmd->out.rsvd)
-> > >  		return -EINVAL;
-> > >  
-> > > -	/* Check that the command is enabled for hardware */
-> > > -	if (!test_bit(info->id, cxlds->enabled_cmds))
-> > > -		return -ENOTTY;
-> > > -
-> > > -	/* Check that the command is not claimed for exclusive kernel use */
-> > > -	if (test_bit(info->id, cxlds->exclusive_cmds))
-> > > -		return -EBUSY;
-> > > +	rc = cxl_cmd_id_user(info->id, cxlds);
-> > > +	if (rc)
-> > > +		return rc;
-> > >  
-> > >  	/* Check the input buffer is the expected size */
-> > >  	if ((info->size_in != CXL_VARIABLE_PAYLOAD) &&
-> > > @@ -446,9 +457,15 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
-> > >  	 */
-> > >  	cxl_for_each_cmd(cmd) {
-> > >  		const struct cxl_command_info *info = &cmd->info;
-> > > +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > > +		int rc;
-> > >  
-> > > -		if (copy_to_user(&q->commands[j++], info, sizeof(*info)))
-> > > -			return -EFAULT;
-> > > +		rc = cxl_cmd_id_user(info->id, cxlds);
-> > > +		if (!rc) {
-> > > +			if (copy_to_user(&q->commands[j++], info,
-> > > +					 sizeof(*info)))
-> > > +				return -EFAULT;
-> > > +		}  
-> > 
-> > I like where this is going, but I think it is still useful to return all
-> > the commands even if they are not enabled or currently exclusive,
-> > especially since that expectation has already shipped.
-> > 
-> > I also think it is a bug that this command passes kernel internal flags
-> > like CXL_CMD_FLAG_FORCE_ENABLE. So let's declare new flags in
-> > include/uapi/linux/cxl_mem.h starting at BIT(1) and do something like:
-> > 
+> Reference command and config for list readers:
 > 
-> So this is OK in that we are just adding more info in the flags
-> field so backwards compatibility is better maintained than simply hiding
-> commands.
+> sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
+> -drive file=/var/lib/libvirt/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
+> -m 2G,slots=4,maxmem=4G \
+> -smp 4 \
+> -machine type=q35,accel=kvm,cxl=on \
+> -enable-kvm \
+> -nographic \
+> -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
+> -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
+> -object memory-backend-ram,id=mem0,size=1G,share=on \
+> -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
+> -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
 > 
-> > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> > index c71021a2a9ed..1ba0e12fd410 100644
-> > --- a/include/uapi/linux/cxl_mem.h
-> > +++ b/include/uapi/linux/cxl_mem.h
-> > @@ -87,8 +87,10 @@ struct cxl_command_info {
-> >         __u32 id;
-> >  
-> >         __u32 flags;
-> > -#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(0, 0)
-> > -
-> > +#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(2, 1)
-> > +#define CXL_MEM_COMMAND_FLAG_RESERVED BIT(0)
 > 
-> Good to add a comment on this flag.  I've been staring at it an can't
-> figure out what it was ever for...
-
-Oh, I just noticed that the kernel internal CXL_CMD_FLAG_FORCE_ENABLE
-was being blindly copied out to userspace where it has no meaning. So
-any new flags need to come after that one that is already burned.
-
-> > +#define CXL_MEM_COMMAND_FLAG_ENABLED BIT(1)
+> echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_region
+> echo 1 > /sys/bus/cxl/devices/region0/interleave_ways
+> echo 256 > /sys/bus/cxl/devices/region0/interleave_granularity
+> echo 0x40000000 > /sys/bus/cxl/devices/region0/size
+> echo mem0 > /sys/bus/cxl/devices/region0/target0
 > 
-> ENABLED isn't the clearest naming... Perhaps _AVAILABLE_TO_USER
-> or something like that would be easier?
-
-Yes... but it is unavailable to the user when it is temporarily reserved
-by the kernel in the next flag indication.
+> Not sure if bug/missing feature, but after attaching a device to the
+> target, you get no output when reading target0
 > 
-> > +#define CXL_MEM_COMMAND_FLAG_EXCLUSIVE BIT(2)
-> What does EXCLUSIVE mean to a userspace caller?  EXCLUSIVE to whom?
+> ```
+> [root@fedora ~]# cat /sys/bus/cxl/devices/region0/target0
 > 
-> Other than bikeshedding this looks good to me.
+> [root@fedora ~]#
 
-How about USER_ENABLED and KERNEL_RESERVED? With some docs:
+Hmm, did you not get:
 
-/*
- * Older kernels leaked an internal flag at this bit position, that flag
- * is not relevant to userspace. Newer kernels set it to zero.
- */
-#define CXL_MEM_COMMAND_FLAG_RESERVED BIT(0)
+"-bash: echo: write error: Invalid argument"
 
-/*
- * The given command id is supported by the driver and is supported by a
- * related opcode on the device.
- */
-#define CXL_MEM_COMMAND_FLAG_USER_ENABLED BIT(1)
+...at that step? Because targetX expects an endpoint decoder, not a
+memdev.
 
-/*
- * Requests with the given command id will terminate with EBUSY as the
- * kernel actively owns management of the given resource. For example,
- * the label-storage-area can not be written while the kernel is
- * actively managing that space.
- */
-#define CXL_MEM_COMMAND_FLAG_KERNEL_RESERVED BIT(2)
+
+> ```
+> 
+> Would be nice for the sake of easier topology reporting if either this
+> reported the configured target or we added a link to the targets into
+> the directory.
+> 
+> But this looks good to be so far, excited to see the devdax patch, I
+> think i can whip up a sample DCD device (for command testing and proof
+> of concept) pretty quickly after this.
+> 
+> 
+> One question re: auto-online of the devdax hookup - is the intent for
+> auto-online to follow /sys/devices/system/memory/auto_online_blocks
+> settings or should we consider controlling auto-online more granularly?
+> 
+> It's a bit of a catch-22 if we follow auto_online_blocks:
+>   1) for local memory expanders, if off, this is annoying
+> 	2) for statically configured remote-pools (remote expanders)
+>      this is annoying for the same reason
+> 	3) for early DCD's (multi-headed expander, no-switch), the pattern
+> 	   / expectation i'm seeing is that the device expects hosts to see all
+> 		 memory blocks when the device is hooked up, and then expects hosts
+> 		 to "play nice" by only onlining blocks that have been allocated.
+> 		 (there is some device-side exclusion features to enforce security).
+> 
+> Basically early DCD's will look like remote expanders with some
+> exclusivity controls (configured via the DCD commands).
+> 
+> So with the pattern above, lets say you have a 1TB pool attached to 4
+> hosts.  Each host would produce the following commands:
+> 
+> echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_region
+> echo 1 > /sys/bus/cxl/devices/region0/interleave_ways
+> echo 256 > /sys/bus/cxl/devices/region0/interleave_granularity
+> echo 0x10000000000 > /sys/bus/cxl/devices/region0/size
+> echo mem0 > /sys/bus/cxl/devices/region0/target0
+
+> and mem0 would get 4096 memory# blocks (presumably under region/devdax?)
+
+At 1T of size, mem0 would be hosting 4294967296 256-byte blocks.
+
+> A provisioning command would be sent via the device interface
+> 
+> ioctl(DCD(N blocks)) -> /sys/bus/cxl/devices/mem0/dev 
+> return: DCD return structure with extents[blocks[a,b,c],...]
+
+In the DCD case the CXL-region would be instantiated ahead of time and
+associated with a DAX-region. Upon each capacity addition event a new
+devdax instance would appear in that region.
+
+> Then the final action would be
+> echo online > /sys/bus/cxl/devices/region0/devdax/memory[a,b,c...]
+
+Something like that, yes.
+
+> or online_moveable, or probably some other special zone to make sure
+> the memory is not used by the kernel (so it can be later released)
+> 
+> 
+> So to me, it feels like we might want more granular auto-online control,
+> but I don't know how possible that is.
+
+Yes, I think it also needs to coordinate with the existing udev rules
+and policy around auto-onlining new memory blocks.
+
+> Note: This is me relaying what I've seen/heard from some device vendors
+> in terms of what they think the control scheme will be, so if something
+> is wildly off-base, it would be good to address the expectations.
+> 
+> 
+> Either way: This is awesome, thank you for sharing the preview Dan.
+
+Thanks for testing!
