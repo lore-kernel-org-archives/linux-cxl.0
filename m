@@ -2,195 +2,131 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F09C54EAA
-	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 22:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA8C54EAA
+	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 22:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjA3WA6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 30 Jan 2023 17:00:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46762 "EHLO
+        id S230028AbjA3WW0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 30 Jan 2023 17:22:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjA3WA5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 17:00:57 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860F07EE5;
-        Mon, 30 Jan 2023 14:00:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675116056; x=1706652056;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=nY5T9BHzA8zlXHPpVNmfycxHZ5u6YkpqDCwhx0sIKtg=;
-  b=GA5opaLEymtzducg/XGt3903lSl1w6kt44dLZVxqVHMT1dq1g2RFYeno
-   hFm6uF8y9lT9rYL5ZBvYfEe3AEJtD7Ev2f0RvEoud8IAI5dZv6dJ7j8ic
-   3lSkJSl03dpkVQNsj/wolJYzHMcJAlKf6i/oscGXViCakagU9E6ubODOp
-   jKZpl2T8wux2N9yxhkGA+X6aSpjsib6+W5kCsFA1G7eTPCdnLWI0Hweja
-   BMzKVjAGo/Ce9KvKiRzGZwC6an72Xd3EVcJAfQmNuwwNq0078K0sBgtJi
-   VeeLgS3XJuUgQhR8unKWoP6NKZzfnuUMeF0RaJVIgLTF9ungk8IMA3+sR
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="315646206"
-X-IronPort-AV: E=Sophos;i="5.97,259,1669104000"; 
-   d="scan'208";a="315646206"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 14:00:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="838109832"
-X-IronPort-AV: E=Sophos;i="5.97,259,1669104000"; 
-   d="scan'208";a="838109832"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga005.jf.intel.com with ESMTP; 30 Jan 2023 14:00:55 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 30 Jan 2023 14:00:55 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 30 Jan 2023 14:00:54 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 30 Jan 2023 14:00:54 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 30 Jan 2023 14:00:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ASkgfqqgkgEPhV9tqvKMJr37ERfLKNgg5ty9UYeQHbVm6SJHqW7EnE2JmHkPK0O+y9w+QqM7NARMDYu3ohICIAWgH6+VDxE6rcAopouH7f7SGBEqCgLAVFYl5FHKrTtlXKkaCq2h4DVtoYidTwp32OI9oGONPrfT00bGhBkmVmCE4MOkX9Xv52gw59VMc0+gABs8WepcYejb8LoX42IMM8SMJuNvo9+H+0korFxxdguNvZzIVhCrh8G1wJ4x/PtDP49jmu79B1i+IDnmX/RC4K/dE6qG6cVaAPykBy6OUw//fgl4yeROlQyq4gF8KogTNnIAY2LkpR8fIu6cxxwSLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mPJ19wZK7GukSMNhcO3lpZyYeUiByDWXUu5WRztUJqM=;
- b=IiUd9uTAtY2lH2JH/ip4BucOBiZmX2iVms4O6Ft7uiHzhXayhHhVmOhiXh2ahVYRBGij53gr2UrlA/2cnNZamr/h5rvKECIE0rJnretvE2KoO9p5tyEk2zrp/f6A7TcmPLo+70oIhHkA5jSRz12++YlyXRw0R026s3qInJ50CWpfIDWSW8s9nuZmvDc56syQeqoV5gTPAvPPY09koU+pLSlp7KnNhqtT5diST7GRB0c1KpOjqPQuPRHpzWSmEEfzhmRp+utSA/NllrBgKiZ2+ek88UXGCFt2mZ6vST9ZsYgVdDPlaEp8c/7UwSnwvsm935oOLlwOaVGPWwiVSm9ucw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5022.namprd11.prod.outlook.com (2603:10b6:a03:2d7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
- 2023 22:00:50 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6043.022; Mon, 30 Jan 2023
- 22:00:50 +0000
-Date:   Mon, 30 Jan 2023 14:00:47 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Shesha Sreenivasamurthy <sheshas@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: Hot ADD using CXL1.1 host
-Message-ID: <63d83e0f9378_3a36e529468@dwillia2-xfh.jf.intel.com.notmuch>
-References: <DM6PR18MB28441B6B542B2A59CF39BF6DAFCE9@DM6PR18MB2844.namprd18.prod.outlook.com>
- <DM6PR18MB2844505042F7EDCF69CE08DBAFD39@DM6PR18MB2844.namprd18.prod.outlook.com>
- <63d8292f70918_ea22229465@dwillia2-xfh.jf.intel.com.notmuch>
- <CABL7MgHENj0FcT+whjdskOmqPfNa0zo8gQobpZ0mrW3a3NY_pA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABL7MgHENj0FcT+whjdskOmqPfNa0zo8gQobpZ0mrW3a3NY_pA@mail.gmail.com>
-X-ClientProxiedBy: BY3PR03CA0020.namprd03.prod.outlook.com
- (2603:10b6:a03:39a::25) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S229468AbjA3WWZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 17:22:25 -0500
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCB039B86
+        for <linux-cxl@vger.kernel.org>; Mon, 30 Jan 2023 14:22:22 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 1DBE4821A20;
+        Mon, 30 Jan 2023 22:22:19 +0000 (UTC)
+Received: from pdx1-sub0-mail-a221.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 8D65E821E2A;
+        Mon, 30 Jan 2023 22:22:18 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1675117338; a=rsa-sha256;
+        cv=none;
+        b=Ji8ea/VhO/gyBIH6lsTpKMUKnl0oZqBCKzQ6CTjwtswC1EuBGPUy/ItoXpRTdseBxf7yM9
+        UuGUEkfqSQlJkqNMwi1R8P0S64Rz7o08r7zHRIaRwkDpjLDZyfhwkbQJxHgtJZ2dhHigzg
+        BlfNjKzfHgZ12CpD6DH1BYnKP7nMij8gqw2mW/H7QdhL3HDslw56/zpFQ+tg1200IeN/CP
+        /GtnAIrHee1BqDyutgsRq6v2VRW1CKKI5YKHIxVF4Cam2lwWiQEdzHtlHPmxi6+eq03tX0
+        1Ff+mMpi2jjqCj2zNL5E4E+YVIAa5nXCJEGL2rPD6oxiOMLY9sKVeO3AYrzcTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1675117338;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=3wSCLvnvykBahLskQERa3cHLXICwFksGbKpLcEhDQdg=;
+        b=5IiJgr8b20jHsuKDpOx0Z5Q99A3pwiQrApsRK1CgmeYH49avWAU7juSNH9lC0S1azE1kzV
+        xYCdyD/WwmKx5t0eToE3QUQSLyo7PYsHlacD6WiMLfJdCldRcouRc0n1T3dp4pvh+5xGhH
+        1Oi+p1LMTpAGqFOeYfTiCeiDoy1GqwMQT2dLYXDhdPEMDEuv+GFwg1cmNyjlkRcqxAxbzV
+        Ges1cZxuJVPHGCcwXCh4pSkCCy20QDG54XdatTKD59DFlLBDKToxIUa4qHZk7zwMTngjPw
+        Ff3xSMevWLVWDMBQ91Ocy9OeyUdGBBQjG7ipRDqxU51y5uMJd2Oy/PiPRo/IfQ==
+ARC-Authentication-Results: i=1;
+        rspamd-5fb8f68d88-mcdm2;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Whimsical-Cellar: 74025b3342eeb0b9_1675117338911_3914163511
+X-MC-Loop-Signature: 1675117338911:4027687716
+X-MC-Ingress-Time: 1675117338911
+Received: from pdx1-sub0-mail-a221.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.109.196.237 (trex/6.7.1);
+        Mon, 30 Jan 2023 22:22:18 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a221.dreamhost.com (Postfix) with ESMTPSA id 4P5N2x453Zz22;
+        Mon, 30 Jan 2023 14:22:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1675117338;
+        bh=3wSCLvnvykBahLskQERa3cHLXICwFksGbKpLcEhDQdg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=TFsri0I35sj/kVoUMOF03wT3U1iynj6Hdi9iFM0p8MdTWOiGBBUqMIgRY/ZaMfx7l
+         iws++OS+z5DkPePY+KKqgXQCB+69HqwP8EoX7bqU97eB1QXfcQ7lqSwcMhFuxWASfD
+         kxRYIPAHO97SgGC6bmUh/NImE+gC9/8PrrrSucOmezcc/jk9wVCA2wGvvHxvXPsdsC
+         2yk3NJBi/kmJ7r3bBiXIt0q9BHscbXbSs2uwLeTTlb0WUlEFX5tfUdwNucqQBO4ySo
+         O0SpNJoycpw70efzSCd8mSJ30slbpf1E8I+2hM3d5PUb7rP8zbJZbI4uCQHZSfbwWg
+         nXytA/B42WNIA==
+Date:   Mon, 30 Jan 2023 13:55:14 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     kernel test robot <lkp@intel.com>, ira.weiny@intel.com,
+        dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+        linux-cxl@vger.kernel.org
+Cc:     oe-kbuild@lists.linux.dev, Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [cxl:pending 13/21] drivers/cxl/pci.c:511:8-33: WARNING:
+ Threaded IRQ with no primary handler requested without IRQF_ONESHOT (unless
+ it is nested IRQ)
+Message-ID: <20230130215514.6cviyuwhxgjlzj27@offworld>
+References: <202301291620.DxnDWLoW-lkp@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5022:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e0296df-cd4c-4b67-8a62-08db030d72dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hKr2u2eeF0/cGGaQixJa6m0/Fig7kBuay5VrkjfW0U6FcYXljAzjv63XLCvAEfjkmphuOzBXmgRpo17cA0FkI2vcN2CDRiumhiHAQKpgHBJTHeQsGiEhZWm+FTCNRanxWsqVq8NXC3+Dn1lgYbjUwLGeWTslOOuJOgw70qlrb+es9s7kdgKp3mxwqLzFNOjQ5a4n8MhHpSscbl5rHwl54obgMnjcmygboy8kDJfaXecWzEiCmjAMo3WwUkAElNVH932CZ9kkgpFQ2dc19w2kzj0h/YZQ2k2l3QH20w7HSHDZKts8WG7mQx0MvuT85cMC9BaAr30f0JEsUy56StqXIhGw/yOw2cn1xkzrZ1fGsRvDFO/W3C8C+VgYinfF37L2T/OtrarjteQc+rUUqpGJLZs/rKAch32MglCiY/ai/WxzQj7h5tkH/q3KkGhOVdgLQJnvt4T7mGKs8fQtoneQjXL3f4lZojeFLZ5w+ZIOimwxQ6a+goaXZdxKMEnbwhUJ3UIMalDTZlIb+ykeYY6xb8nP0rGYi3G+eIMU7Vnu0n6lnVNQO0ok2oWCiSP/iDgYQEhB/myoq1OJwTCLSYH1wTrn0PLNVdCOmiRyhRPMfQGqaclZlGvm307LDj/I5VxJuX+1NarCbra5lOVuRL8xcA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(346002)(396003)(366004)(39860400002)(376002)(451199018)(4326008)(66946007)(41300700001)(66476007)(66556008)(8676002)(6666004)(8936002)(316002)(5660300002)(110136005)(6486002)(83380400001)(2906002)(6512007)(186003)(9686003)(26005)(478600001)(6506007)(86362001)(82960400001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TktqbzlpOUN4MDlJL1pUc0JVNmh3SWRVbXBYOHF3UktiTm8rZDhmRjl5dEFz?=
- =?utf-8?B?UjRjOXBnd212ZUpyTVBvVmszQ1NCcE1hWnRIMk9ybTJpd1o5eWJnK00yMWlL?=
- =?utf-8?B?Q1hsVDlpNXBldDk2aG4zZzZ1Tnd6NTFuajdwQnhQZGNZWXlLczlhSmt2THpt?=
- =?utf-8?B?ekNBNHp2Y3BObWV1SWJEeHVVZ29OVlhTTDh2SHVjUHFldTBxalBFaGhwTS92?=
- =?utf-8?B?WjJFc1V1TUpQK3VqdWtBOU5LYkk3dUhwdHF1bGQwRXkyLzJtcHlRYkRsbkhp?=
- =?utf-8?B?V2MvT2pXUEV0dkU5Q2ZuSmdEVTRBbC93RkJ3azRicUFJUGU5aXNjTS9FM0Qy?=
- =?utf-8?B?UlVQYVA2dlQ3SWtmd3hIVjlJVnVLQjVvN3BXS04rQ1hhWThnalh4SnhsS0Jx?=
- =?utf-8?B?YmtFaFBKeG5sajMzNE9ETmxSMTdRSzlweVoxWnFTSWlYblBXeDFwbURlOVlS?=
- =?utf-8?B?RjZ2dDdvdXRvaStOYVhmVlNpQ0NzOHhJWGE1SDJjcnZPOVBJL2FKVlVtRVRF?=
- =?utf-8?B?a0QxeW9rOHkxRE5QS2lna2E3WGxnenFuTDRHcGU2UGR5TlJwOEFqVUZ3cTdP?=
- =?utf-8?B?RkZCV3I5N29wRkoxNDRJUjhSRjNaMis0U2V2VlBFUmhueHJ4S3pnelk2WEha?=
- =?utf-8?B?MG5UQ01yTFFvekR3R3B3TDVhRnQxcHpIaVA2K1M2b0JsS1hiRWpadVZjNmlN?=
- =?utf-8?B?eWVHMnNna1p1bjBWeWh4RnNIV0FqaFhzbzhVeEtUK0Q3NlhOMjgzQ2dZa0FR?=
- =?utf-8?B?Zmd2WW9qSE5PME8xaWV4N0hqNFhTTllFWDhKb0tFWGRVcS83eStBd1R2TWxn?=
- =?utf-8?B?eGVrT1RZQkc1OW5FL2FkZnMzNmJ6QTl6UDMvT0d2SzF2bm9wMEtXR3hQeHVj?=
- =?utf-8?B?UTRUOEYzUmQ2ZTlzem5rM0JRRFJTZ3YzcG80Q0lzRUdVWlJONlZQZlcvRDBW?=
- =?utf-8?B?QzdlMjFBWTlwblNaQlkxb2tnTTRMaVdLZzFkUFdycmZNWWxpNjYzblBwNlBU?=
- =?utf-8?B?dDlmMjJLWnBvbTZQSjM5ajY2QVRRVkRBdk1WTlc1K1FZRTFKYjV0Zkdsa2Z1?=
- =?utf-8?B?SmpBWlNUYTF4OGpld0U4bmRwb01iMFI3Y1V3Q0toTjBHQXAxR3R0Vlg4NkZq?=
- =?utf-8?B?ZFcrdmNUT0hQQlFoNnRidTJ3cDl0bDZwWVRuaXJuL2w4aGM4bWh3bHhzb1Aw?=
- =?utf-8?B?ZGR5TDRiazJYMFlVN2NFSjk4T0lHdXRJQXIyai80QWI4bTVlb0x4VndkVVUx?=
- =?utf-8?B?VENVNjhiREdRNzZYNWVQeUkybUxBSE1yRVdBR1BVNTNyaGJmdDYzcElYa3lm?=
- =?utf-8?B?R1dsOHF4MFYvNkV5OW43ZmVlSFYwaGJuK1I1Y25CSDQxem5PMG1QeHhVK2Q3?=
- =?utf-8?B?QkFTTHJhQ1Vta0x1M2pncFcvdUJCWHgwWUpNZFBiU0Yvczd5UHVLRnpDdVlT?=
- =?utf-8?B?UEdrbFR0MDNXU3VYaENxOGVNODN4enMzWCtEdlhPS2ZjakI0ZmhSRXBoWE5t?=
- =?utf-8?B?R1I4RG92czYxTG9rbVhaelJNUUJPR3AyaUlCVFRLZVRLY3k0aDFEOFNxZDRp?=
- =?utf-8?B?Q2wwOGdMcHg2MUxWc2Fvd2RRTSsvM1kzcnhJT1lDMWRNRjh2UGgyeHY2dVJ1?=
- =?utf-8?B?YnFyaVZNd2xWejhLUDNFNHJ3VVFwNmh6bG9YQjQrSy9CMHord1NwRXk1anFC?=
- =?utf-8?B?QlovbGF5aXNvY0duVWhzNTZ6cWZTcWNvODhrOVpWcFRKRTVpakZKTnF2T0c4?=
- =?utf-8?B?am5IaVdZa1N2aHpiaFplVG9EdktXeDFIc2RiQ0VoQ0xrdFIzajRBTy9WOThV?=
- =?utf-8?B?Zm1aRllrNnJOdytpaFowdFNGY0krb01BeTdwditFQjlCZ3JRT1Q3czdSY0I4?=
- =?utf-8?B?TXg5Z2xIdmxaL2ZUL0kyRkM5bEI2Z3FWaGJtaklhRk5BeWJzbk5ITXNVSTlq?=
- =?utf-8?B?Tjhmemd5SUJ4dWsySGNraG5yWU1Galc4Smo5QWFjZ0diV24zaVk5TEFMSFpq?=
- =?utf-8?B?UEVrd1BMakpBaVo1Sm5odE5zSVZqRVdFbDVON0pEZWpacnFQRmJFVDdDL3dR?=
- =?utf-8?B?Z0EzMFpzL3UybDZETHZ1Zi9XaUJVWTJwejJwWGRJWHlPOFZaQVYyZVBoa0tn?=
- =?utf-8?B?OHdvalVhYlBEUjV0b2RqblVNMDY0dVdUTmRQQXVwelI2RlpocWo0WEtiaWRx?=
- =?utf-8?B?SEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e0296df-cd4c-4b67-8a62-08db030d72dd
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 22:00:50.3087
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dveYVl3PjZTBPZfCbntzkzd3BKm/K6Y32pTlvT3s/uxww/AySTPXnmJoa+GP5NPDADpSMyDQbQpa2HHJVLrb6FGQBF/cmJORB+ibR+YxItI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5022
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <202301291620.DxnDWLoW-lkp@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Shesha, Linux email expectations are to not top post, i.e. respond
-inline, like below:
+On Sun, 29 Jan 2023, kernel test robot wrote:
 
-Shesha Sreenivasamurthy wrote:
-> The re-configuration does not reset the device. It does re-program the PCIe
-> DVSEC for CXL Device register (Section 8.1.3 CXL 2.0 spec Pg 258), register
-> (DVSEC vendor ID 0x1E98, DCSEC ID 0x0).
-> 
-> 
-> 
-> “So you need to dynamically recreate the region, especially if your step 10
-> above resets the device.”
-> 
-> 
-> 
-> Do you mean the DAX region ?
+>BCC: lkp@intel.com
+>CC: oe-kbuild-all@lists.linux.dev
+>CC: Alison Schofield <alison.schofield@intel.com>
+>CC: Vishal Verma <vishal.l.verma@intel.com>
+>CC: Ira Weiny <ira.weiny@intel.com>
+>CC: Ben Widawsky <ben.widawsky@intel.com>
+>CC: Dan Williams <dan.j.williams@intel.com>
+>CC: linux-cxl@vger.kernel.org
+>TO: Davidlohr Bueso <dave@stgolabs.net>
+>CC: Dan Williams <dan.j.williams@intel.com>
+>CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>CC: Ira Weiny <ira.weiny@intel.com>
+>
+>tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git pending
+>head:   ace4b76d4ab70335cffb5a1c8450d3b34c16771a
+>commit: a49aa8141b657a7fd33d86f7bed3ca07567ab37a [13/21] cxl/mem: Wire up event interrupts
+>:::::: branch date: 4 hours ago
+>:::::: commit date: 2 days ago
+>config: microblaze-randconfig-c043-20230129 (https://download.01.org/0day-ci/archive/20230129/202301291620.DxnDWLoW-lkp@intel.com/config)
+>compiler: microblaze-linux-gcc (GCC) 12.1.0
+>
+>If you fix the issue, kindly add following tag where applicable
+>| Reported-by: kernel test robot <lkp@intel.com>
+>| Reported-by: Julia Lawall <julia.lawall@lip6.fr>
 
-No, I mean the CXL region.
+Thanks for reporting, and I'm adding more folks explicitly to the Cc.
 
-> If so, I can if the system stays up. After a few seconds the system
-> crashes. Can the crash be because of a mismatch between DVSEC
-> information with what kernel was informed by BIOS during boot (Some
-> ACPI tables ?)
+>
+>cocci warnings: (new ones prefixed by >>)
+>>> drivers/cxl/pci.c:511:8-33: WARNING: Threaded IRQ with no primary handler requested without IRQF_ONESHOT (unless it is nested IRQ)
 
-My concern is that the platform memory decode configuration is not
-prepared for the CXL device to claim more than what was originally
-programmed in the CXL DVSEC range registers. One of the platform
-firmware updates for CXL 2.0 was the creation of the CFMWS (CXL Fixed
-Memory Window Structure) in the ACPI CEDT (CXL Early Discovery Table).
-That structure indicates which platform address ranges decode to which
-CXL host bridges. Those windows are defined in platform specific
-registersi (not enumerated to the OS). If the window is only 8GB then
-the endpoint device can not decode more. You would need to reboot to get
-the BIOS to allocate more host address space for CXL.
+Considering MSIs are edge triggered interrupts, this should be benign.
 
-The expectation for newer platforms is that platform firmware define
-CFMWS such that there is spare capacity in the address map for the OS to
-dynmaically map more CXL.
+Thanks,
+Davidlohr
