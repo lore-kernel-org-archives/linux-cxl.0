@@ -2,123 +2,141 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255F5C54EED
-	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1792EC61D97
+	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 17:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237025AbjA3RCW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 30 Jan 2023 12:02:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
+        id S237565AbjA3ROn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 30 Jan 2023 12:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237028AbjA3RCV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 12:02:21 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6A4402CA
-        for <linux-cxl@vger.kernel.org>; Mon, 30 Jan 2023 09:02:15 -0800 (PST)
+        with ESMTP id S234878AbjA3ROm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 12:14:42 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2086.outbound.protection.outlook.com [40.107.95.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5524410B2
+        for <linux-cxl@vger.kernel.org>; Mon, 30 Jan 2023 09:14:40 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pm4nIRiXKuZXACTqB3MyYUn757rdPg6kIcbt7cmTdZamNwPgg4oKVfYgJowHu+5H/RbFbGgCxdWUs/0ALUMkZGlt3a4FPFMG7HKVbszz8/bidyYMKvuH4Lj8WnLmu+1kM04trIiMkPzo0tlW0ruO50FuyOXN8V+ZjqAZhpmGjmT6ASivXb1Sw7DbRlfEN/uodlHH5ia0tp9A9+Kaeg7qiKMLRXJ3fc3aRfYAgGc0YA1jRPxcrGKk69Rcld+RDZMEx42VpeCApp16ggTJ8u5+8FPf6XR5ojOEp2cI3zpLJ7XfgD5OlKEPhlEehU1am0803fKwhYMRMY6hbl5804/tJg==
+ b=TGh9psYAXqIGIH3AQTdnTRZzBVyuyPaUa9erfSegkJ9krzKZfdA30TkBFMf+h3M/v89ltgXOBQS08eWZjcCEfdldK7Mewis/7CS+nG1XHNg3ciX3kKJwdkZVNn3Lw9nt2Aa7rvcA23lTQoa6sPOC7kRs7k2WfHkMgw4jquiRZ9RxCvpphUGo8MTu4dGuuy2HhfrPCA9dlSuIXEMGphjvl3ol0epaIt5ZpK3WHuTnk5TG2D8YjvW/OgARWR0bi3hazWnze6ccH01UiY6cJOgFUjio5l4DWC9Sugiq/t/+f9MLIkZiYu9FsYASwarXEffueAkRklYHPUoqMdmIQ0hPsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hwTsmSJcQxSsA8cA0otB8g0YGbrUJNMTGuU91eUFIZ0=;
- b=k1spfhOAMbDnn3rWNtp2GFa7iV7f6ZB7F1Zn0gNB69STO4vSvXm1b5FK7woc27Wt1+7YjsBHO0ChEOrdTx58OJSy0LhHUmeaTWZw9TkUDyTdDj9uOkYfwv/jSIbhV46Ll08WMwngZuIsqfl3W1ZRqu1XGPOo9F76YbXUaoAnTiICHsBWXVVFT1YnEJI3hJ1wwH8q5YW5XDxboeVeoq1M8pm8CZNWUrsmeAmQ/Auhn6Uq+rPFyuxP1VaK5tDvb5/T8Akj9zLESz0wJPxpDKF9cGIUbiDm3GidtxjIqM4yFDlpDnRhlHm7CeRFUhV4pK4DtSjJBDc6Z2vAP7VbMcx5ZQ==
+ bh=arNRaUPZRomFx/eLzmPoXtsThJTfFy55D8hjGRS1yiE=;
+ b=RG7GQphOenuN+nVlHv+ipeGxg68lEadx91aBnrJClxyXPhBnA5w44AXjm65YjJzL7OagOFodZB5Z3wALy5K8RQNIG1ecAJlzS0oIv7SmonojpGnf69+SyrjCNetk+pQYwTaMf4LJa6KVoIWOocibWdg9s/prqu8engmEduYbd2pE/QL9ZrjuzC2itN8nwj3KVW5gJjsk+deG23mFw035bYNRC9+11g1FbHBF1lCVBg+kPTBJLvy5u7b2JEp3x8Tplh2djb4sy8OY5Ef2TvxvqykxJuljjbx9sF6lOSy1qLoYNDzY/Wu0lv+kJH9/v8XkY0lXUZvC6E4tMGA0XY43FA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
  dkim=pass header.d=memverge.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hwTsmSJcQxSsA8cA0otB8g0YGbrUJNMTGuU91eUFIZ0=;
- b=fVxu1dySxu7DF7D7elPHtm3gguIu0oFI5RBWIaHWMgLVLnGH9Pg7GIL0cSrJpCKMbBqUKGbhgHQwULXOp7py6u/y7BJIavF9qWyhLWjEIFl+MgSUZiKBnmxRpEhfMeIOg0XmqPmIEjJjFe/xD3znMn/oym+JpToRlXUuQfzyrM0=
+ bh=arNRaUPZRomFx/eLzmPoXtsThJTfFy55D8hjGRS1yiE=;
+ b=GTIPJhJxSzY3uftxbEy1XoQG7/JjlnhwbTdNVNrdCjUXYm6Vq3LHzZtAWh6cXHJ42QksxJvfo/iHQ6HZA6jN8yNS8B/27Ef6CaJG72nKWHgbXTsDLCTsmG/TeT1AAbRWcWcPeT/s+zp2SWcHwOGJ0ETAXvH4onmCl3pil2TXRrA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=memverge.com;
 Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
- by PH0PR17MB6530.namprd17.prod.outlook.com (2603:10b6:510:2a1::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.33; Mon, 30 Jan
- 2023 17:02:12 +0000
+ by DS0PR17MB6197.namprd17.prod.outlook.com (2603:10b6:8:d3::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6043.22; Mon, 30 Jan 2023 17:14:37 +0000
 Received: from BN6PR17MB3121.namprd17.prod.outlook.com
  ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
  ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.6043.028; Mon, 30 Jan 2023
- 17:02:12 +0000
-Date:   Mon, 30 Jan 2023 09:23:54 -0500
+ 17:14:37 +0000
+Date:   Mon, 30 Jan 2023 09:37:15 -0500
 From:   Gregory Price <gregory.price@memverge.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: Re: [GIT preview] for-6.3/cxl-ram-region
-Message-ID: <Y9fS+vJft+P0FYWQ@memverge.com>
-References: <63d21ce66e5c_ea22229446@dwillia2-xfh.jf.intel.com.notmuch>
- <63d21dbb62f2f_ea22229441@dwillia2-xfh.jf.intel.com.notmuch>
- <20230126185025.000016a0@huawei.com>
- <20230126193424.00005034@huawei.com>
+Cc:     Gregory Price <gourry.memverge@gmail.com>, qemu-devel@nongnu.org,
+        linux-cxl@vger.kernel.org, alison.schofield@intel.com,
+        dave@stgolabs.net, a.manzanares@samsung.com, bwidawsk@kernel.org,
+        hchkuo@avery-design.com.tw, cbrowy@avery-design.com,
+        ira.weiny@intel.com
+Subject: Re: [RFC v4 3/3] hw/cxl: Multi-Region CXL Type-3 Devices (Volatile
+ and Persistent)
+Message-ID: <Y9fWG2Owlqzkd244@memverge.com>
+References: <20221128150157.97724-1-gregory.price@memverge.com>
+ <20221128150157.97724-4-gregory.price@memverge.com>
+ <20230130132451.00002d5b@Huawei.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230126193424.00005034@huawei.com>
-X-ClientProxiedBy: BYAPR01CA0034.prod.exchangelabs.com (2603:10b6:a02:80::47)
- To BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+In-Reply-To: <20230130132451.00002d5b@Huawei.com>
+X-ClientProxiedBy: BYAPR08CA0023.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::36) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|PH0PR17MB6530:EE_
-X-MS-Office365-Filtering-Correlation-Id: d0a20975-8e33-48de-d0df-08db02e3bb3b
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|DS0PR17MB6197:EE_
+X-MS-Office365-Filtering-Correlation-Id: 836c208d-143d-418f-162c-08db02e576d6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UTLEP86iBngFBbPdpYb++T9VL18Ez/p/T54YmzXgb9oAFSaS2Ip5b6DdLnlEF789IoXCyCE8YYrjzzrZ1DUoR9jmrKnqZwFvOo6r1MyjOBtRXm5mkK3mpkt8z/5Pps+8V3+lJL7/hcUxNG2bHInNcKYl79vTwqXfuxRW5dkJrEN8ngC+Cw0rLRCefjW1YkdwsjkInwahwn650xFW2PEO2q6QhU4mVWMDali0qjSTCaYts2mbNgCRzTIDaKOk91uHDye4C4nY3LpCLRojRILUhDy6OpeP+CmXvXLdBVVB8uds33L8kblNX6BelUm+Xejj6OMjYdQpPGE9GtlOpxCLzbaZ6pGxAWHbWrD+noX95I4r9pYQEjMbPppv7WGk8ueMcvo1MDN5l3NnRhZkYbNsrfllSD8v/CvIRa6WEVW7iDc18QR3XHTD2xKRkwB4iobnWNOQ+b3LWc+D3Nemv9SfqydzzMiM/WBpiQZQ/QUSMpE01L71xQ05DuExmqB62f/MoZg7KeX90CvjKbrRYocr8dT46O7IrvkAe2hI48g284UgCy1oeFyZB2Ls7rd2qkJYp3QUd9kgO634rwFo4XlPvRqE+t/8+BQVg433bc2/NrDx7Cy5hrFY9Uvwo5TYVXiSnCBK0G2Khwhe6YOpIReJ7olvU0wj/c+68f+Jh1TNdEX4DCRTKBdwlIaZPrBQKtOi
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(396003)(136003)(39840400004)(376002)(346002)(451199018)(2906002)(6486002)(86362001)(966005)(478600001)(6666004)(41300700001)(38100700002)(36756003)(2616005)(6506007)(4744005)(66556008)(4326008)(6916009)(316002)(44832011)(66946007)(8936002)(5660300002)(8676002)(66476007)(26005)(6512007)(186003)(83380400001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: To7qAv4+6bTKbKSQjjAWrl7bZFyfLfDG+8+4scE8Vw8zPwcu4zrmLf/7jsIoAQ9muCW5Szp7sRwJFr4bpKeLyDbR1locTUhCTzsoGlXpMVZMQsu7Oa63N+P4lY0ejf1NulnBX2Fgtr84MwfABPGW2TMBGJec4botYsk/q3NTqr73CgLgSez6k/qzLpOmV5UtJgZxm/yv3ggpMdVx9yhW+2pCuSZUYd0PVTYDhRB0pLiEzfTCuCk5NZXy9o+tlKdfTqQ7+yZ4KztIpALlyWSfOFEQ0qlygAcNiz25kZzeQc7IQ13R4Wlw6BPj8CjFSa9jwX378gbANk03M84UyOEIvxDjbbOtUVlSsHa3RkkGDG1555BsRmq0l6n9RAlZPIz2OYf/cQRiRetHupQLylkPJO8no5a7lxaeyksJzA77WtlAjU4XfpXSiNR2zBESrEZL1EMsgP1NuWYc1hufCpTcXhoiff3B6psR2tr5s10uEzHR2WHVfWBFa6C3dZbpOOz0o0NCJPc9gB8cSCXSMrw88U2KOpje2th42Ffd5sO8Avnfeo14BzbZx0uK5mhTGEGfDh8vLHFtusId8GJKYWrC/Cy3LoFgNeqTyMPeaRLm6QNJKFhcY224CW0oAHsHwKeYTIugFNOs7c1aG/wI33CCMA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(39840400004)(396003)(346002)(366004)(136003)(451199018)(2906002)(44832011)(7416002)(86362001)(26005)(6486002)(6666004)(6506007)(5660300002)(66946007)(478600001)(8676002)(38100700002)(66556008)(41300700001)(66476007)(2616005)(6512007)(186003)(6916009)(316002)(8936002)(36756003)(4326008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?02CeO/1+miONbp2XsqvCkq+gjGuL5H7BD9fLsI60q6EGiFTB2WFPOEHfxHV5?=
- =?us-ascii?Q?DL8YW+vtfo4bSiyvRlwRR8XBe2Li2B0ghWgIYgFuU1TKO+r4rQUb5fstHx7P?=
- =?us-ascii?Q?KE7DQhXXKwp5kYMqDjBRuAjVqCQOxlUBOtin08CMhUwvMfEN8+RCezuHOqqb?=
- =?us-ascii?Q?V7bE71YWt/pxIKCDRRYvqrP/FLVxUecXB+xySVm5jCnrx+IxYWn84uLRgspE?=
- =?us-ascii?Q?GWorDaJCtIprYANcw+/hzdF608+mESGbvOPI1UT3fGo4I4D8vlkjj80XXdyj?=
- =?us-ascii?Q?Yi48gAoiAmCef8lfpxprg/8dXmu1oZXiCeBE43//BoZqQ2orTWPCjrEBdAVA?=
- =?us-ascii?Q?nTsjL7AEHNOvITwiYweQ5TmCBCkdHuBrlOHCW0xJ7Tav7V8HtNYpdPgU5B39?=
- =?us-ascii?Q?XlNxRSliVt9EHKFNSQDbUNSVKxJmy4oMRuwfAsKLzeC8NjtA86gl6smL0st0?=
- =?us-ascii?Q?yyc6TaD3Zd2M4ETe3Da6FZVPEg+o8BXEh1yHDqf1r7647Z3yq5S0D/YxHutG?=
- =?us-ascii?Q?/lYco4kkKaiMAIXKrFUDbzJHGEnjtrDZ9LGmnie0g3vwuLjN1qIiedduMs2E?=
- =?us-ascii?Q?AZ1Jxx1YwLX2J91YLfHpVwRVXfdKL2znX4SxaAf4tvYGSroH7lTZw3SByx9Y?=
- =?us-ascii?Q?gb0mX5r6ZrWeiRlgs1mC/7IaUcqrwY1TvTQrNrs27ZN0MF+yTcpSatPRPOat?=
- =?us-ascii?Q?nOAFKRYjW6dXoqCz0KhdLS1wu9QBMD5v72vVZLB34gAvIuFzZPYgDQe3EYxO?=
- =?us-ascii?Q?MSqa++1Bx1aUKL56yN9oajf65Ijir+bdrsXaW4ly/Z85DpumvId5wRZ0GOtz?=
- =?us-ascii?Q?HZMTk29zNjsZHeLdUyNZbaJMJ8KCDRJafXCzc7aKo1kriFmwy62skEHJGt80?=
- =?us-ascii?Q?bGvH44/6CFN5u+u/NIILFVbyCN4bgjAE8X0Wjqi7ShxoB9LzUL1kEPYrYFOr?=
- =?us-ascii?Q?X2n3fWmmf5yPo1jAmH9TM1kPQvFGW/RBwdJQOuL81H1/jF/34KU1VfQ/OZMd?=
- =?us-ascii?Q?IBrnXyOUrZIojtrtFXZAYnYD3YmTes5VWsPt2YxkVtVySuPQq0rIH7qZSbp0?=
- =?us-ascii?Q?6qMBM8PmNML2dE18r/f0s+MJuqemWq+kyWfnjClS8Ve0+Ox4IPaZAqgk8bZY?=
- =?us-ascii?Q?vjKQb0yEhpmOtqMMI9RMAzZsGXjXYPGkZcAfDGOy4g7xscOsRaqK/E2lwOJq?=
- =?us-ascii?Q?6g8uL7y4DaT8/t8eINYF/tpycZwbcrmyPuMenw9oa57nOvhRLguj4blYlAT8?=
- =?us-ascii?Q?B4lVcQz2CMre8I+QIfRZgmFIlHEvy0pChVVdxNRi47/+ftn+5mPjBa707j4e?=
- =?us-ascii?Q?5M//q5dUn+/m27pY1o/ZkVEfJ8gEL3wJyyKUd3gAhLITJs6hBY84ZE/KLvFT?=
- =?us-ascii?Q?WEvAI/rkJB3Utad5rPEXw6MiubYpzmQQqOqq3dDHEbJA/Q0p4NOyKgSUZk6S?=
- =?us-ascii?Q?ZEWnx67LJ0Zz+iZlO9L8n0t7yyhZZRZtBoggwDIZR8abtBsPFjJKP3mkL0WJ?=
- =?us-ascii?Q?q07cuIaRJ/q8P23UBsTW2aZ+SFly0hgZbkxgj2K8hHvIIZ1gnrHb5TBnYM6R?=
- =?us-ascii?Q?+4PWJzuLYEOOtdyAr73gRHeIWE768xx1IAanFLm0wdwMTUoavTr55B76Vn3q?=
- =?us-ascii?Q?hw=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?99dLINNtH7QMQ+8FUHO5sWSMAWIYJDG3UxGTM+ZfHOzo0Y8MmxHKRlDS5yLX?=
+ =?us-ascii?Q?WyIOpcnSFF9r/vwwhGeqB9E8q70iBDB2Hjl8pTp1+i5Nhf1Wr9leJ8d+llRE?=
+ =?us-ascii?Q?rzvqhofWd5Ho/vBeRFimsWb9Z0S8XO9pLGwq/djNghxOse8u/NEPfaXUXknh?=
+ =?us-ascii?Q?sEESq70vJohorOQj8eAIULwXvdrZX3VWJLnXrk40jg95o525eRtzLDsjoHkn?=
+ =?us-ascii?Q?Hk8oihEVVjkRkRXeM0L05bEx7+U9Uz3IjJuXl44NdUL+usEyGhVK+UtRY4qK?=
+ =?us-ascii?Q?RwV5jel914mr+w9Ze3Bjg7UB4AX3wJ6LjWIDChk4YBlPJKnqZUbTdPA3dPsi?=
+ =?us-ascii?Q?wT3cQDAjhYUhp15nVXopj1jni3NBCWLnUvG87/kCsaLAWYtBFyRGkbRKy9Ab?=
+ =?us-ascii?Q?zcEXPDSP2kNduxP9TVN+7mFo235QvV19o4KhlOvJO5+tGYLFcK4dxAXJhTjw?=
+ =?us-ascii?Q?9/JsNIzHKj3wL/OUrDizXB6vmnKA6eJ/N/tDYpB6AYi0uRG7lmZCqbYlvk2V?=
+ =?us-ascii?Q?DQ4qNZQxASQUcvvqEJataUnKrpt7x5BX8AJbPgzw4H2pZ0Mc5+Z1KBB6VBZ6?=
+ =?us-ascii?Q?EOfwd/w/5mpFBZLTNgZIEI0EWPc5oOZVpd6Hw3koUSG0FdTO/LYqyxBacpHB?=
+ =?us-ascii?Q?5fng4/PCqYubbz0SGG2+I7Zs35Ce6Vc42fNJQWoQKI5ug/WDjrDK242lw8Ht?=
+ =?us-ascii?Q?tj/Ry8q58UfXqxSm9ERDCgLxAbBZwa3lKMPmlYqz5PvYByAOwhuhwoS1kOlz?=
+ =?us-ascii?Q?hLYaC5h5h59Cqk8sVeV7RYgviGG4NtJERO2mXGhIvV7IMKilDw4y+Fs45Itl?=
+ =?us-ascii?Q?N8Q7t6wBOZJYuiEOz/uBqAvC6HSiVMq6HpgfLXKOWDjLXQ7ygy+V5oL+f8r/?=
+ =?us-ascii?Q?9UXKYwoPmdYc+KU9ZsbXYa7MlYzevoiji8Aab0HXa2xxGmDa0qSYW5eCQ1Zv?=
+ =?us-ascii?Q?tLU+eHhawItNmD7hnkNdkM/IWmL4MVwvrIjE5FJXAE/TXuoJclLDAY5bW18D?=
+ =?us-ascii?Q?H/zdsM3smgvPeCA4mD5lI3jb5RAZqbP9GX+q4ehIaoBnycvt6MMBTmyvBmfX?=
+ =?us-ascii?Q?4xxovWC2zOV+ymxPDFQabmEaEOkv6rFHhxdghDhMTcUrcdLgRV+aWHoNgk46?=
+ =?us-ascii?Q?BqZOrTasB4x2OhE+FGWAdTiDQXbtsZoC5DAU7gqvz5vGWnMk5cJ7zGVRdfhy?=
+ =?us-ascii?Q?QI+rjqo67nqCLqxYYFelCZy172Zr+S8gWjl5CgxdxtbeQ9u4EhjYBFz+fGPV?=
+ =?us-ascii?Q?70CSbN8kmGyl3Pmh+fjYhvolhR+cGRUgIKPJF0WsCdRPujxDTv2EkLOBT0ae?=
+ =?us-ascii?Q?VHMnvU4GY2f1YAJ4MGKVe+qjmEDuYUk5Ym/t38TxdCEa2uNptIv5hZpIHlPf?=
+ =?us-ascii?Q?BtXxYLG7Xuxpi8mliZfSCKV56Eq5GQd06hvko9fHXovfc+IY2t8XrDIuOKv5?=
+ =?us-ascii?Q?QlResXJlfOyffh/SihsV9uoK8eT1OOb7eKZhfLfN/PixhNnjBwgITOdvo8dl?=
+ =?us-ascii?Q?DIHkIAu/vFwSO8bf+p1zbIJPHxbcPUCmJGrU5Fu+K11Bx/OjSkJ6in7ydoxH?=
+ =?us-ascii?Q?xAP3v0+zNoczEgNT6qPh6srPpp0WQ4o96z6b+6cfybr4UkzEoQiJsSOMBrwQ?=
+ =?us-ascii?Q?Mg=3D=3D?=
 X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0a20975-8e33-48de-d0df-08db02e3bb3b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 836c208d-143d-418f-162c-08db02e576d6
 X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 17:02:12.7960
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 17:14:36.9752
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W0UvkpJpPjqjzHaKrNPASpIcgd5DNxQEsNCIALFLXZ/+j1bDk1I/NScqIj6Q0baLB7286JF1JxDuRxnH6O1f1cEP+ah1lfq6WWMjxwOFUFY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR17MB6530
+X-MS-Exchange-CrossTenant-UserPrincipalName: dpuYKV/KGoIFrp9XUAEyObnIY7NV81Hxv08j9wbyGbNBmofCHjbWUNz4UnBkwsFtukc3cZAgesHWzPa9mcLO9Gs2kvvK6hi0UbOcLG+nLPk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR17MB6197
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 07:34:24PM +0000, Jonathan Cameron wrote:
-> Looks like decoders are programmed correctly as I can read and write from
-> the HPA using devmem2.
+On Mon, Jan 30, 2023 at 01:24:51PM +0000, Jonathan Cameron wrote:
 > 
-> This is against http://gitlab.com/jic23/qemu cxl-2023-01-26 which has been
+> > diff --git a/tests/qtest/cxl-test.c b/tests/qtest/cxl-test.c
+> > index e59ba22387..6893f54e28 100644
+> > --- a/tests/qtest/cxl-test.c
+> > +++ b/tests/qtest/cxl-test.c
+> > @@ -40,32 +40,46 @@
+> >    "-device cxl-rp,id=rp2,bus=cxl.1,chassis=0,slot=2 " \
+> >    "-device cxl-rp,id=rp3,bus=cxl.1,chassis=0,slot=3 "
+> >  
+> > -#define QEMU_T3D \
+> > +#define QEMU_T3D_DEPRECATED \
+> >    "-object memory-backend-file,id=cxl-mem0,mem-path=%s,size=256M " \
+> > -  "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M "    \
+> > +  "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M " \
+> >    "-device cxl-type3,bus=rp0,memdev=cxl-mem0,lsa=lsa0,id=cxl-pmem0 "
+> >  
+> > +#define QEMU_T3D_PMEM \
+> > +  "-object memory-backend-file,id=m0,mem-path=%s,size=256M " \
+> > +  "-object memory-backend-file,id=lsa0,mem-path=%s,size=256M " \
+> > +  "-device cxl-type3,bus=rp0,persistent-memdev=cxl-m0,lsa=lsa0,id=pmem0 "
+> naming mismatch. I've fixed up with mem0 as the device name. 
+> The naming isn't totally consistent so I may tweak this some more before
+> sending for upstream.
 > 
+>
 
-Johnathan, can you explain how you're accessing the memory? I don't
-quite follow.
-
-Extra Notes
-1) Tested against Jonathan's QEMU 01-26 branch above
-2) Tested w/ the Linux preview branch rebased on top of the DOE fixes
-   that were causing other bugs.
+ack
