@@ -2,263 +2,250 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6972C636CD
-	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 20:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2715C54EAA
+	for <linux-cxl@archiver.kernel.org>; Mon, 30 Jan 2023 20:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235030AbjA3UKQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 30 Jan 2023 15:10:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
+        id S229736AbjA3UcI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 30 Jan 2023 15:32:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230444AbjA3UKP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 15:10:15 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C322FCDB
-        for <linux-cxl@vger.kernel.org>; Mon, 30 Jan 2023 12:10:13 -0800 (PST)
+        with ESMTP id S229546AbjA3UcH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 30 Jan 2023 15:32:07 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E9F3586;
+        Mon, 30 Jan 2023 12:32:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675109413; x=1706645413;
+  t=1675110726; x=1706646726;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=HwA2yIkoXD4L47BtZB8GRvXtdM6KvVEJpCAWg/wXnrQ=;
-  b=MhTSplHGGRX9W/jaghRE6UAuJIFITbOOEGoQHMFr4eXYlnXH0FB0mC6G
-   iTBrPw6n4iixKVuwRCLExmNIpZxb8uASDGNdb2/R+vMfNuHvOGVkHuPob
-   3H8H/Oi013kID/doitRYynzKmgHAfkoIvMbapLXpKSTppgjG/UztT45MK
-   Tds8eq6i612zFd04ocRH/KAh4UPtlE+3p0unzU0KAAGc81rv3uML8Rpth
-   dGuDAMEbOlJMnUBAZzrdjjIGCcTcFPzBNkUxT5Vqk5MCwG7FxugTvnGKj
-   D0FDZagenU8WKvymDEKaCqOGifk9qT5hR8q7Hc+NhdXw7ulmiC9k0y3/5
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="307315879"
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=Q6BsgQoL05nE8fGPWD0o8Tv32N81pwOo2gnXB2++Nzc=;
+  b=VDomGFV8v3fy21LHtvqT02xs23RzHYz37Z+zxVxu42puWIEqrM8rb0U/
+   rdgtGw2xC2RT6f6wIGcbNsgUNSepREfHf4Oq23UWaYhXxpEwenKZJC/bH
+   U3DDB23B+QZP93GcPlykwMo2+WHpDozQMw66azLOGWslgVSI5pxO+Tgnc
+   C1Ec9da7tW/K8nwRQQ4kWJBvQlJP4y+0fsBzGcyESBe/8LmeLSrRWILWp
+   rZMYN//xuPDPLj4KGjsd3h2rx9DMOgS0M+Hg7Pz8ZsbhaB42JaY88Q+gr
+   DzntZE+hnLDqi21sV14xFwAb2sJHo7C8GYv3RGSTQ4QaKiDGT/5ew9yKA
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="326329497"
 X-IronPort-AV: E=Sophos;i="5.97,259,1669104000"; 
-   d="scan'208";a="307315879"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 12:10:13 -0800
+   d="scan'208";a="326329497"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 12:31:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="752962199"
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="838092864"
 X-IronPort-AV: E=Sophos;i="5.97,259,1669104000"; 
-   d="scan'208";a="752962199"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Jan 2023 12:10:13 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 30 Jan 2023 12:10:12 -0800
+   d="scan'208";a="838092864"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga005.jf.intel.com with ESMTP; 30 Jan 2023 12:31:51 -0800
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 30 Jan 2023 12:10:12 -0800
+ 15.1.2507.16; Mon, 30 Jan 2023 12:31:51 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 30 Jan 2023 12:31:50 -0800
 Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
  orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 30 Jan 2023 12:10:12 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
+ 15.1.2507.16 via Frontend Transport; Mon, 30 Jan 2023 12:31:50 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
  by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 30 Jan 2023 12:10:12 -0800
+ 15.1.2507.16; Mon, 30 Jan 2023 12:31:49 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F784kKw+AUtyh49I0098xV8wJsoNDwLzhk+eUDod4CQvZdQ0EMPBacSm4zHOrjhT3E292hiLWWmJbYntvdyA6tXFkQB9bH7a1MoxBVh//GzJzTclJBPADIBeHQbf3UPj8GuvaB0E7gRzaX7khGkNI4DpyU9iKHdyILiKCrIzMKVFCPnXyopszGF+A9kKHsObtsSv6MZa4xLn5EKcqbsY+hstYNfbgpd4eiGdGL+eclA9F9jLiz+6mhfGc63+aoKIRYdxtqzLWv/jjuTHNns3ev+GCEhazE2sHveg8u2snOnPnZyz7o8FwVFXfCXJUl+mya2+IWohhp/TJbvYSwZ0tw==
+ b=cftXHfH05zzGECjN57Fy9OHs5EAJGWbkMqQmNzTVbEL7VQJwP8I8WNVeRw86WHTQL1DEzM4ghoqiUpglh1uxhexR5dxW+GsWLWjjbgWRRZKYOmUDRm1bX21IPZW8fV3SIumeuQRbwIHYpydJwSh8ReIFJzbGT9vWru5q4KILAIgOQ8k6tkaF1TmUI7gbBmbYKbsopMMYQNLjgyopNVNtYhewlYLwP8GvRHBcgaOCJSwwmb/F9bvI2C82qm/6Qu5liFCHPm8uTwenJEN3byJgFeUYrwydslL1BBj9rXPr7GdbE7iwr+XwN/C+clqbRyXfn8FwLczxfdUUNrySegVhSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hYJNv/djS0WeUrWT1nmYi9tmoiPW1w0Me4PYG5B/vhY=;
- b=UUAT+Q7hmXH+kaiNR4UH81/a3LQO+JyJXqUjd4OK+TegwgryLO8Vv+7CwY8WJDcgO9qV881rXgHvtztwi3NbuVuuaj6SPqwfT9ZVhunDZLO2k6Zja+1/JgFxPjre2GzpLs7SP7mPxWkic3Ylh5hoMhBoWKNKLrybIJM6ewaTo239vsd3FfrXjQB44GVYGWMttShpQFWU3tkb58ATZAcsLmVKFlVbJ3/ywXJDfWLNw+KesWNjOhYvu8TbJHNqE0pKpqTmGAnUDtscajs1VlSuWr/Si4NpFxycYtlkxnQoAnAL9G7uZCvoaXy2D/QE0MvzesvXpMahMPH9KI+qDHPAaw==
+ bh=MLzlcALtEMkuKCswE6NFOwQSrn+rJK1a4UKfz9eYTMs=;
+ b=nywQRhmjTSI6xe4YERK6htrPGwGa4yegem/zMb4k4q3dGvsqBjUBKNSBnoGwdZU3o9d0AtpGAmFpwKKC97kUNPuKqNdXpAfzjkw4QPIg/I/iuvh8dLlOM1P+hSj+lRkZLYHPW/E3DSdpxwbgrHb9XM74HluCNqYe/cvr+lx3mighFMYX2RRMv86GQhL1ZjSTwOltC7eG2LEjdh17T2lMQk2CyF/rj3ncsQG+HhLroOQI9wsc+fyyYUKB1k9OIcWfjVjd9OQ4bUyyQq3pfroMFNwscTbbTNKd9DUohKkU47su5nYQxIrWQ+NVn62N4jHWZLirTOsX9N07S8fenPXfMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY5PR11MB6283.namprd11.prod.outlook.com (2603:10b6:930:21::19) with
+ by SA0PR11MB4557.namprd11.prod.outlook.com (2603:10b6:806:96::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
- 2023 20:10:10 +0000
+ 2023 20:31:46 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6043.022; Mon, 30 Jan 2023
- 20:10:10 +0000
-Date:   Mon, 30 Jan 2023 12:10:08 -0800
+ 20:31:46 +0000
+Date:   Mon, 30 Jan 2023 12:31:43 -0800
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
+To:     Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [GIT preview] for-6.3/cxl-ram-region
-Message-ID: <63d8242084087_3a36e529420@dwillia2-xfh.jf.intel.com.notmuch>
-References: <63d21ce66e5c_ea22229446@dwillia2-xfh.jf.intel.com.notmuch>
- <63d21dbb62f2f_ea22229441@dwillia2-xfh.jf.intel.com.notmuch>
- <20230126185025.000016a0@huawei.com>
- <20230126193424.00005034@huawei.com>
- <Y9fRVu+yLza4d5Vt@memverge.com>
-Content-Type: text/plain; charset="us-ascii"
+CC:     Dan Williams <dan.j.williams@intel.com>
+Subject: Re: Hot ADD using CXL1.1 host
+Message-ID: <63d8292f70918_ea22229465@dwillia2-xfh.jf.intel.com.notmuch>
+References: <DM6PR18MB28441B6B542B2A59CF39BF6DAFCE9@DM6PR18MB2844.namprd18.prod.outlook.com>
+ <DM6PR18MB2844505042F7EDCF69CE08DBAFD39@DM6PR18MB2844.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <Y9fRVu+yLza4d5Vt@memverge.com>
-X-ClientProxiedBy: BY5PR03CA0028.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::38) To PH8PR11MB8107.namprd11.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6PR18MB2844505042F7EDCF69CE08DBAFD39@DM6PR18MB2844.namprd18.prod.outlook.com>
+X-ClientProxiedBy: SJ0PR05CA0062.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::7) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6283:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb5efa70-6f71-47e6-b9ec-08db02fdfd5e
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA0PR11MB4557:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae9a8b7f-16f4-4ccb-8fbe-08db03010172
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KBlldiR34NRnOq1UxuJ+R/SK5LmkF6GEgDrrDulIcmCnPlbV4JWHlA3Mn58CLFdRbZyx4ykQx4q8m8ScpRXbSHiTmKAUUNYfmjw1vRuX/9XpKBBdb5GSEHP4phWmHa7HzcR2M72zz3JlK10P+4ZAy1eloyVAMlvI4ofxlFIvs9RKUjwe+l1aegHknJl4iMNK6qneKFnUEI4fpW92e4wgLxzYz5VnMzkcGO7VcAJGBtfIwyf5vDtCSZLTFvAl6O+ohp4JwsPR2VbPk5yg92WD87Wi+wE8Wsvt3IQtAR3/xBl1DI8ZVfp9FMXQys9ZL6jsAsS6WLKuS3YmCxF+GfKJLJtbpHzQsZmAPn7wpOSPHnw+Krz4ifKXqIvjvrpWiLwb8WF5zstAMm7Wb4AjOW11W86Vy5+LSLyrNTjTcRvkrp3/o6kLPyGZ0UfX+lZddOfjJXbnqXiUKvYXbeJ4z5VZx4Qtkotw1YkImmKIWsOusaIJ/ztuSGoZWRBMnUmAfky4+Y2bUu3MSEeECb4UKIh8J2XcxSebPKSDlkrlg3rjdxCIHdaJWNMNANp5Zr0e3bFgu/zeUNDQhUXaMJVHRxTlETc0vZnVJK0W0HO7rBg5mrmoBfQkR/CB/TTM+7DPElK4a/We0HMFlOXBxRqcgcd60w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(396003)(346002)(39860400002)(136003)(376002)(451199018)(8936002)(4326008)(41300700001)(66556008)(66946007)(8676002)(66476007)(5660300002)(83380400001)(6506007)(6486002)(478600001)(110136005)(316002)(26005)(6512007)(9686003)(186003)(38100700002)(86362001)(2906002)(82960400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: hx9rWM4mxNElJI4FUwsnQJlgRAE64oVVorbWoIkZYPcv1cRF1YJqDLPYKygQaANGRJ3DYOxGYkPykaApiw5SV/5Ioy93n2OuefXK7c9/Sr2os6zaw6W5GKwNv9iv2zukT+ewWkd7Hntp3Eu0+saHZq8qW/tIYpwxY8BLro9YiHmaIcaVN/RWjTkXA0K0ryPqpo62SRhLaGewG1kiZZEzyIaXJ4rVU/FkXV8/zVqWlpkA9m5WlDIa55PLmtw0trf9w+cYZLTzoDtCdqw7LvA4Y+JfoJLR4jU96J/2Is47L7Fp+FGfn9ixY0E2MYFAiCcE3Ud9tuscKPAzZ49Xj7llHyxsiX3C+6J0RzF94jyVkPizwCTNFR7gR3s0svW0dXeqmfiE+gWgucZjrU/WKK778QnpZ54gXQxYMhXNj9UVfQB5Z/rjriV+JlIZn/zM6CCZC5aE9ZxXji9FiGNHmbupn8i/kVJ18EY7P68g0yxrNsQULrCETEvITjEE7xOSDZLbOATKDNvI4r9D5Onn+DzuBZScRdkp/s0z6qYUOl3a+UAdJvaQRLB7okzd/qnAwIx8jgVkpb+4a1XqLZ7g/8H3DH40TDe/0zBoMC4g6Ugu4yCTK6NgAoBCk7mcRVMInyVh6aSGZbob/lCUT4JxXyiQP/gZtXZuLSJeU9NrhXeKLiQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(136003)(396003)(39860400002)(376002)(346002)(451199018)(2906002)(316002)(82960400001)(186003)(26005)(6512007)(5660300002)(6506007)(53546011)(110136005)(966005)(9686003)(6666004)(38100700002)(107886003)(6486002)(83380400001)(86362001)(478600001)(4326008)(8676002)(66556008)(66476007)(8936002)(66946007)(41300700001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nW2P1CAOan2rwf6ECo5thpvedGUb5zIZORgI80UElnP9mtAaHusxMWFriOFK?=
- =?us-ascii?Q?h6xIitDIuogdLYBDeaduY8C2fGBv02OIrCCeDA4HvebcnS/SFWu9Ek2eHFU8?=
- =?us-ascii?Q?oGw1H6JYBjHoJIv7jWje+sKHM4qyp8Vcj2P9GCJnu+aPCiR5JQ0oCH3uWN8e?=
- =?us-ascii?Q?Tx37If/4f2KkYB6NlW/6k1FtkFeKLxFEdYJJe88ItXVoheudm6+4/WbOrQRe?=
- =?us-ascii?Q?fc1clrvDrbT9p4wQGnPMtgKbLT1G9pbr5gKZOqyPeD1V2OEx2vWwhZWXJhOU?=
- =?us-ascii?Q?tN2HN8F2hglv2+x42ORDetGv2yi0+LoqFvfCDTMaLsH8LUvqv1dzBFs356xi?=
- =?us-ascii?Q?uZ9IZ4UXpBO+obBIuAMXqZYZR6kiFmslueDWzFeoLPrBsX8ni88/DWGUjR8/?=
- =?us-ascii?Q?KTMt+rdyzHaBlOzRkjp6NFAAWO4mqILKikUM6vaMJLIlppxHfhO4N2ePkLs4?=
- =?us-ascii?Q?/p6pQLEMUmgRIho++YxFs9ENtobJ/e9F+cGv5CqlFjvj3AAcizOtVI6O6t8v?=
- =?us-ascii?Q?KNPEKKIQH9iqcqUsW6abILMgqHWXLHlaokkbyMqD42XpSQIGwui89oO2rVMy?=
- =?us-ascii?Q?New+7TtTunbbBQ9R6z6Dulx3LIwqAoB/NUFoNMrL7qNMamMfbPOXux2ZZWGV?=
- =?us-ascii?Q?uWznSNAB3xIUDKYjqh90ezF6oOPQbVgzm83Sh/3JM9d2IsRUBFpiQfZjtk43?=
- =?us-ascii?Q?5EiKIjyO8ws5haf7wWcCofuYxCCzjevgbP7Pu1pkiuHV5lnW0ki4V93l+ZKm?=
- =?us-ascii?Q?u6uQ8m4UaezBXuK4di/ScFZ3OVaeKTF6fu1ml0/ghjgmurO+8WEdzs4kpKYS?=
- =?us-ascii?Q?BLihCYMxVCMWhwT5SQf5dnjzWiq0M9FU2k5YIWOyMmy2bz7YCjlNpnqr3EQw?=
- =?us-ascii?Q?MINPjhVXBUQpJVNKKJ52ggcOqjDL4hTEFZusY1xDEZ0bbaX9KIDmGkju9kPG?=
- =?us-ascii?Q?2OL9LdpxzYFBGAifGNU//9r/CRPjPftGC+vErsEkQTvPzV956xNeUOVIfTWL?=
- =?us-ascii?Q?u4lKms90eI676fIsoe18SojHuJ95XQClheevfexWTc19CLzJ83jBJpKrDbc9?=
- =?us-ascii?Q?5JcbQkTRD3p8agL4bA85Sw1J8GXzbaqKtgdun13qL1ZVKiZjwhwSnyWqRRn6?=
- =?us-ascii?Q?fX5eNsoLYd5gW1EO4acySmaHoiOQ6R6enOgWQN4HxmRw2JX3hd0lqfvE2O4M?=
- =?us-ascii?Q?k582+BhNzDTnNk3QO0b3l0Tge0xbPleTFWUMf9tCxrS3Eb0JCFaVGn2lf/bE?=
- =?us-ascii?Q?1VaozI2hfdeha0QCtUzlmzvXNMpcRlPTKbQTrk60jIu7CrGoABgNzKP1fqTn?=
- =?us-ascii?Q?QliKHT5vsEkV4skTeETCF0N3s/imDTy3IYrFMwY4Aod8jHjJaXnLS61PqqF5?=
- =?us-ascii?Q?Kzkm7IKd+rYRur7007KDSXyAe42gLjwwH+zgDjSVOfzIDsOmn/QbS6Q3/KAz?=
- =?us-ascii?Q?TaEhcWucju2XgOG/RNTHC/LyTajFKQF0ph0o2put3ux2AWECd8CdKPNQIlWT?=
- =?us-ascii?Q?BMG6t3B6Kcx7ejOLRfNOUBJOaHY1l0iMyGt1csofUbUqggsIGmJUsBfAdMKq?=
- =?us-ascii?Q?sek2t6M/9QKiD8fwc/FkTK9tVg60u9o3pOeKajS9y/ulkxBlYJPOrO5gTEc1?=
- =?us-ascii?Q?8g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb5efa70-6f71-47e6-b9ec-08db02fdfd5e
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UU9SblpMZmhnb1RmK2UxbjFaWVpyUmV3VFZBV0NQc2NPR0ZKVUdtWldNbnpr?=
+ =?utf-8?B?T09xcWM0T0poTUNWNjFiNDFMbGNQSWh2dUg1NyttUkVjKytuUUUyS2RjTTZU?=
+ =?utf-8?B?ZE4wZDM0YU8rQUJ4L2tZcXRlZ3diNkZ2Um04VzhnYTJlYWVxWWdQcWk4L3Ux?=
+ =?utf-8?B?ODRlRDdkaWorSDdHdzBCeUZ4cjRrT0hiM3FBSjNZQ1VJYk5pZ3dFRkxvSW5T?=
+ =?utf-8?B?WUptNWZwMEk1OExHcnBYY2dQZ1lDZ1FkdXdDZllKc0t0Q0FOb0NVSFdmT1Uy?=
+ =?utf-8?B?amV2a3plLzNwQUVZaERzbGRaTFQ4K1UwMm5aTE5hb0RqbkVSMGNEdXkvZVc3?=
+ =?utf-8?B?NkxUNXZJUmVHeE9RaEZnTGFaM2hEa3NxREw3dnZiZDZLQXJXUGxTUTJmN3Bz?=
+ =?utf-8?B?aU1LVm9oVEQ4akJ4UGZNWVRTYlFMUHZidlZkeFo3NWlLVDEwUGxpcVd5YUl4?=
+ =?utf-8?B?UmFhaHhHYUVWeThJUnMxWGEvZzNSSDJjbXNkZnFQZGE0Zjk5VTJzRHRPQWta?=
+ =?utf-8?B?aFdadnRmL2xmY0RUU1N5aG1vRVRxUzA0Z0NZTWt4NG5XNUlaOHYxRDFSeHlJ?=
+ =?utf-8?B?UVhwaWlLN1ZHTElSZUlVaysvNjBZWWk1cVZwd3lwVEk3RHhMMUZ0amtGeS9m?=
+ =?utf-8?B?aXhkeHBSVlYzbU11K2h0SElqMmNPNU5pZkhwUzNvTHdxSzA3d2VScjY5bFJq?=
+ =?utf-8?B?SkU3d0Evd0lsVHZUbjR3Q3k2cTkyQktrbHk4Rnh5VXh5SWc0WmFXZ3hURk1L?=
+ =?utf-8?B?TUE0L0hxbTV6dmMzb3crcWxBbmFZM0NMS05qWnhXeGZ0eGZ2MjRpR0gxeU1W?=
+ =?utf-8?B?Q0JvVmJsUEJ1QzNUcHM3Z1BqQm9SKzVmNEFUL3FtenhSRUs5cTRiVGFPOGV0?=
+ =?utf-8?B?clhUb0FqWWNDc1ZSVFJiZGdnR0t3d3Y2RjRnUXJnQjZVQXNycFpJVnJRQjFG?=
+ =?utf-8?B?REdjWEJtWStxamx3a1dOdElTbkFybjhtZkp5dTM2MERtdUJYWEdDQVNZeFNR?=
+ =?utf-8?B?UnhLZ0JBWStIM3NNdHB6cCtrUVpIeWJhcTFvcmd0aTVibDh1THJDeXhmeWk1?=
+ =?utf-8?B?V3ZDa013cW4zdHlUKy94d3J5VHRmaTlTTU1qaHBFOWxweE1LRVBTdWY5NS83?=
+ =?utf-8?B?Yk1Wd2szbFFuS3h1dW9UY0oyVmJvbllNNStXUnhwbzBRVG0wRnJSY3o5dWQ2?=
+ =?utf-8?B?MGJVTENTa0xFWjNVOWt3ZmRyU1NjMUdnTXowTzlUb3hUZmtlNW1sclFwSWJh?=
+ =?utf-8?B?MG1EUURheENHR2FQc242RVlrT1VxeFI2c3UzcE03YWRRU2QzT0FmNEVvcUdJ?=
+ =?utf-8?B?UzVOa0swWDZ4RHBsYncvQ3AxNW5UNXhBOWIwV0traXNCVmtKVTA1TEYzS2FI?=
+ =?utf-8?B?NWxOcDJrdHc1ektWVy9FeVhKaVJkM3hFQ1h1ZHNtQWJxNndQaERKa1BqUmdo?=
+ =?utf-8?B?YmNFRXBJMlZLYVlkWGY3YXkwcytoOFBpdzdqT0Jwc0hjRTNsa256QWdwalVL?=
+ =?utf-8?B?bllRODRrNEdHNE1VNW5aUlNSN3hVQkhVU2g5cDY3d3B2SXozYXlXVUxmRHBS?=
+ =?utf-8?B?d2lRZTdGTFZsa1FzcEhrZ3RDdHhYOE5IdXg2OTFMdGM5RlQ0L1VjU01paEVk?=
+ =?utf-8?B?Q0xNMUU3SVlTVHV0ZXRuRi80V0grN0tTNzczWjBFc0JleU15STU1SGQzc0VE?=
+ =?utf-8?B?UWhOcFVFeHNmbHJWM1l3YkgwYmpKS1I2cDhKMFBiR0lCeUp5L29LTk5YR1h4?=
+ =?utf-8?B?ck5UMlR2RWlaVWJuTFZKUGMxQUlyOXNUckswbkVKR3BJd1hvMUZzNDhIckFs?=
+ =?utf-8?B?UVhMWVpuT2RCN3B4RHBhekRYQU4rcm52Vnp1VXlJekpiVE1Fd0ljWEl0aHho?=
+ =?utf-8?B?QU14djRZZk5pTjVjc3RVL0d0ZWF4YVhPeG54WlVkVFQxb293TlhQN0E0ZEhu?=
+ =?utf-8?B?a2p5OXFnUFRROXFVTXZVeEZaU3FDc242cmdMRjEvanVLSS95V1ZsaWdaYzN5?=
+ =?utf-8?B?N21xaS94V3dNWTBKbU5rQUpBc3VwSkl3K09DYUkveUcwUVFPd3pYdlJ5ZVBp?=
+ =?utf-8?B?Wm9qQ2pwSUJ4NzRlbU1TVUNLRHN2cCtLc3Zpb3ZxekZEM09mNnhLTGErOGZv?=
+ =?utf-8?B?bFhoZUtMU0Y2Z2Z6K21naUJXcEo4ZllpYWtUdlBieVhxYjJUU3loVFl3cUp3?=
+ =?utf-8?B?ZlE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae9a8b7f-16f4-4ccb-8fbe-08db03010172
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 20:10:10.5444
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 20:31:45.8755
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q9Bau4k1n/buzasddVW/+FCcHmXI/8sNfPGifukbvgwyzyVZ5xWqjCwhV2whhveTWRen5Fq8I0n2F2YUXDWllhbytykwxynh8lYdioi4F2s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6283
+X-MS-Exchange-CrossTenant-UserPrincipalName: HN88whqGKLz2wy8GiDhK10GhP+nsWJ3zDi1fdqZN7NvXnPKMPCs/YMN0rqxyOFqNRGN5bWS53aB1WRQ6e4Z21bQHsOYFCxXv3pdJi+GgtGw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4557
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Gregory Price wrote:
-[..]
-> I found the same results.
-> 
-> Reference command and config for list readers:
-> 
-> sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
-> -drive file=/var/lib/libvirt/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
-> -m 2G,slots=4,maxmem=4G \
-> -smp 4 \
-> -machine type=q35,accel=kvm,cxl=on \
-> -enable-kvm \
-> -nographic \
-> -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
-> -object memory-backend-ram,id=mem0,size=1G,share=on \
-> -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
-> -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
-> 
-> 
-> echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_region
-> echo 1 > /sys/bus/cxl/devices/region0/interleave_ways
-> echo 256 > /sys/bus/cxl/devices/region0/interleave_granularity
-> echo 0x40000000 > /sys/bus/cxl/devices/region0/size
-> echo mem0 > /sys/bus/cxl/devices/region0/target0
-> 
-> Not sure if bug/missing feature, but after attaching a device to the
-> target, you get no output when reading target0
-> 
-> ```
-> [root@fedora ~]# cat /sys/bus/cxl/devices/region0/target0
-> 
-> [root@fedora ~]#
+[ add linux-cxl@vger.kernel.org ]
 
-Hmm, did you not get:
+Hi Shesha, I missed this earlier because it does not appear in my
+"linux-cxl" filter. In general, mail to linux-kernel does not get great
+response from domain-specific experts, so I recommend going to the
+domain specific list like linux-cxl@ in this. Comments below:
 
-"-bash: echo: write error: Invalid argument"
-
-...at that step? Because targetX expects an endpoint decoder, not a
-memdev.
-
-
-> ```
+Shesha Bhushan Sreenivasamurthy wrote:
+> From: Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
+> Date: Thursday, January 26, 2023 at 6:05 PM
+> To: linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> Subject: Hot ADD using CXL1.1 host
+> Hi All,
 > 
-> Would be nice for the sake of easier topology reporting if either this
-> reported the configured target or we added a link to the targets into
-> the directory.
+> In our setup, the host is a CXL1.1 running fedora 6.1 kernel. This is
+> connected to a Marvell CXL 2.0 Type-3 memory pooling device. The goal
+> for me is to dynamically change the memory configuration without
+> rebooting the host or the memory device.
 > 
-> But this looks good to be so far, excited to see the devdax patch, I
-> think i can whip up a sample DCD device (for command testing and proof
-> of concept) pretty quickly after this.
-> 
-> 
-> One question re: auto-online of the devdax hookup - is the intent for
-> auto-online to follow /sys/devices/system/memory/auto_online_blocks
-> settings or should we consider controlling auto-online more granularly?
-> 
-> It's a bit of a catch-22 if we follow auto_online_blocks:
->   1) for local memory expanders, if off, this is annoying
-> 	2) for statically configured remote-pools (remote expanders)
->      this is annoying for the same reason
-> 	3) for early DCD's (multi-headed expander, no-switch), the pattern
-> 	   / expectation i'm seeing is that the device expects hosts to see all
-> 		 memory blocks when the device is hooked up, and then expects hosts
-> 		 to "play nice" by only onlining blocks that have been allocated.
-> 		 (there is some device-side exclusion features to enforce security).
-> 
-> Basically early DCD's will look like remote expanders with some
-> exclusivity controls (configured via the DCD commands).
-> 
-> So with the pattern above, lets say you have a 1TB pool attached to 4
-> hosts.  Each host would produce the following commands:
-> 
-> echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_region
-> echo 1 > /sys/bus/cxl/devices/region0/interleave_ways
-> echo 256 > /sys/bus/cxl/devices/region0/interleave_granularity
-> echo 0x10000000000 > /sys/bus/cxl/devices/region0/size
-> echo mem0 > /sys/bus/cxl/devices/region0/target0
-
-> and mem0 would get 4096 memory# blocks (presumably under region/devdax?)
-
-At 1T of size, mem0 would be hosting 4294967296 256-byte blocks.
-
-> A provisioning command would be sent via the device interface
-> 
-> ioctl(DCD(N blocks)) -> /sys/bus/cxl/devices/mem0/dev 
-> return: DCD return structure with extents[blocks[a,b,c],...]
-
-In the DCD case the CXL-region would be instantiated ahead of time and
-associated with a DAX-region. Upon each capacity addition event a new
-devdax instance would appear in that region.
-
-> Then the final action would be
-> echo online > /sys/bus/cxl/devices/region0/devdax/memory[a,b,c...]
-
-Something like that, yes.
-
-> or online_moveable, or probably some other special zone to make sure
-> the memory is not used by the kernel (so it can be later released)
+> The approach that I am currently taking is to use dax. I configured
+> the memory device to export 8G and the host sees 8G. I am successful
+> to convert the memory from ‘devdax’ to ‘system-ram’ mode so that
+> general application can use it. At this time, I modify the memory on
+> our memory device to export 16G and host crashes in few mins. The
+> steps I followed are the following
 > 
 > 
-> So to me, it feels like we might want more granular auto-online control,
-> but I don't know how possible that is.
+>   1.  Configure my memory device to export 8G
+>   2.  Boot host. BIOS populates SRAT table with size 8G.
+>   3.  daxctl list --regions --devices -u // Shows 8G
+>   4.  sudo daxctl reconfigure-device --mode=system-ram dax0.0 -f
+>   5.  Use memory in my application
 
-Yes, I think it also needs to coordinate with the existing udev rules
-and policy around auto-onlining new memory blocks.
+Ok up to this point, no interaction with the CXL enabling. This is just
+the default kernel behavior with a BIOS that applies the EFI_MEMORY_SP
+attribute to an address range.
 
-> Note: This is me relaying what I've seen/heard from some device vendors
-> in terms of what they think the control scheme will be, so if something
-> is wildly off-base, it would be good to address the expectations.
+>   6.  ---- RECONFIGURATION PART ----
+>   7.  sudo daxctl offline-memory dax0.0
+>   8.  sudo daxctl destroy-device  dax0.0 -f // All numa node memory mappings are gone
+>   9.  sudo sh -c "echo 1 > /sys/bus/pci/devices/0000\:38\:00.0/remove"
+
+Note that this only takes care of the software side, the CXL hardware /
+decoder side is not touched.
+
+>   10. Reconfigure memory device to be 16G
+
+Does this reset the device?
+
+>   11. sudo sh -c "echo 1 > /sys/bus/pci/rescan"
+>      *   CXL DEVSEC (Cap ID 0x23, DVSEC VendorID 0x1E98, DVSEC-ID: 0x0) shows size to be 16G 😊
+>   12. daxctl list --regions --devices -u
+>      *   This still shows 8G ☹
+
+Yes, because there is currently no hookup between the CXL subsystem and
+device-dax, but I am working on that:
+
+https://lore.kernel.org/linux-cxl/63d21ce66e5c_ea22229446@dwillia2-xfh.jf.intel.com.notmuch/
+
+>   13. System crashes
 > 
-> 
-> Either way: This is awesome, thank you for sharing the preview Dan.
+> There is a mismatch between what DXL is seeing and what PCI DVSEC is
+> saying. Looks like I am missing some step so that old 8G information
+> is removed from the system. Can someone advise ?
 
-Thanks for testing!
+So you need to dynamically recreate the region, especially if your step
+10 above resets the device.
+
+> Now, I can try the following
+> 
+>   1.  Power off memory device
+>   2.  Power on and boot my host
+>   3.  Power on memory device
+>   4.  Configure the memory device to have 8G
+>   5.  Follow the above 5-12 commands
+> 
+> With this, the question I have is – will the host recognize the PCI
+> device as CXL device and run cxl.mem protocol or will it just see it
+> as PCIe device ? Note that the host is CXL1.1.
+
+Does your device support the HDM decoder capability? As it stands the
+driver expects to use HDM decoders for region creation rather than CXL
+DVSEC range registers.
+
+My expectation is that once the ram-region creation work is done you
+should be able to do something like:
+
+cxl disable-region $region
+cxl disable-memdev $memdev
+modprobe -r cxl_pci
+<reconfigure device>
+modprobe cxl_pci
+cxl create-region ...
+
+...and be back up and running with a new region with the update size.
