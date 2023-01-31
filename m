@@ -2,101 +2,116 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891BFC636CC
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 Jan 2023 16:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4A9C636CC
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 Jan 2023 16:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231475AbjAaQY2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 31 Jan 2023 11:24:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34094 "EHLO
+        id S229480AbjAaQiv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 31 Jan 2023 11:38:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231819AbjAaQYV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 Jan 2023 11:24:21 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 376BA53B2C
-        for <linux-cxl@vger.kernel.org>; Tue, 31 Jan 2023 08:24:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675182260; x=1706718260;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=q/KpNOR7Y95KYazjgeBm6f/ekZW+NYfDAWqBApCvizs=;
-  b=fz0lGzeMFkwR5/OUKlcpxfvV7mOYxKzbif+MPmzizKXLjN7JRD9z7FTU
-   hhqK7B1zPXwVMeMH6s8g5LP4b3/PblcHNiwDno29VSrFAAtDfYvC6yNG3
-   69vsQRyI4JuFdVVaNp/zcmXvAhUa9KZDRiornHu75VV69kTb/W0Mo5Fvr
-   wocooqS/tH8fNrSNFvWWnQ0xcFuBZrKtiZDWCZ5X4EkEFXlp+M18nsXUS
-   NpARFKTZa5amOEvuRQz0k+AOBWIMGcxp/StD/KUV7UNf40Fzx8lalwxlQ
-   koRR2ZLtCgSuMT/FQr9jRXXcDYCCKTeJKBpEZLKOJstXi3phoEcBR8ene
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="311504608"
-X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
-   d="scan'208";a="311504608"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 08:24:19 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="728006917"
-X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
-   d="scan'208";a="728006917"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.177.33]) ([10.213.177.33])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 08:24:18 -0800
-Message-ID: <8239547a-aabe-29ca-5cec-ee49db68973b@intel.com>
-Date:   Tue, 31 Jan 2023 09:24:18 -0700
+        with ESMTP id S230215AbjAaQiu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 Jan 2023 11:38:50 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F09F166FB
+        for <linux-cxl@vger.kernel.org>; Tue, 31 Jan 2023 08:38:47 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P5rLv6vgvz6J9Pc;
+        Wed,  1 Feb 2023 00:37:43 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 31 Jan 2023 16:38:44 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>
+Subject: [PATCH 0/2] hw/mem: CXL Type-3 Volatile Memory Support
+Date:   Tue, 31 Jan 2023 16:38:45 +0000
+Message-ID: <20230131163847.23025-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v2 2/4] cxl/uapi: Add warning on CXL command enum
-Content-Language: en-US
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Robert Richter <rrichter@amd.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        linux-cxl@vger.kernel.org
-References: <20221222-cxl-misc-v2-0-60403cc37257@intel.com>
- <20221222-cxl-misc-v2-2-60403cc37257@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221222-cxl-misc-v2-2-60403cc37257@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Now we have some kernel code to test this against (and it looks good)
+I'd like to propose this series for upstream following 3 other series
+already proposed for inclusion:
 
+a) https://lore.kernel.org/linux-cxl/20230130143705.11758-1-Jonathan.Cameron@huawei.com/
+   [PATCH v3 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream
+b) https://lore.kernel.org/linux-cxl/20230130155251.3430-1-Jonathan.Cameron@huawei.com/
+   [PATCH v3 0/8] hw/cxl: RAS error emulation and injection
+c) https://lore.kernel.org/linux-cxl/20230125152703.9928-1-Jonathan.Cameron@huawei.com/
+   [PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
 
-On 1/27/23 5:09 PM, Ira Weiny wrote:
-> The CXL command enum is exported to user space and must maintain
-> backwards compatibility.
-> 
-> Add comment that new defines must be added to the end of the list.
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Changes since RFC V4 called out in individual patches.
+ - Some minor fixes.
+ - Refactors to simplify patch / resulting code as relevant.
+ - Update the bios-tables-test for CXL to use non deprecated interfaces.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Whilst the more significant changes have been discussed on list
+Gregory, please take a look at these and check your are happy with
+my tweaks.
 
-> 
-> ---
-> Changes for v2:
-> 	Pick up tag
-> ---
->   include/uapi/linux/cxl_mem.h | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index c71021a2a9ed..459a3f7f764b 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -19,6 +19,10 @@
->   #define CXL_MEM_QUERY_COMMANDS _IOR(0xCE, 1, struct cxl_mem_query_commands)
->   #define CXL_MEM_SEND_COMMAND _IOWR(0xCE, 2, struct cxl_send_command)
->   
-> +/*
-> + * NOTE: New defines must be added to the end of the list to preserve
-> + * compatibility because this enum is exported to user space.
-> + */
->   #define CXL_CMDS                                                          \
->   	___C(INVALID, "Invalid Command"),                                 \
->   	___C(IDENTIFY, "Identify Command"),                               \
-> 
+Kernel support used to test this:
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.3/cxl-ram-region
+
+Previous cover letter updated to reflect pulling one patch out
+as a precursor cleanup in set (a) above.
+
+This patches provides 2 features to the CXL Type-3 Device:
+    1) Volatile Memory Region Support
+    2) Multi-Region support (1 Volatile, 1 Persistent)
+
+Summary of Changes per-commit:
+1) Whitespace updates to docs and tests
+2) Refactor CDAT DSMAS Initialization for multi-region initialization
+   Multi-Region and Volatile Memory support for CXL Type-3 Devices
+   Test and Documentation updates
+
+The final patch in this series makes 6 major changes to the type-3
+device in order to implement multi-region and volatile region support
+    1) The HostMemoryBackend [hostmem] has been replaced by two
+       [hostvmem] and [hostpmem] to store volatile and persistent memory
+       respectively
+    2) The single AddressSpace has been replaced by two AddressSpaces
+       [hostvmem_as] and [hostpmem_as] to map respective memdevs.
+    3) Each memory region size and total region are stored separately
+    4) The CDAT and DVSEC memory map entries have been updated:
+       a) if vmem is present, vmem is mapped at DPA(0)
+       b) if pmem is present
+          i)  and vmem is present, pmem is mapped at DPA(vmem->size)
+          ii) else, pmem is mapped at DPA(0)
+       c) partitioning of pmem is not supported in this patch set but
+          has been discussed and this design should suffice.
+    5) Read/Write functions have been updated to access AddressSpaces
+       according to the mapping described in #4.  Access to the
+       persistent address space is calculated by (dpa-vmem_len)
+    6) cxl-mailbox has been updated to report the respective size of
+       volatile and persistent memory regions
+
+Gregory Price (2):
+  tests/qtest/cxl-test: whitespace, line ending cleanup
+  hw/cxl: Multi-Region CXL Type-3 Devices (Volatile and Persistent)
+
+ docs/system/devices/cxl.rst    |  49 ++++--
+ hw/cxl/cxl-mailbox-utils.c     |  26 +--
+ hw/mem/cxl_type3.c             | 300 +++++++++++++++++++++++++--------
+ include/hw/cxl/cxl_device.h    |  11 +-
+ tests/qtest/bios-tables-test.c |   8 +-
+ tests/qtest/cxl-test.c         | 146 +++++++++++-----
+ 6 files changed, 398 insertions(+), 142 deletions(-)
+
+-- 
+2.37.2
+
