@@ -2,218 +2,111 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0252C38142
-	for <linux-cxl@archiver.kernel.org>; Tue, 31 Jan 2023 14:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0467C38142
+	for <linux-cxl@archiver.kernel.org>; Tue, 31 Jan 2023 15:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232279AbjAaO6A (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 31 Jan 2023 09:58:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56768 "EHLO
+        id S233114AbjAaPW1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 31 Jan 2023 10:22:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232361AbjAaO5l (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 Jan 2023 09:57:41 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD38F521C0
-        for <linux-cxl@vger.kernel.org>; Tue, 31 Jan 2023 06:57:33 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P5p2P35bDz6J6Pj;
-        Tue, 31 Jan 2023 22:53:17 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 31 Jan
- 2023 14:57:31 +0000
-Date:   Tue, 31 Jan 2023 14:57:30 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        with ESMTP id S233112AbjAaPWN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 31 Jan 2023 10:22:13 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B42353B08;
+        Tue, 31 Jan 2023 07:20:11 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id l4-20020a17090a850400b0023013402671so2694749pjn.5;
+        Tue, 31 Jan 2023 07:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:cc:date:message-id:subject:mime-version:from
+         :content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6BINpfzI37FmubXDbCicBUzweI9/UjZf3V5c6wKLnds=;
+        b=krZoGmaRnqVDyYJ7XU3vWJMH5kbybAFhCjzRQWk2kZB3VeCDx4Xx3tV3n1yiWUHOOr
+         814/eA/liKoE1pS5VaqQ2sLDkvLOfp1nTpzx+4CUBaTUnW1qotfNkAAAOza0bMOMeEHz
+         ZPXq+YD8U4JJgakjxzDLVxvxb+hA/9x3MIg5y8Jmj0zgzbk1gUowjb1Vx7LY2eGj5DvN
+         19dAYrbtdssUXndbwOYk7f26EDrQZ0+DeLT6fTxjpkQEC1b0frmc7H96mt+lgJ2Ya/1B
+         Kc7d9/oN70IleBIqdDSHq6WwgPAkouxyxxAoY3tGqALvQx6jgbK1gNlnv8xMnm+TcIuJ
+         iRZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:cc:date:message-id:subject:mime-version:from
+         :content-transfer-encoding:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6BINpfzI37FmubXDbCicBUzweI9/UjZf3V5c6wKLnds=;
+        b=PYN6WNi8zStVUdzFMVt4FcQM/Hvj0Ac4lXTpC3KNukYjR05TSzkomY4cFiwToxQgPc
+         ze8HeaE4P42sRREBnHBlcFb7zupgL0vbhtCW/nd5rM+EDOBNaG7SOjn3QHnCWrDgpQ+n
+         80ZG1keCysy8FjATIHFX3A+BXRXPDaOty77BD8qNSKozY7XpmAK9GNkjAVXE2SAdWU9K
+         +IuRoqvz1v9AFvcdKziFjYYDqNdhcIS1kxIviCILCe+efxb5Oj2Y4inB5eVjYrzs30xC
+         J4LGm5G1RJLN5VnDnpEjoRmShMC5h8Qr9uPNMhsMt0dUXv1WpBepjYQyyRgzMutsDvrF
+         a96Q==
+X-Gm-Message-State: AO0yUKUk4t8g/RZBVW9cYh1OTnirVEtPtpFkfWlO1UCUKlwwGE73RAzn
+        D1e+zHP/AIa4/pbow/y9VijgGiifLLM=
+X-Google-Smtp-Source: AK7set80uUmFSGOZLMp0wOxAk4gMm5CvMCBTAUlLTfe2BVHOM9OrrqM29suibFMPqWRrfrVH6wqnTg==
+X-Received: by 2002:a17:902:da89:b0:194:6f3b:3aa1 with SMTP id j9-20020a170902da8900b001946f3b3aa1mr15438191plx.55.1675178410502;
+        Tue, 31 Jan 2023 07:20:10 -0800 (PST)
+Received: from smtpclient.apple ([24.6.25.249])
+        by smtp.gmail.com with ESMTPSA id f8-20020a170902ce8800b0018725c2fc46sm9874385plg.303.2023.01.31.07.20.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Jan 2023 07:20:09 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Shesha Sreenivasamurthy <sheshas@gmail.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: Hot ADD using CXL1.1 host
+Message-Id: <0D3A81E2-C99A-491D-AB66-FC6005E38667@gmail.com>
+Date:   Tue, 31 Jan 2023 07:19:58 -0800
+Cc:     linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "Robert Richter" <rrichter@amd.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 3/4] cxl/uapi: Only return valid commands from
- cxl_query_cmd()
-Message-ID: <20230131145730.00000c23@Huawei.com>
-In-Reply-To: <63d81dc17dcd0_3a36e5294db@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221222-cxl-misc-v2-0-60403cc37257@intel.com>
-        <20221222-cxl-misc-v2-3-60403cc37257@intel.com>
-        <63d483332ff46_3a36e52942c@dwillia2-xfh.jf.intel.com.notmuch>
-        <20230130150633.00005cd2@huawei.com>
-        <63d81dc17dcd0_3a36e5294db@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-Mailer: iPhone Mail (20B110)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 30 Jan 2023 11:42:57 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+=EF=BB=BF
 
-> Jonathan Cameron wrote:
-> > On Fri, 27 Jan 2023 18:06:43 -0800
-> > Dan Williams <dan.j.williams@intel.com> wrote:
-> >   
-> > > Ira Weiny wrote:  
-> > > > It was pointed out that commands not supported by the device or excluded
-> > > > by the kernel were being returned in cxl_query_cmd().[1]
-> > > > 
-> > > > While libcxl correctly handles failing commands, it is more efficient to
-> > > > not issue an invalid command in the first place.
-> > > > 
-> > > > Exclude both kernel exclusive and disabled commands from the list of
-> > > > commands returned by cxl_query_cmd().
-> > > > 
-> > > > [1] https://lore.kernel.org/all/63b4ec4e37cc1_5178e2941d@dwillia2-xfh.jf.intel.com.notmuch/
-> > > > 
-> > > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > > 
-> > > > ---
-> > > > Changes for v2:
-> > > > 	New patch
-> > > > ---
-> > > >  drivers/cxl/core/mbox.c | 35 ++++++++++++++++++++++++++---------
-> > > >  1 file changed, 26 insertions(+), 9 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > > index b03fba212799..a1618b7f01e5 100644
-> > > > --- a/drivers/cxl/core/mbox.c
-> > > > +++ b/drivers/cxl/core/mbox.c
-> > > > @@ -326,12 +326,27 @@ static int cxl_to_mem_cmd_raw(struct cxl_mem_command *mem_cmd,
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +/* Return 0 if the cmd id is available for userspace */
-> > > > +static int cxl_cmd_id_user(__u32 id, struct cxl_dev_state *cxlds)
-> > > > +{
-> > > > +	/* Check that the command is enabled for hardware */
-> > > > +	if (!test_bit(id, cxlds->enabled_cmds))
-> > > > +		return -ENOTTY;
-> > > > +
-> > > > +	/* Check that the command is not claimed for exclusive kernel use */
-> > > > +	if (test_bit(id, cxlds->exclusive_cmds))
-> > > > +		return -EBUSY;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
-> > > >  			  const struct cxl_send_command *send_cmd,
-> > > >  			  struct cxl_dev_state *cxlds)
-> > > >  {
-> > > >  	struct cxl_mem_command *c = &cxl_mem_commands[send_cmd->id];
-> > > >  	const struct cxl_command_info *info = &c->info;
-> > > > +	int rc;
-> > > >  
-> > > >  	if (send_cmd->flags & ~CXL_MEM_COMMAND_FLAG_MASK)
-> > > >  		return -EINVAL;
-> > > > @@ -342,13 +357,9 @@ static int cxl_to_mem_cmd(struct cxl_mem_command *mem_cmd,
-> > > >  	if (send_cmd->in.rsvd || send_cmd->out.rsvd)
-> > > >  		return -EINVAL;
-> > > >  
-> > > > -	/* Check that the command is enabled for hardware */
-> > > > -	if (!test_bit(info->id, cxlds->enabled_cmds))
-> > > > -		return -ENOTTY;
-> > > > -
-> > > > -	/* Check that the command is not claimed for exclusive kernel use */
-> > > > -	if (test_bit(info->id, cxlds->exclusive_cmds))
-> > > > -		return -EBUSY;
-> > > > +	rc = cxl_cmd_id_user(info->id, cxlds);
-> > > > +	if (rc)
-> > > > +		return rc;
-> > > >  
-> > > >  	/* Check the input buffer is the expected size */
-> > > >  	if ((info->size_in != CXL_VARIABLE_PAYLOAD) &&
-> > > > @@ -446,9 +457,15 @@ int cxl_query_cmd(struct cxl_memdev *cxlmd,
-> > > >  	 */
-> > > >  	cxl_for_each_cmd(cmd) {
-> > > >  		const struct cxl_command_info *info = &cmd->info;
-> > > > +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> > > > +		int rc;
-> > > >  
-> > > > -		if (copy_to_user(&q->commands[j++], info, sizeof(*info)))
-> > > > -			return -EFAULT;
-> > > > +		rc = cxl_cmd_id_user(info->id, cxlds);
-> > > > +		if (!rc) {
-> > > > +			if (copy_to_user(&q->commands[j++], info,
-> > > > +					 sizeof(*info)))
-> > > > +				return -EFAULT;
-> > > > +		}    
-> > > 
-> > > I like where this is going, but I think it is still useful to return all
-> > > the commands even if they are not enabled or currently exclusive,
-> > > especially since that expectation has already shipped.
-> > > 
-> > > I also think it is a bug that this command passes kernel internal flags
-> > > like CXL_CMD_FLAG_FORCE_ENABLE. So let's declare new flags in
-> > > include/uapi/linux/cxl_mem.h starting at BIT(1) and do something like:
-> > >   
-> > 
-> > So this is OK in that we are just adding more info in the flags
-> > field so backwards compatibility is better maintained than simply hiding
-> > commands.
-> >   
-> > > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> > > index c71021a2a9ed..1ba0e12fd410 100644
-> > > --- a/include/uapi/linux/cxl_mem.h
-> > > +++ b/include/uapi/linux/cxl_mem.h
-> > > @@ -87,8 +87,10 @@ struct cxl_command_info {
-> > >         __u32 id;
-> > >  
-> > >         __u32 flags;
-> > > -#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(0, 0)
-> > > -
-> > > +#define CXL_MEM_COMMAND_FLAG_MASK GENMASK(2, 1)
-> > > +#define CXL_MEM_COMMAND_FLAG_RESERVED BIT(0)  
-> > 
-> > Good to add a comment on this flag.  I've been staring at it an can't
-> > figure out what it was ever for...  
-> 
-> Oh, I just noticed that the kernel internal CXL_CMD_FLAG_FORCE_ENABLE
-> was being blindly copied out to userspace where it has no meaning. So
-> any new flags need to come after that one that is already burned.
-> 
-> > > +#define CXL_MEM_COMMAND_FLAG_ENABLED BIT(1)  
-> > 
-> > ENABLED isn't the clearest naming... Perhaps _AVAILABLE_TO_USER
-> > or something like that would be easier?  
-> 
-> Yes... but it is unavailable to the user when it is temporarily reserved
-> by the kernel in the next flag indication.
-> >   
-> > > +#define CXL_MEM_COMMAND_FLAG_EXCLUSIVE BIT(2)  
-> > What does EXCLUSIVE mean to a userspace caller?  EXCLUSIVE to whom?
-> > 
-> > Other than bikeshedding this looks good to me.  
-> 
-> How about USER_ENABLED and KERNEL_RESERVED? With some docs:
-> 
-> /*
->  * Older kernels leaked an internal flag at this bit position, that flag
->  * is not relevant to userspace. Newer kernels set it to zero.
->  */
-> #define CXL_MEM_COMMAND_FLAG_RESERVED BIT(0)
-> 
-> /*
->  * The given command id is supported by the driver and is supported by a
->  * related opcode on the device.
->  */
-> #define CXL_MEM_COMMAND_FLAG_USER_ENABLED BIT(1)
-> 
-> /*
->  * Requests with the given command id will terminate with EBUSY as the
->  * kernel actively owns management of the given resource. For example,
->  * the label-storage-area can not be written while the kernel is
->  * actively managing that space.
->  */
-> #define CXL_MEM_COMMAND_FLAG_KERNEL_RESERVED BIT(2)
+On Mon, Jan 30, 2023 at 2:00 PM Dan Williams <dan.j.williams@intel.com> wrot=
+e:
+>=20
+> Hi Shesha, Linux email expectations are to not top post, i.e. respond
+> inline, like below:
+>=20
+> Shesha Sreenivasamurthy wrote:
+>> The re-configuration does not reset the device. It does re-program the PC=
+Ie
+>> DVSEC for CXL Device register (Section 8.1.3 CXL 2.0 spec Pg 258), regist=
+er
+>> (DVSEC vendor ID 0x1E98, DCSEC ID 0x0).
+>> =E2=80=9CSo you need to dynamically recreate the region, especially if yo=
+ur step 10
+>> above resets the device.=E2=80=9D
+>> Do you mean the DAX region ?
+>=20
+> No, I mean the CXL region.
+>=20
+>> If so, I can if the system stays up. After a few seconds the system
+>> crashes. Can the crash be because of a mismatch between DVSEC
+>> information with what kernel was informed by BIOS during boot (Some
+>> ACPI tables ?)
+>=20
+> My concern is that the platform memory decode configuration is not
+> prepared for the CXL device to claim more than what was originally
+> programmed in the CXL DVSEC range registers. One of the platform
+> firmware updates for CXL 2.0 was the creation of the CFMWS (CXL Fixed
+> Memory Window Structure) in the ACPI CEDT (CXL Early Discovery Table).
+> That structure indicates which platform address ranges decode to which
+> CXL host bridges. Those windows are defined in platform specific
+> registersi (not enumerated to the OS). If the window is only 8GB then
+> the endpoint device can not decode more. You would need to reboot to get
+> the BIOS to allocate more host address space for CXL.
+>=20
+> The expectation for newer platforms is that platform firmware define
+> CFMWS such that there is spare capacity in the address map for the OS to
+> dynmaically map more CXL.
 
-LGTM
-
-
+There seems to be some instability in using DAX. When the system is given al=
+l the device memory using efi=3Dnosoftreserve, the stressapptest (https://gi=
+thub.com/stressapptest/stressapptest) runs for an extended period of time. H=
+owever, when the system is booted without efi=3Dnosoftreserve, and assigned t=
+he special purpose memory to system-ram using daxctl, the system crashes aft=
+er some time (20-30 mins). Is there any known instabilities when using DAX?
