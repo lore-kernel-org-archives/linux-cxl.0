@@ -2,85 +2,128 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9EBC05027
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Feb 2023 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2276C05027
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Feb 2023 16:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232973AbjBAQLH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Feb 2023 11:11:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
+        id S229722AbjBAQYr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Feb 2023 11:24:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232418AbjBAQLG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Feb 2023 11:11:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2E414497
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Feb 2023 08:10:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675267815;
+        with ESMTP id S229615AbjBAQYq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Feb 2023 11:24:46 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFEADBCB;
+        Wed,  1 Feb 2023 08:24:43 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 35FD37E1092;
+        Wed,  1 Feb 2023 16:24:42 +0000 (UTC)
+Received: from pdx1-sub0-mail-a221.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 93E7F7E1833;
+        Wed,  1 Feb 2023 16:24:41 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1675268681; a=rsa-sha256;
+        cv=none;
+        b=k5Hl/+1VqHnQE5h6iaeLNKlyabU9PxObDnT+CZPFyWg/t2djrSj3aMZEdSqjhUjISgrFog
+        AwnKgscHNeevmlP859kTIIIErn0JtbFdEwSr0yvMvyRQpTztkd0RzPRjxtiz8kQDZTZofC
+        qHcv+semoMd/lsS9hGJblLctlufvVPZZpj64pnk1zr86Roh4tdNJxm1Gv/sO3BtsgeAtQ2
+        nNh1tmWt6R8nOMSaV/7N5PjLeSSsGjM1Xd9jLHiiN42N6yfWFnvQdar7yYC9uqg0ZxIUB7
+        +EKqOpyJEt/qwIEKakBcfQ7+RQTJ/B6gFnCiB4nJNT0DsvVV4XQr5FMDGrk7lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1675268681;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wOTNJx5WI6Wit4VB+7pbs9T4NqXqlhP40cuIIK7nTCg=;
-        b=R7RQ6wxn2oprRRVmETYrC45hhNhpvDK5FOwlL19bfrsMD5HeshH7tO6N9wFJgZd75ifs6i
-        9tdBuWdMK4/OcEGbxPQc+/SkzsUnzlfPwD8e4Uh60PvBxsU/qxf7MGHy9REnTFcWDJZwPb
-        1DtPsa3jNVjS7vkcJqbevhYMCAVxDck=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-220-1_kXdODYNuSpTt-QR02mTw-1; Wed, 01 Feb 2023 11:10:12 -0500
-X-MC-Unique: 1_kXdODYNuSpTt-QR02mTw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=2bdI4TPDn3elYpB6pyzaj01gJj8K33x3qyWJhEoPEM8=;
+        b=LbZGUF6QSs3y7wOPxFBhRqB3D0H3roqdQ1rL4qwrx6C4NA+YvZav2ZA1UpoBrhfmyb32AK
+        60B99/Wj/zACupc15wXGeqaIR3n6bdP7FlseI4WUKfkNoQLDygHUbzLpHbqCVUN5UJVrJZ
+        iMVuJUphYI4qmdVYdJP7k0muIDqSHqjPTZiT2acd57PN1kpDMrXHdZXfbR1+CCjU1aEGH6
+        87mqI3x953PArjO7tzAnfwy9oz7WKz7R7t1xfLVyyV0lL5IGPDkY6h2i78j0T9zZuOz3dG
+        LA5He9zX9NXWbqKidnWTF2WEZUWkn6ywdCPiNdyaNml2mLB7tRW5+fJqffBjhg==
+ARC-Authentication-Results: i=1;
+        rspamd-5fb8f68d88-2xntm;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Sponge-Versed: 3d14cdde207f1031_1675268682015_240600750
+X-MC-Loop-Signature: 1675268682015:2355844550
+X-MC-Ingress-Time: 1675268682015
+Received: from pdx1-sub0-mail-a221.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.123.200.120 (trex/6.7.1);
+        Wed, 01 Feb 2023 16:24:42 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C67F818E0046;
-        Wed,  1 Feb 2023 16:10:10 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.39.192.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A1CFAC16020;
-        Wed,  1 Feb 2023 16:10:10 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-        id 850FC21E6A1F; Wed,  1 Feb 2023 17:10:09 +0100 (CET)
-From:   Markus Armbruster <armbru@redhat.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Jonathan Cameron via <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: Re: [RFC PATCH v2 1/3] hw/cxl: QMP based poison injection support
-References: <20230201100350.23263-1-Jonathan.Cameron@huawei.com>
-        <20230201100350.23263-2-Jonathan.Cameron@huawei.com>
-        <87k011y44x.fsf@pond.sub.org> <20230201144512.00007b64@Huawei.com>
-Date:   Wed, 01 Feb 2023 17:10:09 +0100
-In-Reply-To: <20230201144512.00007b64@Huawei.com> (Jonathan Cameron's message
-        of "Wed, 1 Feb 2023 14:45:12 +0000")
-Message-ID: <87zg9xs6xq.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a221.dreamhost.com (Postfix) with ESMTPSA id 4P6S1M6qCqz9t;
+        Wed,  1 Feb 2023 08:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1675268681;
+        bh=2bdI4TPDn3elYpB6pyzaj01gJj8K33x3qyWJhEoPEM8=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Udzue+WIdmQOAtw7WDMz1KaYZmcXYFd6qamRuW7aQPDrtdWa4shS7pcl5orFfkVKJ
+         GuhZ8gUO031w5RLJI8K7HMhU+TbMpPK+kJ18I2wpBJj2zEy5mCTv2kbjydDSEDKxXr
+         IJu3TYdTBXbA8NhyqiX8rBH739c62xVrVw9q6ATkjttoqEQFMWeDeVrG1S9NpED7fx
+         m2ohl51LHhUK/V57sb1r2jCsX4oJX3FAuzWH2uEc6Gldn0CrVf+AndPlgWG+z+mR/y
+         Qw/3Esbdav7osvAx5PnkybLo4vJjiLuntt/LmqKTZ3gP3CU9NHqBFC6M6o3+wqiIn5
+         22V+0Kqw35iHg==
+Date:   Wed, 1 Feb 2023 07:57:29 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Fan Ni <fan.ni@samsung.com>
+Cc:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/region: Fix null pointer dereference for resetting
+ decoder
+Message-ID: <20230201155729.wnil24dijtd2rfhl@offworld>
+References: <CGME20221215170915uscas1p262ccdf32fb2ccd3840189376c2793d06@uscas1p2.samsung.com>
+ <20221215170909.2650271-1-fan.ni@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20221215170909.2650271-1-fan.ni@samsung.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
+On Thu, 15 Dec 2022, Fan Ni wrote:
 
-> On Wed, 01 Feb 2023 13:14:06 +0100
-> Markus Armbruster <armbru@redhat.com> wrote:
-
-[...]
-
->> Both commit message and doc comment are rather terse.
->> 
->> The commit message should make the case for the feature: why do we want
->> it?  This typically involves explaining the problem(s) it solves.
->> 
->> The doc comment ideally explains intended use.
+>Not all decoders have a reset callback.
 >
-> OK. I'll expand on this. It'll be a bit of fuzzy text that
-> boils down to we emulate so we can test the OS does the right thing
-> when it gets poison related events. I can add some generic fluff on
-> why a real device might implement this in the first place though
-> I'm not sure that will even matter to anyone reading these docs.
+>The CXL specification allows a host bridge with a single root port to
+>have no explicit HDM decoders. Currently the region driver assumes there
+>are none.  As such the CXL core creates a special pass through decoder
+>instance without a commit/reset callback.
+>
+>Prior to this patch, the ->reset() callback was called unconditionally when
+>calling cxl_region_decode_reset. Thus a configuration with 1 Host Bridge,
+>1 Root Port, and one directly attached CXL type 3 device or multiple CXL
+>type 3 devices attached to downstream ports of a switch can cause a null
+>pointer dereference.
+>
+>Before the fix, a kernel crash was observed when we destroy the region, and
+>a pass through decoder is reset.
+>
+>The issue can be reproduced as below,
+>    1) create a region with a CXL setup which includes a HB with a
+>    single root port under which a memdev is attached directly.
+>    2) destroy the region with cxl destroy-region regionX -f.
+>
+>Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
+>Signed-off-by: Fan Ni <fan.ni@samsung.com>
 
-Use your judgement :)
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
