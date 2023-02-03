@@ -2,98 +2,103 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66448C61DA4
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Feb 2023 09:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4218DC61DA4
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Feb 2023 09:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232799AbjBCJbb convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Feb 2023 04:31:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49218 "EHLO
+        id S230180AbjBCJy0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Feb 2023 04:54:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232254AbjBCJb2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Feb 2023 04:31:28 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932931F5DC;
-        Fri,  3 Feb 2023 01:31:13 -0800 (PST)
-Received: from lhrpeml100002.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P7Vk24sT9z6J9fr;
-        Fri,  3 Feb 2023 17:30:02 +0800 (CST)
-Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
- lhrpeml100002.china.huawei.com (7.191.160.241) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 3 Feb 2023 09:31:11 +0000
-Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
- lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2375.034;
- Fri, 3 Feb 2023 09:31:11 +0000
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [RESEND PATCH V3 2/4] rasdaemon: Add support for the CXL poison
- events
-Thread-Topic: [RESEND PATCH V3 2/4] rasdaemon: Add support for the CXL poison
- events
-Thread-Index: AQHZNzLN5iUmsHWwIUGecRCDH4ZAy668DlwAgADlB8A=
-Date:   Fri, 3 Feb 2023 09:31:11 +0000
-Message-ID: <a5df429552ea4c65b680f985daa32c29@huawei.com>
-References: <20230202181846.692-1-shiju.jose@huawei.com>
-        <20230202181846.692-3-shiju.jose@huawei.com>
- <Y9wR+Kqs1P65ztwT@aschofie-mobl2>
-In-Reply-To: <Y9wR+Kqs1P65ztwT@aschofie-mobl2>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.158.105]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        with ESMTP id S229790AbjBCJyZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Feb 2023 04:54:25 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF12E70D56;
+        Fri,  3 Feb 2023 01:54:22 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id DF6DC300034F1;
+        Fri,  3 Feb 2023 10:54:18 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id C60BF2EE13E; Fri,  3 Feb 2023 10:54:18 +0100 (CET)
+Date:   Fri, 3 Feb 2023 10:54:18 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Li, Ming" <ming4.li@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] cxl/pci: Use synchronous API for DOE
+Message-ID: <20230203095418.GA18459@wunner.de>
+References: <cover.1674468099.git.lukas@wunner.de>
+ <b5469cbb8a3e138a1c709ed3eaab02d7ca8e84b2.1674468099.git.lukas@wunner.de>
+ <63cf2bc3cf76_521a294a1@iweiny-mobl.notmuch>
+ <c9923e59-176c-2e52-9ebf-58bb25750083@intel.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c9923e59-176c-2e52-9ebf-58bb25750083@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
->-----Original Message-----
->From: Alison Schofield <alison.schofield@intel.com>
->Sent: 02 February 2023 19:42
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: mchehab@kernel.org; linux-edac@vger.kernel.org; linux-
->cxl@vger.kernel.org; Jonathan Cameron <jonathan.cameron@huawei.com>;
->Linuxarm <linuxarm@huawei.com>
->Subject: Re: [RESEND PATCH V3 2/4] rasdaemon: Add support for the CXL poison
->events
->
->On Thu, Feb 02, 2023 at 06:18:44PM +0000, shiju.jose@huawei.com wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add support to log and record the CXL poison events.
->>
->> The corresponding Kernel patches here:
->> https://lore.kernel.org/linux-cxl/de11785ff05844299b40b100f8e0f56c7eef
->> 7f08.1674070170.git.alison.schofield@intel.com/
->>
->> Presently RFC draft version for logging, could be extended for the
->> policy based recovery action for the frequent poison events depending
->> on the above kernel patches.
->
->Hi Shiju,
->
->Looks good to me based on the kernel patches you reference above.
->I want to let you know that a v6 is in the works, and will lead to some naming
->changes below - but minor stuff.
+On Fri, Feb 03, 2023 at 04:53:34PM +0800, Li, Ming wrote:
+> On 1/24/2023 8:52 AM, Ira Weiny wrote:
+> > Lukas Wunner wrote:
+> > >  static int cxl_cdat_get_length(struct device *dev,
+> > >  			       struct pci_doe_mb *cdat_doe,
+> > >  			       size_t *length)
+> > >  {
+> > > -	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
+> > > +	u32 request = CDAT_DOE_REQ(0);
+> > > +	u32 response[32];
+> > >  	int rc;
+> > >  
+> > > -	rc = pci_doe_submit_task(cdat_doe, &t.task);
+> > > +	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> > > +		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> > > +		     &request, sizeof(request),
+> > > +		     &response, sizeof(response));
+> > >  	if (rc < 0) {
+> > > -		dev_err(dev, "DOE submit failed: %d", rc);
+> > > +		dev_err(dev, "DOE failed: %d", rc);
+> > >  		return rc;
+> > >  	}
+> > > -	wait_for_completion(&t.c);
+> > > -	if (t.task.rv < sizeof(u32))
+> > > +	if (rc < sizeof(u32))
+> > >  		return -EIO;
+> > >  
+> 
+> Sorry, I didn't find the original patchset email, only can reply here.
+> Should this "if (rc < sizeof(u32))" be "if (rc < 2 * sizeof(u32))"?
+> Because below code used response[1] directly, that means we need unless
+> two u32 in response payload.
 
-Hi Alison,
+Yes I spotted that as well, there's already a fixup on my
+development branch:
 
-Thanks for the information. I will make changes according to the v6.
->
->Alison
->
+  https://github.com/l1k/linux/commits/doe
+
+It's in commit "cxl/pci: Handle truncated CDAT header" which is:
+
+  https://github.com/l1k/linux/commit/208f256b319b
+
+...but that URL may stop working as soon as I rebase the next time.
+
+Actually there's a lot more broken here, there are 3 other new fixup
+patches at the beginning of that development branch.
 
 Thanks,
-Shiju
 
-
-
+Lukas
