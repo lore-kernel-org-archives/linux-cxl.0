@@ -2,78 +2,129 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CBEC61DA4
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Feb 2023 10:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72013C61DA4
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Feb 2023 19:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232554AbjBCKIZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Feb 2023 05:08:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58602 "EHLO
+        id S232100AbjBCT07 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Feb 2023 14:26:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232424AbjBCKIY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Feb 2023 05:08:24 -0500
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4808BDE5;
-        Fri,  3 Feb 2023 02:08:23 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 6756D28011B82;
-        Fri,  3 Feb 2023 11:08:21 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 455342E9C9A; Fri,  3 Feb 2023 11:08:21 +0100 (CET)
-Date:   Fri, 3 Feb 2023 11:08:21 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     "Li, Ming" <ming4.li@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 06/10] PCI/DOE: Allow mailbox creation without devres
- management
-Message-ID: <20230203100821.GB18459@wunner.de>
-References: <cover.1674468099.git.lukas@wunner.de>
- <291131574c9e625195e9c34591abf5fa75cd1279.1674468099.git.lukas@wunner.de>
- <20230124121543.00002600@Huawei.com>
- <d6d3a6c8-7b82-77c2-3407-705916c020b7@intel.com>
+        with ESMTP id S229800AbjBCT06 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Feb 2023 14:26:58 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071E992C37;
+        Fri,  3 Feb 2023 11:26:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675452418; x=1706988418;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1Xhn4BfuGKeJQgOjm2zoh7q5guqibeqf62x6qjEYBLg=;
+  b=DLeWToV2fT1JrFt0KfEJhkDBIR2q6j7guSCnVqIHSivHD1bpf7zyRD0R
+   y0JzCwRiis767fnycmONhIgaKAeo2fnNvlmCG2X3/fXquvIHWfAqNVH3q
+   88GgA6ubE8J/6pN28ndc5omldj0op0jk2Xdt0EWeRvNAtNlTqDZ1Xi391
+   ZrJIShI3MO9hz7bDfhX5jrZpIWyWuJP1twsvte9C5Lcyd3bQAJImfpNbJ
+   7O6hXVqhX8dPmoarcJzvr51v7FL5Yf8o9Wtbzm9qtyGG4FTUlwnhcDnDg
+   UCwbQs48mbPh4n1Vdpd46Jeb2Wk4IqzL4qsl8tfI60khRgQdnfallE/SU
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="327470624"
+X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
+   d="scan'208";a="327470624"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 11:26:50 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="659196289"
+X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
+   d="scan'208";a="659196289"
+Received: from dvincent-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.163.211])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 11:26:49 -0800
+Subject: [PATCH] efi/cper, cxl: Remove cxl_err.h
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     ardb@kernel.org
+Cc:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org
+Date:   Fri, 03 Feb 2023 11:26:49 -0800
+Message-ID: <167545240944.3932004.13241445887801999410.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6d3a6c8-7b82-77c2-3407-705916c020b7@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 05:06:21PM +0800, Li, Ming wrote:
-> On 1/24/2023 8:15 PM, Jonathan Cameron wrote:
-> > On Mon, 23 Jan 2023 11:16:00 +0100 Lukas Wunner <lukas@wunner.de> wrote:
-> > > +/**
-> > > + * pci_doe_destroy_mb() - Destroy a DOE mailbox object
-> > > + *
-> > > + * @ptr: Pointer to DOE mailbox
-> > > + *
-> > > + * Destroy all internal data structures created for the DOE mailbox.
-> > > + */
-> > > +static void pci_doe_destroy_mb(void *ptr)
-> 
-> I don't get why uses "void *ptr" as the parameter of this function,
-> maybe I miss something. I guess we can use "struct pci_doe_mb *doe_mb"
-> as the parameter.
+While going to create include/linux/cxl.h for some cross-subsystem CXL
+definitions I noticed that include/linux/cxl_err.h was already present.
+That header has no reason to be global, and it duplicates the RAS
+Capability Structure definitions in drivers/cxl/cxl.h. A follow-on patch
+can consider unifying the CXL native error tracing with the CPER error
+printing.
 
-It's a "void *ptr" argument so that pci_doe_destroy_mb() can serve
-as a callback for devm_add_action().  But as you've correctly noted,
-devm_add_action() is removed in a subsequent commit and then the
-argument is adjusted to "struct pci_doe_mb *doe_mb".
+Also fixed up the spec reference as the latest released spec is v3.0.
 
-Thanks,
+Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ drivers/firmware/efi/cper_cxl.c |   12 +++++++++++-
+ include/linux/cxl_err.h         |   22 ----------------------
+ 2 files changed, 11 insertions(+), 23 deletions(-)
+ delete mode 100644 include/linux/cxl_err.h
 
-Lukas
+diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+index 53e435c4f310..a55771b99a97 100644
+--- a/drivers/firmware/efi/cper_cxl.c
++++ b/drivers/firmware/efi/cper_cxl.c
+@@ -9,7 +9,6 @@
+ 
+ #include <linux/cper.h>
+ #include "cper_cxl.h"
+-#include <linux/cxl_err.h>
+ 
+ #define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
+ #define PROT_ERR_VALID_AGENT_ADDRESS		BIT_ULL(1)
+@@ -19,6 +18,17 @@
+ #define PROT_ERR_VALID_DVSEC			BIT_ULL(5)
+ #define PROT_ERR_VALID_ERROR_LOG		BIT_ULL(6)
+ 
++/* CXL RAS Capability Structure, CXL v3.0 sec 8.2.4.16 */
++struct cxl_ras_capability_regs {
++	u32 uncor_status;
++	u32 uncor_mask;
++	u32 uncor_severity;
++	u32 cor_status;
++	u32 cor_mask;
++	u32 cap_control;
++	u32 header_log[16];
++};
++
+ static const char * const prot_err_agent_type_strs[] = {
+ 	"Restricted CXL Device",
+ 	"Restricted CXL Host Downstream Port",
+diff --git a/include/linux/cxl_err.h b/include/linux/cxl_err.h
+deleted file mode 100644
+index 629e1bdeda44..000000000000
+--- a/include/linux/cxl_err.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2022 Advanced Micro Devices, Inc.
+- *
+- * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+- */
+-
+-#ifndef LINUX_CXL_ERR_H
+-#define LINUX_CXL_ERR_H
+-
+-/* CXL RAS Capability Structure, CXL v3.1 sec 8.2.4.16 */
+-struct cxl_ras_capability_regs {
+-	u32 uncor_status;
+-	u32 uncor_mask;
+-	u32 uncor_severity;
+-	u32 cor_status;
+-	u32 cor_mask;
+-	u32 cap_control;
+-	u32 header_log[16];
+-};
+-
+-#endif //__CXL_ERR_
+
