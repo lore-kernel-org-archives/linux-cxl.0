@@ -2,102 +2,151 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A47FC61DA4
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Feb 2023 22:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F00CC61DA4
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Feb 2023 23:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbjBCWas (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Feb 2023 17:30:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52402 "EHLO
+        id S233071AbjBCXBH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Feb 2023 18:01:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjBCWas (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Feb 2023 17:30:48 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3B6B11A
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Feb 2023 14:30:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675463447; x=1706999447;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yg0GC+9CH25d/wlDJ54AqKgSWxw5tQBjQx7bmNUPUQE=;
-  b=XBzikcSZlBz8XfBm107Fhbsnx7wosf+THXEOUCBtOKPsJQoNXXKeszd2
-   mNsHN6Yc+W1scJSW5SLqhVTC5ueM4EcFTn9WmmFyTPEE4hOTzr+AHUFxf
-   ueH2OR2pCqQKjNGtRoEdBcZdyi6yjkY1pGmc887/y/jlNv9Pwh1/PFXtA
-   b8j5G2yXETIAERdsZFU81vTWLh9J8y/mvvvlo0juptCmaVQlXexzZIWlj
-   aEsR9ansV5HV5nhPA+rxhR1UHhvcyBxrmb7nlACVuc/E1VXTdDXTcFnp2
-   5d4Lyx93iThfHTjdVoMcGL38hBnFc5uAv+lyHyLxZ0IokiCNoPpQjV1Wg
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="308513876"
-X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
-   d="scan'208";a="308513876"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 14:30:47 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="994654538"
-X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
-   d="scan'208";a="994654538"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.119.40]) ([10.212.119.40])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 14:30:46 -0800
-Message-ID: <9146dc1c-275f-5116-d537-199914f9f74f@intel.com>
-Date:   Fri, 3 Feb 2023 15:30:46 -0700
+        with ESMTP id S233076AbjBCXBG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Feb 2023 18:01:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EF88A7DA;
+        Fri,  3 Feb 2023 15:01:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 49868B82C2A;
+        Fri,  3 Feb 2023 23:00:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8B1AC4339B;
+        Fri,  3 Feb 2023 23:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675465257;
+        bh=xiyk1+P1FTc2Er9/TloFWBOvx0vE6nnxjpmQ3MiK05Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZKIGwijlaxfsGHZChWnZCnDXbN2nk5b7fCaoKSNeSs1680QfdheRepCG2HEiU1Ted
+         7DG1JQCOl5BPaHA4cgsYMR4YEaOPIIEGI09vAps35uqWw3mwI26Qxwl4WG17MK7Fn/
+         pwrEimt5h1+cSWEA22wOZAlyVDDff8RxqTgZ2+mwYviCYr+QlGYnHyDteY+oMd/36D
+         YjEodmcI2T15VjOZC7sH7LHfMdk3lxJ0VXFAaHq7lE0dtzGkJldybPtGvg4yrQWmNS
+         4muVFydzaV0LrLmlF9S4UrSqhHAy6Zrp/VqgK0+jLlVhlGtxYaOiz5u9ep7OPEo4aC
+         J0Ghhxi07BzYg==
+Received: by mail-lf1-f51.google.com with SMTP id bp15so9859552lfb.13;
+        Fri, 03 Feb 2023 15:00:57 -0800 (PST)
+X-Gm-Message-State: AO0yUKVX6b24Ig0VF+GXhovwGWgCjAkF/g5dl8V0pACZo7d21me79Mqi
+        oMglRgV9jHPJGVyGES/ODxZ2HsU9rpQjGoeuH1I=
+X-Google-Smtp-Source: AK7set+nm9Pzl/OQSo9eXO+SNOnEcdvwMukTVXzWpui/wfsvjD019+LUExd61ZYx6PODOdqQkmzYEXI9fKoQeOeu/iY=
+X-Received: by 2002:a19:500b:0:b0:4cc:789a:dac8 with SMTP id
+ e11-20020a19500b000000b004cc789adac8mr2188309lfb.198.1675465255810; Fri, 03
+ Feb 2023 15:00:55 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH ndctl] ndctl/cxl: Remove unnecessary null check
-Content-Language: en-US
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-Cc:     linux-cxl@vger.kernel.org
-References: <20230201-update_query-v1-1-4dd3de2d35c1@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230201-update_query-v1-1-4dd3de2d35c1@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <167545240944.3932004.13241445887801999410.stgit@dwillia2-xfh.jf.intel.com>
+ <63dd81ecfd91_dfba82949f@iweiny-mobl.notmuch>
+In-Reply-To: <63dd81ecfd91_dfba82949f@iweiny-mobl.notmuch>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 4 Feb 2023 00:00:44 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFTgt2AaLao=xHgKgoOW65D0jBL9hvBbSN0wCYrVimp_g@mail.gmail.com>
+Message-ID: <CAMj1kXFTgt2AaLao=xHgKgoOW65D0jBL9hvBbSN0wCYrVimp_g@mail.gmail.com>
+Subject: Re: [PATCH] efi/cper, cxl: Remove cxl_err.h
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+        linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Fri, 3 Feb 2023 at 22:51, Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> Dan Williams wrote:
+> > While going to create include/linux/cxl.h for some cross-subsystem CXL
+> > definitions I noticed that include/linux/cxl_err.h was already present.
+> > That header has no reason to be global, and it duplicates the RAS
+> > Capability Structure definitions in drivers/cxl/cxl.h.
+>
+> Change looks fine to me but I'm failing to find these duplicate
+> definitions?  Without any duplication it seems like stronger change to me.
+>
+> > A follow-on patch
+> > can consider unifying the CXL native error tracing with the CPER error
+> > printing.
+> >
+> > Also fixed up the spec reference as the latest released spec is v3.0.
+> >
+> > Cc: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>
+
+Thanks. I'll queue this up in efi/next
 
 
-On 2/3/23 2:56 PM, Ira Weiny wrote:
-> cmd->query_cmd can never be null in cxl_cmd_alloc_send().  The only call chain
-> is:
-> 
->          cxl_cmd_do_query(cmd);
->          cxl_cmd_validate(cmd, cmd_id);
->          cxl_cmd_alloc_send(cmd, cmd_id);
-> 
-> And cxl_cmd_do_query() ensures it is non-null.  In addition the local variable
-> query is already dereferenced by the time it is checked for null.
-> 
-> Remove the unneeded null check.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
-> Minor fix I found while working on the kernel side query command.
-> ---
->   cxl/lib/libcxl.c | 3 ---
->   1 file changed, 3 deletions(-)
-> 
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index 4205a587d3bb..4859bd5e2fbb 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -3091,9 +3091,6 @@ static int cxl_cmd_alloc_send(struct cxl_cmd *cmd, u32 cmd_id)
->   	struct cxl_command_info *cinfo = &query->commands[cmd->query_idx];
->   	size_t size;
->   
-> -	if (!query)
-> -		return -EINVAL;
-> -
->   	size = sizeof(struct cxl_send_command);
->   	cmd->send_cmd = calloc(1, size);
->   	if (!cmd->send_cmd)
-> 
-> ---
-> base-commit: b73e4e0390aae822bc91b8bf72430e6f0e84d668
-> change-id: 20230201-update_query-ad2845ba197a
-> 
-> Best regards,
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/firmware/efi/cper_cxl.c |   12 +++++++++++-
+> >  include/linux/cxl_err.h         |   22 ----------------------
+> >  2 files changed, 11 insertions(+), 23 deletions(-)
+> >  delete mode 100644 include/linux/cxl_err.h
+> >
+> > diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
+> > index 53e435c4f310..a55771b99a97 100644
+> > --- a/drivers/firmware/efi/cper_cxl.c
+> > +++ b/drivers/firmware/efi/cper_cxl.c
+> > @@ -9,7 +9,6 @@
+> >
+> >  #include <linux/cper.h>
+> >  #include "cper_cxl.h"
+> > -#include <linux/cxl_err.h>
+> >
+> >  #define PROT_ERR_VALID_AGENT_TYPE            BIT_ULL(0)
+> >  #define PROT_ERR_VALID_AGENT_ADDRESS         BIT_ULL(1)
+> > @@ -19,6 +18,17 @@
+> >  #define PROT_ERR_VALID_DVSEC                 BIT_ULL(5)
+> >  #define PROT_ERR_VALID_ERROR_LOG             BIT_ULL(6)
+> >
+> > +/* CXL RAS Capability Structure, CXL v3.0 sec 8.2.4.16 */
+> > +struct cxl_ras_capability_regs {
+> > +     u32 uncor_status;
+> > +     u32 uncor_mask;
+> > +     u32 uncor_severity;
+> > +     u32 cor_status;
+> > +     u32 cor_mask;
+> > +     u32 cap_control;
+> > +     u32 header_log[16];
+> > +};
+> > +
+> >  static const char * const prot_err_agent_type_strs[] = {
+> >       "Restricted CXL Device",
+> >       "Restricted CXL Host Downstream Port",
+> > diff --git a/include/linux/cxl_err.h b/include/linux/cxl_err.h
+> > deleted file mode 100644
+> > index 629e1bdeda44..000000000000
+> > --- a/include/linux/cxl_err.h
+> > +++ /dev/null
+> > @@ -1,22 +0,0 @@
+> > -/* SPDX-License-Identifier: GPL-2.0-only */
+> > -/*
+> > - * Copyright (C) 2022 Advanced Micro Devices, Inc.
+> > - *
+> > - * Author: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> > - */
+> > -
+> > -#ifndef LINUX_CXL_ERR_H
+> > -#define LINUX_CXL_ERR_H
+> > -
+> > -/* CXL RAS Capability Structure, CXL v3.1 sec 8.2.4.16 */
+> > -struct cxl_ras_capability_regs {
+> > -     u32 uncor_status;
+> > -     u32 uncor_mask;
+> > -     u32 uncor_severity;
+> > -     u32 cor_status;
+> > -     u32 cor_mask;
+> > -     u32 cap_control;
+> > -     u32 header_log[16];
+> > -};
+> > -
+> > -#endif //__CXL_ERR_
+> >
+>
+>
