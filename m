@@ -2,164 +2,88 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B824C61DA4
-	for <linux-cxl@archiver.kernel.org>; Sat,  4 Feb 2023 15:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F86C61DA4
+	for <linux-cxl@archiver.kernel.org>; Sat,  4 Feb 2023 19:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbjBDP76 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 4 Feb 2023 10:59:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
+        id S231448AbjBDTU6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 4 Feb 2023 14:20:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjBDP75 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 4 Feb 2023 10:59:57 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB2833451
-        for <linux-cxl@vger.kernel.org>; Sat,  4 Feb 2023 07:59:56 -0800 (PST)
+        with ESMTP id S231314AbjBDTU6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 4 Feb 2023 14:20:58 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09FC22781
+        for <linux-cxl@vger.kernel.org>; Sat,  4 Feb 2023 11:20:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675526396; x=1707062396;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=fgYX3cYd0TzLQDRbjAWCDs22kbvbmXyASl/83mcPrcU=;
-  b=LeEu2gSHzOxZmE0vgxxw+Feu93RwZrWXsTyLuHDGZiok3c2ZcVCAv61m
-   xi5oxW9Vifmpf18Wrk4m5UoB5KdaeG9amiUorOA+4tjT6qutBtgnDU+Md
-   ikIOIFRaj6/YG75p7G6TRLKbrk3zyOsbqjNqHrkDqKCvBH4Ld3Vp7KT27
-   0ISSu6HHFQeXZl+g4nGoXmnU7lDDhl3LznDn/OWzUqpEGEi5Jdqrj+nhb
-   w3XhPob9duDf+J/aC0ayufyyQQv9aFi0wm0LCZociMTlxBzlnexbomlK1
-   X/dScDbA+HO2X7DGmZBK4XpgS/YrrVBqyO2jLUwJWGwC8rploVeWSWxkG
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="415169752"
+  t=1675538456; x=1707074456;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Afid3zaFp4mpWRXkdxce1eCKZmyROBHMlXwaq+EaIvI=;
+  b=OglWlUdQVqhnGhuvzWkXcAJDnO0b/ZEgicCcCxdWpFJuxgZbG7zmVDcy
+   XBodjil3ahB3Mm3137wA66/xmg8I4r3OXJ8O7SGo9k5pn6HsqFfugLNQp
+   k9fT5php7Elhp91BXKHvyjUrECmvpiX9OnlVJsdXa9QRyqgP+lkX5eSil
+   6tMBPvMwodJY/Xefw7ZQaMjwNy6hFor2Ai8A4th5E1C/TppaJHGOqxnZw
+   OTCJ7dn/FcELhhtMywi1nGhEkq2QSUlEfT4djqvVWxao0pCoW2WFNNj3P
+   8e0sed3C5UF9bhVC65GyJZrVximw6JFJ3B6qkicdQ3aCHS9q1L4jFBUWc
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="312636198"
 X-IronPort-AV: E=Sophos;i="5.97,272,1669104000"; 
-   d="scan'208";a="415169752"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2023 07:59:56 -0800
+   d="scan'208";a="312636198"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2023 11:20:56 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="666051772"
+X-IronPort-AV: E=McAfee;i="6500,9779,10611"; a="754825743"
 X-IronPort-AV: E=Sophos;i="5.97,272,1669104000"; 
-   d="scan'208";a="666051772"
+   d="scan'208";a="754825743"
 Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 04 Feb 2023 07:59:53 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Feb 2023 11:20:54 -0800
 Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pOKxA-0001PK-0s;
-        Sat, 04 Feb 2023 15:59:48 +0000
-Date:   Sat, 04 Feb 2023 23:59:22 +0800
+        id 1pOO5m-0001Uq-0f;
+        Sat, 04 Feb 2023 19:20:54 +0000
+Date:   Sun, 5 Feb 2023 03:20:47 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:next] BUILD SUCCESS bed259ea85f54b4ebc1f8de61b5ffafd23acd126
-Message-ID: <63de80da.WhbgLeflO6jMC9Vz%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.3/cxl-ram-region 23/25] ERROR: modpost:
+ "walk_hmem_resources" [drivers/dax/hmem/dax_hmem.ko] undefined!
+Message-ID: <202302050349.g4NppVCy-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: bed259ea85f54b4ebc1f8de61b5ffafd23acd126  Merge branch 'for-6.3/cxl-events' into cxl/next
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.3/cxl-ram-region
+head:   14acf2db2613dad48f315647c022b15e7dd7b7bd
+commit: 1404bbe617dc40d32c8f7b772bb17f9309a33a26 [23/25] dax/hmem: Move hmem device registration to dax_hmem.ko
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20230205/202302050349.g4NppVCy-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?id=1404bbe617dc40d32c8f7b772bb17f9309a33a26
+        git remote add cxl https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git
+        git fetch --no-tags cxl for-6.3/cxl-ram-region
+        git checkout 1404bbe617dc40d32c8f7b772bb17f9309a33a26
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash
 
-elapsed time: 720m
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
 
-configs tested: 87
-configs skipped: 2
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                                defconfig
-powerpc                           allnoconfig
-arc                  randconfig-r043-20230204
-arc                                 defconfig
-s390                             allmodconfig
-s390                 randconfig-r044-20230204
-sh                               allmodconfig
-alpha                               defconfig
-x86_64                              defconfig
-x86_64                            allnoconfig
-x86_64                        randconfig-a004
-riscv                randconfig-r042-20230204
-ia64                             allmodconfig
-s390                             allyesconfig
-x86_64                        randconfig-a002
-s390                                defconfig
-i386                          randconfig-a001
-x86_64                        randconfig-a006
-x86_64                               rhel-8.3
-arm                                 defconfig
-i386                          randconfig-a003
-mips                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-i386                          randconfig-a005
-powerpc                          allmodconfig
-x86_64                           allyesconfig
-arm64                            allyesconfig
-x86_64                           rhel-8.3-bpf
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-arm                              allyesconfig
-x86_64                           rhel-8.3-kvm
-i386                             allyesconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-x86_64                        randconfig-a013
-i386                          randconfig-a016
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-m68k                             allyesconfig
-powerpc                      mgcoge_defconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-powerpc                 mpc85xx_cds_defconfig
-alpha                            alldefconfig
-mips                 decstation_r4k_defconfig
-sh                   sh7724_generic_defconfig
-powerpc                         ps3_defconfig
-sh                           se7705_defconfig
-powerpc                 mpc837x_mds_defconfig
-powerpc                       maple_defconfig
-parisc                              defconfig
-nios2                               defconfig
-sh                           se7724_defconfig
-csky                                defconfig
-sh                          urquell_defconfig
-sparc                               defconfig
-parisc64                            defconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20230204
-arm                  randconfig-r046-20230204
-hexagon              randconfig-r045-20230204
-x86_64                        randconfig-a001
-x86_64                          rhel-8.3-rust
-x86_64                        randconfig-a003
-i386                          randconfig-a002
-x86_64                        randconfig-a005
-i386                          randconfig-a006
-i386                          randconfig-a004
-i386                          randconfig-a013
-i386                          randconfig-a011
-x86_64                        randconfig-a012
-i386                          randconfig-a015
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-mips                       rbtx49xx_defconfig
-arm                           spitz_defconfig
-powerpc                     kilauea_defconfig
-arm                     am200epdkit_defconfig
-powerpc                    mvme5100_defconfig
-arm                         lpc32xx_defconfig
-mips                           ip27_defconfig
-x86_64                        randconfig-k001
-mips                      bmips_stb_defconfig
+>> ERROR: modpost: "walk_hmem_resources" [drivers/dax/hmem/dax_hmem.ko] undefined!
 
 -- 
 0-DAY CI Kernel Test Service
