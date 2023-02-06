@@ -2,176 +2,119 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC57C636D3
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 21:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD5FC636D4
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 21:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230102AbjBFVG1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Feb 2023 16:06:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
+        id S229847AbjBFVMW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Feb 2023 16:12:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbjBFVGQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 16:06:16 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F936EA6;
-        Mon,  6 Feb 2023 13:06:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675717575; x=1707253575;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x9OMFsqoU0CKBlWyYK5ZU5H+rXMOEtYx1Jfz8qzH0vs=;
-  b=dU0Wlt7QnrOgewTqsllU+psgAXytNQsvnU+LGwr3ImNqVmS+Bs2Inc2A
-   FyWCBJbJmsOvHw3UOeX4S9f0+OhMPyqXCZZD+lVydmrf1X6HMT0aHvxlt
-   t0sByyaaqnz8qyKsTHixItJHgDpvs1TTwlY47dwvgCnQ5NXnH0n5B/2uM
-   mrXb8SdYRCFf6+9uMQOYDHMtXbHSrKaLhpXU5AKdJXsoegLMy87bh5c+3
-   DiKp+83SXVHnHOBnq5tOKRNlG2OCp4f6e31OkMR/J/eQRvjhf7jzO6qKa
-   PwcpmDMzDnNyVPoC6HTMyH/iCH/INhruztwm8Eu6uvPYzK1XU+eK2vxzj
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="312969548"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="312969548"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 13:06:00 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="659973146"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="659973146"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.111.195]) ([10.212.111.195])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 13:05:58 -0800
-Message-ID: <ddc58134-9049-d718-1a61-a02a76aca874@intel.com>
-Date:   Mon, 6 Feb 2023 14:05:58 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 02/18] cxl/region: Add a mode attribute for regions
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     dave.hansen@linux.intel.com, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org
+        with ESMTP id S229500AbjBFVMV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 16:12:21 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880DB22781;
+        Mon,  6 Feb 2023 13:12:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gylbMCErtoACZ8HJMQ9ntNy2bwCmDZg7C/Qfq5rEU/22dRfNSOEnhbo/yrCVjR8cjiF1Z1f5dhTPnvgdvXoEeQ+MQzgRDxUdRdZW1qZW7iPKiABcBGvSlwnCg/cPct1nhWa+mM6/L4wjIslA7uAiye1+0aUyQG6AYHKtsEwcSDnlCL19L82Y1O0J159AhfnKrOuyNHMYPY8mq2xmftyBxc3cDKm5Wqk91Y7QVH2RLEPAEhbT8SbaiEf3t+lw8Qrjmso3vydTmZ3ZDvB5QqDTEKM7ghDIm3Hh7Qt7sy76vND6thkpbsbQKwUPalJkTrkqRZ3PCYTgrOMrPvxrmMnJyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q+2I19F2lz2rFraRJJsKr9+hzQfFhxh/Rof/Lxy9ino=;
+ b=KgOYrqXxQ0bnOehbGdhfDmdEUUt0Ahhh5zL7G7y8SSGSVa1M5JVgImv82oY3XJUKiC5bOs3H9ZP7eAdwzXV3w5r3iWQYb/h7lXdXb/jjlpg7GqkyUIVXy48T3q3uAOpA6WdhaogvqRsEu5DYenz+TH0dZpnVCyu+jrNcA5Cp2ViF+HewCLKaaPojj2Ak2n5m6LYTMflTQHFDW09aw5/O+3lhLTzZqsMZ+NABiMhByYZoay/qBYw4lX76lD7kM/PgUmZYLelJa0tMFsdrHowdKBlgzcieeVNg9kVaSFXAwrY7QAyO+fKRH9sRbpaRnhlOBeLq6UImZP5I6DCkcPj2/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q+2I19F2lz2rFraRJJsKr9+hzQfFhxh/Rof/Lxy9ino=;
+ b=PDHGglD199ykg53TymPhsb1lBNF/P02AAUSsHwYDO1a1ezQA38Mm332GPqDX+bJN0vWOLNSN+f2ie7hyRAu7BFg+RKLIMllZdpjnCm7f1jKSPUWdHluJgAannXhlZ3mr3KuR2gV/wsPKKRCUNpjA/Z2QYLwPtCd/ZpuFifdqCCc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+ by MW4PR17MB4618.namprd17.prod.outlook.com (2603:10b6:303:103::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Mon, 6 Feb
+ 2023 21:12:16 +0000
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.6064.034; Mon, 6 Feb 2023
+ 21:12:16 +0000
+Date:   Mon, 6 Feb 2023 12:15:16 -0500
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, dave.hansen@linux.intel.com,
+        linux-mm@kvack.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 14/18] dax/hmem: Drop unnecessary dax_hmem_remove()
+Message-ID: <Y+E1pODoTD23vj+B@memverge.com>
 References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
- <167564536041.847146.11330354943211409793.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <167564536041.847146.11330354943211409793.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <167564542679.847146.17174404738816053065.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <167564542679.847146.17174404738816053065.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: SJ0PR05CA0071.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::16) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|MW4PR17MB4618:EE_
+X-MS-Office365-Filtering-Correlation-Id: a6bc5e56-bca3-4c53-d6b6-08db0886d344
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OqGvmOwbDADXQehFTHgu4CWEa8NFcO57QTmtJ1AUD8i7NpDNGf0h7Uwl+AwZPvUmqHLczuJL2enDzAYNpPyMjq1a902xunXWw7tG0WpviXY97UXbmtMZdxrX1oRqcUfjYX9laIWBO+Xyr8kfHebpr+DJVVXwidG4HbFX6BZp4+hVjdDCVuAS3oL94GWkd0rkXJF78/S95LiGjygGS8Lp6Du/+oFY8BuYnu0IMD+3NK6p0HhfnxJ6icStYKldtNZui+r/4UDda4VDQPnPIIHtMz1w+CmeP1p42u9VqEkEpqlfheTUOyYOJ1EgASS71O5s6Kl4+fZv8XYChR4xPAXRAHmfYpP6Rh8fzcK5QvnlTv29OKF2n4l4aGrBd+GmCxAoZaYQEKg983Loa5hflZPeJ3xTkPLeuzvydaCMT5A388YUH7wk0Rp8SotdMeelVkMHdjgINg6dQnfnBhYRwS7+Vf+ZjnjPp/7FzC5lzhtmFYStH7w1TYcXU4AQCRtQ3tKxhc7FU05p/2/MySUsxSiis5t2GdemXbAK995PM9FOh6BczqQUmlgxYHwlmGZuWmAy2sRpfE3NwoMv6tKsVgyNGuniBirdQsMzeLp1ja1HKhT6S7N3tbUfOxwbL/8eiDNyLo+gOV2S8A53sZk8ydUJBg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39840400004)(346002)(136003)(396003)(376002)(366004)(451199018)(38100700002)(86362001)(36756003)(41300700001)(316002)(6486002)(478600001)(66476007)(6506007)(44832011)(2906002)(66556008)(6916009)(83380400001)(5660300002)(4326008)(66946007)(8676002)(8936002)(4744005)(6512007)(26005)(186003)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vkdsP3rFv2JzpnIOy2/ScUokCd8LML+jlvQ+DkAL+SKEHnixJUEY+LySWlKv?=
+ =?us-ascii?Q?TH3/wx3y7WxRf7onIUh9JdFcLflJaOYpDhsp9Rgky2nG0iTxEX41Wt3K+/wS?=
+ =?us-ascii?Q?oXORF0gPMyPN/t6skT6FqbKJ8yTy8vxmKjYMW9Kg1HtbdzXZ3wA/CAfes0nf?=
+ =?us-ascii?Q?bHiL8GT+ggZ/s7WKG9tPEIQ7eqAnjdM99kquVCTh/azTlHJYfgTk5TpOj0jM?=
+ =?us-ascii?Q?7sAKXpRzXUUGzyueHcPu9/+OmygPyLRcSFg0S1mLi6jrOGVYOFl8oHii1nu6?=
+ =?us-ascii?Q?yQJ0ajcJ204QUH2SbRRoi8EG/G4oNJ5b8TAq1yRLwmQH5z3HmxfBSpKoB36s?=
+ =?us-ascii?Q?mplFRCD4+M+ZoDFcFj7HqE10k1JG6+VEY+vtmpdIzob0qmra9UFDfVL2FYnc?=
+ =?us-ascii?Q?djataDyMCbYj2EuanhyaKeU7Oe5tjZc8xPxdYbIV+Ysue+lMh7ZE1UED0iAo?=
+ =?us-ascii?Q?DvSVwe38LX0yrV9UmOI5mVU6VY+x8SNEHSQHW+pdWOZL9vdDfQiaMBLgXkaU?=
+ =?us-ascii?Q?AwSM8JsOTQ2sBBx8CVwpSVlPOw/bSsVN5ahZa/4OOMPYV8jeHVKMo/z72e2s?=
+ =?us-ascii?Q?gL0IGtvtl5OfkpLC0b2mCV78Hdl0Dlo8V9ZJTfdCMZfSqlMxjdd5yUTBo63a?=
+ =?us-ascii?Q?gyywc8IK8W+v7q5IA7eTpviH0Aj+QOkty0M8UKA43R0N7jSLsz5iUnX8i0Eu?=
+ =?us-ascii?Q?W0nzGlH5tgGvKyqtSOH/bexhCItL5RN1hwULipCB6PpkArf6Y4P0AQzSSJE5?=
+ =?us-ascii?Q?lC5vo0d9+MluUunKv9gRzD+25b+9lo0ccczxxEoHljko/XsiYPchBZl0lV9O?=
+ =?us-ascii?Q?25pjSZYLXzSxzCU3989xDB/RpKxkA3GxhTI0lmCTkCenkTonAlGuUWA3CVdR?=
+ =?us-ascii?Q?+Sm9kx9vuImXhi6YYaMo5f1JEMsK6/Z24RM36tGGjIjNe2ccVJpmfbRp35Ok?=
+ =?us-ascii?Q?NiTpeES8yoPprdwaRa53hQGC/EFpEfFashfSIxbjY3MH/kCHJp1gW2zYFQSN?=
+ =?us-ascii?Q?8xhc0GhLmS+QJc6eAGJo3ox6i7ZHLogVtTsz1LRW0J6/35hoLMmbGoecQqln?=
+ =?us-ascii?Q?o1b7bi/XuBxMVFVSsNDO25SZLUHHiBenJZ5hLzmfC4rWuDMabn9+vQ2kQxND?=
+ =?us-ascii?Q?h3G/meX6m0FbEKmDC8wBGECpT8s6rSqEWqXa3gWiGLjTEzdGcqHu9ihrSvAI?=
+ =?us-ascii?Q?2NiFW18xwTG0WuCbJigg+g+ky92C4N4iFPz4NsQE/RC0SpFolwc+aB9CQxaX?=
+ =?us-ascii?Q?/8XwVhig4dgcWPzOBBg9QOrqmuRbAwPgpv7ISVtJ88I37PAPBaPBT+g1QxW9?=
+ =?us-ascii?Q?kDgtiY/Tp8R8j5ShH8Rm1a+Hvzzu/qST5CLsUPumqUR0/qGOKfGAGZbNd0YJ?=
+ =?us-ascii?Q?KnxVLd9gR1YL+u0MPQ6HnPrj4d7eVeqYn/RwZGvQ7cQV/VmGaMjPrKzvHpuE?=
+ =?us-ascii?Q?8hoTg13cgTuDvARLE+cy4k4QYcYiQZhK3IPD+Fn03i/aCoiLu3TPeFfCRGO4?=
+ =?us-ascii?Q?NIgw85T4kY+bWhMPxjhuLpqTwS+xfgLY0o5ro2xbQyTBsOioCCe6TCjbDE3m?=
+ =?us-ascii?Q?xgbu3d+aG7smKyW241zEr0gxD992apGyZHMaH5UzD3X8EOw2jAWR3X3F6XK+?=
+ =?us-ascii?Q?9g=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6bc5e56-bca3-4c53-d6b6-08db0886d344
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2023 21:12:16.7138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3SOXN4CzP9mvbkqXyiUVA3x25xcFzmZGoQxYEcLw7bcGKK1kYcvnkhHrbJ4pLYeDr+nn9BNnok+oy3OzGMbk2PPih5UzMj8TkM1m/2DOR/c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB4618
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 2/5/23 6:02 PM, Dan Williams wrote:
-> In preparation for a new region type, "ram" regions, add a mode
-> attribute to clarify the mode of the decoders that can be added to a
-> region. Share the internals of mode_show() (for decoders) with the
-> region case.
+On Sun, Feb 05, 2023 at 05:03:46PM -0800, Dan Williams wrote:
+> Empty driver remove callbacks can just be elided.
 > 
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
 > ---
->   Documentation/ABI/testing/sysfs-bus-cxl |   11 +++++++++++
->   drivers/cxl/core/port.c                 |   12 +-----------
->   drivers/cxl/core/region.c               |   10 ++++++++++
->   drivers/cxl/cxl.h                       |   14 ++++++++++++++
->   4 files changed, 36 insertions(+), 11 deletions(-)
+>  drivers/dax/hmem/hmem.c |    7 -------
+>  1 file changed, 7 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 5be032313e29..058b0c45001f 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -358,6 +358,17 @@ Description:
->   		results in the same address being allocated.
->   
->   
-> +What:		/sys/bus/cxl/devices/regionZ/mode
-> +Date:		January, 2023
-> +KernelVersion:	v6.3
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The mode of a region is established at region creation time
-> +		and dictates the mode of the endpoint decoder that comprise the
-> +		region. For more details on the possible modes see
-> +		/sys/bus/cxl/devices/decoderX.Y/mode
-> +
-> +
->   What:		/sys/bus/cxl/devices/regionZ/resource
->   Date:		May, 2022
->   KernelVersion:	v6.0
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 410c036c09fa..8566451cb22f 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -180,17 +180,7 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
->   {
->   	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
->   
-> -	switch (cxled->mode) {
-> -	case CXL_DECODER_RAM:
-> -		return sysfs_emit(buf, "ram\n");
-> -	case CXL_DECODER_PMEM:
-> -		return sysfs_emit(buf, "pmem\n");
-> -	case CXL_DECODER_NONE:
-> -		return sysfs_emit(buf, "none\n");
-> -	case CXL_DECODER_MIXED:
-> -	default:
-> -		return sysfs_emit(buf, "mixed\n");
-> -	}
-> +	return sysfs_emit(buf, "%s\n", cxl_decoder_mode_name(cxled->mode));
->   }
->   
->   static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 60828d01972a..17d2d0c12725 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -458,6 +458,15 @@ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
->   }
->   static DEVICE_ATTR_RO(resource);
->   
-> +static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct cxl_region *cxlr = to_cxl_region(dev);
-> +
-> +	return sysfs_emit(buf, "%s\n", cxl_decoder_mode_name(cxlr->mode));
-> +}
-> +static DEVICE_ATTR_RO(mode);
-> +
->   static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
->   {
->   	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> @@ -585,6 +594,7 @@ static struct attribute *cxl_region_attrs[] = {
->   	&dev_attr_interleave_granularity.attr,
->   	&dev_attr_resource.attr,
->   	&dev_attr_size.attr,
-> +	&dev_attr_mode.attr,
->   	NULL,
->   };
->   
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index aa3af3bb73b2..ca76879af1de 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -320,6 +320,20 @@ enum cxl_decoder_mode {
->   	CXL_DECODER_DEAD,
->   };
->   
-> +static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
-> +{
-> +	static const char * const names[] = {
-> +		[CXL_DECODER_NONE] = "none",
-> +		[CXL_DECODER_RAM] = "ram",
-> +		[CXL_DECODER_PMEM] = "pmem",
-> +		[CXL_DECODER_MIXED] = "mixed",
-> +	};
-> +
-> +	if (mode >= CXL_DECODER_NONE && mode <= CXL_DECODER_MIXED)
-> +		return names[mode];
-> +	return "mixed";
-> +}
-> +
->   /**
->    * struct cxl_endpoint_decoder - Endpoint  / SPA to DPA decoder
->    * @cxld: base cxl_decoder_object
-> 
+
+Reviewed-by: Gregory Price <gregory.price@memverge.com>
