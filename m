@@ -2,40 +2,40 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580C7C05027
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 17:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0323AC636D3
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 17:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjBFRcu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Feb 2023 12:32:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39488 "EHLO
+        id S229686AbjBFRdU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Feb 2023 12:33:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbjBFRct (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 12:32:49 -0500
+        with ESMTP id S229592AbjBFRdT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 12:33:19 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF2161BA
-        for <linux-cxl@vger.kernel.org>; Mon,  6 Feb 2023 09:32:47 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P9YC43RfYz6J6HQ;
-        Tue,  7 Feb 2023 01:28:48 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954FE13523
+        for <linux-cxl@vger.kernel.org>; Mon,  6 Feb 2023 09:33:18 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P9YCg2tTtz6J65x;
+        Tue,  7 Feb 2023 01:29:19 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Mon, 6 Feb 2023 17:32:45 +0000
+ 15.1.2507.17; Mon, 6 Feb 2023 17:33:16 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
 CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
         <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
         Gregory Price <gourry.memverge@gmail.com>,
         =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v4 09/10] qemu/uuid: Add UUID static initializer
-Date:   Mon, 6 Feb 2023 17:28:15 +0000
-Message-ID: <20230206172816.8201-10-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4 10/10] hw/cxl/mailbox: Use new UUID network order define for cel_uuid
+Date:   Mon, 6 Feb 2023 17:28:16 +0000
+Message-ID: <20230206172816.8201-11-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
 References: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
@@ -46,42 +46,90 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-UUID's are defined as network byte order fields.  No static initializer
-was available for UUID's in their standard big endian format.
+The cel_uuid was programatically generated previously because there was
+no static initializer for network order UUIDs.
 
-Define a big endian initializer for UUIDs.
+Use the new network order initializer for cel_uuid.  Adjust
+cxl_initialize_mailbox() because it can't fail now.
 
+Update specification reference.
+
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 Reviewed-by: Gregory Price <gregory.price@memverge.com>
 Tested-by: Gregory Price <gregory.price@memverge.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- include/qemu/uuid.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/include/qemu/uuid.h b/include/qemu/uuid.h
-index 9925febfa5..dc40ee1fc9 100644
---- a/include/qemu/uuid.h
-+++ b/include/qemu/uuid.h
-@@ -61,6 +61,18 @@ typedef struct {
-     (clock_seq_hi_and_reserved), (clock_seq_low), (node0), (node1), (node2),\
-     (node3), (node4), (node5) }
+---
+v2:
+Make it const (Philippe)
+---
+ hw/cxl/cxl-device-utils.c   |  2 +-
+ hw/cxl/cxl-mailbox-utils.c  | 13 ++++++-------
+ include/hw/cxl/cxl_device.h |  2 +-
+ 3 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+index 83ce7a8270..4c5e88aaf5 100644
+--- a/hw/cxl/cxl-device-utils.c
++++ b/hw/cxl/cxl-device-utils.c
+@@ -267,5 +267,5 @@ void cxl_device_register_init_common(CXLDeviceState *cxl_dstate)
+     cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000);
+     memdev_reg_init_common(cxl_dstate);
  
-+/* Normal (network byte order) UUID */
-+#define UUID(time_low, time_mid, time_hi_and_version,                    \
-+  clock_seq_hi_and_reserved, clock_seq_low, node0, node1, node2,         \
-+  node3, node4, node5)                                                   \
-+  { ((time_low) >> 24) & 0xff, ((time_low) >> 16) & 0xff,                \
-+    ((time_low) >> 8) & 0xff, (time_low) & 0xff,                         \
-+    ((time_mid) >> 8) & 0xff, (time_mid) & 0xff,                         \
-+    ((time_hi_and_version) >> 8) & 0xff, (time_hi_and_version) & 0xff,   \
-+    (clock_seq_hi_and_reserved), (clock_seq_low),                        \
-+    (node0), (node1), (node2), (node3), (node4), (node5)                 \
-+  }
-+
- #define UUID_FMT "%02hhx%02hhx%02hhx%02hhx-" \
-                  "%02hhx%02hhx-%02hhx%02hhx-" \
-                  "%02hhx%02hhx-" \
+-    assert(cxl_initialize_mailbox(cxl_dstate) == 0);
++    cxl_initialize_mailbox(cxl_dstate);
+ }
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 3f67b665f5..206e04a4b8 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -193,7 +193,11 @@ static ret_code cmd_timestamp_set(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
+-static QemuUUID cel_uuid;
++/* CXL 3.0 8.2.9.5.2.1 Command Effects Log (CEL) */
++static const QemuUUID cel_uuid = {
++    .data = UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
++                 0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
++};
+ 
+ /* 8.2.9.4.1 */
+ static ret_code cmd_logs_get_supported(struct cxl_cmd *cmd,
+@@ -458,11 +462,8 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+                      DOORBELL, 0);
+ }
+ 
+-int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
++void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
+ {
+-    /* CXL 2.0: Table 169 Get Supported Logs Log Entry */
+-    const char *cel_uuidstr = "0da9c0b5-bf41-4b78-8f79-96b1623b3f17";
+-
+     for (int set = 0; set < 256; set++) {
+         for (int cmd = 0; cmd < 256; cmd++) {
+             if (cxl_cmd_set[set][cmd].handler) {
+@@ -476,6 +477,4 @@ int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
+             }
+         }
+     }
+-
+-    return qemu_uuid_parse(cel_uuidstr, &cel_uuid);
+ }
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 250adf18b2..7e5ad65c1d 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -170,7 +170,7 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE,
+                                       CXL_DEVICE_CAP_HDR1_OFFSET +
+                                           CXL_DEVICE_CAP_REG_SIZE * 2)
+ 
+-int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
++void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
+ void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
+ 
+ #define cxl_device_cap_init(dstate, reg, cap_id)                           \
 -- 
 2.37.2
 
