@@ -2,105 +2,99 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F54DC636D3
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 17:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28FFC636D3
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 17:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230352AbjBFR2Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Feb 2023 12:28:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35216 "EHLO
+        id S230255AbjBFR2i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Feb 2023 12:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230180AbjBFR2R (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 12:28:17 -0500
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DEFF3A89;
-        Mon,  6 Feb 2023 09:27:49 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 41B57260FD4;
-        Mon,  6 Feb 2023 17:27:41 +0000 (UTC)
-Received: from pdx1-sub0-mail-a221.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id BFD3E260F34;
-        Mon,  6 Feb 2023 17:27:40 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1675704460; a=rsa-sha256;
-        cv=none;
-        b=pCnfwdmCKaEgpRrn7FRXV1v8vAMl1d43a4C1RAN8/G1QikRcAt3mjX9jY+sH/SVwuUlSvE
-        fAk4YnRwo1jVOq5lTqlBsOCwHcNLSMja0eenGke6XwADUzsmM5knLnQp8QLaTmhKiALtMu
-        tQ3WEU/vv837XvhNvcUvZA12NG596Ts5KgbyTb+1/Z2s4DZEqf0Wlx56HSyzr7iPbLIxrU
-        rS8625uu1L4ViqTLLsbzFqZ6klSn9fLWep/Ov7cCHt3OR1M/VumCaapR8xb4cy+D47AZGG
-        mV0jSU1AJJYR79aaYw+wER1fIsVvn7njtkIU6q3a7Bbll6NX9+E0jwbsED8aYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1675704460;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=guMc6hsiXGpalu0jr5Z0AEUYKVM2wKO59VlN/G9yblk=;
-        b=qIYusFZ4+eqRr4VbUQ5yr+Z/dI3jX1G0M5eFzivoj6cpGOb3BkaUR/AM7/3JPYTzE7nO3c
-        vGmDmQSIS+wDweev1zWqxuMg2IwboYeF4TDbNJpJHsjcm0x7TssIt5xggC/OqDvf8MDf7G
-        RBZsZt9cPYW+Q12tBBtFMvuKkQQ8IZ8X2Olw9rgP5ebCp4Tj9dv808sf1lMY7H1bZG4bSC
-        e1PE79gXNGM8Jny1biYsIv0tGdccdaLvD2LvdkAk0ryeYyxH9lV9pD1dIKp8RYT2libZlo
-        ed6zoOFU63EGTBFO57UT1ZK0N0Ny0zCL7wvlnh+BO9oS5gV5uIn42yv2tqheYA==
-ARC-Authentication-Results: i=1;
-        rspamd-544f66f495-sp79h;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Shade-Fearful: 0a702cd819bcb5c1_1675704461055_4197068008
-X-MC-Loop-Signature: 1675704461055:1861061609
-X-MC-Ingress-Time: 1675704461055
-Received: from pdx1-sub0-mail-a221.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.103.24.110 (trex/6.7.1);
-        Mon, 06 Feb 2023 17:27:41 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a221.dreamhost.com (Postfix) with ESMTPSA id 4P9Y9m0d9fz9t;
-        Mon,  6 Feb 2023 09:27:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1675704460;
-        bh=guMc6hsiXGpalu0jr5Z0AEUYKVM2wKO59VlN/G9yblk=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Nu4mZLu6eXXsFuG1qopNmg9ygmjFl98KLdVMLpjIwokO3awmYsZ+j/5RttTz8r1fU
-         MagIjB/6LJYKufamb/pzF/5+EYBdoHk/cHRUhh9pzXQgbMGEAKCMVbWr2Z42970Rpx
-         CftCLUJxu1/t/7bVVgYFGIk71p1Z1M/SMIEhiqstuXLP6Tsr/yo6tk7eOqUTP2KX2s
-         Dct4So7RYRmLbSCGO2no/G0ygG5hUPQwyNqBGM27O2+BU45Awxqn6L5F2AWRX+MJo8
-         3vFceRoCX0KpEfYXuidSqzEfQZ+pcB2oh52rF5J4uISLHmqx/a4J4mhkG7GyOpMNbI
-         N3GI5BxijFbBw==
-Date:   Mon, 6 Feb 2023 09:27:37 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, dave.hansen@linux.intel.com,
-        linux-mm@kvack.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 1/18] cxl/Documentation: Update references to attributes
- added in v6.0
-Message-ID: <20230206172737.chyul7vz3cpxij4b@offworld>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
- <167564535494.847146.12120939572640882946.stgit@dwillia2-xfh.jf.intel.com>
+        with ESMTP id S230244AbjBFR20 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 12:28:26 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36A893F8
+        for <linux-cxl@vger.kernel.org>; Mon,  6 Feb 2023 09:28:13 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P9Y8s1XdYz6J9yC;
+        Tue,  7 Feb 2023 01:26:53 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Mon, 6 Feb 2023 17:28:11 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: [PATCH v4 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream
+Date:   Mon, 6 Feb 2023 17:28:06 +0000
+Message-ID: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <167564535494.847146.12120939572640882946.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 05 Feb 2023, Dan Williams wrote:
+Since V3:
+- Rebased on upstream today.
+- Refreshed DSDT.cxl due to changes upstream.
+- Picked up tags from Gregory.
 
->Prior to Linus deciding that the kernel that following v5.19 would be
->v6.0, the CXL ABI documentation already referenced v5.20. In preparation
->for updating these entries update the kernel version to v6.0.
->
->Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+A small collection of misc fixes and tidying up pulled out from various
+series. I've pulled this to the top of my queue of CXL related work
+as they stand fine on their own and it will reduce the noise in
+the larger patch sets if these go upstream first.
 
-This one seems better for v6.2.
+Gregory's patches were posted as part of his work on adding volatile support.
+https://lore.kernel.org/linux-cxl/20221006233702.18532-1-gregory.price@memverge.com/
+https://lore.kernel.org/linux-cxl/20221128150157.97724-2-gregory.price@memverge.com/
+I might propose this for upstream inclusion this cycle, but testing is
+currently limited by lack of suitable kernel support.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Ira's patches were part of his event injection series.
+https://lore.kernel.org/linux-cxl/20221221-ira-cxl-events-2022-11-17-v2-0-2ce2ecc06219@intel.com/
+Intent is to propose for upstream the rest of that series shortly after
+some minor changes from earlier review.
+
+My five patches have not previously been posted before this series.
+
+
+Baseline: 6661b8c7fe "Merge tag 'pull-ppc-20230205' of https://gitlab.com/danielhb/qemu into staging"
+
+Gregory Price (2):
+  hw/cxl: set cxl-type3 device type to PCI_CLASS_MEMORY_CXL
+  hw/cxl: Add CXL_CAPACITY_MULTIPLIER definition
+
+Ira Weiny (3):
+  qemu/bswap: Add const_le64()
+  qemu/uuid: Add UUID static initializer
+  hw/cxl/mailbox: Use new UUID network order define for cel_uuid
+
+Jonathan Cameron (5):
+  hw/mem/cxl_type3: Improve error handling in realize()
+  hw/pci-bridge/cxl_downstream: Fix type naming mismatch
+  tests/acpi: Allow update of q35/DSDT.cxl
+  hw/i386/acpi: Drop duplicate _UID entry for CXL root bridge
+  tests: acpi: Update q35/DSDT.cxl for removed duplicate UID
+
+ hw/cxl/cxl-device-utils.c      |   2 +-
+ hw/cxl/cxl-mailbox-utils.c     |  28 +++++++++++++++-------------
+ hw/i386/acpi-build.c           |   1 -
+ hw/mem/cxl_type3.c             |  15 +++++++++++----
+ hw/pci-bridge/cxl_downstream.c |   2 +-
+ include/hw/cxl/cxl_device.h    |   2 +-
+ include/qemu/bswap.h           |  12 +++++++++++-
+ include/qemu/uuid.h            |  12 ++++++++++++
+ tests/data/acpi/q35/DSDT.cxl   | Bin 9578 -> 9564 bytes
+ 9 files changed, 52 insertions(+), 22 deletions(-)
+
+-- 
+2.37.2
+
