@@ -2,460 +2,196 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055E3C636CC
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 01:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBC3C636D3
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 05:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbjBFBEQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 5 Feb 2023 20:04:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        id S229581AbjBFFgX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Feb 2023 00:36:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjBFBEP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 5 Feb 2023 20:04:15 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1360BD537;
-        Sun,  5 Feb 2023 17:04:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675645454; x=1707181454;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wPmMkCp6DCx1PzgRrsiFSVETspBvehWCurZIdpJuvvk=;
-  b=D80baL58UYzAjhHmJYADerqUAj7KeGawsfDrfKHEkTLOHtzIgJTfBu7M
-   lNo323RclCpB/YMZfJhY8ym5YZCeFkgjKSu3NKdg3C0PTaA9EmGLZtIEl
-   nbWwTAsnQKSDslTmw0qlix2xcpTrDpuC7GKz8TyiGd3lLVufcmsV95qod
-   NXWjDrfvJjP8OR8HUj1sJ+gyi730aLcSARcikg9VUw0OkZKtXBpd/LAek
-   hCJfCHcIp+xDUykkEayEahpcGlJ/NKoZlAGGj08/sSjL0MPhRXAlvwxrQ
-   TKB0rKMdidgUeH0n5mUL/dyjKHtBK7/j/UdWnnbkQZZuh3UXY7XSlr0Q6
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="329123119"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="329123119"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2023 17:04:12 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="698692901"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="698692901"
-Received: from mkrysak-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.255.187])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2023 17:04:11 -0800
-Subject: [PATCH 18/18] cxl/dax: Create dax devices for CXL RAM regions
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dave.hansen@linux.intel.com, linux-mm@kvack.org,
+        with ESMTP id S229447AbjBFFgW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 00:36:22 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9D313505;
+        Sun,  5 Feb 2023 21:36:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MLrDwKwN09Mhgo0TdHMTxk7bBiUxWHbcRaGzTigo2dW9IqkwSubuELVydvNx3dht7bBLN370UyHv4ADFVuDzYa7NngMZ0fYwFxBWy02FXg3hlevnbRJnvxh7QhClXh1oHZBvTwunvw4FaAFh2ZD6QvqZDZetgeDn3nqdSJuMG9WKfqKltCFd/MJXbEOoYld2kr1frl4H+kfuZK+EZhRwZt6X2Mw4C6NdRrMGTL9wBRvmPohFMFwI7BUoT3lHmNQiXHluZ0ARGlhxSJcF5zaOKf5J5YiVc7fvIH37EOxSGdVWN9YUQh12CY/f/YAT66Y3xsft671hnoPFY+DvCbj6pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WsM7JvlC/zMzDriuXrYOdZgXx1EBKJa57f/4bkCcKYU=;
+ b=AXEZQoRQRYs3TUu61uAytURhqyiW5Xk/bh650GxIbda/hBpZvrfxDgDalsiPVWzM8Kt5KPCIg38H+odIlXMyocnqOJRWvPMw8J71/prhClfjaVOZ6cbfQ9gUyN601ilGI7vByZe+1N30K78MZt+qelG24MvzP3GKDT56+etEffXsvAm+6c/ykbVwlV0GFzWZvD98eFl9Czba/A5M45o25Tn2HqGaFdp/dn1taM/jxGk/VxQfnDIudZl3p55xg/A7u7j20r/XU7CSwi2tdtVzZwS6KUMTIDR8CmvkgYBspDovnRJv4QZykqwsfZbOtAC89gj+1Xq9dzCnKOBD2vsTKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WsM7JvlC/zMzDriuXrYOdZgXx1EBKJa57f/4bkCcKYU=;
+ b=AigUQfNl4gIqFvNghFHlWPCfMy+hiJkp6DbMUJIyCHs8+We+4pB+QyF5PV+JPtPM2eUKSz2ZsHV0iR9mTwjkDEUQabuks1tw+Y9QfIuhVhGdh7WVxajAAGlH8RwbBF9O9LSkdq9hWVmb2nFbv+Unhijk0hdl7hYnsPOStMavwT8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+ by SJ0PR17MB5005.namprd17.prod.outlook.com (2603:10b6:a03:303::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Mon, 6 Feb
+ 2023 05:36:17 +0000
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.6064.034; Mon, 6 Feb 2023
+ 05:36:17 +0000
+Date:   Mon, 6 Feb 2023 00:36:11 -0500
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
         linux-acpi@vger.kernel.org
-Date:   Sun, 05 Feb 2023 17:04:11 -0800
-Message-ID: <167564545116.847146.4741351262959589920.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
+ default
+Message-ID: <Y+CRyz0eFKfERZLD@memverge.com>
 References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: BY3PR04CA0018.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::23) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|SJ0PR17MB5005:EE_
+X-MS-Office365-Filtering-Correlation-Id: b506b5f1-6302-4654-f454-08db08041178
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yyvZiPCCYJCBVxJbRcd05ZoW3Tg/FiwUnRvRR8QyTt36sI7QxRuZlhCerElC3wYVGf3xXqz+4g9kzPDyQdqK/9U4N1+eD9FH7Kd+fELUdEDLF6xeYW1iee+aZqjVToP2sWUtO7MZnx11UtG8I7fHzyruzneyPTbOFuD0WIPkWbtpkJCJkbV+XrRF5yAzHoNH4uxWp7svLPVT1mhYy++//X5yXtcBIR7itytMJZh3wYepRUW8mMgEcaQ3K/eQJ8OdmEVsnh62INNgMTo7tqXbfn8HBc5qgDjCvJnrbZnoY8HwSozmXvDoJoF/gaZ6umtv4DXQzdMyjh/U5N7bccYPYa3XzVNbYU6Q5WeZplyTrX5rl6jCrSqnTw4HPVaHGqhSUlpY7coLr2obZxemNlFc70c8zkXbBU9CdshKoXrpmDLDBAW6UCv0DDZYOz5lcsmUJXGcqlBFz2PT2MH0fNlP5WYYZgQUcA2zMPgkImbysqnodQjyDuNbC3eq5t6pAMAeS273hDaI8JYRdmh+H7CANg4g6mYKyiiiloZWpOMHOOKinz01mxhM8KFV1Q7HU7/JLayjH/KAU36tlG72lnJOV6nEOwdD0XYfga7kUb+/Xq0FJxffKpuJmGoJrLUE0tNn99KrRCkiVlBJJw/YfGEnbV0NGhPJEHwDgX2h6XNJyzZUPzo2r0Ix1zkgSJ6ielLW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(366004)(39830400003)(346002)(376002)(136003)(451199018)(86362001)(36756003)(38100700002)(45080400002)(316002)(2906002)(54906003)(478600001)(6486002)(41300700001)(8936002)(44832011)(6506007)(66946007)(66556008)(5660300002)(8676002)(6916009)(4326008)(6666004)(83380400001)(66476007)(6512007)(186003)(26005)(2616005)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9eK8MOciuyOi8aHJhj3+/yL1jQGM5LBsEpv61/kf+kKVFK4q0SPq3dTyArEh?=
+ =?us-ascii?Q?svOQ6mrJENlX9G06jxgT4TUpE/QSizR7NOiNnB+C2CUyzTxLGt4GUQ+t67o6?=
+ =?us-ascii?Q?8hZXGIJL3Hu28VMswRTx1adIJQjOH6okhsm1O8tYGiqhY7zFQHEj8jw6x2/d?=
+ =?us-ascii?Q?VTF6LDWbPiFMjITrTMn3BvLJmphNnltyRjtjT3qkdo7FxX6eCf9S8Lor1kIQ?=
+ =?us-ascii?Q?iQjYn8j1WzCPau/vl/TK64Fw1mKO/nYC6RWSZVI0bqaHY4wroRhwbnEeMiAb?=
+ =?us-ascii?Q?ws+wFyQobNWqcl/Tjxo9LZUIvAaHl2JJJ/dpScSGE1BFaCR9igWDVKrnG1TM?=
+ =?us-ascii?Q?dDJswNY3fR1ajMiKmLHjR5JT7tv3p5sd5xP/8KFq+m0X4yzqCON01akWJRiT?=
+ =?us-ascii?Q?5xpI+waMuAJBkpDwUJeS8wX2WtCg/GYbrZ6ZoDpIU82Af7Tm8QutLLbZLdDb?=
+ =?us-ascii?Q?PnjQoo73bSm6ZN8OaWyhBUN/tebrLK+gvy4ri7Sbfa0Km+5YsIJBf9YuPm3J?=
+ =?us-ascii?Q?ji+6gKHkZSCnYwqZfQGyn3eV8fZ/zGtFtdVr5BdJdk75gGAInghr8wIkMUDZ?=
+ =?us-ascii?Q?7cGE4eCxfSVKvAXyLJRGjG9D0LVILsPs7VW2kvlhLZi6EuJSSkz89HEb2Hws?=
+ =?us-ascii?Q?9u/S2t0UQo7tXMMftIDcTqa3fL+dh/VwRfaY6eJKXFL2acbWbSjWsHWu2NeT?=
+ =?us-ascii?Q?7nvGaRsoT8aw+BPCurhxSNaT9nzydrRWB/koXrmnBH34wvSNOLD9A/k1qL8n?=
+ =?us-ascii?Q?2/BkZgw7W7GNm2cZcTbANTV+YnCEX6dhp8dX/OMwHLoFrON+KGDsbJ1qerqj?=
+ =?us-ascii?Q?ZYGBM5wkOly8kPN1pnW9tbPT3S7Wej6Fm39vwfe/f1erG3GXVXfL9UkYBMW4?=
+ =?us-ascii?Q?GvIzQRKrlPkZNpaZEjSh+De5K7y4yJOt46y6l2cgT0gpzMPdPwEdFqE5Fi3D?=
+ =?us-ascii?Q?RifNeRkggr3k1egpR9MN052cbtzRhzoS3jPgAWjea9DwdEZh/zYQLVP5o9zy?=
+ =?us-ascii?Q?03xk25l0gI09HNjvPbMdhh1jcJprC2GHrphrKup9dXgQiyDEgvfhP6D7D7Ym?=
+ =?us-ascii?Q?42/qlUi+W0jKAwp+sPtuANl8LdZQWcwWvOv/CXNz5zbh7xbVBj4DtDO5ofJa?=
+ =?us-ascii?Q?MzmFnNjrStHu6EF4IiJNhniL/bT/gGzwNNDgdYYIbLJpS262AAnB7JCAjayc?=
+ =?us-ascii?Q?GMAhzML5GcHs7+tekYQfDnLr4zfcMl2y3F1LTkU8zznOh8EoY5H1HYq1+AbK?=
+ =?us-ascii?Q?zW75L+FT0RJyaEvyDvlBBiMf6XXE1sA2A5USI6F9cqgtSzhDVIpkuDTMu/Y1?=
+ =?us-ascii?Q?zlgb9aEcfOOsKFxTCzAAfeBAQ+FV74R6fw/ehMq4KJAIyMXcqUNmT/fCC8um?=
+ =?us-ascii?Q?9eDlo/gWrvWGaKJNMtN+XW9qjzlXBn7XSBEFCqy3+xAQ/hjA/oUlpmjtjXAn?=
+ =?us-ascii?Q?MgJmOsLdtGmeN8LOWGNhMSjNTB/e2VnmeuFpB6hn6hkpatVCArbQzVdo6npt?=
+ =?us-ascii?Q?MEJjDuC6b6qalvrh3bZbcgzDIHVHcbkvjxiKFdfL52HB/kxq9E20SEC6G/YF?=
+ =?us-ascii?Q?IjBkLF4fmJUi0y1nchtxz984Cnx6+gTv9NEToV1jgy68vjeogeHpFx578PQ5?=
+ =?us-ascii?Q?Fw=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b506b5f1-6302-4654-f454-08db08041178
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2023 05:36:17.1275
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bE+39649Ugpq5AeDhETZXQsOs6+AvlRR8Wv91kk7VyneJZnNmN5dDnke10py3e0LESxt0lK3A9zpkx1uEiL0NkOWk5RP2gA3fdUmdk8tiEA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB5005
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-While platform firmware takes some responsibility for mapping the RAM
-capacity of CXL devices present at boot, the OS is responsible for
-mapping the remainder and hot-added devices. Platform firmware is also
-responsible for identifying the platform general purpose memory pool,
-typically DDR attached DRAM, and arranging for the remainder to be 'Soft
-Reserved'. That reservation allows the CXL subsystem to route the memory
-to core-mm via memory-hotplug (dax_kmem), or leave it for dedicated
-access (device-dax).
+On Sun, Feb 05, 2023 at 05:02:29PM -0800, Dan Williams wrote:
+> Summary:
+> --------
+> 
+> CXL RAM support allows for the dynamic provisioning of new CXL RAM
+> regions, and more routinely, assembling a region from an existing
+> configuration established by platform-firmware. The latter is motivated
+> by CXL memory RAS (Reliability, Availability and Serviceability)
+> support, that requires associating device events with System Physical
+> Address ranges and vice versa.
+> 
+> The 'Soft Reserved' policy rework arranges for performance
+> differentiated memory like CXL attached DRAM, or high-bandwidth memory,
+> to be designated for 'System RAM' by default, rather than the device-dax
+> dedicated access mode. That current device-dax default is confusing and
+> surprising for the Pareto of users that do not expect memory to be
+> quarantined for dedicated access by default. Most users expect all
+> 'System RAM'-capable memory to show up in FREE(1).
 
-The new 'struct cxl_dax_region' object allows for a CXL memory resource
-(region) to be published, but also allow for udev and module policy to
-act on that event. It also prevents cxl_core.ko from having a module
-loading dependency on any drivers/dax/ modules.
+Leverage the same QEMU branch, machine, and configuration as my prior
+tests, i'm now experiencing a kernel panic on boot.  Will debug a bit
+in the morning, but here is the stack trace i'm seeing
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- MAINTAINERS               |    1 
- drivers/cxl/acpi.c        |    3 +
- drivers/cxl/core/core.h   |    3 +
- drivers/cxl/core/port.c   |    2 +
- drivers/cxl/core/region.c |  108 ++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxl.h         |   12 +++++
- drivers/dax/Kconfig       |   13 +++++
- drivers/dax/Makefile      |    2 +
- drivers/dax/cxl.c         |   53 ++++++++++++++++++++++
- drivers/dax/hmem/hmem.c   |   14 ++++++
- 10 files changed, 208 insertions(+), 3 deletions(-)
- create mode 100644 drivers/dax/cxl.c
+Saw this in both 1 and 2 root port configurations
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7f86d02cb427..73a9f3401e0e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6035,6 +6035,7 @@ M:	Dan Williams <dan.j.williams@intel.com>
- M:	Vishal Verma <vishal.l.verma@intel.com>
- M:	Dave Jiang <dave.jiang@intel.com>
- L:	nvdimm@lists.linux.dev
-+L:	linux-cxl@vger.kernel.org
- S:	Supported
- F:	drivers/dax/
- 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index ad0849af42d7..8ebb9a74790d 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -731,7 +731,8 @@ static void __exit cxl_acpi_exit(void)
- 	cxl_bus_drain();
- }
- 
--module_init(cxl_acpi_init);
-+/* load before dax_hmem sees 'Soft Reserved' CXL ranges */
-+subsys_initcall(cxl_acpi_init);
- module_exit(cxl_acpi_exit);
- MODULE_LICENSE("GPL v2");
- MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 479f01da6d35..cde475e13216 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -15,12 +15,14 @@ extern struct device_attribute dev_attr_create_ram_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
- extern const struct device_type cxl_pmem_region_type;
-+extern const struct device_type cxl_dax_region_type;
- extern const struct device_type cxl_region_type;
- void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
- #define CXL_REGION_ATTR(x) (&dev_attr_##x.attr)
- #define CXL_REGION_TYPE(x) (&cxl_region_type)
- #define SET_CXL_REGION_ATTR(x) (&dev_attr_##x.attr),
- #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
-+#define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
- int cxl_region_init(void);
- void cxl_region_exit(void);
- #else
-@@ -38,6 +40,7 @@ static inline void cxl_region_exit(void)
- #define CXL_REGION_TYPE(x) NULL
- #define SET_CXL_REGION_ATTR(x)
- #define CXL_PMEM_REGION_TYPE(x) NULL
-+#define CXL_DAX_REGION_TYPE(x) NULL
- #endif
- 
- struct cxl_send_command;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 8d0895cbae93..0faeb1ffc212 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -46,6 +46,8 @@ static int cxl_device_id(struct device *dev)
- 		return CXL_DEVICE_NVDIMM;
- 	if (dev->type == CXL_PMEM_REGION_TYPE())
- 		return CXL_DEVICE_PMEM_REGION;
-+	if (dev->type == CXL_DAX_REGION_TYPE())
-+		return CXL_DEVICE_DAX_REGION;
- 	if (is_cxl_port(dev)) {
- 		if (is_cxl_root(to_cxl_port(dev)))
- 			return CXL_DEVICE_ROOT;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 6fe8c70790df..86fa54015a99 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2261,6 +2261,75 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
- 	return cxlr_pmem;
- }
- 
-+static void cxl_dax_region_release(struct device *dev)
-+{
-+	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-+
-+	kfree(cxlr_dax);
-+}
-+
-+static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
-+	&cxl_base_attribute_group,
-+	NULL,
-+};
-+
-+const struct device_type cxl_dax_region_type = {
-+	.name = "cxl_dax_region",
-+	.release = cxl_dax_region_release,
-+	.groups = cxl_dax_region_attribute_groups,
-+};
-+
-+static bool is_cxl_dax_region(struct device *dev)
-+{
-+	return dev->type == &cxl_dax_region_type;
-+}
-+
-+struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
-+{
-+	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
-+			  "not a cxl_dax_region device\n"))
-+		return NULL;
-+	return container_of(dev, struct cxl_dax_region, dev);
-+}
-+EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, CXL);
-+
-+static struct lock_class_key cxl_dax_region_key;
-+
-+static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
-+{
-+	struct cxl_region_params *p = &cxlr->params;
-+	struct cxl_dax_region *cxlr_dax;
-+	struct device *dev;
-+
-+	down_read(&cxl_region_rwsem);
-+	if (p->state != CXL_CONFIG_COMMIT) {
-+		cxlr_dax = ERR_PTR(-ENXIO);
-+		goto out;
-+	}
-+
-+	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
-+	if (!cxlr_dax) {
-+		cxlr_dax = ERR_PTR(-ENOMEM);
-+		goto out;
-+	}
-+
-+	cxlr_dax->hpa_range.start = p->res->start;
-+	cxlr_dax->hpa_range.end = p->res->end;
-+
-+	dev = &cxlr_dax->dev;
-+	cxlr_dax->cxlr = cxlr;
-+	device_initialize(dev);
-+	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
-+	device_set_pm_not_required(dev);
-+	dev->parent = &cxlr->dev;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_dax_region_type;
-+out:
-+	up_read(&cxl_region_rwsem);
-+
-+	return cxlr_dax;
-+}
-+
- static void cxlr_pmem_unregister(void *_cxlr_pmem)
- {
- 	struct cxl_pmem_region *cxlr_pmem = _cxlr_pmem;
-@@ -2345,6 +2414,42 @@ static int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
- 	return rc;
- }
- 
-+static void cxlr_dax_unregister(void *_cxlr_dax)
-+{
-+	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
-+
-+	device_unregister(&cxlr_dax->dev);
-+}
-+
-+static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
-+{
-+	struct cxl_dax_region *cxlr_dax;
-+	struct device *dev;
-+	int rc;
-+
-+	cxlr_dax = cxl_dax_region_alloc(cxlr);
-+	if (IS_ERR(cxlr_dax))
-+		return PTR_ERR(cxlr_dax);
-+
-+	dev = &cxlr_dax->dev;
-+	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
-+	if (rc)
-+		goto err;
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
-+
-+	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
-+		dev_name(dev));
-+
-+	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
-+					cxlr_dax);
-+err:
-+	put_device(dev);
-+	return rc;
-+}
-+
- static int match_decoder_by_range(struct device *dev, void *data)
- {
- 	struct range *r1, *r2 = data;
-@@ -2606,8 +2711,7 @@ static int cxl_region_probe(struct device *dev)
- 					p->res->start, p->res->end, cxlr,
- 					is_system_ram) > 0)
- 			return 0;
--		dev_dbg(dev, "TODO: hookup devdax\n");
--		return 0;
-+		return devm_cxl_add_dax_region(cxlr);
- 	default:
- 		dev_dbg(&cxlr->dev, "unsupported region mode: %d\n",
- 			cxlr->mode);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 4c6ee6c96f23..336b65d333a2 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -505,6 +505,12 @@ struct cxl_pmem_region {
- 	struct cxl_pmem_region_mapping mapping[];
- };
- 
-+struct cxl_dax_region {
-+	struct device dev;
-+	struct cxl_region *cxlr;
-+	struct range hpa_range;
-+};
-+
- /**
-  * struct cxl_port - logical collection of upstream port devices and
-  *		     downstream port devices to construct a CXL memory
-@@ -699,6 +705,7 @@ void cxl_driver_unregister(struct cxl_driver *cxl_drv);
- #define CXL_DEVICE_MEMORY_EXPANDER	5
- #define CXL_DEVICE_REGION		6
- #define CXL_DEVICE_PMEM_REGION		7
-+#define CXL_DEVICE_DAX_REGION		8
- 
- #define MODULE_ALIAS_CXL(type) MODULE_ALIAS("cxl:t" __stringify(type) "*")
- #define CXL_MODALIAS_FMT "cxl:t%d"
-@@ -715,6 +722,7 @@ struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct device *dev);
- #ifdef CONFIG_CXL_REGION
- bool is_cxl_pmem_region(struct device *dev);
- struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
-+struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
- void cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
- #else
- static inline bool is_cxl_pmem_region(struct device *dev)
-@@ -725,6 +733,10 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
- {
- 	return NULL;
- }
-+static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
-+{
-+	return NULL;
-+}
- static inline void cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
- {
- }
-diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-index 1163eb62e5f6..bd06e16c7ac8 100644
---- a/drivers/dax/Kconfig
-+++ b/drivers/dax/Kconfig
-@@ -45,6 +45,19 @@ config DEV_DAX_HMEM
- 
- 	  Say M if unsure.
- 
-+config DEV_DAX_CXL
-+	tristate "CXL DAX: direct access to CXL RAM regions"
-+	depends on CXL_REGION && DEV_DAX
-+	default CXL_REGION && DEV_DAX
-+	help
-+	  CXL RAM regions are either mapped by platform-firmware
-+	  and published in the initial system-memory map as "System RAM", mapped
-+	  by platform-firmware as "Soft Reserved", or dynamically provisioned
-+	  after boot by the CXL driver. In the latter two cases a device-dax
-+	  instance is created to access that unmapped-by-default address range.
-+	  Per usual it can remain as dedicated access via a device interface, or
-+	  converted to "System RAM" via the dax_kmem facility.
-+
- config DEV_DAX_HMEM_DEVICES
- 	depends on DEV_DAX_HMEM && DAX
- 	def_bool y
-diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
-index 90a56ca3b345..5ed5c39857c8 100644
---- a/drivers/dax/Makefile
-+++ b/drivers/dax/Makefile
-@@ -3,10 +3,12 @@ obj-$(CONFIG_DAX) += dax.o
- obj-$(CONFIG_DEV_DAX) += device_dax.o
- obj-$(CONFIG_DEV_DAX_KMEM) += kmem.o
- obj-$(CONFIG_DEV_DAX_PMEM) += dax_pmem.o
-+obj-$(CONFIG_DEV_DAX_CXL) += dax_cxl.o
- 
- dax-y := super.o
- dax-y += bus.o
- device_dax-y := device.o
- dax_pmem-y := pmem.o
-+dax_cxl-y := cxl.o
- 
- obj-y += hmem/
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-new file mode 100644
-index 000000000000..ccdf8de85bd5
---- /dev/null
-+++ b/drivers/dax/cxl.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
-+#include <linux/module.h>
-+#include <linux/dax.h>
-+
-+#include "../cxl/cxl.h"
-+#include "bus.h"
-+
-+static int cxl_dax_region_probe(struct device *dev)
-+{
-+	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-+	int nid = phys_to_target_node(cxlr_dax->hpa_range.start);
-+	struct cxl_region *cxlr = cxlr_dax->cxlr;
-+	struct dax_region *dax_region;
-+	struct dev_dax_data data;
-+	struct dev_dax *dev_dax;
-+
-+	if (nid == NUMA_NO_NODE)
-+		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
-+
-+	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
-+				      PMD_SIZE, IORESOURCE_DAX_KMEM);
-+	if (!dax_region)
-+		return -ENOMEM;
-+
-+	data = (struct dev_dax_data) {
-+		.dax_region = dax_region,
-+		.id = -1,
-+		.size = range_len(&cxlr_dax->hpa_range),
-+	};
-+	dev_dax = devm_create_dev_dax(&data);
-+	if (IS_ERR(dev_dax))
-+		return PTR_ERR(dev_dax);
-+
-+	/* child dev_dax instances now own the lifetime of the dax_region */
-+	dax_region_put(dax_region);
-+	return 0;
-+}
-+
-+static struct cxl_driver cxl_dax_region_driver = {
-+	.name = "cxl_dax_region",
-+	.probe = cxl_dax_region_probe,
-+	.id = CXL_DEVICE_DAX_REGION,
-+	.drv = {
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+
-+module_cxl_driver(cxl_dax_region_driver);
-+MODULE_ALIAS_CXL(CXL_DEVICE_DAX_REGION);
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Intel Corporation");
-+MODULE_IMPORT_NS(CXL);
-diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-index 5ec08f9f8a57..e5fe8b39fb94 100644
---- a/drivers/dax/hmem/hmem.c
-+++ b/drivers/dax/hmem/hmem.c
-@@ -72,6 +72,13 @@ static int hmem_register_device(struct device *host, int target_nid,
- 	long id;
- 	int rc;
- 
-+	if (IS_ENABLED(CONFIG_CXL_REGION) &&
-+	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
-+			      IORES_DESC_CXL) != REGION_DISJOINT) {
-+		dev_dbg(host, "deferring range to CXL: %pr\n", res);
-+		return 0;
-+	}
-+
- 	rc = region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
- 			       IORES_DESC_SOFT_RESERVED);
- 	if (rc != REGION_INTERSECTS)
-@@ -157,6 +164,13 @@ static __exit void dax_hmem_exit(void)
- module_init(dax_hmem_init);
- module_exit(dax_hmem_exit);
- 
-+/* Allow for CXL to define its own dax regions */
-+#if IS_ENABLED(CONFIG_CXL_REGION)
-+#if IS_MODULE(CONFIG_CXL_ACPI)
-+MODULE_SOFTDEP("pre: cxl_acpi");
-+#endif
-+#endif
-+
- MODULE_ALIAS("platform:hmem*");
- MODULE_ALIAS("platform:hmem_platform*");
- MODULE_LICENSE("GPL v2");
+(note: I also have the region reset issue previously discussed on top of
+your branch).  
 
+QEMU configuration:
+
+sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
+-drive file=/var/lib/libvirt/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
+-m 2G,slots=4,maxmem=4G \
+-smp 4 \
+-machine type=q35,accel=kvm,cxl=on \
+-enable-kvm \
+-nographic \
+-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
+-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
+-object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=1G,share=true \
+-device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
+-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
+
+[   13.936817] Call Trace:
+[   13.970691]  <TASK>
+[   13.990690]  device_add+0x39d/0x9a0
+[   14.024690]  ? kobject_set_name_vargs+0x6d/0x90
+[   14.066690]  ? dev_set_name+0x4b/0x60
+[   14.090691]  devm_cxl_add_port+0x29a/0x4d0
+[   14.135946]  cxl_acpi_probe+0xd9/0x2f0
+[   14.167691]  ? device_pm_check_callbacks+0x36/0x100
+[   14.203691]  platform_probe+0x44/0x90
+[   14.247691]  really_probe+0xde/0x380
+[   14.277690]  ? pm_runtime_barrier+0x50/0x90
+[   14.324693]  __driver_probe_device+0x78/0x170
+[   14.356694]  driver_probe_device+0x1f/0x90
+[   14.396692]  __driver_attach+0xce/0x1c0
+[   14.435691]  ? __pfx___driver_attach+0x10/0x10
+[   14.471692]  bus_for_each_dev+0x73/0xa0
+[   14.508693]  bus_add_driver+0x1ae/0x200
+[   14.551691]  driver_register+0x89/0xe0
+[   14.587691]  ? __pfx_cxl_acpi_init+0x10/0x10
+[   14.625690]  do_one_initcall+0x59/0x230
+[   14.814691]  kernel_init_freeable+0x204/0x24e
+[   14.846710]  ? __pfx_kernel_init+0x10/0x10
+[   14.899692]  kernel_init+0x16/0x140
+[   14.954691]  ret_from_fork+0x2c/0x50
+[   14.986692]  </TASK>
+[   15.023689] Modules linked in:
+[   15.057693] CR2: 0000000000000060
+[   15.105691] ---[ end trace 0000000000000000 ]---
+[   15.162837] RIP: 0010:bus_add_device+0x5b/0x150
+[   15.217693] Code: 49 8b 74 24 20 48 89 df e8 92 88 ff ff 89 c5 85 c0 75 3b 48 8b 53 50 48 85 d2 75 03 48 8b 13 49 8b 84 24 a8 00 00 00 48 89 0
+[   15.427859] RSP: 0000:ffffbd2a40013bc0 EFLAGS: 00010246
+[   15.475692] RAX: 0000000000000000 RBX: ffff955c419e1800 RCX: 0000000000000000
+[   15.591691] RDX: ffff955c41921778 RSI: ffff955c419e1800 RDI: ffff955c419e1800
+[   15.703693] RBP: 0000000000000000 R08: 0000000000000228 R09: ffff955c4119e550
+[   15.802711] R10: ffff955c414bedc8 R11: 0000000000000000 R12: ffffffff9e259d60
+[   15.907692] R13: ffffffff9d3cee40 R14: ffff955c419e1800 R15: ffff955c41f06010
+[   15.983693] FS:  0000000000000000(0000) GS:ffff955cbdd00000(0000) knlGS:0000000000000000
+[   16.126698] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   16.206694] CR2: 0000000000000060 CR3: 0000000036010000 CR4: 00000000000006e0
+[   16.347694] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[   16.348686] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
