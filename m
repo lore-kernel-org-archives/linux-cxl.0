@@ -2,150 +2,138 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAFEC05027
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 23:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F09C636D6
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Feb 2023 23:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjBFXlI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Feb 2023 18:41:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36024 "EHLO
+        id S229930AbjBFXlx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Feb 2023 18:41:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbjBFXlH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 18:41:07 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2058.outbound.protection.outlook.com [40.107.223.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586B92448F;
-        Mon,  6 Feb 2023 15:41:06 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dvNs8K+tTQ8FRSuPbAQHV7bxBQ74CEcc78zpBzxB6LhdteOYx4w6SLWA0Z+s4PsguZsY5T1ZXA74t7rfSDAqO6uOSzucZfR/JZH/XoM/xy6uwH0ajf6byUFr3RD0RRFKYUDXju+lSdFWNt6JYWu/pW8HblBec3RyW0giuebx3T3Su6/PsLwuhFIKfSJNtnZAUDrb6+Kv3p2UdpmQIqBcYwu3tteQXcGtr+nggOGyEvPWDh3i50Tc1EKdp9w0S0E7gHVpew0MEHVswuFvcfROkzBlrxWK1JsmhP4GukbEAH+RrGNMhVuLGcSUquGMJrcRl9v6hG4qqs+Qav7fm4jLig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vmWiseBYaLPdVUy77wiOH/G8W9Rg/qsaGM01R3F1xDQ=;
- b=VnQRY/nGRAIE0DVBTzNAJdyyLc3IDba0RHotuqRZRt3OONn/cYF2jY5h415aX2l5Zt5xEM3qp+pSpSLJFtErExtUXlaj/Guqwq8GBhPfpNvjZXjvYQWLYZjFbIhnnfWGe0YrbY6FjQ/1QkcazC4g021mkcKqRkNYp4SR01efDvG96/XU/m6k0pJ3rv888C5yT4Dp/Wi3/cttyqCM2bdJwLEHTPLZrybj47nHvz+GW/NDXZpLfj7ThN5wobG+rnk8S14kA3ydrXXA3fVP+6FjACqohhNz9UdSakA+T7ByJUjIHNJ+6Fh8aJMKh/RbSu2YGfYCS/GJqkHangmckYAtmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vmWiseBYaLPdVUy77wiOH/G8W9Rg/qsaGM01R3F1xDQ=;
- b=huyXSjtlkLw4f1993Z64p8xXLP5s+u0dACnBHUjoI6sRQ+bC1aMZ7B3c0+/AJugonGXwFuMWAVa0BYBlXFT/gXzJW0own6bR0FhlPZEFZjR8sxcsCAfCwTTbLkdqXXs1YXoypKlo+9WQ1ZbX4jwAcXECxLI5Wq5prjzmvmrSA1M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from BY5PR17MB3128.namprd17.prod.outlook.com (2603:10b6:a03:185::10)
- by PH0PR17MB5486.namprd17.prod.outlook.com (2603:10b6:510:b0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.28; Mon, 6 Feb
- 2023 23:41:04 +0000
-Received: from BY5PR17MB3128.namprd17.prod.outlook.com
- ([fe80::461:c456:bcb:c59]) by BY5PR17MB3128.namprd17.prod.outlook.com
- ([fe80::461:c456:bcb:c59%7]) with mapi id 15.20.6064.034; Mon, 6 Feb 2023
- 23:41:04 +0000
-Date:   Mon, 6 Feb 2023 14:56:34 -0500
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, dave.hansen@linux.intel.com,
-        linux-mm@kvack.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 05/18] cxl/region: Add volatile region creation support
-Message-ID: <Y+FbchorYja5tRWG@memverge.com>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
- <167564537678.847146.4066579806086171091.stgit@dwillia2-xfh.jf.intel.com>
- <Y+ExAllpl9OIyvl7@memverge.com>
- <63e177b14a0ed_e3dae294da@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63e177b14a0ed_e3dae294da@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: BYAPR21CA0025.namprd21.prod.outlook.com
- (2603:10b6:a03:114::35) To BY5PR17MB3128.namprd17.prod.outlook.com
- (2603:10b6:a03:185::10)
+        with ESMTP id S229823AbjBFXlv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Feb 2023 18:41:51 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E6524125;
+        Mon,  6 Feb 2023 15:41:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675726910; x=1707262910;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=efYutd2gsnNzH297fwifRvRlt/qqZtH/7DxCoPKBvbo=;
+  b=mJf5Y0KvPdKUcMoieZRpJSI3wrFUzrYqO52hoLaG/r41UfmZXlsgkZMz
+   RQhG40O6eAqxTnDSW4Wb2pInFSBM2n2cXjvyNmWYOxjgrn7BWXaGV/YQc
+   je+QYzowH+O5SHhboXrbk2TKCJJsqfWLW+ktmdN4+8mxD9Lmy+uqqCHAX
+   odaM3y+bFaLxiS3Wb4ZfjVLa2eypaNn/l2qUJaxI8yGjLwp+mR1SjPKsX
+   KkOM0NSIln8jlrzI77CpGgH6s04WL4l8pq0wdMwImuX03VWVBeUKEeF6A
+   M/QJCqTxqXUqnx4rJyJh2+amgQZgAPtlU7m5VyQClrtx3A0KD266X8tsp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="393946001"
+X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
+   d="scan'208";a="393946001"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 15:41:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="660001013"
+X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
+   d="scan'208";a="660001013"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.111.195]) ([10.212.111.195])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 15:41:48 -0800
+Message-ID: <081043d0-d8c5-d86a-8515-aaf1ed7ba47e@intel.com>
+Date:   Mon, 6 Feb 2023 16:41:47 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR17MB3128:EE_|PH0PR17MB5486:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4df6705d-e5dc-4833-5921-08db089b9c8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YcYYeksyd5PQQparhsp0NRzdroQ9mVLT2CE0uCPGnEtnGgqOVGwt0Vr66vGWSGvi4vSWP3nngPKGbEavJ+/Q6hrjrD1gAJlaUdx+yN7PDth8wN3/jKK91c/CR6w4EEU1Ph8AHGm4FLKsmfve5KV1dYWSzJTTZ2CjyDt2G+h0Nr4f0bjKDaPiUowagDXyMqt0avm31l+k4UHtaTXLznuYZ5J2k4FrtngTTPNuGqq1ZFINhdBXHKy1SPF0r5w8fuXRVzzKHte2F0zTgViZr2EO5DxsjNJIpMYyjnTOsmvwOVJsHH9spsVTpxz8TcBsCOhZo8Xq8Y57ZxDVHwKyfP45ogTSoqnimTnZpaPjekspVZ1hZ3b/7yLDOaCcrS8sirLEtkvrFEzd/TNlOK7caAmYgiSriEMGZ0RKuRIyMNXhDceuyolsZQNL+yu4xDZF6I6Ax2whYpXKat5A2jKOvZIap5hIa355mukNpuK4O02VRo404NP7hvbaZ/YlZKHOIEhMd2H/ezth5vw9hkpLNA7zsHgtnCdDpsrGQmL0kfJ+sdAepTs3IqeaPSsmyiNi1oyGfT83G41z6r6e9azxtTKZjwk+6LLEDMGxPOYFNZ7vi+n858wbBv4wf/GzgsiTSHn19dMNChxPGJEVIIeTgJcQgVCJSpmxsp8KlHBRPJPASL1wE5L36Zwcc077aWFma/oi
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR17MB3128.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(396003)(346002)(366004)(39840400004)(376002)(451199018)(26005)(66946007)(36756003)(86362001)(6506007)(38100700002)(186003)(66476007)(8936002)(41300700001)(6916009)(6666004)(66556008)(4326008)(44832011)(8676002)(6512007)(316002)(2616005)(2906002)(6486002)(478600001)(5660300002)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xYGmjAOIN6Whvdg4N6Zvp5F29goPkGcKGFoHTlUx1FSaqpY2jwofGUSiHqcN?=
- =?us-ascii?Q?posaKl/yPvZeA8uhFtafTH2nodjmUkAPxXiBOAK9KSxCKywxaZ0NhexjMSef?=
- =?us-ascii?Q?YgBNEOJ7XiZl5l+7w26xf0UFCFKmgo6rKqIJ3Tm2CjtK43S8BmBu2kB3yY+U?=
- =?us-ascii?Q?086O9QuKmtZC4oxtUv6uRLAyhKmf0doKFGLkTqtTxykFTdzTppUfT5fFDf3+?=
- =?us-ascii?Q?6Z5CA4uZE6g3+8Aha1nZP6jlhT0A95p/fX7sP6rE7vW2OMJ3M/Y1yIjGxnL+?=
- =?us-ascii?Q?0uX17DJo7onw6RhKux94hD06vttTwShQAA8XxiWK9inTjap3JgM3hzq57nDC?=
- =?us-ascii?Q?oHq8HUWxJluFDv2lzWKWl/3oceDJ1h/PQx7Cf5T6/d/nuwjTjQfB8luVRGkv?=
- =?us-ascii?Q?PsaP6dsPJHFILBp9JuzmxhqymdAHmelEVx0wtq9ue/JQNHwUlBOUYCv7RKyZ?=
- =?us-ascii?Q?C3d39KaKR4bXgUNMZWrsv2rqZfnqN4UJG9EH+zxjMO6jvnGIyrxgpUQ1IMIx?=
- =?us-ascii?Q?3d2GrREC239MKMk5JsgVQIJvnz0b/0JaMiCPLygD85D9MgZXsT6LDFUtLfFZ?=
- =?us-ascii?Q?tdkHr747UVl8O79JFOvup/u0The0b3tNoyAk0wC76yCrNu7WhZyIcU302NwY?=
- =?us-ascii?Q?w3+r0OZ02AkvXE3hYFD4bJ/wg/alO8M0aUCnwBORfjDILsyebCfBkFgDOAB5?=
- =?us-ascii?Q?ci+I+6+4MTx8gWmfdLJg6NgQHOKOKYI04FF3iAVdM5Ho7NVARbc75XJdd2d+?=
- =?us-ascii?Q?6BWvYHWzmBuWlDbXBlWfnbgPy607mz78mSisqcazOh9tp1/Ezt8YTlyaHai/?=
- =?us-ascii?Q?HNyWVlPXOqhoWRKq5PSY08lmILBbwHIcC0QWDZ4D/23VnGhMbGriKd8KK4dW?=
- =?us-ascii?Q?zr7U8pb+R2Xwuy/J+v66JrvtvMU4+Vm0/bqojD6aJ2+1VUCtI+LnSuWcptjH?=
- =?us-ascii?Q?h17uUOzn4popXzY0ZhQTwyxSqnByrTBh1+7awwJp8Bj9EsUC/DIi2sX8tgN0?=
- =?us-ascii?Q?myymxKMc5NqBEurDi0FzHnEK7Tyw62hNyYPzS8b8rm7y6BS6vzFcXHOMilLG?=
- =?us-ascii?Q?HByeZCyPNuUjCERMpu1zhVSA7diVy57xV0Z1TTF2ET1wqcogPkY4ynTQLWE3?=
- =?us-ascii?Q?zqQwtsG8Oah6irwKLm+BwInijNxewl+MlZaMVMLnjI/oji2TWZmMxE4VV5bW?=
- =?us-ascii?Q?ZzbLbLSfuK/nhv4wk1aqgP1i+pvMMf/9l51hwXguysV9f8PPwwZWIfXwpRfh?=
- =?us-ascii?Q?X/+Vzw8eOkERpnLqxd9CXhVMn0dzRxHbNbaIHh+6OgiVFR1vuuJnD4ku/YSS?=
- =?us-ascii?Q?Qyk9HDERS0/TzCmv3M3LovhDVIrxfHsx58B2qRtf7QIUuw04Ba1vQbqdGjf9?=
- =?us-ascii?Q?gJmKW6n04cTo75rVCdhXxpLJKf/9ij3fUgEt2QprSGEdN+78cZCWzjoFdDHc?=
- =?us-ascii?Q?pD5/tMRx4So8uj3iDUiySaD76sYIkq8diQ06lFJnINM9gpPHYoDGzScI8Zhn?=
- =?us-ascii?Q?oVSs5s/ISQJaYguEheA9M++dB6znHXNiCxUP4sGmVgT95bA8uUhBMDzY8E1w?=
- =?us-ascii?Q?DAq8ISHp+69yL7/EJGKxE3W67Vz1ugJsqY8XUC5vGbFEZunIEZZwPsgQGXHe?=
- =?us-ascii?Q?dZ8okZbcI/IjLuQEQ/A3F5Q=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4df6705d-e5dc-4833-5921-08db089b9c8a
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR17MB3128.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2023 23:41:04.4822
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cwJpy+BrYPSDd7N45PDtMoD9+sC5Momfe1xF8/Bb1UIYV3ULg4kiDFvKjysttwTwiT8CFfbKzMk8X64aO2Dyk/RwDlC+f4l606fppC4kyyg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR17MB5486
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 08/18] kernel/range: Uplevel the cxl subsystem's
+ range_contains() helper
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, dave.hansen@linux.intel.com,
+        linux-mm@kvack.org, linux-acpi@vger.kernel.org
+References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
+ <167564539327.847146.788601375229324484.stgit@dwillia2-xfh.jf.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <167564539327.847146.788601375229324484.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 01:57:05PM -0800, Dan Williams wrote:
-> Gregory Price wrote:
-> > On Sun, Feb 05, 2023 at 05:02:56PM -0800, Dan Williams wrote:
-> > > Expand the region creation infrastructure to enable 'ram'
-> > > (volatile-memory) regions. The internals of create_pmem_region_store()
-> > > and create_pmem_region_show() are factored out into helpers
-> > > __create_region() and __create_region_show() for the 'ram' case to
-> > > reuse.
-> > > 
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >  
-> [..]
-> > > @@ -305,6 +306,13 @@ static bool can_create_pmem(struct cxl_root_decoder *cxlrd)
-> > >  	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-> > >  }
-> > >  
-> > > +static bool can_create_ram(struct cxl_root_decoder *cxlrd)
-> > > +{
-> > > +	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
-> > > +
-> > > +	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-> > > +}
-> > > +
-> > 
-> > does this collide with either CXL_DECODE_F_ENABLE or CXL_DECODER_F_AUTO?
-> > 
-> > I think obviously if it's already enabled creating new regions in a
-> > decoder doesn't make sense, but if F_AUTO is set, does that imply
-> > the region settings cannot be changed?
-> 
-> That just cares if the root decoder supports TYPE3 and RAM independent
-> of ENABLE or AUTO. Root decoders are always enabled. The AUTO flag,
-> which is not applicable to root decoders, is just there to hold off
-> userspace racing the attachment of endpoint decoders to a region until
-> the autodiscovery process has completed. Once that completes and the
-> region has been enabled then it can be destroyed to clear AUTO.
 
-Reviewed-by: Gregory Price <gregory.price@memverge.com>
+
+On 2/5/23 6:03 PM, Dan Williams wrote:
+> In support of the CXL subsystem's use of 'struct range' to track decode
+> address ranges, add a common range_contains() implementation with
+> identical semantics as resource_contains();
+> 
+> The existing 'range_contains()' in lib/stackinit_kunit.c is namespaced
+> with a 'stackinit_' prefix.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+I can use this in my QTG series for DPA matching.
+> ---
+>   drivers/cxl/core/pci.c |    5 -----
+>   include/linux/range.h  |    5 +++++
+>   lib/stackinit_kunit.c  |    6 +++---
+>   3 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 1d1492440287..9ed2120dbf8a 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -214,11 +214,6 @@ static int devm_cxl_enable_mem(struct device *host, struct cxl_dev_state *cxlds)
+>   	return devm_add_action_or_reset(host, clear_mem_enable, cxlds);
+>   }
+>   
+> -static bool range_contains(struct range *r1, struct range *r2)
+> -{
+> -	return r1->start <= r2->start && r1->end >= r2->end;
+> -}
+> -
+>   /* require dvsec ranges to be covered by a locked platform window */
+>   static int dvsec_range_allowed(struct device *dev, void *arg)
+>   {
+> diff --git a/include/linux/range.h b/include/linux/range.h
+> index 274681cc3154..7efb6a9b069b 100644
+> --- a/include/linux/range.h
+> +++ b/include/linux/range.h
+> @@ -13,6 +13,11 @@ static inline u64 range_len(const struct range *range)
+>   	return range->end - range->start + 1;
+>   }
+>   
+> +static inline bool range_contains(struct range *r1, struct range *r2)
+> +{
+> +	return r1->start <= r2->start && r1->end >= r2->end;
+> +}
+> +
+>   int add_range(struct range *range, int az, int nr_range,
+>   		u64 start, u64 end);
+>   
+> diff --git a/lib/stackinit_kunit.c b/lib/stackinit_kunit.c
+> index 4591d6cf5e01..05947a2feb93 100644
+> --- a/lib/stackinit_kunit.c
+> +++ b/lib/stackinit_kunit.c
+> @@ -31,8 +31,8 @@ static volatile u8 forced_mask = 0xff;
+>   static void *fill_start, *target_start;
+>   static size_t fill_size, target_size;
+>   
+> -static bool range_contains(char *haystack_start, size_t haystack_size,
+> -			   char *needle_start, size_t needle_size)
+> +static bool stackinit_range_contains(char *haystack_start, size_t haystack_size,
+> +				     char *needle_start, size_t needle_size)
+>   {
+>   	if (needle_start >= haystack_start &&
+>   	    needle_start + needle_size <= haystack_start + haystack_size)
+> @@ -175,7 +175,7 @@ static noinline void test_ ## name (struct kunit *test)		\
+>   								\
+>   	/* Validate that compiler lined up fill and target. */	\
+>   	KUNIT_ASSERT_TRUE_MSG(test,				\
+> -		range_contains(fill_start, fill_size,		\
+> +		stackinit_range_contains(fill_start, fill_size,	\
+>   			    target_start, target_size),		\
+>   		"stack fill missed target!? "			\
+>   		"(fill %zu wide, target offset by %d)\n",	\
+> 
