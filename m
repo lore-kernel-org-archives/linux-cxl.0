@@ -2,48 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA654C636D3
-	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 19:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A6AC64EC6
+	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 19:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjBGTQ6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 7 Feb 2023 14:16:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57874 "EHLO
+        id S231572AbjBGTRB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 7 Feb 2023 14:17:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231178AbjBGTQ5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 14:16:57 -0500
+        with ESMTP id S231518AbjBGTQ6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 14:16:58 -0500
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754001B574
-        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 11:16:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2498C28D30
+        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 11:16:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675797415; x=1707333415;
+  t=1675797417; x=1707333417;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=JxS6RtaLAM8RjSU1zFx4MY78Pc/q+B1lpO2UghyqClQ=;
-  b=aE1hoehkQkH1XQQwPXG2C6Ilx/B1nW/lQwKJTomEAZsp45b5C/mI/0RL
-   GNcaGVcPrDHq2b4Q6FtR3TPh7wZlQow9maBs053JYzBFfW4ghq8p2lMYf
-   Xix4NpVj2tj0wkiwuB/gQHoyEU9IXFb6BNVrFGw7RmLn2dUnUxSDKzbcs
-   aG0OcWyhiSooClwRvnRzjOKr0TKom4scLWyaphqUFbq4lMCyttsoj09Tb
-   a0PvMVAw4ts9WTHGdcFTtF7eQjBRgQ8F4NkymNy6VLQqh07ljJwuBDEK/
-   tOXYPisvNzAF0VJXfxd4PND+yaMRNajP66nKhF4+11fBJD/GpfFkrZ/kx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="331733990"
+  bh=F6i9XzEQEwUXpUjQRIMAD7e50UpecQapEaokHm+Ojxw=;
+  b=hckW4nk9ToTZKy69CGYPD4n8RGxTtzulGMB0WU2hlNwUrz3koldAO8bZ
+   jEaBxJZAT0wVi3cy7OWwRWoLAmt7wPCPCXZ/DrL22mcjzOXCayAHqmcL2
+   ZHrBjzfYNFdfuQc44+cQsLRNtua7CiZS61i7giXWxbJXMFPC4BWoSjBZL
+   gSyJH7vIt68ZANY8YzWVyqYYIeFYP1v+66x9f7ze2o7bL+Vx/rOrV/PMl
+   Bka0bCixRK+/GuOLWaEY49F49MzE+nmoj+BfqozgSIsZC+DHn2xWuLcRT
+   VKIFZoxSPd/ZJaKi9KW3rUvCjxQxS7q43BJBrVKGpOuo0a1kt7bsZgDW1
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="331734008"
 X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="331733990"
+   d="scan'208";a="331734008"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:54 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="735649808"
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:56 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="735649818"
 X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="735649808"
+   d="scan'208";a="735649818"
 Received: from fvanegas-mobl.amr.corp.intel.com (HELO vverma7-desk1.local) ([10.209.109.6])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:53 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:55 -0800
 From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Tue, 07 Feb 2023 12:16:28 -0700
-Subject: [PATCH ndctl 2/7] cxl: add a type attribute to region listings
+Date:   Tue, 07 Feb 2023 12:16:31 -0700
+Subject: [PATCH ndctl 5/7] cxl/region: determine region type based on root
+ decoder capability
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230120-vv-volatile-regions-v1-2-b42b21ee8d0b@intel.com>
+Message-Id: <20230120-vv-volatile-regions-v1-5-b42b21ee8d0b@intel.com>
 References: <20230120-vv-volatile-regions-v1-0-b42b21ee8d0b@intel.com>
 In-Reply-To: <20230120-vv-volatile-regions-v1-0-b42b21ee8d0b@intel.com>
 To:     linux-cxl@vger.kernel.org
@@ -53,138 +54,96 @@ Cc:     Gregory Price <gregory.price@memverge.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev
 X-Mailer: b4 0.13-dev-ada30
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4828;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2566;
  i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=JxS6RtaLAM8RjSU1zFx4MY78Pc/q+B1lpO2UghyqClQ=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDMmPFi+WrSz4fc3y3EG+Upn1vbPXvVtw/dz3UOMCjbDzb
- y0sX87721HKwiDGxSArpsjyd89HxmNy2/N5AhMcYeawMoEMYeDiFICJdNsxMkyMiul8VlX9W9Tn
- 7FKOJQpn1TXqgk7sX1n7OeGA72Y9TjFGhh2NanH6P68+FF8yV3MX79ErRRx5US23Lx3b9yUtzMT
- MlhUA
+ bh=F6i9XzEQEwUXpUjQRIMAD7e50UpecQapEaokHm+Ojxw=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDMmPFi/J5TdfN392dPkDpQdrc3h+8IrGLLTp55mVPm+F/
+ Z9Znwz8OkpZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRzhSG//Ef6+1WHZcW3qTY
+ dWhZ9yfx80bJhwwuvlUyL9u2qvulHw/Df0f5f5XrH1SvW9t9bzrvT9aif8EaHv+eLsje/Ghq1/n
+ kRTwA
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
  fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for enumerating and creating 'volatile' or 'ram' type
-regions, add a 'type' attribute to region listings, so these can be
-distinguished from 'pmem' type regions easily. This depends on a new
-'mode' attribute for region objects in sysfs. For older kernels that
-lack this, region listings will simply omit emitting this attribute,
-but otherwise not treat it as a failure.
+In the common case, root decoders are expected to be either pmem
+capable, or volatile capable, but not necessarily both simultaneously.
+If a decoder only has one of pmem or volatile capabilities,
+cxl-create-region should just infer the type of the region (pmem
+or ram) based on this capability.
+
+Maintain the default behavior of cxl-create-region to choose type=pmem,
+but only as a fallback if the selected root decoder has multiple
+capabilities. If it is only capable of either pmem, or ram, then infer
+region type from this without requiring it to be specified explicitly.
 
 Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- Documentation/cxl/lib/libcxl.txt |  1 +
- cxl/lib/private.h                |  1 +
- cxl/lib/libcxl.c                 | 11 +++++++++++
- cxl/libcxl.h                     |  1 +
- cxl/json.c                       |  5 +++++
- cxl/lib/libcxl.sym               |  5 +++++
- 6 files changed, 24 insertions(+)
+ Documentation/cxl/cxl-create-region.txt |  3 ++-
+ cxl/region.c                            | 27 +++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index f9af376..dbc4b56 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -550,6 +550,7 @@ int cxl_region_get_id(struct cxl_region *region);
- const char *cxl_region_get_devname(struct cxl_region *region);
- void cxl_region_get_uuid(struct cxl_region *region, uuid_t uu);
- unsigned long long cxl_region_get_size(struct cxl_region *region);
-+enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region);
- unsigned long long cxl_region_get_resource(struct cxl_region *region);
- unsigned int cxl_region_get_interleave_ways(struct cxl_region *region);
- unsigned int cxl_region_get_interleave_granularity(struct cxl_region *region);
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index f8871bd..306dc3a 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -149,6 +149,7 @@ struct cxl_region {
- 	unsigned int interleave_ways;
- 	unsigned int interleave_granularity;
- 	enum cxl_decode_state decode_state;
-+	enum cxl_decoder_mode mode;
- 	struct kmod_module *module;
- 	struct list_head mappings;
- };
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 4205a58..83f628b 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -561,6 +561,12 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
- 	else
- 		region->decode_state = strtoul(buf, NULL, 0);
+diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
+index ada0e52..f11a412 100644
+--- a/Documentation/cxl/cxl-create-region.txt
++++ b/Documentation/cxl/cxl-create-region.txt
+@@ -75,7 +75,8 @@ include::bus-option.txt[]
  
-+	sprintf(path, "%s/mode", cxlregion_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		region->mode = CXL_DECODER_MODE_NONE;
-+	else
-+		region->mode = cxl_decoder_mode_from_ident(buf);
-+
- 	sprintf(path, "%s/modalias", cxlregion_base);
- 	if (sysfs_read_attr(ctx, path, buf) == 0)
- 		region->module = util_modalias_to_module(ctx, buf);
-@@ -686,6 +692,11 @@ CXL_EXPORT unsigned long long cxl_region_get_resource(struct cxl_region *region)
- 	return region->start;
+ -t::
+ --type=::
+-	Specify the region type - 'pmem' or 'ram'. Defaults to 'pmem'.
++	Specify the region type - 'pmem' or 'ram'. Default to root decoder
++	capability, and if that is ambiguous, default to 'pmem'.
+ 
+ -U::
+ --uuid=::
+diff --git a/cxl/region.c b/cxl/region.c
+index 9079b2d..1c8ccc7 100644
+--- a/cxl/region.c
++++ b/cxl/region.c
+@@ -448,6 +448,31 @@ static int validate_decoder(struct cxl_decoder *decoder,
+ 	return 0;
  }
  
-+CXL_EXPORT enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region)
++static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
 +{
-+	return region->mode;
++	int num_cap = 0;
++
++	/* if param.type was explicitly specified, nothing to do here */
++	if (param.type)
++		return;
++
++	/*
++	 * if the root decoder only has one type of capability, default
++	 * to that mode for the region.
++	 */
++	if (cxl_decoder_is_pmem_capable(p->root_decoder))
++		num_cap++;
++	if (cxl_decoder_is_volatile_capable(p->root_decoder))
++		num_cap++;
++
++	if (num_cap == 1) {
++		if (cxl_decoder_is_volatile_capable(p->root_decoder))
++			p->mode = CXL_DECODER_MODE_RAM;
++		else if (cxl_decoder_is_pmem_capable(p->root_decoder))
++			p->mode = CXL_DECODER_MODE_PMEM;
++	}
 +}
 +
- CXL_EXPORT unsigned int
- cxl_region_get_interleave_ways(struct cxl_region *region)
+ static int create_region_validate_config(struct cxl_ctx *ctx,
+ 					 struct parsed_params *p)
  {
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index d699af8..e6cca11 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -273,6 +273,7 @@ const char *cxl_region_get_devname(struct cxl_region *region);
- void cxl_region_get_uuid(struct cxl_region *region, uuid_t uu);
- unsigned long long cxl_region_get_size(struct cxl_region *region);
- unsigned long long cxl_region_get_resource(struct cxl_region *region);
-+enum cxl_decoder_mode cxl_region_get_mode(struct cxl_region *region);
- unsigned int cxl_region_get_interleave_ways(struct cxl_region *region);
- unsigned int cxl_region_get_interleave_granularity(struct cxl_region *region);
- struct cxl_decoder *cxl_region_get_target_decoder(struct cxl_region *region,
-diff --git a/cxl/json.c b/cxl/json.c
-index 0fc44e4..f625380 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -827,6 +827,7 @@ void util_cxl_mappings_append_json(struct json_object *jregion,
- struct json_object *util_cxl_region_to_json(struct cxl_region *region,
- 					     unsigned long flags)
- {
-+	enum cxl_decoder_mode mode = cxl_region_get_mode(region);
- 	const char *devname = cxl_region_get_devname(region);
- 	struct json_object *jregion, *jobj;
- 	u64 val;
-@@ -853,6 +854,10 @@ struct json_object *util_cxl_region_to_json(struct cxl_region *region,
- 			json_object_object_add(jregion, "size", jobj);
+@@ -481,6 +506,8 @@ found:
+ 		return -ENXIO;
  	}
  
-+	jobj = json_object_new_string(cxl_decoder_mode_name(mode));
-+	if (jobj)
-+		json_object_object_add(jregion, "type", jobj);
++	set_type_from_decoder(ctx, p);
 +
- 	val = cxl_region_get_interleave_ways(region);
- 	if (val < INT_MAX) {
- 		jobj = json_object_new_int(val);
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 6bc0810..9832d09 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -242,3 +242,8 @@ global:
- 	cxl_target_get_firmware_node;
- 	cxl_dport_get_firmware_node;
- } LIBCXL_3;
-+
-+LIBCXL_5 {
-+global:
-+	cxl_region_get_mode;
-+} LIBCXL_4;
+ 	rc = validate_decoder(p->root_decoder, p);
+ 	if (rc)
+ 		return rc;
 
 -- 
 2.39.1
