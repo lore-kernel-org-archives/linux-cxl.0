@@ -2,121 +2,97 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCC3C636CD
-	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 14:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C1DC636CC
+	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 16:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232391AbjBGOUT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 7 Feb 2023 09:20:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
+        id S229776AbjBGQbZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 7 Feb 2023 11:31:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232304AbjBGOUR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 09:20:17 -0500
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C117392AA;
-        Tue,  7 Feb 2023 06:20:10 -0800 (PST)
-Received: by mail-ej1-f53.google.com with SMTP id m1so1021331ejx.7;
-        Tue, 07 Feb 2023 06:20:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IvnqVj7q+a5osJEmog2V+AtjIDObMd5GeBfEqLFzts8=;
-        b=u6So000PNI22YEcrRr/ThcArY8SmPJ74mSGtVBX6l1QjtKuydsj6j4czL1l/Ku6udW
-         Y8Fl08yQoQfE8oy9U4Q+bR1s82hhH5I382r1SUa49dkrF02WTIPaemynb7C2KcHlJsiY
-         dOHVYsLrX3up71nNIPrJDTqZBC7i3ZA9MXMZ30YICWCrXJmpgMpDehxuenvwVfbZgA8h
-         dpP2Xk/yhoxYsu/jGu9nUi8DyPSI+dpqwUtFSc/lYBcfLBEG2z1U0XmqX9ZnXKQLDL+j
-         aWsFQbSj+90WNi6q5tiK5HIZ1faAFx1NiN0gozK6Qqdfvkhpt2ZVQpnURVXioWJR43Ae
-         3Xmg==
-X-Gm-Message-State: AO0yUKUJapRl86ZgnC0c12e4qdi3+6IhOHwmFZlilqtTL/nYIpP6AKqQ
-        mPsdQYT/5hwfBZL2AwmJXyxBFRl5k+GMTVDOL0g=
-X-Google-Smtp-Source: AK7set/Mbm0aCB1c31qI6RJS4QVnyQvNE+EXCzo6+78pQdWrpHVTJGE0489RkL4fRrn0VemSUpi5AQxIYcQMdoCTA6M=
-X-Received: by 2002:a17:906:ce2e:b0:87f:575a:9b67 with SMTP id
- sd14-20020a170906ce2e00b0087f575a9b67mr937430ejb.274.1675779608674; Tue, 07
- Feb 2023 06:20:08 -0800 (PST)
+        with ESMTP id S229556AbjBGQbY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 11:31:24 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1536A4
+        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 08:31:19 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PB7rh3hScz682wj;
+        Wed,  8 Feb 2023 00:29:56 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Tue, 7 Feb
+ 2023 16:31:16 +0000
+Date:   Tue, 7 Feb 2023 16:31:16 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Gregory Price <gregory.price@memverge.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        Richard Henderson <richard.henderson@linaro.org>
+Subject: Re: [GIT preview] for-6.3/cxl-ram-region
+Message-ID: <20230207163116.00006642@Huawei.com>
+In-Reply-To: <Y9sHf+rczFO8q+jz@memverge.com>
+References: <73ef066b15c5551087da3667398f462d427d3204.camel@intel.com>
+        <Y9meWfDiCGbca4nP@memverge.com>
+        <Y9mhe2xPGRE1/7cC@memverge.com>
+        <CGME20230131235012uscas1p11573de234af67d70a882d4ca0f3ebaab@uscas1p1.samsung.com>
+        <20230131235003.GA336751@bgt-140510-bm03>
+        <Y9n4zjtwf+w6xnmW@memverge.com>
+        <Y9rWskfaz9dLoW+l@memverge.com>
+        <20230202160314.00002cfa@Huawei.com>
+        <Y9riPw7ccA34FQG6@memverge.com>
+        <63dbfe79dbb44_ea22229468@dwillia2-xfh.jf.intel.com.notmuch>
+        <Y9sHf+rczFO8q+jz@memverge.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
- <167571657859.587790.12435839081602248140.stgit@djiang5-mobl3.local>
-In-Reply-To: <167571657859.587790.12435839081602248140.stgit@djiang5-mobl3.local>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Feb 2023 15:19:57 +0100
-Message-ID: <CAJZ5v0hO-FthRSRD5LPL1Onz7DaRG8zBo=GBDBR+k1_upYHVBQ@mail.gmail.com>
-Subject: Re: [PATCH 02/18] ACPICA: Export acpi_ut_verify_cdat_checksum()
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
-        robert.moore@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 6, 2023 at 9:49 PM Dave Jiang <dave.jiang@intel.com> wrote:
->
-> Export the CDAT checksum verify function so CXL driver can use it to verify
-> CDAT coming from the CXL devices.
->
-> Given that this function isn't actually being used by ACPI internals,
-> removing the define check of APCI_CHECKSUM_ABORT so the function would
-> return failure on checksum fail since the driver will need to know.
+On Wed, 1 Feb 2023 19:44:47 -0500
+Gregory Price <gregory.price@memverge.com> wrote:
 
-If you want to make ACPICA changes, please first submit a pull request
-to the upstream ACPICA project on GitHub.
+> On Thu, Feb 02, 2023 at 10:18:33AM -0800, Dan Williams wrote:
+> > Gregory Price wrote:
+> > [..]  
+> > > To me, the solution here isn't to change QEMU, it's to change the kernel
+> > > to try to get it to aggressively keep executable regions out of CXL by
+> > > marking CXL regions into a new zone type that essentially says "Use this
+> > > as a last resort only for X pages".  But that would likely require
+> > > adding migration code to the likes of mprotect and friends.  
+> > 
+> > No, this can't be the path forward as far as I can see. QEMU is a test
+> > vehicle for CXL enabling, there's no expectation that QEMU is running
+> > CXL emulation in production. The quirks of how the QEMU-CXL memory
+> > behaves are not something the kernel should worry about mitigating. CXL
+> > is "System RAM" especially in the case when it is mapped by
+> > platform-firmware. If it's not suitable to be treated as "System RAM"
+> > then the onus is on platform-firmware to keep it out of the general
+> > purpose pool.
+> >   
+> 
+> Eh, you're right, just spitballing.  On real hardware this isn't an
+> issue so there's no reason to change the kernel.  QEMU should just model
+> the hardware.
 
-Having done that, please resubmit the corresponding Linux patch with a
-Link tag pointing to the upstream PR.
+FYI.  Richard Henderson has posted a fix. 
+We should be fine going forwards on QEMU TCG. Waiting on confirmation
+that it fixes the reported the instruction straddling the QEMU normal
+to MMIO boundary, but looks right to me (and it's confirmed to fix
+a different issue that hit same restriction).  Thanks Richard!
 
-Thanks!
+https://lore.kernel.org/qemu-devel/20230206193809.1153124-1-richard.henderson@linaro.org/
 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/acpi/acpica/utcksum.c |    4 +---
->  include/linux/acpi.h          |    7 +++++++
->  2 files changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/acpi/acpica/utcksum.c b/drivers/acpi/acpica/utcksum.c
-> index c166e4c05ab6..c0f98c8f9a0b 100644
-> --- a/drivers/acpi/acpica/utcksum.c
-> +++ b/drivers/acpi/acpica/utcksum.c
-> @@ -102,15 +102,13 @@ acpi_ut_verify_cdat_checksum(struct acpi_table_cdat *cdat_table, u32 length)
->                                    "should be 0x%2.2X",
->                                    acpi_gbl_CDAT, cdat_table->checksum,
->                                    checksum));
-> -
-> -#if (ACPI_CHECKSUM_ABORT)
->                 return (AE_BAD_CHECKSUM);
-> -#endif
->         }
->
->         cdat_table->checksum = checksum;
->         return (AE_OK);
->  }
-> +EXPORT_SYMBOL_GPL(acpi_ut_verify_cdat_checksum);
->
->  /*******************************************************************************
->   *
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 5e6a876e17ba..09b44afef7df 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1504,9 +1504,16 @@ static inline void acpi_init_ffh(void) { }
->  #ifdef CONFIG_ACPI
->  extern void acpi_device_notify(struct device *dev);
->  extern void acpi_device_notify_remove(struct device *dev);
-> +extern acpi_status
-> +acpi_ut_verify_cdat_checksum(struct acpi_table_cdat *cdat_table, u32 length);
->  #else
->  static inline void acpi_device_notify(struct device *dev) { }
->  static inline void acpi_device_notify_remove(struct device *dev) { }
-> +static inline acpi_status
-> +acpi_ut_verify_cdat_checksum(struct acpi_table_cdat *cdat_table, u32 length)
-> +{
-> +       return (AE_NOT_CONFIGURED);
-> +}
->  #endif
->
->  #endif /*_LINUX_ACPI_H*/
->
->
+I hadn't even gotten a reproducer up yet so very much appreciate that
+I might not have to ;)
+
+Jonathan
