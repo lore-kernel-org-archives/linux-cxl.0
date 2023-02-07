@@ -2,49 +2,48 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1F8C636D4
-	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 19:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1CDC636D3
+	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 19:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231522AbjBGTRA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 7 Feb 2023 14:17:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57920 "EHLO
+        id S231395AbjBGTRC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 7 Feb 2023 14:17:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231395AbjBGTQ6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 14:16:58 -0500
+        with ESMTP id S231343AbjBGTRA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 14:17:00 -0500
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7CBF2798F
-        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 11:16:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5295A35267
+        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 11:16:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675797416; x=1707333416;
+  t=1675797419; x=1707333419;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=aiJCC2VqnMfgVX+iZFOAB+W362IZOXkYLTET8CY2Dd4=;
-  b=grp3Iizsp8edLCwzEkhsOPQRRFdGprQCvrE2yRJeZYte5ZwYCNdFSaBi
-   XRdeQ27onQau3qxD7RrvQiB3bNSmspYOrwiflEnEeQ2DN8NGsWrwGZUkT
-   h4qb8au/U81RE1bqc4xUqUfPia9UFuIY9/nvL+qFdQ4P9e/nIP08suAVk
-   Q5W5uDs/ydpSJp6wArpEtVfRy6kLbkUC8F6kMwZn3DzRJ9yUAxo6IQFZJ
-   brfytmawFRH6ynzUAOmF3Xz3cGmHcty7TDAAKnBrylIgbt3VkiF4SwaZs
-   oUsUxhJjJZ2+sbdKOekq+YmJ25p0qddoUOCSSw6M98ZEJnkOntVtbhXKp
+  bh=iRdIDiH4UhTIWJ4OIMuQgZ3P0ZE88DyPelIpcwyE+I0=;
+  b=KgZyxOB1wQRcmdJJG5xGhBpIA1fAsRd49fQstiUWFxUYATdXZ1AmMEHB
+   QC4fMLqjwuayKprsJYFaRJLW8Bz8a7D6MsevRsR1Qa47vhA5LoeroUhRQ
+   S6zCqLxP3on+Ye8ZeSo4i76Tam27j2vDLDGwgdYbPrHpGHuXFykk9R9RA
+   UjhpNYL71grriUFx/8buLkJ8KxIXvYZPAmGt5J4aaKKlL0q/V+CediP16
+   pXqXRs9YBQYUzWqKkce9kmvctSNA06kmVahaV+pJf5Ty2iJ9Qj4YfN2+T
+   EXOIFYHHUh99Zh4+SBFCVHJTXVj7LBizGzUwLFolnHteaAr1SO0TyOM5t
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="331733995"
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="331734014"
 X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="331733995"
+   d="scan'208";a="331734014"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:54 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="735649811"
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:56 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="735649821"
 X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="735649811"
+   d="scan'208";a="735649821"
 Received: from fvanegas-mobl.amr.corp.intel.com (HELO vverma7-desk1.local) ([10.209.109.6])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:54 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 11:16:56 -0800
 From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Tue, 07 Feb 2023 12:16:29 -0700
-Subject: [PATCH ndctl 3/7] cxl: add core plumbing for creation of ram
- regions
+Date:   Tue, 07 Feb 2023 12:16:32 -0700
+Subject: [PATCH ndctl 6/7] cxl/list: Include regions in the verbose listing
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230120-vv-volatile-regions-v1-3-b42b21ee8d0b@intel.com>
+Message-Id: <20230120-vv-volatile-regions-v1-6-b42b21ee8d0b@intel.com>
 References: <20230120-vv-volatile-regions-v1-0-b42b21ee8d0b@intel.com>
 In-Reply-To: <20230120-vv-volatile-regions-v1-0-b42b21ee8d0b@intel.com>
 To:     linux-cxl@vger.kernel.org
@@ -54,181 +53,42 @@ Cc:     Gregory Price <gregory.price@memverge.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev
 X-Mailer: b4 0.13-dev-ada30
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5791;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=632;
  i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=aiJCC2VqnMfgVX+iZFOAB+W362IZOXkYLTET8CY2Dd4=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDMmPFi+Z1TfN3r8qzKhcs+bVkm12jDovbb+6HJtUqdW+M
- Hsdc+/fjlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEykT5GRYbF109/vjc37j01S
- yA2bInb23MwWrtsCaU6WT57Fhr63VmD4Z/72zGeFijq3Z78nFW6Zw+vce4EtMl77ibz3hSN7+I/
- fYAMA
+ bh=QfLIsB0jQFixz9GnkkwyrXBshIB2ZsjPNpz69CvK4mk=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDMmPFi8JW7yYgSvrqNDbsyKP2BsXRO+LmeQ2b3XxnRCB9
+ 8sbY09ldpSyMIhxMciKKbL83fOR8Zjc9nyewARHmDmsTCBDGLg4BWAiC7cyMqx+FxCcv2WmU61S
+ km7c5Z4rc86dOPHyouzhHMnUid+zJeYy/DPYw93p5DRx6akZEQ41Kpc+CDyRXHVEwFXoq/N7Fd1
+ lu5kA
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
  fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add support in libcxl to create ram regions through a new
-cxl_decoder_create_ram_region() API, which works similarly to its pmem
-sibling.
+From: Dan Williams <dan.j.williams@intel.com>
 
-Enable ram region creation in cxl-cli, with the only differences from
-the pmem flow being:
-  1/ Use the above create_ram_region API, and
-  2/ Elide setting the UUID, since ram regions don't have one
+When verbose listing was added, region listing support was not available, so
+it got missed. Add it now.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- Documentation/cxl/cxl-create-region.txt |  3 ++-
- cxl/lib/libcxl.c                        | 22 +++++++++++++++++++---
- cxl/libcxl.h                            |  1 +
- cxl/region.c                            | 32 ++++++++++++++++++++++++++++----
- cxl/lib/libcxl.sym                      |  1 +
- 5 files changed, 51 insertions(+), 8 deletions(-)
+ cxl/list.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
-index 286779e..ada0e52 100644
---- a/Documentation/cxl/cxl-create-region.txt
-+++ b/Documentation/cxl/cxl-create-region.txt
-@@ -80,7 +80,8 @@ include::bus-option.txt[]
- -U::
- --uuid=::
- 	Specify a UUID for the new region. This shouldn't usually need to be
--	specified, as one will be generated by default.
-+	specified, as one will be generated by default. Only applicable to
-+	pmem regions.
- 
- -w::
- --ways=::
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 83f628b..c5b9b18 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -2234,8 +2234,8 @@ cxl_decoder_get_region(struct cxl_decoder *decoder)
- 	return NULL;
- }
- 
--CXL_EXPORT struct cxl_region *
--cxl_decoder_create_pmem_region(struct cxl_decoder *decoder)
-+static struct cxl_region *cxl_decoder_create_region(struct cxl_decoder *decoder,
-+						    enum cxl_decoder_mode mode)
- {
- 	struct cxl_ctx *ctx = cxl_decoder_get_ctx(decoder);
- 	char *path = decoder->dev_buf;
-@@ -2243,7 +2243,11 @@ cxl_decoder_create_pmem_region(struct cxl_decoder *decoder)
- 	struct cxl_region *region;
- 	int rc;
- 
--	sprintf(path, "%s/create_pmem_region", decoder->dev_path);
-+	if (mode == CXL_DECODER_MODE_PMEM)
-+		sprintf(path, "%s/create_pmem_region", decoder->dev_path);
-+	else if (mode == CXL_DECODER_MODE_RAM)
-+		sprintf(path, "%s/create_ram_region", decoder->dev_path);
-+
- 	rc = sysfs_read_attr(ctx, path, buf);
- 	if (rc < 0) {
- 		err(ctx, "failed to read new region name: %s\n",
-@@ -2282,6 +2286,18 @@ cxl_decoder_create_pmem_region(struct cxl_decoder *decoder)
- 	return region;
- }
- 
-+CXL_EXPORT struct cxl_region *
-+cxl_decoder_create_pmem_region(struct cxl_decoder *decoder)
-+{
-+	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_PMEM);
-+}
-+
-+CXL_EXPORT struct cxl_region *
-+cxl_decoder_create_ram_region(struct cxl_decoder *decoder)
-+{
-+	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_RAM);
-+}
-+
- CXL_EXPORT int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder)
- {
- 	return decoder->nr_targets;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index e6cca11..904156c 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -213,6 +213,7 @@ cxl_decoder_get_interleave_granularity(struct cxl_decoder *decoder);
- unsigned int cxl_decoder_get_interleave_ways(struct cxl_decoder *decoder);
- struct cxl_region *cxl_decoder_get_region(struct cxl_decoder *decoder);
- struct cxl_region *cxl_decoder_create_pmem_region(struct cxl_decoder *decoder);
-+struct cxl_region *cxl_decoder_create_ram_region(struct cxl_decoder *decoder);
- struct cxl_decoder *cxl_decoder_get_by_name(struct cxl_ctx *ctx,
- 					    const char *ident);
- struct cxl_memdev *cxl_decoder_get_memdev(struct cxl_decoder *decoder);
-diff --git a/cxl/region.c b/cxl/region.c
-index 38aa142..0945a14 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -380,7 +380,22 @@ static void collect_minsize(struct cxl_ctx *ctx, struct parsed_params *p)
- 		struct json_object *jobj =
- 			json_object_array_get_idx(p->memdevs, i);
- 		struct cxl_memdev *memdev = json_object_get_userdata(jobj);
--		u64 size = cxl_memdev_get_pmem_size(memdev);
-+		u64 size;
-+
-+		switch(p->mode) {
-+		case CXL_DECODER_MODE_RAM:
-+			size = cxl_memdev_get_ram_size(memdev);
-+			break;
-+		case CXL_DECODER_MODE_PMEM:
-+			size = cxl_memdev_get_pmem_size(memdev);
-+			break;
-+		default:
-+			/*
-+			 * This will 'poison' ep_min_size with a 0, and
-+			 * subsequently cause the region creation to fail.
-+			 */
-+			size = 0;
-+		}
- 
- 		if (!p->ep_min_size)
- 			p->ep_min_size = size;
-@@ -589,8 +604,15 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 				param.root_decoder);
- 			return -ENXIO;
- 		}
-+	} else if (p->mode == CXL_DECODER_MODE_RAM) {
-+		region = cxl_decoder_create_ram_region(p->root_decoder);
-+		if (!region) {
-+			log_err(&rl, "failed to create region under %s\n",
-+				param.root_decoder);
-+			return -ENXIO;
-+		}
- 	} else {
--		log_err(&rl, "region type '%s' not supported yet\n",
-+		log_err(&rl, "region type '%s' is not supported\n",
- 			param.type);
- 		return -EOPNOTSUPP;
- 	}
-@@ -602,10 +624,12 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 		goto out;
- 	granularity = rc;
- 
--	uuid_generate(uuid);
- 	try(cxl_region, set_interleave_granularity, region, granularity);
- 	try(cxl_region, set_interleave_ways, region, p->ways);
--	try(cxl_region, set_uuid, region, uuid);
-+	if (p->mode == CXL_DECODER_MODE_PMEM) {
-+		uuid_generate(uuid);
-+		try(cxl_region, set_uuid, region, uuid);
-+	}
- 	try(cxl_region, set_size, region, size);
- 
- 	for (i = 0; i < p->ways; i++) {
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 9832d09..84f60ad 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -246,4 +246,5 @@ global:
- LIBCXL_5 {
- global:
- 	cxl_region_get_mode;
-+	cxl_decoder_create_ram_region;
- } LIBCXL_4;
+diff --git a/cxl/list.c b/cxl/list.c
+index e3ef1fb..4e77aeb 100644
+--- a/cxl/list.c
++++ b/cxl/list.c
+@@ -126,6 +126,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
+ 		param.endpoints = true;
+ 		param.decoders = true;
+ 		param.targets = true;
++		param.regions = true;
+ 		/*fallthrough*/
+ 	case 0:
+ 		break;
 
 -- 
 2.39.1
