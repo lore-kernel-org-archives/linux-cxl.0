@@ -2,195 +2,168 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A79C636D3
-	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 21:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE44C636D3
+	for <linux-cxl@archiver.kernel.org>; Tue,  7 Feb 2023 22:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbjBGV7D (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 7 Feb 2023 16:59:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49966 "EHLO
+        id S229732AbjBGWHr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 7 Feb 2023 17:07:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjBGV7C (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 16:59:02 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937DC3B3C5
-        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 13:59:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675807141; x=1707343141;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=wrPjnM6nQ6naBCkHh0vSyAI2AU2LeMJ+iNkEpyCoO+o=;
-  b=VG/gG66VZhjmbUDnhAkiMpU0ric5rOn8g1cGLmnlxle+TqC71F7rsrgu
-   WbxTuBvQl/TniDlIvTck5odPkbEvMMl9BaeT1pfOJY27es0WgsEHY4SbF
-   hvvPxbd4bCxpiFcgGdG2BccjmmR6USu9ukpgnq9qECFbcidMOhkHt+bmm
-   42pf+6dT1iIlBeIkALP9LUXemeyQkmD19b02FfQeG5cTB69ldg9hfZ+a1
-   Dl7iqxm/o6VlwKWTZIyTQjh+nJfZR4xZEG8NFGqkVUXIw3aC+fWGBsdhG
-   iKlQ9cgqP7SSbaJZed6tWDxz2sj8pSQSBZme8iPOQhw6xggnu21IYpXLA
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="328286921"
-X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
-   d="scan'208";a="328286921"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 13:58:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="775737604"
-X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
-   d="scan'208";a="775737604"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Feb 2023 13:58:50 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 7 Feb 2023 13:58:50 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Tue, 7 Feb 2023 13:58:50 -0800
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.44) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Tue, 7 Feb 2023 13:58:49 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HgZc01hpDEf4NPrLYYlzQMTjyBmBKFQjIfWGfq3XLdCKFzOhx4vwE80ogWkASMyld+Mq7jFjAjoJhW/QOdUP5SgNyXTOJ5NgKOZ27TdyF8SSOiIYkQdN3GyRH/8QIYerFaveq7Cv0ivLmP6Byp0gT2LT/PN6+TTsNjvB/pIqI4wPytqndqJ4S4OLzdqJiB2qSWFOMwRioa6jJTSWNsz5HWvj30KLtZoo4PjjPK/uawSRFYoJla6jg2y+2eLh+SSeaf6PpVl1ifCN+nnIp3TJKY/S+FpuxU6AHsG2d6Y3+UocqOvkI7rDbZpPlY6jYsk6sLHvE7b6Fk3VNTEAk3E/iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bDH51jl6Ua8E4HPVGTIJNXTnhmpGyuumziRtJeC0HNo=;
- b=d45PsEgVMsy5QqQAHGzqm3LJ1eorDaRBi3R0ltWWWxSsjakjQCpVZ1TaYn8C8QxcGMRhcQOqPI6wpgiJdkHyBR5b8g9Rzjzk3/AIPehW3QM59V78m6ZVwc2mcxBzPEVFNDT6gfwiRYttqTVIt26arqKK7fLsDkzfTuNXc0DOBLJR3z6kpXpkwRJEpzJH0PzMG14BhBxqU4AEJQbnk1tg7JLbz6QAjc7CV1yxo88NB/VMTh76rveMIGPQBjNCoFPV0fZnxtoSPlhHFVo+WxkyDWieu23hnmLGYEN9VEkdMEZqEOsTRE0ELAcL//16MdoaLpdz4V4nWQleY04W2wtt8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB8208.namprd11.prod.outlook.com (2603:10b6:8:165::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.36; Tue, 7 Feb
- 2023 21:58:46 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%6]) with mapi id 15.20.6064.036; Tue, 7 Feb 2023
- 21:58:46 +0000
-Date:   Tue, 7 Feb 2023 13:58:43 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-CC:     <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <jonathan.cameron@huawei.com>
-Subject: RE: [PATCH v3 1/8] cxl: break out range register decoding from
- cxl_hdm_decode_init()
-Message-ID: <63e2c9933a27e_e3dae29415@dwillia2-xfh.jf.intel.com.notmuch>
-References: <167406522720.1455071.8837344641950166822.stgit@djiang5-mobl3.local>
- <167406530747.1455071.6556733331321082239.stgit@djiang5-mobl3.local>
- <63e2c8d4bcc4d_e3dae2947d@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S229779AbjBGWHp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Feb 2023 17:07:45 -0500
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85779EC5
+        for <linux-cxl@vger.kernel.org>; Tue,  7 Feb 2023 14:07:35 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230207220733usoutp01b8a4f3faf31c35f4fcd05a11556c250c~Bqi6Efy2D1427714277usoutp01W;
+        Tue,  7 Feb 2023 22:07:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230207220733usoutp01b8a4f3faf31c35f4fcd05a11556c250c~Bqi6Efy2D1427714277usoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1675807653;
+        bh=EnEhYqDsHFGeq32EGpMdDkmR1ncbLh9sFp6iQxRPUNc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=OWo8zTSAdchR/GTiMZMfz4Mtg7WsvIGqlwqeOHnHS8VoljQoSTDuZJSRORS4jt6cB
+         Kgp23Y3XTg+Hdmlc/5uYcIFw5lGQyjV2RiJuI73UssmjBFQ1rIYCp1EZytttyp3af6
+         N7QhrueS4g+t5unSJJl08SdLc+zTNzxMe6KhZMtI=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230207220733uscas1p2003853da12417b97a5bf7117662128f3~Bqi59ZoV_0486704867uscas1p2b;
+        Tue,  7 Feb 2023 22:07:33 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id 17.B2.49129.4ABC2E36; Tue, 
+        7 Feb 2023 17:07:32 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230207220732uscas1p28eab99f743962581e50c2657b2e2132e~Bqi5qXTZT0485204852uscas1p2B;
+        Tue,  7 Feb 2023 22:07:32 +0000 (GMT)
+X-AuditID: cbfec36f-eddff7000001bfe9-34-63e2cba480d0
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id D6.C1.11378.4ABC2E36; Tue, 
+        7 Feb 2023 17:07:32 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Tue, 7 Feb 2023 14:07:31 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
+        7 Feb 2023 14:07:31 -0800
+From:   Fan Ni <fan.ni@samsung.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+Subject: Re: [PATCH ndctl 1/7] cxl/region: skip region_actions for region
+ creation
+Thread-Topic: [PATCH ndctl 1/7] cxl/region: skip region_actions for region
+        creation
+Thread-Index: AQHZO0CTg1B8Uw6T8kqhvQqHMVP2oQ==
+Date:   Tue, 7 Feb 2023 22:07:31 +0000
+Message-ID: <20230207220723.GA702843@bgt-140510-bm03>
+In-Reply-To: <20230120-vv-volatile-regions-v1-1-b42b21ee8d0b@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <63e2c8d4bcc4d_e3dae2947d@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: BYAPR11CA0105.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::46) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Content-ID: <068E3469EEAA044093780C5E03D1D10B@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB8208:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9038eacf-0fea-4407-f370-08db09567c2d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: n+siqhajRYCPFOvRtC2MoioL3KJN6Prk5jg/W8UKPQ9ws9Wm1rzeQi5qPqlBB7tTTxTTLKdSj0Rmgz+kBvUhZICtMpXeiXkRWLR5PUmFF8rPh0X+DJeKiKiyJKbaqwy98jQBlw884JOqwsdyB2dBPoIUydLk8/6NEqTSmYUXgoq4BMcZb1Lg2GO+bmrqOUmMoxpUnm25gM3v/mtaWKWJaTU4qD6lTdrnUTQknz1XaoUjpUTe0ayVdvL7jq0SHN4m3LFUDuMVqQ2bmw1XBuJCCjy+sJaAs+V3ztGnXTNNxwpE9fAiDtm6Gqa9+z9HfbU6AooSCLb5tg3sJ+FftjQOTzfgIbXscTBoG7bzZKMYz7lkKiZ2yg4wu7BoGqeGlEYZnRkhZQ6EE4EhVh7r3TuYUtCOLJgdPkl8EPQUEfBjBYzMLmAiItjCv5871/tZhaVUljhGU5uN/eobBESQyArhtGfxEbkrChQIMchnWy9wXdBkK6gHl9rcfkEzk0BkRCov2ishkNvGbUqLYml0SAvPsrIUM+4TYJVSl6YbMhetXgnvu0n22M/C2KpgLsmkgm1g5SG6dFsUv2+WOo+u/eKvrD3DemntJiJJJR0sKcpi9bWli3iFdUSX7Wtvjvv21DkRHF1K/qxEsbvS7xI6Mf8Shw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(376002)(396003)(136003)(366004)(39860400002)(451199018)(110136005)(86362001)(186003)(6512007)(2906002)(4326008)(66946007)(5660300002)(66476007)(8936002)(41300700001)(8676002)(66556008)(26005)(478600001)(9686003)(6666004)(6506007)(6486002)(38100700002)(82960400001)(316002)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7J/1vK3CP3VJhUNBEN7LzVHVk9CbGQ74lkRBeRopAnWjZZsfPUM6GN+6fJcY?=
- =?us-ascii?Q?WoWQMZISqzmKP5B0MfmakLDTtU2dbIJOUuieO6PZj+9t9DNAydVMEH9sNxOU?=
- =?us-ascii?Q?0vvSfevDcRMTGH0WwmKpYM1dG/WKZrvIx1IgOmHDIiEthBHgmHEYTESQdCXg?=
- =?us-ascii?Q?aiOFcKaFTBVhVA1l2SDP0h0/BOqX9OM0CV9mAj8ZNF6ERQsvClnDtQGF4v+f?=
- =?us-ascii?Q?oCaSI18sIEKwga7IusF7jsUgaeO0vLS5H1ikOXCG1PexM3Cuz0igGSNed7Yw?=
- =?us-ascii?Q?3XWD+v+z5lm4w2bMRReknfLEmjVNib/WM5cx/kLQ9ksywBOTL4Q9eQsvpU8i?=
- =?us-ascii?Q?t4V9P92BWrvH6pkywhu2ZFVpR0KYJYvn7H27KmGXFSsLOBmD5nFCAFlfL1LM?=
- =?us-ascii?Q?0GN/f/7AMYfkAE4g/v30t0V+YT65pA2ggaDjSle5LDowe87uqBkT3BcoiuVF?=
- =?us-ascii?Q?W6j17LS6poquOfBHIwThlxdUk0sqNY9JB/97sUsg0sWMxVl1k/XxukZZe/+0?=
- =?us-ascii?Q?8lWQpAf5a7yrk+Rrl10EuTBuDsAuwGXz6aXr8Unw4px3jbNRw7jUrlfyxaVW?=
- =?us-ascii?Q?ZpybXenCdWi6A+uSX4ujrYatLJtiT8mEFdZrRTU8dNpSFFgnwlpoXQCc2Toq?=
- =?us-ascii?Q?T/SvoUiYKCVNSHT9lxXPb12DCY0duSUGbqZRLArgvI8GzFf+PzwplT6aMDkc?=
- =?us-ascii?Q?fBsB8tvXg1RQKPxaRxqJt+tI441fB3bQawERl5oYLqIJ4TyfOAd3psDionDA?=
- =?us-ascii?Q?GMyBrSE2d0ntG4sWDlmxrAkL/ngakl0i3AdD41jufQaOlYZ8PDCX4XtedhsU?=
- =?us-ascii?Q?z1GUKaMQPRGI7R0PKzoHYU7dhNlH5nKmHjY1K/XAdH/L8J5QQZCLMQMgyBm7?=
- =?us-ascii?Q?pwcZeeGUmqGH/96kaPiBBYxp0nKqMqj8SEjaKKjXdBQOWv/rcEtndL7owZIV?=
- =?us-ascii?Q?PG/7HGLCUM9BhN7+1nuceDvFZnOobv7neRHXcfk1nAenrmXsjOWNW0ds1KJF?=
- =?us-ascii?Q?aWwNPpbc1LtfsOFT9haYObCIXN+TUErdxiYjlQtXN3cPbg8BKwiJEeOz9krP?=
- =?us-ascii?Q?PJObJcnO4BWWpmkpIbozqZm5nNAJPBKpg/SuoPA/jHYfLP8HXfEwkAgNAXCF?=
- =?us-ascii?Q?iuI4neIMGtgKTrirERD/x8VB0AV5K2DZ40Z56ORcMv4GJk0oXrbmLtsXAutG?=
- =?us-ascii?Q?IEvTPJRXMCCdIxQwnEiKvE6POt9MAnfqNVaxe/MaqzbmzqKuU0TRrHcH/RoD?=
- =?us-ascii?Q?HJeGlqwfyD+8E5sfEyKMu+vyh8nZZhCfLastmmL+wqMU4D2bIzmUTEdEazJi?=
- =?us-ascii?Q?bc+pLI3XT+tuxWXTb1U8p0IYNSOoJhqLPR9AALti7tqqBWpS/rQcK7/PhMIl?=
- =?us-ascii?Q?eq53vHyEqR9X0f+c2whj9yEBDEIz1YcxYM4a3X5KjOqnatCzetJrqR9kqGU8?=
- =?us-ascii?Q?KNGbNCj3ZCf+wWPEaxo2wlrP/E0Gm9d3HZ72LKLWpprVwMyzYaPKo9xRHw9i?=
- =?us-ascii?Q?+1D89g5ZSShPl12XC/8OXIBYvqotv+e6+5qA2CLII+RHSCNiQfqQzWYtMT3W?=
- =?us-ascii?Q?Ik5Ri65x/XddvjiCbWuYv0QII87mxWC0d7OvPqNl7slz17jwClaqiV5vF6Ok?=
- =?us-ascii?Q?wg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9038eacf-0fea-4407-f370-08db09567c2d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2023 21:58:46.0468
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lhymoDolS5pvXO/knnTlFUMK2luKwddrJLLoncJOXWQGA+E07/VBt4coFisYbPncB2BEq0NBD8cPtpBuT60hPZJg7vzrHOg4GujpUGeWL70=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8208
-X-OriginatorOrg: intel.com
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfZ/nfjxdLo+j+qiJrthIlx9lNwlhczJjRg3LeVzPEtdd7orY
+        rLTKFDk/jrlm3SXR42gSUsSVWlKdtZK7Gbll6wfWaXaWRHdPpv/e38/7/f58X/vuS+AiMzeA
+        SFGl0xoVpRTzBJxHzT86wsteOxRLT9+MlF7Vv0HSOzYzkmbnODhSxvSWJ7UaWjnSip9jXKld
+        14yt48tyX37lym48HcBk/Q+uIdl95x++TF+cJRupCtrO2yNYnUQrU47Smog1+wUH7XkML+2h
+        T2bHCyIbdXgXIC8CyEgwNlVzCpCAEJEVCIyFFj57yMPgfG42/1+qxW7issZdBD/q3uPswYmg
+        quvzZOUmgtpmF+au8MhgqC94zHPr2WQY6MqHPXWcNGJQ8t2J3MYscic8Y9pxNrQLzrV9QayW
+        wD37/Yk5QXDIUHCMbndLIRkFF3qT3AkvchNcGbBw3RqRfuBqNXuuxUl/sPeVYCz1TCgtfoqz
+        2g/Gaz/xWB0MH10DfDa/BIx133nu9Ti5Bnp0gew4DMpNQ56qcGLNq2t9HLY6Byy333meC8he
+        Aq5bSxBrbIRbwwVcVgdCd4/eQw+kAhingB0roaSsenJPNJjGKjEdCjVMoTZMITL8JzJMITJM
+        ITIiLoP8M7Ta1GRau1xFH5NoqVRthipZolCnVqGJD/V6vFFdg3rsTkkDwgjUgIDAxbOFUS96
+        FSJhEnX8BK1RyzUZSlrbgAIJjthfuCzmlUJEJlPp9GGaTqM1/1yM8ArIxhJe7s03c+WjRSOL
+        29Y3NM61tUYckPn2YxuKE/vy5L6NS4ZyNjC30nxiB+txZmf5PuSz2aZb2Y5qEw6d3JZYVJcw
+        ovZzxo5dvevQ7KYWnpD8ivWmZLiqLj7FtWjFjmnm+PLiy7+ehO/zWxUWMOyaMb2ik0qv7jpw
+        FmuJG5q1QOy4+GH9YFymv9X2rTQvf91YGvO+o7VRHH6xJcJ6KjPfoam8FG55HkVa2zb3n+yK
+        FIf8DN7K/Pk6nwga7URq+W6lqVe9NmaG/Mxery1NohWhASG2jEdH6gubfhfanNKjOvk50/N7
+        el+X2SKiutvfxObqx/WXovn8eUlfarJEH7MMYo72ILVsMa7RUn8BkopwLL8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWS2cA0SXfJ6UfJBis/KVtMn3qB0WL1zTWM
+        Fg1Nj1gsVi28xmZxftYpFouVP/6wWtyacIzJgd2j5chbVo/Fe14yebzYPJPRY+PH/+weU2fX
+        e3zeJBfAFsVlk5Kak1mWWqRvl8CVcat1FVvBVr6Kcwc4GhjPcXcxcnJICJhInLi1kLWLkYtD
+        SGA1o8Sfa33MEM5HRomWCZsZIZyljBKndnezgrSwCShK7OvazgZiiwhoS0xY9gGsnVlgHpPE
+        hXPXGEESwgIhEntXnWWGKAqVePR5MSOErSex7tZGoDgHB4uAisSjXwEgJq+AqcTEBykQu5oZ
+        JZ7uvAI2n1PAXWLay4NgexkFxCS+n1rDBGIzC4hL3HoynwniBQGJJXvOM0PYohIvH/9jhbAV
+        Je5/f8kOUa8jsWD3JzaQXcwCdhLXJ0hDhLUlli18DdbKKyAocXLmExaIVkmJgytusExglJiF
+        ZNssJJNmIUyahWTSLCSTFjCyrmIULy0uzk2vKDbMSy3XK07MLS7NS9dLzs/dxAiM79P/Dkfu
+        YDx666PeIUYmDsZDjBIczEoivKYHHiQL8aYkVlalFuXHF5XmpBYfYpTmYFES5xVynRgvJJCe
+        WJKanZpakFoEk2Xi4JRqYJqjWrTXJ1H5lsD+I70nLibHJv1J1ogLFzqx7FbPlnlGzjcChNe9
+        tdOQkQi8MkNR5lhWP8uZ/+XxKisiOGT/nbnMqsOvuyqc84TF11evP+l1f2vYcmPrm09LVUPq
+        W9kj9tQ2iH8K/JOxUcvP8ojND7Y1HbJ2Lu+mqahPMzRKebA27GpYZWlsZwZ/0m2xnPDOneEP
+        /k+fdDzvKKel2va3czc/q/mq/JntwAfuAz1JZkHPjBX//WdSdngqMEXystOv8tgpSwpWtp9c
+        8ULm0e6nG/5F2aXsO3fBP2nzcgtpRYmKD7o/A54dDmLdrGsSVq2zfSfv4bAugT1lqqYBUasb
+        o1lnlnAEFn1W9vZKzZ65QImlOCPRUIu5qDgRABZseKteAwAA
+X-CMS-MailID: 20230207220732uscas1p28eab99f743962581e50c2657b2e2132e
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20230207220732uscas1p28eab99f743962581e50c2657b2e2132e
+References: <20230120-vv-volatile-regions-v1-0-b42b21ee8d0b@intel.com>
+        <20230120-vv-volatile-regions-v1-1-b42b21ee8d0b@intel.com>
+        <CGME20230207220732uscas1p28eab99f743962581e50c2657b2e2132e@uscas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dan Williams wrote:
-> Dave Jiang wrote:
-> > There are 2 scenarios that requires additional handling. 1. A device that
-> > has active ranges in DVSEC range registers (RR) but no HDM decoder register
-> > block. 2. A device that has both RR active and HDM, but the HDM decoders
-> > are not programmed. The goal is to create emulated decoder software structs
-> > based on the RR.
-> > 
-> > Move the CXL DVSEC range register decoding code block from
-> > cxl_hdm_decode_init() to its own function. Refactor code in preparation for
-> > the HDM decoder emulation.  There is no functionality change to the code.
-> > Name the new function to cxl_dvsec_rr_decode().
-> > 
-> > The only change is to set range->start and range->end to CXL_RESOURCE_NONE
-> > and skipping the reading of base registers if the range size is 0, which
-> > equates to range not active.
-> > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > 
-> > ---
-> > v2:
-> > - Refactor to continue when size is 0. (Jonathan)
-> > ---
-> >  drivers/cxl/core/pci.c |   63 ++++++++++++++++++++++++++++++------------------
-> >  1 file changed, 40 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index 57764e9cd19d..a8ecc6ddb3d7 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> [..]
-> > @@ -410,6 +400,13 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm)
-> >  			return rc;
-> >  
-> >  		size |= temp & CXL_DVSEC_MEM_SIZE_LOW_MASK;
-> > +		if (!size) {
-> > +			info->dvsec_range[i] = (struct range) {
-> > +				.start = CXL_RESOURCE_NONE,
-> > +				.end = CXL_RESOURCE_NONE,
-> > +			};
-> 
-> This should just be .start = 0, and .end = -1, or .start =
-> CXL_RESOURCE_NONE, and .end = CXL_RESOURCE_NONE - 1, right? Otherwise,
-> range_len() on this range will be non-zero. Likely moot because the
-> range will be skipped because @ranges++ gets skipped, but it looks
-> strange written this way.
-
-Actually, IIUC, this update can just be deleted altogether because
-@ranges++ being skipped already invalidates this entry.
+On Tue, Feb 07, 2023 at 12:16:27PM -0700, Vishal Verma wrote:
+> Commit 3d6cd829ec08 ("cxl/region: Use cxl_filter_walk() to gather create-=
+region targets")
+> removed the early return for create-region, and this caused a
+> create-region operation to unnecessarily loop through buses and root
+> decoders only to EINVAL out because ACTION_CREATE is handled outside of
+> the other actions. This results in confising messages such as:
+s/confising/confusing/
+>=20
+>   # cxl create-region -t ram -d 0.0 -m 0,4
+>   {
+>     "region":"region7",
+>     "resource":"0xf030000000",
+>     "size":"512.00 MiB (536.87 MB)",
+>     ...
+>   }
+>   cxl region: decoder_region_action: region0: failed: Invalid argument
+>   cxl region: region_action: one or more failures, last failure: Invalid =
+argument
+>   cxl region: cmd_create_region: created 1 region
+>=20
+> Since there's no need to walk through the topology after creating a
+> region, and especially not to perform an invalid 'action', switch
+> back to retuening early for create-region.
+s/retuening/returning/
+>=20
+> Fixes: 3d6cd829ec08 ("cxl/region: Use cxl_filter_walk() to gather create-=
+region targets")
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  cxl/region.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/cxl/region.c b/cxl/region.c
+> index efe05aa..38aa142 100644
+> --- a/cxl/region.c
+> +++ b/cxl/region.c
+> @@ -789,7 +789,7 @@ static int region_action(int argc, const char **argv,=
+ struct cxl_ctx *ctx,
+>  		return rc;
+> =20
+>  	if (action =3D=3D ACTION_CREATE)
+> -		rc =3D create_region(ctx, count, p);
+> +		return create_region(ctx, count, p);
+> =20
+>  	cxl_bus_foreach(ctx, bus) {
+>  		struct cxl_decoder *decoder;
+>=20
+> --=20
+> 2.39.1
+>=20
+> =
