@@ -2,48 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC13C636D6
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FCAC636D3
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 19:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjBHTVV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Feb 2023 14:21:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
+        id S230080AbjBHTVg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Feb 2023 14:21:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231800AbjBHTVU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 14:21:20 -0500
+        with ESMTP id S230463AbjBHTVf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 14:21:35 -0500
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFA35828F
-        for <linux-cxl@vger.kernel.org>; Wed,  8 Feb 2023 11:21:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B893D51C5C
+        for <linux-cxl@vger.kernel.org>; Wed,  8 Feb 2023 11:21:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675884076; x=1707420076;
+  t=1675884092; x=1707420092;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fdJO9PK91eaVvybNKx35iF36fc78DSsqi9jbCkewzfM=;
-  b=lBBJRj61OTIEiSCh0ussNPWa//Iaqe0c/N0/HzggpKV8e5Uy/W6TOz5i
-   WUuk4R6Gqky6akUQruCsEcRdBya/XwXF+iUb1CXv94lbRX526PJzTje/Y
-   mLf5u9Be0hT7rw/6tjq+uGqnz1FW+iPAJuhd8NUcNUxWrsqB5Pr/Bl+Bg
-   nvN27nudRnbMC2fvGmGPm9BW0G5k+eqK+YW+8Fpr0bLewfJvM0wVHGIZH
-   GuoSFyb9Jp6N9MLmTnmG4Wm3pOlOg1Gr6ZXax161nlcn6ntF2FbBuoGrH
-   kMhr2c18GEa6obKtSjG+ZYMq40g8mLcP04uqGzw+qV5tyW2Oj4hcb6M9K
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="357298466"
+  bh=DqoLt8NKnIgkwrg4LAFgJX1TeX6OOaYnSK1ZabAA1zA=;
+  b=NA160S5FWNDWLT6ukdEVzbDn/q47siSfuUU5wqbMhIdmHsXYAJBencxf
+   NRFicaw82+KUTG69OGtjV5B9Fq3oEikLxh3oVWK8qv5mSoo8NXe23G+pK
+   oSzq19TtRE1jG510p+2QRLVOca6Ou66vvgLlbi2aOAT6DuZrwj6f550nA
+   j0IZz0E7y/jXBcYx9yEslKPUYj6Dr/PiHCKO8+wv1xYSXUoTBTZS1my1v
+   N2oqp3V/dzGIhiX7TCbXkM72Hqoy9gIQkbmo3WK8cO/mw+5FNEw3Js6DM
+   JXquveCbEM9qr1ANGOOMYlg++T57tsSMgtk/ZPb1ZcDVCoKuY7YT5V49w
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="357298529"
 X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="357298466"
+   d="scan'208";a="357298529"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 11:21:15 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="730998477"
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 11:21:32 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="730998659"
 X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="730998477"
+   d="scan'208";a="730998659"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.48.215])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 11:21:15 -0800
-Subject: [PATCH v4 3/7] cxl: refactor cxl_hdm_decode_init()
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 11:21:32 -0800
+Subject: [PATCH v4 5/7] cxl: create emulated cxl_hdm for devices that do not
+ have HDM decoders
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dan.j.williams@intel.com
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-cxl@vger.kernel.org
-Date:   Wed, 08 Feb 2023 12:21:12 -0700
-Message-ID: <167588407080.1155956.5454204009189141313.stgit@djiang5-mobl3.local>
+Date:   Wed, 08 Feb 2023 12:21:30 -0700
+Message-ID: <167588408897.1155956.17261006145412620005.stgit@djiang5-mobl3.local>
 In-Reply-To: <167588394236.1155956.8466475582138210344.stgit@djiang5-mobl3.local>
 References: <167588394236.1155956.8466475582138210344.stgit@djiang5-mobl3.local>
 User-Agent: StGit/1.5
@@ -54,182 +55,179 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-With the previous refactoring of DVSEC range registers out of
-cxl_hdm_decode_init(), it basically becomes a skeleton function. Squash
-__cxl_hdm_decode_init() with cxl_hdm_decode_init() to simplify the code.
-cxl_hdm_decode_init() now returns more error codes than just -EBUSY.
+CXL rev3 spec 8.1.3
+
+RCDs may not have HDM register blocks. Create a fake HDM with information
+from the CXL PCIe DVSEC registers. The decoder count will be set to the
+HDM count retrieved from the DVSEC cap register.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
 v3:
-- Simplify to directly return devm_cxl_enable_mem() in
-  cxl_hdm_decode_init(). (Jonathan)
+- Move relevant changes from next patch in series. (Jonathan)
+- Add kernel doc update. (Jonathan)
 v2:
-- Update commit log to indicate cxl_hdm_decode_init() return additional
-  error codes after change. (Jonathan)
+- Set target_count to same as number of ranges. (Jonathan)
 ---
- drivers/cxl/core/pci.c |  135 +++++++++++++++++++-----------------------------
- 1 file changed, 54 insertions(+), 81 deletions(-)
+ drivers/cxl/core/hdm.c |   58 ++++++++++++++++++++++++++++++++++++++++--------
+ drivers/cxl/core/pci.c |    9 +++++--
+ drivers/cxl/cxl.h      |    3 ++
+ drivers/cxl/port.c     |    2 +-
+ 4 files changed, 57 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index a76735393b38..2e86c209e24d 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -259,80 +259,6 @@ static int devm_cxl_enable_hdm(struct device *host, struct cxl_hdm *cxlhdm)
- 	return devm_add_action_or_reset(host, disable_hdm, cxlhdm);
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index c0f224454447..a49543f22dca 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -101,11 +101,34 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+ 				      BIT(CXL_CM_CAP_CAP_ID_HDM));
  }
  
--static bool __cxl_hdm_decode_init(struct cxl_dev_state *cxlds,
--				  struct cxl_hdm *cxlhdm,
--				  struct cxl_endpoint_dvsec_info *info)
--{
--	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
++static struct cxl_hdm *devm_cxl_setup_emulated_hdm(struct cxl_port *port,
++						   struct cxl_endpoint_dvsec_info *info)
++{
++	struct device *dev = &port->dev;
++	struct cxl_hdm *cxlhdm;
++
++	if (!info->mem_enabled)
++		return ERR_PTR(-ENODEV);
++
++	cxlhdm = devm_kzalloc(dev, sizeof(*cxlhdm), GFP_KERNEL);
++	if (!cxlhdm)
++		return ERR_PTR(-ENOMEM);
++
++	cxlhdm->port = port;
++	cxlhdm->decoder_count = info->ranges;
++	cxlhdm->target_count = info->ranges;
++	dev_set_drvdata(&port->dev, cxlhdm);
++
++	return cxlhdm;
++}
++
+ /**
+  * devm_cxl_setup_hdm - map HDM decoder component registers
+  * @port: cxl_port to map
++ * @info: cached DVSEC range register info
+  */
+-struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port)
++struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
++				   struct cxl_endpoint_dvsec_info *info)
+ {
+ 	struct device *dev = &port->dev;
+ 	struct cxl_hdm *cxlhdm;
+@@ -119,6 +142,9 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port)
+ 	cxlhdm->port = port;
+ 	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+ 	if (!crb) {
++		if (info->mem_enabled)
++			return devm_cxl_setup_emulated_hdm(port, info);
++
+ 		dev_err(dev, "No component registers mapped\n");
+ 		return ERR_PTR(-ENXIO);
+ 	}
+@@ -814,19 +840,15 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 	return 0;
+ }
+ 
+-/**
+- * devm_cxl_enumerate_decoders - add decoder objects per HDM register set
+- * @cxlhdm: Structure to populate with HDM capabilities
+- */
+-int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+-				struct cxl_endpoint_dvsec_info *info)
++static void cxl_settle_decoders(struct cxl_hdm *cxlhdm)
+ {
+ 	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
 -	struct cxl_port *port = cxlhdm->port;
--	struct device *dev = cxlds->dev;
--	struct cxl_port *root;
--	int i, rc, allowed;
--	u32 global_ctrl;
--
--	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--
--	/*
--	 * If the HDM Decoder Capability is already enabled then assume
--	 * that some other agent like platform firmware set it up.
--	 */
--	if (global_ctrl & CXL_HDM_DECODER_ENABLE) {
--		rc = devm_cxl_enable_mem(&port->dev, cxlds);
--		if (rc)
--			return false;
--		return true;
--	}
--
--	root = to_cxl_port(port->dev.parent);
--	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
--		root = to_cxl_port(root->dev.parent);
--	if (!is_cxl_root(root)) {
--		dev_err(dev, "Failed to acquire root port for HDM enable\n");
--		return false;
--	}
--
--	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
--		struct device *cxld_dev;
--
--		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
--					     dvsec_range_allowed);
--		if (!cxld_dev) {
--			dev_dbg(dev, "DVSEC Range%d denied by platform\n", i);
--			continue;
--		}
--		dev_dbg(dev, "DVSEC Range%d allowed by platform\n", i);
--		put_device(cxld_dev);
--		allowed++;
--	}
--
--	if (!allowed) {
--		cxl_set_mem_enable(cxlds, 0);
--		info->mem_enabled = 0;
--	}
--
--	/*
--	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
--	 * [High,Low] when HDM operation is enabled the range register values
--	 * are ignored by the device, but the spec also recommends matching the
--	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
--	 * are expected even though Linux does not require or maintain that
--	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
--	 * Decoder Capability Enable.
--	 */
--	if (info->mem_enabled)
--		return false;
--
--	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
--	if (rc)
--		return false;
--
--	rc = devm_cxl_enable_mem(&port->dev, cxlds);
--	if (rc)
--		return false;
--
--	return true;
--}
--
- int cxl_dvsec_rr_decode(struct pci_dev *pdev, int d,
- 			struct cxl_endpoint_dvsec_info *info)
- {
-@@ -449,18 +375,65 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- {
- 	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
- 	struct device *dev = &pdev->dev;
+-	int i, committed;
+-	u64 dpa_base = 0;
++	int committed, i;
+ 	u32 ctrl;
+ 
++	if (!hdm)
++		return;
++
+ 	/*
+ 	 * Since the register resource was recently claimed via request_region()
+ 	 * be careful about trusting the "not-committed" status until the commit
+@@ -843,6 +865,22 @@ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 	/* ensure that future checks of committed can be trusted */
+ 	if (committed != cxlhdm->decoder_count)
+ 		msleep(20);
++}
++
++/**
++ * devm_cxl_enumerate_decoders - add decoder objects per HDM register set
++ * @cxlhdm: Structure to populate with HDM capabilities
++ * @info: cached DVSEC range register info
++ */
++int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
++				struct cxl_endpoint_dvsec_info *info)
++{
 +	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
 +	struct cxl_port *port = cxlhdm->port;
-+	struct cxl_port *root;
-+	int i, rc, allowed;
-+	u32 global_ctrl;
++	int i;
++	u64 dpa_base = 0;
 +
-+	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
++	cxl_settle_decoders(cxlhdm);
+ 
+ 	for (i = 0; i < cxlhdm->decoder_count; i++) {
+ 		int target_map[CXL_DECODER_MAX_INTERLEAVE] = { 0 };
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 2e0976446053..cfd869a1fa93 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -379,16 +379,19 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+ 	struct cxl_port *port = cxlhdm->port;
+ 	struct cxl_port *root;
+ 	int i, rc, allowed;
+-	u32 global_ctrl;
++	u32 global_ctrl = 0;
+ 
+-	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
++	if (hdm)
++		global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
  
  	/*
--	 * If DVSEC ranges are being used instead of HDM decoder registers there
--	 * is no use in trying to manage those.
-+	 * If the HDM Decoder Capability is already enabled then assume
-+	 * that some other agent like platform firmware set it up.
+ 	 * If the HDM Decoder Capability is already enabled then assume
+ 	 * that some other agent like platform firmware set it up.
  	 */
--	if (!__cxl_hdm_decode_init(cxlds, cxlhdm, info)) {
--		dev_err(dev,
--			"Legacy range registers configuration prevents HDM operation.\n");
--		return -EBUSY;
-+	if (global_ctrl & CXL_HDM_DECODER_ENABLE)
-+		return devm_cxl_enable_mem(&port->dev, cxlds);
-+
-+	root = to_cxl_port(port->dev.parent);
-+	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
-+		root = to_cxl_port(root->dev.parent);
-+	if (!is_cxl_root(root)) {
-+		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+-	if (global_ctrl & CXL_HDM_DECODER_ENABLE)
++	if (global_ctrl & CXL_HDM_DECODER_ENABLE || (!hdm && info->mem_enabled))
+ 		return devm_cxl_enable_mem(&port->dev, cxlds);
++	else if (!hdm)
 +		return -ENODEV;
+ 
+ 	root = to_cxl_port(port->dev.parent);
+ 	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index ea9548cbc7eb..0ec047cced90 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -643,7 +643,8 @@ struct cxl_endpoint_dvsec_info {
+ };
+ 
+ struct cxl_hdm;
+-struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port);
++struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
++				   struct cxl_endpoint_dvsec_info *info);
+ int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+ 				struct cxl_endpoint_dvsec_info *info);
+ int devm_cxl_add_passthrough_decoder(struct cxl_port *port);
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 7f1b71c5cf15..875bf45db4ad 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -55,7 +55,7 @@ static int cxl_port_probe(struct device *dev)
+ 			return devm_cxl_add_passthrough_decoder(port);
  	}
  
--	return 0;
-+	for (i = 0, allowed = 0; info->mem_enabled && i < info->ranges; i++) {
-+		struct device *cxld_dev;
-+
-+		cxld_dev = device_find_child(&root->dev, &info->dvsec_range[i],
-+					     dvsec_range_allowed);
-+		if (!cxld_dev) {
-+			dev_dbg(dev, "DVSEC Range%d denied by platform\n", i);
-+			continue;
-+		}
-+		dev_dbg(dev, "DVSEC Range%d allowed by platform\n", i);
-+		put_device(cxld_dev);
-+		allowed++;
-+	}
-+
-+	if (!allowed) {
-+		cxl_set_mem_enable(cxlds, 0);
-+		info->mem_enabled = 0;
-+	}
-+
-+	/*
-+	 * Per CXL 2.0 Section 8.1.3.8.3 and 8.1.3.8.4 DVSEC CXL Range 1 Base
-+	 * [High,Low] when HDM operation is enabled the range register values
-+	 * are ignored by the device, but the spec also recommends matching the
-+	 * DVSEC Range 1,2 to HDM Decoder Range 0,1. So, non-zero info->ranges
-+	 * are expected even though Linux does not require or maintain that
-+	 * match. If at least one DVSEC range is enabled and allowed, skip HDM
-+	 * Decoder Capability Enable.
-+	 */
-+	if (info->mem_enabled)
-+		return -EBUSY;
-+
-+	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
-+	if (rc)
-+		return rc;
-+
-+	return devm_cxl_enable_mem(&port->dev, cxlds);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
+-	cxlhdm = devm_cxl_setup_hdm(port);
++	cxlhdm = devm_cxl_setup_hdm(port, &info);
+ 	if (IS_ERR(cxlhdm))
+ 		return PTR_ERR(cxlhdm);
  
 
 
