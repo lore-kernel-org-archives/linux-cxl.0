@@ -2,281 +2,209 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5B1C05027
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 17:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1079C636D3
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 18:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230513AbjBHRqB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Feb 2023 12:46:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52308 "EHLO
+        id S231473AbjBHSEp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Feb 2023 13:04:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231255AbjBHRpX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 12:45:23 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D9D51C49;
-        Wed,  8 Feb 2023 09:44:19 -0800 (PST)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230208173731usoutp02114f7c9b6e983e2e7ea2adc30052853b~B6gbA7rwA2706027060usoutp02z;
-        Wed,  8 Feb 2023 17:37:31 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230208173731usoutp02114f7c9b6e983e2e7ea2adc30052853b~B6gbA7rwA2706027060usoutp02z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1675877851;
-        bh=DrVmy24nHFbRK4jTbsef82LhCdWYgfzbqBv3ctj3ASs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=qCEXVZdaCgsXHelZkV2XUwocL8Xz9d7vhIlG5DlAd1gHvrzRDuguGW2W+n7NJE7a+
-         S9RCPPyLI/PFfILY2f+sG+PMcldRJnyjZSRWasY15kzErcBk8THHV5fr6osm0WotWn
-         NdY1yHzK/NbPMcseqOcwKiW6/sbHNOssjKtlZIBA=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-        [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230208173730uscas1p1c9b9c414603573d91c52d530e399ce7b~B6ga4sc4g0175001750uscas1p1F;
-        Wed,  8 Feb 2023 17:37:30 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id 24.66.49129.ADDD3E36; Wed, 
-        8 Feb 2023 12:37:30 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230208173730uscas1p2af3a9eeb8946dfa607b190c079a49653~B6gamcPQD0660206602uscas1p2I;
-        Wed,  8 Feb 2023 17:37:30 +0000 (GMT)
-X-AuditID: cbfec36f-eddff7000001bfe9-98-63e3ddda5e6d
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id BA.B3.11378.ADDD3E36; Wed, 
-        8 Feb 2023 12:37:30 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 8 Feb 2023 09:37:29 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        8 Feb 2023 09:37:29 -0800
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>,
+        with ESMTP id S231490AbjBHSEn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 13:04:43 -0500
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCAD839B9A
+        for <linux-cxl@vger.kernel.org>; Wed,  8 Feb 2023 10:04:14 -0800 (PST)
+Received: by mail-qv1-xf33.google.com with SMTP id d7so6897732qvz.3
+        for <linux-cxl@vger.kernel.org>; Wed, 08 Feb 2023 10:04:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KF7M+Kj3n0+D3QyEmfqAMrT5IWsgyIgzncbmovOdPhI=;
+        b=YQt7VUiE3eFSEFVaeUdNcB1FuoIgWysGFfLvmDD3t/ImN+bvSKA41/y7wy+oxAHQpY
+         EYyOrs2l29SHFuR1GWTo8RvLw9t9pmr7nnUc98Zd9l8HnAlBY5LRPpeIiXkMMxwmcaBG
+         20NRE5zi8QcDIeTUTzSI5uDkA1mL1PnRHX35tnxtZqeBUPg874Q8AtHuJdIPiHQG4pmw
+         xoCXIBi+kC8cX0w2EhXZ4dhK9oOHi4mmxOfFtGJ/T5zSd0YfiISO6OPh+upkozeUfeHF
+         bW6AvMqPYfkAMf25JdDvlwf+nxtgPVT1MRxb+sSLDFMSEwFO9KRiIITQAoxxk582hTms
+         CEzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KF7M+Kj3n0+D3QyEmfqAMrT5IWsgyIgzncbmovOdPhI=;
+        b=lA0ejqX0AMbiDW5bhXnX4yV2wpLWykxCk4DtMB94TrzJUBh109CIig3TdWrLx89THD
+         gzlpDvYTDx+mU6gcTRZMAy6NKX9fEbM/HKAveCPxmGfuCcCDq9/bcBrLN794ScqsGQTp
+         IBSuOCGJjMxjcZaE1TaAHSB22Ob26Ey9L5AnrFVOO4eAvYpjA2X69HX6aWbvjik1+MCr
+         reeRbeGf1DGwJh4bjTZ7Wz6kIeEZJLy+6tK6X4/yI7+csoqcLICcbQ2MI9P89gkFDw1k
+         aclcqVoK3Q6YE9cG4mTP7nebt6vPwQ5DI1yAkTfPzZx0YbN6bZGAXBljVLrslMfETlHS
+         s2yA==
+X-Gm-Message-State: AO0yUKWnWIv5zEhA6PYQksiPfQ2NjlaFUpmQLAvj3tfFmBwBI4pvgS5l
+        TkTNjwoR1dXw6tX8hCOH9XW8UQ==
+X-Google-Smtp-Source: AK7set94oQ93TcgiV4kB2SnWYkbxOL75GEa3U+AN9OGYy6F76zXtm1RRbjgjsNT/gUZJ8pZ8FXbrcw==
+X-Received: by 2002:a0c:c683:0:b0:56c:1b8e:826e with SMTP id d3-20020a0cc683000000b0056c1b8e826emr2562806qvj.15.1675879450780;
+        Wed, 08 Feb 2023 10:04:10 -0800 (PST)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id n2-20020a05620a294200b006f9ddaaf01esm12544061qkp.102.2023.02.08.10.04.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Feb 2023 10:04:10 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: Re: [External] [LSF/MM/BPF TOPIC] CXL Fabric Manager (FM)
+ architecture
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20230208163844.GA407917@bgt-140510-bm01>
+Date:   Wed, 8 Feb 2023 10:03:57 -0800
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
         "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>
-Subject: Re: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
- default
-Thread-Topic: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
-        default
-Thread-Index: AQHZO+QE3nZq3IrnrkiMD6aqk0DnLw==
-Date:   Wed, 8 Feb 2023 17:37:29 +0000
-Message-ID: <20230208173720.GA709329@bgt-140510-bm03>
-In-Reply-To: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8CC4933716740C43BFB545E163AC7CB8@ssi.samsung.com>
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCKsWRmVeSWpSXmKPExsWy7djX87q37j5ONlhywMRi+tQLjBYvNrQz
-        Wqy+uYbR4uv6X8wWZ7pzLZbv62e0OD/rFIvFvTX/WS3u9zlYLNj4iNGBy2N2w0UWj8V7XjJ5
-        bPo0id1j3slAj/f7rrJ5TJ1d77F+y1UWj8+b5AI4orhsUlJzMstSi/TtErgyJm2YxFTwx6Li
-        ztsmxgbGo1pdjJwcEgImEif+zmPtYuTiEBJYySjReq+FCcJpZZL49nEnI0xVT8siZojEWkaJ
-        DbfeMEI4Hxklbrc9YYdwljJKPPxwnA2khU1AUWJf13YwW0RAW2LinINg7cwCJ5klZn2awg6S
-        EBYIkZg9/TkzRFGoxISGtSxdjBxAtp7Eh2sZIGEWARWJp833wcp5BUwlenr3sIDYnAJhEj3H
-        LoLFGQXEJL6fWsMEYjMLiEvcejKfCeJsQYlFs/cwQ9hiEv92PWSDsBUl7n9/yQ5RryOxYPcn
-        NpC1zAJ2Eos2cUGEtSWWLXzNDLFWUOLkzCcsEK2SEgdX3GABeUVCoJlTYuH5tewQCReJNTev
-        Qs2Xlrh6fSozyEwJgWSJVR+5IMI5EvOXbIGaYy2x8M96pgmMKrOQXD0LyUWzEC6aheSiWUgu
-        WsDIuopRvLS4ODc9tdgoL7Vcrzgxt7g0L10vOT93EyMwoZ3+dzh/B+P1Wx/1DjEycTAeYpTg
-        YFYS4f0+8XGyEG9KYmVValF+fFFpTmrxIUZpDhYlcV5D25PJQgLpiSWp2ampBalFMFkmDk6p
-        BqaDCzO/xwfO1+lXLQpvemPl+HvVwnrRQ97cf4Juzth82S1BrVRj5vxElal6SdtvHYnp2Kdy
-        +L/0x1Nnbu9p2XaK+83t0i8PRXQfmLcsEYtIklgXZ5EsML/k9ofehmlPNFnLGbTn3i93/LXi
-        ofdKn5Cf9RU8s/3DflwKESqZMuMPZ8LMc6oVs+fJPDAzYH4yvX/2fYn9ZefmPyyU/39B4WiV
-        1pdCM/GtIQVS/Lk5CR+/LWJ1lHx2zvgCa7iEZwD3vvfZxn///CyubS2QXzbp4K6lac7nf2p1
-        LErkXblEwnzpjK+26zxKgswc/GRlln77O6+G99z9nz0Ghdvm8q1UUjj0TOH69/RbtwKLHDLn
-        pYgrsRRnJBpqMRcVJwIA6spSF9cDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWS2cA0UffW3cfJBjsvK1hMn3qB0eLFhnZG
-        i9U31zBafF3/i9niTHeuxfJ9/YwW52edYrG4t+Y/q8X9PgeLBRsfMTpwecxuuMjisXjPSyaP
-        TZ8msXvMOxno8X7fVTaPqbPrPdZvucri8XmTXABHFJdNSmpOZllqkb5dAlfGpA2TmAr+WFTc
-        edvE2MB4VKuLkZNDQsBEoqdlETOILSSwmlHid5dAFyMXkP2RUeLF4musEImljBL7elxAbDYB
-        RYl9XdvZQGwRAW2JiXMOMoM0MAucZJZ49+gIE0hCWCBEYvb058wQRaES5zbcBYpzANl6Eh+u
-        ZYCEWQRUJJ4232cHsXkFTCV6evewQOwKlbg75QEjiM0pECbRc+wiWA2jgJjE91NrwMYzC4hL
-        3HoynwniAQGJJXvOM0PYohIvH/9jhbAVJe5/f8kOUa8jsWD3JzaQE5gF7CQWbeKCCGtLLFv4
-        mhniBEGJkzOfsEC0SkocXHGDZQKjxCwk22YhmTQLYdIsJJNmIZm0gJF1FaN4aXFxbnpFsWFe
-        arlecWJucWleul5yfu4mRmAiOP3vcOQOxqO3PuodYmTiYDzEKMHBrCTC+33i42Qh3pTEyqrU
-        ovz4otKc1OJDjNIcLErivEKuE+OFBNITS1KzU1MLUotgskwcnFINTMzO3G9/TUtM++/XxjJ5
-        wsRp4iK/T1t6b78aOO940qYpewxY44M5Dnwz/nLo427naH3FTolAQW/lvhdvgife0m9dvFL6
-        bXb9hoj7h6IMbqiX5D2Mibggwh7tO/Xq9puvQzk3PXB+n7Ww568pw197H+deOcn/EUZJk3Z/
-        d/zxge+tvFD6v2sz5M33Hc01c6o7rv0if5Ldr4Lm01tfxu6sqg4WdT/UPjHU+7LuMaZ2Zl3W
-        9wv23OMX00zY7rLTsaJBIjTz7ZHFb2eoRi1yeGEe6/hE7VjnlZ4u4YAgCzuZAx1i1b7hqT/Y
-        4szmF84SrfXSLFkauNEzr8zNeNbXOZ7fVPIDDjBoT18vpGyoOa1ZiaU4I9FQi7moOBEAxWXZ
-        4nMDAAA=
-X-CMS-MailID: 20230208173730uscas1p2af3a9eeb8946dfa607b190c079a49653
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230208173730uscas1p2af3a9eeb8946dfa607b190c079a49653
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
-        <CGME20230208173730uscas1p2af3a9eeb8946dfa607b190c079a49653@uscas1p2.samsung.com>
+Message-Id: <7E864E85-A36F-487B-8B70-C8C49FBECD73@bytedance.com>
+References: <7F001EAF-C512-436A-A9DD-E08730C91214@bytedance.com>
+ <20230131174115.00007493@Huawei.com>
+ <5671D3B3-83B3-49FF-A662-509648E6D297@bytedance.com>
+ <CGME20230202095410uscas1p18ff39cc89400e3bbecfef9036887758a@uscas1p1.samsung.com>
+ <20230202095402.0000585d@Huawei.com>
+ <20230208163844.GA407917@bgt-140510-bm01>
+To:     Adam Manzanares <a.manzanares@samsung.com>
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, Feb 05, 2023 at 05:02:29PM -0800, Dan Williams wrote:
 
 
-> Summary:
-> --------
+> On Feb 8, 2023, at 8:38 AM, Adam Manzanares <a.manzanares@samsung.com> =
+wrote:
 >=20
-> CXL RAM support allows for the dynamic provisioning of new CXL RAM
-> regions, and more routinely, assembling a region from an existing
-> configuration established by platform-firmware. The latter is motivated
-> by CXL memory RAS (Reliability, Availability and Serviceability)
-> support, that requires associating device events with System Physical
-> Address ranges and vice versa.
->=20
-> The 'Soft Reserved' policy rework arranges for performance
-> differentiated memory like CXL attached DRAM, or high-bandwidth memory,
-> to be designated for 'System RAM' by default, rather than the device-dax
-> dedicated access mode. That current device-dax default is confusing and
-> surprising for the Pareto of users that do not expect memory to be
-> quarantined for dedicated access by default. Most users expect all
-> 'System RAM'-capable memory to show up in FREE(1).
->=20
->=20
-> Details:
-> --------
->=20
-> Recall that the Linux 'Soft Reserved' designation for memory is a
-> reaction to platform-firmware, like EFI EDK2, delineating memory with
-> the EFI Specific Purpose Memory attribute (EFI_MEMORY_SP). An
-> alternative way to think of that attribute is that it specifies the
-> *not* general-purpose memory pool. It is memory that may be too precious
-> for general usage or not performant enough for some hot data structures.
-> However, in the absence of explicit policy it should just be 'System
-> RAM' by default.
->=20
-> Rather than require every distribution to ship a udev policy to assign
-> dax devices to dax_kmem (the device-memory hotplug driver) just make
-> that the kernel default. This is similar to the rationale in:
->=20
-> commit 8604d9e534a3 ("memory_hotplug: introduce CONFIG_MEMORY_HOTPLUG_DEF=
-AULT_ONLINE")
->=20
-> With this change the relatively niche use case of accessing this memory
-> via mapping a device-dax instance can be achieved by building with
-> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=3Dn, or specifying
-> memhp_default_state=3Doffline at boot, and then use:
->=20
->     daxctl reconfigure-device $device -m devdax --force
->=20
-> ...to shift the corresponding address range to device-dax access.
->=20
-> The process of assembling a device-dax instance for a given CXL region
-> device configuration is similar to the process of assembling a
-> Device-Mapper or MDRAID storage-device array. Specifically, asynchronous
-> probing by the PCI and driver core enumerates all CXL endpoints and
-> their decoders. Then, once enough decoders have arrived to a describe a
-> given region, that region is passed to the device-dax subsystem where it
-> is subject to the above 'dax_kmem' policy. This assignment and policy
-> choice is only possible if memory is set aside by the 'Soft Reserved'
-> designation. Otherwise, CXL that is mapped as 'System RAM' becomes
-> immutable by CXL driver mechanisms, but is still enumerated for RAS
-> purposes.
->=20
-> This series is also available via:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=3Dfor-=
-6.3/cxl-ram-region
->=20
-> ...and has gone through some preview testing in various forms.
->=20
-> ---
+> On Thu, Feb 02, 2023 at 09:54:02AM +0000, Jonathan Cameron wrote:
+>> On Wed, 1 Feb 2023 12:04:56 -0800
+>> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
+>>=20
+>>>>=20
 
-Tested-by: Fan Ni <fan.ni@samsung.com>
+<skipped>
 
-
-Run the following tests with the patch (with the volatile support at qemu).
-Note: cxl related code are compiled as modules and loaded before used.
-
-For pmem setup, tried three topologies (1HB1RP1Mem, 1HB2RP2Mem, 1HB2RP4Mem =
-with
-a cxl switch). The memdev is either provided in the command line when launc=
-hing
-qemu or hot added to the guest with device_add command in qemu monitor.
-
-The following operations are performed,
-1. create-region with cxl cmd
-2. create name-space with ndctl cmd
-3. convert cxl mem to ram with daxctl cmd
-4. online the memory with daxctl cmd
-5. Let app use the memory (numactl --membind=3D1 htop)
-
-Results: No regression.
-
-For volatile memory (hot add with device_add command), mainly tested 1HB1RP=
-1Mem
-case (passthrough).
-1. the device can be correctly discovered after hot add (cxl list, may need
-cxl enable-memdev)
-2. creating ram region (cxl create-region) succeeded, after creating the
-region, a dax device under /dev/ is shown.
-3. online the memory passes, and the memory is shown on another NUMA node.
-4. Let app use the memory (numactl --membind=3D1 htop) passed.
-
-
-
-
+>>>=20
+>>> Most probably, we will have multiple FM implementations in firmware.
+>>> Yes, FM on host could be important for debug and to verify =
+correctness
+>>> firmware-based implementations. But FM daemon on host could be =
+important
+>>> to receive notifications and react somehow on these events. Also, =
+journalling
+>>> of events/messages/events could be important responsibility of FM =
+daemon
+>>> on host.=20
+>>=20
+>> I agree with an FM daemon somewhere (potentially running on the BMC =
+type chip
+>> that also has the lower level FM-API access).  I think it is somewhat
+>> separate from the rest of this on basis it may well just be talking =
+redfish
+>> to the FM and there are lots of tools for that sort of handling =
+already.
+>>=20
 >=20
-> Dan Williams (18):
->       cxl/Documentation: Update references to attributes added in v6.0
->       cxl/region: Add a mode attribute for regions
->       cxl/region: Support empty uuids for non-pmem regions
->       cxl/region: Validate region mode vs decoder mode
->       cxl/region: Add volatile region creation support
->       cxl/region: Refactor attach_target() for autodiscovery
->       cxl/region: Move region-position validation to a helper
->       kernel/range: Uplevel the cxl subsystem's range_contains() helper
->       cxl/region: Enable CONFIG_CXL_REGION to be toggled
->       cxl/region: Fix passthrough-decoder detection
->       cxl/region: Add region autodiscovery
->       tools/testing/cxl: Define a fixed volatile configuration to parse
->       dax/hmem: Move HMAT and Soft reservation probe initcall level
->       dax/hmem: Drop unnecessary dax_hmem_remove()
->       dax/hmem: Convey the dax range via memregion_info()
->       dax/hmem: Move hmem device registration to dax_hmem.ko
->       dax: Assign RAM regions to memory-hotplug by default
->       cxl/dax: Create dax devices for CXL RAM regions
+> I would be interested in particpating in a BOF about this topic. I =
+wonder what
+> happens when we have multiple switches with multiple FMs each on a =
+separate BMC.
+> In this case, does it make more sense to have an owner of the global =
+FM state=20
+> be a user space application. Is this the job of the orchestrator?
 >=20
+> The BMC based FM seems to have scalability issues, but will we hit =
+them in
+> practice any time soon.
+
+I had discussion recently and it looks like there are interesting =
+points:
+(1) If we have multiple CXL switches (especially with complex =
+hierarchy), then it is
+very compute-intensive activity. So, potentially, FM on firmware side =
+could be not
+capable to digest and executes all responsibilities without potential =
+performance
+degradation.
+(2) However, if we have FM on host side, then there is security concerns =
+because
+FM sees everything and all details of multiple hosts and subsystems.
+(3) Technically speaking, there is one potential capability that =
+user-space FM daemon
+can run as on host side as on CXL switch side. I mean here that if we =
+implement
+user-space FM daemon, then it could be used to execute FM functionality =
+on CXL
+switch side (maybe????). :)
+
+<skipped>
+
+>>>>>   - Manage surprise removal of devices =20
+>>>>=20
+>>>> Likewise, beyond reporting I wouldn't expect the FM daemon to have =
+any idea
+>>>> what to do in the way of managing this.  Scream loudly?
+>>>>=20
+>>>=20
+>>> Maybe, it could require application(s) notification. Let=E2=80=99s =
+imagine that application
+>>> uses some resources from removed device. Maybe, FM can manage =
+kernel-space
+>>> metadata correction and helping to manage application requests to =
+not existing
+>>> entities.
+>>=20
+>> Notifications for the host are likely to come via inband means - so =
+type3 driver
+>> handling rather than related to FM.  As far as the host is concerned =
+this is the
+>> same as case where there is no FM and someone ripped a device out.
+>>=20
+>> There might indeed be meta data to manage, but doubt it will have =
+anything to
+>> do with kernel.
+>>=20
 >=20
->  Documentation/ABI/testing/sysfs-bus-cxl |   64 +-
->  MAINTAINERS                             |    1=20
->  drivers/acpi/numa/hmat.c                |    4=20
->  drivers/cxl/Kconfig                     |   12=20
->  drivers/cxl/acpi.c                      |    3=20
->  drivers/cxl/core/core.h                 |    7=20
->  drivers/cxl/core/hdm.c                  |    8=20
->  drivers/cxl/core/pci.c                  |    5=20
->  drivers/cxl/core/port.c                 |   34 +
->  drivers/cxl/core/region.c               |  848 +++++++++++++++++++++++++=
-+++---
->  drivers/cxl/cxl.h                       |   46 ++
->  drivers/cxl/cxlmem.h                    |    3=20
->  drivers/cxl/port.c                      |   26 +
->  drivers/dax/Kconfig                     |   17 +
->  drivers/dax/Makefile                    |    2=20
->  drivers/dax/bus.c                       |   53 +-
->  drivers/dax/bus.h                       |   12=20
->  drivers/dax/cxl.c                       |   53 ++
->  drivers/dax/device.c                    |    3=20
->  drivers/dax/hmem/Makefile               |    3=20
->  drivers/dax/hmem/device.c               |  102 ++--
->  drivers/dax/hmem/hmem.c                 |  148 +++++
->  drivers/dax/kmem.c                      |    1=20
->  include/linux/dax.h                     |    7=20
->  include/linux/memregion.h               |    2=20
->  include/linux/range.h                   |    5=20
->  lib/stackinit_kunit.c                   |    6=20
->  tools/testing/cxl/test/cxl.c            |  146 +++++
->  28 files changed, 1355 insertions(+), 266 deletions(-)
->  create mode 100644 drivers/dax/cxl.c
+> I've also had similar thoughts, I think the OS responds to =
+notifications that
+> are generated in-band after changes to the state of the FM are made =
+through=20
+> OOB means.
 >=20
-> base-commit: 172738bbccdb4ef76bdd72fc72a315c741c39161
-> =
+> I envision the host sends REDFISH requests to a switch BMC that has an =
+FM
+> implementation. Once the changes are implemented by the FM it would =
+show up
+> as changes to the PCIe hierarchy on a host, which is capable of =
+responding to
+> such changes.
+>=20
+
+I think I am not completely follow your point. :) First of all, I assume =
+that if host
+sends REDFISH request, then it will be expected the confirmation of =
+request execution.
+It means for me that host needs to receive some packet that informs that =
+request
+executed successfully or failed. It means that some subsystem or =
+application requested
+this change and only after receiving the confirmation requested =
+capabilities can be used.
+And if FM is on CXL switch side, then how FM will show up the changes? =
+It sounds for me
+that some FM subsystem should be on the host side to receive =
+confirmation/notification
+and to execute the real changes in PCIe hierarchy. Am missing something =
+here?
+
+Thanks,
+Slava.
+
