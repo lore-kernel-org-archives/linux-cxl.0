@@ -2,119 +2,85 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3A3C05027
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 22:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF3CC636D3
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 23:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232374AbjBHWQF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Feb 2023 17:16:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42322 "EHLO
+        id S229996AbjBHXuF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Feb 2023 18:50:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232284AbjBHWQE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 17:16:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A370527496;
-        Wed,  8 Feb 2023 14:16:03 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5375CB81FC8;
-        Wed,  8 Feb 2023 22:16:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B527EC433D2;
-        Wed,  8 Feb 2023 22:16:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675894561;
-        bh=180SwzFa3o9190yU4lPgphWW7oAP/AsKVzVTKpBhdFQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PCBPy7LT6va7KOH+Jo+krtjMix4dGI7mDcDTWnG/Gc3lRR3I9W5QoJKd4iK3BtlN3
-         N98qAUmQb/YCkqtJNan6yqxvD+Wv8wZkZkHDuzSxaSpUE/LbPoDiFN0Y2ulErutGcr
-         /dBygnVGUXS1nfPb/Q9Ie7lvY3AderL998kSFhq2zsil9vM57q807j2vsrozsBdf4+
-         1T4OBTd5E1C8bHutUoiqmsLxS072Gzyq/om8WFba+LctGFpRg01cee77psCCeu4rU8
-         8WoOq/WoiTcKE5QrZ28F4VgfhvPG74HqkebH+2tXMo3WpcYET3GemDKz0cBkgpA1KU
-         ovOUQcNk3QgRA==
-Date:   Wed, 8 Feb 2023 16:15:59 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
-        robert.moore@intel.com
-Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
- CXL device
-Message-ID: <20230208221559.GA2489627@bhelgaas>
+        with ESMTP id S230020AbjBHXuE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 18:50:04 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F4030EE
+        for <linux-cxl@vger.kernel.org>; Wed,  8 Feb 2023 15:50:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675900202; x=1707436202;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SYQhMYG3Vg+R1XwA5IkrRq+88eN1Re4OeIzHmMIR4ZU=;
+  b=epeuU2uoDdM7WUV6nsl/rjAdYnVx8S31BRZLKcunQbFqDLXiwsGOB671
+   3TtHQ5u1xopeLQYB5XpRteKgwz8/0HiooptUr9IvJPGQkmrZge5x3Z3Bv
+   iDHCkpP4iQh7O7KXomXaawGGfrbTN8hjjzOM/6+7lUM5fNT2Vdm9nbOaJ
+   GsLqXHrw/9fUeMtjRRBZjbwzPH+gMc5sAL/UnaTPq4Ba4DREn1gHyQlM9
+   X5cpaNcSNwJWukPl81RfdFLliQlE5fZ73MrytkcVtsSC5Xg+SiIyWZd6z
+   npvWfjYnAJ4rsKzUVhdqPOsz+Mz7Hqww7DUQgCC9Tb+dj8cDcZkD1MrqM
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="357361689"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="357361689"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 15:50:02 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="776253401"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="776253401"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.48.215]) ([10.212.48.215])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 15:50:01 -0800
+Message-ID: <44e69271-bcdc-8389-d9d0-9761db5108bf@intel.com>
+Date:   Wed, 8 Feb 2023 16:50:01 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19f777db-fdc4-3f6e-ced5-d7bc43f6a340@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH] cxl/mem: Correct full ID range allocation
+Content-Language: en-US
+To:     Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
+Cc:     linux-cxl@vger.kernel.org
+References: <20230208181944.240261-1-dave@stgolabs.net>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230208181944.240261-1-dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 01:51:17PM -0700, Dave Jiang wrote:
+
+
+On 2/8/23 11:19 AM, Davidlohr Bueso wrote:
+> For ID allocations we want 0-(max-1), ie: smatch complains:
 > 
+> 	 error: Calling ida_alloc_range() with a 'max' argument which is a power of 2. -1 missing?
 > 
-> On 2/6/23 3:39 PM, Bjorn Helgaas wrote:
-> > On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
-> > > The latency is calculated by dividing the FLIT size over the
-> > > bandwidth. Add support to retrieve the FLIT size for the CXL
-> > > device and calculate the latency of the downstream link.
-
-> > I guess you only care about the latency of a single link, not the
-> > entire path?
+> Correct this and also replace the call to use the max() flavor instead.
 > 
-> I am adding each of the link individually together in the next
-> patch. Are you suggesting a similar function like
-> pcie_bandwidth_available() but for latency for the entire path?
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Only a clarifying question.
-
-> > > +static int cxl_get_flit_size(struct pci_dev *pdev)
-> > > +{
-> > > +	if (cxl_pci_flit_256(pdev))
-> > > +		return 256;
-> > > +
-> > > +	return 66;
-> > 
-> > I don't know about the 66-byte flit format, maybe this part is
-> > CXL-specific?
+> ---
+>   drivers/cxl/core/memdev.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 68-byte flit format. Looks like this is a typo from me.
-
-This part must be CXL-specific, since I don't think PCIe mentions
-68-byte flits.
-
-> > > + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
-> > > + * mode, otherwise it's 68B flits mode.
-> > > + */
-> > > +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
-> > > +{
-> > > +	u32 lnksta2;
-> > > +
-> > > +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-> > > +	return lnksta2 & BIT(10);
-> > 
-> > Add a #define for the bit.
-> 
-> ok will add.
-> 
-> > 
-> > AFAICT, the PCIe spec defines this bit, and it only indicates the link
-> > is or will be operating in Flit Mode; it doesn't actually say anything
-> > about how large the flits are.  I suppose that's because PCIe only
-> > talks about 256B flits, not 66B ones?
-> 
-> Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows that
-> when PCIe Flit Mode is set, then CXL is in 256B flits mode, otherwise, it is
-> 68B flits. So an assumption is made here regarding the flit side based on
-> the table.
-
-So reading PCI_EXP_LNKSTA2 and extracting the Flit Mode bit is
-PCIe-generic, but the interpretation of "PCIe Flit Mode not enabled
-means 68-byte flits" is CXL-specific?
-
-This sounds wrong, but I don't know quite how.  How would the PCI core
-manage links where Flit Mode being cleared really means Flit Mode is
-*enabled* but with a different size?  Seems like something could go
-wrong there.
-
-Bjorn
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index a74a93310d26..12bd9ddaba22 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -242,7 +242,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>   	if (!cxlmd)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> -	rc = ida_alloc_range(&cxl_memdev_ida, 0, CXL_MEM_MAX_DEVS, GFP_KERNEL);
+> +	rc = ida_alloc_max(&cxl_memdev_ida, CXL_MEM_MAX_DEVS - 1, GFP_KERNEL);
+>   	if (rc < 0)
+>   		goto err;
+>   	cxlmd->id = rc;
