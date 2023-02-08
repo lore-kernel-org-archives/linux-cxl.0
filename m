@@ -2,98 +2,119 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA29C636D3
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 22:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3A3C05027
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Feb 2023 22:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232369AbjBHWNE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Feb 2023 17:13:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42158 "EHLO
+        id S232374AbjBHWQF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Feb 2023 17:16:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232365AbjBHWND (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 17:13:03 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F83E4228
-        for <linux-cxl@vger.kernel.org>; Wed,  8 Feb 2023 14:13:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675894380; x=1707430380;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=7hmAWX2TkK4bLtgksYcYEaN57Y50IHbQGEZGoOyhGeM=;
-  b=a/mlgzMwtJNU1VMgaMw89WNFOWRuuAoRqEv6qulmy3MuF3XRfkINrfqh
-   eSm9of5VRRfdq70wPyhnWbk9s1EnZ7wYsQ7ZK1giht4s/7ep5FRd9hFHm
-   aBwF56E+kQKV7au692OrUYKLBfDphmKnSTo3k0n9tQjrEu4wMsUC3DozW
-   slI35B0VNhEFz9/Jiyl8CivywyWBisMJ3asPjz+6stv7YPAO1LZ0peiZf
-   xpPj50w9t2M1LMzU6QTB/3/CkwRssXpo8Oz8rOcY2mEVI7/Vfm+Yi/A5l
-   /GkIrAqrHezUG1lnsjZv1QQKYrAiSOQB92aVhRe3mwZdNV6Aykqhoxhdu
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="317944610"
-X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="317944610"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 14:12:59 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="731039509"
-X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="731039509"
-Received: from laarmstr-mobl.amr.corp.intel.com (HELO vverma7-desk1.local) ([10.251.6.109])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 14:12:58 -0800
-From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Wed, 08 Feb 2023 15:12:48 -0700
-Subject: [PATCH ndctl] meson.build: fix version for v75
+        with ESMTP id S232284AbjBHWQE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Feb 2023 17:16:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A370527496;
+        Wed,  8 Feb 2023 14:16:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5375CB81FC8;
+        Wed,  8 Feb 2023 22:16:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B527EC433D2;
+        Wed,  8 Feb 2023 22:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675894561;
+        bh=180SwzFa3o9190yU4lPgphWW7oAP/AsKVzVTKpBhdFQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PCBPy7LT6va7KOH+Jo+krtjMix4dGI7mDcDTWnG/Gc3lRR3I9W5QoJKd4iK3BtlN3
+         N98qAUmQb/YCkqtJNan6yqxvD+Wv8wZkZkHDuzSxaSpUE/LbPoDiFN0Y2ulErutGcr
+         /dBygnVGUXS1nfPb/Q9Ie7lvY3AderL998kSFhq2zsil9vM57q807j2vsrozsBdf4+
+         1T4OBTd5E1C8bHutUoiqmsLxS072Gzyq/om8WFba+LctGFpRg01cee77psCCeu4rU8
+         8WoOq/WoiTcKE5QrZ28F4VgfhvPG74HqkebH+2tXMo3WpcYET3GemDKz0cBkgpA1KU
+         ovOUQcNk3QgRA==
+Date:   Wed, 8 Feb 2023 16:15:59 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
+ CXL device
+Message-ID: <20230208221559.GA2489627@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20230208-v75-fix-version-v1-1-cb90e3740011@intel.com>
-X-B4-Tracking: v=1; b=H4sIAF8e5GMC/x2NQQrDMAwEvxJ0rsBxYhr6ldKDHW8TXdQggymE/
- L12j8PssCcVmKDQYzjJUKXIRxuMt4HWPeoGltyYvPOT827heg/8li9XWN/yPIYlzX7KAYFalWI
- BJ4u67r07oFl06+YwtPD/9Xxd1w98Qa6HewAAAA==
-To:     nvdimm@lists.linux.dev
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        =?utf-8?q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
-        Vishal Verma <vishal.l.verma@intel.com>
-X-Mailer: b4 0.13-dev-ada30
-X-Developer-Signature: v=1; a=openpgp-sha256; l=899;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=7hmAWX2TkK4bLtgksYcYEaN57Y50IHbQGEZGoOyhGeM=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDMlP5LI2W2V4dPhPDU1aoJgfNKlgd+3r2dHzC2+o/hPb/
- MT8+EmpjlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAExEs5nhn7aJcGTLlvY5Lv8m
- q3/RP3LDZ8fOL5Pmn8ivmJcTVagVuI+R4ebRx+bnl76639e13EA/SHQ2zylz1n+6CYmt3m4zQgU
- mMwIA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19f777db-fdc4-3f6e-ced5-d7bc43f6a340@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The v75 release neglected to update the meson.build version to 75.
-This results in the build and '--version' commands to output a v74 based
-version. Update this to 75 now for the git tree and subsequently have a
-v75.1 branch / release if needed.
+On Tue, Feb 07, 2023 at 01:51:17PM -0700, Dave Jiang wrote:
+> 
+> 
+> On 2/6/23 3:39 PM, Bjorn Helgaas wrote:
+> > On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
+> > > The latency is calculated by dividing the FLIT size over the
+> > > bandwidth. Add support to retrieve the FLIT size for the CXL
+> > > device and calculate the latency of the downstream link.
 
-Reported-by: Michal Suchánek <msuchanek@suse.de>
-Link: https://github.com/pmem/ndctl/issues/230
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- meson.build | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > I guess you only care about the latency of a single link, not the
+> > entire path?
+> 
+> I am adding each of the link individually together in the next
+> patch. Are you suggesting a similar function like
+> pcie_bandwidth_available() but for latency for the entire path?
 
-diff --git a/meson.build b/meson.build
-index 2a96cb3..6a1b32e 100644
---- a/meson.build
-+++ b/meson.build
-@@ -1,5 +1,5 @@
- project('ndctl', 'c',
--  version : '74',
-+  version : '75',
-   license : [
-     'GPL-2.0',
-     'LGPL-2.1',
+Only a clarifying question.
 
----
-base-commit: eee8fa6cea7403f3998c7a3e23a881b85e661664
-change-id: 20230208-v75-fix-version-4158b423d5e5
+> > > +static int cxl_get_flit_size(struct pci_dev *pdev)
+> > > +{
+> > > +	if (cxl_pci_flit_256(pdev))
+> > > +		return 256;
+> > > +
+> > > +	return 66;
+> > 
+> > I don't know about the 66-byte flit format, maybe this part is
+> > CXL-specific?
+> 
+> 68-byte flit format. Looks like this is a typo from me.
 
-Best regards,
--- 
-Vishal Verma <vishal.l.verma@intel.com>
+This part must be CXL-specific, since I don't think PCIe mentions
+68-byte flits.
 
+> > > + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+> > > + * mode, otherwise it's 68B flits mode.
+> > > + */
+> > > +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+> > > +{
+> > > +	u32 lnksta2;
+> > > +
+> > > +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+> > > +	return lnksta2 & BIT(10);
+> > 
+> > Add a #define for the bit.
+> 
+> ok will add.
+> 
+> > 
+> > AFAICT, the PCIe spec defines this bit, and it only indicates the link
+> > is or will be operating in Flit Mode; it doesn't actually say anything
+> > about how large the flits are.  I suppose that's because PCIe only
+> > talks about 256B flits, not 66B ones?
+> 
+> Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows that
+> when PCIe Flit Mode is set, then CXL is in 256B flits mode, otherwise, it is
+> 68B flits. So an assumption is made here regarding the flit side based on
+> the table.
+
+So reading PCI_EXP_LNKSTA2 and extracting the Flit Mode bit is
+PCIe-generic, but the interpretation of "PCIe Flit Mode not enabled
+means 68-byte flits" is CXL-specific?
+
+This sounds wrong, but I don't know quite how.  How would the PCI core
+manage links where Flit Mode being cleared really means Flit Mode is
+*enabled* but with a different size?  Seems like something could go
+wrong there.
+
+Bjorn
