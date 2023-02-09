@@ -2,181 +2,357 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED63C61DA4
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 20:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E7FC05027
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 22:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjBIUxC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Feb 2023 15:53:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
+        id S229602AbjBIWE3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Feb 2023 17:04:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbjBIUxB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 15:53:01 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468F368AD5;
-        Thu,  9 Feb 2023 12:52:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675975978; x=1707511978;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Sn277+psjfFN64UPMMk0XQa4SJkm+59DxmOrkqFb2R0=;
-  b=bfM3xy/WHbtkJz6+GcGPQZ8oMa88zgYPv90qPUX1S+YPKLG20qpEvXlF
-   NOjwMfAAC+EIDZywT7rpCeICE0FNCvhF77FTFjglazJk5kO0+oYPkYpqK
-   80ulhk29gdhI7qXxq6kOSj5Dom9FB/0Z673uyw4qjg+0HOxe87pqBvZ76
-   /TxjJ00IVWGpr+TeYc6u4SjczcmgXy1Uh/eJ62U3gj5W2DPi/bsNbO7P5
-   5Iy18h66OPjRmGXWpyPCzWT79EsX9sIXOruK1pHb9VBsDD8kI5efANurx
-   AIMQQKyDhgkRUhqNpLZCdOMyhj1H7qikXC/sBlIca8mzLDI6QwQZEnyNs
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="330256935"
-X-IronPort-AV: E=Sophos;i="5.97,284,1669104000"; 
-   d="scan'208";a="330256935"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 12:52:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="700225392"
-X-IronPort-AV: E=Sophos;i="5.97,284,1669104000"; 
-   d="scan'208";a="700225392"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga001.jf.intel.com with ESMTP; 09 Feb 2023 12:52:57 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 9 Feb 2023 12:52:57 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Thu, 9 Feb 2023 12:52:57 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Thu, 9 Feb 2023 12:52:57 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I8k3vWfqIL3j/W9ZPVf9llXaco7Yp7DbP+0jXVyKFVJAjiGaHTNf/YfyZ5/W/mzjadsAUAaNJtsvpwaQ4l9jKP51nQsRBTcsJ4wYLJ+PYQhco9DYSfWwj6xxAlYdo+jQHiC66M2uIZq+WrxhQUxtrBnawuwof9gT1A5ZUetdSZnGVcESXfpxWZYwN5cKfoXFdESKnkWt2L0FY/hKzVFVf4pQYSqu83VY/6ro9pH8wbC0O0IFE+UX50I9ym0D/tFGqhicWGILvDAxAWeNm3pYGcP+JoG6e6+ZCGN9O8XH3R/o9LLOHRr3xZqJbcc2FhiIPirUQJJdfdORQBHizuA7lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ejl2yRCDUmQNwZcXGgLSgzA/k9RDCYztWTDyqOntfhw=;
- b=cwbXgBqI8wpWW68gvhVtYq7/0sJ+teF6DOotdJZ3Qo8X9UEe6R8/WJp/fTU9ejUM6oBFzOJsilQlj+7gde07jKbuPVdEnBb8jF9Id08dAPBktAFOeip9/Aou3unN+BmQmFkz4IJ4oZSujU4ZOdcf5aWT7omGFHZ+YGV9rGfvmZk1pdseaCxBXpIhfvo0UKw7KgwBU4ukhqTwGhyc8e4jbflLGbhRLFB3T4KJEqHX3idUSDzWo5OZaaLVNFv8BVG6CuZ1AGl0z3vif9q7Ls9l6bJucS7xND1EfG5DAQFZxxp3rur+y7auP6K7QEG4jLamUQPgVCymIFf+Y1HqHXCFDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH0PR11MB8191.namprd11.prod.outlook.com (2603:10b6:610:181::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.36; Thu, 9 Feb
- 2023 20:52:54 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%6]) with mapi id 15.20.6064.036; Thu, 9 Feb 2023
- 20:52:54 +0000
-Date:   Thu, 9 Feb 2023 12:52:52 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <dave.hansen@linux.intel.com>,
-        <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 07/18] cxl/region: Move region-position validation to a
- helper
-Message-ID: <63e55d2434979_36c72947e@dwillia2-xfh.jf.intel.com.notmuch>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
- <167564538779.847146.8356062886811511706.stgit@dwillia2-xfh.jf.intel.com>
- <20230208123031.00006990@Huawei.com>
- <63e475f2a5fd_36c729455@dwillia2-xfh.jf.intel.com.notmuch>
- <20230209110704.000072c6@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230209110704.000072c6@Huawei.com>
-X-ClientProxiedBy: BYAPR07CA0041.namprd07.prod.outlook.com
- (2603:10b6:a03:60::18) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH0PR11MB8191:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56cde8ee-92d9-4ac5-31a8-08db0adf9db5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qOEL1GJx4OAhKrrvpAlxqDokScKsV+7Woi/+tBv9BLLl+GGg3RBtRNtxyHFw5m0OqrOgifVJQdYej2TGf8+fB5FkoVemwQuWuUTv/ebsn1lmBchvEERcteU7Ij1z3PcloxTkN0+onLZHFoXHMBDL1coxRxb3z9Szl7NNGFslqFfePFFG4ibbp9AzgLenK5Ikv/NLCm2MTXrze7DR8TZjPVvC0lIzclgxatjug6APmj72snRPMWMX9CnskNf2b8HIqztVb9+Zt7RkH1s0m6UshUg4nXb4lbVwlqmVgr6lXS1GBx4/BVtJJfNddUhmnWT95ZCNKOB+YNbAvHTBjyzuC/2GymJ4DpSsjZ7VTXzNG7cxO9EAjOEH4MEjpVEovVD+FAsK+3RCyGY/nFyvvBIuzHW/C8hHhEWkMplu4/j/IZ3VL3Z4mgjNB2FVXfDd99tFHl2kGMmf/AQxFZV5pdUlR3KVlmDWSgfsyXLBN+GfVd9vQ2lpqqixiTU/2cE/vO1YlQE56sYPpYOS5M31C2zO0fX9ix2XP8c9mo/QItdGOGeEinNk6Iv25yoFJ/qWGW76x0L5dxkUsZIDr8O8wB1IoxJeAk1soVpVXzOH70CbE5C+SYTkVgxUMzG09XyjjPVueBlZQUPYW7Wlo0Z0P0kAig==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(396003)(366004)(136003)(39860400002)(346002)(451199018)(6512007)(9686003)(186003)(6506007)(2906002)(26005)(5660300002)(478600001)(6486002)(82960400001)(8936002)(41300700001)(66899018)(8676002)(66946007)(4326008)(66476007)(83380400001)(66556008)(86362001)(110136005)(316002)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9JEm2KlXWulsXUrkHZw8pK90hSqZMtfNNSL7oFKEdoTHPhQFnC88rGZQASkW?=
- =?us-ascii?Q?4vwYr2LxiEOCF091ggEuzCEoDbMo4/aH3g2ehy4ZDgp+hwxzPRkT4BOwJZeo?=
- =?us-ascii?Q?tkg5Z5BP9oO6031uDMpHbHkWSNdf+z9PhRfvcPGvX6JBqemIQrXda0bHmTk9?=
- =?us-ascii?Q?p17L17vrYabGNTdNKYOadu+uwWB8sZFSspiVuffLXiYkoZ1lMFblQBkAY/m0?=
- =?us-ascii?Q?8APay3JqWEsxR+J/aFK+MOJc7dCTZRA1weVqPmkX+tlTmjjhDDr6IMTv5/ht?=
- =?us-ascii?Q?J4hBe7MfSTObBSKpaqDTlJgXJxwXZOtfyTchm9KxnNKf8ywUdR5koxQVr+Lw?=
- =?us-ascii?Q?7U0pmmBfAbaeabeucCOh+8oMu/SVxr57ZxMJWLJhFQ2ltqXlRTdY2qRn2yat?=
- =?us-ascii?Q?bbRce5WNziZzvKJnkf3eN1uFV0i6Rkgghh8cojVyKqyN9VfjngqdyxC7E7Fj?=
- =?us-ascii?Q?sG4tTWA3LaxFm/5I1oGxcC9YkJsgKolagSLP/sXZndPaJkRhpB6ahtfWjIUg?=
- =?us-ascii?Q?2iDPyj8DHQHxPxEw6C4hMf0L6sR63ZMUQT2EDxoRvauf8xT3fvTeK/sdGxCy?=
- =?us-ascii?Q?h01VHnx88yoiDyaG4CzEjBQNtXHhsTJd5iVF9EHISqp7Ew8ZzOzvRyGAF7PF?=
- =?us-ascii?Q?PAvPZCHH5YS5PIupwyY2kCyODHa/oHCOqrz+5NUcgME/1BLB2D6+JivD2FW/?=
- =?us-ascii?Q?AwNgtO6wPcZNnWyQ98QzTh1XdGMVFVl3MEL/ThFRq6ksnqKTMl/Jzl5N/R5C?=
- =?us-ascii?Q?NXSrohR669WuQn56M4GDsS4iKJYmhhf+SKB5Nuebi0ANV/b0vm0nXRNjMnCv?=
- =?us-ascii?Q?kkJOjO+DtkBvH1p4J28+vbZpAdQHxGlEYDRInWe7gt8I8dFF4PyOT3bBLsNe?=
- =?us-ascii?Q?nUQNHCd9jfaRS78V+JY8ePwpaHVVHclfWeIsDVSMc8kwp+IB91srmHs5CYGU?=
- =?us-ascii?Q?PwFLfVpnfMjOdmxu++I6rEuUUMkD9QZtXlJC2zhmyV8FnmkplVZcPU+jjWk1?=
- =?us-ascii?Q?I9+KF8388GQuoCiykXnRAq8m+qf2Xn0293k9NXigCrqg1TBUB+AR0Nu770u3?=
- =?us-ascii?Q?gMbG0/IiE7Ua4R3y4S0XhiD7UwYVp5KHnMtZ3ehLN2I5hYYexwNBror9THsu?=
- =?us-ascii?Q?3g8feDT0jvcE3sulssOioPrDGEa/5pkYjwgZDmGEp42/jQ76oXdoUVH6aNFL?=
- =?us-ascii?Q?+o0E2PXyGVbb2K9AAinraTizXogeaskkNPtoO8LB+ddmGWrRQ9wPrJjyBFew?=
- =?us-ascii?Q?TIbtqbdM1qBD1ZMVvFwyLH/ikEaiVQBSxDsKjLfrQ716w4+QgV2pOuVK6X+9?=
- =?us-ascii?Q?QUtxfN+PXCjy/qqR4HltVmCLRDsU2hyFsAVRms5cEtZLNdtXFvF0AmLPrRMM?=
- =?us-ascii?Q?CTY3UsYIlCEoCkoz+IteZzgSP64CHtS+5p189aC6AzWYZqnnDPU109STXybP?=
- =?us-ascii?Q?USyKPF8AAiaXL0kACRLdERNXkHisTbxSQquII829tNSgcByWR0FFHAMCvAL+?=
- =?us-ascii?Q?5Ie/VKbAr8X8VL7sFvEDZTXmnwLg36ap8sH8Fif/22ggleL96SY0P/8PpNPW?=
- =?us-ascii?Q?R/bW2wc+JIHLxTeRs4YG7T9Q0kyurneYQj+qF449j1O/qb37+/P+XPAYt9EZ?=
- =?us-ascii?Q?3A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56cde8ee-92d9-4ac5-31a8-08db0adf9db5
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2023 20:52:54.4502
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kVr16RLwcuCwORAiGQAvx5n0fewbeSVDJBpITOhqLjjWXUDUF0MvjKnoQ1zVfEvM/YEFSKNlHsQxkQbjQUkXJe+BB+9gcXtwEU5hmdDjfQ0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8191
-X-OriginatorOrg: intel.com
+        with ESMTP id S229520AbjBIWE2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 17:04:28 -0500
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB9B170D
+        for <linux-cxl@vger.kernel.org>; Thu,  9 Feb 2023 14:04:27 -0800 (PST)
+Received: by mail-oi1-x22d.google.com with SMTP id v15so2901589oie.9
+        for <linux-cxl@vger.kernel.org>; Thu, 09 Feb 2023 14:04:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HwJYigqp1NOB2US5BTlKwSn4w4HVBuo71UExWBXGYuA=;
+        b=zwyER/97b2g0RXSTqXCn7dmB204mNODZ5MYLhFA95V7EmmLc87epHcCnVfHOd4wYau
+         Py+GY/ivUX7AQHeA89OGN+hsi+Alm26JH+U3oZAKxj20wSW6CaFA82sKzZtjT9sE2C9u
+         y6W5xS1SgkbwWvOxNZpm49KapT25cBHvF7SgoVNTy9RYqdHLBrDbZZnNym4xodxMqosm
+         ElVi9d+EGcqdWDcaOplfGsP+YNM1u4fjbGr/Mn8HBLu1GlR91F8e7OeqWfGmm/Nh+e2D
+         Oi+514EJsr5LGXUkq73okW+QKWH9hOpBPzaRu6AFQmh3sPGJWAInIhQBffs8ywUzsBs4
+         wGHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HwJYigqp1NOB2US5BTlKwSn4w4HVBuo71UExWBXGYuA=;
+        b=bDoC1uPJbIXNqia284Gnk9tCiYmSZ50lXsppn8oO6plKJJMsOLEUFSrsaKCWxyrttx
+         DEQb4pGIXd80ZyNCuBIkr1lpvRUrieS7QFBtxwbZoqqiRgKse45+azkRcgErRxBvzjJr
+         0mT8921TzOoU5FCRiZGAUyRRYc9VFLMKMbF6m52bAdbRXZT9rWQa1R6pnoi2j2eMVq1Q
+         sH6XUbIqlB8SMSSssFH9ilBpzaPL1xX9kWZ7+0v0l2gOpJV0hbz0n/ZxZ2wrAEgok0zA
+         eaXFh77xSAIB24qjbGXOmQEQlc9BVn1zOudSduFrpHB/9AhnWps2icYUPXURAGJ8fJ3K
+         x35w==
+X-Gm-Message-State: AO0yUKXcNyeuYbzYQ5Dr20M2DjHk3TGh/bzVXxCe2oRv2j8DqjGMr8bf
+        HqQwe2ebfJywM1oQx595FxVS6g==
+X-Google-Smtp-Source: AK7set8Im6wtw4TpH9maC0dmf/kyymdY4q/bU4ANDxUgAWEZEi/gkvGOCRNXtCXkZkkOEV5ZUlK4LQ==
+X-Received: by 2002:a54:4081:0:b0:37a:f63b:45f with SMTP id i1-20020a544081000000b0037af63b045fmr5358846oii.16.1675980266275;
+        Thu, 09 Feb 2023 14:04:26 -0800 (PST)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id i126-20020acaea84000000b0037887ca2150sm1417526oih.22.2023.02.09.14.04.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Feb 2023 14:04:25 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: Re: [External] [LSF/MM/BPF TOPIC] CXL Fabric Manager (FM)
+ architecture
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20230209110502.00001a7a@Huawei.com>
+Date:   Thu, 9 Feb 2023 14:04:13 -0800
+Cc:     Adam Manzanares <a.manzanares@samsung.com>,
+        "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cong Wang <cong.wang@bytedance.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <89DC75A8-0507-4AA1-B121-4AC398F615BC@bytedance.com>
+References: <7F001EAF-C512-436A-A9DD-E08730C91214@bytedance.com>
+ <20230131174115.00007493@Huawei.com>
+ <5671D3B3-83B3-49FF-A662-509648E6D297@bytedance.com>
+ <CGME20230202095410uscas1p18ff39cc89400e3bbecfef9036887758a@uscas1p1.samsung.com>
+ <20230202095402.0000585d@Huawei.com>
+ <20230208163844.GA407917@bgt-140510-bm01>
+ <7E864E85-A36F-487B-8B70-C8C49FBECD73@bytedance.com>
+ <20230209110502.00001a7a@Huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> On Wed, 8 Feb 2023 20:26:26 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > Jonathan Cameron wrote:
-> > [..]
-> > > > @@ -1284,13 +1327,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
-> > > >  		return -ENXIO;
-> > > >  	}
-> > > >  
-> > > > -	if (cxlrd->calc_hb(cxlrd, pos) != dport) {
-> > > > -		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
-> > > > -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> > > > -			dev_name(&cxlrd->cxlsd.cxld.dev));
-> > > > -		return -ENXIO;
-> > > > -	}
-> > > > -  
-> > > 
-> > > In an ideal world, this would have been nice as two patches.
-> > > One that reorders the various checks so that they are in the order
-> > > after you have factored things out (easy to review for correctness)
-> > > then one that factored it out.  
-> > 
-> > I played with this a bit and the only way I could see to make the diff
-> > come out significantly nicer would be to use a forward declaration to
-> > move the new helpers below cxl_region_attach().
-> 
-> Don't bother then!  Unless you've already done it.
 
-No worries, abandoned.
 
-> In the ideal world diff would magically present everything in the most
-> human readable form :)  What are all these AI folk working on that we
-> don't already have this!
+> On Feb 9, 2023, at 3:05 AM, Jonathan Cameron =
+<Jonathan.Cameron@Huawei.com> wrote:
+>=20
+> On Wed, 8 Feb 2023 10:03:57 -0800
+> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
+>=20
+>>> On Feb 8, 2023, at 8:38 AM, Adam Manzanares =
+<a.manzanares@samsung.com> wrote:
+>>>=20
+>>> On Thu, Feb 02, 2023 at 09:54:02AM +0000, Jonathan Cameron wrote: =20=
 
-+1 to this.
+>>>> On Wed, 1 Feb 2023 12:04:56 -0800
+>>>> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
+>>>>=20
+>>>>>>=20
+>>=20
+>> <skipped>
+>>=20
+>>>>>=20
+>>>>> Most probably, we will have multiple FM implementations in =
+firmware.
+>>>>> Yes, FM on host could be important for debug and to verify =
+correctness
+>>>>> firmware-based implementations. But FM daemon on host could be =
+important
+>>>>> to receive notifications and react somehow on these events. Also, =
+journalling
+>>>>> of events/messages/events could be important responsibility of FM =
+daemon
+>>>>> on host.  =20
+>>>>=20
+>>>> I agree with an FM daemon somewhere (potentially running on the BMC =
+type chip
+>>>> that also has the lower level FM-API access).  I think it is =
+somewhat
+>>>> separate from the rest of this on basis it may well just be talking =
+redfish
+>>>> to the FM and there are lots of tools for that sort of handling =
+already.
+>>>>=20
+>>>=20
+>>> I would be interested in particpating in a BOF about this topic. I =
+wonder what
+>>> happens when we have multiple switches with multiple FMs each on a =
+separate BMC.
+>>> In this case, does it make more sense to have an owner of the global =
+FM state=20
+>>> be a user space application. Is this the job of the orchestrator?
+>=20
+> This partly comes down to terminology. Ultimately there is an FM that =
+is
+> responsible for the whole fabric (could be distributed software) and =
+that
+> in turn will talk to a the various BMCs that then talk to the =
+switches.
+>=20
+> Depending on the setup it may not be necessary for any entity to see =
+the
+> whole fabric.
+>=20
+> Interesting point in general though.  I think it boils down to getting
+> layering in any software correct and that is easier done from outset.
+>=20
+> I don't know whether the redfish stuff is flexible enough to cover =
+this, but
+> if it is, I'd envision, the actual FM talking redfish to a bunch of =
+sub-FMs
+> and in turn presenting redfish to the orchestrator.
+>=20
+> Any of these components might run on separate machines, or in firmware =
+on
+> some device, or indeed all run on one server that is acting as the FM =
+and
+> a node in the orchestrator layer.
+>=20
+>>>=20
+>>> The BMC based FM seems to have scalability issues, but will we hit =
+them in
+>>> practice any time soon. =20
+>=20
+> Who knows ;)  If anyone builds the large scale fabric stuff in CXL 3.0 =
+then
+> we definitely will in the medium term.
+>=20
+>>=20
+>> I had discussion recently and it looks like there are interesting =
+points:
+>> (1) If we have multiple CXL switches (especially with complex =
+hierarchy), then it is
+>> very compute-intensive activity. So, potentially, FM on firmware side =
+could be not
+>> capable to digest and executes all responsibilities without potential =
+performance
+>> degradation.
+>=20
+> There is firmware and their is firmware ;)  It's not uncommon for BMCs =
+to be
+> significant devices in their own right and run Linux or other heavy =
+weight OSes.
+>=20
+>> (2) However, if we have FM on host side, then there is security =
+concerns because
+>> FM sees everything and all details of multiple hosts and subsystems.
+>=20
+> Agreed. Other than testing I wouldn't expect the FM to run on a =
+'host', but in
+> at lest some implementations it will be running on a capable Linux =
+machine.
+> In large fabrics that may be very capable indeed (basically a server =
+dedicated to
+> this role).
+>=20
+>> (3) Technically speaking, there is one potential capability that =
+user-space FM daemon
+>> can run as on host side as on CXL switch side. I mean here that if we =
+implement
+>> user-space FM daemon, then it could be used to execute FM =
+functionality on CXL
+>> switch side (maybe????). :)
+>=20
+> Sure, anything could run anywhere.  We should draw up some 'reference' =
+architectures
+> though to guide discussion down the line.  Mind you I think there are =
+a lot of
+> steps along the way and starting point should be a simple PoC where =
+all the FM
+> stuff is in linux userspace (other than comms).  That's easy enough to =
+do.
+> If I get a quiet week or so I'll hammer out what we need on emulation =
+side to
+> start playing with this.
+>=20
+> Jonathan
+>=20
+>=20
+>=20
+>>=20
+>> <skipped>
+>>=20
+>>>>>>>  - Manage surprise removal of devices   =20
+>>>>>>=20
+>>>>>> Likewise, beyond reporting I wouldn't expect the FM daemon to =
+have any idea
+>>>>>> what to do in the way of managing this.  Scream loudly?
+>>>>>>=20
+>>>>>=20
+>>>>> Maybe, it could require application(s) notification. Let=E2=80=99s =
+imagine that application
+>>>>> uses some resources from removed device. Maybe, FM can manage =
+kernel-space
+>>>>> metadata correction and helping to manage application requests to =
+not existing
+>>>>> entities. =20
+>>>>=20
+>>>> Notifications for the host are likely to come via inband means - so =
+type3 driver
+>>>> handling rather than related to FM.  As far as the host is =
+concerned this is the
+>>>> same as case where there is no FM and someone ripped a device out.
+>>>>=20
+>>>> There might indeed be meta data to manage, but doubt it will have =
+anything to
+>>>> do with kernel.
+>>>>=20
+>>>=20
+>>> I've also had similar thoughts, I think the OS responds to =
+notifications that
+>>> are generated in-band after changes to the state of the FM are made =
+through=20
+>>> OOB means.
+>>>=20
+>>> I envision the host sends REDFISH requests to a switch BMC that has =
+an FM
+>>> implementation. Once the changes are implemented by the FM it would =
+show up
+>>> as changes to the PCIe hierarchy on a host, which is capable of =
+responding to
+>>> such changes.
+>>>=20
+>>=20
+>> I think I am not completely follow your point. :) First of all, I =
+assume that if host
+>> sends REDFISH request, then it will be expected the confirmation of =
+request execution.
+>> It means for me that host needs to receive some packet that informs =
+that request
+>> executed successfully or failed. It means that some subsystem or =
+application requested
+>> this change and only after receiving the confirmation requested =
+capabilities can be used.
+>> And if FM is on CXL switch side, then how FM will show up the =
+changes? It sounds for me
+>> that some FM subsystem should be on the host side to receive =
+confirmation/notification
+>> and to execute the real changes in PCIe hierarchy. Am missing =
+something here?
+>=20
+> Another terminology issue I think.  FM from CXL side of things is an =
+abstract thing
+> (potentially highly layered / distributed) that acts on instructions =
+from an
+> orchestrator (also potentially highly distributed, one implementation =
+is hosts
+> can be the orchestrator) and configures the fabric.
+> The downstream APIs to the switches and EPs are all in FM-API (CXL =
+spec)
+> Upstream probably all Redfish.  What happens in between is impdef =
+(though
+> obviously mapping to Redfish or FM-API as applicable may make it more
+> reuseable and flexible).
+>=20
+> I think some diagrams of what is where will help.
+> I think we need (note I've always kept the controller hosts as normal =
+hosts as well
+> as that includes the case where it never uses the Fabric - so BMC type =
+cases as
+> a subset without needing to double the number of diagrams).
+>=20
+> 1) Diagram of single host with the FM as one 'thing' on that host - =
+direct interfaces
+>   to a single switch - interfaces options include switch CCI MB, mctp =
+of PCI VDM,
+>   mctp over say i2c.
+>=20
+> 2) Diagram of same as above, with a multiple head device all connected =
+to one host.
+>=20
+> 3) Diagram of 1 (maybe with MHD below switches), but now with multiple =
+hosts,
+>   one of which is responsible for  fabric management.   FM in that =
+manager host
+>   and orchestrator) - agents on other hosts able to send requests for =
+services to that host.
+>=20
+> 4) Diagram of 3, but now with multiple switches, each with separate =
+controlling host.
+>   Some other hosts that don't have any fabric control.
+>   Distributed FM across the controlling hosts.
+>=20
+> 5) Diagram of 4 but with layered FM and separate Orchestrator.  Hosts =
+all talk to the
+>   orchestrator, that then talks to the FM.
+>=20
+> 6) 4, but push some management entities down into switches (from =
+architecture point of
+>   view this is no different from layered case with a separate BMC per =
+switch - there
+>   is still either a distribute FM or a layered FM, which the =
+orchestrator talks to.)
+>=20
+> Can mess with exactly distribution of who does what across the various =
+layers.
+>=20
+> I can sketch this lot up (and that will probably make some gaps in =
+these cases apparent)
+> but will take a little while, hence text descriptions in the meantime.
+>=20
+> I come back to my personal view though - which is don't worry too much =
+at this early
+> stage, beyond making sure we have some layering in code so that we can =
+distribute
+> it across a distributed or layered architecture later!  =20
+>=20
+
+I had slightly more simplified image in my mind. :) We definitely need =
+to have diagrams
+to clarify the vision. But which collaboration tool could we use to work =
+publicly on diagrams?
+Any suggestion?
+
+Thanks,
+Slava.
+
