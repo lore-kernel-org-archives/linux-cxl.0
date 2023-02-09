@@ -2,82 +2,120 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2A9C636D7
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 11:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E547C61DA4
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 11:48:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbjBILHK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Feb 2023 06:07:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
+        id S229923AbjBILsb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Feb 2023 06:48:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbjBILHI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 06:07:08 -0500
+        with ESMTP id S229633AbjBILsC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 06:48:02 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C756F741;
-        Thu,  9 Feb 2023 03:07:07 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCDV60WmMz6J7kQ;
-        Thu,  9 Feb 2023 19:02:38 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C611455E6D;
+        Thu,  9 Feb 2023 03:35:06 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCF955Vj7z6JB0s;
+        Thu,  9 Feb 2023 19:32:57 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Thu, 9 Feb
- 2023 11:07:04 +0000
-Date:   Thu, 9 Feb 2023 11:07:04 +0000
+ 2023 11:34:23 +0000
+Date:   Thu, 9 Feb 2023 11:34:22 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <dave.hansen@linux.intel.com>,
-        <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 07/18] cxl/region: Move region-position validation to a
- helper
-Message-ID: <20230209110704.000072c6@Huawei.com>
-In-Reply-To: <63e475f2a5fd_36c729455@dwillia2-xfh.jf.intel.com.notmuch>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
-        <167564538779.847146.8356062886811511706.stgit@dwillia2-xfh.jf.intel.com>
-        <20230208123031.00006990@Huawei.com>
-        <63e475f2a5fd_36c729455@dwillia2-xfh.jf.intel.com.notmuch>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <rafael@kernel.org>,
+        <bhelgaas@google.com>, <robert.moore@intel.com>
+Subject: Re: [PATCH 03/18] cxl: Add checksum verification to CDAT from CXL
+Message-ID: <20230209113422.00007017@Huawei.com>
+In-Reply-To: <167571658747.587790.17252249256706733075.stgit@djiang5-mobl3.local>
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+        <167571658747.587790.17252249256706733075.stgit@djiang5-mobl3.local>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 8 Feb 2023 20:26:26 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Mon, 06 Feb 2023 13:49:48 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> [..]
-> > > @@ -1284,13 +1327,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
-> > >  		return -ENXIO;
-> > >  	}
-> > >  
-> > > -	if (cxlrd->calc_hb(cxlrd, pos) != dport) {
-> > > -		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
-> > > -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> > > -			dev_name(&cxlrd->cxlsd.cxld.dev));
-> > > -		return -ENXIO;
-> > > -	}
-> > > -  
-> > 
-> > In an ideal world, this would have been nice as two patches.
-> > One that reorders the various checks so that they are in the order
-> > after you have factored things out (easy to review for correctness)
-> > then one that factored it out.  
+> A CDAT table is available from a CXL device. The table is read by the
+> driver and cached in software. With the CXL subsystem needing to parse the
+> CDAT table, the checksum should be verified. Add checksum verification
+> after the CDAT table is read from device.
 > 
-> I played with this a bit and the only way I could see to make the diff
-> come out significantly nicer would be to use a forward declaration to
-> move the new helpers below cxl_region_attach().
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Hi Dave,
 
-Don't bother then!  Unless you've already done it.
-
-In the ideal world diff would magically present everything in the most
-human readable form :)  What are all these AI folk working on that we
-don't already have this!
+Some comments on this follow on from previous patch so may not
+be relevant once you've updated how that is done.
 
 Jonathan
+
+> ---
+>  drivers/cxl/core/pci.c |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 57764e9cd19d..a24dac36bedd 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> +#include <linux/acpi.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-doe.h>
+>  #include <cxlpci.h>
+> @@ -592,6 +593,7 @@ void read_cdat_data(struct cxl_port *port)
+>  	struct device *dev = &port->dev;
+>  	struct device *uport = port->uport;
+>  	size_t cdat_length;
+> +	acpi_status status;
+>  	int rc;
+>  
+>  	cdat_doe = find_cdat_doe(uport);
+> @@ -620,5 +622,14 @@ void read_cdat_data(struct cxl_port *port)
+>  		port->cdat.length = 0;
+>  		dev_err(dev, "CDAT data read error\n");
+>  	}
+> +
+> +	status = acpi_ut_verify_cdat_checksum(port->cdat.table, port->cdat.length);
+> +	if (status != AE_OK) {
+
+if (ACPI_FAILURE(acpi_ut...))  or better still put that in the wrapper I suggeste
+in previous patch so that we have normal kernel return code handling out here.
+
+
+> +		/* Don't leave table data allocated on error */
+> +		devm_kfree(dev, port->cdat.table);
+> +		port->cdat.table = NULL;
+> +		port->cdat.length = 0;
+
+I'd rather see us manipulate a local copy of cdat_length, and cdat_table
+then only assign them to the port->cdat fields the success path rather
+than setting them then unsetting the on error.
+
+Diff will be bigger, but nicer resulting code (and hopefully diff
+won't be too big!)
+
+
+> +		dev_err(dev, "CDAT data checksum error\n");
+> +	}
+>  }
+>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+> 
+> 
 
