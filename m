@@ -2,94 +2,82 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25BEC05027
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 11:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2A9C636D7
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 11:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230021AbjBILFJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Feb 2023 06:05:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
+        id S229675AbjBILHK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Feb 2023 06:07:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbjBILE4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 06:04:56 -0500
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8E15B46F
-        for <linux-cxl@vger.kernel.org>; Thu,  9 Feb 2023 03:04:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JmItCF/Hc3iPs7Ks538UlyC8NCqGwOSthlT2H4VZr0Y=;
-  b=ZXkW9FyaSmUgOLCRyeqZMrPe36YkHENMgjMO6d8Fbo5lBbOxeN8dCpr6
-   GbzVAAgPebDKZKbOfrDGJEEjtUAGfhvYl6N3bQoEapqprPej+ei/BiZyq
-   MPde4ZhRuEUrhxZEqafE5pwJwjbY8Z2zQ+NV+skSKvPPjPkeuotp7JOv0
-   M=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Brice.Goglin@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.97,283,1669071600"; 
-   d="scan'208";a="47293240"
-Received: from unknown (HELO [193.50.110.246]) ([193.50.110.246])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 12:04:48 +0100
-Message-ID: <e885b2a7-0405-153c-a578-b863a4e00977@inria.fr>
-Date:   Thu, 9 Feb 2023 12:04:47 +0100
+        with ESMTP id S229914AbjBILHI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 06:07:08 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C756F741;
+        Thu,  9 Feb 2023 03:07:07 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCDV60WmMz6J7kQ;
+        Thu,  9 Feb 2023 19:02:38 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Thu, 9 Feb
+ 2023 11:07:04 +0000
+Date:   Thu, 9 Feb 2023 11:07:04 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dave.hansen@linux.intel.com>,
+        <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 07/18] cxl/region: Move region-position validation to a
+ helper
+Message-ID: <20230209110704.000072c6@Huawei.com>
+In-Reply-To: <63e475f2a5fd_36c729455@dwillia2-xfh.jf.intel.com.notmuch>
+References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
+        <167564538779.847146.8356062886811511706.stgit@dwillia2-xfh.jf.intel.com>
+        <20230208123031.00006990@Huawei.com>
+        <63e475f2a5fd_36c729455@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH ndctl v2 0/7] cxl: add support for listing and creating
- volatile regions
-Content-Language: en-US
-To:     Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Gregory Price <gregory.price@memverge.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        nvdimm@lists.linux.dev, Ira Weiny <ira.weiny@intel.com>
-References: <20230120-vv-volatile-regions-v2-0-4ea6253000e5@intel.com>
-From:   Brice Goglin <Brice.Goglin@inria.fr>
-In-Reply-To: <20230120-vv-volatile-regions-v2-0-4ea6253000e5@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Wed, 8 Feb 2023 20:26:26 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-Le 08/02/2023 à 21:00, Vishal Verma a écrit :
-> While enumeration of ram type regions already works in libcxl and
-> cxl-cli, it lacked an attribute to indicate pmem vs. ram. Add a new
-> 'type' attribute to region listings to address this. Additionally, add
-> support for creating ram regions to the cxl-create-region command. The
-> region listings are also updated with dax-region information for
-> volatile regions.
->
-> This also includes fixed for a few bugs / usability issues identified
-> along the way - patches 1, 4, and 6. Patch 5 is a usability improvement
-> where based on decoder capabilities, the type of a region can be
-> inferred for the create-region command.
->
-> These have been tested against the ram-region additions to cxl_test
-> which are part of the kernel support patch set[1].
-> Additionally, tested against qemu using a WIP branch for volatile
-> support found here[2]. The 'run_qemu' script has a branch that creates
-> volatile memdevs in addition to pmem ones. This is also in a branch[3]
-> since it depends on [2].
->
-> These cxl-cli / libcxl patches themselves are also available in a
-> branch at [4].
->
-> [1]: https://lore.kernel.org/linux-cxl/167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com/
-> [2]: https://gitlab.com/jic23/qemu/-/commits/cxl-2023-01-26
-> [3]: https://github.com/pmem/run_qemu/commits/vv/ram-memdevs
-> [4]: https://github.com/pmem/ndctl/tree/vv/volatile-regions
+> Jonathan Cameron wrote:
+> [..]
+> > > @@ -1284,13 +1327,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+> > >  		return -ENXIO;
+> > >  	}
+> > >  
+> > > -	if (cxlrd->calc_hb(cxlrd, pos) != dport) {
+> > > -		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
+> > > -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+> > > -			dev_name(&cxlrd->cxlsd.cxld.dev));
+> > > -		return -ENXIO;
+> > > -	}
+> > > -  
+> > 
+> > In an ideal world, this would have been nice as two patches.
+> > One that reorders the various checks so that they are in the order
+> > after you have factored things out (easy to review for correctness)
+> > then one that factored it out.  
+> 
+> I played with this a bit and the only way I could see to make the diff
+> come out significantly nicer would be to use a forward declaration to
+> move the new helpers below cxl_region_attach().
 
+Don't bother then!  Unless you've already done it.
 
-Hello Vishal
+In the ideal world diff would magically present everything in the most
+human readable form :)  What are all these AI folk working on that we
+don't already have this!
 
-I am trying to play with this but all my attempts failed so far. Could 
-you provide Qemu and cxl-cli command-lines to get a volatile region 
-enabled in a Qemu VM?
-
-Thanks
-
-Brice
-
-
+Jonathan
 
