@@ -2,62 +2,62 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E7FC05027
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 22:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A14EC05027
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 22:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjBIWE3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Feb 2023 17:04:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50102 "EHLO
+        id S230353AbjBIWX0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Feb 2023 17:23:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbjBIWE2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 17:04:28 -0500
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB9B170D
-        for <linux-cxl@vger.kernel.org>; Thu,  9 Feb 2023 14:04:27 -0800 (PST)
-Received: by mail-oi1-x22d.google.com with SMTP id v15so2901589oie.9
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Feb 2023 14:04:27 -0800 (PST)
+        with ESMTP id S229945AbjBIWXZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 17:23:25 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E502E68AD7
+        for <linux-cxl@vger.kernel.org>; Thu,  9 Feb 2023 14:22:58 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id r34-20020a05683044a200b0068d4a8a8d2dso1017435otv.12
+        for <linux-cxl@vger.kernel.org>; Thu, 09 Feb 2023 14:22:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=to:references:message-id:content-transfer-encoding:cc:date
          :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HwJYigqp1NOB2US5BTlKwSn4w4HVBuo71UExWBXGYuA=;
-        b=zwyER/97b2g0RXSTqXCn7dmB204mNODZ5MYLhFA95V7EmmLc87epHcCnVfHOd4wYau
-         Py+GY/ivUX7AQHeA89OGN+hsi+Alm26JH+U3oZAKxj20wSW6CaFA82sKzZtjT9sE2C9u
-         y6W5xS1SgkbwWvOxNZpm49KapT25cBHvF7SgoVNTy9RYqdHLBrDbZZnNym4xodxMqosm
-         ElVi9d+EGcqdWDcaOplfGsP+YNM1u4fjbGr/Mn8HBLu1GlR91F8e7OeqWfGmm/Nh+e2D
-         Oi+514EJsr5LGXUkq73okW+QKWH9hOpBPzaRu6AFQmh3sPGJWAInIhQBffs8ywUzsBs4
-         wGHA==
+        bh=qFZR6Xfgk9KAiE3ijmG6Tw9Tq94CGVcZz40hqRYtxcY=;
+        b=XrNKJSt4zO+Z7rgysrOQRgXXbshDNUZwdld4u1om2RtQiZ2w2GGsoTRPQRWxpgYvwq
+         zFL3Do+0RPo3nmuG4UimZ7r2bnEKaafuAuIRgWn71jtOmPHfBOoxkhTHAssqmlyJx8X9
+         IhJIpy+UZSXPHD1Jaku9QiwxIGfx0zZcIg9S76TB6GAMMWBL7RHKE5r8QI1ve1u6sM9I
+         JYdiosDsBB3lIchaRTmO12euDqBL8RJpjotXrM1bqsFcMqk5OoTySMREokSiMWJOUrfl
+         pUjN0mxpq6jr7Gg22xErTcUm6/UY4Y34WZuUvqJTHCEdT/zyjjQH8DNKq/YPCdpSDpfp
+         dh3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=to:references:message-id:content-transfer-encoding:cc:date
          :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HwJYigqp1NOB2US5BTlKwSn4w4HVBuo71UExWBXGYuA=;
-        b=bDoC1uPJbIXNqia284Gnk9tCiYmSZ50lXsppn8oO6plKJJMsOLEUFSrsaKCWxyrttx
-         DEQb4pGIXd80ZyNCuBIkr1lpvRUrieS7QFBtxwbZoqqiRgKse45+azkRcgErRxBvzjJr
-         0mT8921TzOoU5FCRiZGAUyRRYc9VFLMKMbF6m52bAdbRXZT9rWQa1R6pnoi2j2eMVq1Q
-         sH6XUbIqlB8SMSSssFH9ilBpzaPL1xX9kWZ7+0v0l2gOpJV0hbz0n/ZxZ2wrAEgok0zA
-         eaXFh77xSAIB24qjbGXOmQEQlc9BVn1zOudSduFrpHB/9AhnWps2icYUPXURAGJ8fJ3K
-         x35w==
-X-Gm-Message-State: AO0yUKXcNyeuYbzYQ5Dr20M2DjHk3TGh/bzVXxCe2oRv2j8DqjGMr8bf
-        HqQwe2ebfJywM1oQx595FxVS6g==
-X-Google-Smtp-Source: AK7set8Im6wtw4TpH9maC0dmf/kyymdY4q/bU4ANDxUgAWEZEi/gkvGOCRNXtCXkZkkOEV5ZUlK4LQ==
-X-Received: by 2002:a54:4081:0:b0:37a:f63b:45f with SMTP id i1-20020a544081000000b0037af63b045fmr5358846oii.16.1675980266275;
-        Thu, 09 Feb 2023 14:04:26 -0800 (PST)
+        bh=qFZR6Xfgk9KAiE3ijmG6Tw9Tq94CGVcZz40hqRYtxcY=;
+        b=lkogA7yO6IfJMQwWMEgX7TNwnpqKC9T3onZhV1iv/DuO7g/dHVaNoeaZc/OCOMe+zL
+         0eHtT+XdSjyTlC1ZzGCgL1GZJ3L5uFKwNRcRFhXJ7bP6lfoJL9+j0whbnN/Z8Y+GREOd
+         ybbfGyOwb4tOpmuTx9joIR2i44n2sAgm2B3SK0qTFyedpX5Uf3SXE76d7ayA/0J7WQ/Y
+         84zmPZw8zE9eMAyBEM4/WxTaIcbFe9FX11bjZX3cBtoTBcDjujHIL04oyADI8xsdGziV
+         /iZgkbeE+c6SNF8Y1+z62vHZSPdLK3WwAVugTTryDHGrlZJ5BN7F8SK0dpk1n22iHRKk
+         +MgA==
+X-Gm-Message-State: AO0yUKUtUjWz7VYcd9FQMwTwENzeBZDXit++MowbIeroCUcYU/Ayx6PE
+        Qhwco/9QgrnMH0z+5/zKkDk8GQ==
+X-Google-Smtp-Source: AK7set/cRcC+MHYtZkFWioLDrvm6Ro5wqPLrkQKV/+pKTTs8tPoG+haFcrqrpcW2j8P4bjrB1a0ngA==
+X-Received: by 2002:a9d:65d3:0:b0:68e:d218:ee44 with SMTP id z19-20020a9d65d3000000b0068ed218ee44mr2092777oth.32.1675981378242;
+        Thu, 09 Feb 2023 14:22:58 -0800 (PST)
 Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
-        by smtp.gmail.com with ESMTPSA id i126-20020acaea84000000b0037887ca2150sm1417526oih.22.2023.02.09.14.04.24
+        by smtp.gmail.com with ESMTPSA id y3-20020a056830108300b00684e4d974e6sm1306690oto.24.2023.02.09.14.22.56
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Feb 2023 14:04:25 -0800 (PST)
+        Thu, 09 Feb 2023 14:22:57 -0800 (PST)
 Content-Type: text/plain;
         charset=utf-8
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
 Subject: Re: [External] [LSF/MM/BPF TOPIC] CXL Fabric Manager (FM)
  architecture
 From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
-In-Reply-To: <20230209110502.00001a7a@Huawei.com>
-Date:   Thu, 9 Feb 2023 14:04:13 -0800
-Cc:     Adam Manzanares <a.manzanares@samsung.com>,
+In-Reply-To: <20230209221045.GA416928@bgt-140510-bm01>
+Date:   Thu, 9 Feb 2023 14:22:45 -0800
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
         "lsf-pc@lists.linux-foundation.org" 
         <lsf-pc@lists.linux-foundation.org>,
         "linux-mm@kvack.org" <linux-mm@kvack.org>,
@@ -66,7 +66,7 @@ Cc:     Adam Manzanares <a.manzanares@samsung.com>,
         Cong Wang <cong.wang@bytedance.com>,
         Viacheslav Dubeyko <slava@dubeyko.com>
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <89DC75A8-0507-4AA1-B121-4AC398F615BC@bytedance.com>
+Message-Id: <4E272B5A-5952-4680-94A6-14F588ACA7C4@bytedance.com>
 References: <7F001EAF-C512-436A-A9DD-E08730C91214@bytedance.com>
  <20230131174115.00007493@Huawei.com>
  <5671D3B3-83B3-49FF-A662-509648E6D297@bytedance.com>
@@ -74,8 +74,8 @@ References: <7F001EAF-C512-436A-A9DD-E08730C91214@bytedance.com>
  <20230202095402.0000585d@Huawei.com>
  <20230208163844.GA407917@bgt-140510-bm01>
  <7E864E85-A36F-487B-8B70-C8C49FBECD73@bytedance.com>
- <20230209110502.00001a7a@Huawei.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+ <20230209221045.GA416928@bgt-140510-bm01>
+To:     Adam Manzanares <a.manzanares@samsung.com>
 X-Mailer: Apple Mail (2.3731.300.101.1.3)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -83,17 +83,16 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 
-> On Feb 9, 2023, at 3:05 AM, Jonathan Cameron =
-<Jonathan.Cameron@Huawei.com> wrote:
+> On Feb 9, 2023, at 2:10 PM, Adam Manzanares <a.manzanares@samsung.com> =
+wrote:
 >=20
-> On Wed, 8 Feb 2023 10:03:57 -0800
-> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
->=20
+> On Wed, Feb 08, 2023 at 10:03:57AM -0800, Viacheslav A.Dubeyko wrote:
+>>=20
+>>=20
 >>> On Feb 8, 2023, at 8:38 AM, Adam Manzanares =
 <a.manzanares@samsung.com> wrote:
 >>>=20
->>> On Thu, Feb 02, 2023 at 09:54:02AM +0000, Jonathan Cameron wrote: =20=
-
+>>> On Thu, Feb 02, 2023 at 09:54:02AM +0000, Jonathan Cameron wrote:
 >>>> On Wed, 1 Feb 2023 12:04:56 -0800
 >>>> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
 >>>>=20
@@ -112,7 +111,7 @@ important
 journalling
 >>>>> of events/messages/events could be important responsibility of FM =
 daemon
->>>>> on host.  =20
+>>>>> on host.=20
 >>>>=20
 >>>> I agree with an FM daemon somewhere (potentially running on the BMC =
 type chip
@@ -131,42 +130,10 @@ separate BMC.
 >>> In this case, does it make more sense to have an owner of the global =
 FM state=20
 >>> be a user space application. Is this the job of the orchestrator?
->=20
-> This partly comes down to terminology. Ultimately there is an FM that =
-is
-> responsible for the whole fabric (could be distributed software) and =
-that
-> in turn will talk to a the various BMCs that then talk to the =
-switches.
->=20
-> Depending on the setup it may not be necessary for any entity to see =
-the
-> whole fabric.
->=20
-> Interesting point in general though.  I think it boils down to getting
-> layering in any software correct and that is easier done from outset.
->=20
-> I don't know whether the redfish stuff is flexible enough to cover =
-this, but
-> if it is, I'd envision, the actual FM talking redfish to a bunch of =
-sub-FMs
-> and in turn presenting redfish to the orchestrator.
->=20
-> Any of these components might run on separate machines, or in firmware =
-on
-> some device, or indeed all run on one server that is acting as the FM =
-and
-> a node in the orchestrator layer.
->=20
 >>>=20
 >>> The BMC based FM seems to have scalability issues, but will we hit =
 them in
->>> practice any time soon. =20
->=20
-> Who knows ;)  If anyone builds the large scale fabric stuff in CXL 3.0 =
-then
-> we definitely will in the medium term.
->=20
+>>> practice any time soon.
 >>=20
 >> I had discussion recently and it looks like there are interesting =
 points:
@@ -177,24 +144,9 @@ could be not
 >> capable to digest and executes all responsibilities without potential =
 performance
 >> degradation.
->=20
-> There is firmware and their is firmware ;)  It's not uncommon for BMCs =
-to be
-> significant devices in their own right and run Linux or other heavy =
-weight OSes.
->=20
 >> (2) However, if we have FM on host side, then there is security =
 concerns because
 >> FM sees everything and all details of multiple hosts and subsystems.
->=20
-> Agreed. Other than testing I wouldn't expect the FM to run on a =
-'host', but in
-> at lest some implementations it will be running on a capable Linux =
-machine.
-> In large fabrics that may be very capable indeed (basically a server =
-dedicated to
-> this role).
->=20
 >> (3) Technically speaking, there is one potential capability that =
 user-space FM daemon
 >> can run as on host side as on CXL switch side. I mean here that if we =
@@ -202,27 +154,10 @@ implement
 >> user-space FM daemon, then it could be used to execute FM =
 functionality on CXL
 >> switch side (maybe????). :)
->=20
-> Sure, anything could run anywhere.  We should draw up some 'reference' =
-architectures
-> though to guide discussion down the line.  Mind you I think there are =
-a lot of
-> steps along the way and starting point should be a simple PoC where =
-all the FM
-> stuff is in linux userspace (other than comms).  That's easy enough to =
-do.
-> If I get a quiet week or so I'll hammer out what we need on emulation =
-side to
-> start playing with this.
->=20
-> Jonathan
->=20
->=20
->=20
 >>=20
 >> <skipped>
 >>=20
->>>>>>>  - Manage surprise removal of devices   =20
+>>>>>>>  - Manage surprise removal of devices =20
 >>>>>>=20
 >>>>>> Likewise, beyond reporting I wouldn't expect the FM daemon to =
 have any idea
@@ -235,7 +170,7 @@ imagine that application
 kernel-space
 >>>>> metadata correction and helping to manage application requests to =
 not existing
->>>>> entities. =20
+>>>>> entities.
 >>>>=20
 >>>> Notifications for the host are likely to come via inband means - so =
 type3 driver
@@ -280,78 +215,38 @@ confirmation/notification
 >> and to execute the real changes in PCIe hierarchy. Am missing =
 something here?
 >=20
-> Another terminology issue I think.  FM from CXL side of things is an =
-abstract thing
-> (potentially highly layered / distributed) that acts on instructions =
-from an
-> orchestrator (also potentially highly distributed, one implementation =
-is hosts
-> can be the orchestrator) and configures the fabric.
-> The downstream APIs to the switches and EPs are all in FM-API (CXL =
-spec)
-> Upstream probably all Redfish.  What happens in between is impdef =
-(though
-> obviously mapping to Redfish or FM-API as applicable may make it more
-> reuseable and flexible).
->=20
-> I think some diagrams of what is where will help.
-> I think we need (note I've always kept the controller hosts as normal =
-hosts as well
-> as that includes the case where it never uses the Fabric - so BMC type =
-cases as
-> a subset without needing to double the number of diagrams).
->=20
-> 1) Diagram of single host with the FM as one 'thing' on that host - =
-direct interfaces
->   to a single switch - interfaces options include switch CCI MB, mctp =
-of PCI VDM,
->   mctp over say i2c.
->=20
-> 2) Diagram of same as above, with a multiple head device all connected =
-to one host.
->=20
-> 3) Diagram of 1 (maybe with MHD below switches), but now with multiple =
-hosts,
->   one of which is responsible for  fabric management.   FM in that =
-manager host
->   and orchestrator) - agents on other hosts able to send requests for =
-services to that host.
->=20
-> 4) Diagram of 3, but now with multiple switches, each with separate =
-controlling host.
->   Some other hosts that don't have any fabric control.
->   Distributed FM across the controlling hosts.
->=20
-> 5) Diagram of 4 but with layered FM and separate Orchestrator.  Hosts =
-all talk to the
->   orchestrator, that then talks to the FM.
->=20
-> 6) 4, but push some management entities down into switches (from =
-architecture point of
->   view this is no different from layered case with a separate BMC per =
-switch - there
->   is still either a distribute FM or a layered FM, which the =
-orchestrator talks to.)
->=20
-> Can mess with exactly distribution of who does what across the various =
-layers.
->=20
-> I can sketch this lot up (and that will probably make some gaps in =
-these cases apparent)
-> but will take a little while, hence text descriptions in the meantime.
->=20
-> I come back to my personal view though - which is don't worry too much =
-at this early
-> stage, beyond making sure we have some layering in code so that we can =
-distribute
-> it across a distributed or layered architecture later!  =20
+> Hopefully I have a point ;). I do expect a host to receive a response  =
+for a
+> given REDFISH request, but the request/response would be OOB. I would =
+go back
+> to the example of hot plugging in a PCIe based devices. For example if =
+an nvme
+> SSD is hot plugged, then the OS notified by HW that a new PCIe device =
+has been
+> added. Going back to changes made by the FM, if the changes impact the =
+CXL
+> hiearchy that is visible to a host, it is my expectation that the host =
+OS will
+> be informed of the changes requested of the FM when the host HW =
+becomes aware
+> of the changes (the in-band change).
 >=20
 
-I had slightly more simplified image in my mind. :) We definitely need =
-to have diagrams
-to clarify the vision. But which collaboration tool could we use to work =
-publicly on diagrams?
-Any suggestion?
+You are right if we talk about hardware directly connected to the host. =
+It means that
+CPU (or any other hardware subsystem) can receive interrupt and kernel =
+can process
+this hardware change. But FM can be remote and be shared by multiple =
+hosts.
+In such case, we need to have some software subsystem on host(s) side =
+that can
+execute polling or expects to receive network packet with notification =
+or confirmation
+of the change. Or we need to have some hardware subsystem on every host =
+that
+can interact with remote FM in the background and issues the interrupt =
+locally
+with the goal to refresh kernel metadata.
 
 Thanks,
 Slava.
