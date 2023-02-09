@@ -2,350 +2,121 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C6C61DA4
-	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 22:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFC3C05027
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Feb 2023 23:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbjBIW5h (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 9 Feb 2023 17:57:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54162 "EHLO
+        id S230520AbjBIXe5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Feb 2023 18:34:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbjBIW5g (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 17:57:36 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8083F7EEE;
-        Thu,  9 Feb 2023 14:57:34 -0800 (PST)
+        with ESMTP id S231145AbjBIXey (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Feb 2023 18:34:54 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A5DB656AE;
+        Thu,  9 Feb 2023 15:34:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675983454; x=1707519454;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MA4kIapkkAIMk0ErRWDlk6c3dRQ0E//qnjmF0Zs9JYo=;
-  b=HLlFYx7dZRt3R8e53QoYSclhBEm4tRHJNKgKbmKdMJqlnc/8+ldXPk1x
-   1YN/EOYY0lKlpuH1UmswXwnmOaXTUa+zCtN9mz2mJPLi+ipGQv1YBthiS
-   HwTmBfydHLnv5MvCn1EBlrXFvFol53BOx28PkVKWH+oqslCAbDB/NX2Js
-   TWUc4srG4iGnOdauWCMOuC4gDhBbrWG+XU6R06Qb4v+/vHS/NUtb+Frkz
-   PR8lIstOz1T2so63jMRoeoJQdPndqzXUKSptxMkqu5TJ4xrE5JE54765M
-   3869/2TdFCYerqps0UqPUCTwf51OO5MDfPYbPLQoo2TpzIFDAZW3qmI0R
+  t=1675985670; x=1707521670;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HaeM+wilmzH9lkMsRKAaYMvtL58J3QbWvK5gMOvUqJU=;
+  b=KXdWqpOkfiQM4cqG7hzlu0dWBPRYHli2PFbhd0s8CYZQwBNROqZX3oy4
+   bY0h0ateX+vr0BtZHJwX7nN6DMpDrqHb9c+4dmHz4LN1E6+r3at1Anw3X
+   AJa2fLO+vNePrWtkl22hVyxRY8aXK/HvXbibFXxZMaIRMPSxVr/lhbB0h
+   gL1ZLakHMmuV4IR6jTXie7vCpeONxZrFX2ixmkAj0twXzfR15kw24fev1
+   7KYk8mWhvNoBuQWQmzzHOg4Xf2Vne2zumJIQuTJFzk6rmSfE8BjLH9JnU
+   q21C7H89xZ9owlXdN55IuNWX5S+SaBCcwkabC+OThkRqGKIMHaIZ6HIkp
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="313915231"
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="416508686"
 X-IronPort-AV: E=Sophos;i="5.97,285,1669104000"; 
-   d="scan'208";a="313915231"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 14:57:33 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="776670638"
+   d="scan'208";a="416508686"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 15:33:03 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="756592021"
 X-IronPort-AV: E=Sophos;i="5.97,285,1669104000"; 
-   d="scan'208";a="776670638"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.163.223]) ([10.213.163.223])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 14:57:32 -0800
-Message-ID: <3c69a080-de0c-3244-cc44-0a187230d203@intel.com>
-Date:   Thu, 9 Feb 2023 15:57:32 -0700
+   d="scan'208";a="756592021"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.13.232])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 15:33:01 -0800
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/6] CXL Poison List Retrieval & Tracing
+Date:   Thu,  9 Feb 2023 15:32:53 -0800
+Message-Id: <cover.1675983077.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 04/18] cxl: Add common helpers for cdat parsing
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
-        robert.moore@intel.com
-References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
- <167571659666.587790.1381783105886436293.stgit@djiang5-mobl3.local>
- <20230209115803.00002778@Huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230209115803.00002778@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+From: Alison Schofield <alison.schofield@intel.com>
+
+This is not targeting the 6.3 merge window.
+
+Changes in v6:
+- Remove the ABI that collected poison per region, and added the
+  region info to the per memdev collection.  (Dan)
+  This means Patch 4 is brand new:
+  	cxl/region: Provide region info to the cxl_poison trace event
+
+- Also added Patch 5: cxl/trace: Add an HPA to cxl_poison trace events
+  to this set. It comes w a couple of Review Tags, and is unchanged,
+  from a v2 last posted upstream.
+- Dropped Jonathan's Review on Patch 3 because of changes
+- Remove local var 'cxlps' (cxl_poison_state) (Dan)
+- Trigger sysfs attr on boolean truisms only (Dan)
+- Remove unneeded param pcidev from trace call. 
+- Mock: add __packed, and le64_to_cpu(() (Dan)
+- Abbreviate less: s/max_mer/max_errors (Dan)
+- Rename trace field 'pcidev', 'host' (Dan)
+- getpoison_po/payload_out (Dan)
+- Add serial no. to trace (Dan)
+- s/getpoison_lock/lock (Dan)
+- s/tmp/trigger
+
+Link to v5: https://lore.kernel.org/linux-cxl/cover.1674070170.git.alison.schofield@intel.com/
+
+Add support for retrieving device poison lists and store the returned
+error records as kernel trace events.
+
+The handling of the poison list is guided by the CXL 3.0 Specification
+Section 8.2.9.8.4.1. [1] 
+
+Example:
+$ echo 1 > /sys/bus/cxl/devices/mem0/trigger_poison_list
+cxl_poison: memdev=mem0 serial=0 host=cxl_mem.0 region=region4 region_uuid=117b2cf4-b160-4090-9361-ba31b9649317 hpa=0xf0d0000000 dpa=0x40000000 length=0x40 source=Internal flags= overflow_time=0
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+
+Alison Schofield (6):
+  cxl/mbox: Add GET_POISON_LIST mailbox command
+  cxl/trace: Add TRACE support for CXL media-error records
+  cxl/memdev: Add trigger_poison_list sysfs attribute
+  cxl/region: Provide region info to the cxl_poison trace event
+  cxl/trace: Add an HPA to cxl_poison trace events
+  tools/testing/cxl: Mock support for Get Poison List
+
+ Documentation/ABI/testing/sysfs-bus-cxl | 14 ++++
+ drivers/cxl/core/core.h                 |  5 ++
+ drivers/cxl/core/mbox.c                 | 74 +++++++++++++++++++
+ drivers/cxl/core/memdev.c               | 68 ++++++++++++++++++
+ drivers/cxl/core/region.c               | 82 +++++++++++++++++++++
+ drivers/cxl/core/trace.c                | 94 +++++++++++++++++++++++++
+ drivers/cxl/core/trace.h                | 92 ++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h                    | 69 +++++++++++++++++-
+ drivers/cxl/pci.c                       |  4 ++
+ tools/testing/cxl/test/mem.c            | 42 +++++++++++
+ 10 files changed, 543 insertions(+), 1 deletion(-)
 
 
-On 2/9/23 4:58 AM, Jonathan Cameron wrote:
-> On Mon, 06 Feb 2023 13:49:58 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> Add helper functions to parse the CDAT table and provide a callback to
->> parse the sub-table. Helpers are provided for DSMAS and DSLBIS sub-table
->> parsing. The code is patterned after the ACPI table parsing helpers.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/cxl/core/Makefile |    1
->>   drivers/cxl/core/cdat.c   |   98 +++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/cxl/core/cdat.h   |   15 +++++++
->>   drivers/cxl/cxl.h         |    9 ++++
->>   4 files changed, 123 insertions(+)
->>   create mode 100644 drivers/cxl/core/cdat.c
->>   create mode 100644 drivers/cxl/core/cdat.h
->>
->> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
->> index 79c7257f4107..438ce27faf77 100644
->> --- a/drivers/cxl/core/Makefile
->> +++ b/drivers/cxl/core/Makefile
->> @@ -10,4 +10,5 @@ cxl_core-y += memdev.o
->>   cxl_core-y += mbox.o
->>   cxl_core-y += pci.o
->>   cxl_core-y += hdm.o
->> +cxl_core-y += cdat.o
->>   cxl_core-$(CONFIG_CXL_REGION) += region.o
->> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->> new file mode 100644
->> index 000000000000..be09c8a690f5
->> --- /dev/null
->> +++ b/drivers/cxl/core/cdat.c
->> @@ -0,0 +1,98 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
->> +#include "cxl.h"
->> +#include "cdat.h"
->> +
->> +static u8 cdat_get_subtable_entry_type(struct cdat_subtable_entry *entry)
->> +{
->> +	return entry->hdr->type;
->> +}
-> 
-> Are these all worthwhile given the resulting function name is longer
-> than accessing it directly.  If aim is to move the details of the
-> struct cdat_subtable_entry away from being exposed at caller, then
-> fair enough, but if that is the plan I'd expect to see something about
-> that in the patch description.
-> 
-> Feels like some premature abstraction, but I don't feel particularly
-> strongly about this.
+base-commit: dbe9f7d1e155b97a42f7da81e22acc98fe0a9072
+-- 
+2.37.3
 
-I'll drop them. The code was adapted from ACPI table parsing code. But 
-we can simplify for our usages.
-> 
-> 
->> +
->> +static u16 cdat_get_subtable_entry_length(struct cdat_subtable_entry *entry)
->> +{
->> +	return entry->hdr->length;
->> +}
->> +
->> +static bool has_handler(struct cdat_subtable_proc *proc)
->> +{
->> +	return proc->handler;
->> +}
->> +
->> +static int call_handler(struct cdat_subtable_proc *proc,
->> +			struct cdat_subtable_entry *ent)
->> +{
->> +	if (proc->handler)
-> 
-> Use your wrapper...
-
-ok
-> 
->> +		return proc->handler(ent->hdr, proc->arg);
->> +	return -EINVAL;
->> +}
->> +
->> +static int cdat_table_parse_entries(enum acpi_cdat_type type,
->> +				    struct acpi_table_cdat *table_header,
->> +				    struct cdat_subtable_proc *proc,
->> +				    unsigned int max_entries)
-> 
-> Documentation needed.  max_entries wasn't what I was expecting.
-> I would have expected it to be a cap on number of entries of
-> matching type, whereas it seems to be number of entries of any type.
-> 
-> Also, max_entries == 0 non obvious parameter value.
-
-I'll drop max_entries. Code came from ACPI, but I don't think we need it.
-> 
-> 
->> +{
->> +	struct cdat_subtable_entry entry;
->> +	unsigned long table_end, entry_len;
->> +	int count = 0;
->> +	int rc;
->> +
->> +	if (!has_handler(proc))
->> +		return -EINVAL;
->> +
->> +	table_end = (unsigned long)table_header + table_header->length;
->> +
->> +	if (type >= ACPI_CDAT_TYPE_RESERVED)
->> +		return -EINVAL;
->> +
->> +	entry.type = type;
->> +	entry.hdr = (struct acpi_cdat_header *)((unsigned long)table_header +
->> +					       sizeof(*table_header));
-> 
-> Common idiom for this is.
-> 
-> 	entry.hdr = (struct acpi_cdat_header *)(table_header + 1);
->
-ok.
-
-
->> +
->> +	while ((unsigned long)entry.hdr < table_end) {
->> +		entry_len = cdat_get_subtable_entry_length(&entry);
->> +
->> +		if ((unsigned long)entry.hdr + entry_len > table_end)
->> +			return -EINVAL;
->> +
->> +		if (max_entries && count >= max_entries)
->> +			break;
->> +
->> +		if (entry_len == 0)
->> +			return -EINVAL;
->> +
->> +		if (cdat_get_subtable_entry_type(&entry) == type) {
-> 
-> This is a little odd as we set entry.type above == type, but
-> the match here is on the value in the one in entry.hdr.
-> 
-> That's not particularly intuitive. Not sure on what a good solution
-> would be though.  Maybe just
-> 
-> 		if (cdat_is_subtable_match(&entry))
-ok
-
-> 
->> +			rc = call_handler(proc, &entry);
->> +			if (rc)
->> +				return rc;
->> +		}
-> 
-> As above.  Maybe intent, but my initial assumption would have had
-> count not incremented unless there was a match. (so put it in this if block
-> not below)
-
-right ok.
-
-> 
->> +
->> +		entry.hdr = (struct acpi_cdat_header *)((unsigned long)entry.hdr + entry_len);
->> +		count++;
->> +	}
->> +
->> +	return count;
->> +}
->> +
->> +int cdat_table_parse_dsmas(void *table, cdat_tbl_entry_handler handler, void *arg)
->> +{
->> +	struct acpi_table_cdat *header = (struct acpi_table_cdat *)table;
-> 
-> Now struct acpi_table_cdata exists, maybe just move to using
-> that type for all references.  Will make a mess of the range checking
-> efforts the hardening folk are working on as we will index off end of
-> it and it doesn't have a variable length array trailing element.
-> 
-> Random musing follows...
-> We could add a variable length element to that struct
-> definition and the magic to associate that with the length parameter
-> and get range protection if relevant hardening is turned on.
-> 
-> Structure definition comes (I think) from scripts in acpica so
-> would need to push such changes into acpica and I'm not sure
-> they will be keen even though it would be good for the kernel
-> to have the protections.
-
-
-Lukas actually noticed that the ACPI data structs are unsuitable for 
-kernel usage because it doesn't designate the data as LE. He has created 
-local structs that has the correct data type. We can expand on top of 
-that for our usages.
-
-https://github.com/l1k/linux/commit/d376a53a45da2fff219799a02f216962123f9fd0
-
-I see what you are saying. But I'm not sure how easily we can do this 
-for the CDAT table due to endieness. Is this what you had in mind?
-
-From:
-struct cdat_entry_header {
-	u8 type;
-	u8 reserved;
-	__le16 length;
-} __packed;
-
-To:
-struct cdat_entry_header {
-	u8 type;
-	u8 reserved;
-	__le16 length;
-	DECLARE_BOUNDED_ARRAY(u8, body, le16_to_cpu(length));
-} __packed;
-
-> 
-> https://people.kernel.org/kees/bounded-flexible-arrays-in-c
-> for Kees Cook's blog on this stuff.  The last bit needs
-> the 'comming soon' part.
-> 
->> +	struct cdat_subtable_proc proc = {
->> +		.handler	= handler,
->> +		.arg		= arg,
->> +	};
->> +
->> +	return cdat_table_parse_entries(ACPI_CDAT_TYPE_DSMAS, header, &proc, 0);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cdat_table_parse_dsmas, CXL);
->> +
->> +int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler, void *arg)
->> +{
->> +	struct acpi_table_cdat *header = (struct acpi_table_cdat *)table;
->> +	struct cdat_subtable_proc proc = {
->> +		.handler	= handler,
->> +		.arg		= arg,
->> +	};
->> +
->> +	return cdat_table_parse_entries(ACPI_CDAT_TYPE_DSLBIS, header, &proc, 0);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cdat_table_parse_dslbis, CXL);
->> diff --git a/drivers/cxl/core/cdat.h b/drivers/cxl/core/cdat.h
->> new file mode 100644
->> index 000000000000..f690325e82a6
->> --- /dev/null
->> +++ b/drivers/cxl/core/cdat.h
->> @@ -0,0 +1,15 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/* Copyright(c) 2023 Intel Corporation. */
->> +#ifndef __CXL_CDAT_H__
->> +#define __CXL_CDAT_H__
->> +
->> +struct cdat_subtable_proc {
->> +	cdat_tbl_entry_handler handler;
->> +	void *arg;
->> +};
->> +
->> +struct cdat_subtable_entry {
->> +	struct acpi_cdat_header *hdr;
->> +	enum acpi_cdat_type type;
->> +};
->> +#endif
->> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
->> index f558bbfc0332..839a121c1997 100644
->> --- a/drivers/cxl/cxl.h
->> +++ b/drivers/cxl/cxl.h
->> @@ -9,6 +9,7 @@
->>   #include <linux/bitops.h>
->>   #include <linux/log2.h>
->>   #include <linux/io.h>
->> +#include <linux/acpi.h>
->>   
->>   /**
->>    * DOC: cxl objects
->> @@ -697,6 +698,14 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
->>   }
->>   #endif
->>   
->> +typedef int (*cdat_tbl_entry_handler)(struct acpi_cdat_header *header, void *arg);
->> +
->> +u8 cdat_table_checksum(u8 *buffer, u32 length);
->> +int cdat_table_parse_dsmas(void *table, cdat_tbl_entry_handler handler,
->> +			   void *arg);
->> +int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
->> +			    void *arg);
->> +
->>   /*
->>    * Unit test builds overrides this to __weak, find the 'strong' version
->>    * of these symbols in tools/testing/cxl/.
->>
->>
-> 
