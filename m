@@ -2,239 +2,193 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF978C05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 17:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099C7C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 17:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232572AbjBJREz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 12:04:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
+        id S232902AbjBJR25 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 12:28:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232951AbjBJREr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 12:04:47 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2511E70715;
-        Fri, 10 Feb 2023 09:04:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676048686; x=1707584686;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7zt+UtiRh4ehGAW6ociAQLf9mRyEgEGRu/VYdIgZBkU=;
-  b=IpHiNMTj+fPpP9fg/egqZ248lAUdntSVT6veOs5yvsgeDXxMbYiI/L+1
-   Pkn9QQOcZk0lV/i/cvg5OOvOOe0azgPKW9gvk6sEBK5kgnKExibMnrJpT
-   eVRQmrM6RxuWU5lT/sxfRxfNpkX/GGLj2ateSRMxVH199hr+Akv9Cq03t
-   ufuouLME4bo3KPg0Xs5VJYbXamaizzUMxc7QS2lSQ2SX5I6fAx9mVeYg6
-   ylB2mtmdwicqnpcIizirRELveFo9uGIpBsYHBZC2FJo/yuYvxLo6ad6EG
-   o4UPnntuxeaqZ50aUBQLYGiV5l+eo2LqojMG4NzCF5uleA51ksXytGujJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="416693494"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="416693494"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 09:04:06 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="617943038"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="617943038"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.213.190.133])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 09:04:05 -0800
-Subject: [PATCH v6] cxl: add RAS status unmasking for CXL
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, bhelgaas@google.com,
-        Jonathan.Cameron@Huawei.com
-Date:   Fri, 10 Feb 2023 10:04:03 -0700
-Message-ID: <167604864163.2392965.5102660329807283871.stgit@djiang5-mobl3.local>
-User-Agent: StGit/1.5
+        with ESMTP id S232800AbjBJR24 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 12:28:56 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB01C7358F;
+        Fri, 10 Feb 2023 09:28:54 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PD0w72WBwz67Qtq;
+        Sat, 11 Feb 2023 01:24:23 +0800 (CST)
+Received: from localhost (10.81.210.211) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 10 Feb
+ 2023 17:28:51 +0000
+Date:   Fri, 10 Feb 2023 17:28:50 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
+        <dave.hansen@linux.intel.com>, <linux-mm@kvack.org>,
+        <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v2 01/20] cxl/memdev: Fix endpoint port removal
+Message-ID: <20230210172850.00001d5b@Huawei.com>
+In-Reply-To: <167601992789.1924368.8083994227892600608.stgit@dwillia2-xfh.jf.intel.com>
+References: <167601992097.1924368.18291887895351917895.stgit@dwillia2-xfh.jf.intel.com>
+        <167601992789.1924368.8083994227892600608.stgit@dwillia2-xfh.jf.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.81.210.211]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-By default the CXL RAS mask registers bits are defaulted to 1's and
-suppress all error reporting. If the kernel has negotiated ownership
-of error handling for CXL then unmask the mask registers by writing 0s.
+On Fri, 10 Feb 2023 01:05:27 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-PCI_EXP_AER_FLAGS moved to linux/pci.h header to expose to driver. It
-allows exposure of system enabled PCI error flags for the driver to decide
-which error bits to toggle. Bjorn suggested that the error enabling should
-be controlled from the system policy rather than a driver level choice[1].
+> Testing of ram region support [1], stimulates a long standing bug in
+> cxl_detach_ep() where some cxl_ep_remove() cleanup is skipped due to
+> inability to walk ports after dports have been unregistered. That
+> results in a failure to re-register a memdev after the port is
+> re-enabled leading to a crash like the following:
+> 
+>     cxl_port_setup_targets: cxl region4: cxl_host_bridge.0:port4 iw: 1 ig: 256
+>     general protection fault, ...
+>     [..]
+>     RIP: 0010:cxl_region_setup_targets+0x897/0x9e0 [cxl_core]
+>     dev_name at include/linux/device.h:700
+>     (inlined by) cxl_port_setup_targets at drivers/cxl/core/region.c:1155
+>     (inlined by) cxl_region_setup_targets at drivers/cxl/core/region.c:1249
+>     [..]
+>     Call Trace:
+>      <TASK>
+>      attach_target+0x39a/0x760 [cxl_core]
+>      ? __mutex_unlock_slowpath+0x3a/0x290
+>      cxl_add_to_region+0xb8/0x340 [cxl_core]
+>      ? lockdep_hardirqs_on+0x7d/0x100
+>      discover_region+0x4b/0x80 [cxl_port]
+>      ? __pfx_discover_region+0x10/0x10 [cxl_port]
+>      device_for_each_child+0x58/0x90
+>      cxl_port_probe+0x10e/0x130 [cxl_port]
+>      cxl_bus_probe+0x17/0x50 [cxl_core]
+> 
+> Change the port ancestry walk to be by depth rather than by dport. This
+> ensures that even if a port has unregistered its dports a deferred
+> memdev cleanup will still be able to cleanup the memdev's interest in
+> that port.
+> 
+> The parent_port->dev.driver check is only needed for determining if the
+> bottom up removal beat the top-down removal, but cxl_ep_remove() can
+> always proceed.
 
-CXL RAS CE and UE masks are checked against PCI_EXP_AER_FLAGS before
-unmasking.
+Why can cxl_ep_remove() always proceed?  What stops it racing?
+Is it that we are holding a reference to the port at the time of the
+call so the release callback can't be called until we drop that?
+Anyhow, good to have a little more detail on the 'why' in the patch
+description (particularly for those reading this when half asleep like me ;)
 
-[1]: https://lore.kernel.org/linux-cxl/20230210122952.00006999@Huawei.com/T/#me8c7f39d43029c64ccff5c950b78a2cee8e885af
+> 
+> Fixes: 2703c16c75ae ("cxl/core/port: Add switch port enumeration")
+> Link: http://lore.kernel.org/r/167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com [1]
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/memdev.c |    1 +
+>  drivers/cxl/core/port.c   |   58 +++++++++++++++++++++++++--------------------
+>  drivers/cxl/cxlmem.h      |    2 ++
+>  3 files changed, 35 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index a74a93310d26..3a8bc2b06047 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -246,6 +246,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  	if (rc < 0)
+>  		goto err;
+>  	cxlmd->id = rc;
+> +	cxlmd->depth = -1;
+>  
+>  	dev = &cxlmd->dev;
+>  	device_initialize(dev);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 410c036c09fa..317bcf4dbd9d 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1207,6 +1207,7 @@ int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint)
+>  
+>  	get_device(&endpoint->dev);
+>  	dev_set_drvdata(dev, endpoint);
+> +	cxlmd->depth = endpoint->depth;
+>  	return devm_add_action_or_reset(dev, delete_endpoint, cxlmd);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_endpoint_autoremove, CXL);
+> @@ -1241,50 +1242,55 @@ static void reap_dports(struct cxl_port *port)
+>  	}
+>  }
+>  
+> +struct detach_ctx {
+> +	struct cxl_memdev *cxlmd;
+> +	int depth;
+> +};
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
----
-
-Based on patch posted by Ira [1] to export CXL native error reporting control.
-
-[1]: https://lore.kernel.org/linux-cxl/20221212070627.1372402-2-ira.weiny@intel.com/
-
-v6:
-- Call cxl_pci_ras_unmask() based on return of pci_enable_pcie_error_reporting()
-- Check PCI_EXP_DEVCTL for UE and CE bit before unmasking the respective error reporting.
-
-v5:
-- Add single debug out to show mask changing. (Dan)
-
-v4:
-- Fix masking of RAS register. (Jonathan)
-
-v3:
-- Remove flex bus port status check. (Jonathan)
-- Only unmask known mask bits. (Jonathan)
-
-v2:
-- Add definition of PCI_EXP_LNKSTA2_FLIT. (Dan)
-- Return error for cxl_pci_ras_unmask(). (Dan)
-- Add dev_dbg() for register bits to be cleared. (Dan)
-- Check Flex Port DVSEC status. (Dan)
----
- drivers/cxl/cxl.h             |    1 +
- drivers/cxl/pci.c             |   66 +++++++++++++++++++++++++++++++++++++++--
- drivers/pci/pcie/aer.c        |    3 --
- include/linux/pci.h           |    2 +
- include/uapi/linux/pci_regs.h |    1 +
- 5 files changed, 66 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b3964149c77b..d640fe61b893 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -130,6 +130,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
- #define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
- #define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define   CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK BIT(8)
- #define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
- #define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
- #define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 4cf9a2191602..4bb41cf581df 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -642,6 +642,59 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
- 	return 0;
- }
- 
-+/*
-+ * CXL v3.0 6.2.3 Table 6-4
-+ * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
-+ * mode, otherwise it's 68B flits mode.
-+ */
-+static bool cxl_pci_flit_256(struct pci_dev *pdev)
-+{
-+	u32 lnksta2;
-+
-+	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-+	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
-+}
-+
-+static int cxl_pci_ras_unmask(struct pci_dev *pdev)
-+{
-+	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	void __iomem *addr;
-+	u32 orig_val, val, mask;
-+
-+	if (!cxlds->regs.ras)
-+		return -ENODEV;
-+
-+	/* BIOS has CXL error control */
-+	if (!host_bridge->native_cxl_error)
-+		return -EOPNOTSUPP;
-+
-+	if (PCI_EXP_AER_FLAGS & PCI_EXP_DEVCTL_URRE) {
-+		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
-+		orig_val = readl(addr);
-+
-+		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
-+		if (!cxl_pci_flit_256(pdev))
-+			mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
-+		val = orig_val & ~mask;
-+		writel(val, addr);
-+		dev_dbg(&pdev->dev,
-+			"Uncorrectable RAS Errors Mask: %#x -> %#x\n",
-+			orig_val, val);
-+	}
-+
-+	if (PCI_EXP_AER_FLAGS & PCI_EXP_DEVCTL_CERE) {
-+		addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
-+		orig_val = readl(addr);
-+		val = orig_val & ~CXL_RAS_CORRECTABLE_MASK_MASK;
-+		writel(val, addr);
-+		dev_dbg(&pdev->dev, "Correctable RAS Errors Mask: %#x -> %#x\n",
-+			orig_val, val);
-+	}
-+
-+	return 0;
-+}
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -734,10 +787,15 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return rc;
- 
- 	if (cxlds->regs.ras) {
--		pci_enable_pcie_error_reporting(pdev);
--		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
--		if (rc)
--			return rc;
-+		rc = pci_enable_pcie_error_reporting(pdev);
-+		if (!rc) {
-+			cxl_pci_ras_unmask(pdev);
-+			rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
-+			if (rc)
-+				return rc;
-+		} else {
-+			dev_warn(&pdev->dev, "Failed to enable PCIE AER.\n");
-+		}
- 	}
- 	pci_save_state(pdev);
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 625f7b2cafe4..21af538ee4a0 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -214,9 +214,6 @@ void pcie_ecrc_get_policy(char *str)
- }
- #endif	/* CONFIG_PCIE_ECRC */
- 
--#define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
--				 PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE)
--
- int pcie_aer_is_native(struct pci_dev *dev)
- {
- 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 22319ea71ab0..508eb3659762 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2545,4 +2545,6 @@ void pci_ims_free_irq(struct pci_dev *pdev, struct msi_map map);
- 	WARN_ONCE(condition, "%s %s: " fmt, \
- 		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
- 
-+#define	PCI_EXP_AER_FLAGS	(PCI_EXP_DEVCTL_CERE | PCI_EXP_DEVCTL_NFERE | \
-+				 PCI_EXP_DEVCTL_FERE | PCI_EXP_DEVCTL_URRE)
- #endif /* LINUX_PCI_H */
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 85ab1278811e..f19e5ccf5cc1 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -693,6 +693,7 @@
- #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
- #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
- #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
-+#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
- #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	0x32	/* end of v2 EPs w/ link */
- #define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
- #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
+>  static void cxl_detach_ep(void *data)
+>  {
+>  	struct cxl_memdev *cxlmd = data;
+> -	struct device *iter;
+>  
+> -	for (iter = &cxlmd->dev; iter; iter = grandparent(iter)) {
+> -		struct device *dport_dev = grandparent(iter);
+> +	for (int i = cxlmd->depth - 1; i >= 1; i--) {
+>  		struct cxl_port *port, *parent_port;
+> +		struct detach_ctx ctx = {
+> +			.cxlmd = cxlmd,
+> +			.depth = i,
+> +		};
+> +		struct device *dev;
+>  		struct cxl_ep *ep;
+>  		bool died = false;
+>  
+> -		if (!dport_dev)
+> -			break;
+> -
+> -		port = find_cxl_port(dport_dev, NULL);
+> -		if (!port)
+> -			continue;
+> -
+> -		if (is_cxl_root(port)) {
+> -			put_device(&port->dev);
+> +		dev = bus_find_device(&cxl_bus_type, NULL, &ctx,
+> +				      port_has_memdev);
+> +		if (!dev)
+>  			continue;
+> -		}
+> +		port = to_cxl_port(dev);
+>  
+>  		parent_port = to_cxl_port(port->dev.parent);
+>  		device_lock(&parent_port->dev);
+> -		if (!parent_port->dev.driver) {
+> -			/*
+> -			 * The bottom-up race to delete the port lost to a
+> -			 * top-down port disable, give up here, because the
+> -			 * parent_port ->remove() will have cleaned up all
+> -			 * descendants.
+> -			 */
+> -			device_unlock(&parent_port->dev);
+> -			put_device(&port->dev);
+> -			continue;
+> -		}
+> -
+>  		device_lock(&port->dev);
+>  		ep = cxl_ep_load(port, cxlmd);
+>  		dev_dbg(&cxlmd->dev, "disconnect %s from %s\n",
+>  			ep ? dev_name(ep->ep) : "", dev_name(&port->dev));
+>  		cxl_ep_remove(port, ep);
+>  		if (ep && !port->dead && xa_empty(&port->endpoints) &&
+> -		    !is_cxl_root(parent_port)) {
+> +		    !is_cxl_root(parent_port) && parent_port->dev.driver) {
+>  			/*
+>  			 * This was the last ep attached to a dynamically
+>  			 * enumerated port. Block new cxl_add_ep() and garbage
 
 
