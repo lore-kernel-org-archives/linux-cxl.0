@@ -2,185 +2,298 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C20C05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 07:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C6C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 08:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbjBJHH4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 02:07:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
+        id S230525AbjBJIMg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 03:12:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230285AbjBJHHz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 02:07:55 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8243E5ACDC;
-        Thu,  9 Feb 2023 23:07:54 -0800 (PST)
+        with ESMTP id S231645AbjBJIMc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 03:12:32 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7275623651
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 00:12:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676012874; x=1707548874;
+  t=1676016730; x=1707552730;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=LDlWIKKarkY7YP+D3Vaa9zbQoIUnA6u6nY8W46pEhU8=;
-  b=ji8x1gUwIS/4ya4cQHpZAOEiK/zNIV29Ck58E/WVIPbesbQa4gpSDkfV
-   8MVTpmMhlUnghX+YbpvfHw/wBNZze4ATAbQUy+pf5gywcBjaDNRHz3sbY
-   jnQElf+jq7+3x2b3efHgvm4LR1foQ1MvFsaz4O9WVXO8CAWCUK1qh9U7X
-   ElKNmxrOmIVh9en4dzwa1V3ZWwU/2GQXcGlYw+7nAIqxF05yT2AOOf3tn
-   YE6p7ZhUAtL8zyazg3gcXudGbZ+hSUdwIGMUgcIxXscvoINaYDtcuRBCT
-   8SQqKGRAvD3DdrRbyPfmI+9IX0uX60CvRTws4NiuI4X9txeljTwF48QMm
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="392755821"
+  bh=96x+qQjuSTNdLTGfAIcWuqlCBr2zCkW4CU8HwAQCAW4=;
+  b=dM5vHlmZq6N9NkZSDQ8CxlQYjR480bbB2goAu3gYy8Z+Fy5pDcpwNvLl
+   fO4ZkxJYWHivunUXBXvCxBOWsami498jUE+AWGwc6xb8iApXzX7YJs7gI
+   ZX6H1xP1MXCJ7Bx+IB1CCnStFxAXMIWFypg1U4sGHiln39FzjUwMIOdq2
+   J0D257v8oPZyKNHyUXwpHI5xFPwBp2u0VGek5rH4RkdG7TAGljqq8z0/N
+   pLpnIKIe008XtdwYjWTDxGqxeqaWFUQUJ5g5QIaoKtskgfdS6OcBm3rKw
+   r6qMLEGnbViA2drnJ1dVo2lP0biZdZ/t5GX6DWac2qGQW0vw5JDnebrAM
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="309997470"
 X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="392755821"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 23:07:43 -0800
+   d="scan'208";a="309997470"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 00:08:03 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="669904776"
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="791883589"
 X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="669904776"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Feb 2023 23:07:43 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="791883589"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga004.jf.intel.com with ESMTP; 10 Feb 2023 00:07:55 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 9 Feb 2023 23:07:42 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ 15.1.2507.16; Fri, 10 Feb 2023 00:07:54 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 9 Feb 2023 23:07:42 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Thu, 9 Feb 2023 23:07:42 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.16 via Frontend Transport; Fri, 10 Feb 2023 00:07:54 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Thu, 9 Feb 2023 23:07:41 -0800
+ 15.1.2507.16; Fri, 10 Feb 2023 00:07:54 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dF8O0ixBIW9E1fUAYVlvc/xOZWor5X7t8ZyrdylCOLNVbOFFOJQG0al+En6QpZBeuldb1DXELxb2V9Dxz1S1mEoYvs4dVPny8dvaTg3P9dPMyqBw8dxXeQmWAUsyb4eoSHgJRivw3C174kwocVbIy+Qp0O//b7Th46sIZoerzPKZdUdbLKPTnIpAm3SIYlwIB+i44cVx0qy0KYe+rT65pgK+3+L5Za7yIA+3L0nYDMzHVSLuGYa68Mw8iDoPDRnSjizuYz6qVHW1Sc29JsKY6jqEm+PEvC3Zt/3ShWcXT8WzssSMVriPDL/RJIHt32Qz101gCSSt4A4gwsx8iZImvA==
+ b=JEWrkyIPCJQkB6wZoN8VySl4xkNsJ+t78ogfrmRYSkRRXKXaTB2KwtrksjvPnBH3MD+f0jwAR+VJWu9QHPTETVgqsJGW41yEkxz4HHkChy+H6euEVT1hyDp2ZDY+D8yrb3/u8IjUCLrbZmsW3Q/1QH1RDz0JOvr7LRSqh+oiIHvWrH7oDVXQHEy4fNVeHRZV84pMUcr0CD6eFUnjTmJzQH7bHeaKfbhSLpI7cU1kOyXt1usObfz0SpY5uR4qpC5izsI/kspS3Vw4vdoWw3Zr2LCXIm+e5Q6TaYX59xgShkCAKDcf5bhKexlaONcu6z1FZyLRgcD/ILi5DkbhKTfrAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OXesrd7mbquBq0uM9rxc5RtqY1qO9Rfc6QpEHY8hibA=;
- b=MkX02X1p1nzAIqTzcPEbI42ysFpn1K80yHTTB4fgn5lwmQOqHo7tFKyo/sixaho/GFuBQwEKAqsQF9Ij9DnZ5o9PbO0zUCQX1qdv6Iuud//JQ2Mo6P8lFg+aBzTsV54cnF61MG6Cv9yEW2Wa8OsqClkl0Skb/nnLtKHDwif+C1qBOv7YLaQ0xUiEIHREmiANSaKfGvhMv8v5sazdUnD4bjIlu45paXAM3JD6oKIxtRwVQDr0ocwynt1bbd1NiML4y9abO96r4yJzeNbDFE71kipLxLYOmqI15Xv2jG+F+x8JTdnTGj6Ee3chW/QXQWj70xO5f/JlVo/I4T5IJQFrTg==
+ bh=0eW5m3OJVYqB7bPHG2FY1EOkMgM+jz19ZKkAgyGrgDI=;
+ b=KSGPln7he0iiswV4HtxZ/mE2U9PRZDOytlEq7vI6gERZeW94vQTY3N/U8x9wBkh62PofBm/qZLC3iHixsQBPCtpFsqo/NnG4toQ8Giqj4pMywdpKFNTgmEjLQZy7F7UcM25rF7iUIu6TwNCScvc4fkoX/ienEsBPyyiuKfq1l92iPKgHQS2So0IuyzTkwY6H8ikzZncG4Ona0W1FrkP2UFeC+bg0znOilhZEhMgASV5J6msLrIBuAeBcn6SakITbW0rtnKOHVP7kdQM/Oh1EGYIXxShSAzX8ZvdklAq8SEUL0qW3VBnEMhsZrpMesAx2xFpeCYtGDuYo03SbWpti/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by MN0PR11MB6134.namprd11.prod.outlook.com (2603:10b6:208:3ca::5) with
+ by PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.21; Fri, 10 Feb
- 2023 07:07:40 +0000
+ 2023 08:07:51 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6%9]) with mapi id 15.20.6086.019; Fri, 10 Feb 2023
- 07:07:40 +0000
-Date:   Thu, 9 Feb 2023 23:07:36 -0800
+ 08:07:51 +0000
+Date:   Fri, 10 Feb 2023 00:07:47 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH 0/2] cxl: Enhance trace point information
-Message-ID: <63e5ed38d77d9_138fbc2947a@iweiny-mobl.notmuch>
-References: <20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, Stefan Roese <sr@denx.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v5] cxl: add RAS status unmasking for CXL
+Message-ID: <63e5fb533f304_13244829412@iweiny-mobl.notmuch>
+References: <20230105163127.00005ae2@huawei.com>
+ <20230105165406.GA1150163@bhelgaas>
+ <20230106112605.00006cf6@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com>
-X-ClientProxiedBy: BY3PR05CA0017.namprd05.prod.outlook.com
- (2603:10b6:a03:254::22) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <20230106112605.00006cf6@Huawei.com>
+X-ClientProxiedBy: BYAPR03CA0011.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::24) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MN0PR11MB6134:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11c9160d-4d34-43df-1148-08db0b357f00
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH7PR11MB7605:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a4198b0-85da-42b9-654b-08db0b3de79b
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sOIw92M1KOLZnS9uWG80eXaBP3aX5Wt5N+lE5pw2Kb+Zc38z4NHNlu8rOSV/WZYlcC5BFz2cJ482KYiy+ecwixzdIyJDx7zf98XlGm57RtxKuhiehVBIs+zheQdYal3DtVmraZrqnjuqqV6+ejoq9yNEU5NCBuZROOlunXoh9SVpHXH4Tloi+0/AtnZDgLV6Qq6tMoDTu1J8D7k3WLMA1VQE0lATizQrcteb57u5lSAoXQVG1atli6KOEC+0ag9grGA5zmGJD1wMEjIbWbOXsgwq1ZESmbuiZS8coyLJnfyzkkJHWKUfGExKwK6fa7Le6u+jttXKtqGQ/nZWKyfavSZnzif1RhNkmyM+hb3VUZUQBgdb5vXniBpvbhJqSiUKlctDT7geCwGNIeV4QQ2mo0PRony8kD4tc8AVP3l0PCI6v0H589WvO5Jw2em/Aa15m2DyextOjdCzeuXtshZj1q8hQKkb9upbnA3gZIelhpzLnmtwmC1IUp2itmpJvhyqghiFLoFveSHMyAQdtCWpONIWTrmwot9GWoBj3ml+1Go4gN2hyrkW5VFb5aln2B6nBMwOh28HQ50oY1fX9DlX+G9V3keVNc5CDaaM0S9QX+BKsy1mvJ+hvesvL3WijJKkGrCkPZ2kR9gSG3ydFovQ9Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(366004)(136003)(39860400002)(396003)(346002)(451199018)(86362001)(82960400001)(54906003)(6636002)(316002)(8676002)(4326008)(66476007)(66556008)(66946007)(110136005)(478600001)(6486002)(2906002)(8936002)(41300700001)(44832011)(4744005)(5660300002)(83380400001)(38100700002)(6512007)(186003)(26005)(9686003)(6666004)(107886003)(6506007);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: SQD1tsZasbISgwsdF3Qr7ysGsEqPPIaiTgpr68JpvkygQs3YbPc3XNgrz6Kra+dwwVRvef5mME4yl6rU+Z717V66lTlUBhuGz3vBLdtzhKx/pTRTmASSwI9D4n1hyykNHyyhfA/4ccik9sTj6QMkNYn0vSz7KRLmyq474DXiAlbBUaW9rNnPzDlIbtAgtD8j1/k9oHcMlgjEzRSk9LaWBC1HzWWSa3wjLTbaRHt/WOS4hOY3gUlwtdOewjHJn0oERTrjHDlS2xQZc41CY16ERUp5E3SHsIT46uTRf1XT0mVts7hvui8gGitUGKocZ7UgiRfwXZ03p6V0sgyZraU2mLp2cbjCG2jSpTQjWEykRUs7HEGVXybAMZTeCNpVmSzu65gQBKtuWMTtIWtsWc8QuTwDqdvf8Tj4SND4xEBWvA7or1fFeyiYmkn+JvybQi3muoE9TfBPzj07CIjKR7zdRXkdqpLqcXd0uiIacFst0Qqav6M0bPGY72zGEyR2n2ohE7X+/d1z7SZmAMWAHnLEWToL5TH51DGu8wXd5VAEcHD4YAjgenHb3vrtQbKJILF5BiFAN1pnZL82Z4G9ciFPMak2CuDduGvKzyeL1dWCQUHiZS6IqF3ZRy2YeJQGp/wlc+ouz8xByqfPWHCV4/PE/eYb7WkFgb3OMy6QxTl/EutlfcsbzOuI7Ng0ORmFFImo
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(346002)(136003)(39860400002)(376002)(366004)(451199018)(82960400001)(38100700002)(83380400001)(86362001)(4326008)(2906002)(66556008)(66476007)(8676002)(66946007)(8936002)(44832011)(41300700001)(5660300002)(6506007)(6666004)(186003)(26005)(9686003)(6512007)(54906003)(316002)(110136005)(478600001)(966005)(6486002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wfsUpyM16ijg7SH2xIb6kXgmaC4oFMWGgr1cCF/axOhQPBPaTrP0HWaN/HFt?=
- =?us-ascii?Q?EWO741NJ6h1xNIN9PWIhXFUpveZz5rl70nvJXeONzV5bcxl8uhXLVVFu9PUh?=
- =?us-ascii?Q?PxlUoa+cgCei2DhbODsPv+v78P25bsL/dZGaQD3gwsIJeaWXRd4pXCVy/foo?=
- =?us-ascii?Q?ArL/EDn7EV66qLE8RC0AqHd81wNRcwL//BaHzET1iWEi9+F014WHUOBfHZs+?=
- =?us-ascii?Q?Ylpac1XFTOB2SEKqSLuHW3wwHRe9ILujK6ALeFx02AJ4fnpeLwgjE6FF1tWP?=
- =?us-ascii?Q?pPHvrdhdZDE9OOU1R07XxLA30RTLz450k+x983SZRnq/e2iuBmtVvygxD4EW?=
- =?us-ascii?Q?n7+RzNnNlZmGPz0qpYwLgCFbDqnvDPrLN40Wi404j+v9xf8HO05Xz8EiD7Oo?=
- =?us-ascii?Q?VOvNElWjBVTO0BRs+GSvRtxaH7GjmEFRw6U8qGGekB35AQgj2N8DzJdvmYjR?=
- =?us-ascii?Q?QbHJwVx2H1roWQ6nrYNhF0JPugGQjjg4vl8kBH/HAKkRlUKxB1Da8O9IVgs+?=
- =?us-ascii?Q?f4adJgIZtJAXvb5Sz+R7ZYlFI/xDTF0ERE7Z7xoXdixDt2OTdHX2RxixkdnP?=
- =?us-ascii?Q?a91dcfE/m18H0pOJMR10ZzKAlvcLvx7Q50243zidq8SxfpNWAEhsZx4Fo52Z?=
- =?us-ascii?Q?EiVm4Rc3s/DLmmbSzhccG+7XqFnCU8xac7AXC55y47h/8MFwmbI/J36QkK7B?=
- =?us-ascii?Q?88ogYa4YOjofVNikOowapAVBs4tSmN2qKa8drx0E8+56EzKJEltv5z/uWCg8?=
- =?us-ascii?Q?KxfDyB/taUPz1rseaW7kzAzayMe4xx5Rkuh9eTv0g0lqAcmlly+ZkzpM2RCy?=
- =?us-ascii?Q?uVnSuCfN8vzbWmxzp4L1pZPYkuv4voG2TnU9CXJlqaNkkkNntKWqA3bekKkD?=
- =?us-ascii?Q?5sAMJz3fH1v89csyd7NAPu+Jqpo+xFlptGAMX8Alq+pNSy87EIXvDTdWbUSP?=
- =?us-ascii?Q?5WOjPmjt2sWrN3roR+IojN8rgnocEDjoTFwGAi0c3fbtVp7T4udmTTaswliH?=
- =?us-ascii?Q?mY9znhnc+KvkLkxw1dqaBp4bgz4Gx8mRonMIxnPQ3rYXbcHSSqSsjLSbcjBA?=
- =?us-ascii?Q?d6NA91NVOlq6Wavh5AdAIvPI/JIi+jOyf1FPvpqgkS5Dqv6WYHGvCXRdcJ45?=
- =?us-ascii?Q?1DxiHrGpH1tZTPXK0elxM1cowbs4Ow0hgwFlJ4pskV9uwqz0aZYOyhCvyOu8?=
- =?us-ascii?Q?cKFlRHlHEcsMMOD3EkQHNtgEOGeuO+yPMAowY6drxgRf5ToPm22wWAhv8nu8?=
- =?us-ascii?Q?ihLVCXF3fYf8pGVO6KL3QBTxh6+e6TqUnblNSUMLb99jYjxYdyt8ok7UsCbh?=
- =?us-ascii?Q?MLziH647C2csPLTDiDMwfYYUrvhH5l5SVZShBqQDwexWwmyLCAyfI/nEVMQh?=
- =?us-ascii?Q?Zz96OvlvflzqWFDJoMen7JeB2SmlQh+xFZLSYn50A3H8pWUWE99MXFYlsZse?=
- =?us-ascii?Q?P9gv3UsQM1cOz8sSnzAc20KgbErWePJKtt1Avfet4w4NiZ6AcJ+UUDz3PYYF?=
- =?us-ascii?Q?LrACokGHqwrtBjR51Vk3Z2eqAT6elU458MBAYzQh22kH1Y3rpgwOL0VUHN34?=
- =?us-ascii?Q?D+sanNOONTw45oRDe5ifsgn+JykQT9Rj4wQxLt7J?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11c9160d-4d34-43df-1148-08db0b357f00
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3KHPs9KG3ihMjojeXfdnLhadAkQeiSdjG+MYOC7ntYRbEOd6rTNF9psgvKXW?=
+ =?us-ascii?Q?GmXvHIW/v3OAwxDkUbxxs34Y8pJnxNu+tRvQuPmcwWmOzvx8PjDfKI7UWPGe?=
+ =?us-ascii?Q?EUg97U0xaR8xN0dIGhlALfUD3REJjBwG9pGla8XtVg9KF7yjy+E5mveC1/gj?=
+ =?us-ascii?Q?FCl73UUwiC2rowKCtcfUQYIMKNpgfAiG5yRev7R1Fc1c3ePLw8JsRS+pepaA?=
+ =?us-ascii?Q?aeRBK1g+F7Ik1EEKefqWdUC/xZm7v+tLzZZppB9VsdYjpqfYFVgE7vPEp4pO?=
+ =?us-ascii?Q?UPlDX06CMfDK8fnOplyQqGdz+xdUYsqFxqlu4AYGXBE38iPc6KFvDxPhBAX/?=
+ =?us-ascii?Q?o8jEPQvutR0DjBxOrlNhjLbJlSb19VsrOgQ8JbDwjMeVmQu9uB0cWvuYl9nt?=
+ =?us-ascii?Q?SMAZ8z0DuU/P/uzoY2U6JuDjfUcRbLBiOWmapt3ouGO1Db0hFuICKA1W4pVC?=
+ =?us-ascii?Q?Nttcny5DCKjhAnFp2n1MvoSpXJQZlt+gE4fqyhs3mUw1pJVrlOtmzO/DO/yJ?=
+ =?us-ascii?Q?9v32cbGvMOdZ3kKzC/mP9L2iZoNK/NXCYX9p9tMB4o589I6mYYaGZt47MGS/?=
+ =?us-ascii?Q?bzCgoKVoh3tSPaDb/74a8mw4EZxxjHPXUviaaKhsI1u8DLQxHvPfJBA0jAlV?=
+ =?us-ascii?Q?3HWyl/MiCHIoihRImcnV+I3YF8rLcDvtT81cxQG+T4AYPQ9UbMtPUebQxQ5n?=
+ =?us-ascii?Q?/0f9EwvMNuJE5HOSsqtfeB0onjGR0OP2mH39ePRctyi419p3AsAOxZcmlLbP?=
+ =?us-ascii?Q?QTrbIXhwBUVUflFJc6/qqQjFcNGu6dONheplTXy+NAoYeiiD7Yckxc8yQ9r9?=
+ =?us-ascii?Q?t4c3MLQJ/drSNIIg2qrHnUmskVUTe6FATOZVxnZP7m+2Ez3tJ87CkGQNP1PC?=
+ =?us-ascii?Q?988oaR4aeLl4fLqUvx+hU19So6AoQneb2ViTN1GRMZ81Xd5+ow9mQFuYM/Mi?=
+ =?us-ascii?Q?iyTMG6cubSFECy+RWtSRdKUb9CUZSmcxGlqXSnKgW+EzpezwgQlpENnBsoTS?=
+ =?us-ascii?Q?mFQ5h66jza+2DsDOS5lVsQSTmJ6mih97cdbX0C2xbBF5ndZlmaUUPvWHN2EQ?=
+ =?us-ascii?Q?pGaMBTX9LUAEuFARpZDRksPPE26d9AEa6GhVWk6dZ5Vs/+G3E1FmKCGUSMZu?=
+ =?us-ascii?Q?Oqg8QNf2E11oLEokjotT26O2HR+Z2nIZU6ItHa9z9ymUcsPp/fxHmewS2eKQ?=
+ =?us-ascii?Q?eNIH+gWGsDhyD7jTN9aPOrr9ml1UIrobev7BBUG9cmCYpePeq/VwZMyRQ9O5?=
+ =?us-ascii?Q?Rw1sQ4R+a9yz9NY9zy4BQq1x7zHbLvTl8x6wPwygWysUeCziVIPWMwb4/9O+?=
+ =?us-ascii?Q?p7cbTcbRt4AE1XdlqOamSgqyjySJeTNSAeBK7uaYSPgWWxwjRBCrxiCTmEJ5?=
+ =?us-ascii?Q?U7SThg3ep+qYkqlWypLRvgUnSGoYwE3UsB1EWwvaPzBAbSUbc9NtvLbYMwtF?=
+ =?us-ascii?Q?GepqYSAJm62x6yxMmoGdkICd09Q6hENv1TwaAFbcqMhyaxdwO/OsInzzdhrl?=
+ =?us-ascii?Q?/d3ntt+lXt6ImTtz1xg2BB1NyGsWu71S/PL45xuXPtAWhiNTIfpU2zLtines?=
+ =?us-ascii?Q?BfySUzDRg4/1m4cdZRl8bTNXVIsGe/qEEXMSlXjQ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a4198b0-85da-42b9-654b-08db0b3de79b
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 07:07:39.8220
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 08:07:51.2031
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FoxH2UaiY1zgJTpjDgXnvWcXvnkJD815BcxVmO3xfWzDZPocZOAw56uk54hf+ekj7hYvOJj6x1/0448eaJD7SQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6134
+X-MS-Exchange-CrossTenant-UserPrincipalName: kf+NKaIY4Da1NuUMojziQxWvPusTragb5+RFeloRX5+HmmaeHjYUkvrxzzcT5mMhivKoWwt2hjmAMe9AYOyVhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7605
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ira Weiny wrote:
-> Trace point definitions are reporting different linux devices for
-> the same CXL hardware device.  Clean this up and add parent device
-> information to all the trace points.
+Jonathan Cameron wrote:
+> On Thu, 5 Jan 2023 10:54:06 -0600
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > On Thu, Jan 05, 2023 at 04:31:27PM +0000, Jonathan Cameron wrote:
+> > > On Thu, 29 Dec 2022 11:27:31 -0600
+> > > Bjorn Helgaas <helgaas@kernel.org> wrote:  
+> > > > On Sat, Dec 17, 2022 at 05:52:04PM +0000, Jonathan Cameron wrote:  
+> > 
+> > > > > I realized that adding this patch still only enables error because I
+> > > > > didn't check the PCIe spec when writing the QEMU emulation. I had
+> > > > > changed the value of  "Correctable Internal Error Mask" to default
+> > > > > to unmasked.  PCIe 6.0 says it defaults to masked.  For some reason
+> > > > > I thought these masks were impdef (should have checked ;)    
+> > > > 
+> > > > I assume you refer to the AER "Corrected Internal Error Mask" bit
+> > > > (PCIe r6.0, sec 7.8.4.6), which indeed defaults to 1b (masked) if the
+> > > > bit is implemented.  
+> > > 
+> > > Spot on.  I keep confusing the correctable / corrected stuff in PCIe.
+> > > Made more confusing by the CXL stuff layered on top.  
+> > 
+> > Great, it wasn't confusing enough already, so CXL rectified that
+> > problem :)
+> > 
+> > > > We now have f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
+> > > > native"), which turns on error reporting in Device Control for all
+> > > > devices at enumeration-time when the OS has control of AER.  But this
+> > > > is only the generic device-level control; it doesn't configure any
+> > > > *AER* registers.
+> > > > 
+> > > > I'm surprised to learn that the only writes to PCI_ERR_UNCOR_MASK are
+> > > > some mips and powerpc arch-specific code and a few individual drivers.
+> > > > It seems like maybe pci_aer_init() should do some more configuration
+> > > > of the AER mask and severity registers.  
+> > > 
+> > > Sounds good.  Any thoughts on where to get the policy from?
+> > > Feels like an administrator thing rather than a kernel config one
+> > > to me, so maybe pci_aer_init() is too early or we'd benefit from
+> > > a nice easy per device interface to tweak a default?  
+> > 
+> > If we get a solid system-level policy in place and still end up
+> > needing some kind of administrative control, that might be OK.  But we
+> > don't have that solid system policy yet, so I'd like to push on that
+> > before adding admin interfaces.
+> 
+> I guess next step is a straw man proposal for people to test / shoot at.
+> I'll send out an RFC that enables the lot as defined in PCI r6.0
+> as that will be most useful for identifying quirks we need to handle.
+> 
+> My assumption being people will push back on some of them / we'll need
+> to quirk others.
 
-I've found a couple of small changes that I wanted to make but got side
-tracked and forgot when I sent this.
+Jonathan,
 
-Also Dan reminded me we would like to see the device serial number in
-these traces as well.
+Did you send something along these lines?  I was testing the AER trace
+point output while cleaning up the trace points a bit.[1]  And I ran
+across the need to set up these PCIe registers.  Because I did not see
+anything from you I was thinking of taking a crack at fixing this.
 
-v2 coming shortly.
+To me, it is pretty straight forward that if a driver enables error
+reporting then it would want to include internal errors both correctable
+and uncorrectable.  This allows for CXL to further control the CXL
+registers as an overlay.  I'm not so sure about the other PCIe AER errors
+which are default masked.
+
+PCI v6.0 defaults to a fatal uncorrectable error.  I think it is probably
+a good default to make these non-fatal when enabling the _reporting_ of
+the errors.  If a driver wants them to be fatal then another call could be
+added later.  (or the driver should be doing that on their own now.)
+
+If I understand this thread, the CXL spec, the PCI spec, and all the code; it
+seems like unmasking the internal correctable and uncorrectable errors in
+pci_enable_pcie_error_reporting() are a good system default.  With the
+addition of making uncorrectable non-fatal.[2]
+
+That said, there are approximately 51 drivers which enable error reporting
+with this call.  I'm a bit concerned with such a global change.  But
+perhaps it seems ok if it is only enabling then internal errors as
+non-fatal.  So at worse this would simply spam logs on bad devices?
 
 Ira
 
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
-> Ira Weiny (2):
->       cxl/trace: Standardize device information output
->       cxl/trace: Add host output to trace points
-> 
->  drivers/cxl/core/mbox.c  | 14 ++++----
->  drivers/cxl/core/pci.c   |  8 ++---
->  drivers/cxl/core/trace.h | 85 +++++++++++++++++++++++++++---------------------
->  3 files changed, 57 insertions(+), 50 deletions(-)
-> ---
-> base-commit: dbe9f7d1e155b97a42f7da81e22acc98fe0a9072
-> change-id: 20230208-cxl-event-names-9372fb72a607
-> 
-> Best regards,
-> -- 
-> Ira Weiny <ira.weiny@intel.com>
-> 
+[1] https://lore.kernel.org/all/20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com/
+[2]
 
+commit 30e6a0bf308e7b8c68b4da33b505fa967f6bbf34 (HEAD -> cxl-pci-aer)
+Author: Ira Weiny <ira.weiny@intel.com>
+Date:   Thu Feb 9 22:26:05 2023 -0800
 
+    PCI/AER: Enable internal AER errors by default
+    
+    The CXL driver expects internal error reporting to be enabled via
+    pci_enable_pcie_error_reporting().  It is likely other drivers expect
+    the same thing.
+    
+    PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
+    Register (7.8.4.6) default to masking internal errors.  The
+    Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
+    as fatal.
+    
+    Change pci_enable_pcie_error_reporting() to enable both types of
+    internal errors.  Ensure uncorrectable errors are set non-fatal to limit
+    any impact to other drivers.
+    
+    Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+    Cc: Bjorn Helgaas <helgaas@kernel.org>
+    Cc: Dave Jiang <dave.jiang@intel.com>
+    Cc: <linux-cxl@vger.kernel.org>,
+    Cc: <dan.j.williams@intel.com>
+    Cc: Stefan Roese <sr@denx.de>
+    Cc: "Kuppuswamy Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
+    Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+    
+    ---
+    For all drivers other than CXL this is expected to at worse increase the
+    error reporting verbosity.  Because the errors are set to non-fatal by
+    default this should not adversely affect the operation of those devices.
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 625f7b2cafe4..9d3ed3a5fc23 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -229,11 +229,28 @@ int pcie_aer_is_native(struct pci_dev *dev)
+ 
+ int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+ {
++       int pos_cap_err;
++       u32 reg;
+        int rc;
+ 
+        if (!pcie_aer_is_native(dev))
+                return -EIO;
+ 
++       pos_cap_err = dev->aer_cap;
++
++       /* Unmask correctable and uncorrectable (non-fatal) internal errors */
++       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
++       reg &= ~PCI_ERR_COR_INTERNAL;
++       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
++
++       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
++       reg &= ~PCI_ERR_UNC_INTN;
++       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
++
++       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
++       reg &= ~PCI_ERR_UNC_INTN;
++       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
++
+        rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
+        return pcibios_err_to_errno(rc);
+ }
