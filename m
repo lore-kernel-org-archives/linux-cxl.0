@@ -2,154 +2,174 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD54C05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 16:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D76C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 16:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232166AbjBJQJt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 11:09:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34132 "EHLO
+        id S232801AbjBJQvp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 11:51:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232178AbjBJQJs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 11:09:48 -0500
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5327406F
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 08:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=akfzNA3CnLMsKm3Mbb4o4t+XjAxRUDogeWIi5MNI9r4=;
-  b=jSwolkQulW42eNP/dNcSnmnn9TXbEQutpO5fMU/xEzcmTQaWYmnN506f
-   GlpKKMavuNikr0330D0t384HgcFQL9g1tWjQ/KKJM7evxG27mkQ26V1lM
-   mDowx+mM7tMFmxjLamiR4GdNhdziEib3DpbhuEe/Q8XHoWO4+IbvFG3sc
-   0=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Brice.Goglin@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="5.97,287,1669071600"; 
-   d="scan'208";a="92189736"
-Received: from 91-160-5-165.subs.proxad.net (HELO [192.168.44.23]) ([91.160.5.165])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 17:09:43 +0100
-Message-ID: <7e2605a8-cd49-4d6f-9f62-07ff6edd50d8@inria.fr>
-Date:   Fri, 10 Feb 2023 17:09:43 +0100
+        with ESMTP id S232695AbjBJQvo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 11:51:44 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F99547088
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 08:51:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676047903; x=1707583903;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=nSzng8kiRdDVACz4XJUD/Xl9rQMBEjR4hZY8l5ikNbY=;
+  b=Uoos53AKdTur6+/ntmcMQPtYDkxIc8PwxErVvuW09hY/qrrJOv6Y/dUq
+   wBSvWvpk/mQ9ESsH7+4o/bjEfSHgAaEVrWhDvAPnefK9OebxuqpflaDit
+   fHu03LeJQY2XEyuXdDwcjt/ef/amOH/2k8ZIgXIVR+pKzoK6me8SYN+v0
+   mx6tYFntQ7QE8tj/fwmAlacEqYLV7s5fgeQ3UW1v0qHHQ3qgRx8BWaCG2
+   IYd/+kDCa2BT6rKBfkE9okPoCYS8uaZLqKYiGKs0UbDBlZdl36X0t1WFr
+   fEregGrBzvViNywNYOXow70bIA9CmzHg/CNKT8PREYz0D0nhzR+fShscH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="310095081"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="310095081"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 08:51:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="645678483"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="645678483"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 10 Feb 2023 08:51:40 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pQWce-0005un-0Y;
+        Fri, 10 Feb 2023 16:51:40 +0000
+Date:   Sat, 11 Feb 2023 00:50:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.3/cxl-ram-region 21/28] drivers/cxl/core/region.c:2527:7:
+ warning: Local variable 'rc' shadows outer variable [shadowVariable]
+Message-ID: <202302110030.nDFn2KVK-lkp@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH ndctl v2 0/7] cxl: add support for listing and creating
- volatile regions
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "gregory.price@memverge.com" <gregory.price@memverge.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-References: <20230120-vv-volatile-regions-v2-0-4ea6253000e5@intel.com>
- <e885b2a7-0405-153c-a578-b863a4e00977@inria.fr>
- <a5e4aff9f300d9b603111983165754b35c89c612.camel@intel.com>
- <34a03b27-923c-7bb0-d77a-b0fddc535160@inria.fr>
- <20230210124307.00003be0@Huawei.com>
-From:   Brice Goglin <Brice.Goglin@inria.fr>
-In-Reply-To: <20230210124307.00003be0@Huawei.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------kWkJT86Ehy7cBn7iqSixX45f"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------kWkJT86Ehy7cBn7iqSixX45f
-Content-Type: multipart/mixed; boundary="------------r74KqkgT70Q8dFuEqS9lES3O";
- protected-headers="v1"
-From: Brice Goglin <Brice.Goglin@inria.fr>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: "Verma, Vishal L" <vishal.l.verma@intel.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "Williams, Dan J" <dan.j.williams@intel.com>,
- "gregory.price@memverge.com" <gregory.price@memverge.com>,
- "dave@stgolabs.net" <dave@stgolabs.net>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "Weiny, Ira" <ira.weiny@intel.com>
-Message-ID: <7e2605a8-cd49-4d6f-9f62-07ff6edd50d8@inria.fr>
-Subject: Re: [PATCH ndctl v2 0/7] cxl: add support for listing and creating
- volatile regions
-References: <20230120-vv-volatile-regions-v2-0-4ea6253000e5@intel.com>
- <e885b2a7-0405-153c-a578-b863a4e00977@inria.fr>
- <a5e4aff9f300d9b603111983165754b35c89c612.camel@intel.com>
- <34a03b27-923c-7bb0-d77a-b0fddc535160@inria.fr>
- <20230210124307.00003be0@Huawei.com>
-In-Reply-To: <20230210124307.00003be0@Huawei.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.3/cxl-ram-region
+head:   58c651c6c4bbf46725502ffbccde2c24b94dc5c0
+commit: eefc4eedc896b9b3af21a96657d00a9d3f4e88dd [21/28] cxl/region: Add region autodiscovery
+compiler: ia64-linux-gcc (GCC) 12.1.0
+reproduce (cppcheck warning):
+        # apt-get install cppcheck
+        git checkout eefc4eedc896b9b3af21a96657d00a9d3f4e88dd
+        cppcheck --quiet --enable=style,performance,portability --template=gcc FILE
 
---------------r74KqkgT70Q8dFuEqS9lES3O
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202302110030.nDFn2KVK-lkp@intel.com/
 
-TGUgMTAvMDIvMjAyMyDDoCAxMzo0MywgSm9uYXRoYW4gQ2FtZXJvbiBhIMOpY3JpdMKgOg0K
-Pg0KPj4gSGVsbG8gVmlzaGFsDQo+Pg0KPj4gVGhhbmtzIGEgbG90LCB0aGluZ3Mgd2VyZSBm
-YWlsaW5nIGJlY2F1c2UgbXkga2VybmVsIGRpZG4ndCBoYXZlDQo+PiBDT05GSUdfQ1hMX1JF
-R0lPTl9JTlZBTElEQVRJT05fVEVTVD15LiBOb3cgSSBhbSBhYmxlIHRvIGNyZWF0ZSBhIHNp
-bmdsZQ0KPj4gcmFtIHJlZ2lvbiwgZWl0aGVyIHdpdGggYSBzaW5nbGUgZGV2aWNlIG9yIG11
-bHRpcGxlIGludGVybGVhdmVkIG9uZXMuDQo+Pg0KPj4gSG93ZXZlciBJIGNhbid0IGdldCBt
-dWx0aXBsZSBzZXBhcmF0ZSByYW0gcmVnaW9ucy4gSWYgSSBib290IGEgY29uZmlnDQo+PiBs
-aWtlIHlvdXJzIGJlbG93LCBJIGdldCA0IHJhbSBkZXZpY2VzLiBIb3cgY2FuIEkgY3JlYXRl
-IG9uZSByZWdpb24gZm9yDQo+PiBlYWNoPyBPbmNlIEkgY3JlYXRlIHRoZSBmaXJzdCBvbmUs
-IG90aGVycyBmYWlsIHNheWluZyBzb21ldGhpbmcgbGlrZQ0KPj4gYmVsb3cuIEkgdHJpZWQg
-dXNpbmcgb3RoZXIgZGVjb2RlcnMgYnV0IGl0IGRpZG4ndCBoZWxwIChJIHN0aWxsIG5lZWQN
-Cj4+IHRvIHJlYWQgbW9yZSBDWEwgZG9jcyBhYm91dCBkZWNvZGVycywgd2h5IG5ldyBvbmVz
-IGFwcGVhciB3aGVuIGNyZWF0aW5nDQo+PiBhIHJlZ2lvbiwgZXRjKS4NCj4+DQo+PiBjeGwg
-cmVnaW9uOiBjb2xsZWN0X21lbWRldnM6IG5vIGFjdGl2ZSBtZW1kZXZzIGZvdW5kOiBkZWNv
-ZGVyOiBkZWNvZGVyMC4wIGZpbHRlcjogbWVtMw0KPiBIaSBCcmljZSwNCj4NCj4gUUVNVSBl
-bXVsYXRpb24gY3VycmVudGx5IG9ubHkgc3VwcG9ydHMgc2luZ2xlIEhETSBkZWNvZGVyIGF0
-IGVhY2ggbGV2ZWwsDQo+IHNvIEhCLCBTd2l0Y2ggVVNQLCBFUCAod2l0aCBleGNlcHRpb24g
-b2YgdGhlIENGTVdTIHRvcCBsZXZlbCBvbmVzIGFzIHNob3duDQo+IGluIHRoZSBleGFtcGxl
-IHdoaWNoIGhhcyB0d28gb2YgdGhvc2UpLiBXZSBzaG91bGQgZml4IHRoYXQuLi4NCj4NCj4g
-Rm9yIG5vdywgeW91IHNob3VsZCBiZSBhYmxlIHRvIGRvIGl0IHdpdGggbXVsdGlwbGUgcHhi
-LWN4bCBpbnN0YW5jZXMgd2l0aA0KPiBhcHByb3ByaWF0ZSBDRk1XUyBlbnRyaWVzIGZvciBl
-YWNoIG9uZS4gV2hpY2ggaXMgaG9ycmlibGUgYnV0IG1pZ2h0IHdvcmsNCj4gZm9yIHlvdSBp
-biB0aGUgbWVhbnRpbWUuDQoNCg0KVGhhbmtzIEpvbmF0aGFuLCB0aGlzIHdvcmtzIGZpbmU6
-DQoNCiAgIC1vYmplY3QgbWVtb3J5LWJhY2tlbmQtcmFtLGlkPXZtZW0wLHNoYXJlPW9uLHNp
-emU9MjU2TSBcDQogICAtZGV2aWNlIHB4Yi1jeGwsYnVzX25yPTEyLGJ1cz1wY2llLjAsaWQ9
-Y3hsLjEgXA0KICAgLWRldmljZSBjeGwtcnAscG9ydD0wLGJ1cz1jeGwuMSxpZD1yb290X3Bv
-cnQxMyxjaGFzc2lzPTAsc2xvdD0yIFwNCiAgIC1kZXZpY2UgY3hsLXR5cGUzLGJ1cz1yb290
-X3BvcnQxMyx2b2xhdGlsZS1tZW1kZXY9dm1lbTAsaWQ9Y3hsLXZtZW0wIFwNCiAgIC1vYmpl
-Y3QgbWVtb3J5LWJhY2tlbmQtcmFtLGlkPXZtZW0xLHNoYXJlPW9uLHNpemU9MjU2TSBcDQog
-ICAtZGV2aWNlIHB4Yi1jeGwsYnVzX25yPTE0LGJ1cz1wY2llLjAsaWQ9Y3hsLjIgXA0KICAg
-LWRldmljZSBjeGwtcnAscG9ydD0wLGJ1cz1jeGwuMixpZD1yb290X3BvcnQxNCxjaGFzc2lz
-PTEsc2xvdD0yIFwNCiAgIC1kZXZpY2UgY3hsLXR5cGUzLGJ1cz1yb290X3BvcnQxNCx2b2xh
-dGlsZS1tZW1kZXY9dm1lbTEsaWQ9Y3hsLXZtZW0xIFwNCiAgIC1NIGN4bC1mbXcuMC50YXJn
-ZXRzLjA9Y3hsLjEsY3hsLWZtdy4wLnNpemU9NEcsY3hsLWZtdy4xLnRhcmdldHMuMD1jeGwu
-MixjeGwtZm13LjEuc2l6ZT00Rw0KDQoNCj4+IEJ5IHRoZSB3YXksIG9uY2UgY29uZmlndXJl
-ZCBpbiBzeXN0ZW0gcmFtLCBteSBDWEwgcmFtIGlzIG1lcmdlZCBpbnRvIGFuDQo+PiBleGlz
-dGluZyAibm9ybWFsIiBOVU1BIG5vZGUuIEhvdyBkbyBJIHRlbGwgUWVtdSB0aGF0IGEgQ1hM
-IHJlZ2lvbiBzaG91bGQNCj4+IGJlIHBhcnQgb2YgYSBuZXcgTlVNQSBub2RlPyBJIGFzc3Vt
-ZSB0aGF0J3Mgd2hhdCdzIGdvaW5nIHRvIGhhcHBlbiBvbg0KPj4gcmVhbCBoYXJkd2FyZT8N
-Cj4gV2UgZG9uJ3QgeWV0IGhhdmUga2VybmVsIGNvZGUgdG8gZGVhbCB3aXRoIGFzc2lnbmlu
-ZyBhIG5ldyBOVU1BIG5vZGUuDQo+IFdhcyBvbiB0aGUgdG9kbyBsaXN0IGluIGxhc3Qgc3lu
-YyBjYWxsIEkgdGhpbmsuDQoNCg0KR29vZCB0byBrbm93biwgdGhhbmtzIGFnYWluLg0KDQpC
-cmljZQ0KDQoNCg==
+cppcheck warnings: (new ones prefixed by >>)
+>> drivers/cxl/core/region.c:2527:7: warning: Local variable 'rc' shadows outer variable [shadowVariable]
+     int rc = device_attach(&cxlr->dev);
+         ^
+   drivers/cxl/core/region.c:2487:6: note: Shadowed declaration
+    int rc;
+        ^
+   drivers/cxl/core/region.c:2527:7: note: Shadow variable
+     int rc = device_attach(&cxlr->dev);
+         ^
 
---------------r74KqkgT70Q8dFuEqS9lES3O--
+cppcheck possible warnings: (new ones prefixed by >>, may not real problems)
 
---------------kWkJT86Ehy7cBn7iqSixX45f
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+   drivers/cxl/core/region.c:1626:5: warning: Redundant initialization for 'rc'. The initialized value is overwritten before it is read. [redundantInitialization]
+    rc = cxl_region_validate_position(cxlr, cxled, pos);
+       ^
+   drivers/cxl/core/region.c:1527:9: note: rc is initialized
+    int rc = -ENXIO;
+           ^
+   drivers/cxl/core/region.c:1626:5: note: rc is overwritten
+    rc = cxl_region_validate_position(cxlr, cxled, pos);
+       ^
 
------BEGIN PGP SIGNATURE-----
+vim +/rc +2527 drivers/cxl/core/region.c
 
-wsF5BAABCAAjFiEEelpOgOQAl7r26tY4RJGQ8yNavTsFAmPmbEcFAwAAAAAACgkQRJGQ8yNavTui
-uhAAsWNMrh/plW5h6nZjw5ASQgPtxrktKKgEs4+/GN+yV1o4wEnZ03UwSXCoGlyYH/RSZquXFUVL
-Hwhd74KOlHYIMi2kW1obpniB7bLnpR9/I3pdY+OQmN+4TlOBufRBc5EOJ/rp1sY2YNWqnNUdTwpB
-o1oKMirP01Eu7y7C8d+HI7DMDkRg1Jkrv7vKutsQu96PxSKTRElBpmk13woclhJ9PKYJFsjLYlA6
-hD0L6/taEXu56OF3xGhJYAjRtSElPNRksm//zoo1fcPPF+/UrStfrDrfXxHblkhWvIL3erFcaByX
-Kq7PfjijzjJgP+a61d0nqcYk8KFc+KldGymxce0hdmIQtIYABgz92PIOtKAF+aGmxy3KufUchYu0
-7h3/DakGz1MLvGf2GRRbqLHvmhJMcy6E2XzbM01qd0sVvGqNHZgw5O9CwzmoWxhNPa8d5qH1iQnG
-kAH7dHtiyw6+T1fUarm2HXQrkp3/GfqBfQm03GNFkHphdWc7oHPTFGRD0mhP+qFyWDf0/872h8SS
-wuDF1DAe2jSsRCvdV1RnZpp+Shnjs462YtntkpZfbbwPTSLmPb50aqFP76zntgEHY5wAUJt0R5Hg
-GR2bvEXKzjAa4ViTp9PRQ/pWltvB5x8Fl2W87tAAjV3tj74yy9eouBmqkT4KoxYpuAMEo0F/7w40
-tF4=
-=Tzje
------END PGP SIGNATURE-----
+  2476	
+  2477	int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+  2478	{
+  2479		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+  2480		struct range *hpa = &cxled->cxld.hpa_range;
+  2481		struct cxl_decoder *cxld = &cxled->cxld;
+  2482		struct cxl_root_decoder *cxlrd;
+  2483		struct cxl_region_params *p;
+  2484		struct cxl_region *cxlr;
+  2485		bool attach = false;
+  2486		struct device *dev;
+  2487		int rc;
+  2488	
+  2489		dev = device_find_child(&root->dev, &cxld->hpa_range,
+  2490					match_decoder_by_range);
+  2491		if (!dev) {
+  2492			dev_err(cxlmd->dev.parent,
+  2493				"%s:%s no CXL window for range %#llx:%#llx\n",
+  2494				dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+  2495				cxld->hpa_range.start, cxld->hpa_range.end);
+  2496			return -ENXIO;
+  2497		}
+  2498	
+  2499		cxlrd = to_cxl_root_decoder(dev);
+  2500	
+  2501		/*
+  2502		 * Ensure that if multiple threads race to construct_region() for @hpa
+  2503		 * one does the construction and the others add to that.
+  2504		 */
+  2505		mutex_lock(&cxlrd->range_lock);
+  2506		dev = device_find_child(&cxlrd->cxlsd.cxld.dev, hpa,
+  2507					match_region_by_range);
+  2508		if (!dev)
+  2509			cxlr = construct_region(cxlrd, cxled);
+  2510		else
+  2511			cxlr = to_cxl_region(dev);
+  2512		mutex_unlock(&cxlrd->range_lock);
+  2513	
+  2514		if (IS_ERR(cxlr)) {
+  2515			rc = PTR_ERR(cxlr);
+  2516			goto out;
+  2517		}
+  2518	
+  2519		attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
+  2520	
+  2521		down_read(&cxl_region_rwsem);
+  2522		p = &cxlr->params;
+  2523		attach = p->state == CXL_CONFIG_COMMIT;
+  2524		up_read(&cxl_region_rwsem);
+  2525	
+  2526		if (attach) {
+> 2527			int rc = device_attach(&cxlr->dev);
+  2528	
+  2529			/*
+  2530			 * If device_attach() fails the range may still be active via
+  2531			 * the platform-firmware memory map, otherwise the driver for
+  2532			 * regions is local to this file, so driver matching can't fail.
+  2533			 */
+  2534			if (rc < 0)
+  2535				dev_err(&cxlr->dev, "failed to enable, range: %pr\n",
+  2536					p->res);
+  2537		}
+  2538	
+  2539		put_device(&cxlr->dev);
+  2540	out:
+  2541		put_device(&cxlrd->cxlsd.cxld.dev);
+  2542		return rc;
+  2543	}
+  2544	EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, CXL);
+  2545	
 
---------------kWkJT86Ehy7cBn7iqSixX45f--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
