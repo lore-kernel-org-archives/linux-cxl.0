@@ -2,205 +2,136 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF86C636D4
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 22:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C037BC636D4
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 22:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233727AbjBJWoL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 17:44:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38704 "EHLO
+        id S229490AbjBJWw3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 17:52:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233919AbjBJWoJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 17:44:09 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1FE37E3E5
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 14:43:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676069031; x=1707605031;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cMeedvGQz1ode0qcGNdajTBaEBthyyCJktukdzgPg/U=;
-  b=Y2bunfqOJqFQXS3FFAarjDxJl5d9FoxcYMuZ3NeAg+manGTguSkAFvOH
-   +v2eXSdnom30lmR82TJXLEdPa5OWuIF+Igo6ggHrajVXyWDyIUzhfPas3
-   MwQUwb1K6AGMu+NGXKJ8tzZlrv5Mj0T38y5NdyEb1n7tOVlI2CB5JwkDE
-   0YxCdHb9IopNHSkuznkPC+CigPoH1u2FxA6vQAWWcjWN2QDCtUUgwhRbs
-   tdgs+5mMzkwjig6gPQIudp8popAqbeuphagmYOG4iRNEyCUkpQqx7H8Yy
-   aeK49jrh/MGvOGxPOMAEReO/12EG4t/1Di5Xqdb4A1XjGshyCDPYzWi/G
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="329176674"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="329176674"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 14:43:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="997094201"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="997094201"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Feb 2023 14:43:49 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pQc7Q-00065p-2P;
-        Fri, 10 Feb 2023 22:43:48 +0000
-Date:   Sat, 11 Feb 2023 06:43:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:for-6.3/cxl-ram-region] BUILD REGRESSION
- 58c651c6c4bbf46725502ffbccde2c24b94dc5c0
-Message-ID: <63e6c890.ZatB8yr8gndgan6+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229455AbjBJWw2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 17:52:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A99123D88;
+        Fri, 10 Feb 2023 14:52:27 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0566AB82614;
+        Fri, 10 Feb 2023 22:52:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 782EAC433EF;
+        Fri, 10 Feb 2023 22:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676069544;
+        bh=0drzW3eRMsgM82W+lr4/tR/Q3NADcNKLhfSlEmcCJDs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bht0gaip4fHLGiLfKra/qZTULokTOwpet8N8LQlDvvLVp8HLS3mYsqYu8xIRYK8u6
+         Yx36Kb0Upj3C3mJDH9DtfxkMSNBXwCF0ZEMUzWjP9zMY9wx2rGBARATcMDak966PZR
+         50j7kEsTEocXoKJ6Ipe2mvuFR5buWu6gsJV0LSkFyGllrKr40TpjHhkM4Ogjd5U3KP
+         DZEAYXsRnK/D2uPVShchB78MAg6Byd94f543U/jtfFGHaAFmk0pWFKKXcH0aiVmVez
+         UYH5Hnek6zoONO/kG7vU+CQD9ETZGzI5f1plkxcpw07ZYU9Jiwb6yNl3kK2S2fhlTb
+         KhVwBRwIgM//A==
+Date:   Fri, 10 Feb 2023 16:52:23 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com, bhelgaas@google.com,
+        Jonathan.Cameron@Huawei.com
+Subject: Re: [PATCH v6] cxl: add RAS status unmasking for CXL
+Message-ID: <20230210225223.GA2706583@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <167604864163.2392965.5102660329807283871.stgit@djiang5-mobl3.local>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.3/cxl-ram-region
-branch HEAD: 58c651c6c4bbf46725502ffbccde2c24b94dc5c0  cxl/dax: Create dax devices for CXL RAM regions
+On Fri, Feb 10, 2023 at 10:04:03AM -0700, Dave Jiang wrote:
+> By default the CXL RAS mask registers bits are defaulted to 1's and
+> suppress all error reporting. If the kernel has negotiated ownership
+> of error handling for CXL then unmask the mask registers by writing 0s.
+> 
+> PCI_EXP_AER_FLAGS moved to linux/pci.h header to expose to driver. It
+> allows exposure of system enabled PCI error flags for the driver to decide
+> which error bits to toggle. Bjorn suggested that the error enabling should
+> be controlled from the system policy rather than a driver level choice[1].
+> 
+> CXL RAS CE and UE masks are checked against PCI_EXP_AER_FLAGS before
+> unmasking.
+> 
+> [1]: https://lore.kernel.org/linux-cxl/20230210122952.00006999@Huawei.com/T/#me8c7f39d43029c64ccff5c950b78a2cee8e885af
 
-Error/Warning reports:
+> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+> +{
+> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +	void __iomem *addr;
+> +	u32 orig_val, val, mask;
+> +
+> +	if (!cxlds->regs.ras)
+> +		return -ENODEV;
+> +
+> +	/* BIOS has CXL error control */
+> +	if (!host_bridge->native_cxl_error)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (PCI_EXP_AER_FLAGS & PCI_EXP_DEVCTL_URRE) {
 
-https://lore.kernel.org/oe-kbuild-all/202301281217.NvoiwL4w-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302050349.g4NppVCy-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302110030.nDFn2KVK-lkp@intel.com
+1) I don't really want to expose PCI_EXP_AER_FLAGS in linux/pci.h.
+It's basically a convenience part of the AER implementation.
 
-Error/Warning: (recently discovered and may have been fixed)
+2) I think your intent here is to configure the CXL RAS masking based
+on what PCIe error reporting is enabled, but doing it by looking at
+PCI_EXP_AER_FLAGS doesn't seem right.  This expression is a
+compile-time constant that is always true, but we can't rely on
+devices always being configured that way.
 
-ERROR: modpost: "walk_hmem_resources" [drivers/dax/hmem/dax_hmem.ko] undefined!
-drivers/cxl/core/region.c:2619:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+We call pci_aer_init() for every device during enumeration, but we
+only write PCI_EXP_AER_FLAGS if pci_aer_available() and if
+pcie_aer_is_native().  And there are a bunch of drivers that call
+pci_disable_pcie_error_reporting(), which *clears* those flags.  I'm
+not sure those drivers *should* be doing that, but they do today.
 
-Error/Warning ids grouped by kconfigs:
+I'm not sure why this needs to be conditional at all, but if it does,
+maybe you want to read PCI_EXP_DEVCTL and base it on that?
 
-gcc_recent_errors
-|-- ia64-randconfig-p002-20230210
-|   `-- drivers-cxl-core-region.c:warning:Local-variable-rc-shadows-outer-variable-shadowVariable
-`-- loongarch-allmodconfig
-    `-- ERROR:walk_hmem_resources-drivers-dax-hmem-dax_hmem.ko-undefined
-clang_recent_errors
-|-- s390-randconfig-r044-20230210
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-|-- x86_64-randconfig-a005
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-|-- x86_64-randconfig-a012
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-`-- x86_64-randconfig-a014
-    `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+> +		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
+> +		orig_val = readl(addr);
+> +
+> +		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
 
-elapsed time: 785m
+Weird name ("_MASK_MASK"), but I assume there's a good reason ;)
 
-configs tested: 101
-configs skipped: 3
+> +		if (!cxl_pci_flit_256(pdev))
+> +			mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
+> +		val = orig_val & ~mask;
+> +		writel(val, addr);
+> +		dev_dbg(&pdev->dev,
+> +			"Uncorrectable RAS Errors Mask: %#x -> %#x\n",
+> +			orig_val, val);
+> +	}
 
-gcc tested configs:
-alpha                            allyesconfig
-alpha                               defconfig
-arc                              allyesconfig
-arc                      axs103_smp_defconfig
-arc                                 defconfig
-arc                        nsimosci_defconfig
-arc                  randconfig-r043-20230210
-arm                              allmodconfig
-arm                              allyesconfig
-arm                                 defconfig
-arm                             pxa_defconfig
-arm                  randconfig-r046-20230210
-arm                          simpad_defconfig
-arm                        spear6xx_defconfig
-arm                           sunxi_defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-csky                                defconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                         debian-10.3-func
-i386                   debian-10.3-kselftests
-i386                        debian-10.3-kunit
-i386                          debian-10.3-kvm
-i386                                defconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-i386                          randconfig-c001
-ia64                             allmodconfig
-ia64                                defconfig
-loongarch                        allmodconfig
-loongarch                         allnoconfig
-loongarch                           defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-m68k                                defconfig
-m68k                        m5272c3_defconfig
-m68k                       m5275evb_defconfig
-m68k                        mvme147_defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-mips                       bmips_be_defconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                       maple_defconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                           se7343_defconfig
-sparc                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                            allnoconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-bpf
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
+>  	if (cxlds->regs.ras) {
+> -		pci_enable_pcie_error_reporting(pdev);
+> -		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
+> -		if (rc)
+> -			return rc;
+> +		rc = pci_enable_pcie_error_reporting(pdev);
 
-clang tested configs:
-hexagon              randconfig-r041-20230210
-hexagon              randconfig-r045-20230210
-i386                              allnoconfig
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-powerpc                   lite5200b_defconfig
-powerpc                     mpc5200_defconfig
-powerpc                    mvme5100_defconfig
-powerpc                     skiroot_defconfig
-riscv                randconfig-r042-20230210
-s390                 randconfig-r044-20230210
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-x86_64                        randconfig-k001
+I see you're just adding a check of return value here, but I'm not
+sure you need to call pci_enable_pcie_error_reporting() in the first
+place.  Isn't the call in the pci_aer_init() path enough?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -693,6 +693,7 @@
+>  #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
+>  #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
+>  #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
+> +#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
+
+Please spell out the hex constant.  This is to match the style of the
+surrounding code, and it also gives a hint about the size of the
+register.
+
+Bjorn
