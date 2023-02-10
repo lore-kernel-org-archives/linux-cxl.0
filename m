@@ -2,207 +2,245 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E23BC05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 12:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89B6C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 12:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbjBJMnN convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 07:43:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
+        id S231965AbjBJM4t (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 07:56:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231462AbjBJMnN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 07:43:13 -0500
+        with ESMTP id S231727AbjBJM4s (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 07:56:48 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599046CC65
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 04:43:11 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCtdw0Tqzz67n8d;
-        Fri, 10 Feb 2023 20:41:40 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6BF71F1C;
+        Fri, 10 Feb 2023 04:56:45 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCtt63fxsz6J7RD;
+        Fri, 10 Feb 2023 20:52:14 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 10 Feb
- 2023 12:43:08 +0000
-Date:   Fri, 10 Feb 2023 12:43:07 +0000
+ 2023 12:56:42 +0000
+Date:   Fri, 10 Feb 2023 12:56:41 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Brice Goglin <Brice.Goglin@inria.fr>
-CC:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "gregory.price@memverge.com" <gregory.price@memverge.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Subject: Re: [PATCH ndctl v2 0/7] cxl: add support for listing and creating
- volatile regions
-Message-ID: <20230210124307.00003be0@Huawei.com>
-In-Reply-To: <34a03b27-923c-7bb0-d77a-b0fddc535160@inria.fr>
-References: <20230120-vv-volatile-regions-v2-0-4ea6253000e5@intel.com>
-        <e885b2a7-0405-153c-a578-b863a4e00977@inria.fr>
-        <a5e4aff9f300d9b603111983165754b35c89c612.camel@intel.com>
-        <34a03b27-923c-7bb0-d77a-b0fddc535160@inria.fr>
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 4/6] cxl/region: Provide region info to the
+ cxl_poison trace event
+Message-ID: <20230210125641.00004744@Huawei.com>
+In-Reply-To: <7862ef793a3b4fce49b0c8074b014b53b389ce12.1675983077.git.alison.schofield@intel.com>
+References: <cover.1675983077.git.alison.schofield@intel.com>
+        <7862ef793a3b4fce49b0c8074b014b53b389ce12.1675983077.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 10 Feb 2023 11:15:44 +0100
-Brice Goglin <Brice.Goglin@inria.fr> wrote:
+On Thu,  9 Feb 2023 15:32:57 -0800
+alison.schofield@intel.com wrote:
 
-> Le 09/02/2023 à 20:17, Verma, Vishal L a écrit :
-> > On Thu, 2023-02-09 at 12:04 +0100, Brice Goglin wrote:  
-> >> Hello Vishal
-> >>
-> >> I am trying to play with this but all my attempts failed so far. Could
-> >> you provide Qemu and cxl-cli command-lines to get a volatile region
-> >> enabled in a Qemu VM?  
-> > Hi Brice,
-> >
-> > Greg had posted his working config in another thread:
-> > https://lore.kernel.org/linux-cxl/Y9sMs0FGulQSIe9t@memverge.com/
-> >
-> > I've also pasted below, the qemu command line generated by the run_qemu
-> > script I referenced. (Note that this adds a bunch of stuff not strictly
-> > needed for a minimal CXL configuration - you can certainly trim a lot
-> > of that out - this is just the default setup that is generated and I
-> > usually run).  
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
+> User space may need to know which region, if any, maps the poison
+> address(es) logged in a cxl_poison trace event. Since the mapping
+> of DPAs (device physical addresses) to a region can change, the
+> kernel must provide this information at the time the poison list
+> is read. The event informs user space that at event <timestamp>
+> this <region> mapped to this <DPA>, which is poisoned.
 > 
-> Hello Vishal
+> The cxl_poison trace event is already wired up to log the region
+> name and uuid if it receives param 'struct cxl_region'.
 > 
-> Thanks a lot, things were failing because my kernel didn't have
-> CONFIG_CXL_REGION_INVALIDATION_TEST=y. Now I am able to create a single
-> ram region, either with a single device or multiple interleaved ones.
-> 
-> However I can't get multiple separate ram regions. If I boot a config
-> like yours below, I get 4 ram devices. How can I create one region for
-> each? Once I create the first one, others fail saying something like
-> below. I tried using other decoders but it didn't help (I still need
-> to read more CXL docs about decoders, why new ones appear when creating
-> a region, etc).
-> 
-> cxl region: collect_memdevs: no active memdevs found: decoder: decoder0.0 filter: mem3
+> In order to provide that cxl_region, add another method for gathering
+> poison - by committed endpoint decoder mappings. This method is only
+> available with CONFIG_CXL_REGION and is only used if a region actually
+> maps the memdev where poison is being read. The default method remains:
+> read the poison by memdev resource.
 
-Hi Brice,
+Mention here that you also cover memory that isn't mapped.
 
-QEMU emulation currently only supports single HDM decoder at each level,
-so HB, Switch USP, EP (with exception of the CFMWS top level ones as shown
-in the example which has two of those). We should fix that...
+A few minor comments inline.
 
-For now, you should be able to do it with multiple pxb-cxl instances with
-appropriate CFMWS entries for each one. Which is horrible but might work
-for you in the meantime.  
+Thanks,
+
+Jonathan
+
 
 > 
-> By the way, once configured in system ram, my CXL ram is merged into an
-> existing "normal" NUMA node. How do I tell Qemu that a CXL region should
-> be part of a new NUMA node? I assume that's what's going to happen on
-> real hardware?
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  drivers/cxl/core/core.h   |  5 +++
+>  drivers/cxl/core/memdev.c | 14 ++++++-
+>  drivers/cxl/core/region.c | 82 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 100 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 8c04672dca56..2f9bd8651eb1 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -22,7 +22,12 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
+>  #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
+>  int cxl_region_init(void);
+>  void cxl_region_exit(void);
+> +int cxl_get_poison_by_endpoint(struct device *dev, void *data);
+>  #else
+> +static inline int cxl_get_poison_by_endpoint(struct device *dev, void *data)
+> +{
+> +	return 0;
+> +}
+>  static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
+>  {
+>  }
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 19b833c9cf35..8696d7b508b6 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -139,14 +139,26 @@ static ssize_t trigger_poison_list_store(struct device *dev,
+>  					 const char *buf, size_t len)
+>  {
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_port *port;
+>  	bool trigger;
+>  	int rc;
+>  
+>  	if (kstrtobool(buf, &trigger) || !trigger)
+>  		return -EINVAL;
+>  
+> +	port = dev_get_drvdata(&cxlmd->dev);
+> +	if (!port || !is_cxl_endpoint(port))
+> +		return -EINVAL;
+> +
+>  	down_read(&cxl_dpa_rwsem);
+> -	rc = cxl_get_poison_by_memdev(cxlmd);
+> +	if (port->commit_end == -1)
+> +		/* No regions mapped to this memdev */
+> +		rc = cxl_get_poison_by_memdev(cxlmd);
+> +	else
+> +		/* Regions mapped, collect poison by endpoint */
+> +		rc = device_for_each_child(&port->dev, port,
+> +					   cxl_get_poison_by_endpoint);
+> +
+>  	up_read(&cxl_dpa_rwsem);
+>  
+>  	return rc ? rc : len;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 67e83d961670..0ac08e9106af 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1826,6 +1826,88 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, CXL);
+>  
+> +int cxl_get_poison_by_endpoint(struct device *dev, void *data)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_port *port = data;
+> +	struct cxl_dev_state *cxlds;
+> +	struct cxl_memdev *cxlmd;
+> +	u64 offset, length;
+> +	int rc = 0;
+> +
+> +	down_read(&cxl_dpa_rwsem);
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		goto out;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
+> +		goto out;
+> +
+> +	/*
+> +	 * Get the poison by decoder for mapped resources. This
+> +	 * separates pmem and ram poison list reads, as the spec
+> +	 * requires, and provides the region for the trace event.
+> +	 */
 
-We don't yet have kernel code to deal with assigning a new NUMA node.
-Was on the todo list in last sync call I think.
+Does the spec actually require separate decoders for PMEM and MEM?
+Sure, Linux only sets it up like that, but a BIOS might have set
+them up as a single decoder I think - even if we don't handle
+that form of crazy yet. If the spec requires it, then a reference
+would be great.
 
-> 
-> Thanks
-> 
-> Brice
-> 
-> 
-> 
-> >
-> >
-> > $ run_qemu.sh -g --cxl --cxl-debug --rw -r none --cmdline
-> > /home/vverma7/git/qemu/build/qemu-system-x86_64
-> > -machine q35,accel=kvm,nvdimm=on,cxl=on
-> > -m 8192M,slots=4,maxmem=40964M
-> > -smp 8,sockets=2,cores=2,threads=2
-> > -enable-kvm
-> > -display none
-> > -nographic
-> > -drive if=pflash,format=raw,unit=0,file=OVMF_CODE.fd,readonly=on
-> > -drive if=pflash,format=raw,unit=1,file=OVMF_VARS.fd
-> > -debugconfile:uefi_debug.log  
-> > -global isa-debugcon.iobase=0x402
-> > -drive file=root.img,format=raw,media=disk
-> > -kernel ./mkosi.extra/lib/modules/6.2.0-rc6+/vmlinuz
-> > -initrd mkosi.extra/boot/initramfs-6.2.0-rc2+.img
-> > -append selinux=0 audit=0 console=tty0 console=ttyS0 root=/dev/sda2 ignore_loglevel rw cxl_acpi.dyndbg=+fplm cxl_pci.dyndbg=+fplm cxl_core.dyndbg=+fplm cxl_mem.dyndbg=+fplm cxl_pmem.dyndbg=+fplm cxl_port.dyndbg=+fplm cxl_region.dyndbg=+fplm cxl_test.dyndbg=+fplm cxl_mock.dyndbg=+fplm cxl_mock_mem.dyndbg=+fplm memmap=2G!4G efi_fake_mem=2G@6G:0x40000
-> > -device e1000,netdev=net0,mac=52:54:00:12:34:56
-> > -netdev user,id=net0,hostfwd=tcp::10022-:22
-> > -object memory-backend-file,id=cxl-mem0,share=on,mem-path=cxltest0.raw,size=256M
-> > -object memory-backend-file,id=cxl-mem1,share=on,mem-path=cxltest1.raw,size=256M
-> > -object memory-backend-file,id=cxl-mem2,share=on,mem-path=cxltest2.raw,size=256M
-> > -object memory-backend-file,id=cxl-mem3,share=on,mem-path=cxltest3.raw,size=256M
-> > -object memory-backend-ram,id=cxl-mem4,share=on,size=256M
-> > -object memory-backend-ram,id=cxl-mem5,share=on,size=256M
-> > -object memory-backend-ram,id=cxl-mem6,share=on,size=256M
-> > -object memory-backend-ram,id=cxl-mem7,share=on,size=256M
-> > -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=lsa0.raw,size=1K
-> > -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=lsa1.raw,size=1K
-> > -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=lsa2.raw,size=1K
-> > -object memory-backend-file,id=cxl-lsa3,share=on,mem-path=lsa3.raw,size=1K
-> > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=53
-> > -device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=191
-> > -device cxl-rp,id=hb0rp0,bus=cxl.0,chassis=0,slot=0,port=0
-> > -device cxl-rp,id=hb0rp1,bus=cxl.0,chassis=0,slot=1,port=1
-> > -device cxl-rp,id=hb0rp2,bus=cxl.0,chassis=0,slot=2,port=2
-> > -device cxl-rp,id=hb0rp3,bus=cxl.0,chassis=0,slot=3,port=3
-> > -device cxl-rp,id=hb1rp0,bus=cxl.1,chassis=0,slot=4,port=0
-> > -device cxl-rp,id=hb1rp1,bus=cxl.1,chassis=0,slot=5,port=1
-> > -device cxl-rp,id=hb1rp2,bus=cxl.1,chassis=0,slot=6,port=2
-> > -device cxl-rp,id=hb1rp3,bus=cxl.1,chassis=0,slot=7,port=3
-> > -device cxl-type3,bus=hb0rp0,memdev=cxl-mem0,id=cxl-dev0,lsa=cxl-lsa0
-> > -device cxl-type3,bus=hb0rp1,memdev=cxl-mem1,id=cxl-dev1,lsa=cxl-lsa1
-> > -device cxl-type3,bus=hb1rp0,memdev=cxl-mem2,id=cxl-dev2,lsa=cxl-lsa2
-> > -device cxl-type3,bus=hb1rp1,memdev=cxl-mem3,id=cxl-dev3,lsa=cxl-lsa3
-> > -device cxl-type3,bus=hb0rp2,volatile-memdev=cxl-mem4,id=cxl-dev4
-> > -device cxl-type3,bus=hb0rp3,volatile-memdev=cxl-mem5,id=cxl-dev5
-> > -device cxl-type3,bus=hb1rp2,volatile-memdev=cxl-mem6,id=cxl-dev6
-> > -device cxl-type3,bus=hb1rp3,volatile-memdev=cxl-mem7,id=cxl-dev7
-> > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k,cxl-fmw.1.targets.0=cxl.0,cxl-fmw.1.targets.1=cxl.1,cxl-fmw.1.size=4G,cxl-fmw.1.interleave-granularity=8k
-> > -object memory-backend-ram,id=mem0,size=2048M
-> > -numa node,nodeid=0,memdev=mem0,
-> > -numa cpu,node-id=0,socket-id=0
-> > -object memory-backend-ram,id=mem1,size=2048M
-> > -numa node,nodeid=1,memdev=mem1,
-> > -numa cpu,node-id=1,socket-id=1
-> > -object memory-backend-ram,id=mem2,size=2048M
-> > -numa node,nodeid=2,memdev=mem2,
-> > -object memory-backend-ram,id=mem3,size=2048M
-> > -numa node,nodeid=3,memdev=mem3,
-> > -numa node,nodeid=4,
-> > -object memory-backend-file,id=nvmem0,share=on,mem-path=nvdimm-0,size=16384M,align=1G
-> > -device nvdimm,memdev=nvmem0,id=nv0,label-size=2M,node=4
-> > -numa node,nodeid=5,
-> > -object memory-backend-file,id=nvmem1,share=on,mem-path=nvdimm-1,size=16384M,align=1G
-> > -device nvdimm,memdev=nvmem1,id=nv1,label-size=2M,node=5
-> > -numa dist,src=0,dst=0,val=10
-> > -numa dist,src=0,dst=1,val=21
-> > -numa dist,src=0,dst=2,val=12
-> > -numa dist,src=0,dst=3,val=21
-> > -numa dist,src=0,dst=4,val=17
-> > -numa dist,src=0,dst=5,val=28
-> > -numa dist,src=1,dst=1,val=10
-> > -numa dist,src=1,dst=2,val=21
-> > -numa dist,src=1,dst=3,val=12
-> > -numa dist,src=1,dst=4,val=28
-> > -numa dist,src=1,dst=5,val=17
-> > -numa dist,src=2,dst=2,val=10
-> > -numa dist,src=2,dst=3,val=21
-> > -numa dist,src=2,dst=4,val=28
-> > -numa dist,src=2,dst=5,val=28
-> > -numa dist,src=3,dst=3,val=10
-> > -numa dist,src=3,dst=4,val=28
-> > -numa dist,src=3,dst=5,val=28
-> > -numa dist,src=4,dst=4,val=10
-> > -numa dist,src=4,dst=5,val=28
-> > -numa dist,src=5,dst=5,val=10
-> >  
+> +	cxlmd = cxled_to_memdev(cxled);
+> +	length = cxled->dpa_res->end - cxled->dpa_res->start + 1;
+> +	rc = cxl_mem_get_poison(cxlmd, cxled->dpa_res->start, length,
+> +				cxled->cxld.region);
+> +	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> +		rc = 0;
+> +	if (rc)
+> +		goto out;
+> +
+> +	/* Get poison in a skip range */
+
+Seems odd to do it in this order. I'd do the skip first as then
+the records will appear in address order (subject to whatever
+random order the device is tracking them and the resulting ordering
+in each request)
+
+> +	if (cxled->skip) {
+> +		rc = cxl_mem_get_poison(cxlmd, 0, cxled->skip, NULL);
+> +		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> +			rc = 0;
+> +		if (rc)
+> +			goto out;
+> +	}
+> +
+> +	/* Iterate until commit_end is reached */
+> +	if (cxled->cxld.id < port->commit_end)
+> +		goto out;
+> +
+> +	/*
+> +	 * Reach here with the last committed decoder only.
+> +	 * Knowing that PMEM must always follow RAM, get poison
+> +	 * for unmapped ranges based on the last decoder's mode:
+> +	 *	ram: scan remains of ram range, then scan for pmem
+> +	 *	pmem: scan remains of pmem range
+> +	 */
+> +	cxlds = cxlmd->cxlds;
+> +
+> +	if (cxled->mode == CXL_DECODER_RAM) {
+> +		offset = cxled->dpa_res->end + 1;
+> +		length = resource_size(&cxlds->ram_res) - offset;
+> +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> +		if (rc == -EFAULT)
+> +			rc = 0;
+> +		if (rc)
+> +			goto out;
+> +	}
+> +	if (cxled->mode == CXL_DECODER_PMEM) {
+> +		offset = cxled->dpa_res->end + 1;
+> +		length = resource_size(&cxlds->pmem_res) - offset;
+> +	} else if (resource_size(&cxlds->pmem_res)) {
+> +		offset = cxlds->pmem_res.start;
+> +		length = resource_size(&cxlds->pmem_res);
+> +	} else {
+> +		rc = 1;
+> +		goto out;
+> +	}
+> +	/* Final get poison call. Return rc or 1 to stop iteration. */
+> +	rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> +	if (!rc)
+> +		rc = 1;
+> +out:
+> +	up_read(&cxl_dpa_rwsem);
+> +	return rc;
+> +}
+> +
+>  static struct lock_class_key cxl_pmem_region_key;
+>  
+>  static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 
