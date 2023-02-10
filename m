@@ -2,298 +2,214 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C6C05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 08:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C497C636D3
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 09:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbjBJIMg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 03:12:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
+        id S231777AbjBJJGQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 04:06:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231645AbjBJIMc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 03:12:32 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7275623651
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 00:12:10 -0800 (PST)
+        with ESMTP id S231779AbjBJJFv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 04:05:51 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E845FF4;
+        Fri, 10 Feb 2023 01:05:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676016730; x=1707552730;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=96x+qQjuSTNdLTGfAIcWuqlCBr2zCkW4CU8HwAQCAW4=;
-  b=dM5vHlmZq6N9NkZSDQ8CxlQYjR480bbB2goAu3gYy8Z+Fy5pDcpwNvLl
-   fO4ZkxJYWHivunUXBXvCxBOWsami498jUE+AWGwc6xb8iApXzX7YJs7gI
-   ZX6H1xP1MXCJ7Bx+IB1CCnStFxAXMIWFypg1U4sGHiln39FzjUwMIOdq2
-   J0D257v8oPZyKNHyUXwpHI5xFPwBp2u0VGek5rH4RkdG7TAGljqq8z0/N
-   pLpnIKIe008XtdwYjWTDxGqxeqaWFUQUJ5g5QIaoKtskgfdS6OcBm3rKw
-   r6qMLEGnbViA2drnJ1dVo2lP0biZdZ/t5GX6DWac2qGQW0vw5JDnebrAM
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="309997470"
+  t=1676019924; x=1707555924;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aAOYbYjD+N5rIbj4yLf5cWdsbDyvwj1VTim/NDqe4VU=;
+  b=N9M1/N0syUZ/ijR4s/xbctWiKVwo+n7kdFCbOnpUjIBF/4w56a8JTSWm
+   DAEJStqukpqmNgtYP0sEavrb8qfNhN6KgvKdq+XbWoW24BaI3ZM7Fxuc8
+   0JMjlcKjK3R7ip/jXub3mmbVHaRFXv9FZi3P36Eb83coLLAipn9RNupqp
+   POHJ9ymBAUkdLpnXn7ZUa4qpLuAtDG8+ul1NdY4zAzRHlkomeqc7pS86T
+   NplHb2P+8FAvVPL93lmuQMmPXHKbcixE+9ivk44kr2gT4jmOQCe1L5TzK
+   qcGgPa355SH4ACyzngLr7WPVfJCpycDGXRIQjynqFtBdVZHcwkNVdREKN
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="314018672"
 X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="309997470"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 00:08:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="791883589"
+   d="scan'208";a="314018672"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 01:05:22 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="736669673"
 X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="791883589"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga004.jf.intel.com with ESMTP; 10 Feb 2023 00:07:55 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Fri, 10 Feb 2023 00:07:54 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Fri, 10 Feb 2023 00:07:54 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Fri, 10 Feb 2023 00:07:54 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JEWrkyIPCJQkB6wZoN8VySl4xkNsJ+t78ogfrmRYSkRRXKXaTB2KwtrksjvPnBH3MD+f0jwAR+VJWu9QHPTETVgqsJGW41yEkxz4HHkChy+H6euEVT1hyDp2ZDY+D8yrb3/u8IjUCLrbZmsW3Q/1QH1RDz0JOvr7LRSqh+oiIHvWrH7oDVXQHEy4fNVeHRZV84pMUcr0CD6eFUnjTmJzQH7bHeaKfbhSLpI7cU1kOyXt1usObfz0SpY5uR4qpC5izsI/kspS3Vw4vdoWw3Zr2LCXIm+e5Q6TaYX59xgShkCAKDcf5bhKexlaONcu6z1FZyLRgcD/ILi5DkbhKTfrAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0eW5m3OJVYqB7bPHG2FY1EOkMgM+jz19ZKkAgyGrgDI=;
- b=KSGPln7he0iiswV4HtxZ/mE2U9PRZDOytlEq7vI6gERZeW94vQTY3N/U8x9wBkh62PofBm/qZLC3iHixsQBPCtpFsqo/NnG4toQ8Giqj4pMywdpKFNTgmEjLQZy7F7UcM25rF7iUIu6TwNCScvc4fkoX/ienEsBPyyiuKfq1l92iPKgHQS2So0IuyzTkwY6H8ikzZncG4Ona0W1FrkP2UFeC+bg0znOilhZEhMgASV5J6msLrIBuAeBcn6SakITbW0rtnKOHVP7kdQM/Oh1EGYIXxShSAzX8ZvdklAq8SEUL0qW3VBnEMhsZrpMesAx2xFpeCYtGDuYo03SbWpti/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.21; Fri, 10 Feb
- 2023 08:07:51 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6851:3db2:1166:dda6]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6851:3db2:1166:dda6%9]) with mapi id 15.20.6086.019; Fri, 10 Feb 2023
- 08:07:51 +0000
-Date:   Fri, 10 Feb 2023 00:07:47 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Stefan Roese <sr@denx.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v5] cxl: add RAS status unmasking for CXL
-Message-ID: <63e5fb533f304_13244829412@iweiny-mobl.notmuch>
-References: <20230105163127.00005ae2@huawei.com>
- <20230105165406.GA1150163@bhelgaas>
- <20230106112605.00006cf6@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230106112605.00006cf6@Huawei.com>
-X-ClientProxiedBy: BYAPR03CA0011.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::24) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+   d="scan'208";a="736669673"
+Received: from hrchavan-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.46.42])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 01:05:22 -0800
+Subject: [PATCH v2 00/20] CXL RAM and the 'Soft Reserved' => 'System RAM'
+ default
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Fan Ni <fan.ni@samsung.com>, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org
+Date:   Fri, 10 Feb 2023 01:05:21 -0800
+Message-ID: <167601992097.1924368.18291887895351917895.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH7PR11MB7605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a4198b0-85da-42b9-654b-08db0b3de79b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SQD1tsZasbISgwsdF3Qr7ysGsEqPPIaiTgpr68JpvkygQs3YbPc3XNgrz6Kra+dwwVRvef5mME4yl6rU+Z717V66lTlUBhuGz3vBLdtzhKx/pTRTmASSwI9D4n1hyykNHyyhfA/4ccik9sTj6QMkNYn0vSz7KRLmyq474DXiAlbBUaW9rNnPzDlIbtAgtD8j1/k9oHcMlgjEzRSk9LaWBC1HzWWSa3wjLTbaRHt/WOS4hOY3gUlwtdOewjHJn0oERTrjHDlS2xQZc41CY16ERUp5E3SHsIT46uTRf1XT0mVts7hvui8gGitUGKocZ7UgiRfwXZ03p6V0sgyZraU2mLp2cbjCG2jSpTQjWEykRUs7HEGVXybAMZTeCNpVmSzu65gQBKtuWMTtIWtsWc8QuTwDqdvf8Tj4SND4xEBWvA7or1fFeyiYmkn+JvybQi3muoE9TfBPzj07CIjKR7zdRXkdqpLqcXd0uiIacFst0Qqav6M0bPGY72zGEyR2n2ohE7X+/d1z7SZmAMWAHnLEWToL5TH51DGu8wXd5VAEcHD4YAjgenHb3vrtQbKJILF5BiFAN1pnZL82Z4G9ciFPMak2CuDduGvKzyeL1dWCQUHiZS6IqF3ZRy2YeJQGp/wlc+ouz8xByqfPWHCV4/PE/eYb7WkFgb3OMy6QxTl/EutlfcsbzOuI7Ng0ORmFFImo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(346002)(136003)(39860400002)(376002)(366004)(451199018)(82960400001)(38100700002)(83380400001)(86362001)(4326008)(2906002)(66556008)(66476007)(8676002)(66946007)(8936002)(44832011)(41300700001)(5660300002)(6506007)(6666004)(186003)(26005)(9686003)(6512007)(54906003)(316002)(110136005)(478600001)(966005)(6486002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3KHPs9KG3ihMjojeXfdnLhadAkQeiSdjG+MYOC7ntYRbEOd6rTNF9psgvKXW?=
- =?us-ascii?Q?GmXvHIW/v3OAwxDkUbxxs34Y8pJnxNu+tRvQuPmcwWmOzvx8PjDfKI7UWPGe?=
- =?us-ascii?Q?EUg97U0xaR8xN0dIGhlALfUD3REJjBwG9pGla8XtVg9KF7yjy+E5mveC1/gj?=
- =?us-ascii?Q?FCl73UUwiC2rowKCtcfUQYIMKNpgfAiG5yRev7R1Fc1c3ePLw8JsRS+pepaA?=
- =?us-ascii?Q?aeRBK1g+F7Ik1EEKefqWdUC/xZm7v+tLzZZppB9VsdYjpqfYFVgE7vPEp4pO?=
- =?us-ascii?Q?UPlDX06CMfDK8fnOplyQqGdz+xdUYsqFxqlu4AYGXBE38iPc6KFvDxPhBAX/?=
- =?us-ascii?Q?o8jEPQvutR0DjBxOrlNhjLbJlSb19VsrOgQ8JbDwjMeVmQu9uB0cWvuYl9nt?=
- =?us-ascii?Q?SMAZ8z0DuU/P/uzoY2U6JuDjfUcRbLBiOWmapt3ouGO1Db0hFuICKA1W4pVC?=
- =?us-ascii?Q?Nttcny5DCKjhAnFp2n1MvoSpXJQZlt+gE4fqyhs3mUw1pJVrlOtmzO/DO/yJ?=
- =?us-ascii?Q?9v32cbGvMOdZ3kKzC/mP9L2iZoNK/NXCYX9p9tMB4o589I6mYYaGZt47MGS/?=
- =?us-ascii?Q?bzCgoKVoh3tSPaDb/74a8mw4EZxxjHPXUviaaKhsI1u8DLQxHvPfJBA0jAlV?=
- =?us-ascii?Q?3HWyl/MiCHIoihRImcnV+I3YF8rLcDvtT81cxQG+T4AYPQ9UbMtPUebQxQ5n?=
- =?us-ascii?Q?/0f9EwvMNuJE5HOSsqtfeB0onjGR0OP2mH39ePRctyi419p3AsAOxZcmlLbP?=
- =?us-ascii?Q?QTrbIXhwBUVUflFJc6/qqQjFcNGu6dONheplTXy+NAoYeiiD7Yckxc8yQ9r9?=
- =?us-ascii?Q?t4c3MLQJ/drSNIIg2qrHnUmskVUTe6FATOZVxnZP7m+2Ez3tJ87CkGQNP1PC?=
- =?us-ascii?Q?988oaR4aeLl4fLqUvx+hU19So6AoQneb2ViTN1GRMZ81Xd5+ow9mQFuYM/Mi?=
- =?us-ascii?Q?iyTMG6cubSFECy+RWtSRdKUb9CUZSmcxGlqXSnKgW+EzpezwgQlpENnBsoTS?=
- =?us-ascii?Q?mFQ5h66jza+2DsDOS5lVsQSTmJ6mih97cdbX0C2xbBF5ndZlmaUUPvWHN2EQ?=
- =?us-ascii?Q?pGaMBTX9LUAEuFARpZDRksPPE26d9AEa6GhVWk6dZ5Vs/+G3E1FmKCGUSMZu?=
- =?us-ascii?Q?Oqg8QNf2E11oLEokjotT26O2HR+Z2nIZU6ItHa9z9ymUcsPp/fxHmewS2eKQ?=
- =?us-ascii?Q?eNIH+gWGsDhyD7jTN9aPOrr9ml1UIrobev7BBUG9cmCYpePeq/VwZMyRQ9O5?=
- =?us-ascii?Q?Rw1sQ4R+a9yz9NY9zy4BQq1x7zHbLvTl8x6wPwygWysUeCziVIPWMwb4/9O+?=
- =?us-ascii?Q?p7cbTcbRt4AE1XdlqOamSgqyjySJeTNSAeBK7uaYSPgWWxwjRBCrxiCTmEJ5?=
- =?us-ascii?Q?U7SThg3ep+qYkqlWypLRvgUnSGoYwE3UsB1EWwvaPzBAbSUbc9NtvLbYMwtF?=
- =?us-ascii?Q?GepqYSAJm62x6yxMmoGdkICd09Q6hENv1TwaAFbcqMhyaxdwO/OsInzzdhrl?=
- =?us-ascii?Q?/d3ntt+lXt6ImTtz1xg2BB1NyGsWu71S/PL45xuXPtAWhiNTIfpU2zLtines?=
- =?us-ascii?Q?BfySUzDRg4/1m4cdZRl8bTNXVIsGe/qEEXMSlXjQ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a4198b0-85da-42b9-654b-08db0b3de79b
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 08:07:51.2031
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kf+NKaIY4Da1NuUMojziQxWvPusTragb5+RFeloRX5+HmmaeHjYUkvrxzzcT5mMhivKoWwt2hjmAMe9AYOyVhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7605
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> On Thu, 5 Jan 2023 10:54:06 -0600
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Thu, Jan 05, 2023 at 04:31:27PM +0000, Jonathan Cameron wrote:
-> > > On Thu, 29 Dec 2022 11:27:31 -0600
-> > > Bjorn Helgaas <helgaas@kernel.org> wrote:  
-> > > > On Sat, Dec 17, 2022 at 05:52:04PM +0000, Jonathan Cameron wrote:  
-> > 
-> > > > > I realized that adding this patch still only enables error because I
-> > > > > didn't check the PCIe spec when writing the QEMU emulation. I had
-> > > > > changed the value of  "Correctable Internal Error Mask" to default
-> > > > > to unmasked.  PCIe 6.0 says it defaults to masked.  For some reason
-> > > > > I thought these masks were impdef (should have checked ;)    
-> > > > 
-> > > > I assume you refer to the AER "Corrected Internal Error Mask" bit
-> > > > (PCIe r6.0, sec 7.8.4.6), which indeed defaults to 1b (masked) if the
-> > > > bit is implemented.  
-> > > 
-> > > Spot on.  I keep confusing the correctable / corrected stuff in PCIe.
-> > > Made more confusing by the CXL stuff layered on top.  
-> > 
-> > Great, it wasn't confusing enough already, so CXL rectified that
-> > problem :)
-> > 
-> > > > We now have f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
-> > > > native"), which turns on error reporting in Device Control for all
-> > > > devices at enumeration-time when the OS has control of AER.  But this
-> > > > is only the generic device-level control; it doesn't configure any
-> > > > *AER* registers.
-> > > > 
-> > > > I'm surprised to learn that the only writes to PCI_ERR_UNCOR_MASK are
-> > > > some mips and powerpc arch-specific code and a few individual drivers.
-> > > > It seems like maybe pci_aer_init() should do some more configuration
-> > > > of the AER mask and severity registers.  
-> > > 
-> > > Sounds good.  Any thoughts on where to get the policy from?
-> > > Feels like an administrator thing rather than a kernel config one
-> > > to me, so maybe pci_aer_init() is too early or we'd benefit from
-> > > a nice easy per device interface to tweak a default?  
-> > 
-> > If we get a solid system-level policy in place and still end up
-> > needing some kind of administrative control, that might be OK.  But we
-> > don't have that solid system policy yet, so I'd like to push on that
-> > before adding admin interfaces.
-> 
-> I guess next step is a straw man proposal for people to test / shoot at.
-> I'll send out an RFC that enables the lot as defined in PCI r6.0
-> as that will be most useful for identifying quirks we need to handle.
-> 
-> My assumption being people will push back on some of them / we'll need
-> to quirk others.
+Changes since v1: [1]
+- Add a fix for memdev removal racing port removal (found by unit tests)
+- Add a fix to unwind region target list updates on error in
+  cxl_region_attach() (Jonathan)
+- Move the passthrough decoder fix for submission for v6.2-final (Greg)
+- Fix wrong initcall for cxl_core (Gregory and Davidlohr)
+- Add an endpoint decoder state (CXL_DECODER_STATE_AUTO) to replace
+  the flag CXL_DECODER_F_AUTO (Jonathan)
+- Reflow cmp_decode_pos() to reduce levels of indentation (Jonathan)
+- Fix a leaked reference count in cxl_add_to_region() (Jonathan)
+- Make cxl_add_to_region() return an error (Jonathan)
+- Fix several spurious whitespace changes (Jonathan)
+- Cleanup some spurious changes from the tools/testing/cxl update
+  (Jonathan)
+- Test for == CXL_CONFIG_COMMIT rather than >= CXL_CONFIG_COMMIT
+  (Jonathan)
+- Add comment to clarify device_attach() return code expectation in
+  cxl_add_to_region() (Jonathan)
+- Add a patch to split cxl_port_probe() into switch and endpoint port
+  probe calls (Jonathan)
+- Collect reviewed-by and tested-by tags
 
-Jonathan,
+[1]: http://lore.kernel.org/r/167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com
 
-Did you send something along these lines?  I was testing the AER trace
-point output while cleaning up the trace points a bit.[1]  And I ran
-across the need to set up these PCIe registers.  Because I did not see
-anything from you I was thinking of taking a crack at fixing this.
+---
+Cover letter same as v1
 
-To me, it is pretty straight forward that if a driver enables error
-reporting then it would want to include internal errors both correctable
-and uncorrectable.  This allows for CXL to further control the CXL
-registers as an overlay.  I'm not so sure about the other PCIe AER errors
-which are default masked.
+Summary:
+--------
 
-PCI v6.0 defaults to a fatal uncorrectable error.  I think it is probably
-a good default to make these non-fatal when enabling the _reporting_ of
-the errors.  If a driver wants them to be fatal then another call could be
-added later.  (or the driver should be doing that on their own now.)
+CXL RAM support allows for the dynamic provisioning of new CXL RAM
+regions, and more routinely, assembling a region from an existing
+configuration established by platform-firmware. The latter is motivated
+by CXL memory RAS (Reliability, Availability and Serviceability)
+support, that requires associating device events with System Physical
+Address ranges and vice versa.
 
-If I understand this thread, the CXL spec, the PCI spec, and all the code; it
-seems like unmasking the internal correctable and uncorrectable errors in
-pci_enable_pcie_error_reporting() are a good system default.  With the
-addition of making uncorrectable non-fatal.[2]
+The 'Soft Reserved' policy rework arranges for performance
+differentiated memory like CXL attached DRAM, or high-bandwidth memory,
+to be designated for 'System RAM' by default, rather than the device-dax
+dedicated access mode. That current device-dax default is confusing and
+surprising for the Pareto of users that do not expect memory to be
+quarantined for dedicated access by default. Most users expect all
+'System RAM'-capable memory to show up in FREE(1).
 
-That said, there are approximately 51 drivers which enable error reporting
-with this call.  I'm a bit concerned with such a global change.  But
-perhaps it seems ok if it is only enabling then internal errors as
-non-fatal.  So at worse this would simply spam logs on bad devices?
 
-Ira
+Details:
+--------
 
-[1] https://lore.kernel.org/all/20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com/
-[2]
+Recall that the Linux 'Soft Reserved' designation for memory is a
+reaction to platform-firmware, like EFI EDK2, delineating memory with
+the EFI Specific Purpose Memory attribute (EFI_MEMORY_SP). An
+alternative way to think of that attribute is that it specifies the
+*not* general-purpose memory pool. It is memory that may be too precious
+for general usage or not performant enough for some hot data structures.
+However, in the absence of explicit policy it should just be 'System
+RAM' by default.
 
-commit 30e6a0bf308e7b8c68b4da33b505fa967f6bbf34 (HEAD -> cxl-pci-aer)
-Author: Ira Weiny <ira.weiny@intel.com>
-Date:   Thu Feb 9 22:26:05 2023 -0800
+Rather than require every distribution to ship a udev policy to assign
+dax devices to dax_kmem (the device-memory hotplug driver) just make
+that the kernel default. This is similar to the rationale in:
 
-    PCI/AER: Enable internal AER errors by default
-    
-    The CXL driver expects internal error reporting to be enabled via
-    pci_enable_pcie_error_reporting().  It is likely other drivers expect
-    the same thing.
-    
-    PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
-    Register (7.8.4.6) default to masking internal errors.  The
-    Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
-    as fatal.
-    
-    Change pci_enable_pcie_error_reporting() to enable both types of
-    internal errors.  Ensure uncorrectable errors are set non-fatal to limit
-    any impact to other drivers.
-    
-    Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-    Cc: Bjorn Helgaas <helgaas@kernel.org>
-    Cc: Dave Jiang <dave.jiang@intel.com>
-    Cc: <linux-cxl@vger.kernel.org>,
-    Cc: <dan.j.williams@intel.com>
-    Cc: Stefan Roese <sr@denx.de>
-    Cc: "Kuppuswamy Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
-    Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-    
-    ---
-    For all drivers other than CXL this is expected to at worse increase the
-    error reporting verbosity.  Because the errors are set to non-fatal by
-    default this should not adversely affect the operation of those devices.
+commit 8604d9e534a3 ("memory_hotplug: introduce CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE")
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 625f7b2cafe4..9d3ed3a5fc23 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -229,11 +229,28 @@ int pcie_aer_is_native(struct pci_dev *dev)
- 
- int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- {
-+       int pos_cap_err;
-+       u32 reg;
-        int rc;
- 
-        if (!pcie_aer_is_native(dev))
-                return -EIO;
- 
-+       pos_cap_err = dev->aer_cap;
-+
-+       /* Unmask correctable and uncorrectable (non-fatal) internal errors */
-+       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
-+       reg &= ~PCI_ERR_COR_INTERNAL;
-+       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
-+
-+       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
-+       reg &= ~PCI_ERR_UNC_INTN;
-+       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
-+
-+       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
-+       reg &= ~PCI_ERR_UNC_INTN;
-+       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
-+
-        rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-        return pcibios_err_to_errno(rc);
- }
+With this change the relatively niche use case of accessing this memory
+via mapping a device-dax instance can be achieved by building with
+CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=n, or specifying
+memhp_default_state=offline at boot, and then use:
+
+    daxctl reconfigure-device $device -m devdax --force
+
+...to shift the corresponding address range to device-dax access.
+
+The process of assembling a device-dax instance for a given CXL region
+device configuration is similar to the process of assembling a
+Device-Mapper or MDRAID storage-device array. Specifically, asynchronous
+probing by the PCI and driver core enumerates all CXL endpoints and
+their decoders. Then, once enough decoders have arrived to a describe a
+given region, that region is passed to the device-dax subsystem where it
+is subject to the above 'dax_kmem' policy. This assignment and policy
+choice is only possible if memory is set aside by the 'Soft Reserved'
+designation. Otherwise, CXL that is mapped as 'System RAM' becomes
+immutable by CXL driver mechanisms, but is still enumerated for RAS
+purposes.
+
+This series is also available via:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.3/cxl-ram-region
+
+...and has gone through some preview testing in various forms.
+
+---
+
+Dan Williams (20):
+      cxl/memdev: Fix endpoint port removal
+      cxl/Documentation: Update references to attributes added in v6.0
+      cxl/region: Add a mode attribute for regions
+      cxl/region: Support empty uuids for non-pmem regions
+      cxl/region: Validate region mode vs decoder mode
+      cxl/region: Add volatile region creation support
+      cxl/region: Refactor attach_target() for autodiscovery
+      cxl/region: Cleanup target list on attach error
+      cxl/region: Move region-position validation to a helper
+      kernel/range: Uplevel the cxl subsystem's range_contains() helper
+      cxl/region: Enable CONFIG_CXL_REGION to be toggled
+      cxl/port: Split endpoint and switch port probe
+      cxl/region: Add region autodiscovery
+      tools/testing/cxl: Define a fixed volatile configuration to parse
+      dax/hmem: Move HMAT and Soft reservation probe initcall level
+      dax/hmem: Drop unnecessary dax_hmem_remove()
+      dax/hmem: Convey the dax range via memregion_info()
+      dax/hmem: Move hmem device registration to dax_hmem.ko
+      dax: Assign RAM regions to memory-hotplug by default
+      cxl/dax: Create dax devices for CXL RAM regions
+
+
+ Documentation/ABI/testing/sysfs-bus-cxl |   64 +-
+ MAINTAINERS                             |    1 
+ drivers/acpi/numa/hmat.c                |    4 
+ drivers/cxl/Kconfig                     |   12 
+ drivers/cxl/acpi.c                      |    3 
+ drivers/cxl/core/core.h                 |    7 
+ drivers/cxl/core/hdm.c                  |   25 +
+ drivers/cxl/core/memdev.c               |    1 
+ drivers/cxl/core/pci.c                  |    5 
+ drivers/cxl/core/port.c                 |   92 ++-
+ drivers/cxl/core/region.c               |  851 ++++++++++++++++++++++++++++---
+ drivers/cxl/cxl.h                       |   57 ++
+ drivers/cxl/cxlmem.h                    |    5 
+ drivers/cxl/port.c                      |  113 +++-
+ drivers/dax/Kconfig                     |   17 +
+ drivers/dax/Makefile                    |    2 
+ drivers/dax/bus.c                       |   53 +-
+ drivers/dax/bus.h                       |   12 
+ drivers/dax/cxl.c                       |   53 ++
+ drivers/dax/device.c                    |    3 
+ drivers/dax/hmem/Makefile               |    3 
+ drivers/dax/hmem/device.c               |  102 ++--
+ drivers/dax/hmem/hmem.c                 |  148 +++++
+ drivers/dax/kmem.c                      |    1 
+ include/linux/dax.h                     |    7 
+ include/linux/memregion.h               |    2 
+ include/linux/range.h                   |    5 
+ lib/stackinit_kunit.c                   |    6 
+ tools/testing/cxl/test/cxl.c            |  147 +++++
+ 29 files changed, 1484 insertions(+), 317 deletions(-)
+ create mode 100644 drivers/dax/cxl.c
+
+base-commit: 172738bbccdb4ef76bdd72fc72a315c741c39161
