@@ -2,51 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0378DC05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 06:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4E0C636D4
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 06:41:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbjBJGlw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 01:41:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56766 "EHLO
+        id S230394AbjBJGly (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 01:41:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbjBJGlv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 01:41:51 -0500
+        with ESMTP id S231264AbjBJGlx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 01:41:53 -0500
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9033976C;
-        Thu,  9 Feb 2023 22:41:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7CDA1115B;
+        Thu,  9 Feb 2023 22:41:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676011310; x=1707547310;
-  h=from:subject:date:message-id:mime-version:
-   content-transfer-encoding:to:cc;
-  bh=4xggN7P66K2tnaGFM2iCfVXbyCWBFwqN22XsUsnZ0Cw=;
-  b=Qv9eg+t+1lCZFnskWPVMLP1rFPrDrEpI+51f7mnvPJ9aDNDVqS1ps+bw
-   MFtsIdeyRJ8JpThT4rUK1Ox8R4Nyas9c1EREbePe/dixt4ITpZJGSh90w
-   tU54EjZ+aP5j8bt5l2DiM4lANUwEeoEIL3CZoGwRPr/OBwjebPR5CjaVl
-   qHJKSb9wuxi4fccbXPEP1XhlRe4pYIcED8Wc+aWDi/XHlLUZUa5GBA6+N
-   4bLSIwD7xxhfw6kcr72CE9k8izULLBoTO4nxt9P2KGsTxuQn5JD6jBgYO
-   o00hkMocgYCKZ83VD1DJc20ra60VZJDfknc8veMQutEW92IyxQzkO5YGd
+  t=1676011312; x=1707547312;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=eiNZRovgGtYMT3dCMoI5ZB50b+BK2P4JSaNAWOtAIvw=;
+  b=Nml3oiCury585hBh9tGy2/OtcLLLbaWiz/LciycfRHnplhiVtkAfbbzp
+   l2Inc6f3+WjFdMTRGKlfP3236/YbIodFuDQZcYlmempr5anzh/DBT9rkW
+   i1iu3HMGKslfCrC5+MAhAv/3rj0gvisBw57GzRuqvfFkwbybe1ehlgKYs
+   F5P/Sz0bb+K0F7v96oU13I97epHFPwyAuONEZELP5xDk7HkUmaeM0s4cz
+   DGx2gDngXuIGRXBoq/xImTVnudCJn4idayDbyCC+fBV08fqy68noQxaEX
+   n0Ydcr+Bh1jPjTQTcRTiSe7NXj1KCVWs0N8LrHfEykp63pdgMh9Oq/mZd
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="331654750"
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="331654760"
 X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="331654750"
+   d="scan'208";a="331654760"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 22:41:50 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="661300308"
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 22:41:52 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="661300314"
 X-IronPort-AV: E=Sophos;i="5.97,286,1669104000"; 
-   d="scan'208";a="661300308"
+   d="scan'208";a="661300314"
 Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.212.43.65])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 22:41:49 -0800
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 22:41:51 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH 0/2] cxl: Enhance trace point information
-Date:   Thu, 09 Feb 2023 22:40:14 -0800
-Message-Id: <20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com>
+Date:   Thu, 09 Feb 2023 22:40:16 -0800
+Subject: [PATCH 2/2] cxl/trace: Add host output to trace points
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAM7m5WMC/x2N0QrCMAwAf2Xk2UDNYFV/RXxIu8wVapRmjsHYv
- xt8vIPjdjBpRQxu3Q5N1mLlrQ7nUwd5Zn0KltEZKFAfKFwwbxVlFV1Q+SWG1z7SlCLxECJ4ldg
- EU2PNs3f6rdXlp8lUtv/m/jiOHzhnjyB2AAAA
+Message-Id: <20230208-cxl-event-names-v1-2-73f0ff3a3870@intel.com>
+References: <20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com>
+In-Reply-To: <20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com>
 To:     Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
@@ -56,36 +55,140 @@ Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
         Dave Jiang <dave.jiang@intel.com>
 X-Mailer: b4 0.13-dev-ada30
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1676011309; l=730;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1676011309; l=4583;
  i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
- bh=4xggN7P66K2tnaGFM2iCfVXbyCWBFwqN22XsUsnZ0Cw=;
- b=ajZVbn66tUqNHmyl+tMCm7xIyyWgaBn0td3Ms+nodR01f0yski+eZgcSUmZNguMHih+sCjNtfug3
- ZvZZMn8hAaeRiY1ovJ4gMJz3OrT60A+hvhIcK4BijMz8SXgqqZc5
+ bh=eiNZRovgGtYMT3dCMoI5ZB50b+BK2P4JSaNAWOtAIvw=;
+ b=SzIHAJIHeQ7Hsc4oFlAT0kTPw4RfNVBuvKtGwiGbupvZfY1e797td+6EmLFwLVPbmFfADCQlyHLi
+ uHbtKuZlAiMG1gkai2rrBZa9ZE4zwjBN8HttWpU7bxafwJKaWtC2
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Trace point definitions are reporting different linux devices for
-the same CXL hardware device.  Clean this up and add parent device
-information to all the trace points.
+The host parameter of where the memdev is connected is useful
+information.
 
+Report host consistently in all trace points.
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
-Ira Weiny (2):
-      cxl/trace: Standardize device information output
-      cxl/trace: Add host output to trace points
+ drivers/cxl/core/trace.h | 31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
- drivers/cxl/core/mbox.c  | 14 ++++----
- drivers/cxl/core/pci.c   |  8 ++---
- drivers/cxl/core/trace.h | 85 +++++++++++++++++++++++++++---------------------
- 3 files changed, 57 insertions(+), 50 deletions(-)
----
-base-commit: dbe9f7d1e155b97a42f7da81e22acc98fe0a9072
-change-id: 20230208-cxl-event-names-9372fb72a607
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index b7a11e6b0e28..1d32fc5d5eba 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -51,12 +51,14 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+ 	TP_ARGS(cxlmd, status, fe, hl),
+ 	TP_STRUCT__entry(
+ 		__string(memdev, dev_name(&cxlmd->dev))
++		__string(host, dev_name(cxlmd->dev.parent))
+ 		__field(u32, status)
+ 		__field(u32, first_error)
+ 		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+ 	),
+ 	TP_fast_assign(
+ 		__assign_str(memdev, dev_name(&cxlmd->dev));
++		__assign_str(host, dev_name(cxlmd->dev.parent));
+ 		__entry->status = status;
+ 		__entry->first_error = fe;
+ 		/*
+@@ -65,8 +67,8 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+ 		 */
+ 		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+ 	),
+-	TP_printk("memdev=%s: status: '%s' first_error: '%s'",
+-		  __get_str(memdev),
++	TP_printk("memdev=%s host=%s: status: '%s' first_error: '%s'",
++		  __get_str(memdev), __get_str(host),
+ 		  show_uc_errs(__entry->status),
+ 		  show_uc_errs(__entry->first_error)
+ 	)
+@@ -95,14 +97,17 @@ TRACE_EVENT(cxl_aer_correctable_error,
+ 	TP_ARGS(cxlmd, status),
+ 	TP_STRUCT__entry(
+ 		__string(memdev, dev_name(&cxlmd->dev))
++		__string(host, dev_name(cxlmd->dev.parent))
+ 		__field(u32, status)
+ 	),
+ 	TP_fast_assign(
+ 		__assign_str(memdev, dev_name(&cxlmd->dev));
++		__assign_str(host, dev_name(cxlmd->dev.parent));
+ 		__entry->status = status;
+ 	),
+-	TP_printk("memdev=%s: status: '%s'",
+-		  __get_str(memdev), show_ce_errs(__entry->status)
++	TP_printk("memdev=%s host=%s: status: '%s'",
++		  __get_str(memdev), __get_str(host),
++		  show_ce_errs(__entry->status)
+ 	)
+ );
+ 
+@@ -122,6 +127,7 @@ TRACE_EVENT(cxl_overflow,
+ 
+ 	TP_STRUCT__entry(
+ 		__string(memdev, dev_name(&cxlmd->dev))
++		__string(host, dev_name(cxlmd->dev.parent))
+ 		__field(int, log)
+ 		__field(u64, first_ts)
+ 		__field(u64, last_ts)
+@@ -130,15 +136,17 @@ TRACE_EVENT(cxl_overflow,
+ 
+ 	TP_fast_assign(
+ 		__assign_str(memdev, dev_name(&cxlmd->dev));
++		__assign_str(host, dev_name(cxlmd->dev.parent));
+ 		__entry->log = log;
+ 		__entry->count = le16_to_cpu(payload->overflow_err_count);
+ 		__entry->first_ts = le64_to_cpu(payload->first_overflow_timestamp);
+ 		__entry->last_ts = le64_to_cpu(payload->last_overflow_timestamp);
+ 	),
+ 
+-	TP_printk("memdev=%s: log=%s : %u records from %llu to %llu",
+-		__get_str(memdev), cxl_event_log_type_str(__entry->log),
+-		__entry->count, __entry->first_ts, __entry->last_ts)
++	TP_printk("memdev=%s host=%s: log=%s : %u records from %llu to %llu",
++		__get_str(memdev), __get_str(host),
++		cxl_event_log_type_str(__entry->log), __entry->count,
++		__entry->first_ts, __entry->last_ts)
+ 
+ );
+ 
+@@ -171,6 +179,7 @@ TRACE_EVENT(cxl_overflow,
+  */
+ #define CXL_EVT_TP_entry					\
+ 	__string(memdev, dev_name(&cxlmd->dev))		\
++	__string(host, dev_name(cxlmd->dev.parent))		\
+ 	__field(int, log)					\
+ 	__field_struct(uuid_t, hdr_uuid)			\
+ 	__field(u32, hdr_flags)					\
+@@ -182,6 +191,7 @@ TRACE_EVENT(cxl_overflow,
+ 
+ #define CXL_EVT_TP_fast_assign(cxlmd, l, hdr)					\
+ 	__assign_str(memdev, dev_name(&cxlmd->dev));				\
++	__assign_str(host, dev_name(cxlmd->dev.parent));			\
+ 	__entry->log = (l);							\
+ 	memcpy(&__entry->hdr_uuid, &(hdr).id, sizeof(uuid_t));			\
+ 	__entry->hdr_length = (hdr).length;					\
+@@ -192,10 +202,11 @@ TRACE_EVENT(cxl_overflow,
+ 	__entry->hdr_maint_op_class = (hdr).maint_op_class
+ 
+ #define CXL_EVT_TP_printk(fmt, ...) \
+-	TP_printk("memdev=%s log=%s : time=%llu uuid=%pUb len=%d flags='%s' "	\
+-		"handle=%x related_handle=%x maint_op_class=%u"			\
++	TP_printk("memdev=%s host=%s log=%s : time=%llu uuid=%pUb len=%d "	\
++		"flags='%s' handle=%x related_handle=%x maint_op_class=%u"	\
+ 		" : " fmt,							\
+-		__get_str(memdev), cxl_event_log_type_str(__entry->log),	\
++		__get_str(memdev), __get_str(host),				\
++		cxl_event_log_type_str(__entry->log),				\
+ 		__entry->hdr_timestamp, &__entry->hdr_uuid, __entry->hdr_length,\
+ 		show_hdr_flags(__entry->hdr_flags), __entry->hdr_handle,	\
+ 		__entry->hdr_related_handle, __entry->hdr_maint_op_class,	\
 
-Best regards,
 -- 
-Ira Weiny <ira.weiny@intel.com>
+2.39.1
 
