@@ -2,171 +2,188 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C636C636D7
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 23:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EC5C636D4
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 23:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbjBJXqu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 18:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56970 "EHLO
+        id S229589AbjBJXvM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 18:51:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbjBJXqr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 18:46:47 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577BF125AC;
-        Fri, 10 Feb 2023 15:46:41 -0800 (PST)
+        with ESMTP id S229551AbjBJXvL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 18:51:11 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68E6BBA1;
+        Fri, 10 Feb 2023 15:51:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676072801; x=1707608801;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7FpgIac8FzbCShLFwaqYK1OwqN3FNoWhI2Ig6hNiFsE=;
-  b=kXORbJvgZXtkerQePY2YwWM1r0MjUcQme1Mlehm9id/n/dw63bG2cBha
-   Y9aKBtlimJUdNfXVtRWIXykBDuso9h2uYp4ixx1ATQ6iONHxnJIMxL9dk
-   dFFtTJwaWsRkcJ3Ko2ro2OwaM+nkJ28pqjsOIhPoVvfV+QAWnKWPxBKXy
-   +gsnmaYg/5cyN9yOLk03Wct7zt8l6/DUHhkTNFZjO/We7pKTW+gyz+Daf
-   LeEc6zG4CVMd/4PM69cv+ux5YIumhu/2O70R1tcbjgXHMSY4bb6wMo6yn
-   zoT+50qb+dr2C6QDeI5D4jUBqRHHjls7wuim363IIn7gTLYerOUNFeefS
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="318576355"
+  t=1676073069; x=1707609069;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=GocVGuaVlJurE0k3uweX2YBE8OmlOaKIPNpy/xnDJIs=;
+  b=RQeCyp8JNAJnZmI2gRj82O7A+EiRWExC5Bfql1NrTgRlAGDKvCoFuARu
+   CNRWYBhUXNWigg+5U9IAyIQ47SvGFE2jd7dvqUTjnG8GI3NqebF88IYzw
+   drDVBJKcE373y0wbqrfXRd3Qd47esKPbLv2IJNaVgTzdoNZacSb8L7vqh
+   2PBd4F/u53LwZCof1DzJTZ9jKdFQpwTHKVrrSyyePByW5l/11gRru5TX8
+   x/4Azn0+IUd7DHg/B10lN2MaHIG9l3QV3PJVVZqsYO4amTO6kohBXIFnB
+   CTeuXLLmOk4rnu0f+ZD66sfnxfRCypyYWwxJzVIeilBxmYWBtGDlRis9r
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="331861171"
 X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="318576355"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 15:46:16 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="700633859"
+   d="scan'208";a="331861171"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 15:51:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="756951151"
 X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="700633859"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.190.133]) ([10.213.190.133])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 15:46:16 -0800
-Message-ID: <c5a3eb31-ebeb-2a8c-e504-4ea52e720844@intel.com>
-Date:   Fri, 10 Feb 2023 16:46:15 -0700
+   d="scan'208";a="756951151"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Feb 2023 15:51:03 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 10 Feb 2023 15:51:03 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Fri, 10 Feb 2023 15:51:03 -0800
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.45) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Fri, 10 Feb 2023 15:51:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z58MTLAbYz0hKYC1vjlBF4+BJ9/VIjWdthZjXw1RzPU076oTESFyoldhHOQX4RZ2SS1pRE9mDtPv2UsmPcchHCAfuSS9tZk8F52Qw+UgLIu7LBo27MnDQUq59FDkXqei8/S7XDrr7PsgMMREJNqv+CgjCtjkIYkuiEgaXVkWqkKm/54upM64dlgxsMikd//r5Wl7ndBEP1B5t5aAexQhWfIJjUMgKi05lhncr6PmX0E2mQ7s2PeU9STfJrUUlsgzPvkfk5CchXAoaZE1tnqxO0EASW5cfx/ypddhZ/FlVBKNUlx7LCHFeaaeCRSw635ZzrIFu92MBPxWOnuaCyXAUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KEXRDupCzELSOLEkJaWYMxPRHGciF6l+tA1TVkn486I=;
+ b=QVKK6NG57jD2tElatIqnoOIdU7wMs7ayeZPFuNHnoezO9/H5nUclcnCGrqyMYgJ/kg347kTEPOmtQq5DGNBXE8wW+Zf4wojzroE0Xf+j8miI4ZTu4D9gdxP6YKVz4IHgSB3c6p+6WzAT4Xr1PZrbOKuiugBQ6JvJMujs1TctixF95M9jB6YX1XaAplvaIw6XQukbIlAA+SbmaVCD0JQ8CFwhE1SzG2VFQ0q3RnD53IOa+/QKQB629FDq5qY16h971TxB5+KyP48RnItnIJs7BJ/GIzdexZ1yKBFHRUDUuoGlzNBXoDI8zqT6uf8Qv8ghAJc6v8/F9nwMkTf2JaA6JQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MW4PR11MB5822.namprd11.prod.outlook.com (2603:10b6:303:185::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Fri, 10 Feb
+ 2023 23:50:56 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6086.020; Fri, 10 Feb 2023
+ 23:50:56 +0000
+Date:   Fri, 10 Feb 2023 15:50:53 -0800
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: RE: [PATCH v2 01/10] PCI/DOE: Silence WARN splat with
+ CONFIG_DEBUG_OBJECTS=y
+Message-ID: <63e6d85d5cf40_1e49432941b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1674468099.git.lukas@wunner.de>
+ <cc4b61809e2520d835cf3d4f62e7d5ed00a9d031.1674468099.git.lukas@wunner.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cc4b61809e2520d835cf3d4f62e7d5ed00a9d031.1674468099.git.lukas@wunner.de>
+X-ClientProxiedBy: BY5PR17CA0054.namprd17.prod.outlook.com
+ (2603:10b6:a03:167::31) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v6] cxl: add RAS status unmasking for CXL
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        dan.j.williams@intel.com, ira.weiny@intel.com, bhelgaas@google.com,
-        Jonathan.Cameron@Huawei.com
-References: <20230210225223.GA2706583@bhelgaas>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230210225223.GA2706583@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB5822:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0442eae3-0f92-40b1-5682-08db0bc1a6b3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +zC6+KNl6Cw0C48YK220D7zc0N3bW8x58OLgErzSfI8m3WfzqlHus2VL+KCOZgVwoRLBkltJrhtVHxLM6RabjpY1HHDmLjmDGynmOcavmK3W5+TerifTy6vF11++woQL1RXTj9TUWxt3vfvRv0w81XKGdPFXff1gFxKTwrHk1xv+De7Ej59v2PcOdJR1DGuqqGKHWe5qoCDII5D7xBLib1irAwEzGop1xXCtF32nrQ05sleM2JBNZmO5ClZdrCwMIB4ngQVt9cePZRfGGCmmtOz2vNSmGtPHpSN0NsLImpg68lZGVmW5PrYRW6IixZb/BWehpo/17oipxmfTmUug98PGN5cyJcPNIz7n4UZd+dZOip3TNpVcAWZhQNMBQOU6Q5/VEbCKZ0Vxn8kPVsaPcUGzqWyxIIFyppnEqI7J68VGK+VXcENtfx3k4VWTSo3X+DhlhLGLAcdyBzrqhk736FFdJklxNw/wrwIrzlfNj2uIo4vhszbRwbUMFkGbff3/5wYrVTNqwg1nLVvjFJYr/GJwJPDtJFQ8ljQWUZzbg4jcGex6PwOjWV+nGEuPKXJIAz1UFabEWNrssJuKERpKCNuvWkNXEH7x5HBy8FLHzZsgL46quuMKUMlujipRwN9Id6BSH8r3svREK1QxGXSqpU8VdQqgG8+CsFvuBMrEU+k=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(396003)(136003)(366004)(376002)(346002)(451199018)(6486002)(8936002)(9686003)(6512007)(966005)(26005)(186003)(5660300002)(66556008)(316002)(8676002)(66946007)(6666004)(41300700001)(2906002)(83380400001)(66476007)(54906003)(478600001)(6506007)(110136005)(86362001)(4326008)(38100700002)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/joSTpEbCEFYEn/YNEB1YZ348bO/p+J/M0MGdjNw4EhW6C8hjeedhdIh7p/p?=
+ =?us-ascii?Q?lPsRA9iVA4uaunR6nKrIF7jXC/fu6vOMV7TKjznMfwUQ/dG6203s5in5NLNl?=
+ =?us-ascii?Q?dr/jy0Z3/hzxasMPyctp6wa556z9sQBxc+MfzEkq4YU0Qv5S6MXwoVmCeJGn?=
+ =?us-ascii?Q?IwrF78V37CYRgrDiw9oQX5UV4lJvZ8r+PQVPq+GTbeOPPjkCnLXiJQkYQfkH?=
+ =?us-ascii?Q?MJbEmSdM0iv1uCMb3zfv9WjMAXqJny5B8WzTxRtXHXG+H3YKvUXozmncndJB?=
+ =?us-ascii?Q?UdZszN4YTCKVID1NrRk+41Bawm+dqXAyUtsipC/px/j65RyqaJyE2PxlvsA0?=
+ =?us-ascii?Q?cq21JxrV2YhTQ5GYexGa2iqE59LNG+dgsSOlxU52ZPaprQXEAqH37XCtkWX/?=
+ =?us-ascii?Q?elqD1bTZdyVrny81nmZCQVQkUw1sS1yMFNHxN/Q6N/vK6xH3SNoDFmIamS7K?=
+ =?us-ascii?Q?TSZBN218gAZrhFp4tPOcJNTbCuB3zhXdcF3GHsNNgFHNOD9j/EJ280f2m/bv?=
+ =?us-ascii?Q?PWGgfukld5jsuAnXq9UZNaY63v8BYInry8mo8h4B4QAxXEIJJgAXxmp9HTH2?=
+ =?us-ascii?Q?RSVlJoHJYDfOV89x+sn91zoi+1h+/iRWEvybyv3pMApKBgxO75/cVS1laigj?=
+ =?us-ascii?Q?rnaMfO+m9PypYMfxWzPNEk1BESSq2ybw4GxNQRX+bA4EZG1cCrAvKY4yfHWG?=
+ =?us-ascii?Q?pNewZZAnrAYOoR2I8BPpPrHSFiW/uYOiw+dBylH2kMmdY3hYkfY/nhTUaYeg?=
+ =?us-ascii?Q?OE24r9cqp19CJZrasOmwrzIdg4P64OzX6f6RcnPkWmp5rKQSf/KSuL34RD9n?=
+ =?us-ascii?Q?7Sd2o9lx5W9zel1L7vDCWHH3XMHzoKFj7HbQqetkqsEmgBqD2EsVOtGX459P?=
+ =?us-ascii?Q?TnNROjDsrYvzmEqrELgeTYZXQvxMBQBVexn47xsohLQInAXJqBA167CnUPO8?=
+ =?us-ascii?Q?hWZFVhyvHAaJo/+SsX08/9TyslYbfk2lssKx8rSQS/H3FYmB+FtIsmeDxoFn?=
+ =?us-ascii?Q?2ikSF/JtNMlLjwNRXzo6V3zV7G+YO8ong/e1Je5VXmCerFFNzhmfaywueK1H?=
+ =?us-ascii?Q?ffsda3RCYS/zFfo/ddWo58CI0/uYb4p/7L5kHikiP4WDsf6DuZrrX/CzkEJe?=
+ =?us-ascii?Q?ZDP7zRdH74miRzO28ooq1j77brAZNi43ppZdzxGLJCp5N/6UWJu/PePFUdza?=
+ =?us-ascii?Q?5M9jLjVg3BFyq3NPZVDJ2DDmiwxul11SLRkFX3w+zVXALxJNcEr89+QqKFNW?=
+ =?us-ascii?Q?iGDJXxOV2aWSBQs+vva+BlF0faQNi6spCwhwzUfNB8lEwRMrdBrxstrZE4vY?=
+ =?us-ascii?Q?miP6+sr7ILirZRZcAXwYPwaGSZ7BgcZNzA3jQCHbHptku3q550wwp9p1zFxk?=
+ =?us-ascii?Q?yHLeW64NgqyPKW3tYTgAe0Ss4Czf7Xbkh9ts2v6MHyREradW8yshTGHFWxtK?=
+ =?us-ascii?Q?SYCi66BRezZ/+t7NBOsygNABwsHpuz0IB6sBh/By5e31hwPAVijE6840aXoZ?=
+ =?us-ascii?Q?AABysaaMVt+uBmQ/qAVvHVpPLtV3x1hc1bFNTbvkkp19pK+sXyssYGojpS+W?=
+ =?us-ascii?Q?ThupN1jd8otU+qYaPoSLnuYMXWB4VIu5gADUeW/AkOIi66flkJwBkEZh0K5Y?=
+ =?us-ascii?Q?Dw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0442eae3-0f92-40b1-5682-08db0bc1a6b3
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 23:50:55.8621
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FUEF9NnQ6aJYnaJxMxYopphbM36lkqP70+Mh/14VfASWIUpgnEF7zmXloQvClrTsxGg/V6GH/Y9zm3kF6jqvdXC/Qp4+REns7VNGf3Uy7Fo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5822
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Lukas Wunner wrote:
+> Gregory Price reports a WARN splat with CONFIG_DEBUG_OBJECTS=y upon CXL
+> probing because pci_doe_submit_task() invokes INIT_WORK() instead of
+> INIT_WORK_ONSTACK() for a work_struct that was allocated on the stack.
+> 
+> All callers of pci_doe_submit_task() allocate the work_struct on the
+> stack, so replace INIT_WORK() with INIT_WORK_ONSTACK() as a backportable
+> short-term fix.
+> 
+> Stacktrace for posterity:
+> 
+> WARNING: CPU: 0 PID: 23 at lib/debugobjects.c:545 __debug_object_init.cold+0x18/0x183
+> CPU: 0 PID: 23 Comm: kworker/u2:1 Not tainted 6.1.0-0.rc1.20221019gitaae703b02f92.17.fc38.x86_64 #1
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014
+> Call Trace:
+>  pci_doe_submit_task+0x5d/0xd0
+>  pci_doe_discovery+0xb4/0x100
+>  pcim_doe_create_mb+0x219/0x290
+>  cxl_pci_probe+0x192/0x430
+>  local_pci_probe+0x41/0x80
+>  pci_device_probe+0xb3/0x220
+>  really_probe+0xde/0x380
+>  __driver_probe_device+0x78/0x170
+>  driver_probe_device+0x1f/0x90
+>  __driver_attach_async_helper+0x5c/0xe0
+>  async_run_entry_fn+0x30/0x130
+>  process_one_work+0x294/0x5b0
+> 
+> Fixes: 9d24322e887b ("PCI/DOE: Add DOE mailbox support functions")
+> Link: https://lore.kernel.org/linux-cxl/Y1bOniJliOFszvIK@memverge.com/
+> Reported-by: Gregory Price <gregory.price@memverge.com>
+> Tested-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: stable@vger.kernel.org # v6.0+
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-
-On 2/10/23 3:52 PM, Bjorn Helgaas wrote:
-> On Fri, Feb 10, 2023 at 10:04:03AM -0700, Dave Jiang wrote:
->> By default the CXL RAS mask registers bits are defaulted to 1's and
->> suppress all error reporting. If the kernel has negotiated ownership
->> of error handling for CXL then unmask the mask registers by writing 0s.
->>
->> PCI_EXP_AER_FLAGS moved to linux/pci.h header to expose to driver. It
->> allows exposure of system enabled PCI error flags for the driver to decide
->> which error bits to toggle. Bjorn suggested that the error enabling should
->> be controlled from the system policy rather than a driver level choice[1].
->>
->> CXL RAS CE and UE masks are checked against PCI_EXP_AER_FLAGS before
->> unmasking.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20230210122952.00006999@Huawei.com/T/#me8c7f39d43029c64ccff5c950b78a2cee8e885af
-> 
->> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->> +{
->> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
->> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->> +	void __iomem *addr;
->> +	u32 orig_val, val, mask;
->> +
->> +	if (!cxlds->regs.ras)
->> +		return -ENODEV;
->> +
->> +	/* BIOS has CXL error control */
->> +	if (!host_bridge->native_cxl_error)
->> +		return -EOPNOTSUPP;
->> +
->> +	if (PCI_EXP_AER_FLAGS & PCI_EXP_DEVCTL_URRE) {
-> 
-> 1) I don't really want to expose PCI_EXP_AER_FLAGS in linux/pci.h.
-> It's basically a convenience part of the AER implementation.
-> 
-> 2) I think your intent here is to configure the CXL RAS masking based
-> on what PCIe error reporting is enabled, but doing it by looking at
-> PCI_EXP_AER_FLAGS doesn't seem right.  This expression is a
-> compile-time constant that is always true, but we can't rely on
-> devices always being configured that way.
-> 
-> We call pci_aer_init() for every device during enumeration, but we
-> only write PCI_EXP_AER_FLAGS if pci_aer_available() and if
-> pcie_aer_is_native().  And there are a bunch of drivers that call
-> pci_disable_pcie_error_reporting(), which *clears* those flags.  I'm
-> not sure those drivers *should* be doing that, but they do today.
-> 
-> I'm not sure why this needs to be conditional at all, but if it does,
-> maybe you want to read PCI_EXP_DEVCTL and base it on that?
-
-Ok I'll read the PCI_EXP_DEVCTL. Looking to only unmask the relevant RAS 
-reporting if respective PCIe bits are enabled.
-
-> 
->> +		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
->> +		orig_val = readl(addr);
->> +
->> +		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
-> 
-> Weird name ("_MASK_MASK"), but I assume there's a good reason ;)
-
-Yes. It's the mask of the error mask register. Is that too much of a 
-mouthful? I can take out the second mask.
-
-> 
->> +		if (!cxl_pci_flit_256(pdev))
->> +			mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
->> +		val = orig_val & ~mask;
->> +		writel(val, addr);
->> +		dev_dbg(&pdev->dev,
->> +			"Uncorrectable RAS Errors Mask: %#x -> %#x\n",
->> +			orig_val, val);
->> +	}
-> 
->>   	if (cxlds->regs.ras) {
->> -		pci_enable_pcie_error_reporting(pdev);
->> -		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
->> -		if (rc)
->> -			return rc;
->> +		rc = pci_enable_pcie_error_reporting(pdev);
-> 
-> I see you're just adding a check of return value here, but I'm not
-> sure you need to call pci_enable_pcie_error_reporting() in the first
-> place.  Isn't the call in the pci_aer_init() path enough?
-
-I guess I'm confused by the kernel documentation:
-"
-pci_enable_pcie_error_reporting enables the device to send error
-messages to root port when an error is detected. Note that devices
-don't enable the error reporting by default, so device drivers need
-call this function to enable it.
-"
-
-Seems to indicate that driver should always call this if it wants AER 
-reporting?
-
-> 
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -693,6 +693,7 @@
->>   #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
->>   #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
->>   #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
->> +#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
-> 
-> Please spell out the hex constant.  This is to match the style of the
-> surrounding code, and it also gives a hint about the size of the
-> register.
-
-Ok will fix
-> 
-> Bjorn
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
