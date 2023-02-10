@@ -2,81 +2,155 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E15AC636CD
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 18:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABA2C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 20:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232558AbjBJSjA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 13:39:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33328 "EHLO
+        id S233521AbjBJU2i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 15:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232807AbjBJSjA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 13:39:00 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2942D16E;
-        Fri, 10 Feb 2023 10:38:58 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PD2TL3Ctvz6J67f;
-        Sat, 11 Feb 2023 02:34:46 +0800 (CST)
-Received: from localhost (10.81.210.211) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 10 Feb
- 2023 18:38:55 +0000
-Date:   Fri, 10 Feb 2023 18:38:54 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, Fan Ni <fan.ni@samsung.com>,
-        <vishal.l.verma@intel.com>, <dave.hansen@linux.intel.com>,
-        <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v2 20/20] cxl/dax: Create dax devices for CXL RAM
- regions
-Message-ID: <20230210183854.000022ee@Huawei.com>
-In-Reply-To: <167602003896.1924368.10335442077318970468.stgit@dwillia2-xfh.jf.intel.com>
-References: <167601992097.1924368.18291887895351917895.stgit@dwillia2-xfh.jf.intel.com>
-        <167602003896.1924368.10335442077318970468.stgit@dwillia2-xfh.jf.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.210.211]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+        with ESMTP id S233192AbjBJU2h (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 15:28:37 -0500
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F52DA5C3;
+        Fri, 10 Feb 2023 12:28:35 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by mailout2.hostsharing.net (Postfix) with ESMTPS id 5D6F410189E13;
+        Fri, 10 Feb 2023 21:28:33 +0100 (CET)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 357C2600CA83;
+        Fri, 10 Feb 2023 21:28:33 +0100 (CET)
+X-Mailbox-Line: From 49c5299afc660ac33fee9a116ea37df0de938432 Mon Sep 17 00:00:00 2001
+Message-Id: <cover.1676043318.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Fri, 10 Feb 2023 21:25:00 +0100
+Subject: [PATCH v3 00/16] Collection of DOE material
+To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc:     Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 10 Feb 2023 01:07:19 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Collection of DOE material, v3:
 
-> While platform firmware takes some responsibility for mapping the RAM
-> capacity of CXL devices present at boot, the OS is responsible for
-> mapping the remainder and hot-added devices. Platform firmware is also
-> responsible for identifying the platform general purpose memory pool,
-> typically DDR attached DRAM, and arranging for the remainder to be 'Soft
-> Reserved'. That reservation allows the CXL subsystem to route the memory
-> to core-mm via memory-hotplug (dax_kmem), or leave it for dedicated
-> access (device-dax).
-> 
-> The new 'struct cxl_dax_region' object allows for a CXL memory resource
-> (region) to be published, but also allow for udev and module policy to
-> act on that event. It also prevents cxl_core.ko from having a module
-> loading dependency on any drivers/dax/ modules.
-> 
-> Tested-by: Fan Ni <fan.ni@samsung.com>
-> Link: https://lore.kernel.org/r/167564545116.847146.4741351262959589920.stgit@dwillia2-xfh.jf.intel.com
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Migrate to synchronous API, create mailboxes in PCI core instead of
+in drivers, relax restrictions on request/response size.
 
-I've not yet gotten around to testing this version yet but from a read
-through looks fine.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+One major change since v2 is the behavior on device removal:
+Previously ongoing DOE exchanges were canceled before driver unbinding,
+so that a driver doesn't wait for an ongoing DOE exchange to time out.
+That's the right thing to do for surprise removal, but not for
+orderly removal via sysfs or Attention Button, so canceling is
+now confined to the former.
 
-I've skipped a patch or two where I felt I didn't have the expertise
-to cover them adequately (and not enough time for now to get it...)
-in particular the policy patch. Hopefully that will get
-good review from others.
+Another major change is a new patch at the end of the series
+to rightsize CXL CDAT response allocation (per Jonathan's request).
 
-Jonathan
+A number of issues in CXL CDAT retrieval caught my eye.
+Some of them look like potential vulnerabilities.
+I'm adding 4 patches at the beginning of the series to fix them.
 
+Ira kindly tested the series again and verified that the CDAT exposed
+in sysfs remains identical.
+
+
+Changes v2 -> v3:
+
+* [PATCH v3 01/16] cxl/pci: Fix CDAT retrieval on big endian
+  [PATCH v3 02/16] cxl/pci: Handle truncated CDAT header
+  [PATCH v3 03/16] cxl/pci: Handle truncated CDAT entries
+  [PATCH v3 04/16] cxl/pci: Handle excessive CDAT length
+  * Newly added patch in v3
+
+* [PATCH v3 05/16] PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y
+  * Explain in commit message what the long-term fix implemented by
+    a subsequent commit is (Jonathan)
+
+* [PATCH v3 10/16] PCI/DOE: Deduplicate mailbox flushing
+  * Newly added patch in v3
+
+* [PATCH v3 11/16] PCI/DOE: Allow mailbox creation without devres management
+  * Call pci_doe_flush_mb() from pci_doe_destroy_mb() to simplify
+    error paths (Jonathan)
+  * Explain in commit message why xa_destroy() is reordered in
+    error path of the new pci_doe_create_mb() (Jonathan)
+
+* [PATCH v3 12/16] PCI/DOE: Create mailboxes on device enumeration
+  * Don't cancel ongoing DOE exchanges in pci_stop_dev() so that
+    drivers may perform DOE in their ->remove() hooks
+  * Instead cancel ongoing DOE exchanges on surprise removal in
+    pci_dev_set_disconnected()
+  * Emit error message in pci_doe_init() if mailbox creation fails (Ira)
+  * Explain in commit message that pci_find_doe_mailbox() can later
+    be amended with pci_find_next_doe_mailbox() (Jonathan)
+
+* [PATCH v3 15/16] PCI/DOE: Relax restrictions on request and response size
+  * Fix byte order of last dword on big endian arches (Ira)
+  * Explain in commit message and kerneldoc that arbitrary-sized
+    payloads are not stipulated by the spec, but merely for
+    convenience of the caller (Bjorn, Jonathan)
+  * Add code comment that "remainder" in pci_doe_recv_resp() signifies
+    the number of data bytes in the last payload dword (Ira)
+
+* [PATCH v3 16/16] cxl/pci: Rightsize CDAT response allocation
+  * Newly added patch in v3 on popular request (Jonathan)
+
+
+Link to v2:
+
+https://lore.kernel.org/all/cover.1674468099.git.lukas@wunner.de/
+
+
+Lukas Wunner (16):
+  cxl/pci: Fix CDAT retrieval on big endian
+  cxl/pci: Handle truncated CDAT header
+  cxl/pci: Handle truncated CDAT entries
+  cxl/pci: Handle excessive CDAT length
+  PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y
+  PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y
+  PCI/DOE: Provide synchronous API and use it internally
+  cxl/pci: Use synchronous API for DOE
+  PCI/DOE: Make asynchronous API private
+  PCI/DOE: Deduplicate mailbox flushing
+  PCI/DOE: Allow mailbox creation without devres management
+  PCI/DOE: Create mailboxes on device enumeration
+  cxl/pci: Use CDAT DOE mailbox created by PCI core
+  PCI/DOE: Make mailbox creation API private
+  PCI/DOE: Relax restrictions on request and response size
+  cxl/pci: Rightsize CDAT response allocation
+
+ .clang-format           |   1 -
+ drivers/cxl/core/pci.c  | 125 ++++++---------
+ drivers/cxl/cxl.h       |   3 +-
+ drivers/cxl/cxlmem.h    |   3 -
+ drivers/cxl/cxlpci.h    |  14 ++
+ drivers/cxl/pci.c       |  49 ------
+ drivers/cxl/port.c      |   2 +-
+ drivers/pci/doe.c       | 340 ++++++++++++++++++++++++++++++----------
+ drivers/pci/pci.h       |  12 ++
+ drivers/pci/probe.c     |   1 +
+ drivers/pci/remove.c    |   1 +
+ include/linux/pci-doe.h |  62 +-------
+ include/linux/pci.h     |   3 +
+ 13 files changed, 345 insertions(+), 271 deletions(-)
+
+-- 
+2.39.1
 
