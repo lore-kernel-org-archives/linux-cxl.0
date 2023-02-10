@@ -2,90 +2,334 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338D2C636D4
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 22:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8450C636D4
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 22:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233556AbjBJWRp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 17:17:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50558 "EHLO
+        id S233556AbjBJWUG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 17:20:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233340AbjBJWRp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 17:17:45 -0500
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C172B4FC20;
-        Fri, 10 Feb 2023 14:17:43 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 5A9532808FCC2;
-        Fri, 10 Feb 2023 23:17:42 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 41C43CC5C9; Fri, 10 Feb 2023 23:17:42 +0100 (CET)
-Date:   Fri, 10 Feb 2023 23:17:42 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 04/10] cxl/pci: Use synchronous API for DOE
-Message-ID: <20230210221742.GA15075@wunner.de>
-References: <cover.1674468099.git.lukas@wunner.de>
- <b5469cbb8a3e138a1c709ed3eaab02d7ca8e84b2.1674468099.git.lukas@wunner.de>
- <20230124110127.00001de0@Huawei.com>
+        with ESMTP id S233937AbjBJWTv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 17:19:51 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C669DB6D5E;
+        Fri, 10 Feb 2023 14:19:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676067556; x=1707603556;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5QEIEhNAp3nmGGpMMbKD0XHNWNNpBBL7AkmI44tqVdc=;
+  b=TOXVT2d8OPzwTzXUjGd6VOYyZyzpLlbO5TI4MqWYRDZxYZ+gKyXiapj1
+   iZTl/LCZ7WxR168FdE7HsqOshq1das73i685oWwBcyXxYbYpS4A7z5Sov
+   0ePcnDqLvWHAaIjfXsMBzNwS2pfk3pbwe2/1kwfNUMfer15js40sKaQiU
+   4/chgxRbmVviUJySZ0eebn/0vYGTKE9RdyfYsZ757h2SiDGes9LnZzTRG
+   L4gh9DfwmXs5UZUmYtVp3hUgEQrkFeyXd6pODJS/YU5Q+P1tnp9feTgAY
+   cuo5uwrKnLT7EJvLcrcP+5GgTJE1KlG7vL6DIfvR3n3SjbcSdwJ3hUstR
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="318558876"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="318558876"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 14:19:16 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="736875933"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="736875933"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.190.133]) ([10.213.190.133])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 14:19:12 -0800
+Message-ID: <065ecb4a-c71e-b293-cc01-599e5ded50da@intel.com>
+Date:   Fri, 10 Feb 2023 15:19:11 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230124110127.00001de0@Huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH v2 19/20] dax: Assign RAM regions to memory-hotplug by
+ default
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Fan Ni <fan.ni@samsung.com>, vishal.l.verma@intel.com,
+        linux-mm@kvack.org, linux-acpi@vger.kernel.org
+References: <167601992097.1924368.18291887895351917895.stgit@dwillia2-xfh.jf.intel.com>
+ <167602003336.1924368.6809503401422267885.stgit@dwillia2-xfh.jf.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <167602003336.1924368.6809503401422267885.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 11:01:27AM +0000, Jonathan Cameron wrote:
-> On Mon, 23 Jan 2023 11:14:00 +0100 Lukas Wunner <lukas@wunner.de> wrote:
-> > A synchronous API for DOE has just been introduced.  Convert CXL CDAT
-> > retrieval over to it.
+
+
+On 2/10/23 2:07 AM, Dan Williams wrote:
+> The default mode for device-dax instances is backwards for RAM-regions
+> as evidenced by the fact that it tends to catch end users by surprise.
+> "Where is my memory?". Recall that platforms are increasingly shipping
+> with performance-differentiated memory pools beyond typical DRAM and
+> NUMA effects. This includes HBM (high-bandwidth-memory) and CXL (dynamic
+> interleave, varied media types, and future fabric attached
+> possibilities).
 > 
-> The clean up here gives opportunities for 'right sizing' at least
-> the response to reading the header. The others are harder was we
-> don't know what each one is going to be.
-> May make more sense as a follow on patch though. 
-
-Thy will be done:
-
-https://lore.kernel.org/linux-pci/49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de/
-
-
-> > -		DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(entry_handle), t);
-> > +		u32 request = CDAT_DOE_REQ(entry_handle);
-> > +		u32 response[32];
+> For this reason the EFI_MEMORY_SP (EFI Special Purpose Memory => Linux
+> 'Soft Reserved') attribute is expected to be applied to all memory-pools
+> that are not the general purpose pool. This designation gives an
+> Operating System a chance to defer usage of a memory pool until later in
+> the boot process where its performance properties can be interrogated
+> and administrator policy can be applied.
 > 
-> As above, this is still a bit random.
-> Things we might be reading.
-> DSMAS: 6 dword
-> DSLBIS: 6 dword
-> DSIS: 2 dword
-> DSEMTS: 6 dword
-> SSLBIS: 4 dword + 2 * entires dwords.  This can get huge - as
-> can include p2p as well as the smaller usp / dsp set.
+> 'Soft Reserved' memory can be anything from too limited and precious to
+> be part of the general purpose pool (HBM), too slow to host hot kernel
+> data structures (some PMEM media), or anything in between. However, in
+> the absence of an explicit policy, the memory should at least be made
+> usable by default. The current device-dax default hides all
+> non-general-purpose memory behind a device interface.
 > 
-> Right now we aren't reading from switches though so we can fix
-> that later (I posted an RFC for switches ages ago, but haven't
-> gotten back to it since then)
+> The expectation is that the distribution of users that want the memory
+> online by default vs device-dedicated-access by default follows the
+> Pareto principle. A small number of enlightened users may want to do
+> userspace memory management through a device, but general users just
+> want the kernel to make the memory available with an option to get more
+> advanced later.
 > 
-> So for now probably leave this one at the 32 dwords.
+> Arrange for all device-dax instances not backed by PMEM to default to
+> attaching to the dax_kmem driver. From there the baseline memory hotplug
+> policy (CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE / memhp_default_state=)
+> gates whether the memory comes online or stays offline. Where, if it
+> stays offline, it can be reliably converted back to device-mode where it
+> can be partitioned, or fronted by a userspace allocator.
+> 
+> So, if someone wants device-dax instances for their 'Soft Reserved'
+> memory:
+> 
+> 1/ Build a kernel with CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE=n or boot
+>     with memhp_default_state=offline, or roll the dice and hope that the
+>     kernel has not pinned a page in that memory before step 2.
+> 
+> 2/ Write a udev rule to convert the target dax device(s) from
+>     'system-ram' mode to 'devdax' mode:
+> 
+>     daxctl reconfigure-device $dax -m devdax -f
+> 
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Reviewed-by: Gregory Price <gregory.price@memverge.com>
+> Tested-by: Fan Ni <fan.ni@samsung.com>
+> Link: https://lore.kernel.org/r/167564544513.847146.4645646177864365755.stgit@dwillia2-xfh.jf.intel.com
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-I found a way to avoid a response buffer altogether.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks,
-
-Lukas
+> ---
+>   drivers/dax/Kconfig     |    2 +-
+>   drivers/dax/bus.c       |   53 ++++++++++++++++++++---------------------------
+>   drivers/dax/bus.h       |   12 +++++++++--
+>   drivers/dax/device.c    |    3 +--
+>   drivers/dax/hmem/hmem.c |   12 ++++++++++-
+>   drivers/dax/kmem.c      |    1 +
+>   6 files changed, 46 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
+> index d13c889c2a64..1163eb62e5f6 100644
+> --- a/drivers/dax/Kconfig
+> +++ b/drivers/dax/Kconfig
+> @@ -50,7 +50,7 @@ config DEV_DAX_HMEM_DEVICES
+>   	def_bool y
+>   
+>   config DEV_DAX_KMEM
+> -	tristate "KMEM DAX: volatile-use of persistent memory"
+> +	tristate "KMEM DAX: map dax-devices as System-RAM"
+>   	default DEV_DAX
+>   	depends on DEV_DAX
+>   	depends on MEMORY_HOTPLUG # for add_memory() and friends
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 1dad813ee4a6..012d576004e9 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -56,6 +56,25 @@ static int dax_match_id(struct dax_device_driver *dax_drv, struct device *dev)
+>   	return match;
+>   }
+>   
+> +static int dax_match_type(struct dax_device_driver *dax_drv, struct device *dev)
+> +{
+> +	enum dax_driver_type type = DAXDRV_DEVICE_TYPE;
+> +	struct dev_dax *dev_dax = to_dev_dax(dev);
+> +
+> +	if (dev_dax->region->res.flags & IORESOURCE_DAX_KMEM)
+> +		type = DAXDRV_KMEM_TYPE;
+> +
+> +	if (dax_drv->type == type)
+> +		return 1;
+> +
+> +	/* default to device mode if dax_kmem is disabled */
+> +	if (dax_drv->type == DAXDRV_DEVICE_TYPE &&
+> +	    !IS_ENABLED(CONFIG_DEV_DAX_KMEM))
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +
+>   enum id_action {
+>   	ID_REMOVE,
+>   	ID_ADD,
+> @@ -216,14 +235,9 @@ static int dax_bus_match(struct device *dev, struct device_driver *drv)
+>   {
+>   	struct dax_device_driver *dax_drv = to_dax_drv(drv);
+>   
+> -	/*
+> -	 * All but the 'device-dax' driver, which has 'match_always'
+> -	 * set, requires an exact id match.
+> -	 */
+> -	if (dax_drv->match_always)
+> +	if (dax_match_id(dax_drv, dev))
+>   		return 1;
+> -
+> -	return dax_match_id(dax_drv, dev);
+> +	return dax_match_type(dax_drv, dev);
+>   }
+>   
+>   /*
+> @@ -1413,13 +1427,10 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
+>   }
+>   EXPORT_SYMBOL_GPL(devm_create_dev_dax);
+>   
+> -static int match_always_count;
+> -
+>   int __dax_driver_register(struct dax_device_driver *dax_drv,
+>   		struct module *module, const char *mod_name)
+>   {
+>   	struct device_driver *drv = &dax_drv->drv;
+> -	int rc = 0;
+>   
+>   	/*
+>   	 * dax_bus_probe() calls dax_drv->probe() unconditionally.
+> @@ -1434,26 +1445,7 @@ int __dax_driver_register(struct dax_device_driver *dax_drv,
+>   	drv->mod_name = mod_name;
+>   	drv->bus = &dax_bus_type;
+>   
+> -	/* there can only be one default driver */
+> -	mutex_lock(&dax_bus_lock);
+> -	match_always_count += dax_drv->match_always;
+> -	if (match_always_count > 1) {
+> -		match_always_count--;
+> -		WARN_ON(1);
+> -		rc = -EINVAL;
+> -	}
+> -	mutex_unlock(&dax_bus_lock);
+> -	if (rc)
+> -		return rc;
+> -
+> -	rc = driver_register(drv);
+> -	if (rc && dax_drv->match_always) {
+> -		mutex_lock(&dax_bus_lock);
+> -		match_always_count -= dax_drv->match_always;
+> -		mutex_unlock(&dax_bus_lock);
+> -	}
+> -
+> -	return rc;
+> +	return driver_register(drv);
+>   }
+>   EXPORT_SYMBOL_GPL(__dax_driver_register);
+>   
+> @@ -1463,7 +1455,6 @@ void dax_driver_unregister(struct dax_device_driver *dax_drv)
+>   	struct dax_id *dax_id, *_id;
+>   
+>   	mutex_lock(&dax_bus_lock);
+> -	match_always_count -= dax_drv->match_always;
+>   	list_for_each_entry_safe(dax_id, _id, &dax_drv->ids, list) {
+>   		list_del(&dax_id->list);
+>   		kfree(dax_id);
+> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+> index fbb940293d6d..8cd79ab34292 100644
+> --- a/drivers/dax/bus.h
+> +++ b/drivers/dax/bus.h
+> @@ -11,7 +11,10 @@ struct dax_device;
+>   struct dax_region;
+>   void dax_region_put(struct dax_region *dax_region);
+>   
+> -#define IORESOURCE_DAX_STATIC (1UL << 0)
+> +/* dax bus specific ioresource flags */
+> +#define IORESOURCE_DAX_STATIC BIT(0)
+> +#define IORESOURCE_DAX_KMEM BIT(1)
+> +
+>   struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+>   		struct range *range, int target_node, unsigned int align,
+>   		unsigned long flags);
+> @@ -25,10 +28,15 @@ struct dev_dax_data {
+>   
+>   struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data);
+>   
+> +enum dax_driver_type {
+> +	DAXDRV_KMEM_TYPE,
+> +	DAXDRV_DEVICE_TYPE,
+> +};
+> +
+>   struct dax_device_driver {
+>   	struct device_driver drv;
+>   	struct list_head ids;
+> -	int match_always;
+> +	enum dax_driver_type type;
+>   	int (*probe)(struct dev_dax *dev);
+>   	void (*remove)(struct dev_dax *dev);
+>   };
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 5494d745ced5..ecdff79e31f2 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -475,8 +475,7 @@ EXPORT_SYMBOL_GPL(dev_dax_probe);
+>   
+>   static struct dax_device_driver device_dax_driver = {
+>   	.probe = dev_dax_probe,
+> -	/* all probe actions are unwound by devm, so .remove isn't necessary */
+> -	.match_always = 1,
+> +	.type = DAXDRV_DEVICE_TYPE,
+>   };
+>   
+>   static int __init dax_init(void)
+> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
+> index e7bdff3132fa..5ec08f9f8a57 100644
+> --- a/drivers/dax/hmem/hmem.c
+> +++ b/drivers/dax/hmem/hmem.c
+> @@ -11,15 +11,25 @@ module_param_named(region_idle, region_idle, bool, 0644);
+>   
+>   static int dax_hmem_probe(struct platform_device *pdev)
+>   {
+> +	unsigned long flags = IORESOURCE_DAX_KMEM;
+>   	struct device *dev = &pdev->dev;
+>   	struct dax_region *dax_region;
+>   	struct memregion_info *mri;
+>   	struct dev_dax_data data;
+>   	struct dev_dax *dev_dax;
+>   
+> +	/*
+> +	 * @region_idle == true indicates that an administrative agent
+> +	 * wants to manipulate the range partitioning before the devices
+> +	 * are created, so do not send them to the dax_kmem driver by
+> +	 * default.
+> +	 */
+> +	if (region_idle)
+> +		flags = 0;
+> +
+>   	mri = dev->platform_data;
+>   	dax_region = alloc_dax_region(dev, pdev->id, &mri->range,
+> -				      mri->target_node, PMD_SIZE, 0);
+> +				      mri->target_node, PMD_SIZE, flags);
+>   	if (!dax_region)
+>   		return -ENOMEM;
+>   
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 4852a2dbdb27..918d01d3fbaa 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -239,6 +239,7 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+>   static struct dax_device_driver device_dax_kmem_driver = {
+>   	.probe = dev_dax_kmem_probe,
+>   	.remove = dev_dax_kmem_remove,
+> +	.type = DAXDRV_KMEM_TYPE,
+>   };
+>   
+>   static int __init dax_kmem_init(void)
+> 
