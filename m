@@ -2,230 +2,207 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65003C636CD
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 12:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E23BC05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 10 Feb 2023 12:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231621AbjBJM36 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Feb 2023 07:29:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49038 "EHLO
+        id S231758AbjBJMnN convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Feb 2023 07:43:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbjBJM36 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 07:29:58 -0500
+        with ESMTP id S231462AbjBJMnN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Feb 2023 07:43:13 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246EF33456
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 04:29:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599046CC65
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Feb 2023 04:43:11 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCtHX2DnYz67lD7;
-        Fri, 10 Feb 2023 20:25:44 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCtdw0Tqzz67n8d;
+        Fri, 10 Feb 2023 20:41:40 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 10 Feb
- 2023 12:29:53 +0000
-Date:   Fri, 10 Feb 2023 12:29:52 +0000
+ 2023 12:43:08 +0000
+Date:   Fri, 10 Feb 2023 12:43:07 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Stefan Roese <sr@denx.de>,
-        "Kuppuswamy Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH v5] cxl: add RAS status unmasking for CXL
-Message-ID: <20230210122952.00006999@Huawei.com>
-In-Reply-To: <63e5fb533f304_13244829412@iweiny-mobl.notmuch>
-References: <20230105163127.00005ae2@huawei.com>
-        <20230105165406.GA1150163@bhelgaas>
-        <20230106112605.00006cf6@Huawei.com>
-        <63e5fb533f304_13244829412@iweiny-mobl.notmuch>
+To:     Brice Goglin <Brice.Goglin@inria.fr>
+CC:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "gregory.price@memverge.com" <gregory.price@memverge.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+Subject: Re: [PATCH ndctl v2 0/7] cxl: add support for listing and creating
+ volatile regions
+Message-ID: <20230210124307.00003be0@Huawei.com>
+In-Reply-To: <34a03b27-923c-7bb0-d77a-b0fddc535160@inria.fr>
+References: <20230120-vv-volatile-regions-v2-0-4ea6253000e5@intel.com>
+        <e885b2a7-0405-153c-a578-b863a4e00977@inria.fr>
+        <a5e4aff9f300d9b603111983165754b35c89c612.camel@intel.com>
+        <34a03b27-923c-7bb0-d77a-b0fddc535160@inria.fr>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 10 Feb 2023 00:07:47 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Fri, 10 Feb 2023 11:15:44 +0100
+Brice Goglin <Brice.Goglin@inria.fr> wrote:
 
-> Jonathan Cameron wrote:
-> > On Thu, 5 Jan 2023 10:54:06 -0600
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >   
-> > > On Thu, Jan 05, 2023 at 04:31:27PM +0000, Jonathan Cameron wrote:  
-> > > > On Thu, 29 Dec 2022 11:27:31 -0600
-> > > > Bjorn Helgaas <helgaas@kernel.org> wrote:    
-> > > > > On Sat, Dec 17, 2022 at 05:52:04PM +0000, Jonathan Cameron wrote:    
-> > >   
-> > > > > > I realized that adding this patch still only enables error because I
-> > > > > > didn't check the PCIe spec when writing the QEMU emulation. I had
-> > > > > > changed the value of  "Correctable Internal Error Mask" to default
-> > > > > > to unmasked.  PCIe 6.0 says it defaults to masked.  For some reason
-> > > > > > I thought these masks were impdef (should have checked ;)      
-> > > > > 
-> > > > > I assume you refer to the AER "Corrected Internal Error Mask" bit
-> > > > > (PCIe r6.0, sec 7.8.4.6), which indeed defaults to 1b (masked) if the
-> > > > > bit is implemented.    
-> > > > 
-> > > > Spot on.  I keep confusing the correctable / corrected stuff in PCIe.
-> > > > Made more confusing by the CXL stuff layered on top.    
-> > > 
-> > > Great, it wasn't confusing enough already, so CXL rectified that
-> > > problem :)
-> > >   
-> > > > > We now have f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
-> > > > > native"), which turns on error reporting in Device Control for all
-> > > > > devices at enumeration-time when the OS has control of AER.  But this
-> > > > > is only the generic device-level control; it doesn't configure any
-> > > > > *AER* registers.
-> > > > > 
-> > > > > I'm surprised to learn that the only writes to PCI_ERR_UNCOR_MASK are
-> > > > > some mips and powerpc arch-specific code and a few individual drivers.
-> > > > > It seems like maybe pci_aer_init() should do some more configuration
-> > > > > of the AER mask and severity registers.    
-> > > > 
-> > > > Sounds good.  Any thoughts on where to get the policy from?
-> > > > Feels like an administrator thing rather than a kernel config one
-> > > > to me, so maybe pci_aer_init() is too early or we'd benefit from
-> > > > a nice easy per device interface to tweak a default?    
-> > > 
-> > > If we get a solid system-level policy in place and still end up
-> > > needing some kind of administrative control, that might be OK.  But we
-> > > don't have that solid system policy yet, so I'd like to push on that
-> > > before adding admin interfaces.  
-> > 
-> > I guess next step is a straw man proposal for people to test / shoot at.
-> > I'll send out an RFC that enables the lot as defined in PCI r6.0
-> > as that will be most useful for identifying quirks we need to handle.
-> > 
-> > My assumption being people will push back on some of them / we'll need
-> > to quirk others.  
+> Le 09/02/2023 à 20:17, Verma, Vishal L a écrit :
+> > On Thu, 2023-02-09 at 12:04 +0100, Brice Goglin wrote:  
+> >> Hello Vishal
+> >>
+> >> I am trying to play with this but all my attempts failed so far. Could
+> >> you provide Qemu and cxl-cli command-lines to get a volatile region
+> >> enabled in a Qemu VM?  
+> > Hi Brice,
+> >
+> > Greg had posted his working config in another thread:
+> > https://lore.kernel.org/linux-cxl/Y9sMs0FGulQSIe9t@memverge.com/
+> >
+> > I've also pasted below, the qemu command line generated by the run_qemu
+> > script I referenced. (Note that this adds a bunch of stuff not strictly
+> > needed for a minimal CXL configuration - you can certainly trim a lot
+> > of that out - this is just the default setup that is generated and I
+> > usually run).  
 > 
-> Jonathan,
 > 
-> Did you send something along these lines? 
+> Hello Vishal
+> 
+> Thanks a lot, things were failing because my kernel didn't have
+> CONFIG_CXL_REGION_INVALIDATION_TEST=y. Now I am able to create a single
+> ram region, either with a single device or multiple interleaved ones.
+> 
+> However I can't get multiple separate ram regions. If I boot a config
+> like yours below, I get 4 ram devices. How can I create one region for
+> each? Once I create the first one, others fail saying something like
+> below. I tried using other decoders but it didn't help (I still need
+> to read more CXL docs about decoders, why new ones appear when creating
+> a region, etc).
+> 
+> cxl region: collect_memdevs: no active memdevs found: decoder: decoder0.0 filter: mem3
 
-Oops. I forgot about it :(
+Hi Brice,
 
-> I was testing the AER trace
-> point output while cleaning up the trace points a bit.[1]  And I ran
-> across the need to set up these PCIe registers.  Because I did not see
-> anything from you I was thinking of taking a crack at fixing this.
+QEMU emulation currently only supports single HDM decoder at each level,
+so HB, Switch USP, EP (with exception of the CFMWS top level ones as shown
+in the example which has two of those). We should fix that...
 
-Great. I can forget about it again ;)
+For now, you should be able to do it with multiple pxb-cxl instances with
+appropriate CFMWS entries for each one. Which is horrible but might work
+for you in the meantime.  
 
 > 
-> To me, it is pretty straight forward that if a driver enables error
-> reporting then it would want to include internal errors both correctable
-> and uncorrectable.  This allows for CXL to further control the CXL
-> registers as an overlay.  I'm not so sure about the other PCIe AER errors
-> which are default masked.
+> By the way, once configured in system ram, my CXL ram is merged into an
+> existing "normal" NUMA node. How do I tell Qemu that a CXL region should
+> be part of a new NUMA node? I assume that's what's going to happen on
+> real hardware?
 
-I think the concern may be around devices that are rather over chatty wrt
-things that are fairly trivial.
-
-> 
-> PCI v6.0 defaults to a fatal uncorrectable error.  I think it is probably
-> a good default to make these non-fatal when enabling the _reporting_ of
-> the errors.  If a driver wants them to be fatal then another call could be
-> added later.  (or the driver should be doing that on their own now.)
-
-Interesting point.  I'm not sure what to do about severity.  Definitely a
-question for an RFC posting.
+We don't yet have kernel code to deal with assigning a new NUMA node.
+Was on the todo list in last sync call I think.
 
 > 
-> If I understand this thread, the CXL spec, the PCI spec, and all the code; it
-> seems like unmasking the internal correctable and uncorrectable errors in
-> pci_enable_pcie_error_reporting() are a good system default.  With the
-> addition of making uncorrectable non-fatal.[2]
+> Thanks
 > 
-> That said, there are approximately 51 drivers which enable error reporting
-> with this call.  I'm a bit concerned with such a global change.  But
-> perhaps it seems ok if it is only enabling then internal errors as
-> non-fatal.  So at worse this would simply spam logs on bad devices?
-
-Yes, this isn't risk free, but we probably want device drivers for problem
-devices to opt out of this with the defaults as you describe.
-I'm sure we'll get a bunch of reports of new log messages appearing but if
-they are false positives (odd things happen during device init perhaps) then
-the drivers in question ought to work around that locally.
-
+> Brice
 > 
-> Ira
 > 
-> [1] https://lore.kernel.org/all/20230208-cxl-event-names-v1-0-73f0ff3a3870@intel.com/
-> [2]
 > 
-> commit 30e6a0bf308e7b8c68b4da33b505fa967f6bbf34 (HEAD -> cxl-pci-aer)
-> Author: Ira Weiny <ira.weiny@intel.com>
-> Date:   Thu Feb 9 22:26:05 2023 -0800
-> 
->     PCI/AER: Enable internal AER errors by default
->     
->     The CXL driver expects internal error reporting to be enabled via
->     pci_enable_pcie_error_reporting().  It is likely other drivers expect
->     the same thing.
->     
->     PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
->     Register (7.8.4.6) default to masking internal errors.  The
->     Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
->     as fatal.
->     
->     Change pci_enable_pcie_error_reporting() to enable both types of
->     internal errors.  Ensure uncorrectable errors are set non-fatal to limit
->     any impact to other drivers.
->     
->     Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
->     Cc: Bjorn Helgaas <helgaas@kernel.org>
->     Cc: Dave Jiang <dave.jiang@intel.com>
->     Cc: <linux-cxl@vger.kernel.org>,
->     Cc: <dan.j.williams@intel.com>
->     Cc: Stefan Roese <sr@denx.de>
->     Cc: "Kuppuswamy Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
->     Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->     
->     ---
->     For all drivers other than CXL this is expected to at worse increase the
->     error reporting verbosity.  Because the errors are set to non-fatal by
->     default this should not adversely affect the operation of those devices.
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 625f7b2cafe4..9d3ed3a5fc23 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -229,11 +229,28 @@ int pcie_aer_is_native(struct pci_dev *dev)
->  
->  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->  {
-> +       int pos_cap_err;
-> +       u32 reg;
->         int rc;
->  
->         if (!pcie_aer_is_native(dev))
->                 return -EIO;
->  
-> +       pos_cap_err = dev->aer_cap;
-> +
-> +       /* Unmask correctable and uncorrectable (non-fatal) internal errors */
-> +       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
-> +       reg &= ~PCI_ERR_COR_INTERNAL;
-> +       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
-> +
-> +       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
-> +       reg &= ~PCI_ERR_UNC_INTN;
-> +       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
-> +
-> +       pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
-> +       reg &= ~PCI_ERR_UNC_INTN;
-> +       pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
-> +
->         rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
->         return pcibios_err_to_errno(rc);
->  }
+> >
+> >
+> > $ run_qemu.sh -g --cxl --cxl-debug --rw -r none --cmdline
+> > /home/vverma7/git/qemu/build/qemu-system-x86_64
+> > -machine q35,accel=kvm,nvdimm=on,cxl=on
+> > -m 8192M,slots=4,maxmem=40964M
+> > -smp 8,sockets=2,cores=2,threads=2
+> > -enable-kvm
+> > -display none
+> > -nographic
+> > -drive if=pflash,format=raw,unit=0,file=OVMF_CODE.fd,readonly=on
+> > -drive if=pflash,format=raw,unit=1,file=OVMF_VARS.fd
+> > -debugconfile:uefi_debug.log  
+> > -global isa-debugcon.iobase=0x402
+> > -drive file=root.img,format=raw,media=disk
+> > -kernel ./mkosi.extra/lib/modules/6.2.0-rc6+/vmlinuz
+> > -initrd mkosi.extra/boot/initramfs-6.2.0-rc2+.img
+> > -append selinux=0 audit=0 console=tty0 console=ttyS0 root=/dev/sda2 ignore_loglevel rw cxl_acpi.dyndbg=+fplm cxl_pci.dyndbg=+fplm cxl_core.dyndbg=+fplm cxl_mem.dyndbg=+fplm cxl_pmem.dyndbg=+fplm cxl_port.dyndbg=+fplm cxl_region.dyndbg=+fplm cxl_test.dyndbg=+fplm cxl_mock.dyndbg=+fplm cxl_mock_mem.dyndbg=+fplm memmap=2G!4G efi_fake_mem=2G@6G:0x40000
+> > -device e1000,netdev=net0,mac=52:54:00:12:34:56
+> > -netdev user,id=net0,hostfwd=tcp::10022-:22
+> > -object memory-backend-file,id=cxl-mem0,share=on,mem-path=cxltest0.raw,size=256M
+> > -object memory-backend-file,id=cxl-mem1,share=on,mem-path=cxltest1.raw,size=256M
+> > -object memory-backend-file,id=cxl-mem2,share=on,mem-path=cxltest2.raw,size=256M
+> > -object memory-backend-file,id=cxl-mem3,share=on,mem-path=cxltest3.raw,size=256M
+> > -object memory-backend-ram,id=cxl-mem4,share=on,size=256M
+> > -object memory-backend-ram,id=cxl-mem5,share=on,size=256M
+> > -object memory-backend-ram,id=cxl-mem6,share=on,size=256M
+> > -object memory-backend-ram,id=cxl-mem7,share=on,size=256M
+> > -object memory-backend-file,id=cxl-lsa0,share=on,mem-path=lsa0.raw,size=1K
+> > -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=lsa1.raw,size=1K
+> > -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=lsa2.raw,size=1K
+> > -object memory-backend-file,id=cxl-lsa3,share=on,mem-path=lsa3.raw,size=1K
+> > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=53
+> > -device pxb-cxl,id=cxl.1,bus=pcie.0,bus_nr=191
+> > -device cxl-rp,id=hb0rp0,bus=cxl.0,chassis=0,slot=0,port=0
+> > -device cxl-rp,id=hb0rp1,bus=cxl.0,chassis=0,slot=1,port=1
+> > -device cxl-rp,id=hb0rp2,bus=cxl.0,chassis=0,slot=2,port=2
+> > -device cxl-rp,id=hb0rp3,bus=cxl.0,chassis=0,slot=3,port=3
+> > -device cxl-rp,id=hb1rp0,bus=cxl.1,chassis=0,slot=4,port=0
+> > -device cxl-rp,id=hb1rp1,bus=cxl.1,chassis=0,slot=5,port=1
+> > -device cxl-rp,id=hb1rp2,bus=cxl.1,chassis=0,slot=6,port=2
+> > -device cxl-rp,id=hb1rp3,bus=cxl.1,chassis=0,slot=7,port=3
+> > -device cxl-type3,bus=hb0rp0,memdev=cxl-mem0,id=cxl-dev0,lsa=cxl-lsa0
+> > -device cxl-type3,bus=hb0rp1,memdev=cxl-mem1,id=cxl-dev1,lsa=cxl-lsa1
+> > -device cxl-type3,bus=hb1rp0,memdev=cxl-mem2,id=cxl-dev2,lsa=cxl-lsa2
+> > -device cxl-type3,bus=hb1rp1,memdev=cxl-mem3,id=cxl-dev3,lsa=cxl-lsa3
+> > -device cxl-type3,bus=hb0rp2,volatile-memdev=cxl-mem4,id=cxl-dev4
+> > -device cxl-type3,bus=hb0rp3,volatile-memdev=cxl-mem5,id=cxl-dev5
+> > -device cxl-type3,bus=hb1rp2,volatile-memdev=cxl-mem6,id=cxl-dev6
+> > -device cxl-type3,bus=hb1rp3,volatile-memdev=cxl-mem7,id=cxl-dev7
+> > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k,cxl-fmw.1.targets.0=cxl.0,cxl-fmw.1.targets.1=cxl.1,cxl-fmw.1.size=4G,cxl-fmw.1.interleave-granularity=8k
+> > -object memory-backend-ram,id=mem0,size=2048M
+> > -numa node,nodeid=0,memdev=mem0,
+> > -numa cpu,node-id=0,socket-id=0
+> > -object memory-backend-ram,id=mem1,size=2048M
+> > -numa node,nodeid=1,memdev=mem1,
+> > -numa cpu,node-id=1,socket-id=1
+> > -object memory-backend-ram,id=mem2,size=2048M
+> > -numa node,nodeid=2,memdev=mem2,
+> > -object memory-backend-ram,id=mem3,size=2048M
+> > -numa node,nodeid=3,memdev=mem3,
+> > -numa node,nodeid=4,
+> > -object memory-backend-file,id=nvmem0,share=on,mem-path=nvdimm-0,size=16384M,align=1G
+> > -device nvdimm,memdev=nvmem0,id=nv0,label-size=2M,node=4
+> > -numa node,nodeid=5,
+> > -object memory-backend-file,id=nvmem1,share=on,mem-path=nvdimm-1,size=16384M,align=1G
+> > -device nvdimm,memdev=nvmem1,id=nv1,label-size=2M,node=5
+> > -numa dist,src=0,dst=0,val=10
+> > -numa dist,src=0,dst=1,val=21
+> > -numa dist,src=0,dst=2,val=12
+> > -numa dist,src=0,dst=3,val=21
+> > -numa dist,src=0,dst=4,val=17
+> > -numa dist,src=0,dst=5,val=28
+> > -numa dist,src=1,dst=1,val=10
+> > -numa dist,src=1,dst=2,val=21
+> > -numa dist,src=1,dst=3,val=12
+> > -numa dist,src=1,dst=4,val=28
+> > -numa dist,src=1,dst=5,val=17
+> > -numa dist,src=2,dst=2,val=10
+> > -numa dist,src=2,dst=3,val=21
+> > -numa dist,src=2,dst=4,val=28
+> > -numa dist,src=2,dst=5,val=28
+> > -numa dist,src=3,dst=3,val=10
+> > -numa dist,src=3,dst=4,val=28
+> > -numa dist,src=3,dst=5,val=28
+> > -numa dist,src=4,dst=4,val=10
+> > -numa dist,src=4,dst=5,val=28
+> > -numa dist,src=5,dst=5,val=10
+> >  
 
