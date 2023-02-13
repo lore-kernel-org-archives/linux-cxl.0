@@ -2,115 +2,220 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE90C636CC
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 22:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3104C636CC
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 22:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbjBMWoe convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Feb 2023 17:44:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
+        id S229977AbjBMWzp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Feb 2023 17:55:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjBMWod (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 17:44:33 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3F221288
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Feb 2023 14:44:21 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-91-bQdp4kpzOVOJNtCS0YM40g-1; Mon, 13 Feb 2023 22:44:17 +0000
-X-MC-Unique: bQdp4kpzOVOJNtCS0YM40g-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Mon, 13 Feb
- 2023 22:44:16 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.045; Mon, 13 Feb 2023 22:44:16 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Bjorn Helgaas' <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Stefan Roese <sr@denx.de>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH RFC] PCI/AER: Enable internal AER errors by default
-Thread-Topic: [PATCH RFC] PCI/AER: Enable internal AER errors by default
-Thread-Index: AQHZP/OWtZukbVOH0kqW0g36cswuDK7NdzVQ
-Date:   Mon, 13 Feb 2023 22:44:16 +0000
-Message-ID: <f5d13d0d67a34567a586a1171ba44b52@AcuMS.aculab.com>
-References: <20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com>
- <20230213213820.GA2935044@bhelgaas>
-In-Reply-To: <20230213213820.GA2935044@bhelgaas>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S229615AbjBMWzo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 17:55:44 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FAF183E6;
+        Mon, 13 Feb 2023 14:55:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676328943; x=1707864943;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/w++TRnibFGShJge12dzFb5NbRSuFeZYYEypzu80vCY=;
+  b=OduFxcNnNdvupeyokAeTVyN6RQSSWLqPWrP/hD+aTH7uybUgKZNzN8sq
+   H9JYLS6m+QgwhPFslPwaNUGqb8Qe3r7tSkkk9DmCN67o3sGGn04dOUu5o
+   gp0SiiaF60LyjIrYO5N/bhX51i2uhvPiQyjjLvHcy7ZuSTTVlH7K8+Opo
+   /wKXawdtGqoCVwVFx/4AWo+f4zpGU5sGnm5KXSSKgRID6SCFMJoWdeRlQ
+   D7QbnPeNu2v7axx6NjAlTwKCuvcqawIdrlnoI4k9CIjWPJKyE8B+5LMgn
+   kzHZY2fKkSxoI70z4+Ci0OFdMzEnXTN/Zw+ZqgsfFe1+Ul42HlEhecx4e
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="319047201"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="319047201"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 14:55:43 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="618806741"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="618806741"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.99.85]) ([10.212.99.85])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 14:55:42 -0800
+Message-ID: <a438a086-b922-0902-e6ef-16d0dfda7f27@intel.com>
+Date:   Mon, 13 Feb 2023 15:55:41 -0700
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 06/18] cxl: Add callback to parse the DSMAS subtables from
+ CDAT
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+ <167571661375.587790.16681436923769338643.stgit@djiang5-mobl3.local>
+ <20230209132925.00006711@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230209132925.00006711@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Bjorn Helgaas
-> Sent: 13 February 2023 21:38
+
+
+On 2/9/23 6:29 AM, Jonathan Cameron wrote:
+> On Mon, 06 Feb 2023 13:50:15 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> On Fri, Feb 10, 2023 at 02:33:23PM -0800, Ira Weiny wrote:
-> > The CXL driver expects internal error reporting to be enabled via
-> > pci_enable_pcie_error_reporting().  It is likely other drivers expect the same.
-> > Dave submitted a patch to enable the CXL side[1] but the PCI AER registers
-> > still mask errors.
-> >
-> > PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
-> > Register (7.8.4.6) default to masking internal errors.  The
-> > Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
-> > as fatal.
-> >
-> > Enable internal errors to be reported via the standard
-> > pci_enable_pcie_error_reporting() call.  Ensure uncorrectable errors are set
-> > non-fatal to limit any impact to other drivers.
+>> Provide a callback function to the CDAT parser in order to parse the Device
+>> Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+>> DPA range and its associated attributes in each entry. See the CDAT
+>> specification for details.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Hi Dave,
 > 
-> Do you have any background on why the spec makes these errors masked
-> by default?  I'm sympathetic to wanting to learn about all the errors
-> we can, but I'm a little wary if the spec authors thought it was
-> important to mask these by default.
+> A few minor questions / comments inline,
+> 
+> Jonathan
+> 
+>> ---
+>>   drivers/cxl/core/cdat.c |   25 +++++++++++++++++++++++++
+>>   drivers/cxl/core/port.c |    2 ++
+>>   drivers/cxl/cxl.h       |   11 +++++++++++
+>>   drivers/cxl/port.c      |    8 ++++++++
+>>   4 files changed, 46 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>> index be09c8a690f5..f9a64a0f1ee4 100644
+>> --- a/drivers/cxl/core/cdat.c
+>> +++ b/drivers/cxl/core/cdat.c
+>> @@ -96,3 +96,28 @@ int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler, void *a
+>>   	return cdat_table_parse_entries(ACPI_CDAT_TYPE_DSLBIS, header, &proc, 0);
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cdat_table_parse_dslbis, CXL);
+>> +
+>> +int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg)
+>> +{
+>> +	struct cxl_port *port = (struct cxl_port *)arg;
+>> +	struct dsmas_entry *dent;
+>> +	struct acpi_cdat_dsmas *dsmas;
+>> +
+>> +	if (header->type != ACPI_CDAT_TYPE_DSMAS)
+>> +		return -EINVAL;
+>> +
+>> +	dent = devm_kzalloc(&port->dev, sizeof(*dent), GFP_KERNEL);
+>> +	if (!dent)
+>> +		return -ENOMEM;
+>> +
+>> +	dsmas = (struct acpi_cdat_dsmas *)((unsigned long)header + sizeof(*header));
+> 
+> I'd prefer header + 1
 
-I'd guess that it is for backwards compatibility with older hardware
-and/or software that that didn't support error notifications.
+It's simpler. Will update.
 
-Then there are the x86 systems that manage to take the AER
-error into some 'board management hardware' which finally
-interrupts the kernel with an NMI - and the obvious consequence.
-These systems are NEBS? 'qualified' for telecoms use, but take
-out a PCIe link and the system crashes.
+> 
+> 
+>> +	dent->handle = dsmas->dsmad_handle;
+>> +	dent->dpa_range.start = dsmas->dpa_base_address;
+>> +	dent->dpa_range.end = dsmas->dpa_base_address + dsmas->dpa_length - 1;
+>> +
+>> +	mutex_lock(&port->cdat.dsmas_lock);
+>> +	list_add_tail(&dent->list, &port->cdat.dsmas_list);
+>> +	mutex_unlock(&port->cdat.dsmas_lock);
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
+>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>> index fe78daf7e7c8..2b27319cfd42 100644
+>> --- a/drivers/cxl/core/port.c
+>> +++ b/drivers/cxl/core/port.c
+>> @@ -660,6 +660,8 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+>>   	device_set_pm_not_required(dev);
+>>   	dev->bus = &cxl_bus_type;
+>>   	dev->type = &cxl_port_type;
+>> +	INIT_LIST_HEAD(&port->cdat.dsmas_list);
+>> +	mutex_init(&port->cdat.dsmas_lock);
+>>   
+>>   	return port;
+>>   
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 839a121c1997..1e5e69f08480 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -8,6 +8,7 @@
+>>   #include <linux/bitfield.h>
+>>   #include <linux/bitops.h>
+>>   #include <linux/log2.h>
+>> +#include <linux/list.h>
+>>   #include <linux/io.h>
+>>   #include <linux/acpi.h>
+>>   
+>> @@ -520,6 +521,8 @@ struct cxl_port {
+>>   	struct cxl_cdat {
+>>   		void *table;
+>>   		size_t length;
+>> +		struct list_head dsmas_list;
+>> +		struct mutex dsmas_lock; /* lock for dsmas_list */
+> 
+> I'm curious, what might race with the dsmas_list changing and hence what is lock for?
 
-It is pretty easy to generate a PCIe error.
-Any endpoint with two (or more) different sized BARs leaves
-a big chunk of PCIe address space that is forwarded by the upstream
-bridge but is not responded to.
-The requirement to put the MSI-X area in its own BAR pretty much
-ensures that such addresses exist.
+It should be dropped. The latest implementation has all the access 
+during port probe so no longer needing locking.
 
-(Never mind reprogramming the fpga that is terminating the link.)
+> 
+>>   	} cdat;
+>>   	bool cdat_available;
+>>   };
+>> @@ -698,6 +701,12 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+>>   }
+>>   #endif
+>>   
+>> +struct dsmas_entry {
+>> +	struct list_head list;
+>> +	struct range dpa_range;
+>> +	u16 handle;
+> 
+> handle is 1 byte in the spec. Why larger here?
 
-	David
+It should be u8. Oops. Thanks for the catch.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
 
+> 
+>> +};
+>> +
+>>   typedef int (*cdat_tbl_entry_handler)(struct acpi_cdat_header *header, void *arg);
+>>   
+>>   u8 cdat_table_checksum(u8 *buffer, u32 length);
+>> @@ -706,6 +715,8 @@ int cdat_table_parse_dsmas(void *table, cdat_tbl_entry_handler handler,
+>>   int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
+>>   			    void *arg);
+>>   
+>> +int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg);
+>> +
+>>   /*
+>>    * Unit test builds overrides this to __weak, find the 'strong' version
+>>    * of these symbols in tools/testing/cxl/.
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index 5453771bf330..b1da73e99bab 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -61,6 +61,14 @@ static int cxl_port_probe(struct device *dev)
+>>   		if (rc)
+>>   			return rc;
+>>   
+>> +		if (port->cdat.table) {
+>> +			rc = cdat_table_parse_dsmas(port->cdat.table,
+>> +						    cxl_dsmas_parse_entry,
+>> +						    (void *)port);
+>> +			if (rc < 0)
+>> +				dev_dbg(dev, "Failed to parse DSMAS: %d\n", rc);
+>> +		}
+>> +
+>>   		rc = cxl_hdm_decode_init(cxlds, cxlhdm);
+>>   		if (rc)
+>>   			return rc;
+>>
+>>
+> 
