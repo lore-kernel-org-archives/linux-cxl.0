@@ -2,67 +2,92 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93724C61DA4
-	for <linux-cxl@archiver.kernel.org>; Sat, 11 Feb 2023 19:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB8CC636D4
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 10:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbjBKTLl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 11 Feb 2023 14:11:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49530 "EHLO
+        id S229716AbjBMKMr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Feb 2023 05:12:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjBKTLl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 11 Feb 2023 14:11:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297D7199EC;
-        Sat, 11 Feb 2023 11:11:37 -0800 (PST)
+        with ESMTP id S229911AbjBMKMj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 05:12:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C271517178;
+        Mon, 13 Feb 2023 02:12:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B94CB60BBD;
-        Sat, 11 Feb 2023 19:11:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 26B5DC4339C;
-        Sat, 11 Feb 2023 19:11:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1D65D60F6E;
+        Mon, 13 Feb 2023 10:12:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B65C433EF;
+        Mon, 13 Feb 2023 10:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676142696;
-        bh=7kZWaAlskOUzi/MYBilhV8xLgVGgJFzO+FM4bE3nWuQ=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=p8/I1IbxoPX9V4r8+p9ChEPKRORgT4eMmgXFCu1tAyW3Xx3nOW7OkfOf8UkeEIVDU
-         f2NzJUPt1f0vpPcZjT55dzNYhohBasaiDlHhl3yeoqCUikSIg4doUgi+qdYxFulU/q
-         6R1e5+3ySkwBnuyfkhlCC0xAnM9slT0u2126twLN9ySC46j6353xgHLEOO+qMW3IKW
-         SEwkcHLtUhbXPrZk6I74kasLYjaTWStdiyMRPps94o5AdroHEht/9rEWwmAe+ZThoL
-         1TM1wW5p0GjIo1zNqHWtkJnjLECpWb989AL0nIry2tcpCqn6x5ferfDUnGeWTbfXTa
-         2sjiY4Kt5b/Dg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 14D8BE21EC8;
-        Sat, 11 Feb 2023 19:11:36 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) fixes for 6.2-final
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <63e700859e02a_88e1294d6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <63e700859e02a_88e1294d6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-List-Id: <nvdimm.lists.linux.dev>
-X-PR-Tracked-Message-Id: <63e700859e02a_88e1294d6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.2
-X-PR-Tracked-Commit-Id: 711442e29f16f0d39dd0e2460c9baacfccb9d5a7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d12aca5c0cee0da197ca55241bcc5ec55dd5ae58
-Message-Id: <167614269608.18613.3418622327024670718.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 Feb 2023 19:11:36 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     torvalds@linux-foundation.org, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+        s=k20201202; t=1676283143;
+        bh=tFR8Is7pavXEpFk5U0TVtxzOu/qBmPCX8MhgYgxKFFc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UF30ZRTO6xpYhEi8j35cVSgfYP9ZdsE6hYPizE+vpA3PNOkw6orROmUQjSjxtnqi4
+         92r0J751DcQr3xxPO7A9mFxmUc1YoXExPVVYb1rO8iYELTqC9CF+3jpcHuK7Hhy8fA
+         XnXfJvkOZdNtIT1PsCZl3iATABuC3RlD6/2AvhBRVTijVmbEBw7edQw+aKXV0VMXfg
+         s5hySEdjeKAOlgY1mKWFz+jJVFfzKqYevQ7KKZhZcJzpXOOpUKZmcSvlyJqlZmGXE0
+         Lsdvrcr8Ep2jvIIUdKUFVRE7tj2SP6dQ4voqLuqe8fspZQXLuH8oY0/Go/B979rjzl
+         aG36IBVhjnNpA==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Dave Jiang <dave.jiang@intel.com>,
+        Dan Carpenter <error27@gmail.com>, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl: avoid returning uninitialized error code
+Date:   Mon, 13 Feb 2023 11:12:11 +0100
+Message-Id: <20230213101220.3821689-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The pull request you sent on Fri, 10 Feb 2023 18:42:13 -0800:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.2
+The new cxl_add_to_region() function returns an uninitialized
+value on success:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d12aca5c0cee0da197ca55241bcc5ec55dd5ae58
+drivers/cxl/core/region.c:2628:6: error: variable 'rc' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+        if (IS_ERR(cxlr)) {
+            ^~~~~~~~~~~~
+drivers/cxl/core/region.c:2654:9: note: uninitialized use occurs here
+        return rc;
 
-Thank you!
+Simplify the logic to have the rc variable always initialized in the
+same place.
 
+Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/cxl/core/region.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index fe1d8392870e..f29028148806 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2625,10 +2625,9 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
+ 		cxlr = to_cxl_region(region_dev);
+ 	mutex_unlock(&cxlrd->range_lock);
+ 
+-	if (IS_ERR(cxlr)) {
+-		rc = PTR_ERR(cxlr);
++	rc = PTR_ERR_OR_ZERO(cxlr);
++	if (rc)
+ 		goto out;
+-	}
+ 
+ 	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.1
+
