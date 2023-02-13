@@ -2,134 +2,115 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E878C636D4
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 21:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE90C636CC
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 22:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbjBMVkT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Feb 2023 16:40:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        id S230200AbjBMWoe convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Feb 2023 17:44:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbjBMVkS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 16:40:18 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9552278D
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Feb 2023 13:39:55 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230213213916usoutp028905d3ea545478a2fc181ad1eab10959~DgB7tH-8t0679806798usoutp02_;
-        Mon, 13 Feb 2023 21:39:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230213213916usoutp028905d3ea545478a2fc181ad1eab10959~DgB7tH-8t0679806798usoutp02_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1676324356;
-        bh=apffgPHQo2OKd2kN82/EeOwUBe+9ozPjYP2UmTtQ2b4=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=Je4iQm/G5l7jl8usGRHNmcFGrggcTAKAKTKTN2r5BeKtUAQmcxv6H9KIP3IhqWdn2
-         99lnHHw8f22ZIBOu28Hk3FWpZ2hfbW3sWVlu85QS7FwkZIrgYVJmT8GYF92jZT5Peg
-         y12KBY+WBlAicKeD3uNNNeNHDzWMI+NeO7yVIs0I=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230213213916uscas1p250505b5d7452cfe6af763a6ed3d84ba3~DgB7mUo8Z1155611556uscas1p2l;
-        Mon, 13 Feb 2023 21:39:16 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id 66.58.06976.40EAAE36; Mon,
-        13 Feb 2023 16:39:16 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa~DgB7NCbTl1771417714uscas1p2H;
-        Mon, 13 Feb 2023 21:39:16 +0000 (GMT)
-X-AuditID: cbfec36d-d99ff70000011b40-40-63eaae04beac
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 6F.9B.11378.30EAAE36; Mon,
-        13 Feb 2023 16:39:15 -0500 (EST)
-Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 13 Feb 2023 13:39:15 -0800
-Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
-        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Mon,
-        13 Feb 2023 13:39:15 -0800
-From:   Adam Manzanares <a.manzanares@samsung.com>
-To:     "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC:     Fan Ni <fan.ni@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>
-Subject: [ndctl PATCH] daxctl: Skip over memory failure node status
-Thread-Topic: [ndctl PATCH] daxctl: Skip over memory failure node status
-Thread-Index: AQHZP/OehnE/B2wTYkm5lOWEJwqLyw==
-Date:   Mon, 13 Feb 2023 21:39:15 +0000
-Message-ID: <20230213213853.436788-1-a.manzanares@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
+        with ESMTP id S229484AbjBMWod (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 17:44:33 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3F221288
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Feb 2023 14:44:21 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-91-bQdp4kpzOVOJNtCS0YM40g-1; Mon, 13 Feb 2023 22:44:17 +0000
+X-MC-Unique: bQdp4kpzOVOJNtCS0YM40g-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Mon, 13 Feb
+ 2023 22:44:16 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.045; Mon, 13 Feb 2023 22:44:16 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Bjorn Helgaas' <helgaas@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Stefan Roese <sr@denx.de>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [PATCH RFC] PCI/AER: Enable internal AER errors by default
+Thread-Topic: [PATCH RFC] PCI/AER: Enable internal AER errors by default
+Thread-Index: AQHZP/OWtZukbVOH0kqW0g36cswuDK7NdzVQ
+Date:   Mon, 13 Feb 2023 22:44:16 +0000
+Message-ID: <f5d13d0d67a34567a586a1171ba44b52@AcuMS.aculab.com>
+References: <20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com>
+ <20230213213820.GA2935044@bhelgaas>
+In-Reply-To: <20230213213820.GA2935044@bhelgaas>
+Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42LZduzreV2Wda+SDf7PlbJYfXMNo8X5WadY
-        LFb++MNqcWvCMSYHFo/Fe14yebzYPJPRY+rseo/Pm+QCWKK4bFJSczLLUov07RK4Mpas6mYv
-        eMVe0fjlCHsD42a2LkZODgkBE4mPW2+zdzFycQgJrGSUuPx2PiuE08oksf/jBFaYqk+v17NA
-        JNYySqxde5QJJCEk8IlR4u38dIjEMkaJBVOWgs1lEzCQ+H18IzOILSJQIHHozAWwbmaB9YwS
-        7Vd2Ao3l4BAWcJZ4u9wEosZDYlpjAyuErSdx4PUhFhCbRUBVYvmRVWBzeAXsJD58bARbzCgg
-        JvH91Bowm1lAXOLWk/lMEJcKSiyavYcZwhaT+LfrIdSfihL3v79kh6jXk7gxdQobhK0tsWzh
-        a6j5ghInZz5hgaiXlDi44gbYzRICvRwSK4+sg0q4SFxbfRlqmbTE1etToZblS+xquwJlV0hc
-        fd0NtdhaYuGf9VCH8kn8/fWIEeR3CQFeiY42oQmMSrOQvDALyXmzkJw3C8l5CxhZVjGKlxYX
-        56anFhvmpZbrFSfmFpfmpesl5+duYgQml9P/DufuYNxx66PeIUYmDsZDjBIczEoivMJPXyQL
-        8aYkVlalFuXHF5XmpBYfYpTmYFES5zW0PZksJJCeWJKanZpakFoEk2Xi4JRqYJqSP0fht5nx
-        DY0JZdcPnva5vjvPXdvYbf9SXVeGA2zLT68Nqd3Wm5dw0LTV+eL7QJ7lxXtLJ+hLrMiaXrJF
-        VL/rzqc1fo73uWZnux1LOcnw8o27e+L7n0zT3ulZJgRZZF7Im5VwJv3D6kNcpf4nW/t/Twq0
-        frR9+1kXjQ8L9IKeL1G37NPZUxtYf1nqhGuNhr6R091HwfNK5/z8/j0s3ejpwbnNWzMn35+5
-        V5dRbp9A0OyZd3+pnDNde9elwMx/4txQKdnCZ7OPZGWU7Zlz46/pisxqMYmVQXsXK00+/FTh
-        zA1NoacbBRkuTF90etbs1q6IGbu5G0veOmYfMJDcOvGZVVXFbufEm+fs/Sri2CcrsRRnJBpq
-        MRcVJwIAmpf9sZ0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LJbGCaqMu87lWywcVPVharb65htDg/6xSL
-        xcoff1gtbk04xuTA4rF4z0smjxebZzJ6TJ1d7/F5k1wASxSXTUpqTmZZapG+XQJXxpJV3ewF
-        r9grGr8cYW9g3MzWxcjJISFgIvHp9XqWLkYuDiGB1YwSx1fsZIVwPjFKbJp8iBGkSkhgGaPE
-        obviIDabgIHE7+MbmUFsEYECiUNnLoB1MwusZ5RovwLSzcEhLOAs8Xa5CUSNh8S0xgZWCFtP
-        4sDrQywgNouAqsTyI6vA5vAK2El8+NjIBGIzCohJfD+1BsxmFhCXuPVkPhPEpQISS/acZ4aw
-        RSVePv7HCmErStz//pIdol5P4sbUKWwQtrbEsoWvoeYLSpyc+YQFol5S4uCKGywTGEVnIVkx
-        C0n7LCTts5C0L2BkWcUoXlpcnJteUWyYl1quV5yYW1yal66XnJ+7iREYUaf/HY7cwXj01ke9
-        Q4xMHIyHGCU4mJVEeIWfvkgW4k1JrKxKLcqPLyrNSS0+xCjNwaIkzivkOjFeSCA9sSQ1OzW1
-        ILUIJsvEwSnVwMRnqazhlT/NKmXeNGcHo8fbqirvOGq4TJ6n1Ne1avXRSeKLY1hMbGc4bBfr
-        nLFsV6Puu8qDU5m3Z5XpvfA5znub8+J2I2VVw5cdxjJFbbXtLmv23r1h+0tOft7X1+eKvwqU
-        ZF3W2afIsHiJqVigRC/XLF5ezV3r1n5e59/S9E7+XblF/dRzIo/km2c/qd3+xfXpl/2r3mUe
-        OSDIO8emSFlrWmG3RoDA5755Ctwr63jYPPjdvl7d1Kx2wqfS4M3RV9x3/Nrro8QCbC4LBDOc
-        ynE4scxHwvXnEuZJW7WTfnV3brTbb/bH7vIm/ryOY8LHv1hbxwcKMX48v8Dyq861I7eTzhYV
-        dS01a61iYa4rU2Ipzkg01GIuKk4EAGbb/+kXAwAA
-X-CMS-MailID: 20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa
-References: <CGME20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa@uscas1p2.samsung.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-When trying to match a dax device to a memblock physical address
-memblock_in_dev will fail if the the phys_index sysfs file does
-not exist in the memblock. Currently the memory failure directory
-associated with a node is currently interpreted as a memblock.
-Skip over the memory_failure directory within the node directory.
+From: Bjorn Helgaas
+> Sent: 13 February 2023 21:38
+> 
+> On Fri, Feb 10, 2023 at 02:33:23PM -0800, Ira Weiny wrote:
+> > The CXL driver expects internal error reporting to be enabled via
+> > pci_enable_pcie_error_reporting().  It is likely other drivers expect the same.
+> > Dave submitted a patch to enable the CXL side[1] but the PCI AER registers
+> > still mask errors.
+> >
+> > PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
+> > Register (7.8.4.6) default to masking internal errors.  The
+> > Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
+> > as fatal.
+> >
+> > Enable internal errors to be reported via the standard
+> > pci_enable_pcie_error_reporting() call.  Ensure uncorrectable errors are set
+> > non-fatal to limit any impact to other drivers.
+> 
+> Do you have any background on why the spec makes these errors masked
+> by default?  I'm sympathetic to wanting to learn about all the errors
+> we can, but I'm a little wary if the spec authors thought it was
+> important to mask these by default.
 
-Signed-off-by: Adam Manzanares <a.manzanares@samsung.com>
----
- daxctl/lib/libdaxctl.c | 2 ++
- 1 file changed, 2 insertions(+)
+I'd guess that it is for backwards compatibility with older hardware
+and/or software that that didn't support error notifications.
 
-diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
-index d990479..b27a8af 100644
---- a/daxctl/lib/libdaxctl.c
-+++ b/daxctl/lib/libdaxctl.c
-@@ -1552,6 +1552,8 @@ static int daxctl_memory_op(struct daxctl_memory *mem=
-, enum memory_op op)
- 	errno =3D 0;
- 	while ((de =3D readdir(node_dir)) !=3D NULL) {
- 		if (strncmp(de->d_name, "memory", 6) =3D=3D 0) {
-+			if (strncmp(de->d_name, "memory_", 7) =3D=3D 0)
-+				continue;
- 			rc =3D memblock_in_dev(mem, de->d_name);
- 			if (rc < 0)
- 				goto out_dir;
---=20
-2.39.0
+Then there are the x86 systems that manage to take the AER
+error into some 'board management hardware' which finally
+interrupts the kernel with an NMI - and the obvious consequence.
+These systems are NEBS? 'qualified' for telecoms use, but take
+out a PCIe link and the system crashes.
+
+It is pretty easy to generate a PCIe error.
+Any endpoint with two (or more) different sized BARs leaves
+a big chunk of PCIe address space that is forwarded by the upstream
+bridge but is not responded to.
+The requirement to put the MSI-X area in its own BAR pretty much
+ensures that such addresses exist.
+
+(Never mind reprogramming the fpga that is terminating the link.)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
