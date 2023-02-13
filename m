@@ -2,97 +2,172 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F87C636CC
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 14:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5338BC636CC
+	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 15:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjBMOuO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Feb 2023 09:50:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43086 "EHLO
+        id S229798AbjBMP4j (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Feb 2023 10:56:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbjBMOuN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 09:50:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBED01C5A3;
-        Mon, 13 Feb 2023 06:50:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9088FB81258;
-        Mon, 13 Feb 2023 14:50:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52788C433D2;
-        Mon, 13 Feb 2023 14:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676299799;
-        bh=m0Chpo40bobQ2eEBsgYq2sC8P/wqR6TPt8UCc2tCPf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KA4RgytHpbAv8I5kNhM16QsS6vuPHJeZmeierPXj2riN1zQ5GF0XKL9UBs15okDmg
-         XeceNDzyG0cdVPq6zXL35nAjQxA9SMc8XSA9QS2WTXtuC+biJXCPEp2cO9YG/0fF7V
-         bglsnzQlktYrSwkfndentHAXKy4B94WNrRxwUGrbQ81u4HNlbp533spWW3+6efRoNo
-         mqKOfwBnmp/Y5GURsr0+FOdb8QEPfo9rZTPHYGnMptlGae8i5lLKD4iqsVB4Dz99LT
-         0cjHuMKGCm8UXavJHlItwPxCnxMHnXZjUw6ZawGtwfXmKrgA7Tam/fgxHXJ9ZTY5F3
-         tBSYGDlZyqzXA==
-Date:   Mon, 13 Feb 2023 15:49:51 +0100
-From:   Robert Richter <rric@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Robert Richter <rrichter@amd.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl/port: Disable decoder setup for endpoints in RCD mode
-Message-ID: <Y+pOD5+DAsm3IKup@rric.localdomain>
-References: <20230208071758.658652-1-rrichter@amd.com>
- <63e52846175ae_36c729428@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S230290AbjBMP4h (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 10:56:37 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D80617161;
+        Mon, 13 Feb 2023 07:56:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676303787; x=1707839787;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vxeAsNf+mv/ERsbiwUZurdbzKLA8ndvUmODsrDY8naE=;
+  b=YlBIUXZodiv9/lfqvfwMYOb9c1rQjd6zQ5RR4giuP0DoKc9uZh3lS0hL
+   b5FcfrgzHTB6395Q58qGG8JoMiEpW5xigEp1Fpwl1yuBwFYGzSs79sWj1
+   dVU/3u5gPtjOJOGnDYGlG+I+L5eCcPTCo44DsPRao4cHh74tR1cTQ/UAH
+   aEXUIDcXXN/1owwyN4E1YPTeAlT+RGeclIH01AqDieqbkG/DQw40qFtT0
+   5nP8MSiiFbboKLovn1KFBC9+dUdI2caILwjBB6nlLatzvl3I4vEAMJTj3
+   nSt3KlZ5BQMGpOoXdpGi+wmn9/lGBbolVPkhh9jae3yTx7Np3AH7Cgcya
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="318940889"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="318940889"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 07:56:26 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="618684301"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="618684301"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.99.85]) ([10.212.99.85])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 07:56:25 -0800
+Message-ID: <c2e244bd-a94b-8de2-e43c-7ff8a756cbc7@intel.com>
+Date:   Mon, 13 Feb 2023 08:56:24 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63e52846175ae_36c729428@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH v6] cxl: add RAS status unmasking for CXL
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com, bhelgaas@google.com,
+        Jonathan.Cameron@Huawei.com
+References: <20230211001144.GA2716712@bhelgaas>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230211001144.GA2716712@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dan,
 
-On 09.02.23 09:07:18, Dan Williams wrote:
-> Robert Richter wrote:
-> > In RCD mode the HDM decoder capability is optional for endpoints and
-> > may not exist. The HDM range registers are used instead. Since the
-> > driver relies on the existence of an HDM decoder capability, its
-> > absence will cause the initialization of a memory card to fail.
-> > 
-> > Moreover, the driver also tries to enable or reuse enabled memory
-> > ranges. In the worst case this may lead to a system hang due to
-> > disabling system memory that was previously provided and setup by
-> > system firmware.
-> > 
-> > To solve the issues described, disable decoder setup for RCD endpoints
-> > and instead rely exclusively on system firmware to enable those memory
-> > ranges. Decoders are used by the kernel to setup and configure CXL
-> > memory regions, esp. to enable and disable them. Since Hot-plug is not
-> > supported for devices in RCD mode, the ability to disable that memory
-> > by the kernel using a decoder is not a necessarily requirement,
-> > decoders are not needed then.
-> > 
-> > Fixes: 34e37b4c432c ("cxl/port: Enable HDM Capability after validating DVSEC Ranges")
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
+
+On 2/10/23 5:11 PM, Bjorn Helgaas wrote:
+> On Fri, Feb 10, 2023 at 04:46:15PM -0700, Dave Jiang wrote:
+>> On 2/10/23 3:52 PM, Bjorn Helgaas wrote:
+>>> On Fri, Feb 10, 2023 at 10:04:03AM -0700, Dave Jiang wrote:
+>>>> By default the CXL RAS mask registers bits are defaulted to 1's and
+>>>> suppress all error reporting. If the kernel has negotiated ownership
+>>>> of error handling for CXL then unmask the mask registers by writing 0s.
+>>>>
+>>>> PCI_EXP_AER_FLAGS moved to linux/pci.h header to expose to driver. It
+>>>> allows exposure of system enabled PCI error flags for the driver to decide
+>>>> which error bits to toggle. Bjorn suggested that the error enabling should
+>>>> be controlled from the system policy rather than a driver level choice[1].
+>>>>
+>>>> CXL RAS CE and UE masks are checked against PCI_EXP_AER_FLAGS before
+>>>> unmasking.
+>>>>
+>>>> [1]: https://lore.kernel.org/linux-cxl/20230210122952.00006999@Huawei.com/T/#me8c7f39d43029c64ccff5c950b78a2cee8e885af
+>>>
+>>>> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+>>>> +{
+>>>> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+>>>> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+>>>> +	void __iomem *addr;
+>>>> +	u32 orig_val, val, mask;
+>>>> +
+>>>> +	if (!cxlds->regs.ras)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	/* BIOS has CXL error control */
+>>>> +	if (!host_bridge->native_cxl_error)
+>>>> +		return -EOPNOTSUPP;
+>>>> +
+>>>> +	if (PCI_EXP_AER_FLAGS & PCI_EXP_DEVCTL_URRE) {
+>>>
+>>> 1) I don't really want to expose PCI_EXP_AER_FLAGS in linux/pci.h.
+>>> It's basically a convenience part of the AER implementation.
+>>>
+>>> 2) I think your intent here is to configure the CXL RAS masking based
+>>> on what PCIe error reporting is enabled, but doing it by looking at
+>>> PCI_EXP_AER_FLAGS doesn't seem right.  This expression is a
+>>> compile-time constant that is always true, but we can't rely on
+>>> devices always being configured that way.
+>>>
+>>> We call pci_aer_init() for every device during enumeration, but we
+>>> only write PCI_EXP_AER_FLAGS if pci_aer_available() and if
+>>> pcie_aer_is_native().  And there are a bunch of drivers that call
+>>> pci_disable_pcie_error_reporting(), which *clears* those flags.  I'm
+>>> not sure those drivers *should* be doing that, but they do today.
+>>>
+>>> I'm not sure why this needs to be conditional at all, but if it does,
+>>> maybe you want to read PCI_EXP_DEVCTL and base it on that?
+>>
+>> Ok I'll read the PCI_EXP_DEVCTL. Looking to only unmask the relevant RAS
+>> reporting if respective PCIe bits are enabled.
 > 
-> Does Dave's series address this problem?
+> That sounds OK to me, but leaves the question of those drivers that
+> call pci_disable_pcie_error_reporting() because CXL won't know about
+> that.  But maybe that's not a problem, I dunno.
+
+Currently the CXL subsystem covers the type-3 devices so I don't think 
+it'll be an issue. type-2 may be an issue but it doesn't go through the 
+current driver. Maybe we'll figure out how to deal with that when those 
+show device drivers show up.
+
+
 > 
-> https://lore.kernel.org/linux-cxl/167588394236.1155956.8466475582138210344.stgit@djiang5-mobl3.local/
+>>> I see you're just adding a check of return value here, but I'm not
+>>> sure you need to call pci_enable_pcie_error_reporting() in the first
+>>> place.  Isn't the call in the pci_aer_init() path enough?
+>>
+>> I guess I'm confused by the kernel documentation:
+>> "
+>> pci_enable_pcie_error_reporting enables the device to send error
+>> messages to root port when an error is detected. Note that devices
+>> don't enable the error reporting by default, so device drivers need
+>> call this function to enable it.
+>> "
+>>
+>> Seems to indicate that driver should always call this if it wants AER
+>> reporting?
 > 
-> ...that is arranging for the driver to carry-on in the absence of the
-> HDM Decoder Capability.
+> Oh, thanks for pointing that out!  I'll update that doc to match the
+> current code, which *does* enable reporting by default:
 
-it might only solve the missing hdm decoder capability. I need to take
-a closer look if that also solves a system hang I was debugging which
-is caused by clearing the memory disable bit in the hdm dvsec range
-register. So the best would be to use this patch now to fix decoder
-initialization in RCD mode and then have Dave's patches on top. I am
-going to test the series too.
+Ah ok. I shall remove the calling of pci_enable_pcie_error_reporting.
 
-Thanks,
-
--Robert
+> 
+> commit f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is native")
+> Author: Stefan Roese <sr@denx.de>
+> Date:   Tue Jan 25 08:18:20 2022 +0100
+> 
+>      PCI/AER: Enable error reporting when AER is native
+> 
+>      If we have native control of AER, set the following error reporting enable
+>      bits:
+> 
+>        - Correctable Error Reporting Enable
+>        - Non-Fatal Error Reporting Enable
+>        - Fatal Error Reporting Enable
+>        - Unsupported Request Reporting Enable
+> 
+>      Note that these bits are all in the Device Control register and are not
+>      AER-specific.
+> 
+>      This affects all devices with an AER capability, including hot-added
+>      devices.
+> 
+>      Please note that this change is quite invasive, as error reporting now will
+>      be enabled for all available PCIe Endpoints, which was previously not the
+>      case.
+> 
+>      When "pci=noaer" is selected, error reporting stays disabled of course.
