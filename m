@@ -2,285 +2,291 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A97C6379F
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 17:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0EDC6379F
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 18:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233022AbjBNRLN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Feb 2023 12:11:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37022 "EHLO
+        id S229510AbjBNS1n (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Feb 2023 13:27:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232786AbjBNRK7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 12:10:59 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C76B2E81B;
-        Tue, 14 Feb 2023 09:10:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676394630; x=1707930630;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CSK5mIDaVWpNXNLLNXtPJEQjjrLG5SjV8c3RKQrKEMs=;
-  b=T6aH3oQGwh9sYClRnEtiCw7Z9F3Zuc8960R0kP7SWJOMHk+P3HQzAecg
-   36YTTluWAQ7LktGmN0Vizxzl/3sZp5MlJIjGQmYYepXLZByt6LJONQDpN
-   XAyS+aUngTKnEmw+PcuB6Bh6YuTpY04EDREyRF6k7HTioog0JiuY5SVYb
-   eGdFoXSE9nd34DwiFbvkCIbQfU8bybU/TLLu1qWYYUih72GnUX+7Rf6G+
-   1NPkOhiWyq7C+NKxqnerUpgcuWKqyJL4eXEr1hOy94nUzyMa5VhtEva4w
-   rcKbhtGUCUA58J/mg4//XUSnnqcDx7X8Gk5C/BGYEDMNBovqJKHXgnpHJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="393611936"
-X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="393611936"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:10:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="914813208"
-X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="914813208"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Feb 2023 09:10:17 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pRyoq-0008fQ-34;
-        Tue, 14 Feb 2023 17:10:16 +0000
-Date:   Wed, 15 Feb 2023 01:10:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-cxl@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb
-Message-ID: <63ebc077.iIFldcCwBHnTkZn0%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229496AbjBNS1m (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 13:27:42 -0500
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211AA113D5;
+        Tue, 14 Feb 2023 10:27:41 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PThb2bjkDD0PRCiZcBs8VfaFRfYouLk1BdK6RXz1F4cFDn8xtrfwWKWvS4nz6w/TM9isXpPdfI/wTjMHE2SfDwbcRfw24C7lt6ENEGlUvkmiKOWsfTeXoidNpXEyHiImQkla6rOdcPAz3dYZFlc7Cw9j4Y+aBC9g2gS2ULTp0JFqOKwgi4vIyygvmGeIXWiL+SpbFETPyeZ3F/yMEWM4ftH95fC0+oEiYPPAFJnOsSACfih3OFIAiTu74aMtaZDoN2+eBoKNv6rN0B93GqiFIm2h/HqyuktvRvhzHtxJxUrySAVB0pGf4PUHgVJWM54saXHr43QmnqKH+5Oj2l0d4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=I+pd7cdqWpF/JIwLOY/RRdcDDF1pX07cjgSqdjv/qcY=;
+ b=axxeYTS4os7tx+9ynBSo0Q7uKhMsQbL2Kd1s+s/c103muCY5GPqvY+PQsUPixZctBO4kS7J0Oe7jhsaAqmESQ2328lvK4yfytmx5dxO8FFo3hRSXuvEE+y3gIOQ+MbOCceuPp9/zT9Tlu30YEsHHBuZio8j8J0aND0HtqQwqXrjVlNA1ABWb/VGS10rAmLWRXGeM+8+P9+AXJ959Q8fy3mjBLLBq+y72XsnHFmgfiE57aUNDi7KHFkrl50RwxlECtch5is9SaWGlTde16p5ImUU0OSk3DF+ohw9NYImYVzRaMglQp3Dfl4KLs0xutCV2FKHJlLxsTg+USrlCpz9ZyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I+pd7cdqWpF/JIwLOY/RRdcDDF1pX07cjgSqdjv/qcY=;
+ b=UPRllnkwJs3/nrtRHfcvCJ9Q1EliA7X8m70tUMTPFJ9Btev4ikOnM2ycycBGRYjWA+3fmJJC40mV1h+6L4lzGSmym2kEYokoW//XCjUFAh9oBE3NTQltsd9ZQvshvtsxnDOLKqXL3fBuLZ6anRoLhasDCiIvnP3D9JwMues9Zkc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
+ by PH0PR17MB4890.namprd17.prod.outlook.com (2603:10b6:510:e7::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Tue, 14 Feb
+ 2023 18:27:36 +0000
+Received: from BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
+ ([fe80::d253:1eb3:9347:c660%3]) with mapi id 15.20.6086.024; Tue, 14 Feb 2023
+ 18:27:36 +0000
+Date:   Tue, 14 Feb 2023 13:27:27 -0500
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
+ default
+Message-ID: <Y+vSj8FD6ZaHhfoN@memverge.com>
+References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
+X-ClientProxiedBy: SJ0PR03CA0292.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::27) To BN6PR17MB3121.namprd17.prod.outlook.com
+ (2603:10b6:405:7c::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|PH0PR17MB4890:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0265fe59-2746-4e16-a642-08db0eb9256d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: b5u5CngNUXBWxx+cdUe2TCbi7FGuIcUnux8HCD/gWu4tKuEkvB3dx0A207zpj8bplFxVrxoQy/W+jPA3oY0xHRa+WdyN2AIruVNlF+SyNwN17iUsYFpA80QO3A5iGW90kbk3aJo8z1z3lEIhpW5GRBSctnUP5Zcv00335PcezGgeV2TxfH71FwquwpA/0zhJSfnPnNzIAOkm6/0tvJGB2L1sMdqeDLycS3sM2OwiRr3bGM+SRPQV43tPk9OSAVEvupaSKz3WvO5BHtqL7JwJlC4wux4ZzF8Ptybrv0A6w0bHspzQkj1otAx7VOdi7tRiCS9OQxQddCilUtIVRzAydNt4gctzSOBYUCulyN9f7yPRRUKtWTpBGj5wgOILsMr1mRViTCyV3rrmIxOyz7UDAxz6KvD4IFjCz6KLT+oQj1O3HMofGXiKGCWIuFunEn2gEkPhfzw4eOB4FN/glWHIZjM1zUcRuzcUE1RXtLwpLMHYU+c5yY28F18QI2lcnKPbY1dVVO6Yp3FiT+emVUKud3ZeTTAYzA1ueXS4aWUyx12XhGbT5vWkwjWI7bUXck01Ky0BfrwNc7MGFfIoNFe2uUKlOvG6H03CHQxXnnXiEfW+XW/hlNAZqWp/TkDriEU1eTfrWiZuevvQ17C2uK7UHjWS4xcIxJYHkQ4KILVEUQ9249nQ1gC3sWdLj0qLr67H
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(376002)(136003)(39830400003)(366004)(346002)(451199018)(2906002)(6666004)(8936002)(41300700001)(66556008)(66946007)(4326008)(6916009)(66476007)(44832011)(8676002)(5660300002)(316002)(54906003)(83380400001)(6506007)(478600001)(6486002)(26005)(186003)(966005)(6512007)(36756003)(86362001)(2616005)(38100700002)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SlZUd3JtREpYOStDTXRBYjFrdnlza05wSnNyTElGYXhxN2tMTHUxT09YVGdy?=
+ =?utf-8?B?MW1vaFc2YTRuYlNSdGFEeVcycmZrTDY5ZWx1dGVUMnZlaE5IMGFMNTNSejlD?=
+ =?utf-8?B?dzQ1STFoZWxRaWpia1FsZHNhQWRHbWRrbXZzZHcza2h2aDhqZjNSd05jSXI3?=
+ =?utf-8?B?SW1qY0ZSYnZqWitIU2gwNkR6U1dVNGRjTHBhZlNMMktGRWdWL2grdmlZbzQ1?=
+ =?utf-8?B?dmxkaG1zMS84dCtpR3VqUEVxenhZVHJ2N1BGSGUydGZmNVlEbmQzdytpQXpm?=
+ =?utf-8?B?N1ZIQ1J6UDZnQ3d5ekZ5Zm1BWk1JNHRnVXhodS9oUStBVys5RW4ySHJEellT?=
+ =?utf-8?B?K2RVVUhUSnFaQTIzNzZIcG1zMGhhSjVRYXc0WVZLRjBrLysydGk3eTBWb1hL?=
+ =?utf-8?B?cGN2T3BJZW5KZ3JQeTJtdnFydWV5bGU2c2h4cUNGQ21mUHc2T1QySk1oaGp0?=
+ =?utf-8?B?NUQ2U21HY1Y3QjM5U1JUaUpFUGNFdzcwaEdqR243TGFjTjlIMHZabUZHMCtm?=
+ =?utf-8?B?Vm9PN0lBSmZQTGxlOXVnY01qZGsvM2wzTzdkZE4xbkRmMkpTTCtOWlcyN3Nh?=
+ =?utf-8?B?MVNoUFpvcllHOWFLMWVQUWhEbkh6QUdCcG9BYUdRVmdmdTY5TjZma2tGQ2dy?=
+ =?utf-8?B?N3VEMUxQNzFWRHR6clE4NW8wZm5DMm93K0JRMEVsTXM0WXhXanpCL28xcTY2?=
+ =?utf-8?B?OHY5NGx1RWJGOUErL012QkRYdytldURnK3oyMlVWUTRJMnN2NEVxcXpKNVlZ?=
+ =?utf-8?B?bXJPeDZMeUN5cFpISFRJVVcxb3pqQ3VjTmxDdlpUeVNteEtTZ21XMThPcmxp?=
+ =?utf-8?B?YTZycDZaK2t3eVBuVHdOd1hxOWhxOEJXcENEeFFpVk5IYVpaZ3cveEZEdWNS?=
+ =?utf-8?B?TDdRNEZBTkNrN3J1S0pxU1R6K0dDTnE3ZStJWkJaV2txeXE5bHNENHd6MW5m?=
+ =?utf-8?B?TWc0OXdVMklYWFdWQ3o4UVhFQnc0RVRDTkQxZ2t0NUtML2xzUmpUR1I3ZVNv?=
+ =?utf-8?B?SXRBcFRuRm1ueHNpR1ZMSE9UQjlUek5VTTAzSTREam42VnltMFlPWk1LR1ly?=
+ =?utf-8?B?bVlWZTVGSnIvS1E0U1QrSXg5NFR5TTg4OWZHTEFNaXU2RzZUc0RobFljTjhZ?=
+ =?utf-8?B?NGdwMGhVcnR6YzdmbDh3UnB1d2RGTzNKekl3QWVZR0lTSFNYdU9vbE9hSkY2?=
+ =?utf-8?B?cGM3TEZvSUs1RGptUVNvT25TUlFhY2RaYU02d1lVMmtxN21RSnVvVnpmdms4?=
+ =?utf-8?B?VjFKcFpQRHQ2eUZ2VzB3Q3BpM3Z6eXNxSU4rcm5Ed3FuVHQwQkJvN1NodjBn?=
+ =?utf-8?B?SWRkclhVRFpxUmlROXBkT3Z5b3UwSFZ2dThDbHVXSUhlUFpOb2JDS2tEQ3BJ?=
+ =?utf-8?B?cDd5T2NOMkpTVjk5U1YrU1k3UmZRK0dDa2J5NU9xU0t6OFFGVkUxYkZpWFFO?=
+ =?utf-8?B?ZjR0RDE5cEU3WFluSEc0K2xicU84YUhTbUFvc2tSa2NrTUZtVWR1anpHZjV4?=
+ =?utf-8?B?VmtMRVZVcEgvUkFFc0I4YWg5TXZXdk8zcHNxUk4vRmw2blJFZU9nSGpPbDlv?=
+ =?utf-8?B?ejI2ZFNHck5BMnh0WGtsOUV4RnZFdVI1T3FlQXJoR0lVRDIxUm5pZFdYME9v?=
+ =?utf-8?B?ODIrVi9DOFV2UXJEUGdta1lYbjYvTDJEVHhQLzlmKzIwQitBYnNCYXhRYzZ4?=
+ =?utf-8?B?QzBId00vM1EwTHFjdEZUVWxaWittSitUMVRERTVKNHNCZElMM0VPWld0ZW9p?=
+ =?utf-8?B?eHR5TVJieXlGK2RJZlA5QzFsQlZaNHgxaEh1NmJ2Y3Q4TjNsMVI5anFiaFlh?=
+ =?utf-8?B?ejAzV2M0Z1VLdC9pNTJ5cW1IRTNvQ3VsY1A0Z2hPam1DRVorSENvb2dRZEta?=
+ =?utf-8?B?SHNRMjV0bmZ5a2FyU041TUFmWkpjNE1VekZ2eloyT0hCQ29JQUlja3NCUVFG?=
+ =?utf-8?B?TUx5RThuY2RqVlZaMVVuS1NZWVFnNFcwZWNXdlN4c2tFV3pqUXZ6a2pPbm1m?=
+ =?utf-8?B?OHByQ1JzT1JaYkhQTGJhOE5tOGo2QVArMFpOZWtLUXNiejFkcFBqYnJ2Tjd0?=
+ =?utf-8?B?bktYa0lJM0tmUEdhSGxFZkRDTExzQzdyRTdENVdNOThEVGRuZ0thMENUQnNM?=
+ =?utf-8?B?K20ybkp6SDlWTXBrNHA3SCtyVDg3cDU1c3hCQy84Q1RQNkk3L2VNWElZVU1I?=
+ =?utf-8?B?N0E9PQ==?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0265fe59-2746-4e16-a642-08db0eb9256d
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 18:27:36.4613
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WEHBNeNouag7eX1IghtkA2V3GNqlRjQdC1D3wBVyLBDqSHtNhN8R6/CqX1TwoZPcRiTKQ87+9PLKXsI7WGmiEGzaRfUFzfPfgoxdIp6a1qA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR17MB4890
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb  Add linux-next specific files for 20230214
+On Sun, Feb 05, 2023 at 05:02:29PM -0800, Dan Williams wrote:
+> Summary:
+> --------
+> 
+> CXL RAM support allows for the dynamic provisioning of new CXL RAM
+> regions, and more routinely, assembling a region from an existing
+> configuration established by platform-firmware. The latter is motivated
+> by CXL memory RAS (Reliability, Availability and Serviceability)
+> support, that requires associating device events with System Physical
+> Address ranges and vice versa.
+> 
 
-Error/Warning reports:
+Ok, I simplified down my tests and reverted a bunch of stuff, figured i
+should report this before I dive further in.
 
-https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302092211.54EYDhYH-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302111601.jtY4lKrA-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302112104.g75cGHZd-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302142145.iN5WZnpF-lkp@intel.com
+Earlier i was carrying the DOE patches and others, I've dropped most of
+that to make sure i could replicate on the base kernel and qemu images
 
-Error/Warning: (recently discovered and may have been fixed)
+QEMU branch: 
+https://gitlab.com/jic23/qemu/-/tree/cxl-2023-01-26
+this is a little out of date at this point i think? but it shouldn't
+matter, the results are the same regardless of what else i pull in.
 
-Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
-Documentation/sphinx/templates/kernel-toc.html: 1:36 Invalid token: #}
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-arch/mips/kernel/vpe.c:643:41: error: 'struct module' has no member named 'mod_mem'
-drivers/cxl/core/region.c:2628:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_optc.c:294:6: warning: no previous prototype for 'optc3_wait_drr_doublebuffer_pending_clear' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1296:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:280:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1586:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
-ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
+Kernel branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.3/cxl-ram-region
+I had been carrying a bunch of other hotfixes and work like the DOE
+patches, but but i wanted to know if the base branch saw the same
+behavior.
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Config:
+sudo /opt/qemu-cxl/bin/qemu-system-x86_64 \
+-drive file=/data/qemu/images/cxl.qcow2,format=qcow2,index=0,media=disk,id=hd \
+-m 4G,slots=4,maxmem=8G \
+-smp 4 \
+-machine type=q35,accel=kvm,cxl=on \
+-enable-kvm \
+-nographic \
+-netdev bridge,id=hn0,br=virbr0 \
+-device virtio-net-pci,netdev=hn0,id=nic1 \
+-device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
+-device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
+-object memory-backend-ram,id=mem0,size=4G \
+-device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
+-M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=4G
 
-drivers/clk/ingenic/jz4760-cgu.c:80 jz4760_cgu_calc_m_n_od() error: uninitialized symbol 'od'.
-drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c:415 bnxt_rdma_aux_device_init() warn: possible memory leak of 'edev'
-drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8188e.c:1678 rtl8188e_handle_ra_tx_report2() warn: ignoring unreachable code.
-drivers/pci/setup-bus.c:1916:21-24: ERROR: invalid reference to the index variable of the iterator on line 1890
-drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
-drivers/usb/host/xhci-plat.c:371 xhci_generic_plat_probe() error: we previously assumed 'sysdev' could be null (see line 361)
 
-Error/Warning ids grouped by kconfigs:
+boot is fine
+# ./ndctl/build/cxl/cxl create-region -m -t ram -d decoder0.0 \
+  -w 1 -g 4096 mem0
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- alpha-randconfig-c041-20230212
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|-- alpha-randconfig-s042-20230212
-|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arc-randconfig-r016-20230213
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|   `-- ftrace-ops.c:(.init.text):undefined-reference-to-__udivdi3
-|-- i386-randconfig-m021
-|   `-- kernel-trace-trace_events_synth.c-trace_event_raw_event_synth()-warn:inconsistent-indenting
-|-- i386-randconfig-s001
-|   |-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
-|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
-|-- i386-randconfig-s002
-|   `-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
-clang_recent_errors
-|-- s390-randconfig-r044-20230214
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-|-- x86_64-randconfig-a002-20230213
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-|-- x86_64-randconfig-a004-20230213
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-|-- x86_64-randconfig-a005-20230213
-|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
-`-- x86_64-randconfig-r036-20230213
-    `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+[   28.183276] cxl_region region0: Bypassing cpu_cache_invalidate_memregion() for testing!
+{
+  "region":"region0",
+  "resource":"0x390000000",
+  "size":"4.00 GiB (4.29 GB)",
+  "type":"ram",
+  "interleave_ways":1,
+  "interleave_granularity":4096,
+  "decode_state":"commit",
+  "mappings":[
+    {
+      "position":0,
+      "memdev":"mem0",
+      "decoder":"decoder2.0"
+    }
+  ]
+}
+cxl region: cmd_create_region: created 1 region
+[   28.247144] Built 1 zonelists, mobility grouping on.  Total pages: 979754
+[   28.247844] Policy zone: Normal
+[   28.258449] Fallback order for Node 0: 0 1
+[   28.258945] Fallback order for Node 1: 1 0
+[   28.259422] Built 2 zonelists, mobility grouping on.  Total pages: 1012522
+[   28.260087] Policy zone: Normal
 
-elapsed time: 726m
 
-configs tested: 103
-configs skipped: 4
+top shows the memory has been onlined
+MiB Mem :   8022.1 total,   7631.6 free,    200.9 used,    189.7 buff/cache
+MiB Swap:   3926.0 total,   3926.0 free,      0.0 used.   7567.8 avail Mem
 
-gcc tested configs:
-alpha                            allyesconfig
-alpha                               defconfig
-arc                              allyesconfig
-arc                                 defconfig
-arc                        nsim_700_defconfig
-arc                  randconfig-r043-20230212
-arc                  randconfig-r043-20230213
-arc                  randconfig-r043-20230214
-arm                              allmodconfig
-arm                              allyesconfig
-arm                                 defconfig
-arm                  randconfig-r046-20230212
-arm                  randconfig-r046-20230214
-arm64                            allyesconfig
-arm64                               defconfig
-csky                                defconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                         debian-10.3-func
-i386                   debian-10.3-kselftests
-i386                        debian-10.3-kunit
-i386                          debian-10.3-kvm
-i386                                defconfig
-i386                 randconfig-a011-20230213
-i386                 randconfig-a012-20230213
-i386                 randconfig-a013-20230213
-i386                 randconfig-a014-20230213
-i386                 randconfig-a015-20230213
-i386                 randconfig-a016-20230213
-i386                          randconfig-c001
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                        generic_defconfig
-loongarch                        allmodconfig
-loongarch                         allnoconfig
-loongarch                           defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                            mac_defconfig
-microblaze                          defconfig
-mips                             allmodconfig
-mips                             allyesconfig
-mips                 decstation_r4k_defconfig
-mips                        vocore2_defconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                       holly_defconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                randconfig-r042-20230213
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                             allyesconfig
-s390                                defconfig
-s390                 randconfig-r044-20230213
-sh                               allmodconfig
-sh                          landisk_defconfig
-sh                   secureedge5410_defconfig
-sparc                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                            allnoconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                                  kexec
-x86_64               randconfig-a011-20230213
-x86_64               randconfig-a012-20230213
-x86_64               randconfig-a013-20230213
-x86_64               randconfig-a014-20230213
-x86_64               randconfig-a015-20230213
-x86_64               randconfig-a016-20230213
-x86_64                               rhel-8.3
 
-clang tested configs:
-arm                     davinci_all_defconfig
-arm                  randconfig-r046-20230213
-hexagon              randconfig-r041-20230212
-hexagon              randconfig-r041-20230213
-hexagon              randconfig-r041-20230214
-hexagon              randconfig-r045-20230212
-hexagon              randconfig-r045-20230213
-hexagon              randconfig-r045-20230214
-i386                 randconfig-a001-20230213
-i386                 randconfig-a002-20230213
-i386                 randconfig-a003-20230213
-i386                 randconfig-a004-20230213
-i386                 randconfig-a005-20230213
-i386                 randconfig-a006-20230213
-powerpc                     ksi8560_defconfig
-powerpc                 mpc836x_rdk_defconfig
-powerpc                     tqm5200_defconfig
-riscv                randconfig-r042-20230212
-riscv                randconfig-r042-20230214
-s390                 randconfig-r044-20230212
-s390                 randconfig-r044-20230214
-x86_64               randconfig-a001-20230213
-x86_64               randconfig-a002-20230213
-x86_64               randconfig-a003-20230213
-x86_64               randconfig-a004-20230213
-x86_64               randconfig-a005-20230213
-x86_64               randconfig-a006-20230213
+Lets attempt to use the memory
+[root@fedora ~]# numactl --membind=1 python
+KVM internal error. Suberror: 3
+extra data[0]: 0x0000000080000b0e
+extra data[1]: 0x0000000000000031
+extra data[2]: 0x0000000000000d81
+extra data[3]: 0x0000000390074ac0
+extra data[4]: 0x0000000000000010
+RAX=0000000080000000 RBX=0000000000000000 RCX=0000000000000000 RDX=0000000000000001
+RSI=0000000000000000 RDI=0000000390074000 RBP=ffffac1c4067bca0 RSP=ffffac1c4067bc88
+R8 =0000000000000000 R9 =0000000000000001 R10=0000000000000000 R11=0000000000000000
+R12=0000000000000000 R13=ffff99eed0074000 R14=0000000000000000 R15=0000000000000000
+RIP=ffffffff812b3d62 RFL=00010006 [-----P-] CPL=0 II=0 A20=1 SMM=0 HLT=0
+ES =0000 0000000000000000 ffffffff 00c00000
+CS =0010 0000000000000000 ffffffff 00a09b00 DPL=0 CS64 [-RA]
+SS =0018 0000000000000000 ffffffff 00c09300 DPL=0 DS   [-WA]
+DS =0000 0000000000000000 ffffffff 00c00000
+FS =0000 0000000000000000 ffffffff 00c00000
+GS =0000 ffff99ec3bc00000 ffffffff 00c00000
+LDT=0000 0000000000000000 ffffffff 00c00000
+TR =0040 fffffe1d13135000 00004087 00008b00 DPL=0 TSS64-busy
+GDT=     fffffe1d13133000 0000007f
+IDT=     fffffe0000000000 00000fff
+CR0=80050033 CR2=ffffffff812b3d62 CR3=0000000390074000 CR4=000006f0
+DR0=0000000000000000 DR1=0000000000000000 DR2=0000000000000000 DR3=0000000000000000
+DR6=00000000fffe0ff0 DR7=0000000000000400
+EFER=0000000000000d01
+Code=5d 9c 01 0f b7 db 48 09 df 48 0f ba ef 3f 0f 22 df 0f 1f 00 <5b> 41 5c 41 5d 5d c3 cc cc cc cc 48 c7 c0 00 00 00 80 48 2b 05 cd 0d 76 01
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+
+
+I also tested lowering the ram sizes (2GB ram, 1GB "CXL") to see if
+there's something going on with the PCI hole or something, but no, same
+results.
+
+Double checked if there was an issue using a single root port so i
+registered a second one - same results.
+
+
+In prior tests i accessed the memory directly via devmem2
+
+This still works when mapping the memory manually
+
+[root@fedora map] ./map_memory.sh
+echo ram > /sys/bus/cxl/devices/decoder2.0/mode
+echo 0x40000000 > /sys/bus/cxl/devices/decoder2.0/dpa_size
+echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_region
+echo 4096 > /sys/bus/cxl/devices/region0/interleave_granularity
+echo 1 > /sys/bus/cxl/devices/region0/interleave_ways
+echo 0x40000000 > /sys/bus/cxl/devices/region0/size
+echo decoder2.0 > /sys/bus/cxl/devices/region0/target0
+echo 1 > /sys/bus/cxl/devices/region0/commit
+
+
+[root@fedora devmem]# ./devmem2 0x290000000 w 0x12345678
+/dev/mem opened.
+Memory mapped at address 0x7fb4d4ed3000.
+Value at address 0x290000000 (0x7fb4d4ed3000): 0x0
+Written 0x12345678; readback 0x12345678
+
+
+
+This kind of implies there's a disagreement about the state of memory
+between linux and qemu.
+
+
+but even just onlining a region produces memory usage:
+
+[root@fedora ~]# cat /sys/bus/node/devices/node1/meminfo
+Node 1 MemTotal:        1048576 kB
+Node 1 MemFree:         1048112 kB
+Node 1 MemUsed:             464 kB
+
+
+Which I would expect to set off some fireworks.
+
+Maybe an issue at the NUMA level? I just... i have no idea.
+
+
+I will need to dig through the email chains to figure out what others
+have been doing that i'm missing.  Everything *looks* nominal, but the
+reactors are exploding so... ¯\_(ツ)_/¯
+
+I'm not sure where to start here, but i'll bash my face on the keyboard
+for a bit until i have some ideas.
+
+
+~Gregory
