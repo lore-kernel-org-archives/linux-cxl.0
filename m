@@ -2,110 +2,128 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F27C05027
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 03:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F0FC05027
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 06:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231550AbjBND7q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Feb 2023 22:59:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42320 "EHLO
+        id S231725AbjBNG5N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Feb 2023 01:57:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231552AbjBND7p (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 22:59:45 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61111CDEC
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Feb 2023 19:59:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676347179; x=1707883179;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VToIQ6QCeoQde9Heb86hAZZR6ObFV8wceMoEW8GRZ0g=;
-  b=H8Li79LIm9pG1NQkrdauGM82ZhHwhD6+m8GxuWEf9iJgfNQA763YWxNJ
-   WFlnNiK3KcKUlvavIPX9a1ob0dD/fA8UnaHVB8qHPdwt9BXAhopsVw7IX
-   w4OlVieQ3kYnl+Lzr0oIKb6aQ0VdllcrlXJWsVQvxSBok4ISSPd3Hs0iT
-   KcQqDe4itvV8itaY+jpv+GeW17KCADH40f3/tqLfiJSWORHaFFgP1io4T
-   P5fa62GWmfYnKw3wBNNe17VpN3FUanGQ7QVIEDN3AJ7ecI22deSW6Oahm
-   p25cBRGUjvg6hte/pTmdEPJSvr7fDQARAjbyS31jhJ5NhPxZnbaZIdYv/
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="358480160"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="358480160"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 19:59:38 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="757835238"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="757835238"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.99.85]) ([10.212.99.85])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 19:59:38 -0800
-Message-ID: <51fa9a1b-adb9-78c0-bea4-ed27469e078c@intel.com>
-Date:   Mon, 13 Feb 2023 20:59:38 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] cxl: remove unnecessary calling of
- pci_enable_pcie_error_reporting()
+        with ESMTP id S231721AbjBNG5M (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 01:57:12 -0500
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7C61C7D0
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Feb 2023 22:57:10 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230214065707usoutp02daac5ac7fa751767e5ea96b9845d1c5b~Dno-ehuhM1999219992usoutp02a;
+        Tue, 14 Feb 2023 06:57:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230214065707usoutp02daac5ac7fa751767e5ea96b9845d1c5b~Dno-ehuhM1999219992usoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1676357827;
+        bh=f0aYirtpGCbdrGcI1B/Q5XaonHuAxu+3fFwOoNKmqys=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=L7qKeZSWC+AMnDuP1VXWdMBV/ihHLzDSTwNyQVL0W04f8ybgFz/dkoB2X1VFwOkTf
+         5PzfPqhlGhEvD/ONhYypSg27Sz3/WPviWwbwv7DEZC+GWQDjZlnP+CIvsvf1PyFlVU
+         Fb2ntIuVdjIXqwy/8OJgdh67NWlOqi8xwSBB26NA=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+        [203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230214065706uscas1p1508163355ffa673e7a7ea5eae461ad07~Dno-VkASe0102101021uscas1p1W;
+        Tue, 14 Feb 2023 06:57:06 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges3new.samsung.com (USCPEMTA) with SMTP id 45.4F.12196.2C03BE36; Tue,
+        14 Feb 2023 01:57:06 -0500 (EST)
+Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
+        [203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230214065705uscas1p16dfd8ec62fdd1ffc75d468b9e491ba81~Dno_FEevs1891118911uscas1p1Y;
+        Tue, 14 Feb 2023 06:57:05 +0000 (GMT)
+X-AuditID: cbfec370-83dfe70000012fa4-50-63eb30c27d33
+Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id FF.65.11346.1C03BE36; Tue,
+        14 Feb 2023 01:57:05 -0500 (EST)
+Received: from SSI-EX3.ssi.samsung.com (105.128.2.228) by
+        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Mon, 13 Feb 2023 22:57:04 -0800
+Received: from SSI-EX3.ssi.samsung.com ([105.128.5.228]) by
+        SSI-EX3.ssi.samsung.com ([105.128.5.228]) with mapi id 15.01.2375.024; Mon,
+        13 Feb 2023 22:57:04 -0800
+From:   Adam Manzanares <a.manzanares@samsung.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Fan Ni <fan.ni@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>
+Subject: Re: [ndctl PATCH] daxctl: Skip over memory failure node status
+Thread-Topic: [ndctl PATCH] daxctl: Skip over memory failure node status
+Thread-Index: AQHZP/OehnE/B2wTYkm5lOWEJwqLy67OC4oAgAB9u4A=
+Date:   Tue, 14 Feb 2023 06:57:04 +0000
+Message-ID: <20230214065653.GA437651@bgt-140510-bm01>
+In-Reply-To: <63eac7427d994_27392429460@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     bhelgaas@google.com, ira.weiny@intel.com,
-        Jonathan.Cameron@huawei.com, lukas@wunner.de
-References: <167632012093.4153151.5360778069735064322.stgit@djiang5-mobl3.local>
- <63eae2639fce0_32d612941d@dwillia2-xfh.jf.intel.com.notmuch>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <63eae2639fce0_32d612941d@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DA92A76EC414124295E55F63C007390B@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sd0xTURTGve+9to+a6rU29CiJg6AhUitDY+NONLHRxEGMGKNohWcZpWCf
+        KI5INS5ALaiIlCqiiJbhwGgQkNDKUEDEhVrjwAVYjYoahhX08WrS/37nO+s7N5cmpWbBaDpa
+        v5kx6DU6X6GYulH3q3myPdAZEdjZG6zKymxBqqLnxUh139xAqaw9LoHKkV5HzBOoz1V2EuqO
+        a9lInZmTrP5ROmYZtVo8K5LRRW9hDFPmrBdH5RfWCBNeCpPanKmUEd0UpCIvGvBUePXRSqUi
+        MS3FVgTt3x4I+GAfAfml1UQqogerntT78HoJgnefXSI+6ELw9MYRkhslxQUI9pTs4liIA+F3
+        /dVBXYYDIMNiI7kGEn9HcMBmoripI/FCyM1Q8jVqOLHbKOBkGZ4Bp6+v4WQKT4CmB/UijiV4
+        GrQX2RHHXngR1PafoDhG2Bu6G4oJjkksB8f7XIK/bASczakkefaG/vI2Ic/j4XV3p4ivV8CZ
+        ii4hz3PAevWTe04AFOQ5SX7vCLib/Z7ie0eB7eKzwdcCfIeGLFO6iE8sgKqPJvdiH8gqfuRu
+        iIfy/Y/dJpLgiTPNbWIm5LkuE+nIz+zh2+zhyezhyezhyezh6QwSFCJ5IsvGaRk2RM9sVbKa
+        ODZRr1VGxMeVon/fp7H/dkIZcji+K+2IoJEdAU36yiQjP3RESCWRmm3bGUP8OkOijmHtyIem
+        fOWSoNl3I6RYq9nMxDJMAmP4nyVor9FGImxHgPCe5UtPVSPYmuctPZddG7RXoQi/5RjnXzbQ
+        1S6/E33xTVXRz4EN45oduWlLZqOCraFQnRzcFjO2t9KCL/Qq/A9pv3XgrzV95OQPunWbaobP
+        b/W7LXGm17cmb5muy449O/TwEVN0rrZPEltOh7W4lh8kj2lNl8LshebgyAYDnC7vPpB5dGWm
+        MVQWbmrdXrAtcVZ1ydph3Z/FS883tePaH4vrHBU9STaZdFJFxng0UTlwKS9GJDXKPklesG+F
+        +iFy14xF+4KH/Ak0Wazkb4trfkpOx6orE7+cujV3ekh44/GS12FpeWV7pWUnU1Yo+uQ7yaaQ
+        gYcxG1JaKjaKWV+KjdIETSINrOYvgwGM+a0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJIsWRmVeSWpSXmKPExsWS2cA0Ufegwetkg3fnZCymT73AaLH65hpG
+        i/OzTrFYrPzxh9Xi1oRjTA6sHov3vGTyeLF5JqPH1Nn1Hp83yQWwRHHZpKTmZJalFunbJXBl
+        LFl1hK3gLlvFw9ddLA2MO1m7GDk4JARMJK4el+5i5OIQEljNKDFr1k1WCOcTo8T7S4fYIJxl
+        jBLbdq5g7GLk5GATMJD4fXwjM4gtIqAtMXHOQWaQImaBj4wS7Qf7WUDGCgu4S8yfqAdR4yEx
+        rbEBbJuIgJXEvK0xIGEWAVWJMxePs4PYvAKmEs9XH2KE2HWJUeJk9yywXZwCXhJH/01jAbEZ
+        BcQkvp9awwRiMwuIS9x6Mh/MlhAQkFiy5zwzhC0q8fLxP1YIW1Hi/veX7BD1OhILdn9ig7Dt
+        JFZufAU1R1ti2cLXzBBHCEqcnPmEBaJXUuLgihssE4ABgmTdLCSjZiEZNQvJqFlIRi1gZF3F
+        KF5aXJybXlFsnJdarlecmFtcmpeul5yfu4kRGLun/x2O2cF479ZHvUOMTByMhxglOJiVRHiF
+        n75IFuJNSaysSi3Kjy8qzUktPsQozcGiJM7rETsxXkggPbEkNTs1tSC1CCbLxMEp1cDk4WaW
+        xSh6svTc7WzHOfKPkwv2/O+PEdzq0Zp0y+jyjXjVfCevbRPflFUdZ2NO4nh6Ujg3Nboq6Mah
+        dzoOOYZNIVMn9QR9//d0TxlrjcOhY1vvqRgIXJ4mfb2/ze9nvlz9XtvqXFtti3qjvwbX24/E
+        rHE2f8itG8XaFfHdPin6nQzzz/2vm9k2Lmvg+rjl2btz99fPrDlibLPQ56DKuVDZNc+2eOSw
+        Jv9d2X9/8ws2reNzrnsWLltQZNrqL7Hj3lnpl6ELTll0SHxViN5+8zAfQ+mx8zuadxtb3ZBi
+        OeGj0M7lxjR5a8buvSWb1zUcFCu0zEucnRkx9eSZxtV6t89+mnDuwMTKvIf1gmJVKzqVWIoz
+        Eg21mIuKEwEDilx5TAMAAA==
+X-CMS-MailID: 20230214065705uscas1p16dfd8ec62fdd1ffc75d468b9e491ba81
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa
+References: <CGME20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa@uscas1p2.samsung.com>
+        <20230213213853.436788-1-a.manzanares@samsung.com>
+        <63eac7427d994_27392429460@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Mon, Feb 13, 2023 at 03:26:58PM -0800, Dan Williams wrote:
+> Adam Manzanares wrote:
+> > When trying to match a dax device to a memblock physical address
+> > memblock_in_dev will fail if the the phys_index sysfs file does
+> > not exist in the memblock. Currently the memory failure directory
+> > associated with a node is currently interpreted as a memblock.
+> > Skip over the memory_failure directory within the node directory.
+>=20
+> Oh, interesting, I did not know memory_failure() added entries to sysfs.
+> My grep-fu is failing me though... I only found node_init_cache_dev()
+> that creates a file named "memory_side_cache" under a node. This fix
+> will work for that as well, but I am still curious where the memory
+> failure file originates.
 
-
-On 2/13/23 6:22 PM, Dan Williams wrote:
-> Dave Jiang wrote:
->> With this [1] commit upstream, pci_enable_pci_error_report() is no longer
->> necessary for the driver to call. Remove call and related cleanups.
->>
->> [1]: f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is native")
-> 
-> Care to fixup the Documentation as well so others do not follow the same
-> pattern?
-
-Sure I'll add the diffs below.
-
-> 
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 0b36b9ebfa4b..a82802795a06 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -135,15 +135,6 @@ hierarchy and links. These errors do not include any device specific
->   errors because device specific errors will still get sent directly to
->   the device driver.
->   
-> -Configure the AER capability structure
-> ---------------------------------------
-> -
-> -AER aware drivers of PCI Express component need change the device
-> -control registers to enable AER. They also could change AER registers,
-> -including mask and severity registers. Helper function
-> -pci_enable_pcie_error_reporting could be used to enable AER. See
-> -section 3.3.
-> -
->   Provide callbacks
->   -----------------
->   
-> @@ -214,15 +205,6 @@ to mmio_enabled.
->   
->   helper functions
->   ----------------
-> -::
-> -
-> -  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
-> -
-> -pci_enable_pcie_error_reporting enables the device to send error
-> -messages to root port when an error is detected. Note that devices
-> -don't enable the error reporting by default, so device drivers need
-> -call this function to enable it.
-> -
->   ::
->   
->     int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+I found the issue on next-20230119, I have a suspicion your grep-fu will
+work fine there.=20
