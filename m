@@ -2,210 +2,285 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5E2C05027
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 17:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A97C6379F
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 17:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232876AbjBNRCw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Feb 2023 12:02:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
+        id S233022AbjBNRLN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Feb 2023 12:11:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233099AbjBNRCP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 12:02:15 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F7B2CFED
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Feb 2023 09:01:39 -0800 (PST)
+        with ESMTP id S232786AbjBNRK7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 12:10:59 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C76B2E81B;
+        Tue, 14 Feb 2023 09:10:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676394099; x=1707930099;
-  h=subject:from:to:cc:date:message-id:mime-version:
+  t=1676394630; x=1707930630;
+  h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=wBh1uFg9dfM/hM40tDGcE1TjFwNaQwHlJ4IHGW0eVN4=;
-  b=cH9aFrkIn/69l6C8qRoeLBB8drwMTD1OCcfUWtBTfry0WZU76HTaGpRV
-   y6VYyNQTRzU4AZhkiSdniF/mW4p8X3zFBJKDFxLqdU1ZcOFgBR8BfGvpt
-   BsOqbb3PyQVNuLGxQ9bVdpf7elTdTKGAZ6EgGeaSHsCFF8bCwC5wcPGT/
-   6pJYUr1lFHXeoOTvAq2gZ099Qq4jTYWlbe5mDRiJsdu3Lxrw7vUn/p1D8
-   FW/WaQwZuFFpQ5tZW/ZCIymCrigLpQL3a1/KZrOK/LkswB8xPQ40ENLLQ
-   uWUBWNpXJiSIxVHF63SO1wsGj6awot4/rlmVD2DBiAzd5QVvdOIJAFnEv
+  bh=CSK5mIDaVWpNXNLLNXtPJEQjjrLG5SjV8c3RKQrKEMs=;
+  b=T6aH3oQGwh9sYClRnEtiCw7Z9F3Zuc8960R0kP7SWJOMHk+P3HQzAecg
+   36YTTluWAQ7LktGmN0Vizxzl/3sZp5MlJIjGQmYYepXLZByt6LJONQDpN
+   XAyS+aUngTKnEmw+PcuB6Bh6YuTpY04EDREyRF6k7HTioog0JiuY5SVYb
+   eGdFoXSE9nd34DwiFbvkCIbQfU8bybU/TLLu1qWYYUih72GnUX+7Rf6G+
+   1NPkOhiWyq7C+NKxqnerUpgcuWKqyJL4eXEr1hOy94nUzyMa5VhtEva4w
+   rcKbhtGUCUA58J/mg4//XUSnnqcDx7X8Gk5C/BGYEDMNBovqJKHXgnpHJ
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="358622284"
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="393611936"
 X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="358622284"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:00:37 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="669252913"
+   d="scan'208";a="393611936"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:10:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="914813208"
 X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="669252913"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.93.192])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:00:26 -0800
-Subject: [PATCH v8] cxl: add RAS status unmasking for CXL
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        dan.j.williams@intel.com, bhelgaas@google.com, ira.weiny@intel.com,
-        lukas@wunner.de
-Date:   Tue, 14 Feb 2023 10:00:24 -0700
-Message-ID: <167639402301.778884.12556849214955646539.stgit@djiang5-mobl3.local>
-User-Agent: StGit/1.5
+   d="scan'208";a="914813208"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Feb 2023 09:10:17 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pRyoq-0008fQ-34;
+        Tue, 14 Feb 2023 17:10:16 +0000
+Date:   Wed, 15 Feb 2023 01:10:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-cxl@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb
+Message-ID: <63ebc077.iIFldcCwBHnTkZn0%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-By default the CXL RAS mask registers bits are defaulted to 1's and
-suppress all error reporting. If the kernel has negotiated ownership
-of error handling for CXL then unmask the mask registers by writing 0s.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb  Add linux-next specific files for 20230214
 
-PCI_EXP_DEVCTL capability is checked to see uncorrectable or correctable
-errors bits are set before unmasking the respective errors.
+Error/Warning reports:
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>  # pci_regs.h
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302092211.54EYDhYH-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302111601.jtY4lKrA-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302112104.g75cGHZd-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302142145.iN5WZnpF-lkp@intel.com
 
----
-Patch based on top of:
-https://lore.kernel.org/linux-cxl/167632012093.4153151.5360778069735064322.stgit@djiang5-mobl3.local/T/#u
+Error/Warning: (recently discovered and may have been fixed)
 
-v8:
-- Fix lnksta2 size. (Bjorn)
-v7:
-- Check PCI_EXP_DEVCTL to enable related RAS errors.
-v6:
-- Call cxl_pci_ras_unmask() based on return of pci_enable_pcie_error_reporting()
-- Check PCI_EXP_DEVCTL for UE and CE bit before unmasking the respective error reporting.
+Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
+Documentation/sphinx/templates/kernel-toc.html: 1:36 Invalid token: #}
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+arch/mips/kernel/vpe.c:643:41: error: 'struct module' has no member named 'mod_mem'
+drivers/cxl/core/region.c:2628:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_optc.c:294:6: warning: no previous prototype for 'optc3_wait_drr_doublebuffer_pending_clear' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1296:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:280:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1586:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
 
-v5:
-- Add single debug out to show mask changing. (Dan)
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-v4:
-- Fix masking of RAS register. (Jonathan)
+drivers/clk/ingenic/jz4760-cgu.c:80 jz4760_cgu_calc_m_n_od() error: uninitialized symbol 'od'.
+drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c:415 bnxt_rdma_aux_device_init() warn: possible memory leak of 'edev'
+drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8188e.c:1678 rtl8188e_handle_ra_tx_report2() warn: ignoring unreachable code.
+drivers/pci/setup-bus.c:1916:21-24: ERROR: invalid reference to the index variable of the iterator on line 1890
+drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
+drivers/usb/host/xhci-plat.c:371 xhci_generic_plat_probe() error: we previously assumed 'sysdev' could be null (see line 361)
 
-v3:
-- Remove flex bus port status check. (Jonathan)
-- Only unmask known mask bits. (Jonathan)
+Error/Warning ids grouped by kconfigs:
 
-v2:
-- Add definition of PCI_EXP_LNKSTA2_FLIT. (Dan)
-- Return error for cxl_pci_ras_unmask(). (Dan)
-- Add dev_dbg() for register bits to be cleared. (Dan)
-- Check Flex Port DVSEC status. (Dan)
----
- drivers/cxl/cxl.h             |    1 +
- drivers/cxl/pci.c             |   65 +++++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/pci_regs.h |    1 +
- 3 files changed, 67 insertions(+)
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-c041-20230212
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- alpha-randconfig-s042-20230212
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-randconfig-r016-20230213
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- arm-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|   `-- ftrace-ops.c:(.init.text):undefined-reference-to-__udivdi3
+|-- i386-randconfig-m021
+|   `-- kernel-trace-trace_events_synth.c-trace_event_raw_event_synth()-warn:inconsistent-indenting
+|-- i386-randconfig-s001
+|   |-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- i386-randconfig-s002
+|   `-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
+clang_recent_errors
+|-- s390-randconfig-r044-20230214
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a002-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a004-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a005-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+`-- x86_64-randconfig-r036-20230213
+    `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b3964149c77b..d640fe61b893 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -130,6 +130,7 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- #define   CXL_RAS_UNCORRECTABLE_STATUS_MASK (GENMASK(16, 14) | GENMASK(11, 0))
- #define CXL_RAS_UNCORRECTABLE_MASK_OFFSET 0x4
- #define   CXL_RAS_UNCORRECTABLE_MASK_MASK (GENMASK(16, 14) | GENMASK(11, 0))
-+#define   CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK BIT(8)
- #define CXL_RAS_UNCORRECTABLE_SEVERITY_OFFSET 0x8
- #define   CXL_RAS_UNCORRECTABLE_SEVERITY_MASK (GENMASK(16, 14) | GENMASK(11, 0))
- #define CXL_RAS_CORRECTABLE_STATUS_OFFSET 0xC
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index c87340095a8a..3b9a2276d33d 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -637,6 +637,67 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
- 	return 0;
- }
- 
-+/*
-+ * CXL v3.0 6.2.3 Table 6-4
-+ * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
-+ * mode, otherwise it's 68B flits mode.
-+ */
-+static bool cxl_pci_flit_256(struct pci_dev *pdev)
-+{
-+	u16 lnksta2;
-+
-+	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-+	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
-+}
-+
-+static int cxl_pci_ras_unmask(struct pci_dev *pdev)
-+{
-+	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-+	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
-+	void __iomem *addr;
-+	u32 orig_val, val, mask;
-+	u16 cap;
-+	int rc;
-+
-+	if (!cxlds->regs.ras) {
-+		dev_dbg(&pdev->dev, "No RAS registers.\n");
-+		return 0;
-+	}
-+
-+	/* BIOS has CXL error control */
-+	if (!host_bridge->native_cxl_error)
-+		return -EOPNOTSUPP;
-+
-+	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
-+	if (rc)
-+		return rc;
-+
-+	if (cap & PCI_EXP_DEVCTL_URRE) {
-+		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
-+		orig_val = readl(addr);
-+
-+		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
-+		if (!cxl_pci_flit_256(pdev))
-+			mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
-+		val = orig_val & ~mask;
-+		writel(val, addr);
-+		dev_dbg(&pdev->dev,
-+			"Uncorrectable RAS Errors Mask: %#x -> %#x\n",
-+			orig_val, val);
-+	}
-+
-+	if (cap & PCI_EXP_DEVCTL_CERE) {
-+		addr = cxlds->regs.ras + CXL_RAS_CORRECTABLE_MASK_OFFSET;
-+		orig_val = readl(addr);
-+		val = orig_val & ~CXL_RAS_CORRECTABLE_MASK_MASK;
-+		writel(val, addr);
-+		dev_dbg(&pdev->dev, "Correctable RAS Errors Mask: %#x -> %#x\n",
-+			orig_val, val);
-+	}
-+
-+	return 0;
-+}
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -728,6 +789,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_pci_ras_unmask(pdev);
-+	if (rc)
-+		dev_warn(&pdev->dev, "No RAS reporting unmasked\n");
-+
- 	pci_save_state(pdev);
- 
- 	return rc;
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 85ab1278811e..dc2000e0fe3a 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -693,6 +693,7 @@
- #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
- #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
- #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
-+#define  PCI_EXP_LNKSTA2_FLIT		0x0400 /* Flit Mode Status */
- #define PCI_CAP_EXP_ENDPOINT_SIZEOF_V2	0x32	/* end of v2 EPs w/ link */
- #define PCI_EXP_SLTCAP2		0x34	/* Slot Capabilities 2 */
- #define  PCI_EXP_SLTCAP2_IBPD	0x00000001 /* In-band PD Disable Supported */
+elapsed time: 726m
 
+configs tested: 103
+configs skipped: 4
 
+gcc tested configs:
+alpha                            allyesconfig
+alpha                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+arc                        nsim_700_defconfig
+arc                  randconfig-r043-20230212
+arc                  randconfig-r043-20230213
+arc                  randconfig-r043-20230214
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm                  randconfig-r046-20230212
+arm                  randconfig-r046-20230214
+arm64                            allyesconfig
+arm64                               defconfig
+csky                                defconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                         debian-10.3-func
+i386                   debian-10.3-kselftests
+i386                        debian-10.3-kunit
+i386                          debian-10.3-kvm
+i386                                defconfig
+i386                 randconfig-a011-20230213
+i386                 randconfig-a012-20230213
+i386                 randconfig-a013-20230213
+i386                 randconfig-a014-20230213
+i386                 randconfig-a015-20230213
+i386                 randconfig-a016-20230213
+i386                          randconfig-c001
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                        generic_defconfig
+loongarch                        allmodconfig
+loongarch                         allnoconfig
+loongarch                           defconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                            mac_defconfig
+microblaze                          defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                 decstation_r4k_defconfig
+mips                        vocore2_defconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                       holly_defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                randconfig-r042-20230213
+riscv                          rv32_defconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                                defconfig
+s390                 randconfig-r044-20230213
+sh                               allmodconfig
+sh                          landisk_defconfig
+sh                   secureedge5410_defconfig
+sparc                               defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                            allnoconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64               randconfig-a011-20230213
+x86_64               randconfig-a012-20230213
+x86_64               randconfig-a013-20230213
+x86_64               randconfig-a014-20230213
+x86_64               randconfig-a015-20230213
+x86_64               randconfig-a016-20230213
+x86_64                               rhel-8.3
+
+clang tested configs:
+arm                     davinci_all_defconfig
+arm                  randconfig-r046-20230213
+hexagon              randconfig-r041-20230212
+hexagon              randconfig-r041-20230213
+hexagon              randconfig-r041-20230214
+hexagon              randconfig-r045-20230212
+hexagon              randconfig-r045-20230213
+hexagon              randconfig-r045-20230214
+i386                 randconfig-a001-20230213
+i386                 randconfig-a002-20230213
+i386                 randconfig-a003-20230213
+i386                 randconfig-a004-20230213
+i386                 randconfig-a005-20230213
+i386                 randconfig-a006-20230213
+powerpc                     ksi8560_defconfig
+powerpc                 mpc836x_rdk_defconfig
+powerpc                     tqm5200_defconfig
+riscv                randconfig-r042-20230212
+riscv                randconfig-r042-20230214
+s390                 randconfig-r044-20230212
+s390                 randconfig-r044-20230214
+x86_64               randconfig-a001-20230213
+x86_64               randconfig-a002-20230213
+x86_64               randconfig-a003-20230213
+x86_64               randconfig-a004-20230213
+x86_64               randconfig-a005-20230213
+x86_64               randconfig-a006-20230213
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
