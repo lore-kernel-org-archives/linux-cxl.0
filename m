@@ -2,173 +2,166 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9F8C6379F
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 15:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90525C05027
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 16:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbjBNPpM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Feb 2023 10:45:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
+        id S232181AbjBNQgU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Feb 2023 11:36:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjBNPpL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 10:45:11 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F282C29169;
-        Tue, 14 Feb 2023 07:45:09 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGQQj1KGxz6J682;
-        Tue, 14 Feb 2023 23:40:45 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Tue, 14 Feb
- 2023 15:45:06 +0000
-Date:   Tue, 14 Feb 2023 15:45:05 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
+        with ESMTP id S232082AbjBNQgQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 11:36:16 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55C2222CB;
+        Tue, 14 Feb 2023 08:36:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676392565; x=1707928565;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=53h693cXNy6dgyuGalXZylJbfFjz4qasabFF50VwdC4=;
+  b=aiS95fmu6f3qqIF7rv3uqecpILVSbv39MJtMZN0T0mh9ooeCocr0EBpU
+   QpmAO1gbT+GMPXF030oS4eWRSZ+A68eKYWuLuFfVGFIYE8hc5nxRExcYL
+   dIqrkrhxfdYaUxMLlDgY7yILk4ZYUZqefT4jz1E5MqI4taUjsPeN3b8aj
+   kKhBxcW3NlFIYoZ7Yoz7Dsov2azHQ0q+taZOcoMIv4Sqbs+QI7SRGBwJY
+   u6C1oCrGDezAHcBCgHn7j068Vpp5ljMW6m7AEhXW5H6vb4cgh+YQLqF1Q
+   knr/+uTvRm1EwRuXHojV8U9zNbcjSAcYSrUMqQUwBYU+uGv37jv2joqvI
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="332512892"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="332512892"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 08:35:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="793156120"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="793156120"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga004.jf.intel.com with ESMTP; 14 Feb 2023 08:35:54 -0800
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Tue, 14 Feb 2023 08:35:53 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Tue, 14 Feb 2023 08:35:53 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Tue, 14 Feb 2023 08:35:53 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oRRXs6+YRRYBdP6vaFDRy6/axSGto835dtauSId6BPGjz3EWqOIFYgDcPgx8Jha0GXJ4KPrBBjiYzTBo9Ea5+Bl1ygDbsykJSRvvEHHZgYeMGaVnWabhsmXnciL2OoPtzrs4xPf9QEf4mEa+JoUw9JIwdndjX4djR/qYQ1qHsM1rgTAOgFd6oK6unFm/VhqFRMK0apFSRZKcYAf5wANJ19QNFyyslYPOsryY/0MHmH+NXRE5i3IWOa2AQPN2sdIpXaIfby2aLc2q6fQFYXnMzNfvQ+aJS2i+DoXDi63vnOM1TSTBA+y1tKkCCmETtGCFh7gDh2NzejzwBFbGlBuzhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yt2bTggYOZyUaCS+QVWAwngywKQZzuKc0p0op+oDOT0=;
+ b=FE9u4dfoxjIMAaRzKcF7+Xui6M6emW/uKmu6Htp7P4w7CSze449zNxz1lM2UJcPUH0/DOS+meGKshQ98jKJgq4hNISemCoAH+2OFhv4f3Gu6diT8hEC0Y3tdlu+KK7wcCR0NOBFwRUbXMVtRoraU/PM4cKDy+sczYRcwazUB0Ql35SrUK+s3U1+XiAmX3lTISOsrP9nMVPV54LZnnZQb9AfyBD2gwNR8Ld5+4oY03xF9mDcR7+muaqURZ/i4dUtrp6+WCkj+hAGioSxGTb5goNTEbs/ovaQ2HFKl1//W9lTYFdubni1WYvjZBtkHw1ZRfSk2W7/4EoAUhulpLYXNLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH7PR11MB6746.namprd11.prod.outlook.com (2603:10b6:510:1b4::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26; Tue, 14 Feb
+ 2023 16:35:51 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6086.024; Tue, 14 Feb 2023
+ 16:35:51 +0000
+Date:   Tue, 14 Feb 2023 08:35:48 -0800
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 01/16] cxl/pci: Fix CDAT retrieval on big endian
-Message-ID: <20230214154505.00006dad@Huawei.com>
-In-Reply-To: <20230214135110.GB14338@wunner.de>
-References: <cover.1676043318.git.lukas@wunner.de>
-        <bbbe1c4f3788052865941572565aeb2be67a6770.1676043318.git.lukas@wunner.de>
-        <20230214111504.000060b0@Huawei.com>
-        <20230214135110.GB14338@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Arnd Bergmann <arnd@arndb.de>, Dave Jiang <dave.jiang@intel.com>,
+        "Dan Carpenter" <error27@gmail.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] cxl: avoid returning uninitialized error code
+Message-ID: <63ebb86432d39_32d61294ba@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230213101220.3821689-1-arnd@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230213101220.3821689-1-arnd@kernel.org>
+X-ClientProxiedBy: SJ0PR05CA0078.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::23) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6746:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03e68352-0366-4c23-5645-08db0ea988a7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iybOeNXAahW6YpU654OOP1wJNUrlOoAMw2bi9P2ZqBxRnhc2/So+AFm+PdKOFDcyKPsvMWdWL9a3+D+g7mABajH6lR2luD673QbTCJY6rCPA0LK9XigiynD0qFtRMaWk3u/tstsC6BXpKPOjaO9BFydZ7THHnTmoQ8Cqc/XbGoPdU6ZK5kmyIePOk+UTsP0dqjgiLhL6prw1SyIC/gNOEz1uVzx8ayc+LkRUwCnR+beNkT/LKI48JmloWxT5nDKNicpshYPW+qA55TntgAU8lWJEIUEz4WJ7njyIgYkv/gIFSsJj19ngKgBr33Wmyyl8NRVLzFgaXukR3YQlMf40RNcizOCDiM1czoi+Md/GCgs02htxignQQYLQj1L+znf5Ukgy2qX95PqN7RCEm6AWg49OEkXYqqnn2+MqYqckiaSCtQQhcZOtg8cvLQkQd9XbEc9ULiMP7tJbTKcWWEAt5zZf1txy1wojoYTz/VZ25vm9W8J677DU9nb+CNh3kFbRvw/DHUZc0R7yFV203okeD4663ahyy9GwZz3tl0RFUQjbP7+LmwXDvQwXQbaw2PM7BgBJZXgFHf/vc3o3y9/+9Ya6P/fN5cLDoW5pjPG9+acnAi57iVm5czVQNQWm7cZBMBpmuyYU9tCGfvZPNjVnDA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(39860400002)(396003)(136003)(376002)(366004)(451199018)(186003)(5660300002)(26005)(6506007)(41300700001)(9686003)(6512007)(6666004)(86362001)(38100700002)(82960400001)(8936002)(4744005)(2906002)(316002)(54906003)(6486002)(478600001)(110136005)(4326008)(8676002)(66476007)(66556008)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2MPtG3DPEjUGW8fHYH4/KGTBgBPaQsvQpql2IzlQZkinI7psWFEMvBx6nIQc?=
+ =?us-ascii?Q?RGCGmnxJCvyrMKJcUdGXsCmK0vlHG36E4P0kspeA5YurCr0ahwzQgUi1DbP7?=
+ =?us-ascii?Q?N8buSiw3Un4LOCLzL2GNfRM++K8knhGe3/BqTLkPbor4sUjOsoWGep04Y7vC?=
+ =?us-ascii?Q?vj3RvyJnRJZ+sEGChFzXOLYzpcERbO/OJBRp7SbUQWPVKTZXC/DF1tbrdqr1?=
+ =?us-ascii?Q?Y5aWBQ7voe1xrW/Pwhl9FdgP0X9S+kRRPS9ct9reH+5e7ELqTzTu5Qm9lP4p?=
+ =?us-ascii?Q?mFZZT4ssoUKY+otoMtXXRvIUySnr/Atjwpq68T1lWo9wBkgyc3EfruGAzcyi?=
+ =?us-ascii?Q?HlaHnyidvpivT7M1CgkMx1Cwaq5sl1emc49/xwENL4fR6sYwPHsm8kGs+aRZ?=
+ =?us-ascii?Q?fUxTy/a4NnnDgJJj8DAZIQi7nU4pPNXbVODcJqluXJwPBsN1ow+ubMm6+suF?=
+ =?us-ascii?Q?7ThdXU35T+w1K33l1bOI6evFAsptFsZh5dLXzaFRNmep6XhaLxHQeKWRJuMy?=
+ =?us-ascii?Q?45MbWLKrF3XRQi1Rvsu2XaYrGw+JWwxs80qkT1424hjQetfpF6WDJKRB49L0?=
+ =?us-ascii?Q?2tPRqtJW8fHQpQz+SAy72x9wjWkWB9oWMDL53dy0kQK6LDz/WvYETrjVRTMG?=
+ =?us-ascii?Q?CO51UTM48aX3QYWy/ClqtXjtD2nWq15RXG/zDZ/KMWFTQkMpf/bp4Pxc9fWX?=
+ =?us-ascii?Q?JMisf5eGsJ7X29QXAKZnYxKcWKz+H9kBZhCH2o1+N0m6Y+wjoAPyLsSIpbRs?=
+ =?us-ascii?Q?Y5TSfnzLfdktslKWxzvQIAfNdwWwF973FVnUenxEnisvU6tmVl3HWuLPOkED?=
+ =?us-ascii?Q?hIS0p/tLLgmpUtPNyWfp3gokhEQt8t5v3l1OzosdF3Nws5TnVRQUDA9F2lwe?=
+ =?us-ascii?Q?i+xsUiTJPHvvlCS7wyWVvkcfQkgA02XnfGVWt1jVQaAT4UMd0ojw20LVf3X0?=
+ =?us-ascii?Q?BDYVo0wxM9dRYWsFOuXEtgTFoDolDvOXM2pvSb4vnNaiYrkTpgPshfH0b8xN?=
+ =?us-ascii?Q?NGpKwCan6mRyZRwwu/l91g0jjYxdN+I64ItvRA8/qoZDc5x5FKU6PDSnjwLW?=
+ =?us-ascii?Q?qzh1/kHk3R6Ob9XfbpdhPC6BW2DCLPyEBoeKcomWM/MGu/3/p7Oy5t2bKuP1?=
+ =?us-ascii?Q?IIlDY1k25IpAbOPkjNGYdAwAui0uhPyUUZ1XC4jE0BknfH8yXyyYPY1bZnIs?=
+ =?us-ascii?Q?kzE5g5qTJfp/40Ot/UKT5awuYaUAVkLDi9x0W89V+5EvXERFqb68M712s5hM?=
+ =?us-ascii?Q?7M4h8EVQTmTeW7jUPs9847huRsuPO4s2X99rURvJEACAyqQHaMi9JrcWZheq?=
+ =?us-ascii?Q?YzCHc0+m5a43A2N0hrwGlVG8LFmCTTmgtsYsxTVt1UBFQdAzMetVgB5vNDVj?=
+ =?us-ascii?Q?SLG9X+PBqMETLp2RjosdKErmGY1/tOtPFoETFvtjqsBjdGXJ9Ji3Kqj3uuyT?=
+ =?us-ascii?Q?x6xuj3hc5gcfjj6ID4aIUtuqIS+c+KNA2LcPMAHuZGOS+FuSVBojCZgMY5RD?=
+ =?us-ascii?Q?9YC4HOSD//t70eVe1DFFjwNRQ4pzxV+9NoprVQASXqlQwcAwQ7Vr+t5ziLGE?=
+ =?us-ascii?Q?R0DG6YH2aPhTwS80tNLfkJF4paz0q4EmN2jooMdnZV2am9FO4FHjkMf7VcH3?=
+ =?us-ascii?Q?zw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03e68352-0366-4c23-5645-08db0ea988a7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 16:35:50.9862
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xrpj/4PtC2KM6RPBIsvcaH/ht7iKt0Bb1/Ec1BhMWwYAyu2aNx3UwbDAR2t7YpfIpSYF5ofGTZTSvsa2p6wSg9k4JOKYDUsjD/tn0+QgCsE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6746
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 14 Feb 2023 14:51:10 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The new cxl_add_to_region() function returns an uninitialized
+> value on success:
+> 
+> drivers/cxl/core/region.c:2628:6: error: variable 'rc' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+>         if (IS_ERR(cxlr)) {
+>             ^~~~~~~~~~~~
+> drivers/cxl/core/region.c:2654:9: note: uninitialized use occurs here
+>         return rc;
+> 
+> Simplify the logic to have the rc variable always initialized in the
+> same place.
+> 
+> Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> On Tue, Feb 14, 2023 at 11:15:04AM +0000, Jonathan Cameron wrote:
-> > On Fri, 10 Feb 2023 21:25:01 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > The CDAT exposed in sysfs differs between little endian and big endian
-> > > arches:  On big endian, every 4 bytes are byte-swapped.
-> > > 
-> > > PCI Configuration Space is little endian (PCI r3.0 sec 6.1).  Accessors
-> > > such as pci_read_config_dword() implicitly swap bytes on big endian.
-> > > That way, the macros in include/uapi/linux/pci_regs.h work regardless of
-> > > the arch's endianness.  For an example of implicit byte-swapping, see
-> > > ppc4xx_pciex_read_config(), which calls in_le32(), which uses lwbrx
-> > > (Load Word Byte-Reverse Indexed).
-> > > 
-> > > DOE Read/Write Data Mailbox Registers are unlike other registers in
-> > > Configuration Space in that they contain or receive a 4 byte portion of
-> > > an opaque byte stream (a "Data Object" per PCIe r6.0 sec 7.9.24.5f).
-> > > They need to be copied to or from the request/response buffer verbatim.
-> > > So amend pci_doe_send_req() and pci_doe_recv_resp() to undo the implicit
-> > > byte-swapping.
-> > > 
-> > > The CXL_DOE_TABLE_ACCESS_* and PCI_DOE_DATA_OBJECT_DISC_* macros assume
-> > > implicit byte-swapping.  Byte-swap requests after constructing them with
-> > > those macros and byte-swap responses before parsing them.
-> > > 
-> > > Change the request and response type to __le32 to avoid sparse warnings.  
-> > 
-> > In brief this patch set ensures that internal handling of the payloads
-> > is in le32 chunks by unwinding the implicit conversions in the pci config
-> > accessors for BE platforms.  Thus the data in the payloads is always
-> > in the same order.  Good start.  Hence the binary read back of CDAT is
-> > little endian (including all fields within it).  
-> 
-> Correct.  On big endian this means writing request dwords and
-> reading response dwords involves 2 endianness conversions.
-> 
-> If the request is constructed with macros such as CXL_DOE_TABLE_ACCESS_*
-> and PCI_DOE_DATA_OBJECT_DISC_*, then an additional (3rd) endianness
-> conversion is necessary:  The request is constructed in native big endian
-> order, then converted to a little endian DOE payload.  That payload is
-> then converted back to big endian so that it can be written with the
-> config space accessor, which converts to little endian.
-> 
-> I recognize this is crazy but I do not see a better solution.
-> Dan suggested amending struct pci_ops with ->read_raw and ->write_raw
-> callbacks which omit the endianness conversion.  However there are
-> 175 struct pci_ops in the kernel and each one would have to be looked at.
-> I also do not know the Assembler instructions for every architecture to
-> perform a non-byte-swapped write or read.  It's a big task and lots of
-> code to add.  Given that DOE is likely the only user and big endian
-> is seeing decreasing use, it's probably not worth the effort and LoC.
-> 
-> 
-> > > @@ -322,15 +322,17 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
-> > >  	struct pci_doe_task task = {
-> > >  		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
-> > >  		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
-> > > -		.request_pl = &request_pl,
-> > > +		.request_pl = (__le32 *)&request_pl,  
-> > 
-> > I don't like this type cast. request_pl is local
-> > anyway, so why not change it's type and set it appropriately in
-> > the first place.  
-> 
-> That doesn't work I'm afraid.  The request_pl is constructed with
-> FIELD_PREP() here and the response_pl is parsed with FIELD_GET().
-> 
-> Those macros operate on an unsigned integer of native endianness.
-> If I declare them __le32, I get sparse warnings and rightfully so.
-> 
-> The casts are the simplest, least intrusive solution.  The only
-> alternative would be to use separate variables but then I'd have
-> to change a lot more lines and it would be more difficult to review
-> and probably not all that more readable.
-
-Separate variables was what I meant (less than clear)
-
-Add a __le32 le32_req_pl then
-do the endian conversion into that rather than in place conversion.
-Equivalent in teh other direction for the response.
-
-That way the endian markings end up correct on all the local variables
-and it shouldn't require many more lines to change.
-
-
-> 
-> Thanks,
-> 
-> Lukas
-> 
-> > >  		.request_pl_sz = sizeof(request_pl),
-> > > -		.response_pl = &response_pl,
-> > > +		.response_pl = (__le32 *)&response_pl,  
-> > 
-> > Likewise here.
-> >   
-> > >  		.response_pl_sz = sizeof(response_pl),
-> > >  		.complete = pci_doe_task_complete,
-> > >  		.private = &c,
-> > >  	};
-> > >  	int rc;
-> > >  
-> > > +	cpu_to_le32s(&request_pl);
-> > > +
-> > >  	rc = pci_doe_submit_task(doe_mb, &task);
-> > >  	if (rc < 0)
-> > >  		return rc;
-> > > @@ -340,6 +342,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
-> > >  	if (task.rv != sizeof(response_pl))
-> > >  		return -EIO;
-> > >  
-> > > +	le32_to_cpus(&response_pl);
-> > >  	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
-> > >  	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
-> > >  			      response_pl);  
-> 
-
+Looks good, thanks Arnd.
