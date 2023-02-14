@@ -2,173 +2,121 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927F2C61DA4
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 18:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2AFC61DA4
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 18:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232171AbjBNSp4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Feb 2023 13:45:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
+        id S229808AbjBNSt6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Feb 2023 13:49:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231944AbjBNSpz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 13:45:55 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F98A274;
-        Tue, 14 Feb 2023 10:45:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676400354; x=1707936354;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=sUtVE+ovoVSvE+ojAT/Up0Q//SZcQLHqI4L0vB5VtZ8=;
-  b=gqHjStB6cD/DMEMYwHo+EEugXwVyMic9TDNw3e4OBVme8VGJ4ligDZDk
-   g/D8FCOAklcfEYILGVeHFTwC0QLklHTmSiMZu7Mp5lDrhMyHMW574FjzR
-   OTQfNj5Z0DR9qdNJBQPhkTfCNm1Y5Ry159lEKut1sjRhmgdLNgqlVuaVB
-   SGp+Ku3QkL/qThPpf0HHe3lTldNpN7PrXsAGa3TgEmixGleDOoPJNxmWo
-   BRU9Yf3glx5g9F9Hobg+tcNpHeLZX4RMIT0x/OlHkaYA9GlXX0540GNn8
-   ItPLurDLG/y2o+LgF6OPY8QVjA6V1rKW2Jd2PK3ThRnoJ6AJmpZW1b37Q
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="329864704"
-X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="329864704"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 10:45:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="914840522"
-X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="914840522"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Feb 2023 10:45:53 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 14 Feb 2023 10:45:53 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 14 Feb 2023 10:45:53 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Tue, 14 Feb 2023 10:45:53 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.176)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Tue, 14 Feb 2023 10:45:51 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ab5XJjA9Xh7u5v3MQpz5yKrqCul4kYBBjbdt+qMJDvdr2C0YMaEUVb7M3ZladObyK1cVQXiTWnda1I0sDyN7uP73hJLOK59glIWis1XqIJJLYTgT+BWZHAkLcmu5QKau09sDHuvmikQ5nFRWS/AjirPru6i/Z5qkg9gu2YYlJOQDk2nCr4GVkevwTUeP6fbkZ4xSIm1EeO3U0qn+trJTGtYIEz6ab0Iei9k751vwSZ+5fl36bE4zx+S3vYx9gJAMTGsRFfjiQsyaPvvWLBfjaePKmjfl601J70d+mQk30R/C4R2yD0CPdHZGUflWjhl/nb35NwBWcEAtadN6/wa9tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IoQ6jp5qa41W+MvUzilT+lCTHkK2u15es8+tQtLNIA8=;
- b=fdyyt9+DqH4yJ1H0ge6NLIAHwSKgMnYFbw1RnMr8bUZpkd9QQRYsbSJxUBuSyR/D3tXcTfbnYEKfKrc0UmCtTDcE6WUSYETQbFAYETiwa0A24XtIfzr36JwuMAhivpXrwmG5vbItjzvL4svRRUO40Oxl4GERC0Lhss69MIfK60nbDbP0PScxjDXtIxisxmdUkGaBCpWHqRAfctXMqubxBy8pw/81KQYUBsN3nFHkTZDVIjSM2cdhxo9lxWRlPf59vx87vqP35gfvl9n3bmiC6t0dRjjgnfc5m4TAvYQrh/Sdp+bnLp8S+bCGj5/5+LTe0YnuagppbjwD65TgjJj3gA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW4PR11MB7151.namprd11.prod.outlook.com (2603:10b6:303:220::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.23; Tue, 14 Feb
- 2023 18:45:48 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6086.024; Tue, 14 Feb 2023
- 18:45:48 +0000
-Date:   Tue, 14 Feb 2023 10:45:46 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-CC:     Kees Cook <keescook@chromium.org>, <stable@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>, <linux-mm@kvack.org>,
-        <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
- default
-Message-ID: <63ebd6da1c4f4_32d612948c@dwillia2-xfh.jf.intel.com.notmuch>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
- <ed85ee75-1507-3f72-2af7-40ba452402f4@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ed85ee75-1507-3f72-2af7-40ba452402f4@redhat.com>
-X-ClientProxiedBy: SJ0PR13CA0010.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::15) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S233041AbjBNStg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 13:49:36 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFFF8BBBC
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Feb 2023 10:49:33 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 164278821C1;
+        Tue, 14 Feb 2023 18:43:36 +0000 (UTC)
+Received: from pdx1-sub0-mail-a221.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 7333D8821E9;
+        Tue, 14 Feb 2023 18:43:35 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1676400215; a=rsa-sha256;
+        cv=none;
+        b=Y3yLXv0lddZ6sMNH/xFgh3EzlHduM//JnfIreN4gV9MMIoQHcX7NEu5DffM//LU/7izm7z
+        2Zopn9V5zEXZONbzFlNfpoWF15mMTH50H6H+C1wzGKHjQW5EpH4rVB209ANFfaTXGJFat7
+        BIGd/qMOhG9FknV1ayWd+ABgIzYl06UykM4lUyhTnfhL2I8dVzW+h95mcT87W/G6Az4iVJ
+        Bm6zZPElcxl2AvfJmpITTOL+pbBvEpUmno1CHyy+GAhrZKbd96hSQb4xCczx/q4ISJnD/E
+        T/1ZN4DBQ5Epg9MWfpHtfYNoRYRuEvD2cvjw3D1d8O2H9A5kWRqrGCUjGsdFIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1676400215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=iQjhFESGKASNO0O7sxGSRCOcjSv2sTTqAFVvYDWmzZw=;
+        b=I8cIeyCJG4Shd2KxBok4OAVY7/0tFtBR6CTf8WlQGz4ekyrjbtZLvme9B9sntcWHgxd7Aa
+        vMwJnYFZcNCfbaQjPGC/sVtrUPiGTn1h0fXrLE4vUkOG4Qg2IUI1U8yn79DZJmf8N2GYxo
+        ywFfCVYW2DUH3LmWwxclNx1QuSgVbrWTy2YnQ6R8XncNAyTcIw3hfHYqkQH/NXyDH9GfkD
+        nM5FNBpxQUAsxsrKgXZPWe57ItYMAe8n5Z5bmXPQU0JKuR7I1ZB7icWBKcKFgD1EWpICnj
+        g20qmLW0N+d11SDcEl08KfwlxAa7Tovx8nO7DvT1sSh5NYOFtDz4K9VKpLu20g==
+ARC-Authentication-Results: i=1;
+        rspamd-b9c55767f-626p9;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Industry-Trade: 62a9de3c7b2a63ab_1676400215832_514669986
+X-MC-Loop-Signature: 1676400215832:1443824501
+X-MC-Ingress-Time: 1676400215832
+Received: from pdx1-sub0-mail-a221.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.126.30.37 (trex/6.7.1);
+        Tue, 14 Feb 2023 18:43:35 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a221.dreamhost.com (Postfix) with ESMTPSA id 4PGVTf0vrqz9d;
+        Tue, 14 Feb 2023 10:43:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1676400215;
+        bh=iQjhFESGKASNO0O7sxGSRCOcjSv2sTTqAFVvYDWmzZw=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=EDDH6di4kwthAfEiKhr9dLe5O/NqvfWnvufFlOeOISOtylMimQkevyq+z5m58w8BJ
+         z0dgfe8gmMKmbV9wuBn6p7LgVyL/9WUJaYgrcdwA7fGu6Qr93bzl5oeONncsuCGQ14
+         OZGXhSMvSZ/U5gIyEwWjUdOHhwalYgMZaAOvgw8YeEeK2e58fRPo/GBdEiEC7cPQJW
+         19YLDhWIFgzHqRFQgrJI55HjqbNUlOK470gN0JX6KoRiehfJEaMwYEsab/ofsGSOmJ
+         gNFvS6VKrfeZkiL2Ux9MbSEzLNMa4Q3w+ax+sx7WJNLkQl3SbvFzDr1sFV4SapqgBP
+         NHhF7iDjsBH2g==
+Date:   Tue, 14 Feb 2023 10:15:40 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        Philippe =?utf-8?B?TWF0aGlldS1EYXVkw6/Cv8K9?= <philmd@linaro.org>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>
+Subject: Re: [PATCH 2/2] hw/cxl: Multi-Region CXL Type-3 Devices (Volatile
+ and Persistent)
+Message-ID: <20230214181540.6yurhcasg3sezh3e@offworld>
+References: <20230131163847.23025-1-Jonathan.Cameron@huawei.com>
+ <20230131163847.23025-3-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB7151:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75e13f37-5800-4f9e-1915-08db0ebbb024
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gDeeKrtl61dbndo+A/QowQw2rxwA8jDpYbN3OYig6gFtcYsu9YYJL1hnbI/JmRfDoGHAe0hwd/bOsguJUP0zhg8VaGEB37gnykv8Ge+k80N5lD41Ce5eFkGHhcOwBfQSKsmXGo7DSrQ/4ZknP4UdGHf2dfM3sKJTktB7o4BEwIuVoWBY5UB0VG3nyIupqaRSexRg4fnQvfx5PC/LWnxg5LVhG7xp3uEXz4vRf5dC/Hi0/tyXlAA17aL5KPJXHd8y1M6o/a9vE+CJtLIH2MI7q2QZD4slytMiaJrRNiCDi9q3CFvcexnH8+eXe78/ildYLwqkjvVgBSnmQVS4/vDsZAhymB61En4G47ee7XWJP0aasxNgSDZu4HLZPfPtgaaBCRomNILhVEuUgdSBfsj1Tji0LnG+CwYq+Qh6h2UW6VgG1BNKAGZq45Lkja2awHuNjJxOXzTmDMJ7ow+tZ4OpLu2TtVf+/y6hhsVhmE2NCIbppImEPNBBC6G1ybEq360Zy4OPxkaxdN5IA0lJRVTmcb/DAMaCFfLXCvvdGwuBJGwUhpBDrWLEg4dzIL+IrkyKd7HWLgDmwIPFDM+ZagnHO4jfk+i2UA6f/+ysNgh3tLhTExSp9t+vQkLU65NcOaXRYRM9C360S+WBjWC2dB59+g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(136003)(396003)(376002)(366004)(346002)(451199018)(38100700002)(2906002)(8936002)(82960400001)(66476007)(66556008)(4326008)(66946007)(8676002)(5660300002)(26005)(41300700001)(110136005)(86362001)(478600001)(6486002)(54906003)(186003)(6506007)(6512007)(9686003)(316002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vsJgK2zV/lI5zpxLRtUahm8PGUxO1lazygZvJEralG4dUMnmX5fpDV67e2Xr?=
- =?us-ascii?Q?rTNKrK31hWyuE7ImLUvppwIazd0GEJEtaz9h63g4bsh/no33m1H0VnULFfUL?=
- =?us-ascii?Q?qd8OlvjHlXuVmIpd02wK17JZGsvUDEorxnIm4QUBUkWqBLe1Gw5QgvqJ0jNp?=
- =?us-ascii?Q?DMxzgK16d8mqgAjvYJv9ZLulnoo7sQ/8WDzaKPMN5odEaF/jjMHmrJMe5t4Y?=
- =?us-ascii?Q?02/wxSV1kOumj/hO4xIwl3kx79cwgxPC7uYRppfneARuXS2VoopIXl9vyb3B?=
- =?us-ascii?Q?prRaqMZ5RIIF9kvULNod1Szb6vKn2aueeF2JWWSjXyqFFPSvlg6lacAAZLpN?=
- =?us-ascii?Q?U+wts1rrGQ9159Ipnf9Dv6NaG2B1beDx/Y7EpzruigFYj48vzQGNEXdB6amz?=
- =?us-ascii?Q?/ykew4clPDl1FOcxuihiJ5igx71CrCIAry2PuapCA3onGJ5rRA2eqB2P/NLx?=
- =?us-ascii?Q?RDAZsVybBmPzSqowd93hSovwW+kvcP+ejLzP7dIb74fcmdEHoyDAMSQt2+JB?=
- =?us-ascii?Q?FZNDMyFoSscLdP1TcLqjX0MBIcYSMI6prfQqcja0Kr0nwA3PdjtXU53Dewc2?=
- =?us-ascii?Q?6td9tgVT2wtxTPqOyfQm+qiJFz21PscuQsuv432NkyaybZ42jmAgoG/cDXnt?=
- =?us-ascii?Q?wDdwHOZvWd9u54yfXVpvCqjl2jYSJWXcqt33s24pCuGgTNXvm9mtRLbOsXdx?=
- =?us-ascii?Q?CF2lT2Qc3nmId6sPIfkS7qHWO3+fiGDSvNNWfuhEA4RiI0QIkmdazaaXb7Eh?=
- =?us-ascii?Q?EQck1+b8KF5rrQ2J4LZV6Xq4w7UVmJemnMXdvUYYVLgcKGohwjv9Bsbuz6TB?=
- =?us-ascii?Q?0CeckNsCiOle9OQqXmyLRXyu/fER8EvVugTHAyC84KDmz+XtNYx28GSVulB5?=
- =?us-ascii?Q?4iB5Ug4OFuIvcb/5jrpsC9uuxV7v1T5rXgzHAFyHE5rkjmLwLNjpbqaJUYSJ?=
- =?us-ascii?Q?nx6NCBvHQHmk3Yi7ibd4lqmo8GavEZ8ymiouLLNMt1C4G01DYzib9VYKfj7y?=
- =?us-ascii?Q?+/hy7wZoZRwVlKaurmr0fS1itOInIQafYpYu2UyxUuAvXUl+6wSUirvcNm3j?=
- =?us-ascii?Q?gssZ3WIaJpqY81FIW/maidMGyOy52dWDmDJxn7avd4tWJ3PVS1nXsW3qBR3t?=
- =?us-ascii?Q?CyWFMTwVLMWWxCYzM0AzhbFj9lmEBxUntXgojzEhEWzvg3xq9hpcFpZx/gH8?=
- =?us-ascii?Q?QLCUQR0XBAG7XtHiP3kqG7l0mTNFMDy5diXFSlrcafOI9NleEB985L0i93tD?=
- =?us-ascii?Q?ny1lsAo2mNEhzzlo1MYjRW+Mqr8934ojHGTP3qgAcOErj8QLDXzblBPiqyF1?=
- =?us-ascii?Q?0noMl+JCeOapaC4mWHnaT5cthETT/g4DhJFsm0Hu76QsHlKGGq2kp5lemfkh?=
- =?us-ascii?Q?Z3mK4bDoQntPWKScTCKwZ2Oir+BjqROZZ5aaurMtESsbBXVLI0s9lqqcfxQg?=
- =?us-ascii?Q?L+QRMBbb0po0MVf+Wa+BuHRW+sGk3DPAK768A7i8h/s1AKCGiCSueSYDLhps?=
- =?us-ascii?Q?0Hlha5Gme+s8GV7xVDkxp8cHosSwmKGBy4Ejbrbc5mPd57N/n98DN3yEfwWo?=
- =?us-ascii?Q?qZ84pD/upJMqW+O1vGEY0+2WRLQT3FAq6eBhD2TlBgLMaFSJoJ6JEFhN5YEw?=
- =?us-ascii?Q?tg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75e13f37-5800-4f9e-1915-08db0ebbb024
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 18:45:48.1292
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /xVtRSHME+lmUnAwffp7iVaBl9zfIFgpzAImKhXpdb0CeU+xwsSnrSTkV8N2Jt2NYtOIKl+R76yndw0BIbCrYCKJchen9iGujBV0Kh7/J/E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB7151
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230131163847.23025-3-Jonathan.Cameron@huawei.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-David Hildenbrand wrote:
-[..]
-> My concern would be that in setups with a lot of CXL memory 
-> (soft-reserved), having that much offline memory during boot might make 
-> the kernel run out of memory. After all, offline memory consumes memory 
-> for the memmap.
-> 
-> Is the assumption that something like that cannot happen because we'll 
-> never ever have that much soft-reserved memory? :)
+On Tue, 31 Jan 2023, Jonathan Cameron wrote:
 
-Right, the assumption is that platform firmware is going to pick a
-reasonable general purpose pool that lets an OS boot. In the near term
-it is difficult to get that wrong since it will encompass all locally
-attached DDR-DRAM. In the longer term, where it becomes possible that
-all memory is CXL attached, then platform firmware will need to mark
-some or all of CXL memory as general purpose (not Soft Reserved).
+>From: Gregory Price <gourry.memverge@gmail.com>
+>
+>This commit enables each CXL Type-3 device to contain one volatile
+>memory region and one persistent region.
+>
+>Two new properties have been added to cxl-type3 device initialization:
+>    [volatile-memdev] and [persistent-memdev]
+>
+>The existing [memdev] property has been deprecated and will default the
+>memory region to a persistent memory region (although a user may assign
+>the region to a ram or file backed region). It cannot be used in
+>combination with the new [persistent-memdev] property.
+>
+>Partitioning volatile memory from persistent memory is not yet supported.
+>
+>Volatile memory is mapped at DPA(0x0), while Persistent memory is mapped
+>at DPA(vmem->size), per CXL Spec 8.2.9.8.2.0 - Get Partition Info.
+>
+>Signed-off-by: Gregory Price <gregory.price@memverge.com>
+>Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> Note that this is a concern only applies when not using auto-onlining in 
-> the kernel during boot, which (IMHO) is or will be the default in the 
-> future.
-
-Yes, I expect that to be the default as well and let those small few
-that have custom requirements figure out how to override that default.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
