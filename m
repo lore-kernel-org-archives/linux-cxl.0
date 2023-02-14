@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A83BC05027
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 11:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D78C61DA4
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 13:06:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231442AbjBNLwC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Feb 2023 06:52:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50702 "EHLO
+        id S232589AbjBNNGA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Feb 2023 08:06:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbjBNLwB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 06:52:01 -0500
+        with ESMTP id S232569AbjBNNF5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Feb 2023 08:05:57 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950612365E;
-        Tue, 14 Feb 2023 03:52:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB8C23C77;
+        Tue, 14 Feb 2023 05:05:55 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGKJp012Gz689lY;
-        Tue, 14 Feb 2023 19:50:17 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGLtl0n54z6J7g6;
+        Tue, 14 Feb 2023 21:01:19 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Tue, 14 Feb
- 2023 11:51:57 +0000
-Date:   Tue, 14 Feb 2023 11:51:56 +0000
+ 2023 13:05:53 +0000
+Date:   Tue, 14 Feb 2023 13:05:52 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Lukas Wunner <lukas@wunner.de>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
@@ -34,53 +34,187 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
         "Li, Ming" <ming4.li@intel.com>, "Hillf Danton" <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 11/16] PCI/DOE: Allow mailbox creation without devres
- management
-Message-ID: <20230214115156.00002e04@Huawei.com>
-In-Reply-To: <ad46bbc593d4b7f1c9c5cbafbb51d89533edd4a7.1676043318.git.lukas@wunner.de>
+Subject: Re: [PATCH v3 16/16] cxl/pci: Rightsize CDAT response allocation
+Message-ID: <20230214130552.000030ea@Huawei.com>
+In-Reply-To: <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
 References: <cover.1676043318.git.lukas@wunner.de>
-        <ad46bbc593d4b7f1c9c5cbafbb51d89533edd4a7.1676043318.git.lukas@wunner.de>
+        <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 10 Feb 2023 21:25:11 +0100
+On Fri, 10 Feb 2023 21:25:16 +0100
 Lukas Wunner <lukas@wunner.de> wrote:
 
-> DOE mailbox creation is currently only possible through a devres-managed
-> API.  The lifetime of mailboxes thus ends with driver unbinding.
+> Jonathan notes that cxl_cdat_get_length() and cxl_cdat_read_table()
+> allocate 32 dwords for the DOE response even though it may be smaller.
 > 
-> An upcoming commit will create DOE mailboxes upon device enumeration by
-> the PCI core.  Their lifetime shall not be limited by a driver.
+> In the case of cxl_cdat_get_length(), only the second dword of the
+> response is of interest (it contains the length).  So reduce the
+> allocation to 2 dwords and let DOE discard the remainder.
 > 
-> Therefore rework pcim_doe_create_mb() into the non-devres-managed
-> pci_doe_create_mb().  Add pci_doe_destroy_mb() for mailbox destruction
-> on device removal.
+> In the case of cxl_cdat_read_table(), a correctly sized allocation for
+> the full CDAT already exists.  Let DOE write each table entry directly
+> into that allocation.  There's a snag in that the table entry is
+> preceded by a Table Access Response Header (1 dword).  Save the last
+> dword of the previous table entry, let DOE overwrite it with the
+> header of the next entry and restore it afterwards.
+
+Marginally nasty, but looks like it works to me and avoid excessive allocations.
+
 > 
-> Provide a devres-managed wrapper under the existing pcim_doe_create_mb()
-> name.
+> The resulting CDAT is preceded by 4 unavoidable useless bytes.  Increase
+> the allocation size accordingly and skip these bytes when exposing CDAT
+> in sysfs.
 > 
-> The error path of pcim_doe_create_mb() previously called xa_destroy() if
-> alloc_ordered_workqueue() failed.  That's unnecessary because the xarray
-> is still empty at that point.  It doesn't need to be destroyed until
-> it's been populated by pci_doe_cache_protocols().  Arrange the error
-> path of the new pci_doe_create_mb() accordingly.
-> 
-> pci_doe_cancel_tasks() is no longer used as callback for
-> devm_add_action(), so refactor it to accept a struct pci_doe_mb pointer
-> instead of a generic void pointer.
+> The buffer overflow check in cxl_cdat_read_table() becomes unnecessary
+> because the remaining bytes in the allocation are tracked in "length",
+> which is passed to DOE and limits how many bytes it writes to the
+> allocation.  Additionally, cxl_cdat_read_table() bails out if the DOE
+> response is truncated due to insufficient space.
 > 
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-
+> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Follow up comment on earlier one inline.
+
+> ---
+>  Changes v2 -> v3:
+>  * Newly added patch in v3 on popular request (Jonathan)
+> 
+>  drivers/cxl/core/pci.c | 34 ++++++++++++++++++----------------
+>  drivers/cxl/cxl.h      |  3 ++-
+>  drivers/cxl/port.c     |  2 +-
+>  3 files changed, 21 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 1b954783b516..70097cc75302 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -471,7 +471,7 @@ static int cxl_cdat_get_length(struct device *dev,
+>  			       size_t *length)
+>  {
+>  	__le32 request = CDAT_DOE_REQ(0);
+> -	__le32 response[32];
+> +	__le32 response[2];
+>  	int rc;
+>  
+>  	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> @@ -495,28 +495,28 @@ static int cxl_cdat_read_table(struct device *dev,
+>  			       struct pci_doe_mb *cdat_doe,
+>  			       struct cxl_cdat *cdat)
+>  {
+> -	size_t length = cdat->length;
+> -	u32 *data = cdat->table;
+> +	size_t length = cdat->length + sizeof(u32);
+> +	__le32 *data = cdat->table;
+
+Ah. Makes my earlier comment on this type irrelevant.
+
+>  	int entry_handle = 0;
+> +	__le32 saved_dw = 0;
+>  
+>  	do {
+>  		__le32 request = CDAT_DOE_REQ(entry_handle);
+>  		struct cdat_entry_header *entry;
+> -		__le32 response[32];
+>  		size_t entry_dw;
+>  		int rc;
+>  
+>  		rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+>  			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+>  			     &request, sizeof(request),
+> -			     &response, sizeof(response));
+> +			     data, length);
+>  		if (rc < 0) {
+>  			dev_err(dev, "DOE failed: %d", rc);
+>  			return rc;
+>  		}
+>  
+>  		/* 1 DW Table Access Response Header + CDAT entry */
+> -		entry = (struct cdat_entry_header *)(response + 1);
+> +		entry = (struct cdat_entry_header *)(data + 1);
+>  		if ((entry_handle == 0 &&
+>  		     rc != sizeof(u32) + sizeof(struct cdat_header)) ||
+>  		    (entry_handle > 0 &&
+> @@ -526,21 +526,22 @@ static int cxl_cdat_read_table(struct device *dev,
+>  
+>  		/* Get the CXL table access header entry handle */
+>  		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
+> -					 le32_to_cpu(response[0]));
+> +					 le32_to_cpu(data[0]));
+>  		entry_dw = rc / sizeof(u32);
+>  		/* Skip Header */
+>  		entry_dw -= 1;
+> -		entry_dw = min(length / sizeof(u32), entry_dw);
+> -		/* Prevent length < 1 DW from causing a buffer overflow */
+> -		if (entry_dw) {
+> -			memcpy(data, entry, entry_dw * sizeof(u32));
+> -			length -= entry_dw * sizeof(u32);
+> -			data += entry_dw;
+> -		}
+> +		/*
+> +		 * Table Access Response Header overwrote the last DW of
+> +		 * previous entry, so restore that DW
+> +		 */
+> +		*data = saved_dw;
+> +		length -= entry_dw * sizeof(u32);
+> +		data += entry_dw;
+> +		saved_dw = *data;
+>  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
+>  
+>  	/* Length in CDAT header may exceed concatenation of CDAT entries */
+> -	cdat->length -= length;
+> +	cdat->length -= length - sizeof(u32);
+>  
+>  	return 0;
+>  }
+> @@ -576,7 +577,8 @@ void read_cdat_data(struct cxl_port *port)
+>  		return;
+>  	}
+>  
+> -	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
+> +	port->cdat.table = devm_kzalloc(dev, cdat_length + sizeof(u32),
+> +					GFP_KERNEL);
+>  	if (!port->cdat.table)
+>  		return;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1b1cf459ac77..78f5cae5134c 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -494,7 +494,8 @@ struct cxl_pmem_region {
+>   * @component_reg_phys: component register capability base address (optional)
+>   * @dead: last ep has been removed, force port re-creation
+>   * @depth: How deep this port is relative to the root. depth 0 is the root.
+> - * @cdat: Cached CDAT data
+> + * @cdat: Cached CDAT data (@table is preceded by 4 null bytes, these are not
+> + *	  included in @length)
+>   * @cdat_available: Should a CDAT attribute be available in sysfs
+>   */
+>  struct cxl_port {
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 5453771bf330..0705343ac5ca 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -95,7 +95,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
+>  		return 0;
+>  
+>  	return memory_read_from_buffer(buf, count, &offset,
+> -				       port->cdat.table,
+> +				       port->cdat.table + sizeof(u32),
+>  				       port->cdat.length);
+>  }
+>  
 
