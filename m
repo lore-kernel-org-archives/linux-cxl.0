@@ -2,156 +2,241 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FCEC636CC
-	for <linux-cxl@archiver.kernel.org>; Mon, 13 Feb 2023 23:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2111BC636D4
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Feb 2023 00:24:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbjBMX1X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 13 Feb 2023 18:27:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41008 "EHLO
+        id S229622AbjBNAYR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 13 Feb 2023 19:24:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbjBMX1W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 18:27:22 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A002212D
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Feb 2023 15:27:04 -0800 (PST)
+        with ESMTP id S229484AbjBNAYQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 13 Feb 2023 19:24:16 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C67C449E;
+        Mon, 13 Feb 2023 16:24:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676330824; x=1707866824;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=6VdHHph5p6EJskOPMhxNc3KqUZhHqLGx6qQHqVg9gCc=;
-  b=OtMDpSoyt8U2qQ2hg2Kj6p3vLmQpbMvDey4uPQT2d63BToWqpoeOBk6f
-   vAQijLsiYHeq3oEXosDaMlqFPqC6zOGHibtgtdxe9M3mZv/lwp8E2jwxK
-   8gYfDHPOp1c2JLxhnygi0SN8zdpk4AeFhu7ZfWAhC1R9I/cEhizYyV2k+
-   Evq9CJWtDcwsE2WRDOnyc/x/fYs0LHYV55EYXz+BxEB8lFgNwu5ftBjSY
-   HhCYeJPbmHdvKL/e6j3+sLVlAyH9tyTMdyaQ9HieFj0dpOOoiAnyCiOr7
-   g/BQ7XPA7cyIyQo4hcvBYIxRb3eccqzJVdx0Z4RmjvUrB6O/AtiXknoC6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="393426264"
+  t=1676334255; x=1707870255;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Gkhl6ezDlc1ss5YwSYVQ4Gf3h6MQxMz/5wqdYif/WQ0=;
+  b=Hpd1fx5w1ob+bE0s/5PTUgRYs4+Dal4sJiSNZ6FSMnzj3sX+DOguvfwK
+   Cr/AWZrU/Kf0I5zZKEa79NHRzBAeMHHk5GonJ83NRhZPb7K5jCOlzsMar
+   UjK6TJ8qI+O9kHvMKk/rtXnbumHWqE7P+CsFbPbeVcwZTVod5EauecVad
+   k7sidhT7DnIVDuLdcD/4MCycncU/i/Zm1cU+LfUo7SgFIE4fr4AGt1t/e
+   VlL0PryvIt0NQgMTvTy0o/mHp9fXbTdlS/GBk4O9Pn2Qf/WZ6i9v+MMs0
+   RRcUJJ8o8IxCI9fiV8SHBzU5bEpXQGBZ+zvGv7O7o1hNiO2ov3esNnfUk
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="311396686"
 X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="393426264"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 15:27:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="997862694"
+   d="scan'208";a="311396686"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 16:24:15 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="646571961"
 X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="997862694"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Feb 2023 15:27:03 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 13 Feb 2023 15:27:03 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 13 Feb 2023 15:27:03 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.42) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 13 Feb 2023 15:27:03 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U3fXXP7YPeK92+s/D45SbOM2guZtOS8m2aq6/kuqVcfPq18xpGw0KDhLVylFmxeJH55pYp/FNBz9kcvIgLnD5tupCua1tEKxeJDK1h1jiF//IQgL0RvI6/h/rdWu1d5JGdx/7+yRaZPcJt7jYLXVhw+AxTtO4fPHD+G+RGxHtbnA0v6jhuAcxLTd46CohQQjOJX33XhsnJXlEqFF1ADPN0k7uWDj887VE0MpFA4u9hy/Hjitya9kkNijmE/NOTpP3mSzPzGygTSMpeJ1OaL8eDqMn0cPE1jJ1UhijdR0tlhC1ytLsSwXoJudT797G7BpwBbsYEq8Qb96J1UfEaHN3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6VdHHph5p6EJskOPMhxNc3KqUZhHqLGx6qQHqVg9gCc=;
- b=lQogjZIy3n9xllD1Eoy+xdCTxuVUtFMlBh9UV+7IItooI44S5zF7QvGDRS3rijvKUA2Ld8h2T4c69Iu53w9Oj9yYp12FVGm+m7+ZhfO7hrWU51F7LIhStCVF6GAauYjOroIDZsvYC+nXv5YLkVLEl2D4wY0mi+Xy9sEyiVsd6h3HLoC1M8i457E9v4ybwDS8JEtEQDUTLTbQfI4Gqu9pKjtsYkoc8QiS+itv86tFJNMnr8j7kk/XF16bF1ovzkG6ahKTOTbiq7Rh+fCtCJTo3tCGyYdImT1NDN2rpNJu81wufYrUq1CkBRe9Dx9lkHZSIU85KjfV7IaNV6xIU6qiIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB6528.namprd11.prod.outlook.com (2603:10b6:8:8f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.23; Mon, 13 Feb
- 2023 23:27:01 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%6]) with mapi id 15.20.6086.023; Mon, 13 Feb 2023
- 23:27:01 +0000
-Date:   Mon, 13 Feb 2023 15:26:58 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Adam Manzanares <a.manzanares@samsung.com>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC:     Fan Ni <fan.ni@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>
-Subject: RE: [ndctl PATCH] daxctl: Skip over memory failure node status
-Message-ID: <63eac7427d994_27392429460@dwillia2-xfh.jf.intel.com.notmuch>
-References: <CGME20230213213916uscas1p2ee91a53c14ec5ddcb31322212af6cdaa@uscas1p2.samsung.com>
- <20230213213853.436788-1-a.manzanares@samsung.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230213213853.436788-1-a.manzanares@samsung.com>
-X-ClientProxiedBy: SJ0PR03CA0182.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::7) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+   d="scan'208";a="646571961"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.99.85]) ([10.212.99.85])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 16:24:14 -0800
+Message-ID: <db76a0ac-a597-378c-5f6d-8e358af45cba@intel.com>
+Date:   Mon, 13 Feb 2023 17:24:13 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB6528:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e5cf59b-4339-4d43-9f52-08db0e19ce7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: niaUaTaJoOmjrlSMNOJdvmFwFO592SUuTkwChif9bn4wbfAAysKRi1d88I3dC5RFxZsbasc2rP22T5ryRuu0AHr2tkbzw3V6q7a9cNA0wStThdK7mpzm9ht0uKP/xdQQZ/8H7Qyg571WUnnCETV5frDEb1DEkUz8d9DIbBv5SZeALGVgpN847RHXKJaTTNoA1AE6M40nfA7SZy7dUKYjGenu6kj5R27GdvIJ4nr66hLJtH8imppP8aXTn7ztTETk4krudw238IwTFLZ2YW/gzGsXtpmbVy8K3mz08okHghpJ8OBBXH2AfBJF/h+jH++lF8fidY9rCtMSlE837fsM36s16VsIjahtdHwpGapxxrHn/aMabhJiZMEv7uUTEhoxbrS/W9qxpRGHIelRbaBgHLLqsCWKu/9RBZwL1jjPZQIdaQ61fEcgY7fpHs5OCaI0YgaMu0wEu/pPQopCw2U2fg5bbkIQtZBwAf6avHL1v7I4Xkuc0kYYJBtavvEgXubqlo9PCjwiPOAPRJrrGHmDZy2A7wls2dmqoPX/kF79fvC6k+rkikyUWRqYKYtVA9E94/sQbMucKV2byNXDa2qQZ4kQ42ad6X3t/vQUDAX3GNUgyewfhEbCL/gY5l1Zec1Wm7RdCA/hmj99h68L0BMxnw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(366004)(39860400002)(346002)(396003)(136003)(451199018)(316002)(6506007)(110136005)(54906003)(41300700001)(38100700002)(82960400001)(8936002)(2906002)(4744005)(5660300002)(83380400001)(66556008)(66946007)(66476007)(8676002)(4326008)(6666004)(6486002)(478600001)(26005)(86362001)(9686003)(6512007)(186003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?w3KqPLM/SZl/LhallIAGKKgKBQgqqSCoZyRJ5UPnyg0ajSYezjh8rKrNaK5m?=
- =?us-ascii?Q?1UCGS6jg0OxroG2CGiUear6WHAhYpa+j+WKPcxRzgzqxamYkdcyRx41NUKGQ?=
- =?us-ascii?Q?jSEDg7WwZcBCoxqGT3Jyw6D4OWFlqIym0iBSkvUWIVledmNGEOE+e9bGCQ0T?=
- =?us-ascii?Q?oNXnqXXGN/478R7Lus3OHxpwxa0/d+uILyuasc9U9IBJI2R88YLSfxkLejiK?=
- =?us-ascii?Q?vSt84hrX6Y/MF9gTht6wNpw6rjS4uJCZfgsudxUYbthB4LatYlFRALXJU8JG?=
- =?us-ascii?Q?PjIL+jJFlI5RBCZ8FDI8YVqQ4hn47R3/BSfq5hsIkdLuA4KNEVhLkvk+Vhf1?=
- =?us-ascii?Q?itaKl4rU5D8h+76n4AenQs42f1C6NL551deUDEDCjkAUyxUbV5DyTBtUv2CP?=
- =?us-ascii?Q?Ct1cUQRGNBbrEOdzZ43yDmAuLCb83EWtbI0ISEBERNEUQc7XzoWHHdgK0H43?=
- =?us-ascii?Q?M0PTJd476UbNZmfdqn3hlLz8wm9U8LbCY8ref0PZA8unpdksrFYEmxZVSlI+?=
- =?us-ascii?Q?TprRFxuXdlPoJtIgJgtITNZcKW9M85BO1G0m0yFeBOny2mrUCI5LBZv5uylj?=
- =?us-ascii?Q?RDjl54BrqE+lK7BW6UvecByf9DlDNUZ4q0MDa+a1ORz/aQCSpW3JPXlshA4A?=
- =?us-ascii?Q?BU08DwuWjlewVxT5T+Rn5Ih9L3QkyaI/xuEnWt+dLek5tm4wihGFjTb2plNo?=
- =?us-ascii?Q?08tmA9m0Arb9+GlPSaUXR95yO7J5HNCErEKvScR5ApCcmmq9F/lhfa9LiV/K?=
- =?us-ascii?Q?1W4TIqk4VRAEq0dwhX0m53Vv+U2zH266WHQCLobCG5fBLbYrOoA7q/K646/0?=
- =?us-ascii?Q?lpSGIA9JobQu+gbRq5s9xpEDHAxJd81qFPwM+B6wgpiklMM2VtdZig5nhlXV?=
- =?us-ascii?Q?gk7HcTsMr4X13uvL1SvH93KJNVQJ/S2r596mrk5V+c5ZL+emSirCMRUkjoxR?=
- =?us-ascii?Q?FmzGZPm8ZwpANrI+XreJ57UO0h1libybtTRJqB4uiE1CDlXOhWHVWVPrANV2?=
- =?us-ascii?Q?xH1lqrUzWpKrHKZNeoxnUM2YzCgWsem7LIbdSP+ZwZiBVWiZ0BZwcOYcEQRi?=
- =?us-ascii?Q?2YL/DkSgzaCh7GVdNcR5nrVG1aDYmjzxgPt3TXor098nrtYut8TdOpm0564M?=
- =?us-ascii?Q?l5+tsvi6WF8F3q6HADuKZzIXmYGSYNCkaP0YQ7TM9Yb1c0yr/L3E0PEU5gCP?=
- =?us-ascii?Q?ySI3YT1pMXNZB6/nUezNE2MvX3pS123YbRqyvLZ16nZwATy6FN7sanANai4i?=
- =?us-ascii?Q?DTHTGMnboZ/4ySrVYHpAlYY6rB3Tsj+pa3wz3xrl9AICf7PYrqRDUNqicOS9?=
- =?us-ascii?Q?OiWvMKfXyWT63VTFC3HsL91Uh/fIAMD6qw1lppyMyZkE+xKlhe9Bnp8fylmE?=
- =?us-ascii?Q?I1Ptt3fswbcNdWCnwSzCbyYKrqOUrq/0QMw8vMHCicukD6a38ilQnKqfqILd?=
- =?us-ascii?Q?5Ttz80BnTvOOjc8QjF5Uy5jUNC5sQ/k5wR4fOqOF3ez2UOVLqNfkD2XnCQPM?=
- =?us-ascii?Q?UjggBd+WkyMWpHXT6wx+HkhakFI38yRlnx0dGGS1+71uHzJqndkvUvvciIp0?=
- =?us-ascii?Q?BBy4eFZxNYqIoIx6OoQvyCFXpZCiwe/9A46ixhHFKItnoGV+xV3YClk0zqoh?=
- =?us-ascii?Q?Sg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e5cf59b-4339-4d43-9f52-08db0e19ce7a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2023 23:27:00.6057
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NDqE0JvIXWydCpulu0aV0KA77MMRwGzHshCW5YGBqVWwZ8JW6EhQ6qzkWC99lo//hTDO0wv8tfjvvhUEjZbdarw9OmaszG5vN5F1zk85Ut8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6528
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 07/18] cxl: Add callback to parse the DSLBIS subtable from
+ CDAT
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+ <167571662248.587790.4362747686454305108.stgit@djiang5-mobl3.local>
+ <20230209135007.0000667d@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230209135007.0000667d@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Adam Manzanares wrote:
-> When trying to match a dax device to a memblock physical address
-> memblock_in_dev will fail if the the phys_index sysfs file does
-> not exist in the memblock. Currently the memory failure directory
-> associated with a node is currently interpreted as a memblock.
-> Skip over the memory_failure directory within the node directory.
 
-Oh, interesting, I did not know memory_failure() added entries to sysfs.
-My grep-fu is failing me though... I only found node_init_cache_dev()
-that creates a file named "memory_side_cache" under a node. This fix
-will work for that as well, but I am still curious where the memory
-failure file originates.
+
+On 2/9/23 6:50 AM, Jonathan Cameron wrote:
+> On Mon, 06 Feb 2023 13:50:23 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Provide a callback to parse the Device Scoped Latency and Bandwidth
+>> Information Structure (DSLBIS) in the CDAT structures. The DSLBIS
+>> contains the bandwidth and latency information that's tied to a DSMAS
+>> handle. The driver will retrieve the read and write latency and
+>> bandwidth associated with the DSMAS which is tied to a DPA range.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> A few comments inline,
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+>> ---
+>>   drivers/cxl/core/cdat.c |   34 ++++++++++++++++++++++++++++++++++
+>>   drivers/cxl/cxl.h       |    2 ++
+>>   drivers/cxl/port.c      |    9 ++++++++-
+>>   include/acpi/actbl1.h   |    5 +++++
+>>   4 files changed, 49 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>> index f9a64a0f1ee4..3c8f3956487e 100644
+>> --- a/drivers/cxl/core/cdat.c
+>> +++ b/drivers/cxl/core/cdat.c
+>> @@ -121,3 +121,37 @@ int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg)
+>>   	return 0;
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
+>> +
+>> +int cxl_dslbis_parse_entry(struct acpi_cdat_header *header, void *arg)
+>> +{
+>> +	struct cxl_port *port = (struct cxl_port *)arg;
+>> +	struct dsmas_entry *dent;
+>> +	struct acpi_cdat_dslbis *dslbis;
+> 
+> Perhaps reorder to maintain the pretty upside-down Christmas trees
+> (I don't care :)
+
+will fix
+> 
+>> +	u64 val;
+>> +
+>> +	if (header->type != ACPI_CDAT_TYPE_DSLBIS)
+>> +		return -EINVAL;
+> 
+> Isn't this guaranteed by the caller?  Seems overkill do it twice
+> and I don't think these will ever be called outside of that wrapper that
+> loops over the entries. I could be wrong though!
+>
+
+ok will remove
+
+
+>> +
+>> +	dslbis = (struct acpi_cdat_dslbis *)((unsigned long)header + sizeof(*header));
+> header + 1
+> 
+>> +	if ((dslbis->flags & ACPI_CEDT_DSLBIS_MEM_MASK) !=
+> 
+> This field 'must be ignored' if the DSMAS handle isn't a match
+> (as it's an initiator only entry) Odd though it may seem I think we
+> might see one of those on a type 3 device and we are probably going to
+> have other users of this function anyway.
+> 
+> I think you need to do the walk below to check we have a DSMAS match, before
+> running this check.
+
+ok, will move down to where entry is matched
+
+> 
+>> +	     ACPI_CEDT_DSLBIS_MEM_MEMORY)
+>> +		return 0;
+>> +
+>> +	if (dslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
+>> +		return -ENXIO;
+> 
+> This would probably imply a new HMAT spec value, so probably just
+> log it and ignore rather than error out.
+
+ok
+
+> 
+>> +
+>> +	/* Value calculation with base_unit, see ACPI Spec 6.5 5.2.28.4 */
+>> +	val = dslbis->entry[0] * dslbis->entry_base_unit;
+> 
+> In theory this might overflow as u64 * u16.
+> Doubt it will ever happen in reality, but maybe a check and debug print if it does?
+
+ok will use check_mul_overflow()
+> 
+>> +
+>> +	mutex_lock(&port->cdat.dsmas_lock);
+>> +	list_for_each_entry(dent, &port->cdat.dsmas_list, list) {
+>> +		if (dslbis->handle == dent->handle) {
+>> +			dent->qos[dslbis->data_type] = val;
+>> +			break;
+>> +		}
+>> +	}
+>> +	mutex_unlock(&port->cdat.dsmas_lock);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_dslbis_parse_entry, CXL);
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 1e5e69f08480..849b22236f1d 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -705,6 +705,7 @@ struct dsmas_entry {
+>>   	struct list_head list;
+>>   	struct range dpa_range;
+>>   	u16 handle;
+>> +	u64 qos[ACPI_HMAT_WRITE_BANDWIDTH + 1];
+>>   };
+>>   
+>>   typedef int (*cdat_tbl_entry_handler)(struct acpi_cdat_header *header, void *arg);
+>> @@ -716,6 +717,7 @@ int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
+>>   			    void *arg);
+>>   
+>>   int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg);
+>> +int cxl_dslbis_parse_entry(struct acpi_cdat_header *header, void *arg);
+>>   
+>>   /*
+>>    * Unit test builds overrides this to __weak, find the 'strong' version
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index b1da73e99bab..8de311208b37 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -65,8 +65,15 @@ static int cxl_port_probe(struct device *dev)
+>>   			rc = cdat_table_parse_dsmas(port->cdat.table,
+>>   						    cxl_dsmas_parse_entry,
+>>   						    (void *)port);
+>> -			if (rc < 0)
+>> +			if (rc > 0) {
+>> +				rc = cdat_table_parse_dslbis(port->cdat.table,
+>> +							     cxl_dslbis_parse_entry,
+>> +							     (void *)port);
+>> +				if (rc <= 0)
+>> +					dev_dbg(dev, "Failed to parse DSLBIS: %d\n", rc);
+> 
+> If we have entries and they won't parse, I think we should be screaming louder.
+> dev_warn() would be my preference for this and the one in the previous patch.
+> Sure we can carry on, but something on the device is not working as expected.
+
+ok will fix this one and previous.
+
+> 
+>> +			} else {
+>>   				dev_dbg(dev, "Failed to parse DSMAS: %d\n", rc);
+>> +			}
+>>   		}
+>>   
+>>   		rc = cxl_hdm_decode_init(cxlds, cxlhdm);
+>> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+>> index e8297cefde09..ff6092e45196 100644
+>> --- a/include/acpi/actbl1.h
+>> +++ b/include/acpi/actbl1.h
+>> @@ -369,6 +369,11 @@ struct acpi_cdat_dslbis {
+>>   	u16 reserved2;
+>>   };
+>>   
+>> +/* Flags for subtable above */
+>> +
+>> +#define ACPI_CEDT_DSLBIS_MEM_MASK	GENMASK(3, 0)
+>> +#define ACPI_CEDT_DSLBIS_MEM_MEMORY	0
+>> +
+>>   /* Subtable 2: Device Scoped Memory Side Cache Information Structure (DSMSCIS) */
+>>   
+>>   struct acpi_cdat_dsmscis {
+>>
+>>
+> 
