@@ -2,126 +2,159 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CA8C636CC
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Feb 2023 13:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF26C636D4
+	for <linux-cxl@archiver.kernel.org>; Wed, 15 Feb 2023 16:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233466AbjBONRO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Feb 2023 08:17:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60228 "EHLO
+        id S229504AbjBOQfV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Feb 2023 11:35:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231476AbjBONRN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 08:17:13 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F340C2528C;
-        Wed, 15 Feb 2023 05:17:09 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGz8X2tFFz6J9rm;
-        Wed, 15 Feb 2023 21:15:24 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Wed, 15 Feb
- 2023 13:17:07 +0000
-Date:   Wed, 15 Feb 2023 13:17:06 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <rafael@kernel.org>,
-        <bhelgaas@google.com>, <robert.moore@intel.com>
-Subject: Re: [PATCH 13/18] cxl: Add latency and bandwidth calculations for
- the CXL path
-Message-ID: <20230215131706.0000592d@Huawei.com>
-In-Reply-To: <8b2bbf7b-fe3f-c80b-163b-8247e0c47821@intel.com>
-References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
-        <167571667794.587790.14172786993094257614.stgit@djiang5-mobl3.local>
-        <20230209152417.00007f47@Huawei.com>
-        <8b2bbf7b-fe3f-c80b-163b-8247e0c47821@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229649AbjBOQez (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 11:34:55 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2782D234F9;
+        Wed, 15 Feb 2023 08:34:31 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UYNikLafGcQd4R8RhDpd/vhHaa0YhxsISgwaYDVUa5YO2kNBgFghYfJVp1U2dCJEZQjIb/Llu7Ng0DttPkmMhBJxmui5P3iD0foIQ5YJKhtTMYqQCmAceEbyeDvJOqoOpi2bOyQQbS2A1lN0ZYuwJ8dbOyIL3Abub+Tgfek6EpasRCft4S5JpI3u0Hr3qyi3MbdfoyuFxd6maTZ7joQYcfvd46Mo8QKOrwF94Vc2kYxcCfrH4f2nRxw32VKb4m4w7u4zWDYtTWqeNowncpglV9+gtuwsCrUnNVlma6q4Sic0lbeQMcRLEeLBqHjHyNMpvmMjFe5ByQj9cXc7sfIJgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+ltj7ElR0IG0wFFmRnEmMIjZYCRi/ECWZbU6thqgmHk=;
+ b=dbzPhrRiPU0MTr8Yrh3gYquyWmRT+3ZypwBhsVE+Y1ftfVzuTGK+95CtDZ4m4RXypYMzpHHYkj0fIbMrjfRvHnT4zCawYVuvH6iBLblwy3rUHql9QRAaXlXAHId4Gm9xqpdnwaf2IPwgvoBtvQ7sD370yhJ2pKGMDS8JFnt2MB3gzoyDpBAEjUBsBHdtLOfkv78WgWBL3tDfpTz15C2EI8TFP2Gw9zN1OnS9LxgKpvoI78qFbG2tQc13jP3DnjZirNjnYbzdKlXGt5Avy5/CBjRnFVnAMmCT5bQd+2G0d0dG/yFBJrZz9+f3FrDlj1kEigmbJtmvU2xTMkUfp/KWxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+ltj7ElR0IG0wFFmRnEmMIjZYCRi/ECWZbU6thqgmHk=;
+ b=xLtKfvOUgG3mGJjRFoeGzMQccyKbuZdapxidEVv3hXg7ihgww2Sm7uYWtLz2PbIbLVyJg134USmA4xYzfzBN2tpPl/CpUI/odIF53QTL19JVDd6UJpZ40AgjCPUbY7QX663AiuEFB/htR6Muarl1IgTbdP3k/Q9TeaZCnsgXbpM=
+Received: from CY5PR14CA0016.namprd14.prod.outlook.com (2603:10b6:930:2::22)
+ by SA3PR12MB8000.namprd12.prod.outlook.com (2603:10b6:806:31f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26; Wed, 15 Feb
+ 2023 16:33:05 +0000
+Received: from CY4PEPF0000C971.namprd02.prod.outlook.com
+ (2603:10b6:930:2:cafe::7a) by CY5PR14CA0016.outlook.office365.com
+ (2603:10b6:930:2::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26 via Frontend
+ Transport; Wed, 15 Feb 2023 16:33:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000C971.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6111.8 via Frontend Transport; Wed, 15 Feb 2023 16:33:03 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 15 Feb
+ 2023 10:33:01 -0600
+Date:   Wed, 15 Feb 2023 17:32:58 +0100
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/port: Disable decoder setup for endpoints in RCD mode
+Message-ID: <Y+0JOrdGxaNJ1MvW@rric.localdomain>
+References: <20230208071758.658652-1-rrichter@amd.com>
+ <63e52846175ae_36c729428@dwillia2-xfh.jf.intel.com.notmuch>
+ <Y+pOD5+DAsm3IKup@rric.localdomain>
+ <63ec0b2370e46_32d6129434@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <63ec0b2370e46_32d6129434@dwillia2-xfh.jf.intel.com.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000C971:EE_|SA3PR12MB8000:EE_
+X-MS-Office365-Filtering-Correlation-Id: db061c2b-3a0f-4208-5657-08db0f724fb0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3iTtfYO9O6ijMTrdz+BfYNUtS+RXUMDNZPak/5A9IUHyNS1/unykiAX0B07k0EkEjn6wt9E5RaCp05C30JrsqxLply8ejlZZMALTptrrYxlscLxA8na/DvD6OONqMLloa8+YzHVtNkOPhjG19m9jYS7TPY3psIQU2eAo2LIUeL3oGDsyWCtXcVeD4tj1e1sYcIowU+itV7tvWjy7TOS/DrIvZTzp4lGbtW0X+5kcUeDUTMmRam5Ilwre5OwRjK3z6VjUIvqfG5hI4kq7edt8aFSzrt6sK21aXg/IV608ArgmKGWDeWbMjRTm+yrQQNoS7CgwDZZEJ2FguJH/BUSt4r13wBQAEcnckU3KuQdnXmwk/c2UAabk45GFD3i1T4C6ABkF0cPccAZoryYZgkDfzgm/EXqf87TNyzwWp+viX8aut+lZG5C+n407o4EpNubGk0KsPSbxiRPOcHgG1s2c+K31HYa0xJUMt7VMSH2TR1V3UU9osYajQZMUp9cCTr/aQcYnkJ2ra6yiYllLxMG5RsQ4f6eAHR7iBEHXK22YDHeaUDgCGcCzpMYR5U97QBEu8GU2COHx9DjB3bq9fo/Gy01hiTf0DJRNzJkmkPC/DZWcEhTaseldIE2x6VCBr0aNG+VJqCwrZJybEXB4euYef+l+i9SKeaxlkv+mTCF9cQQeUZGPROb/V85LGyn9ZSdvCRgLrbkbVYPbzI6rrXkS4tUhiUfb1+Kv+hhUL71jSxSdv9NdIWl1ts9kTnr+1/6Z
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(136003)(346002)(39860400002)(376002)(396003)(451199018)(36840700001)(46966006)(40470700004)(6666004)(478600001)(966005)(36860700001)(47076005)(426003)(82310400005)(83380400001)(40460700003)(55016003)(356005)(40480700001)(81166007)(82740400003)(9686003)(16526019)(53546011)(26005)(186003)(336012)(41300700001)(70586007)(8676002)(70206006)(6916009)(4326008)(2906002)(5660300002)(8936002)(7696005)(316002)(54906003)(67856001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2023 16:33:03.8201
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: db061c2b-3a0f-4208-5657-08db0f724fb0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000C971.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8000
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 14 Feb 2023 16:03:27 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> On 2/9/23 8:24 AM, Jonathan Cameron wrote:
-> > On Mon, 06 Feb 2023 13:51:19 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> CXL Memory Device SW Guide rev1.0 2.11.2 provides instruction on how to
-> >> caluclate latency and bandwidth for CXL memory device. Calculate minimum  
+On 14.02.23 14:28:51, Dan Williams wrote:
+> Robert Richter wrote:
+> > Dan,
 > > 
-> > Spell check your descriptions (I often forget to do this as well!
-> > )  
-> >> bandwidth and total latency for the path from the CXL device to the root
-> >> port. The calculates values are stored in the cached DSMAS entries attached
-> >> to the cxl_port of the CXL device.
-> >>
-> >> For example for a device that is directly attached to a host bus:
-> >> Total Latency = Device Latency (from CDAT) + Dev to Host Bus (HB) Link
-> >> 		Latency
-> >> Min Bandwidth = Link Bandwidth between Host Bus and CXL device
-> >>
-> >> For a device that has a switch in between host bus and CXL device:
-> >> Total Latency = Device (CDAT) Latency + Dev to Switch Link Latency +
-> >> 		Switch (CDAT) Latency + Switch to HB Link Latency  
+> > On 09.02.23 09:07:18, Dan Williams wrote:
+> > > Robert Richter wrote:
+> > > > In RCD mode the HDM decoder capability is optional for endpoints and
+> > > > may not exist. The HDM range registers are used instead. Since the
+> > > > driver relies on the existence of an HDM decoder capability, its
+> > > > absence will cause the initialization of a memory card to fail.
+> > > > 
+> > > > Moreover, the driver also tries to enable or reuse enabled memory
+> > > > ranges. In the worst case this may lead to a system hang due to
+> > > > disabling system memory that was previously provided and setup by
+> > > > system firmware.
+> > > > 
+> > > > To solve the issues described, disable decoder setup for RCD endpoints
+> > > > and instead rely exclusively on system firmware to enable those memory
+> > > > ranges. Decoders are used by the kernel to setup and configure CXL
+> > > > memory regions, esp. to enable and disable them. Since Hot-plug is not
+> > > > supported for devices in RCD mode, the ability to disable that memory
+> > > > by the kernel using a decoder is not a necessarily requirement,
+> > > > decoders are not needed then.
+> > > > 
+> > > > Fixes: 34e37b4c432c ("cxl/port: Enable HDM Capability after validating DVSEC Ranges")
+> > > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > 
+> > > Does Dave's series address this problem?
+> > > 
+> > > https://lore.kernel.org/linux-cxl/167588394236.1155956.8466475582138210344.stgit@djiang5-mobl3.local/
+> > > 
+> > > ...that is arranging for the driver to carry-on in the absence of the
+> > > HDM Decoder Capability.
 > > 
-> > For QTG purposes, are we also supposed to take into account HB to
-> > system interconnect type latency (or maybe nearest CPU?).
-> > That is likely to be non trivial.  
+> > it might only solve the missing hdm decoder capability. I need to take
+> > a closer look if that also solves a system hang I was debugging which
+> > is caused by clearing the memory disable bit in the hdm dvsec range
+> > register. So the best would be to use this patch now to fix decoder
+> > initialization in RCD mode and then have Dave's patches on top. I am
+> > going to test the series too.
 > 
-> Dan brought this ECN [1] to my attention. We can add this if we can find 
-> a BIOS that implements the ECN. Or should we code a place holder for it 
-> until this is available?
+> My concern with this patch is that it skips HDM decoder enumeration
+> entirely in RCD mode. The CXL cards I have seen are CXL 1.1+ and do
+> export the HDM decoder capability.
 > 
-> https://lore.kernel.org/linux-cxl/e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com/
-
-I've had Generic Ports on my list to add to QEMU for a while but not been
-high enough priority to either do it myself, or make it someone else's problem.
-I suspect the biggest barrier in QEMU is going to be the interface to add
-these to the NUMA description.
-
-It's easy enough to hand build and inject a SRAT /SLIT/HMAT tables with
-these in (that's how we developed the Generic Initiator support in Linux before
-any BIOS support).  
-
-So I'd like to see it soon, but I'm not hugely bothered if that element
-follows this patch set. However, we are potentially going to see different
-decisions made when that detail is added so it 'might' count as ABI
-breakage if it's not there from the start. I think we are fine as probably
-no BIOS' yet though.
-
+> The driver turns off mem_enable in a few scenarios, one of them indeed
+> looks buggy, but does not seem to be the one you addressed. The driver
+> should only disable mem if it was also the agent that enabled mem, but
+> looks like it does not always do that.
 > 
-> >   
-> >> Min Bandwidth = min(dev to switch bandwidth, switch to HB bandwidth)
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
-> > 
-> > Stray sign off.
-> >   
-> >>
-> >> The internal latency for a switch can be retrieved from the CDAT of the
-> >> switch PCI device. However, since there's no easy way to retrieve that
-> >> right now on Linux, a guesstimated constant is used per switch to simplify
-> >> the driver code.  
-> > 
-> > I'd like to see that gap closed asap. I think it is fairly obvious how to do
-> > it, so shouldn't be too hard, just needs a dance to get the DOE for a switch
-> > port using Lukas' updated handling of DOE mailboxes.  
-> 
-> Talked to Lukas and this may not be difficult with his latest changes. I 
-> can take a look. Do we support switch CDAT in QEMU yet?
+> Can you confirm if this fixes this issue?
 
-I started typing no, then thought I'd just check.  Seems I did write support
-for CDAT on switches (and then completely forgot about it ;)
-It's upstream and everything!
-https://elixir.bootlin.com/qemu/latest/source/hw/pci-bridge/cxl_upstream.c#L194
+I have tested the HDM decoder emulation series (v5) and it fixes the
+issue. Looking into the paricular change for that, I hope to get a
+condensed fix for stable.
 
+Thanks,
+
+-Robert
