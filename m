@@ -2,115 +2,108 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D88FC636D4
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Feb 2023 10:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD9C636D4
+	for <linux-cxl@archiver.kernel.org>; Wed, 15 Feb 2023 11:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233438AbjBOKDv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Feb 2023 05:03:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
+        id S233748AbjBOLtH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Feb 2023 06:49:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233108AbjBOKDp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 05:03:45 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79BD3757B;
-        Wed, 15 Feb 2023 02:03:31 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGtp0322Dz6J67P;
-        Wed, 15 Feb 2023 17:59:04 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Wed, 15 Feb
- 2023 10:03:28 +0000
-Date:   Wed, 15 Feb 2023 10:03:27 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
-        Kees Cook <keescook@chromium.org>, <stable@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>, <linux-mm@kvack.org>,
-        <linux-acpi@vger.kernel.org>, <qemu-devel@nongnu.org>
-Subject: Re: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
- default
-Message-ID: <20230215100327.0000728f@Huawei.com>
-In-Reply-To: <Y+wC+rPRbAc9rudx@memverge.com>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
-        <Y+vSj8FD6ZaHhfoN@memverge.com>
-        <63ebd56e639e9_32d61294f4@dwillia2-xfh.jf.intel.com.notmuch>
-        <Y+vag3hg3VRNRUti@memverge.com>
-        <20230214211824.00007f91@Huawei.com>
-        <Y+wCeSig++c3ACkj@memverge.com>
-        <Y+wC+rPRbAc9rudx@memverge.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233554AbjBOLtG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 06:49:06 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B4123659;
+        Wed, 15 Feb 2023 03:49:04 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2613A300291F4;
+        Wed, 15 Feb 2023 12:49:01 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 19B2D263F6; Wed, 15 Feb 2023 12:49:01 +0100 (CET)
+Date:   Wed, 15 Feb 2023 12:49:01 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Li, Ming" <ming4.li@intel.com>
+Cc:     Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v3 15/16] PCI/DOE: Relax restrictions on request and
+ response size
+Message-ID: <20230215114901.GA19157@wunner.de>
+References: <cover.1676043318.git.lukas@wunner.de>
+ <fdb52e091b62b34c2036a61ae9ab8087dba4e4db.1676043318.git.lukas@wunner.de>
+ <d3806f93-9d75-5431-142d-1601eb2a1bab@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3806f93-9d75-5431-142d-1601eb2a1bab@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 14 Feb 2023 16:54:02 -0500
-Gregory Price <gregory.price@memverge.com> wrote:
-
-> On Tue, Feb 14, 2023 at 04:51:53PM -0500, Gregory Price wrote:
-> > On Tue, Feb 14, 2023 at 09:18:24PM +0000, Jonathan Cameron wrote:  
-> > > On Tue, 14 Feb 2023 14:01:23 -0500
-> > > Gregory Price <gregory.price@memverge.com> wrote:
-> > > 
-> > > Could you test it with TCG (just drop --enable-kvm)?  We have a known
-> > > limitation with x86 instructions running out of CXL emulated memory
-> > > (side effect of emulating the interleave).  You'll need a fix even on TCG
-> > > for the corner case of an instruction bridging from normal ram to cxl memory.
-> > > https://lore.kernel.org/qemu-devel/20230206193809.1153124-1-richard.henderson@linaro.org/
-> > > 
-> > > Performance will be bad, but so far this is only way we can do it correctly.
-> > > 
-> > > Jonathan
-> > >   
+On Wed, Feb 15, 2023 at 01:05:20PM +0800, Li, Ming wrote:
+> On 2/11/2023 4:25 AM, Lukas Wunner wrote:
+> > An upcoming user of DOE is CMA (Component Measurement and Authentication,
+> > PCIe r6.0 sec 6.31).
 > > 
-> > Siiiggghh... i had this patch and dropped --enable-kvm, but forgot to
-> > drop "accel=kvm" from the -machine line
+> > It builds on SPDM (Security Protocol and Data Model):
+> > https://www.dmtf.org/dsp/DSP0274
 > > 
-> > This was the issue.
-> > 
-> > And let me tell you, if you numactl --membind=1 python, it is
-> > IMPRESSIVELY slow.  I wonder if it's even hitting a few 100k
-> > instructions a second.
-> > 
-> > 
-> > This appears to be the issue.  When I get a bit more time, try to dive
-> > into the deep dark depths of qemu memory regions to see how difficult
-> > a non-mmio fork might be, unless someone else is already looking at it.
-> > 
-> > ~Gregory  
+> > SPDM message sizes are not always a multiple of dwords.  To transport
+> > them over DOE without using bounce buffers, allow sending requests and
+> > receiving responses whose final dword is only partially populated.
+[...]
+> > +	if (payload_length) {
+> > +		/* Read all payload dwords except the last */
+> > +		for (; i < payload_length - 1; i++) {
+> > +			pci_read_config_dword(pdev, offset + PCI_DOE_READ,
+> > +					      &val);
+> > +			task->response_pl[i] = cpu_to_le32(val);
+> > +			pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > +		}
+> > +
+> > +		/* Read last payload dword */
+> >  		pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
+> > -		task->response_pl[i] = cpu_to_le32(val);
+> > +		cpu_to_le32s(&val);
+> > +		memcpy(&task->response_pl[i], &val, remainder);
 > 
-> Just clarifying one thing:  Even with the patch, KVM blows up.
-> Disabling KVM fixes this entirely.  I haven't tested without KVM but
-> with the patch, i will do that now.
+> This "Read last payload dword" seems like making sense only when remainder != sizeof(u32).
+> If remainder == sizeof(u32), it should be read in above reading loops.
+> But this implementation also looks good to me.
 
-yup.  The patch only fixes TCG so that's expected behavior.
+The last payload dword requires special handling anyway because of
+the Data Object Ready check (see quoted remainder of the function
+below).
 
-Fingers crossed on this 'working'.
+Up until now that special handling is done with an if-clause that
+checks if the last loop iteration has been reached.
 
-I'm open to suggestions on how to work around the problem with KVM
-or indeed allow TCG to cache the instructions (right not it has
-to fetch and emulate each instruction on it's own).
+The support for non-dword responses adds more special handling
+of the last payload dword, which is why I decided to go the full
+distance and move handling of the last dword out of the loop.
 
-I can envision how we might do it for KVM with userspace page fault handling
-used to get a fault up to QEMU which can then stitch in a cache
-of the underlying memory as a stage 2 translation to the page (a little
-bit like how post migration copy works) though I've not prototyped
-anything...
+Thanks,
 
-I think it would be complex code that would be little used
-so we may just have to cope with the emulation being slow.
+Lukas
 
-Intent is very much to be able to test the kernel code etc, not
-test it quickly :)
-
-Jonathan
+> >  		/* Prior to the last ack, ensure Data Object Ready */
+> > -		if (i == (payload_length - 1) && !pci_doe_data_obj_ready(doe_mb))
+> > +		if (!pci_doe_data_obj_ready(doe_mb))
+> >  			return -EIO;
+> >  		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
+> > +		i++;
+> >  	}
+> >  
+> >  	/* Flush excess length */
