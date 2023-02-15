@@ -2,108 +2,201 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD9C636D4
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Feb 2023 11:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606ACC636D4
+	for <linux-cxl@archiver.kernel.org>; Wed, 15 Feb 2023 12:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233748AbjBOLtH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Feb 2023 06:49:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47880 "EHLO
+        id S233588AbjBOMNh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Feb 2023 07:13:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233554AbjBOLtG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 06:49:06 -0500
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B4123659;
-        Wed, 15 Feb 2023 03:49:04 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2613A300291F4;
-        Wed, 15 Feb 2023 12:49:01 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 19B2D263F6; Wed, 15 Feb 2023 12:49:01 +0100 (CET)
-Date:   Wed, 15 Feb 2023 12:49:01 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     "Li, Ming" <ming4.li@intel.com>
-Cc:     Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 15/16] PCI/DOE: Relax restrictions on request and
- response size
-Message-ID: <20230215114901.GA19157@wunner.de>
-References: <cover.1676043318.git.lukas@wunner.de>
- <fdb52e091b62b34c2036a61ae9ab8087dba4e4db.1676043318.git.lukas@wunner.de>
- <d3806f93-9d75-5431-142d-1601eb2a1bab@intel.com>
+        with ESMTP id S229625AbjBOMNg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 07:13:36 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D989745;
+        Wed, 15 Feb 2023 04:13:34 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGxl92ghQz6J9dx;
+        Wed, 15 Feb 2023 20:11:49 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Wed, 15 Feb
+ 2023 12:13:30 +0000
+Date:   Wed, 15 Feb 2023 12:13:29 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <rafael@kernel.org>, <bhelgaas@google.com>,
+        <robert.moore@intel.com>
+Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
+ CXL device
+Message-ID: <20230215121329.00005589@Huawei.com>
+In-Reply-To: <47b05595-141b-3e1a-6674-0c395088d988@intel.com>
+References: <20230208221559.GA2489627@bhelgaas>
+        <158ba672-09f1-a202-4fb6-7168496b95c4@intel.com>
+        <20230209151040.00006d93@Huawei.com>
+        <47b05595-141b-3e1a-6674-0c395088d988@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d3806f93-9d75-5431-142d-1601eb2a1bab@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 01:05:20PM +0800, Li, Ming wrote:
-> On 2/11/2023 4:25 AM, Lukas Wunner wrote:
-> > An upcoming user of DOE is CMA (Component Measurement and Authentication,
-> > PCIe r6.0 sec 6.31).
+On Tue, 14 Feb 2023 15:22:42 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> On 2/9/23 8:10 AM, Jonathan Cameron wrote:
+> > On Wed, 8 Feb 2023 16:56:30 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> On 2/8/23 3:15 PM, Bjorn Helgaas wrote:  
+> >>> On Tue, Feb 07, 2023 at 01:51:17PM -0700, Dave Jiang wrote:  
+> >>>>
+> >>>>
+> >>>> On 2/6/23 3:39 PM, Bjorn Helgaas wrote:  
+> >>>>> On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:  
+> >>>>>> The latency is calculated by dividing the FLIT size over the
+> >>>>>> bandwidth. Add support to retrieve the FLIT size for the CXL
+> >>>>>> device and calculate the latency of the downstream link.  
+> >>>      
+> >>>>> I guess you only care about the latency of a single link, not the
+> >>>>> entire path?  
+> >>>>
+> >>>> I am adding each of the link individually together in the next
+> >>>> patch. Are you suggesting a similar function like
+> >>>> pcie_bandwidth_available() but for latency for the entire path?  
+> >>>
+> >>> Only a clarifying question.
+> >>>      
+> >>>>>> +static int cxl_get_flit_size(struct pci_dev *pdev)
+> >>>>>> +{
+> >>>>>> +	if (cxl_pci_flit_256(pdev))
+> >>>>>> +		return 256;
+> >>>>>> +
+> >>>>>> +	return 66;  
+> >>>>>
+> >>>>> I don't know about the 66-byte flit format, maybe this part is
+> >>>>> CXL-specific?  
+> >>>>
+> >>>> 68-byte flit format. Looks like this is a typo from me.  
+> >>>
+> >>> This part must be CXL-specific, since I don't think PCIe mentions
+> >>> 68-byte flits.
+> >>>      
+> >>>>>> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+> >>>>>> + * mode, otherwise it's 68B flits mode.
+> >>>>>> + */
+> >>>>>> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+> >>>>>> +{
+> >>>>>> +	u32 lnksta2;
+> >>>>>> +
+> >>>>>> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+> >>>>>> +	return lnksta2 & BIT(10);  
+> >>>>>
+> >>>>> Add a #define for the bit.  
+> >>>>
+> >>>> ok will add.
+> >>>>     
+> >>>>>
+> >>>>> AFAICT, the PCIe spec defines this bit, and it only indicates the link
+> >>>>> is or will be operating in Flit Mode; it doesn't actually say anything
+> >>>>> about how large the flits are.  I suppose that's because PCIe only
+> >>>>> talks about 256B flits, not 66B ones?  
+> >>>>
+> >>>> Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows that
+> >>>> when PCIe Flit Mode is set, then CXL is in 256B flits mode, otherwise, it is
+> >>>> 68B flits. So an assumption is made here regarding the flit side based on
+> >>>> the table.  
+> >>>
+> >>> So reading PCI_EXP_LNKSTA2 and extracting the Flit Mode bit is
+> >>> PCIe-generic, but the interpretation of "PCIe Flit Mode not enabled
+> >>> means 68-byte flits" is CXL-specific?
+> >>>
+> >>> This sounds wrong, but I don't know quite how.  How would the PCI core
+> >>> manage links where Flit Mode being cleared really means Flit Mode is
+> >>> *enabled* but with a different size?  Seems like something could go
+> >>> wrong there.  
+> >>
+> >> Looking at the PCIe base spec and the CXL spec, that seemed to be the
+> >> only way that implies the flit size for a CXL device as far as I can
+> >> tell. I've yet to find a good way to make that determination. Dan?  
 > > 
-> > It builds on SPDM (Security Protocol and Data Model):
-> > https://www.dmtf.org/dsp/DSP0274
+> > So a given CXL port has either trained up in:
+> > * normal PCI (in which case all the normal PCI stuff applies) and we'll
+> >    fail some of the other checks in the CXL driver never get hear here
+> >    - I 'think' the driver will load for the PCI device to enable things
+> >    like firmware upgrade, but we won't register the CXL Port devices
+> >    that ultimately call this stuff.
+> >    It's perfectly possible to have a driver that will cope with this
+> >    but it's pretty meaningless for a lot of cxl type 3 driver.
+> > * 68 byte flit (which was CXL precursor to PCI going flit based)
+> >    Can be queried via CXL DVSEC Flex Bus Port Status CXL r3.0 8.2.1.3.3
+> > * 256 byte flits (may or may not be compatible with PCIe ones as there
+> >    are some optional latency optimizations)
 > > 
-> > SPDM message sizes are not always a multiple of dwords.  To transport
-> > them over DOE without using bounce buffers, allow sending requests and
-> > receiving responses whose final dword is only partially populated.
-[...]
-> > +	if (payload_length) {
-> > +		/* Read all payload dwords except the last */
-> > +		for (; i < payload_length - 1; i++) {
-> > +			pci_read_config_dword(pdev, offset + PCI_DOE_READ,
-> > +					      &val);
-> > +			task->response_pl[i] = cpu_to_le32(val);
-> > +			pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> > +		}
-> > +
-> > +		/* Read last payload dword */
-> >  		pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> > -		task->response_pl[i] = cpu_to_le32(val);
-> > +		cpu_to_le32s(&val);
-> > +		memcpy(&task->response_pl[i], &val, remainder);
+> > So if the 68 byte flit is enabled the 256 byte one should never be and
+> > CXL description is overriding the old PCIe
+> > 
+> > Hence I think we should have the additional check on the flex bus
+> > dvsec even though it should be consistent with your assumption above.  
 > 
-> This "Read last payload dword" seems like making sense only when remainder != sizeof(u32).
-> If remainder == sizeof(u32), it should be read in above reading loops.
-> But this implementation also looks good to me.
+> So I'm trying to understand the CXL DVSEC Port status "68B flit and VH 
+> Enabled bit". If this bit is set, it means we are in 68B flit mode and 
+> VH mode? 
 
-The last payload dword requires special handling anyway because of
-the Data Object Ready check (see quoted remainder of the function
-below).
+I think so. 
 
-Up until now that special handling is done with an if-clause that
-checks if the last loop iteration has been reached.
+> Do we just ignore RCH/RCD calculations since it doesn't support 
+> hotplug?
 
-The support for non-dword responses adds more special handling
-of the last payload dword, which is why I decided to go the full
-distance and move handling of the last dword out of the loop.
+Agreed. An impdef solution for RCH etc might be possible but there
+isn't enough in the spec to do it.
 
-Thanks,
+> Does this bit get cleared for 256B flit mode? It's not clear to 
+> me.
 
-Lukas
+I think so.  I think once we are in 256B we know we are CXL 3.0 so
+VH is true.  There is some compliance test coverage 14.6.11 but
+it only talks about checking Link Status 2 to confirm link has
+trained in 256B Flit Mode.  Not sure if there is a gap there to close
+or not.  One to poke your spec folk on perhaps (I'm not making this
+one my problem ;)
 
-> >  		/* Prior to the last ack, ensure Data Object Ready */
-> > -		if (i == (payload_length - 1) && !pci_doe_data_obj_ready(doe_mb))
-> > +		if (!pci_doe_data_obj_ready(doe_mb))
-> >  			return -EIO;
-> >  		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> > +		i++;
-> >  	}
-> >  
-> >  	/* Flush excess length */
+
+> 
+> > 
+> > Hmm. That does raise a question of how we take the latency optimized
+> > flits into account or indeed some of the other latency impacting things
+> > that may or may not be running - IDE in it's various modes for example.
+> > 
+> > For latency optimized we can query relevant bit in the flex bus port status.
+> > IDE info will be somewhere I guess though no idea if there is a way to
+> > know the latency impacts.  
+> 
+> Should we deal with latency optimized flits and IDE in a later step?
+
+No fun :)
+
+Sure.
+
+Jonathan
+
+> 
+> > 
+> > Jonathan
+> >   
+> >>
+> >>  
+> >>>
+> >>> Bjorn  
+> >   
+
