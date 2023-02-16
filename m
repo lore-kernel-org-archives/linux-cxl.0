@@ -2,284 +2,293 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25C2C636D6
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Feb 2023 02:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C067FC6379F
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Feb 2023 02:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbjBPCEf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Feb 2023 21:04:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58360 "EHLO
+        id S229599AbjBPCGU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Feb 2023 21:06:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjBPCEe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 21:04:34 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A9F22026;
-        Wed, 15 Feb 2023 18:04:31 -0800 (PST)
+        with ESMTP id S229592AbjBPCGT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Feb 2023 21:06:19 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F942FCEB;
+        Wed, 15 Feb 2023 18:06:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676513071; x=1708049071;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hb7vpaFy1+xNq//qwF1yWdxFMR3v3oby6ZiTClQzpLU=;
-  b=YUc/YMTvlPRP2Cozpbw6qxFRv5Qtl6mBsq+TOEOGsefYqoo74pTi4KY9
-   lvwZY1JjB6SJzQVeN7/J7ZGGktOcDUViYh2BHbytNnXzS5Byi4CWb6iwQ
-   Zug9UKnmr4rzefVnHWasa5intg02qguYOMl1TaZHDFL1qIjUHXW16M6oH
-   SWLff1qHtuOQMOqHuOJrqNFk5zlLX285D2CfH+OrDBjt1IoVBd1oc0cQX
-   rwNzCZxrMvl1tdERegFu5bwyd59v53CuoQsmb8e7yxRdUFeiLNcuFsbY7
-   CH30wnSdapITaHXOqA33mH+z8tJWSkMOHgtwjRDV2t39ycu6Fgy1qG2Zx
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="329322594"
+  t=1676513177; x=1708049177;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jRTJ4sXSQTOejxge4WJ1uV6Jrs78wwQWBIhclkA4r90=;
+  b=XwWnWvwY4wVa4pop6idv3Btfx+SZ0hH33JiZH+QWcWh+yHp7DB1K/WEY
+   pGdvajXySE3w83P4pWSvEifVOlbp3hEQuxgTxcbYFFGi6DNV/D9ka737S
+   CCCp5Pn/7WJ+LalS7hUFCpL/8n6FlCHg6TUEonPSmSvqw3n7sLpcRheMc
+   t1M1jzQxlgEOvnJdm+e0TWqFIq4Dp8jWj3sGv7qBVcxDa714jvokxdSpB
+   F477u0r2GKFs2696ougzDS7H13TvBgNIczOOcvPPfoLCb95dhtR9gl1Bk
+   etxZOw3cQ6y6i/dC9Am96bUDRBp12m+8nJiBp+Q5ZgtxW42UZFARfrMk+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="359029232"
 X-IronPort-AV: E=Sophos;i="5.97,301,1669104000"; 
-   d="scan'208";a="329322594"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 18:04:31 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="758750806"
+   d="scan'208";a="359029232"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 18:06:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="843959605"
 X-IronPort-AV: E=Sophos;i="5.97,301,1669104000"; 
-   d="scan'208";a="758750806"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.33.161])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 18:04:30 -0800
-Date:   Wed, 15 Feb 2023 18:04:28 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] cxl/region: Provide region info to the cxl_poison
- trace event
-Message-ID: <Y+2PLGynCGRDLmVl@aschofie-mobl2>
-References: <cover.1675983077.git.alison.schofield@intel.com>
- <7862ef793a3b4fce49b0c8074b014b53b389ce12.1675983077.git.alison.schofield@intel.com>
- <20230210125641.00004744@Huawei.com>
+   d="scan'208";a="843959605"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 15 Feb 2023 18:06:13 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pSTf2-0009wT-1i;
+        Thu, 16 Feb 2023 02:06:12 +0000
+Date:   Thu, 16 Feb 2023 10:05:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-cxl@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        alsa-devel@alsa-project.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 9d9019bcea1aac7eed64a1a4966282b6b7b141c8
+Message-ID: <63ed8f83.xxCUQUW24+WEYfwo%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230210125641.00004744@Huawei.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 12:56:41PM +0000, Jonathan Cameron wrote:
-> On Thu,  9 Feb 2023 15:32:57 -0800
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > User space may need to know which region, if any, maps the poison
-> > address(es) logged in a cxl_poison trace event. Since the mapping
-> > of DPAs (device physical addresses) to a region can change, the
-> > kernel must provide this information at the time the poison list
-> > is read. The event informs user space that at event <timestamp>
-> > this <region> mapped to this <DPA>, which is poisoned.
-> > 
-> > The cxl_poison trace event is already wired up to log the region
-> > name and uuid if it receives param 'struct cxl_region'.
-> > 
-> > In order to provide that cxl_region, add another method for gathering
-> > poison - by committed endpoint decoder mappings. This method is only
-> > available with CONFIG_CXL_REGION and is only used if a region actually
-> > maps the memdev where poison is being read. The default method remains:
-> > read the poison by memdev resource.
-> 
-> Mention here that you also cover memory that isn't mapped.
-Ok, will do. And will also mention that we don't cover
-CXL_DECODER_MIXED, as I'm noting below...
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 9d9019bcea1aac7eed64a1a4966282b6b7b141c8  Add linux-next specific files for 20230215
 
-> 
-> A few minor comments inline.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> 
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  drivers/cxl/core/core.h   |  5 +++
-> >  drivers/cxl/core/memdev.c | 14 ++++++-
-> >  drivers/cxl/core/region.c | 82 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 100 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > index 8c04672dca56..2f9bd8651eb1 100644
-> > --- a/drivers/cxl/core/core.h
-> > +++ b/drivers/cxl/core/core.h
-> > @@ -22,7 +22,12 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
-> >  #define CXL_PMEM_REGION_TYPE(x) (&cxl_pmem_region_type)
-> >  int cxl_region_init(void);
-> >  void cxl_region_exit(void);
-> > +int cxl_get_poison_by_endpoint(struct device *dev, void *data);
-> >  #else
-> > +static inline int cxl_get_poison_by_endpoint(struct device *dev, void *data)
-> > +{
-> > +	return 0;
-> > +}
-> >  static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
-> >  {
-> >  }
-> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > index 19b833c9cf35..8696d7b508b6 100644
-> > --- a/drivers/cxl/core/memdev.c
-> > +++ b/drivers/cxl/core/memdev.c
-> > @@ -139,14 +139,26 @@ static ssize_t trigger_poison_list_store(struct device *dev,
-> >  					 const char *buf, size_t len)
-> >  {
-> >  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +	struct cxl_port *port;
-> >  	bool trigger;
-> >  	int rc;
-> >  
-> >  	if (kstrtobool(buf, &trigger) || !trigger)
-> >  		return -EINVAL;
-> >  
-> > +	port = dev_get_drvdata(&cxlmd->dev);
-> > +	if (!port || !is_cxl_endpoint(port))
-> > +		return -EINVAL;
-> > +
-> >  	down_read(&cxl_dpa_rwsem);
-> > -	rc = cxl_get_poison_by_memdev(cxlmd);
-> > +	if (port->commit_end == -1)
-> > +		/* No regions mapped to this memdev */
-> > +		rc = cxl_get_poison_by_memdev(cxlmd);
-> > +	else
-> > +		/* Regions mapped, collect poison by endpoint */
-> > +		rc = device_for_each_child(&port->dev, port,
-> > +					   cxl_get_poison_by_endpoint);
-> > +
-> >  	up_read(&cxl_dpa_rwsem);
-> >  
-> >  	return rc ? rc : len;
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 67e83d961670..0ac08e9106af 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1826,6 +1826,88 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, CXL);
-> >  
-> > +int cxl_get_poison_by_endpoint(struct device *dev, void *data)
-> > +{
-> > +	struct cxl_endpoint_decoder *cxled;
-> > +	struct cxl_port *port = data;
-> > +	struct cxl_dev_state *cxlds;
-> > +	struct cxl_memdev *cxlmd;
-> > +	u64 offset, length;
-> > +	int rc = 0;
-> > +
-> > +	down_read(&cxl_dpa_rwsem);
-> > +
-> > +	if (!is_endpoint_decoder(dev))
-> > +		goto out;
-> > +
-> > +	cxled = to_cxl_endpoint_decoder(dev);
-> > +	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
-> > +		goto out;
-> > +
-> > +	/*
-> > +	 * Get the poison by decoder for mapped resources. This
-> > +	 * separates pmem and ram poison list reads, as the spec
-> > +	 * requires, and provides the region for the trace event.
-> > +	 */
-> 
-> Does the spec actually require separate decoders for PMEM and MEM?
-> Sure, Linux only sets it up like that, but a BIOS might have set
-> them up as a single decoder I think - even if we don't handle
-> that form of crazy yet. If the spec requires it, then a reference
-> would be great.
-> 
+Error/Warning reports:
 
-No, the spec allows mixed mode decoders. I chatted w Dan about this,
-and we're suggesting skipping poison reads when mode == CXL_DECODER_MIXED.
-That skip would be quiet, just a dev_debug(). But, add some more noise
-to the front end by changing adding this dev_warn() :
+https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302092211.54EYDhYH-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302111601.jtY4lKrA-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302112104.g75cGHZd-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302142145.iN5WZnpF-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302151041.0SWs1RHK-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302151109.xlBpZKUS-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302151751.DTeft5Fn-lkp@intel.com
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index dcc16d7cb8f3..349a16b7c97a 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -268,8 +268,8 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
-        else if (resource_contains(&cxlds->ram_res, res))
-                cxled->mode = CXL_DECODER_RAM;
-        else {
--               dev_dbg(dev, "decoder%d.%d: %pr mixed\n", port->id,
--                       cxled->cxld.id, cxled->dpa_res);
-+               dev_warn(dev, "decoder%d.%d: %pr mixed mode not supported\n",
-+                        port->id, cxled->cxld.id, cxled->dpa_res);
-                cxled->mode = CXL_DECODER_MIXED;
-        }
+Error/Warning: (recently discovered and may have been fixed)
 
-> > +	cxlmd = cxled_to_memdev(cxled);
-> > +	length = cxled->dpa_res->end - cxled->dpa_res->start + 1;
-> > +	rc = cxl_mem_get_poison(cxlmd, cxled->dpa_res->start, length,
-> > +				cxled->cxld.region);
-> > +	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
-> > +		rc = 0;
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	/* Get poison in a skip range */
-> 
-> Seems odd to do it in this order. I'd do the skip first as then
-> the records will appear in address order (subject to whatever
-> random order the device is tracking them and the resulting ordering
-> in each request)
-> 
-Yes - skip should be logically first, since those addresses would be
-before any mapped addresses. Thanks for pointing it out.
+Documentation/admin-guide/pm/amd-pstate.rst:343: WARNING: duplicate label admin-guide/pm/amd-pstate:user space interface in ``sysfs``, other instance in Documentation/admin-guide/pm/amd-pstate.rst
+Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
+Documentation/sphinx/templates/kernel-toc.html: 1:36 Invalid token: #}
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+ERROR: modpost: "walk_hmem_resources" [drivers/dax/hmem/dax_hmem.ko] undefined!
+arch/mips/kernel/vpe.c:643:41: error: 'struct module' has no member named 'mod_mem'
+drivers/cxl/core/region.c:2628:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_optc.c:294:6: warning: no previous prototype for 'optc3_wait_drr_doublebuffer_pending_clear' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/link_detection.c:1199: warning: expecting prototype for dc_link_detect_connection_type(). Prototype was for link_detect_connection_type() instead
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1292:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1586:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+idma64.c:(.text+0x7c): undefined reference to `devm_platform_ioremap_resource'
 
-> > +	if (cxled->skip) {
-> > +		rc = cxl_mem_get_poison(cxlmd, 0, cxled->skip, NULL);
-> > +		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
-> > +			rc = 0;
-> > +		if (rc)
-> > +			goto out;
-> > +	}
-> > +
-> > +	/* Iterate until commit_end is reached */
-> > +	if (cxled->cxld.id < port->commit_end)
-> > +		goto out;
-> > +
-> > +	/*
-> > +	 * Reach here with the last committed decoder only.
-> > +	 * Knowing that PMEM must always follow RAM, get poison
-> > +	 * for unmapped ranges based on the last decoder's mode:
-> > +	 *	ram: scan remains of ram range, then scan for pmem
-> > +	 *	pmem: scan remains of pmem range
-> > +	 */
-> > +	cxlds = cxlmd->cxlds;
-> > +
-> > +	if (cxled->mode == CXL_DECODER_RAM) {
-> > +		offset = cxled->dpa_res->end + 1;
-> > +		length = resource_size(&cxlds->ram_res) - offset;
-> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-> > +		if (rc == -EFAULT)
-> > +			rc = 0;
-> > +		if (rc)
-> > +			goto out;
-> > +	}
-> > +	if (cxled->mode == CXL_DECODER_PMEM) {
-> > +		offset = cxled->dpa_res->end + 1;
-> > +		length = resource_size(&cxlds->pmem_res) - offset;
-> > +	} else if (resource_size(&cxlds->pmem_res)) {
-> > +		offset = cxlds->pmem_res.start;
-> > +		length = resource_size(&cxlds->pmem_res);
-> > +	} else {
-> > +		rc = 1;
-> > +		goto out;
-> > +	}
-> > +	/* Final get poison call. Return rc or 1 to stop iteration. */
-> > +	rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-> > +	if (!rc)
-> > +		rc = 1;
-> > +out:
-> > +	up_read(&cxl_dpa_rwsem);
-> > +	return rc;
-> > +}
-> > +
-> >  static struct lock_class_key cxl_pmem_region_key;
-> >  
-> >  static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
-> 
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/clk/ingenic/jz4760-cgu.c:80 jz4760_cgu_calc_m_n_od() error: uninitialized symbol 'od'.
+drivers/hid/hid-sony.c:1726:41: warning: Uninitialized variables: entry.lock, entry.list_node, entry.hdev, entry.touchpad, entry.sensor_dev, entry.quirks, entry.state_worker, entry.send_output_report, entry.battery, entry.battery_desc, entry.device_id, entry.output_report_dmabuf, entry.state_worker_initialized, entry.defer_initialization, entry.battery_capacity, entry.battery_status, entry.led_count, entry.ghl_urb, entry.ghl_poke_timer [uninitvar]
+drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
+drivers/usb/host/xhci-plat.c:371 xhci_generic_plat_probe() error: we previously assumed 'sysdev' could be null (see line 361)
+sound/soc/soc-ac97.c:339 snd_soc_ac97_parse_pinctl() warn: passing zero to 'PTR_ERR'
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-r033-20230212
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- i386-randconfig-c001
+|   `-- net-sched-act_pedit.c:WARNING-opportunity-for-kmemdup
+|-- i386-randconfig-s001
+|   |-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- i386-randconfig-s002
+|   `-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
+|-- i386-randconfig-s003
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-link_detection.c:warning:expecting-prototype-for-dc_link_detect_connection_type().-Prototype-was-for-link_detect_connection_type()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+clang_recent_errors
+|-- arm-randconfig-r005-20230212
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- s390-randconfig-r001-20230213
+|   `-- idma64.c:(.text):undefined-reference-to-devm_platform_ioremap_resource
+|-- x86_64-randconfig-a002-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a004-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+`-- x86_64-randconfig-a005-20230213
+    `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+
+elapsed time: 1294m
+
+configs tested: 108
+configs skipped: 7
+
+gcc tested configs:
+alpha                            allyesconfig
+alpha                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+arc                        nsim_700_defconfig
+arc                  randconfig-r043-20230212
+arc                  randconfig-r043-20230213
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm                  randconfig-r046-20230212
+arm                           u8500_defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+csky                                defconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                                defconfig
+i386                 randconfig-a011-20230213
+i386                 randconfig-a012-20230213
+i386                 randconfig-a013-20230213
+i386                 randconfig-a014-20230213
+i386                 randconfig-a015-20230213
+i386                 randconfig-a016-20230213
+i386                          randconfig-c001
+ia64                             allmodconfig
+ia64                                defconfig
+loongarch                        allmodconfig
+loongarch                         allnoconfig
+loongarch                           defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+m68k                                defconfig
+m68k                        mvme147_defconfig
+m68k                          sun3x_defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                            ar7_defconfig
+mips                 decstation_r4k_defconfig
+mips                           gcw0_defconfig
+mips                           xway_defconfig
+nios2                            allyesconfig
+nios2                               defconfig
+openrisc                            defconfig
+parisc                              defconfig
+parisc64                            defconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+powerpc                      mgcoge_defconfig
+powerpc                     stx_gp3_defconfig
+powerpc                     tqm8548_defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                randconfig-r042-20230213
+riscv                          rv32_defconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                                defconfig
+s390                 randconfig-r044-20230213
+sh                               allmodconfig
+sh                        dreamcast_defconfig
+sh                          rsk7264_defconfig
+sh                           se7712_defconfig
+sparc                               defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                            allnoconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64               randconfig-a011-20230213
+x86_64               randconfig-a012-20230213
+x86_64               randconfig-a013-20230213
+x86_64               randconfig-a014-20230213
+x86_64               randconfig-a015-20230213
+x86_64               randconfig-a016-20230213
+x86_64                               rhel-8.3
+xtensa                           allyesconfig
+xtensa                    smp_lx200_defconfig
+
+clang tested configs:
+arm                        multi_v5_defconfig
+arm                  randconfig-r046-20230213
+hexagon              randconfig-r041-20230212
+hexagon              randconfig-r041-20230213
+hexagon              randconfig-r045-20230212
+hexagon              randconfig-r045-20230213
+i386                 randconfig-a001-20230213
+i386                 randconfig-a002-20230213
+i386                 randconfig-a003-20230213
+i386                 randconfig-a004-20230213
+i386                 randconfig-a005-20230213
+i386                 randconfig-a006-20230213
+mips                      malta_kvm_defconfig
+mips                 randconfig-c004-20230212
+powerpc                 mpc8313_rdb_defconfig
+powerpc                      ppc44x_defconfig
+powerpc              randconfig-c003-20230212
+riscv                randconfig-r042-20230212
+s390                 randconfig-r044-20230212
+x86_64               randconfig-a001-20230213
+x86_64               randconfig-a002-20230213
+x86_64               randconfig-a003-20230213
+x86_64               randconfig-a004-20230213
+x86_64               randconfig-a005-20230213
+x86_64               randconfig-a006-20230213
+x86_64                        randconfig-k001
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
