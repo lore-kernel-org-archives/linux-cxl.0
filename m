@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15763C05027
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Feb 2023 22:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF92C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Feb 2023 22:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbjBQWAV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Feb 2023 17:00:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
+        id S229847AbjBQWUo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Feb 2023 17:20:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229684AbjBQWAU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 17:00:20 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D3564B22
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Feb 2023 14:00:19 -0800 (PST)
+        with ESMTP id S229844AbjBQWUn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 17:20:43 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F40B5D3FD
+        for <linux-cxl@vger.kernel.org>; Fri, 17 Feb 2023 14:20:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676671219; x=1708207219;
+  t=1676672437; x=1708208437;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=tIYZ6a+3sbvHSRoqLIcYH/edSnZLE6ChkR5avYfvaGo=;
-  b=ExUzZsj+RsYiyoh5G8wDkAHE42d00qsaE2/bHmbammbA7GkWiUS6ZcB7
-   bOFdKriN+oaENZ90moRGqO5lcvXnreymH0zakqU5+UptfyIwwFKzdVcPb
-   s4cLPBtxoZMWtEasSFGXq6ZYl0PcKmV2wPgVk/qN8lDTlPfzTGR+O6k/T
-   LN8KLLobkV9F273VrQzf8ogp6wAqHLvUwaP4eIUY7sa6XzoFVoLxEa95w
-   PsBmak12e/aZsAtr+HS9RxseP7PZZWRiaFjSjohYsC9sMrEF8bsUTVmXz
-   V6O3iBorp4mksjar3dt6zMbsd3PUyqxe9/Ek4ZgdF1FY2iun5gPaWH0ec
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="311727435"
+  bh=x+hir5pyDd0YTqiuxwSceIHL3Mq3VDleBkbQ+Ghq6pQ=;
+  b=MOjdb68cSsu3bP13/DWVTVxmxctin/WQbvHf8HaJgjj+C0GeggcPms40
+   j1BDz7xUs72BX/tnN7FprCHbsh5vOVw9jdOaLECWHdAJv4KfW4Uc+4gO0
+   4YSybzj9fuTprrkQ8IzHk1vMYhFdH0m8cThW4pZq2OclKZNc6TLc8vK0h
+   vGTLjxPaSFQU6RzPrp00KdZcCfF1oprx9X2NVkl9Kr7AgPISdUx0oLF64
+   gOZGxSBLgBO9IMWHd2FhGgb+L3vyxIRMPKKMyHdLAdV4qTTqk/5KzhrsN
+   cH5iHppk8z344DWJRBWLtJtmNdazOnixqhnxOpBx8xjbzlFZeAbmt/xgd
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="330766948"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="311727435"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 14:00:19 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="648208855"
+   d="scan'208";a="330766948"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 14:20:36 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="813510165"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="648208855"
+   d="scan'208";a="813510165"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.187.252]) ([10.213.187.252])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 14:00:18 -0800
-Message-ID: <ff7b2293-5a86-297e-6483-53e1970b6029@intel.com>
-Date:   Fri, 17 Feb 2023 15:00:17 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 14:20:35 -0800
+Message-ID: <b99089d3-d271-14c5-fb8d-c4f0437847cb@intel.com>
+Date:   Fri, 17 Feb 2023 15:20:35 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v4 7/8] hw/pci/aer: Make PCIE AER error injection facility
- available for other emulation to use.
+Subject: Re: [PATCH v4 8/8] hw/mem/cxl_type3: Add CXL RAS Error Injection
+ Support.
 Content-Language: en-US
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>
@@ -54,9 +54,9 @@ Cc:     Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         Markus Armbruster <armbru@redhat.com>
 References: <20230217172924.25239-1-Jonathan.Cameron@huawei.com>
- <20230217172924.25239-8-Jonathan.Cameron@huawei.com>
+ <20230217172924.25239-9-Jonathan.Cameron@huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230217172924.25239-8-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230217172924.25239-9-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -66,36 +66,657 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 2/17/23 10:29 AM, Jonathan Cameron wrote:
-> This infrastructure will be reused for CXL RAS error injection
-> in patches that follow.
+> CXL uses PCI AER Internal errors to signal to the host that an error has
+> occurred. The host can then read more detailed status from the CXL RAS
+> capability.
+> 
+> For uncorrectable errors: support multiple injection in one operation
+> as this is needed to reliably test multiple header logging support in an
+> OS. The equivalent feature doesn't exist for correctable errors, so only
+> one error need be injected at a time.
+> 
+> Note:
+>   - Header content needs to be manually specified in a fashion that
+>     matches the specification for what can be in the header for each
+>     error type.
+> 
+> Injection via QMP:
+> { "execute": "qmp_capabilities" }
+> ...
+> { "execute": "cxl-inject-uncorrectable-errors",
+>    "arguments": {
+>      "path": "/machine/peripheral/cxl-pmem0",
+>      "errors": [
+>          {
+>              "type": "cache-address-parity",
+>              "header": [ 3, 4]
+>          },
+>          {
+>              "type": "cache-data-parity",
+>              "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+>          },
+>          {
+>              "type": "internal",
+>              "header": [ 1, 2, 4]
+>          }
+>          ]
+>    }}
+> ...
+> { "execute": "cxl-inject-correctable-error",
+>      "arguments": {
+>          "path": "/machine/peripheral/cxl-pmem0",
+>          "type": "physical"
+>      } }
 > 
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
 > ---
->   hw/pci/pci-internal.h     | 1 -
->   include/hw/pci/pcie_aer.h | 1 +
->   2 files changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/hw/pci/pci-internal.h b/hw/pci/pci-internal.h
-> index 2ea356bdf5..a7d6d8a732 100644
-> --- a/hw/pci/pci-internal.h
-> +++ b/hw/pci/pci-internal.h
-> @@ -20,6 +20,5 @@ void pcibus_dev_print(Monitor *mon, DeviceState *dev, int indent);
+> v4:
+> - Improved QMP help text wth more detail (following request in review
+>    of the Poison injection series)
+> ---
+>   hw/cxl/cxl-component-utils.c   |   4 +-
+>   hw/mem/cxl_type3.c             | 281 +++++++++++++++++++++++++++++++++
+>   hw/mem/cxl_type3_stubs.c       |  10 ++
+>   hw/mem/meson.build             |   2 +
+>   include/hw/cxl/cxl_component.h |  26 +++
+>   include/hw/cxl/cxl_device.h    |  11 ++
+>   qapi/cxl.json                  | 118 ++++++++++++++
+>   qapi/meson.build               |   1 +
+>   qapi/qapi-schema.json          |   1 +
+>   9 files changed, 453 insertions(+), 1 deletion(-)
+> 
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> index 737b4764b9..b665d4f565 100644
+> --- a/hw/cxl/cxl-component-utils.c
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -142,16 +142,18 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
+>        * be handled as RO.
+>        */
+>       stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_STATUS, 0);
+> +    stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_STATUS, 0x1cfff);
+>       /* Bits 12-13 and 17-31 reserved in CXL 2.0 */
+>       stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_MASK, 0x1cfff);
+>       stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_MASK, 0x1cfff);
+>       stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_SEVERITY, 0x1cfff);
+>       stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_SEVERITY, 0x1cfff);
+>       stl_le_p(reg_state + R_CXL_RAS_COR_ERR_STATUS, 0);
+> +    stl_le_p(write_msk + R_CXL_RAS_COR_ERR_STATUS, 0x7f);
+>       stl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK, 0x7f);
+>       stl_le_p(write_msk + R_CXL_RAS_COR_ERR_MASK, 0x7f);
+>       /* CXL switches and devices must set */
+> -    stl_le_p(reg_state + R_CXL_RAS_ERR_CAP_CTRL, 0x00);
+> +    stl_le_p(reg_state + R_CXL_RAS_ERR_CAP_CTRL, 0x200);
+>   }
 >   
->   int pcie_aer_parse_error_string(const char *error_name,
->                                   uint32_t *status, bool *correctable);
-> -int pcie_aer_inject_error(PCIDevice *dev, const PCIEAERErr *err);
+>   static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 6cdd988d1d..e32bbac966 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1,6 +1,7 @@
+>   #include "qemu/osdep.h"
+>   #include "qemu/units.h"
+>   #include "qemu/error-report.h"
+> +#include "qapi/qapi-commands-cxl.h"
+>   #include "hw/mem/memory-device.h"
+>   #include "hw/mem/pc-dimm.h"
+>   #include "hw/pci/pci.h"
+> @@ -323,6 +324,66 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+>       ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
+>   }
 >   
->   #endif
-> diff --git a/include/hw/pci/pcie_aer.h b/include/hw/pci/pcie_aer.h
-> index 65e71d98fe..1234fdc4e2 100644
-> --- a/include/hw/pci/pcie_aer.h
-> +++ b/include/hw/pci/pcie_aer.h
-> @@ -100,4 +100,5 @@ void pcie_aer_root_write_config(PCIDevice *dev,
->                                   uint32_t addr, uint32_t val, int len,
->                                   uint32_t root_cmd_prev);
+> +static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
+> +{
+> +    switch (qmp_err) {
+> +    case CXL_UNCOR_ERROR_TYPE_CACHE_DATA_PARITY:
+> +        return CXL_RAS_UNC_ERR_CACHE_DATA_PARITY;
+> +    case CXL_UNCOR_ERROR_TYPE_CACHE_ADDRESS_PARITY:
+> +        return CXL_RAS_UNC_ERR_CACHE_ADDRESS_PARITY;
+> +    case CXL_UNCOR_ERROR_TYPE_CACHE_BE_PARITY:
+> +        return CXL_RAS_UNC_ERR_CACHE_BE_PARITY;
+> +    case CXL_UNCOR_ERROR_TYPE_CACHE_DATA_ECC:
+> +        return CXL_RAS_UNC_ERR_CACHE_DATA_ECC;
+> +    case CXL_UNCOR_ERROR_TYPE_MEM_DATA_PARITY:
+> +        return CXL_RAS_UNC_ERR_MEM_DATA_PARITY;
+> +    case CXL_UNCOR_ERROR_TYPE_MEM_ADDRESS_PARITY:
+> +        return CXL_RAS_UNC_ERR_MEM_ADDRESS_PARITY;
+> +    case CXL_UNCOR_ERROR_TYPE_MEM_BE_PARITY:
+> +        return CXL_RAS_UNC_ERR_MEM_BE_PARITY;
+> +    case CXL_UNCOR_ERROR_TYPE_MEM_DATA_ECC:
+> +        return CXL_RAS_UNC_ERR_MEM_DATA_ECC;
+> +    case CXL_UNCOR_ERROR_TYPE_REINIT_THRESHOLD:
+> +        return CXL_RAS_UNC_ERR_REINIT_THRESHOLD;
+> +    case CXL_UNCOR_ERROR_TYPE_RSVD_ENCODING:
+> +        return CXL_RAS_UNC_ERR_RSVD_ENCODING;
+> +    case CXL_UNCOR_ERROR_TYPE_POISON_RECEIVED:
+> +        return CXL_RAS_UNC_ERR_POISON_RECEIVED;
+> +    case CXL_UNCOR_ERROR_TYPE_RECEIVER_OVERFLOW:
+> +        return CXL_RAS_UNC_ERR_RECEIVER_OVERFLOW;
+> +    case CXL_UNCOR_ERROR_TYPE_INTERNAL:
+> +        return CXL_RAS_UNC_ERR_INTERNAL;
+> +    case CXL_UNCOR_ERROR_TYPE_CXL_IDE_TX:
+> +        return CXL_RAS_UNC_ERR_CXL_IDE_TX;
+> +    case CXL_UNCOR_ERROR_TYPE_CXL_IDE_RX:
+> +        return CXL_RAS_UNC_ERR_CXL_IDE_RX;
+> +    default:
+> +        return -EINVAL;
+> +    }
+> +}
+> +
+> +static int ct3d_qmp_cor_err_to_cxl(CxlCorErrorType qmp_err)
+> +{
+> +    switch (qmp_err) {
+> +    case CXL_COR_ERROR_TYPE_CACHE_DATA_ECC:
+> +        return CXL_RAS_COR_ERR_CACHE_DATA_ECC;
+> +    case CXL_COR_ERROR_TYPE_MEM_DATA_ECC:
+> +        return CXL_RAS_COR_ERR_MEM_DATA_ECC;
+> +    case CXL_COR_ERROR_TYPE_CRC_THRESHOLD:
+> +        return CXL_RAS_COR_ERR_CRC_THRESHOLD;
+> +    case CXL_COR_ERROR_TYPE_RETRY_THRESHOLD:
+> +        return CXL_RAS_COR_ERR_RETRY_THRESHOLD;
+> +    case CXL_COR_ERROR_TYPE_CACHE_POISON_RECEIVED:
+> +        return CXL_RAS_COR_ERR_CACHE_POISON_RECEIVED;
+> +    case CXL_COR_ERROR_TYPE_MEM_POISON_RECEIVED:
+> +        return CXL_RAS_COR_ERR_MEM_POISON_RECEIVED;
+> +    case CXL_COR_ERROR_TYPE_PHYSICAL:
+> +        return CXL_RAS_COR_ERR_PHYSICAL;
+> +    default:
+> +        return -EINVAL;
+> +    }
+> +}
+> +
+>   static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+>                              unsigned size)
+>   {
+> @@ -341,6 +402,83 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+>           should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
+>           which_hdm = 0;
+>           break;
+> +    case A_CXL_RAS_UNC_ERR_STATUS:
+> +    {
+> +        uint32_t capctrl = ldl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL);
+> +        uint32_t fe = FIELD_EX32(capctrl, CXL_RAS_ERR_CAP_CTRL, FIRST_ERROR_POINTER);
+> +        CXLError *cxl_err;
+> +        uint32_t unc_err;
+> +
+> +        /*
+> +         * If single bit written that corresponds to the first error
+> +         * pointer being cleared, update the status and header log.
+> +         */
+> +        if (!QTAILQ_EMPTY(&ct3d->error_list)) {
+> +            if ((1 << fe) ^ value) {
+> +                CXLError *cxl_next;
+> +                /*
+> +                 * Software is using wrong flow for multiple header recording
+> +                 * Following behaviour in PCIe r6.0 and assuming multiple
+> +                 * header support. Imdef choice to clear all matching records
+
+What does "Imdef" mean?
+
+DJ
+
+> +                 * if more than one bit set - which corresponds closest to
+> +                 * behavior of hardware not capable of multiple header
+> +                 * recording.
+> +                 */
+> +                QTAILQ_FOREACH_SAFE(cxl_err, &ct3d->error_list, node, cxl_next) {
+> +                    if ((1 << cxl_err->type) & value) {
+> +                        QTAILQ_REMOVE(&ct3d->error_list, cxl_err, node);
+> +                        g_free(cxl_err);
+> +                    }
+> +                }
+> +            } else {
+> +                /* Done with previous FE, so drop from list */
+> +                cxl_err = QTAILQ_FIRST(&ct3d->error_list);
+> +                QTAILQ_REMOVE(&ct3d->error_list, cxl_err, node);
+> +                g_free(cxl_err);
+> +            }
+> +
+> +            /*
+> +             * If there is another FE, then put that in place and update
+> +             * the header log
+> +             */
+> +            if (!QTAILQ_EMPTY(&ct3d->error_list)) {
+> +                uint32_t *header_log = &cache_mem[R_CXL_RAS_ERR_HEADER0];
+> +                int i;
+> +
+> +                cxl_err = QTAILQ_FIRST(&ct3d->error_list);
+> +                for (i = 0; i < CXL_RAS_ERR_HEADER_NUM; i++) {
+> +                    stl_le_p(header_log + i, cxl_err->header[i]);
+> +                }
+> +                capctrl = FIELD_DP32(capctrl, CXL_RAS_ERR_CAP_CTRL,
+> +                                     FIRST_ERROR_POINTER, cxl_err->type);
+> +            } else {
+> +                /*
+> +                 * If no more errors, then follow recomendation of PCI spec
+> +                 * r6.0 6.2.4.2 to set the first error pointer to a status
+> +                 * bit that will never be used.
+> +                 */
+> +                capctrl = FIELD_DP32(capctrl, CXL_RAS_ERR_CAP_CTRL,
+> +                                     FIRST_ERROR_POINTER,
+> +                                     CXL_RAS_UNC_ERR_CXL_UNUSED);
+> +            }
+> +            stl_le_p((uint8_t *)cache_mem + A_CXL_RAS_ERR_CAP_CTRL, capctrl);
+> +        }
+> +        unc_err = 0;
+> +        QTAILQ_FOREACH(cxl_err, &ct3d->error_list, node) {
+> +            unc_err |= 1 << cxl_err->type;
+> +        }
+> +        stl_le_p((uint8_t *)cache_mem + offset, unc_err);
+> +
+> +        return;
+> +    }
+> +    case A_CXL_RAS_COR_ERR_STATUS:
+> +    {
+> +        uint32_t rw1c = value;
+> +        uint32_t temp = ldl_le_p((uint8_t *)cache_mem + offset);
+> +        temp &= ~rw1c;
+> +        stl_le_p((uint8_t *)cache_mem + offset, temp);
+> +        return;
+> +    }
+>       default:
+>           break;
+>       }
+> @@ -404,6 +542,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>       unsigned short msix_num = 1;
+>       int i, rc;
 >   
-> +int pcie_aer_inject_error(PCIDevice *dev, const PCIEAERErr *err);
->   #endif /* QEMU_PCIE_AER_H */
+> +    QTAILQ_INIT(&ct3d->error_list);
+> +
+>       if (!cxl_setup_memory(ct3d, errp)) {
+>           return;
+>       }
+> @@ -631,6 +771,147 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
+>        */
+>   }
+>   
+> +/* For uncorrectable errors include support for multiple header recording */
+> +void qmp_cxl_inject_uncorrectable_errors(const char *path,
+> +                                         CXLUncorErrorRecordList *errors,
+> +                                         Error **errp)
+> +{
+> +    Object *obj = object_resolve_path(path, NULL);
+> +    static PCIEAERErr err = {};
+> +    CXLType3Dev *ct3d;
+> +    CXLError *cxl_err;
+> +    uint32_t *reg_state;
+> +    uint32_t unc_err;
+> +    bool first;
+> +
+> +    if (!obj) {
+> +        error_setg(errp, "Unable to resolve path");
+> +        return;
+> +    }
+> +
+> +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
+> +        error_setg(errp, "Path does not point to a CXL type 3 device");
+> +        return;
+> +    }
+> +
+> +    err.status = PCI_ERR_UNC_INTN;
+> +    err.source_id = pci_requester_id(PCI_DEVICE(obj));
+> +    err.flags = 0;
+> +
+> +    ct3d = CXL_TYPE3(obj);
+> +
+> +    first = QTAILQ_EMPTY(&ct3d->error_list);
+> +    reg_state = ct3d->cxl_cstate.crb.cache_mem_registers;
+> +    while (errors) {
+> +        uint32List *header = errors->value->header;
+> +        uint8_t header_count = 0;
+> +        int cxl_err_code;
+> +
+> +        cxl_err_code = ct3d_qmp_uncor_err_to_cxl(errors->value->type);
+> +        if (cxl_err_code < 0) {
+> +            error_setg(errp, "Unknown error code");
+> +            return;
+> +        }
+> +
+> +        /* If the error is masked, nothing to do here */
+> +        if (!((1 << cxl_err_code) &
+> +              ~ldl_le_p(reg_state + R_CXL_RAS_UNC_ERR_MASK))) {
+> +            errors = errors->next;
+> +            continue;
+> +        }
+> +
+> +        cxl_err = g_malloc0(sizeof(*cxl_err));
+> +        if (!cxl_err) {
+> +            return;
+> +        }
+> +
+> +        cxl_err->type = cxl_err_code;
+> +        while (header && header_count < 32) {
+> +            cxl_err->header[header_count++] = header->value;
+> +            header = header->next;
+> +        }
+> +        if (header_count > 32) {
+> +            error_setg(errp, "Header must be 32 DWORD or less");
+> +            return;
+> +        }
+> +        QTAILQ_INSERT_TAIL(&ct3d->error_list, cxl_err, node);
+> +
+> +        errors = errors->next;
+> +    }
+> +
+> +    if (first && !QTAILQ_EMPTY(&ct3d->error_list)) {
+> +        uint32_t *cache_mem = ct3d->cxl_cstate.crb.cache_mem_registers;
+> +        uint32_t capctrl = ldl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL);
+> +        uint32_t *header_log = &cache_mem[R_CXL_RAS_ERR_HEADER0];
+> +        int i;
+> +
+> +        cxl_err = QTAILQ_FIRST(&ct3d->error_list);
+> +        for (i = 0; i < CXL_RAS_ERR_HEADER_NUM; i++) {
+> +            stl_le_p(header_log + i, cxl_err->header[i]);
+> +        }
+> +
+> +        capctrl = FIELD_DP32(capctrl, CXL_RAS_ERR_CAP_CTRL,
+> +                             FIRST_ERROR_POINTER, cxl_err->type);
+> +        stl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL, capctrl);
+> +    }
+> +
+> +    unc_err = 0;
+> +    QTAILQ_FOREACH(cxl_err, &ct3d->error_list, node) {
+> +        unc_err |= (1 << cxl_err->type);
+> +    }
+> +    if (!unc_err) {
+> +        return;
+> +    }
+> +
+> +    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_STATUS, unc_err);
+> +    pcie_aer_inject_error(PCI_DEVICE(obj), &err);
+> +
+> +    return;
+> +}
+> +
+> +void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
+> +                                      Error **errp)
+> +{
+> +    static PCIEAERErr err = {};
+> +    Object *obj = object_resolve_path(path, NULL);
+> +    CXLType3Dev *ct3d;
+> +    uint32_t *reg_state;
+> +    uint32_t cor_err;
+> +    int cxl_err_type;
+> +
+> +    if (!obj) {
+> +        error_setg(errp, "Unable to resolve path");
+> +        return;
+> +    }
+> +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
+> +        error_setg(errp, "Path does not point to a CXL type 3 device");
+> +        return;
+> +    }
+> +
+> +    err.status = PCI_ERR_COR_INTERNAL;
+> +    err.source_id = pci_requester_id(PCI_DEVICE(obj));
+> +    err.flags = PCIE_AER_ERR_IS_CORRECTABLE;
+> +
+> +    ct3d = CXL_TYPE3(obj);
+> +    reg_state = ct3d->cxl_cstate.crb.cache_mem_registers;
+> +    cor_err = ldl_le_p(reg_state + R_CXL_RAS_COR_ERR_STATUS);
+> +
+> +    cxl_err_type = ct3d_qmp_cor_err_to_cxl(type);
+> +    if (cxl_err_type < 0) {
+> +        error_setg(errp, "Invalid COR error");
+> +        return;
+> +    }
+> +    /* If the error is masked, nothting to do here */
+> +    if (!((1 << cxl_err_type) & ~ldl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK))) {
+> +        return;
+> +    }
+> +
+> +    cor_err |= (1 << cxl_err_type);
+> +    stl_le_p(reg_state + R_CXL_RAS_COR_ERR_STATUS, cor_err);
+> +
+> +    pcie_aer_inject_error(PCI_DEVICE(obj), &err);
+> +}
+> +
+>   static void ct3_class_init(ObjectClass *oc, void *data)
+>   {
+>       DeviceClass *dc = DEVICE_CLASS(oc);
+> diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+> new file mode 100644
+> index 0000000000..b6b51ced54
+> --- /dev/null
+> +++ b/hw/mem/cxl_type3_stubs.c
+> @@ -0,0 +1,10 @@
+> +
+> +#include "qemu/osdep.h"
+> +#include "qapi/qapi-commands-cxl.h"
+> +
+> +void qmp_cxl_inject_uncorrectable_errors(const char *path,
+> +                                         CXLUncorErrorRecordList *errors,
+> +                                         Error **errp) {}
+> +
+> +void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
+> +                                      Error **errp) {}
+> diff --git a/hw/mem/meson.build b/hw/mem/meson.build
+> index 609b2b36fc..56c2618b84 100644
+> --- a/hw/mem/meson.build
+> +++ b/hw/mem/meson.build
+> @@ -4,6 +4,8 @@ mem_ss.add(when: 'CONFIG_DIMM', if_true: files('pc-dimm.c'))
+>   mem_ss.add(when: 'CONFIG_NPCM7XX', if_true: files('npcm7xx_mc.c'))
+>   mem_ss.add(when: 'CONFIG_NVDIMM', if_true: files('nvdimm.c'))
+>   mem_ss.add(when: 'CONFIG_CXL_MEM_DEVICE', if_true: files('cxl_type3.c'))
+> +softmmu_ss.add(when: 'CONFIG_CXL_MEM_DEVICE', if_false: files('cxl_type3_stubs.c'))
+> +softmmu_ss.add(when: 'CONFIG_ALL', if_true: files('cxl_type3_stubs.c'))
+>   
+>   softmmu_ss.add_all(when: 'CONFIG_MEM_DEVICE', if_true: mem_ss)
+>   
+> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+> index 692d7a5507..ec4203b83f 100644
+> --- a/include/hw/cxl/cxl_component.h
+> +++ b/include/hw/cxl/cxl_component.h
+> @@ -65,11 +65,37 @@ CXLx_CAPABILITY_HEADER(SNOOP, 0x14)
+>   #define CXL_RAS_REGISTERS_OFFSET 0x80
+>   #define CXL_RAS_REGISTERS_SIZE   0x58
+>   REG32(CXL_RAS_UNC_ERR_STATUS, CXL_RAS_REGISTERS_OFFSET)
+> +#define CXL_RAS_UNC_ERR_CACHE_DATA_PARITY 0
+> +#define CXL_RAS_UNC_ERR_CACHE_ADDRESS_PARITY 1
+> +#define CXL_RAS_UNC_ERR_CACHE_BE_PARITY 2
+> +#define CXL_RAS_UNC_ERR_CACHE_DATA_ECC 3
+> +#define CXL_RAS_UNC_ERR_MEM_DATA_PARITY 4
+> +#define CXL_RAS_UNC_ERR_MEM_ADDRESS_PARITY 5
+> +#define CXL_RAS_UNC_ERR_MEM_BE_PARITY 6
+> +#define CXL_RAS_UNC_ERR_MEM_DATA_ECC 7
+> +#define CXL_RAS_UNC_ERR_REINIT_THRESHOLD 8
+> +#define CXL_RAS_UNC_ERR_RSVD_ENCODING 9
+> +#define CXL_RAS_UNC_ERR_POISON_RECEIVED 10
+> +#define CXL_RAS_UNC_ERR_RECEIVER_OVERFLOW 11
+> +#define CXL_RAS_UNC_ERR_INTERNAL 14
+> +#define CXL_RAS_UNC_ERR_CXL_IDE_TX 15
+> +#define CXL_RAS_UNC_ERR_CXL_IDE_RX 16
+> +#define CXL_RAS_UNC_ERR_CXL_UNUSED 63 /* Magic value */
+>   REG32(CXL_RAS_UNC_ERR_MASK, CXL_RAS_REGISTERS_OFFSET + 0x4)
+>   REG32(CXL_RAS_UNC_ERR_SEVERITY, CXL_RAS_REGISTERS_OFFSET + 0x8)
+>   REG32(CXL_RAS_COR_ERR_STATUS, CXL_RAS_REGISTERS_OFFSET + 0xc)
+> +#define CXL_RAS_COR_ERR_CACHE_DATA_ECC 0
+> +#define CXL_RAS_COR_ERR_MEM_DATA_ECC 1
+> +#define CXL_RAS_COR_ERR_CRC_THRESHOLD 2
+> +#define CXL_RAS_COR_ERR_RETRY_THRESHOLD 3
+> +#define CXL_RAS_COR_ERR_CACHE_POISON_RECEIVED 4
+> +#define CXL_RAS_COR_ERR_MEM_POISON_RECEIVED 5
+> +#define CXL_RAS_COR_ERR_PHYSICAL 6
+>   REG32(CXL_RAS_COR_ERR_MASK, CXL_RAS_REGISTERS_OFFSET + 0x10)
+>   REG32(CXL_RAS_ERR_CAP_CTRL, CXL_RAS_REGISTERS_OFFSET + 0x14)
+> +    FIELD(CXL_RAS_ERR_CAP_CTRL, FIRST_ERROR_POINTER, 0, 6)
+> +REG32(CXL_RAS_ERR_HEADER0, CXL_RAS_REGISTERS_OFFSET + 0x18)
+> +#define CXL_RAS_ERR_HEADER_NUM 32
+>   /* Offset 0x18 - 0x58 reserved for RAS logs */
+>   
+>   /* 8.2.5.10 - CXL Security Capability Structure */
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 7e5ad65c1d..d589f78202 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -232,6 +232,14 @@ REG64(CXL_MEM_DEV_STS, 0)
+>       FIELD(CXL_MEM_DEV_STS, MBOX_READY, 4, 1)
+>       FIELD(CXL_MEM_DEV_STS, RESET_NEEDED, 5, 3)
+>   
+> +typedef struct CXLError {
+> +    QTAILQ_ENTRY(CXLError) node;
+> +    int type; /* Error code as per FE definition */
+> +    uint32_t header[32];
+> +} CXLError;
+> +
+> +typedef QTAILQ_HEAD(, CXLError) CXLErrorList;
+> +
+>   struct CXLType3Dev {
+>       /* Private */
+>       PCIDevice parent_obj;
+> @@ -248,6 +256,9 @@ struct CXLType3Dev {
+>   
+>       /* DOE */
+>       DOECap doe_cdat;
+> +
+> +    /* Error injection */
+> +    CXLErrorList error_list;
+>   };
+>   
+>   #define TYPE_CXL_TYPE3 "cxl-type3"
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> new file mode 100644
+> index 0000000000..ac7e167fa2
+> --- /dev/null
+> +++ b/qapi/cxl.json
+> @@ -0,0 +1,118 @@
+> +# -*- Mode: Python -*-
+> +# vim: filetype=python
+> +
+> +##
+> +# = CXL devices
+> +##
+> +
+> +##
+> +# @CxlUncorErrorType:
+> +#
+> +# Type of uncorrectable CXL error to inject. These errors are reported via
+> +# an AER uncorrectable internal error with additional information logged at
+> +# the CXL device.
+> +#
+> +# @cache-data-parity: Data error such as data parity or data ECC error CXL.cache
+> +# @cache-address-parity: Address parity or other errors associated with the
+> +#                        address field on CXL.cache
+> +# @cache-be-parity: Byte enable parity or other byte enable errors on CXL.cache
+> +# @cache-data-ecc: ECC error on CXL.cache
+> +# @mem-data-parity: Data error such as data parity or data ECC error on CXL.mem
+> +# @mem-address-parity: Address parity or other errors associated with the
+> +#                      address field on CXL.mem
+> +# @mem-be-parity: Byte enable parity or other byte enable errors on CXL.mem.
+> +# @mem-data-ecc: Data ECC error on CXL.mem.
+> +# @reinit-threshold: REINIT threshold hit.
+> +# @rsvd-encoding: Received unrecognized encoding.
+> +# @poison-received: Received poison from the peer.
+> +# @receiver-overflow: Buffer overflows (first 3 bits of header log indicate which)
+> +# @internal: Component specific error
+> +# @cxl-ide-tx: Integrity and data encryption tx error.
+> +# @cxl-ide-rx: Integrity and data encryption rx error.
+> +##
+> +
+> +{ 'enum': 'CxlUncorErrorType',
+> +  'data': ['cache-data-parity',
+> +           'cache-address-parity',
+> +           'cache-be-parity',
+> +           'cache-data-ecc',
+> +           'mem-data-parity',
+> +           'mem-address-parity',
+> +           'mem-be-parity',
+> +           'mem-data-ecc',
+> +           'reinit-threshold',
+> +           'rsvd-encoding',
+> +           'poison-received',
+> +           'receiver-overflow',
+> +           'internal',
+> +           'cxl-ide-tx',
+> +           'cxl-ide-rx'
+> +           ]
+> + }
+> +
+> +##
+> +# @CXLUncorErrorRecord:
+> +#
+> +# Record of a single error including header log.
+> +#
+> +# @type: Type of error
+> +# @header: 16 DWORD of header.
+> +##
+> +{ 'struct': 'CXLUncorErrorRecord',
+> +  'data': {
+> +      'type': 'CxlUncorErrorType',
+> +      'header': [ 'uint32' ]
+> +  }
+> +}
+> +
+> +##
+> +# @cxl-inject-uncorrectable-errors:
+> +#
+> +# Command to allow injection of multiple errors in one go. This allows testing
+> +# of multiple header log handling in the OS.
+> +#
+> +# @path: CXL Type 3 device canonical QOM path
+> +# @errors: Errors to inject
+> +##
+> +{ 'command': 'cxl-inject-uncorrectable-errors',
+> +  'data': { 'path': 'str',
+> +             'errors': [ 'CXLUncorErrorRecord' ] }}
+> +
+> +##
+> +# @CxlCorErrorType:
+> +#
+> +# Type of CXL correctable error to inject
+> +#
+> +# @cache-data-ecc: Data ECC error on CXL.cache
+> +# @mem-data-ecc: Data ECC error on CXL.mem
+> +# @crc-threshold: Component specific and applicable to 68 byte Flit mode only.
+> +# @cache-poison-received: Received poison from a peer on CXL.cache.
+> +# @mem-poison-received: Received poison from a peer on CXL.mem
+> +# @physical: Received error indication from the physical layer.
+> +##
+> +{ 'enum': 'CxlCorErrorType',
+> +  'data': ['cache-data-ecc',
+> +           'mem-data-ecc',
+> +           'crc-threshold',
+> +           'retry-threshold',
+> +           'cache-poison-received',
+> +           'mem-poison-received',
+> +           'physical']
+> +}
+> +
+> +##
+> +# @cxl-inject-correctable-error:
+> +#
+> +# Command to inject a single correctable error.  Multiple error injection
+> +# of this error type is not interesting as there is no associated header log.
+> +# These errors are reported via AER as a correctable internal error, with
+> +# additional detail available from the CXL device.
+> +#
+> +# @path: CXL Type 3 device canonical QOM path
+> +# @type: Type of error.
+> +##
+> +{ 'command': 'cxl-inject-correctable-error',
+> +  'data': { 'path': 'str',
+> +            'type': 'CxlCorErrorType'
+> +  }
+> +}
+> diff --git a/qapi/meson.build b/qapi/meson.build
+> index fbdb442fdf..73c3c8c31a 100644
+> --- a/qapi/meson.build
+> +++ b/qapi/meson.build
+> @@ -31,6 +31,7 @@ qapi_all_modules = [
+>     'compat',
+>     'control',
+>     'crypto',
+> +  'cxl',
+>     'dump',
+>     'error',
+>     'introspect',
+> diff --git a/qapi/qapi-schema.json b/qapi/qapi-schema.json
+> index f000b90744..079f2a402a 100644
+> --- a/qapi/qapi-schema.json
+> +++ b/qapi/qapi-schema.json
+> @@ -95,3 +95,4 @@
+>   { 'include': 'pci.json' }
+>   { 'include': 'stats.json' }
+>   { 'include': 'virtio.json' }
+> +{ 'include': 'cxl.json' }
