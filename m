@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F29C64ED8
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Feb 2023 17:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6A1C05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Feb 2023 17:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbjBQRbx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Feb 2023 12:31:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35414 "EHLO
+        id S229693AbjBQRc0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Feb 2023 12:32:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229933AbjBQRbv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 12:31:51 -0500
+        with ESMTP id S229955AbjBQRcY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 12:32:24 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2806EB9E
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Feb 2023 09:31:50 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PJJjM5gMbz67ySC;
-        Sat, 18 Feb 2023 01:29:59 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02E371186
+        for <linux-cxl@vger.kernel.org>; Fri, 17 Feb 2023 09:32:21 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PJJfq6FX8z6J6QX;
+        Sat, 18 Feb 2023 01:27:47 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Fri, 17 Feb 2023 17:31:48 +0000
+ 15.1.2507.17; Fri, 17 Feb 2023 17:32:19 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
 CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
@@ -30,9 +30,9 @@ CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         Markus Armbruster <armbru@redhat.com>,
         Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v4 5/8] hw/mem/cxl-type3: Add AER extended capability
-Date:   Fri, 17 Feb 2023 17:29:21 +0000
-Message-ID: <20230217172924.25239-6-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v4 6/8] hw/cxl: Fix endian issues in CXL RAS capability defaults / masks
+Date:   Fri, 17 Feb 2023 17:29:22 +0000
+Message-ID: <20230217172924.25239-7-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230217172924.25239-1-Jonathan.Cameron@huawei.com>
 References: <20230217172924.25239-1-Jonathan.Cameron@huawei.com>
@@ -47,55 +47,50 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This enables AER error injection to function as expected.
-It is intended as a building block in enabling CXL RAS error injection
-in the following patches.
+As these are about to be modified, fix the endian handle for
+this set of registers rather than making it worse.
+
+Note that CXL is currently only supported in QEMU on
+x86 (arm64 patches out of tree) so we aren't going to yet hit
+an problems with big endian. However it is good to avoid making
+things worse for that support in the future.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- hw/mem/cxl_type3.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ hw/cxl/cxl-component-utils.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 217a5e639b..6cdd988d1d 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -250,6 +250,7 @@ static void ct3d_config_write(PCIDevice *pci_dev, uint32_t addr, uint32_t val,
- 
-     pcie_doe_write_config(&ct3d->doe_cdat, addr, val, size);
-     pci_default_write_config(pci_dev, addr, val, size);
-+    pcie_aer_write_config(pci_dev, addr, val, size);
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index 3edd303a33..737b4764b9 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -141,17 +141,17 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
+      * Error status is RW1C but given bits are not yet set, it can
+      * be handled as RO.
+      */
+-    reg_state[R_CXL_RAS_UNC_ERR_STATUS] = 0;
++    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_STATUS, 0);
+     /* Bits 12-13 and 17-31 reserved in CXL 2.0 */
+-    reg_state[R_CXL_RAS_UNC_ERR_MASK] = 0x1cfff;
+-    write_msk[R_CXL_RAS_UNC_ERR_MASK] = 0x1cfff;
+-    reg_state[R_CXL_RAS_UNC_ERR_SEVERITY] = 0x1cfff;
+-    write_msk[R_CXL_RAS_UNC_ERR_SEVERITY] = 0x1cfff;
+-    reg_state[R_CXL_RAS_COR_ERR_STATUS] = 0;
+-    reg_state[R_CXL_RAS_COR_ERR_MASK] = 0x7f;
+-    write_msk[R_CXL_RAS_COR_ERR_MASK] = 0x7f;
++    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_MASK, 0x1cfff);
++    stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_MASK, 0x1cfff);
++    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_SEVERITY, 0x1cfff);
++    stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_SEVERITY, 0x1cfff);
++    stl_le_p(reg_state + R_CXL_RAS_COR_ERR_STATUS, 0);
++    stl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK, 0x7f);
++    stl_le_p(write_msk + R_CXL_RAS_COR_ERR_MASK, 0x7f);
+     /* CXL switches and devices must set */
+-    reg_state[R_CXL_RAS_ERR_CAP_CTRL] = 0x00;
++    stl_le_p(reg_state + R_CXL_RAS_ERR_CAP_CTRL, 0x00);
  }
  
- /*
-@@ -452,8 +453,19 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
-     cxl_cstate->cdat.free_cdat_table = ct3_free_cdat_table;
-     cxl_cstate->cdat.private = ct3d;
-     cxl_doe_cdat_init(cxl_cstate, errp);
-+
-+    pcie_cap_deverr_init(pci_dev);
-+    /* Leave a bit of room for expansion */
-+    rc = pcie_aer_init(pci_dev, PCI_ERR_VER, 0x200, PCI_ERR_SIZEOF, NULL);
-+    if (rc) {
-+        goto err_release_cdat;
-+    }
-+
-     return;
- 
-+err_release_cdat:
-+    cxl_doe_cdat_release(cxl_cstate);
-+    g_free(regs->special_ops);
- err_address_space_free:
-     address_space_destroy(&ct3d->hostmem_as);
-     return;
-@@ -465,6 +477,7 @@ static void ct3_exit(PCIDevice *pci_dev)
-     CXLComponentState *cxl_cstate = &ct3d->cxl_cstate;
-     ComponentRegisters *regs = &cxl_cstate->crb;
- 
-+    pcie_aer_exit(pci_dev);
-     cxl_doe_cdat_release(cxl_cstate);
-     g_free(regs->special_ops);
-     address_space_destroy(&ct3d->hostmem_as);
+ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
 -- 
 2.37.2
 
