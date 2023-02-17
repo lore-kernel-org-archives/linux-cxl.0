@@ -2,47 +2,47 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D14C636D6
-	for <linux-cxl@archiver.kernel.org>; Fri, 17 Feb 2023 21:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A52DC05027
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Feb 2023 21:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjBQVK1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Feb 2023 16:10:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55350 "EHLO
+        id S229524AbjBQVQF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Feb 2023 16:16:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjBQVK1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 16:10:27 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4427A5DE38
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Feb 2023 13:10:26 -0800 (PST)
+        with ESMTP id S229461AbjBQVQE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 16:16:04 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1FC35DE25
+        for <linux-cxl@vger.kernel.org>; Fri, 17 Feb 2023 13:16:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676668226; x=1708204226;
+  t=1676668563; x=1708204563;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=bsglX7iidTKm/vXA8BsTgb35ImhNfc2kF1gMW9B7eSw=;
-  b=ThNPGmSIogTpdQHlHBizYXfjS7HwzrUs7Hs0/oj1CDcSpF70wOR4Hrh+
-   +6UFGVJmmGBTqHfQkyTn+fkn3VUmAoRgH4B+VYcAl3pfm7WMvRbXJOg/S
-   1pkpTZ+4yNwTF963JLkCbS/j4z9ovxE2iXb5FCPkaNOvbwsKqLP1z8Iak
-   bjkiGgT/p9503436pvs8p4dPacyfsI2wF9Jao+djNaiG0b5YqX3WRW8vm
-   PRSGxY34LtEkqTYNg0Foy3bm7/OBSDyOQTn5T1o9TtFfYXUdO2zVMRQ64
-   sKXWuyoN++MuvasyuFiyyPE8sFvzLUCh2HydnCpz6iE6awpYoGfdNSLWa
+  bh=n57sCYK4PeaLUElSFWfLDuvU6jKLhr9A0sJ1rA2TP4Y=;
+  b=fzblW2GHXNM5qEpZVOJyWaK/Lq1Q46EUtIfZi5v5bhg446kx2UQYFd/h
+   qzufExuCjj5Zh972spx7atFMUdIdt8tf3rqYkC4zPbjxTiODyB8NzXtek
+   8mwuuz37OWaQ4Jt9RekFfksBMQpiBbd85e1+Hu0IQXvdtgiEQbVMpxfPO
+   iDRfoAiV3Gf0EM8WKknQrrd7Em7R+eBCryOQGHXKfE9mh7N7d+2T86o0B
+   n2OqrQNYqiSYEtEPCJsX80l/Pb4MfVLfPR6s20x8f7F0Y7rgi86wDsMVp
+   OowtO8v4+2nLjzhzC90/JIcVs/QEYrujHVBvS5paV0KQvOigB7pQwG3Ie
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="332097843"
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="312457996"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="332097843"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 13:10:08 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="759519627"
+   d="scan'208";a="312457996"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 13:16:03 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="779914774"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="759519627"
+   d="scan'208";a="779914774"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.187.252]) ([10.213.187.252])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 13:10:07 -0800
-Message-ID: <bcc07785-3787-6485-92d1-6a347609d4bb@intel.com>
-Date:   Fri, 17 Feb 2023 14:10:07 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 13:16:03 -0800
+Message-ID: <d3e07dbe-500f-303c-b348-4ca18934ed5c@intel.com>
+Date:   Fri, 17 Feb 2023 14:16:02 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v4 1/8] hw/pci/aer: Implement PCI_ERR_UNCOR_MASK register
+Subject: Re: [PATCH v4 2/8] hw/pci/aer: Add missing routing for AER errors
 Content-Language: en-US
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>
@@ -53,9 +53,9 @@ Cc:     Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         Markus Armbruster <armbru@redhat.com>
 References: <20230217172924.25239-1-Jonathan.Cameron@huawei.com>
- <20230217172924.25239-2-Jonathan.Cameron@huawei.com>
+ <20230217172924.25239-3-Jonathan.Cameron@huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230217172924.25239-2-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230217172924.25239-3-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -65,46 +65,42 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 2/17/23 10:29 AM, Jonathan Cameron wrote:
-> This register in AER should be both writeable and should
-> have a default value with a couple of the errors masked
-> including the Uncorrectable Internal Error used by CXL for
-> it's error reporting.
+> PCIe r6.0 Figure 6-3 "Pseudo Logic Diagram for Selected Error Message Control
+> and Status Bits" includes a right hand branch under "All PCI Express devices"
+> that allows for messages to be generated or sent onwards without SERR#
+> being set as long as the appropriate per error class bit in the PCIe
+> Device Control Register is set.
+> 
+> Implement that branch thus enabling routing of ERR_COR, ERR_NONFATAL
+> and ERR_FATAL under OSes that set these bits appropriately (e.g. Linux)
 > 
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   hw/pci/pcie_aer.c          | 4 ++++
->   include/hw/pci/pcie_regs.h | 3 +++
->   2 files changed, 7 insertions(+)
+>   hw/pci/pcie_aer.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
 > 
 > diff --git a/hw/pci/pcie_aer.c b/hw/pci/pcie_aer.c
-> index 9a19be44ae..909e027d99 100644
+> index 909e027d99..103667c368 100644
 > --- a/hw/pci/pcie_aer.c
 > +++ b/hw/pci/pcie_aer.c
-> @@ -112,6 +112,10 @@ int pcie_aer_init(PCIDevice *dev, uint8_t cap_ver, uint16_t offset,
+> @@ -192,8 +192,16 @@ static void pcie_aer_update_uncor_status(PCIDevice *dev)
+>   static bool
+>   pcie_aer_msg_alldev(PCIDevice *dev, const PCIEAERMsg *msg)
+>   {
+> +    uint16_t devctl = pci_get_word(dev->config + dev->exp.exp_cap +
+> +                                   PCI_EXP_DEVCTL);
+>       if (!(pcie_aer_msg_is_uncor(msg) &&
+> -          (pci_get_word(dev->config + PCI_COMMAND) & PCI_COMMAND_SERR))) {
+> +          (pci_get_word(dev->config + PCI_COMMAND) & PCI_COMMAND_SERR)) &&
+> +        !((msg->severity == PCI_ERR_ROOT_CMD_NONFATAL_EN) &&
+> +          (devctl & PCI_EXP_DEVCTL_NFERE)) &&
+> +        !((msg->severity == PCI_ERR_ROOT_CMD_COR_EN) &&
+> +          (devctl & PCI_EXP_DEVCTL_CERE)) &&
+> +        !((msg->severity == PCI_ERR_ROOT_CMD_FATAL_EN) &&
+> +          (devctl & PCI_EXP_DEVCTL_FERE))) {
+>           return false;
+>       }
 >   
->       pci_set_long(dev->w1cmask + offset + PCI_ERR_UNCOR_STATUS,
->                    PCI_ERR_UNC_SUPPORTED);
-> +    pci_set_long(dev->config + offset + PCI_ERR_UNCOR_MASK,
-> +                 PCI_ERR_UNC_MASK_DEFAULT);
-> +    pci_set_long(dev->wmask + offset + PCI_ERR_UNCOR_MASK,
-> +                 PCI_ERR_UNC_SUPPORTED);
->   
->       pci_set_long(dev->config + offset + PCI_ERR_UNCOR_SEVER,
->                    PCI_ERR_UNC_SEVERITY_DEFAULT);
-> diff --git a/include/hw/pci/pcie_regs.h b/include/hw/pci/pcie_regs.h
-> index 963dc2e170..6ec4785448 100644
-> --- a/include/hw/pci/pcie_regs.h
-> +++ b/include/hw/pci/pcie_regs.h
-> @@ -155,6 +155,9 @@ typedef enum PCIExpLinkWidth {
->                                            PCI_ERR_UNC_ATOP_EBLOCKED |    \
->                                            PCI_ERR_UNC_TLP_PRF_BLOCKED)
->   
-> +#define PCI_ERR_UNC_MASK_DEFAULT        (PCI_ERR_UNC_INTN | \
-> +                                         PCI_ERR_UNC_TLP_PRF_BLOCKED)
-> +
->   #define PCI_ERR_UNC_SEVERITY_DEFAULT    (PCI_ERR_UNC_DLP |              \
->                                            PCI_ERR_UNC_SDN |              \
->                                            PCI_ERR_UNC_FCP |              \
