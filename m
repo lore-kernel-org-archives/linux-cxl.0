@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1741BC678D5
-	for <linux-cxl@archiver.kernel.org>; Sat, 18 Feb 2023 02:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5A8C64ED6
+	for <linux-cxl@archiver.kernel.org>; Sat, 18 Feb 2023 02:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbjBRCTH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 17 Feb 2023 21:19:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
+        id S229445AbjBRCTD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Feb 2023 21:19:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbjBRCTF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 21:19:05 -0500
+        with ESMTP id S229744AbjBRCTC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Feb 2023 21:19:02 -0500
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1759F4AFDF;
-        Fri, 17 Feb 2023 18:19:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EDE46C00F;
+        Fri, 17 Feb 2023 18:19:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676686744; x=1708222744;
+  t=1676686740; x=1708222740;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eOxsSCkly6OfS9ejgcE60ZcxhTGEoXdmme+lQaoewg0=;
-  b=U6RxYLnZVPVc+BHMOQ4DLrfMEyj+1VGeQbJ0t8w1muLxU2HzjSXRbFxG
-   AB8fWv7KWeNE2yJ1YZzJq/aoN1ygyXg/h8rGdCdQPaP8MlIXQ2vN+nZZC
-   5eV+l5UCaC+jx/IvaX01N8Sld9ReTQHqVtnwDV46NVk+exp4h88aO0k3Y
-   376lycN2PyNDkrpkS4eLpb6azh090aHp6j63v6VSUiZDsc6LP1AzKUZqK
-   wY6g/kAP15Er6vj56yQGE/SQ9enZVZgYjfYNyGCSpdC2qJ5Q+2HR3ZVjo
-   0Uh4e2JslsUqeE71wImgyHAq5dAaIRWmN0cy0uOKG+uir1JRjB32M0MZp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="320244217"
+  bh=PW6WLN2OKDVjEO50s1i9kILGsUK37pTf9zbgWeYNOLo=;
+  b=c3vYxulijmUL0qsxo/ey0Vv0H2vysD2zDtHGV1pxnHXaRwy5pZdmYi9W
+   rPaBwXcpKvUlt0loYSwRgpxBKOkK/2MKM2yw4M46613+oauUP3Nuzhq00
+   1OUTBZqi0xeu6ymO0KrxNoslbgbMzUB2H6RXUDLZC5CPTIx6RMFPH7tH7
+   DK8KfGbs76DA2MoEKuceKjh6Aj9PDVNSE5gzoe3dHMrN5xEaZheN/o4nN
+   j5ksRSEOSzgu/DVCHjIEwSZx2JuRB2fgsQyUP2k5AjE5+HU2zfakt+O2N
+   RmmwgbbrT+It4gqv+ZCQxtr5XlPWzRQ1VcrHe0FASZzM6IWDIwDINanl+
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="320244203"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="320244217"
+   d="scan'208";a="320244203"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 18:19:03 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="672787892"
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 18:18:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10624"; a="672787875"
 X-IronPort-AV: E=Sophos;i="5.97,306,1669104000"; 
-   d="scan'208";a="672787892"
+   d="scan'208";a="672787875"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.252.133.15])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 18:19:02 -0800
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2023 18:18:58 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -45,10 +45,11 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 4/6] cxl/region: Provide region info to the cxl_poison trace event
-Date:   Fri, 17 Feb 2023 18:18:52 -0800
-Message-Id: <62d24b380514c8c39b651aca79c81a424f0b5b37.1676685180.git.alison.schofield@intel.com>
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v7 1/6] cxl/mbox: Add GET_POISON_LIST mailbox command
+Date:   Fri, 17 Feb 2023 18:18:49 -0800
+Message-Id: <69c1a7dcefcd559c61372e1b15fbeac6e86af24e.1676685180.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <cover.1676685180.git.alison.schofield@intel.com>
 References: <cover.1676685180.git.alison.schofield@intel.com>
@@ -60,185 +61,249 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-User space may need to know which region, if any, maps the poison
-address(es) logged in a cxl_poison trace event. Since the mapping
-of DPAs (device physical addresses) to a region can change, the
-kernel must provide this information at the time the poison list
-is read. The event informs user space that at event <timestamp>
-this <region> mapped to this <DPA>, which is poisoned.
+CXL devices maintain a list of locations that are poisoned or result
+in poison if the addresses are accessed by the host.
 
-The cxl_poison trace event is already wired up to log the region
-name and uuid if it receives param 'struct cxl_region'.
+Per the spec (CXL 3.0 8.2.9.8.4.1), the device returns this Poison
+list as a set of  Media Error Records that include the source of the
+error, the starting device physical address and length. The length is
+the number of adjacent DPAs in the record and is in units of 64 bytes.
 
-In order to provide that cxl_region, add another method for gathering
-poison - by committed endpoint decoder mappings. This method is only
-available with CONFIG_CXL_REGION and is only used if a region actually
-maps the memdev where poison is being read. After the poison list is
-read for all the mapped resources, poison is read for the unmapped
-resources, and those events are logged without the region info.
+Retrieve the poison list.
 
-Mixed mode decoders are not currently supported in Linux. Add a debug
-message to the poison request path. That will serve as an alert that
-poison list retrieval needs to add support for mixed mode.
-
-The default method remains: read the poison by memdev resource.
-
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/core.h   |  5 +++
- drivers/cxl/core/memdev.c | 14 +++++-
- drivers/cxl/core/region.c | 89 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 107 insertions(+), 1 deletion(-)
+ drivers/cxl/core/mbox.c | 72 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h    | 67 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/pci.c       |  4 +++
+ 3 files changed, 143 insertions(+)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index cde475e13216..4f507cb85926 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -25,7 +25,12 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
- #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
- int cxl_region_init(void);
- void cxl_region_exit(void);
-+int cxl_get_poison_by_endpoint(struct device *dev, void *data);
- #else
-+static inline int cxl_get_poison_by_endpoint(struct device *dev, void *data)
-+{
-+	return 0;
-+}
- static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
- {
- }
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index ea996057815e..c11b7bc253b4 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -139,14 +139,26 @@ static ssize_t trigger_poison_list_store(struct device *dev,
- 					 const char *buf, size_t len)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_port *port;
- 	bool trigger;
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index fc7631bb1c24..faa61e5f541f 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -5,6 +5,8 @@
+ #include <linux/debugfs.h>
+ #include <linux/ktime.h>
+ #include <linux/mutex.h>
++#include <asm/unaligned.h>
++#include <cxlpci.h>
+ #include <cxlmem.h>
+ #include <cxl.h>
+ 
+@@ -994,6 +996,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+ 	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
+ 	struct cxl_mbox_identify id;
+ 	struct cxl_mbox_cmd mbox_cmd;
++	u32 val;
  	int rc;
  
- 	if (kstrtobool(buf, &trigger) || !trigger)
- 		return -EINVAL;
+ 	mbox_cmd = (struct cxl_mbox_cmd) {
+@@ -1017,6 +1020,11 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+ 	cxlds->lsa_size = le32_to_cpu(id.lsa_size);
+ 	memcpy(cxlds->firmware_version, id.fw_revision, sizeof(id.fw_revision));
  
-+	port = dev_get_drvdata(&cxlmd->dev);
-+	if (!port || !is_cxl_endpoint(port))
-+		return -EINVAL;
++	if (test_bit(CXL_MEM_COMMAND_ID_GET_POISON, cxlds->enabled_cmds)) {
++		val = get_unaligned_le24(id.poison_list_max_mer);
++		cxlds->poison.max_errors = min_t(u32, val, CXL_POISON_LIST_MAX);
++	}
 +
- 	down_read(&cxl_dpa_rwsem);
--	rc = cxl_get_poison_by_memdev(cxlmd);
-+	if (port->commit_end == -1)
-+		/* No regions mapped to this memdev */
-+		rc = cxl_get_poison_by_memdev(cxlmd);
-+	else
-+		/* Regions mapped, collect poison by endpoint */
-+		rc = device_for_each_child(&port->dev, port,
-+					   cxl_get_poison_by_endpoint);
-+
- 	up_read(&cxl_dpa_rwsem);
- 
- 	return rc ? rc : len;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index f29028148806..a055f8e36ef1 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2213,6 +2213,95 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+ 	return 0;
  }
- EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, CXL);
+ EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
+@@ -1107,6 +1115,70 @@ int cxl_set_timestamp(struct cxl_dev_state *cxlds)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
  
-+int cxl_get_poison_by_endpoint(struct device *dev, void *data)
++int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
++		       struct cxl_region *cxlr)
 +{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_port *port = data;
-+	struct cxl_dev_state *cxlds;
-+	struct cxl_memdev *cxlmd;
-+	u64 offset, length;
-+	int rc = 0;
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_mbox_poison_payload_out *po;
++	struct cxl_mbox_poison_payload_in pi;
++	struct cxl_mbox_cmd mbox_cmd;
++	int nr_records = 0;
++	int rc;
 +
-+	down_read(&cxl_dpa_rwsem);
-+
-+	if (!is_endpoint_decoder(dev))
-+		goto out;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
-+		goto out;
-+
-+	/*
-+	 * Regions are only created with single mode decoders: pmem or ram.
-+	 * Linux does not currently support mixed mode decoders. This means
-+	 * that reading poison per endpoint decoder adheres to the spec
-+	 * requirement that poison reads of pmem and ram must be separated.
-+	 * CXL 3.0 Spec 8.2.9.8.4.1
-+	 *
-+	 * Watch for future support of mixed with a dev_dbg() msg.
-+	 */
-+	if (cxled->mode == CXL_DECODER_MIXED) {
-+		dev_dbg(dev, "poison list read unsupported in mixed mode\n");
-+		goto out;
-+	}
-+
-+	cxlmd = cxled_to_memdev(cxled);
-+	if (cxled->skip) {
-+		rc = cxl_mem_get_poison(cxlmd, 0, cxled->skip, NULL);
-+		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
-+			rc = 0;
-+		if (rc)
-+			goto out;
-+	}
-+	length = cxled->dpa_res->end - cxled->dpa_res->start + 1;
-+	rc = cxl_mem_get_poison(cxlmd, cxled->dpa_res->start, length,
-+				cxled->cxld.region);
-+	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
-+		rc = 0;
++	rc = mutex_lock_interruptible(&cxlds->poison.lock);
 +	if (rc)
-+		goto out;
++		return rc;
 +
-+	/* Iterate until commit_end is reached */
-+	if (cxled->cxld.id < port->commit_end)
-+		goto out;
++	po = cxlds->poison.payload_out;
++	pi.offset = cpu_to_le64(offset);
++	pi.length = cpu_to_le64(len / CXL_POISON_LEN_MULT);
 +
-+	/*
-+	 * Reach here with the last committed decoder only.
-+	 * Knowing that PMEM must always follow RAM, get poison
-+	 * for unmapped ranges based on the last decoder's mode:
-+	 *	ram: scan remains of ram range, then scan for pmem
-+	 *	pmem: scan remains of pmem range
-+	 */
-+	cxlds = cxlmd->cxlds;
++	mbox_cmd = (struct cxl_mbox_cmd) {
++		.opcode = CXL_MBOX_OP_GET_POISON,
++		.size_in = sizeof(pi),
++		.payload_in = &pi,
++		.size_out = cxlds->payload_size,
++		.payload_out = po,
++		.min_out = struct_size(po, record, 0),
++	};
 +
-+	if (cxled->mode == CXL_DECODER_RAM) {
-+		offset = cxled->dpa_res->end + 1;
-+		length = resource_size(&cxlds->ram_res) - offset;
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+		if (rc == -EFAULT)
-+			rc = 0;
++	do {
++		rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
 +		if (rc)
-+			goto out;
-+	}
-+	if (cxled->mode == CXL_DECODER_PMEM) {
-+		offset = cxled->dpa_res->end + 1;
-+		length = resource_size(&cxlds->pmem_res) - offset;
-+	} else if (resource_size(&cxlds->pmem_res)) {
-+		offset = cxlds->pmem_res.start;
-+		length = resource_size(&cxlds->pmem_res);
-+	} else {
-+		rc = 1;
-+		goto out;
-+	}
-+	/* Final get poison call. Return rc or 1 to stop iteration. */
-+	rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+	if (!rc)
-+		rc = 1;
-+out:
-+	up_read(&cxl_dpa_rwsem);
++			break;
++
++		/* TODO TRACE the media error records */
++
++		/* Protect against an uncleared _FLAG_MORE */
++		nr_records = nr_records + le16_to_cpu(po->count);
++		if (nr_records >= cxlds->poison.max_errors) {
++			dev_dbg(&cxlmd->dev, "Max Error Records reached: %d\n",
++				nr_records);
++			break;
++		}
++	} while (po->flags & CXL_POISON_FLAG_MORE);
++
++	mutex_unlock(&cxlds->poison.lock);
 +	return rc;
 +}
++EXPORT_SYMBOL_NS_GPL(cxl_mem_get_poison, CXL);
 +
- static struct lock_class_key cxl_pmem_region_key;
++int cxl_poison_state_init(struct cxl_dev_state *cxlds)
++{
++	if (!test_bit(CXL_MEM_COMMAND_ID_GET_POISON, cxlds->enabled_cmds))
++		return 0;
++
++	cxlds->poison.payload_out = devm_kzalloc(cxlds->dev,
++						 cxlds->payload_size,
++						 GFP_KERNEL);
++	if (!cxlds->poison.payload_out)
++		return -ENOMEM;
++
++	mutex_init(&cxlds->poison.lock);
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
++
+ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
+ {
+ 	struct cxl_dev_state *cxlds;
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index c6c560c67a8a..c0feb43b585d 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -215,6 +215,24 @@ struct cxl_event_state {
+ 	struct mutex log_lock;
+ };
  
- static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
++/**
++ * struct cxl_poison_state - Poison list retrieval
++ *
++ * @max_errors: Maximum media error records held in device cache
++ * @payload_out: The poison list payload returned by device
++ * @lock: Protect reads of the poison list
++ *
++ * Reads of the poison list are synchronized to ensure that a reader
++ * does not get an incomplete list because their request overlapped
++ * (was interrupted or preceded by) another read request of the same
++ * DPA range. CXL Spec 3.0 Section 8.2.9.8.4.1
++ */
++struct cxl_poison_state {
++	u32 max_errors;
++	struct cxl_mbox_poison_payload_out *payload_out;
++	struct mutex lock;  /* Protect reads of poison list */
++};
++
+ /**
+  * struct cxl_dev_state - The driver device state
+  *
+@@ -250,6 +268,7 @@ struct cxl_event_state {
+  * @info: Cached DVSEC information about the device.
+  * @serial: PCIe Device Serial Number
+  * @doe_mbs: PCI DOE mailbox array
++ * @poison: poison list retrieval info
+  * @mbox_send: @dev specific transport for transmitting mailbox commands
+  *
+  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+@@ -289,6 +308,7 @@ struct cxl_dev_state {
+ 	struct xarray doe_mbs;
+ 
+ 	struct cxl_event_state event;
++	struct cxl_poison_state poison;
+ 
+ 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+ };
+@@ -537,6 +557,50 @@ struct cxl_mbox_set_timestamp_in {
+ 
+ } __packed;
+ 
++/* Get Poison List  CXL 3.0 Spec 8.2.9.8.4.1 */
++struct cxl_mbox_poison_payload_in {
++	__le64 offset;
++	__le64 length;
++} __packed;
++
++struct cxl_mbox_poison_payload_out {
++	u8 flags;
++	u8 rsvd1;
++	__le64 overflow_t;
++	__le16 count;
++	u8 rsvd2[20];
++	struct cxl_poison_record {
++		__le64 address;
++		__le32 length;
++		__le32 rsvd;
++	} __packed record[];
++} __packed;
++
++/*
++ * Get Poison List address field encodes the starting
++ * address of poison, and the source of the poison.
++ */
++#define CXL_POISON_START_MASK		GENMASK_ULL(63, 6)
++#define CXL_POISON_SOURCE_MASK		GENMASK(2, 0)
++
++/* Get Poison List record length is in units of 64 bytes */
++#define CXL_POISON_LEN_MULT	64
++
++/* Kernel defined maximum for a list of poison errors */
++#define CXL_POISON_LIST_MAX	1024
++
++/* Get Poison List: Payload out flags */
++#define CXL_POISON_FLAG_MORE            BIT(0)
++#define CXL_POISON_FLAG_OVERFLOW        BIT(1)
++#define CXL_POISON_FLAG_SCANNING        BIT(2)
++
++/* Get Poison List: Poison Source */
++#define CXL_POISON_SOURCE_UNKNOWN	0
++#define CXL_POISON_SOURCE_EXTERNAL	1
++#define CXL_POISON_SOURCE_INTERNAL	2
++#define CXL_POISON_SOURCE_INJECTED	3
++#define CXL_POISON_SOURCE_VENDOR	7
++
+ /**
+  * struct cxl_mem_command - Driver representation of a memory device command
+  * @info: Command information as it exists for the UAPI
+@@ -607,6 +671,9 @@ void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds
+ void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
+ void cxl_mem_get_event_records(struct cxl_dev_state *cxlds, u32 status);
+ int cxl_set_timestamp(struct cxl_dev_state *cxlds);
++int cxl_poison_state_init(struct cxl_dev_state *cxlds);
++int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
++		       struct cxl_region *cxlr);
+ 
+ #ifdef CONFIG_CXL_SUSPEND
+ void cxl_mem_active_inc(void);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 60b23624d167..827ea0895778 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -769,6 +769,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_poison_state_init(cxlds);
++	if (rc)
++		return rc;
++
+ 	rc = cxl_dev_state_identify(cxlds);
+ 	if (rc)
+ 		return rc;
 -- 
 2.37.3
 
