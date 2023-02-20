@@ -2,207 +2,219 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45217C05027
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Feb 2023 04:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30653C05027
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Feb 2023 08:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjBTE4S (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 19 Feb 2023 23:56:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
+        id S230303AbjBTIEg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 20 Feb 2023 03:04:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbjBTE4Q (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 19 Feb 2023 23:56:16 -0500
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5846CAD0F
-        for <linux-cxl@vger.kernel.org>; Sun, 19 Feb 2023 20:56:14 -0800 (PST)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230220045612epoutp02a311608604de0e242391e04a158bd15d~Fb3IimEiO0251302513epoutp02C
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Feb 2023 04:56:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230220045612epoutp02a311608604de0e242391e04a158bd15d~Fb3IimEiO0251302513epoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1676868972;
-        bh=Pfrzu8Wbex/JgffOTP9GKaek8xOiG+IofFAMFv8YnRY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r3g+rvwfxydFaVl6HYgHzgL/vNnBkKHEKc7V6WcmiWuoOp+AavtJDpHKH5YY1dvyh
-         E6iKReZMNzm4qMK5nz+1wRhMSmPZ4Occ2/t73crGcIV1szs3e0jkJAFlyvKTnQk+Vx
-         unEDpC+zOmyvnSlrxwqMPBcKOjmyQCaxXpOiAJic=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230220045611epcas2p207db0f79cd4059e14ec98437cc811975~Fb3INj-Q41274112741epcas2p2C;
-        Mon, 20 Feb 2023 04:56:11 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.88]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4PKqrC2Vzxz4x9Pt; Mon, 20 Feb
-        2023 04:56:11 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        58.1A.61927.B6DF2F36; Mon, 20 Feb 2023 13:56:11 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20230220045610epcas2p269c76f9b80a8d18d357af396b2968970~Fb3HTJWbd1274112741epcas2p29;
-        Mon, 20 Feb 2023 04:56:10 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230220045610epsmtrp259f02d9e0c55e74c79ca47579018902c~Fb3HQwYgt0918909189epsmtrp2W;
-        Mon, 20 Feb 2023 04:56:10 +0000 (GMT)
-X-AuditID: b6c32a45-e942ca800001f1e7-61-63f2fd6bb2cb
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        84.63.05839.A6DF2F36; Mon, 20 Feb 2023 13:56:10 +0900 (KST)
-Received: from dell-ArcherCity.dsn.sec.samsung.com (unknown [10.229.83.212])
-        by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230220045610epsmtip2e07fa35a96cbe13dc1c4fd1fab22963f~Fb3HC-1T73014230142epsmtip2I;
-        Mon, 20 Feb 2023 04:56:10 +0000 (GMT)
-From:   Junhyeok Im <junhyeok.im@samsung.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        bwidawsk@kernel.org, alison.schofield@intel.com,
-        Junhyeok Im <junhyeok.im@samsung.com>
-Subject: [ndctl 3/3] Documentation: add man page documentation for
- inject-poison
-Date:   Mon, 20 Feb 2023 13:57:09 +0900
-Message-Id: <20230220045709.94027-4-junhyeok.im@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230220045709.94027-1-junhyeok.im@samsung.com>
+        with ESMTP id S229706AbjBTIEf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Feb 2023 03:04:35 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4BA1027A;
+        Mon, 20 Feb 2023 00:04:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jd+T+/croQtdUx7oK6yM0oVEutZiqv8xhzTMcWpTjcUSJV/d1X4nSTsKoH6tNfifY/sAPbrW2inBtOLzt19yWotwij08tp5ScqzH/Swpxl2nHyDQgPf6u1+h2ClgKwvWPy7u2jM+0qvpnFHJ7WLWdx8neTns2Z+ZbM62xxBHwR1ZrUbgg5C6nzA6XQ6i+f8c6A4oUvDCucco9us1ksGNj74btQDACCseTfQYj3CPnu1UWnQwNYjKlQdkw/CFAa7ePvEP+QQvviYwjIEafGOhJefSCQtipDWR2WyDG6TkAh2pfmkvz3nU3k/pRgR/VUReu1NwpfPoi9epxWVszy6dNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9qAiPI7tUTWcESZw35R3Po7VANLTtIOSox4x2htHyQc=;
+ b=PohPij7CDX+Y8yigAX9O+KM8cNMhDZRG9FqlOx+LX58siOEou/ZYIk1dtvwfvocjKtOMqP7RG5bhXmM0SBaZ3QVe64JAicq+6Hv7qPlE083jrvOfiQMgxr0ZvVzSvBqrxcWqu5X/ulA82eg5NrBEbYEQ+vPknDmb6v/ykJRBNDF9HXfaOfoN0ffaHfAHSj4sLn+vWJf+rSqszraE4yGtQj0APhoNGTAilW4qmCPa9KKOnRGdCVdthRL0G5h0NoEVNDfjNSNNOmrF1sLDZNRXhnzXasLE8cj/9PcfMxmp/A0/OvWm/sy5x6arUK1B/rOKiPNE5LdUmTb7/jnKMsm55w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9qAiPI7tUTWcESZw35R3Po7VANLTtIOSox4x2htHyQc=;
+ b=UMCb6ld6Alk414bQCNW5WvQKTtWyczX46sk0AJjUWFxmw7CCAbQtKIggQurYLYEi2ZocYgIRgvOAoPUAje7+L7aZW4nWi8EzB8YhjiW2HOuwKxm+s1Kp8ecq63apVaWJgojkRGxqXHsU1YVqvB//cYyz5Srd/IQyLMOzLq5x8rha2mipBlCsJlJ2v0S2Tr8Jv3a6+UsphE3rPg5hhJ6sgNR36EY4/23FfmBbVnAHb/P+rafGsQs8KgZQ1CrxcA4kWsHgunhXdjwJDEcACJ6IIc3TnpbXbbLzEQW4/HDfmNxo/g9F+K/aRJ8lA0CKVirp9ir4/zNaAhz5N9N3WG3WPw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
+ by IA1PR12MB6457.namprd12.prod.outlook.com (2603:10b6:208:3ab::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.13; Mon, 20 Feb
+ 2023 08:04:30 +0000
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::4bd4:de67:b676:67df]) by BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::4bd4:de67:b676:67df%6]) with mapi id 15.20.6111.019; Mon, 20 Feb 2023
+ 08:04:30 +0000
+References: <167653656244.3147810.5705900882794040229.stgit@dwillia2-xfh.jf.intel.com>
+User-agent: mu4e 1.8.10; emacs 28.2
+From:   Alistair Popple <apopple@nvidia.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, stable@vger.kernel.org,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org
+Subject: Re: [PATCH] dax/kmem: Fix leak of memory-hotplug resources
+Date:   Mon, 20 Feb 2023 18:53:01 +1100
+In-reply-to: <167653656244.3147810.5705900882794040229.stgit@dwillia2-xfh.jf.intel.com>
+Message-ID: <87k00coj90.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0095.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::10) To BYAPR12MB3176.namprd12.prod.outlook.com
+ (2603:10b6:a03:134::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpik+LIzCtJLcpLzFFi42LZdljTVDf776dkg+YnghZ3H19gs2ievJjR
-        YvrUC4wWi4/OYLY4P+sUi8WtCceYHNg8Fu95yeSxaVUnm0ffllWMHp83yQWwRGXbZKQmpqQW
-        KaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gAtV1IoS8wpBQoFJBYX
-        K+nb2RTll5akKmTkF5fYKqUWpOQUmBfoFSfmFpfmpevlpZZYGRoYGJkCFSZkZzyZPpGx4LVk
-        xfQ73xgbGDeLdjFyckgImEgcu7OItYuRi0NIYAejxPtJv9kgnE+MEpN2LoByvjFK/Nm0lh2m
-        5e7tuewQib0gLZ1Q/Y1MEmemfmcBqWIT0Jb42z+dEcQWEZCVaF73gAmkiFlgAqPE0rkHmUES
-        wgJBEufvrQYrYhFQlbj0fQbYCl4BG4mXE76xQayTl9h/8CxYPaeArcSu50tYIWoEJU7OfAK2
-        jBmopnnrbGaQBRICL9kl/m75C7SNA8hxkVj8MQdijrDEq+NboF6Qkvj8bi/U/HyJqQcnQsVL
-        JNrOHICyjSXe3XzOCjKGWUBTYv0ufYiJyhJHbkFt5ZPoOPyXHSLMK9HRJgTRqCqxZcMLqCHS
-        EkcnbmKBsD0kLlw5DA1QYCjcfbOUeQKjwiwkz8xC8swshMULGJlXMYqlFhTnpqcWGxUYwmM4
-        OT93EyM4MWq57mCc/PaD3iFGJg7GQ4wSHMxKIrzShz4kC/GmJFZWpRblxxeV5qQWH2I0BQb1
-        RGYp0eR8YGrOK4k3NLE0MDEzMzQ3MjUwVxLnlbY9mSwkkJ5YkpqdmlqQWgTTx8TBKdXAtI5F
-        NfaWxRdPPYe/R61vWhfkiG2JjF8Q+cnYoW2O6/MvK7kcr8cXsAhLJYW83ZzmMmGtcnZR1p3D
-        PyRZ3/9sm3F8icCL9V0uzN21e+e+0RSYyR5wrMLU9dSzB/O+yxcUskWs/ZYi4XajR+HQkbWF
-        s6+kJNa5+F40X/Hzj2bdGvNLS5eoMnywcEi/9k5U8snSsBU9xt1fAicLrVj1aMExh+mf86JU
-        loZ8m1+1VHPC5tNBohEBJa+WaNgqrNh34rWmmYd7T+zFPU21fF8btk6eHWnLUFWUz+yy99jn
-        xWZHdghE/+7KKOuYz1KrZf7fK9b4y2MLm46NN0RtnF6qyl/tStly1DWxYrsT8/YUj/1OSizF
-        GYmGWsxFxYkAXHp2ehUEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsWy7bCSvG7W30/JBr2X9CzuPr7AZtE8eTGj
-        xfSpFxgtFh+dwWxxftYpFotbE44xObB5LN7zkslj06pONo++LasYPT5vkgtgieKySUnNySxL
-        LdK3S+DKeDJ9ImPBa8mK6Xe+MTYwbhbtYuTkkBAwkbh7ey57FyMXh5DAbkaJvbOXM0MkpCVu
-        POpig7CFJe63HGEFsYUE/jNKHP+uDGKzCWhL/O2fzghiiwjISjSve8AEYjMLTGOU2L43EcQW
-        FgiQ+P94LthMFgFViUvfZ7CD2LwCNhIvJ3yDmi8vsf/gWbAaTgFbiV3Pl0DtspH4OeshVL2g
-        xMmZT1i6GDmA5qtLrJ8nBLFKXqJ562zmCYyCs5BUzUKomoWkagEj8ypGydSC4tz03GLDAsO8
-        1HK94sTc4tK8dL3k/NxNjOBg19Lcwbh91Qe9Q4xMHIyHGCU4mJVEeKUPfUgW4k1JrKxKLcqP
-        LyrNSS0+xCjNwaIkznuh62S8kEB6YklqdmpqQWoRTJaJg1OqgWn7r8JYj6oXGwUjPk0LMpIM
-        MHknYpObE160T+3bemCEm0Zc55mp5dObW7ia6XPisSwn9XIemUmX826UJ5ndnjrdt1IioWHG
-        Pp8Fwu/buBTq7laruwbsceqbpHdFv4fnqIra+aZbW6wi+kuuf3vwboZb/zRzXh+jO5c9hWs+
-        Ppv2wvsa/7dQ5zVGty/uZ7DpfWxz2qzIe8Hh1Zy3/stxMWxY4Sx8I7E/6cPU4Fy3W1XWXSW7
-        zt3UjHt57DXH8VcXzm7elTZH1fB4yez1x1siVZf8lOep5LM/6v++7cavaQba59R69Lf6s9yN
-        L3z5gMFbZvbF2079qx+Jfcy+LTD3pc+HyRLFTat8Tn958enrRSWW4oxEQy3mouJEALPMx/zl
-        AgAA
-X-CMS-MailID: 20230220045610epcas2p269c76f9b80a8d18d357af396b2968970
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230220045610epcas2p269c76f9b80a8d18d357af396b2968970
-References: <20230220045709.94027-1-junhyeok.im@samsung.com>
-        <CGME20230220045610epcas2p269c76f9b80a8d18d357af396b2968970@epcas2p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3176:EE_|IA1PR12MB6457:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d04dcc6-c1b7-4d67-9178-08db1319182f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bQwjyptTjqpZUAN9N2TRLNbjSTAxMg6KxxTDYNO3uWCGtfXTkWJHDLsp48Si1WXNXivO/xWn61METRkTPlqLIpUyYMylp/HkYVFaZxgukpVd9042bYK/eTGNwzyoxG/hOFWqPV5HCfiBFAPBF77QIiBTIApYMqYord+o1msgUg25FdFa13h8KLl+2CpURy5otu0wh9WldApD8Mn2dtA2oIoU0I6yobQ0eCD+iwJ26N//wuab2dwHYEX5X8UbQnfsbKxXu/nIkilTMdDCNBvKL/1gD8ULL6tPD5RNIJlm7cVab3iXGKH1q1V8W10zgqB34SOBAYXQuP4BN/cUof5kUKVnsJX4hkpzgk7ByIuNxGLe6JIpkSnOA2rPHmKrimIBVx18lvNEqm8qnvcIwqtbkVq+8pvo7VL+46HYVGB43WcRhFYTh+XtsBWz75znqSyfoTFUzRmmMgxAy8pl3Y2BKAe6St2LJWbHL2pAMo3dWl7WWl/7eQ4+KcUIWyzt3L32hg97LoTxpA2csV7s7PrO4H9umBnvC6UDsvP7DoH3xaChFnNPhGpdEHXr3PsgtI0IkiNUHdKD7X3LgqANtLzvFDXdxtUnpsWq5+/TuxQm5vl1GQj7v23Bx+q8xoT3NK4HYu292RC7Qniv9RDb/449Mg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(366004)(346002)(39860400002)(396003)(376002)(451199018)(86362001)(54906003)(8936002)(5660300002)(316002)(83380400001)(478600001)(4326008)(66556008)(41300700001)(66946007)(36756003)(66476007)(6916009)(186003)(2616005)(8676002)(6666004)(6506007)(2906002)(6486002)(26005)(38100700002)(6512007)(66899018);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zu76a2vxGY7D6MmZsXRgZLqugANQlJnVl4zSyJ0MXo9T05BBdoelB41kQcbf?=
+ =?us-ascii?Q?jErYoYFD27qwQS6VxeBdxsZn6YwnLaQbQXsz6FmCQmrxCCzrD+f0CtooPHEE?=
+ =?us-ascii?Q?Hxxv3vtYO2qHb03RBs+w+Y8T5nFj4q15M6sFK/z1sPrtQGJquwduHA8nHUtR?=
+ =?us-ascii?Q?PxOtC7eBGpOS3a2Sy3BNI4Q2hXUP4vKV4jyVCBpUKPKPpKGIouM2TNPLkkQI?=
+ =?us-ascii?Q?mpMmSSJ4GyYFwW4j/0Q1yWEgQeNilRqa7I24p4mLtlStqyUd9f99PVUrOrDw?=
+ =?us-ascii?Q?ZI6xSA7YNWNbbV8vbBaNVpCTA8ABpnNNId7q6KN7MBGHd4IS6L+bZlbFa6cV?=
+ =?us-ascii?Q?ysnOl0kJptKpgQEUhA2G5aaodMhn0qVnuHeumaiWjiBQl2H/uK+Q2khGab/C?=
+ =?us-ascii?Q?/1fTpC3VCr52JKT6XbcZlkPhLTw8bS8k9CPep9ALFNezhugAR6GAVTHL2NWi?=
+ =?us-ascii?Q?Q56cvbug3UvYPr4Z/e684A2WwPpmX5kf5o6P4cpixd2UQys7Piv1SdCbkaNn?=
+ =?us-ascii?Q?8Kejt1LVGzs6xOenVVNWFdGCVmLE7pjLg0E2/iWaqmHCmkO/DdF/fYDpy6u8?=
+ =?us-ascii?Q?5FxJO5enfGLCIX5x0ipWIizzDXbe3NOXS0Z14pONKKoGPUJNeFiOr3M5e5kx?=
+ =?us-ascii?Q?WYc1H+zXum++G+r8+YdthNdYAP0rvW69GYD7KJJ3nuTF4OYTkKMHSFH93BL4?=
+ =?us-ascii?Q?25Ze7pDOTiDGb/sbUDAQ4MElbxTzdcEBYVZ1h5XzSevA8uB6eXkitY9tRRmH?=
+ =?us-ascii?Q?VGdVS0+wUhtx/iRKi/XR1wkxXzXXEI3PlMImYvB7LHP7mH3LVCjrSlc+HQ//?=
+ =?us-ascii?Q?QSvSxAAuNYfSP5XHl4nDzg+XNtI53vBjzfEum+rivvmq83lfQxe2X25a0lNe?=
+ =?us-ascii?Q?7iSvonI7q2Rq68qjuPNYIhTf6BVlcFNyHpSxEhxPf7Bd16TMxwLloUNmcG9x?=
+ =?us-ascii?Q?9psJwhz4LdyZJGB3KQHvpoDKz0uKEq+BzrqBgXaAydbEoACBylvZcVmjTKgn?=
+ =?us-ascii?Q?20FYiNrVlZSj4+MsJUaO6UKocVfHt8RHPvyeRJjhTy5RcglPZOiGJA/WBH3H?=
+ =?us-ascii?Q?J5/ZpUtR0mPHvoE6Ih6QA3g3A4lyCfXhMY5W37ybRts/AmZ5S3usPeFyc8E5?=
+ =?us-ascii?Q?qtL5rB51wrhfOqOmg35/LOVB+/RSOYVIiqmRiiiZJkChQnIbFf5clGzhBweS?=
+ =?us-ascii?Q?q6LFCJ2TmNPlNtUi9T1wGIOoCfGyXiPeMSe9mUTxuwAbPzvJNNT++LS4B6EU?=
+ =?us-ascii?Q?uOWFU9mrRfCaQCTGYaaCW/Q2hwrgdKhDzrbHh9ypbVf/+7E7W4dxj8SXQba0?=
+ =?us-ascii?Q?R8dIrh/wSWBZkuxNRQxh12x14VkpvHIwfZyyEcY8MUkEaplyuCzaIYaKhUoV?=
+ =?us-ascii?Q?h1ZMLqD/UIODMUFiDrfF9GjXfgY57TIZuBKkJFroBEVNcjAtr6sXzLiP3JTC?=
+ =?us-ascii?Q?WG5GJ/gC01Qx78uLe4/oH0HEIZYswR6+T8hLrLkrl9jEvvIA9tWNZfUFCMek?=
+ =?us-ascii?Q?TM3A1a/bYEunwVy8u/Xth9dF3lwqwblYspiRN6EBHW+bfxlbrpJkUYrWtu9O?=
+ =?us-ascii?Q?53FlrLh1T/tA7mz/A2qRcsAUV3rY2FWqw9hE4N/E?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d04dcc6-c1b7-4d67-9178-08db1319182f
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2023 08:04:30.5344
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PYqqAXPA+sd9hHt/uY5zGEWHDlxYJQfGd4MnJKELAGqScinvwWLpJ5ZUEhvjybtrDyQHDKJmAwpHV5kotH8JyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6457
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add man page documentation for inject-poison command in cxl,
-also add the content of cxl_memdev_inject_poison in libcxl.
 
-Signed-off-by: Junhyeok Im <junhyeok.im@samsung.com>
----
- Documentation/cxl/cxl-inject-poison.txt | 42 +++++++++++++++++++++++++
- Documentation/cxl/lib/libcxl.txt        |  4 +++
- Documentation/cxl/meson.build           |  1 +
- 3 files changed, 47 insertions(+)
- create mode 100644 Documentation/cxl/cxl-inject-poison.txt
+Dan Williams <dan.j.williams@intel.com> writes:
 
-diff --git a/Documentation/cxl/cxl-inject-poison.txt b/Documentation/cxl/cxl-inject-poison.txt
-new file mode 100644
-index 0000000..d438d33
---- /dev/null
-+++ b/Documentation/cxl/cxl-inject-poison.txt
-@@ -0,0 +1,42 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+cxl-inject-poison(1)
-+====================
-+
-+NAME
-+----
-+cxl-inject-poison - send inject poison command to specified CXL memdev
-+                    targeting given DPA.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl inject-poison <memdev> -a <dpa> [<options>]'
-+
-+DESCRIPTION
-+-----------
-+Add the <dpa> to the <memdev> poison list and the error source shall be set
-+to an injected error. In addition, the device shall add an appropriate poison
-+creation event to its internal Informational Event Log, update the Event Status
-+register, and if configured, interrupt the host.
-+
-+OPTIONS
-+-------
-+<memory device>::
-+        A 'memX' device name, or a memdev id number. Restrict the operation to
-+        the specified memdev.
-+
-+-a::
-+--address=::
-+        Physical address of a CXL memdev to inject poison into.
-+
-+-S::
-+--serial=::
-+        Specify CXL memory device serial number(s) to filter the listing
-+
-+include::verbose-option.txt[]
-+
-+
-+SEE ALSO
-+--------
-+CXL-2.0 8.2.9.5.4.2
-diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index f9af376..95f5662 100644
---- a/Documentation/cxl/lib/libcxl.txt
-+++ b/Documentation/cxl/lib/libcxl.txt
-@@ -132,6 +132,7 @@ int cxl_memdev_read_label(struct cxl_memdev *memdev, void *buf, size_t length,
- 			  size_t offset);
- int cxl_memdev_write_label(struct cxl_memdev *memdev, void *buf, size_t length,
- 			   size_t offset);
-+int cxl_memdev_inject_poison(struct cxl_memdev *memdev, const char *address);
- struct cxl_cmd *cxl_cmd_new_get_partition(struct cxl_memdev *memdev);
- struct cxl_cmd *cxl_cmd_new_set_partition(struct cxl_memdev *memdev,
- 					  unsigned long long volatile_size);
-@@ -172,6 +173,9 @@ cxl_memdev{read,write,zero}_label() are helpers for marshaling multiple
- label access commands over an arbitrary extent of the device's label
- area.
- 
-+cxl_memdev_inject_poison supports injecting poison into a physical address
-+on a specified CXL memory device.
-+
- cxl_cmd_partition_set_mode() supports selecting NEXTBOOT or IMMEDIATE
- mode. When CXL_SETPART_IMMEDIATE mode is set, it is the caller’s
- responsibility to avoid immediate changes to partitioning when the
-diff --git a/Documentation/cxl/meson.build b/Documentation/cxl/meson.build
-index a6d77ab..a972467 100644
---- a/Documentation/cxl/meson.build
-+++ b/Documentation/cxl/meson.build
-@@ -46,6 +46,7 @@ cxl_manpages = [
-   'cxl-enable-region.txt',
-   'cxl-destroy-region.txt',
-   'cxl-monitor.txt',
-+  'cxl-inject-poison.txt',
- ]
- 
- foreach man : cxl_manpages
--- 
-2.34.1
+[...]
+
+> First up for the fix is release_mem_region_adjustable() needs to
+> reliably delete the resource inserted by add_memory_driver_managed().
+> That is thwarted by a check for IORESOURCE_SYSRAM that predates the
+> dax/kmem driver, from commit:
+>
+> 65c78784135f ("kernel, resource: check for IORESOURCE_SYSRAM in release_mem_region_adjustable")
+>
+> That appears to be working around the behavior of HMM's
+> "MEMORY_DEVICE_PUBLIC" facility that has since been deleted. With that
+> check removed the "System RAM (kmem)" resource gets removed, but
+> corruption still occurs occasionally because the "dax" resource is not
+> reliably removed.
+
+And re-added in the form of MEMORY_DEVICE_COHERENT, which is pretty
+similar. However I can't understand why that commit was needed in the
+first place. As mentioned in that commit message "we only call
+release_mem_region_adjustable() in __remove_pages if the zone is not
+ZONE_DEVICE" anyway, so I don't really understand how this code path
+could ever have been exercised. I can't see why it's needed now either,
+so for the change to resource.c feel free to add:
+
+Reviewed-by: Alistair Popple <apopple@nvidia.com>
+
+> The dax range information is freed before the device is unregistered, so
+> the driver can not reliably recall (another use after free) what it is
+> meant to release. Lastly if that use after free got lucky, the driver
+> was covering up the leak of "System RAM (kmem)" due to its use of
+> release_resource() which detaches, but does not free, child resources.
+> The switch to remove_resource() forces remove_memory() to be responsible
+> for the deletion of the resource added by add_memory_driver_managed().
+>
+> Fixes: c2f3011ee697 ("device-dax: add an allocation interface for device-dax instances")
+> Cc: <stable@vger.kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/dax/bus.c  |    2 +-
+>  drivers/dax/kmem.c |    4 ++--
+>  kernel/resource.c  |   14 --------------
+>  3 files changed, 3 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 012d576004e9..67a64f4c472d 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -441,8 +441,8 @@ static void unregister_dev_dax(void *dev)
+>  	dev_dbg(dev, "%s\n", __func__);
+>  
+>  	kill_dev_dax(dev_dax);
+> -	free_dev_dax_ranges(dev_dax);
+>  	device_del(dev);
+> +	free_dev_dax_ranges(dev_dax);
+>  	put_device(dev);
+>  }
+>  
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 918d01d3fbaa..7b36db6f1cbd 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -146,7 +146,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>  		if (rc) {
+>  			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
+>  					i, range.start, range.end);
+> -			release_resource(res);
+> +			remove_resource(res);
+>  			kfree(res);
+>  			data->res[i] = NULL;
+>  			if (mapped)
+> @@ -195,7 +195,7 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+>  
+>  		rc = remove_memory(range.start, range_len(&range));
+>  		if (rc == 0) {
+> -			release_resource(data->res[i]);
+> +			remove_resource(data->res[i]);
+>  			kfree(data->res[i]);
+>  			data->res[i] = NULL;
+>  			success++;
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index ddbbacb9fb50..b1763b2fd7ef 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -1343,20 +1343,6 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>  			continue;
+>  		}
+>  
+> -		/*
+> -		 * All memory regions added from memory-hotplug path have the
+> -		 * flag IORESOURCE_SYSTEM_RAM. If the resource does not have
+> -		 * this flag, we know that we are dealing with a resource coming
+> -		 * from HMM/devm. HMM/devm use another mechanism to add/release
+> -		 * a resource. This goes via devm_request_mem_region and
+> -		 * devm_release_mem_region.
+> -		 * HMM/devm take care to release their resources when they want,
+> -		 * so if we are dealing with them, let us just back off here.
+> -		 */
+> -		if (!(res->flags & IORESOURCE_SYSRAM)) {
+> -			break;
+> -		}
+> -
+>  		if (!(res->flags & IORESOURCE_MEM))
+>  			break;
+>  
 
