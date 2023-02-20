@@ -2,144 +2,132 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E3EC636D6
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Feb 2023 04:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF4AC05027
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Feb 2023 04:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbjBTE4B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 19 Feb 2023 23:56:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35054 "EHLO
+        id S229797AbjBTE4N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 19 Feb 2023 23:56:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjBTEz5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 19 Feb 2023 23:55:57 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7954FBDE1
-        for <linux-cxl@vger.kernel.org>; Sun, 19 Feb 2023 20:55:54 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31K48ucL008449;
-        Mon, 20 Feb 2023 04:55:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type; s=pp1; bh=A7rsBWEPRCJEayuZrXaMs27fJzUwWUaTLOF4Okti8Qw=;
- b=VHVJfxCoxf2C7PBUhA7xqCPJXZTznSFBxdMSQI3yt56rqJdtR+UGF5/zjs/2ZEm4mG58
- O8UXplpWMia7dMLrAL2TsMISJXC4lK5N194GWxOwihWfE2W5a4pfA51VdlFcy+ZGYDys
- A37bO7nIANpYqRF/529+rlQNobTSfwO7cmPmQPZyBoYZV9Kgk8WfydA4fOThfovH0Zlp
- CbQO+1Cwudrqz4nxL6hsrNKiP+FCX+kv4TZzbNSB5xnoIMMJqCUH2HGp/dN0a6J1avCw
- wUQFjHsJ4yOjRmtPm0cB4AIoyEJ0a8SKNbg7NaNE02UmOgMDC4gNimCCmnYtEZ1Ex+TM NA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nuyk6argm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 04:55:22 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31K4hbXH024085;
-        Mon, 20 Feb 2023 04:55:22 GMT
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nuyk6arg9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 04:55:22 +0000
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31K2TO9G017055;
-        Mon, 20 Feb 2023 04:55:21 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([9.208.130.98])
-        by ppma03dal.us.ibm.com (PPS) with ESMTPS id 3ntpa6ny4k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 04:55:21 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31K4tJto4129364
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Feb 2023 04:55:20 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B96DF5805B;
-        Mon, 20 Feb 2023 04:55:19 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B65CE58058;
-        Mon, 20 Feb 2023 04:55:15 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.109.205.160])
-        by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Feb 2023 04:55:15 +0000 (GMT)
-X-Mailer: emacs 29.0.60 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Yang Shi <shy828301@gmail.com>,
-        David Rientjes <rientjes@google.com>
-Cc:     "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>,
-        lsf-pc@lists.linux-foundation.org, linux-cxl@vger.kernel.org,
-        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Duen-wen Hsiao <duenwen@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [LSF/MM/BPF BoF] Session for CXL memory
-In-Reply-To: <CAHbLzkpJa=HYH7OAdFO6WGYXtX1Yzhv9sFE+MGfyZrd3KvUv=A@mail.gmail.com>
-References: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
- <38D49DA9-3C57-4951-8CBA-5D2BB0C40D9C@bytedance.com>
- <dd0d92fd-51dc-f5ac-26f9-7446118d654e@google.com>
- <CAHbLzkpJa=HYH7OAdFO6WGYXtX1Yzhv9sFE+MGfyZrd3KvUv=A@mail.gmail.com>
-Date:   Mon, 20 Feb 2023 10:25:12 +0530
-Message-ID: <87v8jx0wcv.fsf@linux.ibm.com>
+        with ESMTP id S229619AbjBTE4M (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 19 Feb 2023 23:56:12 -0500
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED86C646
+        for <linux-cxl@vger.kernel.org>; Sun, 19 Feb 2023 20:56:07 -0800 (PST)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230220045605epoutp04400371c1b9741400ecbbdbc4ebab1a61~Fb3CW220M1754517545epoutp04I
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Feb 2023 04:56:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230220045605epoutp04400371c1b9741400ecbbdbc4ebab1a61~Fb3CW220M1754517545epoutp04I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1676868965;
+        bh=39IiQ7oRkksZeq7cYm0LKZuY0ScNNMJ5Wa9QJ5QqWlM=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=UpMaq4EyhUsDgA5063CUQLf0QydMaewgbnIGNBYPEOGi8ISIWTU1g6NtAiuOQYBA4
+         94dRxjLaq8efyp8fMyEAeo8DpkxuOoYq9UPKHsPAv7fQlDrOe6ciLxNBZRPlvYN1/Z
+         gu5+g2KaFE2PCIFxVtMIPVagmSZALL7tp78nYbvc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230220045605epcas2p36d2a83e3bf7d70a181cad751d85110f0~Fb3CC_96_1651616516epcas2p32;
+        Mon, 20 Feb 2023 04:56:05 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.89]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4PKqr45N8Pz4x9Q0; Mon, 20 Feb
+        2023 04:56:04 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        39.0A.61927.46DF2F36; Mon, 20 Feb 2023 13:56:04 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230220045604epcas2p3bc0b1fb688c48ec0b8ae2512adba3513~Fb3A2hoam0473304733epcas2p3X;
+        Mon, 20 Feb 2023 04:56:04 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230220045603epsmtrp27e57f85c2f83cea2dc70e75b85b502a1~Fb3A1t6CS0918909189epsmtrp2I;
+        Mon, 20 Feb 2023 04:56:03 +0000 (GMT)
+X-AuditID: b6c32a45-8bdf87000001f1e7-3b-63f2fd647bc8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EB.50.17995.36DF2F36; Mon, 20 Feb 2023 13:56:03 +0900 (KST)
+Received: from dell-ArcherCity.dsn.sec.samsung.com (unknown [10.229.83.212])
+        by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230220045603epsmtip2fb76d63f560b72c64a9bc62a73fb9c26~Fb3AoFbw32919129191epsmtip2a;
+        Mon, 20 Feb 2023 04:56:03 +0000 (GMT)
+From:   Junhyeok Im <junhyeok.im@samsung.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        bwidawsk@kernel.org, alison.schofield@intel.com,
+        Junhyeok Im <junhyeok.im@samsung.com>
+Subject: [ndctl 0/3] Support for inject poison
+Date:   Mon, 20 Feb 2023 13:57:06 +0900
+Message-Id: <20230220045709.94027-1-junhyeok.im@samsung.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Gdq6GZnXqO7X3Ab7u1m4fmPu_t52Eu-C
-X-Proofpoint-ORIG-GUID: vWinnm_MLpH5UWHtG0_eKaS55ObBeYh4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-20_01,2023-02-17_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 spamscore=0 bulkscore=0 mlxscore=0 phishscore=0
- impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0 clxscore=1011
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302200041
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKKsWRmVeSWpSXmKPExsWy7bCmmW7K30/JBq9uS1rcfXyBzaJ58mJG
+        i+lTLzBaLD46g9ni/KxTLBa3JhxjcmDzWLznJZPHplWdbB59W1YxenzeJBfAEpVtk5GamJJa
+        pJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQO0XEmhLDGnFCgUkFhc
+        rKRvZ1OUX1qSqpCRX1xiq5RakJJTYF6gV5yYW1yal66Xl1piZWhgYGQKVJiQnbF4ZzNrwUX2
+        iuMd01kbGKezdjFyckgImEi0nf/E0sXIxSEksINRYvLCF1DOJ0aJzwuOMkI4nxklfiw7Dtey
+        4/kbVojELkaJiR++Q7U0MklMf7eEEaSKTUBb4m//dDBbREBWonndAyaQImaBCYwSS+ceZAZJ
+        CAvoSVw8/IGti5GDg0VAVWLNVGGQMK+AjcStJQfYILbJS+w/eJYZIi4ocXLmExYQmxko3rx1
+        NjPITAmBXewSkzYvZodocJE4dPY/C4QtLPHq+BaouJTE53d7oYbmS0w9OBEqXiLRduYAlG0s
+        8e7mc1aQe5gFNCXW79IHMSUElCWO3IJayyfRcfgvO0SYV6KjTQiiUVViy4YXUEOkJY5O3AR1
+        gIfEpLk9TCC2kECsxLHbU1gnMMrPQvLMLCTPzELYu4CReRWjWGpBcW56arFRgSE8UpPzczcx
+        gtOflusOxslvP+gdYmTiYDzEKMHBrCTCK33oQ7IQb0piZVVqUX58UWlOavEhRlNg6E5klhJN
+        zgcm4LySeEMTSwMTMzNDcyNTA3MlcV5p25PJQgLpiSWp2ampBalFMH1MHJxSDUwpE3TOfnDz
+        t3C/vH89n8H7iwnT1iQkBZxg37OrmtN6W3CmuVYCi07jfFs9kbBjs0SelJYZ3XlZvML5i9Ol
+        m6sZlLL+VzzfHr5cozi0/1Flnv385U1rt79rzqr55zahxTdBetoqnimerDr2txzk1u9mv/re
+        wtinfs8yrsnzvrGxPLmRJCbrceBUbnNZxSnl9+nXfCZa3s7d4LLYTd54R2T89bw3RRvit51c
+        Kr0k98dBOWvT/5e5H1/7vN2/npP/8eO3Jbt/bT5o/av1peYpMSeeybZ6n7InfjIQYq1bOt1o
+        fgNb3E6j1RH6l09Gm8tfrHulI9fVK7wjYsLGm2qxG9+oay6R8Fi0VHdC95YtjAeVWIozEg21
+        mIuKEwEifVFpCAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCLMWRmVeSWpSXmKPExsWy7bCSvG7y30/JBrf+m1ncfXyBzaJ58mJG
+        i+lTLzBaLD46g9ni/KxTLBa3JhxjcmDzWLznJZPHplWdbB59W1YxenzeJBfAEsVlk5Kak1mW
+        WqRvl8CVsXhnM2vBRfaK4x3TWRsYp7N2MXJySAiYSOx4/gbI5uIQEtjBKHF39hxmiIS0xI1H
+        XWwQtrDE/ZYjUEX/GSVWzlsHlmAT0Jb42z+dEcQWEZCVaF73gAnEZhaYxiixfW8iiC0soCdx
+        8fAHoHoODhYBVYk1U4VBwrwCNhK3lhyAmi8vsf/gWWaIuKDEyZlPWCDGyEs0b53NPIGRbxaS
+        1CwkqQWMTKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYIDUktrB+OeVR/0DjEycTAe
+        YpTgYFYS4ZU+9CFZiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+FrpPxQgLpiSWp2ampBalFMFkm
+        Dk6pBqZmN1eh46s7Iwxs15hlfTLZMUFFoSs8WblS50RzYUvPdKUQm6XljYKBMy+9mX+03ndi
+        YE2fq+iRfZWfD6jdauyOnlJwIbapnUHePJbnHBdLzYffxnm/hS8yO5SuvsuixbaQtede8r5f
+        PY8PtnptDJva6ffxqqmN8MV109n7JosvlnK0WvD/xq45Lsttwg9INd9T19Zh3xj4/JdFcdvC
+        paHzUvJP1InocsoeLWXfa7Dvwi/bpdXdC8rYnzn2fT3ze5OxBV/uAV+Z2unCiicW5qcw6GUr
+        iuZnCXnaWKZocu0PXvVSsKDN0JVTjU//zW2eKKYmgzrTh/dVVsounK+yJjr67HnVAzke6uZ2
+        +zcrsRRnJBpqMRcVJwIAHzvq4rcCAAA=
+X-CMS-MailID: 20230220045604epcas2p3bc0b1fb688c48ec0b8ae2512adba3513
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230220045604epcas2p3bc0b1fb688c48ec0b8ae2512adba3513
+References: <CGME20230220045604epcas2p3bc0b1fb688c48ec0b8ae2512adba3513@epcas2p3.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Yang Shi <shy828301@gmail.com> writes:
+This series adds new ability to inject poison, including library update
+and new command interface(inject-poison).
 
-> On Sun, Jan 22, 2023 at 9:51 PM David Rientjes <rientjes@google.com> wrote:
->>
->> On Fri, 6 Jan 2023, Viacheslav A.Dubeyko wrote:
->>
->> > CC: LSF/MM/BPF mailing list. Sorry, missed the list.
->> >
->> > > On Jan 6, 2023, at 11:51 AM, Viacheslav A.Dubeyko <viacheslav.dubeyko@bytedance.com> wrote:
->> > >
->> > > Hello,
->> > >
->> > > I believe CXL memory is hot topic now. I believe we have multiple topics
->> > > for discussion. I personally would like to discuss CXL Fabric Manager
->> > > and vision of FM architecture implementation. I am going to share the topic
->> > > in separate email. I would like to suggest a special session for CXL memory
->> > > related topics.
->> > >
->> > > How everybody feels about it?
->> > >
->>
->> I think this makes a lot of sense, thanks for suggesting it.
->>
->> Should this be a BoF or just a normal topic proposal?  I assume that there
->> could be several different topics of interest all related to CXL.mem.
->>
->> Specifically interesting would be the division of work between the kernel
->> and userspace to manage memory placement on systems with locally attached
->> CXL.  And, further, what APIs userspace would have at its disposal for
->> explicit optimization of this placement that would exist beyond what is
->> available for NUMA.
->
-> Yeah, in addition, how CXL hierarchy interacts with memory tiering may
-> be an interesting topic too.
->
->>
->> I assume we might also want to chat about CXL 2.0 extensions that would be
->> useful, especially for cloud providers.
->>
->> I'd be happy to join in any of the proposals for these topics, just let me
->> know!
->
-> +1 for me.
->
+Junhyeok Im (3):
+  libcxl: add memdev inject poison support
+  cxl: add inject-poison command to cxl tool
+  Documentation: add man page documentation for inject-poison
 
-I would also be interested in finding out what we learned about the
-device attributes that people want to use for building hierarchy. We
-still haven't hooked up HMAT/CDAT to memory tiers. It would be good to
-understand and discuss on how we should make progress here.
+ Documentation/cxl/cxl-inject-poison.txt | 42 ++++++++++++++++++++
+ Documentation/cxl/lib/libcxl.txt        |  4 ++
+ Documentation/cxl/meson.build           |  1 +
+ cxl/builtin.h                           |  1 +
+ cxl/cxl.c                               |  1 +
+ cxl/lib/libcxl.c                        | 26 ++++++++++++
+ cxl/lib/libcxl.sym                      |  5 +++
+ cxl/libcxl.h                            |  1 +
+ cxl/memdev.c                            | 53 +++++++++++++++++++++++--
+ 9 files changed, 131 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/cxl/cxl-inject-poison.txt
 
--aneesh
+
+base-commit: a88bdcfb4202c73aadfee6f83c5502eb5121cbd9
+-- 
+2.34.1
+
