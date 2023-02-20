@@ -2,174 +2,96 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509D5C636CC
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Feb 2023 11:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF244C05027
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Feb 2023 14:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231844AbjBTLqy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 20 Feb 2023 06:46:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39108 "EHLO
+        id S232059AbjBTObU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 20 Feb 2023 09:31:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231873AbjBTLqw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Feb 2023 06:46:52 -0500
+        with ESMTP id S232017AbjBTObT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Feb 2023 09:31:19 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8CA1B336
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Feb 2023 03:46:49 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PL0rb1t2Gz6J68P;
-        Mon, 20 Feb 2023 19:42:07 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86F1710AB2;
+        Mon, 20 Feb 2023 06:31:17 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PL4VH47D8z6J7fc;
+        Mon, 20 Feb 2023 22:26:31 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Mon, 20 Feb
- 2023 11:46:47 +0000
-Date:   Mon, 20 Feb 2023 11:46:46 +0000
+ 2023 14:31:13 +0000
+Date:   Mon, 20 Feb 2023 14:31:12 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     Jonathan Cameron via <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Gregory Price <gourry.memverge@gmail.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>
-Subject: Re: [PATCH 2/2] hw/cxl: Multi-Region CXL Type-3 Devices (Volatile
- and Persistent)
-Message-ID: <20230220114646.000000ff@Huawei.com>
-In-Reply-To: <Y+9gSWadbRfdqJGS@memverge.com>
-References: <20230131163847.23025-1-Jonathan.Cameron@huawei.com>
-        <20230131163847.23025-3-Jonathan.Cameron@huawei.com>
-        <20230217161617.000064d1@huawei.com>
-        <Y+9gSWadbRfdqJGS@memverge.com>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/hdm: dev_warn() on unsupported mixed mode decoder
+Message-ID: <20230220143112.00005678@Huawei.com>
+In-Reply-To: <20230218013834.31237-1-alison.schofield@intel.com>
+References: <20230218013834.31237-1-alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 17 Feb 2023 06:08:57 -0500
-Gregory Price <gregory.price@memverge.com> wrote:
+On Fri, 17 Feb 2023 17:38:34 -0800
+alison.schofield@intel.com wrote:
 
-> On Fri, Feb 17, 2023 at 04:16:17PM +0000, Jonathan Cameron via wrote:
-> > On Tue, 31 Jan 2023 16:38:47 +0000
-> > Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
-> >   
-> > > From: Gregory Price <gourry.memverge@gmail.com>
-> > > 
-> > > This commit enables each CXL Type-3 device to contain one volatile
-> > > memory region and one persistent region.
-> > > 
-> > > Two new properties have been added to cxl-type3 device initialization:
-> > >     [volatile-memdev] and [persistent-memdev]
-> > > 
-> > > The existing [memdev] property has been deprecated and will default the
-> > > memory region to a persistent memory region (although a user may assign
-> > > the region to a ram or file backed region). It cannot be used in
-> > > combination with the new [persistent-memdev] property.
-> > > 
-> > > Partitioning volatile memory from persistent memory is not yet supported.
-> > > 
-> > > Volatile memory is mapped at DPA(0x0), while Persistent memory is mapped
-> > > at DPA(vmem->size), per CXL Spec 8.2.9.8.2.0 - Get Partition Info.
-> > > 
-> > > Signed-off-by: Gregory Price <gregory.price@memverge.com>
-> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > >   
-> > Hi Gregory,
-> > 
-> > I've added support for multiple HDM decoders and hence can now
-> > test both volatile and non volatile on same device.
-> > It very nearly all works. With one exception which is I couldn't
-> > poke the first byte of the non volatile region.
-> > 
-> > I think we have an off by one in a single check.
-> > 
-> > Interestingly it makes no difference when creating an FS on top
-> > (which was my standard test) so I only noticed when poking memory
-> > addresses directly to sanity check the HDM decoder setup.
-> > 
-> > I'll roll a v2 if no one shouts out that I'm wrong.
-> > 
-> > Note that adding multiple HDM decoders massively increases
-> > the number of test cases over what we had before to poke all the
-> > corners so I may well be missing stuff.  Hopefully can send an RFC
-> > of that support out next week.
-> > 
-> > Jonathan
-> >   
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Very cool! Thanks for pushing this over the finishing line.
+> A mixed mode decoder is programmed with device physical addresses
+> that span both ram and pmem partitions of a memdev.
 > 
-> All my testing so far has been really smooth since getting the TCG issue
-> worked out.
+> Linux does not support mixed mode decoders. The driver rejects
+> sysfs writes that try to set decoder mode to mixed, and if a
+> resource bieng allocated is not wholly contained in either the
+> pmem or ram partition of a memdev, it is also rejected. Basically,
+> the CXL region driver is not going to create regions with mixed
+> mode decoders, but the BIOS could.
 > 
-> > > -MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-> > > -                           unsigned size, MemTxAttrs attrs)  
-> [...]
-> > > +    if (vmr) {
-> > > +        if (*dpa_offset <= int128_get64(vmr->size)) {  
-> > 
-> > Off by one I think.  < 
-> >   
+> If the kernel driver sees the mixed mode decoder, it will fail to
+> enable the region, and emit a dev_dbg() message.
 > 
-> Yes that makes sense, should be <.  Derp derp.
+> A dev_dbg() is not noisy enough in this case. Change the message
+> to be a dev_warn() that explicitly says mixed mode is not supported.
 > 
-> Though I think this may alludes to more off-by-one issues?  This says
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+Makes sense.
+FWIW
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/core/hdm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> if (dpa_offset < vmr->size)
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 45deda18ed32..9eaf93c8ebb0 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -294,8 +294,8 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>  	else if (resource_contains(&cxlds->ram_res, res))
+>  		cxled->mode = CXL_DECODER_RAM;
+>  	else {
+> -		dev_dbg(dev, "decoder%d.%d: %pr mixed\n", port->id,
+> -			cxled->cxld.id, cxled->dpa_res);
+> +		dev_warn(dev, "decoder%d.%d: %pr mixed mode not supported\n",
+> +			 port->id, cxled->cxld.id, cxled->dpa_res);
+>  		cxled->mode = CXL_DECODER_MIXED;
+>  	}
+>  
 > 
-> but dpa_offset should be (hpa - memory_region_base),
-> 
-> The HPA is used by memory access routing for the whole system to determine
-> what device it should access.
-> 
-> If that corner case is being hit, doesn't it imply the higher level code
-> is also susceptible to this, and is routing accesses to the wrong device?
-
-I don't think so though I may be missing something. 
-
-Say vmr->size = 8
-
-hpa  dpa_offset
-0       0
-1       1
-2       2
-3       3
-4       4
-5       5
-6       6
-7       7
-8       0
-
-etc
-
-Also the writes are turning up where I expect them to.
-
-Also just noticed that the code is setting Memory_base in the CXL dvsec.
-Given we are emulating a device as if it has been freshly powered up
-those should not be set - it's the OS or firmware's job to set them up.
-Harmless though, so can be a cleanup to follow the main series.
-
-We don't currently handle dvsec range based routing anyway and
-I'm not sure we ever will as it is a pain to test without some firmware
-or OS code to program them for us.
-
-Note that if you update your kernel to cxl/next it will currently fail
-as the Range register emulation is (I think) rather over enthusiastic
-and currently decides to emulate the HDM decoders for the QEMU emulated
-type 3 devices.
-
-https://lore.kernel.org/linux-cxl/167640366272.935665.1056268838301725481.stgit@dwillia2-xfh.jf.intel.com/T/#m6c025d5c9b27d8360a64079593f6c5adaa408772
-
-Jonathan
-
-
-> 
-> ~Gregory
+> base-commit: a5fcd228ca1db9810ba1ed461c90b6ee933b9daf
 
