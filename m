@@ -2,115 +2,93 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6522DC61DA3
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 18:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BD1C636D7
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 22:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbjBUSfq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Feb 2023 13:35:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34272 "EHLO
+        id S229708AbjBUWGr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Feb 2023 17:06:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjBUSfp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 13:35:45 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BB92E80D
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 10:35:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677004500; x=1708540500;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W2DgoNIBqTUdR7cgxM9iP9YdGTsBiPVZAd1W8LNrPWw=;
-  b=b6lqc7FwhNsqdZwL4uMjUwAt9DiBayj/9YWkZcyhL71GmL8XGnPGY/8Y
-   SfhLF1zN7tnMQn3UFCJGwwdRm3tGNKfHqgo5APvwb5zegvqg3DTRmIZyk
-   iH/Vgz+uhdnqeHDDwLjUjVzJVUOoIbVPcAsYHSs1/7e4eWzwWXBnLodaz
-   kMwPe/kiinf0sJXKuRk4Ze7M2TgBenp2NXUHMQ9kEb39AvT9KZDtb9MQL
-   uvy+KBBmjRhy8Rtj8xAEIBnmTKC/Y47yel6m098f5FoCzrpwJSFsxIJZo
-   RePPT+9duP68pi2+pohzsB3LlV/5u4O7OlHcdroIVqbvWdIYh/0+MuQ2m
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10628"; a="330440256"
-X-IronPort-AV: E=Sophos;i="5.97,315,1669104000"; 
-   d="scan'208";a="330440256"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2023 10:34:02 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10628"; a="814606621"
-X-IronPort-AV: E=Sophos;i="5.97,315,1669104000"; 
-   d="scan'208";a="814606621"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.28.85])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2023 10:34:02 -0800
-Date:   Tue, 21 Feb 2023 10:34:00 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
-Subject: Re: [PATCH ndctl 3/3] test/cxl-security.sh: avoid intermittent
- failures due to sasync probe
-Message-ID: <Y/UOmFaOtx9FOnwf@aschofie-mobl2>
-References: <20230217-coverity-fixes-v1-0-043fac896a40@intel.com>
- <20230217-coverity-fixes-v1-3-043fac896a40@intel.com>
- <Y/T96khZVa7Oo6uU@aschofie-mobl2>
- <427fbc8d0cf56b9cbdfb7f5bef31a96c4b40fe31.camel@intel.com>
+        with ESMTP id S229622AbjBUWGq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 17:06:46 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADD732CEB
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 14:06:37 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id o4so5949264wrs.4
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 14:06:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QswolMF7JwIsaKgLxTsm84bIyCbB4xAcx+Fy7sgre/U=;
+        b=kFrQRYagxLqIVhlzqppxkUSOe1RcH6sNBTHoAnykrg/QrenYPIW+Xbi634K1G5Offl
+         H/KN7QjHbcAwX/zodlYzAdCPFq9+g93/wMyNFOPPqPB+8z/9gpmSBcQjlgdoI63j6FKu
+         we7hMmeeCyTXkorkn1gO+3Hqs/0sr29TO/YkuM1zYcMSoKcSI6gWOrBzLW/BFcA0ArpX
+         k0x4Z1TallWOtsdX812yZUncrla0zphfJ+WsgoJGOrl6rTXWaXU3HTrOVTuupGBc+jbP
+         XDjemydf+jO6+RAW5ESFaB269YQBsLx9SQo6Uid26MWQFukxKxh6eXYzz/rM7y1m3x0n
+         ZQnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QswolMF7JwIsaKgLxTsm84bIyCbB4xAcx+Fy7sgre/U=;
+        b=ZGON6nmrsy2ioYVU2DilBibTjN/14m8iBHjNK15FfM1NugTn9tudd2nUavpwnK4bkK
+         uw+k7hrIHAwKQSk9Jz4gmJbmvrdLh27pkkiE6a4LzqG48yrLAlZvWFpuo2cQKor6tcnL
+         VW0dgGzzw9GMa2hb8BtYKrKAm01U+lZC19lkyokTPZYYyo/Ivr+asTyR764QpjfW15Mh
+         t7sHmSS5av2mDotyB0irV6bLyK1bpF41+mwKaRbeuGEuN2g1yK/Shb8QfU4wUTigV+A5
+         jIzz+M4OvI5VhxugJLHPjMaAjWIpnz/haRVv6/uYdsVKAwCyzWnYhAsJ3kYyABgrjNAW
+         mBDA==
+X-Gm-Message-State: AO0yUKX+fSQs0JHBy0trAzIrVFY1Ku217G9FtRBS5teGnGMZHzb9VU//
+        DKscH8s1OPwrT0h6/Krg075p1S8n+d73Lvm4
+X-Google-Smtp-Source: AK7set817qXFh60NlBP/3akgNNtrjagi01bbBSMi2AzCOukBnE3OfBRPHmbIaWCVcSldsMETUYYBIA==
+X-Received: by 2002:adf:fdce:0:b0:2c5:5ff8:6b01 with SMTP id i14-20020adffdce000000b002c55ff86b01mr6495017wrs.1.1677017195790;
+        Tue, 21 Feb 2023 14:06:35 -0800 (PST)
+Received: from [192.168.1.115] ([185.126.107.38])
+        by smtp.gmail.com with ESMTPSA id t13-20020a05600001cd00b002c6d0462163sm4357405wrx.100.2023.02.21.14.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Feb 2023 14:06:35 -0800 (PST)
+Message-ID: <2074f332-8f6e-95f1-6860-ba5ac2df40d0@linaro.org>
+Date:   Tue, 21 Feb 2023 23:06:33 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <427fbc8d0cf56b9cbdfb7f5bef31a96c4b40fe31.camel@intel.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
+Subject: Re: [PATCH v5 6/8] hw/cxl: Fix endian issues in CXL RAS capability
+ defaults / masks
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>
+Cc:     Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>
+References: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
+ <20230221152145.9736-7-Jonathan.Cameron@huawei.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230221152145.9736-7-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 10:13:16AM -0800, Vishal Verma wrote:
-> On Tue, 2023-02-21 at 09:22 -0800, Alison Schofield wrote:
-> > On Fri, Feb 17, 2023 at 05:40:24PM -0700, Vishal Verma wrote:
-> > > This test failed intermittently because the ndctl-list operation right
-> > > after a 'modprobe cxl_test' could race the actual nmem devices getting
-> > > loaded.
-> > >
-> > > Since CXL device probes are asynchronous, and cxl_acpi might've kicked
-> > > off a cxl_bus_rescan(), a cxl_flush() (via cxl_wait_probe()) can ensure
-> > > everything is loaded.
-> > >
-> > > Add a plain cxl-list right after the modprobe to allow for a flush/wait
-> > > cycle.
-> >
-> > Is this the preferred method to 'settle', instead of udevadm settle?
+On 21/2/23 16:21, Jonathan Cameron wrote:
+> As these are about to be modified, fix the endian handle for
+> this set of registers rather than making it worse.
 > 
-> Generally, no. Usually cxl tests would use cxl-cli commands, which now
-> have the necessary waits via cxl_wait_probe(), so even a 'udevadm
-> settle' shouldn't be needed.
+> Note that CXL is currently only supported in QEMU on
+> x86 (arm64 patches out of tree) so we aren't going to yet hit
+> an problems with big endian. However it is good to avoid making
+> things worse for that support in the future.
 > 
-> In this case, the first thing we run is ndctl list, which waits for
-> nvdimm things to 'settle', but we were racing with cxl_test coming up,
-> which it (ndctl) knows nothing about.
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>   hw/cxl/cxl-component-utils.c | 18 +++++++++---------
+>   1 file changed, 9 insertions(+), 9 deletions(-)
 
-OK - I'll stop doing the udevadm settle, since what I'm doing is pure
-'cxl' and modprobe is always followed by cxl-cli commands. 
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
-> 
-> >
-> > >
-> > > Cc: Dave Jiang <dave.jiang@intel.com>
-> > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> > > ---
-> > >  test/security.sh | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/test/security.sh b/test/security.sh
-> > > index 04f630e..fb04aa6 100755
-> > > --- a/test/security.sh
-> > > +++ b/test/security.sh
-> > > @@ -225,6 +225,7 @@ if [ "$uid" -ne 0 ]; then
-> > >  fi
-> > >
-> > >  modprobe "$KMOD_TEST"
-> > > +cxl list
-> > >  setup
-> > >  check_prereq "keyctl"
-> > >  rc=1
-> > >
-> > > --
-> > > 2.39.1
-> > >
-> > >
-> 
