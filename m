@@ -2,148 +2,156 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9664C61DA3
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 15:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1E2C61DA3
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 15:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234216AbjBUPLZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Feb 2023 10:11:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35488 "EHLO
+        id S233810AbjBUPVu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Feb 2023 10:21:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229909AbjBUPLY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 10:11:24 -0500
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2051.outbound.protection.outlook.com [40.107.102.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23DA02196A;
-        Tue, 21 Feb 2023 07:11:23 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TCCrIKEzPVMzTyctYGUIjye30y5XiOV8KPj8Uutmk+eNnv9mMT2PpxQmv7PmtP0K0eBFZk6aaqzRmy70DumiX9GZd6BexsHFd963AB4E/o7wOcNLrfrb2iKX+nm6VzR19FEGIFme3WoIbpdTWGj2MhnvZ00Ij3EPOgQ7CQgY1UvG+wisae3Hanu5BpYqW9F6PsnV2cFwGd63yX3KqprbIcP37EsD6Ze8A8NfcDWuzELeeNrBZ5jac7K1MzSWokPIbCnlcDCa8cYuDGdKJmgTqRqOtzE7kwU0Krar02uBP3eTQaopY0QjhZKVnchYnMh6hhtPevz9V5HYCM1EITJ7/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NKbOlJTbD1MCZa62OX6oHGLLPnMsPScz30TINaOi7Mc=;
- b=LHk1TmWxgSfw02poXrRL5n+cEQ7keSCMf8IBjIJuJufvUu19WLP6SaSN/agJHI6lscUGEFSY2ZJqhk6Tclm3HrcXmLlBcy6AxTaL/kawJeSlYc2nPvHVTpMUfByfyVKik5g/4k/jGrUvOYdd3XeTOM/vPVQgRjjjIPQLXW7PNgqFDqv2IYunsX/JHiBeRsy41ZMGrOl5oQcZhOApNJxqJj2bnBpriO+0elpMcavQ77I9xdy2SGhzR7czH8uy4KOifK297DfRDBONaxUWB3P5QcmnMlB30iNep2ABoUnx7ExZCteW7OzXwPWlXXzpoqVAnuN0Lmlg9chu0/6Z4d2lMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NKbOlJTbD1MCZa62OX6oHGLLPnMsPScz30TINaOi7Mc=;
- b=YhxxEZh1bgn1mqr9Q+YrsLNpqKt1u2ZI2ujFu8/FB7E8MMnmBKNhA4pjQYPOFsrbVEN3CeLnRYFRI1K6S3j4WUjJjpXcwMkdaNWM78+CBgkiyebSKIfQWGBp4Jv5synfmkG70bwnnjWq+f6XkteOWuCBtNkZ3rO8ZcbmKx98hok=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
- by CH2PR17MB3909.namprd17.prod.outlook.com (2603:10b6:610:8c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.21; Tue, 21 Feb
- 2023 15:11:20 +0000
-Received: from BN6PR17MB3121.namprd17.prod.outlook.com
- ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
- ([fe80::d253:1eb3:9347:c660%3]) with mapi id 15.20.6111.021; Tue, 21 Feb 2023
- 15:11:20 +0000
-Date:   Sat, 18 Feb 2023 04:47:54 -0500
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
-        linux-acpi@vger.kernel.org, qemu-devel@nongnu.org
-Subject: Re: [PATCH 00/18] CXL RAM and the 'Soft Reserved' => 'System RAM'
- default
-Message-ID: <Y/CeykFm6A4vYw7P@memverge.com>
-References: <167564534874.847146.5222419648551436750.stgit@dwillia2-xfh.jf.intel.com>
- <Y+vSj8FD6ZaHhfoN@memverge.com>
- <63ebd56e639e9_32d61294f4@dwillia2-xfh.jf.intel.com.notmuch>
- <Y+vag3hg3VRNRUti@memverge.com>
- <20230214211824.00007f91@Huawei.com>
- <Y+wCeSig++c3ACkj@memverge.com>
- <Y+wC+rPRbAc9rudx@memverge.com>
- <20230215100327.0000728f@Huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230215100327.0000728f@Huawei.com>
-X-ClientProxiedBy: BL0PR02CA0071.namprd02.prod.outlook.com
- (2603:10b6:207:3d::48) To BN6PR17MB3121.namprd17.prod.outlook.com
- (2603:10b6:405:7c::19)
+        with ESMTP id S234503AbjBUPVn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 10:21:43 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA6C25BB2
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 07:21:37 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PLjd25yt6z6J9fv;
+        Tue, 21 Feb 2023 23:19:34 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Tue, 21 Feb 2023 15:21:34 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>
+Subject: [PATCH v5 0/8] hw/cxl: RAS error emulation and injection
+Date:   Tue, 21 Feb 2023 15:21:37 +0000
+Message-ID: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|CH2PR17MB3909:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0460e43d-f73c-4bbb-5691-08db141de2f4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jWsbnEioOErB82we4lUpQ8mftJSAtB6OnXNbbVZ4gcKBFf9MwjWHExi538DHDra+eLAmlzy1aE1YNVXTId/+xRzQSalJcdKYptxV0YPeiomNzg1FXf8qZuAYniOYinUye2Q7z0omria24c/vxWhbp9djxUboAfJ36KIJ/1adVNZydoKJEWpQVx9mFVBCTWjFxprJ253IIN+Io2KalwHU2PT+P2ggfpoPUoAFM8WMPmo6ulJTDwsvKUyNWD7muCVdpia/rB4FbV9wvfwEu0HU4g5xCE+RBjyOIQgdFP19jGQgfg21oYcZk0RK/DZ1leNNAKFuNV0eZU+eMlrgYibJQRAlmKgCDZ4hNgXKqu+jXx112tEalhWulfhx5dRRnqVBMVt9BGMLAxplJIGVd2IHZVfx1RZ2CIR2OGoAKmkErrVrPKPLcqM3nr94Wemh+1l5WiaArAeVm/tE9sUP2uOSiePeMqgNakUhsov0tOHoDjFhR+Y+QsakJHuUjZssCqiV5JkxdTnHjlnMVePZqicEa49X8HpmkAIk7rul+ksmzQQdRkAJOIZ86bW0QbJvf787mUSF2XDIkj4inQUl8678/T2vDBNFmpbgfIjye4AkftEzc/HgqQ3WG4R90BusTo8LuuMMfTd78tJoYodMgNnCzA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39830400003)(346002)(366004)(136003)(396003)(376002)(451199018)(86362001)(36756003)(5660300002)(41300700001)(44832011)(7416002)(2906002)(8936002)(38100700002)(66476007)(66946007)(66556008)(6916009)(478600001)(54906003)(8676002)(6486002)(316002)(186003)(26005)(6512007)(2616005)(4326008)(6506007)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ipGZxOmzV6A4TT+TF3UsR03yKWYThHItNUSwygX7D2160pRIL9ZOmAFB0lyr?=
- =?us-ascii?Q?AEXv6Pw/2IyAodH3kHAzOnyiOwTn86ig+hA3UEFhoEmZR2TGDtI69syM4uni?=
- =?us-ascii?Q?CG2Mk2w7PR0zDtxib8cGuYPPfvBSfnlwTDWh/cWAczkYQzrnBQimOpp+2SyH?=
- =?us-ascii?Q?k9xHA7Hj/sTDoe4QrzqkEe2tqWUcU+2MY4PbNgvBDvwhISmFOttwD63FNM97?=
- =?us-ascii?Q?75EKlF3ix+lWfBEKNaQZkUT7+PqrqY046L8e86RquCQhJPTQm+j4kU0HhvlF?=
- =?us-ascii?Q?bvggCAOpZC2CuCvOLMdAfkCQ4fAHOLj29CcgA1ZKRj8IMV37lLqbU6zTKWjG?=
- =?us-ascii?Q?Wdf52Ms6SEHqwn0gE+0XRpJfvq6HSo7yS+vy+EjiDGCz+UE3qgiwXPNUz4RS?=
- =?us-ascii?Q?WmpgefYQMImtDU7xr67WC41eUMQHc+jvQOnlapyzgxJso0Vb6MzglyZNa1M5?=
- =?us-ascii?Q?R1mwGkjrK9bQcUo5EqvVCvu32646m3atWtNTMvInfB3MG25hxONlQUndzIS0?=
- =?us-ascii?Q?LYG9iDBOhRiA23a1osAkEdXwlx2V1wDPFbcJOGKJFKuhXVqW/TmPeSjj+ZbB?=
- =?us-ascii?Q?PxsGKEnXUWvmHBCKoLK2QlLSMhc7L8JvU6C5iBaM2tAIKdaAIC8fMi3Bvek6?=
- =?us-ascii?Q?3EtGYRu48pGcjYh70CCKS/Yc00ZrRLuLuPOMV+JDqV0qk2MYRJOl8D9ZRnnB?=
- =?us-ascii?Q?mRw049TrhzRRT93dcdjN3qiBollRcza5CdWlXuNfLWg+krgowXCdiQrMLp3j?=
- =?us-ascii?Q?nLPjDudvjIre/FKABXdDrKiOMUFhprqRCNLW9RlytUeMwtKA/QjBfriuRocA?=
- =?us-ascii?Q?ycvTtCh6SHL31Vig/SVQvnoqgz7DHUPwOBZpoWSOC2Sm0mQtIC8NBloWnvRZ?=
- =?us-ascii?Q?9nENskyS0y25HCoDKiq6t0kYTmv4MXVuW9ziwXkNgTYn70zD2K1wWBCvYLoE?=
- =?us-ascii?Q?EG4vZQ1ItwbinDfNU2c2CSLJ1inRxkvRVaY8RSnkqd4SjqF0ZhLkCOXjHou0?=
- =?us-ascii?Q?QPdRwlmWENZ/ZLAecPR0uy5oK7I/LgmaHglWUs9f0mNQP1x8jc3wovU2svSU?=
- =?us-ascii?Q?lksa1CL5AKo2xFULaUE4PmnMoRbpEjyjVIOaGpntmxpM70HNgCToXD2rkpBd?=
- =?us-ascii?Q?pf6rcQPuROEUAplkfyBvlZEBGhJoN2qjEDf3szVUR+uWai9Yb4sQeKw4bRyS?=
- =?us-ascii?Q?NX5M+fswmIYi14cU0rAxVhV87RRXzOAi5ET9iLbwWCBrYJlKvtLlU4AzNl/K?=
- =?us-ascii?Q?mYDT+egaF9SCUvo8Xhk3x/54+/QoIBIaDRJwaLsnAkrs43mGyAPajtD/6u/M?=
- =?us-ascii?Q?BkTNeBL0dDIWyOS4bIV5ouyeCImezPz8Kmg81xy/b8X/uVlG6sLeRFBKA4Cf?=
- =?us-ascii?Q?NPSyY65jO4UUlaJTODpEvwLBsBsi0wWEnlaTlG3dCqfjiw9A0GKe11CRrqiu?=
- =?us-ascii?Q?VXzStc4WcS+ySEuRIJvhtM8JOlY9KEm3emwDvpw68ucXkezi6djhp/mUxRp8?=
- =?us-ascii?Q?OosBOteG10UZ4KF8fHHqC1MP47ZbmB5LvFStydHxO85033GmM5pQDr2s0evz?=
- =?us-ascii?Q?D5h3TCmRfDc7Z40YZuXHobwQbSRDqBvYd6IiLOROUiXUroHXW42wZshGuxA8?=
- =?us-ascii?Q?OQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0460e43d-f73c-4bbb-5691-08db141de2f4
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2023 15:11:20.0452
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X6xf5r9ppeHkWGmlYG0Y324OAwC+D+w2wh1I+bIe7M2+gsafQx7Fo1pskVz8k87flCilY3IdNCP+m/n5K5MZKBR3Vni1Bofe0MaObf5cYuE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR17MB3909
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 10:03:27AM +0000, Jonathan Cameron wrote:
-> On Tue, 14 Feb 2023 16:54:02 -0500
-> Gregory Price <gregory.price@memverge.com> wrote:
-> 
-> > Just clarifying one thing:  Even with the patch, KVM blows up.
-> > Disabling KVM fixes this entirely.  I haven't tested without KVM but
-> > with the patch, i will do that now.
-> 
-> yup.  The patch only fixes TCG so that's expected behavior.
-> 
-> Fingers crossed on this 'working'.
-> 
-> I'm open to suggestions on how to work around the problem with KVM
-> or indeed allow TCG to cache the instructions (right not it has
-> to fetch and emulate each instruction on it's own).
-> 
-> I can envision how we might do it for KVM with userspace page fault handling
-> used to get a fault up to QEMU which can then stitch in a cache
-> of the underlying memory as a stage 2 translation to the page (a little
-> bit like how post migration copy works) though I've not prototyped
-> anything...
-> 
+v5: thanks to Dave Jiang for review.
+- Spell out Implementation Defined.
+- Pick up Dave's tags - thanks!
+v4:
+In response to similar feedback on poison injection series (Markus Armbruster).
+ - More detailed documentation in cxl.json
+ - Based on tag in format suggested by Markus.
 
-Just following up.  With the patch applied and KVM turned off, no crash.
-I've been working with this for a while.
+Based on series "[PATCH v4 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream"
 
-We should move the instruction alignment issue into a separate
-discussion thread.
+Based on: Message-Id: 20230206172816.8201-1-Jonathan.Cameron@huawei.com
+
+v3 cover letter.
+
+CXL error reporting is complex. This series only covers the protocol
+related errors reported via PCIe AER - Ira Weiny has posted support for
+Event log based injection and I will post an update of Poison list injection
+shortly. My proposal is to upstream this one first, followed by Ira's Event
+Log series, then finally the Poison List handling. That is based on likely
+order of Linux kernel support (the support for this type of error reporting
+went in during the recent merge window, the others are still under review).
+Note we may propose other non error related features in between!
+
+In order to test the kernel support for RAS error handling, I previously
+provided this series via gitlab, enabling David Jiang's kernel patches
+to be tested.
+
+Now that Linux kernel support is upstream, this series is proposing the
+support for upstream inclusion in QEMU. Note that support for Multiple
+Header Recording has been added to QEMU the meantime and a kernel
+patch to use that feature sent out.
+
+https://lore.kernel.org/linux-cxl/20230113154058.16227-1-Jonathan.Cameron@huawei.com/T/#t
+
+There are two generic PCI AER precursor feature additions.
+1) The PCI_ERR_UCOR_MASK register has not been implemented until now
+   and is necessary for correct emulation.
+2) The routing for AER errors, via existing AER error injection, only
+   covered one of two paths given in the PCIe base specification,
+   unfortunately not the one used by the Linux kernel CXL support.
+
+The use of MSI for the CXL root ports, both makes sense from the point
+of view of how it may well be implemented, and works around the documented
+lack of PCI interrupt routing in i386/q35. I have a hack that lets
+us correctly route those interrupts but don't currently plan to post it.
+
+The actual CXL error injection uses a new QMP interface as documented
+in the final patch description. The existing AER error injection
+internals are reused though it's HMP interface is not.
+
+Injection via QMP:
+{ "execute": "qmp_capabilities" }
+...
+{ "execute": "cxl-inject-uncorrectable-errors",
+  "arguments": {
+    "path": "/machine/peripheral/cxl-pmem0",
+    "errors": [
+        {
+            "type": "cache-address-parity",
+            "header": [ 3, 4]
+        },
+        {
+            "type": "cache-data-parity",
+            "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+        },
+        {
+            "type": "internal",
+            "header": [ 1, 2, 4]
+        }
+        ]
+  }}
+...
+{ "execute": "cxl-inject-correctable-error",
+    "arguments": {
+        "path": "/machine/peripheral/cxl-pmem0",
+        "type": "physical"
+    } }
+
+Jonathan Cameron (8):
+  hw/pci/aer: Implement PCI_ERR_UNCOR_MASK register
+  hw/pci/aer: Add missing routing for AER errors
+  hw/pci-bridge/cxl_root_port: Wire up AER
+  hw/pci-bridge/cxl_root_port: Wire up MSI
+  hw/mem/cxl-type3: Add AER extended capability
+  hw/cxl: Fix endian issues in CXL RAS capability defaults / masks
+  hw/pci/aer: Make PCIE AER error injection facility available for other
+    emulation to use.
+  hw/mem/cxl_type3: Add CXL RAS Error Injection Support.
+
+ hw/cxl/cxl-component-utils.c   |  20 ++-
+ hw/mem/cxl_type3.c             | 294 +++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3_stubs.c       |  10 ++
+ hw/mem/meson.build             |   2 +
+ hw/pci-bridge/cxl_root_port.c  |  64 +++++++
+ hw/pci/pci-internal.h          |   1 -
+ hw/pci/pcie_aer.c              |  14 +-
+ include/hw/cxl/cxl_component.h |  26 +++
+ include/hw/cxl/cxl_device.h    |  11 ++
+ include/hw/pci/pcie_aer.h      |   1 +
+ include/hw/pci/pcie_regs.h     |   3 +
+ qapi/cxl.json                  | 118 +++++++++++++
+ qapi/meson.build               |   1 +
+ qapi/qapi-schema.json          |   1 +
+ 14 files changed, 555 insertions(+), 11 deletions(-)
+ create mode 100644 hw/mem/cxl_type3_stubs.c
+ create mode 100644 qapi/cxl.json
+
+-- 
+2.37.2
+
