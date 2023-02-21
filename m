@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BB7C636D7
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 15:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C9FC61DA3
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 15:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233312AbjBUPYm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Feb 2023 10:24:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46380 "EHLO
+        id S233656AbjBUPZN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Feb 2023 10:25:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbjBUPYl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 10:24:41 -0500
+        with ESMTP id S229945AbjBUPZM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 10:25:12 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3D822798
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 07:24:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D24423134
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 07:25:11 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PLjhZ5CkMz6J9b9;
-        Tue, 21 Feb 2023 23:22:38 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PLjf13CCvz6J6Wc;
+        Tue, 21 Feb 2023 23:20:25 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Tue, 21 Feb 2023 15:24:38 +0000
+ 15.1.2507.17; Tue, 21 Feb 2023 15:25:09 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
 CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
@@ -30,9 +30,9 @@ CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Markus Armbruster <armbru@redhat.com>
-Subject: [PATCH v5 6/8] hw/cxl: Fix endian issues in CXL RAS capability defaults / masks
-Date:   Tue, 21 Feb 2023 15:21:43 +0000
-Message-ID: <20230221152145.9736-7-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 7/8] hw/pci/aer: Make PCIE AER error injection facility available for other emulation to use.
+Date:   Tue, 21 Feb 2023 15:21:44 +0000
+Message-ID: <20230221152145.9736-8-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
 References: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
@@ -40,58 +40,44 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-As these are about to be modified, fix the endian handle for
-this set of registers rather than making it worse.
-
-Note that CXL is currently only supported in QEMU on
-x86 (arm64 patches out of tree) so we aren't going to yet hit
-an problems with big endian. However it is good to avoid making
-things worse for that support in the future.
+This infrastructure will be reused for CXL RAS error injection
+in patches that follow.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
- hw/cxl/cxl-component-utils.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ hw/pci/pci-internal.h     | 1 -
+ include/hw/pci/pcie_aer.h | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index 3edd303a33..737b4764b9 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -141,17 +141,17 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
-      * Error status is RW1C but given bits are not yet set, it can
-      * be handled as RO.
-      */
--    reg_state[R_CXL_RAS_UNC_ERR_STATUS] = 0;
-+    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_STATUS, 0);
-     /* Bits 12-13 and 17-31 reserved in CXL 2.0 */
--    reg_state[R_CXL_RAS_UNC_ERR_MASK] = 0x1cfff;
--    write_msk[R_CXL_RAS_UNC_ERR_MASK] = 0x1cfff;
--    reg_state[R_CXL_RAS_UNC_ERR_SEVERITY] = 0x1cfff;
--    write_msk[R_CXL_RAS_UNC_ERR_SEVERITY] = 0x1cfff;
--    reg_state[R_CXL_RAS_COR_ERR_STATUS] = 0;
--    reg_state[R_CXL_RAS_COR_ERR_MASK] = 0x7f;
--    write_msk[R_CXL_RAS_COR_ERR_MASK] = 0x7f;
-+    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_MASK, 0x1cfff);
-+    stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_MASK, 0x1cfff);
-+    stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_SEVERITY, 0x1cfff);
-+    stl_le_p(write_msk + R_CXL_RAS_UNC_ERR_SEVERITY, 0x1cfff);
-+    stl_le_p(reg_state + R_CXL_RAS_COR_ERR_STATUS, 0);
-+    stl_le_p(reg_state + R_CXL_RAS_COR_ERR_MASK, 0x7f);
-+    stl_le_p(write_msk + R_CXL_RAS_COR_ERR_MASK, 0x7f);
-     /* CXL switches and devices must set */
--    reg_state[R_CXL_RAS_ERR_CAP_CTRL] = 0x00;
-+    stl_le_p(reg_state + R_CXL_RAS_ERR_CAP_CTRL, 0x00);
- }
+diff --git a/hw/pci/pci-internal.h b/hw/pci/pci-internal.h
+index 2ea356bdf5..a7d6d8a732 100644
+--- a/hw/pci/pci-internal.h
++++ b/hw/pci/pci-internal.h
+@@ -20,6 +20,5 @@ void pcibus_dev_print(Monitor *mon, DeviceState *dev, int indent);
  
- static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+ int pcie_aer_parse_error_string(const char *error_name,
+                                 uint32_t *status, bool *correctable);
+-int pcie_aer_inject_error(PCIDevice *dev, const PCIEAERErr *err);
+ 
+ #endif
+diff --git a/include/hw/pci/pcie_aer.h b/include/hw/pci/pcie_aer.h
+index 65e71d98fe..1234fdc4e2 100644
+--- a/include/hw/pci/pcie_aer.h
++++ b/include/hw/pci/pcie_aer.h
+@@ -100,4 +100,5 @@ void pcie_aer_root_write_config(PCIDevice *dev,
+                                 uint32_t addr, uint32_t val, int len,
+                                 uint32_t root_cmd_prev);
+ 
++int pcie_aer_inject_error(PCIDevice *dev, const PCIEAERErr *err);
+ #endif /* QEMU_PCIE_AER_H */
 -- 
 2.37.2
 
