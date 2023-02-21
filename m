@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BDAC61DA3
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 15:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F44BC6379F
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 15:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233938AbjBUPWy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Feb 2023 10:22:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
+        id S233273AbjBUPX0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Feb 2023 10:23:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233905AbjBUPWj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 10:22:39 -0500
+        with ESMTP id S234293AbjBUPXJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 10:23:09 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0B72006B
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 07:22:38 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PLjb43F0Pz6J6nR;
-        Tue, 21 Feb 2023 23:17:52 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E806190
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 07:23:09 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PLjbf3H5lz6865q;
+        Tue, 21 Feb 2023 23:18:22 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Tue, 21 Feb 2023 15:22:36 +0000
+ 15.1.2507.17; Tue, 21 Feb 2023 15:23:06 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
 CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
@@ -30,9 +30,9 @@ CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Markus Armbruster <armbru@redhat.com>
-Subject: [PATCH v5 2/8] hw/pci/aer: Add missing routing for AER errors
-Date:   Tue, 21 Feb 2023 15:21:39 +0000
-Message-ID: <20230221152145.9736-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v5 3/8] hw/pci-bridge/cxl_root_port: Wire up AER
+Date:   Tue, 21 Feb 2023 15:21:40 +0000
+Message-ID: <20230221152145.9736-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
 References: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
@@ -40,51 +40,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-PCIe r6.0 Figure 6-3 "Pseudo Logic Diagram for Selected Error Message Control
-and Status Bits" includes a right hand branch under "All PCI Express devices"
-that allows for messages to be generated or sent onwards without SERR#
-being set as long as the appropriate per error class bit in the PCIe
-Device Control Register is set.
-
-Implement that branch thus enabling routing of ERR_COR, ERR_NONFATAL
-and ERR_FATAL under OSes that set these bits appropriately (e.g. Linux)
+We are missing necessary config write handling for AER emulation in
+the CXL root port. Add it based on pcie_root_port.c
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 ---
- hw/pci/pcie_aer.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ hw/pci-bridge/cxl_root_port.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/hw/pci/pcie_aer.c b/hw/pci/pcie_aer.c
-index 909e027d99..103667c368 100644
---- a/hw/pci/pcie_aer.c
-+++ b/hw/pci/pcie_aer.c
-@@ -192,8 +192,16 @@ static void pcie_aer_update_uncor_status(PCIDevice *dev)
- static bool
- pcie_aer_msg_alldev(PCIDevice *dev, const PCIEAERMsg *msg)
+diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
+index 6664783974..00195257f7 100644
+--- a/hw/pci-bridge/cxl_root_port.c
++++ b/hw/pci-bridge/cxl_root_port.c
+@@ -187,12 +187,15 @@ static void cxl_rp_write_config(PCIDevice *d, uint32_t address, uint32_t val,
+                                 int len)
  {
-+    uint16_t devctl = pci_get_word(dev->config + dev->exp.exp_cap +
-+                                   PCI_EXP_DEVCTL);
-     if (!(pcie_aer_msg_is_uncor(msg) &&
--          (pci_get_word(dev->config + PCI_COMMAND) & PCI_COMMAND_SERR))) {
-+          (pci_get_word(dev->config + PCI_COMMAND) & PCI_COMMAND_SERR)) &&
-+        !((msg->severity == PCI_ERR_ROOT_CMD_NONFATAL_EN) &&
-+          (devctl & PCI_EXP_DEVCTL_NFERE)) &&
-+        !((msg->severity == PCI_ERR_ROOT_CMD_COR_EN) &&
-+          (devctl & PCI_EXP_DEVCTL_CERE)) &&
-+        !((msg->severity == PCI_ERR_ROOT_CMD_FATAL_EN) &&
-+          (devctl & PCI_EXP_DEVCTL_FERE))) {
-         return false;
-     }
+     uint16_t slt_ctl, slt_sta;
++    uint32_t root_cmd =
++        pci_get_long(d->config + d->exp.aer_cap + PCI_ERR_ROOT_COMMAND);
  
+     pcie_cap_slot_get(d, &slt_ctl, &slt_sta);
+     pci_bridge_write_config(d, address, val, len);
+     pcie_cap_flr_write_config(d, address, val, len);
+     pcie_cap_slot_write_config(d, slt_ctl, slt_sta, address, val, len);
+     pcie_aer_write_config(d, address, val, len);
++    pcie_aer_root_write_config(d, address, val, len, root_cmd);
+ 
+     cxl_rp_dvsec_write_config(d, address, val, len);
+ }
 -- 
 2.37.2
 
