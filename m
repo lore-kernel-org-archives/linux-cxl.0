@@ -2,160 +2,115 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A974C64EC4
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 01:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B6AC61DA3
+	for <linux-cxl@archiver.kernel.org>; Tue, 21 Feb 2023 14:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232746AbjBUBl0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 20 Feb 2023 20:41:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33382 "EHLO
+        id S234176AbjBUOAZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Feb 2023 09:00:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232478AbjBUBlZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Feb 2023 20:41:25 -0500
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233E123127
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Feb 2023 17:41:19 -0800 (PST)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230221014116epoutp022ad83ce3fbedf7d8e8c550fe3cd24022~Fs2OF14g02073420734epoutp026
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 01:41:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230221014116epoutp022ad83ce3fbedf7d8e8c550fe3cd24022~Fs2OF14g02073420734epoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1676943676;
-        bh=WEUybv9VWfF96kQxDc8qrTU6bMD4lvn/2S8D+4YxiQI=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=WccSlifx2SuOHKTClB6CVHRYhtMKrRc5RZEM4GlrMpPVsQTjcFGIsBVrb1V6/Y9dh
-         DngHYW5YJBsHimgXynJiAkyh96uklEDDDgHIpsv1vTadsxieiGBshPXmRCO9CQqiT9
-         npRGRpMywocaWAGq6dbnIfCYKkekgo88TCsVn1l0=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20230221014116epcas2p40f6da9d19d902fb89020a7088b79294c~Fs2N0zIUA1922519225epcas2p4H;
-        Tue, 21 Feb 2023 01:41:16 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.88]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4PLMSq35DTz4x9QG; Tue, 21 Feb
-        2023 01:41:15 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2C.4F.61927.B3124F36; Tue, 21 Feb 2023 10:41:15 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230221014114epcas2p1687db1d75765a8f9ed0b3495eab1154d~Fs2M1KaCc1783017830epcas2p1E;
-        Tue, 21 Feb 2023 01:41:14 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230221014114epsmtrp2862f1fb4f6d4ba6ff25f634289578ae7~Fs2M0ZriV1365513655epsmtrp2f;
-        Tue, 21 Feb 2023 01:41:14 +0000 (GMT)
-X-AuditID: b6c32a45-671ff7000001f1e7-44-63f4213b104c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B3.D0.17995.A3124F36; Tue, 21 Feb 2023 10:41:14 +0900 (KST)
-Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
-        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230221014114epsmtip2e349dbd81c9e2391a63e7ac21b148977~Fs2MmhEb80990509905epsmtip2I;
-        Tue, 21 Feb 2023 01:41:14 +0000 (GMT)
-From:   Kyungsan Kim <ks0204.kim@samsung.com>
-To:     lsf-pc@lists.linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-        viacheslav.dubeyko@bytedance.com
-Subject: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Date:   Tue, 21 Feb 2023 10:41:14 +0900
-Message-Id: <20230221014114.64888-1-ks0204.kim@samsung.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S234281AbjBUOAU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Feb 2023 09:00:20 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC01929E38
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Feb 2023 06:00:15 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PLgm03KP0z6J7Tk;
+        Tue, 21 Feb 2023 21:55:28 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Tue, 21 Feb 2023 14:00:12 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v3 0/2] hw/mem: CXL Type-3 Volatile Memory Support
+Date:   Tue, 21 Feb 2023 14:00:21 +0000
+Message-ID: <20230221140023.9315-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFKsWRmVeSWpSXmKPExsWy7bCmha614pdkgy0X+SymH1a0OD/rFIvF
-        nr0nWSzurfnParHv9V5mi44Nbxgd2Dz+nVjD5rHp0yR2j8k3ljN69G1ZxejxeZNcAGtUtk1G
-        amJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0AFKCmWJOaVA
-        oYDE4mIlfTubovzSklSFjPziElul1IKUnALzAr3ixNzi0rx0vbzUEitDAwMjU6DChOyM52sm
-        sRb8Vak4u2cRUwPjRvkuRk4OCQETiQl7FrJ3MXJxCAnsYJRo2zCXDcL5xCixpGUBlPOZUeLb
-        7AOMMC1NE68zQiR2MUq8nX6QBcLpYpLoON7JClLFJqAt8efKeTYQW0RAVeLv+iNgRcwCExgl
-        5na2sYAkhAVsJJ59agCzWYCK2t6vZQKxeQWsJWb97GGDWCcvMfPSd3aIuKDEyZlPwOqZgeLN
-        W2czgwyVEDjGLrHi6wJ2iAYXibWtz6CahSVeHd8CFZeS+PxuL1S8WOLx639Q8RKJw0t+s0DY
-        xhLvbj4H+oADaIGmxPpd+iCmhICyxJFbUGv5JDoO/2WHCPNKdLQJQTSqSGz/t5wZZtHp/Zug
-        hntIHNl5BGypkECsRN+lfuYJjPKzkDwzC8kzsxD2LmBkXsUollpQnJueWmxUYAiP1eT83E2M
-        4ESo5bqDcfLbD3qHGJk4GA8xSnAwK4nw/uf9nCzEm5JYWZValB9fVJqTWnyI0RQYvBOZpUST
-        84GpOK8k3tDE0sDEzMzQ3MjUwFxJnFfa9mSykEB6YklqdmpqQWoRTB8TB6dUA9PcRY3MX19e
-        KqgrbVY683zpC9bc33XuX8U2vOO23l3U+dyv6ORxCfFW79RXBrJyh3qFt60vdPjZkbfxwCSH
-        dOnA6Xf1Dn1KyTLn4Nxx2ejc92WXvOu/be++O7Mx/JFxrs7jB9qOD48I2zw5a79v9cf3b+qO
-        bK2QLDLLLe65GJH6IFY2S9sz0odNaI5cZ8p8j9LEY6nlByZYr3zLKOUrtuHv1aPOF00LPXYv
-        flnSWr5F7UHjgoUsBiqfxV87vfhqcPjcoRi9s1djAjNmnVYouXF/0qX2mXcm2ey+OOdHvs6q
-        YyUFgVlOvhuNll2IbDvaZLLfqjiw03mCvtwnhqXJFZzufPNnZWq/4n+nvsEkYpcSS3FGoqEW
-        c1FxIgDj0q+pDQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFLMWRmVeSWpSXmKPExsWy7bCSvK6V4pdkgymX9S2mH1a0OD/rFIvF
-        nr0nWSzurfnParHv9V5mi44Nbxgd2Dz+nVjD5rHp0yR2j8k3ljN69G1ZxejxeZNcAGsUl01K
-        ak5mWWqRvl0CV8bzNZNYC/6qVJzds4ipgXGjfBcjJ4eEgIlE08TrjF2MXBxCAjsYJXa2LWGC
-        SEhJvD/dxg5hC0vcbznCClHUwSTx5McWNpAEm4C2xJ8r58FsEQFVib/rj7CAFDELTGGU2L78
-        ENgkYQEbiWefGlhAbBagorb3a8HivALWErN+9rBBbJCXmHnpOztEXFDi5MwnYPXMQPHmrbOZ
-        JzDyzUKSmoUktYCRaRWjZGpBcW56brFhgVFearlecWJucWleul5yfu4mRnBwamntYNyz6oPe
-        IUYmDsZDjBIczEoivP95PycL8aYkVlalFuXHF5XmpBYfYpTmYFES573QdTJeSCA9sSQ1OzW1
-        ILUIJsvEwSnVwNTN/2K32bZHD5817Zu74M+rnZ/D/LInPOhRZtvmIZxqLW4fdm/K/M8b5R/m
-        XKn3ZWp+9Flr/YVEQXnBTYo+3huOsir/+L1F8vTF0OWiC75bp51qLp6+xnKtVLD01Z8CdlVb
-        ag78f99c9TT+w7kPps2cHE8F8n32B7/YLtqxbLuL0oRWY7XLjzKPzmt+fS3gx1ad4jPMLC3X
-        NmafSY65sNfopWLxSs8goag2u2jjJtvTL4uM/0/UOvGlcWLkt5MOjw5ZG659d7VAaveVMrHS
-        fL9vD0ObhEvNSzLtkgo4PJL0T+uu93EzyaqL2XJiFSPHwr0ltl5HInzY4t5bzLx2yK7C8F+7
-        5cw9lRs/7/zhxa7EUpyRaKjFXFScCADV6dS+vQIAAA==
-X-CMS-MailID: 20230221014114epcas2p1687db1d75765a8f9ed0b3495eab1154d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230221014114epcas2p1687db1d75765a8f9ed0b3495eab1154d
-References: <CGME20230221014114epcas2p1687db1d75765a8f9ed0b3495eab1154d@epcas2p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL is a promising technology that leads to fundamental changes in computing architecture.
-To facilitate adoption and widespread of CXL memory, we are developing a memory tiering solution, called SMDK[1][2].
-Using SMDK and CXL RAM device, our team has been working with industry and academic partners over last year.
-Also, thanks to many researcher's effort, CXL adoption stage is gradually moving forward from basic enablement to real-world composite usecases.
-At this moment, based on the researches and experiences gained working on SMDK, we would like to suggest a session at LSF/MM/BFP this year
-to propose possible Linux MM changes with a brief of SMDK.
+v3: Noticed whilst chasing an unrelated kernel bug.
+ - Drop setting of DVSEC range base addresses.  Whilst harmless,
+   expectation is that this will be 0 until the OS sets it (or uses
+   HDM decoders instead)
 
-Adam Manzanares kindly adviced me that it is preferred to discuss implementation details on given problem and consensus at LSF/MM/BFP.
-Considering the adoption stage of CXL technology, however, let me suggest a design level discussion on the two MM expansions of SMDK this year.
-When we have design consensus with participants, we want to continue follow-up discussions with additional implementation details, hopefully.
+Based on following series (in order)
+1. [PATCH v4 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream
+2. [PATCH v4 0/8] hw/cxl: RAS error emulation and injection
+3. [PATCH 0/2] hw/cxl: Passthrough HDM decoder emulation
 
- 
-1. A new zone, ZONE_EXMEM
-We added ZONE_EXMEM to manage CXL RAM device(s), separated from ZONE_NORMAL for usual DRAM due to the three reasons below.
+Based on: Message-Id: 20230206172816.8201-1-Jonathan.Cameron@huawei.com
+Based-on: Message-id: 20230217172924.25239-1-Jonathan.Cameron@huawei.com
+Based-on: Message-id: 20230125152703.9928-1-Jonathan.Cameron@huawei.com
 
-1) a CXL RAM has many different characteristics with conventional DRAM because a CXL device inherits and expands PCIe specification.
-ex) frequency range, pluggability, link speed/width negotiation, host/device flow control, power throttling, channel-interleaving methodology, error handling, and etc.
-It is likely that the primary usecase of CXL RAM would be System RAM.
-However, to deal with the hardware differences properly, different MM algorithms are needed accordingly.
+Kernel code is queued up in kernel.org cxl/next for the merge window
+that just opened.
 
-2) Historically, zone has been expanded by reflecting the evolution of CPU, IO, and memory devices.
-ex) ZONE_DMA(32), ZONE_HIGHMEM, ZONE_DEVICE, and ZONE_MOVABLE.
-Each zone applies different MM algorithms such as page reclaim, compaction, migration, and fragmentation.
-At first, we tried reuse of existing zones, ZONE_DEVICE and ZONE_MOVABLE, for CXL RAM purpose.
-However, the purpose and implementation of the zones are not fit for CXL RAM.
+Now we have some kernel code to test this against (and it looks good)
+I'd like to propose this series for upstream following 3 other series
+already proposed for inclusion:
 
-3) Industry is preparing a CXL-capable system that connects dozens of CXL devices in a server system.
-When a CXL device becomes a separate node, an administrator/programmer needs to be aware of and manually control all nodes using 3rd party software, such as numactl and libnuma.
-ZONE_EXMEM allows the assemble of CXL RAM devices into the single ZONE_EXMEM zone, and provides an abstraction to userspace by seamlessly managing the devices.
-Also, the zone is able to interleave assembled devices in a software way to lead to aggregated bandwidth.
-We would like to suggest if it is co-existable with HW interleaving like SW/HW raid0.
-To help understanding, please refer to the node partition part of the picture[3].
+Original cover letter with minor updates.
+
+This patches provides 2 features to the CXL Type-3 Device:
+    1) Volatile Memory Region Support
+    2) Multi-Region support (1 Volatile, 1 Persistent)
+
+Summary of Changes per-commit:
+1) Whitespace updates to docs and tests
+2) Refactor CDAT DSMAS Initialization for multi-region initialization
+   Multi-Region and Volatile Memory support for CXL Type-3 Devices
+   Test and Documentation updates
+
+The final patch in this series makes 6 major changes to the type-3
+device in order to implement multi-region and volatile region support
+    1) The HostMemoryBackend [hostmem] has been replaced by two
+       [hostvmem] and [hostpmem] to store volatile and persistent memory
+       respectively
+    2) The single AddressSpace has been replaced by two AddressSpaces
+       [hostvmem_as] and [hostpmem_as] to map respective memdevs.
+    3) Each memory region size and total region are stored separately
+    4) The CDAT and DVSEC memory map entries have been updated:
+       a) if vmem is present, vmem is mapped at DPA(0)
+       b) if pmem is present
+          i)  and vmem is present, pmem is mapped at DPA(vmem->size)
+          ii) else, pmem is mapped at DPA(0)
+       c) partitioning of pmem is not supported in this patch set but
+          has been discussed and this design should suffice.
+    5) Read/Write functions have been updated to access AddressSpaces
+       according to the mapping described in #4.  Access to the
+       persistent address space is calculated by (dpa-vmem_len)
+    6) cxl-mailbox has been updated to report the respective size of
+       volatile and persistent memory region
 
 
-2. User/Kernelspace Programmable Interface
-In terms of a memory tiering solution, it is typical that the solution attempts to locate hot data on near memory, and cold data on far memory as accurately as possible.[4][5][6][7]
-We noticed that the hot/coldness of data is determined by the memory access pattern of running application and/or kernel context.
-Hence, a running context needs a near/far memory identifier to determine near/far memory. 
-When CXL RAM(s) is manipulated as a NUMA node, a node id can be function as a CXL identifier more or less.
-However, the node id has limitation in that it is an ephemeral information that dynamically varies according to online status of CXL topology and system socket.
-In this sense, we provides programmable interfaces for userspace and kernelspace context to explicitly (de)allocate memory from DRAM and CXL RAM regardless of a system change.
-Specifically, MAP_EXMEM and GFP_EXMEM flags were added to mmap() syscall and kmalloc() siblings, respectively.
+Gregory Price (2):
+  tests/qtest/cxl-test: whitespace, line ending cleanup
+  hw/cxl: Multi-Region CXL Type-3 Devices (Volatile and Persistent)
 
-Thanks to Adam Manzanares for reviewing this CFP thoroughly.
+ docs/system/devices/cxl.rst    |  49 ++++--
+ hw/cxl/cxl-mailbox-utils.c     |  26 +--
+ hw/mem/cxl_type3.c             | 294 +++++++++++++++++++++++++--------
+ include/hw/cxl/cxl_device.h    |  11 +-
+ tests/qtest/bios-tables-test.c |   8 +-
+ tests/qtest/cxl-test.c         | 146 +++++++++++-----
+ 6 files changed, 392 insertions(+), 142 deletions(-)
 
+-- 
+2.37.2
 
-[1]SMDK: https://github.com/openMPDK/SMDK
-[2]SMT: Software-defined Memory Tiering for Heterogeneous Computing systems with CXL Memory Expander, https://ieeexplore.ieee.org/document/10032695
-[3]SMDK node partition: https://github.com/OpenMPDK/SMDK/wiki/2.-SMDK-Architecture#memory-partition
-[4]TMO: Transparent Memory Offloading in Datacenters, https://dl.acm.org/doi/10.1145/3503222.3507731
-[5]TPP: Transparent Page Placement for CXL-Enabled Tiered Memory, https://arxiv.org/abs/2206.02878
-[6]Pond: CXL-Based Memory Pooling Systems for Cloud Platforms, https://dl.acm.org/doi/10.1145/3575693.3578835
-[7]Hierarchical NUMA: https://blog.linuxplumbersconf.org/2017/ocw/system/presentations/4656/original/Hierarchical_NUMA_Design_Plumbers_2017.pdf
