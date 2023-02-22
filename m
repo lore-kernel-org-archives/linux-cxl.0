@@ -2,204 +2,365 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFA9C61DA4
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Feb 2023 16:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51793C61DA4
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Feb 2023 17:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232122AbjBVQ7u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 22 Feb 2023 11:59:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46806 "EHLO
+        id S230048AbjBVRxw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 22 Feb 2023 12:53:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231584AbjBVQ7t (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Feb 2023 11:59:49 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E23F38035
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Feb 2023 08:59:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677085188; x=1708621188;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1ZyZi4a059ghy9xS+pFY8yi7VAAK4yk7l7nUhlJ9WDs=;
-  b=P1uQlXxeET/0s3flgcmIvjkjPIbxz3E9koli+T6V+NLBFyzSt6xCG1wE
-   CRs32+bKOTGqOcaABEQWxkMC+kK5pmp8Y0lU3RKZZC5ucwAyC0Z9unVBO
-   v3MVd2h032Vuhpm8FrTXdQmDnYIePxjCLLK4GP9y2amM2dhDoWLJjO8I5
-   5r2DVFKYR/2I+3KX9PNOD5XJBKoNql7adQlSRGleDPk+fnK+TUBtukrcV
-   qUZQ1HClv1aJlQtOeH0DqE3I5npwOr3nF4wM7KFQ6QQMVWhc58jNVHqWd
-   lU0Y578kZKx7OoeP4IAIqTvNCeDvBYQyz80WEcbLMl2qr/N8nfjGahlNE
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10629"; a="312605823"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="312605823"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 08:59:48 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10629"; a="672138934"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="672138934"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.50.122]) ([10.212.50.122])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2023 08:59:47 -0800
-Message-ID: <45ca3274-3a9f-5bb3-cdbc-9e75414ff763@intel.com>
-Date:   Wed, 22 Feb 2023 09:59:46 -0700
+        with ESMTP id S229756AbjBVRxw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Feb 2023 12:53:52 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F4D28854
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Feb 2023 09:53:49 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PMNtz27Klz6J6YC;
+        Thu, 23 Feb 2023 01:48:59 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Wed, 22 Feb
+ 2023 17:53:46 +0000
+Date:   Wed, 22 Feb 2023 17:53:45 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        Philippe =?ISO-8859-1?Q?Mathie?= =?ISO-8859-1?Q?u-Daud=E9?= 
+        <philmd@linaro.org>, Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        "Dave Jiang" <dave.jiang@intel.com>, <alison.schofield@intel.com>
+Subject: Re: [PATCH 4/6] hw/cxl: QMP based poison injection support
+Message-ID: <20230222175345.000041bc@Huawei.com>
+In-Reply-To: <63f56c5d6b269_1dc7bb2947c@iweiny-mobl.notmuch>
+References: <20230217181812.26995-1-Jonathan.Cameron@huawei.com>
+        <20230217181812.26995-5-Jonathan.Cameron@huawei.com>
+        <63f56c5d6b269_1dc7bb2947c@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 2/2] cxl/hdm: Skip emulation when driver manages
- mem_enable
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <167703067373.185722.16579529992799939220.stgit@dwillia2-xfh.jf.intel.com>
- <167703068474.185722.664126485486344246.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <167703068474.185722.664126485486344246.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Tue, 21 Feb 2023 17:14:05 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
+
+> Jonathan Cameron wrote:
+> > Inject poison using qmp command cxl-inject-poison to add an entry to the
+> > poison list.
+> > 
+> > For now, the poison is not returned CXL.mem reads, but only via the
+> > mailbox command Get Poison List.
+> > 
+> > See CXL rev 3.0, sec 8.2.9.8.4.1 Get Poison list (Opcode 4300h)
+> > 
+> > Kernel patches to use this interface here:
+> > https://lore.kernel.org/linux-cxl/cover.1665606782.git.alison.schofield@intel.com/
+> > 
+> > To inject poison using qmp (telnet to the qmp port)
+> > { "execute": "qmp_capabilities" }
+> > 
+> > { "execute": "cxl-inject-poison",
+> >     "arguments": {
+> >          "path": "/machine/peripheral/cxl-pmem0",
+> >          "start": 2048,
+> >          "length": 256
+> >     }
+> > }
+> > 
+> > Adjusted to select a device on your machine.
+> > 
+> > Note that the poison list supported is kept short enough to avoid the
+> > complexity of state machine that is needed to handle the MORE flag.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > ---
+> > v3:
+> > Improve QMP documentation.
+> > 
+> > v2:
+> > Moved to QMP to allow for single command.
+> > Update reference in coverletter
+> > Added specific setting of type for this approach to injection.
+> > Drop the unnecessary ct3d class get_poison_list callback.
+> > Block overlapping regions from being injected
+> > Handle list overflow
+> > Use Ira's utility function to get the timestamps
+> > ---
+> >  hw/cxl/cxl-mailbox-utils.c  | 82 +++++++++++++++++++++++++++++++++++++
+> >  hw/mem/cxl_type3.c          | 56 +++++++++++++++++++++++++
+> >  hw/mem/cxl_type3_stubs.c    |  3 ++
+> >  hw/mem/meson.build          |  2 +
+> >  include/hw/cxl/cxl_device.h | 20 +++++++++
+> >  qapi/cxl.json               | 16 ++++++++
+> >  6 files changed, 179 insertions(+)
+> > 
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index 580366ed2f..cf3cfb10a1 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -62,6 +62,8 @@ enum {
+> >          #define GET_PARTITION_INFO     0x0
+> >          #define GET_LSA       0x2
+> >          #define SET_LSA       0x3
+> > +    MEDIA_AND_POISON = 0x43,
+> > +        #define GET_POISON_LIST        0x0
+> >  };
+> >  
+> >  struct cxl_cmd;
+> > @@ -267,6 +269,8 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
+> >      id->persistent_capacity = cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER;
+> >      id->volatile_capacity = cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER;
+> >      id->lsa_size = cvc->get_lsa_size(ct3d);
+> > +    id->poison_list_max_mer[1] = 0x1; /* 256 poison records */  
+> 
+> Using st24_le_p() would be more robust I think.
+
+Ah the wonder of patch reordering. The patch adding that was after this is my queue.
+I'll pull it down to before here so we can use it.
+
+There are a bunch of endian issues around here (such as the lsa_size just above
+this) but good not to introduce a new one.
+
+I'll circle back around to clean the rest up at a later date.
 
 
-On 2/21/23 6:51 PM, Dan Williams wrote:
-> If the driver is allowed to enable memory operation itself then it can
-> also turn on HDM decoder support at will.
 > 
-> With this the second call to cxl_setup_hdm_decoder_from_dvsec(), when
-> an HDM decoder is not committed, is not needed.
+> > +    id->inject_poison_limit = 0; /* No limit - so limited by main poison record limit */
+> >  
+> >      *len = sizeof(*id);
+> >      return CXL_MBOX_SUCCESS;
+> > @@ -356,6 +360,82 @@ static CXLRetCode cmd_ccls_set_lsa(struct cxl_cmd *cmd,
+> >      return CXL_MBOX_SUCCESS;
+> >  }
+> >  
+> > +/*
+> > + * This is very inefficient, but good enough for now!
+> > + * Also the payload will always fit, so no need to handle the MORE flag and
+> > + * make this stateful. We may want to allow longer poison lists to aid
+> > + * testing that kernel functionality.
+> > + */
+> > +static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
+> > +                                            CXLDeviceState *cxl_dstate,
+> > +                                            uint16_t *len)
+> > +{
+> > +    struct get_poison_list_pl {
+> > +        uint64_t pa;
+> > +        uint64_t length;
+> > +    } QEMU_PACKED;
+> > +
+> > +    struct get_poison_list_out_pl {
+> > +        uint8_t flags;
+> > +        uint8_t rsvd1;
+> > +        uint64_t overflow_timestamp;
+> > +        uint16_t count;
+> > +        uint8_t rsvd2[0x14];
+> > +        struct {
+> > +            uint64_t addr;
+> > +            uint32_t length;
+> > +            uint32_t resv;
+> > +        } QEMU_PACKED records[];
+> > +    } QEMU_PACKED;
+> > +
+> > +    struct get_poison_list_pl *in = (void *)cmd->payload;
+> > +    struct get_poison_list_out_pl *out = (void *)cmd->payload;
+> > +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+> > +    uint16_t record_count = 0, i = 0;
+> > +    uint64_t query_start = in->pa;  
 > 
-> Fixes: b777e9bec960 ("cxl/hdm: Emulate HDM decoder from DVSEC range registers")
-> Link: http://lore.kernel.org/r/20230220113657.000042e1@huawei.com
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Should we verify Bits[5:0] are 0?
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Yes, plus looking again at this code, it needs a bunch of le handling like
+all the other mailbox commands.  In the interests of not making that worse
+I'll fix this one up whilst we are here.
 
-> ---
->   drivers/cxl/core/hdm.c |   31 ++++++++++++++++++-------------
->   drivers/cxl/cxl.h      |    4 +++-
->   drivers/cxl/port.c     |    2 +-
->   3 files changed, 22 insertions(+), 15 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 520814130928..5293fe13fce3 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -717,19 +717,29 @@ static int cxl_setup_hdm_decoder_from_dvsec(struct cxl_port *port,
->   	return 0;
->   }
->   
-> -static bool should_emulate_decoders(struct cxl_port *port)
-> +static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
->   {
-> -	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
-> -	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
-> +	struct cxl_hdm *cxlhdm;
-> +	void __iomem *hdm;
->   	u32 ctrl;
->   	int i;
->   
-> -	if (!is_cxl_endpoint(cxlhdm->port))
-> +	if (!info)
->   		return false;
->   
-> +	cxlhdm = dev_get_drvdata(&info->port->dev);
-> +	hdm = cxlhdm->regs.hdm_decoder;
-> +
->   	if (!hdm)
->   		return true;
->   
-> +	/*
-> +	 * If HDM decoders are present and the driver is in control of
-> +	 * Mem_Enable skip DVSEC based emulation
-> +	 */
-> +	if (!info->mem_enabled)
-> +		return false;
-> +
->   	/*
->   	 * If any decoders are committed already, there should not be any
->   	 * emulated DVSEC decoders.
-> @@ -747,7 +757,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   			    int *target_map, void __iomem *hdm, int which,
->   			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
->   {
-> -	struct cxl_endpoint_decoder *cxled = NULL;
-> +	struct cxl_endpoint_decoder *cxled;
->   	u64 size, base, skip, dpa_size;
->   	bool committed;
->   	u32 remainder;
-> @@ -758,12 +768,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   		unsigned char target_id[8];
->   	} target_list;
->   
-> -	if (should_emulate_decoders(port))
-> +	if (should_emulate_decoders(info))
->   		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, which, info);
->   
-> -	if (is_endpoint_decoder(&cxld->dev))
-> -		cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> -
->   	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
->   	base = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
->   	size = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
-> @@ -784,9 +791,6 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   		.end = base + size - 1,
->   	};
->   
-> -	if (cxled && !committed && range_len(&info->dvsec_range[which]))
-> -		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, which, info);
-> -
->   	/* decoders are enabled if committed */
->   	if (committed) {
->   		cxld->flags |= CXL_DECODER_F_ENABLE;
-> @@ -824,7 +828,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   	if (rc)
->   		return rc;
->   
-> -	if (!cxled) {
-> +	if (!info) {
->   		target_list.value =
->   			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
->   		for (i = 0; i < cxld->interleave_ways; i++)
-> @@ -844,6 +848,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   		return -ENXIO;
->   	}
->   	skip = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
-> +	cxled = to_cxl_endpoint_decoder(&cxld->dev);
->   	rc = devm_cxl_dpa_reserve(cxled, *dpa_base + skip, dpa_size, skip);
->   	if (rc) {
->   		dev_err(&port->dev,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index d853a0238ad7..dd4b7a729419 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -695,13 +695,15 @@ int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint)
->   
->   /**
->    * struct cxl_endpoint_dvsec_info - Cached DVSEC info
-> - * @mem_enabled: cached value of mem_enabled in the DVSEC, PCIE_DEVICE
-> + * @mem_enabled: cached value of mem_enabled in the DVSEC at init time
->    * @ranges: Number of active HDM ranges this device uses.
-> + * @port: endpoint port associated with this info instance
->    * @dvsec_range: cached attributes of the ranges in the DVSEC, PCIE_DEVICE
->    */
->   struct cxl_endpoint_dvsec_info {
->   	bool mem_enabled;
->   	int ranges;
-> +	struct cxl_port *port;
->   	struct range dvsec_range[2];
->   };
->   
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 1049bb5ea496..9c8f46ed336b 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -78,8 +78,8 @@ static int cxl_switch_port_probe(struct cxl_port *port)
->   
->   static int cxl_endpoint_port_probe(struct cxl_port *port)
->   {
-> +	struct cxl_endpoint_dvsec_info info = { .port = port };
->   	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
-> -	struct cxl_endpoint_dvsec_info info = { 0 };
->   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->   	struct cxl_hdm *cxlhdm;
->   	struct cxl_port *root;
+> > +    uint64_t query_length = in->length;  
 > 
+> Isn't in->length in units of 64bytes?  Does that get converted somewhere?
+Good spot. I guess all my test values happen to be small so I never noticed.
+Clearly need to update those!
+
+
+
+> 
+> > +    CXLPoisonList *poison_list = &ct3d->poison_list;
+> > +    CXLPoison *ent;
+> > +    uint16_t out_pl_len;
+> > +
+> > +    QLIST_FOREACH(ent, poison_list, node) {
+> > +        /* Check for no overlap */
+> > +        if (ent->start >= query_start + query_length ||
+> > +            ent->start + ent->length <= query_start) {
+> > +            continue;
+> > +        }
+> > +        record_count++;
+> > +    }
+> > +    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
+> > +    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> > +
+> > +    memset(out, 0, out_pl_len);
+> > +    QLIST_FOREACH(ent, poison_list, node) {
+> > +        uint64_t start, stop;
+> > +
+> > +        /* Check for no overlap */
+> > +        if (ent->start >= query_start + query_length ||
+> > +            ent->start + ent->length <= query_start) {
+> > +            continue;
+> > +        }
+> > +
+> > +        /* Deal with overlap */
+> > +        start = MAX(ent->start & 0xffffffffffffffc0, query_start);
+> > +        stop = MIN((ent->start & 0xffffffffffffffc0) + ent->length,
+> > +                   query_start + query_length);
+> > +        out->records[i].addr = start | (ent->type & 0x3);  
+> 
+> cpu_to_le64()?
+> 
+> > +        out->records[i].length = (stop - start) / 64;  
+> 
+> cpu_to_le32()?
+
+yup. Though I'll use stw_le_p() etc
+
+Usual problem of when you've looked at code too many times you forget
+the newer issues identified in other patches that apply here.
+
+Oh for that big endian CXL emulated machine to make all these
+stand out in spectacular fashion.
+
+> 
+> > +        i++;
+> > +    }
+> > +    if (ct3d->poison_list_overflowed) {
+> > +        out->flags = (1 << 1);
+> > +        out->overflow_timestamp = ct3d->poison_list_overflow_ts;  
+> 
+> cpu_to_le64()?
+> 
+> > +    }
+> > +    out->count = record_count;
+> > +    *len = out_pl_len;
+> > +    return CXL_MBOX_SUCCESS;
+> > +}
+
+...
+
+> >  void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 8b7727a75b..3585f78b4e 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -925,6 +925,62 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
+
+> > +void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+> > +                           Error **errp)
+> > +{
+> > +    Object *obj = object_resolve_path(path, NULL);
+> > +    CXLType3Dev *ct3d;
+> > +    CXLPoison *p;
+> > +
+> > +    if (length % 64) {
+> > +        error_setg(errp, "Poison injection must be in multiples of 64 bytes");
+> > +        return;
+> > +    }
+
+Relevant to below response.  Length is 64 byte aligned, not to be multiplied by
+64 (unlike the CXL commands).
+
+...
+> > diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+> > index b6b51ced54..6055190ca6 100644
+> > --- a/hw/mem/cxl_type3_stubs.c
+> > +++ b/hw/mem/cxl_type3_stubs.c
+> > @@ -2,6 +2,9 @@
+> >  #include "qemu/osdep.h"
+> >  #include "qapi/qapi-commands-cxl.h"
+> >  
+> > +void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+> > +                           Error **errp) {}
+
+Added an error_setg()  inline with Philippe's feedback.
+
+> > +
+> >  void qmp_cxl_inject_uncorrectable_errors(const char *path,
+> >                                           CXLUncorErrorRecordList *errors,
+> >                                           Error **errp) {}
+> > diff --git a/hw/mem/meson.build b/hw/mem/meson.build
+> > index 56c2618b84..930c67e390 100644
+> > --- a/hw/mem/meson.build
+> > +++ b/hw/mem/meson.build
+> > @@ -10,3 +10,5 @@ softmmu_ss.add(when: 'CONFIG_ALL', if_true: files('cxl_type3_stubs.c'))
+> >  softmmu_ss.add_all(when: 'CONFIG_MEM_DEVICE', if_true: mem_ss)
+> >  
+> >  softmmu_ss.add(when: 'CONFIG_SPARSE_MEM', if_true: files('sparse-mem.c'))
+> > +softmmu_ss.add(when: 'CONFIG_CXL_MEM_DEVICE', if_false: files('cxl_type3_stubs.c'))
+> > +softmmu_ss.add(when: 'CONFIG_ALL', if_true: files('cxl_type3_stubs.c'))
+
+Gah. Rebase error. This is duplicated.
+
+> > diff --git a/qapi/cxl.json b/qapi/cxl.json
+> > index ac7e167fa2..bc099d695e 100644
+> > --- a/qapi/cxl.json
+> > +++ b/qapi/cxl.json
+> > @@ -5,6 +5,22 @@
+> >  # = CXL devices
+> >  ##
+> >  
+> > +##
+> > +# @cxl-inject-poison:
+> > +#
+> > +# Poison records indicate that a CXL memory device knows that a particular
+> > +# memory region may be corrupted. This may be because of locally detected
+> > +# errors (e.g. ECC failure) or poisoned writes received from other components
+> > +# in the system. This injection mechanism enables testing of the OS handling
+> > +# of poison records which may be queried via the CXL mailbox.
+> > +#
+> > +# @path: CXL type 3 device canonical QOM path
+> > +# @start: Start address  
+> 
+> NIT: "Must be 64 bytes aligned."
+> 
+> > +# @length: Length of poison to inject  
+> 
+> NIT: "Must be in multiples of 64 bytes."
+Must be an integer multiple of.  I decided the CXL convention of
+* 64 was not intuitive so at least for the qapi I can use real numbers!
+> 
+> Ira
+
+Thanks for your feedback - very useful! Also makes it clear I need
+to do a scrub of all the mailbox commands to ensure little endian
+setters and getters are used.
+
+Some other changes coming from Philippe's review of the AER set
+may affect this so those will have to come to a conclusion before
+I post v2.
+
+Thanks,
+
+Jonathan
+> 
+> > +##
+> > +{ 'command': 'cxl-inject-poison',
+> > +  'data': { 'path': 'str', 'start': 'uint64', 'length': 'uint64' }}
+> > +
+> >  ##
+> >  # @CxlUncorErrorType:
+> >  #
+> > -- 
+> > 2.37.2
+> >   
+> 
+> 
+
