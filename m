@@ -2,93 +2,133 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A97C636D6
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Feb 2023 16:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B72C636D6
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Feb 2023 16:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbjBVQ1G (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 22 Feb 2023 11:27:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47242 "EHLO
+        id S232201AbjBVQt6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 22 Feb 2023 11:49:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231230AbjBVQ1G (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Feb 2023 11:27:06 -0500
+        with ESMTP id S232054AbjBVQtw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Feb 2023 11:49:52 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4496A3754D
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Feb 2023 08:27:04 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PMLyv32jkz6J7Ts;
-        Thu, 23 Feb 2023 00:22:15 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15C02BEFD
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Feb 2023 08:49:50 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PMMT972QGz67x9N;
+        Thu, 23 Feb 2023 00:45:01 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Wed, 22 Feb
- 2023 16:27:01 +0000
-Date:   Wed, 22 Feb 2023 16:27:00 +0000
+ 2023 16:49:47 +0000
+Date:   Wed, 22 Feb 2023 16:49:47 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Nabeel M Mohamed <nabeelmd.linux@gmail.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+To:     Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
         "Ira Weiny" <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2] cxl/pci: Set the device timestamp
-Message-ID: <20230222162700.00006d0f@Huawei.com>
-In-Reply-To: <Y/Y19p8hqgYGkkKK@nabeel-linux.myguest.virtualbox.org>
-References: <20230130151327.32415-1-Jonathan.Cameron@huawei.com>
-        <Y/Y19p8hqgYGkkKK@nabeel-linux.myguest.virtualbox.org>
+        Gregory Price <gourry.memverge@gmail.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>
+Subject: Re: [PATCH v5 8/8] hw/mem/cxl_type3: Add CXL RAS Error Injection
+ Support.
+Message-ID: <20230222164947.0000554f@Huawei.com>
+In-Reply-To: <c2fb77b0-0734-3be5-1b54-7c797b3daa15@linaro.org>
+References: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
+        <20230221152145.9736-9-Jonathan.Cameron@huawei.com>
+        <e432cebc-8faa-7b41-71c8-ea88c7bcbb04@linaro.org>
+        <20230222145330.000021ef@huawei.com>
+        <c2fb77b0-0734-3be5-1b54-7c797b3daa15@linaro.org>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 22 Feb 2023 09:34:14 -0600
-Nabeel M Mohamed <nabeelmd.linux@gmail.com> wrote:
 
-> On Mon, Jan 30, 2023 at 03:13:27PM +0000, Jonathan Cameron wrote:
-> > CXL r3.0 section 8.2.9.4.2 "Set Timestamp" recommends that the host sets
-> > the timestamp after every Conventional or CXL Reset to ensure accurate
-> > timestamps. This should include on initial boot up. The time base that
-> > is being set is used by a device for the poison list overflow timestamp
-> > and all event timestamps.  Note that the command is optional and if
-> > not supported and the device cannot return accurate timestamps it will
-> > fill the fields in with an appropriate marker (see the specification
-> > description of each timestamp).
+...
+
+> >>> +# Type of uncorrectable CXL error to inject. These errors are reported via
+> >>> +# an AER uncorrectable internal error with additional information logged at
+> >>> +# the CXL device.
+> >>> +#
+> >>> +# @cache-data-parity: Data error such as data parity or data ECC error CXL.cache
+> >>> +# @cache-address-parity: Address parity or other errors associated with the
+> >>> +#                        address field on CXL.cache
+> >>> +# @cache-be-parity: Byte enable parity or other byte enable errors on CXL.cache
+> >>> +# @cache-data-ecc: ECC error on CXL.cache
+> >>> +# @mem-data-parity: Data error such as data parity or data ECC error on CXL.mem
+> >>> +# @mem-address-parity: Address parity or other errors associated with the
+> >>> +#                      address field on CXL.mem
+> >>> +# @mem-be-parity: Byte enable parity or other byte enable errors on CXL.mem.
+> >>> +# @mem-data-ecc: Data ECC error on CXL.mem.
+> >>> +# @reinit-threshold: REINIT threshold hit.
+> >>> +# @rsvd-encoding: Received unrecognized encoding.
+> >>> +# @poison-received: Received poison from the peer.
+> >>> +# @receiver-overflow: Buffer overflows (first 3 bits of header log indicate which)
+> >>> +# @internal: Component specific error
+> >>> +# @cxl-ide-tx: Integrity and data encryption tx error.
+> >>> +# @cxl-ide-rx: Integrity and data encryption rx error.
+> >>> +##
+> >>> +
+> >>> +{ 'enum': 'CxlUncorErrorType',  
+> >>
+> >> Doesn't these need
+> >>
+> >>        'if': 'CONFIG_CXL_MEM_DEVICE',
+> >>
+> >> ?  
 > > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >  
+> > If I make this change I get a bunch of
+> > 
+> > ./qapi/qapi-types-cxl.h:18:13: error: attempt to use poisoned "CONFIG_CXL_MEM_DEVICE"
+> >     18 | #if defined(CONFIG_CXL_MEM_DEVICE)  
 > 
-> Hi Jonathan,
+> Err, I meant the generic CONFIG_CXL, not CONFIG_CXL_MEM_DEVICE.
 > 
-> Could you please educate me on the reason for not supporting a
-> "Get Timestamp" mailbox command at this time?
+> > It's a target specific define (I think) as built alongside PCI_EXPRESS
+> > Only CXL_ACPI is specifically included by x86 and arm64 (out of tree)
+> > 
+> > To be honest though I don't fully understand the QEMU build system so the reason
+> > for the error might be wrong.  
 > 
-> A use-case that I can think of for having "Get Timestamp" in the UAPI
-> is to enable userspace to better correlate the timestamp in the device
-> logs with the wall time by querying the current timestamp on the device.
-> This could be useful if there's some inaccuracy or skew in the device
-> timestamp.
-> 
-> Would that be a valid use-case or am I misunderstanding something here?
-> 
-> I can see why "Set Timestamp" is a kernel-internal command but fail to
-> see why "Get Timestamp" cannot be in the UAPI.
+> You need to restrict to system emulation (the 'have_system' check):
 
-Hi Nabeel,
+This doesn't help - still have 
+attempt to used poisoned "CONFIG_CXL"
 
-I'd be fine with a patch adding the support, it just didn't solve my
-immediate problem so I didn't want to make this patch more complex.
-
-Jonathan
 
 > 
-> Please clarify.
+> -- >8 --  
+> diff --git a/qapi/meson.build b/qapi/meson.build
+> index fbdb442fdf..643c76d61c 100644
+> --- a/qapi/meson.build
+> +++ b/qapi/meson.build
+> @@ -31,6 +31,7 @@ qapi_all_modules = [
+>     'compat',
+>     'control',
+>     'crypto',
+> -  'cxl',
+>     'dump',
+>     'error',
+>     'introspect',
+> @@ -58,6 +59,7 @@ if have_system
+>       'audio',
+>       'qdev',
+>       'pci',
+> +    'cxl',
+>       'rdma',
+>       'rocker',
+>       'tpm',
+> ---
 > 
-> Thanks,
-> Nabeel
 
