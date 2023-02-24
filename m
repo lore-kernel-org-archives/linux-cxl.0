@@ -2,104 +2,93 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02121C61DA3
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Feb 2023 15:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9742C678D5
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Feb 2023 15:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbjBXP36 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Feb 2023 10:29:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54660 "EHLO
+        id S230056AbjBXPfQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Feb 2023 10:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbjBXP35 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Feb 2023 10:29:57 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802C0457CD
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Feb 2023 07:29:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677252596; x=1708788596;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Aj/mFk9uBP2ayvZGuXAoGTOjpWoy6rUq6becmuwIXXQ=;
-  b=FL0dhXPTZ/D5UE/miLsPSMdBPICLyC1yqXZCDCx3KJYj7p0QqW9eiS3W
-   POaPMbj9cMCHh/DWo8unrCpp3fqiszJbFxy/AJRxPiekun4WnQkjEyMur
-   Z2ZDmG46KDkgIHt2geOv7Yl60G1r8MLCgmNwZ/YptvI+yxN9R5OUMZrQA
-   zFhSoC8izUpY6cw+DeBYJ7upMK4vYqZ12jx5oCg0sVyV+I1vw4Wy4aiIa
-   VdANp0UKUh1llvvigiFgtX135uZHiniWmxanseS7Z4fAaflCnd757Rbur
-   BAjN6JQ2TuqCZr6EgcLSR5Or7W62snCg3dSDrpPMWqDLfu7nCE0vFFUKz
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="398230109"
-X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
-   d="scan'208";a="398230109"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 07:29:55 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10631"; a="1001857496"
-X-IronPort-AV: E=Sophos;i="5.97,325,1669104000"; 
-   d="scan'208";a="1001857496"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.22.194]) ([10.212.22.194])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 07:29:55 -0800
-Message-ID: <414e2318-3026-c234-2d72-eee15cca5b6f@intel.com>
-Date:   Fri, 24 Feb 2023 08:29:54 -0700
+        with ESMTP id S230291AbjBXPfO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Feb 2023 10:35:14 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537BC6A9E6
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Feb 2023 07:35:11 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PNYB24Wzlz67Hqp;
+        Fri, 24 Feb 2023 23:06:02 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 24 Feb
+ 2023 15:10:55 +0000
+Date:   Fri, 24 Feb 2023 15:10:55 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        Philippe =?ISO-8859-1?Q?Mathie?= =?ISO-8859-1?Q?u-Daud=E9?= 
+        <philmd@linaro.org>, Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        "Dave Jiang" <dave.jiang@intel.com>, <alison.schofield@intel.com>
+Subject: Re: [PATCH 1/6] hw/cxl: Move enum ret_code definition to
+ cxl_device.h
+Message-ID: <20230224151055.000071f3@Huawei.com>
+In-Reply-To: <63f5742b15896_1dd2fc294da@iweiny-mobl.notmuch>
+References: <20230217181812.26995-1-Jonathan.Cameron@huawei.com>
+        <20230217181812.26995-2-Jonathan.Cameron@huawei.com>
+        <63f5742b15896_1dd2fc294da@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH ndctl 2/2] cxl/event-trace: use the wrapped
- util_json_new_u64()
-Content-Language: en-US
-To:     Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org
-Cc:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>, nvdimm@lists.linux.dev
-References: <20230223-meson-build-fixes-v1-0-5fae3b606395@intel.com>
- <20230223-meson-build-fixes-v1-2-5fae3b606395@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230223-meson-build-fixes-v1-2-5fae3b606395@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Tue, 21 Feb 2023 17:47:23 -0800
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-
-On 2/23/23 10:45 PM, Vishal Verma wrote:
-> The json-c API json_object_new_uint64() is relatively new, and some distros
-> may not have it available. There is already a wrapped version in
-> util/json.h which falls back to the int64 API, based on meson's
-> determination of the availability of the uint64 version at compile time.
-> Replace the direct uint64 calls with this wrapped version.
+> Jonathan Cameron wrote:
+> > Needs tidy up and rename to something more generic now it is
+> > in a header.  
 > 
-> Link: https://github.com/pmem/ndctl/issues/233
-> Fixes: 8dedc6cf5e85 ("cxl: add a helper to parse trace events into a json object")
-> Reported-by: Michal Suchánek <msuchanek@suse.de>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   cxl/event_trace.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+> I'm not opposed to this change and patch 2 but I don't see where
+> CXLRetCode is being used outside of cxl-mailbox-utils.c in this series.
 > 
-> diff --git a/cxl/event_trace.c b/cxl/event_trace.c
-> index 926f446..db8cc85 100644
-> --- a/cxl/event_trace.c
-> +++ b/cxl/event_trace.c
-> @@ -25,7 +25,7 @@ static struct json_object *num_to_json(void *num, int elem_size, unsigned long f
->   		if (sign)
->   			return json_object_new_int64(*(int64_t *)num);
->   		else
-> -			return json_object_new_uint64(*(uint64_t *)num);
-> +			return util_json_new_u64(*(uint64_t *)num);
->   	}
->   
->   	/* All others fit in a signed 64 bit */
-> @@ -98,7 +98,7 @@ static int cxl_event_to_json(struct tep_event *event, struct tep_record *record,
->   	}
->   	json_object_object_add(jevent, "event", jobj);
->   
-> -	jobj = json_object_new_uint64(record->ts);
-> +	jobj = util_json_new_u64(record->ts);
->   	if (!jobj) {
->   		rc = -ENOMEM;
->   		goto err_jevent;
+> Despite that reservation I think this is a good clarification.
 > 
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+Ah.  This is a mess due to patch reordering as this was originally
+meant as a precursor for your event injection series then I had to drag
+it forwards to here to avoid introducing more use of the old naming.
+
+Let me see if I can swap it round and just do the rename in this series
+and push the move back to the start of that series - which I'll post
+soon.
+
+As it's the same code changes in a different order I'll pick up your RB.
+Give me a shout if you'd rather I didn't!
+
+Thanks,
+
+Jonathan
+
+
+
+> 
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  hw/cxl/cxl-mailbox-utils.c  | 28 ----------------------------
+> >  include/hw/cxl/cxl_device.h | 28 ++++++++++++++++++++++++++++
+> >  2 files changed, 28 insertions(+), 28 deletions(-)
+> >   
+
