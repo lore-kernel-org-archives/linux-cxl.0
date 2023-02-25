@@ -2,88 +2,69 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E56C64ED8
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Feb 2023 23:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A323C7EE23
+	for <linux-cxl@archiver.kernel.org>; Sat, 25 Feb 2023 17:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbjBXXKb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Feb 2023 18:10:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
+        id S229751AbjBYRdH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 25 Feb 2023 12:33:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjBXXKa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Feb 2023 18:10:30 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291921630B;
-        Fri, 24 Feb 2023 15:10:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=PWlxtCRdEYf+JZg4eqY+Ghwyo/skTEHHEw79y59hqkA=; b=0/Tor7OOrFQUrrKwtxamtltx11
-        nKDIVjdsIQ0gcNotQUCZhG8ECjAKhIBhvT3EStnMoaGsUPNqn0mgb4ZNh4qc3MVSt4HlxYcMVbJHV
-        FcAL4x6XaOSHfXi5IZ4txQCLonRG2UoF/uOzi56GM1rKkuVPtqF6bCvWpDcLpEijZLuBmRmIkYKV8
-        f2ZaohLjFfmyuZqV2HlL5q0ikn01WleytaBoP378s41z0gdnmms6oecbmKLlSaZ2tW5Q3SM+/NiLA
-        FCRZyB/gPI/aj6PCnv6VCkCFC5QANTD0gbbPFijxoT9SCGDpTQDPAuRJ1OJLAOoya6ui+gjUOU3GL
-        ud7yYcYw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pVhCs-004G7y-Iv; Fri, 24 Feb 2023 23:10:26 +0000
-Date:   Fri, 24 Feb 2023 15:10:26 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mcgrof@kernel.org
-Subject: [ANN]: kdevops v6.2 released devices
-Message-ID: <Y/lD4kVcPqUppMwm@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+        with ESMTP id S229762AbjBYRdD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 25 Feb 2023 12:33:03 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD67426AD;
+        Sat, 25 Feb 2023 09:33:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D08260B55;
+        Sat, 25 Feb 2023 17:33:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A532DC433EF;
+        Sat, 25 Feb 2023 17:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677346381;
+        bh=6NZHfqzfAo19cNKksjq+o/SCM1i/OjyrFCDF9l0TwoA=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=WctzGEymlJyadp8JqsSHP/WF4T9ifp7V2Ncs+kUXh8+9kmhDwylIIg7wMyiowEQug
+         4+rCFJx4oiOJOeci1LKGaaQRgCzs/gJEnNS9y4p3J7BBZkyQYIhiyzhumGI70AVetP
+         dkx1VKZn7poFipoONQRx5nPN5eVJw6K20TWVhUDQvBrYrV0eYkTd1p5Fz6hKJklz/t
+         c8tQY1PpFB/aeNxNoXFPDJkgW7hYNvz6HnH2UC1PMHXqw3g4eb2iI5ydwYG123FLic
+         sAtnhT7YB1W9/7BFeEUKPSBsQV9n4Zfpf5YnWJGREp38Xe+SpAZH1oCZs2xY3keUH6
+         vdLeo5E3dufZQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 93D3FE68D26;
+        Sat, 25 Feb 2023 17:33:01 +0000 (UTC)
+Subject: Re: [GIT PULL] Compute Express Link (CXL) for 6.3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <63f5a4e2277b1_c94229453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <63f5a4e2277b1_c94229453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <63f5a4e2277b1_c94229453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.3
+X-PR-Tracked-Commit-Id: e686c32590f40bffc45f105c04c836ffad3e531a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7c3dc440b1f5c75f45e24430f913e561dc82a419
+Message-Id: <167734638160.8970.6794755420865287571.pr-tracker-bot@kernel.org>
+Date:   Sat, 25 Feb 2023 17:33:01 +0000
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     torvalds@linux-foundation.org, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-I'd like to announce the release of kdevops v6.2 [0] [1]. I had already written
-about most of the new features on the v6.2-rc1 release in the December 2022
-notes [2], but since a new features cannot regress we've seen a few more new
-features sneak in since then. I'll re-iterate a few of the newest major
-features added since our last release (v5.0.2):
+The pull request you sent on Tue, 21 Feb 2023 21:15:14 -0800:
 
-  * ZNS
-  * CXL
-  * NFS
-  * Initial Kernel selftests suport: firmware, sysctl, kmod
-  * OCI cloud support
-  * libvirt use 9p now for local builds
-  * PCI-passthrough support including a new dynamic kconfig interface for it
-  * Building qemu for you
-  * 12 btrfs profiles to test
-  * Results for tests are now archived see workflows/fstests/results/
-    for an example namespace
+> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.3
 
-For more details of release notes you can refer to the v6.2-rc1 [3] and
-v6.2 [4] git tags.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7c3dc440b1f5c75f45e24430f913e561dc82a419
 
-Thanks a lot to the developers who have contributed:
+Thank you!
 
-  Adam Manzanares
-  Amir Goldstein
-  Chandan Babu R
-  Jeff Layton
-  Joel Granados
-  Josef Bacik
-  Luis Chamberlain
-  Pankaj Raghav
-
-*If* it makes sense, we may set up a stable brach for v6.2.y releases so
-which could fixate on the vagrant setup, so that folks using libvirt
-can get fixes. If we do that it would make sense to just merge fixes
-to the master branch first before the stable branch as well just as we
-do in upstream linux / stable branches.
-
-  Luis
-
-[0] https://github.com/linux-kdevops/kdevops
-[1] https://gitlab.com/linux-kdevops/kdevops
-[2] https://people.kernel.org/mcgrof/kdevops-v6-2-rc1-released
-[3] https://github.com/linux-kdevops/kdevops/releases/tag/v6.2-rc1
-[4] https://github.com/linux-kdevops/kdevops/releases/tag/v6.2
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
