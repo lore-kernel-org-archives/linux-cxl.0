@@ -2,180 +2,97 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEEBC64ED6
-	for <linux-cxl@archiver.kernel.org>; Mon, 27 Feb 2023 14:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B23FC64ED6
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Feb 2023 15:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229906AbjB0O52 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 09:57:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        id S229451AbjB0Pbz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 10:31:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbjB0O51 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 09:57:27 -0500
+        with ESMTP id S229470AbjB0Pbb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 10:31:31 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B112D68
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 06:57:25 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PQNrb5gfWz6J7CH;
-        Mon, 27 Feb 2023 22:57:19 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 27 Feb
- 2023 14:57:23 +0000
-Date:   Mon, 27 Feb 2023 14:57:22 +0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2F6D527
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 07:31:30 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PQPVL1jngz6J7n1;
+        Mon, 27 Feb 2023 23:26:34 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Feb 2023 15:31:27 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>
+CC:     Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
         Gregory Price <gourry.memverge@gmail.com>,
-        Philippe =?ISO-8859-1?Q?Mathie?= =?ISO-8859-1?Q?u-Daud=E9?= 
-        <philmd@linaro.org>, Mike Maslenkin <mike.maslenkin@gmail.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        "Dave Jiang" <dave.jiang@intel.com>, <alison.schofield@intel.com>
-Subject: Re: [PATCH 5/6] hw/cxl: Add poison injection via the mailbox.
-Message-ID: <20230227145722.000049f2@huawei.com>
-In-Reply-To: <63f56d49deb1f_1dc7bb29489@iweiny-mobl.notmuch>
-References: <20230217181812.26995-1-Jonathan.Cameron@huawei.com>
-        <20230217181812.26995-6-Jonathan.Cameron@huawei.com>
-        <63f56d49deb1f_1dc7bb29489@iweiny-mobl.notmuch>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v2 0/2] hw/cxl: Passthrough HDM decoder emulation
+Date:   Mon, 27 Feb 2023 15:31:26 +0000
+Message-ID: <20230227153128.8164-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 21 Feb 2023 17:18:01 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
+v2:
+- Rebase and pick up tags.
+- State prereq patche sets more clearly.
 
-> Jonathan Cameron wrote:
-> > Very simple implementation to allow testing of corresponding
-> > kernel code. Note that for now we track each 64 byte section
-> > independently.  Whilst a valid implementation choice, it may
-> > make sense to fuse entries so as to prove out more complex
-> > corners of the kernel code.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> >  hw/cxl/cxl-mailbox-utils.c | 40 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> > 
-> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index cf3cfb10a1..7d3f7bcd3a 100644
-> > --- a/hw/cxl/cxl-mailbox-utils.c
-> > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -64,6 +64,7 @@ enum {
-> >          #define SET_LSA       0x3
-> >      MEDIA_AND_POISON = 0x43,
-> >          #define GET_POISON_LIST        0x0
-> > +        #define INJECT_POISON          0x1
-> >  };
-> >  
-> >  struct cxl_cmd;
-> > @@ -436,6 +437,43 @@ static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
-> >      return CXL_MBOX_SUCCESS;
-> >  }
-> >  
-> > +static CXLRetCode cmd_media_inject_poison(struct cxl_cmd *cmd,
-> > +                                          CXLDeviceState *cxl_dstate,
-> > +                                          uint16_t *len)
-> > +{
-> > +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> > +    CXLPoisonList *poison_list = &ct3d->poison_list;
-> > +    CXLPoison *ent;
-> > +    struct inject_poison_pl {
-> > +        uint64_t dpa;
-> > +    };
-> > +    struct inject_poison_pl *in = (void *)cmd->payload;
-> > +    CXLPoison *p;
-> > +
-> > +    QLIST_FOREACH(ent, poison_list, node) {
-> > +        if (ent->start == in->dpa && ent->length == 64) {  
-> 
-> How does this interact with the QMP inject poison?  Should this be
-> checking the range of the entries?
+Mostly sending out again because some of the precursors have been updated
+and to fix a typo in a tag given on v1.
 
-Good question and this implementation is definitely not right.
-Having looked at the spec I'm not entirely sure what happens wrt
-to the poison list if there is overlap. It leaves things less
-sharply defined than I'd like.
+Until now, testing using CXL has relied up always using two root ports
+below a host bridge, to work around a current assumption in the Linux
+kernel support that, in the single root port case, the implementation will
+use the allowed passthrough decoder implementation choice. If that choice
+is made all accesses are routed from the host bridge to the single
+root port that is present. Effectively we have a pass through decoder
+(it is called that in the kernel driver).
 
-The inject poison command calls out that it is not an error to inject poison
-into a DPA that already has poison present - so a range match would
-make more sense than what is here - I'll fix that.
+This patch series implements that functionality and makes it the default
+See patch 2 for a discussion of why I think we can make this change
+without backwards compatibility issues (basically if it didn't work before
+who are we breaking by making it work?)
 
-It also calls out that the device "shall add a the new physical
-address to the device's poison list and error source shall be set to an
-injected event".
+Whilst this limitation has been known since the initial QEMU patch
+postings / kernel CXL region support, Fan Ni ran into it recently reminding
+me that we should solve it.
 
-What it doesn't say is what should it do if there is already an entry
-for a different poison type.  Should we update the type?  That's
-nasty as it could lead to list overflow by turning one region into 2 or
-3.
+Note that if you enable hdm_for_passthrough and use a configuration that
+would otherwise get a passthrough decoder, the linux kernel will currently
+fail to set it up correctly.  That's a bug / missing feature in Linux
+not an issue with the emulation.
 
-I guess no one really cares that much on the precise detail of poison
-injection hence the spec is a little vague.
+Based on series "[PATCH v4 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream"
+Based on series "[PATCH v6 0/8] hw/cxl: RAS error emulation and injection"
 
-Anyhow, for now I'm thinking that if a range contains matches leave the
-type alone is easy and I can't find anything to say that's not a valid
-implementation choice.
+Based on: Message-Id: 20230206172816.8201-1-Jonathan.Cameron@huawei.com
+Based on: Message-Id: 20230227112751.6101-1-Jonathan.Cameron@huawei.com
 
-As a side note, we don't yet have events support (that series is later in
-the tree) so that fact injecting poison should add an entry to that isn't
-happening.  I don't propose doing that until after the generic event injection
-is done though as it will otherwise make that series more complex and
-I doubt this is the only case we need to cover of these various error
-reporting paths interacting.
+Jonathan Cameron (2):
+  hw/pci: Add pcie_count_ds_port() and pcie_find_port_first() helpers
+  hw/pxb-cxl: Support passthrough HDM Decoders unless overridden
 
-Jonathan
+ hw/cxl/cxl-host.c                   | 31 ++++++++++++--------
+ hw/pci-bridge/pci_expander_bridge.c | 44 +++++++++++++++++++++++++----
+ hw/pci/pcie_port.c                  | 38 +++++++++++++++++++++++++
+ include/hw/cxl/cxl.h                |  1 +
+ include/hw/cxl/cxl_component.h      |  1 +
+ include/hw/pci/pci_bridge.h         |  1 +
+ include/hw/pci/pcie_port.h          |  2 ++
+ 7 files changed, 101 insertions(+), 17 deletions(-)
 
-
-> 
-> Ira
-> 
-> > +            return CXL_MBOX_SUCCESS;
-> > +        }
-> > +    }
-> > +
-> > +    if (ct3d->poison_list_cnt == CXL_POISON_LIST_LIMIT) {
-> > +        return CXL_MBOX_INJECT_POISON_LIMIT;
-> > +    }
-> > +    p = g_new0(CXLPoison, 1);
-> > +
-> > +    p->length = 64;
-> > +    p->start = in->dpa;
-> > +    p->type = CXL_POISON_TYPE_INJECTED;
-> > +
-> > +    /*
-> > +     * Possible todo: Merge with existing entry if next to it and if same type
-> > +     */
-> > +    QLIST_INSERT_HEAD(poison_list, p, node);
-> > +    ct3d->poison_list_cnt++;
-> > +
-> > +    return CXL_MBOX_SUCCESS;
-> > +}
-> > +
-> >  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-> >  #define IMMEDIATE_DATA_CHANGE (1 << 2)
-> >  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> > @@ -465,6 +503,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
-> >          ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
-> >      [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
-> >          cmd_media_get_poison_list, 16, 0 },
-> > +    [MEDIA_AND_POISON][INJECT_POISON] = { "MEDIA_AND_POISON_INJECT_POISON",
-> > +        cmd_media_inject_poison, 8, 0 },
-> >  };
-> >  
-> >  void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-> > -- 
-> > 2.37.2
-> >   
-> 
-> 
+-- 
+2.37.2
 
