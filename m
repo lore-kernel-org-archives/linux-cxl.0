@@ -2,229 +2,161 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CAFC64ED6
-	for <linux-cxl@archiver.kernel.org>; Mon, 27 Feb 2023 03:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EB0C64ED6
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Feb 2023 09:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbjB0Dqu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 26 Feb 2023 22:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54404 "EHLO
+        id S229548AbjB0JlB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 04:41:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbjB0Dqt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 26 Feb 2023 22:46:49 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F911CAFE
-        for <linux-cxl@vger.kernel.org>; Sun, 26 Feb 2023 19:46:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677469607; x=1709005607;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JFJhPpVA4adnYLS1eEsWvuzd7nJTu1KuJcA0IdpvaZU=;
-  b=XCvvAm1YiBSXIR4gOZjYtcFKPxEoGDrjGr6E32SP70w7ulZi7a4BGtU6
-   UUUakOsOsGnrWuW78fgzO2GES6mT59O6XYCZ2u7BA/EdZDD2+WkmzpFql
-   f01DuILRXPyhfwV7rl0Ollygk/OBKY9I7OSLHYhPGRiv5Q1gm9J2FiDg7
-   f7dR+I5mygeGwQFUvqmiLhUGy2Hvaf0sMj82T6UTH/6PTK0Wn2A28KNPI
-   K0DgJvWeCwqdkqTVE7ZiARU1WyPkY5kJ+k2uCKnhhFP0GXU2vx8tjV5o9
-   iF8vQhl4m0Jh5RvY/n7o0862BzprwJ3cK+fjzBpAvfEGBOjzfR5JtTrc1
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="336050913"
-X-IronPort-AV: E=Sophos;i="5.97,330,1669104000"; 
-   d="scan'208";a="336050913"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2023 19:46:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="919134954"
-X-IronPort-AV: E=Sophos;i="5.97,330,1669104000"; 
-   d="scan'208";a="919134954"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.83.169])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2023 19:46:45 -0800
-Date:   Sun, 26 Feb 2023 19:46:43 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     dan.j.williams@intel.com, jonathan.cameron@huawei.com,
-        ira.weiny@intel.com, fan.ni@samsung.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/7] cxl/region: Add cxl_memdev_active_region()
-Message-ID: <Y/wno8C4bK3XNoUD@aschofie-mobl2>
-References: <20230224194652.1990604-1-dave@stgolabs.net>
- <20230224194652.1990604-4-dave@stgolabs.net>
+        with ESMTP id S229684AbjB0JlA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 04:41:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD09D529
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 01:40:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1677490812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CUMRnTDeR7CwtfWw5lJqv4Nxr13L7OiZY8PPWakXYE8=;
+        b=X8uYGfTw3Qyhm++jlYSDhM87Y/JbOa4EN1b3AWCOnjkbmqeEEroNuW+W52A2GxqBRB2a01
+        FWnv7FslpQi93c9hd2zTyENOxCQGQsHs8IOARB+P+Df84qjzOSwBYGzZgXE/uhYKEi7HSu
+        9eYhZJyzLvi6fxSbrhxA4UDlM+Oh21s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-264-FN9PLIq2OZuyMoqypPs7Tw-1; Mon, 27 Feb 2023 04:40:09 -0500
+X-MC-Unique: FN9PLIq2OZuyMoqypPs7Tw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BADAC101157B;
+        Mon, 27 Feb 2023 09:40:08 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.39.192.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1562D404BEC5;
+        Mon, 27 Feb 2023 09:40:08 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+        id 2357221E6A1F; Mon, 27 Feb 2023 10:40:07 +0100 (CET)
+From:   Markus Armbruster <armbru@redhat.com>
+To:     Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Thomas Huth <thuth@redhat.com>, qemu-devel@nongnu.org,
+        Michael Tsirkin <mst@redhat.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>
+Subject: Re: [PATCH v5 8/8] hw/mem/cxl_type3: Add CXL RAS Error Injection
+ Support.
+References: <20230221152145.9736-1-Jonathan.Cameron@huawei.com>
+        <20230221152145.9736-9-Jonathan.Cameron@huawei.com>
+        <e432cebc-8faa-7b41-71c8-ea88c7bcbb04@linaro.org>
+        <20230222145330.000021ef@huawei.com>
+        <c2fb77b0-0734-3be5-1b54-7c797b3daa15@linaro.org>
+        <20230222164947.0000554f@Huawei.com>
+        <b9bd5698-1f73-b912-0344-4b70c30dd02a@linaro.org>
+        <586d040f-d712-905e-fd68-bcde3713478b@redhat.com>
+        <875ybsg7cl.fsf@pond.sub.org> <20230223142748.0000662f@huawei.com>
+        <45b86050-0f0b-d222-c32f-9d6f23246574@linaro.org>
+Date:   Mon, 27 Feb 2023 10:40:07 +0100
+In-Reply-To: <45b86050-0f0b-d222-c32f-9d6f23246574@linaro.org> ("Philippe
+        =?utf-8?Q?Mathieu-Daud=C3=A9=22's?= message of "Fri, 24 Feb 2023 20:02:59
+ +0100")
+Message-ID: <87sfertpjc.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230224194652.1990604-4-dave@stgolabs.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Feb 24, 2023 at 11:46:48AM -0800, Davidlohr Bueso wrote:
-> Track all regions associated to a memdev in order to
-> tell if the device might be in active use.
+Philippe Mathieu-Daud=C3=A9 <philmd@linaro.org> writes:
 
-Hi David,
+> On 23/2/23 15:27, Jonathan Cameron wrote:
+>> On Thu, 23 Feb 2023 08:37:46 +0100
+>> Markus Armbruster <armbru@redhat.com> wrote:
+>>> Whenever you use a poisoned macro in a conditional, all the code
+>>> generated for this .json file (we call it a "QAPI schema module")
+>>> becomes target-dependent.  The QAPI code generator itself is blissfully
+>>> unaware of this.
+>>>
+>>> Since target-dependent code needs to be compiled differently, the build
+>>> process needs to be know which modules are target-dependent.  We do this
+>>> in one of the stupidest ways that could possibly work: a module is
+>>> target-dependent if its name ends with "-target".  There are just two
+>>> right now: qapi/machine-target.json and qapi/misc-target.json.
+>>>
+>>> The logic resides in qapi/meson.build.  Look for
+>>>
+>>>      if module.endswith('-target')
+>>
+>> Thanks for all the pointers.
+>>
+>>> Questions?
+>>>
+>> Is it sensible to make the cxl stuff all target dependent and do the fol=
+lowing?
+>> I like that we can get rid of the stubs if we do this but I'm sure there=
+ are
+>> disadvantages. Only alternative I can currently see is continue to have
+>> stubs and not make the qmp commands conditional on them doing anything u=
+seful.
+>
+> I still don't understand what is the target-dependent part of CXL.
+>
+> IIUC CXL depends on PCIe which isn't target dependent.
 
-I took a look here as I've been poked around in this space when looking
-for 'region' names to associate with memdev poison trace events. [1]
+As far as I can tell, the target-dependent part of CXL is the macro
+CONFIG_CXL :)
 
-How does the list created get used?
+Consider a device model implemented in perfectly target-independent
+code, to be linked only into some qemu-system-TARGET.  How do we do
+that?
 
-If we only need to know that this memdev is mapped in any region,
-so don't touch it, we can look at it's port->commit_end. If that
-commit_end >= 0, we can look at each endpoint to find the regions
-it's mapped to.
+We put a 'config FOO' section in the appropriate Kconfig, and select it
+from the target's Kconfig for the targets that want it.  We add device
+model sources to Meson source set softmmu_ss when CONFIG_FOO.
 
-Not sure if any of that is useful for what you need to do, but
-it sounded familiar.
+This puts CONFIG_FOO=3Dy into the TARGET-softmmu-config-devices.mak, and
+#define CONFIG_FOO 1 into TARGET-softmmu-config-devices.h.  It also puts
+#pragma GCC poison CONFIG_FOO into config-poison.h.
 
-[1] https://lore.kernel.org/linux-cxl/62d24b380514c8c39b651aca79c81a424f0b5b37.1676685180.git.alison.schofield@intel.com/
+Note the two CONFIG_FOO have subtly different meaning:
 
-Alison
+* The make variable means "there is an enabled target that has FOO
+  enabled".  It gets propagated to Meson.
 
-> 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/cxl/core/memdev.c |  1 +
->  drivers/cxl/core/region.c | 33 +++++++++++++++++++++++++++++++--
->  drivers/cxl/cxl.h         |  6 ++++++
->  drivers/cxl/cxlmem.h      |  4 ++++
->  4 files changed, 42 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 47cc625bb1b0..68c0ab06b999 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -306,6 +306,7 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
->  	dev->type = &cxl_memdev_type;
->  	device_set_pm_not_required(dev);
->  	INIT_WORK(&cxlmd->detach_work, detach_memdev);
-> +	INIT_LIST_HEAD(&cxlmd->region_list);
->  
->  	cdev = &cxlmd->cdev;
->  	cdev_init(cdev, fops);
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index f29028148806..cea9de6457b9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1730,7 +1730,10 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
->  {
->  	down_write(&cxl_region_rwsem);
->  	cxled->mode = CXL_DECODER_DEAD;
-> -	cxl_region_detach(cxled);
-> +	if (!cxl_region_detach(cxled)) {
-> +		struct cxl_region *cxlr = cxled->cxld.region;
-> +		list_del(&cxlr->node);
-> +	}
->  	up_write(&cxl_region_rwsem);
->  }
->  
-> @@ -1749,8 +1752,12 @@ static int attach_target(struct cxl_region *cxlr,
->  
->  	down_read(&cxl_dpa_rwsem);
->  	rc = cxl_region_attach(cxlr, cxled, pos);
-> -	if (rc == 0)
-> +	if (rc == 0) {
-> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +
->  		set_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
-> +		list_add_tail(&cxlr->node, &cxlmd->region_list);
-> +	}
->  	up_read(&cxl_dpa_rwsem);
->  	up_write(&cxl_region_rwsem);
->  	return rc;
-> @@ -1778,6 +1785,8 @@ static int detach_target(struct cxl_region *cxlr, int pos)
->  	}
->  
->  	rc = cxl_region_detach(p->targets[pos]);
-> +	if (rc == 0)
-> +		list_del(&cxlr->node);
->  out:
->  	up_write(&cxl_region_rwsem);
->  	return rc;
-> @@ -2654,6 +2663,26 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, CXL);
->  
-> +bool cxl_memdev_active_region(struct cxl_memdev *cxlmd)
-> +{
-> +	bool ret = false;
-> +	struct cxl_region *cxlr;
-> +
-> +	down_read(&cxl_region_rwsem);
-> +	list_for_each_entry(cxlr, &cxlmd->region_list, node) {
-> +		struct cxl_region_params *p = &cxlr->params;
-> +
-> +		if (p->state >= CXL_CONFIG_ACTIVE) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	}
-> +	up_read(&cxl_region_rwsem);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_active_region, CXL);
-> +
->  static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
->  {
->  	if (!test_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags))
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index b834e55375e3..e211241b079b 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -502,6 +502,7 @@ struct cxl_region {
->  	struct cxl_pmem_region *cxlr_pmem;
->  	unsigned long flags;
->  	struct cxl_region_params params;
-> +	struct list_head node;
->  };
->  
->  struct cxl_nvdimm_bridge {
-> @@ -773,6 +774,7 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
->  int cxl_add_to_region(struct cxl_port *root,
->  		      struct cxl_endpoint_decoder *cxled);
->  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
-> +bool cxl_memdev_active_region(struct cxl_memdev *cxlmd);
->  #else
->  static inline bool is_cxl_pmem_region(struct device *dev)
->  {
-> @@ -791,6 +793,10 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
->  {
->  	return NULL;
->  }
-> +static inline bool cxl_memdev_active_region(struct cxl_memdev *cxlmd)
-> +{
-> +	return false;
-> +}
->  #endif
->  
->  /*
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 934076254d52..4e31f3234519 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -5,6 +5,7 @@
->  #include <uapi/linux/cxl_mem.h>
->  #include <linux/cdev.h>
->  #include <linux/uuid.h>
-> +#include <linux/list.h>
->  #include "cxl.h"
->  
->  /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-> @@ -40,6 +41,8 @@
->   * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
->   * @id: id number of this memdev instance.
->   * @depth: endpoint port depth
-> + * @region_list: List of regions that have as target the endpoint
-> + *               decoder associated with this memdev
->   */
->  struct cxl_memdev {
->  	struct device dev;
-> @@ -50,6 +53,7 @@ struct cxl_memdev {
->  	struct cxl_nvdimm *cxl_nvd;
->  	int id;
->  	int depth;
-> +	struct list_head region_list;
->  };
->  
->  static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-> -- 
-> 2.39.2
-> 
+* The C macro means "the current target has FOO enabled".  It therefore
+  must not be used in target-independent code.  That's why we poison it
+  in config-poison.h.
+
+Note that the device model code has no use for C macro CONFIG_FOO.  It
+remains target-independent as it should.
+
+Now consider how to have the QAPI schema provide something for FOO.
+
+If we make it a QAPI schema module of its own, we can arrange for it to
+be linked only into the qemu-system-TARGET that have the device model,
+just like the device model code.  We haven't tried this for individual
+devices, only for whole subsystems like PCI.
+
+If we don't make it a module of its own, we have two choices:
+
+* We use 'if': 'CONFIG_FOO'.  This is actually the C macro.  The module
+  becomes target-dependent.  We compile the code generated for the
+  module separately for each target.
+
+* We make it unconditional.  The module can remain target-independent.
+  The code generated for FOO's QAPI schema is linked unconditionally,
+  even when the target doesn't need it.  Any references to handwritten
+  FOO code need to be satisfied with stubs.
+
+I dislike both.  Existing usage seems to prefer "unconditional schema".
+Sticking to that is okay.
+
