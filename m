@@ -2,244 +2,231 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8282C64ED6
-	for <linux-cxl@archiver.kernel.org>; Mon, 27 Feb 2023 17:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05ECC64ED6
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Feb 2023 18:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjB0RkK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 12:40:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
+        id S229548AbjB0SWO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 13:22:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230502AbjB0Rjw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 12:39:52 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3C4244A5
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 09:38:39 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PQSJ80Pntz6J7mD;
-        Tue, 28 Feb 2023 01:32:56 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 27 Feb 2023 17:37:49 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>
-CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v3 7/7] hw/cxl/events: Add injection of Memory Module Events
-Date:   Mon, 27 Feb 2023 17:34:16 +0000
-Message-ID: <20230227173416.7740-8-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230227173416.7740-1-Jonathan.Cameron@huawei.com>
-References: <20230227173416.7740-1-Jonathan.Cameron@huawei.com>
+        with ESMTP id S229516AbjB0SWO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 13:22:14 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3853525941
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 10:22:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677522131; x=1709058131;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VqpzgnBk6JTEe6MW4LLPk+RGqS8sr+ozOD/wW053xns=;
+  b=G1TukS/k88lOjY4SA5Rg7j6rYMSiI0T2rVpwKucpXCo4DcNBdBo3I+kE
+   p60hFTwtiamXtkouhNdI7IW32EhdvIMIQGr9dhHeG5GZ+/fvn0giDt6l5
+   hP3810krQGzTyREXaS5OeoXq+plCraLW0KFzSiGTn6sTkH4xk79audzaH
+   RTDNdd9Y/pxdjo7eHwozGZTgK6dG1Jyms3Z/Cr8akhN/QJGu1SJVnKEMp
+   Kqtyah28/iEUMtsqXJjlHTQ2NScZqDegTlrg7/r9D4s/n2kJvrMB5oqTl
+   E8wxq+EgwnY6ksmJEjM1hlyX1QSDxFJC1P/SC53icqNela4KyQwvhRYLe
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="314359876"
+X-IronPort-AV: E=Sophos;i="5.98,219,1673942400"; 
+   d="scan'208";a="314359876"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 10:21:13 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="704114783"
+X-IronPort-AV: E=Sophos;i="5.98,219,1673942400"; 
+   d="scan'208";a="704114783"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.113.7])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 10:21:12 -0800
+Subject: [RFC PATCH] hw/acpi: Add support for Generic Port Affinity Structure
+ to SRAT
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     jonathan.cameron@huawei.com
+Cc:     linux-cxl@vger.kernel.org
+Date:   Mon, 27 Feb 2023 11:21:10 -0700
+Message-ID: <167752189501.2142629.5945611780614317355.stgit@djiang5-mobl3.local>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-These events include a copy of the device health information at the
-time of the event. Actually using the emulated device health would
-require a lot of controls to manipulate that state.  Given the aim
-of this injection code is to just test the flows when events occur,
-inject the contents of the device health state as well.
+The Generic Port Affinity Structure is added for the System Resource
+Affinity Table in ACPI r6.4. It provides information on the proximity
+domain that's associated with a device handle. This information in
+combination with HMAT can be used by the CXL driver to calculate the
+bandwidth and latency information between the CPU and the CXL Host Bridge
+(HB).
 
-Future work may add more sophisticate device health emulation
-including direct generation of these records when events occur
-(such as a temperature threshold being crossed).  That does not
-reduce the usefulness of this more basic generation of the events.
+Add a list to account for the ACPI0016 (CXL HB ACPI devices) being
+created. Create GAPS entries equivalent to the number of HB devices
+constructed by qemu using the list and inject the relevant device handle.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The proximity domain will be set to 0 for simplicity to enable Linux kernel
+side debugging and usage of the new SRAT sub-tables.
+
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- hw/mem/cxl_type3.c          | 61 +++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3_stubs.c    | 12 ++++++++
- include/hw/cxl/cxl_events.h | 19 ++++++++++++
- qapi/cxl.json               | 35 +++++++++++++++++++++
- 4 files changed, 127 insertions(+)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index cff5341b7b..98c0c9ad32 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1172,6 +1172,11 @@ static const QemuUUID dram_uuid = {
-                  0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
- };
- 
-+static const QemuUUID memory_module_uuid = {
-+    .data = UUID(0xfe927475, 0xdd59, 0x4339, 0xa5, 0x86,
-+                 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74),
-+};
-+
- #define CXL_GMER_VALID_CHANNEL                          BIT(0)
- #define CXL_GMER_VALID_RANK                             BIT(1)
- #define CXL_GMER_VALID_DEVICE                           BIT(2)
-@@ -1377,6 +1382,62 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-     return;
+Hi Jonathan,
+I hacked together the SRAT support for generic port on qemu. Wasn't sure if
+it's ok to define a global list for the ACPI0016 devices. I don't see how
+we can parse the created table instead. Please let me know if this is the right
+way to go. Thanks!
+
+ hw/acpi/aml-build.c         |   19 +++++++++++++++++++
+ hw/i386/acpi-build.c        |   25 +++++++++++++++++++++++++
+ include/hw/acpi/aml-build.h |   27 +++++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
+
+diff --git a/hw/acpi/aml-build.c b/hw/acpi/aml-build.c
+index ea331a20d131..2a43b24796a7 100644
+--- a/hw/acpi/aml-build.c
++++ b/hw/acpi/aml-build.c
+@@ -1938,6 +1938,25 @@ void build_srat_memory(GArray *table_data, uint64_t base,
+     build_append_int_noprefix(table_data, 0, 8); /* Reserved */
  }
  
-+void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-+                                        uint8_t flags, uint8_t type,
-+                                        uint8_t health_status,
-+                                        uint8_t media_status,
-+                                        uint8_t additional_status,
-+                                        uint8_t life_used,
-+                                        int16_t temperature,
-+                                        uint32_t dirty_shutdown_count,
-+                                        uint32_t corrected_volatile_error_count,
-+                                        uint32_t corrected_persistent_error_count,
-+                                        Error **errp)
++/*
++ * ACPI spec, Revision 6.5
++ * 5.2.16.7 Generic Port Affinity Structure
++ */
++void build_srat_generic_port_affinity(GArray *table_data, uint8_t htype, int node,
++                                      ACPIDeviceHandle *handle,
++                                      GenericAffinityFlags flags)
 +{
-+    Object *obj = object_resolve_path(path, NULL);
-+    CXLEventMemoryModule module;
-+    CXLEventRecordHdr *hdr = &module.hdr;
-+    CXLDeviceState *cxlds;
-+    CXLType3Dev *ct3d;
-+    uint8_t enc_log;
-+    int rc;
-+
-+    if (!obj) {
-+        error_setg(errp, "Unable to resolve path");
-+        return;
-+    }
-+    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-+        error_setg(errp, "Path does not point to a CXL type 3 device");
-+        return;
-+    }
-+    ct3d = CXL_TYPE3(obj);
-+    cxlds = &ct3d->cxl_dstate;
-+
-+    rc = ct3d_qmp_cxl_event_log_enc(log);
-+    if (rc < 0) {
-+        error_setg(errp, "Unhandled error log type");
-+        return;
-+    }
-+    enc_log = rc;
-+
-+    memset(&module, 0, sizeof(module));
-+    cxl_assign_event_header(hdr, &memory_module_uuid, flags, sizeof(module));
-+
-+    module.type = type;
-+    module.health_status = health_status;
-+    module.media_status = media_status;
-+    module.additional_status = additional_status;
-+    module.life_used = life_used;
-+    stw_le_p(&module.temperature, temperature);
-+    stl_le_p(&module.dirty_shutdown_count, dirty_shutdown_count);
-+    stl_le_p(&module.corrected_volatile_error_count, corrected_volatile_error_count);
-+    stl_le_p(&module.corrected_persistent_error_count, corrected_persistent_error_count);
-+
-+    if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&module)) {
-+        cxl_event_irq_assert(ct3d);
-+    }
++    build_append_int_noprefix(table_data, 6, 1); /* Type */
++    build_append_int_noprefix(table_data, 32, 1); /* Length */
++    build_append_int_noprefix(table_data, 0, 1); /* Reserved */
++    build_append_int_noprefix(table_data, htype, 1); /* Device Handle Type */
++    build_append_int_noprefix(table_data, node, 4); /* Proximity Domain */
++    build_append_int_noprefix(table_data, handle->raw[0], 8); /* Device Handle part 1 */
++    build_append_int_noprefix(table_data, handle->raw[1], 8); /* Device Handle part 2 */
++    build_append_int_noprefix(table_data, flags, 4); /* Flags */
++    build_append_int_noprefix(table_data, 0, 4); /* Reserved */
 +}
 +
- static void ct3_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(oc);
-diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-index 235c171264..2196bd841c 100644
---- a/hw/mem/cxl_type3_stubs.c
-+++ b/hw/mem/cxl_type3_stubs.c
-@@ -26,6 +26,18 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-                                bool has_correction_mask, uint64List *correction_mask,
-                                Error **errp) {}
+ /*
+  * ACPI spec 5.2.17 System Locality Distance Information Table
+  * (Revision 2.0 or later)
+diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+index d449e5b76f30..3c9b2e9e4bfe 100644
+--- a/hw/i386/acpi-build.c
++++ b/hw/i386/acpi-build.c
+@@ -132,6 +132,13 @@ const struct AcpiGenericAddress x86_nvdimm_acpi_dsmio = {
+     .bit_width = NVDIMM_ACPI_IO_LEN << 3
+ };
  
-+void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-+                                        uint8_t flags, uint8_t type,
-+                                        uint8_t health_status,
-+                                        uint8_t media_status,
-+                                        uint8_t additional_status,
-+                                        uint8_t life_used,
-+                                        int16_t temperature,
-+                                        uint32_t dirty_shutdown_count,
-+                                        uint32_t corrected_volatile_error_count,
-+                                        uint32_t corrected_persistent_error_count,
-+                                        Error **errp) {}
++typedef struct CxlHBDev {
++    uint32_t uid;
++    QSLIST_ENTRY(CxlHBDev) entry;
++} CxlHBDev;
 +
- void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-                            Error **errp)
++static QSLIST_HEAD(, CxlHBDev) cxl_hb_list_head;
++
+ static void init_common_fadt_data(MachineState *ms, Object *o,
+                                   AcpiFadtData *data)
  {
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index a39e30d973..089ba2091f 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -146,4 +146,23 @@ typedef struct CXLEventDram {
-     uint8_t reserved[0x17];
- } QEMU_PACKED CXLEventDram;
+@@ -1507,8 +1514,13 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+             aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)));
+             aml_append(dev, aml_name_decl("_BBN", aml_int(bus_num)));
+             if (pci_bus_is_cxl(bus)) {
++                CxlHBDev *hb_entry;
+                 struct Aml *pkg = aml_package(2);
+ 
++                hb_entry = g_malloc0(sizeof(*hb_entry));
++                hb_entry->uid = bus_num;
++                QSLIST_INSERT_HEAD(&cxl_hb_list_head, hb_entry, entry);
++
+                 aml_append(dev, aml_name_decl("_HID", aml_string("ACPI0016")));
+                 aml_append(pkg, aml_eisaid("PNP0A08"));
+                 aml_append(pkg, aml_eisaid("PNP0A03"));
+@@ -1866,6 +1878,7 @@ static void
+ build_srat(GArray *table_data, BIOSLinker *linker, MachineState *machine)
+ {
+     int i;
++    CxlHBDev *hb_entry;
+     int numa_mem_start, slots;
+     uint64_t mem_len, mem_base, next_base;
+     MachineClass *mc = MACHINE_GET_CLASS(machine);
+@@ -1973,6 +1986,16 @@ build_srat(GArray *table_data, BIOSLinker *linker, MachineState *machine)
+ 
+     sgx_epc_build_srat(table_data);
+ 
++    QSLIST_FOREACH(hb_entry, &cxl_hb_list_head, entry) {
++        ACPIDeviceHandle handle = {
++                .hid = "ACPI0016",
++                .uid = hb_entry->uid,
++        };
++        uint32_t flags = GEN_AFFINITY_ENABLED;
++
++        build_srat_generic_port_affinity(table_data, 0, 0, &handle, flags);
++    }
++
+     /*
+      * TODO: this part is not in ACPI spec and current linux kernel boots fine
+      * without these entries. But I recall there were issues the last time I
+@@ -2728,6 +2751,8 @@ void acpi_setup(void)
+         return;
+     }
+ 
++    QSLIST_INIT(&cxl_hb_list_head);
++
+     build_state = g_malloc0(sizeof *build_state);
+ 
+     acpi_build_tables_init(&tables);
+diff --git a/include/hw/acpi/aml-build.h b/include/hw/acpi/aml-build.h
+index d1fb08514bfa..46a31469ebe2 100644
+--- a/include/hw/acpi/aml-build.h
++++ b/include/hw/acpi/aml-build.h
+@@ -204,6 +204,10 @@ typedef enum {
+     AML_PULL_NONE = 3,
+ } AmlPinConfig;
  
 +/*
-+ * Memory Module Event Record
-+ * CXL Rev 3.0 Section 8.2.9.2.1.3: Table 8-45
-+ * All fields little endian.
++ * ACPI 6.5: Table 5-68 Flags - Generic Initiator/Port Affinity Structure
++ * Flags field definition
 + */
-+typedef struct CXLEventMemoryModule {
-+    CXLEventRecordHdr hdr;
-+    uint8_t type;
-+    uint8_t health_status;
-+    uint8_t media_status;
-+    uint8_t additional_status;
-+    uint8_t life_used;
-+    int16_t temperature;
-+    uint32_t dirty_shutdown_count;
-+    uint32_t corrected_volatile_error_count;
-+    uint32_t corrected_persistent_error_count;
-+    uint8_t reserved[0x3d];
-+} QEMU_PACKED CXLEventMemoryModule;
-+
- #endif /* CXL_EVENTS_H */
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 32f340d972..8b3d30cd71 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -90,6 +90,41 @@
-             '*column': 'uint16', '*correction-mask': [ 'uint64' ]
-            }}
+ typedef enum {
+     MEM_AFFINITY_NOFLAGS      = 0,
+     MEM_AFFINITY_ENABLED      = (1 << 0),
+@@ -211,6 +215,25 @@ typedef enum {
+     MEM_AFFINITY_NON_VOLATILE = (1 << 2),
+ } MemoryAffinityFlags;
  
-+##
-+# @cxl-inject-memory-module-event:
-+#
-+# Inject an event record for a Memory Module Event (CXL r3.0 8.2.9.2.1.3)
-+# This event includes a copy of the Device Health info at the time of
-+# the event.
-+#
-+# @path: CXL type 3 device canonical QOM path
-+# @log: Event Log to add the event to
-+# @flags: header flags
-+# @type: Device Event Type (see spec for permitted values)
-+# @health-status: Overall health summary bitmap (see spec for permitted bits)
-+# @media-status: Overall media health summary (see spec for permitted values)
-+# @additional-status: Complex field (see spec for meaning)
-+# @life-used: Percentage (0-100) of factory expected life span
-+# @temperature: Device temperature in degrees Celsius
-+# @dirty-shutdown-count: Counter incremented whenever device is unable
-+#                        to determine if data loss may have occured.
-+# @corrected-volatile-error-count: Total number of correctable errors in
-+#                                  volatile memory
-+# @corrected-persistent-error-count: Total number correctable errors in
-+#                                    persistent memory
-+#
-+# Since: 8.0
-+##
-+{ 'command': 'cxl-inject-memory-module-event',
-+  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags' : 'uint8',
-+            'type': 'uint8', 'health-status': 'uint8',
-+            'media-status': 'uint8', 'additional-status': 'uint8',
-+            'life-used': 'uint8', 'temperature' : 'int16',
-+            'dirty-shutdown-count': 'uint32',
-+            'corrected-volatile-error-count': 'uint32',
-+            'corrected-persistent-error-count': 'uint32'
-+            }}
++/*
++ * ACPI 6.5: Table 5-65 Device Handle - ACPI
++ * Device Handle definition
++ */
++typedef union ACPIDeviceHandle {
++    struct {
++        uint8_t hid[8];
++        uint32_t uid;
++        uint32_t reserved;
++    };
++    uint64_t raw[2];
++} ACPIDeviceHandle;
 +
- ##
- # @cxl-inject-poison:
- #
--- 
-2.37.2
++typedef enum {
++    GEN_AFFINITY_NOFLAGS      = 0,
++    GEN_AFFINITY_ENABLED      = (1 << 0),
++    GEN_AFFINITY_ARCH_TRANS   = (2 << 0),
++} GenericAffinityFlags;
++
+ typedef
+ struct AcpiBuildTables {
+     GArray *table_data;
+@@ -486,6 +509,10 @@ Aml *build_crs(PCIHostState *host, CrsRangeSet *range_set, uint32_t io_offset,
+ void build_srat_memory(GArray *table_data, uint64_t base,
+                        uint64_t len, int node, MemoryAffinityFlags flags);
+ 
++void build_srat_generic_port_affinity(GArray *table_data, uint8_t htype, int node,
++                                      ACPIDeviceHandle *handle,
++                                      GenericAffinityFlags flags);
++
+ void build_slit(GArray *table_data, BIOSLinker *linker, MachineState *ms,
+                 const char *oem_id, const char *oem_table_id);
+ 
+
 
