@@ -2,217 +2,214 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C274CC64EC7
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29276C64EC7
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230047AbjB1EPQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 23:15:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
+        id S229563AbjB1Ef7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 23:35:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjB1EPP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:15:15 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9D6222C2
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:15:13 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041512usoutp02e0edf6a787fb51eff9907da1cf1b4e07~H4dndybJi1262212622usoutp02N;
-        Tue, 28 Feb 2023 04:15:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230228041512usoutp02e0edf6a787fb51eff9907da1cf1b4e07~H4dndybJi1262212622usoutp02N
+        with ESMTP id S229558AbjB1Ef6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:35:58 -0500
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6AC3252B8
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:35:55 -0800 (PST)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230228043552epoutp0170d13a3a4ce85e436621d93050fa9b83~H4vqnFFzL1883518835epoutp01g
+        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 04:35:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230228043552epoutp0170d13a3a4ce85e436621d93050fa9b83~H4vqnFFzL1883518835epoutp01g
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677557712;
-        bh=mbIzfCKyjKaIdxH+/8k1JP3aVSVXGPmWKDnEDTqqy2A=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=sTQXId+MAtQWy/JzUZ24W07aR8PXlMzL5XGb3p7Vf2F/iLkLInvb29OE7cLLDIOYn
-         69zgmU2sDdB1b3K5bOopvKDOD3b+hdljW/h+kP/aukCzex2WF/bWHi3ZpIn+3WbPRC
-         7aLOI3q4/jdR00PgViVssr+/Pl8UNUyqhsWe312c=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230228041511uscas1p2a3b6888d9d31f0b0ff7df80e5fc9db97~H4dnTeMyo2463924639uscas1p23;
-        Tue, 28 Feb 2023 04:15:11 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id 15.F2.12196.FCF7DF36; Mon,
-        27 Feb 2023 23:15:11 -0500 (EST)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230228041511uscas1p29bfa83f0efe2632d89d5d76ea1be0245~H4dnIHYPE2463924639uscas1p22;
-        Tue, 28 Feb 2023 04:15:11 +0000 (GMT)
-X-AuditID: cbfec370-5b3ff70000012fa4-7d-63fd7fcf534d
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id F2.F8.17110.FCF7DF36; Mon,
-        27 Feb 2023 23:15:11 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 27 Feb 2023 20:15:10 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        27 Feb 2023 20:15:10 -0800
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Gregory Price <gourry.memverge@gmail.com>,
-        =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH v4 10/10] hw/cxl/mailbox: Use new UUID network order
- define for cel_uuid
-Thread-Topic: [PATCH v4 10/10] hw/cxl/mailbox: Use new UUID network order
-        define for cel_uuid
-Thread-Index: AQHZSys/HAMpeEHzhUiuPAL7AephLA==
-Date:   Tue, 28 Feb 2023 04:15:10 +0000
-Message-ID: <20230228041510.GJ1339780@bgt-140510-bm03>
-In-Reply-To: <20230206172816.8201-11-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <E6FC4462C9BFC14882EAD423592C39A1@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        s=mail20170921; t=1677558952;
+        bh=qv9cPRK6mwicxtYCU4/a4VZVUqNsk0JediXpI7ocLn8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y7P05FodAp29zVaNDVXQNbCxhkDyx/lDNo5KGVXp0rtdGLJ/zXCcI/f6ezwNsM4rV
+         zDAQNCtwr6CAjZVhTQonx+HFnfNdMxgKd2nQpkj7q9PTjP9rQjVpIgQj+FK0oJ2phF
+         8NjqrI6l6bBQBLBakTLErraiSO3eA/F8wQCLEbo4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20230228043552epcas2p1585a6e975c820132194c4e57d8f97a72~H4vqXVrtO0478604786epcas2p18;
+        Tue, 28 Feb 2023 04:35:52 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.91]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4PQl133QdVz4x9Ps; Tue, 28 Feb
+        2023 04:35:51 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AB.D4.05668.7A48DF36; Tue, 28 Feb 2023 13:35:51 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230228043551epcas2p3085444899b00b106c2901e1f51814d2c~H4vpW3Jkp2377223772epcas2p3k;
+        Tue, 28 Feb 2023 04:35:51 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230228043551epsmtrp1b07c7ee0f9c5f04d23e97493a894ebde~H4vpWDD8O2963529635epsmtrp1X;
+        Tue, 28 Feb 2023 04:35:51 +0000 (GMT)
+X-AuditID: b6c32a48-1f7ff70000021624-da-63fd84a7cb34
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        27.7F.17995.6A48DF36; Tue, 28 Feb 2023 13:35:50 +0900 (KST)
+Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230228043550epsmtip2fa4f49e6faf58c02ec9cb8464cdbe07f~H4vpJnfEE1945119451epsmtip2c;
+        Tue, 28 Feb 2023 04:35:50 +0000 (GMT)
+From:   Kyungsan Kim <ks0204.kim@samsung.com>
+To:     dan.j.williams@intel.com
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com
+Subject: RE: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
+Date:   Tue, 28 Feb 2023 13:35:50 +0900
+Message-Id: <20230228043550.88798-1-ks0204.kim@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <63fd39406c2dd_276522948@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdljTTHd5y99kg52HJC2mH1a0mD71AqPF
+        +VmnWCz27D3JYnFvzX9Wi32v9zJbdGx4w+jA7vHvxBo2j8V7XjJ5bPo0id1j8o3ljB59W1Yx
+        enzeJBfAFpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuW
+        mQN0ipJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLxArzgxt7g0L10vL7XEytDA
+        wMgUqDAhO+PD+7dsBat0K/afn83WwHhKtYuRk0NCwETi1qk3jF2MXBxCAjsYJTqntzNBOJ8Y
+        Je5uPsgM4XxmlFjzu4ERpuXotU0sEIldjBLXtx1mg3C6mCS6p7xgBqliE9CW+HPlPBuILSIg
+        I7Hh/3awOLPAZkaJ41elQWxhAQeJExMhalgEVCWOn1gOVsMrYC2xbf0mVoht8hIzL31nB7E5
+        BTwkmvZ3QtUISpyc+YQFYqa8RPPW2WCnSgh8ZJd4+XEWVLOLxJojh6DOFpZ4dXwLO4QtJfGy
+        vw3KLpZ4/PoflF0icXjJbxYI21ji3c3nQHM4gBZoSqzfpQ9iSggoSxy5BbWWT6Lj8F92iDCv
+        REebEESjisT2fxCfgCw6vX8TVImHxP3WdEhIzWaU+P51MtsERoVZSJ6ZheSZWQh7FzAyr2IU
+        Sy0ozk1PLTYqMIFHcHJ+7iZGcMrU8tjBOPvtB71DjEwcjIcYJTiYlUR4F97+kyzEm5JYWZVa
+        lB9fVJqTWnyI0RQY1BOZpUST84FJO68k3tDE0sDEzMzQ3MjUwFxJnFfa9mSykEB6Yklqdmpq
+        QWoRTB8TB6dUA1P283KtpqRq5WkpN+u/NM2p6Z370norawD/lFBW3TsyerM+nn4gHihrcER/
+        kZn2Cc1J4Xoz5hezGRx93vzyS8w/oe5z2gdFLUQjLds9NvbvKu3+3Dd9YppdkxXDJ91fpXGZ
+        8h6vt4fburvmzihlk5qXt03w/d+szh3PTz7qXDxN7+ruyMhb/HK7ePL3Pn8RdklmqtIOX557
+        Xr42PzxrpW1WfV7xqVJNu1PsxJHYwNntnrabN67kN6hjmjlJ/G7mGUnW831/DBf53ugLa+eR
+        P+YRe9H5eLXfvI3zeCUXLVMoj71oaXbJOeuD4c91TpOUUpY03/XmXpXKWBbD/fqf26Miq19y
+        j/aISL3ycEyar8RSnJFoqMVcVJwIAOvRP3YiBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsWy7bCSvO6ylr/JBr/3WVhMP6xoMX3qBUaL
+        87NOsVjs2XuSxeLemv+sFvte72W26NjwhtGB3ePfiTVsHov3vGTy2PRpErvH5BvLGT36tqxi
+        9Pi8SS6ALYrLJiU1J7MstUjfLoEr48P7t2wFq3Qr9p+fzdbAeEq1i5GTQ0LAROLotU0sXYxc
+        HEICOxgl1u05ywqRkJJ4f7qNHcIWlrjfcoQVoqiDSWLH9ItsIAk2AW2JP1fOg9kiAjISG/5v
+        ZwYpYhbYySjRveo02CRhAQeJExMhilgEVCWOn1jODGLzClhLbFu/CWqbvMTMS9/BtnEKeEg0
+        7e8EquEA2uYuseSyMES5oMTJmU9YQGxmoPLmrbOZJzAKzEKSmoUktYCRaRWjZGpBcW56brFh
+        gVFearlecWJucWleul5yfu4mRnB4a2ntYNyz6oPeIUYmDsZDjBIczEoivAtv/0kW4k1JrKxK
+        LcqPLyrNSS0+xCjNwaIkznuh62S8kEB6YklqdmpqQWoRTJaJg1OqgenQzHjpV95b9/9puLnK
+        Risq73+lV+i0qaafZKslvmt/3HDT9XScir3x9ebpYmb7LqcFGzruNQ7zU/h3arW64kIf6Q0r
+        Hv/dKJngzH1B6YrnvZudz/KW/Uz9/Kp04oayfykTmX5oh+TeWv7lwkXfqc4TUtgVzpx2vz3n
+        m8+26sOlt2f4XZskv/RY0fxb23UMDwt2bDM7Z1Uv1m9WEsm8q6FRreRMecWUNrbXKotLnoYq
+        HVka43uazyOUvaIuge8TV4VYH+vfw9PmBy51l3mcIf/gV3bZi6bjx7M+i33rcpxX/lpd4tek
+        PVeVvdO5TTsTdQLWKL6O239AViCau6nzvee/hnp98aq1F2O28EtMKVViKc5INNRiLipOBAB+
+        a9f93gIAAA==
+X-CMS-MailID: 20230228043551epcas2p3085444899b00b106c2901e1f51814d2c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7djX87rn6/8mG3ydYGLRPHkxo8WLP8+Z
-        LPY/fc5isWrhNTaL87NOsVgc3niGyeL/r1esFmtWCFsc793B4sDpsXPWXXaPliNvWT0W73nJ
-        5LFpVSebx51re9g8nlzbzOTxft9VNo/Pm+QCOKK4bFJSczLLUov07RK4MhYe3sVeMFGm4ugy
-        jQbG2WJdjJwcEgImEhf/zWbvYuTiEBJYySjx+v9VNpCEkEArk8SXDwIwRacb9jFCFK1llHh6
-        CqQIxPnEKNFz4xErhLOMUeLEyjZmkBY2AUWJfV3bwUaJCBhJvLsxCaydWeALk8TUuxtZQBLC
-        AnESG78vZoUoipdY3bwOqkFPYvOK52A1LAKqEqf3bwOL8wqYSUz4uJIdxOYUcJRY9LIRrIZR
-        QEzi+6k1TCA2s4C4xK0n85kg7haUWDR7DzOELSbxb9dDNghbUeL+95fsEPV6EjemTgGKcwDZ
-        dhIfblhAhLUlli18zQyxVlDi5MwnLBCtkhIHV9xgAflFQqCZU+LHiw1QCReJE0ffQe2Slvh7
-        dxkTyEwJgWSJVR+5IMI5EvOXbIEqt5ZY+Gc90wRGlVlIrp6F5KJZCBfNQnLRLCQXLWBkXcUo
-        XlpcnJueWmycl1quV5yYW1yal66XnJ+7iRGYyk7/O1ywg/HWrY96hxiZOBgPMUpwMCuJ8C68
-        /SdZiDclsbIqtSg/vqg0J7X4EKM0B4uSOK+h7clkIYH0xJLU7NTUgtQimCwTB6dUA1PB3aod
-        dfq3zmswtxyR8d32uLM+91bI60c56q8Zuf3sDkh+bzTrlDG79UP9ScSxaplFV+aKtpfM38Fx
-        1//Jp9O8wgf/TvgekuMzuzBg2ltOl6NB8u0T/z5If7ukVNkhbNW6UIPW7tdiqnu0Ni/p5Z2l
-        WG9rs6NqwtSuSR4sxn9kFkWV5jNz2HazL5kjL3cn5jVHnmm3adK74nSXxg8cpzkeJcqfm2XT
-        Ib1gy98NL04EXHZcZP9swdb4d08X9tR9XxGk7aoQX/mwJCvvdNmW3S3RNTpNQg8q1qjrvfiw
-        2qPMerflnenOFcq+eZ2ed8JcVOZOEA2Jbwi/+PHN0quxN6duPevBOn/GdhFlHhFlDiWW4oxE
-        Qy3mouJEAFqhZxfUAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsWS2cA0Sfd8/d9kg7OHVC2aJy9mtHjx5zmT
-        xf6nz1ksVi28xmZxftYpFovDG88wWfz/9YrVYs0KYYvjvTtYHDg9ds66y+7RcuQtq8fiPS+Z
-        PDat6mTzuHNtD5vHk2ubmTze77vK5vF5k1wARxSXTUpqTmZZapG+XQJXxsLDu9gLJspUHF2m
-        0cA4W6yLkZNDQsBE4nTDPsYuRi4OIYHVjBIbT85kgnA+MUrcP7EaylnGKDFxbgc7SAubgKLE
-        vq7tbCC2iICRxLsbk8DamQW+MEnc+PCdBSQhLBAnsfH7YlaIoniJ21f2M0PYehKbVzwHq2ER
-        UJU4vX8b2CBeATOJCR9XAi3gANpWJrHjUApImFPAUWLRy0awckYBMYnvp9YwgdjMAuISt57M
-        Z4J4QUBiyZ7zzBC2qMTLx/9YIWxFifvfX7JD1OtJ3Jg6hQ1kPLOAncSHGxYQYW2JZQtfM0Nc
-        IChxcuYTFohWSYmDK26wTGCUmIVk2ywkk2YhTJqFZNIsJJMWMLKuYhQvLS7OTa8oNspLLdcr
-        TswtLs1L10vOz93ECEwDp/8djt7BePvWR71DjEwcjIcYJTiYlUR4F97+kyzEm5JYWZValB9f
-        VJqTWnyIUZqDRUmc92XUxHghgfTEktTs1NSC1CKYLBMHp1QDk/u9Wxde97EeXbSk58qz9F2T
-        KpnbXSZPefqFOe3YLJajjsseuoUqp61bo6+/64ey//Ns84BAy6xKWdPJeU+vPPVoTb1YPs3I
-        zzTOakbw9bq188VPfNkQvS/z4nFu3QsHbYUrs5W+rN6w+L7Ygb+Gos75i+88vVXvybcwl62a
-        aenTp9XTdq6QV3Ll8Ddls6vhMHk/41ua8snPv9LPK12KkF7+2TSS63quUnvz8f5i36dOn69d
-        vXZUdXt/isq7s+e8GJYd2swklK8b3fS1rJt534LTuixr3q3ojPd4UZ0lJ7WuqN72Dsf+ZqPp
-        53dvfjDzEsM3yY2Rdbrrnkm/ncTRbj5Tqn/lDNZq+8Qjqwwe9CuxFGckGmoxFxUnAgD6m7Hs
-        cgMAAA==
-X-CMS-MailID: 20230228041511uscas1p29bfa83f0efe2632d89d5d76ea1be0245
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228041511uscas1p29bfa83f0efe2632d89d5d76ea1be0245
-References: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
-        <20230206172816.8201-11-Jonathan.Cameron@huawei.com>
-        <CGME20230228041511uscas1p29bfa83f0efe2632d89d5d76ea1be0245@uscas1p2.samsung.com>
+X-CMS-RootMailID: 20230228043551epcas2p3085444899b00b106c2901e1f51814d2c
+References: <63fd39406c2dd_276522948@dwillia2-xfh.jf.intel.com.notmuch>
+        <CGME20230228043551epcas2p3085444899b00b106c2901e1f51814d2c@epcas2p3.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 05:28:16PM +0000, Jonathan Cameron wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
->=20
-> The cel_uuid was programatically generated previously because there was
-> no static initializer for network order UUIDs.
->=20
-> Use the new network order initializer for cel_uuid.  Adjust
-> cxl_initialize_mailbox() because it can't fail now.
->=20
-> Update specification reference.
->=20
-> Reviewed-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
-> Reviewed-by: Gregory Price <gregory.price@memverge.com>
-> Tested-by: Gregory Price <gregory.price@memverge.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->=20
+Thank you dan for kind reminder of the submission. 
+I filled out the form with topic suggestions and required attendees.
+Hopefully, we can elaborate the topics with wider opinions revisiting previous kernel designs related.
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-> ---
-> v2:
-> Make it const (Philippe)
-> ---
->  hw/cxl/cxl-device-utils.c   |  2 +-
->  hw/cxl/cxl-mailbox-utils.c  | 13 ++++++-------
->  include/hw/cxl/cxl_device.h |  2 +-
->  3 files changed, 8 insertions(+), 9 deletions(-)
->=20
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 83ce7a8270..4c5e88aaf5 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -267,5 +267,5 @@ void cxl_device_register_init_common(CXLDeviceState *=
-cxl_dstate)
->      cxl_device_cap_init(cxl_dstate, MEMORY_DEVICE, 0x4000);
->      memdev_reg_init_common(cxl_dstate);
-> =20
-> -    assert(cxl_initialize_mailbox(cxl_dstate) =3D=3D 0);
-> +    cxl_initialize_mailbox(cxl_dstate);
->  }
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 3f67b665f5..206e04a4b8 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -193,7 +193,11 @@ static ret_code cmd_timestamp_set(struct cxl_cmd *cm=
-d,
->      return CXL_MBOX_SUCCESS;
->  }
-> =20
-> -static QemuUUID cel_uuid;
-> +/* CXL 3.0 8.2.9.5.2.1 Command Effects Log (CEL) */
-> +static const QemuUUID cel_uuid =3D {
-> +    .data =3D UUID(0x0da9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79,
-> +                 0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17)
-> +};
-> =20
->  /* 8.2.9.4.1 */
->  static ret_code cmd_logs_get_supported(struct cxl_cmd *cmd,
-> @@ -458,11 +462,8 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
->                       DOORBELL, 0);
->  }
-> =20
-> -int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
-> +void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate)
->  {
-> -    /* CXL 2.0: Table 169 Get Supported Logs Log Entry */
-> -    const char *cel_uuidstr =3D "0da9c0b5-bf41-4b78-8f79-96b1623b3f17";
-> -
->      for (int set =3D 0; set < 256; set++) {
->          for (int cmd =3D 0; cmd < 256; cmd++) {
->              if (cxl_cmd_set[set][cmd].handler) {
-> @@ -476,6 +477,4 @@ int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate=
-)
->              }
->          }
->      }
-> -
-> -    return qemu_uuid_parse(cel_uuidstr, &cel_uuid);
->  }
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 250adf18b2..7e5ad65c1d 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -170,7 +170,7 @@ CXL_DEVICE_CAPABILITY_HEADER_REGISTER(MEMORY_DEVICE,
->                                        CXL_DEVICE_CAP_HDR1_OFFSET +
->                                            CXL_DEVICE_CAP_REG_SIZE * 2)
-> =20
-> -int cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
-> +void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate);
->  void cxl_process_mailbox(CXLDeviceState *cxl_dstate);
-> =20
->  #define cxl_device_cap_init(dstate, reg, cap_id)                        =
-   \
-> --=20
-> 2.37.2
->=20
-> =
+>Please be sure to log this in the submission spreadsheet as well. From the
+>CFP:
+>
+>---
+>
+>1) Fill out the following Google form to request attendance and
+>suggest any topics
+>
+>        https://forms.gle/VKVXjWGBHZbnsz226
+>
+>In previous years we have accidentally missed people's attendance
+>requests because they either didn't cc lsf-pc@ or we simply missed them
+>in the flurry of emails we get.  Our community is large and our
+>volunteers are busy, filling this out will help us make sure we don't
+>miss anybody.
+>
+>
+>Kyungsan Kim wrote:
+>> CXL is a promising technology that leads to fundamental changes in
+>> computing architecture.  To facilitate adoption and widespread of CXL
+>> memory, we are developing a memory tiering solution, called
+>> SMDK[1][2].  Using SMDK and CXL RAM device, our team has been working
+>> with industry and academic partners over last year.  Also, thanks to
+>> many researcher's effort, CXL adoption stage is gradually moving
+>> forward from basic enablement to real-world composite usecases.  At
+>> this moment, based on the researches and experiences gained working on
+>> SMDK, we would like to suggest a session at LSF/MM/BFP this year to
+>> propose possible Linux MM changes with a brief of SMDK.
+>>
+>> Adam Manzanares kindly adviced me that it is preferred to discuss
+>> implementation details on given problem and consensus at LSF/MM/BFP.
+>> Considering the adoption stage of CXL technology, however, let me
+>> suggest a design level discussion on the two MM expansions of SMDK
+>> this year.  When we have design consensus with participants, we want
+>> to continue follow-up discussions with additional implementation
+>> details, hopefully.
+>>
+>> 
+>> 1. A new zone, ZONE_EXMEM We added ZONE_EXMEM to manage CXL RAM
+>> device(s), separated from ZONE_NORMAL for usual DRAM due to the three
+>> reasons below.
+>>
+>> 1) a CXL RAM has many different characteristics with conventional DRAM
+>> because a CXL device inherits and expands PCIe specification.  ex)
+>> frequency range, pluggability, link speed/width negotiation,
+>> host/device flow control, power throttling, channel-interleaving
+>> methodology, error handling, and etc.  It is likely that the primary
+>> usecase of CXL RAM would be System RAM.  However, to deal with the
+>> hardware differences properly, different MM algorithms are needed
+>> accordingly.
+>>
+>> 2) Historically, zone has been expanded by reflecting the evolution of
+>> CPU, IO, and memory devices.  ex) ZONE_DMA(32), ZONE_HIGHMEM,
+>> ZONE_DEVICE, and ZONE_MOVABLE.  Each zone applies different MM
+>> algorithms such as page reclaim, compaction, migration, and
+>> fragmentation.  At first, we tried reuse of existing zones,
+>> ZONE_DEVICE and ZONE_MOVABLE, for CXL RAM purpose.  However, the
+>> purpose and implementation of the zones are not fit for CXL RAM.
+>>
+>> 3) Industry is preparing a CXL-capable system that connects dozens of
+>> CXL devices in a server system.  When a CXL device becomes a separate
+>> node, an administrator/programmer needs to be aware of and manually
+>> control all nodes using 3rd party software, such as numactl and
+>> libnuma.  ZONE_EXMEM allows the assemble of CXL RAM devices into the
+>> single ZONE_EXMEM zone, and provides an abstraction to userspace by
+>> seamlessly managing the devices.  Also, the zone is able to interleave
+>> assembled devices in a software way to lead to aggregated bandwidth.
+>> We would like to suggest if it is co-existable with HW interleaving
+>> like SW/HW raid0.  To help understanding, please refer to the node
+>> partition part of the picture[3].
+>>
+>>
+>> 2. User/Kernelspace Programmable Interface In terms of a memory
+>> tiering solution, it is typical that the solution attempts to locate
+>> hot data on near memory, and cold data on far memory as accurately as
+>> possible.[4][5][6][7] We noticed that the hot/coldness of data is
+>> determined by the memory access pattern of running application and/or
+>> kernel context.  Hence, a running context needs a near/far memory
+>> identifier to determine near/far memory.  When CXL RAM(s) is
+>> manipulated as a NUMA node, a node id can be function as a CXL
+>> identifier more or less.  However, the node id has limitation in that
+>> it is an ephemeral information that dynamically varies according to
+>> online status of CXL topology and system socket.  In this sense, we
+>> provides programmable interfaces for userspace and kernelspace context
+>> to explicitly (de)allocate memory from DRAM and CXL RAM regardless of
+>> a system change.  Specifically, MAP_EXMEM and GFP_EXMEM flags were
+>> added to mmap() syscall and kmalloc() siblings, respectively.
+>>
+>> Thanks to Adam Manzanares for reviewing this CFP thoroughly.
+>>
+>>
+>> [1]SMDK: https://github.com/openMPDK/SMDK
+>> [2]SMT: Software-defined Memory Tiering for Heterogeneous Computing systems with CXL Memory Expander, https://ieeexplore.ieee.org/document/10032695
+>> [3]SMDK node partition: https://github.com/OpenMPDK/SMDK/wiki/2.-SMDK-Architecture#memory-partition
+>> [4]TMO: Transparent Memory Offloading in Datacenters, https://dl.acm.org/doi/10.1145/3503222.3507731
+>> [5]TPP: Transparent Page Placement for CXL-Enabled Tiered Memory, https://arxiv.org/abs/2206.02878
+>> [6]Pond: CXL-Based Memory Pooling Systems for Cloud Platforms, https://dl.acm.org/doi/10.1145/3575693.3578835
+>> [7]Hierarchical NUMA: https://blog.linuxplumbersconf.org/2017/ocw/system/presentations/4656/original/Hierarchical_NUMA_Design_Plumbers_2017.pdf
+>
