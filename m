@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5938C64EC7
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD94C64ED6
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbjB1ENR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 23:13:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39132 "EHLO
+        id S229970AbjB1EOW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 23:14:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjB1ENQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:13:16 -0500
+        with ESMTP id S229737AbjB1EOV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:14:21 -0500
 Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DF7B776
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:13:14 -0800 (PST)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041313usoutp01f70b674c03f8183b2a5d14f6e9c4b57b~H4b5VBMxz1359613596usoutp01x;
-        Tue, 28 Feb 2023 04:13:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230228041313usoutp01f70b674c03f8183b2a5d14f6e9c4b57b~H4b5VBMxz1359613596usoutp01x
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E9B22021
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:14:20 -0800 (PST)
+Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041419usoutp01a007b0742f8757e280b7145fa49b4beb~H4c2ZbiUE1359613596usoutp016;
+        Tue, 28 Feb 2023 04:14:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230228041419usoutp01a007b0742f8757e280b7145fa49b4beb~H4c2ZbiUE1359613596usoutp016
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677557593;
-        bh=X9uQl9JqiSBl4TNCis9iJ44KEpcH13nq3bZ9fYvWn24=;
+        s=mail20170921; t=1677557659;
+        bh=AGDzX+qIjpiHkfk/sGvGhobxIWQy/XxC1an2DJtii4M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=UXwIlH3qscfCzleElSLunIN18pxptDMBvRM6rYeYkPY8xtHs81490ZZzZaPDMD6WK
-         kqOXAmuHG6TLZ6qI3UKVZP0e+hRVAQ/vX4hPkMJWkPGpYBata46j6rVzXQ2gKiYr+n
-         A6nWwHtJV23k6Z9jlwAD57Hy1YV2SWX8XnNkTg38=
+        b=Z4qeDWza/Qh1vhwzRRx1zmVLB/cbQbSJ3gkXOqOZZT9BPsjszy7j/1IRMSDYEmoPb
+         9f5qF8I5Gp3D1Uso8AS4d/9A9B9zWfGMzBHqw0onh3/uh86t0mMisIGcqJgcL73B++
+         27dii+NZ7LW7S08ZTXtAOMdDBvmX863Uyi6yav80=
 Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
         [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230228041312uscas1p285b54e92fef1eda5b77b59c01f5adf21~H4b4iAx0J3129631296uscas1p2A;
-        Tue, 28 Feb 2023 04:13:12 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id A9.DB.06976.85F7DF36; Mon,
-        27 Feb 2023 23:13:12 -0500 (EST)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228041312uscas1p1baf3e096036cefdc0a843ec47126facc~H4b4OgY_C2639726397uscas1p1-;
-        Tue, 28 Feb 2023 04:13:12 +0000 (GMT)
-X-AuditID: cbfec36d-d99ff70000011b40-0b-63fd7f5823f2
+        20230228041419uscas1p22aba74f86ec2bc87ec646f20129ae54b~H4c2SELn21227212272uscas1p2w;
+        Tue, 28 Feb 2023 04:14:19 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id 3B.EB.06976.B9F7DF36; Mon,
+        27 Feb 2023 23:14:19 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4~H4c2Ev71i2103021030uscas1p12;
+        Tue, 28 Feb 2023 04:14:19 +0000 (GMT)
+X-AuditID: cbfec36d-afdff70000011b40-a4-63fd7f9b82c6
 Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id B7.E8.17110.85F7DF36; Mon,
-        27 Feb 2023 23:13:12 -0500 (EST)
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 76.B9.11378.A9F7DF36; Mon,
+        27 Feb 2023 23:14:18 -0500 (EST)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
         SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 27 Feb 2023 20:13:11 -0800
+        15.1.2375.24; Mon, 27 Feb 2023 20:14:18 -0800
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        27 Feb 2023 20:13:11 -0800
+        27 Feb 2023 20:14:18 -0800
 From:   Fan Ni <fan.ni@samsung.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -57,101 +57,123 @@ CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Gregory Price <gourry.memverge@gmail.com>,
         =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH v4 07/10] tests: acpi: Update q35/DSDT.cxl for removed
- duplicate UID
-Thread-Topic: [PATCH v4 07/10] tests: acpi: Update q35/DSDT.cxl for removed
-        duplicate UID
-Thread-Index: AQHZSyr4HoUYoSjLhkiu2TwCupOsNA==
-Date:   Tue, 28 Feb 2023 04:13:11 +0000
-Message-ID: <20230228041311.GG1339780@bgt-140510-bm03>
-In-Reply-To: <20230206172816.8201-8-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 08/10] qemu/bswap: Add const_le64()
+Thread-Topic: [PATCH v4 08/10] qemu/bswap: Add const_le64()
+Thread-Index: AQHZSysgfxoOm0uIsUCJEp/Zj+u25Q==
+Date:   Tue, 28 Feb 2023 04:14:18 +0000
+Message-ID: <20230228041417.GH1339780@bgt-140510-bm03>
+In-Reply-To: <20230206172816.8201-9-Jonathan.Cameron@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <48347A1005E35B47B2163A8674F6373C@ssi.samsung.com>
+Content-ID: <03187EE6F7FE864AA2CAF60663F126FD@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7djXc7oR9X+TDR7+MbFonryY0eLFn+dM
-        FvufPmexWLXwGpvF+VmnWCwObzzDZPH/1ytWizUrhC2O9+5gceD02DnrLrtHy5G3rB6L97xk
-        8ti0qpPN4861PWweT65tZvJ4v+8qm8fnTXIBHFFcNimpOZllqUX6dglcGQfeTmAsuMBV0dXz
-        n7WBsZezi5GTQ0LAROLl78eMXYxcHEICKxklfh9bxA7htDJJ7Hv7gBWmqrl1KxtEYi2jxJLZ
-        n1ghnE+MEldWbofKLGOU6DrVxw7SwiagKLGvCyTBySEiYCTx7sYksCXMAl+YJKbe3cgCkhAW
-        iJKY9uUVUAMHUFG0xKl3vBCmnsSRe34gFSwCqhJvTmxlAgnzCphJ7O0Da+QUcJBo/3qZGcRm
-        FBCT+H5qDROIzSwgLnHryXwmiKMFJRbN3sMMYYtJ/Nv1kA3CVpS4//0lO0S9nsSNqVPYIGw7
-        iX/z97NC2NoSyxa+BuvlBZpzcuYTFoheSYmDK26wgHwiIdDOKXF6wmF2iISLxKM5r6ChJS3x
-        9+4ysJslBJIlVn3kggjnSMxfsgVqjrXEwj/rmSYwqsxCcvYsJCfNQnLSLCQnzUJy0gJG1lWM
-        4qXFxbnpqcWGeanlesWJucWleel6yfm5mxiByez0v8O5Oxh33Pqod4iRiYPxEKMEB7OSCO/C
-        23+ShXhTEiurUovy44tKc1KLDzFKc7AoifMa2p5MFhJITyxJzU5NLUgtgskycXBKNTDJSWwq
-        +rSJ3fOa409BD9H0I44btSNDeKX3fLB8cqv33tt+lhzbU+154uy/Hr2WO7FrxTz5XR2b7dfM
-        Flwo0ND1e9Gc+595r82WzXb9PSnu+IJL2wUzp8XpHpX+738npbPjnimn6NEZiqUC59dnsncp
-        vH2vlT2rTTror82D++d746ZF9ZxZc1j3b+HZFakF4kUK286o2r5ZXLtQ2XpNMjeDVt+Bt3um
-        vp7eru0hqZBxjtH1ktnvEz5z/yzrEdWJUWnjSnyd1SZ7+Hf+95boOy/3/ZXRE9lesKVnzeqH
-        DbIz315fl194Q+quZsSN4KgY3ytLPK/aicbFH/8vU1widmSG2eGmCL6XTSwH3P886vmrxFKc
-        kWioxVxUnAgA2bViatUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWS2cA0UTei/m+ywYS18hbNkxczWrz485zJ
-        Yv/T5ywWqxZeY7M4P+sUi8XhjWeYLP7/esVqsWaFsMXx3h0sDpweO2fdZfdoOfKW1WPxnpdM
-        HptWdbJ53Lm2h83jybXNTB7v911l8/i8SS6AI4rLJiU1J7MstUjfLoEr48DbCYwFF7gqunr+
-        szYw9nJ2MXJySAiYSDS3bmXrYuTiEBJYzSjxZvo0FgjnE6PEn3NfWSGcZYwS7xY/YAdpYRNQ
-        lNjXtZ0NxBYRMJJ4d2MSI0gRs8AXJokbH76zgCSEBaIkpn15xQ5RFC3xZVEHUxcjB5CtJ3Hk
-        nh9ImEVAVeLNia1gYV4BM4m9fSwgppBAqUR3rwBIBaeAg0T718vMIDajgJjE91NrmEBsZgFx
-        iVtP5jNBPCAgsWTPeWYIW1Ti5eN/rBC2osT97y/ZIer1JG5MncIGYdtJ/Ju/nxXC1pZYtvA1
-        WC+vgKDEyZlPWCB6JSUOrrjBMoFRYhaSdbOQjJqFZNQsJKNmIRm1gJF1FaN4aXFxbnpFsVFe
-        arlecWJucWleul5yfu4mRmAiOP3vcPQOxtu3PuodYmTiYDzEKMHBrCTCu/D2n2Qh3pTEyqrU
-        ovz4otKc1OJDjNIcLErivC+jJsYLCaQnlqRmp6YWpBbBZJk4OKUamJbqc0TtvGn5d8Hz5c63
-        ygPyv7wI/5n8qmTXhF+8q/RfHTdm2uh2+fW3K2KTxPle/c3VvKZqxJOnXtCZVndEoeLUtZCj
-        Urn5K/V1fVZ2l0yYVMpw41/5OrnJpRN3f7tsmrkzXKG8f86p1R8aV0k27BfNC+zz6L9b3vqn
-        8eYamUNzr0+e+TNDecbvBanau34I2ZjdNKyR+nvtXMXN/nfMld1T1kXrcIndlbT16Hdl47Jk
-        qLw9+S/fxmNTA1sMrzLMfD+pIaLLxye2/fzOqQ3vpsyq2d17IEjnzvI5pZxzTn4TceIJ3DXt
-        3fEm974bR085TZGbsjrm9RVL70ztL48mODSGLc7mv7/rNv+7x4K6DLFKLMUZiYZazEXFiQCJ
-        YGV/cwMAAA==
-X-CMS-MailID: 20230228041312uscas1p1baf3e096036cefdc0a843ec47126facc
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7djX87qz6/8mG0w6zmPRPHkxo8WLP8+Z
+        LPY/fc5isWrhNTaL87NOsVgc3niGyeL/r1esFmtWCFsc793B4sDpsXPWXXaPliNvWT0W73nJ
+        5LFpVSebx51re9g8nlzbzOTxft9VNo/Pm+QCOKK4bFJSczLLUov07RK4MrbtPc9ccEuw4tmZ
+        M0wNjL28XYycHBICJhIn2z8zgdhCAisZJU5Nte1i5AKyW5kkXs9cwtzFyAFWNGOGNkR8LaNE
+        +5Z9TBDOJ0aJCa/nskE4yxglupaeYwUZxSagKLGvazsbiC0iYCTx7sYkRpAiZoEvTBJT725k
+        AUkIC1hJLJrwiA1khYiAtURbnw5EvZ7Ew/U7wE5iEVCV2HL4Dlg5r4CZxKF1Z8Fmcgo4SFyd
+        vZAdxGYUEJP4fmoNWD2zgLjErSfzmSBeE5RYNHsPM4QtJvFv10M2CFtR4v73l+wQ9XoSN6ZO
+        YYOw7SROX73MCGFrSyxb+JoZYq+gxMmZT1ggeiUlDq64wQLyi4RAM6fEugfPoJa5SJyePpsV
+        wpaWuHp9KjTokiVWfeSCCOdIzF+yBWqOtcTCP+uZJjCqzEJy9iwkJ81CctIsJCfNQnLSAkbW
+        VYzipcXFuempxYZ5qeV6xYm5xaV56XrJ+bmbGIHJ7PS/w7k7GHfc+qh3iJGJg/EQowQHs5II
+        78Lbf5KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xrankwWEkhPLEnNTk0tSC2CyTJxcEo1MPVz
+        pk1fduY6Y73SdZll9e53bxosl/G/Y3gz4cKanJmcHUef1WheUznx+dLDqtr6DIuqOQ63/75S
+        uLtN2uTuy8Dl6gte8BxNMcqYNmumyob/yU9kq5knbNb1ZQ51dHmx/mRCddORbWtL/9Q+EmVe
+        whe28FL96mIf1pMtc7M2frfxZuCS85i7Vq9i/6EVJvO/VEe+WaJw4KddD+PVw5rNT3alXM6c
+        4GP49tT8Yyt2zeu/mXYx0qP0/etgy9eCSRZapS19950v1QVYT8nbFdbyiPlktUnp5P3esyUv
+        O3RrPfYUfh7f1lGj51Op3Onz7mii3U/ZufNc69ZPK/DYlTBXx2cup4eCdlIgU+wvEev5Tkos
+        xRmJhlrMRcWJAEdTDWvVAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWS2cA0UXdW/d9kg0uLzCyaJy9mtHjx5zmT
+        xf6nz1ksVi28xmZxftYpFovDG88wWfz/9YrVYs0KYYvjvTtYHDg9ds66y+7RcuQtq8fiPS+Z
+        PDat6mTzuHNtD5vHk2ubmTze77vK5vF5k1wARxSXTUpqTmZZapG+XQJXxra955kLbglWPDtz
+        hqmBsZe3i5GDQ0LARGLGDO0uRi4OIYHVjBK3W5YzQTifGCVWX/3I1sXICeQsY5TYe8ANxGYT
+        UJTY17UdLC4iYCTx7sYkRpAGZoEvTBI3PnxnAUkIC1hJLJrwiA1kg4iAtURbnw5EvZ7Ew/U7
+        mEBsFgFViS2H74CV8wqYSRxadxZqV6nE+d8f2UFsTgEHiauzF4LZjAJiEt9PrQHrZRYQl7j1
+        ZD6YLSEgILFkz3lmCFtU4uXjf6wQtqLE/e8v2SHq9SRuTJ3CBmHbSZy+epkRwtaWWLbwNTPE
+        DYISJ2c+YYHolZQ4uOIGywRGiVlI1s1CMmoWklGzkIyahWTUAkbWVYzipcXFuekVxYZ5qeV6
+        xYm5xaV56XrJ+bmbGIGJ4PS/w5E7GI/e+qh3iJGJg/EQowQHs5II78Lbf5KFeFMSK6tSi/Lj
+        i0pzUosPMUpzsCiJ8wq5TowXEkhPLEnNTk0tSC2CyTJxcEo1MPnP+dgl3OySsDy26V7y25f/
+        gkqbDTL+XLksfqZq2jQG601Hb3Ha9k/i+bY1gV/lSOtX2Z3Xq7+/KF6+9IzX56OiMkfmPvm8
+        6L/dlgnzItYpNV4pvM1rFMOb+VE5elZw0sIA7StrfL55TFk2p06LJ2PKnoupZ205Qjc9unVW
+        zenVTK/jh6RP1B/hsT2a81S8pj2juvtwuAOb3qHJH0KUr8702Tk/PHj62poY441rIhY2nKn/
+        Zrrh09FpJtU2DrddnS+u33bdrNNkqljtmcg3978/W5NY+ffU9n2Mt7zVtR7cMbPWT/jA/5vJ
+        pumfjV1Gy8yHAVO2X7Wdcy+4ze3Wi3uiNn03OmObRbhdl9zdynxIiaU4I9FQi7moOBEAO13D
+        TXMDAAA=
+X-CMS-MailID: 20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228041312uscas1p1baf3e096036cefdc0a843ec47126facc
+X-CMS-RootMailID: 20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4
 References: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
-        <20230206172816.8201-8-Jonathan.Cameron@huawei.com>
-        <CGME20230228041312uscas1p1baf3e096036cefdc0a843ec47126facc@uscas1p1.samsung.com>
+        <20230206172816.8201-9-Jonathan.Cameron@huawei.com>
+        <CGME20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 05:28:13PM +0000, Jonathan Cameron wrote:
-> Dropping the ID effects this table in trivial fashion.
+On Mon, Feb 06, 2023 at 05:28:14PM +0000, Jonathan Cameron wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 >=20
+> Gcc requires constant versions of cpu_to_le* calls.
+>=20
+> Add a 64 bit version.
+>=20
+> Reviewed-by: Peter Maydell <peter.maydell@linaro.org>
+> Reviewed-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
 > Reviewed-by: Gregory Price <gregory.price@memverge.com>
 > Tested-by: Gregory Price <gregory.price@memverge.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+>=20
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
->  tests/data/acpi/q35/DSDT.cxl                | Bin 9578 -> 9564 bytes
->  tests/qtest/bios-tables-test-allowed-diff.h |   1 -
->  2 files changed, 1 deletion(-)
+> ---
+> v2: Update comment (Philippe)
+> ---
+>  include/qemu/bswap.h | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/tests/data/acpi/q35/DSDT.cxl b/tests/data/acpi/q35/DSDT.cxl
-> index 3d18b9672d124a0cf11a79e92c396a1b883d0589..4586b9a18b24acd946cd32c7e=
-3e3a70891a246d2 100644
-> GIT binary patch
-> delta 65
-> zcmaFmb;pa#CD<h-MwNkqQEMaDUKwr|m6-Tor}*e5Z{^9CWUMyF%dcjfyiYC^MM6#<
-> IB*D!F0I~xVRsaA1
->=20
-> delta 79
-> zcmccP^~#IOCD<h-OO=3D6vv2P>SUKwt0m6-Tor}*e5CzZ*UWUScYLp@!%?rjc`U&A<g
-> SyId%Wytq76o(Cw;!v+8Y7Z@l2
->=20
-> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bi=
-os-tables-test-allowed-diff.h
-> index 9ce0f596cc..dfb8523c8b 100644
-> --- a/tests/qtest/bios-tables-test-allowed-diff.h
-> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-> @@ -1,2 +1 @@
->  /* List of comma-separated changed AML files to ignore */
-> -"tests/data/acpi/q35/DSDT.cxl",
+> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
+> index 3cbe52246b..eb3bcf2520 100644
+> --- a/include/qemu/bswap.h
+> +++ b/include/qemu/bswap.h
+> @@ -129,11 +129,20 @@ CPU_CONVERT(le, 32, uint32_t)
+>  CPU_CONVERT(le, 64, uint64_t)
+> =20
+>  /*
+> - * Same as cpu_to_le{16,32}, except that gcc will figure the result is
+> + * Same as cpu_to_le{16,32,64}, except that gcc will figure the result i=
+s
+>   * a compile-time constant if you pass in a constant.  So this can be
+>   * used to initialize static variables.
+>   */
+>  #if HOST_BIG_ENDIAN
+> +# define const_le64(_x)                          \
+> +    ((((_x) & 0x00000000000000ffU) << 56) |      \
+> +     (((_x) & 0x000000000000ff00U) << 40) |      \
+> +     (((_x) & 0x0000000000ff0000U) << 24) |      \
+> +     (((_x) & 0x00000000ff000000U) <<  8) |      \
+> +     (((_x) & 0x000000ff00000000U) >>  8) |      \
+> +     (((_x) & 0x0000ff0000000000U) >> 24) |      \
+> +     (((_x) & 0x00ff000000000000U) >> 40) |      \
+> +     (((_x) & 0xff00000000000000U) >> 56))
+>  # define const_le32(_x)                          \
+>      ((((_x) & 0x000000ffU) << 24) |              \
+>       (((_x) & 0x0000ff00U) <<  8) |              \
+> @@ -143,6 +152,7 @@ CPU_CONVERT(le, 64, uint64_t)
+>      ((((_x) & 0x00ff) << 8) |                    \
+>       (((_x) & 0xff00) >> 8))
+>  #else
+> +# define const_le64(_x) (_x)
+>  # define const_le32(_x) (_x)
+>  # define const_le16(_x) (_x)
+>  #endif
 > --=20
 > 2.37.2
 >=20
