@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD94C64ED6
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3753C64ED6
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjB1EOW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 23:14:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39684 "EHLO
+        id S230042AbjB1EO4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 23:14:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjB1EOV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:14:21 -0500
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03E9B22021
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:14:20 -0800 (PST)
+        with ESMTP id S230037AbjB1EOz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:14:55 -0500
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD38722021
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:14:53 -0800 (PST)
 Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041419usoutp01a007b0742f8757e280b7145fa49b4beb~H4c2ZbiUE1359613596usoutp016;
-        Tue, 28 Feb 2023 04:14:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230228041419usoutp01a007b0742f8757e280b7145fa49b4beb~H4c2ZbiUE1359613596usoutp016
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041453usoutp0255882cd362aba3a392ba40d3a3bb24b3~H4dV7dJuc1024110241usoutp02b;
+        Tue, 28 Feb 2023 04:14:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230228041453usoutp0255882cd362aba3a392ba40d3a3bb24b3~H4dV7dJuc1024110241usoutp02b
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677557659;
-        bh=AGDzX+qIjpiHkfk/sGvGhobxIWQy/XxC1an2DJtii4M=;
+        s=mail20170921; t=1677557693;
+        bh=ZknCFzYKebEQDxxUsyWUxlyxlk1O2ksEJZ8kmxaeM9c=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=Z4qeDWza/Qh1vhwzRRx1zmVLB/cbQbSJ3gkXOqOZZT9BPsjszy7j/1IRMSDYEmoPb
-         9f5qF8I5Gp3D1Uso8AS4d/9A9B9zWfGMzBHqw0onh3/uh86t0mMisIGcqJgcL73B++
-         27dii+NZ7LW7S08ZTXtAOMdDBvmX863Uyi6yav80=
+        b=F+267tgtKhnc69RL3KNalM3TdNAQhB4Fj/8xcEJUQfymW1e0oq6S59KRrddS1eAIU
+         xGfrSpcQwhFEqhSn5eFv7oVcjmAa631Xfg2zvkNnVWJgSzI2IDL5odHDAxtIZGcGVa
+         /huEy5tkDCvFYxxbuRzffVbAAOJT51n2lmPTzFBE=
 Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
         [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230228041419uscas1p22aba74f86ec2bc87ec646f20129ae54b~H4c2SELn21227212272uscas1p2w;
-        Tue, 28 Feb 2023 04:14:19 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id 3B.EB.06976.B9F7DF36; Mon,
-        27 Feb 2023 23:14:19 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4~H4c2Ev71i2103021030uscas1p12;
-        Tue, 28 Feb 2023 04:14:19 +0000 (GMT)
-X-AuditID: cbfec36d-afdff70000011b40-a4-63fd7f9b82c6
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 76.B9.11378.A9F7DF36; Mon,
-        27 Feb 2023 23:14:18 -0500 (EST)
+        20230228041453uscas1p266adeb86f5f460eaf08ec62bca5a75dc~H4dVvQdp51247412474uscas1p2O;
+        Tue, 28 Feb 2023 04:14:53 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id 74.FB.06976.CBF7DF36; Mon,
+        27 Feb 2023 23:14:52 -0500 (EST)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230228041451uscas1p19d32976b917a5b8eaf3cd9b413e911f0~H4dUtLSLS0424204242uscas1p1s;
+        Tue, 28 Feb 2023 04:14:51 +0000 (GMT)
+X-AuditID: cbfec36d-d99ff70000011b40-f1-63fd7fbcb60e
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 0B.E8.17110.BBF7DF36; Mon,
+        27 Feb 2023 23:14:51 -0500 (EST)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 27 Feb 2023 20:14:18 -0800
+        15.1.2375.24; Mon, 27 Feb 2023 20:14:51 -0800
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        27 Feb 2023 20:14:18 -0800
+        27 Feb 2023 20:14:51 -0800
 From:   Fan Ni <fan.ni@samsung.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -57,123 +57,116 @@ CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Gregory Price <gourry.memverge@gmail.com>,
         =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH v4 08/10] qemu/bswap: Add const_le64()
-Thread-Topic: [PATCH v4 08/10] qemu/bswap: Add const_le64()
-Thread-Index: AQHZSysgfxoOm0uIsUCJEp/Zj+u25Q==
-Date:   Tue, 28 Feb 2023 04:14:18 +0000
-Message-ID: <20230228041417.GH1339780@bgt-140510-bm03>
-In-Reply-To: <20230206172816.8201-9-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 09/10] qemu/uuid: Add UUID static initializer
+Thread-Topic: [PATCH v4 09/10] qemu/uuid: Add UUID static initializer
+Thread-Index: AQHZSyszRQ9xpvKx/E6w+2kwgssCsA==
+Date:   Tue, 28 Feb 2023 04:14:50 +0000
+Message-ID: <20230228041450.GI1339780@bgt-140510-bm03>
+In-Reply-To: <20230206172816.8201-10-Jonathan.Cameron@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <03187EE6F7FE864AA2CAF60663F126FD@ssi.samsung.com>
+Content-ID: <A8BE30F3D1C82F4F9DE301740D01808B@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7djX87qz6/8mG0w6zmPRPHkxo8WLP8+Z
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7djXc7p76v8mGyyZYG7RPHkxo8WLP8+Z
         LPY/fc5isWrhNTaL87NOsVgc3niGyeL/r1esFmtWCFsc793B4sDpsXPWXXaPliNvWT0W73nJ
-        5LFpVSebx51re9g8nlzbzOTxft9VNo/Pm+QCOKK4bFJSczLLUov07RK4MrbtPc9ccEuw4tmZ
-        M0wNjL28XYycHBICJhIn2z8zgdhCAisZJU5Nte1i5AKyW5kkXs9cwtzFyAFWNGOGNkR8LaNE
-        +5Z9TBDOJ0aJCa/nskE4yxglupaeYwUZxSagKLGvazsbiC0iYCTx7sYkRpAiZoEvTBJT725k
-        AUkIC1hJLJrwiA1khYiAtURbnw5EvZ7Ew/U7wE5iEVCV2HL4Dlg5r4CZxKF1Z8Fmcgo4SFyd
-        vZAdxGYUEJP4fmoNWD2zgLjErSfzmSBeE5RYNHsPM4QtJvFv10M2CFtR4v73l+wQ9XoSN6ZO
-        YYOw7SROX73MCGFrSyxb+JoZYq+gxMmZT1ggeiUlDq64wQLyi4RAM6fEugfPoJa5SJyePpsV
-        wpaWuHp9KjTokiVWfeSCCOdIzF+yBWqOtcTCP+uZJjCqzEJy9iwkJ81CctIsJCfNQnLSAkbW
-        VYzipcXFuempxYZ5qeV6xYm5xaV56XrJ+bmbGIHJ7PS/w7k7GHfc+qh3iJGJg/EQowQHs5II
-        78Lbf5KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xrankwWEkhPLEnNTk0tSC2CyTJxcEo1MPVz
-        pk1fduY6Y73SdZll9e53bxosl/G/Y3gz4cKanJmcHUef1WheUznx+dLDqtr6DIuqOQ63/75S
-        uLtN2uTuy8Dl6gte8BxNMcqYNmumyob/yU9kq5knbNb1ZQ51dHmx/mRCddORbWtL/9Q+EmVe
-        whe28FL96mIf1pMtc7M2frfxZuCS85i7Vq9i/6EVJvO/VEe+WaJw4KddD+PVw5rNT3alXM6c
-        4GP49tT8Yyt2zeu/mXYx0qP0/etgy9eCSRZapS19950v1QVYT8nbFdbyiPlktUnp5P3esyUv
-        O3RrPfYUfh7f1lGj51Op3Onz7mii3U/ZufNc69ZPK/DYlTBXx2cup4eCdlIgU+wvEev5Tkos
-        xRmJhlrMRcWJAEdTDWvVAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWS2cA0UXdW/d9kg0uLzCyaJy9mtHjx5zmT
+        5LFpVSebx51re9g8nlzbzOTxft9VNo/Pm+QCOKK4bFJSczLLUov07RK4Mtau6WIr2Mhf8X7K
+        baYGxnbuLkZODgkBE4mFSw8zgthCAisZJT42+nUxcgHZrUwSd6Y+YYYpuvOzkxmiaC2jxLO9
+        hRBFn4Aa3p1jhXCWMUqsudYDNopNQFFiX9d2NhBbRMBI4t2NSYwgRcwCX5gkpt7dyAKSEBZw
+        kWjuP8gIUeQqMXf6eagGPYnGI7+ZQGwWAVWJ1mPNYHFeATOJSR8/A8U5ODgFHCX+3AZ7gVFA
+        TOL7qTVg5cwC4hK3nsxngrhaUGLR7D1QH4hJ/Nv1kA3CVpS4//0lO0S9nsSNqVPYIGw7ib9n
+        1kPN0ZZYtvA1M8RaQYmTM5+wQPRKShxccYMF5BcJgR8cEkc//INa5iKx5fFmdghbWuLv3WVg
+        d0oIJEus+sgFEc6RmL9kC9Qca4mFf9YzTWBUmYXk7FlITpqF5KRZSE6aheSkBYysqxjFS4uL
+        c9NTiw3zUsv1ihNzi0vz0vWS83M3MQKT2el/h3N3MO649VHvECMTB+MhRgkOZiUR3oW3/yQL
+        8aYkVlalFuXHF5XmpBYfYpTmYFES5zW0PZksJJCeWJKanZpakFoEk2Xi4JRqYOKqLwp7rGez
+        u0i7Ia3ZRXLJNO75Ssy+mipRrwuWqNZev57bzC7reFp/Ode8hM9OzG9Kbh1tf/BS1s993c+l
+        0y/0Lp3Z8T7BScStrIrlk5i0sOiP1XE7BU5U6n5qSa1es+CPGaNcyevZDMWHnG9rHZ32YOra
+        sslnFi6+abv6xfrXokaMr+rC4oXn9b7e/0nVcmlS5ppmX3l3VYV1V7arv+lctuFa0YWAX8Uq
+        W0Pf6CivXfxtR/mtqKrkuDt/rSVPPztdzvIjk7P02gTG1iz/mE0ici/CCk3ZpXjPvTVJLv/5
+        q9nYcRHrR9fwc/cmF4fVKXAv8Lpf/FHxAnvg07dzbuquXyZ3fsbp65bxSRxbWpRYijMSDbWY
+        i4oTAfoAO3XVAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsWS2cA0SXd3/d9kg70rDCyaJy9mtHjx5zmT
         xf6nz1ksVi28xmZxftYpFovDG88wWfz/9YrVYs0KYYvjvTtYHDg9ds66y+7RcuQtq8fiPS+Z
-        PDat6mTzuHNtD5vHk2ubmTze77vK5vF5k1wARxSXTUpqTmZZapG+XQJXxra955kLbglWPDtz
-        hqmBsZe3i5GDQ0LARGLGDO0uRi4OIYHVjBK3W5YzQTifGCVWX/3I1sXICeQsY5TYe8ANxGYT
-        UJTY17UdLC4iYCTx7sYkRpAGZoEvTBI3PnxnAUkIC1hJLJrwiA1kg4iAtURbnw5EvZ7Ew/U7
-        mEBsFgFViS2H74CV8wqYSRxadxZqV6nE+d8f2UFsTgEHiauzF4LZjAJiEt9PrQHrZRYQl7j1
-        ZD6YLSEgILFkz3lmCFtU4uXjf6wQtqLE/e8v2SHq9SRuTJ3CBmHbSZy+epkRwtaWWLbwNTPE
-        DYISJ2c+YYHolZQ4uOIGywRGiVlI1s1CMmoWklGzkIyahWTUAkbWVYzipcXFuekVxYZ5qeV6
-        xYm5xaV56XrJ+bmbGIGJ4PS/w5E7GI/e+qh3iJGJg/EQowQHs5II78Lbf5KFeFMSK6tSi/Lj
-        i0pzUosPMUpzsCiJ8wq5TowXEkhPLEnNTk0tSC2CyTJxcEo1MPnP+dgl3OySsDy26V7y25f/
-        gkqbDTL+XLksfqZq2jQG601Hb3Ha9k/i+bY1gV/lSOtX2Z3Xq7+/KF6+9IzX56OiMkfmPvm8
-        6L/dlgnzItYpNV4pvM1rFMOb+VE5elZw0sIA7StrfL55TFk2p06LJ2PKnoupZ205Qjc9unVW
-        zenVTK/jh6RP1B/hsT2a81S8pj2juvtwuAOb3qHJH0KUr8702Tk/PHj62poY441rIhY2nKn/
-        Zrrh09FpJtU2DrddnS+u33bdrNNkqljtmcg3978/W5NY+ffU9n2Mt7zVtR7cMbPWT/jA/5vJ
-        pumfjV1Gy8yHAVO2X7Wdcy+4ze3Wi3uiNn03OmObRbhdl9zdynxIiaU4I9FQi7moOBEAO13D
-        TXMDAAA=
-X-CMS-MailID: 20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4
+        PDat6mTzuHNtD5vHk2ubmTze77vK5vF5k1wARxSXTUpqTmZZapG+XQJXxto1XWwFG/kr3k+5
+        zdTA2M7dxcjJISFgInHnZydzFyMXh5DAakaJwz92skE4nxglFs1YBJVZxihx4u9aVpAWNgFF
+        iX1d29lAbBEBI4l3NyYxghQxC3xhkrjx4TsLSEJYwEWiuf8gI0SRq8Tc6eehGvQkGo/8ZgKx
+        WQRUJVqPNYPFeQXMJCZ9/AwWFxIok2ifcxwozsHBKeAo8ec22KmMAmIS30+tASthFhCXuPVk
+        PhPECwISS/acZ4awRSVePv7HCmErStz//pIdol5P4sbUKWwQtp3E3zProeZoSyxb+JoZ4gRB
+        iZMzn7BA9EpKHFxxg2UCo8QsJOtmIRk1C8moWUhGzUIyagEj6ypG8dLi4tz0imKjvNRyveLE
+        3OLSvHS95PzcTYzAZHD63+HoHYy3b33UO8TIxMF4iFGCg1lJhHfh7T/JQrwpiZVVqUX58UWl
+        OanFhxilOViUxHlfRk2MFxJITyxJzU5NLUgtgskycXBKNTCJmd0wYZ9d91LuZ6GcVlTncju+
+        hsCpkr/CD6jE/T8jcedgyaajXHMrjuzjyks+zW6+3j1jAkvD4V79XaG/+AIufH5oqmN/9RBL
+        9iMmowOuSfei7EVuBk3nKuqYkPRCUS1OP7hl/ilTt+C4y2sf7zI1U7ny7/5ZId9N/VX8Oi4F
+        73etfDnL7/RsWefv/Vm70wri3koeUvCJWS/62sHPc99TqdQ/5z7c+bBz2vt3znzfg+ap5ERo
+        +j+TrXl777t90b92d98jpjqP7IwshIS3lT7JCea2ci57+So01DBdWzllYbHYsnnibkxSlzI+
+        96kxGnosamLlzM07nVIqYbGIUzjdUjjqgcnBPJ7UDvYfSizFGYmGWsxFxYkAWi1bGHUDAAA=
+X-CMS-MailID: 20230228041451uscas1p19d32976b917a5b8eaf3cd9b413e911f0
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4
+X-CMS-RootMailID: 20230228041451uscas1p19d32976b917a5b8eaf3cd9b413e911f0
 References: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
-        <20230206172816.8201-9-Jonathan.Cameron@huawei.com>
-        <CGME20230228041419uscas1p1b9d933dc37c4b6369ef1dea03a54c9e4@uscas1p1.samsung.com>
+        <20230206172816.8201-10-Jonathan.Cameron@huawei.com>
+        <CGME20230228041451uscas1p19d32976b917a5b8eaf3cd9b413e911f0@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 05:28:14PM +0000, Jonathan Cameron wrote:
+On Mon, Feb 06, 2023 at 05:28:15PM +0000, Jonathan Cameron wrote:
 > From: Ira Weiny <ira.weiny@intel.com>
 >=20
-> Gcc requires constant versions of cpu_to_le* calls.
+> UUID's are defined as network byte order fields.  No static initializer
+> was available for UUID's in their standard big endian format.
 >=20
-> Add a 64 bit version.
+> Define a big endian initializer for UUIDs.
 >=20
-> Reviewed-by: Peter Maydell <peter.maydell@linaro.org>
-> Reviewed-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
 > Reviewed-by: Gregory Price <gregory.price@memverge.com>
 > Tested-by: Gregory Price <gregory.price@memverge.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->=20
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
 > ---
-> v2: Update comment (Philippe)
-> ---
->  include/qemu/bswap.h | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+>  include/qemu/uuid.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 >=20
-> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
-> index 3cbe52246b..eb3bcf2520 100644
-> --- a/include/qemu/bswap.h
-> +++ b/include/qemu/bswap.h
-> @@ -129,11 +129,20 @@ CPU_CONVERT(le, 32, uint32_t)
->  CPU_CONVERT(le, 64, uint64_t)
+> diff --git a/include/qemu/uuid.h b/include/qemu/uuid.h
+> index 9925febfa5..dc40ee1fc9 100644
+> --- a/include/qemu/uuid.h
+> +++ b/include/qemu/uuid.h
+> @@ -61,6 +61,18 @@ typedef struct {
+>      (clock_seq_hi_and_reserved), (clock_seq_low), (node0), (node1), (nod=
+e2),\
+>      (node3), (node4), (node5) }
 > =20
->  /*
-> - * Same as cpu_to_le{16,32}, except that gcc will figure the result is
-> + * Same as cpu_to_le{16,32,64}, except that gcc will figure the result i=
-s
->   * a compile-time constant if you pass in a constant.  So this can be
->   * used to initialize static variables.
->   */
->  #if HOST_BIG_ENDIAN
-> +# define const_le64(_x)                          \
-> +    ((((_x) & 0x00000000000000ffU) << 56) |      \
-> +     (((_x) & 0x000000000000ff00U) << 40) |      \
-> +     (((_x) & 0x0000000000ff0000U) << 24) |      \
-> +     (((_x) & 0x00000000ff000000U) <<  8) |      \
-> +     (((_x) & 0x000000ff00000000U) >>  8) |      \
-> +     (((_x) & 0x0000ff0000000000U) >> 24) |      \
-> +     (((_x) & 0x00ff000000000000U) >> 40) |      \
-> +     (((_x) & 0xff00000000000000U) >> 56))
->  # define const_le32(_x)                          \
->      ((((_x) & 0x000000ffU) << 24) |              \
->       (((_x) & 0x0000ff00U) <<  8) |              \
-> @@ -143,6 +152,7 @@ CPU_CONVERT(le, 64, uint64_t)
->      ((((_x) & 0x00ff) << 8) |                    \
->       (((_x) & 0xff00) >> 8))
->  #else
-> +# define const_le64(_x) (_x)
->  # define const_le32(_x) (_x)
->  # define const_le16(_x) (_x)
->  #endif
+> +/* Normal (network byte order) UUID */
+> +#define UUID(time_low, time_mid, time_hi_and_version,                   =
+ \
+> +  clock_seq_hi_and_reserved, clock_seq_low, node0, node1, node2,        =
+ \
+> +  node3, node4, node5)                                                  =
+ \
+> +  { ((time_low) >> 24) & 0xff, ((time_low) >> 16) & 0xff,               =
+ \
+> +    ((time_low) >> 8) & 0xff, (time_low) & 0xff,                        =
+ \
+> +    ((time_mid) >> 8) & 0xff, (time_mid) & 0xff,                        =
+ \
+> +    ((time_hi_and_version) >> 8) & 0xff, (time_hi_and_version) & 0xff,  =
+ \
+> +    (clock_seq_hi_and_reserved), (clock_seq_low),                       =
+ \
+> +    (node0), (node1), (node2), (node3), (node4), (node5)                =
+ \
+> +  }
+> +
+>  #define UUID_FMT "%02hhx%02hhx%02hhx%02hhx-" \
+>                   "%02hhx%02hhx-%02hhx%02hhx-" \
+>                   "%02hhx%02hhx-" \
 > --=20
 > 2.37.2
 >=20
