@@ -2,160 +2,360 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD19C64EC7
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 09:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B44C64ED6
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 09:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjB1JaC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Feb 2023 04:30:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46380 "EHLO
+        id S229528AbjB1Jl7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Feb 2023 04:41:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbjB1JaA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 04:30:00 -0500
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A845F421E
-        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 01:29:58 -0800 (PST)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230228092956epoutp04f140dcdc7cdff46e4f01a02adb6836da~H8wbD69xJ0479404794epoutp04K
-        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 09:29:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230228092956epoutp04f140dcdc7cdff46e4f01a02adb6836da~H8wbD69xJ0479404794epoutp04K
+        with ESMTP id S230222AbjB1Jl6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 04:41:58 -0500
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218162BF3F
+        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 01:41:55 -0800 (PST)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230228094152epoutp02b01bff0324702a31a2b611c44dd025d8~H862COol80337303373epoutp02X
+        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 09:41:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230228094152epoutp02b01bff0324702a31a2b611c44dd025d8~H862COol80337303373epoutp02X
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677576596;
-        bh=uQdhO84pCQls9fd9PJJGwXPrCWaWLWeHCPXtqEWTRY8=;
+        s=mail20170921; t=1677577312;
+        bh=bRXXt2YaReOGAjMsOfCas/8Uz4Hx8Sq9FVeVXyG9pGw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=puP2Hz7FuyfhFo/MbwhlMZgryA0Us3qnpbjVILMBoXpBFhwQUux0EyFjDv5j+vy3I
-         RU6oJHLDA5rnoGjVPH9zUsyqSt/rsVr/AKfIZvjh41wkX84u7mdP/LQE4n1I1oEkuo
-         n2qJIipDdBjDI4Y00JeqUlbeUDI1Bm5gDCLTRew8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230228092956epcas2p20564472234246e57e3a74a99d575af28~H8wau-SJw1607916079epcas2p2Y;
-        Tue, 28 Feb 2023 09:29:56 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.101]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4PQsXM4FyRz4x9Py; Tue, 28 Feb
-        2023 09:29:55 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A2.D9.61927.399CDF36; Tue, 28 Feb 2023 18:29:55 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230228092955epcas2p1a216cbd36ac26fd7d2ac6af2d3e83c9c~H8wZq-LSI3223832238epcas2p1w;
-        Tue, 28 Feb 2023 09:29:55 +0000 (GMT)
+        b=lkA9iGq1Y26LOZzEIMl18+BRjKgpDSDjqW2Pn0ZOAWj1/MIp6DnLATesQTA5Ab5Q6
+         AKgFtp47qjwyaoouu3V51FJvqMBccqDsk/8544A+MtcSNieDmtos7moGqR+fovz3+u
+         0O6/ixWHyPD0ob1F/wSClyQmFnouUJZMicHy+KJY=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20230228094151epcas2p454e1161022be2d17660e103fb71e2e01~H861QbyYj2652126521epcas2p4Y;
+        Tue, 28 Feb 2023 09:41:51 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.90]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4PQsp72RJVz4x9Q2; Tue, 28 Feb
+        2023 09:41:51 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C0.00.08750.F5CCDF36; Tue, 28 Feb 2023 18:41:51 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230228094151epcas2p4f16c7afb9b8db3b37803fa0e7b24f73b~H860Zn0sz2652526525epcas2p4T;
+        Tue, 28 Feb 2023 09:41:51 +0000 (GMT)
 Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230228092955epsmtrp105b6368070c37b2d9f4ce6299e5b15f2~H8wZqWe9Q2963829638epsmtrp1P;
-        Tue, 28 Feb 2023 09:29:55 +0000 (GMT)
-X-AuditID: b6c32a45-671ff7000001f1e7-ee-63fdc9935104
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230228094150epsmtrp2534e9b0302c0869a631534c4a3625d72~H860ZEgb61092810928epsmtrp2R;
+        Tue, 28 Feb 2023 09:41:50 +0000 (GMT)
+X-AuditID: b6c32a47-777ff7000000222e-fd-63fdcc5f542d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
         epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        73.C0.17995.299CDF36; Tue, 28 Feb 2023 18:29:54 +0900 (KST)
+        D8.91.17995.E5CCDF36; Tue, 28 Feb 2023 18:41:50 +0900 (KST)
 Received: from dell-ArcherCity (unknown [10.229.83.212]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230228092954epsmtip198332c867dae747196c821d3482d335b~H8wZc3DrE0452304523epsmtip1U;
-        Tue, 28 Feb 2023 09:29:54 +0000 (GMT)
-Date:   Tue, 28 Feb 2023 18:31:06 +0900
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230228094150epsmtip2e8130fc0cf4f3501c2a17e4140a761ed~H860NY1kK2435924359epsmtip2N;
+        Tue, 28 Feb 2023 09:41:50 +0000 (GMT)
+Date:   Tue, 28 Feb 2023 18:43:02 +0900
 From:   Junhyeok Im <junhyeok.im@samsung.com>
 To:     Alison Schofield <alison.schofield@intel.com>
 Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
         vishal.l.verma@intel.com, bwidawsk@kernel.org
-Subject: Re: [ndctl 0/3] Support for inject poison
-Message-ID: <Y/3J2nJTf97bHKb3@dell-ArcherCity>
+Subject: Re: [ndctl 2/3] cxl: add inject-poison command to cxl tool
+Message-ID: <Y/3MpsTbFfZhTp7C@dell-ArcherCity>
 MIME-Version: 1.0
-In-Reply-To: <Y/wXnZjhplI9AUvv@aschofie-mobl2>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCKsWRmVeSWpSXmKPExsWy7bCmhe7kk3+TDXoeKljcfXyBzaJ58mJG
+In-Reply-To: <Y/whyOESQ0fRIpNZ@aschofie-mobl2>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCKsWRmVeSWpSXmKPExsWy7bCmmW78mb/JBgve8FvcfXyBzaJ58mJG
         i+lTLzBanJ91isXi1oRjTA6sHov3vGTy2LSqk83j8ya5AOaobJuM1MSU1CKF1Lzk/JTMvHRb
         Je/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoJVKCmWJOaVAoYDE4mIlfTubovzSklSF
-        jPziElul1IKUnALzAr3ixNzi0rx0vbzUEitDAwMjU6DChOyMdS2NrAV3+Csu/33I1sB4nruL
-        kZNDQsBEYndPI1sXIxeHkMAORokFex6xgySEBD4xSiyfKweR+MwocX/benaYjl39x6GKdjFK
-        dLywhCh6yygx6VQ3K0iCRUBV4uTGQ0wgNpuAtsTf/umMXYwcHCIChhILpqmBmMwCGRJ7t4JV
-        CAsYSVzt/Ahm8wroSczaspcRwhaUODnzCQuIzQkUn/D5KAvIKgmBc+wS9+92sULc4yLR+WAL
-        G4QtLPHq+BaoO6UkXva3Qdn5ElMPToSySyTazhyAso0l3t18DjaHWSBTYlbvMzaQ2yQElCWO
-        3GKBCPNJdBz+yw4R5pXoaBOC6FSV2LLhBdQUaYmjEzexQNgeEpPm9jBBQmQLo8S5ZbvYJzDK
-        zULyziwk2yBsHYkFuz8B2aBQkZZY/o8DwtSUWL9LfwEj6ypGsdSC4tz01GKjAkN47Cbn525i
-        BCc/LdcdjJPfftA7xMjEwXiIUYKDWUmEd+HtP8lCvCmJlVWpRfnxRaU5qcWHGE2BMTORWUo0
-        OR+YfvNK4g1NLA1MzMwMzY1MDcyVxHmlbU8mCwmkJ5akZqemFqQWwfQxcXBKNTB5VjAf5mD5
-        ovZYw+KjiO/d2DPbJJL2hzQU6gX1KMsF3C8Syr0gf2DWqk0ugpm77wolf7p8d+IWK/UH16es
-        6PG9vImrTmGW6+TPxksiF4c6btjBa2jRd+Lfpv89Oy4ZFqtUzC26kqNj1jNBNb1aK2XrBeX2
-        dO+ZPSbH3or8eyZzY/77ZZbLnvvdcOHgV37llTf9x68agf8fjYMqIn6cOMq+crLBje6jfx5M
-        l3Jl0tilea/OYPpm3s1bFW+sYZ2odO9AWDFPSfKBv8s1pRnv+Ltv1Hu1LWJrxBbFnN41H6wF
-        OefOdWVX8bc75l04MV3y7/JFT34l5Dg8TSgTf5KnKuy9sPieytfbzkvF+ByPuZ1VYinOSDTU
-        Yi4qTgQAYPH6qAcEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsWy7bCSnO6kk3+TDaa+tbS4+/gCm0Xz5MWM
-        FtOnXmC0OD/rFIvFrQnHmBxYPRbvecnksWlVJ5vH501yAcxRXDYpqTmZZalF+nYJXBnrnq5g
-        LZjJWzGhYx9bA+NSzi5GTg4JAROJXf3H2bsYuTiEBHYwSsw/sJQJIiEtceNRFxuELSxxv+UI
-        K0TRa0aJO5OaWEASLAKqEic3HgJrYBPQlvjbP52xi5GDQ0TAUGLBNDUQk1kgQ2LvVrAKYQEj
-        iaudH8FsXgE9iVlb9jJCjNzCKPH8w2NGiISgxMmZT8DGMwtoSdz495IJYo60xPJ/HCBhTqDe
-        CZ+PskxgFJiFpGMWko5ZCB0LGJlXMUqmFhTnpucWGxYY5aWW6xUn5haX5qXrJefnbmIEB7CW
-        1g7GPas+6B1iZOJgPMQowcGsJMK78PafZCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8F7pOxgsJ
-        pCeWpGanphakFsFkmTg4pRqYzqZ9K8vYrmq6w3uGotLS7RJ794c0JTTJOP8++ee38QdHb62N
-        PxX689gXvXkscV6H9fphj2/xk9bzip14cSJNLuOWfpRM55J97Wqb3BdPv99sUaT5ZMcM1/iV
-        Ad3ndja4yPt+evJ0D1tzdSlPV8ZZkepPvCvLyppDG2aGO+9fXeS7y3/poVymtJ1xDkVvdi7W
-        PhAxQ9X+Z21UeVtr6vTsS9xNs6yWu3G3Hj+Z9WiR0fUD+cfLGYLfiW1nuMLKzRxbU9nnJneo
-        7J+ql9Xy2etXNTff/rlBVmX65Mb5/YufrxGOl896rsdWESHCfXfLyby5v+x13rid9I982Hdo
-        68rv5jMmify9Enqz7BDjPMV2JZbijERDLeai4kQA+OkOAc8CAAA=
-X-CMS-MailID: 20230228092955epcas2p1a216cbd36ac26fd7d2ac6af2d3e83c9c
+        jPziElul1IKUnALzAr3ixNzi0rx0vbzUEitDAwMjU6DChOyM70u/MBU0eld8btvC3MD42rKL
+        kYNDQsBE4t3VmC5GLg4hgR2MEg9vH2eDcD4xSpzd0cII4XxmlFj64QCQwwnW8bz9PgtEYhej
+        xPnVD6Ba3jJKTJ41gxWkikVAVWLu2W9gNpuAtsTf/umMIPtEBAwlFkxTAzGZBTIk9m5lAqkQ
+        FnCWeNvaygJi8wroSTye+4wJwhaUODnzCVicEyh++uJ5JpBVEgLn2CWWnb7IAvGCi8TfP2kQ
+        twlLvDq+hR3ClpL4/G4vG4SdLzH14ESoeIlE25kDULaxxLubz8GuZBbIlPh9v58JYqSyxJFb
+        LBBhPomOw3/ZIcK8Eh1tQhCdqhJbNryAmiItcXTiJhYI20Niy9P70GB7zijxZNoepgmMcrOQ
+        fDMLyTYIW0diwe5PbLPAgSItsfwfB4SpKbF+l/4CRtZVjGKpBcW56anFRgXG8NhNzs/dxAhO
+        flruOxhnvP2gd4iRiYPxEKMEB7OSCO/C23+ShXhTEiurUovy44tKc1KLDzGaAiNmIrOUaHI+
+        MP3mlcQbmlgamJiZGZobmRqYK4nzStueTBYSSE8sSc1OTS1ILYLpY+LglGpgkmPaeV+0X+Bg
+        Sv/tQxKJPGqLd58pOfqg51b1Lfd9j1W/Tp3y0dSf73JEmeoZbpkMnc1260JjCl25t9wMt1sq
+        GpXuOKUtoqSf7+Lx54U2X0t3fa/pjs+vet7J4G7Nz3V2rlf321fpAeYTgpUPJunFKrX/vxar
+        mznNpW+JvdrmF5JTQ6VXqoW+X3f/mMj5xUuP7d0UmKjI3JQkPEfuRm+qkHWSYtfhUtfVrwQ0
+        ouP6y2Ys5D9ddNOp7Nj+t6ceXX5/IPSH8q4lzxZJxworPV15nuHUrU470Rt3D741Vf7yXXLR
+        Di6Td3OyDwh83tATprRD2jXnRKvK6jvdN1iL2DzENselbX1szPw6anVVXsh0JZbijERDLeai
+        4kQAJ226vwcEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsWy7bCSvG7cmb/JBh9WmFrcfXyBzaJ58mJG
+        i+lTLzBanJ91isXi1oRjTA6sHov3vGTy2LSqk83j8ya5AOYoLpuU1JzMstQifbsErox33z4x
+        F+zzqHj4cC9rA+NB8y5GTg4JAROJ5+33WboYuTiEBHYwSuw6spEZIiEtceNRFxuELSxxv+UI
+        K0TRa0aJxu3fwYpYBFQl5p79xgpiswloS/ztn87YxcjBISJgKLFgmhqIySyQIbF3KxNIhbCA
+        s8Tb1lYWEJtXQE/i8dxnTBAjnzNKPNtzCCohKHFy5hMwm1lAS+LGv5dMEHOkJZb/4wAJcwL1
+        nr54nmkCo8AsJB2zkHTMQuhYwMi8ilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOIC1
+        tHYw7ln1Qe8QIxMH4yFGCQ5mJRHehbf/JAvxpiRWVqUW5ccXleakFh9ilOZgURLnvdB1Ml5I
+        ID2xJDU7NbUgtQgmy8TBKdXAVHZ50xX3wA8yOdknRFwykg3/P3pT9jBN64fsX5cGJfOvFvuS
+        5y6VuHbQf2qO9vWNUVm+7h+Vyx++DF5XnXI5oVbZeV3fhOqmTOukR1aqR2f0XWR9uXTLMeHa
+        hQc1tezOW/3fuP735HWaXw7Znj6xwFfENCMwyZ3ZJnDz+qXnLsvPVzsdxThdcMWaFs/5NbIp
+        nns+pVpWL7q/pvnjkXdyQkevnD1SMOOR3Osp2iUflY3nOKZ7uk60nVAs/6Pzd7G5VP3vjr36
+        M9/Eapk15KsyPI4SE/15gsG2VG/rL4fq1bXtFXIn/lt26xY9bzlx1in50sLSh3cPn7zHFcn2
+        RejaFNvp3yPTKtVcj8scPsM5VYmlOCPRUIu5qDgRAJUOVajPAgAA
+X-CMS-MailID: 20230228094151epcas2p4f16c7afb9b8db3b37803fa0e7b24f73b
 X-Msg-Generator: CA
 Content-Type: multipart/mixed;
-        boundary="----IPzR0Zmv7eUACe1AcPM4bhPiN.NxXwyEj5sj1OQa2HLEVOb4=_11d426_"
+        boundary="----mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_11cb0b_"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230220045604epcas2p3bc0b1fb688c48ec0b8ae2512adba3513
-References: <CGME20230220045604epcas2p3bc0b1fb688c48ec0b8ae2512adba3513@epcas2p3.samsung.com>
-        <20230220045709.94027-1-junhyeok.im@samsung.com>
-        <Y/wXnZjhplI9AUvv@aschofie-mobl2>
+X-CMS-RootMailID: 20230220045608epcas2p11d40339e7401f5bf99a9e97308058fec
+References: <20230220045709.94027-1-junhyeok.im@samsung.com>
+        <CGME20230220045608epcas2p11d40339e7401f5bf99a9e97308058fec@epcas2p1.samsung.com>
+        <20230220045709.94027-3-junhyeok.im@samsung.com>
+        <Y/whyOESQ0fRIpNZ@aschofie-mobl2>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-------IPzR0Zmv7eUACe1AcPM4bhPiN.NxXwyEj5sj1OQa2HLEVOb4=_11d426_
+------mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_11cb0b_
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 
-On Sun, Feb 26, 2023 at 06:38:21PM -0800, Alison Schofield wrote:
-> On Mon, Feb 20, 2023 at 01:57:06PM +0900, Junhyeok Im wrote:
-> > This series adds new ability to inject poison, including library update
-> > and new command interface(inject-poison).
-> 
-> Hi Junhyeok,
-> Nice to see this set, and sorry for the delay in trying it out. I'm
-> using it now while prepping another version of the driver support 
-> for inject and clear.
-> 
+On Sun, Feb 26, 2023 at 07:21:44PM -0800, Alison Schofield wrote:
+> On Mon, Feb 20, 2023 at 01:57:08PM +0900, Junhyeok Im wrote:
+> > Add new command to cli tool, to inject poison into dpa(-a) on the
+> > memory device.
 > > 
-> > Junhyeok Im (3):
-> >   libcxl: add memdev inject poison support
-> >   cxl: add inject-poison command to cxl tool
-> >   Documentation: add man page documentation for inject-poison
+> > DPA written in sysfs attribute(inject_poison) is converted by
+> > kstrtou64 with 0 base by 'inject_poison_store' of CXL driver, so if
+> > it begins with 0x the number will be parsed as a hexadecimal
+> > (case insensitive), if it otherwise begins with 0, it will be parsed
+> > as an octal number. Otherwise it will be parsed as a decimal.
+> > 
+> > Since the validity verification of the dpa would be done in
+> > 'cxl_validate_poison_dpa' of CXL driver, no additional logic
+> > is added.
 > 
-> The libcxl.sym and libclx.txt changes in the 3rd patch go better
-> in the 1st patch that adds the libcxl support.
+> I'm not sure that zero validity checks on that DPA is best here.
+> That validity checks in the driver always returns -EINVAL, and
+> the driver emits a dev_dbg message offering more details. So, for
+> a user that is not running a debug kernel, figuring out which
+> validity check they failed is not so trivial.
+> 
+> The driver fails the validity check for these reasons:
+> 
+> device has no dpa resource
+> dpa in resource
+> dpa is not 64-byte aligned
+> dpa mapped in region
+> 
+> I lean towards the cxl command checking all of these, but I'm not
+> clear of the precedence here, so let's see what others say.
 > 
 
-Thank you Alison for your comments.
-Since libcxl.sym changes are already in the 1st patch,
-I will include libcxl.txt changes in the 1st patch of next series.
+Thank you for sharing your thoughts.
+Then I will also wait for others opinion for now.
 
 > > 
-> >  Documentation/cxl/cxl-inject-poison.txt | 42 ++++++++++++++++++++
-> >  Documentation/cxl/lib/libcxl.txt        |  4 ++
-> >  Documentation/cxl/meson.build           |  1 +
-> >  cxl/builtin.h                           |  1 +
-> >  cxl/cxl.c                               |  1 +
-> >  cxl/lib/libcxl.c                        | 26 ++++++++++++
-> >  cxl/lib/libcxl.sym                      |  5 +++
-> >  cxl/libcxl.h                            |  1 +
-> >  cxl/memdev.c                            | 53 +++++++++++++++++++++++--
-> >  9 files changed, 131 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/cxl/cxl-inject-poison.txt
+> > Also since it is expected no use case of injecting poison into the
+> > same address for multiple devices, this command targets only one
+> > memdev, like write-labels command.
 > > 
+> >  usage: cxl inject-poison <memdev> -a <dpa> [<options>]
+> 
+> maybe -m memdev (to be like others)
+
+AFAIK, memdev is to be specified without "-m" except for 'list' cmd,
+but I think the reason you said is to distinguish memdev from region(e.g."-r").
+(I also found in your previous patch for GET_POISON_LIST that 
+memdev and region were separated.)
+If so, codes and documentation should be modified like:
+    cxl inject-poison -m <memdev> -a <dpa> [<options>]
+Thanks.
 > > 
-> > base-commit: a88bdcfb4202c73aadfee6f83c5502eb5121cbd9
+> >     -v, --verbose         turn on debug
+> >     -S, --serial          use serial numbers to id memdevs
+> >     -a, --address <dpa>   DPA to inject poison
+> 
+> Let's open up the naming discussion again.  This isn't solely about
+> your patch here. With the cxl list --media-errors patch, Jonathan and I
+> had a discussion about whether that should be --poison or --media-errors
+> and stuck with --media-errors to align with the CXL spec and be like ndctl.
+> 
+> Our prior thoughts:
+> https://lore.kernel.org/nvdimm/20221121105711.0000770c@Huawei.com/
+> 
+> Note that this is all pending work, nothing has been merged. I started
+> using 'poison' for the sysfs attributes: trigger_poison_list, inject_poison,
+> clear_posion.
+> 
+> But, in the CXL tool, I went with 'media-errors', cxl list --media-errors.
+> 
+> Following that pattern, s/inject-poison/inject-media-error  
+> 
+> I'd like to revisit that, because now it seems like less of a match as
+> we grow to include inject_poison and clear_poison.
+
+I agree that naming should be changed and unified if needed.
+Personally I do not think it's awkward to use the name 'poison' 
+seperately from general 'errors' to indicate that it's inserted artificially.
+But still a concern is that spec calls them "Media Error Records", like your
+previous comments above.
+
+> 
+> > 
+> > Link to corresponding kernel patch:
+> >   https://patchwork.kernel.org/project/cxl/patch/97a0b128d0d0df56cea1a1a4ead65a40b9cf008e.1674101475.git.alison.schofield@intel.com/
+> > 
+> > Signed-off-by: Junhyeok Im <junhyeok.im@samsung.com>
+> > ---
+> >  cxl/builtin.h |  1 +
+> >  cxl/cxl.c     |  1 +
+> >  cxl/memdev.c  | 53 ++++++++++++++++++++++++++++++++++++++++++++++++---
+> >  3 files changed, 52 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/cxl/builtin.h b/cxl/builtin.h
+> > index 34c5cfb..ddc4da9 100644
+> > --- a/cxl/builtin.h
+> > +++ b/cxl/builtin.h
+> > @@ -23,4 +23,5 @@ int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+> >  int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
+> >  int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
+> >  int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
+> > +int cmd_inject_poison(int argc, const char **argv, struct cxl_ctx *ctx);
+> >  #endif /* _CXL_BUILTIN_H_ */
+> > diff --git a/cxl/cxl.c b/cxl/cxl.c
+> > index 3be7026..aa8d090 100644
+> > --- a/cxl/cxl.c
+> > +++ b/cxl/cxl.c
+> > @@ -77,6 +77,7 @@ static struct cmd_struct commands[] = {
+> >  	{ "disable-region", .c_fn = cmd_disable_region },
+> >  	{ "destroy-region", .c_fn = cmd_destroy_region },
+> >  	{ "monitor", .c_fn = cmd_monitor },
+> > +	{ "inject-poison", .c_fn = cmd_inject_poison },
+> >  };
+> >  
+> >  int main(int argc, const char **argv)
+> > diff --git a/cxl/memdev.c b/cxl/memdev.c
+> > index 0b3ad02..7a10f79 100644
+> > --- a/cxl/memdev.c
+> > +++ b/cxl/memdev.c
+> > @@ -34,6 +34,7 @@ static struct parameters {
+> >  	const char *type;
+> >  	const char *size;
+> >  	const char *decoder_filter;
+> > +	const char *poison_address;
+> >  } param;
+> >  
+> >  static struct log_ctx ml;
+> > @@ -85,6 +86,10 @@ OPT_STRING('t', "type", &param.type, "type",                   \
+> >  OPT_BOOLEAN('f', "force", &param.force,                        \
+> >  	    "Attempt 'expected to fail' operations")
+> >  
+> > +#define INJECT_POISON_OPTIONS()				\
+> > +OPT_STRING('a', "address", &param.poison_address, "dpa",	\
+> > +	   "DPA to inject poison")
+> > +
+> 
+> git clang-format doesn't like the above.
+> 
+> -#define INJECT_POISON_OPTIONS()                                \
+> -OPT_STRING('a', "address", &param.poison_address, "dpa",       \
+> -          "DPA to inject poison")
+> +#define INJECT_POISON_OPTIONS()                                  \
+> +       OPT_STRING('a', "address", &param.poison_address, "dpa", \
+> +                  "DPA to inject poison")
+> 
+> 
+> 
+
+Thank you for check and you're right, clang-format wants a different style 
+of macro definition. 
+Before defining them, I referred to the other macros in memdev.c
+(e.g. DPA_OPTIONS()) and found they were also not indented.
+Do you think that we have to modify them all?
+
+> >  static const struct option read_options[] = {
+> >  	BASE_OPTIONS(),
+> >  	LABEL_OPTIONS(),
+> > @@ -135,6 +140,12 @@ static const struct option free_dpa_options[] = {
+> >  	OPT_END(),
+> >  };
+> >  
+> > +static const struct option inject_poison_options[] = {
+> > +	BASE_OPTIONS(),
+> > +	INJECT_POISON_OPTIONS(),
+> > +	OPT_END(),
+> > +};
+> > +
+> >  enum reserve_dpa_mode {
+> >  	DPA_ALLOC,
+> >  	DPA_FREE,
+> > @@ -351,6 +362,24 @@ static int action_free_dpa(struct cxl_memdev *memdev,
+> >  	return __reserve_dpa(memdev, DPA_FREE, actx);
+> >  }
+> >  
+> > +static int action_inject_poison(struct cxl_memdev *memdev,
+> > +				struct action_context *actx)
+> > +{
+> > +	int rc;
+> > +
+> > +	if (!param.poison_address) {
+> > +		log_err(&ml, "%s: set dpa to inject poison.\n",
+> > +			cxl_memdev_get_devname(memdev));
+> > +		return -EINVAL;
+> > +	}
+> > +	rc = cxl_memdev_inject_poison(memdev, param.poison_address);
+> > +	if (rc < 0) {
+> > +		log_err(&ml, "%s: inject poison failed: %s\n",
+> > +			cxl_memdev_get_devname(memdev), strerror(-rc));
+> > +	}
+> > +	return rc;
+> > +}
+> > +
+> >  static int action_disable(struct cxl_memdev *memdev, struct action_context *actx)
+> >  {
+> >  	if (!cxl_memdev_is_enabled(memdev))
+> > @@ -755,7 +784,8 @@ static int memdev_action(int argc, const char **argv, struct cxl_ctx *ctx,
+> >  				continue;
+> >  			found = true;
+> >  
+> > -			if (action == action_write) {
+> > +			if ((action == action_write) ||
+> > +			    (action == action_inject_poison)) {
+> >  				single = memdev;
+> >  				rc = 0;
+> >  			} else
+> > @@ -771,9 +801,15 @@ static int memdev_action(int argc, const char **argv, struct cxl_ctx *ctx,
+> >  	}
+> >  	rc = err;
+> >  
+> > -	if (action == action_write) {
+> > +	if ((action == action_write) || (action == action_inject_poison)) {
+> >  		if (count > 1) {
+> > -			error("write-labels only supports writing a single memdev\n");
+> > +			if (action == action_write) {
+> > +				error("write-labels only supports writing "
+> > +				      "a single memdev\n");
+> > +			} else {
+> > +				error("inject-poison only supports injection "
+> > +				      "of poison into a single memdev\n");
+> > +			}
+> >  			usage_with_options(u, options);
+> >  			return -EINVAL;
+> >  		} else if (single) {
+> > @@ -893,3 +929,14 @@ int cmd_free_dpa(int argc, const char **argv, struct cxl_ctx *ctx)
+> >  
+> >  	return count >= 0 ? 0 : EXIT_FAILURE;
+> >  }
+> > +
+> > +int cmd_inject_poison(int argc, const char **argv, struct cxl_ctx *ctx)
+> > +{
+> > +	int count = memdev_action(
+> > +		argc, argv, ctx, action_inject_poison, inject_poison_options,
+> > +		"cxl inject-poison <memdev> -a <dpa> [<options>]");
+> > +	log_info(&ml, "inject-poison %d mem%s\n", count >= 0 ? count : 0,
+> > +		 count > 1 ? "s" : "");
+> > +
+> > +	return count >= 0 ? 0 : EXIT_FAILURE;
+> > +}
 > > -- 
 > > 2.34.1
 > > 
 
-------IPzR0Zmv7eUACe1AcPM4bhPiN.NxXwyEj5sj1OQa2HLEVOb4=_11d426_
+------mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_11cb0b_
 Content-Type: text/plain; charset="utf-8"
 
 
-------IPzR0Zmv7eUACe1AcPM4bhPiN.NxXwyEj5sj1OQa2HLEVOb4=_11d426_--
+------mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_11cb0b_--
