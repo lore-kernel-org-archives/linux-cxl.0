@@ -2,214 +2,88 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29276C64EC7
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01802C64EC7
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 05:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjB1Ef7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 23:35:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
+        id S229574AbjB1Fn6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Feb 2023 00:43:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjB1Ef6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:35:58 -0500
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6AC3252B8
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:35:55 -0800 (PST)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230228043552epoutp0170d13a3a4ce85e436621d93050fa9b83~H4vqnFFzL1883518835epoutp01g
-        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 04:35:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230228043552epoutp0170d13a3a4ce85e436621d93050fa9b83~H4vqnFFzL1883518835epoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677558952;
-        bh=qv9cPRK6mwicxtYCU4/a4VZVUqNsk0JediXpI7ocLn8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7P05FodAp29zVaNDVXQNbCxhkDyx/lDNo5KGVXp0rtdGLJ/zXCcI/f6ezwNsM4rV
-         zDAQNCtwr6CAjZVhTQonx+HFnfNdMxgKd2nQpkj7q9PTjP9rQjVpIgQj+FK0oJ2phF
-         8NjqrI6l6bBQBLBakTLErraiSO3eA/F8wQCLEbo4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228043552epcas2p1585a6e975c820132194c4e57d8f97a72~H4vqXVrtO0478604786epcas2p18;
-        Tue, 28 Feb 2023 04:35:52 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.91]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4PQl133QdVz4x9Ps; Tue, 28 Feb
-        2023 04:35:51 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AB.D4.05668.7A48DF36; Tue, 28 Feb 2023 13:35:51 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230228043551epcas2p3085444899b00b106c2901e1f51814d2c~H4vpW3Jkp2377223772epcas2p3k;
-        Tue, 28 Feb 2023 04:35:51 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230228043551epsmtrp1b07c7ee0f9c5f04d23e97493a894ebde~H4vpWDD8O2963529635epsmtrp1X;
-        Tue, 28 Feb 2023 04:35:51 +0000 (GMT)
-X-AuditID: b6c32a48-1f7ff70000021624-da-63fd84a7cb34
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        27.7F.17995.6A48DF36; Tue, 28 Feb 2023 13:35:50 +0900 (KST)
-Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
-        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230228043550epsmtip2fa4f49e6faf58c02ec9cb8464cdbe07f~H4vpJnfEE1945119451epsmtip2c;
-        Tue, 28 Feb 2023 04:35:50 +0000 (GMT)
-From:   Kyungsan Kim <ks0204.kim@samsung.com>
-To:     dan.j.williams@intel.com
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com
-Subject: RE: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Date:   Tue, 28 Feb 2023 13:35:50 +0900
-Message-Id: <20230228043550.88798-1-ks0204.kim@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <63fd39406c2dd_276522948@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S229534AbjB1Fn5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 00:43:57 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0906D1A4B8;
+        Mon, 27 Feb 2023 21:43:54 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4F8AB102F1753;
+        Tue, 28 Feb 2023 06:43:53 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 213C938176; Tue, 28 Feb 2023 06:43:53 +0100 (CET)
+Date:   Tue, 28 Feb 2023 06:43:53 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Alexey Kardashevskiy <aik@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v3 12/16] PCI/DOE: Create mailboxes on device enumeration
+Message-ID: <20230228054353.GA32202@wunner.de>
+References: <cover.1676043318.git.lukas@wunner.de>
+ <c3f9e24fffa318a045f89664fb9545099cb0d603.1676043318.git.lukas@wunner.de>
+ <bc150b29-ee21-b033-7d05-dd28dd7a1af4@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdljTTHd5y99kg52HJC2mH1a0mD71AqPF
-        +VmnWCz27D3JYnFvzX9Wi32v9zJbdGx4w+jA7vHvxBo2j8V7XjJ5bPo0id1j8o3ljB59W1Yx
-        enzeJBfAFpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuW
-        mQN0ipJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLxArzgxt7g0L10vL7XEytDA
-        wMgUqDAhO+PD+7dsBat0K/afn83WwHhKtYuRk0NCwETi1qk3jF2MXBxCAjsYJTqntzNBOJ8Y
-        Je5uPsgM4XxmlFjzu4ERpuXotU0sEIldjBLXtx1mg3C6mCS6p7xgBqliE9CW+HPlPBuILSIg
-        I7Hh/3awOLPAZkaJ41elQWxhAQeJExMhalgEVCWOn1gOVsMrYC2xbf0mVoht8hIzL31nB7E5
-        BTwkmvZ3QtUISpyc+YQFYqa8RPPW2WCnSgh8ZJd4+XEWVLOLxJojh6DOFpZ4dXwLO4QtJfGy
-        vw3KLpZ4/PoflF0icXjJbxYI21ji3c3nQHM4gBZoSqzfpQ9iSggoSxy5BbWWT6Lj8F92iDCv
-        REebEESjisT2fxCfgCw6vX8TVImHxP3WdEhIzWaU+P51MtsERoVZSJ6ZheSZWQh7FzAyr2IU
-        Sy0ozk1PLTYqMIFHcHJ+7iZGcMrU8tjBOPvtB71DjEwcjIcYJTiYlUR4F97+kyzEm5JYWZVa
-        lB9fVJqTWnyI0RQY1BOZpUST84FJO68k3tDE0sDEzMzQ3MjUwFxJnFfa9mSykEB6Yklqdmpq
-        QWoRTB8TB6dUA1P283KtpqRq5WkpN+u/NM2p6Z370norawD/lFBW3TsyerM+nn4gHihrcER/
-        kZn2Cc1J4Xoz5hezGRx93vzyS8w/oe5z2gdFLUQjLds9NvbvKu3+3Dd9YppdkxXDJ91fpXGZ
-        8h6vt4fburvmzihlk5qXt03w/d+szh3PTz7qXDxN7+ruyMhb/HK7ePL3Pn8RdklmqtIOX557
-        Xr42PzxrpW1WfV7xqVJNu1PsxJHYwNntnrabN67kN6hjmjlJ/G7mGUnW831/DBf53ugLa+eR
-        P+YRe9H5eLXfvI3zeCUXLVMoj71oaXbJOeuD4c91TpOUUpY03/XmXpXKWBbD/fqf26Miq19y
-        j/aISL3ycEyar8RSnJFoqMVcVJwIAOvRP3YiBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsWy7bCSvO6ylr/JBr/3WVhMP6xoMX3qBUaL
-        87NOsVjs2XuSxeLemv+sFvte72W26NjwhtGB3ePfiTVsHov3vGTy2PRpErvH5BvLGT36tqxi
-        9Pi8SS6ALYrLJiU1J7MstUjfLoEr48P7t2wFq3Qr9p+fzdbAeEq1i5GTQ0LAROLotU0sXYxc
-        HEICOxgl1u05ywqRkJJ4f7qNHcIWlrjfcoQVoqiDSWLH9ItsIAk2AW2JP1fOg9kiAjISG/5v
-        ZwYpYhbYySjRveo02CRhAQeJExMhilgEVCWOn1jODGLzClhLbFu/CWqbvMTMS9/BtnEKeEg0
-        7e8EquEA2uYuseSyMES5oMTJmU9YQGxmoPLmrbOZJzAKzEKSmoUktYCRaRWjZGpBcW56brFh
-        gVFearlecWJucWleul5yfu4mRnB4a2ntYNyz6oPeIUYmDsZDjBIczEoivAtv/0kW4k1JrKxK
-        LcqPLyrNSS0+xCjNwaIkznuh62S8kEB6YklqdmpqQWoRTJaJg1OqgenQzHjpV95b9/9puLnK
-        Risq73+lV+i0qaafZKslvmt/3HDT9XScir3x9ebpYmb7LqcFGzruNQ7zU/h3arW64kIf6Q0r
-        Hv/dKJngzH1B6YrnvZudz/KW/Uz9/Kp04oayfykTmX5oh+TeWv7lwkXfqc4TUtgVzpx2vz3n
-        m8+26sOlt2f4XZskv/RY0fxb23UMDwt2bDM7Z1Uv1m9WEsm8q6FRreRMecWUNrbXKotLnoYq
-        HVka43uazyOUvaIuge8TV4VYH+vfw9PmBy51l3mcIf/gV3bZi6bjx7M+i33rcpxX/lpd4tek
-        PVeVvdO5TTsTdQLWKL6O239AViCau6nzvee/hnp98aq1F2O28EtMKVViKc5INNRiLipOBAB+
-        a9f93gIAAA==
-X-CMS-MailID: 20230228043551epcas2p3085444899b00b106c2901e1f51814d2c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230228043551epcas2p3085444899b00b106c2901e1f51814d2c
-References: <63fd39406c2dd_276522948@dwillia2-xfh.jf.intel.com.notmuch>
-        <CGME20230228043551epcas2p3085444899b00b106c2901e1f51814d2c@epcas2p3.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bc150b29-ee21-b033-7d05-dd28dd7a1af4@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Thank you dan for kind reminder of the submission. 
-I filled out the form with topic suggestions and required attendees.
-Hopefully, we can elaborate the topics with wider opinions revisiting previous kernel designs related.
+On Tue, Feb 28, 2023 at 12:18:07PM +1100, Alexey Kardashevskiy wrote:
+> On 11/2/23 07:25, Lukas Wunner wrote:
+> > For the same reason a DOE instance cannot be shared between the PCI core
+> > and a driver.
+> 
+> And we want this sharing why? Any example will do. Thanks,
+
+The PCI core is going to perform CMA/SPDM authentication when a device
+gets enumerated (PCIe r6.0 sec 6.31).  That's the main motivation
+to lift DOE mailbox creation into the PCI core.  It's not mentioned
+here explicitly because I want the patch to stand on its own.
+CMA/SPDM support will be submitted separately.
+
+A driver that later on gets bound to the device should be allowed
+to talk to it via DOE as well, possibly even sharing the same DOE
+mailboxes used by the PCI core.
+
+Patches for CMA/SPDM are under development on this branch:
+
+https://github.com/l1k/linux/commits/doe
 
 
->Please be sure to log this in the submission spreadsheet as well. From the
->CFP:
->
->---
->
->1) Fill out the following Google form to request attendance and
->suggest any topics
->
->        https://forms.gle/VKVXjWGBHZbnsz226
->
->In previous years we have accidentally missed people's attendance
->requests because they either didn't cc lsf-pc@ or we simply missed them
->in the flurry of emails we get.  Our community is large and our
->volunteers are busy, filling this out will help us make sure we don't
->miss anybody.
->
->
->Kyungsan Kim wrote:
->> CXL is a promising technology that leads to fundamental changes in
->> computing architecture.  To facilitate adoption and widespread of CXL
->> memory, we are developing a memory tiering solution, called
->> SMDK[1][2].  Using SMDK and CXL RAM device, our team has been working
->> with industry and academic partners over last year.  Also, thanks to
->> many researcher's effort, CXL adoption stage is gradually moving
->> forward from basic enablement to real-world composite usecases.  At
->> this moment, based on the researches and experiences gained working on
->> SMDK, we would like to suggest a session at LSF/MM/BFP this year to
->> propose possible Linux MM changes with a brief of SMDK.
->>
->> Adam Manzanares kindly adviced me that it is preferred to discuss
->> implementation details on given problem and consensus at LSF/MM/BFP.
->> Considering the adoption stage of CXL technology, however, let me
->> suggest a design level discussion on the two MM expansions of SMDK
->> this year.  When we have design consensus with participants, we want
->> to continue follow-up discussions with additional implementation
->> details, hopefully.
->>
->> 
->> 1. A new zone, ZONE_EXMEM We added ZONE_EXMEM to manage CXL RAM
->> device(s), separated from ZONE_NORMAL for usual DRAM due to the three
->> reasons below.
->>
->> 1) a CXL RAM has many different characteristics with conventional DRAM
->> because a CXL device inherits and expands PCIe specification.  ex)
->> frequency range, pluggability, link speed/width negotiation,
->> host/device flow control, power throttling, channel-interleaving
->> methodology, error handling, and etc.  It is likely that the primary
->> usecase of CXL RAM would be System RAM.  However, to deal with the
->> hardware differences properly, different MM algorithms are needed
->> accordingly.
->>
->> 2) Historically, zone has been expanded by reflecting the evolution of
->> CPU, IO, and memory devices.  ex) ZONE_DMA(32), ZONE_HIGHMEM,
->> ZONE_DEVICE, and ZONE_MOVABLE.  Each zone applies different MM
->> algorithms such as page reclaim, compaction, migration, and
->> fragmentation.  At first, we tried reuse of existing zones,
->> ZONE_DEVICE and ZONE_MOVABLE, for CXL RAM purpose.  However, the
->> purpose and implementation of the zones are not fit for CXL RAM.
->>
->> 3) Industry is preparing a CXL-capable system that connects dozens of
->> CXL devices in a server system.  When a CXL device becomes a separate
->> node, an administrator/programmer needs to be aware of and manually
->> control all nodes using 3rd party software, such as numactl and
->> libnuma.  ZONE_EXMEM allows the assemble of CXL RAM devices into the
->> single ZONE_EXMEM zone, and provides an abstraction to userspace by
->> seamlessly managing the devices.  Also, the zone is able to interleave
->> assembled devices in a software way to lead to aggregated bandwidth.
->> We would like to suggest if it is co-existable with HW interleaving
->> like SW/HW raid0.  To help understanding, please refer to the node
->> partition part of the picture[3].
->>
->>
->> 2. User/Kernelspace Programmable Interface In terms of a memory
->> tiering solution, it is typical that the solution attempts to locate
->> hot data on near memory, and cold data on far memory as accurately as
->> possible.[4][5][6][7] We noticed that the hot/coldness of data is
->> determined by the memory access pattern of running application and/or
->> kernel context.  Hence, a running context needs a near/far memory
->> identifier to determine near/far memory.  When CXL RAM(s) is
->> manipulated as a NUMA node, a node id can be function as a CXL
->> identifier more or less.  However, the node id has limitation in that
->> it is an ephemeral information that dynamically varies according to
->> online status of CXL topology and system socket.  In this sense, we
->> provides programmable interfaces for userspace and kernelspace context
->> to explicitly (de)allocate memory from DRAM and CXL RAM regardless of
->> a system change.  Specifically, MAP_EXMEM and GFP_EXMEM flags were
->> added to mmap() syscall and kmalloc() siblings, respectively.
->>
->> Thanks to Adam Manzanares for reviewing this CFP thoroughly.
->>
->>
->> [1]SMDK: https://github.com/openMPDK/SMDK
->> [2]SMT: Software-defined Memory Tiering for Heterogeneous Computing systems with CXL Memory Expander, https://ieeexplore.ieee.org/document/10032695
->> [3]SMDK node partition: https://github.com/OpenMPDK/SMDK/wiki/2.-SMDK-Architecture#memory-partition
->> [4]TMO: Transparent Memory Offloading in Datacenters, https://dl.acm.org/doi/10.1145/3503222.3507731
->> [5]TPP: Transparent Page Placement for CXL-Enabled Tiered Memory, https://arxiv.org/abs/2206.02878
->> [6]Pond: CXL-Based Memory Pooling Systems for Cloud Platforms, https://dl.acm.org/doi/10.1145/3575693.3578835
->> [7]Hierarchical NUMA: https://blog.linuxplumbersconf.org/2017/ocw/system/presentations/4656/original/Hierarchical_NUMA_Design_Plumbers_2017.pdf
->
+> > Currently a DOE instance cannot be shared by multiple drivers because
+> > each driver creates its own pci_doe_mb struct for a given DOE instance.
+> 
+> Sorry for my ignorance but why/how/when would a device have multiple drivers
+> bound? Or it only one driver at the time but we also want DOE MBs to survive
+> switching to another (different or newer) driver?
+
+Conceivably, a driver may have the need to talk to multiple devices
+via DOE, even ones it's not bound to.  (E.g. devices in its ancestry
+or children.)
+
+Thanks,
+
+Lukas
