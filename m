@@ -2,131 +2,74 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3916CC64EC7
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 11:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30DFC64ED6
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 11:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbjB1LNX convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Feb 2023 06:13:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35296 "EHLO
+        id S230251AbjB1Lj3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Feb 2023 06:39:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230160AbjB1LNW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 06:13:22 -0500
+        with ESMTP id S229591AbjB1Lj2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 06:39:28 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61835193F1
-        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 03:13:21 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PQvBG6Y5pz688J2;
-        Tue, 28 Feb 2023 18:44:22 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 28 Feb
- 2023 10:49:17 +0000
-Date:   Tue, 28 Feb 2023 10:49:16 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     =?ISO-8859-1?Q?J=F8rgen?= Hansen <Jorgen.Hansen@wdc.com>
-CC:     Gregory Price <gregory.price@memverge.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC] CXL: TCG/KVM instruction alignment issue discussion
- default
-Message-ID: <20230228104916.00003d9a@Huawei.com>
-In-Reply-To: <b066510e-8420-26ba-019b-fef2b255634e@wdc.com>
-References: <Y/Cm5nuJl3G2CG2p@memverge.com>
-        <b066510e-8420-26ba-019b-fef2b255634e@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CDA3211C0
+        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 03:39:27 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PQwJ625qzz6J7dJ;
+        Tue, 28 Feb 2023 19:34:30 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 28 Feb 2023 11:39:24 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>
+CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH] MAINTAINERS: Add Fan Ni as Compute eXpress Link QEMU reviewer
+Date:   Tue, 28 Feb 2023 11:39:26 +0000
+Message-ID: <20230228113926.11485-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 27 Feb 2023 11:06:47 +0000
-Jørgen Hansen <Jorgen.Hansen@wdc.com> wrote:
+Fan Ni has offered to help out with QEMU CXL emulation reviewing.
+Add him as a designated reviewer.
 
-> On 2/18/23 11:22, Gregory Price wrote:
-> > Breaking this off into a separate thread for archival sake.
-> > 
-> > There's a bug with handling execution of instructions held in CXL
-> > memory - specifically when an instruction crosses a page boundary.
-> > 
-> > The result of this is that type-3 devices cannot use KVM at all at the
-> > moment, and require the attached patch to run in TCG-only mode.
-> > 
-> > 
-> > CXL memory devices are presently emulated as MMIO, and MMIO has no
-> > coherency guarantees, so TCG doesn't cache the results of translating
-> > an instruction, meaning execution is incredibly slow (orders of
-> > magnitude slower than KVM).
-> > 
-> > 
-> > Request for comments:
-> > 
-> > 
-> > First there's the stability issue:
-> > 
-> > 0) TCG cannot handle instructions across a page boundary spanning ram and
-> >     MMIO. See attached patch for hotfix.  This basically solves the page
-> >     boundary issue by reverting the entire block to MMIO-mode if the
-> >     problem is detected.
-> > 
-> > 1) KVM needs to be investigated.  It's likely the same/similar issue,
-> >     but it's not confirmed.  
-> 
-> I ran into an issue with KVM as well. However, it wasn't a page boundary 
-> spanning issue, since I could hit it when using pure CXL backed memory 
-> for a given application. It turned out that (at least) certain AVX 
-> instructions didn't handle execution from MMIO when using qemu. This 
-> generated an illegal instruction exception for the application. At that 
-> point, I switched to tcg, so I didn't investigate if running a non-AVX 
-> system would work with KVM.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Short term I'm wondering if we should attempt to error out on KVM
-unless some override parameter is used alongside the main cxl=on
+--
+Thanks to Fan for stepping up after I requested help following Ben
+stepping down as co-maintainer. Fan base been active in testing
+and review recently so great to have Fan on board.
 
-> 
-> > Second there's the performance issue:
-> > 
-> > 0) Do we actually care about performance? How likely are users to
-> >     attempt to run software out of CXL memory?
-> > 
-> > 1) If we do care, is there a potential for converting CXL away from the
-> >     MMIO design?  The issue is coherency for shared memory. Emulating
-> >     coherency is a) hard, and b) a ton of work for little gain.
-> > 
-> >     Presently marking CXL memory as MMIO basically enforces coherency by
-> >     preventing caching, though it's unclear how this is enforced
-> >     by KVM (or if it is, i have to imagine it is).   
-> 
-> Having the option of doing device specific processing of accesses to a 
-> CXL type 3 device (that the MMIO based access allows) is useful for 
-> experimentation with device functionality, so I would be sad to see that 
-> option go away. Emulating cache line access to a type 3 device would be 
-> interesting, and could potentially be implemented in a way that would 
-> allow caching of device memory in a shadow page in RAM, but that it a 
-> rather large project.
+Based on patch [PATCH] MAINTAINERS: Remove CXL maintainer Ben Widawsky
 
-Absolutely agree.  Can sketch a solution that is entirely in QEMU and
-works with KVM on a white board, but it doesn't feel like a small job
-to actually implement it and I'm sure there are nasty corners
-(persistency is going to be tricky) 
+Based-of: Message-id: 20230220212437.1462314-1-armbru@redhat.com
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-If anyone sees this as a 'fun challenge' and wants to take it on though
-that would be great!
-
-Jonathan
-
-> 
-> > It might be nice to solve this for non-shared memory regions, but
-> > testing functionality >>> performance at this point so it might not
-> > worth the investment.  
-> 
-> Thanks,
-> Jorgen
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7ea56c6ccc..838e1a91a4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2633,6 +2633,7 @@ T: git https://gitlab.com/vsementsov/qemu.git block
+ 
+ Compute Express Link
+ M: Jonathan Cameron <jonathan.cameron@huawei.com>
++R: Fan Ni <fan.ni@samsung.com>
+ S: Supported
+ F: hw/cxl/
+ F: hw/mem/cxl_type3.c
+-- 
+2.37.2
 
