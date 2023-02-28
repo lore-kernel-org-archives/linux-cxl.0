@@ -2,153 +2,267 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F1EC64ED6
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 17:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C2EC64ED6
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 17:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjB1RAf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Feb 2023 12:00:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58958 "EHLO
+        id S229520AbjB1R2c (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Feb 2023 12:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjB1RAe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 12:00:34 -0500
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CCBD2CC49
-        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 09:00:27 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230228170025usoutp012d5ca4fe26e677040d7901bb9a6228f7~IC5vtJC2a0932909329usoutp01g;
-        Tue, 28 Feb 2023 17:00:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230228170025usoutp012d5ca4fe26e677040d7901bb9a6228f7~IC5vtJC2a0932909329usoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677603625;
-        bh=IqScxJE99n4blcyyLCbXcS9MbXRjqVp9lQNIvPAfyXc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=M4VwuUwprPxy71FxQbyEwm6yLd4lZFUrAgoTegIL0s8F+GiGlh4g2o+hQxhEiWzl9
-         UzCNpgEBwNXJ2vGgW/PpVSmB0Tgfe4na7pnz3QZA5XMsBFkvh4EXL3nnmfLQckwfiw
-         un4pgFjq4wcqohWaXfXYUnez4XrY9Y2YK2/5hw9w=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230228170025uscas1p234a9e8e6ee43bab7ae67bebc80cbe8ce~IC5vlCA7R1230812308uscas1p2p;
-        Tue, 28 Feb 2023 17:00:25 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id 6F.8D.06976.9233EF36; Tue,
-        28 Feb 2023 12:00:25 -0500 (EST)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228170025uscas1p1c55a57da5ce4c235cfa2176d65b53123~IC5vScb7Z1704217042uscas1p1N;
-        Tue, 28 Feb 2023 17:00:25 +0000 (GMT)
-X-AuditID: cbfec36d-afdff70000011b40-ed-63fe33298f1e
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id CA.42.17110.8233EF36; Tue,
-        28 Feb 2023 12:00:24 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 28 Feb 2023 09:00:23 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        28 Feb 2023 09:00:23 -0800
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>
-Subject: Re: [PATCH] MAINTAINERS: Add Fan Ni as Compute eXpress Link QEMU
- reviewer
-Thread-Topic: [PATCH] MAINTAINERS: Add Fan Ni as Compute eXpress Link QEMU
-        reviewer
-Thread-Index: AQHZS2lgeMHM3Cd7ME6AU/PeNBpw6q7lG5AA
-Date:   Tue, 28 Feb 2023 17:00:23 +0000
-Message-ID: <20230228170007.GA1344259@bgt-140510-bm03>
-In-Reply-To: <20230228113926.11485-1-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <079B2C711B434043BB8C0C9B8D7C71E5@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229635AbjB1R2a (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 12:28:30 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02B61E1DC
+        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 09:28:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677605308; x=1709141308;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7u2e5ZdUrxxj3A0Fs5cHBpKSd//x5dSo3IoLacMmaUI=;
+  b=R2xQlrwtWNZXAP2h7oYr2VQ97Eg9LGdmSEVaV4UGqf9Qs+mH02Og9Nop
+   IMut51nqJ7cwFPObh9pKqFs9rieZKxgi9Dgo79sEQB5KBEj1V60xpVSbu
+   lAiy+U5Q+oe82YZ+sSdEkNlcM3uhxIe+3INDTZZlmLAiB0YfnuGUFe2Q1
+   ziCMN203nf2TTY2HeH9nE8wODgxESxDaZc6M8jSbntx0h5wAfkn67rqpB
+   vK351eJ0B92+U6+QYY0qq728jS+a7L3G1cHzMIXoLUQxFdgScwetfu/vv
+   nb+p+DDws+q5hVxAvDB8Tq9ZUMgbli6MLoPsyw+ZPUdZkNqx8+3JfA7c/
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="332927983"
+X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
+   d="scan'208";a="332927983"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 09:28:28 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="783948486"
+X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
+   d="scan'208";a="783948486"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.1.236]) ([10.212.1.236])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 09:28:28 -0800
+Message-ID: <7333903c-4ef9-6f1f-9767-e32f228149b3@intel.com>
+Date:   Tue, 28 Feb 2023 10:28:27 -0700
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djXc7qaxv+SDfomCVvMX3ufxWL1zTWM
-        FqsWXmOzOD/rFIvF4Y1nmCz+/3rFanG8dweLA7tHy5G3rB5Prm1m8ni/7yqbx9TZ9R6fN8kF
-        sEZx2aSk5mSWpRbp2yVwZRyeu4Kl4DtnxYIPT1kaGBdwdDFyckgImEhs2HuRsYuRi0NIYCWj
-        xKzju5kgnFYmiXMLvjLCVDV+Ps8CkVjLKNH59jhUyydGibNHm1ghnGWMEpeXP2ABaWETUJTY
-        17WdDcQWETCSeHdjElgHs8B+Jol3u28xgSSEBUIknjZfY4QoCpVounmSFabh+4FFYDUsAqoS
-        b6e8AIvzCphJPOycA2ZzCjhKbDkEUcMoICbx/dQaMJtZQFzi1pP5TBB3C0osmr2HGcIWk/i3
-        6yEbhK0ocf/7S3aIeh2JBbs/sUHYdhJ7t61ggbC1JZYtfM0MsVdQ4uTMJywQvZISB1fcAIeF
-        hMAVDonmv5OAHA4gx0Xi/nVXiBppib93lzFBhJMlVn3kggjnSMxfsgVqjLXEwj/rmSYwqsxC
-        cvUsJBfNQnLRLCQXzUJy0QJG1lWM4qXFxbnpqcWGeanlesWJucWleel6yfm5mxiB6en0v8O5
-        Oxh33Pqod4iRiYPxEKMEB7OSCO/C23+ShXhTEiurUovy44tKc1KLDzFKc7AoifMa2p5MFhJI
-        TyxJzU5NLUgtgskycXBKNTDx+mgvU025xW/VJjbv2v7EVOm2GalhRXedv1i6z1+4Pu26j/OR
-        a+pRn1oPLF6nJCj03Hjh4ehpwvzewc13eY37I42Sgsw3Ti/ct1tun7SN+8Zu+d6ks+f8dQ7+
-        XcjwQfo0r3ye5ba7m813yPrcq961T2aCVbVWzLt+3YliS75xvr5j8IBp8vwZs8s/7f/0xmTt
-        vq2T1qSE3nH1rrifZhgpPdXnvsvEW2xVl3h2SR7bkOkdkv24rWN6241ctZmh1x5crctLebZH
-        9Z1by7u3k07c2Cu1nuXglDONdzdNP7dA9nCh/9ZTVxcE7dv8K1oyZfffdR27n/FVc1g91noY
-        Gt3Ptl3K7nJB8u+r5rOOmn6RVGIpzkg01GIuKk4EAOZ336O+AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsWS2cA0SVfD+F+yQdsJa4v5a++zWKy+uYbR
-        YtXCa2wW52edYrE4vPEMk8X/X69YLY737mBxYPdoOfKW1ePJtc1MHu/3XWXzmDq73uPzJrkA
-        1igum5TUnMyy1CJ9uwSujMNzV7AUfOesWPDhKUsD4wKOLkZODgkBE4nGz+dZQGwhgdWMEitf
-        23YxcgHZnxglur/1MEM4yxgltjQtZgepYhNQlNjXtZ0NxBYRMJJ4d2MSI0gRs8B+Jol3u28x
-        gSSEBUIknjZfY4QoCpXY/GwVO0zD9wOLwGpYBFQl3k55wQpi8wqYSTzsnMMKsW0Ko0T77Edg
-        N3EKOEpsOQTRwCggJvH91Bowm1lAXOLWk/lMED8ISCzZc54ZwhaVePn4HyuErShx//tLdoh6
-        HYkFuz+xQdh2Enu3rWCBsLUlli18zQxxhKDEyZlPWCB6JSUOrrjBMoFRYhaSdbOQjJqFZNQs
-        JKNmIRm1gJF1FaN4aXFxbnpFsVFearlecWJucWleul5yfu4mRmB0n/53OHoH4+1bH/UOMTJx
-        MB5ilOBgVhLhXXj7T7IQb0piZVVqUX58UWlOavEhRmkOFiVx3pdRE+OFBNITS1KzU1MLUotg
-        skwcnFINTFxFrB8ajT1FS1vsj+3/ZLfAPPZogFD9saNf9rBIKfLLHkmY46/7oyEvZ9kRdm7V
-        TQaqXv9Ffsl/3f0/b/pGzh+8sS//PZI5OfG7xV2Nt/bb57MUvruxpHiBTtOh0sP8jassTqzc
-        +P1u18mWiYy7vUwTLu57ItmjLtatNP1uvMvSSe/ufmhNkPfjnyGgeTVo1l57xnsTuLfHrNgT
-        LaZRO7/pGcu5G/znfW9mcU5YdN5P7YTGm8yQF+sTPq+bns7JclD2jHNL/jYlJ9FP5zL/zVph
-        3f52caXY7DNxq66zxQbkxmw/zN4tXaq79C+zf/IWp4eOqaoftNdHv+a1Mf7idm6GRXmzhNuO
-        dVHmbI+Dq5RYijMSDbWYi4oTASfw61NdAwAA
-X-CMS-MailID: 20230228170025uscas1p1c55a57da5ce4c235cfa2176d65b53123
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228113930uscas1p1ee175978a900da78cf499695e7701e0f
-References: <CGME20230228113930uscas1p1ee175978a900da78cf499695e7701e0f@uscas1p1.samsung.com>
-        <20230228113926.11485-1-Jonathan.Cameron@huawei.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 4/7] cxl/mem: Support Sanitation
+Content-Language: en-US
+To:     Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
+Cc:     jonathan.cameron@huawei.com, ira.weiny@intel.com,
+        fan.ni@samsung.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org
+References: <20230224194652.1990604-1-dave@stgolabs.net>
+ <20230224194652.1990604-5-dave@stgolabs.net>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230224194652.1990604-5-dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Feb 28, 2023 at 11:39:26AM +0000, Jonathan Cameron wrote:
-> Fan Ni has offered to help out with QEMU CXL emulation reviewing.
-> Add him as a designated reviewer.
->=20
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->=20
 
-Acked-by: Fan Ni <fan.ni@samsung.com>
 
-> --
-> Thanks to Fan for stepping up after I requested help following Ben
-> stepping down as co-maintainer. Fan base been active in testing
-> and review recently so great to have Fan on board.
->=20
-> Based on patch [PATCH] MAINTAINERS: Remove CXL maintainer Ben Widawsky
->=20
-> Based-of: Message-id: 20230220212437.1462314-1-armbru@redhat.com
+On 2/24/23 12:46 PM, Davidlohr Bueso wrote:
+> Implement support for the non-pmem exclusive sanitize (aka overwrite),
+> per CXL specs. This is the baseline for the sanitize-on-release
+> functionality.
+> 
+> To properly support this feature, create a 'security/sanitize' sysfs
+> file that when read will list the current pmem security state and
+> when written to, perform the requested operation.
+
+I think this segment needs to be updated? The attrib is write only from 
+the code below.
+
+DJ
+
+> 
+> This operation can run in the background and the driver must wait
+> for completion (no timeout), where the poller will awake every
+> ~10 seconds (this could be further based on the size of the device).
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7ea56c6ccc..838e1a91a4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2633,6 +2633,7 @@ T: git https://urldefense.com/v3/__https://gitlab.c=
-om/vsementsov/qemu.git__;!!EwVzqGoTKBqv-0DWAJBm!UcJW-DGImFKtSoRVFI1IzD3TFOp=
-kBbeSwsmRlUdUKPdhiOMXbTFOABJvxDRBLgLAEt0RvW0cdBG19HgqiR_VceRIA91N$  block
-> =20
->  Compute Express Link
->  M: Jonathan Cameron <jonathan.cameron@huawei.com>
-> +R: Fan Ni <fan.ni@samsung.com>
->  S: Supported
->  F: hw/cxl/
->  F: hw/mem/cxl_type3.c
-> --=20
-> 2.37.2
-> =
+>   Documentation/ABI/testing/sysfs-bus-cxl | 14 ++++++
+>   drivers/cxl/core/mbox.c                 | 61 +++++++++++++++++++++++++
+>   drivers/cxl/core/memdev.c               | 39 ++++++++++++++++
+>   drivers/cxl/cxlmem.h                    |  2 +
+>   4 files changed, 116 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index e9c432a5a841..b315d78b7e91 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -66,6 +66,20 @@ Description:
+>   		are available: frozen, locked, unlocked and disabled (which
+>   		is also the case for any unsupported security features).
+>   
+> +What:          /sys/bus/cxl/devices/memX/security/sanitize
+> +Date:          February, 2023
+> +KernelVersion: v6.4
+> +Contact:       linux-cxl@vger.kernel.org
+> +Description:
+> +	       (WO) Write a boolean 'true' string value to this attribute to
+> +	       sanitize the device to securely re-purpose or decommission it.
+> +	       This is done by ensuring that all user data and meta-data,
+> +	       whether it resides in persistent capacity, volatile capacity,
+> +	       or the LSA, is made permanently unavailable by whatever means
+> +	       is appropriate for the media type. This causes all CPU caches
+> +	       to be flushed. If this sysfs entry is not present then the
+> +	       architecture does not support security features.
+> +
+>   What:		/sys/bus/cxl/devices/*/devtype
+>   Date:		June, 2021
+>   KernelVersion:	v5.14
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index f2addb457172..885de3506735 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1,6 +1,7 @@
+>   // SPDX-License-Identifier: GPL-2.0-only
+>   /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>   #include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/memregion.h>
+>   #include <linux/security.h>
+>   #include <linux/debugfs.h>
+>   #include <linux/ktime.h>
+> @@ -1021,6 +1022,66 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
+>   
+> +/**
+> + * cxl_mem_sanitize() - Send sanitation (aka overwrite) command to the device.
+> + * @cxlds: The device data for the operation
+> + *
+> + * Return: 0 if the command was executed successfully, regardless of
+> + * whether or not the actual security operation is done in the background.
+> + * Upon error, return the result of the mailbox command or -EINVAL if
+> + * security requirements are not met. CPU caches are flushed before and
+> + * after succesful completion of each command.
+> + *
+> + * See CXL 3.0 @8.2.9.8.5.1 Sanitize.
+> + */
+> +int cxl_mem_sanitize(struct cxl_dev_state *cxlds)
+> +{
+> +	int rc;
+> +	u32 sec_out = 0;
+> +	struct cxl_get_security_output {
+> +		__le32 flags;
+> +	} out;
+> +	struct cxl_mbox_cmd sec_cmd = {
+> +		.opcode = CXL_MBOX_OP_GET_SECURITY_STATE,
+> +		.payload_out = &out,
+> +		.size_out = sizeof(out),
+> +	};
+> +	struct cxl_mbox_cmd mbox_cmd = {
+> +		.opcode = CXL_MBOX_OP_SANITIZE,
+> +		.poll_interval = 10000UL,
+> +	};
+> +
+> +	if (!cpu_cache_has_invalidate_memregion())
+> +		return -EINVAL;
+> +
+> +	rc = cxl_internal_send_cmd(cxlds, &sec_cmd);
+> +	if (rc < 0) {
+> +		dev_err(cxlds->dev, "Failed to get security state : %d", rc);
+> +		return rc;
+> +	}
+> +
+> +	/*
+> +	 * Prior to using these commands, any security applied to
+> +	 * the user data areas of the device shall be DISABLED (or
+> +	 * UNLOCKED for secure erase case).
+> +	 */
+> +	sec_out = le32_to_cpu(out.flags);
+> +	if (sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET)
+> +		return -EINVAL;
+> +
+> +	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +
+> +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> +	if (rc < 0) {
+> +		dev_err(cxlds->dev, "Failed to sanitize device : %d", rc);
+> +		return rc;
+> +	}
+> +
+> +	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_mem_sanitize, CXL);
+> +
+>   static int add_dpa_res(struct device *dev, struct resource *parent,
+>   		       struct resource *res, resource_size_t start,
+>   		       resource_size_t size, const char *type)
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 68c0ab06b999..a1bb095d081c 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -127,6 +127,34 @@ static ssize_t security_state_show(struct device *dev,
+>   static struct device_attribute dev_attr_security_state =
+>   	__ATTR(state, 0444, security_state_show, NULL);
+>   
+> +static ssize_t security_sanitize_store(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       const char *buf, size_t len)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	ssize_t rc;
+> +	bool sanitize;
+> +
+> +	rc = kstrtobool(buf, &sanitize);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (sanitize) {
+> +		if (cxl_memdev_active_region(cxlmd))
+> +			return -EBUSY;
+> +
+> +		rc = cxl_mem_sanitize(cxlds);
+> +	}
+> +
+> +	if (rc == 0)
+> +		rc = len;
+> +	return rc;
+> +}
+> +
+> +static struct device_attribute dev_attr_security_sanitize =
+> +	__ATTR(sanitize, 0200, NULL, security_sanitize_store);
+> +
+>   static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+>   			   char *buf)
+>   {
+> @@ -188,11 +216,22 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
+>   
+>   static struct attribute *cxl_memdev_security_attributes[] = {
+>   	&dev_attr_security_state.attr,
+> +	&dev_attr_security_sanitize.attr,
+>   	NULL,
+>   };
+>   
+> +static umode_t cxl_security_visible(struct kobject *kobj,
+> +				    struct attribute *a, int n)
+> +{
+> +	if (!cpu_cache_has_invalidate_memregion() &&
+> +	    a == &dev_attr_security_sanitize.attr)
+> +		return 0;
+> +	return a->mode;
+> +}
+> +
+>   static struct attribute_group cxl_memdev_security_attribute_group = {
+>   	.name = "security",
+> +	.is_visible = cxl_security_visible,
+>   	.attrs = cxl_memdev_security_attributes,
+>   };
+>   
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 4e31f3234519..0d2009b36933 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -631,6 +631,8 @@ static inline void cxl_mem_active_dec(void)
+>   }
+>   #endif
+>   
+> +int cxl_mem_sanitize(struct cxl_dev_state *cxlds);
+> +
+>   struct cxl_hdm {
+>   	struct cxl_component_regs regs;
+>   	unsigned int decoder_count;
