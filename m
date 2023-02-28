@@ -2,48 +2,48 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B33C64ED6
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 01:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFB5C7EE23
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 02:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjB1Bpv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 20:45:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48502 "EHLO
+        id S229524AbjB1CyU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 21:54:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjB1Bpu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 20:45:50 -0500
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2076.outbound.protection.outlook.com [40.107.212.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EEF21A3F;
-        Mon, 27 Feb 2023 17:45:48 -0800 (PST)
+        with ESMTP id S229491AbjB1CyT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 21:54:19 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2085.outbound.protection.outlook.com [40.107.244.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033471E9D4;
+        Mon, 27 Feb 2023 18:54:00 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ArV+l/FHX1YvsBd85wsMkcZ0RQIKnk6pVjSC51fQuy7vzvt8nZO8p+QDDqhfawmfnoEUoDX4h0IlRcVa+dxpDizSaJ2/OqjUe+A19cDXLmLHTRCStGnpmYFazudq7ObghggvUlkVzr56qdcRU4Mj2SYWFLDhEyYkXlsscAePc4tP04d3g8qXfNFUJsdi1BR7ppGOyUoZMCr3+yb88/u8/CvFinOxG81dFtMBaBB/va54sY03tehQWXCrInbD1rZeq7Mves2crwIki9QZpR2LlENhl0s/TUtzlvj0FBxsOSXEYXKX96dyIcJQXO966nzXvxo/ploEu+90Ax7LlN+yyQ==
+ b=gh1mHvKme6Q4i+oFJ3jYndTnQVekLBMh6Bi6semBrX0kBOkfhYCHx4x+Rx9BzFC2fH1MsoScbnUqdlNqxCkJyPW8gswZg6bN3TLK4FF3Y5SFSk2USP/cMHQYhOs0Ag+p+wW1m7ZEF7/kd8xvrYHbSh40GPJSVcfmY7Z663JnvIH0ThGT2WzFz9M4DuWEDpQeMrean0wTkQhNfts8WshrA5OxrHcTfEDHp9kFYj/kFYAYWrLZ8qGQQ0NBb4lMqulbscAtrMaqSEF9sYd0LjFLYLyQBKCDT8a4O0alNyhQxPXYVuFzG08wBpTNSyo+nc3XY+CKOOfUy1EeTdfVZmViAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RqCI9/C/RwjUDzCiNedwrmi65JdKR7UYg/33h8ey9ec=;
- b=ADznx0Rl2ECEX5EBjEGIqM976kJ6YyXKvxMqpF8nW8+wTBkEAbFNlDWWIo+68l9Ym3P6wuQC2OfoH3rgRONXEpKT4PocraTIMgQG8WbBjY771/IO2OTQaz/hjwnUgKVJr6fdJnd9eQ7ZmqAGhq26rWzVdzGcvO51IjT2tvHpf/fSX7l/fmp8ig0f9H1J++R/OFvDbRv/wwHAvO9A4nhTV7Owq2mBWXUaQAsUXytOq4k6psw0WhSEf2kj8HlMVQPcaeaZnhUo7hhA0kBfv+ZAdiAU7WaRiYQxWRS62L2U5Py+qhYDPWa8N3y/oR0QkfoMYm6BEhhW98lb4qul3N0w5A==
+ bh=0XOh36W/JRNjEzqaiFqfCjlp6y4DLfE0hTGwK4DC8oU=;
+ b=S6/7ish47csoAddCWLnFuQYBc9+Wm19y88vx6nVI9Z8Rg+cDkOb1uJGnNgAg13QTetzYk77LiKZIpfwhSPTGIL0ss+hNZLcE3H6HL4OB3Bghjd3MWISiBxFlwRUUBxVLcfYODIJm2vp1ZOY9oELjuAjaCoU+XnLiMj3EcBMNrCCGHZYDNalIuhu3WPfKHaNVzRcbPQwQTvKTdPUazHpFzTZvzWLttwW7jtSsp3HtKx9hz0fYu+2/Qq16zWNmHi1MqGgJTTTZqjQjWqJj6QTCkjEz5+7QeJHtq9cxu13x7X7s3XmFJWQpequlecDsKy8xoo2XtlRdkJ3aJkT2WcAkJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RqCI9/C/RwjUDzCiNedwrmi65JdKR7UYg/33h8ey9ec=;
- b=UBqi2/2XcwOu20OZebxPWdHuplsesAFeQTd0WJRhlKiCHX7flH7qSld12Z4oL02vpysa4r7uYk2VlkIyaFqsBD7P52UvqBnwrKottnL8Kd1g2quh1qNAN8rA2ZsfyEPcEWtByCbfUCdTqHvEYq2W+W9nuylDwloPfgr/8iItnRQ=
+ bh=0XOh36W/JRNjEzqaiFqfCjlp6y4DLfE0hTGwK4DC8oU=;
+ b=Edek+OQsJ2i5wbJtK0w++wEOwV3tmhPf8+JK23O0mdd+hGkQNDPyCcoYGuI2tUUSh6nE77f9WJXYYCE+no5O7JuMkrB2rPzTS0a1c3fDbRGHi3w3cRqvIwF4L3WqsbLJVJ9oAZBbJ7F9+IFQNEZNX6+bnGuyX0rDWnOGX1Dl9DM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB2843.namprd12.prod.outlook.com (2603:10b6:5:48::24) by
- MN2PR12MB4358.namprd12.prod.outlook.com (2603:10b6:208:24f::12) with
+ IA1PR12MB7565.namprd12.prod.outlook.com (2603:10b6:208:42f::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.21; Tue, 28 Feb
- 2023 01:45:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.29; Tue, 28 Feb
+ 2023 02:53:58 +0000
 Received: from DM6PR12MB2843.namprd12.prod.outlook.com
  ([fe80::1185:1d60:8b6e:89d3]) by DM6PR12MB2843.namprd12.prod.outlook.com
  ([fe80::1185:1d60:8b6e:89d3%7]) with mapi id 15.20.6134.029; Tue, 28 Feb 2023
- 01:45:46 +0000
-Message-ID: <10f9baf4-7fdf-b105-9222-5a1df59e2993@amd.com>
-Date:   Tue, 28 Feb 2023 12:45:33 +1100
+ 02:53:57 +0000
+Message-ID: <ccfc3dcd-a52b-7649-fa8e-89a6ac7ebb3c@amd.com>
+Date:   Tue, 28 Feb 2023 13:53:46 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH v3 16/16] cxl/pci: Rightsize CDAT response allocation
+Subject: Re: [PATCH v3 01/16] cxl/pci: Fix CDAT retrieval on big endian
 Content-Language: en-US
 To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
         linux-pci@vger.kernel.org
@@ -58,112 +58,273 @@ Cc:     Gregory Price <gregory.price@memverge.com>,
         Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
         linux-cxl@vger.kernel.org
 References: <cover.1676043318.git.lukas@wunner.de>
- <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
+ <bbbe1c4f3788052865941572565aeb2be67a6770.1676043318.git.lukas@wunner.de>
 From:   Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
+In-Reply-To: <bbbe1c4f3788052865941572565aeb2be67a6770.1676043318.git.lukas@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SYBPR01CA0068.ausprd01.prod.outlook.com
- (2603:10c6:10:2::32) To DM6PR12MB2843.namprd12.prod.outlook.com
+X-ClientProxiedBy: SYBPR01CA0163.ausprd01.prod.outlook.com
+ (2603:10c6:10:d::31) To DM6PR12MB2843.namprd12.prod.outlook.com
  (2603:10b6:5:48::24)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2843:EE_|MN2PR12MB4358:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5546dfd6-ca94-4da0-5925-08db192d82dd
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2843:EE_|IA1PR12MB7565:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb097f99-3cc8-4cc6-b6f7-08db19370972
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7n6CPMnZP5Heneum+/rCdezyAA/R5ZvAYUT7GvMOEXeG3XPmEtu+3TzoZxvS/B3lndDOsy/O5w0GYxdu8+HsY3AffYHlKzktTlM3Zdeh0O5eDJberbXePcH5l4S7RQ1XyQsfoL5l5QLkxbunPVK7+eH0BoNevNsmZaMGzgeUfhSs967BSU65mxDIInXhZpiIZ447bHwilJJWzg9G2lVvdHlRdHu7++/iJ45ZZ/ZU7cmfMUcOQpsFooP7CPABl2rE/8fVLLKJ/jPGxD9RJUMMiqbHYKvy+yPu4iCypMvy5VnJLSifn/BgnpOP/PLadqPBWDEpQLUpFnl84qcnx/gFJ2RdbbtCmMUb+o2800jE7fCS9BmqL04T+DwfYr1ED7bDIfT6LC/IO/YjsqvMhsX+1IuAFC61ul8DWpSZ+MQf17Mpc+lg0rEbxdYT1BNBELvxtntUuggBkDBRRpCE+AzeXW8Oah/AqtEWqEuq3hC1Y5OSveAhw37KAMNuEu48SanAwTf/2flF+QVKkkLfIOG33JJ80ehsnNM+7Zyd3d3tS7aN2I4U/s767gI9QWb4nII4tWkPrJ0XvpnxEiQ9x0ybuA+DVeDb4gBD2YuErjj/I8gn1YvZylMXhhsr8xz/E/wqV9yXMz4gPFZ3Eupconro2o3w3ugJQqKpod/GqHFm/ew+yQmx3GlSFjHhsZoE0Lst9UCWh5KdTNzfI7kR/FZi8L4ngIlu3w8F9uz/yQh2hnI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2843.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(346002)(366004)(376002)(396003)(39860400002)(451199018)(2616005)(66946007)(41300700001)(83380400001)(26005)(31696002)(478600001)(38100700002)(8676002)(8936002)(186003)(54906003)(5660300002)(4326008)(7416002)(110136005)(6512007)(6506007)(66556008)(6486002)(36756003)(66476007)(53546011)(31686004)(2906002)(6666004)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: mdIRDRpnfR+yvir0k+V9mJ7lGiK0lhYiP4NCoa/ok+CFVtLp4mDPSU9U1T+nmdWu8U1xa1m28/6Kn5MhOf8rm8QJeOKELOi642RNNP+1sMrJYai4BbEVLgWmdB+THXrDInIhMZVc5LQvOknwC6/2LbEDdW50hZ5XecotMqozVMPgjvsePIK/9X0hwmc57actkiBlfoGsNOmNeGsGS1b4ZVZiv4C7hlL5mGWscA51bB5uvgJcbhmfqMBNPNBfN/hgvZbpkdI7ib1pu91U/ErQNw0hQd07fy0QJ7OIxYVPR/+V/1AyLBSMU8/4jdwZa/Zx9alBuyjflbFHBOeiUI7ni1eobSC/MZ3fl4/bzZ5jhOhLhfI0L8xY7KAv6NR3H+NSikfV+llzl8N4ItBQIa61aoUhtMcoAyWujL6fVhEuHo4S5hC6VVTdOeVmn6cicjmoWnhAIh23jY+75shweKs7fPAxuYHHGF3ta+SJHjVQztxPANNgm77/fDeNVIeI9uwdB733bnr0qD3qpVEXNZgjXbUlg2jCKrPff9ml6mdKHiC7BdEXXpuV39d7g9bofP81XrttC69MLYeDu5tIT8apBr6Fx1Jtkc7MmzdJXk6LmU5el9rZWmcsMkd54rYf9+6uEsXFkAI8ZAfPV+RpI1OQSIzd8HN//Gf7ROn7O7jcnuGYy90joK2WTyB/0S8b2j7KyU5m0QX2PY7eeAeYmA661rxNRXGdzHj3J3NrYeHBO1k=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2843.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(451199018)(31696002)(7416002)(5660300002)(36756003)(478600001)(83380400001)(6666004)(6486002)(186003)(26005)(53546011)(2616005)(6506007)(6512007)(4326008)(8676002)(66556008)(66476007)(66946007)(41300700001)(54906003)(38100700002)(110136005)(316002)(8936002)(2906002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGhCUGQwWURnZGxNS3VPdmpoN3ZaNWMvQ3dzZUM2NzVlVWdJQVVnekU2S2NY?=
- =?utf-8?B?THZ4UFNXNjZMdnE1S3dsZERUMXR3MzRQTUE0NTROWWlMQVA4WnAxZWJaY05Q?=
- =?utf-8?B?d1p3RWI4RnhTY0tRV21VSVFCdmFvSnRhSnlRNjlsUHB6bGNQeW53S2oxRE1j?=
- =?utf-8?B?T3lGdzhlU2NkNmRaMEJTam5tMkNLVHJtYzVWak43VDMveEFsQ0VXc2YvdzZx?=
- =?utf-8?B?Y0cyWURJTklvbEdjbVhLMmhzQWpZUlVnNXRMVzB3dzJGWkNvV0JuWlNsOHl2?=
- =?utf-8?B?Q2lINHEyeFAyQXlCdXRpRk9IOXhjcU1Rc0ppMmQ3NDZTOHY1VGJpSmdZaktJ?=
- =?utf-8?B?VEtXcDZSdUZtWFUzUW5ocVM2NW9RMkxQM1ZoL1pWd2I5MHhZajJ4enk2d3dp?=
- =?utf-8?B?d0w0ampYbXBLREExeWNTTTNTNTFsT0ZJeTUweXZXeWlqZktncVVIUUczenlh?=
- =?utf-8?B?aWNHUkNKeGdjeHZFbklqQ1ZNYkpwOEdwSjJrbmpKZmdvcUNXVE16SlZ6VlVW?=
- =?utf-8?B?OFFKbEdKa2FscHFFM0hXVWVrUHAvS2dTeVJ0MVN3SDFUWndpZnAwQXdpZU5H?=
- =?utf-8?B?dVpCQmx5akltZnJ6NWRwb0hZWEZ5WTNPRVNTQ2hXMVYzS01pV0RmT2ZqRUd1?=
- =?utf-8?B?R2E4OEJyQ2NSZFNjUHF5THd2ekczT2ZFMXVMMXdmMU5Ca2ptT2tDclZtb09s?=
- =?utf-8?B?bWl4N1F2Wnl6M0QzT2hYT0RGQklmbDlDdHN1VDk0WHI3S1JvUXlLd1RlV3JC?=
- =?utf-8?B?R0RRS2NlMi9EdFJZQW5Sc1k3eGhlMDhmM3J4MHRRMWRjeHhKOUozT2pFdTdN?=
- =?utf-8?B?RmdQYnRlSEFBMVkvbVU0R253TjVCQjZkSjBHSlp5c092dFo3VCtRTHlTdnBx?=
- =?utf-8?B?bEdab2RySnRGRGxTT0hBNlQxckE5SW1tWXI4ZEpIQnpmNjM3NmtiQXh3U2Uy?=
- =?utf-8?B?cWV1K2NPS3g5VlRjL0lXaWdJaEFtRzJraWs5ZWRzOU5DQm5FZmRsNk10c3Ry?=
- =?utf-8?B?RElZdjBIamNQbFI1MXNxQjNKaGUyelBZVm9JSkROYVFMMDRtTndrNDV5NGM3?=
- =?utf-8?B?OU5zRUw4bStuZDRjMEZabHd4L05FaWF1Rjh3UnZLcFhlcGhpZHh0SEU0Mng5?=
- =?utf-8?B?dit2djZTM1BkZm85NWZrcGNJaUoxUEVEcDMydUhBaC9IMXZ1aGxmYjdjZXpX?=
- =?utf-8?B?UWdsNHk1SWVEYzZ0dFE5aTVJVytRMW9lM2txR2o3V29rQklYRGhCRVowZFNG?=
- =?utf-8?B?RmlsTUczM1F3TThzVFJuOVpmQzY0eWUwQTZ2eXE2ZFBlRXJYVUwrdGE4SUZk?=
- =?utf-8?B?anBJUXpqZDRXak42SlV3Y25RdzFNYzlzNE9aM1QyVm85aVlWUHJER0hKTFEv?=
- =?utf-8?B?TlAvbTgwbkQxT2VjZmVVUytFYVJEZVU1eWFzODQrVUxlbllDYVNIR2hWZERY?=
- =?utf-8?B?TnRIWENoS3ZuVmxrV3lkODJhcjQyRFVvVjhSRWdvaXlDeFNreldwMXRmMG0y?=
- =?utf-8?B?TUtqWGJWNk1GRkMySkdhY2dsa2UwVC9BNjJQU3VvZWhET3BuRk5jTlRoM3lV?=
- =?utf-8?B?Y3R3anBDMWhTdVU2ZW5JZ1ZxWHFtdnQvUU1TUnlLU0QrY05JaU9sbWJtN0pn?=
- =?utf-8?B?V3pCZm9IanB4bGFMcXZDRmdndEk0MTM3eXd4bGprTUhLby90TjhkZVZQdDVI?=
- =?utf-8?B?ZEVyMExHT3NDZmw0MnlaRHh0YWU0ZWZJL0I3YWNXaTVFTW91cE9yeC9peDZx?=
- =?utf-8?B?MDJVTG5yUkNLSk10Vko4RytmVUU2NzYzR1k5NkFmcFZMQWlLb1ltQkxlQXJl?=
- =?utf-8?B?K1M2b1djQ0pZWkI2bE9GOXltS0FvcTRpMFBxZUxxaHVLbjZORXFYRkZjdmxi?=
- =?utf-8?B?bHRFYkRtY2MyVkdIaFJuMW9UM0hKZDZ5Z3BneTdnUWp2b1lTNFZIWUUvZDhG?=
- =?utf-8?B?bzBaWWFtOWN4bGJCNWRKOW85dFFxcVA5eTRocDU2ZUVKMjhuOFdJRGFRZXlY?=
- =?utf-8?B?VkJocW5SNmFKaWpOOHVxUm51NjFaMUxlc0Y0Y014c0UrQVkyUWg5Q1ZyYkx5?=
- =?utf-8?B?MXVVSVp0ZTlIVDFxYVFLdUNXcVl0b1VjcWUwN1Q2RUJWTWxqTThvZExOMlB1?=
- =?utf-8?Q?L2tcTUZMMmIU6mv4mdFZtYsY0?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dW1hanRBa0VMR2Y0eW5IY3A5Zk12SkZWSzNXZUl5QjZJRTJYY2RtNDZ6ZU9H?=
+ =?utf-8?B?MmVyM2gyRVU5VTV5SGdxdDZtV1lYQnVSY1BWcXByUExBaWZrVDJVMTExcGlL?=
+ =?utf-8?B?VmZ2ejFFY25UWlZEc0k2ams0aDRwaG5zOUxWQ0JMQUFMT05sRmZ6UkhSekNi?=
+ =?utf-8?B?RWdMS2thRitKOHh1WmFkZyt2UmJiVlVNZHczMEtXZlcyMWhFTGZ6Z0JNZThC?=
+ =?utf-8?B?OXM2MmNGNnNqQnVJSTh3YUVqZTBENGQzSG1IQUZRL0FIc0d6UXcydFlHcy9T?=
+ =?utf-8?B?OUtjYUl3L3RuYXJLTENTS0loQjZVYVMveWljZVZ4N0VuZ0JXdy96TDhUbVhH?=
+ =?utf-8?B?RTZDU1UxVHdtaSs0WVZEZGRqd28wdUppd01yQzM0bHJkZHZIbzlOVGwxNUtH?=
+ =?utf-8?B?Y2E4UGNSTVdLYXIwcndyQWpXbThQYWVCbTNZYzJBN2Roem1UaVRKeGZaV3g5?=
+ =?utf-8?B?VHpiTmFXa0taaTZmSFlvaWl5ekpWQlBwSnc2VU5rM1lFeWx5Q0pTVDQ2SWJK?=
+ =?utf-8?B?R0RjOWdkWU9TQjBnaW92bXIwNzZveXFrOU43bzJYSXpsZHpTa3U2eGVVRGJx?=
+ =?utf-8?B?TjdLdE1JcThHNjA4dFB6QXdQOGprUVZ5YmQ4SEJ0SnQwQUJWSCtmcmFKa09h?=
+ =?utf-8?B?dElqV1haeEs0WlNVQ3p6V3l3bmtraXBpL0FJOW1BdlhISWVxSzl2RHc2aWo2?=
+ =?utf-8?B?bHhGanNyMmpLaTJFN2lMUnB5akV5ZnV3djJEVDVYYzV0QWZieXZhbHAwRXo2?=
+ =?utf-8?B?bGZUWEV0cUprU3hKMjdlck51a1dpMGhNRExtOS9MRktudW9FM09wckFZK2ZP?=
+ =?utf-8?B?bUI0SGhkY0lCOXpmZk5Md2tERUJpWUxvQmZOdHc5Q09oZVJiZTI4WG5DR2ty?=
+ =?utf-8?B?MTIyTUtlYkNWM21OZjdZelhma0oxNVJocDhDRDJCbklHaFhmK2pTVCsrdDZK?=
+ =?utf-8?B?VDFXUVpYdStpVlU4eHY5M3MvTzRqK0lJVlFiSDZmSkZlQ0ZjS0NKMTNEQytQ?=
+ =?utf-8?B?aEg0bnNtWmMzRTBjM2YrS3lJYnVzd3dQd3R3YUdwQ3RmbFZvUEdqcFdieTN5?=
+ =?utf-8?B?NTVZWUx1aC9mdFEzWlRVbWZlaG5hVlhabWorWHYycTRBQ05EbndrTU12R2ZH?=
+ =?utf-8?B?TWp0dFp3aTJoK0hjc2psYUE4WEl1OStCdFl1d25SUUJtOCtDaFFBTjRYQTJy?=
+ =?utf-8?B?anNvblVlZklzNlpmV3FVRkpuOEorS2FQUStWWmpMTTdiQ1JodElpeFZWWXZT?=
+ =?utf-8?B?NDZPZzEwZU9DKzVYcXZWakpSSmpQdUhsTmU0MkV2TnZNRVUwb2pyNHdJOXBm?=
+ =?utf-8?B?SktOOW5aQ1NVQUc3WHFrZDJuOWhpT21oMnZNRmlDWlN0dUdObkVKUktmWUZo?=
+ =?utf-8?B?Y0NybDZsZDZBeHNZWEZDdmlSMTBtNzNhaGduQ29FRERPS0huNDFBaG1MMWZH?=
+ =?utf-8?B?TGE3bkFNeGZMd0I5dWYzcEV0VitvUldUY2RVWUxxTmJ1REZrU0syUldjRW5T?=
+ =?utf-8?B?MkhXbHRMMWpGemQ5c0VyZmthbDk1MjlBUCtuZzA4NTBRSERKTi9OOURNNllr?=
+ =?utf-8?B?M2xmWW9XZTNzelI3bGJTTjEvZit4WXV1UmVpckxKUFdvQjJhMkNFYTV4ZmtM?=
+ =?utf-8?B?Z0M1T280OGxkTDFORnZDeVRzL094TW1ZdXhQQ3AyTFVkM3l5MEVTOXZaN0h1?=
+ =?utf-8?B?TWlqSG96eGRIdStmQVErLzBVNG4zYXFva0ZaNFNQUk1JNGhQM1pEVTdaMTVx?=
+ =?utf-8?B?MnFCWUZFdlU1NEg4U29FN1pBUmtJaUdWclQyYTJkN1lZK1BwdDNuM3V0bVhn?=
+ =?utf-8?B?c2lGOWJWWjZsN0s4d1NqUE8rMkw4VnEvWE9tcmwxZjB2WWlFdndxQ0Z4Lys4?=
+ =?utf-8?B?aHFGbWdkemlWMjhHcnlYekNBeDlBcDJTWGdXUlh5RG45c2FVUUlVQU1ZZTdP?=
+ =?utf-8?B?Uytyc3l5Q2JBM3pjR1RkSnVrbTBOdW1COW1ZMWQwdzNpbURnUm0wRmF3dmtI?=
+ =?utf-8?B?MERGOGVPcWNRM1ZIYkx2dmJXeVVaR0ZSZHQvdjZLZGM5VzFSNjkyQUdoRGND?=
+ =?utf-8?B?WmZIb1hOVU5HWDFhY0ZydVViVlNjWVVzdEFwYzcyNWpLRXBzNW1VMENGR3d6?=
+ =?utf-8?Q?kfLB4DBY9cpA1gv865fakmY3r?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5546dfd6-ca94-4da0-5925-08db192d82dd
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb097f99-3cc8-4cc6-b6f7-08db19370972
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2843.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2023 01:45:46.5792
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2023 02:53:57.7965
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3IeW2t5icN7nPh9J54a56HmSlBiM0av69WxQh/OEN/ieOexEs5QJIBvqsJ9UGMJ1PrE16Sw2DGN3L/LrQz4+mA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4358
+X-MS-Exchange-CrossTenant-UserPrincipalName: jNXOGUSa6nJCEO6Qw3Rztgm3PUh3Tv5Oy/2HsL1GBBgR/caGpap/ZFm4JlVG9s53OB9VIikFlOFrp+PJ/koPgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7565
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 On 11/2/23 07:25, Lukas Wunner wrote:
-> Jonathan notes that cxl_cdat_get_length() and cxl_cdat_read_table()
-> allocate 32 dwords for the DOE response even though it may be smaller.
+> The CDAT exposed in sysfs differs between little endian and big endian
+> arches:  On big endian, every 4 bytes are byte-swapped.
+
+
+hexdump prints different byte streams on LE and BE? Does not seem right.
+
+
+> PCI Configuration Space is little endian (PCI r3.0 sec 6.1).  Accessors
+> such as pci_read_config_dword() implicitly swap bytes on big endian.
+> That way, the macros in include/uapi/linux/pci_regs.h work regardless of
+> the arch's endianness.  For an example of implicit byte-swapping, see
+> ppc4xx_pciex_read_config(), which calls in_le32(), which uses lwbrx
+> (Load Word Byte-Reverse Indexed).
 > 
-> In the case of cxl_cdat_get_length(), only the second dword of the
-> response is of interest (it contains the length).  So reduce the
-> allocation to 2 dwords and let DOE discard the remainder.
+> DOE Read/Write Data Mailbox Registers are unlike other registers in
+> Configuration Space in that they contain or receive a 4 byte portion of
+> an opaque byte stream (a "Data Object" per PCIe r6.0 sec 7.9.24.5f).
+> They need to be copied to or from the request/response buffer verbatim.
+> So amend pci_doe_send_req() and pci_doe_recv_resp() to undo the implicit
+> byte-swapping.
 > 
-> In the case of cxl_cdat_read_table(), a correctly sized allocation for
-> the full CDAT already exists.  Let DOE write each table entry directly
-> into that allocation.  There's a snag in that the table entry is
-> preceded by a Table Access Response Header (1 dword).  Save the last
-> dword of the previous table entry, let DOE overwrite it with the
-> header of the next entry and restore it afterwards.
+> The CXL_DOE_TABLE_ACCESS_* and PCI_DOE_DATA_OBJECT_DISC_* macros assume
+> implicit byte-swapping.  Byte-swap requests after constructing them with
+> those macros and byte-swap responses before parsing them.
 > 
-> The resulting CDAT is preceded by 4 unavoidable useless bytes.  Increase
-> the allocation size accordingly and skip these bytes when exposing CDAT
-> in sysfs.
-> 
-> The buffer overflow check in cxl_cdat_read_table() becomes unnecessary
-> because the remaining bytes in the allocation are tracked in "length",
-> which is passed to DOE and limits how many bytes it writes to the
-> allocation.  Additionally, cxl_cdat_read_table() bails out if the DOE
-> response is truncated due to insufficient space.
-> 
+> Change the request and response type to __le32 to avoid sparse warnings.
+>
+> Fixes: c97006046c79 ("cxl/port: Read CDAT table")
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Cc: stable@vger.kernel.org # v6.0+
 > ---
 >   Changes v2 -> v3:
->   * Newly added patch in v3 on popular request (Jonathan)
+>   * Newly added patch in v3
 > 
->   drivers/cxl/core/pci.c | 34 ++++++++++++++++++----------------
+>   drivers/cxl/core/pci.c  | 12 ++++++------
+>   drivers/pci/doe.c       | 13 ++++++++-----
+>   include/linux/pci-doe.h |  8 ++++++--
+>   3 files changed, 20 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 57764e9cd19d..d3cf1d9d67d4 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -480,7 +480,7 @@ static struct pci_doe_mb *find_cdat_doe(struct device *uport)
+>   	return NULL;
+>   }
+>   
+> -#define CDAT_DOE_REQ(entry_handle)					\
+> +#define CDAT_DOE_REQ(entry_handle) cpu_to_le32				\
+>   	(FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
+>   		    CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
+>   	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_TABLE_TYPE,			\
+> @@ -493,8 +493,8 @@ static void cxl_doe_task_complete(struct pci_doe_task *task)
+>   }
+>   
+>   struct cdat_doe_task {
+> -	u32 request_pl;
+> -	u32 response_pl[32];
+> +	__le32 request_pl;
+> +	__le32 response_pl[32];
+
+This is ok as it is a binary format of DOE message (is it?)...
+
+>   	struct completion c;
+>   	struct pci_doe_task task;
+>   };
+> @@ -531,7 +531,7 @@ static int cxl_cdat_get_length(struct device *dev,
+>   	if (t.task.rv < sizeof(u32))
+>   		return -EIO;
+>   
+> -	*length = t.response_pl[1];
+> +	*length = le32_to_cpu(t.response_pl[1]);
+>   	dev_dbg(dev, "CDAT length %zu\n", *length);
+>   
+>   	return 0;
+> @@ -548,7 +548,7 @@ static int cxl_cdat_read_table(struct device *dev,
+>   	do {
+>   		DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(entry_handle), t);
+>   		size_t entry_dw;
+> -		u32 *entry;
+> +		__le32 *entry;
+>   		int rc;
+>   
+>   		rc = pci_doe_submit_task(cdat_doe, &t.task);
+> @@ -563,7 +563,7 @@ static int cxl_cdat_read_table(struct device *dev,
+>   
+>   		/* Get the CXL table access header entry handle */
+>   		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
+> -					 t.response_pl[0]);
+> +					 le32_to_cpu(t.response_pl[0]));
+>   		entry = t.response_pl + 1;
+>   		entry_dw = t.task.rv / sizeof(u32);
+>   		/* Skip Header */
+> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+> index 66d9ab288646..69efa9a250b9 100644
+> --- a/drivers/pci/doe.c
+> +++ b/drivers/pci/doe.c
+> @@ -143,7 +143,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+>   					  length));
+>   	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
+>   		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+> -				       task->request_pl[i]);
+> +				       le32_to_cpu(task->request_pl[i]));
+
+Does it really work on BE? My little brain explodes on all these 
+convertions :)
+
+char buf[] = { 1, 2, 3, 4 }
+u32 *request_pl = buf;
+
+request_pl[0] will be 0x01020304.
+le32_to_cpu(request_pl[0]) will be 0x04030201
+And then pci_write_config_dword() will do another swap.
+
+Did I miss something? (/me is gone bringing up a BE system).
+
+>   
+>   	pci_doe_write_ctrl(doe_mb, PCI_DOE_CTRL_GO);
+>   
+> @@ -198,8 +198,8 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+>   	payload_length = min(length, task->response_pl_sz / sizeof(u32));
+>   	/* Read the rest of the response payload */
+>   	for (i = 0; i < payload_length; i++) {
+> -		pci_read_config_dword(pdev, offset + PCI_DOE_READ,
+> -				      &task->response_pl[i]);
+> +		pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
+> +		task->response_pl[i] = cpu_to_le32(val);
+>   		/* Prior to the last ack, ensure Data Object Ready */
+>   		if (i == (payload_length - 1) && !pci_doe_data_obj_ready(doe_mb))
+>   			return -EIO;
+> @@ -322,15 +322,17 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
+>   	struct pci_doe_task task = {
+>   		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
+>   		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
+> -		.request_pl = &request_pl,
+> +		.request_pl = (__le32 *)&request_pl,
+>   		.request_pl_sz = sizeof(request_pl),
+> -		.response_pl = &response_pl,
+> +		.response_pl = (__le32 *)&response_pl,
+>   		.response_pl_sz = sizeof(response_pl),
+>   		.complete = pci_doe_task_complete,
+>   		.private = &c,
+>   	};
+>   	int rc;
+>   
+> +	cpu_to_le32s(&request_pl);
+> +
+>   	rc = pci_doe_submit_task(doe_mb, &task);
+>   	if (rc < 0)
+>   		return rc;
+> @@ -340,6 +342,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
+>   	if (task.rv != sizeof(response_pl))
+>   		return -EIO;
+>   
+> +	le32_to_cpus(&response_pl);
+>   	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
+>   	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
+>   			      response_pl);
+> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+> index ed9b4df792b8..43765eaf2342 100644
+> --- a/include/linux/pci-doe.h
+> +++ b/include/linux/pci-doe.h
+> @@ -34,6 +34,10 @@ struct pci_doe_mb;
+>    * @work: Used internally by the mailbox
+>    * @doe_mb: Used internally by the mailbox
+>    *
+> + * Payloads are treated as opaque byte streams which are transmitted verbatim,
+> + * without byte-swapping.  If payloads contain little-endian register values,
+> + * the caller is responsible for conversion with cpu_to_le32() / le32_to_cpu().
+> + *
+>    * The payload sizes and rv are specified in bytes with the following
+>    * restrictions concerning the protocol.
+>    *
+> @@ -45,9 +49,9 @@ struct pci_doe_mb;
+>    */
+>   struct pci_doe_task {
+>   	struct pci_doe_protocol prot;
+> -	u32 *request_pl;
+> +	__le32 *request_pl;
+>   	size_t request_pl_sz;
+> -	u32 *response_pl;
+> +	__le32 *response_pl;
 
 
-Almost no change from this patchset applied cleanly to 
-drivers/cxl/core/pci.c, what is the patchset based on? Thanks,
+This does not look right. Either:
+- pci_doe() should also take __le32* or
+- pci_doe() should do cpu_to_le32() for the request, and 
+pci_doe_task_complete() - for the response.
+
+
+Thanks,
+
+
+>   	size_t response_pl_sz;
+>   	int rv;
+>   	void (*complete)(struct pci_doe_task *task);
 
 -- 
 Alexey
