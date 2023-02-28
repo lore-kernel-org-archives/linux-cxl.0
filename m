@@ -2,203 +2,146 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77879C64EC4
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 22:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B163C64EC4
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 23:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbjB1Wl2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Feb 2023 17:41:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
+        id S229619AbjB1XUq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Feb 2023 18:20:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjB1WlY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 17:41:24 -0500
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE8D3754D;
-        Tue, 28 Feb 2023 14:40:47 -0800 (PST)
+        with ESMTP id S229585AbjB1XUp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 18:20:45 -0500
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60661E1DC
+        for <linux-cxl@vger.kernel.org>; Tue, 28 Feb 2023 15:20:42 -0800 (PST)
 Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230228224029usoutp01baecc932e091dc6fe5e6d2efaeffe310~IHiqkmhC23146031460usoutp01F;
-        Tue, 28 Feb 2023 22:40:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230228224029usoutp01baecc932e091dc6fe5e6d2efaeffe310~IHiqkmhC23146031460usoutp01F
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230228232038usoutp0294af7efb235473bcd993673d9f78e16d~IIFuK3piz1147811478usoutp02R;
+        Tue, 28 Feb 2023 23:20:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230228232038usoutp0294af7efb235473bcd993673d9f78e16d~IIFuK3piz1147811478usoutp02R
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677624029;
-        bh=OZb09o/TekRRAlSOZno2pYSLsUkKlMFtRRfVE2PHgvA=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=U6i1f0T+uLjjZNjUWoYL7CYZlGLo+HP9F6uxjcz4P1wtvYEwPq/cMmuMi5h7CEySx
-         TOV461IkaOhBSg2oDtcp8opjokHYMFa6I/m3Sw2xS5R0rTeYpS6+cgxVXcUbzZ5LO5
-         DL8/YkbfbiQYPPq+opgk+7txZ95tpzihVECAGjZo=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228224029uscas1p17c6cc91a0272593beac21b786c354633~IHiqY97Ou2950229502uscas1p1-;
-        Tue, 28 Feb 2023 22:40:29 +0000 (GMT)
+        s=mail20170921; t=1677626438;
+        bh=ohZ+yizsQLIUpViu2Qv3WsdPiEePv4pH3zvOQnI1C4s=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=disut+zh75ZPbz+763LDjE0pthkd4KHnncM+MZb99Tf/2je66OQWsBP48tqDMY+QL
+         3DMSRlL+78OE6uxsNAtIIKqATLakqaA9agNpX7b/uxds6W8eP61Niu7T9EPL8TgieM
+         TaJKP6N9we76Fk6WKbj5Q3mCnqvsYZL4jj0+BxSc=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230228232038uscas1p18a2482d9effb75d9728af922c72c94b5~IIFuEzKHh1607416074uscas1p1K;
+        Tue, 28 Feb 2023 23:20:38 +0000 (GMT)
 Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id EE.78.12196.DD28EF36; Tue,
-        28 Feb 2023 17:40:29 -0500 (EST)
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id B4.53.49129.64C8EF36; Tue,
+        28 Feb 2023 18:20:38 -0500 (EST)
 Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785~IHiqIpKXF1367513675uscas1p1x;
-        Tue, 28 Feb 2023 22:40:29 +0000 (GMT)
-X-AuditID: cbfec370-83dfe70000012fa4-7e-63fe82ddde09
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id B0.A8.17110.CD28EF36; Tue,
-        28 Feb 2023 17:40:29 -0500 (EST)
+        [203.254.195.91]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230228232038uscas1p20112a8c23b622658b24949147131b78e~IIFttma-l0670506705uscas1p24;
+        Tue, 28 Feb 2023 23:20:38 +0000 (GMT)
+X-AuditID: cbfec36f-167fe7000001bfe9-08-63fe8c464063
+Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id B5.49.17110.54C8EF36; Tue,
+        28 Feb 2023 18:20:38 -0500 (EST)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
+        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 28 Feb 2023 14:40:28 -0800
+        15.1.2375.24; Tue, 28 Feb 2023 15:20:37 -0800
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        28 Feb 2023 14:40:28 -0800
+        28 Feb 2023 15:20:37 -0800
 From:   Fan Ni <fan.ni@samsung.com>
-To:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     Alison Schofield <alison.schofield@intel.com>,
         "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
         Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field check
-Thread-Topic: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
-        check
-Thread-Index: AQHZS8WnqoF9q+YY/UCqLavADTGrLQ==
-Date:   Tue, 28 Feb 2023 22:40:28 +0000
-Message-ID: <20230228224014.1402545-1-fan.ni@samsung.com>
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 3/7] cxl/region: Add cxl_memdev_active_region()
+Thread-Topic: [PATCH 3/7] cxl/region: Add cxl_memdev_active_region()
+Thread-Index: AQHZSIjKgg75QTtW6UqE1hGG9+eV667isUGAgAKpooCAADCqgA==
+Date:   Tue, 28 Feb 2023 23:20:37 +0000
+Message-ID: <20230228232018.GA1402731@bgt-140510-bm03>
+In-Reply-To: <20230228202623.ceytv4ecryxcloxc@offworld>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1EDD50BA6FF7F44AAA5F3214A8A878F2@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djX87p3m/4lG5zokra4+/gCm0Xz5MWM
-        FtOnXmC0WH1zDaPF/qfPWSxWLbzGZnF+1ikWi8u75rBZ3JpwjMmB06PlyFtWj8V7XjJ5bFrV
-        yeYxdXa9x+dNcgGsUVw2Kak5mWWpRfp2CVwZM/7+Yy3olanYv/UZawPjWvEuRk4OCQETid5T
-        G1m6GLk4hARWMkr8nPSIGcJpZZK429XEAlO16NwZVojEWkaJL/ueM0I4nxgllp54zAhSJSSw
-        jFHi330vEJtNQFFiX9d2NpAiEYFTTBL/p8wCa2cG6XjWuYkJpEpYwFvi6+rvYDtEBIIkdp26
-        C2XrSRzcuwiogYODRUBVov1nAEiYV8BSYvKBpewgNqOAmMT3U2vAxjALiEvcejKfCeJUQYlF
-        s/cwQ9hiEv92PWSDsBUl7n9/yQ5RrydxY+oUNghbW2LZwtfMEPMFJU7OfAL1sqTEwRU3wAEj
-        IXCAQ+Lit81QCReJB38/Qg2Vlvh7dxkTyJ0SAskSqz5yQYRzJOYv2QJVbi2x8M96qDv5JP7+
-        esQIUc4r0dEmNIFRaRaSD2YhuW4WkutmIbluASPLKkbx0uLi3PTUYuO81HK94sTc4tK8dL3k
-        /NxNjMDEdPrf4YIdjLdufdQ7xMjEwXiIUYKDWUmEd+HtP8lCvCmJlVWpRfnxRaU5qcWHGKU5
-        WJTEeQ1tTyYLCaQnlqRmp6YWpBbBZJk4OKUamHzVVexzZv/dEvtgqTHr2YIZbEH3AsuPPU5N
-        k40SLl//YrvYI+msSrHr2gzvH3UZ9x2tE2/7scdDKu3TD+dTvZc07rSYnb7JFWraxfEs3em3
-        iurtsMUl3988uswgds/onKHcBfE1Bw6wrHFS0Hnbxv5SqvnflfhZbxJOHer0TpZMuLhKv7pA
-        qlBS8uU0xvNnbHf5O889OePBn3mJ65MnCxeIe65KMLOaova+wbX/Wf6sF8q61R3Xv+cotD9T
-        +VVfKsu06ZPa4R6pkyG/3qbO4NvqoxMdp3/dVmpBYN/2Yp/i+OxrOU52B9/MXFy9bevZyFm7
-        assVI7XtxV9kCgUFPLqwx9OZ+Wjp5T/M/3a8V2Ipzkg01GIuKk4EAJ6AXsy7AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWS2cA0Ufdu079kgymP2CzuPr7AZtE8eTGj
-        xfSpFxgtVt9cw2ix/+lzFotVC6+xWZyfdYrF4vKuOWwWtyYcY3Lg9Gg58pbVY/Gel0wem1Z1
-        snlMnV3v8XmTXABrFJdNSmpOZllqkb5dAlfGjL//WAt6ZSr2b33G2sC4VryLkZNDQsBEYtG5
-        M6xdjFwcQgKrGSXWT21hg3A+MUq8uPiKGcJZxijRdf0iI0gLm4CixL6u7WBVIgKnmCT+T5kF
-        1s8M0vKscxMTSJWwgLfE19XfWUBsEYEgibuvFrNB2HoSB/cuAmrg4GARUJVo/xkAEuYVsJSY
-        fGApO4jNKCAm8f3UGrAxzALiEreezGeCuFVAYsme88wQtqjEy8f/WCFsRYn731+yQ9TrSdyY
-        OoUNwtaWWLbwNTPEfEGJkzOfsEDUS0ocXHGDZQKj6CwkK2YhaZ+FpH0WkvYFjCyrGMVLi4tz
-        0yuKjfJSy/WKE3OLS/PS9ZLzczcxAiPy9L/D0TsYb9/6qHeIkYmD8RCjBAezkgjvwtt/koV4
-        UxIrq1KL8uOLSnNSiw8xSnOwKInzvoyaGC8kkJ5YkpqdmlqQWgSTZeLglGpgkoma+zHGbrLR
-        xkSvqj1aN1je+7QGBWVMOZEsnboss59F0LdZwSFvaVf+1vQJkx8dfD1rr+zPKwE8lz8ZMLCZ
-        5TwQnPzT79GZd99YvdTPJ4omCXCZ1vmd7YhiCL36r9fr3NpfDg25Z8ur5zZsuO+5VrR5rZT3
-        zjTTN+8j/Sw5ug7+NrOqMD/3cvPz95XifydoPHrqLf9Q94jXDT+OPyejnpoX//7B9jLvfWxA
-        H+PfigN/ppnt2BA+zf2L+ezdhi7nv6xdxtssq+nSJFl4cYfPiw2rVq++IXype675N4/2dfr8
-        ++5V5J8J/RppVhMvvPXN3Yb3L+4qzPe5YmW4JfLguk8lCxpFZD9LToyPTj2fp8RSnJFoqMVc
-        VJwIAO+Xhec3AwAA
-X-CMS-MailID: 20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsWy7djX87puPf+SDbZ2KVncfXyBzWL61AuM
+        FqtvrmG02P/0OYvFqoXX2CzOzzrF4sDm0XLkLavH4j0vmTymzq73+LxJLoAlissmJTUnsyy1
+        SN8ugSvjX9thxoKbHBUPH7exNjA+Y+ti5OSQEDCR2Nb2lbWLkYtDSGAlo0TDwRZ2CKeVSaL7
+        0CFWmKq97cdYIBJrGSV2zXvDDOF8AnK+z4RqWcYo8ebAH7DBbAKKEvu6toPZIgLqEvPW3mYE
+        KWIWOMgk0XH1DFhCWMBZ4t3vR+wQRS4STSt3QzU4SXye0sQIYrMIqEpceb8AzOYVMJNo2XgW
+        rIZTwFzixMfLLCA2o4CYxPdTa5hAbGYBcYlbT+YzQdwtKLFo9h5mCFtM4t+uh1BfK0rc//6S
+        HaJeR2LB7k9sELadxM7/k6DmaEssW/iaGWKvoMTJmU9YIHolJQ6uuAEOCwmBExwSe5a/A2rm
+        AHJcJC5c1YSokZb4e3cZE0Q4WWLVRy6IcI7E/CVboMZYSyz8s55pAqPKLCRXz0Jy0SwkF81C
+        ctEsJBctYGRdxSheWlycm55abJSXWq5XnJhbXJqXrpecn7uJEZiKTv87nL+D8fqtj3qHGJk4
+        GA8xSnAwK4nwLrz9J1mINyWxsiq1KD++qDQntfgQozQHi5I4r6HtyWQhgfTEktTs1NSC1CKY
+        LBMHp1QDU8zaSr7E1vLs4JqU+w7Ok3j5v+x5Nndmr0bOOT6G175Ctzevve0c+Or07Gj+5I49
+        D1wZ/r9I2MAgtpk39OJPuVf22hN3XZ41b8VDJc/j7jE7HJi1HBccX6Um9tyn66KllEiKStQ2
+        w2U/Q7w94hh22N7JzDGL5V8qXqkhsuGxs9z3td8N5K9ktL6PSfg3KeTazlMuzBcN5+ZNemIo
+        3nf+NG/fibZDixgXXjqSbpWuueycdtkOiY+qDScc+Y6szVPcUzdDzGef4/2jZ/9uzj7zh1ng
+        gdISR9P1sQ8l/lx5JRebrlKy3mkz14rNnb4VMoEX30qvYO+dF9zhFrSzd1PEF+seqYYGt8RX
+        h1nMTzquU2Ipzkg01GIuKk4EAGNNxme0AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWS2cA0Udet51+ywdQv7BZ3H19gs5g+9QKj
+        xeqbaxgt9j99zmKxauE1Novzs06xOLB5tBx5y+qxeM9LJo+ps+s9Pm+SC2CJ4rJJSc3JLEst
+        0rdL4Mr413aYseAmR8XDx22sDYzP2LoYOTkkBEwk9rYfY+li5OIQEljNKDHr2BY2COcTo8TO
+        e2eZIJxljBJPdzYygbSwCShK7OvaDtYuIqAuMW/tbUaQImaB/UwSnR1z2UESwgLOEu9+P2KH
+        KHKRaFq5G6rBSeLzlCZGEJtFQFXiyvsFYDavgJlEy8azUKt7mCR+rr8P1swpYC5x4uNlFhCb
+        UUBM4vupNWBXMAuIS9x6Mp8J4gkBiSV7zjND2KISLx//Y4WwFSXuf3/JDlGvI7Fg9yc2CNtO
+        Yuf/SVBztCWWLXzNDHGEoMTJmU9YIHolJQ6uuMEyARgkSNbNQjJqFpJRs5CMmoVk1AJG1lWM
+        4qXFxbnpFcVGeanlesWJucWleel6yfm5mxiBsXz63+HoHYy3b33UO8TIxMF4iFGCg1lJhHfh
+        7T/JQrwpiZVVqUX58UWlOanFhxilOViUxHlfRk2MFxJITyxJzU5NLUgtgskycXBKNTC1yLzX
+        6n/iIvNmt5j8v7vlqpbijttVGuf/4+h607PZfM+3uZt2HbrJK3zgq2Ch7D1j6wsa/ddDlwoZ
+        JMTf8he79rLm4/7eH7cEZy1zWlKXxVWrqfL32cnpx9bP2uLZpHaLIXxR+Wrli1HXC3tNa6s+
+        Ssuq7u1ZYr/k96YO/a4FV3s2SLa4Ck8z780Jfdu10ra8NkviUYjtJZHNT0JNOjSElqy/lWDv
+        UzFh39VgQ+H1y2r6pxRlqMx3ctD7uGyO1r1j2YlL5+k+ve10zPnW3yiVX5e8Nrbs7Le+9Kdd
+        xlDz7pfdtumG9cYepjse6z7sasr5yrvI8l/0zjfiDziEKw/Mr500x+bwkoiJPX/iyyYrsRRn
+        JBpqMRcVJwIA+LFBqVQDAAA=
+X-CMS-MailID: 20230228232038uscas1p20112a8c23b622658b24949147131b78e
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785
-References: <CGME20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785@uscas1p1.samsung.com>
+X-CMS-RootMailID: 20230228205514uscas1p1cb55faea3e3885cbcc40fdde48471831
+References: <20230224194652.1990604-1-dave@stgolabs.net>
+        <20230224194652.1990604-4-dave@stgolabs.net>
+        <Y/wno8C4bK3XNoUD@aschofie-mobl2>
+        <CGME20230228205514uscas1p1cb55faea3e3885cbcc40fdde48471831@uscas1p1.samsung.com>
+        <20230228202623.ceytv4ecryxcloxc@offworld>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add COMMIT field check aside with existing COMMITTED field check during
-hdm decoder initialization to avoid a system crash during module removal
-after destroying a region which leaves the COMMIT field being reset while
-the COMMITTED field still being set.
+On Tue, Feb 28, 2023 at 12:26:23PM -0800, Davidlohr Bueso wrote:
+> Hi Alison,
+>=20
+> On Sun, 26 Feb 2023, Alison Schofield wrote:
+>=20
+> > I took a look here as I've been poked around in this space when looking
+> > for 'region' names to associate with memdev poison trace events. [1]
+>=20
+> Thanks for the pointer.
+>=20
+> > How does the list created get used?
+>=20
+> It's used by the security commands, in the next patches in the series.
+> This came about because Dan requested some way of knowing wether the
+> memdev is being used (actively decoding HPA ranges).
+>=20
+> > If we only need to know that this memdev is mapped in any region,
+> > so don't touch it, we can look at it's port->commit_end. If that
+> > commit_end >=3D 0, we can look at each endpoint to find the regions
+> > it's mapped to.
 
-In current kernel implementation, when destroying a region (cxl
-destroy-region),the decoders associated to the region will be reset
-as that in cxl_decoder_reset, where the COMMIT field will be reset.
-However, resetting COMMIT field will not automatically reset the
-COMMITTED field, causing a situation where COMMIT is reset (0) while
-COMMITTED is set (1) after the region is destroyed. Later, when
-init_hdm_decoder is called (during modprobe), current code only check
-the COMMITTED to decide whether the decoder is enabled or not. Since
-the COMMITTED will be 1 and the code treats the decoder as enabled,
-which will cause unexpected behaviour.
+commit_end will not be updated during commit if the decoder flag is
+with CXL_DECODER_F_ENABLE, not sure whether it will cause issue or not
+for your case. Can we use hdm_end instead?
 
-Before the fix, a system crash was observed when performing following
-steps:
-1. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem
-2. cxl create-region -m -d decoder0.0 -w 1 mem0 -s 256M
-3. cxl destroy-region region0 -f
-4. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core
-5. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem (showing
-"no CXL window for range 0x0:0xffffffffffffffff" error message)
-6. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core (kernel
-crash at cxl_dpa_release due to dpa_res has been freed when destroying
-the region).
-
-The patch fixed the above issue, and is tested based on follow patch series=
-:
-
-[PATCH 00/18] CXL RAM and the 'Soft Reserved' =3D> 'System RAM' default
-Message-ID: 167601992097.1924368.18291887895351917895.stgit@dwillia2-xfh.jf=
-.intel.com
-
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
----
- drivers/cxl/core/hdm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 80eccae6ba9e..6cf854c949f0 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -695,6 +695,7 @@ static int init_hdm_decoder(struct cxl_port *port, stru=
-ct cxl_decoder *cxld,
- 	struct cxl_endpoint_decoder *cxled =3D NULL;
- 	u64 size, base, skip, dpa_size;
- 	bool committed;
-+	bool should_commit;
- 	u32 remainder;
- 	int i, rc;
- 	u32 ctrl;
-@@ -710,10 +711,11 @@ static int init_hdm_decoder(struct cxl_port *port, st=
-ruct cxl_decoder *cxld,
- 	base =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
- 	size =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
- 	committed =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
-+	should_commit =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMIT);
- 	cxld->commit =3D cxl_decoder_commit;
- 	cxld->reset =3D cxl_decoder_reset;
-=20
--	if (!committed)
-+	if (!should_commit || !committed)
- 		size =3D 0;
- 	if (base =3D=3D U64_MAX || size =3D=3D U64_MAX) {
- 		dev_warn(&port->dev, "decoder%d.%d: Invalid resource range\n",
-@@ -727,7 +729,7 @@ static int init_hdm_decoder(struct cxl_port *port, stru=
-ct cxl_decoder *cxld,
- 	};
-=20
- 	/* decoders are enabled if committed */
--	if (committed) {
-+	if (should_commit && committed) {
- 		cxld->flags |=3D CXL_DECODER_F_ENABLE;
- 		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
- 			cxld->flags |=3D CXL_DECODER_F_LOCK;
-@@ -772,7 +774,7 @@ static int init_hdm_decoder(struct cxl_port *port, stru=
-ct cxl_decoder *cxld,
- 		return 0;
- 	}
-=20
--	if (!committed)
-+	if (!should_commit || !committed)
- 		return 0;
-=20
- 	dpa_size =3D div_u64_rem(size, cxld->interleave_ways, &remainder);
---=20
-2.25.1
+Fan
+>=20
+> I think this is a lot better than using the list approach.
+>=20
+> Thanks,
+> Davidlohr=
