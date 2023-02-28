@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F282C64ED6
-	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A99C64ED6
+	for <linux-cxl@archiver.kernel.org>; Tue, 28 Feb 2023 04:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229899AbjB1EMX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Feb 2023 23:12:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
+        id S229880AbjB1ENC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Feb 2023 23:13:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjB1EMW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:12:22 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02FE23847
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:12:21 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041221usoutp023b1ad00848c27e11012ef15c8665e146~H4bINBP950127701277usoutp02k;
-        Tue, 28 Feb 2023 04:12:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230228041221usoutp023b1ad00848c27e11012ef15c8665e146~H4bINBP950127701277usoutp02k
+        with ESMTP id S229737AbjB1ENB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Feb 2023 23:13:01 -0500
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750FD3C13
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Feb 2023 20:12:55 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230228041254usoutp012c2a03e5bc3cea0f36391534307a3eb2~H4bnrHpGA1359613596usoutp01w;
+        Tue, 28 Feb 2023 04:12:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230228041254usoutp012c2a03e5bc3cea0f36391534307a3eb2~H4bnrHpGA1359613596usoutp01w
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677557541;
-        bh=z+EeJwvhXgPiB+2z2lB0k5mwKsj/ecXFn0Pfu4ps+3E=;
+        s=mail20170921; t=1677557574;
+        bh=w3Zht0KtIMmvXTVJVeROsMKEsAUVrgRuNwWHqsItE9Y=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=E1giW0zPR9D9sVTkDcFwCvnLxqgkFNiWs+3rmR+JAf28zfikwQCOejfhAGIcxE/7f
-         7w8lVZcgI3vwszDzT0bLM5/wGRm4QkyRcWSmgmWMpm1lGAA1I/qxtatUh/NdOw4CXk
-         aLo6q4ci6mbYYVHYgMnqAoH7SRcfk3BT1eIpPOWo=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-        [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228041220uscas1p150c5163096efb7cbcf78110cd7f859f9~H4bHsmdD02860128601uscas1p19;
-        Tue, 28 Feb 2023 04:12:20 +0000 (GMT)
+        b=YBcLzO2nOn9XmHE3snNest9Fql+4eFDkXy8NcNcYErkFJg5Tlifp7AWe/fylcSRoF
+         0DH6lNxsqKJjuvxAWFymte6iKdw9+s6I5fWCu+NOirIsTUcFpFkIvPc6fVmd58/K69
+         J1GkqaryTPAFytlg005CgUvZ6RMLCdog51fidNhY=
+Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
+        [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230228041253uscas1p290ef25317da2cb7e23a5eece1efce856~H4bmpE5Zk3129231292uscas1p23;
+        Tue, 28 Feb 2023 04:12:53 +0000 (GMT)
 Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id 78.B8.49129.42F7DF36; Mon,
-        27 Feb 2023 23:12:20 -0500 (EST)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230228041219uscas1p140e49d902024e0eab1eb1cf3cba168fa~H4bG8q2kf2860228602uscas1p1m;
-        Tue, 28 Feb 2023 04:12:19 +0000 (GMT)
-X-AuditID: cbfec36f-167fe7000001bfe9-49-63fd7f248e52
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 36.E8.17110.32F7DF36; Mon,
-        27 Feb 2023 23:12:19 -0500 (EST)
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id B6.DB.06976.54F7DF36; Mon,
+        27 Feb 2023 23:12:53 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230228041253uscas1p229d8375093fdd4d2de21be8921e35e32~H4bmXMYFH3129631296uscas1p21;
+        Tue, 28 Feb 2023 04:12:53 +0000 (GMT)
+X-AuditID: cbfec36d-afdff70000011b40-e6-63fd7f45e6f7
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 05.B9.11378.54F7DF36; Mon,
+        27 Feb 2023 23:12:53 -0500 (EST)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
         SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 27 Feb 2023 20:12:18 -0800
+        15.1.2375.24; Mon, 27 Feb 2023 20:12:52 -0800
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        27 Feb 2023 20:12:18 -0800
+        27 Feb 2023 20:12:52 -0800
 From:   Fan Ni <fan.ni@samsung.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -57,86 +57,95 @@ CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Ira Weiny <ira.weiny@intel.com>,
         Gregory Price <gourry.memverge@gmail.com>,
         =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>
-Subject: Re: [PATCH v4 05/10] tests/acpi: Allow update of q35/DSDT.cxl
-Thread-Topic: [PATCH v4 05/10] tests/acpi: Allow update of q35/DSDT.cxl
-Thread-Index: AQHZSyrZ4NvNbCkdmkq/SpOgF8iyFw==
-Date:   Tue, 28 Feb 2023 04:12:18 +0000
-Message-ID: <20230228041218.GE1339780@bgt-140510-bm03>
-In-Reply-To: <20230206172816.8201-6-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 06/10] hw/i386/acpi: Drop duplicate _UID entry for
+ CXL root bridge
+Thread-Topic: [PATCH v4 06/10] hw/i386/acpi: Drop duplicate _UID entry for
+        CXL root bridge
+Thread-Index: AQHZSyrtVB+/OTsNb0moubI0flUVvQ==
+Date:   Tue, 28 Feb 2023 04:12:52 +0000
+Message-ID: <20230228041252.GF1339780@bgt-140510-bm03>
+In-Reply-To: <20230206172816.8201-7-Jonathan.Cameron@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <6CABAB1D50384349BAC6A4CD41B80B57@ssi.samsung.com>
+Content-ID: <079FBF10B0071C40962C09E6C827FC4F@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7djXc7oq9X+TDa7PELdonryY0eLFn+dM
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPKsWRmVeSWpSXmKPExsWy7djXc7qu9X+TDVYe0rRonryY0eLFn+dM
         FvufPmexWLXwGpvF+VmnWCwObzzDZPH/1ytWizUrhC2O9+5gceD02DnrLrtHy5G3rB6L97xk
-        8ti0qpPN4861PWweT65tZvJ4v+8qm8fnTXIBHFFcNimpOZllqUX6dglcGf1PP7IV3GerOLZo
-        HlsD4wPWLkZODgkBE4nbR++zdTFycQgJrGSUuD27hR3CaWWSmHy+jRmm6uTuYywQibWMEvMu
-        HYNq+cQoseb2WWYIZxmQM/kmO0gLm4CixL6u7WwgtoiAkcS7G5MYQYqYBb4wSUy9u5EFJCEs
-        4CbR+u0sM0SRu8TnBz9ZIWw9icez2oEaODhYBFQlNi5hATF5Bcwk+iZoglRwCjhIbNv2Hmw8
-        o4CYxPdTa5hAbGYBcYlbT+YzQVwtKLFo9h6oD8Qk/u16yAZhK0rc//6SHaJeT+LG1ClsELad
-        xO17fSwQtrbEsoWvwXp5geacnPmEBaJXUuLgihvgkJAQ+M8hsX7iDmhAukj077kOtUBa4u/d
-        ZUwgN0sIJEus+sgFEc6RmL9kC9Qca4mFf9YzTWBUmYXk7FlITpqF5KRZSE6aheSkBYysqxjF
-        S4uLc9NTi43yUsv1ihNzi0vz0vWS83M3MQLT2el/h/N3MF6/9VHvECMTB+MhRgkOZiUR3oW3
-        /yQL8aYkVlalFuXHF5XmpBYfYpTmYFES5zW0PZksJJCeWJKanZpakFoEk2Xi4JRqYGr6fvBf
-        WPq9/+LfO/a9fd4WO+XYd/fE85y7jk84vvvAlUNHN5vbfmsP+3cufMGsL81XEm3K9v5QO3/n
-        FUPLj5CpO6puXPv74tG6wsn3Qz4obFW/92W77f6G2b8X8rc+4QvRuL5a8JL8vbuBT77rHLbJ
-        m8UmWztLWqzOjs2vSP7upKmB5p8nfIq8LcbHe5fjo7Mq9/7fl9L39bcobP2k2NPillLzNjth
-        7iuRyr/ph+d8+SQwceF7rx9tj72KQmcc15a0cHddY/rs74ILCiKGa63b17U/v+Lafe6faOVs
-        iezwoDNzjxcdWhg88fUUjmU3ufuMntnuO205zTjkY5zIeQuxtt03ko6d42sQu8yuELVonRJL
-        cUaioRZzUXEiAKk0jInWAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWS2cA0SVe5/m+ywad3ShbNkxczWrz485zJ
+        8ti0qpPN4861PWweT65tZvJ4v+8qm8fnTXIBHFFcNimpOZllqUX6dglcGatfnGMuOMRZ8Wnq
+        WdYGxi3sXYwcHBICJhJH57t0MXJyCAmsZJTo+yfVxcgFZLcySSxaepUVJAFS833vIjaIxFpG
+        iW9r7zJCOJ8YJZb+e8UO4SxjlNhw5gAjSAubgKLEvq7tbCC2iICRxLsbk8A6mAW+MElMvbuR
+        BSQhLBAtcfhHGytEUYzExmtfmSBsPYmO1r9gNouAqsTdidPBbuUVMJO4OD0XJMwp4CDxbv0P
+        dhCbUUBM4vupNWDlzALiEreezGeCOFtQYtHsPcwQtpjEv10P2SBsRYn731+yQ9TrSdyYOoUN
+        ZDyzgJ3E7Fe6EGFtiWULX4O18gKNOTnzCQtEq6TEwRU3WEBekRBo55R4s+gINBhdJJpvQq2S
+        lrh6fSozRDhZYtVHLohwjsT8JVugxlhLLPyznmkCo8osJEfPQnLQLISDZiE5aBaSgxYwsq5i
+        FC8tLs5NTy02zEst1ytOzC0uzUvXS87P3cQITGOn/x3O3cG449ZHvUOMTByMhxglOJiVRHgX
+        3v6TLMSbklhZlVqUH19UmpNafIhRmoNFSZzX0PZkspBAemJJanZqakFqEUyWiYNTqoFp5oUU
+        /raQH38DN8genv+340D1HPdTsyQsraaskLt152jghI1Je455dU6eXeDeFVm+LF1DL2Or305N
+        7yKR+LAMQ6E7T2qeSSc8WuV+N53tGR/f+q1p2n0/NOXiFb7N+/XSmH9Bv+oZ06fd+TOjpn/S
+        /bsoRSWJr65qup6t3MNELjGrwqN3fMUueCy6nMN2IsfuyJLQfIGA0OM7H2luzMsL39D7v7P+
+        QWXHbwbdyQ/2V+zQv7MvOvLBRH7JJxxPBc0XaWopLZt6NSMxvf3+p86szrOBlwu+McVZBkpZ
+        LOTuXvpun/U9x/oj0nesMsRYJhbzx4Y+S982ebrDjS9NTfYLjvBc2hn/suFv+pJVTJFKLMUZ
+        iYZazEXFiQAQjYKL0gMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWS2cA0Ude1/m+ywbLXQhbNkxczWrz485zJ
         Yv/T5ywWqxZeY7M4P+sUi8XhjWeYLP7/esVqsWaFsMXx3h0sDpweO2fdZfdoOfKW1WPxnpdM
-        HptWdbJ53Lm2h83jybXNTB7v911l8/i8SS6AI4rLJiU1J7MstUjfLoEro//pR7aC+2wVxxbN
-        Y2tgfMDaxcjJISFgInFy9zEWEFtIYDWjRMsK2S5GLiD7E6PEi5VXWSCcZYwSb1+2MYJUsQko
-        Suzr2s4GYosIGEm8uzGJEaSIWeALk8SND9/BRgkLuEm0fjvLDFHkLvH5wU9WCFtP4vGsdqAG
-        Dg4WAVWJjUtYQExeATOJvgmaEEeUSsw8Oh9sCqeAg8S2be/BVjEKiEl8P7WGCcRmFhCXuPVk
-        PhPEAwISS/acZ4awRSVePv4H9ZiixP3vL9kh6vUkbkydwgZh20ncvtfHAmFrSyxb+Bqsl1dA
-        UOLkzCcsEL2SEgdX3GCZwCgxC8m6WUhGzUIyahaSUbOQjFrAyLqKUby0uDg3vaLYKC+1XK84
-        Mbe4NC9dLzk/dxMjMBGc/nc4egfj7Vsf9Q4xMnEwHmKU4GBWEuFdePtPshBvSmJlVWpRfnxR
-        aU5q8SFGaQ4WJXHel1ET44UE0hNLUrNTUwtSi2CyTBycUg1MPMITT/y70fiKT+xh90MXcxP7
-        DTLT2650RmscPR4cJlUVWbJjpY1BsEmTy5mZ1RLsnd0PV7I1NBa0BxV2a0hu0vaO/nfy46zD
-        RVPWfbp240xDfv8rjozHpmmXGQ6pPXro9XNHjbmcvGCmlZNU6w6XX1XzTE68fnM5+/KnGbxv
-        u0q7ZL+cjJKO/m4c/Z+7z3iBo6n53w+qu7VWHg/LWC+yhX95y5RjXMecDQJ3pIsLmG6y8lDq
-        l9jQmD5pXs5z1RMfE8KlQhbPvdv4buGRe7OeGmUbRvvx7o55vmixsYGR5aK5ske5reMrs6V2
-        sdUu/3w97HPPdU/Pbp6re2eZeH48Hrd2h8cZRnFzow/zrs1XYinOSDTUYi4qTgQAp63kZnMD
-        AAA=
-X-CMS-MailID: 20230228041219uscas1p140e49d902024e0eab1eb1cf3cba168fa
+        HptWdbJ53Lm2h83jybXNTB7v911l8/i8SS6AI4rLJiU1J7MstUjfLoErY/WLc8wFhzgrPk09
+        y9rAuIW9i5GTQ0LAROL73kVsXYxcHEICqxkllj2ZxwrhfGKUePbhGxOEs4xR4ue/JWwgLWwC
+        ihL7uraD2SICRhLvbkxiBCliFvjCJHHjw3cWkISwQLREV8t9ZoiiGIlz9zqZIGw9iY7Wv2A2
+        i4CqxN2J04Hu4ODgFTCTuDg9FyQsJFAqcef3B1YQm1PAQeLd+h9gpzIKiEl8P7UGrJVZQFzi
+        1pP5TBAvCEgs2XOeGcIWlXj5+B8rhK0ocf/7S3aIej2JG1OnsIGsYhawk5j9ShcirC2xbOFr
+        sFZeAUGJkzOfsEC0SkocXHGDZQKjxCwk22YhmTQLYdIsJJNmIZm0gJF1FaN4aXFxbnpFsWFe
+        arlecWJucWleul5yfu4mRmAiOP3vcOQOxqO3PuodYmTiYDzEKMHBrCTCu/D2n2Qh3pTEyqrU
+        ovz4otKc1OJDjNIcLErivEKuE+OFBNITS1KzU1MLUotgskwcnFINTM3LXiV8mi/2sVfCW5VD
+        5/7NoH2TrmTzyk0pF9D/feFP54X0dxPtp/2eH/j0rv3SlZUGEVu/dm81tki0K/zab+qju+NJ
+        9LUFzEfmTC2xFvH1PBV74cn2uoq7z8wOHpL/wVq4ynVd9qQXc8pORXO+fO3dPPVgrfObn4+k
+        s1Tbv7Mt5Cu9ZMjKsumIUNC/rkJjGZfZNpnH59zOu3ZE0j0h67qMUtCczWfY1jdp9oi/kqjI
+        mF+2pyBruVPzLp2oX2llKYVP876+7P93/bDRti0rVzR+ZmX4uO7+7H/tk3Id85zfyly1SS25
+        q2dSuHe+wNrJR+6bO6kVnX73I1BadAbDldO3HGztvF/UzZKfGxLUHa3EUpyRaKjFXFScCAC3
+        g0oZcwMAAA==
+X-CMS-MailID: 20230228041253uscas1p229d8375093fdd4d2de21be8921e35e32
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228041219uscas1p140e49d902024e0eab1eb1cf3cba168fa
+X-CMS-RootMailID: 20230228041253uscas1p229d8375093fdd4d2de21be8921e35e32
 References: <20230206172816.8201-1-Jonathan.Cameron@huawei.com>
-        <20230206172816.8201-6-Jonathan.Cameron@huawei.com>
-        <CGME20230228041219uscas1p140e49d902024e0eab1eb1cf3cba168fa@uscas1p1.samsung.com>
+        <20230206172816.8201-7-Jonathan.Cameron@huawei.com>
+        <CGME20230228041253uscas1p229d8375093fdd4d2de21be8921e35e32@uscas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 05:28:11PM +0000, Jonathan Cameron wrote:
-> Next patch will drop duplicate _UID entry so allow update.
+On Mon, Feb 06, 2023 at 05:28:12PM +0000, Jonathan Cameron wrote:
+> Noticed as this prevents iASL disasembling the DSDT table.
 >=20
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 > Reviewed-by: Gregory Price <gregory.price@memverge.com>
 > Tested-by: Gregory Price <gregory.price@memverge.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-> ---
->  tests/qtest/bios-tables-test-allowed-diff.h | 1 +
->  1 file changed, 1 insertion(+)
+>  hw/i386/acpi-build.c | 1 -
+>  1 file changed, 1 deletion(-)
 >=20
-> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bi=
-os-tables-test-allowed-diff.h
-> index dfb8523c8b..9ce0f596cc 100644
-> --- a/tests/qtest/bios-tables-test-allowed-diff.h
-> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-> @@ -1 +1,2 @@
->  /* List of comma-separated changed AML files to ignore */
-> +"tests/data/acpi/q35/DSDT.cxl",
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index 145389aa58..4840d11799 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -1514,7 +1514,6 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+>                  aml_append(pkg, aml_eisaid("PNP0A03"));
+>                  aml_append(dev, aml_name_decl("_CID", pkg));
+>                  aml_append(dev, aml_name_decl("_ADR", aml_int(0)));
+> -                aml_append(dev, aml_name_decl("_UID", aml_int(bus_num)))=
+;
+>                  build_cxl_osc_method(dev);
+>              } else if (pci_bus_is_express(bus)) {
+>                  aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A0=
+8")));
 > --=20
 > 2.37.2
 >=20
