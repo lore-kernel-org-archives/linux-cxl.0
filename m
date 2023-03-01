@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91505C7EE33
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 21:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90619C7EE23
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 21:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjCAVgq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 16:36:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35636 "EHLO
+        id S229652AbjCAVgs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Mar 2023 16:36:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbjCAVgp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 16:36:45 -0500
+        with ESMTP id S229616AbjCAVgr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 16:36:47 -0500
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C372D17D
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 13:36:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2682C66F
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 13:36:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677706604; x=1709242604;
+  t=1677706606; x=1709242606;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=y6IJ4y3V983QIhEy4j1bJNSuHt3hSOYsmzg/U577xGM=;
-  b=TVnFnU+4TzO3YH8EsA0GbHSb3kVlA4/TCwJqh6gZVXuSM7TKqDiE4B+1
-   CtfAUnMjFkYhcyAGWwDn3Fgc/uDs6bVIgUQh8Rt4BSOmt147dUFZNu4X6
-   vIuapLwL88qS2zCF9iERmIVOYxTgrAAjuRE9osbfXqDmtoPyoCo7S2Jdi
-   xwnXmuGO9InxoOqOK7pltDkfvX9A3Guk7tphqmqVt6O2p4+WRucaavtlD
-   SZ39bM5q9hSvkOaylrFWFj7Ho9iOVNzAZCnVOU22XorRpB2LA0ypQiqyt
-   FP5B8ZgTDit1rZcuRB11X4/WJxl3IgfJySq9aDumEafNQN6yDCMkGABDH
+  bh=9XlRh/ds203jgRKUL0nOY0dM7MckI8S56IRONmZF5VY=;
+  b=IvcutTvuj5HCXHxi/dnq/3jUBAvXE9inLgAMHUSkUbGba2Fb4H1tdf2p
+   lMnsudB8axvrciFo4XFI7BoYBSwVhFhxois32IgU/mIBmfikW6lSp7h6y
+   nQvBnaHnC8bG3k0KFCsFhyFirOqjgzfJwXl4/M31Q3El6lAaJ2y+E8OMn
+   wWx8VFDXeMkr9eYMlV/2G8lfapinYPI59OwOemhmw3xOdTw3+UNxGrnsU
+   pJDrf9thBlQX1q+y0RJp5+uybx4Dx2G2QiJAKZj6pxvYUp1TYAexR8xtd
+   VQHwTMr5tcmF9g97XACoBXSNH8oGNFmT6XCMiC5DKoJQ1nqpEo5FbHg5N
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="397094699"
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="397094707"
 X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="397094699"
+   d="scan'208";a="397094707"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 13:36:44 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="784520823"
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 13:36:46 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="784520833"
 X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="784520823"
+   d="scan'208";a="784520833"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.70.38])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 13:36:43 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 13:36:44 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -44,11 +44,10 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Dave Jiang <dave.jiang@intel.com>
 Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 6/8] tools/testing/cxl: Add a sysfs attr to test poison injection limits
-Date:   Wed,  1 Mar 2023 13:36:31 -0800
-Message-Id: <976a71944b9403d057bc1d4607210daa89ac1568.1677704994.git.alison.schofield@intel.com>
+        linux-cxl@vger.kernel.org
+Subject: [PATCH v3 7/8] cxl/memdev: Make inject and clear poison cmds kernel exclusive
+Date:   Wed,  1 Mar 2023 13:36:32 -0800
+Message-Id: <82199c54a421aeb05fb0e3b4a353a4fed8c98bc9.1677704994.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <cover.1677704994.git.alison.schofield@intel.com>
 References: <cover.1677704994.git.alison.schofield@intel.com>
@@ -60,132 +59,96 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-CXL devices may report a maximum number of addresses that a device
-allows to be poisoned using poison injection. When cxl_test creates
-mock CXL memory devices, it defaults to MOCK_INJECT_DEV_MAX==88 for
-all mocked memdevs.
+Inject and clear poison commands are intended to be used in debug
+mode only, and if improperly used, can lead to data corruption. The
+kernel provides a sysfs interface that provides the protection needed
+to issue these commands.[1]
 
-Add a sysfs attribute, poison_inject_max to module cxl_mock_mem so
-that users can set a custom device injection limit. Fail, and return
--EBUSY, if the mock poison list is not empty.
+The CXL driver defines Enabled commands in its ABI.[2] Enabled means
+that the device and the driver both support the command. If a device
+supports inject and/or clear, those commands are flagged Enabled.
 
-/sys/bus/platform/drivers/cxl_mock_mem/poison_inject_max
+The ABI also defines another command flag: Exclusive. Exclusive
+commands are reserved for kernel use. The exclusive flags can be
+temporal, but for inject and clear, the status is permanent.
 
-A simple usage model is to set the attribute before running a test in
-order to emulate a device's poison handling.
+Document the exclusivity of Inject and Clear in the ABI kernel doc.
+(Clean up a typo in kdoc too: 'CXL_MEM_COMMAND_FLAG_ENABLED')
 
-Suggested-by: Dave Jiang <dave.jiang@intel.com>
+Create an exclusive commands bitmap in the memdev driver, add the
+inject and clear poison commands, and set it in the cxl_dev_state.
+
+[1] Documentation/ABI/testing/sysfs-bus-cxl
+[2] include/uapi/linux/cxl_mem.h
+
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- tools/testing/cxl/test/mem.c | 52 +++++++++++++++++++++++++++++++++---
- 1 file changed, 48 insertions(+), 4 deletions(-)
+ drivers/cxl/core/memdev.c    |  6 ++++++
+ include/uapi/linux/cxl_mem.h | 21 ++++++++++++++++-----
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 9658d95236b7..5c3b3e5a3b4b 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -19,6 +19,8 @@
- #define MOCK_INJECT_DEV_MAX 8
- #define MOCK_INJECT_TEST_MAX 128
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index ed3e4517dc3a..f746a0c222b6 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -10,6 +10,8 @@
  
-+static unsigned int poison_inject_dev_max = MOCK_INJECT_DEV_MAX;
-+
- static struct cxl_cel_entry mock_cel[] = {
- 	{
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_LOGS),
-@@ -485,7 +487,7 @@ static int mock_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- 			cpu_to_le64(SZ_256M / CXL_CAPACITY_MULTIPLIER),
- 		.total_capacity =
- 			cpu_to_le64(DEV_SIZE / CXL_CAPACITY_MULTIPLIER),
--		.inject_poison_limit = cpu_to_le16(MOCK_INJECT_DEV_MAX),
-+		.inject_poison_limit = cpu_to_le16(MOCK_INJECT_TEST_MAX),
- 	};
+ static DECLARE_RWSEM(cxl_memdev_rwsem);
  
- 	put_unaligned_le24(CXL_POISON_LIST_MAX, id.poison_list_max_mer);
-@@ -919,7 +921,7 @@ static struct cxl_mbox_poison_payload_out
- 	int nr_records = 0;
- 	u64 dpa;
++static __read_mostly DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
++
+ /*
+  * An entire PCI topology full of devices should be enough for any
+  * config
+@@ -571,6 +573,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+ 	cxlmd->cxlds = cxlds;
+ 	cxlds->cxlmd = cxlmd;
  
--	po = kzalloc(struct_size(po, record, MOCK_INJECT_DEV_MAX), GFP_KERNEL);
-+	po = kzalloc(struct_size(po, record, poison_inject_dev_max), GFP_KERNEL);
- 	if (!po)
- 		return NULL;
- 
-@@ -934,7 +936,7 @@ static struct cxl_mbox_poison_payload_out
- 		po->record[nr_records].address = cpu_to_le64(dpa);
- 		po->record[nr_records].length = cpu_to_le32(1);
- 		nr_records++;
--		if (nr_records == MOCK_INJECT_DEV_MAX)
-+		if (nr_records == poison_inject_dev_max)
- 			break;
- 	}
- 
-@@ -969,7 +971,7 @@ static bool mock_poison_dev_max_injected(struct cxl_dev_state *cxlds)
- 		if (mock_poison_list[i].cxlds == cxlds)
- 			count++;
- 	}
--	return (count >= MOCK_INJECT_DEV_MAX);
-+	return (count >= poison_inject_dev_max);
- }
- 
- static bool mock_poison_add(struct cxl_dev_state *cxlds, u64 dpa)
-@@ -1051,6 +1053,47 @@ static int mock_clear_poison(struct cxl_dev_state *cxlds,
- 	return 0;
- }
- 
-+static bool mock_poison_list_empty(void)
-+{
-+	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
-+		if (mock_poison_list[i].cxlds)
-+			return false;
-+	}
-+	return true;
-+}
++	set_bit(CXL_MEM_COMMAND_ID_INJECT_POISON, exclusive_cmds);
++	set_bit(CXL_MEM_COMMAND_ID_CLEAR_POISON, exclusive_cmds);
++	set_exclusive_cxl_commands(cxlds, exclusive_cmds);
 +
-+static ssize_t poison_inject_max_show(struct device_driver *drv, char *buf)
-+{
-+	return sysfs_emit(buf, "%u\n", poison_inject_dev_max);
-+}
-+
-+static ssize_t poison_inject_max_store(struct device_driver *drv,
-+				       const char *buf, size_t len)
-+{
-+	int val;
-+
-+	if (kstrtoint(buf, 0, &val) < 0)
-+		return -EINVAL;
-+
-+	if (!mock_poison_list_empty())
-+		return -EBUSY;
-+
-+	if (val <= MOCK_INJECT_TEST_MAX)
-+		poison_inject_dev_max = val;
-+	else
-+		return -EINVAL;
-+
-+	return len;
-+}
-+
-+static DRIVER_ATTR_RW(poison_inject_max);
-+
-+static struct attribute *cxl_mock_mem_core_attrs[] = {
-+	&driver_attr_poison_inject_max.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(cxl_mock_mem_core);
-+
- static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct device *dev = cxlds->dev;
-@@ -1259,6 +1302,7 @@ static struct platform_driver cxl_mock_mem_driver = {
- 	.driver = {
- 		.name = KBUILD_MODNAME,
- 		.dev_groups = cxl_mock_mem_groups,
-+		.groups = cxl_mock_mem_core_groups,
- 	},
- };
- 
+ 	cdev = &cxlmd->cdev;
+ 	rc = cdev_device_add(cdev, dev);
+ 	if (rc)
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+index 86bbacf2a315..6f9ae244f7fd 100644
+--- a/include/uapi/linux/cxl_mem.h
++++ b/include/uapi/linux/cxl_mem.h
+@@ -74,17 +74,28 @@ static const struct {
+  * @id: ID number for the command.
+  * @flags: Flags that specify command behavior.
+  *
+- *         CXL_MEM_COMMAND_FLAG_USER_ENABLED
++ *         CXL_MEM_COMMAND_FLAG_ENABLED
+  *
+  *         The given command id is supported by the driver and is supported by
+  *         a related opcode on the device.
+  *
+  *         CXL_MEM_COMMAND_FLAG_EXCLUSIVE
+  *
+- *         Requests with the given command id will terminate with EBUSY as the
+- *         kernel actively owns management of the given resource. For example,
+- *         the label-storage-area can not be written while the kernel is
+- *         actively managing that space.
++ *	   The given command id is for kernel exclusive use and is not
++ *	   available to userspace. Requests will terminate with EBUSY.
++ *
++ *	   The exclusive flag may be temporal, and only set while the
++ *	   kernel actively owns management of the given resource. For
++ *	   example, the label-storage-area can not be written while the
++ *	   kernel is actively managing that space.
++ *
++ *	   The exclusive flag can be permanent, as in commands that can
++ *	   never be issued through the ioctl interface.
++ *
++ *	   INJECT_POISON and CLEAR_POISON are permanently kernel exclusive.
++ *	   They are supported through a sysfs interface that validates the
++ *	   safety of each command based on the state of the memdev.
++ *	   See: Documentation/ABI/testing/sysfs-bus-cxl
+  *
+  * @size_in: Expected input size, or ~0 if variable length.
+  * @size_out: Expected output size, or ~0 if variable length.
 -- 
 2.37.3
 
