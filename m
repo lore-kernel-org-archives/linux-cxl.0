@@ -2,366 +2,194 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640DCC6FA9D
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 19:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB80C6FA9D
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 19:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjCATBD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 14:01:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
+        id S229518AbjCATCI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Mar 2023 14:02:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjCATBC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 14:01:02 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28DC42BC4
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 11:00:58 -0800 (PST)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230301190056usoutp029e096d10280df2d62998aa2d20bf5f48~IYMQDqH-r1733017330usoutp02b;
-        Wed,  1 Mar 2023 19:00:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230301190056usoutp029e096d10280df2d62998aa2d20bf5f48~IYMQDqH-r1733017330usoutp02b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677697256;
-        bh=hXZSUGuqyAQ+4HohbFQK93qzf/u5DDzV2MTjHeMsDDI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=lds9n6i4Gt4kKSLkRQ2LDlEL20POJzzfRjUZfiNv7Joq2wUnm/04MdrCw3oneD94P
-         BPPTmHzmyfUM9FgZKqe0e9xFFHZTq3uRMhn1EaRTv5vZyPhCfqxj2/iIhK3OejQ4Jx
-         pCZNtoTvXquosoUnYkf2A1B/5x0cu59wKczuRbvU=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230301190056uscas1p29c0422d3cc90aaf8402db1bd1d3e903b~IYMP935iA0490304903uscas1p2O;
-        Wed,  1 Mar 2023 19:00:56 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id F6.19.06976.7E0AFF36; Wed, 
-        1 Mar 2023 14:00:55 -0500 (EST)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230301190055uscas1p1e774178c46cd229012fe942589cb3448~IYMPlPdHO1191011910uscas1p1F;
-        Wed,  1 Mar 2023 19:00:55 +0000 (GMT)
-X-AuditID: cbfec36d-d99ff70000011b40-df-63ffa0e7f543
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 8E.E9.11346.7E0AFF36; Wed, 
-        1 Mar 2023 14:00:55 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 1 Mar 2023 11:00:54 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        1 Mar 2023 11:00:54 -0800
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
+        with ESMTP id S229481AbjCATCH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 14:02:07 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78DD415148
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 11:02:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677697324; x=1709233324;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Enjn48xl305fz3NpX3NnSF+bxR8hGQV5o3YbqxUbipw=;
+  b=bEtkhODiw0FcsVuIf+g292fQsT7ycq1oiTVamI1E2RA6pUP1ikGXhjIT
+   ow9Mqm2RJf2q51QRFv1BIcw4aR8tc35PigVgY7ndfGmR2z+iIEWa0wZxt
+   6KPkg4pBUe1FBVBNhweE6jtrqSJSlpEnTq0gAKND2GCLxvZdUiqCv/cxi
+   cTzSs5fo0X+YUcfvnecBe3nFgYhOaw5xNMR6LQhS1ug93E8YWWvdpPA21
+   bZ4yAUZugQlNGXOrvWYMyad0q/wVVuQzLOJvd7E/vUL/0m33cywDCna7T
+   sMDFZiPwSskZyCEKA4McFUrQv9Wp6rJ3Ju1b4dPB79tAAeNaF+rFdXtYc
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="336786242"
+X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
+   d="scan'208";a="336786242"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 11:01:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="652112322"
+X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
+   d="scan'208";a="652112322"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga006.jf.intel.com with ESMTP; 01 Mar 2023 11:01:33 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 1 Mar 2023 11:01:32 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 1 Mar 2023 11:01:31 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Wed, 1 Mar 2023 11:01:31 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Wed, 1 Mar 2023 11:01:31 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E5i+8ZlygElKbLqSkYMjUX9U8TqqTKKwEJYgGQusdLtefOS5c8ZsMeeus8+40kEwfDcsrTvf+2L+DKkbIYznQtsRoCUzq9WN2RR9nSWf1BvjaIR4rJWPhQ1Arw/tDIdiAKEVfC0SaO86760//f30nvrPCOdnOptikFY1ancCrulYZ5RYv4LXDcX0+yyTDzcbkv0bwVyipzF984jMduYVRrNShbS+/w2QIg0U/hYR+nctdt0JEnpnn8JcOxqgrXs3cyd/crvJeCH4v0MV5aVkhA80BY9dnvaM5Ebkzgb0Fg7ej26W0HBFY+CkVqdZfJlbW3FNhbygO937biCwo3YA/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Enjn48xl305fz3NpX3NnSF+bxR8hGQV5o3YbqxUbipw=;
+ b=K9ZWxgR62sWSFA9Bm3o0bOPlLqv8hH2Bxly8PNLFeLylkFazE846ksOnQsaKqszWompTWvk8FLa743vztVad0sZFhDMZ6x2spoFr6/IheI5XvJMSSHlJFQaW8+jySbsr9cMvAWnX8/mR07NNLzki0sQ9w3zBBTykbLLxIGrWLlNXDwafiL7unf5LyxSyGpgvqRS+W+kTRFvZXFVwNcDQ0yE9YWuvOWsWEeQC9VCnk1MOsMGohDrJZlVK9F1PnYGt+olmyg4HM52G6M6uwosubdy8gWQ37RTlvQIdo0RGCBgWtTtO6E5EtbWm4nnnR7dzNASHyrE05qNcTtbPsiRGuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by DM4PR11MB5971.namprd11.prod.outlook.com (2603:10b6:8:5e::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.30; Wed, 1 Mar 2023 19:01:27 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::35af:d7a8:8484:627]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::35af:d7a8:8484:627%5]) with mapi id 15.20.6134.030; Wed, 1 Mar 2023
+ 19:01:27 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "Schofield, Alison" <alison.schofield@intel.com>,
+        "im, junhyeok" <junhyeok.im@samsung.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/3] cxl/mbox: Add support for background operations
-Thread-Topic: [PATCH 1/3] cxl/mbox: Add support for background operations
-Thread-Index: AQHZSIiDmGie97vcfkSrQS6DlQwt1q7m1VIA
-Date:   Wed, 1 Mar 2023 19:00:54 +0000
-Message-ID: <20230301190047.GA1421354@bgt-140510-bm03>
-In-Reply-To: <20230224194443.1990440-2-dave@stgolabs.net>
+Subject: Re: [ndctl 2/3] cxl: add inject-poison command to cxl tool
+Thread-Topic: [ndctl 2/3] cxl: add inject-poison command to cxl tool
+Thread-Index: AQHZROewN3/kkfI3bU2BKHP/Q5uiIq7iK2wAgAH83QCAAi5YgA==
+Date:   Wed, 1 Mar 2023 19:01:27 +0000
+Message-ID: <49e6870cbb846beadce4ef475226af0601db63fa.camel@intel.com>
+References: <20230220045709.94027-1-junhyeok.im@samsung.com>
+         <CGME20230220045608epcas2p11d40339e7401f5bf99a9e97308058fec@epcas2p1.samsung.com>
+         <20230220045709.94027-3-junhyeok.im@samsung.com>
+         <Y/whyOESQ0fRIpNZ@aschofie-mobl2> <Y/3MpsTbFfZhTp7C@dell-ArcherCity>
+In-Reply-To: <Y/3MpsTbFfZhTp7C@dell-ArcherCity>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3214757FAC06E74ABD29194516995043@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+user-agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR11MB3999:EE_|DM4PR11MB5971:EE_
+x-ms-office365-filtering-correlation-id: c49770e2-fc56-4dc6-eb61-08db1a875c2d
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gnuoNNHh0RO0srDD+IjOj7lPLUkmcjlwpWuUS8CUq7AVz06rFovtJD+diTYkRdg8HRAynLpwgL+Y3srLTn5STlJnld04fFNiibOM83of86AfsvzH/xm64P0U9MdvbROohquF+zvp3wRHJKe5Q5kB70EouocPeHwSUKCGcAygA+QaUaJbDzl43MsCVAzex0uMZfML48IAzH7KtYuAXMZvffJcLNbVhGIm+J/Usz+aIe9r1QDIio8SrmgLx0r3uFGaRXTmpnLWkLZzFwzcERXF5MgKLNlKAi/uTLVWgsm3Q2+kV/ENVLjqrSqy/aPi07xUHTu6gPXSwG9DZkG8YZQG1eGaJG19Zo4rmV0i57GdIdwuC4jfmvjmWmRWeYZl+wFI9KWDhpBl4JfS5KJJ6UF5nvY0Mwx+oKsD9ht7gIoQIKM2v9ZLTY/FHcKAkFhODfeY1UglTLt+VG8kLMM77RnKquB7mg3DIw2Gp2NFBFXYDRW4j4C/26mbZaLpJdowmLbn8moJAGHPIPWbJ7xHEnaU+lpbqkg7SdHo+YT9PVgpsY2OfUTAyzGfgiZr3C3VKAZY19DCExnDlfvDgZhrfH0hDoLUDszdDLFIJSBPdW+N/2qHD3yyqJ9HsDOUzNDjtd1DBsUG+yTM6GAkoCmhtH332LMgyIkPv95NDs46bCnX1ObDHAeBohVLF5Vt5duH5pgJLDXqhk7L0jE7XIgPGZrLDA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(376002)(396003)(366004)(136003)(346002)(451199018)(91956017)(2616005)(82960400001)(38070700005)(38100700002)(122000001)(110136005)(54906003)(36756003)(6486002)(316002)(6512007)(6506007)(2906002)(478600001)(71200400001)(5660300002)(86362001)(8936002)(41300700001)(4326008)(26005)(186003)(8676002)(66446008)(66556008)(66476007)(64756008)(76116006)(66946007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eU1vNkVqOGZ4MmVrM1R4dTM0MG1HUjZuUmtzcFFqdFdDdHJzaXRWV0N5enNZ?=
+ =?utf-8?B?OU5Xb3RqU054Y3pzVlo5TkxYbTk0eFNiak1TMWIyTTBOSkkyUjhtWFdmdjB1?=
+ =?utf-8?B?dFZrd2Mxbmp3U3NTQTJVU05nTU5ybE9kd0Jnbkp5YVhGcHJaWWt0WEpNRzhm?=
+ =?utf-8?B?cWhNemZnb3pUVktQT1Vvc29XTVhtSU9nUGM0bHJyUnZLWmQ5UVFiNXppYUtT?=
+ =?utf-8?B?dUhVcnRHMStidHowM1Fmd0tKWlNwem1UZk5XbUhwVkZhYTgzWWhXUldHd0JU?=
+ =?utf-8?B?cTJRZXAyZEFFaEVZdE5Ibm5jQWo2ZlplTHorVUlIZ3Q5S1BNVU92WEhlM204?=
+ =?utf-8?B?M2dNY2d1NVFUZ1FHdk1QSXIvNFN3NnNiMXVkdzhtWmpGR3ViNzhZclQvcUhC?=
+ =?utf-8?B?L0lmMGJKZGR0WUgwVm9EMjZNb1JETWhmREE0TzRNaXhnOWY5NlBQcy9IRlhr?=
+ =?utf-8?B?aTRYTHNNUWZNQkR5ODRWTFV2ZlJRdUtZMEVBWEhhQm9lVEwzWXpmNTZaWTlB?=
+ =?utf-8?B?bTkwbDRYNHVUcmR3S00zeDdmR05KWnE5RTFjMmx3RDcrN0JGRDF5T3NhVlJZ?=
+ =?utf-8?B?UE1OclZqS2NDSnRiVUhTdXk5cmpua3NPVnliTmtiWTZtaERrT2JzdEd5Q2pH?=
+ =?utf-8?B?M09DRTdBbHl1ay8waWV6dk1sd3Znak5YK0pkNkxzdXRjaXQvMTlKUVl3OWhJ?=
+ =?utf-8?B?TU5RdGdySm1FK2xmNzdqWVpNUm1Oam0zN3ZDd04yRDJ6N2w5cnV6SHFCUHVZ?=
+ =?utf-8?B?dzFLUHdNM1NXaG1TUkl5UXRDeXNpVmFyVjJWdDNINGpyamI5NDM4eWl2Q0dG?=
+ =?utf-8?B?VlkxcWIrUHR6RjlEQ3lxK1dnZnVVSjBQK25DUGhaQUthcWpaQ1dYTktoVFNO?=
+ =?utf-8?B?aDl5Zkc1Y0laYWR2Z0swMEhyZ2Z3T0lEb0tleUVOKy9jWFAzRk0yWDNPZnZm?=
+ =?utf-8?B?R1grWkN1dGFXS3ViZHNVN3d6dHZ1aENIOUdJd1VPZzdGUGcxaVVOMG1HNGpo?=
+ =?utf-8?B?dm80eU5URVBOL09ZQTI3MitOMUZ6eWJxVXNKd1IvdXhGc1drVVFnS0wvdGlV?=
+ =?utf-8?B?NWp5QVBDTlVER3hyRTcyek1DSjhsZ3k1dTBoUjlZdVAra1RweXJ0MjZLU3RK?=
+ =?utf-8?B?aWFFK2V1VERCNWJwTk4xMS8vSk9EVytHU2RYUXVKY3l3OW5BUUk1RzlWMGxM?=
+ =?utf-8?B?dlFJaHdsY0tCNlc1d1dHa3lqUWN2VVIxWWNmMUM0czFQQ2Z1YkdkbmZmWnh5?=
+ =?utf-8?B?K0pHbmpNdUIzVXpxaW84c1BFbjBXbXBIVTIxZWREWXMvRFU2L205U2RTTkht?=
+ =?utf-8?B?dy9yMGJocDlVUUJEemJRbEFranUySHRudTcxU1ZHMTZIcEhjTk14MDRxbzV0?=
+ =?utf-8?B?VGlOVGRXUDcyTmJaTnN2Smd2VTRnK0FkRERJamtqMnRweS9scmRza0twK05J?=
+ =?utf-8?B?enVNT3VWNTQ2TCtDUUxqa2JsRmw3VnI1MVpxejJETjl0ZExXQldnQUNFRk84?=
+ =?utf-8?B?VlRJZ1pwb1hhZHREaXp4WUJGZFQrTHZwbTRSZy9OYTFQQlYzQnNhWG1zcnFF?=
+ =?utf-8?B?Zkc3MlJlUlZYWXlTQlBaWWxIM3NRS3A4elhNQThXMmNLbks5a24vbkxXcUl2?=
+ =?utf-8?B?Y29YYWJNOGtQaElFcnRYNFdOY29HWEhWMm5Ub1Rxa3U1enBTYkZzNERUQ0R4?=
+ =?utf-8?B?RlJtNUgzNnpDMy9jbTlzYW5rK21BRThHaEhJT3ROOHZSNHRJWStBSWZJVVhU?=
+ =?utf-8?B?aGxWRDErUTdvZEpPVWRZbjd4Zkk4RDI4OVgxVDFoVUhIckJremlpdStSZm1r?=
+ =?utf-8?B?Wi9uYllUb3dYeUV2a1AyNmV4OWhRMTQ4YTd2Z1MyVENTWnJJN25qNStSR1lX?=
+ =?utf-8?B?Q3hxdmFsdFFHeC9Gc3BRYnJsOTV5U292SVNNa1JCOTZlZzhIcVpiRTdmZWxZ?=
+ =?utf-8?B?SFZtdUxTQmJ6NWlXSEpaUHlYSkVPdjFIa0FyTFFUVFNKS2pHRFAxb0Nla3Bn?=
+ =?utf-8?B?RlQrb1paUklYZVVNL2oxdVJPZnNOVEtmY3hIOEl1QmFwNVVSeTdmUWcyUWJE?=
+ =?utf-8?B?enNQUDIzc2I0MHF5c2tuT2dRVmlTbTF0OEJQWTB1aE0rUlVqK253cnUxS3dw?=
+ =?utf-8?B?SnpDbVRVakoxdFI3eUpBOWNLUS9ZYXk5QXRZQTV1SnJraU1TUEJFa09teDVo?=
+ =?utf-8?B?SXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4B7D36DF520EC74F8A7404CD4CA423C2@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBKsWRmVeSWpSXmKPExsWy7djXc7rPF/xPNmh9Y2UxfeoFRovVN9cw
-        Wux/+pzFYtXCa2wW52edYnFg9Wg58pbVY/Gel0weU2fXe3zeJBfAEsVlk5Kak1mWWqRvl8CV
-        sfTpWpaCdb4Vx/5XNTDusOxi5OSQEDCRmNL3mLGLkYtDSGAlo8TCteuYQRJCAq1MEvdnB8MU
-        /Z72kh2iaC2jxJvZB9ggnI+MEs8+vWeD6FjKKDFrnzqIzSagKLGvaztYXERAXWLe2ttgK5gF
-        +pgkdn7vYAdJCAt4SMw5P4UZoshToufpRCYI20ii9e59sGYWARWJC//nAzVzcPAKmEl8+5wG
-        EuYUsJS4dO8eC4jNKCAm8f3UGrBWZgFxiVtP5jNBXC0osWj2HmYIW0zi366HbBC2osT97y/Z
-        Iep1JBbs/sQGYdtJNB+dyghha0ssW/garJcXaM7JmU9YIHolJQ6uuMEC8ouEwBEOiXfdV5lA
-        bpMQcJGY2hQFUSMtMX3NZRaIcLLEqo9cEOEciflLtkCNsZZY+Gc90wRGlVlIrp6F5KJZSC6a
-        heSiWUguWsDIuopRvLS4ODc9tdgwL7Vcrzgxt7g0L10vOT93EyMw8Zz+dzh3B+OOWx/1DjEy
-        cTAeYpTgYFYS4V14+0+yEG9KYmVValF+fFFpTmrxIUZpDhYlcV5D25PJQgLpiSWp2ampBalF
-        MFkmDk6pBiYZprVrlIPk9p9Y9FMv9XZC9nnptXulS86sm3ldSLFLTM3tatw7lVkLMrYKLkpY
-        0+AWkqWsuutIvnrjzn+MNzfP2Hf65ZM7HA+OVT4KZJwdeSdp7/R306XYOblXb0z+bGCq5OXO
-        uvtf486+P24l1Xrfd+r8yY5NV4munvWnN5lr3aTDr+eVxqoallT5VLPF6fMmX9K47azyTI47
-        qFT5fkVprE+G95GeK+s37vLuv6bZtnJ2wwxHhsszBS+WWG/6/aH85avopjbp6Dv8gcnnVGL6
-        D1f++Gp058XnZZ0G3FsDHYuveqhmrquRjzpaYHeANVSy6k+uy+L5Xb+/Zz660/f33UT+hwvy
-        0/YK/8tMuKXEUpyRaKjFXFScCADepYomqwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWS2cA0Uff5gv/JBgt/KllMn3qB0WL1zTWM
-        FvufPmexWLXwGpvF+VmnWBxYPVqOvGX1WLznJZPH1Nn1Hp83yQWwRHHZpKTmZJalFunbJXBl
-        LH26lqVgnW/Fsf9VDYw7LLsYOTkkBEwkfk97yd7FyMUhJLCaUeLlgessEM5HRokDj5+wQThL
-        GSVW3b/BAtLCJqAosa9rOxuILSKgLjFv7W1GkCJmgT4miZ3fO9hBEsICHhJzzk9hhijylOh5
-        OpEJwjaSaL17H6yZRUBF4sL/+UDNHBy8AmYS3z6nQSzbzSjxZMp2sF5OAUuJS/fugS1mFBCT
-        +H5qDdgcZgFxiVtP5jNB/CAgsWTPeWYIW1Ti5eN/rBC2osT97y/ZIep1JBbs/sQGYdtJNB+d
-        yghha0ssW/garJdXQFDi5MwnLBC9khIHV9xgmcAoMQvJullIRs1CMmoWklGzkIxawMi6ilG8
-        tLg4N72i2DgvtVyvODG3uDQvXS85P3cTIzB6T/87HLOD8d6tj3qHGJk4GA8xSnAwK4nwLrz9
-        J1mINyWxsiq1KD++qDQntfgQozQHi5I4r0fsxHghgfTEktTs1NSC1CKYLBMHp1QDk6WFoPmJ
-        c5p87026H89UuZO7OeqYf+K1ax8vsvosqqm+nFq34wqznWwqz4+jGvsldZ4pO0VP/BQ6P+jS
-        h38zzu7iUeVnuWj5osR/E7NS7uLMXs/NlQtMDmW8U4tOKpnl+U1+tubv6Iltuy5PYHmbGFm6
-        TsU/3sC79bB/VOaMSzulVAtjrCUtYqVsvcSCNHUvFh1x2r+3xb31wBGfePdKh5nxVyMbbs2M
-        9wi/zPn6jkLY7sKFa3vn8X6b9DpriWnQZI5NTwOzv/g0lh4NYZges/GGm/pBdjPTiSzxheIR
-        uUtnC1zJZtUv3HAi+ceHRL25Wn+TLPp0fvUnf/GynlJ1+bboz+fdR+JVXPYrro9VYinOSDTU
-        Yi4qTgQAyA47nk0DAAA=
-X-CMS-MailID: 20230301190055uscas1p1e774178c46cd229012fe942589cb3448
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230224194502uscas1p2674510e3a54bddc824f5fcac7719f3ce
-References: <20230224194443.1990440-1-dave@stgolabs.net>
-        <CGME20230224194502uscas1p2674510e3a54bddc824f5fcac7719f3ce@uscas1p2.samsung.com>
-        <20230224194443.1990440-2-dave@stgolabs.net>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c49770e2-fc56-4dc6-eb61-08db1a875c2d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Mar 2023 19:01:27.2321
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M5FUfUBAyLMCuh5l4C/gE911pMUFHxcaz40NsTNCP/X/4yZ7D6dXSTWtoF6CXRXmRvav2i/k5E+x2sMIPRNLYT+AQPJtqfoz/7X0q95s5Yk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5971
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Feb 24, 2023 at 11:44:41AM -0800, Davidlohr Bueso wrote:
-
-One minor thing. See below under bg_timercb.
-
-> Support background commands in the mailbox, and update
-> cmd_infostat_bg_op_sts() accordingly. This patch does
-> not implement mbox interrupts upon completion, so the
-> kernel driver must rely on polling to know when the
-> operation is done.
->=20
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  hw/cxl/cxl-device-utils.c   |   5 +-
->  hw/cxl/cxl-mailbox-utils.c  | 103 ++++++++++++++++++++++++++++++++++--
->  include/hw/cxl/cxl_device.h |  10 ++++
->  3 files changed, 111 insertions(+), 7 deletions(-)
->=20
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 50c76c65e755..4bb4e85dae19 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -101,8 +101,7 @@ static void mailbox_mem_writeq(uint64_t *reg_state, h=
-waddr offset,
->      case A_CXL_DEV_MAILBOX_CMD:
->          break;
->      case A_CXL_DEV_BG_CMD_STS:
-> -        /* BG not supported */
-> -        /* fallthrough */
-> +        break;
->      case A_CXL_DEV_MAILBOX_STS:
->          /* Read only register, will get updated by the state machine */
->          return;
-> @@ -273,7 +272,7 @@ static void device_reg_init_common(CXLDeviceState *cx=
-l_dstate)
-> =20
->  static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
->  {
-> -    /* 2048 payload size, with no interrupt or background support */
-> +    /* 2048 payload size, with no interrupt */
->      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
->                       PAYLOAD_SIZE, CXL_MAILBOX_PAYLOAD_SHIFT);
->      cxl_dstate->payload_size =3D CXL_MAILBOX_MAX_PAYLOAD_SIZE;
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index b02908c4a4ba..82923bb84eb0 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -350,7 +350,14 @@ static CXLRetCode cmd_infostat_bg_op_sts(struct cxl_=
-cmd *cmd,
-> =20
->      bg_op_status =3D (void *)cmd->payload;
->      memset(bg_op_status, 0, sizeof(*bg_op_status));
-> -    /* No support yet for background operations so status all 0 */
-> +    bg_op_status->status =3D ARRAY_FIELD_EX64(cxl_dstate->mbox_reg_state=
-64,
-> +                                            CXL_DEV_BG_CMD_STS, PERCENTA=
-GE_COMP) << 1;
-> +    if (cxl_dstate->bg.runtime > 0) {
-> +        bg_op_status->status |=3D 1U << 0;
-> +    }
-> +    bg_op_status->opcode =3D cxl_dstate->bg.opcode;
-> +    bg_op_status->returncode =3D ARRAY_FIELD_EX64(cxl_dstate->mbox_reg_s=
-tate64,
-> +                                               CXL_DEV_BG_CMD_STS, RET_C=
-ODE);
->      *len =3D sizeof(*bg_op_status);
->      return CXL_MBOX_SUCCESS;
->  }
-> @@ -808,6 +815,8 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_c=
-md *cmd,
->  #define IMMEDIATE_DATA_CHANGE (1 << 2)
->  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
->  #define IMMEDIATE_LOG_CHANGE (1 << 4)
-> +#define SECURITY_STATE_CHANGE (1 << 5)
-> +#define BACKGROUND_OPERATION (1 << 6)
-> =20
->  static struct cxl_cmd cxl_cmd_set[256][256] =3D {
->      [EVENTS][GET_RECORDS] =3D { "EVENTS_GET_RECORDS",
-> @@ -856,12 +865,20 @@ static struct cxl_cmd cxl_cmd_set_sw[256][256] =3D =
-{
->          cmd_identify_switch_device, 0, 0x49 },
->  };
-> =20
-> +/*
-> + * While the command is executing in the background, the device should
-> + * update the percentage complete in the Background Command Status Regis=
-ter
-> + * at least once per second.
-> + */
-> +#define CXL_MBOX_BG_UPDATE_FREQ 1000UL
-> +
->  void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
->  {
->      uint16_t ret =3D CXL_MBOX_SUCCESS;
->      struct cxl_cmd *cxl_cmd;
-> -    uint64_t status_reg;
-> +    uint64_t status_reg =3D 0;
->      opcode_handler h;
-> +    uint8_t bg_started =3D 0;
->      uint64_t command_reg =3D cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAIL=
-BOX_CMD];
-> =20
->      uint8_t set =3D FIELD_EX64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND=
-_SET);
-> @@ -873,7 +890,17 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
->          if (len =3D=3D cxl_cmd->in || cxl_cmd->in =3D=3D ~0) {
->              cxl_cmd->payload =3D cxl_dstate->mbox_reg_state +
->                  A_CXL_DEV_CMD_PAYLOAD;
-> +            /* Only one bg command at a time */
-> +            if ((cxl_cmd->effect & BACKGROUND_OPERATION) &&
-> +                cxl_dstate->bg.runtime > 0) {
-> +                    ret =3D CXL_MBOX_BUSY;
-> +                    goto done;
-> +            }
->              ret =3D (*h)(cxl_cmd, cxl_dstate, &len);
-> +            if ((cxl_cmd->effect & BACKGROUND_OPERATION) &&
-> +                ret =3D=3D CXL_MBOX_BG_STARTED) {
-> +                bg_started =3D 1;
-> +            }
->              assert(len <=3D cxl_dstate->payload_size);
->          } else {
->              ret =3D CXL_MBOX_INVALID_PAYLOAD_LENGTH;
-> @@ -884,8 +911,12 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
->          ret =3D CXL_MBOX_UNSUPPORTED;
->      }
-> =20
-> -    /* Set the return code */
-> -    status_reg =3D FIELD_DP64(0, CXL_DEV_MAILBOX_STS, ERRNO, ret);
-> +done:
-> +    /* Set bg and the return code */
-> +    if (bg_started) {
-> +        status_reg =3D FIELD_DP64(0, CXL_DEV_MAILBOX_STS, BG_OP, bg_star=
-ted);
-> +    }
-> +    status_reg =3D FIELD_DP64(status_reg, CXL_DEV_MAILBOX_STS, ERRNO, re=
-t);
-> =20
->      /* Set the return length */
->      command_reg =3D FIELD_DP64(command_reg, CXL_DEV_MAILBOX_CMD, COMMAND=
-_SET, 0);
-> @@ -895,11 +926,70 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate=
-)
->      cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_CMD] =3D command_reg;
->      cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_STS] =3D status_reg;
-> =20
-> +    if (bg_started) {
-> +        uint64_t bg_status_reg, now;
-> +
-> +        cxl_dstate->bg.opcode =3D (set << 8) | cmd;
-> +
-> +        bg_status_reg =3D FIELD_DP64(0, CXL_DEV_BG_CMD_STS, OP, cxl_dsta=
-te->bg.opcode);
-> +        bg_status_reg =3D FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS,
-> +                                   PERCENTAGE_COMP, 0);
-> +        cxl_dstate->mbox_reg_state64[R_CXL_DEV_BG_CMD_STS] =3D bg_status=
-_reg;
-> +
-> +        now =3D qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
-> +        cxl_dstate->bg.starttime =3D now;
-> +        timer_mod(cxl_dstate->bg.timer, now + CXL_MBOX_BG_UPDATE_FREQ);
-> +    }
-> +
->      /* Tell the host we're done */
->      ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CTRL,
->                       DOORBELL, 0);
->  }
-> =20
-> +static void bg_timercb(void *opaque)
-> +{
-> +    CXLDeviceState *cxl_dstate =3D opaque;
-> +    uint64_t bg_status_reg =3D 0;
-> +    uint64_t now =3D qemu_clock_get_ms(QEMU_CLOCK_VIRTUAL);
-> +    uint64_t total_time =3D cxl_dstate->bg.starttime + cxl_dstate->bg.ru=
-ntime;
-> +
-> +    assert(cxl_dstate->bg.runtime > 0);
-> +    bg_status_reg =3D FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS,
-> +                               OP, cxl_dstate->bg.opcode);
-> +
-> +    if (now >=3D total_time) { /* we are done */
-> +        uint64_t status_reg;
-> +        uint16_t ret =3D CXL_MBOX_SUCCESS;
-> +
-> +        cxl_dstate->bg.complete_pct =3D 100;
-> +        /* Clear bg */
-> +        status_reg =3D FIELD_DP64(0, CXL_DEV_MAILBOX_STS, BG_OP, 0);
-> +        cxl_dstate->mbox_reg_state64[R_CXL_DEV_MAILBOX_STS] =3D status_r=
-eg;
-> +
-> +        bg_status_reg =3D FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS, =
-RET_CODE, ret);
-> +
-> +        /* TODO add ad-hoc cmd succesful completion handling */
-> +
-> +        qemu_log("Background command %04xh finished: %s\n",
-> +                 cxl_dstate->bg.opcode,
-> +                 ret =3D=3D CXL_MBOX_SUCCESS ? "success" : "aborted");
-Seems ret will always be CXL_MBOX_SUCCESS, maybe bg_status_reg?
-> +    } else {
-> +        /* estimate only */
-> +        cxl_dstate->bg.complete_pct =3D 100 * now / total_time;
-> +        timer_mod(cxl_dstate->bg.timer, now + CXL_MBOX_BG_UPDATE_FREQ);
-> +    }
-> +
-> +    bg_status_reg =3D FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS, PERC=
-ENTAGE_COMP,
-> +                               cxl_dstate->bg.complete_pct);
-> +    cxl_dstate->mbox_reg_state64[R_CXL_DEV_BG_CMD_STS] =3D bg_status_reg=
-;
-> +
-> +    if (cxl_dstate->bg.complete_pct =3D=3D 100) {
-> +        cxl_dstate->bg.starttime =3D 0;
-> +        /* registers are updated, allow new bg-capable cmds */
-> +        cxl_dstate->bg.runtime =3D 0;
-> +    }
-> +}
-> +
->  void cxl_initialize_mailbox(CXLDeviceState *cxl_dstate, bool switch_cci)
->  {
->      if (!switch_cci) {
-> @@ -920,4 +1010,9 @@ void cxl_initialize_mailbox(CXLDeviceState *cxl_dsta=
-te, bool switch_cci)
->              }
->          }
->      }
-> +    cxl_dstate->bg.complete_pct =3D 0;
-> +    cxl_dstate->bg.starttime =3D 0;
-> +    cxl_dstate->bg.runtime =3D 0;
-> +    cxl_dstate->bg.timer =3D timer_new_ms(QEMU_CLOCK_VIRTUAL,
-> +                                        bg_timercb, cxl_dstate);
->  }
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 1fa8522d33fa..dbb8a955723b 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -216,6 +216,16 @@ typedef struct cxl_device_state {
->      struct cxl_cmd (*cxl_cmd_set)[256];
->      CPMUState cpmu[CXL_NUM_CPMU_INSTANCES];
->      CXLEventLog event_logs[CXL_EVENT_TYPE_MAX];
-> +
-> +    /* background command handling (times in ms) */
-> +    struct {
-> +        uint16_t opcode;
-> +        uint16_t complete_pct;
-> +        uint64_t starttime;
-> +        /* set by each bg cmd, cleared by the bg_timer when complete */
-> +        uint64_t runtime;
-> +        QEMUTimer *timer;
-> +    } bg;
->  } CXLDeviceState;
-> =20
->  /* Initialize the register block for a device */
-> --=20
-> 2.39.2
-> =
+T24gVHVlLCAyMDIzLTAyLTI4IGF0IDE4OjQzICswOTAwLCBKdW5oeWVvayBJbSB3cm90ZToNCj4g
+T24gU3VuLCBGZWIgMjYsIDIwMjMgYXQgMDc6MjE6NDRQTSAtMDgwMCwgQWxpc29uIFNjaG9maWVs
+ZCB3cm90ZToNCj4gDQo+IA0KPiA+IA0KPC4uPg0KDQo+ID4gPiBBbHNvIHNpbmNlIGl0IGlzIGV4
+cGVjdGVkIG5vIHVzZSBjYXNlIG9mIGluamVjdGluZyBwb2lzb24gaW50byB0aGUNCj4gPiA+IHNh
+bWUgYWRkcmVzcyBmb3IgbXVsdGlwbGUgZGV2aWNlcywgdGhpcyBjb21tYW5kIHRhcmdldHMgb25s
+eSBvbmUNCj4gPiA+IG1lbWRldiwgbGlrZSB3cml0ZS1sYWJlbHMgY29tbWFuZC4NCj4gPiA+IA0K
+PiA+ID4gwqB1c2FnZTogY3hsIGluamVjdC1wb2lzb24gPG1lbWRldj4gLWEgPGRwYT4gWzxvcHRp
+b25zPl0NCj4gPiANCj4gPiBtYXliZSAtbSBtZW1kZXYgKHRvIGJlIGxpa2Ugb3RoZXJzKQ0KPiAN
+Cj4gQUZBSUssIG1lbWRldiBpcyB0byBiZSBzcGVjaWZpZWQgd2l0aG91dCAiLW0iIGV4Y2VwdCBm
+b3IgJ2xpc3QnIGNtZCwNCj4gYnV0IEkgdGhpbmsgdGhlIHJlYXNvbiB5b3Ugc2FpZCBpcyB0byBk
+aXN0aW5ndWlzaCBtZW1kZXYgZnJvbSByZWdpb24oZS5nLiItciIpLg0KPiAoSSBhbHNvIGZvdW5k
+IGluIHlvdXIgcHJldmlvdXMgcGF0Y2ggZm9yIEdFVF9QT0lTT05fTElTVCB0aGF0IA0KPiBtZW1k
+ZXYgYW5kIHJlZ2lvbiB3ZXJlIHNlcGFyYXRlZC4pDQo+IElmIHNvLCBjb2RlcyBhbmQgZG9jdW1l
+bnRhdGlvbiBzaG91bGQgYmUgbW9kaWZpZWQgbGlrZToNCj4gwqDCoMKgIGN4bCBpbmplY3QtcG9p
+c29uIC1tIDxtZW1kZXY+IC1hIDxkcGE+IFs8b3B0aW9ucz5dDQoNCkp1c3Qgd2FudGVkIHRvIGNo
+aW1lIGluIG9uIHRoaXMgcXVpY2tseSBiZWZvcmUgaGF2aW5nIGdvbmUgdGhyb3VnaCB0aGUNCnJl
+c3Qgb2YgdGhlIHNlcmllcyAtDQoNClRoZSBjb252ZW50aW9uIGhhcyBiZWVuIGlmIGEgY29tbWFu
+ZCBjYW4gb25seSBoYXZlIG9uZSB0eXBlIG9mDQondGFyZ2V0JywgdGhlbiBubyBuZWVkIGZvciBh
+IC1tLCBvciAtciBldGMuDQoNCmUuZy4gY3hsIGVuYWJsZS1yZWdpb24gcmVnaW9uMA0KDQpCdXQg
+aWYgaXQgY2FuIChwb3RlbnRpYWxseSkgaGF2ZSBkaWZmZXJlbnQgdHlwZXMgb2YgdGFyZ2V0cywg
+dGhlbiBhbg0Kb3B0aW9uIGNhbiBiZSB1c2VkIHRvIGRldGVybWluZSB0aGUgdGFyZ2V0IHR5cGUu
+IGUuZy4gY3hsLWNyZWF0ZS1yZWdpb24NCndhcyBvcmlnaW5hbGx5IGludGVuZGluZyB0byBhbGxv
+dyBib3RoIG1lbWRldiBhbmQgZW5kcG9pbnQgdGFyZ2V0cywNCmhlbmNlIHRoZSAtbSBvcHRpb24g
+dG8gc2F5IHRoYXQgdGhlIG5vbi1vcHRpb24gYXJndW1lbnRzIHNob3VsZCBiZQ0KdHJlYXRlZCBh
+cyBtZW1kZXZzLg0KDQpUaGUgb3RoZXIgcGxhY2Ugd2hlcmUgeW91J2QgaGF2ZSBvcHRpb25zIGxp
+a2UgLW09Im1lbTAsbWVtMSIgZXRjIGlzIGZvcg0KZmlsdGVyaW5nIG9yIHJlc3RyaWN0aW5nIGFu
+IG9wZXJhdGlvbi4gY3hsLWxpc3QgdXNlcyB0aGUgZGlmZmVyZW50DQpvcHRpb25zIHRvIGZpbHRl
+ciByZXN1bHRzLCBidXQgYWxzbyBvdGhlciBjb21tYW5kczoNCg0KICBlLmcuIGN4bCBkaXNhYmxl
+LXJlZ2lvbiAtLWJ1cz1jeGxfdGVzdCBhbGwNCg0Kd2lsbCBkaXNhYmxlIGFsbCByZWdpb25zIHVu
+ZGVyIGN4bF90ZXN0LCBidXQgbGVhdmUgYWxvbmUgcmVnaW9ucyB1bmRlcg0KYW5vdGhlciBidXMu
+DQo=
