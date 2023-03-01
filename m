@@ -2,81 +2,77 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C6EC64ED6
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 15:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF0BC6FA9D
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 16:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjCAPrj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 10:47:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39068 "EHLO
+        id S229754AbjCAQ7q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Mar 2023 11:59:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjCAPrf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 10:47:35 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323B04347D
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 07:47:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677685628; x=1709221628;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Iw21esphieu3bz/xeEOUKMSgq9gPnv+tzL10S7ujcEk=;
-  b=QWx5QYI1i+gfwH23Z6Bgpzh77kJnHn3rpAt7E+FWrGQommkCKwMqiw3g
-   PIDUCFPWhqcD2UfjuZ8apNB3l0D/oPmeNwMIzMFsnam8HPcY6vUSr1MIr
-   7S8XLAZ06YYQw9q0+VSk3NyF3BGq3NdDgL4LUlCHmYRvNUznr69pV2GVA
-   NuXLl+VTxdHaDPgkVP32lPDl/UGN/9UUxsP/1lWgQorW1lbtyLieNQa5s
-   x4c1wrrOPKHfZcvMgtKr/Gao3Oz9WaMReRw8FxRRBbaNMNeP1+nCsUtbJ
-   xWoeA6yV0MPSVDkl6eZXLkKmJ9ubzPJ8jBF/sEbVWqMpRMZb1VK7DcZS6
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="362022761"
-X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="362022761"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 07:46:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="920294720"
-X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="920294720"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Mar 2023 07:46:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pXOfC-00DojM-1G;
-        Wed, 01 Mar 2023 17:46:42 +0200
-Date:   Wed, 1 Mar 2023 17:46:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        linuxarm@huawei.com
-Subject: Re: [PATCH] cxl/mbox: Drop extra struct resource cast
-Message-ID: <Y/9zYlHETHByXRUz@smile.fi.intel.com>
-References: <20230228152112.14774-1-Jonathan.Cameron@huawei.com>
- <Y/9zKXOKI1h2nvEI@smile.fi.intel.com>
+        with ESMTP id S229874AbjCAQ7p (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 11:59:45 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D644D2A6F7
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 08:59:41 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PRgSd2tSSz6J75v;
+        Thu,  2 Mar 2023 00:59:29 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 1 Mar 2023 16:59:38 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linuxarm@huawei.com>
+Subject: [PATCH v2] cxl/mbox: Drop extra (struct resource)
+Date:   Wed, 1 Mar 2023 16:59:38 +0000
+Message-ID: <20230301165938.6403-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/9zKXOKI1h2nvEI@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 01, 2023 at 05:45:45PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 28, 2023 at 03:21:12PM +0000, Jonathan Cameron wrote:
-> > DEFINE_RES_MEM() is a wrapper around the DEFINE_RES_NAMED()
-> > macro which already has the (struct resource) cast.
-> 
-> It's not a cast. As commit message that brought it says: "Converting it to be
-> a compound literal..."
+DEFINE_RES_MEM() is a wrapper around the DEFINE_RES_NAMED()
+macro which already has the (struct resource) for the compound
+literal.
 
-...
+Fixes warnings with W=1 C=1
+  CC [M]  drivers/cxl/core/mbox.o
+  CHECK   drivers/cxl/core/mbox.c
+drivers/cxl/core/mbox.c:1064:18: warning: cast to non-scalar
+drivers/cxl/core/mbox.c:1064:18: warning: cast from non-scalar
 
-> > -	cxlds->dpa_res =
-> > -		(struct resource)DEFINE_RES_MEM(0, cxlds->total_bytes);
+Fixes: 52c4d11f1dce ("resource: Convert DEFINE_RES_NAMED() to be compound literal")
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/cxl/core/mbox.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-FWIW, here it's also not a cast.
-
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f2addb457172..dce16088ceee 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1052,8 +1052,7 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
+ 	struct device *dev = cxlds->dev;
+ 	int rc;
+ 
+-	cxlds->dpa_res =
+-		(struct resource)DEFINE_RES_MEM(0, cxlds->total_bytes);
++	cxlds->dpa_res = DEFINE_RES_MEM(0, cxlds->total_bytes);
+ 
+ 	if (cxlds->partition_align_bytes == 0) {
+ 		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->ram_res, 0,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.37.2
 
