@@ -2,115 +2,76 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AA2C64EC7
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 02:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555FEC64EC7
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 03:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbjCACTv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Feb 2023 21:19:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39174 "EHLO
+        id S229868AbjCADD0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 28 Feb 2023 22:03:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjCACTu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 21:19:50 -0500
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4716EB445;
-        Tue, 28 Feb 2023 18:19:49 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 8AB7F5C0FA6;
-        Wed,  1 Mar 2023 02:19:48 +0000 (UTC)
-Received: from pdx1-sub0-mail-a268.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id C556C5C19FE;
-        Wed,  1 Mar 2023 02:19:47 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1677637187; a=rsa-sha256;
-        cv=none;
-        b=ep1OJunmZTR1AoHfFoHckXjCPu7Uh6soWR1R0HpfzuvCbeXXcPa2Yl1GTivBlmdYn1dZfg
-        GqLsK/KDCNufPePe5NXTvof9kEJ38EuNvN9ZlTOrq9FMRXBjIIjwymqrwvcFtJhptflIuf
-        iwVxYokbAcF/U4TZpO5GlOdfU/CIzIHvXhBpeZtcuInSNth8LZNmPISxm3Mxv7DXrR93eQ
-        cpZYqbgrYkF7zyWs9jtr/fX4wWmRue7Y0IIQ/Yofa4IaOjKqST3yy6Qg18T1+xPAQvFWyV
-        oxxdBsR6EWb6mq2ttW54mecLsVYtplBtBbKITSwRsGS4IjBvT5jWskMBafxuZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1677637187;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=pBKVJ6yr5/sZu5kZRecYQTY7LbmCiGdwOZ6fa5VFReY=;
-        b=iiDFEsfI85pLlxDl6VVGSj13W/ACJwJA6g4r/O1I7xTRETxJjHLkqc24wt05AAygfIXn0Z
-        uDbk48FpwUNLMM6+4WwP70Cv00S5ZyXLTb2suvXKRzBLUrP7Aaw7933UD11xHGb0oRgcp+
-        GQcJ+eO1gHs0ogtpSOQkoBjlBpyoxpQ/QQ8LHPyRpzEW/CDG0Vj+VgZeX7SA1wzhOcSvcd
-        8c8OWDKr19whJnK8fcJL/MKyLGggaSJVDEFtb+rE3vz/72HB2lIScvEjkmpiqYzuSl4k7E
-        5nLzs+/u0HROBgRrNdtaF5YNsp9sfsBtQSM57M42WYL7eYNbqep3Y7j9j7KaMg==
-ARC-Authentication-Results: i=1;
-        rspamd-69778c65cd-9csnf;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Spot-Juvenile: 7efca3c96cec1d27_1677637188358_555531155
-X-MC-Loop-Signature: 1677637188358:3277154009
-X-MC-Ingress-Time: 1677637188358
-Received: from pdx1-sub0-mail-a268.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.99.229.53 (trex/6.7.2);
-        Wed, 01 Mar 2023 02:19:48 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S229766AbjCADDY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Feb 2023 22:03:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDB719A1;
+        Tue, 28 Feb 2023 19:03:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a268.dreamhost.com (Postfix) with ESMTPSA id 4PRHxZ4RQgz9v;
-        Tue, 28 Feb 2023 18:19:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1677637187;
-        bh=pBKVJ6yr5/sZu5kZRecYQTY7LbmCiGdwOZ6fa5VFReY=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Ah0D6a4dhtjRnVTWjEVcgGYvFJxbliqO6ggVfDIhuWsqkwn576eVFBK0hAA5aZCyg
-         br0StoADIIoef8SqNZjdFwd4mmH7Gx9LGkcJAln8aq5iwTySUTRJglvCd2X3tqPBYZ
-         bn5jKpWpDCxBNfXJy9TNa135+AMirStXnbgPRrPP5dGB9+nZCNxgXV0j8e4qxhTSLV
-         wyKfU9M/KlDEpCFUw5ElilqUAkGAyHdTnjbAm+ieHAmAZ0ptpU05EexHMMyE32RggW
-         PA0ixQvuE/EPymXm5De5fB8zfylgg6eNyzuPwmATiYP9vhcW2rIDTdaLDj9Sa7cMOq
-         uouZO1z/ikQTg==
-Date:   Tue, 28 Feb 2023 17:51:05 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 06/16] PCI/DOE: Fix memory leak with
- CONFIG_DEBUG_OBJECTS=y
-Message-ID: <20230301015105.jnw3xqrhqjj23sfa@offworld>
-References: <cover.1676043318.git.lukas@wunner.de>
- <53bd8006bae1385905eec702c97f66695363c527.1676043318.git.lukas@wunner.de>
+        by ams.source.kernel.org (Postfix) with ESMTPS id C0C5AB80EF8;
+        Wed,  1 Mar 2023 03:03:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 570D0C433D2;
+        Wed,  1 Mar 2023 03:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677639780;
+        bh=KST7kuGKBwNQWupUzWrtCxf1pKhAzuYaNHh5QTYxFXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tbX1GVAhPCGRaHFDjmoz8brUemPhyIiPN4chFPJgQctN/0qjaw1XwkcTVmuSE8tvh
+         WHh1qgxNH9oPfvdy36fJPWhGnD09p2GhjMaJoIASWRov8UWPEfI9dDfa1gdjDyPHJT
+         hKEcd3mEGOeiYt2SWcdaZJ+tJGkIJPB0OiAJlSoJDdg3Oaq6GttJ4q6ozMf4HlVJtL
+         chMMX1j4AIi8nVCmhYD7YFrBOzlrqnGp6dubad5re4U/EzVQ+ggLJKT5Y5gL70PM25
+         9TeUqXNXGpO/QrC0iw8nskX2b4jlyRfQ9Eg9b0zGuzS0yZHAg2j/ZB88OyGJJ8qRjv
+         N8LYqTe4F0itw==
+Date:   Tue, 28 Feb 2023 19:02:59 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-cxl@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
+        code@tyhicks.com, sfrench@samba.org, jlayton@kernel.org,
+        chandan.babu@oracle.com, josef@toxicpanda.com, amir73il@gmail.com,
+        palmer@dabbelt.com, dave@stgolabs.net, a.manzanares@samsung.com,
+        fan.ni@samsung.com
+Subject: Re: kdevops live demo zoom & Q&A
+Message-ID: <Y/7AYyUY65lLOl39@magnolia>
+References: <Y/1KnN/ER8pnhbaa@bombadil.infradead.org>
+ <Y/5O0yItfBwNKdXm@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <53bd8006bae1385905eec702c97f66695363c527.1676043318.git.lukas@wunner.de>
-User-Agent: NeoMutt/20220429
+In-Reply-To: <Y/5O0yItfBwNKdXm@bombadil.infradead.org>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 10 Feb 2023, Lukas Wunner wrote:
+On Tue, Feb 28, 2023 at 10:58:27AM -0800, Luis Chamberlain wrote:
+> On Mon, Feb 27, 2023 at 04:28:12PM -0800, Luis Chamberlain wrote:
+> > To start off with let me propose a few dates for this zoom demo (all
+> > are Wednesdays as its my most flexible day):
+> > 
+> >   * March 8  1pm PST
+> >   * March 15 1pm PST
+> >   * March 29 1pm PST
+> 
+> Based on feedback to at least to get some EU folks I'll change this to 9am PST.
+> I know one person can't attend March 8th so the following dates are
+> remaining:
+> 
+> * March 15 9am PST
+> * March 29 9am PST
+> 
+> Let me know if this works for those who had expressed interest.
 
->After a pci_doe_task completes, its work_struct needs to be destroyed
->to avoid a memory leak with CONFIG_DEBUG_OBJECTS=y.
->
->Fixes: 9d24322e887b ("PCI/DOE: Add DOE mailbox support functions")
->Tested-by: Ira Weiny <ira.weiny@intel.com>
->Signed-off-by: Lukas Wunner <lukas@wunner.de>
->Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->Cc: stable@vger.kernel.org # v6.0+
+Either of those work for me. :)
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+--D
+
+>   Luis
