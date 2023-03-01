@@ -2,120 +2,116 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6B2C678D4
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 21:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111EFC678D4
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 21:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbjCAVOQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 16:14:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47190 "EHLO
+        id S229486AbjCAVgj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Mar 2023 16:36:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjCAVOP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 16:14:15 -0500
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82BEA4615E
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 13:14:14 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 4E467541DE3;
-        Wed,  1 Mar 2023 21:14:13 +0000 (UTC)
-Received: from pdx1-sub0-mail-a269.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id CCAE4541C41;
-        Wed,  1 Mar 2023 21:14:12 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1677705252; a=rsa-sha256;
-        cv=none;
-        b=6DGdzSIaRdHn+ZGYJJQitpFkTxhFYuRY8yhRmSgGU/g0DeZLW5JQM6QUthGsV07yhdhjII
-        mft+o28pF0EPUZjaiZKR8wVyzvIDXIGZBovrUpU3iZnyqh4U8WQ6lEiY5uHfIpM0TKtzn5
-        JtRF4sGsLb5zkn61eIBYHX8XCYm1ZeSfx/2V907xVtCcCyotbLbHxH1pRSKMbGMH0ryWaQ
-        sOpb0BjM/2EDw2rtW3dEQujOEAqRQc6oX8w8Mu8XJCESJwj0TP/I7VpwkoddT/3OSNxBtA
-        ZyZ7UHAvaUQrlLF0kzt0FyB0vrPZ+hTJINiy1+p6HB6P57qItksKAfMkBIrF4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1677705252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=24jgCb4xdeMvhuoKYDkTrPFC25b9Co9AlfsM3brxxnQ=;
-        b=pUzhc8+uqL/EbxziVpePSksL4AQN9Vko0+M/9xvr1m4iopMTAFQWaBMIGzd6F06/3rN3yo
-        CVKq5g5VAPCixGzDqrG/MgCph4U6qlXH0WQpSUZcGUwHMch6jgEs/vFlyWq3FKmqLVuoTE
-        QgHUTh9dbVbTJyP7dU8o0zyqbbGefdZ7PSo7FK8AD9lXlBAKNAf0VYAsx1OWfuoRHu7pSa
-        /zFnnsv3antFJVsVSG+0TUOboTWswmwVPvyHP1UDjchWQFp1e2ajKaLQeFlZqqQVbxVQHT
-        hLKr4R68Vi5C8d8blEcFRhnIMtFDWXQ4p5PVI+VzDY4xZK0WHJxVmV2Y761yFw==
-ARC-Authentication-Results: i=1;
-        rspamd-fd4f5fb8c-mzkcs;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stop-Quick: 43a25d5d557a255e_1677705253108_2524863724
-X-MC-Loop-Signature: 1677705253107:1112117442
-X-MC-Ingress-Time: 1677705253107
-Received: from pdx1-sub0-mail-a269.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.120.227.148 (trex/6.7.2);
-        Wed, 01 Mar 2023 21:14:13 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a269.dreamhost.com (Postfix) with ESMTPSA id 4PRn6X1VDSz59;
-        Wed,  1 Mar 2023 13:14:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1677705252;
-        bh=XoRwMkTCO36fVYwdSRndhRrFHDlR90xt3WeD89nRxN8=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=C1Z5p7HVaCj3Ih7GXc0WfCbXVb+WHWFy/FtTiKsji0ipV9tLPqWoQkLLMMT7kUpM0
-         OsiCvAMXPtaEH2Swmx8IbmoBk0G/UKUvWeGwixCuxwBfhODZIE7WUzPz09A4l6sNu1
-         U8CDhknHATpQa7iN/hpp0actGDTBEq3LH8Fnz91wMRush7v0QclN+StbFjpwVk6iCQ
-         jmOSkq1VZNManTu1Y7nmR1s19HLxRacMMQlFzVbh6U2Y63Wi7JkwLD95IwSjXhdHhu
-         C/A/AZjoz2fHDfDRHltQ3Vicqy9/gAQW1uV+XNGLZYMxaL8sTIJn4PANmpRLxw2kh4
-         T4XjjXzwiD6IQ==
-Date:   Wed, 1 Mar 2023 12:45:27 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Fan Ni <fan.ni@samsung.com>
-Cc:     "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/3] cxl/mbox: Add support for background operations
-Message-ID: <20230301204527.ug4wvciq6dvlvdmo@offworld>
-References: <20230224194443.1990440-1-dave@stgolabs.net>
- <CGME20230224194502uscas1p2674510e3a54bddc824f5fcac7719f3ce@uscas1p2.samsung.com>
- <20230224194443.1990440-2-dave@stgolabs.net>
- <20230301190047.GA1421354@bgt-140510-bm03>
+        with ESMTP id S229437AbjCAVgi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 16:36:38 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD76E12847
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 13:36:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677706597; x=1709242597;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qn/hwWwJhZp6X1TAkMr8Mit7X5WMRFSVrTnih+knO6k=;
+  b=muPXXcky53PXiBtJK3amIIGzk7Kd2RCZvb2GqrgvCU0LvjeWF1MHrWQR
+   RN/TZAzv/PfyaCmU2Ig2wLTHP0kPh6QY+zPaQOCYDAYjSZfzB0CT/XvjZ
+   FLGy/oObhRMeMwHMr1dU2qJL3wi8vUq9GF9JKcPBIneAhLU3eTRWatbpR
+   NsiKK6mQw2Th5siMGt+3QszODBeSIObkprfxe0BWXqiU24I1GcU0rx5fk
+   QkuFU6u5KyE7QOSMO5cGNu6Am+oress9v3XL9p622+WFO/t4ylrRh9572
+   KCbpTG+u5K9Y93kW3O2XyG80y2coXPplm1Y5lFRjlzmtatTLpILPagx/s
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="397094664"
+X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
+   d="scan'208";a="397094664"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 13:36:37 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="784520762"
+X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
+   d="scan'208";a="784520762"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.70.38])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 13:36:36 -0800
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH v3 0/8] cxl: CXL Inject & Clear Poison
+Date:   Wed,  1 Mar 2023 13:36:25 -0800
+Message-Id: <cover.1677704994.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230301190047.GA1421354@bgt-140510-bm03>
-User-Agent: NeoMutt/20220429
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 01 Mar 2023, Fan Ni wrote:
+From: Alison Schofield <alison.schofield@intel.com>
 
->On Fri, Feb 24, 2023 at 11:44:41AM -0800, Davidlohr Bueso wrote:
->
->One minor thing. See below under bg_timercb.
+Changes in v3: 
 
-Thanks for taking a look.
+- Built on cxl/next plus the Get Poison list patchset here:
+  https://lore.kernel.org/linux-cxl/cover.1676685180.git.alison.schofield@intel.com/
 
-...
+- Two new patches are appended to address Dan's deprecate ask:
+  	cxl/memdev: Make inject and clear poison cmds kernel exclusive
+  	cxl/mbox: Block inject and clear poison opcodes in raw mode
+  I didn't deprecate the ioctls as Dan suggested. Instead, I followed
+  on Ira's recent clean up wrt enabled and exclusive commands, deciding
+  that the honest response to a cxl_query() would be 'Enabled' (if hardware
+  supports) and kernel 'Exclusive' (always). Please take a look.
 
->> +
->> +        qemu_log("Background command %04xh finished: %s\n",
->> +                 cxl_dstate->bg.opcode,
->> +                 ret == CXL_MBOX_SUCCESS ? "success" : "aborted");
->Seems ret will always be CXL_MBOX_SUCCESS, maybe bg_status_reg?
+- Move IS_ENABLED(CONFIG_CXL_POISON_INJECT) test into each attr check (Dan)
+- Fail updates to poison_inject_max when poison list is not empty (DaveJ)
+- Make poison_inject_max a sysfs attr, rather than module param (Dan)
+- Kconfig: add note regarding debug intent (Dan)
+- Kept Jonathan's Reviewed-by Tag on Patches 1-6
 
-bg_status_reg is still set to ret, so it doesn't make any difference.
-Overall I saw little reason to ever return anything other than success,
-most of the code checking against CXL_MBOX_SUCCESS is mostly a formality,
-for if this ever changes.
+Link to v2: https://lore.kernel.org/linux-cxl/cover.1674101475.git.alison.schofield@intel.com/
 
-Thanks,
-Davidlohr
+
+Introducing Inject and Clear Poison support for CXL Devices.
+
+These are optional commands, meaning not all CXL devices must support
+them. The sysfs attributes, inject_poison and clear_poison, are only
+visible for devices reporting support of the capability and when the
+kernel Kconfig option CONFIG_CXL_POISON_INJECT is on. (Default: off)
+
+Example:
+# echo 0x40000000 > /sys/bus/cxl/devices/mem1/inject_poison
+# echo 1 > /sys/bus/cxl/devices/mem1/trigger_poison_list
+
+cxl_poison: memdev=mem1 pcidev=cxl_mem.1 region= region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xffffffffffffffff dpa=0x40000000 length=0x40 source=Injected flags= overflow_time=0
+
+
+Alison Schofield (8):
+  cxl/memdev: Add support for the Inject Poison mailbox command
+  cxl/memdev: Add support for the Clear Poison mailbox command
+  tools/testing/cxl: Mock the Inject Poison mailbox command
+  tools/testing/cxl: Mock the Clear Poison mailbox command
+  tools/testing/cxl: Use injected poison for get poison list
+  tools/testing/cxl: Add a sysfs attr to test poison injection limits
+  cxl/memdev: Make inject and clear poison cmds kernel exclusive
+  cxl/mbox: Block inject and clear poison opcodes in raw mode
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  40 +++++
+ drivers/cxl/Kconfig                     |  11 ++
+ drivers/cxl/core/mbox.c                 |   6 +
+ drivers/cxl/core/memdev.c               | 162 ++++++++++++++++++
+ drivers/cxl/cxlmem.h                    |  11 ++
+ include/uapi/linux/cxl_mem.h            |  21 ++-
+ tools/testing/cxl/test/mem.c            | 216 +++++++++++++++++++++---
+ 7 files changed, 443 insertions(+), 24 deletions(-)
+
+-- 
+2.37.3
+
