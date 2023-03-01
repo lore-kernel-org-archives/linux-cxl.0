@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF715C7EE23
-	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 23:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB11CC7EE23
+	for <linux-cxl@archiver.kernel.org>; Wed,  1 Mar 2023 23:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjCAXIK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 18:08:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45062 "EHLO
+        id S229704AbjCAXbg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Mar 2023 18:31:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbjCAXIJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 18:08:09 -0500
+        with ESMTP id S229693AbjCAXbe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 18:31:34 -0500
 Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AEBE10F4
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 15:08:03 -0800 (PST)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230301230801usoutp01e18460aca9706999ef4e868f100599db~Ibj-ooO7J0175701757usoutp01T;
-        Wed,  1 Mar 2023 23:08:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230301230801usoutp01e18460aca9706999ef4e868f100599db~Ibj-ooO7J0175701757usoutp01T
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1291532AE
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 15:31:32 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230301233131usoutp019cb1494582ac4a438eaca387be728cb9~Ib4ggj2FY2229222292usoutp012;
+        Wed,  1 Mar 2023 23:31:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230301233131usoutp019cb1494582ac4a438eaca387be728cb9~Ib4ggj2FY2229222292usoutp012
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677712082;
-        bh=y6FMdj3R2ywpEtjkQRKVB8R956ygW+EjM8G+qnRkorM=;
+        s=mail20170921; t=1677713491;
+        bh=h765QhC8FCEZrNawIIXY+S1pXUl6tkWkze+8yvBwe1o=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=ZORRYD0C8kg86LL1NDwT31gDz2FaNlJXD4h6Kq72V/YRA+zTN0Hel3hPMO5OH6BnU
-         /uGPLk2kLYfoRfCEqCGX7CikvLYQ3gpgtPpiLwaXnYe+PLgitTOPMXoLxThQpvIGam
-         tCArHZFriA4qPX7EWo2QlW+EFwM1xVFOilSPOcRw=
+        b=C6GVgtMREdA7KgF6c48qVEVCUaOriOJwj4Su3Ygqup1hW0BsQCmFgV6qxUBZzcLKA
+         WFT4tQVimQpJGQ90C6IMn9/uzfJIedgDn3ZcnJ+YpS7LYoQpDk7xf5sQ9iMhozcQaG
+         ugWBwTGS/MdmCS0/DGa8XyuRCDvKZ5eUfD6+1+iA=
 Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
         [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230301230801uscas1p1054b7f07a54841f9f896061d74d6187c~Ibj-d0QIy2899428994uscas1p1j;
-        Wed,  1 Mar 2023 23:08:01 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id A4.5C.49129.1DADFF36; Wed, 
-        1 Mar 2023 18:08:01 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230301230801uscas1p155098774d0f921b4fd8a1f683343481c~Ibj-Q1Lm91447514475uscas1p13;
-        Wed,  1 Mar 2023 23:08:01 +0000 (GMT)
-X-AuditID: cbfec36f-eddff7000001bfe9-27-63ffdad1c966
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 99.CE.11378.1DADFF36; Wed, 
-        1 Mar 2023 18:08:01 -0500 (EST)
+        20230301233131uscas1p10794ae973bc770f40aeff89ae21a1b8e~Ib4gXvRtM1405614056uscas1p1D;
+        Wed,  1 Mar 2023 23:31:31 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id DC.FE.49129.350EFF36; Wed, 
+        1 Mar 2023 18:31:31 -0500 (EST)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230301233131uscas1p1bb4ea930c66fd4a9e355c8bb830db3f9~Ib4f7MTZ42935229352uscas1p1n;
+        Wed,  1 Mar 2023 23:31:31 +0000 (GMT)
+X-AuditID: cbfec36f-167fe7000001bfe9-6c-63ffe053a4cd
+Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id D2.DE.17110.250EFF36; Wed, 
+        1 Mar 2023 18:31:30 -0500 (EST)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
+        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 1 Mar 2023 15:08:00 -0800
+        15.1.2375.24; Wed, 1 Mar 2023 15:31:30 -0800
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        1 Mar 2023 15:08:00 -0800
+        1 Mar 2023 15:31:30 -0800
 From:   Fan Ni <fan.ni@samsung.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -56,144 +56,151 @@ CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Ira Weiny <ira.weiny@intel.com>,
         =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>,
         Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 2/6] hw/cxl: Introduce cxl_device_get_timestamp()
- utility function
-Thread-Topic: [PATCH v2 2/6] hw/cxl: Introduce cxl_device_get_timestamp()
-        utility function
-Thread-Index: AQHZSs2JfYF69ar8nESkKIBaSgB23a7nFdOA
-Date:   Wed, 1 Mar 2023 23:08:00 +0000
-Message-ID: <20230301230753.GA1429848@bgt-140510-bm03>
-In-Reply-To: <20230227170311.20054-3-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 3/6] bswap: Add the ability to store to an unaligned
+ 24 bit field
+Thread-Topic: [PATCH v2 3/6] bswap: Add the ability to store to an unaligned
+        24 bit field
+Thread-Index: AQHZSs2ZilSdKpsGkUmfFTHAPmMwEK7nHGaA
+Date:   Wed, 1 Mar 2023 23:31:30 +0000
+Message-ID: <20230301233129.GB1429848@bgt-140510-bm03>
+In-Reply-To: <20230227170311.20054-4-Jonathan.Cameron@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <01E891F4041D8B479DCB830395ECABAF@ssi.samsung.com>
+Content-ID: <87F3AE79F942B34699B3DD5837CFC99E@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djX87oXb/1PNpjZpGNx4mYjm8X+p89Z
-        LFYtvMZmcX7WKRaLwxvPMFn8//WK1WLNCmGL4707WBw4PFqOvGX1WLznJZPHnWt72DyeXNvM
-        5PF+31U2j8+b5ALYorhsUlJzMstSi/TtErgyuvfuZitYKF7R2zWBsYGxW6iLkZNDQsBEoql1
-        CiuILSSwklHiyGTGLkYuILuVSWJK00EWmKLeD/uhEmsZJWZvvs4E4XxklHi9/C5UZimjxJOP
-        m8FmsQkoSuzr2s4GYosIGEm8uzEJrIhZ4BiTxMslV8GKhAWiJT5t+8sCURQj0bLnClARB1jD
-        hNmhIGEWARWJiXtPgM3hFTCTOLzlLRNICaeAo8S2HieQMKOAmMT3U2uYQGxmAXGJW0/mM0Fc
-        LSixaPYeZghbTOLfrodsELaixP3vL9kh6vUkbkydwgZh20lce/iKBcLWlli28DUzxFpBiZMz
-        n0BDQlLi4IobLCCvSAi84JDoOf8ZaqiLxPzZS9ghbGmJq9enMoPcKSGQLLHqIxdEOEdi/pIt
-        UHOsJRb+Wc80gVFlFpKzZyE5aRaSk2YhOWkWkpMWMLKuYhQvLS7OTU8tNspLLdcrTswtLs1L
-        10vOz93ECExXp/8dzt/BeP3WR71DjEwcjIcYJTiYlUR4F97+kyzEm5JYWZValB9fVJqTWnyI
-        UZqDRUmc19D2ZLKQQHpiSWp2ampBahFMlomDU6qBaUrruvYFsu4HGUT7S49dshE/z/sj8c71
-        LNWJPiu6lunwTpWKXdTNrxS311VJxopPSGPS5mlZbhvurZfX1Lg6w3tyaJtE4zyhtCuTC769
-        TzrdcutGb33ZnG1ZLRq6K33yby9PezLB632fq0pYiGwRu1tr5VXRRVH14ol/dmytK965Yl9p
-        1o0nRTbKPNsmXesOnhAg/f91553WxFNa9i59Wy+qTJA5FXx08p7muJSkLRE6+1bu4zY7NemW
-        8qlvD00FHtzSVRURiPwur5kTGNl6YPv2s+XnDc8tW1zwL2/re4bFpxfpbzLIncDym9N4/8Sr
-        dw7PeGjlwxypnFzD9TGTI/RSefneVv5JSu9naz3oUWIpzkg01GIuKk4EAMSiPdHGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsWS2cA0Sffirf/JBlfXSlqcuNnIZrH/6XMW
-        i1ULr7FZnJ91isXi8MYzTBb/f71itVizQtjieO8OFgcOj5Yjb1k9Fu95yeRx59oeNo8n1zYz
-        ebzfd5XN4/MmuQC2KC6blNSczLLUIn27BK6M7r272QoWilf0dk1gbGDsFupi5OSQEDCR6P2w
-        n7GLkYtDSGA1o8TrlvnMEM5HRokTp+dDZZYySpz+Oo0dpIVNQFFiX9d2NhBbRMBI4t2NSYwg
-        NrPAMSaJPU/MQGxhgWiJT9v+skDUxEismLeOqYuRA6x+wuxQkDCLgIrExL0nwMbwCphJHN7y
-        lgnEFhIol+jZ3coCUs4p4CixrccJJMwoICbx/dQaJohN4hK3nsxngnhAQGLJnvPMELaoxMvH
-        /1ghbEWJ+99fskPU60ncmDqFDcK2k7j28BULhK0tsWzha2aIEwQlTs58wgLRKylxcMUNlgmM
-        ErOQrJuFZNQsJKNmIRk1C8moBYysqxjFS4uLc9Mrig3zUsv1ihNzi0vz0vWS83M3MQJj/fS/
-        w5E7GI/e+qh3iJGJg/EQowQHs5II78Lbf5KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8wq5TowX
-        EkhPLEnNTk0tSC2CyTJxcEo1MK25f+E009L+C+9NirLz5vvNOZaZUdBZm3a3v/PE/V3b3t/1
-        ObP+SdcdndQ/BWdmnn5guTqfUfVdwWX96xXzI3alnXFwcZ02LSKBb9UBJpUanwVzJ1e96+i0
-        ia74f3TZ1tdGj+PCeXNvnYo+nd6wM3RGQ8+CBUx5a3k3Hl3313kW38zWwH1x+UsY9c8cMmrY
-        cuufUfZq1btMqt8UlX8fckuS4ezI335s7+wZRzfu+XAud+apS3xLHvIsXn57ob35rDuRe6qu
-        3rwR9/OCvOG3hQn5ch7v5ZX2fd4vL1L4NC+wpfD80zPTw1eb3ir9sfxNqXYXf8nrZH7ewOyv
-        vQIP48usjPlKilnn7f/o+jNmxlQeJZbijERDLeai4kQArJ8oTWQDAAA=
-X-CMS-MailID: 20230301230801uscas1p155098774d0f921b4fd8a1f683343481c
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1BMYRjH5z3n7HF2m+W0Gz1KjB0fxNgK1XEJjds2fHBLJmNY25GmrdYe
+        uV8KfbBDuYSsqC0aRVJSyVpjhUrIjtqUEtY0m6nsYHKrZZ0y++33Ps///76/Dy+FS0oFPlRc
+        4nZWm6hUy0gRUfH42/NpqzudqsBHjcDUvk4lmfsfuwimyNBMMi/09QTzsLQBY5w/uwXM9atS
+        5snxKmIBpThS0yNQ5BvtmOJNs5FU2JpvYYo+UxOp+FI2fgUZLZobw6rjdrDagHmbRFuz7CGa
+        POmunouFKAWZR+qQkAJ6JlwrHhDokIiS0IUIsk7n4PwhDQNbt04wnOp4Pki4WEIXI3hWOIMP
+        ORB8uHcK4xdXEFRX+riYpCeCSVdJutiLng69LaeQq4DTjzGwX276d6uUjoZLlnsEH1oPqTrn
+        /4Iz+8bfOUUR9CTo/OjpGovpEDjZehZ3sZAOh5dHjiEXI3oM9Ndf/+eA097QasvBeGlPyLtg
+        xHkeA4PV70ieJ8LbfvsIPi+HljOZJM/zwHi4l+B5KhQYPuH8u55Qd95G8N2x8OBqyxDbKOg5
+        H87zIrh9OAPx7AsD7QWYSx9oFRQ5RPxYDTmXy4eqc8DwuwQ7gSbp3az1bkZ6NyO9m5HezSgX
+        CYqQdzLHJcSy3PREdqecUyZwyYmxclVSQhn6+6ueDj5MqkLWVofcjDAKmRFQuMxLbGj7rZKI
+        Y5S797DapI3aZDXLmZEvRci8xUFhdSoJHavczsazrIbVDm8xSuiTgnFLJ3ssTduVpbTmRd6c
+        YGGOT72N91aY96lorSa+Y+0xa8mMyMajD2a/9RN7rG83qZLz00eZo5/URflFBaR+j+/QWRZz
+        49IPeGVeuuvPDKTG+0uFHJP+ptpqml27Zv7CwKyq0B/nSjJyTA0RB0fXiNID0KJDn+/7xoX4
+        3OnmXm1oGKetGhts2PgCyZZ7BDeGTvYrnpVviV01aO9r87/ZS1re63UrTyzpo8vScvdWjF9C
+        LQv5FaSM0Wjqgwsy14WZKzUe2d/VLxc2BeorjTVCkXPtNvh6y9G1OePTptz8aqHVUS7oyhZE
+        BMfsrxioJUIj902DUqt3ubRGHtW2ZVlgkozgtiqDpuBaTvkHvEIrTMQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsWS2cA0UTfowf9kg4u3zSxO3Gxks9j/9DmL
+        xaqF19gszs86xWJxeOMZJov/v16xWqxZIWxxvHcHiwOHR8uRt6wei/e8ZPK4c20Pm8eTa5uZ
+        PN7vu8rm8XmTXABbFJdNSmpOZllqkb5dAlfGjJdmBYuEK97OXcnYwHiIr4uRk0NCwETi3rl/
+        LF2MXBxCAqsZJd60v2WDcD4ySuxfvQHKWcoo0bXxASNIC5uAosS+ru1sILaIgJHEuxuTwOLM
+        AseYJPY8Meti5OAQFoiS+DTLGqIkWmLKp0uMMOX/56xjASlhEVCRePBUECTMK2AmMfHWNGYQ
+        W0igXGLT+k0sIDangKPExZYesFZGATGJ76fWMEFsEpe49WQ+E8QDAhJL9pxnhrBFJV4+/scK
+        YStK3P/+kh2iXk/ixtQpbBC2ncSe5ncsELa2xLKFr5khbhCUODnzCQtEr6TEwRU3WCYwSsxC
+        sm4WklGzkIyahWTULCSjFjCyrmIULy0uzk2vKDbKSy3XK07MLS7NS9dLzs/dxAiM9NP/Dkfv
+        YLx966PeIUYmDsZDjBIczEoivAtv/0kW4k1JrKxKLcqPLyrNSS0+xCjNwaIkzvsyamK8kEB6
+        YklqdmpqQWoRTJaJg1OqgWne5rOv2brmnFrF3BQ1yf9k0ms2Y+uJy2/Ne2t0X+H5mRePzJ//
+        ZpuWKNh3Q74y6/WMhSvrxQ+nx82PP3OCq+9ViUvb9aw1Whvvfgzq/+lZyJF/O/OeuJjzhWf2
+        32IUM9adeTpBLTit40bqYTGjWyttqt7MyM+RazTktJ43Yb3R4aJ4WfO4hMbPN3ICrjP5Xc4Q
+        ceXQ+dYh77Yl9sKTPTM91JiyRAwYbUIe/ptyMP2a+ILzTwXmpMQ9Z3rl9vRaS+BDN6H/d29/
+        q3iQqF6X8vRpdePHX06pkXyykerXtiSdW9Y1Z7+DlPPnj1O4E3792/248dOf1l+av3+vEZvT
+        p6hTxOqSyZj+XyX9zzp3Z3UlluKMREMt5qLiRACAr393YwMAAA==
+X-CMS-MailID: 20230301233131uscas1p1bb4ea930c66fd4a9e355c8bb830db3f9
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230301230801uscas1p155098774d0f921b4fd8a1f683343481c
+X-CMS-RootMailID: 20230301233131uscas1p1bb4ea930c66fd4a9e355c8bb830db3f9
 References: <20230227170311.20054-1-Jonathan.Cameron@huawei.com>
-        <20230227170311.20054-3-Jonathan.Cameron@huawei.com>
-        <CGME20230301230801uscas1p155098774d0f921b4fd8a1f683343481c@uscas1p1.samsung.com>
+        <20230227170311.20054-4-Jonathan.Cameron@huawei.com>
+        <CGME20230301233131uscas1p1bb4ea930c66fd4a9e355c8bb830db3f9@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 05:03:07PM +0000, Jonathan Cameron wrote:
+On Mon, Feb 27, 2023 at 05:03:08PM +0000, Jonathan Cameron wrote:
 > From: Ira Weiny <ira.weiny@intel.com>
 >=20
-> There are new users of this functionality coming shortly so factor
-> it out from the GET_TIMESTAMP mailbox command handling.
+> CXL has 24 bit unaligned fields which need to be stored to.  CXL is
+> specified as little endian.
+>=20
+> Define st24_le_p() and the supporting functions to store such a field
+> from a 32 bit host native value.
+>=20
+> The use of b, w, l, q as the size specifier is limiting.  So "24" was
+> used for the size part of the function name.
 >=20
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>=20
 
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
 > ---
->  hw/cxl/cxl-device-utils.c   | 15 +++++++++++++++
->  hw/cxl/cxl-mailbox-utils.c  | 11 +----------
->  include/hw/cxl/cxl_device.h |  2 ++
->  3 files changed, 18 insertions(+), 10 deletions(-)
+> v7:
+>   - Pulled this patch out of the CXL events series as Ira pointed
+>     out it can be used to simplify this series.
+> ---
+>  include/qemu/bswap.h | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 >=20
-> diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
-> index 4c5e88aaf5..86e1cea8ce 100644
-> --- a/hw/cxl/cxl-device-utils.c
-> +++ b/hw/cxl/cxl-device-utils.c
-> @@ -269,3 +269,18 @@ void cxl_device_register_init_common(CXLDeviceState =
-*cxl_dstate)
+> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
+> index 15a78c0db5..ee71cbeaaa 100644
+> --- a/include/qemu/bswap.h
+> +++ b/include/qemu/bswap.h
+> @@ -8,11 +8,23 @@
+>  #undef  bswap64
+>  #define bswap64(_x) __builtin_bswap64(_x)
 > =20
->      cxl_initialize_mailbox(cxl_dstate);
->  }
-> +
-> +uint64_t cxl_device_get_timestamp(CXLDeviceState *cxl_dstate)
+> +static inline uint32_t bswap24(uint32_t x)
 > +{
-> +    uint64_t time, delta;
-> +    uint64_t final_time =3D 0;
-> +
-> +    if (cxl_dstate->timestamp.set) {
-> +        /* Find the delta from the last time the host set the time. */
-> +        time =3D qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-> +        delta =3D time - cxl_dstate->timestamp.last_set;
-> +        final_time =3D cxl_dstate->timestamp.host_set + delta;
-> +    }
-> +
-> +    return final_time;
+> +    return (((x & 0x000000ffU) << 16) |
+> +            ((x & 0x0000ff00U) <<  0) |
+> +            ((x & 0x00ff0000U) >> 16));
 > +}
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 7b2aef0d67..702e16ca20 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -163,17 +163,8 @@ static CXLRetCode cmd_timestamp_get(struct cxl_cmd *=
-cmd,
->                                      CXLDeviceState *cxl_dstate,
->                                      uint16_t *len)
->  {
-> -    uint64_t time, delta;
-> -    uint64_t final_time =3D 0;
-> -
-> -    if (cxl_dstate->timestamp.set) {
-> -        /* First find the delta from the last time the host set the time=
-. */
-> -        time =3D qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-> -        delta =3D time - cxl_dstate->timestamp.last_set;
-> -        final_time =3D cxl_dstate->timestamp.host_set + delta;
-> -    }
-> +    uint64_t final_time =3D cxl_device_get_timestamp(cxl_dstate);
-> =20
-> -    /* Then adjust the actual time */
->      stq_le_p(cmd->payload, final_time);
->      *len =3D 8;
-> =20
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index edb9791bab..02befda0f6 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -287,4 +287,6 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_=
-addr, uint64_t *data,
->  MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t dat=
-a,
->                              unsigned size, MemTxAttrs attrs);
-> =20
-> +uint64_t cxl_device_get_timestamp(CXLDeviceState *cxlds);
 > +
->  #endif
+>  static inline void bswap16s(uint16_t *s)
+>  {
+>      *s =3D __builtin_bswap16(*s);
+>  }
+> =20
+> +static inline void bswap24s(uint32_t *s)
+> +{
+> +    *s =3D bswap24(*s);
+> +}
+> +
+>  static inline void bswap32s(uint32_t *s)
+>  {
+>      *s =3D __builtin_bswap32(*s);
+> @@ -176,6 +188,7 @@ CPU_CONVERT(le, 64, uint64_t)
+>   * size is:
+>   *   b: 8 bits
+>   *   w: 16 bits
+> + *   24: 24 bits
+>   *   l: 32 bits
+>   *   q: 64 bits
+>   *
+> @@ -248,6 +261,11 @@ static inline void stw_he_p(void *ptr, uint16_t v)
+>      __builtin_memcpy(ptr, &v, sizeof(v));
+>  }
+> =20
+> +static inline void st24_he_p(void *ptr, uint32_t v)
+> +{
+> +    __builtin_memcpy(ptr, &v, 3);
+> +}
+> +
+>  static inline int ldl_he_p(const void *ptr)
+>  {
+>      int32_t r;
+> @@ -297,6 +315,11 @@ static inline void stw_le_p(void *ptr, uint16_t v)
+>      stw_he_p(ptr, le_bswap(v, 16));
+>  }
+> =20
+> +static inline void st24_le_p(void *ptr, uint32_t v)
+> +{
+> +    st24_he_p(ptr, le_bswap(v, 24));
+> +}
+> +
+>  static inline void stl_le_p(void *ptr, uint32_t v)
+>  {
+>      stl_he_p(ptr, le_bswap(v, 32));
 > --=20
 > 2.37.2
 >=20
