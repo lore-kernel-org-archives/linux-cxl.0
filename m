@@ -2,114 +2,154 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8295C678D4
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 17:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417C5C7EE32
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 17:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbjCBRG4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 2 Mar 2023 12:06:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
+        id S229949AbjCBRXA convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Mar 2023 12:23:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbjCBRGy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 12:06:54 -0500
-X-Greylist: delayed 527 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Mar 2023 09:06:51 PST
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D9ED41B5D;
-        Thu,  2 Mar 2023 09:06:50 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id B23AA100B5C;
-        Thu,  2 Mar 2023 16:57:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a262.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 44AAD100D62;
-        Thu,  2 Mar 2023 16:57:54 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1677776279; a=rsa-sha256;
-        cv=none;
-        b=h+b7bWahO/kuD41OCWw+zOkVLlaSjPuacllwAN9+zqHS49cn/tDG0MMsBBSoX7Tjsadctn
-        ep24YM7qCCSXJj1n4gDOG5IuFOmsXQrSaQoV79ciIVHYpIOd0tkYfz0tPs7hRxehUOiL6N
-        0aiz+CjLdHaGFxva5YpcCDV5CB7vBN6pVmRQ4FPeTVuybndAp036Y+hhlI+DxLHfq+K5g5
-        FChauPa+G8I/whQZDnSaTQ/Hua765qQo+hp+j8Goe8bP4I4f8UDBHPPkOT7kWculvFBwMd
-        rJ6OW3Zmz6KmFue9ZBpHMp+IZQ4t9fG3hPI3NVim2A2pLkkY8sqT+vui5BRDsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1677776279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=BtMMHrhC+VxWMHcM9Z5TNWKVxCwkBeOHL18S5DW5UYw=;
-        b=iBKpNiVrMtoeaucKaLthtdLl8zygkq7HbEoY0bCd9f7KkjxzZiA9gSMI3gVuPGjGf1MWJk
-        xWO6eLeiGN+HFF1rszdvCzg/AcPBG6cuQVoxnFMeyRBz3ZE4u1C0e5o2cyEL+WSX2LAJ3H
-        xRgecjwOR1LsG0b3U369TY5qOo6kICc8nGVAGas0RYj78T31wFxDoV4Jy4jhfKr95xZOIf
-        9sT8NO57bhVB21A3CCqxHSlY7bcX6x0trdhoQjcU4Z1d7CQFd/k5HNqs/Ezv94SWz+ChGz
-        KJKJCQv2X1FHA3cz8LC1QVmdjgYfu2MwFQ2pLMAsMHdUTLSOi2Z10fVLpJeVdA==
-ARC-Authentication-Results: i=1;
-        rspamd-fd4f5fb8c-wzv7n;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Coil-Desert: 2ab2c85054887b60_1677776279472_3546099934
-X-MC-Loop-Signature: 1677776279472:2981588585
-X-MC-Ingress-Time: 1677776279472
-Received: from pdx1-sub0-mail-a262.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.103.24.89 (trex/6.7.2);
-        Thu, 02 Mar 2023 16:57:59 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a262.dreamhost.com (Postfix) with ESMTPSA id 4PSHMp0Qk2zy1;
-        Thu,  2 Mar 2023 08:57:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1677776246;
-        bh=BtMMHrhC+VxWMHcM9Z5TNWKVxCwkBeOHL18S5DW5UYw=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=hw2XolLhYTPkanbG8GCpzvPw+Uit3qCFH/vA8YgC31HvFYKoBhmodjTcNHwJ/oYVh
-         VCxD2olWCNE3gyAhrIdI2BRHC6oukxIjHY1OnWFBPJ9oBVDATFlPLhVF0C6S4jRPkw
-         Y7wdmzkWEgZ0YVx2rQGKPgEk5vQChC7pi36OEeiWPW29ShzYmcLmDKJXEy+0rGYOZs
-         3RsbApjs4iXwQ711yzJVE80yZDVynvbdQCj1sO4dbCr27TNsU1E1SBJQvfHiD/5Psw
-         vl/EOguojwvGCRLNhgWMZvKb+R6me2sjOgdBbp4uImqoVdLNGlLIJPuNhwtq24vdHL
-         2ARWjyy/EIRBg==
-Date:   Thu, 2 Mar 2023 08:28:38 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Fan Ni <fan.ni@samsung.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
- check
-Message-ID: <20230302162838.euflpp5luvkqcc7f@offworld>
-References: <CGME20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785@uscas1p1.samsung.com>
- <20230228224014.1402545-1-fan.ni@samsung.com>
- <346a8225-609e-0188-ec8a-4abe8d271a09@intel.com>
- <20230302062305.GA1444578@bgt-140510-bm03>
- <e10b60ab-f666-8124-eb8f-6a2da6c0f989@intel.com>
+        with ESMTP id S229918AbjCBRW6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 12:22:58 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168FA7292
+        for <linux-cxl@vger.kernel.org>; Thu,  2 Mar 2023 09:22:55 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PSHqR4cvYz6J7f6;
+        Fri,  3 Mar 2023 01:17:55 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Thu, 2 Mar
+ 2023 17:22:53 +0000
+Date:   Thu, 2 Mar 2023 17:22:52 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        qemu <qemu-devel@nongnu.org>, Ben Widawsky <bwidawsk@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        "Mike Maslenkin" <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        =?ISO-8859-1?Q?Marc-Andr=E9?= Lureau 
+        <marcandre.lureau@redhat.com>, Thomas Huth <thuth@redhat.com>,
+        Michael Roth <michael.roth@amd.com>
+Subject: Re: [PATCH v6 8/8] hw/mem/cxl_type3: Add CXL RAS Error Injection
+ Support.
+Message-ID: <20230302172252.00000025@huawei.com>
+In-Reply-To: <20230302055254-mutt-send-email-mst@kernel.org>
+References: <20230227112751.6101-1-Jonathan.Cameron@huawei.com>
+        <20230227112751.6101-9-Jonathan.Cameron@huawei.com>
+        <20230302100608.00005bcd@huawei.com>
+        <e9287de7-94a6-944b-1627-3fa8f7f1a9bc@linaro.org>
+        <20230302055254-mutt-send-email-mst@kernel.org>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <e10b60ab-f666-8124-eb8f-6a2da6c0f989@intel.com>
-User-Agent: NeoMutt/20220429
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 02 Mar 2023, Dave Jiang wrote:
+On Thu, 2 Mar 2023 05:55:00 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-> It does sound like a bug with QEMU emulation currently.
+> On Thu, Mar 02, 2023 at 11:49:52AM +0100, Philippe Mathieu-Daudé wrote:
+> > On 2/3/23 11:06, Jonathan Cameron wrote:  
+> > > +CC Michael Roth.
+> > > 
+> > > Michael Tsirkin noted I'd missed CCing QAPI maintaintainers on the
+> > > poison injection series so I went back to check the others I had out for review.
+> > > For this series I'd managed to pick up one of two as Markus gave comments on
+> > > earlier versions.  
+> > 
+> > Now LGTM for meson/QAPI (although I'm not a QAPI maintainer).
+> > 
+> > Hopefully MST can take your series just in time for soft freeze.  
+> 
+> 
+> Bottleneck is QAPI right now. Consider CC Eric and maybe Daniel
+> because Daniel is awesome and has been helping out with lots
+> of stuff among them QAPI.
 
-Agreed, but still, crashing the kernel is always a no no - like with
-the passthrough decoder situation we had.
+Thanks for the tip.  Resent with additional CCs (hopefully to right
+people!) and a note that we are looking for qapi review.
 
-Thanks,
-Davidlohr
+With the benefit of hindsight I'd have ordered the series differently
+if I'd guessed we'd bottleneck here.
+
+Jonathan
+
+> 
+> > > On Mon, 27 Feb 2023 11:27:51 +0000
+> > > Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
+> > >   
+> > > > CXL uses PCI AER Internal errors to signal to the host that an error has
+> > > > occurred. The host can then read more detailed status from the CXL RAS
+> > > > capability.
+> > > > 
+> > > > For uncorrectable errors: support multiple injection in one operation
+> > > > as this is needed to reliably test multiple header logging support in an
+> > > > OS. The equivalent feature doesn't exist for correctable errors, so only
+> > > > one error need be injected at a time.
+> > > > 
+> > > > Note:
+> > > >   - Header content needs to be manually specified in a fashion that
+> > > >     matches the specification for what can be in the header for each
+> > > >     error type.
+> > > > 
+> > > > Injection via QMP:
+> > > > { "execute": "qmp_capabilities" }
+> > > > ...
+> > > > { "execute": "cxl-inject-uncorrectable-errors",
+> > > >    "arguments": {
+> > > >      "path": "/machine/peripheral/cxl-pmem0",
+> > > >      "errors": [
+> > > >          {
+> > > >              "type": "cache-address-parity",
+> > > >              "header": [ 3, 4]
+> > > >          },
+> > > >          {
+> > > >              "type": "cache-data-parity",
+> > > >              "header": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+> > > >          },
+> > > >          {
+> > > >              "type": "internal",
+> > > >              "header": [ 1, 2, 4]
+> > > >          }
+> > > >          ]
+> > > >    }}
+> > > > ...
+> > > > { "execute": "cxl-inject-correctable-error",
+> > > >      "arguments": {
+> > > >          "path": "/machine/peripheral/cxl-pmem0",
+> > > >          "type": "physical"
+> > > >      } }
+> > > > 
+> > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > ---
+> > > > v6: (Thanks to Philippe Mathieu-Daudé)
+> > > > - Add Since entries in cxl.json
+> > > > - Add error prints in the stub functions so that if they are called without
+> > > >    CONFIG_CXL_MEM_DEVICE then we get a useful print rather than just silently
+> > > >    eating them.
+> > > > ---
+> > > >   hw/cxl/cxl-component-utils.c   |   4 +-
+> > > >   hw/mem/cxl_type3.c             | 281 +++++++++++++++++++++++++++++++++
+> > > >   hw/mem/cxl_type3_stubs.c       |  17 ++
+> > > >   hw/mem/meson.build             |   2 +
+> > > >   include/hw/cxl/cxl_component.h |  26 +++
+> > > >   include/hw/cxl/cxl_device.h    |  11 ++
+> > > >   qapi/cxl.json                  | 128 +++++++++++++++
+> > > >   qapi/meson.build               |   1 +
+> > > >   qapi/qapi-schema.json          |   1 +
+> > > >   9 files changed, 470 insertions(+), 1 deletion(-)  
+> 
+
