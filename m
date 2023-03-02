@@ -2,127 +2,131 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F96C7EE2F
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 17:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF6EC678D4
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 20:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjCBRms (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 2 Mar 2023 12:42:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
+        id S229819AbjCBUWw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Mar 2023 15:22:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230207AbjCBRms (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 12:42:48 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EE453282
-        for <linux-cxl@vger.kernel.org>; Thu,  2 Mar 2023 09:42:44 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PSJKD0csYz67DYv;
-        Fri,  3 Mar 2023 01:40:16 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Thu, 2 Mar
- 2023 17:42:41 +0000
-Date:   Thu, 2 Mar 2023 17:42:40 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>
-CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        with ESMTP id S229447AbjCBUWv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 15:22:51 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D0D51F97;
+        Thu,  2 Mar 2023 12:22:47 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id B27DD300160F0;
+        Thu,  2 Mar 2023 21:22:45 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id A54443187D; Thu,  2 Mar 2023 21:22:45 +0100 (CET)
+Date:   Thu, 2 Mar 2023 21:22:45 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Alexey Kardashevskiy <aik@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v3 5/7] hw/cxl/events: Add injection of General Media
- Events
-Message-ID: <20230302174240.00003ed7@huawei.com>
-In-Reply-To: <20230227173416.7740-6-Jonathan.Cameron@huawei.com>
-References: <20230227173416.7740-1-Jonathan.Cameron@huawei.com>
-        <20230227173416.7740-6-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v3 12/16] PCI/DOE: Create mailboxes on device enumeration
+Message-ID: <20230302202245.GA14357@wunner.de>
+References: <cover.1676043318.git.lukas@wunner.de>
+ <c3f9e24fffa318a045f89664fb9545099cb0d603.1676043318.git.lukas@wunner.de>
+ <bc150b29-ee21-b033-7d05-dd28dd7a1af4@amd.com>
+ <20230228054353.GA32202@wunner.de>
+ <66ca8670-6bd2-a446-d393-3c327aa45ccc@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66ca8670-6bd2-a446-d393-3c327aa45ccc@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 27 Feb 2023 17:34:14 +0000
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
-
-> From: Ira Weiny <ira.weiny@intel.com>
+On Tue, Feb 28, 2023 at 06:24:41PM +1100, Alexey Kardashevskiy wrote:
+> On 28/2/23 16:43, Lukas Wunner wrote:
+> > On Tue, Feb 28, 2023 at 12:18:07PM +1100, Alexey Kardashevskiy wrote:
+> > > On 11/2/23 07:25, Lukas Wunner wrote:
+> > > > For the same reason a DOE instance cannot be shared between the
+> > > > PCI core and a driver.
+> > > 
+> > > And we want this sharing why? Any example will do. Thanks,
+> > 
+> > The PCI core is going to perform CMA/SPDM authentication when a device
+> > gets enumerated (PCIe r6.0 sec 6.31).  That's the main motivation
+> > to lift DOE mailbox creation into the PCI core.  It's not mentioned
+> > here explicitly because I want the patch to stand on its own.
+> > CMA/SPDM support will be submitted separately.
 > 
-> To facilitate testing provide a QMP command to inject a general media
-> event.  The event can be added to the log specified.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Link: https://lore.kernel.org/r/20221221-ira-cxl-events-2022-11-17-v2-8-2ce2ecc06219@intel.com
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> I was going the opposite direction with avoiding adding this into the PCI
+> core as 1) the pci_dev struct is already 2K  and 2) it is a niche feature
+> and  3) I wanted this CMA/SPDM session setup to be platform specific as on
+> our platform the SPDM support requires some devices to be probed before we
+> can any SPDM.
 
-Took another look at this after some review feedback on remaining endian issues.
-There are some of those + the timestamp in the header is not in device time.
-I'll fix up for v4.
+We had an open discussion at Plumbers with stakeholders from various
+companies and the consensus was that initially we'll upstream a CMA/SPDM
+implementation which authenticates devices on enumeration and exposes
+the result to user space via sysfs.  Nothing more, nothing less:
 
-> +static void cxl_assign_event_header(CXLEventRecordHdr *hdr,
-> +                                    const QemuUUID *uuid, uint8_t flags,
-> +                                    uint8_t length)
-> +{
-> +    hdr->flags[0] = flags;
-Should be st24_le_p() really and a type big enough to hold a 24 bit
+https://lpc.events/event/16/contributions/1304/
+https://lpc.events/event/16/contributions/1304/attachments/1029/1974/LPC2022-SPDM-BoF-v4.pdf
 
-> +    hdr->length = length;
-> +    memcpy(&hdr->id, uuid, sizeof(hdr->id));
-> +    hdr->timestamp = qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL);
-This isn't the right timestamp and it should be little endian. 
+Thereby we seek to minimize friction in the upstreaming process
+because we avoid depending on PCIe features layered on top of
+CMA/SPDM (such as IDE) and we can postpone controversial discussions
+about the consequences of failed authentication (such as forbidding
+driver binding or firewalling the device off via ACS).
 
-> +}
-> +
-> +/* Component ID is device specific.  Define this as a string. */
-> +void qmp_cxl_inject_gen_media_event(const char *path, CxlEventLog log,
-> +                                    uint8_t flags, uint64_t physaddr,
-> +                                    uint8_t descriptor, uint8_t type,
-> +                                    uint8_t transaction_type,
-> +                                    bool has_channel, uint8_t channel,
-> +                                    bool has_rank, uint8_t rank,
-> +                                    bool has_device, uint32_t device,
-> +                                    const char *component_id,
-> +                                    Error **errp)
-> +{
-> +    Object *obj = object_resolve_path(path, NULL);
-> +    CXLEventGenMedia gem;
-> +    CXLEventRecordHdr *hdr = &gem.hdr;
-> +    CXLDeviceState *cxlds;
-> +    CXLType3Dev *ct3d;
-> +    uint16_t valid_flags = 0;
-> +    uint8_t enc_log;
-> +    int rc;
-> +
-> +    if (!obj) {
-> +        error_setg(errp, "Unable to resolve path");
-> +        return;
-> +    }
-> +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-> +        error_setg(errp, "Path does not point to a CXL type 3 device");
-> +        return;
-> +    }
-> +    ct3d = CXL_TYPE3(obj);
-> +    cxlds = &ct3d->cxl_dstate;
-> +
-> +    rc = ct3d_qmp_cxl_event_log_enc(log);
-> +    if (rc < 0) {
-> +        error_setg(errp, "Unhandled error log type");
-> +        return;
-> +    }
-> +    enc_log = rc;
-> +
-> +    memset(&gem, 0, sizeof(gem));
-> +    cxl_assign_event_header(hdr, &gen_media_uuid, flags, sizeof(gem));
-> +
-> +    gem.phys_addr = physaddr;
-This was the one that was pointed out off list.
-Thanks!
-> +    gem.descriptor = descriptor;
-> +    gem.type = type;
-> +    gem.transaction_type = transaction_type;
+The patches under development follow the approach we agreed on back then.
 
+I honestly think that the size of struct pci_dev is a non-issue because
+even the lowest-end IoT devices come with gigabytes of memory these days
+and as long as we do not exceed PAGE_SIZE (which is the limit when we'd
+have to switch from kmalloc() to vmalloc() I believe), there's no
+problem.
+
+The claim that DOE and CMA/SPDM is going to be a niche feature is at
+least debatable.  It seems rather likely to me that we'll see adoption
+particularly in the mobile segment as iOS/Android/Chrome promulgators
+will see an opportunity to harden their products further.
+
+It's intriguing that you need some devices to be probed before you
+can perform authentication.  What do you need this for?
+
+Do you perhaps need to load firmware onto the device before you can
+authenticate it?  Doesn't that defeat the whole point of authentication?
+
+Or do you mean that certain *other* devices need to probe before a device
+can be authenticated?  What are these other devices?
+
+What happens if the device is suspended to D3cold or experiences a
+Conventional Reset?  Do you need to do anything special before you
+can re-authenticate the device?
+
+On the one hand, performing authentication in the PCI core could be
+considered a case of midlayer fallacy.  On the other hand, I think we
+do want to afford CMA/SPDM and the features layered on top of it
+(IDE, TDISP) regardless whether a driver is bound:  That way we can
+protect the PCI core's communication with the device and with ACS
+we can protect other PCI devices in the system from peer-to-peer
+communication originating from a malicious device which failed to
+authenticate.
+
+I would like to make the implementation under development work for
+your use case as well, but to do that I need a better understanding
+what your requirements are.
+
+Thanks,
+
+Lukas
