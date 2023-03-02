@@ -2,105 +2,156 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B1EC7EE30
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 00:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71562C678D4
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 01:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbjCBARM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 19:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
+        id S229470AbjCBBQA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 1 Mar 2023 20:16:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjCBARI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 19:17:08 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345764FA91
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 16:17:07 -0800 (PST)
+        with ESMTP id S229463AbjCBBQA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 20:16:00 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330684347D
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 17:15:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677716227; x=1709252227;
+  t=1677719759; x=1709255759;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=qU0+zCZ6gzF8j9PsE4U+CezqucY5RiDgi6fMnedAsKs=;
-  b=ASOkaalznZ+TMijfrCJHl0uoq+T/A0cWkkgLjsPiOYeTvOdl1YnEWYmE
-   HRgAWT7x3qBsBBk19S6t6MbR9G2nUYuhSPAQpoqF+KIXcY4kXWp+hNFAC
-   HgUuCTa1rS+PnexB8bPg6ad7zjq/3PQZofY1to1TdfIbSvAQxBBZ5BOCr
-   dIL4vRL7fzFyIJDJUr/ns6PBt8pgmzTKW5D6j21VOlo6AjZq3LezcByWp
-   IQ0zKAACV2kS3MNRC6aqIUwUzhpGG8jjUPyVSYOCx0oGHVexP7BA8zQEj
-   8ZRx38WeUh46cW6vlf3618uZvc0Yjd0NkE5fACIBL+tW5kjZ0hRFLW0lV
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="336860256"
-X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="336860256"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 16:17:06 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="763787950"
-X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="763787950"
+  bh=2mML6RsAC6bvhaoPqiC+gUeN4bvwDP8JV8z6JOb9TL0=;
+  b=i5FYqy3Fr498qLQTbeadeYRitIVqkbCSvMhLUiQlhGUYqofVH8jPNX1S
+   z7qTvKLLg9Mks2KkXFaeDFSIs60siTs15SkHk/hj0wiMYhpHSKh+P7dyQ
+   FT0HZHZA1tlPYNYkj49SBcsc5TnP17izAXaj0q/1+xLdxt9cnvYeFtH/o
+   LtolsLX5DWyDfXuv+oSw38G+6lMnt53Fj6a7pfNNoGtXmAGUm2Yj4TnlV
+   hjB3qiaQgQHZMiUHJWG2oOeajLjdFUsDNxMagnLEu9JF+S0eOsiwoFaVa
+   j7Xb2ZoMcPhIkcjvtGAyG5sdsHDNqJ/suRJV5xiYF2zE7N+I5wNZ0Vq+2
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="318381015"
+X-IronPort-AV: E=Sophos;i="5.98,226,1673942400"; 
+   d="scan'208";a="318381015"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 17:15:58 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="798632692"
+X-IronPort-AV: E=Sophos;i="5.98,226,1673942400"; 
+   d="scan'208";a="798632692"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.252.139.73])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 16:17:06 -0800
-Date:   Wed, 1 Mar 2023 16:17:04 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 17:15:58 -0800
+Date:   Wed, 1 Mar 2023 17:15:56 -0800
 From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     jonathan.cameron@huawei.com, dan.j.williams@intel.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl: fix compile warning for cxl_security_ops extern
-Message-ID: <Y//rABaux/8Cgx0q@aschofie-mobl2>
-References: <20230228150911.00002535@Huawei.com>
- <167771196186.3285982.18283746206612049722.stgit@djiang5-mobl3.local>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v2 0/6] hw/cxl: Poison get, inject, clear
+Message-ID: <Y//4zFIjBCN/Qlkz@aschofie-mobl2>
+References: <20230227170311.20054-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <167771196186.3285982.18283746206612049722.stgit@djiang5-mobl3.local>
+In-Reply-To: <20230227170311.20054-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 01, 2023 at 04:06:58PM -0700, Dave Jiang wrote:
-> Jonathan says he has observed compiler warning when using running with W=1
-> C=1 for cxl_security_ops that is declared as an extern in cxl/pmem.c. Move
-> to cxl.h to make it visible to all cxl sources.
-> 
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> 
-> Hi Jonathan, I was not able to reproduce the issue with W=1 C=1. Can you
-> please see if this fixes what you were seeing? Thanks!
+On Mon, Feb 27, 2023 at 05:03:05PM +0000, Jonathan Cameron wrote:
 
-I was seeing this with make C=2 -Wsparse-all
-Works without complaint now.
+Hi Jonathan,
+Can you share your repo with this support?  How about your qemu cmdline?
+I'm more of a 'try it out' type of a reviewer for qemu changes.
+Thanks,
+Alison
 
-Tested-by: Alison Schofield <alison.schofield@intel.com>
-
+> v2: Thanks to Ira for review and also to Philippe as some of the
+>     changes follow through from comments on precusor series.
 > 
->  drivers/cxl/cxl.h  |    2 ++
->  drivers/cxl/pmem.c |    2 --
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> - Fixed a bunch of endian issues. Note that QEMU CXL suppport only currently
+>   supports platforms that happen to be little endian so these are more
+>   theoretical than bugs that can be triggered.
+> - Improve handling over mailbox inject poison that overlaps with
+>   qmp injected (which can be bigger).
+> - Tighter checks on alignment.
+> - Add 'Since' entries to qapi docs.
+> - Drop the CXLRetCode move out of this series as it isn't needed for this.
+>   Will appear in next series I post instead (Ira's event series)
+> - Drag down the st24_le_p() patch from Ira's Event series so we can use
+>   it in this series.
 > 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f2b0962a552d..6f00b938f342 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -10,6 +10,8 @@
->  #include <linux/log2.h>
->  #include <linux/io.h>
->  
-> +extern const struct nvdimm_security_ops *cxl_security_ops;
-> +
->  /**
->   * DOC: cxl objects
->   *
-> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
-> index 71cfa1fdf902..55930567fc01 100644
-> --- a/drivers/cxl/pmem.c
-> +++ b/drivers/cxl/pmem.c
-> @@ -11,8 +11,6 @@
->  #include "cxlmem.h"
->  #include "cxl.h"
->  
-> -extern const struct nvdimm_security_ops *cxl_security_ops;
-> -
->  static __read_mostly DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
->  
->  static void clear_exclusive(void *cxlds)
+> Note Alison has stated the kernel series will be post 6.3 material
+> so this one isn't quite as urgent as the patches it is based on.
+> However I think this series in a good state (plus I have lots more queued
+> behind it) hence promoting it from RFC.
 > 
+> Changes since RFC v2: Thanks to Markus for review.
+>  - Improve documentation for QMP interface
+>  - Add better description of baseline series
+>  - Include precursor refactors around ret_code / CXLRetCode as this is now
+>    the first series in suggeste merge order to rely on those.
+>  - Include Ira's cxl_device_get_timestamp() function as it was better than
+>    the equivalent in the RFC.
+> 
+> Based on following series (in order)
+> 1. [PATCH v4 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream
+> 2. [PATCH v6 0/8] hw/cxl: RAS error emulation and injection
+> 3. [PATCH v2 0/2] hw/cxl: Passthrough HDM decoder emulation
+> 4. [PATCH v4 0/2] hw/mem: CXL Type-3 Volatile Memory Support
+> 
+> Based on: Message-Id: 20230206172816.8201-1-Jonathan.Cameron@huawei.com
+> Based-on: Message-id: 20230227112751.6101-1-Jonathan.Cameron@huawei.com
+> Based-on: Message-id: 20230227153128.8164-1-Jonathan.Cameron@huawei.com
+> Based-on: Message-id: 20230227163157.6621-1-Jonathan.Cameron@huawei.com
+> 
+> The series supports:
+> 1) Injection of variable length poison regions via QMP (to fake real
+>    memory corruption and ensure we deal with odd overflow corner cases
+>    such as clearing the middle of a large region making the list overflow
+>    as we go from one long entry to two smaller entries.
+> 2) Read of poison list via the CXL mailbox.
+> 3) Injection via the poison injection mailbox command (limited to 64 byte
+>    entries)
+> 4) Clearing of poison injected via either method.
+> 
+> The implementation is meant to be a valid combination of impdef choices
+> based on what the spec allowed. There are a number of places where it could
+> be made more sophisticated that we might consider in future:
+> * Fusing adjacent poison entries if the types match.
+> * Separate injection list and main poison list, to test out limits on
+>   injected poison list being smaller than the main list.
+> * Poison list overflow event (needs event log support in general)
+> * Connecting up to the poison list error record generation (rather complex
+>   and not needed for currently kernel handling testing).
+> 
+> As the kernel code is currently fairly simple, it is likely that the above
+> does not yet matter but who knows what will turn up in future!
+> 
+> Kernel patches:
+>  [PATCH v7 0/6] CXL Poison List Retrieval & Tracing
+>  cover.1676685180.git.alison.schofield@intel.com
+>  [PATCH v2 0/6] cxl: CXL Inject & Clear Poison
+>  cover.1674101475.git.alison.schofield@intel.com
+> 
+> 
+> Ira Weiny (2):
+>   hw/cxl: Introduce cxl_device_get_timestamp() utility function
+>   bswap: Add the ability to store to an unaligned 24 bit field
+> 
+> Jonathan Cameron (4):
+>   hw/cxl: rename mailbox return code type from ret_code to CXLRetCode
+>   hw/cxl: QMP based poison injection support
+>   hw/cxl: Add poison injection via the mailbox.
+>   hw/cxl: Add clear poison mailbox command support.
+> 
+>  hw/cxl/cxl-device-utils.c   |  15 ++
+>  hw/cxl/cxl-mailbox-utils.c  | 285 ++++++++++++++++++++++++++++++------
+>  hw/mem/cxl_type3.c          |  92 ++++++++++++
+>  hw/mem/cxl_type3_stubs.c    |   6 +
+>  include/hw/cxl/cxl_device.h |  23 +++
+>  include/qemu/bswap.h        |  23 +++
+>  qapi/cxl.json               |  18 +++
+>  7 files changed, 420 insertions(+), 42 deletions(-)
+> 
+> -- 
+> 2.37.2
 > 
