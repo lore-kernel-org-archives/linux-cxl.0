@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4D7C678D4
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 10:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A7C6FA8E
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 10:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjCBKSt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 2 Mar 2023 05:18:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
+        id S229735AbjCBKTR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Mar 2023 05:19:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbjCBKSp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 05:18:45 -0500
+        with ESMTP id S229712AbjCBKTQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 05:19:16 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F3813DD8
-        for <linux-cxl@vger.kernel.org>; Thu,  2 Mar 2023 02:18:44 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PS6Q11Fyrz6J7x4;
-        Thu,  2 Mar 2023 18:13:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860DE14992
+        for <linux-cxl@vger.kernel.org>; Thu,  2 Mar 2023 02:19:13 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PS6QZ1FL1z6J7wj;
+        Thu,  2 Mar 2023 18:14:14 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 2 Mar 2023 10:18:40 +0000
+ 15.1.2507.21; Thu, 2 Mar 2023 10:19:11 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
         Fan Ni <fan.ni@samsung.com>
@@ -31,9 +31,9 @@ CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
         =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         Dave Jiang <dave.jiang@intel.com>,
         Markus Armbruster <armbru@redhat.com>
-Subject: [PATCH v3 3/6] bswap: Add the ability to store to an unaligned 24 bit field
-Date:   Thu, 2 Mar 2023 10:17:07 +0000
-Message-ID: <20230302101710.1652-4-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v3 4/6] hw/cxl: QMP based poison injection support
+Date:   Thu, 2 Mar 2023 10:17:08 +0000
+Message-ID: <20230302101710.1652-5-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230302101710.1652-1-Jonathan.Cameron@huawei.com>
 References: <20230302101710.1652-1-Jonathan.Cameron@huawei.com>
@@ -41,95 +41,332 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Inject poison using qmp command cxl-inject-poison to add an entry to the
+poison list.
 
-CXL has 24 bit unaligned fields which need to be stored to.  CXL is
-specified as little endian.
+For now, the poison is not returned CXL.mem reads, but only via the
+mailbox command Get Poison List.
 
-Define st24_le_p() and the supporting functions to store such a field
-from a 32 bit host native value.
+See CXL rev 3.0, sec 8.2.9.8.4.1 Get Poison list (Opcode 4300h)
 
-The use of b, w, l, q as the size specifier is limiting.  So "24" was
-used for the size part of the function name.
+Kernel patches to use this interface here:
+https://lore.kernel.org/linux-cxl/cover.1665606782.git.alison.schofield@intel.com/
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+To inject poison using qmp (telnet to the qmp port)
+{ "execute": "qmp_capabilities" }
+
+{ "execute": "cxl-inject-poison",
+    "arguments": {
+         "path": "/machine/peripheral/cxl-pmem0",
+         "start": 2048,
+         "length": 256
+    }
+}
+
+Adjusted to select a device on your machine.
+
+Note that the poison list supported is kept short enough to avoid the
+complexity of state machine that is needed to handle the MORE flag.
+
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 ---
-v8:
-  - Picked up tag from Fan Ni.
+v2:
+Improve QMP documentation.
+Fix up some endian issues
 ---
- include/qemu/bswap.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ hw/cxl/cxl-mailbox-utils.c  | 90 +++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          | 56 +++++++++++++++++++++++
+ hw/mem/cxl_type3_stubs.c    |  6 +++
+ include/hw/cxl/cxl_device.h | 20 +++++++++
+ qapi/cxl.json               | 18 ++++++++
+ 5 files changed, 190 insertions(+)
 
-diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
-index 15a78c0db5..ee71cbeaaa 100644
---- a/include/qemu/bswap.h
-+++ b/include/qemu/bswap.h
-@@ -8,11 +8,23 @@
- #undef  bswap64
- #define bswap64(_x) __builtin_bswap64(_x)
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 702e16ca20..792d3ee5aa 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -62,6 +62,8 @@ enum {
+         #define GET_PARTITION_INFO     0x0
+         #define GET_LSA       0x2
+         #define SET_LSA       0x3
++    MEDIA_AND_POISON = 0x43,
++        #define GET_POISON_LIST        0x0
+ };
  
-+static inline uint32_t bswap24(uint32_t x)
-+{
-+    return (((x & 0x000000ffU) << 16) |
-+            ((x & 0x0000ff00U) <<  0) |
-+            ((x & 0x00ff0000U) >> 16));
-+}
-+
- static inline void bswap16s(uint16_t *s)
- {
-     *s = __builtin_bswap16(*s);
+ /* 8.2.8.4.5.1 Command Return Codes */
+@@ -295,6 +297,10 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
+     stq_le_p(&id->persistent_capacity, cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
+     stq_le_p(&id->volatile_capacity, cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
+     stl_le_p(&id->lsa_size, cvc->get_lsa_size(ct3d));
++    /* 256 poison records */
++    st24_le_p(id->poison_list_max_mer, 256);
++    /* No limit - so limited by main poison record limit */
++    stw_le_p(&id->inject_poison_limit, 0);
+ 
+     *len = sizeof(*id);
+     return CXL_MBOX_SUCCESS;
+@@ -384,6 +390,88 @@ static CXLRetCode cmd_ccls_set_lsa(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
  }
  
-+static inline void bswap24s(uint32_t *s)
++/*
++ * This is very inefficient, but good enough for now!
++ * Also the payload will always fit, so no need to handle the MORE flag and
++ * make this stateful. We may want to allow longer poison lists to aid
++ * testing that kernel functionality.
++ */
++static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
++                                            CXLDeviceState *cxl_dstate,
++                                            uint16_t *len)
 +{
-+    *s = bswap24(*s);
++    struct get_poison_list_pl {
++        uint64_t pa;
++        uint64_t length;
++    } QEMU_PACKED;
++
++    struct get_poison_list_out_pl {
++        uint8_t flags;
++        uint8_t rsvd1;
++        uint64_t overflow_timestamp;
++        uint16_t count;
++        uint8_t rsvd2[0x14];
++        struct {
++            uint64_t addr;
++            uint32_t length;
++            uint32_t resv;
++        } QEMU_PACKED records[];
++    } QEMU_PACKED;
++
++    struct get_poison_list_pl *in = (void *)cmd->payload;
++    struct get_poison_list_out_pl *out = (void *)cmd->payload;
++    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
++    uint16_t record_count = 0, i = 0;
++    uint64_t query_start, query_length;
++    CXLPoisonList *poison_list = &ct3d->poison_list;
++    CXLPoison *ent;
++    uint16_t out_pl_len;
++
++    query_start = ldq_le_p(&in->pa);
++    /* 64 byte alignemnt required */
++    if (query_start & 0x3f) {
++        return CXL_MBOX_INVALID_INPUT;
++    }
++    query_length = ldq_le_p(&in->length) * 64;
++
++    QLIST_FOREACH(ent, poison_list, node) {
++        /* Check for no overlap */
++        if (ent->start >= query_start + query_length ||
++            ent->start + ent->length <= query_start) {
++            continue;
++        }
++        record_count++;
++    }
++    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
++    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
++
++    memset(out, 0, out_pl_len);
++    QLIST_FOREACH(ent, poison_list, node) {
++        uint64_t start, stop;
++
++        /* Check for no overlap */
++        if (ent->start >= query_start + query_length ||
++            ent->start + ent->length <= query_start) {
++            continue;
++        }
++
++        /* Deal with overlap */
++        start = MAX(ent->start & 0xffffffffffffffc0, query_start);
++        stop = MIN((ent->start & 0xffffffffffffffc0) + ent->length,
++                   query_start + query_length);
++        stq_le_p(&out->records[i].addr, start | (ent->type & 0x3));
++        stl_le_p(&out->records[i].length, (stop - start) / 64);
++        i++;
++    }
++    if (ct3d->poison_list_overflowed) {
++        out->flags = (1 << 1);
++        stq_le_p(&out->overflow_timestamp, ct3d->poison_list_overflow_ts);
++    }
++    stw_le_p(&out->count, record_count);
++    *len = out_pl_len;
++    return CXL_MBOX_SUCCESS;
 +}
 +
- static inline void bswap32s(uint32_t *s)
- {
-     *s = __builtin_bswap32(*s);
-@@ -176,6 +188,7 @@ CPU_CONVERT(le, 64, uint64_t)
-  * size is:
-  *   b: 8 bits
-  *   w: 16 bits
-+ *   24: 24 bits
-  *   l: 32 bits
-  *   q: 64 bits
-  *
-@@ -248,6 +261,11 @@ static inline void stw_he_p(void *ptr, uint16_t v)
-     __builtin_memcpy(ptr, &v, sizeof(v));
+ #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+ #define IMMEDIATE_DATA_CHANGE (1 << 2)
+ #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+@@ -411,6 +499,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+     [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
+     [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
+         ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
++    [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
++        cmd_media_get_poison_list, 16, 0 },
+ };
+ 
+ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 572ad47fa2..21e3a84785 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -919,6 +919,62 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
+      */
  }
  
-+static inline void st24_he_p(void *ptr, uint32_t v)
++void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d)
 +{
-+    __builtin_memcpy(ptr, &v, 3);
++        ct3d->poison_list_overflowed = true;
++        ct3d->poison_list_overflow_ts =
++            cxl_device_get_timestamp(&ct3d->cxl_dstate);
 +}
 +
- static inline int ldl_he_p(const void *ptr)
- {
-     int32_t r;
-@@ -297,6 +315,11 @@ static inline void stw_le_p(void *ptr, uint16_t v)
-     stw_he_p(ptr, le_bswap(v, 16));
- }
++void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
++                           Error **errp)
++{
++    Object *obj = object_resolve_path(path, NULL);
++    CXLType3Dev *ct3d;
++    CXLPoison *p;
++
++    if (length % 64) {
++        error_setg(errp, "Poison injection must be in multiples of 64 bytes");
++        return;
++    }
++    if (start % 64) {
++        error_setg(errp, "Poison start address must be 64 byte aligned");
++        return;
++    }
++    if (!obj) {
++        error_setg(errp, "Unable to resolve path");
++        return;
++    }
++    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
++        error_setg(errp, "Path does not point to a CXL type 3 device");
++        return;
++    }
++
++    ct3d = CXL_TYPE3(obj);
++
++    QLIST_FOREACH(p, &ct3d->poison_list, node) {
++        if (((start >= p->start) && (start < p->start + p->length)) ||
++            ((start + length > p->start) &&
++             (start + length <= p->start + p->length))) {
++            error_setg(errp, "Overlap with existing poisoned region not supported");
++            return;
++        }
++    }
++
++    if (ct3d->poison_list_cnt == CXL_POISON_LIST_LIMIT) {
++        cxl_set_poison_list_overflowed(ct3d);
++        return;
++    }
++
++    p = g_new0(CXLPoison, 1);
++    p->length = length;
++    p->start = start;
++    p->type = CXL_POISON_TYPE_INTERNAL; /* Different from injected via the mbox */
++
++    QLIST_INSERT_HEAD(&ct3d->poison_list, p, node);
++    ct3d->poison_list_cnt++;
++}
++
+ /* For uncorrectable errors include support for multiple header recording */
+ void qmp_cxl_inject_uncorrectable_errors(const char *path,
+                                          CXLUncorErrorRecordList *errors,
+diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+index d574c58f9a..fd1166a610 100644
+--- a/hw/mem/cxl_type3_stubs.c
++++ b/hw/mem/cxl_type3_stubs.c
+@@ -3,6 +3,12 @@
+ #include "qapi/error.h"
+ #include "qapi/qapi-commands-cxl.h"
  
-+static inline void st24_le_p(void *ptr, uint32_t v)
++void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
++                           Error **errp)
 +{
-+    st24_he_p(ptr, le_bswap(v, 24));
++    error_setg(errp, "CXL Type 3 support is not compiled in");
 +}
 +
- static inline void stl_le_p(void *ptr, uint32_t v)
- {
-     stl_he_p(ptr, le_bswap(v, 32));
+ void qmp_cxl_inject_uncorrectable_errors(const char *path,
+                                          CXLUncorErrorRecordList *errors,
+                                          Error **errp)
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index 02befda0f6..32c234ea91 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -242,6 +242,18 @@ typedef struct CXLError {
+ 
+ typedef QTAILQ_HEAD(, CXLError) CXLErrorList;
+ 
++typedef struct CXLPoison {
++    uint64_t start, length;
++    uint8_t type;
++#define CXL_POISON_TYPE_EXTERNAL 0x1
++#define CXL_POISON_TYPE_INTERNAL 0x2
++#define CXL_POISON_TYPE_INJECTED 0x3
++    QLIST_ENTRY(CXLPoison) node;
++} CXLPoison;
++
++typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
++#define CXL_POISON_LIST_LIMIT 256
++
+ struct CXLType3Dev {
+     /* Private */
+     PCIDevice parent_obj;
+@@ -264,6 +276,12 @@ struct CXLType3Dev {
+ 
+     /* Error injection */
+     CXLErrorList error_list;
++
++    /* Poison Injection - cache */
++    CXLPoisonList poison_list;
++    unsigned int poison_list_cnt;
++    bool poison_list_overflowed;
++    uint64_t poison_list_overflow_ts;
+ };
+ 
+ #define TYPE_CXL_TYPE3 "cxl-type3"
+@@ -289,4 +307,6 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+ 
+ uint64_t cxl_device_get_timestamp(CXLDeviceState *cxlds);
+ 
++void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d);
++
+ #endif
+diff --git a/qapi/cxl.json b/qapi/cxl.json
+index 4be7d46041..9ebd680dfe 100644
+--- a/qapi/cxl.json
++++ b/qapi/cxl.json
+@@ -5,6 +5,24 @@
+ # = CXL devices
+ ##
+ 
++##
++# @cxl-inject-poison:
++#
++# Poison records indicate that a CXL memory device knows that a particular
++# memory region may be corrupted. This may be because of locally detected
++# errors (e.g. ECC failure) or poisoned writes received from other components
++# in the system. This injection mechanism enables testing of the OS handling
++# of poison records which may be queried via the CXL mailbox.
++#
++# @path: CXL type 3 device canonical QOM path
++# @start: Start address - must be 64 byte aligned.
++# @length: Length of poison to inject - must be a multiple of 64 bytes.
++#
++# Since: 8.0
++##
++{ 'command': 'cxl-inject-poison',
++  'data': { 'path': 'str', 'start': 'uint64', 'length': 'uint64' }}
++
+ ##
+ # @CxlUncorErrorType:
+ #
 -- 
 2.37.2
 
