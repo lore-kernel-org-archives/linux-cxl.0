@@ -2,402 +2,234 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082BEC7EE23
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 01:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5B1C6FA8E
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 06:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjCBBf5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 1 Mar 2023 20:35:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        id S229623AbjCBGYV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Mar 2023 01:24:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjCBBf4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 1 Mar 2023 20:35:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03542D16A
-        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 17:35:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677720910;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RYQXI4gn9jDV24DMvr8JslmvQdkIeiQx0d/hMAPS0p4=;
-        b=O+UmWKItwQQ7mDXzz0JJN0NgWdpoz+YD+UAPPMkFR3zMG3Cp2OhdykonvOnPkqU1TqEvPd
-        Tub2LKGJhzorsu3Eqj2cDcsQPlDrkP0HS9KZktFRnsSMhB7kxTUAuAUnthSxPErUjN70t9
-        1AHSDrgKyZAPDXSqEvyNEB2Q9NWhFP4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-484-M3LT57zGOUajCD9mhclP-A-1; Wed, 01 Mar 2023 20:35:09 -0500
-X-MC-Unique: M3LT57zGOUajCD9mhclP-A-1
-Received: by mail-wm1-f69.google.com with SMTP id f26-20020a7bcd1a000000b003e71cde0e70so426571wmj.0
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Mar 2023 17:35:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677720908;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RYQXI4gn9jDV24DMvr8JslmvQdkIeiQx0d/hMAPS0p4=;
-        b=QHM1TG6N5AVCidgJWpuI+FfGRnc1Ud00Qs3Hz4kNp9d2bhx2MzmshyV1roJUja7WQx
-         V4WDCFxuktYl8+0VFCdgAfexG3d9HKz4Tuxrg56aevfBTfSSOdqGC/Ov48nvNxa0zwLu
-         tCaERdAJRyMgYcObVFuqmGMt78C/E8Rr+fNibqXnr9cErDzsA/Au1RIHdtYQYeYDqjFG
-         F9R60YPgWsQH6br66pUMrxOHcMDzRIVVDI2pTdPQCC0aFlRE81wjz/2l5H4DC7Jlbtwn
-         iMD2ZG+9PerSKBlX9r4zYzjTy2y8Jg8d25YGoSebukleAMwQNbgt/KxC8dXrhzKQ0w8m
-         8rMA==
-X-Gm-Message-State: AO0yUKVqJyJStupW6Vygd7ZF2WNaFhvsLffNV3DINuDBVxh0/sP5vSYD
-        LIoYtnKVe39uI+IX7DbpI53r5+4K8oubkZl7ha3RkwDhkvIdz12IEl6chN2MnbESRnv6L/OsaO9
-        LxLxkJ5tvjeaXstvjdCOU
-X-Received: by 2002:a05:600c:2e95:b0:3ea:e7e7:95d9 with SMTP id p21-20020a05600c2e9500b003eae7e795d9mr7088459wmn.32.1677720905167;
-        Wed, 01 Mar 2023 17:35:05 -0800 (PST)
-X-Google-Smtp-Source: AK7set/a2wrJr/jaelFoL9tD0k149SogAHY8rGq8LyKfCcL9A2sdHmca24qtMWwb924Pwk+OzF36Lg==
-X-Received: by 2002:a05:600c:2e95:b0:3ea:e7e7:95d9 with SMTP id p21-20020a05600c2e9500b003eae7e795d9mr7088441wmn.32.1677720904803;
-        Wed, 01 Mar 2023 17:35:04 -0800 (PST)
-Received: from redhat.com ([2.52.141.194])
-        by smtp.gmail.com with ESMTPSA id c10-20020a5d4f0a000000b002c54911f50bsm14013259wru.84.2023.03.01.17.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Mar 2023 17:35:04 -0800 (PST)
-Date:   Wed, 1 Mar 2023 20:35:00 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
-        linux-cxl@vger.kernel.org, linuxarm@huawei.com,
-        Ira Weiny <ira.weiny@intel.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 4/6] hw/cxl: QMP based poison injection support
-Message-ID: <20230301203423-mutt-send-email-mst@kernel.org>
-References: <20230227170311.20054-1-Jonathan.Cameron@huawei.com>
- <20230227170311.20054-5-Jonathan.Cameron@huawei.com>
+        with ESMTP id S229656AbjCBGYU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 01:24:20 -0500
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F8026865;
+        Wed,  1 Mar 2023 22:23:42 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230302062320usoutp01be7ded3253993f6e0727a35612c39c1f~IhgE2hH0u1833418334usoutp01h;
+        Thu,  2 Mar 2023 06:23:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230302062320usoutp01be7ded3253993f6e0727a35612c39c1f~IhgE2hH0u1833418334usoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1677738201;
+        bh=m0dnWZXQ+7mVEVzZEG1kSsp+sI1xgT444djgFDxtk9w=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=ADjLwxG4m4ZtDIT9oxZIeNvC79sOcdPN3CeWhuVL9cAUh5bOCWLOCaVFqGHL3aRTu
+         Iv7yjn0gQ6IxUTUNOF/Fd8tvRMK0dN7kxCeFUjMsrNSzqD+BZoRkRV/zVNM8Mv2SPR
+         PwQpoc68JGtPTpj7uNY6WZraIKNvwVdtTkSLUAFo=
+Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
+        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230302062320uscas1p1516ac300a1fe3f95721b7f6808123d07~IhgEtlWnH1656616566uscas1p1H;
+        Thu,  2 Mar 2023 06:23:20 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges1new.samsung.com (USCPEMTA) with SMTP id A7.10.06976.8D040046; Thu, 
+        2 Mar 2023 01:23:20 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230302062320uscas1p161e16bdb8d07a9a7f596b7be5902bedd~IhgENsnFV1656616566uscas1p1G;
+        Thu,  2 Mar 2023 06:23:20 +0000 (GMT)
+X-AuditID: cbfec36d-d99ff70000011b40-7a-640040d89057
+Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 08.EB.11378.7D040046; Thu, 
+        2 Mar 2023 01:23:20 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Wed, 1 Mar 2023 22:23:19 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
+        1 Mar 2023 22:23:19 -0800
+From:   Fan Ni <fan.ni@samsung.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
+ check
+Thread-Topic: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
+        check
+Thread-Index: AQHZS8WnqoF9q+YY/UCqLavADTGrLa7mzPgAgADAioA=
+Date:   Thu, 2 Mar 2023 06:23:19 +0000
+Message-ID: <20230302062305.GA1444578@bgt-140510-bm03>
+In-Reply-To: <346a8225-609e-0188-ec8a-4abe8d271a09@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <289B2BF480131E4A9FC85BC21DC8C71A@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20230227170311.20054-5-Jonathan.Cameron@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djX87o3HBhSDP7uVrO4+/gCm0Xz5MWM
+        FtOnXmC0OHGzkc1i9c01jBb7nz5nsVi18BqbxflZp1gsLu+aw2Zxa8IxJgcuj5Yjb1k9Fu95
+        yeSxaVUnm8fU2fUenzfJBbBGcdmkpOZklqUW6dslcGXMWfSDveCtakXr3N+sDYzz5boYOTkk
+        BEwkrh1pYOli5OIQEljJKNE8fSkjhNPKJHGutYUZpmrelJvMEIm1jBKNS+YwQTgfGSV+7j4M
+        5SxllJj64iwLSAubgKLEvq7tbCC2iICqxP31j9lAipgF5rJI3Pw3m72LkYNDWCBQ4uXpGoia
+        IIldp+6yQNhWEvuav7CBlLAIqEhMnJQEEuYVMJPovrmZFcTmFLCVePD7NTuIzSggJvH91Bom
+        EJtZQFzi1pP5TBBXC0osmr0H6gMxiX+7HrJB2IoS97+/ZIeo15FYsPsTG4RtJ3HjVTtUXFti
+        2cLXzBB7BSVOznzCAtErKXFwxQ1weEkIfOCQeHJ4AitEwkXi5qW/7BC2tMTV61OZQe6XEEiW
+        WPWRCyKcIzF/yRaoOdYSC/+sZ5rAqDILydmzkJw0C8lJs5CcNAvJSQsYWVcxipcWF+empxYb
+        5qWW6xUn5haX5qXrJefnbmIEpq7T/w7n7mDcceuj3iFGJg7GQ4wSHMxKIrwLb/9JFuJNSays
+        Si3Kjy8qzUktPsQozcGiJM5raHsyWUggPbEkNTs1tSC1CCbLxMEp1cC09m/FqoVBmhLyB5O2
+        /Jb6apV//o2kj7Jn1b2/CQ49L+UdHpcpPSk87JR/ee93h/9fjk3Y+j3OcOJt57d8aY8rTJZs
+        uhi0rVi+/uNNhTrVVZtONM2Zd91qz7Pr9mv/HfDf7Dkxcm+W+OUvrHM/2HOXx6kctQzMfRr8
+        3pk354XUnheuYUalcRU9h3i0Vxb+nHFuU4z4yg0/+F9mBqcZ+FpUKnNWL/SMWaXnumTG0bCt
+        n/tutSkGCNVqR904+nnS340aZSK+/XkXjYIdYyeKaz7vrVp1xcJ74e1dVx9+XKI41zpiNe/D
+        VH+btOe623O/zf4fOP2DRmf59G2i7DV6az6eZBPYmT5VZdfGRz8mPZnGqMRSnJFoqMVcVJwI
+        AHhvQHnMAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsWS2cA0SfeGA0OKQcNZTou7jy+wWTRPXsxo
+        MX3qBUaLEzcb2SxW31zDaLH/6XMWi1ULr7FZnJ91isXi8q45bBa3JhxjcuDyaDnyltVj8Z6X
+        TB6bVnWyeUydXe/xeZNcAGsUl01Kak5mWWqRvl0CV8acRT/YC96qVrTO/c3awDhfrouRk0NC
+        wERi3pSbzCC2kMBqRokFx+Ug7I+MErf/V3QxcgHZSxklNnY/YQFJsAkoSuzr2s4GYosIqErc
+        X/+YDaSIWWAui8TNf7PZuxg5OIQFAiVenq6BqAmSuPtqMVS9lcS+5i9sICUsAioSEyclgYR5
+        Bcwkum9uZoXYe4BR4s5CURCbU8BW4sHv1+wgNqOAmMT3U2uYQGxmAXGJW0/mM0HcLyCxZM95
+        ZghbVOLl43+sELaixP3vL9kh6nUkFuz+xAZh20nceNUOFdeWWLbwNTPEDYISJ2dCvCghIClx
+        cMUNlgmMErOQrJuFZNQsJKNmIRk1C8moBYysqxjFS4uLc9Mrig3zUsv1ihNzi0vz0vWS83M3
+        MQJj/vS/w5E7GI/e+qh3iJGJg/EQowQHs5II78Lbf5KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ
+        8wq5TowXEkhPLEnNTk0tSC2CyTJxcEo1MDk9eC8m4s15m/Hfne3uEVX63hf/CR6ap79qZcQz
+        PouIaTebVdkvTUoMmB1r/XbzW/nLG7iPsT/56Bm389SJ5ZzqvC/vfF1296Evi1O2rQ/32YxP
+        kndXJO8+3zphO1d90ukJtbcq0uJzIsV9f+lfiz/8ISlKZMEDQ8tJsty3Hzvxf7BhW/RP+Pu8
+        9kWBMw7EqFhMixCq+XbvX4C0wkYeR9X8g/6hzBO7M7/uyZM+NqW7gX+h2T7HDZ33bgm27wjK
+        zawyyL0gHDCjlFfGVTHZZ/ax8x73V2yYdsxg+iMz1SMrMmfoVnPxzVx8amvg/+m2bc9EJC7d
+        e3/51utE/6hfMktKXysvbl435at9Vlu0jLcSS3FGoqEWc1FxIgC2ARtGaAMAAA==
+X-CMS-MailID: 20230302062320uscas1p161e16bdb8d07a9a7f596b7be5902bedd
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785
+References: <CGME20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785@uscas1p1.samsung.com>
+        <20230228224014.1402545-1-fan.ni@samsung.com>
+        <346a8225-609e-0188-ec8a-4abe8d271a09@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 05:03:09PM +0000, Jonathan Cameron wrote:
-> Inject poison using qmp command cxl-inject-poison to add an entry to the
-> poison list.
-> 
-> For now, the poison is not returned CXL.mem reads, but only via the
-> mailbox command Get Poison List.
-> 
-> See CXL rev 3.0, sec 8.2.9.8.4.1 Get Poison list (Opcode 4300h)
-> 
-> Kernel patches to use this interface here:
-> https://lore.kernel.org/linux-cxl/cover.1665606782.git.alison.schofield@intel.com/
-> 
-> To inject poison using qmp (telnet to the qmp port)
-> { "execute": "qmp_capabilities" }
-> 
-> { "execute": "cxl-inject-poison",
->     "arguments": {
->          "path": "/machine/peripheral/cxl-pmem0",
->          "start": 2048,
->          "length": 256
->     }
-> }
-> 
-> Adjusted to select a device on your machine.
-> 
-> Note that the poison list supported is kept short enough to avoid the
-> complexity of state machine that is needed to handle the MORE flag.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Wed, Mar 01, 2023 at 11:54:08AM -0700, Dave Jiang wrote:
+>=20
+Hi Dave,
+Thanks for looking into this.
+>=20
+> On 2/28/23 3:40 PM, Fan Ni wrote:
+> > Add COMMIT field check aside with existing COMMITTED field check during
+> > hdm decoder initialization to avoid a system crash during module remova=
+l
+> > after destroying a region which leaves the COMMIT field being reset whi=
+le
+> > the COMMITTED field still being set.
+>=20
+> Hi Fan. Are you seeing this issue on qemu emulation or hardware? The
+I run into the issue with qemu emulation.
+> situation does not make sense to me. If we clear the COMMIT bit, then the
+> COMMITTED bit should be cleared by the hardware shortly after right?
 
-You need to CC QAPI maintainers.
+From the spec, I cannot find any statement saying clearing the COMMIT bit
+will automatically clear the COMMITTED. If I have not missed the statement =
+in
+the spec, I assume we should not make the assumption that it will be
+cleared automatically for real hardware. But you may be right, leaving the
+COMMITTED bit set can potentially cause some issue? Need to check more.
 
-> ---
-> v2:
-> Improve QMP documentation.
-> Fix up some endian issues
-> ---
->  hw/cxl/cxl-mailbox-utils.c  | 90 +++++++++++++++++++++++++++++++++++++
->  hw/mem/cxl_type3.c          | 56 +++++++++++++++++++++++
->  hw/mem/cxl_type3_stubs.c    |  6 +++
->  include/hw/cxl/cxl_device.h | 20 +++++++++
->  qapi/cxl.json               | 18 ++++++++
->  5 files changed, 190 insertions(+)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 702e16ca20..792d3ee5aa 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -62,6 +62,8 @@ enum {
->          #define GET_PARTITION_INFO     0x0
->          #define GET_LSA       0x2
->          #define SET_LSA       0x3
-> +    MEDIA_AND_POISON = 0x43,
-> +        #define GET_POISON_LIST        0x0
->  };
->  
->  /* 8.2.8.4.5.1 Command Return Codes */
-> @@ -295,6 +297,10 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
->      stq_le_p(&id->persistent_capacity, cxl_dstate->pmem_size / CXL_CAPACITY_MULTIPLIER);
->      stq_le_p(&id->volatile_capacity, cxl_dstate->vmem_size / CXL_CAPACITY_MULTIPLIER);
->      stl_le_p(&id->lsa_size, cvc->get_lsa_size(ct3d));
-> +    /* 256 poison records */
-> +    st24_le_p(id->poison_list_max_mer, 256);
-> +    /* No limit - so limited by main poison record limit */
-> +    stw_le_p(&id->inject_poison_limit, 0);
->  
->      *len = sizeof(*id);
->      return CXL_MBOX_SUCCESS;
-> @@ -384,6 +390,88 @@ static CXLRetCode cmd_ccls_set_lsa(struct cxl_cmd *cmd,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> +/*
-> + * This is very inefficient, but good enough for now!
-> + * Also the payload will always fit, so no need to handle the MORE flag and
-> + * make this stateful. We may want to allow longer poison lists to aid
-> + * testing that kernel functionality.
-> + */
-> +static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
-> +                                            CXLDeviceState *cxl_dstate,
-> +                                            uint16_t *len)
-> +{
-> +    struct get_poison_list_pl {
-> +        uint64_t pa;
-> +        uint64_t length;
-> +    } QEMU_PACKED;
-> +
-> +    struct get_poison_list_out_pl {
-> +        uint8_t flags;
-> +        uint8_t rsvd1;
-> +        uint64_t overflow_timestamp;
-> +        uint16_t count;
-> +        uint8_t rsvd2[0x14];
-> +        struct {
-> +            uint64_t addr;
-> +            uint32_t length;
-> +            uint32_t resv;
-> +        } QEMU_PACKED records[];
-> +    } QEMU_PACKED;
-> +
-> +    struct get_poison_list_pl *in = (void *)cmd->payload;
-> +    struct get_poison_list_out_pl *out = (void *)cmd->payload;
-> +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> +    uint16_t record_count = 0, i = 0;
-> +    uint64_t query_start, query_length;
-> +    CXLPoisonList *poison_list = &ct3d->poison_list;
-> +    CXLPoison *ent;
-> +    uint16_t out_pl_len;
-> +
-> +    query_start = ldq_le_p(&in->pa);
-> +    /* 64 byte alignemnt required */
-> +    if (query_start & 0x3f) {
-> +        return CXL_MBOX_INVALID_INPUT;
-> +    }
-> +    query_length = ldq_le_p(&in->length) * 64;
-> +
-> +    QLIST_FOREACH(ent, poison_list, node) {
-> +        /* Check for no overlap */
-> +        if (ent->start >= query_start + query_length ||
-> +            ent->start + ent->length <= query_start) {
-> +            continue;
-> +        }
-> +        record_count++;
-> +    }
-> +    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
-> +    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
-> +
-> +    memset(out, 0, out_pl_len);
-> +    QLIST_FOREACH(ent, poison_list, node) {
-> +        uint64_t start, stop;
-> +
-> +        /* Check for no overlap */
-> +        if (ent->start >= query_start + query_length ||
-> +            ent->start + ent->length <= query_start) {
-> +            continue;
-> +        }
-> +
-> +        /* Deal with overlap */
-> +        start = MAX(ent->start & 0xffffffffffffffc0, query_start);
-> +        stop = MIN((ent->start & 0xffffffffffffffc0) + ent->length,
-> +                   query_start + query_length);
-> +        stq_le_p(&out->records[i].addr, start | (ent->type & 0x3));
-> +        stl_le_p(&out->records[i].length, (stop - start) / 64);
-> +        i++;
-> +    }
-> +    if (ct3d->poison_list_overflowed) {
-> +        out->flags = (1 << 1);
-> +        stq_le_p(&out->overflow_timestamp, ct3d->poison_list_overflow_ts);
-> +    }
-> +    stw_le_p(&out->count, record_count);
-> +    *len = out_pl_len;
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
->  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
->  #define IMMEDIATE_DATA_CHANGE (1 << 2)
->  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> @@ -411,6 +499,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
->      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
->      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
->          ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
-> +    [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
-> +        cmd_media_get_poison_list, 16, 0 },
->  };
->  
->  void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 572ad47fa2..21e3a84785 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -919,6 +919,62 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
->       */
->  }
->  
-> +void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d)
-> +{
-> +        ct3d->poison_list_overflowed = true;
-> +        ct3d->poison_list_overflow_ts =
-> +            cxl_device_get_timestamp(&ct3d->cxl_dstate);
-> +}
-> +
-> +void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-> +                           Error **errp)
-> +{
-> +    Object *obj = object_resolve_path(path, NULL);
-> +    CXLType3Dev *ct3d;
-> +    CXLPoison *p;
-> +
-> +    if (length % 64) {
-> +        error_setg(errp, "Poison injection must be in multiples of 64 bytes");
-> +        return;
-> +    }
-> +    if (start % 64) {
-> +        error_setg(errp, "Poison start address must be 64 byte aligned");
-> +        return;
-> +    }
-> +    if (!obj) {
-> +        error_setg(errp, "Unable to resolve path");
-> +        return;
-> +    }
-> +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-> +        error_setg(errp, "Path does not point to a CXL type 3 device");
-> +        return;
-> +    }
-> +
-> +    ct3d = CXL_TYPE3(obj);
-> +
-> +    QLIST_FOREACH(p, &ct3d->poison_list, node) {
-> +        if (((start >= p->start) && (start < p->start + p->length)) ||
-> +            ((start + length > p->start) &&
-> +             (start + length <= p->start + p->length))) {
-> +            error_setg(errp, "Overlap with existing poisoned region not supported");
-> +            return;
-> +        }
-> +    }
-> +
-> +    if (ct3d->poison_list_cnt == CXL_POISON_LIST_LIMIT) {
-> +        cxl_set_poison_list_overflowed(ct3d);
-> +        return;
-> +    }
-> +
-> +    p = g_new0(CXLPoison, 1);
-> +    p->length = length;
-> +    p->start = start;
-> +    p->type = CXL_POISON_TYPE_INTERNAL; /* Different from injected via the mbox */
-> +
-> +    QLIST_INSERT_HEAD(&ct3d->poison_list, p, node);
-> +    ct3d->poison_list_cnt++;
-> +}
-> +
->  /* For uncorrectable errors include support for multiple header recording */
->  void qmp_cxl_inject_uncorrectable_errors(const char *path,
->                                           CXLUncorErrorRecordList *errors,
-> diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-> index d574c58f9a..fd1166a610 100644
-> --- a/hw/mem/cxl_type3_stubs.c
-> +++ b/hw/mem/cxl_type3_stubs.c
-> @@ -3,6 +3,12 @@
->  #include "qapi/error.h"
->  #include "qapi/qapi-commands-cxl.h"
->  
-> +void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-> +                           Error **errp)
-> +{
-> +    error_setg(errp, "CXL Type 3 support is not compiled in");
-> +}
-> +
->  void qmp_cxl_inject_uncorrectable_errors(const char *path,
->                                           CXLUncorErrorRecordList *errors,
->                                           Error **errp)
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 02befda0f6..32c234ea91 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -242,6 +242,18 @@ typedef struct CXLError {
->  
->  typedef QTAILQ_HEAD(, CXLError) CXLErrorList;
->  
-> +typedef struct CXLPoison {
-> +    uint64_t start, length;
-> +    uint8_t type;
-> +#define CXL_POISON_TYPE_EXTERNAL 0x1
-> +#define CXL_POISON_TYPE_INTERNAL 0x2
-> +#define CXL_POISON_TYPE_INJECTED 0x3
-> +    QLIST_ENTRY(CXLPoison) node;
-> +} CXLPoison;
-> +
-> +typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
-> +#define CXL_POISON_LIST_LIMIT 256
-> +
->  struct CXLType3Dev {
->      /* Private */
->      PCIDevice parent_obj;
-> @@ -264,6 +276,12 @@ struct CXLType3Dev {
->  
->      /* Error injection */
->      CXLErrorList error_list;
-> +
-> +    /* Poison Injection - cache */
-> +    CXLPoisonList poison_list;
-> +    unsigned int poison_list_cnt;
-> +    bool poison_list_overflowed;
-> +    uint64_t poison_list_overflow_ts;
->  };
->  
->  #define TYPE_CXL_TYPE3 "cxl-type3"
-> @@ -289,4 +307,6 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
->  
->  uint64_t cxl_device_get_timestamp(CXLDeviceState *cxlds);
->  
-> +void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d);
-> +
->  #endif
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 4be7d46041..9ebd680dfe 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -5,6 +5,24 @@
->  # = CXL devices
->  ##
->  
-> +##
-> +# @cxl-inject-poison:
-> +#
-> +# Poison records indicate that a CXL memory device knows that a particular
-> +# memory region may be corrupted. This may be because of locally detected
-> +# errors (e.g. ECC failure) or poisoned writes received from other components
-> +# in the system. This injection mechanism enables testing of the OS handling
-> +# of poison records which may be queried via the CXL mailbox.
-> +#
-> +# @path: CXL type 3 device canonical QOM path
-> +# @start: Start address - must be 64 byte aligned.
-> +# @length: Length of poison to inject - must be a multiple of 64 bytes.
-> +#
-> +# Since: 8.0
-> +##
-> +{ 'command': 'cxl-inject-poison',
-> +  'data': { 'path': 'str', 'start': 'uint64', 'length': 'uint64' }}
-> +
->  ##
->  # @CxlUncorErrorType:
->  #
-> -- 
-> 2.37.2
+Fan
 
+> Otherwise, how would one reprogram the decoder if the decoder is indicati=
+ng
+> to be active?
+>=20
+> DJ
+>=20
+> >=20
+> > In current kernel implementation, when destroying a region (cxl
+> > destroy-region),the decoders associated to the region will be reset
+> > as that in cxl_decoder_reset, where the COMMIT field will be reset.
+> > However, resetting COMMIT field will not automatically reset the
+> > COMMITTED field, causing a situation where COMMIT is reset (0) while
+> > COMMITTED is set (1) after the region is destroyed. Later, when
+> > init_hdm_decoder is called (during modprobe), current code only check
+> > the COMMITTED to decide whether the decoder is enabled or not. Since
+> > the COMMITTED will be 1 and the code treats the decoder as enabled,
+> > which will cause unexpected behaviour.
+> >=20
+> > Before the fix, a system crash was observed when performing following
+> > steps:
+> > 1. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem
+> > 2. cxl create-region -m -d decoder0.0 -w 1 mem0 -s 256M
+> > 3. cxl destroy-region region0 -f
+> > 4. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core
+> > 5. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem (showing
+> > "no CXL window for range 0x0:0xffffffffffffffff" error message)
+> > 6. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core (kernel
+> > crash at cxl_dpa_release due to dpa_res has been freed when destroying
+> > the region).
+> >=20
+> > The patch fixed the above issue, and is tested based on follow patch se=
+ries:
+> >=20
+> > [PATCH 00/18] CXL RAM and the 'Soft Reserved' =3D> 'System RAM' default
+> > Message-ID: 167601992097.1924368.18291887895351917895.stgit@dwillia2-xf=
+h.jf.intel.com
+> >=20
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > ---
+> >   drivers/cxl/core/hdm.c | 8 +++++---
+> >   1 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 80eccae6ba9e..6cf854c949f0 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -695,6 +695,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
+struct cxl_decoder *cxld,
+> >   	struct cxl_endpoint_decoder *cxled =3D NULL;
+> >   	u64 size, base, skip, dpa_size;
+> >   	bool committed;
+> > +	bool should_commit;
+> >   	u32 remainder;
+> >   	int i, rc;
+> >   	u32 ctrl;
+> > @@ -710,10 +711,11 @@ static int init_hdm_decoder(struct cxl_port *port=
+, struct cxl_decoder *cxld,
+> >   	base =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which=
+));
+> >   	size =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which=
+));
+> >   	committed =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
+> > +	should_commit =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMIT);
+> >   	cxld->commit =3D cxl_decoder_commit;
+> >   	cxld->reset =3D cxl_decoder_reset;
+> > -	if (!committed)
+> > +	if (!should_commit || !committed)
+> >   		size =3D 0;
+> >   	if (base =3D=3D U64_MAX || size =3D=3D U64_MAX) {
+> >   		dev_warn(&port->dev, "decoder%d.%d: Invalid resource range\n",
+> > @@ -727,7 +729,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
+struct cxl_decoder *cxld,
+> >   	};
+> >   	/* decoders are enabled if committed */
+> > -	if (committed) {
+> > +	if (should_commit && committed) {
+> >   		cxld->flags |=3D CXL_DECODER_F_ENABLE;
+> >   		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
+> >   			cxld->flags |=3D CXL_DECODER_F_LOCK;
+> > @@ -772,7 +774,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
+struct cxl_decoder *cxld,
+> >   		return 0;
+> >   	}
+> > -	if (!committed)
+> > +	if (!should_commit || !committed)
+> >   		return 0;
+> >   	dpa_size =3D div_u64_rem(size, cxld->interleave_ways, &remainder);=
