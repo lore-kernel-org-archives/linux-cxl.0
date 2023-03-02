@@ -2,234 +2,433 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5B1C6FA8E
-	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 06:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5FAC7EE2F
+	for <linux-cxl@archiver.kernel.org>; Thu,  2 Mar 2023 06:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbjCBGYV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 2 Mar 2023 01:24:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58228 "EHLO
+        id S229971AbjCBGi5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 2 Mar 2023 01:38:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjCBGYU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 01:24:20 -0500
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F8026865;
-        Wed,  1 Mar 2023 22:23:42 -0800 (PST)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230302062320usoutp01be7ded3253993f6e0727a35612c39c1f~IhgE2hH0u1833418334usoutp01h;
-        Thu,  2 Mar 2023 06:23:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230302062320usoutp01be7ded3253993f6e0727a35612c39c1f~IhgE2hH0u1833418334usoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677738201;
-        bh=m0dnWZXQ+7mVEVzZEG1kSsp+sI1xgT444djgFDxtk9w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=ADjLwxG4m4ZtDIT9oxZIeNvC79sOcdPN3CeWhuVL9cAUh5bOCWLOCaVFqGHL3aRTu
-         Iv7yjn0gQ6IxUTUNOF/Fd8tvRMK0dN7kxCeFUjMsrNSzqD+BZoRkRV/zVNM8Mv2SPR
-         PwQpoc68JGtPTpj7uNY6WZraIKNvwVdtTkSLUAFo=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230302062320uscas1p1516ac300a1fe3f95721b7f6808123d07~IhgEtlWnH1656616566uscas1p1H;
-        Thu,  2 Mar 2023 06:23:20 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id A7.10.06976.8D040046; Thu, 
-        2 Mar 2023 01:23:20 -0500 (EST)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230302062320uscas1p161e16bdb8d07a9a7f596b7be5902bedd~IhgENsnFV1656616566uscas1p1G;
-        Thu,  2 Mar 2023 06:23:20 +0000 (GMT)
-X-AuditID: cbfec36d-d99ff70000011b40-7a-640040d89057
-Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 08.EB.11378.7D040046; Thu, 
-        2 Mar 2023 01:23:20 -0500 (EST)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 1 Mar 2023 22:23:19 -0800
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        1 Mar 2023 22:23:19 -0800
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
- check
-Thread-Topic: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
-        check
-Thread-Index: AQHZS8WnqoF9q+YY/UCqLavADTGrLa7mzPgAgADAioA=
-Date:   Thu, 2 Mar 2023 06:23:19 +0000
-Message-ID: <20230302062305.GA1444578@bgt-140510-bm03>
-In-Reply-To: <346a8225-609e-0188-ec8a-4abe8d271a09@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
+        with ESMTP id S230023AbjCBGi4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 2 Mar 2023 01:38:56 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6FDA149A6
+        for <linux-cxl@vger.kernel.org>; Wed,  1 Mar 2023 22:38:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677739129; x=1709275129;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Ajfbht6VgojwC3ZgyL+LZDv6M3tDThrmV3a2NIdi8zo=;
+  b=f8MXWtYXKJ0qjBk3/niL53mNOFnVkOH7pqnPfn43GdjQpal2cu1IpcPw
+   Y89etglukl86bbrPjtPURWh3kpTSttbt/HGOGhImNvvdWTATCiCmpJO77
+   lwZL9FcRnEi5jkqjlIv+FT5v/+VBVzY+sKTwoeqxs1vbjqqVE1GPqEhd+
+   s9Ai+y+WUxGXdEqJdiuikKCPfkpTLf1Af8wCzpqeolz8qR7IIegg7XWlX
+   7LPEUZ7+/jjh7YndoIklhxJyP9CtL5Dmg7CF4HrRmcpvsVMiwk78gIDhf
+   /vI0jdApzGuFfVewXtRaFFFtdLFRpsYV0rmzKWh55fTgrE/mjeLIdgvty
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="332118378"
+X-IronPort-AV: E=Sophos;i="5.98,226,1673942400"; 
+   d="scan'208";a="332118378"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 22:38:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="1003985867"
+X-IronPort-AV: E=Sophos;i="5.98,226,1673942400"; 
+   d="scan'208";a="1003985867"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Mar 2023 22:38:46 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 1 Mar 2023 22:38:40 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 1 Mar 2023 22:38:39 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Wed, 1 Mar 2023 22:38:39 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Wed, 1 Mar 2023 22:38:38 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TbZ1fPlr7uZrysR4jWAgoTHcQ14l2nKZ34eqnjkJzIoTtf8ddlVJulaz8pzpTpLXRmKi5RKCej5LTGiBNGZqVWvioXZ8d+CJNvQY8E+/UwL0113uBQ4zxmsnCdNzJSg/Tt3sWi7iH++ERlLo97ID7rmPYO1ROrr+ACgBedY6CMEjmgQXdQadTHQKtm+I21PRO/LKQ/yIhSN3cVaWK1sHVrMd/4AIHtNWhL9Ga+qAEoKKAiNcMFa0D37TXfQhB+vKJp/pJyvZ6WYLFP0OA+3pBRPTplTriFwX79iwml254rsGNv4hJF/JCIJ/tSYPjyP0WUx8ha6ltk+X0OXlWQH9dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0d8+oiZhDVvyb28H0Oqdne4vYxUjqv2H3zF2uGd8i9E=;
+ b=ACzT5TW7DdvujMi6GAy8FfKKhg4iJLClHRvtorSNop2E5Fj4OfIatOloKsRQWlb/IQEM4qQ0g0nm25pL3FKxC8oXDD2i6QzC5cJAeqNbWbgURisZtzM/qi67J0sH6Og/SOb1ozM1+8JM2/Fc6xz1rvwORlUIc0UletyUydzjWoyEbI94uRDy2E9wSK5F+cIk7KRrbcGzD2Ecm/xRArGRbvpd29UNV/2FW1P1KyoQYfI9pJpP12o52I9lRIlFsY/QPKoU1lUNyrGjppZpy/UQrfej9rPz0duHz4hn5o7daDO9uiZ/JJh14AOUVMKqHnVtCi2W8amgoAKDD125OJteqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CO1PR11MB4883.namprd11.prod.outlook.com (2603:10b6:303:9b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.18; Thu, 2 Mar
+ 2023 06:38:32 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::84dd:d3f2:6d99:d7ff]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::84dd:d3f2:6d99:d7ff%7]) with mapi id 15.20.6156.019; Thu, 2 Mar 2023
+ 06:38:32 +0000
+Date:   Wed, 1 Mar 2023 22:38:26 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>
+CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 6/7] hw/cxl/events: Add injection of DRAM events
+Message-ID: <64004462d4dec_3a6b5294bc@iweiny-mobl.notmuch>
+References: <20230227173416.7740-1-Jonathan.Cameron@huawei.com>
+ <20230227173416.7740-7-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <289B2BF480131E4A9FC85BC21DC8C71A@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20230227173416.7740-7-Jonathan.Cameron@huawei.com>
+X-ClientProxiedBy: BY5PR16CA0021.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::34) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djX87o3HBhSDP7uVrO4+/gCm0Xz5MWM
-        FtOnXmC0OHGzkc1i9c01jBb7nz5nsVi18BqbxflZp1gsLu+aw2Zxa8IxJgcuj5Yjb1k9Fu95
-        yeSxaVUnm8fU2fUenzfJBbBGcdmkpOZklqUW6dslcGXMWfSDveCtakXr3N+sDYzz5boYOTkk
-        BEwkrh1pYOli5OIQEljJKNE8fSkjhNPKJHGutYUZpmrelJvMEIm1jBKNS+YwQTgfGSV+7j4M
-        5SxllJj64iwLSAubgKLEvq7tbCC2iICqxP31j9lAipgF5rJI3Pw3m72LkYNDWCBQ4uXpGoia
-        IIldp+6yQNhWEvuav7CBlLAIqEhMnJQEEuYVMJPovrmZFcTmFLCVePD7NTuIzSggJvH91Bom
-        EJtZQFzi1pP5TBBXC0osmr0H6gMxiX+7HrJB2IoS97+/ZIeo15FYsPsTG4RtJ3HjVTtUXFti
-        2cLXzBB7BSVOznzCAtErKXFwxQ1weEkIfOCQeHJ4AitEwkXi5qW/7BC2tMTV61OZQe6XEEiW
-        WPWRCyKcIzF/yRaoOdYSC/+sZ5rAqDILydmzkJw0C8lJs5CcNAvJSQsYWVcxipcWF+empxYb
-        5qWW6xUn5haX5qXrJefnbmIEpq7T/w7n7mDcceuj3iFGJg7GQ4wSHMxKIrwLb/9JFuJNSays
-        Si3Kjy8qzUktPsQozcGiJM5raHsyWUggPbEkNTs1tSC1CCbLxMEp1cC09m/FqoVBmhLyB5O2
-        /Jb6apV//o2kj7Jn1b2/CQ49L+UdHpcpPSk87JR/ee93h/9fjk3Y+j3OcOJt57d8aY8rTJZs
-        uhi0rVi+/uNNhTrVVZtONM2Zd91qz7Pr9mv/HfDf7Dkxcm+W+OUvrHM/2HOXx6kctQzMfRr8
-        3pk354XUnheuYUalcRU9h3i0Vxb+nHFuU4z4yg0/+F9mBqcZ+FpUKnNWL/SMWaXnumTG0bCt
-        n/tutSkGCNVqR904+nnS340aZSK+/XkXjYIdYyeKaz7vrVp1xcJ74e1dVx9+XKI41zpiNe/D
-        VH+btOe623O/zf4fOP2DRmf59G2i7DV6az6eZBPYmT5VZdfGRz8mPZnGqMRSnJFoqMVcVJwI
-        AHhvQHnMAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsWS2cA0SfeGA0OKQcNZTou7jy+wWTRPXsxo
-        MX3qBUaLEzcb2SxW31zDaLH/6XMWi1ULr7FZnJ91isXi8q45bBa3JhxjcuDyaDnyltVj8Z6X
-        TB6bVnWyeUydXe/xeZNcAGsUl01Kak5mWWqRvl0CV8acRT/YC96qVrTO/c3awDhfrouRk0NC
-        wERi3pSbzCC2kMBqRokFx+Ug7I+MErf/V3QxcgHZSxklNnY/YQFJsAkoSuzr2s4GYosIqErc
-        X/+YDaSIWWAui8TNf7PZuxg5OIQFAiVenq6BqAmSuPtqMVS9lcS+5i9sICUsAioSEyclgYR5
-        Bcwkum9uZoXYe4BR4s5CURCbU8BW4sHv1+wgNqOAmMT3U2uYQGxmAXGJW0/mM0HcLyCxZM95
-        ZghbVOLl43+sELaixP3vL9kh6nUkFuz+xAZh20nceNUOFdeWWLbwNTPEDYISJ2dCvCghIClx
-        cMUNlgmMErOQrJuFZNQsJKNmIRk1C8moBYysqxjFS4uLc9Mrig3zUsv1ihNzi0vz0vWS83M3
-        MQJj/vS/w5E7GI/e+qh3iJGJg/EQowQHs5II78Lbf5KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ
-        8wq5TowXEkhPLEnNTk0tSC2CyTJxcEo1MDk9eC8m4s15m/Hfne3uEVX63hf/CR6ap79qZcQz
-        PouIaTebVdkvTUoMmB1r/XbzW/nLG7iPsT/56Bm389SJ5ZzqvC/vfF1296Evi1O2rQ/32YxP
-        kndXJO8+3zphO1d90ukJtbcq0uJzIsV9f+lfiz/8ISlKZMEDQ8tJsty3Hzvxf7BhW/RP+Pu8
-        9kWBMw7EqFhMixCq+XbvX4C0wkYeR9X8g/6hzBO7M7/uyZM+NqW7gX+h2T7HDZ33bgm27wjK
-        zawyyL0gHDCjlFfGVTHZZ/ax8x73V2yYdsxg+iMz1SMrMmfoVnPxzVx8amvg/+m2bc9EJC7d
-        e3/51utE/6hfMktKXysvbl435at9Vlu0jLcSS3FGoqEWc1FxIgC2ARtGaAMAAA==
-X-CMS-MailID: 20230302062320uscas1p161e16bdb8d07a9a7f596b7be5902bedd
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785
-References: <CGME20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785@uscas1p1.samsung.com>
-        <20230228224014.1402545-1-fan.ni@samsung.com>
-        <346a8225-609e-0188-ec8a-4abe8d271a09@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CO1PR11MB4883:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e487652-3d54-4b25-3a65-08db1ae8bd2b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nGbd2etmIA37G/QDl33ABK1wEnK3fP4cUayfcRl0q/qIq/DBs0pG27/evlM1YQT6jKBXvHgmmVkxNfV3QneZfkYWcsPe9/uZ696QDkOt9czo5Yv24p9XIDzM69cMHigPFhNIrwFiJCRdkzE7y9c8Jo22jO7m1Of71O+PKfhKoaBNmsSaY7+sSYje/VGyg2sY+Ccc3bOXnz3yVmNwlftewsaoGcHGYm2IAbhDZhn+DhQqVNCzIuXqgvqsS/1H3t2nkb70YSpHPl4p+e6Rgi2XEgpgppBRLT2v19Kkv7vnSaF4M1MB5MprrP8OnFsgBWXtczoVymqJxjtN8vx7L5neOYOHT2IYMoiDQ1mMZU2QECB4lP+vBcMYPJMaVZD3qFpTu0nr0KnCviIPhrHU9zG0Gu+zKi2DvWROOWp91s5Ao0Q5bX9eJwFpx3dxkHxxkHDbVFoCrORdbo/7MmJTbq0/b5k4QuCnYcR+NgIWAvr4/Jx+JLXS21wufa0aOjwr9VdyWikV73Fp3m9ypoTPMgIk1FzIix0thjVcaXRIX2+efds7WEgF6YCHEWggTZkiI14HBE4s7/u3STAqzrXKi51cY3Qfb6MQE222SgIpA3C2n+CYQtnVKuXX/6wSe80vpi0tB9g+GViakKTLoQqKp7TAPA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(366004)(346002)(136003)(39860400002)(376002)(451199018)(83380400001)(66556008)(26005)(82960400001)(38100700002)(478600001)(44832011)(5660300002)(66476007)(86362001)(107886003)(6512007)(6666004)(6486002)(186003)(9686003)(6506007)(66946007)(8936002)(8676002)(2906002)(4326008)(316002)(110136005)(54906003)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Ih5vkvx71Qx20ye6FX53uAMwJSaqrvlQw6YsoaHLfUrQdulpQ+q4t748EkEA?=
+ =?us-ascii?Q?jnO0NZNOY4se59x3ldCKD7029cplkc5P66Fxg/sAMUByF1N5YqkJFcoNGKje?=
+ =?us-ascii?Q?EbQfEgCwt0DmecpXDneixqIvGKmT3mRIcSRd7wWD/Lj71XafMtrXPfCkglYh?=
+ =?us-ascii?Q?Yadcb0ufR9hasdk4FXl9OXrTbEc1yfNd5tWePgldAOeLo7j+dS5CfQBlSP/d?=
+ =?us-ascii?Q?elYVJk1MjnatUj0k/+FhfUOEf0jooaybU9HD4vX8M0Rzt0w45mD7kuuT9iGe?=
+ =?us-ascii?Q?9VYh+64iYVJDJaUAQ9BSuP7LXFnOGHJMswYEoF+FO5uDk0Ak9xtBVFNod5Ey?=
+ =?us-ascii?Q?E0+iSwD4Qe4K2Luhx8ZnAnbcdmlnRhV9vRG+XsXcRXkaSJpgZEeLfzKs2zYu?=
+ =?us-ascii?Q?YmdSDBzSqKoq1v1UgNUq+mvn1mLtQPcSJhSC3kFrSQPlRQYKlSx0ZsCiE1Mz?=
+ =?us-ascii?Q?pfKmyxLGeBQDjcJVWw6Vy0R94GUnMK38jnrW0mCRcnH7bsZ/GUnUSoDdYc6M?=
+ =?us-ascii?Q?mVm6oX6+kz5mBlqfEjmoi5IRAsaXKRoBaLUcjF7LJ4VTi+5R8lTahxtgM1D5?=
+ =?us-ascii?Q?NwlytNbtE7pIKCnJ5JnTCls63EZps48DyV0bQ1cVOE1aj9XPlj/03j6AFMxn?=
+ =?us-ascii?Q?/+UcRn8qV9OJbfzry6XBvR++Zi+LmNTr+6vNwcpJyVf5uh++wZQZr+5ZesTT?=
+ =?us-ascii?Q?7HTComPWwdu2LvD1R9hi8aesNXZN2BqT0tsf+0pmjvaW90eG0bNor3LaBQHx?=
+ =?us-ascii?Q?oNDvCcWnBoFarvaSM1jbkB02Zh05pwUPJ4DI51dRHHHK3DkOuJytJZWXMCEB?=
+ =?us-ascii?Q?S7S8gM2i57x97lgDAAdYAufvSkWzJhrMGn/qOXK1FkDYJeSMGWIxAuLn9y0B?=
+ =?us-ascii?Q?Cxfohp2QwZBFf8AE3Air5yjzw5mLnM3dIzCaXLWpu8Mbq5C/DmQ9N2XrBS0O?=
+ =?us-ascii?Q?y47R+ARx50xnt0iIVSrITnwV/2bITjdVbBfgLGPtd9TgoEsYpGn/RGvN6WlQ?=
+ =?us-ascii?Q?J/u5eg8m426KexN3iv+a+WgGRrOqt3aylduOAedjUOjPbdDI9qSox+tYgHHW?=
+ =?us-ascii?Q?Xpfn64a+RHLN2bL3jxiIrJxC9azvEvRuNRkRXMvuISYUIpwqykwyiIyn/Q9l?=
+ =?us-ascii?Q?V7EL4ODEA6lRyrCigd+o2um51rla35SXpzpYV8piglfb/W/UANOnEYyejYaL?=
+ =?us-ascii?Q?by3KsIkdCqzTO9RMrjVf5kmXs+beelwLgN6x/Me9vdGYlVTNSLzPQlPsYozC?=
+ =?us-ascii?Q?cSbzyvU36dPrL48Qif/Xk0pqNaUVJ77K6XdEvVsujx5f+ScsZXcwte8YgC2H?=
+ =?us-ascii?Q?rohpEXa9gOYKwzzwWJ+AT42ZPieKDZcwr4Ulg6K0PjSBd5UEmRXhftLm35ZB?=
+ =?us-ascii?Q?IR4ByHG+NFxOigNftuTqUPIyYplbqikxRMAYBiU5oJTsnxu/MKWKhteEIFk2?=
+ =?us-ascii?Q?7BlV7az7vQIv/xTPNB5n0JXb6ml3WkilqethLC6YTrLGtLra/hr1We/GG4vh?=
+ =?us-ascii?Q?bHMTMJMNLTs1V48H0opOhNhGj7llQTl1fxUb2YbZkmKQoTrq+A3O+k11THl7?=
+ =?us-ascii?Q?tCM+pJKx9PvZxMafEqE5h10gmAIUC0JLaI3xJZfe?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e487652-3d54-4b25-3a65-08db1ae8bd2b
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2023 06:38:31.5264
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: w7waK/EZWBuNf9LGj6jUNjRlXqEVK/km1A1FHO7evJ0NDrRLArmLiE843IwYXdgP5nCPh8JrgCb1rh0uDMbkKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4883
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 01, 2023 at 11:54:08AM -0700, Dave Jiang wrote:
->=20
-Hi Dave,
-Thanks for looking into this.
->=20
-> On 2/28/23 3:40 PM, Fan Ni wrote:
-> > Add COMMIT field check aside with existing COMMITTED field check during
-> > hdm decoder initialization to avoid a system crash during module remova=
-l
-> > after destroying a region which leaves the COMMIT field being reset whi=
-le
-> > the COMMITTED field still being set.
->=20
-> Hi Fan. Are you seeing this issue on qemu emulation or hardware? The
-I run into the issue with qemu emulation.
-> situation does not make sense to me. If we clear the COMMIT bit, then the
-> COMMITTED bit should be cleared by the hardware shortly after right?
+Jonathan Cameron wrote:
+> Defined in CXL r3.0 8.2.9.2.1.2 DRAM Event Record, this event
+> provides information related to DRAM devices.
+> 
+> Example injection command in QMP:
+> 
+> { "execute": "cxl-inject-dram-event",
+>     "arguments": {
+>         "path": "/machine/peripheral/cxl-mem0",
+>         "log": "informational",
+>         "flags": 1,
+>         "physaddr": 1000,
+>         "descriptor": 3,
+>         "type": 3,
+>         "transaction-type": 192,
+>         "channel": 3,
+>         "rank": 17,
+>         "nibble-mask": 37421234,
+>         "bank-group": 7,
+>         "bank": 11,
+>         "row": 2,
+>         "column": 77,
+>         "correction-mask": [33, 44, 55,66]
+>     }}
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  hw/mem/cxl_type3.c          | 115 ++++++++++++++++++++++++++++++++++++
+>  hw/mem/cxl_type3_stubs.c    |  13 ++++
+>  include/hw/cxl/cxl_events.h |  23 ++++++++
+>  qapi/cxl.json               |  35 +++++++++++
+>  4 files changed, 186 insertions(+)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 5d55943df2..cff5341b7b 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -1167,6 +1167,11 @@ static const QemuUUID gen_media_uuid = {
+>                   0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6),
+>  };
+>  
+> +static const QemuUUID dram_uuid = {
+> +    .data = UUID(0x601dcbb3, 0x9c06, 0x4eab, 0xb8, 0xaf,
+> +                 0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
+> +};
+> +
+>  #define CXL_GMER_VALID_CHANNEL                          BIT(0)
+>  #define CXL_GMER_VALID_RANK                             BIT(1)
+>  #define CXL_GMER_VALID_DEVICE                           BIT(2)
+> @@ -1262,6 +1267,116 @@ void qmp_cxl_inject_gen_media_event(const char *path, CxlEventLog log,
+>      }
+>  }
+>  
+> +#define CXL_DRAM_VALID_CHANNEL                          BIT(0)
+> +#define CXL_DRAM_VALID_RANK                             BIT(1)
+> +#define CXL_DRAM_VALID_NIBBLE_MASK                      BIT(2)
+> +#define CXL_DRAM_VALID_BANK_GROUP                       BIT(3)
+> +#define CXL_DRAM_VALID_BANK                             BIT(4)
+> +#define CXL_DRAM_VALID_ROW                              BIT(5)
+> +#define CXL_DRAM_VALID_COLUMN                           BIT(6)
+> +#define CXL_DRAM_VALID_CORRECTION_MASK                  BIT(7)
+> +
+> +void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+> +                               uint64_t physaddr, uint8_t descriptor,
+> +                               uint8_t type, uint8_t transaction_type,
+> +                               bool has_channel, uint8_t channel,
+> +                               bool has_rank, uint8_t rank,
+> +                               bool has_nibble_mask, uint32_t nibble_mask,
+> +                               bool has_bank_group, uint8_t bank_group,
+> +                               bool has_bank, uint8_t bank,
+> +                               bool has_row, uint32_t row,
+> +                               bool has_column, uint16_t column,
+> +                               bool has_correction_mask, uint64List *correction_mask,
+> +                               Error **errp)
+> +{
+> +    Object *obj = object_resolve_path(path, NULL);
+> +    CXLEventDram dram;
+> +    CXLEventRecordHdr *hdr = &dram.hdr;
+> +    CXLDeviceState *cxlds;
+> +    CXLType3Dev *ct3d;
+> +    uint16_t valid_flags = 0;
+> +    uint8_t enc_log;
+> +    int rc;
+> +
+> +    if (!obj) {
+> +        error_setg(errp, "Unable to resolve path");
+> +        return;
+> +    }
+> +    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
+> +        error_setg(errp, "Path does not point to a CXL type 3 device");
+> +        return;
+> +    }
+> +    ct3d = CXL_TYPE3(obj);
+> +    cxlds = &ct3d->cxl_dstate;
+> +
+> +    rc = ct3d_qmp_cxl_event_log_enc(log);
+> +    if (rc < 0) {
+> +        error_setg(errp, "Unhandled error log type");
+> +        return;
+> +    }
+> +    enc_log = rc;
+> +
+> +    memset(&dram, 0, sizeof(dram));
+> +    cxl_assign_event_header(hdr, &dram_uuid, flags, sizeof(dram));
+> +    dram.phys_addr = physaddr;
 
-From the spec, I cannot find any statement saying clearing the COMMIT bit
-will automatically clear the COMMITTED. If I have not missed the statement =
-in
-the spec, I assume we should not make the assumption that it will be
-cleared automatically for real hardware. But you may be right, leaving the
-COMMITTED bit set can potentially cause some issue? Need to check more.
+I know I did not do this either but now that the devices can be volatile
+memory; Should we try and set the Volatile bit based on the address
+provided?
 
-Fan
+Or should we just allow the bits to be set by the user for testing?  I
+think this is what I originally thought but given the new functionality it
+may be best to make this more 'real'?
 
-> Otherwise, how would one reprogram the decoder if the decoder is indicati=
-ng
-> to be active?
->=20
-> DJ
->=20
-> >=20
-> > In current kernel implementation, when destroying a region (cxl
-> > destroy-region),the decoders associated to the region will be reset
-> > as that in cxl_decoder_reset, where the COMMIT field will be reset.
-> > However, resetting COMMIT field will not automatically reset the
-> > COMMITTED field, causing a situation where COMMIT is reset (0) while
-> > COMMITTED is set (1) after the region is destroyed. Later, when
-> > init_hdm_decoder is called (during modprobe), current code only check
-> > the COMMITTED to decide whether the decoder is enabled or not. Since
-> > the COMMITTED will be 1 and the code treats the decoder as enabled,
-> > which will cause unexpected behaviour.
-> >=20
-> > Before the fix, a system crash was observed when performing following
-> > steps:
-> > 1. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem
-> > 2. cxl create-region -m -d decoder0.0 -w 1 mem0 -s 256M
-> > 3. cxl destroy-region region0 -f
-> > 4. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core
-> > 5. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem (showing
-> > "no CXL window for range 0x0:0xffffffffffffffff" error message)
-> > 6. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core (kernel
-> > crash at cxl_dpa_release due to dpa_res has been freed when destroying
-> > the region).
-> >=20
-> > The patch fixed the above issue, and is tested based on follow patch se=
-ries:
-> >=20
-> > [PATCH 00/18] CXL RAM and the 'Soft Reserved' =3D> 'System RAM' default
-> > Message-ID: 167601992097.1924368.18291887895351917895.stgit@dwillia2-xf=
-h.jf.intel.com
-> >=20
-> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > ---
-> >   drivers/cxl/core/hdm.c | 8 +++++---
-> >   1 file changed, 5 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index 80eccae6ba9e..6cf854c949f0 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -695,6 +695,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
-struct cxl_decoder *cxld,
-> >   	struct cxl_endpoint_decoder *cxled =3D NULL;
-> >   	u64 size, base, skip, dpa_size;
-> >   	bool committed;
-> > +	bool should_commit;
-> >   	u32 remainder;
-> >   	int i, rc;
-> >   	u32 ctrl;
-> > @@ -710,10 +711,11 @@ static int init_hdm_decoder(struct cxl_port *port=
-, struct cxl_decoder *cxld,
-> >   	base =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which=
-));
-> >   	size =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which=
-));
-> >   	committed =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
-> > +	should_commit =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMIT);
-> >   	cxld->commit =3D cxl_decoder_commit;
-> >   	cxld->reset =3D cxl_decoder_reset;
-> > -	if (!committed)
-> > +	if (!should_commit || !committed)
-> >   		size =3D 0;
-> >   	if (base =3D=3D U64_MAX || size =3D=3D U64_MAX) {
-> >   		dev_warn(&port->dev, "decoder%d.%d: Invalid resource range\n",
-> > @@ -727,7 +729,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
-struct cxl_decoder *cxld,
-> >   	};
-> >   	/* decoders are enabled if committed */
-> > -	if (committed) {
-> > +	if (should_commit && committed) {
-> >   		cxld->flags |=3D CXL_DECODER_F_ENABLE;
-> >   		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
-> >   			cxld->flags |=3D CXL_DECODER_F_LOCK;
-> > @@ -772,7 +774,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
-struct cxl_decoder *cxld,
-> >   		return 0;
-> >   	}
-> > -	if (!committed)
-> > +	if (!should_commit || !committed)
-> >   		return 0;
-> >   	dpa_size =3D div_u64_rem(size, cxld->interleave_ways, &remainder);=
+Either way:
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+
+> +    dram.descriptor = descriptor;
+> +    dram.type = type;
+> +    dram.transaction_type = transaction_type;
+> +
+> +    if (has_channel) {
+> +        dram.channel = channel;
+> +        valid_flags |= CXL_DRAM_VALID_CHANNEL;
+> +    }
+> +
+> +    if (has_rank) {
+> +        dram.rank = rank;
+> +        valid_flags |= CXL_DRAM_VALID_RANK;
+> +    }
+> +
+> +    if (has_nibble_mask) {
+> +        st24_le_p(dram.nibble_mask, nibble_mask);
+> +        valid_flags |= CXL_DRAM_VALID_NIBBLE_MASK;
+> +    }
+> +
+> +    if (has_bank_group) {
+> +        dram.bank_group = bank_group;
+> +        valid_flags |= CXL_DRAM_VALID_BANK_GROUP;
+> +    }
+> +
+> +    if (has_bank) {
+> +        dram.bank = bank;
+> +        valid_flags |= CXL_DRAM_VALID_BANK;
+> +    }
+> +
+> +    if (has_row) {
+> +        st24_le_p(dram.row, row);
+> +        valid_flags |= CXL_DRAM_VALID_ROW;
+> +    }
+> +
+> +    if (has_column) {
+> +        stw_le_p(&dram.column, column);
+> +        valid_flags |= CXL_DRAM_VALID_COLUMN;
+> +    }
+> +
+> +    if (has_correction_mask) {
+> +        int count = 0;
+> +        while (correction_mask && count < 4) {
+> +            stq_le_p(&dram.correction_mask[count],
+> +                     correction_mask->value);
+> +            count++;
+> +            correction_mask = correction_mask->next;
+> +        }
+> +        valid_flags |= CXL_DRAM_VALID_CORRECTION_MASK;
+> +    }
+> +
+> +    stw_le_p(&dram.validity_flags, valid_flags);
+> +
+> +    if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&dram)) {
+> +        cxl_event_irq_assert(ct3d);
+> +    }
+> +    return;
+> +}
+> +
+>  static void ct3_class_init(ObjectClass *oc, void *data)
+>  {
+>      DeviceClass *dc = DEVICE_CLASS(oc);
+> diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
+> index 55d19b0e03..235c171264 100644
+> --- a/hw/mem/cxl_type3_stubs.c
+> +++ b/hw/mem/cxl_type3_stubs.c
+> @@ -13,6 +13,19 @@ void qmp_cxl_inject_gen_media_event(const char *path, CxlEventLog log,
+>                                      const char *component_id,
+>                                      Error **errp) {}
+>  
+> +void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+> +                               uint64_t physaddr, uint8_t descriptor,
+> +                               uint8_t type, uint8_t transaction_type,
+> +                               bool has_channel, uint8_t channel,
+> +                               bool has_rank, uint8_t rank,
+> +                               bool has_nibble_mask, uint32_t nibble_mask,
+> +                               bool has_bank_group, uint8_t bank_group,
+> +                               bool has_bank, uint8_t bank,
+> +                               bool has_row, uint32_t row,
+> +                               bool has_column, uint16_t column,
+> +                               bool has_correction_mask, uint64List *correction_mask,
+> +                               Error **errp) {}
+> +
+>  void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
+>                             Error **errp)
+>  {
+> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> index b189193f4c..a39e30d973 100644
+> --- a/include/hw/cxl/cxl_events.h
+> +++ b/include/hw/cxl/cxl_events.h
+> @@ -123,4 +123,27 @@ typedef struct CXLEventGenMedia {
+>      uint8_t reserved[CXL_EVENT_GEN_MED_RES_SIZE];
+>  } QEMU_PACKED CXLEventGenMedia;
+>  
+> +/*
+> + * DRAM Event Record
+> + * CXL Rev 3.0 Section 8.2.9.2.1.2: Table 8-44
+> + * All fields little endian.
+> + */
+> +typedef struct CXLEventDram {
+> +    CXLEventRecordHdr hdr;
+> +    uint64_t phys_addr;
+> +    uint8_t descriptor;
+> +    uint8_t type;
+> +    uint8_t transaction_type;
+> +    uint16_t validity_flags;
+> +    uint8_t channel;
+> +    uint8_t rank;
+> +    uint8_t nibble_mask[3];
+> +    uint8_t bank_group;
+> +    uint8_t bank;
+> +    uint8_t row[3];
+> +    uint16_t column;
+> +    uint64_t correction_mask[4];
+> +    uint8_t reserved[0x17];
+> +} QEMU_PACKED CXLEventDram;
+> +
+>  #endif /* CXL_EVENTS_H */
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> index 4ec06c0335..32f340d972 100644
+> --- a/qapi/cxl.json
+> +++ b/qapi/cxl.json
+> @@ -55,6 +55,41 @@
+>              '*device': 'uint32', '*component-id': 'str'
+>              }}
+>  
+> +##
+> +# @cxl-inject-dram-event:
+> +#
+> +# Inject an event record for a DRAM Event (CXL r3.0 8.2.9.2.1.2)
+> +# This event type is reported via one of the event logs specified via
+> +# the log parameter.
+> +#
+> +# @path: CXL type 3 device canonical QOM path
+> +# @log: Event Log to add the event to
+> +# @flags: header flags
+> +# @physaddr: Physical Address
+> +# @descriptor: Descriptor
+> +# @type: Type
+> +# @transaction-type: Transaction Type
+> +# @channel: Channel
+> +# @rank: Rank
+> +# @nibble-mask: Identify one or more nibbles that the error affects
+> +# @bank-group: Bank group
+> +# @bank: Bank
+> +# @row: Row
+> +# @column: Column
+> +# @correction-mask: Bits within each nibble. Used in order of bits set
+> +#                   in the nibble-mask.  Up to 4 nibbles may be covered.
+> +#
+> +# Since: 8.0
+> +##
+> +{ 'command': 'cxl-inject-dram-event',
+> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
+> +            'physaddr': 'uint64', 'descriptor': 'uint8',
+> +            'type': 'uint8', 'transaction-type': 'uint8',
+> +            '*channel': 'uint8', '*rank': 'uint8', '*nibble-mask': 'uint32',
+> +            '*bank-group': 'uint8', '*bank': 'uint8', '*row': 'uint32',
+> +            '*column': 'uint16', '*correction-mask': [ 'uint64' ]
+> +           }}
+> +
+>  ##
+>  # @cxl-inject-poison:
+>  #
+> -- 
+> 2.37.2
+> 
+
+
