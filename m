@@ -2,79 +2,53 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8304C61DA3
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Mar 2023 22:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9131EC61DA3
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Mar 2023 22:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232686AbjCCWjY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Mar 2023 17:39:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50686 "EHLO
+        id S232250AbjCCWyP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Mar 2023 17:54:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233373AbjCCWjM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Mar 2023 17:39:12 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0038166DB;
-        Fri,  3 Mar 2023 14:37:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677883063; x=1709419063;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=BSwOJPrU3WOV2D7KM77n1HGlWnE5cQZG4X3bZzzRBUU=;
-  b=LNDge32RJ+n/zc7hl62/jfFmS85IRsOZ0V2IhbWVyxaLZdXtFh0gyRuD
-   V5LuBYL4Be6liSkb86PkT9/7oBrvoUek/qFEa3rYUzDPfRm2+6aOEHtnq
-   lRgtqyX5VTxG58PZ6xXZu7bqRMuAdzWN32k4Lp/iXZp9j/hF9KCgxSIR9
-   gmhUHpbk29WRgRoavLcLwKfRZTSCnmay2ogxSGDaZxxiQoDjXcUtzwNuC
-   XsrhnsVgAle4EgjsKqMQxwnMoMCxcxCEJSk03M8gUgmiBlx6nxYqW1E4k
-   ck0IbbdC3PBOwqNgZsp7rFtrzzHtjQu/GVW+2qcCP/bl5idJ5ZP3/SOc4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="333898726"
-X-IronPort-AV: E=Sophos;i="5.98,232,1673942400"; 
-   d="scan'208";a="333898726"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 14:36:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="668807425"
-X-IronPort-AV: E=Sophos;i="5.98,232,1673942400"; 
-   d="scan'208";a="668807425"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2023 14:36:31 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 3 Mar 2023 14:36:30 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Fri, 3 Mar 2023 14:36:30 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Fri, 3 Mar 2023 14:36:30 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oFJMGl0QhE+n2fC59B4a+Whoe5lW8lLTF1SfiqP9mKXfKMYVk+/tX9o46ITz/jDB3yMpDxXCdWIp9zTJFST1/Lv9Eu8Ia0XsqM6ZHUpS31UJ1/0Ypg1MElsYuiHdqOBeRMPLQnYpyyt7JIraKBaMAEqVOJv8JVrPaPMXSURKgsY2fwIcifS2PlME2SPNPugwp9fv59YND+lcD5SP9xXCM6PdtoVNV/mlcuOgTTioMJYyvKmuqJWmp7cOZoZHbA/T9VsJS9BY6U4spSCTVV+mAfMPbFec5AzfUeSb3rCCFKqCz8dtKgNxnxmvrHxPxZkAr0iyIBOy2AMn5imq4WR33Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xKtgoy9bZgWdjwffHisB2qBI2VXEjTJv+V248scZ0po=;
- b=aCSYUGBm2UoCIKGbHyuHT53g7ybdUYL1gEnRtDRj5CLpAeE21NRD1aNxp99aBTkk9fhJmOl3GRcVK4UEfwMFUDfFQws2ZPDpYYEftob7E+utg26af2iDI1to6oORUhzNaB9lQhhFTdoXE+KPfreKZgfY/0HBMmY6Hx5B4nbKwUlkOyWM/uugKAb10evSBo37h0+IHto3/aqn8VgSs6cmdK+JA7vg81KIU94Nqy5rof3SyXk5ZOT53yaP7BgQRxwBdOg6z0oAVg6V7xxp6yiaFzgjE/ebbQIywT6CPPij+S1Ch/1j8yzhpsfmIUJL+fTReo4HSMlrbal6bEUUFXH5Aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB7471.namprd11.prod.outlook.com (2603:10b6:510:28a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.19; Fri, 3 Mar
- 2023 22:36:27 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::421b:865b:f356:7dfc%5]) with mapi id 15.20.6156.018; Fri, 3 Mar 2023
- 22:36:27 +0000
-Date:   Fri, 3 Mar 2023 14:36:25 -0800
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Fan Ni <fan.ni@samsung.com>,
-        Dan Williams <dan.j.williams@intel.com>
+        with ESMTP id S232199AbjCCWyN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Mar 2023 17:54:13 -0500
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A091EBCE;
+        Fri,  3 Mar 2023 14:53:47 -0800 (PST)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230303215456usoutp02b1d76daff059bc405125efcb8882dfc9~JB2vrsktX1075310753usoutp02a;
+        Fri,  3 Mar 2023 21:54:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230303215456usoutp02b1d76daff059bc405125efcb8882dfc9~JB2vrsktX1075310753usoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1677880496;
+        bh=Z2Rn13uNaVD27nSdhdfylk8HLkTwqheQLBAhFsIbW38=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=nAn5zy/SLijvFphmGtdFroIk7cRyN2f1hCiC5lZCsfRYWR/Yb1ajEPG1OL6zcLJ7w
+         UIiuxwGNKZ33ukPjvt+NEu7CoECrbpVf6QlzSiB2MM93YJRo07koW9NCop0qBBaHpr
+         z8moBHGcm44KJTAm2dt+r2zFw0xyCqhZBzFi6zLU=
+Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
+        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230303215456uscas1p2787369c71f175c90d21fadca2366386b~JB2veaNwM3104331043uscas1p2Y;
+        Fri,  3 Mar 2023 21:54:56 +0000 (GMT)
+Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id F7.23.49129.FAC62046; Fri, 
+        3 Mar 2023 16:54:55 -0500 (EST)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230303215455uscas1p26a9f8fd92c6cbe9e2f8be72190b373ef~JB2vAdn8j1866418664uscas1p2b;
+        Fri,  3 Mar 2023 21:54:55 +0000 (GMT)
+X-AuditID: cbfec36f-eddff7000001bfe9-ae-64026caf7114
+Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 10.D0.11378.FAC62046; Fri, 
+        3 Mar 2023 16:54:55 -0500 (EST)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Fri, 3 Mar 2023 13:54:54 -0800
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Fri,
+        3 Mar 2023 13:54:54 -0800
+From:   Fan Ni <fan.ni@samsung.com>
+To:     Dan Williams <dan.j.williams@intel.com>
 CC:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
         "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
         "ira.weiny@intel.com" <ira.weiny@intel.com>,
@@ -86,93 +60,250 @@ CC:     "alison.schofield@intel.com" <alison.schofield@intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
  check
-Message-ID: <640276695c8e8_5b27929473@dwillia2-xfh.jf.intel.com.notmuch>
-References: <CGME20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785@uscas1p1.samsung.com>
- <20230228224014.1402545-1-fan.ni@samsung.com>
- <64025f6219d2d_71138294e5@dwillia2-xfh.jf.intel.com.notmuch>
- <20230303215446.GA1479551@bgt-140510-bm03>
+Thread-Topic: [PATCH] cxl/hdm: Fix hdm decoder init by adding COMMIT field
+        check
+Thread-Index: AQHZS8WnqoF9q+YY/UCqLavADTGrLa7qFEkAgAAP1IA=
+Date:   Fri, 3 Mar 2023 21:54:54 +0000
+Message-ID: <20230303215446.GA1479551@bgt-140510-bm03>
+In-Reply-To: <64025f6219d2d_71138294e5@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230303215446.GA1479551@bgt-140510-bm03>
-X-ClientProxiedBy: SJ0PR05CA0016.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::21) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Content-ID: <5B416EA2175CB14DA0B54F96157C17DB@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB7471:EE_
-X-MS-Office365-Filtering-Correlation-Id: f64f49ea-8a87-4fb6-582e-08db1c37b9f5
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MsL8la8YFKsGBBiMIdutoV+pPqvn4PExscj2aaeXrrvRuGh9yjx0NGYBB5/NocM4GvE/2K7BKn9o1u0hYMmTmkIRBz9xa8tj4ZPeM2zLyTxJK1NsqEwBZuje5lyXslm9UKkEwmc8Oa/E4XIZYB7G+nTTm7zm8fQDo2ibJ9E6OR8JPArpiGm6oULWhTkyXOFm1c3FGTWven+X4kCmnVIYxIimPZotY6Tha1uMy5RCjbIGhei7DpvzxmKRUUKfOrpqGXVs/RODpnSzJR4RKn07AJZ2UhGpZTlq94L+5mb3Qg2v5c5ZBjwy+5WqncGIKZLroWG64pjLNSRNg0ltuA+r57PpMVaTSZfXsMQaQ1e1rTBe2Si+z3KdILmi6/ISaGv+vQtxV6MSr9qUyi/h9ZLKEP1cIq2FxTICJOVyh8cyffH/jGaDChqv1sfLdZ1xIhUzGu09fl1xFG5rbxMXXAEiDtfQQkDCT20XwsFFB6Dn+mF/3wMVpVaJPMwwgCBO7FxsW+m6ErEnJDgRGN/DKctCgYuf0s+SfTfUWK/8IatycgFjfE81hUyp0bjyasFzGx95WrH83DyjVGZEXHO+LkBPPejC7ocNcUtHjzlm1nRNAIkmGI2t7jJT0qSt1AIWg3TVO9owbsvDSFFE0nwPskO4HQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(396003)(366004)(136003)(39860400002)(376002)(451199018)(86362001)(6512007)(6506007)(2906002)(6486002)(9686003)(186003)(26005)(82960400001)(478600001)(5660300002)(110136005)(83380400001)(54906003)(4326008)(8676002)(66476007)(8936002)(66556008)(316002)(66946007)(38100700002)(41300700001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xE/xh8EhNfKsONdlB0zU7BNgIa473holRyYphmOJfV0twwDYH76lCvlsM7ZS?=
- =?us-ascii?Q?RbHSfGVeOIdPn9/9E1QUMl0h1f9ym01jlVGi07IoL4ogAj6/OtcpgqFGDkVm?=
- =?us-ascii?Q?RWmVRk6OvEtOiuM9ABt7gQL1cLlXllE/j2IsAzccpQ7vc1yBcS3sWuGpUZhx?=
- =?us-ascii?Q?u8wPP0zdTyMk33TfuFirRC6GYRoMmLu7k7AnesqPeC5AGgBDX8+DlBYKmews?=
- =?us-ascii?Q?7w5sDkO/zae7oQPaPtl7pCA6f2ThVFE74q/PGzrJOnHsI1kIVetPBszD7X3p?=
- =?us-ascii?Q?XFPfDdB0NhvIjCd5TaOIVl7vvBHMmzbwDsKi2xnjMQRzolSgBhPGVNjIH+Ov?=
- =?us-ascii?Q?0tyqRamDgBwJY7RRg6BEt6lkpFJD/Ttp5tIWVas1jmlbZZqKT1CU8T7Ei53K?=
- =?us-ascii?Q?XlhueAJKxkXOElH6xbzB6sEC3xut4w1cowytIWCupOc3PvxEFRgGfoV5wKTR?=
- =?us-ascii?Q?U8hTygxM3cMwZ6ejKJd7YI5vVFByXjwS0LksWVxK6Nm2btc7HT/MTP5CS+Bp?=
- =?us-ascii?Q?nzreycycjUnotncJa+8b8OI9hE0u8MVhXvaEErUrS0jXDTsAkSFCvJV1DM72?=
- =?us-ascii?Q?wesZ4RUC9B0t5vsDIvxDcqvOWBqnW+0xsDhQ5Me5OkqbtRM2UMeODRtEadHs?=
- =?us-ascii?Q?Zh4bo0sjF7iuZZSQTQctlEuuonLQ70GzsmxBF+Rb8fEa9uq4d/acwle1SI6k?=
- =?us-ascii?Q?U5CmcxZQIPXB0d4Nw6jxvDT5RSAMFkRB20S4aSX/wV1uhHY8ifyBZxVxYqVs?=
- =?us-ascii?Q?DW4lqPlpyKoPppvkr2hCr/HpFhatc6P7rOpX2/Dr1ywpGWJDiVu7P1FeRiKS?=
- =?us-ascii?Q?mFMAXRoaPr8paMTtqz/lTaaVLKnJSgRVIcvlVN3wI1hsL85xodOvAVyaQWty?=
- =?us-ascii?Q?cIXPC+PeL/G42Fqj5tiXXnxMR1HDAkttQZ+IMpz6/RLKM4zG6ekifmZKSZdE?=
- =?us-ascii?Q?K3MzAe+6kjDFhA6m+Y2ui+eEzULRrA85kone4d1jk9aC5XbFKTm8/40Z5lQw?=
- =?us-ascii?Q?lZnBONxtr4u2grNWauSYw92IwlH3aJya316yORjezymMWNDUFvy++8XTbC7N?=
- =?us-ascii?Q?+RfESW5Zmzs/ZkirBQG4qIrwFvtKNsr4iqXLImnqUiO7h/Og//O0xYrd53K+?=
- =?us-ascii?Q?brC+8XPnYAp6M10+VQ6dHCFjPjaBndk0Qae6KS0N5nvRZxdOHSM4lzwtKcSE?=
- =?us-ascii?Q?/TDKHCoHRUQBpzzvMw16lk3ZzwtXb7lj8euY1fDRG0Orlw4/H+t3j1DEmL2q?=
- =?us-ascii?Q?CKuQ152klcWBv1napYqB6pWz+vgKCA2H1lEzIa2zaza/k0oLUHSMNyV0Mf0I?=
- =?us-ascii?Q?XUfiekk3ER8t1CnsjaiS19mB2TIqduTB92l84Jm30/4idWEzioXRHYdJ4QXs?=
- =?us-ascii?Q?46ghVtx1eKhPBWfmyHceugcqnlSlb8hDi1tvI/w8Yc5pBAZeRmhDqjRvDdCb?=
- =?us-ascii?Q?ukUmWQGZrUYo58NjY2Joqn3FZQRr2gSprjAMuEOxeA8gIqnig8HfvHFVGmEs?=
- =?us-ascii?Q?FFXQegzH7OBgb4Ui+jP56ZFfeKJPQNVsSd1LnRRvGKRYJlDRDrCjhMeFBAh/?=
- =?us-ascii?Q?G5Sr1iemd5GKHjrR0YUp8Gys3CvRsgi92NfYMuLibM/G4WDIRDZUEJoIB3/j?=
- =?us-ascii?Q?kw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f64f49ea-8a87-4fb6-582e-08db1c37b9f5
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2023 22:36:27.4055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 83RiURCTyxWHjhrFQjBLo7qYomcbtYeWWtlE4ZWv08jKSeMauMXz76cQrSAywvehLrG942wLsjEPwLUiGPGYmerBwzPHLxYECrX+CQZ6Dv0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7471
-X-OriginatorOrg: intel.com
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djXc7rrc5hSDFY02ljcfXyBzaJ58mJG
+        i+lTLzBarL65htFi/9PnLBarFl5jszg/6xSLxeVdc9gsbk04xuTA6dFy5C2rx+I9L5k8Nq3q
+        ZPOYOrve4/MmuQDWKC6blNSczLLUIn27BK6M25fXMRccca2Y8GoVYwPjfssuRk4OCQETiSeb
+        J7GA2EICKxklXrzy7WLkArJbmSS2vH/GDlP07tM6FojEWkaJtzfmQDkfGSWaj29kh3CWMkrs
+        +b6WDaSFTUBRYl/XdjBbREBbYuKcg8wgRcwCT5glbu++A9TOwSEsECjx8nQNRE2QxK5Td1kg
+        bCuJC+8OMIHYLAIqEue3rGQEsXkFzCSutT5iBWnlFPCUuDilCiTMKCAm8f3UGrByZgFxiVtP
+        5jNBXC0osWj2HmYIW0zi366HbBC2osT97y/ZIep1JBbs/sQGYdtJvGk6zgpha0ssW/iaGWKt
+        oMTJmU9YIHolJQ6uuAH2vITACw6JFWuvQi1wkdhx7QnUAmmJq9enMoPcKSGQLLHqIxdEOEdi
+        /pItUHOsJRb+Wc80gVFlFpKzZyE5aRaSk2YhOWkWkpMWMLKuYhQvLS7OTU8tNspLLdcrTswt
+        Ls1L10vOz93ECExXp/8dzt/BeP3WR71DjEwcjIcYJTiYlUR4qxsYUoR4UxIrq1KL8uOLSnNS
+        iw8xSnOwKInzGtqeTBYSSE8sSc1OTS1ILYLJMnFwSjUwsSoxKG58fPiwQUzmHbOXa64wnYpQ
+        EGl3nM6WqLHz5t/iDrsDEdLyfrmvdZz1RT3KIk7trWx7w51y8O2G+cHmTgwGExbsrDWJYzcN
+        2b2Eca7ovcAe0YDTokYLPHPP2G+fYbQ7+6jjNObH7i/FoiPCFSxPHj8kMq/GzHpJ/YI/Cqt/
+        BS4/pXPb5MWZvndHbF0uy84JeX3HuHy261RD0bnRpdtYHdLM9I53+cYnpTIJfTiQsnBev8Ut
+        xc5oXyYzg6tbFmQ3Kkg6Hvud9ti19KiK/sOEy7Z3LBZJfix53nyMZf3Jo2dna90QPd06b9sh
+        z+aLXBKaoe/jjgXWl27dFTxn6fKT+tPWJrXF7uTt9axWYinOSDTUYi4qTgQAPAj/xcYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsWS2cA0SXd9DlOKwdbjkhZ3H19gs2ievJjR
+        YvrUC4wWq2+uYbTY//Q5i8WqhdfYLM7POsVicXnXHDaLWxOOMTlwerQcecvqsXjPSyaPTas6
+        2Tymzq73+LxJLoA1issmJTUnsyy1SN8ugSvj9uV1zAVHXCsmvFrF2MC437KLkZNDQsBE4t2n
+        dSxdjFwcQgKrGSVmfNjNBOF8ZJS41vgNylnKKNF19yELSAubgKLEvq7tbCC2iIC2xMQ5B5lB
+        ipgFnjBL3N59B6iIg0NYIFDi5ekaiJogibuvFkPVW0lceHeACcRmEVCROL9lJSOIzStgJnGt
+        9REriC0kcIZR4u4bL5AxnAKeEhenVIGEGQXEJL6fWgPWyiwgLnHryXwmiA8EJJbsOc8MYYtK
+        vHz8jxXCVpS4//0lO0S9jsSC3Z/YIGw7iTdNx1khbG2JZQtfM0OcIChxcuYTFoheSYmDK26w
+        TGCUmIVk3Swko2YhGTULyahZSEYtYGRdxSheWlycm15RbJiXWq5XnJhbXJqXrpecn7uJERjt
+        p/8djtzBePTWR71DjEwcjIcYJTiYlUR4qxsYUoR4UxIrq1KL8uOLSnNSiw8xSnOwKInzCrlO
+        jBcSSE8sSc1OTS1ILYLJMnFwSjUw7XBbJVax+k+a0BRza0eFTJ3933gzLr4KD2+3n+i466op
+        Q+lnb735n21Z3zJGtSUtXCn8e5eN4nebukVHVrdnhpl6bk35mf2el0Px3KPI//LWDm/LBE9L
+        TX7Awir56PKZhgamrBjHFItlb3jPlG5mOj4r5ZHX0//cLXmTPMOf20euYuud5qL0fP+m8sAv
+        t7Mlf1tumPHn9baLWScXSlVWLjxl+F9595r5bxdXXTJVdnqc3Jl8f3ZaxNc/+y5/sHN4uUGu
+        pnvxp7vz7ms/X7s/anmydZzfrLVTjT3viRpsrDuyzHkf/96fvxze1Qt7SNRPb40LzmsoF51y
+        PN9F7l9iiP+nTYY36q4rLBEUcAkKVmIpzkg01GIuKk4EAHgBCbxlAwAA
+X-CMS-MailID: 20230303215455uscas1p26a9f8fd92c6cbe9e2f8be72190b373ef
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785
+References: <CGME20230228224029uscas1p1e2fb92a8a595f80fa2985b452899d785@uscas1p1.samsung.com>
+        <20230228224014.1402545-1-fan.ni@samsung.com>
+        <64025f6219d2d_71138294e5@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Fan Ni wrote:
-[..]
-> > I think a separate fix for that crash is needed, can you send the
-> > backtrace? I.e. I worry that crash can be triggered by other means.
-> Hi Dan,
-> See backtrace below.
+On Fri, Mar 03, 2023 at 12:58:10PM -0800, Dan Williams wrote:
 
-Thanks, I'll take a look. 
+> Fan Ni wrote:
+> > Add COMMIT field check aside with existing COMMITTED field check during
+> > hdm decoder initialization to avoid a system crash during module remova=
+l
+> > after destroying a region which leaves the COMMIT field being reset whi=
+le
+> > the COMMITTED field still being set.
+> >=20
+> > In current kernel implementation, when destroying a region (cxl
+> > destroy-region),the decoders associated to the region will be reset
+> > as that in cxl_decoder_reset, where the COMMIT field will be reset.
+> > However, resetting COMMIT field will not automatically reset the
+> > COMMITTED field, causing a situation where COMMIT is reset (0) while
+> > COMMITTED is set (1) after the region is destroyed. Later, when
+> > init_hdm_decoder is called (during modprobe), current code only check
+> > the COMMITTED to decide whether the decoder is enabled or not. Since
+> > the COMMITTED will be 1 and the code treats the decoder as enabled,
+> > which will cause unexpected behaviour.
+> >=20
+> > Before the fix, a system crash was observed when performing following
+> > steps:
+> > 1. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem
+> > 2. cxl create-region -m -d decoder0.0 -w 1 mem0 -s 256M
+> > 3. cxl destroy-region region0 -f
+> > 4. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core
+> > 5. modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem (showing
+> > "no CXL window for range 0x0:0xffffffffffffffff" error message)
+> > 6. rmmod cxl_acpi cxl_pci cxl_port cxl_mem cxl_pmem cxl_core (kernel
+> > crash at cxl_dpa_release due to dpa_res has been freed when destroying
+> > the region).
+>=20
+> I think a separate fix for that crash is needed, can you send the
+> backtrace? I.e. I worry that crash can be triggered by other means.
+Hi Dan,
+See backtrace below.
 
-[..]
-> > > @@ -710,10 +711,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
-> > >  	base = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
-> > >  	size = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
-> > >  	committed = !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
-> > > +	should_commit = !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMIT);
-> > 
-> > This change looks like a good idea in general given the ambiguity of
-> > 'committed'. However just combine the two checks into the @committed
-> > variable with something like this:
-> > 
-> > commit_mask = CXL_HDM_DECODER0_CTRL_COMMITTED|CXL_HDM_DECODER0_CTRL_COMMIT;
-> > committed = (ctrl & commit_mask) == commit_mask;
+[  130.299394] BUG: kernel NULL pointer dereference, address: 0000000000000=
+008
+[  130.299907] #PF: supervisor read access in kernel mode
+[  130.299907] #PF: error_code(0x0000) - not-present page
+[  130.299907] PGD 0 P4D 0=20
+[  130.299907] Oops: 0000 [#1] PREEMPT SMP NOPTI
+[  130.299907] CPU: 13 PID: 467 Comm: rmmod Not tainted 6.2.0-rc6-00024-g3e=
+a761ec9dd5 #58
+[  130.299907] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel=
+-1.16.1-0-g3208b098f51a-prebuilt.qemu.org 04/01/2014
+[  130.299907] RIP: 0010:__cxl_dpa_release+0x3c/0xb0 [cxl_core]
+[  130.299907] Code: ff ff 48 8b 7d 40 4c 8b a8 d8 02 00 00 e8 5c a6 ff ff =
+4c 8b a5 28 03 00 00 48 89 c3 48 8b 85 20 03 00 00 4d 8b ad 40 03 00 00 <48=
+> 8b 50 08 4c 8b 30 49 81 c5 90 00 00 00 4c 89 ef 48 83 c2 01 4c
+[  130.299907] RSP: 0018:ffffc9000075fae0 EFLAGS: 00000246
+[  130.299907] RAX: 0000000000000000 RBX: ffff88810250cc00 RCX: 00000000000=
+00000
+[  130.299907] RDX: 0000000000000001 RSI: ffff8881008d25e8 RDI: ffff8881025=
+0cc00
+[  130.299907] RBP: ffff88810250d000 R08: 0000000000000001 R09: ffffffff818=
+2b400
+[  130.299907] R10: ffff888101fd7238 R11: ffff888201c1f406 R12: 00000000000=
+00000
+[  130.299907] R13: 0000000000000000 R14: ffff88810250ce90 R15: ffff8881025=
+0ce8c
+[  130.299907] FS:  00007f53b3884c40(0000) GS:ffff888277d40000(0000) knlGS:=
+0000000000000000
+[  130.299907] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  130.299907] CR2: 0000000000000008 CR3: 000000010285c000 CR4: 00000000000=
+006e0
+[  130.299907] Call Trace:
+[  130.299907]  <TASK>
+[  130.299907]  cxl_dpa_release+0x18/0x30 [cxl_core]
+[  130.299907]  release_nodes+0x40/0x70
+[  130.299907]  devres_release_all+0x86/0xc0
+[  130.299907]  device_unbind_cleanup+0x9/0x70
+[  130.299907]  device_release_driver_internal+0xe9/0x160
+[  130.299907]  bus_remove_device+0xd3/0x140
+[  130.299907]  device_del+0x186/0x3d0
+[  130.299907]  ? _raw_spin_unlock_irqrestore+0x16/0x30
+[  130.299907]  ? devres_remove+0xcb/0xf0
+[  130.299907]  device_unregister+0xe/0x60
+[  130.299907]  ? __pfx_devm_action_release+0x10/0x10
+[  130.299907]  devres_release+0x22/0x50
+[  130.299907]  devm_release_action+0x33/0x60
+[  130.299907]  ? __pfx_unregister_port+0x10/0x10 [cxl_core]
+[  130.299907]  delete_endpoint+0x7a/0x80 [cxl_core]
+[  130.299907]  release_nodes+0x40/0x70
+[  130.299907]  devres_release_all+0x86/0xc0
+[  130.299907]  device_unbind_cleanup+0x9/0x70
+[  130.299907]  device_release_driver_internal+0xe9/0x160
+[  130.299907]  bus_remove_device+0xd3/0x140
+[  130.299907]  device_del+0x186/0x3d0
+[  130.299907]  cdev_device_del+0x10/0x30
+[  130.299907]  cxl_memdev_unregister+0x36/0x40 [cxl_core]
+[  130.299907]  release_nodes+0x40/0x70
+[  130.299907]  devres_release_all+0x86/0xc0
+[  130.299907]  device_unbind_cleanup+0x9/0x70
+[  130.299907]  device_release_driver_internal+0xe9/0x160
+[  130.299907]  driver_detach+0x3f/0x80
+[  130.299907]  bus_remove_driver+0x50/0xd0
+[  130.299907]  pci_unregister_driver+0x36/0x80
+[  130.299907]  __x64_sys_delete_module+0x191/0x270
+[  130.299907]  ? fpregs_assert_state_consistent+0x1d/0x50
+[  130.299907]  ? exit_to_user_mode_prepare+0x36/0x120
+[  130.299907]  do_syscall_64+0x3b/0x90
+[  130.299907]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+[  130.299907] RIP: 0033:0x7f53b3126c9b
+[  130.299907] Code: 73 01 c3 48 8b 0d 95 21 0f 00 f7 d8 64 89 01 48 83 c8 =
+ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48=
+> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 65 21 0f 00 f7 d8 64 89 01 48
+[  130.299907] RSP: 002b:00007fff5a72c558 EFLAGS: 00000206 ORIG_RAX: 000000=
+00000000b0
+[  130.299907] RAX: ffffffffffffffda RBX: 000056037a16e790 RCX: 00007f53b31=
+26c9b
+[  130.299907] RDX: 000000000000000a RSI: 0000000000000800 RDI: 000056037a1=
+6e7f8
+[  130.299907] RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000000=
+00000
+[  130.299907] R10: 00007f53b31beac0 R11: 0000000000000206 R12: 00007fff5a7=
+2c7b0
+[  130.299907] R13: 000056037a16d2a0 R14: 00007fff5a72cdb7 R15: 000056037a1=
+6e790
+[  130.299907]  </TASK>
+[  130.299907] Modules linked in: cxl_mem cxl_pmem cxl_port cxl_pci(-) cxl_=
+acpi cxl_core dax_pmem nd_pmem nd_btt [last unloaded: cxl_core]
+[  130.299907] CR2: 0000000000000008
+[  130.357813] ---[ end trace 0000000000000000 ]---
+[  130.358811] RIP: 0010:__cxl_dpa_release+0x3c/0xb0 [cxl_core]
+[  130.360039] Code: ff ff 48 8b 7d 40 4c 8b a8 d8 02 00 00 e8 5c a6 ff ff =
+4c 8b a5 28 03 00 00 48 89 c3 48 8b 85 20 03 00 00 4d 8b ad 40 03 00 00 <48=
+> 8b 50 08 4c 8b 30 49 81 c5 90 00 00 00 4c 89 ef 48 83 c2 01 4c
+[  130.363227] RSP: 0018:ffffc9000075fae0 EFLAGS: 00000246
+[  130.364292] RAX: 0000000000000000 RBX: ffff88810250cc00 RCX: 00000000000=
+00000
+[  130.365400] RDX: 0000000000000001 RSI: ffff8881008d25e8 RDI: ffff8881025=
+0cc00
+[  130.366645] RBP: ffff88810250d000 R08: 0000000000000001 R09: ffffffff818=
+2b400
+[  130.368025] R10: ffff888101fd7238 R11: ffff888201c1f406 R12: 00000000000=
+00000
+[  130.369337] R13: 0000000000000000 R14: ffff88810250ce90 R15: ffff8881025=
+0ce8c
+[  130.370531] FS:  00007f53b3884c40(0000) GS:ffff888277d40000(0000) knlGS:=
+0000000000000000
+[  130.372515] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  130.373567] CR2: 0000000000000008 CR3: 000000010285c000 CR4: 00000000000=
+006e0
 
-Did you also notice this ^^^ request for a fixed up version of the
-current patch?
+>=20
+> >=20
+> > The patch fixed the above issue, and is tested based on follow patch se=
+ries:
+> >=20
+> > [PATCH 00/18] CXL RAM and the 'Soft Reserved' =3D> 'System RAM' default
+> > Message-ID: 167601992097.1924368.18291887895351917895.stgit@dwillia2-xf=
+h.jf.intel.com
+> >=20
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > ---
+> >  drivers/cxl/core/hdm.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 80eccae6ba9e..6cf854c949f0 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -695,6 +695,7 @@ static int init_hdm_decoder(struct cxl_port *port, =
+struct cxl_decoder *cxld,
+> >  	struct cxl_endpoint_decoder *cxled =3D NULL;
+> >  	u64 size, base, skip, dpa_size;
+> >  	bool committed;
+> > +	bool should_commit;
+> >  	u32 remainder;
+> >  	int i, rc;
+> >  	u32 ctrl;
+> > @@ -710,10 +711,11 @@ static int init_hdm_decoder(struct cxl_port *port=
+, struct cxl_decoder *cxld,
+> >  	base =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which)=
+);
+> >  	size =3D ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which)=
+);
+> >  	committed =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
+> > +	should_commit =3D !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMIT);
+>=20
+> This change looks like a good idea in general given the ambiguity of
+> 'committed'. However just combine the two checks into the @committed
+> variable with something like this:
+>=20
+> commit_mask =3D CXL_HDM_DECODER0_CTRL_COMMITTED|CXL_HDM_DECODER0_CTRL_COM=
+MIT;
+> committed =3D (ctrl & commit_mask) =3D=3D commit_mask;=
