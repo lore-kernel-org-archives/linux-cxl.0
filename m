@@ -2,259 +2,94 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675C2C64EC4
-	for <linux-cxl@archiver.kernel.org>; Fri,  3 Mar 2023 15:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E959BC64EC4
+	for <linux-cxl@archiver.kernel.org>; Fri,  3 Mar 2023 15:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231168AbjCCPcn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 3 Mar 2023 10:32:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47938 "EHLO
+        id S230436AbjCCPmx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 3 Mar 2023 10:42:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbjCCPcm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Mar 2023 10:32:42 -0500
+        with ESMTP id S229800AbjCCPmw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 3 Mar 2023 10:42:52 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4FA82312A
-        for <linux-cxl@vger.kernel.org>; Fri,  3 Mar 2023 07:32:41 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PSsKm1Mf9z67L8m;
-        Fri,  3 Mar 2023 23:27:40 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 3 Mar 2023 15:32:38 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>
-CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578B821A28;
+        Fri,  3 Mar 2023 07:42:50 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PSsft5WWrz6J7Yr;
+        Fri,  3 Mar 2023 23:42:30 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 3 Mar
+ 2023 15:42:46 +0000
+Date:   Fri, 3 Mar 2023 15:42:45 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        =?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v4 7/7] hw/cxl/events: Add injection of Memory Module Events
-Date:   Fri, 3 Mar 2023 15:29:03 +0000
-Message-ID: <20230303152903.28103-8-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230303152903.28103-1-Jonathan.Cameron@huawei.com>
-References: <20230303152903.28103-1-Jonathan.Cameron@huawei.com>
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 3/6] cxl/memdev: Add trigger_poison_list sysfs
+ attribute
+Message-ID: <20230303154245.00007b4b@Huawei.com>
+In-Reply-To: <cba540061d48defc0008638bef0cc42cb1f6762e.1676685180.git.alison.schofield@intel.com>
+References: <cover.1676685180.git.alison.schofield@intel.com>
+        <cba540061d48defc0008638bef0cc42cb1f6762e.1676685180.git.alison.schofield@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-These events include a copy of the device health information at the
-time of the event. Actually using the emulated device health would
-require a lot of controls to manipulate that state.  Given the aim
-of this injection code is to just test the flows when events occur,
-inject the contents of the device health state as well.
+On Fri, 17 Feb 2023 18:18:51 -0800
+alison.schofield@intel.com wrote:
 
-Future work may add more sophisticate device health emulation
-including direct generation of these records when events occur
-(such as a temperature threshold being crossed).  That does not
-reduce the usefulness of this more basic generation of the events.
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> When a boolean 'true' is written to this attribute the memdev driver
+> retrieves the poison list from the device. The list consists of
+> addresses that are poisoned, or would result in poison if accessed,
+> and the source of the poison. This attribute is only visible for
+> devices supporting the capability. The retrieved errors are logged
+> as kernel trace events with the label 'cxl_poison'.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Hi Alison,
 
---
-v4: THanks to Ira Weiny for review.
-- Fixed typo in QAPI docs
-- Use device time for event header.
----
- hw/mem/cxl_type3.c          | 62 +++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3_stubs.c    | 12 +++++++
- include/hw/cxl/cxl_events.h | 19 ++++++++++++
- qapi/cxl.json               | 35 +++++++++++++++++++++
- 4 files changed, 128 insertions(+)
+The dates and version in the docs need an update. Otherwise
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 526d55ee13..e1278cdfa4 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1172,6 +1172,11 @@ static const QemuUUID dram_uuid = {
-                  0x4e, 0x9b, 0xfb, 0x5c, 0x96, 0x24),
- };
- 
-+static const QemuUUID memory_module_uuid = {
-+    .data = UUID(0xfe927475, 0xdd59, 0x4339, 0xa5, 0x86,
-+                 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74),
-+};
-+
- #define CXL_GMER_VALID_CHANNEL                          BIT(0)
- #define CXL_GMER_VALID_RANK                             BIT(1)
- #define CXL_GMER_VALID_DEVICE                           BIT(2)
-@@ -1379,6 +1384,63 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-     return;
- }
- 
-+void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-+                                        uint8_t flags, uint8_t type,
-+                                        uint8_t health_status,
-+                                        uint8_t media_status,
-+                                        uint8_t additional_status,
-+                                        uint8_t life_used,
-+                                        int16_t temperature,
-+                                        uint32_t dirty_shutdown_count,
-+                                        uint32_t corrected_volatile_error_count,
-+                                        uint32_t corrected_persistent_error_count,
-+                                        Error **errp)
-+{
-+    Object *obj = object_resolve_path(path, NULL);
-+    CXLEventMemoryModule module;
-+    CXLEventRecordHdr *hdr = &module.hdr;
-+    CXLDeviceState *cxlds;
-+    CXLType3Dev *ct3d;
-+    uint8_t enc_log;
-+    int rc;
-+
-+    if (!obj) {
-+        error_setg(errp, "Unable to resolve path");
-+        return;
-+    }
-+    if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-+        error_setg(errp, "Path does not point to a CXL type 3 device");
-+        return;
-+    }
-+    ct3d = CXL_TYPE3(obj);
-+    cxlds = &ct3d->cxl_dstate;
-+
-+    rc = ct3d_qmp_cxl_event_log_enc(log);
-+    if (rc < 0) {
-+        error_setg(errp, "Unhandled error log type");
-+        return;
-+    }
-+    enc_log = rc;
-+
-+    memset(&module, 0, sizeof(module));
-+    cxl_assign_event_header(hdr, &memory_module_uuid, flags, sizeof(module),
-+                            cxl_device_get_timestamp(&ct3d->cxl_dstate));
-+
-+    module.type = type;
-+    module.health_status = health_status;
-+    module.media_status = media_status;
-+    module.additional_status = additional_status;
-+    module.life_used = life_used;
-+    stw_le_p(&module.temperature, temperature);
-+    stl_le_p(&module.dirty_shutdown_count, dirty_shutdown_count);
-+    stl_le_p(&module.corrected_volatile_error_count, corrected_volatile_error_count);
-+    stl_le_p(&module.corrected_persistent_error_count, corrected_persistent_error_count);
-+
-+    if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&module)) {
-+        cxl_event_irq_assert(ct3d);
-+    }
-+}
-+
- static void ct3_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc = DEVICE_CLASS(oc);
-diff --git a/hw/mem/cxl_type3_stubs.c b/hw/mem/cxl_type3_stubs.c
-index 235c171264..2196bd841c 100644
---- a/hw/mem/cxl_type3_stubs.c
-+++ b/hw/mem/cxl_type3_stubs.c
-@@ -26,6 +26,18 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
-                                bool has_correction_mask, uint64List *correction_mask,
-                                Error **errp) {}
- 
-+void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
-+                                        uint8_t flags, uint8_t type,
-+                                        uint8_t health_status,
-+                                        uint8_t media_status,
-+                                        uint8_t additional_status,
-+                                        uint8_t life_used,
-+                                        int16_t temperature,
-+                                        uint32_t dirty_shutdown_count,
-+                                        uint32_t corrected_volatile_error_count,
-+                                        uint32_t corrected_persistent_error_count,
-+                                        Error **errp) {}
-+
- void qmp_cxl_inject_poison(const char *path, uint64_t start, uint64_t length,
-                            Error **errp)
- {
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index a39e30d973..089ba2091f 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -146,4 +146,23 @@ typedef struct CXLEventDram {
-     uint8_t reserved[0x17];
- } QEMU_PACKED CXLEventDram;
- 
-+/*
-+ * Memory Module Event Record
-+ * CXL Rev 3.0 Section 8.2.9.2.1.3: Table 8-45
-+ * All fields little endian.
-+ */
-+typedef struct CXLEventMemoryModule {
-+    CXLEventRecordHdr hdr;
-+    uint8_t type;
-+    uint8_t health_status;
-+    uint8_t media_status;
-+    uint8_t additional_status;
-+    uint8_t life_used;
-+    int16_t temperature;
-+    uint32_t dirty_shutdown_count;
-+    uint32_t corrected_volatile_error_count;
-+    uint32_t corrected_persistent_error_count;
-+    uint8_t reserved[0x3d];
-+} QEMU_PACKED CXLEventMemoryModule;
-+
- #endif /* CXL_EVENTS_H */
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 32f340d972..8f06b48a0a 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -90,6 +90,41 @@
-             '*column': 'uint16', '*correction-mask': [ 'uint64' ]
-            }}
- 
-+##
-+# @cxl-inject-memory-module-event:
-+#
-+# Inject an event record for a Memory Module Event (CXL r3.0 8.2.9.2.1.3)
-+# This event includes a copy of the Device Health info at the time of
-+# the event.
-+#
-+# @path: CXL type 3 device canonical QOM path
-+# @log: Event Log to add the event to
-+# @flags: header flags
-+# @type: Device Event Type (see spec for permitted values)
-+# @health-status: Overall health summary bitmap (see spec for permitted bits)
-+# @media-status: Overall media health summary (see spec for permitted values)
-+# @additional-status: Complex field (see spec for meaning)
-+# @life-used: Percentage (0-100) of factory expected life span
-+# @temperature: Device temperature in degrees Celsius
-+# @dirty-shutdown-count: Counter incremented whenever device is unable
-+#                        to determine if data loss may have occurred.
-+# @corrected-volatile-error-count: Total number of correctable errors in
-+#                                  volatile memory
-+# @corrected-persistent-error-count: Total number correctable errors in
-+#                                    persistent memory
-+#
-+# Since: 8.0
-+##
-+{ 'command': 'cxl-inject-memory-module-event',
-+  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags' : 'uint8',
-+            'type': 'uint8', 'health-status': 'uint8',
-+            'media-status': 'uint8', 'additional-status': 'uint8',
-+            'life-used': 'uint8', 'temperature' : 'int16',
-+            'dirty-shutdown-count': 'uint32',
-+            'corrected-volatile-error-count': 'uint32',
-+            'corrected-persistent-error-count': 'uint32'
-+            }}
-+
- ##
- # @cxl-inject-poison:
- #
--- 
-2.37.2
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 14 +++++++
+>  drivers/cxl/core/memdev.c               | 56 +++++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h                    |  2 +-
+>  3 files changed, 71 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 3acf2f17a73f..d9421c965a3b 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -415,3 +415,17 @@ Description:
+>  		1), and checks that the hardware accepts the commit request.
+>  		Reading this value indicates whether the region is committed or
+>  		not.
+> +
+> +
+> +What:		/sys/bus/cxl/devices/memX/trigger_poison_list
+> +Date:		November, 2022
+> +KernelVersion:	v6.2
 
+Needs an update.
+
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
