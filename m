@@ -2,54 +2,48 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E65C678D4
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Mar 2023 10:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39BBC678D4
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Mar 2023 10:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230195AbjCFKEC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Mar 2023 05:04:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
+        id S231209AbjCFK2s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Mar 2023 05:28:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229652AbjCFKD6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Mar 2023 05:03:58 -0500
+        with ESMTP id S229691AbjCFK2U (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Mar 2023 05:28:20 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2FA185
-        for <linux-cxl@vger.kernel.org>; Mon,  6 Mar 2023 02:03:56 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PVZ0j3vHPz6J6KM;
-        Mon,  6 Mar 2023 18:03:49 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C510027992;
+        Mon,  6 Mar 2023 02:27:31 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PVZSv395tz6J9jy;
+        Mon,  6 Mar 2023 18:24:47 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 6 Mar
- 2023 10:03:52 +0000
-Date:   Mon, 6 Mar 2023 10:03:52 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        "Daniel P . =?ISO-8859-1?Q?Berrang=E9?=" <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?ISO-8859-1?Q?Marc-Andr=E9?= Lureau 
-        <marcandre.lureau@redhat.com>, Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v4 6/6] hw/cxl: Add clear poison mailbox command
- support.
-Message-ID: <20230306100352.00004a51@Huawei.com>
-In-Reply-To: <6402e9787cad0_606a629499@iweiny-mobl.notmuch>
-References: <20230303150908.27889-1-Jonathan.Cameron@huawei.com>
-        <20230303150908.27889-7-Jonathan.Cameron@huawei.com>
-        <6402e9787cad0_606a629499@iweiny-mobl.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+ 2023 10:27:23 +0000
+Date:   Mon, 6 Mar 2023 10:27:22 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] docs: perf: Minimal introduction the the CXL PMU
+ device and driver.
+Message-ID: <20230306102722.00005ead@huawei.com>
+In-Reply-To: <4dabd301-32d7-968e-e048-8135b072a7b5@intel.com>
+References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
+        <20230303175022.10806-5-Jonathan.Cameron@huawei.com>
+        <4dabd301-32d7-968e-e048-8135b072a7b5@intel.com>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
+X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
@@ -57,195 +51,131 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 3 Mar 2023 22:47:20 -0800
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Fri, 3 Mar 2023 11:34:37 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > Current implementation is very simple so many of the corner
-> > cases do not exist (e.g. fragmenting larger poison list entries)  
+> On 3/3/23 10:50 AM, Jonathan Cameron wrote:
+> > Very basic introduction to the device and the current driver support
+> > provided. I expect to expand on this in future versions of this patch
+> > set.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
 > 
-> One coding style change at the bottom and I'm still hung up on that loop
-> logic...
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > 
 > > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > v4:
-> > - Fix off by one on check of edge of vmr (cut and paste from similar
-> >   but long fixed in the volatile memory series)
-> > - Drop unnecessary overflow check.
-> > - Ensure that even in case of overflow we still delete the element
-> >   replaced (in the hole punching case)
-> > ---
-> >  hw/cxl/cxl-mailbox-utils.c  | 77 +++++++++++++++++++++++++++++++++++++
-> >  hw/mem/cxl_type3.c          | 36 +++++++++++++++++
-> >  include/hw/cxl/cxl_device.h |  1 +
-> >  3 files changed, 114 insertions(+)
-> > 
-> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index 64a3f3c1bf..0b30307fa3 100644
-> > --- a/hw/cxl/cxl-mailbox-utils.c
-> > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -65,6 +65,7 @@ enum {
-> >      MEDIA_AND_POISON = 0x43,
-> >          #define GET_POISON_LIST        0x0
-> >          #define INJECT_POISON          0x1
-> > +        #define CLEAR_POISON           0x2
-> >  };
-> >  
-> >  /* 8.2.8.4.5.1 Command Return Codes */
-> > @@ -511,6 +512,80 @@ static CXLRetCode cmd_media_inject_poison(struct cxl_cmd *cmd,
-> >      return CXL_MBOX_SUCCESS;
-> >  }
-> >  
-> > +static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
-> > +                                         CXLDeviceState *cxl_dstate,
-> > +                                         uint16_t *len)
-> > +{
-> > +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> > +    CXLPoisonList *poison_list = &ct3d->poison_list;
-> > +    CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
-> > +    struct clear_poison_pl {
-> > +        uint64_t dpa;
-> > +        uint8_t data[64];
-> > +    };
-> > +    CXLPoison *ent;
-> > +    uint64_t dpa;
-> > +
-> > +    struct clear_poison_pl *in = (void *)cmd->payload;
-> > +
-> > +    dpa = ldq_le_p(&in->dpa);
-> > +    if (dpa + 64 > cxl_dstate->mem_size) {
-> > +        return CXL_MBOX_INVALID_PA;
-> > +    }
-> > +
-> > +    /* Always exit loop on entry removal so no need for safe variant */  
+> > --
+> > v1:
+> > - Add docs for how to use a Vendor Defined Counter.
+> > RFC:
+> > - I'll post separately about this shortly, but it seems very odd
+> >    to me that there is no way to assign a parent to an event_sources
+> >    device.  As a result we get the messy approach of playing match
+> >    the name to figure out what the CPMU instance is connected to.  
 > 
-> Commenting this is nice but I don't think it is needed.
-> 
-> > +    QLIST_FOREACH(ent, poison_list, node) {
-> > +        /*
-> > +         * Test for contained in entry. Simpler than general case
-> > +         * as clearing 64 bytes and entries 64 byte aligned
-> > +         */
-> > +        if ((dpa < ent->start) || (dpa >= ent->start + ent->length)) {
-> > +            continue;
-> > +        }
-> > +        /* Do accounting early as we know one will go away */
-> > +        ct3d->poison_list_cnt--;  
-> 
-> Sorry to get so hung up on this but while I think this code now works I
-> still think it is odd and will be an issue to maintain.
-> 
-> FWIW I don't think we have to keep 'ent' in the list here...
-> 
-> > +        if (dpa > ent->start) {
-> > +            CXLPoison *frag;
-> > +            /* Cannot overflow as replacing existing entry */
-> > +
-> > +            frag = g_new0(CXLPoison, 1);
-> > +
-> > +            frag->start = ent->start;
-> > +            frag->length = dpa - ent->start;
-> > +            frag->type = ent->type;
-> > +
-> > +            QLIST_INSERT_HEAD(poison_list, frag, node);
-> > +            ct3d->poison_list_cnt++;
-> > +        }
-> > +        if (dpa + 64 < ent->start + ent->length) {
-> > +            CXLPoison *frag;
-> > +
-> > +            if (ct3d->poison_list_cnt == CXL_POISON_LIST_LIMIT) {
-> > +                cxl_set_poison_list_overflowed(ct3d);
-> > +            } else {
-> > +                frag = g_new0(CXLPoison, 1);
-> > +
-> > +                frag->start = dpa + 64;
-> > +                frag->length = ent->start + ent->length - frag->start;
-> > +                frag->type = ent->type;
-> > +                QLIST_INSERT_HEAD(poison_list, frag, node);
-> > +                ct3d->poison_list_cnt++;
-> > +            }
-> > +        }
-> > +        /* Any fragments have been added, free original entry */
-> > +        QLIST_REMOVE(ent, node);
-> > +        g_free(ent);
-> > +        break;
-> > +    }  
-> 
-> Why not this?
+> Would it be too awkward to encode the parent name into the cpmu name?
 
-Fair enough.  I think this is a case of code evolving to a state
-that is non optimal in the end so I'll refactor it to something like
-you have suggested.
+We could, though it gets messy fast as we have multiple instances per
+CXL component - right now I'm only registering them for the PCI EPs but
+we also need to deal with all the other places they could be.
+We can also expose extra information via additional attributes, but where
+I've seen that done in the past it's a topology description (i.e. socket X,
+die Y) and our topology isn't stable.
 
-I think we caan simplify it further by dragging the cacheline clear
-up to before the list manipulation.
+Even if we do I'd like to fix the issue with parents for event_sources
+and once that's done I'm not sure we need to worry so much about how
+to do the reverse lookup.
 
-> 
-> ...
->     CXLPoison *ent, found = NULL;
-> 
-> ...
->     QLIST_FOREACH(ent, poison_list, node) {
->         /*
->          * Test for contained in entry. Simpler than general case
->          * as clearing 64 bytes and entries are 64 byte aligned
->          */
->         if ((dpa >= ent->start) && (dpa < ent->start + ent->length)) {
->             found = ent;
-> 	    break;
->         }
->     }
-> 
->     /*
->      * Do we even need 'found'?  Or is ent null if not found?
->      * I'm not sure how QLIST's work.
->      */
->     if (found) {
->         CXLPoison *frag;
-> 
->         QLIST_REMOVE(found, node);
->         ct3d->poison_list_cnt--;
-> 
-> 	/* If not clearing the start, create new beginning of range */
->         if (dpa > found->start) {
->             frag = g_new0(CXLPoison, 1);
->             frag->start = found->start;
->             frag->length = dpa - found->start;
->             frag->type = found->type;
->             QLIST_INSERT_HEAD(poison_list, frag, node);
->             ct3d->poison_list_cnt++;
-> 	}
-> 
-> 	/* If needed, and space available, create new end of range */
->         if (dpa + 64 < found->start + found->length) {
->             if (ct3d->poison_list_cnt == CXL_POISON_LIST_LIMIT) {
->                 cxl_set_poison_list_overflowed(ct3d);
->             } else {
->                 frag = g_new0(CXLPoison, 1);
-> 
->                 frag->start = dpa + 64;
->                 frag->length = found->start + found->length - frag->start;
->                 frag->type = found->type;
->                 QLIST_INSERT_HEAD(poison_list, frag, node);
->                 ct3d->poison_list_cnt++;
->             }
->         }
->         g_free(found);
->     }
-> ...
-> 
-> > +    /* Clearing a region with no poison is not an error so always do so */
-> > +    if (cvc->set_cacheline)  
-> 
-> For QEMU coding style you still need '{' '}'.
-Gah.
-> 
-> Ira
-
-Thanks,
+Input from perf / event_sources folk on how they would like to do
+the association needed!
 
 Jonathan
 
+
+> 
+> > ---
+> >   Documentation/admin-guide/perf/cxl.rst   | 65 ++++++++++++++++++++++++
+> >   Documentation/admin-guide/perf/index.rst |  1 +
+> >   2 files changed, 66 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
+> > new file mode 100644
+> > index 000000000000..46235dff4b21
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/perf/cxl.rst
+> > @@ -0,0 +1,65 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +======================================
+> > +CXL Performance Monitoring Unit (CPMU)
+> > +======================================
+> > +
+> > +The CXL rev 3.0 specification provides a definition of CXL Performance
+> > +Monitoring Unit in section 13.2: Performance Monitoring.
+> > +
+> > +CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
+> > +any number of CPMU instances. CPMU capabilities are fully discoverable from
+> > +the devices. The specification provides event definitions for all CXL protocol
+> > +message types and a set of additional events for things commonly counted on
+> > +CXL devices (e.g. DRAM events).
+> > +
+> > +CPMU driver
+> > +===========
+> > +
+> > +The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
+> > +
+> > +    /sys/bus/cxl/device/cpmu<id>
+> > +
+> > +The associated PMU is registered as
+> > +
+> > +   /sys/bus/event_sources/devices/cpmu<id>
+> > +
+> > +In common with other CXL bus devices, the id has no specific meaning and the
+> > +relationship to specific CXL device should be established via the device parent
+> > +of the device on the CXL bus.
+> > +
+> > +PMU driver provides description of available events and filter options in sysfs.
+> > +
+> > +The "format" directory describes all formats of the config (event vendor id,
+> > +group id and mask) config1 (threshold, filter enables) and config2 (filter
+> > +parameters) fields of the perf_event_attr structure.  The "events" directory
+> > +describes all documented events show in perf list.
+> > +
+> > +The events shown in perf list are the most fine grained events with a single
+> > +bit of the event mask set. More general events may be enable by setting
+> > +multiple mask bits in config. For example, all Device to Host Read Requests
+> > +may be captured on a single counter by setting the bits for all of
+> > +
+> > +* d2h_req_rdcurr
+> > +* d2h_req_rdown
+> > +* d2h_req_rdshared
+> > +* d2h_req_rdany
+> > +* d2h_req_rdownnodata
+> > +
+> > +Example of usage::
+> > +
+> > +  $#perf list
+> > +  cpmu0/clock_ticks/                                 [Kernel PMU event]
+> > +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
+> > +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
+> > +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
+> > +  -----------------------------------------------------------
+> > +
+> > +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
+> > +
+> > +Vendor specific events may also be available and if so can be used via
+> > +
+> > +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
+> > +
+> > +The driver does not support sampling. So "perf record" and attaching to
+> > +a task are unsupported.
+> > diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
+> > index 9de64a40adab..f60be04e4e33 100644
+> > --- a/Documentation/admin-guide/perf/index.rst
+> > +++ b/Documentation/admin-guide/perf/index.rst
+> > @@ -21,3 +21,4 @@ Performance monitor support
+> >      alibaba_pmu
+> >      nvidia-pmu
+> >      meson-ddr-pmu
+> > +   cxl  
 
