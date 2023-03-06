@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887D8C64EC4
-	for <linux-cxl@archiver.kernel.org>; Mon,  6 Mar 2023 18:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9374CC61DA4
+	for <linux-cxl@archiver.kernel.org>; Mon,  6 Mar 2023 18:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbjCFS2u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 6 Mar 2023 13:28:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
+        id S230016AbjCFSdP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 6 Mar 2023 13:33:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230164AbjCFS2r (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Mar 2023 13:28:47 -0500
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A613CE21
-        for <linux-cxl@vger.kernel.org>; Mon,  6 Mar 2023 10:28:29 -0800 (PST)
+        with ESMTP id S229813AbjCFSdO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 6 Mar 2023 13:33:14 -0500
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71076F604
+        for <linux-cxl@vger.kernel.org>; Mon,  6 Mar 2023 10:32:46 -0800 (PST)
 Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230306175328usoutp02a615a62c0d4b85c96d386c5859157e07~J5fxpiZF12344523445usoutp02N;
-        Mon,  6 Mar 2023 17:53:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230306175328usoutp02a615a62c0d4b85c96d386c5859157e07~J5fxpiZF12344523445usoutp02N
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230306173743usoutp01ecc678f6b6de0b0b80d693e56ba7ee44~J5SB3-Om82686826868usoutp01f;
+        Mon,  6 Mar 2023 17:37:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230306173743usoutp01ecc678f6b6de0b0b80d693e56ba7ee44~J5SB3-Om82686826868usoutp01f
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1678125208;
-        bh=9X9GgHqHRXwYJkwmqid2segpwTyYcVSBs4Qglq2t1F0=;
+        s=mail20170921; t=1678124263;
+        bh=+DECmdPswst/XV3u5kyQ/V46jl2ssTX0GflLj7cHUeY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=uvzvfZB6CUxc58c0xGW9kNsqarHQYN5EWZ0gW/2Vdu41bPbtpPkhtFYfytFUMEg8C
-         4e6SyYIo6Z+8TMOQIdbBANHWJAHtEpYgSOYqtUBeczCXIJ3wquw6vnisYi44XriuTJ
-         HpmUpgybr/FIYJ4Yfblbf2d0vf0hnuxAf1dUJ3Ls=
+        b=Wd4RvUn/O7tY3AFaLtVEXx3dACsjKvldV6UKmhSjjcDGJ+LTRS8QMqII17I6s6MUu
+         JktQvpaYsYbJ87OBsH/IP16nNuhO92QLJ1hY1IhCSWbRKM3xUQYgGU+RaI1pkm0jXk
+         MgYZEhHIuPOnlHzjNepecSue8+oK4Kx9JvUJWIlI=
 Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230306175328uscas1p19e18d0001957cbbcbc177a1180766e64~J5fxepptR2738027380uscas1p13;
-        Mon,  6 Mar 2023 17:53:28 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id FE.84.12196.89826046; Mon, 
-        6 Mar 2023 12:53:28 -0500 (EST)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230306175327uscas1p15622b1d859a60b2cc5d9df70182e35fe~J5fxJZvdr1854418544uscas1p1y;
-        Mon,  6 Mar 2023 17:53:27 +0000 (GMT)
-X-AuditID: cbfec370-5b3ff70000012fa4-ba-64062898cce0
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 68.A7.11346.79826046; Mon, 
-        6 Mar 2023 12:53:27 -0500 (EST)
+        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20230306173743uscas1p2405d1db3b207457287238b61ce651b2c~J5SBuCV300309903099uscas1p2A;
+        Mon,  6 Mar 2023 17:37:43 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges3new.samsung.com (USCPEMTA) with SMTP id 20.02.12196.7E426046; Mon, 
+        6 Mar 2023 12:37:43 -0500 (EST)
+Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
+        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230306173743uscas1p1f464bb8a53859927472b90f7f9e017c9~J5SBU_6NE0248702487uscas1p1D;
+        Mon,  6 Mar 2023 17:37:43 +0000 (GMT)
+X-AuditID: cbfec370-5b3ff70000012fa4-44-640624e7ec58
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id F6.33.17110.6E426046; Mon, 
+        6 Mar 2023 12:37:43 -0500 (EST)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 6 Mar 2023 09:53:27 -0800
+        15.1.2375.24; Mon, 6 Mar 2023 09:37:42 -0800
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        6 Mar 2023 09:53:27 -0800
+        6 Mar 2023 09:37:42 -0800
 From:   Fan Ni <fan.ni@samsung.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -64,101 +64,97 @@ CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         =?iso-8859-1?Q?Marc-Andr=E9_Lureau?= <marcandre.lureau@redhat.com>,
         Thomas Huth <thuth@redhat.com>
-Subject: Re: [RESEND PATCH v6 7/8] hw/pci/aer: Make PCIE AER error injection
- facility available for other emulation to use.
-Thread-Topic: [RESEND PATCH v6 7/8] hw/pci/aer: Make PCIE AER error
-        injection facility available for other emulation to use.
-Thread-Index: AQHZTQypFWLDKomDHUGIgneSD56y4a7ulR0A
-Date:   Mon, 6 Mar 2023 17:53:27 +0000
-Message-ID: <20230306175326.GG1489326@bgt-140510-bm03>
-In-Reply-To: <20230302133709.30373-8-Jonathan.Cameron@huawei.com>
+Subject: Re: [RESEND PATCH v6 3/8] hw/pci-bridge/cxl_root_port: Wire up AER
+Thread-Topic: [RESEND PATCH v6 3/8] hw/pci-bridge/cxl_root_port: Wire up AER
+Thread-Index: AQHZTQxQkYHUknmJgkm3Rob6/pEwfq7ukLgA
+Date:   Mon, 6 Mar 2023 17:37:42 +0000
+Message-ID: <20230306173742.GC1489326@bgt-140510-bm03>
+In-Reply-To: <20230302133709.30373-4-Jonathan.Cameron@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <A669D60850CA6047B9033D144657909A@ssi.samsung.com>
+Content-ID: <C033CFD0F72A9A44B24557E698A6C001@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7djXc7ozNNhSDGY3cVrcfXyBzWL+2vss
-        Fm/erGGyOHGzkc1i4tv1rBb7nz5nsVi18BqbxflZp1gsDm88w2SxoK2d1WLN/UOsFr/XPmay
-        +P/rFZC7QtjieO8OFouVx2wcBDxaL/1l89g56y67R8uRt6wei/e8ZPK4c20Pm8eTa5uZPN7v
-        u8rm8XmTXABHFJdNSmpOZllqkb5dAlfGg312Bb+5K648a2FrYNzJ2cXIySEhYCLR1j2BuYuR
-        i0NIYCWjxKGp/xkhnFYmiW3nFrLBVG3ftxvMFhJYyyixdaoqRNFHRol1Vz9CtS9llNiyZhMT
-        SBWbgKLEvq7tYB0iAkYS725MAhvLLLCHVeLjjPnsXYwcHMICtRKtm4Uhauokmjfdhat/cKmZ
-        FcRmEVCR+HegD8zmFTCTWPL/ElgNp4CjxJ5Xa8F2MQqISXw/tQbMZhYQl7j1ZD4TxNWCEotm
-        72GGsMUk/u16CPWNosT97y/ZIer1JG5MncIGYdtJLFo5nQXC1pZYtvA1M8ReQYmTM5+wQPRK
-        ShxccYMF5BcJgdWcEos2T2CHSLhIfP/yhhXClpaYvuYyC8iPEgLJEqs+ckGEcyTmL9kCNcda
-        YuGf9UwTGFVmITl7FpKTZiE5aRaSk2YhOWkBI+sqRvHS4uLc9NRi47zUcr3ixNzi0rx0veT8
-        3E2MwIR4+t/hgh2Mt2591DvEyMTBeIhRgoNZSYS36jdrihBvSmJlVWpRfnxRaU5q8SFGaQ4W
-        JXFeQ9uTyUIC6YklqdmpqQWpRTBZJg5OqQamaJFqPbeQapEXXSUv7bZFS7TPLq7KEWt5XinF
-        NJt9u4LWlaW7zbiO/z11591kfcHJzV49kk/EKzZdKUuQnvfQT0nHWa2GZcL1VbaOxu4BL+/k
-        177W+M+WpFB4+LPYbhs9gT1cDL+q+ucHXJFVFtrkXeHppLzbrXypjlNkw6aI/V6OIX0dW1Qc
-        d21lrmL5Z5w3y/fMWruI6xPfJQbcFnKz0XQUP/rFsvxuq4IB3+61DZYL5Iwe77r67sy2SYlq
-        V7TtbYNmbjq1wO1p2+Ulm0T/SzL9YUksLtBd4ZZysTi0TFe1havVbfrshof913c8dJouLsbG
-        uS3IpebXl5YlZ/6VzC1Zbn921ia17O3lekosxRmJhlrMRcWJABqAFtb3AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42LJbGCaqDtdgy3FYNNPA4u7jy+wWcxfe5/F
-        4s2bNUwWJ242sllMfLue1WL/0+csFqsWXmOzOD/rFIvF4Y1nmCwWtLWzWqy5f4jV4vfax0wW
-        /3+9AnJXCFsc793BYrHymI2DgEfrpb9sHjtn3WX3aDnyltVj8Z6XTB53ru1h83hybTOTx/t9
-        V9k8Pm+SC+CI4rJJSc3JLEst0rdL4Mp4sM+u4Dd3xZVnLWwNjDs5uxg5OSQETCS279vN1sXI
-        xSEksJpR4uOzyVDOR0aJk7+fs0I4Sxkl7hx8ywbSwiagKLGvazuYLSJgJPHuxiRGkCJmgV2s
-        Eo+XPmfvYuTgEBaolWjdLAxRUydxofcSI0z9g0vNrCA2i4CKxL8DfWA2r4CZxJL/l8BmCgmU
-        S/w7/gAszingKLHn1VomEJtRQEzi+6k1YDazgLjErSfzmSBeEJBYsuc8M4QtKvHy8T9WCFtR
-        4v73l+wQ9XoSN6ZOYYOw7SQWrZzOAmFrSyxb+JoZ4gZBiZMzn7BA9EpKHFxxg2UCo8QsJOtm
-        IRk1C8moWUhGzUIyagEj6ypG8dLi4tz0imLjvNRyveLE3OLSvHS95PzcTYzAdHL63+GYHYz3
-        bn3UO8TIxMF4iFGCg1lJhLfqN2uKEG9KYmVValF+fFFpTmrxIUZpDhYlcV6P2InxQgLpiSWp
-        2ampBalFMFkmDk6pBiY3o8oLO1Xv1mh43Kz/H2wqJTTr640XVk9KcqLen3Q8tHNGjJP9avG4
-        mTrrVB6bVU7jmzC1IUtZ80tJU47zlLsH9kZufcGfenjlxbMvSxeWa7U0OU7SzFRoehpmWpJy
-        tGV135uaqHNcnRrHnugEsvpe2rb5cPO8vW/2W5of3ekfHMfHpioWbbp31Ron+/dblz5vmjvD
-        /8Jpyw+mp6ovzFZ9fGLepr3/TL2vlbh+fL7pvd3Wxw2J57n+71rtP0fx7l/DxVrta3om9UXf
-        P5aZzst2n2f74+UmJxTdvKcEu7G8CLzpuN5rv190Xn3JxtxVi6ap3ZxnZH/1Y9y5wweN3DfF
-        ef8v2VPp+mLNZvG+ZYsKlFiKMxINtZiLihMBYrl9DZYDAAA=
-X-CMS-MailID: 20230306175327uscas1p15622b1d859a60b2cc5d9df70182e35fe
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIKsWRmVeSWpSXmKPExsWy7djX87rPVdhSDGZ8k7O4+/gCm8X8tfdZ
+        LN68WcNkceJmI5vFxLfrWS32P33OYrFq4TU2i/OzTrFYHN54hsliQVs7q8Wa+4dYLX6vfcxk
+        8f/XKyB3hbDF8d4dLBYrj9k4CHi0XvrL5rFz1l12j5Yjb1k9Fu95yeRx59oeNo8n1zYzebzf
+        d5XN4/MmuQCOKC6blNSczLLUIn27BK6MFZNfMhe0clfMP/yatYHxGUcXIweHhICJxOcf/F2M
+        XBxCAisZJdoubGKHcFqZJA6c6WHrYuQEK/oyZxojRGIto8TO72dYIZyPjBK3jxxmg3CWMkq8
+        +72SHaSFTUBRYl/XdrB2EQEjiXc3JoG1MwvsYZX4OGM+O8hyYQFviZ41IhA1PhKbNk1lh6mf
+        tGQOI4jNIqAicaGlESzOK2Am0XfgHhtIK6eAo0T/9wCQMKOAmMT3U2uYQGxmAXGJW0/mM0Fc
+        LSixaPYeZghbTOLfrodQ3yhK3P/+kh2iXk/ixtQpYCOZBewkOo4VQYS1JZYtfM0MsVVQ4uTM
+        JywQrZISB1fcYAH5REJgPafEu93NbJBgdJF41m8LUSMt8ffuMiaIcLLEqo9cEOEciflLtkCN
+        sZZY+Gc90wRGlVlIjp6F5KBZCAfNQnLQLCQHLWBkXcUoXlpcnJueWmycl1quV5yYW1yal66X
+        nJ+7iRGYCk//O1ywg/HWrY96hxiZOBgPMUpwMCuJ8Fb9Zk0R4k1JrKxKLcqPLyrNSS0+xCjN
+        waIkzmtoezJZSCA9sSQ1OzW1ILUIJsvEwSnVwORVUvHtP8fvuYvTTHiTdq4QW3VF8nd+O2/L
+        lTap1/nbTvzY0svO8mKj5LaTR9svCPsLcbxiOSimOO3fgpo3KQnigcUbWWLSW5KrJ/7o+K2v
+        2CXQ8NDihnRWx+d/s0y+nhdYty3UvrnwpYRF54bMwq8VR9Ttd4WaJQen7f9xMbX5Z/mminm7
+        LI/JfHmyyJW7/eiMQvUJ15+8vMVR56W/emG07etF9xM97wc1RvE1/X+3a0vlKW1HFa3Pe4Lm
+        PLJd/VZ6Rchsrs/hRuH72gN5TF8t16oQ1Kl6KON/OHbtn2PS91clRxvsc4lumTKL6erUh/Ha
+        z75wlFaphiX/se+seBZ2tkxt5rWAkMRfm3vVTiqxFGckGmoxFxUnAgAVZyMH9AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUwTQRjFM3t1qTaOFe2Idz2iENGi0VVRMWqoCPGKmmgQK2yAWArZWgX+
+        EbRYrScgCpVYGqtWBI+q4QhWBZWKGhqjBfFoBKTWcgRRSYpn2Rj5771v3vt9M8nQuDibDKKT
+        VXtYTqVQSikhkZyF5c52T6MS5lbdIJh3bQ6KMZa7CKazswxj7K+zKSa36zrJ3PvoJphSk5Ni
+        Gg0NBFN38xnGlBzSkUyZq5ZkBsrbMOa37/NfaxnF1B+vJJgrj8MjoDznxU9KXmV4J5BrH3aR
+        8gs1Hkz+1llDydudtzB5j+0VJe+zTlxPbxOGJ7DK5L0sN2fZTmGSJd+Dp+UMSzfWecks0EHr
+        QQCN4Hz0tfgM0AMhLYZXAfqkyyd40wtQ6bVyijcXAfI6nJS/QsEpyKavGNSBMAx1N+cN1nFY
+        TaK2i26BHtD0KLgWHSsL5DPRyGotEPzL55mLgV8TcBpyaLMH5yK4AJ24/36QKYb7kK2plfRj
+        AuAKdLJ/vX8M4BjU31CG+TUOJail3YjxL4DIXNOI83o08rT9Ink9Bbn6PQI+H4qaC05TfiQO
+        l6HDjzl+HIIumbw4f4OR6ElRO8FXx6IHlmbiFECGIdsMQ0iG/yTDEJJhCKkEkKVAolGrUxLT
+        1WEqdl+oWpGi1qgSQ+NTU6zg7y95+qtueyV409IbWgswGtQCROPSQFHmAJkgFiUoMjJZLjWO
+        0yhZdS0YRxNSicizLTdODBMVe9jdLJvGcv9OMTogKAvbXOy54bop06/+UbprsujBjIhH1ePr
+        OiZLNR7ImQQC5uCz2N60zniHrjjkSYQttl9hnhqj7TLancbNs6xLvpFF0gqzJWbCtyO+e1FH
+        JMH586pld0K0YRZfztc1YSvzppIzqw+sOpdx+M5DX99Jo7OnMcNk20hmrrPfXdJS4KiI5yb1
+        zY9WNi0M7ihMr9y+a4Y3OXp/5lHM4O6OzB7YaF8u6Y5Y+n6rLt47PKbwqXi67vvA9UUfvs+6
+        vKEe3xm5g4p20zErTkW1C0f0pLoWf1G+RLKSRbkjz/rGa5pum3akNLSev2RtPXhAmxRUr9ri
+        iJvjNo8oDOeKNmELZc/tc6NIKaFOUsiCcU6t+AMxc5cplAMAAA==
+X-CMS-MailID: 20230306173743uscas1p1f464bb8a53859927472b90f7f9e017c9
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230306175327uscas1p15622b1d859a60b2cc5d9df70182e35fe
+X-CMS-RootMailID: 20230306173743uscas1p1f464bb8a53859927472b90f7f9e017c9
 References: <20230302133709.30373-1-Jonathan.Cameron@huawei.com>
-        <20230302133709.30373-8-Jonathan.Cameron@huawei.com>
-        <CGME20230306175327uscas1p15622b1d859a60b2cc5d9df70182e35fe@uscas1p1.samsung.com>
+        <20230302133709.30373-4-Jonathan.Cameron@huawei.com>
+        <CGME20230306173743uscas1p1f464bb8a53859927472b90f7f9e017c9@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 02, 2023 at 01:37:08PM +0000, Jonathan Cameron wrote:
-> This infrastructure will be reused for CXL RAS error injection
-> in patches that follow.
+On Thu, Mar 02, 2023 at 01:37:04PM +0000, Jonathan Cameron wrote:
+> We are missing necessary config write handling for AER emulation in
+> the CXL root port. Add it based on pcie_root_port.c
 >=20
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  hw/pci/pci-internal.h     | 1 -
->  include/hw/pci/pcie_aer.h | 1 +
->  2 files changed, 1 insertion(+), 1 deletion(-)
+>  hw/pci-bridge/cxl_root_port.c | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> diff --git a/hw/pci/pci-internal.h b/hw/pci/pci-internal.h
-> index 2ea356bdf5..a7d6d8a732 100644
-> --- a/hw/pci/pci-internal.h
-> +++ b/hw/pci/pci-internal.h
-> @@ -20,6 +20,5 @@ void pcibus_dev_print(Monitor *mon, DeviceState *dev, i=
-nt indent);
+> diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.=
+c
+> index 6664783974..00195257f7 100644
+> --- a/hw/pci-bridge/cxl_root_port.c
+> +++ b/hw/pci-bridge/cxl_root_port.c
+> @@ -187,12 +187,15 @@ static void cxl_rp_write_config(PCIDevice *d, uint3=
+2_t address, uint32_t val,
+>                                  int len)
+>  {
+>      uint16_t slt_ctl, slt_sta;
+> +    uint32_t root_cmd =3D
+> +        pci_get_long(d->config + d->exp.aer_cap + PCI_ERR_ROOT_COMMAND);
 > =20
->  int pcie_aer_parse_error_string(const char *error_name,
->                                  uint32_t *status, bool *correctable);
-> -int pcie_aer_inject_error(PCIDevice *dev, const PCIEAERErr *err);
+>      pcie_cap_slot_get(d, &slt_ctl, &slt_sta);
+>      pci_bridge_write_config(d, address, val, len);
+>      pcie_cap_flr_write_config(d, address, val, len);
+>      pcie_cap_slot_write_config(d, slt_ctl, slt_sta, address, val, len);
+>      pcie_aer_write_config(d, address, val, len);
+> +    pcie_aer_root_write_config(d, address, val, len, root_cmd);
 > =20
->  #endif
-> diff --git a/include/hw/pci/pcie_aer.h b/include/hw/pci/pcie_aer.h
-> index 65e71d98fe..1234fdc4e2 100644
-> --- a/include/hw/pci/pcie_aer.h
-> +++ b/include/hw/pci/pcie_aer.h
-> @@ -100,4 +100,5 @@ void pcie_aer_root_write_config(PCIDevice *dev,
->                                  uint32_t addr, uint32_t val, int len,
->                                  uint32_t root_cmd_prev);
-> =20
-> +int pcie_aer_inject_error(PCIDevice *dev, const PCIEAERErr *err);
->  #endif /* QEMU_PCIE_AER_H */
+>      cxl_rp_dvsec_write_config(d, address, val, len);
+>  }
 > --=20
 > 2.37.2
 >=20
