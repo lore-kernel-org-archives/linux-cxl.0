@@ -2,276 +2,170 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A4C742A7
-	for <linux-cxl@archiver.kernel.org>; Tue,  7 Mar 2023 08:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83CBC678D5
+	for <linux-cxl@archiver.kernel.org>; Tue,  7 Mar 2023 08:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbjCGIUL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 7 Mar 2023 03:20:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55550 "EHLO
+        id S229605AbjCGIUN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 7 Mar 2023 03:20:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230290AbjCGITt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Mar 2023 03:19:49 -0500
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667BC4FF35
-        for <linux-cxl@vger.kernel.org>; Tue,  7 Mar 2023 00:19:30 -0800 (PST)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230307081927epoutp028084868cadac39ad48c6d8e066a59edb~KFT4bctY-0959209592epoutp02Z
-        for <linux-cxl@vger.kernel.org>; Tue,  7 Mar 2023 08:19:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230307081927epoutp028084868cadac39ad48c6d8e066a59edb~KFT4bctY-0959209592epoutp02Z
+        with ESMTP id S230283AbjCGITs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Mar 2023 03:19:48 -0500
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA45206A1
+        for <linux-cxl@vger.kernel.org>; Tue,  7 Mar 2023 00:19:24 -0800 (PST)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230307081919epoutp043f7c6a1d2e815583a48f76ea46e443ec~KFTwjMmwQ0037200372epoutp04u
+        for <linux-cxl@vger.kernel.org>; Tue,  7 Mar 2023 08:19:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230307081919epoutp043f7c6a1d2e815583a48f76ea46e443ec~KFTwjMmwQ0037200372epoutp04u
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1678177167;
-        bh=Ll/mV2/avNgcA01Rk0ybYYBeA3ug2+bwDroZZOjjMOc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T63XLJ7oDZL/d65lewCriBkTl1z4dTJLlWMPHqzzq1x9EdN7HNbSCQBErsS9wzUPY
-         KpjkL/TmS6clUNd68SWUyGZ6cAndqIB1Elt/svewB2f5j2yIpN1EZuZ00/rDCO5LmG
-         VR+Ke2ySIoR0M8ZU8RpKBsADynwY/5TRPxHyidVM=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20230307081926epcas2p1ffa2f81fe35309d0c0dcd8db6549942a~KFT3xR6af1880718807epcas2p1x;
-        Tue,  7 Mar 2023 08:19:26 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.90]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4PW7dp2BTMz4x9Q0; Tue,  7 Mar
-        2023 08:19:26 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.11.08750.E83F6046; Tue,  7 Mar 2023 17:19:26 +0900 (KST)
+        s=mail20170921; t=1678177159;
+        bh=KGL9ojWmMtRFLna4hkq7D+CeXrW+e1kC0rgPsUN9svY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Sc2vmlQtc+BogGBVq7Si1qT7HqZUi0FdfsY9+1A+QyruyztILxe/5QjZ9UC6ON1JB
+         42mr1i2/ZrQMtAcbYSfpbhlk7gnIzn7b9Cuxc9bFm57KQi1OCcqm4wHta0zQuzTlTU
+         0pWMtXiEsl7cAQhuOmH9orbK4MJfxHiSDHTeqVLM=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20230307081918epcas2p432d41abf692b836336df04b273cdb4b6~KFTv-VHuu0062400624epcas2p4Y;
+        Tue,  7 Mar 2023 08:19:18 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.102]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4PW7dd62t4z4x9QJ; Tue,  7 Mar
+        2023 08:19:17 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1A.29.61927.583F6046; Tue,  7 Mar 2023 17:19:17 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
         epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230307081925epcas2p1c94af34f67c1f18efc428a5aeef9037e~KFT23Yxjv0867608676epcas2p16;
-        Tue,  7 Mar 2023 08:19:25 +0000 (GMT)
+        20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788~KFTu85ry-1880318803epcas2p1X;
+        Tue,  7 Mar 2023 08:19:17 +0000 (GMT)
 Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230307081925epsmtrp2457ad985b267168fecfdd5aff2a15419~KFT22qy7W0621606216epsmtrp2h;
-        Tue,  7 Mar 2023 08:19:25 +0000 (GMT)
-X-AuditID: b6c32a47-f8935a800000222e-9e-6406f38e71d2
+        20230307081917epsmtrp2fa2aee965bb19820e77554ead7112e7c~KFTu7jxfE0592305923epsmtrp2c;
+        Tue,  7 Mar 2023 08:19:17 +0000 (GMT)
+X-AuditID: b6c32a45-671ff7000001f1e7-56-6406f3855ae7
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
         epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        39.22.18071.D83F6046; Tue,  7 Mar 2023 17:19:25 +0900 (KST)
+        75.22.18071.583F6046; Tue,  7 Mar 2023 17:19:17 +0900 (KST)
 Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
         [10.229.83.133]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230307081925epsmtip24ad9057431bc041f2c1ed204cb2e0359~KFT2oScj-3041430414epsmtip2a;
-        Tue,  7 Mar 2023 08:19:25 +0000 (GMT)
+        20230307081917epsmtip231b9fb7641f509c3376b6c916a2220df~KFTuwQfLT3147031470epsmtip2D;
+        Tue,  7 Mar 2023 08:19:17 +0000 (GMT)
 From:   Jehoon Park <jehoon.park@samsung.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
         ira.weiny@intel.com, alison.schofield@intel.com,
         bwidawsk@kernel.org, jehoon park <jehoon.park@samsung.com>
-Subject: [ndctl patch RFC 1/2] libcxl: add accessors for IDENTIFY command
-Date:   Tue,  7 Mar 2023 17:21:01 +0900
-Message-Id: <20230307082102.27195-2-jehoon.park@samsung.com>
+Subject: [ndctl patch RFC 0/2] add support for IDENTIFY command
+Date:   Tue,  7 Mar 2023 17:21:00 +0900
+Message-Id: <20230307082102.27195-1-jehoon.park@samsung.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230307082102.27195-1-jehoon.park@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGKsWRmVeSWpSXmKPExsWy7bCmqW7fZ7YUg9lzuC3uPr7AZtE8eTGj
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsWy7bCmhW7rZ7YUgx9HDCzuPr7AZtE8eTGj
         xfSpFxgt9j99zmJx4HUDu8X5WadYLG5NOMbkwO6xeM9LJo9NqzrZPPq2rGL0+LxJLoAlKtsm
         IzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+gCJYWyxJxS
-        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BeYFecWJucWleul5eaomVoYGBkSlQYUJ2xp3f
-        ugU3dSsWL/nC2sD4Ur2LkZNDQsBE4sv/7UxdjFwcQgI7GCUuvVjNCOF8YpQ4s/I2C4TzjVHi
-        79/fzDAt/+btBbOFBPYySpz/kQ1R1M0ksWf7dDaQBJuAtsT97RvAbBEBWYnmdQ/AdjALLGeU
-        WLz/J1i3sICnxOzebkYQm0VAVaJj7kcmEJtXwEZi1b2/UNvkJVZvOABmcwrYSqx81skGMkhC
-        YB+7xLSWA2wQRS4SJw59YoewhSVeHd8CZUtJfH63F6omX+LnyVusEHaBxKcvH1ggbGOJdzef
-        A8U5gK7TlFi/Sx/ElBBQljhyC6yCWYBPouPwX3aIMK9ER5sQRKOqRNfxD4wQtrTE4StHoS72
-        kPh9/AI0SCcwSiw4uZN1AqPcLIQFCxgZVzGKpRYU56anFhsVGMMjLDk/dxMjOIFpue9gnPH2
-        g94hRiYOxkOMEhzMSiK8b9+xpQjxpiRWVqUW5ccXleakFh9iNAWG3URmKdHkfGAKzSuJNzSx
-        NDAxMzM0NzI1MFcS55W2PZksJJCeWJKanZpakFoE08fEwSnVwORxl8di/u8pfCc6eypWRlkH
-        PUz9ffWXuKB5S0Hv/hYGx03vYvcVbGWdvc898AmXt4j0S36p5tMiuZsvKtSvFTv+dYnXRv+6
-        eQdmfjePmmZgySu1Jf6B78z1WVa+rw8+kts3R6DNqPCpxF0p7xcePAINa2IO7tea0LBIyv5M
-        gti8trWfv6Z/7Zi5Tf3HttXVOrtzayxeJZ86Y9N01Lln8pU1P4+8P3Vq9/6Pj2Q9rkXe31jh
-        LLhFUmBR8qPjNTcXZDFO0tL4t121f7uFYBn/rPquy33XS66fyHKfd+2t6V/5L3azLoop/q20
-        iP1x1X9NC7Phu7PCD0N7qjp3nNutMuFMpzJD+am397ZsnHTC9pSeEktxRqKhFnNRcSIApADL
-        5ukDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprILMWRmVeSWpSXmKPExsWy7bCSvG7vZ7YUg4l3DC3uPr7AZtE8eTGj
+        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BeYFecWJucWleul5eaomVoYGBkSlQYUJ2xsG2
+        G4wF/8QqJl/9zdzA2CfQxcjJISFgInFl6jzmLkYuDiGBHYwSs0/2s4AkhAQ+MUpsWesAYX9j
+        lOg5rAPTcGniHUaIhr2MEtM3fYXq7maSuH3lIitIFZuAtsT97RvYQGwRAVmJ5nUPmECKmAWW
+        M0os3v+TGSQhLGAv0bfxCROIzSKgKvHy03Ywm1fARuLUo1PsEOvkJVZvOAC2QUJgGbvE++6z
+        bBAJF4nLy49BFQlLvDq+BcqWkvj8bi9UTb7Ez5O3WCHsAolPXz6wQNjGEu9uPgeKcwBdpCmx
+        fpc+iCkhoCxx5BZYBbMAn0TH4b/sEGFeiY42IYhGVYmu4x8YIWxpicNXjjJD2B4Sc3ouMEIC
+        K1aiuW8vywRG2VkI8xcwMq5iFEstKM5NTy02KjCEx1Fyfu4mRnCa0nLdwTj57Qe9Q4xMHIyH
+        GCU4mJVEeN++Y0sR4k1JrKxKLcqPLyrNSS0+xGgKDK6JzFKiyfnARJlXEm9oYmlgYmZmaG5k
+        amCuJM4rbXsyWUggPbEkNTs1tSC1CKaPiYNTqoFpecH9Z5/zbHY+VHnkwFEaYb0zJUt1gff9
+        A/HfZt+/Z2chsL199SO+eZNEY1Pv5fCp5SfZhWVM3qu5Qe1WqQzL5ltMVpf99mz/lzeziUVr
+        +Rzd6oRY3duXF8YeNOiuieXfs69i1eIKTn/3RUdKPn9n7ihY+3DfhszofvnX0w5tSnx7eIea
+        /5vHYUfWvHj/8HvwLEbWD9P2SvnVsor7X3q3LYSdo/j0GuF5Lm4OGQv/WP87dTRwWvpVQbvG
+        28EZ9+RMzG5+aelaa+596ZIyk+ZB37VLGx1Kb098dnvZlbDfsUcaHlvs/u3W9VoxdE/1hDlV
+        J86r/VE4m57mMPX96f/pt3L8jy9Wcrocw+AYLmx0U4mlOCPRUIu5qDgRAMGL8BzcAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJJMWRmVeSWpSXmKPExsWy7bCSvG7rZ7YUg/tnRS3uPr7AZtE8eTGj
         xfSpFxgt9j99zmJx4HUDu8X5WadYLG5NOMbkwO6xeM9LJo9NqzrZPPq2rGL0+LxJLoAlissm
-        JTUnsyy1SN8ugSvjzm/dgpu6FYuXfGFtYHyp3sXIySEhYCLxb95e5i5GLg4hgd2MEocbelgg
-        EtIS95qvsEPYwhL3W46wQhR1Mkns2DKFDSTBJqAtcX/7BjBbREBWonndAyYQm1lgLaPEuTZh
-        EFtYwFNidm83I4jNIqAq0TH3I1gNr4CNxKp7f5khFshLrN5wAMzmFLCVWPmsE2ymEFBN48al
-        bBMY+RYwMqxilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/dxAgONS3NHYzbV33QO8TIxMF4
-        iFGCg1lJhPftO7YUId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rwXuk7GCwmkJ5akZqemFqQWwWSZ
-        ODilGpgavLXXvBPzO81nFJTjuj952kS+9N9NmlWHLM1dfhqtWf3KeZ793szKnzacTvryf6dP
-        sNt9d+b9bWrB58X1fJdoNx/0XbegnC/C/Me0Y+VRCt3l0b5Gf6VOPIrJiV1uZZLHdC3bWXpK
-        nXNhziwnTyXhlbePB/32sFS/GWutM6GgNuqOZb3C1j/KTgEsQq3rJ+Uu69iU9ftGRkrddOZP
-        8/atqfyW3WVYkJbt7scTeJfxyPTL749/3Hdg1ZH7xYocZ+c5fZ4qaxTvt226g9dTh6ep286t
-        OZjoWZT8S3vFsx/Be6wUd8gelrnH4nhX4NeLA9byImlGl42UWk4VbX4l0GW5QUQ/S23xzMmH
-        7qluf6rEUpyRaKjFXFScCABXMVYmpAIAAA==
-X-CMS-MailID: 20230307081925epcas2p1c94af34f67c1f18efc428a5aeef9037e
+        JTUnsyy1SN8ugSvjYNsNxoJ/YhWTr/5mbmDsE+hi5OSQEDCRuDTxDiOILSSwm1HiziI+iLi0
+        xL3mK+wQtrDE/ZYjrF2MXEA1nUwS02ddAGtgE9CWuL99AxuILSIgK9G87gETiM0ssJZR4lyb
+        MIgtLGAv0bfxCVicRUBV4uWn7WA2r4CNxKlHp6AWyEus3nCAeQIjzwJGhlWMkqkFxbnpucWG
+        BYZ5qeV6xYm5xaV56XrJ+bmbGMGho6W5g3H7qg96hxiZOBgPMUpwMCuJ8L59x5YixJuSWFmV
+        WpQfX1Sak1p8iFGag0VJnPdC18l4IYH0xJLU7NTUgtQimCwTB6dUA1PA1I3zH9y0DX5h+PHt
+        o4qKqAvtz+7+ninQYj6vNcXKI7HgtGPta8YzRgv2zd9+N6OVe+aSn4W/9DdPqDtxTfKZwhU3
+        q+wop7sZ9gzWuV+mNyze6iaf3XQ38l2m3YpFa9ivikXM8Y45ynLEYVW3nvDTP4+0AzYrvtTV
+        W83LNEX58M20LblySToe7W1Fy1+12nfEfPwyecVE5+T7zL0mvblLnJOvHs6JrUve4M2zVqCg
+        yEks8pB+4uyZ3Cm37ixtk4vtXtez7N3/8kt/F26099JYVOJrV3nlvO+OlbNcFfc8X+1+K1Yy
+        YHWNz0yZB7fvXGk88G++aijLzLfL1L+G9C9ex9rb+TA5f6LhHF4F0X4lluKMREMt5qLiRADW
+        MEa0jAIAAA==
+X-CMS-MailID: 20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230307081925epcas2p1c94af34f67c1f18efc428a5aeef9037e
-References: <20230307082102.27195-1-jehoon.park@samsung.com>
-        <CGME20230307081925epcas2p1c94af34f67c1f18efc428a5aeef9037e@epcas2p1.samsung.com>
+X-CMS-RootMailID: 20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788
+References: <CGME20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788@epcas2p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: jehoon park <jehoon.park@samsung.com>
 
-Add accessors to retrieve event log size, poison list size,
-inject poison limit, poison handling capabilities and QoS
-telemetry capabilities from output payload of IDENTIFY command.
+This patchset supports CXL IDENTIFY mailbox command and corresponding
+cxl tool interface command.
 
-Signed-off-by: jehoon park <jehoon.park@samsung.com>
----
- cxl/lib/libcxl.c   | 73 ++++++++++++++++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym | 11 +++++++
- cxl/lib/private.h  | 11 +++++++
- cxl/libcxl.h       | 16 ++++++++++
- 4 files changed, 111 insertions(+)
+CXL 3.0 Spec 8.2.9.8.1 defines IDENTIFY command which retrieves basic
+information about CXL memory device. The information consist of device's
+firmware version, capacity, LSA size, event log size, poison list size,
+inject poison limit, poison handling capabilities and QoS telemetry
+capabilities. Firmware version, capacity and LSA size are already supported
+and used for partition commands or sysfs attributes while others are not.
+Since patches about event log [1] and poison [2] are discussed recently,
+support for those information will be helpful.
 
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 59e5bdb..12d8e63 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -3775,6 +3775,79 @@ cxl_cmd_identify_get_persistent_only_size(struct cxl_cmd *cmd)
- 	return cxl_capacity_to_bytes(c->persistent_capacity);
- }
- 
-+CXL_EXPORT int
-+cxl_cmd_identify_get_event_log_size(struct cxl_cmd *cmd,
-+				    enum cxl_identify_event event)
-+{
-+	struct cxl_cmd_identify *id =
-+		(struct cxl_cmd_identify *)cmd->send_cmd->out.payload;
-+	int rc = cxl_cmd_validate_status(cmd, CXL_MEM_COMMAND_ID_IDENTIFY);
-+	if (rc)
-+		return rc;
-+
-+	switch (event) {
-+	case CXL_IDENTIFY_INFO:
-+		return le16_to_cpu(id->info_event_log_size);
-+	case CXL_IDENTIFY_WARN:
-+		return le16_to_cpu(id->warning_event_log_size);
-+	case CXL_IDENTIFY_FAIL:
-+		return le16_to_cpu(id->failure_event_log_size);
-+	case CXL_IDENTIFY_FATAL:
-+		return le16_to_cpu(id->fatal_event_log_size);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+CXL_EXPORT int cxl_cmd_identify_get_poison_list_max(struct cxl_cmd *cmd)
-+{
-+	unsigned int max_records = 0;
-+	struct cxl_cmd_identify *id =
-+		(struct cxl_cmd_identify *)cmd->send_cmd->out.payload;
-+	int rc = cxl_cmd_validate_status(cmd, CXL_MEM_COMMAND_ID_IDENTIFY);
-+	if (rc)
-+		return rc;
-+
-+	for (int i = 0; i < 3; i++)
-+		max_records += id->poison_list_max_mer[i] << (8 * i);
-+
-+	return max_records;
-+}
-+
-+CXL_EXPORT int cxl_cmd_identify_get_inject_poison_limit(struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u16(cmd, identify, IDENTIFY, inject_poison_limit);
-+}
-+
-+CXL_EXPORT int cxl_cmd_identify_injects_persistent_poison(struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u8_mask(
-+		cmd, identify, IDENTIFY, poison_caps,
-+		CXL_CMD_IDENTIFY_POISON_HANDLING_CAPABILITIES_INJECTS_PERSISTENT_POISON);
-+}
-+
-+CXL_EXPORT int cxl_cmd_identify_scans_for_poison(struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u8_mask(
-+		cmd, identify, IDENTIFY, poison_caps,
-+		CXL_CMD_IDENTIFY_POISON_HANDLING_CAPABILITIES_SCANS_FOR_POISON);
-+}
-+
-+CXL_EXPORT int cxl_cmd_identify_egress_port_congestion(struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u8_mask(
-+		cmd, identify, IDENTIFY, qos_telemetry_caps,
-+		CXL_CMD_IDENTIFY_QOS_TELEMETRY_CAPABILITIES_EGRESS_PORT_CONGESTION);
-+}
-+
-+CXL_EXPORT int
-+cxl_cmd_identify_temporary_throughput_reduction(struct cxl_cmd *cmd)
-+{
-+	cmd_get_field_u8_mask(
-+		cmd, identify, IDENTIFY, qos_telemetry_caps,
-+		CXL_CMD_IDENTIFY_QOS_TELEMETRY_CAPABILITIES_TEMPORARY_THROUGHPUT_REDUCTION);
-+}
-+
- CXL_EXPORT struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev,
- 		int opcode)
- {
-diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index 1c6177c..2bd209e 100644
---- a/cxl/lib/libcxl.sym
-+++ b/cxl/lib/libcxl.sym
-@@ -249,3 +249,14 @@ global:
- 	cxl_decoder_create_ram_region;
- 	cxl_region_get_daxctl_region;
- } LIBCXL_4;
-+
-+LIBCXL_6 {
-+global:
-+	cxl_cmd_identify_get_event_log_size;
-+	cxl_cmd_identify_get_poison_list_max;
-+	cxl_cmd_identify_get_inject_poison_limit;
-+	cxl_cmd_identify_injects_persistent_poison;
-+	cxl_cmd_identify_scans_for_poison;
-+	cxl_cmd_identify_egress_port_congestion;
-+	cxl_cmd_identify_temporary_throughput_reduction;
-+} LIBCXL_5;
-diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index d648992..aab1552 100644
---- a/cxl/lib/private.h
-+++ b/cxl/lib/private.h
-@@ -211,6 +211,17 @@ struct cxl_cmd_identify {
- 	u8 qos_telemetry_caps;
- } __attribute__((packed));
- 
-+/* CXL 3.0 8.2.9.8.1.1 Identify Memory Device Poison Handling Capabilities */
-+#define CXL_CMD_IDENTIFY_POISON_HANDLING_CAPABILITIES_INJECTS_PERSISTENT_POISON \
-+	BIT(0)
-+#define CXL_CMD_IDENTIFY_POISON_HANDLING_CAPABILITIES_SCANS_FOR_POISON BIT(1)
-+
-+/* CXL 3.0 8.2.9.8.1.1 Identify Memory Device QoS Telemetry Capabilities */
-+#define CXL_CMD_IDENTIFY_QOS_TELEMETRY_CAPABILITIES_EGRESS_PORT_CONGESTION \
-+	BIT(0)
-+#define CXL_CMD_IDENTIFY_QOS_TELEMETRY_CAPABILITIES_TEMPORARY_THROUGHPUT_REDUCTION \
-+	BIT(1)
-+
- struct cxl_cmd_get_lsa_in {
- 	le32 offset;
- 	le32 length;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 54d9f10..1856bee 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -334,6 +334,22 @@ unsigned long long cxl_cmd_identify_get_volatile_only_size(struct cxl_cmd *cmd);
- unsigned long long cxl_cmd_identify_get_persistent_only_size(struct cxl_cmd *cmd);
- unsigned long long cxl_cmd_identify_get_partition_align(struct cxl_cmd *cmd);
- unsigned int cxl_cmd_identify_get_label_size(struct cxl_cmd *cmd);
-+
-+enum cxl_identify_event {
-+	CXL_IDENTIFY_INFO,
-+	CXL_IDENTIFY_WARN,
-+	CXL_IDENTIFY_FAIL,
-+	CXL_IDENTIFY_FATAL,
-+};
-+
-+int cxl_cmd_identify_get_event_log_size(struct cxl_cmd *cmd,
-+					enum cxl_identify_event event);
-+int cxl_cmd_identify_get_poison_list_max(struct cxl_cmd *cmd);
-+int cxl_cmd_identify_get_inject_poison_limit(struct cxl_cmd *cmd);
-+int cxl_cmd_identify_injects_persistent_poison(struct cxl_cmd *cmd);
-+int cxl_cmd_identify_scans_for_poison(struct cxl_cmd *cmd);
-+int cxl_cmd_identify_egress_port_congestion(struct cxl_cmd *cmd);
-+int cxl_cmd_identify_temporary_throughput_reduction(struct cxl_cmd *cmd);
- struct cxl_cmd *cxl_cmd_new_get_health_info(struct cxl_memdev *memdev);
- int cxl_cmd_health_info_get_maintenance_needed(struct cxl_cmd *cmd);
- int cxl_cmd_health_info_get_performance_degraded(struct cxl_cmd *cmd);
+Example:
+# cxl identify mem0
+FW Revision                              : BWFW VERSION 00
+Total Capacity                           : 1.00 GB
+Volatile Only Capacity                   : 1.00 GB
+Persistent Only Capacity                 : 0 B
+Partition Alignment                      : 0 B
+Informational Event Log Size             : 0
+Warning Event Log Size                   : 0
+Failure Event Log Size                   : 0
+Fatal Event Log Size                     : 0
+LSA Size                                 : 0 B
+Poison List Maximum Media Error Records  : 256
+Inject Poison Limit                      : 0
+Poison Handling Capabilities
+Injects Persistent Poison                : Not Supported
+Scans for Poison                         : Not Supported
+QoS Telemetry Capabilities
+Egress Port Congestion                   : Not Supported
+Temporary Throughput Reduction           : Not Supported
+cxl memdev: cmd_identify: identified 1 mem
+
+This patch is RFC because some of the information are already provided by
+"list -m <memdev>" command and sysfs attributes.
+I think a separate cxl tool interface command for identify is useful to provide
+device's information clearly. In case of nvme-cli, there are separate
+interface commands for identifying controller and namespace: id-ctrl and id-ns.
+
+[1] https://lore.kernel.org/linux-cxl/20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com/
+[2] https://lore.kernel.org/linux-cxl/cover.1676685180.git.alison.schofield@intel.com/
+
+jehoon park (2):
+  libcxl: add accessors for IDENTIFY command
+  cxl: add identify command to cxl tool
+
+ Documentation/cxl/cxl-identify.txt |  57 ++++++++++++
+ Documentation/cxl/meson.build      |   1 +
+ cxl/builtin.h                      |   1 +
+ cxl/cxl.c                          |   1 +
+ cxl/lib/libcxl.c                   |  73 +++++++++++++++
+ cxl/lib/libcxl.sym                 |  11 +++
+ cxl/lib/private.h                  |  11 +++
+ cxl/libcxl.h                       |  16 ++++
+ cxl/memdev.c                       | 141 +++++++++++++++++++++++++++++
+ 9 files changed, 312 insertions(+)
+ create mode 100644 Documentation/cxl/cxl-identify.txt
+
+
+base-commit: b830c4af984e72e5849c0705669aad2ffa19db13
 -- 
 2.17.1
 
