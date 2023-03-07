@@ -2,146 +2,180 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492BEC678D5
-	for <linux-cxl@archiver.kernel.org>; Tue,  7 Mar 2023 20:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12679C6FA99
+	for <linux-cxl@archiver.kernel.org>; Tue,  7 Mar 2023 20:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjCGUSo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 7 Mar 2023 15:18:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60494 "EHLO
+        id S229938AbjCGUrN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 7 Mar 2023 15:47:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231575AbjCGUSn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Mar 2023 15:18:43 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5579BA335C
-        for <linux-cxl@vger.kernel.org>; Tue,  7 Mar 2023 12:18:40 -0800 (PST)
+        with ESMTP id S229780AbjCGUrM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 7 Mar 2023 15:47:12 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D2855068;
+        Tue,  7 Mar 2023 12:47:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678220320; x=1709756320;
+  t=1678222032; x=1709758032;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8gOnVNtZS73YCyh/mLSbcZ+RPbESqS/Y8BbGwsy4gwc=;
-  b=hPNeez4G+lJlLC8SqnfxikmP5SqB89MfdRO/C4n/iW/tiV7GfNbJ/9VS
-   FxTLmlJ30UtnbT2FJE+f7H9TGAQUuHYW71haWDIF0dCd6wG+ZZ6gaiY/u
-   bYgKXxfNiNFB8Lyi60bHqv3qd18XFcaDk9ORPZVtd+CKFPwXu55GR9/45
-   1PHd1Wcdyf8rDJh5QHsHQ1asspM0atipmNnKO9bLUbPXQZFpoQsPvbxeO
-   OaVdrtgjevyrHUa+xdte2B4TEm8SH65SHAVLj9TiTiiWo+IBfOUWwH+3e
-   uCKPHCn2JLXTecc5ZnWM8ZNO8DleWRsCMSZfj6kGCdvIK8nKkuWSU1gms
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="315622375"
+   in-reply-to:mime-version;
+  bh=t5QWckVImj94fX6cxx0vvsVQ0ZQ6I8rQ9TMTOWz6v1Y=;
+  b=jkqwFL5Fj/LCgZ/5rGTiuj691CvtoU8TQCVRQ34UHEWTZNB9645iZRiP
+   HbSbfPTNTzwmwNLkmuvd3AibcjAUQcD6cWntCgeMuBoiPgHTZwsof4ena
+   3Nyp6zLhC6ADkV2DpIIt/xDEAFAm2hRBm+KVswjLjy9IiCKaylttHJtpQ
+   7fPZvyIiuMgFy3XBq++/V4d8PHzSoY3ln5N1aQfHL80k3A6nAqHSg0C/F
+   pWqpcwrzZ5XJaqjdGsc1irdq6a8F7DgFBV2U95sUlW9i3TJTqOXj0r9g/
+   xUdBf7+rm2DEIrEQcHjqrsNyWE3xuvLlOxx11fpOGOKsJEHux5zjzkCqJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="333440307"
 X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="315622375"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 12:18:40 -0800
+   d="scan'208";a="333440307"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 12:47:11 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="709178532"
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="786832270"
 X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="709178532"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.214.103])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 12:18:39 -0800
-Date:   Tue, 7 Mar 2023 12:18:38 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jehoon Park <jehoon.park@samsung.com>
-Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org
-Subject: Re: [ndctl patch RFC 0/2] add support for IDENTIFY command
-Message-ID: <ZAecHtXUX5ZR9ccU@aschofie-mobl2>
-References: <CGME20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788@epcas2p1.samsung.com>
- <20230307082102.27195-1-jehoon.park@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+   d="scan'208";a="786832270"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Mar 2023 12:47:07 -0800
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 7 Mar 2023 12:47:01 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Tue, 7 Mar 2023 12:47:01 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Tue, 7 Mar 2023 12:47:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JE0+kVqYSlVWjkI2eNyCUCgHU6mCG1suRZguYQHPsBcDvjEDzKn31OobbD4ROMmDwJc7T4uzBdCIbY85yE5mf7WvTixJC4X00rHt57CcTPe+CSS9u6wXj6XZz9p+fAJwycMliymaZWrcsMfbJfkhOE8VZ4W6Sk7Oq+0LZODHqPQ9amZPqURrwuYpVJNFrCy40tvus9U3oBLBFNo4T07gHCXz2Hzys6WXdxQsjvfw8pzlCzMcjTi8aBl8YCIb5QHySPRKsyuNF0muAFAUoQ1ccRQiGl0qtDkCGG6H+u+H10vTx7CQp4w2hOQkMxmmjH6GZ6hPgIKNRxL6naHptrhfnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YBLr84O7EC6IiYv62IBNfVrwTuVIREd5RxZ7Q0AIJAU=;
+ b=gCEOuQKFpP+x7UXUh9KzJceborjHoOrXBsek9B24DMLeaUuajTNtILrhXaeytNp4vdA4qLoEb0j43VcIXqIIHS4Mre2hf8wduiNN6mYr5mHdPRIYQ4ZHI7eHssoEbcvatx7hb1pioWKn3lSvF6JuEQWMkLwr4Rga3/d3qOLVSIWFH/if09OWxFgaIMGtK+B98ysY2uwSyNnjDUj+EuaXp/qj11k9dBQiHCjued7Lht4uUjM5XXbrRPSWUYrObP2mp7MsFhSNyAZFr2BcdVXEDvQ698ZkUweG3QD+NeaW3oXJUGbqwqJ5EzW1vtwmSQsZsW8fctIoYd1+eaiNOtqy6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by CH3PR11MB7324.namprd11.prod.outlook.com (2603:10b6:610:14f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
+ 2023 20:46:59 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::84dd:d3f2:6d99:d7ff]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::84dd:d3f2:6d99:d7ff%7]) with mapi id 15.20.6156.029; Tue, 7 Mar 2023
+ 20:46:59 +0000
+Date:   Tue, 7 Mar 2023 12:46:55 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] cxl/pci: Remove unnecessary aer.h include
+Message-ID: <6407a2bf56a99_a37b829417@iweiny-mobl.notmuch>
+References: <20230307162443.858052-1-helgaas@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230307082102.27195-1-jehoon.park@samsung.com>
+In-Reply-To: <20230307162443.858052-1-helgaas@kernel.org>
+X-ClientProxiedBy: BYAPR08CA0030.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::43) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CH3PR11MB7324:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a98f048-8315-4a80-f511-08db1f4d187b
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rrC6Ndzw/p5QNOtLpwrMzjAUdsUDqTQXwNZFcKayOaOaB8GRMrm6z1aMz5YoLu10OJH8OtfD0GExcSlOyapxa4uq8EsG3IVhocw+6Zkcdf0kUXHQXJ6RY6yULrn7RqWShHzd2NEw+ThtNgL2/Wf97qRlRa/eZgaknXLXMO2pWC9dIxgwIWtX4LpkO1O32a9peYDDt3g6ZiQGR8nXjOghSocwhxDA0lKrU2CXJ002NHTrYcdCrLeBc67nlKIFfO0q8cKS5z9xT5nxi1tOgz9YdK+f2B1Z2zZL6eiv/FTunWJqqd4R/pS/VgGGUKwzHOTaRCJVPgdAYARsAD8EQQPR83QVzTn47Y3GCIUn7MJdPI3JcApp0JodzyOyFbadVp5qFfzynuj5IX+/F5rlgQBafXKs0/4QyxMI77LcRC6Fo6CL5YbLfxwZew7Ny3iplJ8LQm03BCD+yBe9Hl6nibkKk+86deyDnnDgjjvjU1Tj88RPZp708RtkGczbAH1HBPQH6TlqWxTFtTbDVlX/O//yEwJL0V+XICkJeBS4jVK6dKMdR/ypGKxy974hZtYkwonMnntPlB2oFdKDXkj7613rO+dyCbN+6S6oCyfCjbkskLbftDaSuXi+hMKXRzGc3vx2PDjIsRQu6c1OfXXiaPbtog==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(346002)(39860400002)(396003)(366004)(136003)(451199018)(82960400001)(66556008)(66946007)(38100700002)(66476007)(8676002)(4326008)(316002)(8936002)(110136005)(6636002)(41300700001)(5660300002)(478600001)(86362001)(6666004)(44832011)(83380400001)(4744005)(9686003)(6506007)(6512007)(2906002)(186003)(26005)(6486002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nSK8YrMvZrm0J+9QsT6JPrudIY3wyagukFbasZefUYNZ0R08s4f5H9Isqpit?=
+ =?us-ascii?Q?sgLXsx4TTJeXpEC6iN2towre9q+GKukS4vzWf94OWMcnpF2tQwlkmsrJU6/7?=
+ =?us-ascii?Q?Ugsf0zUHvBk7C/YbaF8GoW3rNOhhLuGE3tpW6NS14IKCq5sZZ/2TNvBqlt31?=
+ =?us-ascii?Q?CAgbp04LMivXb0aOGeayTj/oZ4ZANrs7KYLYTf6vlrMimw87/m5dMVcxI2Lv?=
+ =?us-ascii?Q?ve4EKH30e/2ZY1yBt4xcATaIQb/dmrlSNbMztU9F2zwc966Lj9RGvatxqTIh?=
+ =?us-ascii?Q?kDHi81Tw0JbOHztiw6qhP/0/Q1QpZqCG7/ljhxJ983cSVJ30w7Nw8XCRnEwJ?=
+ =?us-ascii?Q?zgDZOhVmsO4Ykn39tZRKp94QiCV/yYrm6CiwqDFyIPjRBnYBCBpNhWin1r61?=
+ =?us-ascii?Q?2OVfLXIJGSkxJWNmgxd4196D4QGhzry3H0OkQxJ4eec9m41+g9xOEExBoYS8?=
+ =?us-ascii?Q?Q7+p/ZMqVbXNOY/wg6Oin5fIqR5g3gXi1mgjKjqIoktduFHP7n3lAppE5LFH?=
+ =?us-ascii?Q?vKwYiHbuIMsbk8XUvOFtXNeailr4QuRKIPjsblwmP9Nao0m335+0b2P9+l7I?=
+ =?us-ascii?Q?lEIc3rtlNNBZdPnPOVkkgfbR+CnMAUQNbbbPwIpxgNrIT//3mz//HagH1Kg1?=
+ =?us-ascii?Q?wReJRQ0K8a5Fl7V6Tllh9wDSTn/Y7FOsegP81Jt0KmdOhbRBuU4WXNDcufJn?=
+ =?us-ascii?Q?Ag43rYoyVMiCGXCNStq4BmPinkfhjHjE9qXz55yNe1/eYaxtn8aFcjf/xQH2?=
+ =?us-ascii?Q?4ryaGIJCWcat8v8d/W6/yvesjmM0gCQZPIPoI8Nj+35DH8XVL9WoMAHgd/dR?=
+ =?us-ascii?Q?w/M1Pf2cePVmPPO40BSDiYF7NYDSbwEMXbBh6zAuWw7cKFVf4xSz8FTLpD59?=
+ =?us-ascii?Q?kkJ6KZQRx4ZIwX1zxFRbMKarni+pqa8682W1MlUlc819Yg3u7j8PZ7vNpKr5?=
+ =?us-ascii?Q?FKodUN/iIhsin4gc52zGpvYOMLtfUYujmfiWUU46ihSEhF9tYw+ZMGOv5sf5?=
+ =?us-ascii?Q?AMswdPVr3FvDC+MOvI4fgiXus25fzQWOPfx8ngQsRxUoechmvKZyXPG1O4x7?=
+ =?us-ascii?Q?/zgRYLfTl9ig26C3tgg/bWT4KplHUgAIjviomQdHeSIhThkWjE8WgGlUICHP?=
+ =?us-ascii?Q?r64AZ5aWJOIoWfn+g/SnPdLyDPrP6LcArO/QH7srbdalMEGWYrMbv+RQAfJO?=
+ =?us-ascii?Q?TIZhHBLUs39s43XJNJ8SgTinavKtuyA3jMN322RD4JcxUwU9yEglHCcbQfPL?=
+ =?us-ascii?Q?6IzjAsN5AOSFMPsMdmmhlSxzjhBfV7ZEhEtqIrI7nBZwfTSFTaoyc9SSLQbc?=
+ =?us-ascii?Q?yFGNgvxnudX4TWznNQaiQAO2Bbk4xoTmVIXiGqXIAyF+ZTuaxq1WcSI4/rAY?=
+ =?us-ascii?Q?7StagYKmQirPHkcqFKjChSPSZ4V6sRHanqEGHi+Ogw+4biADT8RqSrw140ho?=
+ =?us-ascii?Q?KEBFRzZPwa+O4As0H8e37ZjT/fiM+XhpCbqgQgGJuHj0UwhamgHQ6g8ZCgEK?=
+ =?us-ascii?Q?mNndq/51kOjhQ17pHP4Ery3r8mEtZExOmkKnRFxylUaVnvzXwHdj1crUEmmz?=
+ =?us-ascii?Q?0XS1xLWSs7XfK4up8zvlIg6Qs8L9QvPRN7/LCdX3?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a98f048-8315-4a80-f511-08db1f4d187b
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2023 20:46:58.9120
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QFeMv+yCY4cNv7nvfV0YYjy2Sy5eziXZLHdSQEmd7e0B28HwiXH2YxxGv7RHfhtaqRuxFv/svsLUWxZIVP28LQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7324
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 07, 2023 at 05:21:00PM +0900, Jehoon Park wrote:
-> From: jehoon park <jehoon.park@samsung.com>
+Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> This patchset supports CXL IDENTIFY mailbox command and corresponding
-> cxl tool interface command.
+> <linux/aer.h> is unused, so remove it.
 > 
-> CXL 3.0 Spec 8.2.9.8.1 defines IDENTIFY command which retrieves basic
-> information about CXL memory device. The information consist of device's
-> firmware version, capacity, LSA size, event log size, poison list size,
-> inject poison limit, poison handling capabilities and QoS telemetry
-> capabilities. Firmware version, capacity and LSA size are already supported
-> and used for partition commands or sysfs attributes while others are not.
-> Since patches about event log [1] and poison [2] are discussed recently,
-> support for those information will be helpful.
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
 
-Hi Jehoon,
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Does this need to be a separate command? Identify fields can be included
-in cxl list options. For example, the -I option to cxl list, issues the
-identify command and includes the partition related entries in that json
-output.
-
-There are other identify fields that need to be picked up, like the
-poison related fields.  They need to be added to the cxl list 
-options. We may want to include some when we list the poison, and
-some as an option in the memdev listing.
-
-Is there some reasoning behind separating this out? If not, can we look
-to add the missing fields to the various cxl-list options and add
-new cxl-list options where needed?
-
-Alison
-
+> Cc: Ben Widawsky <bwidawsk@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-cxl@vger.kernel.org
+> ---
+>  drivers/cxl/pci.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Example:
-
-Users expect json formatted output here.
-
-
-> # cxl identify mem0
-> FW Revision                              : BWFW VERSION 00
-> Total Capacity                           : 1.00 GB
-> Volatile Only Capacity                   : 1.00 GB
-> Persistent Only Capacity                 : 0 B
-> Partition Alignment                      : 0 B
-> Informational Event Log Size             : 0
-> Warning Event Log Size                   : 0
-> Failure Event Log Size                   : 0
-> Fatal Event Log Size                     : 0
-> LSA Size                                 : 0 B
-> Poison List Maximum Media Error Records  : 256
-> Inject Poison Limit                      : 0
-> Poison Handling Capabilities
-> Injects Persistent Poison                : Not Supported
-> Scans for Poison                         : Not Supported
-> QoS Telemetry Capabilities
-> Egress Port Congestion                   : Not Supported
-> Temporary Throughput Reduction           : Not Supported
-> cxl memdev: cmd_identify: identified 1 mem
-> 
-> This patch is RFC because some of the information are already provided by
-> "list -m <memdev>" command and sysfs attributes.
-> I think a separate cxl tool interface command for identify is useful to provide
-> device's information clearly. In case of nvme-cli, there are separate
-> interface commands for identifying controller and namespace: id-ctrl and id-ns.
-> 
-> [1] https://lore.kernel.org/linux-cxl/20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com/
-> [2] https://lore.kernel.org/linux-cxl/cover.1676685180.git.alison.schofield@intel.com/
-> 
-> jehoon park (2):
->   libcxl: add accessors for IDENTIFY command
->   cxl: add identify command to cxl tool
-> 
->  Documentation/cxl/cxl-identify.txt |  57 ++++++++++++
->  Documentation/cxl/meson.build      |   1 +
->  cxl/builtin.h                      |   1 +
->  cxl/cxl.c                          |   1 +
->  cxl/lib/libcxl.c                   |  73 +++++++++++++++
->  cxl/lib/libcxl.sym                 |  11 +++
->  cxl/lib/private.h                  |  11 +++
->  cxl/libcxl.h                       |  16 ++++
->  cxl/memdev.c                       | 141 +++++++++++++++++++++++++++++
->  9 files changed, 312 insertions(+)
->  create mode 100644 Documentation/cxl/cxl-identify.txt
-> 
-> 
-> base-commit: b830c4af984e72e5849c0705669aad2ffa19db13
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 60b23624d167..d3bc450717ce 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/list.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-doe.h>
+> -#include <linux/aer.h>
+>  #include <linux/io.h>
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
 > -- 
-> 2.17.1
+> 2.25.1
 > 
+
+
