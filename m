@@ -2,239 +2,216 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF49C64EC4
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Mar 2023 08:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD58C678D5
+	for <linux-cxl@archiver.kernel.org>; Wed,  8 Mar 2023 18:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbjCHI70 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Mar 2023 03:59:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
+        id S229778AbjCHSWv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 8 Mar 2023 13:22:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjCHI7Z (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Mar 2023 03:59:25 -0500
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4A58F71A
-        for <linux-cxl@vger.kernel.org>; Wed,  8 Mar 2023 00:59:21 -0800 (PST)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230308085919epoutp032d9c33b9245ae3baa36464cd30178664~KZf96SZ8V0630306303epoutp03R
-        for <linux-cxl@vger.kernel.org>; Wed,  8 Mar 2023 08:59:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230308085919epoutp032d9c33b9245ae3baa36464cd30178664~KZf96SZ8V0630306303epoutp03R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1678265959;
-        bh=4XtP9KAbmHTB6uGoj0bPUdVjzoIV9mKJyTF+PhWMjGY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VX2dI4DsPLJdmkPbOLkb44ZC0fazswEtAyxsGsOjqwT7dOZ+eKgq+IEx/NjQnyN3B
-         dOVtl6jqOpTGK7lktbKTsa+/Z7hHjdUPqWmq7Q4rl0S58XW1MjpO54Od20I4e1Djpe
-         /6i+3aaBSjG8hojPctY5U0o0Wfa+8G52ctPWBzTY=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230308085918epcas2p2ba855441e6fdd7b9ea8c5dbaa7a05279~KZf9lOM2z2886728867epcas2p2y;
-        Wed,  8 Mar 2023 08:59:18 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.89]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4PWmTK5cZ5z4x9Q5; Wed,  8 Mar
-        2023 08:59:17 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1E.56.05668.56E48046; Wed,  8 Mar 2023 17:59:17 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230308085916epcas2p3d8f19b1a4c6615b214d96f909ce1eba1~KZf7dUJuo1250412504epcas2p3F;
-        Wed,  8 Mar 2023 08:59:16 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230308085916epsmtrp2913533f05d1ce796b44bce8c3dfd38d2~KZf7cqI-l0477704777epsmtrp2S;
-        Wed,  8 Mar 2023 08:59:16 +0000 (GMT)
-X-AuditID: b6c32a48-45bfc70000021624-d1-64084e65b51f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        85.EC.31821.46E48046; Wed,  8 Mar 2023 17:59:16 +0900 (KST)
-Received: from dell-Precision-7920-Tower (unknown [10.229.83.133]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230308085916epsmtip2e98b7cc1a49a016908e8c46b5d0018ad~KZf7ULx3T0595305953epsmtip2_;
-        Wed,  8 Mar 2023 08:59:16 +0000 (GMT)
-Date:   Wed, 8 Mar 2023 18:01:34 +0900
-From:   Jehoon Park <jehoon.park@samsung.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org
+        with ESMTP id S229613AbjCHSWu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Mar 2023 13:22:50 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29448298DC
+        for <linux-cxl@vger.kernel.org>; Wed,  8 Mar 2023 10:22:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678299769; x=1709835769;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=8KcueN/V31B0tafN1zuEs/XG94PMAy5BCM6v8t2J+h8=;
+  b=FEqcOF0DT6YfGskEXtWDQPRh4eVhChBJBicZCeUF+A0h0uAYtZrj/VY3
+   IroCLpiQdTZ0PWo9uSYa5KSXL0FG6NGM8Cqf9quCrswy0TkpzCZ/8RlNN
+   jdmIbYSxKbH1O9YrUm/xTOaX28enVcCqfK/VmM08Oiz+hLrVLRn74MXcs
+   0T3dj4/xrZhk31fY+IljGlQuFGVUL2dpGky7pNxCPforyxWHq4jyTXNhh
+   OI1v+iYsLr98aLVGXrFKDmfTwVooODzmhDryuANOZK8CdjmcHEpIv7osA
+   8FXn148hsUVQAnyNRmOro9uIHhi81iWzJ/FZlytp58hpLjg5XCLqo4Yu4
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="422510112"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="422510112"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 10:22:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="820327620"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="820327620"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Mar 2023 10:22:48 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 8 Mar 2023 10:22:48 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 8 Mar 2023 10:22:48 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Wed, 8 Mar 2023 10:22:48 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.42) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Wed, 8 Mar 2023 10:22:47 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V2zCtPRcJMqJP0Eb7IktsIFF8otk6oXtfdfojcMWTV4l4aUVkvzbIz5/qFQwEcvJ8Qpssl772HDabfkPSmYSRmlwCiqdjb0V7oBd8STsgPKjyt8jvAcMeGGf+kglxx83yeNQcYA2rq+H1W4eX3YjKeWcqtESJRcHeTjmnLs0UgZNpWwkS6hLTK89H8Rf1SpqfVXl7HTlyKt7bT+Wnmsy/ai9qk5HRixGN5TRo3YN5a8wg/85EQytM/3JgjTegt8CAha6sZiGMx3/EBE1959/8DoWG6TnayKwFyBqsUpYS2M68HXGJqIqeiqDbHR1GjqGCVWdV6XBVEKTnwGFC48ySg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N/HDgPp61r/C8RnVzojRPuX2bm9kSMMNyGR7AXBXZds=;
+ b=hDFTFj6aCUfpCbepFSrNnHyr+/lBcXs6meUDAhDOQd1FuV9bKJHMlwDLxgk6y/Fvcju2m6tWgmXIJm9azqZON3ZdC1/CxcENqJTc5iG2HZ7p47dUAKJVHXaOgcJW35NwV0ccYghC8RTFJunsXWJo9iCGQEGGepSTRXyIkobbp8hn7pGSEYjRzXVQbZhhrGF3fLT6c4AFO52dRZ4DC5dCQ1BFbT0rUxQDY/7qzv1D7x+CR/srMc3A+pifHaLWXIdHzuB7Wim/oBA3bwgkH9wqsqSTQTWf1GdjaAIzsxOD3ZpnN41aSqHvM3y6CwHvN1Xp263SmIMPQqNPM6fOW/PRNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by BN9PR11MB5323.namprd11.prod.outlook.com (2603:10b6:408:118::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Wed, 8 Mar
+ 2023 18:22:45 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::84dd:d3f2:6d99:d7ff]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::84dd:d3f2:6d99:d7ff%8]) with mapi id 15.20.6178.017; Wed, 8 Mar 2023
+ 18:22:44 +0000
+Date:   Wed, 8 Mar 2023 10:22:41 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jehoon Park <jehoon.park@samsung.com>,
+        Alison Schofield <alison.schofield@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>
 Subject: Re: [ndctl patch RFC 0/2] add support for IDENTIFY command
-Message-ID: <20230308090134.GA15397@dell-Precision-7920-Tower>
-MIME-Version: 1.0
-In-Reply-To: <ZAecHtXUX5ZR9ccU@aschofie-mobl2>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdljTVDfVjyPFYGGzjsXdxxfYLJonL2a0
-        mD71AqPF/qfPWSzOzzrFYnFrwjEmBzaPxXteMnlsWtXJ5vF5k1wAc1S2TUZqYkpqkUJqXnJ+
-        SmZeuq2Sd3C8c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QXiWFssScUqBQQGJxsZK+nU1R
-        fmlJqkJGfnGJrVJqQUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsbhPw9YChbrVJxoXMzW
-        wPhLoYuRk0NCwERi7qfjbF2MXBxCAjsYJVbfWMwM4XxilDjf08MI4XxmlPg3bx07TMv5z90s
-        EIldjBJvDk9ihXC+M0oceP2fBaSKRUBFYtaHbWwgNpuAtsT97RuAbA4OEQFDiQXT1EDCzAK1
-        Eh0rJzGB2MICzhITrlwFK+cVsJN4tXwCM4QtKHFy5hOwkZwCehLnmnvAjhAVUJY4sO04E8he
-        CYGX7BLt9+4zgsyXEHCRmL6rAOJQYYlXx7dAHS0l8fndXjYIO1/i58lbrBB2gcSnLx9YIGxj
-        iXc3n7NC3JYpcXzeHCaIkcoSR26xQIT5JDoO/2WHCPNKdLQJQXSqSnQd/8AIYUtLHL5ylBnC
-        9pCY03MBLC4ksIVR4thb1QmM8rOQPDYLyTIIW0diwe5PbLOANjADjVr+jwPC1JRYv0t/ASPr
-        Kkax1ILi3PTUYqMCE3hUJ+fnbmIEJ0gtjx2Ms99+0DvEyMTBeIhRgoNZSYT3uxRHihBvSmJl
-        VWpRfnxRaU5q8SFGU2AkTWSWEk3OB6bovJJ4QxNLAxMzM0NzI1MDcyVxXmnbk8lCAumJJanZ
-        qakFqUUwfUwcnFINTMfWP7r3uDTg8Z+SdY1KGd4dAcuDav1e/tP9tU9M8Yc9xwsTPtF7JuoX
-        zBbXu29oC/niMq9TKTfyS1LGOwfbuhWXfK7MyjwZnvbn544K37PZc2Jk2e9UVcy/r7S5c8Jb
-        6c1P3hxWPHL9zo9zzmfNv8snhnCaGLiLl4t7c7jIPpVut/zx5/T3Q4+UCluFVpQ7tLFpXld6
-        cot3a9Yn96a0XM7Zc32Tqu/1l15o7f/mdK+/teeW6qKDi7jOc3Bt0/l5tjKSITBUvUbFjEfP
-        Y6vRssWBe5RrTy1dU/TEm5Wp/utT9j98dV0Cx1hN1HaL7BfMX+z4qvhnzuKJzeY3DjFzBK/N
-        4rsSOHnOFp3Vv2fvUWIpzkg01GIuKk4EAGv18RAZBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsWy7bCSvG6KH0eKwdmvEhZ3H19gs2ievJjR
-        YvrUC4wW+58+Z7E4P+sUi8WtCceYHNg8Fu95yeSxaVUnm8fnTXIBzFFcNimpOZllqUX6dglc
-        GV3rtzMWPNCseHT0BnsD4wW5LkZODgkBE4nzn7tZuhi5OIQEdjBK7HhxmA0iIS1xr/kKO4Qt
-        LHG/5QgrRNFXRolZG7czgiRYBFQkZn3YBtbAJqAtcX/7BiCbg0NEwFBiwTQ1kDCzQK1Ex8pJ
-        TCC2sICzxIQrV8HKeQXsJF4tn8AMYgsJbGGUWHe5ECIuKHFy5hMWiF4tiRv/XjKBjGQGumf5
-        Pw6QMKeAnsS55h6w00QFlCUObDvONIFRcBaS7llIumchdC9gZF7FKJlaUJybnltsWGCUl1qu
-        V5yYW1yal66XnJ+7iREc4lpaOxj3rPqgd4iRiYPxEKMEB7OSCO93KY4UId6UxMqq1KL8+KLS
-        nNTiQ4zSHCxK4rwXuk7GCwmkJ5akZqemFqQWwWSZODilGpjM+DcUP9vM9Uv036MCppteptN2
-        fxG4qqEpv6b0onksW3FtQEJDwcJOgcNX9c5Kn8+yD3+p7NshcPVhpeOuW2n/7yQ48q41vh/y
-        KemJ9ty6Oe+St4rx1Zj6JwRcWPy29VhQr2wvl9LyK+nrdN7evLOwTj572dSrvnsfu7ivnLjY
-        8u9viQ+s+iLz9z+exS3bt4r3etnHqYLh/8XEORwDbsQEnFv2obLUsc32/hKrc0x1DEwS+5x3
-        csvt/K76z6v+JcuruOtX/unLPtx2/WGLo93+UtMtWgEhlfsVBQ8Ifv0ZttvszYf7Hy37JRsD
-        xZ+9rk/4FxT56/XDd0+NziU+EuzOM1z9+uTBO8c3PSjecNhbiaU4I9FQi7moOBEAafNA9uAC
-        AAA=
-X-CMS-MailID: 20230308085916epcas2p3d8f19b1a4c6615b214d96f909ce1eba1
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_15c29f_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788
+Message-ID: <6408d271a2c96_f3f4a2943@iweiny-mobl.notmuch>
 References: <CGME20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788@epcas2p1.samsung.com>
-        <20230307082102.27195-1-jehoon.park@samsung.com>
-        <ZAecHtXUX5ZR9ccU@aschofie-mobl2>
+ <20230307082102.27195-1-jehoon.park@samsung.com>
+ <ZAecHtXUX5ZR9ccU@aschofie-mobl2>
+ <20230308090134.GA15397@dell-Precision-7920-Tower>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230308090134.GA15397@dell-Precision-7920-Tower>
+X-ClientProxiedBy: BYAPR03CA0023.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::36) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BN9PR11MB5323:EE_
+X-MS-Office365-Filtering-Correlation-Id: 09a6b818-684b-42ad-e3b8-08db20021cb3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: a9GK1AJjcoioIS9FFZQ7mJ0JdiL6hhtz2c/AsWckr1XmK02P8Sl0S69TTBVkV76l3U6g0p6xMn2DeK1yKfRh3G7LfFlnO5VE+vTEGY3OfRcZtX+/f6o5cbzyKWo2zcKQJ9cXGVBFZtm5jAcaHNif1LHIJCP9AkTdfDgV/e4u0ULNmRjoTuJsAi5Fcgsq784HE5PTCgtiX6nCYl5rQJ4DxzAbzZp6xOlfD1PuqTPwtnVNEW0mZ2G0OmaPT9YiR8Bl3+kvXwLvnPjEqjVTHp0GnOIjKf7RUrOoRBETt81++belK8wKam3FklmSOckBJ5mTPAxYsR7UgZXhpOF5J7HdPvnXVe6p00cqfW5XvT/+t+zZoqc0afY4180FEiv7h1MUBwgCzrZpYpaxOdizM3WBzCQHK9JEiTDfS8mZwDuYDIhqVed+moi39eQ8YBKtHL3Vvtpll8AYg99n+VasQ7Jrum2VhClsIxvFA297XPQKYfer34I5YsbWBsOChihlHv80faamcJTfZIE+iarqVOGlsTaQnSbQFN/sqCdcGDNMg6QZOvrhsJ9dCNTj4rJykUMqnczjYZL39t7V2mRNhvbboFAZ5Odq/6jg6TWWOpyfGqkcoUFtFQo884q+9q2yAHlDwgYFBHuHKjyN0c6xNSsQsg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(366004)(39860400002)(346002)(136003)(396003)(451199018)(82960400001)(66476007)(66556008)(66946007)(8676002)(38100700002)(4326008)(316002)(8936002)(41300700001)(6636002)(110136005)(6666004)(83380400001)(478600001)(5660300002)(86362001)(44832011)(6486002)(6512007)(186003)(6506007)(9686003)(26005)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?65tJ+eSOjLOJe7DUNUJuo/dx5aiWikds3cxCtZg1votmUg9CXC1/iMCHqNcK?=
+ =?us-ascii?Q?S/JSkp58CDAGw55HeGTZOdprVscXxOBvtubrPoupfQLcvUT7an74AOP5PAnH?=
+ =?us-ascii?Q?AdjvLZzAGlP1pGCM5YmtmSVP55Wzx9GW5Uf7rsvnZgjZ/ciLzAlIcrcTqeMt?=
+ =?us-ascii?Q?029hAsCwgeRIyzf65aDSr/AFjv9ftT7pCQ3aIPqj2YyLzk3YLQALPjVPGqPS?=
+ =?us-ascii?Q?C4pTKSHU0a4NKB82zZ531HvodB+BWaLyNOpsqigFwyUOzcwxz9I3jgZmAk1X?=
+ =?us-ascii?Q?01NNmrF84hiMEodsZyKpHYN0Rbl4UvkiQtHOMjWxOUVHjvS144RKVGTUeil4?=
+ =?us-ascii?Q?KqTfeotv4Uc3PVG7Et7iKvKxK3amP802NEZr5C12l7EdGWdiGqREBA2OTbMt?=
+ =?us-ascii?Q?cGfHOT0AJlEH2q4uhtGmC2Es9qrl4KIqL5naM2u4aYSBNstnKbtO/L7geNvo?=
+ =?us-ascii?Q?ek7L3INGvpu+4vZjMIQ9OdxJ1YWljuQ1tUxbteWZz8nkncnGIPuN0khYdCvh?=
+ =?us-ascii?Q?xc1ptv0DplSrir+Gk6GRgWJxcH77rsfbjEKSkXYJ1jx7QqFWEQPzVP0ebmMw?=
+ =?us-ascii?Q?OHXFzJSzqjeCujmsi/eJPzL0mdTuszC0ckhv1YgHECzoK9KaYjFUBEs2Sd2i?=
+ =?us-ascii?Q?BTtwsWZc/djCH9j0amD9d/aRQlhkp7ST9MV+BSYFJ+/IY0MAfOKj9brA+N3L?=
+ =?us-ascii?Q?qxMhfjjVXdogBxYgdeO2pJ6SYZVvtZAshcrmhifbUul5OKuIXQ7/wWhrYc7s?=
+ =?us-ascii?Q?aPl0bEQw5Hi2obG2/WkTjpvEMSaUIyAjgoDUeiG16MtwdY5zqFkZax454D6C?=
+ =?us-ascii?Q?5+Y9xET6YhInM1Z3ZHIgTxYYdqv41u94+JsyQzRsYEi/8r0vzHRKsr8NFD/6?=
+ =?us-ascii?Q?1oE9cKv6+2yZVrseoNP1JglupMVlo5hSZUz/4HLUHC3Mnw0KX9xX6BoEOXg/?=
+ =?us-ascii?Q?91beIjaeXWm6iz1RdWIzMYIEOQ/6YOGiFWHwQUKRPO6Bw9wH7PhlaSi8GuLR?=
+ =?us-ascii?Q?KBidnPEj7nJVuMghe7cWwcmhjedjrpiua535vRTGCqQU7aM6y0epp4j6htj4?=
+ =?us-ascii?Q?zfX2YFms7x1zQl+utkBXQIazytmMLyjc2DjidBqkdjlz+rgOioCtO0OojF8A?=
+ =?us-ascii?Q?0srJ/LKPCdsvgl6F6FK9eX+/QFKMFTigSRnLihqFpaN/BCFcPeNN23bZmMP7?=
+ =?us-ascii?Q?It2tCUo9sRrnVpV33SBcVUpv/ag92uTXzOfkQOQ6DrR30QH+pmDNi9qDjQ0g?=
+ =?us-ascii?Q?6+W+IjIfPCQmT/iu5Q9Or1PBTCshvTwmgSaRWD5zMx2WmmQa4JKRVKwaueYV?=
+ =?us-ascii?Q?veD/ydvpdcD+im+2kBFyI1NjcKbEDhfvXAU0zs5vqMjothFX1LZlibCDVhlR?=
+ =?us-ascii?Q?Fw7/kBoFMTNlYtkOfrnrQY3U2nXqT6L/Rguznn8r7zzExLohF+hoiqBSxfZm?=
+ =?us-ascii?Q?xIG3HwpJtC5EJ2Lm4LJBCOmQ7+wUGmoUU9DxHV8cNi5Sm7sNjCYl2XG8Aq+z?=
+ =?us-ascii?Q?e2Oy7RjdJIFTJ+5wDnyDw6YErYdTBL1zeQ++t3n4dOGGOCMDHHpjkmy6zKj5?=
+ =?us-ascii?Q?vW91TQC0DwvsalTQLtn6SYpj/99+nZnPPDbxfUi1?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09a6b818-684b-42ad-e3b8-08db20021cb3
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2023 18:22:44.8662
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QZ3E4QwYN7zcH43HB6aTWeC1hj8h2uctR1IJcIsaDqM6C3snkiwqjGxQ8PFNWzXIxOlddBUJjFBYuDWnUnqXdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5323
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-------mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_15c29f_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-
-On Tue, Mar 07, 2023 at 12:18:38PM -0800, Alison Schofield wrote:
-> On Tue, Mar 07, 2023 at 05:21:00PM +0900, Jehoon Park wrote:
-> > From: jehoon park <jehoon.park@samsung.com>
+Jehoon Park wrote:
+> On Tue, Mar 07, 2023 at 12:18:38PM -0800, Alison Schofield wrote:
+> > On Tue, Mar 07, 2023 at 05:21:00PM +0900, Jehoon Park wrote:
+> > > From: jehoon park <jehoon.park@samsung.com>
+> > > 
+> > > This patchset supports CXL IDENTIFY mailbox command and corresponding
+> > > cxl tool interface command.
+> > > 
+> > > CXL 3.0 Spec 8.2.9.8.1 defines IDENTIFY command which retrieves basic
+> > > information about CXL memory device. The information consist of device's
+> > > firmware version, capacity, LSA size, event log size, poison list size,
+> > > inject poison limit, poison handling capabilities and QoS telemetry
+> > > capabilities. Firmware version, capacity and LSA size are already supported
+> > > and used for partition commands or sysfs attributes while others are not.
+> > > Since patches about event log [1] and poison [2] are discussed recently,
+> > > support for those information will be helpful.
 > > 
-> > This patchset supports CXL IDENTIFY mailbox command and corresponding
-> > cxl tool interface command.
+> > Hi Jehoon,
 > > 
-> > CXL 3.0 Spec 8.2.9.8.1 defines IDENTIFY command which retrieves basic
-> > information about CXL memory device. The information consist of device's
-> > firmware version, capacity, LSA size, event log size, poison list size,
-> > inject poison limit, poison handling capabilities and QoS telemetry
-> > capabilities. Firmware version, capacity and LSA size are already supported
-> > and used for partition commands or sysfs attributes while others are not.
-> > Since patches about event log [1] and poison [2] are discussed recently,
-> > support for those information will be helpful.
+> > Does this need to be a separate command? Identify fields can be included
+> > in cxl list options. For example, the -I option to cxl list, issues the
+> > identify command and includes the partition related entries in that json
+> > output.
+> > 
+> > There are other identify fields that need to be picked up, like the
+> > poison related fields.  They need to be added to the cxl list 
+> > options. We may want to include some when we list the poison, and
+> > some as an option in the memdev listing.
+> > 
+> > Is there some reasoning behind separating this out? If not, can we look
+> > to add the missing fields to the various cxl-list options and add
+> > new cxl-list options where needed?
+> > 
+> > Alison
+> > 
 > 
-> Hi Jehoon,
+> Hi Alison, thank you for comments.
 > 
-> Does this need to be a separate command? Identify fields can be included
-> in cxl list options. For example, the -I option to cxl list, issues the
-> identify command and includes the partition related entries in that json
-> output.
+> I suggested separate identify command since it retrieves basic information
+> about memdev. Since cxl-list command lists all cxl objects, I intended to
+> focus memdev information by separating it. Also, I referred to nvme-cli
+> which has id-ctrl and id-ns commands.
 > 
-> There are other identify fields that need to be picked up, like the
-> poison related fields.  They need to be added to the cxl list 
-> options. We may want to include some when we list the poison, and
-> some as an option in the memdev listing.
+> However, as you commented, some fields were already included in cxl-list.
+> I think the idea that providing information to proper listing option also
+> makes sense.
 > 
-> Is there some reasoning behind separating this out? If not, can we look
-> to add the missing fields to the various cxl-list options and add
-> new cxl-list options where needed?
+> Then, by following the approach, including fields to cxl-list options,
+> identify fields could be included like below. Do they look fine?
 > 
-> Alison
+> 1. FW version and LSA size are included when listing memdev. ("list -m memdev")
+> 2. For poison related fields (poison_list_max size and inject_poison_limit),
+> include them when listing poison. ("--media-errors" option, patch [1])
+> 3. For capabilities fields, add new option "-C, --capabilities" to the
+> memdev listing. (I see there exists same option for listing nvdimm device)
 > 
+> However, I'm confused about event_log_size fields. Could they be included
+> in capabilities option too? or require new option like "--event"?
 
-Hi Alison, thank you for comments.
+Fundamentally why does user space need to know the event log sizes?
 
-I suggested separate identify command since it retrieves basic information
-about memdev. Since cxl-list command lists all cxl objects, I intended to
-focus memdev information by separating it. Also, I referred to nvme-cli
-which has id-ctrl and id-ns commands.
+I do like the idea of getting the 'raw' results of the identify command in
+it's entirety.
 
-However, as you commented, some fields were already included in cxl-list.
-I think the idea that providing information to proper listing option also
-makes sense.
+What if list has an '--identify' option which adds the list of Identify
+values as a child json object.
 
-Then, by following the approach, including fields to cxl-list options,
-identify fields could be included like below. Do they look fine?
-
-1. FW version and LSA size are included when listing memdev. ("list -m memdev")
-2. For poison related fields (poison_list_max size and inject_poison_limit),
-include them when listing poison. ("--media-errors" option, patch [1])
-3. For capabilities fields, add new option "-C, --capabilities" to the
-memdev listing. (I see there exists same option for listing nvdimm device)
-
-However, I'm confused about event_log_size fields. Could they be included
-in capabilities option too? or require new option like "--event"?
-
-Jehoon
-
-[1] https://lore.kernel.org/nvdimm/cover.1668133294.git.alison.schofield@intel.com/
-
-> > 
-> > Example:
-> 
-> Users expect json formatted output here.
-> 
-> 
-> > # cxl identify mem0
-> > FW Revision                              : BWFW VERSION 00
-> > Total Capacity                           : 1.00 GB
-> > Volatile Only Capacity                   : 1.00 GB
-> > Persistent Only Capacity                 : 0 B
-> > Partition Alignment                      : 0 B
-> > Informational Event Log Size             : 0
-> > Warning Event Log Size                   : 0
-> > Failure Event Log Size                   : 0
-> > Fatal Event Log Size                     : 0
-> > LSA Size                                 : 0 B
-> > Poison List Maximum Media Error Records  : 256
-> > Inject Poison Limit                      : 0
-> > Poison Handling Capabilities
-> > Injects Persistent Poison                : Not Supported
-> > Scans for Poison                         : Not Supported
-> > QoS Telemetry Capabilities
-> > Egress Port Congestion                   : Not Supported
-> > Temporary Throughput Reduction           : Not Supported
-> > cxl memdev: cmd_identify: identified 1 mem
-> > 
-> > This patch is RFC because some of the information are already provided by
-> > "list -m <memdev>" command and sysfs attributes.
-> > I think a separate cxl tool interface command for identify is useful to provide
-> > device's information clearly. In case of nvme-cli, there are separate
-> > interface commands for identifying controller and namespace: id-ctrl and id-ns.
-> > 
-> > [1] https://lore.kernel.org/linux-cxl/20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com/
-> > [2] https://lore.kernel.org/linux-cxl/cover.1676685180.git.alison.schofield@intel.com/
-> > 
-> > jehoon park (2):
-> >   libcxl: add accessors for IDENTIFY command
-> >   cxl: add identify command to cxl tool
-> > 
-> >  Documentation/cxl/cxl-identify.txt |  57 ++++++++++++
-> >  Documentation/cxl/meson.build      |   1 +
-> >  cxl/builtin.h                      |   1 +
-> >  cxl/cxl.c                          |   1 +
-> >  cxl/lib/libcxl.c                   |  73 +++++++++++++++
-> >  cxl/lib/libcxl.sym                 |  11 +++
-> >  cxl/lib/private.h                  |  11 +++
-> >  cxl/libcxl.h                       |  16 ++++
-> >  cxl/memdev.c                       | 141 +++++++++++++++++++++++++++++
-> >  9 files changed, 312 insertions(+)
-> >  create mode 100644 Documentation/cxl/cxl-identify.txt
-> > 
-> > 
-> > base-commit: b830c4af984e72e5849c0705669aad2ffa19db13
-> > -- 
-> > 2.17.1
-> > 
-
-------mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_15c29f_
-Content-Type: text/plain; charset="utf-8"
-
-
-------mCHB6Vbp4ppqb7.Eb9hMqMXHvM99xBNVcrtllGKp56PgfQUr=_15c29f_--
+Ira
