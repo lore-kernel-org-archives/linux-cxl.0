@@ -2,136 +2,1271 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A9DC64EC4
-	for <linux-cxl@archiver.kernel.org>; Wed,  8 Mar 2023 21:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F6DC61DA4
+	for <linux-cxl@archiver.kernel.org>; Thu,  9 Mar 2023 22:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbjCHV6Q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 8 Mar 2023 16:58:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34334 "EHLO
+        id S230406AbjCIW3f (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 9 Mar 2023 17:29:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjCHV6P (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 8 Mar 2023 16:58:15 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E134130283
-        for <linux-cxl@vger.kernel.org>; Wed,  8 Mar 2023 13:58:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678312693; x=1709848693;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=u3JFeTGZMCrxtzOrK/oEg1z2ItEAdKYZuY4+D98f28g=;
-  b=IPOa5b0G3ftLw6mkk4hPXEhigFwZ5xVDFkh2WchpLOXH6wno/4V4Oemg
-   mqbxPNOB2EEpvUpNvSXzRbpzZk+utAmpUtix9UkArXQWsNrhAcb+qkiV1
-   3sRMIJK0H1pCOlPRI+A9uIaXi+40TaW3Xjf1WHTCFNU9kIM1haznICho9
-   TONuHfX/DO4sbkj6hnIx+Ld2iToDz+dH+DBwSNrPEaMw55ASX/urnhfdf
-   H4vpRjXOaeIPRD5xlfH6JstvlqCRRKetWX0lANt2LqEMFe0P00cmVXeS6
-   4v/B9HyeWYtn7EpfCg1JOcznGuT35XKSsd9V5Fl4DicmePmk9n4QaNV7a
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="334990326"
-X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
-   d="scan'208";a="334990326"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 13:58:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="670485352"
-X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
-   d="scan'208";a="670485352"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.215.12])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 13:58:12 -0800
-Date:   Wed, 8 Mar 2023 13:58:11 -0800
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jehoon Park <jehoon.park@samsung.com>, linux-cxl@vger.kernel.org,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        bwidawsk@kernel.org
-Subject: Re: [ndctl patch RFC 0/2] add support for IDENTIFY command
-Message-ID: <ZAkE81CNAjXB48Wz@aschofie-mobl2>
-References: <CGME20230307081917epcas2p1accc8f7bf3f31e08525684abb2efa788@epcas2p1.samsung.com>
- <20230307082102.27195-1-jehoon.park@samsung.com>
- <ZAecHtXUX5ZR9ccU@aschofie-mobl2>
- <20230308090134.GA15397@dell-Precision-7920-Tower>
- <6408d271a2c96_f3f4a2943@iweiny-mobl.notmuch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6408d271a2c96_f3f4a2943@iweiny-mobl.notmuch>
+        with ESMTP id S230154AbjCIW3e (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 9 Mar 2023 17:29:34 -0500
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216B5B53FD
+        for <linux-cxl@vger.kernel.org>; Thu,  9 Mar 2023 14:29:05 -0800 (PST)
+Received: by mail-qt1-x829.google.com with SMTP id c3so3816636qtc.8
+        for <linux-cxl@vger.kernel.org>; Thu, 09 Mar 2023 14:29:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1678400944;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P/+z0LDRuwXfJZigVI5RSeSyFTI882wikiR2NtwDoHg=;
+        b=CM+FYnSvaIWDBLG4Hc6QoU8fw5Nr2Sl2QYBmgELH5RZvjpQSmHgLKemW3P8eH1Bm8w
+         nTTmUxgxY6gK0v7z9UV55Xtx88Mlkz86ujUcDX3goC/JVoSsou0uXJTT5FEhVDBGr2F+
+         c00NA7JSchJFJXqTxvM/bWI1neoGrNezdVLcfFNcMRCWygG/XLHb14jmusSBV/2ye+OL
+         9KIZxOE5HMtBSOikUTv2wvX2L7luoAScV9Kqp8+fJe76eZ8EnTIAhQYCIBhSqExMN+T1
+         V4vsy0pwCTek1FUjDEvK2bcgLBMb7P6GsKnEmQtZqMopvq8vN5vi2AFR2+d7Yl75Eb8B
+         zCQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678400944;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P/+z0LDRuwXfJZigVI5RSeSyFTI882wikiR2NtwDoHg=;
+        b=qCnIa6Etmdt88LDeAZuYmtaaRH/v4IhiV1eRV8+Xq6bXK8ctSGZ1ZrrUUXRessYweV
+         9UJvrVYG8CCjMJ37UYpofz9+75YMhPS1NSJS259oo5ZejbDwTasXhdLU0SeSPuYSxfqY
+         RxamrcVrERJK1VcKwfTTf1oMCf5epcna/d0bAfTxkSKPonfch7t920moS6xZe8xyt4xv
+         z34h9thruN59Cqvxjpkf48s8/1i3/I1+97CxBLGwqmwrtwCqhLUfSsb8MwAr0rnLLDRJ
+         Ngpt4HFrhFsQnSjL9IIj/FRyTpKMbvpcMgRP32hiz5a/lRtCWhR7UOvf909iTgAsC+vU
+         Z7Hg==
+X-Gm-Message-State: AO0yUKW1WTGgGoBhn/18OMcAWdG8qq07sOMtMFepvWbuimR4LdluB4WW
+        reFKpWEHEYl7dHTFpkey9XeLyw==
+X-Google-Smtp-Source: AK7set/Ryg0+VEtNd4iCHdjs0TE8WlkJ6bvwaAfVv4KHZR1UTH1555j1Gz7QF0lJ8y9roDTK2KP8cA==
+X-Received: by 2002:a05:622a:50f:b0:3c0:6cf:3226 with SMTP id l15-20020a05622a050f00b003c006cf3226mr34338227qtx.8.1678400944063;
+        Thu, 09 Mar 2023 14:29:04 -0800 (PST)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id q55-20020a05620a2a7700b007423c122457sm103439qkp.63.2023.03.09.14.29.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Mar 2023 14:29:03 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: Re: [External] CXL Fabric Manager (FM) architecture diagrams
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20230307172105.00006132@Huawei.com>
+Date:   Thu, 9 Mar 2023 14:28:51 -0800
+Cc:     Viacheslav Dubeyko <slava@dubeyko.com>, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F6C3F73D-904C-4667-AB97-E12E64F4681F@bytedance.com>
+References: <20230306185913.1060918-1-slava@dubeyko.com>
+ <20230307172105.00006132@Huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 10:22:41AM -0800, Ira Weiny wrote:
-> Jehoon Park wrote:
-> > On Tue, Mar 07, 2023 at 12:18:38PM -0800, Alison Schofield wrote:
-> > > On Tue, Mar 07, 2023 at 05:21:00PM +0900, Jehoon Park wrote:
-> > > > From: jehoon park <jehoon.park@samsung.com>
-> > > > 
-> > > > This patchset supports CXL IDENTIFY mailbox command and corresponding
-> > > > cxl tool interface command.
-> > > > 
-> > > > CXL 3.0 Spec 8.2.9.8.1 defines IDENTIFY command which retrieves basic
-> > > > information about CXL memory device. The information consist of device's
-> > > > firmware version, capacity, LSA size, event log size, poison list size,
-> > > > inject poison limit, poison handling capabilities and QoS telemetry
-> > > > capabilities. Firmware version, capacity and LSA size are already supported
-> > > > and used for partition commands or sysfs attributes while others are not.
-> > > > Since patches about event log [1] and poison [2] are discussed recently,
-> > > > support for those information will be helpful.
-> > > 
-> > > Hi Jehoon,
-> > > 
-> > > Does this need to be a separate command? Identify fields can be included
-> > > in cxl list options. For example, the -I option to cxl list, issues the
-> > > identify command and includes the partition related entries in that json
-> > > output.
-> > > 
-> > > There are other identify fields that need to be picked up, like the
-> > > poison related fields.  They need to be added to the cxl list 
-> > > options. We may want to include some when we list the poison, and
-> > > some as an option in the memdev listing.
-> > > 
-> > > Is there some reasoning behind separating this out? If not, can we look
-> > > to add the missing fields to the various cxl-list options and add
-> > > new cxl-list options where needed?
-> > > 
-> > > Alison
-> > > 
-> > 
-> > Hi Alison, thank you for comments.
-> > 
-> > I suggested separate identify command since it retrieves basic information
-> > about memdev. Since cxl-list command lists all cxl objects, I intended to
-> > focus memdev information by separating it. Also, I referred to nvme-cli
-> > which has id-ctrl and id-ns commands.
-> > 
-> > However, as you commented, some fields were already included in cxl-list.
-> > I think the idea that providing information to proper listing option also
-> > makes sense.
-> > 
-> > Then, by following the approach, including fields to cxl-list options,
-> > identify fields could be included like below. Do they look fine?
-> > 
-> > 1. FW version and LSA size are included when listing memdev. ("list -m memdev")
-> > 2. For poison related fields (poison_list_max size and inject_poison_limit),
-> > include them when listing poison. ("--media-errors" option, patch [1])
-> > 3. For capabilities fields, add new option "-C, --capabilities" to the
-> > memdev listing. (I see there exists same option for listing nvdimm device)
-> > 
-> > However, I'm confused about event_log_size fields. Could they be included
-> > in capabilities option too? or require new option like "--event"?
-> 
-> Fundamentally why does user space need to know the event log sizes?
-> 
-> I do like the idea of getting the 'raw' results of the identify command in
-> it's entirety.
-> 
-> What if list has an '--identify' option which adds the list of Identify
-> values as a child json object.
->
-That's a good way to add it. That'll give you all the fields in one
-place, and then, we can still think about if we want to spit out
-specific fields (ie poison related) when we are doing a poison command.
-You will have added all the libcxl accessors, making those easier to add.
-Alison
 
 
-> Ira
+> On Mar 7, 2023, at 9:21 AM, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>=20
+> On Mon,  6 Mar 2023 10:59:13 -0800
+> Viacheslav Dubeyko <slava@dubeyko.com> wrote:
+>=20
+>> Hi Jonathan,
+>>=20
+>> You can find diagram online now:
+>>=20
+>> (1) Diagram 1: single host with Fabric Manager (FM)
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+1-cxl-fm-single-host-with-fm.pdf
+>=20
+> Whilst accurate that you might only be able to control the switch, I =
+would add one MLD to this
+> diagram so that tunneling can be discussed.  It's minimal in sense of =
+near minimal number of
+> components that might exist in a switched system
+>=20
+> Thanks to asciiflow.com + some editing of the resutl - fingers crossed =
+this works.
+> Obviously these can't be as rich as your nice diagrams so I've
+> left out what the connections are, but having them inline has
+> it's advantages as well.
+>=20
+
+I=E2=80=99ve copied ascii diagrams into pure text document and I can see =
+the diagrams properly aligned. :)
+
+> I've played fast and loose with some of the terminology and not =
+checked
+> it against the spec naming.  I've also left it vague how an =
+application
+> talks to the orchestrator.  That was via agent in your terms I think
+>=20
+> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90
+> =E2=94=82                   =E2=94=82    =E2=94=82               =E2=94=82=
+   =E2=94=82                =E2=94=82
+> =E2=94=82                   =E2=94=82    =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+> =E2=94=82                   =E2=94=82    =E2=94=82   =E2=94=82       =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+> =E2=94=82           =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=90   =
+=E2=94=82    =E2=94=82   =E2=94=82Switch =E2=94=82   =E2=94=82   =E2=94=82=
+ =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+> =E2=94=82           =E2=94=82FM =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=96=BA  CCI  =E2=94=82   =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82
+> =E2=94=82           =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=98   =
+=E2=94=82    =E2=94=82   =E2=94=82       =E2=94=82   =E2=94=82   =E2=94=82=
+ MLD 1          =E2=94=82
+> =E2=94=82                   =E2=94=82    =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=
+=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+> =E2=94=82              =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82          =E2=94=82    =E2=94=82
+> =E2=94=82              =E2=94=82RP0 =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4          =E2=94=82    =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=90
+> =E2=94=82              =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82          =E2=94=82    =E2=94=82   =E2=94=82             =
+   =E2=94=82
+> =E2=94=82                   =E2=94=82    =E2=94=82          =E2=94=82  =
+  =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90=
+ =E2=94=82
+> =E2=94=82              =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82          =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =
+=E2=94=82 =E2=94=82
+> =E2=94=82              =E2=94=82RP1 =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4               =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+> =E2=94=82              =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82               =E2=94=82   =E2=94=82                =E2=94=
+=82
+> =E2=94=82 Host A            =E2=94=82    =E2=94=82 SWITCH        =E2=94=82=
+   =E2=94=82 MLD 2          =E2=94=82
+> =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98   =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=98
+>=20
+
+I assume that RP0/RP1 are Root Ports. Should RP0/RP1 be on switch side?
+I think APP should be shown too on this diagram. What do you think?
+
+>>=20
+>> (2) Diagram 2: single host with orchestrator
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+2-cxl-fm-single-host-with-orhestrator.pdf
+>=20
+> Actually having an FM in a switch might happen, but there is no spec =
+defined way of doing it.
+> =46rom a software architecture point of view it's no different from =
+another host talking to the
+> switch - just think of sticking a BMC down next to the switch chip.
+> Having the orchestrator in the host is also rather odd though it could =
+in theory happen.
+> Typically the orchestrator is considered a 'cloud' level thing =
+floating way above individual host.
+> Without any loss of generality I'd always have the orchestrator as =
+something on it's own
+> machine chatting over a network to the Agents and FM-API accessed =
+devices.
+>=20
+
+I agree that orchestrator could be standalone system. But diagram 2 is =
+an example of simple case
+when FM is located outside of the host (CXL switch or something else). =
+So, I mean here simple
+subsystem (dedicated application or library) that can talk with FM. I =
+believe that standalone
+orchestrator could be overkill for such case. What do you think?
+
+> Something like
+>=20
+>=20
+>    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90
+>    =E2=94=82                      =E2=94=82    =E2=94=82        =E2=94=82=
+
+>    =E2=94=82                      =E2=94=82    =E2=94=82        =E2=94=82=
+
+>    =E2=94=82   Orchestrator =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA  FM    =
+=E2=94=82
+>    =E2=94=82                      =E2=94=82    =E2=94=82        =E2=94=82=
+
+>    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=96=B2=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98
+>        =E2=94=82                         =E2=94=82
+>  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90
+>  =E2=94=82     =E2=94=82             =E2=94=82    =E2=94=82      =E2=94=82=
+        =E2=94=82   =E2=94=82                =E2=94=82
+>  =E2=94=82     =E2=94=82             =E2=94=82    =E2=94=82  =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+>  =E2=94=82     =E2=94=82             =E2=94=82    =E2=94=82  =E2=94=82 =
+Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=E2=94=80=
+=E2=94=90          =E2=94=82    =E2=94=82  =E2=94=82   CCI  =E2=94=82   =
+=E2=94=82   =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =
+=E2=94=82
+>  =E2=94=82 =E2=94=82 APP  =E2=94=82          =E2=94=82    =E2=94=82  =
+=E2=94=82 or MCTP=E2=94=82   =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4=
+                =E2=94=82
+>  =E2=94=82 =E2=94=82      =E2=94=82          =E2=94=82    =E2=94=82  =
+=E2=94=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 MLD 1          =E2=94=82=
+
+>  =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=98          =E2=94=82    =E2=94=82  =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>  =E2=94=82              =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4    =E2=94=82          =E2=94=82    =E2=94=82
+>  =E2=94=82              =E2=94=82RP0 =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4          =E2=94=82    =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=90
+>  =E2=94=82              =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4    =E2=94=82          =E2=94=82    =E2=94=82   =E2=94=82          =
+      =E2=94=82
+>  =E2=94=82                   =E2=94=82    =E2=94=82          =E2=94=82 =
+   =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90=
+ =E2=94=82
+>  =E2=94=82              =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4    =E2=94=82          =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned =
+LD =E2=94=82 =E2=94=82
+>  =E2=94=82              =E2=94=82RP1 =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4               =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>  =E2=94=82              =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4    =E2=94=82               =E2=94=82   =E2=94=82                =
+=E2=94=82
+>  =E2=94=82 Host A            =E2=94=82    =E2=94=82 SWITCH        =E2=94=
+=82   =E2=94=82 MLD 2          =E2=94=82
+>  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98   =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=98
+>=20
+
+Most probably, FM outside of CXL switch will talk by means of Redfish =
+protocol.
+Do you mean that MCTP CCI is subprotocol of Redfish? Should we introduce =
+some
+CXL switch=E2=80=99s subsystem that can talk by means of Redfish?
+
+>>=20
+>> (3) Diagram3: Multi-headed device
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+3-cxl-fm-multi-headed-device.pdf
+>=20
+> Looks good though there is a simpler single host version.
+>=20
+> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+> =E2=94=82           =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=90   =
+=E2=94=82    =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90=
+      =E2=94=82
+> =E2=94=82           =E2=94=82FM =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BA =
+Mailbox CCI=E2=94=82      =E2=94=82
+> =E2=94=82           =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=98   =
+=E2=94=82    =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98=
+      =E2=94=82   =20
+> =E2=94=82                   =E2=94=82    =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90     =E2=94=82=
+
+> =E2=94=82              =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82 =E2=94=82 LD Pool CCI =E2=94=82     =E2=94=82
+> =E2=94=82              =E2=94=82RP0 =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98     =E2=94=82
+> =E2=94=82              =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82                     =E2=94=82
+> =E2=94=82              =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82                     =E2=94=82
+> =E2=94=82              =E2=94=82RP1 =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4                     =E2=94=82
+> =E2=94=82              =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=A4    =E2=94=82                     =E2=94=82
+> =E2=94=82 Host A            =E2=94=82    =E2=94=82 MHD 1               =
+=E2=94=82
+> =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+>=20
+> I'd jump from single host to the multi host with external FM and
+> orchestator.
+>=20
+>        =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90
+>        =E2=94=82                      =E2=94=82    =E2=94=82        =
+=E2=94=82
+>        =E2=94=82                      =E2=94=82    =E2=94=82        =
+=E2=94=82
+>  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA   =
+Orchestrator =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA  FM    =E2=94=82
+>  =E2=94=82     =E2=94=82                      =E2=94=82    =E2=94=82   =
+     =E2=94=82
+>  =E2=94=82     =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=96=B2=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98
+>  =E2=94=82         =E2=94=82                            =E2=94=82
+>  =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90      =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+>  =E2=94=82   =E2=94=82     =E2=94=82             =E2=94=82      =E2=94=82=
+ =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90     =E2=94=82=
+
+>  =E2=94=82   =E2=94=82     =E2=94=82             =E2=94=82      =E2=94=82=
+ =E2=94=82 Mailbox CCI =E2=94=82     =E2=94=82
+>  =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=
+=80=E2=94=80=E2=94=90      =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+     =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80-=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =
+=E2=94=82
+>  =E2=94=82   =E2=94=82 =E2=94=82 APP  =E2=94=82      =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=A4       =E2=94=82             =E2=94=82
+>  =E2=94=82   =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=94=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=A4      =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90     =E2=94=82=
+
+>  =E2=94=82   =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=98          =E2=94=82      =E2=94=82 =E2=94=82 LD =
+Pool CCI =E2=94=82     =E2=94=82
+>  =E2=94=82   =E2=94=82                   =E2=94=82      =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=82=
+
+>  =E2=94=82   =E2=94=82 Host A            =E2=94=82      =E2=94=82      =
+               =E2=94=82
+>  =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98      =E2=94=82                   =
+  =E2=94=82
+>  =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90      =E2=94=82                   =
+  =E2=94=82
+>  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=AC=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90      =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4      =E2=94=82             =
+        =E2=94=82
+>      =E2=94=82 =E2=94=82 APP  =E2=94=82      =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=A4                     =E2=94=82
+>      =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=94=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4      =E2=94=82                     =E2=94=82
+>      =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98          =E2=94=82      =E2=94=82                     =
+=E2=94=82
+>      =E2=94=82 Host B            =E2=94=82      =E2=94=82 MHD 1        =
+       =E2=94=82
+>      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98      =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+>=20
+>=20
+
+It looks like FM needs to use network + Redfish to interact with =
+Multi-Headed Device (MHD).
+Could Multi-Headed Device support network protocol? I assume it sounds =
+like overkill.
+
+>=20
+>>=20
+>> (4) Diagram 4: Multi-headed device + Orchestrator
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+4-cxl-fm-multi-headed-device-orchestrator.pdf
+> I'd put the orchestrator in it's own 'host' as above...  I've drawn it =
+with a mailbox cci but
+> could be a mctp CCI.=20
+>>=20
+>> (5) Diagram5: Multiple hosts with Fabric Manager (FM)
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+5-cxl-fm-multiple-hosts-with-fm.pdf
+>=20
+> Another one where I'd separate the FM from the switch.  It may be near =
+the switch but
+> it's talking fm-api to the switch and that's an interface that is well =
+defined.
+>=20
+>       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90
+> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA   =
+Orchestrator =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA  FM    =E2=94=82
+> =E2=94=82     =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=96=B2=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98
+> =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90              =E2=94=82
+> =E2=94=82   =E2=94=82     =E2=94=82             =E2=94=82       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90
+> =E2=94=82   =E2=94=82     =E2=94=82             =E2=94=82       =E2=94=82=
+  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=
+=80=E2=94=80=E2=94=90      =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+      =E2=94=82  =E2=94=82 Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=
+=82 =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=82 APP  =E2=94=82      =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4  =E2=94=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=94=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=A4       =E2=94=82  =E2=94=82 or MCTP=E2=94=82   =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=98          =E2=94=82       =E2=94=82  =E2=94=82   =
+CCI  =E2=94=82   =E2=94=82   =E2=94=82 MLD 1          =E2=94=82
+> =E2=94=82   =E2=94=82                   =E2=94=82       =E2=94=82  =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+> =E2=94=82   =E2=94=82 Host A            =E2=94=82       =E2=94=82      =
+    =E2=94=82    =E2=94=82
+> =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98       =E2=94=82          =E2=94=82=
+    =E2=94=82   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=90
+> =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90       =E2=94=82          =E2=94=82=
+    =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90 =E2=94=82
+> =E2=94=82   =E2=94=82                   =E2=94=82       =E2=94=82      =
+    =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+> =E2=94=82   =E2=94=82                   =E2=94=82       =E2=94=82      =
+         =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+> =E2=94=82   =E2=94=82                   =E2=94=82       =E2=94=82      =
+         =E2=94=82   =E2=94=82                =E2=94=82
+> =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=AC=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90      =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4       =E2=94=82 SWITCH     =
+   =E2=94=82   =E2=94=82 MLD 2          =E2=94=82
+>     =E2=94=82 =E2=94=82 APP  =E2=94=82      =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4               =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>     =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=94=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4       =E2=94=82               =E2=94=82
+>     =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98          =E2=94=82       =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98
+>     =E2=94=82 Host B            =E2=94=82
+>     =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+
+The same question here for interaction of FM with CXL switch by Redfish.
+Is MCTP CCI compatible with Redfish?=20
+
+>>=20
+>> (6) Diagram 6: Multiple hosts with orhestrator
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+6-cxl-fm-multiple-hosts-with-orhestrator.pdf
+>=20
+> I'm not sure there is a need to separate the case where there
+> is an orchestrator in the loop from when there isn't.  Hence I just =
+threw one on the diagram above.
+>=20
+
+The same logic here. Application need to use some library or simple =
+subsystem that can talk
+with FM. And standalone Orchestrator could be overkill here.
+
+>>=20
+>> (7) Diagram 7: Distributed Fabric Manager (FM)
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+7-cxl-fm-distributed-fm.pdf
+>>=20
+> Looks like a set of FMs, not what I'd think of as a distributed FM.
+> Only makes sense to me if more like this...=20
+
+I think I don=E2=80=99t follow here what you mean by distributed FM. I =
+see the same set of FMs on your
+version of diagram. What=E2=80=99s the difference? :)
+
+>=20
+>     =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BA   Orchestrator =
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+> =E2=94=82   =E2=94=82   =E2=96=B2                  =E2=94=82           =
+                              =E2=94=82
+> =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98       =
+                                  =E2=94=82
+> =E2=94=82       =E2=94=82          =E2=94=82                           =
+                      =E2=94=82
+> =E2=94=82       =E2=94=82          =E2=94=82            =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90                           =E2=94=82
+> =E2=94=82       =E2=94=82          =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA  FM1   =E2=94=82     =
+                      =E2=94=82
+> =E2=94=82       =E2=94=82                       =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98                           =E2=94=82
+> =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90              =E2=94=82           =
+                    =E2=94=82
+> =E2=94=82 =E2=94=82     =E2=94=82             =E2=94=82       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90 =E2=94=82
+> =E2=94=82 =E2=94=82     =E2=94=82         =E2=94=8C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4       =E2=94=82      =E2=94=82        =E2=94=82   =E2=94=82=
+                =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82     =E2=94=82         =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=
+=E2=94=80=E2=94=90      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4    =
+   =E2=94=82  =E2=94=82 Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82=
+ =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82 =E2=94=82 APP  =E2=94=82          =E2=94=82       =
+=E2=94=82  =E2=94=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=8C=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=A4       =E2=94=82  =E2=94=82 or MCTP=E2=94=82   =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82 =
+=E2=94=82
+> =E2=94=82 =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=98      =E2=94=82RP1=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=90 =E2=94=82  =E2=94=82   CCI  =E2=94=82   =E2=94=82=
+   =E2=94=82 MLD 1          =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82               =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4     =E2=94=82 =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98 =E2=94=82
+> =E2=94=82 =E2=94=82 Host A            =E2=94=82     =E2=94=82 =E2=94=82 =
+         =E2=94=82    =E2=94=82                      =E2=94=82
+> =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=82 =E2=94=82          =
+=E2=94=82    =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=90 =E2=94=82
+> =E2=94=82                           =E2=94=82 =E2=94=82          =E2=94=82=
+    =E2=94=82   =E2=94=82                =E2=94=82 =E2=94=82
+> =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90     =E2=94=82 =E2=94=82          =
+=E2=94=82    =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82                   =E2=94=82     =E2=94=82 =E2=94=82 =
+         =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82 =
+=E2=94=82
+> =E2=94=82 =E2=94=82               =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4     =E2=94=82 =E2=94=82               =E2=94=9C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82=
+ =E2=94=82
+> =E2=94=82 =E2=94=82               =E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=A4               =E2=94=
+=82   =E2=94=82                =E2=94=82 =E2=94=82
+> =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4    =
+ =E2=94=82 =E2=94=82 SWITCH 1      =E2=94=82   =E2=94=82 MLD 2          =
+=E2=94=82 =E2=94=82
+> =E2=94=94=E2=94=80=E2=94=BC=E2=94=80=E2=94=A4 APP  =E2=94=82          =
+=E2=94=82     =E2=94=82 =E2=94=82               =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98 =E2=94=82
+>   =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=8C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4     =E2=94=82 =E2=94=82               =E2=94=82          =
+            =E2=94=82
+>   =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98      =E2=94=82RP1=E2=94=9C=E2=94=80=E2=94=80=E2=94=90  =E2=94=
+=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=98                      =E2=94=82
+>   =E2=94=82               =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+ =E2=94=82  =E2=94=82                                        =E2=94=82
+>   =E2=94=82 Host B            =E2=94=82  =E2=94=82  =E2=94=82          =
+                              =E2=94=82
+>   =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98  =E2=94=82  =E2=94=82         =
+                               =E2=94=82
+>                          =E2=94=82  =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90                           =E2=94=82
+>                          =E2=94=82  =E2=94=82   =E2=94=82  FM2   =
+=E2=97=84=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+>                          =E2=94=82  =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98
+>                          =E2=94=82  =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90
+>                          =E2=94=82  =E2=94=82 =E2=94=82  =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+>                          =E2=94=82  =E2=94=82 =E2=94=82  =E2=94=82 =
+Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>                          =E2=94=82  =E2=94=94=E2=94=80=E2=94=A4  =E2=94=82=
+   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>                          =E2=94=82    =E2=94=82  =E2=94=82 or MCTP=E2=94=
+=82   =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82=
+
+>                          =E2=94=82    =E2=94=82  =E2=94=82   CCI  =E2=94=
+=82   =E2=94=82   =E2=94=82 MLD 3          =E2=94=82
+>                          =E2=94=82    =E2=94=82  =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>                          =E2=94=82    =E2=94=82          =E2=94=82    =
+=E2=94=82   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=90
+>                          =E2=94=82    =E2=94=82          =E2=94=82    =
+=E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =
+=E2=94=82
+>                          =E2=94=82    =E2=94=82          =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>                          =E2=94=82    =E2=94=82               =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>                          =E2=94=82    =E2=94=82               =E2=94=82 =
+  =E2=94=82                =E2=94=82
+>                          =E2=94=82    =E2=94=82 SWITCH 2      =E2=94=82 =
+  =E2=94=82 MLD 4          =E2=94=82
+>                          =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4               =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>                               =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98
+>=20
+>> (8) Diagram 8: Layered Fabric Manager (FM) and separate orchestrator
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+8-cxl-fm-layered-fm-and-separate-orchestrator.pdf
+>=20
+> I don't follow the layered part on this diagram.  My interpretation =
+would
+> be something like.
+>=20
+
+Yeah, your version looks more logical. But top FM and bottom FM sounds =
+slightly not
+obvious. Maybe, we need to name top FM as root FM and bottom FM as leaf =
+FM?
+However, leaf FM sounds confusing too.
+
+But why do we need top FM at all? I considered Orchestrator as root of =
+hierarchy that
+can keep the knowledge about all FMs. Am I wrong here?
+
+
+>=20
+>       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90
+> =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA   =
+Orchestrator =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA TOP FM =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+> =E2=94=82     =E2=94=82   =E2=96=B2                  =E2=94=82    =E2=94=
+=82        =E2=94=82                              =E2=94=82
+> =E2=94=82     =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98                              =E2=94=82
+> =E2=94=82         =E2=94=82                            =E2=94=82       =
+                           =E2=94=82
+> =E2=94=82         =E2=94=82                       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90                              =E2=94=82
+> =E2=94=82         =E2=94=82                       =E2=94=82 BOTTOM =E2=94=
+=82                              =E2=94=82
+> =E2=94=82         =E2=94=82                       =E2=94=82  FM1   =E2=94=
+=82                              =E2=94=82
+> =E2=94=82         =E2=94=82                       =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98                              =E2=94=82
+> =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90              =E2=94=82           =
+                       =E2=94=82
+> =E2=94=82   =E2=94=82     =E2=94=82             =E2=94=82       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90    =E2=94=82
+> =E2=94=82   =E2=94=82     =E2=94=82         =E2=94=8C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4       =E2=94=82      =E2=94=82        =E2=94=82   =E2=94=82=
+                =E2=94=82    =E2=94=82
+> =E2=94=82   =E2=94=82     =E2=94=82         =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82    =E2=94=82=
+
+> =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=
+=80=E2=94=80=E2=94=90      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+      =E2=94=82  =E2=94=82 Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=
+=82 =E2=94=82    =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=82 APP  =E2=94=82          =E2=94=82      =
+ =E2=94=82  =E2=94=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82    =E2=94=82=
+
+> =E2=94=82   =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=8C=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=A4       =E2=94=82  =E2=94=82 or MCTP=E2=94=82   =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82   =
+ =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=98      =E2=94=82RP1=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=90 =E2=94=82  =E2=94=82   CCI  =E2=94=82   =E2=94=
+=82   =E2=94=82 MLD 1          =E2=94=82    =E2=94=82
+> =E2=94=82   =E2=94=82               =E2=94=94=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=A4     =E2=94=82 =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98    =E2=94=82
+> =E2=94=82   =E2=94=82 Host A            =E2=94=82     =E2=94=82 =E2=94=82=
+          =E2=94=82    =E2=94=82                         =E2=94=82
+> =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=82 =E2=94=82          =
+=E2=94=82    =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=90    =E2=94=82
+> =E2=94=82                             =E2=94=82 =E2=94=82          =E2=94=
+=82    =E2=94=82   =E2=94=82                =E2=94=82    =E2=94=82
+> =E2=94=82                             =E2=94=82 =E2=94=82          =E2=94=
+=82    =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=90 =E2=94=82    =E2=94=82
+> =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90     =E2=94=82 =E2=94=82          =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82    =E2=94=
+=82
+> =E2=94=82   =E2=94=82               =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=A4     =E2=94=82 =E2=94=82               =E2=94=9C=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =
+=E2=94=82    =E2=94=82
+> =E2=94=82   =E2=94=82               =E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=A4               =
+=E2=94=82   =E2=94=82                =E2=94=82    =E2=94=82
+> =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=90      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+    =E2=94=82 =E2=94=82 SWITCH 1      =E2=94=82   =E2=94=82 MLD 2        =
+  =E2=94=82    =E2=94=82
+> =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=A4 APP  =
+=E2=94=82          =E2=94=82     =E2=94=82 =E2=94=82               =E2=94=82=
+   =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98    =E2=94=82
+>     =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=8C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4     =E2=94=82 =E2=94=82               =E2=94=82          =
+               =E2=94=82
+>     =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98      =E2=94=82RP1=E2=94=9C=E2=94=80=E2=94=80=E2=94=90  =E2=94=
+=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=98                         =E2=94=82
+>     =E2=94=82               =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4=
+  =E2=94=82  =E2=94=82                                           =E2=94=82=
+
+>     =E2=94=82 Host B            =E2=94=82  =E2=94=82  =E2=94=82        =
+                                   =E2=94=82
+>     =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98  =E2=94=82  =E2=94=82      =
+                                     =E2=94=82
+>                            =E2=94=82  =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90                              =E2=94=82
+>                            =E2=94=82  =E2=94=82   =E2=94=82 BOTTOM =E2=94=
+=82                              =E2=94=82
+>                            =E2=94=82  =E2=94=82   =E2=94=82  FM2   =
+=E2=97=84=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+>                            =E2=94=82  =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98
+>                            =E2=94=82  =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90
+>                            =E2=94=82  =E2=94=82 =E2=94=82  =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+>                            =E2=94=82  =E2=94=82 =E2=94=82  =E2=94=82 =
+Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>                            =E2=94=82  =E2=94=94=E2=94=80=E2=94=A4  =E2=94=
+=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>                            =E2=94=82    =E2=94=82  =E2=94=82 or =
+MCTP=E2=94=82   =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4            =
+    =E2=94=82
+>                            =E2=94=82    =E2=94=82  =E2=94=82   CCI  =
+=E2=94=82   =E2=94=82   =E2=94=82 MLD 3          =E2=94=82
+>                            =E2=94=82    =E2=94=82  =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>                            =E2=94=82    =E2=94=82          =E2=94=82   =
+ =E2=94=82   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=90
+>                            =E2=94=82    =E2=94=82          =E2=94=82   =
+ =E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90=
+ =E2=94=82
+>                            =E2=94=82    =E2=94=82          =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>                            =E2=94=82    =E2=94=82               =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>                            =E2=94=82    =E2=94=82 SWITCH 2      =E2=94=82=
+   =E2=94=82 MLD 4          =E2=94=82
+>                            =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=A4               =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>                                 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98
+>>=20
+>> (9) Diagram 9: BMC based layered Fabric Manager (FM)
+>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+9-cxl-fm-bmc-based-layered-fm.pdf
+>=20
+> I don't follow what the BMC is in this diagram.
+>=20
+> The BMC is just a (cheap) host that happens to have some elements of =
+the overall management
+> infrastructure on it.  Let it be any of the FMs floating around on =
+their own in the
+> diagrams above.  The diagram immediately above might be built with 3 =
+BMCs or
+> as a single BMC like this...
+>=20
+>      =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+>  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BA   Orchestrator       =
+=E2=94=82
+>  =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=96=B2=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98    =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90
+>  =E2=94=82       =E2=94=82          =E2=94=82            =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+>  =E2=94=82       =E2=94=82          =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA=E2=94=80=E2=94=A4FM  =
+=E2=94=82 =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+>  =E2=94=82       =E2=94=82                       =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=98 =E2=94=82         =
+                  =E2=94=82
+>  =E2=94=82       =E2=94=82                       =E2=94=82BMC =E2=94=82 =
+  =E2=94=82                           =E2=94=82
+>  =E2=94=82       =E2=94=82                       =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=98                           =E2=94=82
+>  =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90              =E2=94=82           =
+                    =E2=94=82
+>  =E2=94=82 =E2=94=82     =E2=94=82             =E2=94=82       =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90 =E2=94=82
+>  =E2=94=82 =E2=94=82     =E2=94=82         =E2=94=8C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4       =E2=94=82      =E2=94=82        =E2=94=82   =E2=94=82=
+                =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82     =E2=94=82         =
+=E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=A4  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=
+=80=E2=94=80=E2=94=90      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+      =E2=94=82  =E2=94=82 Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=BC=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=
+=82 =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82 =E2=94=82 APP  =E2=94=82          =E2=94=82       =
+=E2=94=82  =E2=94=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=8C=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=A4       =E2=94=82  =E2=94=82 or MCTP=E2=94=82   =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82 =
+=E2=94=82
+>  =E2=94=82 =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=98      =E2=94=82RP1=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=90 =E2=94=82  =E2=94=82   CCI  =E2=94=82   =E2=94=
+=82   =E2=94=82 MLD 1          =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82               =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4     =E2=94=82 =E2=94=82  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98 =E2=94=82
+>  =E2=94=82 =E2=94=82 Host A            =E2=94=82     =E2=94=82 =E2=94=82=
+          =E2=94=82    =E2=94=82                      =E2=94=82
+>  =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98     =E2=94=82 =E2=94=82          =
+=E2=94=82    =E2=94=82   =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=90 =E2=94=82
+>  =E2=94=82                           =E2=94=82 =E2=94=82          =E2=94=
+=82    =E2=94=82   =E2=94=82                =E2=94=82 =E2=94=82
+>  =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90     =E2=94=82 =E2=94=82          =
+=E2=94=82    =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82                   =E2=94=82     =E2=94=82 =E2=94=82=
+          =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82 =
+=E2=94=82
+>  =E2=94=82 =E2=94=82               =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4     =E2=94=82 =E2=94=82               =E2=94=9C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82=
+ =E2=94=82
+>  =E2=94=82 =E2=94=82               =E2=94=82RP0=E2=94=9C=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=A4               =E2=94=
+=82   =E2=94=82                =E2=94=82 =E2=94=82
+>  =E2=94=82 =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=90      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+    =E2=94=82 =E2=94=82 SWITCH 1      =E2=94=82   =E2=94=82 MLD 2        =
+  =E2=94=82 =E2=94=82
+>  =E2=94=94=E2=94=80=E2=94=BC=E2=94=80=E2=94=A4 APP  =E2=94=82          =
+=E2=94=82     =E2=94=82 =E2=94=82               =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98 =E2=94=82
+>    =E2=94=82 =E2=94=82      =E2=94=82      =E2=94=8C=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=A4     =E2=94=82 =E2=94=82               =E2=94=82          =
+            =E2=94=82
+>    =E2=94=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98      =E2=94=82RP1=E2=94=9C=E2=94=80=E2=94=80=E2=94=90  =E2=94=
+=82 =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=98                      =E2=94=82
+>    =E2=94=82               =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=A4=
+  =E2=94=82  =E2=94=82                                        =E2=94=82
+>    =E2=94=82 Host B            =E2=94=82  =E2=94=82  =E2=94=82         =
+                               =E2=94=82
+>    =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98  =E2=94=82  =E2=94=82      =
+                                  =E2=94=82
+>                           =E2=94=82  =E2=94=82        =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98
+>                           =E2=94=82  =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=90   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=90
+>                           =E2=94=82  =E2=94=82 =E2=94=82  =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=96=BC=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=90   =E2=94=82   =E2=94=82 =
+=E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =E2=94=82
+>                           =E2=94=82  =E2=94=82 =E2=94=82  =E2=94=82 =
+Switch =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>                           =E2=94=82  =E2=94=94=E2=94=80=E2=94=A4  =E2=94=
+=82   CCI  =E2=94=82   =E2=94=82   =E2=94=82 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>                           =E2=94=82    =E2=94=82  =E2=94=82 or MCTP=E2=94=
+=82   =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                =E2=94=82=
+
+>                           =E2=94=82    =E2=94=82  =E2=94=82   CCI  =E2=94=
+=82   =E2=94=82   =E2=94=82 MLD 3          =E2=94=82
+>                           =E2=94=82    =E2=94=82  =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=AC=E2=94=98   =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>                           =E2=94=82    =E2=94=82          =E2=94=82    =
+=E2=94=82   =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=90
+>                           =E2=94=82    =E2=94=82          =E2=94=82    =
+=E2=94=82   =E2=94=82 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90 =
+=E2=94=82
+>                           =E2=94=82    =E2=94=82          =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=BC=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=BC=E2=94=80=E2=96=BAFM Owned LD =E2=94=82 =E2=94=82
+>                           =E2=94=82    =E2=94=82               =
+=E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=A4 =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98 =E2=94=82
+>                           =E2=94=82    =E2=94=82 SWITCH 2      =E2=94=82=
+   =E2=94=82 MLD 4          =E2=94=82
+>                           =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=A4               =E2=94=82   =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=98
+>                                =
+=E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=98
+>>=20
+>> So, have I missed something?
+>> Should we correct something on diagrams?
+>> Does it look good?
+>=20
+> Thare are far too many things we should perhaps show on these =
+diagrams, but
+> I suspect it will mostly fall out of any layered design.
+>=20
+> We could draw one incredibly complex diagram that does everything :)
+>=20
+
+I believe several simple diagrams are better than one really complex =
+one. :)
+
+> *crossed fingers the ascii art fun above looks ok*
+>=20
+> Thanks for getting this started btw! I was completely failing to start
+> whereas once there was a proposal it became easier to have a go!
+>=20
+
+My pleasure. :)
+
+Thanks,
+Slava.
+
