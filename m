@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A091C74A44
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC16BC6FA99
 	for <linux-cxl@archiver.kernel.org>; Fri, 10 Mar 2023 18:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbjCJStb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Mar 2023 13:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37374 "EHLO
+        id S230325AbjCJStc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 10 Mar 2023 13:49:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230325AbjCJStb (ORCPT
+        with ESMTP id S229589AbjCJStb (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Mar 2023 13:49:31 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52329111B07
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Mar 2023 10:49:29 -0800 (PST)
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78DE180E26
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Mar 2023 10:49:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678474169; x=1710010169;
+  t=1678474170; x=1710010170;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=l5qydJc2qTxClYAA3khPwiAT8pVGyO4LrUT5kTe7wxc=;
-  b=aN5g1dVPSbFExoqv07IpEq6U3Z9XLKog97Htqtn/necaRpvy2gvzkgmu
-   OBQUM8+2qcsTCstyOjUc6GfHpz0WuYTk2cZVKC0wU9UYzeX69ZfHA6dwV
-   oL/+dbyZ5GDAZcgsa9izS/yrwemc5vjU2rMogHoSBL4B7skSBTrpAB6YQ
-   kzpojgGH2Q91vl5bNzKu0aj/y0wlfSK3ZGAGAXgKGd2+dZ6ZDtBlUXPnS
-   IhJmhPzoXp64FZzoAuSKFLT7cHRt5cmZUsVGsOx3M9aB6vFPlgdyhEPUC
-   yGooDIJHy661YYbRQwraUiL269Wu7cpQGjA6fTjDLvFN9RK/WsWmrnq5h
+  bh=nDk3pV3liVAh1iI8uSZxNz8iRJV5YRcR+k+NYvbbV/M=;
+  b=QKgHzWFJtxiA02Cx4PfmoWFS8vi4lMZ6z2WzDZ+xt1n4iPVZ/bvQYThT
+   Rk0q6Kzo4pd07pLR7YK3MogPCyWY0zbu30Fn+PjU5r77LGVzGIUxPzqkZ
+   eH7by6Pkedu+uaMaHNtrTDeWvLLkhnJu7TvynUSwGCmJBTSRnwCjRtIWH
+   5LDLOtxlz8/Ex7e1sGrB/x9VFAHh1QLIw9CJVPTzQbYEoaUFNVXdo4rcV
+   sylce9zDCoFrbduQhpGLvZ1IA6d928mr8e7Yud0ISMdz5UPNlixYJrN9D
+   TG4mjBpla8qo04EmB5q+gebI0eLFlMT/fGa0Y5eZvp8+al5t4zVoNgPfl
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="316452314"
+X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="336824153"
 X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="316452314"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 10:49:27 -0800
+   d="scan'208";a="336824153"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 10:49:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="680292302"
+X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="627906736"
 X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="680292302"
+   d="scan'208";a="627906736"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.255.228.62])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 10:49:27 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 10:49:29 -0800
 From:   alison.schofield@intel.com
 To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -47,9 +47,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     Alison Schofield <alison.schofield@intel.com>,
         linux-cxl@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v4 3/8] tools/testing/cxl: Mock the Inject Poison mailbox command
-Date:   Fri, 10 Mar 2023 10:49:04 -0800
-Message-Id: <3326dba0f9522d081284606d233cfd62ff4e1330.1678471465.git.alison.schofield@intel.com>
+Subject: [PATCH v4 5/8] tools/testing/cxl: Use injected poison for get poison list
+Date:   Fri, 10 Mar 2023 10:49:06 -0800
+Message-Id: <af4aca72c45d33b5941de2c0b85b0c0c99ab5f34.1678471465.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <cover.1678471465.git.alison.schofield@intel.com>
 References: <cover.1678471465.git.alison.schofield@intel.com>
@@ -61,142 +61,96 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Alison Schofield <alison.schofield@intel.com>
 
-Mock the injection of poison by storing the device:address entries in
-mock_poison_list[]. Enforce a limit of 8 poison injections per memdev
-device and 128 total entries for the cxl_test mock driver.
+Prior to poison inject support, the mock of 'Get Poison List'
+returned a poison list containing a single mocked error record.
 
-Introducing the mock_poison[] list here, makes it available for use in
-the mock of Clear Poison, and the mock of Get Poison List.
+Following the addition of poison inject and clear support to the
+mock driver, use the mock_poison_list[], rather than faking an
+error record. Mock_poison_list[] list tracks the actual poison
+inject and clear requests issued by userspace.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- tools/testing/cxl/test/mem.c | 77 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+ tools/testing/cxl/test/mem.c | 59 ++++++++++++++++++++++++------------
+ 1 file changed, 40 insertions(+), 19 deletions(-)
 
 diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 2fa9c18d4c2c..4fca886e2a7c 100644
+index 720147c7cb2b..9658d95236b7 100644
 --- a/tools/testing/cxl/test/mem.c
 +++ b/tools/testing/cxl/test/mem.c
-@@ -16,6 +16,9 @@
- #define DEV_SIZE SZ_2G
- #define EFFECT(x) (1U << x)
+@@ -912,31 +912,52 @@ static struct mock_poison {
+ 	u64 dpa;
+ } mock_poison_list[MOCK_INJECT_TEST_MAX];
  
-+#define MOCK_INJECT_DEV_MAX 8
-+#define MOCK_INJECT_TEST_MAX 128
-+
- static struct cxl_cel_entry mock_cel[] = {
- 	{
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_SUPPORTED_LOGS),
-@@ -45,6 +48,10 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_POISON),
- 		.effect = cpu_to_le16(0),
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_INJECT_POISON),
-+		.effect = cpu_to_le16(0),
-+	},
- };
- 
- /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-@@ -474,6 +481,7 @@ static int mock_id(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- 			cpu_to_le64(SZ_256M / CXL_CAPACITY_MULTIPLIER),
- 		.total_capacity =
- 			cpu_to_le64(DEV_SIZE / CXL_CAPACITY_MULTIPLIER),
-+		.inject_poison_limit = cpu_to_le16(MOCK_INJECT_DEV_MAX),
- 	};
- 
- 	put_unaligned_le24(CXL_POISON_LIST_MAX, id.poison_list_max_mer);
-@@ -895,6 +903,11 @@ static int mock_health_info(struct cxl_dev_state *cxlds,
- 	return 0;
- }
- 
-+static struct mock_poison {
-+	struct cxl_dev_state *cxlds;
++static struct cxl_mbox_poison_payload_out
++*cxl_get_injected_po(struct cxl_dev_state *cxlds, u64 offset, u64 length)
++{
++	struct cxl_mbox_poison_payload_out *po;
++	int nr_records = 0;
 +	u64 dpa;
-+} mock_poison_list[MOCK_INJECT_TEST_MAX];
++
++	po = kzalloc(struct_size(po, record, MOCK_INJECT_DEV_MAX), GFP_KERNEL);
++	if (!po)
++		return NULL;
++
++	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
++		if (mock_poison_list[i].cxlds != cxlds)
++			continue;
++		if (mock_poison_list[i].dpa < offset ||
++		    mock_poison_list[i].dpa > offset + length - 1)
++			continue;
++
++		dpa = mock_poison_list[i].dpa + CXL_POISON_SOURCE_INJECTED;
++		po->record[nr_records].address = cpu_to_le64(dpa);
++		po->record[nr_records].length = cpu_to_le32(1);
++		nr_records++;
++		if (nr_records == MOCK_INJECT_DEV_MAX)
++			break;
++	}
++
++	/* Always return count, even when zero */
++	po->count = cpu_to_le16(nr_records);
++
++	return po;
++}
 +
  static int mock_get_poison(struct cxl_dev_state *cxlds,
  			   struct cxl_mbox_cmd *cmd)
  {
-@@ -923,6 +936,67 @@ static int mock_get_poison(struct cxl_dev_state *cxlds,
+ 	struct cxl_mbox_poison_payload_in *pi = cmd->payload_in;
++	struct cxl_mbox_poison_payload_out *po;
++	u64 offset = le64_to_cpu(pi->offset);
++	u64 length = le64_to_cpu(pi->length);
++	int nr_records;
+ 
+-	/* Mock one poison record at pi.offset for 64 bytes */
+-	struct {
+-		struct cxl_mbox_poison_payload_out po;
+-		struct cxl_poison_record record;
+-	} __packed mock_plist = {
+-		.po = {
+-			.count = cpu_to_le16(1),
+-		},
+-		.record = {
+-			.length = cpu_to_le32(1),
+-			.address = cpu_to_le64(le64_to_cpu(pi->offset) +
+-					       CXL_POISON_SOURCE_INJECTED),
+-		},
+-	};
++	po = cxl_get_injected_po(cxlds, offset, length);
++	nr_records = le16_to_cpu(po->count);
++	memcpy(cmd->payload_out, po, struct_size(po, record, nr_records));
++	cmd->size_out = struct_size(po, record, nr_records);
+ 
+-	if (cmd->size_out < sizeof(mock_plist))
+-		return -EINVAL;
+-
+-	memcpy(cmd->payload_out, &mock_plist, sizeof(mock_plist));
+-	cmd->size_out = sizeof(mock_plist);
  	return 0;
  }
  
-+static bool mock_poison_dev_max_injected(struct cxl_dev_state *cxlds)
-+{
-+	int count = 0;
-+
-+	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
-+		if (mock_poison_list[i].cxlds == cxlds)
-+			count++;
-+	}
-+	return (count >= MOCK_INJECT_DEV_MAX);
-+}
-+
-+static bool mock_poison_add(struct cxl_dev_state *cxlds, u64 dpa)
-+{
-+	if (mock_poison_dev_max_injected(cxlds)) {
-+		dev_dbg(cxlds->dev,
-+			"Device poison injection limit has been reached: %d\n",
-+			MOCK_INJECT_DEV_MAX);
-+		return false;
-+	}
-+
-+	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
-+		if (!mock_poison_list[i].cxlds) {
-+			mock_poison_list[i].cxlds = cxlds;
-+			mock_poison_list[i].dpa = dpa;
-+			return true;
-+		}
-+	}
-+	dev_dbg(cxlds->dev,
-+		"Mock test poison injection limit has been reached: %d\n",
-+		MOCK_INJECT_TEST_MAX);
-+
-+	return false;
-+}
-+
-+static bool mock_poison_found(struct cxl_dev_state *cxlds, u64 dpa)
-+{
-+	for (int i = 0; i < MOCK_INJECT_TEST_MAX; i++) {
-+		if (mock_poison_list[i].cxlds == cxlds &&
-+		    mock_poison_list[i].dpa == dpa)
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static int mock_inject_poison(struct cxl_dev_state *cxlds,
-+			      struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_inject_poison *pi = cmd->payload_in;
-+	u64 dpa = le64_to_cpu(pi->address);
-+
-+	if (mock_poison_found(cxlds, dpa)) {
-+		/* Not an error to inject poison if already poisoned */
-+		dev_dbg(cxlds->dev, "DPA: 0x%llx already poisoned\n", dpa);
-+		return 0;
-+	}
-+	if (!mock_poison_add(cxlds, dpa))
-+		return -ENXIO;
-+
-+	return 0;
-+}
-+
- static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct device *dev = cxlds->dev;
-@@ -980,6 +1054,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_GET_POISON:
- 		rc = mock_get_poison(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_INJECT_POISON:
-+		rc = mock_inject_poison(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
 -- 
 2.37.3
 
