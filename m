@@ -2,102 +2,131 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71704C74A4B
-	for <linux-cxl@archiver.kernel.org>; Fri, 10 Mar 2023 18:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4B6C61DA4
+	for <linux-cxl@archiver.kernel.org>; Sat, 11 Mar 2023 14:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230326AbjCJSte (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 10 Mar 2023 13:49:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
+        id S230250AbjCKOoJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 11 Mar 2023 09:44:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbjCJStd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 10 Mar 2023 13:49:33 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E2E122389
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Mar 2023 10:49:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678474172; x=1710010172;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=kFyu2vqlFHUZvKFHwe4SPyjiSc9vLazrgoQorD5ju9E=;
-  b=ewbToUwVS5Py8vjgzgarCQJu2v9bR7zN7d12wwWojmKUR4a1j8d8tNq2
-   IY2e2ptV4FUqRwBfCC4GqdNLjbwsuDdfIdqMRriLKo19babCj9Fi8J3wl
-   ysR36fsDr7yC6uouTTt6cwJdA5RZM53CqraH/5hYdLaAAxMzD/yOXvrd3
-   h0ponQI1rsGH4odbPEO+eDgD9bOJW9NX3quyLsRVvLLaufkSE4z+djzw0
-   iE8Az691gb1kFUESno8pGKkb3XMzO2nEKWpt+lxG49WQQPMN6M1c69red
-   RwvVX194kAGu4mgxxfBMvs+g3dhX3g6FIkUa6opin9PZtwbLpGLjArkR3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="336824188"
-X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="336824188"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 10:49:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="627906792"
-X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="627906792"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.255.228.62])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 10:49:31 -0800
-From:   alison.schofield@intel.com
-To:     Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S230416AbjCKOoI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 11 Mar 2023 09:44:08 -0500
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914643401B;
+        Sat, 11 Mar 2023 06:44:03 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by mailout3.hostsharing.net (Postfix) with ESMTPS id 67170102F174D;
+        Sat, 11 Mar 2023 15:44:01 +0100 (CET)
+Received: from localhost (unknown [89.246.108.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 082F560049B2;
+        Sat, 11 Mar 2023 15:44:00 +0100 (CET)
+X-Mailbox-Line: From 7a4e1f86958a79a70f29b96a92199522f08f8322 Mon Sep 17 00:00:00 2001
+Message-Id: <cover.1678543498.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Sat, 11 Mar 2023 15:40:00 +0100
+Subject: [PATCH v4 00/17] Collection of DOE material
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc:     Gregory Price <gregory.price@memverge.com>,
         Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v4 8/8] cxl/mbox: Block inject and clear poison opcodes in raw mode
-Date:   Fri, 10 Mar 2023 10:49:09 -0800
-Message-Id: <6952da15b164e18e7f26fb26631839837d9797b3.1678471465.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <cover.1678471465.git.alison.schofield@intel.com>
-References: <cover.1678471465.git.alison.schofield@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Alexey Kardashevskiy <aik@amd.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, linuxarm@huawei.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+Collection of DOE material, v4:
 
-Inject and clear poison are commands intended for debug environments,
-and can cause data corruption if issued without validation. They are
-kernel exclusive commands not available to userspace through ioctls,
-but could be submitted via the raw mode ioctl.
+Migrate to synchronous API, create mailboxes in PCI core instead of
+in drivers, relax restrictions on request/response size.
 
-Add inject and clear poison to the cxl_disabled_raw_commands[] list.
-Attempts by userspace to issue either command via the RAW ioctl fail
-with -EPERM.
+This should probably go in via the cxl tree because Dave Jiang is
+basing his cxl work for the next merge window on it.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/mbox.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+The first 6 patches are fixes, so could be applied immediately.
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 77fc811bdfed..4b5e65edbc71 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -89,6 +89,10 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
-  *
-  * CXL_MBOX_OP_[GET_]SCAN_MEDIA: The kernel provides a native error list that
-  * is kept up to date with patrol notifications and error management.
-+ *
-+ * CXL_MBOX_OP_[INJECT|CLEAR]_POISON: The kernel provides a sysfs interface
-+ * to these commands that ensures data protection of mapped resources.
-+ * See: Documentation/ABI/testing/sysfs-bus-cxl
-  */
- static u16 cxl_disabled_raw_commands[] = {
- 	CXL_MBOX_OP_ACTIVATE_FW,
-@@ -97,6 +101,8 @@ static u16 cxl_disabled_raw_commands[] = {
- 	CXL_MBOX_OP_SET_SHUTDOWN_STATE,
- 	CXL_MBOX_OP_SCAN_MEDIA,
- 	CXL_MBOX_OP_GET_SCAN_MEDIA,
-+	CXL_MBOX_OP_INJECT_POISON,
-+	CXL_MBOX_OP_CLEAR_POISON,
- };
- 
- /*
+Thanks!
+
+
+Changes v3 -> v4:
+
+* [PATCH v4 01/17] cxl/pci: Fix CDAT retrieval on big endian
+  * In pci_doe_discovery(), add request_pl_le / response_pl_le variables
+    to avoid typecasts in pci_doe_task initializer (Jonathan)
+  * In cxl_cdat_read_table(), use __le32 instead of u32 for "*data"
+    variable (Jonathan)
+  * Use sizeof(__le32) instead of sizeof(u32) (Jonathan)
+
+* [PATCH v4 03/17] cxl/pci: Handle truncated CDAT entries
+  * Check for sizeof(*entry) instead of sizeof(struct cdat_entry_header)
+    for clarity (Jonathan)
+
+* [PATCH v4 12/17] PCI/DOE: Create mailboxes on device enumeration
+  * Amend commit message with additional justification for the commit
+    (Alexey)
+
+* [PATCH v4 16/17] cxl/pci: cxl/pci: Simplify CDAT retrieval error path
+  * Newly added patch in v4 on popular request (Jonathan, Dave)
+
+* [PATCH v4 17/17] cxl/pci: Rightsize CDAT response allocation
+  * Amend commit message with spec reference to the Table Access
+    Response Header (Ira)
+  * In cxl_cdat_get_length(), check for sizeof(response) instead of
+    2 * sizeof(u32) for clarity
+
+Link to v3:
+
+https://lore.kernel.org/linux-pci/cover.1676043318.git.lukas@wunner.de/
+
+
+Dave Jiang (1):
+  cxl/pci: Simplify CDAT retrieval error path
+
+Lukas Wunner (16):
+  cxl/pci: Fix CDAT retrieval on big endian
+  cxl/pci: Handle truncated CDAT header
+  cxl/pci: Handle truncated CDAT entries
+  cxl/pci: Handle excessive CDAT length
+  PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y
+  PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y
+  PCI/DOE: Provide synchronous API and use it internally
+  cxl/pci: Use synchronous API for DOE
+  PCI/DOE: Make asynchronous API private
+  PCI/DOE: Deduplicate mailbox flushing
+  PCI/DOE: Allow mailbox creation without devres management
+  PCI/DOE: Create mailboxes on device enumeration
+  cxl/pci: Use CDAT DOE mailbox created by PCI core
+  PCI/DOE: Make mailbox creation API private
+  PCI/DOE: Relax restrictions on request and response size
+  cxl/pci: Rightsize CDAT response allocation
+
+ .clang-format           |   1 -
+ drivers/cxl/core/pci.c  | 140 +++++++---------
+ drivers/cxl/cxlmem.h    |   3 -
+ drivers/cxl/cxlpci.h    |  14 ++
+ drivers/cxl/pci.c       |  49 ------
+ drivers/pci/doe.c       | 342 ++++++++++++++++++++++++++++++----------
+ drivers/pci/pci.h       |  11 ++
+ drivers/pci/probe.c     |   1 +
+ drivers/pci/remove.c    |   1 +
+ include/linux/pci-doe.h |  62 +-------
+ include/linux/pci.h     |   3 +
+ 11 files changed, 350 insertions(+), 277 deletions(-)
+
 -- 
-2.37.3
+2.39.1
 
