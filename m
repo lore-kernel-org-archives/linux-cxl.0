@@ -2,59 +2,59 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77603C6FD1F
-	for <linux-cxl@archiver.kernel.org>; Tue, 14 Mar 2023 06:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AB8C6FD1C
+	for <linux-cxl@archiver.kernel.org>; Tue, 14 Mar 2023 06:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbjCNGWl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 14 Mar 2023 02:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
+        id S229684AbjCNG2B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 14 Mar 2023 02:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjCNGWl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Mar 2023 02:22:41 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3932388EE5
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Mar 2023 23:22:39 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id v16so13312701wrn.0
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Mar 2023 23:22:39 -0700 (PDT)
+        with ESMTP id S229616AbjCNG2A (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 14 Mar 2023 02:28:00 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1955B9D
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Mar 2023 23:27:58 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id p23-20020a05600c1d9700b003ead4835046so177991wms.0
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Mar 2023 23:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678774957;
+        d=linaro.org; s=google; t=1678775277;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=00uQYOsidjD0CPAYsiK2rWil5R/oQs5nSJAxponlgTA=;
-        b=cFmTmKFSfTtvs+d5ZkvGea5xMDHa/ALk1kmuc0n/6Gn1PJj1pCQ8mDZhsa/p0PxFol
-         C1R5Oy/JLNikBbKCT/Zeqhfj4Gh5G7s7jDKjEeYnotEwnzNWAJfrftnFxQFhLrdG/+2f
-         4qZC/3VokyFGs5j+UPJ69sKMO3pMTJHe+GW502m7TMaEvTPk6Siae3s8LL//h5lR4Rxz
-         DbKWlVAvSCfDaimteEuETDBNc38fd9H+GZ5GgFoIVNfECE4ZeVN1wxfxPmQyoSJWY5Y1
-         o9OH7fE2sAs1HBQQw7X12g6N8RkbY7pioDXcz/2bNnHJNzyoEeF9WeSpjasfNYfPdrSo
-         en9A==
+        bh=qYns6uzT2QxbBcCa0vS4G5/3NPd0+7JxpjBnyynmpEI=;
+        b=JJB5HQtsj1ZsHRO5TJfcq+imgp+ogT/jaIbiVkM/AbGfNtHTHz+JMv8xZzpZ3gXU7M
+         IJPQd6sAXBprY0FMcyK39V8zBLi7U/p9UyoggUB9xlr/SARSsvbE6UHc2ZLMexnb5mKr
+         4X2MMbbjtSxzA9NYbupghcBAdn5ZdnelpfE+5G0ZWbaSLCth4pUEx21KEjkP90i3a7T+
+         XD7xlGvdya/c8tlqEvS1Ft9id+mO4EUzlIOcdTijArLRJ0dRxZIaKrAmqaKhrD2Frx+x
+         YfHjte+sLaXlPAXibi08WD27iVKR3wzr4twkD4uNnzcEBTwpAKaeN72hgRtYDBtvByPf
+         jYiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678774957;
+        d=1e100.net; s=20210112; t=1678775277;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=00uQYOsidjD0CPAYsiK2rWil5R/oQs5nSJAxponlgTA=;
-        b=mW2FkxSapBfXjvF7Y6XSjDcBYlt6GDwMbYy3w/NWZa9uJG1hfSDSymEDLsOi+jlx03
-         HidqNpjp4BU1uNex1l9gkBJ5fMaVLkccH2RF4s0MpO2aefr4RokKbmJ2st8NFNVRIqif
-         YVPz+pdJCqv8+gq8IBNnXBeFNweNY52M0jmbvzTSeBKrxr8/oTwVEzQDNCV81l20O9BM
-         1gZ5/LYSY97FmKxE8o+SbJYtz2SCyHxmbAfaS4VgpqWvsb++KLpBKF9HoLBuh/B31iPY
-         zkeJLRuWWHHSl5f+ljr0ph9zWm6Z3RnrsZ3Q/mhgbFvO0egTZ2gwlBtmz89e+A32Vj3D
-         flCw==
-X-Gm-Message-State: AO0yUKVzE2JXEfWl2caBQDM9DB4+VmhKpjF31YLEajhmZrLgDQ7lxAGT
-        7huCgmnwYMRv0EnpCSuvFyrItA==
-X-Google-Smtp-Source: AK7set//mf30nJ/z3BT2W3nv82wuEj5l7/wwAQu9QQmFmIfZd2KAuJVNKxMFlSKbZNCNOVpzvgTa9Q==
-X-Received: by 2002:a5d:5650:0:b0:2ce:98fc:f289 with SMTP id j16-20020a5d5650000000b002ce98fcf289mr7085528wrw.49.1678774957700;
-        Mon, 13 Mar 2023 23:22:37 -0700 (PDT)
+        bh=qYns6uzT2QxbBcCa0vS4G5/3NPd0+7JxpjBnyynmpEI=;
+        b=MCOMywFhA1XMtoFMaHtGpAjB2zBwTE78IZOrAlzfba/6PJbOkD3tgg6duPuZzT5qTK
+         2V2equ9SkWfbqkHjWpjMnlKlogMy0SsSuQPyvmI2JQ5EC39FmaKiiRbSdBUkKO/L6w8u
+         6loXGYoRjHGSzQTvuIuc3cK8AjHFXBfGKtDRoTiqVYqufwdXZh3x0Ux0q7cvb7JzSPrr
+         KpzvCSi2sfl3fcP904XVf6T6BxdAe+mQsbgNTvwFVo6BGGzqrU18FhdddSimSY1BrPqp
+         ixHTK44WokBWThdy2g+BskHGdvLQeAlimfres33u05xW/E8n5gcyvj6mX3js9qm32PbR
+         whCQ==
+X-Gm-Message-State: AO0yUKU9wx1uvDuGDe3RNCbnAg05ULIhbiBgA4KoJ+9LLY4CVU1O0n9H
+        QU14T8O/zXjSpzD9cF72lGhkHQ==
+X-Google-Smtp-Source: AK7set/2WV9vLrL2lxn/B2smMYJWPlqkYBtHU+khuGwNoQ8U9m4vKGkBS5HSDjLCmRiTkJDYudjifg==
+X-Received: by 2002:a05:600c:3ac9:b0:3eb:966f:5811 with SMTP id d9-20020a05600c3ac900b003eb966f5811mr13273971wms.3.1678775276901;
+        Mon, 13 Mar 2023 23:27:56 -0700 (PDT)
 Received: from [192.168.150.175] (180.red-88-28-30.dynamicip.rima-tde.net. [88.28.30.180])
-        by smtp.gmail.com with ESMTPSA id f3-20020a0560001b0300b002c559626a50sm1239393wrz.13.2023.03.13.23.22.35
+        by smtp.gmail.com with ESMTPSA id 20-20020a05600c021400b003e20970175dsm1765992wmi.32.2023.03.13.23.27.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 23:22:37 -0700 (PDT)
-Message-ID: <3e7a9151-2f41-0ac5-2b47-f264574be73f@linaro.org>
-Date:   Tue, 14 Mar 2023 07:22:32 +0100
+        Mon, 13 Mar 2023 23:27:56 -0700 (PDT)
+Message-ID: <c5332793-f062-e4e7-9579-8eeb416e57ab@linaro.org>
+Date:   Tue, 14 Mar 2023 07:27:52 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH v4 4/6] hw/cxl: QMP based poison injection support
+Subject: Re: [PATCH v4 5/6] hw/cxl: Add poison injection via the mailbox.
 Content-Language: en-US
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
@@ -71,9 +71,9 @@ Cc:     linux-cxl@vger.kernel.org, linuxarm@huawei.com,
         =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>,
         Thomas Huth <thuth@redhat.com>
 References: <20230303150908.27889-1-Jonathan.Cameron@huawei.com>
- <20230303150908.27889-5-Jonathan.Cameron@huawei.com>
+ <20230303150908.27889-6-Jonathan.Cameron@huawei.com>
 From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230303150908.27889-5-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230303150908.27889-6-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,168 +81,27 @@ List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 On 3/3/23 16:09, Jonathan Cameron wrote:
-> Inject poison using qmp command cxl-inject-poison to add an entry to the
-> poison list.
+> Very simple implementation to allow testing of corresponding
+> kernel code. Note that for now we track each 64 byte section
+> independently.  Whilst a valid implementation choice, it may
+> make sense to fuse entries so as to prove out more complex
+> corners of the kernel code.
 > 
-> For now, the poison is not returned CXL.mem reads,
-
-What do you mean?
-
-> but only via the
-> mailbox command Get Poison List.
-> 
-> See CXL rev 3.0, sec 8.2.9.8.4.1 Get Poison list (Opcode 4300h)
-> 
-> Kernel patches to use this interface here:
-> https://lore.kernel.org/linux-cxl/cover.1665606782.git.alison.schofield@intel.com/
-> 
-> To inject poison using qmp (telnet to the qmp port)
-> { "execute": "qmp_capabilities" }
-> 
-> { "execute": "cxl-inject-poison",
->      "arguments": {
->           "path": "/machine/peripheral/cxl-pmem0",
->           "start": 2048,
->           "length": 256
->      }
-> }
-> 
-> Adjusted to select a device on your machine.
-> 
-> Note that the poison list supported is kept short enough to avoid the
-> complexity of state machine that is needed to handle the MORE flag.
-> 
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
 > ---
-> v4:
->   - Widen the mask on Poison source (lower bits of the address)
->     to allow for Vendor Defined. Change will make it easier to potentially
->     add a means to inject such poison in the future. Today it has no
->     impact.
+> v4: No change
 > ---
->   hw/cxl/cxl-mailbox-utils.c  | 90 +++++++++++++++++++++++++++++++++++++
->   hw/mem/cxl_type3.c          | 56 +++++++++++++++++++++++
->   hw/mem/cxl_type3_stubs.c    |  6 +++
->   include/hw/cxl/cxl_device.h | 20 +++++++++
->   qapi/cxl.json               | 18 ++++++++
->   5 files changed, 190 insertions(+)
+>   hw/cxl/cxl-mailbox-utils.c | 41 ++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 41 insertions(+)
 
 
-> +/*
-> + * This is very inefficient, but good enough for now!
-> + * Also the payload will always fit, so no need to handle the MORE flag and
-> + * make this stateful. We may want to allow longer poison lists to aid
-> + * testing that kernel functionality.
-> + */
-> +static CXLRetCode cmd_media_get_poison_list(struct cxl_cmd *cmd,
-> +                                            CXLDeviceState *cxl_dstate,
-> +                                            uint16_t *len)
+> +static CXLRetCode cmd_media_inject_poison(struct cxl_cmd *cmd,
+> +                                          CXLDeviceState *cxl_dstate,
+> +                                          uint16_t *len)
 > +{
-> +    struct get_poison_list_pl {
-> +        uint64_t pa;
-> +        uint64_t length;
-> +    } QEMU_PACKED;
-> +
-> +    struct get_poison_list_out_pl {
-> +        uint8_t flags;
-> +        uint8_t rsvd1;
-> +        uint64_t overflow_timestamp;
-> +        uint16_t count;
-> +        uint8_t rsvd2[0x14];
-> +        struct {
-> +            uint64_t addr;
-> +            uint32_t length;
-> +            uint32_t resv;
-> +        } QEMU_PACKED records[];
-> +    } QEMU_PACKED;
-> +
-> +    struct get_poison_list_pl *in = (void *)cmd->payload;
-> +    struct get_poison_list_out_pl *out = (void *)cmd->payload;
 > +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> +    uint16_t record_count = 0, i = 0;
-> +    uint64_t query_start, query_length;
-> +    CXLPoisonList *poison_list = &ct3d->poison_list;
-> +    CXLPoison *ent;
-> +    uint16_t out_pl_len;
-> +
-> +    query_start = ldq_le_p(&in->pa);
-> +    /* 64 byte alignemnt required */
-> +    if (query_start & 0x3f) {
-> +        return CXL_MBOX_INVALID_INPUT;
-> +    }
-> +    query_length = ldq_le_p(&in->length) * 64;
-> +
-> +    QLIST_FOREACH(ent, poison_list, node) {
-> +        /* Check for no overlap */
-> +        if (ent->start >= query_start + query_length ||
-> +            ent->start + ent->length <= query_start) {
-> +            continue;
-> +        }
-> +        record_count++;
-> +    }
-> +    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
-> +    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
-> +
-> +    memset(out, 0, out_pl_len);
-> +    QLIST_FOREACH(ent, poison_list, node) {
-> +        uint64_t start, stop;
-> +
-> +        /* Check for no overlap */
-> +        if (ent->start >= query_start + query_length ||
-> +            ent->start + ent->length <= query_start) {
-> +            continue;
-> +        }
-> +
-> +        /* Deal with overlap */
-> +        start = MAX(ent->start & 0xffffffffffffffc0, query_start);
-> +        stop = MIN((ent->start & 0xffffffffffffffc0) + ent->length,
 
-~63ull or ROUND_DOWN(, 64ull) could be easier to read.
+This makes me wonder why CXLDeviceState isn't QDev based.
 
-> +                   query_start + query_length);
-> +        stq_le_p(&out->records[i].addr, start | (ent->type & 0x7));
-> +        stl_le_p(&out->records[i].length, (stop - start) / 64);
-> +        i++;
-> +    }
-> +    if (ct3d->poison_list_overflowed) {
-> +        out->flags = (1 << 1);
-> +        stq_le_p(&out->overflow_timestamp, ct3d->poison_list_overflow_ts);
-> +    }
-> +    stw_le_p(&out->count, record_count);
-> +    *len = out_pl_len;
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-
-
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 4be7d46041..9ebd680dfe 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -5,6 +5,24 @@
->   # = CXL devices
->   ##
->   
-> +##
-> +# @cxl-inject-poison:
-> +#
-> +# Poison records indicate that a CXL memory device knows that a particular
-> +# memory region may be corrupted. This may be because of locally detected
-> +# errors (e.g. ECC failure) or poisoned writes received from other components
-> +# in the system. This injection mechanism enables testing of the OS handling
-> +# of poison records which may be queried via the CXL mailbox.
-> +#
-> +# @path: CXL type 3 device canonical QOM path
-> +# @start: Start address - must be 64 byte aligned.
-> +# @length: Length of poison to inject - must be a multiple of 64 bytes.
-> +#
-> +# Since: 8.0
-
-8.1 per the cover.
-
-> +##
-> +{ 'command': 'cxl-inject-poison',
-> +  'data': { 'path': 'str', 'start': 'uint64', 'length': 'uint64' }}
-> +
-
+(Also, why include/hw/cxl/cxl_device.h is under GPL-2.0-only license?)
