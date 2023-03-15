@@ -2,91 +2,156 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110B5C61DA4
-	for <linux-cxl@archiver.kernel.org>; Wed, 15 Mar 2023 16:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF6C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Wed, 15 Mar 2023 16:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbjCOQ6I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 15 Mar 2023 12:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
+        id S230059AbjCOQ7h (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 15 Mar 2023 12:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231205AbjCOQ6H (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Mar 2023 12:58:07 -0400
+        with ESMTP id S230248AbjCOQ7g (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 15 Mar 2023 12:59:36 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E6F559F7;
-        Wed, 15 Mar 2023 09:58:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2F1730290
+        for <linux-cxl@vger.kernel.org>; Wed, 15 Mar 2023 09:59:34 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PcGHL0hYwz6J9fG;
-        Thu, 16 Mar 2023 00:36:14 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PcGkj537nz6J9r5;
+        Thu, 16 Mar 2023 00:56:29 +0800 (CST)
 Received: from localhost (10.126.171.21) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Wed, 15 Mar
- 2023 16:39:16 +0000
-Date:   Wed, 15 Mar 2023 16:39:15 +0000
+ 2023 16:59:32 +0000
+Date:   Wed, 15 Mar 2023 16:59:31 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
+To:     <alison.schofield@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        "Alexey Kardashevskiy" <aik@amd.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v4 01/17] cxl/pci: Fix CDAT retrieval on big endian
-Message-ID: <20230315163915.00004275@Huawei.com>
-In-Reply-To: <3051114102f41d19df3debbee123129118fc5e6d.1678543498.git.lukas@wunner.de>
-References: <cover.1678543498.git.lukas@wunner.de>
-        <3051114102f41d19df3debbee123129118fc5e6d.1678543498.git.lukas@wunner.de>
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v4 7/8] cxl/memdev: Make inject and clear poison cmds
+ kernel exclusive
+Message-ID: <20230315165931.00007228@Huawei.com>
+In-Reply-To: <66f6c36d20fa6ab906fe800bcf7059d1f5a552e6.1678471465.git.alison.schofield@intel.com>
+References: <cover.1678471465.git.alison.schofield@intel.com>
+        <66f6c36d20fa6ab906fe800bcf7059d1f5a552e6.1678471465.git.alison.schofield@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.126.171.21]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, 11 Mar 2023 15:40:01 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+On Fri, 10 Mar 2023 10:49:08 -0800
+alison.schofield@intel.com wrote:
 
-> The CDAT exposed in sysfs differs between little endian and big endian
-> arches:  On big endian, every 4 bytes are byte-swapped.
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> PCI Configuration Space is little endian (PCI r3.0 sec 6.1).  Accessors
-> such as pci_read_config_dword() implicitly swap bytes on big endian.
-> That way, the macros in include/uapi/linux/pci_regs.h work regardless of
-> the arch's endianness.  For an example of implicit byte-swapping, see
-> ppc4xx_pciex_read_config(), which calls in_le32(), which uses lwbrx
-> (Load Word Byte-Reverse Indexed).
+> Inject and clear poison commands are intended to be used in debug
+> mode only, and if improperly used, can lead to data corruption. The
+> kernel provides a sysfs interface that provides the protection needed
+> to issue these commands [1]
 > 
-> DOE Read/Write Data Mailbox Registers are unlike other registers in
-> Configuration Space in that they contain or receive a 4 byte portion of
-> an opaque byte stream (a "Data Object" per PCIe r6.0 sec 7.9.24.5f).
-> They need to be copied to or from the request/response buffer verbatim.
-> So amend pci_doe_send_req() and pci_doe_recv_resp() to undo the implicit
-> byte-swapping.
+> The CXL driver defines Enabled commands in its ABI.[2] Enabled means
+> that the device and the driver both support the command. If a device
+> supports inject and/or clear, those commands are flagged Enabled.
 > 
-> The CXL_DOE_TABLE_ACCESS_* and PCI_DOE_DATA_OBJECT_DISC_* macros assume
-> implicit byte-swapping.  Byte-swap requests after constructing them with
-> those macros and byte-swap responses before parsing them.
+> The ABI also defines another command flag: Exclusive. Exclusive
+> commands are reserved for kernel use. The exclusive flags can be
+> temporal, but for inject and clear, the status is permanent.
 > 
-> Change the request and response type to __le32 to avoid sparse warnings.
-> Per a request from Jonathan, replace sizeof(u32) with sizeof(__le32) for
-> consistency.
+> Document the exclusivity of Inject and Clear in the ABI kernel doc.
+> (Clean up a typo in kdoc too: 'CXL_MEM_COMMAND_FLAG_ENABLED')
 > 
-> Fixes: c97006046c79 ("cxl/port: Read CDAT table")
-> Tested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Cc: stable@vger.kernel.org # v6.0+
+> Create an exclusive commands bitmap in the memdev driver, add the
+> inject and clear poison commands, and set it in the cxl_dev_state.
+> 
+> [1] Documentation/ABI/testing/sysfs-bus-cxl
+> [2] include/uapi/linux/cxl_mem.h
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-LGTM
+Trivial whitespace issue inline.  Otherwise LGTM
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+> ---
+>  drivers/cxl/core/memdev.c    |  6 ++++++
+>  include/uapi/linux/cxl_mem.h | 21 ++++++++++++++++-----
+>  2 files changed, 22 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 5dd334c4caf2..6ca2815d5c12 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -10,6 +10,8 @@
+>  
+>  static DECLARE_RWSEM(cxl_memdev_rwsem);
+>  
+> +static __read_mostly DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+> +
+>  /*
+>   * An entire PCI topology full of devices should be enough for any
+>   * config
+> @@ -574,6 +576,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+>  	cxlmd->cxlds = cxlds;
+>  	cxlds->cxlmd = cxlmd;
+>  
+> +	set_bit(CXL_MEM_COMMAND_ID_INJECT_POISON, exclusive_cmds);
+> +	set_bit(CXL_MEM_COMMAND_ID_CLEAR_POISON, exclusive_cmds);
+> +	set_exclusive_cxl_commands(cxlds, exclusive_cmds);
+> +
+>  	cdev = &cxlmd->cdev;
+>  	rc = cdev_device_add(cdev, dev);
+>  	if (rc)
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index 86bbacf2a315..6f9ae244f7fd 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -74,17 +74,28 @@ static const struct {
+>   * @id: ID number for the command.
+>   * @flags: Flags that specify command behavior.
+>   *
+> - *         CXL_MEM_COMMAND_FLAG_USER_ENABLED
+> + *         CXL_MEM_COMMAND_FLAG_ENABLED
+>   *
+>   *         The given command id is supported by the driver and is supported by
+>   *         a related opcode on the device.
+>   *
+>   *         CXL_MEM_COMMAND_FLAG_EXCLUSIVE
+>   *
+> - *         Requests with the given command id will terminate with EBUSY as the
+> - *         kernel actively owns management of the given resource. For example,
+> - *         the label-storage-area can not be written while the kernel is
+> - *         actively managing that space.
+> + *	   The given command id is for kernel exclusive use and is not
+
+Diff gave away an inconsistency here via it's alignment.
+Probably just replace the tab with spaces to match previous code.
+
+
+> + *	   available to userspace. Requests will terminate with EBUSY.
+> + *
+> + *	   The exclusive flag may be temporal, and only set while the
+> + *	   kernel actively owns management of the given resource. For
+> + *	   example, the label-storage-area can not be written while the
+> + *	   kernel is actively managing that space.
+> + *
+> + *	   The exclusive flag can be permanent, as in commands that can
+> + *	   never be issued through the ioctl interface.
+> + *
+> + *	   INJECT_POISON and CLEAR_POISON are permanently kernel exclusive.
+> + *	   They are supported through a sysfs interface that validates the
+> + *	   safety of each command based on the state of the memdev.
+> + *	   See: Documentation/ABI/testing/sysfs-bus-cxl
+>   *
+>   * @size_in: Expected input size, or ~0 if variable length.
+>   * @size_out: Expected output size, or ~0 if variable length.
+
