@@ -2,97 +2,175 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC833C6FD1F
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Mar 2023 20:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236F8C7618A
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Mar 2023 20:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbjCPU0X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Mar 2023 16:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
+        id S230306AbjCPUoF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Mar 2023 16:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbjCPU0W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Mar 2023 16:26:22 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF0904B822;
-        Thu, 16 Mar 2023 13:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678998381; x=1710534381;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=N/UV/JGFwalfx0oPNUccNM6ZJrQ5XofHq51SxDHotNo=;
-  b=l7/NVFHKiFju+nCZgHvb8cKrfW4OXOAodpuI6aIaglKd8WfeHZwtTr9V
-   g1xT6z2ch8sXcoYFAbV3JvwCBMnq0LzO1ZrnOmTVNya7izZSlcy7CGLFJ
-   Ar3q2NaBlZBmLdcH++PpEfiHB1TOnc00y+MbIWpRaxBAa+bDmoXYh56mb
-   YCkwi0yzKl+OZiWpw9tjX432XefEApWLiYHIIlSwgOfEl5KRrUrSCv/2a
-   E0DYkFsf7iAx7dX0K6Nte2499PEYbBmVjGNydkN8m+rfb6aINgT797AXh
-   8ia57Fg12/puUpB6CM5iGWDDotbWJ/cMlhtst0L5BnzZ7qkIgp1bUbD3Q
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="424376014"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="424376014"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 13:26:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="803874716"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="803874716"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.182.83]) ([10.213.182.83])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 13:26:20 -0700
-Message-ID: <b7a0b5c0-61a0-9843-09a6-3c4c606221be@intel.com>
-Date:   Thu, 16 Mar 2023 13:26:20 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] ACPI: APEI: EINJ: Add CXL error types
-Content-Language: en-US
-To:     Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patches@lists.linux.dev
-References: <20230314004611.48583-1-tony.luck@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230314004611.48583-1-tony.luck@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S229701AbjCPUoE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Mar 2023 16:44:04 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA2DE2A14F
+        for <linux-cxl@vger.kernel.org>; Thu, 16 Mar 2023 13:43:38 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id x1so3250115qtr.7
+        for <linux-cxl@vger.kernel.org>; Thu, 16 Mar 2023 13:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1678999418;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sc6swQhb68yJtfW+drht1iCVBwdNeIL7MkstjP5wXKo=;
+        b=HN1hJfzGjT1pJnP1Lwcjj0tCopWtxTRQAB5uHBPYVvK0Uv4IyafxHmjSVoxlpFi9Uj
+         XELxEQ869VKYus4pQbzINp0vzq5RClwvotvyK7l83l2ZsjhQMKbgPtXVZCuKvoxrmKla
+         hi2686o/gT38LFH+Y+A265Akjz1my5YJe4HZ8QV1AgoUpt9YB8898TIOA01n5JcRIacC
+         /t44iw+OhjjlqYQfcQ5mmV6CcKX1Ra3uJ7xGl+RvYh8e1MFDB4Y69Ww8Z2HrhtexHzGZ
+         6U34i9hUoCIwNJtl8YcIe6MDELi2kmNeYR3znocZlEk3/oJWA/ECUtzIFdfxYgGmYHXF
+         VIjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678999418;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sc6swQhb68yJtfW+drht1iCVBwdNeIL7MkstjP5wXKo=;
+        b=BDvULYU3TrRLAodAp19NdI2OC+f22KaAd1F81gaxnvmWSEGtBt0Ljz/HC5NGGHs2WG
+         IW3TedXiFLdJIsbvZHGBUS6r5nHyELdA6M3wzyi+xm2Uabr2i0gfpHgGIQIwONP0zaWg
+         29iNYFwXRTUyqVa+Cw6sOB3O6yjBjt2/7SXAtkapcCSx7tRbHb0wR8n9hOkTAFcPBy+H
+         T7EKWbMhvcN1Xan8AcM0pE1vLDVHBcRJ7Ve7/aQM7xY4mZyRsQV/FRKnUm95DkQhwSzd
+         fxYLdVReHh2Izuacm2NU8FgliCA+eJLgkGBx6PYp/c4I69VgBcz9qkR5KwZS+TWPFh7n
+         KFrQ==
+X-Gm-Message-State: AO0yUKVINwZ+JBxlfWUh8OjSBj+tPz9rgAOj2P8u2F8mO9GVAXIHv6+I
+        8YNDPLR6Xz0LMsF2WrJLexFdrA==
+X-Google-Smtp-Source: AK7set+edYIIsPrYAkmna+sJazz+LGumAoJ5gXPJPI3ZVP1+MlbhS8g/gBp/sM5wHHUK4R5hOlJLuQ==
+X-Received: by 2002:ac8:5903:0:b0:3b9:cd2a:f13d with SMTP id 3-20020ac85903000000b003b9cd2af13dmr8593759qty.59.1678999418019;
+        Thu, 16 Mar 2023 13:43:38 -0700 (PDT)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id e12-20020a05620a014c00b0073b27323c6dsm219555qkn.136.2023.03.16.13.43.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Mar 2023 13:43:37 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: Re: [External] CXL Fabric Manager (FM) architecture diagrams
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20230310120126.000057b9@Huawei.com>
+Date:   Thu, 16 Mar 2023 13:43:25 -0700
+Cc:     Viacheslav Dubeyko <slava@dubeyko.com>, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C6DF19E3-B5BB-47AE-8234-C6F0C9EF7C63@bytedance.com>
+References: <20230306185913.1060918-1-slava@dubeyko.com>
+ <20230307172105.00006132@Huawei.com>
+ <F6C3F73D-904C-4667-AB97-E12E64F4681F@bytedance.com>
+ <20230310120126.000057b9@Huawei.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Hi Jonathan,
+
+> On Mar 10, 2023, at 4:01 AM, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>=20
+> On Thu, 9 Mar 2023 14:28:51 -0800
+> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
+>=20
+>>> On Mar 7, 2023, at 9:21 AM, Jonathan Cameron =
+<Jonathan.Cameron@huawei.com> wrote:
+>>>=20
+>>> On Mon,  6 Mar 2023 10:59:13 -0800
+>>> Viacheslav Dubeyko <slava@dubeyko.com> wrote:
+>>>=20
+>>>> Hi Jonathan,
+>>>>=20
+>>>> You can find diagram online now:
+>>>>=20
+>>>> (1) Diagram 1: single host with Fabric Manager (FM)
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+1-cxl-fm-single-host-with-fm.pdf =20
+>>>=20
+
+Diagram 1 has been reworked.
+
+>>=20
+>>>>=20
+>>>> (2) Diagram 2: single host with orchestrator
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+2-cxl-fm-single-host-with-orhestrator.pdf =20
+>>>=20
+
+Diagram 2 has been reworked.
 
 
-On 3/13/23 5:46 PM, Tony Luck wrote:
-> ACPI 6.5 added six new error types for CXL. See chapter 18
-> table 18.30.
-> 
-> Add strings for the new types so that Linux will list them in the
-> /sys/kernel/debug/apei/einj/available_error_types file.
-> 
-> It seems no other changes are needed. Linux already accepts
-> the CXL codes (on a BIOS that advertises them).
-> 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
+>>>>=20
+>>>> (3) Diagram3: Multi-headed device
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+3-cxl-fm-multi-headed-device.pdf =20
+>>>=20
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Diagram 3 has been reworked.
 
-> ---
->   drivers/acpi/apei/einj.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
-> index b4373e575660..39bee5a067cc 100644
-> --- a/drivers/acpi/apei/einj.c
-> +++ b/drivers/acpi/apei/einj.c
-> @@ -584,6 +584,12 @@ static const char * const einj_error_type_string[] = {
->   	"0x00000200\tPlatform Correctable\n",
->   	"0x00000400\tPlatform Uncorrectable non-fatal\n",
->   	"0x00000800\tPlatform Uncorrectable fatal\n",
-> +	"0x00001000\tCXL.cache Protocol Correctable\n",
-> +	"0x00002000\tCXL.cache Protocol Uncorrectable non-fatal\n",
-> +	"0x00004000\tCXL.cache Protocol Uncorrectable fatal\n",
-> +	"0x00008000\tCXL.mem Protocol Correctable\n",
-> +	"0x00010000\tCXL.mem Protocol Uncorrectable non-fatal\n",
-> +	"0x00020000\tCXL.mem Protocol Uncorrectable fatal\n",
->   };
->   
->   static int available_error_type_show(struct seq_file *m, void *v)
+>>>> (4) Diagram 4: Multi-headed device + Orchestrator
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+4-cxl-fm-multi-headed-device-orchestrator.pdf =20
+
+Diagram 4 has been reworked.
+
+>>>>=20
+>>>> (5) Diagram5: Multiple hosts with Fabric Manager (FM)
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+5-cxl-fm-multiple-hosts-with-fm.pdf =20
+>>>=20
+
+Diagram 5 has been reworked.
+
+>>>>=20
+>>>> (6) Diagram 6: Multiple hosts with orhestrator
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+6-cxl-fm-multiple-hosts-with-orhestrator.pdf=20
+>>>=20
+
+
+Diagram 6 has been removed.
+
+>>>>=20
+>>>> (7) Diagram 7: Distributed Fabric Manager (FM)
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+7-cxl-fm-distributed-fm.pdf
+>>>>=20
+
+Diagram 7 is Diagram 6 now. And it=E2=80=99s reworked.
+
+>>>> (8) Diagram 8: Layered Fabric Manager (FM) and separate =
+orchestrator
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+8-cxl-fm-layered-fm-and-separate-orchestrator.pdf =20
+>>>=20
+
+Diagram 8 is Diagram 7 now. And it=E2=80=99s reworked.
+
+>>>> (9) Diagram 9: BMC based layered Fabric Manager (FM)
+>>>> =
+https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
+9-cxl-fm-bmc-based-layered-fm.pdf =20
+>>>=20
+
+Diagram 9 is Diagram 8 now. And it=E2=80=99s reworked.
+
+Please, check the online version of diagrams and
+let me know if I need to rework any diagram.
+
+Thanks,
+Slava.
+
