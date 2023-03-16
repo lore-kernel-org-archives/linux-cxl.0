@@ -2,68 +2,132 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911EFC6FD1F
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Mar 2023 17:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00470C7618A
+	for <linux-cxl@archiver.kernel.org>; Thu, 16 Mar 2023 20:24:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjCPROq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Mar 2023 13:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
+        id S229690AbjCPUYI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 16 Mar 2023 16:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbjCPROq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Mar 2023 13:14:46 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D10DE049
-        for <linux-cxl@vger.kernel.org>; Thu, 16 Mar 2023 10:14:44 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pcv4v1Nrqz67Ntg;
-        Fri, 17 Mar 2023 01:14:23 +0800 (CST)
-Received: from localhost (10.48.145.133) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Thu, 16 Mar
- 2023 17:14:41 +0000
-Date:   Thu, 16 Mar 2023 17:14:41 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>
-Subject: CXL/region :  commit reset of out of order region appears to
- succeed.
-Message-ID: <20230316171441.0000205b@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229786AbjCPUYH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Mar 2023 16:24:07 -0400
+Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D76810ABE;
+        Thu, 16 Mar 2023 13:24:02 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id D76675018FF;
+        Thu, 16 Mar 2023 20:23:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a290.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 5734350182C;
+        Thu, 16 Mar 2023 20:23:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1678998238; a=rsa-sha256;
+        cv=none;
+        b=bQKVpHHOuPOR2QMouvhzR4jlckVrG7UYNYmHgdjpAQk534RDX5EjkTACfUn7G72zyfSBe+
+        WwfBtfQVZBX6m6shd58J7iHz1CCHhLwi+OaP/c0jFyC/U8EmOSGwzGXsTBtOmGLOvA878u
+        H0I2LIYXSFfZS7rivdiHfdIRmYUhTQwdu4yJi+gTK6EjyAOnlns/eEra+YNGgY2j3zWNiK
+        yH/TsFUXbwv8TMfmhPH1VtytaoV9A5EXWVB/suluOZ2T7+ZN+NusKUIX+swqDU/zTLAfs2
+        fX9lgSff0dA4EveG1I/0zzD0x2ev6Z3j1yL7ud+inqJIFKMWwmKjqmsZj6waWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1678998238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=zzZZTZnF4mgkGlPMN+EAoe0gpBwte5d92YbdLcYCzn0=;
+        b=j95Agn9HTQzQConAUf/37EsGDrhUiYyg4G2YTg1ZThqvoLHPm+ZBSemuXXDo5l+VPQu3eZ
+        5P7OycDbQ+JUoJ2xRCn4a4ZRfpZoG0RTQHNkEeMFwMKO9koZcgOkYkKAaGo1SweqyFwFh3
+        UYlJNg4LZG8h9oCCqP/jmwOU9S6dW6lU/Ainc80L8bG0mSHyBxINgisiwrRKsGo3hLXpVe
+        kwsV64Bq0wIkimVJZImtGAPXNs8445vVnqRlwKy2yp5q+Oa+0PF9Od1LbP7WevdIZG2fSW
+        nac8cEmJzYcqOfnhxopZESr1pB2r41IJpmRKgCWSA5Eq0dPpVUF1zh6oQCXQbw==
+ARC-Authentication-Results: i=1;
+        rspamd-766d96cb5b-6njkk;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Cooing-Average: 16c87f12391b59a7_1678998238685_4263010003
+X-MC-Loop-Signature: 1678998238685:2361967255
+X-MC-Ingress-Time: 1678998238684
+Received: from pdx1-sub0-mail-a290.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.117.156.21 (trex/6.7.2);
+        Thu, 16 Mar 2023 20:23:58 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a290.dreamhost.com (Postfix) with ESMTPSA id 4PczHd4ST8zHB;
+        Thu, 16 Mar 2023 13:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1678998238;
+        bh=zzZZTZnF4mgkGlPMN+EAoe0gpBwte5d92YbdLcYCzn0=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=M3WEc1QTfiP3WR9EvHG8kCXLeJLw3P0yRrLLxG1JwRF8/K67ksBa8WFiq5PF+25WV
+         OM1MFHdFccjD4nzRWm14nOzfsB5SwZWUyjF6eu0UpdvPpKfv1SI047jopf8Sf3DIrM
+         Y4Bn8s/GLau24WREKreR5YoFEOpXmaGc4G6KcoRdnX8Sy5JXROzOPhWM00L/hQCAx7
+         d5a5mNt1n9DSYNH2RCG6IYkSHxW9BHI4LQ2IhZqKotM9hdcSutTIOc/ABpod4GYLBg
+         mzPuc3ERirE82G7FMRCxogcJv5d5ZlVpPDf1mzrjV13WdLkcPOrJ9ee6T6Xl+OVIqc
+         690KD1j3mvPmw==
+Date:   Thu, 16 Mar 2023 12:54:26 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH] ACPI: APEI: EINJ: Add CXL error types
+Message-ID: <20230316195426.x7wmzzf32sucfk7l@offworld>
+References: <20230314004611.48583-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.145.133]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230314004611.48583-1-tony.luck@intel.com>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ran into this whilst testing fix for QEMU uncommit handling.
+On Mon, 13 Mar 2023, Tony Luck wrote:
 
-To replicate.
-1) Setup two regions on a direct connected Type 3 and commit them both.
-2) Uncommit the first region once. (it fails with an out of order message)
-   Note that from here on the sysfs commit attribute reads as 0.
-3) Uncommit that first region again.  It appears to succeed.
+>ACPI 6.5 added six new error types for CXL. See chapter 18
+>table 18.30.
+>
+>Add strings for the new types so that Linux will list them in the
+>/sys/kernel/debug/apei/einj/available_error_types file.
+>
+>It seems no other changes are needed. Linux already accepts
+>the CXL codes (on a BIOS that advertises them).
+>
+>Signed-off-by: Tony Luck <tony.luck@intel.com>
 
-Reason is easy to track down:
-https://elixir.bootlin.com/linux/v6.3-rc2/source/drivers/cxl/core/region.c#L257
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-commit_store() of 0 unconditionally sets the state to CXL_CONFIG_RESET_PENDING
-
-When the decoder reset fails, that is left set.
-Hence next call drops straight through.
-
-Whilst it's easy to 'fix' the superficial issue by reseting the state to the previous
-value on error, I'm not sure that's sufficient or race free.
-
-Hence report rather than a patch.  I can look into this in more depth, but
-a few other things come before it in my list.
-
-Thanks,
-
-Jonathan
-
-p.s. I hope to send the qemu fix for uncommit fairly soon.
+>---
+> drivers/acpi/apei/einj.c | 6 ++++++
+> 1 file changed, 6 insertions(+)
+>
+>diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
+>index b4373e575660..39bee5a067cc 100644
+>--- a/drivers/acpi/apei/einj.c
+>+++ b/drivers/acpi/apei/einj.c
+>@@ -584,6 +584,12 @@ static const char * const einj_error_type_string[] = {
+>	"0x00000200\tPlatform Correctable\n",
+>	"0x00000400\tPlatform Uncorrectable non-fatal\n",
+>	"0x00000800\tPlatform Uncorrectable fatal\n",
+>+	"0x00001000\tCXL.cache Protocol Correctable\n",
+>+	"0x00002000\tCXL.cache Protocol Uncorrectable non-fatal\n",
+>+	"0x00004000\tCXL.cache Protocol Uncorrectable fatal\n",
+>+	"0x00008000\tCXL.mem Protocol Correctable\n",
+>+	"0x00010000\tCXL.mem Protocol Uncorrectable non-fatal\n",
+>+	"0x00020000\tCXL.mem Protocol Uncorrectable fatal\n",
+> };
+>
+> static int available_error_type_show(struct seq_file *m, void *v)
+>--
+>2.39.2
+>
