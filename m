@@ -2,175 +2,91 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236F8C7618A
-	for <linux-cxl@archiver.kernel.org>; Thu, 16 Mar 2023 20:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8957C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Fri, 17 Mar 2023 14:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbjCPUoF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 16 Mar 2023 16:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52192 "EHLO
+        id S230034AbjCQOYK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 17 Mar 2023 10:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbjCPUoE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 16 Mar 2023 16:44:04 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA2DE2A14F
-        for <linux-cxl@vger.kernel.org>; Thu, 16 Mar 2023 13:43:38 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id x1so3250115qtr.7
-        for <linux-cxl@vger.kernel.org>; Thu, 16 Mar 2023 13:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1678999418;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sc6swQhb68yJtfW+drht1iCVBwdNeIL7MkstjP5wXKo=;
-        b=HN1hJfzGjT1pJnP1Lwcjj0tCopWtxTRQAB5uHBPYVvK0Uv4IyafxHmjSVoxlpFi9Uj
-         XELxEQ869VKYus4pQbzINp0vzq5RClwvotvyK7l83l2ZsjhQMKbgPtXVZCuKvoxrmKla
-         hi2686o/gT38LFH+Y+A265Akjz1my5YJe4HZ8QV1AgoUpt9YB8898TIOA01n5JcRIacC
-         /t44iw+OhjjlqYQfcQ5mmV6CcKX1Ra3uJ7xGl+RvYh8e1MFDB4Y69Ww8Z2HrhtexHzGZ
-         6U34i9hUoCIwNJtl8YcIe6MDELi2kmNeYR3znocZlEk3/oJWA/ECUtzIFdfxYgGmYHXF
-         VIjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678999418;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sc6swQhb68yJtfW+drht1iCVBwdNeIL7MkstjP5wXKo=;
-        b=BDvULYU3TrRLAodAp19NdI2OC+f22KaAd1F81gaxnvmWSEGtBt0Ljz/HC5NGGHs2WG
-         IW3TedXiFLdJIsbvZHGBUS6r5nHyELdA6M3wzyi+xm2Uabr2i0gfpHgGIQIwONP0zaWg
-         29iNYFwXRTUyqVa+Cw6sOB3O6yjBjt2/7SXAtkapcCSx7tRbHb0wR8n9hOkTAFcPBy+H
-         T7EKWbMhvcN1Xan8AcM0pE1vLDVHBcRJ7Ve7/aQM7xY4mZyRsQV/FRKnUm95DkQhwSzd
-         fxYLdVReHh2Izuacm2NU8FgliCA+eJLgkGBx6PYp/c4I69VgBcz9qkR5KwZS+TWPFh7n
-         KFrQ==
-X-Gm-Message-State: AO0yUKVINwZ+JBxlfWUh8OjSBj+tPz9rgAOj2P8u2F8mO9GVAXIHv6+I
-        8YNDPLR6Xz0LMsF2WrJLexFdrA==
-X-Google-Smtp-Source: AK7set+edYIIsPrYAkmna+sJazz+LGumAoJ5gXPJPI3ZVP1+MlbhS8g/gBp/sM5wHHUK4R5hOlJLuQ==
-X-Received: by 2002:ac8:5903:0:b0:3b9:cd2a:f13d with SMTP id 3-20020ac85903000000b003b9cd2af13dmr8593759qty.59.1678999418019;
-        Thu, 16 Mar 2023 13:43:38 -0700 (PDT)
-Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
-        by smtp.gmail.com with ESMTPSA id e12-20020a05620a014c00b0073b27323c6dsm219555qkn.136.2023.03.16.13.43.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Mar 2023 13:43:37 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
-Subject: Re: [External] CXL Fabric Manager (FM) architecture diagrams
-From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
-In-Reply-To: <20230310120126.000057b9@Huawei.com>
-Date:   Thu, 16 Mar 2023 13:43:25 -0700
-Cc:     Viacheslav Dubeyko <slava@dubeyko.com>, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C6DF19E3-B5BB-47AE-8234-C6F0C9EF7C63@bytedance.com>
-References: <20230306185913.1060918-1-slava@dubeyko.com>
- <20230307172105.00006132@Huawei.com>
- <F6C3F73D-904C-4667-AB97-E12E64F4681F@bytedance.com>
- <20230310120126.000057b9@Huawei.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Mailer: Apple Mail (2.3731.400.51.1.1)
+        with ESMTP id S229966AbjCQOYJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 17 Mar 2023 10:24:09 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD271204E;
+        Fri, 17 Mar 2023 07:24:05 -0700 (PDT)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PdRDl0RsKz6J7MB;
+        Fri, 17 Mar 2023 22:23:03 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.168.91) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 17 Mar 2023 14:24:02 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <mchehab@kernel.org>, <linux-edac@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>
+CC:     <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
+        <shiju.jose@huawei.com>
+Subject: [PATCH V5 0/4] rasdaemon: Add support for the CXL error events
+Date:   Fri, 17 Mar 2023 14:23:47 +0000
+Message-ID: <20230317142351.1234-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.168.91]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Jonathan,
+Log and record the following CXL errors reported through the kernel
+trace events. CXL poison errors, CXL AER uncorrectable errors and CXL AER
+correctable errors.
 
-> On Mar 10, 2023, at 4:01 AM, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->=20
-> On Thu, 9 Mar 2023 14:28:51 -0800
-> "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com> wrote:
->=20
->>> On Mar 7, 2023, at 9:21 AM, Jonathan Cameron =
-<Jonathan.Cameron@huawei.com> wrote:
->>>=20
->>> On Mon,  6 Mar 2023 10:59:13 -0800
->>> Viacheslav Dubeyko <slava@dubeyko.com> wrote:
->>>=20
->>>> Hi Jonathan,
->>>>=20
->>>> You can find diagram online now:
->>>>=20
->>>> (1) Diagram 1: single host with Fabric Manager (FM)
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-1-cxl-fm-single-host-with-fm.pdf =20
->>>=20
+Shiju Jose (4):
+  rasdaemon: Move definition for BIT and BIT_ULL to a common file
+  rasdaemon: Add support for the CXL poison events
+  rasdaemon: Add support for the CXL AER uncorrectable errors
+  rasdaemon: Add support for the CXL AER correctable errors
 
-Diagram 1 has been reworked.
+Changes:
+V4 -> V5
+1. Add logging of device serial number for the CXL AER uncorrectable and
+    CXL AER correctable errors.
+2. Rebased.
+3. Updated the patches description.	
 
->>=20
->>>>=20
->>>> (2) Diagram 2: single host with orchestrator
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-2-cxl-fm-single-host-with-orhestrator.pdf =20
->>>=20
+V3 -> V4
+1. Modifications for the changes in the kernel patches
+   a) https://lore.kernel.org/lkml/cover.1675983077.git.alison.schofield@intel.com/
+   b) https://lore.kernel.org/linux-cxl/63e5ed38d77d9_138fbc2947a@iweiny-mobl.notmuch/T/#t
 
-Diagram 2 has been reworked.
+V2 -> V3
+1. Fix for the comments from Dave Jiang.
 
+RFC V1 -> V2
+1. Rename uuid to region_uuid in the log and SQLite DB.
+2. Rebase to the latest rasdaemon code.
+3. Modify to match the name changes of interface structures and
+   functions in the latest libtraceevent-dev, use in the rasdaemon. 
 
->>>>=20
->>>> (3) Diagram3: Multi-headed device
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-3-cxl-fm-multi-headed-device.pdf =20
->>>=20
+ Makefile.am                |   7 +-
+ configure.ac               |  11 +
+ ras-cxl-handler.c          | 410 +++++++++++++++++++++++++++++++++++++
+ ras-cxl-handler.h          |  32 +++
+ ras-events.c               |  33 +++
+ ras-events.h               |   3 +
+ ras-non-standard-handler.h |   3 -
+ ras-record.c               | 213 +++++++++++++++++++
+ ras-record.h               |  54 +++++
+ ras-report.c               | 229 +++++++++++++++++++++
+ ras-report.h               |   6 +
+ 11 files changed, 997 insertions(+), 4 deletions(-)
+ create mode 100644 ras-cxl-handler.c
+ create mode 100644 ras-cxl-handler.h
 
-Diagram 3 has been reworked.
-
->>>> (4) Diagram 4: Multi-headed device + Orchestrator
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-4-cxl-fm-multi-headed-device-orchestrator.pdf =20
-
-Diagram 4 has been reworked.
-
->>>>=20
->>>> (5) Diagram5: Multiple hosts with Fabric Manager (FM)
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-5-cxl-fm-multiple-hosts-with-fm.pdf =20
->>>=20
-
-Diagram 5 has been reworked.
-
->>>>=20
->>>> (6) Diagram 6: Multiple hosts with orhestrator
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-6-cxl-fm-multiple-hosts-with-orhestrator.pdf=20
->>>=20
-
-
-Diagram 6 has been removed.
-
->>>>=20
->>>> (7) Diagram 7: Distributed Fabric Manager (FM)
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-7-cxl-fm-distributed-fm.pdf
->>>>=20
-
-Diagram 7 is Diagram 6 now. And it=E2=80=99s reworked.
-
->>>> (8) Diagram 8: Layered Fabric Manager (FM) and separate =
-orchestrator
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-8-cxl-fm-layered-fm-and-separate-orchestrator.pdf =20
->>>=20
-
-Diagram 8 is Diagram 7 now. And it=E2=80=99s reworked.
-
->>>> (9) Diagram 9: BMC based layered Fabric Manager (FM)
->>>> =
-https://github.com/computexpresslink/cxl-fm-architecture/blob/main/diagram=
-9-cxl-fm-bmc-based-layered-fm.pdf =20
->>>=20
-
-Diagram 9 is Diagram 8 now. And it=E2=80=99s reworked.
-
-Please, check the online version of diagrams and
-let me know if I need to rework any diagram.
-
-Thanks,
-Slava.
+-- 
+2.25.1
 
