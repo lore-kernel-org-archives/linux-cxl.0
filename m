@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7491FC6FD1C
-	for <linux-cxl@archiver.kernel.org>; Mon, 20 Mar 2023 19:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775E0C6FD1C
+	for <linux-cxl@archiver.kernel.org>; Mon, 20 Mar 2023 19:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjCTTPJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 20 Mar 2023 15:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
+        id S230270AbjCTTVW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 20 Mar 2023 15:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231537AbjCTTOv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Mar 2023 15:14:51 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39C4147805;
-        Mon, 20 Mar 2023 12:06:56 -0700 (PDT)
+        with ESMTP id S230320AbjCTTUr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 20 Mar 2023 15:20:47 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A5837701;
+        Mon, 20 Mar 2023 12:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679339216; x=1710875216;
+  t=1679339576; x=1710875576;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=rOfjKAAWxv0XMnzWuGIfCrmikj+4etpj1/XdDsgGUfQ=;
-  b=W0ekHHkGpHS5iAeYlB8EiiUxW9B4EUmwEOy8KUv7yEcQ2+QAGtAddvI/
-   htlred8gxHkf5R0YOwno+wwWLeEZqGlJ+2bIZU1IZzlV0jJ69XLE/svYb
-   JYp+/vC6NewpWEkdQYdNRteylzAKxxSLkNLPS6XWv1seTI0nxRk6lQpeX
-   qMw5bW+5NgSZIAoA+HqtPQUy+7LtNaZMpTsgqviPvzEmSottO5m8sQAbY
-   FrUqEU081iWVP/poxmWco77tbqsUBDEHwWM9Rv6LKpvYTVysrOIXQw7BQ
-   pKsFw4yTPm9eL6CZzEUDXGTWPJVU9EvnjjwCvYOpW67J6NOHRlW0BNWVT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="338780132"
+  bh=Zqhx56XnNn6vmObwhD0p+pxmYyVqDpvJYE4oaKieQCo=;
+  b=PBfSt+gsVsNPhbBw4HoP3MouPF6iFvBDCuhIeSJO3BHnFTRqhQKciVFu
+   xnx3HZgUEeJfjy09BJdtbb8jcLsHcy6H76dnxZdBQqiTVzczk52n9T4Oi
+   WW+2VD4AcYVyVq/D08GCFWVd9aPwiEx0hiqve6id6KQ7ZAUiodB8i+aOz
+   J756kNlS9kCoW31t9jpGsbeV7/FfOXffD9sPhTxvDCl6mXpokJTrAQAog
+   pJsGgajSczGFISn1QfQNxyPjkhdd3/cbyoLNEgsBP9GPKSzEBzHb8BfpL
+   IDyR7poeucSCXVcdyRdfMfxu8xhRYjTpyui9+Ym2uoPNL2xm2OXR+irJ/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="318406703"
 X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="338780132"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 12:06:38 -0700
+   d="scan'208";a="318406703"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 12:12:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="713665718"
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="683546001"
 X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="713665718"
+   d="scan'208";a="683546001"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.60.228])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 12:06:37 -0700
-Date:   Mon, 20 Mar 2023 12:06:36 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 12:12:51 -0700
+Date:   Mon, 20 Mar 2023 12:12:49 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -48,232 +48,280 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 5/6] cxl/trace: Add an HPA to cxl_poison trace events
-Message-ID: <ZBiuvHx8otTLnOM5@aschofie-mobl2>
+Subject: Re: [PATCH v9 4/6] cxl/region: Provide region info to the cxl_poison
+ trace event
+Message-ID: <ZBiwMbYBShBjuhW2@aschofie-mobl2>
 References: <cover.1679284567.git.alison.schofield@intel.com>
- <00b34ab93ffd2737b33d4f1c74fbd98968a58a60.1679284567.git.alison.schofield@intel.com>
- <20230320163059.00003b7a@Huawei.com>
+ <f0f98437873ce86db9d97e5dee61e7399f8ddc14.1679284567.git.alison.schofield@intel.com>
+ <20230320155306.00004f5e@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230320163059.00003b7a@Huawei.com>
+In-Reply-To: <20230320155306.00004f5e@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 04:30:59PM +0000, Jonathan Cameron wrote:
-> On Sun, 19 Mar 2023 21:31:50 -0700
+On Mon, Mar 20, 2023 at 03:53:06PM +0000, Jonathan Cameron wrote:
+> On Sun, 19 Mar 2023 21:31:49 -0700
 > alison.schofield@intel.com wrote:
 > 
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > When a cxl_poison trace event is reported for a region, the poisoned
-> > Device Physical Address (DPA) can be translated to a Host Physical
-> > Address (HPA) for consumption by user space.
+> > User space may need to know which region, if any, maps the poison
+> > address(es) logged in a cxl_poison trace event. Since the mapping
+> > of DPAs (device physical addresses) to a region can change, the
+> > kernel must provide this information at the time the poison list
+> > is read. The event informs user space that at event <timestamp>
+> > this <region> mapped to this <DPA>, which is poisoned.
 > > 
-> > Translate and add the resulting HPA to the cxl_poison trace event.
-> > Follow the device decode logic as defined in the CXL Spec 3.0 Section
-> > 8.2.4.19.13.
+> > The cxl_poison trace event is already wired up to log the region
+> > name and uuid if it receives param 'struct cxl_region'.
 > > 
-> > If no region currently maps the poison, assign ULLONG_MAX to the
-> > cxl_poison event hpa field.
+> > In order to provide that cxl_region, add another method for gathering
+> > poison - by committed endpoint decoder mappings. This method is only
+> > available with CONFIG_CXL_REGION and is only used if a region actually
+> > maps the memdev where poison is being read. After the region driver
+> > reads the poison list for all the mapped resources, control returns
+> > to the memdev driver, where poison is read for any remaining unmapped
+> > resources.
+> > 
+> > Mixed mode decoders are not currently supported in Linux. Add a debug
+> > message to the poison request path. That will serve as an alert that
+> > poison list retrieval needs to add support for mixed mode.
+> > 
+> > The default method remains: read the poison by memdev resource.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> 
 > Hi Alison,
 > 
-> I poked this with a few more test cases in QEMU and ran into a corner that
-> probably wants addressing.
+> I could be wrong but I don't think I gave a reviewed-by for this individual patch
+> (I made a note locally that I still needed to test v8 before doing so).
+> Doesn't matter in the end though..
 > 
-> What should the tracepoints contain if the poisoned DPA length of a single
-> record returned by the device is greater than the interleave granularity of
-> of an interleaved region?
+> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> + keep the RB.
+> 
+> A few whitespace changes have sneaked in here though that would be good to 
+> clean up. (inline)
 
 Jonathan,
 
-How does that happen now that we are reading poison by endpoint decoder,
-when committed decoders exist?
+My apologies for applying the reviewed by tag.
+Thanks for the tags now
 
-If we are always bounding the poison read requests by the decoder
-resource, then the device cannot give us a length that goes beyond
-that decoder's mapping.
-
-For an endpoint decoder - a contiguous DPA space maps to a contiguous
-HPA space.
-
-Or not?
+I'll clean up the whitespace and try to keep it that way. There's 
+something about the spacing around returns, that my subconscious
+struggles with. I'm not deliberately ignoring you ;)
 
 Alison
 
 > 
-> That didn't matter until HPA was added as we were just reporting a DPA
-> base and length, but with the HPA present, the length is only in DPA space
-> not HPA space.  Userspace can figure this out, but that's rather inelegant
-> and would require ras-daemon or similar to go and query the interleave granularity
-> and ways.
-> 
-> I think the best thing to do in this case would be to break the single returned DPA
-> base record up into multiple trace points at the interleave granual boundaries.
-> 
-> What do you think we should do?
+> Thanks,
 > 
 > Jonathan
 > 
 > > ---
-> >  drivers/cxl/core/trace.c | 94 ++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/core/trace.h |  9 +++-
-> >  2 files changed, 102 insertions(+), 1 deletion(-)
+> >  drivers/cxl/core/core.h   | 11 +++++++
+> >  drivers/cxl/core/memdev.c | 64 +++++++++++++++++++++++++++++++++++++--
+> >  drivers/cxl/core/region.c | 63 ++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 136 insertions(+), 2 deletions(-)
 > > 
-> > diff --git a/drivers/cxl/core/trace.c b/drivers/cxl/core/trace.c
-> > index 29ae7ce81dc5..d0403dc3c8ab 100644
-> > --- a/drivers/cxl/core/trace.c
-> > +++ b/drivers/cxl/core/trace.c
-> > @@ -1,5 +1,99 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> >  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-> >  
-> > +#include <cxl.h>
-> > +#include "core.h"
-> > +
-> >  #define CREATE_TRACE_POINTS
-> >  #include "trace.h"
-> > +
-> > +static bool cxl_is_hpa_in_range(u64 hpa, struct cxl_region *cxlr, int pos)
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> > index cde475e13216..3d1b38255ab4 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -25,7 +25,12 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
+> >  #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
+> >  int cxl_region_init(void);
+> >  void cxl_region_exit(void);
+> > +int cxl_get_poison_by_endpoint(struct device *dev, void *data);
+> >  #else
+> > +static inline int cxl_get_poison_by_endpoint(struct device *dev, void *data)
 > > +{
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	int gran = p->interleave_granularity;
-> > +	int ways = p->interleave_ways;
-> > +	u64 offset;
-> > +
-> > +	/* Is the hpa within this region at all */
-> > +	if (hpa < p->res->start || hpa > p->res->end) {
-> > +		dev_dbg(&cxlr->dev,
-> > +			"Addr trans fail: hpa 0x%llx not in region\n", hpa);
-> > +		return false;
-> > +	}
-> > +
-> > +	/* Is the hpa in an expected chunk for its pos(-ition) */
-> > +	offset = hpa - p->res->start;
-> > +	offset = do_div(offset, gran * ways);
-> > +	if ((offset >= pos * gran) && (offset < (pos + 1) * gran))
-> > +		return true;
-> > +
-> > +	dev_dbg(&cxlr->dev,
-> > +		"Addr trans fail: hpa 0x%llx not in expected chunk\n", hpa);
-> > +
-> > +	return false;
+> > +	return 0;
 > > +}
+> >  static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
+> >  {
+> >  }
+> > @@ -64,4 +69,10 @@ int cxl_memdev_init(void);
+> >  void cxl_memdev_exit(void);
+> >  void cxl_mbox_init(void);
+> >  
+> > +struct cxl_trigger_poison_context {
+> > +	struct cxl_port *port;
+> > +	enum cxl_decoder_mode mode;
+> > +	u64 offset;
+> > +};
 > > +
-> > +static u64 cxl_dpa_to_hpa(u64 dpa,  struct cxl_region *cxlr,
-> > +			  struct cxl_endpoint_decoder *cxled)
+> >  #endif /* __CXL_CORE_H__ */
+> > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > index 5ef40c36f1a3..0b8b8996e588 100644
+> > --- a/drivers/cxl/core/memdev.c
+> > +++ b/drivers/cxl/core/memdev.c
+> > @@ -106,6 +106,47 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+> >  }
+> >  static DEVICE_ATTR_RO(numa_node);
+> >  
+> > +static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
+> > +				   struct cxl_trigger_poison_context *ctx)
 > > +{
-> > +	u64 dpa_offset, hpa_offset, bits_upper, mask_upper, hpa;
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	int pos = cxled->pos;
-> > +	u16 eig = 0;
-> > +	u8 eiw = 0;
-> > +
-> > +	ways_to_eiw(p->interleave_ways, &eiw);
-> > +	granularity_to_eig(p->interleave_granularity, &eig);
+> > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > +	u64 offset, length;
+> > +	int rc = 0;
 > > +
 > > +	/*
-> > +	 * The device position in the region interleave set was removed
-> > +	 * from the offset at HPA->DPA translation. To reconstruct the
-> > +	 * HPA, place the 'pos' in the offset.
+> > +	 * Collect poison for the remaining unmapped resources
+> > +	 * after poison is collected by committed endpoints.
 > > +	 *
-> > +	 * The placement of 'pos' in the HPA is determined by interleave
-> > +	 * ways and granularity and is defined in the CXL Spec 3.0 Section
-> > +	 * 8.2.4.19.13 Implementation Note: Device Decode Logic
+> > +	 * Knowing that PMEM must always follow RAM, get poison
+> > +	 * for unmapped resources based on the last decoder's mode:
+> > +	 *	ram: scan remains of ram range, then any pmem range
+> > +	 *	pmem: scan remains of pmem range
 > > +	 */
 > > +
-> > +	/* Remove the dpa base */
-> > +	dpa_offset = dpa - cxl_dpa_resource_start(cxled);
-> > +
-> > +	mask_upper = GENMASK_ULL(51, eig + 8);
-> > +
-> > +	if (eiw < 8) {
-> > +		hpa_offset = (dpa_offset & mask_upper) << eiw;
-> > +		hpa_offset |= pos << (eig + 8);
+> > +	if (ctx->mode == CXL_DECODER_RAM) {
+> > +		offset = ctx->offset;
+> > +		length = resource_size(&cxlds->ram_res) - offset;
+> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> > +		if (rc == -EFAULT)
+> > +			rc = 0;
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +	if (ctx->mode == CXL_DECODER_PMEM) {
+> > +		offset = ctx->offset;
+> > +		length = resource_size(&cxlds->dpa_res) - offset;
+> > +		if (!length)
+> > +			return 0;
+> > +	} else if (resource_size(&cxlds->pmem_res)) {
+> > +		offset = cxlds->pmem_res.start;
+> > +		length = resource_size(&cxlds->pmem_res);
 > > +	} else {
-> > +		bits_upper = (dpa_offset & mask_upper) >> (eig + 8);
-> > +		bits_upper = bits_upper * 3;
-> > +		hpa_offset = ((bits_upper << (eiw - 8)) + pos) << (eig + 8);
+> > +		return 0;
 > > +	}
 > > +
-> > +	/* The lower bits remain unchanged */
-> > +	hpa_offset |= dpa_offset & GENMASK_ULL(eig + 7, 0);
-> > +
-> > +	/* Apply the hpa_offset to the region base address */
-> > +	hpa = hpa_offset + p->res->start;
-> > +
-> > +	if (!cxl_is_hpa_in_range(hpa, cxlr, cxled->pos))
-> > +		return ULLONG_MAX;
-> > +
-> > +	return hpa;
+> > +	return cxl_mem_get_poison(cxlmd, offset, length, NULL);
 > > +}
 > > +
-> > +u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *cxlmd,
-> > +		  u64 dpa)
+> >  static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+> >  {
+> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > @@ -139,17 +180,36 @@ ssize_t cxl_trigger_poison_list(struct device *dev,
+> >  				const char *buf, size_t len)
+> >  {
+> >  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > +	struct cxl_trigger_poison_context ctx;
+> > +	struct cxl_port *port;
+> >  	bool trigger;
+> >  	int rc;
+> >  
+> >  	if (kstrtobool(buf, &trigger) || !trigger)
+> >  		return -EINVAL;
+> >  
+> > +	port = dev_get_drvdata(&cxlmd->dev);
+> > +	if (!port || !is_cxl_endpoint(port))
+> > +		return -EINVAL;
+> > +
+> >  	down_read(&cxl_dpa_rwsem);
+> > -	rc = cxl_get_poison_by_memdev(cxlmd);
+> > +	if (port->commit_end == -1) {
+> > +		/* No regions mapped to this memdev */
+> > +		rc = cxl_get_poison_by_memdev(cxlmd);
+> > +	} else {
+> > +		/* Regions mapped, collect poison by endpoint */
+> > +		ctx = (struct cxl_trigger_poison_context) {
+> > +			.port = port,
+> > +		};
+> > +		rc = device_for_each_child(&port->dev, &ctx,
+> > +					   cxl_get_poison_by_endpoint);
+> > +		if (rc == 1)
+> > +			rc = cxl_get_poison_unmapped(cxlmd, &ctx);
+> > +	}
+> > +
+> >  	up_read(&cxl_dpa_rwsem);
+> > -
+> I'd keep this one.
+> >  	return rc ? rc : len;
+> > +
+> Doesn't want to be here.
+> 
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_trigger_poison_list, CXL);
+> >  
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index f29028148806..4c4d3a6d631d 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -2213,6 +2213,69 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, CXL);
+> >  
+> > +int cxl_get_poison_by_endpoint(struct device *dev, void *arg)
 > > +{
-> > +	struct cxl_region_params *p = &cxlr->params;
-> > +	struct cxl_endpoint_decoder *cxled = NULL;
+> > +	struct cxl_trigger_poison_context *ctx = arg;
+> > +	struct cxl_endpoint_decoder *cxled;
+> > +	struct cxl_port *port = ctx->port;
+> > +	struct cxl_memdev *cxlmd;
+> > +	u64 offset, length;
+> > +	int rc = 0;
 > > +
-> > +	for (int i = 0; i <  p->nr_targets; i++) {
-> > +		cxled = p->targets[i];
-> > +		if (cxlmd == cxled_to_memdev(cxled))
-> > +			break;
+> > +	down_read(&cxl_region_rwsem);
+> > +
+> > +	if (!is_endpoint_decoder(dev))
+> > +		goto out;
+> > +
+> > +	cxled = to_cxl_endpoint_decoder(dev);
+> > +	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
+> > +		goto out;
+> > +
+> > +	/*
+> > +	 * Regions are only created with single mode decoders: pmem or ram.
+> > +	 * Linux does not currently support mixed mode decoders. This means
+> > +	 * that reading poison per endpoint decoder adheres to the spec
+> > +	 * requirement that poison reads of pmem and ram must be separated.
+> > +	 * CXL 3.0 Spec 8.2.9.8.4.1
+> > +	 *
+> > +	 * Watch for future support of mixed with a dev_dbg() msg.
+> > +	 */
+> > +	if (cxled->mode == CXL_DECODER_MIXED) {
+> > +		dev_dbg(dev, "poison list read unsupported in mixed mode\n");
+> > +		goto out;
 > > +	}
-> > +	if (!cxled || cxlmd != cxled_to_memdev(cxled))
-> > +		return ULLONG_MAX;
 > > +
-> > +	return cxl_dpa_to_hpa(dpa, cxlr, cxled);
+> > +	cxlmd = cxled_to_memdev(cxled);
+> > +	if (cxled->skip) {
+> > +		offset = cxled->dpa_res->start - cxled->skip;
+> > +		length = cxled->skip;
+> > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> > +		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> > +			rc = 0;
+> > +		if (rc)
+> > +			goto out;
+> > +	}
+> > +
+> > +	offset = cxled->dpa_res->start;
+> > +	length = cxled->dpa_res->end - offset + 1;
+> > +	rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region);
+> > +	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> > +		rc = 0;
+> > +	if (rc)
+> > +		goto out;
+> > +
+> > +	/* Iterate until commit_end is reached */
+> > +	if (cxled->cxld.id == port->commit_end)
+> > +		rc = 1;
+> > +
+> > +	/* ctx informs the memdev driver of last read poison */
+> > +	ctx->mode = cxled->mode;
+> > +	ctx->offset = cxled->dpa_res->end + 1;
+> > +out:
+> > +	up_read(&cxl_region_rwsem);
+> > +	return rc;
 > > +}
-> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> > index 33a22d26e742..25dbf52ac327 100644
-> > --- a/drivers/cxl/core/trace.h
-> > +++ b/drivers/cxl/core/trace.h
-> > @@ -631,6 +631,8 @@ TRACE_EVENT(cxl_memory_module,
-> >  #define cxl_poison_overflow(flags, time)				\
-> >  	(flags & CXL_POISON_FLAG_OVERFLOW ? le64_to_cpu(time) : 0)
-> >  
-> > +u64 cxl_trace_hpa(struct cxl_region *cxlr, struct cxl_memdev *memdev, u64 dpa);
 > > +
-> >  TRACE_EVENT(cxl_poison,
+> >  static struct lock_class_key cxl_pmem_region_key;
 > >  
-> >  	TP_PROTO(struct cxl_memdev *cxlmd, struct cxl_region *region,
-> > @@ -645,6 +647,7 @@ TRACE_EVENT(cxl_poison,
-> >  		__field(u64, serial)
-> >  		__string(region, region)
-> >  		__field(u64, overflow_t)
-> > +		__field(u64, hpa)
-> >  		__field(u64, dpa)
-> >  		__field(u32, length)
-> >  		__array(char, uuid, 16)
-> > @@ -664,18 +667,22 @@ TRACE_EVENT(cxl_poison,
-> >  		if (region) {
-> >  			__assign_str(region, dev_name(&region->dev));
-> >  			memcpy(__entry->uuid, &region->params.uuid, 16);
-> > +			__entry->hpa = cxl_trace_hpa(region, cxlmd,
-> > +						     __entry->dpa);
-> >  		} else {
-> >  			__assign_str(region, "");
-> >  			memset(__entry->uuid, 0, 16);
-> > +			__entry->hpa = ULLONG_MAX;
-> >  		}
-> >  	    ),
-> >  
-> > -	TP_printk("memdev=%s host=%s serial=%lld region=%s region_uuid=%pU dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
-> > +	TP_printk("memdev=%s host=%s serial=%lld region=%s region_uuid=%pU hpa=0x%llx dpa=0x%llx length=0x%x source=%s flags=%s overflow_time=%llu",
-> >  		__get_str(memdev),
-> >  		__get_str(host),
-> >  		__entry->serial,
-> >  		__get_str(region),
-> >  		__entry->uuid,
-> > +		__entry->hpa,
-> >  		__entry->dpa,
-> >  		__entry->length,
-> >  		show_poison_source(__entry->source),
+> >  static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
 > 
