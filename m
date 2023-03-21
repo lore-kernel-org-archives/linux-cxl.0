@@ -2,35 +2,33 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BD4C6FD1C
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Mar 2023 16:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D61BC76195
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Mar 2023 16:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbjCVQ3l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 22 Mar 2023 12:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
+        id S230169AbjCVQ3z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 22 Mar 2023 12:29:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230213AbjCVQ3k (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Mar 2023 12:29:40 -0400
+        with ESMTP id S230083AbjCVQ3y (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Mar 2023 12:29:54 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DBD100
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Mar 2023 09:29:18 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pgzph5WSnz6YpTh;
-        Wed, 22 Mar 2023 01:57:48 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760965D8A1
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Mar 2023 09:29:36 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PgznV67d4z6YpMq;
+        Wed, 22 Mar 2023 01:56:46 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 21 Mar 2023 18:01:07 +0000
+ 15.1.2507.21; Tue, 21 Mar 2023 18:00:06 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     Michael Tsirkin <mst@redhat.com>, <qemu-devel@nongnu.org>
 CC:     <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
         Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
-Subject: [PATCH 2/2] hw/cxl: Fix incorrect reset of commit and associated clearing of committed.
-Date:   Tue, 21 Mar 2023 18:00:12 +0000
-Message-ID: <20230321180012.2545-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH 0/2] hw/cxl: Fix decoder commit and uncommit handling
+Date:   Tue, 21 Mar 2023 18:00:10 +0000
+Message-ID: <20230321180012.2545-1-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230321180012.2545-1-Jonathan.Cameron@huawei.com>
-References: <20230321180012.2545-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -42,105 +40,28 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The hardware clearing the commit bit is not spec compliant.
-Clearing of committed bit when commit is cleared is not specifically
-stated in the CXL spec, but is the expected (and simplest) permitted
-behaviour so use that for QEMU emulation.
+Issue reported in discussion of:
+https://lore.kernel.org/all/20230228224014.1402545-1-fan.ni@samsung.com/
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- hw/cxl/cxl-component-utils.c |  6 +++++-
- hw/mem/cxl_type3.c           | 21 ++++++++++++++++++++-
- 2 files changed, 25 insertions(+), 2 deletions(-)
+The committed bit for HDM decoders is expected reset when commit transitions
+from 1->0.  Whilst looking at that it was noticed that hardware was resetting
+the commit bit which is not an option allowed by the CXL spec.
 
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index a3e6cf75cf..378f1082ce 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -38,19 +38,23 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
-     ComponentRegisters *cregs = &cxl_cstate->crb;
-     uint32_t *cache_mem = cregs->cache_mem_registers;
-     bool should_commit = false;
-+    bool should_uncommit = false;
- 
-     switch (offset) {
-     case A_CXL_HDM_DECODER0_CTRL:
-         should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-+        should_uncommit = !should_commit;
-         break;
-     default:
-         break;
-     }
- 
-     if (should_commit) {
--        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-         value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
-         value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-+    } else if (should_uncommit) {
-+        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
-+        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
-     }
-     stl_le_p((uint8_t *)cache_mem + offset, value);
- }
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 846089ccda..9598d584ac 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -320,13 +320,28 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
- 
-     ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
-     /* TODO: Sanity checks that the decoder is possible */
--    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
- 
-     stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
- }
- 
-+static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
-+{
-+    ComponentRegisters *cregs = &ct3d->cxl_cstate.crb;
-+    uint32_t *cache_mem = cregs->cache_mem_registers;
-+    uint32_t ctrl;
-+
-+    assert(which == 0);
-+
-+    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
-+
-+    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-+    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
-+
-+    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
-+}
-+
- static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
- {
-     switch (qmp_err) {
-@@ -395,6 +410,7 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-     CXLType3Dev *ct3d = container_of(cxl_cstate, CXLType3Dev, cxl_cstate);
-     uint32_t *cache_mem = cregs->cache_mem_registers;
-     bool should_commit = false;
-+    bool should_uncommit = false;
-     int which_hdm = -1;
- 
-     assert(size == 4);
-@@ -403,6 +419,7 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-     switch (offset) {
-     case A_CXL_HDM_DECODER0_CTRL:
-         should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-+        should_uncommit = !should_commit;
-         which_hdm = 0;
-         break;
-     case A_CXL_RAS_UNC_ERR_STATUS:
-@@ -489,6 +506,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
-     stl_le_p((uint8_t *)cache_mem + offset, value);
-     if (should_commit) {
-         hdm_decoder_commit(ct3d, which_hdm);
-+    } else if (should_uncommit) {
-+        hdm_decoder_uncommit(ct3d, which_hdm);
-     }
- }
- 
+In common with many other areas the code did not take into account
+big endian architectures, so fix that whilst we are here.
+
+Note testing this exposed a kernel bug around repeated attempts to clear
+a decoder out of order. That's been reported but not yet fixed.
+
+Jonathan Cameron (2):
+  hw/cxl: Fix endian handling for decoder commit.
+  hw/cxl: Fix incorrect reset of commit and associated clearing of
+    committed.
+
+ hw/cxl/cxl-component-utils.c | 14 ++++++++------
+ hw/mem/cxl_type3.c           | 28 +++++++++++++++++++++++++---
+ 2 files changed, 33 insertions(+), 9 deletions(-)
+
 -- 
 2.37.2
 
