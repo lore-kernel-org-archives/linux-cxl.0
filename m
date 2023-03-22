@@ -2,113 +2,145 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFF5C6FD1C
-	for <linux-cxl@archiver.kernel.org>; Wed, 22 Mar 2023 10:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D23C6FD1C
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Mar 2023 15:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbjCVKej (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 22 Mar 2023 06:34:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48010 "EHLO
+        id S231612AbjCVP3s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 22 Mar 2023 11:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230241AbjCVKei (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Mar 2023 06:34:38 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5668652F57
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Mar 2023 03:34:37 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id bg16-20020a05600c3c9000b003eb34e21bdfso12697018wmb.0
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Mar 2023 03:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679481276;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RYkfG22HjGs03l4ehDPCyiQgubtep/FS2RbjbyPAMKU=;
-        b=mw1Rk2Evr2Rb822D/JkRjVOtW4/ZadooypbQMLQakBrT5nsjjawNDD7DyVO5uve7py
-         hhrmqoE4n6pN4wLLIlOjHkxhDV+ktp3DgIhuQSNxhjIxNhyc+UBzo16/WG7wGeX8cuqW
-         QSHzNN3hWcabPdX6zUAbiEqR93zd8HzWAOTLZAy8ZiZ2GTOPfwHLbiKN3S1dCFZL9tIv
-         hTbRdp998Y39uJs8ogrP3r5R214m8WyZPjmRcpNdPTqtadEBYNhNceNX5qK3vduVxq/b
-         eJYNWmoharT0A8wHFgla7WTlEsreuZTeSe0j2KvQMyVL1LdvejbgubFdM1xn4bf7/O+r
-         6mZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679481276;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RYkfG22HjGs03l4ehDPCyiQgubtep/FS2RbjbyPAMKU=;
-        b=wtggwxvUL+kMSwQEezp+aJF/kymfp1401xLlsHInNf5p5zOQa8FEG+wNbx/lCNYYdF
-         lRf0/35bKY7GW7ZqV2qseLSntT4PoImxsBx5SKNjm8XZqHy/cEI3RTenNUUhKqNkPO3X
-         qWwUtqoGXcEllAjhTrmUjnnw+owFrY56RCWTC0SbhlvLWH7iWYSzYAPriraZuHVXZJ8r
-         /gDFOUo2XPT4vX0O30mXZHrpb58k80HFf7qopI7mizuDw8cIAYBgY1lcVHms3YX9wbCP
-         ROce4fo6gX3iHsHkLDjghHYesQNpag0mpwDF5SzPhN+9xRGb5E1yqbyCthosSmkp2JPb
-         eSmQ==
-X-Gm-Message-State: AO0yUKV1aiBHwCxG4smBEYELqSn20h4Ta3E10Wmpyw+GxnnIooaPeoB1
-        xDdpwHLAmTpq4UZ7VazXXfhpTg==
-X-Google-Smtp-Source: AK7set/DZnvlMmeRk+0KDqjB7LCGWSlykJixPT378PklHt04EXgENQgDHwcOY8qGnUzaSXMFeyB9rQ==
-X-Received: by 2002:a7b:c383:0:b0:3df:eecc:de2b with SMTP id s3-20020a7bc383000000b003dfeeccde2bmr4976466wmj.11.1679481275777;
-        Wed, 22 Mar 2023 03:34:35 -0700 (PDT)
-Received: from [192.168.30.216] ([81.0.6.76])
-        by smtp.gmail.com with ESMTPSA id k22-20020a05600c1c9600b003ee6a91b596sm870914wms.29.2023.03.22.03.34.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Mar 2023 03:34:35 -0700 (PDT)
-Message-ID: <366919e9-e7ca-28bf-f61a-813634c4a115@linaro.org>
-Date:   Wed, 22 Mar 2023 11:34:34 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [RESEND PATCH 1/2] hw/cxl: Fix endian handling for decoder
- commit.
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michael Tsirkin <mst@redhat.com>, qemu-devel@nongnu.org
-Cc:     linuxarm@huawei.com, Fan Ni <fan.ni@samsung.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+        with ESMTP id S229554AbjCVP3p (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 22 Mar 2023 11:29:45 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D4E2FCDB
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Mar 2023 08:29:43 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PhPjr4dWpz6pGl9;
+        Wed, 22 Mar 2023 18:25:04 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 22 Mar 2023 10:28:26 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Michael Tsirkin <mst@redhat.com>, <qemu-devel@nongnu.org>
+CC:     <linuxarm@huawei.com>, Fan Ni <fan.ni@samsung.com>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: [RESEND PATCH 2/2] hw/cxl: Fix incorrect reset of commit and associated clearing of committed.
+Date:   Wed, 22 Mar 2023 10:27:31 +0000
+Message-ID: <20230322102731.4219-3-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20230322102731.4219-1-Jonathan.Cameron@huawei.com>
 References: <20230322102731.4219-1-Jonathan.Cameron@huawei.com>
- <20230322102731.4219-2-Jonathan.Cameron@huawei.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230322102731.4219-2-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 22/3/23 11:27, Jonathan Cameron via wrote:
-> Not a real problem yet as all supported architectures are
-> little endian, but continue to tidy these up when touching
-> code for other reasons.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->   hw/cxl/cxl-component-utils.c | 10 ++++------
->   hw/mem/cxl_type3.c           |  9 ++++++---
->   2 files changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index b665d4f565..a3e6cf75cf 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -47,14 +47,12 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
->           break;
->       }
->   
-> -    memory_region_transaction_begin();
-> -    stl_le_p((uint8_t *)cache_mem + offset, value);
->       if (should_commit) {
-> -        ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> -        ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> -        ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-> +        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> +        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
->       }
-> -    memory_region_transaction_commit();
+The hardware clearing the commit bit is not spec compliant.
+Clearing of committed bit when commit is cleared is not specifically
+stated in the CXL spec, but is the expected (and simplest) permitted
+behaviour so use that for QEMU emulation.
 
-Indeed the memory_region_transaction guard seems pointless here,
-but it is a different change, so should go in a preliminary patch IMHO.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ hw/cxl/cxl-component-utils.c |  6 +++++-
+ hw/mem/cxl_type3.c           | 21 ++++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 2 deletions(-)
 
-Conditional to this patch being split:
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-
-> +    stl_le_p((uint8_t *)cache_mem + offset, value);
->   }
-
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index a3e6cf75cf..378f1082ce 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -38,19 +38,23 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
+     ComponentRegisters *cregs = &cxl_cstate->crb;
+     uint32_t *cache_mem = cregs->cache_mem_registers;
+     bool should_commit = false;
++    bool should_uncommit = false;
+ 
+     switch (offset) {
+     case A_CXL_HDM_DECODER0_CTRL:
+         should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
++        should_uncommit = !should_commit;
+         break;
+     default:
+         break;
+     }
+ 
+     if (should_commit) {
+-        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
+         value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
+         value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
++    } else if (should_uncommit) {
++        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
++        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
+     }
+     stl_le_p((uint8_t *)cache_mem + offset, value);
+ }
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 846089ccda..9598d584ac 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -320,13 +320,28 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+ 
+     ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
+     /* TODO: Sanity checks that the decoder is possible */
+-    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
+     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
+     ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
+ 
+     stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
+ }
+ 
++static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
++{
++    ComponentRegisters *cregs = &ct3d->cxl_cstate.crb;
++    uint32_t *cache_mem = cregs->cache_mem_registers;
++    uint32_t ctrl;
++
++    assert(which == 0);
++
++    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
++
++    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
++    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
++
++    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
++}
++
+ static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
+ {
+     switch (qmp_err) {
+@@ -395,6 +410,7 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+     CXLType3Dev *ct3d = container_of(cxl_cstate, CXLType3Dev, cxl_cstate);
+     uint32_t *cache_mem = cregs->cache_mem_registers;
+     bool should_commit = false;
++    bool should_uncommit = false;
+     int which_hdm = -1;
+ 
+     assert(size == 4);
+@@ -403,6 +419,7 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+     switch (offset) {
+     case A_CXL_HDM_DECODER0_CTRL:
+         should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
++        should_uncommit = !should_commit;
+         which_hdm = 0;
+         break;
+     case A_CXL_RAS_UNC_ERR_STATUS:
+@@ -489,6 +506,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
+     stl_le_p((uint8_t *)cache_mem + offset, value);
+     if (should_commit) {
+         hdm_decoder_commit(ct3d, which_hdm);
++    } else if (should_uncommit) {
++        hdm_decoder_uncommit(ct3d, which_hdm);
+     }
+ }
+ 
+-- 
+2.37.2
 
