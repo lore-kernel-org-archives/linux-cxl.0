@@ -2,184 +2,143 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD7DC6FD20
-	for <linux-cxl@archiver.kernel.org>; Tue, 21 Mar 2023 19:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148BDC6FD20
+	for <linux-cxl@archiver.kernel.org>; Wed, 22 Mar 2023 00:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229945AbjCUT2V (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 21 Mar 2023 15:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
+        id S229694AbjCVAfJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 21 Mar 2023 20:35:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjCUT2T (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Mar 2023 15:28:19 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D54A53706
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Mar 2023 12:28:06 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230321192803usoutp02152e237a66f458b25815057bbd8ce1ad~OhdpI-z050177201772usoutp02h;
-        Tue, 21 Mar 2023 19:28:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230321192803usoutp02152e237a66f458b25815057bbd8ce1ad~OhdpI-z050177201772usoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1679426883;
-        bh=wJDgUHfzLgnupTNaPv93v+3CMV+EHh/+qabCeul7890=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=Fxk5gkLNVUkn22Q6PNF65RF1QM80qBsRvl7VjfaJobKxIiqAka9IkTCw9GnWrJsRl
-         Zqv/abtgRFyST2rjtm/o4Rt2PCY8w03pFsz+vLO2zLZJ+R2223Bddc71W7AZV9mfix
-         bWniNkvs0MkNdWn8ThhWyb3ac4ZS+Vnmrj83uHR0=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230321192803uscas1p1a18cc23574537b560f0e842215d7f60a~Ohdo-TTTf1910319103uscas1p1C;
-        Tue, 21 Mar 2023 19:28:03 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id ED.88.09547.3450A146; Tue,
-        21 Mar 2023 15:28:03 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230321192803uscas1p159362a081168a51902245d16b77de92d~OhdosLeyK1838018380uscas1p1E;
-        Tue, 21 Mar 2023 19:28:03 +0000 (GMT)
-X-AuditID: cbfec370-79bff7000000254b-a4-641a05437e62
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 60.E9.09541.2450A146; Tue,
-        21 Mar 2023 15:28:03 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 21 Mar 2023 12:28:02 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        21 Mar 2023 12:28:02 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Michael Tsirkin <mst@redhat.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/2] hw/cxl: Fix endian handling for decoder commit.
-Thread-Topic: [PATCH 1/2] hw/cxl: Fix endian handling for decoder commit.
-Thread-Index: AQHZXB8PhkxCI1wsR0uQTaxcCsGRK68GE5YA
-Date:   Tue, 21 Mar 2023 19:28:02 +0000
-Message-ID: <20230321192754.GA1621435@bgt-140510-bm03>
-In-Reply-To: <20230321180012.2545-2-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <54D1F7479DB7E342919CF17AFBCF30AE@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229629AbjCVAfI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 21 Mar 2023 20:35:08 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02AD574E1
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Mar 2023 17:35:07 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id D16203C284A;
+        Wed, 22 Mar 2023 00:35:06 +0000 (UTC)
+Received: from pdx1-sub0-mail-a273.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 3C2083C2E11;
+        Wed, 22 Mar 2023 00:35:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1679445306; a=rsa-sha256;
+        cv=none;
+        b=OBsxZpy/TLeiN7paDbKQuHYsfm62PEX0oEWmHN3ByRXoulogBLkaGy3MkoQNTFP0D0HRnU
+        mcxlX8UOj4wXwI+RdgckT4lAulW2tgJRn+E4Q4Y678FMRIpT8lI9mWX/WyqPZdm9Nj7RTw
+        4B3k6W46+puk3oOlIuZkeim5D4rlJRu5fOuAKwKjIKSo2079bjJTdEmCQk1+sVlQIVDpQJ
+        tEMK6HSVuSDEtcued5ElXGETQ2kxRsVtXBr4+2lB06DW+HLbjBdFQzRAUjplabGaK8t1wx
+        wnoPWzNyu+3exGxs6d6e9wOEc0n01DvklrVkVei259+IAjkphcFDgmsLoYS/UQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1679445306;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=LHl8Ycm5DtFIhQfcd3H5apDVy6yPkxbG0UAMI5K+ejg=;
+        b=aadJlu49rcCGLyDdzl+beMXRDvlWDd9+L9SV9ta2KFvImt85FEY26cTE/mhj0wuCpRKGrQ
+        54Qg727nfWvUTmwqGqeEtuRK9JaX+HE194SQYFcDexVMMXElmRBtaaDoTbXYwnYWgcr2x7
+        +HXihLODMScjWQPRpUcKtg0YE/P0/0iH7c/45Du2w+1yefd8WHJekNNwIZpK7F+jd1R0//
+        YwUEdFEZIvslH7SKIEAjaoONpffD2TfMKhHvNiIO1Crranl7Y7EXuPOFJhbAIOA5u2qBAI
+        Y0ZTAcG/1tKawpFfbSR07uPPo+u+Qpdqn2KG9+osBq/BWxew1BKePA+oEtrqTg==
+ARC-Authentication-Results: i=1;
+        rspamd-766d96cb5b-l7sxs;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Slimy-Arithmetic: 18ffe9961b2eb66b_1679445306643_2275959767
+X-MC-Loop-Signature: 1679445306643:3369902498
+X-MC-Ingress-Time: 1679445306643
+Received: from pdx1-sub0-mail-a273.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.104.253.212 (trex/6.7.2);
+        Wed, 22 Mar 2023 00:35:06 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a273.dreamhost.com (Postfix) with ESMTPSA id 4Ph8d54CL8z2F;
+        Tue, 21 Mar 2023 17:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1679445306;
+        bh=LHl8Ycm5DtFIhQfcd3H5apDVy6yPkxbG0UAMI5K+ejg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Jv/cYzEjxIwuAiNIpL+g6g5CwpRjnHWAuX556pAlStouW6BHLgr/GeTfk5ipvfavz
+         LActfK45yvXyDhdAqQN3izWZcNISCZXN/5Jd2zOL/M9GJdqJrbP5TqUE7WdDcfotYH
+         KsBbedbs+yj99Wml5q/Bdv37apNcSoTCdE8RiVsuMQFs3z/WbHhBbjX0+vfjwn34dP
+         CR6kWnywYiV3dbmQ3kRfKcJvWtCxT5AUo5ajUizCmbbRHoHUUds5duJ8B3TcW1V+Pb
+         DkjWaF8rBxuCgTCyqBVwYtw4IBnWAstNOyk0wtWpFtRFClMRQ/0OO1S6yP+00WEmwm
+         TIsQQ1xFALA6g==
+Date:   Tue, 21 Mar 2023 17:05:14 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     dan.j.williams@intel.com
+Cc:     jonathan.cameron@huawei.com, ira.weiny@intel.com,
+        fan.ni@samsung.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org, dave.jiang@intel.com
+Subject: Re: [PATCH v3 0/7] cxl: Background cmds and device sanitation
+Message-ID: <20230322000514.nlxg5u3oryep3eag@offworld>
+References: <20230224194652.1990604-1-dave@stgolabs.net>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djX87rOrFIpBkuPiVqcuNnIZrFq4TU2
-        i/OzTrFYHN54hsni/69XrBbHe3ewOLB5tBx5y+qxeM9LJo8n1zYzebzfd5XN4/MmuQDWKC6b
-        lNSczLLUIn27BK6MO5OXMxV0iFV8u/2ZpYHxoWAXIyeHhICJxNQnH5i7GLk4hARWMkqsnnOY
-        BcJpZZKY++U6O0zV8Q1r2SASaxklzs6bxwrhfGKUmHb3GlRmGaPE+v4WZpAWNgFFiX1d29lA
-        bBEBI4l3NyYxghQxCzxjlDjz7SATSEJYwEOi+fVqRogiT4nGxW3McA0/+1lBbBYBVYkV/w+A
-        DeIVMJP4PecR2E2cAg4SFxatYgGxGQXEJL6fWgM2k1lAXOLWk/lMEHcLSiyavYcZwhaT+Lfr
-        IRuErShx//tLdoh6HYkFuz+xQdh2Er+/7meEsLUlli18zQyxV1Di5MwnLBC9khIHV9wAB5KE
-        wBUOiX+9h6ASLhJ3p/ZBA0xa4ur1qUDNHEB2ssSqj1wQ4RyJ+Uu2QJVbSyz8s55pAqPKLCRn
-        z0Jy0iwkJ81CctIsJCctYGRdxSheWlycm55abJyXWq5XnJhbXJqXrpecn7uJEZiYTv87XLCD
-        8datj3qHGJk4GA8xSnAwK4nwujFLpAjxpiRWVqUW5ccXleakFh9ilOZgURLnNbQ9mSwkkJ5Y
-        kpqdmlqQWgSTZeLglGpgWnyz5qaS0lll5eM7Pb70tM+YHKDxPvT/hb3vJBaoGJRPrRF98eDY
-        atUAo6X8X5s3fnGx3ld2/wK3QfxxnYcqpZq/mdvZ3BTPa+Xdcr0xea+Pyvb+6WmTb88uXNuX
-        vuxXc6dqV/Vh371rd+3Y+HCxS/v/tsjJibNML3ZqJtjtl3/IeMb/t4wP21y2JJsYLgn2iq7q
-        pJ57Etxv2DfNlHAtDymXF+jVC+LuexeVsqjTQ2LnjaCMSTeTTk2qX3+sntv42YytVWYn3hrW
-        1O1yM9xY6POTwaSQR2Fnzzl7zYClm19xsM/Z0Cy9YfKD6OyWv/HJvkt4zudnn1zrznJzGqv6
-        qUvfhA8LTz9oMOGH4PKpSizFGYmGWsxFxYkAjJADybsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsWS2cA0SdeZVSrFYH6JxYmbjWwWqxZeY7M4
-        P+sUi8XhjWeYLP7/esVqcbx3B4sDm0fLkbesHov3vGTyeHJtM5PH+31X2Tw+b5ILYI3isklJ
-        zcksSy3St0vgyrgzeTlTQYdYxbfbn1kaGB8KdjFyckgImEgc37CWrYuRi0NIYDWjxP0Z01kg
-        nE+MEjNmHWeHcJYxShw99oIRpIVNQFFiX9d2NhBbRMBI4t2NSYwgRcwCzxglznw7yASSEBbw
-        kGh+vZoRoshTonFxGzNcw89+VhCbRUBVYsX/A2CDeAXMJH7PecQOYgsJnGSU+N9VB2JzCjhI
-        XFi0igXEZhQQk/h+ag3YfGYBcYlbT+YzQfwgILFkz3lmCFtU4uXjf6wQtqLE/e8v2SHqdSQW
-        7P7EBmHbSfz+up8RwtaWWLbwNTPEDYISJ2c+YYHolZQ4uOIGywRGiVlI1s1CMmoWklGzkIya
-        hWTUAkbWVYzipcXFuekVxYZ5qeV6xYm5xaV56XrJ+bmbGIExffrf4cgdjEdvfdQ7xMjEwXiI
-        UYKDWUmE141ZIkWINyWxsiq1KD++qDQntfgQozQHi5I4r5DrxHghgfTEktTs1NSC1CKYLBMH
-        p1QD0+VnV6+85zzw8vjCqeW8ZYWW+Urm+693bb63/M8GZ62La979SPPpPzfnyq9dEad+y5c2
-        2Dy+c2yy1AqmXduuBJSuuWe68/J7LhnJLg/etdq/f78R55O4Ktrqu2j3l31irBb39X6mCpbs
-        ksvl7DaLLF4Y+mHnkfnBCoFiXb0igadMy7cv03j9iXvd2aZzy/cJ+13h4PPjP3ym2vfmxt+t
-        4sVP9oietr96LXn3pYmrE18q3RE54aXHoBe07s4fy/1NM1jSTS8xs9/SO/q0cBOf+NQpp5X9
-        +dVCC2adlZA6Pr+t19Igbf+iMypGB/PnZQRuuM2uF1s8I+3RVuuGFR0/5Vwfp8g6yT8pqTdx
-        Xp8vyabEUpyRaKjFXFScCACA5OQNWAMAAA==
-X-CMS-MailID: 20230321192803uscas1p159362a081168a51902245d16b77de92d
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230321180043uscas1p26987d1a0d16fb69a44a0631bfc4c1eb9
-References: <20230321180012.2545-1-Jonathan.Cameron@huawei.com>
-        <CGME20230321180043uscas1p26987d1a0d16fb69a44a0631bfc4c1eb9@uscas1p2.samsung.com>
-        <20230321180012.2545-2-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230224194652.1990604-1-dave@stgolabs.net>
+User-Agent: NeoMutt/20220429
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 06:00:11PM +0000, Jonathan Cameron wrote:
-> Not a real problem yet as all supported architectures are
-> little endian, but continue to tidy these up when touching
-> code for other reasons.
->=20
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Fri, 24 Feb 2023, Davidlohr Bueso wrote:
 
-Hi Jonathan,
-Did you forget to send the other patch in this series by any chance?
+>Hello,
+>
+>This series adds support for the rest of the security related cxl operations
+>which are not strictly dependent on PMEM.
+>
+>Patch 1 adds the required background cmd handling bits (polling and irq).
+>This is really the main motivation of the series as there are various
+>features that will need this regardless of sanitation.
+>
+>Patch 2 adds a new sysfs 'security/state' file, which shows "disabled" if
+>no security features are available - which is more intuitive than no showing
+>it.
+>
+>Patch 3 adds a way to check if the device is actively used by tracking regions
+>with target the memdevice to sanitize. I realize this might not be what is
+>desired and wanted to get the expectations for this. This is more of a RFC
+>patch.
+>
+>Patches 4-7 add the Sanitation and Secure Erase support, per CXL3.0 specs.
+>
+>These changes have been tested with both the mock device as well as with qemu[0,1].
+>
+>Changes from v2 (https://lore.kernel.org/linux-cxl/20221206011501.464916-1-dave@stgolabs.net/):
+>- Redid the bacground cmd handling to use a syncronous approach instead.
+>- Added cxl_memdev_active_region() to check if the memdevice is being used
+>  (actively decoding any HPA ranges).
+>- Create a new security sysfs directory with a 'state' file which is always visible.
+>- The sysfs files' to trigger the security commands is only visible if
+>  cpu_cache_has_invalidate_memregion().
+>- Added a sanitize test for the mock device.
+>
+>Please consider for v6.4.
 
-Fan
-> ---
->  hw/cxl/cxl-component-utils.c | 10 ++++------
->  hw/mem/cxl_type3.c           |  9 ++++++---
->  2 files changed, 10 insertions(+), 9 deletions(-)
->=20
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index b665d4f565..a3e6cf75cf 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -47,14 +47,12 @@ static void dumb_hdm_handler(CXLComponentState *cxl_c=
-state, hwaddr offset,
->          break;
->      }
-> =20
-> -    memory_region_transaction_begin();
-> -    stl_le_p((uint8_t *)cache_mem + offset, value);
->      if (should_commit) {
-> -        ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> -        ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> -        ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1)=
-;
-> +        value =3D FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> +        value =3D FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +        value =3D FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 1)=
-;
->      }
-> -    memory_region_transaction_commit();
-> +    stl_le_p((uint8_t *)cache_mem + offset, value);
->  }
-> =20
->  static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_=
-t value,
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index abe60b362c..846089ccda 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -314,14 +314,17 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, i=
-nt which)
->  {
->      ComponentRegisters *cregs =3D &ct3d->cxl_cstate.crb;
->      uint32_t *cache_mem =3D cregs->cache_mem_registers;
-> +    uint32_t ctrl;
-> =20
->      assert(which =3D=3D 0);
-> =20
-> +    ctrl =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
->      /* TODO: Sanity checks that the decoder is possible */
-> -    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> -    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +    ctrl =3D FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
-> +    ctrl =3D FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +    ctrl =3D FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-> =20
-> -    ARRAY_FIELD_DP32(cache_mem, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-> +    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
->  }
-> =20
->  static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
-> --=20
-> 2.37.2
-> =
+Hi Dan, ping? I would like to see were we stand with this series and hopefully
+still time for 6.4 material - but that's not important. The open points which
+imo would best be answered before attempting a v4 based on the current input:
+
+- Are you ok with the approach in patch 1?
+
+- Are you ok with security directory always showing at least the state file? As
+Dave mentions this differs somewhat with nfit, but for that matter so does the
+whole security semantics (this is now a directory vs a single, multiplexed file).
+
+- Regarding ensuring the device is not actively decoding, would Alison/Fan's suggestion
+to use commit_end/hdm_end instead of my hacky patch 3 be feasible? Or did you
+have something else in mind?
+
+Thanks,
+Davidlohr
