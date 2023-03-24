@@ -2,121 +2,172 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B87C77B61
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 08:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67A7C6FD20
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 09:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231872AbjCXIyM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Mar 2023 04:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
+        id S231298AbjCXJJg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Mar 2023 05:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231886AbjCXIyL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 04:54:11 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED6B19C79;
-        Fri, 24 Mar 2023 01:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679648051; x=1711184051;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=j5CbuxsW9YhmDTT/LOuuIKZ5pDvmHmeXkVuCe8TyAu8=;
-  b=Jn9K6mf4UDgAy5KCMh12B1wCA/LGW/IjeaIeoMTPWrDcvx7AYWArFrcI
-   u/DpZlTea97pGFtE2D4nYBLpB8gBtntx1/w+aFLYnKUq/Kb/kTlNrkWZx
-   vf8N/3nUlxp1xNofvAcL2UyOWcTWM9+lqFQnOz0P1GTB9rbNqsy5Twz/w
-   OGhuu/3K0TbGyOkU9dm12LdMNt4+Fe84KUHzsb7+jgGHnbxyj1seFCemw
-   kNlrQcdiEx9rW0N5Rc27i1uhQvdDYgUJ63LY6LxkEJUo5B3yWOIO3Ff+z
-   zizV9RuzMN/jnH9KXAk/s/86nByrmdbSuGSqEfzqnrhdrOo5mb91vpD7N
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="328146195"
-X-IronPort-AV: E=Sophos;i="5.98,287,1673942400"; 
-   d="scan'208";a="328146195"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 01:54:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="806580721"
-X-IronPort-AV: E=Sophos;i="5.98,287,1673942400"; 
-   d="scan'208";a="806580721"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2023 01:54:07 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pfdBW-000F94-2u;
-        Fri, 24 Mar 2023 08:54:06 +0000
-Date:   Fri, 24 Mar 2023 16:53:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
-        rrichter@amd.com
-Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com
-Subject: Re: [PATCH v2 1/5] cxl/pci: Add RCH downstream port AER and RAS
- register discovery
-Message-ID: <202303241632.HTxJ0yfj-lkp@intel.com>
-References: <20230323213808.398039-2-terry.bowman@amd.com>
+        with ESMTP id S231654AbjCXJJa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 05:09:30 -0400
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB08616339
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Mar 2023 02:09:27 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230324090925epoutp04de0613ae915f8f8103efadba75ee02c6~PT9W1drMa0632806328epoutp04x
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Mar 2023 09:09:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230324090925epoutp04de0613ae915f8f8103efadba75ee02c6~PT9W1drMa0632806328epoutp04x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1679648965;
+        bh=f0X0PgQNIRa18Zw3p+myDnTTd6jspyLZGnNukXyxcyk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oM49UQ5XrdrSdpmt2oANKRBgMXxLmhlzwtj/Pq7VRbDl8ZmXkWwxf0jRgX7rqmrvW
+         po7JDK/Dy0kxa+zj9bxynudfPyTkl5O7eQ4Iy4KciUWFNZKc20f4mRy51mxNVbFg85
+         VND0TTznGqA3BVppAX5trbnFVPKpxOjiFl13jpV8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230324090924epcas2p3df4027204c33d6ba972e0e321b6a6124~PT9WdEo421378113781epcas2p3z;
+        Fri, 24 Mar 2023 09:09:24 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.97]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4Pjbxc2428z4x9Q1; Fri, 24 Mar
+        2023 09:09:24 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BD.EB.31307.4C86D146; Fri, 24 Mar 2023 18:09:24 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20230324090923epcas2p2710ba4dc8157f9141c03104cf66e9d26~PT9VXeM0d3122731227epcas2p2E;
+        Fri, 24 Mar 2023 09:09:23 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230324090923epsmtrp10ac6c7c71d85c3d8be9d18ef0605d40d~PT9VWge250442704427epsmtrp1A;
+        Fri, 24 Mar 2023 09:09:23 +0000 (GMT)
+X-AuditID: b6c32a46-743fa70000007a4b-2f-641d68c4b5be
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FA.F2.18071.3C86D146; Fri, 24 Mar 2023 18:09:23 +0900 (KST)
+Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230324090923epsmtip2bf24333b56efa57f9f4d7f9bfdc5b8ec~PT9VNSSzq0738207382epsmtip2f;
+        Fri, 24 Mar 2023 09:09:23 +0000 (GMT)
+From:   Kyungsan Kim <ks0204.kim@samsung.com>
+To:     david@redhat.com
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
+        dan.j.williams@intel.com
+Subject: RE(4): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL 
+Date:   Fri, 24 Mar 2023 18:09:23 +0900
+Message-Id: <20230324090923.147947-1-ks0204.kim@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <31395703-5f0e-651e-1e3d-226751a22d1b@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230323213808.398039-2-terry.bowman@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmue6RDNkUg8VTeSymH1a0mD71AqPF
+        1/W/mC3OzzrFYrFn70kWi3tr/rNa7Hu9l9miY8MbRgcOj38n1rB5LN7zkslj06dJ7B6Tbyxn
+        9Hi/7yqbR9+WVYwenzfJBbBHZdtkpCampBYppOYl56dk5qXbKnkHxzvHm5oZGOoaWlqYKynk
+        Jeam2iq5+AToumXmAB2lpFCWmFMKFApILC5W0rezKcovLUlVyMgvLrFVSi1IySkwL9ArTswt
+        Ls1L18tLLbEyNDAwMgUqTMjOmNSwkKWgVbLi8vlDTA2Mm0W6GDk5JARMJNouX2PuYuTiEBLY
+        wSixpGsHE4TziVFi2+rdjBDON0aJZb/fMsK0vDpwDKpqL6PEjqcwLV1MEmuWb2UDqWIT0Jb4
+        c+U8mC0iICLx4+FLsFHMAueB5r74zQ6SEBbwkPi16gIziM0ioCoxc8MLVhCbV8BGYvuudhaI
+        dfISMy99B6vnFLCTmP1wOSNEjaDEyZlPwGqYgWqat85mhqhv5JB40JkBYbtI7D/+DiouLPHq
+        +BZ2CFtK4mV/G5RdLPH49T8ou0Ti8JLfUHuNJd7dfA50DwfQfE2J9bv0QUwJAWWJI7egtvJJ
+        dBz+yw4R5pXoaBOCaFSR2P5vOTPMotP7N0EN95Dofj+JHRJUExkl7t+9zz6BUWEWkmdmIXlm
+        FsLiBYzMqxjFUguKc9NTi40KjOAxnJyfu4kRnEi13HYwTnn7Qe8QIxMH4yFGCQ5mJRHedyGy
+        KUK8KYmVValF+fFFpTmpxYcYTYFBPZFZSjQ5H5jK80riDU0sDUzMzAzNjUwNzJXEeaVtTyYL
+        CaQnlqRmp6YWpBbB9DFxcEo1MLGfmdaZqGR89u8utacLzFnElu/xF1mp1dnTNTeMp+rGBeut
+        /564Trbcsi5l2pHI4kLuaTvncbvJLVvD8C1r2s6zh/8UVp4MnPh+sYHJytJzcWU7Gqf+8ZNj
+        +b9UpyIotD79U1PU1xNZk01fPC8PeubJ+1G2eMPKB4xhnwKtY87mPumzjLQXefndvvEwv33+
+        zhyvG6cDquI1fmd+quP02Pxn5Z//aw4aMvkb5y+O6DQNVGyZ071+m0Jx+8S2CXnSTjH5N29/
+        UOt6yfdV5tcubqujb5kOdS6645MVMpmv+MjWvxd/VltXWfgVXy3plG15Wdy0t0jr5d+So5yr
+        a22nbZDV8e1z2ZQqLnx648pH55RYijMSDbWYi4oTAS42nzUtBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsWy7bCSvO7hDNkUg9vnNC2mH1a0mD71AqPF
+        1/W/mC3OzzrFYrFn70kWi3tr/rNa7Hu9l9miY8MbRgcOj38n1rB5LN7zkslj06dJ7B6Tbyxn
+        9Hi/7yqbR9+WVYwenzfJBbBHcdmkpOZklqUW6dslcGVMaljIUtAqWXH5/CGmBsbNIl2MnBwS
+        AiYSrw4cY+pi5OIQEtjNKHG27RM7REJK4v3pNihbWOJ+yxFWiKIOJonJi+8ygyTYBLQl/lw5
+        zwZiiwiISPx4+JIRpIhZ4CqjxMcXK8GKhAU8JH6tugBmswioSszc8IIVxOYVsJHYvqudBWKD
+        vMTMS9/BtnEK2EnMfricEcQWErCVmPLtPztEvaDEyZlPwOqZgeqbt85mnsAoMAtJahaS1AJG
+        plWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMFBr6W5g3H7qg96hxiZOBgPMUpwMCuJ
+        8L4LkU0R4k1JrKxKLcqPLyrNSS0+xCjNwaIkznuh62S8kEB6YklqdmpqQWoRTJaJg1OqgYlh
+        z9v3DzJaVY1zTh9+M+FHYJp54QneXZH9fJskbiWtaGTnecHzfveiZhX2e3dU769u8o2+9Zfp
+        S/S6NS7WV48wWBSpVpzu5n/P1Tnj6LP1Dk8z/BcnbTvDMFlKZcXtvIC4gJss68uTxYWL1h6x
+        n7tjppfjyU858yx2q0kdOOS7YH4C+9dtJ593CKgKmnm3rxZ7kj/Jyrde3OtCC3tptx+7QoCJ
+        zHwxifabMz+ZGl6MzfwkPUfEtda9/fHN59/kfqnt1+q7uPDzAdsYxbmfdzjyOZcca4zgLSib
+        v2HimpTWW9Lnt1Rca0xZkLnx0LYH73gX3skKP712+uqfP3rLtfw6dBLuzHF8JB3uxp29YZIS
+        S3FGoqEWc1FxIgD0GhGh6QIAAA==
+X-CMS-MailID: 20230324090923epcas2p2710ba4dc8157f9141c03104cf66e9d26
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230324090923epcas2p2710ba4dc8157f9141c03104cf66e9d26
+References: <31395703-5f0e-651e-1e3d-226751a22d1b@redhat.com>
+        <CGME20230324090923epcas2p2710ba4dc8157f9141c03104cf66e9d26@epcas2p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Terry,
+Thank you David Hinderbrand for your interest on this topic.
 
-Thank you for the patch! Perhaps something to improve:
+>>
+>>> Kyungsan Kim wrote:
+>>> [..]
+>>>>> In addition to CXL memory, we may have other kind of memory in the
+>>>>> system, for example, HBM (High Bandwidth Memory), memory in FPGA card,
+>>>>> memory in GPU card, etc.  I guess that we need to consider them
+>>>>> together.  Do we need to add one zone type for each kind of memory?
+>>>>
+>>>> We also don't think a new zone is needed for every single memory
+>>>> device.  Our viewpoint is the sole ZONE_NORMAL becomes not enough to
+>>>> manage multiple volatile memory devices due to the increased device
+>>>> types.  Including CXL DRAM, we think the ZONE_EXMEM can be used to
+>>>> represent extended volatile memories that have different HW
+>>>> characteristics.
+>>>
+>>> Some advice for the LSF/MM discussion, the rationale will need to be
+>>> more than "we think the ZONE_EXMEM can be used to represent extended
+>>> volatile memories that have different HW characteristics". It needs to
+>>> be along the lines of "yes, to date Linux has been able to describe DDR
+>>> with NUMA effects, PMEM with high write overhead, and HBM with improved
+>>> bandwidth not necessarily latency, all without adding a new ZONE, but a
+>>> new ZONE is absolutely required now to enable use case FOO, or address
+>>> unfixable NUMA problem BAR." Without FOO and BAR to discuss the code
+>>> maintainability concern of "fewer degress of freedom in the ZONE
+>>> dimension" starts to dominate.
+>>
+>> One problem we experienced was occured in the combination of hot-remove and kerelspace allocation usecases.
+>> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
+>> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
+>> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus efi/next cxl/next cxl/pending linus/master v6.3-rc3 next-20230324]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>That sounds like a bad hack :) .
+I consent you.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/cxl-pci-Add-RCH-downstream-port-AER-and-RAS-register-discovery/20230324-054044
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20230323213808.398039-2-terry.bowman%40amd.com
-patch subject: [PATCH v2 1/5] cxl/pci: Add RCH downstream port AER and RAS register discovery
-config: parisc-randconfig-s043-20230322 (https://download.01.org/0day-ci/archive/20230324/202303241632.HTxJ0yfj-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 12.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/7cbc5c7357504af79c820ad7d0e9369b4a580a65
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Terry-Bowman/cxl-pci-Add-RCH-downstream-port-AER-and-RAS-register-discovery/20230324-054044
-        git checkout 7cbc5c7357504af79c820ad7d0e9369b4a580a65
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=parisc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=parisc SHELL=/bin/bash
+>> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
+>> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303241632.HTxJ0yfj-lkp@intel.com/
+>I once raised the idea of a ZONE_PREFER_MOVABLE [1], maybe that's
+>similar to what you have in mind here. In general, adding new zones is
+>frowned upon.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/cxl/core/regs.c:340:24: sparse: sparse: Using plain integer as NULL pointer
-   drivers/cxl/core/regs.c:345:24: sparse: sparse: Using plain integer as NULL pointer
+Actually, we have already studied your idea and thought it is similar with us in 2 aspects.
+1. ZONE_PREFER_MOVABLE allows a kernelspace allocation using a new zone
+2. ZONE_PREFER_MOVABLE helps less fragmentation by splitting zones, and ordering allocation requests from the zones.
 
-vim +340 drivers/cxl/core/regs.c
+We think ZONE_EXMEM also helps less fragmentation.
+Because it is a separated zone and handles a page allocation as movable by default.
 
-   338	
-   339		if (!request_mem_region(map->resource, map->max_size, name))
- > 340			return 0;
-   341	
-   342		map->base = ioremap(map->resource, map->max_size);
-   343		if (!map->base) {
-   344			release_mem_region(map->resource, map->max_size);
-   345			return 0;
-   346		}
-   347	
-   348		return map->base;
-   349	}
-   350	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+>> As you well know, among heterogeneous DRAM devices, CXL DRAM is the first PCIe basis device, which allows hot-pluggability, different RAS, and extended connectivity.
+>> So, we thought it could be a graceful approach adding a new zone and separately manage the new features.
+>>
+>> Kindly let me know any advice or comment on our thoughts.
+>
+>[1] https://www.lkml.org/lkml/2020/9/9/667
+>
+>--
+>Thanks,
+>
+>David / dhildenb
