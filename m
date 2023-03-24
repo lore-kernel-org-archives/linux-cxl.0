@@ -2,172 +2,255 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6988C76196
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 22:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800F4C76195
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 22:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231801AbjCXWFA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Mar 2023 18:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33394 "EHLO
+        id S231963AbjCXWhB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Mar 2023 18:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232326AbjCXWEz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 18:04:55 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7BA1F483;
-        Fri, 24 Mar 2023 15:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679695485; x=1711231485;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZQpATWAgpEfOHRwSw8qlhWylXSqgSyK9oPTTEvQRcTA=;
-  b=lbmgLRR+LzYMHT7BH1lYPmtKbREJqhaEHWMGvhmED2q2NBIygQw5Jxx6
-   SDSGonwDldT1es6I0U72hRNhAgVGZt1cjZhsDiPTyNWqqj0VnGZq1XLwJ
-   Hk0VIoI/0RLRKJ8Vyzhg1vet63EFmSVPP7HzaEUzF6uh8rMKvbcZGp6n7
-   onBx3DfjB1s6nO5ekSQpMF/jsJhMqDuX/EHL+n3IUuDT4prBbHmjuO+fx
-   dMbGfE4Gi9Lfkagu8mZ8so/zp7kAPQJwtlfAeI641WuYK/gtRgLtjviaR
-   Bc1kClxLfgsZXUQrJf3k2ZvauympUf6hgEAkaylgyBFfHuGxJx+mFw7rI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="338616643"
-X-IronPort-AV: E=Sophos;i="5.98,289,1673942400"; 
-   d="scan'208";a="338616643"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 15:04:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="806827965"
-X-IronPort-AV: E=Sophos;i="5.98,289,1673942400"; 
-   d="scan'208";a="806827965"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2023 15:04:40 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pfpWU-000Fh7-2n;
-        Fri, 24 Mar 2023 22:04:34 +0000
-Date:   Sat, 25 Mar 2023 06:03:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        linux-cxl@vger.kernel.org, peterz@infradead.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        will@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
-Message-ID: <202303250546.ijiFKIpM-lkp@intel.com>
-References: <20230324171313.18448-5-Jonathan.Cameron@huawei.com>
+        with ESMTP id S231658AbjCXWhA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 18:37:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF573A8F;
+        Fri, 24 Mar 2023 15:36:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E28E62CF8;
+        Fri, 24 Mar 2023 22:36:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6E65C433EF;
+        Fri, 24 Mar 2023 22:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679697417;
+        bh=FHDfGSZzbmTk+//HRHt6i1lfo5GNVr0Ttjxyt2cvrTI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=opspLHEaeKbA4uehjxQMn6exzH/017owytagqPFzVQdcJl536gnEN64GBiPUmAyiB
+         nkhTOe8hxUoKIgfKA2/noNzkq2iI7qSAr+e6EI1bGcsn7+6Q2ren9bEtvGR3glJMZ8
+         wXGFvY2AnC0MWDGnpwSbuFq9o0rZ+Wle8Hra8SsUGWt69aEdtGMzlVbXlLuoPWrTEH
+         gE6ieb5aXzPTWrweJdQZPIM7mX3fjdSJaIhmpXYfF2V+puHUeP6IO3hgGe5cRVMdqv
+         S+BMaM48YuloMttbmQMEOFOPh7svdazWoIu2ZLzu1ubNMQ/8o/VUeR/cVweXWiVIL0
+         myMh+tp2rymVQ==
+Date:   Fri, 24 Mar 2023 17:36:56 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Terry Bowman <terry.bowman@amd.com>
+Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
+        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
+        linux-cxl@vger.kernel.org, rrichter@amd.com,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com
+Subject: Re: [PATCH v2 4/5] cxl/pci: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <20230324223656.GA2660301@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230324171313.18448-5-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230323213808.398039-5-terry.bowman@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Jonathan,
+I'd call this a "PCI/AER: ..." patch since that's where all the
+changes are.
 
-I love your patch! Perhaps something to improve:
+On Thu, Mar 23, 2023 at 04:38:07PM -0500, Terry Bowman wrote:
+> From: Robert Richter <rrichter@amd.com>
+> 
+> In RCD mode a CXL device (RCD) is exposed as an RCiEP, but CXL
+> downstream and upstream ports are not enumerated and not visible in
+> the PCIe hierarchy. Protocol and link errors are sent to an RCEC.
 
-[auto build test WARNING on acme/perf/core]
-[also build test WARNING on tip/perf/core cxl/next cxl/pending linus/master v6.3-rc3 next-20230324]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+"RCD" isn't a common term in drivers/pci; can you expand it once here?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-patch link:    https://lore.kernel.org/r/20230324171313.18448-5-Jonathan.Cameron%40huawei.com
-patch subject: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
-config: i386-randconfig-a004 (https://download.01.org/0day-ci/archive/20230325/202303250546.ijiFKIpM-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/a04f0052a1fa10bda54569c8c7b3ab7fe60ca975
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
-        git checkout a04f0052a1fa10bda54569c8c7b3ab7fe60ca975
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/cxl/
+> Now, RCH downstream port-detected errors are signaled as internal AER
+> errors (UIE/CIE) with the RCEC's source ID. A CXL handler must then
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303250546.ijiFKIpM-lkp@intel.com/
+Similarly, "UIE" and "CIE" are new to drivers/pci; can you expand them
+before using?  I assume Uncorrectable Internal Error (UIE) and
+Corrected Internal Error (CIE)?  (Annoying that the PCIe spec uses
+"Correctable" in general, but "Corrected" for Internal Errors.)
 
-All warnings (new ones prefixed by >>):
+> inspect the error status in various CXL registers residing in the
+> dport's component register space (CXL RAS cap) or the dport's RCRB
+> (AER ext cap). [1]
+> 
+> This patch connects errors showing up in the RCEC's error handler with
 
-   drivers/cxl/cpmu.c:101:8: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           val = readq(base + CPMU_CAP_REG);
-                 ^
-   drivers/cxl/cpmu.c:559:3: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-                   writeq(0, base + CPMU_FREEZE_REG);
-                   ^
-   drivers/cxl/cpmu.c:578:3: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-                   writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
-                   ^
->> drivers/cxl/cpmu.c:578:10: warning: shift count is negative [-Wshift-count-negative]
-                   writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
-                          ^~~~~~~~~~~~~~
-   include/linux/bits.h:37:31: note: expanded from macro 'GENMASK'
-           (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-                                        ^~~~~~~~~~~~~~~
-   include/linux/bits.h:35:11: note: expanded from macro '__GENMASK'
-            (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-                    ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/cxl/cpmu.c:605:3: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-                   writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
-                   ^
-   drivers/cxl/cpmu.c:608:8: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
-                 ^
-   drivers/cxl/cpmu.c:630:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
-           ^
-   drivers/cxl/cpmu.c:648:9: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           return readq(base + CPMU_COUNTER_REG(event->hw.idx));
-                  ^
-   drivers/cxl/cpmu.c:689:8: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
-                 ^
-   drivers/cxl/cpmu.c:692:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
-           ^
-   drivers/cxl/cpmu.c:709:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(0, base + CPMU_EVENT_CAP_REG(idx));
-           ^
-   drivers/cxl/cpmu.c:761:15: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           overflowed = readq(base + CPMU_OVERFLOW_REG);
-                        ^
-   drivers/cxl/cpmu.c:780:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(overflowed, base + CPMU_OVERFLOW_REG);
-           ^
-   1 warning and 12 errors generated.
+"Connect errors ..." (we already know this text applies to *this
+patch*).
 
+> the CXL subsystem. Implement this by forwarding the error to all CXL
+> devices below the RCEC. Since the entire CXL device is controlled only
+> using PCIe Configuration Space of device 0, Function 0, only pass it
+> there [2]. These devices have the Memory Device class code set
+> (PCI_CLASS_MEMORY_CXL, 502h) and the existing cxl_pci driver can
+> implement the handler.
 
-vim +578 drivers/cxl/cpmu.c
+> The CXL device driver is then responsible to
+> enable error reporting in the RCEC's AER cap
 
-   564	
-   565	static void cpmu_pmu_disable(struct pmu *pmu)
-   566	{
-   567		struct cpmu_info *info = pmu_to_cpmu_info(pmu);
-   568		void __iomem *base = info->base;
-   569	
-   570		if (info->freeze_for_enable) {
-   571			/*
-   572			 * Whilst bits above number of counters are RsvdZ
-   573			 * they are unlikely to be repurposed given
-   574			 * number of counters is allowed to be 64 leaving
-   575			 * no reserved bits.  Hence this is only slightly
-   576			 * naughty.
-   577			 */
- > 578			writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
-   579			return;
-   580		}
-   581	}
-   582	
+I don't know exactly what you mean by "error reporting in the RCEC's
+AER cap", but IIUC, for non-Root Port devices, generation of ERR_COR/
+ERR_NONFATAL/ERR_FATAL messages is controlled by the Device Control
+register and should already be enabled by pci_aer_init().
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Maybe you mean setting AER mask/severity specifically for Internal
+Errors?  I'm hoping to get as much of AER management as we can in the
+PCI core and out of drivers, so maybe we need a new PCI interface to
+do that.
+
+In any event, I assume this sort of configuration would be an
+enumeration-time thing, while *this* patch is a run-time thing, so
+maybe this information belongs with a different patch?
+
+> (esp. CIE and UIE) and to
+> inspect the dport's CXL registers in addition (CXL RAS cap and AER ext
+> cap).
+> 
+> The reason for choosing this implementation is that a CXL RCEC device
+> is bound to the AER port driver, but the driver does not allow it to
+> register a custom specific handler to support CXL. Connecting the RCEC
+> hard-wired with a CXL handler does not work, as the CXL subsystem
+> might not be present all the time. The alternative to add an
+> implementation to the portdrv to allow the registration of a custom
+> RCEC error handler isn't worth doing it as CXL would be its only user.
+> Instead, just check for an CXL RCEC and pass it down to the connected
+> CXL device's error handler.
+> 
+> [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
+> [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+
+Since you're sending this patch (Terry) your Signed-off-by should be
+last.
+
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pci@vger.kernel.org
+> ---
+>  drivers/pci/pcie/aer.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 7f0f52d094a4..d250a4caa85a 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -943,6 +943,49 @@ static bool find_source_device(struct pci_dev *parent,
+>  	return true;
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_CXL_PCI)
+> +
+> +static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info);
+> +
+> +static int handle_cxl_error_iter(struct pci_dev *dev, void *data)
+> +{
+> +	struct aer_err_info *e_info = (struct aer_err_info *)data;
+> +
+
+Thanks for explaining the :00.0 in the commit log.  I think a one-line
+comment here would be useful too so future readers don't have to dig
+out the commit to understand.
+
+> +	if (dev->devfn != PCI_DEVFN(0, 0))
+> +		return 0;
+> +
+> +	/* Right now there is only a CXL.mem driver */
+> +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> +		return 0;
+> +
+> +	/* pci_dev_put() in handle_error_source() */
+> +	dev = pci_dev_get(dev);
+
+I don't see why you need this.  Didn't we get here via this path?
+
+  aer_isr
+    aer_isr_one_error
+      find_source_device
+        find_device_iter
+          if (is_error_source())
+            add_error_device
+              pci_dev_get          <-- existing pci_dev_get()
+      aer_process_err_devices
+        for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++)
+          if (aer_get_device_error_info(e_info->dev[i], e_info))
+            handle_error_source
+  +           handle_cxl_error
+              pci_dev_put(dev)     <-- existing pci_dev_put()
+
+So it looks like we wouldn't call handle_error_source() unless we had
+a valid e_info->dev[i], which has already had pci_dev_get() called on
+it.
+
+Oh, I think I see ... handle_cxl_error() itself was called because an
+RCEC reported an error on behalf of a CXL RCiEP (?), and then you use
+pcie_walk_rcec() to look through all the associated RCiEPs, and
+recursively call handle_error_source(), and we haven't acquired a
+reference to those RCiEPs.  Right?
+
+But I thought the CXL things were not enumerated (first paragraph of
+commit log)?  But obviously these RCiEPs must be enumerated as PCI
+devices or pcie_walk_rcec() and pci_dev_get() wouldn't work.
+
+I haven't worked all the way through this, but I thought Sean Kelley's
+and Qiuxu Zhuo's work was along the same line and might cover this,
+e.g.,
+
+  a175102b0a82 ("PCI/ERR: Recover from RCEC AER errors")
+  579086225502 ("PCI/ERR: Recover from RCiEP AER errors")
+  af113553d961 ("PCI/AER: Add pcie_walk_rcec() to RCEC AER handling")
+
+But I guess maybe it's not quite the same case?
+
+If you *do* need this, I know pci_dev_get(NULL) is a no-op, but since
+you're testing for NULL anyway, I'd put it inside the "if" body.
+
+> +	if (dev)
+> +		handle_error_source(dev, e_info);
+> +
+> +	return 0;
+> +}
+> +
+> +static bool is_internal_error(struct aer_err_info *info)
+> +{
+> +	if (info->severity == AER_CORRECTABLE)
+> +		return info->status & PCI_ERR_COR_INTERNAL;
+> +
+> +	return info->status & PCI_ERR_UNC_INTN;
+> +}
+> +
+> +static void handle_cxl_error(struct pci_dev *dev, struct aer_err_info *info)
+> +{
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> +	    is_internal_error(info))
+
+What's unique about Internal Errors?  I'm trying to figure out why you
+wouldn't do this for *all* CXL errors.
+
+> +		pcie_walk_rcec(dev, handle_cxl_error_iter, info);
+> +}
+> +
+> +#else
+> +static inline void handle_cxl_error(struct pci_dev *dev,
+> +				    struct aer_err_info *info) { }
+> +#endif
+> +
+>  /**
+>   * handle_error_source - handle logging error into an event log
+>   * @dev: pointer to pci_dev data structure of error source device
+> @@ -954,6 +997,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	int aer = dev->aer_cap;
+>  
+> +	handle_cxl_error(dev, info);
+> +
+>  	if (info->severity == AER_CORRECTABLE) {
+>  		/*
+>  		 * Correctable error does not need software intervention.
+> -- 
+> 2.34.1
+> 
