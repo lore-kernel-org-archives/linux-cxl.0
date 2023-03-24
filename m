@@ -2,166 +2,133 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9C4C6FD1C
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 17:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E2AC76195
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 17:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjCXRFf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Mar 2023 13:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55272 "EHLO
+        id S229830AbjCXROG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Mar 2023 13:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231939AbjCXRF3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 13:05:29 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBCA19C44
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Mar 2023 10:05:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679677525; x=1711213525;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8AFG7JhvkdVT4uFApogk+R72HBRNldkiNduLZ86tu3w=;
-  b=WwOzlz/jepdHST/uZsnqujKNtgV0X4ytoNlyytwAr+HncOMX38nCjxFB
-   E2ht+b3G5Y36q+4fkXUuagvC0BllarZnbuJ2twVLABUpgwylzFmbRIl7e
-   IhYVvLdqT1Y96DLrAuu2lSxVmFrmjhh8JM06f4BRts5KQ0V1pxFJ0fZPu
-   WnZsiiKiVr+aBZlfnsK/zqc4+rXknXq9c6Nq/ebwEwdbWzaZF9chAPjEd
-   +lRkZfgErBd+VvNJ6Gy4q1DaDTmpCEM1bAEHcwiV1SuvftaAyWtBy9zDO
-   8CFsQYBt4ft4ACVVds4dsaIM86ljgJCVYvK40yNrqmW+bPclE2EGOmFmL
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="323709698"
-X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
-   d="scan'208";a="323709698"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 10:05:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="793518667"
-X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
-   d="scan'208";a="793518667"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.52.172]) ([10.212.52.172])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 10:05:21 -0700
-Message-ID: <33825419-59bf-f6f8-6444-de24a90c2fa6@intel.com>
-Date:   Fri, 24 Mar 2023 10:05:20 -0700
+        with ESMTP id S230157AbjCXROF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 13:14:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EF8172C;
+        Fri, 24 Mar 2023 10:13:34 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pjpf83N0yz6J7BP;
+        Sat, 25 Mar 2023 01:11:44 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 24 Mar 2023 17:13:06 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v2 0/5] CXL 3.0 Performance Monitoring Unit support
+Date:   Fri, 24 Mar 2023 17:13:08 +0000
+Message-ID: <20230324171313.18448-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [RESEND PATCH 2/2] hw/cxl: Fix incorrect reset of commit and
- associated clearing of committed.
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michael Tsirkin <mst@redhat.com>, qemu-devel@nongnu.org
-Cc:     linuxarm@huawei.com, Fan Ni <fan.ni@samsung.com>,
-        linux-cxl@vger.kernel.org
-References: <20230322102731.4219-1-Jonathan.Cameron@huawei.com>
- <20230322103300.4278-1-Jonathan.Cameron@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230322103300.4278-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Significant changes since v1:
+- New patch 2 - allow a PMU device to have a parent. This helps identify
+  the association of the CPMU with the CXL devices without needing to
+  rely on messy naming of the PMU.
+- Set the parent for each CPMU instance.
+- Add missing cpmu.h from patch 3.
+- Fix a bug due to bad ordering of ida allocation wrt to device_initialize()
+- Split the event list in two as handling for fixed and configurable
+  counters is different.  Add util functions to search each list.
+- Lots of other improvements in patch 4 called out in that patch description.
 
+Thanks to all those who looked at it, and Kan Liang in particular for
+all the feedback on the main driver.
 
-On 3/22/23 3:33 AM, Jonathan Cameron wrote:
-> The hardware clearing the commit bit is not spec compliant.
-> Clearing of committed bit when commit is cleared is not specifically
-> stated in the CXL spec, but is the expected (and simplest) permitted
-> behaviour so use that for QEMU emulation.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Updated cover letter.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
 
-> ---
->   hw/cxl/cxl-component-utils.c |  6 +++++-
->   hw/mem/cxl_type3.c           | 21 ++++++++++++++++++++-
->   2 files changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index a3e6cf75cf..378f1082ce 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -38,19 +38,23 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
->       ComponentRegisters *cregs = &cxl_cstate->crb;
->       uint32_t *cache_mem = cregs->cache_mem_registers;
->       bool should_commit = false;
-> +    bool should_uncommit = false;
->   
->       switch (offset) {
->       case A_CXL_HDM_DECODER0_CTRL:
->           should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-> +        should_uncommit = !should_commit;
->           break;
->       default:
->           break;
->       }
->   
->       if (should_commit) {
-> -        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
->           value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
->           value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
-> +    } else if (should_uncommit) {
-> +        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +        value = FIELD_DP32(value, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
->       }
->       stl_le_p((uint8_t *)cache_mem + offset, value);
->   }
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 846089ccda..9598d584ac 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -320,13 +320,28 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
->   
->       ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
->       /* TODO: Sanity checks that the decoder is possible */
-> -    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMIT, 0);
->       ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
->       ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
->   
->       stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
->   }
->   
-> +static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
-> +{
-> +    ComponentRegisters *cregs = &ct3d->cxl_cstate.crb;
-> +    uint32_t *cache_mem = cregs->cache_mem_registers;
-> +    uint32_t ctrl;
-> +
-> +    assert(which == 0);
-> +
-> +    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
-> +
-> +    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> +    ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
-> +
-> +    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
-> +}
-> +
->   static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
->   {
->       switch (qmp_err) {
-> @@ -395,6 +410,7 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
->       CXLType3Dev *ct3d = container_of(cxl_cstate, CXLType3Dev, cxl_cstate);
->       uint32_t *cache_mem = cregs->cache_mem_registers;
->       bool should_commit = false;
-> +    bool should_uncommit = false;
->       int which_hdm = -1;
->   
->       assert(size == 4);
-> @@ -403,6 +419,7 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
->       switch (offset) {
->       case A_CXL_HDM_DECODER0_CTRL:
->           should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-> +        should_uncommit = !should_commit;
->           which_hdm = 0;
->           break;
->       case A_CXL_RAS_UNC_ERR_STATUS:
-> @@ -489,6 +506,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
->       stl_le_p((uint8_t *)cache_mem + offset, value);
->       if (should_commit) {
->           hdm_decoder_commit(ct3d, which_hdm);
-> +    } else if (should_uncommit) {
-> +        hdm_decoder_uncommit(ct3d, which_hdm);
->       }
->   }
->   
+Notes.
+
+1) The QEMU model against which this was developed needs tidying up.
+   Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go. So whilst I believe
+   the driver should be fine for what it supports we may find issues
+   as those corners of what is allowed are explored.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+5) Patch 1 led to a discussion of how to handle the self describing
+   and extensible nature of the CPMU counters.  That is likely to involve
+   a description in the "caps" sysfs directory and perf tool code that is
+   aware of the different event combinations that make sense and can
+   establish which sets are available on a given device.
+   That is likely to take a while to converge on, so as the driver is useful
+   in the current state, I'm looking to upstream this first and deal with
+   the more complex handling later.
+6) There is a lot of other functionality that can be added in future
+   include allowing for simpler hardware implementations that may not
+   support the minimum level of features currently required by the driver
+   (freeze, overflow interrupts etc).
+
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
+
+Jonathan Cameron (5):
+  cxl: Add function to count regblocks of a given type.
+  perf: Allow a PMU to have a parent.
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver.
+
+ Documentation/admin-guide/perf/cxl.rst   |  65 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  12 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   3 +
+ drivers/cxl/core/cpmu.c                  |  72 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  50 +-
+ drivers/cxl/cpmu.c                       | 937 +++++++++++++++++++++++
+ drivers/cxl/cpmu.h                       |  56 ++
+ drivers/cxl/cxl.h                        |  17 +-
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  27 +-
+ include/linux/perf_event.h               |   1 +
+ kernel/events/core.c                     |   1 +
+ 17 files changed, 1243 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.h
+
+-- 
+2.37.2
+
