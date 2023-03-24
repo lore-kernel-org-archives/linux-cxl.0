@@ -2,79 +2,142 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27393C6FD1C
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 17:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C7C6FD1C
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 21:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231925AbjCXRuP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Mar 2023 13:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        id S230196AbjCXVEZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Mar 2023 17:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231477AbjCXRuH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 13:50:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5996386AB;
-        Fri, 24 Mar 2023 10:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=L97NvfZpT4YYB2rdfhkEMctBAC/jl2cw0YL5PLc13BA=; b=fEbTH4nis2CZPnj27yrwBEsGhj
-        VM8eoqNH3bifgYPWDCswe9n/9bMkqmOy5COrPuXPq4Zk9hgfyuzvaoV5lJnxFOVwlirmh3qGokOap
-        gI8qA0vHgkAiGdwPhOrHDHwh9Ft4PFmhVXByjsyv1q7xoXroweqTci/Lm4OwbZzTHcoqS5K3eWW40
-        8bwrRv9LAuYDumh0kixTbWDUIaipmMMp0XeQd/Z4WDHZTFY/XyWX78aXnrNGuEoN7z1sO9N6G54Zt
-        dcJ5LLvgtXkcsnx55jlrdO00uFGTjlS7RVsTI8WPbrlIdYiODx7X1RKXfzx6ehe95i1P1hVejhj+o
-        dxXo5IsQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pflXA-00577f-BH; Fri, 24 Mar 2023 17:49:00 +0000
-Date:   Fri, 24 Mar 2023 17:49:00 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     dan.j.williams@intel.com, lsf-pc@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-        viacheslav.dubeyko@bytedance.com, ying.huang@intel.com
-Subject: Re: RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Message-ID: <ZB3ijJBf3SEF+Xl2@casper.infradead.org>
-References: <641b7b2117d02_1b98bb294cb@dwillia2-xfh.jf.intel.com.notmuch>
- <CGME20230323105106epcas2p39ea8de619622376a4698db425c6a6fb3@epcas2p3.samsung.com>
- <20230323105105.145783-1-ks0204.kim@samsung.com>
- <ZB25xqRMgTrQas5W@casper.infradead.org>
+        with ESMTP id S229921AbjCXVEY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 17:04:24 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EFC166C1;
+        Fri, 24 Mar 2023 14:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679691863; x=1711227863;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Lrh8mfNbujVclko7AoZ5oMBIAjQ3E9uh/4Jho+AveiE=;
+  b=ktB3mKp7GHM8FtDdQEmQBqqE5DG+C8c/RWSAulIKI7UiErMPOwjhyYJU
+   xlhE5wtGtWZonikpGzWLwU4zCmcyWQTqLan4TiYpXXDY2ZGOJQnTa5pb/
+   IkgwaRpXpg4kX/QUpelD1DDftXNkTgVclmXHQxaE6q1ZPiIvmF3c7F0Uh
+   /Q3kfR+MvJrpESs4/wBayVFg6hAQR7PuRuyOWKbgPfH0vg7qG2RM6Wsch
+   5jHVc3VuA12gETTAQVgemaC76Icd/oYL7yWOrBnGfU5uUPg+w1CuaVkFN
+   hBelcL1YV4fTyab0YFiaSQQlJlv+orGAli/+5EgdKpXfbX3GSDbkEjtRR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="338608054"
+X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
+   d="scan'208";a="338608054"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 14:01:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="793584347"
+X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
+   d="scan'208";a="793584347"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Mar 2023 14:01:33 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pfoXU-000Fee-2t;
+        Fri, 24 Mar 2023 21:01:32 +0000
+Date:   Sat, 25 Mar 2023 05:01:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        linux-cxl@vger.kernel.org, peterz@infradead.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        will@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v2 3/5] cxl/pci: Find and register CXL PMU devices
+Message-ID: <202303250419.FANh4fIC-lkp@intel.com>
+References: <20230324171313.18448-4-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZB25xqRMgTrQas5W@casper.infradead.org>
+In-Reply-To: <20230324171313.18448-4-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 24, 2023 at 02:55:02PM +0000, Matthew Wilcox wrote:
-> No, that's not true.  You can allocate kernel memory from ZONE_MOVABLE.
-> You have to be careful when you do that, but eg filesystems put symlinks
-> and directories in ZONE_MOVABLE, and zswap allocates memory from
-> ZONE_MOVABLE.  Of course, then you have to be careful that the kernel
-> doesn't try to move it while you're accessing it.  That's the tradeoff.
+Hi Jonathan,
 
-I want to talk a little bit about what it would take to use MOVABLE
-allocations for slab.
+I love your patch! Yet something to improve:
 
-Initially, one might presume that it is impossible to have slab use a
-movable allocation.  Usually, we need a relatively complex mechanism of
-reference counting where one takes a reference on the page, uses it,
-then puts the reference.  Then migration can check the page reference
-and if it's unused, it knows it's safe to migrate (much handwaving here,
-of course it's more complex).
+[auto build test ERROR on acme/perf/core]
+[also build test ERROR on tip/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The general case of kmalloc slabs cannot use MOVABLE allocations.
-The API has no concept of "this pointer is temporarily not in use",
-so we can never migrate any slab which has allocated objects.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+patch link:    https://lore.kernel.org/r/20230324171313.18448-4-Jonathan.Cameron%40huawei.com
+patch subject: [PATCH v2 3/5] cxl/pci: Find and register CXL PMU devices
+config: arm-randconfig-r023-20230322 (https://download.01.org/0day-ci/archive/20230325/202303250419.FANh4fIC-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 67409911353323ca5edf2049ef0df54132fa1ca7)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/ab99ab31e5c4aa9f68425f3505f22a790d64bfe9
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
+        git checkout ab99ab31e5c4aa9f68425f3505f22a790d64bfe9
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/cxl/
 
-But for slab caches, individual objects may have access rules which allow
-them to be moved.  For example, we might be able to migrate every dentry
-in a slab, then RCU-free the slab.  Similarly for radix_tree_nodes.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303250419.FANh4fIC-lkp@intel.com/
 
-There was some work along these lines a few years ago:
-https://lore.kernel.org/all/20190603042637.2018-16-tobin@kernel.org/
+All errors (new ones prefixed by >>):
 
-There are various practical problems with that patchset, but they can
-be overcome with sufficient work.  The question is: Why do we need to do
-this work?  What is the high-level motivation to make slab caches movable?
+>> drivers/cxl/core/port.c:60:20: error: use of undeclared identifier 'cxl_cpmu_type'; did you mean 'cxl_bus_type'?
+           if (dev->type == &cxl_cpmu_type)
+                             ^~~~~~~~~~~~~
+                             cxl_bus_type
+   drivers/cxl/cxl.h:732:24: note: 'cxl_bus_type' declared here
+   extern struct bus_type cxl_bus_type;
+                          ^
+   1 error generated.
+
+
+vim +60 drivers/cxl/core/port.c
+
+    40	
+    41	static int cxl_device_id(const struct device *dev)
+    42	{
+    43		if (dev->type == &cxl_nvdimm_bridge_type)
+    44			return CXL_DEVICE_NVDIMM_BRIDGE;
+    45		if (dev->type == &cxl_nvdimm_type)
+    46			return CXL_DEVICE_NVDIMM;
+    47		if (dev->type == CXL_PMEM_REGION_TYPE())
+    48			return CXL_DEVICE_PMEM_REGION;
+    49		if (dev->type == CXL_DAX_REGION_TYPE())
+    50			return CXL_DEVICE_DAX_REGION;
+    51		if (is_cxl_port(dev)) {
+    52			if (is_cxl_root(to_cxl_port(dev)))
+    53				return CXL_DEVICE_ROOT;
+    54			return CXL_DEVICE_PORT;
+    55		}
+    56		if (is_cxl_memdev(dev))
+    57			return CXL_DEVICE_MEMORY_EXPANDER;
+    58		if (dev->type == CXL_REGION_TYPE())
+    59			return CXL_DEVICE_REGION;
+  > 60		if (dev->type == &cxl_cpmu_type)
+    61			return CXL_DEVICE_CPMU;
+    62		return 0;
+    63	}
+    64	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
