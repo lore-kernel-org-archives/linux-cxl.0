@@ -2,110 +2,146 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6BDC74A5B
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 00:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D65C6FD20
+	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 05:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229868AbjCXAmM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 23 Mar 2023 20:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
+        id S229623AbjCXFkI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 24 Mar 2023 01:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbjCXAmM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 23 Mar 2023 20:42:12 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65642CC55;
-        Thu, 23 Mar 2023 17:42:10 -0700 (PDT)
+        with ESMTP id S231189AbjCXFkH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 01:40:07 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E8E252A8;
+        Thu, 23 Mar 2023 22:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679618530; x=1711154530;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=AnfAZEwkzaV+MXfEzXGLd84me6iNy8c8SDgIW7uWzHs=;
-  b=bLYXl7Ao7NWW9z6af7lkHBb+NePfMyCfWXPKrhJgQLmSmKD7DfuZjXiS
-   2GTmGGc65A40Bt27fHGKfgHRcaYLGr0KCC5wKoj8mg+9i7n2DpaNI7g5S
-   86VuypJ348MLKWSVAfZqsxY4VZSH1ATflLBCrVnAcz8DlXd8ZP2Z63j/x
-   aTTUnSzo1saBr1fTpHNpz6ivPjDQrU0gDd+eOHzJS/DwJ6fC0bFtYy4d1
-   ySqTY6y9pbV1IrpithpbEHOS+wSfhZnzG0zOT3SsOTv+R7WqgPYgMEMVq
-   jUwkeo2AIvoj5dDCOO7LmAV9kyIobnimx7Ytsf5E2OO0/gWukrFLYIVXU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="404577358"
+  t=1679636405; x=1711172405;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lz4E1YV6Yw7Hz3q4Hij1kHmq1J+RPLt8Y3nDI4SGDMQ=;
+  b=joKT+3CbvStHIeYNA97yDkf4Vk+AC4b3DdqHyyb1YrNERM/mR1AVDTcx
+   PfFasXYy4l44cRbYS8ceZwjqEg86+scYZ/BdgShphgxpSzzEKHwG4XvLw
+   E41J+D6mcSPdjGYithoHkl17H2sHszGl5wR7Lt9OHWJMuxRi8eNrm1sq4
+   SVlzKZAR1LNmK06uVcSXv3d5y9W0AV3fGyb/mIUqAAXLl6muOCWqEw+I2
+   ryfAr0mNt/GmaMUFuEai5ekumPKK5QgMWX82k4BQjReTdQKOb9Wj6/tIk
+   rbYe6yfg1ev7gBfS1YM0Um7tByBxeHtyEKKnDPlTvz2HNWBtBefO7yNMm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="367439463"
 X-IronPort-AV: E=Sophos;i="5.98,286,1673942400"; 
-   d="scan'208";a="404577358"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 17:42:10 -0700
+   d="scan'208";a="367439463"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 22:40:05 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="684958656"
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="676010886"
 X-IronPort-AV: E=Sophos;i="5.98,286,1673942400"; 
-   d="scan'208";a="684958656"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 17:42:08 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     dan.j.williams@intel.com, lsf-pc@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-        viacheslav.dubeyko@bytedance.com
-Subject: Re: RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-References: <641b7b2117d02_1b98bb294cb@dwillia2-xfh.jf.intel.com.notmuch>
-        <CGME20230323105106epcas2p39ea8de619622376a4698db425c6a6fb3@epcas2p3.samsung.com>
-        <20230323105105.145783-1-ks0204.kim@samsung.com>
-Date:   Fri, 24 Mar 2023 08:41:02 +0800
-In-Reply-To: <20230323105105.145783-1-ks0204.kim@samsung.com> (Kyungsan Kim's
-        message of "Thu, 23 Mar 2023 19:51:05 +0900")
-Message-ID: <87wn37q8v5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+   d="scan'208";a="676010886"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 23 Mar 2023 22:40:01 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pfa9g-000F1E-2P;
+        Fri, 24 Mar 2023 05:40:00 +0000
+Date:   Fri, 24 Mar 2023 13:39:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
+        rrichter@amd.com
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com
+Subject: Re: [PATCH v2 5/5] cxl/pci: Add RCH downstream port error logging
+Message-ID: <202303241305.7Xdy6342-lkp@intel.com>
+References: <20230323213808.398039-6-terry.bowman@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230323213808.398039-6-terry.bowman@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Kyungsan Kim <ks0204.kim@samsung.com> writes:
+Hi Terry,
 
-> I appreciate dan for the careful advice.
->
->>Kyungsan Kim wrote:
->>[..]
->>> >In addition to CXL memory, we may have other kind of memory in the
->>> >system, for example, HBM (High Bandwidth Memory), memory in FPGA card,
->>> >memory in GPU card, etc.  I guess that we need to consider them
->>> >together.  Do we need to add one zone type for each kind of memory?
->>> 
->>> We also don't think a new zone is needed for every single memory
->>> device.  Our viewpoint is the sole ZONE_NORMAL becomes not enough to
->>> manage multiple volatile memory devices due to the increased device
->>> types.  Including CXL DRAM, we think the ZONE_EXMEM can be used to
->>> represent extended volatile memories that have different HW
->>> characteristics.
->>
->>Some advice for the LSF/MM discussion, the rationale will need to be
->>more than "we think the ZONE_EXMEM can be used to represent extended
->>volatile memories that have different HW characteristics". It needs to
->>be along the lines of "yes, to date Linux has been able to describe DDR
->>with NUMA effects, PMEM with high write overhead, and HBM with improved
->>bandwidth not necessarily latency, all without adding a new ZONE, but a
->>new ZONE is absolutely required now to enable use case FOO, or address
->>unfixable NUMA problem BAR." Without FOO and BAR to discuss the code
->>maintainability concern of "fewer degress of freedom in the ZONE
->>dimension" starts to dominate.
->
-> One problem we experienced was occured in the combination of hot-remove and kerelspace allocation usecases.
-> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
-> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
-> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
-> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
-> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
+Thank you for the patch! Yet something to improve:
 
-Sorry, I don't get your idea.  You want the memory range
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus efi/next cxl/next linus/master v6.3-rc3 next-20230323]
+[cannot apply to cxl/pending]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
- 1. can be hot-removed
- 2. allow kernel context allocation
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/cxl-pci-Add-RCH-downstream-port-AER-and-RAS-register-discovery/20230324-054044
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20230323213808.398039-6-terry.bowman%40amd.com
+patch subject: [PATCH v2 5/5] cxl/pci: Add RCH downstream port error logging
+config: i386-randconfig-a013 (https://download.01.org/0day-ci/archive/20230324/202303241305.7Xdy6342-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/c40ca148e9cff1a1c32cd4c5c9b252bf0cf201b6
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Terry-Bowman/cxl-pci-Add-RCH-downstream-port-AER-and-RAS-register-discovery/20230324-054044
+        git checkout c40ca148e9cff1a1c32cd4c5c9b252bf0cf201b6
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/cxl/
 
-This appears impossible for me.  Why cannot you just use ZONE_MOVABLE?
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303241305.7Xdy6342-lkp@intel.com/
 
-Best Regards,
-Huang, Ying
+All errors (new ones prefixed by >>):
 
-> As you well know, among heterogeneous DRAM devices, CXL DRAM is the first PCIe basis device, which allows hot-pluggability, different RAS, and extended connectivity.
-> So, we thought it could be a graceful approach adding a new zone and separately manage the new features.
->
-> Kindly let me know any advice or comment on our thoughts.
+>> drivers/cxl/mem.c:51:31: error: no member named 'rcec' in 'struct pci_dev'
+           struct pci_dev *rcec = pdev->rcec;
+                                  ~~~~  ^
+>> drivers/cxl/mem.c:63:14: error: no member named 'aer_cap' in 'struct pci_dev'
+           aer = rcec->aer_cap;
+                 ~~~~  ^
+   2 errors generated.
+
+
+vim +51 drivers/cxl/mem.c
+
+    48	
+    49	static int rcec_enable_aer_ints(struct pci_dev *pdev)
+    50	{
+  > 51		struct pci_dev *rcec = pdev->rcec;
+    52		int aer, rc;
+    53		u32 mask;
+    54	
+    55		if (!rcec)
+    56			return -ENODEV;
+    57	
+    58		/*
+    59		 * Internal errors are masked by default, unmask RCEC's here
+    60		 * PCI6.0 7.8.4.3 Uncorrectable Error Mask Register (Offset 08h)
+    61		 * PCI6.0 7.8.4.6 Correctable Error Mask Register (Offset 14h)
+    62		 */
+  > 63		aer = rcec->aer_cap;
+    64		rc = pci_read_config_dword(rcec, aer + PCI_ERR_UNCOR_MASK, &mask);
+    65		if (rc)
+    66			return rc;
+    67		mask &= ~PCI_ERR_UNC_INTN;
+    68		rc = pci_write_config_dword(rcec, aer + PCI_ERR_UNCOR_MASK, mask);
+    69		if (rc)
+    70			return rc;
+    71	
+    72		rc = pci_read_config_dword(rcec, aer + PCI_ERR_COR_MASK, &mask);
+    73		if (rc)
+    74			return rc;
+    75		mask &= ~PCI_ERR_COR_INTERNAL;
+    76		rc = pci_write_config_dword(rcec, aer + PCI_ERR_COR_MASK, mask);
+    77	
+    78		return rc;
+    79	}
+    80	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
