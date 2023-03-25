@@ -2,164 +2,302 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72467C6FD1C
-	for <linux-cxl@archiver.kernel.org>; Sat, 25 Mar 2023 07:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D071EC6FD1C
+	for <linux-cxl@archiver.kernel.org>; Sat, 25 Mar 2023 13:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231461AbjCYHTM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 25 Mar 2023 03:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
+        id S230399AbjCYNJI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 25 Mar 2023 09:09:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbjCYHTL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 25 Mar 2023 03:19:11 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2887211664
-        for <linux-cxl@vger.kernel.org>; Sat, 25 Mar 2023 00:19:10 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id ew6so16074124edb.7
-        for <linux-cxl@vger.kernel.org>; Sat, 25 Mar 2023 00:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679728748;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G2Lakoiqf+b405RhNeKhA8+8uQ9GhOVChZGkG8jYViM=;
-        b=SHk/jwp+5LHO2Q1bXXdIh01NJhcQUBU7Ayk+q2PUnHkU8WIhKVV5SjHGf3B9eg2d0u
-         3jmmJQv0ZYlmPwKNgFmFjyBcfqvlf5idxpmr7P95stObGQK6DXDgffOLTxbyOM+S1NVy
-         v9qtwy29u+irKAaM4spqhiS7MLysiP9kVCw7ZOEGeRHplxVxulmtJ3cON2T4wqnMOb/3
-         J0uVuotcndB5LIlxiKFZR01FMrrPr5DYLebY8iiaOKjqr7rCxC6h6yKgKkocEGKqrYi4
-         ML51gq9OI8b6Vq2rpfrdn19OfB2cTPcT3lo+82Z4dmfM6V2vUR1HD7DtuvS2P6wucBFg
-         DCTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679728748;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G2Lakoiqf+b405RhNeKhA8+8uQ9GhOVChZGkG8jYViM=;
-        b=5MWP0BPMwn6S660cpaD5ggdfIRanTxgnlJs4XxnJ5/j8sL9ciZhcrkseHbpEkEt55E
-         fguk0n5205xApeHVpC73p7nitex0rYvXQPvC9Fwu28QcjJQD0Y6zmpnS1xXCSNco31t/
-         DmYSH28xE8fBavUm1/psmRJ8gaQfTvqlfKKarYCElkG8ypMp3M4EZXlrin5FS++hFoGM
-         AP5/FHigHmjX22sXfapEcOzKJ3WfiqmjPGXWUZTYYZ5h8Jc8wUHEYS3ZpmrQpfy4vX1c
-         30KVNKTcWyhJsQQdaMBWe23L1yTEFurPcUNsXDKgUSJksFrkV5+QlwpcuQW0MgDwAo20
-         1LUg==
-X-Gm-Message-State: AAQBX9dR1i3krB8dzHEXt3ex60WKUcarTW6HfTSlEJMb6lcDR6H5cRQN
-        CpQPLbjtiYXse+7xH8/85d8=
-X-Google-Smtp-Source: AKy350bAvZiVj8oCyeLBH3lywneVzJCRC7A5JS/wA4y8/HL77c3bNppjANrDX3ohUTzGwfy3EO5oAQ==
-X-Received: by 2002:a05:6402:1143:b0:502:25ac:c72a with SMTP id g3-20020a056402114300b0050225acc72amr2920578edw.1.1679728748455;
-        Sat, 25 Mar 2023 00:19:08 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id s30-20020a50ab1e000000b004c5d1a15bd5sm11724665edc.69.2023.03.25.00.19.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Mar 2023 00:19:08 -0700 (PDT)
-Date:   Sat, 25 Mar 2023 10:18:48 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     oe-kbuild@lists.linux.dev, Dan Williams <dan.j.williams@intel.com>
-Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        with ESMTP id S229588AbjCYNJH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 25 Mar 2023 09:09:07 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A01C11174
+        for <linux-cxl@vger.kernel.org>; Sat, 25 Mar 2023 06:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679749745; x=1711285745;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FWp3IegVXv50ghUegpAYpCWoPoJuHdukew8mGryWMA4=;
+  b=LKYdg7aOW2smzrmDLXUM9W+DqIWeiCMpBm5PKjDOOMWYDypXaHdvgNd5
+   6uImnRGo63UkQyIpO+Af0SmWn/e7BDP0/fm78Bt06+crNysT92oYdKKoK
+   QabYvJlMIG2PI24SJP5klqR7Mn0+3+3roB1UMbtifIL5xhncxHQ8QG87j
+   34EcTZDuUBvNYuz8ujiGrffKKfne9Sk+ho52A5sIToDhTq6WEpDL9dpqh
+   Kvlq0Egzn6RbzkkstFwZ9vgIOohRiTnxnVg5jxBZ7ZMR214QHhgmWjwq1
+   6oO+3kxHSP3pT/Vvz6XGOif+qVLZXLfbntif1dZyz6QRVJ2inCLbMaFCy
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="328399113"
+X-IronPort-AV: E=Sophos;i="5.98,290,1673942400"; 
+   d="scan'208";a="328399113"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 06:09:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="747480795"
+X-IronPort-AV: E=Sophos;i="5.98,290,1673942400"; 
+   d="scan'208";a="747480795"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 25 Mar 2023 06:09:02 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pg3dl-000GHB-2t;
+        Sat, 25 Mar 2023 13:09:01 +0000
+Date:   Sat, 25 Mar 2023 21:08:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [cxl:for-6.4/cxl-type-2 10/22] drivers/cxl/core/pci.c:493
- cxl_probe_link() warn: right shifting more than type allows 16 vs 16
-Message-ID: <cb1319e7-e4ef-4358-9b3e-cca489395f3f@kili.mountain>
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>
+Subject: [cxl:for-6.4/cxl-type-2] BUILD SUCCESS
+ 0b80e8b55828313bcd08c4740646689e648de444
+Message-ID: <641ef25a.UyHxiuEeKlAjdgup%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.4/cxl-type-2
-head:   0b80e8b55828313bcd08c4740646689e648de444
-commit: 45bbde21f573f287d5828b5e3ff1eac0320acc3d [10/22] cxl/port: Enumerate flit mode capability
-config: i386-randconfig-m021 (https://download.01.org/0day-ci/archive/20230325/202303251253.yCqOttoG-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.4/cxl-type-2
+branch HEAD: 0b80e8b55828313bcd08c4740646689e648de444  tools/testing/cxl: Emulate a CXL accelerator with local memory
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <error27@gmail.com>
-| Link: https://lore.kernel.org/r/202303251253.yCqOttoG-lkp@intel.com/
+Unverified Warning (likely false positive, please contact us if interested):
 
-New smatch warnings:
+drivers/cxl/core/memdev.c:414 cxl_acquire_endpoint() warn: inconsistent returns '&cxlmd->dev.mutex'.
 drivers/cxl/core/pci.c:493 cxl_probe_link() warn: right shifting more than type allows 16 vs 16
 
-Old smatch warnings:
-drivers/cxl/core/pci.c:496 cxl_probe_link() warn: right shifting more than type allows 16 vs 16
+Warning ids grouped by kconfigs:
 
-vim +493 drivers/cxl/core/pci.c
+gcc_recent_errors
+`-- i386-randconfig-m021
+    |-- drivers-cxl-core-memdev.c-cxl_acquire_endpoint()-warn:inconsistent-returns-cxlmd-dev.mutex-.
+    `-- drivers-cxl-core-pci.c-cxl_probe_link()-warn:right-shifting-more-than-type-allows-vs
 
-45bbde21f573f2 Dan Williams 2023-03-05  451  int cxl_probe_link(struct cxl_port *port)
-45bbde21f573f2 Dan Williams 2023-03-05  452  {
-45bbde21f573f2 Dan Williams 2023-03-05  453  	struct pci_dev *pdev = cxl_port_to_pci(port);
-45bbde21f573f2 Dan Williams 2023-03-05  454  	u16 cap, en, hdr, parent_features;
-                                                ^^^          ^^^
-hdr is a u16.
+elapsed time: 727m
 
-45bbde21f573f2 Dan Williams 2023-03-05  455  	struct cxl_port *parent_port;
-45bbde21f573f2 Dan Williams 2023-03-05  456  	struct device *dev;
-45bbde21f573f2 Dan Williams 2023-03-05  457  	int rc, dvsec;
-45bbde21f573f2 Dan Williams 2023-03-05  458  
-45bbde21f573f2 Dan Williams 2023-03-05  459  	if (!pdev) {
-45bbde21f573f2 Dan Williams 2023-03-05  460  		/*
-45bbde21f573f2 Dan Williams 2023-03-05  461  		 * Assume host bridges support all features, the root
-45bbde21f573f2 Dan Williams 2023-03-05  462  		 * port will dictate the actual enabled set to endpoints.
-45bbde21f573f2 Dan Williams 2023-03-05  463  		 */
-45bbde21f573f2 Dan Williams 2023-03-05  464  		return 0;
-45bbde21f573f2 Dan Williams 2023-03-05  465  	}
-45bbde21f573f2 Dan Williams 2023-03-05  466  
-45bbde21f573f2 Dan Williams 2023-03-05  467  	dev = &pdev->dev;
-45bbde21f573f2 Dan Williams 2023-03-05  468  	dvsec = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
-45bbde21f573f2 Dan Williams 2023-03-05  469  					  CXL_DVSEC_FLEXBUS_PORT);
-45bbde21f573f2 Dan Williams 2023-03-05  470  	if (!dvsec) {
-45bbde21f573f2 Dan Williams 2023-03-05  471  		dev_err(dev, "Failed to enumerate port capabilities\n");
-45bbde21f573f2 Dan Williams 2023-03-05  472  		return -ENXIO;
-45bbde21f573f2 Dan Williams 2023-03-05  473  	}
-45bbde21f573f2 Dan Williams 2023-03-05  474  
-45bbde21f573f2 Dan Williams 2023-03-05  475  	/*
-45bbde21f573f2 Dan Williams 2023-03-05  476  	 * Cache the link features for future determination of HDM-D or
-45bbde21f573f2 Dan Williams 2023-03-05  477  	 * HDM-DB support
-45bbde21f573f2 Dan Williams 2023-03-05  478  	 */
-45bbde21f573f2 Dan Williams 2023-03-05  479  	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_HEADER1, &hdr);
-45bbde21f573f2 Dan Williams 2023-03-05  480  	if (rc)
-45bbde21f573f2 Dan Williams 2023-03-05  481  		return rc;
-45bbde21f573f2 Dan Williams 2023-03-05  482  
-45bbde21f573f2 Dan Williams 2023-03-05  483  	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_CAP_OFFSET,
-45bbde21f573f2 Dan Williams 2023-03-05  484  				  &cap);
-45bbde21f573f2 Dan Williams 2023-03-05  485  	if (rc)
-45bbde21f573f2 Dan Williams 2023-03-05  486  		return rc;
-45bbde21f573f2 Dan Williams 2023-03-05  487  
-45bbde21f573f2 Dan Williams 2023-03-05  488  	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_STATUS_OFFSET,
-45bbde21f573f2 Dan Williams 2023-03-05  489  				  &en);
-45bbde21f573f2 Dan Williams 2023-03-05  490  	if (rc)
-45bbde21f573f2 Dan Williams 2023-03-05  491  		return rc;
-45bbde21f573f2 Dan Williams 2023-03-05  492  
-45bbde21f573f2 Dan Williams 2023-03-05 @493  	if (PCI_DVSEC_HEADER1_REV(hdr) < 2)
+configs tested: 213
+configs skipped: 10
 
-PCI_DVSEC_HEADER1_REV() does a >> 16 so the result is always zero.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-45bbde21f573f2 Dan Williams 2023-03-05  494  		cap &= ~CXL_DVSEC_FLEXBUS_REV2_MASK;
-45bbde21f573f2 Dan Williams 2023-03-05  495  
-45bbde21f573f2 Dan Williams 2023-03-05  496  	if (PCI_DVSEC_HEADER1_REV(hdr) < 1)
-45bbde21f573f2 Dan Williams 2023-03-05  497  		cap &= ~CXL_DVSEC_FLEXBUS_REV1_MASK;
-45bbde21f573f2 Dan Williams 2023-03-05  498  
-45bbde21f573f2 Dan Williams 2023-03-05  499  	en &= cap;
-45bbde21f573f2 Dan Williams 2023-03-05  500  	parent_port = to_cxl_port(port->dev.parent);
-45bbde21f573f2 Dan Williams 2023-03-05  501  	parent_features = parent_port->features;
-45bbde21f573f2 Dan Williams 2023-03-05  502  
-45bbde21f573f2 Dan Williams 2023-03-05  503  	/* Enforce port features are plumbed through to the host bridge */
-45bbde21f573f2 Dan Williams 2023-03-05  504  	port->features = en & CXL_DVSEC_FLEXBUS_ENABLE_MASK & parent_features;
-45bbde21f573f2 Dan Williams 2023-03-05  505  
-45bbde21f573f2 Dan Williams 2023-03-05  506  	dev_dbg(dev, "features:%s%s%s%s%s%s%s\n",
-45bbde21f573f2 Dan Williams 2023-03-05  507  		en & CXL_DVSEC_FLEXBUS_CACHE_ENABLED ? " cache" : "",
-45bbde21f573f2 Dan Williams 2023-03-05  508  		en & CXL_DVSEC_FLEXBUS_IO_ENABLED ? " io" : "",
-45bbde21f573f2 Dan Williams 2023-03-05  509  		en & CXL_DVSEC_FLEXBUS_MEM_ENABLED ? " mem" : "",
-45bbde21f573f2 Dan Williams 2023-03-05  510  		en & CXL_DVSEC_FLEXBUS_FLIT68_ENABLED ? " flit68" : "",
-45bbde21f573f2 Dan Williams 2023-03-05  511  		en & CXL_DVSEC_FLEXBUS_MLD_ENABLED ? " mld" : "",
-45bbde21f573f2 Dan Williams 2023-03-05  512  		en & CXL_DVSEC_FLEXBUS_FLIT256_ENABLED ? " flit256" : "",
-45bbde21f573f2 Dan Williams 2023-03-05  513  		en & CXL_DVSEC_FLEXBUS_PBR_ENABLED ? " pbr" : "");
-45bbde21f573f2 Dan Williams 2023-03-05  514  
-45bbde21f573f2 Dan Williams 2023-03-05  515  	return 0;
-45bbde21f573f2 Dan Williams 2023-03-05  516  }
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r026-20230322   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                  randconfig-r001-20230323   gcc  
+arc                  randconfig-r013-20230323   gcc  
+arc                  randconfig-r034-20230322   gcc  
+arc                  randconfig-r043-20230322   gcc  
+arc                  randconfig-r043-20230324   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                       aspeed_g4_defconfig   clang
+arm                       aspeed_g5_defconfig   gcc  
+arm          buildonly-randconfig-r001-20230322   clang
+arm          buildonly-randconfig-r003-20230324   clang
+arm                                 defconfig   gcc  
+arm                   milbeaut_m10v_defconfig   clang
+arm                          moxart_defconfig   clang
+arm                        multi_v5_defconfig   clang
+arm                       netwinder_defconfig   clang
+arm                       omap2plus_defconfig   gcc  
+arm                  randconfig-r021-20230322   clang
+arm                  randconfig-r023-20230322   clang
+arm                  randconfig-r046-20230322   clang
+arm                  randconfig-r046-20230324   clang
+arm                        shmobile_defconfig   gcc  
+arm                           stm32_defconfig   gcc  
+arm                       versatile_defconfig   clang
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r002-20230322   clang
+arm64        buildonly-randconfig-r006-20230322   clang
+arm64                               defconfig   gcc  
+arm64                randconfig-r022-20230322   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r011-20230322   gcc  
+csky                 randconfig-r012-20230322   gcc  
+csky                 randconfig-r016-20230322   gcc  
+csky                 randconfig-r022-20230324   gcc  
+hexagon                          alldefconfig   clang
+hexagon      buildonly-randconfig-r004-20230322   clang
+hexagon              randconfig-r002-20230322   clang
+hexagon              randconfig-r004-20230322   clang
+hexagon              randconfig-r035-20230322   clang
+hexagon              randconfig-r041-20230322   clang
+hexagon              randconfig-r041-20230324   clang
+hexagon              randconfig-r045-20230322   clang
+hexagon              randconfig-r045-20230324   clang
+i386                             allyesconfig   gcc  
+i386                         debian-10.3-func   gcc  
+i386                   debian-10.3-kselftests   gcc  
+i386                        debian-10.3-kunit   gcc  
+i386                          debian-10.3-kvm   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                          randconfig-a001   gcc  
+i386                          randconfig-a002   clang
+i386                          randconfig-a003   gcc  
+i386                          randconfig-a004   clang
+i386                          randconfig-a005   gcc  
+i386                          randconfig-a006   clang
+i386                          randconfig-a011   clang
+i386                          randconfig-a012   gcc  
+i386                          randconfig-a013   clang
+i386                          randconfig-a014   gcc  
+i386                          randconfig-a015   clang
+i386                          randconfig-a016   gcc  
+i386                          randconfig-c001   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r001-20230322   gcc  
+ia64                 randconfig-r003-20230323   gcc  
+ia64                 randconfig-r004-20230322   gcc  
+ia64                 randconfig-r005-20230322   gcc  
+ia64                 randconfig-r011-20230322   gcc  
+ia64                 randconfig-r014-20230323   gcc  
+ia64                 randconfig-r031-20230322   gcc  
+ia64                 randconfig-r032-20230322   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r014-20230322   gcc  
+loongarch            randconfig-r021-20230322   gcc  
+loongarch            randconfig-r024-20230322   gcc  
+loongarch            randconfig-r026-20230324   gcc  
+loongarch            randconfig-r032-20230322   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+m68k                            q40_defconfig   gcc  
+m68k                 randconfig-r015-20230322   gcc  
+m68k                 randconfig-r023-20230322   gcc  
+microblaze           randconfig-r015-20230322   gcc  
+microblaze           randconfig-r024-20230324   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r012-20230322   clang
+mips                 randconfig-r021-20230322   clang
+mips                 randconfig-r023-20230322   clang
+mips                 randconfig-r034-20230322   gcc  
+mips                 randconfig-r036-20230322   gcc  
+nios2        buildonly-randconfig-r002-20230324   gcc  
+nios2        buildonly-randconfig-r004-20230322   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r002-20230322   gcc  
+nios2                randconfig-r003-20230322   gcc  
+nios2                randconfig-r036-20230322   gcc  
+openrisc     buildonly-randconfig-r002-20230322   gcc  
+openrisc             randconfig-r011-20230323   gcc  
+openrisc             randconfig-r015-20230322   gcc  
+openrisc             randconfig-r024-20230322   gcc  
+openrisc             randconfig-r033-20230322   gcc  
+parisc       buildonly-randconfig-r005-20230322   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r002-20230323   gcc  
+parisc               randconfig-r003-20230322   gcc  
+parisc               randconfig-r004-20230322   gcc  
+parisc               randconfig-r011-20230322   gcc  
+parisc               randconfig-r012-20230323   gcc  
+parisc               randconfig-r013-20230322   gcc  
+parisc               randconfig-r016-20230322   gcc  
+parisc               randconfig-r034-20230322   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                        cell_defconfig   gcc  
+powerpc                       maple_defconfig   gcc  
+powerpc                 mpc837x_mds_defconfig   gcc  
+powerpc              randconfig-c003-20230322   gcc  
+powerpc              randconfig-r004-20230323   gcc  
+powerpc              randconfig-r013-20230322   gcc  
+powerpc              randconfig-r021-20230322   gcc  
+powerpc              randconfig-r025-20230322   gcc  
+powerpc                    socrates_defconfig   clang
+powerpc                     tqm8555_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv        buildonly-randconfig-r001-20230324   gcc  
+riscv                               defconfig   gcc  
+riscv                    nommu_k210_defconfig   gcc  
+riscv                randconfig-r022-20230322   gcc  
+riscv                randconfig-r024-20230322   gcc  
+riscv                randconfig-r042-20230322   gcc  
+riscv                randconfig-r042-20230324   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390         buildonly-randconfig-r006-20230324   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r012-20230322   gcc  
+s390                 randconfig-r016-20230322   gcc  
+s390                 randconfig-r023-20230322   gcc  
+s390                 randconfig-r031-20230322   clang
+s390                 randconfig-r035-20230322   clang
+s390                 randconfig-r044-20230322   gcc  
+s390                 randconfig-r044-20230324   gcc  
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r004-20230324   gcc  
+sh                   randconfig-r005-20230322   gcc  
+sh                   randconfig-r013-20230322   gcc  
+sh                   randconfig-r016-20230322   gcc  
+sh                   randconfig-r022-20230322   gcc  
+sh                   randconfig-r036-20230322   gcc  
+sparc        buildonly-randconfig-r005-20230324   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r006-20230322   gcc  
+sparc                randconfig-r006-20230323   gcc  
+sparc                randconfig-r014-20230322   gcc  
+sparc                randconfig-r035-20230322   gcc  
+sparc64                             defconfig   gcc  
+sparc64              randconfig-r016-20230323   gcc  
+sparc64              randconfig-r031-20230322   gcc  
+sparc64              randconfig-r035-20230322   gcc  
+um                               alldefconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           alldefconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                        randconfig-a001   clang
+x86_64                        randconfig-a002   gcc  
+x86_64                        randconfig-a003   clang
+x86_64                        randconfig-a004   gcc  
+x86_64                        randconfig-a005   clang
+x86_64                        randconfig-a006   gcc  
+x86_64                        randconfig-a011   gcc  
+x86_64                        randconfig-a012   clang
+x86_64                        randconfig-a013   gcc  
+x86_64                        randconfig-a014   clang
+x86_64                        randconfig-a015   gcc  
+x86_64                        randconfig-a016   clang
+x86_64                        randconfig-k001   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-kvm   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                           rhel-8.3-syz   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r001-20230322   gcc  
+xtensa       buildonly-randconfig-r006-20230322   gcc  
+xtensa                generic_kc705_defconfig   gcc  
+xtensa                          iss_defconfig   gcc  
+xtensa               randconfig-r001-20230322   gcc  
+xtensa               randconfig-r002-20230322   gcc  
+xtensa               randconfig-r014-20230322   gcc  
+xtensa               randconfig-r025-20230322   gcc  
+xtensa               randconfig-r035-20230322   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests
-
