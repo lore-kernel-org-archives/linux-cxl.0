@@ -2,177 +2,164 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D3DC6FD1C
-	for <linux-cxl@archiver.kernel.org>; Fri, 24 Mar 2023 22:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72467C6FD1C
+	for <linux-cxl@archiver.kernel.org>; Sat, 25 Mar 2023 07:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232422AbjCXWh5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 24 Mar 2023 18:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57106 "EHLO
+        id S231461AbjCYHTM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 25 Mar 2023 03:19:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232321AbjCXWhy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 24 Mar 2023 18:37:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E1018B25
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Mar 2023 15:37:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679697421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=M2Gd048jUU5nxLZZ0U+ngFbATTz0dYwE/LMy6TKJlvM=;
-        b=ND+7Ck4vh64cFbeDMK+GJwkd0eARCckQLQph4I8+P980sEO7SqfOPTCVAR8KuonD+Q7IoI
-        2mx3TEp/DvegbK/8qUDDXk2jUrXws8syJWwU47CmZsku5B54sXmepILZRGWF3gH4ophpdf
-        ZSR+zPVjxsq1C3inXMueqt5LYEZNfX0=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-527-z_sMcsdoO5eqFz0s7HGJAw-1; Fri, 24 Mar 2023 18:33:15 -0400
-X-MC-Unique: z_sMcsdoO5eqFz0s7HGJAw-1
-Received: by mail-yb1-f198.google.com with SMTP id x15-20020a25accf000000b00b3b4535c48dso3101056ybd.7
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Mar 2023 15:33:15 -0700 (PDT)
+        with ESMTP id S229926AbjCYHTL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 25 Mar 2023 03:19:11 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2887211664
+        for <linux-cxl@vger.kernel.org>; Sat, 25 Mar 2023 00:19:10 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id ew6so16074124edb.7
+        for <linux-cxl@vger.kernel.org>; Sat, 25 Mar 2023 00:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679728748;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G2Lakoiqf+b405RhNeKhA8+8uQ9GhOVChZGkG8jYViM=;
+        b=SHk/jwp+5LHO2Q1bXXdIh01NJhcQUBU7Ayk+q2PUnHkU8WIhKVV5SjHGf3B9eg2d0u
+         3jmmJQv0ZYlmPwKNgFmFjyBcfqvlf5idxpmr7P95stObGQK6DXDgffOLTxbyOM+S1NVy
+         v9qtwy29u+irKAaM4spqhiS7MLysiP9kVCw7ZOEGeRHplxVxulmtJ3cON2T4wqnMOb/3
+         J0uVuotcndB5LIlxiKFZR01FMrrPr5DYLebY8iiaOKjqr7rCxC6h6yKgKkocEGKqrYi4
+         ML51gq9OI8b6Vq2rpfrdn19OfB2cTPcT3lo+82Z4dmfM6V2vUR1HD7DtuvS2P6wucBFg
+         DCTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679697195;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M2Gd048jUU5nxLZZ0U+ngFbATTz0dYwE/LMy6TKJlvM=;
-        b=UDXojUmPmUWqT+E6/gYIcIYDRdLrCPVvmkuPUyJSY8Zy2MsS0mpX8T1yxvF4qp6lAt
-         pPfspq49qA1eanwm5NepCkuQQK5aQIoHI+T6nkPZ4ZWeLG9Dz7Qk0brrfq5dR5T3yhmH
-         526feNCL5R6NHOwRDJPctEE7BiyYcDSg4TtwXLpzr/lEwsX/QvYcgKHlxLqpQsk8YDhp
-         ck9YqS3U6eAUKTBjfU0Aj4Q1XP25JcKWcHiuudVC51rldSZUTqMXjCqg+a3+P4aqh4d1
-         fVuDZvtA1jarjRVQQLY6Vmoi+n8C71qJdIjg/RB2fFybf4pzGi1698hQekJ5+QRuVorM
-         mZxA==
-X-Gm-Message-State: AAQBX9dmopnPjKjazAUsvWb4sgJNoToEQlcaiPNqufOXrtwutMZBSBn1
-        X1kAyOyL5871bDRFccjIPrYFFt1eHWnfClnuOJP8wqag+OpFHbkpgoc3UDgvT0pPG4jnzypl0g4
-        kdMVUIWl3FIBCIRElJDzoR292E2g+IK8=
-X-Received: by 2002:a81:6ac5:0:b0:541:894d:9360 with SMTP id f188-20020a816ac5000000b00541894d9360mr3452802ywc.21.1679697194984;
-        Fri, 24 Mar 2023 15:33:14 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZxDFkfYE1yVhUtHbiwatfrVOh987ysutLClRdPWjsYtqHOWAfDK8VXxXnoVK8wOnV2R2YvYw==
-X-Received: by 2002:a81:6ac5:0:b0:541:894d:9360 with SMTP id f188-20020a816ac5000000b00541894d9360mr3452775ywc.21.1679697194417;
-        Fri, 24 Mar 2023 15:33:14 -0700 (PDT)
-Received: from [100.69.142.128] ([206.173.106.22])
-        by smtp.gmail.com with ESMTPSA id t4-20020a81b504000000b00545a0818493sm664253ywh.35.2023.03.24.15.33.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Mar 2023 15:33:14 -0700 (PDT)
-Message-ID: <7c7933df-43da-24e3-2144-0551cde05dcd@redhat.com>
-Date:   Fri, 24 Mar 2023 23:33:12 +0100
+        d=1e100.net; s=20210112; t=1679728748;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2Lakoiqf+b405RhNeKhA8+8uQ9GhOVChZGkG8jYViM=;
+        b=5MWP0BPMwn6S660cpaD5ggdfIRanTxgnlJs4XxnJ5/j8sL9ciZhcrkseHbpEkEt55E
+         fguk0n5205xApeHVpC73p7nitex0rYvXQPvC9Fwu28QcjJQD0Y6zmpnS1xXCSNco31t/
+         DmYSH28xE8fBavUm1/psmRJ8gaQfTvqlfKKarYCElkG8ypMp3M4EZXlrin5FS++hFoGM
+         AP5/FHigHmjX22sXfapEcOzKJ3WfiqmjPGXWUZTYYZ5h8Jc8wUHEYS3ZpmrQpfy4vX1c
+         30KVNKTcWyhJsQQdaMBWe23L1yTEFurPcUNsXDKgUSJksFrkV5+QlwpcuQW0MgDwAo20
+         1LUg==
+X-Gm-Message-State: AAQBX9dR1i3krB8dzHEXt3ex60WKUcarTW6HfTSlEJMb6lcDR6H5cRQN
+        CpQPLbjtiYXse+7xH8/85d8=
+X-Google-Smtp-Source: AKy350bAvZiVj8oCyeLBH3lywneVzJCRC7A5JS/wA4y8/HL77c3bNppjANrDX3ohUTzGwfy3EO5oAQ==
+X-Received: by 2002:a05:6402:1143:b0:502:25ac:c72a with SMTP id g3-20020a056402114300b0050225acc72amr2920578edw.1.1679728748455;
+        Sat, 25 Mar 2023 00:19:08 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id s30-20020a50ab1e000000b004c5d1a15bd5sm11724665edc.69.2023.03.25.00.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Mar 2023 00:19:08 -0700 (PDT)
+Date:   Sat, 25 Mar 2023 10:18:48 +0300
+From:   Dan Carpenter <error27@gmail.com>
+To:     oe-kbuild@lists.linux.dev, Dan Williams <dan.j.williams@intel.com>
+Cc:     lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [cxl:for-6.4/cxl-type-2 10/22] drivers/cxl/core/pci.c:493
+ cxl_probe_link() warn: right shifting more than type allows 16 vs 16
+Message-ID: <cb1319e7-e4ef-4358-9b3e-cca489395f3f@kili.mountain>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-To:     =?UTF-8?Q?J=c3=b8rgen_Hansen?= <Jorgen.Hansen@wdc.com>,
-        Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "a.manzanares@samsung.com" <a.manzanares@samsung.com>,
-        "viacheslav.dubeyko@bytedance.com" <viacheslav.dubeyko@bytedance.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-References: <91d02705-1c3f-5f55-158a-1a68120df2f4@redhat.com>
- <CGME20230324095031epcas2p284095ae90b25a47360b5098478dffdaa@epcas2p2.samsung.com>
- <20230324095031.148164-1-ks0204.kim@samsung.com>
- <E224146D-058D-48B3-8788-A6BC3370044F@wdc.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <E224146D-058D-48B3-8788-A6BC3370044F@wdc.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 24.03.23 14:08, Jørgen Hansen wrote:
-> 
->> On 24 Mar 2023, at 10.50, Kyungsan Kim <ks0204.kim@samsung.com> wrote:
->>
->>> On 24.03.23 10:27, Kyungsan Kim wrote:
->>>>> On 24.03.23 10:09, Kyungsan Kim wrote:
->>>>>> Thank you David Hinderbrand for your interest on this topic.
->>>>>>
->>>>>>>>
->>>>>>>>> Kyungsan Kim wrote:
->>>>>>>>> [..]
->>>>>>>>>>> In addition to CXL memory, we may have other kind of memory in the
->>>>>>>>>>> system, for example, HBM (High Bandwidth Memory), memory in FPGA card,
->>>>>>>>>>> memory in GPU card, etc.  I guess that we need to consider them
->>>>>>>>>>> together.  Do we need to add one zone type for each kind of memory?
->>>>>>>>>>
->>>>>>>>>> We also don't think a new zone is needed for every single memory
->>>>>>>>>> device.  Our viewpoint is the sole ZONE_NORMAL becomes not enough to
->>>>>>>>>> manage multiple volatile memory devices due to the increased device
->>>>>>>>>> types.  Including CXL DRAM, we think the ZONE_EXMEM can be used to
->>>>>>>>>> represent extended volatile memories that have different HW
->>>>>>>>>> characteristics.
->>>>>>>>>
->>>>>>>>> Some advice for the LSF/MM discussion, the rationale will need to be
->>>>>>>>> more than "we think the ZONE_EXMEM can be used to represent extended
->>>>>>>>> volatile memories that have different HW characteristics". It needs to
->>>>>>>>> be along the lines of "yes, to date Linux has been able to describe DDR
->>>>>>>>> with NUMA effects, PMEM with high write overhead, and HBM with improved
->>>>>>>>> bandwidth not necessarily latency, all without adding a new ZONE, but a
->>>>>>>>> new ZONE is absolutely required now to enable use case FOO, or address
->>>>>>>>> unfixable NUMA problem BAR." Without FOO and BAR to discuss the code
->>>>>>>>> maintainability concern of "fewer degress of freedom in the ZONE
->>>>>>>>> dimension" starts to dominate.
->>>>>>>>
->>>>>>>> One problem we experienced was occured in the combination of hot-remove and kerelspace allocation usecases.
->>>>>>>> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
->>>>>>>> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
->>>>>>>> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
->>>>>>
->>>>>>> That sounds like a bad hack :) .
->>>>>> I consent you.
->>>>>>
->>>>>>>> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
->>>>>>>> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
->>>>>>
->>>>>>> I once raised the idea of a ZONE_PREFER_MOVABLE [1], maybe that's
->>>>>>> similar to what you have in mind here. In general, adding new zones is
->>>>>>> frowned upon.
->>>>>>
->>>>>> Actually, we have already studied your idea and thought it is similar with us in 2 aspects.
->>>>>> 1. ZONE_PREFER_MOVABLE allows a kernelspace allocation using a new zone
->>>>>> 2. ZONE_PREFER_MOVABLE helps less fragmentation by splitting zones, and ordering allocation requests from the zones.
->>>>>>
->>>>>> We think ZONE_EXMEM also helps less fragmentation.
->>>>>> Because it is a separated zone and handles a page allocation as movable by default.
->>>>>
->>>>> So how is it different that it would justify a different (more confusing
->>>>> IMHO) name? :) Of course, names don't matter that much, but I'd be
->>>>> interested in which other aspect that zone would be "special".
->>>>
->>>> FYI for the first time I named it as ZONE_CXLMEM, but we thought it would be needed to cover other extended memory types as well.
->>>> So I changed it as ZONE_EXMEM.
->>>> We also would like to point out a "special" zone aspeact, which is different from ZONE_NORMAL for tranditional DDR DRAM.
->>>> Of course, a symbol naming is important more or less to represent it very nicely, though.
->>>> Do you prefer ZONE_SPECIAL? :)
->>>
->>> I called it ZONE_PREFER_MOVABLE. If you studied that approach there must
->>> be a good reason to name it differently?
->>>
->>
->> The intention of ZONE_EXMEM is a separated logical management dimension originated from the HW diffrences of extended memory devices.
->> Althought the ZONE_EXMEM considers the movable and frementation aspect, it is not all what ZONE_EXMEM considers.
->> So it is named as it.
-> 
-> Given that CXL memory devices can potentially cover a wide range of technologies with quite different latency and bandwidth metrics, will one zone serve as the management vehicle that you seek? If a system contains both CXL attached DRAM and, let say, a byte-addressable CXL SSD - both used as (different) byte addressable tiers in a tiered memory hierarchy, allocating memory from the ZONE_EXMEM doesn’t really tell you much about what you get. So the client would still need an orthogonal method to characterize the desired performance characteristics. This method could be combined with a fabric independent zone such as ZONE_PREFER_MOVABLE to address the kernel allocation issue. At the same time, this new zone could also be useful in other cases, such as virtio-mem.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-6.4/cxl-type-2
+head:   0b80e8b55828313bcd08c4740646689e648de444
+commit: 45bbde21f573f287d5828b5e3ff1eac0320acc3d [10/22] cxl/port: Enumerate flit mode capability
+config: i386-randconfig-m021 (https://download.01.org/0day-ci/archive/20230325/202303251253.yCqOttoG-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
 
-Yes. I still did not get a satisfying answer to my original question: 
-what would be the differences between both zones from a MM point of 
-view? We can discuss that in the session, of course.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <error27@gmail.com>
+| Link: https://lore.kernel.org/r/202303251253.yCqOttoG-lkp@intel.com/
 
-Regarding performance differences, I thought the idea was to go with 
-different nodes to express (and model) such.
+New smatch warnings:
+drivers/cxl/core/pci.c:493 cxl_probe_link() warn: right shifting more than type allows 16 vs 16
+
+Old smatch warnings:
+drivers/cxl/core/pci.c:496 cxl_probe_link() warn: right shifting more than type allows 16 vs 16
+
+vim +493 drivers/cxl/core/pci.c
+
+45bbde21f573f2 Dan Williams 2023-03-05  451  int cxl_probe_link(struct cxl_port *port)
+45bbde21f573f2 Dan Williams 2023-03-05  452  {
+45bbde21f573f2 Dan Williams 2023-03-05  453  	struct pci_dev *pdev = cxl_port_to_pci(port);
+45bbde21f573f2 Dan Williams 2023-03-05  454  	u16 cap, en, hdr, parent_features;
+                                                ^^^          ^^^
+hdr is a u16.
+
+45bbde21f573f2 Dan Williams 2023-03-05  455  	struct cxl_port *parent_port;
+45bbde21f573f2 Dan Williams 2023-03-05  456  	struct device *dev;
+45bbde21f573f2 Dan Williams 2023-03-05  457  	int rc, dvsec;
+45bbde21f573f2 Dan Williams 2023-03-05  458  
+45bbde21f573f2 Dan Williams 2023-03-05  459  	if (!pdev) {
+45bbde21f573f2 Dan Williams 2023-03-05  460  		/*
+45bbde21f573f2 Dan Williams 2023-03-05  461  		 * Assume host bridges support all features, the root
+45bbde21f573f2 Dan Williams 2023-03-05  462  		 * port will dictate the actual enabled set to endpoints.
+45bbde21f573f2 Dan Williams 2023-03-05  463  		 */
+45bbde21f573f2 Dan Williams 2023-03-05  464  		return 0;
+45bbde21f573f2 Dan Williams 2023-03-05  465  	}
+45bbde21f573f2 Dan Williams 2023-03-05  466  
+45bbde21f573f2 Dan Williams 2023-03-05  467  	dev = &pdev->dev;
+45bbde21f573f2 Dan Williams 2023-03-05  468  	dvsec = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+45bbde21f573f2 Dan Williams 2023-03-05  469  					  CXL_DVSEC_FLEXBUS_PORT);
+45bbde21f573f2 Dan Williams 2023-03-05  470  	if (!dvsec) {
+45bbde21f573f2 Dan Williams 2023-03-05  471  		dev_err(dev, "Failed to enumerate port capabilities\n");
+45bbde21f573f2 Dan Williams 2023-03-05  472  		return -ENXIO;
+45bbde21f573f2 Dan Williams 2023-03-05  473  	}
+45bbde21f573f2 Dan Williams 2023-03-05  474  
+45bbde21f573f2 Dan Williams 2023-03-05  475  	/*
+45bbde21f573f2 Dan Williams 2023-03-05  476  	 * Cache the link features for future determination of HDM-D or
+45bbde21f573f2 Dan Williams 2023-03-05  477  	 * HDM-DB support
+45bbde21f573f2 Dan Williams 2023-03-05  478  	 */
+45bbde21f573f2 Dan Williams 2023-03-05  479  	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_HEADER1, &hdr);
+45bbde21f573f2 Dan Williams 2023-03-05  480  	if (rc)
+45bbde21f573f2 Dan Williams 2023-03-05  481  		return rc;
+45bbde21f573f2 Dan Williams 2023-03-05  482  
+45bbde21f573f2 Dan Williams 2023-03-05  483  	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_CAP_OFFSET,
+45bbde21f573f2 Dan Williams 2023-03-05  484  				  &cap);
+45bbde21f573f2 Dan Williams 2023-03-05  485  	if (rc)
+45bbde21f573f2 Dan Williams 2023-03-05  486  		return rc;
+45bbde21f573f2 Dan Williams 2023-03-05  487  
+45bbde21f573f2 Dan Williams 2023-03-05  488  	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_STATUS_OFFSET,
+45bbde21f573f2 Dan Williams 2023-03-05  489  				  &en);
+45bbde21f573f2 Dan Williams 2023-03-05  490  	if (rc)
+45bbde21f573f2 Dan Williams 2023-03-05  491  		return rc;
+45bbde21f573f2 Dan Williams 2023-03-05  492  
+45bbde21f573f2 Dan Williams 2023-03-05 @493  	if (PCI_DVSEC_HEADER1_REV(hdr) < 2)
+
+PCI_DVSEC_HEADER1_REV() does a >> 16 so the result is always zero.
+
+45bbde21f573f2 Dan Williams 2023-03-05  494  		cap &= ~CXL_DVSEC_FLEXBUS_REV2_MASK;
+45bbde21f573f2 Dan Williams 2023-03-05  495  
+45bbde21f573f2 Dan Williams 2023-03-05  496  	if (PCI_DVSEC_HEADER1_REV(hdr) < 1)
+45bbde21f573f2 Dan Williams 2023-03-05  497  		cap &= ~CXL_DVSEC_FLEXBUS_REV1_MASK;
+45bbde21f573f2 Dan Williams 2023-03-05  498  
+45bbde21f573f2 Dan Williams 2023-03-05  499  	en &= cap;
+45bbde21f573f2 Dan Williams 2023-03-05  500  	parent_port = to_cxl_port(port->dev.parent);
+45bbde21f573f2 Dan Williams 2023-03-05  501  	parent_features = parent_port->features;
+45bbde21f573f2 Dan Williams 2023-03-05  502  
+45bbde21f573f2 Dan Williams 2023-03-05  503  	/* Enforce port features are plumbed through to the host bridge */
+45bbde21f573f2 Dan Williams 2023-03-05  504  	port->features = en & CXL_DVSEC_FLEXBUS_ENABLE_MASK & parent_features;
+45bbde21f573f2 Dan Williams 2023-03-05  505  
+45bbde21f573f2 Dan Williams 2023-03-05  506  	dev_dbg(dev, "features:%s%s%s%s%s%s%s\n",
+45bbde21f573f2 Dan Williams 2023-03-05  507  		en & CXL_DVSEC_FLEXBUS_CACHE_ENABLED ? " cache" : "",
+45bbde21f573f2 Dan Williams 2023-03-05  508  		en & CXL_DVSEC_FLEXBUS_IO_ENABLED ? " io" : "",
+45bbde21f573f2 Dan Williams 2023-03-05  509  		en & CXL_DVSEC_FLEXBUS_MEM_ENABLED ? " mem" : "",
+45bbde21f573f2 Dan Williams 2023-03-05  510  		en & CXL_DVSEC_FLEXBUS_FLIT68_ENABLED ? " flit68" : "",
+45bbde21f573f2 Dan Williams 2023-03-05  511  		en & CXL_DVSEC_FLEXBUS_MLD_ENABLED ? " mld" : "",
+45bbde21f573f2 Dan Williams 2023-03-05  512  		en & CXL_DVSEC_FLEXBUS_FLIT256_ENABLED ? " flit256" : "",
+45bbde21f573f2 Dan Williams 2023-03-05  513  		en & CXL_DVSEC_FLEXBUS_PBR_ENABLED ? " pbr" : "");
+45bbde21f573f2 Dan Williams 2023-03-05  514  
+45bbde21f573f2 Dan Williams 2023-03-05  515  	return 0;
+45bbde21f573f2 Dan Williams 2023-03-05  516  }
 
 -- 
-Thanks,
-
-David / dhildenb
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
 
