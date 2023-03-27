@@ -2,376 +2,424 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10C5C6FD1D
-	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 21:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460CFC76195
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 21:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjC0Vvy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Mar 2023 17:51:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34718 "EHLO
+        id S229477AbjC0V5u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Mar 2023 17:57:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjC0Vvy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 17:51:54 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6625E2D66;
-        Mon, 27 Mar 2023 14:51:47 -0700 (PDT)
+        with ESMTP id S229471AbjC0V5t (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 17:57:49 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B36F012E
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Mar 2023 14:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679954267; x=1711490267;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=mJ1WAo/rtYBn6ykLtDX9Rfx7Ausl0RqG+NvAu+Ukcik=;
+  b=Ux+x3DmZMohw5LOOB0lq63cf4UlMGw/E5hD/FKKbBmmPneI4XulcK15x
+   AzWjbdiysWvR8P1dJWGuVOa6GJLuDlKFwjIr+02Nppx+Rw5azLF969Ai5
+   jxe7NK/t3KwxFv4dcUDB3nilu2DBeB44676dUxx+dRAtr6PVzHeyxIDIT
+   AWfEzFcTCveKP/1uyH9iT3xjNbB5QZjqXMztajdWP+1dudR1o+8CjITrB
+   vchFhyo9HHZOlwDazt398BhwIm2Pgt21Sl582jRB4N7/5DjMFab/3W1Mn
+   DnNFojBFZ2MEf91Hc8ly/P0w+briZdO3x6RkQHB0t3xrpn9rt5k05cGJQ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="324285267"
+X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
+   d="scan'208";a="324285267"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:57:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="716233913"
+X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
+   d="scan'208";a="716233913"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga001.jf.intel.com with ESMTP; 27 Mar 2023 14:57:40 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Mar 2023 14:57:39 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Mar 2023 14:57:39 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Mon, 27 Mar 2023 14:57:39 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.48) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Mon, 27 Mar 2023 14:57:39 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YaJzxKzAD12h/DeNCvjNrREvE9pJ2vK9q+l5TsW/usDtF6Kc2g/FM17jgLJhPnrnPKUq7qURzuhUMEQ5t4761Ewa6gm1lzBmvAL9yHrxZ0nq3J4cDQhfybiQj3yTCamkbp237Re1SjOTUpm7FzQGv2kFi1sB7O6dE0OtcycjNIJkdYw2VieH838jHLSD8iB2cISofDYeG5bySznaCyP4RXg6P2siL6MZvYoYhkGqs1t5WgYC9MkqnPOYOMtimWsSXugydUyE5eYe+2uiDQQ9AK7TbUM7CdyoQSYu76k53oMDzgu36uKYsyeFWwVx1pjB3/NCAOorSvndTmB965Cy5g==
+ b=PfwRIBfAcZfvU+wqDWeDYffWPWmfrjubTpIlLIncnHE0RTrx2nmwoy1dlJ143210LhkDkROiQBa7pdZqKMuKW2jhc05IYSSaR8fhqxE3jitzIzuWcfn56O0FS7h25iaaupAHtLM2tw71WwRuFlKXFRq484tiCRa7F6ZVCsdUIMObi3HFFy1+46CzsKA2K6zz7fnEaPK3hqodIlCJubWMWYVWmEAfWIFemz8dXnWNyLchRNoQ/FzRcxmsYayfNnIpXXA0V7rBYsmYqZo+Fr1XoLd1jKMosCxjPnmNuJOZ0OtwC0x6JjzgUL+NwCa+LkZQVEmL4y1Vvx4R3A8m6mp33Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OFQHAh/BpWNRHnd1kvgVeQgj05l32vTbFswnzVs8yg4=;
- b=Q1Ww7Z2ypGgo7vNriF/oVOE6WONYJzTqzr5q5duenwayOnZKCsEoUw3wVRVj/YnwdI6A9iCIEtJH5csaXGBUSX1DE7BUq4kiA3iOLHrchpuDSnxnToRk/sYo5KqseFg+xGaz1Poh31b8doe0+sT/Yf89h/tsPQRTJVbHLP/KOoee4MjutaViEsD7NT/rDR3hDVcEhqb1E2+upk4u8GfONUgipLLqfd/x2RszaoviHcyx4tbYK8WPM+e2N1K+D6qf+/+pmY1RyDXXAugVbYNq/S7Npnltu1WwCFli59zROXCoFzJSi6cNvtRAj0BkWR9Flm/cqmBiNYy6SeD4veGhVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OFQHAh/BpWNRHnd1kvgVeQgj05l32vTbFswnzVs8yg4=;
- b=SNG1f3k1uWBhBqrAhBT2bkxQlZGQ89J+ig9AncNG2StCHrez077VHt1Z3gSvs8oabbY1mb6ZmwiIX/YCR5UVA/F98aCfNWqm1tdnCRE2Su0rf/tWJbBxLeg56YKBqQ577pfh+tVVnN33WIfWRmFk9qMUMi6TdGDNscTpynO8Kd0=
-Received: from DM6PR02CA0114.namprd02.prod.outlook.com (2603:10b6:5:1b4::16)
- by CYYPR12MB8940.namprd12.prod.outlook.com (2603:10b6:930:bd::17) with
+ bh=AKTRopzEycm3ozWBTxqfHNIiJ1UhT2uxRoRryic4sAQ=;
+ b=SVTm71MFCauOK6DVXLjEI3XmONQb8bgGdi9okPEVW/T8iNQ2r693qeuvQ9wyPgvnNcWIxlQWFihUnCeyX9E4Pa4n09GscZioJVUh7aWFoBC6M80ZmrumQYnvfZnzDpPfgTWkHj6rLToQzmZ5iaR8ij0SUQ8oQzc4iBZc7DBmvNuQjfX9DhQwF+AEgoDKBU9nljbxiVHKD2vinYM5UgR6+UuCbi8GWjqh5aiToCtFJA867lfLSW68dDKoM4xA74ZQuYWugCBsHlg3ABRJtNONC8SYHaeGa3T70b/aoAoX0hGTIXMSk/72vhPkIdBo6SJT11smUGwtbBy6+Ga5RamZ7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MN0PR11MB6207.namprd11.prod.outlook.com (2603:10b6:208:3c5::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.30; Mon, 27 Mar
- 2023 21:51:45 +0000
-Received: from DM6NAM11FT055.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1b4:cafe::12) by DM6PR02CA0114.outlook.office365.com
- (2603:10b6:5:1b4::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.41 via Frontend
- Transport; Mon, 27 Mar 2023 21:51:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT055.mail.protection.outlook.com (10.13.173.103) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6222.22 via Frontend Transport; Mon, 27 Mar 2023 21:51:45 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 27 Mar
- 2023 16:51:42 -0500
-Date:   Mon, 27 Mar 2023 23:51:39 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>
-Subject: Re: [PATCH v2 4/5] cxl/pci: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <ZCIPuPM+LZsOFIIZ@rric.localdomain>
-References: <20230323213808.398039-5-terry.bowman@amd.com>
- <20230324223656.GA2660301@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.32; Mon, 27 Mar
+ 2023 21:57:37 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%6]) with mapi id 15.20.6178.041; Mon, 27 Mar 2023
+ 21:57:37 +0000
+Date:   Mon, 27 Mar 2023 14:57:34 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>, <dan.j.williams@intel.com>
+CC:     <jonathan.cameron@huawei.com>, <ira.weiny@intel.com>,
+        <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
+        <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>
+Subject: RE: [PATCH 1/7] cxl/mbox: Add background cmd handling machinery
+Message-ID: <6422114e9b764_21a8294bc@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230224194652.1990604-1-dave@stgolabs.net>
+ <20230224194652.1990604-2-dave@stgolabs.net>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230324223656.GA2660301@bhelgaas>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+In-Reply-To: <20230224194652.1990604-2-dave@stgolabs.net>
+X-ClientProxiedBy: SJ0PR03CA0282.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::17) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
+MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT055:EE_|CYYPR12MB8940:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77f1a313-4f41-45ab-5cfe-08db2f0d7543
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN0PR11MB6207:EE_
+X-MS-Office365-Filtering-Correlation-Id: 35a23af4-2f8f-4613-b97a-08db2f0e4720
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: z0G3TeIC7QLTzUlrvhOnhdAosH49pivGL94PO+FIEiAW8p/9roPUurD8q/2mL/DH0Y9uyGLb73So+jChjUFKiyUhWgVn6+hg70h5DJsG3HGF9eLkChRB9TOKPj/6af6qo5r8gvo6xs2/AMXgc6RrdNMSFs+1J/qvm2HGI7iOWsPDQaH/HmydFjbgAdtH5r+6nFPGCIUHJhLTst7tLKxlOhv+R8mV0iWtW8CZDWLiv2UMcn83pbNM6pvGzPyrWyt3GSAUZg9VnloxSAPV+rPUsb+M4utNltE8SY2NRG2ZZB4fZumgZJ63C52X062+DUWrIk0YLR15Wsu+c82w8DK1zDli46wBIEZbEdfUPq5H7QolNNU/6sItBlejO8bGIK999CRIdf7ziiT7EWIhi8PNt3gL4EApssyOqadMX96SQ2aaKj41vf7tolo3i8Ko+UKYSwadWcW9pga/HJ+rAuBki4VJ6lCavGPcFHDDZzXuzM4QyjiMiKGxPfnmlAe9D57LoVpdINRFTQYp4xz99ktR5R5MaA69Az+9gzKdiT/P9cToJHKcaarFF76m4L65imbaB1hU5aJH01Zk59V/QzXWZuDHHgTHs7nVdnr1V/Febv0h0r6QWMJ5zFJt+GBL8sNfnrx0yFeK+OrrJGqkkLo4S9hhFjdgES2dj3uH7qvEu8Vd4dfrc+3hmk1k/UWFanJt89TbZew/lttJWzmXbLGeWyz6NRpxDoovhSPRO/aAjeI7BmK1QLe/zBLkoXj40RUaGdLldmaG0QKclEJE0xNX8Q==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(39860400002)(396003)(451199021)(46966006)(40470700004)(36840700001)(16526019)(9686003)(26005)(53546011)(426003)(40480700001)(41300700001)(186003)(55016003)(6666004)(7696005)(83380400001)(336012)(47076005)(478600001)(54906003)(316002)(36860700001)(40460700003)(4326008)(70206006)(2906002)(7416002)(70586007)(8676002)(6916009)(81166007)(82740400003)(356005)(82310400005)(5660300002)(8936002)(67856001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2023 21:51:45.0861
+X-Microsoft-Antispam-Message-Info: zb59XNEkmSG6ysjE8Su4jYF0FPNSyv5p3AVUC1+bvCtLNhS2Jt1AH7m+70CyE5gXjRBxV6lQbLcgyjmRJTtYjPZlCu27uXLT6ycocDrktlPK9I6Il/nrAOVvY7ml9bpatyk1pU/FivSGUHD3LMvKR2No2Olsw3bpayfazz/ju4x2Sv8nxjPyJVDIZP2sVhc/gPony8MHaGokU5CjS69IgynIqfpcxHlYad/BeMXkqeEhJXRD86oSAgED/KI3Tnjr7DQpyPfEhUhoU5zsGvayeKO9P9IeBdm5Wd45VNby9DTYljybIw7YlqRRhAqU5ZN5KfrfYDle9b6B0ycqED6am4lZDL3W2cmXTkmUkLa3bhgIINnPauGajhtXV+aPWJoRZr6wIudAvzuvG0oppKCIV+5NYYAjBEWL5hOrd+oyqxeINvQYnBjYhxK/epIttYjZ3fuecHbKloL9l8RxoQObBvJQWwc8jJhAPwkt9aDOgp1hkRhJe8GLHeY3DE6gCYQIoXY69n0/KkTo/1ERMzSGDo8wiFeSf4CRj4yv6yh2Td76Sslx6+V8/EHl26zYqL+T
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(346002)(366004)(396003)(39860400002)(136003)(451199021)(66556008)(66476007)(8676002)(4326008)(66946007)(316002)(8936002)(5660300002)(30864003)(41300700001)(26005)(82960400001)(186003)(6506007)(83380400001)(6512007)(6666004)(478600001)(6486002)(38100700002)(9686003)(86362001)(2906002)(66899021);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Bd5u42KeE6evxum8OPRCJPjI2bqzu/0CJNTtBv72zccorWjyeCT70xAntunL?=
+ =?us-ascii?Q?jAVoiG+ddEqAk3XRFIxG6F3aScHMcqrIIxooq4/0OEV/OlS8t85SkrIWj9Ib?=
+ =?us-ascii?Q?VqU5ZV1KT1LqD+m9IVF/C6AGORA/8sRwlCNml2dtlwsrkPRZ9uDdrWlukSyr?=
+ =?us-ascii?Q?XiSlbdPiNS6bG83g/zjgrhgr4fTjfAp7cDn5Kn0Kwsoyv830V9pWIp4ne86e?=
+ =?us-ascii?Q?SVPgGe0ewvUELGXhXFEh/obtf6fb0+WdaE14gEy5xz3zHjPR2LibF42SnG8o?=
+ =?us-ascii?Q?r5PbRK0F7EgSFGiHriukiLc/wkwvEtqzx8x2EI6uMVsvXvrjWbZPB/wTIRC7?=
+ =?us-ascii?Q?8MuTZt3j+zxBmf7ipLVMkgjEA4SY3AKi1jsMVMWHkuvgX3P6GyOnVphQtMF0?=
+ =?us-ascii?Q?irFDcCLsk/TTaUBkpgJMAX/TQCqcPXie8AyOQn/7CvAoz1w23PlkH+BdJVMk?=
+ =?us-ascii?Q?KT0FRoml0kU6xWkuj5XuY5OuKs3l7seqB42/p20BvOOFFz2hOQcdbe1bTWR4?=
+ =?us-ascii?Q?SEDxm307anlYC+cnG02CseTuhv72lVcCkyNgAQirKdtHCOG/Si01Gv01AZF1?=
+ =?us-ascii?Q?/6SIwh7WJcJtTIflimM52z3Vn5M1QmCu/QqAUNwKRnKL+SV0Jlm3Nm6/rdwu?=
+ =?us-ascii?Q?xTSSCddfeKPhL2DEGEFPZv35+15toVHz4KRjmIH0UYB3Sl8GVu87BgBz3iVL?=
+ =?us-ascii?Q?bUA2KtYkPFnPJmF26S5MG2tGQ98XvuIFY2kIso+plgOzZu2XCARFxnfLGZoB?=
+ =?us-ascii?Q?IK3eL017rv0YQiH6VG/OAiCjoP/FlBUMEQXhk95g2Geab8UVRMUArwLeLLub?=
+ =?us-ascii?Q?rh5/PXAXKxgbJf631h6BnT7Y1zhxi1dP9NaLMCEcstQiSYN9yIap8HJcVMtP?=
+ =?us-ascii?Q?DtlluvVMIfs/gsjHYgyfrBr/2WBqS1YgAl/4Pfp1+L+hrFE4ypuogFDIMUpK?=
+ =?us-ascii?Q?7IvQH1T8Mjq7KYFjlJj4bwxoV0p30RzXJet9gDlYVjTCh4aOv5NE4ZEHSO+o?=
+ =?us-ascii?Q?Y6hOb6s3AMwe3H+d0S/9SJ4raH36tX8kRbYKSwndlSCqPBAQFfhIqKhuXLie?=
+ =?us-ascii?Q?dJTNdONZS7u/bgCq0TKFiXkwrJ9Pyn0E7uJ2IKZM+zHjbisRT4BQ/9ujNGKr?=
+ =?us-ascii?Q?wuYBtjtDp+raNBUj0UI/nt24ie9546D9nm7+9hyT+nc3J2XubRY2EFS+ZjXb?=
+ =?us-ascii?Q?bIzGDAhfT44jUlMu8lgmLg40B+4AUzII/XoRSKIXwhq6C1sxakOmL0iF8hqr?=
+ =?us-ascii?Q?asNDyd93tl6zdATQiWX1W9yMtxHmR1oum4FXvMkejW2mDkKpUuiGKewYeSRo?=
+ =?us-ascii?Q?stFxw+IaCIAZSTJ198YAN4WDJaZpOaegyQBNBa20fkx/VmeAn3RKRoiFy925?=
+ =?us-ascii?Q?EkA1HPTWE+ZY2+Aa6idYuuIM6Y1A3U0OF4QCrWkqKLJb27QqQ94Um/YTcV9r?=
+ =?us-ascii?Q?d9QE+2jJYlR6YdKQ4I1AnynCtm1MO8TAUbwZIxCLND9r4khhwrZHIpu0T5Fa?=
+ =?us-ascii?Q?ORg6am3PJll/c3TJJHDwBllJPYfbipuYMJiHY1FZSeG51pKeIVh5HPFs/KKL?=
+ =?us-ascii?Q?SQPJ9EyT9V/jMqGZrKaKWpaAkOe5KJEBPzFhXh3ZBvNrRDqZH7BGEMRWrEAd?=
+ =?us-ascii?Q?jA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35a23af4-2f8f-4613-b97a-08db2f0e4720
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2023 21:57:37.4463
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77f1a313-4f41-45ab-5cfe-08db2f0d7543
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT055.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8940
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tXoGPwEwG9nTJTkDpxQek1oxTYPnekmXwrvj2O4wuQ9Xz3WoQHGssD8vsTk44Vc7akoTNkaLYr8ucmk38jD1kHTf+YJuZHwLAE4p2Doeeak=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6207
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Bjorn,
+Davidlohr Bueso wrote:
 
-thanks for you review.
+Hi Davidlohr, I am finally circling back to this, some comments below,
+but I think this is looking good.
 
-On 24.03.23 17:36:56, Bjorn Helgaas wrote:
-> I'd call this a "PCI/AER: ..." patch since that's where all the
-> changes are.
+> This adds support for handling background operations, as defined in
+> the CXL 3.0 spec. Commands that can take too long (over ~2 seconds)
+> can run in the background asynchronously (to the hardware). Currently
+> these are limited to Maintenance, transfer/activate Firmware, Scan
+> Media, Sanitize (aka overwrite), and VPPB bind/unbind.
 > 
-> On Thu, Mar 23, 2023 at 04:38:07PM -0500, Terry Bowman wrote:
-> > From: Robert Richter <rrichter@amd.com>
-> > 
-> > In RCD mode a CXL device (RCD) is exposed as an RCiEP, but CXL
-> > downstream and upstream ports are not enumerated and not visible in
-> > the PCIe hierarchy. Protocol and link errors are sent to an RCEC.
+> The driver will deal with such commands synchronously, blocking
+> all other incoming commands for a specified period of time, allowing
+> time-slicing the command such that the caller can send incremental
+> requests to avoid monopolizing the driver/device. This approach
+> makes the code simpler, where any out of sync (timeout) between the
+> driver and hardware is just disregarded as an invalid state until
+> the next successful submission.
 > 
-> "RCD" isn't a common term in drivers/pci; can you expand it once here?
+> On devices where mbox interrupts are supported, this will still use
+> a poller that will wakeup in the specified wait intervals. The irq
+> handler will simply awake a blocked cmd, which is also safe vs a
+> task that is either waking (timing out) or already awoken.
 > 
-> > Now, RCH downstream port-detected errors are signaled as internal AER
-> > errors (UIE/CIE) with the RCEC's source ID. A CXL handler must then
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  drivers/cxl/cxl.h    |   7 +++
+>  drivers/cxl/cxlmem.h |   6 +++
+>  drivers/cxl/pci.c    | 100 +++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 109 insertions(+), 4 deletions(-)
 > 
-> Similarly, "UIE" and "CIE" are new to drivers/pci; can you expand them
-> before using?  I assume Uncorrectable Internal Error (UIE) and
-> Corrected Internal Error (CIE)?  (Annoying that the PCIe spec uses
-> "Correctable" in general, but "Corrected" for Internal Errors.)
-> 
-> > inspect the error status in various CXL registers residing in the
-> > dport's component register space (CXL RAS cap) or the dport's RCRB
-> > (AER ext cap). [1]
-> > 
-> > This patch connects errors showing up in the RCEC's error handler with
-> 
-> "Connect errors ..." (we already know this text applies to *this
-> patch*).
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index d853a0238ad7..b834e55375e3 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -176,14 +176,21 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  /* CXL 2.0 8.2.8.4 Mailbox Registers */
+>  #define CXLDEV_MBOX_CAPS_OFFSET 0x00
+>  #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
+> +#define   CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK GENMASK(10, 7)
+> +#define   CXLDEV_MBOX_CAP_BG_CMD_IRQ BIT(6)
+>  #define CXLDEV_MBOX_CTRL_OFFSET 0x04
+>  #define   CXLDEV_MBOX_CTRL_DOORBELL BIT(0)
+> +#define   CXLDEV_MBOX_CTRL_BG_CMD_IRQ BIT(2)
+>  #define CXLDEV_MBOX_CMD_OFFSET 0x08
+>  #define   CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
+>  #define   CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK GENMASK_ULL(36, 16)
+>  #define CXLDEV_MBOX_STATUS_OFFSET 0x10
+> +#define   CXLDEV_MBOX_STATUS_BG_CMD BIT(0)
+>  #define   CXLDEV_MBOX_STATUS_RET_CODE_MASK GENMASK_ULL(47, 32)
+>  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
+> +#define   CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
+> +#define   CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK GENMASK_ULL(22, 16)
+> +#define   CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK GENMASK_ULL(47, 32)
+>  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
+>  
+>  /*
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index ccbafc05a636..934076254d52 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -108,6 +108,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+>   *            variable sized output commands, it tells the exact number of bytes
+>   *            written.
+>   * @min_out: (input) internal command output payload size validation
+> + * @poll_count: (input)  Number of timeouts to attempt.
+> + * @poll_interval: (input) Number of ms between mailbox background command
+> + *                 polling intervals timeouts.
+>   * @return_code: (output) Error code returned from hardware.
+>   *
+>   * This is the primary mechanism used to send commands to the hardware.
+> @@ -123,6 +126,8 @@ struct cxl_mbox_cmd {
+>  	size_t size_in;
+>  	size_t size_out;
+>  	size_t min_out;
+> +	int poll_count;
+> +	u64 poll_interval;
 
-I will update subject and description.
+An int will do, right? This value should likely never be above 1000.
 
-> 
-> > the CXL subsystem. Implement this by forwarding the error to all CXL
-> > devices below the RCEC. Since the entire CXL device is controlled only
-> > using PCIe Configuration Space of device 0, Function 0, only pass it
-> > there [2]. These devices have the Memory Device class code set
-> > (PCI_CLASS_MEMORY_CXL, 502h) and the existing cxl_pci driver can
-> > implement the handler.
-> 
-> > The CXL device driver is then responsible to
-> > enable error reporting in the RCEC's AER cap
-> 
-> I don't know exactly what you mean by "error reporting in the RCEC's
-> AER cap", but IIUC, for non-Root Port devices, generation of ERR_COR/
-> ERR_NONFATAL/ERR_FATAL messages is controlled by the Device Control
-> register and should already be enabled by pci_aer_init().
-> 
-> Maybe you mean setting AER mask/severity specifically for Internal
-> Errors?  I'm hoping to get as much of AER management as we can in the
+>  	u16 return_code;
+>  };
+>  
+> @@ -322,6 +327,7 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
+>  	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+>  	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+> +	CXL_MBOX_OP_SANITIZE		= 0x4400,
+>  	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>  	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>  	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 60b23624d167..26b6105e2797 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -52,6 +52,8 @@ static unsigned short mbox_ready_timeout = 60;
+>  module_param(mbox_ready_timeout, ushort, 0644);
+>  MODULE_PARM_DESC(mbox_ready_timeout, "seconds to wait for mailbox ready");
+>  
+> +static DECLARE_WAIT_QUEUE_HEAD(mbox_wait);
+> +
+>  static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+>  {
+>  	const unsigned long start = jiffies;
+> @@ -85,6 +87,25 @@ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+>  			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+>  			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>  
+> +static irqreturn_t cxl_mbox_irq(int irq, void *id)
+> +{
+> +	/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
+> +	wake_up(&mbox_wait);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
+> +{
+> +	u64 bgcmd_status_reg;
+> +	u32 pct;
+> +
+> +	bgcmd_status_reg = readq(cxlds->regs.mbox +
+> +				 CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+> +	pct = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, bgcmd_status_reg);
+> +
+> +	return pct == 100;
+> +}
+> +
+>  /**
+>   * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+>   * @cxlds: The device state to communicate with.
+> @@ -178,6 +199,56 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  	mbox_cmd->return_code =
+>  		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
+>  
+> +	/*
+> +	 * Handle the background command in a synchronous manner.
+> +	 *
+> +	 * All other mailbox commands will serialize/queue on the mbox_mutex,
+> +	 * which we currently hold. Furthermore this also guarantees that
+> +	 * cxl_mbox_background_complete() checks are safe amongst each other,
+> +	 * in that no new bg operation can occur in between.
+> +	 *
+> +	 * With the exception of special cases that merit monopolizing the
+> +	 * driver/device, bg operations are timesliced in accordance with
+> +	 * the nature of the command being sent.
+> +	 *
+> +	 * In the event of timeout, the mailbox state is indeterminate
+> +	 * until the next successful command submission and the driver
+> +	 * can get back in sync with the hardware state.
+> +	 */
+> +	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
+> +		u64 bg_status_reg;
+> +		const bool timeslice = mbox_cmd->opcode != CXL_MBOX_OP_SANITIZE;
 
-Richt, this is implemented in patch #5 in function
-rcec_enable_aer_ints().
+I understand that sanitize is special, but it feels out of place for
+this to never give up polling when sanitize is in progress.
 
-> PCI core and out of drivers, so maybe we need a new PCI interface to
-> do that.
-> 
-> In any event, I assume this sort of configuration would be an
-> enumeration-time thing, while *this* patch is a run-time thing, so
-> maybe this information belongs with a different patch?
+Yes, sanitize is a special case because the device is media disabled and
+not much else can happen with it. However because of that I expect the
+admin thread that submitted it may be different than the thread that
+wants to check the status and re-enable the device.
 
-Do you mean once a Restricted CXL host (RCH) is detected, the internal
-errors should be enabled in the device mask, all this done during
-device enumeration? But wouldn't interrupts being enabled then before
-the CXL device is ready?
+cxl disable-memdev memX
+echo 1 > /sys/bus/cxl/devices/memX/security/sanitize
+<select()/poll() on /sys/bus/cxl/devices/memX/security/sanitize>
+cxl enable-memdev memX
 
-> 
-> > (esp. CIE and UIE) and to
-> > inspect the dport's CXL registers in addition (CXL RAS cap and AER ext
-> > cap).
-> > 
-> > The reason for choosing this implementation is that a CXL RCEC device
-> > is bound to the AER port driver, but the driver does not allow it to
-> > register a custom specific handler to support CXL. Connecting the RCEC
-> > hard-wired with a CXL handler does not work, as the CXL subsystem
-> > might not be present all the time. The alternative to add an
-> > implementation to the portdrv to allow the registration of a custom
-> > RCEC error handler isn't worth doing it as CXL would be its only user.
-> > Instead, just check for an CXL RCEC and pass it down to the connected
-> > CXL device's error handler.
-> > 
-> > [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
-> > [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
-> > 
-> > Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> 
-> Since you're sending this patch (Terry) your Signed-off-by should be
-> last.
-> 
-> > Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: linuxppc-dev@lists.ozlabs.org
-> > Cc: linux-pci@vger.kernel.org
-> > ---
-> >  drivers/pci/pcie/aer.c | 45 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 7f0f52d094a4..d250a4caa85a 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -943,6 +943,49 @@ static bool find_source_device(struct pci_dev *parent,
-> >  	return true;
-> >  }
-> >  
-> > +#if IS_ENABLED(CONFIG_CXL_PCI)
-> > +
-> > +static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info);
-> > +
-> > +static int handle_cxl_error_iter(struct pci_dev *dev, void *data)
-> > +{
-> > +	struct aer_err_info *e_info = (struct aer_err_info *)data;
-> > +
-> 
-> Thanks for explaining the :00.0 in the commit log.  I think a one-line
-> comment here would be useful too so future readers don't have to dig
-> out the commit to understand.
+Per the spec other foreground commands can be allowed through while
+sanitize is in flight and the device is expected to fail them. With
+background commands I think the need to be careful and queue them up to
+avoid clobbering the background status goes away with santize. If the
+device has sanitize in progress the driver can just reject/fail new
+commands with the "Background Operation" effect until it has had a
+chance to reap the sanitize result.
 
-Sure, will add a comment.
+> +
+> +		dev_dbg(dev, "Mailbox background operation started\n");
+> +
+> +		while (1) {
+> +			if (wait_event_interruptible_timeout(
+> +				mbox_wait, cxl_mbox_background_complete(cxlds),
+> +				msecs_to_jiffies(mbox_cmd->poll_interval)) > 0)
+> +				break;
 
-> 
-> > +	if (dev->devfn != PCI_DEVFN(0, 0))
-> > +		return 0;
-> > +
-> > +	/* Right now there is only a CXL.mem driver */
-> > +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> > +		return 0;
-> > +
-> > +	/* pci_dev_put() in handle_error_source() */
-> > +	dev = pci_dev_get(dev);
+Given that this does not check for -EINTR what is the rationale for
+making the wait interruptible?
 
-This dev is the endpoint's device handle.
+> +
+> +			if (timeslice && !--mbox_cmd->poll_count)
+> +				break;
 
-> 
-> I don't see why you need this.  Didn't we get here via this path?
-> 
->   aer_isr
->     aer_isr_one_error
->       find_source_device
->         find_device_iter
->           if (is_error_source())
->             add_error_device
->               pci_dev_get          <-- existing pci_dev_get()
+Per-above all commands that the kernel would synchronously wait for are
+always timesliced, and sanitize has special behavior.
 
-This is the RCEC's device handle. Note that downstream port errors
-have the RCEC's error source id (the RCEC’s Bus, Device, and Function
-Numbers, see CXL 3.0, 12.2.1.1). We pass this error to the CXL
-endpoint's driver (RCD, the RCiEP) now. The iterator goes through all
-endpoints connected to the RCEC.
+> +		}
+> +
+> +		if (!cxl_mbox_background_complete(cxlds)) {
+> +			u64 md_status =
+> +				readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+> +
+> +			cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
+> +				    "background timeout");
+> +			return -ETIMEDOUT;
+> +		}
+> +
+> +		bg_status_reg = readq(cxlds->regs.mbox +
+> +				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+> +		mbox_cmd->return_code =
+> +			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
+> +				  bg_status_reg);
+> +
+> +		dev_dbg(dev, "Mailbox background operation completed\n");
 
->       aer_process_err_devices
->         for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++)
->           if (aer_get_device_error_info(e_info->dev[i], e_info))
->             handle_error_source
->   +           handle_cxl_error
+Might be nice to include the opcode here and the other dev_dbg() above.
 
-For the endpoint we further call here now:
+> +	}
+> +
+>  	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
+>  		dev_dbg(dev, "Mailbox operation had an error: %s\n",
+>  			cxl_mbox_cmd_rc2str(mbox_cmd));
+> @@ -222,8 +293,11 @@ static int cxl_pci_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *c
+>  static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+>  {
+>  	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+> +	struct device *dev = cxlds->dev;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	unsigned long timeout;
+>  	u64 md_status;
+> +	int rc, irq;
+>  
+>  	timeout = jiffies + mbox_ready_timeout * HZ;
+>  	do {
+> @@ -272,6 +346,24 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+>  	dev_dbg(cxlds->dev, "Mailbox payload sized %zu",
+>  		cxlds->payload_size);
+>  
+> +	if (!(cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ)) {
+> +		dev_dbg(dev, "Only Mailbox polling is supported");
+> +		return 0;
+> +	}
+> +
+> +	irq = pci_irq_vector(pdev,
+> +			     FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap));
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	rc = devm_request_irq(dev, irq, cxl_mbox_irq,
+> +			      IRQF_SHARED, "mailbox", cxlds);
+> +	if (rc)
+> +		return rc;
+> +
+> +	writel(CXLDEV_MBOX_CTRL_BG_CMD_IRQ,
+> +	       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -757,6 +849,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
+>  
+> +	rc = cxl_alloc_irq_vectors(pdev);
+> +	if (rc)
+> +		return rc;
+> +
+>  	rc = cxl_pci_setup_mailbox(cxlds);
+>  	if (rc)
+>  		return rc;
+> @@ -777,10 +873,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = cxl_alloc_irq_vectors(pdev);
+> -	if (rc)
+> -		return rc;
+> -
 
-                  pcie_walk_rcec(dev, handle_cxl_error_iter, info)
-                    handle_cxl_error_iter(endpoint_dev)
-		      pci_dev_get(endpoint_dev)
-                      handle_error_source(endpoint_dev)
-                        pci_dev_put(endpoint_dev)
-
->               pci_dev_put(dev)     <-- existing pci_dev_put()
-> 
-> So it looks like we wouldn't call handle_error_source() unless we had
-> a valid e_info->dev[i], which has already had pci_dev_get() called on
-> it.
-> 
-> Oh, I think I see ... handle_cxl_error() itself was called because an
-> RCEC reported an error on behalf of a CXL RCiEP (?), and then you use
-> pcie_walk_rcec() to look through all the associated RCiEPs, and
-> recursively call handle_error_source(), and we haven't acquired a
-> reference to those RCiEPs.  Right?
-
-Yes, exacly.
-
-> 
-> But I thought the CXL things were not enumerated (first paragraph of
-> commit log)?  But obviously these RCiEPs must be enumerated as PCI
-> devices or pcie_walk_rcec() and pci_dev_get() wouldn't work.
-
-The dport and uport are not enumerated, there are two RCRB ranges for
-them. But errors are reported using the PCI hierarchy, using the RCEC
-and the RCiEP. Once an internal error arrives with the RCEC as an
-error source, the AER err cap in the RCRB must be checked.
-
-> 
-> I haven't worked all the way through this, but I thought Sean Kelley's
-> and Qiuxu Zhuo's work was along the same line and might cover this,
-> e.g.,
-> 
->   a175102b0a82 ("PCI/ERR: Recover from RCEC AER errors")
->   579086225502 ("PCI/ERR: Recover from RCiEP AER errors")
->   af113553d961 ("PCI/AER: Add pcie_walk_rcec() to RCEC AER handling")
-> 
-> But I guess maybe it's not quite the same case?
-
-Actually, we use this code to handle errors that are reported to the
-RCEC and only implement here the CXL specifics. That is, checking if
-the RCEC receives something from a CXL downstream port and forwarding
-that to a CXL handler (this patch). The handler then checks the AER
-err cap in the RCRB of all CXL downstream ports associated to the RCEC
-(not visible in the PCI hierarchy), but discovered through the :00.0
-RCiEP (patch #5).
-
-> 
-> If you *do* need this, I know pci_dev_get(NULL) is a no-op, but since
-> you're testing for NULL anyway, I'd put it inside the "if" body.
-> 
-> > +	if (dev)
-> > +		handle_error_source(dev, e_info);
-
-The check is more for the (theoretical) case where we cannot increment
-the refcount.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static bool is_internal_error(struct aer_err_info *info)
-> > +{
-> > +	if (info->severity == AER_CORRECTABLE)
-> > +		return info->status & PCI_ERR_COR_INTERNAL;
-> > +
-> > +	return info->status & PCI_ERR_UNC_INTN;
-> > +}
-> > +
-> > +static void handle_cxl_error(struct pci_dev *dev, struct aer_err_info *info)
-> > +{
-> > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> > +	    is_internal_error(info))
-> 
-> What's unique about Internal Errors?  I'm trying to figure out why you
-> wouldn't do this for *all* CXL errors.
-
-Per CXL specification downstream port errors are signaled using
-internal errors. All other errors would be device specific, we cannot
-handle that in a generic CXL driver. Note these are only errors
-reported to the RCEC with the RCEC as a source, the RCiEP's errors are
-handled using standard reporting already, see aer_isr_one_error() and
-further calling pdrv->err_handler->cor_error_detected() or
-pdrv->err_handler->error_detected().
-
--Robert
-
-> 
-> > +		pcie_walk_rcec(dev, handle_cxl_error_iter, info);
-> > +}
-> > +
-> > +#else
-> > +static inline void handle_cxl_error(struct pci_dev *dev,
-> > +				    struct aer_err_info *info) { }
-> > +#endif
-> > +
-> >  /**
-> >   * handle_error_source - handle logging error into an event log
-> >   * @dev: pointer to pci_dev data structure of error source device
-> > @@ -954,6 +997,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
-> >  {
-> >  	int aer = dev->aer_cap;
-> >  
-> > +	handle_cxl_error(dev, info);
-> > +
-> >  	if (info->severity == AER_CORRECTABLE) {
-> >  		/*
-> >  		 * Correctable error does not need software intervention.
-> > -- 
-> > 2.34.1
-> > 
+This hunk wants to be its own lead-in patch so it can be bisected
+independently of introducing background command support.
