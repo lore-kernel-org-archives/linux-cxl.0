@@ -2,104 +2,116 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD69C6FD1C
-	for <linux-cxl@archiver.kernel.org>; Sun, 26 Mar 2023 07:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD77C7619A
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 05:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjCZHVh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 26 Mar 2023 03:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
+        id S229546AbjC0FCT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Mar 2023 01:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjCZHVg (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 26 Mar 2023 03:21:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89B49A27B;
-        Sun, 26 Mar 2023 00:21:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 40E1A60DEA;
-        Sun, 26 Mar 2023 07:21:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E90C4339C;
-        Sun, 26 Mar 2023 07:21:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679815293;
-        bh=pxji88z27H0PgsSBucqTZmQTQyn/hGoPa6A+2B7kyW4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qoEL8Z115aro/jpVXBgeGYPwcL9BwfsejvL0g41x465R0UnGpA/zXlecUoU/yWn7y
-         FLAWi9tECSA30YB/defwKA1auizlk4JfbZGWhFQpo1CW3Q+vuOHYMMPC0F/4h3Rt9G
-         kIz/PUvmxiDxUuD7JkrkvEIrsyLpuDUAttNypHcnRQMO15p8DLcAmIKs4Nutqcbrvc
-         jA8BlJz8+l4sSO0AOYNTkkAausD233l0C8SM0ckC1E61TrL9ZpOD/+wCpOcEf3so0c
-         E2fA+c2E61WU8z6CZMzAhQ7uhKq01nPM+pessiFEIY4wTolXBimWtb+rTwW10a3shX
-         DsFZ/xPvK0fUA==
-Date:   Sun, 26 Mar 2023 10:21:19 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     dan.j.williams@intel.com, lsf-pc@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-        viacheslav.dubeyko@bytedance.com, ying.huang@intel.com
-Subject: Re: RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Message-ID: <ZB/yb9n6e/eNtNsf@kernel.org>
-References: <641b7b2117d02_1b98bb294cb@dwillia2-xfh.jf.intel.com.notmuch>
- <CGME20230323105106epcas2p39ea8de619622376a4698db425c6a6fb3@epcas2p3.samsung.com>
- <20230323105105.145783-1-ks0204.kim@samsung.com>
+        with ESMTP id S229462AbjC0FCS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 01:02:18 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FBA3A8C
+        for <linux-cxl@vger.kernel.org>; Sun, 26 Mar 2023 22:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679893336; x=1711429336;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JtR7tUq24AqDBgnohqTIjjPWYu2rTy9ajWFW/HnFhr0=;
+  b=DuCDp/hBIl/poAwMPG2WVuW3E4ECatj3vzoLLSjaxcPdhGCQlCx+vPOc
+   bFMCj0SupEegU4ftvUFguKtJg4p/bznYUTKhLwt/GaagmCUE1MhZnSBGy
+   +tN6MIVUjsCGbZFr+PyzRQM9/y46Kbv0U8WEkKRR2hCTmyqdac7v/XXaE
+   8N8mGlK37H4q3VXOIIpGAZoqSscJ5gniQuYjBwOABQ+VrYhiIKERP6pso
+   WgaLrnXcpF7oEenLNfrWypR5g0GdN3aZlHsf0IOiGxY4DTqmVzRr2QJ2v
+   SAa4d4uxChABvDhesMyoGFLms4tfDt0uWGBZ0MINhotOjmcVeIVl62UrT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10661"; a="341753839"
+X-IronPort-AV: E=Sophos;i="5.98,293,1673942400"; 
+   d="scan'208";a="341753839"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2023 22:02:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10661"; a="747856138"
+X-IronPort-AV: E=Sophos;i="5.98,293,1673942400"; 
+   d="scan'208";a="747856138"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.227.2])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2023 22:02:15 -0700
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH v11 0/6] CXL Poison List Retrieval & Tracing
+Date:   Sun, 26 Mar 2023 22:02:06 -0700
+Message-Id: <cover.1679888450.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230323105105.145783-1-ks0204.kim@samsung.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi,
+From: Alison Schofield <alison.schofield@intel.com>
 
-On Thu, Mar 23, 2023 at 07:51:05PM +0900, Kyungsan Kim wrote:
-> I appreciate dan for the careful advice.
-> 
-> >Kyungsan Kim wrote:
-> >[..]
-> >> >In addition to CXL memory, we may have other kind of memory in the
-> >> >system, for example, HBM (High Bandwidth Memory), memory in FPGA card,
-> >> >memory in GPU card, etc.  I guess that we need to consider them
-> >> >together.  Do we need to add one zone type for each kind of memory?
-> >> 
-> >> We also don't think a new zone is needed for every single memory
-> >> device.  Our viewpoint is the sole ZONE_NORMAL becomes not enough to
-> >> manage multiple volatile memory devices due to the increased device
-> >> types.  Including CXL DRAM, we think the ZONE_EXMEM can be used to
-> >> represent extended volatile memories that have different HW
-> >> characteristics.
-> >
-> >Some advice for the LSF/MM discussion, the rationale will need to be
-> >more than "we think the ZONE_EXMEM can be used to represent extended
-> >volatile memories that have different HW characteristics". It needs to
-> >be along the lines of "yes, to date Linux has been able to describe DDR
-> >with NUMA effects, PMEM with high write overhead, and HBM with improved
-> >bandwidth not necessarily latency, all without adding a new ZONE, but a
-> >new ZONE is absolutely required now to enable use case FOO, or address
-> >unfixable NUMA problem BAR." Without FOO and BAR to discuss the code
-> >maintainability concern of "fewer degress of freedom in the ZONE
-> >dimension" starts to dominate.
-> 
-> One problem we experienced was occured in the combination of hot-remove and kerelspace allocation usecases.
-> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
-> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
-> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
-> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
-> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
-> As you well know, among heterogeneous DRAM devices, CXL DRAM is the first PCIe basis device, which allows hot-pluggability, different RAS, and extended connectivity.
-> So, we thought it could be a graceful approach adding a new zone and separately manage the new features.
+Changes in v11:
+- Introduce the hpa field in TP_printk in Patch5, not Patch2. (0-day)
+- cxl_trigger_poison_list() make rc ssize_t
+- trace naming: s/LIST/List, s/type/trace_type
 
-This still does not describe what are the use cases that require having
-kernel allocations on CXL.mem. 
+Link to v10:
+https://lore.kernel.org/linux-cxl/cover.1679448904.git.alison.schofield@intel.com/
 
-I believe it's important to start with explanation *why* it is important to
-have kernel allocations on removable devices.
- 
-> Kindly let me know any advice or comment on our thoughts.
-> 
-> 
+Add support for retrieving device poison lists and store the returned
+error records as kernel trace events.
 
+The handling of the poison list is guided by the CXL 3.0 Specification
+Section 8.2.9.8.4.1. [1] 
+
+Example trigger:
+$ echo 1 > /sys/bus/cxl/devices/mem0/trigger_poison_list
+
+Example Trace Events:
+
+Poison found in a PMEM Region:
+cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=List region=region11 region_uuid=d96e67ec-76b0-406f-8c35-5b52630dcad1 hpa=0xf100000000 dpa=0x70000000 dpa_length=0x40 source=Injected flags= overflow_time=0
+
+Poison found in RAM Region:
+cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=List region=region2 region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xf010000000 dpa=0x0 dpa_length=0x40 source=Injected flags= overflow_time=0
+
+Poison found in an unmapped DPA resource:
+cxl_poison: memdev=mem3 host=cxl_mem.3 serial=3 trace_type=List region= region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xffffffffffffffff dpa=0x40000000 dpa_length=0x40 source=Injected flags= overflow_time=0
+
+[1]: https://www.computeexpresslink.org/download-the-specification
+
+Alison Schofield (6):
+  cxl/mbox: Add GET_POISON_LIST mailbox command
+  cxl/trace: Add TRACE support for CXL media-error records
+  cxl/memdev: Add trigger_poison_list sysfs attribute
+  cxl/region: Provide region info to the cxl_poison trace event
+  cxl/trace: Add an HPA to cxl_poison trace events
+  tools/testing/cxl: Mock support for Get Poison List
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  14 +++
+ drivers/cxl/core/core.h                 |  15 ++++
+ drivers/cxl/core/mbox.c                 |  75 ++++++++++++++++
+ drivers/cxl/core/memdev.c               | 108 ++++++++++++++++++++++++
+ drivers/cxl/core/region.c               |  63 ++++++++++++++
+ drivers/cxl/core/trace.c                |  94 +++++++++++++++++++++
+ drivers/cxl/core/trace.h                | 101 ++++++++++++++++++++++
+ drivers/cxl/cxlmem.h                    |  72 +++++++++++++++-
+ drivers/cxl/mem.c                       |  36 ++++++++
+ drivers/cxl/pci.c                       |   4 +
+ tools/testing/cxl/test/mem.c            |  42 +++++++++
+ 11 files changed, 623 insertions(+), 1 deletion(-)
+
+
+base-commit: e686c32590f40bffc45f105c04c836ffad3e531a
 -- 
-Sincerely yours,
-Mike.
+2.37.3
+
