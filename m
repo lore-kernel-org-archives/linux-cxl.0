@@ -2,47 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5E2C761A6
-	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 15:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4133C76195
+	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 17:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231834AbjC0Pup (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Mar 2023 11:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
+        id S232798AbjC0REe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Mar 2023 13:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbjC0Puo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 11:50:44 -0400
+        with ESMTP id S232590AbjC0RDx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 13:03:53 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A33198A;
-        Mon, 27 Mar 2023 08:50:41 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PlcgR5PrVz6J7lh;
-        Mon, 27 Mar 2023 23:49:07 +0800 (CST)
-Received: from localhost (10.48.153.9) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 27 Mar
- 2023 16:50:39 +0100
-Date:   Mon, 27 Mar 2023 16:50:38 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     kernel test robot <lkp@intel.com>
-CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <oe-kbuild-all@lists.linux.dev>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C14D10D4;
+        Mon, 27 Mar 2023 10:02:55 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PlfHc6mgPz6J83R;
+        Tue, 28 Mar 2023 01:02:04 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Mar 2023 18:02:39 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
         <will@kernel.org>, <dan.j.williams@intel.com>,
         <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
-Message-ID: <20230327165038.00002037@Huawei.com>
-In-Reply-To: <202303250523.JdddC4Ld-lkp@intel.com>
-References: <20230324171313.18448-5-Jonathan.Cameron@huawei.com>
-        <202303250523.JdddC4Ld-lkp@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Subject: [PATCH v3 0/5] CXL 3.0 Performance Monitoring Unit support
+Date:   Mon, 27 Mar 2023 18:02:42 +0100
+Message-ID: <20230327170247.6968-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.153.9]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
 X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
@@ -50,87 +45,87 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, 25 Mar 2023 05:12:01 +0800
-kernel test robot <lkp@intel.com> wrote:
+v3: Build fixes. Called out in individual patches.
 
-> Hi Jonathan,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on acme/perf/core]
-> [also build test ERROR on tip/perf/core cxl/next cxl/pending linus/master v6.3-rc3 next-20230324]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-> patch link:    https://lore.kernel.org/r/20230324171313.18448-5-Jonathan.Cameron%40huawei.com
-> patch subject: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
-> config: parisc-randconfig-r036-20230324 (https://download.01.org/0day-ci/archive/20230325/202303250523.JdddC4Ld-lkp@intel.com/config)
-> compiler: hppa-linux-gcc (GCC) 12.1.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/a04f0052a1fa10bda54569c8c7b3ab7fe60ca975
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
->         git checkout a04f0052a1fa10bda54569c8c7b3ab7fe60ca975
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc olddefconfig
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc SHELL=/bin/bash drivers/cxl/
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/oe-kbuild-all/202303250419.FANh4fIC-lkp@intel.com/
+Link: https://lore.kernel.org/oe-kbuild-all/202303250523.JdddC4Ld-lkp@intel.com/
+Link: https://lore.kernel.org/oe-kbuild-all/202303250546.ijiFKIpM-lkp@intel.com/
+etc
 
-Wow. This wasn't one of my best :(
+Thanks to all those who have looked at v1, and Kan Liang in particular for
+all the feedback on the main driver.
 
-Anyhow thanks for the reports + detailed build description.
+Updated cover letter.
 
-> 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: https://lore.kernel.org/oe-kbuild-all/202303250523.JdddC4Ld-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/cxl/cpmu.c: In function 'cpmu_parse_caps':
->    drivers/cxl/cpmu.c:101:15: error: implicit declaration of function 'readq'; did you mean 'readl'? [-Werror=implicit-function-declaration]
->      101 |         val = readq(base + CPMU_CAP_REG);
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
 
-Added include of linux/io-64-non-atomic-lo-hi.h
+Notes.
 
->          |               ^~~~~
->          |               readl
->    In file included from <command-line>:
->    drivers/cxl/cpmu.c: In function 'cpmu_config_get_mask':
-> >> drivers/cxl/cpmu.c:416:51: error: 'struct perf_event' has no member named 'attr'  
->      416 |         return FIELD_GET(GENMASK_ULL(31, 0), event->attr.config);
+1) The QEMU model against which this was developed needs tidying up.
+   Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go. So whilst I believe
+   the driver should be fine for what it supports we may find issues
+   as those corners of what is allowed are explored.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+5) Patch 1 led to a discussion of how to handle the self describing
+   and extensible nature of the CPMU counters.  That is likely to involve
+   a description in the "caps" sysfs directory and perf tool code that is
+   aware of the different event combinations that make sense and can
+   establish which sets are available on a given device.
+   That is likely to take a while to converge on, so as the driver is useful
+   in the current state, I'm looking to upstream this first and deal with
+   the more complex handling later.
+6) There is a lot of other functionality that can be added in future
+   include allowing for simpler hardware implementations that may not
+   support the minimum level of features currently required by the driver
+   (freeze, overflow interrupts etc).
 
-Added depends on PERF_EVENTS
-which I'd missed because it comes for free if a driver is under the drivers/perf/Kconfig menu.
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
 
->    drivers/cxl/cpmu.c:578:24: note: in expansion of macro 'GENMASK'
->      578 |                 writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
+Jonathan Cameron (5):
+  cxl: Add function to count regblocks of a given type
+  perf: Allow a PMU to have a parent
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver
 
-GENMASK_ULL() here and a couple of other places where it's not a compile
-time constant.
+ Documentation/admin-guide/perf/cxl.rst   |  65 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  13 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   1 +
+ drivers/cxl/core/cpmu.c                  |  72 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  50 +-
+ drivers/cxl/cpmu.c                       | 939 +++++++++++++++++++++++
+ drivers/cxl/cpmu.h                       |  56 ++
+ drivers/cxl/cxl.h                        |  17 +-
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  27 +-
+ include/linux/perf_event.h               |   1 +
+ kernel/events/core.c                     |   1 +
+ 17 files changed, 1244 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.h
 
+-- 
+2.37.2
 
-> >> drivers/cxl/cpmu.c:632:9: error: implicit declaration of function 'local64_set'; did you mean 'local_set'? [-Werror=implicit-function-declaration]  
->      632 |         local64_set(&hwc->prev_count, 0);
->          |         ^~~~~~~~~~~
->          |         local_set
-...
-
-> >> drivers/cxl/cpmu.c:636:28: error: implicit declaration of function 'local64_read'; did you mean 'local_read'? [-Werror=implicit-function-declaration]  
->      636 |                 prev_cnt = local64_read(&hwc->prev_count);
->          |                            ^~~~~~~~~~~~
->          |                            local_read
->    drivers/cxl/cpmu.c:636:45: error: 'struct hw_perf_event' has no member named 'prev_count'
->      636 |                 prev_cnt = local64_read(&hwc->prev_count);
->          |                                             ^~
->    drivers/cxl/cpmu.c:637:61: error: 'struct hw_perf_event' has no member named 'idx'
->      637 |                 writeq(prev_cnt, base + CPMU_COUNTER_REG(hwc->idx));
->          |                                                             ^~
->    drivers/cxl/cpmu.h:46:63: note: in definition of macro 'CPMU_COUNTER_REG'
->       46 | #define CPMU_COUNTER_REG(n)                     (0xc00 + 8 * (n))
->          |                                                               ^
