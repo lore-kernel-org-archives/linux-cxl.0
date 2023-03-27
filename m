@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7609CC761A6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB01C76195
 	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 21:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229595AbjC0Vqc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Mar 2023 17:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58258 "EHLO
+        id S231737AbjC0Vqd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Mar 2023 17:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232336AbjC0VqI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 17:46:08 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A562D6A;
-        Mon, 27 Mar 2023 14:46:04 -0700 (PDT)
+        with ESMTP id S232464AbjC0VqQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 17:46:16 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1303590;
+        Mon, 27 Mar 2023 14:46:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679953564; x=1711489564;
+  t=1679953576; x=1711489576;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zjASrLO9JAbHSbBHk6kX11fYZgCw5TbnWsK7mdF23JY=;
-  b=AkhyFCT5ozUw7NIA2IrCOj2ypk5vvbTjEQcScsXagNiRbJWznVBzLXfw
-   an+wnjsfpomjfSq48o89hNMwckcjfghM4crNnbzOF5kcGT3QtmxT2wgOY
-   +O+XsdCIIq422q3/ZGPAj5wcobSfCHbwL8y6sWZdB5orioP0JrwQ4fuim
-   57Ps9eFkqqcdsXSvbnaZIBzCbudjGhEg81Q5POiB4m++OoooJBBmU0Qqt
-   h/GqQUc4KLlnYz4TRXwDSvLGqM7kYr2/Uwyk2xYmbFpNRl+LdDaHG4uPu
-   WJpng7gquPG7YSeNJQNXlaMbum8HHHuQIQpALFeKyk3vk9P/NL+pAaNF1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="320799345"
+  bh=VNlMZOdJht7Zy6pmLtxW1M0jPur17UAJ1WBP+aKH9eE=;
+  b=G3BjD5syB3n3eCtAZ++BUPW82/tWKq5mOAb0l9Do3uBH/YOIVWRkzLa/
+   BbjdqW+HvNpEIc7TF7FEE2+8K1gv9hO4nvs3Uxp58845eQG9eRxZnzh9H
+   Fdfplag/kUReSoXdLLXXjy6XawN7RaJSoHI7w6/48aDR15xEAuQ6UjZp3
+   YOiOyadb/CHrqd9A5YH7/5nK+tFTa5lfJf9XPN0A+7lBLJLhKZ4/ZVIUm
+   HYuKmMG7Yz5OYd5xuPEorn6/Hyl/j3aVPnDhvBzJXBBE07/joZU1/R12q
+   k18js7V1NkxwT2YKaECIbRcucxix1Dgh5Yif1gjnwtznelSJz6PaCbLgn
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="337900377"
 X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
-   d="scan'208";a="320799345"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:45:49 -0700
+   d="scan'208";a="337900377"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:46:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="660958638"
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="686114802"
 X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
-   d="scan'208";a="660958638"
-Received: from spal2-desk3.gar.corp.intel.com (HELO [192.168.1.177]) ([10.212.91.66])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:45:48 -0700
-Subject: [PATCH v2 17/21] cxl: Wait Memory_Info_Valid before access memory
- related info
+   d="scan'208";a="686114802"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.91.66])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:46:00 -0700
+Subject: [PATCH v2 19/21] cxl: Store QTG IDs and related info to the CXL
+ memory device context
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rafael@kernel.org, lukas@wunner.de
-Date:   Mon, 27 Mar 2023 14:45:47 -0700
-Message-ID: <167995354763.2857312.3427869236165015969.stgit@djiang5-mobl3>
+Date:   Mon, 27 Mar 2023 14:46:00 -0700
+Message-ID: <167995356029.2857312.4374564094571467987.stgit@djiang5-mobl3>
 In-Reply-To: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
 References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,145 +57,113 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL rev3.0 8.1.3.8.2 Memory_Info_valid field
+Once the QTG ID _DSM is executed successfully, the QTG ID is retrieved from
+the return package. Create a list of entries in the cxl_memdev context and
+store the QTG ID and the associated DPA range. This information can be
+exposed to user space via sysfs in order to help region setup for
+hot-plugged CXL memory devices.
 
-The Memory_Info_Valid bit indicates that the CXL Range Size High and Size
-Low registers are valid. The bit must be set within 1 second of reset
-deassertion to the device. Check valid bit before we check the
-Memory_Active bit when waiting for cxl_await_media_ready() to ensure that
-the memory info is valid for consumption.
-
-Fixes: 2e4ba0ec9783 ("cxl/pci: Move cxl_await_media_ready() to the core")
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
 ---
-v2:
-- Check both ranges. (Jonathan)
----
- drivers/cxl/core/pci.c |   83 +++++++++++++++++++++++++++++++++++++++++++-----
- drivers/cxl/cxlpci.h   |    2 +
- 2 files changed, 77 insertions(+), 8 deletions(-)
+ drivers/cxl/core/memdev.c |    1 +
+ drivers/cxl/cxlmem.h      |   14 ++++++++++++++
+ drivers/cxl/port.c        |   19 +++++++++++++++++++
+ 3 files changed, 34 insertions(+)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 2f58cc54e108..268694d33a34 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -101,21 +101,55 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port)
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_port_enumerate_dports, CXL);
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index 28a05f2fe32d..d2605fc39240 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -346,6 +346,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+ 	 */
+ 	cxlmd->cxlds = cxlds;
+ 	cxlds->cxlmd = cxlmd;
++	INIT_LIST_HEAD(&cxlmd->qos_list);
  
--/*
-- * Wait up to @media_ready_timeout for the device to report memory
-- * active.
-- */
--int cxl_await_media_ready(struct cxl_dev_state *cxlds)
-+static int cxl_dvsec_mem_range_valid(struct cxl_dev_state *cxlds, int id)
-+{
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	int d = cxlds->cxl_dvsec;
-+	bool valid = false;
-+	int rc, i;
-+	u32 temp;
-+
-+	if (id > CXL_DVSEC_RANGE_MAX)
-+		return -EINVAL;
-+
-+	/* Check MEM INFO VALID bit first, give up after 1s */
-+	i = 1;
-+	do {
-+		rc = pci_read_config_dword(pdev,
-+					   d + CXL_DVSEC_RANGE_SIZE_LOW(id),
-+					   &temp);
-+		if (rc)
-+			return rc;
-+
-+		valid = FIELD_GET(CXL_DVSEC_MEM_INFO_VALID, temp);
-+		if (valid)
-+			break;
-+		msleep(1000);
-+	} while (i--);
-+
-+	if (!valid) {
-+		dev_err(&pdev->dev,
-+			"Timeout awaiting memory range %d valid after 1s.\n",
-+			id);
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cxl_dvsec_mem_range_active(struct cxl_dev_state *cxlds, int id)
- {
- 	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
- 	int d = cxlds->cxl_dvsec;
- 	bool active = false;
--	u64 md_status;
- 	int rc, i;
-+	u32 temp;
+ 	cdev = &cxlmd->cdev;
+ 	rc = cdev_device_add(cdev, dev);
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 001dabf0231b..c8b8d4865e49 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -40,6 +40,7 @@
+  * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
+  * @id: id number of this memdev instance.
+  * @depth: endpoint port depth
++ * @qos_list: QTG ID related list of entries
+  */
+ struct cxl_memdev {
+ 	struct device dev;
+@@ -50,6 +51,7 @@ struct cxl_memdev {
+ 	struct cxl_nvdimm *cxl_nvd;
+ 	int id;
+ 	int depth;
++	struct list_head qos_list;
+ };
  
--	for (i = media_ready_timeout; i; i--) {
--		u32 temp;
-+	if (id > CXL_DVSEC_RANGE_MAX)
-+		return -EINVAL;
+ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+@@ -215,6 +217,18 @@ struct cxl_event_state {
+ 	struct mutex log_lock;
+ };
  
-+	/* Check MEM ACTIVE bit, up to 60s timeout by default */
-+	for (i = media_ready_timeout; i; i--) {
- 		rc = pci_read_config_dword(
- 			pdev, d + CXL_DVSEC_RANGE_SIZE_LOW(0), &temp);
- 		if (rc)
-@@ -134,6 +168,39 @@ int cxl_await_media_ready(struct cxl_dev_state *cxlds)
- 		return -ETIMEDOUT;
- 	}
- 
-+	return 0;
-+}
-+
-+/*
-+ * Wait up to @media_ready_timeout for the device to report memory
-+ * active.
++/**
++ * struct qos_prop - QoS property entry
++ * @list - list entry
++ * @dpa_range - range for DPA address
++ * @qtg_id - QoS Throttling Group ID
 + */
-+int cxl_await_media_ready(struct cxl_dev_state *cxlds)
++struct qos_prop_entry {
++	struct list_head list;
++	struct range dpa_range;
++	u16 qtg_id;
++};
++
+ /**
+  * struct cxl_dev_state - The driver device state
+  *
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index f6646d91ae26..4e7e22c13790 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -124,6 +124,22 @@ static int cxl_port_qos_calculate(struct cxl_port *port,
+ 	return 0;
+ }
+ 
++static void cxl_memdev_set_qtg(struct cxl_memdev *cxlmd, struct list_head *dsmas_list)
 +{
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	int d = cxlds->cxl_dvsec;
-+	int rc, i, hdm_count;
-+	u64 md_status;
-+	u16 cap;
++	struct dsmas_entry *dent;
++	struct qos_prop_entry *qos;
 +
-+	rc = pci_read_config_word(pdev,
-+				  d + CXL_DVSEC_CAP_OFFSET, &cap);
-+	if (rc)
-+		return rc;
++	list_for_each_entry(dent, dsmas_list, list) {
++		qos = devm_kzalloc(&cxlmd->dev, sizeof(*qos), GFP_KERNEL);
++		if (!qos)
++			return;
 +
-+	hdm_count = FIELD_GET(CXL_DVSEC_HDM_COUNT_MASK, cap);
-+	for (i = 0; i < hdm_count; i++) {
-+		rc = cxl_dvsec_mem_range_valid(cxlds, i);
-+		if (rc)
-+			return rc;
++		qos->dpa_range = dent->dpa_range;
++		qos->qtg_id = dent->qtg_id;
++		list_add_tail(&qos->list, &cxlmd->qos_list);
 +	}
++}
 +
-+	for (i = 0; i < hdm_count; i++) {
-+		rc = cxl_dvsec_mem_range_active(cxlds, i);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
- 	if (!CXLMDEV_READY(md_status))
- 		return -EIO;
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 8ed8dd6903e9..754bfeab2921 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -31,6 +31,8 @@
- #define   CXL_DVSEC_RANGE_BASE_LOW(i)	(0x24 + (i * 0x10))
- #define     CXL_DVSEC_MEM_BASE_LOW_MASK	GENMASK(31, 28)
+ static int cxl_switch_port_probe(struct cxl_port *port)
+ {
+ 	struct cxl_hdm *cxlhdm;
+@@ -212,6 +228,7 @@ static int cxl_port_probe(struct device *dev)
+ 	read_cdat_data(port);
+ 	if (port->cdat.table) {
+ 		if (is_cxl_endpoint(port)) {
++			struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
+ 			LIST_HEAD(dsmas_list);
  
-+#define CXL_DVSEC_RANGE_MAX		2
+ 			rc = cdat_table_parse_dsmas(port->cdat.table,
+@@ -230,6 +247,8 @@ static int cxl_port_probe(struct device *dev)
+ 			rc = cxl_port_qos_calculate(port, &dsmas_list);
+ 			if (rc)
+ 				dev_dbg(dev, "Failed to do QoS calculations\n");
 +
- /* CXL 2.0 8.1.4: Non-CXL Function Map DVSEC */
- #define CXL_DVSEC_FUNCTION_MAP					2
- 
++			cxl_memdev_set_qtg(cxlmd, &dsmas_list);
+ 			dsmas_list_destroy(&dsmas_list);
+ 		} else {
+ 			rc = cdat_table_parse_sslbis(port->cdat.table,
 
 
