@@ -2,51 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87918C77B60
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C1DC77B6F
 	for <linux-cxl@archiver.kernel.org>; Mon, 27 Mar 2023 21:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjC0Vqd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 27 Mar 2023 17:46:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
+        id S232075AbjC0Vqe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 27 Mar 2023 17:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232443AbjC0VqP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 17:46:15 -0400
+        with ESMTP id S232479AbjC0VqS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 27 Mar 2023 17:46:18 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B323A82;
-        Mon, 27 Mar 2023 14:46:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131AA2D51;
+        Mon, 27 Mar 2023 14:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679953572; x=1711489572;
+  t=1679953578; x=1711489578;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R2JHEP2NGtTg4XZMCESgs9TXf6rrTFuo735DGLV/EUQ=;
-  b=P+1DaS07glEVvnWmLHpapXtIm9yX50t657m1GLy8NsyvDgRbFQLDwo8w
-   S7mKQOjQrA3NKXUDO7fZtTIb3B0biWLNaOTe9snmarOM7CwNo77kz3UEr
-   h2NaCdsM+Mxxx0299dxXVoapf5kiHV7O8Rhu2wZG+7A0gdn/zxAqjlHnE
-   nMeiQ8px0u4NRSpfDqhS052tfHnprIrS6map9uFTDceioPoVIOBdPcwPL
-   3SGrEva/aoeUaau4YG8/T0K453B4vg7cw9VNvabQlmuQyGHw2NlELgHtu
-   wOmk0A4k+Y9QEd3KMEqElC+3VJ16AmT2YLKbdLndZtbWb6iMuvVscBRvw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="337900352"
+  bh=qMzu4nCtJ++Zi0nLNXxEMdOYChBih0KqyaTouorlZiU=;
+  b=WSdtDeuF/f6eXksYRMQJTDHfr7KdS6077czsaJqcCy2pNLRiwn8rQpM8
+   KtWPTcOABmWGeQplqchM/DMs1Fpr41JSlkaoQDY/TLF1kOUSDSo6llRAu
+   RgfABcqZiMUILtbWuxWRPlhpeLHLVhwfea0Ur2PWZhBBEd9U9f7aL3xcz
+   IjzhdDaiRvbXsTuLmBZ0nnb8buRHw12TBxxW0NMqJUnG/1GrbfFso1OXF
+   sBCq3VzUKYTc1aaSTNPakkEk88HfRG0vLD6jn3Y82St+hCSM1LQHF74EW
+   ANoeRurcp8Zjd38qHFYIn51Hr82kzdCBno8kcq+KygkHV95BXz2u1w9dc
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="337900415"
 X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
-   d="scan'208";a="337900352"
+   d="scan'208";a="337900415"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:45:55 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:46:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="686114796"
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="686114814"
 X-IronPort-AV: E=Sophos;i="5.98,295,1673942400"; 
-   d="scan'208";a="686114796"
+   d="scan'208";a="686114814"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.91.66])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:45:54 -0700
-Subject: [PATCH v2 18/21] cxl: Move identify and partition query from pci
- probe to port probe
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 14:46:12 -0700
+Subject: [PATCH v2 21/21] cxl/mem: Add debugfs output for QTG related data
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rafael@kernel.org, lukas@wunner.de
-Date:   Mon, 27 Mar 2023 14:45:54 -0700
-Message-ID: <167995355442.2857312.7640440102093572590.stgit@djiang5-mobl3>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, lukas@wunner.de
+Date:   Mon, 27 Mar 2023 14:46:11 -0700
+Message-ID: <167995357195.2857312.5279274659737251140.stgit@djiang5-mobl3>
 In-Reply-To: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
 References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,53 +56,48 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Move the enumeration of device capacity to cxl_port_probe() from
-cxl_pci_probe(). The size and capacity information should be read
-after cxl_await_media_ready() so the data is valid.
+Add debugfs output to /sys/kernel/debug/cxl/memX/qtgmap
+The debugfs attribute will dump out all the DSMAS ranges and the associated
+QTG ID exported by the CXL device CDAT.
 
-Fixes: 5e2411ae8071 ("cxl/memdev: Change cxl_mem to a more descriptive name")
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/pci.c  |    8 --------
- drivers/cxl/port.c |    8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/cxl/mem.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index ed39d133b70d..06324266eae8 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -707,14 +707,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 39c4b54f0715..bf2cb5a54a7f 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -45,6 +45,21 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
+ 	return 0;
+ }
  
--	rc = cxl_dev_state_identify(cxlds);
--	if (rc)
--		return rc;
--
--	rc = cxl_mem_create_range_info(cxlds);
--	if (rc)
--		return rc;
--
- 	rc = cxl_alloc_irq_vectors(pdev);
- 	if (rc)
- 		return rc;
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 55517f6f5b84..f6646d91ae26 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -175,6 +175,14 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 		return rc;
- 	}
++static int cxl_mem_qtg_show(struct seq_file *file, void *data)
++{
++	struct device *dev = file->private;
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct qos_prop_entry *qos;
++
++	list_for_each_entry(qos, &cxlmd->qos_list, list) {
++		seq_printf(file, "%08llx-%08llx : QTG ID %u\n",
++			   qos->dpa_range.start, qos->dpa_range.end,
++			   qos->qtg_id);
++	}
++
++	return 0;
++}
++
+ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+ 				 struct cxl_dport *parent_dport)
+ {
+@@ -117,6 +132,7 @@ static int cxl_mem_probe(struct device *dev)
  
-+	rc = cxl_dev_state_identify(cxlds);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_mem_create_range_info(cxlds);
-+	if (rc)
-+		return rc;
-+
- 	rc = devm_cxl_enumerate_decoders(cxlhdm, &info);
+ 	dentry = cxl_debugfs_create_dir(dev_name(dev));
+ 	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
++	debugfs_create_devm_seqfile(dev, "qtgmap", dentry, cxl_mem_qtg_show);
+ 	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
  	if (rc)
  		return rc;
 
