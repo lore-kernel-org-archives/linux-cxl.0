@@ -2,160 +2,168 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B09AC6FD18
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 18:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D7C6FD18
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 19:29:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjC2SLG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Mar 2023 14:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42074 "EHLO
+        id S230314AbjC2T3P (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 15:29:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjC2SLF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 14:11:05 -0400
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8F365A8
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Mar 2023 11:10:28 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230329180937usoutp010a55891964f9f639db865745557bf894~Q9jcdWcJa2924429244usoutp01T;
-        Wed, 29 Mar 2023 18:09:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230329180937usoutp010a55891964f9f639db865745557bf894~Q9jcdWcJa2924429244usoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1680113377;
-        bh=TAlB8I5j2NwCmhKxrFGYQ6sJBYmxQB1/G9ZqLXYFyhU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=c2NwO1NUa6osD8qZAxqlo0VH4lcwL+rufNJY3fwXIvCG3bnmAgOnFvZe0vGnsul5p
-         9W9LgthCJFf+l74Az+xFQaykuQKF/3U5oHy757ahojO25o2bsQDX+JY1jY7GhmGix5
-         6J2viuWtrD5qFnhxsO3APi69HhOcV76jxZw3dN3s=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230329180937uscas1p185a0a799b23bf0b99227e0e575902784~Q9jcVy4LA0427504275uscas1p1D;
-        Wed, 29 Mar 2023 18:09:37 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id B1.57.09634.1EE74246; Wed,
-        29 Mar 2023 14:09:37 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230329180937uscas1p2aee5d0c49e66d2de6e5dbd884acb5705~Q9jcF8FqB0719307193uscas1p2B;
-        Wed, 29 Mar 2023 18:09:37 +0000 (GMT)
-X-AuditID: cbfec36d-9b3ff700000025a2-48-64247ee12d2c
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 16.4D.09515.0EE74246; Wed,
-        29 Mar 2023 14:09:36 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 29 Mar 2023 11:09:36 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        29 Mar 2023 11:09:36 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "dave.jiang@intel.com" <dave.jiang@intel.com>,
-        "alison.schofield@intel.com" <alison.schofield@intel.com>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH] cxl/region: Move coherence tracking into
- cxl_region_attach()
-Thread-Topic: [PATCH] cxl/region: Move coherence tracking into
-        cxl_region_attach()
-Thread-Index: AQHZYmmeSQHUPAgPT0aTdI++pCKksg==
-Date:   Wed, 29 Mar 2023 18:09:36 +0000
-Message-ID: <20230329180929.GA1683747@bgt-140510-bm03>
-In-Reply-To: <168002858817.50647.1217607907088920888.stgit@dwillia2-xfh.jf.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <50080D4AA41B674991570016DB173B60@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230232AbjC2T3O (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 15:29:14 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423FD134;
+        Wed, 29 Mar 2023 12:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680118153; x=1711654153;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eXdFVSGTvIKz7EDIZLcUeytXl6nXJcuFiBB8WJdknyI=;
+  b=fBdsS07wLkDJ6kwKiZMWchxDmY9JEA+ehCmNmhzVwfujpdztf9ScaY30
+   x7gVbQzKyIFnLH2L865px8TWZW+HIkaXUZYuSG6Oq474z7UcRAu1Pi5Dp
+   csUogy3sc0sRTRRasR4KPkgk3lcTS/if5am7h82/p0Z3a3y49wkWyywnw
+   bZF02lr021b0iI8X+3FtemYNjJZF6Yp4AY7l7hLLQcCrRnVsc1KF+KIYV
+   9njswgLcXZqt82eMNouRR5X0hP+8D69IBo9syojMcVIjE+t16vqFrJegQ
+   jOydbvgc1iM/9Zv7c4+AO5soh+GvQWUwG0hlIFEV2phWPQ805cYBqg4qE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="427255361"
+X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
+   d="scan'208";a="427255361"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 12:29:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="677902215"
+X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
+   d="scan'208";a="677902215"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 29 Mar 2023 12:29:10 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1phbTp-000JsG-23;
+        Wed, 29 Mar 2023 19:29:09 +0000
+Date:   Thu, 30 Mar 2023 03:28:38 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ben Cheatham <Benjamin.Cheatham@amd.com>, rafael@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, benjamin.cheatham@amd.com,
+        yazen.ghannam@amd.com, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, tony.luck@intel.com
+Subject: Re: [PATCH] ACPI, APEI, EINJ: Remove memory range validation for CXL
+ error types
+Message-ID: <202303300345.QZXN7i0i-lkp@intel.com>
+References: <20230329143813.25849-1-Benjamin.Cheatham@amd.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEKsWRmVeSWpSXmKPExsWy7djXc7oP61RSDG62iFncfXyBzWL61AuM
-        FiduNrJZ7H/6nMVi1cJrbBbnZ51isbg14RiTA7tHy5G3rB6L97xk8vi8SS6AOYrLJiU1J7Ms
-        tUjfLoEro/H3etaCBr6KX4vOsDUwHuLuYuTkkBAwkXh95QR7FyMXh5DASkaJVW1/GSGcViaJ
-        mVfessJUnbizkQkisRaoqnsLC4TziVHi3talUP3LGCUWff/DAtLCJqAosa9rOxuILSKgLTFx
-        zkFmkCJmgXNMEvN/X2UGSQgLBEt8mfiJFaIoROLhv83MELaexOnNU8BsFgFViU3X7gLZHBy8
-        AmYSP/6HgYQ5BUIl9p54AlbCKCAm8f3UGiYQm1lAXOLWk/lMEGcLSiyavYcZwhaT+LfrIRuE
-        rShx//tLdoh6HYkFuz+xQdh2Ej1fDkLFtSWWLXwN1ssLNOfkzCcsEL2SEgdX3AD7XkLgDIfE
-        p8Z3UAtcJF79uAgNL2mJ6Wsus4DcLCGQLLHqIxdEOEdi/pItUHOsJRb+Wc80gVFlFpKzZyE5
-        aRaSk2YhOWkWkpMWMLKuYhQvLS7OTU8tNsxLLdcrTswtLs1L10vOz93ECExGp/8dzt3BuOPW
-        R71DjEwcjIcYJTiYlUR4f19TShHiTUmsrEotyo8vKs1JLT7EKM3BoiTOa2h7MllIID2xJDU7
-        NbUgtQgmy8TBKdXApL7/zp9NuXqSbMxBTPrbqlSnTlQQfu8+cfX5hYVprjd+3o50Ozrjue1W
-        wXt+opsOOi5UP3jX9N2VE2V1Ab+XO4Qoud9mUJrq0JxS0csTuGTxqn971KbF37jLv6nOuFn2
-        sUrhsgK1o7Hbt1m+t7+11fPDFPmuvNIVJ7t9PXTcl3QUvzA6qqdY4/Kc26l9/wzOTQ5zMpYF
-        qiYf5tryNNrhvvyfluK1bzZdM8/zE+v9/dto1izDTcc2nWj55i3uMDnUrGKqxLdrUT8f5P7a
-        uu/I3wsZdbO9tsSL2a4s5K6xUlJyiDVnUJXcMz3rm037xlc1s02iFjhE2MVvYrHeFXPx69/V
-        Usv/JURNunj66NWUBUosxRmJhlrMRcWJAEjKRzC1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsWS2cA0UfdhnUqKwQIxi7uPL7BZTJ96gdHi
-        xM1GNov9T5+zWKxaeI3N4vysUywWtyYcY3Jg92g58pbVY/Gel0wenzfJBTBHcdmkpOZklqUW
-        6dslcGU0/l7PWtDAV/Fr0Rm2BsZD3F2MnBwSAiYSJ+5sZOpi5OIQEljNKLFrwRZ2COcTo0TH
-        rElQzjJGie+3bjGCtLAJKErs69rOBmKLCGhLTJxzkBmkiFngHJPE/N9XmUESwgLBEl8mfmKF
-        KAqRmLN4NROErSdxevMUsBoWAVWJTdfuAtkcHLwCZhI//oeBhIWAyg/e/gNWzikQKrH3xBOw
-        ckYBMYnvp9aAxZkFxCVuPZnPBPGCgMSSPeeZIWxRiZeP/7FC2IoS97+/ZIeo15FYsPsTG4Rt
-        J9Hz5SBUXFti2cLXYL28AoISJ2c+YYHolZQ4uOIGywRGiVlI1s1CMmoWklGzkIyahWTUAkbW
-        VYzipcXFuekVxcZ5qeV6xYm5xaV56XrJ+bmbGIFxfPrf4ZgdjPdufdQ7xMjEwXiIUYKDWUmE
-        9/c1pRQh3pTEyqrUovz4otKc1OJDjNIcLErivB6xE+OFBNITS1KzU1MLUotgskwcnFINTFou
-        pz8+Z0zZdpuDKZIzb92WC881fbbaHuq70mF2711w6M1VLJuqEieuU3lt/on55uc64QmdM4y4
-        Lr79fOX1UmZOv4rASp5AX938dJHMy1fuPTS+u6Ho/L64MiOxx/EbhC07LoW5lE3TEbqxeftn
-        dVZLOaV+E6M3RxbfnKKac/2mNPMP4bdz5ILqVK9evGCf9NZ5qr6Y9dSJ8+pj+nvMDyq6b9fe
-        P7f7+qz2fF7N54nSwV/UVLJmvPkdezjw+/OsvXmy3qx7hR/aSF1pfH9izRpv5yKV+YEWK6af
-        dnfY6/y1qfzRJ3XN1YtNN0xVeNacvZjx6bW8DoEvf7u/P+wWqp/7cV1Nw9o5Z4zevJi1bLYS
-        S3FGoqEWc1FxIgArUS/sUgMAAA==
-X-CMS-MailID: 20230329180937uscas1p2aee5d0c49e66d2de6e5dbd884acb5705
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230329180937uscas1p2aee5d0c49e66d2de6e5dbd884acb5705
-References: <168002858817.50647.1217607907088920888.stgit@dwillia2-xfh.jf.intel.com>
-        <CGME20230329180937uscas1p2aee5d0c49e66d2de6e5dbd884acb5705@uscas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230329143813.25849-1-Benjamin.Cheatham@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Mar 28, 2023 at 11:36:28AM -0700, Dan Williams wrote:
-> Each time the contents of a given HPA are potentially changed in a cache
-> incoherent manner the CXL core sets CXL_REGION_F_INCOHERENT to
-> invalidate CPU caches before the region is used.
->=20
-> Successful invocation of attach_target() indicates that DPA has been
-> newly assigned to a given HPA in the dynamic region creation flow.
-> However, attach_target() is also reused in the autodiscovery flow where
-> the region was activated by platform firmware. In that case there is no
-> need to invalidate caches because that region is already in active use
-> and nothing about the autodiscovery flow modifies the HPA-to-DPA
-> relationship.
->=20
-> Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
+Hi Ben,
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+I love your patch! Perhaps something to improve:
 
->  drivers/cxl/core/region.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 52bbf6268d5f..b2fd67fcebfb 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1674,6 +1674,7 @@ static int cxl_region_attach(struct cxl_region *cxl=
-r,
->  		if (rc)
->  			goto err_decrement;
->  		p->state =3D CXL_CONFIG_ACTIVE;
-> +		set_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
->  	}
-> =20
->  	cxled->cxld.interleave_ways =3D p->interleave_ways;
-> @@ -1775,8 +1776,6 @@ static int attach_target(struct cxl_region *cxlr,
-> =20
->  	down_read(&cxl_dpa_rwsem);
->  	rc =3D cxl_region_attach(cxlr, cxled, pos);
-> -	if (rc =3D=3D 0)
-> -		set_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
->  	up_read(&cxl_dpa_rwsem);
->  	up_write(&cxl_region_rwsem);
->  	return rc;
->=20
-> =
+[auto build test WARNING on rafael-pm/linux-next]
+[also build test WARNING on linus/master v6.3-rc4 next-20230329]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Cheatham/ACPI-APEI-EINJ-Remove-memory-range-validation-for-CXL-error-types/20230329-224405
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20230329143813.25849-1-Benjamin.Cheatham%40amd.com
+patch subject: [PATCH] ACPI, APEI, EINJ: Remove memory range validation for CXL error types
+config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20230330/202303300345.QZXN7i0i-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/f0c48248d842ab224de7ac3d62d260e9f411e80c
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Ben-Cheatham/ACPI-APEI-EINJ-Remove-memory-range-validation-for-CXL-error-types/20230329-224405
+        git checkout f0c48248d842ab224de7ac3d62d260e9f411e80c
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/acpi/apei/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303300345.QZXN7i0i-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/acpi/apei/einj.c: In function 'einj_error_inject':
+>> drivers/acpi/apei/einj.c:527:13: warning: unused variable 'available_error_types' [-Wunused-variable]
+     527 |         u32 available_error_types = 0;
+         |             ^~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/available_error_types +527 drivers/acpi/apei/einj.c
+
+   521	
+   522	/* Inject the specified hardware error */
+   523	static int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
+   524				     u64 param3, u64 param4)
+   525	{
+   526		int rc;
+ > 527		u32 available_error_types = 0;
+   528		u64 base_addr, size;
+   529	
+   530		/* If user manually set "flags", make sure it is legal */
+   531		if (flags && (flags &
+   532			~(SETWA_FLAGS_APICID|SETWA_FLAGS_MEM|SETWA_FLAGS_PCIE_SBDF)))
+   533			return -EINVAL;
+   534	
+   535		/*
+   536		 * We need extra sanity checks for memory errors.
+   537		 * Other types leap directly to injection.
+   538		 */
+   539	
+   540		/* ensure param1/param2 existed */
+   541		if (!(param_extension || acpi5))
+   542			goto inject;
+   543	
+   544		/* ensure injection is memory related */
+   545		if (type & ACPI5_VENDOR_BIT) {
+   546			if (vendor_flags != SETWA_FLAGS_MEM)
+   547				goto inject;
+   548		} else if (!(type & MEM_ERROR_MASK) && !(flags & SETWA_FLAGS_MEM)) {
+   549			goto inject;
+   550		} else if (type & CXL_ERROR_MASK) {
+   551			goto inject;
+   552		}
+   553	
+   554		/*
+   555		 * Disallow crazy address masks that give BIOS leeway to pick
+   556		 * injection address almost anywhere. Insist on page or
+   557		 * better granularity and that target address is normal RAM or
+   558		 * NVDIMM.
+   559		 */
+   560		base_addr = param1 & param2;
+   561		size = ~param2 + 1;
+   562	
+   563		if (((param2 & PAGE_MASK) != PAGE_MASK) ||
+   564		    ((region_intersects(base_addr, size, IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE)
+   565					!= REGION_INTERSECTS) &&
+   566		     (region_intersects(base_addr, size, IORESOURCE_MEM, IORES_DESC_PERSISTENT_MEMORY)
+   567					!= REGION_INTERSECTS) &&
+   568		     (region_intersects(base_addr, size, IORESOURCE_MEM, IORES_DESC_SOFT_RESERVED)
+   569					!= REGION_INTERSECTS) &&
+   570		     !arch_is_platform_page(base_addr)))
+   571			return -EINVAL;
+   572	
+   573		if (is_zero_pfn(base_addr >> PAGE_SHIFT))
+   574			return -EADDRINUSE;
+   575	
+   576	inject:
+   577		mutex_lock(&einj_mutex);
+   578		rc = __einj_error_inject(type, flags, param1, param2, param3, param4);
+   579		mutex_unlock(&einj_mutex);
+   580	
+   581		return rc;
+   582	}
+   583	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
