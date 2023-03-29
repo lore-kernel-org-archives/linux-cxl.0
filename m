@@ -2,146 +2,121 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F5EC76196
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 01:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B338EC74A5B
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 08:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjC2B1Y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 28 Mar 2023 21:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36338 "EHLO
+        id S231463AbjC2Izw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 04:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbjC2B1X (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 28 Mar 2023 21:27:23 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4294226AD;
-        Tue, 28 Mar 2023 18:27:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680053239; x=1711589239;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LW50/v7VbQmn2waXY9YUX2XxebnyjfWAYyCviZhJ3e8=;
-  b=GwgAQL8Iz9WZP3GRWcOjiwf/y43kpkJ++Qa+qvWFKkdNdOGOI5vzVeL3
-   pP9FaJluDruLgOlKYeRcp50HSRhQKHw0aDy/Fd08P56vtwRjelNifFfat
-   h4+6iTw7SCGfFbPwsafq94HnDwaqH45aVh1cQrpG5P8wXjIOEr4YPgbeg
-   NSTigGfKlnlHgJ0kCV6ASiausB0+jgfy9fwHfMg1CJRD+PWMaxvKLHm/e
-   40Eie0u91/PI2xj/W4+N7p5PZcTyTDYZ9+iShvrnhuJislZ6CQuBSA7FX
-   kZJqtxpWReKgshQa8pLjUC59hQdo/lvjA2fzpfoK2RR4EUVOMwKPnNi+B
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="403362516"
-X-IronPort-AV: E=Sophos;i="5.98,299,1673942400"; 
-   d="scan'208";a="403362516"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 18:27:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="773360171"
-X-IronPort-AV: E=Sophos;i="5.98,299,1673942400"; 
-   d="scan'208";a="773360171"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.62.61])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 18:27:18 -0700
-Date:   Tue, 28 Mar 2023 18:27:16 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, rafael@kernel.org, lukas@wunner.de
-Subject: Re: [PATCH v2 20/21] cxl: Export sysfs attributes for memory device
- QTG ID
-Message-ID: <ZCOT9DS9/PhVGS4R@aschofie-mobl2>
-References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
- <167995356611.2857312.4634198260468536572.stgit@djiang5-mobl3>
+        with ESMTP id S231358AbjC2IzX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 04:55:23 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DFF4C0D;
+        Wed, 29 Mar 2023 01:55:08 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PmgN42vb1z6J7wy;
+        Wed, 29 Mar 2023 16:54:28 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Wed, 29 Mar
+ 2023 09:55:05 +0100
+Date:   Wed, 29 Mar 2023 09:55:04 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Subject: Re: [PATCH v2 2/5] perf: Allow a PMU to have a parent.
+Message-ID: <20230329095504.0000411f@Huawei.com>
+In-Reply-To: <ZCLI9A40PJsyqAmq@kroah.com>
+References: <20230324171313.18448-1-Jonathan.Cameron@huawei.com>
+        <20230324171313.18448-3-Jonathan.Cameron@huawei.com>
+        <f8123e7c-36a6-a302-1101-e778622dc997@linux.intel.com>
+        <20230328115444.000036ea@Huawei.com>
+        <ZCLI9A40PJsyqAmq@kroah.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <167995356611.2857312.4634198260468536572.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 02:46:06PM -0700, Dave Jiang wrote:
-> Export qtg_id sysfs attributes for the CXL memory device. The QTG ID
-> should show up as /sys/bus/cxl/devices/memX/qtg_id. The QTG ID is
-> retrieved via _DSM after supplying the caluclated bandwidth and latency
+On Tue, 28 Mar 2023 13:01:08 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-calculated
+> On Tue, Mar 28, 2023 at 11:54:44AM +0100, Jonathan Cameron wrote:
+> > On Mon, 27 Mar 2023 13:04:08 -0400
+> > "Liang, Kan" <kan.liang@linux.intel.com> wrote:
+> >   
+> > > On 2023-03-24 1:13 p.m., Jonathan Cameron wrote:  
+> > > > Some PMUs have well defined parents such as PCI devices.
+> > > > As the device_initialize() and device_add() are all within
+> > > > pmu_dev_alloc() which is called from perf_pmu_register()
+> > > > there is no opportunity to set the parent from within a driver.
+> > > > 
+> > > > Add a struct device *parent field to struct pmu and use that
+> > > > to set the parent.    
+> > > 
+> > > Why we want a PMU parent? Maybe I missed it. I don't see that the parent
+> > > is used anywhere.  
+> > 
+> > This allows you to identify the association between PMU and the hardware related
+> > device that is providing it by looking at the directory structure in sysfs rather
+> > than putting them directly under /sys/devices.
+> > 
+> > ls -l /sys/bus/event_sources/devices/
+> > 
+> > ... armv8_pmuv3_0 -> ../../../devices/arm8_pmuv3_0
+> > ... breakpoint -> ../../../devices/breakpoint
+> > ... cpmu0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/cpmu0/cpmu0
+> > etc
+> > 
+> > (the first cpmu0 is the parent registered as a child of the PCI EP and used for
+> >  driver binding).  So it's of use to userspace rather than in the kernel driver
+> > itself.
+> > 
+> > Note that almost nothing is normally in the top level /sys/devices other than
+> > event_sources - because nearly all other struct device instances created by
+> > subsystems have parents assigned.
+> > 
+> > On my system
+> > 
+> > ls /sys/devices
+> > 
+> > armv8_pmuv3_0	LNXSYSTEM:00	pci0000:0c	pnp0		system		uprobe
+> > breakpoint	pci0000:00	platform	software	tracepoint	virtual
+> > 
+> > +CC Greg KH for input on whether / why this make sense.  
+> 
+> That doesn't make sense, nothing should be in /sys/devices/ EXCEPT the
+> root device of busses.  Everything else is wrong and should have their
+> code fixed up (i.e. "breakpoint", "software", etc.)
 
-> for the entire CXL path from device to the CPU. This ID is used to match
-> up to the root decoder QTG ID to determine which CFMWS the memory range
-> of a hotplugged CXL mem device should be assigned under.
-> 
-> While there may be multiple DSMAS exported by the device CDAT, the driver
-> will only expose the first QTG ID in sysfs for now. In the future when
-> multiple QTG IDs are necessary, they can be exposed. [1]
-> 
-> [1]: https://lore.kernel.org/linux-cxl/167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local/T/#md2a47b1ead3e1ba08f50eab29a4af1aed1d215ab
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl |   11 +++++++++++
->  drivers/cxl/core/memdev.c               |   15 +++++++++++++++
->  2 files changed, 26 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 471ac9a37078..a018f0a21aca 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -58,6 +58,17 @@ Description:
->  		affinity for this device.
->  
->  
-> +What:		/sys/bus/cxl/devices/memX/qtg_id
-> +Date:		March, 2024
-> +KernelVersion:	v6.4
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Show the first QoS Throttling Group ID for the device.
-> +		The ID is used to match against the CFMWS (root decoder)
-> +		QTG ID so that the memory range under a hot-plugged device
-> +		is assigned under the appropriate CFMWS.
+Thanks Greg.
 
-Some of the language in the cover letter seemed more descriptive, but
-I guess it's a bit squishy to me. (ie. 'some guidance' and 'appropriate')
+I was thinking to cycle back round to that once I'd got agreement on 'some' devices,
+but great to have clarity from the start that these should all have
+parents.
 
-Would a spec link be useful here?
+For a few cases the parent is not immediately obvious but we'll figure it out.
 
-Alison
+Jonathan
 
-> +
-> +
->  What:		/sys/bus/cxl/devices/*/devtype
->  Date:		June, 2021
->  KernelVersion:	v5.14
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index d2605fc39240..974eff833edd 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -106,12 +106,27 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(numa_node);
->  
-> +static ssize_t qtg_id_show(struct device *dev, struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct qos_prop_entry *qos;
-> +
-> +	if (list_empty(&cxlmd->qos_list))
-> +		return 0;
-> +
-> +	qos = list_first_entry(&cxlmd->qos_list, struct qos_prop_entry, list);
-> +	return sysfs_emit(buf, "%u\n", qos->qtg_id);
-> +}
-> +static DEVICE_ATTR_RO(qtg_id);
-> +
->  static struct attribute *cxl_memdev_attributes[] = {
->  	&dev_attr_serial.attr,
->  	&dev_attr_firmware_version.attr,
->  	&dev_attr_payload_max.attr,
->  	&dev_attr_label_storage_size.attr,
->  	&dev_attr_numa_node.attr,
-> +	&dev_attr_qtg_id.attr,
->  	NULL,
->  };
->  
+
 > 
+> thanks,
 > 
+> greg k-h
+
