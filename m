@@ -2,122 +2,245 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C685C74A5B
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 09:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AB1C74A5B
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 13:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjC2JDg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Mar 2023 05:03:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
+        id S230063AbjC2NLN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 09:11:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbjC2JDf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 05:03:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F0C49F6;
-        Wed, 29 Mar 2023 02:03:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EDE3FB8219F;
-        Wed, 29 Mar 2023 09:03:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B7FC433EF;
-        Wed, 29 Mar 2023 09:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1680080588;
-        bh=MRWCDKqyHLXpMclCRynE4mC2XptBBJv/kLKWedbmFbA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vfk+eReZw2squsglLmvYEambRf8Yfvmku9fpM/9qSERWLwdKWZJ4uT1dUNAWLLtS2
-         +gcDnwK8dS63+AELw+YWABGaSpATmTvYI9FQBbe3JW9v1XGGeBi/jm2LkbYrGKnj1M
-         iTXskjWxSCeCLQHqfjqirjbH0AQlQhUHs1BKxW+g=
-Date:   Wed, 29 Mar 2023 11:03:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        linux-cxl@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, linuxarm@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        with ESMTP id S229992AbjC2NLK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 09:11:10 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF7949E8;
+        Wed, 29 Mar 2023 06:11:06 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pmn2F6NPsz6J79f;
+        Wed, 29 Mar 2023 21:09:25 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Wed, 29 Mar
+ 2023 14:11:03 +0100
+Date:   Wed, 29 Mar 2023 14:11:02 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 2/5] perf: Allow a PMU to have a parent.
-Message-ID: <ZCP-yon1gn2ZzUmp@kroah.com>
+Subject: Re: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
+Message-ID: <20230329141102.000079a1@Huawei.com>
+In-Reply-To: <4f3c101b-415c-bbe5-e99e-f775236b624f@linux.intel.com>
 References: <20230324171313.18448-1-Jonathan.Cameron@huawei.com>
- <20230324171313.18448-3-Jonathan.Cameron@huawei.com>
- <f8123e7c-36a6-a302-1101-e778622dc997@linux.intel.com>
- <20230328115444.000036ea@Huawei.com>
- <ZCLI9A40PJsyqAmq@kroah.com>
- <20230329095504.0000411f@Huawei.com>
+        <20230324171313.18448-5-Jonathan.Cameron@huawei.com>
+        <4f3c101b-415c-bbe5-e99e-f775236b624f@linux.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230329095504.0000411f@Huawei.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 09:55:04AM +0100, Jonathan Cameron wrote:
-> On Tue, 28 Mar 2023 13:01:08 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Tue, Mar 28, 2023 at 11:54:44AM +0100, Jonathan Cameron wrote:
-> > > On Mon, 27 Mar 2023 13:04:08 -0400
-> > > "Liang, Kan" <kan.liang@linux.intel.com> wrote:
-> > >   
-> > > > On 2023-03-24 1:13 p.m., Jonathan Cameron wrote:  
-> > > > > Some PMUs have well defined parents such as PCI devices.
-> > > > > As the device_initialize() and device_add() are all within
-> > > > > pmu_dev_alloc() which is called from perf_pmu_register()
-> > > > > there is no opportunity to set the parent from within a driver.
-> > > > > 
-> > > > > Add a struct device *parent field to struct pmu and use that
-> > > > > to set the parent.    
-> > > > 
-> > > > Why we want a PMU parent? Maybe I missed it. I don't see that the parent
-> > > > is used anywhere.  
-> > > 
-> > > This allows you to identify the association between PMU and the hardware related
-> > > device that is providing it by looking at the directory structure in sysfs rather
-> > > than putting them directly under /sys/devices.
-> > > 
-> > > ls -l /sys/bus/event_sources/devices/
-> > > 
-> > > ... armv8_pmuv3_0 -> ../../../devices/arm8_pmuv3_0
-> > > ... breakpoint -> ../../../devices/breakpoint
-> > > ... cpmu0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/cpmu0/cpmu0
-> > > etc
-> > > 
-> > > (the first cpmu0 is the parent registered as a child of the PCI EP and used for
-> > >  driver binding).  So it's of use to userspace rather than in the kernel driver
-> > > itself.
-> > > 
-> > > Note that almost nothing is normally in the top level /sys/devices other than
-> > > event_sources - because nearly all other struct device instances created by
-> > > subsystems have parents assigned.
-> > > 
-> > > On my system
-> > > 
-> > > ls /sys/devices
-> > > 
-> > > armv8_pmuv3_0	LNXSYSTEM:00	pci0000:0c	pnp0		system		uprobe
-> > > breakpoint	pci0000:00	platform	software	tracepoint	virtual
-> > > 
-> > > +CC Greg KH for input on whether / why this make sense.  
-> > 
-> > That doesn't make sense, nothing should be in /sys/devices/ EXCEPT the
-> > root device of busses.  Everything else is wrong and should have their
-> > code fixed up (i.e. "breakpoint", "software", etc.)
-> 
-> Thanks Greg.
-> 
-> I was thinking to cycle back round to that once I'd got agreement on 'some' devices,
-> but great to have clarity from the start that these should all have
-> parents.
-> 
-> For a few cases the parent is not immediately obvious but we'll figure it out.
 
-If there is no "real" parent, then it is a virtual device and belongs
-under the "virtual" directory.  Otherwise why are these "devices" at all
-with such generic names?
+Hi Kan,
 
-thanks,
+Thanks for another quick review.
 
-greg k-h
+A few comments on how I responded to feedback inline, but in short
+I accepted all of it and made the obvious changes.
+
+> > +static u16 cpmu_config_get_vid(struct perf_event *event)
+> > +{
+> > +	return FIELD_GET(GENMASK_ULL(63, 48), event->attr.config);
+> > +}
+> > +  
+> 
+> There should be at least two places which use GENMASK_ULL(63, 48), and
+> also git, mask. It's better to replace them by macros.
+> 
+> Ideally, we can use macros to replace all these magic numbers for the
+> format and define the macros close to cpmu_format_attr[]?
+> In case, we will change the bits for a format later. We will not miss
+> any places.
+> 
+
+Good idea and lo and behold one of them was mismatched.
+(Filter enable was described as bit 18 of config1 but bit 14 was read).
+
+...
+
+
+> > +static const struct attribute_group *cpmu_attr_groups[] = {
+> > +	&cpmu_events,
+> > +	&cpmu_format_group,
+> > +	&cpmu_cpumask_group,
+> > +	NULL
+> > +};
+> > +
+> > +/* If counter_idx == NULL, don't try to allocate a counter. */
+> > +static int cpmu_get_event_idx(struct perf_event *event, int *counter_idx, int *event_idx)
+> > +{
+> > +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> > +	DECLARE_BITMAP(configurable_and_free, CPMU_MAX_COUNTERS);
+> > +	struct cpmu_event *cpmu_ev;
+> > +	u32 mask;
+> > +	u16 gid, vid;
+> > +	int i;
+> > +
+> > +	vid = cpmu_config_get_vid(event);
+> > +	gid = cpmu_config_get_gid(event);
+> > +	mask = cpmu_config_get_mask(event);
+> > +
+> > +	cpmu_ev = cpmu_find_fixed_counter_event(info, vid, gid, mask);
+> > +	if (!IS_ERR(cpmu_ev)) {
+> > +		if (!counter_idx)
+> > +			return 0;
+> > +		if (!info->hw_events[cpmu_ev->counter_idx]) {  
+> 
+> Use info->used_counter_bm?
+
+I guess that's more obviously similar with the handling below and possibly
+a small performance saving, so sure.
+
+> 
+> > +			*counter_idx = cpmu_ev->counter_idx;
+> > +			return 0;
+> > +		}
+> > +		/* Fixed counter is in use, but maybe a configurable one? */
+> > +	}
+> > +
+> > +	cpmu_ev = cpmu_find_config_counter_event(info, vid, gid, mask);
+> > +	if (!IS_ERR(cpmu_ev)) {
+> > +		if (!counter_idx)
+> > +			return 0;
+> > +
+> > +		bitmap_andnot(configurable_and_free, info->conf_counter_bm,
+> > +			info->used_counter_bm, CPMU_MAX_COUNTERS);
+> > +
+> > +		i = find_first_bit(configurable_and_free, CPMU_MAX_COUNTERS);
+> > +		if (i == CPMU_MAX_COUNTERS)
+> > +			return -EINVAL;
+> > +
+> > +		*counter_idx = i;
+> > +		return 0;
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+
+...
+
+
+> > +static void cpmu_event_start(struct perf_event *event, int flags)
+> > +{
+> > +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> > +	struct hw_perf_event *hwc = &event->hw;
+> > +	void __iomem *base = info->base;
+> > +	u64 cfg, prev_cnt;
+> > +
+> > +	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+> > +		return;
+> > +
+> > +	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
+> > +	hwc->state = 0;
+> > +
+> > +	/*
+> > +	 * Currently only hdm filter control is implemnted, this code will
+> > +	 * want generalizing when more filters are added.
+> > +	 */
+> > +	if (info->filter_hdm) {
+> > +		if (cpmu_config1_hdm_filter_en(event))
+> > +			cfg = cpmu_config2_get_hdm_decoder(event);
+> > +		else
+> > +			cfg = GENMASK(15, 0);
+> > +		writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
+> > +	}
+> > +
+> > +	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EDGE, cpmu_config1_get_edge(event) ? 1 : 0);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INVERT, cpmu_config1_get_invert(event) ? 1 : 0);
+> > +
+> > +	/* Fixed purpose counters have next two fields RO */
+> > +	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+> > +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, hwc->event_base);
+> > +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENTS_MSK, cpmu_config_get_mask(event));
+> > +	}
+> > +	cfg &= ~CPMU_COUNTER_CFG_THRESHOLD_MSK;
+> > +	/*
+> > +	 * For events that generate only 1 count per clock the CXL 3.0 spec
+> > +	 * states the threshold shall be set to 1 but if set to 0 it will
+> > +	 * count the raw value anwyay?
+> > +	 * There is no definition of what events will count multiple per cycle
+> > +	 * and hence to which non 1 values of threshold can apply.
+> > +	 * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
+> > +	 */
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_THRESHOLD_MSK,
+> > +			  cpmu_config1_get_threshold(event));
+> > +	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> > +
+> > +	local64_set(&hwc->prev_count, 0);
+> > +	writeq(0, base + CPMU_COUNTER_REG(hwc->idx));
+> > +
+> > +	if (flags & PERF_EF_RELOAD) {
+> > +		prev_cnt = local64_read(&hwc->prev_count);
+> > +		writeq(prev_cnt, base + CPMU_COUNTER_REG(hwc->idx));
+> > +	}  
+> 
+> The hwc->prev_count is already unconditionally set to 0.
+
+Good spot.  This driver has been evolving for too long so I'm missing
+silly thing like this. I'll drop the PERF_EF_RELOAD handling as
+it doesn't do anything useful and it seems to be a bit random
+if uncore drivers have support or not.
+
+> 
+> > +
+> > +	perf_event_update_userpage(event);
+> > +}
+...
+
+> > +static void cpmu_event_stop(struct perf_event *event, int flags)
+> > +{
+> > +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> > +	void __iomem *base = info->base;
+> > +	struct hw_perf_event *hwc = &event->hw;
+> > +	u64 cfg;
+> > +
+> > +	cpmu_read(event);
+> > +	WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+> > +	hwc->state |= PERF_HES_STOPPED;
+> > +
+> > +	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> > +	cfg &= ~(FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1) |
+> > +		 FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1));
+> > +	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> > +
+> > +	if (hwc->state & PERF_HES_UPTODATE)
+> > +		return;  
+> 
+> The PERF_HES_UPTODATE is used to update the event count if there is a
+> request and the !(hwc->state & PERF_HES_UPTODATE). It can avoid a read
+> if no PERF_HES_UPTODATE is requested.
+> Since the read is invoked unconditionally above, I guess you don't need
+> the check.
+
+Dropped.  Even looking very locally we set the bit on the next line anyway
+and setting an already set bit is harmless.
+
+> 
+> Thanks,
+> Kan
+
+
