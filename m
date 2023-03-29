@@ -2,55 +2,55 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8918C74A5B
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 17:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECFAC6FD18
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 17:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbjC2Rgl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Mar 2023 13:36:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
+        id S229511AbjC2RjH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 13:39:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjC2Rgk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 13:36:40 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6081A4ED9
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Mar 2023 10:36:39 -0700 (PDT)
+        with ESMTP id S229456AbjC2RjG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 13:39:06 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE4CE46AD
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Mar 2023 10:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680111399; x=1711647399;
+  t=1680111545; x=1711647545;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ug3e9aOiHYwdZ3vnMKuLryALh6c2CmEibAJj7P3Xsos=;
-  b=B0QgxyoZxmvHc59ZWqxG8a6UL4ZJYOJ+Gar2I+c1jAiPIVN7tbhmHuOb
-   lqXJjIaIrH+4zb1z8WbmODEEgZQ82SkMJM5XAir/rvYlm6XG7bPhAEFax
-   C3HVSX/CUNqUlnyVc2E8X/vx7MNB5RCELlAj+9Q3y6zEYMzuNGtfl3uHh
-   yDuJbA+wyadAHuPm3mwQSKLDKK712Ayckmr1pc5qzZD2djcHF8lgjIeHP
-   4i7T9jfDaRrbPmohvTzgn4z1L6Y1sk9jKuYdvyZS2/gG7j4QH78sbDmDR
-   2zJMaO8pMds6+/7ZkFnlk1uzUT3LGepgJUcNigQVvjBdfdrS+kkQNmqJf
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="343391318"
+  bh=UzVM/c7NOVgFTvzmKlbIV/z9PGvMDMtfwC2fod4bOFI=;
+  b=UXfICJcHdp5mrz/BmKS5vgx5h7utdzZ2zLvXXgDikdeFFxAbKmBNnj3m
+   /YZEWjOaxQyd4Rg1zuWU0dS8Blr6B4BzNxg5H7FYnDw7F1vzQ7V6/IjwY
+   ka2eRWdYFbB2+8duFdwbrcyQ0g2hZu6jkrS7jUeixBNNB1QbZg85DQ8Dg
+   CrOr8fKjm2pABwB3S8bznY1y9uHuauiE9hjeCYQ5OSlQGLQIL4RNjg7zN
+   N6vjBXt5z7swYxvFkTHUrdng7dkDc3lpM4FbjGr3D+cWb6F0hUCzHjdGV
+   YUXn81GLTBxkF43jkeSJfCnV/d6W4LlJLoA0FDibzgq0ymaP4mmpLdOiY
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="368725359"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="343391318"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 10:36:38 -0700
+   d="scan'208";a="368725359"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 10:39:05 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="661695121"
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="753688342"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="661695121"
-Received: from sandrew-mobl2.amr.corp.intel.com (HELO [10.212.109.34]) ([10.212.109.34])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 10:36:38 -0700
-Message-ID: <95534ef8-4d62-6dd8-1eb8-012f352dcfcb@intel.com>
-Date:   Wed, 29 Mar 2023 10:36:37 -0700
+   d="scan'208";a="753688342"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.109.34]) ([10.212.109.34])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 10:39:05 -0700
+Message-ID: <55a56196-688e-cdaa-b796-657f1da684fe@intel.com>
+Date:   Wed, 29 Mar 2023 10:39:04 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH] cxl/port: Fix find_cxl_root() for RCDs and simplify it
+Subject: Re: [PATCH] cxl/region: Fix region setup/teardown for RCDs
 Content-Language: en-US
 To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
 Cc:     vishal.l.verma@intel.com, ira.weiny@intel.com,
         alison.schofield@intel.com, Jonathan.Cameron@huawei.com
-References: <168002857715.50647.344876437247313909.stgit@dwillia2-xfh.jf.intel.com>
+References: <168002858268.50647.728091521032131326.stgit@dwillia2-xfh.jf.intel.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <168002857715.50647.344876437247313909.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <168002858268.50647.728091521032131326.stgit@dwillia2-xfh.jf.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -60,24 +60,33 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 3/28/23 11:36 AM, Dan Williams wrote:
-> The find_cxl_root() helper is used to lookup root decoders and other CXL
-> platform topology information for a given endpoint. It turns out that
-> for RCDs it has never worked. The result of find_cxl_root(&cxlmd->dev)
-> is always NULL for the RCH topology case because it expects to find a
-> cxl_port at the host-bridge. RCH topologies only have the root cxl_port
-> object with the host-bridge as a dport. While there are no reports of
-> this being a problem to date, by inspection region enumeration should
-> crash as a result of this problem, and it does in a local unit test for
-> this scenario.
+> RCDs (CXL memory devices that link train without VH capability and show
+> up as root complex integrated endpoints), hide the presence of the link
+> between the endpoint and the host-bridge. The CXL region setup/teardown
+> paths assume that a link hop is present and go looking for at least one
+> 'struct cxl_port' instance between the CXL root port-object and an
+> endpoint port-object leading to crashes of the form:
 > 
-> However, an observation that ever since:
+>      BUG: kernel NULL pointer dereference, address: 0000000000000008
+>      [..]
+>      RIP: 0010:cxl_region_setup_targets+0x3e9/0xae0 [cxl_core]
+>      [..]
+>      Call Trace:
+>       <TASK>
+>       cxl_region_attach+0x46c/0x7a0 [cxl_core]
+>       cxl_create_region+0x20b/0x270 [cxl_core]
+>       cxl_mock_mem_probe+0x641/0x800 [cxl_mock_mem]
+>       platform_probe+0x5b/0xb0
 > 
-> commit f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
+> Detect RCDs explicitly and skip walking the non-existent port hierarchy
+> between root and endpoint in that case.
 > 
-> ...all callers of find_cxl_root() occur after the memdev connection to
-> the port topology has been established. That means that find_cxl_root()
-> can be simplified to a walk of the endpoint port topology to the root.
-> Switch to that arrangement which also fixes the RCD bug.
+> While this has been a problem since:
+> 
+> commit 0a19bfc8de93 ("cxl/port: Add RCD endpoint port enumeration")
+> 
+> ...it becomes a more reliable crash scenario with the new autodiscovery
+> implementation.
 > 
 > Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
@@ -85,137 +94,91 @@ On 3/28/23 11:36 AM, Dan Williams wrote:
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   drivers/cxl/core/pmem.c   |    6 +++---
->   drivers/cxl/core/port.c   |   38 +++++++-------------------------------
->   drivers/cxl/core/region.c |    2 +-
->   drivers/cxl/cxl.h         |    4 ++--
->   drivers/cxl/port.c        |    2 +-
->   5 files changed, 14 insertions(+), 38 deletions(-)
+>   drivers/cxl/core/region.c |   28 +++++++++++++++++++++++++++-
+>   1 file changed, 27 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
-> index c2e4b1093788..f8c38d997252 100644
-> --- a/drivers/cxl/core/pmem.c
-> +++ b/drivers/cxl/core/pmem.c
-> @@ -62,9 +62,9 @@ static int match_nvdimm_bridge(struct device *dev, void *data)
->   	return is_cxl_nvdimm_bridge(dev);
->   }
->   
-> -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct device *start)
-> +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd)
->   {
-> -	struct cxl_port *port = find_cxl_root(start);
-> +	struct cxl_port *port = find_cxl_root(dev_get_drvdata(&cxlmd->dev));
->   	struct device *dev;
->   
->   	if (!port)
-> @@ -253,7 +253,7 @@ int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd)
->   	struct device *dev;
->   	int rc;
->   
-> -	cxl_nvb = cxl_find_nvdimm_bridge(&cxlmd->dev);
-> +	cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
->   	if (!cxl_nvb)
->   		return -ENODEV;
->   
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 8ee6b6e2e2a4..4d1f9c5b5029 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -823,41 +823,17 @@ static bool dev_is_cxl_root_child(struct device *dev)
->   	return false;
->   }
->   
-> -/* Find a 2nd level CXL port that has a dport that is an ancestor of @match */
-> -static int match_root_child(struct device *dev, const void *match)
-> +struct cxl_port *find_cxl_root(struct cxl_port *port)
->   {
-> -	const struct device *iter = NULL;
-> -	struct cxl_dport *dport;
-> -	struct cxl_port *port;
-> -
-> -	if (!dev_is_cxl_root_child(dev))
-> -		return 0;
-> -
-> -	port = to_cxl_port(dev);
-> -	iter = match;
-> -	while (iter) {
-> -		dport = cxl_find_dport_by_dev(port, iter);
-> -		if (dport)
-> -			break;
-> -		iter = iter->parent;
-> -	}
-> -
-> -	return !!iter;
-> -}
-> +	struct cxl_port *iter = port;
->   
-> -struct cxl_port *find_cxl_root(struct device *dev)
-> -{
-> -	struct device *port_dev;
-> -	struct cxl_port *root;
-> +	while (iter && !is_cxl_root(iter))
-> +		iter = to_cxl_port(iter->dev.parent);
->   
-> -	port_dev = bus_find_device(&cxl_bus_type, NULL, dev, match_root_child);
-> -	if (!port_dev)
-> +	if (!iter)
->   		return NULL;
-> -
-> -	root = to_cxl_port(port_dev->parent);
-> -	get_device(&root->dev);
-> -	put_device(port_dev);
-> -	return root;
-> +	get_device(&iter->dev);
-> +	return iter;
->   }
->   EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
->   
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index f29028148806..808f23ec4e2b 100644
+> index 808f23ec4e2b..52bbf6268d5f 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -2251,7 +2251,7 @@ static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
->   		 * bridge for one device is the same for all.
->   		 */
->   		if (i == 0) {
-> -			cxl_nvb = cxl_find_nvdimm_bridge(&cxlmd->dev);
-> +			cxl_nvb = cxl_find_nvdimm_bridge(cxlmd);
->   			if (!cxl_nvb) {
->   				cxlr_pmem = ERR_PTR(-ENODEV);
->   				goto out;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f2b0962a552d..06ca12418f7d 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -658,7 +658,7 @@ struct pci_bus *cxl_port_to_pci_bus(struct cxl_port *port);
->   struct cxl_port *devm_cxl_add_port(struct device *host, struct device *uport,
->   				   resource_size_t component_reg_phys,
->   				   struct cxl_dport *parent_dport);
-> -struct cxl_port *find_cxl_root(struct device *dev);
-> +struct cxl_port *find_cxl_root(struct cxl_port *port);
->   int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
->   void cxl_bus_rescan(void);
->   void cxl_bus_drain(void);
-> @@ -758,7 +758,7 @@ struct cxl_nvdimm *to_cxl_nvdimm(struct device *dev);
->   bool is_cxl_nvdimm(struct device *dev);
->   bool is_cxl_nvdimm_bridge(struct device *dev);
->   int devm_cxl_add_nvdimm(struct cxl_memdev *cxlmd);
-> -struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct device *dev);
-> +struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_memdev *cxlmd);
+> @@ -134,9 +134,13 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+>   		struct cxl_endpoint_decoder *cxled = p->targets[i];
+>   		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>   		struct cxl_port *iter = cxled_to_port(cxled);
+> +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>   		struct cxl_ep *ep;
+>   		int rc = 0;
 >   
->   #ifdef CONFIG_CXL_REGION
->   bool is_cxl_pmem_region(struct device *dev);
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 1049bb5ea496..f243132fb174 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -119,7 +119,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->   	 * This can't fail in practice as CXL root exit unregisters all
->   	 * descendant ports and that in turn synchronizes with cxl_port_probe()
->   	 */
-> -	root = find_cxl_root(&cxlmd->dev);
-> +	root = find_cxl_root(port);
+> +		if (cxlds->rcd)
+> +			goto endpoint_reset;
+> +
+>   		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
+>   			iter = to_cxl_port(iter->dev.parent);
 >   
->   	/*
->   	 * Now that all endpoint decoders are successfully enumerated, try to
+> @@ -153,6 +157,7 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+>   				return rc;
+>   		}
+>   
+> +endpoint_reset:
+>   		rc = cxled->cxld.reset(&cxled->cxld);
+>   		if (rc)
+>   			return rc;
+> @@ -1199,6 +1204,7 @@ static void cxl_region_teardown_targets(struct cxl_region *cxlr)
+>   {
+>   	struct cxl_region_params *p = &cxlr->params;
+>   	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_dev_state *cxlds;
+>   	struct cxl_memdev *cxlmd;
+>   	struct cxl_port *iter;
+>   	struct cxl_ep *ep;
+> @@ -1214,6 +1220,10 @@ static void cxl_region_teardown_targets(struct cxl_region *cxlr)
+>   	for (i = 0; i < p->nr_targets; i++) {
+>   		cxled = p->targets[i];
+>   		cxlmd = cxled_to_memdev(cxled);
+> +		cxlds = cxlmd->cxlds;
+> +
+> +		if (cxlds->rcd)
+> +			continue;
+>   
+>   		iter = cxled_to_port(cxled);
+>   		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
+> @@ -1229,14 +1239,24 @@ static int cxl_region_setup_targets(struct cxl_region *cxlr)
+>   {
+>   	struct cxl_region_params *p = &cxlr->params;
+>   	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_dev_state *cxlds;
+> +	int i, rc, rch = 0, vh = 0;
+>   	struct cxl_memdev *cxlmd;
+>   	struct cxl_port *iter;
+>   	struct cxl_ep *ep;
+> -	int i, rc;
+>   
+>   	for (i = 0; i < p->nr_targets; i++) {
+>   		cxled = p->targets[i];
+>   		cxlmd = cxled_to_memdev(cxled);
+> +		cxlds = cxlmd->cxlds;
+> +
+> +		/* validate that all targets agree on topology */
+> +		if (!cxlds->rcd) {
+> +			vh++;
+> +		} else {
+> +			rch++;
+> +			continue;
+> +		}
+>   
+>   		iter = cxled_to_port(cxled);
+>   		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
+> @@ -1256,6 +1276,12 @@ static int cxl_region_setup_targets(struct cxl_region *cxlr)
+>   		}
+>   	}
+>   
+> +	if (rch && vh) {
+> +		dev_err(&cxlr->dev, "mismatched CXL topologies detected\n");
+> +		cxl_region_teardown_targets(cxlr);
+> +		return -ENXIO;
+> +	}
+> +
+>   	return 0;
+>   }
+>   
 > 
