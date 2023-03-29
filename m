@@ -2,168 +2,236 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D7C6FD18
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 19:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F5CC6FD18
+	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 20:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbjC2T3P (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Mar 2023 15:29:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39440 "EHLO
+        id S229753AbjC2UmD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 16:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbjC2T3O (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 15:29:14 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423FD134;
-        Wed, 29 Mar 2023 12:29:13 -0700 (PDT)
+        with ESMTP id S229682AbjC2UmC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 16:42:02 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8915B5BAB;
+        Wed, 29 Mar 2023 13:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680118153; x=1711654153;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eXdFVSGTvIKz7EDIZLcUeytXl6nXJcuFiBB8WJdknyI=;
-  b=fBdsS07wLkDJ6kwKiZMWchxDmY9JEA+ehCmNmhzVwfujpdztf9ScaY30
-   x7gVbQzKyIFnLH2L865px8TWZW+HIkaXUZYuSG6Oq474z7UcRAu1Pi5Dp
-   csUogy3sc0sRTRRasR4KPkgk3lcTS/if5am7h82/p0Z3a3y49wkWyywnw
-   bZF02lr021b0iI8X+3FtemYNjJZF6Yp4AY7l7hLLQcCrRnVsc1KF+KIYV
-   9njswgLcXZqt82eMNouRR5X0hP+8D69IBo9syojMcVIjE+t16vqFrJegQ
-   jOydbvgc1iM/9Zv7c4+AO5soh+GvQWUwG0hlIFEV2phWPQ805cYBqg4qE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="427255361"
+  t=1680122521; x=1711658521;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iSyV0ehDFak9QQXAgOyi/XJ6vJSbq2f23ALBwakUg0k=;
+  b=DxQEpJe7h1M3FGM0i4RV0W/2Fq+ryKuN5A63jKx+NNlTWxl+8d9DXChX
+   7fALAoqQqAuYece1leXTFB+n3iSNybh3iLA6qu5GPEGbubVtUtkJZOg6I
+   zdoJu6/4b/O6xH0nlF3KSK84oUw+NyRG8GRBUDxD6BmBsNxs6eIAVZFlp
+   JNWK33Jl8+QMt4dhx1w0lCic6hqqK2tV/IRVxnM0yENE/vSso8gEDUHws
+   gXWZUnZF6crjPc4UqKn+guoOE1oiy2jh0Ew8axsNA4MjR6D6hlB2sKR02
+   pRcyNtbLgDDD8Wk1m5UiVUTWMLUNX8McEFrgX3Coo5jBy6wRBYun2I2d2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="368769997"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="427255361"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 12:29:12 -0700
+   d="scan'208";a="368769997"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 13:42:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="677902215"
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="661747701"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="677902215"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 29 Mar 2023 12:29:10 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1phbTp-000JsG-23;
-        Wed, 29 Mar 2023 19:29:09 +0000
-Date:   Thu, 30 Mar 2023 03:28:38 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ben Cheatham <Benjamin.Cheatham@amd.com>, rafael@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, benjamin.cheatham@amd.com,
-        yazen.ghannam@amd.com, linux-acpi@vger.kernel.org,
-        linux-cxl@vger.kernel.org, tony.luck@intel.com
-Subject: Re: [PATCH] ACPI, APEI, EINJ: Remove memory range validation for CXL
- error types
-Message-ID: <202303300345.QZXN7i0i-lkp@intel.com>
-References: <20230329143813.25849-1-Benjamin.Cheatham@amd.com>
+   d="scan'208";a="661747701"
+Received: from sandrew-mobl2.amr.corp.intel.com (HELO [10.212.109.34]) ([10.212.109.34])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 13:42:00 -0700
+Message-ID: <cd54fc74-95d5-c950-4d61-33a152c43937@intel.com>
+Date:   Wed, 29 Mar 2023 13:41:59 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230329143813.25849-1-Benjamin.Cheatham@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.0
+Subject: Re: [PATCH v2 05/21] cxl: Add callback to parse the DSMAS subtables
+ from CDAT
+Content-Language: en-US
+To:     Alison Schofield <alison.schofield@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, rafael@kernel.org, lukas@wunner.de
+References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
+ <167995347254.2857312.246180486952683569.stgit@djiang5-mobl3>
+ <ZCOEa0Y7OFU4afxK@aschofie-mobl2>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ZCOEa0Y7OFU4afxK@aschofie-mobl2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Ben,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on linus/master v6.3-rc4 next-20230329]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Cheatham/ACPI-APEI-EINJ-Remove-memory-range-validation-for-CXL-error-types/20230329-224405
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20230329143813.25849-1-Benjamin.Cheatham%40amd.com
-patch subject: [PATCH] ACPI, APEI, EINJ: Remove memory range validation for CXL error types
-config: i386-allyesconfig (https://download.01.org/0day-ci/archive/20230330/202303300345.QZXN7i0i-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/f0c48248d842ab224de7ac3d62d260e9f411e80c
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Ben-Cheatham/ACPI-APEI-EINJ-Remove-memory-range-validation-for-CXL-error-types/20230329-224405
-        git checkout f0c48248d842ab224de7ac3d62d260e9f411e80c
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/acpi/apei/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303300345.QZXN7i0i-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/acpi/apei/einj.c: In function 'einj_error_inject':
->> drivers/acpi/apei/einj.c:527:13: warning: unused variable 'available_error_types' [-Wunused-variable]
-     527 |         u32 available_error_types = 0;
-         |             ^~~~~~~~~~~~~~~~~~~~~
 
 
-vim +/available_error_types +527 drivers/acpi/apei/einj.c
+On 3/28/23 5:20 PM, Alison Schofield wrote:
+> On Mon, Mar 27, 2023 at 02:44:32PM -0700, Dave Jiang wrote:
+>> Provide a callback function to the CDAT parser in order to parse the Device
+>> Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+>> DPA range and its associated attributes in each entry. See the CDAT
+>> specification for details.
+> 
+> Are we going away from offering spec section numbers or links?
 
-   521	
-   522	/* Inject the specified hardware error */
-   523	static int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
-   524				     u64 param3, u64 param4)
-   525	{
-   526		int rc;
- > 527		u32 available_error_types = 0;
-   528		u64 base_addr, size;
-   529	
-   530		/* If user manually set "flags", make sure it is legal */
-   531		if (flags && (flags &
-   532			~(SETWA_FLAGS_APICID|SETWA_FLAGS_MEM|SETWA_FLAGS_PCIE_SBDF)))
-   533			return -EINVAL;
-   534	
-   535		/*
-   536		 * We need extra sanity checks for memory errors.
-   537		 * Other types leap directly to injection.
-   538		 */
-   539	
-   540		/* ensure param1/param2 existed */
-   541		if (!(param_extension || acpi5))
-   542			goto inject;
-   543	
-   544		/* ensure injection is memory related */
-   545		if (type & ACPI5_VENDOR_BIT) {
-   546			if (vendor_flags != SETWA_FLAGS_MEM)
-   547				goto inject;
-   548		} else if (!(type & MEM_ERROR_MASK) && !(flags & SETWA_FLAGS_MEM)) {
-   549			goto inject;
-   550		} else if (type & CXL_ERROR_MASK) {
-   551			goto inject;
-   552		}
-   553	
-   554		/*
-   555		 * Disallow crazy address masks that give BIOS leeway to pick
-   556		 * injection address almost anywhere. Insist on page or
-   557		 * better granularity and that target address is normal RAM or
-   558		 * NVDIMM.
-   559		 */
-   560		base_addr = param1 & param2;
-   561		size = ~param2 + 1;
-   562	
-   563		if (((param2 & PAGE_MASK) != PAGE_MASK) ||
-   564		    ((region_intersects(base_addr, size, IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE)
-   565					!= REGION_INTERSECTS) &&
-   566		     (region_intersects(base_addr, size, IORESOURCE_MEM, IORES_DESC_PERSISTENT_MEMORY)
-   567					!= REGION_INTERSECTS) &&
-   568		     (region_intersects(base_addr, size, IORESOURCE_MEM, IORES_DESC_SOFT_RESERVED)
-   569					!= REGION_INTERSECTS) &&
-   570		     !arch_is_platform_page(base_addr)))
-   571			return -EINVAL;
-   572	
-   573		if (is_zero_pfn(base_addr >> PAGE_SHIFT))
-   574			return -EADDRINUSE;
-   575	
-   576	inject:
-   577		mutex_lock(&einj_mutex);
-   578		rc = __einj_error_inject(type, flags, param1, param2, param3, param4);
-   579		mutex_unlock(&einj_mutex);
-   580	
-   581		return rc;
-   582	}
-   583	
+Ok I'll add.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> 
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> ---
+>> v2:
+>> - Add DSMAS table size check. (Lukas)
+>> - Use local DSMAS header for LE handling.
+>> - Remove dsmas lock. (Jonathan)
+>> - Fix handle size (Jonathan)
+>> - Add LE to host conversion for DSMAS address and length.
+>> - Make dsmas_list local
+>> ---
+>>   drivers/cxl/core/cdat.c |   26 ++++++++++++++++++++++++++
+>>   drivers/cxl/cxl.h       |    1 +
+>>   drivers/cxl/cxlpci.h    |   18 ++++++++++++++++++
+>>   drivers/cxl/port.c      |   24 ++++++++++++++++++++++++
+>>   4 files changed, 69 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>> index 210f4499bddb..d068609fb6f9 100644
+>> --- a/drivers/cxl/core/cdat.c
+>> +++ b/drivers/cxl/core/cdat.c
+>> @@ -98,3 +98,29 @@ int cdat_table_parse_sslbis(struct cdat_header *table,
+>>   	return cdat_table_parse_entries(CDAT_TYPE_SSLBIS, table, &proc);
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cdat_table_parse_sslbis, CXL);
+>> +
+>> +int cxl_dsmas_parse_entry(struct cdat_entry_header *header, void *arg)
+>> +{
+>> +	struct cdat_dsmas *dsmas = (struct cdat_dsmas *)(header);
+>> +	struct list_head *dsmas_list = (struct list_head *)arg;
+> 
+> cast from void unnecessary ?
+
+Ok will remove
+
+> 
+>> +	struct dsmas_entry *dent;
+>> +
+>> +	if (dsmas->hdr.length != sizeof(*dsmas)) {
+>> +		pr_warn("Malformed DSMAS table length: (%lu:%u)\n",
+>> +			 (unsigned long)sizeof(*dsmas), dsmas->hdr.length);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	dent = kzalloc(sizeof(*dent), GFP_KERNEL);
+>> +	if (!dent)
+>> +		return -ENOMEM;
+>> +
+>> +	dent->handle = dsmas->dsmad_handle;
+>> +	dent->dpa_range.start = le64_to_cpu(dsmas->dpa_base_address);
+>> +	dent->dpa_range.end = le64_to_cpu(dsmas->dpa_base_address) +
+>> +			      le64_to_cpu(dsmas->dpa_length) - 1;
+>> +	list_add_tail(&dent->list, dsmas_list);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index cc3309794b45..9d0e22fe72c0 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -8,6 +8,7 @@
+>>   #include <linux/bitfield.h>
+>>   #include <linux/bitops.h>
+>>   #include <linux/log2.h>
+>> +#include <linux/list.h>
+>>   #include <linux/io.h>
+>>   
+>>   /**
+>> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+>> index 45e2f2bf5ef8..9a2468a93d83 100644
+>> --- a/drivers/cxl/cxlpci.h
+>> +++ b/drivers/cxl/cxlpci.h
+>> @@ -104,6 +104,22 @@ struct cdat_subtable_entry {
+>>   	enum cdat_type type;
+>>   };
+>>   
+>> +struct dsmas_entry {
+>> +	struct list_head list;
+>> +	struct range dpa_range;
+>> +	u8 handle;
+>> +};
+>> +
+>> +/* Sub-table 0: Device Scoped Memory Affinity Structure (DSMAS) */
+>> +struct cdat_dsmas {
+>> +	struct cdat_entry_header hdr;
+>> +	u8 dsmad_handle;
+>> +	u8 flags;
+>> +	__u16 reserved;
+>> +	__le64 dpa_base_address;
+>> +	__le64 dpa_length;
+>> +} __packed;
+>> +
+>>   int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>>   struct cxl_dev_state;
+>>   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>> @@ -119,4 +135,6 @@ int cdat_table_parse_##x(struct cdat_header *table, \
+>>   cdat_table_parse(dsmas);
+>>   cdat_table_parse(dslbis);
+>>   cdat_table_parse(sslbis);
+>> +
+>> +int cxl_dsmas_parse_entry(struct cdat_entry_header *header, void *arg);
+>>   #endif /* __CXL_PCI_H__ */
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index 60a865680e22..c8136797d528 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -57,6 +57,16 @@ static int discover_region(struct device *dev, void *root)
+>>   	return 0;
+>>   }
+>>   
+>> +static void dsmas_list_destroy(struct list_head *dsmas_list)
+>> +{
+>> +	struct dsmas_entry *dentry, *n;
+>> +
+>> +	list_for_each_entry_safe(dentry, n, dsmas_list, list) {
+>> +		list_del(&dentry->list);
+>> +		kfree(dentry);
+>> +	}
+>> +}
+>> +
+>>   static int cxl_switch_port_probe(struct cxl_port *port)
+>>   {
+>>   	struct cxl_hdm *cxlhdm;
+>> @@ -131,9 +141,23 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>>   static int cxl_port_probe(struct device *dev)
+>>   {
+>>   	struct cxl_port *port = to_cxl_port(dev);
+>> +	int rc;
+>>   
+>>   	/* Cache the data early to ensure is_visible() works */
+>>   	read_cdat_data(port);
+>> +	if (port->cdat.table) {
+>> +		if (is_cxl_endpoint(port)) {
+> 
+> How about reducing indentation w:
+> 	if ((port->cdat.table) && (is_cxl_endpoint(port))
+
+Yes. I got a little disoriented around here from the v6.2 to v6.3 rebase 
+where this function changed drastically. In fact I think I'll move this 
+block under the endpoint check below to avoid another endpoint check.
+
+> 
+>> +			LIST_HEAD(dsmas_list);
+>> +
+>> +			rc = cdat_table_parse_dsmas(port->cdat.table,
+>> +						    cxl_dsmas_parse_entry,
+>> +						    (void *)&dsmas_list);
+>> +			if (rc < 0)
+>> +				dev_warn(dev, "Failed to parse DSMAS: %d\n", rc);
+>> +
+>> +			dsmas_list_destroy(&dsmas_list);
+>> +		}
+>> +	}
+>>   
+>>   	if (is_cxl_endpoint(port))
+>>   		return cxl_endpoint_port_probe(port);
+>>
+>>
