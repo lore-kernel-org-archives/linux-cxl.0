@@ -2,217 +2,123 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0FBC6FD1D
-	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 15:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A5EC77B6D
+	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 16:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233274AbjC3PqA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 30 Mar 2023 11:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58720 "EHLO
+        id S232034AbjC3Qpz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 30 Mar 2023 12:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233179AbjC3Pp7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 11:45:59 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E67E07C;
-        Thu, 30 Mar 2023 08:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680191126; x=1711727126;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=RN1Cm2GCZcQoGRox1xfibo73ByCq1sHqhaRH51BCVwY=;
-  b=gC1H+X9Q14u2d0b5psMgLKoMAkYsgD5qRJ3sLeexdqtYgSccbWVKF964
-   RlJnP6LYmHTxgACHpEhUMbU11Yoga90PlTOYdia18K2Nb+EAdcRofytn2
-   1WCW5CtPUIp0QsFnPDBB1YV53mpHUVqEFtjY+QxvkOcQfNaC1XdGlBUZA
-   oJIU+VmtiabNHF8tB4+IkpRm6rpJ/AkTlXrSjthXEbkKsWg8INJeVjfxK
-   GOz8k/j6Dxax1ToGiG1+l4OSz6gEV/hMaAqKNbmP88hT6jTu2Xs+kf/3Q
-   imRUuoebJCnKnBTkdKtKUYo8TmrC5mYoZwIN+h7rjx9HHLnykB1wGnLow
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="427481263"
-X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
-   d="scan'208";a="427481263"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 08:43:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="795702613"
-X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
-   d="scan'208";a="795702613"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.117.86]) ([10.212.117.86])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 08:43:06 -0700
-Message-ID: <ae2e391e-996b-a6c1-1a2b-1210cc7d1b14@intel.com>
-Date:   Thu, 30 Mar 2023 08:43:05 -0700
+        with ESMTP id S232179AbjC3Qpx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 12:45:53 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81290CDE7;
+        Thu, 30 Mar 2023 09:45:51 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PnTlW2xy2z6J7Kb;
+        Fri, 31 Mar 2023 00:44:07 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 30 Mar 2023 17:45:48 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v4 0/5] CXL 3.0 Performance Monitoring Unit support
+Date:   Thu, 30 Mar 2023 17:45:51 +0100
+Message-ID: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH v2 05/21] cxl: Add callback to parse the DSMAS subtables
- from CDAT
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rafael@kernel.org, lukas@wunner.de
-References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
- <167995347254.2857312.246180486952683569.stgit@djiang5-mobl3>
-In-Reply-To: <167995347254.2857312.246180486952683569.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Changes since v3: Kan Liang gave feedback on v2 incorporated here.
+- All updates in patch 4, see details there.
+
+Updated cover letter.
+
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
+
+Notes.
+
+1) The QEMU model against which this was developed needs tidying up.
+   Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go. So whilst I believe
+   the driver should be fine for what it supports we may find issues
+   as those corners of what is allowed are explored.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+5) Patch 1 led to a discussion of how to handle the self describing
+   and extensible nature of the CPMU counters.  That is likely to involve
+   a description in the "caps" sysfs directory and perf tool code that is
+   aware of the different event combinations that make sense and can
+   establish which sets are available on a given device.
+   That is likely to take a while to converge on, so as the driver is useful
+   in the current state, I'm looking to upstream this first and deal with
+   the more complex handling later.
+6) There is a lot of other functionality that can be added in future
+   include allowing for simpler hardware implementations that may not
+   support the minimum level of features currently required by the driver
+   (freeze, overflow interrupts etc).
+
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
 
 
-On 3/27/23 2:44 PM, Dave Jiang wrote:
-> Provide a callback function to the CDAT parser in order to parse the Device
-> Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
-> DPA range and its associated attributes in each entry. See the CDAT
-> specification for details.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> v2:
-> - Add DSMAS table size check. (Lukas)
-> - Use local DSMAS header for LE handling.
-> - Remove dsmas lock. (Jonathan)
-> - Fix handle size (Jonathan)
-> - Add LE to host conversion for DSMAS address and length.
-> - Make dsmas_list local
-> ---
->   drivers/cxl/core/cdat.c |   26 ++++++++++++++++++++++++++
->   drivers/cxl/cxl.h       |    1 +
->   drivers/cxl/cxlpci.h    |   18 ++++++++++++++++++
->   drivers/cxl/port.c      |   24 ++++++++++++++++++++++++
->   4 files changed, 69 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 210f4499bddb..d068609fb6f9 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -98,3 +98,29 @@ int cdat_table_parse_sslbis(struct cdat_header *table,
->   	return cdat_table_parse_entries(CDAT_TYPE_SSLBIS, table, &proc);
->   }
->   EXPORT_SYMBOL_NS_GPL(cdat_table_parse_sslbis, CXL);
-> +
-> +int cxl_dsmas_parse_entry(struct cdat_entry_header *header, void *arg)
-> +{
-> +	struct cdat_dsmas *dsmas = (struct cdat_dsmas *)(header);
-> +	struct list_head *dsmas_list = (struct list_head *)arg;
-> +	struct dsmas_entry *dent;
-> +
-> +	if (dsmas->hdr.length != sizeof(*dsmas)) {
-> +		pr_warn("Malformed DSMAS table length: (%lu:%u)\n",
-> +			 (unsigned long)sizeof(*dsmas), dsmas->hdr.length);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dent = kzalloc(sizeof(*dent), GFP_KERNEL);
-> +	if (!dent)
-> +		return -ENOMEM;
-> +
-> +	dent->handle = dsmas->dsmad_handle;
-> +	dent->dpa_range.start = le64_to_cpu(dsmas->dpa_base_address);
-> +	dent->dpa_range.end = le64_to_cpu(dsmas->dpa_base_address) +
-> +			      le64_to_cpu(dsmas->dpa_length) - 1;
-> +	list_add_tail(&dent->list, dsmas_list);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index cc3309794b45..9d0e22fe72c0 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -8,6 +8,7 @@
->   #include <linux/bitfield.h>
->   #include <linux/bitops.h>
->   #include <linux/log2.h>
-> +#include <linux/list.h>
->   #include <linux/io.h>
->   
->   /**
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 45e2f2bf5ef8..9a2468a93d83 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -104,6 +104,22 @@ struct cdat_subtable_entry {
->   	enum cdat_type type;
->   };
->   
-> +struct dsmas_entry {
-> +	struct list_head list;
-> +	struct range dpa_range;
-> +	u8 handle;
-> +};
-> +
-> +/* Sub-table 0: Device Scoped Memory Affinity Structure (DSMAS) */
-> +struct cdat_dsmas {
-> +	struct cdat_entry_header hdr;
-> +	u8 dsmad_handle;
-> +	u8 flags;
-> +	__u16 reserved;
-> +	__le64 dpa_base_address;
-> +	__le64 dpa_length;
-> +} __packed;
-> +
->   int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->   struct cxl_dev_state;
->   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
-> @@ -119,4 +135,6 @@ int cdat_table_parse_##x(struct cdat_header *table, \
->   cdat_table_parse(dsmas);
->   cdat_table_parse(dslbis);
->   cdat_table_parse(sslbis);
-> +
-> +int cxl_dsmas_parse_entry(struct cdat_entry_header *header, void *arg);
->   #endif /* __CXL_PCI_H__ */
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 60a865680e22..c8136797d528 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -57,6 +57,16 @@ static int discover_region(struct device *dev, void *root)
->   	return 0;
->   }
->   
-> +static void dsmas_list_destroy(struct list_head *dsmas_list)
-> +{
-> +	struct dsmas_entry *dentry, *n;
-> +
-> +	list_for_each_entry_safe(dentry, n, dsmas_list, list) {
-> +		list_del(&dentry->list);
-> +		kfree(dentry);
-> +	}
-> +}
-> +
->   static int cxl_switch_port_probe(struct cxl_port *port)
->   {
->   	struct cxl_hdm *cxlhdm;
-> @@ -131,9 +141,23 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->   static int cxl_port_probe(struct device *dev)
->   {
->   	struct cxl_port *port = to_cxl_port(dev);
-> +	int rc;
->   
->   	/* Cache the data early to ensure is_visible() works */
->   	read_cdat_data(port);
-> +	if (port->cdat.table) {
-> +		if (is_cxl_endpoint(port)) {
-> +			LIST_HEAD(dsmas_list);
-> +
-> +			rc = cdat_table_parse_dsmas(port->cdat.table,
-> +						    cxl_dsmas_parse_entry,
-> +						    (void *)&dsmas_list);
-> +			if (rc < 0)
-> +				dev_warn(dev, "Failed to parse DSMAS: %d\n", rc);
-> +
-> +			dsmas_list_destroy(&dsmas_list);
-> +		}
-> +	}
+Jonathan Cameron (5):
+  cxl: Add function to count regblocks of a given type
+  perf: Allow a PMU to have a parent
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver
 
-This block needs to be moved to cxl_endpoint_port_probe() after media is 
-ready.
+ Documentation/admin-guide/perf/cxl.rst   |  65 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  13 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   1 +
+ drivers/cxl/core/cpmu.c                  |  72 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  50 +-
+ drivers/cxl/cpmu.c                       | 940 +++++++++++++++++++++++
+ drivers/cxl/cpmu.h                       |  56 ++
+ drivers/cxl/cxl.h                        |  17 +-
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  27 +-
+ include/linux/perf_event.h               |   1 +
+ kernel/events/core.c                     |   1 +
+ 17 files changed, 1245 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.h
 
->   
->   	if (is_cxl_endpoint(port))
->   		return cxl_endpoint_port_probe(port);
-> 
-> 
+-- 
+2.37.2
+
