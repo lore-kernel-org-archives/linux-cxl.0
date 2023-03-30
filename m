@@ -2,54 +2,53 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF2CC6FD18
-	for <linux-cxl@archiver.kernel.org>; Wed, 29 Mar 2023 23:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB8C6FD18
+	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 00:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjC2X7X (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Mar 2023 19:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
+        id S229623AbjC3AAK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 20:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbjC2X7W (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 19:59:22 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9CF3C03
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Mar 2023 16:59:22 -0700 (PDT)
+        with ESMTP id S231139AbjC3AAJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 20:00:09 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6605FF7
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Mar 2023 17:00:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680134361; x=1711670361;
+  t=1680134405; x=1711670405;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=SllLy98lboAQE6T/4iT0OsGN7/87AVlLaTbLqjhz2qk=;
-  b=DmB5QO9KTtEENkjHcvQRlexplfTwQ6cgS+Tu2DGTe7rBgqw62c2h69Kq
-   BBtaWNKJT4V+zuDES15crttumnaVa2sM9xIHgQSTSZjduu0LHK/KaRcmm
-   scSn9jtmPnYur2woHgFq4ndfQkcSryzOpr10SYUHgd88Wp34kxv42S8Eh
-   w6oqzKYMTVKX0hjyCRyLKSNpobmSXURoHqp8QNX2DZb9gZxHDGVMWsMFi
-   0q9i27jKllzTyDfLH9lWCH8ZFVoKO8AAk+Z64lSvmzgB24zetYE39BQ+m
-   O442T7hYNOmBKopZR+jgNauzoUYdhjoR7ReFrY0+YsiOP389ODgwi10Bf
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="343476937"
+  bh=z8okW4Xric4/4taLbhvgfmVIYOsjZoFbjHts8uNE8Q8=;
+  b=hNEfHt85mNE1evv1GxY+k1p7D5nquocKMKKi6MmZ3hr/XgYs1FpLeNpL
+   YPm88VVCP5CFFFYcz9hwlrDzz9RqFRxgVPg34ohH3ydI4wg3sncMl1htO
+   FyEX0JZ7eP9pj/Exk4VJswNy0DX97ioVNeUaJCXwt0Ipyokpxp/rvLHnT
+   asrcXbX3WOl0V5g0J6yc+KNnW/8EEd2ojAVJAM3ytfEeF6gYSJ/k0MJe/
+   YWGblRymHl8ZgVXNyCMrbROVhBpkD5FDX9ttAMrGw9PDWMxj9aBGp/Fqb
+   5ANNJgClRKXUrGs0mluMAHIdsqQXh7xIcVSEOvBPF6HB43o9sAnm9QDoz
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="324949313"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="343476937"
+   d="scan'208";a="324949313"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 16:59:21 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 17:00:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="748960150"
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="748960394"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="748960150"
+   d="scan'208";a="748960394"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.109.34]) ([10.212.109.34])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 16:59:21 -0700
-Message-ID: <76fc93c5-bc5b-45e3-8e85-3b6ea48d013c@intel.com>
-Date:   Wed, 29 Mar 2023 16:59:20 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 17:00:04 -0700
+Message-ID: <061daadb-c6bb-8981-cff4-2d3e2251f69e@intel.com>
+Date:   Wed, 29 Mar 2023 17:00:04 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH] cxl/hdm: Avoid NULL deref when component registers are
- missing
+Subject: Re: [PATCH] cxl/hdm: Limit emulation to the number of range registers
 Content-Language: en-US
 To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-References: <168012574357.221280.5001364964799725366.stgit@dwillia2-xfh.jf.intel.com>
+References: <168012574932.221280.15944705098679646436.stgit@dwillia2-xfh.jf.intel.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <168012574357.221280.5001364964799725366.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <168012574932.221280.15944705098679646436.stgit@dwillia2-xfh.jf.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -59,35 +58,135 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 3/29/23 2:35 PM, Dan Williams wrote:
-> The cxl_port driver attempts to support endpoint devices that do not
-> advertise a component register block, but by inspection
-> devm_cxl_setup_hdm() passes a NULL @crb to helper functions that should
-> be skipped.
+> Recall that range register emulation seeks to treat the 2 potential
+> range registers as Linux CXL "decoder" objects. The number of range
+> registers can be 1 or 2, while HDM decoder ranges can include more than
+> 2.
 > 
-> Return early and skip setting target_count since that is only relevant
-> for switch decoders, not endpoint decoders.
+> Be careful not to confuse DVSEC range count with HDM capability decoder
+> count. Commit to range register earlier in devm_cxl_setup_hdm().
+> Otherwise, a device with more HDM decoders than range registers can set
+> @cxlhdm->decoder_count to an invalid value.
 > 
-> Fixes: 757f6448b100 ("cxl/hdm: Fix double allocation of @cxlhdm")
+> Avoid introducing a forward declaration by just moving the definition of
+> should_emulate_decoders() earlier in the file. should_emulate_decoders()
+> is unchanged.
+> 
 > Tested-by: Dave Jiang <dave.jiang@intel.com>
+> Fixes: d7a2153762c7 ("cxl/hdm: Add emulation when HDM decoders are not committed")
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   drivers/cxl/core/hdm.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/cxl/core/hdm.c |   82 +++++++++++++++++++++++++++---------------------
+>   1 file changed, 46 insertions(+), 36 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 5293fe13fce3..cc123996b1a4 100644
+> index cc123996b1a4..9884b6d4d930 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -123,7 +123,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
->   	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
->   	if (!crb && info && info->mem_enabled) {
->   		cxlhdm->decoder_count = info->ranges;
-> -		cxlhdm->target_count = info->ranges;
-> +		return cxlhdm;
->   	} else if (!crb) {
->   		dev_err(dev, "No component registers mapped\n");
+> @@ -101,6 +101,42 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+>   				      BIT(CXL_CM_CAP_CAP_ID_HDM));
+>   }
+>   
+> +static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> +{
+> +	struct cxl_hdm *cxlhdm;
+> +	void __iomem *hdm;
+> +	u32 ctrl;
+> +	int i;
+> +
+> +	if (!info)
+> +		return false;
+> +
+> +	cxlhdm = dev_get_drvdata(&info->port->dev);
+> +	hdm = cxlhdm->regs.hdm_decoder;
+> +
+> +	if (!hdm)
+> +		return true;
+> +
+> +	/*
+> +	 * If HDM decoders are present and the driver is in control of
+> +	 * Mem_Enable skip DVSEC based emulation
+> +	 */
+> +	if (!info->mem_enabled)
+> +		return false;
+> +
+> +	/*
+> +	 * If any decoders are committed already, there should not be any
+> +	 * emulated DVSEC decoders.
+> +	 */
+> +	for (i = 0; i < cxlhdm->decoder_count; i++) {
+> +		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>   /**
+>    * devm_cxl_setup_hdm - map HDM decoder component registers
+>    * @port: cxl_port to map
+> @@ -140,6 +176,16 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
 >   		return ERR_PTR(-ENXIO);
+>   	}
+>   
+> +	/*
+> +	 * Now that the hdm capability is parsed, decide if range
+> +	 * register emulation is needed and fixup cxlhdm accordingly.
+> +	 */
+> +	if (should_emulate_decoders(info)) {
+> +		dev_dbg(dev, "Fallback map %d range register%s\n", info->ranges,
+> +			info->ranges > 1 ? "s" : "");
+> +		cxlhdm->decoder_count = info->ranges;
+> +	}
+> +
+>   	return cxlhdm;
+>   }
+>   EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_hdm, CXL);
+> @@ -717,42 +763,6 @@ static int cxl_setup_hdm_decoder_from_dvsec(struct cxl_port *port,
+>   	return 0;
+>   }
+>   
+> -static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> -{
+> -	struct cxl_hdm *cxlhdm;
+> -	void __iomem *hdm;
+> -	u32 ctrl;
+> -	int i;
+> -
+> -	if (!info)
+> -		return false;
+> -
+> -	cxlhdm = dev_get_drvdata(&info->port->dev);
+> -	hdm = cxlhdm->regs.hdm_decoder;
+> -
+> -	if (!hdm)
+> -		return true;
+> -
+> -	/*
+> -	 * If HDM decoders are present and the driver is in control of
+> -	 * Mem_Enable skip DVSEC based emulation
+> -	 */
+> -	if (!info->mem_enabled)
+> -		return false;
+> -
+> -	/*
+> -	 * If any decoders are committed already, there should not be any
+> -	 * emulated DVSEC decoders.
+> -	 */
+> -	for (i = 0; i < cxlhdm->decoder_count; i++) {
+> -		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
+> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+> -			return false;
+> -	}
+> -
+> -	return true;
+> -}
+> -
+>   static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>   			    int *target_map, void __iomem *hdm, int which,
+>   			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
 > 
