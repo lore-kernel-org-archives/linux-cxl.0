@@ -2,104 +2,141 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B947C6FD1D
-	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 20:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5440C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 22:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbjC3UUU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 30 Mar 2023 16:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
+        id S230311AbjC3WGS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 30 Mar 2023 18:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjC3UUT (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 16:20:19 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B1940D3
-        for <linux-cxl@vger.kernel.org>; Thu, 30 Mar 2023 13:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680207619; x=1711743619;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4jgkhHX292Xf/cK+6P+P4xAlOFFLJbgjLYz8TQuv4ZA=;
-  b=HX1eEGjSL5mN3Lla2YYfzh+pbFF125lXvquFR7RB7JQtzSzoXt7SxJEO
-   5H5WIw1+ve2b2JbQmLSyuh6hVHm39S3XbMkYKmoOv+wFhRrSS/fXsWvjB
-   CePZxfesnF63S+jlTIR2hs4he7H/zz0P43VCWDbkG9V+8wjDcKSHDf3PM
-   qKoHftN+LGoHEQNm+psxNdNJ04gqo2bZULF2R8T/7WMrviUHuwMWIgwtF
-   gQvKPyVT93JU1XksO0xntJtzQLblQPgrIylcT6ZcXx2eA3XgnSEdK+2rD
-   gn0z2qJtTX/wSdE0WchMRSFdRfMKQ22jF2f7ugcICVTTaTUCvQlfDPXFF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="342922901"
-X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
-   d="scan'208";a="342922901"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 13:20:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="1014562941"
-X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
-   d="scan'208";a="1014562941"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.67.201])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 13:20:06 -0700
-Date:   Thu, 30 Mar 2023 13:20:04 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v11 3/6] cxl/memdev: Add trigger_poison_list sysfs
- attribute
-Message-ID: <ZCXu9IyUYWzLZLy3@aschofie-mobl2>
-References: <cover.1679888450.git.alison.schofield@intel.com>
- <f1a60cac8cc404f2fc8768333afbf16be01a5a90.1679888450.git.alison.schofield@intel.com>
- <20230330184240.0000411f@Huawei.com>
+        with ESMTP id S230260AbjC3WGM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 18:06:12 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F413114;
+        Thu, 30 Mar 2023 15:02:55 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 87705141D2C;
+        Thu, 30 Mar 2023 22:02:54 +0000 (UTC)
+Received: from pdx1-sub0-mail-a294.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id DF39414150F;
+        Thu, 30 Mar 2023 22:02:53 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1680213774; a=rsa-sha256;
+        cv=none;
+        b=GxihehXc/ZVXJRjYYYK5nA0/9U+zrV1T1grQRFO+pYHT0JyXFo4km0cdUFCG/ZLWlaS63R
+        3rRdTseinHqETPIzEpYPNN6mG6374ORYnRFIlPvc9uS8+3gFWWMOMiscnFgDNIFT868NN5
+        vQrl9ZqyNBr4vHo6Yct2OKVMxPV7FHXife/Zeisg2X2IOr2seuii7Q32j81xEAjpxK8OIv
+        45Iu+rJ0COusSkoikL4CcYpA6VGrF5t4Gca+1Y8Voh/x2XVpRXUgrmmNuL85BH5tN6L8lm
+        37uYFScl+YC66Yg4VMwClmT0M3Qv7sTvJaW8+fCBR3mdwp3o38/D9Nw77GtTVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1680213774;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=rDBoPi7u8Hdh3eFhndrLHZE31sc7ofYBzJWm4lYAkos=;
+        b=vovd/zqcchTZbqeOwGNoDYRKB7K5sEtM6adMw5qdRjTTOaYQpFfbgADu/Jjiq2+P8F1M13
+        aVS2XI3oDnCKsJhpRZgeQiyxAHwzG05Guq0wqWZsgeppQBjQN1KO0vMddKlJyKj7dZz/p1
+        l96xpNH8v5Oe28UckKsjOao4jYdvnMvO6Gu+UkdQf0E+RgjjkbJGL/WCUZnxUwn+e7IBCP
+        BQFl5M67be5D/3Sm6JabRRnN0XZCVVR/UYVoYBjWTG4WQgdCBSgmmOfTaUBs3xbFquSgVy
+        8izNbt9jvBRPLyEMx0+hwCtMOQAXzZNpgTFiXJrFw2Q9wCXJgVBk1msOwqzifA==
+ARC-Authentication-Results: i=1;
+        rspamd-786cb55f77-d9lht;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dragan@stancevic.com
+X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dragan@stancevic.com
+X-MailChannels-Auth-Id: dreamhost
+X-Trail-Thread: 64ee653e6e8b3c6f_1680213774245_3606843821
+X-MC-Loop-Signature: 1680213774245:3282326279
+X-MC-Ingress-Time: 1680213774244
+Received: from pdx1-sub0-mail-a294.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.116.217.198 (trex/6.7.2);
+        Thu, 30 Mar 2023 22:02:54 +0000
+Received: from [192.168.1.31] (99-160-136-52.lightspeed.nsvltn.sbcglobal.net [99.160.136.52])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dragan@stancevic.com)
+        by pdx1-sub0-mail-a294.dreamhost.com (Postfix) with ESMTPSA id 4PncqH3jMPzBY;
+        Thu, 30 Mar 2023 15:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stancevic.com;
+        s=dreamhost; t=1680213773;
+        bh=rDBoPi7u8Hdh3eFhndrLHZE31sc7ofYBzJWm4lYAkos=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=hufabQvnYtZ/bTfYroVuIVnOgUVGeVrgJwwLUC/E1om/WAvr35cc2MVPdjqBlmlbH
+         5iXKY9ianqKhLFUaPMRkzbgeXt8EwNwUcRC4mLwmqoNXYqzBh6nGI9GyNx/qA2awNr
+         OMGjHChH9QQp0Fp0T9NUj2wkDlQkpiFBduBzH57WN9eQIR+qwdHuICnI4JzhsSYb5l
+         NNUlNJcqPs/ZpDwPZZxAu1gtw5EQY+2Kfw8F401ZdAXO1jSIszliO27AhLxkOE5RS/
+         G61UZpI33yPBGoDqH/1x7dwnVwFgKErOOsmWhRO+nBG/EEAENeax92Wdog1oCC0e75
+         BQzOdy7sV9xVg==
+Message-ID: <e4a8433a-fdca-e806-c7e9-750e81176228@stancevic.com>
+Date:   Thu, 30 Mar 2023 17:02:49 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230330184240.0000411f@Huawei.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
+Content-Language: en-US
+To:     Kyungsan Kim <ks0204.kim@samsung.com>,
+        lsf-pc@lists.linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
+        viacheslav.dubeyko@bytedance.com, nil-migration@lists.linux.dev
+References: <CGME20230221014114epcas2p1687db1d75765a8f9ed0b3495eab1154d@epcas2p1.samsung.com>
+ <20230221014114.64888-1-ks0204.kim@samsung.com>
+From:   Dragan Stancevic <dragan@stancevic.com>
+In-Reply-To: <20230221014114.64888-1-ks0204.kim@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 06:42:40PM +0100, Jonathan Cameron wrote:
-> On Sun, 26 Mar 2023 22:02:09 -0700
-> alison.schofield@intel.com wrote:
+On 2/20/23 19:41, Kyungsan Kim wrote:
+> CXL is a promising technology that leads to fundamental changes in computing architecture.
+> To facilitate adoption and widespread of CXL memory, we are developing a memory tiering solution, called SMDK[1][2].
+> Using SMDK and CXL RAM device, our team has been working with industry and academic partners over last year.
+> Also, thanks to many researcher's effort, CXL adoption stage is gradually moving forward from basic enablement to real-world composite usecases.
+> At this moment, based on the researches and experiences gained working on SMDK, we would like to suggest a session at LSF/MM/BFP this year
+> to propose possible Linux MM changes with a brief of SMDK.
 > 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > When a boolean 'true' is written to this attribute the memdev driver
-> > retrieves the poison list from the device. The list consists of
-> > addresses that are poisoned, or would result in poison if accessed,
-> > and the source of the poison. This attribute is only visible for
-> > devices supporting the capability. The retrieved errors are logged
-> > as kernel trace events with the label 'cxl_poison'.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Adam Manzanares kindly adviced me that it is preferred to discuss implementation details on given problem and consensus at LSF/MM/BFP.
+> Considering the adoption stage of CXL technology, however, let me suggest a design level discussion on the two MM expansions of SMDK this year.
+> When we have design consensus with participants, we want to continue follow-up discussions with additional implementation details, hopefully.
 > 
-> A grumpy reviewer comment inline...  But meh, if non else minds
-> let it be.
+>   
+> 1. A new zone, ZONE_EXMEM
+> We added ZONE_EXMEM to manage CXL RAM device(s), separated from ZONE_NORMAL for usual DRAM due to the three reasons below.
 
-Sigh! I know patch review fatigue is not suppose to apply to
-the sender...but I clearly have it. Thanks for the review.
-I'll queue it for v12.
+Hi Kyungsan-
 
-Alison
+I read through your links and I am very interested in this 
+talk/discussion from the perspective of cloud/virtualization hypervisor 
+loads.
 
-> 
-> 
-> >  static struct attribute *cxl_memdev_attributes[] = {
-> >  	&dev_attr_serial.attr,
-> >  	&dev_attr_firmware_version.attr,
-> > @@ -130,6 +177,7 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
-> >  {
-> >  	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
-> >  		return 0;
-> > +
-> 
->  Noise...
-> 
-> >  	return a->mode;
-> >  }
-> 
+The problem that I am starting to tackle is clustering of hypervisors 
+over cxl.mem for high availability of virtual machines. Or live 
+migration of virtual machines between hypervisors using cxl.mem [1].
+
+
+So I was wondering, with regards to the ZONE_XMEM, has any thought been 
+given to the shared memory across virtual hierarchies [2], where you 
+have cxl.mem access over cxl switches by multiple VH connections. It 
+seems to me that there might be a need for differentiation of direct 
+cxl.mem and switched cxl.mem. At least from the point of view where you 
+have multiple hypervisors sharing the memory over a switch. Where they 
+would potentially have to synchronize state/metadata about the memory.
+
+
+[1] A high-level explanation is at http://nil-migration.org
+[2] Compute Express Link Specification r3.0, v1.0 8/1/22, Page 51, 
+figure 1-4, black color scheme circle(3) and bars.
+
+
+--
+Peace can only come as a natural consequence
+of universal enlightenment -Dr. Nikola Tesla
