@@ -2,144 +2,217 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2682FC6FD1D
-	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 14:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0FBC6FD1D
+	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 15:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231157AbjC3OvT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 30 Mar 2023 10:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58736 "EHLO
+        id S233274AbjC3PqA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 30 Mar 2023 11:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231322AbjC3OvS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 10:51:18 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2079.outbound.protection.outlook.com [40.107.96.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A99900D
-        for <linux-cxl@vger.kernel.org>; Thu, 30 Mar 2023 07:51:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ViowWFxH39glL2otdcWxm2DlQM58N0YRpRTCQeAIsSmspmdi40a9/43E87PsFZRbNoQlon5HiaBXY0Ot9xG/9PRf5iIQGxfB3IvW2StbiQtSRQkm2XnCSXiVsVhE2l6HEWG7Y3gf7qW/dUe4PzMFw8dOT+WTNMutDNsJ2dClHojSJl8KkMGFZoSAaAuR7YY4A9dPwICznYsjNumbk1c44LnQOtWvCkR+scHU9jxWqQ3D3dH3w20wUTIxRpI6kOTC1bVoGroEFsSgom1MEmUMHPw4/avMmUSKz1mh8ygJTUahF34XISw2r5VPAGf3U5RnW1y9KRH//U/k/Qmll0Q45g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0bObu8aKPXod3KHL2Se5ihFkf2HoeIiJNaYVgSLRtpc=;
- b=iy6RDcyB60gp+TUhqSpgxXaK57I0JQAeKN8QdRmhmTq1eui6UtMjuJbwchX+JHv5p3s/l8I6JbAPstsEaKGqFFUGMUazZB/zoQRTCfAzKDKVZ3LwXDVOW1A9qRFfMrJcNBpg+RSoDKad7SdthOTnBNe+DPF1V/yzAeKcSULAbkL95GLxXpDImvKWkneKnuaeom0J/M1m0xEn1Sm9TZawlLMZiKQ/9OBgkd3tRF3rBJrNBOKexYtXT/CTtfnz0QzDZQApewuDdUxO/opG1gzQ+RGwg/+wcZ1G7Heslf5upY0qNnvWJbICi3/gminy6warv7dMIevBIFN8nZaCFZafcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0bObu8aKPXod3KHL2Se5ihFkf2HoeIiJNaYVgSLRtpc=;
- b=v/5zJ5PrlAPllH1N4ubn8gp9ZvtNHVy9wX0BL7aOT1geux/M73+hpjGzOAGrf98tNhXoJTXISi4ADoSYipHcngo5HMaRV2XwSJCjOl/qapczGYlzBZXqGMTJ9CGHH7PkkNWtS0kvNZjN+Rl+zs/lVOBvKPOB4FVXMX53eNewdxM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by SA1PR17MB5540.namprd17.prod.outlook.com (2603:10b6:806:1c9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.41; Thu, 30 Mar
- 2023 14:51:12 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a%5]) with mapi id 15.20.6222.033; Thu, 30 Mar 2023
- 14:51:12 +0000
-Date:   Thu, 30 Mar 2023 00:27:02 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH] cxl/hdm: Extend DVSEC range register emulation for
- region enumeration
-Message-ID: <ZCUPlnQYVRCumy2O@memverge.com>
-References: <168012575521.221280.14177293493678527326.stgit@dwillia2-xfh.jf.intel.com>
- <ZCRhhUDcmypVKu0X@memverge.com>
- <64250e45bea49_c722294c2@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ZCRzh0VLSVF/7jya@memverge.com>
- <64252d214f0b_c7222942@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64252d214f0b_c7222942@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: BYAPR01CA0063.prod.exchangelabs.com (2603:10b6:a03:94::40)
- To SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+        with ESMTP id S233179AbjC3Pp7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 11:45:59 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E67E07C;
+        Thu, 30 Mar 2023 08:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680191126; x=1711727126;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=RN1Cm2GCZcQoGRox1xfibo73ByCq1sHqhaRH51BCVwY=;
+  b=gC1H+X9Q14u2d0b5psMgLKoMAkYsgD5qRJ3sLeexdqtYgSccbWVKF964
+   RlJnP6LYmHTxgACHpEhUMbU11Yoga90PlTOYdia18K2Nb+EAdcRofytn2
+   1WCW5CtPUIp0QsFnPDBB1YV53mpHUVqEFtjY+QxvkOcQfNaC1XdGlBUZA
+   oJIU+VmtiabNHF8tB4+IkpRm6rpJ/AkTlXrSjthXEbkKsWg8INJeVjfxK
+   GOz8k/j6Dxax1ToGiG1+l4OSz6gEV/hMaAqKNbmP88hT6jTu2Xs+kf/3Q
+   imRUuoebJCnKnBTkdKtKUYo8TmrC5mYoZwIN+h7rjx9HHLnykB1wGnLow
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="427481263"
+X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
+   d="scan'208";a="427481263"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 08:43:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="795702613"
+X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
+   d="scan'208";a="795702613"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.117.86]) ([10.212.117.86])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 08:43:06 -0700
+Message-ID: <ae2e391e-996b-a6c1-1a2b-1210cc7d1b14@intel.com>
+Date:   Thu, 30 Mar 2023 08:43:05 -0700
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SA1PR17MB5540:EE_
-X-MS-Office365-Filtering-Correlation-Id: 341a6f12-9f2a-4773-8c60-08db312e346c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FSZfW0J8yl629iaMNnct6KD0h6FxCjgYqOvepBxb2VIo0w598PwpZXx02bkvxzq/KFxd+5bAYE/LEiBLDzSlIelojRAAYZuIOE879x33F9B53e9g1KMR3d1TfxbY+YL1twKh4+VsnHKKLlmhM0Af+zOdpvlNVTtQxNlOmWh39Lvo0pFm0WqiMUe/kr8IsC/6ErJeBu9qU7C5VHZEMrJyBSMF9CvVIIEK/GrqKmIA5r23W/q8/ihE4Ph44cBy3O8SKFoaZa/Pnya/hVRNYxUUUgQUcVltMfKeUrFczTWjj2buSpcYMgDJtz0MNVP0QlNBZORPehACqdy2QzWC2/iaTP3FXSRzlroc3u7br5Xf79BZxthjtn7JHsXhaPsK0U9qlWKGRqHlltXvTxVQcSWdDU3unqagwjFn150Fgubpgbf+o9+HX3SoKEGN3ffcH2HAzHU2/lVepIGJhYGFRbvjo2WR+5MYCHo9g45ACAVPT0mkjZo7Y3vsVQ1oiq5ErUeHUZPfb1jvYNXzm7pxwHGUJfKSwYZwyIudyjLFfQhHFMp0Vw7A6OFLKzgbNsfsTmEq
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(136003)(346002)(376002)(396003)(39840400004)(451199021)(6512007)(6666004)(36756003)(2616005)(2906002)(44832011)(83380400001)(8936002)(6486002)(5660300002)(316002)(66946007)(478600001)(8676002)(6916009)(186003)(38100700002)(41300700001)(86362001)(66556008)(4326008)(26005)(6506007)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hyJAIEL19k0I+1oh1eAfb16iDsBN0AmkvwQ9wZU5aVh1tEHKTt523nVaLbNS?=
- =?us-ascii?Q?jicUhOGSI6rBJ7SzOYjI/fQTf6IX6/bNyZ7hdgbIoJqJGOGh1T8Lokk949Ez?=
- =?us-ascii?Q?Dkp7fisXEXIb8qFzEY6hV4sHcwIYEGmiV7wHMHtzA3I1UHO4A1kA6SdwTePX?=
- =?us-ascii?Q?nvGLIVGpEak/0C3p1/8b64JA+l5vIRqAItpyTbJB2MlJ/oLxLUDnH7HArOck?=
- =?us-ascii?Q?0c4PYy3T5L3nTaRSNxqDe155RT2lMrU942TT+PpNHNR+BVolagUDX2Jyt/Su?=
- =?us-ascii?Q?l03ARl4WxqrLb8DeRQ7Tlf3upIerR3t3SPxWr//60TPt5zLdmSuElANu6mn2?=
- =?us-ascii?Q?Q27ZDqbyKQAFcTOXVIM5smwPLfgAohBKmQ0csC0Cc3f/jsSgmcx03prb1ojQ?=
- =?us-ascii?Q?Crl09JzVW2x2nposO7tSd6y9IZSCSD0bFtQQBlxypVUTVX1zJO1NlzFKq0al?=
- =?us-ascii?Q?D46FCtVf/+xtBjRuZ+VP5kX1TzsbcMfsTVRqGVwOQNhyQzHnMprixbZJMQsK?=
- =?us-ascii?Q?iRaQdBIjEuur+sXJAPfNiiaUU0xNabFHPpF9aJ0NJtnP7aoxATHwwYy2fRvv?=
- =?us-ascii?Q?/ePcX/x0VKnuxBTV5NDBzYZgSDqNj+gBBlJLTEw8Ww9Zw87KoeAn6o5OzvN0?=
- =?us-ascii?Q?nmTJDIr2FwbXyde2PSWhT6SAgGIj9wPGM0jjVIoXfTLCJFWn57A55JQncV7L?=
- =?us-ascii?Q?DT+d1/E9AFBhagVDMHKS3BkGyUn/kZDyPofMJ/aF42KRw+NJo6M9EAzJ1xo7?=
- =?us-ascii?Q?IbeuXx0ywDGcHh5ERHSYCHSRW10LtbNBaHWd7VH3KZ+z00U2ti0A31JSQ8ws?=
- =?us-ascii?Q?rgKlDRGT22GuHQiXEVlF18IOBkRuoth5/jRLKxbaEs+2iyspzggbv6/zpqED?=
- =?us-ascii?Q?outZYv0FOCx/kwMakhXZ1Hrq/aT+KWmrH079heRKQDlPV8RMekU4D77fN0e4?=
- =?us-ascii?Q?Xx0950og0OxGbA7l4QixQIA2GapxU2AfUoWF4KlpJ4g5bpdEhIMj+UBtarTB?=
- =?us-ascii?Q?2am3ecu5Z74YChNrkKiOs2Wad41Mv3uBLZZ4LRU5vDgS+1ZRqrNRpif2AElp?=
- =?us-ascii?Q?GWKqZbApGF2XwpWsbFVgwIwXhbQBjPyEvnDRMen5SZpi2Wh66GWD4Y/Ih/Yz?=
- =?us-ascii?Q?DlUfLryEr/NsTKayplM9XQV2PGBzrd3ZRn4wp5AIxdj1ik6tcXTWnlYkBL1M?=
- =?us-ascii?Q?JOFHAtcmSZwTSAK4+p/qoB0msxhHHnPwrgPAi/qiXoF8+QJ5WmOfS0y1pTsq?=
- =?us-ascii?Q?kInAH6bFXnc5Gc7GzgABrs5h4SZBhSDWxH/We9YsjVUjSGYNUxubZqPGsXbQ?=
- =?us-ascii?Q?VQT+V3COu1eG25eWoj2j8zPDXThUHKJc+AtKvhnRYRPqoGsbIbdzUWMNSjmH?=
- =?us-ascii?Q?MjbW4derVZd4TxVGpGjuwRgVMrLupVXr2ZqDr4cN7i3+CNZADaZl0l1CREMP?=
- =?us-ascii?Q?G5U/S6dmg6ye4zStN6x7NtzxrS/gRWd876fNn1MNE63vnTjW1PoemcuhCp6R?=
- =?us-ascii?Q?c8NvnfTl0tyxNcSUEPghzd3BOwatJ36OkkweniZPumVPR5uzI40K1rkXulnM?=
- =?us-ascii?Q?JLgIIGB+XlmREkuf+GAfCvrWK5FNk7ehNtiIX4C6io5l1tcY2oB2j0vBxbi8?=
- =?us-ascii?Q?zA=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 341a6f12-9f2a-4773-8c60-08db312e346c
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2023 14:51:12.2944
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /AwZSgQoGIMuShYZMKyIEvV1w0J9yLq+QmOL/kOayqpKW4cw4dAAXE4r/Cn3sEUJ08qZUZC2w3MF5GGOOCsltPEzSjHbMxHgip4bhtwYBCE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR17MB5540
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.0
+Subject: Re: [PATCH v2 05/21] cxl: Add callback to parse the DSMAS subtables
+ from CDAT
+Content-Language: en-US
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        rafael@kernel.org, lukas@wunner.de
+References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
+ <167995347254.2857312.246180486952683569.stgit@djiang5-mobl3>
+In-Reply-To: <167995347254.2857312.246180486952683569.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 11:33:05PM -0700, Dan Williams wrote:
-> Gregory Price wrote:
-> > On Wed, Mar 29, 2023 at 09:21:25PM -0700, Dan Williams wrote:
-> > > > Is the DVSEC Range Register expected to be programmed by bios, and are
-> > > > not being programmed correctly?
-> > > 
-> > > This debug experiment makes me think perhaps the *device* is at fault,
-> > > not the BIOS. Perhaps the device accepts writes to CXL_DVSEC_RANGE_BASE
-> > > to set up the decode as expected, but reads return 0? That's the only
-> > > way that I can see that forcing that offset results in successfully
-> > > talking to memory.
-> > > 
-> > 
-> > Oh, i meant to add that i tested whether the memory is accessible via
-> > numactl --membind=1 with both memhog and a python prompt, and things
-> > worked just fine.  So memory works.
+
+
+On 3/27/23 2:44 PM, Dave Jiang wrote:
+> Provide a callback function to the CDAT parser in order to parse the Device
+> Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+> DPA range and its associated attributes in each entry. See the CDAT
+> specification for details.
 > 
-> One other theory is that the device is correct, but the platform CXL
-> window accepts transactions at an offset and then removes that offset
-> when transmitting the address down the CXL port. So device thinks its
-> decoding 0x0 and never sees the offset removed by the host bridge.
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> ---
+> v2:
+> - Add DSMAS table size check. (Lukas)
+> - Use local DSMAS header for LE handling.
+> - Remove dsmas lock. (Jonathan)
+> - Fix handle size (Jonathan)
+> - Add LE to host conversion for DSMAS address and length.
+> - Make dsmas_list local
+> ---
+>   drivers/cxl/core/cdat.c |   26 ++++++++++++++++++++++++++
+>   drivers/cxl/cxl.h       |    1 +
+>   drivers/cxl/cxlpci.h    |   18 ++++++++++++++++++
+>   drivers/cxl/port.c      |   24 ++++++++++++++++++++++++
+>   4 files changed, 69 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index 210f4499bddb..d068609fb6f9 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -98,3 +98,29 @@ int cdat_table_parse_sslbis(struct cdat_header *table,
+>   	return cdat_table_parse_entries(CDAT_TYPE_SSLBIS, table, &proc);
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cdat_table_parse_sslbis, CXL);
+> +
+> +int cxl_dsmas_parse_entry(struct cdat_entry_header *header, void *arg)
+> +{
+> +	struct cdat_dsmas *dsmas = (struct cdat_dsmas *)(header);
+> +	struct list_head *dsmas_list = (struct list_head *)arg;
+> +	struct dsmas_entry *dent;
+> +
+> +	if (dsmas->hdr.length != sizeof(*dsmas)) {
+> +		pr_warn("Malformed DSMAS table length: (%lu:%u)\n",
+> +			 (unsigned long)sizeof(*dsmas), dsmas->hdr.length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	dent = kzalloc(sizeof(*dent), GFP_KERNEL);
+> +	if (!dent)
+> +		return -ENOMEM;
+> +
+> +	dent->handle = dsmas->dsmad_handle;
+> +	dent->dpa_range.start = le64_to_cpu(dsmas->dpa_base_address);
+> +	dent->dpa_range.end = le64_to_cpu(dsmas->dpa_base_address) +
+> +			      le64_to_cpu(dsmas->dpa_length) - 1;
+> +	list_add_tail(&dent->list, dsmas_list);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index cc3309794b45..9d0e22fe72c0 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -8,6 +8,7 @@
+>   #include <linux/bitfield.h>
+>   #include <linux/bitops.h>
+>   #include <linux/log2.h>
+> +#include <linux/list.h>
+>   #include <linux/io.h>
+>   
+>   /**
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 45e2f2bf5ef8..9a2468a93d83 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -104,6 +104,22 @@ struct cdat_subtable_entry {
+>   	enum cdat_type type;
+>   };
+>   
+> +struct dsmas_entry {
+> +	struct list_head list;
+> +	struct range dpa_range;
+> +	u8 handle;
+> +};
+> +
+> +/* Sub-table 0: Device Scoped Memory Affinity Structure (DSMAS) */
+> +struct cdat_dsmas {
+> +	struct cdat_entry_header hdr;
+> +	u8 dsmad_handle;
+> +	u8 flags;
+> +	__u16 reserved;
+> +	__le64 dpa_base_address;
+> +	__le64 dpa_length;
+> +} __packed;
+> +
+>   int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+>   struct cxl_dev_state;
+>   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> @@ -119,4 +135,6 @@ int cdat_table_parse_##x(struct cdat_header *table, \
+>   cdat_table_parse(dsmas);
+>   cdat_table_parse(dslbis);
+>   cdat_table_parse(sslbis);
+> +
+> +int cxl_dsmas_parse_entry(struct cdat_entry_header *header, void *arg);
+>   #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 60a865680e22..c8136797d528 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -57,6 +57,16 @@ static int discover_region(struct device *dev, void *root)
+>   	return 0;
+>   }
+>   
+> +static void dsmas_list_destroy(struct list_head *dsmas_list)
+> +{
+> +	struct dsmas_entry *dentry, *n;
+> +
+> +	list_for_each_entry_safe(dentry, n, dsmas_list, list) {
+> +		list_del(&dentry->list);
+> +		kfree(dentry);
+> +	}
+> +}
+> +
+>   static int cxl_switch_port_probe(struct cxl_port *port)
+>   {
+>   	struct cxl_hdm *cxlhdm;
+> @@ -131,9 +141,23 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>   static int cxl_port_probe(struct device *dev)
+>   {
+>   	struct cxl_port *port = to_cxl_port(dev);
+> +	int rc;
+>   
+>   	/* Cache the data early to ensure is_visible() works */
+>   	read_cdat_data(port);
+> +	if (port->cdat.table) {
+> +		if (is_cxl_endpoint(port)) {
+> +			LIST_HEAD(dsmas_list);
+> +
+> +			rc = cdat_table_parse_dsmas(port->cdat.table,
+> +						    cxl_dsmas_parse_entry,
+> +						    (void *)&dsmas_list);
+> +			if (rc < 0)
+> +				dev_warn(dev, "Failed to parse DSMAS: %d\n", rc);
+> +
+> +			dsmas_list_destroy(&dsmas_list);
+> +		}
+> +	}
 
-Wouldn't that be against the spec?  I thought the device intended to
-receive HPA and do its decode accordingly.
+This block needs to be moved to cxl_endpoint_port_probe() after media is 
+ready.
 
-Otherwise you could have multiple devices programmed capable of decoding
-0x0, which is already the device address, so there's nothing to
-"decode".
-
-I'll follow up as I learn more, this is concerning.  Certainly explains
-why every time I switch hardware nothing seems to work quite right.
-
-~Gregory
+>   
+>   	if (is_cxl_endpoint(port))
+>   		return cxl_endpoint_port_probe(port);
+> 
+> 
