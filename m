@@ -2,34 +2,34 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E679EC761A6
-	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 17:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80D2C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 17:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232204AbjC3RCr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 30 Mar 2023 13:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53282 "EHLO
+        id S232316AbjC3RTb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 30 Mar 2023 13:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231821AbjC3RCq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 13:02:46 -0400
+        with ESMTP id S232294AbjC3RT0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 30 Mar 2023 13:19:26 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA497E1AC
-        for <linux-cxl@vger.kernel.org>; Thu, 30 Mar 2023 10:02:35 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PnV830K1Dz6J7fD;
-        Fri, 31 Mar 2023 01:01:55 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF23EB64
+        for <linux-cxl@vger.kernel.org>; Thu, 30 Mar 2023 10:19:19 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PnVWL29BVz6J7wF;
+        Fri, 31 Mar 2023 01:18:38 +0800 (CST)
 Received: from localhost (10.48.159.148) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Thu, 30 Mar
- 2023 18:02:33 +0100
-Date:   Thu, 30 Mar 2023 18:02:32 +0100
+ 2023 18:19:17 +0100
+Date:   Thu, 30 Mar 2023 18:19:16 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH] cxl/hdm: Limit emulation to the number of range
- registers
-Message-ID: <20230330180232.00004c84@Huawei.com>
-In-Reply-To: <168012574932.221280.15944705098679646436.stgit@dwillia2-xfh.jf.intel.com>
-References: <168012574932.221280.15944705098679646436.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH] cxl/hdm: Avoid NULL deref when component registers are
+ missing
+Message-ID: <20230330181916.00007fb8@Huawei.com>
+In-Reply-To: <168012574357.221280.5001364964799725366.stgit@dwillia2-xfh.jf.intel.com>
+References: <168012574357.221280.5001364964799725366.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -43,140 +43,47 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 29 Mar 2023 14:35:49 -0700
+On Wed, 29 Mar 2023 14:35:43 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Recall that range register emulation seeks to treat the 2 potential
-> range registers as Linux CXL "decoder" objects. The number of range
-> registers can be 1 or 2, while HDM decoder ranges can include more than
-> 2.
+> The cxl_port driver attempts to support endpoint devices that do not
+> advertise a component register block, but by inspection
+> devm_cxl_setup_hdm() passes a NULL @crb to helper functions that should
+> be skipped.
 > 
-> Be careful not to confuse DVSEC range count with HDM capability decoder
-> count. Commit to range register earlier in devm_cxl_setup_hdm().
-> Otherwise, a device with more HDM decoders than range registers can set
-> @cxlhdm->decoder_count to an invalid value.
+> Return early and skip setting target_count since that is only relevant
+> for switch decoders, not endpoint decoders.
+
+This is a good observation. It would be nice to not read it for the
+HDM decoder path either. Obviously we don't use it so that doesn't do
+any harm, but to someone reading the code it looks like we care about the
+value.  I'm not immediately sure how we'd establish at this layer that
+the HDM decoder is a switch or HB one though..
+
 > 
-> Avoid introducing a forward declaration by just moving the definition of
-> should_emulate_decoders() earlier in the file. should_emulate_decoders()
-> is unchanged.
-> 
+> Fixes: 757f6448b100 ("cxl/hdm: Fix double allocation of @cxlhdm")
 > Tested-by: Dave Jiang <dave.jiang@intel.com>
-> Fixes: d7a2153762c7 ("cxl/hdm: Add emulation when HDM decoders are not committed")
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Seems reasonable.
+Patch looks fine to me.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/cxl/core/hdm.c |   82 +++++++++++++++++++++++++++---------------------
->  1 file changed, 46 insertions(+), 36 deletions(-)
+>  drivers/cxl/core/hdm.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index cc123996b1a4..9884b6d4d930 100644
+> index 5293fe13fce3..cc123996b1a4 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -101,6 +101,42 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
->  				      BIT(CXL_CM_CAP_CAP_ID_HDM));
->  }
->  
-> +static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> +{
-> +	struct cxl_hdm *cxlhdm;
-> +	void __iomem *hdm;
-> +	u32 ctrl;
-> +	int i;
-> +
-> +	if (!info)
-> +		return false;
-> +
-> +	cxlhdm = dev_get_drvdata(&info->port->dev);
-> +	hdm = cxlhdm->regs.hdm_decoder;
-> +
-> +	if (!hdm)
-> +		return true;
-> +
-> +	/*
-> +	 * If HDM decoders are present and the driver is in control of
-> +	 * Mem_Enable skip DVSEC based emulation
-> +	 */
-> +	if (!info->mem_enabled)
-> +		return false;
-> +
-> +	/*
-> +	 * If any decoders are committed already, there should not be any
-> +	 * emulated DVSEC decoders.
-> +	 */
-> +	for (i = 0; i < cxlhdm->decoder_count; i++) {
-> +		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
-> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  /**
->   * devm_cxl_setup_hdm - map HDM decoder component registers
->   * @port: cxl_port to map
-> @@ -140,6 +176,16 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+> @@ -123,7 +123,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>  	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
+>  	if (!crb && info && info->mem_enabled) {
+>  		cxlhdm->decoder_count = info->ranges;
+> -		cxlhdm->target_count = info->ranges;
+> +		return cxlhdm;
+>  	} else if (!crb) {
+>  		dev_err(dev, "No component registers mapped\n");
 >  		return ERR_PTR(-ENXIO);
->  	}
->  
-> +	/*
-> +	 * Now that the hdm capability is parsed, decide if range
-> +	 * register emulation is needed and fixup cxlhdm accordingly.
-> +	 */
-> +	if (should_emulate_decoders(info)) {
-> +		dev_dbg(dev, "Fallback map %d range register%s\n", info->ranges,
-> +			info->ranges > 1 ? "s" : "");
-> +		cxlhdm->decoder_count = info->ranges;
-> +	}
-> +
->  	return cxlhdm;
->  }
->  EXPORT_SYMBOL_NS_GPL(devm_cxl_setup_hdm, CXL);
-> @@ -717,42 +763,6 @@ static int cxl_setup_hdm_decoder_from_dvsec(struct cxl_port *port,
->  	return 0;
->  }
->  
-> -static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> -{
-> -	struct cxl_hdm *cxlhdm;
-> -	void __iomem *hdm;
-> -	u32 ctrl;
-> -	int i;
-> -
-> -	if (!info)
-> -		return false;
-> -
-> -	cxlhdm = dev_get_drvdata(&info->port->dev);
-> -	hdm = cxlhdm->regs.hdm_decoder;
-> -
-> -	if (!hdm)
-> -		return true;
-> -
-> -	/*
-> -	 * If HDM decoders are present and the driver is in control of
-> -	 * Mem_Enable skip DVSEC based emulation
-> -	 */
-> -	if (!info->mem_enabled)
-> -		return false;
-> -
-> -	/*
-> -	 * If any decoders are committed already, there should not be any
-> -	 * emulated DVSEC decoders.
-> -	 */
-> -	for (i = 0; i < cxlhdm->decoder_count; i++) {
-> -		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
-> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
-> -			return false;
-> -	}
-> -
-> -	return true;
-> -}
-> -
->  static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  			    int *target_map, void __iomem *hdm, int which,
->  			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
 > 
 
