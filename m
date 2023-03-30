@@ -2,149 +2,151 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F82C74A5B
-	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 00:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AC8C77B6D
+	for <linux-cxl@archiver.kernel.org>; Thu, 30 Mar 2023 00:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbjC3AG4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 29 Mar 2023 20:06:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34024 "EHLO
+        id S229625AbjC3AJh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 29 Mar 2023 20:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjC3AG4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 20:06:56 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0382D48
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Mar 2023 17:06:54 -0700 (PDT)
+        with ESMTP id S230368AbjC3AJg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 29 Mar 2023 20:09:36 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C710A4212;
+        Wed, 29 Mar 2023 17:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680134815; x=1711670815;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=dGadilSoT9Vj9/AI9sz+osqg9wohVe/t5ElMIIGFvR0=;
-  b=BdLLussT8jAhSmw7dM9V3RCjMFaDHNhRld6BWPENreeixO83Ti5G4JEM
-   tgDDWyqNA7TKG7oMestpU9UiTB9jHGBkLw/vPW4G+5ARZMYtuatkWgVZ9
-   UVzHp0pU6WpTIJ+lMmI+0WghHN0tz7X9iq8GsYbxQDWTRZ112uZw134MC
-   kBc6g5zY0/aj+GQVYzP4DoAU4MuXtnSS1+FefUtfcKkTK57eEP5Bn19Bs
-   Cjk8Lb8FE3qIkrPap8KJ7qpEn9K+ZAt9BMNZhUbOFkubU6YbISXOOH7In
-   qe9goCkjsRAiij4YhECoN+tpDeCwkkW7maUE/G2LOlXoRF8gtGRW7r5SK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="339752773"
+  t=1680134975; x=1711670975;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=GY/VlJ64/ED7A0ypnvAz0Yp4DZrkmpX9B1TLpQXp9XI=;
+  b=ll3hIjTHPJRkbeBDYlVckpLEfhZcEhcF/tQP9ZEnvtv8/YpGea+r5E/v
+   sJZLaajJUlJfHyiSbvFkNiO3hKxck/0IPksu1O2bWPdE4+ZMUxPbZ6e9Q
+   HoHjjSf+ZaPyjLZ+eHl86SwntQ8ZKmz05wlP6dr3JnTZMq9Oc4nKSUpaG
+   TYCeDhJ9+Evb0hM8dblSC3DWUqAnrUeS9wr6G2LFMj2Yh+zKpE6yk8OTP
+   zFjYVcsFuMhCxOWb5oYeR0pmcU/KWYcItnXFO6IFILDVT1GKXp+BYIc9O
+   vKcnWnvz1fSERaZD635gfoyei3QHfFuzy+OWlUCcI0vyUs+bvK/hU1T0z
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="368807958"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="339752773"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 17:06:42 -0700
+   d="scan'208";a="368807958"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 17:09:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="717098550"
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="1014229955"
 X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="717098550"
-Received: from sandrew-mobl2.amr.corp.intel.com (HELO [10.212.109.34]) ([10.212.109.34])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 17:06:41 -0700
-Message-ID: <bfdc6772-e62c-e950-415d-a5b3d502295a@intel.com>
-Date:   Wed, 29 Mar 2023 17:06:41 -0700
+   d="scan'208";a="1014229955"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Mar 2023 17:09:32 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 29 Mar 2023 17:09:30 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Wed, 29 Mar 2023 17:09:30 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.48) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Wed, 29 Mar 2023 17:09:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gS816B7ze//4vPYx2+VQKJxGEobpLBkOPyXRYExMZ65PMJz5aXLD8+IqFxntXwn85Jj2tQ3WnANKnjToAXPb7RGLGi/6EZVc0iks1ZjsWGE7ypViApYOFtbhsu4OMaxsTMMM+6w6tZUK3LzO5qHtjHuq4DDLZhEXFWonvc5g5ueSme6bSD46QRJwWahsLh1u6w1A2A4qh0V8v9g77MdfMjSu8iIPriI0kezTMRf+Ob8jJ+NKypLr/6sZE+gzfAIty//RDe9AEw+NZ1lGSmD1vq+vqpL2q4vl8928ZrLz4iztKQkzappn54v3d01rN+i2kojrZDLyStapmKSk9VuKGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5gCfFovR+hXoCTdTRQA1AKgoaviExlYK7tJ25TU/LQI=;
+ b=Gh/iVE8FI2SPoNK6mvgA+Cqu0a9Foipg/dEniHW2eg4yNHfUKUQq9LUxrXAYE1FzE3n+Zf16upE1WwME+Cit82h75xnUYq/8Ge4BU/ZnCstv3HfQgBBSjvtpeRBtr8Ebn3wtkJ64I2Bd80mkfu6rqlJ04TEkHkkHArj2R+C9hKsMnSDqdNO8sDvOa0/gVeTyFU0vROSNlgjwfNfIGIH4bVq2v4PtJkNFNP6oDZ68e0Bxd8K/sY0hUWPB9drcIfbmnBl7pdA0oOcQ5JndXVba6/Uo2WrXM9EOkdcmVAdKYjUyw9WH8WCmgUzh+R7YmFZw/CeJ5ptjWtgBNFz1XmMEDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by DS0PR11MB7879.namprd11.prod.outlook.com (2603:10b6:8:f7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.33; Thu, 30 Mar
+ 2023 00:09:26 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::c5b2:6996:5aee:91db]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::c5b2:6996:5aee:91db%5]) with mapi id 15.20.6222.033; Thu, 30 Mar 2023
+ 00:09:26 +0000
+Date:   Wed, 29 Mar 2023 17:09:22 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>
+CC:     <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <rafael@kernel.org>, <lukas@wunner.de>
+Subject: Re: [PATCH v2 02/21] cxl: Add checksum verification to CDAT from CXL
+Message-ID: <6424d332987c4_3652cd294a9@iweiny-mobl.notmuch>
+References: <167995336797.2857312.539473939839316778.stgit@djiang5-mobl3>
+ <167995345388.2857312.2421270054519644444.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <167995345388.2857312.2421270054519644444.stgit@djiang5-mobl3>
+X-ClientProxiedBy: SJ0PR05CA0106.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::21) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH] cxl/hdm: Extend DVSEC range register emulation for region
- enumeration
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-References: <168012575521.221280.14177293493678527326.stgit@dwillia2-xfh.jf.intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <168012575521.221280.14177293493678527326.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DS0PR11MB7879:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3ea6d4a-1fa6-46c5-2186-08db30b305e4
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7bx7NUNZqWYDT8MgXNbowAqIp4FGzLts5cy2l7/5+j7qtEyZB6wsR0xlkqVXLDsSrwjY3xrnMPqKqAvzVm6bW6c5icKmkrVA+OY9TceHQM6SIZHO7dHuo8UOhyjIzTg67c5sOCcGK2WppMXMDA8BbsvN18pmVwL+M6iclwGVVGP9Au7mOoROTQHVaAl8rMRmmZFHKAWk3txsj+mFeuhiv6JsFWQOfEMqeRjoQUlPZCWDklrZgnEH02vbrcvrS6/Kp++wAwoNfpbu2dRWiwNiKPwl5W1plOnllEIVTmR0EIxxkhi1xFbxljDSPIudddSCahp2f+tIv0tfiO6KVMgpNWORTFmw8ZQ3s77CRv2bc5NMWQdnYEC9gaKQwcF2vR5gFIwQ+o+JJvABQNA22oK1DrDRkCaN2mpUmrX22Ek12v+idHP2XHlekaCibWov/d+DTC2iIADhpzZEtZxZW3Dg5IKfV1RdOKlLlSKyC5GaaZJpUuMOGAvwnvzx2vl1rvGLhi115Itl0jSMA9bymVruoPtfnQlzb2CjXEmLFSs2COxhd1OdMSciJYWHMxizrIMo
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(346002)(39860400002)(136003)(396003)(451199021)(83380400001)(186003)(6486002)(6506007)(9686003)(6512007)(6666004)(478600001)(86362001)(316002)(26005)(41300700001)(4326008)(82960400001)(66946007)(8676002)(66556008)(66476007)(15650500001)(38100700002)(44832011)(8936002)(4744005)(2906002)(5660300002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bkyGQEZ/F/H9oZ2jGxqA87NBmp+9xinWUhfQ91Ko2XDkptkRGYmzBNAs4gMz?=
+ =?us-ascii?Q?hDD9AD5dMzI7m4SGeYVYngDgcnVpsCXdzWFkpVdBQsONQiBgCr+kY/aM/edM?=
+ =?us-ascii?Q?NK2ga1xscImUHS9xVn7jY2WOWioQD5CyYqhWsJy4OS+y+wfOD4W84BFxB6na?=
+ =?us-ascii?Q?wi6S+DaOgIQvptM/PLTIX9ouA1VCUOynrvDqvCzHzpSrs2rmns7eLbu6n1Qm?=
+ =?us-ascii?Q?Mng7BmrvhS56Tz5BUQA1e4uyseBxTV/+glYmj0UAguu3Zo+O9gdyxNUFNF95?=
+ =?us-ascii?Q?tv1xgv6FKGgGATMbzCI3e0FjeIyhWGSsgsYQ7Mxm5VO35kRc8k4nWkKcbKrk?=
+ =?us-ascii?Q?w8opTs5ogYBtcWZNoeZkm7JAeN15OMwazSzkN+nPGWYRqQrr07w/eXOu/gLo?=
+ =?us-ascii?Q?tWgKVnrBZC+JU5JZER7GEzjKcH6kuUvmgNEvjLWy8KpFCHSwlPx/PF/uH0MU?=
+ =?us-ascii?Q?ieHpN8xX61H0ll7rhN4hdlnR/WOdmbjFRkHlBTNPi29dBQoLXxLZS23te9GD?=
+ =?us-ascii?Q?CW+RDrPLyaILagwNhzMyEdGF0dSRDOJK4SJUYbkcVcYfxgw3K9n5l87jDTOo?=
+ =?us-ascii?Q?so7gUetXDbE5VnOdR29iYBANPZawFrNuHwmUaCiMFchRx5BU25KEmcaFzqQJ?=
+ =?us-ascii?Q?k8YuljQNirMKZw/om7dcKh8jgEygYx9nIciimlZJqeIszZ6sO3B7pTQ+bRys?=
+ =?us-ascii?Q?en1ZdPN+rYdBhtZACeNJA/7Agdpt7XOv+RkfBDWPA9SWRzY1rvULsXHU5lH+?=
+ =?us-ascii?Q?a8z4kY2v1JvKuuBsVZYvyi9kyOFWfdNYoE7SyNS8ZQYNwM+xSgJXiFtJ4eX6?=
+ =?us-ascii?Q?II2KRJYwOQLFEhtFELgMU1Es3vQU8NN9CYP5f7afSVCPvZ+ucvjOh9GaO65m?=
+ =?us-ascii?Q?ea8uMQE66iVEgC2OaOWshQlR/wEaUmdlVbBgl4qli6ufkou4rThMn0KCqiL8?=
+ =?us-ascii?Q?nYhUplifEb29j+XgaFCdFbXCJrdaSWtZ9S9Y8W8s3wPO2N9XPb5B/xGC6Ctz?=
+ =?us-ascii?Q?aSH/xiO52sXJB+H+FyCdKYspjepfc+kbLf3znj3yFWk83+3FMFDHO/5krpBl?=
+ =?us-ascii?Q?9DMOB32e8ZGmW8jXt92SeHmyCy2EecSXlbkzSUegSgIc2qUL7hlef1ccQRqz?=
+ =?us-ascii?Q?XyNz7xNP0ydgo1qYUL51lgEjfIuwcWWNVG5ooLAl71xa75e9f1Z1sr8Eo4hB?=
+ =?us-ascii?Q?+annQQM8cT3Sy5+0BMIHEiczP6L2Bz664uK4bLNj+PZrj3BH9QoJ/MuTvAGw?=
+ =?us-ascii?Q?bLhoqGOiaM1SoRcPRGW+ylbcTTf0tzFzRV6WYW51QV9kdRJbjPm/cResaHtk?=
+ =?us-ascii?Q?HHe1MSD5Zlz2kYe/lzMXPcj2Xvx1r8IqVZLTYbT8Hj94KjqMCOdoQPMGp/OU?=
+ =?us-ascii?Q?iKdVC4lYbMilVfMvIigVat3VSausK/I2uuvjzwTgwlZDgWu5EGPuJDBXIPLs?=
+ =?us-ascii?Q?EPAGgAJFOwb/XyfeJsVxSmHUFLe3xx2NVzAgBmCj8HpcJBgbDayOR8S6kgyI?=
+ =?us-ascii?Q?4rUgELueQ+c3IDmlYU62ATRCDQldK7VH2t600+P/afmUdjJs0AWlGiouzMlD?=
+ =?us-ascii?Q?oyTXF56UuPR1FXT26yT6Xot0aNgcjwAvVN+AYV2Y?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3ea6d4a-1fa6-46c5-2186-08db30b305e4
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2023 00:09:26.1742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yg+Hs2JckINfYooz0Rfj2CSoOVtl0LgDv264dUPqjT9UI+BsaIQkDB8MliFbtJ6jEh4+Olg0Juojnf+UxwNA7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7879
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 3/29/23 2:35 PM, Dan Williams wrote:
-> One motivation for mapping range registers to decoder objects is
-> to use those settings for region autodiscovery.
+Dave Jiang wrote:
+> A CDAT table is available from a CXL device. The table is read by the
+> driver and cached in software. With the CXL subsystem needing to parse the
+> CDAT table, the checksum should be verified. Add checksum verification
+> after the CDAT table is read from device.
 > 
-> The need to map a region for devices programmed to use range registers
-> is especially urgent now that the kernel no longer routes "Soft
-> Reserved" ranges in the memory map to device-dax by default. The CXL
-> memory range loses all access mechanisms.
-> 
-> Complete the implementation by filling out ways and granularity, marking
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Where is the ways and granularity set done in code?
-
-DJ
-
-> the DPA reservation, and setting the endpoint-decoder state to signal
-> autodiscovery.
-> 
-> Fixes: 09d09e04d2fc ("cxl/dax: Create dax devices for CXL RAM regions")
-> Tested-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->   drivers/cxl/core/hdm.c |   30 ++++++++++++++++++++++++------
->   1 file changed, 24 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 9884b6d4d930..5339c0719177 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -738,20 +738,26 @@ static int cxl_decoder_reset(struct cxl_decoder *cxld)
->   	return 0;
->   }
->   
-> -static int cxl_setup_hdm_decoder_from_dvsec(struct cxl_port *port,
-> -					    struct cxl_decoder *cxld, int which,
-> -					    struct cxl_endpoint_dvsec_info *info)
-> +static int cxl_setup_hdm_decoder_from_dvsec(
-> +	struct cxl_port *port, struct cxl_decoder *cxld, u64 *dpa_base,
-> +	int which, struct cxl_endpoint_dvsec_info *info)
->   {
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct range *range;
-> +	int rc;
-> +
->   	if (!is_cxl_endpoint(port))
->   		return -EOPNOTSUPP;
->   
-> -	if (!range_len(&info->dvsec_range[which]))
-> +	cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +	range = &info->dvsec_range[which];
-> +	if (!range_len(range))
->   		return -ENOENT;
->   
->   	cxld->target_type = CXL_DECODER_EXPANDER;
->   	cxld->commit = NULL;
->   	cxld->reset = NULL;
-> -	cxld->hpa_range = info->dvsec_range[which];
-> +	cxld->hpa_range = *range;
->   
->   	/*
->   	 * Set the emulated decoder as locked pending additional support to
-> @@ -760,6 +766,17 @@ static int cxl_setup_hdm_decoder_from_dvsec(struct cxl_port *port,
->   	cxld->flags |= CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK;
->   	port->commit_end = cxld->id;
->   
-> +	rc = devm_cxl_dpa_reserve(cxled, *dpa_base, range_len(range), 0);
-> +	if (rc) {
-> +		dev_err(&port->dev,
-> +			"decoder%d.%d: Failed to reserve DPA range %#llx - %#llx\n (%d)",
-> +			port->id, cxld->id, *dpa_base,
-> +			*dpa_base + range_len(range) - 1, rc);
-> +		return rc;
-> +	}
-> +	*dpa_base += range_len(range);
-> +	cxled->state = CXL_DECODER_STATE_AUTO;
-> +
->   	return 0;
->   }
->   
-> @@ -779,7 +796,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   	} target_list;
->   
->   	if (should_emulate_decoders(info))
-> -		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, which, info);
-> +		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, dpa_base,
-> +							which, info);
->   
->   	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
->   	base = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
-> 
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
