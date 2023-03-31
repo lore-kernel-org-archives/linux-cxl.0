@@ -2,65 +2,73 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5C2C6FD18
-	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 12:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C620C761AF
+	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 13:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230488AbjCaMyS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 31 Mar 2023 08:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59336 "EHLO
+        id S232496AbjCaNmq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 31 Mar 2023 09:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230356AbjCaMyR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 08:54:17 -0400
+        with ESMTP id S229894AbjCaNmn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 09:42:43 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A5CF199;
-        Fri, 31 Mar 2023 05:54:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773E9B459;
+        Fri, 31 Mar 2023 06:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Yeenr72+biii/gxq1Q+YDEgdmCOdBcLhSB08YsTUu+4=; b=cWuuNt3m2/7xaIpDp9GbqHfsJn
-        /lptGcoV0wqRu41nyD9az7xdUuRHsgrDV9573SXFqElfIy1wjyd/TdCgBNU2rpuXQdRhNwzkJKyI1
-        vU7pmWIKyi0+cGgvee7Ay3pKnZPtHniMQu3SlqrCaKw/ozat3iNr5M+QcMJT/migWIoZ7z99Va0A+
-        LQ2gC/uT42y5Z8WLj2opMEIBevQMjZjNbiP49DfiZjoJBZ9ZFl3YVCtStLFCAui8J76Oi8k9FW68w
-        DbwgUKhoGkZO0goGIlffRuckAhnykTFe0Zz5OKjPJ8QAx311Mr/l0Y/QMFwNBKXa7IF9Hxm5oudk3
-        vC7EWnJQ==;
+        bh=5I4KJmBZJA/j7wJDLeyLVxjH0xULgErbT1T9v7RMqcs=; b=J/R1MzB9Wucb7Y6h+C/8TofVal
+        hbhTT7g+hEVNm07PTNpHSf2Du4f34BaxCv43dkaCIAFZNVLIAdvUgF+Lqcb9h/MwsXqmTMWnZyJgM
+        nDrGhAf8V4j8Np89cjjY8HFZxl8gSOL1hTkM4SH5yItR6AaN+g+O09BX+TUxpGjKY920nIXIuCe0m
+        SZRbZcHvbXlGqyhMcCA6uQ7a/95YZq1h/Mo7eLK2W3h4SkQM/4ppupkR59gw5PkRaqluZun0O3eBn
+        jAyDFK9BTcd2lY6+YqDbpuC+u+XBpI+2GCLkpoWg67lhHKo3hh7glr7YiRNqXMDJv6OBBtCzhwkBo
+        i7Sk8wIQ==;
 Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1piEGZ-00BQpk-1x; Fri, 31 Mar 2023 12:54:03 +0000
-Date:   Fri, 31 Mar 2023 13:54:03 +0100
+        id 1piF1S-00BSqh-9A; Fri, 31 Mar 2023 13:42:30 +0000
+Date:   Fri, 31 Mar 2023 14:42:30 +0100
 From:   Matthew Wilcox <willy@infradead.org>
 To:     Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
-        dan.j.williams@intel.com, seungjun.ha@samsung.com,
-        wj28.lee@samsung.com
-Subject: Re: Re: RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for
- CXL
-Message-ID: <ZCbX6+x1xJ0tnwLw@casper.infradead.org>
-References: <ZB3ijJBf3SEF+Xl2@casper.infradead.org>
- <CGME20230331113715epcas2p13127b95af4000ec1ed96a2e9d89b7444@epcas2p1.samsung.com>
- <20230331113715.400135-1-ks0204.kim@samsung.com>
+Cc:     david@redhat.com, lsf-pc@lists.linux-foundation.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
+        viacheslav.dubeyko@bytedance.com, dan.j.williams@intel.com,
+        seungjun.ha@samsung.com, wj28.lee@samsung.com
+Subject: Re: RE: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
+Message-ID: <ZCbjRsmoy1acVN0Z@casper.infradead.org>
+References: <7c7933df-43da-24e3-2144-0551cde05dcd@redhat.com>
+ <CGME20230331114220epcas2p2d5734efcbdd8956f861f8e7178cd5288@epcas2p2.samsung.com>
+ <20230331114220.400297-1-ks0204.kim@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230331113715.400135-1-ks0204.kim@samsung.com>
+In-Reply-To: <20230331114220.400297-1-ks0204.kim@samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 08:37:15PM +0900, Kyungsan Kim wrote:
-> >> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
-> >
-> >This sounds dangerously confused.  Do you want the EXMEM to be removable
-> >or not?  If you do, then allocations from it have to be movable.  If
-> >you don't, why go to all this trouble?
-> 
-> I'm sorry to make you confused. We will try more to clearly explain our thought.
-> We think the CXL DRAM device should be removable along with HW pluggable nature.
-> For MM point of view, we think a page of CXL DRAM can be both movable and unmovable. 
-> An user or kernel context should be able to determine it. Thus, we think dedication on the ZONE_NORMAL or the ZONE_MOVABLE is not enough.
+On Fri, Mar 31, 2023 at 08:42:20PM +0900, Kyungsan Kim wrote:
+> Given our experiences/design and industry's viewpoints/inquiries,
+> I will prepare a few slides in the session to explain 
+>   1. Usecase - user/kernespace memory tiering for near/far placement, memory virtualization between hypervisor/baremetal OS
+>   2. Issue - movability(movable/unmovable), allocation(explicit/implicit), migration(intented/unintended)
+>   3. HW - topology(direct, switch, fabric), feature(pluggability,error-handling,etc)
 
-No, this is not the right approach.  If CXL is to be hot-pluggable,
-then all CXL allocations must be movable.  If even one allocation on a
-device is not movable, then the device cannot be removed.  ZONE_EXMEM
-feels like a solution in search of a problem.
+I think you'll find everybody else in the room understands these issues
+rather better than you do.  This is hardly the first time that we've
+talked about CXL, and CXL is not the first time that people have
+proposed disaggregated memory, nor heterogenous latency/bandwidth
+systems.  All the previous attempts have failed, and I expect this
+one to fail too.  Maybe there's something novel that means this time
+it really will work, so any slides you do should focus on that.
+
+A more profitable discussion might be:
+
+1. Should we have the page allocator return pages from CXL or should
+   CXL memory be allocated another way?
+2. Should there be a way for userspace to indicate that it prefers CXL
+   memory when it calls mmap(), or should it always be at the discretion
+   of the kernel?
+3. Do we continue with the current ZONE_DEVICE model, or do we come up
+   with something new?
+
