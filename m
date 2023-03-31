@@ -2,266 +2,213 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6FBC6FD18
-	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 05:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4241C6FD18
+	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 11:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229584AbjCaFMa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 31 Mar 2023 01:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51252 "EHLO
+        id S231888AbjCaLcR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 31 Mar 2023 07:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjCaFM3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 01:12:29 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD005CA38
-        for <linux-cxl@vger.kernel.org>; Thu, 30 Mar 2023 22:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680239548; x=1711775548;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=xA8QYz1Y7INzw43RJ2t/y6mmP/OV5PuLemzHzBRteFM=;
-  b=XflS/mPArRfpmt9/+5bn9WCwFWfMmu1fYKMF3Isca+LQUlIVhVyiqw5Z
-   2s9wQ6mpOWuc2a5ae8dzjoPjtA+pZQPoW6jwEy6AeRQLFTrQB77wGpWUx
-   Dy8GY3IeHDE8tYLN0aIA0HFGGklgmdQUa+j8LwRHI2goXUTOzGMvKFZiX
-   zGfrnEMX0+skYgrKUQTMbRa1K16BMnSxz9l2ywyxA6gddg+Cw99FL5LMR
-   6pG5EjsjujzwFZmzyUt2ovFrIWDpnfXiRWRpJj2C24yFJy0c6aZUgpODN
-   glpbZuKhvm5APq6M0NSAA8IUHRnurOCujkIZCOe8MFJg48oHJ4nhhBV84
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="325324204"
-X-IronPort-AV: E=Sophos;i="5.98,306,1673942400"; 
-   d="scan'208";a="325324204"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 22:12:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="808918918"
-X-IronPort-AV: E=Sophos;i="5.98,306,1673942400"; 
-   d="scan'208";a="808918918"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2023 22:12:28 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 30 Mar 2023 22:12:27 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Thu, 30 Mar 2023 22:12:27 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Thu, 30 Mar 2023 22:12:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HxNBZQhama6wpm2CMHZpL0sxMIz3qs7wK6Mz+0ysLBTp5ebMlU1s3bP8g90Qm7yZVB9pKJWJnp1mDxTT3NYewCE2XUIYPJXmODlymMHFvmyK3wrKEkPler3xIwoT6leK/2f3xZjMeM02FfhzpRUkMAOY5iMWDpC2V+zfhfaM0mO5wiyDhA6ftY6Ko5H2P1e84ZvtwFg1UeyRPA81NYlDdb+RacLmS7mZ0vLhPmxWUgfRIUT9EnYGX5qHqbgWMQ6NNOyJeqSJd3AyVJWqjX/p0EQtB8zevqVpqHfFcBsgSeFPLu+JPMoS8wizgwJGqM8UEnxyt4e8it2dawlIGnW72g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qemb4y2C5kqKecZc9J1syz3u9coLmpwfpAJ7eDCDLCw=;
- b=ksZ2iYgztk64Tt5qPNwtf0jl9zdiya9y1WMKaX6ZbSPpHHh+kWa4PBxWVlrxtiF9ZYmrK7qU0p9h1/Uu3yl0IZ57rtsM1wOP29hcDZ2ys6wjG7E08Ycexc/1MGZRF8VdZeH8Fr9KdnQDXko1uCwmOHl7b7SWAg+QxqJ6VQ2bfS+YjamQYYtXFAVpm7joNGocB/3bNgskuTrOfSvU2x5E/73OaTbA4smNoQHK6m+Ap3TXawRSPZCsY50VOb4b5rjU9q75MG1WanFZpt3jaAi312vV4XV98OGPDuhAhVkFU4PChQt5imck6W6WhETRYsZwpL7gXL4VjoKu+KAz7kkkDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DS0PR11MB7560.namprd11.prod.outlook.com (2603:10b6:8:14b::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.35; Fri, 31 Mar
- 2023 05:12:08 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::c5b2:6996:5aee:91db]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::c5b2:6996:5aee:91db%5]) with mapi id 15.20.6222.033; Fri, 31 Mar 2023
- 05:12:07 +0000
-Date:   Thu, 30 Mar 2023 22:12:03 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-CC:     <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-        <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH] cxl/region: Fix region setup/teardown for RCDs
-Message-ID: <64266ba31d9da_375f7e29483@iweiny-mobl.notmuch>
-References: <168002858268.50647.728091521032131326.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <168002858268.50647.728091521032131326.stgit@dwillia2-xfh.jf.intel.com>
-X-ClientProxiedBy: SJ0PR05CA0001.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::6) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+        with ESMTP id S231808AbjCaLcP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 07:32:15 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE711D92B
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Mar 2023 04:31:52 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230331113150epoutp03e17abff359eb47cf812489109ef511c2~Rfas3CvCG0767107671epoutp03o
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Mar 2023 11:31:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230331113150epoutp03e17abff359eb47cf812489109ef511c2~Rfas3CvCG0767107671epoutp03o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1680262310;
+        bh=Oitv5yopQeA0fexutVY/k5ElDF3b1N+jbldLHWxDDa0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SErZU8oMV4DteO0+F3ngwOSgoIoteORab5EoDFYcQIe5S4LcNSX9dSMFRzk3rZU7I
+         oXlxUWcStboY2oiJ6vGD6MhoAD/fPCSTz5mNqpMYD1zpEw2qLOzc5WpePCoOml0z/j
+         nROelnV7fsH9iw+R9bwL5SuBytsddvUkRW0u9Mbw=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20230331113149epcas2p1a1d7e0504a92e1610ef96b5c22961401~Rfar1w9OE2337823378epcas2p1Q;
+        Fri, 31 Mar 2023 11:31:49 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.100]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4Pnymh48Pqz4x9Pw; Fri, 31 Mar
+        2023 11:31:48 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        73.4B.61927.4A4C6246; Fri, 31 Mar 2023 20:31:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230331113147epcas2p12655777fec6839f7070ffcc446e3581b~Rfaqm7BZh2804528045epcas2p1y;
+        Fri, 31 Mar 2023 11:31:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230331113147epsmtrp1504753b15de5156965351f4ad565d568~Rfaql71w70592105921epsmtrp11;
+        Fri, 31 Mar 2023 11:31:47 +0000 (GMT)
+X-AuditID: b6c32a45-671ff7000001f1e7-b7-6426c4a470fb
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B5.45.18071.3A4C6246; Fri, 31 Mar 2023 20:31:47 +0900 (KST)
+Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230331113147epsmtip274ef97950857f554f2bd32cc8a1511b7~RfaqZksUj0134601346epsmtip2H;
+        Fri, 31 Mar 2023 11:31:47 +0000 (GMT)
+From:   Kyungsan Kim <ks0204.kim@samsung.com>
+To:     Jorgen.Hansen@wdc.com
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
+        dan.j.williams@intel.com, seungjun.ha@samsung.com,
+        wj28.lee@samsung.com
+Subject: RE: RE: RE(3): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for
+ CXL
+Date:   Fri, 31 Mar 2023 20:31:47 +0900
+Message-Id: <20230331113147.399972-1-ks0204.kim@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <E224146D-058D-48B3-8788-A6BC3370044F@wdc.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DS0PR11MB7560:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2adb0537-87c3-4046-4389-08db31a67962
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XTVVXyUh4wbuJGlMAfBPAbpbfifNzUivrEevAOK8T76zOcR++OdYECGUlxQA3yK57J+qsYgD+cNMlWsWpWdVwMtgJuWzWSvBr4v15TeYKIOlxNXi0mEnaF7FK7iMWJXPZSJXWAwQ+OygeayXgl9h4y47Y73gg56o8ek9hHUQrgpbdB/igienT4lXAeXf24dgGX/ZIlek2bWeUIUzws+zUph6UIeBQY1HVlPLpDJte0aLsKBqQXLcaKgY81JZ2rH+XQfFZjARmttpudoQ6NjMjnLnXV9nGxFUa3qw9yOj7Mz6a18VbvjFC3BL+7FtT5EugQm+2bECxDiZWQ2U01Y3V445/x+PlhYXhkABM3souN8euK5aNo3gLczAJ4dshx8QUAePOjDK5xVcOD6C0FxoOngc4U+Dq+5V1RnjU4mCGCZdSpmUkZ3qxajFa0hpDS97MrHwfOIYhON3mhTJfMD5FZppcldL8e+VeeiQKmoPOynI4Pa0d9lx/apxbQbR/F55yi+qzKCXYfDNL8tdnfeLmaae26cBe3Hi9eWKWHWqLfbnuxhtvOLyO90GUkQ51JU2
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(376002)(346002)(136003)(39860400002)(451199021)(44832011)(83380400001)(9686003)(26005)(6506007)(6512007)(82960400001)(38100700002)(86362001)(4326008)(66556008)(5660300002)(8676002)(41300700001)(478600001)(6666004)(316002)(66946007)(8936002)(6486002)(66476007)(186003)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UqMSwyE6Kzrjl5m2CUcFIN1ny6sC4q9FDDyY9n/lJSat78q7EAsegaeSJOVL?=
- =?us-ascii?Q?Ja6gZ3vGQcmFkoeHFxHl9iky7PuR/nu+q9ps0cPe5rFoXppZgwur+NQfCAuB?=
- =?us-ascii?Q?5n3Rzv3ktQTYJIP0mMVzzwnnxcYVrRcFhwS0wA764AILvSzQrs1RfC0H2vfN?=
- =?us-ascii?Q?Q1h9FK/cceUHyCf/xupL/JVm/4uw06FQORCD2KIvUWEpMPaBs3vzdhs59mtm?=
- =?us-ascii?Q?3HYlqI2ISK9U5OpETJvRq+yoLxoHFaEvN4yJ4r6Swm8PhCNte90ReSLMyiSq?=
- =?us-ascii?Q?upuGshcyvrQpEUpgGDPREoiCFgyupSfV95cWv1gLlNqcRZJMai24FEi5mHng?=
- =?us-ascii?Q?X3gI0dEPzo4Dgmjf9Z3vG8zbOruxyRzjnok1qK5Jqxn+Gn5g2ebDjKF3MdPI?=
- =?us-ascii?Q?ueFuiU66N9T3OMrAdBjJhlj3zocmOjD3xqlHHhPe92NESYYc6FZnVxUsFaMJ?=
- =?us-ascii?Q?H7sosdGVRiywOnqNwOedqE/cHt34ZaOzKZfKqTQGtPpBSnKoDPrQgvvRkPt7?=
- =?us-ascii?Q?DdeENBzGCklbAhr1A50hE1eDO3BHNu7EprjeZPMd7MfifByLuZvSgANNfcz/?=
- =?us-ascii?Q?Nph9W/seW3uAycFukEb4eboNrN71kj4HWNp1ajuU5FCoeN+GhK2QPX6z+bI2?=
- =?us-ascii?Q?soBpnwZvl5vdNsO2l1Mcusf+7tAZfj9QszRlhN2elFI6h9QkUWye2LGlnL/k?=
- =?us-ascii?Q?btnrtyooivaeidEPLxwBSBCofw0NVmXuksOrlD/IrbXEZjQAQ+4AhNBvL3Xc?=
- =?us-ascii?Q?wzu3DWwS3B1Szuhx+q/CaoIUnh63FLzkW8cnR21MjKnlj4Wb8BTjKweZWiPw?=
- =?us-ascii?Q?LZ7tng3rR3o/RXT07PEgYlUpeoQwZIvIvfJSxLgfI94BzJ3q0DDTZf+G7Zq5?=
- =?us-ascii?Q?k2rLZBLBs3aONSHEwIolswgrwd0LhuQJNQo/khsBGfmMukbK4/UVpnLS1O0Z?=
- =?us-ascii?Q?UQ1wceKyJMnEYWNzlxiIX5O2scVJsPuzQjCREx/oJEfgv/WPBquwde8nc2VH?=
- =?us-ascii?Q?wpAddhAPcBxRPchiesqTplO3ypzT5sn15xnRzf9A03ENEkpsL5G3Qnqb0OiT?=
- =?us-ascii?Q?f0Mk8/fc2UyWEgFnuF4TFaXuIxDNnyCMBmLqD/fSc+QAEV8WnOb7W6nzgtLZ?=
- =?us-ascii?Q?8kVTXpjy8KcTOAyr/o8yAGazfm/vP59NQEQsTouFfNwnXf6nZK3W1JZXHy96?=
- =?us-ascii?Q?25s8OSHXkfccsHUGlxi5HK99JrVxA4BKwb5Rr3rP6XOyiXvqe673vjggbOuB?=
- =?us-ascii?Q?RZn74INGVqjUgXVmNS19t2EKrUTLHCPPnA/9kpHbX8mFTpuud0dDUtsOMecE?=
- =?us-ascii?Q?OFrLJ7pwcNBfb3mwZxiMWA4HRKJFO06BM8rIqymCyJvfi4v0gyojQsotqF13?=
- =?us-ascii?Q?FLnoJw+q50v68TZaiUKczL7ncOJazIuauX13bQro/0UKIFO3/fDEFeHB+fFJ?=
- =?us-ascii?Q?M3CvhlRqr190CUWl6AERY59IC+BfxU3eEDKzfqAkNVLShqNm8QKx2GtBjCwP?=
- =?us-ascii?Q?EvKXqh4KRXJPc9hD0wPpWKWQ8PHclmPky/zlSrQ+YEot6Ik6BdDVCCklygAJ?=
- =?us-ascii?Q?PXVpIOeE8QjqW+TXPW8oZCaeqP1AVqjf/WzRI35i?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2adb0537-87c3-4046-4389-08db31a67962
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2023 05:12:07.6818
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C/6X0gxsgunJuntVq32Qgwk23VOly9PdTaXOuoL9qa+bB9sP+buzUmLgtPmp7QIW9O8AmP2vWK7Yxsdh4e0o3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7560
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmue6SI2opBuc3SVtMP6xoMX3qBUaL
+        vgmPmS3OzzrFYrFn70kWi3tr/rNa7Hu9l9niRedxJouODW8YLTbef8fmwOXx78QaNo/Fe14y
+        eWz6NIndY/KN5YwefVtWMXp83iTn0X6gmymAPSrbJiM1MSW1SCE1Lzk/JTMv3VbJOzjeOd7U
+        zMBQ19DSwlxJIS8xN9VWycUnQNctMwfoPCWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJq
+        QUpOgXmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsb0bV+ZCy4bV1zb+I6xgXGTVhcjJ4eEgIlE
+        z9b/zF2MXBxCAjsYJbY/uMoO4XxilHh9+wIThPONUeLlg62MMC1vl/xhhEjsZZRYu+oflNPF
+        JNFw7AETSBWbgLbEnyvn2UBsEQFJiZUb1oDFmQX+MUrsuSwJYgsLBEq8uLOTBcRmEVCVaH5y
+        lxXE5hWwkbg44TU7xDZ5iZmXvoPZnALWEk+bJkHVCEqcnPmEBWKmvETz1tlgT0gIzOSQ2NX4
+        lw2i2UXi3o2DUGcLS7w6vgVqqJTEy/42KLtY4vHrf1B2icThJb9ZIGxjiXc3nwMt4wBaoCmx
+        fpc+iCkhoCxx5BbUWj6JjsN/2SHCvBIdbUIQjSoS2/8tZ4ZZdHr/JqjhHhKX5z9iAykXEuhj
+        lJjNOoFRYRaSX2Yh+WUWwtoFjMyrGMVSC4pz01OLjQoM4fGbnJ+7iRGcWLVcdzBOfvtB7xAj
+        EwfjIUYJDmYlEd5CY9UUId6UxMqq1KL8+KLSnNTiQ4ymwJCeyCwlmpwPTO15JfGGJpYGJmZm
+        huZGpgbmSuK80rYnk4UE0hNLUrNTUwtSi2D6mDg4pRqYzvzNrqyT27hE6/6X+7wv/n/LOHNU
+        P5nD8tVR4c/eQQ2br363vFr8YtOUuVV8kc3/3sQIsq5aK1N57cehDv34orLicI/9z1W+HCli
+        2Oxx3KuB4dhTy06pNVrdVva884Lc3z5ri6rYcnNCc/nO+Bn81UbCxvae+57xhU336U+e6Lfr
+        TYCjmNSOyOpP2zW6dCQOX3OZ9YmdU7Ou6sid41rZHw/9ljuZtPT7klsvYuQMo+3mByR8fpfh
+        dmLe4g12P3/t2HRKLWzTtQRlkxmG3Kx/E1lOX9/RxbGu9pWbgPG6pohNdS8j816xuxkddeO/
+        stBaer6MveZJhvLEB0cNsy+sF88QPb2wJb8o+odfTFCWEktxRqKhFnNRcSIAp4dZczUEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsWy7bCSvO7iI2opBt836llMP6xoMX3qBUaL
+        vgmPmS3OzzrFYrFn70kWi3tr/rNa7Hu9l9niRedxJouODW8YLTbef8fmwOXx78QaNo/Fe14y
+        eWz6NIndY/KN5YwefVtWMXp83iTn0X6gmymAPYrLJiU1J7MstUjfLoErY/q2r8wFl40rrm18
+        x9jAuEmri5GTQ0LAROLtkj+MXYxcHEICuxklJq/fzwaRkJJ4f7qNHcIWlrjfcoQVxBYS6GCS
+        WHreCMRmE9CW+HPlPFi9iICkxMoNa5hABjGD1Gy9PB0owcEhLOAvcbUHrJ5FQFWi+cldsDm8
+        AjYSFye8hpovLzHz0ncwm1PAWuJp0ySoXVYSx0+cZYaoF5Q4OfMJC8hIZgF1ifXzhEDCzECt
+        zVtnM09gFJyFpGoWQtUsJFULGJlXMUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIER4yW
+        5g7G7as+6B1iZOJgPMQowcGsJMJbaKyaIsSbklhZlVqUH19UmpNafIhRmoNFSZz3QtfJeCGB
+        9MSS1OzU1ILUIpgsEwenVANTC0MR64O4xvWfuHv2ThXxS2nfcJD56oP1p1VrOdynbVkfkFpc
+        /u1ygGSWOGuW1YVfcqbCYudU1vtzS8212RrHK8u2Wi5ZfcL176bnMoNvOb8vv39LP6Gk8e1+
+        C71fvTxB0pHPeY6dP3AlIcN625Z/C7RuRR1I7cxQOm5XlKJwdvHZugrGo7rvZHZtDesoSTrT
+        eNHVeNH7nslMzGemy3ioGhjEt0QHdilPee9xs2GOzoNPgZZaPNY9bAIrTykUxM4tnhd/Wvej
+        /pJP4X8W8txWkXkXJ9To57g2/BLHg4gDG55czEuzuDZX+WrxqbO/Uj+ebK9ZIVRk2FzLy9ZZ
+        OIlz8ur53lt2f9nt7+EpekiJpTgj0VCLuag4EQCKYSbxBwMAAA==
+X-CMS-MailID: 20230331113147epcas2p12655777fec6839f7070ffcc446e3581b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230331113147epcas2p12655777fec6839f7070ffcc446e3581b
+References: <E224146D-058D-48B3-8788-A6BC3370044F@wdc.com>
+        <CGME20230331113147epcas2p12655777fec6839f7070ffcc446e3581b@epcas2p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dan Williams wrote:
-> RCDs (CXL memory devices that link train without VH capability and show
-> up as root complex integrated endpoints), hide the presence of the link
-> between the endpoint and the host-bridge. The CXL region setup/teardown
-> paths assume that a link hop is present and go looking for at least one
-> 'struct cxl_port' instance between the CXL root port-object and an
-> endpoint port-object leading to crashes of the form:
-> 
->     BUG: kernel NULL pointer dereference, address: 0000000000000008
->     [..]
->     RIP: 0010:cxl_region_setup_targets+0x3e9/0xae0 [cxl_core]
->     [..]
->     Call Trace:
->      <TASK>
->      cxl_region_attach+0x46c/0x7a0 [cxl_core]
->      cxl_create_region+0x20b/0x270 [cxl_core]
->      cxl_mock_mem_probe+0x641/0x800 [cxl_mock_mem]
->      platform_probe+0x5b/0xb0
-> 
-> Detect RCDs explicitly and skip walking the non-existent port hierarchy
-> between root and endpoint in that case.
-> 
-> While this has been a problem since:
-> 
-> commit 0a19bfc8de93 ("cxl/port: Add RCD endpoint port enumeration")
-> 
-> ...it becomes a more reliable crash scenario with the new autodiscovery
-> implementation.
-> 
-> Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hi Jorgen Hansen.
+Thank you for joining this topic and share your thoughts.
+I'm sorry for late reply due to some major tasks of our team this week.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>> On 24 Mar 2023, at 10.50, Kyungsan Kim <ks0204.kim@samsung.com> wrote:
+>> 
+>>> On 24.03.23 10:27, Kyungsan Kim wrote:
+>>>>> On 24.03.23 10:09, Kyungsan Kim wrote:
+>>>>>> Thank you David Hinderbrand for your interest on this topic.
+>>>>>> 
+>>>>>>>> 
+>>>>>>>>> Kyungsan Kim wrote:
+>>>>>>>>> [..]
+>>>>>>>>>>> In addition to CXL memory, we may have other kind of memory in the
+>>>>>>>>>>> system, for example, HBM (High Bandwidth Memory), memory in FPGA card,
+>>>>>>>>>>> memory in GPU card, etc.  I guess that we need to consider them
+>>>>>>>>>>> together.  Do we need to add one zone type for each kind of memory?
+>>>>>>>>>> 
+>>>>>>>>>> We also don't think a new zone is needed for every single memory
+>>>>>>>>>> device.  Our viewpoint is the sole ZONE_NORMAL becomes not enough to
+>>>>>>>>>> manage multiple volatile memory devices due to the increased device
+>>>>>>>>>> types.  Including CXL DRAM, we think the ZONE_EXMEM can be used to
+>>>>>>>>>> represent extended volatile memories that have different HW
+>>>>>>>>>> characteristics.
+>>>>>>>>> 
+>>>>>>>>> Some advice for the LSF/MM discussion, the rationale will need to be
+>>>>>>>>> more than "we think the ZONE_EXMEM can be used to represent extended
+>>>>>>>>> volatile memories that have different HW characteristics". It needs to
+>>>>>>>>> be along the lines of "yes, to date Linux has been able to describe DDR
+>>>>>>>>> with NUMA effects, PMEM with high write overhead, and HBM with improved
+>>>>>>>>> bandwidth not necessarily latency, all without adding a new ZONE, but a
+>>>>>>>>> new ZONE is absolutely required now to enable use case FOO, or address
+>>>>>>>>> unfixable NUMA problem BAR." Without FOO and BAR to discuss the code
+>>>>>>>>> maintainability concern of "fewer degress of freedom in the ZONE
+>>>>>>>>> dimension" starts to dominate.
+>>>>>>>> 
+>>>>>>>> One problem we experienced was occured in the combination of hot-remove and kerelspace allocation usecases.
+>>>>>>>> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
+>>>>>>>> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
+>>>>>>>> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
+>>>>>> 
+>>>>>>> That sounds like a bad hack :) .
+>>>>>> I consent you.
+>>>>>> 
+>>>>>>>> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
+>>>>>>>> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
+>>>>>> 
+>>>>>>> I once raised the idea of a ZONE_PREFER_MOVABLE [1], maybe that's
+>>>>>>> similar to what you have in mind here. In general, adding new zones is
+>>>>>>> frowned upon.
+>>>>>> 
+>>>>>> Actually, we have already studied your idea and thought it is similar with us in 2 aspects.
+>>>>>> 1. ZONE_PREFER_MOVABLE allows a kernelspace allocation using a new zone
+>>>>>> 2. ZONE_PREFER_MOVABLE helps less fragmentation by splitting zones, and ordering allocation requests from the zones.
+>>>>>> 
+>>>>>> We think ZONE_EXMEM also helps less fragmentation.
+>>>>>> Because it is a separated zone and handles a page allocation as movable by default.
+>>>>> 
+>>>>> So how is it different that it would justify a different (more confusing
+>>>>> IMHO) name? :) Of course, names don't matter that much, but I'd be
+>>>>> interested in which other aspect that zone would be "special".
+>>>> 
+>>>> FYI for the first time I named it as ZONE_CXLMEM, but we thought it would be needed to cover other extended memory types as well.
+>>>> So I changed it as ZONE_EXMEM.
+>>>> We also would like to point out a "special" zone aspeact, which is different from ZONE_NORMAL for tranditional DDR DRAM.
+>>>> Of course, a symbol naming is important more or less to represent it very nicely, though.
+>>>> Do you prefer ZONE_SPECIAL? :)
+>>> 
+>>> I called it ZONE_PREFER_MOVABLE. If you studied that approach there must
+>>> be a good reason to name it differently?
+>>> 
+>> 
+>> The intention of ZONE_EXMEM is a separated logical management dimension originated from the HW diffrences of extended memory devices.
+>> Althought the ZONE_EXMEM considers the movable and frementation aspect, it is not all what ZONE_EXMEM considers.
+>> So it is named as it.
+>
+>Given that CXL memory devices can potentially cover a wide range of technologies with quite different latency and bandwidth metrics, will one zone serve as the management vehicle that you seek? If a system contains both CXL attached DRAM and, let say, a byte-addressable CXL SSD - both used as (different) byte addressable tiers in a tiered memory hierarchy, allocating memory from the ZONE_EXMEM doesn’t really tell you much about what you get. So the client would still need an orthogonal method to characterize the desired performance characteristics. 
 
-> ---
->  drivers/cxl/core/region.c |   28 +++++++++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 808f23ec4e2b..52bbf6268d5f 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -134,9 +134,13 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
->  		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  		struct cxl_port *iter = cxled_to_port(cxled);
-> +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  		struct cxl_ep *ep;
->  		int rc = 0;
->  
-> +		if (cxlds->rcd)
-> +			goto endpoint_reset;
-> +
->  		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
->  			iter = to_cxl_port(iter->dev.parent);
->  
-> @@ -153,6 +157,7 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
->  				return rc;
->  		}
->  
-> +endpoint_reset:
->  		rc = cxled->cxld.reset(&cxled->cxld);
->  		if (rc)
->  			return rc;
-> @@ -1199,6 +1204,7 @@ static void cxl_region_teardown_targets(struct cxl_region *cxlr)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_dev_state *cxlds;
->  	struct cxl_memdev *cxlmd;
->  	struct cxl_port *iter;
->  	struct cxl_ep *ep;
-> @@ -1214,6 +1220,10 @@ static void cxl_region_teardown_targets(struct cxl_region *cxlr)
->  	for (i = 0; i < p->nr_targets; i++) {
->  		cxled = p->targets[i];
->  		cxlmd = cxled_to_memdev(cxled);
-> +		cxlds = cxlmd->cxlds;
-> +
-> +		if (cxlds->rcd)
-> +			continue;
->  
->  		iter = cxled_to_port(cxled);
->  		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
-> @@ -1229,14 +1239,24 @@ static int cxl_region_setup_targets(struct cxl_region *cxlr)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_dev_state *cxlds;
-> +	int i, rc, rch = 0, vh = 0;
->  	struct cxl_memdev *cxlmd;
->  	struct cxl_port *iter;
->  	struct cxl_ep *ep;
-> -	int i, rc;
->  
->  	for (i = 0; i < p->nr_targets; i++) {
->  		cxled = p->targets[i];
->  		cxlmd = cxled_to_memdev(cxled);
-> +		cxlds = cxlmd->cxlds;
-> +
-> +		/* validate that all targets agree on topology */
-> +		if (!cxlds->rcd) {
-> +			vh++;
-> +		} else {
-> +			rch++;
-> +			continue;
-> +		}
->  
->  		iter = cxled_to_port(cxled);
->  		while (!is_cxl_root(to_cxl_port(iter->dev.parent)))
-> @@ -1256,6 +1276,12 @@ static int cxl_region_setup_targets(struct cxl_region *cxlr)
->  		}
->  	}
->  
-> +	if (rch && vh) {
-> +		dev_err(&cxlr->dev, "mismatched CXL topologies detected\n");
-> +		cxl_region_teardown_targets(cxlr);
-> +		return -ENXIO;
-> +	}
-> +
->  	return 0;
->  }
->  
-> 
+I agree that a heterogeneous system would be able to adopt multiple types of extended memory devices.
+We think ZONE_EXMEM can apply different management algorithms for each extended memory type. 
+What we think is ZONE_NORMAL : ZONE_EXMEM = 1 : N, where N is the number of HW device type.
+ZONE_NORMAL is for conventional DDR DRAM on DIMM F/F, while ZONE_EXMEM is for extended memories, CXL DRAM, CXL SSD, etc on other F/Fs such as EDSFF. 
+
+We think the movable attribute is a requirement for CXL DRAM device. 
+However, there are other SW points we are concerning - implicit allocation and unintended migration - with CXL HW differences.
+So, I'm not sure if it is possible or good to cover the matters by combination of ZONE_MOVABLE and ZONE_PREFER_MOVABLE design.
+Let me point out again, we proposed the ZONE_EXMEM for the special logical management of extended memory devices.
+
+Specifically, for the performance metric, we think it would be handled not in the zone, but in a node unit.
 
 
+>This method could be combined with a fabric independent zone such as ZONE_PREFER_MOVABLE to address the kernel allocation issue. At the same time, this new zone could also be useful in other cases, such as virtio-mem.
+
+We agree with your thought. Along with adoption of CXL memory pool and fabric, virtualization SW layers would be added.
+Considering not only baremetal OS, but memory inflation/deflation between baremetal OS and a hypervisor, we think ZONE_EXMEM can be useful as the identifier for CXL memory.
+
+
+>
+>Thanks,
+>Jorgen
