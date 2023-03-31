@@ -2,73 +2,99 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C620C761AF
-	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 13:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89442C6FD18
+	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 13:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232496AbjCaNmq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 31 Mar 2023 09:42:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
+        id S232505AbjCaNod (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 31 Mar 2023 09:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbjCaNmn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 09:42:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773E9B459;
-        Fri, 31 Mar 2023 06:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5I4KJmBZJA/j7wJDLeyLVxjH0xULgErbT1T9v7RMqcs=; b=J/R1MzB9Wucb7Y6h+C/8TofVal
-        hbhTT7g+hEVNm07PTNpHSf2Du4f34BaxCv43dkaCIAFZNVLIAdvUgF+Lqcb9h/MwsXqmTMWnZyJgM
-        nDrGhAf8V4j8Np89cjjY8HFZxl8gSOL1hTkM4SH5yItR6AaN+g+O09BX+TUxpGjKY920nIXIuCe0m
-        SZRbZcHvbXlGqyhMcCA6uQ7a/95YZq1h/Mo7eLK2W3h4SkQM/4ppupkR59gw5PkRaqluZun0O3eBn
-        jAyDFK9BTcd2lY6+YqDbpuC+u+XBpI+2GCLkpoWg67lhHKo3hh7glr7YiRNqXMDJv6OBBtCzhwkBo
-        i7Sk8wIQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1piF1S-00BSqh-9A; Fri, 31 Mar 2023 13:42:30 +0000
-Date:   Fri, 31 Mar 2023 14:42:30 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     david@redhat.com, lsf-pc@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cxl@vger.kernel.org, a.manzanares@samsung.com,
-        viacheslav.dubeyko@bytedance.com, dan.j.williams@intel.com,
-        seungjun.ha@samsung.com, wj28.lee@samsung.com
-Subject: Re: RE: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Message-ID: <ZCbjRsmoy1acVN0Z@casper.infradead.org>
-References: <7c7933df-43da-24e3-2144-0551cde05dcd@redhat.com>
- <CGME20230331114220epcas2p2d5734efcbdd8956f861f8e7178cd5288@epcas2p2.samsung.com>
- <20230331114220.400297-1-ks0204.kim@samsung.com>
+        with ESMTP id S232294AbjCaNod (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 09:44:33 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D159765;
+        Fri, 31 Mar 2023 06:44:31 -0700 (PDT)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pp1j01dSZz6J7dD;
+        Fri, 31 Mar 2023 21:43:48 +0800 (CST)
+Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 31 Mar 2023 14:44:28 +0100
+From:   <shiju.jose@huawei.com>
+To:     <mchehab@kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>
+CC:     <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
+        <shiju.jose@huawei.com>
+Subject: [PATCH V6 0/4] rasdaemon: Add support for the CXL error events
+Date:   Fri, 31 Mar 2023 21:44:00 +0800
+Message-ID: <20230331134404.1315-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.35.1.windows.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230331114220.400297-1-ks0204.kim@samsung.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.234]
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 08:42:20PM +0900, Kyungsan Kim wrote:
-> Given our experiences/design and industry's viewpoints/inquiries,
-> I will prepare a few slides in the session to explain 
->   1. Usecase - user/kernespace memory tiering for near/far placement, memory virtualization between hypervisor/baremetal OS
->   2. Issue - movability(movable/unmovable), allocation(explicit/implicit), migration(intented/unintended)
->   3. HW - topology(direct, switch, fabric), feature(pluggability,error-handling,etc)
+From: Shiju Jose <shiju.jose@huawei.com>
 
-I think you'll find everybody else in the room understands these issues
-rather better than you do.  This is hardly the first time that we've
-talked about CXL, and CXL is not the first time that people have
-proposed disaggregated memory, nor heterogenous latency/bandwidth
-systems.  All the previous attempts have failed, and I expect this
-one to fail too.  Maybe there's something novel that means this time
-it really will work, so any slides you do should focus on that.
+Log and record the following CXL error records reported through the kernel
+trace events. CXL poison errors, CXL AER uncorrectable errors and CXL AER
+correctable errors.
 
-A more profitable discussion might be:
+Shiju Jose (4):
+  rasdaemon: Move definition for BIT and BIT_ULL to a common file
+  rasdaemon: Add support for the CXL poison events
+  rasdaemon: Add support for the CXL AER uncorrectable errors
+  rasdaemon: Add support for the CXL AER correctable errors
 
-1. Should we have the page allocator return pages from CXL or should
-   CXL memory be allocated another way?
-2. Should there be a way for userspace to indicate that it prefers CXL
-   memory when it calls mmap(), or should it always be at the discretion
-   of the kernel?
-3. Do we continue with the current ZONE_DEVICE model, or do we come up
-   with something new?
+Changes:
+V5 -> V6
+1. Following modification in the CXL poison due to
+   changes in the kernel patches for the cxl_poison.
+  - length -> dpa_length
+  - add field trace_type
+  
+V4 -> V5
+1. Add logging of device serial number for the CXL AER uncorrectable and
+    CXL AER correctable errors.
+2. Rebased.
+3. Updated the patches description.	
+
+V3 -> V4
+1. Modification for the changes in the kernel patches
+   a) https://lore.kernel.org/lkml/cover.1675983077.git.alison.schofield@intel.com/
+   b) https://lore.kernel.org/linux-cxl/63e5ed38d77d9_138fbc2947a@iweiny-mobl.notmuch/T/#t
+
+V2 -> V3
+1. Fix for the comments from Dave Jiang.
+
+RFC V1 -> V2
+1. Rename uuid to region_uuid in the log and SQLite DB.
+2. Rebase to the latest rasdaemon code.
+3. Modify to match the name changes of interface structures and
+   functions in the latest libtraceevent-dev, use in the rasdaemon. 
+
+ Makefile.am                |   7 +-
+ configure.ac               |  11 +
+ ras-cxl-handler.c          | 426 +++++++++++++++++++++++++++++++++++++
+ ras-cxl-handler.h          |  32 +++
+ ras-events.c               |  33 +++
+ ras-events.h               |   3 +
+ ras-non-standard-handler.h |   3 -
+ ras-record.c               | 215 +++++++++++++++++++
+ ras-record.h               |  55 +++++
+ ras-report.c               | 231 ++++++++++++++++++++
+ ras-report.h               |   6 +
+ 11 files changed, 1018 insertions(+), 4 deletions(-)
+ create mode 100644 ras-cxl-handler.c
+ create mode 100644 ras-cxl-handler.h
+
+-- 
+2.25.1
 
