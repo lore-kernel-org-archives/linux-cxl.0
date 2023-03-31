@@ -2,198 +2,174 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790AAC761A6
-	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 18:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85E0C76196
+	for <linux-cxl@archiver.kernel.org>; Fri, 31 Mar 2023 18:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232048AbjCaSLO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 31 Mar 2023 14:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
+        id S230112AbjCaSPf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 31 Mar 2023 14:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231454AbjCaSLO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 14:11:14 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F18683E6
-        for <linux-cxl@vger.kernel.org>; Fri, 31 Mar 2023 11:11:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680286273; x=1711822273;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=c6RpuVfvFir7eX+hr2W9VCJopiMnGKMkApp/FBNZFds=;
-  b=Qjlc+MASqz0x4NuyDG14qvc4D/5yV1EwNjIgbj3vh8/Bol3nPdw4ACsA
-   HB+VjogNoaNzB8tClMRrKS9kl0wX1zBqHvM0BMipLOXuH6GHrXhqCMWj8
-   MJc4tRzwrqQ2go0KD1CWf1xhQs38pgmoykNUjib18gaGxgwwcYQqTA0kZ
-   P7BSvSH97DrWvedYZkcO8r6GtVLSIcdA2316ti55QbFZjRtC8SKrtFUZ6
-   LmHQ6TUTWlHX/nJULNK3mLLANIhbSapk2tMuxM06PiSWCCmlYTVov8j2U
-   osvGbAtbVa9O6812vtAJPSw9P4fdbnfWDshG1ln3ld94Pg3KmpQ4cEHBA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="330071900"
-X-IronPort-AV: E=Sophos;i="5.98,307,1673942400"; 
-   d="scan'208";a="330071900"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 11:11:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10666"; a="859435889"
-X-IronPort-AV: E=Sophos;i="5.98,307,1673942400"; 
-   d="scan'208";a="859435889"
-Received: from bpedapat-mobl2.amr.corp.intel.com (HELO [10.212.71.212]) ([10.212.71.212])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 11:11:12 -0700
-Message-ID: <0986cce6-fcc7-8c47-32df-29a2b308b758@intel.com>
-Date:   Fri, 31 Mar 2023 11:11:11 -0700
+        with ESMTP id S230432AbjCaSPe (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 31 Mar 2023 14:15:34 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8ED1D2CE
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Mar 2023 11:15:32 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 02F288C1C73;
+        Fri, 31 Mar 2023 18:15:32 +0000 (UTC)
+Received: from pdx1-sub0-mail-a294.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 589848C2207;
+        Fri, 31 Mar 2023 18:15:31 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1680286531; a=rsa-sha256;
+        cv=none;
+        b=4RZMKfJcIZa1TtRP1KwCLsp+HTXPg4ooWHe8kSETVlF5ISYJIsFtvrWQ4U+MIBFEfkgzGI
+        JXdmZV2Cbpaj5pUpxYzw11kv33GGFYALRXqByj5waCV1q4kt3kv4loEka6pFk0eUT+PGP7
+        u7af8e1jBJMwDlWvm1mO5jfBRWhl0xcFO2o9ApUgvHyyi2ioSPAikbzgY7mOwJubCJr3bn
+        N7GCmAe5o2wrC6fLS+/BMYbP738OpOS0jDor67l9F9rAXqrI57bgQ1V6CEIlrEoZ29nkTE
+        kQvScDNWxvG58rIkkhI4RMc6t2CqmNsTtc19MHl4KW9q2SDjfzZdX2e0/3h5Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1680286531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=j3L24ZBsOLeH9lhPiSpkHV4mLNUGQbsSedwN/1vKxQk=;
+        b=wJe7+4TaO6y8rYj7SXzOktb5jB8G3TOdwEhfD/JDLtyVkctk0DmlJYXtxCy1Xc0VhXgB6I
+        QbrLwrCfLx/2smuqlKkf61W/rzpba0PZf4Wgj/GCqZHWcHk0mWzZJWGtQ7AVFk+/FSKLru
+        R8fTAENQTBp+3KqUHWFAFrAQeXJFdNspqKwGLZf95/TnzgwWasVZTApyXoxgOZMvpWGBZb
+        PSVodFY0lxc7wCaUjoByXycAWaRv1Ztr1AjycOsPaFIgLTDFn8oISZwk3/Y+LQMJY98PQn
+        0gG9UJAYOgM4lZDEjOdtwaw9LSdC9Pj3XOX5TYVQfH+PRiF72mtM/+mPdlJlag==
+ARC-Authentication-Results: i=1;
+        rspamd-5468d68f6d-cbbfh;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dragan@stancevic.com
+X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dragan@stancevic.com
+X-MailChannels-Auth-Id: dreamhost
+X-Robust-Vacuous: 2e12ef17570752d6_1680286531829_3437166632
+X-MC-Loop-Signature: 1680286531829:4057621066
+X-MC-Ingress-Time: 1680286531829
+Received: from pdx1-sub0-mail-a294.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.104.253.204 (trex/6.7.2);
+        Fri, 31 Mar 2023 18:15:31 +0000
+Received: from [192.168.1.31] (99-160-136-52.lightspeed.nsvltn.sbcglobal.net [99.160.136.52])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dragan@stancevic.com)
+        by pdx1-sub0-mail-a294.dreamhost.com (Postfix) with ESMTPSA id 4Pp7kT6YxqzMG;
+        Fri, 31 Mar 2023 11:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stancevic.com;
+        s=dreamhost; t=1680286531;
+        bh=j3L24ZBsOLeH9lhPiSpkHV4mLNUGQbsSedwN/1vKxQk=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=gR5MEgdb7Px/0UE4OozwE9efStked6+WaRQTWDR4U1cliSlvq4c8fmefT5KkTta3P
+         ruBCkvKldb6bmbfpr391EOGtH5ZfO/TN5hIDUyYqrUKp7X4aVrYzDhHLGWGIaDNpND
+         IWPnHmiLeemyof1oV5bsYCfFH8Up3XVZTkWTAtrJlCllUe/zjtXPbp6RHzeJBGDvDn
+         XC3Sce29HisGwUraxZtWH5i/d63Vb/mX9byyxaxXPgeJmL0x5lV5GqcGXacuChppRY
+         O8NnTfhahf0uQV2euhWLH6GLkCV7Bi3+G1cQpkvmPEh3NQaC+o/qkUS8J6QqnwzHZM
+         5OX+vJC5OACsw==
+Message-ID: <7447b9ed-f000-92f9-8044-afa65ef38ce5@stancevic.com>
+Date:   Fri, 31 Mar 2023 13:15:28 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH v5 01/12] cxl/memdev: Add support for the Inject Poison
- mailbox command
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [LSF/MM/BPF BoF] Session for CXL memory
 Content-Language: en-US
-To:     alison.schofield@intel.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>
-Cc:     linux-cxl@vger.kernel.org
-References: <cover.1679892337.git.alison.schofield@intel.com>
- <976c3fcb43f31c0b303709a14a044652bc267978.1679892337.git.alison.schofield@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <976c3fcb43f31c0b303709a14a044652bc267978.1679892337.git.alison.schofield@intel.com>
+To:     Zhu Yanjun <yanjun.zhu@linux.dev>, Wei Xu <weixugc@google.com>,
+        Yang Shi <shy828301@gmail.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>,
+        lsf-pc@lists.linux-foundation.org, linux-cxl@vger.kernel.org,
+        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Duen-wen Hsiao <duenwen@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jerome Glisse <jglisse@google.com>
+References: <F75E3DE0-CDF2-407A-9AF7-8EAE1D177559@bytedance.com>
+ <38D49DA9-3C57-4951-8CBA-5D2BB0C40D9C@bytedance.com>
+ <dd0d92fd-51dc-f5ac-26f9-7446118d654e@google.com>
+ <CAHbLzkpJa=HYH7OAdFO6WGYXtX1Yzhv9sFE+MGfyZrd3KvUv=A@mail.gmail.com>
+ <CAAPL-u9w2K6q4nF6+VKxafZYNr1WqsROYCQc6gqVS0BVXt0-Bg@mail.gmail.com>
+ <d733b3a4-757a-624f-18a4-ad27b1ef1f77@linux.dev>
+From:   Dragan Stancevic <dragan@stancevic.com>
+In-Reply-To: <d733b3a4-757a-624f-18a4-ad27b1ef1f77@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 3/26/23 10:03 PM, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
+On 1/25/23 09:04, Zhu Yanjun wrote:
+> 在 2023/1/24 8:57, Wei Xu 写道:
+>> On Mon, Jan 23, 2023 at 4:22 PM Yang Shi <shy828301@gmail.com> wrote:
+>>>
+>>> On Sun, Jan 22, 2023 at 9:51 PM David Rientjes <rientjes@google.com> 
+>>> wrote:
+>>>>
+>>>> On Fri, 6 Jan 2023, Viacheslav A.Dubeyko wrote:
+>>>>
+>>>>> CC: LSF/MM/BPF mailing list. Sorry, missed the list.
+>>>>>
+>>>>>> On Jan 6, 2023, at 11:51 AM, Viacheslav A.Dubeyko 
+>>>>>> <viacheslav.dubeyko@bytedance.com> wrote:
+>>>>>>
+>>>>>> Hello,
+>>>>>>
+>>>>>> I believe CXL memory is hot topic now. I believe we have multiple 
+>>>>>> topics
+>>>>>> for discussion. I personally would like to discuss CXL Fabric Manager
+>>>>>> and vision of FM architecture implementation. I am going to share 
+>>>>>> the topic
+>>>>>> in separate email. I would like to suggest a special session for 
+>>>>>> CXL memory
+>>>>>> related topics.
+>>>>>>
+>>>>>> How everybody feels about it?
+>>>>>>
+>>>>
+>>>> I think this makes a lot of sense, thanks for suggesting it.
+>>>>
+>>>> Should this be a BoF or just a normal topic proposal?  I assume that 
+>>>> there
+>>>> could be several different topics of interest all related to CXL.mem.
+>>>>
+>>>> Specifically interesting would be the division of work between the 
+>>>> kernel
+>>>> and userspace to manage memory placement on systems with locally 
+>>>> attached
+>>>> CXL.  And, further, what APIs userspace would have at its disposal for
+>>>> explicit optimization of this placement that would exist beyond what is
+>>>> available for NUMA.
+>>>
+>>> Yeah, in addition, how CXL hierarchy interacts with memory tiering may
+>>> be an interesting topic too.
+>>>
+>>>>
+>>>> I assume we might also want to chat about CXL 2.0 extensions that 
+>>>> would be
+>>>> useful, especially for cloud providers.
+>>>>
+>>>> I'd be happy to join in any of the proposals for these topics, just 
+>>>> let me
+>>>> know!
+>>>
+>>> +1 for me.
+>>>
+>>
+>> I am also interested in these discussions.
 > 
-> CXL devices optionally support the INJECT POISON mailbox command. Add
-> memdev driver support for the mailbox command.
-> 
-> Per the CXL Specification (3.0 8.2.9.8.4.2), after receiving a valid
-> inject poison request, the device will return poison when the address
-> is accessed through the CXL.mem bus. Injecting poison adds the address
+> +1， I am interested in this.
 
-s/bus/protocol/?
++1, also interested in cloud aspects
 
-> to the device's Poison List and the error source is set to Injected.
-> In addition, the device adds a poison creation event to its internal
-> Informational Event log, updates the Event Status register, and if
-> configured, interrupts the host.
-> 
-> Also, per the CXL Specification, it is not an error to inject poison
-> into an address that already has poison present and no error is
-> returned from the device.
-> 
-> If the address is not contained in the device's dpa resource, or is
-> not 64 byte aligned, return -EINVAL without issuing the mbox command.
-> 
-> Poison injection is intended for debug only and will be exposed to
-> userspace through debugfs. Restrict compilation to CONFIG_DEBUG_FS.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Just a NIT below. Otherwise,
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   drivers/cxl/core/memdev.c | 55 +++++++++++++++++++++++++++++++++++++++
->   drivers/cxl/cxlmem.h      |  6 +++++
->   2 files changed, 61 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index f26b5b6cda10..3b3ac2868848 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -213,6 +213,61 @@ ssize_t cxl_trigger_poison_list(struct device *dev,
->   }
->   EXPORT_SYMBOL_NS_GPL(cxl_trigger_poison_list, CXL);
->   
-> +static int cxl_validate_poison_dpa(struct cxl_memdev *cxlmd, u64 dpa)
-> +{
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +
-> +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-> +		return 0;
-> +
-> +	if (!resource_size(&cxlds->dpa_res)) {
-> +		dev_dbg(cxlds->dev, "device has no dpa resource\n");
-> +		return -EINVAL;
-> +	}
-> +	if (dpa < cxlds->dpa_res.start || dpa > cxlds->dpa_res.end) {
-> +		dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
-> +			dpa, &cxlds->dpa_res);
-> +		return -EINVAL;
-> +	}
-> +	if (!IS_ALIGNED(dpa, 64)) {
-> +		dev_dbg(cxlds->dev, "dpa:0x%llx is not 64-byte aligned\n", dpa);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int cxl_inject_poison(struct device *dev, u64 dpa)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_mbox_inject_poison inject;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	int rc;
-> +
-> +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-> +		return 0;
-> +
-> +	down_read(&cxl_dpa_rwsem);
-> +	rc = cxl_validate_poison_dpa(cxlmd, dpa);
-> +	if (rc)
-> +		goto out;
-> +
-> +	inject = (struct cxl_mbox_inject_poison) {
-> +		.address = cpu_to_le64(dpa)
-> +	};
-
-Why not inject.address = cpu_to_le64(dpa);? Uneless there are more 
-assignments coming in later patches?
-
-DJ
-
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_INJECT_POISON,
-> +		.size_in = sizeof(inject),
-> +		.payload_in = &inject,
-> +	};
-> +	rc = cxl_internal_send_cmd(cxlmd->cxlds, &mbox_cmd);
-> +out:
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, CXL);
-> +
->   static struct attribute *cxl_memdev_attributes[] = {
->   	&dev_attr_serial.attr,
->   	&dev_attr_firmware_version.attr,
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 5febaa3f9b04..527efef2d700 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -602,6 +602,11 @@ struct cxl_mbox_poison_payload_out {
->   #define CXL_POISON_SOURCE_INJECTED	3
->   #define CXL_POISON_SOURCE_VENDOR	7
->   
-> +/* Inject & Clear Poison  CXL 3.0 Spec 8.2.9.8.4.2/3 */
-> +struct cxl_mbox_inject_poison {
-> +	__le64 address;
-> +};
-> +
->   /**
->    * struct cxl_mem_command - Driver representation of a memory device command
->    * @info: Command information as it exists for the UAPI
-> @@ -678,6 +683,7 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
->   ssize_t cxl_trigger_poison_list(struct device *dev,
->   				struct device_attribute *attr, const char *buf,
->   				size_t len);
-> +int cxl_inject_poison(struct device *dev, u64 dpa);
->   
->   #ifdef CONFIG_CXL_SUSPEND
->   void cxl_mem_active_inc(void);
+--
+Peace can only come as a natural consequence
+of universal enlightenment -Dr. Nikola Tesla
