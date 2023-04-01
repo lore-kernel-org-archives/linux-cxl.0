@@ -2,201 +2,223 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF1C77B60
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B71EC761A6
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 19:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234814AbjDDTRO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Apr 2023 15:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46840 "EHLO
+        id S232142AbjDDTnZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 Apr 2023 15:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231477AbjDDTRN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 15:17:13 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A9A35A6;
-        Tue,  4 Apr 2023 12:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680635832; x=1712171832;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=RL/Oa2ge8QEbGqtMVn4G/4bNJFmAE1eYb/6bmQFb8Fg=;
-  b=RG4qemh2l6yXsPduFyQybJPDCxF6Xw2cDk8O0mV0L0hucNdUoG/T11gb
-   IiyuzEJYlpxfTybreFLSJ3AIbFiuT2o6rbFmYltBmjw4j6ek6stWws63A
-   yhLX5CqWfaV1+1r3EZtB28Vh1eN5Md8sdX+51WisU1A3e4rOKWwuD0fu+
-   KuyU2VXByoNMdrEasxMUCQm6/cVgJwzarZ1nURO9Yi7Bk0j6KiXm1e/IV
-   ldmLhKNNc3pm0tGDyJlt+VmBrb2RaWpzXOyvQS5LDhoGkH1Qt2QPWHOrj
-   11BkO/D+7LQ0n2udiB4EVmJktghHb/L2+wUwRgCRKQIYonrR8PVMTqL1N
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="339773633"
-X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
-   d="scan'208";a="339773633"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 12:17:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="775763256"
-X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
-   d="scan'208";a="775763256"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Apr 2023 12:17:12 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 4 Apr 2023 12:17:11 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Tue, 4 Apr 2023 12:17:11 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Tue, 4 Apr 2023 12:17:11 -0700
+        with ESMTP id S231691AbjDDTnY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 15:43:24 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2053.outbound.protection.outlook.com [40.107.244.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA28E131;
+        Tue,  4 Apr 2023 12:43:22 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gP/8gbY30yC9BqeVEJkW+kBnZk0/hEYp32vfATbukHCEmYKCpv8KUiWOrs39JlDco3nZlPgv007vIjUitUxOMBFL0CPuNzLX1sME3ErgR81kkb+rajWLH9cCpZQ+8vuWClxfhJ3zF3VM1StaqRJ/v4liCsik6dhbhYPZAzVWO3UyLMZ/3K3ehx2WhSUcUX78vewOYzpAMmiQVL/NYdwRZC1nqCcf68V+aOOBhn5VMgVNifeZs30tDQI09R3+UVqnh9Yb+DN5WU4Zdf1jwNrqU15h8yh39joDDO9mBSpb45qKO9bz+phtz/n9X8B7j+2gCz1nG5Uem1TWm31/arss1Q==
+ b=YHuLWPB3XV7IRqgMFGJLqLmNFL00uglj+8/xTre2OTGe9cilP4ZAHHIOwOPdKv+gklOuPQ2VyuJ5sInWhVHi3PlAqXl+825zhUKbDE7AFdB9p57IPGlSRx57LNJW1du2644lBaO63s+PPjV0lokV6C4kwkKiD0+ZB7Y3RUmSJCEmvrI4dymfvClniGXT2SR7U+DNFTYKIEYaLynEMVLabjE8FCMUujdlq+ZpGqgA89hpIBdUJYqf3ZLEWkzcEDx1czCjJbPwVe6C0vaCYoFehK/Ftn0ErublC0npuLV9ENrF2EDywWHoY4/wmOzZbYyoPo8Amqg9W5qdcA8Ry7QCMA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dfAP8xYOhvbB9b/Ge6XRsu7d0zfWJCmSbpiPJQ20apg=;
- b=LzI+LY4Xomm9v478Gf5Ph68iUmIxsAWm/ih4BjjFiRRd7E2Tzhlt2jMz6TNbdtjwQMgvDhuo6aHLKZ/06QrBqe8e+4ZcXDirmNZuqtqmzIVqmK8nDvYrWsdZsZwF7BIs4xbH07j79RvzlyPTNU61kmBzALIX8kdRJ+0xp2BSuC0HQRPStgMcVRssJwMgK8GywZMnNGaLTCfCJHGFO8h6JMe0gBqCSwLOZvbn3AKKgn866vHoiWY4Y8juMYTL5kg3Agg1J7W1ZWCnaoSU5m2EL+jPrk8T48ahBQuWLq4zAFoGn4HkhOszaAGPlPo5mDs4HVjjpm2Y9iZIvPyJ9QBRKg==
+ bh=Qapz4nlM4pl+FdBQf7W7o22a92AmaV6teirFDT0ekas=;
+ b=oCahE46IbI1TmupW7b/ge02VFuBe2R31wRjRDx+RG2OLd5pMWfE5JFpnZUV5dW47Ix+Ugq0j83aO24X5uPZxMwuno7RI6dh5+ZWw7jGafcLCIsPc9uOs8lVRRDTxLFZMoseg64kQaXkalZEm50oPDxeaCHa11lY5+QvcmbGqP4jkm/UDKonQjop4M3ScLhHJhzIp7KyC/Q+eWazRRL/Ji57Q/jukSc5yOPK2Pdk7Beny9+dB7qbPkA8cnOC8Gll26gRhUF7FzDbqEYpZhjpVr4XgYJMkac/2KqLcVNmC2LCIi/x5mldTkC+ZvocEaxr9sVIgPoI7tz9cuEAbHA7+Kw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qapz4nlM4pl+FdBQf7W7o22a92AmaV6teirFDT0ekas=;
+ b=sZOvrYLaSUbP2ugRbT83rpdK1O831Gcr1m31R8Q2ZUnsziK3BPdKMqb2lcuqLYWl7L7yEvuH5w5LoIN4pagcfUGE5cJ8a/chFwSQuKTNp7WI0P8ipax0QTS7X1KSJQ8xegt4OShoj4uCki7rgpfKZIjoPfRHfmJQyxuCNcXltWA=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB4797.namprd11.prod.outlook.com (2603:10b6:a03:2d4::24) with
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by SA0PR17MB4223.namprd17.prod.outlook.com (2603:10b6:806:80::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35; Tue, 4 Apr
- 2023 19:17:03 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6254.033; Tue, 4 Apr 2023
- 19:17:03 +0000
-Date:   Tue, 4 Apr 2023 12:17:01 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: RE: [PATCH v4 3/5] cxl/pci: Find and register CXL PMU devices
-Message-ID: <642c77ad5f0d_21a8294fe@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
- <20230330164556.31533-4-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.22; Tue, 4 Apr
+ 2023 19:43:19 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::7b97:62c3:4602:b47a]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::7b97:62c3:4602:b47a%5]) with mapi id 15.20.6254.035; Tue, 4 Apr 2023
+ 19:43:19 +0000
+Date:   Sat, 1 Apr 2023 07:51:12 -0400
+From:   Gregory Price <gregory.price@memverge.com>
+To:     "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+Cc:     Adam Manzanares <a.manzanares@samsung.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "seungjun.ha@samsung.com" <seungjun.ha@samsung.com>,
+        "wj28.lee@samsung.com" <wj28.lee@samsung.com>
+Subject: Re: [External] RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM
+ changes for CXL
+Message-ID: <ZCgasNpBjtQje8k+@memverge.com>
+References: <ZB/yb9n6e/eNtNsf@kernel.org>
+ <CGME20230331114526epcas2p2b6f1d4c8c1c0b2e3c12a425b6e48c0d8@epcas2p2.samsung.com>
+ <20230331114525.400375-1-ks0204.kim@samsung.com>
+ <ZCvgTA5uk/HcyMAk@kernel.org>
+ <20230404175754.GA633356@bgt-140510-bm01>
+ <ZCgMlc63gnhHgwuD@memverge.com>
+ <D0C2ADD0-35C4-4BE4-9330-A81D7326A588@bytedance.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230330164556.31533-4-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: BY5PR04CA0002.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+In-Reply-To: <D0C2ADD0-35C4-4BE4-9330-A81D7326A588@bytedance.com>
+X-ClientProxiedBy: SJ0PR03CA0209.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::34) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB4797:EE_
-X-MS-Office365-Filtering-Correlation-Id: c9b3c412-ba0a-4e18-d855-08db35412c1b
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SA0PR17MB4223:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5ad2f421-64d8-4c88-62b1-08db3544d74c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: w1eDft7okUI4UnLMXeBoP6rQOS4bYjlVSvf3i+6ASLUTzlePOar/z++uYDMj0h2oGHl3YzR4snfrVaYIzEKhLMxszXCG2VhRVzwwegZ0xZ/chiGZ4HVoIIi/gEwT7UtiFsfifCVQqSBaPY2wWN1JeFdvJbNUFzu3uXFnHZZqAKbrQjkGVDzVInowkPXcFj3ykjnkev3TD/6NsAgMQiWfdKmhn38dCsB/7wd7LG0UlCVk6TJjD7/UsuEQXRWVtjPdcYpwLf46Jx0Bj9Kk5ZZQ9du5Ib7PyQ+AhqnSgLco/YfcRlkew6+avWALhGArijiMwqHSatfdvz+fzaOEk6R9GHBILhMdo9igqMoIR83FArziDN9Iijyvp6xbMYXl0cf1Ca0dOoDT82TKeeH+nFj+H6e3uLjTAzdxOz8I5B0niycR/uAwvcyJAGUziPSsyHkZMannOBlZ5XgxSWPUn6BEV+NYPidzgwkJhsTIGm0eT04xsGu8fP17JW1dZZtQqlkOQPLx8vPiKn1JGgAbUQ2QdxV4sAVb1rjCGS3j/AcFNPICINxCT6xatSjIoReCoB3d
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(376002)(346002)(366004)(451199021)(186003)(26005)(8676002)(66946007)(83380400001)(6512007)(478600001)(41300700001)(316002)(54906003)(6506007)(4326008)(82960400001)(66476007)(66556008)(6486002)(38100700002)(110136005)(86362001)(7416002)(5660300002)(2906002)(9686003)(8936002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: q2ixuFaThYJKTE1BHtBsUp3oWpIdMS4HQj8MlAuxRG9uHmzkvLIVaWovd1OJ6H3bdY7gwhmD2CHIUX6pG3AW3jpRve/u548V/IZKeFRbj+3aep6yAwEqy+1SblJbDURzy5u2DDsILh0ZG1LxAOELOKqG8xOL3KgN8/5OCnEDhq3b4bfsY3qBgyCQ2IhvgiULuz1FaWWRBMWnuVQmoo38LQgN1yFlJhLcSpPPqUQMhrdF5h4k+AhdDc3C9gNEkSUkXlNORu91TfMFzUpGD63lJiz3oWmPuL1eWxeqvRszZvs5na2VjDUIyk2hwD/V/OLHN9E2hi0aQKtayd5QLx6GVXIB6An0LyvvPjDlByR/1s3Ourj6D0gkXA0T1jqZgw8/a0a/1+uAkvaoAg+Pwyl4iC2dt+cRZD7y8J5IS2ljVGuHhffMQRSm827bSRdRAlZLvrZFnPcoMuO4m1Exm46R5kXUr2CoTjL3K068yooGaIIR3JZ4sEOGDzYC2Hq60qJ2ZwLXZiWPfGDKvIzLVKJ85ALe1OIdhFliEKHaYL1xqW2lFSD6Lf0Mzpo6Rn+Gdq1P
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(39850400004)(366004)(396003)(346002)(376002)(451199021)(4326008)(8676002)(6916009)(66476007)(66556008)(41300700001)(8936002)(86362001)(2906002)(5660300002)(7416002)(44832011)(478600001)(36756003)(66946007)(6486002)(6512007)(53546011)(6666004)(26005)(6506007)(83380400001)(186003)(316002)(54906003)(2616005)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?plmCYOQt92MC3wnMPMBQg0sURb6XHK9Y15rbnublEDvEEGGPQUVSTnqUHQ9Z?=
- =?us-ascii?Q?4lHrRLmMIatVTI5+65xDuGRqriL0jDs+IaObrinXc7erkb+bVUmkHPkp9umH?=
- =?us-ascii?Q?p6aC49nEKvrZi4Ulqi2PwttHgcNgsugJ+KYEz56LotbklDNuRa7HGcLPVDbv?=
- =?us-ascii?Q?u3Ozj4aGjt2vNP4h7uLWBgF3iCxKewXVkg0HqCzu++TTGNSuxP6PiZ0eyZd8?=
- =?us-ascii?Q?WV8lPwAjouZtWso9+h4hfOQedFPpsRGDK97nWye+7S5EykJezqXEcD4dz+M5?=
- =?us-ascii?Q?zcSSVXvquiXytI2GlnkGljDipQchO80eEM5HHgLwUORzt68zeZ+pkMwzrKC1?=
- =?us-ascii?Q?Ih+sP7/ylNYFVVTRi9iUk2FtGSBXH2uiumSd85wuSpiHmRvbN64tvDVMyGY6?=
- =?us-ascii?Q?2T0Umr3KSQI5JfsFX1u+V8BWvVYcv3d07EwIcWkE73YKsrwcJU9cd1WCY0NC?=
- =?us-ascii?Q?43cFNHif51Vhq98iWNygBURqhwxHQMJnN28lQt+ROwNJKTk2uezEHhHOnYZH?=
- =?us-ascii?Q?XPUXEAlebVubBr9zHxYoaab9uM1hleZB09aVfGZR5P3yQ8wR/zmVESarNsVI?=
- =?us-ascii?Q?4yC13uGilAbnVBXGWhE+qKtAX52VsllagGXaLtXWQEmzqAtFnbh6uoNKoOco?=
- =?us-ascii?Q?eHvwBODz+qnlkjIRwMDLkqMAKrNqyi2J1TOTaoleeY2JTTwCcuPoxePDhA5A?=
- =?us-ascii?Q?T5V2OLYH76bOnBm8DI1CJKM1C7Md71CcmIA7q5C1iv1JjtHVlveBm3006zSy?=
- =?us-ascii?Q?xXvNwx9EO1GDxufWTj0GPQgckaspqL8iRpcZbmckMjUosOL3BSjv9FzyCnWi?=
- =?us-ascii?Q?TSDzDqMx3xh5LKe7qEZ6+vG0eHUYm6DZannrMaEcu0e09o4pLQGm5wluQMIZ?=
- =?us-ascii?Q?nzyWC0Dwv2I4jh2cyLIT+BpyWSqKro+Y+dEdsavtRB+AvEVXPhR0HQ+AhoGX?=
- =?us-ascii?Q?eGLbZI8RhNV8pYuPRKZ5D4dDgjYd63kQbxcFiJZ+W5pa4emekL3CzIkwxiyy?=
- =?us-ascii?Q?Bi7ixD6EkOi2OlKh7GX6CNjKUePwM3cO44XO1L1qrI2KTpP5/IUaIRjIiZ9M?=
- =?us-ascii?Q?6QXES3RgFE1NhmHcjR+1S1Hjb/gO4Ay+YZa2yOQfOpni65xdwhzPrZepSU9n?=
- =?us-ascii?Q?MJ5A44A/BLmExknMGFVXYm53w5yXP+Jd27EtYo2ePb35DqrRV3FIIypVslwm?=
- =?us-ascii?Q?pAodAzx2tTf1yD3l1kVbEse+x6R3gsuyRAG+9/hWP8ZiNRbaOEn4+YVWoxiu?=
- =?us-ascii?Q?TINmdxwH9QFAc9uLpYpZpNDGq8LPHTXU2vn+08QOUrqKb04yqmEX8TaZ8R0M?=
- =?us-ascii?Q?I1FOILUgn0sLYwx2MCFZVSSXR0AKyNKeNuZCRdGv20n9NRgruVdPmm1F8UWu?=
- =?us-ascii?Q?jNYpX5gbOmsA9yF+YOIEFGlrQwaQ1FDi1mog1dk6nVn3vsmjTD89V28x1M74?=
- =?us-ascii?Q?PJgtL42ReJRnpuK+leALtC0PRdlTAjMqnV0iyfPpgjOuUeqfJnJ3udyAaQTi?=
- =?us-ascii?Q?W7ZCQZvy6yusl1qS4h1fIZAO726H5JLTWUGm3j1POFj9dcE6pY8MAsyq/HE3?=
- =?us-ascii?Q?CHGmxusV3Iof7e6H83RbuYrMFsi/SR4E63VW4SLtBmPDSZZZ7hKPhmkn7oWH?=
- =?us-ascii?Q?nA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9b3c412-ba0a-4e18-d855-08db35412c1b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kIVB/T8Dy6ZKtEZvbEHJETZW+9xsWA3yY5m7va10oSM7ftF//lvQMvIBmR+O?=
+ =?us-ascii?Q?DXgPPCk0bVvW1qJi+l7ZgTjFMu8FPMnSgMCwg1Ck++Iaxf0Z88vS8CO5Ve61?=
+ =?us-ascii?Q?UR/bi3mY84NcKcWOiXUKjPJVHR9Tl6W97/HDe/8KpOu8uljPPhhi70TgXe+n?=
+ =?us-ascii?Q?8wipxcHIvBsivo2XXVX27BQLdyOnKbIdRcvSpYFhoxu2b0pDNp2Go0zRzefn?=
+ =?us-ascii?Q?iguIsWierERWJftNbJeA/dWRZFs3OdqEn3LuO6maVJnhnpBrQN8gdFsy6upC?=
+ =?us-ascii?Q?KHNMXv9zdeRF38no8cjJMS6T/wJwJNSOghaQwXO0tHI4HaO+csOJxwfHQdiU?=
+ =?us-ascii?Q?saG+2EbBxPTN518YT/ik3RuEIMSvh2952r0rt4s6UufaR5VtBjoNaCE7mLCd?=
+ =?us-ascii?Q?5mPHDFXY8sNXOpOZF5CYmfecY+Av+tnkZzSY3K2mt9YVJcD4T5gYO4yBsNBV?=
+ =?us-ascii?Q?BHumAQ+iFnHBjVjASwqNR8Nr5QDE9KM0gmXwtPAkpcCdbhxqPgQyCtFscWuG?=
+ =?us-ascii?Q?OHCUNbMpQ1V50Obe6MTXNcw+SUo0NeileuErBVaNzQxHgN1P+pElzZOtdF2D?=
+ =?us-ascii?Q?qOqULrSXkntqpuAVfFecXf26XETW4JoSjDDs4cT/60RvENi9bL1ojNp6NLwW?=
+ =?us-ascii?Q?2qTRRn0o3scPRWNaYVsMq0rI3dm698CHyN148MnKFb7YZn6q1rS0VrmhO0Vy?=
+ =?us-ascii?Q?aeoGFEMS1C8irMZFEzzDX4vJr1Vhu5KTcbWEz1cAhhSl6mufjK7dLADjB2qC?=
+ =?us-ascii?Q?m8/lIf/96G75G+k437AJRDlcSz9uQ4U8T3t7+J2fa99iO9i59TlgkXFa++fj?=
+ =?us-ascii?Q?e629kpscbagYpkwkeZse12f2svjHC2DbbVxsRbUF+X2FK8P/8dXwPy0TjnyK?=
+ =?us-ascii?Q?C/UNnjDIH0bcREhUPWRnyUbMbX2FP2Ezm7nnDt/r9eXaxRwQGuyaTuyGuqS0?=
+ =?us-ascii?Q?F6VILSU5mdT1jqn0xibXTl3Vc3kD/vqlwZuCoPPoOLk9fYvL+JnR3wcadg6r?=
+ =?us-ascii?Q?mutR7LgSIV1cQCPIkgOeGqTToqOLPhtLBxPIyCjmh1MhcYHkTrBU+iQ7Mvpm?=
+ =?us-ascii?Q?OaAxwMNmKeOeHmd9V+yBoIdcCdkahICe0v+iwcqhfMb832W2TOUgxM4jLyHQ?=
+ =?us-ascii?Q?3au4IvJ14E4cNiKbUfAAwuwVlhgVxwwkMxc7TcfwC5tWrF9UTOttMzwp7Kip?=
+ =?us-ascii?Q?7obgsDqng++54MM4y+brvBaBa/Dn6wiGdTyurDWBqi3UY2LU1kmnxRROVU4t?=
+ =?us-ascii?Q?2vrZyiONeJ+tZRfBX1yqQVO3j03EjG0FiiJC2wsaodUVoZfwUJXC7gJTEW9Q?=
+ =?us-ascii?Q?heMd+yC3bE6cKKTSgVQU2btWgvGuzlgkDU49VbdL4LAVONSCSR/djFwE7MUA?=
+ =?us-ascii?Q?NsW+YtfFF6+xLbodTkuab6x5qvye+pm8EfPBNZnUsqDvwKATB3y+85o9QLhF?=
+ =?us-ascii?Q?DYClPUdItrKB9NIbF6JECwPoJrOpKnNTOCUrhT2U3MTHdv1XIPrgFq11qW5+?=
+ =?us-ascii?Q?5I0ha1UYNJxjhtj/SHz+H/wY2MRb8mpwe//x40yw12FrpFSNfUbwxV4ZQZXZ?=
+ =?us-ascii?Q?7FdK1OfPrQhIVW3VOS/7J2olfvJQiIUXRslpjjwrnk2cZFoi6Asaff1hTKrQ?=
+ =?us-ascii?Q?FQ=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ad2f421-64d8-4c88-62b1-08db3544d74c
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 19:17:03.5437
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 19:43:19.1919
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kFpBGLESnGZ8PSmpVFHi863x2gPXHwc9tnuffqP+fURnaYR3U2r3qJAHqNkvnz+ldZk01UCzcOhAWNfLj7dwhfR3bzq8t9xzNFR9MH7+T4Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4797
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0aH3clZFPWanMivNkWJzyUJvOBJiygMYfTkIBynzmu7y4XibK0hRohes6EC2EZLJOjKdI8Qh1zHDqi6mpAp3dFZuS2CF8fCJFIVDMu3TY0U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR17MB4223
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> CXL PMU devices can be found from entries in the Register
-> Locator DVSEC.
+On Tue, Apr 04, 2023 at 11:59:22AM -0700, Viacheslav A.Dubeyko wrote:
 > 
-> In order to register the minimum number of IRQ vectors necessary
-> to support all CPMUs found, separate the registration into two
-> steps.  First find the devices, and query the IRQs used and then
-> register the devices. Between these two steps, request the
-> IRQ vectors necessary and enable bus master support.
+> 
+> > On Apr 1, 2023, at 3:51 AM, Gregory Price <gregory.price@memverge.com> wrote:
+> > 
+> > On Tue, Apr 04, 2023 at 05:58:05PM +0000, Adam Manzanares wrote:
+> >> On Tue, Apr 04, 2023 at 11:31:08AM +0300, Mike Rapoport wrote:
+> >>> 
+> >>> The point of zswap IIUC is to have small and fast swap device and
+> >>> compression is required to better utilize DRAM capacity at expense of CPU
+> >>> time.
+> >>> 
+> >>> Presuming CXL memory will have larger capacity than DRAM, why not skip the
+> >>> compression and use CXL as a swap device directly?
+> >> 
+> >> I like to shy away from saying CXL memory should be used for swap. I see a 
+> >> swap device as storing pages in a manner that is no longer directly addressable
+> >> by the cpu. 
+> >> 
+> >> Migrating pages to a CXL device is a reasonable approach and I believe we
+> >> have the ability to do this in the page reclaim code. 
+> >> 
+> > 
+> > The argument is "why do you need swap if memory itself is elastic", and
+> > I think there are open questions about how performant using large
+> > amounts of high-latency memory is.
+> > 
+> > Think 1us-1.5us+ cross-rack attached memory.
+> > 
+> > Does it make sense to use that as CPU-addressible and migrate it on
+> > first use?  Isn't that just swap with more steps?  What happens if we
+> > just use it as swap, is the performance all that different?
+> > 
+> > I think there's a reasonable argument for exploring the idea at the
+> > higher ends of the latency spectrum.  And the simplicity of using an
+> > existing system (swap) to implement a form of proto-tiering is rather
+> > attractive in my opinion.
+> > 
+> 
+> I think the problem with swap that we need to take into account the additional
+> latency of swap-in/swap-out logic. I assume that this logic is expensive enough.
+> And if we considering the huge graph, for example, I am afraid the swap-in/swap-out
+> logic could be expensive. So, the question here is about use-case. Which use-case could
+> have benefits to employ the swap as a big space of high-latency memory? I see your point
+> that such swap could be faster than persistent storage. But which use-case can be happy
+> user of this space of high-latency memory?
+> 
+> Thanks,
+> Slava.
+> 
 
-It's not clear why this patch is talking about irq vectors and bus
-mastering when there is no irq query/setup logic in this patch?
+Just spitballing here - to me this problem is two fold:
 
-> Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
-> follow a similar pattern the number of vectors necessary is known
-> before any parts of the driver stack rely on their availability.
+I think the tiering use case and the swap use case are exactly the same.
+If tiering is sufficiently valuable, there exists a spectrum of compute
+density (cpu:dram:cxl:far-cxl) where simply using far-cxl as fast-swap
+becomes easier and less expensive than a complex tiering system.
 
-With the new pci_msix_alloc_irq_at() it's not clear that this 2 step
-approach is required, right?
+So rather than a single use-case question, it reads like a tiering
+question to me:
 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> v4:
-> - No change.
-> ---
->  drivers/cxl/core/Makefile |  1 +
->  drivers/cxl/core/core.h   |  1 +
->  drivers/cxl/core/cpmu.c   | 72 +++++++++++++++++++++++++++++++++++++++
+1) Where on the 1us-20us (far cxl : nvme) spectrum does it make sense to
+   switch from a swap mechanism to simply byte-addressable memory?
+   There's a point, somewhere, where promote on first access (effectively
+   swap) is the same performance as active tiering (for a given workload).
 
-A quibble with the naming, I prefer:
+   If that point is under 2us, there's a good chance that a high-latency
+   CXL swap-system would be a major win for any workload on any cloud-based
+   system.  It's simple, clean, and reclaim doesn't have to worry about the
+   complexities of hotpluggable memory zones.
 
-drivers/cxl/core/pmu.c
 
-...since "cxl" is in the directory path. Also, usages of cpmu
-already have a cxl in their symbol names, so just s/cpmu/pmu/ throught.
-The usage of CPMU_ for register macros would seem be more clear, or at
-least more consistent, as CXL_PMU_ like the other register offset
-definitions in cxlpci.h.
+Beyond that, to your point, what use-case is happy with this class of
+memory, and in what form?
 
->  drivers/cxl/core/port.c   |  2 ++
->  drivers/cxl/core/regs.c   | 16 +++++++++
->  drivers/cxl/cpmu.h        | 56 ++++++++++++++++++++++++++++++
+2) This is likely obscurred by the fact that many large-memory
+   applications avoid swap like the plague by sharding data and creating
+   clusters. So it's hard to answer this until it's tested, and you
+   can't test it unless you make it... woo!
 
-drivers/cxl/pmu.h
+   Bit of a chicken/egg in here.  I don't know that anyone can say
+   definitively what workload can make use of it, but that doesn't mean
+   there isn't one.  So in the spectrum of risk/reward, at least
+   enabling some simple mechanism for the sake of exploration feels
+   exciting to say the least.
 
->  drivers/cxl/cxl.h         | 14 ++++++++
->  drivers/cxl/cxlpci.h      |  1 +
->  drivers/cxl/pci.c         | 25 +++++++++++++-
->  9 files changed, 187 insertions(+), 1 deletion(-)
 
-Other than those minor issues above, this looks good to me, with those
-fixed up.
+More generally, I think a cxl-swap (cswap? ;V) would be useful exactly to
+help identify when watch-and-wait tiering becomes more performant than
+promote-on-first-use.  If you can't beat a simple fast-swap, why bother?
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Again, I think this is narrowly applicable to high-latency CXL. My gut
+tells me that anything under 1us is better used in a byte-addressable
+manner, but once you start hitting 1us "It makes me go hmmm..."
+
+I concede this is largely conjecture until someone tests it out, but
+certainly a fun thing to discess.
+
+~Gregory
