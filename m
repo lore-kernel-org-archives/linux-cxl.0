@@ -2,214 +2,178 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6DEC761A6
-	for <linux-cxl@archiver.kernel.org>; Mon,  3 Apr 2023 14:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5335EC76188
+	for <linux-cxl@archiver.kernel.org>; Mon,  3 Apr 2023 15:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232455AbjDCOJW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 3 Apr 2023 10:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48388 "EHLO
+        id S232553AbjDCPTF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 3 Apr 2023 11:19:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232359AbjDCOJV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 3 Apr 2023 10:09:21 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132752442C
-        for <linux-cxl@vger.kernel.org>; Mon,  3 Apr 2023 07:08:51 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pqt130WBvz67DWp;
-        Mon,  3 Apr 2023 22:04:07 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 3 Apr
- 2023 15:08:02 +0100
-Date:   Mon, 3 Apr 2023 15:08:01 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alison Schofield <alison.schofield@intel.com>
-CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v5 02/12] cxl/memdev: Add support for the Clear Poison
- mailbox command
-Message-ID: <20230403150801.00007d89@Huawei.com>
-In-Reply-To: <ZCXtJ4pzBL8SYLwc@aschofie-mobl2>
-References: <cover.1679892337.git.alison.schofield@intel.com>
-        <548e2a175a2f20cdc886297430102ee851d30f26.1679892337.git.alison.schofield@intel.com>
-        <20230330195018.00005afe@Huawei.com>
-        <ZCXtJ4pzBL8SYLwc@aschofie-mobl2>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S232508AbjDCPTE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 3 Apr 2023 11:19:04 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2060.outbound.protection.outlook.com [40.107.95.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E9110EC;
+        Mon,  3 Apr 2023 08:19:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bd9gvF0Ouot4CUc+quE6jUMihd74MuPB1jcmz8qUgH73mcw5WYAPmKkkBm1a0E7FZwH5NJosMFS8rXSdg7r2wlvJmPwo+M0zaGho645mnjstJUKSLN91bN4/gGCZCDLG03qMI3sxs47Cn1K4qgX3yoYAttuk76pR0V5GG9jQ50iGMuHk80Ri+12o79JJGt1M2pKz7Y9DB0LkwZTMpwrGAKnX4xb03XdFdFblvJXqIcCZZrDBQQfqAn30Mco1yJcuJrtfNASmi5NSMerH1S8F/jGljB09HWSoM/Dqo1NmmRUMXjWu45uGISjmhhRNO0dElqFc9tQ0YIyw3IHLSJ8eOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WYcGyNnrNB0terW7sh19ex2GgrzJNQ4v508hQn8rhd0=;
+ b=MUrz37ik8Q0z5g1UwcNf7OB1SlNvgJ5UPsc25/+CiyZ+akBxPeXyF6PaBo24SMi8Wy1GbB6E3TlDx5QHS23E28AFaopTgS3hdCjgckdbLf7uQ1a3dr0yD0tgtDpqGHKtkymz7Z3fRaiG0J8rJZYaxrUrpbNtL1axCQcqR/bf4kxPWfObgBrveXjylu/wO37tGpFw8qE5BSGYFkH1f2SxU4ILxX44hMDqpYl02Zg7XsObTv+XLC9W89Tx7ibfRk7F8TpbsBbTZZx09HIZHv8Ow6CKounRcjJkNMwmRYyAoWCSMU3XSB6zX2Bgv6AmyjvEqAcz3bzRNmmpFruOjUqymA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WYcGyNnrNB0terW7sh19ex2GgrzJNQ4v508hQn8rhd0=;
+ b=ii5lAK7V8K42eHbY9C85sGWUof6/HDuDUrAjWhHi85CIB+tuoMO6NB7ye24ncAMBNRHaEOnYC23hkgDdckmAFcDNkV6g2fAJIoBt6aIUv2fE0zE+n1vDfUyn9REcw854cFcMf0Xp2pNg84Iag9/vD62UI5rLUUmwNWFwTlEuASE=
+Received: from MW3PR05CA0015.namprd05.prod.outlook.com (2603:10b6:303:2b::20)
+ by PH7PR12MB6977.namprd12.prod.outlook.com (2603:10b6:510:1b7::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Mon, 3 Apr
+ 2023 15:19:00 +0000
+Received: from CO1NAM11FT049.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:2b:cafe::c9) by MW3PR05CA0015.outlook.office365.com
+ (2603:10b6:303:2b::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.26 via Frontend
+ Transport; Mon, 3 Apr 2023 15:19:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT049.mail.protection.outlook.com (10.13.175.50) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6277.18 via Frontend Transport; Mon, 3 Apr 2023 15:19:00 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Mon, 3 Apr 2023 10:18:57 -0500
+From:   Ben Cheatham <Benjamin.Cheatham@amd.com>
+To:     <rafael@kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>
+CC:     <yazen.ghannam@amd.com>, <benjamin.cheatham@amd.com>,
+        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+Subject: [PATCH v2] ACPI, APEI, EINJ: Remove memory range validation for CXL error types
+Date:   Mon, 3 Apr 2023 10:18:49 -0500
+Message-ID: <20230403151849.43408-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT049:EE_|PH7PR12MB6977:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7a449a1-440d-4072-9eb8-08db3456c064
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ydfj2hl4ZQDGWwLFQtSuMxXVtHozl8LdPDw+6pBfmMKB1h3P2hVdcWi1RaVhPVxBZLV3IrnUF/MNHi04BfkEMot7QFLkO9rG8CNqcIiAGD+ItWhzlSGjQQS82HmVHvbayh3/s50sdZTE9TQsXQN54Wq8J7CQRyvwzHUa8nIrrLYFwnG9P07bfcwpIHcEVFE/LVV8JLIKcTtO1x+dazpV8pzSw8bInbv59UsR5KqaqmIoQ+y8/H9g4bzBWcJbQ4KtEAo1Sm40xyjOdQkApBdgu/vByTcvlLPYQvozFeflLoGJViSqEG/4DiS7kacXq8IzgJcUynYChEb9+uHGua5VH1oUP7YL6g1cRCo5RA4qmAQxXGwJWLF/ZwHoHom1qkub7PDfDC3uhdcLIIM9Obu/Fs8dpf3uJ8OQl2ENwA5Qs1FEpR0NFs7PGNj28Up2wT9HQjvFPWhifj23MpIYoZ6GHqZnfiG4Vp2OKKVZkLgJXQQmLKKVJBz7YMMFRyUgqxhZzjubtfzNEKO4XcJhhXtT2IOVo4/oEfKtIKGA2CoyGHf2tY5Oy+coYc96rYNv3QB0MFTdEqrLYRj2vj5o6e502s4PngFZimpexvcs9CUZGqOFD+f6fAetT9qE5A3fPCcJ968CLMhl5YvD6A1UBrenWwn+jbSExOUN+6hZ11IDKNaKbfIovIc7VPSgMl5N9DDfFzFrQv5ZJmg86xOfnNXwkMp4eAAZVwau8cnHl6lcu+PLiocGeaqso1PIM5Fii52JWfpK5W8Ulad9K9bW85zGBw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(396003)(346002)(376002)(451199021)(40470700004)(46966006)(36840700001)(40480700001)(70586007)(70206006)(40460700003)(36860700001)(478600001)(8676002)(110136005)(316002)(54906003)(8936002)(81166007)(356005)(5660300002)(82740400003)(41300700001)(4326008)(426003)(186003)(16526019)(47076005)(83380400001)(2616005)(7696005)(336012)(6666004)(966005)(1076003)(26005)(86362001)(82310400005)(2906002)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2023 15:19:00.1302
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7a449a1-440d-4072-9eb8-08db3456c064
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT049.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6977
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 30 Mar 2023 13:12:23 -0700
-Alison Schofield <alison.schofield@intel.com> wrote:
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-> On Thu, Mar 30, 2023 at 11:50:18AM -0700, Jonathan Cameron wrote:
-> > On Sun, 26 Mar 2023 22:03:08 -0700
-> > alison.schofield@intel.com wrote:
-> >   
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > CXL devices optionally support the CLEAR POISON mailbox command. Add
-> > > memdev driver support for clearing poison.
-> > > 
-> > > Per the CXL Specification (3.0 8.2.9.8.4.3), after receiving a valid
-> > > clear poison request, the device removes the address from the device's
-> > > Poison List and writes 0 (zero) for 64 bytes starting at address. If
-> > > the device cannot clear poison from the address, it returns a permanent
-> > > media error and -ENXIO is returned to the user.
-> > > 
-> > > Additionally, and per the spec also, it is not an error to clear poison
-> > > of an address that is not poisoned. In this case, the device does not
-> > > overwrite the address and the device does not return an error.  
-> > 
-> > That's not inline with the spec.
-> > 
-> > "Clear Poison Write Data: The data the device shall always write into the
-> > requested physical address, atomically, while clearing poison if the location
-> > is marked as being poisoned."
-> > 
-> > The overwrite always happens whether or not it's poisoned.  
-> 
-> Jonathan,
-> 
-> I read that with an emphasis on that final 'if' clause:
-> "The data the device shall always write (...blah blah blah...) if the
-> location is marked as being poisoned.
-> 
-> So, if the location was not marked as being poisoned, the device won't
-> write anything.
-> 
-> Which means, the user cannot use the Clear command to randomly write stuff
-> wherever they please.
-> 
-> What do you think of that ? 
+V2 Changes:
+ - Added Link tags for links
+ - removed stray unused variable
 
-Clarification needed for the spec perhaps.  I'd argue the 'always' is there to make
-it clear it does the write whether or not that condition is present. Otherwise
-that word has no purpose in the sentence.  Hence the user can write random
-data.  They can anyway if they have the ability to inject poison so I don't
-see that mattering a lot.
+This patch is a follow up to the discussion at [1], and builds on Tony's
+CXL error patch at [2].
 
-Jonathan
+The new CXL error types will use the Memory Address field in the
+SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+compliant memory-mapped Downstream port. The value of the Memory Address
+will be in the port's MMIO range, and it will not represent physical
+(normal or persistent) memory.
 
+Allow error injection for CXL 1.1 systems by skipping memory range
+validation for CXL error injection types.
 
-> 
-> Alison
-> 
-> 
-> > Other than that
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >   
-> > > 
-> > > If the address is not contained in the device's dpa resource, or is
-> > > not 64 byte aligned, return -EINVAL without issuing the mbox command.
-> > > 
-> > > Poison clearing is intended for debug only and will be exposed to
-> > > userspace through debugfs. Restrict compilation to CONFIG_DEBUG_FS.
-> > > 
-> > > Implementation note: Although the CXL specification defines the clear
-> > > command to accept 64 bytes of 'write-data' to be used when clearing
-> > > the poisoned address, this implementation always uses 0 (zeros) for
-> > > the write-data.
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > > ---
-> > >  drivers/cxl/core/memdev.c | 43 +++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxlmem.h      |  7 +++++++
-> > >  2 files changed, 50 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> > > index 3b3ac2868848..0e39c3c3fb09 100644
-> > > --- a/drivers/cxl/core/memdev.c
-> > > +++ b/drivers/cxl/core/memdev.c
-> > > @@ -268,6 +268,49 @@ int cxl_inject_poison(struct device *dev, u64 dpa)
-> > >  }
-> > >  EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, CXL);
-> > >  
-> > > +int cxl_clear_poison(struct device *dev, u64 dpa)
-> > > +{
-> > > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > > +	struct cxl_mbox_clear_poison clear;
-> > > +	struct cxl_mbox_cmd mbox_cmd;
-> > > +	int rc;
-> > > +
-> > > +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-> > > +		return 0;
-> > > +
-> > > +	down_read(&cxl_dpa_rwsem);
-> > > +	rc = cxl_validate_poison_dpa(cxlmd, dpa);
-> > > +	if (rc)
-> > > +		goto out;
-> > > +
-> > > +	/*
-> > > +	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
-> > > +	 * is defined to accept 64 bytes of 'write-data', along with the
-> > > +	 * address to clear. The device writes the data into the address
-> > > +	 * atomically, while clearing poison if the location is marked as
-> > > +	 * being poisoned.  
-> > 
-> > This description is correct.
-> >   
-> > > +	 *
-> > > +	 * Always use '0' for the write-data.
-> > > +	 */
-> > > +	clear = (struct cxl_mbox_clear_poison) {
-> > > +		.address = cpu_to_le64(dpa)
-> > > +	};
-> > > +
-> > > +	mbox_cmd = (struct cxl_mbox_cmd) {
-> > > +		.opcode = CXL_MBOX_OP_CLEAR_POISON,
-> > > +		.size_in = sizeof(clear),
-> > > +		.payload_in = &clear,
-> > > +	};
-> > > +
-> > > +	rc = cxl_internal_send_cmd(cxlmd->cxlds, &mbox_cmd);
-> > > +
-> > > +out:
-> > > +	up_read(&cxl_dpa_rwsem);
-> > > +
-> > > +	return rc;
-> > > +}
-> > > +EXPORT_SYMBOL_NS_GPL(cxl_clear_poison, CXL);
-> > > +
-> > >  static struct attribute *cxl_memdev_attributes[] = {
-> > >  	&dev_attr_serial.attr,
-> > >  	&dev_attr_firmware_version.attr,
-> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > > index 527efef2d700..1d8677ab2306 100644
-> > > --- a/drivers/cxl/cxlmem.h
-> > > +++ b/drivers/cxl/cxlmem.h
-> > > @@ -607,6 +607,12 @@ struct cxl_mbox_inject_poison {
-> > >  	__le64 address;
-> > >  };
-> > >  
-> > > +/* Clear Poison  CXL 3.0 Spec 8.2.9.8.4.3 */
-> > > +struct cxl_mbox_clear_poison {
-> > > +	__le64 address;
-> > > +	u8 write_data[CXL_POISON_LEN_MULT];
-> > > +} __packed;
-> > > +
-> > >  /**
-> > >   * struct cxl_mem_command - Driver representation of a memory device command
-> > >   * @info: Command information as it exists for the UAPI
-> > > @@ -684,6 +690,7 @@ ssize_t cxl_trigger_poison_list(struct device *dev,
-> > >  				struct device_attribute *attr, const char *buf,
-> > >  				size_t len);
-> > >  int cxl_inject_poison(struct device *dev, u64 dpa);
-> > > +int cxl_clear_poison(struct device *dev, u64 dpa);
-> > >  
-> > >  #ifdef CONFIG_CXL_SUSPEND
-> > >  void cxl_mem_active_inc(void);  
-> >   
+Output trying to inject CXL.mem error without patch:
+
+-bash: echo: write error: Invalid argument
+
+[1]:
+Link: https://lore.kernel.org/linux-acpi/20221206205234.606073-1-Benjamin.Cheatham@amd.com/
+[2]:
+Link: https://lore.kernel.org/linux-cxl/CAJZ5v0hNQUfWViqxbJ5B4JCGJUuHpWWSpqpCFWPNpGuagoFbsQ@mail.gmail.com/T/#t
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Ben Cheatham <benjamin.cheatham@amd.com>
+---
+ drivers/acpi/apei/einj.c | 12 +++++++++++-
+ include/acpi/actbl1.h    |  6 ++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
+index 013eb621dc92..68a20326ed7c 100644
+--- a/drivers/acpi/apei/einj.c
++++ b/drivers/acpi/apei/einj.c
+@@ -37,6 +37,13 @@
+ 				ACPI_EINJ_MEMORY_UNCORRECTABLE | \
+ 				ACPI_EINJ_MEMORY_FATAL)
+ 
++#define CXL_ERROR_MASK		(ACPI_EINJ_CXL_CACHE_CORRECTABLE	| \
++				ACPI_EINJ_CXL_CACHE_UNCORRECTABLE	| \
++				ACPI_EINJ_CXL_CACHE_FATAL		| \
++				ACPI_EINJ_CXL_MEM_CORRECTABLE		| \
++				ACPI_EINJ_CXL_MEM_UNCORRECTABLE		| \
++				ACPI_EINJ_CXL_MEM_FATAL)
++
+ /*
+  * ACPI version 5 provides a SET_ERROR_TYPE_WITH_ADDRESS action.
+  */
+@@ -537,8 +544,11 @@ static int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
+ 	if (type & ACPI5_VENDOR_BIT) {
+ 		if (vendor_flags != SETWA_FLAGS_MEM)
+ 			goto inject;
+-	} else if (!(type & MEM_ERROR_MASK) && !(flags & SETWA_FLAGS_MEM))
++	} else if (!(type & MEM_ERROR_MASK) && !(flags & SETWA_FLAGS_MEM)) {
++		goto inject;
++	} else if (type & CXL_ERROR_MASK) {
+ 		goto inject;
++	}
+ 
+ 	/*
+ 	 * Disallow crazy address masks that give BIOS leeway to pick
+diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+index 81b9e794424d..c39837266414 100644
+--- a/include/acpi/actbl1.h
++++ b/include/acpi/actbl1.h
+@@ -1044,6 +1044,12 @@ enum acpi_einj_command_status {
+ #define ACPI_EINJ_PLATFORM_CORRECTABLE      (1<<9)
+ #define ACPI_EINJ_PLATFORM_UNCORRECTABLE    (1<<10)
+ #define ACPI_EINJ_PLATFORM_FATAL            (1<<11)
++#define ACPI_EINJ_CXL_CACHE_CORRECTABLE     BIT(12)
++#define ACPI_EINJ_CXL_CACHE_UNCORRECTABLE   BIT(13)
++#define ACPI_EINJ_CXL_CACHE_FATAL           BIT(14)
++#define ACPI_EINJ_CXL_MEM_CORRECTABLE       BIT(15)
++#define ACPI_EINJ_CXL_MEM_UNCORRECTABLE     BIT(16)
++#define ACPI_EINJ_CXL_MEM_FATAL             BIT(17)
+ #define ACPI_EINJ_VENDOR_DEFINED            (1<<31)
+ 
+ /*******************************************************************************
+-- 
+2.34.1
 
