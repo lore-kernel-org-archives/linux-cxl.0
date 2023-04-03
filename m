@@ -2,111 +2,214 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BA1C761A6
-	for <linux-cxl@archiver.kernel.org>; Mon,  3 Apr 2023 08:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6DEC761A6
+	for <linux-cxl@archiver.kernel.org>; Mon,  3 Apr 2023 14:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231935AbjDCIo5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 3 Apr 2023 04:44:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38004 "EHLO
+        id S232455AbjDCOJW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 3 Apr 2023 10:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231817AbjDCIop (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 3 Apr 2023 04:44:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782BA901F;
-        Mon,  3 Apr 2023 01:44:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2E126B815B8;
-        Mon,  3 Apr 2023 08:44:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F63C433EF;
-        Mon,  3 Apr 2023 08:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680511469;
-        bh=rcNTkexBq3Q+uJyB3j6QpUz1kVSfgLh2+uusgW7/vik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=athY3XDRKOfxSL5sGLnDLlGzre4UmRyr1xaYX9FpdWCv+iyibHSeO+JqhP5tfpvBp
-         AsWg7CGZzp2vcQY4jZAbSmmtiZ92SK6bfW7/Bz0PQLeraEQQU483gjwuHdADaSJuoA
-         kgI2jW9Lo7p56UaSfv2c1etvhGJ9kyL6o6GuFZXqekORJFwQRKzxyjUGu4olLqM0Yn
-         kR9FM0/wQLmiCN3AnanGE6blZPurvXcCDzZcOeZc1qiin92YzvdOnt1n88FVpIF7/V
-         Y591H2k+t4U4mLMIXhtBqBOVX4cL0QvUUvca9lmtX05Km670+t/EuWCVyJkkqBsxO2
-         xkWojXuUymQ+w==
-Date:   Mon, 3 Apr 2023 11:44:23 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Dragan Stancevic <dragan@stancevic.com>
-Cc:     Kyungsan Kim <ks0204.kim@samsung.com>, dan.j.williams@intel.com,
-        lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
-        ying.huang@intel.com, nil-migration@lists.linux.dev
-Subject: Re: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Message-ID: <ZCqR55Ryrewmy6Bo@kernel.org>
-References: <641b7b2117d02_1b98bb294cb@dwillia2-xfh.jf.intel.com.notmuch>
- <CGME20230323105106epcas2p39ea8de619622376a4698db425c6a6fb3@epcas2p3.samsung.com>
- <20230323105105.145783-1-ks0204.kim@samsung.com>
- <ZB/yb9n6e/eNtNsf@kernel.org>
- <362a9e19-fea5-e45a-3c22-3aa47e851aea@stancevic.com>
+        with ESMTP id S232359AbjDCOJV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 3 Apr 2023 10:09:21 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132752442C
+        for <linux-cxl@vger.kernel.org>; Mon,  3 Apr 2023 07:08:51 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pqt130WBvz67DWp;
+        Mon,  3 Apr 2023 22:04:07 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 3 Apr
+ 2023 15:08:02 +0100
+Date:   Mon, 3 Apr 2023 15:08:01 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Alison Schofield <alison.schofield@intel.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v5 02/12] cxl/memdev: Add support for the Clear Poison
+ mailbox command
+Message-ID: <20230403150801.00007d89@Huawei.com>
+In-Reply-To: <ZCXtJ4pzBL8SYLwc@aschofie-mobl2>
+References: <cover.1679892337.git.alison.schofield@intel.com>
+        <548e2a175a2f20cdc886297430102ee851d30f26.1679892337.git.alison.schofield@intel.com>
+        <20230330195018.00005afe@Huawei.com>
+        <ZCXtJ4pzBL8SYLwc@aschofie-mobl2>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <362a9e19-fea5-e45a-3c22-3aa47e851aea@stancevic.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Dragan,
+On Thu, 30 Mar 2023 13:12:23 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-On Thu, Mar 30, 2023 at 05:03:24PM -0500, Dragan Stancevic wrote:
-> On 3/26/23 02:21, Mike Rapoport wrote:
-> > Hi,
+> On Thu, Mar 30, 2023 at 11:50:18AM -0700, Jonathan Cameron wrote:
+> > On Sun, 26 Mar 2023 22:03:08 -0700
+> > alison.schofield@intel.com wrote:
+> >   
+> > > From: Alison Schofield <alison.schofield@intel.com>
+> > > 
+> > > CXL devices optionally support the CLEAR POISON mailbox command. Add
+> > > memdev driver support for clearing poison.
+> > > 
+> > > Per the CXL Specification (3.0 8.2.9.8.4.3), after receiving a valid
+> > > clear poison request, the device removes the address from the device's
+> > > Poison List and writes 0 (zero) for 64 bytes starting at address. If
+> > > the device cannot clear poison from the address, it returns a permanent
+> > > media error and -ENXIO is returned to the user.
+> > > 
+> > > Additionally, and per the spec also, it is not an error to clear poison
+> > > of an address that is not poisoned. In this case, the device does not
+> > > overwrite the address and the device does not return an error.  
 > > 
-> > [..] >> One problem we experienced was occured in the combination of
-> hot-remove and kerelspace allocation usecases.
-> > > ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
-> > > ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
-> > > Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
-> > > In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
-> > > We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
-> > > As you well know, among heterogeneous DRAM devices, CXL DRAM is the first PCIe basis device, which allows hot-pluggability, different RAS, and extended connectivity.
-> > > So, we thought it could be a graceful approach adding a new zone and separately manage the new features.
+> > That's not inline with the spec.
 > > 
-> > This still does not describe what are the use cases that require having
-> > kernel allocations on CXL.mem.
+> > "Clear Poison Write Data: The data the device shall always write into the
+> > requested physical address, atomically, while clearing poison if the location
+> > is marked as being poisoned."
 > > 
-> > I believe it's important to start with explanation *why* it is important to
-> > have kernel allocations on removable devices.
+> > The overwrite always happens whether or not it's poisoned.  
 > 
-> Hi Mike,
+> Jonathan,
 > 
-> not speaking for Kyungsan here, but I am starting to tackle hypervisor
-> clustering and VM migration over cxl.mem [1].
+> I read that with an emphasis on that final 'if' clause:
+> "The data the device shall always write (...blah blah blah...) if the
+> location is marked as being poisoned.
 > 
-> And in my mind, at least one reason that I can think of having kernel
-> allocations from cxl.mem devices is where you have multiple VH connections
-> sharing the memory [2]. Where for example you have a user space application
-> stored in cxl.mem, and then you want the metadata about this
-> process/application that the kernel keeps on one hypervisor be "passed on"
-> to another hypervisor. So basically the same way processors in a single
-> hypervisors cooperate on memory, you extend that across processors that span
-> over physical hypervisors. If that makes sense...
+> So, if the location was not marked as being poisoned, the device won't
+> write anything.
+> 
+> Which means, the user cannot use the Clear command to randomly write stuff
+> wherever they please.
+> 
+> What do you think of that ? 
 
-Let me reiterate to make sure I understand your example.
-If we focus on VM usecase, your suggestion is to store VM's memory and
-associated KVM structures on a CXL.mem device shared by several nodes.  
-Even putting aside the aspect of keeping KVM structures on presumably
-slower memory, what ZONE_EXMEM will provide that cannot be accomplished
-with having the cxl memory in a memoryless node and using that node to
-allocate VM metadata?
- 
-> [1] A high-level explanation is at http://nil-migration.org
-> [2] Compute Express Link Specification r3.0, v1.0 8/1/22, Page 51, figure
-> 1-4, black color scheme circle(3) and bars.
-> 
-> --
-> Peace can only come as a natural consequence
-> of universal enlightenment -Dr. Nikola Tesla
-> 
+Clarification needed for the spec perhaps.  I'd argue the 'always' is there to make
+it clear it does the write whether or not that condition is present. Otherwise
+that word has no purpose in the sentence.  Hence the user can write random
+data.  They can anyway if they have the ability to inject poison so I don't
+see that mattering a lot.
 
--- 
-Sincerely yours,
-Mike.
+Jonathan
+
+
+> 
+> Alison
+> 
+> 
+> > Other than that
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >   
+> > > 
+> > > If the address is not contained in the device's dpa resource, or is
+> > > not 64 byte aligned, return -EINVAL without issuing the mbox command.
+> > > 
+> > > Poison clearing is intended for debug only and will be exposed to
+> > > userspace through debugfs. Restrict compilation to CONFIG_DEBUG_FS.
+> > > 
+> > > Implementation note: Although the CXL specification defines the clear
+> > > command to accept 64 bytes of 'write-data' to be used when clearing
+> > > the poisoned address, this implementation always uses 0 (zeros) for
+> > > the write-data.
+> > > 
+> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > > ---
+> > >  drivers/cxl/core/memdev.c | 43 +++++++++++++++++++++++++++++++++++++++
+> > >  drivers/cxl/cxlmem.h      |  7 +++++++
+> > >  2 files changed, 50 insertions(+)
+> > > 
+> > > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> > > index 3b3ac2868848..0e39c3c3fb09 100644
+> > > --- a/drivers/cxl/core/memdev.c
+> > > +++ b/drivers/cxl/core/memdev.c
+> > > @@ -268,6 +268,49 @@ int cxl_inject_poison(struct device *dev, u64 dpa)
+> > >  }
+> > >  EXPORT_SYMBOL_NS_GPL(cxl_inject_poison, CXL);
+> > >  
+> > > +int cxl_clear_poison(struct device *dev, u64 dpa)
+> > > +{
+> > > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> > > +	struct cxl_mbox_clear_poison clear;
+> > > +	struct cxl_mbox_cmd mbox_cmd;
+> > > +	int rc;
+> > > +
+> > > +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
+> > > +		return 0;
+> > > +
+> > > +	down_read(&cxl_dpa_rwsem);
+> > > +	rc = cxl_validate_poison_dpa(cxlmd, dpa);
+> > > +	if (rc)
+> > > +		goto out;
+> > > +
+> > > +	/*
+> > > +	 * In CXL 3.0 Spec 8.2.9.8.4.3, the Clear Poison mailbox command
+> > > +	 * is defined to accept 64 bytes of 'write-data', along with the
+> > > +	 * address to clear. The device writes the data into the address
+> > > +	 * atomically, while clearing poison if the location is marked as
+> > > +	 * being poisoned.  
+> > 
+> > This description is correct.
+> >   
+> > > +	 *
+> > > +	 * Always use '0' for the write-data.
+> > > +	 */
+> > > +	clear = (struct cxl_mbox_clear_poison) {
+> > > +		.address = cpu_to_le64(dpa)
+> > > +	};
+> > > +
+> > > +	mbox_cmd = (struct cxl_mbox_cmd) {
+> > > +		.opcode = CXL_MBOX_OP_CLEAR_POISON,
+> > > +		.size_in = sizeof(clear),
+> > > +		.payload_in = &clear,
+> > > +	};
+> > > +
+> > > +	rc = cxl_internal_send_cmd(cxlmd->cxlds, &mbox_cmd);
+> > > +
+> > > +out:
+> > > +	up_read(&cxl_dpa_rwsem);
+> > > +
+> > > +	return rc;
+> > > +}
+> > > +EXPORT_SYMBOL_NS_GPL(cxl_clear_poison, CXL);
+> > > +
+> > >  static struct attribute *cxl_memdev_attributes[] = {
+> > >  	&dev_attr_serial.attr,
+> > >  	&dev_attr_firmware_version.attr,
+> > > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > > index 527efef2d700..1d8677ab2306 100644
+> > > --- a/drivers/cxl/cxlmem.h
+> > > +++ b/drivers/cxl/cxlmem.h
+> > > @@ -607,6 +607,12 @@ struct cxl_mbox_inject_poison {
+> > >  	__le64 address;
+> > >  };
+> > >  
+> > > +/* Clear Poison  CXL 3.0 Spec 8.2.9.8.4.3 */
+> > > +struct cxl_mbox_clear_poison {
+> > > +	__le64 address;
+> > > +	u8 write_data[CXL_POISON_LEN_MULT];
+> > > +} __packed;
+> > > +
+> > >  /**
+> > >   * struct cxl_mem_command - Driver representation of a memory device command
+> > >   * @info: Command information as it exists for the UAPI
+> > > @@ -684,6 +690,7 @@ ssize_t cxl_trigger_poison_list(struct device *dev,
+> > >  				struct device_attribute *attr, const char *buf,
+> > >  				size_t len);
+> > >  int cxl_inject_poison(struct device *dev, u64 dpa);
+> > > +int cxl_clear_poison(struct device *dev, u64 dpa);
+> > >  
+> > >  #ifdef CONFIG_CXL_SUSPEND
+> > >  void cxl_mem_active_inc(void);  
+> >   
+
