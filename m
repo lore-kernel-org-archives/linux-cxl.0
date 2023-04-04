@@ -2,183 +2,251 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DF3C77B60
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 14:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8395CC6FD1D
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 16:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231221AbjDDOuz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Apr 2023 10:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51794 "EHLO
+        id S230491AbjDDQss (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 Apr 2023 12:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231910AbjDDOuy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 10:50:54 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968A03C11
-        for <linux-cxl@vger.kernel.org>; Tue,  4 Apr 2023 07:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680619852; x=1712155852;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=rFktJRzeZO0OgjaBIvHspju1iYMuHHPc6PR/DgbDKvk=;
-  b=IGabEi7eC9btvjpYE/8qvIva9WWikP48VXuvpUeC8XfWXPByIttEHVo1
-   H4U1kVB33DBE0+QKSuOjeqzP3IOC5CrATeq8W5g5RuNc7NrW+HZNmVo9R
-   iswAtxPAR7Z0tR8T+tjDXvqzL9ECcIOa+sB1/tqMgWNdiGXuTpYVofx6m
-   M9oOTuUjd5fvqweop7rd4iUAsyk79cVKISGG+jAlUVmaeGmN5H32Vk2sY
-   695t20g4nMMhKNot/48N6uJWthyWak9eujT9DxpiNrdiCctz+sOiE33B5
-   nRSzY2/TtgkfkVDCq4ootXZ43tz+jLWSsBjszKjsZi9zwnp9NySTqRlMS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="340935623"
-X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
-   d="scan'208";a="340935623"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 07:50:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="663636429"
-X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
-   d="scan'208";a="663636429"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 04 Apr 2023 07:50:31 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pjhzS-000PnX-0H;
-        Tue, 04 Apr 2023 14:50:30 +0000
-Date:   Tue, 04 Apr 2023 22:50:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>
-Subject: [cxl:fixes] BUILD SUCCESS
- 3cfa89c1ef13a7a32c4c4229bb1b5be5758a3db2
-Message-ID: <642c391d.VyThJQYLJekDhit8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229379AbjDDQss (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 12:48:48 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1D61A1;
+        Tue,  4 Apr 2023 09:48:45 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PrYbc5y35z67T1b;
+        Wed,  5 Apr 2023 00:47:56 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 4 Apr
+ 2023 17:48:42 +0100
+Date:   Tue, 4 Apr 2023 17:48:41 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v4 4/5] cxl: CXL Performance Monitoring Unit driver
+Message-ID: <20230404174841.000045a7@Huawei.com>
+In-Reply-To: <bcae8e21-0afc-9fc6-7f90-07afca412223@linux.intel.com>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+        <20230330164556.31533-5-Jonathan.Cameron@huawei.com>
+        <bcae8e21-0afc-9fc6-7f90-07afca412223@linux.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: 3cfa89c1ef13a7a32c4c4229bb1b5be5758a3db2  Merge branch 'for-6.3/cxl-doe-fixes' into for-6.3/cxl
+On Mon, 3 Apr 2023 13:32:06 -0400
+"Liang, Kan" <kan.liang@linux.intel.com> wrote:
 
-elapsed time: 726m
+> On 2023-03-30 12:45 p.m., Jonathan Cameron wrote:
+> > CXL rev 3.0 introduces a standard performance monitoring hardware
+> > block to CXL. Instances are discovered using CXL Register Locator DVSEC
+> > entries. Each CXL component may have multiple PMUs.
+> > 
+> > This initial driver supports on a subset of types of counter.
+> > It support counters that are either fixed or configurable, but requires
+> > that they support the ability to freeze and write value whilst frozen.
+> > 
+> > Development done with QEMU model which will be posted shortly.
+> >   
+> 
+> So the patch series is only tested with QEMU. Is there a real hardware
+> which supports the CXL PMON?
 
-configs tested: 106
-configs skipped: 5
+In common with a lot of CXL stuff (and in general new standards based
+architecture features), nothing that anyone is willing to talk about
+except in general terms at this stage (this is a CXL 3.0 feature so
+pretty recent).  Much of the existing kernel CXL support has been written
+against emulation of one type or another (and we've shaken out a lot of
+bugs that aren't yet seen with real hardware. Switches are very
+rare for example - I've not yet registered PMUs for those, but that's
+on the todo list after we get this merged). 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+For this particular feature it's likely that initial devices will only
+exercise some parts of the driver support. It's much easier to poke
+the interesting corner cases with emulation given how extreme the
+design space allowed by the CPMU specification is. To that end there
+are a lot more features to add to this driver once we have a basic version
+in place. One example is that we've had a request for fixed free running counter
+support combined with vendor defined events as that's particularly useful
+for debugging of new devices.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r021-20230403   gcc  
-arc                  randconfig-r025-20230403   gcc  
-arc                  randconfig-r034-20230403   gcc  
-arc                  randconfig-r043-20230403   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r001-20230403   clang
-arm                                 defconfig   gcc  
-arm                          exynos_defconfig   gcc  
-arm                  randconfig-r046-20230403   clang
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r006-20230403   clang
-arm64                               defconfig   gcc  
-arm64                randconfig-r013-20230403   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r033-20230403   gcc  
-hexagon              randconfig-r035-20230403   clang
-hexagon              randconfig-r041-20230403   clang
-hexagon              randconfig-r045-20230403   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r002-20230403   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230403   clang
-i386                 randconfig-a002-20230403   clang
-i386                 randconfig-a003-20230403   clang
-i386                 randconfig-a004-20230403   clang
-i386                 randconfig-a005-20230403   clang
-i386                 randconfig-a006-20230403   clang
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-i386                 randconfig-r036-20230403   clang
-ia64                             alldefconfig   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r002-20230403   gcc  
-ia64                 randconfig-r026-20230403   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r022-20230403   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r015-20230403   gcc  
-microblaze           randconfig-r024-20230403   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r005-20230403   gcc  
-nios2                               defconfig   gcc  
-openrisc             randconfig-r011-20230403   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r001-20230403   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                     kmeter1_defconfig   clang
-powerpc              randconfig-r012-20230403   gcc  
-powerpc              randconfig-r014-20230403   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                randconfig-r042-20230403   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r005-20230403   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r004-20230403   clang
-s390                 randconfig-r044-20230403   gcc  
-sh                               allmodconfig   gcc  
-sh                   randconfig-r031-20230403   gcc  
-sparc        buildonly-randconfig-r003-20230403   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r003-20230403   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230403   clang
-x86_64               randconfig-a002-20230403   clang
-x86_64               randconfig-a003-20230403   clang
-x86_64               randconfig-a004-20230403   clang
-x86_64               randconfig-a005-20230403   clang
-x86_64               randconfig-a006-20230403   clang
-x86_64               randconfig-a011-20230403   gcc  
-x86_64               randconfig-a012-20230403   gcc  
-x86_64               randconfig-a013-20230403   gcc  
-x86_64               randconfig-a014-20230403   gcc  
-x86_64               randconfig-a015-20230403   gcc  
-x86_64               randconfig-a016-20230403   gcc  
-x86_64               randconfig-r016-20230403   gcc  
-x86_64               randconfig-r032-20230403   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r006-20230403   gcc  
+Note that there is still work to be done on the emulation to make it
+easier to vary what is being emulated as right now I end up hacking it
+to hit particular interesting cases and that's not going to be great
+for CI testing this.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> 
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+
+> > +
+> > +#define CPMU_ATTR_CONFIG_MASK_MSK	GENMASK_ULL(63, 48)  
+> 
+> (31, 0)?
+
+Indeed. You'd have thought that having them right next
+to the definition would have made that obvious when I messed
+up the cut and paste. *sigh*
+
+> 
+> > +#define CPMU_ATTR_CONFIG_GID_MSK	GENMASK_ULL(47, 32)
+> > +#define CPMU_ATTR_CONFIG_VID_MSK	GENMASK_ULL(63, 48)
+> > +#define CPMU_ATTR_CONFIG1_THRESHOLD_MSK	GENMASK_ULL(15, 0)
+> > +#define CPMU_ATTR_CONFIG1_INVERT_MSK	BIT(16)
+> > +#define CPMU_ATTR_CONFIG1_EDGE_MSK	BIT(17)
+> > +#define CPMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
+> > +#define CPMU_ATTR_CONFIG2_HDM_MSK	GENMASK(15, 0)
+
+> > +static void cpmu_event_start(struct perf_event *event, int flags)
+> > +{
+> > +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> > +	struct hw_perf_event *hwc = &event->hw;
+> > +	void __iomem *base = info->base;
+> > +	u64 cfg;
+> > +
+> > +	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+> > +		return;
+> > +
+> > +	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
+> > +	hwc->state = 0;
+> > +
+> > +	/*
+> > +	 * Currently only hdm filter control is implemnted, this code will
+> > +	 * want generalizing when more filters are added.
+> > +	 */
+> > +	if (info->filter_hdm) {
+> > +		if (cpmu_config1_hdm_filter_en(event))
+> > +			cfg = cpmu_config2_get_hdm_decoder(event);
+> > +		else
+> > +			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
+> > +		writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
+> > +	}
+> > +
+> > +	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));  
+> 
+> I don't think we need the previous value. Just overwrite it.
+
+Some bits are hwinit or RO.  Whilst we can probably get away with just writing
+random garbage (zeros) to those bits, but I'd prefer to write their
+value back to them.
+
+> 
+> 
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EDGE, cpmu_config1_get_edge(event) ? 1 : 0);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INVERT, cpmu_config1_get_invert(event) ? 1 : 0);
+> > +
+> > +	/* Fixed purpose counters have next two fields RO */
+> > +	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+> > +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, hwc->event_base);
+> > +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENTS_MSK, cpmu_config_get_mask(event));
+> > +	}
+> > +	cfg &= ~CPMU_COUNTER_CFG_THRESHOLD_MSK;
+> > +	/*
+> > +	 * For events that generate only 1 count per clock the CXL 3.0 spec
+> > +	 * states the threshold shall be set to 1 but if set to 0 it will
+> > +	 * count the raw value anwyay?
+> > +	 * There is no definition of what events will count multiple per cycle
+> > +	 * and hence to which non 1 values of threshold can apply.
+> > +	 * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
+> > +	 */
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_THRESHOLD_MSK,
+> > +			  cpmu_config1_get_threshold(event));
+> > +	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> > +
+> > +	local64_set(&hwc->prev_count, 0);
+> > +	writeq(0, base + CPMU_COUNTER_REG(hwc->idx));  
+> 
+> The counter is reset twice. The other is in add()->cpmu_reset_counter().
+> I think you can remove the one in add().
+
+After some tracing I think you are correct. This seems to be always called immediately
+after add anyway so no point in doing it twice.
+
+> 
+> > +
+> > +	perf_event_update_userpage(event);
+> > +}
+> > +
+...
+
+
+> > +
+> > +/*
+> > + * Reset ensures no possibility of any information leaking to wrong
+> > + * counter. Note that all fields written during start()
+> > + */
+> > +static void cpmu_reset_counter(struct cpmu_info *info, int idx)
+> > +{
+> > +	void __iomem *base = info->base;
+> > +
+> > +	/* Much of this register is read only */
+> > +	writeq(0, base + CPMU_EVENT_CAP_REG(idx));  
+> 
+> 
+> CPMU_COUNTER_CFG_REG?
+> 
+> I don't think we need to reset the config here, since it will be rewrite
+> in cpmu_event_start().
+
+You are correct.  The above write is clearly a noop as that's a read only register
+and as you have observed cpmu_event_start() writes almost all the bits that
+are not HWInit. I'll make it write the remaining one as well.
+
+As above this whole function can then go away.
+
+
+
+> 
+> 
+> > +	/* Filters are not per counter, so no reset here */
+> > +	writeq(0, base + CPMU_COUNTER_REG(idx));
+> > +}
+
+
+> > +	info->pmu = (struct pmu) {
+> > +		.name = dev_name(dev),
+> > +		.parent = dev,  
+> 
+> I don't see the PMU parent is used anywhere.
+> Please remove this and drop the Patch 2 from this series.
+
+No.  As per the discussion of v4, without this the driver is incorrectly
+resulting in the device being listed in /sys/devices rather than
+/sys/bus/devices/pcie0000:0c/0000:0c:00.0/0000:0d:00.0/cpmu0/cpmu0
+
+I do not want to introduce more ABI that will then need fixing up later.
+
+This issue is common with a lot of other drivers hence the series
+https://lore.kernel.org/all/20230404134225.13408-1-Jonathan.Cameron@huawei.com/
+to correct it for all drivers that should have a simple parent set.
+
+> 
+> If there will be other followup patches, please add the PMU parent
+> support there.
+> 
+> Thanks,
+> Kan
+
+Thanks again for looking at this so quickly.
+
+Jonathan
+
