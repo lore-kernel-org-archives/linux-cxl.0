@@ -2,121 +2,65 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5360DC761AF
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 08:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB089C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 09:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjDDIb1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Apr 2023 04:31:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
+        id S233558AbjDDJBH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 Apr 2023 05:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjDDIb0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 04:31:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16645A8;
-        Tue,  4 Apr 2023 01:31:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A8B9F61689;
-        Tue,  4 Apr 2023 08:31:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10ECC433D2;
-        Tue,  4 Apr 2023 08:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680597083;
-        bh=iruvF61gWTN0Vg96KJHTh6O2xF0lYRK04YezfwLzB7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OxQSkEMXR1/79xtLVurLzzoxr8ryGCcBNrj4iWtEEFauIwdIeHWTxMQmyTaNUo+Ck
-         /oEtyVbc21eYYlVUFOEM1LX6RDdLwSmJ1MA35oKHzHUHZtH6VyeY4fkuXvKQX0Aq5D
-         NsIU/x6FyacPIRhnxlnzSKkx0Wa8S24chPaEfoJebH7dag5pB6FxWMPTTnGs4udR3q
-         HAvpqKmU9R3/MQ9qI3LFf9PCBo36h+AGdC01GIDo3ahFZgJdPujUsHEmHmHa7peZjK
-         93OkPi2hNwnkcMh6In2OFRjUAr+HlUQVD3pGtgUd6poQ1YhodKxMNTXdC9TqQeICqa
-         FZptQy2ei1PDw==
-Date:   Tue, 4 Apr 2023 11:31:08 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Kyungsan Kim <ks0204.kim@samsung.com>
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
-        dan.j.williams@intel.com, seungjun.ha@samsung.com,
-        wj28.lee@samsung.com
-Subject: Re: RE: RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for
- CXL
-Message-ID: <ZCvgTA5uk/HcyMAk@kernel.org>
-References: <ZB/yb9n6e/eNtNsf@kernel.org>
- <CGME20230331114526epcas2p2b6f1d4c8c1c0b2e3c12a425b6e48c0d8@epcas2p2.samsung.com>
- <20230331114525.400375-1-ks0204.kim@samsung.com>
+        with ESMTP id S232063AbjDDJBG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 05:01:06 -0400
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E98C10F8;
+        Tue,  4 Apr 2023 02:01:02 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 9E6E12800C981;
+        Tue,  4 Apr 2023 11:01:00 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 84DA7292B2; Tue,  4 Apr 2023 11:01:00 +0200 (CEST)
+Date:   Tue, 4 Apr 2023 11:01:00 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Alexey Kardashevskiy <aik@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, linuxarm@huawei.com
+Subject: Re: [PATCH v4 05/17] PCI/DOE: Silence WARN splat with
+ CONFIG_DEBUG_OBJECTS=y
+Message-ID: <20230404090100.GA21129@wunner.de>
+References: <cover.1678543498.git.lukas@wunner.de>
+ <67a9117f463ecdb38a2dbca6a20391ce2f1e7a06.1678543498.git.lukas@wunner.de>
+ <b3d2d326-8736-09e4-0886-68c6d69aa404@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230331114525.400375-1-ks0204.kim@samsung.com>
+In-Reply-To: <b3d2d326-8736-09e4-0886-68c6d69aa404@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 08:45:25PM +0900, Kyungsan Kim wrote:
-> Thank you Mike Rapoport for participating discussion and adding your thought.
+On Tue, Mar 21, 2023 at 02:42:01PM +1100, Alexey Kardashevskiy wrote:
+> On 12/3/23 01:40, Lukas Wunner wrote:
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+>                                                   ^^^^^
 > 
-> >Hi,
-> >
-> >On Thu, Mar 23, 2023 at 07:51:05PM +0900, Kyungsan Kim wrote:
-> >> I appreciate dan for the careful advice.
-> >> 
-> >> >Kyungsan Kim wrote:
-> >> >[..]
-> >> >> >In addition to CXL memory, we may have other kind of memory in the
-> >> >> >system, for example, HBM (High Bandwidth Memory), memory in FPGA card,
-> >> >> >memory in GPU card, etc.  I guess that we need to consider them
-> >> >> >together.  Do we need to add one zone type for each kind of memory?
-> >> >> 
-> >> >> We also don't think a new zone is needed for every single memory
-> >> >> device.  Our viewpoint is the sole ZONE_NORMAL becomes not enough to
-> >> >> manage multiple volatile memory devices due to the increased device
-> >> >> types.  Including CXL DRAM, we think the ZONE_EXMEM can be used to
-> >> >> represent extended volatile memories that have different HW
-> >> >> characteristics.
-> >> >
-> >> >Some advice for the LSF/MM discussion, the rationale will need to be
-> >> >more than "we think the ZONE_EXMEM can be used to represent extended
-> >> >volatile memories that have different HW characteristics". It needs to
-> >> >be along the lines of "yes, to date Linux has been able to describe DDR
-> >> >with NUMA effects, PMEM with high write overhead, and HBM with improved
-> >> >bandwidth not necessarily latency, all without adding a new ZONE, but a
-> >> >new ZONE is absolutely required now to enable use case FOO, or address
-> >> >unfixable NUMA problem BAR." Without FOO and BAR to discuss the code
-> >> >maintainability concern of "fewer degress of freedom in the ZONE
-> >> >dimension" starts to dominate.
-> >> 
-> >> One problem we experienced was occured in the combination of hot-remove and kerelspace allocation usecases.
-> >> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
-> >> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
-> >> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
-> >> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
-> >> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
-> >> As you well know, among heterogeneous DRAM devices, CXL DRAM is the first PCIe basis device, which allows hot-pluggability, different RAS, and extended connectivity.
-> >> So, we thought it could be a graceful approach adding a new zone and separately manage the new features.
-> >
-> >This still does not describe what are the use cases that require having
-> >kernel allocations on CXL.mem. 
-> >
-> >I believe it's important to start with explanation *why* it is important to
-> >have kernel allocations on removable devices.
-> > 
-> 
-> In general, a memory system with DDR/CXL DRAM will have near/far memory.
-> And, we think kernel already includes memory tiering solutions - Meta TPP, zswap, and pagecache.
-> Some kernel contexts would prefer fast memory. For example, a hot data with time locality or a data for fast processing such as metadata or indexing.
-> Others would enough with slow memory. For example, a zswap page which is being used while swapping. 
+> huwei? :)
 
-The point of zswap IIUC is to have small and fast swap device and
-compression is required to better utilize DRAM capacity at expense of CPU
-time.
+Thanks for spotting this Alexey.
 
-Presuming CXL memory will have larger capacity than DRAM, why not skip the
-compression and use CXL as a swap device directly? 
-
-And even supposing there's an advantage in putting zswap on CXL memory,
-why that can be done with node-based APIs but warrants a new zone?
-
--- 
-Sincerely yours,
-Mike.
+Dan fixed it up when he applied the patch to cxl/fixes yesterday:
+https://git.kernel.org/cxl/cxl/c/92dc899c3b49
