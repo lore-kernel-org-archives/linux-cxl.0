@@ -2,144 +2,201 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EC3C6FD1D
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 19:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF1C77B60
+	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 19:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235918AbjDDTAC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Apr 2023 15:00:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59968 "EHLO
+        id S234814AbjDDTRO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 Apr 2023 15:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235711AbjDDTAB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 15:00:01 -0400
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14CF9124
-        for <linux-cxl@vger.kernel.org>; Tue,  4 Apr 2023 11:59:36 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-5491fa028adso137214307b3.10
-        for <linux-cxl@vger.kernel.org>; Tue, 04 Apr 2023 11:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1680634775; x=1683226775;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XXO/sPKYiSh7df3RL6T1nFQFdO3JNbaBjCjcp7Ezoio=;
-        b=ZxnTqbt+6n8xVZ2L1KjX6Vxemx3sc/bCFzGlsXD8i/h258Tut+QudOL21vMWxdtnLv
-         PQ0I0a7b3ybZfO5OzC5BDRoiSUbomrKlPxEchuya/pbPJNQRohpQVcA2xPlqQfxJiGVg
-         qw7v6JjzcUXXPK5MexwHW0fGxt37thpVYrE0sUdEynyLqygCupwHmp/It8ILmvwvOES8
-         vFM2dzIwzF6C81f7LiYJfI/FdIVoV+0uo3H3Q8fzHDaHt8JCeFL+H1iwqcEw+TzGZIXA
-         zAi1q3zUv1q5qqh7YKu4FvQ/rvnAgETdBqXw1bZafgcS6l7EecmXZGT6VWTiEKl1JL0M
-         skwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680634775; x=1683226775;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XXO/sPKYiSh7df3RL6T1nFQFdO3JNbaBjCjcp7Ezoio=;
-        b=54L7e4GJn6EiMl1NlVQEr/du6ZspR+gE1F3996oTOIneGQLcaSzTmR2BaL2Xs/hma3
-         19Bbng1Cad9dW+ZviqYuMDN2tnZptdvkscsyKlRoc/idTQ9qQ4ih5OD1UrDod8GqvHTO
-         cq0HelLfYhgAskVJ3rtoCQt/uI3sEzrh7+jbzlclsYV6wZfl39qYPNSHuUJJYHgMwKiX
-         +bdxglk6vSfJpWzwDMWGLcs+TCXYaebv0u6NJY9MLFee7y+CtSu1IAFsmFL4pH9irjEr
-         MAd0qFc/yqqvj3vhWNnk5BHHWZphkweoIeYvj58pT/cErZNw10s1E4smpeCnMwrkGJQD
-         jGag==
-X-Gm-Message-State: AAQBX9dD7wLiV1nVWiekib489JNv7o9Feq6xfjyaDYLMQVh+mrm9j7/7
-        8nauhgeGKfLWdjPXum94tmGAYQ==
-X-Google-Smtp-Source: AKy350akuu8WNjqJI/OZZxOT3oKDvAK+k25HVUtFYCx5qfBTo1XdxOnKMEZfhrxaZAxyhBMpnNhZ4Q==
-X-Received: by 2002:a0d:d857:0:b0:541:826c:20fd with SMTP id a84-20020a0dd857000000b00541826c20fdmr3545786ywe.13.1680634775128;
-        Tue, 04 Apr 2023 11:59:35 -0700 (PDT)
-Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
-        by smtp.gmail.com with ESMTPSA id df18-20020a05690c0f9200b0054643d99e21sm3390137ywb.133.2023.04.04.11.59.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Apr 2023 11:59:34 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
-Subject: Re: [External] RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes
- for CXL
-From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
-In-Reply-To: <ZCgMlc63gnhHgwuD@memverge.com>
-Date:   Tue, 4 Apr 2023 11:59:22 -0700
-Cc:     Adam Manzanares <a.manzanares@samsung.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Kyungsan Kim <ks0204.kim@samsung.com>,
-        "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "seungjun.ha@samsung.com" <seungjun.ha@samsung.com>,
-        "wj28.lee@samsung.com" <wj28.lee@samsung.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D0C2ADD0-35C4-4BE4-9330-A81D7326A588@bytedance.com>
-References: <ZB/yb9n6e/eNtNsf@kernel.org>
- <CGME20230331114526epcas2p2b6f1d4c8c1c0b2e3c12a425b6e48c0d8@epcas2p2.samsung.com>
- <20230331114525.400375-1-ks0204.kim@samsung.com>
- <ZCvgTA5uk/HcyMAk@kernel.org> <20230404175754.GA633356@bgt-140510-bm01>
- <ZCgMlc63gnhHgwuD@memverge.com>
-To:     Gregory Price <gregory.price@memverge.com>
-X-Mailer: Apple Mail (2.3731.400.51.1.1)
+        with ESMTP id S231477AbjDDTRN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 15:17:13 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7A9A35A6;
+        Tue,  4 Apr 2023 12:17:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680635832; x=1712171832;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=RL/Oa2ge8QEbGqtMVn4G/4bNJFmAE1eYb/6bmQFb8Fg=;
+  b=RG4qemh2l6yXsPduFyQybJPDCxF6Xw2cDk8O0mV0L0hucNdUoG/T11gb
+   IiyuzEJYlpxfTybreFLSJ3AIbFiuT2o6rbFmYltBmjw4j6ek6stWws63A
+   yhLX5CqWfaV1+1r3EZtB28Vh1eN5Md8sdX+51WisU1A3e4rOKWwuD0fu+
+   KuyU2VXByoNMdrEasxMUCQm6/cVgJwzarZ1nURO9Yi7Bk0j6KiXm1e/IV
+   ldmLhKNNc3pm0tGDyJlt+VmBrb2RaWpzXOyvQS5LDhoGkH1Qt2QPWHOrj
+   11BkO/D+7LQ0n2udiB4EVmJktghHb/L2+wUwRgCRKQIYonrR8PVMTqL1N
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="339773633"
+X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
+   d="scan'208";a="339773633"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 12:17:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="775763256"
+X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
+   d="scan'208";a="775763256"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Apr 2023 12:17:12 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 4 Apr 2023 12:17:11 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Tue, 4 Apr 2023 12:17:11 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Tue, 4 Apr 2023 12:17:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gP/8gbY30yC9BqeVEJkW+kBnZk0/hEYp32vfATbukHCEmYKCpv8KUiWOrs39JlDco3nZlPgv007vIjUitUxOMBFL0CPuNzLX1sME3ErgR81kkb+rajWLH9cCpZQ+8vuWClxfhJ3zF3VM1StaqRJ/v4liCsik6dhbhYPZAzVWO3UyLMZ/3K3ehx2WhSUcUX78vewOYzpAMmiQVL/NYdwRZC1nqCcf68V+aOOBhn5VMgVNifeZs30tDQI09R3+UVqnh9Yb+DN5WU4Zdf1jwNrqU15h8yh39joDDO9mBSpb45qKO9bz+phtz/n9X8B7j+2gCz1nG5Uem1TWm31/arss1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dfAP8xYOhvbB9b/Ge6XRsu7d0zfWJCmSbpiPJQ20apg=;
+ b=LzI+LY4Xomm9v478Gf5Ph68iUmIxsAWm/ih4BjjFiRRd7E2Tzhlt2jMz6TNbdtjwQMgvDhuo6aHLKZ/06QrBqe8e+4ZcXDirmNZuqtqmzIVqmK8nDvYrWsdZsZwF7BIs4xbH07j79RvzlyPTNU61kmBzALIX8kdRJ+0xp2BSuC0HQRPStgMcVRssJwMgK8GywZMnNGaLTCfCJHGFO8h6JMe0gBqCSwLOZvbn3AKKgn866vHoiWY4Y8juMYTL5kg3Agg1J7W1ZWCnaoSU5m2EL+jPrk8T48ahBQuWLq4zAFoGn4HkhOszaAGPlPo5mDs4HVjjpm2Y9iZIvPyJ9QBRKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB4797.namprd11.prod.outlook.com (2603:10b6:a03:2d4::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35; Tue, 4 Apr
+ 2023 19:17:03 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6254.033; Tue, 4 Apr 2023
+ 19:17:03 +0000
+Date:   Tue, 4 Apr 2023 12:17:01 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: RE: [PATCH v4 3/5] cxl/pci: Find and register CXL PMU devices
+Message-ID: <642c77ad5f0d_21a8294fe@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+ <20230330164556.31533-4-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230330164556.31533-4-Jonathan.Cameron@huawei.com>
+X-ClientProxiedBy: BY5PR04CA0002.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::12) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB4797:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9b3c412-ba0a-4e18-d855-08db35412c1b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: w1eDft7okUI4UnLMXeBoP6rQOS4bYjlVSvf3i+6ASLUTzlePOar/z++uYDMj0h2oGHl3YzR4snfrVaYIzEKhLMxszXCG2VhRVzwwegZ0xZ/chiGZ4HVoIIi/gEwT7UtiFsfifCVQqSBaPY2wWN1JeFdvJbNUFzu3uXFnHZZqAKbrQjkGVDzVInowkPXcFj3ykjnkev3TD/6NsAgMQiWfdKmhn38dCsB/7wd7LG0UlCVk6TJjD7/UsuEQXRWVtjPdcYpwLf46Jx0Bj9Kk5ZZQ9du5Ib7PyQ+AhqnSgLco/YfcRlkew6+avWALhGArijiMwqHSatfdvz+fzaOEk6R9GHBILhMdo9igqMoIR83FArziDN9Iijyvp6xbMYXl0cf1Ca0dOoDT82TKeeH+nFj+H6e3uLjTAzdxOz8I5B0niycR/uAwvcyJAGUziPSsyHkZMannOBlZ5XgxSWPUn6BEV+NYPidzgwkJhsTIGm0eT04xsGu8fP17JW1dZZtQqlkOQPLx8vPiKn1JGgAbUQ2QdxV4sAVb1rjCGS3j/AcFNPICINxCT6xatSjIoReCoB3d
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(376002)(346002)(366004)(451199021)(186003)(26005)(8676002)(66946007)(83380400001)(6512007)(478600001)(41300700001)(316002)(54906003)(6506007)(4326008)(82960400001)(66476007)(66556008)(6486002)(38100700002)(110136005)(86362001)(7416002)(5660300002)(2906002)(9686003)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?plmCYOQt92MC3wnMPMBQg0sURb6XHK9Y15rbnublEDvEEGGPQUVSTnqUHQ9Z?=
+ =?us-ascii?Q?4lHrRLmMIatVTI5+65xDuGRqriL0jDs+IaObrinXc7erkb+bVUmkHPkp9umH?=
+ =?us-ascii?Q?p6aC49nEKvrZi4Ulqi2PwttHgcNgsugJ+KYEz56LotbklDNuRa7HGcLPVDbv?=
+ =?us-ascii?Q?u3Ozj4aGjt2vNP4h7uLWBgF3iCxKewXVkg0HqCzu++TTGNSuxP6PiZ0eyZd8?=
+ =?us-ascii?Q?WV8lPwAjouZtWso9+h4hfOQedFPpsRGDK97nWye+7S5EykJezqXEcD4dz+M5?=
+ =?us-ascii?Q?zcSSVXvquiXytI2GlnkGljDipQchO80eEM5HHgLwUORzt68zeZ+pkMwzrKC1?=
+ =?us-ascii?Q?Ih+sP7/ylNYFVVTRi9iUk2FtGSBXH2uiumSd85wuSpiHmRvbN64tvDVMyGY6?=
+ =?us-ascii?Q?2T0Umr3KSQI5JfsFX1u+V8BWvVYcv3d07EwIcWkE73YKsrwcJU9cd1WCY0NC?=
+ =?us-ascii?Q?43cFNHif51Vhq98iWNygBURqhwxHQMJnN28lQt+ROwNJKTk2uezEHhHOnYZH?=
+ =?us-ascii?Q?XPUXEAlebVubBr9zHxYoaab9uM1hleZB09aVfGZR5P3yQ8wR/zmVESarNsVI?=
+ =?us-ascii?Q?4yC13uGilAbnVBXGWhE+qKtAX52VsllagGXaLtXWQEmzqAtFnbh6uoNKoOco?=
+ =?us-ascii?Q?eHvwBODz+qnlkjIRwMDLkqMAKrNqyi2J1TOTaoleeY2JTTwCcuPoxePDhA5A?=
+ =?us-ascii?Q?T5V2OLYH76bOnBm8DI1CJKM1C7Md71CcmIA7q5C1iv1JjtHVlveBm3006zSy?=
+ =?us-ascii?Q?xXvNwx9EO1GDxufWTj0GPQgckaspqL8iRpcZbmckMjUosOL3BSjv9FzyCnWi?=
+ =?us-ascii?Q?TSDzDqMx3xh5LKe7qEZ6+vG0eHUYm6DZannrMaEcu0e09o4pLQGm5wluQMIZ?=
+ =?us-ascii?Q?nzyWC0Dwv2I4jh2cyLIT+BpyWSqKro+Y+dEdsavtRB+AvEVXPhR0HQ+AhoGX?=
+ =?us-ascii?Q?eGLbZI8RhNV8pYuPRKZ5D4dDgjYd63kQbxcFiJZ+W5pa4emekL3CzIkwxiyy?=
+ =?us-ascii?Q?Bi7ixD6EkOi2OlKh7GX6CNjKUePwM3cO44XO1L1qrI2KTpP5/IUaIRjIiZ9M?=
+ =?us-ascii?Q?6QXES3RgFE1NhmHcjR+1S1Hjb/gO4Ay+YZa2yOQfOpni65xdwhzPrZepSU9n?=
+ =?us-ascii?Q?MJ5A44A/BLmExknMGFVXYm53w5yXP+Jd27EtYo2ePb35DqrRV3FIIypVslwm?=
+ =?us-ascii?Q?pAodAzx2tTf1yD3l1kVbEse+x6R3gsuyRAG+9/hWP8ZiNRbaOEn4+YVWoxiu?=
+ =?us-ascii?Q?TINmdxwH9QFAc9uLpYpZpNDGq8LPHTXU2vn+08QOUrqKb04yqmEX8TaZ8R0M?=
+ =?us-ascii?Q?I1FOILUgn0sLYwx2MCFZVSSXR0AKyNKeNuZCRdGv20n9NRgruVdPmm1F8UWu?=
+ =?us-ascii?Q?jNYpX5gbOmsA9yF+YOIEFGlrQwaQ1FDi1mog1dk6nVn3vsmjTD89V28x1M74?=
+ =?us-ascii?Q?PJgtL42ReJRnpuK+leALtC0PRdlTAjMqnV0iyfPpgjOuUeqfJnJ3udyAaQTi?=
+ =?us-ascii?Q?W7ZCQZvy6yusl1qS4h1fIZAO726H5JLTWUGm3j1POFj9dcE6pY8MAsyq/HE3?=
+ =?us-ascii?Q?CHGmxusV3Iof7e6H83RbuYrMFsi/SR4E63VW4SLtBmPDSZZZ7hKPhmkn7oWH?=
+ =?us-ascii?Q?nA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9b3c412-ba0a-4e18-d855-08db35412c1b
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 19:17:03.5437
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kFpBGLESnGZ8PSmpVFHi863x2gPXHwc9tnuffqP+fURnaYR3U2r3qJAHqNkvnz+ldZk01UCzcOhAWNfLj7dwhfR3bzq8t9xzNFR9MH7+T4Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4797
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Jonathan Cameron wrote:
+> CXL PMU devices can be found from entries in the Register
+> Locator DVSEC.
+> 
+> In order to register the minimum number of IRQ vectors necessary
+> to support all CPMUs found, separate the registration into two
+> steps.  First find the devices, and query the IRQs used and then
+> register the devices. Between these two steps, request the
+> IRQ vectors necessary and enable bus master support.
 
+It's not clear why this patch is talking about irq vectors and bus
+mastering when there is no irq query/setup logic in this patch?
 
-> On Apr 1, 2023, at 3:51 AM, Gregory Price <gregory.price@memverge.com> =
-wrote:
->=20
-> On Tue, Apr 04, 2023 at 05:58:05PM +0000, Adam Manzanares wrote:
->> On Tue, Apr 04, 2023 at 11:31:08AM +0300, Mike Rapoport wrote:
->>>=20
->>> The point of zswap IIUC is to have small and fast swap device and
->>> compression is required to better utilize DRAM capacity at expense =
-of CPU
->>> time.
->>>=20
->>> Presuming CXL memory will have larger capacity than DRAM, why not =
-skip the
->>> compression and use CXL as a swap device directly?
->>=20
->> I like to shy away from saying CXL memory should be used for swap. I =
-see a=20
->> swap device as storing pages in a manner that is no longer directly =
-addressable
->> by the cpu.=20
->>=20
->> Migrating pages to a CXL device is a reasonable approach and I =
-believe we
->> have the ability to do this in the page reclaim code.=20
->>=20
->=20
-> The argument is "why do you need swap if memory itself is elastic", =
-and
-> I think there are open questions about how performant using large
-> amounts of high-latency memory is.
->=20
-> Think 1us-1.5us+ cross-rack attached memory.
->=20
-> Does it make sense to use that as CPU-addressible and migrate it on
-> first use?  Isn't that just swap with more steps?  What happens if we
-> just use it as swap, is the performance all that different?
->=20
-> I think there's a reasonable argument for exploring the idea at the
-> higher ends of the latency spectrum.  And the simplicity of using an
-> existing system (swap) to implement a form of proto-tiering is rather
-> attractive in my opinion.
->=20
+> Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
+> follow a similar pattern the number of vectors necessary is known
+> before any parts of the driver stack rely on their availability.
 
-I think the problem with swap that we need to take into account the =
-additional
-latency of swap-in/swap-out logic. I assume that this logic is expensive =
-enough.
-And if we considering the huge graph, for example, I am afraid the =
-swap-in/swap-out
-logic could be expensive. So, the question here is about use-case. Which =
-use-case could
-have benefits to employ the swap as a big space of high-latency memory? =
-I see your point
-that such swap could be faster than persistent storage. But which =
-use-case can be happy
-user of this space of high-latency memory?
+With the new pci_msix_alloc_irq_at() it's not clear that this 2 step
+approach is required, right?
 
-Thanks,
-Slava.
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v4:
+> - No change.
+> ---
+>  drivers/cxl/core/Makefile |  1 +
+>  drivers/cxl/core/core.h   |  1 +
+>  drivers/cxl/core/cpmu.c   | 72 +++++++++++++++++++++++++++++++++++++++
 
+A quibble with the naming, I prefer:
+
+drivers/cxl/core/pmu.c
+
+...since "cxl" is in the directory path. Also, usages of cpmu
+already have a cxl in their symbol names, so just s/cpmu/pmu/ throught.
+The usage of CPMU_ for register macros would seem be more clear, or at
+least more consistent, as CXL_PMU_ like the other register offset
+definitions in cxlpci.h.
+
+>  drivers/cxl/core/port.c   |  2 ++
+>  drivers/cxl/core/regs.c   | 16 +++++++++
+>  drivers/cxl/cpmu.h        | 56 ++++++++++++++++++++++++++++++
+
+drivers/cxl/pmu.h
+
+>  drivers/cxl/cxl.h         | 14 ++++++++
+>  drivers/cxl/cxlpci.h      |  1 +
+>  drivers/cxl/pci.c         | 25 +++++++++++++-
+>  9 files changed, 187 insertions(+), 1 deletion(-)
+
+Other than those minor issues above, this looks good to me, with those
+fixed up.
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
