@@ -2,268 +2,140 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10744C6FD1D
-	for <linux-cxl@archiver.kernel.org>; Tue,  4 Apr 2023 22:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD36C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Apr 2023 02:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236583AbjDDWYp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 4 Apr 2023 18:24:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52052 "EHLO
+        id S236695AbjDECAo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 4 Apr 2023 22:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236626AbjDDWYm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 18:24:42 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E564481;
-        Tue,  4 Apr 2023 15:24:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680647081; x=1712183081;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=uOjeBJg2l86qIN3nEdo0RYU0Dqi3MfriJMN5A2fMpjw=;
-  b=R6cY6XFurlfu953iNe4nMi5ThV8UOQmm39HflswN2c0d7vx4mvIQ9jKB
-   EYufGSeqmibCK12nwq/xLWMHFZsEaJHn9ABhJzvIRTtCQj9vEhimk3E2C
-   G3/lhJ8iyQ0Ocd6Vw3N2N5W+simdILHPfIux4dfbi+7viM2i2kQksp+cP
-   KKM9044EaMuPmXK5ZS8Q1Az4pobzX3VkyrG5PGTPsVbyScBLY5ZPhMK8I
-   C1C3LxXoed43fDQ9LFOFD2zszRrkBwYAsRWDhbn4Ia7js39BPytr7RNVU
-   Bc6CASUs17ve0DX23lOHuMQvAenWFrJeuQJtrC8Tj6QqGE6VcIuNSpgqK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="405092699"
-X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
-   d="scan'208";a="405092699"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 15:24:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="686535891"
-X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
-   d="scan'208";a="686535891"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga002.jf.intel.com with ESMTP; 04 Apr 2023 15:24:36 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 4 Apr 2023 15:24:35 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 4 Apr 2023 15:24:35 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Tue, 4 Apr 2023 15:24:35 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Tue, 4 Apr 2023 15:24:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BjBq6UtMLsJPauiWt0MR/S2alaib5iXAYpskQLPT0H0hai3o7KSe/qMim1mh4xi6InHnEuG+bPZP6rJgzrjupB3FtfaTdHUMvGotz7Mt1yM7bby4YD9L2nf+HO9Xje8SBPVB9uQXPhcBPZeFi0D8AF90nBHLcMvsQ5os87ub90Q+5e98rHHBhDa2a3lb7C53zNmBqH9u+jyxqi/LFbtrYSNAEOuFIq15MlMONWBVnxc5Ukv6AtELgjZ0Pakmb4gw/148wV6HGrJNnF4b0bU94hlpV8nt5rf3OpmZ1EEmuM+N8dpjQTAZ9Lz/lyH2gHw8gU8sem1zYr39NxRqPwmFlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=muKj9ZF2/Eq7kT7VkAZJYv/TZbmLGlKKg3nqh6Pbxgo=;
- b=Rilpqq6US5NKDtnncTz8sN8g0XfN+5eMk8zUnCbPQZSlKxAJNycyEXXZKL10gFq5SL0/Kw9qQ5ionBQhNOL9r3LpRN272yKkN8UrRcZMuxcA9SbxJnp6HBE5w/dQjz+YS60uLzrwHAgvclIGCLSHEmUJgR+dZvFr+MDK9HMunhtXMROdl6Laa5mfjx8TBgB2sfirX/eJv2+l5uprPTdfkN5fX2+FXeRPFWv++qi6wyBETKbzLDsjPJ0/iRX6iz5x1RpOvYshs12WR9ojG9AoYonHj/xa3NXCxlSClUPctSAE2fNyzgUV46m/pBbm9GLzGiO2meMfxbETLUmZMI2b/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CO1PR11MB4978.namprd11.prod.outlook.com (2603:10b6:303:91::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.34; Tue, 4 Apr
- 2023 22:24:27 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6254.033; Tue, 4 Apr 2023
- 22:24:27 +0000
-Date:   Tue, 4 Apr 2023 15:24:24 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: RE: [PATCH v4 5/5] docs: perf: Minimal introduction the the CXL PMU
- device and driver
-Message-ID: <642ca39865e8b_21a8294d9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
- <20230330164556.31533-6-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230330164556.31533-6-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: BYAPR21CA0016.namprd21.prod.outlook.com
- (2603:10b6:a03:114::26) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S236717AbjDECAl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 4 Apr 2023 22:00:41 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053074C3D
+        for <linux-cxl@vger.kernel.org>; Tue,  4 Apr 2023 19:00:33 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230405020029epoutp032ae3f8f61077f69c5242e23bc82d8ca4~S52R4RRqH0771707717epoutp03Z
+        for <linux-cxl@vger.kernel.org>; Wed,  5 Apr 2023 02:00:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230405020029epoutp032ae3f8f61077f69c5242e23bc82d8ca4~S52R4RRqH0771707717epoutp03Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1680660029;
+        bh=4thd3heMEraca//jwqJ0ec4LoGtfGKo+0QaJP9sr9II=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eNhUeftUqfUjH3ltgf0fbBPLINVd8lSG1M/eaFgqxKAAWQFoXXvt2sAdnM53tlNKy
+         5axdXz3z7wB/4LP72Sh5Ls14US/8WDHBGdlGn4fLEU3MUzYZwk8NC5w/McjLcIGV9M
+         P9TyMOy15W+n7A43N52lvaQ9u2FYsvqhSqdKrl8E=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20230405020028epcas2p2847d97067fccea2f9c3434afb89d9b49~S52RJCxWu1499914999epcas2p2I;
+        Wed,  5 Apr 2023 02:00:28 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.92]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4Prns82915z4x9Q1; Wed,  5 Apr
+        2023 02:00:28 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1F.A6.35469.C36DC246; Wed,  5 Apr 2023 11:00:28 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230405020027epcas2p4682d43446a493385b60c39a1dbbf07d6~S52QNybSg3010330103epcas2p4O;
+        Wed,  5 Apr 2023 02:00:27 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230405020027epsmtrp2958bd39a98ddadadcc48e188140e1af7~S52QNBfTV1003310033epsmtrp2-;
+        Wed,  5 Apr 2023 02:00:27 +0000 (GMT)
+X-AuditID: b6c32a48-9e7f970000008a8d-fe-642cd63ce796
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A6.5A.18071.B36DC246; Wed,  5 Apr 2023 11:00:27 +0900 (KST)
+Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230405020027epsmtip2e94be8e8537bddb9e3784a7ab098f603~S52P9gE_w1602716027epsmtip2p;
+        Wed,  5 Apr 2023 02:00:27 +0000 (GMT)
+From:   Kyungsan Kim <ks0204.kim@samsung.com>
+To:     willy@infradead.org
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
+        dan.j.williams@intel.com, seungjun.ha@samsung.com,
+        wj28.lee@samsung.com
+Subject: RE: Re: Re: RE(2): FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes
+ for CXL
+Date:   Wed,  5 Apr 2023 11:00:27 +0900
+Message-Id: <20230405020027.413578-1-ks0204.kim@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <ZCbX6+x1xJ0tnwLw@casper.infradead.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO1PR11MB4978:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5b3629f-1a7b-4584-620d-08db355b5a2a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Zd/fyptUQbxlXCAkYiXnb/OJIGju4wseoveUE5FVs2rduT6KMCGT9KnL0KIPvQvkZSWRAaDxr5IT3UzlxDVSm4pouMvoG20Yozkw2+5xHRNDA8u9xX67pCtVrPAL9nfQrIC8qysDuzHAv77wngn96Kg6pPcRLRdlETKY+QhPtSupBeffi7Fne4O61fxH0McEAi+VS3slIU0biAqpFzdbh3L53eCiEP+2WkIKf9bvR8wFZu7L/BfwNWxn/eoUhcUHO/ERsgEEom//qgdaajcRYfsktcbv/couqBMG/U3MAutxY1CzbRv8XgmdNzXsKj2TEKYrvqH7fTujEa4iOXgtXENNwAQQ3Eb8J/wNTq9W5PxAZSo4esqOO8A88UBN56bDwlDc7UN0SM8kv8iG22i+jY0KXcLvKf9GA7LKL2uCpSfguidRLSfZLbUQH2HtYqSY793zEPuofYBr9hahQC74JeNt7p4YZ5WYhUz8D7lBvuBg6ocugouC5rVLAszVqH80sg+NeAN1RhB6aOfUyhP+wfQOozCquuC65swfVGfD5keuIPG/OiMxp8wXuDWCVjAV
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(39860400002)(136003)(396003)(346002)(366004)(451199021)(6512007)(6506007)(26005)(6666004)(9686003)(86362001)(478600001)(186003)(7416002)(8676002)(38100700002)(66946007)(66556008)(2906002)(66476007)(83380400001)(6486002)(5660300002)(82960400001)(8936002)(4326008)(316002)(110136005)(41300700001)(54906003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?T0fUNhowrTw49VM4z6wOoI6PLT4dHwqNbqCvgGAJxzEnIKPU1Xq3M/lg18V3?=
- =?us-ascii?Q?AD0dkz7oqy2AiwPs3qBMNWYbL0IDVNemEIQCj9G5KdZ7a1ohqzbAF/HE5q3m?=
- =?us-ascii?Q?YFZTesFyrTsc8guHxoisn7upJaRb43rcTUOHIbWwMHfzxLSyvi8Uou/wGt2J?=
- =?us-ascii?Q?/JAWmWc75UKitTihxRK/f4FhJw+5cF7sBCCqpY9gJBH+m2C4NSIeF/yza0w0?=
- =?us-ascii?Q?/c+4qjxlh9eNiGEHk1lWrFltC+Wm4PhFmRHvjToGBnQSJ+dTDrWOWtANEVao?=
- =?us-ascii?Q?VTfguMu+SP89aZh0tKxC2yS9UH7Fhaez6rAUS9stgs7ZGHXPm3SW/tYz9aQe?=
- =?us-ascii?Q?9AhKlpt7aWZmHptrXaaV9oUNnlpc5KEpTXsDP6ITispEuYkM592UnfkBUzoV?=
- =?us-ascii?Q?I+PZTyuY+r9GpEeEQ2jF/TKCtGZuCpW3oXGKo1eVnoErV3Elg4Uq32PnvsTj?=
- =?us-ascii?Q?D0gd+vZlRWkJ1jZb8q9WT3GWEBaXQWxMDbnDB/j9gEkXRcTJu5lZEU6VqZHp?=
- =?us-ascii?Q?3D79IxiNiDx/639LvkgtekQStR+HmCjAwgSoitZrZEqBdZlIpehLUob/WYH0?=
- =?us-ascii?Q?2YTtjcttotSLsO/0alJrwizdrKjtjDgNDgkr7WrgOrwQ4ezFWhR28NtcelH8?=
- =?us-ascii?Q?rO2e34Oim/bud+n9f7NP0iJsheuGtgu3DGdSaSzSezysde92tEvlawPbsm4O?=
- =?us-ascii?Q?b5S8ijD9+DSnGLMgxgFu8o0oufXGATNBIuJPijjDbjw5jsJbwXxhApw1PwSp?=
- =?us-ascii?Q?6uiUWar8HOrXbUI14kc5UA5iiRzuO7JGcL9YOzFKhBB5n9ErftVSffprzga3?=
- =?us-ascii?Q?f6AZ7CY239bjitM3oHQvpnH1MJXZB87o3JFA8hdyTucVCHCCLUs05ocT87bB?=
- =?us-ascii?Q?Yhc+Ehfe8HMAG3KRDOmzhnyOqKdRARDu91pf3dwVukmW6ZJZWTxBnFJ9dKPZ?=
- =?us-ascii?Q?w0Ocl+/Fuk7etpQ1w2yrOfDVhigF5pT6FE5IKjFiMZPssTU1DnAmR8ibugkh?=
- =?us-ascii?Q?yi6AxwPjtSfz9oyRu4mXeexQDAIDbL+dkQgNSchZIR4ZhD0NoUef9dPTjHe+?=
- =?us-ascii?Q?FuQKN3vnNOWWqUT6J1uWu5stwDBJfBHKb1GVjav3tqqdgV5lpCAfZUMs/rY9?=
- =?us-ascii?Q?tUp5pHymo4YRHA3P5ys+qdCcFE1sttsPwyk1wy8a9NnUM7X5FJYO3n8cZWyt?=
- =?us-ascii?Q?Aq/puCQmxkFA4ruS+0/f+xnCct/Zdf+B0pbDNbw3KuqctPNkBfct29+zgRAg?=
- =?us-ascii?Q?Ma0a55dAhWReMiDb5MaNd6wIau6CTnRblelAVDFE9grRIiTbMhlRGy1+oMOr?=
- =?us-ascii?Q?q7CLa1+G9ri7KpT3JVIl6PrXoMAzq4iOjFhz4Dm+yPKqV6Me8JJ8Bg0xPjlo?=
- =?us-ascii?Q?UQAqNyuW24H/ns4HfrWE8n4vvxsF5xpW8C/2KaYDCJLeiyHt1Bk4sP22X79E?=
- =?us-ascii?Q?opp0f/D8fN6kkU7WopuZxsiJjQ/lGj76rzinkDJcuu9YdQGSeR/TyZjd35Sw?=
- =?us-ascii?Q?GHvXyMuaBU2A5Y+Gxwqdr1uuQ2oBoij1wCw2lqvPGsZvWej9UwaWmSWSRnfL?=
- =?us-ascii?Q?bFfxLj01dfjVEmjIpxxE55eyBMcAyAJSTWn7h7PkBZMNHJk0UxL+IA7GNrpR?=
- =?us-ascii?Q?5w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5b3629f-1a7b-4584-620d-08db355b5a2a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 22:24:27.6300
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6xu2uVSxNb3xuLvK1BBP4PFedjmWrmBcF4UO/cUzwflNYcwZ/92hEcT5hbYn9Jeqg1BuVir0lwUTHd8AhJ3txi1LBZq45v1Gk09ICp9iy7k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4978
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmma7NNZ0UgzsveS2mH1a0mD71AqPF
+        +VmnWCz27D3JYnFvzX9Wi32v9zJbvOg8zmTRseENo8XvH3PYLDbef8fmwOXx78QaNo/NK7Q8
+        Fu95yeSx6dMkdo/JN5YzevRtWcXo8XmTXAB7VLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZ
+        gaGuoaWFuZJCXmJuqq2Si0+ArltmDtB1SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSC
+        lJwC8wK94sTc4tK8dL281BIrQwMDI1OgwoTsjMMXGlgL7vJWrOhdy9TA2M3dxcjJISFgIrF+
+        2SO2LkYuDiGBHYwS33/dZQZJCAl8YpTY+c8MIvGNUWLb9E5GmI69fz9DdexllNg7aTUjhNPF
+        JNG34DJYFZuAtsSfK+fZQGwRAXGJY1NPgsWZBf4xSuy5LAliCwuESqy/sIwJxGYRUJVoeHae
+        HcTmFbCROLRyJdQ2eYmZl76DxTmBNh/bMYcRokZQ4uTMJywQM+UlmrfOZgY5QkKglUNi8/+1
+        LBDNLhK7L0yHGiQs8er4FnYIW0ri87u9bBB2scTj1/+g4iUSh5f8huo1lnh38zlrFyMH0AJN
+        ifW79EFMCQFliSO3oNbySXQc/ssOEeaV6GgTgmhUkdj+bzkzzKLT+zdBDfeQmLDqJwskqNoZ
+        JdbcvMUygVFhFpJvZiH5ZhbC4gWMzKsYxVILinPTU4uNCkzgEZycn7uJEZxYtTx2MM5++0Hv
+        ECMTB+MhRgkOZiURXtUurRQh3pTEyqrUovz4otKc1OJDjKbAsJ7ILCWanA9M7Xkl8YYmlgYm
+        ZmaG5kamBuZK4rwfO5RThATSE0tSs1NTC1KLYPqYODilGpi457Vsbi+5Gr7zHLOmy2QG94km
+        AZeezDqyYyZH12aR0hXHspL6r+/eVPatLCt0StmWMG2dRq0jSU0t8kp/7230jLm8omdtz0aF
+        ZcuubayQiTwS3hXlJeDxba/cD7tH2Z77Q5nPKTHKrJMx/1X076rdSkdlR1mjjXVBTcVpl6dv
+        rNWUD5R/UfZ+1dKoX/Nj/ONn/lwjqfg3yl/y2/v9+o1Kq6y9/k2Jehri75DByefzOurYxXyz
+        Ow+qIqetTLuYW99Y9DKwU+k2c8KfZP4lS398sVXM2hl7dYL81D2WHzmv3BTI1809usNLQfH4
+        7PbMNHNNtn+3FxefbNW5fXpa4NINCi4FhxdckbJK/Lmt1FaJpTgj0VCLuag4EQDW2LA2NQQA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsWy7bCSvK71NZ0Ug61HdSymH1a0mD71AqPF
+        +VmnWCz27D3JYnFvzX9Wi32v9zJbvOg8zmTRseENo8XvH3PYLDbef8fmwOXx78QaNo/NK7Q8
+        Fu95yeSx6dMkdo/JN5YzevRtWcXo8XmTXAB7FJdNSmpOZllqkb5dAlfG4QsNrAV3eStW9K5l
+        amDs5u5i5OSQEDCR2Pv3M1sXIxeHkMBuRontDRPZIRJSEu9Pt0HZwhL3W46wQhR1MEks/3WG
+        DSTBJqAt8efKeTBbREBc4tjUk4wgRcwgRVsvTwdLCAsES7y7dY8ZxGYRUJVoeHYebCqvgI3E
+        oZUrGSE2yEvMvPQdLM4JdNKxHXPA4kICxhKPjq2HqheUODnzCQuIzQxU37x1NvMERoFZSFKz
+        kKQWMDKtYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjgMtzR2M21d90DvEyMTBeIhR
+        goNZSYRXtUsrRYg3JbGyKrUoP76oNCe1+BCjNAeLkjjvha6T8UIC6YklqdmpqQWpRTBZJg5O
+        qQamSdb9ImfEOrf+2TDr0fYUvWvFTnv3snc8mHW+1npt5w+j86ElDttkr5yXqr9z3tabZcmb
+        QtGiOYx7O8NsNq7xXT3/8cM5Mslvp79f+FWpMk4pzP3zh/usYjlaylLPzwpsTIqf3rgnQY/T
+        f+4U+Vv7p3od3bhr/v3ZD6aUR6ct/ipxJVK7NFB8woHodbo9gVN2cOdLmHex6abdUn3U2iu3
+        TrymuPaeo/DTlZeCVO/OWpTvdDO6q25RWYDdLPFsx+Y3Mnqr9toKrRETm6Fn/c7544nFVWl/
+        k71lZjQ8brS7ffSuoN9ePpOLIu/Xuce6+lRfbZW62Bdu9CzplpJ4+jv79Rz3wuOvxKrs/JHz
+        722VEktxRqKhFnNRcSIAaaqqBfICAAA=
+X-CMS-MailID: 20230405020027epcas2p4682d43446a493385b60c39a1dbbf07d6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230405020027epcas2p4682d43446a493385b60c39a1dbbf07d6
+References: <ZCbX6+x1xJ0tnwLw@casper.infradead.org>
+        <CGME20230405020027epcas2p4682d43446a493385b60c39a1dbbf07d6@epcas2p4.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> Very basic introduction to the device and the current driver support
-> provided. I expect to expand on this in future versions of this patch
-> set.
-> 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> --
-> v4: No change
-> ---
->  Documentation/admin-guide/perf/cxl.rst   | 65 ++++++++++++++++++++++++
->  Documentation/admin-guide/perf/index.rst |  1 +
->  2 files changed, 66 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-> new file mode 100644
-> index 000000000000..46235dff4b21
-> --- /dev/null
-> +++ b/Documentation/admin-guide/perf/cxl.rst
-> @@ -0,0 +1,65 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================================
-> +CXL Performance Monitoring Unit (CPMU)
-> +======================================
-> +
-> +The CXL rev 3.0 specification provides a definition of CXL Performance
-> +Monitoring Unit in section 13.2: Performance Monitoring.
-> +
-> +CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-> +any number of CPMU instances. CPMU capabilities are fully discoverable from
-> +the devices. The specification provides event definitions for all CXL protocol
-> +message types and a set of additional events for things commonly counted on
-> +CXL devices (e.g. DRAM events).
-> +
-> +CPMU driver
-> +===========
-> +
-> +The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
+>On Fri, Mar 31, 2023 at 08:37:15PM +0900, Kyungsan Kim wrote:
+>> >> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
+>> >
+>> >This sounds dangerously confused.  Do you want the EXMEM to be removable
+>> >or not?  If you do, then allocations from it have to be movable.  If
+>> >you don't, why go to all this trouble?
+>> 
+>> I'm sorry to make you confused. We will try more to clearly explain our thought.
+>> We think the CXL DRAM device should be removable along with HW pluggable nature.
+>> For MM point of view, we think a page of CXL DRAM can be both movable and unmovable. 
+>> An user or kernel context should be able to determine it. Thus, we think dedication on the ZONE_NORMAL or the ZONE_MOVABLE is not enough.
+>
+>No, this is not the right approach.  If CXL is to be hot-pluggable,
+>then all CXL allocations must be movable.  If even one allocation on a
+>device is not movable, then the device cannot be removed.  ZONE_EXMEM
+>feels like a solution in search of a problem
 
-s/register/registers/
+We know the situation. When a CXL DRAM channel is located under ZONE_NORMAL,
+a random allocation of a kernel object by calling kmalloc() siblings makes the entire CXL DRAM unremovable.
+Also, not all kernel objects can be allocated from ZONE_MOVABLE.
 
-> +
-> +    /sys/bus/cxl/device/cpmu<id>
-> +
-> +The associated PMU is registered as
-> +
-> +   /sys/bus/event_sources/devices/cpmu<id>
-> +
-> +In common with other CXL bus devices, the id has no specific meaning and the
-> +relationship to specific CXL device should be established via the device parent
-> +of the device on the CXL bus.
+ZONE_EXMEM does not confine a movability attribute(movable or unmovable), rather it allows a calling context can decide it.
+In that aspect, it is the same with ZONE_NORMAL but ZONE_EXMEM works for extended memory device.
+It does not mean ZONE_EXMEM support both movability and kernel object allocation at the same time.
+In case multiple CXL DRAM channels are connected, we think a memory consumer possibly dedicate a channel for movable or unmovable purpose.
 
-So I went to go add some text about how to identify PMUs in a persistent
-manner from one boot to the next. For CXL memdevs this is done by the
-'serial' attribute which is always stable regardless of the device init
-order. That's harder to get to from the pmu device because it may be
-associated with a device that does not have a memdev.
-
-I think it's also going to be frustrating for userspace to see
-randomized pmu ids across devices since that probing will happen in
-parallel. So how about:
-
-1/ Add serial as an attribute for each PMU to export
-2/ Change the device name format to be "pmuX.Y" where X can just reuse
-the memdev id for endpoints and be another value for switches, and Y is
-guaranteed to be 0-based and in hardware discovery order.
-
-...with that, someone can write a udev script that can persistently
-identify PMU[Y] on device[serial] each boot.
-
-That also cleans up a /sys/bus/cxl/devices listing to make it clear
-which pmu instances belong together.
- 
-> +
-> +PMU driver provides description of available events and filter options in sysfs.
-> +
-> +The "format" directory describes all formats of the config (event vendor id,
-> +group id and mask) config1 (threshold, filter enables) and config2 (filter
-> +parameters) fields of the perf_event_attr structure.  The "events" directory
-> +describes all documented events show in perf list.
-> +
-> +The events shown in perf list are the most fine grained events with a single
-> +bit of the event mask set. More general events may be enable by setting
-> +multiple mask bits in config. For example, all Device to Host Read Requests
-> +may be captured on a single counter by setting the bits for all of
-> +
-> +* d2h_req_rdcurr
-> +* d2h_req_rdown
-> +* d2h_req_rdshared
-> +* d2h_req_rdany
-> +* d2h_req_rdownnodata
-> +
-> +Example of usage::
-> +
-> +  $#perf list
-> +  cpmu0/clock_ticks/                                 [Kernel PMU event]
-> +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-> +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-> +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-> +  -----------------------------------------------------------
-> +
-> +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-
-Ah here's the examples I was looking for in the last patch, nice.
-
-> +
-> +Vendor specific events may also be available and if so can be used via
-> +
-> +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
-> +
-> +The driver does not support sampling. So "perf record" and attaching to
-> +a task are unsupported.
-
-Is this a common restriction for CPU-external pmus, or do you see
-sampling support required to get this upstream?
