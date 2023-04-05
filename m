@@ -2,231 +2,254 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929F3C7619A
-	for <linux-cxl@archiver.kernel.org>; Wed,  5 Apr 2023 05:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855E7C7619A
+	for <linux-cxl@archiver.kernel.org>; Wed,  5 Apr 2023 10:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236750AbjDEFAM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Apr 2023 01:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50508 "EHLO
+        id S237700AbjDEKTA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 5 Apr 2023 06:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236593AbjDEFAL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 5 Apr 2023 01:00:11 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61A372D72;
-        Tue,  4 Apr 2023 22:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680670810; x=1712206810;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=BE64LDpjc7W63Ye+zQhJ1yk9DDYxSGm/2fwHvUEpl6A=;
-  b=eDKL68iM2A1b4mRe7fr2VgCFoO1OtL3aoW1aXxcxbFVDw0jo11+zL+/M
-   DVDTCh7zvu2xxjvSaBb+GLdNS1aO3OePwNO9uZoUNSZnNbgbZYa2ZrPqf
-   gIpC20LuFYd5hH4whkFdPzfnT/wFhP2Jmzb3ePGmsJLvarFCX08C6cNps
-   BrIU7ll3Klyzxv0Dc8EbhsWnUCidq/uPjVWUFFdZjVgpU/u+m0VPWoVeC
-   F1CAs67h/FGJfziXwTHdI6a0nD4wluCmciAmRwK3jRK+GB5y67ZyFH0Ci
-   vgaJ83bNlbxi3M27UqWFUG4UJ3SC62ide5RKsrf8HwlxEcDK7snjKX2+I
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="342389326"
-X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
-   d="scan'208";a="342389326"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 22:00:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="932692132"
-X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
-   d="scan'208";a="932692132"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Apr 2023 22:00:09 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 4 Apr 2023 22:00:09 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 4 Apr 2023 22:00:08 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Tue, 4 Apr 2023 22:00:08 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.104)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Tue, 4 Apr 2023 22:00:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FOt6rwM4gDW7e39RK8BsNCvE8WIS7P+jmaKnU04wiSaahFFbm3S4RpL9Q5Y5VybH+QDUN9sdoaL8ejJrctqeVWEdN2BLzEzo1a1BYbbl4fAZ267t1X+WXZBSg8c8jbCvUxC/qcICPQYbLDBw1q1EopVb4u2bSr5BWB+j4tLWlAM2QoOBV8pXOSjT+yC5puCHVyXuUgqzQiTWQMIdmvKTkmwIkHRZ41RlRyZIzG8cg6XqnO7oYrgqKBhFMf7ntZIvMUeFlRnBJGtkgHx1BsgdGbU8+Z5zEOZ24AFjRQN3MY/1hIJwSjaAzAJGVQkchKQGJMLF6n8E2HIwHEVLF3JM8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v5JFtegeAq5wSlgp3Q+gFes3ura3rIKm7IRevrgZC6s=;
- b=nVtz1SdI2+ttXezXlTV4XI1G5W8A7i4L7cyWxeu/ocO5NWJbDKb2fvFd0u1rAPkxS9tcFiI92Cg5j0G2cNW0KPoHN7hv86Tkqd25e3/APHsPKEArT5XA6apRbL6LtPcCFXFXKitd1rCbc0rEmnDgxfFTWJCje1or11ZdYIuL71LqldfSkzxazX2xEooudel6aYX4LKSTC87Vd4iAY4giafyB8ZkWismFAZqmTWB51yqHfEH5G4RQB9f5ZLiJmSSF9jhCMIkeoOu0S4L1PvwwVE+bEDBsfFNHfZb88LImZLUD0r3RtbY7uEV3jCVcK5p0eN9lb5PXyoCvgy2oQBO41w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB6517.namprd11.prod.outlook.com (2603:10b6:8:d3::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6254.35; Wed, 5 Apr 2023 05:00:06 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6254.033; Wed, 5 Apr 2023
- 05:00:06 +0000
-Date:   Tue, 4 Apr 2023 22:00:03 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Kyungsan Kim <ks0204.kim@samsung.com>, <fvdl@google.com>
-CC:     <lsf-pc@lists.linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <a.manzanares@samsung.com>, <viacheslav.dubeyko@bytedance.com>,
-        <dan.j.williams@intel.com>, <seungjun.ha@samsung.com>,
-        <wj28.lee@samsung.com>
-Subject: RE: Re: RE: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Message-ID: <642d0053afc07_21a8294b7@dwillia2-xfh.jf.intel.com.notmuch>
-References: <CAPTztWYGdkcdq+yO4aG2C8YYZ0SokxhHQxQK7JmRxXLAuwV00Q@mail.gmail.com>
- <CGME20230405020631epcas2p1c85058b28a70bbd46d587e78a9c9c7ad@epcas2p1.samsung.com>
- <20230405020631.413965-1-ks0204.kim@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230405020631.413965-1-ks0204.kim@samsung.com>
-X-ClientProxiedBy: BY3PR05CA0053.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::28) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S237815AbjDEKSw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 5 Apr 2023 06:18:52 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339A059DD
+        for <linux-cxl@vger.kernel.org>; Wed,  5 Apr 2023 03:18:44 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230405101841epoutp033b2a39141ce53b9e155e42dd526c33ee~TApROUyZb0897108971epoutp039
+        for <linux-cxl@vger.kernel.org>; Wed,  5 Apr 2023 10:18:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230405101841epoutp033b2a39141ce53b9e155e42dd526c33ee~TApROUyZb0897108971epoutp039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1680689921;
+        bh=9ydTuce663enN56S8RaGBrGjILCmiz4Kr4WItfjDk/Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BaYePQxNmKPA8yB8FJa8EIGJjqbmdTnmsMYpG6Jlk2tOxajvO0cKG+toPkQ+yWxG4
+         ivxRbLFIPcZvBGFGVziu1OAx7oDFaewXzjdi6lSmfPRZhkdsstemC0v4c3hBMc5Iib
+         kkg8NI0g4PB2Yuri0NWvdHaGLyWoCM17/X5fZHbI=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20230405101841epcas2p43ec0d117bfb67bc0039dcccc71620dff~TApQyCTXr1128311283epcas2p4q;
+        Wed,  5 Apr 2023 10:18:41 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.68]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4Ps0w05x2Vz4x9Q1; Wed,  5 Apr
+        2023 10:18:40 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        71.4A.08750.00B4D246; Wed,  5 Apr 2023 19:18:40 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230405101840epcas2p4c92037ceba77dfe963d24791a9058450~TApPlzOO40598005980epcas2p4N;
+        Wed,  5 Apr 2023 10:18:40 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230405101840epsmtrp18ae01efa7f010cc1ce24a41edd9f0925~TApPlE1LQ0603106031epsmtrp1e;
+        Wed,  5 Apr 2023 10:18:40 +0000 (GMT)
+X-AuditID: b6c32a47-777ff7000000222e-52-642d4b001d7c
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.0E.31821.00B4D246; Wed,  5 Apr 2023 19:18:40 +0900 (KST)
+Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230405101839epsmtip285b42780b3c47ef8410e5781474a8442~TApPXryTt2659526595epsmtip2L;
+        Wed,  5 Apr 2023 10:18:39 +0000 (GMT)
+From:   Kyungsan Kim <ks0204.kim@samsung.com>
+To:     dragan@stancevic.com
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
+        dan.j.williams@intel.com, seungjun.ha@samsung.com,
+        wj28.lee@samsung.com
+Subject: RE: Re: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
+Date:   Wed,  5 Apr 2023 19:18:39 +0900
+Message-Id: <20230405101839.415029-1-ks0204.kim@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <81baa7f2-6c95-5225-a675-71d1290032f0@stancevic.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB6517:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b2f4174-3b46-4eb5-b388-08db35929f75
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u9jEClCun1McMDJrHDfO6v77AfYc2cTXaVc/qbN2uU8rkAebn0SVY1MViqBQidwSbBTcXdF38BqTR8PrZN5x/eTNqhHPgK8vDHLWf0yC/HajRwrCO5zXbEYAyWMIS/8/iA+kAn055/O5j+rkKOaM1QS0LqfGdfRvCT3G3GOgwdsD1m8tn3++oqBxQj6IrtinvVSniyYmGhRC5tAUEKkLNoIsowEccVwWrd1cHo4hr0/zEQHbG3H0/EXsAs4NQiFuULs46F8JcUHoYuNTuJ+oVMdx4Ee/qWrs8p7cA87ufBNMg/aTEO6/zv8zWn4Te5bS5fF06esVt89Of/op48x3TACD3eXeBzA5YezTbDoYrL2hBKnCaE9AVTD8fG0MfCW5ZAE74WS2ST5DQC45migoruCUPmcf0CH7RE0cj9A225G9YYixUYFo/GFW1dMcYOL9JBnrur5lUz9SmYSv6R7CDKpCrX6Kaa8memQCoT6yDah4tJjyqXYSOrJVmS2g1hwO5NELldhvHiDKJ8kDAMjRn1nJXsyRHFeFms+mP7MggVUeNUiIFbN3WVKSM/9Sa9HKws7+edG2QdIlkyTbFN6TuA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(346002)(396003)(376002)(136003)(451199021)(83380400001)(6486002)(966005)(6666004)(8676002)(66476007)(66556008)(66946007)(9686003)(26005)(6512007)(6506007)(86362001)(4326008)(2906002)(186003)(316002)(478600001)(82960400001)(41300700001)(8936002)(38100700002)(7416002)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UVhFb05HTmtMaDNRSC9KR2Iybk5oS0srZmNJRnVCWG00TEhIMkFwWmhnUkpx?=
- =?utf-8?B?Y0dRaHlmbXJjUm8xYnNvZFdjMFh2ZHZuSHlTRjVDcnZySmtyNlhXVlQ4RzFr?=
- =?utf-8?B?elJaMnp2ZTdQdjZlNFFvdU1BOTQyUm5pYTlOYXdlUlp2ZkpvY0RzMjNkaFVl?=
- =?utf-8?B?T1UxRFF3Y1JiSlY1d2VNaFJ4dUVxZjY0M1hKckw0NlBLcnFvRGFGY3lkTEEv?=
- =?utf-8?B?ZE0wSmVXTkRiQk5yT0I0RSs0YlNpY1NOR3Jsa2ZTZmFQRzc4Y1lxS1Q2Ymoz?=
- =?utf-8?B?bXRsMU1wZC85QUhyMkJGVk1nWm4zcEY3ZUFDSy9RUmF6eUdnM1czeHB4bHhj?=
- =?utf-8?B?ZXd0dTdYU25JZDU2NEU0T1pwcXZKd2J5alEvbm9EZEMzUWxCMGUwU1MvVHEr?=
- =?utf-8?B?VFZjSHV2WDgxUWxlSmdKdXRnQmtPT1pvcE1qSGl1eWxPRGptaUthV3pUU29v?=
- =?utf-8?B?QzBaMzVscFJrcmMzV0ROR0Q2cGYyMVhLQUxqSW5hNitVWkVNQ3lXVVErNzR2?=
- =?utf-8?B?NkIzSUxhMFpxeTRnbmdzTmZlUFJtNnY2YjNYNVgrRWpqUGtiVHdVMEJDSWxC?=
- =?utf-8?B?dWw1WWJQZnRsRFNORk4wTEhITVB3VTVLV1orbFJBL1RId2FLODRSNE9WYklS?=
- =?utf-8?B?cUs0NHlkZVcwdU02aDhwNExwMlJucDlrRWthL3BnZnFYUXlMQjh6dWVHd0hx?=
- =?utf-8?B?alFBRVZ5SUo3RGYrQWkrOS9YYnNRTmIyK2dJdDRVaUVFdTh4TkNVWDFnYzdT?=
- =?utf-8?B?Qk5SdkRNR0Mxek5nK2RtRFA2Q2kwOHhqeEpKcWd3V1haMzh0c0FpRUY5MVUx?=
- =?utf-8?B?bnpSR0FKRGRaNk5scjRMU1RUelNsWHdKNTRwQlFkMXVIZzZRM2xTVzBHSEJp?=
- =?utf-8?B?Z1k3MW1iY2JYR0xiR3lXVlllN0tqQXdWcFBpSW9yL1JyNDhiSmx0SUw1aG8x?=
- =?utf-8?B?ZWJvS2dkRC9MeStLTVpLcFhJdGtWZkZCbXBNWU1iNmlIOVdnTHpqR2k5dDdq?=
- =?utf-8?B?aVU5R3h5YWVocFR3U1BMS0U1dS9pTjg5WkVsRkxrQkpXdWhTd0RBNWVvNC9h?=
- =?utf-8?B?VFF3Z0tlVEY5VjgrL1c1WXhEUnRob0luWmJvSlk4dEg2RXZtcDBGYlNrZkdX?=
- =?utf-8?B?cFNGOFZmeUY5SnhQZU5uNjRqNVg3MnRBZHVBb3JZYk85a2doR2Y4UnpjNCtO?=
- =?utf-8?B?ZXExSVNnUk9yTU5LOXpXN1hueWJDcXlJN3pXVWxVemFWTkFQNzMyaDJhcll6?=
- =?utf-8?B?d3UxbmFTdkNQOGZZYzhzOSs0Zmc2SmIwTFo4cjl3OEZmNzNqWi9hY2lqQ0pn?=
- =?utf-8?B?ekEvMStaSWdidWdBcUVuZFpHL2d6TGZzTFVUSkh5SUp1MkN0ajBCZ3BBblJU?=
- =?utf-8?B?d1NpS1oveHNFSGxJM1c3RXNCNXZsRGJ0TmZSTDR4VDhBakFsSW0yRDB1a2FJ?=
- =?utf-8?B?Smp6SHlEeDloL2k5YU5lcGdqbDVsUWlQQytORnowNWxNSzVtZzBMWVlPaThM?=
- =?utf-8?B?MXYyZWEzL2dxUE12eXRkNGxzZ2c2UEl5alBBeC93WWRCaWlBOVRLUVdwUUoy?=
- =?utf-8?B?SU9rNUxnbFFpdmtMWHJtNEdtQUt0RGpBQzV6dnFNTmJFMjB1ek0xOFhxaTVZ?=
- =?utf-8?B?amNWVnhDemwreDBlQlEwYTBReVBUZ1ZmY2RmVWlEZ2oyakFOLzJpOGVDQVZU?=
- =?utf-8?B?Q013UHg0bFYva1E5OEk3ektadlFpNU5QbEpNQy9tSDVDYTB6YXBSWWtpMG5a?=
- =?utf-8?B?YnFHZG42TXpJZE9LWTdSQnNXWjRIRzFLN2F3VkxqNDJETktzNnFLRG42L3ly?=
- =?utf-8?B?RVhIL3JMRWhVRTlMejFJbyt6NVdDTy90OEtkaXBYZEZKbnlCMTUrb2FzczlC?=
- =?utf-8?B?Z2Q4MklaY2lUL0ZTR0JrRWRmY1h5QVVIMzZRL214SWFncDlQZTZ6bTY5YlBB?=
- =?utf-8?B?WUZ3dU93b3pZbmV6amY1bnRQOVoyb2hmOWdqUElyT0lhV3NTdG1NY2lUa29v?=
- =?utf-8?B?b0hyamd4ZUZFVXpMakJTOEFrTlNkdC9VcmJMYTFvVHdJZHg4eDVEeDFCNDdo?=
- =?utf-8?B?dkxYT0dQUUZhZ2FxbVpGMWZRRGZsb25PQ3FPQ2R4K2VZY1RveDFmUDdPL0JD?=
- =?utf-8?B?YVk0Q2Q1MWswck1wRUdKbU1jbHVpZnBsUmdOYUZzQUVtVWNjb0ZLWXRhTllS?=
- =?utf-8?B?enc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b2f4174-3b46-4eb5-b388-08db35929f75
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2023 05:00:06.1723
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RqfhtipCyUCse4+RTNgx7e1OCctI/d0R+PqXknp4D7w1jcFP/K7eu4spBopWRMAL/73L64E2TtV1ygHj1EWfDOMicKjyTuN+QC6pC5gl+Xs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6517
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIJsWRmVeSWpSXmKPExsWy7bCmhS6Dt26KwanVOhbTDytaTJ96gdHi
+        0Nyb7BbnZ51isdiz9ySLxb01/1kt9r3ey2zxovM4k0XHhjeMFhvvv2Nz4PL4d2INm8fiPS+Z
+        PDZ9msTuMfnGckaPvi2rGD0WL7Xx+LxJLoA9KtsmIzUxJbVIITUvOT8lMy/dVsk7ON453tTM
+        wFDX0NLCXEkhLzE31VbJxSdA1y0zB+g6JYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpB
+        Sk6BeYFecWJucWleul5eaomVoYGBkSlQYUJ2xr3ZxxkL7thV9Hf+Y2lgXG/cxcjJISFgIjF1
+        3nrWLkYuDiGBHYwSh269ZoRwPjFKvF30ixmkSkjgM6PEj9ZgmI6dd/eyQRTtYpRY9WoulNPF
+        JLHx4BZ2kCo2AW2JP1fOs4HYIgISEvvWLGIEsZkF/jFK7Lks2cXIwSEs4CGxdgoHSJhFQFXi
+        3crlTCA2r4CNxPK+b4wQy+QlZl76DjaSU8BRYv3bZ+wQNYISJ2c+YYEYKS/RvHU2M8gNEgKd
+        HBLNZ9+zQDS7SOy6Mp8JwhaWeHUc4jYJASmJl/1tUHaxxOPX/6DsEonDS35D9RpLvLv5nBXk
+        TmYBTYn1u/RBTAkBZYkjt6DW8kl0HP7LDhHmlehoE4JoVJHY/m85M8yi0/s3QQ33kHg19Tk0
+        pKYwSsx5s5ptAqPCLCTfzELyzSyExQsYmVcxiqUWFOempxYbFRjD4zc5P3cTIzitarnvYJzx
+        9oPeIUYmDsZDjBIczEoivKpdWilCvCmJlVWpRfnxRaU5qcWHGE2BYT2RWUo0OR+Y2PNK4g1N
+        LA1MzMwMzY1MDcyVxHmlbU8mCwmkJ5akZqemFqQWwfQxcXBKNTAJnnPUeW9bWm1Z9UDiVOyk
+        z5Pyv+855H4jUuiSfvyMBc7qD6s+zcyaqJe1Zcf707PztP8YFu3gbImu6dwp9qBhYuf/I3J9
+        p9pNvG7ILE24duGBeGrc6zyVpW8zDDt2H6i94nhpk9EeqbZtmyNCBI/cVBXuuft9iamw4p7E
+        r1lxWV+L3m3b9DHxO4OkwP2jfbNFVz+Zl1rbMOty0LpF+lr8F78sbJKau58tY4OPbHRnv9IK
+        b9/Tf/6Ifpt3jmHCc4d1ChJ6ew6tUw3bVhq54826MEaNxQfl/wXfvv4347xs/8wvE51n6lTY
+        /2mRU5yfefuwqX63lKT15Ufxyz9tTeJZW7g1UGbR0zkpB5YUTOsKV2Ipzkg01GIuKk4EAGZX
+        1a80BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDLMWRmVeSWpSXmKPExsWy7bCSvC6Dt26KwZIXzBbTDytaTJ96gdHi
+        0Nyb7BbnZ51isdiz9ySLxb01/1kt9r3ey2zxovM4k0XHhjeMFhvvv2Nz4PL4d2INm8fiPS+Z
+        PDZ9msTuMfnGckaPvi2rGD0WL7Xx+LxJLoA9issmJTUnsyy1SN8ugSvj3uzjjAV37Cr6O/+x
+        NDCuN+5i5OSQEDCR2Hl3LxuILSSwg1Fi6T9fiLiUxPvTbewQtrDE/ZYjrBA1HUwS7+bEg9hs
+        AtoSf66cB+sVEZCQ2LdmEWMXIxcHM0jN1svTgRIcHMICHhJrp3CA1LAIqEq8W7mcCcTmFbCR
+        WN73jRFivrzEzEvfwXZxCjhKrH/7jB1il4PE58lT2CDqBSVOznzCAmIzA9U3b53NPIFRYBaS
+        1CwkqQWMTKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYIjQEtrB+OeVR/0DjEycTAe
+        YpTgYFYS4VXt0koR4k1JrKxKLcqPLyrNSS0+xCjNwaIkznuh62S8kEB6YklqdmpqQWoRTJaJ
+        g1OqgUlI1L5d6UNMCveSzKmTuzieB53bvIzv3OGlipYb/ne9sNh1yrjyPeMG2cv8V6QqhJTu
+        Tgx0/jBdhcP/+ib283sz5wUGlnn5LJTikc0r/qBUeGdWl6mg7rPoNRMK/At2NhjODfrM4nZd
+        54J4W872qKnbd/rNfMG1kt/a/+zzR7u1esQ+XTRbIP7GMHV+4GoFx3492+WazQvLLqQ0r1xf
+        bTz53+7DkRkeWqVLDmtuPXRdNe6rwhYTH439iworpy3ZxzvddI+Di/MNhb2pvEIz5E89L720
+        UeoJw7Zn1TOuGzVNrN6byPgmiKko7Em9eGuhdP3DP8+7n9++y/SYWdL99i7v1NsMzxn3z1e7
+        JjP1upMSS3FGoqEWc1FxIgCLeSdS7wIAAA==
+X-CMS-MailID: 20230405101840epcas2p4c92037ceba77dfe963d24791a9058450
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230405101840epcas2p4c92037ceba77dfe963d24791a9058450
+References: <81baa7f2-6c95-5225-a675-71d1290032f0@stancevic.com>
+        <CGME20230405101840epcas2p4c92037ceba77dfe963d24791a9058450@epcas2p4.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Kyungsan Kim wrote:
-> Hi Frank, 
-> Thank you for your interest on this topic and remaining your opinion.
-> 
-> >On Fri, Mar 31, 2023 at 6:42���AM Matthew Wilcox <willy@infradead.org> wrote:
-> >>
-> >> On Fri, Mar 31, 2023 at 08:42:20PM +0900, Kyungsan Kim wrote:
-> >> > Given our experiences/design and industry's viewpoints/inquiries,
-> >> > I will prepare a few slides in the session to explain
-> >> >   1. Usecase - user/kernespace memory tiering for near/far placement, memory virtualization between hypervisor/baremetal OS
-> >> >   2. Issue - movability(movable/unmovable), allocation(explicit/implicit), migration(intented/unintended)
-> >> >   3. HW - topology(direct, switch, fabric), feature(pluggability,error-handling,etc)
-> >>
-> >> I think you'll find everybody else in the room understands these issues
-> >> rather better than you do.  This is hardly the first time that we've
-> >> talked about CXL, and CXL is not the first time that people have
-> >> proposed disaggregated memory, nor heterogenous latency/bandwidth
-> >> systems.  All the previous attempts have failed, and I expect this
-> >> one to fail too.  Maybe there's something novel that means this time
-> >> it really will work, so any slides you do should focus on that.
-> >>
-> >> A more profitable discussion might be:
-> >>
-> >> 1. Should we have the page allocator return pages from CXL or should
-> >>    CXL memory be allocated another way?
-> >> 2. Should there be a way for userspace to indicate that it prefers CXL
-> >>    memory when it calls mmap(), or should it always be at the discretion
-> >>    of the kernel?
-> >> 3. Do we continue with the current ZONE_DEVICE model, or do we come up
-> >>    with something new?
-> >>
-> >>
-> >
-> >Point 2 is what I proposed talking about here:
-> >https://lore.kernel.org/linux-mm/a80a4d4b-25aa-a38a-884f-9f119c03a1da@google.com/T/
-> >
-> >With the current cxl-as-numa-node model, an application can express a
-> >preference through mbind(). But that also means that mempolicy and
-> >madvise (e.g. MADV_COLD) are starting to overlap if the intention is
-> >to use cxl as a second tier for colder memory.  Are these the right
-> >abstractions? Might it be more flexible to attach properties to memory
-> >ranges, and have applications hint which properties they prefer?
-> 
-> We also think more userspace hints would be meaningful for diverse purposes of application.
-> Specific intefaces are need to be discussed, though.
-> 
-> FYI in fact, we expanded mbind() and set_mempolicy() as well to explicitly bind DDR/CXL.
->   - mbind(,,MPOL_F_ZONE_EXMEM / MPOL_F_ZONE_NOEXMEM) 
->   - set_mempolicy(,,MPOL_F_ZONE_EXMEM / MPOL_F_ZONE_NOEXMEM)
-> madvise() is also a candidate to express tiering intention.
+>Hi Mike,
+>
+>On 4/3/23 03:44, Mike Rapoport wrote:
+>> Hi Dragan,
+>> 
+>> On Thu, Mar 30, 2023 at 05:03:24PM -0500, Dragan Stancevic wrote:
+>>> On 3/26/23 02:21, Mike Rapoport wrote:
+>>>> Hi,
+>>>>
+>>>> [..] >> One problem we experienced was occured in the combination of
+>>> hot-remove and kerelspace allocation usecases.
+>>>>> ZONE_NORMAL allows kernel context allocation, but it does not allow hot-remove because kernel resides all the time.
+>>>>> ZONE_MOVABLE allows hot-remove due to the page migration, but it only allows userspace allocation.
+>>>>> Alternatively, we allocated a kernel context out of ZONE_MOVABLE by adding GFP_MOVABLE flag.
+>>>>> In case, oops and system hang has occasionally occured because ZONE_MOVABLE can be swapped.
+>>>>> We resolved the issue using ZONE_EXMEM by allowing seletively choice of the two usecases.
+>>>>> As you well know, among heterogeneous DRAM devices, CXL DRAM is the first PCIe basis device, which allows hot-pluggability, different RAS, and extended connectivity.
+>>>>> So, we thought it could be a graceful approach adding a new zone and separately manage the new features.
+>>>>
+>>>> This still does not describe what are the use cases that require having
+>>>> kernel allocations on CXL.mem.
+>>>>
+>>>> I believe it's important to start with explanation *why* it is important to
+>>>> have kernel allocations on removable devices.
+>>>
+>>> Hi Mike,
+>>>
+>>> not speaking for Kyungsan here, but I am starting to tackle hypervisor
+>>> clustering and VM migration over cxl.mem [1].
+>>>
+>>> And in my mind, at least one reason that I can think of having kernel
+>>> allocations from cxl.mem devices is where you have multiple VH connections
+>>> sharing the memory [2]. Where for example you have a user space application
+>>> stored in cxl.mem, and then you want the metadata about this
+>>> process/application that the kernel keeps on one hypervisor be "passed on"
+>>> to another hypervisor. So basically the same way processors in a single
+>>> hypervisors cooperate on memory, you extend that across processors that span
+>>> over physical hypervisors. If that makes sense...
+>> 
+>> Let me reiterate to make sure I understand your example.
+>> If we focus on VM usecase, your suggestion is to store VM's memory and
+>> associated KVM structures on a CXL.mem device shared by several nodes.
+>
+>Yes correct. That is what I am exploring, two different approaches:
+>
+>Approach 1: Use CXL.mem for VM migration between hypervisors. In this 
+>approach the VM and the metadata executes/resides on a traditional NUMA 
+>node (cpu+dram) and only uses CXL.mem to transition between hypervisors. 
+>It's not kept permanently there. So basically on hypervisor A you would 
+>do something along the lines of migrate_pages into cxl.mem and then on 
+>hypervisor B you would migrate_pages from cxl.mem and onto the regular 
+>NUMA node (cpu+dram).
+>
+>Approach 2: Use CXL.mem to cluster hypervisors to improve high 
+>availability of VMs. In this approach the VM and metadata would be kept 
+>in CXL.mem permanently and each hypervisor accessing this shared memory 
+>could have the potential to schedule/run the VM if the other hypervisor 
+>experienced a failure.
+>
+>> Even putting aside the aspect of keeping KVM structures on presumably
+>> slower memory, 
+>
+>Totally agree, presumption of memory speed dully noted. As far as I am 
+>aware, CXL.mem at this point has higher latency than DRAM, and switched 
+>CXL.mem has an additional latency. That may or may not change in the 
+>future, but even with actual CXL induced latency I think there are 
+>benefits to the approaches.
+>
+>In the example #1 above, I think even if you had a very noisy VM that is 
+>dirtying pages at a high rate, once migrate_pages has occurred, it 
+>wouldn't have to be quiesced for the migration to happen. A migration 
+>could basically occur in-between the CPU slices, once VCPU is done with 
+>it's slice on hypervisor A, the next slice could be on hypervisor B.
+>
+>And the example #2 above, you are trading memory speed for 
+>high-availability. Where either hypervisor A or B could run the CPU load 
+>of the VM. You could even have a VM where some of the VCPUs are 
+>executing on hypervisor A and others on hypervisor B to be able to shift 
+>CPU load across hypervisors in quasi real-time.
+>
+>
+>> what ZONE_EXMEM will provide that cannot be accomplished
+>> with having the cxl memory in a memoryless node and using that node to
+>> allocate VM metadata?
+>
+>It has crossed my mind to perhaps use NUMA node distance for the two 
+>approaches above. But I think that is not sufficient because we can have 
+>varying distance, and distance in itself doesn't indicate 
+>switched/shared CXL.mem or non-switched/non-shared CXL.mem. Strictly 
+>speaking just for myself here, with the two approaches above, the 
+>crucial differentiator in order for #1 and #2 to work would be that 
+>switched/shared CXL.mem would have to be indicated as such in a way. 
+>Because switched memory would have to be treated and formatted in some 
+>kind of ABI way that would allow hypervisors to cooperate and follow 
+>certain protocols when using this memory.
+>
+>
+>I can't answer what ZONE_EXMEM will provide since we haven's seen 
+>Kyungsan's talk yet, that's why I myself was very curious to find out 
+>more about ZONE_EXMEM proposal and if it includes some provisions for 
+>CXL switched/shared memory.
+>
+>To me, I don't think it makes a difference if pages are coming from 
+>ZONE_NORMAL, or ZONE_EXMEM but the part that I was curious about was if 
+>I could allocate from or migrate_pages to (ZONE_EXMEM | type 
+>"SWITCHED/SHARED"). So it's not the zone that is crucial for me,  it's 
+>the typing. That's what I meant with my initial response but I guess it 
+>wasn't clear enough, "_if_ ZONE_EXMEM had some typing mechanism, in my 
+>case, this is where you'd have kernel allocations on CXL.mem"
 
-Need to be careful to explain why node numbers are not sufficient,
-because the need for new userspace ABI is a high bar.
+Hi Dragan, I'm sorry for late reply, we are trying to reply well, though.
+ZONE_EXMEM can be movable. A calling context is able to determine movability(movable/unmovable).
 
-Recall that ZONE id bits and NUMA id bits are both coming from
-page->flags:
+I'm not sure if it is related to the provision you keep in mind, but ZONE_EXMEM allows capacity and bandwidth aggregation among multiple CXL DRAM channels. 
+Multiple CXL DRAM can be grouped into a ZONE_EXMEM, then it is able to be exposed as a single memory-node[1].
+Along with the increase of CXL DRAM channels through (multi-level) switch and enhanced CXL server system, we thought kernel should manage it seamlessly.
+Otherwise, userspace would see many nodes, then a 3rd party tool would be always needed such as numactl and libnuma. 
+Of course, CXL switch can do the part, but HW/SW means have pros and cons in many ways, so we thought it would be co-existable.
 
-#define NODES_PGSHIFT           (NODES_PGOFF * (NODES_WIDTH != 0))
-#define ZONES_PGSHIFT           (ZONES_PGOFF * (ZONES_WIDTH != 0))
-#define ZONES_MASK              ((1UL << ZONES_WIDTH) - 1)
-#define NODES_MASK              ((1UL << NODES_WIDTH) - 1)
+Also, upon the composability expectation of CXL, I think memory sharing among VM/KVM instances well fits with CXL. 
+This is just a gut now, but a security and permission matter would be handled in the zone dimension possibly.
 
-So when people declare that they are on "team ZONE" or "team NUMA" for
-this solution they are both on "team page->flags".
+In general, given CXL nature(PCIe basis) and topology expansions(direct->switches->fabrics), 
+let us carefully guess more functionality and performance matter would be raised. 
+We have proposed ZONE_EXMEM as a separated logical management dimension for extended memory types, as of now CXL DRAM.
+To help your clarify, please find the slide that explains our proposal[2].
 
-Also have a look at the HMEM_REPORTING [1] interface and how it
-enumerates performance properties from initiator nodes to target nodes.
-There's no similar existing ABI for enumerating the performance of a
-ZONE. This is just to point out the momentum behind numbers in
-NODES_MASK having more meaning for conveying policy and enumerating
-performance than numbers in ZONES_MASK.
+[1] https://github.com/OpenMPDK/SMDK/wiki/2.-SMDK-Architecture#memory-partition
+[2] https://github.com/OpenMPDK/SMDK/wiki/93.-%5BLSF-MM-BPF-TOPIC%5D-SMDK-inspired-MM-changes-for-CXL
 
-[1]: https://www.kernel.org/doc/html/latest/admin-guide/mm/numaperf.html
+>
+>
+>Sorry if it got long, hope that makes sense... :)
+>
+>
+>>   
+>>> [1] A high-level explanation is at https://protect2.fireeye.com/v1/url?k=4536d55f-244b3fdc-45375e10-74fe48600158-3fa306550dc8830d&q=1&e=afaf972f-90cd-4c53-b50f-bead1fea18a3&u=http%3A%2F%2Fnil-migration.org%2F
+>>> [2] Compute Express Link Specification r3.0, v1.0 8/1/22, Page 51, figure
+>>> 1-4, black color scheme circle(3) and bars.
+>>>
+>
