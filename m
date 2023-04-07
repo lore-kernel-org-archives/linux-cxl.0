@@ -2,110 +2,117 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87652C77B6C
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 Apr 2023 18:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E45C76196
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 Apr 2023 21:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbjDGSgD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 7 Apr 2023 14:36:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50716 "EHLO
+        id S230091AbjDGVFg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 7 Apr 2023 17:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbjDGSgB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Apr 2023 14:36:01 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5547093C8
-        for <linux-cxl@vger.kernel.org>; Fri,  7 Apr 2023 11:36:00 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+        with ESMTP id S229614AbjDGVFf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Apr 2023 17:05:35 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648451A8
+        for <linux-cxl@vger.kernel.org>; Fri,  7 Apr 2023 14:05:34 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 7A27641F03;
-        Fri,  7 Apr 2023 18:35:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a273.dreamhost.com (unknown [127.0.0.6])
+        by relay.mailchannels.net (Postfix) with ESMTP id BDA853E0DD7;
+        Fri,  7 Apr 2023 21:05:33 +0000 (UTC)
+Received: from pdx1-sub0-mail-a294.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 0052441F93;
-        Fri,  7 Apr 2023 18:35:58 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1680892559; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 3A64C3E0D55;
+        Fri,  7 Apr 2023 21:05:33 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1680901533; a=rsa-sha256;
         cv=none;
-        b=lF7pr9YioLZzX9vs8BDzg7Y2xDNHKp4fhtlN1nxJhQX7Y2adMHQ+w2xNmOK6GURMsv1SOo
-        pfHNkr1YWx7ej0A16NDdVEv1Z7UoHbv+ndytFIciZOwYheWaZoK83VdTyhtYkQuFrcMLoQ
-        8lx44yi9aColcNrz+FYXcLeqindXiDFAv2XNOsbIUUxpcItAUiKpNBd/5APPUhV8a4Aul7
-        jDaX4QxfL74gc+biiX+OUrAptv2kHg8VqA13Axf/hUQxlorvx2dH+gAC9tRg3Ws3Z4RpVF
-        ELtaD0NFYuWUkEw7JWnxJcIVrdHbKFQ6PKBmdos2MII6c8vH2r3OW5/T/oomTg==
+        b=Qu/itOePCsskU3vANFpP/4p521obpDk6yD19a6SFemDjn2xDf3PFt65U9f/WAU6hXHJjP5
+        zGxkBpYPBFuMCtZh+0A08QmEbncKDRPKrIZAlGHj2iUZigks0nvypkIw1a/o30iVZxOliq
+        x78oLC+1RrOMcXKsiLLmxgeiFOESq5E7m1HDu6tUiW9teD/5u18mTi6idJRI/amXULnKBN
+        vI0U5ztGje8/VrKjr5sF3SbPjHarTkDATUCD1tYgdqOUlE7uUt6D8eWmuG4LxYH076RWQA
+        u0UTGorZ20OSzM3NJoSPWN/F65IM+EE3G2FL9VrKdK0wbVeu4ybAQg5/Vp3Xtw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1680892559;
+        s=arc-2022; t=1680901533;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=VInOktCAFiJTJPvhpLL+4xT0ClHqfI1TA/cQf1cNgTk=;
-        b=nxWEKogdQxQY262w+FIshpeg3MH47lo4lm0/jr2S+T99apzwEDrjeFkO3NfnBnTlWyy0nf
-        Wdr9U5o+o4z+6po0XneBwEyarg+MnoXQgKtTVFF0Qj86b8Na+AfmjpBEwdcUpUNU4BhIo+
-        V0YRM4BmeaNdvpcMYG0cpAJmEO4NkZTXMAl93X1kM4yrI80+pekqhVIBvwiksF+VzUIkzs
-        IXmmhi/0x+I5nwZo1XxYXZ8ggzfxXhqTM636JIuZ37DULofEsx2u5wCNO4VGPyLHeJyIDa
-        Ft0hdT0DAlojbu8f9jQFsfl1h5e1SrjGDvYIbYvXgh6OsVUQtqyx+S6O/rYMEQ==
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=kLIJVh6wZLoGZw5fjUt2cLYd3LiMD8Ukj+V8GN1qqDw=;
+        b=wHio3Dcz1x2wFzyGP3fl8LFvNdLic5oEra+5A/kyJdI8vomv01oIlqMq0ELluO0odVFFi7
+        30POCwV/+S2svcerKtx3Wu6e2BvZ/AIM+8SBvc2NTC6wwFepZzS5nz+aQEp49wxrBEx5HE
+        tk6LKDqiQZLH+bjsgQFLvYkCyBczErKcyBc4sG5O08sL2RbL3fwlMYSga7r7FFEvYYAEOr
+        qURcvCcm0lMGwjFglW9bofL163dAkioO6zKxUy50pPdpjjmUlTQJUXYPQmlHIzijPmszmE
+        BLjQngC8HpmXcg6p09aXpKy4nZMrF5kCmsSXHwaT+0lBa8bIz3sXGQqvB9B2VQ==
 ARC-Authentication-Results: i=1;
-        rspamd-5468d68f6d-7kf64;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+        rspamd-5468d68f6d-w9llh;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dragan@stancevic.com
+X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
 X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-SenderId: dreamhost|x-authsender|dragan@stancevic.com
 X-MailChannels-Auth-Id: dreamhost
-X-Drop-Print: 6833f11b78cf1d95_1680892559296_4247349223
-X-MC-Loop-Signature: 1680892559296:1046145912
-X-MC-Ingress-Time: 1680892559295
-Received: from pdx1-sub0-mail-a273.dreamhost.com (pop.dreamhost.com
+X-Blushing-Shrill: 295646891d38cf94_1680901533540_2485106083
+X-MC-Loop-Signature: 1680901533540:1185009869
+X-MC-Ingress-Time: 1680901533540
+Received: from pdx1-sub0-mail-a294.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.97.48.127 (trex/6.7.2);
-        Fri, 07 Apr 2023 18:35:59 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        by 100.107.49.248 (trex/6.7.2);
+        Fri, 07 Apr 2023 21:05:33 +0000
+Received: from [192.168.1.31] (99-160-136-52.lightspeed.nsvltn.sbcglobal.net [99.160.136.52])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a273.dreamhost.com (Postfix) with ESMTPSA id 4PtRrt2M12zFJ;
-        Fri,  7 Apr 2023 11:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1680892558;
-        bh=VInOktCAFiJTJPvhpLL+4xT0ClHqfI1TA/cQf1cNgTk=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=HUXzeRCFdl2593FC3PPXwK35MTnTMYfoHsV4Aqo/7mPVZQb5yveXcQ7I89uU3b9mL
-         AcLS7/gOr370u++qNDPSkbHMTmwb6Pn9ZKe6+YIjsytVmqJErZJ1g2/gDM1yXG0W6C
-         CGtEDD8GBNXg2s733gDVnBmo0ot9IVTpK2uJmaJfARyVZNoEufzC9Q9KCZURBUus1P
-         BJg8+XvirEoaoYORPkb4qMSf9q65gFYbkGVSlSi0n/IUl9MU5PIc2Qsqs9TXzRQCSD
-         Z9Sz5ByfZmN7olY2HlrMzsxEH4oRoAeAT3a0FvWMbjFRm15zNboX0Y0B85oObVwqaX
-         bUeatVzC1J2dQ==
-Date:   Fri, 7 Apr 2023 11:05:12 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, fan.ni@samsung.com,
-        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/3] cxl/mbox: Add support for background operations
-Message-ID: <20230407180512.pj2lznudcidb7f7l@offworld>
-References: <20230224194443.1990440-1-dave@stgolabs.net>
- <20230224194443.1990440-2-dave@stgolabs.net>
- <20230403174730.00003920@Huawei.com>
+        (Authenticated sender: dragan@stancevic.com)
+        by pdx1-sub0-mail-a294.dreamhost.com (Postfix) with ESMTPSA id 4PtW9S4XX8z1p;
+        Fri,  7 Apr 2023 14:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stancevic.com;
+        s=dreamhost; t=1680901533;
+        bh=kLIJVh6wZLoGZw5fjUt2cLYd3LiMD8Ukj+V8GN1qqDw=;
+        h=Date:From:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
+        b=DHxS1AfWkJQkwbsb/LA19+voTqVgUO7werTheAxLVFukpaa2dWicDpU4Rmg6krKLt
+         mS78yopjTFpzQ9x3x9pgahOlqWA3k5MzMKoElOPn++0odQiynPzEcxoT+B7jOR4cHf
+         3GSNcoOFbQ9+bsxyqDw4KmCcxlGJ2Qnziscdv1fPYsu5etTfM0DSNJoZs72ADFt4/p
+         tfStFtH5YLqqGe+g+tFsZIBFoGQ6q7F3QncBoEy0e80SciHTJjFug6g7vLhauLXik4
+         aKr/NOEpgsaw3ZI5lKmKcpUdsxJrsis/TRZCOhNrvmn9jRT1achGZE8jTF76p0MqK2
+         9znY324r1HUnQ==
+Message-ID: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
+Date:   Fri, 7 Apr 2023 16:05:31 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230403174730.00003920@Huawei.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Content-Language: en-US
+From:   Dragan Stancevic <dragan@stancevic.com>
+Subject: =?UTF-8?Q?=5bLSF/MM/BPF_TOPIC=5d_BoF_VM_live_migration_over_CXL_mem?=
+ =?UTF-8?B?b3J54oCL?=
+To:     lsf-pc@lists.linux-foundation.org
+Cc:     nil-migration@lists.linux.dev, linux-cxl@vger.kernel.org,
+        linux-mm@kvack.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 03 Apr 2023, Jonathan Cameron wrote:
+Hi folks-
 
->> @@ -350,7 +350,14 @@ static CXLRetCode cmd_infostat_bg_op_sts(struct cxl_cmd *cmd,
->>
->>      bg_op_status = (void *)cmd->payload;
->>      memset(bg_op_status, 0, sizeof(*bg_op_status));
->> -    /* No support yet for background operations so status all 0 */
->> +    bg_op_status->status = ARRAY_FIELD_EX64(cxl_dstate->mbox_reg_state64,
->> +                                            CXL_DEV_BG_CMD_STS, PERCENTAGE_COMP) << 1;
->
->Ah. I'd forgotten I bodged this one in for the switch.
+if it's not too late for the schedule...
 
-General question, do you know the reasoning behind why this command is only listed
-for switches (while the overall vocabulary is very generic to all bg-capable commands)?
+I am starting to tackle VM live migration and hypervisor clustering over 
+switched CXL memory[1][2], intended for cloud virtualization types of loads.
 
-Thanks,
-Davidlohr
+I'd be interested in doing a small BoF session with some slides and get 
+into a discussion/brainstorming with other people that deal with VM/LM 
+cloud loads. Among other things to discuss would be page migrations over 
+switched CXL memory, shared in-memory ABI to allow VM hand-off between 
+hypervisors, etc...
+
+A few of us discussed some of this under the ZONE_XMEM thread, but I 
+figured it might be better to start a separate thread.
+
+If there is interested, thank you.
+
+
+[1]. High-level overview available at http://nil-migration.org/
+[2]. Based on CXL spec 3.0
+
+--
+Peace can only come as a natural consequence
+of universal enlightenment -Dr. Nikola Tesla
