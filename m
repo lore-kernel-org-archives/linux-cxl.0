@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330D1C77B74
-	for <linux-cxl@archiver.kernel.org>; Fri,  7 Apr 2023 17:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCA2C6FD1D
+	for <linux-cxl@archiver.kernel.org>; Fri,  7 Apr 2023 17:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbjDGROR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 7 Apr 2023 13:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
+        id S229904AbjDGROZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 7 Apr 2023 13:14:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbjDGROP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Apr 2023 13:14:15 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D0A9AF34;
-        Fri,  7 Apr 2023 10:14:14 -0700 (PDT)
+        with ESMTP id S230189AbjDGROU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 7 Apr 2023 13:14:20 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BFAB752;
+        Fri,  7 Apr 2023 10:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680887654; x=1712423654;
+  t=1680887658; x=1712423658;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZWsYJfw0gbUl/xTVOGIsEJag6zroc9ti2yLD7YmUSuc=;
-  b=VqzdoxFCuJQVt2AkvYbXRhMG1+Gh3cEurvjqIVJzbKQ/cBnGWaV39YW6
-   AnLy0aTyI6I7S60WrCa7/FSQ49kooAJidcl5a++mH6ebXLPTuxm6P6axG
-   BAPW+P9uRq0yX/3ous0luJZKR7hnBRj3rDq2aNwgYcOl+dy4EzWKCxI5U
-   wawPj+PeoHrABWWPWalv2R5b2CvwJC4Mlj1/d3jqaqH+1VdFg4P9qJj2f
-   mRuaoCmHUpGixHS/zIDdWBcDUFuu55rwarWWfo/iffx7g2Wlmy+PtFMOO
-   Vs1TZlLcgBwX3QJpOTMEFzQvideeb1T3f1xg8PeUtwODHyAUCJ4f4E9C1
+  bh=s+EXZVJ1JkQIsvOgC4hoYVQTXB71iThB2DX8P+RuUtI=;
+  b=VpgOWcKKEtXIOMCRMAyijZEpOWJHgbGCwG6brKz1z8KikGvEBSjfdFCF
+   WGE0SkX8vzprryHlxcPHIma8hFm5r9x+URCvkAk4lyS5J/BI3Aw16JDzJ
+   VMK5SAOOh8QBd4XX2QqTKLQPFOr7UhG79RAQ/PLB92+r/rrNHGlnXIEKs
+   ReZ5fDx3OQiTzfNa3D928SbEynYj0IVO078xus7t2Zn+C0eVs8xM9kbxv
+   /VDaT/kuEnWg1WwSyo4Jl96fgb7EBdnq4o83f5AeZI3R6UOGV92oowYZL
+   ALkiJAwoFHmnwgVkj2w/mKDdtOHYuhB6Wdgm4Y++bHXzndMnOO6zBoq/C
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="345682119"
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="343037457"
 X-IronPort-AV: E=Sophos;i="5.98,327,1673942400"; 
-   d="scan'208";a="345682119"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 10:14:12 -0700
+   d="scan'208";a="343037457"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 10:14:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="831251826"
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="933648814"
 X-IronPort-AV: E=Sophos;i="5.98,327,1673942400"; 
-   d="scan'208";a="831251826"
+   d="scan'208";a="933648814"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.160.172])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 10:14:06 -0700
-Subject: [PATCH 3 21/23] cxl: Store QTG IDs and related info to the CXL memory
- device context
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 10:14:17 -0700
+Subject: [PATCH 3 23/23] cxl/mem: Add debugfs output for QTG related data
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rafael@kernel.org, lukas@wunner.de, Jonathan.Cameron@huawei.com
-Date:   Fri, 07 Apr 2023 10:14:05 -0700
-Message-ID: <168088764576.1441063.4073780159473151210.stgit@djiang5-mobl3>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, lukas@wunner.de,
+        Jonathan.Cameron@huawei.com
+Date:   Fri, 07 Apr 2023 10:14:17 -0700
+Message-ID: <168088765758.1441063.3077950661602680130.stgit@djiang5-mobl3>
 In-Reply-To: <168088732996.1441063.10107817505475386072.stgit@djiang5-mobl3>
 References: <168088732996.1441063.10107817505475386072.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,148 +57,68 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Once the QTG ID _DSM is executed successfully, the QTG ID is retrieved from
-the return package. Create a list of entries in the cxl_memdev context and
-store the QTG ID and the associated DPA range. This information can be
-exposed to user space via sysfs in order to help region setup for
-hot-plugged CXL memory devices.
+Add debugfs output to /sys/kernel/debug/cxl/memX/qtgmap
+The debugfs attribute will dump out all the DSMAS ranges and the associated
+QTG ID exported by the CXL device CDAT.
 
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
 ---
-v3:
-- Move back to QTG ID per partition
----
- drivers/cxl/core/mbox.c |    3 +++
- drivers/cxl/cxlmem.h    |   20 ++++++++++++++++++++
- drivers/cxl/port.c      |   35 +++++++++++++++++++++++++++++++++++
- 3 files changed, 58 insertions(+)
+ Documentation/ABI/testing/debugfs-cxl |   11 +++++++++++
+ drivers/cxl/mem.c                     |   16 ++++++++++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 Documentation/ABI/testing/debugfs-cxl
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index f2addb457172..a535a1b78b0e 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1120,6 +1120,9 @@ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
- 	mutex_init(&cxlds->mbox_mutex);
- 	mutex_init(&cxlds->event.log_lock);
- 	cxlds->dev = dev;
-+	INIT_LIST_HEAD(&cxlds->qos_list);
-+	cxlds->ram_qtg_id = -1;
-+	cxlds->pmem_qtg_id = -1;
- 
- 	return cxlds;
- }
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 001dabf0231b..7107ef594555 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -5,6 +5,7 @@
- #include <uapi/linux/cxl_mem.h>
- #include <linux/cdev.h>
- #include <linux/uuid.h>
-+#include <linux/node.h>
- #include "cxl.h"
- 
- /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-@@ -40,6 +41,7 @@
-  * @cxl_nvd: optional bridge to an nvdimm if the device supports pmem
-  * @id: id number of this memdev instance.
-  * @depth: endpoint port depth
-+ * @qos_list: QTG ID related list of entries
-  */
- struct cxl_memdev {
- 	struct device dev;
-@@ -50,6 +52,7 @@ struct cxl_memdev {
- 	struct cxl_nvdimm *cxl_nvd;
- 	int id;
- 	int depth;
-+	struct list_head qos_list;
- };
- 
- static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-@@ -215,6 +218,19 @@ struct cxl_event_state {
- 	struct mutex log_lock;
- };
- 
-+/**
-+ * struct qos_prop - QoS property entry
-+ * @list - list entry
-+ * @dpa_range - range for DPA address
-+ * @qtg_id - QoS Throttling Group ID
-+ */
-+struct qos_prop_entry {
-+	struct list_head list;
-+	struct range dpa_range;
-+	u16 qtg_id;
-+	struct node_hmem_attrs hmem_attrs;
-+};
-+
- /**
-  * struct cxl_dev_state - The driver device state
-  *
-@@ -283,6 +299,10 @@ struct cxl_dev_state {
- 	u64 next_volatile_bytes;
- 	u64 next_persistent_bytes;
- 
-+	int ram_qtg_id;
-+	int pmem_qtg_id;
-+	struct list_head qos_list;
-+
- 	resource_size_t component_reg_phys;
- 	u64 serial;
- 
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 70189309c1c0..facecb5c8b00 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -124,6 +124,40 @@ static int cxl_port_qos_calculate(struct cxl_port *port,
+diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
+new file mode 100644
+index 000000000000..0f36eeb7e59b
+--- /dev/null
++++ b/Documentation/ABI/testing/debugfs-cxl
+@@ -0,0 +1,11 @@
++What:		/sys/kernel/debug/cxl/memX/qtg_map
++Date:		Mar, 2023
++KernelVersion:	v6.4
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) Entries of all Device Physical Address (DPA) ranges
++		provided by the device Coherent Device Attributes Table (CDAT)
++		Device Scoped Memory Affinity Structure (DSMAS) entries with
++		the matching QoS Throttling Group (QTG) id calculated from the
++		latency and bandwidth of the CXL path from the memory device
++		to the CPU.
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 39c4b54f0715..bf2cb5a54a7f 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -45,6 +45,21 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
  	return 0;
  }
  
-+static void cxl_memdev_set_qtg(struct cxl_dev_state *cxlds, struct list_head *dsmas_list)
++static int cxl_mem_qtg_show(struct seq_file *file, void *data)
 +{
-+	struct range pmem_range = {
-+		.start = cxlds->pmem_res.start,
-+		.end = cxlds->pmem_res.end,
-+	};
-+	struct range ram_range = {
-+		.start = cxlds->ram_res.start,
-+		.end = cxlds->ram_res.end,
-+	};
++	struct device *dev = file->private;
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
 +	struct qos_prop_entry *qos;
-+	struct dsmas_entry *dent;
 +
-+	list_for_each_entry(dent, dsmas_list, list) {
-+		qos = devm_kzalloc(cxlds->dev, sizeof(*qos), GFP_KERNEL);
-+		if (!qos)
-+			return;
-+
-+		qos->dpa_range = dent->dpa_range;
-+		qos->qtg_id = dent->qtg_id;
-+		qos->hmem_attrs = dent->hmem_attrs;
-+		list_add_tail(&qos->list, &cxlds->qos_list);
-+
-+		if (resource_size(&cxlds->ram_res) &&
-+		    range_contains(&ram_range, &dent->dpa_range) &&
-+		    cxlds->ram_qtg_id == -1)
-+			cxlds->ram_qtg_id = dent->qtg_id;
-+		else if (resource_size(&cxlds->pmem_res) &&
-+			 range_contains(&pmem_range, &dent->dpa_range) &&
-+			 cxlds->pmem_qtg_id == -1)
-+			cxlds->pmem_qtg_id = dent->qtg_id;
++	list_for_each_entry(qos, &cxlmd->qos_list, list) {
++		seq_printf(file, "%08llx-%08llx : QTG ID %u\n",
++			   qos->dpa_range.start, qos->dpa_range.end,
++			   qos->qtg_id);
 +	}
++
++	return 0;
 +}
 +
- static int cxl_switch_port_probe(struct cxl_port *port)
+ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+ 				 struct cxl_dport *parent_dport)
  {
- 	struct cxl_hdm *cxlhdm;
-@@ -234,6 +268,7 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 		if (rc)
- 			dev_dbg(&port->dev, "Failed to do QoS calculations\n");
+@@ -117,6 +132,7 @@ static int cxl_mem_probe(struct device *dev)
  
-+		cxl_memdev_set_qtg(cxlds, &dsmas_list);
- 		dsmas_list_destroy(&dsmas_list);
- 	}
- 
+ 	dentry = cxl_debugfs_create_dir(dev_name(dev));
+ 	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
++	debugfs_create_devm_seqfile(dev, "qtgmap", dentry, cxl_mem_qtg_show);
+ 	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
+ 	if (rc)
+ 		return rc;
 
 
