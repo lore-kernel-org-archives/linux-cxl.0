@@ -2,156 +2,153 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DEFC7619A
-	for <linux-cxl@archiver.kernel.org>; Sat,  8 Apr 2023 16:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3F6C77B61
+	for <linux-cxl@archiver.kernel.org>; Sun,  9 Apr 2023 07:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229451AbjDHQbb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 8 Apr 2023 12:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48626 "EHLO
+        id S229517AbjDIHHp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 9 Apr 2023 03:07:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDHQba (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 8 Apr 2023 12:31:30 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D2F7DBD
-        for <linux-cxl@vger.kernel.org>; Sat,  8 Apr 2023 09:31:22 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 0603A2004F7;
-        Sat,  8 Apr 2023 16:31:20 +0000 (UTC)
-Received: from pdx1-sub0-mail-a294.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 2503F2025E5;
-        Sat,  8 Apr 2023 16:25:01 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1680971101; a=rsa-sha256;
-        cv=none;
-        b=LwITwJizDqFQYM+qaoUrQTsNhJMV1IkqUCYJ3T1Fdzrp9Qnqb29cIYjBmDEzksooyLfjNQ
-        FyzaYMRNCtZi+sGnuxkW+5Zgtu1FZf+77vw9JPHg4eReItoEu9/pqiRRM0CP4wYXznQ90B
-        4Rw27WuvtvL5uN/3L6W4X6Yo6IkWKkCaY+6rOhIF7+xbtimg/TlAGlr3z7KzD62h91uqHN
-        7f1ccIm4CAKejyhBIlNfFJOzdU8W0OOEibhvuLzgFC8FEW51YEmzEQ7r4n1WCyNXps304L
-        1205l8vZCYDYLYqrOUv1Vqo7yxsfJFOX7MQ0/iLhwAvv5QXv9FQqQdzD3kYeTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1680971101;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=Q15BRLxpQIPEm91Mp3ow0K/nfpWZAmYlHh/cVpShUpg=;
-        b=OIz3m+IGnLBEkyUklvvwfnZ1KB+XDCXL7Vq6C9rDsc5TWfD7Jwh7+Knx0VW6GYv+F5LFSN
-        pK1k4qigk7mtpEIMu/HPDSF/qtPKLUMtAK/4WXedRcHhKyLdpMGXm8N9+GE+8DNtrqgjDk
-        XP1Vys7Dczsr9DKDJmGvUIbXcAqX/QhJR+pU9t/U5YsJHKj5aGL4fqLkvTvB5GSJNuvlHa
-        9DEZloUzYRGQibqEAY+u3z6wd8VEVsOCppKnk3YLkIseHFpFFjSU3DaZgGc+hl1PEpYQ34
-        f5rwo13DlnpGAG9LeAZG2Ds9Cuc46ihiv676I7dBYq7kkWf+1U+YQshz80EWFw==
-ARC-Authentication-Results: i=1;
-        rspamd-5468d68f6d-xkv7t;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dragan@stancevic.com
-X-Sender-Id: dreamhost|x-authsender|dragan@stancevic.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dragan@stancevic.com
-X-MailChannels-Auth-Id: dreamhost
-X-Descriptive-Name: 5640c2ac40e51051_1680971102281_1465795904
-X-MC-Loop-Signature: 1680971102281:3103371782
-X-MC-Ingress-Time: 1680971102280
-Received: from pdx1-sub0-mail-a294.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.102.66.14 (trex/6.7.2);
-        Sat, 08 Apr 2023 16:25:02 +0000
-Received: from [192.168.1.31] (99-160-136-52.lightspeed.nsvltn.sbcglobal.net [99.160.136.52])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        (Authenticated sender: dragan@stancevic.com)
-        by pdx1-sub0-mail-a294.dreamhost.com (Postfix) with ESMTPSA id 4Pv0vJ2GVKzC6;
-        Sat,  8 Apr 2023 09:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stancevic.com;
-        s=dreamhost; t=1680971100;
-        bh=Q15BRLxpQIPEm91Mp3ow0K/nfpWZAmYlHh/cVpShUpg=;
-        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-        b=z1xoBzErwPtXTu3rKXOhpivONDBXDPmxY0Xtve+P7vW5RDb36iUbZZwc6vcb486Zc
-         shFlorX694QO6S4id0GJEV8Z0g1+bFxkUjhVa/IGLM5pR18+sx7/PA+mj8p92pcQF4
-         DMKXAOGBks2r2K3sLdA4mwUhAnel0CmuA5sAUnn6Q+/g3muKBcKdyaOES90LhwLYDD
-         P4YZIvdMSkR51/QwIMgo7rQTayshNK/60KosFl57Fw+4qONWhfTi/oN1wY0sF+l/WQ
-         uu92HqUuxsJN/JgI7JoKD2gkoHv8e3rYKn/z1N3ZH6T0MU6O0Qmt1TnlsX5HTw5tlM
-         75FrorBnOeCjg==
-Message-ID: <3803d836-c2d1-2fe0-3dda-cbfff604d619@stancevic.com>
-Date:   Sat, 8 Apr 2023 11:24:59 -0500
+        with ESMTP id S229436AbjDIHHo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 9 Apr 2023 03:07:44 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A739159ED
+        for <linux-cxl@vger.kernel.org>; Sun,  9 Apr 2023 00:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681024063; x=1712560063;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=UICP3DSBJ4iLlpaCQDi+lYHgWflh7U4t7sPHZiiBhXk=;
+  b=NuufJ480kHNBnDx0b0TuzximKbVHT155j2Dzd4o01TteNBQBmc4ywEKA
+   hsigMhDTTDl2MIi/3melQb0GMkjeja7kfhIzGtkEZVkC2sUYrPI2ED5zg
+   j+uNL/4vy/4ZdHmRrskkr5ULfAimdvsBufuspCSl2OtjSJFlPedrSW3Cb
+   h7i39qB3hW2Xpa560zSR7DuWRM65zTkooTWa8ffvzzRnMoTX4J2BXqGHJ
+   /SrPvzDMHQE6uDdKkoeQpWQAT4XkTC5h5BCFjh4NYEBQ5/J/vpgPg5+ER
+   pTM8rBRdOio+/nxD4jSHQYrT/yuT71cPvH1vhkNXFmZdv1wiIuIzeW5Cn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10674"; a="344983098"
+X-IronPort-AV: E=Sophos;i="5.98,330,1673942400"; 
+   d="scan'208";a="344983098"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2023 00:07:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10674"; a="687935538"
+X-IronPort-AV: E=Sophos;i="5.98,330,1673942400"; 
+   d="scan'208";a="687935538"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga002.jf.intel.com with ESMTP; 09 Apr 2023 00:07:43 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sun, 9 Apr 2023 00:07:42 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sun, 9 Apr 2023 00:07:42 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Sun, 9 Apr 2023 00:07:42 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.105)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Sun, 9 Apr 2023 00:07:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HhDb9YjELrPqFOMytyn74sFSOSIH45VVdzyv98lgu1CzXEoHuXjffg4efKIBmV7ap38PBGybNBBvZ9hRY0jpsyKdEpDDcya+ZIk1ZSCCa45hNp7WZjwMAIV2cXkDngBFNLw4IIAOasC+Gb9kOpXhqYlKhTfCwuHDIjmqR/ESn88G1WWkTg6F+qYqD7Uw3Y7f2Rf2Q3D0Jqi7vWQzSUBYz0epFTfaicU8L0sHHrEuMU4Cs7BRWyq8S0Vm+a4nz1iq/wjxp3a5uVV456duQXNlbQS3pWpXNReYyVduumFLWezq7GfVU3Y5TrkaOrTb0Le4bVroJag+ZJ64AcvNyDKGNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H3X14UcQ84JVbTvAPqtXNBsxpepi3EFJMl7whxdQqnI=;
+ b=TPv5/aCANnXLD7hy9iPE0K2DK6mH9HKJIi9KnlliWOIGXGxFUYzpORb6ItDDXXHv07+x9SUzlSCnaFBGUkLCGRA/ll4+Lv9k6tp83uTpbcGquci4BRjTkn4GNLiI0qp2rwPC2Y2GEeKGh281Mv32OIEuGRrs6utOleRG17l8Bem6cQ7VY1rq9AY3nogtZLOLhWLLE7RtEORikD/YaYR1N0oFVX9vZhAcB/rrbEWcIByxB7RmYalrSb1To2LS5bOqnebDBFCcBI001Q2eHaJ5NtDrvwBcXKYk8+gUV7OkP/bRaTHKlFYWTHvzD5ur0NlasHY9lECXZ5CEUgUy5/kzLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH0PR11MB4807.namprd11.prod.outlook.com (2603:10b6:510:3a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.35; Sun, 9 Apr
+ 2023 07:07:40 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6277.035; Sun, 9 Apr 2023
+ 07:07:40 +0000
+Date:   Sun, 9 Apr 2023 00:07:36 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     <linux-cxl@vger.kernel.org>
+CC:     <navneet.singh@intel.com>, <ira.weiny@intel.com>
+Subject: "release early" preview of DCD enabling
+Message-ID: <64326437c1496_934b2949f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: BYAPR07CA0083.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::24) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: =?UTF-8?Q?Re=3a_=5bLSF/MM/BPF_TOPIC=5d_BoF_VM_live_migration_over_C?=
- =?UTF-8?B?WEwgbWVtb3J54oCL?=
-Content-Language: en-US
-To:     David Rientjes <rientjes@google.com>,
-        James Houghton <jthoughton@google.com>
-Cc:     lsf-pc@lists.linux-foundation.org, nil-migration@lists.linux.dev,
-        linux-cxl@vger.kernel.org, linux-mm@kvack.org
-References: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
- <CADrL8HXLEd8PsCn0y7hfFNsGPoV8nyXokL-_wmmXE=TuV6ML=g@mail.gmail.com>
- <8fada43c-8319-4d1a-9614-3ac3c76d59f3@google.com>
-From:   Dragan Stancevic <dragan@stancevic.com>
-In-Reply-To: <8fada43c-8319-4d1a-9614-3ac3c76d59f3@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4807:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4df0662e-ad04-4a8c-c7e8-08db38c91aea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KfMBQdSpht9FHRCeoyu185Z7YsWo4VJRRb7u7hlePAmoqdAnKnmZKMgrHwEBisaTGsmfRFReWzs1IW7krAKcG26s7XBs0H+O/v+ILUGrt1cvmHlLxwhzVKvJ+Rj3E+S+Zu8igzpxdGALaTsadLgFXl8+fy8Ck5Tleyu8kCsdN+v/a9vttanbH75NVPbmuLYgXpvaN+ab8d5NVfMvuVadtnjeMAWwgs1/oAYnDsemQSJ2VzCuL3bjqvXZtL0hISFiO44AQGRhp6wftYVEI3U6egYC4hyrkDzSC/eq4Ye4clxwDbDn2m/OET/uCou9b3rG2ZWoDlt6BzT17GPWcgpn5tAKaIBFjZaI7TeuBXNebeY/WDhSlpfZu4ThhsqIN/3SaIcl7yFz/et7dODMz+ERnUgDUEXUBIEiGxIAaFsICKJc7HGRxOVxdWEPadmzjtq1KD4BXfkY87MYuwBn9EriVS4oEFjxfSeKguN/v/Kfc/4woP+oGAE0E1kK1dqz97p7c27apS/1jLk8LeBQ8p0Hu84CVe/TjyZsv3tRnxGNUhI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(39860400002)(396003)(136003)(376002)(366004)(451199021)(86362001)(316002)(41300700001)(66946007)(66556008)(66476007)(8676002)(4326008)(966005)(6916009)(6486002)(478600001)(5660300002)(8936002)(2906002)(4744005)(38100700002)(82960400001)(186003)(6666004)(107886003)(9686003)(6512007)(6506007)(26005)(66899021);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1FO4xTLogcX3J0coFIwdyF53ORjqQjqEdPsW5OmSRmMxBVu4v3apZm/xCV5o?=
+ =?us-ascii?Q?g3fbos7a1+fNW6TxuVyBfM0LRQ92y1F5kxTTM6EFzN1qmOdJI3YliPYsLuq/?=
+ =?us-ascii?Q?c2qvov+LGKjbatujFO5hiL3oe3NEwsxt0AIu19MvEkJOAknIteTEE5ppPwbC?=
+ =?us-ascii?Q?vyP+cxLPAIFXywtHx5ec8kT5vRMaHZ6PF6o2pM5QA0JagOqDE2NL//4GzSXd?=
+ =?us-ascii?Q?tM7RBARbyTFFUFv5kt69UHq+2fSRYyCF5GxJz584ZaJ5eqJAObEP20Yj5sDw?=
+ =?us-ascii?Q?eZIzYNw+KPTDZRa0v/8X2R4XYHvx5t25Vn1+ri3CAZ+TaFK+TZsRFOWsFPGn?=
+ =?us-ascii?Q?2grA5Lub4PmHeBhLaTO62kNJe0ifUQy8wuOY1KavTmNjnO4BNTYB1953MaMF?=
+ =?us-ascii?Q?jnBMwyA0YNf3i8+UAk2d5n/twJCeFcu1r5lMhAjrg/FG1/nxJu+PSFY3UWjK?=
+ =?us-ascii?Q?dVsLoLZdIsQSFyEqflQJrtoZYWHC1wu5NlRdHFj+xRw3agHi9gpG2EisC1nm?=
+ =?us-ascii?Q?aq0I7PnmLT8+C2Slvl6xT+MCcLS84Frhd/ZQU78uBxy4DYf3re5awhUczOVW?=
+ =?us-ascii?Q?cyE6f0Rod6AtkrjtDOB9vVslUGiBT9v1zSAu75Z27fhVqoFFZr6gvwwxQeum?=
+ =?us-ascii?Q?ZChppI/R7wArVF0D+RzTkuweeGGsXbp3lvsFdg/F0CFeQ1RjyKW3KBaSE0ib?=
+ =?us-ascii?Q?rIbLybVSTf4JjinkLGo1qVbewp9fG/EfMg6Zf79Q8zpTPCBco3zWfe9rNX3V?=
+ =?us-ascii?Q?211mcxlZMBTQQSd/ysl0LsjuIs3gfdQ5R8WV0SG6JNLjJFbULzdNL/MBHIU2?=
+ =?us-ascii?Q?rL0PJTAgDgAIMWJZ48Lx+Cml4bh7OckCyQZ7Qxp0V04fk+FLbMwSjys7Ml6m?=
+ =?us-ascii?Q?1rz/bFFpG//UwbvtgbITIQzz3bbQxmiphaEG90gCfg1DxQ7ZtDvGMvnK1+58?=
+ =?us-ascii?Q?GCsIKyGKQyzuQkkD/usj2ZZneqAhpqPy6OsGopvbaf2W93MKurBxW2b0Lo75?=
+ =?us-ascii?Q?xNqUVQyGiHfR344gwf/xboTEbCuOoEP5xDJWFoFj8jTFskf3UwmyrBpEsYl+?=
+ =?us-ascii?Q?oEMYaMIxXtlVm9J/tmOG1QGNxv2Bvf0WOqGVstMwIU6sp0mZ8ShRLaKHeZOQ?=
+ =?us-ascii?Q?6SLlBdiT23RAiFDqaaN1JWOUXk3YOB1hTpXWQkA2Tyx0Adlc6XzIAYHfQw1Q?=
+ =?us-ascii?Q?Uaj2xz1fpfRNwQNavIgpcFFgtrNruOO178PMbuV1nOhOJsB4GnTYjrMUE34w?=
+ =?us-ascii?Q?tHyLzZZJ/Ykuu23OLtXbweJengc8bdXNso0NWEvhdOnB5RwDoWVuXBPR03ZU?=
+ =?us-ascii?Q?vOTexvoeCe/CAoyCWiLw9hFqnt0EhVJ+UvjuazpQZfurEfAcBAzut9IAgg+G?=
+ =?us-ascii?Q?7/VdBa0aewjDkEGZ1QTJmHIawGqxuRDN6R5P/xHTMQqXnBxrhKNMzXoswB0J?=
+ =?us-ascii?Q?6LaqFasb9HrIfjMxr0C0jygw1YYbuFNRQkdLZ6JP8QVEMM/SOQTw2zfQNA3h?=
+ =?us-ascii?Q?9NBZg/7vu048Tmo5oSD0pHVWG1GZ3rM6pl4nqYAb9OM1YJyaEeFExxvzn6ZP?=
+ =?us-ascii?Q?4ePSlL0vnoUwPWHJabAxmb2i/ibgvUUwBnesZ5Cb5jlHPFngddt4gfmclUwN?=
+ =?us-ascii?Q?Mw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4df0662e-ad04-4a8c-c7e8-08db38c91aea
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2023 07:07:39.6352
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JOsH669TQfMq4Lb+UePyI6/hNnjBYbNlg6++UQ6BcjKAANF6oFvbo+pf5tDwUHAem/99yF67ItTPzk/WAH+F48Tr6X9l0Q53OC7/WV4E6us=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4807
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi David-
+Here is an early draft of the DCD work that Navneet has spearheaded.
+Given the interest level I thought it best to do the remaining
+development and refinement of the functionality in the open.  For now
+this is just a git branch that will become a patchkit on the mailing
+list in a few weeks.
 
+Questions are welcome, but I do not recommend a formal review until the
+patches hit the mailing list.
 
-On 4/7/23 18:17, David Rientjes wrote:
-> On Fri, 7 Apr 2023, James Houghton wrote:
-> 
->> On Fri, Apr 7, 2023 at 5:05 PM Dragan Stancevic <dragan@stancevic.com> wrote:
->>>
->>> Hi folks-
->>>
->>> if it's not too late for the schedule...
->>>
->>> I am starting to tackle VM live migration and hypervisor clustering over
->>> switched CXL memory[1][2], intended for cloud virtualization types of loads.
->>>
->>> I'd be interested in doing a small BoF session with some slides and get
->>> into a discussion/brainstorming with other people that deal with VM/LM
->>> cloud loads. Among other things to discuss would be page migrations over
->>> switched CXL memory, shared in-memory ABI to allow VM hand-off between
->>> hypervisors, etc...
->>>
->>> A few of us discussed some of this under the ZONE_XMEM thread, but I
->>> figured it might be better to start a separate thread.
->>>
->>> If there is interested, thank you.
->>
->> Hi Dragan,
->>
->> Thanks for bringing up this topic. I'd be very interested to be part
->> of this BoF, as I'm also interested in using CXL.mem as a live
->> migration mechanism.
->>
-> 
-> Thanks for cc'ing me, this would be very interesting to talk about.  Count
-> me in!
-> 
->>> [1]. High-level overview available at http://nil-migration.org/
->>> [2]. Based on CXL spec 3.0
->>>
-> 
-> Dragan: I'm curious about the reference to CXL spec 3.0 here, is there
-> something specific about 3.0 that this work depends on or should we be
-> good-to-go with 2.0 as well?  (Are you referring to 3.0 for security
-> extensions?)
+This has had some checkout on an internal functional model, I expect
+QEMU and/or cxl_test grows an emulation of DCD before this patchkit is
+committed for mainline.
 
-
-Sorry hit send too soon, and then had hosting provider issues... the 
-hypervisor clustering part[1] might not work on CXL 2.0
-
-
-[1]. http://nil-migration.org/ds-nil-migration-p12.png
-
-
-
---
-Peace can only come as a natural consequence
-of universal enlightenment -Dr. Nikola Tesla
-
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.5/dcd-preview
