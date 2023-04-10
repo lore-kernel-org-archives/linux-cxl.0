@@ -2,141 +2,124 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF917C77B61
-	for <linux-cxl@archiver.kernel.org>; Mon, 10 Apr 2023 03:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207C0C77B61
+	for <linux-cxl@archiver.kernel.org>; Mon, 10 Apr 2023 17:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjDJDFq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 9 Apr 2023 23:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
+        id S229871AbjDJRrG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 10 Apr 2023 13:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjDJDFp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 9 Apr 2023 23:05:45 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B1F35B5
-        for <linux-cxl@vger.kernel.org>; Sun,  9 Apr 2023 20:05:42 -0700 (PDT)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230410030536epoutp02e5baeb61e9684ad3810ece78735fad29~Uc9jnLMSA1078010780epoutp02o
-        for <linux-cxl@vger.kernel.org>; Mon, 10 Apr 2023 03:05:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230410030536epoutp02e5baeb61e9684ad3810ece78735fad29~Uc9jnLMSA1078010780epoutp02o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1681095936;
-        bh=SRTeLE9lQ3b/QiJsBXYPDVIGRjiZ1RqLSwa/G+aVphI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QY28z1y5nnvErGsEEOshEXhyonfXsQNp8DcyAE2njfK/489zUHWcfjBuB6TfoV0Tn
-         AndF/8vO9UPAMpeoAxxPFj6zWyf7hejMmHKJiyqQpldLoZSsm7t92/VKMarzqC2Zl+
-         rfAIQ573pkLD42kQUnDTOdcGvBs7/Tv7oN1tq3/g=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20230410030534epcas2p167ef3050097e2507e98f957af3e96d7b~Uc9hhQAue1950019500epcas2p1M;
-        Mon, 10 Apr 2023 03:05:34 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.69]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4Pvv3x2lNkz4x9Pv; Mon, 10 Apr
-        2023 03:05:33 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A1.87.09650.DFC73346; Mon, 10 Apr 2023 12:05:33 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20230410030532epcas2p49eae675396bf81658c1a3401796da1d4~Uc9gRgJqf0469904699epcas2p4O;
-        Mon, 10 Apr 2023 03:05:32 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230410030532epsmtrp2e937a887cd70c1d269f082f6e901f107~Uc9gQwOwZ2512825128epsmtrp2e;
-        Mon, 10 Apr 2023 03:05:32 +0000 (GMT)
-X-AuditID: b6c32a48-dc7ff700000025b2-34-64337cfd53e7
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B6.84.08609.CFC73346; Mon, 10 Apr 2023 12:05:32 +0900 (KST)
-Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
-        [10.229.83.99]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230410030532epsmtip1b9af32e7980eee83fb3add941a66ca7d~Uc9gC5Wx_0228302283epsmtip1Y;
-        Mon, 10 Apr 2023 03:05:32 +0000 (GMT)
-From:   Kyungsan Kim <ks0204.kim@samsung.com>
-To:     dragan@stancevic.com
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
-        dan.j.williams@intel.com, seungjun.ha@samsung.com,
-        wj28.lee@samsung.com
-Subject: RE: [LSF/MM/BPF TOPIC] BoF VM live migration over CXL memory
-Date:   Mon, 10 Apr 2023 12:05:32 +0900
-Message-Id: <20230410030532.427842-1-ks0204.kim@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmqe7fGuMUg5c3hS2mH1a0mD71AqPF
-        obk32S3OzzrFYrFn70kWi3tr/rNa7Hu9l9niRedxJouODW8YLTbef8fmwOXx78QaNo/Fe14y
-        eWz6NIndY/KN5YwefVtWMXosXmrj8XmTXAB7VLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZ
-        gaGuoaWFuZJCXmJuqq2Si0+ArltmDtB1SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSC
-        lJwC8wK94sTc4tK8dL281BIrQwMDI1OgwoTsjFO/eQqOc1Qs2SbQwPidrYuRk0NCwETie8cB
-        IJuLQ0hgB6PEqmlTGUESQgKfGCU+HwmCSHxmlNi04wQLTMfPB5dYIBK7GCWuTWiFau9ikri+
-        /S9YFZuAtsSfK+fBdogISEjsW7MIbCyzwD9GiT2XJUFsYQFXif2/1zOD2CwCqhJ981ewg9i8
-        AjYSk2fthdomLzHz0newOKeAo0T3s89MEDWCEidnPmGBmCkv0bx1NjPIERICrRwS5979YIVo
-        dpGY2PIHapCwxKvjW9ghbCmJz+/2QgOgWOLx639Q8RKJw0t+Q9UbS7y7+RxoDgfQAk2J9bv0
-        QUwJAWWJI7eg1vJJdBz+yw4R5pXoaBOCaFSR2P5vOTPMotP7N0EN95BoP7CZGRJUUxglbi65
-        xjSBUWEWkm9mIflmFsLiBYzMqxjFUguKc9NTi40KTODRm5yfu4kRnFS1PHYwzn77Qe8QIxMH
-        4yFGCQ5mJRFeG26DFCHelMTKqtSi/Pii0pzU4kOMpsCwnsgsJZqcD0zreSXxhiaWBiZmZobm
-        RqYG5krivB87lFOEBNITS1KzU1MLUotg+pg4OKUamLZaXnz16nGv1bMFkf8tpmns3nif5ebk
-        JdHPjHlZ8n21RN8KJ3hrSF945/hMaX709FiOuY9lHn5Z7PJR97WMzM9X/fNWP1zIZyy/6u5h
-        XbGn5W6d709e+9a1xGSJ4NN3qj97LNYm1yr+ESwI3dHWFx4mWm3M/f+3TNGJne8bl81sYz6r
-        VFNgv8nchPdY7LQ9r1T6GzbIqJiZ5vw8afH4a6te1ff8+Wlt0+Pt0k732yTXFk20Sq/S23Yp
-        U7DhDuOEV0/uGymb/at4MacrPmEOa6bUraywPawrLdWOPtXfaTmZ6eaWW+uaA1v79fVy3JWm
-        PIo9c+HJIblpHwJnrl5VuzM/tre7pplzfbj29ZV6nkosxRmJhlrMRcWJAP0ort8zBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDLMWRmVeSWpSXmKPExsWy7bCSnO6fGuMUg0crtCymH1a0mD71AqPF
-        obk32S3OzzrFYrFn70kWi3tr/rNa7Hu9l9niRedxJouODW8YLTbef8fmwOXx78QaNo/Fe14y
-        eWz6NIndY/KN5YwefVtWMXosXmrj8XmTXAB7FJdNSmpOZllqkb5dAlfGqd88Bcc5KpZsE2hg
-        /M7WxcjJISFgIvHzwSWWLkYuDiGBHYwSO6bfZIRISEm8P93GDmELS9xvOcIKYgsJdDBJHP9Q
-        D2KzCWhL/LlyHmyQiICExL41ixhBBjGD1Gy9PB0sISzgKrH/93pmEJtFQFWib/4KsKG8AjYS
-        k2ftZYFYIC8x89J3sDingKNE97PPTBDLHCSutdxhhqgXlDg58wlYPTNQffPW2cwTGAVmIUnN
-        QpJawMi0ilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOAK0tHYw7ln1Qe8QIxMH4yFG
-        CQ5mJRFeG26DFCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8F7pOxgsJpCeWpGanphakFsFkmTg4
-        pRqYVjDXBD05W//Xaw8z4923USLLJyl1XNp76G2A054twv86LtvNevntXsXPdecZviXc7N2s
-        nC1149KBLjZOtrlr7p6fcHBR0cZlWxTDXUMuC+dlfgkzrpKa1lR4Vnaj1Qd3Yc73eVaeIndn
-        LxEX+fMuei6zeXpXwuIvFjJLfM+Z3zWxLeK6ePvRnfydr+Z7+EmdDEg7fk7Hd5PdqzPBhzW/
-        zvt57a2i8s3++hq2xuqAm37XSw354nvywtfKVk5+yugvY2nSKPlWZybfzINFX9+4+P3s0Vor
-        KbeeX9d3VeNzgb1GgW8fz9p359/y6cYslkLzLxUZLgsUUT3uEfV1z0qHX9Mv+jrcnWZfcmr/
-        nq+8qUosxRmJhlrMRcWJACcs5mrvAgAA
-X-CMS-MailID: 20230410030532epcas2p49eae675396bf81658c1a3401796da1d4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230410030532epcas2p49eae675396bf81658c1a3401796da1d4
+        with ESMTP id S229503AbjDJRrF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Apr 2023 13:47:05 -0400
+Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5990C171D
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Apr 2023 10:47:04 -0700 (PDT)
+Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-54c17fa9ae8so211329937b3.5
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Apr 2023 10:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1681148823; x=1683740823;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6rtR1KQ3AqrOVvZCzQlb6jCWmGPQKc6qNmt9LztgmJM=;
+        b=BqbhM9JMvMAyMmkt7kMrlBFKSDVBInnQ1LH97f8g/RNriLbcr9kGlvFiM3kFx9p7kT
+         k3DElh125L3hk2n0Oq02XuS+WiFPPfz0sSvZSZ84yCA5Q/wQj7MLaoqC8WAYECZWqgFE
+         JSf9VFkalZBIIBX9YFvNBWPWX2cdfo/TkEn0UoNVO+xtFEtGHOH0XKmzqb8P4icODO1r
+         x5e/JsFjPI6CcwCQvS03Z2iXtfZ/bbrsxDUvjd5Qy2UbfhXhGdaOKZK6C4OSB1AEcPif
+         y9wkz7D60qzPGCDFFz25BUfeOgY+OEGzm2lpZweBi4Dg1IUn85XAOaKhriu84dKvF5Ho
+         STXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681148823; x=1683740823;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6rtR1KQ3AqrOVvZCzQlb6jCWmGPQKc6qNmt9LztgmJM=;
+        b=j0RCn/A5Xd5Y80D6wwoBxbKYIhuoKjRPigCfk1qOTwFj1V+OtmW6RGiGjRM5Q53dxq
+         OIJle0vY+eyedEhOlPzKQGJ3xT2G4UqUc0tZMASVvmKi8K/Xho7t72ESUNdzFHeorA9c
+         pntSTFWRH+888B6U9kTIIWTko+ZvsNNTyju4lP1qb12Qvmiw/cMj3syeuL/wU+rBlHxU
+         vlJP8GHrabvLqurLz1w6v1uSdvPRdh3UeA+tzaLk6U6h7gJpb/Zvm9P3EnMhbZAeKEo6
+         7/jIC+jKgyU0QveIEEM1lPWVU/6XnyTwoU6Ct7RHRt58YxW7y422K0juxGILKVTiVvZP
+         FsuQ==
+X-Gm-Message-State: AAQBX9d+jFakGnAZSIrBOPfzPk3MCXAABW7T1zEUMK5QJlkS6+L1/KPi
+        bPOECzKzQF84u3eRINOgNNzBMg==
+X-Google-Smtp-Source: AKy350ZDxReVUeZGSiN9OtREAUcY12spdX+6/+Rz+W9m1AdQN2kfh2aFaMblSkdCUrERM6FGfbByAw==
+X-Received: by 2002:a81:4890:0:b0:54f:3322:cbec with SMTP id v138-20020a814890000000b0054f3322cbecmr210620ywa.28.1681148823539;
+        Mon, 10 Apr 2023 10:47:03 -0700 (PDT)
+Received: from smtpclient.apple (172-125-78-211.lightspeed.sntcca.sbcglobal.net. [172.125.78.211])
+        by smtp.gmail.com with ESMTPSA id 80-20020a811453000000b00545a0818480sm2968877ywu.16.2023.04.10.10.47.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Apr 2023 10:47:03 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: Re: [External] [LSF/MM/BPF TOPIC] BoF VM live migration over CXL
+ memory
+From:   "Viacheslav A.Dubeyko" <viacheslav.dubeyko@bytedance.com>
+In-Reply-To: <20230410030532.427842-1-ks0204.kim@samsung.com>
+Date:   Mon, 10 Apr 2023 10:46:50 -0700
+Cc:     dragan@stancevic.com, lsf-pc@lists.linux-foundation.org,
+        linux-mm@kvack.org, Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-cxl@vger.kernel.org,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        seungjun.ha@samsung.com, wj28.lee@samsung.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1DEC12D4-9D85-4AC1-BEE5-92E7E8189C2D@bytedance.com>
 References: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
-        <CGME20230410030532epcas2p49eae675396bf81658c1a3401796da1d4@epcas2p4.samsung.com>
+ <CGME20230410030532epcas2p49eae675396bf81658c1a3401796da1d4@epcas2p4.samsung.com>
+ <20230410030532.427842-1-ks0204.kim@samsung.com>
+To:     Kyungsan Kim <ks0204.kim@samsung.com>
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
->Hi folks-
->
->if it's not too late for the schedule...
->
->I am starting to tackle VM live migration and hypervisor clustering over
->switched CXL memory[1][2], intended for cloud virtualization types of loads.
->
->I'd be interested in doing a small BoF session with some slides and get
->into a discussion/brainstorming with other people that deal with VM/LM
->cloud loads. Among other things to discuss would be page migrations over
->switched CXL memory, shared in-memory ABI to allow VM hand-off between
->hypervisors, etc...
->
->A few of us discussed some of this under the ZONE_XMEM thread, but I
->figured it might be better to start a separate thread.
->
->If there is interested, thank you.
 
-I would like join the discussion as well.
-Let me kindly suggest it would be more great if it includes the data flow of VM/hypervisor as background and kernel interaction expected.
 
->
->
->[1]. High-level overview available at http://nil-migration.org/
->[2]. Based on CXL spec 3.0
->
->--
->Peace can only come as a natural consequence
->of universal enlightenment -Dr. Nikola Tesla
+> On Apr 9, 2023, at 8:05 PM, Kyungsan Kim <ks0204.kim@samsung.com> =
+wrote:
+>=20
+>> Hi folks-
+>>=20
+>> if it's not too late for the schedule...
+>>=20
+>> I am starting to tackle VM live migration and hypervisor clustering =
+over
+>> switched CXL memory[1][2], intended for cloud virtualization types of =
+loads.
+>>=20
+>> I'd be interested in doing a small BoF session with some slides and =
+get
+>> into a discussion/brainstorming with other people that deal with =
+VM/LM
+>> cloud loads. Among other things to discuss would be page migrations =
+over
+>> switched CXL memory, shared in-memory ABI to allow VM hand-off =
+between
+>> hypervisors, etc...
+>>=20
+>> A few of us discussed some of this under the ZONE_XMEM thread, but I
+>> figured it might be better to start a separate thread.
+>>=20
+>> If there is interested, thank you.
+>=20
+> I would like join the discussion as well.
+> Let me kindly suggest it would be more great if it includes the data =
+flow of VM/hypervisor as background and kernel interaction expected.
+>=20
+
+Sounds like interesting topic to me. I would like to attend the =
+discussion.
+
+Thanks,
+Slava.
+
+>>=20
+>>=20
+>> [1]. High-level overview available at http://nil-migration.org/
+>> [2]. Based on CXL spec 3.0
+>>=20
+>> --
+>> Peace can only come as a natural consequence
+>> of universal enlightenment -Dr. Nikola Tesla
+
