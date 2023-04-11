@@ -2,100 +2,160 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76662C7619A
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Apr 2023 18:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8993AC7619A
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Apr 2023 18:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjDKSRM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Apr 2023 14:17:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37438 "EHLO
+        id S229508AbjDKSyP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Apr 2023 14:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229845AbjDKSQx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Apr 2023 14:16:53 -0400
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0C85276
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Apr 2023 11:16:52 -0700 (PDT)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5491fa028adso497240087b3.10
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Apr 2023 11:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681237011; x=1683829011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S7rx3MgpBWYFSw0IirP1+4MZNl+aKRUmf8h7Qo2lJm8=;
-        b=S3112uF+4GQy7gKSiXJxNvtx2OI4It5Ba8y7K6Zlh2IZg7chsB4d1xXVoKrIYqk/Cm
-         53QdztjZKBzFZR5lL6R2hzkrWMcf49kvC2lxDKEgzs94VBOcWPDG0HQZ/Iwz7W+wZv8X
-         fH36ODJlGH+FswwmMEG2CMrOmnwDkdfy1JL2zv4eMVqPpTvzXB28yYKcJqJE/45Vu0Ql
-         pe77Q95qrnrgWWXNwpMy8XWxP+YZUDa/93vHsPA559ME3U4eGLXa78rw9z0k3ZLKQ6pi
-         QN2J9vLArOFXqQxgKCOd9n0UcW2SN1oMtkxJaxOO0KK+bqP8e35WWNAxeQSpoPlCpUp7
-         IZew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681237011; x=1683829011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S7rx3MgpBWYFSw0IirP1+4MZNl+aKRUmf8h7Qo2lJm8=;
-        b=xxu9oZjCNC7O+DKn7jP5YHh5Ij0OJWKyce2fzdurRReHpbzMEdMuUUFGzntM0vBZes
-         WS/mqqEyg/4iix5PmIAi9d+b7wfzv+SiccLEl6YmQkTPBCUyfteqM52opeDv/ftqsX9J
-         FSFz+UCkY3Pw6zyEyX+xF5qYiHAjPq4mQJJ0i3Ss24snG7bEJmZLUoPD91KyRtZDbl3H
-         cpYM4MXoazq/4r2KRzxM/Vr4+qgKHwZDz32oKLvfxoxvGVal9HwPwCKP4lsi+btOfrN+
-         5tLWUPEpTyv7YBGUbqPRzgMXffB5kRblcZbWYvsATgBZQSlNkGH2vWgb1eFPNNZPaoc2
-         PDMA==
-X-Gm-Message-State: AAQBX9fJnZEoLGX7qGc+L4B2xNXoI7/VU41OoY02JG15PVIAIDVLOkQS
-        k7rn11UZxZE8G86xnHHiF0QYbMy0Gz9KoufAiOI=
-X-Google-Smtp-Source: AKy350bk2xxu1tDGXhk5Y8qSXEyqsuZLUfelqtG8xI5ro+bRGOPOOTZ5RlCWKatjpuuotajOsg3SOGxmjxwAPjijamo=
-X-Received: by 2002:a81:aa14:0:b0:54f:2ad:91c5 with SMTP id
- i20-20020a81aa14000000b0054f02ad91c5mr5288660ywh.3.1681237011487; Tue, 11 Apr
- 2023 11:16:51 -0700 (PDT)
+        with ESMTP id S229450AbjDKSyP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Apr 2023 14:54:15 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928C510D;
+        Tue, 11 Apr 2023 11:54:13 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pwvz32kWxz67L71;
+        Wed, 12 Apr 2023 02:49:51 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 11 Apr 2023 19:54:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v5 0/5] perf: CXL 3.0 Performance Monitoring Unit support
+Date:   Tue, 11 Apr 2023 19:54:06 +0100
+Message-ID: <20230411185411.23360-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
-In-Reply-To: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
-From:   RAGHU H <raghuhack78@gmail.com>
-Date:   Tue, 11 Apr 2023 23:46:40 +0530
-Message-ID: <CAGWUp4rVEeUCwyuAc5LqgSbr_SVv4oNGy6vVdNDB+5vrH5AYVw@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BLSF=2FMM=2FBPF_TOPIC=5D_BoF_VM_live_migration_over_CX?=
-        =?UTF-8?Q?L_memory=E2=80=8B?=
-To:     Dragan Stancevic <dragan@stancevic.com>
-Cc:     lsf-pc@lists.linux-foundation.org, nil-migration@lists.linux.dev,
-        linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Dragan
+Was CXL 3.0 Performance Monitoring Unit support.
+Renamed to highlight the driver has moved to drivers/perf
 
-Please add me to the discussion!
+Dan Williams has expressed that he is happy to take this through the CXL
+tree once perf reviewers are happy with those parts.
 
-Regards
-Raghu
+Thanks to Kan and Dan for reviews.
 
-On Sat, Apr 8, 2023 at 2:56=E2=80=AFAM Dragan Stancevic <dragan@stancevic.c=
-om> wrote:
->
-> Hi folks-
->
-> if it's not too late for the schedule...
->
-> I am starting to tackle VM live migration and hypervisor clustering over
-> switched CXL memory[1][2], intended for cloud virtualization types of loa=
-ds.
->
-> I'd be interested in doing a small BoF session with some slides and get
-> into a discussion/brainstorming with other people that deal with VM/LM
-> cloud loads. Among other things to discuss would be page migrations over
-> switched CXL memory, shared in-memory ABI to allow VM hand-off between
-> hypervisors, etc...
->
-> A few of us discussed some of this under the ZONE_XMEM thread, but I
-> figured it might be better to start a separate thread.
->
-> If there is interested, thank you.
->
->
-> [1]. High-level overview available at http://nil-migration.org/
-> [2]. Based on CXL spec 3.0
->
-> --
-> Peace can only come as a natural consequence
-> of universal enlightenment -Dr. Nikola Tesla
+Major changes since v4: (Smaller changes described in individual patches)
+- Move driver from drivers/cxl/cpmu.c to drivers/perf/cxl_pmu.c
+- Rename devices to associate with cxl/devices/memX etc. Scheme
+  extends to CPMU instances on Upstream and Downstream CXL ports.
+- Rename CXL core files to simply pmu.* and simplify code structure
+  naming and similar to cxl_pmu* CXL_PMU* etc
+
+Patch 1/5 is also present in the series:
+[PATCH 00/32] Add parents to struct pmu -> dev
+which may merge first.
+
+Update introduction.
+
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver. All instances are self describing, though for vendor defined
+events we expect mapping from numeric values to counter names to be
+performed in userspace tooling. In common with many CXL features,
+this driver precedes any announced hardware (that I'm aware of anyway!).  
+
+Supported features are:
+- Devices that allow counters to be written when frozen (allows
+  a single register write to start / stop all counters).
+- Fixed purpose counters
+- Configurable counters
+- CXL specification defined events + HDM filters.
+
+This initial series covers a useful subset of functionality and is
+expected to be followed by patch series addressing:
+* Discoverability beyond fine grained events. This will cover both
+  vendor defined events and providing perf tool with the visibility
+  to be able construct 'summed' events.  For example if a single
+  counter can cover all host to device read traffic.
+  Perf tool patches will use this information and appropriate schema
+  to present a richer set of countable events.
+* CXL PMU instances on Upstream and Downstream CXL switch ports
+  and root ports.
+* Free running counters. Often used for vendor defined debug type
+  events and error counters.  Likely to appear on real devices.
+* Devices without interrupt support for overflow.
+* Devices that don't support freeze (counters need to be enabled
+   individually).
+
+Exact priority order for the above features will depend on early
+hardware though (a) will definitely be top of the list as any
+likely hardware will be able to take advantage of that feature.
+
+Notes.
+
+1) The QEMU model against which this was developed needs tidying up.
+   Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) V1 led to a discussion of how to handle the self describing
+   and extensible nature of the CPMU counters.  That is likely to involve
+   a description in the "caps" sysfs directory and perf tool code that is
+   aware of the different event combinations that make sense and can
+   establish which sets are available on a given device.
+   That is likely to take a while to converge on, so as the driver is useful
+   in the current state, I'm looking to upstream this first and deal with
+   the more complex handling later.
+3) There is a lot of other functionality that can be added in future
+   include allowing for simpler hardware implementations that may not
+   support the minimum level of features currently required by the driver
+   (freeze, overflow interrupts etc).
+4) Adding support for ports will require solving msi/msix vector requests
+   from portdrv and how to pass those to the CXL port drivers. (or some
+   other way to instantiate the CXL PMU devices.) RFC on that to follow.
+
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
+
+Jonathan Cameron (5):
+  perf: Allow a PMU to have a parent
+  cxl: Add functions to get an instance of / count regblocks of a given
+    type
+  cxl/pci: Find and register CXL PMU devices
+  perf: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver
+
+ Documentation/admin-guide/perf/cxl.rst   |  68 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ MAINTAINERS                              |   7 +
+ drivers/cxl/Kconfig                      |  13 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   1 +
+ drivers/cxl/core/pmu.c                   |  69 ++
+ drivers/cxl/core/port.c                  |   2 +
+ drivers/cxl/core/regs.c                  |  75 +-
+ drivers/cxl/cxl.h                        |  16 +
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  26 +-
+ drivers/cxl/pmu.h                        |  28 +
+ drivers/perf/Kconfig                     |  13 +
+ drivers/perf/Makefile                    |   1 +
+ drivers/perf/cxl_pmu.c                   | 984 +++++++++++++++++++++++
+ include/linux/perf_event.h               |   1 +
+ kernel/events/core.c                     |   1 +
+ 18 files changed, 1301 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/pmu.c
+ create mode 100644 drivers/cxl/pmu.h
+ create mode 100644 drivers/perf/cxl_pmu.c
+
+-- 
+2.37.2
+
