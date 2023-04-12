@@ -2,36 +2,34 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F193C77B71
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 08:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F78C77B71
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 08:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231479AbjDLIyn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Apr 2023 04:54:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44990 "EHLO
+        id S229903AbjDLI7C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Apr 2023 04:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbjDLIyi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 04:54:38 -0400
+        with ESMTP id S229734AbjDLI7A (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 04:59:00 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DE9A5C4;
-        Wed, 12 Apr 2023 01:54:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA01430C8;
+        Wed, 12 Apr 2023 01:58:43 -0700 (PDT)
 Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PxGBt3fksz6J7DV;
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PxGBt1rMpz6J7DH;
         Wed, 12 Apr 2023 16:31:18 +0800 (CST)
 Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
  lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 12 Apr 2023 09:33:40 +0100
+ 15.1.2507.23; Wed, 12 Apr 2023 09:33:39 +0100
 From:   <shiju.jose@huawei.com>
 To:     <mchehab@kernel.org>, <linux-cxl@vger.kernel.org>,
         <linux-edac@vger.kernel.org>
 CC:     <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
         <shiju.jose@huawei.com>
-Subject: [RFC PATCH 2/7] rasdaemon: Add common function to get timestamp for the event
-Date:   Wed, 12 Apr 2023 16:33:06 +0800
-Message-ID: <20230412083312.1384-3-shiju.jose@huawei.com>
+Subject: [RFC PATCH 0/7] rasdaemon: Process the generic CXL trace events
+Date:   Wed, 12 Apr 2023 16:33:04 +0800
+Message-ID: <20230412083312.1384-1-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.35.1.windows.2
-In-Reply-To: <20230412083312.1384-1-shiju.jose@huawei.com>
-References: <20230412083312.1384-1-shiju.jose@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -45,99 +43,34 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add common function to get the timestamp for the event
-reported.
+Log and record the following generic CXL error records reported through
+the kernel trace events.
+- cxl_overflow
+- cxl_generic_event
+- cxl_general_media
+- cxl_dram
+- cxl_memory_module
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- ras-cxl-handler.c | 44 +++++++++++++++++---------------------------
- 1 file changed, 17 insertions(+), 27 deletions(-)
+Shiju Jose (7):
+  rasdaemon: Add common function to convert timestamp in the CXL event
+    records to the broken-down time format
+  rasdaemon: Add common function to get timestamp for the event
+  rasdaemon: Add support for the CXL overflow events
+  rasdaemon: Add support for the CXL generic events
+  rasdaemon: Add support for the CXL general media events
+  rasdaemon: Add support for the CXL dram events
+  rasdaemon: Add support for the CXL memory module events
 
-diff --git a/ras-cxl-handler.c b/ras-cxl-handler.c
-index ad93558..025e582 100644
---- a/ras-cxl-handler.c
-+++ b/ras-cxl-handler.c
-@@ -42,6 +42,20 @@ static void convert_timestamp(unsigned long long ts, char *ts_ptr, uint16_t size
- 			size);
- }
- 
-+static void get_timestamp(struct trace_seq *s, struct tep_record *record,
-+			  struct ras_events *ras, char *ts_ptr, uint16_t size)
-+{
-+	time_t now;
-+	struct tm *tm;
-+
-+	now = record->ts / user_hz + ras->uptime_diff;
-+	tm = localtime(&now);
-+	if (tm)
-+		strftime(ts_ptr, size, "%Y-%m-%d %H:%M:%S %z", tm);
-+	else
-+		strncpy(ts_ptr, "1970-01-01 00:00:00 +0000", size);
-+}
-+
- /* Poison List: Payload out flags */
- #define CXL_POISON_FLAG_MORE            BIT(0)
- #define CXL_POISON_FLAG_OVERFLOW        BIT(1)
-@@ -68,17 +82,9 @@ int ras_cxl_poison_event_handler(struct trace_seq *s,
- 	int len;
- 	unsigned long long val;
- 	struct ras_events *ras = context;
--	time_t now;
--	struct tm *tm;
- 	struct ras_cxl_poison_event ev;
- 
--	now = record->ts / user_hz + ras->uptime_diff;
--	tm = localtime(&now);
--	if (tm)
--		strftime(ev.timestamp, sizeof(ev.timestamp),
--			 "%Y-%m-%d %H:%M:%S %z", tm);
--	else
--		strncpy(ev.timestamp, "1970-01-01 00:00:00 +0000", sizeof(ev.timestamp));
-+	get_timestamp(s, record, ras, (char *)&ev.timestamp, sizeof(ev.timestamp));
- 	if (trace_seq_printf(s, "%s ", ev.timestamp) <= 0)
- 		return -1;
- 
-@@ -277,19 +283,11 @@ int ras_cxl_aer_ue_event_handler(struct trace_seq *s,
- {
- 	int len, i;
- 	unsigned long long val;
--	time_t now;
--	struct tm *tm;
- 	struct ras_events *ras = context;
- 	struct ras_cxl_aer_ue_event ev;
- 
- 	memset(&ev, 0, sizeof(ev));
--	now = record->ts / user_hz + ras->uptime_diff;
--	tm = localtime(&now);
--	if (tm)
--		strftime(ev.timestamp, sizeof(ev.timestamp),
--			 "%Y-%m-%d %H:%M:%S %z", tm);
--	else
--		strncpy(ev.timestamp, "1970-01-01 00:00:00 +0000", sizeof(ev.timestamp));
-+	get_timestamp(s, record, ras, (char *)&ev.timestamp, sizeof(ev.timestamp));
- 	if (trace_seq_printf(s, "%s ", ev.timestamp) <= 0)
- 		return -1;
- 
-@@ -372,18 +370,10 @@ int ras_cxl_aer_ce_event_handler(struct trace_seq *s,
- {
- 	int len;
- 	unsigned long long val;
--	time_t now;
--	struct tm *tm;
- 	struct ras_events *ras = context;
- 	struct ras_cxl_aer_ce_event ev;
- 
--	now = record->ts / user_hz + ras->uptime_diff;
--	tm = localtime(&now);
--	if (tm)
--		strftime(ev.timestamp, sizeof(ev.timestamp),
--			 "%Y-%m-%d %H:%M:%S %z", tm);
--	else
--		strncpy(ev.timestamp, "1970-01-01 00:00:00 +0000", sizeof(ev.timestamp));
-+	get_timestamp(s, record, ras, (char *)&ev.timestamp, sizeof(ev.timestamp));
- 	if (trace_seq_printf(s, "%s ", ev.timestamp) <= 0)
- 		return -1;
- 
+ ras-cxl-handler.c | 826 +++++++++++++++++++++++++++++++++++++++++++---
+ ras-cxl-handler.h |  15 +
+ ras-events.c      |  45 +++
+ ras-events.h      |   5 +
+ ras-record.c      | 420 +++++++++++++++++++++++
+ ras-record.h      |  99 ++++++
+ ras-report.c      | 476 ++++++++++++++++++++++++++
+ ras-report.h      |  10 +
+ 8 files changed, 1853 insertions(+), 43 deletions(-)
+
 -- 
 2.25.1
 
