@@ -2,147 +2,151 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D428BC7619A
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 05:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA620C7619A
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 05:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbjDLFiC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Apr 2023 01:38:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
+        id S229484AbjDLF5N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Apr 2023 01:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjDLFiB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 01:38:01 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B7F1E5A
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Apr 2023 22:38:00 -0700 (PDT)
+        with ESMTP id S229469AbjDLF5M (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 01:57:12 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587CC1FEA
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Apr 2023 22:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681277880; x=1712813880;
+  t=1681279030; x=1712815030;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=Lfklhc5SajrPZQBeTTEJm3bwcLyRih4oX2T0gazIt3M=;
-  b=VjsliQp8cde9OaM9r44eesPrVFH8EUcuCTOJ7jwz3V8zzHzHgzznx/0s
-   w0g3djsEN7lV0JQ3PaGkyzUIiuTtlh127fI+y4fH4+ZmERzAjT9c4XKZa
-   oLqaD4lzMG/eLcaf3S/oR+6Ak524G1Vea4PN8qXFWvkH6K2gD61Pw38yy
-   cnVkbWiDJUZcMOaKBerol2eFyrBa1DQg3jCrKrByGmtIIzSWHvSnapy0T
-   5lJtE25DXGi+8uGB9MoRWM6vISnKNaR/dQaH+KBfLxHrgkHwepqzn7en4
-   nND55EaJOVviAlyU6y+h5EH6U4WBgb4AkiTBVkVyCDPpymYuWz3NNqozL
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="327913622"
+  bh=ZohBXOsrMmTVC/0HDFf+o7PLg1mYf58tEs2yXyeOtLM=;
+  b=Y+7oCGSotyTkaMcj3MeDDhUU/5tQqwZ6NdiemFr3Y2/eoxdcW3uvIEMv
+   bLkt6CbqjGT0lIo22nUOKPQ6KC/lmecWr59HRS9UuR7trBUBcRUYQzaVo
+   IIGJ1nUqKyzyAvNa04/+8kD1NJsPNcRjqEa+DBTP0AKEZFGTh8MQFjQUs
+   Y5lqikOwpg04LuCQd5ccxIys9OREuk8k5iYD00MgoJJBlvQ29ULAccW7L
+   fgJxmjde6J0WPIJLPW7UKdm3mg9+AadS8mUqgI4NSM+ZQZkuYasXjhRM6
+   NWEeP1kEEpzLv7ZhrCmwYgjTs1MOtZF8ZXNj11+TgxoZOuwlwIDnvPadS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="323436894"
 X-IronPort-AV: E=Sophos;i="5.98,338,1673942400"; 
-   d="scan'208";a="327913622"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 22:37:59 -0700
+   d="scan'208";a="323436894"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 22:55:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="800180515"
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="688838337"
 X-IronPort-AV: E=Sophos;i="5.98,338,1673942400"; 
-   d="scan'208";a="800180515"
+   d="scan'208";a="688838337"
 Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Apr 2023 22:37:59 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+  by orsmga002.jf.intel.com with ESMTP; 11 Apr 2023 22:55:55 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
  fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 11 Apr 2023 22:37:59 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 11 Apr 2023 22:55:54 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 11 Apr 2023 22:37:59 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 11 Apr 2023 22:55:54 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Tue, 11 Apr 2023 22:55:54 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.108)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 11 Apr 2023 22:37:55 -0700
+ 15.1.2507.23; Tue, 11 Apr 2023 22:55:54 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AaW+x7dB1dED0cer6ejjXKjf8Wdj6DUf+6SHFW+6IL0FnkvZ3V9Rw9VCOfCdRG+B6YqCgfjQxF1DsHsL66hyA+GKlKjYD2nApnzNl46V0dsl9eJDoFavvvWh8RSMTU5nEvf0JNsJiIqAgqgd+KIW6FAQisVxFvqHlDTblae+6gi95Z0LgGv2Su6fDAoRlURv1JLSYEOHMEXwAmI5puEzOyHoFXWxGabC/p+4znRiNWrI+Mkox1f9lXmSvcMsUkQVJBe2SOLSQ7AMq7j4rDcEhiPnO5Q3TWkKk3HTJ3lhmlq7Z8DNJLjhRCB0XVA9Kvu86fHuXVIQ5LnoaWnMxqMhHQ==
+ b=UF7oXs9gBX12IMt9s9Q5IsI627VXaFqmNxH1/Q4aFp847yqFqzwmGORn6wv05ir8GHfCYG/ecgTf7HoSCryypVEt1gwm5sU4WtJVscFMatIlDVs+8r+PxDrUjhhN9zcTJJwH9QISwnMiRb2jL2KNRUHfYAwmXQ2esSktnwW/xyTXtemrWhDjAges2W/Kuz9UPY8l3KckkCVQ3QIJHL+sl3uKnE46EWrsezsyNQgOyUyLTygPPcwUxDmlkDvd4CRRw9Qyxxb7f+LsU+PUUtZi9TKvB2Vp9vYKaMtUSMB7v/mvK5PMM762IEpwTt8dsiSLJxxAnEiDD9jpFsRToJtqLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rZOfiAhygB1rT2CoezTXRqxu+kXfSL4n/m+WboxAzo8=;
- b=lKkK+9d0/9UOonUeRa6cYMU06MFw1AxDrFbe7Rd7hVjveHnTAwpdGpFR0SRHPfEsL8BAALOlcBH+a91r+4kfom0SfsKzf4C9Ua+qLZhZRiC8+ccpp+czna5TEXndx7PZrPmAvRPfE+E/ZFzg6QbcqID+Gc0vbxt14GdnAE87tx/5zxkAeOZjmj0AMtrehJrJHZqOWJXR6dGGxoY0it9eoSOizmFGOlLraRTPjPMB8Bz4dEnITP5oS6VtYp83yNmXXCntoLM9Ibqe6QLYAbiErFbH70XLVQL12WJ0EWjPmbnDzcud4ZCX8yvBdF1r7N6/A9GHfeTV6o3NZoJ+FIf93Q==
+ bh=HwmzcdnaDy+QfbbVkk/SoqP4dB0yZoY7Mi0WoI+UJ9Y=;
+ b=ejToMYUKdriVN66arRV7YWofXR7dWnfX4dHPNnz3qxMXhJ7gzAlxLrpZwqKy2hV/DB9etc83RblBCyy4sd+jjUp1T8XNdkKCa7teimZPYOl56WL/imOjuu4HOjqbQfQF9wg2P7Z+B07VWMp3xRxW7Pa3c7hkMKf6FYzac4FeZ+PI1tZniBleTA1iGz2EjClbKEWXN7nd6nnZJDxWs30p36z0TEQA1A0PqXUJGM/BIUX9xWQKMGJvGvvkX0iTRBLdSaA9PpARlpEkJSEEC4Rh/yixvuO17/1+F38ww53GARH+qa8Gw9I31vg5KAYSCDPCiGxX45l8yxz/Hy6276+N7Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BL3PR11MB5683.namprd11.prod.outlook.com (2603:10b6:208:33e::11) with
+ by DS0PR11MB6375.namprd11.prod.outlook.com (2603:10b6:8:c9::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Wed, 12 Apr
- 2023 05:37:52 +0000
+ 2023 05:55:51 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6277.035; Wed, 12 Apr 2023
- 05:37:52 +0000
-Date:   Tue, 11 Apr 2023 22:37:49 -0700
+ 05:55:51 +0000
+Date:   Tue, 11 Apr 2023 22:55:49 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     <alison.schofield@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>
+        Steven Rostedt <rostedt@goodmis.org>
 CC:     Alison Schofield <alison.schofield@intel.com>,
         <linux-cxl@vger.kernel.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: RE: [PATCH v12 3/6] cxl/memdev: Add trigger_poison_list sysfs
- attribute
-Message-ID: <643643ada955_417e294b1@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: RE: [PATCH v12 4/6] cxl/region: Provide region info to the
+ cxl_poison trace event
+Message-ID: <643647e5502ab_417e29445@dwillia2-xfh.jf.intel.com.notmuch>
 References: <cover.1681159309.git.alison.schofield@intel.com>
- <31ecc71e43fa584aa0c4b1cb1e9aa7b124461037.1681159309.git.alison.schofield@intel.com>
+ <92a8eab0aadde1c65f57e03d1ae0160929b23921.1681159309.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <31ecc71e43fa584aa0c4b1cb1e9aa7b124461037.1681159309.git.alison.schofield@intel.com>
-X-ClientProxiedBy: BYAPR08CA0035.namprd08.prod.outlook.com
- (2603:10b6:a03:100::48) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <92a8eab0aadde1c65f57e03d1ae0160929b23921.1681159309.git.alison.schofield@intel.com>
+X-ClientProxiedBy: BYAPR06CA0011.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::24) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL3PR11MB5683:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00a70279-ae42-4543-5509-08db3b180ee6
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB6375:EE_
+X-MS-Office365-Filtering-Correlation-Id: 846aaeb9-976d-4e40-fdb2-08db3b1a9229
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kix3mM5MGAp8RTNAFrKK6vjIuDklbNDNqxecIbfVGf2QWvvBGFHOy6j0rezEj7/oF5w6tPyfhdqhT1erWocNaFbCRNONhpcJF7Zi52EuEhLhpvzpXZDZtikb7igy+lMkpW05T3Uo0dA034ZozOcilHfOee6bmoLMZ95xWVM62XaVZ09M8Z4NtC4yZh4YK0ZPfpBJI5t/MrHVVj6zW9VE7AAS66FeZQRSc4sFOHTL3BPNPQ4R/V9NCfUGzAJn8yDb4bOLOkSo8mHV/Ofoto2g1rKVz5oFvt1a8L52ARMMaY+3+3mKBU/cwTwYITA+LFeK4wN5Qf2Lm80D67pl1QjohJepYH4rdKXDX0ktmYSYJDAAvwrLK/YC5aHWBvYNBD2I8iA5EZ9WydBOxfsoS7N66uo/hqY04nXmrlBzbKxwbvisOXSDXNVlfPwSYNKC+FMlGh+RBLWUsEZzZ/n4eJEx36iKDV61AnRehPdjK81KjnPi6a14ux6gIhERNOv82thiBTH6hVn9wgGqWj5DS2QXAH3Wjcl2IZyH5sxl4a1/BMkxuotYJjdchpIPEuG7bp52
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(366004)(396003)(39860400002)(136003)(451199021)(26005)(66476007)(66556008)(4326008)(66946007)(6512007)(6506007)(9686003)(2906002)(83380400001)(6666004)(6486002)(186003)(54906003)(110136005)(86362001)(5660300002)(8676002)(8936002)(38100700002)(478600001)(41300700001)(316002)(82960400001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: KIYmUXHeFOSuPqyUzZ5j08oPXrw1iuYnJpXEj3GhC3cNr/XyRx+tzlnK+4fvWUaqvi4ijJJjSIca87NKWH7PZGCvqR1GWf1qmDqcJNhIOLqwVr4vQytGjX4tWDAXpmQi4AiuL50PUBeSSNifb69a8fSLvsgdQH5TOvJnF/xjmV6ewPvroizQNYTijLOu8/rtnPll7Ilwx0fWXRm0k/Tf9Z0iMoieuAcZfzgy+wbtJUflWtbPCCR2toMtYnxE1SKUFO07V11cSbI2qrx3C9NENRJs0uHXlV/9n15dWtTQCYX2dJX4WatfFP+WOrbmqp+SJIWtYjJ4cHubbDdLAmGWExV2OOR46DS+KXBdpFeltXP6M6vkMuN5/PnuUsh0xKXrGCBqTuYxSNnmwAjSAyV4Gc7tH0quDaJzMuuD3YMx8ZO9d//DFKbdgg1O6RCPKBU533+frJ9g5A/u0W5VjhTxCC9RTSH50A4nj/5aqTXJrRgw3LP4l4Np267U3ToeLkS4n1zuhtee8CEzzdgM3TvFqbnP0pu0DbGx2Sva2neEsunLhStUW0B2701AT07Zrne0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(39860400002)(376002)(396003)(346002)(451199021)(316002)(478600001)(82960400001)(86362001)(54906003)(110136005)(4326008)(66946007)(66476007)(66556008)(38100700002)(83380400001)(6486002)(41300700001)(2906002)(186003)(26005)(6506007)(6512007)(9686003)(5660300002)(8936002)(8676002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+upsGdj2jBGhRKHkwKE0hPpPqz8lA8SFi0dUINsVYNmU0w+p4yQbefoXr0U4?=
- =?us-ascii?Q?v2wsEgqOb9e1DZKWOAblbJVpGUiRnGLwnYO98xZkpgopXziOlz/+Tn+YqkPL?=
- =?us-ascii?Q?1Hrtwqke7eu48m+WpGtndU70piHU+J/w6kB0ISRIzhBYSI2HxH90LLwFUuze?=
- =?us-ascii?Q?uY4idPZHZcYytXEXuSxoeCyjWaV99YdN7eR1Ij+lTWoFPQh7dTmetnlzrvXL?=
- =?us-ascii?Q?EcYsxL7aknFdvlbfOUFvSYEPNPgyNhLkJd10rrYp+rXgG6MlTB1pe+QpS91P?=
- =?us-ascii?Q?0oadiRO8q5DEL+amR2mnf5BTIf/HdCDIoIzuDJbofo8tQbRuJs2MH0euUtL2?=
- =?us-ascii?Q?8+WCdnaxexeGb+MzfeIAGywF1vd5/8Ii/3O8IANc1R7jfwGeUDjeIon8FEpI?=
- =?us-ascii?Q?nYEpmQK2bg78UDAq/QlyPHI5CUh97IkTGfGSBDF7iGC6hI3pPMBt49k1f7Ux?=
- =?us-ascii?Q?8uEcHaGKDCPe9xJfmJguf2l+UzwTRmTzt+zOt/qwWJ8gp3QibdH2OPnElKOg?=
- =?us-ascii?Q?cKu0sbBlO96OncAwFqyNohuTQpd1tOiaMIb/OCz4/yv1DJQcT3+3rkAqyH3z?=
- =?us-ascii?Q?Oi8OKRtJkU0eFPX4GFS02r4M27x+dmlT3myFpzCvFVXVpkvDQm5BmlRX5X7/?=
- =?us-ascii?Q?tbLWQodDqWtzG1TSnI8ZeAxDGS7Up4dR3rVZHIQ0MzUn08RGtTqkJMJUCO/r?=
- =?us-ascii?Q?EV8GC+QAmkpg7o/I1lkHQG8BC792lQZgY/NHuHF9otJ5MGQMCb2JPVTO1FCq?=
- =?us-ascii?Q?ONMTiSYUVIWZ1oyb1aj5VSZyTO37cv1Z+vpukjqMamSLZLiwdW2miTFa43bD?=
- =?us-ascii?Q?IXpNnu8hNurSFDLYXzpbokBpbPYZ95kZgXCyUa812TMyHcKRkAUjXoZ+MPZW?=
- =?us-ascii?Q?UGAZlp2qAdW+ID8nPkSL2QOOdANRp4OqzDLoi02LycRNbQCrqO3NHHPUknXK?=
- =?us-ascii?Q?b/1Ye1lEJ8ktmKVyDAX1e0PCD/G79dk+IHbeF7Cvq4zLhc75goqr93EsH7Jd?=
- =?us-ascii?Q?KoaKhiOMoEMEb0itzwCV3urznvz1DYC4k+mK4XAn261axMTbXcbbrJPSrioc?=
- =?us-ascii?Q?slwg5b3emb6IKzQfSQDKhflNqSquxbYge6hOMNyTNaPN2tfZRq21BKmuPWAi?=
- =?us-ascii?Q?yCzprj23iHNgCWqZgxUCRf/RzDMeDQ3CC5e5Zv+CwOI9Jq4DN/q0YZuw4xVG?=
- =?us-ascii?Q?xQevetR5it/OncZcO19Dv6qdJ56r1L85OqM8rif94yf28c5fwsW/rqhF6bBo?=
- =?us-ascii?Q?PkwYh4oRYvDgBWNXaiwAzWtKJYCUjqGsc6H9PXH4//EKPSWIAYcE0Eyl0uOm?=
- =?us-ascii?Q?XxwF+dsAGyIRAmYUaAAtzs5aqSCmVB8pXbXfz4TdUeo53xPFDoPla0dkRAgM?=
- =?us-ascii?Q?7Mj3Yioyf6Z7jJITXgnHMCVs2fMzuWT9I8I/8UF7KMQKWH47NsOlqUzP+oZd?=
- =?us-ascii?Q?Bjr+9N7okkTCthV2p8gIjCGnVkgz5/YewOlYNr+BBlQKOTOu+2wCGgs+dai+?=
- =?us-ascii?Q?OrWKMPOigPJ5e/nv33OvJ0KfK8NnBHqDCJcmY03IwT/c7WGll394V/Wlj1Zw?=
- =?us-ascii?Q?246tMnWFf55yJFS9F9vXJlwus9CQquUPdBvVzPWcLAllpaQRQrPpCAQRW+Lt?=
- =?us-ascii?Q?hQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00a70279-ae42-4543-5509-08db3b180ee6
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6wl1ZAmDVrjWCBYMe4nyqcy90ZMT5xKt5DrTDeh3VgShx5Kyl+VSV5sTf4fW?=
+ =?us-ascii?Q?LmKei6XrrWQFRJrCndZvmlPlPRztwuhouSWV4qk++INeKXP7rnHOtOm0GNn2?=
+ =?us-ascii?Q?ebn3/Ef4UKxyClcSoT6+CsqSLptOY5NMkf8VKLsGjgC1A5Vx1ilcyUwhIs0K?=
+ =?us-ascii?Q?eLuOfxXWot6J2yHpilUtPPeJ4jnZxopyIJRYC7w+eftlSyux+EaA5Ea/40E7?=
+ =?us-ascii?Q?OQd+gzFWYamcLIRIViCPCuxhBkmLnV3/sZ+h62G2BKNTd9QspJOxcGLp2aaW?=
+ =?us-ascii?Q?H7ZDl0mIJ1DtDbP/aQzS+cOU++VqFG7lsSJqo6EV9/YEC2/qZPzRp0MnQ0KD?=
+ =?us-ascii?Q?YKMXW+eBkFg3fd4r0xfWwIwHuE6yWJUinRPqymyJ4MTUIf779vEI+MMhVnLb?=
+ =?us-ascii?Q?P2awrN3QPPOD0adEANjpDu7nw3ZQLNiGz7n1eJpEV3aT4r/JQGRE3U7ZmlwX?=
+ =?us-ascii?Q?ImaktQKrMT24qVIAQbUU3khH4gHo24qYB4c2uJD2/5P8KvmZqnKtLXULj6EH?=
+ =?us-ascii?Q?wpzQpFFBjnk0fWtDO3mixwC3fKXDQYensl2uDKG1lTt/OqD2/k5u1f9Ci9HE?=
+ =?us-ascii?Q?xZCrV+FNGMnNrJwcug9oC1p8H+826hDKSa3pFjCCLFF0oGj2tV1YiH5jWS0k?=
+ =?us-ascii?Q?/uBqk8bWO/wPIWBQ5fuB3Z6FRH9/qX8q8jfJWsWTKP6pJo/pMSDyCC7IrfPU?=
+ =?us-ascii?Q?ldx1nOMlzmMFzVvV3bKWrSmE4LJKpmBM6L6/gtl+j7jZZEN9dHsGCyZpvNj9?=
+ =?us-ascii?Q?s/4BrSSEpi8yFY4YB3j6R05icUQfSvTli3Mzhq+JHDKmathT6YfKDUiqjqa2?=
+ =?us-ascii?Q?OLZnJ1IK3V0ZJR21AF4V7BTEVQoTHEFa5zmoP3eUyEy0D8oCNSsHq5G/nGoc?=
+ =?us-ascii?Q?Zyq56i0GFRW1uEf+ByBNAPfnu2OMz/N4SI31hpFi/emI5aGq3QFTuBY2N5Sy?=
+ =?us-ascii?Q?0QhgYn/taQ9g+LiZsl1FsFhHUu+5ZtZKPBJCXXdv4r9KDCZPqvr2bmlSi3im?=
+ =?us-ascii?Q?fw3sE43L3289bigTVZtmlFXs0JiCfVUdhlDvi9gkkyj3zaA+nTF2a5dtQfmB?=
+ =?us-ascii?Q?6CBeyWx38pUuXQfLB8OisOwluBpNnp+RwvKNsAEVSa6XyXeS3hxZglMVTvmD?=
+ =?us-ascii?Q?a4CxMqh8PKX4zpMRpQktT1RpRT6inuRPGhXdeot2xT5L+ikmPs4uqKeIlVd5?=
+ =?us-ascii?Q?sc1aFPUAWbCPyWmG/iIEl4rUwpY6e4z/nJLPOT29zYqSQd/E8MXx+LlN/dJ0?=
+ =?us-ascii?Q?ltCCbj/fpH6f4Xb6E/Z7MQcsN4JYr7uU/KJv+9F3RAkBzsDjflzs/5SzCocE?=
+ =?us-ascii?Q?wPJN3zIjGaBOzzpsqq04lm1GEPkkQ08YZeVta9e6ZU5QDeM8sPZ5b60p+XJu?=
+ =?us-ascii?Q?Sb2H7+By/7RXAx9qzCCeEl97lIthnGWZwnEX7qWRYgvedxpvkDgh2heIP+pt?=
+ =?us-ascii?Q?+O7bGRTCOLbMReHeMDygsuM4uPNywxHWvTUqlkYycJRMmDHK8qCa2PK3e/Cl?=
+ =?us-ascii?Q?0Y2Gz1brtlicALAO9jP0eFKcch5TxAjU3gS4z5GZQfDtr3SNRrcJbw6HR59u?=
+ =?us-ascii?Q?/bOhs75vJZRBUtovZ8qypn7tTBLg/ItLka+YHzCTJU98wWYedqUCfFTKxFlo?=
+ =?us-ascii?Q?Rw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 846aaeb9-976d-4e40-fdb2-08db3b1a9229
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 05:37:51.9874
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 05:55:51.3423
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ie4jYcpwImTrvN9IvT5G0WyG4KufyKfM9KA1x4Cqk9xWc3CNJJF8+pr16WbgAyYKDo34v7PJGhsEdZQMxwtapGjPvhSN/+5Xq0AodPpiYNU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB5683
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0GpMgFKq+Klt2B30skA2u1QdvisLo7bcpg5srPIWZAxi5v7A5tHAUlFv/XZ1KvwRjJHawQwhfXLfMVuKc8w2nmBXvklKw5I3A99lQIZvtzc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6375
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -151,128 +155,269 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 alison.schofield@ wrote:
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> When a boolean 'true' is written to this attribute the memdev driver
-> retrieves the poison list from the device. The list consists of
-> addresses that are poisoned, or would result in poison if accessed,
-> and the source of the poison. This attribute is only visible for
-> devices supporting the capability. The retrieved errors are logged
-> as kernel events when cxl_poison event tracing is enabled.
+> User space may need to know which region, if any, maps the poison
+> address(es) logged in a cxl_poison trace event. Since the mapping
+> of DPAs (device physical addresses) to a region can change, the
+> kernel must provide this information at the time the poison list
+> is read. The event informs user space that at event <timestamp>
+> this <region> mapped to this <DPA>, which is poisoned.
+> 
+> The cxl_poison trace event is already wired up to log the region
+> name and uuid if it receives param 'struct cxl_region'.
+> 
+> In order to provide that cxl_region, add another method for gathering
+> poison - by committed endpoint decoder mappings. This method is only
+> available with CONFIG_CXL_REGION and is only used if a region actually
+> maps the memdev where poison is being read. After the region driver
+> reads the poison list for all the mapped resources, control returns
+> to the memdev driver, where poison is read for any remaining unmapped
+> resources.
+> 
+> Mixed mode decoders are not currently supported in Linux. Add a debug
+> message to the poison request path. That will serve as an alert that
+> poison list retrieval needs to add support for mixed mode.
+> 
+> The default method remains: read the poison by memdev resource.
 > 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 14 ++++++++
->  drivers/cxl/core/memdev.c               | 48 +++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h                    |  5 ++-
->  drivers/cxl/mem.c                       | 36 +++++++++++++++++++
->  4 files changed, 102 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/core.h   | 11 +++++++
+>  drivers/cxl/core/memdev.c | 62 +++++++++++++++++++++++++++++++++++++-
+>  drivers/cxl/core/region.c | 63 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 135 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 3acf2f17a73f..48ac0d911801 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -415,3 +415,17 @@ Description:
->  		1), and checks that the hardware accepts the commit request.
->  		Reading this value indicates whether the region is committed or
->  		not.
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index e888e293943e..57bd22e01a0b 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -25,7 +25,12 @@ void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled);
+>  #define CXL_DAX_REGION_TYPE(x) (&cxl_dax_region_type)
+>  int cxl_region_init(void);
+>  void cxl_region_exit(void);
+> +int cxl_get_poison_by_endpoint(struct device *dev, void *data);
+>  #else
+> +static inline int cxl_get_poison_by_endpoint(struct device *dev, void *data)
+> +{
+> +	return 0;
+> +}
+
+For a public function the lack of type safety jumps out at me... more
+below:
+
+>  static inline void cxl_decoder_kill_region(struct cxl_endpoint_decoder *cxled)
+>  {
+>  }
+> @@ -68,4 +73,10 @@ enum cxl_poison_trace_type {
+>  	CXL_POISON_TRACE_LIST,
+>  };
+>  
+> +struct cxl_trigger_poison_context {
+> +	struct cxl_port *port;
+> +	enum cxl_decoder_mode mode;
+> +	u64 offset;
+> +};
 > +
-> +
-> +What:		/sys/bus/cxl/devices/memX/trigger_poison_list
-> +Date:		April, 2023
-> +KernelVersion:	v6.4
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(WO) When a boolean 'true' is written to this attribute the
-> +		memdev driver retrieves the poison list from the device. The
-> +		list consists of addresses that are poisoned, or would result
-> +		in poison if accessed, and the source of the poison. This
-> +		attribute is only visible for devices supporting the
-> +		capability. The retrieved errors are logged as kernel
-> +		events when cxl_poison event tracing is enabled.
+>  #endif /* __CXL_CORE_H__ */
 > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 0af8856936dc..297d87ebaca6 100644
+> index 297d87ebaca6..f26b5b6cda10 100644
 > --- a/drivers/cxl/core/memdev.c
 > +++ b/drivers/cxl/core/memdev.c
-> @@ -106,6 +106,53 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+> @@ -106,6 +106,47 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
 >  }
 >  static DEVICE_ATTR_RO(numa_node);
 >  
-> +static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+> +static int cxl_get_poison_unmapped(struct cxl_memdev *cxlmd,
+> +				   struct cxl_trigger_poison_context *ctx)
 > +{
 > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
 > +	u64 offset, length;
 > +	int rc = 0;
 > +
-> +	/* CXL 3.0 Spec 8.2.9.8.4.1 Separate pmem and ram poison requests */
-> +	if (resource_size(&cxlds->pmem_res)) {
-> +		offset = cxlds->pmem_res.start;
-> +		length = resource_size(&cxlds->pmem_res);
+> +	/*
+> +	 * Collect poison for the remaining unmapped resources
+> +	 * after poison is collected by committed endpoints.
+> +	 *
+> +	 * Knowing that PMEM must always follow RAM, get poison
+> +	 * for unmapped resources based on the last decoder's mode:
+> +	 *	ram: scan remains of ram range, then any pmem range
+> +	 *	pmem: scan remains of pmem range
+> +	 */
+> +
+> +	if (ctx->mode == CXL_DECODER_RAM) {
+> +		offset = ctx->offset;
+> +		length = resource_size(&cxlds->ram_res) - offset;
 > +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> +		if (rc == -EFAULT)
+> +			rc = 0;
 > +		if (rc)
 > +			return rc;
 > +	}
-> +	if (resource_size(&cxlds->ram_res)) {
-> +		offset = cxlds->ram_res.start;
-> +		length = resource_size(&cxlds->ram_res);
-> +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-> +		/*
-> +		 * Invalid Physical Address is not an error for
-> +		 * volatile addresses. Device support is optional.
-> +		 */
-> +		if (rc == -EFAULT)
-> +			rc = 0;
+> +	if (ctx->mode == CXL_DECODER_PMEM) {
+> +		offset = ctx->offset;
+> +		length = resource_size(&cxlds->dpa_res) - offset;
+> +		if (!length)
+> +			return 0;
+> +	} else if (resource_size(&cxlds->pmem_res)) {
+> +		offset = cxlds->pmem_res.start;
+> +		length = resource_size(&cxlds->pmem_res);
+> +	} else {
+> +		return 0;
 > +	}
+> +
+> +	return cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> +}
+> +
+>  static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+>  {
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> @@ -139,14 +180,33 @@ ssize_t cxl_trigger_poison_list(struct device *dev,
+>  				const char *buf, size_t len)
+>  {
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_trigger_poison_context ctx;
+> +	struct cxl_port *port;
+>  	bool trigger;
+>  	ssize_t rc;
+>  
+>  	if (kstrtobool(buf, &trigger) || !trigger)
+>  		return -EINVAL;
+>  
+> +	port = dev_get_drvdata(&cxlmd->dev);
+> +	if (!port || !is_cxl_endpoint(port))
+> +		return -EINVAL;
+> +
+>  	down_read(&cxl_dpa_rwsem);
+> -	rc = cxl_get_poison_by_memdev(cxlmd);
+> +	if (port->commit_end == -1) {
+> +		/* No regions mapped to this memdev */
+> +		rc = cxl_get_poison_by_memdev(cxlmd);
+> +	} else {
+> +		/* Regions mapped, collect poison by endpoint */
+> +		ctx = (struct cxl_trigger_poison_context) {
+> +			.port = port,
+> +		};
+> +		rc = device_for_each_child(&port->dev, &ctx,
+> +					   cxl_get_poison_by_endpoint);
+> +		if (rc == 1)
+> +			rc = cxl_get_poison_unmapped(cxlmd, &ctx);
+
+Ah, cxl_get_poison_by_endpoint() is a function pointer to
+device_for_each_child(), that really feels like a detail that's private
+to the implementation.
+
+I would reorganize this to something like:
+
+     if (port->commit_end == -1) {
+             /* No regions mapped to this memdev */
+             rc = cxl_get_poison_by_memdev(cxlmd);
+     } else {
+             /* Regions mapped, collect poison by endpoint */
+             rc = cxl_get_poison_by_endpoint(endpoint);
+     }
+
+...and then internal to cxl_get_poison_by_endpoint() do:
+	    
+             ctx = (struct cxl_trigger_poison_context) {
+                     .port = endpoint,
+             };
+             rc = device_for_each_child(&port->dev, &ctx,
+                                        poison_by_decoder);
+             if (rc == 1)
+                     rc = cxl_get_poison_unmapped(cxlmd, &ctx);
+
+...then the header file reads more calmly with the added type-safety.
+
+> +	}
+> +
+>  	up_read(&cxl_dpa_rwsem);
+>  
+>  	return rc ? rc : len;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index f29028148806..4c4d3a6d631d 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2213,6 +2213,69 @@ struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(to_cxl_pmem_region, CXL);
+>  
+> +int cxl_get_poison_by_endpoint(struct device *dev, void *arg)
+> +{
+> +	struct cxl_trigger_poison_context *ctx = arg;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_port *port = ctx->port;
+> +	struct cxl_memdev *cxlmd;
+> +	u64 offset, length;
+> +	int rc = 0;
+> +
+> +	down_read(&cxl_region_rwsem);
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		goto out;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
+> +		goto out;
+> +
+> +	/*
+> +	 * Regions are only created with single mode decoders: pmem or ram.
+> +	 * Linux does not currently support mixed mode decoders. This means
+> +	 * that reading poison per endpoint decoder adheres to the spec
+> +	 * requirement that poison reads of pmem and ram must be separated.
+> +	 * CXL 3.0 Spec 8.2.9.8.4.1
+> +	 *
+> +	 * Watch for future support of mixed with a dev_dbg() msg.
+
+This sentence can go, mixed will never* be supported.
+
+* at least until the vendor that manages to ship such a thing comes and
+  explains why the kernel needs to work around that awkwardness.
+
+> +	 */
+> +	if (cxled->mode == CXL_DECODER_MIXED) {
+> +		dev_dbg(dev, "poison list read unsupported in mixed mode\n");
+> +		goto out;
+> +	}
+> +
+> +	cxlmd = cxled_to_memdev(cxled);
+> +	if (cxled->skip) {
+> +		offset = cxled->dpa_res->start - cxled->skip;
+> +		length = cxled->skip;
+> +		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> +		if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> +			rc = 0;
+> +		if (rc)
+> +			goto out;
+> +	}
+> +
+> +	offset = cxled->dpa_res->start;
+> +	length = cxled->dpa_res->end - offset + 1;
+> +	rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region);
+> +	if (rc == -EFAULT && cxled->mode == CXL_DECODER_RAM)
+> +		rc = 0;
+> +	if (rc)
+> +		goto out;
+> +
+> +	/* Iterate until commit_end is reached */
+> +	if (cxled->cxld.id == port->commit_end)
+> +		rc = 1;
+> +
+> +	/* ctx informs the memdev driver of last read poison */
+> +	ctx->mode = cxled->mode;
+> +	ctx->offset = cxled->dpa_res->end + 1;
+> +out:
+> +	up_read(&cxl_region_rwsem);
 > +	return rc;
 > +}
 > +
-> +ssize_t cxl_trigger_poison_list(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-
-The @attr argument is unused, it can be dropped.
-
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-
-The caller can do this conversion.
-
-> +	bool trigger;
-> +	ssize_t rc;
-> +
-> +	if (kstrtobool(buf, &trigger) || !trigger)
-> +		return -EINVAL;
-
-Hmm, the caller could to this too...
-
-...the below seems to be the bit that the cxl_core cares about handling.
-
-> +
-> +	down_read(&cxl_dpa_rwsem);
-
-down_read_interruptible() since this is coming from userspace.
-
-> +	rc = cxl_get_poison_by_memdev(cxlmd);
-> +	up_read(&cxl_dpa_rwsem);
-> +
-> +	return rc ? rc : len;
-
-The caller can do this conversion.
-
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_trigger_poison_list, CXL);
-> +
->  static struct attribute *cxl_memdev_attributes[] = {
->  	&dev_attr_serial.attr,
->  	&dev_attr_firmware_version.attr,
-> @@ -130,6 +177,7 @@ static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
->  {
->  	if (!IS_ENABLED(CONFIG_NUMA) && a == &dev_attr_numa_node.attr)
->  		return 0;
-> +
-
-I am surprised that Jonathan let this slide :).
-
->  	return a->mode;
->  }
+>  static struct lock_class_key cxl_pmem_region_key;
 >  
+>  static struct cxl_pmem_region *cxl_pmem_region_alloc(struct cxl_region *cxlr)
+> -- 
+> 2.37.3
+> 
+
+
