@@ -2,122 +2,100 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3796C76196
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Apr 2023 19:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B442DC7619A
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 01:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjDKThM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Apr 2023 15:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38806 "EHLO
+        id S229516AbjDLBcq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Apr 2023 21:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjDKThK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Apr 2023 15:37:10 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52E8170E
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Apr 2023 12:37:09 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 3E1145C2171;
-        Tue, 11 Apr 2023 19:37:08 +0000 (UTC)
-Received: from pdx1-sub0-mail-a273.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id A15565C14C7;
-        Tue, 11 Apr 2023 19:37:07 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1681241827; a=rsa-sha256;
-        cv=none;
-        b=P3i/N8Ca7mWBJjN9xFNRFyGljQ/A5PB7E3GYiBoBJ8RA48x3c5B9Y9fawC1PmavKcWuwIl
-        nHGhhihM9naihs/XJFC5Eh9P1sh2s0B+veW3Zb8M05nUyh8DV5yBTw+2PnDyIoNENq8kVu
-        uA9LLxFe1d1ft1zWU2MwZa1MRvrbLIP6HOHbltO12yWhHqiT8s7V6TnrjG6a7TNQC9e4mO
-        tHteMM904FG2bBY1ZLFlov9QOBVfnbJDhOxIx5Ptjy0GIFaRLJMdiB0vWEc5W8rfFnbs0E
-        h1Rw0DklK9MIjsLRpjVdGaYDtPTpLDZLf9j4P4qOtYGx1er/rISRX2YDhYsfPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1681241827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=mF6rYkOKZBWCvm08A+392aGIpvmJHZbAhc3oZSHJ2M8=;
-        b=mmE0NYRrjtNBwSB6b3GSNFbpNhk9QvbnWS7uoaNE3KtwYmKrztYGyKOzbCp+GkDevfVNtD
-        rUYpi5mJpYcg4vpaCfmX5jIySRApmnR0FL6qEJdoDbo1HgVqfILPq3ULNgk7/4x7SF5rqr
-        ub3/tpOogfobQoyw5cJrToMuA7sIMycRDz0uopCIrObBQocZDbuoOrK1QWVsxPiyrVFeiF
-        +fjiGUffDcVRdg12V2AnyJROFm8qdCM/zW9d3ECGe8OO6Rt0ehEMfakm9smPPiIUpwzLeL
-        cKumedF5jmxWTrvzeBlcYdIiRhwQeDUv6/JO1/Vj+Lm8F3daUdycespsa6xqkw==
-ARC-Authentication-Results: i=1;
-        rspamd-786cb55f77-wm8vm;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Quick-Hook: 17ffbc4d3f588913_1681241828011_3446462309
-X-MC-Loop-Signature: 1681241828011:604405379
-X-MC-Ingress-Time: 1681241828011
-Received: from pdx1-sub0-mail-a273.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.101.8.119 (trex/6.7.2);
-        Tue, 11 Apr 2023 19:37:08 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a273.dreamhost.com (Postfix) with ESMTPSA id 4Pwx1Z6Zl3zFr;
-        Tue, 11 Apr 2023 12:37:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1681241827;
-        bh=mF6rYkOKZBWCvm08A+392aGIpvmJHZbAhc3oZSHJ2M8=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=KTFDbmSS5Ut9Il+vkHkHdfVUrSIyajShgjwKj2EL0ilSOCoRGOzwI/858UFZJouO3
-         wXtD8Px0GNXb9Lvr5FSVwHEVVogHmuoDe65BoNk6eLp3m7z1uFNe3R1SwirD56YY6L
-         mTa9kpyt3m/SHuaNeqnoW0Og3ZPXXnne/UwiQBTBWF3DbGfggORXbO9RngUk3I8rrk
-         hvwpluXhGtSSZ+s3DKOUsLFAPY5UKKTldC4Fpu5ghFban9IW6+hc1pvPd7nL1qKF7M
-         4gRWvE4h6I7NbUKx7Eln/YIuIwahKU8ZqQsDfdhLBSWmx8mR2wW4m4O3XIOS5AQdG/
-         UWWsFRYUQBsDw==
-Date:   Tue, 11 Apr 2023 12:06:07 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, fan.ni@samsung.com,
-        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/3] cxl/mbox: Add support for background operations
-Message-ID: <6s2gtg7imyiyrkiq54rcxmidzkyfy4bvybfpjm5jikblnvluei@6trlbojork66>
-References: <20230224194443.1990440-1-dave@stgolabs.net>
- <20230224194443.1990440-2-dave@stgolabs.net>
- <20230403174730.00003920@Huawei.com>
+        with ESMTP id S229555AbjDLBcp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Apr 2023 21:32:45 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA5B49FD;
+        Tue, 11 Apr 2023 18:32:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681263162; x=1712799162;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NpHSJadvgON+Y54a3OFsI9t8u2jTudA5HtPGaVo/gvg=;
+  b=nyIaRmCmgn1fPrIAaCb1pY7uYYiCZqpqEc66o/vEhIV9fF72E5qxXhXw
+   x8onCJ3xsNZq5HeLvfiFeW/DKzgUh3TNNeQCNHxjBcz8WXRSYReRpJ5uj
+   8PZuWlh7fbGJv2XgUPCvUj3efdmqfYiZLUv2PEK++jyEWobs3BSy461JJ
+   D5kzEbJiMShC1zHMN+cpgRajzHo7qSLFGU5i20wwXUQS6EwupH4dMDkCJ
+   hTMB2TvLXnvMvOfvm3XDJCO+NNes1IO1Tv9QYgz8GF7MbtHImhaXwnrfb
+   ufFcuOvCZOywmLyLt29xso7c+zRwA7NU4OxwYoVUYOXIgHW7oyESn2ilE
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="345565035"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="345565035"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 18:32:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="1018571587"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="1018571587"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 11 Apr 2023 18:32:38 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pmPLh-000Ww5-0j;
+        Wed, 12 Apr 2023 01:32:37 +0000
+Date:   Wed, 12 Apr 2023 09:32:00 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, terry.bowman@amd.com,
+        rrichter@amd.com, linux-kernel@vger.kernel.org, bhelgaas@google.com
+Subject: Re: [PATCH v3 4/6] cxl/pci: Add RCH downstream port error logging
+Message-ID: <202304120926.dekDF6um-lkp@intel.com>
+References: <20230411180302.2678736-5-terry.bowman@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230403174730.00003920@Huawei.com>
-User-Agent: NeoMutt/20230322
+In-Reply-To: <20230411180302.2678736-5-terry.bowman@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 03 Apr 2023, Jonathan Cameron wrote:
+Hi Terry,
 
->On Fri, 24 Feb 2023 11:44:41 -0800
->Davidlohr Bueso <dave@stgolabs.net> wrote:
->> +    } else {
->> +        /* estimate only */
->> +        cxl_dstate->bg.complete_pct = 100 * now / total_time;
->> +        timer_mod(cxl_dstate->bg.timer, now + CXL_MBOX_BG_UPDATE_FREQ);
->> +    }
->> +
->> +    bg_status_reg = FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS, PERCENTAGE_COMP,
->> +                               cxl_dstate->bg.complete_pct);
->> +    cxl_dstate->mbox_reg_state64[R_CXL_DEV_BG_CMD_STS] = bg_status_reg;
->> +
->> +    if (cxl_dstate->bg.complete_pct == 100) {
->> +        cxl_dstate->bg.starttime = 0;
->> +        /* registers are updated, allow new bg-capable cmds */
->> +        cxl_dstate->bg.runtime = 0;
->
->Looks like this could all move into the if (now >=..
->block above as I'm not seeing either of these fields being used after that.
+kernel test robot noticed the following build errors:
 
-I'd rather keep this branch. For one, the next patch will also add the msi
-notifications here; and secondly, we don't want another incoming cmd to see
-no bg command running (runtime is used to check CXL_MBOX_BUSY) and status
-pct complete not at 100.
+[auto build test ERROR on ca712e47054678c5ce93a0e0f686353ad5561195]
 
-Thanks,
-Davidlohr
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/cxl-pci-Add-RCH-downstream-port-AER-and-RAS-register-discovery/20230412-020957
+base:   ca712e47054678c5ce93a0e0f686353ad5561195
+patch link:    https://lore.kernel.org/r/20230411180302.2678736-5-terry.bowman%40amd.com
+patch subject: [PATCH v3 4/6] cxl/pci: Add RCH downstream port error logging
+config: loongarch-buildonly-randconfig-r004-20230409 (https://download.01.org/0day-ci/archive/20230412/202304120926.dekDF6um-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/7f1c5cefb1e75bd709dc35c7f5e3e29dd5df65e1
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Terry-Bowman/cxl-pci-Add-RCH-downstream-port-AER-and-RAS-register-discovery/20230412-020957
+        git checkout 7f1c5cefb1e75bd709dc35c7f5e3e29dd5df65e1
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304120926.dekDF6um-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   loongarch64-linux-ld: drivers/cxl/core/pci.o: in function `cxl_rch_log_error':
+   drivers/cxl/core/pci.c:768: undefined reference to `cper_print_aer'
+>> loongarch64-linux-ld: drivers/cxl/core/pci.c:768: undefined reference to `cper_print_aer'
+>> loongarch64-linux-ld: drivers/cxl/core/pci.c:768: undefined reference to `cper_print_aer'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
