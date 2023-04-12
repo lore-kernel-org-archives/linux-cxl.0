@@ -2,456 +2,192 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F30C7619A
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 18:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C058FC77B6E
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 19:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjDLSns (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Apr 2023 14:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
+        id S229624AbjDLTQV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Apr 2023 15:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbjDLSnq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 14:43:46 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE39D3AAB
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Apr 2023 11:43:44 -0700 (PDT)
+        with ESMTP id S229499AbjDLTQU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 15:16:20 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6813B61B6
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Apr 2023 12:16:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681326976; x=1712862976;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=4tXBMHCMvX5yCwQas3tmNebtQgrGYr9h3OTJW3G0jvg=;
+  b=jNdJJJ6C3Kf6oTZPsvCyZyWbkl2A5CxqDNkMbGWTy4tldcrvL1gVcrgR
+   3i3A3sDv/hdEbSIuLHSwJL7y/oB3va/zz8kTY8K0ASY/rmSeTPEgmd89t
+   /kMliapuAKUMypbuopKlzaeiXP1MHihhz6xdO+IgaSOTNLG4c9lEqu54g
+   gZ7mYU7C565kN3zzHex/WHJU6pENNy9pJGAGVc7wts4A1u2f3ODVXwk3c
+   TPVCdRu10YsekZx8P73E9bsh53do4YAFdcVy7XPCMXcoYyPzhTyostDZ4
+   pgeijJed4wMpXrNxb7npXQ1Eepg/SLVXBLr3c1zr1zl/lhbpEmLK7ZDwU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="323620168"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="323620168"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 12:16:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="758357517"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="758357517"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Apr 2023 12:16:14 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 12 Apr 2023 12:16:13 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 12 Apr 2023 12:16:13 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Wed, 12 Apr 2023 12:16:13 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Wed, 12 Apr 2023 12:16:12 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UJmL6GbQbWL6OgmmZDTYasRTKu4u8bYv8gASMS/OdxOn9ryGL+ZCkkR+zkE91tX5rHW6o+neiJ/0hA6ufVW1A+lG2P+2dO+3JAAcjFgnp2XzvN2mHfyLJjqGNjVTMHoR0GM+GgffA+q+GeP3OYdFXPdlftwQgD8HA9uVx78ceKikM4xuC/eREivZuRg+OELw4qpWHssUndVIZL7+Qdxg7m0BidlHqVrCZSBFQ+3jRJ2W2qGViNbMKUEkvwzu6nDWuW6XbAP82/LTOo7bR+H/TQVrUl/GxiqIGYLh9McuysxXxYiKHTemDtjE0402H9c4TDNZLgku6yd1BNyE9DSFDA==
+ b=Z39ErfwboYUkdG28b/j9Sz3h5quHOBrb37pIkQYIOJFFzkydpQ3shMHoy5fMgnsz4FLEs3kRIU3PM9bhpk+5N9rRX2Wbwu6fy2u11eD3b74gTrXiejUCvoSraMBNIqodh+6PwuapXtSwOPD/SFryhpMArfkFgRUOFwCAG+qZ1pBbdt/bl9cRhjIuEA27dK6qw83QwvglWcZMtdT/9aJCQa2ZLzhDXMSX3ASYG3uba6ZQbXdmJs5CElFN8+REnd1xH5WjhWFWMk8cq4476yjC8WIjKebqzWisMSV1NrYuzR7p50h0rwxjAeBXQ3Yw0VhE4sc++cev/d5tpNfa+EoF+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3zDrRqlGrAGd8SCD9O5+KErsKp/4nRRfv+77K0qYWZc=;
- b=QBlrsKefWF7uUFC1ymM+4fpEiHwpzfO/ehEi6Dwbnc1AZR1/u/Fnb7fe6MOvPQVKYDD9AU03deZE00rP3W/uJMib4urk1wwlu+YSL1thV4MIyjr8JZ1FaN8tuFf6t1Dz0qacy7kLuKo8ROe+W9M7qHDWl3TbEFn5+4jc7wchgosP7e2vU4ip5alzmcTmwAKi4Fo0wxi94CPiCKV+ZDu2018egXakNJIdHVhoWsz+ev6n7iEd/rcBTRFuYhthFkjjBwBr+6QdJMCuHStWN0V6mOIvPiF/6pEwg2sp2KTLZ5HkdOPR8pEcLVFD0T+k4q3UUMnxepETT2Fg2MvMqseuIw==
+ bh=D7yDKvirAZtvp9Xgb3YATbZix2WSx9Q09yOjEVhUWv4=;
+ b=es3DftzGm2cRol0a7/TdaOKVFfc/iMQ1neCFB5qSLG3h9cSIS+zaAnSvVRiL1LjSwUdarLdv4GqXtXF78S5khgfm1vCWN+8/xMwimUnBg84cBzSUyepK7y9vmMuxhj+BUiWqnl2Id0smiuK++WaQFqmUQlNjLIr9a6fCYQXe6WVkx+GFyjWJcstiMGbOf2uIe4/OnNwAshbDl5Wq4L9Z7Pb/gJi9aSPEXL0MVrog+uv6E3FIyiFIYK50oRJuXFuyinlEO5u+CoCUwsT+AhxhpdN3qJrtMGRXxfdOT59NsEMUoPt905tk7jDeEMhyIZ8x2QJe/zOIWmUxMZbyM/RoxA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3zDrRqlGrAGd8SCD9O5+KErsKp/4nRRfv+77K0qYWZc=;
- b=a+IVc1OuYwy81zicnBvq8T+2gF6xKcyI6obstsgrgarsatn/T1fqrCBy8bwQZt1VFtf90qnodkfW2vOZMMVQcCyKT8JOMOe1Vn8jnL3Pv39G5vmvHZSLO9kysH0wUmUiru+uDImqS2oowWny4Q6cLRhJ4CQwfqVz6EkNZjCp90Q=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by CH2PR17MB4005.namprd17.prod.outlook.com (2603:10b6:610:88::14) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB8231.namprd11.prod.outlook.com (2603:10b6:8:15c::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.38; Wed, 12 Apr
- 2023 18:43:40 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a%6]) with mapi id 15.20.6277.036; Wed, 12 Apr 2023
- 18:43:40 +0000
-Date:   Wed, 12 Apr 2023 14:43:33 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [BUG] DAX access of Memory Expander on RCH topology fires BUG on
- page_table_check
-Message-ID: <ZDb71ZXGtzz0ttQT@memverge.com>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Wed, 12 Apr
+ 2023 19:16:10 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%6]) with mapi id 15.20.6298.030; Wed, 12 Apr 2023
+ 19:16:10 +0000
+Date:   Wed, 12 Apr 2023 12:16:07 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        <linux-cxl@vger.kernel.org>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v12 1/6] cxl/mbox: Add GET_POISON_LIST mailbox command
+Message-ID: <64370377d9051_5f75629440@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1681159309.git.alison.schofield@intel.com>
+ <e87e1792e147a46f348019cc772e06f2ea19e970.1681159309.git.alison.schofield@intel.com>
+ <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZDY3dR0vA6+zihxN@aschofie-mobl2>
+ <64363f30a6370_417e294d0@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZDbx7qjw+SP+6sSe@aschofie-mobl2>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-X-ClientProxiedBy: BY3PR10CA0008.namprd10.prod.outlook.com
- (2603:10b6:a03:255::13) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+In-Reply-To: <ZDbx7qjw+SP+6sSe@aschofie-mobl2>
+X-ClientProxiedBy: BYAPR03CA0031.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::44) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CH2PR17MB4005:EE_
-X-MS-Office365-Filtering-Correlation-Id: 253d95a9-2123-469b-230c-08db3b85d58d
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB8231:EE_
+X-MS-Office365-Filtering-Correlation-Id: a880252a-75fc-4fae-6c2e-08db3b8a5fc3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B4r/3g8E3UfWEmAPp56eL1h2p30OPMxPZY29XVlq3GW4iZ6ORQ0aN0MAdHJRxcZ1gkEBpnK6Ds2gmNnoDi/kyl4sSetihjTE6+ywqt9esEnXcCTHjSst6Sm+ZWSjR9yhttnY62cLA+p6U8IZ216hALCi917zd4Bs8lKpv8/39asQxRYyaa/7X8fvjEIOw2U7dkP5cFBxYtlGfZxIRG3+uvd9jLaMFoAu5Hk2gfHLACHd+oSLHbMCUDcns+fU+BgeGdwDPNgMwvv1mbUMUIH+zbfAS5Ae6e193DMXOH7EHDsAhgzJjm3RGeeXB8LGilJoQCu7tGqWoownNo9fJgwLvMG97fVcfP4nZ7QCZk7pU3QCES1IJj/DcBXx8thCEuU4RKJh4MKpJAhLPwXPbJAihlzVzPP+WZtV6BM8svfQlxuqs10xmwNy9qVG4CQOvREMwaXrvmbT56Y/5E2YfZuacNyRWyIaFE1ObSshLQ//gfREqVSCLOjnrjbjFiyj65LJRQLB54d5DLt3KBNOzPJwTxaC7+q5IaVVLEunbMp5VQSadpo/TNLSjxpYjhjhFuQQ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(136003)(346002)(39840400004)(396003)(376002)(451199021)(6916009)(86362001)(4326008)(2906002)(45080400002)(8676002)(38100700002)(186003)(66476007)(66946007)(66556008)(6512007)(6506007)(26005)(54906003)(8936002)(478600001)(316002)(44832011)(30864003)(5660300002)(41300700001)(83380400001)(36756003)(2616005)(6666004)(6486002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 4dz+pbPISlQsGe3nWrHTVD+VrOYbDWJS7tXTSEkbECANHWcu4iZg699YsNCeHLjB9YbrG+3hN3TBdgfWB1RjaXh/VzsCNS1NaI0wEa8ZqzE897v31kODc9wOIuZbRKd6pxmgwS4bLekuAaO8z68wVtfFz7Bn7S3Z/9NQaTBBcu5HDjYC9o/KH2ojDugPlvFh6o4Rppj4pfjbkjYOe64CVc7FNqsiqzvOATP/R28Zbt43/PhkXwqb1I1+AOenzHIKHXN9WVePB3ZZ9QRLp2uwANBzqoVDZSIwOSvSz6RzEHy54B48vCLEHAN/MCl9nxYeotj2Go/NqD3gyS+MJhGTlxt6r+hmxpEBvFqDArAmISsJXIy5hqUnM/v8qqhLky8VWerIovuttkbMbNCPgBekN4sju5lE1mwRmmnt3BYlJV5hr0GVMWLld8WZmVwGvjZIppJ2w48xigk7QDz4VZu+kgYr/LIzc24StcIef12hJ1p0KSgnIz2g7Co4nFhawiNzhf+rUARZWWEKk3dXMdfHM9EPfcMEqBL3h2RVDnD5ULS8o7qvUTZ7t96bhwoDdSLy
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(376002)(39860400002)(366004)(346002)(451199021)(8676002)(38100700002)(5660300002)(15650500001)(2906002)(86362001)(8936002)(4326008)(316002)(66556008)(66946007)(82960400001)(41300700001)(66476007)(83380400001)(54906003)(110136005)(6506007)(6512007)(26005)(9686003)(186003)(6486002)(478600001)(6666004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZjiA43wMWDST4eaD20qsRafcH0l+liehrTrtRhnhipz01tnOKlBJ6xsbLiSi?=
- =?us-ascii?Q?Xm9o8avC1dlWOnLDxnAMlWLU7rp2km0fprh+wC/eSElKvvvcVBIyR9CsytIi?=
- =?us-ascii?Q?GraKZzurKYat97yBmOH9Crvsw61FC/7R6CdadXdrRUyvaNvWg654nTA1RR64?=
- =?us-ascii?Q?BH/PPEJ2UIgZoDQ/ZzNEfDuf37ciZL4P1WYsgZqumqyG+0qGlL8gk5BhPblq?=
- =?us-ascii?Q?7OPCJEp2ASDwvLfSz5N8SaSUQWrMLP9HyIJe0BtAONst1GhT6PHRpMxKgLrc?=
- =?us-ascii?Q?v8siq+Hn5bAOOg67u5Xx7sJ1E+FkoWzsTW11EPvLPrIqYQDNFMNGVRdFdECH?=
- =?us-ascii?Q?9d9yc/rE9ww2B3hUXRXp+HN0QipvUwSte+raLZSxAsjqYuxj7UBhEbPnXluS?=
- =?us-ascii?Q?CwehsAZ7SV5B9QDiPNL1WDgeE8ugpiM/Ohw7fhAxcwvH825KnWXD+OTXrkVG?=
- =?us-ascii?Q?U7a99FWFLhBuV09viS0DPHMvgSybv7QukJ3VdaLF12YOn74rPcCvuRJ1e+1w?=
- =?us-ascii?Q?n8YLSKADp1seIEevm1SL+pwKGcISmKo38vNJjlMiC2HvFwqJwMio/8XDDJbl?=
- =?us-ascii?Q?QiV+K5Cr68cnoWMne9HGgoUVfU3B27WZ4pnkQvGvtd5aell9DXuUlqYDwdtj?=
- =?us-ascii?Q?mUUj5Byc5JJ1mp6PlnIgZlj3ZD2TglO3XYuZza9uf+FdoiPdeD1iaD1nyd1E?=
- =?us-ascii?Q?M4u3xGFtt2aC5Kt2dbbu9OlCInxDxhvrW4PaU+iLDSQDWJN4DIFdfXHuBoOx?=
- =?us-ascii?Q?ZQJUwXmxRP3lBLkGd61r3fIRSnRCYMIc5H7YxgkyNR09Uk3QzV0nbZAAZzQ4?=
- =?us-ascii?Q?mBKGLVG1yPwmqRnujGE/fUU2Mw0sAS8/peiA43PhkcnnvmGYA3c2bf7X5OnZ?=
- =?us-ascii?Q?sZVKOszHpl/952i+GwpWKEhOsZgBGnWWoBTmH/xGWCbQ9YBiluel71s+q9MU?=
- =?us-ascii?Q?WzBDkq45GqshxbzC52yVLoUZXT3MB09q3LXDwVqKuF4Gk6NA4m5D1c5ckARX?=
- =?us-ascii?Q?iNSLPeIgeesMK2AMDpKJZLxj5vxCTqX92mAL5f8dk/PHo61DRNkNcKF5jg1E?=
- =?us-ascii?Q?90SSJ7ptKRWTMR9jkaN9KMZkGBzpTqop0XRUzbMvsMFDwQFjoOs4FXbp2LL4?=
- =?us-ascii?Q?/n6XD8bw/iqniCyOVX0cTFMRny8aeqYteha426rTF/yE/S4jYk507m3fcLKo?=
- =?us-ascii?Q?p+XTjfWm/7CmzirUu/t5b3sJ4W8m8gdJOzp3aJgSPwE2Jrp2YeJ2oFCu9JR3?=
- =?us-ascii?Q?CiDdq5WoMh4VTWz4IGBOoCIaTnlj4o1tsLU72jFUQHKDbURcIOuT7m+QsHvB?=
- =?us-ascii?Q?EFaRIuCCT1f6N/ApmsFfAZzBwMMS+68nnh2TgCyLJnZvrXYs0UctmB44u3lk?=
- =?us-ascii?Q?2w7hmKmppGJzBX6IXd2yTUVejfZ2RuZIuJuFFROwB2gVW5wsE5sUPkLdbyTG?=
- =?us-ascii?Q?qXU5KRMzK6A9NfX5RS6T7fY9UeuGlexj92xnYvdd7q7nGH+RciEZm7n9p56v?=
- =?us-ascii?Q?MRd7L4b3ntZNHV2e5xoeh2ZPxSPD1wwdy+klcUzeZFkdqmvDTzIkEfmRd184?=
- =?us-ascii?Q?vVvKItVXx6VvGIIL9PLrB411yx2MYyR13+fm+0ZcooMDN5ENObJ6yE4QFpHv?=
- =?us-ascii?Q?vQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 253d95a9-2123-469b-230c-08db3b85d58d
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zRM11bm+rfOf+7mE+SLvqOxCXRjC2RecloarNgfa2GFnIHt0LMoqL9HwegP9?=
+ =?us-ascii?Q?D7u6mEfXi4vLZ/rUuMhRfRuA+mpm6+uAAUvhi5Nydu4T/A+eJlvXhUd+rfP2?=
+ =?us-ascii?Q?Si/LSS/LtI2uVnk462aHzxVYsnZj7DggoJkLw+HeUTEz9U9Ni54n8o/88nIb?=
+ =?us-ascii?Q?7rffvsiIBSM8q1RE7dJcWBYVGckds08bu1q0DO8SKZg++WpP/psWAj2p61pT?=
+ =?us-ascii?Q?n9eBdeLYgMCcyNY562a1C248/8+AZTVS40PLZVUS54dv1W9KyszGFJXqoViz?=
+ =?us-ascii?Q?XuY6uSWn5xxmHlReRngHISApYeNrtOYhiBf8Jx8LvHcMlCpDSPNwO+LQivBr?=
+ =?us-ascii?Q?FYyhD9etRutMCsqZEA/hAcqfN3pZaooCnlIGTl+BtZ5JbzCWS+sHP7x9kBzK?=
+ =?us-ascii?Q?r66fpHx1WNppflSSKCJ3d+1y16QgKyH01fWpmbyG9PipiFMapMcyTcP9WCqJ?=
+ =?us-ascii?Q?YUT+uHBGjOM13FH1ALx7Hke5FI7/nKDLiDp9PddV5wZMbKuFDz5KBrtVCMKE?=
+ =?us-ascii?Q?ejXCta+nqqqLB7qjywoOJvNwOYi+Ys71127crXBhxMPrc1FVo7yl1zqhzrxC?=
+ =?us-ascii?Q?MHNA5mbA9FB+YQucatBQYc1mWYVWSwQgH6LLJA4F2MfjPKrUy8BWBRrALait?=
+ =?us-ascii?Q?LqqxaqU+YhikFxY8ISMjFF39y028sPKVtkfpCOnw6wpoyTm1lR/YvhoXP6jX?=
+ =?us-ascii?Q?pA5wDUEsigYxHX5op6rNd2oKK3W6JltNE6fSzH5G1e/WMHzbSVHxXT8lXy1D?=
+ =?us-ascii?Q?oHziR0lqPfXNM4y9ForrGzIK8qC5pawH8oKTcAuws5ab3Z6RWF7ogqr6XHT8?=
+ =?us-ascii?Q?C/j78X/M1bq6GL+DcWp1ETcPWc1FHI9G8PpG426bTO+0RKlUGGjaz4/mLPWb?=
+ =?us-ascii?Q?DXIAyvjiYwVYYpsY2A3nRAMeRurY4C29Ie793XFOsBw63os8piqQAXnyoCxu?=
+ =?us-ascii?Q?Qlx/j+d9QM3ihhBsCG+UV1hSpcWoh1PipSmxpahxi5AG3M6M+2IpvKsC/qwp?=
+ =?us-ascii?Q?/oQ+A1tF7iO3OE/NtcbK0n/I7Z4++AcW1O1IlB/9PsRihjktXbahof20NJfD?=
+ =?us-ascii?Q?g5IHdKO1XqGO3EYujjMbklH6wnjTaFqtxu3pEOzmTJx78bcO793XMUB57BV1?=
+ =?us-ascii?Q?qtgYLy//Z0vMc9jxoJkFfHi3uNC5t8USuEdNwaMokEDe6+pxJnzpbqzbqVfw?=
+ =?us-ascii?Q?s2tv+KN+q/i+urJyggorkb3PBVwG9SZyGUZY4zpWEsE25QMclkGMYGmLJaC3?=
+ =?us-ascii?Q?05LSpT4dyEAzKW1OyP87qdilbXCpdxCnDIIyd8hX1DDn4o/AmsiPRH3T1t8W?=
+ =?us-ascii?Q?7K8zZiNqyOcdqqxWKz4j7Q9BZQD63vRyrmveWC5b6wRL26Emqv2sN48cekZu?=
+ =?us-ascii?Q?F4RCR0NzF0lCYVzYjm2dYud1rb+41Ny2qulPsYYVt43H/uqHmyEEAt8/l7Ir?=
+ =?us-ascii?Q?WJvPnx/DdQbWGMOyBtB42cSYWNNKbipLpkSFwQvITtG9LVRApiP1bcVNpY4C?=
+ =?us-ascii?Q?LI3y8q0GR22VZ4hxyUcDFMm4iNOkjcu9nWJdIca5tBrn+6lewI1Io4AOfQO3?=
+ =?us-ascii?Q?22z7eJN0pLhH8HUymk3PFvYzSE/0gKWgyenxtAy3QTm0SNIO1XPiFGiEZMSL?=
+ =?us-ascii?Q?dA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a880252a-75fc-4fae-6c2e-08db3b8a5fc3
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 18:43:40.5046
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 19:16:10.3502
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RUxKRxHRkY9NF4gvxVB9Tunqfmk8oM2U7gi4xDgh37YFyJhoYZQC+Dzxd/8+TPH451IEkl/zVdvtZ26CRzowqsE9EGBodAnuobWtd6pHRcQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR17MB4005
+X-MS-Exchange-CrossTenant-UserPrincipalName: OPN/nUUimDIn7aONs71ukitXDZSZPU4nlqA1JXcU7FJixT1eCkPLOYHRnJRPQzbRsBv+1x9yDOOV/Ev2acXSGAZK2HcowZFyGHZWIOSnLls=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8231
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Alison Schofield wrote:
+[..]
+> Once we deprecate, is there a way for users to determine what commands a
+> device supports?
 
+I think this discussion needs to be careful about the word "command"
+there's the Linux CXL command ids and there are the device mailbox
+command opcodes. The Linux commands ids are usually, but not always, a 1:1
+match with the mailbox commands, but the functionality that the mailbox
+command implements need not be wrapped by a Linux command id.
 
-I was looking to validate mlock-ability of various pages when CXL is in
-different states (numa, dax, etc), and I discovered a page_table_check
-BUG when accessing MemExp memory while a device is in daxdev mode.
+For poison retrieval the user will know that the device supports it
+because the poison sysfs entries will pop up. For DCD the user will know
+that the device supports the commands because the DCD region info will
+show up in sysfs. So, CXL_MEM_QUERY_COMMANDS is only a mechanism to
+enumerate the Linux command ids, the way to query device functionality
+is via a combination of CXL_MEM_QUERY_COMMANDS and sysfs.
 
-this happens essentially on a fault of the first accessed page
+> 
+> Can you post that deprecate patch preemptively? I'll update the affected
+> series to follow it.
+> 
+> Please include SCAN_MEDIA & GET_SCAN_MEDIA in your patch for the same reason. 
+> SCAN_MEDIA_CAPS is harmless.
 
-int dax_fd = open(device_path, O_RDWR);
-void *mapped_memory = mmap(NULL, (1024*1024*2), PROT_READ | PROT_WRITE, MAP_SHARED, dax_fd, 0);
-((char*)mapped_memory)[0] = 1;
+I was going to say wait until the scan media kernel implementation shows
+up, but you're right the sooner we deprecate the better.
 
+>  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+> -	___C(SCAN_MEDIA, "Scan Media"),                                   \
+> -	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
+> +	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
+> +	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
+>  	___C(MAX, "invalid / last command")
 
-Full details of my test here:
-
-Step 1) Test that memory onlined in NUMA node works
-
-[user@host0 ~]# numactl --hardware
-available: 2 nodes (0-1)
-node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
-node 0 size: 63892 MB
-node 0 free: 59622 MB
-node 1 cpus:
-node 1 size: 129024 MB
-node 1 free: 129024 MB
-node distances:
-node   0   1
-  0:  10  50
-  1:  255  10
-
-
-[user@host0 ~]# numactl --preferred=1 memhog 128G
-... snip ...
-
-Passes no problem, all memory is accessible and used.
-
-
-
-Next, reconfigure the device to daxdev mode
-
-
-[user@host0 ~]# daxctl list
-[
-  {
-    "chardev":"dax0.0",
-    "size":137438953472,
-    "target_node":1,
-    "align":2097152,
-    "mode":"system-ram",
-    "online_memblocks":63,
-    "total_memblocks":63,
-    "movable":true
-  }
-]
-[user@host0 ~]# daxctl offline-memory dax0.0
-offlined memory for 1 device
-[user@host0 ~]# daxctl reconfigure-device --human --mode=devdax dax0.0
-{
-  "chardev":"dax0.0",
-  "size":"128.00 GiB (137.44 GB)",
-  "target_node":1,
-  "align":2097152,
-  "mode":"devdax"
-}
-reconfigured 1 device
-[user@host0 mapping0]# daxctl list -M -u
-{
-  "chardev":"dax0.0",
-  "size":"128.00 GiB (137.44 GB)",
-  "target_node":1,
-  "align":2097152,
-  "mode":"devdax",
-  "mappings":[
-    {
-      "page_offset":"0",
-      "start":"0x1050000000",
-      "end":"0x304fffffff",
-      "size":"128.00 GiB (137.44 GB)"
-    }
-  ]
-}
-
-
-Now map and access the memory via /dev/dax0.0  (test program attached)
-
-[ 1028.430734] kernel BUG at mm/page_table_check.c:53!
-[ 1028.430753] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-[ 1028.430763] CPU: 14 PID: 5292 Comm: daxmemtest Not tainted 6.3.0-rc6-dirty #22
-[ 1028.430774] Hardware name: AMD Corporation ONYX/ONYX, BIOS ROX1006C 03/01/2023
-[ 1028.430785] RIP: 0010:page_table_check_set.part.0+0x89/0xf0
-[ 1028.430798] Code: 75 65 44 89 c2 f0 0f c1 10 83 c2 01 83 fa 01 7e 04 84 db 75 6d 48 83 c1 01 48 03 3d 21 09 52 05 4c 39 e1 74 52 48 85 ff 75 c2 <0f> 0b 8b 10 85 d2 75 37 44 89 c2 f0 0f c1 50 04 83 c2 01 79 d6 0f
-[ 1028.430820] RSP: 0000:ff6120b001417d30 EFLAGS: 00010246
-[ 1028.430829] RAX: ff115d297d82b128 RBX: 0000000000000001 RCX: 00000000001e0414
-[ 1028.430838] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
-[ 1028.430847] RBP: fff3676981400000 R08: 0000000000000002 R09: 0000000032458015
-[ 1028.430857] R10: 0000000000000001 R11: 000000001ad9d129 R12: 0000000000000200
-[ 1028.430867] R13: fff3676981400000 R14: 84000010500008e7 R15: 0000000000000001
-[ 1028.430876] FS:  00007f0a660c4740(0000) GS:ff115d37c1200000(0000) knlGS:0000000000000000
-[ 1028.430887] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1028.430895] CR2: 00007f0a65a00000 CR3: 00000001ab212005 CR4: 0000000000771ee0
-[ 1028.430905] PKRU: 55555554
-[ 1028.430909] Call Trace:
-[ 1028.430914]  <TASK>
-[ 1028.430919]  vmf_insert_pfn_pmd_prot+0x2b4/0x360
-[ 1028.430929]  dev_dax_huge_fault+0x181/0x400 [device_dax]
-[ 1028.430941]  __handle_mm_fault+0x806/0xfe0
-[ 1028.430951]  handle_mm_fault+0x189/0x460
-[ 1028.430958]  do_user_addr_fault+0x1e0/0x730
-[ 1028.430968]  exc_page_fault+0x7e/0x200
-[ 1028.430977]  asm_exc_page_fault+0x22/0x30
-[ 1028.430984] RIP: 0033:0x401262
-[ 1028.430990] Code: 00 b8 00 00 00 00 e8 1d fe ff ff 8b 45 f4 89 c7 e8 23 fe ff ff b8 01 00 00 00 eb 2a bf 7e 20 40 00 e8 e2 fd ff ff 48 8b 45 e0 <c6> 00 01 8b 45 f4 89 c7 e8 01 fe ff ff bf 85 20 40 00 e8 c7 fd ff
-[ 1028.431011] RSP: 002b:00007fff888d8fc0 EFLAGS: 00010206
-[ 1028.431019] RAX: 00007f0a65a00000 RBX: 00007fff888d90f8 RCX: 00007f0a65f01c37
-[ 1028.431242] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 00007f0a65ffaa70
-[ 1028.431446] RBP: 00007fff888d8fe0 R08: 0000000000000003 R09: 0000000000000000
-[ 1028.431651] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
-[ 1028.431852] R13: 00007fff888d9108 R14: 0000000000403e18 R15: 00007f0a6610d000
-[ 1028.432053]  </TASK>
-[ 1028.432247] Modules linked in: xt_conntrack xt_MASQUERADE nf_conntrack_netlink xt_addrtype nft_compat br_netfilter bridge rpcsec_gss_krb5 stp llc auth_rpcgss overlay nfsv4 dns_resolver nfs lockd grace fscache netfs nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill ip_set nf_tables nfnetlink qrtr sunrpc vfat fat intel_rapl_msr intel_rapl_common amd64_edac edac_mce_amd kvm_amd kvm kmem device_dax dax_cxl irqbypass rapl wmi_bmof pcspkr dax_hmem cxl_mem ipmi_ssif cxl_port acpi_ipmi ipmi_si ipmi_devintf i2c_piix4 cxl_pci k10temp ipmi_msghandler cxl_acpi cxl_core acpi_cpufreq fuse zram xfs crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni polyval_generic ghash_clmulni_intel sha512_ssse3 nvme nvme_core ast tg3 i2c_algo_bit nvme_common sp5100_tco ccp wmi
-[ 1028.434042] ---[ end trace 0000000000000000 ]---
-[ 1028.434278] RIP: 0010:page_table_check_set.part.0+0x89/0xf0
-[ 1028.434518] Code: 75 65 44 89 c2 f0 0f c1 10 83 c2 01 83 fa 01 7e 04 84 db 75 6d 48 83 c1 01 48 03 3d 21 09 52 05 4c 39 e1 74 52 48 85 ff 75 c2 <0f> 0b 8b 10 85 d2 75 37 44 89 c2 f0 0f c1 50 04 83 c2 01 79 d6 0f
-[ 1028.435009] RSP: 0000:ff6120b001417d30 EFLAGS: 00010246
-[ 1028.435251] RAX: ff115d297d82b128 RBX: 0000000000000001 RCX: 00000000001e0414
-[ 1028.435501] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
-[ 1028.435744] RBP: fff3676981400000 R08: 0000000000000002 R09: 0000000032458015
-[ 1028.435985] R10: 0000000000000001 R11: 000000001ad9d129 R12: 0000000000000200
-[ 1028.436220] R13: fff3676981400000 R14: 84000010500008e7 R15: 0000000000000001
-[ 1028.436454] FS:  00007f0a660c4740(0000) GS:ff115d37c1200000(0000) knlGS:0000000000000000
-[ 1028.436683] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1028.436910] CR2: 00007f0a65a00000 CR3: 00000001ab212005 CR4: 0000000000771ee0
-[ 1028.437140] PKRU: 55555554
-[ 1028.437375] note: daxmemtest[5292] exited with preempt_count 1
-
-
-
-Test program:
-
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-
-int main() {
-    // Open the DAX device
-    const char *device_path = "/dev/dax0.0"; // Replace with your DAX device path
-    int dax_fd = open(device_path, O_RDWR);
-
-    if (dax_fd < 0) {
-        printf("Error: Unable to open DAX device: %s\n", strerror(errno));
-        return 1;
-    }
-    printf("file opened\n");
-
-    // Memory-map the DAX device
-    size_t size = 1024*1024*2; // 2MB
-    void *mapped_memory = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, dax_fd, 0);
-
-    if (mapped_memory == MAP_FAILED) {
-        printf("Error: Unable to mmap DAX device: %s\n", strerror(errno));
-        close(dax_fd);
-        return 1;
-    }
-    printf("mmaped\n");
-
-    ((char*)mapped_memory)[0] = 1;
-
-/*
-    // Lock the memory region using mlock
-    int result = mlock(mapped_memory, size);
-
-    if (result != 0) {
-        printf("Error: Unable to lock memory using mlock: %s\n", strerror(errno));
-        munmap(mapped_memory, size);
-        close(dax_fd);
-        return 1;
-    }
-    printf("mlocked\n");
-
-    // Use the mapped_memory for your application
-
-    // Remember to unlock the memory using munlock before unmapping it
-    result = munlock(mapped_memory, size);
-    if (result != 0) {
-        printf("Error: Unable to unlock memory using munlock: %s\n", strerror(errno));
-    }
-    printf("munlocked\n");
-
-    munmap(mapped_memory, size);
-*/
-    close(dax_fd);
-    printf("success\n");
-    return 0;
-}
-
-
-
-CXL topology at time of error:
-[user@host0 ~]# ./cxl list -vvvv
-[
-  {
-    "bus":"root0",
-    "provider":"ACPI.CXL",
-    "nr_dports":1,
-    "dports":[
-      {
-        "dport":"pci0000:3f",
-        "alias":"ACPI0016:00",
-        "id":4
-      }
-    ],
-    "endpoints:root0":[
-      {
-        "endpoint":"endpoint1",
-        "host":"mem0",
-        "depth":1,
-        "memdev":{
-          "memdev":"mem0",
-          "ram_size":137438953472,
-          "health":{
-            "maintenance_needed":true,
-            "performance_degraded":false,
-            "hw_replacement_needed":false,
-            "media_normal":false,
-            "media_not_ready":false,
-            "media_persistence_lost":true,
-            "media_data_lost":false,
-            "media_powerloss_persistence_loss":false,
-            "media_shutdown_persistence_loss":false,
-            "media_persistence_loss_imminent":false,
-            "media_powerloss_data_loss":false,
-            "media_shutdown_data_loss":false,
-            "media_data_loss_imminent":false,
-            "ext_life_used":"unknown",
-            "ext_temperature":"normal",
-            "ext_corrected_volatile":"normal",
-            "ext_corrected_persistent":"normal",
-            "life_used_percent":4,
-            "temperature":0,
-            "dirty_shutdowns":0,
-            "volatile_errors":0,
-            "pmem_errors":0
-          },
-          "alert_config":{
-            "life_used_prog_warn_threshold_valid":false,
-            "dev_over_temperature_prog_warn_threshold_valid":true,
-            "dev_under_temperature_prog_warn_threshold_valid":false,
-            "corrected_volatile_mem_err_prog_warn_threshold_valid":false,
-            "corrected_pmem_err_prog_warn_threshold_valid":false,
-            "life_used_prog_warn_threshold_writable":false,
-            "dev_over_temperature_prog_warn_threshold_writable":true,
-            "dev_under_temperature_prog_warn_threshold_writable":false,
-            "corrected_volatile_mem_err_prog_warn_threshold_writable":false,
-            "corrected_pmem_err_prog_warn_threshold_writable":false,
-            "life_used_crit_alert_threshold":75,
-            "life_used_prog_warn_threshold":25,
-            "dev_over_temperature_crit_alert_threshold":150,
-            "dev_under_temperature_crit_alert_threshold":65360,
-            "dev_over_temperature_prog_warn_threshold":75,
-            "dev_under_temperature_prog_warn_threshold":65472,
-            "corrected_volatile_mem_err_prog_warn_threshold":16,
-            "corrected_pmem_err_prog_warn_threshold":0
-          },
-          "serial":9947034750368612352,
-          "host":"0000:3f:00.0",
-          "partition_info":{
-            "total_size":137438953472,
-            "volatile_only_size":137438953472,
-            "persistent_only_size":0,
-            "partition_alignment_size":0
-          }
-        },
-        "decoders:endpoint1":[
-          {
-            "decoder":"decoder1.0",
-            "resource":70061654016,
-            "size":137438953472,
-            "interleave_ways":1,
-            "region":"region0",
-            "dpa_resource":0,
-            "dpa_size":137438953472,
-            "mode":"ram"
-          }
-        ]
-      }
-    ],
-    "decoders:root0":[
-      {
-        "decoder":"decoder0.0",
-        "resource":70061654016,
-        "size":137438953472,
-        "interleave_ways":1,
-        "max_available_extent":0,
-        "volatile_capable":true,
-        "nr_targets":1,
-        "targets":[
-          {
-            "target":"pci0000:3f",
-            "alias":"ACPI0016:00",
-            "position":0,
-            "id":4
-          }
-        ],
-        "regions:decoder0.0":[
-          {
-            "region":"region0",
-            "resource":70061654016,
-            "size":137438953472,
-            "type":"ram",
-            "interleave_ways":1,
-            "interleave_granularity":4096,
-            "decode_state":"commit",
-            "mappings":[
-              {
-                "position":0,
-                "memdev":"mem0",
-                "decoder":"decoder1.0"
-              }
-            ],
-            "daxregion":{
-              "id":0,
-              "size":137438953472,
-              "align":2097152,
-              "devices":[
-                {
-                  "chardev":"dax0.0",
-                  "size":137438953472,
-                  "target_node":1,
-                  "align":2097152,
-                  "mode":"devdax"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    ]
-  }
-]
-
-
-
-~Gregory
+I was thinking you would pick up that patch in your next posting, so go
+ahead and pull in that update.
