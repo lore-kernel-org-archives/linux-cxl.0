@@ -2,111 +2,95 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105FEC77B71
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 09:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1C6C77B6E
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 11:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbjDLJX2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Apr 2023 05:23:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38370 "EHLO
+        id S229659AbjDLLFD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Apr 2023 07:05:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjDLJX0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 05:23:26 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA04F61B5;
-        Wed, 12 Apr 2023 02:23:25 -0700 (PDT)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PxGBt2lVVz6J7Dj;
-        Wed, 12 Apr 2023 16:31:18 +0800 (CST)
-Received: from SecurePC30232.china.huawei.com (10.122.247.234) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 12 Apr 2023 09:33:40 +0100
-From:   <shiju.jose@huawei.com>
-To:     <mchehab@kernel.org>, <linux-cxl@vger.kernel.org>,
-        <linux-edac@vger.kernel.org>
-CC:     <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
-        <shiju.jose@huawei.com>
-Subject: [RFC PATCH 1/7] rasdaemon: Add common function to convert timestamp in the CXL event records to the broken-down time format
-Date:   Wed, 12 Apr 2023 16:33:05 +0800
-Message-ID: <20230412083312.1384-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.35.1.windows.2
-In-Reply-To: <20230412083312.1384-1-shiju.jose@huawei.com>
-References: <20230412083312.1384-1-shiju.jose@huawei.com>
+        with ESMTP id S229633AbjDLLFC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 07:05:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 562426A5F;
+        Wed, 12 Apr 2023 04:05:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DD2D463255;
+        Wed, 12 Apr 2023 11:05:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498B0C433D2;
+        Wed, 12 Apr 2023 11:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681297500;
+        bh=6ACRjS9taP0Br9NBMa4IZSxz0sG2bxUgpX3aEEydlck=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CYtP8Nefz3ZqmENkeR/ZnuilUvGgCHOlQmRuWpB3u4mtCdfyHuYmwwnV7KIGK8gwI
+         QHxDuqhZQYp8XvLHsPvD/XkcxMcWncb2Sk0NKUlp3le1o9/x86j5opJWi3v3i3XFPu
+         9gn+S8NnTnha96eGlUDtDu6NDbuo2uam/ecmKEEOfoHGJrUHrAyLQg57rJ+Z6PD42D
+         EMop7VqvMtgz6UpsOp17gt1H/byZCWRLVzflvRo1uE+BJsO6iUXL9JmdKMO6457CcI
+         0Rsa3eP5w7SUGCvA9SLPBDVL6R6XIBvVH9LanQdB7hzce+PoxBrWBefA4sd5KBnEoB
+         69nS6bi7FNi/A==
+Received: by mail-lf1-f48.google.com with SMTP id e11so14114252lfc.10;
+        Wed, 12 Apr 2023 04:05:00 -0700 (PDT)
+X-Gm-Message-State: AAQBX9c60+JEgd5eIz/2ynP85TM92Yzu22P8moZD+mBwLuvCou9VLNPm
+        FGb/TLcMm0h+FWodvmChL13CnjMlqZOb24yLm0g=
+X-Google-Smtp-Source: AKy350b1aEyRr4j1G/tTTUEA9AcniJJkuDBi8PVJYpQ9n2aX6dsR7wyVmDFAUZWhwbZGG+bgquCRlsHoJc6fLeY9nok=
+X-Received: by 2002:ac2:5312:0:b0:4ec:a23e:69c8 with SMTP id
+ c18-20020ac25312000000b004eca23e69c8mr234992lfh.9.1681297498269; Wed, 12 Apr
+ 2023 04:04:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.234]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
-X-CFilter-Loop: Reflected
+References: <20230411180302.2678736-1-terry.bowman@amd.com> <20230411180302.2678736-3-terry.bowman@amd.com>
+In-Reply-To: <20230411180302.2678736-3-terry.bowman@amd.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 12 Apr 2023 13:04:47 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH38KnOsX+QffXi_UO3ZKXJMpB=VcSzJFeYBron=GTbdw@mail.gmail.com>
+Message-ID: <CAMj1kXH38KnOsX+QffXi_UO3ZKXJMpB=VcSzJFeYBron=GTbdw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] efi/cper: Export cper_mem_err_unpack() for use by modules
+To:     Terry Bowman <terry.bowman@amd.com>
+Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
+        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
+        linux-cxl@vger.kernel.org, rrichter@amd.com,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        linux-efi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Tue, 11 Apr 2023 at 20:03, Terry Bowman <terry.bowman@amd.com> wrote:
+>
+> The CXL driver plans to use cper_print_aer() for restricted CXL host (RCH)
+> logging. This is not currently possible if CXL is built as a loadable
+> module because cper_print_aer() depends on cper_mem_err_unpack() which
+> is not exported.
+>
+> Export cper_mem_err_unpack() to enable cper_print_aer() usage in
+> CXL and other loadable modules.
+>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: linux-efi@vger.kernel.org
 
-Add common function to convert the timestamp in the CXL event records
-in nanoseconds to the broken-down time format.
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- ras-cxl-handler.c | 36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
-
-diff --git a/ras-cxl-handler.c b/ras-cxl-handler.c
-index adc2fa3..ad93558 100644
---- a/ras-cxl-handler.c
-+++ b/ras-cxl-handler.c
-@@ -23,6 +23,25 @@
- #include "ras-report.h"
- #include <endian.h>
- 
-+/* Common Functions */
-+static void convert_timestamp(unsigned long long ts, char *ts_ptr, uint16_t size)
-+{
-+	/* CXL Specification 3.0
-+	 * Overflow timestamp - The number of unsigned nanoseconds
-+	 * that have elapsed since midnight, 01-Jan-1970 UTC
-+	 */
-+	time_t ts_secs = ts / 1000000000ULL;
-+	struct tm *tm;
-+
-+	tm = localtime(&ts_secs);
-+	if (tm)
-+		strftime(ts_ptr, size, "%Y-%m-%d %H:%M:%S %z", tm);
-+
-+	if (!ts || !tm)
-+		strncpy(ts_ptr, "1970-01-01 00:00:00 +0000",
-+			size);
-+}
-+
- /* Poison List: Payload out flags */
- #define CXL_POISON_FLAG_MORE            BIT(0)
- #define CXL_POISON_FLAG_OVERFLOW        BIT(1)
-@@ -160,22 +179,7 @@ int ras_cxl_poison_event_handler(struct trace_seq *s,
- 	if (ev.flags & CXL_POISON_FLAG_OVERFLOW) {
- 		if (tep_get_field_val(s,  event, "overflow_t", record, &val, 1) < 0)
- 			return -1;
--		if (val) {
--			/* CXL Specification 3.0
--			 * Overflow timestamp - The number of unsigned nanoseconds
--			 * that have elapsed since midnight, 01-Jan-1970 UTC
--			 */
--			time_t ovf_ts_secs = val / 1000000000ULL;
--
--			tm = localtime(&ovf_ts_secs);
--			if (tm) {
--				strftime(ev.overflow_ts, sizeof(ev.overflow_ts),
--					 "%Y-%m-%d %H:%M:%S %z", tm);
--			}
--		}
--		if (!val || !tm)
--			strncpy(ev.overflow_ts, "1970-01-01 00:00:00 +0000",
--				sizeof(ev.overflow_ts));
-+		convert_timestamp(val, ev.overflow_ts, sizeof(ev.overflow_ts));
- 	} else
- 		strncpy(ev.overflow_ts, "1970-01-01 00:00:00 +0000", sizeof(ev.overflow_ts));
- 	if (trace_seq_printf(s, "overflow timestamp:%s\n", ev.overflow_ts) <= 0)
--- 
-2.25.1
-
+> ---
+>  drivers/firmware/efi/cper.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 35c37f667781..ff15e12160ae 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -350,6 +350,7 @@ const char *cper_mem_err_unpack(struct trace_seq *p,
+>
+>         return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(cper_mem_err_unpack);
+>
+>  static void cper_print_mem(const char *pfx, const struct cper_sec_mem_err *mem,
+>         int len)
+> --
+> 2.34.1
+>
