@@ -2,141 +2,144 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5CAC7619A
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 16:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743CCC77B6E
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 18:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbjDLQe5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Apr 2023 12:34:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34592 "EHLO
+        id S229712AbjDLSB3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Apr 2023 14:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjDLQez (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 12:34:55 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2044.outbound.protection.outlook.com [40.107.94.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5566A6E
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Apr 2023 09:34:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eG+HjrNyc4UfkIjW+VJ+TdD60PMI3ZKu2mxvBdxsQI9D2SaJMjD7oViQjd9oPXP1A4dnq9Y8nWEkND/BZBxJD2LKt8VvcRD2zM8FPHYGxFOsFdpZAkmSpmQ/WCEUUcgOIVjFa83sStFmeMBAz5lXnLYrrObSYTtZGv6IpmxoYQkW3bJ1q/o/LyXySAGT38MBLrRB1osk7lrM3+NPyjVzwPHPa9yzBI3S3EpQkXqSY9wiqODQ4hzBTgbfolX4qABhVUFEW15UUdPZXHTJv7K9ZukdmYHiP9ZZnsFLijk+6yLyo/+ULffxJVmxxpfxz2IdYL1RZXfX3fNoLiBZnYBnEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7hIj0nVhsMBQYcGr4RfUDhyMJkcxdJpv7I5gJkldxkQ=;
- b=ZurDFZ+V+b2QCP1GejIYXPPUHqYzdFeiWWhluAocEtvfKNdd4Uem7TJPvDoLXiFWEHUXdXGerX8yxoS7W9mX1s+5hCnk2JZXAMrTCuEj+2S7JAbV0PsfKFX4E4SK1z8MTfyH3n6yEnfc/+mxRY9ajJMJ+6gSbOFh/xcsbTNDNIEEiAsviyUn07niQcFjik38MQ243sZVGjiesTtfL+IMQMqlzNg5UEUUZyeSIPiSig35R8L5rPvJPsrrVy2Ik5o+m2s+3mXJgxAqt9ij7kJhwHkPeOA6GRPZKlb0rnEE6L1y3PB1XQtKKe/OQrE99O932UJbXtqiBM5t6Vf5yigXAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7hIj0nVhsMBQYcGr4RfUDhyMJkcxdJpv7I5gJkldxkQ=;
- b=aTetL5u3asytfz/xuoAytiFf2AROTYOnpV5skkM96zL2b+qGrn4UNyrAN4LNErneaWaPbsbITCqCEO5CJn0wgOG+u7aUu+xdtQlVK7Mw/LeHcduRGbRzjShWd8pmawPRheKCyo8P2DxX60E1nktNyU9PBXwFXu/ualu8lKMewvM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by PH7PR17MB6108.namprd17.prod.outlook.com (2603:10b6:510:1f4::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.28; Wed, 12 Apr
- 2023 16:34:41 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a%6]) with mapi id 15.20.6277.036; Wed, 12 Apr 2023
- 16:34:41 +0000
-Date:   Wed, 12 Apr 2023 12:34:37 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        Dragan Stancevic <dragan@stancevic.com>,
-        lsf-pc@lists.linux-foundation.org, nil-migration@lists.linux.dev,
-        linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [LSF/MM/BPF TOPIC] BoF VM =?utf-8?Q?li?=
- =?utf-8?Q?ve_migration_over_CXL_memory=E2=80=8B?=
-Message-ID: <ZDbdnRE39Py4X4bT@memverge.com>
-References: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
- <ZDCv3lxLbquITy8M@memverge.com>
- <87v8i22abl.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZDV+f7+QH5W/vXAt@memverge.com>
- <87bkjtzu7e.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <f4f9eedf-c514-3388-29ad-dcb497a19303@redhat.com>
- <ZDbNoNN0nkzn4xe6@memverge.com>
- <efe5dad7-8e58-b416-8108-bb692c726302@redhat.com>
+        with ESMTP id S229928AbjDLSBX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 14:01:23 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933656E80
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Apr 2023 11:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681322481; x=1712858481;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v4rEqS9P2CIHVYv8u9uYSTmSMU45Q8tFZi6g369fxhc=;
+  b=bE5c7iwxlzadxbZP6YHkm5K9pqGe2D6TEvSpYq+nW+oaZ/RlcXXmai5C
+   FQ8dSmwkpPDx9Epg3+8rl5pBrfkxee1tSLSHqmmDD1L8bZR7can9UBGbS
+   j8gKdxEehyFmQJ3Z6+VOjAdSDHQF99UTVZKzkFvFOaB+Xgsibhx/Ph+bQ
+   wK1blx9Y5HOnBmiTLnJC2PHNG8SV/zbWkfolNuNcY41myDRYCf/6WyF1+
+   9gFc2oIGqTezH2Agi94ZdMDg8VA0Ore2xFaqDkEPx6r8aRWIycJAjzjxH
+   6a1qvZZF5rDwuQ4ukOFs0QTvpQShg7oZ5AZgxpbUAN9Ic4I7vLEsY55BV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="332678331"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="332678331"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 11:01:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="863398391"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="863398391"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.150.154])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 11:01:20 -0700
+Date:   Wed, 12 Apr 2023 11:01:18 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v12 1/6] cxl/mbox: Add GET_POISON_LIST mailbox command
+Message-ID: <ZDbx7qjw+SP+6sSe@aschofie-mobl2>
+References: <cover.1681159309.git.alison.schofield@intel.com>
+ <e87e1792e147a46f348019cc772e06f2ea19e970.1681159309.git.alison.schofield@intel.com>
+ <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZDY3dR0vA6+zihxN@aschofie-mobl2>
+ <64363f30a6370_417e294d0@dwillia2-xfh.jf.intel.com.notmuch>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <efe5dad7-8e58-b416-8108-bb692c726302@redhat.com>
-X-ClientProxiedBy: SJ0PR05CA0086.namprd05.prod.outlook.com
- (2603:10b6:a03:332::31) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|PH7PR17MB6108:EE_
-X-MS-Office365-Filtering-Correlation-Id: d1847cb5-9f47-4678-6c06-08db3b73d0b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(136003)(346002)(396003)(376002)(39850400004)(451199021)(38100700002)(2906002)(8936002)(44832011)(5660300002)(36756003)(86362001)(83380400001)(316002)(478600001)(54906003)(2616005)(6666004)(6486002)(6512007)(186003)(26005)(6506007)(66946007)(6916009)(4326008)(41300700001)(66476007)(66556008);DIR:OUT;SFP:1101;
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1847cb5-9f47-4678-6c06-08db3b73d0b0
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2023 16:34:41.4277
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RJHDooXr8Rux98MNwajAGGRtRcLCZs7YqyiaprFxJp3oYabYTpDcOYYxnEaC0SimqhPi0r8XJOwj9gEx/WSESXhksN4deqOHUIG5tP3kXhU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR17MB6108
+In-Reply-To: <64363f30a6370_417e294d0@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 05:50:55PM +0200, David Hildenbrand wrote:
-> 
-> long-term: possibly forever, controlled by user space. In practice, anything
-> longer than ~10 seconds ( best guess :) ). There can be long-term pinnings
-> that are of very short duration, we just don't know what user space is up to
-> and when it will decide to unpin.
-> 
-> Assume user space requests to trigger read/write of a user space page to a
-> file: the page is pinned, DMA is started, once DMA completes the page is
-> unpinned. Short-term. User space does not control how long the page remains
-> pinned.
-> 
-> In contrast:
-> 
-> Example #1: mapping VM guest memory into an IOMMU using vfio for PCI
-> passthrough requires pinning the pages. Until user space decides to unmap
-> the pages from the IOMMU, the pages will remain pinned. -> long-term
-> 
-> Example #2: mapping a user space address range into an IOMMU to repeatedly
-> perform RDMA using that address range requires pinning the pages. Until user
-> space decides to unregister that range, the pages remain pinned. ->
-> long-term
-> 
-> Example #3: registering a user space address range with io_uring as a fixed
-> buffer, such that io_uring OPS can avoid the page table walks by simply
-> using the pinned pages that were looked up once. As long as the fixed buffer
-> remains registered, the pages stay pinned. -> long-term
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
+On Tue, Apr 11, 2023 at 10:18:40PM -0700, Dan Williams wrote:
+> Alison Schofield wrote:
+> > On Tue, Apr 11, 2023 at 06:47:56PM -0700, Dan Williams wrote:
+> > > alison.schofield@ wrote:
+> > > > From: Alison Schofield <alison.schofield@intel.com>
+> > > > 
 
-That pretty much precludes live migration from using CXL as a transport
-mechanism, since live migration would be a user-initiated process, you
-would need what amounts to an atomic move between hosts to ensure pages
-are not left pinned.
+snip
 
-The more i'm reading the more i'm somewhat convinced CXL memory should
-not allow pinning at all.
+> > > 
+> > > With this new interface I do not expect we want to support user tooling
+> > > that wants to retrieve the list via ioctl. So I think this wants a
+> > > lead-in patch that deprecates the poison command support so that the
+> > > linux-cxl community only has one mechanism to maintain going forward.
+> > > 
+> > > Something like the below as a lead-in, and then you would add code to
+> > > cxl_walk_cel() to set a flag for the "get poison" machinery.
+> > 
+> > In the inject & clear series, I made the commands kernel exclusive (and
+> > also blocked their usage in raw mode).
+> > 
+> > https://lore.kernel.org/linux-cxl/1576040e-e8db-bc78-2fa3-622c8f7da8ec@intel.com/T/#m5b86f3e88ee7ad5b92843babdb9fd41b7f03cf36
+> > 
+> > Is that not enough or not the right protection?
+> 
+> I think I'm having deja vu and maybe we talked about this already and I
+> forgot the outcome?
+> 
+> The concern is having a consistent approach across the commands that are
+> valid from userspace all the time, those that are valid sometimes
+> (temporarily marked exclusive), and those that are unsupported from
+> userspace (unsupported via raw command being a special case of that).
+> 
+> For recent new mailbox functionality like CXL_MBOX_OP_GET_EVENT_RECORD
+> and the DCD commands, that are only expected to be executed from the
+> kernel, those are kept out of the CXL_CMDS list, not marked exclusive.
+> 
+> The commands marked exclusive like the label commands return EBUSY, but
+> only while libnvdimm owns the label area. If libnvdimm is disconnected
+> (echo pmemX > /sys/bus/cxl/drivers/cxl_pmem/unbind), then those commands
+> stop being exclusive.
+> 
+> So, I think I want to keep "exclusive" as a set of commands that are
+> suitable to build into a user tool just that the tool needs to know the
+> rules about when those commands might be busy.
+> 
+> For poison the user tool is expected to use sysfs + trace-events, so
+> including it in the list of available commands returned by
+> CXL_MEM_QUERY_COMMANDS only to never be able to execute it seems wrong.
+> 
+> Marking it deprecated as a "whoops" feels more honest and brings it in
+> line with the other commands that are permanently kernel exclusive.
 
 
-I suppose you could implement a new RDMA feature where the remote host's
-CXL memory is temporarily mapped, data is migrated, and then that area
-is unmapped. Basically the exact same RDMA mechanism, but using memory
-instead of network. This would make the operation a kernel-controlled
-if pin/unpin is required.
+Yes, we were here previously w Inject & Clear series, and didn't close on
+it. My last words were were in a inject/clear changelog:
 
+>>  I didn't deprecate the ioctls as Dan suggested. Instead, I followed
+>>  on Ira's recent clean up wrt enabled and exclusive commands, deciding
+>>  that the honest response to a cxl_query() would be 'Enabled' (if hardware
+>>  supports) and kernel 'Exclusive' (always). Please take a look.
 
-Lots to talk about.
+Once we deprecate, is there a way for users to determine what commands a
+device supports?
 
-~Gregory
+Can you post that deprecate patch preemptively? I'll update the affected
+series to follow it.
+
+Please include SCAN_MEDIA & GET_SCAN_MEDIA in your patch for the same reason. 
+SCAN_MEDIA_CAPS is harmless.
+
+ 	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+-	___C(SCAN_MEDIA, "Scan Media"),                                   \
+-	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
++	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
++	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
+ 	___C(MAX, "invalid / last command")
+
+Alison
+
