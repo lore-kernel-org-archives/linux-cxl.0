@@ -2,95 +2,183 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1C6C77B6E
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 11:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FCEC77B6E
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Apr 2023 11:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbjDLLFD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Apr 2023 07:05:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
+        id S229697AbjDLLLv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Apr 2023 07:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjDLLFC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 07:05:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 562426A5F;
-        Wed, 12 Apr 2023 04:05:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD2D463255;
-        Wed, 12 Apr 2023 11:05:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498B0C433D2;
-        Wed, 12 Apr 2023 11:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681297500;
-        bh=6ACRjS9taP0Br9NBMa4IZSxz0sG2bxUgpX3aEEydlck=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CYtP8Nefz3ZqmENkeR/ZnuilUvGgCHOlQmRuWpB3u4mtCdfyHuYmwwnV7KIGK8gwI
-         QHxDuqhZQYp8XvLHsPvD/XkcxMcWncb2Sk0NKUlp3le1o9/x86j5opJWi3v3i3XFPu
-         9gn+S8NnTnha96eGlUDtDu6NDbuo2uam/ecmKEEOfoHGJrUHrAyLQg57rJ+Z6PD42D
-         EMop7VqvMtgz6UpsOp17gt1H/byZCWRLVzflvRo1uE+BJsO6iUXL9JmdKMO6457CcI
-         0Rsa3eP5w7SUGCvA9SLPBDVL6R6XIBvVH9LanQdB7hzce+PoxBrWBefA4sd5KBnEoB
-         69nS6bi7FNi/A==
-Received: by mail-lf1-f48.google.com with SMTP id e11so14114252lfc.10;
-        Wed, 12 Apr 2023 04:05:00 -0700 (PDT)
-X-Gm-Message-State: AAQBX9c60+JEgd5eIz/2ynP85TM92Yzu22P8moZD+mBwLuvCou9VLNPm
-        FGb/TLcMm0h+FWodvmChL13CnjMlqZOb24yLm0g=
-X-Google-Smtp-Source: AKy350b1aEyRr4j1G/tTTUEA9AcniJJkuDBi8PVJYpQ9n2aX6dsR7wyVmDFAUZWhwbZGG+bgquCRlsHoJc6fLeY9nok=
-X-Received: by 2002:ac2:5312:0:b0:4ec:a23e:69c8 with SMTP id
- c18-20020ac25312000000b004eca23e69c8mr234992lfh.9.1681297498269; Wed, 12 Apr
- 2023 04:04:58 -0700 (PDT)
+        with ESMTP id S229696AbjDLLLt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Apr 2023 07:11:49 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636C4769C
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Apr 2023 04:11:23 -0700 (PDT)
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230412111036epoutp02eef447ed6e5bc2ed567e32b6230fde5a~VK3lkRXM-0945509455epoutp02a
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Apr 2023 11:10:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230412111036epoutp02eef447ed6e5bc2ed567e32b6230fde5a~VK3lkRXM-0945509455epoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1681297836;
+        bh=gxT9FVIWocXRSEi5tRsmUyrD2AFA4oFyGjZCRcax7eE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mzfiSuIfmsdHxJD3wU9WincAovM5r8BnYxFWLxylGntR9JN6ioBfjHVsbTDfmoXAw
+         Y3GycuXq6gP77zjR3mCJtHo/q9yZHTqUGD4tvCaA9L4ldnZdKS8PWMvVTVNiu0GMkb
+         vPauigjI8EWt2lwuo9CCG2ePNvbMd3uhtNJeTWyY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230412111035epcas2p351b6aa0cae5301c5620e21ae3731c404~VK3k-K1iC2920729207epcas2p3j;
+        Wed, 12 Apr 2023 11:10:35 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.92]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4PxKkf6jbNz4x9Pt; Wed, 12 Apr
+        2023 11:10:34 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FA.6F.09650.AA196346; Wed, 12 Apr 2023 20:10:34 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230412111034epcas2p1b46d2a26b7d3ac5db3b0e454255527b0~VK3jypdUS2306323063epcas2p1-;
+        Wed, 12 Apr 2023 11:10:34 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230412111034epsmtrp2ea4846993ebd7c4a6e805f72f978cf41~VK3jx72eZ1285412854epsmtrp2k;
+        Wed, 12 Apr 2023 11:10:34 +0000 (GMT)
+X-AuditID: b6c32a48-dc7ff700000025b2-74-643691aa072f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1B.8E.08609.AA196346; Wed, 12 Apr 2023 20:10:34 +0900 (KST)
+Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.99]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20230412111034epsmtip162b8e93b033651522a7edc8fbdb79d77~VK3josXS00632606326epsmtip1E;
+        Wed, 12 Apr 2023 11:10:34 +0000 (GMT)
+From:   Kyungsan Kim <ks0204.kim@samsung.com>
+To:     david@redhat.com
+Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
+        dan.j.williams@intel.com, seungjun.ha@samsung.com,
+        wj28.lee@samsung.com
+Subject: RE: FW: [LSF/MM/BPF TOPIC] BoF VM live migration over CXL memory
+Date:   Wed, 12 Apr 2023 20:10:33 +0900
+Message-Id: <20230412111033.434644-1-ks0204.kim@samsung.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <f4f9eedf-c514-3388-29ad-dcb497a19303@redhat.com>
 MIME-Version: 1.0
-References: <20230411180302.2678736-1-terry.bowman@amd.com> <20230411180302.2678736-3-terry.bowman@amd.com>
-In-Reply-To: <20230411180302.2678736-3-terry.bowman@amd.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 12 Apr 2023 13:04:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH38KnOsX+QffXi_UO3ZKXJMpB=VcSzJFeYBron=GTbdw@mail.gmail.com>
-Message-ID: <CAMj1kXH38KnOsX+QffXi_UO3ZKXJMpB=VcSzJFeYBron=GTbdw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] efi/cper: Export cper_mem_err_unpack() for use by modules
-To:     Terry Bowman <terry.bowman@amd.com>
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
-        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        linux-cxl@vger.kernel.org, rrichter@amd.com,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIJsWRmVeSWpSXmKPExsWy7bCmhe6qiWYpBgsWGlpMP6xoMX3qBUaL
+        r+t/MVucn3WKxWLP3pMsFvfW/Ge12Pd6L7PFi87jTBYdG94wWmy8/47Ngcvj34k1bB6L97xk
+        8tj0aRK7x+Qbyxk93u+7yubRt2UVo8fnTXIB7FHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGm
+        ZgaGuoaWFuZKCnmJuam2Si4+AbpumTlA5ykplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVS
+        C1JyCswL9IoTc4tL89L18lJLrAwNDIxMgQoTsjPa3qQVrJComPlpD3MD4wvhLkYODgkBE4lT
+        ja5djFwcQgI7GCX2nZvBCuF8YpT4tnceE4TzmVFi0pGrLF2MnGAd7+9PYoRI7GKUODRnFVRV
+        F5PEhPkbmEGq2AS0Jf5cOc8GYosIiEj8ePiSEcRmFvjHKLHnsiSILSzgKfHy1CKwehYBVYnJ
+        S26C1fAK2Ej8bDjFBLFNXmLmpe/sIDangJ3EmqdN7BA1ghInZz5hgZgpL9G8dTYzyBESAp0c
+        En3LjzBCNLtIHD09hRnCFpZ4dXwLO4QtJfH53V42CLtY4vHrf1DxEonDS35DvWks8e7mc1ZQ
+        IDELaEqs36UPCS9liSO3oNbySXQc/ssOEeaV6GgTgmhUkdj+bzkzzKLT+zdBlXhInPgfCQmp
+        iYwSO+7uY5nAqDALyTOzkDwzC2HvAkbmVYxiqQXFuempxUYFJvDoTc7P3cQITqtaHjsYZ7/9
+        oHeIkYmD8RCjBAezkgjvDxfTFCHelMTKqtSi/Pii0pzU4kOMpsCgnsgsJZqcD0zseSXxhiaW
+        BiZmZobmRqYG5krivB87lFOEBNITS1KzU1MLUotg+pg4OKUamNYtVpojsmCXSN5Zz8M/2t49
+        TPp9cGNjaEVtvPaFRxW5X5JiOdJfCH1dnsX5z+yNcNPWLfsudpRX7nS4rRdvEafVWz59w4+J
+        dT1dgqc+hofcbznIEbvub6vlseV/dy6dJilxenbCfN+/y962dy2UdlW9UfLLRf6b+K9ZyZv8
+        fFfpnhN9eDVVeYtxv/QHQYYyZscne1eWFB2++U4w6cqyiTMW3fCotdgw1TK34tT/XVMXBp1u
+        +mTFvkTPcGpmvWxPw/weIY7DV85unG53i+llqMvNuTsvx2u+/mu1rE0oZOnBtkVeFl2r990X
+        nLdNe4vGf5M53uHhZTd64pNDi8/r73AQvaPFuaSNa92UHT4ux02UWIozEg21mIuKEwHlzE74
+        NAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsWy7bCSnO6qiWYpBv/XCVlMP6xoMX3qBUaL
+        r+t/MVucn3WKxWLP3pMsFvfW/Ge12Pd6L7PFi87jTBYdG94wWmy8/47Ngcvj34k1bB6L97xk
+        8tj0aRK7x+Qbyxk93u+7yubRt2UVo8fnTXIB7FFcNimpOZllqUX6dglcGW1v0gpWSFTM/LSH
+        uYHxhXAXIyeHhICJxPv7kxi7GLk4hAR2MEpc2r6FBSIhJfH+dBs7hC0scb/lCCtEUQeTxKGb
+        TWwgCTYBbYk/V86D2SICIhI/Hr4Em8QMUrT18nSwhLCAp8TLU4uYQWwWAVWJyUtuMoLYvAI2
+        Ej8bTjFBbJCXmHnpO9g2TgE7iTVPm8BsIQFbiSsPr7FB1AtKnJz5BOw6ZqD65q2zmScwCsxC
+        kpqFJLWAkWkVo2RqQXFuem6xYYFRXmq5XnFibnFpXrpecn7uJkZwHGhp7WDcs+qD3iFGJg7G
+        Q4wSHMxKIrw/XExThHhTEiurUovy44tKc1KLDzFKc7AoifNe6DoZLySQnliSmp2aWpBaBJNl
+        4uCUamDSkIgPnnhI56N5/mK9OKXFFe+2hPhPlXuqPqGz5HBl32vulw/mHOMsZtJd9nOJ2s1+
+        ScHTHPNnfb5ec8ou0v81v8qJOu8iX3sBn4Ds9Wk9T9IPtGmd8BEuT3jtKVhvq5O45PY7eyFT
+        z73snAq/ZaJuTWG8eTTrhoDJ5Sm+b+5Mu/Ft+6TgJe/7rrRybXbM2rFwineTsSGP/6WaT0tb
+        vRlbL32dYBOtbSC48WsyRxTLZfu/z3SPpLEY/zf7dfD+Il2u0+XbeHONQo7oHJ273vLA/AsX
+        VWrcfl53uXjrV+zEe2JsBQozuJdsXKKvt/P0edZ3L69cD38qtdz4tfr7TXGfb973+HzfQXvL
+        1y/9KhNMlViKMxINtZiLihMB7mtRd/ICAAA=
+X-CMS-MailID: 20230412111034epcas2p1b46d2a26b7d3ac5db3b0e454255527b0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230412111034epcas2p1b46d2a26b7d3ac5db3b0e454255527b0
+References: <f4f9eedf-c514-3388-29ad-dcb497a19303@redhat.com>
+        <CGME20230412111034epcas2p1b46d2a26b7d3ac5db3b0e454255527b0@epcas2p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 11 Apr 2023 at 20:03, Terry Bowman <terry.bowman@amd.com> wrote:
+>> Gregory Price <gregory.price@memverge.com> writes:
+>>
+>>> On Tue, Apr 11, 2023 at 02:37:50PM +0800, Huang, Ying wrote:
+>>>> Gregory Price <gregory.price@memverge.com> writes:
+>>>>
+>>>> [snip]
+>>>>
+>>>>> 2. During the migration process, the memory needs to be forced not to be
+>>>>>     migrated to another node by other means (tiering software, swap,
+>>>>>     etc).  The obvious way of doing this would be to migrate and
+>>>>>     temporarily pin the page... but going back to problem #1 we see that
+>>>>>     ZONE_MOVABLE and Pinning are mutually exclusive.  So that's
+>>>>>     troublesome.
+>>>>
+>>>> Can we use memory policy (cpusets, mbind(), set_mempolicy(), etc.) to
+>>>> avoid move pages out of CXL.mem node?  Now, there are gaps in tiering,
+>>>> but I think it is fixable.
+>>>>
+>>>> Best Regards,
+>>>> Huang, Ying
+>>>>
+>>>> [snip]
+>>>
+>>> That feels like a hack/bodge rather than a proper solution to me.
+>>>
+>>> Maybe this is an affirmative argument for the creation of an EXMEM
+>>> zone.
+>>
+>> Let's start with requirements.  What is the requirements for a new zone
+>> type?
 >
-> The CXL driver plans to use cper_print_aer() for restricted CXL host (RCH)
-> logging. This is not currently possible if CXL is built as a loadable
-> module because cper_print_aer() depends on cper_mem_err_unpack() which
-> is not exported.
+>I'm stills scratching my head regarding this. I keep hearing all
+>different kind of statements that just add more confusions "we want it
+>to be hotunpluggable" "we want to allow for long-term pinning memory"
+>"but we still want it to be movable" "we want to place some unmovable
+>allocations on it". Huh?
 >
-> Export cper_mem_err_unpack() to enable cper_print_aer() usage in
-> CXL and other loadable modules.
+>Just to clarify: ZONE_MOVABLE allows for pinning. It just doesn't allow
+>for long-term pinning of memory.
 >
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: linux-efi@vger.kernel.org
+>For good reason, because long-term pinning of memory is just the worst
+>(memory waste, fragmentation, overcommit) and instead of finding new
+>ways to *avoid* long-term pinnings, we're coming up with advanced
+>concepts to work-around the fundamental property of long-term pinnings.
+>
+>We want all memory to be long-term pinnable and we want all memory to be
+>movable/hotunpluggable. That's not going to work.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Looks there is misunderstanding about ZONE_EXMEM argument.
+Pinning and plubbability is mutual exclusive so it can not happen at the same time.
+What we argue is ZONE_EXMEM does not "confine movability". an allocation context can determine the movability attribute.
+Even one unmovable allocation will make the entire CXL DRAM unpluggable. 
+When you see ZONE_EXMEM just on movable/unmoable aspect, we think it is the same with ZONE_NORMAL,
+but ZONE_EXMEM works on an extended memory, as of now CXL DRAM.
 
-> ---
->  drivers/firmware/efi/cper.c | 1 +
->  1 file changed, 1 insertion(+)
+Then why ZONE_EXMEM is, ZONE_EXMEM considers not only the pluggability aspect, but CXL identifier for user/kenelspace API, 
+the abstraction of multiple CXL DRAM channels, and zone unit algorithm for CXL HW characteristics.
+The last one is potential at the moment, though.
+
+As mentioned in ZONE_EXMEM thread, we are preparing slides to explain experiences and proposals.
+It it not final version now[1].
+[1] https://github.com/OpenMPDK/SMDK/wiki/93.-%5BLSF-MM-BPF-TOPIC%5D-SMDK-inspired-MM-changes-for-CXL
+
+>If you'd ask me today, my prediction is that ZONE_EXMEM is not going to
+>happen.
 >
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 35c37f667781..ff15e12160ae 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-> @@ -350,6 +350,7 @@ const char *cper_mem_err_unpack(struct trace_seq *p,
+>--
+>Thanks,
 >
->         return ret;
->  }
-> +EXPORT_SYMBOL_GPL(cper_mem_err_unpack);
->
->  static void cper_print_mem(const char *pfx, const struct cper_sec_mem_err *mem,
->         int len)
-> --
-> 2.34.1
->
+>David / dhildenb
