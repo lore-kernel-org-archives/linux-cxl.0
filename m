@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4789C77B6E
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Apr 2023 16:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE67C77B6E
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Apr 2023 16:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230304AbjDMQIt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Apr 2023 12:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48798 "EHLO
+        id S229582AbjDMQNv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Apr 2023 12:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbjDMQIq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Apr 2023 12:08:46 -0400
+        with ESMTP id S229578AbjDMQNv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Apr 2023 12:13:51 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B624772B3;
-        Thu, 13 Apr 2023 09:08:33 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Py4Bd05W5z689N7;
-        Fri, 14 Apr 2023 00:03:52 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F00B83;
+        Thu, 13 Apr 2023 09:13:50 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Py4MG3GBlz6J6kG;
+        Fri, 14 Apr 2023 00:11:22 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 13 Apr
- 2023 17:08:17 +0100
-Date:   Thu, 13 Apr 2023 17:08:16 +0100
+ 2023 17:13:48 +0100
+Date:   Thu, 13 Apr 2023 17:13:47 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,13 +29,15 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH v3 2/6] efi/cper: Export cper_mem_err_unpack() for use
- by modules
-Message-ID: <20230413170816.0000333b@Huawei.com>
-In-Reply-To: <20230411180302.2678736-3-terry.bowman@amd.com>
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 3/6] PCI/AER: Export cper_print_aer() for use by
+ modules
+Message-ID: <20230413171347.00003f1d@Huawei.com>
+In-Reply-To: <20230411180302.2678736-4-terry.bowman@amd.com>
 References: <20230411180302.2678736-1-terry.bowman@amd.com>
-        <20230411180302.2678736-3-terry.bowman@amd.com>
+        <20230411180302.2678736-4-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,42 +51,37 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 11 Apr 2023 13:02:58 -0500
+On Tue, 11 Apr 2023 13:02:59 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> The CXL driver plans to use cper_print_aer() for restricted CXL host (RCH)
-> logging. This is not currently possible if CXL is built as a loadable
-> module because cper_print_aer() depends on cper_mem_err_unpack() which
-> is not exported.
-> 
-> Export cper_mem_err_unpack() to enable cper_print_aer() usage in
-> CXL and other loadable modules.
-
-No problem with the export, but I'm struggling to see the path that needs it.
-Could you give a little more detail, perhaps a call path?
-
-Thanks,
-
-Jonathan
-
+> The CXL driver plans to use cper_print_aer() for restricted CXL host
+> (RCH) logging. cper_print_aer() is not exported and as a result is not
+> available to the CXL driver or other loadable modules. Export
+> cper_print_aer() making it available to CXL and other loadable modules.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: linux-efi@vger.kernel.org
+> Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+Seems reasonable.
+FWIW
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  drivers/firmware/efi/cper.c | 1 +
+>  drivers/pci/pcie/aer.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
-> index 35c37f667781..ff15e12160ae 100644
-> --- a/drivers/firmware/efi/cper.c
-> +++ b/drivers/firmware/efi/cper.c
-> @@ -350,6 +350,7 @@ const char *cper_mem_err_unpack(struct trace_seq *p,
->  
->  	return ret;
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f6c24ded134c..7a25b62d9e01 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -812,6 +812,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
+>  	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>  			aer_severity, tlp_header_valid, &aer->header_log);
 >  }
-> +EXPORT_SYMBOL_GPL(cper_mem_err_unpack);
+> +EXPORT_SYMBOL_GPL(cper_print_aer);
+>  #endif
 >  
->  static void cper_print_mem(const char *pfx, const struct cper_sec_mem_err *mem,
->  	int len)
+>  /**
 
