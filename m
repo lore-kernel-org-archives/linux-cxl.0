@@ -2,197 +2,301 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFBCC77B61
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Apr 2023 16:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85282C77B6E
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Apr 2023 16:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbjDMQtG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Apr 2023 12:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
+        id S229772AbjDMQuu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Apr 2023 12:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbjDMQtF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Apr 2023 12:49:05 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91DD7BF
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Apr 2023 09:49:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681404543; x=1712940543;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xjGcnU8oiazqnMhgt3B8p4XydfEoJnCL9G1Xfm4S9uI=;
-  b=TSB1s1DEaYVHnJxCghTKXTkHJ1Xwbymntd+AQL1guw/kq74p7ANoJjo/
-   saNGzcHRRBWN7hpw1vDmKiDOtgFYdk8qrXd7tIL4IH4ZzJoyyTnbi6Emr
-   ZXCFnH7kCJfNz24q//XN+0V8Objqm9+CCD08pwaXnvGxwaRd3d/OCegCT
-   jaDm9SKgJcdZUDfx05YxQdVXnqV4frwMjky/HoVijU6RvyJ8PiWmbTsFh
-   I18+Vp8/yYEsoz2LFylBvSi74ibNKPzaqPuk2DLdYEw1N8is7AlUP7QG4
-   jAPmYxwDdo6YsBKw9FLDF1DBjKodJVoYSiBEzq9Bk+cHcHy8Dk7nay8c9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="328380158"
-X-IronPort-AV: E=Sophos;i="5.99,194,1677571200"; 
-   d="scan'208";a="328380158"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 09:49:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="800869653"
-X-IronPort-AV: E=Sophos;i="5.99,194,1677571200"; 
-   d="scan'208";a="800869653"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.194.26])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 09:49:01 -0700
-Date:   Thu, 13 Apr 2023 09:48:59 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-cxl@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v12 1/6] cxl/mbox: Add GET_POISON_LIST mailbox command
-Message-ID: <ZDgyezzrVAxV/Kdx@aschofie-mobl2>
-References: <cover.1681159309.git.alison.schofield@intel.com>
- <e87e1792e147a46f348019cc772e06f2ea19e970.1681159309.git.alison.schofield@intel.com>
- <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
+        with ESMTP id S229530AbjDMQut (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Apr 2023 12:50:49 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8418CBF;
+        Thu, 13 Apr 2023 09:50:47 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Py59t5S0vz6J79x;
+        Fri, 14 Apr 2023 00:48:18 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 13 Apr
+ 2023 17:50:44 +0100
+Date:   Thu, 13 Apr 2023 17:50:43 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Terry Bowman <terry.bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v3 4/6] cxl/pci: Add RCH downstream port error logging
+Message-ID: <20230413175043.0000523e@Huawei.com>
+In-Reply-To: <20230411180302.2678736-5-terry.bowman@amd.com>
+References: <20230411180302.2678736-1-terry.bowman@amd.com>
+        <20230411180302.2678736-5-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 06:47:56PM -0700, Dan Williams wrote:
-> alison.schofield@ wrote:
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
+On Tue, 11 Apr 2023 13:03:00 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-follow up on the deprecate patch...
+> RCH downstream port error logging is missing in the current CXL driver. The
+> missing AER and RAS error logging is needed for communicating driver error
+> details to userspace. Update the driver to include PCIe AER and CXL RAS
+> error logging.
+> 
+> Add RCH downstream port error handling into the existing RCiEP handler.
+> The downstream port error handler is added to the RCiEP error handler
+> because the downstream port is implemented in a RCRB, is not PCI
+> enumerable, and as a result is not directly accessible to the PCI AER
+> root port driver. The AER root port driver calls the RCiEP handler for
+> handling RCD errors and RCH downstream port protocol errors.
+> 
+> Update mem.c to include RAS and AER setup. This includes AER and RAS
+> capability discovery and mapping for later use in the error handler.
+> 
+> Disable RCH downstream port's root port cmd interrupts.[1]
+> 
+> Update existing RCiEP correctable and uncorrectable handlers to also call
+> the RCH handler. The RCH handler will read the RCH AER registers, check for
+> error severity, and if an error exists will log using an existing kernel
+> AER trace routine. The RCH handler will also log downstream port RAS errors
+> if they exist.
+> 
+> [1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
+> 
+> Co-developed-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Some minor stuff inline. Looks fine to me otherwise.
 
-snip
+I do find it a little confusing how often we go into an RCD or RCH specific
+function then drop out directly for 2.0+ case, but you do seem to be consistent
+with existing code so fair enough.
 
-> 
-> With this new interface I do not expect we want to support user tooling
-> that wants to retrieve the list via ioctl. So I think this wants a
-> lead-in patch that deprecates the poison command support so that the
-> linux-cxl community only has one mechanism to maintain going forward.
-> 
-> Something like the below as a lead-in, and then you would add code to
-> cxl_walk_cel() to set a flag for the "get poison" machinery.
-> 
-> -- >8 --
-> From f2cd1d1e09fe6f36255f3b8cd831b2b4903045d4 Mon Sep 17 00:00:00 2001
-> From: Dan Williams <dan.j.williams@intel.com>
-> Date: Tue, 11 Apr 2023 17:48:45 -0700
-> Subject: [PATCH] cxl/mbox: Deprecate poison commands
-> 
-> The CXL subsystem is adding a formal mechanism for retrieving the poison
-> list. Minimize the maintenance burden going forward, and maximize the
-> investment in common tooling by deprecating direct user access to issue
-> this command outside of CXL_MEM_RAW_COMMANDS debug scenarios.
+Jonathan
 
-I'm expanding the scope of this deprecate patch to include Scan
-commands, and want to make above statement correct, wrt what is
-allowed in raw mode.
-
-Today, Scan Media (& Results) are not allowed in raw.
-It seems like in the spirit of raw, we should allow the scans. That
-would be same as the raw allowed commands Get Poison, Inject & Clear.
-
-Thoughts?
-
-Alison
-
-> 
-> A new cxl_deprecated_commands[] list is created for querying which
-> command ids defined in previous kernels are now deprecated.
-> 
-> Effectively all of the commands defined in:
-> 
-> 87815ee9d006 ("cxl/pci: Add media provisioning required commands")
-> 
-> ...were defined prematurely and should have waited until the kernel
-> implementation was decided. To my knowledge there are no shipping
-> devices with poison listing support and no known tools that would
-> regress with this change.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/cxl/core/mbox.c      |  3 ---
->  include/uapi/linux/cxl_mem.h | 31 ++++++++++++++++++++++++++++---
->  2 files changed, 28 insertions(+), 6 deletions(-)
+>  drivers/cxl/core/pci.c  | 126 ++++++++++++++++++++++++++++++++++++----
+>  drivers/cxl/core/regs.c |   1 +
+>  drivers/cxl/cxl.h       |  13 +++++
+>  drivers/cxl/mem.c       |  73 +++++++++++++++++++++++
+>  4 files changed, 201 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index f2addb457172..8e24038b8769 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -61,9 +61,6 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(SET_ALERT_CONFIG, 0xc, 0, 0),
->  	CXL_CMD(GET_SHUTDOWN_STATE, 0, 0x1, 0),
->  	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
-> -	CXL_CMD(GET_POISON, 0x10, CXL_VARIABLE_PAYLOAD, 0),
-> -	CXL_CMD(INJECT_POISON, 0x8, 0, 0),
-> -	CXL_CMD(CLEAR_POISON, 0x48, 0, 0),
->  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
->  	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
->  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index 86bbacf2a315..90f17343f1ba 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -40,19 +40,22 @@
->  	___C(SET_ALERT_CONFIG, "Set Alert Configuration"),                \
->  	___C(GET_SHUTDOWN_STATE, "Get Shutdown State"),                   \
->  	___C(SET_SHUTDOWN_STATE, "Set Shutdown State"),                   \
-> -	___C(GET_POISON, "Get Poison List"),                              \
-> -	___C(INJECT_POISON, "Inject Poison"),                             \
-> -	___C(CLEAR_POISON, "Clear Poison"),                               \
-> +	___DEPRECATED(GET_POISON, "Get Poison List"),                     \
-> +	___DEPRECATED(INJECT_POISON, "Inject Poison"),                    \
-> +	___DEPRECATED(CLEAR_POISON, "Clear Poison"),                      \
->  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
->  	___C(SCAN_MEDIA, "Scan Media"),                                   \
->  	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
->  	___C(MAX, "invalid / last command")
->  
->  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
-> +#define ___DEPRECATED(a, b) CXL_MEM_DEPRECATED_ID_##a
->  enum { CXL_CMDS };
->  
->  #undef ___C
-> +#undef ___DEPRECATED
->  #define ___C(a, b) { b }
-> +#define ___DEPRECATED(a, b) { "Deprecated " b }
->  static const struct {
->  	const char *name;
->  } cxl_command_names[] __attribute__((__unused__)) = { CXL_CMDS };
-> @@ -68,6 +71,28 @@ static const struct {
->   */
->  
->  #undef ___C
-> +#undef ___DEPRECATED
-> +#define ___C(a, b) (0)
-> +#define ___DEPRECATED(a, b) (1)
-> +
-> +static const u8 cxl_deprecated_commands[]
-> +	__attribute__((__unused__)) = { CXL_CMDS };
-> +
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 523d5b9fd7fc..d435ed2ff8b6 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+
+
 > +/*
-> + * Here's how this actually breaks out:
-> + * cxl_deprecated_commands[] = {
-> + *	[CXL_MEM_COMMAND_ID_INVALID] = 0,
-> + *	[CXL_MEM_COMMAND_ID_IDENTIFY] = 0,
-> + *	...
-> + *	[CXL_MEM_DEPRECATED_ID_GET_POISON] = 1,
-> + *	[CXL_MEM_DEPRECATED_ID_INJECT_POISON] = 1,
-> + *	[CXL_MEM_DEPRECATED_ID_CLEAR_POISON] = 1,
-> + *	...
-> + * };
+> + * Copy the AER capability registers to a buffer. This is necessary
+> + * because RCRB AER capability is MMIO mapped. Clear the status
+> + * after copying.
+> + *
+> + * @aer_base: base address of AER capability block in RCRB
+> + * @aer_regs: destination for copying AER capability
 > + */
+> +static bool cxl_rch_get_aer_info(void __iomem *aer_base,
+> +				 struct aer_capability_regs *aer_regs)
+> +{
+> +	int read_cnt = PCI_AER_CAPABILITY_LENGTH / sizeof(u32);
+> +	u32 *aer_regs_buf = (u32 *)aer_regs;
+> +	int n;
 > +
-> +#undef ___C
-> +#undef ___DEPRECATED
+> +	if (!aer_base)
+> +		return false;
+> +
+> +	for (n = 0; n < read_cnt; n++)
+> +		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
+
+Maybe add a comment here on why memcpy_fromio() doesn't work for us.
+I'm assuming we need these to definitely be 32bit reads.
+Otherwise someone will 'optimize' it in future.
+
+> +
+> +	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
+> +	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
+> +
+> +	return true;
+> +}
+=
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index bde1fffab09e..dfa6fcfc428a 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -198,6 +198,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
 >  
->  /**
->   * struct cxl_command_info - Command information returned from a query.
-> -- 
-> 2.39.2
+>  	return ret_val;
+>  }
+> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, CXL);
+>  
+>  int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
+>  			   struct cxl_register_map *map, unsigned long map_mask)
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index df64c402e6e6..dae3f141ffcb 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -66,6 +66,8 @@
+>  #define CXL_DECODER_MIN_GRANULARITY 256
+>  #define CXL_DECODER_MAX_ENCODED_IG 6
+>  
+> +#define PCI_AER_CAPABILITY_LENGTH 56
+
+Odd place to find a PCI specific define. Also a spec reference is
+always good for these.  What's the the length of? PCI r6.0 has
+cap going up to address 0x5c  so length 0x60.  This seems to be igoring
+the header log register.
+
+> +
+>  static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+>  {
+>  	int val = FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
+> @@ -209,6 +211,15 @@ struct cxl_regs {
+>  	struct_group_tagged(cxl_device_regs, device_regs,
+>  		void __iomem *status, *mbox, *memdev;
+>  	);
+> +
+> +	/*
+> +	 * Pointer to RCH cxl_dport AER. (only for RCH/RCD mode)
+> +	 * @dport_aer: CXL 2.0 12.2.11 RCH Downstream Port-detected Errors
+
+As with other cases, I'd like full comments, so something for @aer as well.
+
+> +	 */
+> +	struct_group_tagged(cxl_rch_regs, rch_regs,
+> +		void __iomem *aer;
+> +		void __iomem *dport_ras;
+> +	);
+>  };
+>  
+>  struct cxl_reg_map {
+> @@ -249,6 +260,8 @@ struct cxl_register_map {
+>  	};
+>  };
+>  
+> +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> +				   resource_size_t length);
+>  void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			      struct cxl_component_reg_map *map);
+>  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 014295ab6bc6..dd5ae0a4560c 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/aer.h>
+>  
+>  #include "cxlmem.h"
+>  #include "cxlpci.h"
+> @@ -45,6 +46,71 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
+>  	return 0;
+>  }
+>  
+> +static void rch_disable_root_ints(void __iomem *aer_base)
+> +{
+> +	u32 aer_cmd_mask, aer_cmd;
+> +
+> +	/*
+> +	 * Disable RCH root port command interrupts.
+> +	 * CXL3.0 12.2.1.1 - RCH Downstream Port-detected Errors
+> +	 */
+> +	aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+> +			PCI_ERR_ROOT_CMD_NONFATAL_EN |
+> +			PCI_ERR_ROOT_CMD_FATAL_EN);
+> +	aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
+> +	aer_cmd &= ~aer_cmd_mask;
+> +	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+
+Should we be touching these if firmware hasn't granted control to
+the OS?  Description in the spec refers to 'software'. Is that
+the kernel? No idea.  I guess this is safe even if it has already
+been done. Perhaps a comment to say it should already be in this state?
+
+
+> +}
+> +
+> +static int cxl_rch_map_ras(struct cxl_dev_state *cxlds,
+> +			   struct cxl_dport *parent_dport)
+> +{
+> +	struct device *dev = parent_dport->dport;
+> +	resource_size_t aer_phys, ras_phys;
+> +	void __iomem *aer, *dport_ras;
+> +
+> +	if (!parent_dport->rch)
+> +		return 0;
+> +
+> +	if (!parent_dport->aer_cap || !parent_dport->ras_cap ||
+> +	    parent_dport->component_reg_phys == CXL_RESOURCE_NONE)
+> +		return -ENODEV;
+> +
+> +	aer_phys = parent_dport->aer_cap + parent_dport->rcrb;
+> +	aer = devm_cxl_iomap_block(dev, aer_phys,
+> +				   PCI_AER_CAPABILITY_LENGTH);
+> +
+> +	if (!aer)
+> +		return -ENOMEM;
+> +
+> +	ras_phys = parent_dport->ras_cap + parent_dport->component_reg_phys;
+> +	dport_ras = devm_cxl_iomap_block(dev, ras_phys,
+> +					 CXL_RAS_CAPABILITY_LENGTH);
+> +
+> +	if (!dport_ras)
+> +		return -ENOMEM;
+> +
+> +	cxlds->regs.aer = aer;
+> +	cxlds->regs.dport_ras = dport_ras;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cxl_setup_ras(struct cxl_dev_state *cxlds,
+> +			 struct cxl_dport *parent_dport)
+> +{
+> +	int rc;
+> +
+> +	rc = cxl_rch_map_ras(cxlds, parent_dport);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (cxlds->rcd)
+> +		rch_disable_root_ints(cxlds->regs.aer);
+> +
+> +	return rc;
+> +}
+> +
+>  static void cxl_setup_rcrb(struct cxl_dev_state *cxlds,
+>  			   struct cxl_dport *parent_dport)
+>  {
+> @@ -91,6 +157,13 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+>  
+>  	cxl_setup_rcrb(cxlds, parent_dport);
+>  
+> +	rc = cxl_setup_ras(cxlds, parent_dport);
+> +	/* Continue with RAS setup errors */
+> +	if (rc)
+> +		dev_warn(&cxlmd->dev, "CXL RAS setup failed: %d\n", rc);
+> +	else
+> +		dev_info(&cxlmd->dev, "CXL error handling enabled\n");
+
+This feels a little noisy as something to add given we didn't shout about it for
+non RCD cases (I think).  Maybe a dev_dbg()?
+
+> +
+>  	endpoint = devm_cxl_add_port(host, &cxlmd->dev, cxlds->component_reg_phys,
+>  				     parent_dport);
+>  	if (IS_ERR(endpoint))
+
