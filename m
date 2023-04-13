@@ -2,225 +2,293 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2683C77B6E
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Apr 2023 20:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7079AC77B6E
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Apr 2023 22:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjDMUyb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Apr 2023 16:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41362 "EHLO
+        id S229625AbjDMWwu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Apr 2023 18:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjDMUya (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Apr 2023 16:54:30 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7217ED8
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Apr 2023 13:54:28 -0700 (PDT)
+        with ESMTP id S229522AbjDMWwt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Apr 2023 18:52:49 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0470430EA;
+        Thu, 13 Apr 2023 15:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681426368; x=1712962368;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=BRE/ClVAQ/w/h997vW5X0Gfrg2XOa7yQokIQACN6DZ8=;
+  b=Jf7Is6M0VEJkltOPwWwPeteyKCWgQjFaAp6ym7OvLoVHI4HaBUagU2T/
+   20CKah8PJSqujiKd9FAFPgBd8Ht8Lzr4g3W+ZZf9uJEJY1lY7IpREt1MA
+   BQv7qHh7l2MlAd0zz1/v1bzmWvJ3c7m86ahbH1I098LaVMRBiW/Mt4Ils
+   TQy4cim+t30J8fVEaqLefNdN46cbkLr4nLna2C/Iz2sCTS7jbfGP42XP3
+   w7sY/If4+a0HsK1G85YhOI6RgrHA5akfrlxznPe3Zv6qlJrjuB4KmFOcw
+   5bkGT9C9l+KB6O43ov9v9ZNUIqjpGJHRFNQ3foAySvaHxF9mOoFl2sJYf
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="347036146"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="347036146"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 15:52:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="813639369"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="813639369"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga004.jf.intel.com with ESMTP; 13 Apr 2023 15:52:46 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 13 Apr 2023 15:52:46 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Thu, 13 Apr 2023 15:52:46 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Thu, 13 Apr 2023 15:52:46 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DWnfzHO2mqaxMS6OFXsDkwq3QswcfKSmyxYcyZ7r6F+bSY6mqbz9enpY2cJiJ7DqZCDECzD+YM5WAsfbGeajtGLFOy2mgdgxfFcq/AbkBt4wwMQPPPMs0YakvILmBFcLjCplP01O0lhiaFUWXdOIbBiREaCuRRIkKocWRlUEqQzd1aYLOwvwRRvGWZrH6BEuwe8Mxx/8qkdV8V/LNGh/rqjYilMuseyMrhOl54YjtFoYP/8vN8bQwHP37o7/i2tbiOp/dg7gBrve7PSn7+E5BukeuDRZT76AzlKcn3pNhfLHSGtscnBN1f4x0UJvsHj5lGm14Vt+rP4d1w5Ds/zqDQ==
+ b=DkYScwv9V7ln9EAhVMPsW4eFYmTBsfXMJRzvHEEGl5J+zPAu0OY2e/CVVEtsWHqTZ98/eADVyYQIjN7ggM6RQjbJ9uFwqMf0pu3SrO6sA2c1l1myxqiFxMGfPfJhD1pho0dTbSUF50J74MyPHPH7hgOghOdKo6mSsx0Uoe6vJyyiTijrP+7jwUyBAI7735OboELHcmOigqDEAuagzjcvev7CImNFz8nYD0Au6m2CgvS6lHuGAhFcJ87gcyMVz7Dkgxdjxif2zkzKmXFFh9o5nJy0Pjw9xemB1vab3Vl96OSB3EooPzN0FigOE4DbkPRrBZRa9WmHtjYuz7Ge2XixFQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y4mWbibBvNwoI8V7T8JfTXk4TawSmx99IP3VWOOaoAE=;
- b=dBqT/KJQbvonpTx306UQla4kV93TLiBRFfDCRPfdbjXffTE3TQ0m9l4RUNwrKI1h4J9tH4F6vrLR9XpkNteemvBYc9q/rrXP+i/8aL0xIIXO9tMw+0a+v600nrB796VjT1xIp3Ww9M/2nIKfpb1Gs7WtYdcd5iBKIexMGzNjacQldMM8MKIb5JEDB6KpBC1vO1fAlO0CHDsCWmQSLbhUK3HTmV4LtIFnPy1px1yZ5zIVfe7PrqVf65OX3mH26h4u8fCWP1xbkOCT+3LvYi/wznqBxR1meja5EDRznxAEyfSbN/QV+pM8GqoxXFGypa/XeVZ7mJfGjL2hGBrjRta+VQ==
+ bh=L7Q9qwU/6K5X0Mto+0oZG1VdBhYO/Sx/YbZKdveyYrE=;
+ b=NsZ2VCCVjimYwIX9GR9ahrzxC4WcHqsF4DejKeDaGPXS2VldrGCMlCcZgCFJGPWFsHfrX9iHkQhRIAj4oeVp6jjMFFdUwoGVVBY168jG1aInWfvdORCbS6oMfGHYakMHgo2LIUMV3MI7rhoYedIPyV/LhTxrF2A5zzTuxcRxfIIhBbum52362TmG4YeXKHKu8G9dS2FA+B33TMiTMvK0kG6fUJmle8CrVFgaEYJmtEuei6Gby95bd4wls590hshSCmTLQk0pn3/MeitLtahz9gaeZ7/qu+pxaF8Zq88tn5m8MKORDPqmJbuWxZC1k7zuEify2sGmEail5sBb821L0Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y4mWbibBvNwoI8V7T8JfTXk4TawSmx99IP3VWOOaoAE=;
- b=tq6siQCQ1xoZxhVpbA0uQzcFWUGmH+NlXOfLy9pxCEAw3XNhKQvY3YlTesdXYEePpID4+H6M81yC/4G1sYq0+ao0Fv0W5dqPtI1VjLcTmeKlJOOlTLbNfNcRvNlEnAdccabVAY8EHMzFtCxRTuBIARhYtlaiXqqrKjAKl7XjkBM=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by BLAPR17MB4163.namprd17.prod.outlook.com (2603:10b6:208:27b::19) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by IA1PR11MB6345.namprd11.prod.outlook.com (2603:10b6:208:38b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.36; Thu, 13 Apr
- 2023 20:54:26 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7b97:62c3:4602:b47a%6]) with mapi id 15.20.6277.036; Thu, 13 Apr 2023
- 20:54:26 +0000
-Date:   Thu, 13 Apr 2023 07:39:43 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [BUG] DAX access of Memory Expander on RCH topology fires BUG on
- page_table_check
-Message-ID: <ZDfp/+7uTyh2wWcX@memverge.com>
-References: <ZDb71ZXGtzz0ttQT@memverge.com>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Thu, 13 Apr
+ 2023 22:52:41 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::4fe2:e207:596b:d145]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::4fe2:e207:596b:d145%5]) with mapi id 15.20.6298.028; Thu, 13 Apr 2023
+ 22:52:41 +0000
+Date:   Thu, 13 Apr 2023 15:52:36 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <rrichter@amd.com>, <linux-kernel@vger.kernel.org>,
+        <bhelgaas@google.com>, Oliver O'Halloran <oohall@gmail.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 6/6] PCI/AER: Unmask RCEC internal errors to enable
+ RCH downstream port error handling
+Message-ID: <643887b44b2d4_3a1882949d@iweiny-mobl.notmuch>
+References: <20230411180302.2678736-7-terry.bowman@amd.com>
+ <20230412212901.GA81099@bhelgaas>
+ <20230413180122.00007471@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ZDb71ZXGtzz0ttQT@memverge.com>
-X-ClientProxiedBy: SJ0PR05CA0024.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::29) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+In-Reply-To: <20230413180122.00007471@Huawei.com>
+X-ClientProxiedBy: SJ0PR05CA0031.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::6) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|BLAPR17MB4163:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3b5244b-2647-47e1-d8d8-08db3c614450
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|IA1PR11MB6345:EE_
+X-MS-Office365-Filtering-Correlation-Id: 055190b3-132e-4432-9998-08db3c71c926
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WZ42OoENfS9fhi3UexuK635R9jFNjqX9NfByQP8FtjM1RXPFv1jgEOYopckSUIH06RtCsJlFg9V9EK+PfkOc8HMNPjHpdpfRLlyWXg6eg5WGni2N6peUwS3a/NnePRvdVL4KpD0dC52o3CVoru/8aM0eniPwDnxG9JFGeNpYQcXOy8VJwKS7RvhpTQv/t3vdk18Vn1qaa7GcOIh6ydcWaZ1JOL4Piqku9mUamv4+ruNHaTxQa5YLSvQMdM/IGYGD9XxuntkdiVZD7qy3qQvQf8djnYfXnSHNCelbmlYm+O1ByOrRUSO7MQlVj9J4n+L0CDa/cC/bIa9700GBzIx7kYxIcc4f6NQMo4mOp8FKbFhNoTpK329dc7mw+YP6tIl4ijzw2oMUVszUoqf1iO4X47juBm/h6kUjm6bxTkfe5jafOGhhVIOHFnOaD/GWeYkE/luv2gPJjOdGeKIJe/T8j785f5wQDLnG1kTqS9vOjt0KPQ2h/emqqON3gnAeNLhQv1DloHHUAUVEtAS9lPdCrTO0W1JIT6Xbklc4Hrai3RSi6LffwdSyKLEOp+K7oWjB
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(39840400004)(346002)(396003)(366004)(136003)(451199021)(6486002)(8936002)(38100700002)(478600001)(66556008)(66476007)(66946007)(4326008)(316002)(6916009)(54906003)(5660300002)(44832011)(41300700001)(8676002)(83380400001)(186003)(2616005)(6666004)(26005)(6512007)(6506007)(86362001)(36756003)(2906002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: vLne1JHsqol01vjtGstF7bAvfa1Ako0oVVgY8gdNXoUnGBQf3ndWSvlkld3k24BoRAmtQ5Bf3i8CrLIU/l6e0IdQlGn9ABkvf0l+neis0iuChuduHLNxkIinZGOF0KA/YNxcIp8akQOc46YO6XhQrb29k21NGu0H0f4/OpQNu8Ran6BJQyrxvkSBjg4ulUPSePewoJuUufH/BhLKAeWrqXRLSQrYmFN4/1KLiqw1Y3pJr1+rB/eSuU4u+bO7DFErlcJrlvzmDHEelU02NHwixmrifEqcYnxmp7/C7XG7G5KdMdMSKONG1chQhf7Mk9mvuINcfbXKARjymLimCFoapIk3PGcHqOVcR4cv/ncTOWjva4OpTdoK9aLkghIOLfWPN8bP3ZN/miysub3bVwLsWjZxmNhkA7P9xCCjwYzZWL3NZ4SdI4Bd81NLainhr7zzTjKzD05PqjGC0XSzIy70AM5fD5xb4bx6xwmR9DFO5ySSZlby9AQ8Pl0FNe4TzFcp2BkjPJh3o82exWLgVFwlAd0fBYy/XNCPSSyCf9g+4KED6xWkPipmTrd5R6aqH/UL2+Lgc8iObrdR69Zh1ZMjMRm3O0cIjcDyL3mm4LzEQxnUAP4VDOy/vL/m54RtNYfAt1jEKsp9lUQzd79L0bXImw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(366004)(346002)(396003)(136003)(39860400002)(451199021)(9686003)(26005)(6512007)(6506007)(54906003)(186003)(66899021)(83380400001)(966005)(6486002)(6666004)(5660300002)(41300700001)(82960400001)(316002)(8676002)(8936002)(86362001)(38100700002)(478600001)(4326008)(66946007)(66476007)(66556008)(2906002)(7416002)(44832011)(110136005)(309714004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yr+/Cp4mb0aapsHRf1PItIFioQYTGKP76UXz4jXvrZ5Tiao9rhVVb0EFA89C?=
- =?us-ascii?Q?THpao4jWW+VPegj3W/lHcyKHMmxVlGPDADwzlmdtBehwAtLKXzOHlyZssz5r?=
- =?us-ascii?Q?TsEUglxm4negoHSSBi2rB1m3IhalJ8a+zspaXoayq5Rh9532fRvpIJnJnRbn?=
- =?us-ascii?Q?PCbUSnaTFekX7pv4035lX3LiSenwEtvV3Bv0kD+EWUOjOV8fCSLp/PUQRDRO?=
- =?us-ascii?Q?F84Yvv2LH4uEz8K8613MkC+EP6bVgznLWv8+VplAv4U9MJsz7WQg0owWWnsR?=
- =?us-ascii?Q?qop1yxkneDftrK/fzlVMK4LSNYM7qCflUAOCrnoYdK0P3JNA6rQvKThdLopx?=
- =?us-ascii?Q?27rEdkJVy7jP1AWDkbMgioaFa2C7Zlw/mDCeKBASfGvmF4W/LycWJaWLRFIY?=
- =?us-ascii?Q?JIjlr7Nsu1j4ICeWJ/E1Z/oh/T7HuSVDdgv+0ZYF3rld8hdPNwPZNW8uo9Ow?=
- =?us-ascii?Q?GVBL3Q4mjUfEPYWflO7wXd0KljsOzlMYw1gkRKA35CKU950zohijtuOllZ4c?=
- =?us-ascii?Q?NhHpLYW4B067jps+q2s/CCEzivVbHRJkyhuQDq043/0lVd02EmtLXJWOwtej?=
- =?us-ascii?Q?zZfNrb4wNIkrKSsgFZh/e4zryZi0LFauIyXXAf/teZmtxkYRKmXVUbxIqLHX?=
- =?us-ascii?Q?blUk5nw5G6bil/J5XUzrriiNzsdYP5vb3qDvjGDL9FftAnwDoyGmbDJAeOac?=
- =?us-ascii?Q?+TJrWfuJgBPWUwVZXdQo6ybpHLGKor7mJfapoaBjUMwythhrgMzP4VwfrbEL?=
- =?us-ascii?Q?5vEtV6gSiiwCeV+Q4qfLDnOZ8bkXSkc/62XN6FNvZM9fPmJ61DLiPdycac7v?=
- =?us-ascii?Q?5eQsO1ZJ7UwCxnWwqa5dXcASg8m0JeZUnMC6+7MuYIjFyRpqKNwMNP2gbQFJ?=
- =?us-ascii?Q?AnJ7jSKTEwoTDVL6t2NVspH876eTAq9wGKJg+sWYE1OtlsghbOyOlQkjh24T?=
- =?us-ascii?Q?sdDPE+KrpNgfjHrjEbWD0iYkc3tVCpwCsWz4VeJtG+ctQeAmQHYEXIVcLVbp?=
- =?us-ascii?Q?831jmKF8vvgqBf1vfAhI8CpNwNWzOWUBsmg99Zk8Qpdo/6H4nFw1IYoKe26B?=
- =?us-ascii?Q?Uw7XnNaQL2Bw1bXspWYumCMyDQFY8JlJnJ4xa9kqlbveHi7+1OL2RzXEkVT5?=
- =?us-ascii?Q?jgY22OrW7jz0h7JTi1lehJIDQ8BAvoU6IFb8X4bY9gB/Ku4y1alW+J9+1dld?=
- =?us-ascii?Q?F0noFCPHJGm4IZDbeCBBgJBcnLxPuhAFPSQcdEBBvlNQevIKD8EMiu7KKnoB?=
- =?us-ascii?Q?lbfVmxHSeZRkLAVPwY9kOx41FCHvybfWKak3MKI8k2CvaW6oWBBUyUjhxjw6?=
- =?us-ascii?Q?go2PMjwujbo/r3MWmls/33l57C8JhKMcbcjHwl3aL03lS5y8eSjzDNdzWm0s?=
- =?us-ascii?Q?oNal9YbGkx04g4wlkDY/YgNaUQktUj4v88v2qXUmNW7aPZmgWgbsBmfMW2Qw?=
- =?us-ascii?Q?wYTNHPvzQfTR8jLROZdsADNRq0Sn9Pa+WZqIcEgddQRfIKxmVkxu+BtZl8X+?=
- =?us-ascii?Q?RO4LDvq3zgz1CclT6jNn7RUH5uSqqXVthW4iXv99/xWhuZAMZIjFvjrK3FIy?=
- =?us-ascii?Q?XKlZDjjeMlwMZfoWrY4ESSRljZBWWhH8APKkdsUT5g7Qnjn/BaJe+XPcDFHx?=
- =?us-ascii?Q?AA=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3b5244b-2647-47e1-d8d8-08db3c614450
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?o53MbmW2rX3D9GllqCUtRKAWo+Pj8oiPGuPp9d5kAfcHtxZUTZLCIuNAVwHj?=
+ =?us-ascii?Q?0tkYDvC9kzhyRMteeIXMrFDfWWUgwumYU4zAbotWyUVEPyOHbtXWbWTCKnJR?=
+ =?us-ascii?Q?Rks1VDpSRM9pqVU9y+BIrdLXTOVlLILaAju2cvBj6OLOF6bg0KkCJFuA31Hv?=
+ =?us-ascii?Q?wlSSylZNIWQpaBhtOyLbJjTn/uwb/8Ses8pdW3hFwi7nnxjC30Ed2Ev9d5fa?=
+ =?us-ascii?Q?DE8OC3NFtRcWyr7JsNLdizE4EGWhKNDkvjTXrqBBmCBWf+QIRmuqykvbXo0X?=
+ =?us-ascii?Q?3cmxrZtznPRTaO8uKnDvX/hG5sYzOkfzgSavBj7QJJBMU443cCGKBObrkavL?=
+ =?us-ascii?Q?rzfZ/KLBEqcQcyINcE+ppTqy8gQ/5hRru+Nr349bEhq+E17GCV8OTMPBgNp+?=
+ =?us-ascii?Q?Cg5OfyZvCTo+zkETqWYcEEB6xoacMyMQUGCsIRN+yre5r+lV3Ir9A23LYiLD?=
+ =?us-ascii?Q?pkDbXUW4Yc8KpEutmje1GjXuA77FmLBjOOry/hOZUglq7kFJTDiMUY/FmrEl?=
+ =?us-ascii?Q?MJB/IWtnrfvz/I/i7HLkLxZ8h/P4Jq/AejQTT9CDttFxfiCLX9rmrYI68Ppd?=
+ =?us-ascii?Q?owGrnyvP7c67c09my20IV7dhvseQf9xdbxxh7rNY/NDkzC90rFKIhgeGs/ER?=
+ =?us-ascii?Q?Mox8FRTQtG9TQuHR5hAOOJnPdvJvMsaNaf+jhY7LQIhQG2YpcboOuhAkSuef?=
+ =?us-ascii?Q?TwDs9lqbQqqhrYKvGyLE/Ej1wCwhulmLAn7z9AeZoeq/af2V0JA5XRkOByX1?=
+ =?us-ascii?Q?1dJbJr9Vi1JHAsgSUZpM043+s0oipOJTGlLuanf/3xmckzEsVqL2GiTeP+3x?=
+ =?us-ascii?Q?CqHbTosE7wxFf728iYCNu2q+G6phPhkLvbMqCakUYSY/MGC0UumS3htJioWC?=
+ =?us-ascii?Q?o6+GFjogvwnaH5m/e1LzoHdJ0DB1AEMJy+2BcruZKQnfjRZPlhGD26cw2/TW?=
+ =?us-ascii?Q?s4UFajRSsFxmI57+Z8ttrhjajswig3B+SjpncjbOWUt8tY54G3Yy1cC+/z7w?=
+ =?us-ascii?Q?DObd0QV8tKOQKmUzbyHLgy6VftzMA5XFmVgg6JCz5HSrFW8q/LsjmsCOpNek?=
+ =?us-ascii?Q?V5HuCa7nzCRWcs9d7/z0BGfi37AwGcaDBbF8pI2siHgOGyt3dMGAquQn+auc?=
+ =?us-ascii?Q?MV5AahVAKWa+FK8X58DZto3UZHVnJFYwikB3Q5rN3OEJ47z06tggmUUKT+B9?=
+ =?us-ascii?Q?mCr9svpUjRIUfAIDHUgxuTti5QfGA/dvAKbdKWu2JQsdkwbsH/s4vp9Kfym3?=
+ =?us-ascii?Q?ndIa/PBds4cVhNfFLNsRoOq3xlS3D4+IRBorADqhAD4+TG1bvJcCIPgs5Uiq?=
+ =?us-ascii?Q?qM0Z65IPz0odQ/fG2eZUgHNB+zISo/Ijd4oSD4sBfhntqCCOyZ+6nJjpzdIK?=
+ =?us-ascii?Q?7E42XAGJRefEV0x0yPE2rwFhZRjZkwDaD3c6SxhcQ093CT89dZP+il0G7rKW?=
+ =?us-ascii?Q?XJwqbyReIvzNrZByyQWI1RPgTN0K63qBQucJRIOGL+DkhYmdzMLaIYW/hvDM?=
+ =?us-ascii?Q?92RT/Zw/rvABJKhwsqNB4DLtO5AjwlxJZUvRmwKBPZrNc1PO9nuH29+WWW7Q?=
+ =?us-ascii?Q?2Pvctfh7UqIhPgOpBQiTH+nRZ/TkBXkJASPld8Nl?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 055190b3-132e-4432-9998-08db3c71c926
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2023 20:54:26.1826
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2023 22:52:41.0661
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GcmSDHM7g6OBETbxfGB8IqqDyTqaK0QwsvaJplawg+/hfqi1Et/FWwtWBTVSVA7jbco5fQyeHhii2oN39gDYZMn/uqvvSHzAdUtvLnCu1oc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR17MB4163
+X-MS-Exchange-CrossTenant-UserPrincipalName: nl88+Zl6KgPbVgu/WfP/X15kfsXRJe+I8Sb+417QPlv+wg64CYrlAActEGYXA8zekuicD9UvXsLS3bUE7PSNwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6345
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 02:43:33PM -0400, Gregory Price wrote:
+Jonathan Cameron wrote:
+> On Wed, 12 Apr 2023 16:29:01 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 > 
+> > On Tue, Apr 11, 2023 at 01:03:02PM -0500, Terry Bowman wrote:
+> > > From: Robert Richter <rrichter@amd.com>
+> > > 
+> > > RCEC AER corrected and uncorrectable internal errors (CIE/UIE) are
+> > > disabled by default.  
+> > 
+> > "Disabled by default" just means "the power-up state of CIE/UIC is
+> > that they are masked", right?  It doesn't mean that Linux normally
+> > masks them.
+> > 
+> > > [1][2] Enable them to receive CXL downstream port
+> > > errors of a Restricted CXL Host (RCH).
+> > > 
+> > > [1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
+> > > [2] PCIe Base Spec 6.0, 7.8.4.3 Uncorrectable Error Mask Register,
+> > >     7.8.4.6 Correctable Error Mask Register
+> > > 
+> > > Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > > Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+> > > Cc: linuxppc-dev@lists.ozlabs.org
+> > > Cc: linux-pci@vger.kernel.org
+> > > ---
+> > >  drivers/pci/pcie/aer.c | 73 ++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 73 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > index 171a08fd8ebd..3973c731e11d 100644
+> > > --- a/drivers/pci/pcie/aer.c
+> > > +++ b/drivers/pci/pcie/aer.c
+> > > @@ -1000,7 +1000,79 @@ static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> > >  		pcie_walk_rcec(dev, cxl_handle_error_iter, info);
+> > >  }
+> > >  
+> > > +static bool cxl_error_is_native(struct pci_dev *dev)
+> > > +{
+> > > +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+> > > +
+> > > +	if (pcie_ports_native)
+> > > +		return true;
+> > > +
+> > > +	return host->native_aer && host->native_cxl_error;
+> > > +}
+> > > +
+> > > +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> > > +{
+> > > +	int *handles_cxl = data;
+> > > +
+> > > +	*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
+> > > +
+> > > +	return *handles_cxl;
+> > > +}
+> > > +
+> > > +static bool handles_cxl_errors(struct pci_dev *rcec)
+> > > +{
+> > > +	int handles_cxl = 0;
+> > > +
+> > > +	if (!rcec->aer_cap)
+> > > +		return false;
+> > > +
+> > > +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC)
+> > > +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
+> > > +
+> > > +	return !!handles_cxl;
+> > > +}
+> > > +
+> > > +static int __cxl_unmask_internal_errors(struct pci_dev *rcec)
+> > > +{
+> > > +	int aer, rc;
+> > > +	u32 mask;
+> > > +
+> > > +	/*
+> > > +	 * Internal errors are masked by default, unmask RCEC's here
+> > > +	 * PCI6.0 7.8.4.3 Uncorrectable Error Mask Register (Offset 08h)
+> > > +	 * PCI6.0 7.8.4.6 Correctable Error Mask Register (Offset 14h)
+> > > +	 */  
+> > 
+> > Unmasking internal errors doesn't have anything specific to do with
+> > CXL, so I don't think it should have "cxl" in the function name.
+> > Maybe something like "pci_aer_unmask_internal_errors()".
 > 
-> I was looking to validate mlock-ability of various pages when CXL is in
-> different states (numa, dax, etc), and I discovered a page_table_check
-> BUG when accessing MemExp memory while a device is in daxdev mode.
+> This reminds me.  Not sure we resolved earlier discussion on changing
+> the system wide policy to turn these on 
+> https://lore.kernel.org/linux-cxl/20221229172731.GA611562@bhelgaas/
+> which needs pretty much the same thing.
 > 
-> this happens essentially on a fault of the first accessed page
-> 
-> int dax_fd = open(device_path, O_RDWR);
-> void *mapped_memory = mmap(NULL, (1024*1024*2), PROT_READ | PROT_WRITE, MAP_SHARED, dax_fd, 0);
-> ((char*)mapped_memory)[0] = 1;
-> 
-> 
-> Full details of my test here:
-> 
-> Step 1) Test that memory onlined in NUMA node works
-> 
-> [user@host0 ~]# numactl --hardware
-> available: 2 nodes (0-1)
-> node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
-> node 0 size: 63892 MB
-> node 0 free: 59622 MB
-> node 1 cpus:
-> node 1 size: 129024 MB
-> node 1 free: 129024 MB
-> node distances:
-> node   0   1
->   0:  10  50
->   1:  255  10
-> 
-> 
-> [user@host0 ~]# numactl --preferred=1 memhog 128G
-> ... snip ...
-> 
-> Passes no problem, all memory is accessible and used.
-> 
-> 
-> 
-> Next, reconfigure the device to daxdev mode
-> 
-> 
-> [user@host0 ~]# daxctl list
-> [
->   {
->     "chardev":"dax0.0",
->     "size":137438953472,
->     "target_node":1,
->     "align":2097152,
->     "mode":"system-ram",
->     "online_memblocks":63,
->     "total_memblocks":63,
->     "movable":true
->   }
-> ]
+> Ira, I think you were picking this one up?
+> https://lore.kernel.org/linux-cxl/63e5fb533f304_13244829412@iweiny-mobl.notmuch/
 
+After this discussion I posted an RFC to enable those errors.
 
-Follow up - i was investigating why my dax region here only created 63
-2GB MemBlocks for a 128GB region, and the reason is a forced alignment
-of dax devices against the CXL Fixed Memory Window.
+https://lore.kernel.org/all/20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com/
 
-[    0.000000] BIOS-e820: [mem 0x0000001050000000-0x000000304fffffff] soft reserved
-[    0.000000] BIOS-e820: [mem 0x00003ffc00000000-0x00003ffc03ffffff] reserved
-[    0.000000] reserve setup_data: [mem 0x0000001050000000-0x000000304fffffff] soft reserved
-[    0.000000] reserve setup_data: [mem 0x00003ffc00000000-0x00003ffc03ffffff] reserved
+Unfortunately the prevailing opinion was that this was unsafe.  And no one
+piped up with a reason to pursue the alternative of a pci core call to enable
+them as needed.
 
+So I abandoned the work.
 
-some debug prints i added
+I think the direction things where headed was to have a call like:
 
-[   20.726483] dax cxl probe
-[   20.727330] cxl_dax_region dax_region0: alloc_dax_region: start 1050000000 end 304fffffff
-[   20.728405] Creating dev_dev
-[   20.729033] dev_dax nr_range: 0
-[   20.735481]  dax0.0: alloc range[0]: 0x0000001050000000:0x000000304fffffff
+int pci_enable_pci_internal_errors(struct pci_dev *dev)
+{
+	int pos_cap_err;
+	u32 reg;
 
-The memory backing this dax region gets squashed by this code:
+	if (!pcie_aer_is_native(dev))
+		return -EIO;
 
-+++ b/drivers/dax/kmem.c
-static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
-        struct dev_dax_range *dax_range = &dev_dax->ranges[i];
-        struct range *range = &dax_range->range;
+	pos_cap_err = dev->aer_cap;
 
-        /* memory-block align the hotplug range */
-        r->start = ALIGN(range->start, memory_block_size_bytes());
-        r->end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes()) - 1;
-        if (r->start >= r->end) {
-                r->start = range->start;
-                r->end = range->end;
+	/* Unmask correctable and uncorrectable (non-fatal) internal errors */
+	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
+	reg &= ~PCI_ERR_COR_INTERNAL;
+	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
+	
+	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
+	reg &= ~PCI_ERR_UNC_INTN;
+	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
+	
+	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
+	reg &= ~PCI_ERR_UNC_INTN;
+	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
 
+	return 0;
+}
 
-and we end up with a mapping range of:
+... and call this from the cxl code where it is needed.
 
-start=0x1080000000
-end=0x2fffffffff
+Is this an acceptable direction?  Terry is welcome to steal the above from my
+patch and throw it into the PCI core.
 
+Looking at the current state of things I think cxl_pci_ras_unmask() may
+actually be broken now without calling something like the above.  For that I
+dropped the ball.
 
-Why NUMA-mode works under these conditions without crashing the system
-is escaping me at the moment, given that the page faulting system goes
-through the same driver.  But my guess is that pfn-to-page mappings are
-off in some way when placed in devdax mode, whereas they're correct
-under numa mode.
-
-
-Note that the above code chops off the first 768MB of the dax region and
-the last 1.25GB of the dax region.
-
-The CFWM is required to be 256MB aligned, but this code will force
-anything mapped into that area to be 2GB aligned.  I don't think it's
-safe to safe the BIOS is wrong.
-
-
-It seems like the dax region ranges are being tied to memory block size,
-but that a raw devdax does not necessarily utilize memory blocks.  Is
-there a potential bug in the mode-switching code?
-
-~Gregory
+Ira
