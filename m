@@ -2,49 +2,47 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9DCC77B73
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 18:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F725C77B71
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 18:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjDNSyD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 14:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37794 "EHLO
+        id S229744AbjDNSyM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 14:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229764AbjDNSyC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 14:54:02 -0400
+        with ESMTP id S229704AbjDNSyI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 14:54:08 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679948A62;
-        Fri, 14 Apr 2023 11:54:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7820A93C5
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 11:54:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681498441; x=1713034441;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tUqGHrY80SJ2eUDfu+8kOstL9TQ9mFA3t45VKnZoLr8=;
-  b=QjJJov44flkTuyVKG43bS4DgctaPElJY3jUaJFclkWM5Sm/em/M2iNX3
-   9W7h+9rUyp1MuHNxCL8kqk+uHrajMPdMRNZdOXhswdGCUhVZk/BdlB7Fg
-   Thgpe8aAPGTUsHiH+zrhjg2MT2L+Dv8v45A/5I1y4ewdN6iaHTeB9/Im0
-   UyYF35NFbydUN+66IsJ6CHKLT0gFNCzB9X2uSIfOIR45rGyakBhbasqLL
-   ejMKO98u6lzRg3k+pyh7elN398NbcKWMN/Hc8EKjViHck+lLBZDqKw8ck
-   DxSv9oq1J/DrhuAqhLIJEU7nkbTuFGl+5279FISnWt4O4QhUc47OWrLMC
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="347270265"
+  t=1681498446; x=1713034446;
+  h=subject:from:to:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=9WofR5/mLDZj6ZsgW6wP7+ESFmi/OjokxKRJmaWJyFo=;
+  b=m+XZaFBVr/xRWW6AjC5vrGiEQ/xyFU9iiy2t0aW7IF0JZL14fRypzwRN
+   5qxAn5uikAIGyDoM7LvkCkWDUvmcx4oVzyMQf+pPvHK1s/OfPLtlA5dCl
+   8H6cUCb/c6PnmfPCLaKW/64dOB02UkgW+JziZjcN+WEtkGn92OjHQKYxA
+   GMXfuUiYlKYYbwQq0beEhSEEzmYCV9P2JnpcgZvnEU/i0wrusnF9upXv8
+   JoAO8A/Pr6m7oc5xaZT0cJ/OridW7B5Z+ZJU46+t9xf/mtsH5NsM/WqeS
+   HxTidckB+5YmKdYeExhQKEwyNXytK9Q99C9CehFvsWD1W+E/jq/dY4CVN
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="347270278"
 X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
-   d="scan'208";a="347270265"
+   d="scan'208";a="347270278"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:54:01 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:54:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="683437693"
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="683437720"
 X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
-   d="scan'208";a="683437693"
+   d="scan'208";a="683437720"
 Received: from rkulesho-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.41.243])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:54:00 -0700
-Subject: [PATCH 2/5] cxl/hdm: Use 4-byte reads to retrieve HDM decoder
- base+limit
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:54:06 -0700
+Subject: [PATCH 3/5] cxl/core: Drop unused io-64-nonatomic-lo-hi.h
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Date:   Fri, 14 Apr 2023 11:54:00 -0700
-Message-ID: <168149844056.792294.8224490474529733736.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Fri, 14 Apr 2023 11:54:06 -0700
+Message-ID: <168149844596.792294.8273108394688012953.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <168149842935.792294.13212627946146993066.stgit@dwillia2-xfh.jf.intel.com>
 References: <168149842935.792294.13212627946146993066.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -55,85 +53,38 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CXL specification mandates that 4-byte registers must be accessed
-with 4-byte access cycles. CXL 3.0 8.2.3 "Component Register Layout and
-Definition" states that the behavior is undefined if (2) 32-bit
-registers are accessed as an 8-byte quantity. It turns out that at least
-one hardware implementation is sensitive to this in practice. The @size
-variable results in zero with:
+After the discovery of a case where an implementation misbehaves with
+register reads larger than the definition of the register the other
+usages of readq() were audited and found to be correct, but some cases
+where the io-64-nonatomic-lo-hi.h include is not needed were discovered,
+delete them.
 
-    size = readq(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
-
-...and the correct size with:
-
-    lo = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
-    hi = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(which));
-    size = (hi << 32) + lo;
-
-Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/hdm.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/cxl/core/mbox.c |    1 -
+ drivers/cxl/core/port.c |    1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 35b338b716fe..6fdf7981ddc7 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f2addb457172..6198637cb0bb 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
 @@ -1,6 +1,5 @@
  // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
--#include <linux/io-64-nonatomic-hi-lo.h>
- #include <linux/seq_file.h>
- #include <linux/device.h>
- #include <linux/delay.h>
-@@ -785,8 +784,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			    int *target_map, void __iomem *hdm, int which,
- 			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
- {
-+	u64 size, base, skip, dpa_size, lo, hi;
- 	struct cxl_endpoint_decoder *cxled;
--	u64 size, base, skip, dpa_size;
- 	bool committed;
- 	u32 remainder;
- 	int i, rc;
-@@ -801,8 +800,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 							which, info);
- 
- 	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
--	base = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
--	size = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
-+	lo = readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
-+	hi = readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(which));
-+	base = (hi << 32) + lo;
-+	lo = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
-+	hi = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(which));
-+	size = (hi << 32) + lo;
- 	committed = !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
- 	cxld->commit = cxl_decoder_commit;
- 	cxld->reset = cxl_decoder_reset;
-@@ -865,8 +868,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		return rc;
- 
- 	if (!info) {
--		target_list.value =
--			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
-+		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
-+		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
-+		target_list.value = (hi << 32) + lo;
- 		for (i = 0; i < cxld->interleave_ways; i++)
- 			target_map[i] = target_list.target_id[i];
- 
-@@ -883,7 +887,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			port->id, cxld->id, size, cxld->interleave_ways);
- 		return -ENXIO;
- 	}
--	skip = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
-+	lo = readl(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
-+	hi = readl(hdm + CXL_HDM_DECODER0_SKIP_HIGH(which));
-+	skip = (hi << 32) + lo;
- 	cxled = to_cxl_endpoint_decoder(&cxld->dev);
- 	rc = devm_cxl_dpa_reserve(cxled, *dpa_base + skip, dpa_size, skip);
- 	if (rc) {
+ /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+-#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/security.h>
+ #include <linux/debugfs.h>
+ #include <linux/ktime.h>
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 4d1f9c5b5029..b060757c4000 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+-#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/memregion.h>
+ #include <linux/workqueue.h>
+ #include <linux/debugfs.h>
 
