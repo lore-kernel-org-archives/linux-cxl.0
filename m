@@ -2,101 +2,109 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FD3C77B70
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 05:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B756C77B71
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 08:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbjDNFjY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 01:39:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59052 "EHLO
+        id S230167AbjDNIX3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 04:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbjDNFjV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 01:39:21 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1C92729
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Apr 2023 22:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681450752; x=1712986752;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=O1LRDFz3R3Vdf4KXd96xJLQIEE7mfukbxNtrhi8lDHE=;
-  b=WbAqgNLy1fghYW63o9rm9OLLGJDL6d028UgJ/5xZav9dxGlrDt/f9vl2
-   3oGecWByipPdqDPqy31fi4lQ5Fauas07mCkbJOnIHOZgQKaEMc8qElM9y
-   JJsD/uw8hXaJTHW4TY9Ze1w3t5tH6xWGn2Om+Q0YhBc1K/KyzIuda6ptF
-   /KjbchNXbtBpaN9DsQOrTkP1Ej4Pu8KJxQPa8+Oee8WXDeITfYxPQtR5A
-   c+7DN/b/3LiIZevS/KkoqGqWy7ek/pBTa5euX5sYQ15lkxGjrHTTEqr9p
-   IFuEkvNc7EJ4CLpGvX1JTlSV34SdttBJfiPLPwmpQ2vTVMNNphxhJhA5C
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="324014975"
-X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
-   d="scan'208";a="324014975"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 22:39:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="864074929"
-X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
-   d="scan'208";a="864074929"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 22:39:09 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Dragan Stancevic <dragan@stancevic.com>
-Cc:     Gregory Price <gregory.price@memverge.com>,
-        lsf-pc@lists.linux-foundation.org, nil-migration@lists.linux.dev,
-        linux-cxl@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [LSF/MM/BPF TOPIC] BoF VM live migration over CXL =?utf-8?Q?m?=
- =?utf-8?Q?emory=E2=80=8B?=
-References: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
-        <ZDCv3lxLbquITy8M@memverge.com>
-        <87v8i22abl.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <4a1e74f5-284f-7bfe-6a79-42b44909ca23@stancevic.com>
-Date:   Fri, 14 Apr 2023 13:35:50 +0800
-In-Reply-To: <4a1e74f5-284f-7bfe-6a79-42b44909ca23@stancevic.com> (Dragan
-        Stancevic's message of "Thu, 13 Apr 2023 22:33:24 -0500")
-Message-ID: <87r0sn10w9.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        with ESMTP id S229836AbjDNIX2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 04:23:28 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D646E1BC9;
+        Fri, 14 Apr 2023 01:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4/OedsHNECWMdb1O/5CmBXIMhKWxTMAD8xpCzvQiWk4=; b=cJt80wV5U63xn0tju0Jh0AUTJp
+        AW758NvMDPN4Eh2BgK4wm+ZoWVv7qdmVGZ2/4ZXuB6mHDoMACsiJfOlyVp3ZDgra439Vn/DR+wzMY
+        GUKXVlFDW+LuV1S61mOEQVTYdXdwkM+2rN1CMvRIjwhtLZTnlXuUrl6yr9fkfX79nD3bD2nY86Rji
+        PxYrYjrNcb6vNav4NU3sjbKOCk23dY4MnRGB90RFbCNk1Yzn5OUVrjfWCLFZzLYLMQOEUU3WcAox7
+        PC/XwRv88/y5GK/P4jno8z/sfwzPbwH3lHDJs1lFQFa6/K1LhOrMCo1busLSiZpK1d9k+9YTN57Mo
+        HG1G36nQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pnEfg-00FWn9-0h;
+        Fri, 14 Apr 2023 08:22:42 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2598430002F;
+        Fri, 14 Apr 2023 10:20:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0BC1520248CE4; Fri, 14 Apr 2023 10:20:39 +0200 (CEST)
+Date:   Fri, 14 Apr 2023 10:20:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Liang Kan <kan.liang@linux.intel.com>, linux-cxl@vger.kernel.org,
+        mark.rutland@arm.com, will@kernel.org, mingo@redhat.com,
+        acme@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v6 1/5] perf: Allow a PMU to have a parent
+Message-ID: <20230414082039.GT4253@hirez.programming.kicks-ass.net>
+References: <20230413142617.15995-1-Jonathan.Cameron@huawei.com>
+ <20230413142617.15995-2-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230413142617.15995-2-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dragan Stancevic <dragan@stancevic.com> writes:
+On Thu, Apr 13, 2023 at 03:26:13PM +0100, Jonathan Cameron wrote:
+> Some PMUs have well defined parents such as PCI devices.
+> As the device_initialize() and device_add() are all within
+> pmu_dev_alloc() which is called from perf_pmu_register()
+> there is no opportunity to set the parent from within a driver.
+> 
+> Add a struct device *parent field to struct pmu and use that
+> to set the parent.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> On 4/11/23 01:37, Huang, Ying wrote:
->> Gregory Price <gregory.price@memverge.com> writes:
->> [snip]
->> 
->>> 2. During the migration process, the memory needs to be forced not to be
->>>     migrated to another node by other means (tiering software, swap,
->>>     etc).  The obvious way of doing this would be to migrate and
->>>     temporarily pin the page... but going back to problem #1 we see that
->>>     ZONE_MOVABLE and Pinning are mutually exclusive.  So that's
->>>     troublesome.
->> Can we use memory policy (cpusets, mbind(), set_mempolicy(), etc.)
->> to
->> avoid move pages out of CXL.mem node?  Now, there are gaps in tiering,
->> but I think it is fixable.
->
->
-> Hmmm, I don't know about cpusets. For mbind, are you thinking
-> something along the lines of MPOL_MF_MOVE_ALL? I guess it does have
-> that deterministic placement, but this would have to be called from
-> the process itself. Unlike migrate_pages which takes a pid.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-You can still use migrate_pages(2).  But after that, if you want to
-prevent the pages to be migrated out of CXL.mem, you can use some kind
-of memory policy, such as cpusets, mbind(), set_mempolicy().
-
-Best Regards,
-Huang, Ying
-
-> Same for set_mempolicy, right?
->
-> I mean I guess, if some of this needs to be added into qemu it's not
-> the end of the word...
->
->
->> Best Regards,
->> Huang, Ying
->> [snip]
->> 
+> ---
+> v6: No change
+> v5: Move to head of series as may merge as part of:
+> https://lore.kernel.org/all/20230404134225.13408-1-Jonathan.Cameron@huawei.com/
+> ---
+>  include/linux/perf_event.h | 1 +
+>  kernel/events/core.c       | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index d5628a7b5eaa..b99db1eda72c 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -303,6 +303,7 @@ struct pmu {
+>  
+>  	struct module			*module;
+>  	struct device			*dev;
+> +	struct device			*parent;
+>  	const struct attribute_group	**attr_groups;
+>  	const struct attribute_group	**attr_update;
+>  	const char			*name;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 435815d3be3f..32079a332480 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11367,6 +11367,7 @@ static int pmu_dev_alloc(struct pmu *pmu)
+>  
+>  	dev_set_drvdata(pmu->dev, pmu);
+>  	pmu->dev->bus = &pmu_bus;
+> +	pmu->dev->parent = pmu->parent;
+>  	pmu->dev->release = pmu_dev_release;
+>  
+>  	ret = dev_set_name(pmu->dev, "%s", pmu->name);
+> -- 
+> 2.37.2
+> 
