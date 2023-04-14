@@ -2,191 +2,199 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AE1C77B70
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 08:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31D9C77B6E
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 11:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230218AbjDNIli (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 04:41:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
+        id S230032AbjDNLWA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 07:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbjDNIlc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 04:41:32 -0400
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2793576B4
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 01:41:25 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230414084122epoutp011715d3521f0eb4fcd59415290c940381~VwH3Ff5rZ1318913189epoutp01Z
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 08:41:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230414084122epoutp011715d3521f0eb4fcd59415290c940381~VwH3Ff5rZ1318913189epoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1681461682;
-        bh=2WiLjVJB2lYMJ4GVOV43m9tkB8a+wJa/F+s4trIZaiU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+Z5FVP0zVQOZa4qFqhqH+ON5CVJRb+DrLMD+arFtrFwD4AUBrnxx9WXgrH2LOJBZ
-         FdLkMUMk0tbU+7hq6R9Ko/VECWmHPPo7TGFJWDFO8GJQ7pJi1KA+qHr0wfZ44/Ce94
-         PRt8Vy8rSgoJ4kRuarNYQsGMHyGYjqFfz3S7YZZU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20230414084121epcas2p34d71f44b49b7e0637a2275d56c7df9b2~VwH2jQn9Z3175431754epcas2p3D;
-        Fri, 14 Apr 2023 08:41:21 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.90]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4PyVKY1XXcz4x9Pt; Fri, 14 Apr
-        2023 08:41:21 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        14.16.09961.1B119346; Fri, 14 Apr 2023 17:41:21 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230414084120epcas2p37f105901350410772a3115a5a490c215~VwH1dqMEq3175431754epcas2p3C;
-        Fri, 14 Apr 2023 08:41:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230414084120epsmtrp1adef2571095dcb80dac26126a061bacc~VwH1bd1nV2509225092epsmtrp1e;
-        Fri, 14 Apr 2023 08:41:20 +0000 (GMT)
-X-AuditID: b6c32a45-e13fa700000026e9-8c-643911b15ee8
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1A.5F.08279.0B119346; Fri, 14 Apr 2023 17:41:20 +0900 (KST)
-Received: from dell-Precision-7920-Tower.dsn.sec.samsung.com (unknown
-        [10.229.83.99]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230414084120epsmtip2013e99767d5eb96a0166b755a9ef3222~VwH1NLuH52743227432epsmtip2x;
-        Fri, 14 Apr 2023 08:41:20 +0000 (GMT)
-From:   Kyungsan Kim <ks0204.kim@samsung.com>
-To:     ks0204.kim@samsung.com
-Cc:     lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        a.manzanares@samsung.com, viacheslav.dubeyko@bytedance.com,
-        dan.j.williams@intel.com, seungjun.ha@samsung.com,
-        wj28.lee@samsung.com, hj96.nam@samsung.com
-Subject: FW: [LSF/MM/BPF TOPIC] SMDK inspired MM changes for CXL
-Date:   Fri, 14 Apr 2023 17:41:20 +0900
-Message-Id: <20230414084120.440801-1-ks0204.kim@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230221014114.64888-1-ks0204.kim@samsung.com>
+        with ESMTP id S229722AbjDNLV7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 07:21:59 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2069.outbound.protection.outlook.com [40.107.96.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5AFCF;
+        Fri, 14 Apr 2023 04:21:56 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DgYt4OpC7HS+nE5XqZN1XLvp3CX1ZYXdqodsG92+eDfxjSHiZn9X/CtOKAjp5AKQ4UmKaLdAXOJM3C08imLWyCnxIfyHkxKWeyYIJ4yhHs3g+ytwpxvs6SFASMX/M8pYv+o7I/P2gqBAipoJppv4VpIaP5UiXwnZrwjftw+FNbT061ELqUynLVWOFXwm8IH7Y+Wg9no8R/7w4En/KPDTL+uV811u1hKr54ApiqWxDgJqZ0lKa5+2jrjlkKnUCFTfAtIV3USVXUH3qgmpEreGcHmvDebNXD2Spb85Bd5UGXw1gheRInP4Ohulz8TH9OYpchLXUooYPj243j8peUfWRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P6c/zq0fGbrK8b51V+19DhwcLK/5pilgWfZ/i8zJ69E=;
+ b=ETxb0/a9sQ90mMSA5GsMugPx5E92c2e1QJKx8apzu+Zsmu3TLVcgAx42fslcECXrzLqVQB7kUEGoPlxM1EzD1Yno8qwacXVk2TX/F14h8HFkk6QTJMFcudfiSII/I+tbnKjtjK9YBsiHWmFC9v9HfPHuFtjEFBXjBzQ5CiBIwgFQBuiHU5fDuK5HCVdc0P4k7ibEn075tq9pc32CJm2k647NIXr/g/9VY/VcuyPM3kkBlUm0P5RfCqKH9eYtMx6kBlqNAzyjjupSxS4dgazd+s9LPGaRQEMi8VwRZBIOYz30QSW3/7luZvVDIXRr6leLjOXHyXLUQzTMERP1oXwrmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P6c/zq0fGbrK8b51V+19DhwcLK/5pilgWfZ/i8zJ69E=;
+ b=A3whwXozY1CoQaGrJYCmIUwa9fY1JQiH1xnXOJJU1UzALQs/PYbYzpp1spaCUT5XyCdg+SGUJkQMFHcbmwYJDICe1uql1qPPPIXF79GSv/SGp63imMs1b+ImUKbs/CtnVVVB1PEdXqFdEx4JLlnZ6hrKc+Nb+FTK7mZA0cnc+8k=
+Received: from BN1PR12CA0004.namprd12.prod.outlook.com (2603:10b6:408:e1::9)
+ by CH0PR12MB5074.namprd12.prod.outlook.com (2603:10b6:610:e1::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Fri, 14 Apr
+ 2023 11:21:54 +0000
+Received: from BN8NAM11FT063.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e1:cafe::cb) by BN1PR12CA0004.outlook.office365.com
+ (2603:10b6:408:e1::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.36 via Frontend
+ Transport; Fri, 14 Apr 2023 11:21:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT063.mail.protection.outlook.com (10.13.177.110) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6298.36 via Frontend Transport; Fri, 14 Apr 2023 11:21:54 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 14 Apr
+ 2023 06:21:48 -0500
+Date:   Fri, 14 Apr 2023 13:21:37 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 6/6] PCI/AER: Unmask RCEC internal errors to enable
+ RCH downstream port error handling
+Message-ID: <ZDk3QeWZDOP8sr4s@rric.localdomain>
+References: <20230411180302.2678736-7-terry.bowman@amd.com>
+ <20230412212901.GA81099@bhelgaas>
+ <20230413180122.00007471@Huawei.com>
+ <643887b44b2d4_3a1882949d@iweiny-mobl.notmuch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmme5GQcsUg4XnWC2mH1a0mD71AqPF
-        hzf/WCyO7uGwOD/rFIvFnr0nWSzurfnParHv9V5mixedx5ksOja8YbTYeP8dmwO3x78Ta9g8
-        Fu95yeSx6dMkdo/JN5YzevRtWcXo8XmTXABbVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZ
-        gaGuoaWFuZJCXmJuqq2Si0+ArltmDtB1SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSC
-        lJwC8wK94sTc4tK8dL281BIrQwMDI1OgwoTsjI8zbrAUPDGpeHzyIXsD4xqdLkZODgkBE4l7
-        81vZuxi5OIQEdjBKrJn/mxHC+cQo8X3JDTYI5xujxOWFWxlhWr7eXMYEkdjLKLFu4VdmCKeL
-        SeLUqpnMIFVsAtoSf66cZwOxRQSkJKa1r2EBKWIWmMYksWjrWbCEsICDxOaud2BjWQRUJY5P
-        vgvUzMHBK2AjsfCHJ8Q2eYmZl76zg9icQOF9O9eAlfMKCEqcnPmEBcRmBqpp3job7AgJgYkc
-        Eit2LWGCaHaR+Nu1HOpsYYlXx7ewQ9hSEi/726DsYonHr/9B2SUSh5f8ZoGwjSXe3XzOCnIP
-        s4CmxPpd+iCmhICyxJFbUGv5JDoO/2WHCPNKdLQJQTSqSGz/t5wZZtHp/ZugSjwknj/NhIRU
-        P6PEv11vmScwKsxC8swsJM/MQti7gJF5FaNYakFxbnpqsVGBITyCk/NzNzGCE6uW6w7GyW8/
-        6B1iZOJgPMQowcGsJML7w8U0RYg3JbGyKrUoP76oNCe1+BCjKTCkJzJLiSbnA1N7Xkm8oYml
-        gYmZmaG5kamBuZI4r7TtyWQhgfTEktTs1NSC1CKYPiYOTqkGpjzJTPaXD762TPvY2X2yqveL
-        wUPmB7Oudr/qit4gVafa8kk8cZHi4v/hh2/pfr/4stHrGr+PiFfVg017zb7UKBV7iAdOWJup
-        oeXjLlPa9zjVeXKYrWKgguJLffXF81/nPbY50KN6boe8S8PmL75tBpvipCeVbjEN/D7bZ8/s
-        N8kOmXuPvzu1893TDVtnGJ9a/v9s9+kdj1g1d87Z0/MzaMuc7Sssspiu+ArdOre1oPj/1glV
-        /HfEJp9Z/efD1bRfltecX366t+Zo3bf5jrP9TxzV+bzeaM3VU7p5d7X+qXGyPWe9cuGlSJSW
-        /Gb1+BvRZXuP5vLo2HAyBmtrpsrlv2ViK/Nl1Hz2u2xP2dKHIWZKLMUZiYZazEXFiQDip9SS
-        NQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSvO4GQcsUg427JS2mH1a0mD71AqPF
-        hzf/WCyO7uGwOD/rFIvFnr0nWSzurfnParHv9V5mixedx5ksOja8YbTYeP8dmwO3x78Ta9g8
-        Fu95yeSx6dMkdo/JN5YzevRtWcXo8XmTXABbFJdNSmpOZllqkb5dAlfGxxk3WAqemFQ8PvmQ
-        vYFxjU4XIyeHhICJxNeby5i6GLk4hAR2M0r83NzCBJGQknh/uo0dwhaWuN9yhBWiqINJ4vOD
-        ucwgCTYBbYk/V86zgdgiQA3T2tewgBQxCyxgktg4Yw1YkbCAg8TmrneMIDaLgKrE8cl3geIc
-        HLwCNhILf3hCLJCXmHnpO9gyTqDwvp1rwMqFBKwl/k78AjaGV0BQ4uTMJywgNjNQffPW2cwT
-        GAVmIUnNQpJawMi0ilEytaA4Nz232LDAMC+1XK84Mbe4NC9dLzk/dxMjOAq0NHcwbl/1Qe8Q
-        IxMH4yFGCQ5mJRHeHy6mKUK8KYmVValF+fFFpTmpxYcYpTlYlMR5L3SdjBcSSE8sSc1OTS1I
-        LYLJMnFwSjUwmUd9XC26pc7piMGvth+zJ9i+Nt46fxGv2cejliJzg2/EXb/jwPZkg2nYLduZ
-        Tz9y6YdNvh9fkubd5DxHI/Do6l/Kk0py/85qPZ2tq6dTG7vpwP0NNiz1Rh9Ofb5+qjjtqFrp
-        xJ7pNR0ftFNF7xQ8EGLnXHR/xhnVig7TY6d8S9liOcM4L/3M/V/J8H6FhYnaVF3FD1K7Av0n
-        zIzb5sA7ZZP2kUKFyllPjleHHS5OCPM7vHvl4y0nzMXn9dT/KbftWOMttofl5IzLRXX2xbbS
-        miHr3ilGWu+6cPK/9u07tzbXXVV5cOL3lMDEDa9qTy2qMv988s7Lzwr9jzgussybsrIzXO6K
-        7M9FXb7OWefv+iuxFGckGmoxFxUnAgA8cYdF8QIAAA==
-X-CMS-MailID: 20230414084120epcas2p37f105901350410772a3115a5a490c215
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230414084120epcas2p37f105901350410772a3115a5a490c215
-References: <20230221014114.64888-1-ks0204.kim@samsung.com>
-        <CGME20230414084120epcas2p37f105901350410772a3115a5a490c215@epcas2p3.samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <643887b44b2d4_3a1882949d@iweiny-mobl.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT063:EE_|CH0PR12MB5074:EE_
+X-MS-Office365-Filtering-Correlation-Id: 63a70abd-3998-4231-22f8-08db3cda7392
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vzix4prmwlCEJND1FM0/GYC/b4UGfBoFnPdI+KfHYKTXGbz/Uls+75M2ejuswKu3iDXN1YBLIb7sKENkJMQbrAhyHbkuNTjFYcVkoEZQ8ka3GTnOub2YjEq4UFSgd+6Hchjq5OKkIqly2FYgd39E8m10NJi5vz8gEXKn0LW8/HaztFAgqlDKpobc2GyzFys6qs9dgeWf4MS+OcSaXKyooyrNjYEjSociQHx6zjaRFnh6EQgVswZmW1yr+9qmdLIWskjHQuzmLnUtbNh7I/I/PhdqlCzSqErkgQJWwqlhkIS38pk/P3/J9m3d5OB/KXyzrBNr7eiDlrme86g63qm8pa/ulbL/9VGiuupiPzW3M2iTAUlnpxi7Uh3fiz4JlR6D4evyD50EP9Af6zomnmDey7fN/JZMOvjpCi7JTxtpUxDqikiokcG8ejihwXBY3+IgPQbpXCib7mWHHWigWG3Uyd+Xy5d969cWzwNSoQFkxbaG3swsBRo/oP/fms9FLgi5F+Jm6T6A1IwLRQBMYAErpbL8pFVuLwrDDjxJRwVukDGEem38jq0yRBujSfz+I5p6bB4PsIYlm1CW75NyXZNSCGqw0hULifTC0rpOm7l+SASzXOIJ8L3GaCBBhLlZOln9MsBQCtBkXjF9NSWFCe1ZpNPxH8Fw2INGYqM4V+jYr9VLmimQomjuufb7Dl0nHtl8h7A1zqbwAQH85aKVxCtwZeJKW8PY6zIiYRCbvKqgxCcOwzhH0MhCQzxUis2XvRR8urapQdN8D7Bl2I1UL6GV0w==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(396003)(136003)(39860400002)(451199021)(46966006)(36840700001)(40470700004)(66899021)(36860700001)(336012)(70586007)(5660300002)(2906002)(7416002)(316002)(8676002)(40480700001)(55016003)(8936002)(41300700001)(81166007)(356005)(82310400005)(40460700003)(6916009)(82740400003)(4326008)(966005)(426003)(70206006)(47076005)(54906003)(186003)(26005)(478600001)(9686003)(53546011)(7696005)(6666004)(16526019)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 11:21:54.2082
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63a70abd-3998-4231-22f8-08db3cda7392
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT063.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5074
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
->CXL is a promising technology that leads to fundamental changes in computing architecture.
->To facilitate adoption and widespread of CXL memory, we are developing a memory tiering solution, called SMDK[1][2].
->Using SMDK and CXL RAM device, our team has been working with industry and academic partners over last year.
->Also, thanks to many researcher's effort, CXL adoption stage is gradually moving forward from basic enablement to real-world composite usecases.
->At this moment, based on the researches and experiences gained working on SMDK, we would like to suggest a session at LSF/MM/BFP this year
->to propose possible Linux MM changes with a brief of SMDK.
->
->Adam Manzanares kindly adviced me that it is preferred to discuss implementation details on given problem and consensus at LSF/MM/BFP.
->Considering the adoption stage of CXL technology, however, let me suggest a design level discussion on the two MM expansions of SMDK this year.
->When we have design consensus with participants, we want to continue follow-up discussions with additional implementation details, hopefully.
->
+On 13.04.23 15:52:36, Ira Weiny wrote:
+> Jonathan Cameron wrote:
+> > On Wed, 12 Apr 2023 16:29:01 -0500
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > > On Tue, Apr 11, 2023 at 01:03:02PM -0500, Terry Bowman wrote:
+> > > > From: Robert Richter <rrichter@amd.com>
+> > > > 
+
+> > > > +static int __cxl_unmask_internal_errors(struct pci_dev *rcec)
+> > > > +{
+> > > > +	int aer, rc;
+> > > > +	u32 mask;
+> > > > +
+> > > > +	/*
+> > > > +	 * Internal errors are masked by default, unmask RCEC's here
+> > > > +	 * PCI6.0 7.8.4.3 Uncorrectable Error Mask Register (Offset 08h)
+> > > > +	 * PCI6.0 7.8.4.6 Correctable Error Mask Register (Offset 14h)
+> > > > +	 */  
+> > > 
+> > > Unmasking internal errors doesn't have anything specific to do with
+> > > CXL, so I don't think it should have "cxl" in the function name.
+> > > Maybe something like "pci_aer_unmask_internal_errors()".
+> > 
+> > This reminds me.  Not sure we resolved earlier discussion on changing
+> > the system wide policy to turn these on 
+> > https://lore.kernel.org/linux-cxl/20221229172731.GA611562@bhelgaas/
+> > which needs pretty much the same thing.
+> > 
+> > Ira, I think you were picking this one up?
+> > https://lore.kernel.org/linux-cxl/63e5fb533f304_13244829412@iweiny-mobl.notmuch/
 > 
->1. A new zone, ZONE_EXMEM
->We added ZONE_EXMEM to manage CXL RAM device(s), separated from ZONE_NORMAL for usual DRAM due to the three reasons below.
->
->1) a CXL RAM has many different characteristics with conventional DRAM because a CXL device inherits and expands PCIe specification.
->ex) frequency range, pluggability, link speed/width negotiation, host/device flow control, power throttling, channel-interleaving methodology, error handling, and etc.
->It is likely that the primary usecase of CXL RAM would be System RAM.
->However, to deal with the hardware differences properly, different MM algorithms are needed accordingly.
->
->2) Historically, zone has been expanded by reflecting the evolution of CPU, IO, and memory devices.
->ex) ZONE_DMA(32), ZONE_HIGHMEM, ZONE_DEVICE, and ZONE_MOVABLE.
->Each zone applies different MM algorithms such as page reclaim, compaction, migration, and fragmentation.
->At first, we tried reuse of existing zones, ZONE_DEVICE and ZONE_MOVABLE, for CXL RAM purpose.
->However, the purpose and implementation of the zones are not fit for CXL RAM.
->
->3) Industry is preparing a CXL-capable system that connects dozens of CXL devices in a server system.
->When a CXL device becomes a separate node, an administrator/programmer needs to be aware of and manually control all nodes using 3rd party software, such as numactl and libnuma.
->ZONE_EXMEM allows the assemble of CXL RAM devices into the single ZONE_EXMEM zone, and provides an abstraction to userspace by seamlessly managing the devices.
->Also, the zone is able to interleave assembled devices in a software way to lead to aggregated bandwidth.
->We would like to suggest if it is co-existable with HW interleaving like SW/HW raid0.
->To help understanding, please refer to the node partition part of the picture[3].
->
->
->2. User/Kernelspace Programmable Interface
->In terms of a memory tiering solution, it is typical that the solution attempts to locate hot data on near memory, and cold data on far memory as accurately as possible.[4][5][6][7]
->We noticed that the hot/coldness of data is determined by the memory access pattern of running application and/or kernel context.
->Hence, a running context needs a near/far memory identifier to determine near/far memory. 
->When CXL RAM(s) is manipulated as a NUMA node, a node id can be function as a CXL identifier more or less.
->However, the node id has limitation in that it is an ephemeral information that dynamically varies according to online status of CXL topology and system socket.
->In this sense, we provides programmable interfaces for userspace and kernelspace context to explicitly (de)allocate memory from DRAM and CXL RAM regardless of a system change.
->Specifically, MAP_EXMEM and GFP_EXMEM flags were added to mmap() syscall and kmalloc() siblings, respectively.
->
->Thanks to Adam Manzanares for reviewing this CFP thoroughly.
->
->
->[1]SMDK: https://github.com/openMPDK/SMDK
->[2]SMT: Software-defined Memory Tiering for Heterogeneous Computing systems with CXL Memory Expander, https://ieeexplore.ieee.org/document/10032695
->[3]SMDK node partition: https://github.com/OpenMPDK/SMDK/wiki/2.-SMDK-Architecture#memory-partition
->[4]TMO: Transparent Memory Offloading in Datacenters, https://dl.acm.org/doi/10.1145/3503222.3507731
->[5]TPP: Transparent Page Placement for CXL-Enabled Tiered Memory, https://arxiv.org/abs/2206.02878
->[6]Pond: CXL-Based Memory Pooling Systems for Cloud Platforms, https://dl.acm.org/doi/10.1145/3575693.3578835
->[7]Hierarchical NUMA: https://blog.linuxplumbersconf.org/2017/ocw/system/presentations/4656/original/Hierarchical_NUMA_Design_Plumbers_2017.pdf
+> After this discussion I posted an RFC to enable those errors.
+> 
+> https://lore.kernel.org/all/20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com/
+> 
+> Unfortunately the prevailing opinion was that this was unsafe.  And no one
+> piped up with a reason to pursue the alternative of a pci core call to enable
+> them as needed.
+> 
+> So I abandoned the work.
+> 
+> I think the direction things where headed was to have a call like:
+> 
+> int pci_enable_pci_internal_errors(struct pci_dev *dev)
+> {
+> 	int pos_cap_err;
+> 	u32 reg;
+> 
+> 	if (!pcie_aer_is_native(dev))
+> 		return -EIO;
+> 
+> 	pos_cap_err = dev->aer_cap;
+> 
+> 	/* Unmask correctable and uncorrectable (non-fatal) internal errors */
+> 	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
+> 	reg &= ~PCI_ERR_COR_INTERNAL;
+> 	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
+> 	
+> 	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
+> 	reg &= ~PCI_ERR_UNC_INTN;
+> 	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
+> 	
+> 	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
+> 	reg &= ~PCI_ERR_UNC_INTN;
+> 	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
+> 
+> 	return 0;
+> }
+> 
+> ... and call this from the cxl code where it is needed.
 
-Let us restate the original CFP as requirement point of view and the thought on that.
+The version I have ready after addressing Bjorn's comments is pretty
+much the same, apart from error checking of the read/writes.
 
-1) CXL DRAM pluggability
-Issue: a random unmovable allocation makes a CXL DRAM unpluggable. 
-It can happen out of userspace e.g.) pinning for DMA buffer, or kernelspace e.g.) pinning for metadata such as struct page, zone, etc.
-For this matter, we should separate logical memory on/offline and physical add/remove.
-Thought: a CXL DRAM should be able to be used in a selective manner, pluggable or unpluggable.
-But, please don't get this wrong. Those are mutual-exclusive, so it cannot happen at the same time on a single CXL DRAM channel.
+From your patch proposed you will need it in aer.c too and we do not
+need to export it.
 
-2) CXL DRAM identifier (API and ABI)
-Issue: an user/kernel context has to use the node id of a CXL memory-node to access CXL DRAM explicitly and implicitly.
-Thought: Node id would be ephemeral information. An userspace and kernelspace memory tiering solution need a API and/or ABI rather than node id.
+This patch only enables it for (CXL) RCECs. You might want to extend
+this for CXL endpoints (and ports?) then.
 
-3) Prevention of unintended CXL page migration
-Issue: while zswap operation, a page on near memory(DIMM DRAM) is allocated to store swapped page on far memory(CXL DRAM).
-Our thought: On the swap flow, the far memory should not be promoted to near memory accidentally. 
+> 
+> Is this an acceptable direction?  Terry is welcome to steal the above from my
+> patch and throw it into the PCI core.
+> 
+> Looking at the current state of things I think cxl_pci_ras_unmask() may
+> actually be broken now without calling something like the above.  For that I
+> dropped the ball.
 
-4) Too many CXL nodes appearing in userland
-Issue: many CXL memory nodes would be appeared to userland along with development of a CXL capable server, switch and fabric topology.
-Currently, to lead to aggregated bandwidth among the CXL nodes, an userland needs to be aware and manage the nodes using a 3rd party SW such as numactl and libnuma.
-Thought: Kernel would provide an abstraction layer for userland to deal with it seamlessly.
-By the way, traditionally a node implies multiple memory channels in the same distance, and a node is the largest management unit in MM. i.e.) Node - Zone - Page.
-So, we thought that multiple CXL DRAMs can be appeared as a node, so the management dimension for single CXL DRAM should be smaller than node. 
+Thanks,
 
+-Robert
+
+> 
+> Ira
