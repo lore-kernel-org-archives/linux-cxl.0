@@ -2,73 +2,114 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532FC77B6E
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76396C77B76
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 11:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbjDNLrI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 07:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45952 "EHLO
+        id S229907AbjDNLsN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 07:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjDNLrH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 07:47:07 -0400
+        with ESMTP id S229945AbjDNLsM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 07:48:12 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A74483CD;
-        Fri, 14 Apr 2023 04:47:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B0483ED;
+        Fri, 14 Apr 2023 04:48:09 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PyZQg3tQvz6DFQG;
-        Fri, 14 Apr 2023 19:46:03 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PyZQB6156z6JCL5;
+        Fri, 14 Apr 2023 19:45:38 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 14 Apr
- 2023 12:47:03 +0100
-Date:   Fri, 14 Apr 2023 12:47:02 +0100
+ 2023 12:48:07 +0100
+Date:   Fri, 14 Apr 2023 12:48:05 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <Terry.Bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v3 1/6] cxl/pci: Add RCH downstream port AER and RAS
- register discovery
-Message-ID: <20230414124702.00007fc5@Huawei.com>
-In-Reply-To: <8d2690d8-9418-e2da-8834-6457a60a67cb@amd.com>
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v3 2/6] efi/cper: Export cper_mem_err_unpack() for use
+ by modules
+Message-ID: <20230414124805.00000479@Huawei.com>
+In-Reply-To: <9d66afdb-40bd-4254-547e-05f6481dd550@amd.com>
 References: <20230411180302.2678736-1-terry.bowman@amd.com>
-        <20230411180302.2678736-2-terry.bowman@amd.com>
-        <20230413163050.00006bfb@Huawei.com>
-        <8d2690d8-9418-e2da-8834-6457a60a67cb@amd.com>
+        <20230411180302.2678736-3-terry.bowman@amd.com>
+        <20230413170816.0000333b@Huawei.com>
+        <9d66afdb-40bd-4254-547e-05f6481dd550@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-> >> +	endpoint = devm_cxl_add_port(host, &cxlmd->dev, cxlds->component_reg_phys,
-> >>  				     parent_dport);  
-> > As above, I'd prefer to see this refactor done in a precursor patch before the new
-> > stuff is added.  I like reviewing noop patches as I don't have to think much (so
-> > can do it when I'm supposedly in a meeting ;)
-> >   
->  
-> Ok. I'll add an earlier patch that introduces cxl_setup_rcrb() and first moves this 
-> chunk into cxl_setup_rcrb(). The following patch will replace the cxl_setup_rcrb() 
-> logic with the AER and RAS discovery.
+On Thu, 13 Apr 2023 14:40:10 -0500
+Terry Bowman <Terry.Bowman@amd.com> wrote:
+
+> Hi Jonathan,
 > 
-> My understanding is the requested refactoring changes then splits this patch into 
-> the 3 patches listed below (using git log latest first order): 
-> - Add RCH downstream port AER and RAS register discovery
-> - Refactor RCD component discovery into separate function
-> - Refactor RCRB register mapping into separate function
+> On 4/13/23 11:08, Jonathan Cameron wrote:
+> > On Tue, 11 Apr 2023 13:02:58 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >   
+> >> The CXL driver plans to use cper_print_aer() for restricted CXL host (RCH)
+> >> logging. This is not currently possible if CXL is built as a loadable
+> >> module because cper_print_aer() depends on cper_mem_err_unpack() which
+> >> is not exported.
+> >>
+> >> Export cper_mem_err_unpack() to enable cper_print_aer() usage in
+> >> CXL and other loadable modules.  
+> > 
+> > No problem with the export, but I'm struggling to see the path that needs it.
+> > Could you give a little more detail, perhaps a call path?
+> >   
+> 
+> The cper_print_aer() is used to log RCH dport AER errors. This is needed 
+> because the RCH dport AER errors are not handled directly by the AER port 
+> driver. I'll add these details to the patch.
 
-Spot on I think.
+Ah. I wasn't particularly clear.  cper_print_aer() is fine, but oddly
+I'm not seeing where that results in a call to cper_mem_err_unpack()
 
-Thanks,
+More than possible my grep skills are failing me!
 
 Jonathan
+
+> 
+> Regards,
+> Terry
+> 
+> > Thanks,
+> > 
+> > Jonathan
+> >   
+> >>
+> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> >> Cc: Ard Biesheuvel <ardb@kernel.org>
+> >> Cc: linux-efi@vger.kernel.org
+> >> ---
+> >>  drivers/firmware/efi/cper.c | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> >> index 35c37f667781..ff15e12160ae 100644
+> >> --- a/drivers/firmware/efi/cper.c
+> >> +++ b/drivers/firmware/efi/cper.c
+> >> @@ -350,6 +350,7 @@ const char *cper_mem_err_unpack(struct trace_seq *p,
+> >>  
+> >>  	return ret;
+> >>  }
+> >> +EXPORT_SYMBOL_GPL(cper_mem_err_unpack);
+> >>  
+> >>  static void cper_print_mem(const char *pfx, const struct cper_sec_mem_err *mem,
+> >>  	int len)  
+> >   
+
