@@ -2,145 +2,102 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36053C77B6E
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 11:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808C0C77B6E
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 12:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjDNL6g (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 07:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52616 "EHLO
+        id S229446AbjDNMEW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 08:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjDNL6f (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 07:58:35 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2062.outbound.protection.outlook.com [40.107.96.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6533C11;
-        Fri, 14 Apr 2023 04:58:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QSRN+RPi2znqQHIfynyAILta6PPY+zSa0I1vfxdCGs7UF5LP7uneRgCpp5222y/RdgzNBqTePCPYyn+E0Z5rr1uOHPjnyPoGlD/oCZsOjt/hIZjC0wAwRbJYvYopFM0asZOnoUiCkG2vdGU8OEPc2lJ2quwT+t2sKKLmMYtefnadZUgsGP2gcJoGtMFjM0BJJVPg7L5bFgElSiAv04eyzOqrLni3sp7PWuXPtvFbf0NEgsLXF5VBEPWb5tvqQa0zH5k5kbhs7spdXCtTQjgPqcuXAr2xzb6sMP2c7WZ6W5gRk+qc6rn/3kDADATp/g2WbFCtwBgPzF2lAzhPi2Vb9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dYRVmjAAJuBQN7dKooCHbeMiZLODR0jSNHdMW0CizSs=;
- b=Ga10cAOSDRiutC5kBN9yYiAYx7d42Z+XLzewJHb2uH6qCvcjygghMvy0D2wqX7RApLoJNwiR1oCZt+IhosBRkdzquYJNIA2oNpCeKzr8ula+b13w3z9AvatPDY4VrjZOMgtLHBVhBWksap4neEe6cMrbO6X8IVzK1+8miD3n8xE7K98q7/yjXbvWFIpLRgoiURFIlp3PVRCEm3GWyiEotRVcsPDiVCBQQFbygH3afVTYn9j3D0koeSnnmESV3Iuchktuh/Mkjj0h3DdlP0vFkaw3FMIpJ4ONaE6IKYx2bPhBGXv8B2W0bE8WaqYTosZULpv1f4ayqs238sJ/IiWGIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dYRVmjAAJuBQN7dKooCHbeMiZLODR0jSNHdMW0CizSs=;
- b=M7nJTo0dOtApsWmJM4/8ya11zfi9uf4KdPPJOreSW/umXFFqHGtDkKJPnmEKtOP4DklEs6pW7DugJ9jNCTPq7lxTgQg30umNS3/w1YZLMga5/QtVftMaDCXaJgzCPG8oZtU0rJWd/+5yNg28BFX8vACBsy1EUKMAdcUq7M5Fk8c=
-Received: from DS7PR03CA0175.namprd03.prod.outlook.com (2603:10b6:5:3b2::30)
- by BN9PR12MB5132.namprd12.prod.outlook.com (2603:10b6:408:119::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Fri, 14 Apr
- 2023 11:58:32 +0000
-Received: from DM6NAM11FT108.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3b2:cafe::16) by DS7PR03CA0175.outlook.office365.com
- (2603:10b6:5:3b2::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.36 via Frontend
- Transport; Fri, 14 Apr 2023 11:58:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT108.mail.protection.outlook.com (10.13.172.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.33 via Frontend Transport; Fri, 14 Apr 2023 11:58:09 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 14 Apr
- 2023 06:58:06 -0500
-Date:   Fri, 14 Apr 2023 13:58:03 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
-        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>, Oliver O'Halloran <oohall@gmail.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 6/6] PCI/AER: Unmask RCEC internal errors to enable
- RCH downstream port error handling
-Message-ID: <ZDk/y/w5IjuRkPyu@rric.localdomain>
-References: <20230411180302.2678736-7-terry.bowman@amd.com>
- <20230412212901.GA81099@bhelgaas>
- <ZDgFv6AtCXkVl8IQ@rric.localdomain>
- <20230413180508.00003f13@Huawei.com>
+        with ESMTP id S230025AbjDNMET (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 08:04:19 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC49D13A
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 05:04:17 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PyZpW3PMWz6DFgW;
+        Fri, 14 Apr 2023 20:03:15 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 14 Apr
+ 2023 13:04:15 +0100
+Date:   Fri, 14 Apr 2023 13:04:14 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Gregory Price <gregory.price@memverge.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>, <navneet.singh@intel.com>,
+        <ira.weiny@intel.com>
+Subject: Re: "release early" preview of DCD enabling
+Message-ID: <20230414130414.00007c88@Huawei.com>
+In-Reply-To: <ZDWVkJKVThJzhMzM@memverge.com>
+References: <64326437c1496_934b2949f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+        <ZDWVkJKVThJzhMzM@memverge.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230413180508.00003f13@Huawei.com>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT108:EE_|BN9PR12MB5132:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96925c5b-7eb7-45ba-4ff1-08db3cdf91ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rEMqKwC5TdmgwdiT1saD6cFvVQCP2NTulKQBMDdD3mYmDHFLI5iIu7Qcp7TYXI18bTE3JxRAmESF7K2iGC5gFOdfjaWkW9Kygz/0XJVZvbSX0BJWeUG8viCqwGrVu6SIqBukTzJLFLJHcdevunf3rspjt85VoDuBbSegakrSiv4JfZUTwyky7tqc7WhBdRjmPifryIC59u1Mb9Jra+gj8JH8YziPPMaArYBD7rSIQ2pIu2kq7XE+4YV4vZnXkytTMdjqmMAl2ZlCuk7N/+ZXOmCH7kKoGu8upECo9zgx5B0FJ1Yha06b5qcvVPhLI4WnMUUud4hrLfqGBfuQdaesCDxyauns/pO9+Ec4Ttli5KcCXIC8EWkWRRj9+h0oVMZ0nU2728N9+hMULCksjagzzdZf3f2uAKewIlG/O/XbJ9ER9amCGs6Tf69RfL/eaeUiMSGdnyRFfR8sFWS2t/vjtWi9xUw0ksQRXBLVpAcxsEunIR6IeugT+uXk9Swkxo5E0bcW9TnyY0YwODiDhC9K7Msb1euOilGKZwkNVsIgTQBKp3lBTRUngERbCUrmpJ04TP7A6ym+AOB6Cnd9fRgTxbJPoy79a8ZnKNaf1nAECFupTEapDxLq7xl8y3gA/R4v4xNkUWG0tooG307dyf27FdDA1jxiJByHhikMBo4cpMAbyLVkJtpzU3VPSOV7X0R/uy37gYJGUcprW0F9R98RwX2fxRtwyOod2isbki0ZqrE=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(376002)(346002)(396003)(451199021)(46966006)(40470700004)(36840700001)(36860700001)(336012)(426003)(47076005)(70206006)(83380400001)(70586007)(54906003)(186003)(16526019)(6666004)(478600001)(26005)(7696005)(53546011)(9686003)(2906002)(7416002)(5660300002)(356005)(81166007)(6916009)(4326008)(82740400003)(82310400005)(316002)(41300700001)(8936002)(55016003)(8676002)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 11:58:09.9712
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96925c5b-7eb7-45ba-4ff1-08db3cdf91ab
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT108.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5132
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 13.04.23 18:05:08, Jonathan Cameron wrote:
-> On Thu, 13 Apr 2023 15:38:07 +0200
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > On 12.04.23 16:29:01, Bjorn Helgaas wrote:
-> > > On Tue, Apr 11, 2023 at 01:03:02PM -0500, Terry Bowman wrote:  
+On Tue, 11 Apr 2023 13:14:56 -0400
+Gregory Price <gregory.price@memverge.com> wrote:
 
-> > > With the exception of this function, this patch looks like all CXL
-> > > code that maybe could be with other CXL code.  Would require making
-> > > pcie_walk_rcec() available outside drivers/pci, I guess.  
+> On Sun, Apr 09, 2023 at 12:07:36AM -0700, Dan Williams wrote:
+> > Here is an early draft of the DCD work that Navneet has spearheaded.
+> > Given the interest level I thought it best to do the remaining
+> > development and refinement of the functionality in the open.  For now
+> > this is just a git branch that will become a patchkit on the mailing
+> > list in a few weeks.
 > > 
-> > Even this is CXL code, it implements AER support and fits better here
-> > around AER code. Export of pcie_walk_rcec() (and others?) is not the
-> > main issue here. CXL drivers can come as modules and would need to
-> > register a hook at the aer handler.  This would add even more
-> > complexity here. In contrast, current solution just adds two functions
-> > for enablement and handling which are empty stubs if code is disabled.
+> > Questions are welcome, but I do not recommend a formal review until the
+> > patches hit the mailing list.
 > > 
-> > I could move that code to aer_cxl.c similar to aer_inject.c. Since the
-> > CXL part is small compared to the remaining aer code I left it in
-> > aer.c. Also, it is guarded by #ifdef which additionally encapsulates
-> > it.
+> > This has had some checkout on an internal functional model, I expect
+> > QEMU and/or cxl_test grows an emulation of DCD before this patchkit is
+> > committed for mainline.
 > > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.5/dcd-preview  
 > 
-> To throw another option in there (what Bjorn suggested IIRC for the more
-> general case..) 
+> Awesome!
 > 
-> Just enable internal errors always.  No need to know if they are CXL
-> or something else.
+> for the QEMU folks, has anyone be actively working on a DCD device? I
+> was going to start looking at it, but didn't want to duplicate work.
+
+Not that I know of.  Was thinking I might hack some of it together, but
+not gotten to it yet. 
+
+For and end goal I think we want:
+
+a) Add all the config stuff for DCD regions - perhaps hardcode one initially.
+b) Device that generates DCD events (don't care on interface to make them happen but maybe start
+   with QMP similar to injection interfaces).
+c) Device that maps the DCD extents through to doing the correct read and write behavior for
+   reads that aren't in DCD extents.
+d) A standards based way to poke the FM-API. Tunneling and / or MCTP CCIs
+
+
+Can probably split this up though so if multiple people are hacking on it they don't clash.
+
+(a) and (b) needed to do anything useful with kernel side.
+(c) needed for testing long term, but don't care initially.
+
+(d) mostly separable - needed for a 'nice' test setup but not for basic functionality testing.
+
+If you want to take a look at (a) and (b) and maybe (c) that would be great.
+
+There is lots of independent stuff to do for (d) so maybe I'll focus on that in short term?
+
+How's that work for you?
+
+Jonathan
+
+
 > 
-> There will/might be fallout and it will be fun.
+> ~Gregory
 
-I left the fun part to others. :-)
-
-If some PCI root port goes crazy it tears down the whole system, would
-avoid that.
-
-Since internal error are implementation specific, I would only enable
-them once a handler exists. What's why enablement is limited to CXL
-RCECs only.
-
--Robert
