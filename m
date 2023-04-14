@@ -2,128 +2,101 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDF3C77B72
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 20:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8920C77B71
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 21:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbjDNUzn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 16:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
+        id S229773AbjDNVG0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 17:06:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjDNUzm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 16:55:42 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FAF64227;
-        Fri, 14 Apr 2023 13:55:42 -0700 (PDT)
+        with ESMTP id S229703AbjDNVGZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 17:06:25 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A543E9B
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 14:06:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681505742; x=1713041742;
+  t=1681506384; x=1713042384;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ceC8rrUoQfXie/VLB99NgF8wEEsEU0H0l+IPJPr37gk=;
-  b=H1ToALZyiuFdtLRmRxzF96C+0UVWlPjtRBnVhc5fCtAxMW95AYtpDFEQ
-   QtbEgXKWqoD9nnWX84P6yKsKstH+tjPozAjmexP7bFPwx7jLO/XioJ9JT
-   shTl853PD2CWGyeHVydW/ERT3Af3Aq/9ZKquwqCZFeHVio6it2l4Na/Mi
-   icXX+0Rp+MUXIM0vkq88LdxAqJSax+JDmJ+2/Gw4jh5mbT1O4BY/eKR1R
-   7Tn0LOER9e+yDMnYaKOwRZok1ATWspaDfCiKLA6jtAjPvYEAq/c9vNe6H
-   CZx88bwpDhNZpbGYvYznxPaJY0cLnjvmPzC10Xo49xzHoISTcvHKE+sY3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="342061811"
+  bh=MtjAxowinXr/JwD9NIaly7DXRcQy3rIQuZ4PQcHh2Vg=;
+  b=chv8YhdltMcpSZ/9vx4PTH7JPzodPleCt6uGQmTQGBp+vUHXKrdKJb+a
+   Eul1fiK9/0wEUvSqGThdrZvlC1mtNIuih3JnpFhA/a8HPJV2stL0ilzcz
+   0dKR0bLppFPxfs7xToZ726KX6OfwWBNMWkUVONzHuzqH9lV8PGvv5AQZ6
+   PlsIawcq1/LTWrNLtcWWXaLdmeHB4q1U95MvIjlD7fLopRW/ihXBB7JdN
+   Fsv5D8LKBLVf3dy9qz4ENfmv0A1xQsZDgK+qnn+jDTTwcFrohOnexUSUB
+   Wm1mG727bhzoBRUVrkmoJhjsUbBqQtin/b9C45a1HX/w/BGGW2ea12Wmb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="347298132"
 X-IronPort-AV: E=Sophos;i="5.99,198,1677571200"; 
-   d="scan'208";a="342061811"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 13:55:41 -0700
+   d="scan'208";a="347298132"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 14:06:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="864336773"
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="692561508"
 X-IronPort-AV: E=Sophos;i="5.99,198,1677571200"; 
-   d="scan'208";a="864336773"
+   d="scan'208";a="692561508"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.22.80])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 13:55:41 -0700
-Date:   Fri, 14 Apr 2023 13:55:39 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 14:06:23 -0700
+Date:   Fri, 14 Apr 2023 14:06:21 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4/5] cxl/port: Scan single-target ports for decoders
-Message-ID: <ZDm9yzuLbPqUaOwW@aschofie-mobl2>
+Cc:     linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 5/5] cxl/hdm: Add more HDM decoder debug messages at
+ startup
+Message-ID: <ZDnATXnWEG9FSpQb@aschofie-mobl2>
 References: <168149842935.792294.13212627946146993066.stgit@dwillia2-xfh.jf.intel.com>
- <168149845130.792294.3210421233937427962.stgit@dwillia2-xfh.jf.intel.com>
+ <168149845668.792294.11814353796371419167.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <168149845130.792294.3210421233937427962.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <168149845668.792294.11814353796371419167.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 11:54:11AM -0700, Dan Williams wrote:
-> Do not assume that a single-target port falls back to a passthrough
-> decoder configuration. Scan for decoders and only fallback after probing
-> that the HDM decoder capability is not present.
+On Fri, Apr 14, 2023 at 11:54:16AM -0700, Dan Williams wrote:
+> A recent debug session yielded a couple debug messages that were useful
+> for determining the reason why the driver was or was not falling back
+> to CXL range register emulation, and for identifying decoder setting
+> enumeration problems.
 > 
-> One user visible affect of this bug is the inability to enumerate
-> present CXL regions as the decoder settings for the present decoders are
-> skipped.
-> 
-> Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Link: http://lore.kernel.org/r/20230227153128.8164-1-Jonathan.Cameron@huawei.com
-> Cc: <stable@vger.kernel.org>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
 > ---
->  drivers/cxl/core/hdm.c |    5 +++--
->  drivers/cxl/port.c     |   18 +++++++++++++-----
->  2 files changed, 16 insertions(+), 7 deletions(-)
+>  drivers/cxl/core/hdm.c |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 6fdf7981ddc7..abe3877cfa63 100644
+> index abe3877cfa63..7889ff203a34 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -92,8 +92,9 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
->  
->  	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
->  	if (!map.component_map.hdm_decoder.valid) {
-> -		dev_err(&port->dev, "HDM decoder registers invalid\n");
-> -		return -ENXIO;
-> +		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
-> +		/* unique error code to indicate no HDM decoder capability */
-> +		return -ENODEV;
+> @@ -130,6 +130,14 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>  	 */
+>  	for (i = 0; i < cxlhdm->decoder_count; i++) {
+>  		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
+> +		dev_dbg(&info->port->dev,
+> +			"decoder%d.%d: committed: %ld base: %#x_%.8x size: %#x_%.8x\n",
+> +			info->port->id, i,
+> +			FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl),
+> +			readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i)),
+> +			readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i)),
+> +			readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i)),
+> +			readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i)));
+>  		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
+>  			return false;
 >  	}
->  
->  	return cxl_map_component_regs(&port->dev, regs, &map,
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 22a7ab2bae7c..eb57324c4ad4 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -66,14 +66,22 @@ static int cxl_switch_port_probe(struct cxl_port *port)
->  	if (rc < 0)
+> @@ -868,6 +876,10 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  	if (rc)
 >  		return rc;
 >  
-> -	if (rc == 1)
-> -		return devm_cxl_add_passthrough_decoder(port);
-> -
->  	cxlhdm = devm_cxl_setup_hdm(port, NULL);
-> -	if (IS_ERR(cxlhdm))
-> +	if (!IS_ERR(cxlhdm))
-> +		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
+> +	dev_dbg(&port->dev, "decoder%d.%d: range: %#llx-%#llx iw: %d ig: %d\n",
+> +		port->id, cxld->id, cxld->hpa_range.start, cxld->hpa_range.end,
+> +		cxld->interleave_ways, cxld->interleave_granularity);
 > +
-> +	if (PTR_ERR(cxlhdm) != -ENODEV) {
-> +		dev_err(&port->dev, "Failed to map HDM decoder capability\n");
->  		return PTR_ERR(cxlhdm);
-> +	}
-> +
-> +	if (rc == 1) {
-> +		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
-> +		return devm_cxl_add_passthrough_decoder(port);
-> +	}
->  
-> -	return devm_cxl_enumerate_decoders(cxlhdm, NULL);
-> +	dev_err(&port->dev, "HDM decoder capability not found\n");
-> +	return -ENXIO;
->  }
->  
->  static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	if (!info) {
+>  		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+>  		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
 > 
