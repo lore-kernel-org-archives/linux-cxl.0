@@ -2,95 +2,73 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A5C77B73
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 18:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6912C77B72
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 20:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbjDNSyX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 14:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38270 "EHLO
+        id S229629AbjDNUMA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 16:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229895AbjDNSyX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 14:54:23 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF87AF35
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 11:54:17 -0700 (PDT)
+        with ESMTP id S229468AbjDNUL7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 16:11:59 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9EC86AC;
+        Fri, 14 Apr 2023 13:11:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681498457; x=1713034457;
-  h=subject:from:to:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=nZhSAffzSCP9/c2+9QO3fRLWfPDgKc4G8cLMX8DgQYE=;
-  b=n+GRy4MfZuOtpkLMj0BKIUDG+B9YmZ5Ho2qt9l/bmZ0KnaKwfr6Hd/pC
-   28f1iSZmiAGsPYKhRd7nqf4GCPRAphDVphefMWJN8q2lWxiCQdIPBwN1m
-   tbk5y+TFbvD28isrWyxOeHPXHhID2iWhW7HHn8TSFJBvKsgErHYzsgWfR
-   HxoCyK/lWa8JF0wDWodWKrbp1lSadeMlbxQmiKNFfyV5ZJLDPINKWNyNr
-   2POBwaVgD8Yt3LarpRQyK7Pgi9Gt14YYJw6uuXfsykKzuxWVLY5/fxQW5
-   lYAbmgyiHltUgK6numX7px4IEdDpffhc/qzz46koPJoaIlDMSfDF1iHAR
+  t=1681503087; x=1713039087;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=txQBj+uPv9CCQ0lRxOJiNx7JcuLzKrZA9FMcmU4aqsc=;
+  b=k3NTlKdXdHYYpd8tyVy5CS63h43tnnwnyVszcMYdfKZMBVTzYM8f0FXj
+   F8kOivotSmq23Qdtr8vlIKvz3ED8Dqe1eelUfTE2A4IlU4q5319TsG9VZ
+   JDYCdh0G6sWRA4lRD0dZvbJVROD2Wd2FP5x5pQDuz+fgwdn/JSjEpo3qI
+   fiz4Ea3CuhADxpxZLMDSHChsOyltnoAjAa7FHKSIOum3wfNGaJ66O6XGm
+   p6okHWMHxhJcEzkjHqJJrgHU2uCSYIuaD2UpiXAO0+ycdr8ErekfWEWxU
+   2z3ANMD9u9odAQmluq5SYfmxVed3N2L9DX7iEukTGzNY42G0vAj2zZKsO
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="347270305"
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="409769095"
 X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
-   d="scan'208";a="347270305"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:54:16 -0700
+   d="scan'208";a="409769095"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 13:11:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="683437767"
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="833680251"
 X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
-   d="scan'208";a="683437767"
-Received: from rkulesho-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.41.243])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:54:16 -0700
-Subject: [PATCH 5/5] cxl/hdm: Add more HDM decoder debug messages at startup
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Date:   Fri, 14 Apr 2023 11:54:16 -0700
-Message-ID: <168149845668.792294.11814353796371419167.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <168149842935.792294.13212627946146993066.stgit@dwillia2-xfh.jf.intel.com>
+   d="scan'208";a="833680251"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.22.80])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 13:11:15 -0700
+Date:   Fri, 14 Apr 2023 13:11:13 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/5] cxl/hdm: Fail upon detecting 0-sized decoders
+Message-ID: <ZDmzYe1MAr2yC/GB@aschofie-mobl2>
 References: <168149842935.792294.13212627946146993066.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+ <168149843516.792294.11872242648319572632.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168149843516.792294.11872242648319572632.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-A recent debug session yielded a couple debug messages that were useful
-for determining the reason why the driver was or was not falling back
-to CXL range register emulation, and for identifying decoder setting
-enumeration problems.
+On Fri, Apr 14, 2023 at 11:53:55AM -0700, Dan Williams wrote:
+> Decoders committed with 0-size lead to later crashes on shutdown as
+> __cxl_dpa_release() assumes a 'struct resource' has been established in
+> the in 'cxlds->dpa_res'. Just fail the driver load in this instance
+> since there are deeper problems with the enumeration or the setup when
+> this happens.
+> 
+> Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/hdm.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index abe3877cfa63..7889ff203a34 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -130,6 +130,14 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
- 	 */
- 	for (i = 0; i < cxlhdm->decoder_count; i++) {
- 		ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(i));
-+		dev_dbg(&info->port->dev,
-+			"decoder%d.%d: committed: %ld base: %#x_%.8x size: %#x_%.8x\n",
-+			info->port->id, i,
-+			FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl),
-+			readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(i)),
-+			readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(i)),
-+			readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(i)),
-+			readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(i)));
- 		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl))
- 			return false;
- 	}
-@@ -868,6 +876,10 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 	if (rc)
- 		return rc;
- 
-+	dev_dbg(&port->dev, "decoder%d.%d: range: %#llx-%#llx iw: %d ig: %d\n",
-+		port->id, cxld->id, cxld->hpa_range.start, cxld->hpa_range.end,
-+		cxld->interleave_ways, cxld->interleave_granularity);
-+
- 	if (!info) {
- 		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
- 		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+
+> 
+snip
 
