@@ -2,135 +2,187 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F321CC77B76
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 12:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5F2C77B6E
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 13:16:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbjDNMpJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 08:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60948 "EHLO
+        id S229494AbjDNNQz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 09:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbjDNMpH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 08:45:07 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA2E59E7;
-        Fri, 14 Apr 2023 05:45:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tr3hpSCMuOCYUkxLrLDpoSr57iYCP68uslpAWzeFxiN4yEpEwG96c5CF27Y1QTNsMxTYqqgPqJyOH69cycYroZOzbLb6Rt2hp7g7vdY32FUZyTNLMUqVeKKorhpet5DHHe73H4yrbeAg8yVBmqZeH7/Iznuz/2Oa7NhVrRapJyfCKbsoK3VQVs9wDQjmiZd3xezFFKob3hVFlveTZrXiAQXHCY4zp7Wg/liAgyPLxOFUJi0E6+ozIE3CCvArBOPJeSO4ww914NEg1QUiYBc/GOhIEJlWszTsBtSC+8wL7z4rJO5PE48y8FDBek6HbpZ4i/eePTnTFFadJowlaSfqEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mzRJo/kNuRJuKLWiqZic4qgXwlntMVZdTx2XPhDRTSc=;
- b=kSnZcqfBDxguzvdYRANLrsLynPFI5pbDWi+FYgWzV3px3D4+OaeJVccFdIr3EmOfORGyU7gu6zB/R4cEc1QxpwHnhB1jFg488zKmryLeervNQUHyvwAFYjh+kWmKIgrSp3Q1ES30vSRIJbFTHewBbXpWWw7j5UxxMp3IUtvvtYiFTKObnBqeYdim7CVE9JC8vZLX7J4fQi7t1QiZYm1dLWzqPdH3TM+eA7kKnh/hQZTk0BVW3uwkhi6bb/95aeGfJG6qKa06hNf5/G2Vkt/2gDujy3zUle1c2o6kzPai1syVN+NRGjN9B7KgceVkxARMcGB/6ABexj7fere9+FEDoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mzRJo/kNuRJuKLWiqZic4qgXwlntMVZdTx2XPhDRTSc=;
- b=1tIhBnpO06f95Y3hXrcaB7FMlxp/mcEqIo+gZkVZ1ruP10Ap1Gq2ZoeNhEf5F4nljlyvQCREQ8QlUwQEb6OhU+f2rU2mZzpLrHJziIMTUgq07qp2Eom9uP3gn35fWeyvp/F1Xn49nQXm10mvVRIt5sw6AZh1cE/JcScCX4v6xs4=
-Received: from DM6PR13CA0020.namprd13.prod.outlook.com (2603:10b6:5:bc::33) by
- CH0PR12MB5281.namprd12.prod.outlook.com (2603:10b6:610:d4::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6298.30; Fri, 14 Apr 2023 12:44:58 +0000
-Received: from DM6NAM11FT109.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:bc:cafe::57) by DM6PR13CA0020.outlook.office365.com
- (2603:10b6:5:bc::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.7 via Frontend
- Transport; Fri, 14 Apr 2023 12:44:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT109.mail.protection.outlook.com (10.13.173.178) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.33 via Frontend Transport; Fri, 14 Apr 2023 12:44:57 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 14 Apr
- 2023 07:44:54 -0500
-Date:   Fri, 14 Apr 2023 14:44:51 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     Terry Bowman <Terry.Bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>
-Subject: Re: [PATCH v3 2/6] efi/cper: Export cper_mem_err_unpack() for use by
- modules
-Message-ID: <ZDlKw9bnsxIGQWt7@rric.localdomain>
-References: <20230411180302.2678736-1-terry.bowman@amd.com>
- <20230411180302.2678736-3-terry.bowman@amd.com>
- <20230413170816.0000333b@Huawei.com>
- <9d66afdb-40bd-4254-547e-05f6481dd550@amd.com>
- <20230414124805.00000479@Huawei.com>
+        with ESMTP id S229457AbjDNNQy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 09:16:54 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66B03A9C
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 06:16:51 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PycNX0tpxz6JFXG;
+        Fri, 14 Apr 2023 21:14:20 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 14 Apr
+ 2023 14:16:48 +0100
+Date:   Fri, 14 Apr 2023 14:16:47 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dragan Stancevic <dragan@stancevic.com>
+CC:     Gregory Price <gregory.price@memverge.com>,
+        <lsf-pc@lists.linux-foundation.org>,
+        <nil-migration@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+        <linux-mm@kvack.org>
+Subject: Re: [LSF/MM/BPF TOPIC] BoF VM live migration over CXL memory
+Message-ID: <20230414141647.000075a6@Huawei.com>
+In-Reply-To: <253e7a73-be3c-44d4-1ca3-d0d060313517@stancevic.com>
+References: <5d1156eb-02ae-a6cc-54bb-db3df3ca0597@stancevic.com>
+        <ZDCv3lxLbquITy8M@memverge.com>
+        <9d22b56b-80ef-b36f-731b-4b3b588bc4bd@stancevic.com>
+        <ZDS8WH+yViVfsuMi@memverge.com>
+        <253e7a73-be3c-44d4-1ca3-d0d060313517@stancevic.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230414124805.00000479@Huawei.com>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT109:EE_|CH0PR12MB5281:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8b05871-bd67-4ca8-8640-08db3ce60df5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tiEZnfjqi3Qa46yuoNPJmzHVSNw/t5jZOK0cu3lUxClHJmP7Z8Q42Vbo2euIK55uFquH17+d7yC5zMMbjtUoON8CJTVQ5562n7MaYO3uDiIwpVHxaVG/at/+OXYlGDqjHSpS0mNvCOktmAWajIpjp2ruDcmS8upavY4zUgRHx99BhuBumLkaVaHgR07HAHo9sq0fihtKl1uDUDVaStuQWG5NyWXbL0qDVQXDmbUmrN1gvpkewVIyHLdfN7NzNDH/hBStZsxWkKt+l4qs61/+Sf14zEn/AGbUo+xJDteUcL/hd0nkD0RBV+biKZ2Vml7Kv7l/trPkh9fhCqW3A/xnNED9Agklj9fp/8gbCD5bBzfoX8P92s7mE7Rgm9rIlQAwWQleOjPf2MF+mWMTdThsBu0zeokOeDGqp5COKTZPomRxMWB7lxH6P+/raYWnHS8Y0mr+w9PfbZvP5fmwFk3x2stv9P/uixXh7487slS5IcvgNspNbv2rwwrYrU/o4fJUoe4TbeIJXgc+T5QGXN67nmnF9DKIqsHbadVfW5JJTEjrXPCdY4QEg2VXHLL0etpdMWL3+3heqnrlsVcS+8LUgLAsLtKIt4nkzsbkZQhzTAkOagoIbFYK2krUVIbHpaqfFi7M4D/u/pNaP6K11O648TbYXISEHY7nPJUMct0hmOeAsjxN5J/ZYl9F2GxF/TxX0OXfdvo2vA0Ov7lAIOx9JsZNUqduJ4Xpfa04/QrDE24=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(346002)(136003)(396003)(451199021)(46966006)(36840700001)(40470700004)(40460700003)(9686003)(26005)(186003)(16526019)(53546011)(54906003)(40480700001)(478600001)(55016003)(81166007)(356005)(2906002)(7416002)(8676002)(8936002)(36860700001)(41300700001)(336012)(426003)(5660300002)(47076005)(82310400005)(6916009)(4326008)(316002)(70206006)(70586007)(82740400003)(6666004)(7696005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 12:44:57.6615
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8b05871-bd67-4ca8-8640-08db3ce60df5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT109.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5281
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 14.04.23 12:48:05, Jonathan Cameron wrote:
-> On Thu, 13 Apr 2023 14:40:10 -0500
-> Terry Bowman <Terry.Bowman@amd.com> wrote:
-> 
-> > Hi Jonathan,
-> > 
-> > On 4/13/23 11:08, Jonathan Cameron wrote:
-> > > On Tue, 11 Apr 2023 13:02:58 -0500
-> > > Terry Bowman <terry.bowman@amd.com> wrote:
-> > >   
-> > >> The CXL driver plans to use cper_print_aer() for restricted CXL host (RCH)
-> > >> logging. This is not currently possible if CXL is built as a loadable
-> > >> module because cper_print_aer() depends on cper_mem_err_unpack() which
-> > >> is not exported.
-> > >>
-> > >> Export cper_mem_err_unpack() to enable cper_print_aer() usage in
-> > >> CXL and other loadable modules.  
-> > > 
-> > > No problem with the export, but I'm struggling to see the path that needs it.
-> > > Could you give a little more detail, perhaps a call path?
-> > >   
-> > 
-> > The cper_print_aer() is used to log RCH dport AER errors. This is needed 
-> > because the RCH dport AER errors are not handled directly by the AER port 
-> > driver. I'll add these details to the patch.
-> 
-> Ah. I wasn't particularly clear.  cper_print_aer() is fine, but oddly
-> I'm not seeing where that results in a call to cper_mem_err_unpack()
-> 
-> More than possible my grep skills are failing me!
+On Thu, 13 Apr 2023 22:32:48 -0500
+Dragan Stancevic <dragan@stancevic.com> wrote:
 
-No worries, it is used in some odd tracepoint macro magic included
-with ras_event.h.
+> Hi Gregory-
+> 
+> 
+> On 4/10/23 20:48, Gregory Price wrote:
+> > On Mon, Apr 10, 2023 at 07:56:01PM -0500, Dragan Stancevic wrote:  
+> >> Hi Gregory-
+> >>
+> >> On 4/7/23 19:05, Gregory Price wrote:  
+> >>> 3. This is changing the semantics of migration from a virtual memory
+> >>>      movement to a physical memory movement.  Typically you would expect
+> >>>      the RDMA process for live migration to work something like...
+> >>>
+> >>>      a) migration request arrives
+> >>>      b) source host informs destination host of size requirements
+> >>>      c) destination host allocations memory and passes a Virtual Address
+> >>>         back to source host
+> >>>      d) source host initates an RDMA from HostA-VA to HostB-VA
+> >>>      e) CPU task is migrated
+> >>>
+> >>>      Importantly, the allocation of memory by Host B handles the important
+> >>>      step of creating HVA->HPA mappings, and the Extended/Nested Page
+> >>>      Tables can simply be flushed and re-created after the VM is fully
+> >>>      migrated.
+> >>>
+> >>>      to long didn't read: live migration is a virtual address operation,
+> >>>      and node-migration is a PHYSICAL address operation, the virtual
+> >>>      addresses remain the same.
+> >>>
+> >>>      This is problematic, as it's changing the underlying semantics of the
+> >>>      migration operation.  
+> >>
+> >> Those are all valid points, but what if you don't need to recreate HVA->HPA
+> >> mappings? If I am understanding the CXL 3.0 spec correctly, then both
+> >> virtual addresses and physical addresses wouldn't have to change.
 
--Robert
+That's implementation defined if we are talking DCD for this.  I would suggest making
+it very clear which particular CXL options you are thinking of using.
+
+A CXL 2.0 approach of binding LDs to different switch vPPB (virtual ports) probably doesn't
+have this problem, but has it's own limitations and is a much heavier weight thing
+to handle.
+
+For DCD if we assuming sharing is used (I'd suggest ignoring other possibilities
+for now as there are architectural gaps that I'm not going into and the same
+issues will occur with them anyway)... 
+Then what you get if you share on multiple LDs presented to multiple hosts is
+a set of extents (each is a base + size, any number any size) that have sequence
+numbers.
+
+The device may, typically because of fragmentation of the DPA space exposed to
+an LD (typically one of those from a device per host) decide to map what was created
+in a particular DPA extents pattern (mapped via nice linear decoders into Host PA space)
+in a different order and with different size extents.
+
+So in general you can't assume a spec compliant CXL type 3 device (probably a multihead
+device in initial deployments) will map anything to an particular location when moving
+the memory between hosts.
+
+So ultimately you'd need to translate between:
+Page tables on source + DPA extents info.
+
+and
+
+Page table needed on destination to land the parts of the DPA extents (via HDM deoders
+applying offsets etc) in the right place in GPA space so the guest gets the right
+mapping.
+
+So that will have some complexity and cost associated with it.  Not impossible but
+not a simple reuse of tables from source on the destination. 
+
+This is all PA to GPA translation though and in many cases I'd not expect that
+to be particularly dynamic - so it's a step before you do any actual migration
+hence I'm not sure it matters that might take a bit of maths.
+
+
+> Because
+> >> the fabric "virtualizes" host physical addresses and the translation is done
+> >> by the G-FAM/GFD that has the capability to translate multi-host HPAs to
+> >> it's internal DPAs. So if you have two hypervisors seeing device physical
+> >> address as the same physical address, that might work?
+> >>
+> >>  
+> > 
+> > Hm.  I hadn't considered the device side translation (decoders), though
+> > that's obviously a tool in the toolbox.  You still have to know how to
+> > slide ranges of data (which you mention below).  
+> 
+> Hmm, do you have any quick thoughts on that?
+
+HDM decoder programming is hard to do in a dynamic fashion (lots of limitations
+on what you can do due to ordering restrictions in the spec). I'd ignore it
+for this usecase beyond the fact that you get linear offsets from DPA to HPA
+that need to be incorporated in your thinking.
+
+> 
+> 
+> >>> The reference in this case is... the page tables.  You need to know how
+> >>> to interpret the data in the CXL memory region on the remote host, and
+> >>> that's a "relative page table translation" (to coin a phrase? I'm not
+> >>> sure how to best describe it).  
+> >>
+> >> right, coining phrases... I have been thinking of a "super-page" (for the
+> >> lack of a better word) a metadata region sitting on the switched CXL.mem
+> >> device that would allow hypervisors to synchronize on various aspects, such
+> >> as "relative page table translation", host is up, host is down, list of
+> >> peers, who owns what etc... In a perfect scenario, I would love to see the
+> >> hypervisors cooperating on switched CXL.mem device the same way cpus on
+> >> different numa nodes cooperate on memory in a single hypervisor. If either
+> >> host can allocate and schedule from this space then "NIL" aspect of
+> >> migration is "free".
+> >>
+> >>  
+> > 
+> > The core of the problem is still that each of the hosts has to agree on
+> > the location (physically) of this region of memory, which could be
+> > problematic unless you have very strong BIOS and/or kernel driver
+> > controls to ensure certain devices are guaranteed to be mapped into
+> > certain spots in the CFMW.  
+> 
+> Right, true. The way I am thinking of it is that this would be a part of 
+> data-center ops setup which at first pass would be a somewhat of a 
+> manual setup same way as other pre-OS related setup. But later on down 
+> the road perhaps this could be automated, either through some pre-agreed 
+> auto-ranges detection or similar, it's not unusual for dc ops to name 
+> hypervisors depending of where in dc/rack/etc they sit etc..
+> 
+
+You might be able to constrain particular devices to place nicely with such
+a model, but that is out of the scope of the specification and I'd suggest
+in Linux at least we'd write the code to deal with the general case then
+maybe have a 'fast path' if the stars align.
+
+Jonathan
+
