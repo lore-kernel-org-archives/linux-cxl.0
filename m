@@ -2,49 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C00C77B78
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 17:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59787C77B71
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Apr 2023 17:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbjDNRnI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Apr 2023 13:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35358 "EHLO
+        id S229913AbjDNRnn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Apr 2023 13:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229841AbjDNRm5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 13:42:57 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFE7189
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 10:42:56 -0700 (PDT)
+        with ESMTP id S229752AbjDNRnJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Apr 2023 13:43:09 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903B912A
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Apr 2023 10:43:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681494176; x=1713030176;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qdqmdgfUNxfyS6dl7ZKj+hKjiuO/PDNVv9QE5iTVu9g=;
-  b=SCVBQO1G3kk3o0EAv2wVmv8ee+Iodz/8ngfwh9ILOIX3wughJtYuN+Ze
-   BX8GoTVUBniiuX8ToeoGzg8tHRMpWeNZ3c4Z/h1LopIy1iE8oRRvvV8NN
-   l3BqazdZrruru3zocKpwsf+7Opr9g3jbBbxKyZhhov20PSzyosoDDBASU
-   0TA9zqu9fcaZa0IjcPRbSNoaVH3hPnfvHUWrKtGv7IEDRPLOfj9nRL6IC
-   jSgezsK/QVKj2gk1kl1NAanHfAO/8WZA6Qj6atXhFH9i5jf3ttWCpwBdD
-   sfAulx9nDlwlUdJJw+MjbvEhr6LIY28E7yapQ8snq9jJFULEPB7HE6E5o
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="407405469"
+  t=1681494188; x=1713030188;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=D17v21YpLM9pPZnMM4VddUr5WS5Dr7kwTGK5ugOy8oc=;
+  b=k4PBU+2tvwSx6B7OtiQn2vAxJvyH3uEd2IXVq7kkGA4hHfHYu/iYIQ1q
+   w17vrD8EofsvaHCu9VYOwNtGAOavhr23krAP17IYdGDSAe6Qeq5Z570wZ
+   jO96WNBWyTw7Q5FuWdOtzWmQoQZdd/9YAO9OGaGKv1DaB033MOjb8TrHX
+   7G04TGyldi8JFj/5pOOWRU3ZOc0CatYgQSdhFRNbPYltlKoBLCbwUgcet
+   WVhwkBzGIpqNP4TPzfpYTKuwG3dPhm/yrVbCKPK4rc9ONF4Ec0RVNFkuM
+   9vKxPwSaU4pgnJLJo0xWroJ8Bnd466nuy9zqC8ftWQNwE81cgOMPPL819
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="347247055"
 X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
-   d="scan'208";a="407405469"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 10:42:56 -0700
+   d="scan'208";a="347247055"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 10:43:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="813967553"
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="801281257"
 X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
-   d="scan'208";a="813967553"
-Received: from tpattadx-mobl1.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.122.87])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 10:42:56 -0700
-Subject: [NDCTL PATCH 0/3] ndctl: Add support of QoS Throttling Group (QTG) id
- for CXL CLI
+   d="scan'208";a="801281257"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.122.87])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 10:43:07 -0700
+Subject: [NDCTL PATCH 2/3] ndctl: Add QTG ID support for the memory device
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     linux-cxl@vger.kernel.org
-Date:   Fri, 14 Apr 2023 10:42:55 -0700
-Message-ID: <168149412855.4013891.16386221304030694671.stgit@djiang5-mobl3>
+Date:   Fri, 14 Apr 2023 10:43:07 -0700
+Message-ID: <168149418730.4013891.3864941985901182081.stgit@djiang5-mobl3>
+In-Reply-To: <168149412855.4013891.16386221304030694671.stgit@djiang5-mobl3>
+References: <168149412855.4013891.16386221304030694671.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,39 +54,131 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The series adds support for the kernel enabling [1] of QoS Throttling Group
-(QTG) id. The kernel exports a QTG id for the root decoders (CFMWS) and as
-well as for the CXL memory devices. The QTG id exported for a device is
-calculated by the driver during device probe. Currently a QTG id is exported
-for the volatile partition and another for the persistent partition. In the
-future QTG id(s) will be exported for DCD regions. Display of QTG id is
-through the CXL CLI list command.
+Add libcxl API to retrieve the QoS Throttling Group (QTG) ID for the
+memory devices. Two API calls are added. One for 'ram' or 'volatile'
+mode and another for 'pmem' or 'persistent' mode. Support also added
+for displaying the QTG ID through the 'cxl list' command.
 
-A QTG id check as also been added for region creation. A warning is emitted
-when the QTG id of a memory range of a CXL memory device being included in
-the CXL region assembly does not match the QTG id of the root decoder. Options
-are available to suppress the warning or to fail the region creation. This
-enabling provides a guidance on flagging memory ranges being used is not
-optimal for performance for the CXL region to be formed.
-
-[1]: https://lore.kernel.org/linux-cxl/168088732996.1441063.10107817505475386072.stgit@djiang5-mobl3/T/#t
-
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
+ cxl/json.c         |   12 +++++++++++-
+ cxl/lib/libcxl.c   |   20 ++++++++++++++++++++
+ cxl/lib/libcxl.sym |    2 ++
+ cxl/lib/private.h  |    2 ++
+ cxl/libcxl.h       |    2 ++
+ 5 files changed, 37 insertions(+), 1 deletion(-)
 
-Dave Jiang (3):
-      ndctl: Add QTG ID support for the root decoder
-      ndctl: Add QTG ID support for the memory device
-      ndctl: add QTG ID check for region creation
+diff --git a/cxl/json.c b/cxl/json.c
+index 8dd65f942c6a..9a508cf7950e 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -486,7 +486,7 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 	const char *devname = cxl_memdev_get_devname(memdev);
+ 	struct json_object *jdev, *jobj;
+ 	unsigned long long serial, size;
+-	int numa_node;
++	int numa_node, qtg_id;
+ 
+ 	jdev = json_object_new_object();
+ 	if (!jdev)
+@@ -501,6 +501,11 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		jobj = util_json_object_size(size, flags);
+ 		if (jobj)
+ 			json_object_object_add(jdev, "pmem_size", jobj);
++
++		qtg_id = cxl_memdev_get_pmem_qtg_id(memdev);
++		jobj = json_object_new_int(qtg_id);
++		if (jobj)
++			json_object_object_add(jdev, "qtg_id", jobj);
+ 	}
+ 
+ 	size = cxl_memdev_get_ram_size(memdev);
+@@ -508,6 +513,11 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		jobj = util_json_object_size(size, flags);
+ 		if (jobj)
+ 			json_object_object_add(jdev, "ram_size", jobj);
++
++		qtg_id = cxl_memdev_get_ram_qtg_id(memdev);
++		jobj = json_object_new_int(qtg_id);
++		if (jobj)
++			json_object_object_add(jdev, "qtg_id", jobj);
+ 	}
+ 
+ 	if (flags & UTIL_JSON_HEALTH) {
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 26985c9344b4..dca1683523a1 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -1210,6 +1210,16 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 		goto err_read;
+ 	memdev->ram_size = strtoull(buf, NULL, 0);
+ 
++	sprintf(path, "%s/pmem/qtg_id", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		goto err_read;
++	memdev->pmem_qtg_id = atoi(buf);
++
++	sprintf(path, "%s/ram/qtg_id", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		goto err_read;
++	memdev->ram_qtg_id = atoi(buf);
++
+ 	sprintf(path, "%s/payload_max", cxlmem_base);
+ 	if (sysfs_read_attr(ctx, path, buf) < 0)
+ 		goto err_read;
+@@ -1368,6 +1378,16 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
+ 	return memdev->ram_size;
+ }
+ 
++CXL_EXPORT int cxl_memdev_get_pmem_qtg_id(struct cxl_memdev *memdev)
++{
++	return memdev->pmem_qtg_id;
++}
++
++CXL_EXPORT int cxl_memdev_get_ram_qtg_id(struct cxl_memdev *memdev)
++{
++	return memdev->ram_qtg_id;
++}
++
+ CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
+ {
+ 	return memdev->firmware_version;
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index d1c61f9252fe..60ad16e33f30 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -249,4 +249,6 @@ global:
+ 	cxl_decoder_create_ram_region;
+ 	cxl_region_get_daxctl_region;
+ 	cxl_decoder_get_qtg_id;
++	cxl_memdev_get_pmem_qtg_id;
++	cxl_memdev_get_ram_qtg_id;
+ } LIBCXL_4;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index ac6f111b5956..dfd77ff2a781 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -32,6 +32,8 @@ struct cxl_memdev {
+ 	struct list_node list;
+ 	unsigned long long pmem_size;
+ 	unsigned long long ram_size;
++	int pmem_qtg_id;
++	int ram_qtg_id;
+ 	int payload_max;
+ 	size_t lsa_size;
+ 	struct kmod_module *module;
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 66ce4a021c62..c89806cbbd57 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -47,6 +47,8 @@ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
+ struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
++int cxl_memdev_get_pmem_qtg_id(struct cxl_memdev *memdev);
++int cxl_memdev_get_ram_qtg_id(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
+ 
+ /* ABI spelling mistakes are forever */
 
-
- Documentation/cxl/cxl-create-region.txt |  9 ++++
- cxl/json.c                              | 22 +++++++++-
- cxl/lib/libcxl.c                        | 31 ++++++++++++++
- cxl/lib/libcxl.sym                      |  3 ++
- cxl/lib/private.h                       |  3 ++
- cxl/libcxl.h                            |  5 +++
- cxl/region.c                            | 57 ++++++++++++++++++++++++-
- 7 files changed, 128 insertions(+), 2 deletions(-)
-
---
 
