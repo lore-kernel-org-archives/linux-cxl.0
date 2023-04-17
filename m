@@ -2,307 +2,99 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31844C77B7A
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 Apr 2023 16:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA29C77B76
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Apr 2023 16:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbjDQQyi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 17 Apr 2023 12:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33364 "EHLO
+        id S229982AbjDQQ5D (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Apr 2023 12:57:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229710AbjDQQyh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Apr 2023 12:54:37 -0400
+        with ESMTP id S229744AbjDQQ5B (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Apr 2023 12:57:01 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5F5A9;
-        Mon, 17 Apr 2023 09:54:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D34B1FDE;
+        Mon, 17 Apr 2023 09:57:00 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q0Y4938pbz6J8Ds;
-        Tue, 18 Apr 2023 00:51:53 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q0Y4h4QMVz67dxR;
+        Tue, 18 Apr 2023 00:52:20 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 17 Apr
- 2023 17:54:32 +0100
-Date:   Mon, 17 Apr 2023 17:54:31 +0100
+ 2023 17:56:56 +0100
+Date:   Mon, 17 Apr 2023 17:56:55 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 5/6] PCI/AER: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <20230417175431.00004ab5@Huawei.com>
-In-Reply-To: <ZDlkmcsbwsNv/t8+@rric.localdomain>
+To:     Terry Bowman <Terry.Bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v3 4/6] cxl/pci: Add RCH downstream port error logging
+Message-ID: <20230417175655.00005d59@Huawei.com>
+In-Reply-To: <1552ec3c-fa30-2f2b-c73b-5a9f4cd999be@amd.com>
 References: <20230411180302.2678736-1-terry.bowman@amd.com>
-        <20230411180302.2678736-6-terry.bowman@amd.com>
-        <20230414131950.00006e76@Huawei.com>
-        <ZDlkmcsbwsNv/t8+@rric.localdomain>
+        <20230411180302.2678736-5-terry.bowman@amd.com>
+        <20230413175043.0000523e@Huawei.com>
+        <1552ec3c-fa30-2f2b-c73b-5a9f4cd999be@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 14 Apr 2023 16:35:05 +0200
-Robert Richter <rrichter@amd.com> wrote:
-
-> On 14.04.23 13:19:50, Jonathan Cameron wrote:
-> > On Tue, 11 Apr 2023 13:03:01 -0500
-> > Terry Bowman <terry.bowman@amd.com> wrote:
-> >   
-> > > From: Robert Richter <rrichter@amd.com>
-> > > 
-> > > In Restricted CXL Device (RCD) mode a CXL device is exposed as an
-> > > RCiEP, but CXL downstream and upstream ports are not enumerated and
-> > > not visible in the PCIe hierarchy. Protocol and link errors are sent
-> > > to an RCEC.
-> > > 
-> > > Restricted CXL host (RCH) downstream port-detected errors are signaled
-> > > as internal AER errors, either Uncorrectable Internal Error (UIE) or
-> > > Corrected Internal Errors (CIE). The error source is the id of the
-> > > RCEC. A CXL handler must then inspect the error status in various CXL
-> > > registers residing in the dport's component register space (CXL RAS
-> > > cap) or the dport's RCRB (AER ext cap). [1]
-> > > 
-> > > Errors showing up in the RCEC's error handler must be handled and
-> > > connected to the CXL subsystem. Implement this by forwarding the error
-> > > to all CXL devices below the RCEC. Since the entire CXL device is
-> > > controlled only using PCIe Configuration Space of device 0, Function
-> > > 0, only pass it there [2]. These devices have the Memory Device class
-> > > code set (PCI_CLASS_MEMORY_CXL, 502h) and the existing cxl_pci driver
-> > > can implement the handler.  
-> > 
-> > This comment implies only class code compliant drivers.  Sure we don't
-> > have drivers for anything else yet, but we should try to avoid saying
-> > there won't be any (which I think above implies).
-> > 
-> > You have a comment in the code, but maybe relaxing the description above
-> > to "currently support devices have..."  
-> 
-> It is used here to identify CXL memory devices and limit the
-> enablement to those. The spec requires this to be set for CXL mem devs
-> (see cxl 3.0, 8.1.12.2).
-> 
-> There could be other CXL devices (e.g. cache), but other drivers are
-> not yet implemented. That is what I am referring to. The check makes
-> sure there is actually a driver with a handler for it (cxl_pci).
-
-Understood on intent. My worry is that the above can be read as a
-statement on hardware restrictions, rathe than on what software currently
-implements.  Meh. Minor point so I don't care that much!
-Unlikely anyone will read the patch description after it merges anyway ;)
 
 > 
-> >   
-> > > In addition to errors directed to the CXL
-> > > endpoint device, the handler must also inspect the CXL downstream
-> > > port's CXL RAS and PCIe AER external capabilities that is connected to
-> > > the device.
-> > > 
-> > > Since CXL downstream port errors are signaled using internal errors,
-> > > the handler requires those errors to be unmasked. This is subject of a
-> > > follow-on patch.
-> > > 
-> > > The reason for choosing this implementation is that a CXL RCEC device
-> > > is bound to the AER port driver, but the driver does not allow it to
-> > > register a custom specific handler to support CXL. Connecting the RCEC
-> > > hard-wired with a CXL handler does not work, as the CXL subsystem
-> > > might not be present all the time. The alternative to add an
-> > > implementation to the portdrv to allow the registration of a custom
-> > > RCEC error handler isn't worth doing it as CXL would be its only user.
-> > > Instead, just check for an CXL RCEC and pass it down to the connected
-> > > CXL device's error handler. With this approach the code can entirely
-> > > be implemented in the PCIe AER driver and is independent of the CXL
-> > > subsystem. The CXL driver only provides the handler.
-> > > 
-> > > [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
-> > > [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
-> > > 
-> > > Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> > > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > > Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-> > > Cc: linuxppc-dev@lists.ozlabs.org
-> > > Cc: linux-pci@vger.kernel.org  
+> >> +
+> >> +	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
+> >> +	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
+> >> +
+> >> +	return true;
+> >> +}  
+> > =  
+> >> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> >> index bde1fffab09e..dfa6fcfc428a 100644
+> >> --- a/drivers/cxl/core/regs.c
+> >> +++ b/drivers/cxl/core/regs.c
+> >> @@ -198,6 +198,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> >>  
+> >>  	return ret_val;
+> >>  }
+> >> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, CXL);
+> >>  
+> >>  int cxl_map_component_regs(struct device *dev, struct cxl_component_regs *regs,
+> >>  			   struct cxl_register_map *map, unsigned long map_mask)
+> >> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> >> index df64c402e6e6..dae3f141ffcb 100644
+> >> --- a/drivers/cxl/cxl.h
+> >> +++ b/drivers/cxl/cxl.h
+> >> @@ -66,6 +66,8 @@
+> >>  #define CXL_DECODER_MIN_GRANULARITY 256
+> >>  #define CXL_DECODER_MAX_ENCODED_IG 6
+> >>  
+> >> +#define PCI_AER_CAPABILITY_LENGTH 56  
 > > 
-> > Generally looks good to me.  A few trivial comments inline.
-> >   
-> > > ---
-> > >  drivers/pci/pcie/Kconfig |  8 ++++++
-> > >  drivers/pci/pcie/aer.c   | 61 ++++++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 69 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> > > index 228652a59f27..b0dbd864d3a3 100644
-> > > --- a/drivers/pci/pcie/Kconfig
-> > > +++ b/drivers/pci/pcie/Kconfig
-> > > @@ -49,6 +49,14 @@ config PCIEAER_INJECT
-> > >  	  gotten from:
-> > >  	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
-> > >  
-> > > +config PCIEAER_CXL
-> > > +	bool "PCI Express CXL RAS support"  
-> > 
-> > Description makes this sound too general. I'd mentioned restricted
-> > hosts even in the menu option title.
-> > 
-> >   
-> > > +	default y
-> > > +	depends on PCIEAER && CXL_PCI
-> > > +	help
-> > > +	  This enables CXL error handling for Restricted CXL Hosts
-> > > +	  (RCHs).  
-> > 
-> > Spec term is probably fine in the title, but in the help I'd 
-> > expand it as per the CXL 3.0 glossary to include
-> > "CXL Host that is operating in RCD mode."
-> > It might otherwise surprise people that this matters on their shiny
-> > new CXL X.0 host (because they found an old CXL 1.1 card in a box
-> > and decided to plug it in)
-> > 
-> > Do we actually need this protection at all?  It's a tiny amount of code
-> > and I can't see anything immediately that requires the CXL_PCI dependency
-> > other than it's a bit pointless if that isn't here.
-> >   
-> > > +
-> > >  #
-> > >  # PCI Express ECRC
-> > >  #
-> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > > index 7a25b62d9e01..171a08fd8ebd 100644
-> > > --- a/drivers/pci/pcie/aer.c
-> > > +++ b/drivers/pci/pcie/aer.c
-> > > @@ -946,6 +946,65 @@ static bool find_source_device(struct pci_dev *parent,
-> > >  	return true;
-> > >  }
-> > >  
-> > > +#ifdef CONFIG_PCIEAER_CXL
-> > > +
-> > > +static bool is_cxl_mem_dev(struct pci_dev *dev)
-> > > +{
-> > > +	/*
-> > > +	 * A CXL device is controlled only using PCIe Configuration
-> > > +	 * Space of device 0, Function 0.  
-> > 
-> > That's not true in general.   Definitely true that CXL protocol
-> > error reporting is controlled only using this Devfn, but
-> > more generally there could be other stuff in later functions.
-> > So perhaps make the comment more specific.  
+> > Odd place to find a PCI specific define. Also a spec reference is
+> > always good for these.  What's the the length of? PCI r6.0 has
+> > cap going up to address 0x5c  so length 0x60.  This seems to be igoring
+> > the header log register.
+> >  
 > 
-> I actually mean CXL device in RCD mode here (seen as RCiEP in the PCI
-> hierarchy).
+> This was to avoid including the TLP log at 0x38+.
 > 
-> The spec says (cxl 3.0, 8.1.3):
-> 
-> """
-> In either case [(RCD and non-RCD)], the capability, status, and
-> control fields in Device 0, Function 0 DVSEC control the CXL
-> functionality of the entire device.
+> I can use sizeof(struct aer_capability_regs) or sizeof(*aer_regs) instead. 
+> It's the same 38h(56) and will allow me to remove this #define in the 
+> patchset revision.
 
-> """
-> 
-> So dev 0, func 0 must contain a CXL PCIe DVSEC. Thus it is a CXL
-> device and able to handle CXL AER errors. The limitation to the first
-> device prevents the handler from being run multiple times for the same
-> event.
+That works better than a define that people might think is more generic.
+Otherwise you get PCI_AER_CAP_WITHOUT_TLP_LOG_LENGTH or
+something equally horrible. (or define the TLP_LOG length as another
+define and subtract that?)
 
-Fine with limitation.  Text says "device is controlled only using".
-That is true for what you are controlling here, but other aspects of the
-device are controlled via whatever interface they like.
-
-Perhaps just quote the specification as you have done in your reply. Then it
-is clear that we mean just these registers.
-
-
-> 
-> 
-> >   
-> > > +	 */
-> > > +	if (dev->devfn != PCI_DEVFN(0, 0))
-> > > +		return false;
-> > > +
-> > > +	/* Right now there is only a CXL.mem driver */
-> > > +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> > > +		return false;
-> > > +
-> > > +	return true;
-> > > +}
-> > > +
-> > > +static bool is_internal_error(struct aer_err_info *info)
-> > > +{
-> > > +	if (info->severity == AER_CORRECTABLE)
-> > > +		return info->status & PCI_ERR_COR_INTERNAL;
-> > > +
-> > > +	return info->status & PCI_ERR_UNC_INTN;
-> > > +}
-> > > +
-> > > +static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info);
-> > > +
-> > > +static int cxl_handle_error_iter(struct pci_dev *dev, void *data)
-> > > +{
-> > > +	struct aer_err_info *e_info = (struct aer_err_info *)data;
-> > > +
-> > > +	if (!is_cxl_mem_dev(dev))
-> > > +		return 0;
-> > > +
-> > > +	/* pci_dev_put() in handle_error_source() */
-> > > +	dev = pci_dev_get(dev);
-> > > +	if (dev)
-> > > +		handle_error_source(dev, e_info);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> > > +{
-> > > +	/*
-> > > +	 * CXL downstream port errors are signaled as RCEC internal  
-> > 
-> > Make this comment more specific (to RCH I think).  
-> 
-> Right, same here, this is restricted mode only.
-> 
-> Thanks for review.
-> 
-> -Robert
-> 
-> 
-> >   
-> > > +	 * errors. Forward them to all CXL devices below the RCEC.
-> > > +	 */
-> > > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> > > +	    is_internal_error(info))
-> > > +		pcie_walk_rcec(dev, cxl_handle_error_iter, info);
-> > > +}
-> > > +
-> > > +#else
-> > > +static inline void cxl_handle_error(struct pci_dev *dev,
-> > > +				    struct aer_err_info *info) { }
-> > > +#endif
-> > > +
-> > >  /**
-> > >   * handle_error_source - handle logging error into an event log
-> > >   * @dev: pointer to pci_dev data structure of error source device
-> > > @@ -957,6 +1016,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
-> > >  {
-> > >  	int aer = dev->aer_cap;
-> > >  
-> > > +	cxl_handle_error(dev, info);
-> > > +
-> > >  	if (info->severity == AER_CORRECTABLE) {
-> > >  		/*
-> > >  		 * Correctable error does not need software intervention.  
-> >   
-
+>  
