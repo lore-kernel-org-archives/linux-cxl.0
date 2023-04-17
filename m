@@ -2,149 +2,254 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079D0C77B70
-	for <linux-cxl@archiver.kernel.org>; Sun, 16 Apr 2023 03:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A9CC77B7A
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Apr 2023 16:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230050AbjDPDDf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 15 Apr 2023 23:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47150 "EHLO
+        id S229812AbjDQQcP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Apr 2023 12:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbjDPDDd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 15 Apr 2023 23:03:33 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF680270D
-        for <linux-cxl@vger.kernel.org>; Sat, 15 Apr 2023 20:03:30 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 97A0F541892;
-        Sun, 16 Apr 2023 03:03:29 +0000 (UTC)
-Received: from pdx1-sub0-mail-a315.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 0922C5418A2;
-        Sun, 16 Apr 2023 03:03:29 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1681614209; a=rsa-sha256;
-        cv=none;
-        b=fY9345yIaAs42igKeUHEky8bKI/VcEdBD/EnwOqdP/Ky9m/2dceIah1oGmUTMqHpmdedCh
-        8S7wfLB2aSKAtvrHDaR3G2v/n8vf2SGrqaVpbBpVzZu5yhj29z881hy1b5L9M3TP1dPB9u
-        eUkGV0sTKSrCt7yIUYaNAxa+tmK0l30a0+ZzzPdY8+68/UfTsEVURoHDgje+YNDnDcJhUk
-        im1jr8MrV2mwO+1z/9pu/cN7kA0BikvJCWDZuKJH29tcy2JSED0qwQk1rk8PshbB/6AwHr
-        r4OC/YMNL4YWzSIY+uyuPbcveHqAVi1Qzof5V5adjZXZGJRAEdAx+NI4fWQSgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1681614209;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=QXujTubmzZRP+Z92UDXqJSdu6nskPcz82beetFOuEP8=;
-        b=mOpImbx2u5Bi4CSzUVwwPLFRg5aQ9YtHdYIixv11ZaQThxK9zEYnicmuKTloyzDc/g68Ri
-        nqaCQFVvQHMWxPenF1NVtxjtvJfs7SyqUOmDwmpi2Xva3LmyTINabUZm9Wuajv3c6R1rGp
-        21o/9ZYVhukSA5bH+D3X8yxTSTSY8fA3IKmhuUlLQs02r0yr2VOXdz3YO/vWQoZXqR1hSO
-        PBq2Obcitev3iyTE5/F01e5sJpb9D8l7F+7W0Q3VPxvODvJpy6LjKHuqT+kKPtil9Me3nA
-        Br8djuDV9SgBwK4LaMLTeJQkQspQ4rmE0pCuBmJ6RIXiNrRBRjaE99edw9zXVQ==
-ARC-Authentication-Results: i=1;
-        rspamd-7f66b7b68c-n65jn;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Madly-Slimy: 2fc7e2890125b6a2_1681614209347_2457400657
-X-MC-Loop-Signature: 1681614209347:1155918152
-X-MC-Ingress-Time: 1681614209346
-Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.126.30.57 (trex/6.7.2);
-        Sun, 16 Apr 2023 03:03:29 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4PzZkm2L5Nz58;
-        Sat, 15 Apr 2023 20:03:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1681614208;
-        bh=0SobpOMjhwB2ofZXh70G6E6d5SUGFYtZHQ5Sr7KGhHY=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=ckXA3wefXWRju55pC4j9tx6aIfr422e3rmpI1ewb0/DPk3nMSI14oKXuk9ipmvYzE
-         /0LC2ORzm/m1YoewzlFjvvr2pI55eBJYuCw5KzxaH/yDvFybFN05OCWKL52k/7ed14
-         52OHCUi4wGNYIyi96yY9tl6OKH1/AGlvK6S7sWZTkKYsB69sLLFLEiAOn23EuHqW8k
-         DXt7Sm9/Q8nHMyC2HPo2Mkt1/G8ibAI1hBDgHFlkVFOh4KAUbqUmnZ5P0jxzuk3D8M
-         CjQjhijnCdw/2OLz3ERPyBfJCWs59DsJvI5uV9vE1r+r0ijt5t1Azd2hOqVet2ZokG
-         SdI0d9SvHPFQQ==
-Date:   Sat, 15 Apr 2023 19:32:14 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com, fan.ni@samsung.com,
-        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/3] cxl: Add support for device sanitation
-Message-ID: <lg3ujhymf2h5jbkimgmdc4iz6qwnguanbvlc7cb2tak6zb6xhm@mrs6soct6i2r>
-References: <20230224194443.1990440-1-dave@stgolabs.net>
- <20230224194443.1990440-4-dave@stgolabs.net>
- <20230414151534.00004c71@Huawei.com>
+        with ESMTP id S230190AbjDQQcO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Apr 2023 12:32:14 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C4F10E3
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Apr 2023 09:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681749130; x=1713285130;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XkJU8ByXIXpkuBWYZJTADvlpAxqTciiOGQmQthcPe/k=;
+  b=GfpRy7Ic3iHNti58PF0TsKTzSL8neeoI+j/96N9q5Te8I1+CQVjX0Qpm
+   AsisMZgFPjqpcVehJENpG9VvNpXCyELKFWJ0IedmjT7zDvQHlcD0j+RMs
+   Ok1Ldqz0dwG1YKFWzmgMUPuypyQBJ13G56Yq07+bzkobyDGK3CmQB3chm
+   NiHIBoVu70UVM6OrgEScqHWLqY38O71MdZWwoGZDu2Tt3k2LU693oFG9s
+   Cr2UddKTCj4ps/Oaj5OG2x21TKsCN92NCaC6xv7iFhprEmmF384jZ5Alq
+   KSH48z4ZmdSenzzlJir9dP3oFWXq6/4uKuHwCwV9DApUboT75AEy58GwU
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="431226209"
+X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
+   d="scan'208";a="431226209"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 09:32:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="936898224"
+X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
+   d="scan'208";a="936898224"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.39.53])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 09:32:09 -0700
+Date:   Mon, 17 Apr 2023 09:32:06 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-cxl@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v12 1/6] cxl/mbox: Add GET_POISON_LIST mailbox command
+Message-ID: <ZD10hpfDnXaatUOE@aschofie-mobl2>
+References: <cover.1681159309.git.alison.schofield@intel.com>
+ <e87e1792e147a46f348019cc772e06f2ea19e970.1681159309.git.alison.schofield@intel.com>
+ <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230414151534.00004c71@Huawei.com>
-User-Agent: NeoMutt/20230407
+In-Reply-To: <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 14 Apr 2023, Jonathan Cameron wrote:
 
->On Fri, 24 Feb 2023 11:44:43 -0800
->Davidlohr Bueso <dave@stgolabs.net> wrote:
->
->> Make use of the background operations through the sanitize
->> command, per CXL 3.0 specs. Traditionally run times can be
->> rather long, depending on the size of the media.
->>
->> Estimate times based on:
->>	 https://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
->>
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->
->Various comments inline.  I haven't tested this yet so one
->or two are educated guesses.
+Dan, Vishal,
 
-Thanks for having a look at the series and all the feedback.
+Following up on using the new deprecated list ...
 
-...
+On Tue, Apr 11, 2023 at 06:47:56PM -0700, Dan Williams wrote:
+> alison.schofield@ wrote:
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > CXL devices maintain a list of locations that are poisoned or result
+> > in poison if the addresses are accessed by the host.
+> > 
+> > Per the spec, (CXL 3.0 8.2.9.8.4.1), the device returns this Poison
+> > list as a set of Media Error Records that include the source of the
+> > error, the starting device physical address, and length. The length is
+> > the number of adjacent DPAs in the record and is in units of 64 bytes.
+> > 
+> > Retrieve the poison list.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> >  drivers/cxl/core/mbox.c | 71 +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h    | 67 ++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/pci.c       |  4 +++
+> >  3 files changed, 142 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index f2addb457172..69a5d69dd53b 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -5,6 +5,8 @@
+> >  #include <linux/debugfs.h>
+> >  #include <linux/ktime.h>
+> >  #include <linux/mutex.h>
+> > +#include <asm/unaligned.h>
+> > +#include <cxlpci.h>
+> >  #include <cxlmem.h>
+> >  #include <cxl.h>
+> >  
+> > @@ -994,6 +996,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+> >  	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
+> >  	struct cxl_mbox_identify id;
+> >  	struct cxl_mbox_cmd mbox_cmd;
+> > +	u32 val;
+> >  	int rc;
+> >  
+> >  	mbox_cmd = (struct cxl_mbox_cmd) {
+> > @@ -1017,6 +1020,11 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+> >  	cxlds->lsa_size = le32_to_cpu(id.lsa_size);
+> >  	memcpy(cxlds->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+> >  
+> > +	if (test_bit(CXL_MEM_COMMAND_ID_GET_POISON, cxlds->enabled_cmds)) {
+> > +		val = get_unaligned_le24(id.poison_list_max_mer);
+> > +		cxlds->poison.max_errors = min_t(u32, val, CXL_POISON_LIST_MAX);
+> > +	}
+> > +
+> 
+> With this new interface I do not expect we want to support user tooling
+> that wants to retrieve the list via ioctl. So I think this wants a
+> lead-in patch that deprecates the poison command support so that the
+> linux-cxl community only has one mechanism to maintain going forward.
+> 
+> Something like the below as a lead-in, and then you would add code to
+> cxl_walk_cel() to set a flag for the "get poison" machinery.
+> 
+> -- >8 --
+> From f2cd1d1e09fe6f36255f3b8cd831b2b4903045d4 Mon Sep 17 00:00:00 2001
+> From: Dan Williams <dan.j.williams@intel.com>
+> Date: Tue, 11 Apr 2023 17:48:45 -0700
+> Subject: [PATCH] cxl/mbox: Deprecate poison commands
+> 
+> The CXL subsystem is adding a formal mechanism for retrieving the poison
+> list. Minimize the maintenance burden going forward, and maximize the
+> investment in common tooling by deprecating direct user access to issue
+> this command outside of CXL_MEM_RAW_COMMANDS debug scenarios.
+> 
+> A new cxl_deprecated_commands[] list is created for querying which
+> command ids defined in previous kernels are now deprecated.
 
->> @@ -988,6 +989,10 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
->>          return MEMTX_ERROR;
->>      }
->>
->> +    if (sanitize_running(&CXL_TYPE3(d)->cxl_dstate)) {
->> +        qemu_guest_getrandom_nofail(data, size);
->> +        return MEMTX_OK;
->> +    }
->
->Key here is that you are in media disable status.  I'd prefer checking
->that to whether sanitize is running. There may be other routes to disabling
->it in future.  Also makes me look at right bit of spec for what should be returned.
+Dan, Vishal,
 
-Yeah I agree, checking the media status seems more appropriate, but because
-this media disabled behavior is described specifically under the Sanitation
-section (more below), and the fact that no other cmd disables the media,
-I went with sanitize check. Of course, I would be surprised if the read/write
-semantics would ever vary if anything else also required it, so we could
-generalize instead.
+With the driver no longer returning these commands in the
+cxl_mem_commands[] list, they will appear as -EOPNOTSUPP in
+the ndctl:libcxl cxl_query().
 
+Is there something else we need to do to actually show these
+cmds as deprecated? Something like query the deprecated list
+and add a new status to cxl_query(). 
 
->Speaking of which, where does the spec say what should be returned on
->reads to disabled media?  Reference here (or a comment to say it's
->not explicitly stated if it isn't) would be good.
-
-I found it in CXL 3.0 spec page 556:
-
-"In this state, the Media Status field in the Memory Device Status
-register will indicate 11b (Disabled), all memory writes to the device
-will have no effect, and all memory reads will return random values"
-
-fyi I ended up adding a new patch for media disable management.
+At the moment, my goal is to do what is needed in the driver
+now, and pick up any accompanying libcxl changes after the
+driver changes are merged. A bit worried I'm leaving something
+undone in driver today.
 
 Thanks,
-Davidlohr
+Alison
+
+> 
+> Effectively all of the commands defined in:
+> 
+> 87815ee9d006 ("cxl/pci: Add media provisioning required commands")
+> 
+> ...were defined prematurely and should have waited until the kernel
+> implementation was decided. To my knowledge there are no shipping
+> devices with poison listing support and no known tools that would
+> regress with this change.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  drivers/cxl/core/mbox.c      |  3 ---
+>  include/uapi/linux/cxl_mem.h | 31 ++++++++++++++++++++++++++++---
+>  2 files changed, 28 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index f2addb457172..8e24038b8769 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -61,9 +61,6 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+>  	CXL_CMD(SET_ALERT_CONFIG, 0xc, 0, 0),
+>  	CXL_CMD(GET_SHUTDOWN_STATE, 0, 0x1, 0),
+>  	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
+> -	CXL_CMD(GET_POISON, 0x10, CXL_VARIABLE_PAYLOAD, 0),
+> -	CXL_CMD(INJECT_POISON, 0x8, 0, 0),
+> -	CXL_CMD(CLEAR_POISON, 0x48, 0, 0),
+>  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+>  	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
+>  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index 86bbacf2a315..90f17343f1ba 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -40,19 +40,22 @@
+>  	___C(SET_ALERT_CONFIG, "Set Alert Configuration"),                \
+>  	___C(GET_SHUTDOWN_STATE, "Get Shutdown State"),                   \
+>  	___C(SET_SHUTDOWN_STATE, "Set Shutdown State"),                   \
+> -	___C(GET_POISON, "Get Poison List"),                              \
+> -	___C(INJECT_POISON, "Inject Poison"),                             \
+> -	___C(CLEAR_POISON, "Clear Poison"),                               \
+> +	___DEPRECATED(GET_POISON, "Get Poison List"),                     \
+> +	___DEPRECATED(INJECT_POISON, "Inject Poison"),                    \
+> +	___DEPRECATED(CLEAR_POISON, "Clear Poison"),                      \
+>  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+>  	___C(SCAN_MEDIA, "Scan Media"),                                   \
+>  	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
+>  	___C(MAX, "invalid / last command")
+>  
+>  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> +#define ___DEPRECATED(a, b) CXL_MEM_DEPRECATED_ID_##a
+>  enum { CXL_CMDS };
+>  
+>  #undef ___C
+> +#undef ___DEPRECATED
+>  #define ___C(a, b) { b }
+> +#define ___DEPRECATED(a, b) { "Deprecated " b }
+>  static const struct {
+>  	const char *name;
+>  } cxl_command_names[] __attribute__((__unused__)) = { CXL_CMDS };
+> @@ -68,6 +71,28 @@ static const struct {
+>   */
+>  
+>  #undef ___C
+> +#undef ___DEPRECATED
+> +#define ___C(a, b) (0)
+> +#define ___DEPRECATED(a, b) (1)
+> +
+> +static const u8 cxl_deprecated_commands[]
+> +	__attribute__((__unused__)) = { CXL_CMDS };
+> +
+> +/*
+> + * Here's how this actually breaks out:
+> + * cxl_deprecated_commands[] = {
+> + *	[CXL_MEM_COMMAND_ID_INVALID] = 0,
+> + *	[CXL_MEM_COMMAND_ID_IDENTIFY] = 0,
+> + *	...
+> + *	[CXL_MEM_DEPRECATED_ID_GET_POISON] = 1,
+> + *	[CXL_MEM_DEPRECATED_ID_INJECT_POISON] = 1,
+> + *	[CXL_MEM_DEPRECATED_ID_CLEAR_POISON] = 1,
+> + *	...
+> + * };
+> + */
+> +
+> +#undef ___C
+> +#undef ___DEPRECATED
+>  
+>  /**
+>   * struct cxl_command_info - Command information returned from a query.
+> -- 
+> 2.39.2
+> -- 8< --
+
+snip
