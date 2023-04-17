@@ -2,252 +2,207 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A793C77B76
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 Apr 2023 19:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36A5C77B72
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Apr 2023 20:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjDQTji (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 17 Apr 2023 15:39:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53854 "EHLO
+        id S230026AbjDQUga (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Apr 2023 16:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229957AbjDQTjd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Apr 2023 15:39:33 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E612572A5
-        for <linux-cxl@vger.kernel.org>; Mon, 17 Apr 2023 12:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681760364; x=1713296364;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=uQ2REYuK1dwcWzMRwv3VSMYvDMMc765EMWDik6SjXB4=;
-  b=KWIiRAIIyizA7+KOsauINtGb4HqBJ7mvpEZ7bEsFbE4EWUpBd5Ul1xL3
-   VDwkfnA+jEpIZ8rccqFuuvn7CfO6QVtO3w7KpUs69+2fzQGT2TyexWIwi
-   oUnjRYLhW35BEjlVjmfGQXh6zbrpFA4fJW9gyYSTsGuzGtmM4g0qttn68
-   6Qzw7guRDEEZd4Nnbz9Qr9dSjSXzQd03GvkPdB19a/gYzmAS018S0GOXv
-   Pw+oF3zx9ZPgYLkOEDbkD4+bxYDdcQs/SUwlo3ExvkkatsNPeSc/Q+rpf
-   vKsKpjDxi+RMe/y1oOEdicSVG+11bv9ms5wBiLfsH544PkAGlYZa0p3bU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="333790569"
-X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
-   d="scan'208";a="333790569"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 12:39:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="693335504"
-X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
-   d="scan'208";a="693335504"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Apr 2023 12:39:17 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 17 Apr 2023 12:39:16 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Mon, 17 Apr 2023 12:39:16 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.45) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Mon, 17 Apr 2023 12:39:16 -0700
+        with ESMTP id S230072AbjDQUga (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Apr 2023 16:36:30 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2484C10;
+        Mon, 17 Apr 2023 13:36:28 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MeDl5mEWUknnW3jwWXA5xq4twtgdyqhg9ZLXsasrAmwkp7AXTxxcAOk7VAmXHCYlTn4hCZE+YDZk/HaS/2yDH0nXi0y+xbWNrELkc/yvrfA/1I4aiGMaw/2dzix8T1fUcUzOBnySmmrphCqk3Yc5hYuMWF31pJ58JPhOqxGdEzb2+5O3Hv10ehhKl5iAlZOMes4C3I215kSjaFirJtbxN8yCvW4JoXgereypIfSsX27K2s5RtlSS59zb06rr32PC6wFZqPy19DzWV8XuV0S6f3IvIWnm1WgO123Ib0JhJ3tu/700KmoFb1VB6TPSVCGUCmU9TGnyquANMbjyEnLx+A==
+ b=JS28PVnp961N/HpmBp0Q194FLof3VlXlgKBRb/h5Qzv5LIW7ONT0n6eQBBV8HMTdSddv+z/Y5FUQyPP+QeGO1mdUvyeJt6kp7FcK8Dr56ej2HeLP4LVtYa2qfh2fnRfmzbkjkOnRk280PszWtaadW8QHcaczYJTCZucmErvubpLuzAgEbkHFz8MvI1GzZ7h7CELWHXt3L9GIJZo+w54pedFDontPrK60xwKMcLmE2KdDTE7lLrwI273UkOjdeE5vwdWjWkSOM8KvxO4cbOk/vv3J0ld/T+6biBKYfoiZJQUj89wkRU3OXiiPr31z17xv5F65opcato41w32Ny3rTsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sXuqpm9BnFsXiAcGA5Up49l379kJP4sAl9nLOYXVOOU=;
- b=j6wri1oqckEiNCn1bdaCx+wkUZRM2+aXIz2EZp9r2LL67kN04xOxMVuOUehBJxmWXcMW5JyskDbvcENAek6yXn0E6YALelcGOvHVLWrywRPMQMwrHgjBXN0mU28uKiTQvOosZphYGhnI4Lp1iig5qg0n0uNxTVeg/xFd+UsyG6m3aoERGyq2x9F+OVOyLdYf7umbzg1z+fXgpi+0e+KxDhnY2ydc/fM3lYix8UwV3hO9XD3+c2w68hoQzoPrLDBiEX3rC3Uw6tRbb2MHswkj+dVq/BQ1hUqfbHb7zaKF8OGA4aAZ8nHPWkXHGS72CZ2WqVZsVcwnYE6st8nlwOByBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB8034.namprd11.prod.outlook.com (2603:10b6:510:247::22) with
+ bh=xwbzdqeGM8mPlbye6W3zxBHnZMfZTFXqSe3qlQnQ1mk=;
+ b=Tzv6RpkN4HhO5pqUq+UNFY30Cxy2Maam/rrOstOVyC/KPaYn6oIMTuGXdkk7xTl1szvs4fBw5KTp3t6sFuWLw6lkClLuqJQBcpXZU68q/kp5Bdi9ifFqWHiBCUjAVag0U+vSm+r0Orbjy6KWmR50yoFW4eWRlTN1rbfvug/vgJmAl22ro5OiEYkH9YY/dfT5LRcyE4G2qJQbg7ZQAnf12BvDVZFufGfeHtJTyxizwJCLILccQyqnk4DPFF97yVMiTcy4BI/9GQ9kcpI1915PQtbOnf38+2Ym2/sSTVfFv/FWJWD6bMwUcqJg0HWUafIWiXTsWgjMN2gdMLknAgNsQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xwbzdqeGM8mPlbye6W3zxBHnZMfZTFXqSe3qlQnQ1mk=;
+ b=yVrgBT3xrK38C6KS4HZnwttPZg91HyxLC+QHpUjIh3PIU6qOMChlru+CmZWsSpEMxWKUmVye+3Uvkh/nBhUUIdD7o14bqgJbzxRZAKdAtkBJcnSZsWzNW1UeTBBDxyzbU9TeafqjCKZX0uEj1wIo9s2AH5OXjaaes7uHoAtqeAc=
+Received: from DS7PR03CA0029.namprd03.prod.outlook.com (2603:10b6:5:3b8::34)
+ by BL1PR12MB5272.namprd12.prod.outlook.com (2603:10b6:208:319::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Mon, 17 Apr
- 2023 19:39:09 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233%6]) with mapi id 15.20.6298.045; Mon, 17 Apr 2023
- 19:39:09 +0000
-Date:   Mon, 17 Apr 2023 12:39:07 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        <linux-cxl@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v12 1/6] cxl/mbox: Add GET_POISON_LIST mailbox command
-Message-ID: <643da05aed721_1b66294ef@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.1681159309.git.alison.schofield@intel.com>
- <e87e1792e147a46f348019cc772e06f2ea19e970.1681159309.git.alison.schofield@intel.com>
- <64360dcc59cb0_417e294de@dwillia2-xfh.jf.intel.com.notmuch>
- <ZD10hpfDnXaatUOE@aschofie-mobl2>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Mon, 17 Apr
+ 2023 20:36:25 +0000
+Received: from DM6NAM11FT064.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b8:cafe::40) by DS7PR03CA0029.outlook.office365.com
+ (2603:10b6:5:3b8::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.46 via Frontend
+ Transport; Mon, 17 Apr 2023 20:36:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT064.mail.protection.outlook.com (10.13.172.234) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6319.20 via Frontend Transport; Mon, 17 Apr 2023 20:36:24 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 17 Apr
+ 2023 15:36:21 -0500
+Date:   Mon, 17 Apr 2023 22:36:18 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 5/6] PCI/AER: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <ZD2tY8VqjY9kB+y6@rric.localdomain>
+References: <20230411180302.2678736-1-terry.bowman@amd.com>
+ <20230411180302.2678736-6-terry.bowman@amd.com>
+ <20230414131950.00006e76@Huawei.com>
+ <ZDlkmcsbwsNv/t8+@rric.localdomain>
+ <20230417175431.00004ab5@Huawei.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ZD10hpfDnXaatUOE@aschofie-mobl2>
-X-ClientProxiedBy: SJ0PR03CA0271.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::6) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
+In-Reply-To: <20230417175431.00004ab5@Huawei.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB8034:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2bc1978-863f-4170-5c27-08db3f7b69ef
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT064:EE_|BL1PR12MB5272:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99f77158-f62b-4565-5d1f-08db3f8369ba
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OMoPbMuzDQCkMQBHkFvs4RXXDLfVFlLahpyoLoPPHjAkJIYJoDqolPf56KNO0xcHFEn6/5bgHk/3mKKt4ufLA1WFR5SFFJqEi5442KEpulkQYwQJYzDSzV8BNtjvEFxm1rSUQUK3FHoQv6ehWuuPagryFQ/AlmrAV5a4ZNRz+m68PZK1DZx+sN7A0Q/yZ1r+8ns3zyV94Ra6UcWgfOzk93ksT3BAYU2dACx7WTyo87fnfz4xDTxgteYgyRTurbm1BP5vSwq8ruUQ4k4V+MsnMau2RiSnWlA2PbUaZGGA743Y+dKH3QNAXemLGv3N5EHYCRbMepdTt5Opt1p09sL1qBW5sg1vprG6uJWS01TWGuoDTe63pUq4ewu1kVvKPtyxAn0uGh3PANGqge0GtqSilPCRcPgMy8emLxtNZWknNWTy/DOWahmp1Nb6HFTVzfOqp0vqF/0CyAJkHWvwRZuk1VnmgJ0r3XbgaqkwAzj6sFme6a0q+Ow9WsVBxMjHON8OGCTUZxQOGc3ItP5Yc+PK6v2mzb6P6yEB0taRUdaYQNuWvjltDvOZ4aRogDXHwiZL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(39860400002)(396003)(376002)(346002)(366004)(451199021)(2906002)(86362001)(41300700001)(8676002)(8936002)(66946007)(66476007)(4326008)(66556008)(5660300002)(110136005)(316002)(6636002)(54906003)(82960400001)(478600001)(38100700002)(6486002)(53546011)(26005)(186003)(6506007)(6512007)(9686003)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?p7GR3J/2pG3IQupHDK3aT3f1xnFsQZThIjpilvyPE7HBmYBq/c/Ge4f4G/QY?=
- =?us-ascii?Q?1ixkkgvSJ2TZ8bw47oVzpn4fQ+72/IswU3gLplDwHlKlTrTYDfkHpT2UoCmy?=
- =?us-ascii?Q?W/K02gopNsthwAgIWaZfBCIKMbI+ehI2sPabxQpYCAu3ZAKaoLTfEenLmyTz?=
- =?us-ascii?Q?Coxf31Vup8HUxVfFxarLPPlDG54esh9URZpqquS7M19DZ2Ygfo7CkbH8FQ5D?=
- =?us-ascii?Q?Hn2Hi75b0PnBlrAvdcsYM5IRNW35OmT/KsQqua6d15kMn/JE3KX2Mwyzs+GP?=
- =?us-ascii?Q?E5/GcOidmNZONy+JKlDzeSfJYu3wHSiaotWBvLwOMpHWMk9HXq1AC0FnlgeQ?=
- =?us-ascii?Q?lDVAaCtG4BTVT6zsI63qBvgWXmXt8SD4ixynYD/9LXbYiiM4zNjIk+HjHMbF?=
- =?us-ascii?Q?Lx534SuWOtWxvvB+6WStTE0pfl7xFNwSo5Zea5yW1+E8Pyt7WhN48raFAlm/?=
- =?us-ascii?Q?VsOK84piw+NnotYhrkQAlG40ZWBCTfdqfE8BBMqeMZakEVp39HRFaCxTBLh9?=
- =?us-ascii?Q?LABAjcWDv1nP3IRcMtntCkXKC4meOGnIH+L1tCtGRzlJXgQWwBX+DFnOvofP?=
- =?us-ascii?Q?jzG+VhOsOghQd54Xung1a5o/HZwoXXNRKj3aNknTtKK/wXvg2xI3UHeiYBGj?=
- =?us-ascii?Q?7JTkqJtA5uVgdvHeFqPMmijInsaknEMaU3gBfR99jxa+/glRxIa0eewnUE9G?=
- =?us-ascii?Q?czYIi1XGUdpQd6XKM5/IUG33eDNEG4qMCqYJwmnEGpscGz32SYyOLQT2iTPa?=
- =?us-ascii?Q?t3gUfX3faR6czvnjzkKjc1VwQa2tezz7CodBNjonDVh41WjqSuvfRAQJKU7G?=
- =?us-ascii?Q?T9MtUQe667q5DJeQGQ5vBJeMBCB+UI0ewv9ZPfWMMMXdBR3E9q3JVGWqNllb?=
- =?us-ascii?Q?ZJ65ujefd6IzZL8wZIjZ5hG0fOqOV+v1q2wsgoO4AjQrOk4QJ7yoYhoDBNSd?=
- =?us-ascii?Q?iEBVeaLdKB9FwNh8ZWZCM5SMZ+uVJopShWPbdi58QpkEbmAMKqbp9hWDLm8z?=
- =?us-ascii?Q?F1UkiMzdMK2IzSNgVrDjmK/er1ZsXO3osKxERqDii58ROOxcGofgGzUVeKMT?=
- =?us-ascii?Q?4pJifBrhGsm3sqRq+vDK4SH2YGmX50DFQTSiruy0zGhxoedqh9pLZaS/B4oN?=
- =?us-ascii?Q?mPXpbscZ803gOjAWKjGQ3AGyIREASIyDYznTB4oJ/R0EMBNS6i7Gj/Ok7zbV?=
- =?us-ascii?Q?dRN7SmsrnzkShBTAFaOLfXKJ0VGb9ujcmAum5AwWiOUMkB3uX7l/DsB5ENpe?=
- =?us-ascii?Q?eUp7Vv1bLExREKPYe8cZoXqjwIxDshuwSbSkrBzntEEpkPcmDLCO3nvQBqW7?=
- =?us-ascii?Q?yzWEGqvs4ws+KGrcpf6AKuNdfDE08Xp4WBAmXetufQxjUTsQgvJF676K0Jsj?=
- =?us-ascii?Q?hIN5UTpakMeeGo35ZFrsP5XSseGMp3edKH3CPx4BTncu6+jR/e0C0jsKsHfd?=
- =?us-ascii?Q?0CYbiIZGXYnNZCrMmC8hNG2W87NKpQCm9OvSjuCP3PgicLLeKBAoT4rzVudT?=
- =?us-ascii?Q?UkYNmWOxwafoOgLfI8VeZzcPNqJcOogb9j6i7ssOEYi/dtHNpCoQb7nJqUjQ?=
- =?us-ascii?Q?tiDQIXwlHqjD+qghaS4e9NYHmINI09aOsm6TOyeyFp3jqiOcJdKLtlyXI/fb?=
- =?us-ascii?Q?DQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2bc1978-863f-4170-5c27-08db3f7b69ef
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2023 19:39:09.5905
+X-Microsoft-Antispam-Message-Info: oHn1ftwkuRyeA9H+LnUrz5rirzW73iLZXj1/n3OHmZ73IRK3z0Ju5g8s34CNPita5SCEDgyl6GYF7ztZPtaM98xjwh4WUeC9F2PH50krN3HYiHplgeHwJOLM0XpYQNPrH2tN2gahUE9Q+WT8WOTNm/N2AwZzQ3/HwkiqFD1CdWdsOFIzcWP67JWANDAa7FL6U54dh5Cr6smXEWWhgymCKUomlNIAYVekeIjdWm4s4kfvb3WPoPwVo84w70aLVt3a5w3zE0iLkxmprHmCnP/DkEzpx9J0iiAPKUb5mYJqzouylN43LPncZq/gtskaRlvCj7tiC3ZiW4lhvTVaZzLrMi5Wvr+0esGczmLVuM7jmwJVAvhhHB2qepMEbBk5ALEgPzYiGf/WomB9Wr0YZN5uLV27cZTr9Jlbmfg4lwASbMazp+a5x7IU/sMDf33O9dzuWT/JU8ubedIYkbvl2I6yrU50SMTsGgQzTN8DuZtmfLDO3zBFVnVfYa71noLbM6X5Er36VmDmpP9FPBY7x2nLLu5y/YyQ11lViyllYBzMtIl2A5zQizm/TO/9m2xE5BbN69/udLDA3zGyIy6EoKXDP8jm/A7p1U569FJLDRlKftwip7y5ELdK7X2CTlfNVh/z9weTpUPE9wYX73T70nQA6Gjh/iPLgmAxTahDM3O8duFEBAnyOdd+6Dnm5h23V8m8BSyhsjfn94ERyu/9EHlST/IXgTWpw31wViyME/PMpMIzNoqLlqi3+13x4vOohta9SijVJX6P9c7d1t8aiir/1Q==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(396003)(39860400002)(136003)(451199021)(46966006)(40470700004)(36840700001)(54906003)(55016003)(40480700001)(6666004)(478600001)(7696005)(70586007)(81166007)(316002)(83380400001)(356005)(41300700001)(82740400003)(6916009)(426003)(336012)(4326008)(47076005)(36860700001)(186003)(16526019)(26005)(53546011)(9686003)(70206006)(5660300002)(7416002)(2906002)(8936002)(8676002)(40460700003)(82310400005)(67856001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2023 20:36:24.9362
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w2cabcS+X0b7aEHAb7VaeMIYkpjPnbU0q+df2DXnIjHQdUWveMoSUci2hMDooa6tXLZkPBKk6/WHRQVuv6RNjszlOVkNDvqljZD7RgoDa/s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8034
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99f77158-f62b-4565-5d1f-08db3f8369ba
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT064.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5272
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alison Schofield wrote:
-> 
-> Dan, Vishal,
-> 
-> Following up on using the new deprecated list ...
-> 
-> On Tue, Apr 11, 2023 at 06:47:56PM -0700, Dan Williams wrote:
-> > alison.schofield@ wrote:
-> > > From: Alison Schofield <alison.schofield@intel.com>
-> > > 
-> > > CXL devices maintain a list of locations that are poisoned or result
-> > > in poison if the addresses are accessed by the host.
-> > > 
-> > > Per the spec, (CXL 3.0 8.2.9.8.4.1), the device returns this Poison
-> > > list as a set of Media Error Records that include the source of the
-> > > error, the starting device physical address, and length. The length is
-> > > the number of adjacent DPAs in the record and is in units of 64 bytes.
-> > > 
-> > > Retrieve the poison list.
-> > > 
-> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > > ---
-> > >  drivers/cxl/core/mbox.c | 71 +++++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/cxlmem.h    | 67 ++++++++++++++++++++++++++++++++++++++
-> > >  drivers/cxl/pci.c       |  4 +++
-> > >  3 files changed, 142 insertions(+)
-> > > 
-> > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > > index f2addb457172..69a5d69dd53b 100644
-> > > --- a/drivers/cxl/core/mbox.c
-> > > +++ b/drivers/cxl/core/mbox.c
-> > > @@ -5,6 +5,8 @@
-> > >  #include <linux/debugfs.h>
-> > >  #include <linux/ktime.h>
-> > >  #include <linux/mutex.h>
-> > > +#include <asm/unaligned.h>
-> > > +#include <cxlpci.h>
-> > >  #include <cxlmem.h>
-> > >  #include <cxl.h>
-> > >  
-> > > @@ -994,6 +996,7 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
-> > >  	/* See CXL 2.0 Table 175 Identify Memory Device Output Payload */
-> > >  	struct cxl_mbox_identify id;
-> > >  	struct cxl_mbox_cmd mbox_cmd;
-> > > +	u32 val;
-> > >  	int rc;
-> > >  
-> > >  	mbox_cmd = (struct cxl_mbox_cmd) {
-> > > @@ -1017,6 +1020,11 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
-> > >  	cxlds->lsa_size = le32_to_cpu(id.lsa_size);
-> > >  	memcpy(cxlds->firmware_version, id.fw_revision, sizeof(id.fw_revision));
-> > >  
-> > > +	if (test_bit(CXL_MEM_COMMAND_ID_GET_POISON, cxlds->enabled_cmds)) {
-> > > +		val = get_unaligned_le24(id.poison_list_max_mer);
-> > > +		cxlds->poison.max_errors = min_t(u32, val, CXL_POISON_LIST_MAX);
-> > > +	}
-> > > +
-> > 
-> > With this new interface I do not expect we want to support user tooling
-> > that wants to retrieve the list via ioctl. So I think this wants a
-> > lead-in patch that deprecates the poison command support so that the
-> > linux-cxl community only has one mechanism to maintain going forward.
-> > 
-> > Something like the below as a lead-in, and then you would add code to
-> > cxl_walk_cel() to set a flag for the "get poison" machinery.
-> > 
-> > -- >8 --
-> > From f2cd1d1e09fe6f36255f3b8cd831b2b4903045d4 Mon Sep 17 00:00:00 2001
-> > From: Dan Williams <dan.j.williams@intel.com>
-> > Date: Tue, 11 Apr 2023 17:48:45 -0700
-> > Subject: [PATCH] cxl/mbox: Deprecate poison commands
-> > 
-> > The CXL subsystem is adding a formal mechanism for retrieving the poison
-> > list. Minimize the maintenance burden going forward, and maximize the
-> > investment in common tooling by deprecating direct user access to issue
-> > this command outside of CXL_MEM_RAW_COMMANDS debug scenarios.
-> > 
-> > A new cxl_deprecated_commands[] list is created for querying which
-> > command ids defined in previous kernels are now deprecated.
-> 
-> Dan, Vishal,
-> 
-> With the driver no longer returning these commands in the
-> cxl_mem_commands[] list, they will appear as -EOPNOTSUPP in
-> the ndctl:libcxl cxl_query().
-> 
-> Is there something else we need to do to actually show these
-> cmds as deprecated? Something like query the deprecated list
-> and add a new status to cxl_query(). 
+Hi Jonathan,
 
-No, because any software written before the deprecation does not know to
-look to see if they are deprecated, and software written afterwards can
-read the latest header file. So an EOPNOTSUPP return is all that is
-needed.
+On 17.04.23 17:54:31, Jonathan Cameron wrote:
+> On Fri, 14 Apr 2023 16:35:05 +0200
+> Robert Richter <rrichter@amd.com> wrote:
+> 
+> > On 14.04.23 13:19:50, Jonathan Cameron wrote:
+> > > On Tue, 11 Apr 2023 13:03:01 -0500
+> > > Terry Bowman <terry.bowman@amd.com> wrote:
+> > >   
+> > > > From: Robert Richter <rrichter@amd.com>
+> > > > 
+> > > > In Restricted CXL Device (RCD) mode a CXL device is exposed as an
+> > > > RCiEP, but CXL downstream and upstream ports are not enumerated and
+> > > > not visible in the PCIe hierarchy. Protocol and link errors are sent
+> > > > to an RCEC.
+> > > > 
+> > > > Restricted CXL host (RCH) downstream port-detected errors are signaled
+> > > > as internal AER errors, either Uncorrectable Internal Error (UIE) or
+> > > > Corrected Internal Errors (CIE). The error source is the id of the
+> > > > RCEC. A CXL handler must then inspect the error status in various CXL
+> > > > registers residing in the dport's component register space (CXL RAS
+> > > > cap) or the dport's RCRB (AER ext cap). [1]
+> > > > 
+> > > > Errors showing up in the RCEC's error handler must be handled and
+> > > > connected to the CXL subsystem. Implement this by forwarding the error
+> > > > to all CXL devices below the RCEC. Since the entire CXL device is
+> > > > controlled only using PCIe Configuration Space of device 0, Function
+> > > > 0, only pass it there [2]. These devices have the Memory Device class
+> > > > code set (PCI_CLASS_MEMORY_CXL, 502h) and the existing cxl_pci driver
+> > > > can implement the handler.  
+> > > 
+> > > This comment implies only class code compliant drivers.  Sure we don't
+> > > have drivers for anything else yet, but we should try to avoid saying
+> > > there won't be any (which I think above implies).
+> > > 
+> > > You have a comment in the code, but maybe relaxing the description above
+> > > to "currently support devices have..."  
+> > 
+> > It is used here to identify CXL memory devices and limit the
+> > enablement to those. The spec requires this to be set for CXL mem devs
+> > (see cxl 3.0, 8.1.12.2).
+> > 
+> > There could be other CXL devices (e.g. cache), but other drivers are
+> > not yet implemented. That is what I am referring to. The check makes
+> > sure there is actually a driver with a handler for it (cxl_pci).
+> 
+> Understood on intent. My worry is that the above can be read as a
+> statement on hardware restrictions, rathe than on what software currently
+> implements.  Meh. Minor point so I don't care that much!
+> Unlikely anyone will read the patch description after it merges anyway ;)
 
-> At the moment, my goal is to do what is needed in the driver
-> now, and pick up any accompanying libcxl changes after the
-> driver changes are merged. A bit worried I'm leaving something
-> undone in driver today.
+I have updated the description ...
 
-As long as there are users with new needs the driver will always have
-undone corner cases. I think this series is in good shape.
+> > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > > index 7a25b62d9e01..171a08fd8ebd 100644
+> > > > --- a/drivers/pci/pcie/aer.c
+> > > > +++ b/drivers/pci/pcie/aer.c
+> > > > @@ -946,6 +946,65 @@ static bool find_source_device(struct pci_dev *parent,
+> > > >  	return true;
+> > > >  }
+> > > >  
+> > > > +#ifdef CONFIG_PCIEAER_CXL
+> > > > +
+> > > > +static bool is_cxl_mem_dev(struct pci_dev *dev)
+> > > > +{
+> > > > +	/*
+> > > > +	 * A CXL device is controlled only using PCIe Configuration
+> > > > +	 * Space of device 0, Function 0.  
+> > > 
+> > > That's not true in general.   Definitely true that CXL protocol
+> > > error reporting is controlled only using this Devfn, but
+> > > more generally there could be other stuff in later functions.
+> > > So perhaps make the comment more specific.  
+> > 
+> > I actually mean CXL device in RCD mode here (seen as RCiEP in the PCI
+> > hierarchy).
+> > 
+> > The spec says (cxl 3.0, 8.1.3):
+> > 
+> > """
+> > In either case [(RCD and non-RCD)], the capability, status, and
+> > control fields in Device 0, Function 0 DVSEC control the CXL
+> > functionality of the entire device.
+> 
+> > """
+> > 
+> > So dev 0, func 0 must contain a CXL PCIe DVSEC. Thus it is a CXL
+> > device and able to handle CXL AER errors. The limitation to the first
+> > device prevents the handler from being run multiple times for the same
+> > event.
+> 
+> Fine with limitation.  Text says "device is controlled only using".
+> That is true for what you are controlling here, but other aspects of the
+> device are controlled via whatever interface they like.
+> 
+> Perhaps just quote the specification as you have done in your reply. Then it
+> is clear that we mean just these registers.
+
+... and comments.
+
+Thanks,
+
+-Robert
