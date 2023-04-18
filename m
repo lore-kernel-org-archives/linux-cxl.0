@@ -2,86 +2,86 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08134C77B7E
-	for <linux-cxl@archiver.kernel.org>; Tue, 18 Apr 2023 17:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E28C6FD18
+	for <linux-cxl@archiver.kernel.org>; Tue, 18 Apr 2023 18:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231701AbjDRRzO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 18 Apr 2023 13:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36282 "EHLO
+        id S231262AbjDRSB0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 18 Apr 2023 14:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231637AbjDRRzM (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 18 Apr 2023 13:55:12 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 303C5CC1B
-        for <linux-cxl@vger.kernel.org>; Tue, 18 Apr 2023 10:55:09 -0700 (PDT)
+        with ESMTP id S230435AbjDRSBY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 18 Apr 2023 14:01:24 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B7E1384B
+        for <linux-cxl@vger.kernel.org>; Tue, 18 Apr 2023 11:01:18 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 5AA5B3C0FAD;
-        Tue, 18 Apr 2023 17:55:08 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id D0A84922A40;
+        Tue, 18 Apr 2023 17:55:06 +0000 (UTC)
 Received: from pdx1-sub0-mail-a226.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id DC3AF3C21F5;
-        Tue, 18 Apr 2023 17:55:07 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1681840507; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 270009227F9;
+        Tue, 18 Apr 2023 17:55:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1681840506; a=rsa-sha256;
         cv=none;
-        b=Q/NIgeVVIZ+BRDJ6s+PqhEjfc/7ai+wUj8nA2q91FzhxiY0CaXncGpVM5kO0N7MavzcFZw
-        78suI329t5JRhqfU6fJd8PjWGTVnw/uh12Dvl/1dxGXJf0NMjsCR5SbIMBJKZ3CVj1eikO
-        N1+PKmzDNxY70ArF3IJVtpTNP9MyHLs8/XxUHE7lHAQqVNyPI/M+NbXXBJZHGob/VCWc0r
-        Z0udfgnPtLpwqe/Orh+1BhcQ9+RWwaxR2griQUPiBy7b+Eszgrxbj452StzdM+JN+aU1G5
-        rpSvwB1vuvXj5FypxvO1LnSS0O8d6srPohnRJAszXZl4NHq2/T6lujsMVmFZ/g==
+        b=31UUYueAbC/suiN+l7Vvt3BxcqWqUZJHrceCsy950roByDOKUF04cHioypUPwINw+/4y+w
+        hSspiETliPYBeXtwL7DtMHvchm24oWAKwtr1nHkZYv0cFmUES2DY+WgHJq34YWlt2vlXtt
+        HwzwXTaYwxJxO/9T4+2k7AJrZN6mM9bHagn9kdDLSK5c+fp7C7SDLcX2fRZjUPPZ3K/wmW
+        4Io7CS6YrpmG+B/+rtb3ra1H55sYXPuM82E9opxHRlwAbcd+hDQREZNhdqULCUAowjPlMa
+        MxaEE4Wlnz5YiocY/5daFohn13Zc5Nl9DAs1T9txbsbyXsHm8q5qo9X94zfU4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1681840507;
+        s=arc-2022; t=1681840506;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=35KmwLYXlr2Dk0FAwKgQFfarggDjni7NtBBnP+Y5sSw=;
-        b=DQEQO4zYnUKPkLirpL4kEl7zEBDPftGq5BNXrb9fyDekT5aBEJkcImZ/k6SOThbMcHcnQp
-        SvOv8o8GKdrDL4dpMjZFxzmwx0WhoRmX7aXKANPgTAy6YdxlbZBFeYX9yJxk3KGNOf7T5h
-        fr9Tx9ObK7f13IkwzN3KBe0/Uv8aelqzpCptdVnT5kzULwZgK2Vn28iW2AkSCO4L2WTm4h
-        VwiD8OiygM7Vt9tmxWg3vNyI7jVEd0KJ0jVDzZCxOQP8RXnCrm5by19L1NeAdhIC8PDs4J
-        W23c/ygcBtrxJicjGFQH6zKcKP5sMU/mgNKW7DVeYcdNLhxi3s/vq+c8nkU2Qg==
+        bh=VD6bLHmOCXGMv/QgtQaA/I+v5UKYnbaBd/iqcXqEjLo=;
+        b=vGorH7IxCVX7cN17AZvXokGQysnpa2G9ynZ/3Zqk1Fiwbdaulv/T5fOV0tIHo22B6ZAO/5
+        RI1sEDZH6TinneOqBmp8nAVxDiwWAEN415gkq6q1AIpT5ZIg19XrIuYJEiO5GgDl62QEYP
+        ldZ4BhKDOa8mhm5sJcOBWE6bnAhjXYGLmAOHGvdQB+52s/q/KhpIUfnsZM9uveBo8A/lhY
+        LjpcCu7qgoAatfYs9IPDGnnPyHWPE4BT5L2B9S8UfsVCPKuM7D5gvvmCOQ/zs+MZnZcgF5
+        j9eiipqA0+n3U3D7yco+AL0/sLmfy92TcLcZ5dgHgjgGQGyZUGaj3PTc/nyy0g==
 ARC-Authentication-Results: i=1;
-        rspamd-548d6c8f77-xbcmw;
+        rspamd-548d6c8f77-lxbh4;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Skirt-Oafish: 7907daf4732ae619_1681840508179_1184193323
-X-MC-Loop-Signature: 1681840508179:1813911708
-X-MC-Ingress-Time: 1681840508179
+X-Lyrical-Lonely: 032546760402fc8f_1681840506634_715316162
+X-MC-Loop-Signature: 1681840506634:525926386
+X-MC-Ingress-Time: 1681840506634
 Received: from pdx1-sub0-mail-a226.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.123.193.179 (trex/6.7.2);
-        Tue, 18 Apr 2023 17:55:08 +0000
+        by 100.125.42.190 (trex/6.7.2);
+        Tue, 18 Apr 2023 17:55:06 +0000
 Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a226.dreamhost.com (Postfix) with ESMTPSA id 4Q1BQf6fwZz2x;
-        Tue, 18 Apr 2023 10:55:06 -0700 (PDT)
+        by pdx1-sub0-mail-a226.dreamhost.com (Postfix) with ESMTPSA id 4Q1BQd3XCYzC2;
+        Tue, 18 Apr 2023 10:55:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1681840507;
-        bh=35KmwLYXlr2Dk0FAwKgQFfarggDjni7NtBBnP+Y5sSw=;
+        s=dreamhost; t=1681840505;
+        bh=VD6bLHmOCXGMv/QgtQaA/I+v5UKYnbaBd/iqcXqEjLo=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=JzmSWpClOVxRLsYMQGvnzKYf7XRdC21vT/pZa++r9dIh7BweHnP164rObSxtrj0Kd
-         iAure4Z0D7gxVN+EjXWjmLr0TDVAJIlNerpDRaVJyP6O5A2O7iWtRtbkH/xOsx4UoU
-         3+fpZWFyC4dTP7/5ovT6pHmoQPqqwn7P2u1zqHpkRwdbMQosiMFekO7JdndYbAM7B0
-         qj4LqsL+fGehYIpWf/kuSpnJKjhkCh/Aufox1n9U3Tvm3q58HSzoyepFzjpwk2e/pk
-         2vDlYli6q3uBbggoBnZ6uoLx/qAENBIG/Z7rZtTDy60bSdMDYJTGx1HFyV5iCwoBLh
-         gHW6OkooXlvDQ==
+        b=gmn+fmAhfd8wu7artzLTt38KcrTXc8Hv6vop3dSOYMuC/adfXZdqEvOHu51xqh9jP
+         ZRwYRfCaIUtWPY0mzY7e7B6WTBDr/pNwTDK6hpk3EnNLBYk3DRkeccx6ZfKBuSfmSo
+         DRlBtJRFUy6djuy1xvznWwUwh28z7PFSGhjHl4rMq0VKy7tkkb6abWbkwjIVftLloq
+         4ie0XgAT5vKQlSjto6BeDq/rfGGujjkzb31zBSLB18tc49J8rWuq2/sXoogw4gdNRS
+         szdahxqUxzd7uiexJVd7y88ADGN1EOkPoAF4V+5oW6v0pqeBvmbbqQHrtXtUeFWlnn
+         sk3SdAO3Neprg==
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Jonathan.Cameron@huawei.com
 Cc:     dan.j.williams@intel.com, fan.ni@samsung.com,
         a.manzanares@samsung.com, dave.jiang@intel.com, dave@stgolabs.net,
         linux-cxl@vger.kernel.org
-Subject: [PATCH 4/5] hw/cxl: Add support for device sanitation
-Date:   Tue, 18 Apr 2023 10:23:36 -0700
-Message-Id: <20230418172337.19207-5-dave@stgolabs.net>
+Subject: [PATCH 2/5] cxl/mbox: Wire up interrupts for background completion
+Date:   Tue, 18 Apr 2023 10:23:34 -0700
+Message-Id: <20230418172337.19207-3-dave@stgolabs.net>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230418172337.19207-1-dave@stgolabs.net>
 References: <20230418172337.19207-1-dave@stgolabs.net>
@@ -91,179 +91,97 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Make use of the background operations through the sanitize
-command, per CXL 3.0 specs. Traditionally run times can be
-rather long, depending on the size of the media.
+Notify when the background operation is done.
 
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- hw/cxl/cxl-mailbox-utils.c | 125 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 124 insertions(+), 1 deletion(-)
+ hw/cxl/cxl-device-utils.c   | 10 +++++++++-
+ hw/cxl/cxl-mailbox-utils.c  | 11 +++++++++++
+ hw/mem/cxl_type3.c          |  2 +-
+ include/hw/cxl/cxl_device.h |  1 +
+ 4 files changed, 22 insertions(+), 2 deletions(-)
 
+diff --git a/hw/cxl/cxl-device-utils.c b/hw/cxl/cxl-device-utils.c
+index 4bb4e85dae19..b10ab390234c 100644
+--- a/hw/cxl/cxl-device-utils.c
++++ b/hw/cxl/cxl-device-utils.c
+@@ -272,10 +272,18 @@ static void device_reg_init_common(CXLDeviceState *cxl_dstate)
+ 
+ static void mailbox_reg_init_common(CXLDeviceState *cxl_dstate)
+ {
+-    /* 2048 payload size, with no interrupt */
++    const uint8_t msi_n = 11;
++
++    /* 2048 payload size */
+     ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
+                      PAYLOAD_SIZE, CXL_MAILBOX_PAYLOAD_SHIFT);
+     cxl_dstate->payload_size = CXL_MAILBOX_MAX_PAYLOAD_SIZE;
++    /* irq support */
++    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
++                     BG_INT_CAP, 1);
++    ARRAY_FIELD_DP32(cxl_dstate->mbox_reg_state32, CXL_DEV_MAILBOX_CAP,
++                     MSI_N, msi_n);
++    cxl_dstate->mbox_msi_n = msi_n;
+ }
+ 
+ static void memdev_reg_init_common(CXLDeviceState *cxl_dstate) { }
 diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index e0e20bc3a2bb..2808d0161a38 100644
+index 1a4480d42908..224bfdb4bfca 100644
 --- a/hw/cxl/cxl-mailbox-utils.c
 +++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -18,6 +18,7 @@
- #include "qemu/log.h"
- #include "qemu/units.h"
- #include "qemu/uuid.h"
-+#include "sysemu/hostmem.h"
+@@ -8,6 +8,8 @@
+  */
  
- #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
+ #include "qemu/osdep.h"
++#include "hw/pci/msi.h"
++#include "hw/pci/msix.h"
+ #include "hw/cxl/cxl.h"
+ #include "hw/cxl/cxl_events.h"
+ #include "hw/pci/pci.h"
+@@ -980,9 +982,18 @@ static void bg_timercb(void *opaque)
+     cxl_dstate->mbox_reg_state64[R_CXL_DEV_BG_CMD_STS] = bg_status_reg;
  
-@@ -71,6 +72,9 @@ enum {
-         #define GET_PARTITION_INFO     0x0
-         #define GET_LSA       0x2
-         #define SET_LSA       0x3
-+    SANITATION    = 0x44,
-+        #define SANITIZE      0x0
-+        #define SECURE_ERASE  0x1
-     MEDIA_AND_POISON = 0x43,
-         #define GET_POISON_LIST        0x0
-         #define INJECT_POISON          0x1
-@@ -819,6 +823,112 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
- #define IMMEDIATE_LOG_CHANGE (1 << 4)
- #define BACKGROUND_OPERATION (1 << 5)
+     if (cxl_dstate->bg.complete_pct == 100) {
++        CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
++        PCIDevice *pdev = PCI_DEVICE(ct3d);
++
+         cxl_dstate->bg.starttime = 0;
+         /* registers are updated, allow new bg-capable cmds */
+         cxl_dstate->bg.runtime = 0;
++
++        if (msix_enabled(pdev)) {
++            msix_notify(pdev, cxl_dstate->mbox_msi_n);
++        } else if (msi_enabled(pdev)) {
++            msi_notify(pdev, cxl_dstate->mbox_msi_n);
++        }
+     }
+ }
  
-+/* re-initialize the address space */
-+static void __do_sanitization(CXLDeviceState *cxl_dstate)
-+{
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-+    DeviceState *ds = DEVICE(ct3d);
-+    char *name;
-+    MemoryRegion *mr;
-+
-+    if (ct3d->hostvmem) {
-+        mr = host_memory_backend_get_memory(ct3d->hostvmem);
-+        if (!mr) {
-+            return;
-+        }
-+        if (ds->id) {
-+            name = g_strdup_printf("cxl-type3-dpa-vmem-space:%s", ds->id);
-+        } else {
-+            name = g_strdup("cxl-type3-dpa-vmem-space");
-+        }
-+
-+        address_space_destroy(&ct3d->hostvmem_as);
-+        address_space_init(&ct3d->hostvmem_as, mr, name);
-+        g_free(name);
-+    }
-+    if (ct3d->hostpmem) {
-+        mr = host_memory_backend_get_memory(ct3d->hostpmem);
-+        if (!mr) {
-+            return;
-+        }
-+        if (ds->id) {
-+            name = g_strdup_printf("cxl-type3-dpa-pmem-space:%s", ds->id);
-+        } else {
-+            name = g_strdup("cxl-type3-dpa-pmem-space");
-+        }
-+
-+        address_space_destroy(&ct3d->hostpmem_as);
-+        address_space_init(&ct3d->hostpmem_as, mr, name);
-+        g_free(name);
-+    }
-+}
-+
-+/*
-+ * CXL 3.0 spec section 8.2.9.8.5.1 - Sanitize.
-+ *
-+ * Once the Sanitize command has started successfully, the device shall
-+ * shall be placed in the media disabled state. If the command fails or
-+ * is interrupted by a reset or power failure, it shall remain in the
-+ * media disabled state until a successful Sanitize command has been
-+ * completed.
-+ */
-+static CXLRetCode cmd_sanitation_sanitize(struct cxl_cmd *cmd,
-+                                          CXLDeviceState *cxl_dstate,
-+                                          uint16_t *len)
-+{
-+    unsigned int secs;
-+    uint64_t total_mem; /* in Mb */
-+    struct cxl_cmd *c;
-+
-+    *len = 0;
-+
-+    /* Reported in CEL */
-+    c = &cxl_dstate->cxl_cmd_set[SANITATION][SANITIZE];
-+    if (!(c->effect & BACKGROUND_OPERATION)) {
-+        __do_sanitization(cxl_dstate);
-+        return CXL_MBOX_SUCCESS;
-+    }
-+
-+    /*
-+     * Estimated times based on:
-+     *     https://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
-+     */
-+    total_mem = (cxl_dstate->vmem_size + cxl_dstate->pmem_size) >> 20;
-+    if (total_mem <= 512) {
-+        secs = 4;
-+    } else if (total_mem <= 1024) {
-+        secs = 8;
-+    } else if (total_mem <= 2 * 1024) {
-+        secs = 15;
-+    } else if (total_mem <= 4 * 1024) {
-+        secs = 30;
-+    } else if (total_mem <= 8 * 1024) {
-+        secs = 60;
-+    } else if (total_mem <= 16 * 1024) {
-+        secs = 2 * 60;
-+    } else if (total_mem <= 32 * 1024) {
-+        secs = 4 * 60;
-+    } else if (total_mem <= 64 * 1024) {
-+        secs = 8 * 60;
-+    } else if (total_mem <= 128 * 1024) {
-+        secs = 15 * 60;
-+    } else if (total_mem <= 256 * 1024) {
-+        secs = 30 * 60;
-+    } else if (total_mem <= 512 * 1024) {
-+        secs = 60 * 60;
-+    } else if (total_mem <= 1024 * 1024) {
-+        secs = 120 * 60;
-+    } else {
-+        secs = 240 * 60; /* max 4 hrs */
-+    }
-+
-+    /* sanitize when done */
-+    cxl_dev_media_disable(cxl_dstate);
-+    cxl_dstate->bg.runtime = secs * 1000UL;
-+
-+    return CXL_MBOX_BG_STARTED;
-+}
-+
- static struct cxl_cmd cxl_cmd_set[256][256] = {
-     [EVENTS][GET_RECORDS] = { "EVENTS_GET_RECORDS",
-         cmd_events_get_records, 1, 0 },
-@@ -842,6 +952,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
-     [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
-     [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
-         ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
-+    [SANITATION][SANITIZE] = { "SANITATION_SANITIZE", cmd_sanitation_sanitize,
-+        0, IMMEDIATE_DATA_CHANGE | BACKGROUND_OPERATION },
-     [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
-         cmd_media_get_poison_list, 16, 0 },
-     [MEDIA_AND_POISON][INJECT_POISON] = { "MEDIA_AND_POISON_INJECT_POISON",
-@@ -985,7 +1097,18 @@ static void bg_timercb(void *opaque)
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 63c28a1ed5d2..801f72c5fcae 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -777,7 +777,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+     ComponentRegisters *regs = &cxl_cstate->crb;
+     MemoryRegion *mr = &regs->component_registers;
+     uint8_t *pci_conf = pci_dev->config;
+-    unsigned short msix_num = 10;
++    unsigned short msix_num = 12;
+     int i, rc;
  
-         bg_status_reg = FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS, RET_CODE, ret);
- 
--        /* TODO add ad-hoc cmd succesful completion handling */
-+        /* ad-hoc cmd succesful completion handling */
-+        if (ret == CXL_MBOX_SUCCESS) {
-+            switch (cxl_dstate->bg.opcode) {
-+            case 0x4400: /* sanitize */
-+                __do_sanitization(cxl_dstate);
-+                cxl_dev_media_enable(cxl_dstate);
-+                break;
-+            default:
-+                __builtin_unreachable();
-+                break;
-+            }
-+        }
-     } else {
-         /* estimate only */
-         cxl_dstate->bg.complete_pct = 100 * now / total_time;
+     QTAILQ_INIT(&ct3d->error_list);
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index dbb8a955723b..f986651b6ead 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -189,6 +189,7 @@ typedef struct cxl_device_state {
+     struct {
+         MemoryRegion mailbox;
+         uint16_t payload_size;
++        uint8_t mbox_msi_n;
+         union {
+             uint8_t mbox_reg_state[CXL_MAILBOX_REGISTERS_LENGTH];
+             uint16_t mbox_reg_state16[CXL_MAILBOX_REGISTERS_LENGTH / 2];
 -- 
 2.40.0
 
