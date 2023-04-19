@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC9CC77B73
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 20:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1098FC77B7E
+	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 20:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjDSUYC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 Apr 2023 16:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40916 "EHLO
+        id S230385AbjDSUYE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 19 Apr 2023 16:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbjDSUWC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 16:22:02 -0400
+        with ESMTP id S231458AbjDSUWE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 16:22:04 -0400
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1533E59FB;
-        Wed, 19 Apr 2023 13:22:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC495FE9;
+        Wed, 19 Apr 2023 13:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681935721; x=1713471721;
+  t=1681935723; x=1713471723;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=b6IFzRtDHCzaF3JKSOOP0htMK1gOW1WrNiNaLd2iyoY=;
-  b=V6V5edACf8kx39VMRB6gPxcZVaRRsjTkbAyf11QZdesxe+H0YJFSkHXb
-   89K3pCyr5MedHhjKnQ5PmDpeN3O/gzJZQJDW9GIDgz44zjqFL0IKacwKu
-   gMwHGtoKtOdt9vHzEJhD5pPaRFqjLngsXeMNSjVQ3cwTl879xP+k/4nMl
-   3ppqrzg1pXjG8BJgL+0ORB15Gpr4jQvoBT2E7XQtL51lYJ+IAb4uzI87P
-   djR4EpRfOP5WeUiIjLib/o/AsSd3ecjDFr9cr6WvaWHkep8dYxgypoqxH
-   WWb3L0M4KDr6eruX6AjapYBMuK1chKMh7ZuFsHZiA7zMbxvsqtEkq4ZWx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="373441388"
+  bh=nHivFAoX+KpQulWxpp4bYkr+M7XTmcATg4pNCtJynvc=;
+  b=cYa7n0AP+nbwOue5kYtaL36AcS2NIlDlvCGJ8FwBB6gYcwLIu4OuovtD
+   syXz77tCu9au/UIMXXoYi1IaqEWSHlfHk5WXtWWsptAPn0/GS9/ZCYuC8
+   iYcBFlHECIlN6Yfm8M2k/AYoRd0IBt+8RGjobohdjCPtXz6CN8ndublnk
+   S3gmT+hd/tMEkoE3hMsiHDG6lPqQOx0iVvwiAk+zflT8ZzwHVCUrO/Ule
+   rsC3WC35pScg5DFKfqM0GeMPArnaPL0kokbVry3yNDyQTeX6SF7jHIcnf
+   jss8E99pmh+9Ty1ywKTI04LbLzw7tVLJMpolasQxHiSMgsSEnn/wGfJhQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="373441415"
 X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="373441388"
+   d="scan'208";a="373441415"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:21:50 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="1021336995"
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="1021337058"
 X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="1021336995"
+   d="scan'208";a="1021337058"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.179.6])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:21:50 -0700
-Subject: [PATCH v4 08/23] cxl: Add support for _DSM Function for retrieving
- QTG ID
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:01 -0700
+Subject: [PATCH v4 10/23] cxl: Add helpers to calculate pci latency for the
+ CXL device
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rafael@kernel.org, lukas@wunner.de, Jonathan.Cameron@huawei.com
-Date:   Wed, 19 Apr 2023 13:21:49 -0700
-Message-ID: <168193570968.1178687.16632681494857661844.stgit@djiang5-mobl3>
+Date:   Wed, 19 Apr 2023 13:22:01 -0700
+Message-ID: <168193572162.1178687.9726045601551945413.stgit@djiang5-mobl3>
 In-Reply-To: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
 References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,194 +57,152 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL spec v3.0 9.17.3 CXL Root Device Specific Methods (_DSM)
-
-Add support to retrieve QTG ID via ACPI _DSM call. The _DSM call requires
-an input of an ACPI package with 4 dwords (read latency, write latency,
-read bandwidth, write bandwidth). The call returns a package with 1 WORD
-that provides the max supported QTG ID and a package that may contain 0 or
-more WORDs as the recommended QTG IDs in the recommended order.
+The latency is calculated by dividing the flit size over the bandwidth. Add
+support to retrieve the flit size for the CXL device and calculate the
+latency of the downstream link.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
 v2:
-- Reorder var declaration and use C99 style. (Jonathan)
-- Allow >2 ACPI objects in package for future expansion. (Jonathan)
-- Check QTG IDs against MAX QTG ID provided by output package. (Jonathan)
+- Fix commit log issues. (Jonathan)
+- Fix var declaration issues. (Jonathan)
 ---
- drivers/cxl/core/Makefile |    1 
- drivers/cxl/core/acpi.c   |  116 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h         |   16 ++++++
- 3 files changed, 133 insertions(+)
- create mode 100644 drivers/cxl/core/acpi.c
+ drivers/cxl/core/pci.c |   68 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlpci.h   |   15 +++++++++++
+ drivers/cxl/pci.c      |   13 ---------
+ 3 files changed, 83 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 867a8014b462..30d61c8cae22 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -13,5 +13,6 @@ cxl_core-y += mbox.o
- cxl_core-y += pci.o
- cxl_core-y += hdm.o
- cxl_core-y += cdat.o
-+cxl_core-y += acpi.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
-new file mode 100644
-index 000000000000..6eda5cad8d59
---- /dev/null
-+++ b/drivers/cxl/core/acpi.c
-@@ -0,0 +1,116 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/acpi.h>
-+#include <linux/pci.h>
-+#include <asm/div64.h>
-+#include "cxlpci.h"
-+#include "cxl.h"
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 1c415b26e866..bb58296b3e56 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -712,3 +712,71 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+ 	return PCI_ERS_RESULT_NEED_RESET;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
 +
-+const guid_t acpi_cxl_qtg_id_guid =
-+	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
-+		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
++static int pci_bus_speed_to_mbps(enum pci_bus_speed speed)
++{
++	switch (speed) {
++	case PCIE_SPEED_2_5GT:
++		return 2500;
++	case PCIE_SPEED_5_0GT:
++		return 5000;
++	case PCIE_SPEED_8_0GT:
++		return 8000;
++	case PCIE_SPEED_16_0GT:
++		return 16000;
++	case PCIE_SPEED_32_0GT:
++		return 32000;
++	case PCIE_SPEED_64_0GT:
++		return 64000;
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static int cxl_pci_mbits_to_mbytes(struct pci_dev *pdev)
++{
++	int mbits;
++
++	mbits = pci_bus_speed_to_mbps(pdev->bus->cur_bus_speed);
++	if (mbits < 0)
++		return mbits;
++
++	return mbits >> 3;
++}
++
++static int cxl_flit_size(struct pci_dev *pdev)
++{
++	if (cxl_pci_flit_256(pdev))
++		return 256;
++
++	return 68;
++}
 +
 +/**
-+ * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
-+ * @handle: ACPI handle
-+ * @input: bandwidth and latency data
++ * cxl_pci_get_latency - calculate the link latency for the PCIe link
++ * @pdev - PCI device
 + *
-+ * Issue QTG _DSM with accompanied bandwidth and latency data in order to get
-+ * the QTG IDs that falls within the performance data.
++ * return: calculated latency or -errno
++ *
++ * CXL Memory Device SW Guide v1.0 2.11.4 Link latency calculation
++ * Link latency = LinkPropagationLatency + FlitLatency + RetimerLatency
++ * LinkProgationLatency is negligible, so 0 will be used
++ * RetimerLatency is assumed to be negligible and 0 will be used
++ * FlitLatency = FlitSize / LinkBandwidth
++ * FlitSize is defined by spec. CXL rev3.0 4.2.1.
++ * 68B flit is used up to 32GT/s. >32GT/s, 256B flit size is used.
++ * The FlitLatency is converted to picoseconds.
 + */
-+struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
-+						 struct qtg_dsm_input *input)
++long cxl_pci_get_latency(struct pci_dev *pdev)
 +{
-+	union acpi_object *out_obj, *out_buf, *pkg;
-+	union acpi_object in_buf = {
-+		.buffer = {
-+			.type = ACPI_TYPE_BUFFER,
-+			.pointer = (u8 *)input,
-+			.length = sizeof(u32) * 4,
-+		},
-+	};
-+	union acpi_object in_obj = {
-+		.package = {
-+			.type = ACPI_TYPE_PACKAGE,
-+			.count = 1,
-+			.elements = &in_buf
-+		},
-+	};
-+	struct qtg_dsm_output *output = NULL;
-+	int len, rc, i;
-+	u16 *max_qtg;
++	long bw;
 +
-+	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
-+	if (!out_obj)
-+		return ERR_PTR(-ENXIO);
++	bw = cxl_pci_mbits_to_mbytes(pdev);
++	if (bw < 0)
++		return bw;
 +
-+	if (out_obj->type != ACPI_TYPE_PACKAGE) {
-+		rc = -ENXIO;
-+		goto err;
-+	}
-+
-+	/* Check Max QTG ID */
-+	pkg = &out_obj->package.elements[0];
-+	if (pkg->type != ACPI_TYPE_BUFFER) {
-+		rc = -ENXIO;
-+		goto err;
-+	}
-+
-+	if (pkg->buffer.length != sizeof(u16)) {
-+		rc = -ENXIO;
-+		goto err;
-+	}
-+	max_qtg = (u16 *)pkg->buffer.pointer;
-+
-+	/* Retrieve QTG IDs package */
-+	pkg = &out_obj->package.elements[1];
-+	if (pkg->type != ACPI_TYPE_PACKAGE) {
-+		rc = -ENXIO;
-+		goto err;
-+	}
-+
-+	out_buf = &pkg->package.elements[0];
-+	if (out_buf->type != ACPI_TYPE_BUFFER) {
-+		rc = -ENXIO;
-+		goto err;
-+	}
-+
-+	len = out_buf->buffer.length;
-+
-+	/* It's legal to have 0 QTG entries */
-+	if (len == 0)
-+		goto out;
-+
-+	/* Malformed package, not multiple of WORD size */
-+	if (len % sizeof(u16)) {
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
-+	output = kmalloc(len + sizeof(*output), GFP_KERNEL);
-+	if (!output) {
-+		rc = -ENOMEM;
-+		goto err;
-+	}
-+
-+	output->nr = len / sizeof(u16);
-+	memcpy(output->qtg_ids, out_buf->buffer.pointer, len);
-+
-+	for (i = 0; i < output->nr; i++) {
-+		if (output->qtg_ids[i] > *max_qtg)
-+			pr_warn("QTG ID %u greater than MAX %u\n",
-+				output->qtg_ids[i], *max_qtg);
-+	}
-+
-+out:
-+	ACPI_FREE(out_obj);
-+	return output;
-+
-+err:
-+	ACPI_FREE(out_obj);
-+	return ERR_PTR(rc);
++	return cxl_flit_size(pdev) * 1000000L / bw;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_acpi_evaluate_qtg_dsm, CXL);
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 318aa051f65a..6426c4c22e28 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -7,6 +7,7 @@
- #include <linux/libnvdimm.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
-+#include <linux/acpi.h>
- #include <linux/log2.h>
- #include <linux/list.h>
- #include <linux/io.h>
-@@ -793,6 +794,21 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
- }
- #endif
++EXPORT_SYMBOL_NS_GPL(cxl_pci_get_latency, CXL);
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 1bca1c0e4b40..795eba31fe29 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -167,6 +167,19 @@ struct cdat_sslbis {
+ #define SSLBIS_US_PORT		0x0100
+ #define SSLBIS_ANY_PORT		0xffff
  
-+struct qtg_dsm_input {
-+	u32 rd_lat;
-+	u32 wr_lat;
-+	u32 rd_bw;
-+	u32 wr_bw;
-+};
++/*
++ * CXL v3.0 6.2.3 Table 6-4
++ * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
++ * mode, otherwise it's 68B flits mode.
++ */
++static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
++{
++	u16 lnksta2;
 +
-+struct qtg_dsm_output {
-+	int nr;
-+	u16 qtg_ids[];
-+};
++	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
++	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
++}
 +
-+struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
-+						 struct qtg_dsm_input *input);
+ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+ struct cxl_dev_state;
+ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+@@ -189,4 +202,6 @@ int cxl_##x##_parse_entry(struct cdat_entry_header *header, void *arg)
+ cxl_parse_entry(dsmas);
+ cxl_parse_entry(dslbis);
+ cxl_parse_entry(sslbis);
 +
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
++long cxl_pci_get_latency(struct pci_dev *pdev);
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index ea38bd49b0cf..ed39d133b70d 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -365,19 +365,6 @@ static bool is_cxl_restricted(struct pci_dev *pdev)
+ 	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
+ }
+ 
+-/*
+- * CXL v3.0 6.2.3 Table 6-4
+- * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+- * mode, otherwise it's 68B flits mode.
+- */
+-static bool cxl_pci_flit_256(struct pci_dev *pdev)
+-{
+-	u16 lnksta2;
+-
+-	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+-	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
+-}
+-
+ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+ {
+ 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
 
 
