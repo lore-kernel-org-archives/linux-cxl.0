@@ -2,101 +2,97 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F20DC77B73
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 08:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7152CC77B73
+	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 11:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232614AbjDSIbw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 Apr 2023 04:31:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
+        id S232102AbjDSLRI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 19 Apr 2023 07:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232628AbjDSIbn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 04:31:43 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99733AD23
-        for <linux-cxl@vger.kernel.org>; Wed, 19 Apr 2023 01:31:29 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-54ee0b73e08so493063537b3.0
-        for <linux-cxl@vger.kernel.org>; Wed, 19 Apr 2023 01:31:29 -0700 (PDT)
+        with ESMTP id S231580AbjDSLRH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 07:17:07 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B3214478;
+        Wed, 19 Apr 2023 04:16:33 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-63b78b344d5so2210180b3a.1;
+        Wed, 19 Apr 2023 04:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681893088; x=1684485088;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XQKlxolxu57/urtOdhAfoNxCg5j9w4kz8MMZUwQknvA=;
-        b=EApDnOZFC5zCTGqNc3oSLIVrSvdxkg3dO8YfwAriazGJhh3oJic9lSG5mVkfr+BfZR
-         f/kfo7gdUGUUVn2wjmGL/L1C49G8WXZXAs9s5kqzjUHlISh1BIs4RIw3ccAUw9o7idzn
-         l+BiTHol4YzC3tWv7kvbnfIELVjbrgVQeqwm2lpBhDRogDavDwBPaLM8Hw7enn5kRHV+
-         O9EcjwrIEfky1AHkO6S1Bbsptx+uTbIgyCTVNX4nZjL9782p6/wjmhQukHiyb66x1+dN
-         3hwgjPchWu3iRBe7a+S8G0vVFURQv8BxtuPG2Z38y4u9drQhj3U+gRjBKTFd++7avnPI
-         KcVw==
+        d=gmail.com; s=20221208; t=1681902933; x=1684494933;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4qJ0quS8PSmcOSKHlL8+ZsUIniTqrOGEBBq6bjBNxf0=;
+        b=Z5Q5tE1GLgm4wm3YWrNt4E+8IlHzviPDJAEPbQU/+E8/RAaqgG+gqOBlL9ZGwGHb5G
+         ME5NefLIzmK408Lre3SEK75QOOaPcvunXL3eq/b/+kJ252xTopqnqfmbmR01H1bDD3M1
+         wRmcFJqIEG/2sIkVL6j5E3G0AzGkxSjAMt1UXw5ZW4knVTMugvgDppz+7vItmdWPCheh
+         HMN6mhK2UNk1OjVFul+nf5MxMJjghQsj8nY8/vrKYUGVKKCR63pTvz5jc0sgkQyGYRbC
+         2EeR9ajKXTxZK8bInDFHXgDJJQ7Y1KDbDiAeTMz1U2BvXBAA0OqwvbivdTlvtgZfd4/D
+         NMtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681893088; x=1684485088;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XQKlxolxu57/urtOdhAfoNxCg5j9w4kz8MMZUwQknvA=;
-        b=QrnrswnHOisFV96zDi+GaIu4RVmvsJV90W59EjaM6jIOOzKfHxmdl1JiQADpe+vNHY
-         J6pDWesrtoRjIaPtXBxC73kzOU1YEfldGDLK3ws6ktq0Va7eBMmEkrBdMpzsTL7C+CK/
-         ubZAsEMUuIB+zr+HTLIrR/Z9oCiyELBooZwV3uFxlR8CknRLUxQwBbSZJplW0d9PMxJc
-         QTJ0xx1U8wNfciHXGShGiwNjZg2fMetHgfV/F4YQv1Vt5diHCNzrgek64v0zbVa6VRRc
-         U+lF3At0Aj1hhrOWmZYU6o+k0EBhfi9xvPKGEgtjxObEcQE2JaA0UeJ/Fl9+Mkug6JD3
-         tzZw==
-X-Gm-Message-State: AAQBX9c8gwbTnA6HnwPHR0yX83/8wuBUYfdgR25gO3o9HMak5j/bWGOZ
-        nnRVVdqHYjPdyzkbLXXElh9M/NWkpmaQfRpJ+QwXutwG5zk=
-X-Google-Smtp-Source: AKy350Yvv39dXqtPqpancjbruGbUmc0WAtyjLIr2ai4RdxjziWn6iWhN3DFZ9Fom4OfEEZVq3W4+3ieTigUgcMJcdow=
-X-Received: by 2002:a0d:f687:0:b0:54f:dca7:6f6b with SMTP id
- g129-20020a0df687000000b0054fdca76f6bmr2633619ywf.43.1681893088522; Wed, 19
- Apr 2023 01:31:28 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681902933; x=1684494933;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4qJ0quS8PSmcOSKHlL8+ZsUIniTqrOGEBBq6bjBNxf0=;
+        b=g8Y+BfYmrF7JCTx3XSD8EtluG5ggfZZjZl9pq4bdSaXZELIza5Ffla/Ig/fgL1ahBT
+         ASUA7qpaTcVweRjusXwY/3V59l6EUX9dpZoVpdFNsI5yEvQl2YnPsaetMTwL8ldWJr5G
+         ugQsC4WTbUsb25N+V0gPPlwK8gJQsqAVMVHfhww73nva1HAinY5RCiSXhcdu71d1nCE5
+         D3Thf9TvogL7qIVSnjwOVhztyHGZ5c9tQFS4BElBRtzPe++1pLaJzUHgr/VG6FCYOYYi
+         Z9Rp/xpm6AvCWBriox32aK36OnFh+hPGHtosxdz7/aVCaQO6gTcJudbTxRImYfJSSJhF
+         gP+w==
+X-Gm-Message-State: AAQBX9ehD36t2MLEugzuDs6PZTeepAzYdh+qD3gwpKLpOyt/HT3V6NDM
+        iAmlyAL7yyu8N4PCs02ETiho3gzAh64=
+X-Google-Smtp-Source: AKy350bG4AYtxLuwGUlX5AcJqEu6yQpwW6OC2sqIZKSpq8IDRXsVeQIJI5UtSm7kkibPb0jck5rJHw==
+X-Received: by 2002:a17:902:e84e:b0:1a2:296:9355 with SMTP id t14-20020a170902e84e00b001a202969355mr5518861plg.16.1681902932888;
+        Wed, 19 Apr 2023 04:15:32 -0700 (PDT)
+Received: from cxl-test.. ([103.181.222.211])
+        by smtp.gmail.com with ESMTPSA id o4-20020a170902bcc400b001a6566045ccsm11194914pls.192.2023.04.19.04.15.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 04:15:32 -0700 (PDT)
+From:   Raghu H <raghuhack78@gmail.com>
+To:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        raghuhack78@gmail.com, Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [STYLE v1 1/3] cxl/mbox: remove redundant debug msg
+Date:   Wed, 19 Apr 2023 11:14:41 +0000
+Message-Id: <20230419111443.231151-2-raghuhack78@gmail.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230419111443.231151-1-raghuhack78@gmail.com>
+References: <20230419111443.231151-1-raghuhack78@gmail.com>
 MIME-Version: 1.0
-From:   RAGHU H <raghuhack78@gmail.com>
-Date:   Wed, 19 Apr 2023 14:01:17 +0530
-Message-ID: <CAGWUp4qXXOsFgJu9E__Y9FGhK0ARteOF-mP1P19rd3_5K=mgNg@mail.gmail.com>
-Subject: Usage of tools/testing/cxl
-To:     linux-cxl@vger.kernel.org, alison.schofield@intel.com,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello,
+A return of errno should be good enough if the memory allocation fails,
+the debug message here is redundatant as per the coding style, removing it.
 
-Please pardon my ignorance, but would like to understand how to use
-tools/testing/cxl to understand the current kernel implementation of
-cxl code base & test framework(tools/testing/cxl).
+Signed-off-by: Raghu H <raghuhack78@gmail.com>
+---
+ drivers/cxl/core/mbox.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I have tried "make -C tools/testing/selftests run_tests", but it's a
-bit of a stretch and executes all the tests which may not be related
-to my quest for CXL.
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f2addb457172..11ea145b4b1f 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1112,10 +1112,8 @@ struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
+ 	struct cxl_dev_state *cxlds;
+ 
+ 	cxlds = devm_kzalloc(dev, sizeof(*cxlds), GFP_KERNEL);
+-	if (!cxlds) {
+-		dev_err(dev, "No memory available\n");
++	if (!cxlds)
+ 		return ERR_PTR(-ENOMEM);
+-	}
+ 
+ 	mutex_init(&cxlds->mbox_mutex);
+ 	mutex_init(&cxlds->event.log_lock);
+-- 
+2.39.2
 
-Also I see some compiler & linker errors like below when using "make
--C tools/testing/selftests"
-
-gcc -I/usr/include/libmnl     nf-queue.c -lmnl -o
-/usr/src/kernels/linux-stable/tools/testing/selftests/netfilter/nf-queue
-nf-queue.c:13:10: fatal error: libmnl/libmnl.h: No such file or
-directory
-   13 | #include <libmnl/libmnl.h>
-...
-/usr/bin/ld: cannot find -lm: No such file or directory
-/usr/bin/ld: cannot find -lc: No such file or directory
-
-/usr/include/numa.h
-/usr/include/numacompat1.h
-/usr/include/numaif.h
-/usr/lib64/libnuma.so
-/usr/lib64/pkgconfig/numa.pc
-/usr/share/man/man3/numa.3.gz
-
-I have the following dev libraries installed in my guest
-/usr/lib/.build-id
-/usr/lib/.build-id/a8
-/usr/lib/.build-id/a8/47cfa4a60942edf111e055e5c23d9574c06e77
-/usr/lib64/libmnl.so.0
-/usr/lib64/libmnl.so.0.2.0
-/usr/share/doc/libmnl
-/usr/share/doc/libmnl/README
-/usr/share/licenses/libmnl
-/usr/share/licenses/libmnl/COPYING
-
-
-Any help here would be appreciated!
-
-Regards
