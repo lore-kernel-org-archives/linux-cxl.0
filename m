@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB3EC77B73
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD1BC77B78
 	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 20:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbjDSUY5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S231218AbjDSUY5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 19 Apr 2023 16:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230077AbjDSUYD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 16:24:03 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BECE61BD;
-        Wed, 19 Apr 2023 13:22:08 -0700 (PDT)
+        with ESMTP id S231442AbjDSUYv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 16:24:51 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D008212D;
+        Wed, 19 Apr 2023 13:22:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681935728; x=1713471728;
+  t=1681935746; x=1713471746;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Hiwe4UCD3qPj1hYkPqg9NKX1a/H2NMYZeBqa990z1Jw=;
-  b=dpbHk6PoWwrGHW05ac849lWiZWnvzuk7D4Vd8mEzFHRVB50u/eyb+2af
-   EBGH08A3EEjHx/tsHZ5OSLDRBynv97UUpcMjyVkLhZBM7bC99rlqoGYxD
-   Ynsgp+vKGImUxIiEcZ7djf+rhV4hmXhvY0GvgyEkvdxJXF88GYD8TjYnk
-   P5zVKEy4BmaVuiObG1RgKSgpVOnmLBVzewFxIKm/B1Ib+tNibqloMSUb0
-   41208QVfHo/y0lOmp7J9McGQTkibdEw9CqvroZx7rBpNQYM42Z2pZdKCM
-   No9gjUNNklEhjRkJxSd80PBW3/iGspq9Qs10if306GDnlGv1fyaNAtsRC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="373441436"
+  bh=wdgxuo2Nnod4A3BNFtH/as86IDDlJxBU/iOeYuBZe9s=;
+  b=a/bDpqvXsDRDyLlfAJEIA2oOmSOby24c1q5El5UjWQcsEhVPKgYouXSy
+   ClGrRnYtWyN/kc/MFs2WgWu0NW9EUJ96+aE7CAa6Z2z5tepfT+oFUzBgG
+   a6YLXfzU/hp3loQxovaE/YFvQapozCrX1QeutCi75kg9Lyr3bilJfr+yT
+   UzyRCBGeS/7BH3SSV+DDE8/P8om7WqFXODwLEYu9GwmYRjjWeicGEojjd
+   Rx6v0mguazuXE4tK528I05UGFenr2hzcU0EyZc+CF6RS6LNVCkzplC1KM
+   sPGT2reIjQhU3jMAF/dj9a9Gln8pBZZEFbxB6BGX/jbYlyN+nqufkbsaR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="347408367"
 X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="373441436"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:08 -0700
+   d="scan'208";a="347408367"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="1021337068"
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="803037684"
 X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="1021337068"
+   d="scan'208";a="803037684"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.179.6])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:07 -0700
-Subject: [PATCH v4 11/23] cxl: Add helper function that calculates QoS values
- for switches
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:25 -0700
+Subject: [PATCH v4 14/23] ACPI: NUMA: Add genport target allocation to the
+ HMAT parsing
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rafael@kernel.org, lukas@wunner.de, Jonathan.Cameron@huawei.com
-Date:   Wed, 19 Apr 2023 13:22:07 -0700
-Message-ID: <168193572747.1178687.13347516490022640531.stgit@djiang5-mobl3>
+Date:   Wed, 19 Apr 2023 13:22:24 -0700
+Message-ID: <168193574497.1178687.337023344183864485.stgit@djiang5-mobl3>
 In-Reply-To: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
 References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,127 +57,137 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CDAT information from the switch, Switch Scoped Latency and Bandwidth
-Information Strucutre (SSLBIS), is parsed and stored in an xarray under the
-cxl_port. The QoS data are indexed by the downstream port id.  Walk the CXL
-ports from endpoint to root and retrieve the relevant QoS information
-(bandwidth and latency) that are from the switch CDAT. If read or write QoS
-values are not available, then use the access QoS value.
+Add SRAT parsing for the HMAT init in order to collect the device handle
+from the Generic Port Affinity Structure. The devie handle will serve as
+the key to search for target data.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
 v3:
-- Move to use 'struct node_hmem_attrs'
+- Refactored to share common code
 ---
- drivers/cxl/core/port.c |   81 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |    2 +
- 2 files changed, 83 insertions(+)
+ drivers/acpi/numa/hmat.c |   52 +++++++++++++++++++++++++++++++++++++++++++---
+ include/acpi/actbl3.h    |    2 ++
+ 2 files changed, 51 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 3fedbabac1af..770b540d5325 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1921,6 +1921,87 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
- }
- EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, CXL);
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index 4911b7b9e4dd..d11b4231ae92 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -71,6 +71,7 @@ struct memory_target {
+ 	struct node_hmem_attrs hmem_attrs[NODE_ACCESS_CLASS_MAX];
+ 	struct list_head caches;
+ 	struct node_cache_attrs cache_attrs;
++	u8 device_handle[ACPI_SRAT_DEVICE_HANDLE_SIZE];
+ 	bool registered;
+ };
  
-+/**
-+ * cxl_port_get_switch_qos - retrieve QoS data for CXL switches
-+ * @port: endpoint cxl_port
-+ * @rd_bw: writeback value for min read bandwidth
-+ * @rd_lat: writeback value for total read latency
-+ * @wr_bw: writeback value for min write bandwidth
-+ * @wr_lat: writeback value for total write latency
-+ *
-+ * Return: Errno on failure, 0 on success. -ENOENT if no switch device
-+ */
-+int cxl_port_get_switch_qos(struct cxl_port *port, u64 *rd_bw, u64 *rd_lat,
-+			    u64 *wr_bw, u64 *wr_lat)
-+{
-+	u64 min_rd_bw = ULONG_MAX;
-+	u64 min_wr_bw = ULONG_MAX;
-+	struct cxl_dport *dport;
-+	struct cxl_port *nport;
-+	u64 total_rd_lat = 0;
-+	u64 total_wr_lat = 0;
-+	struct device *next;
-+	int switches = 0;
-+	int rc = 0;
+@@ -125,8 +126,7 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+ 	list_add_tail(&initiator->node, &initiators);
+ }
+ 
+-static __init void alloc_memory_target(unsigned int mem_pxm,
+-		resource_size_t start, resource_size_t len)
++static __init struct memory_target *alloc_target(unsigned int mem_pxm)
+ {
+ 	struct memory_target *target;
+ 
+@@ -134,7 +134,7 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
+ 	if (!target) {
+ 		target = kzalloc(sizeof(*target), GFP_KERNEL);
+ 		if (!target)
+-			return;
++			return NULL;
+ 		target->memory_pxm = mem_pxm;
+ 		target->processor_pxm = PXM_INVAL;
+ 		target->memregions = (struct resource) {
+@@ -147,6 +147,18 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
+ 		INIT_LIST_HEAD(&target->caches);
+ 	}
+ 
++	return target;
++}
 +
-+	if (!is_cxl_endpoint(port))
++static __init void alloc_memory_target(unsigned int mem_pxm,
++		resource_size_t start, resource_size_t len)
++{
++	struct memory_target *target;
++
++	target = alloc_target(mem_pxm);
++	if (!target)
++		return;
++
+ 	/*
+ 	 * There are potentially multiple ranges per PXM, so record each
+ 	 * in the per-target memregions resource tree.
+@@ -157,6 +169,17 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
+ 				start, start + len, mem_pxm);
+ }
+ 
++static __init void alloc_genport_target(unsigned int mem_pxm, u8 *handle)
++{
++	struct memory_target *target;
++
++	target = alloc_target(mem_pxm);
++	if (!target)
++		return;
++
++	memcpy(target->device_handle, handle, ACPI_SRAT_DEVICE_HANDLE_SIZE);
++}
++
+ static __init const char *hmat_data_type(u8 type)
+ {
+ 	switch (type) {
+@@ -498,6 +521,22 @@ static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
+ 	return 0;
+ }
+ 
++static __init int srat_parse_genport_affinity(union acpi_subtable_headers *header,
++					      const unsigned long end)
++{
++	struct acpi_srat_generic_affinity *ga = (void *)header;
++
++	if (!ga)
 +		return -EINVAL;
 +
-+	/* Skip the endpoint */
-+	next = port->dev.parent;
-+	nport = to_cxl_port(next);
-+	dport = port->parent_dport;
++	if (!(ga->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
++		return 0;
 +
-+	do {
-+		struct node_hmem_attrs *hmem_attrs;
-+		u64 lat, bw;
++	alloc_genport_target(ga->proximity_domain, (u8 *)ga->device_handle);
 +
-+		if (!nport->cdat.table)
-+			break;
-+
-+		if (!dev_is_pci(dport->dport))
-+			break;
-+
-+		hmem_attrs = xa_load(&nport->cdat.sslbis_xa, dport->port_id);
-+		if (xa_is_err(hmem_attrs))
-+			return xa_err(hmem_attrs);
-+
-+		if (!hmem_attrs) {
-+			hmem_attrs = xa_load(&nport->cdat.sslbis_xa, SSLBIS_ANY_PORT);
-+			if (xa_is_err(hmem_attrs))
-+				return xa_err(hmem_attrs);
-+			if (!hmem_attrs)
-+				return -ENXIO;
-+		}
-+
-+		bw = hmem_attrs->write_bandwidth;
-+		lat = hmem_attrs->write_latency;
-+		min_wr_bw = min_t(u64, min_wr_bw, bw);
-+		total_wr_lat += lat;
-+
-+		bw = hmem_attrs->read_bandwidth;
-+		lat = hmem_attrs->read_latency;
-+		min_rd_bw = min_t(u64, min_rd_bw, bw);
-+		total_rd_lat += lat;
-+
-+		dport = nport->parent_dport;
-+		next = next->parent;
-+		nport = to_cxl_port(next);
-+		switches++;
-+	} while (next);
-+
-+	*wr_bw = min_wr_bw;
-+	*wr_lat = total_wr_lat;
-+	*rd_bw = min_rd_bw;
-+	*rd_lat = total_rd_lat;
-+
-+	if (!switches)
-+		return -ENOENT;
-+
-+	return rc;
++	return 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_port_get_switch_qos, CXL);
 +
- /* for user tooling to ensure port disable work has completed */
- static ssize_t flush_store(struct bus_type *bus, const char *buf, size_t count)
- {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index d7c1410a437c..76ccc815134f 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -809,6 +809,8 @@ struct qtg_dsm_output {
- struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
- 						 struct qtg_dsm_input *input);
- acpi_handle cxl_acpi_get_rootdev_handle(struct device *dev);
-+int cxl_port_get_switch_qos(struct cxl_port *port, u64 *rd_bw, u64 *rd_lat,
-+			    u64 *wr_bw, u64 *wr_lat);
+ static u32 hmat_initiator_perf(struct memory_target *target,
+ 			       struct memory_initiator *initiator,
+ 			       struct acpi_hmat_locality *hmat_loc)
+@@ -848,6 +887,13 @@ static __init int hmat_init(void)
+ 				ACPI_SRAT_TYPE_MEMORY_AFFINITY,
+ 				srat_parse_mem_affinity, 0) < 0)
+ 		goto out_put;
++
++	if (acpi_table_parse_entries(ACPI_SIG_SRAT,
++				     sizeof(struct acpi_table_srat),
++				     ACPI_SRAT_TYPE_GENERIC_PORT_AFFINITY,
++				     srat_parse_genport_affinity, 0) < 0)
++		goto out_put;
++
+ 	acpi_put_table(tbl);
  
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
+ 	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
+diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
+index 832c6464f063..0daf5a94f08a 100644
+--- a/include/acpi/actbl3.h
++++ b/include/acpi/actbl3.h
+@@ -289,6 +289,8 @@ struct acpi_srat_generic_affinity {
+ 	u32 reserved1;
+ };
+ 
++#define ACPI_SRAT_DEVICE_HANDLE_SIZE		16
++
+ /* Flags for struct acpi_srat_generic_affinity */
+ 
+ #define ACPI_SRAT_GENERIC_AFFINITY_ENABLED     (1)	/* 00: Use affinity structure */
 
 
