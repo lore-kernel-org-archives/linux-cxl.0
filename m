@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54398C77B7A
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 20:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB3EC77B73
+	for <linux-cxl@archiver.kernel.org>; Wed, 19 Apr 2023 20:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjDSUYD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 Apr 2023 16:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        id S229995AbjDSUY5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 19 Apr 2023 16:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230326AbjDSUWD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 16:22:03 -0400
+        with ESMTP id S230077AbjDSUYD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Apr 2023 16:24:03 -0400
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632425FD2;
-        Wed, 19 Apr 2023 13:22:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BECE61BD;
+        Wed, 19 Apr 2023 13:22:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681935722; x=1713471722;
+  t=1681935728; x=1713471728;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=X0GWJLE9JeAutu840OZai68gJ1BiJ2lE2kdtgKExoMo=;
-  b=GA6YGQCeAGHURhcjb6d9Pf/aRBBW5QUf4W2sh3DVi1L6mEgBU8j7n+JW
-   26mARNw8Bx4ctBViwjwWiHGMsQl2X+wbMH+x9+rI9mcV4PD+8Opr8lZT/
-   nzzNvnX/q7nI0BwF7GJ6OpXM9/2uB5P7mh9xdMyIt1/tqpYiAtfmz0MFo
-   gHteVaoggJ5TSda0Bf1vP2bumZ6FSBtdj3DNekKgVs0OIomtvWdbKl78q
-   XSIBTqckdP9kHvtlrznCrSUu5egH4UMUSJccjDP9i8DGmNU8AzOh+NJVy
-   e9UTVzSgSFyDC4wtfbt0Oqq/14FArpHl/w4ucv74MqHUWadhsGPVLMQru
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="373441402"
+  bh=Hiwe4UCD3qPj1hYkPqg9NKX1a/H2NMYZeBqa990z1Jw=;
+  b=dpbHk6PoWwrGHW05ac849lWiZWnvzuk7D4Vd8mEzFHRVB50u/eyb+2af
+   EBGH08A3EEjHx/tsHZ5OSLDRBynv97UUpcMjyVkLhZBM7bC99rlqoGYxD
+   Ynsgp+vKGImUxIiEcZ7djf+rhV4hmXhvY0GvgyEkvdxJXF88GYD8TjYnk
+   P5zVKEy4BmaVuiObG1RgKSgpVOnmLBVzewFxIKm/B1Ib+tNibqloMSUb0
+   41208QVfHo/y0lOmp7J9McGQTkibdEw9CqvroZx7rBpNQYM42Z2pZdKCM
+   No9gjUNNklEhjRkJxSd80PBW3/iGspq9Qs10if306GDnlGv1fyaNAtsRC
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="373441436"
 X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="373441402"
+   d="scan'208";a="373441436"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:21:56 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="1021337017"
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="1021337068"
 X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="1021337017"
+   d="scan'208";a="1021337068"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.209.179.6])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:21:56 -0700
-Subject: [PATCH v4 09/23] cxl: Add helper function to retrieve ACPI handle of
- CXL root device
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 13:22:07 -0700
+Subject: [PATCH v4 11/23] cxl: Add helper function that calculates QoS values
+ for switches
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rafael@kernel.org, lukas@wunner.de, Jonathan.Cameron@huawei.com
-Date:   Wed, 19 Apr 2023 13:21:55 -0700
-Message-ID: <168193571575.1178687.18078745201457493723.stgit@djiang5-mobl3>
+Date:   Wed, 19 Apr 2023 13:22:07 -0700
+Message-ID: <168193572747.1178687.13347516490022640531.stgit@djiang5-mobl3>
 In-Reply-To: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
 References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,83 +57,125 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Provide a helper to find the ACPI0017 device in order to issue the _DSM.
-The helper will take the 'struct device' from a cxl_port and iterate until
-the root device is reached. The ACPI handle will be returned from the root
-device.
+The CDAT information from the switch, Switch Scoped Latency and Bandwidth
+Information Strucutre (SSLBIS), is parsed and stored in an xarray under the
+cxl_port. The QoS data are indexed by the downstream port id.  Walk the CXL
+ports from endpoint to root and retrieve the relevant QoS information
+(bandwidth and latency) that are from the switch CDAT. If read or write QoS
+values are not available, then use the access QoS value.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
-v2:
-- Fix commenting style. (Jonathan)
-- Fix var declaration aligning. (Jonathan)
+v3:
+- Move to use 'struct node_hmem_attrs'
 ---
- drivers/cxl/core/acpi.c |   34 ++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |    1 +
- 2 files changed, 35 insertions(+)
+ drivers/cxl/core/port.c |   81 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h       |    2 +
+ 2 files changed, 83 insertions(+)
 
-diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
-index 6eda5cad8d59..191644d0ca6d 100644
---- a/drivers/cxl/core/acpi.c
-+++ b/drivers/cxl/core/acpi.c
-@@ -5,6 +5,7 @@
- #include <linux/kernel.h>
- #include <linux/acpi.h>
- #include <linux/pci.h>
-+#include <linux/platform_device.h>
- #include <asm/div64.h>
- #include "cxlpci.h"
- #include "cxl.h"
-@@ -13,6 +14,39 @@ const guid_t acpi_cxl_qtg_id_guid =
- 	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
- 		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 3fedbabac1af..770b540d5325 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1921,6 +1921,87 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
+ }
+ EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, CXL);
  
 +/**
-+ * cxl_acpi_get_rootdev_handle - get the ACPI handle of the CXL root device
-+ * @dev: 'struct device' to start searching from. Should be from cxl_port->dev.
++ * cxl_port_get_switch_qos - retrieve QoS data for CXL switches
++ * @port: endpoint cxl_port
++ * @rd_bw: writeback value for min read bandwidth
++ * @rd_lat: writeback value for total read latency
++ * @wr_bw: writeback value for min write bandwidth
++ * @wr_lat: writeback value for total write latency
 + *
-+ * Return: acpi_handle on success, errptr of errno on error.
-+ *
-+ * Looks for the ACPI0017 device and return the ACPI handle
-+ **/
-+acpi_handle cxl_acpi_get_rootdev_handle(struct device *dev)
++ * Return: Errno on failure, 0 on success. -ENOENT if no switch device
++ */
++int cxl_port_get_switch_qos(struct cxl_port *port, u64 *rd_bw, u64 *rd_lat,
++			    u64 *wr_bw, u64 *wr_lat)
 +{
-+	struct device *itr = dev;
-+	struct device *root_dev;
-+	acpi_handle handle;
++	u64 min_rd_bw = ULONG_MAX;
++	u64 min_wr_bw = ULONG_MAX;
++	struct cxl_dport *dport;
++	struct cxl_port *nport;
++	u64 total_rd_lat = 0;
++	u64 total_wr_lat = 0;
++	struct device *next;
++	int switches = 0;
++	int rc = 0;
 +
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
++	if (!is_cxl_endpoint(port))
++		return -EINVAL;
 +
-+	while (itr->parent) {
-+		root_dev = itr;
-+		itr = itr->parent;
-+	}
++	/* Skip the endpoint */
++	next = port->dev.parent;
++	nport = to_cxl_port(next);
++	dport = port->parent_dport;
 +
-+	if (!dev_is_platform(root_dev))
-+		return ERR_PTR(-ENODEV);
++	do {
++		struct node_hmem_attrs *hmem_attrs;
++		u64 lat, bw;
 +
-+	handle = ACPI_HANDLE(root_dev);
-+	if (!handle)
-+		return ERR_PTR(-ENODEV);
++		if (!nport->cdat.table)
++			break;
 +
-+	return handle;
++		if (!dev_is_pci(dport->dport))
++			break;
++
++		hmem_attrs = xa_load(&nport->cdat.sslbis_xa, dport->port_id);
++		if (xa_is_err(hmem_attrs))
++			return xa_err(hmem_attrs);
++
++		if (!hmem_attrs) {
++			hmem_attrs = xa_load(&nport->cdat.sslbis_xa, SSLBIS_ANY_PORT);
++			if (xa_is_err(hmem_attrs))
++				return xa_err(hmem_attrs);
++			if (!hmem_attrs)
++				return -ENXIO;
++		}
++
++		bw = hmem_attrs->write_bandwidth;
++		lat = hmem_attrs->write_latency;
++		min_wr_bw = min_t(u64, min_wr_bw, bw);
++		total_wr_lat += lat;
++
++		bw = hmem_attrs->read_bandwidth;
++		lat = hmem_attrs->read_latency;
++		min_rd_bw = min_t(u64, min_rd_bw, bw);
++		total_rd_lat += lat;
++
++		dport = nport->parent_dport;
++		next = next->parent;
++		nport = to_cxl_port(next);
++		switches++;
++	} while (next);
++
++	*wr_bw = min_wr_bw;
++	*wr_lat = total_wr_lat;
++	*rd_bw = min_rd_bw;
++	*rd_lat = total_rd_lat;
++
++	if (!switches)
++		return -ENOENT;
++
++	return rc;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_acpi_get_rootdev_handle, CXL);
++EXPORT_SYMBOL_NS_GPL(cxl_port_get_switch_qos, CXL);
 +
- /**
-  * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
-  * @handle: ACPI handle
+ /* for user tooling to ensure port disable work has completed */
+ static ssize_t flush_store(struct bus_type *bus, const char *buf, size_t count)
+ {
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 6426c4c22e28..d7c1410a437c 100644
+index d7c1410a437c..76ccc815134f 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -808,6 +808,7 @@ struct qtg_dsm_output {
- 
+@@ -809,6 +809,8 @@ struct qtg_dsm_output {
  struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
  						 struct qtg_dsm_input *input);
-+acpi_handle cxl_acpi_get_rootdev_handle(struct device *dev);
+ acpi_handle cxl_acpi_get_rootdev_handle(struct device *dev);
++int cxl_port_get_switch_qos(struct cxl_port *port, u64 *rd_bw, u64 *rd_lat,
++			    u64 *wr_bw, u64 *wr_lat);
  
  /*
   * Unit test builds overrides this to __weak, find the 'strong' version
