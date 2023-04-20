@@ -2,188 +2,134 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FCCC77B78
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Apr 2023 09:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0626DC77B73
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Apr 2023 11:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234408AbjDTJn2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Apr 2023 05:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
+        id S233960AbjDTLgS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Apr 2023 07:36:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234409AbjDTJnB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Apr 2023 05:43:01 -0400
+        with ESMTP id S234304AbjDTLgO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Apr 2023 07:36:14 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D00D40E5;
-        Thu, 20 Apr 2023 02:41:08 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q2CGF2BwVz67qqr;
-        Thu, 20 Apr 2023 17:36:21 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0B535B1;
+        Thu, 20 Apr 2023 04:35:52 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q2Fnx3qXpz67GMJ;
+        Thu, 20 Apr 2023 19:30:29 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 20 Apr
- 2023 10:41:05 +0100
-Date:   Thu, 20 Apr 2023 10:41:04 +0100
+ 2023 12:35:13 +0100
+Date:   Thu, 20 Apr 2023 12:35:12 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
         <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
         <rafael@kernel.org>, <lukas@wunner.de>
-Subject: Re: [PATCH v4 04/23] cxl: Add common helpers for cdat parsing
-Message-ID: <20230420104104.000065dd@Huawei.com>
-In-Reply-To: <168193568543.1178687.3067575213689202382.stgit@djiang5-mobl3>
+Subject: Re: [PATCH v4 05/23] cxl: Add callback to parse the DSMAS subtables
+ from CDAT
+Message-ID: <20230420123512.0000650b@Huawei.com>
+In-Reply-To: <20230420123350.000061b1@Huawei.com>
 References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
-        <168193568543.1178687.3067575213689202382.stgit@djiang5-mobl3>
+        <168193569130.1178687.11664485128816659216.stgit@djiang5-mobl3>
+        <20230420123350.000061b1@Huawei.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 19 Apr 2023 13:21:25 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Thu, 20 Apr 2023 12:33:50 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> Add helper functions to parse the CDAT table and provide a callback to
-> parse the sub-table. Helpers are provided for DSMAS and DSLBIS sub-table
-> parsing. The code is patterned after the ACPI table parsing helpers.
+> On Wed, 19 Apr 2023 13:21:31 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > Provide a callback function to the CDAT parser in order to parse the Device
+> > Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+> > DPA range and its associated attributes in each entry. See the CDAT
+> > specification for details.
+> > 
+> > Coherent Device Attribute Table 1.03 2.1 Device Scoped memory Affinity
+> > Structure (DSMAS)  
 > 
-A few minor things inline.   More than possible you addressed them
-in earlier versions though.
-
-Jonathan
-
-> ---
-> v2:
-> - Use local headers to handle LE instead of ACPI header
-> - Reduce complexity of parser function. (Jonathan)
-> - Directly access header type. (Jonathan)
-> - Simplify header ptr math. (Jonathan)
-> - Move parsed counter to the correct location. (Jonathan)
-> - Add LE to host conversion for entry length
-> ---
->  drivers/cxl/core/Makefile |    1 
->  drivers/cxl/core/cdat.c   |  100 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlpci.h      |   29 +++++++++++++
->  3 files changed, 130 insertions(+)
->  create mode 100644 drivers/cxl/core/cdat.c
+> I'm not sure what purpose of this is. If it's just detecting problems
+> with the entry because we aren't interested in the content yet, then fine
+> but good to make that clear in patch intro.
 > 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index ca4ae31d8f57..867a8014b462 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -12,5 +12,6 @@ cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
->  cxl_core-y += hdm.o
-> +cxl_core-y += cdat.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
->  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> new file mode 100644
-> index 000000000000..210f4499bddb
-> --- /dev/null
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -0,0 +1,100 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2023 Intel Corporation. All rights reserved. */
-> +#include "cxlpci.h"
-> +#include "cxl.h"
-> +
-> +static bool has_handler(struct cdat_subtable_proc *proc)
+> Maybe I'm missing something!
+> 
+Ah. Got to next patch.  Perhaps a forwards reference to that will avoid
+anyone else wondering what is going on here!
 
-Even though they are static, I'd add a cxl_ or cdat_ prefix
-to these to make it clear they are local.
-
-> +{
-> +	return proc->handler;
-> +}
-> +
-> +static int call_handler(struct cdat_subtable_proc *proc,
-> +			struct cdat_subtable_entry *ent)
-> +{
-> +	if (has_handler(proc))
-
-Do we need to check this again? It's checked in the parse_entries code
-well before this point.
-
-Also, if moving to checking it once, then is it worth the
-little wrapper functions?
-
-
-> +		return proc->handler(ent->hdr, proc->arg);
-> +	return -EINVAL;
-> +}
-> +
-> +static bool cdat_is_subtable_match(struct cdat_subtable_entry *ent)
-> +{
-> +	return ent->hdr->type == ent->type;
-> +}
-> +
-> +static int cdat_table_parse_entries(enum cdat_type type,
-> +				    struct cdat_header *table_header,
-> +				    struct cdat_subtable_proc *proc)
-> +{
-> +	unsigned long table_end, entry_len;
-> +	struct cdat_subtable_entry entry;
-> +	int count = 0;
-> +	int rc;
-> +
-> +	if (!has_handler(proc))
-> +		return -EINVAL;
-> +
-> +	table_end = (unsigned long)table_header + table_header->length;
-> +
-> +	if (type >= CDAT_TYPE_RESERVED)
-> +		return -EINVAL;
-> +
-> +	entry.type = type;
-> +	entry.hdr = (struct cdat_entry_header *)(table_header + 1);
-> +
-> +	while ((unsigned long)entry.hdr < table_end) {
-> +		entry_len = le16_to_cpu(entry.hdr->length);
-> +
-> +		if ((unsigned long)entry.hdr + entry_len > table_end)
-> +			return -EINVAL;
-> +
-> +		if (entry_len == 0)
-> +			return -EINVAL;
-> +
-> +		if (cdat_is_subtable_match(&entry)) {
-> +			rc = call_handler(proc, &entry);
-> +			if (rc)
-> +				return rc;
-> +			count++;
-> +		}
-> +
-> +		entry.hdr = (struct cdat_entry_header *)((unsigned long)entry.hdr + entry_len);
-> +	}
-> +
-> +	return count;
-> +}
-
-...
-
-> +int cdat_table_parse_sslbis(struct cdat_header *table,
-> +			    cdat_tbl_entry_handler handler, void *arg)
-
-Feels like these ones should take a typed arg.  Sure you'll loose
-that again to use the generic handling code, but at this level we can 
-do it I think.
-
-> +{
-> +	struct cdat_subtable_proc proc = {
-> +		.handler	= handler,
-> +		.arg		= arg,
-> +	};
-> +
-> +	return cdat_table_parse_entries(CDAT_TYPE_SSLBIS, table, &proc);
-> +}
+> Thanks,
+> 
+> Jonathan
+> 
+> > 
+> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > 
+> > ---
+> > v3:
+> > - Add spec section number. (Alison)
+> > - Remove cast from void *. (Alison)
+> > - Refactor cxl_port_probe() block. (Alison)
+> > - Move CDAT parse to cxl_endpoint_port_probe()
+> > 
+> > v2:
+> > - Add DSMAS table size check. (Lukas)
+> > - Use local DSMAS header for LE handling.
+> > - Remove dsmas lock. (Jonathan)
+> > - Fix handle size (Jonathan)
+> > - Add LE to host conversion for DSMAS address and length.
+> > - Make dsmas_list local  
+> 
+> 
+> > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> > index 615e0ef6b440..3022bdd52439 100644
+> > --- a/drivers/cxl/port.c
+> > +++ b/drivers/cxl/port.c
+> > @@ -57,6 +57,16 @@ static int discover_region(struct device *dev, void *root)
+> >  	return 0;
+> >  }  
+> 
+> >  static int cxl_switch_port_probe(struct cxl_port *port)
+> >  {
+> >  	struct cxl_hdm *cxlhdm;
+> > @@ -125,6 +135,18 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+> >  	device_for_each_child(&port->dev, root, discover_region);
+> >  	put_device(&root->dev);
+> >  
+> > +	if (port->cdat.table) {
+> > +		LIST_HEAD(dsmas_list);
+> > +
+> > +		rc = cdat_table_parse_dsmas(port->cdat.table,
+> > +					    cxl_dsmas_parse_entry,
+> > +					    (void *)&dsmas_list);
+> > +		if (rc < 0)
+> > +			dev_warn(&port->dev, "Failed to parse DSMAS: %d\n", rc);
+> > +
+> > +		dsmas_list_destroy(&dsmas_list);  
+> 
+> I'm a little confused here.  What's the point?  Parse them then throw the info away?
+> Maybe a comment if all we are trying to do is warn about CDAT problems.
+> 
+> 
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > 
+> >   
+> 
 
