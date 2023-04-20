@@ -2,203 +2,94 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A7EC77B73
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Apr 2023 16:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E491C77B73
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Apr 2023 16:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234457AbjDTQfq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Apr 2023 12:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+        id S231468AbjDTQoF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Apr 2023 12:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234606AbjDTQfn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Apr 2023 12:35:43 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 996E03584
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Apr 2023 09:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682008513; x=1713544513;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xuAmcvWDwV3CSuZM/G5OEQsoS25gwoCfiFFwgPN6NWg=;
-  b=etU3RRb7MjEgpTRe04719mV+lnZZIYRPrzu+ScpxXMP2LBTzYWKoDxTk
-   /D1NQzuN6yqHw/2wy1j1ljg5A+DaxJGU9JmLIbPZetdU+alnUWCw4OMJ/
-   EzGbK396Pb7q5S+cF6e/nqkroBKvTh9CTxDzXnk+0d5hpoZFIG5kdOrDr
-   Q7A8rhJNuCpQwKJYqO3z0fUY7sDtGVE6DBm8Gzjl2BFkPI2CBF9R7wHGS
-   Cedv84ESdanaOzeAWtgYUQb5niAt6oMA+TJVyA5Sc6QkAqtrnsf45ep6h
-   eHlX2cGDNjVX/tKaXtAf2VSrD2eIntRqezzJ9hM4X70oMttduA8Iu0xGT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="334627828"
-X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
-   d="scan'208";a="334627828"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 09:15:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="866336453"
-X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
-   d="scan'208";a="866336453"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.255.228.224])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 09:15:26 -0700
-Date:   Thu, 20 Apr 2023 09:15:24 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
+        with ESMTP id S231295AbjDTQoF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Apr 2023 12:44:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03212721
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Apr 2023 09:44:03 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q2NhR6wf8z6J73V;
+        Fri, 21 Apr 2023 00:41:11 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 20 Apr
+ 2023 17:44:00 +0100
+Date:   Thu, 20 Apr 2023 17:43:59 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vishal.l.verma@intel.com, linux-cxl@vger.kernel.org
-Subject: Re: [NDCTL PATCH 0/3] ndctl: Add support of QoS Throttling Group
- (QTG) id for CXL CLI
-Message-ID: <ZEFlHFpf70f6TnRC@aschofie-mobl2>
-References: <168149412855.4013891.16386221304030694671.stgit@djiang5-mobl3>
- <ZDnKciEJe80+2yrz@aschofie-mobl2>
- <cbee0ae4-0aa5-d2aa-649d-a0c2ef4b2e83@intel.com>
+CC:     <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] hw/pci-bridge/cxl_upstream: Fix bandwidth entry base
+ unit for SSLBIS
+Message-ID: <20230420174359.00005d65@Huawei.com>
+In-Reply-To: <167950638058.386189.535068546966379964.stgit@djiang5-mobl3>
+References: <167950638058.386189.535068546966379964.stgit@djiang5-mobl3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbee0ae4-0aa5-d2aa-649d-a0c2ef4b2e83@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 04:27:47PM -0700, Dave Jiang wrote:
+On Wed, 22 Mar 2023 10:33:00 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> According to ACPI spec 6.5 5.2.28.4 System Locality Latency and Bandwidth
+> Information Structure, if the "Entry Base Unit" is 1024 for BW and the
+> matrix entry has the value of 100, the BW is 100 GB/s. So the
+> entry_base_unit should be changed from 1000 to 1024 given the comment notes
+> it's 16GB/s for .latency_bandwidth.
 > 
-> 
-> On 4/14/23 2:49 PM, Alison Schofield wrote:
-> > On Fri, Apr 14, 2023 at 10:42:55AM -0700, Dave Jiang wrote:
-> > > The series adds support for the kernel enabling [1] of QoS Throttling Group
-> > > (QTG) id. The kernel exports a QTG id for the root decoders (CFMWS) and as
-> > > well as for the CXL memory devices. The QTG id exported for a device is
-> > > calculated by the driver during device probe. Currently a QTG id is exported
-> > > for the volatile partition and another for the persistent partition. In the
-> > > future QTG id(s) will be exported for DCD regions. Display of QTG id is
-> > > through the CXL CLI list command.
-> > > 
-> > > A QTG id check as also been added for region creation. A warning is emitted
-> > > when the QTG id of a memory range of a CXL memory device being included in
-> > > the CXL region assembly does not match the QTG id of the root decoder. Options
-> > > are available to suppress the warning or to fail the region creation. This
-> > > enabling provides a guidance on flagging memory ranges being used is not
-> > > optimal for performance for the CXL region to be formed.
-> > 
-> > Can you cut/paste me some cxl list sample output?  I'm not going to be
-> > trying this out to review.
+> Fixes: 882877fc359d ("hw/pci-bridge/cxl-upstream: Add a CDAT table access DOE")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+As a side note, I don't think the CDAT spec doesn't say which version of ACPI we
+should refer to for meaning of HMAT entries.  It should set a minimum given there were breaking
+changes in the HMAT spec from versions 1 to 2.
+
+Perhaps worth poking the author of that doc?  Posting here in the hope that
+someone (maybe me) remembers to do so.
+
+I'll pick this up for my qemu tree and roll into a misc fixes series once I get
+/ make time to pull one together.
+
+Thanks,
+
+Jonathan
 
 
-Thanks for the samples.
-The cxl list man page sample output may need updating.
-Alison
 
 
-> # cxl list -D
-> [
->   {
->     "decoder":"decoder0.0",
->     "resource":49660559360,
->     "size":4294967296,
->     "interleave_ways":1,
->     "max_available_extent":4294967296,
->     "pmem_capable":true,
->     "volatile_capable":true,
->     "accelmem_capable":true,
->     "qtg_id":0,
->     "nr_targets":1
->   },
->   {
->     "decoder":"decoder0.1",
->     "resource":53955526656,
->     "size":4294967296,
->     "interleave_ways":2,
->     "interleave_granularity":8192,
->     "max_available_extent":4294967296,
->     "pmem_capable":true,
->     "volatile_capable":true,
->     "accelmem_capable":true,
->     "qtg_id":0,
->     "nr_targets":2
->   }
-> ]
+> ---
+>  hw/pci-bridge/cxl_upstream.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> # cxl list
-> [
->   {
->     "memdev":"mem3",
->     "ram_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:c5:00.0"
->   },
->   {
->     "memdev":"mem5",
->     "pmem_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:c2:00.0"
->   },
->   {
->     "memdev":"mem2",
->     "ram_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:c4:00.0"
->   },
->   {
->     "memdev":"mem7",
->     "pmem_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:c3:00.0"
->   },
->   {
->     "memdev":"mem6",
->     "ram_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:38:00.0"
->   },
->   {
->     "memdev":"mem1",
->     "pmem_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:37:00.0"
->   },
->   {
->     "memdev":"mem4",
->     "ram_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:39:00.0"
->   },
->   {
->     "memdev":"mem0",
->     "pmem_size":268435456,
->     "qtg_id":0,
->     "serial":0,
->     "host":"0000:36:00.0"
->   }
-> ]
+> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+> index 2a00b708e560..d6f19c859a3d 100644
+> --- a/hw/pci-bridge/cxl_upstream.c
+> +++ b/hw/pci-bridge/cxl_upstream.c
+> @@ -297,7 +297,7 @@ static int build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
+>                  .length = sslbis_size,
+>              },
+>              .data_type = HMATLB_DATA_TYPE_ACCESS_BANDWIDTH,
+> -            .entry_base_unit = 1000,
+> +            .entry_base_unit = 1024,
+>          },
+>      };
+>  
 > 
 > 
 > 
-> > 
-> > Thanks!
-> > 
-> > 
-> > > 
-> > > [1]: https://lore.kernel.org/linux-cxl/168088732996.1441063.10107817505475386072.stgit@djiang5-mobl3/T/#t
-> > > 
-> > > ---
-> > > 
-> > > Dave Jiang (3):
-> > >        ndctl: Add QTG ID support for the root decoder
-> > >        ndctl: Add QTG ID support for the memory device
-> > >        ndctl: add QTG ID check for region creation
-> > > 
-> > > 
-> > >   Documentation/cxl/cxl-create-region.txt |  9 ++++
-> > >   cxl/json.c                              | 22 +++++++++-
-> > >   cxl/lib/libcxl.c                        | 31 ++++++++++++++
-> > >   cxl/lib/libcxl.sym                      |  3 ++
-> > >   cxl/lib/private.h                       |  3 ++
-> > >   cxl/libcxl.h                            |  5 +++
-> > >   cxl/region.c                            | 57 ++++++++++++++++++++++++-
-> > >   7 files changed, 128 insertions(+), 2 deletions(-)
-> > > 
-> > > --
-> > > 
+
