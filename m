@@ -2,107 +2,140 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0487C77B73
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Apr 2023 09:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C34AC77B78
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Apr 2023 09:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234053AbjDTJAu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Apr 2023 05:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51900 "EHLO
+        id S229729AbjDTJZ4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Apr 2023 05:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234068AbjDTJAE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Apr 2023 05:00:04 -0400
+        with ESMTP id S229625AbjDTJZz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Apr 2023 05:25:55 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C173C05;
-        Thu, 20 Apr 2023 01:56:24 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q2BL65LXTz67lH6;
-        Thu, 20 Apr 2023 16:54:38 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D3DEC;
+        Thu, 20 Apr 2023 02:25:53 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q2C0p2rT7z67L0F;
+        Thu, 20 Apr 2023 17:24:42 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 20 Apr
- 2023 09:55:47 +0100
-Date:   Thu, 20 Apr 2023 09:55:46 +0100
+ 2023 10:25:51 +0100
+Date:   Thu, 20 Apr 2023 10:25:50 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
         Ira Weiny <ira.weiny@intel.com>, <dan.j.williams@intel.com>,
         <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
         <rafael@kernel.org>, <lukas@wunner.de>
-Subject: Re: [PATCH v4 02/23] cxl: Add checksum verification to CDAT from
- CXL
-Message-ID: <20230420095546.00005def@Huawei.com>
-In-Reply-To: <168193567363.1178687.9185773070266307121.stgit@djiang5-mobl3>
+Subject: Re: [PATCH v4 03/23] cxl: Add support for reading CXL switch CDAT
+ table
+Message-ID: <20230420102550.00000139@Huawei.com>
+In-Reply-To: <168193567959.1178687.13133878561024203176.stgit@djiang5-mobl3>
 References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
-        <168193567363.1178687.9185773070266307121.stgit@djiang5-mobl3>
+        <168193567959.1178687.13133878561024203176.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 19 Apr 2023 13:21:13 -0700
+On Wed, 19 Apr 2023 13:21:19 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> A CDAT table is available from a CXL device. The table is read by the
-> driver and cached in software. With the CXL subsystem needing to parse the
-> CDAT table, the checksum should be verified. Add checksum verification
-> after the CDAT table is read from device.
+> Move read_cdat_data() from endpoint probe to general port probe to
+> allow reading of CDAT data for CXL switches as well as CXL device.
+> Add wrapper support for cxl_test to bypass the cdat reading.
 > 
 > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+It might be worth a wrapper at somepoint for that dance
+from port to the PCI device with the actual DOE etc.
+
+Such a wrapp would provide somewhere to add a bit of
+documentation on why the uport might be a platform device
+(memX) or might be a PCI device thus explaining the two
+different way it is handled.
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > 
 > ---
-> v3:
-> - Just return the final sum. (Alison)
-> v2:
-> - Drop ACPI checksum export and just use local verification. (Dan)
+> v4:
+> - Remove cxl_test wrapper. (Ira)
 > ---
->  drivers/cxl/core/pci.c |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+>  drivers/cxl/core/pci.c |   20 +++++++++++++++-----
+>  drivers/cxl/port.c     |    6 +++---
+>  2 files changed, 18 insertions(+), 8 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 25b7e8125d5d..9c7e2f69d9ca 100644
+> index 9c7e2f69d9ca..1c415b26e866 100644
 > --- a/drivers/cxl/core/pci.c
 > +++ b/drivers/cxl/core/pci.c
-> @@ -528,6 +528,16 @@ static int cxl_cdat_read_table(struct device *dev,
->  	return 0;
->  }
+> @@ -546,16 +546,26 @@ static unsigned char cdat_checksum(void *buf, size_t size)
+>   */
+>  void read_cdat_data(struct cxl_port *port)
+>  {
+> -	struct pci_doe_mb *cdat_doe;
+> -	struct device *dev = &port->dev;
+>  	struct device *uport = port->uport;
+> -	struct cxl_memdev *cxlmd = to_cxl_memdev(uport);
+> -	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> -	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+> +	struct device *dev = &port->dev;
+> +	struct cxl_dev_state *cxlds;
+> +	struct pci_doe_mb *cdat_doe;
+> +	struct cxl_memdev *cxlmd;
+> +	struct pci_dev *pdev;
+>  	size_t cdat_length;
+>  	void *cdat_table;
+>  	int rc;
 >  
-> +static unsigned char cdat_checksum(void *buf, size_t size)
-> +{
-> +	unsigned char sum, *data = buf;
-> +	size_t i;
-> +
-> +	for (sum = 0, i = 0; i < size; i++)
-> +		sum += data[i];
-> +	return sum;
-> +}
-> +
->  /**
->   * read_cdat_data - Read the CDAT data on this port
->   * @port: Port to read data from
-> @@ -573,6 +583,12 @@ void read_cdat_data(struct cxl_port *port)
->  	}
->  
->  	port->cdat.table = cdat_table + sizeof(__le32);
-> +	if (cdat_checksum(port->cdat.table, cdat_length)) {
-> +		/* Don't leave table data allocated on error */
-> +		devm_kfree(dev, cdat_table);
-> +		dev_err(dev, "CDAT data checksum error\n");
+> +	if (is_cxl_memdev(uport)) {
+> +		cxlmd = to_cxl_memdev(uport);
+> +		cxlds = cxlmd->cxlds;          
+> +		pdev = to_pci_dev(cxlds->dev); 
+> +	} else if (dev_is_pci(uport)) {
+> +		pdev = to_pci_dev(uport);
+> +	} else {
+> +		return;
 > +	}
 > +
->  	port->cdat.length = cdat_length;
->  }
->  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+>  	cdat_doe = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+>  					CXL_DOE_PROTOCOL_TABLE_ACCESS);
+>  	if (!cdat_doe) {
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 22a7ab2bae7c..615e0ef6b440 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -93,9 +93,6 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	if (IS_ERR(cxlhdm))
+>  		return PTR_ERR(cxlhdm);
+>  
+> -	/* Cache the data early to ensure is_visible() works */
+> -	read_cdat_data(port);
+> -
+>  	get_device(&cxlmd->dev);
+>  	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+>  	if (rc)
+> @@ -135,6 +132,9 @@ static int cxl_port_probe(struct device *dev)
+>  {
+>  	struct cxl_port *port = to_cxl_port(dev);
+>  
+> +	/* Cache the data early to ensure is_visible() works */
+> +	read_cdat_data(port);
+> +
+>  	if (is_cxl_endpoint(port))
+>  		return cxl_endpoint_port_probe(port);
+>  	return cxl_switch_port_probe(port);
 > 
 > 
 
