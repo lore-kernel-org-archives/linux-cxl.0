@@ -2,47 +2,47 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DDBC7618E
-	for <linux-cxl@archiver.kernel.org>; Fri, 21 Apr 2023 20:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06613C7618E
+	for <linux-cxl@archiver.kernel.org>; Fri, 21 Apr 2023 20:25:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233536AbjDUUE3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Apr 2023 16:04:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35704 "EHLO
+        id S229656AbjDUUZ2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Apr 2023 16:25:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232177AbjDUUE1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 16:04:27 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35FD110
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Apr 2023 13:04:26 -0700 (PDT)
+        with ESMTP id S229591AbjDUUZ1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 16:25:27 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9487271F
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Apr 2023 13:25:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682107466; x=1713643466;
+  t=1682108725; x=1713644725;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=tyIuJWVgOap+WQetz8gIdZ7l9WAs+BgOlfzmXyOh82M=;
-  b=CKQXPYHban7XYorSHhab0fuwqdwzMJAC8SKpJMMtmY5vVxFVzCLVzRBB
-   Yk1EpO7LbM/px3Cu0LRbnAI6zvrp/q/sGBtfZE946haL0A1UF1HFpGk+h
-   f4fc6G9tK6f9oFCLqEE3qMp+9zhqrHrbXpBAiI+LKs3A4Rx2K/kYUBLv7
-   1lxmQ21UfWqaIq7fJMLLdobsUK1wz2Qyb3LF+LY4rEl7BDBEGFOCmC+uQ
-   9YEu5KXKxzgfe+Og42ClT3g3B9EH0jeKmoAwiM/ki3PUgZtY2tFIfHIZ5
-   RVbw0RpWPPTItVwN9mLR38kPX+O+1H3SPbOvJ18N2CxUGYzxRLA/t7C59
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="411341482"
+  bh=KIwAvpTsCbN0CtCQqDQrxxB80l9my5zLuCMKFdPyS+Q=;
+  b=ZTDlElyte5rrnCSGN2bzp05NgIqHz4L0a5NsLu50qEyyobskb2GpSmu3
+   Pu8bBCS6coAeHVh6WLhBC2tN022ljkVhK3gDoNk+sws5D9Afj1zJz/N7m
+   KmxQSkaHsMljFRgczryA1Zcvj0Wnl4tc2+mKc7HLu06kFXpCoP2btqhia
+   E1K87571bHqpwyVrGcDerYZffXfNCFRtjKdCPj7E3kVTzHkUsfOoPybMC
+   McT6a5LDrdslqxmAZ0Tqk7USnonT/aturrxr7fLrmUnjnFyQVrFH1IWkf
+   yPOW6MwpRY/eahfpx0J4R5SpbmAVz7GFq+CsUaijVOxPFoz976twucL9A
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="432350623"
 X-IronPort-AV: E=Sophos;i="5.99,216,1677571200"; 
-   d="scan'208";a="411341482"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 13:04:25 -0700
+   d="scan'208";a="432350623"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 13:25:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="695052628"
+X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="757013977"
 X-IronPort-AV: E=Sophos;i="5.99,216,1677571200"; 
-   d="scan'208";a="695052628"
+   d="scan'208";a="757013977"
 Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Apr 2023 13:04:22 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Apr 2023 13:25:22 -0700
 Received: from kbuild by b613635ddfff with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1ppwzV-000gmG-1Y;
-        Fri, 21 Apr 2023 20:04:21 +0000
-Date:   Sat, 22 Apr 2023 04:04:07 +0800
+        id 1ppxJp-000gmW-26;
+        Fri, 21 Apr 2023 20:25:21 +0000
+Date:   Sat, 22 Apr 2023 04:24:36 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
 Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
@@ -52,7 +52,7 @@ Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
         a.manzanares@samsung.com, dave@stgolabs.net,
         linux-cxl@vger.kernel.org
 Subject: Re: [PATCH 4/7] cxl/mem: Wire up Sanitation support
-Message-ID: <202304220358.PInFhQmP-lkp@intel.com>
+Message-ID: <202304220436.O3l806d0-lkp@intel.com>
 References: <20230421092321.12741-5-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -77,29 +77,27 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Davidlohr-Bueso/cxl-pci-A
 base:   linus/master
 patch link:    https://lore.kernel.org/r/20230421092321.12741-5-dave%40stgolabs.net
 patch subject: [PATCH 4/7] cxl/mem: Wire up Sanitation support
-config: powerpc-buildonly-randconfig-r006-20230421 (https://download.01.org/0day-ci/archive/20230422/202304220358.PInFhQmP-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 437b7602e4a998220871de78afcb020b9c14a661)
+config: i386-randconfig-a013 (https://download.01.org/0day-ci/archive/20230422/202304220436.O3l806d0-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # install powerpc cross compiling tool for clang build
-        # apt-get install binutils-powerpc-linux-gnu
         # https://github.com/intel-lab-lkp/linux/commit/b5227afb40297993eba355a804720c834da3fe2a
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Davidlohr-Bueso/cxl-pci-Allocate-irq-vectors-earlier-in-pci-probe/20230421-175725
         git checkout b5227afb40297993eba355a804720c834da3fe2a
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash drivers/cxl/core/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/cxl/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304220358.PInFhQmP-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202304220436.O3l806d0-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/cxl/core/memdev.c:97:12: error: call to undeclared function 'readq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>> drivers/cxl/core/memdev.c:97:12: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
            u64 reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
                      ^
    1 error generated.
