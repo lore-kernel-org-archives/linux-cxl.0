@@ -2,221 +2,227 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9615C77B75
-	for <linux-cxl@archiver.kernel.org>; Fri, 21 Apr 2023 07:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D855BC7618E
+	for <linux-cxl@archiver.kernel.org>; Fri, 21 Apr 2023 09:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbjDUH0i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Apr 2023 03:26:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35512 "EHLO
+        id S231719AbjDUJzn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Apr 2023 05:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230145AbjDUH0g (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 03:26:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481D2132
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Apr 2023 00:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682061953;
+        with ESMTP id S231148AbjDUJzm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 05:55:42 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDF0AF0B
+        for <linux-cxl@vger.kernel.org>; Fri, 21 Apr 2023 02:55:35 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 0DE3854104D;
+        Fri, 21 Apr 2023 09:55:35 +0000 (UTC)
+Received: from pdx1-sub0-mail-a204.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 773A3541027;
+        Fri, 21 Apr 2023 09:55:34 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1682070934; a=rsa-sha256;
+        cv=none;
+        b=SagEY77zeEStzbGiTDdWxofOb8kpozpdPxQWOCy9mlSFgNqMV0h5jOnVc5MzmTiuwEdezt
+        78WxwVKtm8GCDoniCYhUxHmrlUZFj94I+VNHJfGz/JLN57vOPpQO9zOR1PtAojfmVXwYGk
+        z7KqSXnJ4PyQ8uK6jZWtUGNy4jw2lwKSzD2WEGP1B5V0Bor2k06lg2PqZyEMc2ZdjoKD3G
+        cy7uBfgDsEjuT7leUV6G5Gjj7ElcdvFrrI0LicQ9GKLdspTgjIMdcs8cx+JzTpWdMOJHki
+        2nbi29Hrx0p9lkkaGGFpxWezE6dmQCg14lHIHNkcYpz67Stbf0/lxNovHhw1/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1682070934;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AwA/y38H4TEHxfUTp5EeXYTvs30OcUAWsMcXRLuq6kM=;
-        b=APnJjDh4BUgw+mxTB00ciFg5Z9k5TjDe9IUsfP0xFUuK2cOMYM9lzfD/z+RRSTq12cgg+1
-        zUcKoLe+gJ3OnDBwfOZZkuNsUQRvKWsudaVHCRnM3hSNo9qjpMBe+jO3MEMv5RQmdW6C4v
-        Rt/goX5JEVjK/piwIG60yfjxxXvonY4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-AUgjVlZnNrm30gX3KgPKMg-1; Fri, 21 Apr 2023 03:25:52 -0400
-X-MC-Unique: AUgjVlZnNrm30gX3KgPKMg-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f18c2b2110so4283275e9.3
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Apr 2023 00:25:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682061951; x=1684653951;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AwA/y38H4TEHxfUTp5EeXYTvs30OcUAWsMcXRLuq6kM=;
-        b=GZcoVKNqrXWk5jw3R7DFULOQ1IU4QMv/L2avEUAQmR8lWEhWEGqlVLYn1FDbc83kV9
-         mtUFL4qnkwjldIO4QhEOSvvTw0H7KVHOW59MRQ0qu9zzb10SuJ40TD97fvHMFiflcX76
-         JT0Tvp9fTfPc/HhE+JJlJfmf1VSJDJJ5pqL7LIgL6Sz+yYg6alK09B5eqweKYRBSB1KE
-         eLKMYeLwvfGBUHbgnGXi7okw+8Jk9rr5/nE+2XOeK3N/6GBYDZy8jXrW/uB+ej/I7gqy
-         njnZX5+bO1fB/GoNR7++yrES1btroxSouJdGS/7PqjS3qICEOhB7nV8Yla22KpN5KpUr
-         +iHQ==
-X-Gm-Message-State: AAQBX9ftBx2Fs9P1g6BbOLsMcurLW1zypg2Zh4ZyoEt2emY8K6tVSB8c
-        YzJCECtS+OxsOGDSAhon6lam5IeYNceNcHTNoX4reZl5aRhwYgKm5YoPFbFpBe99F+gqOOAjHj1
-        Pfroj0hfuZe7WBLTQqZBR
-X-Received: by 2002:a05:6000:10f:b0:2f9:3641:3f61 with SMTP id o15-20020a056000010f00b002f936413f61mr3083890wrx.48.1682061951021;
-        Fri, 21 Apr 2023 00:25:51 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Z62Iu/+aqG78TJOiD99skzOpBIXxtG2Ra16IF4fZXjz0gYDzBicxXi8qDmfZG8W83iFihE8A==
-X-Received: by 2002:a05:6000:10f:b0:2f9:3641:3f61 with SMTP id o15-20020a056000010f00b002f936413f61mr3083877wrx.48.1682061950683;
-        Fri, 21 Apr 2023 00:25:50 -0700 (PDT)
-Received: from redhat.com ([2.55.62.70])
-        by smtp.gmail.com with ESMTPSA id c18-20020adfed92000000b002f27dd92643sm3723676wro.99.2023.04.21.00.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Apr 2023 00:25:49 -0700 (PDT)
-Date:   Fri, 21 Apr 2023 03:25:45 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
-        linux-cxl@vger.kernel.org, linuxarm@huawei.com,
-        Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?iso-8859-1?Q?Marc-Andr=E9?= Lureau 
-        <marcandre.lureau@redhat.com>, Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v4 0/7] QEMU CXL Provide mock CXL events and irq support
-Message-ID: <20230421032504-mutt-send-email-mst@kernel.org>
-References: <20230303152903.28103-1-Jonathan.Cameron@huawei.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=pchTm2S8FWJD7d+3Kpbf1NIR0qPNH4JVpK8c6XjHdSY=;
+        b=BDwUvhfcVU1h5/FiHdhq/SFRd5EcVdy32aW91Ft/i8S70IJyqtkhAO8b45+I4WvXATtN+w
+        32E4vJMYsqj8AjgwK8dJx/pbxPmuDpXEO4eySjPre5vIG5T6JUgdt3f0WZZTsuL/qvercw
+        5mOSdXy1JoOcjE78SUqCITdhNGT09KKPBpdC/XOFmKQRCj2w7Oc+8Y9665i5NGtEQRGtlu
+        9rDrlUR8lzcERBoEoCrI9eOzAO1UkI22JKNDP8BCM8LJJB++ETRH9q5DJBa0dgoNzexP0L
+        APr6qMdmMY3AUhuf+Nu3trfx7g6cLgA3hmbUnWHvaSIda+Q2FBB2BDRNZcN8dg==
+ARC-Authentication-Results: i=1;
+        rspamd-7f66b7b68c-tqw7k;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Harmony-Troubled: 7518bfd05fc1c621_1682070934821_2854566223
+X-MC-Loop-Signature: 1682070934821:2581886874
+X-MC-Ingress-Time: 1682070934820
+Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.103.24.65 (trex/6.7.2);
+        Fri, 21 Apr 2023 09:55:34 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4Q2qdx4jpwzRN;
+        Fri, 21 Apr 2023 02:55:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1682070934;
+        bh=pchTm2S8FWJD7d+3Kpbf1NIR0qPNH4JVpK8c6XjHdSY=;
+        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+        b=VYGiI9OtZ4JN+UVViwpcvYcC2zAdnchUKyG8A1qfHMcyuKPFC0zCwbdf3mukHUdCz
+         vs2IrypRMPAtvVYbRs6JIUbKBGBAi6dgmgkQS2Nr8k0JetSgBooM7O5u+STrl/L1Py
+         NP2aVSMK5thZhFH4DIGfvPZhZn0L0+YRfpvy5rxaqArsdSJpnfstIsUpWuLziS09ca
+         S0bHQFkqJtgz7yGtHpSUOs25yLrY+QWrhgV4EDrn6w/9tWolawd7/o4vZbbttH6S8A
+         QMsba3iD+Re0BwlyaUtTc+zyISRepEFjHX1tiv1GPncZ3vNOPIXLm6CNuA9GAdcbQC
+         9Yebe4TEU3ETw==
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     dan.j.williams@intel.com
+Cc:     Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+        alison.schofield@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, fan.ni@samsung.com,
+        a.manzanares@samsung.com, dave@stgolabs.net,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH v4 0/7] cxl: Background cmds and device sanitation
+Date:   Fri, 21 Apr 2023 02:23:14 -0700
+Message-Id: <20230421092321.12741-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-In-Reply-To: <20230303152903.28103-1-Jonathan.Cameron@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Mar 03, 2023 at 03:28:56PM +0000, Jonathan Cameron wrote:
-> Whilst I'm an optimist, I suspect this is now 8.1 material because we have
-> 5 CXL patch sets outstanding before it. Current bottleneck being QAPI review
-> for the RAS error series.
+Hi,
 
-RAS thing is in, right?
+First thanks for the reviewing and feedback. It took me a while to get back to this in a
+form of a new series between vacation, being sick and ensuring I (hopefully) covered all
+your requirements. So all of this is intended for v6.5.
 
-could you rebase this one? no longer applies cleanly. thanks!
+The first two patches can directly open the door for Scan Media, etc. and could be picked
+up regardless of the rest of the series - I wouldn't want for Sanitize to hold up other
+functionality, specially considering the special treatment it gets. That said, the synchronous
+mbox bg handling code paths (patch 2) are the least tested in the series (for obvious reasons).
 
-> v4 changes: Thanks to Ira and to some feedback I received off list.
-> - More endian fixes for a future big endian architecture using it.
-> - Comment typo
-> 
-> One challenge here is striking the right balance between lots of constraints
-> in the injection code to enforce particular reserved bits etc by breaking
-> out all the flags as individual parameters vs having a reasonably concise
-> API.  I think this set strikes the right balance but others may well
-> disagree :)   Note that Ira raised the question of whether we should be
-> automatically establishing the volatile flag based on the Device Physical
-> Address of the injected error. My proposal is to not do so for now, but
-> to possibly revisit tightening the checking of injected errors in future.
-> Whilst the volatile flag is straight forwards, some of the other flags that
-> could be automatically set (or perhaps checked for validiaty) are much more
-> complex. Adding verification at this stage would greatly increase the
-> complexity of the patch + we are missing other elements that would interact
-> with this.  I'm not concerned about potential breaking of backwards compatibility
-> if it only related to the injection of errors that make no sense for a real
-> device.
-> 
-> Based on following series (in order)
-> 1. [PATCH v4 00/10] hw/cxl: CXL emulation cleanups and minor fixes for upstream
-> (in staging currently so fingers crossed that one is fine)
-> 2. [PATCH v6 0/8] hw/cxl: RAS error emulation and injection
-> 3. [PATCH v2 0/2] hw/cxl: Passthrough HDM decoder emulation
-> 4. [PATCH v4 0/2] hw/mem: CXL Type-3 Volatile Memory Support
-> 5. [PATCH v4 0/6] hw/cxl: Poison get, inject, clear
-> 
-> Based on: Message-Id: 20230206172816.8201-1-Jonathan.Cameron@huawei.com
-> Based-on: Message-id: 20230227112751.6101-1-Jonathan.Cameron@huawei.com
-> Based-on: Message-id: 20230227153128.8164-1-Jonathan.Cameron@huawei.com
-> Based-on: Message-id: 20230227163157.6621-1-Jonathan.Cameron@huawei.com
-> Based-on: Message-id: 20230303150908.27889-1-Jonathan.Cameron@huawei.com
-> 
-> v2 cover letter.
-> 
-> CXL Event records inform the OS of various CXL device events.  Thus far CXL
-> memory devices are emulated and therefore don't naturally generate events.
-> 
-> Add an event infrastructure and mock event injection.  Previous versions
-> included a bulk insertion of lots of events.  However, this series focuses on
-> providing the ability to inject individual events through QMP.  Only the
-> General Media Event is included in this series as an example.  Other events can
-> be added pretty easily once the infrastructure is acceptable.
-> 
-> In addition, this version updates the code to be in line with the
-> specification based on discussions around the kernel patches.
-> 
-> Injection examples;
-> 
-> { "execute": "cxl-inject-gen-media-event",
->     "arguments": {
->         "path": "/machine/peripheral/cxl-mem0",
->         "log": "informational",
->         "flags": 1,
->         "physaddr": 1000,
->         "descriptor": 3,
->         "type": 3,
->         "transaction-type": 192,
->         "channel": 3,
->         "device": 5,
->         "component-id": "iras mem"
->     }}
-> 
-> 
-> { "execute": "cxl-inject-dram-event",
->     "arguments": {
->         "path": "/machine/peripheral/cxl-mem0",
->         "log": "informational",
->         "flags": 1,
->         "physaddr": 1000,
->         "descriptor": 3,
->         "type": 3,
->         "transaction-type": 192,
->         "channel": 3,
->         "rank": 17,
->         "nibble-mask": 37421234,
->         "bank-group": 7,
->         "bank": 11,
->         "row": 2,
->         "column": 77,
->         "correction-mask": [33, 44, 55, 66]
->     }}
-> 
-> { "execute": "cxl-inject-memory-module-event",
->   "arguments": {
->     "path": "/machine/peripheral/cxl-mem0",
->     "log": "informational",
->     "flags": 1,
->     "type": 3,
->     "health-status": 3,
->     "media-status": 7,
->     "additional-status": 33,
->     "life-used": 30,
->     "temperature": -15,
->     "dirty-shutdown-count": 4,
->     "corrected-volatile-error-count": 3233,
->     "corrected-persistent-error-count": 1300
->   }}
-> 
-> 
-> Ira Weiny (4):
->   hw/cxl/events: Add event status register
->   hw/cxl/events: Wire up get/clear event mailbox commands
->   hw/cxl/events: Add event interrupt support
->   hw/cxl/events: Add injection of General Media Events
-> 
-> Jonathan Cameron (3):
->   hw/cxl: Move CXLRetCode definition to cxl_device.h
->   hw/cxl/events: Add injection of DRAM events
->   hw/cxl/events: Add injection of Memory Module Events
-> 
->  hw/cxl/cxl-device-utils.c   |  43 +++++-
->  hw/cxl/cxl-events.c         | 248 ++++++++++++++++++++++++++++++
->  hw/cxl/cxl-mailbox-utils.c  | 166 ++++++++++++++------
->  hw/cxl/meson.build          |   1 +
->  hw/mem/cxl_type3.c          | 292 +++++++++++++++++++++++++++++++++++-
->  hw/mem/cxl_type3_stubs.c    |  35 +++++
->  include/hw/cxl/cxl_device.h |  80 +++++++++-
->  include/hw/cxl/cxl_events.h | 168 +++++++++++++++++++++
->  qapi/cxl.json               | 120 +++++++++++++++
->  9 files changed, 1097 insertions(+), 56 deletions(-)
->  create mode 100644 hw/cxl/cxl-events.c
->  create mode 100644 include/hw/cxl/cxl_events.h
-> 
-> -- 
-> 2.37.2
+On that note, this series combines the original async semantics from the RFC/v2 specifically
+for Sanitation while leaving the rest of the background-capable operations in the sync approach
+from v3:
+	https://lore.kernel.org/linux-cxl/20230224194652.1990604-1-dave@stgolabs.net/
+
+Specifically, it's worth noting:
+
+    o Supporting async polling for sanitation must protect against out-of-sync driver and hw.
+      See testing (1) below.
+
+    o Treating Sanitation as such a special beast can make the code a bit invasive imo,
+      which I'm not crazy about but couldn't find a decent alternative. For example I realize
+      that this is really ad-hoc code in __cxl_pci_mbox_send_cmd().
+
+    o Regardless of the state of the irq setup, the probing never fails, and falls back to
+      async polling as last resource.
+      
+    o Nothing depends explcitly on CPU cacheline management
+      
+    o All sysfs files/attributes in the security directory are visible.
+    
+    o I continue to use __ATTR() macros for sysfs attributes instead of the requested
+      DEVICE_ATTR_*() ones because of the security directory (perhaps I'm missing something
+      obvious).
+    
+    o I've dropped the 'security/state' sysfs file creation - I will use the a cached pmem
+      security flags, but can be sent later once the rest is settled. The actual sanitize and
+      erase commands do ask the hw about security - there is no risk of spamming the mailbox.
+
+Testing.
+========
+
+o There are the mock device tests for Sanitize and Secure Erase.
+
+o The latest (v2) qemu bg/sanitize support series is posted here:
+	https://lore.kernel.org/linux-cxl/20230418172337.19207-1-dave@stgolabs.net/
+
+(1) Window where driver is out of sync with hw (Sanitation async polling).
+
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[  159.297482] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:37:00.0: Sending command: 0x4400
+[  159.298648] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:37:00.0: Doorbell wait took 0ms
+[  159.299908] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:37:00.0: Sanitation operation started
+>>>> qemu informs sanitation is done <<<<<
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[  165.897345] cxl_pci 0000:37:00.0: Failed to sanitize device : -16
+[  171.692050] cxl_pci:cxl_mbox_sanitize_work:147: cxl_pci 0000:37:00.0: Sanitation operation ended
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[  173.373337] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:37:00.0: Sending command: 0x4400
+[  173.374498] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:37:00.0: Doorbell wait took 0ms
+[  173.375727] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:37:00.0: Sanitation operation started
+
+(2) Perform sanitation of more than one memdev at a time (Sanitation async polling).
+
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem1/security/sanitize
+[  351.287129] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:36:00.0: Sending command: 0x4400
+[  351.288403] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:36:00.0: Doorbell wait took 0ms
+[  351.289706] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:36:00.0: Sanitation operation started
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[  353.058614] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:37:00.0: Sending command: 0x4400
+[  353.059854] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:37:00.0: Doorbell wait took 0ms
+[  353.061126] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:37:00.0: Sanitation operation started
+>>>>  qemu informs sanitation is done <<<<<
+>>>>  qemu informs sanitation is done <<<<<
+[  363.692138] cxl_pci:cxl_mbox_sanitize_work:147: cxl_pci 0000:36:00.0: Sanitation operation ended
+[  365.227416] cxl_pci:cxl_mbox_sanitize_work:147: cxl_pci 0000:37:00.0: Sanitation operation ended
+
+(3) Perform sanitation of more than one memdev at a time (Sanitation async irq).
+
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem1/security/sanitize
+[  193.729821] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:c1:00.0: Sending command: 0x4400
+[  193.731071] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:c1:00.0: Doorbell wait took 0ms
+[  193.732360] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:c1:00.0: Sanitation operation started
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[  197.001466] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:36:00.0: Sending command: 0x4400
+[  197.002694] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:36:00.0: Doorbell wait took 0ms
+[  197.003956] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:36:00.0: Sanitation operation started
+>>>> qemu says sanitation is done <<<<
+[  197.731473] cxl_pci:cxl_pci_mbox_irq:119: cxl_pci 0000:c1:00.0: Sanitation operation ended
+>>>> qemu says sanitation is done <<<<
+[  201.003258] cxl_pci:cxl_pci_mbox_irq:119: cxl_pci 0000:36:00.0: Sanitation operation ended
+
+(4) Forbid new sanitation while one is in progress (Sanitation asyn irq).
+ 
+[root@fedora ~]# cat /sys/bus/cxl/devices/mem0/security/sanitize
+disabled
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[   39.284258] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:36:00.0: Sending command: 0x4400
+[   39.285459] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:36:00.0: Doorbell wait took 0ms
+[   39.286723] cxl_pci:__cxl_pci_mbox_send_cmd:295: cxl_pci 0000:36:00.0: Sanitation operation started
+[root@fedora ~]# cat /sys/bus/cxl/devices/mem0/security/sanitize
+sanitize
+[root@fedora ~]# echo 1 > /sys/bus/cxl/devices/mem0/security/sanitize
+[   42.697129] cxl_pci:__cxl_pci_mbox_send_cmd:243: cxl_pci 0000:36:00.0: Sending command: 0x4400
+[   42.698323] cxl_pci:cxl_pci_mbox_wait_for_doorbell:73: cxl_pci 0000:36:00.0: Doorbell wait took 0ms
+[   42.699525] cxl_pci:__cxl_pci_mbox_send_cmd:335: cxl_pci 0000:36:00.0: Mailbox operation had an error: ongoing background operation
+[   42.701119] cxl_pci 0000:36:00.0: Failed to sanitize device : -6
+>>>> qemu says sanitation is done <<<<
+[   43.285334] cxl_pci:cxl_pci_mbox_irq:119: cxl_pci 0000:36:00.0: Sanitation operation ended
+
+Applies against 'fixes' branch from cxl.git. Please consider for v6.5. 
+
+Thanks!
+
+Davidlohr Bueso (7):
+  cxl/pci: Allocate irq vectors earlier in pci probe
+  cxl/mbox: Add background cmd handling machinery
+  cxl/mbox: Add sanitation handling machinery
+  cxl/mem: Wire up Sanitation support
+  cxl/test: Add Sanitize opcode support
+  cxl/mem: Support Secure Erase
+  cxl/test: Add Secure Erase opcode support
+
+ Documentation/ABI/testing/sysfs-bus-cxl |  29 ++++
+ drivers/cxl/core/mbox.c                 |  63 +++++++-
+ drivers/cxl/core/memdev.c               | 120 +++++++++++++++
+ drivers/cxl/cxl.h                       |   7 +
+ drivers/cxl/cxlmem.h                    |  26 ++++
+ drivers/cxl/pci.c                       | 192 +++++++++++++++++++++++-
+ tools/testing/cxl/test/mem.c            |  52 +++++++
+ 7 files changed, 483 insertions(+), 6 deletions(-)
+
+--
+2.40.0
 
