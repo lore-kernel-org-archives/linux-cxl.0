@@ -2,50 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583C4C77B7F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E71C7618E
 	for <linux-cxl@archiver.kernel.org>; Sat, 22 Apr 2023 03:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbjDVDJl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S229633AbjDVDJl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Fri, 21 Apr 2023 23:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60872 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229717AbjDVDJj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 23:09:39 -0400
+        with ESMTP id S229702AbjDVDJi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 23:09:38 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB17D2135;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC02212F;
         Fri, 21 Apr 2023 20:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1682132976; x=1713668976;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=S6v3crgm10JIVgggizVtLcudusm6KM5ofCzlmoXRgmo=;
-  b=KAfg+D39lZU4cD1kP0wftGRaawlGEQqtpfuPos/6fNiLeAQxDeyv+EgI
-   swpAJWdZylLnJ9zMb3NB2Dsq1fyhnmFSW2/+nGsxlTHqS4y5iCWS7lLdV
-   RJQEkDAosnxqfkM6GTL0XHi8HDRmHbXRI/Lkm93ms+UlKAXV2XixrnTCa
-   H/XOPoc6ZdGJ5Zedirr/JA0lRddauQDs0DsXW7yyPgd66g0MbY4a9h5Eu
-   Z8teDzEgvjK8Z2SM9y28FoQUZHYnHpxQWqV7iT+TJD+yO6nk+d99ezhXd
-   8zuIjS46vaZBrI07shdnUn9K0VZPIjCyrmtE0WVXqhI4f+3Rz6ZTtFL4P
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="343609065"
+  bh=LTlRRMSqF5DU6nGDLrBROJM9XGy7cXA5Nrsr4Ge27ew=;
+  b=eScnhzHijZzZoI93w0Xgwb3tNmGlz012acroowVidvUZZ1oPHEA+to0J
+   cTwaao8XSbWAB6t+UHdrabObTJwBNTkMyYO+VBlC+RvHHpyZ6V6+cRd9L
+   x3v+PgrTmIeMfKQi59ljDfdjkh32EOyBqiOsIoPXv8zTRe5wYE+JD4QY3
+   UkWTrc3SzPIlgHoEmOoJlPfKpz199a6f8mL0NSzpLb/Yt+/k2Ntp3BNFH
+   JS8DJYxitoZv2jSQd6RltLamVEqlVlj6jJF04DF0R93KGdM2Eaimin75B
+   6/0F8I7A0J2+CcO+zeFL137QEhJ0ZRJtbn4aDKz79f9DWEggLcHvZV+XK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="343609059"
 X-IronPort-AV: E=Sophos;i="5.99,216,1677571200"; 
-   d="scan'208";a="343609065"
+   d="scan'208";a="343609059"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 20:09:35 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 20:09:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="757092273"
+X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="757092267"
 X-IronPort-AV: E=Sophos;i="5.99,216,1677571200"; 
-   d="scan'208";a="757092273"
+   d="scan'208";a="757092267"
 Received: from jwostman-mobl2.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.111.101])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 20:09:35 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 20:09:34 -0700
 From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Fri, 21 Apr 2023 21:09:28 -0600
-Subject: [PATCH 4/4] tools/testing/cxl: add firmware update emulation to
- CXL memdevs
+Date:   Fri, 21 Apr 2023 21:09:26 -0600
+Subject: [PATCH 2/4] cxl/mbox: Add background cmd handling machinery
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230421-vv-fw_update-v1-4-22468747d72f@intel.com>
+Message-Id: <20230421-vv-fw_update-v1-2-22468747d72f@intel.com>
 References: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
 In-Reply-To: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
 To:     Alison Schofield <alison.schofield@intel.com>,
@@ -58,298 +57,256 @@ Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         Russ Weight <russell.h.weight@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 X-Mailer: b4 0.13-dev-2eb1a
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7635;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8846;
  i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=S6v3crgm10JIVgggizVtLcudusm6KM5ofCzlmoXRgmo=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDCnO/m9VW4WCAkQvcDwsP5YaufuS4PkvE07ufVmzT/Hgi
- m3vU2qUOkpZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRA7IM/8z4MxzVq+UfsNxa
- 2s+zYssFnVnHZa8XPN36osciZN3V+x8ZGc6v9zxx64FUjMnazzYfKn+us2nqrb+wzlb6b8nfjSF
- OT1kA
+ bh=V2jFSgzPQztiTOuyMj+lsrNslCmjQy7Vmlps32819Hw=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDCnO/m+PfNnudniGTu2xOVujuLKmbdwgsK25latQasXhx
+ pT75woVO0pZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRU+EMv9k+GPs4fcj6bvhB
+ RHDWsYK6RdHt33+t8GsLuRE8P/fE7XxGhmtSEk+fLjrw/ePc3V4fZrtdXCVgPU93a6SBrNQX/j8
+ yd1gB
 X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
  fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add emulation for the 'Get FW Info', 'Transfer FW', and 'Activate FW'
-CXL mailbox commands to the cxl_test emulated memdevs to enable
-end-to-end unit testing of a firmware update flow. For now, only
-advertise an 'offline activation' capability as that is all the CXL
-memdev driver currently implements.
+From: Davidlohr Bueso <dave@stgolabs.net>
 
-Add some canned values for the serial number fields, and create a
-platform device sysfs knob to calculate the sha256sum of the firmware
-image that was received, so a unit test can compare it with the original
-file that was uploaded.
+This adds support for handling background operations, as defined in
+the CXL 3.0 spec. Commands that can take too long (over ~2 seconds)
+can run in the background asynchronously (to the hardware).
 
+The driver will deal with such commands synchronously, blocking all
+other incoming commands for a specified period of time, allowing
+time-slicing the command such that the caller can send incremental
+requests to avoid monopolizing the driver/device. This approach
+makes the code simpler, where any out of sync (timeout) between the
+driver and hardware is just disregarded as an invalid state until
+the next successful submission.
+
+On devices where mbox interrupts are supported, this will still use
+a poller that will wakeup in the specified wait intervals. The irq
+handler will simply awake a blocked cmd, which is also safe vs a
+task that is either waking (timing out) or already awoken. Similarly
+any irq setup error during the probing falls back to polling, thus
+avoids unnecessarily erroring out.
+
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Link: https://lore.kernel.org/r/20230421092321.12741-2-dave@stgolabs.net
 Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- tools/testing/cxl/test/mem.c | 191 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 191 insertions(+)
+ drivers/cxl/cxl.h       |   7 ++++
+ drivers/cxl/cxlmem.h    |   5 +++
+ drivers/cxl/core/mbox.c |   3 +-
+ drivers/cxl/pci.c       | 104 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 117 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 9263b04d35f7..bc99cc673550 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -7,11 +7,14 @@
- #include <linux/delay.h>
- #include <linux/sizes.h>
- #include <linux/bits.h>
-+#include <crypto/hash.h>
- #include <cxlmem.h>
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 044a92d9813e..72731a896f58 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -176,14 +176,21 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ /* CXL 2.0 8.2.8.4 Mailbox Registers */
+ #define CXLDEV_MBOX_CAPS_OFFSET 0x00
+ #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
++#define   CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK GENMASK(10, 7)
++#define   CXLDEV_MBOX_CAP_BG_CMD_IRQ BIT(6)
+ #define CXLDEV_MBOX_CTRL_OFFSET 0x04
+ #define   CXLDEV_MBOX_CTRL_DOORBELL BIT(0)
++#define   CXLDEV_MBOX_CTRL_BG_CMD_IRQ BIT(2)
+ #define CXLDEV_MBOX_CMD_OFFSET 0x08
+ #define   CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
+ #define   CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK GENMASK_ULL(36, 16)
+ #define CXLDEV_MBOX_STATUS_OFFSET 0x10
++#define   CXLDEV_MBOX_STATUS_BG_CMD BIT(0)
+ #define   CXLDEV_MBOX_STATUS_RET_CODE_MASK GENMASK_ULL(47, 32)
+ #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
++#define   CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
++#define   CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK GENMASK_ULL(22, 16)
++#define   CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK GENMASK_ULL(47, 32)
+ #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
  
- #include "trace.h"
- 
- #define LSA_SIZE SZ_128K
-+#define FW_SIZE SZ_64M
-+#define FW_SLOTS 3
- #define DEV_SIZE SZ_2G
- #define EFFECT(x) (1U << x)
- 
-@@ -40,6 +43,18 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
- 		.effect = cpu_to_le16(0),
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_FW_INFO),
-+		.effect = cpu_to_le16(0),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_TRANSFER_FW),
-+		.effect = cpu_to_le16(EFFECT(0) | EFFECT(6)),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_ACTIVATE_FW),
-+		.effect = cpu_to_le16(EFFECT(0) | EFFECT(1)),
-+	},
+ /*
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 090acebba4fa..8c3302fc7738 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -108,6 +108,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+  *            variable sized output commands, it tells the exact number of bytes
+  *            written.
+  * @min_out: (input) internal command output payload size validation
++ * @poll_count: (input)  Number of timeouts to attempt.
++ * @poll_interval: (input) Number of ms between mailbox background command
++ *                 polling intervals timeouts.
+  * @return_code: (output) Error code returned from hardware.
+  *
+  * This is the primary mechanism used to send commands to the hardware.
+@@ -123,6 +126,8 @@ struct cxl_mbox_cmd {
+ 	size_t size_in;
+ 	size_t size_out;
+ 	size_t min_out;
++	int poll_count;
++	int poll_interval;
+ 	u16 return_code;
  };
  
- /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-@@ -91,6 +106,10 @@ struct mock_event_store {
- 
- struct cxl_mockmem_data {
- 	void *lsa;
-+	void *fw;
-+	int fw_slot;
-+	int fw_staged;
-+	size_t fw_size;
- 	u32 security_state;
- 	u8 user_pass[NVDIMM_PASSPHRASE_LEN];
- 	u8 master_pass[NVDIMM_PASSPHRASE_LEN];
-@@ -888,6 +907,88 @@ static int mock_health_info(struct cxl_dev_state *cxlds,
- 	return 0;
- }
- 
-+static int mock_fw_info(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	struct cxl_mbox_get_fw_info fw_info = {
-+		.num_slots = FW_SLOTS,
-+		.slot_info = (mdata->fw_slot & 0x7) |
-+			     ((mdata->fw_staged & 0x7) << 3),
-+		.activation_cap = 0,
-+	};
-+
-+	strcpy(fw_info.slot_1_revision, "cxl_test_fw_001");
-+	strcpy(fw_info.slot_2_revision, "cxl_test_fw_002");
-+	strcpy(fw_info.slot_3_revision, "cxl_test_fw_003");
-+	strcpy(fw_info.slot_4_revision, "");
-+
-+	if (cmd->size_out < sizeof(fw_info))
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, &fw_info, sizeof(fw_info));
-+	return 0;
-+}
-+
-+static int mock_transfer_fw(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_transfer_fw *transfer = cmd->payload_in;
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	void *fw = mdata->fw;
-+	size_t offset, length;
-+
-+	offset = le32_to_cpu(transfer->offset) * CXL_FW_TRANSFER_OFFSET_ALIGN;
-+	length = cmd->size_in - sizeof(*transfer);
-+	if (offset + length > FW_SIZE)
-+		return -EINVAL;
-+
-+	switch (transfer->action) {
-+	case CXL_FW_TRANSFER_ACTION_FULL:
-+		if (offset != 0)
-+			return -EINVAL;
-+		fallthrough;
-+	case CXL_FW_TRANSFER_ACTION_END:
-+		if (transfer->slot == 0 || transfer->slot > FW_SLOTS)
-+			return -EINVAL;
-+		mdata->fw_size = offset + length;
-+		break;
-+	case CXL_FW_TRANSFER_ACTION_START:
-+	case CXL_FW_TRANSFER_ACTION_CONTINUE:
-+	case CXL_FW_TRANSFER_ACTION_ABORT:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	memcpy(fw + offset, &transfer->data[0], length);
-+	return 0;
-+}
-+
-+static int mock_activate_fw(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_activate_fw *activate = cmd->payload_in;
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+
-+	if (activate->slot == 0 || activate->slot > FW_SLOTS)
-+		return -EINVAL;
-+
-+	switch (activate->action) {
-+	case CXL_FW_ACTIVATE_ONLINE:
-+		mdata->fw_slot = activate->slot;
-+		mdata->fw_staged = 0;
-+		break;
-+	case CXL_FW_ACTIVATE_OFFLINE:
-+		mdata->fw_staged = activate->slot;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct device *dev = cxlds->dev;
-@@ -942,6 +1043,15 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
- 		rc = mock_passphrase_secure_erase(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_GET_FW_INFO:
-+		rc = mock_fw_info(cxlds, cmd);
-+		break;
-+	case CXL_MBOX_OP_TRANSFER_FW:
-+		rc = mock_transfer_fw(cxlds, cmd);
-+		break;
-+	case CXL_MBOX_OP_ACTIVATE_FW:
-+		rc = mock_activate_fw(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -957,6 +1067,11 @@ static void label_area_release(void *lsa)
- 	vfree(lsa);
- }
- 
-+static void fw_buf_release(void *buf)
-+{
-+	vfree(buf);
-+}
-+
- static bool is_rcd(struct platform_device *pdev)
- {
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
-@@ -989,10 +1104,19 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	mdata->lsa = vmalloc(LSA_SIZE);
- 	if (!mdata->lsa)
- 		return -ENOMEM;
-+	mdata->fw = vmalloc(FW_SIZE);
-+	if (!mdata->fw)
-+		return -ENOMEM;
-+	mdata->fw_slot = 2;
-+
- 	rc = devm_add_action_or_reset(dev, label_area_release, mdata->lsa);
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f2addb457172..4b0c7564d350 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -181,7 +181,8 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
  	if (rc)
  		return rc;
  
-+	rc = devm_add_action_or_reset(dev, fw_buf_release, mdata->fw);
-+	if (rc)
-+		return rc;
-+
- 	cxlds = cxl_dev_state_create(dev);
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
-@@ -1063,9 +1187,76 @@ static ssize_t security_lock_store(struct device *dev, struct device_attribute *
+-	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS)
++	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
++	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
+ 		return cxl_mbox_cmd_rc2errno(mbox_cmd);
  
- static DEVICE_ATTR_RW(security_lock);
+ 	if (!out_size)
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 39b829a29f6c..aa1bb74a52a1 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -51,6 +51,7 @@
+ static unsigned short mbox_ready_timeout = 60;
+ module_param(mbox_ready_timeout, ushort, 0644);
+ MODULE_PARM_DESC(mbox_ready_timeout, "seconds to wait for mailbox ready");
++static DECLARE_WAIT_QUEUE_HEAD(mbox_wait);
  
-+struct sdesc {
-+	struct shash_desc shash;
-+	char ctx[];
-+};
-+
-+static int do_sha256(u8 *data, unsigned int length, u8 *hash)
+ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+ {
+@@ -85,6 +86,33 @@ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+ 			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+ 			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+ 
++static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
 +{
-+	struct crypto_shash *alg;
-+	struct sdesc *sdesc;
-+	size_t size;
-+	int rc;
++	u64 reg;
 +
-+	alg = crypto_alloc_shash("sha256", 0, 0);
-+	if (IS_ERR(alg))
-+		return PTR_ERR(alg);
-+
-+	size = sizeof(struct shash_desc) + crypto_shash_descsize(alg);
-+	sdesc = kzalloc(size, GFP_KERNEL);
-+	if (!sdesc) {
-+		rc = -ENOMEM;
-+		goto out_shash;
-+	}
-+
-+	sdesc->shash.tfm = alg;
-+	rc = crypto_shash_digest(&sdesc->shash, data, length, hash);
-+
-+	kfree(sdesc);
-+out_shash:
-+	crypto_free_shash(alg);
-+	return rc;
++	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
++	return FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, reg) == 100;
 +}
 +
-+#define CHECKSUM_SIZE 32
-+
-+static ssize_t fw_buf_checksum_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
++static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
 +{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
-+	unsigned char *hstr, *hptr;
-+	u8 hash[CHECKSUM_SIZE];
-+	ssize_t written = 0;
-+	int i, rc;
++	struct cxl_dev_state *cxlds = id;
 +
-+	rc = do_sha256(mdata->fw, mdata->fw_size, &hash[0]);
-+	if (rc) {
-+		dev_err(dev, "error calculating checksum: %d\n", rc);
-+		goto out_free;
++	/* spurious or raced with hw? */
++	if (!cxl_mbox_background_complete(cxlds)) {
++		struct pci_dev *pdev = to_pci_dev(cxlds->dev);
++
++		dev_warn(&pdev->dev,
++			 "Mailbox background operation IRQ but incomplete\n");
++		goto done;
 +	}
 +
-+	hstr = kzalloc((CHECKSUM_SIZE * 2) + 1, GFP_KERNEL);
-+	if (!hstr)
-+		return -ENOMEM;
-+
-+	hptr = hstr;
-+	for (i = 0; i < CHECKSUM_SIZE; i++)
-+		hptr += sprintf(hptr, "%02x", hash[i]);
-+
-+	written = sysfs_emit(buf, "%s\n", hstr);
-+
-+out_free:
-+	kfree(hstr);
-+	return written;
++	/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
++	wake_up(&mbox_wait);
++done:
++	return IRQ_HANDLED;
 +}
 +
-+static DEVICE_ATTR_RO(fw_buf_checksum);
+ /**
+  * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+  * @cxlds: The device state to communicate with.
+@@ -178,7 +206,59 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+ 	mbox_cmd->return_code =
+ 		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
+ 
+-	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
++	/*
++	 * Handle the background command in a synchronous manner.
++	 *
++	 * All other mailbox commands will serialize/queue on the mbox_mutex,
++	 * which we currently hold. Furthermore this also guarantees that
++	 * cxl_mbox_background_complete() checks are safe amongst each other,
++	 * in that no new bg operation can occur in between.
++	 *
++	 * Background operations are timesliced in accordance with the nature
++	 * of the command. In the event of timeout, the mailbox state is
++	 * indeterminate until the next successful command submission and the
++	 * driver can get back in sync with the hardware state.
++	 */
++	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
++		u64 bg_status_reg;
++		int i;
 +
- static struct attribute *cxl_mock_mem_attrs[] = {
- 	&dev_attr_security_lock.attr,
- 	&dev_attr_event_trigger.attr,
-+	&dev_attr_fw_buf_checksum.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(cxl_mock_mem);
++		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
++			mbox_cmd->opcode);
++
++		for (i = 0; i < mbox_cmd->poll_count; i++) {
++			int ret = wait_event_interruptible_timeout(
++				mbox_wait, cxl_mbox_background_complete(cxlds),
++				msecs_to_jiffies(mbox_cmd->poll_interval));
++			if (ret > 0)
++				break;
++
++			/* interrupted by a signal */
++			if (ret < 0)
++				return ret;
++		}
++
++		if (!cxl_mbox_background_complete(cxlds)) {
++			u64 md_status =
++				readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
++
++			cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
++				    "background timeout");
++			return -ETIMEDOUT;
++		}
++
++		bg_status_reg = readq(cxlds->regs.mbox +
++				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
++		mbox_cmd->return_code =
++			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
++				  bg_status_reg);
++		dev_dbg(dev,
++			"Mailbox background operation (0x%04x) completed\n",
++			mbox_cmd->opcode);
++	}
++
++	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
++	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND) {
+ 		dev_dbg(dev, "Mailbox operation had an error: %s\n",
+ 			cxl_mbox_cmd_rc2str(mbox_cmd));
+ 		return 0; /* completed but caller must check return_code */
+@@ -224,6 +304,7 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+ 	const int cap = readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
+ 	unsigned long timeout;
+ 	u64 md_status;
++	int rc, irq;
+ 
+ 	timeout = jiffies + mbox_ready_timeout * HZ;
+ 	do {
+@@ -272,6 +353,27 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+ 	dev_dbg(cxlds->dev, "Mailbox payload sized %zu",
+ 		cxlds->payload_size);
+ 
++	if (cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ) {
++		struct pci_dev *pdev = to_pci_dev(cxlds->dev);
++
++		irq = pci_irq_vector(pdev,
++			     FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap));
++		if (irq < 0)
++			goto mbox_poll;
++
++		rc = devm_request_irq(cxlds->dev, irq, cxl_pci_mbox_irq,
++				      IRQF_SHARED, "mailbox", cxlds);
++		if (rc)
++			goto mbox_poll;
++
++		writel(CXLDEV_MBOX_CTRL_BG_CMD_IRQ,
++		       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
++
++		return 0;
++	}
++
++mbox_poll:
++	dev_dbg(cxlds->dev, "Mailbox interrupts are unsupported");
+ 	return 0;
+ }
+ 
 
 -- 
 2.40.0
