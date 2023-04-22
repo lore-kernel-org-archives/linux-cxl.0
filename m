@@ -2,113 +2,125 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2E8C77B61
-	for <linux-cxl@archiver.kernel.org>; Sat, 22 Apr 2023 02:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7BFC7618E
+	for <linux-cxl@archiver.kernel.org>; Sat, 22 Apr 2023 03:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbjDVCvv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 21 Apr 2023 22:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
+        id S229698AbjDVDJi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 21 Apr 2023 23:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjDVCvu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 22:51:50 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8DE2109
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Apr 2023 19:51:48 -0700 (PDT)
+        with ESMTP id S229633AbjDVDJg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 21 Apr 2023 23:09:36 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B73F1FF7;
+        Fri, 21 Apr 2023 20:09:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682131908; x=1713667908;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=r5GQfd8aixynN5mk2EvRQANGxVKNzrTofFex9WRP3DM=;
-  b=jt0U4M/N65MoORLk1Wuv6s6ONpBxJ4uHF80O6bX/ypU7ElRHqClyJmr7
-   bM48/lBXsmLsyC0XiDTVvxrhCQi4Cw6fYuv/kv1xtCrXiWtj5Y4KyEwsx
-   d7ymlcinmLmvqc4oOYxi2/233tpq5oBBnl/PWcumHlSuFuzLeagR6aev2
-   s2ozJ42zrRgJYe0oUqmBSuKpmldV+tspcFsSS9bubVGF+Uq9/1SGf9wCB
-   GpruM5onN9sQ5WPa291KaMjzOvsH1jrDNyttD92EQyHUgl12amEa/BctZ
-   5dkQgDU1rOEMypE+G8AaEAZEWT4XV98NkkCX1JWVgvHo9HWgZzOYsirMf
+  t=1682132974; x=1713668974;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=6nXvMqoc0XfIWbY8flS/q6ajZvWZ0tjRB0xeWVdGp9E=;
+  b=A41eXh+nu0aaXOCDSTXNqWn3f+pClXQDE2jVCJaD+ekOR+ynYFTtffwl
+   fjYzncqu+zMd2u1P1lAD92JcnGCIv2CjDapZwcP5mR/uq+Lh8wJwdTcVM
+   ouYu3092yUbhj3DtyKZu0xddyro/OFp5UhC6Z6G7OyMX2TO8z+vCN3sTr
+   iZ3z4f8fyVFjlFLKhHg7fov59OvkK5QuZO3pIyEnSxhUFBJKVF4yJlSFO
+   9CyiOmfDBodGZTV7L8cY0a0+q8jQTPLa5ZazT7SNC6ZpQxqZijyXzvDbC
+   xxWqFdicCs302RQ0WATVeASUuThWoEVZilbZtsmd3V0twQMTiwJpkd/BX
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="409061823"
+X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="343609052"
 X-IronPort-AV: E=Sophos;i="5.99,216,1677571200"; 
-   d="scan'208";a="409061823"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 19:51:48 -0700
+   d="scan'208";a="343609052"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 20:09:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="803936600"
+X-IronPort-AV: E=McAfee;i="6600,9927,10687"; a="757092261"
 X-IronPort-AV: E=Sophos;i="5.99,216,1677571200"; 
-   d="scan'208";a="803936600"
-Received: from dklinejr-tigerlake.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.212.245.87])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 19:51:47 -0700
-Subject: [PATCH] cxl/port: Fix port to pci device assumptions in
- read_cdat_data()
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     ira.weiny@intel.com, lukas@wunner.de
-Date:   Fri, 21 Apr 2023 19:51:47 -0700
-Message-ID: <168213190748.708404.16215095414060364800.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <becaf70e8faf9681d474200117d62d7eaac46cca.1678543498.git.lukas@wunner.de>
-References: <becaf70e8faf9681d474200117d62d7eaac46cca.1678543498.git.lukas@wunner.de>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="757092261"
+Received: from jwostman-mobl2.amr.corp.intel.com (HELO [192.168.1.200]) ([10.212.111.101])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 20:09:33 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH 0/4] cxl: Add a firmware update mechanism and cxl_test
+ emulation
+Date:   Fri, 21 Apr 2023 21:09:24 -0600
+Message-Id: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAORPQ2QC/x2N0QqDMAwAf0XyvEBbFdx+ZYyR2qgB6aTVThD/3
+ eDjHRx3QOYknOFVHZC4SJZfVLCPCvqJ4sgoQRmccbVpnMVScPh/tyXQytg+uW4pmGBsB5p4yow
+ +UewnjeI2zyqXxIPs9+P9Oc8LrX2tanMAAAA=
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Russ Weight <russell.h.weight@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+X-Mailer: b4 0.13-dev-2eb1a
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2391;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=6nXvMqoc0XfIWbY8flS/q6ajZvWZ0tjRB0xeWVdGp9E=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDCnO/m9n7z+9+YtB2ILMKsMS/8xp3jvmxZWtnORzgZW9b
+ GuikLBbRykLgxgXg6yYIsvfPR8Zj8ltz+cJTHCEmcPKBDKEgYtTACaiKMzwP6haz1Xnwh/xc0sX
+ XDFQCHQ/77/6mpX44fZ8lv/P3E5sbGVkOFT3Q9Tmx7mt8gW+Rz75m1jOXrcu9LD1gg1yX467JAa
+ rMAAA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Not all CXL ports are associated with PCI devices. Host-bridge and
-cxl_test ports are hosted by platform devices. Teach read_cdat_data() to
-be careful about non-pci hosted cxl_memdev instances. Otherwise,
-cxl_test crashes with this signature:
+Add firmware update capability to the CXL memdev driver, and emulation
+in cxl_test. Since the 'Transfer FW' mailbox command is a background
+command, this series depends on the initial background command support
+patches[1] from Davidlohr. These patches (patch 1 and 2) are included
+in this series, unchanged, for reference.
 
- RIP: 0010:xas_start+0x6d/0x290
- [..]
- Call Trace:
-  <TASK>
-  xas_load+0xa/0x50
-  xas_find+0x25b/0x2f0
-  xa_find+0x118/0x1d0
-  pci_find_doe_mailbox+0x51/0xc0
-  read_cdat_data+0x45/0x190 [cxl_core]
-  cxl_port_probe+0x10a/0x1e0 [cxl_port]
-  cxl_bus_probe+0x17/0x50 [cxl_core]
+Since the Transfer FW command can be a long-running background command,
+it is desirable to retain kernel control over it, so that one command
+doesn't monopolize the mailbox interface. The sysfs based firmware
+loader mechanism that was developed for FPGAs is a suitable candidate to
+help accomplish this. Patch 3 goes into more details on this.
 
-Some other cleanups are included like removing the single-use @uport
-variable, and removing the indirection through 'struct cxl_dev_state' to
-lookup the device that registered the memdev and may be a pci device.
+The poll interval for the Transfer FW command is arbitrarily set at 1
+second, and a poll count of 300, giving us a total wait time of five
+minutes before which each slice of the transfer times out. This seems
+like a good mix of responsiveness and a total wait - the spec doesn't
+have any guidance on any upper or lower bounds for this. This likely
+does not need to be user-configurable, so for now it is just hard-coded
+in the driver.
 
-Fixes: af0a6c3587dc ("cxl/pci: Use CDAT DOE mailbox created by PCI core")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Patch 4 implements the emulation of firmware update related commands in
+the cxl_test environment to enable unit testing.
+
+[1]: https://lore.kernel.org/linux-cxl/20230421092321.12741-1-dave@stgolabs.net
+
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 ---
- drivers/cxl/core/pci.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Davidlohr Bueso (2):
+      cxl/pci: Allocate irq vectors earlier in pci probe
+      cxl/mbox: Add background cmd handling machinery
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 25b7e8125d5d..bdbd907884ce 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -536,17 +536,18 @@ static int cxl_cdat_read_table(struct device *dev,
-  */
- void read_cdat_data(struct cxl_port *port)
- {
--	struct pci_doe_mb *cdat_doe;
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
-+	struct device *host = cxlmd->dev.parent;
- 	struct device *dev = &port->dev;
--	struct device *uport = port->uport;
--	struct cxl_memdev *cxlmd = to_cxl_memdev(uport);
--	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+	struct pci_doe_mb *cdat_doe;
- 	size_t cdat_length;
- 	void *cdat_table;
- 	int rc;
- 
--	cdat_doe = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
-+	if (!dev_is_pci(host))
-+		return;
-+	cdat_doe = pci_find_doe_mailbox(to_pci_dev(host),
-+					PCI_DVSEC_VENDOR_ID_CXL,
- 					CXL_DOE_PROTOCOL_TABLE_ACCESS);
- 	if (!cdat_doe) {
- 		dev_dbg(dev, "No CDAT mailbox\n");
+Vishal Verma (2):
+      cxl: add a firmware update mechanism using the sysfs firmware loader
+      tools/testing/cxl: add firmware update emulation to CXL memdevs
+
+ drivers/cxl/cxl.h                       |   7 +
+ drivers/cxl/cxlmem.h                    |  84 +++++++++
+ drivers/cxl/core/mbox.c                 |   4 +-
+ drivers/cxl/core/memdev.c               | 324 ++++++++++++++++++++++++++++++++
+ drivers/cxl/pci.c                       | 112 ++++++++++-
+ tools/testing/cxl/test/mem.c            | 191 +++++++++++++++++++
+ Documentation/ABI/testing/sysfs-bus-cxl |  11 ++
+ drivers/cxl/Kconfig                     |   1 +
+ 8 files changed, 728 insertions(+), 6 deletions(-)
+---
+base-commit: 24b18197184ac39bb8566fb82c0bf788bcd0d45b
+change-id: 20230421-vv-fw_update-59e35ad0d018
+
+Best regards,
+-- 
+Vishal Verma <vishal.l.verma@intel.com>
 
