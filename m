@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AE1C6FD18
-	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 15:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CAC6FD18
+	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 15:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229792AbjDWP2i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Apr 2023 11:28:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
+        id S229727AbjDWPaR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Apr 2023 11:30:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjDWP2h (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Apr 2023 11:28:37 -0400
+        with ESMTP id S229473AbjDWPaQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Apr 2023 11:30:16 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A12A10F6
-        for <linux-cxl@vger.kernel.org>; Sun, 23 Apr 2023 08:28:35 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q4Bsp40xcz6J6n3;
-        Sun, 23 Apr 2023 23:25:34 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A6B310E4
+        for <linux-cxl@vger.kernel.org>; Sun, 23 Apr 2023 08:30:14 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q4Bvj5Jlbz6J6D1;
+        Sun, 23 Apr 2023 23:27:13 +0800 (CST)
 Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Sun, 23 Apr
- 2023 16:28:32 +0100
-Date:   Sun, 23 Apr 2023 16:28:31 +0100
+ 2023 16:30:11 +0100
+Date:   Sun, 23 Apr 2023 16:30:11 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <alison.schofield@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -31,11 +31,10 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v13 3/9] cxl/mbox: Initialize the poison state
-Message-ID: <20230423162831.00001a2c@huawei.com>
-In-Reply-To: <9078d180769be28a5087288b38cdfc827cae58bf.1681838291.git.alison.schofield@intel.com>
+Subject: Re: [PATCH v13 0/9] CXL Poison List Retrieval & Tracing
+Message-ID: <20230423163011.00004b45@huawei.com>
+In-Reply-To: <cover.1681838291.git.alison.schofield@intel.com>
 References: <cover.1681838291.git.alison.schofield@intel.com>
-        <9078d180769be28a5087288b38cdfc827cae58bf.1681838291.git.alison.schofield@intel.com>
 Organization: Huawei Technologies R&D (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,235 +48,91 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 18 Apr 2023 10:39:03 -0700
+On Tue, 18 Apr 2023 10:39:00 -0700
 alison.schofield@intel.com wrote:
 
 > From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Driver reads of the poison list are synchronized to ensure that a
-> reader does not get an incomplete list because their request
-> overlapped (was interrupted or preceded by) another read request
-> of the same DPA range. (CXL Spec 3.0 Section 8.2.9.8.4.1). The
-> driver maintains state information to achieve this goal.
+
+FWIW I've just been hammering the QEMU emulation for this to test a new
+version of that, but as a side effect I hit ther corner cases with this as well and
+it all looks good to me.
+
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+> Changes in v13:
+> - New Lead-in patches
+> 	cxl/mbox: Deprecate poison commands (Dan)
+> 	cxl/mbox: Restrict poison cmds to debugfs cxl_raw_allow_all
 > 
-> To initialize the state, first recognize the poison commands in
-> the CEL (Command Effects Log). If the device supports Get Poison
-> List, allocate a single buffer for the poison list and protect it
-> with a lock.
+> - New Patch: cxl/mbox: Initialize the poison state
+>   Patch connects the lead-in patches with the rest of this set. Poison init
+>   was previously done in the GET_POISON_LIST patch. With LIST deprecated,
+>   needed a method, along with a reason, to discover device support. 
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Nice. One passing comment inline.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/core/mbox.c | 81 ++++++++++++++++++++++++++++++++++++++++-
->  drivers/cxl/cxlmem.h    | 34 +++++++++++++++++
->  drivers/cxl/pci.c       |  4 ++
->  3 files changed, 117 insertions(+), 2 deletions(-)
+> - cxl_poison_state_init(): use kvmalloc for potentially large payload (Dan)
+> - cxl_poison_state_init() unset poison enabled bit on failure
+> - trigger sysfs: make the core interface a proper api (Dan)
+> - trigger sysfs: use down_read_interruptible (Dan)
+> - Reorganize the by_endpoint work to make typesafe (Dan)
+> - poison_by_decoder() only fill ctx when iteration is done
+> - Remove mentions of mixed mode as a 'watch for'. Just say no. (Dan)
+> - s/overflow_t/overflow_ts in cxlmem.h struct and trace.h struct (Dan)
+> - Really remove errant line from cxl_memdev_visible() (Jonathan, DaveJ, Dan)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index fd1026970d3a..17737386283a 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -5,6 +5,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/ktime.h>
->  #include <linux/mutex.h>
-> +#include <cxlpci.h>
->  #include <cxlmem.h>
->  #include <cxl.h>
->  
-> @@ -120,6 +121,43 @@ static bool cxl_is_security_command(u16 opcode)
->  	return false;
->  }
->  
-> +static bool cxl_is_poison_command(u16 opcode)
-> +{
-> +#define CXL_MBOX_OP_POISON_CMDS 0x43
-> +
-> +	if ((opcode >> 8) == CXL_MBOX_OP_POISON_CMDS)
-
-Perhaps at somepoint we should add macros to split the opcodes up?
-Doesn't need to be in this series, but if we get a lot of opcode >> 8 it
-might be nice (there are two that I'm seeing so far).
-
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static void cxl_set_poison_cmd_enabled(struct cxl_poison_state *poison,
-> +				       u16 opcode)
-> +{
-> +	switch (opcode) {
-> +	case CXL_MBOX_OP_GET_POISON:
-> +		set_bit(CXL_POISON_ENABLED_LIST, poison->enabled_cmds);
-> +		break;
-> +	case CXL_MBOX_OP_INJECT_POISON:
-> +		set_bit(CXL_POISON_ENABLED_INJECT, poison->enabled_cmds);
-> +		break;
-> +	case CXL_MBOX_OP_CLEAR_POISON:
-> +		set_bit(CXL_POISON_ENABLED_CLEAR, poison->enabled_cmds);
-> +		break;
-> +	case CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS:
-> +		set_bit(CXL_POISON_ENABLED_SCAN_CAPS, poison->enabled_cmds);
-> +		break;
-> +	case CXL_MBOX_OP_SCAN_MEDIA:
-> +		set_bit(CXL_POISON_ENABLED_SCAN_MEDIA, poison->enabled_cmds);
-> +		break;
-> +	case CXL_MBOX_OP_GET_SCAN_MEDIA:
-> +		set_bit(CXL_POISON_ENABLED_SCAN_RESULTS, poison->enabled_cmds);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
->  static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
->  {
->  	struct cxl_mem_command *c;
-> @@ -635,13 +673,18 @@ static void cxl_walk_cel(struct cxl_dev_state *cxlds, size_t size, u8 *cel)
->  		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
->  		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
->  
-> -		if (!cmd) {
-> +		if (!cmd && !cxl_is_poison_command(opcode)) {
->  			dev_dbg(cxlds->dev,
->  				"Opcode 0x%04x unsupported by driver\n", opcode);
->  			continue;
->  		}
->  
-> -		set_bit(cmd->info.id, cxlds->enabled_cmds);
-> +		if (cmd)
-> +			set_bit(cmd->info.id, cxlds->enabled_cmds);
-> +
-> +		if (cxl_is_poison_command(opcode))
-> +			cxl_set_poison_cmd_enabled(&cxlds->poison, opcode);
-> +
->  		dev_dbg(cxlds->dev, "Opcode 0x%04x enabled\n", opcode);
->  	}
->  }
-> @@ -1108,6 +1151,40 @@ int cxl_set_timestamp(struct cxl_dev_state *cxlds)
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_set_timestamp, CXL);
->  
-> +static void free_poison_buf(void *buf)
-> +{
-> +	kvfree(buf);
-> +}
-> +
-> +/* Get Poison List output buffer is protected by cxlds->poison.lock */
-> +static int cxl_poison_alloc_buf(struct cxl_dev_state *cxlds)
-> +{
-> +	cxlds->poison.list_out = kvmalloc(cxlds->payload_size, GFP_KERNEL);
-> +	if (!cxlds->poison.list_out)
-> +		return -ENOMEM;
-> +
-> +	return devm_add_action_or_reset(cxlds->dev, free_poison_buf,
-> +					cxlds->poison.list_out);
-> +}
-> +
-> +int cxl_poison_state_init(struct cxl_dev_state *cxlds)
-> +{
-> +	int rc;
-> +
-> +	if (!test_bit(CXL_POISON_ENABLED_LIST, cxlds->poison.enabled_cmds))
-> +		return 0;
-> +
-> +	rc = cxl_poison_alloc_buf(cxlds);
-> +	if (rc) {
-> +		clear_bit(CXL_POISON_ENABLED_LIST, cxlds->poison.enabled_cmds);
-> +		return rc;
-> +	}
-> +
-> +	mutex_init(&cxlds->poison.lock);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_poison_state_init, CXL);
-> +
->  struct cxl_dev_state *cxl_dev_state_create(struct device *dev)
->  {
->  	struct cxl_dev_state *cxlds;
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index ccbafc05a636..16e0241d72a9 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -215,6 +215,37 @@ struct cxl_event_state {
->  	struct mutex log_lock;
->  };
->  
-> +/* Device enabled poison commands */
-> +enum poison_cmd_enabled_bits {
-> +	CXL_POISON_ENABLED_LIST,
-> +	CXL_POISON_ENABLED_INJECT,
-> +	CXL_POISON_ENABLED_CLEAR,
-> +	CXL_POISON_ENABLED_SCAN_CAPS,
-> +	CXL_POISON_ENABLED_SCAN_MEDIA,
-> +	CXL_POISON_ENABLED_SCAN_RESULTS,
-> +	CXL_POISON_ENABLED_MAX
-> +};
-> +
-> +/**
-> + * struct cxl_poison_state - Driver poison state info
-> + *
-> + * @max_errors: Maximum media error records held in device cache
-> + * @enabled_cmds: All poison commands enabled in the CEL
-> + * @list_out: The poison list payload returned by device
-> + * @lock: Protect reads of the poison list
-> + *
-> + * Reads of the poison list are synchronized to ensure that a reader
-> + * does not get an incomplete list because their request overlapped
-> + * (was interrupted or preceded by) another read request of the same
-> + * DPA range. CXL Spec 3.0 Section 8.2.9.8.4.1
-> + */
-> +struct cxl_poison_state {
-> +	u32 max_errors;
-> +	DECLARE_BITMAP(enabled_cmds, CXL_POISON_ENABLED_MAX);
-> +	struct cxl_mbox_poison_out *list_out;
-> +	struct mutex lock;  /* Protect reads of poison list */
-> +};
-> +
->  /**
->   * struct cxl_dev_state - The driver device state
->   *
-> @@ -251,6 +282,7 @@ struct cxl_event_state {
->   * @serial: PCIe Device Serial Number
->   * @doe_mbs: PCI DOE mailbox array
->   * @event: event log driver state
-> + * @poison: poison driver state info
->   * @mbox_send: @dev specific transport for transmitting mailbox commands
->   *
->   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> @@ -290,6 +322,7 @@ struct cxl_dev_state {
->  	struct xarray doe_mbs;
->  
->  	struct cxl_event_state event;
-> +	struct cxl_poison_state poison;
->  
->  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
->  };
-> @@ -608,6 +641,7 @@ void set_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds
->  void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cmds);
->  void cxl_mem_get_event_records(struct cxl_dev_state *cxlds, u32 status);
->  int cxl_set_timestamp(struct cxl_dev_state *cxlds);
-> +int cxl_poison_state_init(struct cxl_dev_state *cxlds);
->  
->  #ifdef CONFIG_CXL_SUSPEND
->  void cxl_mem_active_inc(void);
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 60b23624d167..827ea0895778 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -769,6 +769,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		return rc;
->  
-> +	rc = cxl_poison_state_init(cxlds);
-> +	if (rc)
-> +		return rc;
-> +
->  	rc = cxl_dev_state_identify(cxlds);
->  	if (rc)
->  		return rc;
+> Link to v12:
+> https://lore.kernel.org/linux-cxl/cover.1681159309.git.alison.schofield@intel.com/
+> 
+> Add support for retrieving device poison lists and store the returned
+> error records as kernel trace events.
+> 
+> The handling of the poison list is guided by the CXL 3.0 Specification
+> Section 8.2.9.8.4.1. [1] 
+> 
+> Example trigger:
+> $ echo 1 > /sys/bus/cxl/devices/mem0/trigger_poison_list
+> 
+> Example Trace Events:
+> 
+> Poison found in a PMEM Region:
+> cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=List region=region11 region_uuid=d96e67ec-76b0-406f-8c35-5b52630dcad1 hpa=0xf100000000 dpa=0x70000000 dpa_length=0x40 source=Injected flags= overflow_time=0
+> 
+> Poison found in RAM Region:
+> cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=List region=region2 region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xf010000000 dpa=0x0 dpa_length=0x40 source=Injected flags= overflow_time=0
+> 
+> Poison found in an unmapped DPA resource:
+> cxl_poison: memdev=mem3 host=cxl_mem.3 serial=3 trace_type=List region= region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xffffffffffffffff dpa=0x40000000 dpa_length=0x40 source=Injected flags= overflow_time=0
+> 
+> [1]: https://www.computeexpresslink.org/download-the-specification
+> 
+> Alison Schofield (8):
+>   cxl/mbox: Restrict poison cmds to debugfs cxl_raw_allow_all
+>   cxl/mbox: Initialize the poison state
+>   cxl/mbox: Add GET_POISON_LIST mailbox command
+>   cxl/trace: Add TRACE support for CXL media-error records
+>   cxl/memdev: Add trigger_poison_list sysfs attribute
+>   cxl/region: Provide region info to the cxl_poison trace event
+>   cxl/trace: Add an HPA to cxl_poison trace events
+>   tools/testing/cxl: Mock support for Get Poison List
+> 
+> Dan Williams (1):
+>   cxl/mbox: Deprecate poison commands
+> 
+>  Documentation/ABI/testing/sysfs-bus-cxl |  14 +++
+>  drivers/cxl/core/core.h                 |   9 ++
+>  drivers/cxl/core/mbox.c                 | 150 ++++++++++++++++++++++--
+>  drivers/cxl/core/memdev.c               |  54 +++++++++
+>  drivers/cxl/core/region.c               | 124 ++++++++++++++++++++
+>  drivers/cxl/core/trace.c                |  94 +++++++++++++++
+>  drivers/cxl/core/trace.h                | 101 ++++++++++++++++
+>  drivers/cxl/cxlmem.h                    |  83 ++++++++++++-
+>  drivers/cxl/mem.c                       |  43 +++++++
+>  drivers/cxl/pci.c                       |   4 +
+>  include/uapi/linux/cxl_mem.h            |  35 +++++-
+>  tools/testing/cxl/test/mem.c            |  42 +++++++
+>  12 files changed, 740 insertions(+), 13 deletions(-)
+> 
+> 
+> base-commit: e686c32590f40bffc45f105c04c836ffad3e531a
 
