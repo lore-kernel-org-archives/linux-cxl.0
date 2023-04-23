@@ -2,125 +2,111 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0266AC77B78
-	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 02:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7255C77B76
+	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 02:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjDWCbP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 22 Apr 2023 22:31:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44046 "EHLO
+        id S229658AbjDWChK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 22 Apr 2023 22:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbjDWCbO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 22 Apr 2023 22:31:14 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C626A1BF0
-        for <linux-cxl@vger.kernel.org>; Sat, 22 Apr 2023 19:31:11 -0700 (PDT)
+        with ESMTP id S229914AbjDWChK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 22 Apr 2023 22:37:10 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A431BF0
+        for <linux-cxl@vger.kernel.org>; Sat, 22 Apr 2023 19:37:08 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id B9FAC881425;
-        Sun, 23 Apr 2023 02:31:07 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 5BB6D920C15;
+        Sun, 23 Apr 2023 02:37:08 +0000 (UTC)
 Received: from pdx1-sub0-mail-a202.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 54C768815C4;
-        Sun, 23 Apr 2023 02:31:06 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1682217066; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 48EAA920D12;
+        Sun, 23 Apr 2023 02:37:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1682217426; a=rsa-sha256;
         cv=none;
-        b=E0BkUv9nC9seINFDLDuaiG2Fs+MCGP/9OIkyxM+rHM7EoR5AUACIRZiNs+ybiD/IhXUoKv
-        0BmzgPilxI516QgB0nOKu0VTccBlEJ0kdEZ2wTLBuv9TyUm4aT55NDOShJhakN4GB8Gf2i
-        tRU0d0QQsHmNXVOaA0cxCRLnXoKhKCln119jFK0WAczNDNzappu+typ6RsemDrfleArUDX
-        qkH4cPLYI0PHsFMcdUTxR87iTqzj80AnErrObs51B5wmYnKhBEcvWRDq5dWa7dNgZ6adZI
-        E61v1JS1zaOkaO3yihroEFj3K4WgNe4Ei8VRdyaG/b+7veeTndiXhAZ/TXCtkQ==
+        b=LH4InGMc34ypGiod9dxwcL8PPi10hdtTyvRpaxi77yIukgV1Ceantt3MGr/+wqt+Dry9Mr
+        UIGIFgwlM9n3nRpA540r8dJgJS8bPG1B37GGiRkPYzC6BrXALMgtfWeoWGnsEIMKcVjZFt
+        c68MTnkek8ywz8KBGqznajaltyBSDOI0UqITBEhdcsND96zneu/RiFCBSxld4OUzs2S6sK
+        cVViQ8eoknIjjbZzfgXC738Lfhg8zU1jMrK7GKglMi1f0BhI1DXDReibHsLruL2mewcCY0
+        6Rbtqs3L3hJeyCaEaPJaHMogbzt7pRzgFZoM+FkZomgfSXc5zhmjqBq08DKmfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1682217066;
+        s=arc-2022; t=1682217426;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:dkim-signature;
-        bh=kDiuXsfCrFQoHivoD1Sx5SMqldEXuN+tWGa2PMtkQZs=;
-        b=FRUpt5vW9fitxy2skw3/RI0I167P/LA1L9cDZ29FM6us/jUZQfQ8yrxxuuym9P3ffnCV1x
-        xCxmyKDncQUrG/p038YZ5yrHyk2rBz8dyC3R22HnFmSYikCjSiG+3tiLiIJNsTs7PLcO07
-        s+GeCWRsEZtprawFo8GHLYv2+Adn5zi559vzUQ2vvn22n7DmDrRMdqgFBomNuVp61IxXhD
-        IJAfkedjl67Vjy7pnjoBfuT3yJD6n+ByOACsVmaGIwmGBgkZbN3L9iSV0dxAOiAhURW8UW
-        rhMKTk3Jnp2ZHOqWSXIFzOStRRMZqkVc2F2YOZ88fsvIKgbP9ypYJUzV6640dQ==
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=BKkm9rNn5hc+woofgJL5rmPoLiOxNoJEWgtThdbjg5Q=;
+        b=O3uwubXeK6sthsXixFrnASRvXz+43AHnEPC7qbPwKZXiZxZGnOphgmNFnUboSYYOfcyJ78
+        ZlT9LcYahFbMAjOno7oIJ1FRDW4ylrGNRNvDJw3hHRors1+MDXzOxKTM/GQAgW9cgtud4K
+        9m9PKLl8kDmqMDKUkfivBJUtmKItvdhsiRcOVoOcXsfNmLzCvql1z8cj14baYHuX8+3Sar
+        Vs4JzGoRKTN7AlsnRYPkwrEQyCntFGK1H4JZug4s7S8DIqpQ0DxehjR5m9PDro03ouyx1F
+        34Ea8CoscRJ7lTZfOZdogoaPGEi+lpsJsVbAkJtwNcoVN4A1LyjPVBPpGcXkMQ==
 ARC-Authentication-Results: i=1;
-        rspamd-7f66b7b68c-tqw7k;
+        rspamd-548d6c8f77-hk64m;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Lettuce-Unite: 7be284793210baac_1682217067577_3635236038
-X-MC-Loop-Signature: 1682217067576:3168587399
-X-MC-Ingress-Time: 1682217067576
+X-Reaction-Celery: 6d15f1207cc28bfe_1682217428179_2010837877
+X-MC-Loop-Signature: 1682217428179:3040659810
+X-MC-Ingress-Time: 1682217428178
 Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.127.59.45 (trex/6.7.2);
-        Sun, 23 Apr 2023 02:31:07 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        by 100.102.66.60 (trex/6.7.2);
+        Sun, 23 Apr 2023 02:37:06 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4Q3sh96JvmzGX;
-        Sat, 22 Apr 2023 19:31:05 -0700 (PDT)
+        by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4Q3sq536gjz85;
+        Sat, 22 Apr 2023 19:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1682217066;
-        bh=kDiuXsfCrFQoHivoD1Sx5SMqldEXuN+tWGa2PMtkQZs=;
-        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=Dxe62yOBZIhrca5bVHU42LwyS+gOr2JdavRMMggLLX/J5W3oa9ABS8EclBqUq/Fba
-         Pe7o7F4DxLwBv9eAGh5gMDtO5jd0Tuj81y7aJvrqnrf7A7IGioQHKON5wBIJHQsInj
-         541KXZGcVGWM7OdzA4U9+AkRqDJxQR41nfC9xwjDIlW3NsCidP6GCgoxomZuncM6oH
-         vJPSYB91Tn9DUjFS1Dm6UBF3NRfjV3H9uaQzCAZy03CqOze+JKxG37LZboGQGCx5+O
-         MUUnGYSfQ2x3FMFRmqaOVytRZN8XQk8Ts9lYTZwzdNEETL2thYeUqUt505SBfALtvW
-         wglCN1827t8VA==
+        s=dreamhost; t=1682217426;
+        bh=Ec6b6ZbruinG74QIF1jgPOgZ8lWguCIY9YT+KgzrN5Q=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=DlLChY+mLUJHSpvGOidE5dpO8Mx123e4H8MLYJa3EEh3HC3ojVsAwKtQx8J2iai0g
+         5DER12j9gJPaVNreRyLBKg/Xew6np9rm66fUkfrg5Dx6qHvfT20xaRL5PKdK7fdmNU
+         NvXCK8bpWO1iznV9yB9xf5zpf1yVwCW/jfNf5UQNdcUzFR4gxAVt2IrkOSQFhp3uHb
+         BoKfRu2VS/KgKlMJ2MheDfXm0nW7KogZwXT9dGs3WCEV42Ao+UTTCFborbnsDZL76c
+         MlaX8BlqFNKkQHhXGWQul3pUtWcaCgN2W2t+N1ZwC5rjGDvSmtp375x2Hpn0hRz54q
+         AwnF/6oKqXy7Q==
+Date:   Sat, 22 Apr 2023 19:05:28 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     vishal.l.verma@intel.com
-Cc:     linux-cxl@vger.kernel.org, dave@stgolabs.net
-Subject: [PATCH -ndctl 0/2] cxl: Support memdev sanitation
-Date:   Sat, 22 Apr 2023 18:59:18 -0700
-Message-Id: <20230423015920.11384-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.40.0
+To:     dan.j.williams@intel.com
+Cc:     Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+        alison.schofield@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, fan.ni@samsung.com,
+        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4 0/7] cxl: Background cmds and device sanitation
+Message-ID: <5tikxwbjpfvadgnngk3e2oi4dnhboqmuikq6ado3lrezckaqol@6oultghng35v>
+References: <20230421092321.12741-1-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230421092321.12741-1-dave@stgolabs.net>
+User-Agent: NeoMutt/20230407
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi,
+On Fri, 21 Apr 2023, Davidlohr Bueso wrote:
 
-These are the cxl-tool new subcommands for device sanitation for the kernel
-side equivalent (currently v4):
-     https://lore.kernel.org/linux-cxl/20230421092321.12741-1-dave@stgolabs.net/
+>Testing.
+>========
+>
+>o There are the mock device tests for Sanitize and Secure Erase.
+>
+>o The latest (v2) qemu bg/sanitize support series is posted here:
+>	https://lore.kernel.org/linux-cxl/20230418172337.19207-1-dave@stgolabs.net/
 
-Obviously the naming of the interfaces are derived from what is currently there
-for ndctl. However note that the new cxl wait-sanitize and sanitize-memdev
-commands do not rely on pmem security, such as ndctl_dimm_get_security().
-However, the kernel does consult pmem security before sending the approving
-the operation, so no harm no foul.
-
-This code is also available at:
+fyi here's the support for the cxl-tool cli
      https://github.com/davidlohr/ndctl/tree/cxl-memdev-sanitation-v1
 
-Thanks!
+... which is also posted on the list:
+     https://lore.kernel.org/linux-cxl/20230423015920.11384-1-dave@stgolabs.net/
 
-Davidlohr Bueso (2):
-  cxl/memdev: Introduce wait-sanitize functionality
-  cxl/memdev: Introduce sanitize-memdev functionality
-
- Documentation/cxl/cxl-sanitize-memdev.txt | 65 ++++++++++++++++
- Documentation/cxl/cxl-wait-sanitize.txt   | 39 ++++++++++
- Documentation/cxl/lib/libcxl.txt          |  2 +
- Documentation/cxl/meson.build             |  2 +
- cxl/builtin.h                             |  2 +
- cxl/cxl.c                                 |  2 +
- cxl/lib/libcxl.c                          | 94 +++++++++++++++++++++++
- cxl/lib/libcxl.sym                        |  2 +
- cxl/libcxl.h                              |  2 +
- cxl/memdev.c                              | 73 ++++++++++++++++++
- 10 files changed, 283 insertions(+)
- create mode 100644 Documentation/cxl/cxl-sanitize-memdev.txt
- create mode 100644 Documentation/cxl/cxl-wait-sanitize.txt
-
---
-2.40.0
-
+Thanks,
+Davidlohr
