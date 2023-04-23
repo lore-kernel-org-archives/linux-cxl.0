@@ -2,40 +2,37 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3447C77B60
-	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 15:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F6AC6FD18
+	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 15:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbjDWPlc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Apr 2023 11:41:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
+        id S229497AbjDWPnE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Apr 2023 11:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjDWPlb (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Apr 2023 11:41:31 -0400
+        with ESMTP id S229456AbjDWPnD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Apr 2023 11:43:03 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE6510E5
-        for <linux-cxl@vger.kernel.org>; Sun, 23 Apr 2023 08:41:30 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q4C6V4p5Bz6D8Yt;
-        Sun, 23 Apr 2023 23:36:34 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D1710E5
+        for <linux-cxl@vger.kernel.org>; Sun, 23 Apr 2023 08:43:02 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Q4CBT67w9z6J6st;
+        Sun, 23 Apr 2023 23:40:01 +0800 (CST)
 Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Sun, 23 Apr
- 2023 16:41:27 +0100
-Date:   Sun, 23 Apr 2023 16:41:26 +0100
+ 2023 16:43:00 +0100
+Date:   Sun, 23 Apr 2023 16:42:59 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <alison.schofield@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v13 0/9] CXL Poison List Retrieval & Tracing
-Message-ID: <20230423164126.0000687a@huawei.com>
-In-Reply-To: <20230423163011.00004b45@huawei.com>
-References: <cover.1681838291.git.alison.schofield@intel.com>
-        <20230423163011.00004b45@huawei.com>
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v6 0/10] cxl: CXL Inject & Clear Poison
+Message-ID: <20230423164259.00006f8f@huawei.com>
+In-Reply-To: <cover.1681874357.git.alison.schofield@intel.com>
+References: <cover.1681874357.git.alison.schofield@intel.com>
 Organization: Huawei Technologies R&D (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,101 +46,78 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 23 Apr 2023 16:30:11 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Tue, 18 Apr 2023 20:26:24 -0700
+alison.schofield@intel.com wrote:
 
-> On Tue, 18 Apr 2023 10:39:00 -0700
-> alison.schofield@intel.com wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> >   
-> 
-> FWIW I've just been hammering the QEMU emulation for this to test a new
-> version of that, but as a side effect I hit ther corner cases with this as well and
-> it all looks good to me.
-> 
-> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Built on cxl/next plus [PATCH v13 0/9] CXL Poison List Retrieval & Tracing
+> https://lore.kernel.org/linux-cxl/cover.1681838291.git.alison.schofield@intel.com/
 
-I should refine that slightly - doesn't cover patch 9 as I didn't
-try the mocking.
+For 1-5 given I've poking them from QEMU whilst testing the emulation and
+it all worked well.
 
-Jonathan
-
+Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com.
+> 
+> Changes in v6:
+> - Drop patches: The deprecate, and the removal of raw access, introduced
+>   for all poison commands in v13 of CXL Poison List Retrieval & Tracing,
+>   made these 2 patches obsolete:
+> 	cxl/memdev: Make inject and clear poison cmds kernel exclusive
+> 	cxl/mbox: Block inject and clear poison opcodes in raw mode
+> 
+> - The device always writes the write data on Clear, regardless of whether or
+>   not the address is actually poisoned. Stop stating otherwise. (Jonathan)
+> - Update Patch 1 commit message to refer to CXL.mem driver (DaveJ)
+> - __cxl_dpa_to_region() Stop the walk on a match (Jonathan)
+> - Set & use cxlds->poison.enabled_cmds for inject & clear
+> - Simplify inject payload address assignment (DaveJ)
+> - Use down_read_interruptible in inject/clear 
+> - Tidy up the memdev core api for inject/clear by using cxl_memdev
+> - Use the available cxl_memdev rather than dev in debugfs_create_file()
+> 
+> Link to v5:
+> https://lore.kernel.org/linux-cxl/cover.1679892337.git.alison.schofield@intel.com/
 > 
 > 
-> > Changes in v13:
-> > - New Lead-in patches
-> > 	cxl/mbox: Deprecate poison commands (Dan)
-> > 	cxl/mbox: Restrict poison cmds to debugfs cxl_raw_allow_all
-> > 
-> > - New Patch: cxl/mbox: Initialize the poison state
-> >   Patch connects the lead-in patches with the rest of this set. Poison init
-> >   was previously done in the GET_POISON_LIST patch. With LIST deprecated,
-> >   needed a method, along with a reason, to discover device support. 
-> > 
-> > - cxl_poison_state_init(): use kvmalloc for potentially large payload (Dan)
-> > - cxl_poison_state_init() unset poison enabled bit on failure
-> > - trigger sysfs: make the core interface a proper api (Dan)
-> > - trigger sysfs: use down_read_interruptible (Dan)
-> > - Reorganize the by_endpoint work to make typesafe (Dan)
-> > - poison_by_decoder() only fill ctx when iteration is done
-> > - Remove mentions of mixed mode as a 'watch for'. Just say no. (Dan)
-> > - s/overflow_t/overflow_ts in cxlmem.h struct and trace.h struct (Dan)
-> > - Really remove errant line from cxl_memdev_visible() (Jonathan, DaveJ, Dan)
-> > 
-> > Link to v12:
-> > https://lore.kernel.org/linux-cxl/cover.1681159309.git.alison.schofield@intel.com/
-> > 
-> > Add support for retrieving device poison lists and store the returned
-> > error records as kernel trace events.
-> > 
-> > The handling of the poison list is guided by the CXL 3.0 Specification
-> > Section 8.2.9.8.4.1. [1] 
-> > 
-> > Example trigger:
-> > $ echo 1 > /sys/bus/cxl/devices/mem0/trigger_poison_list
-> > 
-> > Example Trace Events:
-> > 
-> > Poison found in a PMEM Region:
-> > cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=List region=region11 region_uuid=d96e67ec-76b0-406f-8c35-5b52630dcad1 hpa=0xf100000000 dpa=0x70000000 dpa_length=0x40 source=Injected flags= overflow_time=0
-> > 
-> > Poison found in RAM Region:
-> > cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=List region=region2 region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xf010000000 dpa=0x0 dpa_length=0x40 source=Injected flags= overflow_time=0
-> > 
-> > Poison found in an unmapped DPA resource:
-> > cxl_poison: memdev=mem3 host=cxl_mem.3 serial=3 trace_type=List region= region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xffffffffffffffff dpa=0x40000000 dpa_length=0x40 source=Injected flags= overflow_time=0
-> > 
-> > [1]: https://www.computeexpresslink.org/download-the-specification
-> > 
-> > Alison Schofield (8):
-> >   cxl/mbox: Restrict poison cmds to debugfs cxl_raw_allow_all
-> >   cxl/mbox: Initialize the poison state
-> >   cxl/mbox: Add GET_POISON_LIST mailbox command
-> >   cxl/trace: Add TRACE support for CXL media-error records
-> >   cxl/memdev: Add trigger_poison_list sysfs attribute
-> >   cxl/region: Provide region info to the cxl_poison trace event
-> >   cxl/trace: Add an HPA to cxl_poison trace events
-> >   tools/testing/cxl: Mock support for Get Poison List
-> > 
-> > Dan Williams (1):
-> >   cxl/mbox: Deprecate poison commands
-> > 
-> >  Documentation/ABI/testing/sysfs-bus-cxl |  14 +++
-> >  drivers/cxl/core/core.h                 |   9 ++
-> >  drivers/cxl/core/mbox.c                 | 150 ++++++++++++++++++++++--
-> >  drivers/cxl/core/memdev.c               |  54 +++++++++
-> >  drivers/cxl/core/region.c               | 124 ++++++++++++++++++++
-> >  drivers/cxl/core/trace.c                |  94 +++++++++++++++
-> >  drivers/cxl/core/trace.h                | 101 ++++++++++++++++
-> >  drivers/cxl/cxlmem.h                    |  83 ++++++++++++-
-> >  drivers/cxl/mem.c                       |  43 +++++++
-> >  drivers/cxl/pci.c                       |   4 +
-> >  include/uapi/linux/cxl_mem.h            |  35 +++++-
-> >  tools/testing/cxl/test/mem.c            |  42 +++++++
-> >  12 files changed, 740 insertions(+), 13 deletions(-)
-> > 
-> > 
-> > base-commit: e686c32590f40bffc45f105c04c836ffad3e531a  
+> Introducing Inject and Clear Poison support for CXL Devices.
+> 
+> These are optional commands, meaning not all CXL devices must support
+> them. The debugfs attributes, inject_poison and clear_poison, are only
+> visible for devices reporting support of the capability.
+> 
+> Example:
+> # echo 0x40000000 > /sys/kernel/debug/cxl/mem1/inject_poison
+> 
+> cxl_poison: memdev=mem1 pcidev=cxl_mem.1 trace_type=Inject region= region_uuid=00000000-0000-0000-0000-000000000000 hpa=0xffffffffffffffff dpa=0x40000000 dpa_length=0x40 source=Unknown flags= overflow_time=0
+> 
+> Example in which the injected poison landed in region5:
+> # echo 0x40000000 > /sys/kernel/debug/cxl/mem0/inject_poison
+> 
+> cxl_poison: memdev=mem0 host=cxl_mem.0 serial=0 trace_type=Inject region=region5 region_uuid=cfcfc13a-5290-4983-aa74-4c8465c25f26 hpa=0xf110000000 dpa=0x40000000 dpa_length=0x40 source=Unknown flags= overflow_time=0
+> 
+> 
+> Alison Schofield (10):
+>   cxl/memdev: Add support for the Inject Poison mailbox command
+>   cxl/memdev: Add support for the Clear Poison mailbox command
+>   cxl/memdev: Warn of poison inject or clear to a mapped region
+>   cxl/memdev: Trace inject and clear poison as cxl_poison events
+>   cxl/mem: Add debugfs attributes for poison inject and clear
+>   tools/testing/cxl: Mock the Inject Poison mailbox command
+>   tools/testing/cxl: Mock the Clear Poison mailbox command
+>   tools/testing/cxl: Use injected poison for get poison list
+>   tools/testing/cxl: Add a sysfs attr to test poison inject limits
+>   tools/testing/cxl: Require CONFIG_DEBUG_FS
+> 
+>  Documentation/ABI/testing/debugfs-cxl |  35 +++++
+>  drivers/cxl/core/core.h               |   2 +
+>  drivers/cxl/core/memdev.c             | 172 ++++++++++++++++++++
+>  drivers/cxl/core/trace.h              |   8 +-
+>  drivers/cxl/cxlmem.h                  |  13 ++
+>  drivers/cxl/mem.c                     |  28 ++++
+>  tools/testing/cxl/config_check.c      |   1 +
+>  tools/testing/cxl/test/mem.c          | 216 +++++++++++++++++++++++---
+>  8 files changed, 453 insertions(+), 22 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/debugfs-cxl
 > 
 
