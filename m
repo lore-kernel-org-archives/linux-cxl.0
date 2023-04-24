@@ -2,158 +2,286 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B59C77B60
-	for <linux-cxl@archiver.kernel.org>; Sun, 23 Apr 2023 22:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A8BC77B76
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Apr 2023 09:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbjDWWoS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Apr 2023 18:44:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
+        id S230228AbjDXJt5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Apr 2023 05:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjDWWoR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Apr 2023 18:44:17 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3412FE56
-        for <linux-cxl@vger.kernel.org>; Sun, 23 Apr 2023 15:44:16 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 94728540C5B;
-        Sun, 23 Apr 2023 22:44:15 +0000 (UTC)
-Received: from pdx1-sub0-mail-a254.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id EEB40540BAC;
-        Sun, 23 Apr 2023 22:44:14 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1682289855; a=rsa-sha256;
-        cv=none;
-        b=0bV0tBoQHISO3Hv/tiNRjsIORUWFt5+xBPN1jcCBbqnaYEtR1g7uRQxR5mq2efIUyMuOHA
-        sF9qrMbiMX2GH6aoZP4d0MX76WdD7cioIwGzT1E1BAz7yOU2tUau9fqZ3WGMnXn04WpIX7
-        s3mXSrP9OBje/ixMyEoxMJhnj942MyN5BmULthkOCWrdBNbqcaWZSdASNWundMEdwQeYk1
-        hfArT1fGMTARKsLgcVPQo4dGBb4ejcxwoscghxByUlM/afNJLtPfc0hrgURDKJbhmA+ZmT
-        k//a9Ohkseeh6jsbu75juPuwzIjDx+f7Uh3bZfU2RTu83cWTNLDdpLw1EMLqqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1682289855;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:dkim-signature;
-        bh=ODxX98x4u7wOzA1sJIyXRijVwHshQC3Clozws7Zx43Q=;
-        b=eTcVXofr7DOIGJAsChQopjX9KXY+NeiSG6lozjf4s466lw/p9luWilXmBwekPH4ffDIH+v
-        19KwZFc6v/g/9MDq9OeJL6CPNiF8YbqwtxeyH961RDIgfNV9Pki5zlrZDQ3z+nPwCR6dpv
-        72kEXcdo8/XfzPhGMcD58BB40RX+/u+N1mj1eZfvnzrw9od+rZ5CSOZ3Mbk9KaEBYj+XNq
-        4Qm/Qo9qzuA4nW2f02LzHFYO7ggXs8SpLtI12W77pSntkH7KI6I3824hGaadguoD6iMw+c
-        4Aow055uQ8yhcpyuV6Mk7mqK9JW24eq5+KWH/OTCvDA/Lt3f4lQoDDq+ynvV/Q==
-ARC-Authentication-Results: i=1;
-        rspamd-7f66b7b68c-cn6zf;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stop-Share: 2e0941fc0c8a4836_1682289855308_3558863119
-X-MC-Loop-Signature: 1682289855308:1228113731
-X-MC-Ingress-Time: 1682289855308
-Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.103.24.65 (trex/6.7.2);
-        Sun, 23 Apr 2023 22:44:15 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4Q4Nby2R8Cz9q;
-        Sun, 23 Apr 2023 15:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1682289854;
-        bh=ODxX98x4u7wOzA1sJIyXRijVwHshQC3Clozws7Zx43Q=;
-        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=VX7o5tuN//HUn4Ghg7yGSWeX7qKf/4oud4TzIyA+/8RN/qvo7b4KzeQv78eJ5JaHv
-         qzcJxNLERlDuUA92qIR2cp6lUmx8qH8PBW4SI8cpycTK7TEy9IIrnGv8JCKSSnGVSt
-         Ds5mFCV5Jrd9CbsRK2vlPpsAfOp8pM7nESEzJGbEZ4SuXi1pXSJpHDFeg/0GhJXxKP
-         1hom3wQXg5m8zl89fIQMWQdKmQTTZHJVlGRDumwxwxqtNlBT2taDxibM1jwkXmhVYU
-         E5UCvFYqjVopd8zx7kP6IGleP/VE+8ohfPpR+OSkZMGEqlD94RXx9Pt6jBHO4wx2PJ
-         5Wd9ULXd95I/Q==
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     dan.j.williams@intel.com
-Cc:     Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-        fan.ni@samsung.com, a.manzanares@samsung.com, dave@stgolabs.net,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/test: Add mock test for set_timestamp
-Date:   Sun, 23 Apr 2023 15:12:31 -0700
-Message-Id: <20230423221231.6357-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.40.0
+        with ESMTP id S231635AbjDXJtr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Apr 2023 05:49:47 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A09E1713
+        for <linux-cxl@vger.kernel.org>; Mon, 24 Apr 2023 02:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682329786; x=1713865786;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ztLijUg8X7vbdsL56P0X8qLLP39ftH/suOWMo25n41E=;
+  b=Tg8etTBdvX+8KlX5Iq14DAJGWBc45cJcieeLdOatXX++okl1BgqchAGj
+   uM6DzXahZ3mG3txrDsgDawpAZYxU7JJxX6TDz6nfVs4Kikw00ZaO1e4D1
+   p7Nx3eDR7YiRKC5iahFhd+evzo+H22mXNFk8rajYMJnLoyWhVeQ8Ic5h3
+   QEC5Vcm82p3TXDzfSAqhUnOX5+VrcLSd6A0ZKgZ3A6gCwOI2BRdw2fYoP
+   FJPf1sJyxa/RCRafom3n28imHrirUnqVnUa4lIr4YNwApxouL2+f6pGI+
+   OjQrCQT82R/DyFbsLE/i54ljlZQolhUzMC/uaJTXuGA0fa4XuMcr07zl0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10689"; a="374356104"
+X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
+   d="scan'208";a="374356104"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 02:49:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10689"; a="1022642719"
+X-IronPort-AV: E=Sophos;i="5.99,222,1677571200"; 
+   d="scan'208";a="1022642719"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2023 02:49:43 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pqspL-000iLf-0S;
+        Mon, 24 Apr 2023 09:49:43 +0000
+Date:   Mon, 24 Apr 2023 17:49:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>
+Subject: [cxl:next] BUILD SUCCESS bfe58458fd2557c9a81b89bc0ff10eb03d6c0745
+Message-ID: <644650ad.6sJWMgzqq2D6G2Fd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Support the command testing in a unit-test fashion.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: bfe58458fd2557c9a81b89bc0ff10eb03d6c0745  cxl/mbox: Update CMD_RC_TABLE
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-Resending as a new thread. Applies against 'pending' branch.
+elapsed time: 796m
 
- tools/testing/cxl/test/mem.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+configs tested: 209
+configs skipped: 15
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 0fd7e7b8b44a..ba572d03c687 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -116,6 +116,7 @@ struct cxl_mockmem_data {
- 	int master_limit;
- 	struct mock_event_store mes;
- 	u8 event_buf[SZ_4K];
-+	u64 timestamp;
- };
- 
- static struct mock_event_log *event_find_log(struct device *dev, int log_type)
-@@ -379,6 +380,22 @@ struct cxl_event_mem_module mem_module = {
- 	}
- };
- 
-+static int mock_set_timestamp(struct cxl_dev_state *cxlds,
-+			      struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	struct cxl_mbox_set_timestamp_in *ts = cmd->payload_in;
-+
-+	if (cmd->size_in != sizeof(*ts))
-+		return -EINVAL;
-+
-+	if (cmd->size_out != 0)
-+		return -EINVAL;
-+
-+	mdata->timestamp = le64_to_cpu(ts->timestamp);
-+	return 0;
-+}
-+
- static void cxl_mock_add_event_logs(struct mock_event_store *mes)
- {
- 	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
-@@ -1103,6 +1120,9 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	int rc = -EIO;
- 
- 	switch (cmd->opcode) {
-+	case CXL_MBOX_OP_SET_TIMESTAMP:
-+		rc = mock_set_timestamp(cxlds, cmd);
-+		break;
- 	case CXL_MBOX_OP_GET_SUPPORTED_LOGS:
- 		rc = mock_gsl(cmd);
- 		break;
-@@ -1232,6 +1252,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_set_timestamp(cxlds);
-+	if (rc)
-+		return rc;
-+
- 	rc = cxl_dev_state_identify(cxlds);
- 	if (rc)
- 		return rc;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r003-20230423   gcc  
+alpha        buildonly-randconfig-r006-20230423   gcc  
+alpha        buildonly-randconfig-r006-20230424   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r005-20230423   gcc  
+alpha                randconfig-r021-20230423   gcc  
+alpha                randconfig-r031-20230424   gcc  
+alpha                randconfig-r032-20230423   gcc  
+alpha                randconfig-r035-20230424   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r012-20230423   gcc  
+arc                  randconfig-r022-20230423   gcc  
+arc                  randconfig-r043-20230423   gcc  
+arc                  randconfig-r043-20230424   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r003-20230424   clang
+arm                                 defconfig   gcc  
+arm                            hisi_defconfig   gcc  
+arm                  randconfig-r006-20230423   clang
+arm                  randconfig-r013-20230424   clang
+arm                  randconfig-r025-20230423   gcc  
+arm                  randconfig-r046-20230423   gcc  
+arm                  randconfig-r046-20230424   clang
+arm                           sama7_defconfig   clang
+arm                         socfpga_defconfig   clang
+arm64                            alldefconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r016-20230423   clang
+csky         buildonly-randconfig-r001-20230423   gcc  
+csky         buildonly-randconfig-r003-20230423   gcc  
+csky         buildonly-randconfig-r005-20230423   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r003-20230423   gcc  
+csky                 randconfig-r022-20230424   gcc  
+csky                 randconfig-r023-20230423   gcc  
+csky                 randconfig-r024-20230423   gcc  
+hexagon      buildonly-randconfig-r002-20230424   clang
+hexagon              randconfig-r006-20230424   clang
+hexagon              randconfig-r041-20230423   clang
+hexagon              randconfig-r041-20230424   clang
+hexagon              randconfig-r045-20230423   clang
+hexagon              randconfig-r045-20230424   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230424   clang
+i386                 randconfig-a002-20230424   clang
+i386                 randconfig-a003-20230424   clang
+i386                 randconfig-a004-20230424   clang
+i386                 randconfig-a005-20230424   clang
+i386                 randconfig-a006-20230424   clang
+i386                 randconfig-a011-20230424   gcc  
+i386                 randconfig-a012-20230424   gcc  
+i386                 randconfig-a013-20230424   gcc  
+i386                 randconfig-a014-20230424   gcc  
+i386                          randconfig-a014   gcc  
+i386                 randconfig-a015-20230424   gcc  
+i386                 randconfig-a016-20230424   gcc  
+i386                          randconfig-a016   gcc  
+i386                 randconfig-r015-20230424   gcc  
+i386                 randconfig-r016-20230424   gcc  
+i386                 randconfig-r034-20230424   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r011-20230424   gcc  
+ia64                 randconfig-r012-20230424   gcc  
+ia64                 randconfig-r025-20230423   gcc  
+ia64                 randconfig-r032-20230423   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r005-20230424   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r001-20230423   gcc  
+loongarch            randconfig-r002-20230423   gcc  
+loongarch            randconfig-r011-20230424   gcc  
+loongarch            randconfig-r013-20230423   gcc  
+loongarch            randconfig-r033-20230424   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         amcore_defconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k         buildonly-randconfig-r002-20230423   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+m68k                 randconfig-r004-20230423   gcc  
+m68k                 randconfig-r021-20230424   gcc  
+m68k                 randconfig-r032-20230424   gcc  
+m68k                 randconfig-r036-20230423   gcc  
+microblaze   buildonly-randconfig-r006-20230423   gcc  
+microblaze           randconfig-r003-20230424   gcc  
+microblaze           randconfig-r014-20230423   gcc  
+microblaze           randconfig-r016-20230423   gcc  
+microblaze           randconfig-r016-20230424   gcc  
+microblaze           randconfig-r025-20230424   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                           gcw0_defconfig   gcc  
+mips                           ip22_defconfig   clang
+mips                           jazz_defconfig   gcc  
+mips                 randconfig-r002-20230423   clang
+mips                 randconfig-r005-20230424   gcc  
+mips                 randconfig-r014-20230424   clang
+mips                 randconfig-r022-20230423   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r001-20230423   gcc  
+nios2                randconfig-r003-20230423   gcc  
+nios2                randconfig-r012-20230424   gcc  
+nios2                randconfig-r023-20230424   gcc  
+nios2                randconfig-r026-20230423   gcc  
+nios2                randconfig-r032-20230424   gcc  
+nios2                randconfig-r035-20230423   gcc  
+openrisc     buildonly-randconfig-r001-20230423   gcc  
+openrisc     buildonly-randconfig-r005-20230423   gcc  
+openrisc             randconfig-r013-20230423   gcc  
+openrisc             randconfig-r021-20230423   gcc  
+openrisc             randconfig-r036-20230424   gcc  
+parisc       buildonly-randconfig-r004-20230423   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                generic-64bit_defconfig   gcc  
+parisc               randconfig-r005-20230423   gcc  
+parisc               randconfig-r014-20230424   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc      buildonly-randconfig-r001-20230424   gcc  
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                    gamecube_defconfig   clang
+powerpc                     mpc512x_defconfig   clang
+powerpc                mpc7448_hpc2_defconfig   gcc  
+powerpc                 mpc8540_ads_defconfig   gcc  
+powerpc                      ppc40x_defconfig   gcc  
+powerpc              randconfig-r004-20230423   gcc  
+powerpc              randconfig-r015-20230423   clang
+powerpc              randconfig-r031-20230423   gcc  
+powerpc              randconfig-r033-20230424   clang
+powerpc                    socrates_defconfig   clang
+powerpc                     tqm8540_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                randconfig-r036-20230424   clang
+riscv                randconfig-r042-20230423   clang
+riscv                randconfig-r042-20230424   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r002-20230424   clang
+s390                 randconfig-r011-20230423   clang
+s390                 randconfig-r015-20230424   gcc  
+s390                 randconfig-r044-20230423   clang
+s390                 randconfig-r044-20230424   gcc  
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                             sh03_defconfig   gcc  
+sh                           sh2007_defconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r013-20230424   gcc  
+sparc                randconfig-r024-20230423   gcc  
+sparc                randconfig-r036-20230423   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64              randconfig-r006-20230423   gcc  
+sparc64              randconfig-r012-20230423   gcc  
+sparc64              randconfig-r026-20230424   gcc  
+sparc64              randconfig-r034-20230424   gcc  
+sparc64              randconfig-r035-20230423   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230424   clang
+x86_64                        randconfig-a001   clang
+x86_64               randconfig-a002-20230424   clang
+x86_64                        randconfig-a002   gcc  
+x86_64               randconfig-a003-20230424   clang
+x86_64                        randconfig-a003   clang
+x86_64               randconfig-a004-20230424   clang
+x86_64                        randconfig-a004   gcc  
+x86_64               randconfig-a005-20230424   clang
+x86_64                        randconfig-a005   clang
+x86_64               randconfig-a006-20230424   clang
+x86_64                        randconfig-a006   gcc  
+x86_64               randconfig-a011-20230424   gcc  
+x86_64               randconfig-a012-20230424   gcc  
+x86_64               randconfig-a013-20230424   gcc  
+x86_64                        randconfig-a013   gcc  
+x86_64               randconfig-a014-20230424   gcc  
+x86_64               randconfig-a015-20230424   gcc  
+x86_64               randconfig-a016-20230424   gcc  
+x86_64                        randconfig-k001   clang
+x86_64               randconfig-r024-20230424   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r004-20230424   gcc  
+xtensa               randconfig-r011-20230423   gcc  
+xtensa               randconfig-r026-20230423   gcc  
+xtensa               randconfig-r031-20230424   gcc  
+xtensa               randconfig-r033-20230423   gcc  
+
 -- 
-2.40.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
