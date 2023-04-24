@@ -2,48 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7107C77B7F
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Apr 2023 20:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C13BC7EE20
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Apr 2023 20:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231726AbjDXUAA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S231814AbjDXUAA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Mon, 24 Apr 2023 16:00:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60196 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232253AbjDXT7p (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Apr 2023 15:59:45 -0400
+        with ESMTP id S232648AbjDXT7t (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Apr 2023 15:59:49 -0400
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CA1AA
-        for <linux-cxl@vger.kernel.org>; Mon, 24 Apr 2023 12:59:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A26AA
+        for <linux-cxl@vger.kernel.org>; Mon, 24 Apr 2023 12:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682366384; x=1713902384;
+  t=1682366389; x=1713902389;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Faw8xP/k7KDSo+QDpEupmd/VRIE/HwlIRSmiJdGJIig=;
-  b=h//zSPDKSbsXiw/SWtYZKXznHW+BdhmXda1YXv1BdpEPmZmjqt844RZu
-   YioYGAqEkFfac5cADZ5REesEBmfj19Y7p4kVlAG7x3DVW67hI36heiaEH
-   Hhi976CysIpDJz9MsT/poNnzL4RGdxKVqXc+uuiTWSU3RaL6G4uQGQ+lU
-   9wTsvsp98Dky7fdHeVfhKR7BoFctzdK1HMJoX0AANVtnwRp9uDBXEjHN1
-   E1adVdbfx9tWc14iXQdPoXK4ZStH0wdjW+J8+w2CGN5mMClxrF1AnbwuJ
-   fAr7u5pS4fo48tIAaWUT6Ip8Tx52cOTBL89sSIPwrce8MUknqA3dCN79N
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="326157355"
+  bh=/hYsZFVbuB7rXLCiq+RG514NSTK5FRfnbKf2UZYDzDA=;
+  b=c/qjsd5yoRLdrLLAdYpHltqXG9IppXyGt0ugNqZbz+9AvE46YcHrW1gr
+   +h/oDkPdZQyaAwIO0hGWV+WvsqbLw0Z+nkIS7S6YsnixRwFee8Lvr5cIs
+   mVpNwWbbZttw+siMkWYdkHLcEzR/poSjCKAkRu8GjFjD67zDfIZYAZvvp
+   hemgN7uRMEZOnMpD+ENlmL4F6m9R2U3cKfKjN1fKY5l7w8bRCKdgRjqTr
+   9/lYWwRpCk0LiQw9qQOUoXuuHwYBF75Cthkao6X4ub9iDfJk+bpyGq/dg
+   SsH+EcJ0Skez8X8mXAGbMGre/LKIYceC8ZP5z1aEsW9gVHfFGyvPndnEy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="326157375"
 X-IronPort-AV: E=Sophos;i="5.99,223,1677571200"; 
-   d="scan'208";a="326157355"
+   d="scan'208";a="326157375"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 12:59:43 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 12:59:49 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="670622081"
+X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="670622085"
 X-IronPort-AV: E=Sophos;i="5.99,223,1677571200"; 
-   d="scan'208";a="670622081"
+   d="scan'208";a="670622085"
 Received: from fbirang-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.88.12])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 12:59:43 -0700
-Subject: [PATCH 2/4] cxl/list: Filter root decoders by region
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 12:59:48 -0700
+Subject: [PATCH 3/4] test: Support test modules located in 'updates' instead
+ of 'extra'
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Mon, 24 Apr 2023 12:59:43 -0700
-Message-ID: <168236638318.1027628.17234728660914767074.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Mon, 24 Apr 2023 12:59:48 -0700
+Message-ID: <168236638863.1027628.11883188611397194858.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <168236637159.1027628.7560967008080605819.stgit@dwillia2-xfh.jf.intel.com>
 References: <168236637159.1027628.7560967008080605819.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -54,59 +55,31 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Arrange for util_cxl_decoder_filter_by_region() to consider that root
-decoders host multiple regions, unlike switch and endpoint decoders that
-have a 1:1 relationship.
+Since kernel commit:
 
-Before: (list the root decoders hosting region4 and region9)
-    # cxl list -Du -d root -r 4,9
-      Warning: no matching devices found
+b74d7bb7ca24 ("kbuild: Modify default INSTALL_MOD_DIR from extra to updates")
 
-    [
-    ]
-
-After:
-    # cxl list -Du -d root -r 4,9
-    [
-      {
-        "decoder":"decoder3.0",
-        "resource":"0xf010000000",
-        "size":"1024.00 MiB (1073.74 MB)",
-        "interleave_ways":1,
-        "max_available_extent":"512.00 MiB (536.87 MB)",
-        "volatile_capable":true,
-        "nr_targets":1
-      },
-      {
-        "decoder":"decoder3.5",
-        "resource":"0xf1d0000000",
-        "size":"256.00 MiB (268.44 MB)",
-        "interleave_ways":1,
-        "accelmem_capable":true,
-        "nr_targets":1
-      }
-    ]
+...the kernel build process deposits the nfit_test can cxl_test modules in
+/lib/modules/$KVER/updates. This is more widely supported across multiple
+distributions as a default override for modules that ship in their native
+directory.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- cxl/filter.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ test/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 90b13be79d9c..6e8d42165205 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -661,6 +661,12 @@ util_cxl_decoder_filter_by_region(struct cxl_decoder *decoder,
- 	if (!__ident)
- 		return decoder;
+diff --git a/test/core.c b/test/core.c
+index 5d1aa23723f1..a354f41dcba0 100644
+--- a/test/core.c
++++ b/test/core.c
+@@ -209,7 +209,7 @@ retry:
+ 			break;
+ 		}
  
-+	/* root decoders filter by children */
-+	cxl_region_foreach(decoder, region)
-+		if (util_cxl_region_filter(region, __ident))
-+			return decoder;
-+
-+	/* switch and endpoint decoders have a 1:1 association with a region */
- 	region = cxl_decoder_get_region(decoder);
- 	if (!region)
- 		return NULL;
+-		if (!strstr(path, "/extra/")) {
++		if (!strstr(path, "/extra/") && !strstr(path, "/updates/")) {
+ 			log_err(&log_ctx, "%s.ko: appears to be production version: %s\n",
+ 					name, path);
+ 			break;
 
