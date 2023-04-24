@@ -2,222 +2,114 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93F6C7618E
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Apr 2023 17:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13132C7618E
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Apr 2023 18:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbjDXRbb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Apr 2023 13:31:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        id S232193AbjDXSLa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Apr 2023 14:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbjDXRba (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Apr 2023 13:31:30 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9582149D0;
-        Mon, 24 Apr 2023 10:31:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682357489; x=1713893489;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=bRR7rtKWl4sGWdNxIo9fMuQ9SVmlY4+HZqDckGyXmwc=;
-  b=U1lbxwyxY/aLe4pP+HDcuDW3MKBk65lvDiJcx5DCTFA/qigK7VAD31Ry
-   MOoTYqYLowWF953bvqvRDXHoApARE/UZN5lNOwWFvcr7A4w51tlQM9sB8
-   QSLB24aYO8knXQuJQMc+k39GIU0ySAnMaRwDhTx6wvuOXtllvuP7ZX+ja
-   yiWeE4Lkw89Q3UtmErL6DabYNahh78GtTlOerBtwFrFemQIW2ZfYeVH36
-   7yJ27TNmG0wpHPG7AQxR/5P7JfPtRfLpZ7ZbT7zDvkF7Lm0p8S8sy2jmd
-   PQue+2aJXND3lp5lSX3CFWvsJeuphl7Y+0sbAKr4uRlCZJF/zhj0zANqQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="374462033"
-X-IronPort-AV: E=Sophos;i="5.99,223,1677571200"; 
-   d="scan'208";a="374462033"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 10:31:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10690"; a="670579566"
-X-IronPort-AV: E=Sophos;i="5.99,223,1677571200"; 
-   d="scan'208";a="670579566"
-Received: from sridharn-mobl.amr.corp.intel.com (HELO [10.212.106.191]) ([10.212.106.191])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2023 10:31:03 -0700
-Message-ID: <cae21d42-ab7a-5d6c-a3ef-07f4c585dc9f@intel.com>
-Date:   Mon, 24 Apr 2023 10:31:02 -0700
+        with ESMTP id S231985AbjDXSL3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Apr 2023 14:11:29 -0400
+Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDA46EAC;
+        Mon, 24 Apr 2023 11:11:26 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 2C38B5C176A;
+        Mon, 24 Apr 2023 18:11:23 +0000 (UTC)
+Received: from pdx1-sub0-mail-a216.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 9FC4F5C0F80;
+        Mon, 24 Apr 2023 18:11:22 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1682359882; a=rsa-sha256;
+        cv=none;
+        b=AZvnCETqaJWrbR/KXJjP8h/fR2udp8hNHI9Prf/2ziuDnRfYFLIBu4+z/xTWlYmoviK1nx
+        6PNQ1UiwFzl9yQEYcfsKY3E7O94ycxakR5YbMqfyOHhs08GV5dw0B/nAa/7jjN3L0zvWES
+        uWCh4XmfGWRYNUb4HFv5TPyQDIffd9yxjWZhMaOA69zbV8wamONi6nAxMi8k4auqm6EC2M
+        2Vrjdh4Bv11Vv52KSeVnjteUVLOkOfiyoC/HjWWK+VwCH9I8+g7WMD2l6r9PPs2Hno1SBW
+        buOyOEKToYysMURAp9///8z8EC3Ro23VVMVTs9HRRePuW+tKtAqCKtI5D8+iGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1682359882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=2wxLkBR71Y0DyWkZH4ju2khClaI45CxuGX8RryJuv6w=;
+        b=KYACSQ+ongq4fPncv5mUn7bl4ZKZqAmLgmiJYSh5Zc8WMh99Cws7xfDPmNlz4ET6OcZC0P
+        HISx5daTfGGlzEeB5gPcHhHOdhgntDu1gv4ZMMh1tH+Ljr+Wmets+pSOnMIDIQKsWeJ4ju
+        2JsJGhTxLs8LcKdZ30LD972MbyPLy/x+yKl+6Q8wx8XGZWs7W6dsWk9bTQp7uUlzW+BLcT
+        By8x0Eue6+Oi5HULfvp0P21yEKZubR4nVZbWbi+MxZaX7nlhOJyjivvwPyf2C5jIW8x1C9
+        8q+VSqZIjNC4/+dYNJsLPhxRmsWpC7b4OBSgrTNdUFQzKjWW1TA3vYdD9F7IDw==
+ARC-Authentication-Results: i=1;
+        rspamd-7f66b7b68c-zjhh9;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Arch-Turn: 7d8e6e43170ce28d_1682359882951_2513165092
+X-MC-Loop-Signature: 1682359882951:845671132
+X-MC-Ingress-Time: 1682359882951
+Received: from pdx1-sub0-mail-a216.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.114.243.17 (trex/6.7.2);
+        Mon, 24 Apr 2023 18:11:22 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a216.dreamhost.com (Postfix) with ESMTPSA id 4Q4tVd6Qtmz3K;
+        Mon, 24 Apr 2023 11:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1682359882;
+        bh=2wxLkBR71Y0DyWkZH4ju2khClaI45CxuGX8RryJuv6w=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=i7g6EhAUdC28M8k6dmzTcZex8+SkB3kSq4XU78hRl7xv0Drfzi68GmLhm6osQdeLg
+         eM4+1s2fDlxBYGVpcVl6U75u+AID/zqwlE2GV96K3mjC3aVqs23KwFnHVsMVCRjfTp
+         rNHlIm3ApoYQg6QrJJhL3kTuI04EW7ta4biRw8FkOhA9H9CWnQpCT3PeTARNoNNeJD
+         CtwOpLSSwNVx7zMFipvoe56dKPsyL4hT17zHK9fDvGbDyKIq+lYzF6aolz/k5rucpt
+         P5/bVvoUTcYq7t45ROQ7WrBeMQI1ZwrmIVhEbIO/bQu7HvSfV2sYnVKzIgi/hq5BXc
+         EyaB94lm2qxpg==
+Date:   Mon, 24 Apr 2023 10:39:41 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: Re: [PATCH 0/4] cxl: Add a firmware update mechanism and cxl_test
+ emulation
+Message-ID: <y4cqp7r3tt74igqwtcbwshcca66krcjpiopo6frilx272x6ot7@ji2shc7sqk27>
+References: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH v4 11/23] cxl: Add helper function that calculates QoS
- values for switches
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rafael@kernel.org, lukas@wunner.de
-References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
- <168193572747.1178687.13347516490022640531.stgit@djiang5-mobl3>
- <20230420132624.00006334@Huawei.com>
- <86ec4cb5-14fd-9860-0fd9-ed53b474fe6e@intel.com>
-In-Reply-To: <86ec4cb5-14fd-9860-0fd9-ed53b474fe6e@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
+User-Agent: NeoMutt/20230407
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Fri, 21 Apr 2023, Vishal Verma wrote:
 
+>The poll interval for the Transfer FW command is arbitrarily set at 1
+>second, and a poll count of 300, giving us a total wait time of five
+>minutes before which each slice of the transfer times out. This seems
+>like a good mix of responsiveness and a total wait - the spec doesn't
+>have any guidance on any upper or lower bounds for this. This likely
+>does not need to be user-configurable, so for now it is just hard-coded
+>in the driver.
 
-On 4/24/23 10:09 AM, Dave Jiang wrote:
-> 
-> 
-> On 4/20/23 5:26 AM, Jonathan Cameron wrote:
->> On Wed, 19 Apr 2023 13:22:07 -0700
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>> The CDAT information from the switch, Switch Scoped Latency and 
->>> Bandwidth
->>> Information Strucutre (SSLBIS), is parsed and stored in an xarray 
->>> under the
->>> cxl_port. The QoS data are indexed by the downstream port id.  Walk 
->>> the CXL
->>> ports from endpoint to root and retrieve the relevant QoS information
->>> (bandwidth and latency) that are from the switch CDAT. If read or 
->>> write QoS
->>> values are not available, then use the access QoS value.
->>
->> I'd drop the access reference.  You already did that mapping from 
->> access to read
->> and write in earlier patch. Now we have no concept of access so 
->> mentioning
->> it will only potentially cause confusion.
-> 
-> ok
-> 
->>
->>>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>
->>> ---
->>> v3:
->>> - Move to use 'struct node_hmem_attrs'
->>> ---
->>>   drivers/cxl/core/port.c |   81 
->>> +++++++++++++++++++++++++++++++++++++++++++++++
->>>   drivers/cxl/cxl.h       |    2 +
->>>   2 files changed, 83 insertions(+)
->>>
->>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->>> index 3fedbabac1af..770b540d5325 100644
->>> --- a/drivers/cxl/core/port.c
->>> +++ b/drivers/cxl/core/port.c
->>> @@ -1921,6 +1921,87 @@ bool schedule_cxl_memdev_detach(struct 
->>> cxl_memdev *cxlmd)
->>>   }
->>>   EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, CXL);
->>> +/**
->>> + * cxl_port_get_switch_qos - retrieve QoS data for CXL switches
->>
->> Hmm. Terminology wise, this is called QoS data in either CXL spec
->> or the HMAT stuff it came from.  I'd avoid that term here.
->> Might also get confused with the QoS telemetry stuff from the CXL
->> spec which is totally different or the QoS controls on an MLD
->> which are perhaps indirectly related to these.
->>
->> QoS only gets involved once these are mapped to a QTG - assumption
->> being that a given QoS policy should apply to devices of similar access
->> characteristics.
-> 
-> locality_info?
+Nothing against this, just thinking that in general, but we should
+probably limit the poll interval to CXL_MAILBOX_TIMEOUT_MS. I'm not
+sure, however, what would be a proper value across all commands. Or
+would having this limit be per-cmd make more sense instead?
 
-Or perf_data in accordance with this doc:
-https://www.kernel.org/doc/html/v5.9/admin-guide/mm/numaperf.html
-
-> 
-> 
->>
->> Other than that bikeshedding.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>
->>
->>
->>> + * @port: endpoint cxl_port
->>> + * @rd_bw: writeback value for min read bandwidth
->>> + * @rd_lat: writeback value for total read latency
->>> + * @wr_bw: writeback value for min write bandwidth
->>> + * @wr_lat: writeback value for total write latency
->>> + *
->>> + * Return: Errno on failure, 0 on success. -ENOENT if no switch device
->>> + */
->>> +int cxl_port_get_switch_qos(struct cxl_port *port, u64 *rd_bw, u64 
->>> *rd_lat,
->>> +                u64 *wr_bw, u64 *wr_lat)
->>> +{
->>> +    u64 min_rd_bw = ULONG_MAX;
->>> +    u64 min_wr_bw = ULONG_MAX;
->>> +    struct cxl_dport *dport;
->>> +    struct cxl_port *nport;
->>> +    u64 total_rd_lat = 0;
->>> +    u64 total_wr_lat = 0;
->>> +    struct device *next;
->>> +    int switches = 0;
->>> +    int rc = 0;
->>> +
->>> +    if (!is_cxl_endpoint(port))
->>> +        return -EINVAL;
->>> +
->>> +    /* Skip the endpoint */
->>> +    next = port->dev.parent;
->>> +    nport = to_cxl_port(next);
->>> +    dport = port->parent_dport;
->>> +
->>> +    do {
->>> +        struct node_hmem_attrs *hmem_attrs;
->>> +        u64 lat, bw;
->>> +
->>> +        if (!nport->cdat.table)
->>> +            break;
->>> +
->>> +        if (!dev_is_pci(dport->dport))
->>> +            break;
->>> +
->>> +        hmem_attrs = xa_load(&nport->cdat.sslbis_xa, dport->port_id);
->>> +        if (xa_is_err(hmem_attrs))
->>> +            return xa_err(hmem_attrs);
->>> +
->>> +        if (!hmem_attrs) {
->>> +            hmem_attrs = xa_load(&nport->cdat.sslbis_xa, 
->>> SSLBIS_ANY_PORT);
->>> +            if (xa_is_err(hmem_attrs))
->>> +                return xa_err(hmem_attrs);
->>> +            if (!hmem_attrs)
->>> +                return -ENXIO;
->>> +        }
->>> +
->>> +        bw = hmem_attrs->write_bandwidth;
->>> +        lat = hmem_attrs->write_latency;
->>> +        min_wr_bw = min_t(u64, min_wr_bw, bw);
->>> +        total_wr_lat += lat;
->>> +
->>> +        bw = hmem_attrs->read_bandwidth;
->>> +        lat = hmem_attrs->read_latency;
->>> +        min_rd_bw = min_t(u64, min_rd_bw, bw);
->>> +        total_rd_lat += lat;
->>> +
->>> +        dport = nport->parent_dport;
->>> +        next = next->parent;
->>> +        nport = to_cxl_port(next);
->>> +        switches++;
->>> +    } while (next);
->>> +
->>> +    *wr_bw = min_wr_bw;
->>> +    *wr_lat = total_wr_lat;
->>> +    *rd_bw = min_rd_bw;
->>> +    *rd_lat = total_rd_lat;
->>> +
->>> +    if (!switches)
->>> +        return -ENOENT;
->>> +
->>> +    return rc;
->>> +}
->>> +EXPORT_SYMBOL_NS_GPL(cxl_port_get_switch_qos, CXL);
->>
->>
+Thanks,
+Davidlohr
