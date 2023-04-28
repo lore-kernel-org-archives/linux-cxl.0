@@ -2,101 +2,150 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D495C77B73
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 Apr 2023 01:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C6C77B60
+	for <linux-cxl@archiver.kernel.org>; Fri, 28 Apr 2023 15:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344763AbjD1BXG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Apr 2023 21:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
+        id S229792AbjD1Py5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 28 Apr 2023 11:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344775AbjD1BW6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Apr 2023 21:22:58 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8162230C2;
-        Thu, 27 Apr 2023 18:22:57 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-63b57c49c4cso7446444b3a.3;
-        Thu, 27 Apr 2023 18:22:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682644977; x=1685236977;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5zPo3vtMu8f9pRkpyZdDPdmJ7m3I5ZhBmFy8wrhejWA=;
-        b=bloWPNWL2WYYT2JbzizlqbN2m6Qvtd0Ke1HlojmBG42JOMdRggtOs/uAkC93xGNJ5o
-         qVc4Ty1luIrjldDAWk4cvbKeENcv2V7iRuQ0YFgITNFGxRk1JsVdbUOwKLlnjrmTcfC+
-         NZyPDO7iciTiUDyVcX2/1lobGLIw3tYTeNsIxnBWPUsIcFBgNctZwJjFKA1hKwfBYalR
-         OKEMEEPZ4i91Xd99Sa6pMnVpwCnTNpNwUzC8XiEyiDA6CnBVFplC/0aNtgpDxWx1U/uQ
-         iv3zrthDC+3SUaypUzRUoXmIgNxuujzy64d6llsdGBJH/ZvpzALIbBqNl+Eh0KExbxjH
-         NHBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682644977; x=1685236977;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5zPo3vtMu8f9pRkpyZdDPdmJ7m3I5ZhBmFy8wrhejWA=;
-        b=ZBeyA0rke8E8j8EueiJfIh5G7PhZPrRRuaE7OtkyLbRX5x9Ku2j5BY4wTbhNnwaABj
-         4Du8gNQJEm7Y3r0LfKjSSQ737az+pEHxVt4UQxPAFcyetmbKQ7DFMnN3IWXviIIYNWq2
-         0pj0yCNy1vGGMqL4DrxOek+nkvhHZXPr6Ygw8H7IMKKHzj0gLwbtOT0iHwefAR8qJvVi
-         VCDdIR8tKpzJ+BHDih7CI7Jx1tFmE21T5TsbSq9COMsES05mVpODkrYLlkOXbGRwNQgH
-         t5hZ93P7qh5fKm7J1wpb4Q+RUoz9GmM8sPM+e3ddfEGIFLFw+BtB0dqIvlS3rCsXbERf
-         zFaQ==
-X-Gm-Message-State: AC+VfDwN/7PzwE9ZVHbNE7bs+GZlAMMClh2yLkShSgESeOyvqg3upeyt
-        KLs7RORW571iOyKqW/EysgLxksT89Z8=
-X-Google-Smtp-Source: ACHHUZ58YMBqiiH9YEm20upJJ+JKT83z4JlmEmoYdJdm7NvC/CEYfKav8pqaX6JoB5RL+IShe7f0Hg==
-X-Received: by 2002:a05:6a00:cd3:b0:63b:6d60:9a02 with SMTP id b19-20020a056a000cd300b0063b6d609a02mr5108437pfv.34.1682644976806;
-        Thu, 27 Apr 2023 18:22:56 -0700 (PDT)
-Received: from cxl-test.. ([103.181.222.211])
-        by smtp.gmail.com with ESMTPSA id t65-20020a628144000000b0063b8b8580a7sm13691356pfd.29.2023.04.27.18.22.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 18:22:56 -0700 (PDT)
-From:   Raghu H <raghuhack78@gmail.com>
-To:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        raghuhack78@gmail.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] cxl/region: Remove else after return statement
-Date:   Fri, 28 Apr 2023 01:22:35 +0000
-Message-Id: <20230428012235.119333-3-raghuhack78@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230428012235.119333-1-raghuhack78@gmail.com>
-References: <20230428012235.119333-1-raghuhack78@gmail.com>
+        with ESMTP id S229996AbjD1Pyw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Apr 2023 11:54:52 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB73E5B
+        for <linux-cxl@vger.kernel.org>; Fri, 28 Apr 2023 08:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682697291; x=1714233291;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QLPrIph+fe/SWwZ8cw8dSek/MCRr8k7nKEFX0clMKJU=;
+  b=BUaC9VSt4WaXQBCJsldbYIWdzTCJXGP4Bo43R+4QJuICtDHE+JI7Bjbp
+   bsK+TCkgnqgcAqkbVRXvWDIe5Phedjg6MySHI1HUHhcKmIU0SqPF1FAIX
+   uZueBiybGb+6A6/aJbdSWfSicK0GS/XZa+mcz4gmL7Z1y/1N3psRST7ox
+   OgXZ8xYsDKHcOx/IljmjHtGq9vNVaRyA+X46TVkxF1HXNpGmqf+jM3pg9
+   PVs/bFN4CEP6GVP+lGq70Xn0mtvHSRYqkbgYroL69yB86mN7jvAzq8kQr
+   WlmG/uAmQCZHag6ezO4SEGwPsyhn8jec45Z1/dS/g6rN1YPvyHyTfLu4J
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="375776786"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="375776786"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:54:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="688862672"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="688862672"
+Received: from egliskay-mobl.amr.corp.intel.com (HELO [10.212.108.170]) ([10.212.108.170])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:54:50 -0700
+Message-ID: <30c92901-48e3-61d8-5865-632af4a5fb97@intel.com>
+Date:   Fri, 28 Apr 2023 08:54:49 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH 1/4] cxl/list: Fix filtering RCDs
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>, vishal.l.verma@intel.com
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+References: <168236637159.1027628.7560967008080605819.stgit@dwillia2-xfh.jf.intel.com>
+ <168236637746.1027628.14674251843014155022.stgit@dwillia2-xfh.jf.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <168236637746.1027628.14674251843014155022.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Issue found with checkpatch
 
-The else section here is redundant after return statement, removing it.
-Sanity and correctness is not affected due to this fix.
 
-Signed-off-by: Raghu H <raghuhack78@gmail.com>
----
- drivers/cxl/core/region.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 4/24/23 12:59 PM, Dan Williams wrote:
+> Attempts to filter by memdev fail when the memdev is an RCD (RCH topology):
+> 
+>      # cxl list -BEM -m 11
+>        Warning: no matching devices found
+> 
+>      [
+>      ]
+> 
+> This is caused by VH topology assumption where an intervening host-bridge
+> port is expected between the root CXL port and the endpoint. In an RCH
+> topology an endpoint is integrated in the host-bridge.
+> 
+> Search for endpoints directly attached to the root:
+> 
+>      # cxl list -BEMu -m 11
+>      {
+>        "bus":"root3",
+>        "provider":"cxl_test",
+>        "endpoints:root3":[
+>          {
+>            "endpoint":"endpoint22",
+>            "host":"mem11",
+>            "depth":1,
+>            "memdev":{
+>              "memdev":"mem11",
+>              "ram_size":"2.00 GiB (2.15 GB)",
+>              "serial":"0xa",
+>              "numa_node":0,
+>              "host":"cxl_rcd.10"
+>            }
+>          }
+>        ]
+>      }
+> 
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index f29028148806..a46d6ad9ef0a 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2666,11 +2666,11 @@ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
- 				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
- 			clear_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
- 			return 0;
--		} else {
--			dev_err(&cxlr->dev,
--				"Failed to synchronize CPU cache state\n");
--			return -ENXIO;
- 		}
-+
-+		dev_err(&cxlr->dev,
-+			"Failed to synchronize CPU cache state\n");
-+		return -ENXIO;
- 	}
- 
- 	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
--- 
-2.39.2
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
+> ---
+>   cxl/lib/libcxl.c |   19 ++++++++++++++++---
+>   1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> index 59e5bdbcc750..e6c94d623303 100644
+> --- a/cxl/lib/libcxl.c
+> +++ b/cxl/lib/libcxl.c
+> @@ -1457,8 +1457,9 @@ CXL_EXPORT int cxl_memdev_enable(struct cxl_memdev *memdev)
+>   	return 0;
+>   }
+>   
+> -static struct cxl_endpoint *cxl_port_find_endpoint(struct cxl_port *parent_port,
+> -						   struct cxl_memdev *memdev)
+> +static struct cxl_endpoint *
+> +cxl_port_recurse_endpoint(struct cxl_port *parent_port,
+> +			  struct cxl_memdev *memdev)
+>   {
+>   	struct cxl_endpoint *endpoint;
+>   	struct cxl_port *port;
+> @@ -1468,7 +1469,7 @@ static struct cxl_endpoint *cxl_port_find_endpoint(struct cxl_port *parent_port,
+>   			if (strcmp(cxl_endpoint_get_host(endpoint),
+>   				   cxl_memdev_get_devname(memdev)) == 0)
+>   				return endpoint;
+> -		endpoint = cxl_port_find_endpoint(port, memdev);
+> +		endpoint = cxl_port_recurse_endpoint(port, memdev);
+>   		if (endpoint)
+>   			return endpoint;
+>   	}
+> @@ -1476,6 +1477,18 @@ static struct cxl_endpoint *cxl_port_find_endpoint(struct cxl_port *parent_port,
+>   	return NULL;
+>   }
+>   
+> +static struct cxl_endpoint *cxl_port_find_endpoint(struct cxl_port *parent_port,
+> +						   struct cxl_memdev *memdev)
+> +{
+> +	struct cxl_endpoint *endpoint;
+> +
+> +	cxl_endpoint_foreach(parent_port, endpoint)
+> +		if (strcmp(cxl_endpoint_get_host(endpoint),
+> +			   cxl_memdev_get_devname(memdev)) == 0)
+> +			return endpoint;
+> +	return cxl_port_recurse_endpoint(parent_port, memdev);
+> +}
+> +
+>   CXL_EXPORT struct cxl_endpoint *
+>   cxl_memdev_get_endpoint(struct cxl_memdev *memdev)
+>   {
+> 
+> 
