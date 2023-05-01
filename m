@@ -2,240 +2,182 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B81C77B73
-	for <linux-cxl@archiver.kernel.org>; Mon,  1 May 2023 16:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF1DC77B61
+	for <linux-cxl@archiver.kernel.org>; Mon,  1 May 2023 16:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbjEAQ3u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 1 May 2023 12:29:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52224 "EHLO
+        id S231816AbjEAQg7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 1 May 2023 12:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjEAQ3t (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 May 2023 12:29:49 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3BF1118;
-        Mon,  1 May 2023 09:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682958588; x=1714494588;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kzh0zOt1v18lG+wx8XCqBW/zz+ONkGyu0YuD4U/n/W0=;
-  b=GFk+FKGe0ID7zsUGOgsAQIhr3QwY7DofYMGFMosKSDc4CZO2cH4qXCrm
-   Dr9Zn0yO7wF1GAPW6AF3uaEp9iDClhdvse7QhTRTXIZeL1nrlKfqkrFOw
-   qLwWN2FRUryPgXaBrgPSRiadjmISoe/Cqz1zd/dkXg+ReBT72nPVsIf45
-   Qh7Vxbdfs6IiE6nAPdmHJOVr9USMNfp/M6unoMIT3Ngvx50Tkca/8KIwn
-   7afcJqlvxThzxZ/nb1dQGytlGmj7FpLI4wnA2BgPLIwFUwdfYI6zfGGye
-   mhL4lJfypt9TM35ppaRD/C+nHdZsL26bLxixqcitO/r4hKq3GuYxz3jfK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="337304716"
-X-IronPort-AV: E=Sophos;i="5.99,241,1677571200"; 
-   d="scan'208";a="337304716"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 09:29:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="728588635"
-X-IronPort-AV: E=Sophos;i="5.99,241,1677571200"; 
-   d="scan'208";a="728588635"
-Received: from moraalpx-mobl.amr.corp.intel.com (HELO [10.212.85.208]) ([10.212.85.208])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 09:29:28 -0700
-Message-ID: <8963d44c-43b1-5634-6173-cc9fe2cd039b@intel.com>
-Date:   Mon, 1 May 2023 09:29:27 -0700
+        with ESMTP id S229679AbjEAQg6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 1 May 2023 12:36:58 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1810E58
+        for <linux-cxl@vger.kernel.org>; Mon,  1 May 2023 09:36:56 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id DB1F36413A8;
+        Mon,  1 May 2023 16:28:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a245.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 4CBA1641583;
+        Mon,  1 May 2023 16:28:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1682958538; a=rsa-sha256;
+        cv=none;
+        b=vUV6jxRW0NzTBPoWFtNCUjVVdt6zdmVxNbFdZ6FvB2s17ewHjaIoMeTi8zgRNIO7IdOYRJ
+        ImytewHqA01neuOYyMa8pnXMLckpyKMM74kR2et/vzrPpZ9IhhAuksUX/0L3X2BPbtdude
+        9c4GrBFJpPxERKiBDkYxW++3GutfzGs4JIIeHVQQ9A/50u1WrfUKyr5nEIntdY39rC41nE
+        +Nrf/gRvvbh86LTWtrv9+Baw2IDZCGWXTlkBk/h07yYiFwmxFEV2tqt7YtKTzrVyMYUn1r
+        dd0K0fmzq8G6UxHtWCCm0LLYtCYWjqnGxTkLumcQoe3Jsjzoxh4+OdgIPigEWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1682958538;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=9W/fSZAl/qND435yGSuDvV0dd9JMqGRe1EN3C+0TO8c=;
+        b=d5y28rMo8kXK1gUMrDuEPXg9YPhCToAdcQQ6Fr3fnqTW7lNMp0TTD1tiLwQ2lFfogzxtt8
+        d9fwM1oDYKJAoi725FKP2lgL+qtexjzBhKrVzWB6vGlvDArMLkFYOHuZJ8dBmwJb6yMHLx
+        9AibLoqBUAkfv4LN06PQSop5T+/MzVEYcakI38zm4sPun+Fdp02Evqhui45blGigarfhCf
+        8K5A8HoDTbI2xxKpzZ4qqhJOwIovKZKyqYfIonXjMuyHw3FTwl0ly3vZfy/y3oxXFgPoN1
+        q0Hf8cxpAe7VkJHzjngbCsQspDBxsS6iZ11Ji660IMNJr9PYvVz+ktbVFkB03A==
+ARC-Authentication-Results: i=1;
+        rspamd-7f66b7b68c-7xf2w;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Callous-Spot: 328d2f30508a222f_1682958538614_3703042581
+X-MC-Loop-Signature: 1682958538614:2270985919
+X-MC-Ingress-Time: 1682958538614
+Received: from pdx1-sub0-mail-a245.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.109.138.52 (trex/6.7.2);
+        Mon, 01 May 2023 16:28:58 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a245.dreamhost.com (Postfix) with ESMTPSA id 4Q97vF3gCjz3D;
+        Mon,  1 May 2023 09:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1682958538;
+        bh=9W/fSZAl/qND435yGSuDvV0dd9JMqGRe1EN3C+0TO8c=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=NUF6lLM1UsfSNVzJ5XSmk65GtGQpJCq5sYGHOHcrUY5chVG/WDz3Xfl6PxqM1h7sj
+         cOrXtVpG1l9fjT+vfgCU7ktrfDNqpCPA76jZlj5NnKyC92+ktHCSo+fxhDldKPPhZ0
+         TsW8xDOqeMYREQI3QhTGKQnIhgrtvB6ceIXNUxnn+7ocqq80EyCFnnLMwHcUQQ83kU
+         n74mOYolkMsowixUVqMgGx6ehCU0AgjxuIMRwyktmESbyDx90Uq1l6C7zEr4N59cbb
+         TTLNpQUYms6+0gD+biVUO/zyEnnY6pkKarzF5ytrBLrbEKGjHNET0R1HX/w0sUEGnC
+         7IKdAQx9wmGdw==
+Date:   Mon, 1 May 2023 08:56:46 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+        alison.schofield@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, fan.ni@samsung.com,
+        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 2/7] cxl/mbox: Add background cmd handling machinery
+Message-ID: <2vnt6otwqs5fy6z3ddalisugeptlndh5wmhrlwzjbnlea2gpwc@ce4t3m43pibj>
+References: <20230421092321.12741-1-dave@stgolabs.net>
+ <20230421092321.12741-3-dave@stgolabs.net>
+ <cb80b111-c639-aaff-f8dd-8ceacf124b1a@intel.com>
+ <lq33scjudy22a7xpa7vrefhfk6uolzy6wvq4wimwvwg4emeo53@aa6n2n5up3gh>
+ <c649c0f9-b6ef-d391-143c-eed3c6b5df11@intel.com>
+ <mjpl5a3r4oviwl4b6oz7fjwcq3zcgvizxlru3jch62eqoprkdh@6xolbj3he5lz>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v4 10/23] cxl: Add helpers to calculate pci latency for
- the CXL device
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, rafael@kernel.org, lukas@wunner.de,
-        Jonathan.Cameron@huawei.com
-References: <168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3>
- <168193572162.1178687.9726045601551945413.stgit@djiang5-mobl3>
- <64471f202f6dd_1b6629492@dwillia2-xfh.jf.intel.com.notmuch>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <64471f202f6dd_1b6629492@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <mjpl5a3r4oviwl4b6oz7fjwcq3zcgvizxlru3jch62eqoprkdh@6xolbj3he5lz>
+User-Agent: NeoMutt/20230407
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Fri, 28 Apr 2023, Davidlohr Bueso wrote:
+
+>On Fri, 28 Apr 2023, Dave Jiang wrote:
+>
+>>On 4/28/23 10:18 AM, Davidlohr Bueso wrote:
+>>>On Fri, 28 Apr 2023, Dave Jiang wrote:
+>>>
+>>>>>+static DECLARE_WAIT_QUEUE_HEAD(mbox_wait);
+>>>>
+>>>>I apologize if I've asked this before and you've already answered.
+>>>>What is the reason the mbox_wait a module global wq instead of a per
+>>>>device wq? Just thinking when you tear down a device, you may want to
+>>>>wake all pending for that device to clean up.
+>>>
+>>>Yes, I agree that doing the wait per-device is better, and not only
+>>>for tear down reasons. By doing it globally, the queue reflects waits
+>>>from different devices, but the driver really has no control about
+>>>the order of the wait of each device is, so upon a blind wake_up(),
+>>>it could perfectly well be that the first node in the waitq is not
+>>>the node for that device.
+>>>
+>>>This all goes away with per-device, with the note that because of the
+>>>mbox_mutex there never will only ever be a single waiter, so no concept
+>>>of a queue really.
+>>
+>>If there's only a single waiter then I think a 'completion' can be
+>>used instead right?
+>
+>Well completions still use (simple) wq underneath. What we really
+>want is rcuwait semantics but there is currently no support for
+>schedule timeouts. INTERRUPTIBLE sleep was added for new users in
+>the past, so it could be doable.
+
+Something like this, but I guess we could use completions for now and
+convert to rcuwait later if we don't want to have to depend on sched
+bits for this patch - and I'm sure there are a few other users out there
+abusing queued wait for similar semantics that could make use of it.
 
 
-On 4/24/23 5:30 PM, Dan Williams wrote:
-> Dave Jiang wrote:
->> The latency is calculated by dividing the flit size over the bandwidth. Add
->> support to retrieve the flit size for the CXL device and calculate the
->> latency of the downstream link.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>
->> ---
->> v2:
->> - Fix commit log issues. (Jonathan)
->> - Fix var declaration issues. (Jonathan)
->> ---
->>   drivers/cxl/core/pci.c |   68 ++++++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/cxl/cxlpci.h   |   15 +++++++++++
->>   drivers/cxl/pci.c      |   13 ---------
->>   3 files changed, 83 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index 1c415b26e866..bb58296b3e56 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -712,3 +712,71 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
->>   	return PCI_ERS_RESULT_NEED_RESET;
->>   }
->>   EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
->> +
->> +static int pci_bus_speed_to_mbps(enum pci_bus_speed speed)
->> +{
->> +	switch (speed) {
->> +	case PCIE_SPEED_2_5GT:
->> +		return 2500;
->> +	case PCIE_SPEED_5_0GT:
->> +		return 5000;
->> +	case PCIE_SPEED_8_0GT:
->> +		return 8000;
->> +	case PCIE_SPEED_16_0GT:
->> +		return 16000;
->> +	case PCIE_SPEED_32_0GT:
->> +		return 32000;
->> +	case PCIE_SPEED_64_0GT:
->> +		return 64000;
->> +	default:
->> +		break;
->> +	}
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static int cxl_pci_mbits_to_mbytes(struct pci_dev *pdev)
->> +{
->> +	int mbits;
->> +
->> +	mbits = pci_bus_speed_to_mbps(pdev->bus->cur_bus_speed);
->> +	if (mbits < 0)
->> +		return mbits;
->> +
->> +	return mbits >> 3;
-> 
-> Why not just return mbits directly and skip the conversion? Otherwise a
-> "/ 8" requires bit less cleverness to read than ">> 3".
+diff --git a/include/linux/rcuwait.h b/include/linux/rcuwait.h
+index 8052d34da782..9e4759de228b 100644
+--- a/include/linux/rcuwait.h
++++ b/include/linux/rcuwait.h
+@@ -49,9 +49,9 @@ static inline void prepare_to_rcuwait(struct rcuwait *w)
 
-You mean just move the math to the caller()?
-> 
->> +}
->> +
->> +static int cxl_flit_size(struct pci_dev *pdev)
-> 
-> This like something that might be worth caching in 'struct cxl_port'
-> rather than re-reading the configuration register each call. Depends on
-> how often it is used.
+  extern void finish_rcuwait(struct rcuwait *w);
 
-You mean we just calculate it during cxl_port creation? I think the 
-calculations for a switch upstream segment towards the root complex may 
-be used multiple times. Downstream towards device, 1 or more depends on 
-how many partitions there are. But probably not a big deal to just cache 
-it.
+-#define rcuwait_wait_event(w, condition, state)				\
++#define ___rcuwait_wait_event(w, condition, state, ret, cmd)		\
+  ({									\
+-	int __ret = 0;							\
++	long __ret = ret;						\
+	prepare_to_rcuwait(w);						\
+	for (;;) {							\
+		/*							\
+@@ -67,10 +67,27 @@ extern void finish_rcuwait(struct rcuwait *w);
+			break;						\
+		}							\
+									\
+-		schedule();						\
++		cmd;							\
+	}								\
+	finish_rcuwait(w);						\
+	__ret;								\
+  })
 
-> 
->> +{
->> +	if (cxl_pci_flit_256(pdev))
->> +		return 256;
->> +
->> +	return 68;
->> +}
->> +
->> +/**
->> + * cxl_pci_get_latency - calculate the link latency for the PCIe link
->> + * @pdev - PCI device
->> + *
->> + * return: calculated latency or -errno
->> + *
->> + * CXL Memory Device SW Guide v1.0 2.11.4 Link latency calculation
->> + * Link latency = LinkPropagationLatency + FlitLatency + RetimerLatency
->> + * LinkProgationLatency is negligible, so 0 will be used
->> + * RetimerLatency is assumed to be negligible and 0 will be used
->> + * FlitLatency = FlitSize / LinkBandwidth
->> + * FlitSize is defined by spec. CXL rev3.0 4.2.1.
->> + * 68B flit is used up to 32GT/s. >32GT/s, 256B flit size is used.
->> + * The FlitLatency is converted to picoseconds.
->> + */
->> +long cxl_pci_get_latency(struct pci_dev *pdev)
->> +{
->> +	long bw;
->> +
->> +	bw = cxl_pci_mbits_to_mbytes(pdev);
-> 
-> This function looks misnamed when I read it here, it's retrieving the
-> bus speed in MiBs not doing a conversion.
-> 
->> +	if (bw < 0)
->> +		return bw;
->> +
->> +	return cxl_flit_size(pdev) * 1000000L / bw;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_pci_get_latency, CXL);
->> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
->> index 1bca1c0e4b40..795eba31fe29 100644
->> --- a/drivers/cxl/cxlpci.h
->> +++ b/drivers/cxl/cxlpci.h
->> @@ -167,6 +167,19 @@ struct cdat_sslbis {
->>   #define SSLBIS_US_PORT		0x0100
->>   #define SSLBIS_ANY_PORT		0xffff
->>   
->> +/*
->> + * CXL v3.0 6.2.3 Table 6-4
->> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
->> + * mode, otherwise it's 68B flits mode.
->> + */
->> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
->> +{
->> +	u16 lnksta2;
->> +
->> +	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
->> +	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
->> +}
->> +
->>   int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->>   struct cxl_dev_state;
->>   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->> @@ -189,4 +202,6 @@ int cxl_##x##_parse_entry(struct cdat_entry_header *header, void *arg)
->>   cxl_parse_entry(dsmas);
->>   cxl_parse_entry(dslbis);
->>   cxl_parse_entry(sslbis);
->> +
->> +long cxl_pci_get_latency(struct pci_dev *pdev);
->>   #endif /* __CXL_PCI_H__ */
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index ea38bd49b0cf..ed39d133b70d 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -365,19 +365,6 @@ static bool is_cxl_restricted(struct pci_dev *pdev)
->>   	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
->>   }
->>   
->> -/*
->> - * CXL v3.0 6.2.3 Table 6-4
->> - * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
->> - * mode, otherwise it's 68B flits mode.
->> - */
->> -static bool cxl_pci_flit_256(struct pci_dev *pdev)
->> -{
->> -	u16 lnksta2;
->> -
->> -	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
->> -	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
->> -}
->> -
->>   static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->>   {
->>   	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
->>
->>
-> 
-> 
++#define rcuwait_wait_event(w, condition, state)				\
++	___rcuwait_wait_event(w, condition, state, 0, schedule())
++
++#define __rcuwait_wait_event_timeout(w, condition, state, timeout)	\
++	___rcuwait_wait_event(w, ___wait_cond_timeout(condition),	\
++			      state, timeout,				\
++			      __ret = schedule_timeout(__ret))
++
++#define rcuwait_wait_event_timeout(w, condition, state, timeout)	\
++({									\
++	long __ret = timeout;						\
++	if (!___wait_cond_timeout(condition))				\
++		__ret = __rcuwait_wait_event_timeout(w, condition,	\
++						     timeout);		\
++	__ret;								\
++})
++
+  #endif /* _LINUX_RCUWAIT_H_ */
