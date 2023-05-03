@@ -2,341 +2,183 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A266EC77B78
-	for <linux-cxl@archiver.kernel.org>; Wed,  3 May 2023 15:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDEAC77B7F
+	for <linux-cxl@archiver.kernel.org>; Wed,  3 May 2023 17:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjECPaX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 3 May 2023 11:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54280 "EHLO
+        id S230071AbjECR6B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 3 May 2023 13:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229889AbjECPaX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 May 2023 11:30:23 -0400
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038A35271
-        for <linux-cxl@vger.kernel.org>; Wed,  3 May 2023 08:30:19 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 26B7F3E1A97;
-        Wed,  3 May 2023 15:30:15 +0000 (UTC)
-Received: from pdx1-sub0-mail-a316.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 9B8593E1A25;
-        Wed,  3 May 2023 15:30:14 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1683127814; a=rsa-sha256;
-        cv=none;
-        b=j81KrkaCWkUWeq9nJkYbSJ7+BwnZTsqsLOAToaGXMz0CAbB6UxeCmZ0LB3/+AVaCKgs2tI
-        L5TPi0iHHsH8kIrY9YJg683qh16PXpekS6P5u4qcWIPZMQLb8gU7lweeAww9owRGicUG1D
-        Red/AkGwpa86CmNARID2EPdmATTmB/XE/e3l5AxlmqiQs8euP7EkiSY7V6lhUkqimdVWSO
-        xIxwXS96DiCg/M7kJEkpTZmWvMcaIMtYRgmjb2+OZOan3wjSS143hgmpJP5Vdku49VEA9X
-        PvosDa3HfdQyId/uW24vFq+5uaXJmtYlAKfGjKCPGWMBJb6R5dx0/9brK+tKWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1683127814;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=MRSV0ZHPNY47j1yjVtCBRfBDmkK4HIe0qsw1K+wd6DE=;
-        b=fGTGFn6lTjtCalBfH1tn8rDka7JpksQKq5yDppJG7Lx3ak3XTnWtW+tfZRNdL41y9wPE59
-        2t2jMyaLk9nIWyvGqBwKMtryZefgYnr6lHi/G9EVeEBjs4LfrnGf/qEv98r6MteKzxB33D
-        Bg+JxyUa8Lt235alihWMmdtF2+SjNcsNvWxsSMxmGC4lKq+IlASzi/CF0tPILqkXAoglEf
-        A7srAmhFeOf/MCFpurWS0t8H+rEWV8ZPc+FKi6u+r7LnEw7VGRi98vm4HDo7Bl1Mr03igE
-        2Kxp+aJzYTTvgwe8EtHyHwGAfFTFUk7JmokPst9FhqLkVKMM6Qr1jruOpQoBgg==
-ARC-Authentication-Results: i=1;
-        rspamd-548d6c8f77-hk64m;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Drop-Share: 16cb915715ccd2f9_1683127814970_1541072855
-X-MC-Loop-Signature: 1683127814970:637207707
-X-MC-Ingress-Time: 1683127814969
-Received: from pdx1-sub0-mail-a316.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.97.48.108 (trex/6.7.2);
-        Wed, 03 May 2023 15:30:14 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a316.dreamhost.com (Postfix) with ESMTPSA id 4QBLVY6NlvzDF;
-        Wed,  3 May 2023 08:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1683127814;
-        bh=MRSV0ZHPNY47j1yjVtCBRfBDmkK4HIe0qsw1K+wd6DE=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=INP24OEFMCjCsS4RlkUNVKARVo/7Uwkv5XyEr2kqla23c5N0uHuj4tBUDa1S0c8jv
-         Dm6YwTCO1XIRqfo8J7+SErrjsGz0n44KYRfBc05maevX5y0jwckxmUgGDOsrvbkXQT
-         bT3QHfSk79T0rNfvAOn4wXftzO5iH3qwNz56ZYVCUjJbj8faGMuwncx6Rwksp8cnrF
-         ws+Cx1Fam57UK8PTkY2ABHM58C7pajchboJce3a7F3FoiF9yJM7Xzof6OaLTDwG+hf
-         34VvpZC+5+FJOnExAh57Dqiq8ej7Xans7geh7FTXOhFCkJ7guZMvAx9oVbdaqUgmvJ
-         bm0Q73d0oVbxw==
-Date:   Wed, 3 May 2023 07:57:56 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     dan.j.williams@intel.com
-Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com,
-        fan.ni@samsung.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org
-Subject: [PATCH v2] cxl/mbox: Add background cmd handling machinery
-Message-ID: <gtvozgdx2ak7tekc3heczk5g7gj3cwuoptez6tjmkecader4lo@7t2em7rclcxn>
-References: <20230502171841.21317-1-dave@stgolabs.net>
- <20230502171841.21317-4-dave@stgolabs.net>
+        with ESMTP id S229951AbjECR57 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 3 May 2023 13:57:59 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA52BD;
+        Wed,  3 May 2023 10:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683136675; x=1714672675;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=xPTY1fBXx3tILGniPUwYyTNFjSY0ibnMv7k0/ICKDak=;
+  b=C7nqvzR0Av9ShWpwMsYqepDh1lcXcmIQ+8+OtNPhtliP1/ZSVsDAh6kg
+   HNWtTO+58yIJAtyIxgIueweOQFloJeThiubTNVcuakwUjOesgjBpGHcFk
+   Nr9vXSj+G2WcL6x2L6TK69Nt6Fz8O6ywQZomEKwiBJiSV2CwgViaTvs0u
+   u61dnmulRWidwuiN13Z3zYe+FF7hL7fV7S4BYMOY5/AMq8E8oLqJ1aLC4
+   fYsQqIhzMfERmvxa2YH9ENJI0R+ljPmS0i9TzvLfz8nCrWSvzBJjvVldj
+   FMeROIZJUm3Uv7FFcfvId28I9MTpfsX993KwGeseVPn/cpYQY4TxxnqTr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="435032957"
+X-IronPort-AV: E=Sophos;i="5.99,247,1677571200"; 
+   d="scan'208";a="435032957"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 10:57:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="820846920"
+X-IronPort-AV: E=Sophos;i="5.99,247,1677571200"; 
+   d="scan'208";a="820846920"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga004.jf.intel.com with ESMTP; 03 May 2023 10:57:55 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 3 May 2023 10:57:54 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Wed, 3 May 2023 10:57:54 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Wed, 3 May 2023 10:57:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IdRU7+S9oWu/NOWCocxxfmHOM7kPZUcuYZHVvYQ105CVRvxbtFzCat+FrgU3ycGd/Dd08HZhRQC/jY76Avd5xfPnfN7jKLxzr4+++UkwJC+4S6DiPmg6OVsQ54bTvlSIiks9gNwFLyLLri7vpSpppdsjgFC6r5MdgDos7n+iUTN+61A1iJfCJTs7lv8Zi+HtmtJvx2PahzbzHI72a8EMNyymS3AC+WxRkSO7LeWP7UqbU/VqEc+VYkdveVgCXDuQQ0SahwdEKGEAsX4VuwNbE2XkVeMiMf+0t4L6ZBl0JNRh+ntSrgOiolWkYfzN7U4zB6fZJWoiJD9CTn8PDFUiqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xPTY1fBXx3tILGniPUwYyTNFjSY0ibnMv7k0/ICKDak=;
+ b=CT1t3r83oTlULUxfIg6l9FoRdsuCY88PLf+5qslGsPsu0yWx+tGMWv//RmtdtuIzMObWT1j6wfcz4FkS4q9lRDv1Y5CBberV+vEgU3n6FFZNl0ou2IUIOOgNVfS1dPxKC2A7PvOUrgz+9vq4Klb9tyH4DNLqoXCXRt7ZsdsdWIih5JBKflcn0aQcztQ6HbrLvwEabPhnzkqV5cKgrNOgDxbtrpz34z4KN3FHQM5QcA8lX6CCjpmC29bc9/JAwPnYKgn5kRv+XkSwVoNgBxJjIY8P012IAyQsgeNAfZVOMkDabjsOFPP3ZGLo29/FyMX3aMqf0Y0/VDS4UK51iK/mKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com (2603:10b6:208:154::32)
+ by CH3PR11MB7274.namprd11.prod.outlook.com (2603:10b6:610:140::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.30; Wed, 3 May
+ 2023 17:57:53 +0000
+Received: from MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::3403:36be:98a3:b532]) by MN2PR11MB3999.namprd11.prod.outlook.com
+ ([fe80::3403:36be:98a3:b532%4]) with mapi id 15.20.6363.022; Wed, 3 May 2023
+ 17:57:52 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "raghuhack78@gmail.com" <raghuhack78@gmail.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] cxl/mbox: Remove redundant dev_err() after failed
+ mem alloc
+Thread-Topic: [PATCH v2 1/2] cxl/mbox: Remove redundant dev_err() after failed
+ mem alloc
+Thread-Index: AQHZeW/+HGU49hY5IEWNDLziZDCsaq9I3qwA
+Date:   Wed, 3 May 2023 17:57:52 +0000
+Message-ID: <092aa8a27392b191d17930bd64fb98cf955681e9.camel@intel.com>
+References: <20230428012235.119333-1-raghuhack78@gmail.com>
+         <20230428012235.119333-2-raghuhack78@gmail.com>
+In-Reply-To: <20230428012235.119333-2-raghuhack78@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN2PR11MB3999:EE_|CH3PR11MB7274:EE_
+x-ms-office365-filtering-correlation-id: 6f13f0f6-efa5-4da2-7af0-08db4bffea79
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r5S72BXlhvI+NmzhNtVQzbJGbj2dc/mhKD4mU6GXOXa3qSOEUsgUZlO9uRMB/KcSWq+EAbWIejYziDtBgmhc6Cmd2zeWKBdGpRVVncNNbJ0pALfl+sYqw4rpoF+KkxB18OFM7l4lTaPvyFb7c0tidEj7e8JmdhZurnLflCDtgFQ7qoiFFTaLUjHZ1C/TduSSu6nCOmMpsZwnOUMss3wzhCtl642T6jVK+Klxu2dJ+I1xa0TcSKRThogNVkWnsb5qGo6zhKHOaWD0EnGS+lJVGBTmIeQplUBt08pVh0Tq4wUeO8mo7V3R3UXOnIvOjh+zbtcuPidNM9bxw9GhtzvcvvFeJTiB9nKm/ogee7hMiI2kSLuzuW3gdEQn5VqyJwFOt0wIxWp1fca/R/4p4eIvCxdna4R0Byi4c//MX0s4OOQYfmr57NQk25mhFQTdq5/+R2mwwY61bP5DQCo8MZKQ9AAO+Mz1iZSvj7+KgmLheNPZGaE3pKv9COBLJZl6f3tYYiHLrsCavKEGIGBQffcdAJEDXZP4S2YpFQGJlP+nkx96wGfM8DiyT4fHcVYDp8NtpKlsRnn1QX6euvN2gYk967nyLJwNDgTvSZYuPjFfau4lL8nYRBkU8CYp+VZPaC2/
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3999.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(136003)(39860400002)(396003)(376002)(346002)(451199021)(4744005)(478600001)(2906002)(66446008)(4326008)(76116006)(64756008)(66556008)(66476007)(316002)(66946007)(91956017)(5660300002)(8936002)(6636002)(110136005)(41300700001)(8676002)(6506007)(186003)(26005)(38070700005)(6512007)(2616005)(6486002)(122000001)(86362001)(38100700002)(82960400001)(71200400001)(83380400001)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?c0F2OHdpYkdVS1M5bGhkZytZTnlKODExRWYvcVdmd1Q5VURTMDFkSzZTTURC?=
+ =?utf-8?B?UnhwZlBycThMelR0MHZLMnA3LzNKVS9KYlZINHk0SW5UdnRVZitIK1FRUXhu?=
+ =?utf-8?B?WW9LdWZHRUU0NCtFSXk1ZitHTXdiWE1EZytWa2xpRDhLSTY4TWx0OStyb1pB?=
+ =?utf-8?B?V0cwTm1QT3BjNDhlQmI0WThneVdqS2Z0OWRyT2kxaW1OVnZ2RUhTTnNERmxT?=
+ =?utf-8?B?MVI2dU4rWEdjNkJyR0IvSk1SMVBqUWpoY09pWlIweENKbmpCRkJhTDVlZDBF?=
+ =?utf-8?B?TUh5RjlvT2FEaTMvTllJdHV2MVIrd3p0aVEwb2RpU0FJZGRxa2RPNG9hT0lJ?=
+ =?utf-8?B?UFd0bjRtRXVidVNHbnlXWG01bnpuU2tzVUJLNHNxTmxVWDNncVc0YWNkelU5?=
+ =?utf-8?B?elpLcWl0NG5PUStNSmhEY21hblAyQUp3OVdwVXI5VklpTWltcG5TRmVITmpU?=
+ =?utf-8?B?OU9uMndOOFFYTnhBWDRaNTUxTk0zbkhzKzZua1FyNWFUY2V2aHd4NFZENjUy?=
+ =?utf-8?B?eWlKcG5kQ1JXbW1WbXlZc3pHZVgxaDBsMEJBa0I0K1NQTnM4QmVadjdiVHpJ?=
+ =?utf-8?B?VXo4MngraDJ5dlAzTEF2NlpFMGdyaUdReHZrQ3ExZ1pvZzA0cURZSU5xRHJj?=
+ =?utf-8?B?am1zbk0xU2luUURud2RMQ3JJc2pCOWJLMFB5SDhhdDJ5dVpycERWSDEvclNx?=
+ =?utf-8?B?M1ZodVBCeGNFNE81TlY4L1Y1REMvV2sySWlaSWJaNHZXd3lIVDBtWmVrdWZh?=
+ =?utf-8?B?Wm1LdHFrcG0xaG94bkFkbjFicVdrMS9tN05WOUkrMEM3SG03ankveFZuZ1Vi?=
+ =?utf-8?B?b2I2SE9XalBocXVQd2taUGFqWXdPVFJXT3poNWE1V2ZjakYrUThMY2lGOFd2?=
+ =?utf-8?B?V1Ztb0Zmam5hclM5NjExSzFQaTBYS3dacmV5SlZyeHNNQUpJOUZ3eUMweURN?=
+ =?utf-8?B?UVM1Y2ZFWGdDOVhyVzR6S3NodVBycTl2VXBrS1FxNWNiVG5xZTBPc1ZzT2Vw?=
+ =?utf-8?B?VVZxZnpCYVdxRnltZ29YbkRxRi9pcVdvT0lIa2JaNVVETzdFcXZhMzk1a2lp?=
+ =?utf-8?B?bVNVVkpYQ1p4aUZBTXpRbTl5RllISXBzbHlUS1JhdkJLMzViSXVrRjlPL01s?=
+ =?utf-8?B?K05qTXhUUmhoUnhaamFXMmwyZkplWXNGWlFaYmMyRktPRG9TNllFb2YrOUFy?=
+ =?utf-8?B?SDNQK1Z4cVdzYXYrKzVXM2NFRVJLTWZSTzBaQXgxdDdyYkdYUUxKWWJzcE9l?=
+ =?utf-8?B?dkZkaWl4aHphdHZIc3hZWlFWd2ZHTWFLRy8rdjR2T3R5Q1J0NjBydkdWTEto?=
+ =?utf-8?B?d3p0L2pPeUlqWm0yTUZST3R3QWt3YkFWVHZab0xHbFd2VWphS2N6bE51QWt1?=
+ =?utf-8?B?QTRxM0Z3YVBqQitXNGhpeitpVmtpKzNiNkNsMlpCQ2Y5YkJxOXNVa0IzcVp3?=
+ =?utf-8?B?RTRRa2swNTB5ZTAwWDV5OTVmcllibVU0TmRiNDNXWjRKVlZaclB5dWZrL1Js?=
+ =?utf-8?B?YzhndGdaOGQ1L1VaOXFUWlFnekRhUkpxOWc3VWRVYVZ5Rno2NjBnRWsveVlx?=
+ =?utf-8?B?WkxjZzZTKzlJanU1S21OWktkR3loVjVXTTFnU1k4NmFCYjJOOVR6SEg3U2RI?=
+ =?utf-8?B?RE5lTDRxZ0p2YVlnYU1NWkFjQi9HL0tBWm5salFDamdJU1FJZlZyRTlnajVB?=
+ =?utf-8?B?cldqWlVGVld2SndPa01nY3BKQytJZ2o2TGFZOW9nVDVUa3pBMTJQTFVzVGpF?=
+ =?utf-8?B?dzVhRHh5eThRbWFRNWVac0NxTzFkbHNzM0FubTNRREJNOXFvV1BpejNWWllF?=
+ =?utf-8?B?Q3B1aDIwcU9hMmEyK281blJqNTlZTDdCZE8vZjdXNGhZRnYrT2NqSThaUVNB?=
+ =?utf-8?B?YUFwQm5SQkE2OTB6ejZmRjdhUTRYZG5TdFF1U3J2ZGVMajZKRndtTHN4amQ3?=
+ =?utf-8?B?eGIzdmlpeVRzZ0p2dU82bkdMbUlCTHMrWFdtVXRUVDFSYU4vWHQvb216cXBi?=
+ =?utf-8?B?NVpxc2NmTmNSTDlMTm5BRjIvME5nZThEQzVJVlhtclNzcHRZRXA2T3daTnBT?=
+ =?utf-8?B?KzV0bFEzdlBtQUxmZUFoMzR3cGIyNlZTREU0RHg0d3U0VTdXb3ZYV0F6ZlNO?=
+ =?utf-8?B?QnNiTzVuOG1TU2hmRVFmVXdLN3B3M0RxSEFZaVhqcDFhbm1ObWxxM1JKbWJp?=
+ =?utf-8?B?NXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <83C35CCB6509014EB3F6EABF74AD4361@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230502171841.21317-4-dave@stgolabs.net>
-User-Agent: NeoMutt/20230407
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3999.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f13f0f6-efa5-4da2-7af0-08db4bffea79
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 May 2023 17:57:52.5397
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D+akPOXomM/a56jI0G491UdLbZBBCy3h4qH+2WmcUcPlRCJadDDNk3dflFi11vrk9WC3zEQqaT+vKjvnFZDpGW7AMhXMzRXt+XZ0u/YQ9g8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7274
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This adds support for handling background operations, as defined in
-the CXL 3.0 spec. Commands that can take too long (over ~2 seconds)
-can run in the background asynchronously (to the hardware).
-
-The driver will deal with such commands synchronously, blocking all
-other incoming commands for a specified period of time, allowing
-time-slicing the command such that the caller can send incremental
-requests to avoid monopolizing the driver/device. This approach
-makes the code simpler, where any out of sync (timeout) between the
-driver and hardware is just disregarded as an invalid state until
-the next successful submission.
-
-On devices where mbox interrupts are supported, this will still use
-a poller that will wakeup in the specified wait intervals. The irq
-handler will simply awake the blocked cmd, which is also safe vs a
-task that is either waking (timing out) or already awoken. Similarly
-any irq setup error during the probing falls back to polling, thus
-avoids unnecessarily erroring out.
-
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-
-Changes from v2:
-- make the wait ret a long.
-- pass correct param orders to the wait (cond and state were inversed).
-
-  drivers/cxl/core/mbox.c |   3 +-
-  drivers/cxl/cxl.h       |   7 +++
-  drivers/cxl/cxlmem.h    |   7 +++
-  drivers/cxl/pci.c       | 102 ++++++++++++++++++++++++++++++++++++++++
-  4 files changed, 118 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 23b9ff920d7e..7345ed4118b0 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -220,7 +220,8 @@ int cxl_internal_send_cmd(struct cxl_dev_state *cxlds,
-	if (rc)
-		return rc;
-
--	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS)
-+	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS &&
-+	    mbox_cmd->return_code != CXL_MBOX_CMD_RC_BACKGROUND)
-		return cxl_mbox_cmd_rc2errno(mbox_cmd);
-
-	if (!out_size)
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 044a92d9813e..72731a896f58 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -176,14 +176,21 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
-  /* CXL 2.0 8.2.8.4 Mailbox Registers */
-  #define CXLDEV_MBOX_CAPS_OFFSET 0x00
-  #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-+#define   CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK GENMASK(10, 7)
-+#define   CXLDEV_MBOX_CAP_BG_CMD_IRQ BIT(6)
-  #define CXLDEV_MBOX_CTRL_OFFSET 0x04
-  #define   CXLDEV_MBOX_CTRL_DOORBELL BIT(0)
-+#define   CXLDEV_MBOX_CTRL_BG_CMD_IRQ BIT(2)
-  #define CXLDEV_MBOX_CMD_OFFSET 0x08
-  #define   CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
-  #define   CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK GENMASK_ULL(36, 16)
-  #define CXLDEV_MBOX_STATUS_OFFSET 0x10
-+#define   CXLDEV_MBOX_STATUS_BG_CMD BIT(0)
-  #define   CXLDEV_MBOX_STATUS_RET_CODE_MASK GENMASK_ULL(47, 32)
-  #define CXLDEV_MBOX_BG_CMD_STATUS_OFFSET 0x18
-+#define   CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK GENMASK_ULL(15, 0)
-+#define   CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK GENMASK_ULL(22, 16)
-+#define   CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK GENMASK_ULL(47, 32)
-  #define CXLDEV_MBOX_PAYLOAD_OFFSET 0x20
-
-  /*
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index db12b6313afb..d2f751d6583c 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -5,6 +5,7 @@
-  #include <uapi/linux/cxl_mem.h>
-  #include <linux/cdev.h>
-  #include <linux/uuid.h>
-+#include <linux/rcuwait.h>
-  #include "cxl.h"
-
-  /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
-@@ -108,6 +109,9 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
-   *            variable sized output commands, it tells the exact number of bytes
-   *            written.
-   * @min_out: (input) internal command output payload size validation
-+ * @poll_count: (input)  Number of timeouts to attempt.
-+ * @poll_interval: (input) Number of ms between mailbox background command
-+ *                 polling intervals timeouts.
-   * @return_code: (output) Error code returned from hardware.
-   *
-   * This is the primary mechanism used to send commands to the hardware.
-@@ -123,6 +127,8 @@ struct cxl_mbox_cmd {
-	size_t size_in;
-	size_t size_out;
-	size_t min_out;
-+	int poll_count;
-+	int poll_interval;
-	u16 return_code;
-  };
-
-@@ -329,6 +335,7 @@ struct cxl_dev_state {
-	struct cxl_event_state event;
-	struct cxl_poison_state poison;
-
-+	struct rcuwait mbox_wait;
-	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-  };
-
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 8bdf58c0c643..10dc4a4fbb4a 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -51,6 +51,7 @@ static unsigned short mbox_ready_timeout = 60;
-  module_param(mbox_ready_timeout, ushort, 0644);
-  MODULE_PARM_DESC(mbox_ready_timeout, "seconds to wait for mailbox ready");
-
-+
-  static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
-  {
-	const unsigned long start = jiffies;
-@@ -84,6 +85,33 @@ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
-			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
-			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
-
-+static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
-+{
-+	u64 reg;
-+
-+	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
-+	return FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, reg) == 100;
-+}
-+
-+static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
-+{
-+	struct cxl_dev_state *cxlds = id;
-+
-+	/* spurious or raced with hw? */
-+	if (unlikely(!cxl_mbox_background_complete(cxlds))) {
-+		struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+
-+		dev_warn(&pdev->dev,
-+			 "Mailbox background operation IRQ but incomplete\n");
-+		goto done;
-+	}
-+
-+	/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
-+	rcuwait_wake_up(&cxlds->mbox_wait);
-+done:
-+	return IRQ_HANDLED;
-+}
-+
-  /**
-   * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
-   * @cxlds: The device state to communicate with.
-@@ -177,6 +205,57 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
-	mbox_cmd->return_code =
-		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
-
-+	/*
-+	 * Handle the background command in a synchronous manner.
-+	 *
-+	 * All other mailbox commands will serialize/queue on the mbox_mutex,
-+	 * which we currently hold. Furthermore this also guarantees that
-+	 * cxl_mbox_background_complete() checks are safe amongst each other,
-+	 * in that no new bg operation can occur in between.
-+	 *
-+	 * Background operations are timesliced in accordance with the nature
-+	 * of the command. In the event of timeout, the mailbox state is
-+	 * indeterminate until the next successful command submission and the
-+	 * driver can get back in sync with the hardware state.
-+	 */
-+	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
-+		long ret;
-+		u64 bg_status_reg;
-+		int i, timeout = mbox_cmd->poll_interval;
-+
-+		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
-+			mbox_cmd->opcode);
-+
-+		for (i = 0; i < mbox_cmd->poll_count; i++) {
-+			ret = rcuwait_wait_event_timeout(&cxlds->mbox_wait,
-+					cxl_mbox_background_complete(cxlds),
-+					TASK_INTERRUPTIBLE,
-+					msecs_to_jiffies(timeout));
-+			if (ret > 0)
-+				break;
-+			if (ret < 0) /* interrupted by a signal */
-+				return ret;
-+		}
-+
-+		if (!cxl_mbox_background_complete(cxlds)) {
-+			u64 md_status =
-+				readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
-+
-+			cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
-+				    "background timeout");
-+			return -ETIMEDOUT;
-+		}
-+
-+		bg_status_reg = readq(cxlds->regs.mbox +
-+				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
-+		mbox_cmd->return_code =
-+			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
-+				  bg_status_reg);
-+		dev_dbg(dev,
-+			"Mailbox background operation (0x%04x) completed\n",
-+			mbox_cmd->opcode);
-+	}
-+
-	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
-		dev_dbg(dev, "Mailbox operation had an error: %s\n",
-			cxl_mbox_cmd_rc2str(mbox_cmd));
-@@ -271,6 +350,29 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
-	dev_dbg(cxlds->dev, "Mailbox payload sized %zu",
-		cxlds->payload_size);
-
-+	rcuwait_init(&cxlds->mbox_wait);
-+	if (cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ) {
-+		int irq, msgnum;
-+		struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-+
-+		msgnum = FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap);
-+		irq = pci_irq_vector(pdev, msgnum);
-+		if (irq < 0)
-+			goto mbox_poll;
-+
-+		if (devm_request_irq(cxlds->dev, irq, cxl_pci_mbox_irq,
-+				     IRQF_SHARED, NULL, cxlds))
-+			goto mbox_poll;
-+
-+		/* only enable background cmd mbox irq support */
-+		writel(CXLDEV_MBOX_CTRL_BG_CMD_IRQ,
-+		       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
-+
-+		return 0;
-+	}
-+
-+mbox_poll:
-+	dev_dbg(cxlds->dev, "Mailbox interrupts are unsupported");
-	return 0;
-  }
-
---
-2.40.1
+T24gRnJpLCAyMDIzLTA0LTI4IGF0IDAxOjIyICswMDAwLCBSYWdodSBIIHdyb3RlOg0KPiBJc3N1
+ZSBmb3VuZCB3aXRoIGNoZWNrcGF0Y2gNCj4gDQo+IEEgcmV0dXJuIG9mIGVycm5vIHNob3VsZCBi
+ZSBnb29kIGVub3VnaCBpZiB0aGUgbWVtb3J5IGFsbG9jYXRpb24NCj4gZmFpbHMsDQo+IHRoZSBl
+cnJvciBtZXNzYWdlIGhlcmUgaXMgcmVkdW5kYXRhbnQgYXMgcGVyIHRoZSBjb2Rpbmcgc3R5bGUs
+DQo+IHJlbW92aW5nIGl0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUmFnaHUgSCA8cmFnaHVoYWNr
+NzhAZ21haWwuY29tPg0KPiAtLS0NCj4gwqBkcml2ZXJzL2N4bC9jb3JlL21ib3guYyB8IDQgKy0t
+LQ0KPiDCoDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMyBkZWxldGlvbnMoLSkNCg0K
+TG9va3MgZ29vZCwNClJldmlld2VkLWJ5OiBWaXNoYWwgVmVybWEgPHZpc2hhbC5sLnZlcm1hQGlu
+dGVsLmNvbT4NCg0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2NvcmUvbWJveC5jIGIv
+ZHJpdmVycy9jeGwvY29yZS9tYm94LmMNCj4gaW5kZXggZjJhZGRiNDU3MTcyLi4xMWVhMTQ1YjRi
+MWYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY3hsL2NvcmUvbWJveC5jDQo+ICsrKyBiL2RyaXZl
+cnMvY3hsL2NvcmUvbWJveC5jDQo+IEBAIC0xMTEyLDEwICsxMTEyLDggQEAgc3RydWN0IGN4bF9k
+ZXZfc3RhdGUNCj4gKmN4bF9kZXZfc3RhdGVfY3JlYXRlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4g
+wqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxkczsNCj4gwqANCj4gwqDC
+oMKgwqDCoMKgwqDCoGN4bGRzID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjeGxkcyksIEdG
+UF9LRVJORUwpOw0KPiAtwqDCoMKgwqDCoMKgwqBpZiAoIWN4bGRzKSB7DQo+IC3CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZXJyKGRldiwgIk5vIG1lbW9yeSBhdmFpbGFibGVcbiIp
+Ow0KPiArwqDCoMKgwqDCoMKgwqBpZiAoIWN4bGRzKQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoHJldHVybiBFUlJfUFRSKC1FTk9NRU0pOw0KPiAtwqDCoMKgwqDCoMKgwqB9DQo+
+IMKgDQo+IMKgwqDCoMKgwqDCoMKgwqBtdXRleF9pbml0KCZjeGxkcy0+bWJveF9tdXRleCk7DQo+
+IMKgwqDCoMKgwqDCoMKgwqBtdXRleF9pbml0KCZjeGxkcy0+ZXZlbnQubG9nX2xvY2spOw0K
