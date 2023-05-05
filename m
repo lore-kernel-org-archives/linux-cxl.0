@@ -2,111 +2,224 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F239BC77B75
-	for <linux-cxl@archiver.kernel.org>; Fri,  5 May 2023 21:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C3C77B7D
+	for <linux-cxl@archiver.kernel.org>; Fri,  5 May 2023 21:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233498AbjEEV2V (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 5 May 2023 17:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60902 "EHLO
+        id S233588AbjEEVe4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 5 May 2023 17:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233461AbjEEV2U (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 May 2023 17:28:20 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59A9B40F9
-        for <linux-cxl@vger.kernel.org>; Fri,  5 May 2023 14:27:56 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id B3DDF7E25C5;
-        Fri,  5 May 2023 21:27:55 +0000 (UTC)
-Received: from pdx1-sub0-mail-a226.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 3E76F7E1E85;
-        Fri,  5 May 2023 21:27:55 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1683322075; a=rsa-sha256;
-        cv=none;
-        b=kwZU7/EX2ugFo0uPlmQQMmCwOVDh4OFJoe5ut6mhdzE+/EhoHvNZlTEijkfePWHfY4G4vP
-        nPidBN68ypCvY+WR6OE62GfaW4kHZPTpx3+v+wYSu+cuo+W85N/jLTajDXhQ0Flt1oCEsH
-        ryB5sL4ltvIGCN2v7SEbUpB0Z8OBQONNf67qLiF85JDoPFTHYrgcuJHy55dlosmkUxDWCi
-        f7li+EN5F1lesTyURpaSbxIM51Ys+rM+bGRxrM2btpjLA84a4VZYdDw3SOkv8es7ypK64w
-        eOoHREgh0Na7krRcpyrmu1N33fuMflj3qkGyhFEaIB+90RnMPB2e0ZADlrRA5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1683322075;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=iDn056hBga/okhFcGUvoF8SgjUMyDeyl6U2I88ktYdc=;
-        b=9sutek0oTPh2JtNuFpgoceJB4i84ZI2hd86k+SceR1u6t9bwbhCi7IkY+CqwmdZ0BQwwRj
-        EJNBhRP71PW5dWsoq6lZUl4haXgAUykgU3qKMAeDYLfrsQ9YUdq2klE9bOThcGfRx/R9sV
-        OB6qbVwsfCX5w/ImLfuG8zlJAJDKlTXIaN4OTEsB+EBpfcrvMFUvhnZtXeGk7Hcq09Vu2u
-        MUUFQ6yau6od6/O9zqQ3euadxv0r9LjhnRI4Az3lOH4DNjFGCAzKleKqJmVqk7+N83VES5
-        +S9uW8cA8poyU6zRrzQJL5GJHV+xMeJDquxobTXYNKnxU8ajw66qrZRy557L3g==
-ARC-Authentication-Results: i=1;
-        rspamd-79bb5575d7-sp8j9;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cooperative-Reaction: 556132ba53183fbf_1683322075556_2059485873
-X-MC-Loop-Signature: 1683322075556:478497289
-X-MC-Ingress-Time: 1683322075556
-Received: from pdx1-sub0-mail-a226.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.97.48.86 (trex/6.7.2);
-        Fri, 05 May 2023 21:27:55 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a226.dreamhost.com (Postfix) with ESMTPSA id 4QCkLL4HdLz3K;
-        Fri,  5 May 2023 14:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1683322075;
-        bh=iDn056hBga/okhFcGUvoF8SgjUMyDeyl6U2I88ktYdc=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=JFtMg9Z07XHsf6vQEM8LNNcGzdM2PxD5i9FtUXTXuXC6X8wPtoAHqxs9jYlth7X/k
-         Y92rQvgY5ot0oXcEPhJzPf9SKFkaCWN1KIjHlZh40xHuG5Hr5vXWLPJHxDYquKBDnr
-         xdw+y6ZB2AskCdZrfhKRqu/SVLglGgNk+TSJBNI+SpDcAFwHf7re1/GJZ8FdQUKUEd
-         0NT6y1b+5fUA78tuQu3nSg8HhoZYTQ7N1Sht+E7trddq/Vrawkqrv6GynuGcVIeZ2p
-         2JYhrctFjY0TLgvSo3RKvkqXcCJuzO7ublBvbq5S9lWgNJSRCd6oiHS5O+n0YkE8pN
-         A1iELEDXlm4Eg==
-Date:   Fri, 5 May 2023 13:55:29 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com
-Subject: Re: [PATCH 1/3] cxl: Export QTG ids from CFMWS to sysfs as qos_class
- attribute
-Message-ID: <3u24sfpelji37abhbha4b6b2zh2vn2hocbwcyjo4j7k7sgflsb@mvpl7s7hckt2>
-References: <168330433154.1986478.2238692205077357255.stgit@djiang5-mobl3>
- <168330452292.1986478.17259063377180091918.stgit@djiang5-mobl3>
+        with ESMTP id S233551AbjEEVet (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 5 May 2023 17:34:49 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C05E42;
+        Fri,  5 May 2023 14:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683322487; x=1714858487;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ygVybuXnWs/ny/MJljRlz4zC2fpHSEB8MFl5p8kH0BU=;
+  b=VAYXOlQFHXIol5glezVdk68xfoxEl2s/Co8JYZnr9AZiHnPfyuiMhx7P
+   9DBAYScszLjB2epWCjSm3kT+pZ+JBFlQCdMVFv7sv1XxeBOxyGuVhVsqt
+   VN8I6YCIXQMPVRkIcg4p9bJuguAR6vq/7dyZW8SmFUygTe0yAKKx7HnzP
+   LQ88MMFlmZSEKT8RsL91w/c6mB4CO0B22+7DDSwqjLPBa8Vmif0V2Pv/j
+   Kl64yMutPnaMioortCT2ANnC+qeDow4EKglmBIZW00SrX/MO6kA62965/
+   pcmLC1ACtbRQGRhclbcHW93FJtHIDhlX5aCMRuZV6+6CSlY5PzHnfOV8N
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10701"; a="329656185"
+X-IronPort-AV: E=Sophos;i="5.99,253,1677571200"; 
+   d="scan'208";a="329656185"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2023 14:34:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10701"; a="767275699"
+X-IronPort-AV: E=Sophos;i="5.99,253,1677571200"; 
+   d="scan'208";a="767275699"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.77.78])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2023 14:34:47 -0700
+Subject: [PATCH] base/node / acpi: Change 'node_hmem_attrs' to
+ 'access_coordinates'
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+Date:   Fri, 05 May 2023 14:34:46 -0700
+Message-ID: <168332248685.2190392.1983307884583782116.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <168330452292.1986478.17259063377180091918.stgit@djiang5-mobl3>
-User-Agent: NeoMutt/20230407
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 05 May 2023, Dave Jiang wrote:
+Dan Williams suggested changing the struct 'node_hmem_attrs' to
+'access_coordinates' [1]. The struct is a container of r/w-latency and
+r/w-bandwidth numbers. Moving forward, this container will also be used by
+CXL to store the performance characteristics of each link hop in
+the PCIE/CXL topology. So, where node_hmem_attrs is just the access
+parameters of a memory-node, access_coordinates applies more broadly
+to hardware topology characteristics.
 
->Export the QoS Throttling Group ID from the CXL Fixed Memory Window
->Structure (CFMWS) under the root decoder sysfs attributes as qos_class.
->
->CXL rev3.0 9.17.1.3 CXL Fixed Memory Window Structure (CFMWS)
->
->cxl cli will use this id to match with the _DSM retrieved id for a
->hot-plugged CXL memory device DPA memory range to make sure that the
->DPA range is under the right CFMWS window.
->
->Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+[1]: http://lore.kernel.org/r/64471313421f7_1b66294d5@dwillia2-xfh.jf.intel.com.notmuch/
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/acpi/numa/hmat.c |   20 ++++++++++----------
+ drivers/base/node.c      |   12 ++++++------
+ include/linux/node.h     |    8 ++++----
+ 3 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+index bba268ecd802..f9ff992038fa 100644
+--- a/drivers/acpi/numa/hmat.c
++++ b/drivers/acpi/numa/hmat.c
+@@ -62,7 +62,7 @@ struct memory_target {
+ 	unsigned int memory_pxm;
+ 	unsigned int processor_pxm;
+ 	struct resource memregions;
+-	struct node_hmem_attrs hmem_attrs[2];
++	struct access_coordinate coord[2];
+ 	struct list_head caches;
+ 	struct node_cache_attrs cache_attrs;
+ 	bool registered;
+@@ -227,24 +227,24 @@ static void hmat_update_target_access(struct memory_target *target,
+ {
+ 	switch (type) {
+ 	case ACPI_HMAT_ACCESS_LATENCY:
+-		target->hmem_attrs[access].read_latency = value;
+-		target->hmem_attrs[access].write_latency = value;
++		target->coord[access].read_latency = value;
++		target->coord[access].write_latency = value;
+ 		break;
+ 	case ACPI_HMAT_READ_LATENCY:
+-		target->hmem_attrs[access].read_latency = value;
++		target->coord[access].read_latency = value;
+ 		break;
+ 	case ACPI_HMAT_WRITE_LATENCY:
+-		target->hmem_attrs[access].write_latency = value;
++		target->coord[access].write_latency = value;
+ 		break;
+ 	case ACPI_HMAT_ACCESS_BANDWIDTH:
+-		target->hmem_attrs[access].read_bandwidth = value;
+-		target->hmem_attrs[access].write_bandwidth = value;
++		target->coord[access].read_bandwidth = value;
++		target->coord[access].write_bandwidth = value;
+ 		break;
+ 	case ACPI_HMAT_READ_BANDWIDTH:
+-		target->hmem_attrs[access].read_bandwidth = value;
++		target->coord[access].read_bandwidth = value;
+ 		break;
+ 	case ACPI_HMAT_WRITE_BANDWIDTH:
+-		target->hmem_attrs[access].write_bandwidth = value;
++		target->coord[access].write_bandwidth = value;
+ 		break;
+ 	default:
+ 		break;
+@@ -701,7 +701,7 @@ static void hmat_register_target_cache(struct memory_target *target)
+ static void hmat_register_target_perf(struct memory_target *target, int access)
+ {
+ 	unsigned mem_nid = pxm_to_node(target->memory_pxm);
+-	node_set_perf_attrs(mem_nid, &target->hmem_attrs[access], access);
++	node_set_perf_attrs(mem_nid, &target->coord[access], access);
+ }
+ 
+ static void hmat_register_target_devices(struct memory_target *target)
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 2cada01c70da..fc0444b617d0 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -75,14 +75,14 @@ static BIN_ATTR_RO(cpulist, CPULIST_FILE_MAX_BYTES);
+  * @dev:	Device for this memory access class
+  * @list_node:	List element in the node's access list
+  * @access:	The access class rank
+- * @hmem_attrs: Heterogeneous memory performance attributes
++ * @coord:	Heterogeneous memory performance coordinates
+  */
+ struct node_access_nodes {
+ 	struct device		dev;
+ 	struct list_head	list_node;
+ 	unsigned int		access;
+ #ifdef CONFIG_HMEM_REPORTING
+-	struct node_hmem_attrs	hmem_attrs;
++	struct access_coordinate	coord;
+ #endif
+ };
+ #define to_access_nodes(dev) container_of(dev, struct node_access_nodes, dev)
+@@ -168,7 +168,7 @@ static ssize_t property##_show(struct device *dev,			\
+ 			   char *buf)					\
+ {									\
+ 	return sysfs_emit(buf, "%u\n",					\
+-			  to_access_nodes(dev)->hmem_attrs.property);	\
++			  to_access_nodes(dev)->coord.property);	\
+ }									\
+ static DEVICE_ATTR_RO(property)
+ 
+@@ -188,10 +188,10 @@ static struct attribute *access_attrs[] = {
+ /**
+  * node_set_perf_attrs - Set the performance values for given access class
+  * @nid: Node identifier to be set
+- * @hmem_attrs: Heterogeneous memory performance attributes
++ * @coord: Heterogeneous memory performance coordinates
+  * @access: The access class the for the given attributes
+  */
+-void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
++void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+ 			 unsigned int access)
+ {
+ 	struct node_access_nodes *c;
+@@ -206,7 +206,7 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+ 	if (!c)
+ 		return;
+ 
+-	c->hmem_attrs = *hmem_attrs;
++	c->coord = *coord;
+ 	for (i = 0; access_attrs[i] != NULL; i++) {
+ 		if (sysfs_add_file_to_group(&c->dev.kobj, access_attrs[i],
+ 					    "initiators")) {
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 427a5975cf40..25b66d705ee2 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -20,14 +20,14 @@
+ #include <linux/list.h>
+ 
+ /**
+- * struct node_hmem_attrs - heterogeneous memory performance attributes
++ * struct access_coordinate - generic performance coordinates container
+  *
+  * @read_bandwidth:	Read bandwidth in MB/s
+  * @write_bandwidth:	Write bandwidth in MB/s
+  * @read_latency:	Read latency in nanoseconds
+  * @write_latency:	Write latency in nanoseconds
+  */
+-struct node_hmem_attrs {
++struct access_coordinate {
+ 	unsigned int read_bandwidth;
+ 	unsigned int write_bandwidth;
+ 	unsigned int read_latency;
+@@ -65,7 +65,7 @@ struct node_cache_attrs {
+ 
+ #ifdef CONFIG_HMEM_REPORTING
+ void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
+-void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
++void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+ 			 unsigned access);
+ #else
+ static inline void node_add_cache(unsigned int nid,
+@@ -74,7 +74,7 @@ static inline void node_add_cache(unsigned int nid,
+ }
+ 
+ static inline void node_set_perf_attrs(unsigned int nid,
+-				       struct node_hmem_attrs *hmem_attrs,
++				       struct access_coordinate *coord,
+ 				       unsigned access)
+ {
+ }
+
+
