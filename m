@@ -2,51 +2,51 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B42C7EE22
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 May 2023 20:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D54C7EE26
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 May 2023 20:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232812AbjEHUrp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 May 2023 16:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
+        id S233120AbjEHUrs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 May 2023 16:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjEHUro (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 May 2023 16:47:44 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5623C59D3
-        for <linux-cxl@vger.kernel.org>; Mon,  8 May 2023 13:47:43 -0700 (PDT)
+        with ESMTP id S233079AbjEHUrr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 May 2023 16:47:47 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C155859D3
+        for <linux-cxl@vger.kernel.org>; Mon,  8 May 2023 13:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683578863; x=1715114863;
+  t=1683578865; x=1715114865;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=j2KTMOdcq34IFPybLPHZeWcZBlG57IRLduw7Te0ynVI=;
-  b=VSUpj6sAbXv0uipahfuhB1ouNAgZ0Ji8SUqaPLsfy+Svh7d/vJI0fbac
-   RfNYU63AWcMlDu2lwp/fjsKHEzsnmtBpxRPxxKBM45apcOX0LkYjqdtdB
-   44mr4/BmEEbFJl660qrF2OikM3LQVbuveBX1mNKwE9l8jAP+qPsgcdDoY
-   smRkNlUb9LmQsi26VSZabMH6dXtlExcFxCdDn5eSJC0ds+cv+VSosvd+f
-   aCSQechuR/pl8PDasXUV6Vs/QziQh/x7Dz8kNEz+IRHHkydXZKGkw7Biq
-   FPbSypaHwQEwfGrA/ZslybnjIYSu7ldM+n8RjBo+DaDubpsiJ5W9KKpZl
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="436072409"
+  bh=MxDcpaop7BEJXbAJJ/mIUTokUJIg6NVkc2lo++oUdkM=;
+  b=ONLCQ3pwzEkTRC9ci+aXKMas8gsbVlHLqhJxoQKUf8STgNRPFV2mtaQ1
+   yK/E89/gENG+5CqnqkrA2nsdzHqf2B3XWfoNS9kOHM/Iwh+dvueH+iVbT
+   KAKGaV12ZmQXBhj7mr1IhNUlV9o1K8OUhhPDfNbMxtEB9j7soW/RhaFGH
+   uLJ4Y2xE1S/eAETPRwjLsgOtzi8mJR56EoF4QmKx7XnYJNQG6xvfKOSdO
+   PEJhL9IxhFKjddWWXF5Peqcd+XdGfFQoMU7KrsnfuMWpqp+fFAUDBh9GU
+   XA6xq9ZokrRp6H4gLnSfvFj6sisjL4sG4Ao7+B/m2XV6KY7SLeQ5gBfyH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="338976835"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="436072409"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:42 -0700
+   d="scan'208";a="338976835"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:31 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="944996493"
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="731431702"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="944996493"
+   d="scan'208";a="731431702"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.213.172.228])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:42 -0700
-Subject: [PATCH v5 08/14] cxl: Compute the entire CXL path latency and
- bandwidth data
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:30 -0700
+Subject: [PATCH v5 06/14] cxl: Store the access coordinates for the generic
+ ports
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com
-Date:   Mon, 08 May 2023 13:47:42 -0700
-Message-ID: <168357886214.2756219.978696616095404572.stgit@djiang5-mobl3>
+Date:   Mon, 08 May 2023 13:47:29 -0700
+Message-ID: <168357884996.2756219.11067819935569345137.stgit@djiang5-mobl3>
 In-Reply-To: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
 References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,127 +57,86 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL Memory Device SW Guide rev1.0 2.11.2 provides instruction on how to
-caluclate latency and bandwidth for CXL memory device. Calculate minimum
-bandwidth and total latency for the path from the CXL device to the root
-port. The QTG id is retrieved by providing the performance data as input
-and calling the root port callback ->get_qos_class(). The retrieved id is
-stored with the cxl_port of the CXL device.
-
-For example for a device that is directly attached to a host bus:
-Total Latency = Device Latency (from CDAT) + Dev to Host Bus (HB) Link
-		Latency + Generic Port Latency
-Min Bandwidth = Min bandwidth for link bandwidth between HB
-		and CXL device, device CDAT bandwidth, and Generic Port
-		Bandwidth
-
-For a device that has a switch in between host bus and CXL device:
-Total Latency = Device (CDAT) Latency + Dev to Switch Link Latency +
-		Switch (CDAT) Latency + Switch to HB Link Latency +
-		Generic Port Latency
-Min Bandwidth = Min bandwidth for link bandwidth between CXL device
-		to CXL switch, CXL device CDAT bandwidth, CXL switch CDAT
-		bandwidth, CXL switch to HB bandwidth, and Generic Port
-		Bandwidth.
+Each CXL host bridge is represented by an ACPI0016 device. A generic port
+device handle that is an ACPI device is represented by a string of
+ACPI0016 device HID and UID. Create a device handle from the ACPI device
+and retrieve the access coordinates from the stored memory targets. The
+access coordinates are stored under the cxl_dport that is associated with
+the CXL host bridge.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
 ---
-v5:
-- Use new API call cxl_endpoint_get_perf_coordinates().
-- Use root_port->get_qos_class() (Dan)
-- Add endieness handling to DSM input.
----
- drivers/cxl/cxl.h  |    1 +
- drivers/cxl/port.c |   56 +++++++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 54 insertions(+), 3 deletions(-)
+ drivers/cxl/acpi.c |   28 ++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h  |    2 ++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 0c8952e568cc..7c94f07771c1 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -833,6 +833,7 @@ struct dsmas_entry {
- 	struct range dpa_range;
- 	u8 handle;
- 	struct access_coordinate coord;
-+	int qos_class;
- };
- 
- #ifdef CONFIG_ACPI
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index c5a24b75bf03..b474997cc7ee 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -67,6 +67,52 @@ static void dsmas_list_destroy(struct list_head *dsmas_list)
- 	}
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index f9b35e8fe810..675a4f423f4b 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -537,8 +537,26 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
+ 	return 0;
  }
  
-+static int cxl_port_perf_data_calculate(struct cxl_port *port,
-+					struct list_head *dsmas_list)
++static int get_genport_coordinates(struct device *dev, struct cxl_dport *dport)
 +{
-+	struct access_coordinate c;
-+	struct qtg_dsm_input input;
-+	struct cxl_port *root_port;
-+	struct cxl_root *cxl_root;
-+	struct dsmas_entry *dent;
-+	int rc, qos_class;
++	struct acpi_device *hb = to_cxl_host_bridge(NULL, dev);
++	u8 handle[ACPI_SRAT_DEVICE_HANDLE_SIZE] = { 0 };
++	int rc;
 +
-+	rc = cxl_endpoint_get_perf_coordinates(port, &c);
-+	if (rc) {
-+		dev_dbg(&port->dev, "Failed to retrieve perf coordinates.\n");
++	/* ACPI spec 6.5 tABLE 5.65 */
++	memcpy(handle, acpi_device_hid(hb), 8);
++	memcpy(&handle[8], acpi_device_uid(hb), 4);
++
++	rc = acpi_get_genport_coordinates(handle, dport->genport_coord);
++	if (rc)
 +		return rc;
-+	}
-+
-+	root_port = find_cxl_root(port);
-+	cxl_root = to_cxl_root(root_port);
-+	if (!cxl_root->ops && !cxl_root->ops->get_qos_class)
-+		return -EOPNOTSUPP;
-+
-+	list_for_each_entry(dent, dsmas_list, list) {
-+		dent->coord.read_latency = dent->coord.read_latency +
-+					   c.read_latency;
-+		dent->coord.write_latency = dent->coord.write_latency +
-+					    c.write_latency;
-+		dent->coord.read_bandwidth = min_t(int, c.read_bandwidth,
-+						   dent->coord.read_bandwidth);
-+		dent->coord.write_bandwidth = min_t(int, c.write_bandwidth,
-+						    dent->coord.write_bandwidth);
-+
-+		input.rd_lat = cpu_to_le32(dent->coord.read_latency);
-+		input.wr_lat = cpu_to_le32(dent->coord.write_latency);
-+		input.rd_bw = cpu_to_le32(dent->coord.read_bandwidth);
-+		input.wr_bw = cpu_to_le32(dent->coord.write_bandwidth);
-+
-+		qos_class = cxl_root->ops->get_qos_class(root_port, &input);
-+		if (qos_class < 0)
-+			continue;
-+
-+		dent->qos_class = qos_class;
-+	}
 +
 +	return 0;
 +}
 +
- static int cxl_switch_port_probe(struct cxl_port *port)
+ static int add_host_bridge_dport(struct device *match, void *arg)
  {
- 	struct cxl_hdm *cxlhdm;
-@@ -155,10 +201,14 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 		LIST_HEAD(dsmas_list);
++	int ret;
+ 	acpi_status rc;
+ 	struct device *bridge;
+ 	unsigned long long uid;
+@@ -594,6 +612,16 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+ 	if (IS_ERR(dport))
+ 		return PTR_ERR(dport);
  
- 		rc = cxl_cdat_endpoint_process(port, &dsmas_list);
--		if (rc < 0)
-+		if (rc < 0) {
- 			dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
--
--		/* Performance data processing */
-+		} else {
-+			rc = cxl_port_perf_data_calculate(port, &dsmas_list);
-+			if (rc)
-+				dev_dbg(&port->dev,
-+					"Failed to do perf coord calculations.\n");
-+		}
++	dport->genport_coord = devm_kzalloc(dport->dport,
++					    sizeof(*dport->genport_coord),
++					    GFP_KERNEL);
++	if (!dport->genport_coord)
++		return -ENOMEM;
++
++	ret = get_genport_coordinates(match, dport);
++	if (ret)
++		dev_dbg(match, "Failed to get generic port perf coordinates.\n");
++
+ 	return 0;
+ }
  
- 		dsmas_list_destroy(&dsmas_list);
- 	}
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index c1e2c3703a63..033b822a20f2 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -626,6 +626,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+  * @rcrb: base address for the Root Complex Register Block
+  * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+  * @port: reference to cxl_port that contains this downstream port
++ * @genport_coord: access coordinates (performance) from ACPI generic port
+  * @coord: access coordinates (performance) for switch from CDAT
+  * @link_latency: calculated PCIe downstream latency
+  */
+@@ -636,6 +637,7 @@ struct cxl_dport {
+ 	resource_size_t rcrb;
+ 	bool rch;
+ 	struct cxl_port *port;
++	struct access_coordinate *genport_coord;
+ 	struct access_coordinate coord;
+ 	long link_latency;
+ };
 
 
