@@ -2,51 +2,52 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C68C77B7F
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 May 2023 20:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E66C77B7F
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 May 2023 20:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232643AbjEHUrj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 May 2023 16:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        id S233106AbjEHUro (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 May 2023 16:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjEHUri (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 May 2023 16:47:38 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F9655A9
-        for <linux-cxl@vger.kernel.org>; Mon,  8 May 2023 13:47:37 -0700 (PDT)
+        with ESMTP id S232812AbjEHUrn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 May 2023 16:47:43 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236515595
+        for <linux-cxl@vger.kernel.org>; Mon,  8 May 2023 13:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683578857; x=1715114857;
+  t=1683578862; x=1715114862;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=6X1f545mj1OVHPb/RNhze5zXFRbLTLVYEFvGxjtabeo=;
-  b=ne28Im5RD5oo/iw4Kn7FUHxWV+4HbEZj7zBB4104jc6JLMWuI6mTA2Rq
-   OJsr3fIcM/r6UrnWcarDp/q3w/heQ82ZsRwKmrSuAk5UuWdsTk0AQoIAU
-   zBK33GqBNN+6iMcpIH3Jd7BtEWI4KGwm27hkhcMeeaVdz5VAZR/jhr+m2
-   REmFqLpacSjMCAtcFymjcTM0kNgVaDvqaWGYX759w5qMOWYM6wVSrkp/E
-   aNpFYEsARJapRvtLK2IF1ZVbLT3He25Y2xtQT2f4UbYbMMef/7zDx7ItV
-   Z7mA0SAI7gRzZnhen3X9Rzbt1s52oj4bSVeWQWnt+7SfhQnTEfWsL3Ml9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="348580605"
+  bh=rQeFJ6p2RIiXIBSpW5Kp0u605VCmW8d6CRcNKyE8hxQ=;
+  b=WlSgI1BSw3AiwPwdM8vObNhQCRdhPsKwCKPD07t/5xxZWJwhazAx/XUj
+   XtCYfy8ScAZAhQ+HwJBwpW3jmKEZh02DcOy0nZVNXNeKlrIdAcRJwiTPh
+   A10V6oKC4n4Bftb7wKU/r/WHjRmNj/KnkQmeV4QGTZFzMMDmxtFr80sfc
+   hbpnXBHVWSWjnxQM2PbNTyGfamAksOx1oi5cGKQLCwU6qQclHc0O++V5g
+   0u7HpuHXM8FxVGARksHXbWSYRULUX8bRIjn0ZvbED63nxr2r8Wl2CxpTO
+   TwBvtmsnadki4j94lr1ZA4ODyELju7fSC2vzmcwvx5vHKzshKrcu9Yvnb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="338976780"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="348580605"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:37 -0700
+   d="scan'208";a="338976780"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="822826906"
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="731431683"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="822826906"
+   d="scan'208";a="731431683"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.213.172.228])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:36 -0700
-Subject: [PATCH v5 07/14] cxl: Add helper function that calculate performance
- data for downstream ports
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:47:24 -0700
+Subject: [PATCH v5 05/14] cxl: Calculate and store PCI link latency for the
+ downstream ports
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com
-Date:   Mon, 08 May 2023 13:47:36 -0700
-Message-ID: <168357885604.2756219.14660517574518073528.stgit@djiang5-mobl3>
+Date:   Mon, 08 May 2023 13:47:23 -0700
+Message-ID: <168357884387.2756219.5365448705913389325.stgit@djiang5-mobl3>
 In-Reply-To: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
 References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -57,120 +58,229 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CDAT information from the switch, Switch Scoped Latency and Bandwidth
-Information Strucutre (SSLBIS), is parsed and stored under a cxl_dport
-based on the correlated downstream port id from the SSLBIS entry. Walk
-the entire CXL port paths and collect all the performance data. Also
-pick up the link latency number that's stored under the dports. The
-entire path PCIe bandwidth can be retrieved using the
-pcie_bandwidth_available() call.
+The latency is calculated by dividing the flit size over the bandwidth. Add
+support to retrieve the flit size for the CXL switch device and calculate
+the latency of the PCIe link. Cache the latency number with cxl_dport.
 
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/cxl/core/port.c |   69 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |    3 ++
- 2 files changed, 72 insertions(+)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index e4f75847b851..1111a3cebc8e 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -9,6 +9,7 @@
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/idr.h>
-+#include <linux/node.h>
- #include <cxlmem.h>
- #include <cxlpci.h>
- #include <cxl.h>
-@@ -1950,6 +1951,74 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
+---
+v5:
+- Store the latency numbers under dports. (Dan)
+- Use defines instead of magic numbers. (Jonathan)
+v2:
+- Fix commit log issues. (Jonathan)
+- Fix var declaration issues. (Jonathan)
+---
+ drivers/cxl/core/pci.c  |   73 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/port.c |    6 ++++
+ drivers/cxl/cxl.h       |    4 +++
+ drivers/cxl/cxlpci.h    |   15 ++++++++++
+ drivers/cxl/pci.c       |   13 --------
+ 5 files changed, 98 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 58051154ab1a..6c99a964eb54 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
++#include <linux/units.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/device.h>
+ #include <linux/delay.h>
+@@ -718,3 +719,75 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+ 	return PCI_ERS_RESULT_NEED_RESET;
  }
- EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, CXL);
- 
-+static void combine_coordinates(struct access_coordinate *c1,
-+				struct access_coordinate *c2)
-+{
-+		if (c2->write_bandwidth)
-+			c1->write_bandwidth = min_t(unsigned int,
-+						    c1->write_bandwidth,
-+						    c2->write_bandwidth);
-+		c1->write_latency += c2->write_latency;
+ EXPORT_SYMBOL_NS_GPL(cxl_error_detected, CXL);
 +
-+		if (c2->read_bandwidth)
-+			c1->read_bandwidth = min_t(unsigned int,
-+						   c1->read_bandwidth,
-+						   c2->read_bandwidth);
-+		c1->read_latency += c2->read_latency;
++extern const unsigned char pcie_link_speed[];
++
++static enum pci_bus_speed get_link_speed(struct pci_dev *pdev)
++{
++	u16 linkstat;
++	int err;
++
++	err = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &linkstat);
++	if (err)
++		return -EINVAL;
++
++	return pcie_link_speed[linkstat & PCI_EXP_LNKSTA_CLS];
++}
++
++static int pci_bus_speed_to_mbps(enum pci_bus_speed speed)
++{
++	switch (speed) {
++	case PCIE_SPEED_2_5GT:
++		return 2500;
++	case PCIE_SPEED_5_0GT:
++		return 5000;
++	case PCIE_SPEED_8_0GT:
++		return 8000;
++	case PCIE_SPEED_16_0GT:
++		return 16000;
++	case PCIE_SPEED_32_0GT:
++		return 32000;
++	case PCIE_SPEED_64_0GT:
++		return 64000;
++	default:
++		break;
++	}
++
++	return -EINVAL;
++}
++
++static int cxl_flit_size(struct pci_dev *pdev)
++{
++	if (cxl_pci_flit_256(pdev))
++		return 256;
++
++	return 68;
 +}
 +
 +/**
-+ * cxl_port_get_perf_coordinates - Retrieve performance numbers stored in dports
-+ *				   of CXL path
-+ * @port: endpoint cxl_port
-+ * @coord: output performance data
++ * cxl_pci_get_latency - calculate the link latency for the PCIe link
++ * @pdev - PCI device
 + *
-+ * Return: errno on failure, 0 on success.
++ * return: calculated latency or 0 for no latency
++ *
++ * CXL Memory Device SW Guide v1.0 2.11.4 Link latency calculation
++ * Link latency = LinkPropagationLatency + FlitLatency + RetimerLatency
++ * LinkProgationLatency is negligible, so 0 will be used
++ * RetimerLatency is assumed to be negligible and 0 will be used
++ * FlitLatency = FlitSize / LinkBandwidth
++ * FlitSize is defined by spec. CXL rev3.0 4.2.1.
++ * 68B flit is used up to 32GT/s. >32GT/s, 256B flit size is used.
++ * The FlitLatency is converted to picoseconds.
 + */
-+int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
-+				      struct access_coordinate *coord)
++long cxl_pci_get_latency(struct pci_dev *pdev)
 +{
-+	struct access_coordinate c = {
-+		.read_bandwidth = UINT_MAX,
-+		.write_bandwidth = UINT_MAX,
-+	};
-+	struct cxl_port *iter = port;
-+	struct cxl_dport *dport;
-+	struct pci_dev *pdev;
-+	unsigned int bw;
++	long bw;
 +
-+	if (!is_cxl_endpoint(port))
-+		return -EINVAL;
-+
-+	dport = iter->parent_dport;
-+	while (iter && !is_cxl_root(iter)) {
-+		combine_coordinates(&c, &dport->coord);
-+		c.write_latency += dport->link_latency;
-+		c.read_latency += dport->link_latency;
-+
-+		if (dport->genport_coord)
-+			combine_coordinates(&c, dport->genport_coord);
-+
-+		iter = to_cxl_port(iter->dev.parent);
-+		dport = iter->parent_dport;
-+	}
-+
-+	/* Get the calculated PCI paths bandwidth */
-+	pdev = to_pci_dev(port->uport->parent);
-+	bw = pcie_bandwidth_available(pdev, NULL, NULL, NULL);
-+	if (bw == 0)
-+		return -ENXIO;
++	bw = pci_bus_speed_to_mbps(get_link_speed(pdev));
++	if (bw < 0)
++		return 0;
 +	bw /= BITS_PER_BYTE;
 +
-+	c.write_bandwidth = min_t(unsigned int, c.write_bandwidth, bw);
-+	c.read_bandwidth = min_t(unsigned int, c.read_bandwidth, bw);
-+
-+	*coord = c;
-+
-+	return 0;
++	return cxl_flit_size(pdev) * MEGA / bw;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_endpoint_get_perf_coordinates, CXL);
++EXPORT_SYMBOL_NS_GPL(cxl_pci_get_latency, CXL);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 60693c3f85f6..e4f75847b851 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -751,6 +751,9 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
+ 	if (rc)
+ 		return ERR_PTR(rc);
+ 
++	if (parent_dport && dev_is_pci(uport))
++		port->pci_latency = cxl_pci_get_latency(to_pci_dev(uport));
 +
- /* for user tooling to ensure port disable work has completed */
- static ssize_t flush_store(struct bus_type *bus, const char *buf, size_t count)
- {
+ 	return port;
+ 
+ err:
+@@ -1008,6 +1011,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+ 	if (rc)
+ 		return ERR_PTR(rc);
+ 
++	if (dev_is_pci(dport_dev))
++		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
++
+ 	return dport;
+ }
+ 
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 033b822a20f2..0c8952e568cc 100644
+index 16fc14d43aa4..c1e2c3703a63 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -858,6 +858,9 @@ struct qtg_dsm_input {
- 	__le32 wr_bw;
+@@ -562,6 +562,7 @@ struct cxl_dax_region {
+  * @depth: How deep this port is relative to the root. depth 0 is the root.
+  * @cdat: Cached CDAT data
+  * @cdat_available: Should a CDAT attribute be available in sysfs
++ * @pci_latency: Upstream latency in picoseconds
+  */
+ struct cxl_port {
+ 	struct device dev;
+@@ -584,6 +585,7 @@ struct cxl_port {
+ 		size_t length;
+ 	} cdat;
+ 	bool cdat_available;
++	long pci_latency;
  };
  
-+int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
-+				      struct access_coordinate *coord);
+ struct qtg_dsm_input;
+@@ -625,6 +627,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+  * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+  * @port: reference to cxl_port that contains this downstream port
+  * @coord: access coordinates (performance) for switch from CDAT
++ * @link_latency: calculated PCIe downstream latency
+  */
+ struct cxl_dport {
+ 	struct device *dport;
+@@ -634,6 +637,7 @@ struct cxl_dport {
+ 	bool rch;
+ 	struct cxl_port *port;
+ 	struct access_coordinate coord;
++	long link_latency;
+ };
+ 
+ /**
+diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+index 0465ef963cd6..84c9f73c7d92 100644
+--- a/drivers/cxl/cxlpci.h
++++ b/drivers/cxl/cxlpci.h
+@@ -82,6 +82,19 @@ struct cdat_entry_header {
+ 	__le16 length;
+ } __packed;
+ 
++/*
++ * CXL v3.0 6.2.3 Table 6-4
++ * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
++ * mode, otherwise it's 68B flits mode.
++ */
++static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
++{
++	u16 lnksta2;
 +
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
++	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
++	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
++}
++
+ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
+ struct cxl_dev_state;
+ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+@@ -90,4 +103,6 @@ void read_cdat_data(struct cxl_port *port);
+ void cxl_cor_error_detected(struct pci_dev *pdev);
+ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+ 				    pci_channel_state_t state);
++long cxl_pci_get_latency(struct pci_dev *pdev);
++
+ #endif /* __CXL_PCI_H__ */
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index ea38bd49b0cf..ed39d133b70d 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -365,19 +365,6 @@ static bool is_cxl_restricted(struct pci_dev *pdev)
+ 	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
+ }
+ 
+-/*
+- * CXL v3.0 6.2.3 Table 6-4
+- * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+- * mode, otherwise it's 68B flits mode.
+- */
+-static bool cxl_pci_flit_256(struct pci_dev *pdev)
+-{
+-	u16 lnksta2;
+-
+-	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+-	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
+-}
+-
+ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+ {
+ 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
 
 
