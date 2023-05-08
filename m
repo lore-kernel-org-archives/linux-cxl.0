@@ -2,185 +2,100 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1FDC77B75
-	for <linux-cxl@archiver.kernel.org>; Mon,  8 May 2023 04:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374D7C77B73
+	for <linux-cxl@archiver.kernel.org>; Mon,  8 May 2023 08:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232515AbjEHEMz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 8 May 2023 00:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34036 "EHLO
+        id S232084AbjEHIZ5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 8 May 2023 04:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232625AbjEHEMq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 May 2023 00:12:46 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B53156B9;
-        Sun,  7 May 2023 21:12:44 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-55a2691637bso60916277b3.0;
-        Sun, 07 May 2023 21:12:44 -0700 (PDT)
+        with ESMTP id S233751AbjEHIZw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 8 May 2023 04:25:52 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B161CFCB;
+        Mon,  8 May 2023 01:25:43 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1aae5c2423dso41727745ad.3;
+        Mon, 08 May 2023 01:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683519164; x=1686111164;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uxdv+tiHHxtMSCUmmF2nhE4zPo46/gCC6/c5WgX+QIo=;
-        b=Wd58uvQPNeDTpMwH6WaqgsBQ3GRiTlydZigfGn7McqrCSg65FggvmsmYZJxu2TqIsD
-         V3U61Kj8rQskRyvJycoTQJg7BXAqLDmWRIbTlPdSzWmFtj1ZgdY684GdORVm2FbZt/n/
-         i+7HT95uhhoubyH3klQ4Bf7whs1G/TiT/sCXjz6RZBS4MJl3ifkdA5vk8a6QYCNgO4Ts
-         iQrWKzq5KlutWxcWypQX7drRSaK4AsURwelA1L5ItRk2UDClmzuHqVMfw9JhywZKYsRB
-         0OamDe9CYNgPGFjOuA7Kg4HjHMNbssRIMR8doCRnT9pQk3jdRHS6TiTUoFgSPM5GuH+u
-         35Ew==
+        d=gmail.com; s=20221208; t=1683534343; x=1686126343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0pyFK5UrdspkzOxfeQrbNUYCVL5SWjB+7sHgXNn87wM=;
+        b=ZnTDU5UlUypgjlFsIhPqVdp/u8atpbTXSozUFcJOn0Bh9xlI+ZylDPqrrlLlcxpNrh
+         4lo22/NA4H586IAD0y+bqDbTbZJxEiW99NlZar/ZjWgCUMzWgjD32PrPhlwih45c0+7l
+         j4kEj5H1MCszviFs/pR4AOstcDmwaHxkQmRYgBnH72h6KSBvHDr2qtbhQCSjhcQDOWOx
+         26NIAWCrMUZZpoZ8keMa92dKlnQ14ri4Fztyw2SaNaujqekxykcQrlcs9wszbCvmpOe0
+         nD1k4eJ6qjAH1HkvTgJFGVEW2Spi3EhW5Xis9g9Gnwmhbm9uwuST8KoUPH3R1ZSyRRky
+         FPWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683519164; x=1686111164;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uxdv+tiHHxtMSCUmmF2nhE4zPo46/gCC6/c5WgX+QIo=;
-        b=gTiWB2XO+dDIL3VP3/7mwHiGpJy4VoR5RbFiDr9nC5Stxp8lZOmpmLSKztlACW73bt
-         ZGK6Z8ouuKFTKzPRmQaVm88Wc0NWAuVTANNf1EvFCDnVyuvfWopGwNZT/duz4d0bX9mt
-         3oN1zNGLRA3dPcaheD9Bnh/+gG966c2K9WjE6wIAAHzQNsIuMVzIvsihgu0bDNKkz5OP
-         sH7OtTB5iVh80Zziu0EhZD52qdrUbXyYvBZV0SbYNlPRXN8UDjxp7N1XpJZwy5R/fLIP
-         dJco4woaJgKv+GvxQgYX9tyPwHoV5sNpfew/2ZjdZfqlF1mSLFkFX1FITEg3f8vxeLQz
-         Bvfw==
-X-Gm-Message-State: AC+VfDx5WXm3mvUOpIIjgwhsQXQkaA0zUxA2CZA2jWn1uHHIeGkXYRue
-        SOEpyYoXwUeBSDhC6VUJS2nIBXcGKQ7EDj6Y3y4=
-X-Google-Smtp-Source: ACHHUZ45lHALaQcQvMDQx70o3+FskyEF6hIFCBV4J2FjWZpgLxb3FLsABol3CIdeafjYfjUXc14rPi7G0RPYg4RVFYM=
-X-Received: by 2002:a81:a015:0:b0:55a:4117:a8f2 with SMTP id
- x21-20020a81a015000000b0055a4117a8f2mr9831603ywg.4.1683519163750; Sun, 07 May
- 2023 21:12:43 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683534343; x=1686126343;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0pyFK5UrdspkzOxfeQrbNUYCVL5SWjB+7sHgXNn87wM=;
+        b=VX85KCLjJYu97auCMLahREJFEHuslaKLkxLN6uwGrFnWNV3PKHvsl/tFAhG9LXP80e
+         58Oi/z2T6NmGG3Ch+Rgc83mEEPQyKvdJa//fuYjLlorCYEkKi/WbuI4frO2y/dI9uYS8
+         LzGuN6Qzb+xTcFJCsFACnolOjLrkaLkzOeor1U6EUrmIJNWoZoOoVX/bDwR+Sa4DZlUa
+         pEt/fQfIZY8QpnyLefCyFXMpvzTXakba3yIzM/0wSQJK4N1p9MruhBQIx23H8NEpIO5A
+         65Xt94QiTaqq5bKM2oPmtsZIpDBTLRwBkMQ6O5UEabqJxaoMni5tDBlflTWoi8UzUpQI
+         o4/Q==
+X-Gm-Message-State: AC+VfDypD2KMtXxpELprPammm57z6g5cytJ69rSuLYgM9ABfRNzgPEKa
+        u52H7un5lqftlw4xg3RtSxSUphnL4Jc=
+X-Google-Smtp-Source: ACHHUZ6Jm+eD4xs2UCPFuDlauaPRQzMGRBPhk2GINWrHWfiiEoSYenh9C4ZNUTvC4fd6HIskef7XvA==
+X-Received: by 2002:a17:902:9349:b0:1a9:4fa1:2747 with SMTP id g9-20020a170902934900b001a94fa12747mr9006870plp.47.1683534343103;
+        Mon, 08 May 2023 01:25:43 -0700 (PDT)
+Received: from cxl-test.. ([103.181.222.211])
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902ea8600b0019c13d032d8sm6497933plb.253.2023.05.08.01.25.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 01:25:42 -0700 (PDT)
+From:   Raghu Halharvi <raghuhack78@gmail.com>
+To:     linux-cxl@vger.kernel.org,
+        Alison Schofield <alison.schofield@intel.com>,
+        raghuhack78@gmail.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, vishal.l.verma@intel.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Fixing check patch styling issues
+Date:   Mon,  8 May 2023 08:25:29 +0000
+Message-Id: <20230508082531.136281-1-raghuhack78@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230428012235.119333-1-raghuhack78@gmail.com>
- <3235466.44csPzL39Z@suse> <ZFLaG8jHHXmRp67w@aschofie-mobl2>
- <2755196.BEx9A2HvPv@suse> <ZFPN340/UstRWtmR@aschofie-mobl2>
-In-Reply-To: <ZFPN340/UstRWtmR@aschofie-mobl2>
-From:   RAGHU H <raghuhack78@gmail.com>
-Date:   Mon, 8 May 2023 09:42:36 +0530
-Message-ID: <CAGWUp4oJsmwObs=Q8UYZP-0F6BO+gE1+YZYbYvg=G75WGWbLWw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] cxl/mbox: Remove redundant dev_err() after failed
- mem alloc
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        linux-cxl@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello All,
+v3 changes:
+- Update the cover letter and commit message with full author
+  name(Fabio/Alison)
+- Correct the "typo error" in commit message(Fabio)
 
-Just checked the response to this patch, sorry for responding late here.
+v2 changes:
+Thanks Alison, Ira for your comments, modified the v1 patches as
+suggested.
+Dropped the patch containing tab changes in port.c
 
-I will take a note on all the points raised and will follow the
-guidelines in future patches, and will correct this patch too.
+v1 cover letter:
+The following patches are cleanup or fixing the styling issues found
+using checkpatch
 
-Regards
-Raghu
+In cxl/core/mbox.c, in case of null check failure, returning errno or
+-ENOMEM in this case is good enough, removing the redundant dev_err
+message.
 
+In cxl/core/region.c, the else is not required after the return
+statement, cleaned it up.
 
-On Thu, May 4, 2023 at 8:53=E2=80=AFPM Alison Schofield
-<alison.schofield@intel.com> wrote:
->
-> On Thu, May 04, 2023 at 12:46:37PM +0200, Fabio wrote:
-> > On gioved=C3=AC 4 maggio 2023 00:03:07 CEST Alison Schofield wrote:
-> > > On Wed, May 03, 2023 at 08:32:37PM +0200, Fabio wrote:
-> > > > On venerd=C3=AC 28 aprile 2023 03:22:34 CEST Raghu H wrote:
-> >
-> > [...]
-> >
-> > > > >
-> > > > > Signed-off-by: Raghu H <raghuhack78@gmail.com>
-> > > >
-> > > > Is "Raghu H" the name you sign legal documents with?
-> > >
-> > > Fabio,
-> > > Rather than asking a specific question to determine if this is a
-> > > valid SOB, let's just point folks to the documentation to figure
-> > > it out themselves.
-> > > I'm aware that the 'sign legal documents' test
-> > > has been used in the past, but kernel only actually requires a
-> > > known identity.
-> > >
-> > > https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html=
-#sign-you
-> > > r-work-the-developer-s-certificate-of-origin
-> > > https://github.com/cncf/foundation/blob/659fd32c86dc/dco-guidelines.m=
-d
-> >
-> > Alison,
-> >
-> > Thanks for your suggestions.
-> >
-> > I have just a couple of questions about this issue...
-> >
-> > 1) How do we know that the "real name", which the Linux official docume=
-ntation
-> > refers to, should be interpreted in accordance to the document pointed =
-by the
-> > second link you provided?
-> >
-> > I mean, how can we be sure that the official documentation should be
-> > interpreted according to the second link, since it doesn't even cite th=
-at
-> > document from CNCF?
-> >
-> > Can you provide links to documents / LKML's threads that state agreemen=
-t of
-> > our Community about the "relaxed" interpretation by CNCF?
->
-> Citation is hidden it git history. See:
-> d4563201f33a ("Documentation: simplify and clarify DCO contribution examp=
-le language")
->
-> >
-> > 2) It looks that some maintainers (e.g., Greg K-H) still interpret "[] =
-using
-> > your real name (sorry, no pseudonyms or anonymous contributions.)" in a
-> > "strict" and "common" sense.
->
-> See the commit log above. The language was updated to say
-> "using a known identity (sorry, no anonymous contributions.)"
->
-> >
-> > Can you remember that Greg refused all patches from "Kloudifold" and wh=
-y? If
-> > not, please take a look at the following two questions / objections fro=
-m Greg:
-> > https://lore.kernel.org/linux-staging/ZCQkPr6t8IOvF6bk@kroah.com/ and
-> > https://lore.kernel.org/linux-staging/ZBCjK2BXhfiFooeO@kroah.com/.
->
-> The second link above is Greg recognizing that known pseudonyms are
-> allowed.
->
-> >
-> > It seems that this issue it's not yet settled.
-> > Am I overlooking something?
->
-> Hey, I'm not meaning to jump on you for asking Raghu the question.
-> I realize you are being helpful to someone who is submitting their first
-> patch. I'm just saying to make the submitter aware of the guideline and
-> put the burden on them to make sure they're using a known identity.
->
-> Sometimes, what one person thinks of as 'common' is not. Let's refer to
-> the docs and not add out personal or historical layers of interpretation
-> on top of it. (The legal doc signing question may not apply to everyone.)
->
-> Alison
->
-> >
-> > Again thanks,
-> >
-> > Fabio
-> >
-> > > > If not, please send a new version signed-off-by your full legal nam=
-e.
-> > > > Otherwise... sorry for the noise.
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Fabio
-> >
-> >
-> >
+Verified the build and sanity by booting the guest VM using the freshly
+built components.
+
+Raghu Halharvi (2):
+  cxl/mbox: Remove redundant dev_err() after failed mem alloc
+  cxl/region: Remove else after return statement
+
+ drivers/cxl/core/mbox.c   | 4 +---
+ drivers/cxl/core/region.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 7 deletions(-)
+
+-- 
+2.39.2
+
