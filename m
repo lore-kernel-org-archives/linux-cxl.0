@@ -2,103 +2,85 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BE5C77B75
-	for <linux-cxl@archiver.kernel.org>; Tue,  9 May 2023 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193ABC77B7C
+	for <linux-cxl@archiver.kernel.org>; Tue,  9 May 2023 17:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234596AbjEIQwt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 9 May 2023 12:52:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
+        id S235136AbjEIRXc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 9 May 2023 13:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234567AbjEIQwo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 May 2023 12:52:44 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F5F5262;
-        Tue,  9 May 2023 09:52:38 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-24df4ef05d4so5498548a91.2;
-        Tue, 09 May 2023 09:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683651157; x=1686243157;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eZGNkwcKrfK6pQ6D6N1O4LbckY0KJJq0dY3vsTxwcyE=;
-        b=AGyY3WW2FBb4ew7iD+Ep/FDnd4nymRYk0dx7wapzvRvgYFE/mCxPhometBJIMToJp0
-         XYUaM6mYNZDJdPc44pHh/juPGKoQAU19mgg6yTldNptpjoQzgKqeL1MVMCl71cT+t+0k
-         RznVihQBSYOnj82r/NfR1n+7XRZ9LLXLCXSgxlv6dU2bezps+t48ksAGP1+7f1ohvKwe
-         rbHFAR0s3hRKO4pBraKJ6nJN8vrtVSBzQbcgYtYuNh+LYyN3FYhPQoez7jv5oI8rAlFd
-         vyiwLgS5kceagWtGi2XglIRrxeLEnJz8IACWpif+kPFRfbGGnLWzVg4wF4hc1TCL2yqr
-         YW8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683651157; x=1686243157;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eZGNkwcKrfK6pQ6D6N1O4LbckY0KJJq0dY3vsTxwcyE=;
-        b=TQHPBg3n3S2WByGMg6EeMBVmYLqFPb87smeGVM1u7teVg0DcSUQDia0fwaWFGpPPJW
-         ehgxQR16kItsusoUXAa0Da10y8/w8CWNOUTilZoGcPP6+ZykpkAESc1WkVk00Ttw+BPw
-         SYntQciGzjRDEjo2c+GBa4GmHxGTqouTqJxlt84wC44zLnrlwzsQ31B5xmR8+LSQmtQ4
-         qoa9tyWGfgfWCG3m8Ev+RSBb2udNXPN8Vzb6IcN3zZ740uTYGipJC3zVSk/m+Lqib3+a
-         v8wL9D9fShOmfzW08MxgMNBrHmq/1SqeRGQ/h12gZ1sH6cymWiG8vzhtQX9wkLUGPmq3
-         NuCQ==
-X-Gm-Message-State: AC+VfDxAPJBUlVEnqwsSKha9CZNXUVZaA/wHZA1jkpyWdDgYGB9RYGsv
-        y595t2qDD7+Iy1GTWnERuNlHjcMwiok=
-X-Google-Smtp-Source: ACHHUZ6VFYARzED19gr6KhnH3Y0j9WNvGj1L9u8aYvUf37vsMdj1rHkYjVj2jlB8EBfb/B6n7ksk9g==
-X-Received: by 2002:a17:90a:608f:b0:24e:3b69:a87f with SMTP id z15-20020a17090a608f00b0024e3b69a87fmr14040121pji.25.1683651157268;
-        Tue, 09 May 2023 09:52:37 -0700 (PDT)
-Received: from cxl-test.. ([103.181.222.211])
-        by smtp.gmail.com with ESMTPSA id lw6-20020a17090b180600b002505f8b9c53sm5503986pjb.38.2023.05.09.09.52.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 May 2023 09:52:36 -0700 (PDT)
-From:   Raghu Halharvi <raghuhack78@gmail.com>
-To:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        raghuhack78@gmail.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com
-Cc:     linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v5 2/2] cxl/region: Remove else after return statement
-Date:   Tue,  9 May 2023 16:52:17 +0000
-Message-Id: <20230509165218.139568-3-raghuhack78@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230509165218.139568-1-raghuhack78@gmail.com>
-References: <20230509165218.139568-1-raghuhack78@gmail.com>
+        with ESMTP id S234985AbjEIRXa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 May 2023 13:23:30 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC242D79
+        for <linux-cxl@vger.kernel.org>; Tue,  9 May 2023 10:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683653000; x=1715189000;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=M5PazGlCXvjC+zyM0X70XOVeZlM614co03KycejRQlM=;
+  b=RztywSJ38IA2cvGGFiEch3EAZ6JO990kulzfXoj4NKcTtVY3cFmzRVtV
+   JCuz0mhCvk9YnrsawRCnQh1IZ1oOKsDvjo0wFxWf1yCxOK8dioTtUBD8t
+   DLqQ4Z+thqhyxXgbezlVIJL5g4g7VwcRNO7xGNd9v2Q2Kg4jqWAuOy5G1
+   Gxi5S9mKH9V8EPkJDHKzk3wJAd84JtTSYI7j52JRgcHRP6dCayDta0J6R
+   E8jsjgSmjsOIwHu0HVt3eLEgCDg2XMi36vmt+O1C3i3J7jUYQT7i2Bv7A
+   togd0ZrZDlQw7kKQSG8nu2BM2VFttKDhbWd05utwvxjkiFvUdIUvS8x1I
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="339231843"
+X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
+   d="scan'208";a="339231843"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 10:22:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="810793559"
+X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
+   d="scan'208";a="810793559"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.97.226]) ([10.212.97.226])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 10:22:35 -0700
+Message-ID: <9572825f-9b1d-8a41-808c-49048d64affa@intel.com>
+Date:   Tue, 9 May 2023 10:22:35 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH] cxl/region: Fix typo in region comment in RAM mode
+Content-Language: en-US
+To:     Minwoo Im <minwoo.im.dev@gmail.com>, linux-cxl@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+References: <20230509153821.7740-1-minwoo.im.dev@gmail.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230509153821.7740-1-minwoo.im.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Issue found with checkpatch
 
-The else section here is redundant after return statement, removing it.
-Sanity and correctness is not affected due to this fix.
 
+On 5/9/23 8:38 AM, Minwoo Im wrote:
+> s/manged/managed
+> 
+> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Raghu Halharvi <raghuhack78@gmail.com>
----
- drivers/cxl/core/region.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index f29028148806..a46d6ad9ef0a 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2666,11 +2666,11 @@ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
- 				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
- 			clear_bit(CXL_REGION_F_INCOHERENT, &cxlr->flags);
- 			return 0;
--		} else {
--			dev_err(&cxlr->dev,
--				"Failed to synchronize CPU cache state\n");
--			return -ENXIO;
- 		}
-+
-+		dev_err(&cxlr->dev,
-+			"Failed to synchronize CPU cache state\n");
-+		return -ENXIO;
- 	}
- 
- 	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
--- 
-2.39.2
-
+> ---
+>   drivers/cxl/core/region.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index f822de44bee0..d5832a1d1da3 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2871,7 +2871,7 @@ static int cxl_region_probe(struct device *dev)
+>   		return devm_cxl_add_pmem_region(cxlr);
+>   	case CXL_DECODER_RAM:
+>   		/*
+> -		 * The region can not be manged by CXL if any portion of
+> +		 * The region can not be managed by CXL if any portion of
+>   		 * it is already online as 'System RAM'
+>   		 */
+>   		if (walk_iomem_res_desc(IORES_DESC_NONE,
