@@ -2,58 +2,57 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E0DC77B7C
-	for <linux-cxl@archiver.kernel.org>; Tue,  9 May 2023 17:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AFAC77B7C
+	for <linux-cxl@archiver.kernel.org>; Tue,  9 May 2023 17:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234387AbjEIRdW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 9 May 2023 13:33:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
+        id S231467AbjEIRdn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 9 May 2023 13:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233976AbjEIRdV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 May 2023 13:33:21 -0400
+        with ESMTP id S234420AbjEIRdm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 May 2023 13:33:42 -0400
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD9C40F6
-        for <linux-cxl@vger.kernel.org>; Tue,  9 May 2023 10:33:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7916440F5
+        for <linux-cxl@vger.kernel.org>; Tue,  9 May 2023 10:33:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683653600; x=1715189600;
+  t=1683653621; x=1715189621;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=w8AipMO1U9LQYAAbXPzQrMRS5siZPMtjqe8kugTALQI=;
-  b=hEQuaO7Q1yyqlQLhsFJzNyGS8sps96/MvxeLXQZWORsmnMyX8EQwSgmx
-   ze6O0UaodqXdHVTSXnyw8JuiCwrA7gAp7CsERsxKBnCJm+s441FIJLiCn
-   VnxV7Y2zm1Xf2aVNpGdYmjr6XMQWQRD5QM/4X8a75f9x5u/xzuZrSckcm
-   N6E2nRrP8uKC0s//dwKfMxbGaww8y2llqnuaarV5KM1UfwiJYEYJl/IOk
-   taXZHQBirD4Gg07xHvaVzgE5CNoLr970sJuLB4pyzOknxfu8so65hALfb
-   U5m0WEJgsrcAIqAjtpGSL64+fiU3Rshrs8siOLR/GDujoun9HEF75nT/F
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="353066125"
+  bh=acyJmam4GLAlrg1eXjx3+Yd/8EeA4Ra0u9gObckkIp0=;
+  b=a7nX66+6ZpEVmm9EEkJWNKZmolSLWaoB4mfYvN1foy2ykdcjflYq/ua9
+   Ns/+vXD/11Etpa3NV4sVvJVvfRW1lO2wkdS3LR+7EGokMXpjXt/PAe4Ql
+   gUAIlT4QZg167XwXGSkbgd+Evn4ac/c+p6mOQ13ZQunXJficDNT0Dst8q
+   L5hwS87nlw78Rt+3WfxLOGneuQ5jc98RK++DvTt/F1ifGOfM4XPa1ZN67
+   nI1QA5eQSFqndEkhaZuVqiwgCyLZCjvlalBkbRT5UFgCBNif8LnLCOG9B
+   ckf00i83yiVnx9yOkPXHXGI3TDGW7IWp3HJ/noeP6bEWPdYmCAD9+2B+F
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="353066471"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="353066125"
+   d="scan'208";a="353066471"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 10:32:31 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 10:33:28 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="731824726"
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="731825198"
 X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="731824726"
+   d="scan'208";a="731825198"
 Received: from dcovax-mobl.amr.corp.intel.com (HELO [10.212.97.226]) ([10.212.97.226])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 10:32:31 -0700
-Message-ID: <fa12c7b5-100b-161b-b36d-8aa0b342c24e@intel.com>
-Date:   Tue, 9 May 2023 10:32:30 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 10:33:28 -0700
+Message-ID: <dd2b7ea6-ee1d-9c49-0dc0-311269f786e6@intel.com>
+Date:   Tue, 9 May 2023 10:33:27 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [ndctl PATCH 2/3] cxl: region: remove redundant func name from
- error
+Subject: Re: [ndctl PATCH 3/3] cxl: fix changed function name in a comment
 Content-Language: en-US
 To:     Minwoo Im <minwoo.im.dev@gmail.com>, linux-cxl@vger.kernel.org,
         nvdimm@lists.linux.dev
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>
 References: <20230509152427.6920-1-minwoo.im.dev@gmail.com>
- <20230509152427.6920-3-minwoo.im.dev@gmail.com>
+ <20230509152427.6920-4-minwoo.im.dev@gmail.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230509152427.6920-3-minwoo.im.dev@gmail.com>
+In-Reply-To: <20230509152427.6920-4-minwoo.im.dev@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -63,39 +62,27 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 5/9/23 8:24 AM, Minwoo Im wrote:
-> If user does not provide `-s, --size` option and there's no ep_min_size
-> configured, it prints error log like the following.  This patch removes
-> redundant repeated function name from the log.
-> 
-> Before:
-> 
->    root@vm:~/work# cxl create-region -m -d decoder0.0 -w 1 -g 1024 mem0
->    cxl region: create_region: create_region: unable to determine region size
->    cxl region: cmd_create_region: created 0 regions
-> 
-> After:
->    root@vm:~/work# cxl create-region -m -d decoder0.0 -w 1 -g 1024 mem0
->    cxl region: create_region: unable to determine region size
->    cxl region: cmd_create_region: created 0 regions
+> cxl_memdev_target_find_decoder() has been renamed to
+> cxl_memdev_find_decoder in Commit 21b089025178 ("cxl: add a
+> 'create-region' command").  Fix function name in a comment.
 > 
 > Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   cxl/region.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   cxl/region.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/cxl/region.c b/cxl/region.c
-> index 07ce4a319fd0..71f152d9e5a5 100644
+> index 71f152d9e5a5..45f0c6a3771c 100644
 > --- a/cxl/region.c
 > +++ b/cxl/region.c
-> @@ -607,7 +607,8 @@ static int create_region(struct cxl_ctx *ctx, int *count,
->   	} else if (p->ep_min_size) {
->   		size = p->ep_min_size * p->ways;
->   	} else {
-> -		log_err(&rl, "%s: unable to determine region size\n", __func__);
-> +		log_err(&rl, "unable to determine region size\n");
-> +
->   		return -ENXIO;
->   	}
->   	max_extent = cxl_decoder_get_max_available_extent(p->root_decoder);
+> @@ -676,7 +676,7 @@ static int create_region(struct cxl_ctx *ctx, int *count,
+>   		}
+>   		if (cxl_decoder_get_mode(ep_decoder) != p->mode) {
+>   			/*
+> -			 * The memdev_target_find_decoder() helper returns a free
+> +			 * The cxl_memdev_find_decoder() helper returns a free
+>   			 * decoder whose size has been checked for 0.
+>   			 * Thus it is safe to change the mode here if needed.
+>   			 */
