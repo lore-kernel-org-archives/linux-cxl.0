@@ -2,194 +2,232 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6297C77B75
-	for <linux-cxl@archiver.kernel.org>; Tue,  9 May 2023 22:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB03C7EE22
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 May 2023 16:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235134AbjEIWbv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 9 May 2023 18:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33046 "EHLO
+        id S231268AbjEJQOw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 May 2023 12:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231467AbjEIWbv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 9 May 2023 18:31:51 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639BE10F7;
-        Tue,  9 May 2023 15:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683671507; x=1715207507;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1R2Gg6wlaBtXe+4zx8PrBpi9i8hSxKDH4nvvTPsLK2E=;
-  b=RFurPuMGXS6KGqG2LxYWQzmrO4vLHIPV7BLP9GZ8HodizhjSwVXCtPob
-   YjbkyAdsEtczC9JWeB+A5NNnN0ReIVM5chBaFa9CM0zpwv7gg98SGP1px
-   HJo1x50zNlVpeFDEySw/UadnTztIJ9lwcBl25alyIiD957s3EuyhEL6Mh
-   ltY2eVlOp+YU8y7frSWq0j8qRUvHK/H4Rqk7lEdOQZPQhAmNNV4U6qa7w
-   i1Wzn37T4HUHVrquzV8ZJu6VxNyuRFFjKUedi72N4ntH1AMYMV/uE66b/
-   F4JG3OMmw0U2WoRyEMGsSknG4vVGgNPEoDs4hBP4QVBBidC2PKtlelR/u
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="330430580"
-X-IronPort-AV: E=Sophos;i="5.99,263,1677571200"; 
-   d="scan'208";a="330430580"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 15:31:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="649520053"
-X-IronPort-AV: E=Sophos;i="5.99,263,1677571200"; 
-   d="scan'208";a="649520053"
-Received: from dcovax-mobl.amr.corp.intel.com (HELO [10.212.97.226]) ([10.212.97.226])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 15:31:43 -0700
-Message-ID: <7d35c9f2-9070-32d0-2ddc-ff6b0a8b5c26@intel.com>
-Date:   Tue, 9 May 2023 15:31:43 -0700
+        with ESMTP id S229826AbjEJQOv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 May 2023 12:14:51 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EF87AB1;
+        Wed, 10 May 2023 09:14:49 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QGg7v6gD0z67mYL;
+        Thu, 11 May 2023 00:14:03 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 10 May
+ 2023 17:14:46 +0100
+Date:   Wed, 10 May 2023 17:14:45 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <rafael@kernel.org>, <linux-acpi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] base/node / acpi: Change 'node_hmem_attrs' to
+ 'access_coordinates'
+Message-ID: <20230510171445.00004cea@Huawei.com>
+In-Reply-To: <168332248685.2190392.1983307884583782116.stgit@djiang5-mobl3>
+References: <168332248685.2190392.1983307884583782116.stgit@djiang5-mobl3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v7 8/8] cxl/test: Simulate event log overflow
-Content-Language: en-US
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com>
- <20221216-cxl-ev-log-v7-8-2316a5c8f7d8@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221216-cxl-ev-log-v7-8-2316a5c8f7d8@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Fri, 05 May 2023 14:34:46 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> Dan Williams suggested changing the struct 'node_hmem_attrs' to
+> 'access_coordinates' [1]. The struct is a container of r/w-latency and
+> r/w-bandwidth numbers. Moving forward, this container will also be used by
+> CXL to store the performance characteristics of each link hop in
+> the PCIE/CXL topology. So, where node_hmem_attrs is just the access
+> parameters of a memory-node, access_coordinates applies more broadly
+> to hardware topology characteristics.
+
+Not that it hugely matters, but why the term "coordinates"?
+Looks like Dan used that term, but I've not come across it being applied
+in this circumstances and it isn't a case of being immediately obvious
+to me what it means.
+
+If it is just another vague entry in kernel word soup then I don't really
+mind the term, but nice to give some reasoning in patch description.
+
+Patch otherwise looks fine to me.
+
+Jonathan
 
 
-On 1/17/23 10:53 PM, Ira Weiny wrote:
-> Log overflow is marked by a separate trace message.
 > 
-> Simulate a log with lots of messages and flag overflow until space is
-> cleared.
+> [1]: http://lore.kernel.org/r/64471313421f7_1b66294d5@dwillia2-xfh.jf.intel.com.notmuch/
 > 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
-> Changes in v7:
->          <no change>
-> ---
->   tools/testing/cxl/test/mem.c | 50 +++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 49 insertions(+), 1 deletion(-)
+>  drivers/acpi/numa/hmat.c |   20 ++++++++++----------
+>  drivers/base/node.c      |   12 ++++++------
+>  include/linux/node.h     |    8 ++++----
+>  3 files changed, 20 insertions(+), 20 deletions(-)
 > 
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 00bf19a68604..9263b04d35f7 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -78,6 +78,8 @@ struct mock_event_log {
->   	u16 clear_idx;
->   	u16 cur_idx;
->   	u16 nr_events;
-> +	u16 nr_overflow;
-> +	u16 overflow_reset;
->   	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX];
->   };
->   
-> @@ -116,6 +118,7 @@ static void event_reset_log(struct mock_event_log *log)
->   {
->   	log->cur_idx = 0;
->   	log->clear_idx = 0;
-> +	log->nr_overflow = log->overflow_reset;
->   }
->   
->   /* Handle can never be 0 use 1 based indexing for handle */
-> @@ -147,8 +150,12 @@ static void mes_add_event(struct mock_event_store *mes,
->   		return;
->   
->   	log = &mes->mock_logs[log_type];
-> -	if (WARN_ON(log->nr_events >= CXL_TEST_EVENT_CNT_MAX))
-> +
-> +	if ((log->nr_events + 1) > CXL_TEST_EVENT_CNT_MAX) {
-> +		log->nr_overflow++;
-> +		log->overflow_reset = log->nr_overflow;
->   		return;
-> +	}
->   
->   	log->events[log->nr_events] = event;
->   	log->nr_events++;
-> @@ -159,6 +166,7 @@ static int mock_get_event(struct cxl_dev_state *cxlds,
->   {
->   	struct cxl_get_event_payload *pl;
->   	struct mock_event_log *log;
-> +	u16 nr_overflow;
->   	u8 log_type;
->   	int i;
->   
-> @@ -191,6 +199,19 @@ static int mock_get_event(struct cxl_dev_state *cxlds,
->   	if (!event_log_empty(log))
->   		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
->   
-> +	if (log->nr_overflow) {
-> +		u64 ns;
-> +
-> +		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
-> +		pl->overflow_err_count = cpu_to_le16(nr_overflow);
-> +		ns = ktime_get_real_ns();
-> +		ns -= 5000000000; /* 5s ago */
-> +		pl->first_overflow_timestamp = cpu_to_le64(ns);
-> +		ns = ktime_get_real_ns();
-> +		ns -= 1000000000; /* 1s ago */
-> +		pl->last_overflow_timestamp = cpu_to_le64(ns);
-> +	}
-> +
->   	return 0;
->   }
->   
-> @@ -231,6 +252,9 @@ static int mock_clear_event(struct cxl_dev_state *cxlds,
->   		}
->   	}
->   
-> +	if (log->nr_overflow)
-> +		log->nr_overflow = 0;
-> +
->   	/* Clear events */
->   	log->clear_idx += pl->nr_recs;
->   	return 0;
-> @@ -353,6 +377,30 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
->   		      (struct cxl_event_record_raw *)&mem_module);
->   	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
->   
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +		      (struct cxl_event_record_raw *)&dram);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +		      (struct cxl_event_record_raw *)&gen_media);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +		      (struct cxl_event_record_raw *)&mem_module);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +		      (struct cxl_event_record_raw *)&dram);
-> +	/* Overflow this log */
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
-> +
->   	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
->   	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
->   		      (struct cxl_event_record_raw *)&dram);
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index bba268ecd802..f9ff992038fa 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -62,7 +62,7 @@ struct memory_target {
+>  	unsigned int memory_pxm;
+>  	unsigned int processor_pxm;
+>  	struct resource memregions;
+> -	struct node_hmem_attrs hmem_attrs[2];
+> +	struct access_coordinate coord[2];
+>  	struct list_head caches;
+>  	struct node_cache_attrs cache_attrs;
+>  	bool registered;
+> @@ -227,24 +227,24 @@ static void hmat_update_target_access(struct memory_target *target,
+>  {
+>  	switch (type) {
+>  	case ACPI_HMAT_ACCESS_LATENCY:
+> -		target->hmem_attrs[access].read_latency = value;
+> -		target->hmem_attrs[access].write_latency = value;
+> +		target->coord[access].read_latency = value;
+> +		target->coord[access].write_latency = value;
+>  		break;
+>  	case ACPI_HMAT_READ_LATENCY:
+> -		target->hmem_attrs[access].read_latency = value;
+> +		target->coord[access].read_latency = value;
+>  		break;
+>  	case ACPI_HMAT_WRITE_LATENCY:
+> -		target->hmem_attrs[access].write_latency = value;
+> +		target->coord[access].write_latency = value;
+>  		break;
+>  	case ACPI_HMAT_ACCESS_BANDWIDTH:
+> -		target->hmem_attrs[access].read_bandwidth = value;
+> -		target->hmem_attrs[access].write_bandwidth = value;
+> +		target->coord[access].read_bandwidth = value;
+> +		target->coord[access].write_bandwidth = value;
+>  		break;
+>  	case ACPI_HMAT_READ_BANDWIDTH:
+> -		target->hmem_attrs[access].read_bandwidth = value;
+> +		target->coord[access].read_bandwidth = value;
+>  		break;
+>  	case ACPI_HMAT_WRITE_BANDWIDTH:
+> -		target->hmem_attrs[access].write_bandwidth = value;
+> +		target->coord[access].write_bandwidth = value;
+>  		break;
+>  	default:
+>  		break;
+> @@ -701,7 +701,7 @@ static void hmat_register_target_cache(struct memory_target *target)
+>  static void hmat_register_target_perf(struct memory_target *target, int access)
+>  {
+>  	unsigned mem_nid = pxm_to_node(target->memory_pxm);
+> -	node_set_perf_attrs(mem_nid, &target->hmem_attrs[access], access);
+> +	node_set_perf_attrs(mem_nid, &target->coord[access], access);
+>  }
+>  
+>  static void hmat_register_target_devices(struct memory_target *target)
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 2cada01c70da..fc0444b617d0 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -75,14 +75,14 @@ static BIN_ATTR_RO(cpulist, CPULIST_FILE_MAX_BYTES);
+>   * @dev:	Device for this memory access class
+>   * @list_node:	List element in the node's access list
+>   * @access:	The access class rank
+> - * @hmem_attrs: Heterogeneous memory performance attributes
+> + * @coord:	Heterogeneous memory performance coordinates
+>   */
+>  struct node_access_nodes {
+>  	struct device		dev;
+>  	struct list_head	list_node;
+>  	unsigned int		access;
+>  #ifdef CONFIG_HMEM_REPORTING
+> -	struct node_hmem_attrs	hmem_attrs;
+> +	struct access_coordinate	coord;
+>  #endif
+>  };
+>  #define to_access_nodes(dev) container_of(dev, struct node_access_nodes, dev)
+> @@ -168,7 +168,7 @@ static ssize_t property##_show(struct device *dev,			\
+>  			   char *buf)					\
+>  {									\
+>  	return sysfs_emit(buf, "%u\n",					\
+> -			  to_access_nodes(dev)->hmem_attrs.property);	\
+> +			  to_access_nodes(dev)->coord.property);	\
+>  }									\
+>  static DEVICE_ATTR_RO(property)
+>  
+> @@ -188,10 +188,10 @@ static struct attribute *access_attrs[] = {
+>  /**
+>   * node_set_perf_attrs - Set the performance values for given access class
+>   * @nid: Node identifier to be set
+> - * @hmem_attrs: Heterogeneous memory performance attributes
+> + * @coord: Heterogeneous memory performance coordinates
+>   * @access: The access class the for the given attributes
+>   */
+> -void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+> +void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+>  			 unsigned int access)
+>  {
+>  	struct node_access_nodes *c;
+> @@ -206,7 +206,7 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+>  	if (!c)
+>  		return;
+>  
+> -	c->hmem_attrs = *hmem_attrs;
+> +	c->coord = *coord;
+>  	for (i = 0; access_attrs[i] != NULL; i++) {
+>  		if (sysfs_add_file_to_group(&c->dev.kobj, access_attrs[i],
+>  					    "initiators")) {
+> diff --git a/include/linux/node.h b/include/linux/node.h
+> index 427a5975cf40..25b66d705ee2 100644
+> --- a/include/linux/node.h
+> +++ b/include/linux/node.h
+> @@ -20,14 +20,14 @@
+>  #include <linux/list.h>
+>  
+>  /**
+> - * struct node_hmem_attrs - heterogeneous memory performance attributes
+> + * struct access_coordinate - generic performance coordinates container
+>   *
+>   * @read_bandwidth:	Read bandwidth in MB/s
+>   * @write_bandwidth:	Write bandwidth in MB/s
+>   * @read_latency:	Read latency in nanoseconds
+>   * @write_latency:	Write latency in nanoseconds
+>   */
+> -struct node_hmem_attrs {
+> +struct access_coordinate {
+>  	unsigned int read_bandwidth;
+>  	unsigned int write_bandwidth;
+>  	unsigned int read_latency;
+> @@ -65,7 +65,7 @@ struct node_cache_attrs {
+>  
+>  #ifdef CONFIG_HMEM_REPORTING
+>  void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
+> -void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+> +void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
+>  			 unsigned access);
+>  #else
+>  static inline void node_add_cache(unsigned int nid,
+> @@ -74,7 +74,7 @@ static inline void node_add_cache(unsigned int nid,
+>  }
+>  
+>  static inline void node_set_perf_attrs(unsigned int nid,
+> -				       struct node_hmem_attrs *hmem_attrs,
+> +				       struct access_coordinate *coord,
+>  				       unsigned access)
+>  {
+>  }
 > 
+> 
+
