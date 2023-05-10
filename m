@@ -2,232 +2,95 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB03C7EE22
-	for <linux-cxl@archiver.kernel.org>; Wed, 10 May 2023 16:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A28CC7EE22
+	for <linux-cxl@archiver.kernel.org>; Wed, 10 May 2023 18:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231268AbjEJQOw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 10 May 2023 12:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45066 "EHLO
+        id S229487AbjEJSot (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 10 May 2023 14:44:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229826AbjEJQOv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 May 2023 12:14:51 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EF87AB1;
-        Wed, 10 May 2023 09:14:49 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QGg7v6gD0z67mYL;
-        Thu, 11 May 2023 00:14:03 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 10 May
- 2023 17:14:46 +0100
-Date:   Wed, 10 May 2023 17:14:45 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <rafael@kernel.org>, <linux-acpi@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] base/node / acpi: Change 'node_hmem_attrs' to
- 'access_coordinates'
-Message-ID: <20230510171445.00004cea@Huawei.com>
-In-Reply-To: <168332248685.2190392.1983307884583782116.stgit@djiang5-mobl3>
-References: <168332248685.2190392.1983307884583782116.stgit@djiang5-mobl3>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S236033AbjEJSos (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 10 May 2023 14:44:48 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201FA5B84
+        for <linux-cxl@vger.kernel.org>; Wed, 10 May 2023 11:44:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683744273; x=1715280273;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YYdrKttIWl9JFsoooHEG0a12gPW+jEjeYGoNJGfpn7s=;
+  b=fI4fIsJauJgQ5OyBsXZw0t/mibAU14LKLFoa8q66ZML033KsruRjF5o6
+   Q17MivWd4hdM2uhXv5ebMfQicaBdJoAEmyK6v1cFjKnWyaZ3mNU7wJb50
+   xiwslTsappsPPoHBLHpF/kIqe93lI+9gxJW57E7nnSNaFD++oECxtORRr
+   sEJPOiU+KEAlv9l5vM0JdO7XzzBenZK71pQ3OGvEnL+I3V8DspI/7Z/So
+   5wcCzp+8JSJrc9kCqbNGpjPJNeJhSLQ8Bq4hY9F6xxDiSIBS/TDMkT4w2
+   YgP6bhrvoteXi5CcP6TCpuZYmOq5A9wds/pxBHqXzr/3CjRParAa/y2rb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="353370140"
+X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
+   d="scan'208";a="353370140"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 11:44:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="769004628"
+X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
+   d="scan'208";a="769004628"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.34.89])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 11:44:31 -0700
+From:   alison.schofield@intel.com
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [RFC 0/3] Apply SRAT defined PXM to entire CFMWS
+Date:   Wed, 10 May 2023 11:44:25 -0700
+Message-Id: <cover.1683742429.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 05 May 2023 14:34:46 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+From: Alison Schofield <alison.schofield@intel.com>
 
-> Dan Williams suggested changing the struct 'node_hmem_attrs' to
-> 'access_coordinates' [1]. The struct is a container of r/w-latency and
-> r/w-bandwidth numbers. Moving forward, this container will also be used by
-> CXL to store the performance characteristics of each link hop in
-> the PCIE/CXL topology. So, where node_hmem_attrs is just the access
-> parameters of a memory-node, access_coordinates applies more broadly
-> to hardware topology characteristics.
+The patch that created fake NUMA nodes for CFMWS windows
+not defined in the SRAT, made wrong assumptions about the
+SRAT defined entries. Specifically, it assumed an SRAT entry
+using cfmws->start, uses the entire CMFWS range, start through
+end. The assumption is wrong, and so the ACPI driver, needs
+to examine the SRAT created memblks more closely to discover
+partial definitions of the HPA range.
 
-Not that it hugely matters, but why the term "coordinates"?
-Looks like Dan used that term, but I've not come across it being applied
-in this circumstances and it isn't a case of being immediately obvious
-to me what it means.
+This work-in-progress addresses that issue. The first 2 patches
+introduce numa helpers that are used in the 3rd patch, where the
+ACPI drivers parsing of the CFMWS is updated.
 
-If it is just another vague entry in kernel word soup then I don't really
-mind the term, but nice to give some reasoning in patch description.
+The patch commit logs, especially Patch 3, describes more
+of the approach as well as other approaches considered, and
+questions. So, perhaps, scan 1 & 2, and dive into #3 and 
+confirm or refute this approach.
 
-Patch otherwise looks fine to me.
+I did not include our NUMA or ACPI friends in this posting,
+because I want to get a direction check from CXL folks before
+addressing how the helpers can get merged into the NUMA arch.
 
-Jonathan
+Thanks for looking!
 
+Alison Schofield (3):
+  x86/numa: Introduce numa_find_node(start, end)
+  x86/numa: Introduce numa_remove_memblks(node, start, end)
+  ACPI: NUMA: Apply SRAT proximity domain to entire CFMWS window
 
-> 
-> [1]: http://lore.kernel.org/r/64471313421f7_1b66294d5@dwillia2-xfh.jf.intel.com.notmuch/
-> 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/acpi/numa/hmat.c |   20 ++++++++++----------
->  drivers/base/node.c      |   12 ++++++------
->  include/linux/node.h     |    8 ++++----
->  3 files changed, 20 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index bba268ecd802..f9ff992038fa 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -62,7 +62,7 @@ struct memory_target {
->  	unsigned int memory_pxm;
->  	unsigned int processor_pxm;
->  	struct resource memregions;
-> -	struct node_hmem_attrs hmem_attrs[2];
-> +	struct access_coordinate coord[2];
->  	struct list_head caches;
->  	struct node_cache_attrs cache_attrs;
->  	bool registered;
-> @@ -227,24 +227,24 @@ static void hmat_update_target_access(struct memory_target *target,
->  {
->  	switch (type) {
->  	case ACPI_HMAT_ACCESS_LATENCY:
-> -		target->hmem_attrs[access].read_latency = value;
-> -		target->hmem_attrs[access].write_latency = value;
-> +		target->coord[access].read_latency = value;
-> +		target->coord[access].write_latency = value;
->  		break;
->  	case ACPI_HMAT_READ_LATENCY:
-> -		target->hmem_attrs[access].read_latency = value;
-> +		target->coord[access].read_latency = value;
->  		break;
->  	case ACPI_HMAT_WRITE_LATENCY:
-> -		target->hmem_attrs[access].write_latency = value;
-> +		target->coord[access].write_latency = value;
->  		break;
->  	case ACPI_HMAT_ACCESS_BANDWIDTH:
-> -		target->hmem_attrs[access].read_bandwidth = value;
-> -		target->hmem_attrs[access].write_bandwidth = value;
-> +		target->coord[access].read_bandwidth = value;
-> +		target->coord[access].write_bandwidth = value;
->  		break;
->  	case ACPI_HMAT_READ_BANDWIDTH:
-> -		target->hmem_attrs[access].read_bandwidth = value;
-> +		target->coord[access].read_bandwidth = value;
->  		break;
->  	case ACPI_HMAT_WRITE_BANDWIDTH:
-> -		target->hmem_attrs[access].write_bandwidth = value;
-> +		target->coord[access].write_bandwidth = value;
->  		break;
->  	default:
->  		break;
-> @@ -701,7 +701,7 @@ static void hmat_register_target_cache(struct memory_target *target)
->  static void hmat_register_target_perf(struct memory_target *target, int access)
->  {
->  	unsigned mem_nid = pxm_to_node(target->memory_pxm);
-> -	node_set_perf_attrs(mem_nid, &target->hmem_attrs[access], access);
-> +	node_set_perf_attrs(mem_nid, &target->coord[access], access);
->  }
->  
->  static void hmat_register_target_devices(struct memory_target *target)
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 2cada01c70da..fc0444b617d0 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -75,14 +75,14 @@ static BIN_ATTR_RO(cpulist, CPULIST_FILE_MAX_BYTES);
->   * @dev:	Device for this memory access class
->   * @list_node:	List element in the node's access list
->   * @access:	The access class rank
-> - * @hmem_attrs: Heterogeneous memory performance attributes
-> + * @coord:	Heterogeneous memory performance coordinates
->   */
->  struct node_access_nodes {
->  	struct device		dev;
->  	struct list_head	list_node;
->  	unsigned int		access;
->  #ifdef CONFIG_HMEM_REPORTING
-> -	struct node_hmem_attrs	hmem_attrs;
-> +	struct access_coordinate	coord;
->  #endif
->  };
->  #define to_access_nodes(dev) container_of(dev, struct node_access_nodes, dev)
-> @@ -168,7 +168,7 @@ static ssize_t property##_show(struct device *dev,			\
->  			   char *buf)					\
->  {									\
->  	return sysfs_emit(buf, "%u\n",					\
-> -			  to_access_nodes(dev)->hmem_attrs.property);	\
-> +			  to_access_nodes(dev)->coord.property);	\
->  }									\
->  static DEVICE_ATTR_RO(property)
->  
-> @@ -188,10 +188,10 @@ static struct attribute *access_attrs[] = {
->  /**
->   * node_set_perf_attrs - Set the performance values for given access class
->   * @nid: Node identifier to be set
-> - * @hmem_attrs: Heterogeneous memory performance attributes
-> + * @coord: Heterogeneous memory performance coordinates
->   * @access: The access class the for the given attributes
->   */
-> -void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
-> +void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
->  			 unsigned int access)
->  {
->  	struct node_access_nodes *c;
-> @@ -206,7 +206,7 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
->  	if (!c)
->  		return;
->  
-> -	c->hmem_attrs = *hmem_attrs;
-> +	c->coord = *coord;
->  	for (i = 0; access_attrs[i] != NULL; i++) {
->  		if (sysfs_add_file_to_group(&c->dev.kobj, access_attrs[i],
->  					    "initiators")) {
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 427a5975cf40..25b66d705ee2 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -20,14 +20,14 @@
->  #include <linux/list.h>
->  
->  /**
-> - * struct node_hmem_attrs - heterogeneous memory performance attributes
-> + * struct access_coordinate - generic performance coordinates container
->   *
->   * @read_bandwidth:	Read bandwidth in MB/s
->   * @write_bandwidth:	Write bandwidth in MB/s
->   * @read_latency:	Read latency in nanoseconds
->   * @write_latency:	Write latency in nanoseconds
->   */
-> -struct node_hmem_attrs {
-> +struct access_coordinate {
->  	unsigned int read_bandwidth;
->  	unsigned int write_bandwidth;
->  	unsigned int read_latency;
-> @@ -65,7 +65,7 @@ struct node_cache_attrs {
->  
->  #ifdef CONFIG_HMEM_REPORTING
->  void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
-> -void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
-> +void node_set_perf_attrs(unsigned int nid, struct access_coordinate *coord,
->  			 unsigned access);
->  #else
->  static inline void node_add_cache(unsigned int nid,
-> @@ -74,7 +74,7 @@ static inline void node_add_cache(unsigned int nid,
->  }
->  
->  static inline void node_set_perf_attrs(unsigned int nid,
-> -				       struct node_hmem_attrs *hmem_attrs,
-> +				       struct access_coordinate *coord,
->  				       unsigned access)
->  {
->  }
-> 
-> 
+ arch/x86/include/asm/numa.h |  2 ++
+ arch/x86/mm/numa.c          | 36 ++++++++++++++++++++++++++++++++++++
+ drivers/acpi/numa/srat.c    | 32 ++++++++++++++++++++++++++------
+ 3 files changed, 64 insertions(+), 6 deletions(-)
+
+-- 
+2.37.3
 
