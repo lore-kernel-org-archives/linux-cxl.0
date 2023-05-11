@@ -2,284 +2,202 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCFEC7EE22
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 May 2023 21:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8702C77B7F
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 May 2023 22:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238825AbjEKVxe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 May 2023 17:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
+        id S239512AbjEKWms (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 May 2023 18:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238053AbjEKVxd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 17:53:33 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2083.outbound.protection.outlook.com [40.107.100.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4C53A93
-        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 14:53:31 -0700 (PDT)
+        with ESMTP id S239487AbjEKWmr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 18:42:47 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09FD2D68
+        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 15:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683844966; x=1715380966;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=LXYGtRjIjN+iErdmQqzUD86DcRJGc0Yqn8znVuyc/Ow=;
+  b=EDjZfdxiaLj735Eh/JDrPFCa8aUGjN1Gvqmpfn+5cD8L6F4I6Y1CKzyA
+   clUM6OS8RrXBs53TV6WjCIBSohgUrDwZjyLoufA+m+qDvfwiFEh48MSgE
+   JqK6pvKHRUoxHxBO04N50gfSgR9NEkkLSegG4/+E267fZ4oJo9M4A+yOt
+   d148V/7qXUYIabckqE3+ZlrNx56dD6lQCA7lO3yAzdLXZCPA/pDwJNIqe
+   hQkO+s8YrRHLD75/B70uw2fU76fnU6/ypinqRFIlihPg//AoS0ZdEU246
+   38JD1z2E+73uRbzl2t4B3xM4nCegkJxreI/dcV3zNkpztTEL7yTS2Ie6S
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="353767980"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="353767980"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 15:42:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="730567350"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="730567350"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga008.jf.intel.com with ESMTP; 11 May 2023 15:42:46 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 11 May 2023 15:42:46 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 11 May 2023 15:42:45 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Thu, 11 May 2023 15:42:45 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Thu, 11 May 2023 15:42:45 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g+WVc4+5FJDtaM9AponYIflI/WwzP1LFlKJx7U9HKsDBS2VOblgQBl898rV2wDtPA7Q5OonTTzoImqamGm7vLvcE26ASDwzzAJF+EaAsvTzLiw9XESboWDlBB49dVDfWHHvCfP2dvA6oL0CTxx2HH4EzcICrjhF5adMPRQKFAhOD027KTVxnMLesDOquurz3wkmettbcGuUNmBkywFnYw2ShXY7/scQP49kbppoqkLrNkwbtaFaotdxoms0ts1ijNqO/wIMX0NPphiZHfLAT+okePMpWUPlSWc7D0Mb+lr9i/dd9CRjVXEYPf2UluUIII1JyIsr5QM5e4FEKemSO9g==
+ b=ZL8sCuvogAU2Bb/sDVreWfpZ8jQtXPalZQfXpnbqnGtx9E6I3ckdyOGmD/+bEiN7JswUtrfD007/UfLZUYvCKSHqMHgpZO/20p3QNtQ6foBv7RBYFYhnMmOnHjPO2284g/Z1mO4eGVow45KpCIcisf8ct8TymDTMCsjcMB9ATAoqreJYJwbGs4O5a6/wGuygnIT/iZ0TXN9j2DGKdpInHxfDz0G0FF5iTVAavE4yZaz2bbZlFc4sBMO7eHSgk0j1XiKVSh1nhRt1xFoif7LEklKuzQDlTlIgbCVWiajrXx6gx2WXsGqs5zeIERuQxMSvCIDvjpd+H6aLnHwovfGJzQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qwwKKgPzdVKNUgmcrXxZOvh1R3IP2B74sKEYqUnuFR4=;
- b=AvvS7jVGpMFqUcyqv+jjKfJ4JsfuBlNYfiwWAkTiBSWJlZB8+ukyOKdQ0jmaLSkrHeO0NrOcZM4/45Hd2Vo9a8FD8Lr3dTZ8Qv5a9iRqXZSAM4/0ECOWMz0Co7NRYjVJeYqCspEKh0mVGOmc2GLIANt/5H5FXSdqD9jXf/xWTG4Ff6IIpwBP3V88C7laog2CtBUgqkN6G2F05okqfDJMhGbVmEGlSQbGPqXj3cHbexHmdSYWA4ifO7Ts9gH8gNmUxxb0IAbnw/kTszXl+bo1Rfk8ajVnRAPf6RyPiX1YPEpAUDCDYbBUqF3p/spxk/V1bUYudwNm86HIndmGO/tIEg==
+ bh=EOXjSelTyJMizFU4CNoEwCL3Sm6+Mjnc9ycXBeT6cnU=;
+ b=jvwwiFO8F4OMjsieqd64jAI702symOHdC4o/8VDAvzld6+NzIJoPoISwZ3zZPjnxYgGL2BaDWs1TgJeFf4UWXE/iDp+No8Aw1X7nBTpXvJY5sWFh5EjAa8BxQgjwyJb+pvhxnHkQelSg+uB9gdAPWFn3zk6js0JEkrlZvH6FmK552zcHZj3EL2cjFHdxcuDPjo84Pmxb8i9vPj5w1mtx1E+clsU41jblpjihrZMWCDuMSo8yHyESfFt2Evh6A9/tTXOa2qO14e2fellSDP5MEXlL/Zu4cH0/BV6MtUaQnmsKwsx3s+1RokhlSwybR5Pj7icm0olrMwyuEHLq1DJeNg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qwwKKgPzdVKNUgmcrXxZOvh1R3IP2B74sKEYqUnuFR4=;
- b=s4h4n3GiVAbqSL8aCcMVxsA/xZPaCpw1RYlIQLOysf+ojgyugryyKPXIzIDbwEpGdc1oTq6F15mlWB2gQZqmdvj1jfea9wvASZrZ9ItlyytHIQGeYX2JxI4Yq1XiL7ffQFuXg40l1xq3cjyy2+iMqCGVmhKe4rZI3D19D4sGIt0=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6222.namprd12.prod.outlook.com (2603:10b6:208:3c2::19)
- by IA0PR12MB8301.namprd12.prod.outlook.com (2603:10b6:208:40b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.20; Thu, 11 May
- 2023 21:53:27 +0000
-Received: from MN0PR12MB6222.namprd12.prod.outlook.com
- ([fe80::bd4d:3c36:29bb:87de]) by MN0PR12MB6222.namprd12.prod.outlook.com
- ([fe80::bd4d:3c36:29bb:87de%7]) with mapi id 15.20.6387.022; Thu, 11 May 2023
- 21:53:27 +0000
-Message-ID: <5cf2a93d-1a20-c87b-5276-69feb5056e72@amd.com>
-Date:   Thu, 11 May 2023 16:53:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [RFC 2/7] hw/cxl/cxl-mailbox-utils: Add dynamic capacity region
- representative and mailbox command support
-Content-Language: en-US
-To:     Fan Ni <fan.ni@samsung.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
-Cc:     "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "gregory.price@memverge.com" <gregory.price@memverge.com>,
-        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
-        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-        "nifan@outlook.com" <nifan@outlook.com>
-References: <20230511175609.2091136-1-fan.ni@samsung.com>
- <CGME20230511175641uscas1p165a19a1416facf6603bf1a417121f0dc@uscas1p1.samsung.com>
- <20230511175609.2091136-3-fan.ni@samsung.com>
-From:   Nathan Fontenot <nafonten@amd.com>
-In-Reply-To: <20230511175609.2091136-3-fan.ni@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0098.namprd03.prod.outlook.com
- (2603:10b6:408:fd::13) To MN0PR12MB6222.namprd12.prod.outlook.com
- (2603:10b6:208:3c2::19)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB6424.namprd11.prod.outlook.com (2603:10b6:8:c4::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6363.22; Thu, 11 May 2023 22:42:42 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5%7]) with mapi id 15.20.6387.022; Thu, 11 May 2023
+ 22:42:42 +0000
+Date:   Thu, 11 May 2023 15:42:39 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: RE: [RFC 0/3] Apply SRAT defined PXM to entire CFMWS
+Message-ID: <645d6f5f52ff7_1e6f2942f@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1683742429.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1683742429.git.alison.schofield@intel.com>
+X-ClientProxiedBy: BY3PR05CA0007.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::12) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6222:EE_|IA0PR12MB8301:EE_
-X-MS-Office365-Filtering-Correlation-Id: bf8f8b1e-3dd4-4732-2be1-08db526a2674
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB6424:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a2901dc-ca6f-480d-3eef-08db52710774
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /KNVcUYWRMyRyRcqNzb2E2bAMuCsxSbZyWWbebBmTekC17srC9Y+gOXl/pbIJU6cZWpziWS48V8pLHhNVwKXwwCmfVSAz4M6GrVu2utAGw6RnYCn6x1bbb2khuEcCSpCHHfwPfSd08TyaQoazU9cJCzycPrc3g4lB4EvpAJrCpurqCdCOIBeYhpGMwZqTODbI3CxHzOWtZvd+Sd6leaGi7czojICfHwO6J09BpkfwqcVywwveNQZuT7KBU/oL+VASVRS8XtGtrEOohpgd0Hlaps7s4HS76yhiSs4f8zdTZQo9+LP4pM5CGlq+CPDAthcjv40YkHitvC/oMj9jhxRm5YjVYG2Ozu2HnBJOATozEoQmlmnewZaQWdQUZI0dCetSWTTwyOoJMOew9rSzlZ+EdVkRWtda8zpCq88rh/D9ou8q3KT+vXM4W9V/HZ0Nv+NwBre4nD7dCf8xHyU+cwGDBd5i33pY6uESn7I8P5xOMK7ELM8JIKK0Rot0nFuswzAN+Pl6ZF2qvd0Xfm/oERo67xpQIj0s3bFrxOjr1Z+/XZfTrL0GtZtg9OFdTrRXU/dF8tKKx/atsOiqyed39RbS3zXARy3jJIBepQYTLCs+a3RAKsyvBknnVWS8Fq7F3E9ezM5AUI9a/tlbbLJo12egw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6222.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(451199021)(54906003)(110136005)(31686004)(45080400002)(478600001)(4326008)(6666004)(6486002)(66556008)(66946007)(66476007)(316002)(83380400001)(36756003)(2616005)(8676002)(41300700001)(38100700002)(7416002)(8936002)(31696002)(6506007)(186003)(2906002)(26005)(6512007)(5660300002)(15650500001)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: whIox0H1rl6pSo/vc2ZME+YRzMXREG7sb0uJ4P7s/uPSkcidQJmcIy20veM/YrVY/atIF9NnZIKK7binAiGZSFtMP/DbpS/lOLFhKsPfAZ93xDZ696qgS/eu2FcQcLCSmQLerCx4P+SSXPYVMYwTm86ib2ft+M+w/9dceeHT50kgJ8jsX+utrcgRFYYqOEf+AoGiVWvZI1n9du+68ZtezEYSqvmm+NLLXHyfnjgIOD5vePe73l0lyWGlVIuPKvLq7tPltynSOZ4bCHknWTGkwV4TlzlgFldKPXebNo5fvYtx3X5g02uPClG4r4pdRDzUjPsT0bZhvCLjRuXV871BSA6G4iwD/YupxjwlFojmsjZNW2yJpWvVTMSWHCWhvqUZVq1ioyKm4pExgmuwokeDU/iBmbfOwiL/vx7ISSjX8wHM/m9i10va05GR9DfwrCEAe99e6Lw7kzuMqDe8ltSduW9skX7gpdAuBmpXPATXN8dgurmBxoPWOvmzdUjYNyTiw/LGvz800t+C/DJuXvwMqU/ttSAZVjWfY6vX1TQ0Y/mOMD6juUHzMXhnPyTNdP0k
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(346002)(366004)(136003)(396003)(376002)(451199021)(41300700001)(66946007)(66556008)(66476007)(478600001)(4326008)(110136005)(6666004)(6486002)(316002)(5660300002)(82960400001)(6506007)(38100700002)(6512007)(8936002)(26005)(8676002)(9686003)(2906002)(83380400001)(186003)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SHREaTZaSWFnbHRIS0d6L1pGYTZzT2JNSTJQaFdzN0d0SHl3SC9EUVUwRWxN?=
- =?utf-8?B?ZCtHZGRKSTRNZ242YlVVek1TdWNRUytRYmtMaVVOaXVxS2IrWFRZNjBUclF6?=
- =?utf-8?B?aEtWUG1oOEdQVmpBL0VBZGVjdUNEUEMwUlAvMTZsZmFiOGxrSTd0ZkpqbzhQ?=
- =?utf-8?B?S3RuRW9La3AvdDhHM2crY2xkb2RZTUtKVHZ6QWUzQ011L0VhK0h2eVhiMUFF?=
- =?utf-8?B?WWkzczRGNUl0SXJzRjNUT3h6UU95akRjNDFBSEFLL2ZzejF3aE1tajhVTWI5?=
- =?utf-8?B?RjFuMkF6cXp5d3hMTTZmcytROUtRNEUyM1B6cWtSaHAwZ055amVwUGVOMUNi?=
- =?utf-8?B?WGloYWI3S05PbUhKUFdMY2pmQkhwVWg3d25JRzB0VnBMZzhGM2VzUU5oc2Ri?=
- =?utf-8?B?Y3o5QjUxME8wMEhJVVRtOUhvUTRJTEVnQk9pTEFvTHlYbDFVbWpLaUVqNER0?=
- =?utf-8?B?aHNTeWQrek9ibjVObHNKK2ZycER0MXIzQkpkQXUxT0pZTXZpYjJacllTQkNS?=
- =?utf-8?B?b09YT0ZrRldhdm1UekJPNDYvKzNMS3FNV1J4SEFJYnRpaFloUUplR0I0UTFu?=
- =?utf-8?B?SHVvVTUyUEMweWN4WTNMNkY0Y2NDOUNDdlRvV2pjMVkwblc3QUM3V1grR0pn?=
- =?utf-8?B?YlJRRTYwSUI2TzdKeS9BWm84cDRQTXRxcGFsc3ExVXpNM2J5RUhwaU43cHRD?=
- =?utf-8?B?NUVjaWtyZUY0VGZCS3lUOUx5eW4zZVZQZ3BiS0ZVdis3Vko1UzNYS0t2YWht?=
- =?utf-8?B?S0Y4bUJqVXJDTWIzSjFKY1czZGNIRDhLS2dmTjd3ajNSUThvTEFGdjdxcS9v?=
- =?utf-8?B?QmVBbnhhWjh4bnlzb1ZCR3IwemNCTEk2eWxRVUo3ekpaeUdyTjRDTWZyaUFr?=
- =?utf-8?B?V0syZGFRS0g4UHF3QUsyVWNzTmU1UFVqT0hvdDBmeTIxL3V2Q2N0Zi8wSEYy?=
- =?utf-8?B?eDU0OHlvOUpuVnZad2NaK2VEazczL0hYeG03MFhwM2pDK3JPeW9lSE0xNGd0?=
- =?utf-8?B?bDBaRmkyVjFnMFMrWUs3cEN6dEdXcDNyNmZEWExYZ2VEcjJpbkxIdG5mTFpH?=
- =?utf-8?B?RHk5RlNhOXhvZmJrWnRhM1JQWXk1UHg2OFl5V3FhYmJ2MndaRkl4NWdlWjZG?=
- =?utf-8?B?ODBtRFJDRWJGQmQxdmdEZnREMk93clF6N2ZEZ0RISld0cjNVNDUrMG4vUTVI?=
- =?utf-8?B?NGRqSC8vZDY3QnRsQ1ZpZUhxWUFKL05OS2tQaExpaWVkN29oa3U0YzRRUTBw?=
- =?utf-8?B?bUtGQ2ZiUWQ5STFickFMYjdEQ1lPZHFaQk9GWUF3SWdETnRRQzhPYzFVZkRj?=
- =?utf-8?B?OENLSlNRMlNVaStPT25yejQwekNwOGpDRjVnZkFFaFVKd2ZDemoydy9EcUZN?=
- =?utf-8?B?SUJWZXZLUGZVVmYvTHlacnovcVdodVErUXhzM2xFanl3YjMvWURhSUtha0sv?=
- =?utf-8?B?akZxbjVTVE5SK0lOL01IS08rcTRNNy8xZVRhMlE3OUlza3hhY2tCbmtWSnJh?=
- =?utf-8?B?RVgrWmZveWVYaVNXamlSN1hzM1psaFJQOU93UndJNWlVdklMKzlsWlg1WkI3?=
- =?utf-8?B?VUNqK0U1c2RNNURKSk1xc0tRNDJlNDE0aTlRc1Rjd2w3NGppeU5ORHlCKytG?=
- =?utf-8?B?R0pJbW1TVlNMSkhucVNjVjhxY1FqZ1REeWRMRkhWQVlvU1FTQTBMWmYycnpM?=
- =?utf-8?B?V3RwYUFMV1ZPWU5yOXRqVjY3QllMUDhicjA3ZGFIV2t6Nml6MEdCQlJDRkFI?=
- =?utf-8?B?bkpjSUc0VC9uMjJSeDVyV3lIeXR0ejlsTGV1SGsxQSs2clRleE9CWGtuQ0Zz?=
- =?utf-8?B?MVYxSDg5bU5EZk4wdk1VWHR4dmdNRW9uNXJwcllva2lGNnR6Ym5lQWkxSmo1?=
- =?utf-8?B?cG1TOHNMU1FNNXFZak1vT0N3RVY0V0FtVWdlWUdMdkErWWxnd01HYUpBOEhk?=
- =?utf-8?B?cWp4SStHaDVxYWY5bUZxVlQrQU1pRTlJQ3lrY2JqREtLSDVFVTUwZ1JFemNK?=
- =?utf-8?B?enpHNGVUTjdSMGpJbWY0KzhCbVRjZzF5VHoyajh5alB2dEVPbEJML3dEZjhZ?=
- =?utf-8?B?eEdTYTMxMG5XZFl6Y0ljTFhQVHdHNTFjTU0vU0hDaXRLTFNhVVBUWTU1U1ZD?=
- =?utf-8?Q?kalOOGh8corEyszO+SRRnxz3d?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf8f8b1e-3dd4-4732-2be1-08db526a2674
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6222.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Hrh90HqvJaeLKIFWf3fAcDeLqAiQY4oZpTkGbxUN9H9pRy1DYGcFXNQ3P6xJ?=
+ =?us-ascii?Q?UFPEjow3lHhoLj819oue9uTyX1+S4JsZ6UW11U/1ClqoS8rVh49pb7cFqqFd?=
+ =?us-ascii?Q?ZQUYyUzwsnp18/y5LEVBdP/Kt5TFEcX2dsI32Gv11DLxnw+wRWYGU+trXYza?=
+ =?us-ascii?Q?BhUpUEk9z0akFdNxJrojNu6BfQ4WcOPNAaBIHG//vAHLieGOSXIM2yz588QW?=
+ =?us-ascii?Q?bcqXifDnkG7fhIbTTci+Yd2WkIQAD52Sc20Cu0U3Y+J5Io3loh3JYVZpxhbX?=
+ =?us-ascii?Q?10AHDz9zHcQfEFP0/srOAtmcG5lrfCvLn6zfi1XK5bI/yxD2QiC9YGeDQwjt?=
+ =?us-ascii?Q?6W9LpCaf+y3c6sPMw3+5vob2jj9GxGDZL2R2IAjUkwNqxnDlVcQ/NuyoLPCI?=
+ =?us-ascii?Q?trB/IMGUlyEONB5jFIkDtXnsv7aSrfX9HisFWGZnu6I1H6DNeIjYsoptOffu?=
+ =?us-ascii?Q?+sUxVGT3XsMUY2MqMosFGyp8SUx4JDh9EfaIe+gYLlyI6SrTdfTOBypb3C9s?=
+ =?us-ascii?Q?6ZCBQsBx1OB5vBMmb4mexSiQuROxoVOtqYu96xbrDzJXi8CyQYkZlKskRhvy?=
+ =?us-ascii?Q?77Ts7F0odTk0VV9Cy2tC2YoA85LeQYSBHf6lxmxG4G/bbOBuOTPd9MwQBHM/?=
+ =?us-ascii?Q?Z+OwnWZ4O5UYwT6th6sKlFV7qx8/Q9FHrravFfVbLnPiR8W74f+0NEJBFr2c?=
+ =?us-ascii?Q?HR4nDkGjsOOFqTchn+SRMtOEqkJBOtZ6rSS2JRE+d+Ev7Gtw6iZZeeS44lKM?=
+ =?us-ascii?Q?nzFfcrqnY1728hvtNr5ZMb7JJPdvVhXHFa099TEnM0uDsttqIFB8mLDXoC+B?=
+ =?us-ascii?Q?9qLhtjWvC3cPKWxyTIVUnA/vF3LCjg2+ZJIe32G/b5co72HciTBrjzk5KIfN?=
+ =?us-ascii?Q?vYRbrZBV3zo61uvMgzd1nE2c8KytzY9pP3Ojiv6e4zk5y9wKIhhc1FmqNsk9?=
+ =?us-ascii?Q?goV/yVrdO3X2QEmuwakIYuSy9q1AxMnHjlcdUfTul4sHRYhsBSPn5c9bcS7a?=
+ =?us-ascii?Q?d5ToktHki75Dc+Gv0xfycXT2vH+1eXpGs374eJpYVh8dT2RtJpesCHuvYi0E?=
+ =?us-ascii?Q?c47F5Vhl8UD8urdEHJEYazZbm90+/fVxa9qy7mSon4mOEJmMyTmeXVvFeEuq?=
+ =?us-ascii?Q?lgItCJf82BWH8PZ5cZm1IezOtXiPfs13cDeWOSXGp14N6n1rwJ4vVjVOiwyS?=
+ =?us-ascii?Q?2bT8FVs8Kt2eHJFw90fNAPrV7EClxE94ct2ggeGvhUycBJmE9/wnrv+DAyic?=
+ =?us-ascii?Q?gLny3UHDIPUnKyPyIpwSNoB77KORq95lWHhRj5A3/ZxVjVTF9OT9e0NKWH/N?=
+ =?us-ascii?Q?Y0zuKR0EMO2YGgOn2aJbP6yxOKla9BtrHyoDjzoL41Y/hy2I2/Duv1ccBZKX?=
+ =?us-ascii?Q?j62Rp68kbT8YLyofgK8PUjF1bT8IMPNgtRJgMdMFv+1cVx9VhohOt3UBLajU?=
+ =?us-ascii?Q?4/bI+QCeJ5GIf+/RS14JIdYO8iwzSqFfxl5+FOVAnwjyaDTzWXQx3/GTKl09?=
+ =?us-ascii?Q?r5xc9cWQul6vWURfIfeL2wV5AAoRRzky9zCsAi5vzgqmr7EUgjUpQKiFAG/8?=
+ =?us-ascii?Q?I7LW8TkKb9E77t6rP15SJVRG4cAPEWQpxdtND/7sezyrzFH/68VoxWBnFZ6B?=
+ =?us-ascii?Q?1A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a2901dc-ca6f-480d-3eef-08db52710774
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2023 21:53:26.9954
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2023 22:42:41.7883
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4CiEX8Ufnjbf5Rt/2xkNp3lS6EjVhUGSXn7JRr/1TdaYy3nqJIUzmSmbiz7uYzg9CsqlzmXddqQmn3FU4v8QMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8301
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8Zs2CtOMnNUR+c8a6M28yni68sDgibotLVt/5ZlN7ByxN6Ylzwtmr0FNrM/UeAMkRsNLY0rjJEuimfv/PEfMKZptjoHqhY1yiRKslVE37ds=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6424
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 5/11/23 12:56, Fan Ni wrote:
-> From: Fan Ni <nifan@outlook.com>
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
 > 
-> Per cxl spec 3.0, add dynamic capacity region representative based on
-> Table 8-126 and extend the cxl type3 device definition to include dc region
-> information. Also, based on info in 8.2.9.8.9.1, add 'Get Dynamic Capacity
-> Configuration' mailbox support.
+> The patch that created fake NUMA nodes for CFMWS windows
+
+"fake" seems the wrong word to me. These are first class Linux NUMA
+nodes in the end. So to me it's the "patch that extended SRAT proximity
+domains by the potential performance-class windows in the CFMWS", or
+something like that.
+
+> not defined in the SRAT, made wrong assumptions about the
+> SRAT defined entries. Specifically, it assumed an SRAT entry
+> using cfmws->start, uses the entire CMFWS range, start through
+> end. The assumption is wrong, and so the ACPI driver, needs
+
+I also wouldn't say it was wrong, just incomplete. I.e. this is just
+extending the heuristic to say that if the BIOS describes *any* portion
+of a CFMWS window with a proximity domain, might as well reuse that
+proximity domain for the entire window since everything in that window
+is expected to be of a similar performance class.
+
+> to examine the SRAT created memblks more closely to discover
+> partial definitions of the HPA range.
 > 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> ---
->  hw/cxl/cxl-mailbox-utils.c  | 68 +++++++++++++++++++++++++++++++++++++
->  include/hw/cxl/cxl_device.h | 16 +++++++++
->  2 files changed, 84 insertions(+)
+> This work-in-progress addresses that issue. The first 2 patches
+> introduce numa helpers that are used in the 3rd patch, where the
+> ACPI drivers parsing of the CFMWS is updated.
 > 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 7ff4fbdf22..61c77e52d8 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -81,6 +81,8 @@ enum {
->          #define GET_POISON_LIST        0x0
->          #define INJECT_POISON          0x1
->          #define CLEAR_POISON           0x2
-> +	DCD_CONFIG = 0x48, /*8.2.9.8.9*/
-> +		#define GET_DC_REGION_CONFIG   0x0
->      PHYSICAL_SWITCH = 0x51
->          #define IDENTIFY_SWITCH_DEVICE      0x0
->  };
-> @@ -935,6 +937,70 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
->      return CXL_MBOX_SUCCESS;
->  }
->  
-> +/*
-> + * cxl spec 3.0: 8.2.9.8.9.2
-> + * Get Dynamic Capacity Configuration
-> + **/
-> +static CXLRetCode cmd_dcd_get_dyn_cap_config(struct cxl_cmd *cmd,
-> +		CXLDeviceState *cxl_dstate,
-> +		uint16_t *len)
-> +{
-> +	struct get_dyn_cap_config_in_pl {
-> +		uint8_t region_cnt;
-> +		uint8_t start_region_id;
-> +	} QEMU_PACKED;
-> +
-> +    struct get_dyn_cap_config_out_pl {
-> +		uint8_t num_regions;
-> +		uint8_t rsvd1[7];
-> +		struct {
-> +			uint64_t base;
-> +			uint64_t decode_len;
-> +			uint64_t region_len;
-> +			uint64_t block_size;
-> +			uint32_t dsmadhandle;
-> +			uint8_t flags;
-> +			uint8_t rsvd2[3];
-> +		} QEMU_PACKED records[];
+> The patch commit logs, especially Patch 3, describes more
+> of the approach as well as other approaches considered, and
+> questions. So, perhaps, scan 1 & 2, and dive into #3 and 
+> confirm or refute this approach.
+> 
+> I did not include our NUMA or ACPI friends in this posting,
+> because I want to get a direction check from CXL folks before
+> addressing how the helpers can get merged into the NUMA arch.
+> 
+> Thanks for looking!
+> 
+> Alison Schofield (3):
+>   x86/numa: Introduce numa_find_node(start, end)
+>   x86/numa: Introduce numa_remove_memblks(node, start, end)
+>   ACPI: NUMA: Apply SRAT proximity domain to entire CFMWS window
+> 
+>  arch/x86/include/asm/numa.h |  2 ++
+>  arch/x86/mm/numa.c          | 36 ++++++++++++++++++++++++++++++++++++
+>  drivers/acpi/numa/srat.c    | 32 ++++++++++++++++++++++++++------
+>  3 files changed, 64 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.37.3
+> 
 
-Could you declare CXLDCD_Region as QEMU_PACKED and use it here instead of
-re-defining the region structure?
 
-> +	} QEMU_PACKED;
-> +
-> +	struct get_dyn_cap_config_in_pl *in = (void *)cmd->payload;
-> +	struct get_dyn_cap_config_out_pl *out = (void *)cmd->payload;
-> +	struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> +	uint16_t record_count = 0, i = 0;
-> +	uint16_t out_pl_len;
-> +
-> +	if (in->start_region_id >= ct3d->dc.num_regions)
-> +		record_count = 0;
-> +	else if (ct3d->dc.num_regions - in->start_region_id < in->region_cnt)
-> +		record_count = ct3d->dc.num_regions - in->start_region_id;
-> +	else
-> +		record_count = in->region_cnt;
-> +
-> +	out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
-> +	assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
-> +
-> +	memset(out, 0, out_pl_len);
-> +	out->num_regions = record_count;
-> +	for (; i < record_count; i++) {
-> +		stq_le_p(&out->records[i].base,
-> +			ct3d->dc.regions[in->start_region_id+i].base);
-> +		stq_le_p(&out->records[i].decode_len,
-> +			ct3d->dc.regions[in->start_region_id+i].decode_len);
-> +		stq_le_p(&out->records[i].region_len,
-> +			ct3d->dc.regions[in->start_region_id+i].len);
-> +		stq_le_p(&out->records[i].block_size,
-> +			ct3d->dc.regions[in->start_region_id+i].block_size);
-> +		stl_le_p(&out->records[i].dsmadhandle,
-> +			ct3d->dc.regions[in->start_region_id+i].dsmadhandle);
-> +		out->records[i].flags
-> +			= ct3d->dc.regions[in->start_region_id+i].flags;
-
-In this loop your reading from 'in' and writing to 'out' where in and out both
-point to the same payload buffer. It works because of the structure layouts but
-feels like a bug waiting to happen. Perhaps saving start_region to a local variable
-and using that for the loop?
-
--Nathan
-
-> +	}
-> +
-> +	*len = out_pl_len;
-> +	return CXL_MBOX_SUCCESS;
-> +}
-> +
->  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
->  #define IMMEDIATE_DATA_CHANGE (1 << 2)
->  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> @@ -973,6 +1039,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
->          cmd_media_inject_poison, 8, 0 },
->      [MEDIA_AND_POISON][CLEAR_POISON] = { "MEDIA_AND_POISON_CLEAR_POISON",
->          cmd_media_clear_poison, 72, 0 },
-> +	[DCD_CONFIG][GET_DC_REGION_CONFIG] = { "DCD_GET_DC_REGION_CONFIG",
-> +		cmd_dcd_get_dyn_cap_config, 2, 0 },
->  };
->  
->  static struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index e285369693..8a04e53e90 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -383,6 +383,17 @@ typedef struct CXLPoison {
->  typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
->  #define CXL_POISON_LIST_LIMIT 256
->  
-> +#define DCD_MAX_REGION_NUM 8
-> +
-> +typedef struct CXLDCD_Region {
-> +	uint64_t base;
-> +	uint64_t decode_len; /* in multiples of 256MB */
-> +	uint64_t len;
-> +	uint64_t block_size;
-> +	uint32_t dsmadhandle;
-> +	uint8_t flags;
-> +} CXLDCD_Region;
-> +
->  struct CXLType3Dev {
->      /* Private */
->      PCIDevice parent_obj;
-> @@ -414,6 +425,11 @@ struct CXLType3Dev {
->      unsigned int poison_list_cnt;
->      bool poison_list_overflowed;
->      uint64_t poison_list_overflow_ts;
-> +
-> +	struct dynamic_capacity {
-> +		uint8_t num_regions; // 1-8
-> +		struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
-> +	} dc;
->  };
->  
->  #define TYPE_CXL_TYPE3 "cxl-type3"
