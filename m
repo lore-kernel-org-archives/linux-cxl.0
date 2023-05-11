@@ -2,389 +2,422 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AB8C7EE22
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 May 2023 18:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5908C77B7F
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 May 2023 19:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237639AbjEKSYJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 May 2023 14:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47464 "EHLO
+        id S239333AbjEKTsf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 May 2023 15:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237590AbjEKSYI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 14:24:08 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55FC10C6
-        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 11:24:06 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230511175642usoutp02df6b7caf1db5c7964604db29db295e38~eKHcYI77O2377423774usoutp02n;
-        Thu, 11 May 2023 17:56:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230511175642usoutp02df6b7caf1db5c7964604db29db295e38~eKHcYI77O2377423774usoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1683827802;
-        bh=drqPJBiApwcNYY9N2OmW3kEYbqgOgaqjVzvL7Zi3zKg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=bLnzLE+ie0b1gvn2aMpYzD+vyyu4oTTJ06mXAi8CJ2oAyyl9Kak8RfusphTXK3Wsp
-         3sheNz22Z6G5/jZOeZaqjOgVMC7Z38kGBuM1U3fplbm99ONMFGJlssik4sikAlxGvU
-         f09zSlLfH989oxtuZgjYGi8M/cyrHxbfBJjvd3V8=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230511175642uscas1p2db67b9bfa163413fd907aea261b78ad8~eKHcQB_pb2037920379uscas1p2S;
-        Thu, 11 May 2023 17:56:42 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id 9A.93.20392.A5C2D546; Thu,
-        11 May 2023 13:56:42 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230511175642uscas1p27cf2915c8184225bfd581fb6f6dfb2d9~eKHb7Hxc32038420384uscas1p2G;
-        Thu, 11 May 2023 17:56:42 +0000 (GMT)
-X-AuditID: cbfec370-81ffe70000024fa8-f9-645d2c5a62d2
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 59.7F.38326.95C2D546; Thu,
-        11 May 2023 13:56:42 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Thu, 11 May 2023 10:56:41 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Thu,
-        11 May 2023 10:56:41 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
-CC:     "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "gregory.price@memverge.com" <gregory.price@memverge.com>,
-        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
-        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-        "nifan@outlook.com" <nifan@outlook.com>,
-        Fan Ni <fan.ni@samsung.com>
-Subject: [RFC 6/7] Add qmp interfaces to add/release dynamic capacity
- extents
-Thread-Topic: [RFC 6/7] Add qmp interfaces to add/release dynamic capacity
-        extents
-Thread-Index: AQHZhDHweOj1egr3rka/i5lzMWKESQ==
-Date:   Thu, 11 May 2023 17:56:40 +0000
-Message-ID: <20230511175609.2091136-7-fan.ni@samsung.com>
-In-Reply-To: <20230511175609.2091136-1-fan.ni@samsung.com>
-Accept-Language: en-US
+        with ESMTP id S239332AbjEKTsV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 15:48:21 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D112983E6
+        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 12:47:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FXOcwxlutrS9IFVRp2pq4FOmxCcAPfOxigQWb3XryZNiekQ3nOXQGLtXr9U/6ICcozJDl5BuTJeW8mzchJDpGmjzoHJ7v9ekP/e2BS/IDsuBK8RUpV3Z2gCisPJCXMBRzb9AHBDUleHu22W0wVI7vlvz59ZmDtCIPZk8AouzJBV0htoOLaTsNZKxuAZhGAAxW0QOnqyTDqQX8Rt1LuPsWwqUiQivWoFH0vRmUyVNIQ+ixXlaGZb3eY+TmiDr/866U2iov8wBDKjv8qoC3Z4n86k8DxnYfBFevKqykKn8TQGH63gdInsD3ptB1ryGC5njeIbnqYDrH6Q0wweBLymASw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xdWW/rbFu8MTcBJ9NXFgsd2wsqQrd6hGhoI/BjmM500=;
+ b=TYfu6dol0h9KsPj2ZFEv3NgIrE639KnaMGnasaauxmj1/FFYEFxAV/Ll3/FJbvD2au6Wt0Hd9fM2UCO7L4eCx3tBWHGnNpa+jTfDD+hYYmBB7YL0c/DsAS39NvN2I2LIHdtZ0+rw09BR7mYLGtuUISqdmWHcqCmiDqRwrucRs55i7b4hV+v4ALblL2KyyoGzE9cukFKX/lWRnYzZsADLKrhL1K9geg4nbZ89NUuBsSiZ96hgGO5utxYV+G/chllRB5zcHZxlHZdIIvBPQuRZggUVjDBLbdRryN9NP6f8+aGUy8AhkdsSlERE8C4FvFeI0ltvCwZwgNQAVx7BeMF0vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xdWW/rbFu8MTcBJ9NXFgsd2wsqQrd6hGhoI/BjmM500=;
+ b=DLNy3hVyA8Mp9ks1QnIKdGUBlFXQmie5bQ9iTDZCtGQU6TDHDqo+glclvj1efjB5UQB3A9uzi19e+SezoIl/63uzG8TnOEZdZN53pk8zSlebhDmWk23d4V8PYjDmvAKMRhrx+mLSOWbWIIajX5xQi6LvPNQnd6KB8YUMgvpz4zA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3268.namprd12.prod.outlook.com (2603:10b6:408:6c::18)
+ by BY5PR12MB4917.namprd12.prod.outlook.com (2603:10b6:a03:1d1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.21; Thu, 11 May
+ 2023 19:47:03 +0000
+Received: from BN8PR12MB3268.namprd12.prod.outlook.com
+ ([fe80::59d3:73ae:a342:baad]) by BN8PR12MB3268.namprd12.prod.outlook.com
+ ([fe80::59d3:73ae:a342:baad%5]) with mapi id 15.20.6363.026; Thu, 11 May 2023
+ 19:47:03 +0000
+Message-ID: <6f1e7b65-fb95-ffc6-636c-032766f7c270@amd.com>
+Date:   Thu, 11 May 2023 14:47:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [ndctl RFC] cxl/region: Add support to create dc region for
+ dynamic capacity device
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.25.1
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+To:     Fan Ni <fan.ni@samsung.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+        "nifan@outlook.com" <nifan@outlook.com>
+References: <CGME20230511180852uscas1p12736929a3b7da261a94fe661f151cc66@uscas1p1.samsung.com>
+ <20230511180757.2091508-1-fan.ni@samsung.com>
+From:   Ben Cheatham <benjamin.cheatham@amd.com>
+In-Reply-To: <20230511180757.2091508-1-fan.ni@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM6PR08CA0049.namprd08.prod.outlook.com
+ (2603:10b6:5:1e0::23) To BN8PR12MB3268.namprd12.prod.outlook.com
+ (2603:10b6:408:6c::18)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDKsWRmVeSWpSXmKPExsWy7djXc7pROrEpBu+vSFp0n9/AaDF96gVG
-        i9U31zBaNDQ9YrFo2f2eyWL/0+csFqsWXmOzOD/rFIvF84nPmSyWLnnEbHG8dweLA7fHhckT
-        WD0WN7h67Jx1l92j5chbIG/PSyaPjR//s3s8ubaZyWPz6xfMHlNn13t83iQXwBXFZZOSmpNZ
-        llqkb5fAlfFr0Tm2gu1WFQt+tzE3MP7T62Lk5JAQMJG43XaQrYuRi0NIYCWjxJltT9khnFYm
-        iXdzZ7LBVN1Y8B0qsZZR4v+9FcwQzidGiabTL1khnGWMEu+/72EGaWETUJTY17UdrF1EwFji
-        2OElYB3MAm9ZJD6uecMCkhAW8JeY3nuaHaIoROLP78OsELaeRNeEv2A1LAKqEudu7GAEsXkF
-        LCX6DnxlArE5BawkNjSfALMZBcQkvp9aA2YzC4hL3HoynwnibkGJRbMhDpIAqvm36yHUP/IS
-        k3/MgLIVJe5/f8kO0asncWPqFDYIW1ti2cLXzBB7BSVOznzCAlEvKXFwxQ0WkGckBPo5JebM
-        OgE1yEWip7uFHcKWlrh6fSpQMweQnSyx6iMXRDhHYv6SLVBzrCUW/lnPNIFRZRaSs2chOWMW
-        kjNmITljASPLKkbx0uLi3PTUYuO81HK94sTc4tK8dL3k/NxNjMAEd/rf4YIdjLdufdQ7xMjE
-        wXiIUYKDWUmE9+2S6BQh3pTEyqrUovz4otKc1OJDjNIcLErivIa2J5OFBNITS1KzU1MLUotg
-        skwcnFINTJGSdY3TFNOzL9n1L9TYuMuW62/TsdsbAllsNhYmBrEVh1+8dP9Yv5JOUYDQYs0Z
-        /lsNZJ07s3nf7/H2dQrdKsFxTnYl332ucp8f0/eJSTVtXTmTK+6oxBL5OY/OXJNl6L86S1k2
-        3tuAYYt+4wr7Fdxf3jImLk/+f7xT97apzuTabftadtv0n+n8OY0p8vdh+UCXFyr+VgccNHZ7
-        3Vi53Of8ZrOKTaLhcXs574mtTVHp1Juzy6Hydcg7KauEu4/mcyzpnrZFeeWf1A/vOm9m3ink
-        rLfh/sun8YnVIO9ozhH+bVzHQqafKngUWT/nwT6ODvWQf26vZm9gXy7XJNcRExm+rqNatKpS
-        ZnPTNh5hJZbijERDLeai4kQAxEcGL98DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsWS2cA0STdKJzbF4P5EFovu8xsYLaZPvcBo
-        sfrmGkaLhqZHLBYtu98zWex/+pzFYtXCa2wW52edYrF4PvE5k8XSJY+YLY737mBx4Pa4MHkC
-        q8fiBlePnbPusnu0HHkL5O15yeSx8eN/do8n1zYzeWx+/YLZY+rseo/Pm+QCuKK4bFJSczLL
-        Uov07RK4Mn4tOsdWsN2qYsHvNuYGxn96XYycHBICJhI3Fnxn72Lk4hASWM0osXVnMyuE84lR
-        4t7SgywQzjJGicat61hBWtgEFCX2dW1nA7FFBIwljh1ewgxiMwu8ZpH4dpEbxBYW8JXo3b2G
-        BaImROLWlqPMELaeRNeEv2BxFgFViXM3djCC2LwClhJ9B74ygdhCQPbHnzvZQWxOASuJDc0n
-        wOKMAmIS30+tYYLYJS5x68l8JogXBCSW7DnPDGGLSrx8/I8VwpaXmPxjBhuErShx//tLdohe
-        PYkbU6ewQdjaEssWvmaGuEFQ4uTMJywQ9ZISB1fcYJnAKDELybpZSNpnIWmfhaR9ASPLKkbx
-        0uLi3PSKYsO81HK94sTc4tK8dL3k/NxNjMDUcPrf4cgdjEdvfdQ7xMjEwXiIUYKDWUmE9+2S
-        6BQh3pTEyqrUovz4otKc1OJDjNIcLErivEKuE+OFBNITS1KzU1MLUotgskwcnFINTPJfu1Qs
-        cjmjYovv9ZWWLQ0L2sPrsuFGZPGZUxmLo/Xy51s12WjFfpR682qlxdRfZZlJz9vPHG82PaSp
-        LO175VVraZVOsaOVWXSJiv93J6EwqZKZ4mdDJl7eeuTqEZdvQfNvvfNmb9ug3LZT5n/5dklt
-        s+r7c+ys+PZYtX56UOydejLD2qQ8Ra6Pz9ZOW26WUExrvqOM2+J+/7X5sSnrVx0wyo1jljgp
-        8mXH9EupysYfnabzB/bPsJZXY1yw9IpZmfSPfTJ3LY3ucM01cU3Yq/Jqzm/VmMzEihoeo23v
-        3M09RCq4++MTNzgxC5Vs+LzwdfLOyqNzmiP2fZSU1737rWXCQfvKU4ddJB099iuxFGckGmox
-        FxUnAgD6twOCfAMAAA==
-X-CMS-MailID: 20230511175642uscas1p27cf2915c8184225bfd581fb6f6dfb2d9
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230511175642uscas1p27cf2915c8184225bfd581fb6f6dfb2d9
-References: <20230511175609.2091136-1-fan.ni@samsung.com>
-        <CGME20230511175642uscas1p27cf2915c8184225bfd581fb6f6dfb2d9@uscas1p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3268:EE_|BY5PR12MB4917:EE_
+X-MS-Office365-Filtering-Correlation-Id: c269eb0d-087a-4702-597a-08db52587e13
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IKNVCAUaXuI0R7mmMNwmXpyT1Y9TInN2aqo7389vIHjks2+4nEgvJF7NuvWpMl/NuMQbU4dWDCcPfhe8PvIca4gK7DeX2oHsNNgZbLCp3U7i5G/WG5//6Te5xVJJAYNcedA/bZ0HTYnLfiZV/mB4znESBZSzIO7Ex50FUBVFH8BiHhV3PDhzYuCGKwnzMTflyIpAY9grS7IynbtA+xopG/BZ/1QrexB06uYIK2by1Hc/0JA/iI8srMCHQH5G93lPEkESlzRudsgO0nE5Eu0F6RV/koU1lkyq6zwzVkr63lszEb/GVZ2o2WIhLZb0JmuUmvSFCHvPjMrTpNsd15Ugkv23NFOceaRK/YuVWl84Xyulr0g5OPpzLO4zbhf9RCU3lPrWF5uEQABo28US/9YMC+6XQCvpK3vaWcLSGxwoB5vVQ1t5FO2vFXbDs3NF5wRVazhvluwTMjnKe6ooOIas6Y1S+gEZT/k7NkxrmBOCpo79ujnmQ74WJ4XyHFVB3caC0dUfI8Jw6TAbXt8HCJTgJieB8qKTtQkUHpEKauHAiYneACkcBEVBNnLvzsDin5Dg2Ox/wPmUUeqb4kI8OivdwV1eBqFCDqqKW5YnFi+hh5EMxMpCSL++NqzCMFpHjPghRK7z6mWzSywaF8FVL5uwkQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3268.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(366004)(346002)(39860400002)(396003)(451199021)(2616005)(31686004)(186003)(66476007)(66946007)(316002)(66556008)(8676002)(8936002)(5660300002)(4326008)(41300700001)(6506007)(6512007)(2906002)(26005)(86362001)(54906003)(478600001)(110136005)(36756003)(38100700002)(31696002)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YTV3YXRKN0QzUGRCQ2tySVlVQUhVN0xHWnZrN3R4Vm9PRDlJSktHRUVKSjk1?=
+ =?utf-8?B?UWFhRk1xKzNCaldPZFhRZmxUWFJRRjNOZHVteGs2VmpRZUlWTi84OTBqQ0FJ?=
+ =?utf-8?B?U01LTGFhV1JtVEtSMHhFRDV6VVNjdmRldkpDM1cyNUZkU3padGczYWNST1lj?=
+ =?utf-8?B?d0tzZEp3MTZGcW5XWlBMSS93TFAwSkF6K1c3cGFiUTk1Q0RWcU1DRU9jb3Q2?=
+ =?utf-8?B?UktTdkx5WnIzeVJMcDhzRlVMdGRBSGYrZ2kxdUpBSmJwRW5pVFhnUHQvK0Zj?=
+ =?utf-8?B?YWMzNGx3SFVoeXp0dktDN2JXd2xUcVE2Ylc5Zi9JeUJhZlFrbUg5YUg4MTg2?=
+ =?utf-8?B?VVNFdDNvSGVMOGgrc1A3azdNNjMyVFIwQk5lSlJVakFyR2ZKaTVkRUNucCtL?=
+ =?utf-8?B?ck41WHZMdFMrOTU4eVQ3TjRxTjhmdkN1SmpNdi9HeFhLWnU0YUJaSm9CYW01?=
+ =?utf-8?B?T1ZhcGorM0l6ZW1YcExSQ3pkcWU1K2hPTFZjU2JtV0hpOGY2WHFQSzlNWm1C?=
+ =?utf-8?B?Q2VPb1krQllPRWNXRFRXQkpCMkVzTlZXd25BdGgzNnhSbVN5SFh5Mys5Vjdv?=
+ =?utf-8?B?QlpzNXVZYWN2bDNWdERaK2JkWGdhZW5lckp0bExKSCsxTEl2bjduNzI3MlBN?=
+ =?utf-8?B?WmpNdTVFNXZERVZhakRGZDc1SUNob1h2NVpKZ0NlNk1QZ0RHMXpHTk52bG5K?=
+ =?utf-8?B?c2VpTlJkWWJSQm5XZm5JY0NhME0xVVlkK3FyMHVKK0QwOW5kU0lmUnlYMjBF?=
+ =?utf-8?B?cVpYdC9jQXpWR0VVT2crRS9qRmJaRlp2d0F5eVpGc2JuZ2tlWGs1ZUdhSnZF?=
+ =?utf-8?B?RUliZ0tZUnBkR2xxUXlIWmQwSGJ2d0VsQ2ExNXZITDhxbVUwRlkxQ29OOEx5?=
+ =?utf-8?B?REVhZ2NiUVJYQnZEYW5hK1J1OTdlRVdXcVNBVlJIWGRhSTZENkhocUE3NFgy?=
+ =?utf-8?B?dTlhL1ljMWh4V0NmMHAwSlRrQmtnWmRsMHJVczM4U1FNSHNSRUxyaDFKZWQ2?=
+ =?utf-8?B?Znh2Q2prU24zZ0pJeER3dnhFU3QvZjdrUkJNMnJzVEg5U1J0bjJUUXVNYlBM?=
+ =?utf-8?B?VzUxdk9JTkcwemFYbVcwaFk5ckM5TVBDcTEzMnZoNy80WEY3Tjk0cDZ2c1hU?=
+ =?utf-8?B?c2F1OXRiVkdnUjdKSXE1b2dnQ2tKS21nK3F5Z3lxNUphQjJ5c0pBRGFJdlRJ?=
+ =?utf-8?B?dmx0MEhzcENHR0hxMmNuUkp1SE9tQThneXlEdVA2WXZSQ2I2UHQvb2xLeXc5?=
+ =?utf-8?B?aENQRzZTOFNtZ3ZoWnY2M2Z0ZElkL21uQjdZcmd3T2NyVHlUN0lhdlc0OXFN?=
+ =?utf-8?B?U1h6OUt0cEdqS1NaZml4NjU0Q2FYZ0d2NWQ5TzJYUmN2cXoxbVpNYU5VSzFU?=
+ =?utf-8?B?TGtRZHlhTU16eElLTnJ3TWxrNnhKRUZzNzljTnAvb00zTUkxY0NqSStmNkZR?=
+ =?utf-8?B?cjZiWUtOa044cWpicDNvZ3pnWTY3T1NZSTZKQTlJcFU4bDBidGlHVnhxcHdv?=
+ =?utf-8?B?M1p0WS9KbmphaDFhS3FlOUtMZWtrMGljMmZDQ0RhZ0hlTkRlU0Q3UHNjcUE3?=
+ =?utf-8?B?NWpwbkJxZVZNLzNQdjhtbnRGUXNoc2E4UkZua2E2eFkwMG5LRlIyZVZ3SS9W?=
+ =?utf-8?B?UnZuNlp3c0RuU2h6NVUwL3ZhcXpiWndwcHpVeWhmc0liU0pXM3Q1bWM2Y2cx?=
+ =?utf-8?B?TDFiN01nbWtUOHZFYWd4bENUeXg3UWo1QUpJdnhUc2d6bjJuTkdodlprL25I?=
+ =?utf-8?B?VnZrYWtCOUs5bU16T3Z2Mjd6ZVJpYjg3OEppY2MrbVJ3MkU3Ulg2SlR6Tk5i?=
+ =?utf-8?B?OVN4d01LOXBRYzBNVVR6ejhqanRiWmRWNm41YXJZc3BWdU9lS0txQU9mU1k2?=
+ =?utf-8?B?MW9KZlc1QjY1dENYQXRpY3E3RzJ0a25rWmh3M0dRcjN5enNkMXZjcVJkMDU4?=
+ =?utf-8?B?SmIvSkhVVG93ZWtBelBnV1FMcGZNalgwWW1qVWhyK3FpL0dWaFBpYkhJMktv?=
+ =?utf-8?B?cjlqaXBFNjBWOEhleHJpTXZzSEVYUFRGakhnd1R6YXVFMW5yR3BBNlNrMFJR?=
+ =?utf-8?B?TG9tTTkwcjM0ck9HVFhLVDdYYitLNDJrWDlPZzVVYmhkZHRKVy9LU3krZkM2?=
+ =?utf-8?Q?qd6br00Cu71CfUq9w83KSZ0Qo?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c269eb0d-087a-4702-597a-08db52587e13
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3268.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2023 19:47:03.0506
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4S1oz1NhET7Lg6apYxPm0CfU9LjMOGrnLRmQtP7psn6Xj82nNQjScU51Qi0aUylBV2hZOFSVNK1MSOz63VnixQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4917
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Fan Ni <nifan@outlook.com>
+Hi Fan,
 
-Since fabric manager emulation is not supported yet, the change implements
-the functions to add/release dynamic capacity extents as QMP interfaces.
+I actually have a patch series that does this and adds cxl list support for DC regions that I've been 
+sitting on. I was going to wait to send it out until the kernel DCD support was a bit more mature, 
+but since you sent this out I thought I may as well put the list support out there so we don't
+duplicate work. I've copy/pasted the patch below, feel free to add it to your patch/make modifications.
 
-1. Add dynamic capacity extents:
+Subject: [PATCH] Add cxl list support for dynamic capacity regions
 
-For example, the command to add two continuous extents (each is 128MB
-long) to region 0 (starting at dpa offset 0) looks like below:
+Add support for printing dynamic capacity regions to cxl list. Region
+support is broken into two pieces: support for the cxl region, and
+support for device level dc regions. The device level dc regions are
+printed under the memdev in the list output since they are a memdev
+attribute in sysfs. There are a maximum of eight of these regions,
+only the regions that are present in sysfs are printed.
 
-{ "execute": "qmp_capabilities" }
+Example output:
+(assume device has regions 0 and 1 populated, and region0 was created
+ using create-region -t dc)
+[
+    {
+	"memdevs":[
+	  {
+	    "memdev":"mem0"
+	    "pmem_size":536870912,
+	    "ram_size":1,
+	    "serial":0,
+	    "host":"0000:0d:00.0",
+	    "dc_regions":[
+	      {
+		"region_nr":0,
+		"size":268435456,
+		"base":268435456,
+		"blk_size":2097152
+	      },
+	      {
+		"region_nr":1,
+		"size":268435456,
+		"base":536870912,
+		"blk_size":2097152
+	      }
+	    ]
+	  }
+	]
+    },
+    {
+	"regions":[
+	  {
+	    "region":"region0",
+	    "resource":19595788288,
+	    "size":536870912,
+	    "type":"dc",
+	    "interleave_ways":1,
+	    "interleave_granularity":256,
+	    "decode_state":"commit"
+	  }
+	]
+    }
+]
 
-{ "execute": "cxl-add-dynamic-capacity-event",
-    "arguments": {
-	"path": "/machine/peripheral/cxl-pmem0",
-	"region-id" : 0,
-	"num-extent": 2,
-	"dpa":0,
-	"extent-len": 128
-	}
-}
-
-2. Release dynamic capacity extents:
-
-For example, the command to release an extent of size 128MB from region
-0 (starting at dpa offset 0) look like below:
-
-{ "execute": "cxl-release-dynamic-capacity-event",
-	"arguments": {
-		 "path": "/machine/peripheral/cxl-pmem0",
-		"region-id" : 0,
-		 "num-extent": 1 ,
-		"dpa":0,
-		"extent-len": 128
-	}
-}
-
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 ---
- hw/mem/cxl_type3.c          | 127 ++++++++++++++++++++++++++++++++++++
- include/hw/cxl/cxl_events.h |  16 +++++
- qapi/cxl.json               |  44 +++++++++++++
- 3 files changed, 187 insertions(+)
+ cxl/json.c         | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.c   | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym |  4 ++++
+ cxl/lib/private.h  |  8 +++++++
+ cxl/libcxl.h       |  7 ++++++
+ 5 files changed, 139 insertions(+)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 23954711b5..70d47d43b9 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1651,6 +1651,133 @@ void qmp_cxl_inject_memory_module_event(const char =
-*path, CxlEventLog log,
-     }
+diff --git a/cxl/json.c b/cxl/json.c
+index 9a4b5c7..df155f8 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -480,6 +480,62 @@ err_jobj:
+ 	return NULL;
  }
-=20
-+static const QemuUUID dynamic_capacity_uuid =3D {
-+	.data =3D UUID(0xca95afa7, 0xf183, 0x4018, 0x8c, 0x2f,
-+			0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a),
+ 
++static void util_cxl_memdev_dc_regions_to_json(struct json_object *jdev, struct cxl_memdev *memdev,
++			       unsigned long flags)
++{
++	struct json_object *jdc_array, *jdc_region, *jobj;
++	u64 val;
++
++	jdc_array = json_object_new_array();
++	if (!jdc_array)
++		return;
++
++	for (int i = 0; i < CXL_MAX_DC_REGION; i++) {
++		jdc_region = json_object_new_object();
++		if (!jdc_region)
++			continue;
++
++		/*
++		 * Skip the region if the size is invalid, the rest is probably
++		 * also invalid. If size is 0, the region is most likely unset.
++		 */
++		val = cxl_memdev_get_dc_region_size(memdev, i);
++		if (val == ULLONG_MAX || val == 0) {
++			json_object_put(jdc_region);
++			continue;
++		}
++
++		jobj = json_object_new_int(i);
++		if (jobj)
++			json_object_object_add(jdc_region, "region_nr", jobj);
++
++		jobj = util_json_object_size(val, flags);
++		if (jobj) {
++			json_object_object_add(jdc_region, "size", jobj);
++		}
++
++		val = cxl_memdev_get_dc_region_base(memdev, i);
++		if (val < ULLONG_MAX) {
++			jobj = util_json_object_hex(val, flags);
++			if (jobj)
++				json_object_object_add(jdc_region, "base", jobj);
++		}
++
++		val = cxl_memdev_get_dc_region_blk_size(memdev, i);
++		if (val < ULLONG_MAX) {
++			jobj = util_json_object_size(val, flags);
++			if (jobj) {
++				json_object_object_add(jdc_region, "blk_size", jobj);
++			}
++		}
++
++
++		json_object_array_add(jdc_array, jdc_region);
++	}
++
++	json_object_object_add(jdev, "dc_regions", jdc_array);
++}
++
+ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		unsigned long flags)
+ {
+@@ -552,6 +608,10 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 			json_object_object_add(jdev, "partition_info", jobj);
+ 	}
+ 
++	size = cxl_memdev_get_dc_size(memdev);
++	if (size)
++		util_cxl_memdev_dc_regions_to_json(jdev, memdev, flags);
++
+ 	json_object_set_userdata(jdev, memdev, NULL);
+ 	return jdev;
+ }
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index ecdc242..0dcc79e 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -1211,6 +1211,37 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 		goto err_read;
+ 	memdev->ram_size = strtoull(buf, NULL, 0);
+ 
++	sprintf(path, "%s/dc/size", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		memdev->dc_size = 0;
++	else
++		memdev->dc_size = strtoull(buf, NULL, 0);
++
++	for (unsigned int i = 0; i < CXL_MAX_DC_REGION; i++) {
++		/*
++		 * if the first read fails, assume the region doesn't exist
++		 * and set the region to invalid values.
++		 */
++		sprintf(path, "%s/dc/base_region%d", cxlmem_base, i);
++		if (sysfs_read_attr(ctx, path, buf) < 0) {
++			memdev->dc_regions[i].base = ULLONG_MAX;
++			memdev->dc_regions[i].size = 0;
++			memdev->dc_regions[i].blk_size = 0;
++			continue;
++		}
++		memdev->dc_regions[i].base = strtoull(buf, NULL, 0);
++
++		sprintf(path, "%s/dc/size_region%d", cxlmem_base, i);
++		if (sysfs_read_attr(ctx, path, buf) < 0)
++			goto err_read;
++		memdev->dc_regions[i].size = strtoull(buf, NULL, 0);
++
++		sprintf(path,"%s/dc/blk_sz_region%d", cxlmem_base, i);
++		if (sysfs_read_attr(ctx, path, buf) < 0)
++			goto err_read;
++		memdev->dc_regions[i].blk_size = strtoull(buf, NULL, 0);
++	}
++
+ 	sprintf(path, "%s/payload_max", cxlmem_base);
+ 	if (sysfs_read_attr(ctx, path, buf) < 0)
+ 		goto err_read;
+@@ -1369,6 +1400,35 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
+ 	return memdev->ram_size;
+ }
+ 
++CXL_EXPORT unsigned long long cxl_memdev_get_dc_size(struct cxl_memdev *memdev)
++{
++	return memdev->dc_size;
++}
++
++CXL_EXPORT unsigned long long cxl_memdev_get_dc_region_base(struct cxl_memdev *memdev,
++							    unsigned int region_nr)
++{
++	if (region_nr < CXL_MAX_DC_REGION)
++		return memdev->dc_regions[region_nr].base;
++	return ULLONG_MAX;
++}
++
++CXL_EXPORT unsigned long long cxl_memdev_get_dc_region_size(struct cxl_memdev *memdev,
++							    unsigned int region_nr)
++{
++	if (region_nr < CXL_MAX_DC_REGION)
++		return memdev->dc_regions[region_nr].size;
++	return ULLONG_MAX;
++}
++
++CXL_EXPORT unsigned long long cxl_memdev_get_dc_region_blk_size(struct cxl_memdev *memdev,
++							    unsigned int region_nr)
++{
++	if (region_nr < CXL_MAX_DC_REGION)
++		return memdev->dc_regions[region_nr].blk_size;
++	return ULLONG_MAX;
++}
++
+ CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
+ {
+ 	return memdev->firmware_version;
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 1434da6..e711273 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -254,4 +254,8 @@ global:
+ LIBCXL_6 {
+ global:
+ 	cxl_decoder_create_dc_region;
++	cxl_memdev_get_dc_size;
++	cxl_memdev_get_dc_region_base;
++	cxl_memdev_get_dc_region_size;
++	cxl_memdev_get_dc_region_blk_size;
+ } LIBCXL_5;
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index d49b560..968afaf 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -19,6 +19,12 @@ struct cxl_pmem {
+ 	char *dev_path;
+ };
+ 
++struct cxl_dc_region {
++	u64 base;
++	u64 size;
++	u64 blk_size;
 +};
 +
-+static void qmp_cxl_process_dynamic_capacity_event(const char *path, CxlEv=
-entLog log,
-+		uint8_t flags, uint8_t type, uint16_t hid, uint8_t rid, uint32_t extent_=
-cnt,
-+		CXLDCExtent_raw *extents, Error **errp)
-+{
-+	Object *obj =3D object_resolve_path(path, NULL);
-+	CXLEventDynamicCapacity dCap;
-+	CXLEventRecordHdr *hdr =3D &dCap.hdr;
-+	CXLDeviceState *cxlds;
-+	CXLType3Dev *dcd;
-+	int i;
+ struct cxl_endpoint;
+ struct cxl_memdev {
+ 	int id, major, minor;
+@@ -32,12 +38,14 @@ struct cxl_memdev {
+ 	struct list_node list;
+ 	unsigned long long pmem_size;
+ 	unsigned long long ram_size;
++	unsigned long long dc_size;
+ 	int payload_max;
+ 	size_t lsa_size;
+ 	struct kmod_module *module;
+ 	struct cxl_pmem *pmem;
+ 	unsigned long long serial;
+ 	struct cxl_endpoint *endpoint;
++	struct cxl_dc_region dc_regions[CXL_MAX_DC_REGION];
+ };
+ 
+ struct cxl_dport {
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 1a54eee..c548abe 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -18,6 +18,8 @@ typedef unsigned char uuid_t[16];
+ extern "C" {
+ #endif
+ 
++#define CXL_MAX_DC_REGION 8
 +
-+	if (!obj) {
-+		error_setg(errp, "Unable to resolve path");
-+		return;
-+	}
-+	if (!object_dynamic_cast(obj, TYPE_CXL_TYPE3)) {
-+		error_setg(errp, "Path not point to a valid CXL type3 device");
-+		return;
-+	}
-+
-+	dcd =3D CXL_TYPE3(obj);
-+	cxlds =3D &dcd->cxl_dstate;
-+	memset(&dCap, 0, sizeof(dCap));
-+
-+	if (!dcd->dc.num_regions) {
-+		error_setg(errp, "No dynamic capacity support from the device");
-+		return;
-+	}
-+
-+	/*
-+	 * 8.2.9.1.5
-+	 * All Dynamic Capacity event records shall set the Event Record
-+	 * Severity field in the Common Event Record Format to Informational
-+	 * Event. All Dynamic Capacity related events shall be logged in the
-+	 * Dynamic Capacity Event Log.
-+	 */
-+	assert(flags & (1<<CXL_EVENT_TYPE_INFO));
-+	cxl_assign_event_header(hdr, &dynamic_capacity_uuid, flags, sizeof(dCap))=
-;
-+
-+	/*
-+	 * 00h: add capacity
-+	 * 01h: release capacity
-+	 * 02h: forced capacity release
-+	 * 03h: region configuration updated
-+	 * 04h: Add capacity response
-+	 * 05h: capacity released
-+	 **/
-+	dCap.type =3D type;
-+	stw_le_p(&dCap.host_id, hid);
-+	dCap.updated_region_id =3D rid;
-+	for (i =3D 0; i < extent_cnt; i++) {
-+		extents[i].start_dpa +=3D dcd->dc.regions[rid].base;
-+		memcpy(&dCap.dynamic_capacity_extent, &extents[i]
-+				, sizeof(CXLDCExtent_raw));
-+
-+		if (cxl_event_insert(cxlds, CXL_EVENT_TYPE_DYNAMIC_CAP,
-+					(CXLEventRecordRaw *)&dCap)) {
-+			;
-+		}
-+		cxl_event_irq_assert(dcd);
-+	}
-+}
-+
-+#define MEM_BLK_SIZE_MB 128
-+void qmp_cxl_add_dynamic_capacity_event(const char *path, uint8_t region_i=
-d,
-+		uint32_t num_exent, uint64_t dpa, uint64_t extent_len_MB, Error **errp)
-+{
-+	uint8_t flags =3D 1 << CXL_EVENT_TYPE_INFO;
-+	CXLDCExtent_raw *extents;
-+	int i;
-+
-+	if (extent_len_MB < MEM_BLK_SIZE_MB) {
-+		error_setg(errp,
-+			"extent size cannot be smaller than memory block size (%dMB)",
-+			MEM_BLK_SIZE_MB);
-+		return;
-+	}
-+
-+	extents =3D g_new0(CXLDCExtent_raw, num_exent);
-+	for (i =3D 0; i < num_exent; i++) {
-+		extents[i].start_dpa =3D dpa;
-+		extents[i].len =3D extent_len_MB*1024*1024;
-+		memset(extents[i].tag, 0, 0x10);
-+		extents[i].shared_seq =3D 0;
-+		dpa +=3D extents[i].len;
-+	}
-+
-+	qmp_cxl_process_dynamic_capacity_event(path, CXL_EVENT_LOG_INFORMATIONAL,
-+			flags, 0x0, 0, region_id, num_exent, extents, errp);
-+
-+	g_free(extents);
-+}
-+
-+void qmp_cxl_release_dynamic_capacity_event(const char *path, uint8_t regi=
-on_id,
-+		uint32_t num_exent, uint64_t dpa, uint64_t extent_len_MB, Error **errp)
-+{
-+	uint8_t flags =3D 1 << CXL_EVENT_TYPE_INFO;
-+	CXLDCExtent_raw *extents;
-+	int i;
-+
-+	if (extent_len_MB < MEM_BLK_SIZE_MB) {
-+		error_setg(errp,
-+			"extent size cannot be smaller than memory block size (%dMB)",
-+			MEM_BLK_SIZE_MB);
-+		return;
-+	}
-+
-+	extents =3D g_new0(CXLDCExtent_raw, num_exent);
-+	for (i =3D 0; i < num_exent; i++) {
-+		extents[i].start_dpa =3D dpa;
-+		extents[i].len =3D extent_len_MB*1024*1024;
-+		memset(extents[i].tag, 0, 0x10);
-+		extents[i].shared_seq =3D 0;
-+		dpa +=3D extents[i].len;
-+	}
-+
-+	qmp_cxl_process_dynamic_capacity_event(path, CXL_EVENT_LOG_INFORMATIONAL,
-+			flags, 0x1, 0, region_id, num_exent, extents, errp);
-+
-+	g_free(extents);
-+}
-+
- static void ct3_class_init(ObjectClass *oc, void *data)
- {
-     DeviceClass *dc =3D DEVICE_CLASS(oc);
-diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
-index 089ba2091f..dd00458d1d 100644
---- a/include/hw/cxl/cxl_events.h
-+++ b/include/hw/cxl/cxl_events.h
-@@ -165,4 +165,20 @@ typedef struct CXLEventMemoryModule {
-     uint8_t reserved[0x3d];
- } QEMU_PACKED CXLEventMemoryModule;
-=20
-+/*
-+ * Dynamic Capacity Event Record
-+ * CXL Rev 3.0 Section 8.2.9.2.1.5: Table 8-47
-+ * All fields little endian.
-+ */
-+typedef struct CXLEventDynamicCapacity {
-+	CXLEventRecordHdr hdr;
-+	uint8_t type;
-+	uint8_t reserved1;
-+	uint16_t host_id;
-+	uint8_t updated_region_id;
-+	uint8_t reserved2[3];
-+	uint8_t dynamic_capacity_extent[0x28]; /* defined in cxl_device.h */
-+	uint8_t reserved[0x20];
-+} QEMU_PACKED CXLEventDynamicCapacity;
-+
- #endif /* CXL_EVENTS_H */
-diff --git a/qapi/cxl.json b/qapi/cxl.json
-index 8b3d30cd71..c9a9a45ce4 100644
---- a/qapi/cxl.json
-+++ b/qapi/cxl.json
-@@ -264,3 +264,47 @@
-             'type': 'CxlCorErrorType'
-   }
- }
-+
-+##
-+# @cxl-add-dynamic-capacity-event:
-+#
-+# Command to add dynamic capacity extent event
-+#
-+# @path: CXL DCD canonical QOM path
-+# @region-id: region id
-+# @num-extent: number of extents to add, test only
-+# @dpa: start dpa for the operation
-+# @extent-len: extent size in MB
-+#
-+# Since: 8.0
-+##
-+{ 'command': 'cxl-add-dynamic-capacity-event',
-+  'data': { 'path': 'str',
-+           'region-id': 'uint8',
-+           'num-extent': 'uint32',
-+           'dpa':'uint64',
-+           'extent-len': 'uint64'
-+  }
-+}
-+
-+##
-+# @cxl-release-dynamic-capacity-event:
-+#
-+# Command to add dynamic capacity extent event
-+#
-+# @path: CXL DCD canonical QOM path
-+# @region-id: region id
-+# @num-extent: number of extents to add, test only
-+# @dpa: start dpa for the operation
-+# @extent-len: extent size in MB
-+#
-+# Since: 8.0
-+##
-+{ 'command': 'cxl-release-dynamic-capacity-event',
-+  'data': { 'path': 'str',
-+           'region-id': 'uint8',
-+           'num-extent': 'uint32',
-+           'dpa':'uint64',
-+           'extent-len': 'uint64'
-+  }
-+}
---=20
-2.25.1
+ struct cxl_ctx;
+ struct cxl_ctx *cxl_ref(struct cxl_ctx *ctx);
+ void cxl_unref(struct cxl_ctx *ctx);
+@@ -47,6 +49,11 @@ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
+ struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
++unsigned long long cxl_memdev_get_dc_size(struct cxl_memdev *memdev);
++unsigned long long cxl_memdev_get_dc_region_size(struct cxl_memdev *memdev, unsigned int region_nr);
++unsigned long long cxl_memdev_get_dc_region_base(struct cxl_memdev *memdev, unsigned int region_nr);
++unsigned long long cxl_memdev_get_dc_region_blk_size(struct cxl_memdev *memdev,
++						     unsigned int region_nr);
+ const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
+ 
+ /* ABI spelling mistakes are forever */
+-- 
+2.34.1
