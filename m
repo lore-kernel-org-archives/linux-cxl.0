@@ -2,160 +2,196 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774CC77B7C
-	for <linux-cxl@archiver.kernel.org>; Thu, 11 May 2023 17:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F543C77B7F
+	for <linux-cxl@archiver.kernel.org>; Thu, 11 May 2023 17:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238781AbjEKR6J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 May 2023 13:58:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
+        id S238051AbjEKR7m (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 11 May 2023 13:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239097AbjEKR5t (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 13:57:49 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5CFD048
-        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 10:57:21 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 60FDF5C1064;
-        Thu, 11 May 2023 17:56:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a268.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id D0FE45C110A;
-        Thu, 11 May 2023 17:56:16 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1683827776; a=rsa-sha256;
-        cv=none;
-        b=XBOWtXUJPAGZvxxRgv9tGwhllUfbUbVZJIOAOqldU70g7z+QvKCZKNaUmT0SlRj27yTea2
-        jrF3vXt7wB6p+CT1h+JRuZybHUciDdOvun4IrpzUIQZ3t51j5/p/wlPcnvIFhqotKr2bht
-        uF6ZCrRRJSYTb9812LD4Cg/oVNGvG+xWeRDWjrfMHvwOiS8QPeSESKRp4MJLSxNpDNqH9X
-        7Dmgtm5XIyHbdQeOE9p9VGmrtEB9nnuP375R4wyXQF8sXAHZdLwgFTScg8farEhEh3EMnR
-        bl6zzOIqPfxrmwp7bGCTMvB18SDs0E37M4M13a6m418n6Sj50E6Tw1r+DGiV6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1683827776;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=LucIdtj9Dpjy6EY8swbA5Lo+XBebD8CDds9qILuoSDc=;
-        b=d1F8VEpg30Dd9BcxkDVSyZc/+trSNHnQ5OKBdICAycFKgg4ElNf23F5kOop6ceZdCAlyQr
-        z+8VyQDNGdel8jsydp4RcMJ8rQ+1gf876jsFhnBFvyiM6tGA1PvVlMaWkgLahPjjiuiM2Y
-        Ngm1WE6eS2OF4RU5zLlO0LQ/QEZjFC14cIe5JANYOa5TC+1TUnAm3T/6KsRQY+Rr8W1OKD
-        jHtItOwtVJfuTKN6Ct0/Lqnre09pi+qhgh6RasHB/YLTWAzBeNEu5OmzT6/k++BLx55k5g
-        t7SJ6zDe27POu9JKYWQnlwiauvWIjyG0OV52AhF9CvU6Bzw/OEAeKZwoscXJCw==
-ARC-Authentication-Results: i=1;
-        rspamd-5cdf8fd7d9-qfmcz;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Whispering-Wipe: 08050dc3233e1d37_1683827777157_4116574945
-X-MC-Loop-Signature: 1683827777157:545323579
-X-MC-Ingress-Time: 1683827777156
-Received: from pdx1-sub0-mail-a268.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.127.59.48 (trex/6.8.1);
-        Thu, 11 May 2023 17:56:17 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a268.dreamhost.com (Postfix) with ESMTPSA id 4QHKMN0gGbz5h;
-        Thu, 11 May 2023 10:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1683827776;
-        bh=LucIdtj9Dpjy6EY8swbA5Lo+XBebD8CDds9qILuoSDc=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=XwnEcclvbFm3qdkBKdj/yqqIO1x+8V37WzN2J9fmEmHnbmue1BC7gyNyY6Zp7b+3Y
-         Jzqa8lR6POZKMo4hWh+8/oMO6zBSFsUD/PuV6FAFVjlAnCMRYWkrNG21OIXWhp/wXV
-         T3/W67JQynYheh7ufQJsFlqDX9H/Vl9kraePKyWP2r2RDBgUQa9xGLb+ZapCJWzuJV
-         CASFErtGTCoQh6B/ObGILQmNmpR06+/6stPNybXjL7BBGH0Dpd3FYf1QOSKPiwkcn/
-         fAFYgnKN0ihVuowN0/XgSEvCkEwIl8PeZ0IR2iTatCrcI5tWRo++eGhLW++rs0FnWi
-         KjxgRA+9D70/g==
-Date:   Thu, 11 May 2023 10:23:31 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     dan.j.williams@intel.com, dave.jiang@intel.com,
-        alison.schofield@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, fan.ni@samsung.com,
-        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 4/7] cxl/mem: Wire up Sanitation support
-Message-ID: <qnulxxlnw224b4sjdmdv2vqe4weal4ljes2bgtq3e7ksjdez5x@3gyjww5z66w7>
-References: <20230421092321.12741-1-dave@stgolabs.net>
- <20230421092321.12741-5-dave@stgolabs.net>
- <20230511160741.00004531@Huawei.com>
+        with ESMTP id S239131AbjEKR70 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 13:59:26 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C016195
+        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 10:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683827939; x=1715363939;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zmtKCxzEB2eCaiYSIvfweDYzrtmXFJA4u3jy5WAlwrg=;
+  b=N80Ew5PLASsoq4Lnl77c6/GaWxsJK6UsblEABqccEXk9ErrxiFpKJU8A
+   GuqU5e1MApJ0PnNaYsblKsNxJiucv9uHnIx71BbUeQZbc1LiWFMKEUi1I
+   jGLo9ONVQv999mnwEdblt+6cHAiyuo82wVpVtgP9ZJCXC03hy2Ya1RZQM
+   rITptRyu0DTVvk8QKE4MEQJCbQK2g9IThkhMT9gbHs5+/W6DSKIvNr++B
+   BhX1SqOMhPInMCHYCK6rQf2xKLeL+jDbLDG+9MseTSgHCLN6vmN8vxisw
+   RFkb2/Ro/d53aKOLCc5odxKYhRk8eeq98qfy3adRFAF4du2A2sRumTaps
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="349422772"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="349422772"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 10:58:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="730470597"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="730470597"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.95.11])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 10:58:49 -0700
+Subject: [PATCH v2 1/4] cxl: Export QTG ids from CFMWS to sysfs as qos_class
+ attribute
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com
+Date:   Thu, 11 May 2023 10:58:48 -0700
+Message-ID: <168382792890.3510737.9466824452406784924.stgit@djiang5-mobl3>
+In-Reply-To: <168382784460.3510737.9571643715488757272.stgit@djiang5-mobl3>
+References: <168382784460.3510737.9571643715488757272.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230511160741.00004531@Huawei.com>
-User-Agent: NeoMutt/20230407
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 11 May 2023, Jonathan Cameron wrote:
+Export the QoS Throttling Group ID from the CXL Fixed Memory Window
+Structure (CFMWS) under the root decoder sysfs attributes as qos_class.
 
->> +What:           /sys/bus/cxl/devices/memX/security/sanitize
->> +Date:           May, 2023
->> +KernelVersion:  v6.5
->> +Contact:        linux-cxl@vger.kernel.org
->> +Description:
->> +		(RW) Write a boolean 'true' string value to this attribute to
->> +		sanitize the device to securely re-purpose or decommission it.
->> +		This is done by ensuring that all user data and meta-data,
->> +		whether it resides in persistent capacity, volatile capacity,
->> +		or the LSA, is made permanently unavailable by whatever means
->> +		is appropriate for the media type. This functionality requires
->> +		the device to be not be actively decoding any HPA ranges.
->> +
->> +		Reading this file shows either "disabled" when not running, or
->> +		"sanitize" during the duration of the sanitize operation. This
->> +		sysfs entry is select/poll capable from userspace to notify upon
->> +		completion.
->
->A sysfs attribute that reads different from what is written is not very intuitive.
->The one file one thing rule suggests to me that you should have a separate
->santize_status or similar.  Or just have this read true when in progress making
->it a self resetting toggle that returns -EBUSY if anyone tries to unset it.
+CXL rev3.0 9.17.1.3 CXL Fixed Memory Window Structure (CFMWS)
 
-So the plan is to also to have the (cached) pmem security status (read-only):
-     /sys/bus/cxl/devices/memX/security/status
+cxl cli will use this id to match with the _DSM retrieved id for a
+hot-plugged CXL memory device DPA memory range to make sure that the
+DPA range is under the right CFMWS window.
 
-sanitize could nicely be incorporated there and just read/poll that file for all
-things security. So security/sanitize file goes to being write-only, just like
-its secure erase counter part.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
->> +
->> +
->>  What:		/sys/bus/cxl/devices/*/devtype
->>  Date:		June, 2021
->>  KernelVersion:	v5.14
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index cde7270c6037..28daf7dcdec4 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -1021,6 +1021,62 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
->>  }
->>  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
->>
->> +/**
->> + * cxl_mem_sanitize() - Send a sanitation command to the device.
->> + * @cxlds: The device data for the operation
->> + * @cmd: The specific sanitation command opcode
->> + *
->> + * Return: 0 if the command was executed successfully, regardless of
->> + * whether or not the actual security operation is done in the background,
->> + * such as for the Sanitize case.
->> + * Error return values can be the result of the mailbox command, -EINVAL
->> + * when security requirements are not met or invalid contexts, or -EBUSY
->> + * if the device is not offline.
->
->What does offline mean for the device?  Perhaps a tighter definition needed.
+---
+v5:
+- Documentation rewrite. (Dan)
+- Rename attrib to qos_class
+- Move qtg_id to root decoder
+v4:
+- Change kernel version for documentation to v6.5
+v2:
+- Add explanation commit header (Jonathan)
+---
+ Documentation/ABI/testing/sysfs-bus-cxl |   15 +++++++++++++++
+ drivers/cxl/acpi.c                      |    3 +++
+ drivers/cxl/core/port.c                 |   11 +++++++++++
+ drivers/cxl/cxl.h                       |    3 +++
+ 4 files changed, 32 insertions(+)
 
-I can expand. But overall, with Alison's poison work being picked up, now we
-can add a cxl_memdev_active() helper to ensure no regions are mapped to this
-memdev.
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 3acf2f17a73f..2f24e42ef36d 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -310,6 +310,21 @@ Description:
+ 		provided it is currently idle / not bound to a driver.
+ 
+ 
++What:		/sys/bus/cxl/devices/decoderX.Y/qos_class
++Date:		May, 2023
++KernelVersion:	v6.5
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) For CXL host platforms that support "QoS Telemmetry" this
++		root-decoder-only attribute conveys a platform specific cookie
++		that identifies a QoS performance class for the CXL Window.
++		This class-id can be compared against a similar "qos_class"
++		published for each memory-type that an endpoint supports. While
++		it is not required that endpoints map their local memory-class
++		to a matching platform class, mismatches are not recommended and
++		there are platform specific side-effects that may result.
++
++
+ What:		/sys/bus/cxl/devices/regionZ/uuid
+ Date:		May, 2022
+ KernelVersion:	v6.0
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 7e1765b09e04..e063df2bf876 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -289,6 +289,9 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+ 			}
+ 		}
+ 	}
++
++	cxlrd->qos_class = cfmws->qtg_id;
++
+ 	rc = cxl_decoder_add(cxld, target_map);
+ err_xormap:
+ 	if (rc)
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 4d1f9c5b5029..a0130aeb8d42 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -276,6 +276,15 @@ static ssize_t interleave_ways_show(struct device *dev,
+ 
+ static DEVICE_ATTR_RO(interleave_ways);
+ 
++static ssize_t qos_class_show(struct device *dev,
++			      struct device_attribute *attr, char *buf)
++{
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
++
++	return sysfs_emit(buf, "%d\n", cxlrd->qos_class);
++}
++static DEVICE_ATTR_RO(qos_class);
++
+ static struct attribute *cxl_decoder_base_attrs[] = {
+ 	&dev_attr_start.attr,
+ 	&dev_attr_size.attr,
+@@ -295,6 +304,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
+ 	&dev_attr_cap_type2.attr,
+ 	&dev_attr_cap_type3.attr,
+ 	&dev_attr_target_list.attr,
++	&dev_attr_qos_class.attr,
+ 	SET_CXL_REGION_ATTR(create_pmem_region)
+ 	SET_CXL_REGION_ATTR(create_ram_region)
+ 	SET_CXL_REGION_ATTR(delete_region)
+@@ -1625,6 +1635,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
+ 	}
+ 
+ 	atomic_set(&cxlrd->region_id, rc);
++	cxlrd->qos_class = CXL_QOS_CLASS_INVALID;
+ 	return cxlrd;
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_root_decoder_alloc, CXL);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 044a92d9813e..4577d808ac6d 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -300,6 +300,7 @@ enum cxl_decoder_type {
+  */
+ #define CXL_DECODER_MAX_INTERLEAVE 16
+ 
++#define CXL_QOS_CLASS_INVALID -1
+ 
+ /**
+  * struct cxl_decoder - Common CXL HDM Decoder Attributes
+@@ -411,6 +412,7 @@ typedef struct cxl_dport *(*cxl_calc_hb_fn)(struct cxl_root_decoder *cxlrd,
+  * @calc_hb: which host bridge covers the n'th position by granularity
+  * @platform_data: platform specific configuration data
+  * @range_lock: sync region autodiscovery by address range
++ * @qos_class: QoS performance class cookie
+  * @cxlsd: base cxl switch decoder
+  */
+ struct cxl_root_decoder {
+@@ -419,6 +421,7 @@ struct cxl_root_decoder {
+ 	cxl_calc_hb_fn calc_hb;
+ 	void *platform_data;
+ 	struct mutex range_lock;
++	int qos_class;
+ 	struct cxl_switch_decoder cxlsd;
+ };
+ 
 
-Thanks,
-Davidlohr
+
