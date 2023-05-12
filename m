@@ -2,236 +2,263 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC19FC77B7C
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 00:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC66BC77B7F
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 11:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239685AbjELATA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 11 May 2023 20:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
+        id S241056AbjELL7E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 May 2023 07:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239691AbjELASs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 11 May 2023 20:18:48 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7465683D0
-        for <linux-cxl@vger.kernel.org>; Thu, 11 May 2023 17:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683850712; x=1715386712;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=EaAeSL/57pK7ybovPbTjnS0ILyK++ZrfcNFMEL7fQKU=;
-  b=ZOoEjYxx6JwLAjXjR0oFrQ/z+uE0512Wr3QKZ4PKJNiNGle6iQ5lX7NZ
-   1nNsQWPJVnOGqNm4IFelc22O0EX99+wHgOaCDfq2LDSMvW8yfPmL6WLyk
-   qa70RqTEp9m2N46TBlVA7tU6FYdVCo0JezakJfuWNRz9g2xrDiouXcy80
-   XDvoPVOPscf6DpTjb4vhDOO6Nia3KKGtS0dnBl0HH/tbBkW8QTreGA0YZ
-   gTlGdNH9B7RYPFTo0+gpKnA7z8LBX54/leEgjL5mLUg+JezsV3gpLSeq7
-   9oagognyocvTfKUWEAzdNNb3+4MBIuM0cHNRcJbgr6mMNW6MXI8iaFz3e
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="350696299"
-X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
-   d="scan'208";a="350696299"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 17:18:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="702955171"
-X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
-   d="scan'208";a="702955171"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga007.fm.intel.com with ESMTP; 11 May 2023 17:18:32 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 11 May 2023 17:18:31 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 11 May 2023 17:18:31 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 11 May 2023 17:18:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BaE8RduT554ZslxVmqnUWEPNY5HXkDztSXolmOucTzufKn1bWDvKj2qqJQISo4FIVWaxiKx8P+gypN9K5RM+KyvLXkYJVwK/FNrHoEh81NOHVvLVM/BEQwEmonsXhgpNu0T/iyOE+fEkeht2vg/yFSAsxJ4h4pT7joCyWx6ar1xE1GewrQ+nLibeGBF0FIvz8j75zSiFqjIUewRpb+Xez7daZAJPaoQnm7/IBKGoWq2ptJA1KZppLgXgNYsuQ27LP1JHTrKaFiBXiQ1p3EJ7gBnSjSFPQKywcXB5OCnW1Tm4GeWYp0u5i+bLc2Lh2y/ufwUn64XgkevhVgRLmA/kew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dNT4Q0Qi2ajTj6T0oOYKFCf4evxwc2AOqwKrDk69Ae4=;
- b=WePKa9qtpDDahui1Qo6L3W0pjGYTmYcHB3StoS7cIFfa0PMeKJP44aku3ZIe9hf3SrVkZL/m0sL5svHi3z6yY//ylb1ux176qkei9UQsCelSMZmQH4w1tZyE+u25AB6sfvmC9nAyN/KIIQYaPCXemjwNXzdSpPTpqcpHQuLajesZj5egZCgmDLWAejQpm9QHSXt8Bw72JzeT4MiWM7g+ya3TzwNAel82oB4NcH3zkagg9tSwvbvAkdBtEZFzzTUg5D2HKRJHdcELhx8lQwM6xaq44F/T8iwz4Xrjt5IT+1Tuhx+JsEF4/t4dHNHUfG7EB5NVgY/lBbAPU2ZZG8FwHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB4886.namprd11.prod.outlook.com (2603:10b6:510:33::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.33; Fri, 12 May
- 2023 00:18:29 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%7]) with mapi id 15.20.6387.022; Fri, 12 May 2023
- 00:18:29 +0000
-Date:   Thu, 11 May 2023 17:18:27 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [RFC 3/3] ACPI: NUMA: Apply SRAT proximity domain to entire
- CFMWS window
-Message-ID: <645d85d378a85_2ec5d294d2@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.1683742429.git.alison.schofield@intel.com>
- <79a10b7101a8fab56f9ff3f9a4de73bee3156b40.1683742429.git.alison.schofield@intel.com>
- <645d7765a218a_1e6f2944c@dwillia2-xfh.jf.intel.com.notmuch>
- <ZF2Bz9Kw9rNOyOdZ@aschofie-mobl2>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZF2Bz9Kw9rNOyOdZ@aschofie-mobl2>
-X-ClientProxiedBy: SJ0PR03CA0250.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::15) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S241105AbjELL7B (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 07:59:01 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F7414379;
+        Fri, 12 May 2023 04:58:35 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHnLC1qQcz67lJ3;
+        Fri, 12 May 2023 19:56:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 12 May
+ 2023 12:58:32 +0100
+Date:   Fri, 12 May 2023 12:58:31 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <lukas@wunner.de>
+Subject: Re: [PATCH 1/4] acpi: tables: Add CDAT table parsing support
+Message-ID: <20230512125831.00000eb0@Huawei.com>
+In-Reply-To: <168330797672.2042604.12339416734589446371.stgit@djiang5-mobl3>
+References: <168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3>
+        <168330797672.2042604.12339416734589446371.stgit@djiang5-mobl3>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4886:EE_
-X-MS-Office365-Filtering-Correlation-Id: d862b5dd-3346-46c3-269b-08db527e6970
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cnnokYOCZl1Fa/EDDYP9JPsw295S7ATy+dxzWfnuIRePbRDrclnspU3V6CU6TlUui9+GlfYqTiDUGUdCgbKYd81W1EGuPhDvN27QYXf/mLtL2Be+68X7XZRkJXAR8FUXyM/HOLICHIhoTHIw6aQdiOWgsKl9Z8XgAQ7lV2INye3nZKqBQCbgjFW6OLZuf/Knt7be55sYYR90QenJ5zRqxoCKgRhalwRcrblKN8q4/TKqIdRgcFlNDvHq0DaPhPw1UjSbEZudAWE0an3IaFOQzFIFrtW+IZ5ejc5+BkscZY4q0UEHL+9Jk+NxQbPCKGZDFxgauiWPhkRVMLc55XoPjPamg7hYyJQzJdShwUVtLLvlkS53eU60ahu2C4XezAIwTuiMcrKkicYntnxWi6H2AaveHyICdWQO7+37Jxa2JQiq8lqvjVs7J5mXqYlVirTzsSqZrDKoGDTjeCicUtdOel9UqMFAgXYeRuTiViaZr4Am+8A8rSmVtvP20Rxx7N4v4nLpav57C1RVScW6fTwWjInybUxGr56bQpn3QIooCmzoja2gq5nMMDjl4L5sL/6k
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(136003)(396003)(39860400002)(346002)(451199021)(6486002)(8676002)(4326008)(66476007)(66556008)(110136005)(66946007)(54906003)(82960400001)(2906002)(8936002)(38100700002)(86362001)(316002)(41300700001)(5660300002)(478600001)(186003)(9686003)(6506007)(6512007)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGJxYkxlQnlYcDhZamRQK2MwcStlUC9VUWxRcjRYTXVFZk5wSld2MXFDTi9N?=
- =?utf-8?B?VEMxSmYvM245dDc1emVibmFBUmk4aWY3QmVtV1EzVTdacm5TSFNuanlVVXFH?=
- =?utf-8?B?Tkp6RU5OTGhvZTB3Q2pEbWE0V1VpZDIxQTBtK1N4dGROUDBBWGZYamE2dzZC?=
- =?utf-8?B?SnhQcFdGb25tdXJSV1dlNnFUdFNEbjFTTm0wc2N3N1k4VUJPZHovMG82cVJi?=
- =?utf-8?B?NlB0V2hlamRWV0doUWFXVFRXRGozdWYvMWs1LzNZM25JblNQSkk3MnZQUmZR?=
- =?utf-8?B?TGkvNTZXU0RnOCtZOEw3VXp4U0pPZmdhMU5Pemd6RFdCYWVSN20vei9tVUtW?=
- =?utf-8?B?cXNvb2dsNWU4VVgwcWNWdHpMeW15akh5R2dpek5CdGIrcjJScU4rb2lDNWZQ?=
- =?utf-8?B?TitIU0cwVlAzUEo3elVLcTBpSEJXdmRCRWMrbEM2ZkhJKzgwRVVzNnpRVmdK?=
- =?utf-8?B?eGZmRHd3WXcvY2luMitZK1ZTNnlNUlNsbEhEU3JkYkVEd2d3b0hEdlVxUkRD?=
- =?utf-8?B?VlpoR2pPUkdiZzE0SC9BWjlDQlQwS0lrNHNwL1Z5RW40bVV6M3N3NWNqUS93?=
- =?utf-8?B?ZTZhNnFzazJmSGVqWi9vbXprMXFVaDVWcmtML1NVQ2orZnpiS3FrTFlQWkUy?=
- =?utf-8?B?Y2tjbC9yVm01WE1aTXFaZHJCTlJBaE9mK3FRSC9LNlZsT3czQmY5TVJkNmQ3?=
- =?utf-8?B?LzRvVHArQzBuRS9pZjR6TWhSdnhqbGdMcEtTZndsZFByaXV0akVmcW5ZZGJi?=
- =?utf-8?B?MU9hMVQ1QzBwVlAxUERJUTZPamJrY24wSmh3M2NjemNsSTJGQWZFT2IyTThC?=
- =?utf-8?B?eWdoT2xoV2E0MHZZRzZUU2FlOEFBcWJqN2VmK21OQWRMdlZ0WkpqbkxnTUpC?=
- =?utf-8?B?a2hoUEhFbWNsaUZ3NWtzdWZaWkxsZ3YrWkZrUXhzNlZud0hxZlV3Q25wZDNN?=
- =?utf-8?B?S1hrUTExc0pwb1RuQUd2RTczU2lZVUtJZ2dRaThQS2RNaTFBaFRmU3o2ckEx?=
- =?utf-8?B?aUVsam5yM1VpRFdkajdzQUJKWnZtYmZiNEUycXc2UldHVm1jMiswMVhRS1lH?=
- =?utf-8?B?RFZtenZXeEN6RkNMYThqMEtUY0xIU3lhSDAvNlZJcG9KaUZRUTllWXlGTzFQ?=
- =?utf-8?B?UkNKck1XUlUxaTRUc3kzSEhTRm1qZDdmUzdTU1RwNWZvMFdwdmxLcUZCb0VX?=
- =?utf-8?B?WWI5RzM1aWJNRjd1ZnFtY1hxaTJkaEpQcm50KzFzRG1wVEhlOXV6Nnoyc25C?=
- =?utf-8?B?S3NLM0o0VWE1Y0o1RXlLRlFacDlmOFpOa3ZOa0FRcnFyYjlmVXlRMmVNaUxB?=
- =?utf-8?B?d3p6Q1k1ajVoSXhJRTliamJUNEZwMHBYZ21ZenZLeHVhc05jN2F1QWpraEtV?=
- =?utf-8?B?cGhXMTl0Vk50bVhia1lGYTNXeFI5dG5OZmRvSFhyVFR1K2MvK3IvMkVERWRB?=
- =?utf-8?B?bnBrbXJiS3d0anZ0NWI2R3F4OXlzVGZoakhZUHdFMkZHdTc0OFhhTFdMNHpP?=
- =?utf-8?B?OFpoYS9hVkN3UFJ3YWdodUdJY1U3ampEQkJmalRrN2JQRkQ3bGFOTWdscmcv?=
- =?utf-8?B?OTU0TkZ3RGJqbmRRNk93dzV3UmJnZS81Rk5GNmpuMUdFdkRCakJxWEc3YTkw?=
- =?utf-8?B?SUZDVmh2czlZaGVpVjNoQno5endzQkRrcVVFWER2cnJXUkhNemozZ2Q0K0Zx?=
- =?utf-8?B?NDZwd0dINFZiY0tsY2huZVdJMW52Zi9KV0wyZXVEL0QxV3hiTkcyTFJTZEVV?=
- =?utf-8?B?eGZSZWpuc3BxZ1o3dFdJV1BHRXhianI5NzJ2RkVmaEg0d2JTK0x6VCtXMldM?=
- =?utf-8?B?YU9TbDNqYjZFbjYwb2JueWdvWUw1OFkvYVBPWXpjbG1lR2VPSG40dk9tSFdP?=
- =?utf-8?B?ZGtObTJIaTFxTGVuZTJVVTBLc0xhNys1NXI3UjNweFlnMTJwOEdtQXdla1hS?=
- =?utf-8?B?d01RbVJ5NXBUV3VOejI5YXpjeHpBdlNKWTVjKzRITXJnN1RhUjRhdkdaR0dh?=
- =?utf-8?B?RWdhYTh1THh2aWJ4cWVyaUJRZ2pEL1dpcklGUGptMlRrTDc2MEF1dnNobW9Z?=
- =?utf-8?B?VUtvVk80UXVmaTdXSUJlU0VuRHBGK3VHTVhzQWE2Y1NQNkY3dTZsQmFjWEFx?=
- =?utf-8?B?N1N4aGRaeTkzRThVdVhHbUh4bm5wWjNBSjg4bWZ3alVDd1pYYUhxVUM1dGpj?=
- =?utf-8?B?Wmc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d862b5dd-3346-46c3-269b-08db527e6970
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2023 00:18:29.3196
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oJ6QXOd1OWLaSIKQY7nVJNOdTK8xoTqgDVQG3fyDKfbMToBVKUv+nTKTMyIQNGu4E1LADtO512ixtXJnBb8h6RK8EeF28viD0CQVS+XMEP8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4886
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alison Schofield wrote:
-> On Thu, May 11, 2023 at 04:16:53PM -0700, Dan Williams wrote:
-> > alison.schofield@ wrote:
-> 
-> snip...
-> 
-> > > +	/*
-> > > +	 * The SRAT may have already described the NUMA details for
-> > > +	 * this CFMWS HPA range, yet it may not have created memblks
-> > > +	 * for the entire range. Look for a node with a memblk covering
-> > > +	 * any part of the HPA range. Don't bother figuring out if it
-> > > +	 * is partially or wholly described. Replace any memblks in the
-> > > +	 * range with one single memblk that covers the entire range.
-> > > +	 *
-> > > +	 * This preserves the SRAT defined node and Proximity Domain.
-> > > +	 */
-> > > +
-> > > +	found_node = numa_find_node(start, end);
-> > > +	if (found_node != NUMA_NO_NODE) {
-> > > +		numa_remove_memblks(found_node, start, end);
-> > > +		if (numa_add_memblk(found_node, start, end) < 0) {
-> > 
-> > I worry that this blows away information in the case where the BIOS for
-> > some reason decides to describe multiple proximity domains per CXL
-> > window.
-> > 
-> > I think this wants to be an algorithm like
-> > 
-> > numa_fill_memblks(start, end)
-> > 
-> > ...where that walks the range and for any gaps in that range extend the
-> > last memblk to the end of the gap.
-> > 
-> > For example if the CFWMS to SRAT mapping is this:
-> > 
-> >  ┌──────────────────────────────────────────────────┐
-> >  │                  WINDOW0                         │
-> >  ├──────────┬────────────┬────────────┬─────────────┤
-> >  │PXM0      │ GAP        │ PXM1       │ GAP         │
-> >  └──────────┴────────────┴────────────┴─────────────┘
-> > 
-> > 
-> >  ┌──────────────────────────────────────────────────┐
-> >  │                  WINDOW0                         │
-> >  ├───────────────────────┬──────────────────────────┤
-> >  │PXM0                   │ PXM1                     │
-> >  └───────────────────────┴──────────────────────────┘
-> > 
-> > ...and if that finds nothing to fill, *then* create the next proximity
-> > domain for the window.
-> 
-> Thanks for the feedback Dan.
-> 
-> Is there any guarantee that the first PXM begins at cfmws.start?
-> ie...that gaps always 'follow'
-> 
-> This one's easy:	gap-pxm0 	becomes all pxm0
-> This one's easy too:	gap-pxm0-gap 	becomes all pxm0
-> 
-> This one's not so obvious: gap-pxm0-gap-pxm1 
+On Fri, 05 May 2023 10:32:56 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Good point.
+> The CDAT table is very similar to ACPI tables when it comes to sub-table
+> and entry structures. The helper functions can be also used to parse the
+> CDAT table. Add support to the helper functions to deal with an external
+> CDAT table, and also handle the endieness since CDAT can be processed by a
+> BE host. Export a function acpi_table_parse_cdat() for CXL driver to parse
+> a CDAT table.
+> 
+> In order to minimize ACPI code changes, __force is being utilized to deal
+> with the case of a big endien (BE) host parsing a CDAT. All CDAT data
+> structure variables are being force casted to __leX as appropriate.
 
-I would say that pxm0 consuming both gaps is ok. pxm1 grabbing the
-second gap is also ok, whatever makes the code simpler.
+Hi Dave,
 
-> Imagine those are quarters. Is the end result 50/50 or 75/25?
+This falls into the annoyance that CDAT doesn't have a standard table header.
+Whilst I understand that was done deliberately it means some odd things happen
+in this code.
 
-The window is all one QoS class anyway as far as CXL is concerned. So
-the end distribution is not much of a concern. I.e. I would not worry if
-you end up with 75/25 even if 50/50 was possible.
+Just how bad is the duplication if we don't do this at all, but instead roll
+a version for CDAT that doesn't force things through pointers of the wrong types?
 
-> I'm wondering if there is any policy in existence or this is new,
-> and we are setting the policy now?
+Otherwise, maybe we need some unions so that the type mashups don't happen.
 
-We are trailblazing on our own. The reason why I think we have the
-freedom to make an arbitrary decision here is that it is unlikely that the
-BIOS describes multiple proximity domains per window, but on the off
-chance they do lets not throw away information.
+> 
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/acpi/tables.c |   47 +++++++++++++++++++++++++++++++++++++++++++++--
+>  include/acpi/actbl1.h |    3 +++
+>  include/linux/acpi.h  |    4 ++++
+>  3 files changed, 52 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+> index 7b4680da57d7..08486f6df442 100644
+> --- a/drivers/acpi/tables.c
+> +++ b/drivers/acpi/tables.c
+> @@ -42,6 +42,7 @@ enum acpi_subtable_type {
+>  	ACPI_SUBTABLE_HMAT,
+>  	ACPI_SUBTABLE_PRMT,
+>  	ACPI_SUBTABLE_CEDT,
+> +	ACPI_SUBTABLE_CDAT,
+>  };
+>  
+>  struct acpi_subtable_entry {
+> @@ -239,6 +240,8 @@ acpi_get_entry_type(struct acpi_subtable_entry *entry)
+>  		return 0;
+>  	case ACPI_SUBTABLE_CEDT:
+>  		return entry->hdr->cedt.type;
+> +	case ACPI_SUBTABLE_CDAT:
+> +		return entry->hdr->cdat.type;
+>  	}
+>  	return 0;
+>  }
+> @@ -255,6 +258,8 @@ acpi_get_entry_length(struct acpi_subtable_entry *entry)
+>  		return entry->hdr->prmt.length;
+>  	case ACPI_SUBTABLE_CEDT:
+>  		return entry->hdr->cedt.length;
+> +	case ACPI_SUBTABLE_CDAT:
+> +		return le16_to_cpu((__force __le16)entry->hdr->cdat.length);
+>  	}
+>  	return 0;
+>  }
+> @@ -271,6 +276,8 @@ acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
+>  		return sizeof(entry->hdr->prmt);
+>  	case ACPI_SUBTABLE_CEDT:
+>  		return sizeof(entry->hdr->cedt);
+> +	case ACPI_SUBTABLE_CDAT:
+> +		return sizeof(entry->hdr->cdat);
+>  	}
+>  	return 0;
+>  }
+> @@ -284,9 +291,22 @@ acpi_get_subtable_type(char *id)
+>  		return ACPI_SUBTABLE_PRMT;
+>  	if (strncmp(id, ACPI_SIG_CEDT, 4) == 0)
+>  		return ACPI_SUBTABLE_CEDT;
+> +	if (strncmp(id, ACPI_SIG_CDAT, 4) == 0)
+> +		return ACPI_SUBTABLE_CDAT;
+
+I'm not super keen on inventing a SIG when the CDAT 'table'
+doesn't actually have one.
+
+>  	return ACPI_SUBTABLE_COMMON;
+>  }
+>  
+> +static unsigned long __init_or_acpilib
+> +acpi_table_get_length(enum acpi_subtable_type type,
+> +		      struct acpi_table_header *hdr)
+
+I don't like parsing in an acpi_table_header type here when it may not be one.
+I think this length decision needs to be pushed up a level to where we can see
+if we have a CDAT table or not.
+
+
+> +{
+> +	if (type == ACPI_SUBTABLE_CDAT)
+> +		return le32_to_cpu(
+> +			(__force __le32)((struct acpi_table_cdat *)hdr)->length);
+
+Perhaps a local variable in here somewhere would make it more readable.
+	__le32 length = (__force__le32)((struct acpi_table_cdat *)hdr)->length;
+
+	return le32_to_cpu(length)?
+
+
+> +
+> +	return hdr->length;
+> +}
+> +
+>  static __init_or_acpilib bool has_handler(struct acpi_subtable_proc *proc)
+>  {
+>  	return proc->handler || proc->handler_arg;
+> @@ -332,16 +352,19 @@ static int __init_or_acpilib acpi_parse_entries_array(
+>  	int proc_num, unsigned int max_entries)
+>  {
+>  	struct acpi_subtable_entry entry;
+> +	enum acpi_subtable_type type;
+>  	unsigned long table_end, subtable_len, entry_len;
+>  	int count = 0;
+>  	int errs = 0;
+>  	int i;
+>  
+> -	table_end = (unsigned long)table_header + table_header->length;
+> +	type = acpi_get_subtable_type(id);
+> +	table_end = (unsigned long)table_header +
+> +		    acpi_table_get_length(type, table_header);
+As above, I don't like carrying CDAT which doesn't have an acpi_table_header
+section around as that type of pointer.
+
+>  
+>  	/* Parse all entries looking for a match. */
+>  
+> -	entry.type = acpi_get_subtable_type(id);
+> +	entry.type = type;
+>  	entry.hdr = (union acpi_subtable_headers *)
+>  	    ((unsigned long)table_header + table_size);
+>  	subtable_len = acpi_get_subtable_header_length(&entry);
+> @@ -464,6 +487,26 @@ int __init acpi_table_parse_madt(enum acpi_madt_type id,
+>  					    handler, max_entries);
+>  }
+>  
+> +int acpi_table_parse_cdat(enum acpi_cdat_type type,
+> +			  acpi_tbl_entry_handler_arg handler_arg, void *arg,
+> +			  struct acpi_table_cdat *table_header)
+> +{
+> +	struct acpi_subtable_proc proc = {
+> +		.id		= type,
+> +		.handler_arg	= handler_arg,
+> +		.arg		= arg,
+> +	};
+> +
+> +	if (!table_header)
+> +		return -EINVAL;
+> +
+> +	return acpi_parse_entries_array(ACPI_SIG_CDAT,
+> +			sizeof(struct acpi_table_cdat),
+> +			(struct acpi_table_header *)table_header,
+> +			&proc, 1, 0);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(acpi_table_parse_cdat, CXL);
+> +
+>  /**
+>   * acpi_table_parse - find table with @id, run @handler on it
+>   * @id: table id to find
+> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+> index 81b9e794424d..3119be093cfe 100644
+> --- a/include/acpi/actbl1.h
+> +++ b/include/acpi/actbl1.h
+> @@ -66,6 +66,9 @@
+>  #define ACPI_SIG_IEIT           "IEIT"
+>  #endif
+>  
+> +/* External to ACPI */
+> +#define ACPI_SIG_CDAT		"CDAT" /* Coherent Device Attribute Table */
+
+Worse that that, fictional signature :)
+It's the nameof the 'table', but it's not a signature as it's never
+used as they are in ACPI and doesn't appear anywhere in the table.
+
+> +
+>  /*
+>   * All tables must be byte-packed to match the ACPI specification, since
+>   * the tables are provided by the system BIOS.
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index efff750f326d..4c3dfe7587e9 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -135,6 +135,7 @@ union acpi_subtable_headers {
+>  	struct acpi_hmat_structure hmat;
+>  	struct acpi_prmt_module_header prmt;
+>  	struct acpi_cedt_header cedt;
+> +	struct acpi_cdat_header cdat;
+>  };
+>  
+>  typedef int (*acpi_tbl_table_handler)(struct acpi_table_header *table);
+> @@ -266,6 +267,9 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
+>  
+>  int acpi_parse_mcfg (struct acpi_table_header *header);
+>  void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
+> +int acpi_table_parse_cdat(enum acpi_cdat_type type,
+> +			  acpi_tbl_entry_handler_arg handler, void *arg,
+> +			  struct acpi_table_cdat *table_header);
+How did we end up with an 'acpi_' table that isn't in ACPI?
+(I'm not looking as I fear I might be responsible :)
+Should perhaps consider renaming all the CDAT entries so it doesn't looks like they
+are.
+
+>  
+>  /* the following numa functions are architecture-dependent */
+>  void acpi_numa_slit_init (struct acpi_table_slit *slit);
+> 
+> 
+> 
+
