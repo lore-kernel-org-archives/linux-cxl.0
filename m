@@ -2,121 +2,79 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E1EC77B7C
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 12:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B7C7EE23
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 14:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240395AbjELMAn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 May 2023 08:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43722 "EHLO
+        id S241516AbjELORl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 May 2023 10:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240445AbjELMAm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 08:00:42 -0400
+        with ESMTP id S241462AbjELORk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 10:17:40 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B3E10E0;
-        Fri, 12 May 2023 05:00:41 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHnL06tCfz6J793;
-        Fri, 12 May 2023 19:56:40 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E849011DB1;
+        Fri, 12 May 2023 07:17:06 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHrM630pMz6J6pr;
+        Fri, 12 May 2023 22:12:50 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 12 May
- 2023 13:00:39 +0100
-Date:   Fri, 12 May 2023 13:00:38 +0100
+ 2023 15:16:48 +0100
+Date:   Fri, 12 May 2023 15:16:48 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
         <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
         <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
         <alison.schofield@intel.com>, <lukas@wunner.de>
-Subject: Re: [PATCH 2/4] acpi: Add header struct in CDAT subtables
-Message-ID: <20230512130038.00002c84@Huawei.com>
-In-Reply-To: <168330798275.2042604.11217169699695338532.stgit@djiang5-mobl3>
+Subject: Re: [PATCH 3/4] acpi: fix misnamed define for CDAT DSMAS
+Message-ID: <20230512151648.000015bf@Huawei.com>
+In-Reply-To: <168330798865.2042604.4255466100952700191.stgit@djiang5-mobl3>
 References: <168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3>
-        <168330798275.2042604.11217169699695338532.stgit@djiang5-mobl3>
+        <168330798865.2042604.4255466100952700191.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 05 May 2023 10:33:02 -0700
+On Fri, 05 May 2023 10:33:08 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Add the common header struct in all CDAT subtables. This change
-> complies with other ACPI sub-tables in the header file. The change
-> also eases the usage with the helper functions in tables.c.
+> ACPI_CEDT_DSMAS_NON_VOLATILE should be defined as
+> ACPI_CDAT_DSMAS_NON_VOLATILE. Fix misspelled define.
 > 
 > Cc: Rafael J. Wysocki <rafael@kernel.org>
 > Cc: Len Brown <lenb@kernel.org>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Other than the naming question from previous patch (should these have acpi
-in their names at all?), this looks sensible to me.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  include/acpi/actbl1.h |    6 ++++++
->  1 file changed, 6 insertions(+)
+>  include/acpi/actbl1.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-> index 3119be093cfe..166337b04306 100644
+> index 166337b04306..8ea7e5d64bc1 100644
 > --- a/include/acpi/actbl1.h
 > +++ b/include/acpi/actbl1.h
-> @@ -350,6 +350,7 @@ enum acpi_cdat_type {
->  /* Subtable 0: Device Scoped Memory Affinity Structure (DSMAS) */
+> @@ -360,7 +360,7 @@ struct acpi_cdat_dsmas {
 >  
->  struct acpi_cdat_dsmas {
-> +	struct acpi_cdat_header header;
->  	u8 dsmad_handle;
->  	u8 flags;
->  	u16 reserved;
-> @@ -364,6 +365,7 @@ struct acpi_cdat_dsmas {
+>  /* Flags for subtable above */
+>  
+> -#define ACPI_CEDT_DSMAS_NON_VOLATILE        (1 << 2)
+> +#define ACPI_CDAT_DSMAS_NON_VOLATILE        (1 << 2)
+>  
 >  /* Subtable 1: Device scoped Latency and Bandwidth Information Structure (DSLBIS) */
 >  
->  struct acpi_cdat_dslbis {
-> +	struct acpi_cdat_header header;
->  	u8 handle;
->  	u8 flags;		/* If Handle matches a DSMAS handle, the definition of this field matches
->  				 * Flags field in HMAT System Locality Latency */
-> @@ -377,6 +379,7 @@ struct acpi_cdat_dslbis {
->  /* Subtable 2: Device Scoped Memory Side Cache Information Structure (DSMSCIS) */
->  
->  struct acpi_cdat_dsmscis {
-> +	struct acpi_cdat_header header;
->  	u8 dsmas_handle;
->  	u8 reserved[3];
->  	u64 side_cache_size;
-> @@ -386,6 +389,7 @@ struct acpi_cdat_dsmscis {
->  /* Subtable 3: Device Scoped Initiator Structure (DSIS) */
->  
->  struct acpi_cdat_dsis {
-> +	struct acpi_cdat_header header;
->  	u8 flags;
->  	u8 handle;
->  	u16 reserved;
-> @@ -398,6 +402,7 @@ struct acpi_cdat_dsis {
->  /* Subtable 4: Device Scoped EFI Memory Type Structure (DSEMTS) */
->  
->  struct acpi_cdat_dsemts {
-> +	struct acpi_cdat_header header;
->  	u8 dsmas_handle;
->  	u8 memory_type;
->  	u16 reserved;
-> @@ -408,6 +413,7 @@ struct acpi_cdat_dsemts {
->  /* Subtable 5: Switch Scoped Latency and Bandwidth Information Structure (SSLBIS) */
->  
->  struct acpi_cdat_sslbis {
-> +	struct acpi_cdat_header header;
->  	u8 data_type;
->  	u8 reserved[3];
->  	u64 entry_base_unit;
 > 
 > 
 > 
