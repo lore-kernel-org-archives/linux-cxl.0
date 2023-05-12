@@ -2,65 +2,110 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F3DC77B75
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 16:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE32FC77B7C
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 16:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241859AbjELQAZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 May 2023 12:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
+        id S241568AbjELQKT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 May 2023 12:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241611AbjELQAY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 12:00:24 -0400
+        with ESMTP id S230453AbjELQKS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 12:10:18 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381BA26BF;
-        Fri, 12 May 2023 09:00:22 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHtkB5VC7z67fts;
-        Fri, 12 May 2023 23:59:30 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F787EF5;
+        Fri, 12 May 2023 09:10:09 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHtsr2Tffz6J72S;
+        Sat, 13 May 2023 00:06:08 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 12 May
- 2023 17:00:19 +0100
-Date:   Fri, 12 May 2023 17:00:18 +0100
+ 2023 17:10:06 +0100
+Date:   Fri, 12 May 2023 17:10:06 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
         <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
         <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
         <alison.schofield@intel.com>, <lukas@wunner.de>
-Subject: Re: [PATCH 2/4] acpi: numa: Add genport target allocation to the
- HMAT parsing
-Message-ID: <20230512170018.00003cd1@Huawei.com>
-In-Reply-To: <168333152242.2290593.10366412793734184870.stgit@djiang5-mobl3>
+Subject: Re: [PATCH 3/4] acpi: numa: Add setting of generic port system
+ locality attributes
+Message-ID: <20230512171006.00004515@Huawei.com>
+In-Reply-To: <168333152832.2290593.17409054392013117865.stgit@djiang5-mobl3>
 References: <168333141100.2290593.16294670316057617744.stgit@djiang5-mobl3>
-        <168333152242.2290593.10366412793734184870.stgit@djiang5-mobl3>
+        <168333152832.2290593.17409054392013117865.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 05 May 2023 17:05:22 -0700
+On Fri, 05 May 2023 17:05:28 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Add SRAT parsing for the HMAT init in order to collect the device handle
-> from the Generic Port Affinity Structure. The devie handle will serve as
+> Add generic port support for the parsing of HMAT system locality sub-table.
+> The attributes will be added to the third array member of the access
+> coordinates in order to not mix with the existing memory attributes it only
 
-device
+attributes. It only ?
+Otherwise I'm having trouble following that sentence.
 
-> the key to search for target data.
+> provides the system locality attributes from initator to the generic port
+> targets and is missing the rest of the data to the actual memory device.
 > 
-> Consoliate the common code with alloc_memory_target() in a helper function
-> alloc_target().
+> The complete attributes will be updated when a memory device is
+> attached and the system locality information is calculated end to end.
 > 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/acpi/numa/hmat.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index e2ab1cce0add..951579e903cf 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -60,6 +60,7 @@ struct target_cache {
+>  enum {
+>  	NODE_ACCESS_CLASS_0 = 0,
+>  	NODE_ACCESS_CLASS_1,
+> +	NODE_ACCESS_CLASS_GENPORT,
+>  	NODE_ACCESS_CLASS_MAX,
+>  };
+>  
+> @@ -368,6 +369,12 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+>  			if (mem_hier == ACPI_HMAT_MEMORY) {
+>  				target = find_mem_target(targs[targ]);
+>  				if (target && target->processor_pxm == inits[init]) {
+> +					if (*target->device_handle) {
+> +						hmat_update_target_access(target, type, value,
+> +								NODE_ACCESS_CLASS_GENPORT);
+> +						continue;
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+There isn't anything that I know of that says a generic port has to be in it's own PXM.
+
+In theory at least they could share one with CPUs or Memory.
+Sure the access info will be inaccurate, but meh, it's a firmware table and if the spec
+doesn't exclude it then someone might build it.
+
+So rather than continuing here I think you need to add a check on there being memory
+or not before deciding not to update the other access classes.
+
+Jonathan
+
+
+> +					}
+> +
+>  					hmat_update_target_access(target, type, value,
+>  								  NODE_ACCESS_CLASS_0);
+>  					/* If the node has a CPU, update access 1 */
+> 
+> 
 
