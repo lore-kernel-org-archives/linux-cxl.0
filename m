@@ -2,40 +2,39 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27142C77B75
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 16:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752A2C77B75
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 17:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237701AbjELQ6d (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 May 2023 12:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50192 "EHLO
+        id S229544AbjELRAP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 May 2023 13:00:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232730AbjELQ6c (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 12:58:32 -0400
+        with ESMTP id S237529AbjELRAO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 13:00:14 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443533C23;
-        Fri, 12 May 2023 09:58:30 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHvxc69hnz6J74s;
-        Sat, 13 May 2023 00:54:28 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77637358A
+        for <linux-cxl@vger.kernel.org>; Fri, 12 May 2023 10:00:13 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHvzc3s82z67nyn;
+        Sat, 13 May 2023 00:56:12 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 12 May
- 2023 17:58:27 +0100
-Date:   Fri, 12 May 2023 17:58:26 +0100
+ 2023 18:00:11 +0100
+Date:   Fri, 12 May 2023 18:00:10 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Dave Jiang <dave.jiang@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <rafael@kernel.org>,
-        <lenb@kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <lukas@wunner.de>
-Subject: Re: [PATCH 1/4] acpi: tables: Add CDAT table parsing support
-Message-ID: <20230512175826.00007db7@Huawei.com>
-In-Reply-To: <645e65d7dbf3_1e6f29476@dwillia2-xfh.jf.intel.com.notmuch>
-References: <168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3>
-        <168330797672.2042604.12339416734589446371.stgit@djiang5-mobl3>
-        <20230512125831.00000eb0@Huawei.com>
-        <645e65d7dbf3_1e6f29476@dwillia2-xfh.jf.intel.com.notmuch>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <alison.schofield@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
+        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 4/7] cxl/mem: Wire up Sanitation support
+Message-ID: <20230512180010.000059f2@Huawei.com>
+In-Reply-To: <qnulxxlnw224b4sjdmdv2vqe4weal4ljes2bgtq3e7ksjdez5x@3gyjww5z66w7>
+References: <20230421092321.12741-1-dave@stgolabs.net>
+        <20230421092321.12741-5-dave@stgolabs.net>
+        <20230511160741.00004531@Huawei.com>
+        <qnulxxlnw224b4sjdmdv2vqe4weal4ljes2bgtq3e7ksjdez5x@3gyjww5z66w7>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,152 +48,77 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 12 May 2023 09:14:15 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, 11 May 2023 10:23:31 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Jonathan Cameron wrote:
-> > On Fri, 05 May 2023 10:32:56 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> > > The CDAT table is very similar to ACPI tables when it comes to sub-table
-> > > and entry structures. The helper functions can be also used to parse the
-> > > CDAT table. Add support to the helper functions to deal with an external
-> > > CDAT table, and also handle the endieness since CDAT can be processed by a
-> > > BE host. Export a function acpi_table_parse_cdat() for CXL driver to parse
-> > > a CDAT table.
-> > > 
-> > > In order to minimize ACPI code changes, __force is being utilized to deal
-> > > with the case of a big endien (BE) host parsing a CDAT. All CDAT data
-> > > structure variables are being force casted to __leX as appropriate.  
-> > 
-> > Hi Dave,
-> > 
-> > This falls into the annoyance that CDAT doesn't have a standard table header.
-> > Whilst I understand that was done deliberately it means some odd things happen
-> > in this code.
-> > 
-> > Just how bad is the duplication if we don't do this at all, but instead roll
-> > a version for CDAT that doesn't force things through pointers of the wrong types?  
+> On Thu, 11 May 2023, Jonathan Cameron wrote:
 > 
-> Yes, this was the question before sending this out. The savings is on
-> the order of ~100 lines which is not amazing, but was enough for me to
-> say lets keep going with this idea.
+> >> +What:           /sys/bus/cxl/devices/memX/security/sanitize
+> >> +Date:           May, 2023
+> >> +KernelVersion:  v6.5
+> >> +Contact:        linux-cxl@vger.kernel.org
+> >> +Description:
+> >> +		(RW) Write a boolean 'true' string value to this attribute to
+> >> +		sanitize the device to securely re-purpose or decommission it.
+> >> +		This is done by ensuring that all user data and meta-data,
+> >> +		whether it resides in persistent capacity, volatile capacity,
+> >> +		or the LSA, is made permanently unavailable by whatever means
+> >> +		is appropriate for the media type. This functionality requires
+> >> +		the device to be not be actively decoding any HPA ranges.
+> >> +
+> >> +		Reading this file shows either "disabled" when not running, or
+> >> +		"sanitize" during the duration of the sanitize operation. This
+> >> +		sysfs entry is select/poll capable from userspace to notify upon
+> >> +		completion.  
+> >
+> >A sysfs attribute that reads different from what is written is not very intuitive.
+> >The one file one thing rule suggests to me that you should have a separate
+> >santize_status or similar.  Or just have this read true when in progress making
+> >it a self resetting toggle that returns -EBUSY if anyone tries to unset it.  
 > 
-> The other observation is that the ACPICA project is doing something
-> similar for offering disassembly of CDAT buffers within the existing
-> ACPICA tooling vs building independent infrastructure. So that was
-> another weight on the scale with proceeding with the code reuse for me.
+> So the plan is to also to have the (cached) pmem security status (read-only):
+>      /sys/bus/cxl/devices/memX/security/status
+> 
+> sanitize could nicely be incorporated there and just read/poll that file for all
+> things security. So security/sanitize file goes to being write-only, just like
+> its secure erase counter part.
 
-Great. I'd missed that.  I took a look at that ages ago and decided it
-was too hard to solve and ran away / wrote CDAT tables in a hex editor instead
-for a bit.
+That works nicely. Good plan.
 
 > 
-> The only thing I don't like about the result is still seeing acpi_/ACPI_
-> prefixes. I think these entry points and symbol names should be
-> cdat_/CDAT_ where possible, more below.
+> >> +
+> >> +
+> >>  What:		/sys/bus/cxl/devices/*/devtype
+> >>  Date:		June, 2021
+> >>  KernelVersion:	v5.14
+> >> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> >> index cde7270c6037..28daf7dcdec4 100644
+> >> --- a/drivers/cxl/core/mbox.c
+> >> +++ b/drivers/cxl/core/mbox.c
+> >> @@ -1021,6 +1021,62 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
+> >>  }
+> >>  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
+> >>
+> >> +/**
+> >> + * cxl_mem_sanitize() - Send a sanitation command to the device.
+> >> + * @cxlds: The device data for the operation
+> >> + * @cmd: The specific sanitation command opcode
+> >> + *
+> >> + * Return: 0 if the command was executed successfully, regardless of
+> >> + * whether or not the actual security operation is done in the background,
+> >> + * such as for the Sanitize case.
+> >> + * Error return values can be the result of the mailbox command, -EINVAL
+> >> + * when security requirements are not met or invalid contexts, or -EBUSY
+> >> + * if the device is not offline.  
+> >
+> >What does offline mean for the device?  Perhaps a tighter definition needed.  
 > 
-> ...and as I read to the end of the feedback on this one it seems you
-> have the same reaction.
+> I can expand. But overall, with Alison's poison work being picked up, now we
+> can add a cxl_memdev_active() helper to ensure no regions are mapped to this
+> memdev.
+
+Ok.
 > 
-> > 
-> > Otherwise, maybe we need some unions so that the type mashups don't happen.
-
-A union or two would get rid of the type confusion - or at least make it
-deliberate at the cost of annoyingly noisy patch or maybe some wrappers.
-
-> >   
-> > > 
-> > > Cc: Rafael J. Wysocki <rafael@kernel.org>
-> > > Cc: Len Brown <lenb@kernel.org>
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---
-> > >  drivers/acpi/tables.c |   47 +++++++++++++++++++++++++++++++++++++++++++++--
-> > >  include/acpi/actbl1.h |    3 +++
-> > >  include/linux/acpi.h  |    4 ++++
-> > >  3 files changed, 52 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> > > index 7b4680da57d7..08486f6df442 100644
-> > > --- a/drivers/acpi/tables.c
-> > > +++ b/drivers/acpi/tables.c
-> > > @@ -42,6 +42,7 @@ enum acpi_subtable_type {
-> > >  	ACPI_SUBTABLE_HMAT,
-> > >  	ACPI_SUBTABLE_PRMT,
-> > >  	ACPI_SUBTABLE_CEDT,
-> > > +	ACPI_SUBTABLE_CDAT,  
-> 
-> To your point about ACPI_SIG_CDAT I also think this should be named
-> differently, like CDAT_SUBTABLE, just to make it clear that this is a
-> special case and not another ACPI table.
-
-That works for me.
-
-> 
-> > >  };
-> > >  
-> > >  struct acpi_subtable_entry {
-> > > @@ -239,6 +240,8 @@ acpi_get_entry_type(struct acpi_subtable_entry *entry)
-> > >  		return 0;
-> > >  	case ACPI_SUBTABLE_CEDT:
-> > >  		return entry->hdr->cedt.type;
-> > > +	case ACPI_SUBTABLE_CDAT:
-> > > +		return entry->hdr->cdat.type;
-> > >  	}
-> > >  	return 0;
-> > >  }
-> > > @@ -255,6 +258,8 @@ acpi_get_entry_length(struct acpi_subtable_entry *entry)
-> > >  		return entry->hdr->prmt.length;
-> > >  	case ACPI_SUBTABLE_CEDT:
-> > >  		return entry->hdr->cedt.length;
-> > > +	case ACPI_SUBTABLE_CDAT:
-> > > +		return le16_to_cpu((__force __le16)entry->hdr->cdat.length);
-> > >  	}
-> > >  	return 0;
-> > >  }
-> > > @@ -271,6 +276,8 @@ acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
-> > >  		return sizeof(entry->hdr->prmt);
-> > >  	case ACPI_SUBTABLE_CEDT:
-> > >  		return sizeof(entry->hdr->cedt);
-> > > +	case ACPI_SUBTABLE_CDAT:
-> > > +		return sizeof(entry->hdr->cdat);
-> > >  	}
-> > >  	return 0;
-> > >  }
-> > > @@ -284,9 +291,22 @@ acpi_get_subtable_type(char *id)
-> > >  		return ACPI_SUBTABLE_PRMT;
-> > >  	if (strncmp(id, ACPI_SIG_CEDT, 4) == 0)
-> > >  		return ACPI_SUBTABLE_CEDT;
-> > > +	if (strncmp(id, ACPI_SIG_CDAT, 4) == 0)
-> > > +		return ACPI_SUBTABLE_CDAT;  
-> > 
-> > I'm not super keen on inventing a SIG when the CDAT 'table'
-> > doesn't actually have one.  
-> 
-> Agree, I think CDAT_SIG makes it clearer that CDAT is not in the
-> traditional ACPI namespace.
-
-Agreed. IF it shouts different I'm fine with this.
-
-> 
-> >   
-> > >  	return ACPI_SUBTABLE_COMMON;
-> > >  }
-> > >  
-> > > +static unsigned long __init_or_acpilib
-> > > +acpi_table_get_length(enum acpi_subtable_type type,
-> > > +		      struct acpi_table_header *hdr)  
-> > 
-> > I don't like parsing in an acpi_table_header type here when it may not be one.
-> > I think this length decision needs to be pushed up a level to where we can see
-> > if we have a CDAT table or not.
-This comment was (as Dave pointed out) not very helpful.
-
-Switch struct acpi_table_header for a union of that and
-struct acpi_table_cdat (renamed)  and it would make me less
-uncomfortable with this
-
-
-
-> 
+> Thanks,
+> Davidlohr
 
