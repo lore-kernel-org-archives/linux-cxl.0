@@ -2,38 +2,37 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7AAC77B7F
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 14:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D61C77B75
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 14:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241290AbjELO0E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 May 2023 10:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
+        id S241124AbjELO1E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 May 2023 10:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241124AbjELO0D (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 10:26:03 -0400
+        with ESMTP id S240934AbjELO1D (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 10:27:03 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0ED2D7C;
-        Fri, 12 May 2023 07:26:01 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHrdL69l3z67Xd4;
-        Fri, 12 May 2023 22:25:10 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F27272B
+        for <linux-cxl@vger.kernel.org>; Fri, 12 May 2023 07:27:02 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHrZs6BDzz6J6vY;
+        Fri, 12 May 2023 22:23:01 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 12 May
- 2023 15:25:59 +0100
-Date:   Fri, 12 May 2023 15:25:58 +0100
+ 2023 15:27:00 +0100
+Date:   Fri, 12 May 2023 15:26:59 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
+CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
         <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <lukas@wunner.de>
-Subject: Re: [PATCH 4/4] cxl: Add callback to parse the DSMAS subtables from
- CDAT
-Message-ID: <20230512152558.00002a56@Huawei.com>
-In-Reply-To: <168330799471.2042604.1887260521284311424.stgit@djiang5-mobl3>
-References: <168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3>
-        <168330799471.2042604.1887260521284311424.stgit@djiang5-mobl3>
+        <alison.schofield@intel.com>
+Subject: Re: [PATCH v5 01/14] cxl: Add callback to parse the DSMAS subtables
+ from CDAT
+Message-ID: <20230512152659.0000639d@Huawei.com>
+In-Reply-To: <168357881963.2756219.1853631182045246376.stgit@djiang5-mobl3>
+References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
+        <168357881963.2756219.1853631182045246376.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -47,7 +46,7 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 05 May 2023 10:33:14 -0700
+On Mon, 08 May 2023 13:46:59 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
 > Provide a callback function to the CDAT parser in order to parse the Device
@@ -62,12 +61,8 @@ Dave Jiang <dave.jiang@intel.com> wrote:
 > Structure (DSMAS)
 > 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-A few trivials inline.
-
-I've pretty much forgotten this since I last looked, so it's more than
-possible I disagree with what I may have said for previous versions.
-
-Jonathan
+Ah. I failed to read cover letter of the precursor series that said patch 4
+was there as an example.  Please carry forward comments from there.
 
 > ---
 > v5:
@@ -122,10 +117,6 @@ Jonathan
 > +			      const unsigned long end)
 > +{
 > +	struct acpi_cdat_dsmas *dsmas = (struct acpi_cdat_dsmas *)header;
-
-No functional change, but I'd rather see the &header->cdat 
-cast than the union.  Makes it more obvious why this is fine.
-
 > +	struct list_head *dsmas_list = arg;
 > +	struct dsmas_entry *dent;
 > +	u16 len;
@@ -209,10 +200,6 @@ cast than the union.  Makes it more obvious why this is fine.
 > +		kfree(dentry);
 > +	}
 > +}
-
-I'd rather see this alongside the code that created it in core/cdat.c
-than in here.
-
 > +
 >  static int cxl_switch_port_probe(struct cxl_port *port)
 >  {
