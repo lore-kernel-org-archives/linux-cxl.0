@@ -2,37 +2,38 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EDBC77B7C
-	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 15:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83ADC77B75
+	for <linux-cxl@archiver.kernel.org>; Fri, 12 May 2023 15:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241233AbjELPgs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 12 May 2023 11:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55176 "EHLO
+        id S241989AbjELPnj (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 12 May 2023 11:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233395AbjELPgr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 11:36:47 -0400
+        with ESMTP id S241987AbjELPni (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 12 May 2023 11:43:38 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29525B9
-        for <linux-cxl@vger.kernel.org>; Fri, 12 May 2023 08:36:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558365B83;
+        Fri, 12 May 2023 08:43:36 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHt9x3xRCz67Lqc;
-        Fri, 12 May 2023 23:35:01 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QHtKq4RC8z67jMp;
+        Fri, 12 May 2023 23:41:51 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 12 May
- 2023 16:36:43 +0100
-Date:   Fri, 12 May 2023 16:36:42 +0100
+ 2023 16:43:33 +0100
+Date:   Fri, 12 May 2023 16:43:32 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>
-Subject: Re: [PATCH v5 14/14] cxl/mem: Add debugfs output for QTG related
- data
-Message-ID: <20230512163642.00002715@Huawei.com>
-In-Reply-To: <168357889673.2756219.5112791678818283230.stgit@djiang5-mobl3>
-References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
-        <168357889673.2756219.5112791678818283230.stgit@djiang5-mobl3>
+CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <lukas@wunner.de>
+Subject: Re: [PATCH 1/4] acpi: numa: Create enum for memory_target access
+ coordinates indexing
+Message-ID: <20230512164332.00002171@Huawei.com>
+In-Reply-To: <168333151653.2290593.15815859836381468990.stgit@djiang5-mobl3>
+References: <168333141100.2290593.16294670316057617744.stgit@djiang5-mobl3>
+        <168333151653.2290593.15815859836381468990.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -46,101 +47,121 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 08 May 2023 13:48:16 -0700
+On Fri, 05 May 2023 17:05:16 -0700
 Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Add debugfs output to /sys/kernel/debug/cxl/memX/qtgmap
-> The debugfs attribute will dump out all the DSMAS ranges and the associated
-> QTG ID exported by the CXL device CDAT.
+> Create enums to provide named indexing for the access coordinate array.
+> This is in preparation for adding generic port support which will add a
+> third index in the array to keep the generic port attributes separate from
+> the memory attributes.
 > 
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-LTGM, though seems we haven't been keeping up with ABI docs for other
-stuff in debugfs. That wants fixing but is unrelated to this.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> 
-> ---
-> v4:
-> - Use cxlds->qos_list instead of the stray cxlmd->qos_list
-> ---
->  Documentation/ABI/testing/debugfs-cxl |   11 +++++++++++
->  MAINTAINERS                           |    1 +
->  drivers/cxl/mem.c                     |   17 +++++++++++++++++
->  3 files changed, 29 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-cxl
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-cxl b/Documentation/ABI/testing/debugfs-cxl
-> new file mode 100644
-> index 000000000000..0f36eeb7e59b
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/debugfs-cxl
-> @@ -0,0 +1,11 @@
-> +What:		/sys/kernel/debug/cxl/memX/qtg_map
-> +Date:		Mar, 2023
-> +KernelVersion:	v6.4
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Entries of all Device Physical Address (DPA) ranges
-> +		provided by the device Coherent Device Attributes Table (CDAT)
-> +		Device Scoped Memory Affinity Structure (DSMAS) entries with
-> +		the matching QoS Throttling Group (QTG) id calculated from the
-> +		latency and bandwidth of the CXL path from the memory device
-> +		to the CPU.
 
-Curious. This file should already exist as there is clearly more debugfs ABI
-from the code below.  Perhaps a precursor patch to create the file and document
-existing interfaces?
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fd8c4c560f8d..256e4e57017c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5171,6 +5171,7 @@ M:	Ben Widawsky <bwidawsk@kernel.org>
->  M:	Dan Williams <dan.j.williams@intel.com>
->  L:	linux-cxl@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/ABI/testing/debugfs-cxl
->  F:	drivers/cxl/
->  F:	include/uapi/linux/cxl_mem.h
+> ---
+>  drivers/acpi/numa/hmat.c |   35 ++++++++++++++++++++++++-----------
+>  1 file changed, 24 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index f9ff992038fa..abed728bf09d 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -57,12 +57,18 @@ struct target_cache {
+>  	struct node_cache_attrs cache_attrs;
+>  };
 >  
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 39c4b54f0715..587e261a7f76 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -45,6 +45,22 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
->  	return 0;
+> +enum {
+> +	NODE_ACCESS_CLASS_0 = 0,
+> +	NODE_ACCESS_CLASS_1,
+> +	NODE_ACCESS_CLASS_MAX,
+> +};
+> +
+>  struct memory_target {
+>  	struct list_head node;
+>  	unsigned int memory_pxm;
+>  	unsigned int processor_pxm;
+>  	struct resource memregions;
+> -	struct access_coordinate coord[2];
+> +	struct access_coordinate coord[NODE_ACCESS_CLASS_MAX];
+>  	struct list_head caches;
+>  	struct node_cache_attrs cache_attrs;
+>  	bool registered;
+> @@ -338,10 +344,12 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+>  			if (mem_hier == ACPI_HMAT_MEMORY) {
+>  				target = find_mem_target(targs[targ]);
+>  				if (target && target->processor_pxm == inits[init]) {
+> -					hmat_update_target_access(target, type, value, 0);
+> +					hmat_update_target_access(target, type, value,
+> +								  NODE_ACCESS_CLASS_0);
+>  					/* If the node has a CPU, update access 1 */
+>  					if (node_state(pxm_to_node(inits[init]), N_CPU))
+> -						hmat_update_target_access(target, type, value, 1);
+> +						hmat_update_target_access(target, type, value,
+> +									  NODE_ACCESS_CLASS_1);
+>  				}
+>  			}
+>  		}
+> @@ -600,10 +608,12 @@ static void hmat_register_target_initiators(struct memory_target *target)
+>  	 */
+>  	if (target->processor_pxm != PXM_INVAL) {
+>  		cpu_nid = pxm_to_node(target->processor_pxm);
+> -		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> +		register_memory_node_under_compute_node(mem_nid, cpu_nid,
+> +							NODE_ACCESS_CLASS_0);
+>  		access0done = true;
+>  		if (node_state(cpu_nid, N_CPU)) {
+> -			register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
+> +			register_memory_node_under_compute_node(mem_nid, cpu_nid,
+> +								NODE_ACCESS_CLASS_1);
+>  			return;
+>  		}
+>  	}
+> @@ -644,12 +654,13 @@ static void hmat_register_target_initiators(struct memory_target *target)
+>  			}
+>  			if (best)
+>  				hmat_update_target_access(target, loc->hmat_loc->data_type,
+> -							  best, 0);
+> +							  best, NODE_ACCESS_CLASS_0);
+>  		}
+>  
+>  		for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
+>  			cpu_nid = pxm_to_node(i);
+> -			register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> +			register_memory_node_under_compute_node(mem_nid, cpu_nid,
+> +								NODE_ACCESS_CLASS_0);
+>  		}
+>  	}
+>  
+> @@ -681,11 +692,13 @@ static void hmat_register_target_initiators(struct memory_target *target)
+>  				clear_bit(initiator->processor_pxm, p_nodes);
+>  		}
+>  		if (best)
+> -			hmat_update_target_access(target, loc->hmat_loc->data_type, best, 1);
+> +			hmat_update_target_access(target, loc->hmat_loc->data_type, best,
+> +						  NODE_ACCESS_CLASS_1);
+>  	}
+>  	for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
+>  		cpu_nid = pxm_to_node(i);
+> -		register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
+> +		register_memory_node_under_compute_node(mem_nid, cpu_nid,
+> +							NODE_ACCESS_CLASS_1);
+>  	}
 >  }
 >  
-> +static int cxl_mem_qtg_show(struct seq_file *file, void *data)
-> +{
-> +	struct device *dev = file->private;
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct perf_prop_entry *perf;
-> +
-> +	list_for_each_entry(perf, &cxlds->perf_list, list) {
-> +		seq_printf(file, "%08llx-%08llx : QoS Class: %u\n",
-> +			   perf->dpa_range.start, perf->dpa_range.end,
-> +			   perf->qos_class);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  				 struct cxl_dport *parent_dport)
->  {
-> @@ -117,6 +133,7 @@ static int cxl_mem_probe(struct device *dev)
->  
->  	dentry = cxl_debugfs_create_dir(dev_name(dev));
->  	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
-> +	debugfs_create_devm_seqfile(dev, "qtgmap", dentry, cxl_mem_qtg_show);
->  	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
->  	if (rc)
->  		return rc;
+> @@ -746,8 +759,8 @@ static void hmat_register_target(struct memory_target *target)
+>  	if (!target->registered) {
+>  		hmat_register_target_initiators(target);
+>  		hmat_register_target_cache(target);
+> -		hmat_register_target_perf(target, 0);
+> -		hmat_register_target_perf(target, 1);
+> +		hmat_register_target_perf(target, NODE_ACCESS_CLASS_0);
+> +		hmat_register_target_perf(target, NODE_ACCESS_CLASS_1);
+>  		target->registered = true;
+>  	}
+>  	mutex_unlock(&target_lock);
 > 
 > 
 
