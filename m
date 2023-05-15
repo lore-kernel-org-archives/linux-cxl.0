@@ -2,109 +2,144 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E36C7EE22
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 10:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2CAC77B7D
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 10:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237651AbjEOKiS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 06:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
+        id S239655AbjEOKqO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 May 2023 06:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229582AbjEOKiR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 06:38:17 -0400
+        with ESMTP id S229582AbjEOKqN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 06:46:13 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AD219D;
-        Mon, 15 May 2023 03:38:16 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKbQ510GYz67lhG;
-        Mon, 15 May 2023 18:36:29 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BED1B8;
+        Mon, 15 May 2023 03:46:11 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKbXT5xcdz6J6k4;
+        Mon, 15 May 2023 18:42:01 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 11:38:14 +0100
-Date:   Mon, 15 May 2023 11:38:13 +0100
+ 2023 11:46:08 +0100
+Date:   Mon, 15 May 2023 11:46:07 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/5] cxl/hdm: Fail upon detecting 0-sized decoders
-Message-ID: <20230515113813.00003eb1@Huawei.com>
-In-Reply-To: <168149843516.792294.11872242648319572632.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH 2/5] cxl/hdm: Use 4-byte reads to retrieve HDM decoder
+ base+limit
+Message-ID: <20230515114607.00004647@Huawei.com>
+In-Reply-To: <168149844056.792294.8224490474529733736.stgit@dwillia2-xfh.jf.intel.com>
 References: <168149842935.792294.13212627946146993066.stgit@dwillia2-xfh.jf.intel.com>
-        <168149843516.792294.11872242648319572632.stgit@dwillia2-xfh.jf.intel.com>
+        <168149844056.792294.8224490474529733736.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 14 Apr 2023 11:53:55 -0700
+On Fri, 14 Apr 2023 11:54:00 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Decoders committed with 0-size lead to later crashes on shutdown as
-> __cxl_dpa_release() assumes a 'struct resource' has been established in
-> the in 'cxlds->dpa_res'. Just fail the driver load in this instance
-> since there are deeper problems with the enumeration or the setup when
-> this happens.
+> The CXL specification mandates that 4-byte registers must be accessed
+> with 4-byte access cycles. CXL 3.0 8.2.3 "Component Register Layout and
+> Definition" states that the behavior is undefined if (2) 32-bit
+> registers are accessed as an 8-byte quantity. It turns out that at least
+> one hardware implementation is sensitive to this in practice. The @size
+> variable results in zero with:
 > 
-> Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
+>     size = readq(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
+> 
+> ...and the correct size with:
+> 
+>     lo = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
+>     hi = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(which));
+>     size = (hi << 32) + lo;
+
+Hmm. Annoying that there isn't an always present split version of the
+ioread64_hi_lo like there effectively is for hi_low_readq()
+
+Mind you, why was this using the ioread64_hi_lo() variant rather
+than hi_lo_readq()?  Far as I can tell that wouldn't have suffered
+from this problem in the first place.
+
+There is at least one other direct user of that function, so maybe
+we should just use it here as well?
+
+Jonathan
+
+> 
+> Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
 > Cc: <stable@vger.kernel.org>
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-What happened to these?  Seem not to have gone upstream yet.
-
-This seems reasonable to me as well
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
 > ---
->  drivers/cxl/core/hdm.c |   15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
+>  drivers/cxl/core/hdm.c |   20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 02cc2c38b44b..35b338b716fe 100644
+> index 35b338b716fe..6fdf7981ddc7 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -269,8 +269,11 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> @@ -1,6 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+> -#include <linux/io-64-nonatomic-hi-lo.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> @@ -785,8 +784,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  			    int *target_map, void __iomem *hdm, int which,
+>  			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
+>  {
+> +	u64 size, base, skip, dpa_size, lo, hi;
+>  	struct cxl_endpoint_decoder *cxled;
+> -	u64 size, base, skip, dpa_size;
+>  	bool committed;
+>  	u32 remainder;
+>  	int i, rc;
+> @@ -801,8 +800,12 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  							which, info);
 >  
->  	lockdep_assert_held_write(&cxl_dpa_rwsem);
+>  	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
+> -	base = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
+> -	size = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
+> +	lo = readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(which));
+> +	hi = readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(which));
+> +	base = (hi << 32) + lo;
+> +	lo = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(which));
+> +	hi = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(which));
+> +	size = (hi << 32) + lo;
+>  	committed = !!(ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED);
+>  	cxld->commit = cxl_decoder_commit;
+>  	cxld->reset = cxl_decoder_reset;
+> @@ -865,8 +868,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  		return rc;
 >  
-> -	if (!len)
-> -		goto success;
-> +	if (!len) {
-> +		dev_warn(dev, "decoder%d.%d: empty reservation attempted\n",
-> +			 port->id, cxled->cxld.id);
-> +		return -EINVAL;
-> +	}
+>  	if (!info) {
+> -		target_list.value =
+> -			ioread64_hi_lo(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+> +		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+> +		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+> +		target_list.value = (hi << 32) + lo;
+>  		for (i = 0; i < cxld->interleave_ways; i++)
+>  			target_map[i] = target_list.target_id[i];
 >  
->  	if (cxled->dpa_res) {
->  		dev_dbg(dev, "decoder%d.%d: existing allocation %pr assigned\n",
-> @@ -323,7 +326,6 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
->  		cxled->mode = CXL_DECODER_MIXED;
+> @@ -883,7 +887,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  			port->id, cxld->id, size, cxld->interleave_ways);
+>  		return -ENXIO;
 >  	}
->  
-> -success:
->  	port->hdm_end++;
->  	get_device(&cxled->cxld.dev);
->  	return 0;
-> @@ -833,6 +835,13 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  				 port->id, cxld->id);
->  			return -ENXIO;
->  		}
-> +
-> +		if (size == 0) {
-> +			dev_warn(&port->dev,
-> +				 "decoder%d.%d: Committed with zero size\n",
-> +				 port->id, cxld->id);
-> +			return -ENXIO;
-> +		}
->  		port->commit_end = cxld->id;
->  	} else {
->  		/* unless / until type-2 drivers arrive, assume type-3 */
+> -	skip = ioread64_hi_lo(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
+> +	lo = readl(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
+> +	hi = readl(hdm + CXL_HDM_DECODER0_SKIP_HIGH(which));
+> +	skip = (hi << 32) + lo;
+>  	cxled = to_cxl_endpoint_decoder(&cxld->dev);
+>  	rc = devm_cxl_dpa_reserve(cxled, *dpa_base + skip, dpa_size, skip);
+>  	if (rc) {
 > 
 
