@@ -2,209 +2,317 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BFCC77B7D
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 17:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21705C7EE24
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 17:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243888AbjEORQF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 13:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
+        id S243921AbjEORRD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 May 2023 13:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243895AbjEORPh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 13:15:37 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA38DD89
-        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 10:14:29 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 99C7641EFB;
-        Mon, 15 May 2023 17:14:28 +0000 (UTC)
-Received: from pdx1-sub0-mail-a297.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 248C2426CB;
-        Mon, 15 May 2023 17:14:28 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684170868; a=rsa-sha256;
-        cv=none;
-        b=oi+Z7DlyteLqtWaw5iKmH+F7BuqL1Ibvdqg9CHcAYPlXn0V+UBmgXa05OStLL5e/l8Bcgf
-        9Lk+5j6bhP3Y/g6SDiEoD/8z0op/TiGVZkiwZebNJd9O7DQZqAWB0ICHCkEjk+OJE1UmDg
-        h4wq7NpOI1qNZ/uYjqSmu5t3SXRG/s5Xx/Mhsyo4o8Z707YgMbEScStn3aNJv8BTjmv1RM
-        56qzWrbJX8mhP9gVWYRokMKUyRIlI9NIjcn8ueAaslom+B5QNYExTil+CG5wLeFyHb7cUL
-        k+4CMntg6QA93EMsawPS+i/d9uXAcVVKw3x8HVGx8GNtUKc/yYOpyGJWdfgv9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1684170868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=hBAkmNIyKzB7dRbOOdDPQfaV4g6BD4HFl0BRVkZBGiE=;
-        b=GmA5s5ELgtOltDOY0pPlHtdWFj3OhQfhLe66SY50wxNY+tJp+khR5LMSy0x8qqh/zObPQz
-        01lMoWvIEorfEsDe3dq4srO6FaJoN2bCc3py9XcaRwUc8N5xWtU2vKv/R5IZBOe4NGCS7l
-        T3fzaDUYMXXQYutPiisC7/YFc4VxAW1qCs3BevFIHyTQOwXP3PwOpdMMFa7GK1m7zb8EfV
-        fQ3qr/z1grz3W6Xw2AtwBC1nzxUN0hZhG0eIsT4x8TX3oGYzZe3qhB6exi1oH1fLlevRjC
-        BRkJ6BSqCtelglMAFx9dtNEJt5H/8qqtgPEYNx9IsqdvEu5Ma5OSN5mXTYJZ4w==
-ARC-Authentication-Results: i=1;
-        rspamd-79bb5575d7-n4r5z;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cellar-Obese: 769880d05fb354d8_1684170868433_2453398409
-X-MC-Loop-Signature: 1684170868433:3108910913
-X-MC-Ingress-Time: 1684170868433
-Received: from pdx1-sub0-mail-a297.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.104.253.217 (trex/6.8.1);
-        Mon, 15 May 2023 17:14:28 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a297.dreamhost.com (Postfix) with ESMTPSA id 4QKmFH4K4cz76;
-        Mon, 15 May 2023 10:14:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1684170867;
-        bh=hBAkmNIyKzB7dRbOOdDPQfaV4g6BD4HFl0BRVkZBGiE=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=O+FPAYjUJtESN4bZInpybiFtPOFREgVpqRXtbEC7HDrnc2o4mxSolT8QBYnPk4teI
-         ILPmx5Mtbo/IdsIDE38C7nGnSY33itg4RnflVujVBOf3ek95PPshGfZByqzkxtdMg/
-         hBUjvypqLZZUt5AxvJ2hr/ywHcI0tH2Z16d0H0gP6T6Ragys8ugNrMT1J6IoBM2OZ/
-         SmQK4vh/c7VQAti0NyMCapgS0UJ5fG1vFJEMwiS5V7IYauKTPf5KD214CbK+VyoXDF
-         hIGSaVFVK10TYE4tu1bG66o4v6Zt4j5bnWaDkeAYqZBSO7ZgIipiUrQT3J/Elzu2Jl
-         mVfpm2tn4mPWw==
-Date:   Mon, 15 May 2023 09:41:29 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     dan.j.williams@intel.com, fan.ni@samsung.com,
-        a.manzanares@samsung.com, dave.jiang@intel.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/5] cxl/device: Handle Media Disabled state
-Message-ID: <6ydxwjc6dy4pbxblikfglab7txhul5fn3pvcosuwi2ys3j5gfs@y4vp2pfwnswg>
-References: <20230418172337.19207-1-dave@stgolabs.net>
- <20230418172337.19207-4-dave@stgolabs.net>
- <20230515133936.00007bce@Huawei.com>
+        with ESMTP id S243826AbjEORQp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 13:16:45 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F911156D;
+        Mon, 15 May 2023 10:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684170928; x=1715706928;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l9wSj9aHIGctlv8ejegWRxAtidvy5Sgex62r2Dcjlws=;
+  b=VDimmkCMFu4PEQDhWFvtXoKv43dEexVuG5du4MVRRYx8UtgjCx0fNS3i
+   uBq9dG0m9BARfV6FdiuIFKRyUvmv6OtoygNK52OCljKfqbydAs2l3DzHy
+   mX1SNUfhBBbtZLT0axuzlJqVfnQjRMg6+FPLwdZIsjmefWkzXkPJXtZwj
+   13gic3zSYhQ47esb6RHzQudNvRSYtG5hxz69FQfAN501KJ9RDa64Pc8G6
+   PQviAA9wt/X6G7TpuFFr2bFH9/yNGUjbwfNpR0POLpBSW5GzrPxkP1SEk
+   XCAZC597v9vWdMIMtReSNLNF/noTtoePKD89W/V3C4Mdyxv60drIRXYTN
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="416915294"
+X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
+   d="scan'208";a="416915294"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 10:15:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="766034073"
+X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
+   d="scan'208";a="766034073"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.175.127]) ([10.213.175.127])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 10:15:26 -0700
+Message-ID: <cb99a13a-86a8-880e-73fb-2947d8fa7be7@intel.com>
+Date:   Mon, 15 May 2023 10:15:26 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230515133936.00007bce@Huawei.com>
-User-Agent: NeoMutt/20230407
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH 1/4] acpi: tables: Add CDAT table parsing support
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+        rafael@kernel.org, lenb@kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        lukas@wunner.de
+References: <168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3>
+ <168330797672.2042604.12339416734589446371.stgit@djiang5-mobl3>
+ <20230512125831.00000eb0@Huawei.com>
+ <645e65d7dbf3_1e6f29476@dwillia2-xfh.jf.intel.com.notmuch>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <645e65d7dbf3_1e6f29476@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 15 May 2023, Jonathan Cameron wrote:
 
->On Tue, 18 Apr 2023 10:23:35 -0700
->Davidlohr Bueso <dave@stgolabs.net> wrote:
->
->> Ensure that both memory device read/writes and mailbox commands
->> can deal with the device media being disabled - per CXL 3.0 specs
->> 8.2.9.8.5.1 - Sanitize. Disabled semantics here are strictly 11b,
->> however noting that if the media is not in the ready state (01b),
->> user data is not accessible.
->>
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->> ---
->>  hw/cxl/cxl-mailbox-utils.c  | 15 +++++++++++++++
->>  hw/mem/cxl_type3.c          | 10 ++++++++++
->>  include/hw/cxl/cxl_device.h | 33 +++++++++++++++++++++++++++++++++
->>  3 files changed, 58 insertions(+)
->>
->> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
->> index 224bfdb4bfca..e0e20bc3a2bb 100644
->> --- a/hw/cxl/cxl-mailbox-utils.c
->> +++ b/hw/cxl/cxl-mailbox-utils.c
->> @@ -891,6 +891,21 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
->>          if (len == cxl_cmd->in || cxl_cmd->in == ~0) {
->>              cxl_cmd->payload = cxl_dstate->mbox_reg_state +
->>                  A_CXL_DEV_CMD_PAYLOAD;
->> +
->> +            if (cxl_dev_media_disabled(cxl_dstate)) {
->> +                if (h == cmd_events_get_records ||
->> +                    h == cmd_logs_get_log ||
->> +                    h == cmd_ccls_get_partition_info ||
->> +                    h == cmd_ccls_get_lsa ||
->> +                    h == cmd_ccls_set_lsa ||
->> +                    h == cmd_media_get_poison_list ||
->> +                    h == cmd_media_inject_poison ||
->> +                    h == cmd_media_clear_poison) {
->> +                        ret = CXL_MBOX_MEDIA_DISABLED;
->> +                        goto done;
->> +                }
->> +            }
->> +
->>              /* Only one bg command at a time */
->>              if ((cxl_cmd->effect & BACKGROUND_OPERATION) &&
->>                  cxl_dstate->bg.runtime > 0) {
->> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
->> index 801f72c5fcae..707bdc263f03 100644
->> --- a/hw/mem/cxl_type3.c
->> +++ b/hw/mem/cxl_type3.c
->> @@ -12,6 +12,7 @@
->>  #include "qemu/pmem.h"
->>  #include "qemu/range.h"
->>  #include "qemu/rcu.h"
->> +#include "qemu/guest-random.h"
->>  #include "sysemu/hostmem.h"
->>  #include "sysemu/numa.h"
->>  #include "hw/cxl/cxl.h"
->> @@ -989,6 +990,11 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
->>      if (res) {
->>          return MEMTX_ERROR;
->>      }
->> +    /* all memory reads will return random values */
->
->Reference for this would be good.  Random is expensive if we can get
->away with a constant value.
 
-Oh I threw out any performance expectations for qemu out the window, otherwise
-I'd cry. Unless it's problem (this is media disabled, so bleh), I would
-prefer keeping it as is.
-
->> +    if (cxl_dev_media_disabled(&CXL_TYPE3(d)->cxl_dstate)) {
->> +        qemu_guest_getrandom_nofail(data, size);
->> +        return MEMTX_OK;
->> +    }
+On 5/12/23 9:14 AM, Dan Williams wrote:
+> Jonathan Cameron wrote:
+>> On Fri, 05 May 2023 10:32:56 -0700
+>> Dave Jiang <dave.jiang@intel.com> wrote:
 >>
->>      return address_space_read(as, dpa_offset, attrs, data, size);
->>  }
->> @@ -1005,6 +1011,10 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
->>      if (res) {
->>          return MEMTX_ERROR;
->>      }
->> +    /* memory writes to the device will have no effect */
->> +    if (cxl_dev_media_disabled(&CXL_TYPE3(d)->cxl_dstate)) {
->> +        return MEMTX_OK;
->> +    }
+>>> The CDAT table is very similar to ACPI tables when it comes to sub-table
+>>> and entry structures. The helper functions can be also used to parse the
+>>> CDAT table. Add support to the helper functions to deal with an external
+>>> CDAT table, and also handle the endieness since CDAT can be processed by a
+>>> BE host. Export a function acpi_table_parse_cdat() for CXL driver to parse
+>>> a CDAT table.
+>>>
+>>> In order to minimize ACPI code changes, __force is being utilized to deal
+>>> with the case of a big endien (BE) host parsing a CDAT. All CDAT data
+>>> structure variables are being force casted to __leX as appropriate.
 >>
->>      return address_space_write(as, dpa_offset, attrs, &data, size);
->>  }
->> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
->> index f986651b6ead..3ef7a7cded95 100644
->> --- a/include/hw/cxl/cxl_device.h
->> +++ b/include/hw/cxl/cxl_device.h
->> @@ -346,6 +346,39 @@ REG64(CXL_MEM_DEV_STS, 0)
->>      FIELD(CXL_MEM_DEV_STS, MBOX_READY, 4, 1)
->>      FIELD(CXL_MEM_DEV_STS, RESET_NEEDED, 5, 3)
+>> Hi Dave,
 >>
->> +static inline void cxl_dev_media_toggle(CXLDeviceState *cxl_dstate, int val)
->> +{
->> +    uint64_t reg;
->> +
->> +    reg = ldq_le_p(cxl_dstate->mbox_reg_state64 + R_CXL_MEM_DEV_STS);
->> +    if (FIELD_EX64(reg, CXL_MEM_DEV_STS, MEDIA_STATUS) == val) {
->> +        return;
->> +    }
->> +
->> +    reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
->> +    reg = FIELD_DP64(reg, CXL_MEM_DEV_STS, MBOX_READY, 0x1);
->> +
->> +    stq_le_p(&cxl_dstate->mbox_reg_state64 + R_CXL_MEM_DEV_STS, reg);
->
->Why & ?
+>> This falls into the annoyance that CDAT doesn't have a standard table header.
+>> Whilst I understand that was done deliberately it means some odd things happen
+>> in this code.
+>>
+>> Just how bad is the duplication if we don't do this at all, but instead roll
+>> a version for CDAT that doesn't force things through pointers of the wrong types?
+> 
+> Yes, this was the question before sending this out. The savings is on
+> the order of ~100 lines which is not amazing, but was enough for me to
+> say lets keep going with this idea.
+> 
+> The other observation is that the ACPICA project is doing something
+> similar for offering disassembly of CDAT buffers within the existing
+> ACPICA tooling vs building independent infrastructure. So that was
+> another weight on the scale with proceeding with the code reuse for me.
+> 
+> The only thing I don't like about the result is still seeing acpi_/ACPI_
+> prefixes. I think these entry points and symbol names should be
+> cdat_/CDAT_ where possible, more below.
 
-braino
+The name change results in significant ACPICA code changes. We probably 
+want to avoid that.
 
-Thanks,
-Davidlohr
+DJ
+> 
+> ...and as I read to the end of the feedback on this one it seems you
+> have the same reaction.
+> 
+>>
+>> Otherwise, maybe we need some unions so that the type mashups don't happen.
+>>
+>>>
+>>> Cc: Rafael J. Wysocki <rafael@kernel.org>
+>>> Cc: Len Brown <lenb@kernel.org>
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>> ---
+>>>   drivers/acpi/tables.c |   47 +++++++++++++++++++++++++++++++++++++++++++++--
+>>>   include/acpi/actbl1.h |    3 +++
+>>>   include/linux/acpi.h  |    4 ++++
+>>>   3 files changed, 52 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+>>> index 7b4680da57d7..08486f6df442 100644
+>>> --- a/drivers/acpi/tables.c
+>>> +++ b/drivers/acpi/tables.c
+>>> @@ -42,6 +42,7 @@ enum acpi_subtable_type {
+>>>   	ACPI_SUBTABLE_HMAT,
+>>>   	ACPI_SUBTABLE_PRMT,
+>>>   	ACPI_SUBTABLE_CEDT,
+>>> +	ACPI_SUBTABLE_CDAT,
+> 
+> To your point about ACPI_SIG_CDAT I also think this should be named
+> differently, like CDAT_SUBTABLE, just to make it clear that this is a
+> special case and not another ACPI table.
+> 
+>>>   };
+>>>   
+>>>   struct acpi_subtable_entry {
+>>> @@ -239,6 +240,8 @@ acpi_get_entry_type(struct acpi_subtable_entry *entry)
+>>>   		return 0;
+>>>   	case ACPI_SUBTABLE_CEDT:
+>>>   		return entry->hdr->cedt.type;
+>>> +	case ACPI_SUBTABLE_CDAT:
+>>> +		return entry->hdr->cdat.type;
+>>>   	}
+>>>   	return 0;
+>>>   }
+>>> @@ -255,6 +258,8 @@ acpi_get_entry_length(struct acpi_subtable_entry *entry)
+>>>   		return entry->hdr->prmt.length;
+>>>   	case ACPI_SUBTABLE_CEDT:
+>>>   		return entry->hdr->cedt.length;
+>>> +	case ACPI_SUBTABLE_CDAT:
+>>> +		return le16_to_cpu((__force __le16)entry->hdr->cdat.length);
+>>>   	}
+>>>   	return 0;
+>>>   }
+>>> @@ -271,6 +276,8 @@ acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
+>>>   		return sizeof(entry->hdr->prmt);
+>>>   	case ACPI_SUBTABLE_CEDT:
+>>>   		return sizeof(entry->hdr->cedt);
+>>> +	case ACPI_SUBTABLE_CDAT:
+>>> +		return sizeof(entry->hdr->cdat);
+>>>   	}
+>>>   	return 0;
+>>>   }
+>>> @@ -284,9 +291,22 @@ acpi_get_subtable_type(char *id)
+>>>   		return ACPI_SUBTABLE_PRMT;
+>>>   	if (strncmp(id, ACPI_SIG_CEDT, 4) == 0)
+>>>   		return ACPI_SUBTABLE_CEDT;
+>>> +	if (strncmp(id, ACPI_SIG_CDAT, 4) == 0)
+>>> +		return ACPI_SUBTABLE_CDAT;
+>>
+>> I'm not super keen on inventing a SIG when the CDAT 'table'
+>> doesn't actually have one.
+> 
+> Agree, I think CDAT_SIG makes it clearer that CDAT is not in the
+> traditional ACPI namespace.
+> 
+>>
+>>>   	return ACPI_SUBTABLE_COMMON;
+>>>   }
+>>>   
+>>> +static unsigned long __init_or_acpilib
+>>> +acpi_table_get_length(enum acpi_subtable_type type,
+>>> +		      struct acpi_table_header *hdr)
+>>
+>> I don't like parsing in an acpi_table_header type here when it may not be one.
+>> I think this length decision needs to be pushed up a level to where we can see
+>> if we have a CDAT table or not.
+>>
+>>
+>>> +{
+>>> +	if (type == ACPI_SUBTABLE_CDAT)
+>>> +		return le32_to_cpu(
+>>> +			(__force __le32)((struct acpi_table_cdat *)hdr)->length);
+>>
+>> Perhaps a local variable in here somewhere would make it more readable.
+>> 	__le32 length = (__force__le32)((struct acpi_table_cdat *)hdr)->length;
+>>
+>> 	return le32_to_cpu(length)?
+>>
+>>
+>>> +
+>>> +	return hdr->length;
+>>> +}
+>>> +
+>>>   static __init_or_acpilib bool has_handler(struct acpi_subtable_proc *proc)
+>>>   {
+>>>   	return proc->handler || proc->handler_arg;
+>>> @@ -332,16 +352,19 @@ static int __init_or_acpilib acpi_parse_entries_array(
+>>>   	int proc_num, unsigned int max_entries)
+>>>   {
+>>>   	struct acpi_subtable_entry entry;
+>>> +	enum acpi_subtable_type type;
+>>>   	unsigned long table_end, subtable_len, entry_len;
+>>>   	int count = 0;
+>>>   	int errs = 0;
+>>>   	int i;
+>>>   
+>>> -	table_end = (unsigned long)table_header + table_header->length;
+>>> +	type = acpi_get_subtable_type(id);
+>>> +	table_end = (unsigned long)table_header +
+>>> +		    acpi_table_get_length(type, table_header);
+>> As above, I don't like carrying CDAT which doesn't have an acpi_table_header
+>> section around as that type of pointer.
+>>
+>>>   
+>>>   	/* Parse all entries looking for a match. */
+>>>   
+>>> -	entry.type = acpi_get_subtable_type(id);
+>>> +	entry.type = type;
+>>>   	entry.hdr = (union acpi_subtable_headers *)
+>>>   	    ((unsigned long)table_header + table_size);
+>>>   	subtable_len = acpi_get_subtable_header_length(&entry);
+>>> @@ -464,6 +487,26 @@ int __init acpi_table_parse_madt(enum acpi_madt_type id,
+>>>   					    handler, max_entries);
+>>>   }
+>>>   
+>>> +int acpi_table_parse_cdat(enum acpi_cdat_type type,
+>>> +			  acpi_tbl_entry_handler_arg handler_arg, void *arg,
+>>> +			  struct acpi_table_cdat *table_header)
+>>> +{
+>>> +	struct acpi_subtable_proc proc = {
+>>> +		.id		= type,
+>>> +		.handler_arg	= handler_arg,
+>>> +		.arg		= arg,
+>>> +	};
+>>> +
+>>> +	if (!table_header)
+>>> +		return -EINVAL;
+>>> +
+>>> +	return acpi_parse_entries_array(ACPI_SIG_CDAT,
+>>> +			sizeof(struct acpi_table_cdat),
+>>> +			(struct acpi_table_header *)table_header,
+>>> +			&proc, 1, 0);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(acpi_table_parse_cdat, CXL);
+>>> +
+>>>   /**
+>>>    * acpi_table_parse - find table with @id, run @handler on it
+>>>    * @id: table id to find
+>>> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+>>> index 81b9e794424d..3119be093cfe 100644
+>>> --- a/include/acpi/actbl1.h
+>>> +++ b/include/acpi/actbl1.h
+>>> @@ -66,6 +66,9 @@
+>>>   #define ACPI_SIG_IEIT           "IEIT"
+>>>   #endif
+>>>   
+>>> +/* External to ACPI */
+>>> +#define ACPI_SIG_CDAT		"CDAT" /* Coherent Device Attribute Table */
+>>
+>> Worse that that, fictional signature :)
+>> It's the nameof the 'table', but it's not a signature as it's never
+>> used as they are in ACPI and doesn't appear anywhere in the table.
+>>
+>>> +
+>>>   /*
+>>>    * All tables must be byte-packed to match the ACPI specification, since
+>>>    * the tables are provided by the system BIOS.
+>>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>>> index efff750f326d..4c3dfe7587e9 100644
+>>> --- a/include/linux/acpi.h
+>>> +++ b/include/linux/acpi.h
+>>> @@ -135,6 +135,7 @@ union acpi_subtable_headers {
+>>>   	struct acpi_hmat_structure hmat;
+>>>   	struct acpi_prmt_module_header prmt;
+>>>   	struct acpi_cedt_header cedt;
+>>> +	struct acpi_cdat_header cdat;
+>>>   };
+>>>   
+>>>   typedef int (*acpi_tbl_table_handler)(struct acpi_table_header *table);
+>>> @@ -266,6 +267,9 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
+>>>   
+>>>   int acpi_parse_mcfg (struct acpi_table_header *header);
+>>>   void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
+>>> +int acpi_table_parse_cdat(enum acpi_cdat_type type,
+>>> +			  acpi_tbl_entry_handler_arg handler, void *arg,
+>>> +			  struct acpi_table_cdat *table_header);
+>> How did we end up with an 'acpi_' table that isn't in ACPI?
+>> (I'm not looking as I fear I might be responsible :)
+>> Should perhaps consider renaming all the CDAT entries so it doesn't looks like they
+>> are.
+>>
+>>>   
+>>>   /* the following numa functions are architecture-dependent */
+>>>   void acpi_numa_slit_init (struct acpi_table_slit *slit);
+>>>
+>>>
+>>>
+>>
+> 
+> 
