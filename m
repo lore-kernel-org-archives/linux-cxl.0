@@ -2,107 +2,209 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5761DC77B7D
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 16:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BFCC77B7D
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 17:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242650AbjEOQTq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 12:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
+        id S243888AbjEORQF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 May 2023 13:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242655AbjEOQTn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 12:19:43 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4DC359E
-        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 09:19:34 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKl0q5tZQz67n3K;
-        Tue, 16 May 2023 00:18:35 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 17:19:32 +0100
-Date:   Mon, 15 May 2023 17:19:31 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/mbox: Add background cmd handling machinery
-Message-ID: <20230515171931.000054a5@Huawei.com>
-In-Reply-To: <lhpw35lii4cfrmvebphvhaivjgp2l3ajhnelmtilj5vbvqaxmn@o2ajzugaxbcc>
-References: <20230502171841.21317-1-dave@stgolabs.net>
-        <20230502171841.21317-4-dave@stgolabs.net>
-        <gtvozgdx2ak7tekc3heczk5g7gj3cwuoptez6tjmkecader4lo@7t2em7rclcxn>
-        <20230515113027.00001825@Huawei.com>
-        <lhpw35lii4cfrmvebphvhaivjgp2l3ajhnelmtilj5vbvqaxmn@o2ajzugaxbcc>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S243895AbjEORPh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 13:15:37 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA38DD89
+        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 10:14:29 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 99C7641EFB;
+        Mon, 15 May 2023 17:14:28 +0000 (UTC)
+Received: from pdx1-sub0-mail-a297.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 248C2426CB;
+        Mon, 15 May 2023 17:14:28 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684170868; a=rsa-sha256;
+        cv=none;
+        b=oi+Z7DlyteLqtWaw5iKmH+F7BuqL1Ibvdqg9CHcAYPlXn0V+UBmgXa05OStLL5e/l8Bcgf
+        9Lk+5j6bhP3Y/g6SDiEoD/8z0op/TiGVZkiwZebNJd9O7DQZqAWB0ICHCkEjk+OJE1UmDg
+        h4wq7NpOI1qNZ/uYjqSmu5t3SXRG/s5Xx/Mhsyo4o8Z707YgMbEScStn3aNJv8BTjmv1RM
+        56qzWrbJX8mhP9gVWYRokMKUyRIlI9NIjcn8ueAaslom+B5QNYExTil+CG5wLeFyHb7cUL
+        k+4CMntg6QA93EMsawPS+i/d9uXAcVVKw3x8HVGx8GNtUKc/yYOpyGJWdfgv9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1684170868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=hBAkmNIyKzB7dRbOOdDPQfaV4g6BD4HFl0BRVkZBGiE=;
+        b=GmA5s5ELgtOltDOY0pPlHtdWFj3OhQfhLe66SY50wxNY+tJp+khR5LMSy0x8qqh/zObPQz
+        01lMoWvIEorfEsDe3dq4srO6FaJoN2bCc3py9XcaRwUc8N5xWtU2vKv/R5IZBOe4NGCS7l
+        T3fzaDUYMXXQYutPiisC7/YFc4VxAW1qCs3BevFIHyTQOwXP3PwOpdMMFa7GK1m7zb8EfV
+        fQ3qr/z1grz3W6Xw2AtwBC1nzxUN0hZhG0eIsT4x8TX3oGYzZe3qhB6exi1oH1fLlevRjC
+        BRkJ6BSqCtelglMAFx9dtNEJt5H/8qqtgPEYNx9IsqdvEu5Ma5OSN5mXTYJZ4w==
+ARC-Authentication-Results: i=1;
+        rspamd-79bb5575d7-n4r5z;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Cellar-Obese: 769880d05fb354d8_1684170868433_2453398409
+X-MC-Loop-Signature: 1684170868433:3108910913
+X-MC-Ingress-Time: 1684170868433
+Received: from pdx1-sub0-mail-a297.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.104.253.217 (trex/6.8.1);
+        Mon, 15 May 2023 17:14:28 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a297.dreamhost.com (Postfix) with ESMTPSA id 4QKmFH4K4cz76;
+        Mon, 15 May 2023 10:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1684170867;
+        bh=hBAkmNIyKzB7dRbOOdDPQfaV4g6BD4HFl0BRVkZBGiE=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=O+FPAYjUJtESN4bZInpybiFtPOFREgVpqRXtbEC7HDrnc2o4mxSolT8QBYnPk4teI
+         ILPmx5Mtbo/IdsIDE38C7nGnSY33itg4RnflVujVBOf3ek95PPshGfZByqzkxtdMg/
+         hBUjvypqLZZUt5AxvJ2hr/ywHcI0tH2Z16d0H0gP6T6Ragys8ugNrMT1J6IoBM2OZ/
+         SmQK4vh/c7VQAti0NyMCapgS0UJ5fG1vFJEMwiS5V7IYauKTPf5KD214CbK+VyoXDF
+         hIGSaVFVK10TYE4tu1bG66o4v6Zt4j5bnWaDkeAYqZBSO7ZgIipiUrQT3J/Elzu2Jl
+         mVfpm2tn4mPWw==
+Date:   Mon, 15 May 2023 09:41:29 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     dan.j.williams@intel.com, fan.ni@samsung.com,
+        a.manzanares@samsung.com, dave.jiang@intel.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 3/5] cxl/device: Handle Media Disabled state
+Message-ID: <6ydxwjc6dy4pbxblikfglab7txhul5fn3pvcosuwi2ys3j5gfs@y4vp2pfwnswg>
+References: <20230418172337.19207-1-dave@stgolabs.net>
+ <20230418172337.19207-4-dave@stgolabs.net>
+ <20230515133936.00007bce@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230515133936.00007bce@Huawei.com>
+User-Agent: NeoMutt/20230407
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 15 May 2023 08:40:30 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Mon, 15 May 2023, Jonathan Cameron wrote:
 
-> On Mon, 15 May 2023, Jonathan Cameron wrote:
-> 
-> >On Wed, 3 May 2023 07:57:56 -0700
-> >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> >  
-> >> This adds support for handling background operations, as defined in
-> >> the CXL 3.0 spec. Commands that can take too long (over ~2 seconds)
-> >> can run in the background asynchronously (to the hardware).
-> >>
-> >> The driver will deal with such commands synchronously, blocking all
-> >> other incoming commands for a specified period of time, allowing
-> >> time-slicing the command such that the caller can send incremental
-> >> requests to avoid monopolizing the driver/device. This approach
-> >> makes the code simpler, where any out of sync (timeout) between the
-> >> driver and hardware is just disregarded as an invalid state until
-> >> the next successful submission.
-> >>
-> >> On devices where mbox interrupts are supported, this will still use
-> >> a poller that will wakeup in the specified wait intervals. The irq
-> >> handler will simply awake the blocked cmd, which is also safe vs a
-> >> task that is either waking (timing out) or already awoken. Similarly
-> >> any irq setup error during the probing falls back to polling, thus
-> >> avoids unnecessarily erroring out.  
-> >
-> >This raises the question of why we don't support Doorbell Interrupts.
-> >2 seconds is rather a long time to poll for.  I can't really remember the
-> >reasoning but maybe it's that we don't expect anyone to every produce
-> >hardware that takes that long.
-> >
-> >Ah well, job for another day perhaps.
-> >
-> >I'm not following why the rcuwait is needed versus other options.
-> >Perhaps some minimal text here for those of us not familiar with that
-> >particular mechanism vs a completion of similar.  
-> 
-> As mentioned before, rcuwait gives us the single wait/wake semantics we
-> need (we are serialized by the mbox_mutex) - completions use queued wait,
-> which is an overkill for this case.
-Fair enough I guess. New toy that I'd not come across before.
+>On Tue, 18 Apr 2023 10:23:35 -0700
+>Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+>> Ensure that both memory device read/writes and mailbox commands
+>> can deal with the device media being disabled - per CXL 3.0 specs
+>> 8.2.9.8.5.1 - Sanitize. Disabled semantics here are strictly 11b,
+>> however noting that if the media is not in the ready state (01b),
+>> user data is not accessible.
+>>
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> ---
+>>  hw/cxl/cxl-mailbox-utils.c  | 15 +++++++++++++++
+>>  hw/mem/cxl_type3.c          | 10 ++++++++++
+>>  include/hw/cxl/cxl_device.h | 33 +++++++++++++++++++++++++++++++++
+>>  3 files changed, 58 insertions(+)
+>>
+>> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+>> index 224bfdb4bfca..e0e20bc3a2bb 100644
+>> --- a/hw/cxl/cxl-mailbox-utils.c
+>> +++ b/hw/cxl/cxl-mailbox-utils.c
+>> @@ -891,6 +891,21 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
+>>          if (len == cxl_cmd->in || cxl_cmd->in == ~0) {
+>>              cxl_cmd->payload = cxl_dstate->mbox_reg_state +
+>>                  A_CXL_DEV_CMD_PAYLOAD;
+>> +
+>> +            if (cxl_dev_media_disabled(cxl_dstate)) {
+>> +                if (h == cmd_events_get_records ||
+>> +                    h == cmd_logs_get_log ||
+>> +                    h == cmd_ccls_get_partition_info ||
+>> +                    h == cmd_ccls_get_lsa ||
+>> +                    h == cmd_ccls_set_lsa ||
+>> +                    h == cmd_media_get_poison_list ||
+>> +                    h == cmd_media_inject_poison ||
+>> +                    h == cmd_media_clear_poison) {
+>> +                        ret = CXL_MBOX_MEDIA_DISABLED;
+>> +                        goto done;
+>> +                }
+>> +            }
+>> +
+>>              /* Only one bg command at a time */
+>>              if ((cxl_cmd->effect & BACKGROUND_OPERATION) &&
+>>                  cxl_dstate->bg.runtime > 0) {
+>> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+>> index 801f72c5fcae..707bdc263f03 100644
+>> --- a/hw/mem/cxl_type3.c
+>> +++ b/hw/mem/cxl_type3.c
+>> @@ -12,6 +12,7 @@
+>>  #include "qemu/pmem.h"
+>>  #include "qemu/range.h"
+>>  #include "qemu/rcu.h"
+>> +#include "qemu/guest-random.h"
+>>  #include "sysemu/hostmem.h"
+>>  #include "sysemu/numa.h"
+>>  #include "hw/cxl/cxl.h"
+>> @@ -989,6 +990,11 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+>>      if (res) {
+>>          return MEMTX_ERROR;
+>>      }
+>> +    /* all memory reads will return random values */
+>
+>Reference for this would be good.  Random is expensive if we can get
+>away with a constant value.
 
-Jonathan
+Oh I threw out any performance expectations for qemu out the window, otherwise
+I'd cry. Unless it's problem (this is media disabled, so bleh), I would
+prefer keeping it as is.
 
-> 
-> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>  
-> >Otherwise just a comment inline on dev_warn for unexpected interrupt
-> >on an interrupt that you've marked as IRQF_SHARED which pretty much
-> >guarantees you need to handle unexpected interrupts as 'normal'.  
-> 
-> Per your feedback in the the previous series, I will remove this dev_warn
-> altogether.
-> 
-> Thanks,
-> Davidlohr
+>> +    if (cxl_dev_media_disabled(&CXL_TYPE3(d)->cxl_dstate)) {
+>> +        qemu_guest_getrandom_nofail(data, size);
+>> +        return MEMTX_OK;
+>> +    }
+>>
+>>      return address_space_read(as, dpa_offset, attrs, data, size);
+>>  }
+>> @@ -1005,6 +1011,10 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+>>      if (res) {
+>>          return MEMTX_ERROR;
+>>      }
+>> +    /* memory writes to the device will have no effect */
+>> +    if (cxl_dev_media_disabled(&CXL_TYPE3(d)->cxl_dstate)) {
+>> +        return MEMTX_OK;
+>> +    }
+>>
+>>      return address_space_write(as, dpa_offset, attrs, &data, size);
+>>  }
+>> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+>> index f986651b6ead..3ef7a7cded95 100644
+>> --- a/include/hw/cxl/cxl_device.h
+>> +++ b/include/hw/cxl/cxl_device.h
+>> @@ -346,6 +346,39 @@ REG64(CXL_MEM_DEV_STS, 0)
+>>      FIELD(CXL_MEM_DEV_STS, MBOX_READY, 4, 1)
+>>      FIELD(CXL_MEM_DEV_STS, RESET_NEEDED, 5, 3)
+>>
+>> +static inline void cxl_dev_media_toggle(CXLDeviceState *cxl_dstate, int val)
+>> +{
+>> +    uint64_t reg;
+>> +
+>> +    reg = ldq_le_p(cxl_dstate->mbox_reg_state64 + R_CXL_MEM_DEV_STS);
+>> +    if (FIELD_EX64(reg, CXL_MEM_DEV_STS, MEDIA_STATUS) == val) {
+>> +        return;
+>> +    }
+>> +
+>> +    reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
+>> +    reg = FIELD_DP64(reg, CXL_MEM_DEV_STS, MBOX_READY, 0x1);
+>> +
+>> +    stq_le_p(&cxl_dstate->mbox_reg_state64 + R_CXL_MEM_DEV_STS, reg);
+>
+>Why & ?
 
+braino
+
+Thanks,
+Davidlohr
