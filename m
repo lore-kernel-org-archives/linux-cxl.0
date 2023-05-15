@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C820C77B7D
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 14:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E65C77B75
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 14:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237144AbjEOOJY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 10:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
+        id S240191AbjEOOiD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 May 2023 10:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjEOOJX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 10:09:23 -0400
+        with ESMTP id S229679AbjEOOiC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 10:38:02 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D13172B
-        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 07:09:21 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKh2t73htz6J72P;
-        Mon, 15 May 2023 22:05:10 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E8FF10A
+        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 07:37:59 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKhlc1k38z67nTp;
+        Mon, 15 May 2023 22:37:00 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 15:09:18 +0100
-Date:   Mon, 15 May 2023 15:09:17 +0100
+ 2023 15:37:56 +0100
+Date:   Mon, 15 May 2023 15:37:55 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Fan Ni <fan.ni@samsung.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
@@ -35,20 +35,20 @@ CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         "dave@stgolabs.net" <dave@stgolabs.net>,
         "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
         "nifan@outlook.com" <nifan@outlook.com>
-Subject: Re: [RFC 4/7] hw/mem/cxl_type3: Add DC extent representative to cxl
- type3 device
-Message-ID: <20230515150917.000038ef@Huawei.com>
-In-Reply-To: <20230511175609.2091136-5-fan.ni@samsung.com>
+Subject: Re: [RFC 5/7] hw/cxl/cxl-mailbox-utils: Add mailbox commands to
+ support add/release dynamic capacity response
+Message-ID: <20230515153755.00002bfc@Huawei.com>
+In-Reply-To: <20230511175609.2091136-6-fan.ni@samsung.com>
 References: <20230511175609.2091136-1-fan.ni@samsung.com>
-        <CGME20230511175641uscas1p2b70d27b1f20dc2dd54a0530170117530@uscas1p2.samsung.com>
-        <20230511175609.2091136-5-fan.ni@samsung.com>
+        <CGME20230511175642uscas1p1a998a2d4a20c370f0172db93d537ed39@uscas1p1.samsung.com>
+        <20230511175609.2091136-6-fan.ni@samsung.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -60,210 +60,338 @@ Fan Ni <fan.ni@samsung.com> wrote:
 
 > From: Fan Ni <nifan@outlook.com>
 > 
-> Add dynamic capacity extent information to the definition of
-> CXLType3Dev and add get DC extent list mailbox command based on
-> CXL.spec.3.0:.8.2.9.8.9.2.
-> 
-> With this command, we can create dc regions as below:
-> 
-> region=$(cat /sys/bus/cxl/devices/decoder0.0/create_dc_region)
-> echo $region> /sys/bus/cxl/devices/decoder0.0/create_dc_region
-> echo 256 > /sys/bus/cxl/devices/$region/interleave_granularity
-> echo 1 > /sys/bus/cxl/devices/$region/interleave_ways
-> 
-> echo "dc" >/sys/bus/cxl/devices/decoder2.0/mode
-> echo 0x30000000 >/sys/bus/cxl/devices/decoder2.0/dpa_size
-> 
-> echo 0x30000000 > /sys/bus/cxl/devices/$region/size
-> echo  "decoder2.0" > /sys/bus/cxl/devices/$region/target0
-> echo 1 > /sys/bus/cxl/devices/$region/commit
-> echo $region > /sys/bus/cxl/drivers/cxl_region/bind
+> Per CXL spec 3.0, we implemented the two mailbox commands:
+> Add Dynamic Capacity Response (Opcode 4802h) 8.2.9.8.9.3, and
+> Release Dynamic Capacity Response (Opcode 4803h) 8.2.9.8.9.4.
 > 
 > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-Hi Fan,
-
-A few comments inline,
-
-Thanks,
-
-Jonathan
-
 > ---
->  hw/cxl/cxl-mailbox-utils.c  | 73 ++++++++++++++++++++++++++++++++++++-
->  hw/mem/cxl_type3.c          |  1 +
->  include/hw/cxl/cxl_device.h | 23 ++++++++++++
->  3 files changed, 96 insertions(+), 1 deletion(-)
+>  hw/cxl/cxl-mailbox-utils.c  | 223 ++++++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_device.h |   3 +-
+>  2 files changed, 225 insertions(+), 1 deletion(-)
 > 
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index 61c77e52d8..ed2ac154cb 100644
+> index ed2ac154cb..7212934627 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -83,6 +83,7 @@ enum {
->          #define CLEAR_POISON           0x2
+> @@ -84,6 +84,8 @@ enum {
 >  	DCD_CONFIG = 0x48, /*8.2.9.8.9*/
 >  		#define GET_DC_REGION_CONFIG   0x0
-> +		#define GET_DYN_CAP_EXT_LIST   0x1
+>  		#define GET_DYN_CAP_EXT_LIST   0x1
+> +		#define ADD_DYN_CAP_RSP        0x2
+> +		#define RELEASE_DYN_CAP        0x3
 >      PHYSICAL_SWITCH = 0x51
 >          #define IDENTIFY_SWITCH_DEVICE      0x0
 >  };
-> @@ -938,7 +939,7 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
->  }
->  
->  /*
-> - * cxl spec 3.0: 8.2.9.8.9.2
-> + * cxl spec 3.0: 8.2.9.8.9.1
-
-Push that back to earlier patch.
-
->   * Get Dynamic Capacity Configuration
->   **/
->  static CXLRetCode cmd_dcd_get_dyn_cap_config(struct cxl_cmd *cmd,
-> @@ -1001,6 +1002,73 @@ static CXLRetCode cmd_dcd_get_dyn_cap_config(struct cxl_cmd *cmd,
+> @@ -1069,6 +1071,221 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(struct cxl_cmd *cmd,
 >  	return CXL_MBOX_SUCCESS;
 >  }
 >  
-> +/*
-> + * cxl spec 3.0: 8.2.9.8.9.2
-> + * Get Dynamic Capacity Extent List (Opcode 4810h)
-> + **/
-> +static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(struct cxl_cmd *cmd,
-> +		CXLDeviceState *cxl_dstate,
-> +		uint16_t *len)
+> +static inline int test_bits(const unsigned long *addr, int nr, int size)
+
+Not obvious what this does from the name.  Please add some docs.
+
 > +{
-> +	struct get_dyn_cap_ext_list_in_pl {
-> +		uint32_t extent_cnt;
-> +		uint32_t start_extent_id;
-> +	} QEMU_PACKED;
+> +	unsigned long res = find_next_zero_bit(addr, size + nr, nr);
 > +
-> +	struct get_dyn_cap_ext_list_out_pl {
-> +		uint32_t count;
-> +		uint32_t total_extents;
-> +		uint32_t generation_num;
+> +	if (res >= nr + size)
+> +		return 1;
+> +	else
+> +		return 0;
+> +}
+> +
+> +static uint8_t find_region_id(struct CXLType3Dev *dev, uint64_t dpa
+
+Operates only on things in dev->dc, so perhaps pass that instead.
+
+> +		, uint64_t len)
+
+comma on previous line.
+
+> +{
+> +	int8_t i = dev->dc.num_regions-1;
+> +
+> +	while (i > 0 && dpa < dev->dc.regions[i].base)
+> +		i--;
+> +
+> +	if (dpa < dev->dc.regions[i].base
+> +			|| dpa + len > dev->dc.regions[i].base + dev->dc.regions[i].len)
+> +		return dev->dc.num_regions;
+> +
+> +	return i;
+> +}
+> +
+> +static CXLRetCode detect_malformed_extent_list(CXLType3Dev *dev, void *data)
+> +{
+> +	struct updated_dc_extent_list_in_pl {
+This is same as used in next function.  Pull it out of the functions and
+use that type rather than mapping via a void *data pointer.  
+
+> +		uint32_t num_entries_updated;
 > +		uint8_t rsvd[4];
 > +		struct {
 > +			uint64_t start_dpa;
 > +			uint64_t len;
-> +			uint8_t tag[0x10];
-> +			uint16_t shared_seq;
-> +			uint8_t rsvd[6];
-> +		} QEMU_PACKED records[];
+> +			uint8_t rsvd[8];
+> +		} QEMU_PACKED updated_entries[];
 > +	} QEMU_PACKED;
 > +
-> +	struct get_dyn_cap_ext_list_in_pl *in = (void *)cmd->payload;
-> +	struct get_dyn_cap_ext_list_out_pl *out = (void *)cmd->payload;
-> +	struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> +	uint16_t record_count = 0, i = 0, record_done = 0;
-> +	CXLDCDExtentList *extent_list = &ct3d->dc.extents;
-> +	CXLDCD_Extent *ent;
-> +	uint16_t out_pl_len;
+> +	struct updated_dc_extent_list_in_pl *in = data;
+> +	unsigned long *blk_bitmap;
+> +	uint64_t min_block_size = dev->dc.regions[0].block_size;
+> +	struct CXLDCD_Region *region = &dev->dc.regions[0];
+> +	uint32_t i;
+> +	uint64_t dpa, len;
+> +	uint8_t rid;
 > +
-> +	if (in->start_extent_id > ct3d->dc.total_extent_count)
-> +		return CXL_MBOX_INVALID_INPUT;
-> +
-> +	if (ct3d->dc.total_extent_count - in->start_extent_id < in->extent_cnt)
-> +		record_count = ct3d->dc.total_extent_count - in->start_extent_id;
-> +	else
-> +		record_count = in->extent_cnt;
-> +
-> +	out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
-> +	assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
-> +
-> +	memset(out, 0, out_pl_len);
-> +	stl_le_p(&out->count, record_count);
-> +	stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
-> +	stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
-> +
-> +	QTAILQ_FOREACH(ent, extent_list, node) {
-> +		if (i++ < in->start_extent_id)
-> +			continue;
-> +		stq_le_p(&out->records[i].start_dpa, ent->start_dpa);
+> +	for (i = 1; i < dev->dc.num_regions; i++) {
+> +		region = &dev->dc.regions[i];
+> +		if (min_block_size > region->block_size)
+> +			min_block_size = region->block_size;
+> +	}
+> +	blk_bitmap = bitmap_new((region->len + region->base
+> +				- dev->dc.regions[0].base) / min_block_size);
+> +	g_assert(blk_bitmap);
 
-I has been incrementing for the records skipped.  By now it may be well off
-the end of records.  You need a separate index for the ones you are filling
-that is incremented only when you write one.
-record_done for example.
-	out->records[record_done].len etc
+Abort in bitmap_new() anyway so no need for this.  Most qemu allocations
+don't need to be checked as they fail hard anyway so we never get to the checks.
 
+> +	bitmap_zero(blk_bitmap, (region->len + region->base
+> +				- dev->dc.regions[0].base) / min_block_size);
 
-> +		stq_le_p(&out->records[i].len, ent->len);
-> +		memcpy(&out->records[i].tag, ent->tag, 0x10);
-> +		stw_le_p(&out->records[i].shared_seq, ent->shared_seq);
-> +		record_done++;
-> +		if (record_done == record_count)
-> +			break;
+bitmap_new() seems to use a g_malloc0 internally so no need to zero again here
+I think.
+
+> +
+> +	for (i = 0; i < in->num_entries_updated; i++) {
+> +		dpa = in->updated_entries[i].start_dpa;
+> +		len = in->updated_entries[i].len;
+> +
+> +		rid = find_region_id(dev, dpa, len);
+> +		if (rid == dev->dc.num_regions) {
+
+Use a goto and single cleanup path having set ret or similar to
+the particular issue.
+
+> +			g_free(blk_bitmap);
+> +			return CXL_MBOX_INVALID_PA;
+> +		}
+> +		region = &dev->dc.regions[rid];
+> +		if (dpa % region->block_size || len % region->block_size) {
+> +			g_free(blk_bitmap);
+> +			return CXL_MBOX_INVALID_EXTENT_LIST;
+goto from here as well.. etc.
+
+> +		}
+> +		/* the dpa range already covered by some other extents in the list */
+> +		if (test_bits(blk_bitmap, dpa/min_block_size, len/min_block_size)) {
+> +			g_free(blk_bitmap);
+> +			return CXL_MBOX_INVALID_EXTENT_LIST;
+> +		}
+> +		bitmap_set(blk_bitmap, dpa/min_block_size, len/min_block_size);
 > +	}
 > +
-> +	*len = out_pl_len;
+> +	g_free(blk_bitmap);
+> +	return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +/*
+> + * cxl spec 3.0: 8.2.9.8.9.3
+> + * Add Dynamic Capacity Response (opcode 4802h)
+> + * Assuming extent list is updated when a extent is added, when receiving
+> + * the response, verify and ensure the extent is utilized by the host, and
+> + * update extent list  as needed.
+
+Double space in middle of sentence
+
+> + **/
+> +static CXLRetCode cmd_dcd_add_dyn_cap_rsp(struct cxl_cmd *cmd,
+> +		CXLDeviceState *cxl_dstate,
+> +		uint16_t *len_unused)
+> +{
+> +	struct add_dyn_cap_ext_list_in_pl {
+> +		uint32_t num_entries_updated;
+> +		uint8_t rsvd[4];
+> +		struct {
+> +			uint64_t start_dpa;
+> +			uint64_t len;
+> +			uint8_t rsvd[8];
+> +		} QEMU_PACKED updated_entries[];
+
+These extent list entries keep turning up in the code. Pull that out of here
+to be a general 'Extent list element' or similar.
+
+> +	} QEMU_PACKED;
+> +
+> +	struct add_dyn_cap_ext_list_in_pl *in = (void *)cmd->payload;
+> +	struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+> +	CXLDCDExtentList *extent_list = &ct3d->dc.extents;
+> +	CXLDCD_Extent *ent;
+> +	uint32_t i;
+> +	uint64_t dpa, len;
+> +	CXLRetCode rs;
+> +
+> +	if (in->num_entries_updated == 0)
+> +		return CXL_MBOX_SUCCESS;
+> +
+> +	rs = detect_malformed_extent_list(ct3d, in);
+> +	if (rs != CXL_MBOX_SUCCESS)
+> +		return rs;
+> +
+> +	for (i = 0; i < in->num_entries_updated; i++) {
+> +		dpa = in->updated_entries[i].start_dpa;
+> +		len = in->updated_entries[i].len;
+> +
+> +		/* Todo: check following
+> +		 * One or more of the updated extent lists contain Starting DPA
+> +		 * or Lengths that are out of range of a current extent list
+> +		 * maintained by the device.
+> +		 **/
+> +
+> +		QTAILQ_FOREACH(ent, extent_list, node) {
+
+Add some comments here.  Is this a repeated entry test?
+
+> +			if (ent->start_dpa == dpa && ent->len == len)
+> +				return CXL_MBOX_INVALID_PA;
+> +			if (ent->start_dpa <= dpa
+> +				&& dpa + len <= ent->start_dpa + ent->len) {
+
+Comment needed on this one. Why is it shrinking an existing entry?
+
+> +				ent->start_dpa = dpa;
+> +				ent->len = len;
+> +				break;
+
+If you break here I think it will only result in return CXL_MBOX_SUCCESS so
+might as well do that here.
+
+> +			} else if ((dpa < ent->start_dpa + ent->len
+> +				&& dpa + len > ent->start_dpa + ent->len)
+
+Above is new entry would contain existing one.
+
+> +				|| (dpa < ent->start_dpa && dpa + len > ent->start_dpa))
+> +				return CXL_MBOX_INVALID_EXTENT_LIST;
+> +		}
+> +		// a new extent added
+
+Why?  This function generally need more documentation.
+
+> +		if (!ent) {
+> +			ent = g_new0(CXLDCD_Extent, 1);
+> +			assert(ent);
+
+No need.  g_new0 will already have blown up before you get here.
+
+> +			ent->start_dpa = dpa;
+> +			ent->len = len;
+> +			memset(ent->tag, 0, 0x10);
+Allocated empty just above, still empty so no need to set it again.
+> +			ent->shared_seq = 0;
+> +			QTAILQ_INSERT_TAIL(extent_list, ent, node);
+> +		}
+> +	}
+> +
+> +	return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +/*
+> + * Spec 3.0: 8.2.9.8.9.4
+> + * Release Dynamic Capacity (opcode 4803h)
+> + **/
+> +static CXLRetCode cmd_dcd_release_dcd_capacity(struct cxl_cmd *cmd,
+> +		CXLDeviceState *cxl_dstate,
+> +		uint16_t *len_unused)
+> +{
+> +	struct release_dcd_cap_in_pl {
+> +		uint32_t num_entries_updated;
+> +		uint8_t rsvd[4];
+> +		struct {
+> +			uint64_t start_dpa;
+> +			uint64_t len;
+> +			uint8_t rsvd[8];
+> +		} QEMU_PACKED updated_entries[];
+> +	} QEMU_PACKED;
+> +
+> +	struct release_dcd_cap_in_pl *in = (void *)cmd->payload;
+> +	struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+> +	CXLDCDExtentList *extent_list = &ct3d->dc.extents;
+> +	CXLDCD_Extent *ent;
+> +	uint32_t i;
+> +	uint64_t dpa, len;
+> +	CXLRetCode rs;
+> +
+> +	if (in->num_entries_updated == 0)
+> +		return CXL_MBOX_INVALID_INPUT;
+> +
+> +	rs = detect_malformed_extent_list(ct3d, in);
+> +	if (rs != CXL_MBOX_SUCCESS)
+> +		return rs;
+> +
+> +		/* Todo: check following
+> +		 * One or more of the updated extent lists contain Starting DPA
+> +		 * or Lengths that are out of range of a current extent list
+> +		 * maintained by the device.
+> +		 **/
+> +
+> +	for (i = 0; i < in->num_entries_updated; i++) {
+> +		dpa = in->updated_entries[i].start_dpa;
+> +		len = in->updated_entries[i].len;
+> +
+> +		QTAILQ_FOREACH(ent, extent_list, node) {
+> +			if (ent->start_dpa == dpa && ent->len == len)
+
+Do the remove here and comment on 'found entry' not needed.
+Note I think you can release partial extents so that will need handling at some point.
+
+> +				break;
+> +			else if ((dpa < ent->start_dpa + ent->len
+> +				&& dpa + len > ent->start_dpa + ent->len)
+> +				|| (dpa < ent->start_dpa && dpa + len > ent->start_dpa))
+Comment on this condition and why it's a problem.
+
+> +				return CXL_MBOX_INVALID_EXTENT_LIST;
+> +		}
+> +		/* found the entry, release it */
+> +		if (ent)
+> +			QTAILQ_REMOVE(extent_list, ent, node);
+> +	}
+> +
 > +	return CXL_MBOX_SUCCESS;
 > +}
 > +
 >  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
 >  #define IMMEDIATE_DATA_CHANGE (1 << 2)
 >  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> @@ -1041,6 +1109,9 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
->          cmd_media_clear_poison, 72, 0 },
->  	[DCD_CONFIG][GET_DC_REGION_CONFIG] = { "DCD_GET_DC_REGION_CONFIG",
->  		cmd_dcd_get_dyn_cap_config, 2, 0 },
-> +	[DCD_CONFIG][GET_DYN_CAP_EXT_LIST] = {
-> +		"DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_ext_list,
-> +		8, 0 },
+> @@ -1112,6 +1329,12 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+>  	[DCD_CONFIG][GET_DYN_CAP_EXT_LIST] = {
+>  		"DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_ext_list,
+>  		8, 0 },
+> +	[DCD_CONFIG][ADD_DYN_CAP_RSP] = {
+> +		"ADD_DCD_DYNAMIC_CAPACITY_RESPONSE", cmd_dcd_add_dyn_cap_rsp,
+> +		~0, IMMEDIATE_DATA_CHANGE },
+> +	[DCD_CONFIG][RELEASE_DYN_CAP] = {
+> +		"RELEASE_DCD_DYNAMIC_CAPACITY", cmd_dcd_release_dcd_capacity,
+> +		~0, IMMEDIATE_DATA_CHANGE },
 >  };
 >  
 >  static struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index b9c375d9b4..23954711b5 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -708,6 +708,7 @@ static int cxl_create_toy_regions(CXLType3Dev *ct3d)
->  
->  		region_base += region->len;
->  	}
-> +	QTAILQ_INIT(&ct3d->dc.extents);
->  
->  	return 0;
->  }
 > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 8a04e53e90..20ad5e7411 100644
+> index 20ad5e7411..c0c8fcc24b 100644
 > --- a/include/hw/cxl/cxl_device.h
 > +++ b/include/hw/cxl/cxl_device.h
-> @@ -385,6 +385,25 @@ typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
->  
->  #define DCD_MAX_REGION_NUM 8
->  
-> +typedef struct CXLDCD_Extent_raw {
-> +	uint64_t start_dpa;
-> +	uint64_t len;
-> +	uint8_t tag[0x10];
-> +	uint16_t shared_seq;
-> +	uint8_t rsvd[0x6];
-> +} QEMU_PACKED CXLDCExtent_raw;
+> @@ -131,7 +131,8 @@ typedef enum {
+>      CXL_MBOX_INCORRECT_PASSPHRASE = 0x14,
+>      CXL_MBOX_UNSUPPORTED_MAILBOX = 0x15,
+>      CXL_MBOX_INVALID_PAYLOAD_LENGTH = 0x16,
+> -    CXL_MBOX_MAX = 0x17
+> +	CXL_MBOX_INVALID_EXTENT_LIST = 0x17,
 
-What's this for?
+0x1e in the spec.
 
-> +
-> +typedef struct CXLDCD_Extent {
-> +	uint64_t start_dpa;
-> +	uint64_t len;
-> +	uint8_t tag[0x10];
-> +	uint16_t shared_seq;
-> +	uint8_t rsvd[0x6];
-> +
-> +	QTAILQ_ENTRY(CXLDCD_Extent) node;
-> +} CXLDCD_Extent;
-> +typedef QTAILQ_HEAD(, CXLDCD_Extent) CXLDCDExtentList;
-> +
->  typedef struct CXLDCD_Region {
->  	uint64_t base;
->  	uint64_t decode_len; /* in multiples of 256MB */
-> @@ -429,6 +448,10 @@ struct CXLType3Dev {
->  	struct dynamic_capacity {
->  		uint8_t num_regions; // 1-8
->  		struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
-> +		CXLDCDExtentList extents;
-> +
-> +		uint32_t total_extent_count;
-> +		uint32_t ext_list_gen_seq;
->  	} dc;
->  };
+> +	CXL_MBOX_MAX = 0x18
+>  } CXLRetCode;
 >  
+>  struct cxl_cmd;
 
