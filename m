@@ -2,36 +2,36 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D614FC77B75
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 12:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D62C77B75
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 12:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241629AbjEOMwE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 08:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
+        id S241455AbjEOMyB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 May 2023 08:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240871AbjEOMwD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 08:52:03 -0400
+        with ESMTP id S238913AbjEOMyA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 08:54:00 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF9B1710
-        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 05:52:01 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKfPL2YB8z6D8Wc;
-        Mon, 15 May 2023 20:51:02 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFBB199F
+        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 05:53:59 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKfRd036Xz67Lff;
+        Mon, 15 May 2023 20:53:00 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 13:51:58 +0100
-Date:   Mon, 15 May 2023 13:51:57 +0100
+ 2023 13:53:57 +0100
+Date:   Mon, 15 May 2023 13:53:56 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Davidlohr Bueso <dave@stgolabs.net>
 CC:     <dan.j.williams@intel.com>, <fan.ni@samsung.com>,
         <a.manzanares@samsung.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 4/5] hw/cxl: Add support for device sanitation
-Message-ID: <20230515135157.00004c97@Huawei.com>
-In-Reply-To: <20230418172337.19207-5-dave@stgolabs.net>
+Subject: Re: [PATCH 5/5] cxl/type3: Remove superfluous statements
+Message-ID: <20230515135356.00004784@Huawei.com>
+In-Reply-To: <20230418172337.19207-6-dave@stgolabs.net>
 References: <20230418172337.19207-1-dave@stgolabs.net>
-        <20230418172337.19207-5-dave@stgolabs.net>
+        <20230418172337.19207-6-dave@stgolabs.net>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -45,206 +45,58 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 18 Apr 2023 10:23:36 -0700
+On Tue, 18 Apr 2023 10:23:37 -0700
 Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Make use of the background operations through the sanitize
-> command, per CXL 3.0 specs.
-
-Specific reference would be good.
-
-> Traditionally run times can be
-> rather long, depending on the size of the media.
+> Simple cleanup while going through the code, remove the
+> bogus return statements from end of void returning
+> functions.
 > 
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  hw/cxl/cxl-mailbox-utils.c | 125 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 124 insertions(+), 1 deletion(-)
-> 
-> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index e0e20bc3a2bb..2808d0161a38 100644
-> --- a/hw/cxl/cxl-mailbox-utils.c
-> +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -18,6 +18,7 @@
->  #include "qemu/log.h"
->  #include "qemu/units.h"
->  #include "qemu/uuid.h"
-> +#include "sysemu/hostmem.h"
->  
->  #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
->  
-> @@ -71,6 +72,9 @@ enum {
->          #define GET_PARTITION_INFO     0x0
->          #define GET_LSA       0x2
->          #define SET_LSA       0x3
-> +    SANITATION    = 0x44,
-> +        #define SANITIZE      0x0
-> +        #define SECURE_ERASE  0x1
->      MEDIA_AND_POISON = 0x43,
->          #define GET_POISON_LIST        0x0
->          #define INJECT_POISON          0x1
-> @@ -819,6 +823,112 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
->  #define IMMEDIATE_LOG_CHANGE (1 << 4)
->  #define BACKGROUND_OPERATION (1 << 5)
->  
-> +/* re-initialize the address space */
 
-Why does that result in sanitization?
+LGTM
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Given we do this for pmem on all exit paths and the pmem is still full
-of data when we bring it back up on a fresh boot, I don't think this
-works.  Probably have to use address space accessing functions and wipe
-it out a small chunk at a time.
+I'll pick up this version if its the appropriate one when
+I next update my qemu tree.  Might make minimal tweaks as per
+feedback if I remember to do so. I'll let you know if I do
+anything more significant.
 
-Confusion here may be that you can't do host_memory_backend_get_memory
-mainly because it might not be memory.  I tend to back with files.
-address_space_write() is probably the way to go.
+Thanks,
 
 Jonathan
 
-
-> +static void __do_sanitization(CXLDeviceState *cxl_dstate)
-> +{
-> +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> +    DeviceState *ds = DEVICE(ct3d);
-> +    char *name;
-> +    MemoryRegion *mr;
-> +
-> +    if (ct3d->hostvmem) {
-> +        mr = host_memory_backend_get_memory(ct3d->hostvmem);
-> +        if (!mr) {
-> +            return;
-> +        }
-> +        if (ds->id) {
-> +            name = g_strdup_printf("cxl-type3-dpa-vmem-space:%s", ds->id);
-> +        } else {
-> +            name = g_strdup("cxl-type3-dpa-vmem-space");
-> +        }
-> +
-> +        address_space_destroy(&ct3d->hostvmem_as);
-> +        address_space_init(&ct3d->hostvmem_as, mr, name);
-> +        g_free(name);
-> +    }
-> +    if (ct3d->hostpmem) {
-> +        mr = host_memory_backend_get_memory(ct3d->hostpmem);
-> +        if (!mr) {
-> +            return;
-> +        }
-> +        if (ds->id) {
-> +            name = g_strdup_printf("cxl-type3-dpa-pmem-space:%s", ds->id);
-> +        } else {
-> +            name = g_strdup("cxl-type3-dpa-pmem-space");
-> +        }
-> +
-> +        address_space_destroy(&ct3d->hostpmem_as);
-> +        address_space_init(&ct3d->hostpmem_as, mr, name);
-> +        g_free(name);
-> +    }
-> +}
-> +
-> +/*
-> + * CXL 3.0 spec section 8.2.9.8.5.1 - Sanitize.
-> + *
-> + * Once the Sanitize command has started successfully, the device shall
-> + * shall be placed in the media disabled state. If the command fails or
-> + * is interrupted by a reset or power failure, it shall remain in the
-> + * media disabled state until a successful Sanitize command has been
-> + * completed.
-> + */
-> +static CXLRetCode cmd_sanitation_sanitize(struct cxl_cmd *cmd,
-> +                                          CXLDeviceState *cxl_dstate,
-> +                                          uint16_t *len)
-> +{
-> +    unsigned int secs;
-> +    uint64_t total_mem; /* in Mb */
-> +    struct cxl_cmd *c;
-> +
-> +    *len = 0;
-> +
-> +    /* Reported in CEL */
-> +    c = &cxl_dstate->cxl_cmd_set[SANITATION][SANITIZE];
-> +    if (!(c->effect & BACKGROUND_OPERATION)) {
-
-We don't yet provide a means to test this?  Perhaps a command line parameter
-would be good if we want to try both paths.
-
-> +        __do_sanitization(cxl_dstate);
-> +        return CXL_MBOX_SUCCESS;
-> +    }
-> +
-> +    /*
-> +     * Estimated times based on:
-> +     *     https://pmem.io/documents/NVDIMM_DSM_Interface-V1.8.pdf
-> +     */
-> +    total_mem = (cxl_dstate->vmem_size + cxl_dstate->pmem_size) >> 20;
-> +    if (total_mem <= 512) {
-> +        secs = 4;
-> +    } else if (total_mem <= 1024) {
-> +        secs = 8;
-> +    } else if (total_mem <= 2 * 1024) {
-> +        secs = 15;
-> +    } else if (total_mem <= 4 * 1024) {
-> +        secs = 30;
-> +    } else if (total_mem <= 8 * 1024) {
-> +        secs = 60;
-> +    } else if (total_mem <= 16 * 1024) {
-> +        secs = 2 * 60;
-> +    } else if (total_mem <= 32 * 1024) {
-> +        secs = 4 * 60;
-> +    } else if (total_mem <= 64 * 1024) {
-> +        secs = 8 * 60;
-> +    } else if (total_mem <= 128 * 1024) {
-> +        secs = 15 * 60;
-> +    } else if (total_mem <= 256 * 1024) {
-> +        secs = 30 * 60;
-> +    } else if (total_mem <= 512 * 1024) {
-> +        secs = 60 * 60;
-> +    } else if (total_mem <= 1024 * 1024) {
-> +        secs = 120 * 60;
-> +    } else {
-> +        secs = 240 * 60; /* max 4 hrs */
-> +    }
-> +
-> +    /* sanitize when done */
-> +    cxl_dev_media_disable(cxl_dstate);
-> +    cxl_dstate->bg.runtime = secs * 1000UL;
-> +
-> +    return CXL_MBOX_BG_STARTED;
-> +}
-> +
->  static struct cxl_cmd cxl_cmd_set[256][256] = {
->      [EVENTS][GET_RECORDS] = { "EVENTS_GET_RECORDS",
->          cmd_events_get_records, 1, 0 },
-> @@ -842,6 +952,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
->      [CCLS][GET_LSA] = { "CCLS_GET_LSA", cmd_ccls_get_lsa, 8, 0 },
->      [CCLS][SET_LSA] = { "CCLS_SET_LSA", cmd_ccls_set_lsa,
->          ~0, IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE },
-> +    [SANITATION][SANITIZE] = { "SANITATION_SANITIZE", cmd_sanitation_sanitize,
-> +        0, IMMEDIATE_DATA_CHANGE | BACKGROUND_OPERATION },
->      [MEDIA_AND_POISON][GET_POISON_LIST] = { "MEDIA_AND_POISON_GET_POISON_LIST",
->          cmd_media_get_poison_list, 16, 0 },
->      [MEDIA_AND_POISON][INJECT_POISON] = { "MEDIA_AND_POISON_INJECT_POISON",
-> @@ -985,7 +1097,18 @@ static void bg_timercb(void *opaque)
+> ---
+>  hw/mem/cxl_type3.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 707bdc263f03..415a8c8a3973 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -864,7 +864,6 @@ err_address_space_free:
+>      if (ct3d->hostvmem) {
+>          address_space_destroy(&ct3d->hostvmem_as);
+>      }
+> -    return;
+>  }
 >  
->          bg_status_reg = FIELD_DP64(bg_status_reg, CXL_DEV_BG_CMD_STS, RET_CODE, ret);
+>  static void ct3_exit(PCIDevice *pci_dev)
+> @@ -1290,8 +1289,6 @@ void qmp_cxl_inject_uncorrectable_errors(const char *path,
 >  
-> -        /* TODO add ad-hoc cmd succesful completion handling */
-> +        /* ad-hoc cmd succesful completion handling */
-
-Why are these 'ad-hoc'? I'd drop that bit of comment.
-
-> +        if (ret == CXL_MBOX_SUCCESS) {
-> +            switch (cxl_dstate->bg.opcode) {
-> +            case 0x4400: /* sanitize */
-> +                __do_sanitization(cxl_dstate);
-> +                cxl_dev_media_enable(cxl_dstate);
-> +                break;
-> +            default:
-> +                __builtin_unreachable();
-> +                break;
-> +            }
-> +        }
->      } else {
->          /* estimate only */
->          cxl_dstate->bg.complete_pct = 100 * now / total_time;
+>      stl_le_p(reg_state + R_CXL_RAS_UNC_ERR_STATUS, unc_err);
+>      pcie_aer_inject_error(PCI_DEVICE(obj), &err);
+> -
+> -    return;
+>  }
+>  
+>  void qmp_cxl_inject_correctable_error(const char *path, CxlCorErrorType type,
+> @@ -1564,7 +1561,6 @@ void qmp_cxl_inject_dram_event(const char *path, CxlEventLog log, uint8_t flags,
+>      if (cxl_event_insert(cxlds, enc_log, (CXLEventRecordRaw *)&dram)) {
+>          cxl_event_irq_assert(ct3d);
+>      }
+> -    return;
+>  }
+>  
+>  void qmp_cxl_inject_memory_module_event(const char *path, CxlEventLog log,
 
