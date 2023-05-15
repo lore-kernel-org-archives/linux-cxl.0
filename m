@@ -2,92 +2,67 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AC3C7EE22
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 09:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF50C7EE22
+	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 10:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238273AbjEOJ43 convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 05:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60434 "EHLO
+        id S240915AbjEOKFS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 15 May 2023 06:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237368AbjEOJzr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 05:55:47 -0400
+        with ESMTP id S241006AbjEOKEk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 06:04:40 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4DBF1BD7
-        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 02:55:15 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKZ1829PQz6J6tj;
-        Mon, 15 May 2023 17:33:16 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244882D55
+        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 03:03:57 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QKZgN3SSNz683nf;
+        Mon, 15 May 2023 18:02:56 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 10:37:23 +0100
-Date:   Mon, 15 May 2023 10:37:22 +0100
+ 2023 11:03:52 +0100
+Date:   Mon, 15 May 2023 11:03:51 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <vishal.l.verma@intel.com>,
-        <dave.jiang@intel.com>, <ira.weiny@intel.com>,
+CC:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
         <alison.schofield@intel.com>
-Subject: Re: [PATCH] tools/testing/cxl: Use DEFINE_STATIC_SRCU()
-Message-ID: <20230515103722.00004a06@Huawei.com>
-In-Reply-To: <168392709546.1135523.10424917245934547117.stgit@dwillia2-xfh.jf.intel.com>
-References: <168392709546.1135523.10424917245934547117.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH v2 2/4] cxl: add missing return to cdat read error path
+Message-ID: <20230515110351.00007567@Huawei.com>
+In-Reply-To: <645d816a18c74_1e6f2942f@dwillia2-xfh.jf.intel.com.notmuch>
+References: <168382784460.3510737.9571643715488757272.stgit@djiang5-mobl3>
+        <168382793506.3510737.4792518576623749076.stgit@djiang5-mobl3>
+        <645d816a18c74_1e6f2942f@dwillia2-xfh.jf.intel.com.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 12 May 2023 14:31:35 -0700
+On Thu, 11 May 2023 16:59:38 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Starting with commit:
+> Dave Jiang wrote:
+> > Add a return to the error path when cxl_cdat_read_table() fails. Current
+> > code continues with the table pointer points to freed memory.  
 > 
-> 95433f726301 ("srcu: Begin offloading srcu_struct fields to srcu_update")
-> 
-> ...it is no longer possible to do:
-> 
-> static DEFINE_SRCU(x)
-> 
-> Switch to DEFINE_STATIC_SRCU(x) to fix:
-> 
-> tools/testing/cxl/test/mock.c:22:1: error: duplicate ‘static’
->    22 | static DEFINE_SRCU(cxl_mock_srcu);
->       | ^~~~~~
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Yikes, at least the attribute is BIN_ATTR_ADMIN_RO(), but still bad.
+> Will mark this as an urgent fix.
+
+I see it's already gone upstream but fwiw
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I guess this got missed because of hiding kernel code in tools :)
-(not that I want to restart that 'discussion / argument')
+I first thought we were saved because the cdat_length parameter
+would be set to 0, but nope, that will have the value from the
+earlier cxl_cdat_get_length() so if that succeeds and the later
+table readout doesn't we indeed end up in a mess..
 
-Jonathan
-
-
-> ---
->  tools/testing/cxl/test/mock.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-> index c4e53f22e421..de3933a776fd 100644
-> --- a/tools/testing/cxl/test/mock.c
-> +++ b/tools/testing/cxl/test/mock.c
-> @@ -19,7 +19,7 @@ void register_cxl_mock_ops(struct cxl_mock_ops *ops)
->  }
->  EXPORT_SYMBOL_GPL(register_cxl_mock_ops);
->  
-> -static DEFINE_SRCU(cxl_mock_srcu);
-> +DEFINE_STATIC_SRCU(cxl_mock_srcu);
->  
->  void unregister_cxl_mock_ops(struct cxl_mock_ops *ops)
->  {
-> 
 
