@@ -2,286 +2,82 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3ABC77B7D
-	for <linux-cxl@archiver.kernel.org>; Mon, 15 May 2023 18:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83723C77B75
+	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 04:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243053AbjEOSnG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 15 May 2023 14:43:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45860 "EHLO
+        id S229823AbjEPEOO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 May 2023 00:14:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242173AbjEOSnF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 15 May 2023 14:43:05 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD221D047;
-        Mon, 15 May 2023 11:43:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684176183; x=1715712183;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cgPRlDK7agWe0oS5fA1KBt3NJq2tNds+FrSZ6fUq4eI=;
-  b=M0gDNxUg29Bp4AL3jfucQQWN5SneqxTTsq5zhBZc8DEO/gVfKEivGIDw
-   hUBg/ZzQFpFMIIe/dJ8nTAFXXN9AnI5glG0jVO1mY7ExJcZ/wt8Gx4UjX
-   OGRxREDo+qfmt0+zvbwOENYjQuZ8VD3Dso7pndqMtBKnktIcjyZC1sKIQ
-   fgFAec4ZdYSb+AkWE7q0Jx3HSfILoB+480LLTEiYp184FBToM2eFhOEoG
-   MWsh4OAWZWxrBT/aos0ouv4PxD8WHPhPwIw5iXDL/OGny1axji45D9Fe9
-   1OvvIiOseQlKBreCr8+W3el+Ugz5Lo4NNLSlo9KanaYH87srCzGABYGJ0
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="379445907"
-X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
-   d="scan'208";a="379445907"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 11:43:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="704076042"
-X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
-   d="scan'208";a="704076042"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.175.127]) ([10.213.175.127])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 11:43:02 -0700
-Message-ID: <1d74e4af-b85f-4225-fe79-df07bf33d6f2@intel.com>
-Date:   Mon, 15 May 2023 11:43:02 -0700
+        with ESMTP id S229595AbjEPEON (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 00:14:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335C0E64
+        for <linux-cxl@vger.kernel.org>; Mon, 15 May 2023 21:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684210404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0hKFp8N2zG083/9Jdp9l+Uvt5Oe4jI9OliEkkd772lg=;
+        b=SP0HgxhOZ51xmYL5K2maSJ66fC1FMn1R4l31dbVyQx87a6u0Q86bA3RrYIs2PJjEfJG0Lh
+        6wUVXuCNoGO7KrBdBD9vuc2apBFX0x61LO5yyKf1bpYe9xhFCiHmiWBOerqXuVRjmgemSm
+        6JvlKA3sH2eaLPJzP7sEkb2gZ5cmDb0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-307-75r72HiVOp2v7R6TvJheKA-1; Tue, 16 May 2023 00:13:21 -0400
+X-MC-Unique: 75r72HiVOp2v7R6TvJheKA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7A31D101A54F;
+        Tue, 16 May 2023 04:13:21 +0000 (UTC)
+Received: from fedora34.. (unknown [10.66.146.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D343740C2063;
+        Tue, 16 May 2023 04:13:19 +0000 (UTC)
+From:   Yi Zhang <yi.zhang@redhat.com>
+To:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Cc:     vishal.l.verma@intel.com
+Subject: [PATCH] README.md: add three additional config to config item list
+Date:   Tue, 16 May 2023 20:17:30 +0800
+Message-Id: <20230516121730.2561605-1-yi.zhang@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH 1/4] acpi: tables: Add CDAT table parsing support
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, lukas@wunner.de
-References: <168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3>
- <168330797672.2042604.12339416734589446371.stgit@djiang5-mobl3>
- <20230512125831.00000eb0@Huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230512125831.00000eb0@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+CONFIG_NVDIMM_SECURITY_TEST is required for nfit-security.sh and
+cxl-security.sh.
+CONGIF_STRICT_DEVMEM and CONFIG_IO_STRICT_DEVME are required for
+revoke_devmem.
 
+Ref: #240 #241
 
-On 5/12/23 4:58 AM, Jonathan Cameron wrote:
-> On Fri, 05 May 2023 10:32:56 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> The CDAT table is very similar to ACPI tables when it comes to sub-table
->> and entry structures. The helper functions can be also used to parse the
->> CDAT table. Add support to the helper functions to deal with an external
->> CDAT table, and also handle the endieness since CDAT can be processed by a
->> BE host. Export a function acpi_table_parse_cdat() for CXL driver to parse
->> a CDAT table.
->>
->> In order to minimize ACPI code changes, __force is being utilized to deal
->> with the case of a big endien (BE) host parsing a CDAT. All CDAT data
->> structure variables are being force casted to __leX as appropriate.
-> 
-> Hi Dave,
-> 
-> This falls into the annoyance that CDAT doesn't have a standard table header.
-> Whilst I understand that was done deliberately it means some odd things happen
-> in this code.
-> 
-> Just how bad is the duplication if we don't do this at all, but instead roll
-> a version for CDAT that doesn't force things through pointers of the wrong types?
-> 
-> Otherwise, maybe we need some unions so that the type mashups don't happen.
-> 
->>
->> Cc: Rafael J. Wysocki <rafael@kernel.org>
->> Cc: Len Brown <lenb@kernel.org>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/acpi/tables.c |   47 +++++++++++++++++++++++++++++++++++++++++++++--
->>   include/acpi/actbl1.h |    3 +++
->>   include/linux/acpi.h  |    4 ++++
->>   3 files changed, 52 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
->> index 7b4680da57d7..08486f6df442 100644
->> --- a/drivers/acpi/tables.c
->> +++ b/drivers/acpi/tables.c
->> @@ -42,6 +42,7 @@ enum acpi_subtable_type {
->>   	ACPI_SUBTABLE_HMAT,
->>   	ACPI_SUBTABLE_PRMT,
->>   	ACPI_SUBTABLE_CEDT,
->> +	ACPI_SUBTABLE_CDAT,
->>   };
->>   
->>   struct acpi_subtable_entry {
->> @@ -239,6 +240,8 @@ acpi_get_entry_type(struct acpi_subtable_entry *entry)
->>   		return 0;
->>   	case ACPI_SUBTABLE_CEDT:
->>   		return entry->hdr->cedt.type;
->> +	case ACPI_SUBTABLE_CDAT:
->> +		return entry->hdr->cdat.type;
->>   	}
->>   	return 0;
->>   }
->> @@ -255,6 +258,8 @@ acpi_get_entry_length(struct acpi_subtable_entry *entry)
->>   		return entry->hdr->prmt.length;
->>   	case ACPI_SUBTABLE_CEDT:
->>   		return entry->hdr->cedt.length;
->> +	case ACPI_SUBTABLE_CDAT:
->> +		return le16_to_cpu((__force __le16)entry->hdr->cdat.length);
->>   	}
->>   	return 0;
->>   }
->> @@ -271,6 +276,8 @@ acpi_get_subtable_header_length(struct acpi_subtable_entry *entry)
->>   		return sizeof(entry->hdr->prmt);
->>   	case ACPI_SUBTABLE_CEDT:
->>   		return sizeof(entry->hdr->cedt);
->> +	case ACPI_SUBTABLE_CDAT:
->> +		return sizeof(entry->hdr->cdat);
->>   	}
->>   	return 0;
->>   }
->> @@ -284,9 +291,22 @@ acpi_get_subtable_type(char *id)
->>   		return ACPI_SUBTABLE_PRMT;
->>   	if (strncmp(id, ACPI_SIG_CEDT, 4) == 0)
->>   		return ACPI_SUBTABLE_CEDT;
->> +	if (strncmp(id, ACPI_SIG_CDAT, 4) == 0)
->> +		return ACPI_SUBTABLE_CDAT;
-> 
-> I'm not super keen on inventing a SIG when the CDAT 'table'
-> doesn't actually have one.
-> 
->>   	return ACPI_SUBTABLE_COMMON;
->>   }
->>   
->> +static unsigned long __init_or_acpilib
->> +acpi_table_get_length(enum acpi_subtable_type type,
->> +		      struct acpi_table_header *hdr)
-> 
-> I don't like parsing in an acpi_table_header type here when it may not be one.
-> I think this length decision needs to be pushed up a level to where we can see
-> if we have a CDAT table or not.
-> 
-> 
->> +{
->> +	if (type == ACPI_SUBTABLE_CDAT)
->> +		return le32_to_cpu(
->> +			(__force __le32)((struct acpi_table_cdat *)hdr)->length);
-> 
-> Perhaps a local variable in here somewhere would make it more readable.
-> 	__le32 length = (__force__le32)((struct acpi_table_cdat *)hdr)->length;
-> 
-> 	return le32_to_cpu(length)?
-> 
-> 
->> +
->> +	return hdr->length;
->> +}
->> +
->>   static __init_or_acpilib bool has_handler(struct acpi_subtable_proc *proc)
->>   {
->>   	return proc->handler || proc->handler_arg;
->> @@ -332,16 +352,19 @@ static int __init_or_acpilib acpi_parse_entries_array(
->>   	int proc_num, unsigned int max_entries)
->>   {
->>   	struct acpi_subtable_entry entry;
->> +	enum acpi_subtable_type type;
->>   	unsigned long table_end, subtable_len, entry_len;
->>   	int count = 0;
->>   	int errs = 0;
->>   	int i;
->>   
->> -	table_end = (unsigned long)table_header + table_header->length;
->> +	type = acpi_get_subtable_type(id);
->> +	table_end = (unsigned long)table_header +
->> +		    acpi_table_get_length(type, table_header);
-> As above, I don't like carrying CDAT which doesn't have an acpi_table_header
-> section around as that type of pointer.
-> 
->>   
->>   	/* Parse all entries looking for a match. */
->>   
->> -	entry.type = acpi_get_subtable_type(id);
->> +	entry.type = type;
->>   	entry.hdr = (union acpi_subtable_headers *)
->>   	    ((unsigned long)table_header + table_size);
->>   	subtable_len = acpi_get_subtable_header_length(&entry);
->> @@ -464,6 +487,26 @@ int __init acpi_table_parse_madt(enum acpi_madt_type id,
->>   					    handler, max_entries);
->>   }
->>   
->> +int acpi_table_parse_cdat(enum acpi_cdat_type type,
->> +			  acpi_tbl_entry_handler_arg handler_arg, void *arg,
->> +			  struct acpi_table_cdat *table_header)
->> +{
->> +	struct acpi_subtable_proc proc = {
->> +		.id		= type,
->> +		.handler_arg	= handler_arg,
->> +		.arg		= arg,
->> +	};
->> +
->> +	if (!table_header)
->> +		return -EINVAL;
->> +
->> +	return acpi_parse_entries_array(ACPI_SIG_CDAT,
->> +			sizeof(struct acpi_table_cdat),
->> +			(struct acpi_table_header *)table_header,
->> +			&proc, 1, 0);
->> +}
->> +EXPORT_SYMBOL_NS_GPL(acpi_table_parse_cdat, CXL);
->> +
->>   /**
->>    * acpi_table_parse - find table with @id, run @handler on it
->>    * @id: table id to find
->> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
->> index 81b9e794424d..3119be093cfe 100644
->> --- a/include/acpi/actbl1.h
->> +++ b/include/acpi/actbl1.h
->> @@ -66,6 +66,9 @@
->>   #define ACPI_SIG_IEIT           "IEIT"
->>   #endif
->>   
->> +/* External to ACPI */
->> +#define ACPI_SIG_CDAT		"CDAT" /* Coherent Device Attribute Table */
-> 
-> Worse that that, fictional signature :)
-> It's the nameof the 'table', but it's not a signature as it's never
-> used as they are in ACPI and doesn't appear anywhere in the table.
+Signed-off-by: Yi Zhang <yi.zhang@redhat.com>
+---
+ README.md | 3 +++
+ 1 file changed, 3 insertions(+)
 
-This is not necessary as include/acpi/actbl2.h already defines it. But 
-looks like we are stuck with using ACPI_SIG_CDAT. I'm really trying to 
-avoid touching lots of ACPICA code if possible.
+diff --git a/README.md b/README.md
+index 7c7cf0d..3d125ad 100644
+--- a/README.md
++++ b/README.md
+@@ -70,6 +70,9 @@ loaded.  To build and install nfit_test.ko:
+    CONFIG_NVDIMM_DAX=y
+    CONFIG_DEV_DAX_PMEM=m
+    CONFIG_ENCRYPTED_KEYS=y
++   CONFIG_NVDIMM_SECURITY_TEST=y
++   CONFIG_STRICT_DEVMEM=y
++   CONFIG_IO_STRICT_DEVMEM=y
+    ```
+ 
+ 1. Build and install the unit test enabled libnvdimm modules in the
+-- 
+2.34.3
 
-> 
->> +
->>   /*
->>    * All tables must be byte-packed to match the ACPI specification, since
->>    * the tables are provided by the system BIOS.
->> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
->> index efff750f326d..4c3dfe7587e9 100644
->> --- a/include/linux/acpi.h
->> +++ b/include/linux/acpi.h
->> @@ -135,6 +135,7 @@ union acpi_subtable_headers {
->>   	struct acpi_hmat_structure hmat;
->>   	struct acpi_prmt_module_header prmt;
->>   	struct acpi_cedt_header cedt;
->> +	struct acpi_cdat_header cdat;
->>   };
->>   
->>   typedef int (*acpi_tbl_table_handler)(struct acpi_table_header *table);
->> @@ -266,6 +267,9 @@ acpi_table_parse_cedt(enum acpi_cedt_type id,
->>   
->>   int acpi_parse_mcfg (struct acpi_table_header *header);
->>   void acpi_table_print_madt_entry (struct acpi_subtable_header *madt);
->> +int acpi_table_parse_cdat(enum acpi_cdat_type type,
->> +			  acpi_tbl_entry_handler_arg handler, void *arg,
->> +			  struct acpi_table_cdat *table_header);
-> How did we end up with an 'acpi_' table that isn't in ACPI?
-> (I'm not looking as I fear I might be responsible :)
-> Should perhaps consider renaming all the CDAT entries so it doesn't looks like they
-> are.
-> 
->>   
->>   /* the following numa functions are architecture-dependent */
->>   void acpi_numa_slit_init (struct acpi_table_slit *slit);
->>
->>
->>
-> 
