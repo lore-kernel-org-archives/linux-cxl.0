@@ -2,171 +2,177 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 182E9C77B7F
-	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 09:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69B2C7EE25
+	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 14:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbjEPJgP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 16 May 2023 05:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47104 "EHLO
+        id S233608AbjEPOOl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 May 2023 10:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232077AbjEPJgN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 05:36:13 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0B9420C
-        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 02:36:08 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QL9zv1QVbz6D8Yj;
-        Tue, 16 May 2023 17:34:19 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 16 May
- 2023 10:36:05 +0100
-Date:   Tue, 16 May 2023 10:36:05 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <dan.j.williams@intel.com>, <fan.ni@samsung.com>,
-        <a.manzanares@samsung.com>, <dave.jiang@intel.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/5] cxl/device: Handle Media Disabled state
-Message-ID: <20230516103605.00005093@Huawei.com>
-In-Reply-To: <6ydxwjc6dy4pbxblikfglab7txhul5fn3pvcosuwi2ys3j5gfs@y4vp2pfwnswg>
-References: <20230418172337.19207-1-dave@stgolabs.net>
-        <20230418172337.19207-4-dave@stgolabs.net>
-        <20230515133936.00007bce@Huawei.com>
-        <6ydxwjc6dy4pbxblikfglab7txhul5fn3pvcosuwi2ys3j5gfs@y4vp2pfwnswg>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233331AbjEPOOk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 10:14:40 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2063.outbound.protection.outlook.com [40.107.94.63])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7B659FB
+        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 07:14:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g6QFgo/voWfvCs3jsmQRisA7bXqwFNRK4cq/MbbiuqLHzLlCX5tIBNWDK4q9sCPCj8HdLn3JmZPcATMy66X9ZkhlBnUptlIK0Hmd0gCx+LmN7JLfZtXcWxWkYq6E4E9NtAtauJo9hAvwLyFtg3+e1WqwTRwZHQdUUwl7ROZ7ZNELcdOpv6RajSBSjlE5Cdpz0//KGh2Boj+Ksu9DTYT5DLy9SZsNN6z3UqZetZjkFwzSUXdIxnVPO4d5Aw4ARVjbyAExkGOC4//+SP0yqzLQ5Sg7YO+Io5iGziMQWYrVzMAeMxo9b4ZCZcYSOyq5PFe9RiglzezmiZTYaWNRFDrEDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h2YHqE22gIN1EIGclO7+/P3dKMofeGRXoW4xkxuC860=;
+ b=SutvUjVwfws3vn2g+S6FxM7PkECtiLz9KbYxzZ05Y7O/9wvrFBAPtBHqGjk4hKKwoTOnjutyovlM7RLuHfdS61m73GD3lyLKBKec37jS9rtOolc+VElQ5YxlvUol9mv9ZPgaxjuQsk4mJt2rByq7myhHJhrty64icwjIMqK6VobDx28nWkzYQg/ExAYDFf6J2hVYSw7LWwdquDziNPYPBCywY2F2/T9klKIPFWjmXG4nmwS+XcUJ3Ma5ZZsfMTy44w0VqjUzWF4D4LJvIbljuPR0xjv1jZT97qy9vgFKQ7Mgc+miGjSQLjj6wYbyWuNeCzcMbhWQ45MCaDhkf4pYDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h2YHqE22gIN1EIGclO7+/P3dKMofeGRXoW4xkxuC860=;
+ b=gNASGdsgSPdm2u0EydSecML1ON7RYqOAF2eifNMoAjDDBh4rkrPQBna8x0JiXmv2wF/RLFtAt8kf8+59BXaXXLhsCmRhPWxa1EgjCPoNDlCDEz2/nkaJjKG5sr2dZ+0R9p6PfkjEO0jxEh6Bm/kppdUVYWwZjMrftdm+B5WFZL4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by IA1PR17MB6215.namprd17.prod.outlook.com (2603:10b6:208:419::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Tue, 16 May
+ 2023 14:14:35 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::7b97:62c3:4602:b47a]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::7b97:62c3:4602:b47a%5]) with mapi id 15.20.6387.028; Tue, 16 May 2023
+ 14:14:35 +0000
+Date:   Tue, 16 May 2023 01:22:44 -0400
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, "Michael S . Tsirkin" <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>, linuxarm@huawei.com,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Gregory Price <gourry.memverge@gmail.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] hw/mem: Use memory_region_size() in cxl_type3
+Message-ID: <ZGMTJDS9G8iMtW06@memverge.com>
+References: <20230421160827.2227-1-Jonathan.Cameron@huawei.com>
+ <20230421160827.2227-3-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230421160827.2227-3-Jonathan.Cameron@huawei.com>
+X-ClientProxiedBy: BL1PR13CA0301.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::6) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|IA1PR17MB6215:EE_
+X-MS-Office365-Filtering-Correlation-Id: e53ead0f-307a-4ba3-ee2e-08db5617e059
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nurVswupPT3vJeCVfKET+NtdJslX3v0lh6CbN5/i9OXwjNcgy6JoL8aSGAh3MMDcllza0ceOdgd0fRwoapA/E/74/iMQfDzN/CH7LUlMDcemM1K8rY3Tzpg+XCR4C8XuMgjKqcIunoiGY2lNhZfwc9zmBbp+IIdMdoEigJDn5D5v4Ps53CEOXqpe5jdhbn4Tf+eQR9yqPEcYH2oBpsaHZJHXRReXNLCmGeJYdZUsZHhc9lCM1useeonqCBUbFhBT+oI+0QpcIYBpDmDO86etQf/jp13blldPp/1PDdaTy4SF00kR5zDU9WSpGfw0SHo5eskPgQFWOp62xglu7y2tSOfQIqSdxyZ6aC9bMMSuw4Y6sacvIWPpZvrb7m5YTqOwocsNKzEssf69fxX0YO3roPWL+c7vwig3YYnz1JAYGonxh3eYQTPgZ28rVaB09xnwtNY3DWt5UOUa1wgDmh/MleRRer5gTkHoDCCd6Bjwc8f1DlfH8fX+TCwvgpyY75Iiv3lnZezpDZAaqkR80reqjvr5gaMmNSMyk+UqasAvdFNUVLCraYJCGP0KHAj01/eD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(396003)(136003)(39840400004)(376002)(366004)(451199021)(83380400001)(66476007)(66946007)(2616005)(26005)(6486002)(478600001)(8936002)(66556008)(54906003)(44832011)(7416002)(6666004)(186003)(5660300002)(86362001)(2906002)(8676002)(6512007)(36756003)(4326008)(316002)(6916009)(6506007)(38100700002)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kLl6MRFFKo0Vfi/g1c5KJILnJ9Xr95os3VwDK+hbl1rxqtkwyq2EjqAFlX/n?=
+ =?us-ascii?Q?uTbsWNJYW5S+YCwj4+GX6yWpMJqOuxrwC+Zm+Ur/BAsMDskFbIPTs6G3o5VY?=
+ =?us-ascii?Q?nlPNbUk33cB5DhVyKupdTdyfiFKyfLfBJ2gwT4D+sRBiSLResJEZHb2Sh9+h?=
+ =?us-ascii?Q?2kfzFuooAq6R5A0YPulN2Z2Nghq6Hs3bSPHU70mBwlrDW7cQuxGlh1NcHOPp?=
+ =?us-ascii?Q?XTbdD5QImz4BtugZxtqrtiwi/PH5V8+K0ck7A1Y8l6gPXVTMGu/GYGNc7mSC?=
+ =?us-ascii?Q?ITG2agCuxypmgfw424XvBfcsy5ojofVm2vlZutXqX6EmoLpXsgjGBNSZFuPv?=
+ =?us-ascii?Q?UWEW02Stc+D+dksJDPfrNyzxxx79MtGxEZ1Xjt3NJHqReFYV9gAj8YjoUjiz?=
+ =?us-ascii?Q?5z2m/Cx41dWbaKUJp2oG5F3L3ht1WMFw21iRYYywUl5JDsHtrlGg87cOWY+/?=
+ =?us-ascii?Q?5H0Y7ZroBZkswxODVZZRbrr8NjcVjmHXD/0mDCDv9L/50CtQFvxKXnXFQdhT?=
+ =?us-ascii?Q?Pz1bRNBz4ySXeYy5+AoypcVUhkY2idRbFYJb994xDNZn+w8LPlZLYOwREfPl?=
+ =?us-ascii?Q?HT21Y5Wi3X9ViNVVEHKW5a+srWLsqoBX3/WyqkLRiIh9uxv4UnOW/edSP+6E?=
+ =?us-ascii?Q?/ILD/U1F2trB55Pz58zIJn1kWSCUliqINW9Y2KAk6FQ6hL4kJcA3BPxckJmH?=
+ =?us-ascii?Q?9oY4VSTL35WWcMtmttS/sHOxLplX0heO60t8QijKbWMTgDtKGOjwPdbi5amZ?=
+ =?us-ascii?Q?cCS1kiiicnw3pmjRcgtkS7HQTGBHi5Cc/ntwMWf401BgfIzWo6NOrQ+66kQK?=
+ =?us-ascii?Q?BGa35IVh6MKJSN0OmFPOaK5gOQvmPybjOyybhoPmKZw3uEVnJiYmVjJLjvzT?=
+ =?us-ascii?Q?tJ8PvMMTxBkRXJD2T/D3YOOcJAGqfWSdqzrqzbfO48ixjlmAcJhfgdZme3zp?=
+ =?us-ascii?Q?aW5jg+ooNOzrYIBfHv2EspagFYCBa2BmmPPLTxn99SNh+MiwaYzlfIhAbjqU?=
+ =?us-ascii?Q?FlNQDflY9fNlqbowC7KskggPVUuqQPAssffKJ/oZyFqDDSZwMT3zZfHDbRr2?=
+ =?us-ascii?Q?J5wl+f7hTLmpoqlmcy5m5mDJDI4Cr3muwwKcRwn57DhtUGUcPl4Sn6J4T/VD?=
+ =?us-ascii?Q?b5MVKakMyEy9pCWgUATdKCjC7XOtBBmaHJtY30wotbHtRh3VGA2qvPNcE9O9?=
+ =?us-ascii?Q?ya7nF6vWFCK131UOF1mKADqjhv5smm8HvK0ouSsDMP7t0uXSfbRNh4FMH5mj?=
+ =?us-ascii?Q?suUlALAmTuIasFoKJ//K17mO2ZTBIw+59o1ylr6rQSuHuNjoGUYMVRQv6Mwg?=
+ =?us-ascii?Q?8MJ8dkAw6eplsl9xyCxPDVqLLnhFdXy3DgYEjjXoWzaVoizoUp8NIO/Hj59c?=
+ =?us-ascii?Q?CSTqJoqUYqg5LAJj9XRONOjh58JB62cGhsJbWWUDkksXQrJWW+bZx7k6vDSA?=
+ =?us-ascii?Q?D0lVQ1O1IWBE6EyQM9gEnRRjvffFEPCjB8XxrValMXZtEbGVFCfZqVh0fLhb?=
+ =?us-ascii?Q?KhvgTfIjtqlf9DbPx3nu4EjyPvtOWnCYc5l5q4hTW7pruszRqg2IrvFDTbOL?=
+ =?us-ascii?Q?mkrOPtfI1Zi+m8UMxRMduqcqRh9dyjyZxdovX7OfmUBxIkQ5/0kQ/tdPYi7b?=
+ =?us-ascii?Q?NA=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e53ead0f-307a-4ba3-ee2e-08db5617e059
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2023 14:14:35.3914
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9EAIvR5t1CZahagCG8TKJz6lNaetBn+pAyclCIeSPrOIAjupAf+yP/JYGYhz/H4iNMPU4TgFIdDjvI6lH0r+GBxM8YK7pZe+C/fS4lkhCp0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR17MB6215
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 15 May 2023 09:41:29 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Fri, Apr 21, 2023 at 05:08:26PM +0100, Jonathan Cameron wrote:
+> Accessors prefered over direct use of int128_get64() as they
+> clamp out of range values.  None are expected here but
+> cleaner to always use the accessor than mix and match.
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> ---
+> v5: New patch to tidy up existing instance before adding more of
+>     them.
+>   - Use memory_region_size() to access the size of memory regions.
+>     We may eventually need to allow for larger addresses but it
+>     is unlikely to be a problem any time soon.
+> ---
+>  hw/mem/cxl_type3.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 1bd5963a3f..2db756851c 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -52,7 +52,7 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+>          .DSMADhandle = dsmad_handle,
+>          .flags = CDAT_DSMAS_FLAG_NV,
+>          .DPA_base = 0,
+> -        .DPA_length = int128_get64(mr->size),
+> +        .DPA_length = memory_region_size(mr),
+>      };
+>  
+>      /* For now, no memory side cache, plausiblish numbers */
+> @@ -133,7 +133,7 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
+>          /* Reserved - the non volatile from DSMAS matters */
+>          .EFI_memory_type_attr = 2,
+>          .DPA_offset = 0,
+> -        .DPA_length = int128_get64(mr->size),
+> +        .DPA_length = memory_region_size(mr),
+>      };
+>  
+>      /* Header always at start of structure */
+> @@ -698,7 +698,7 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+>          return MEMTX_ERROR;
+>      }
+>  
+> -    if (dpa_offset > int128_get64(mr->size)) {
+> +    if (dpa_offset > memory_region_size(mr)) {
+>          return MEMTX_ERROR;
+>      }
+>  
+> @@ -721,7 +721,7 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+>          return MEMTX_OK;
+>      }
+>  
+> -    if (dpa_offset > int128_get64(mr->size)) {
+> +    if (dpa_offset > memory_region_size(mr)) {
+>          return MEMTX_OK;
+>      }
+>      return address_space_write(&ct3d->hostmem_as, dpa_offset, attrs,
+> -- 
+> 2.37.2
+> 
 
-> On Mon, 15 May 2023, Jonathan Cameron wrote:
-> 
-> >On Tue, 18 Apr 2023 10:23:35 -0700
-> >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> >  
-> >> Ensure that both memory device read/writes and mailbox commands
-> >> can deal with the device media being disabled - per CXL 3.0 specs
-> >> 8.2.9.8.5.1 - Sanitize. Disabled semantics here are strictly 11b,
-> >> however noting that if the media is not in the ready state (01b),
-> >> user data is not accessible.
-> >>
-> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> >> ---
-> >>  hw/cxl/cxl-mailbox-utils.c  | 15 +++++++++++++++
-> >>  hw/mem/cxl_type3.c          | 10 ++++++++++
-> >>  include/hw/cxl/cxl_device.h | 33 +++++++++++++++++++++++++++++++++
-> >>  3 files changed, 58 insertions(+)
-> >>
-> >> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> >> index 224bfdb4bfca..e0e20bc3a2bb 100644
-> >> --- a/hw/cxl/cxl-mailbox-utils.c
-> >> +++ b/hw/cxl/cxl-mailbox-utils.c
-> >> @@ -891,6 +891,21 @@ void cxl_process_mailbox(CXLDeviceState *cxl_dstate)
-> >>          if (len == cxl_cmd->in || cxl_cmd->in == ~0) {
-> >>              cxl_cmd->payload = cxl_dstate->mbox_reg_state +
-> >>                  A_CXL_DEV_CMD_PAYLOAD;
-> >> +
-> >> +            if (cxl_dev_media_disabled(cxl_dstate)) {
-> >> +                if (h == cmd_events_get_records ||
-> >> +                    h == cmd_logs_get_log ||
-> >> +                    h == cmd_ccls_get_partition_info ||
-> >> +                    h == cmd_ccls_get_lsa ||
-> >> +                    h == cmd_ccls_set_lsa ||
-> >> +                    h == cmd_media_get_poison_list ||
-> >> +                    h == cmd_media_inject_poison ||
-> >> +                    h == cmd_media_clear_poison) {
-> >> +                        ret = CXL_MBOX_MEDIA_DISABLED;
-> >> +                        goto done;
-> >> +                }
-> >> +            }
-> >> +
-> >>              /* Only one bg command at a time */
-> >>              if ((cxl_cmd->effect & BACKGROUND_OPERATION) &&
-> >>                  cxl_dstate->bg.runtime > 0) {
-> >> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> >> index 801f72c5fcae..707bdc263f03 100644
-> >> --- a/hw/mem/cxl_type3.c
-> >> +++ b/hw/mem/cxl_type3.c
-> >> @@ -12,6 +12,7 @@
-> >>  #include "qemu/pmem.h"
-> >>  #include "qemu/range.h"
-> >>  #include "qemu/rcu.h"
-> >> +#include "qemu/guest-random.h"
-> >>  #include "sysemu/hostmem.h"
-> >>  #include "sysemu/numa.h"
-> >>  #include "hw/cxl/cxl.h"
-> >> @@ -989,6 +990,11 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
-> >>      if (res) {
-> >>          return MEMTX_ERROR;
-> >>      }
-> >> +    /* all memory reads will return random values */  
-> >
-> >Reference for this would be good.  Random is expensive if we can get
-> >away with a constant value.  
-> 
-> Oh I threw out any performance expectations for qemu out the window, otherwise
-> I'd cry. Unless it's problem (this is media disabled, so bleh), I would
-> prefer keeping it as is.
+lgtm
 
-Fair enough though marked data (the old DEADBEEF or similar) might be more
-useful for verifying it worked as expected.
-
-> 
-> >> +    if (cxl_dev_media_disabled(&CXL_TYPE3(d)->cxl_dstate)) {
-> >> +        qemu_guest_getrandom_nofail(data, size);
-> >> +        return MEMTX_OK;
-> >> +    }
-> >>
-> >>      return address_space_read(as, dpa_offset, attrs, data, size);
-> >>  }
-> >> @@ -1005,6 +1011,10 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
-> >>      if (res) {
-> >>          return MEMTX_ERROR;
-> >>      }
-> >> +    /* memory writes to the device will have no effect */
-> >> +    if (cxl_dev_media_disabled(&CXL_TYPE3(d)->cxl_dstate)) {
-> >> +        return MEMTX_OK;
-> >> +    }
-> >>
-> >>      return address_space_write(as, dpa_offset, attrs, &data, size);
-> >>  }
-> >> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> >> index f986651b6ead..3ef7a7cded95 100644
-> >> --- a/include/hw/cxl/cxl_device.h
-> >> +++ b/include/hw/cxl/cxl_device.h
-> >> @@ -346,6 +346,39 @@ REG64(CXL_MEM_DEV_STS, 0)
-> >>      FIELD(CXL_MEM_DEV_STS, MBOX_READY, 4, 1)
-> >>      FIELD(CXL_MEM_DEV_STS, RESET_NEEDED, 5, 3)
-> >>
-> >> +static inline void cxl_dev_media_toggle(CXLDeviceState *cxl_dstate, int val)
-> >> +{
-> >> +    uint64_t reg;
-> >> +
-> >> +    reg = ldq_le_p(cxl_dstate->mbox_reg_state64 + R_CXL_MEM_DEV_STS);
-> >> +    if (FIELD_EX64(reg, CXL_MEM_DEV_STS, MEDIA_STATUS) == val) {
-> >> +        return;
-> >> +    }
-> >> +
-> >> +    reg = FIELD_DP64(0, CXL_MEM_DEV_STS, MEDIA_STATUS, val);
-> >> +    reg = FIELD_DP64(reg, CXL_MEM_DEV_STS, MBOX_READY, 0x1);
-> >> +
-> >> +    stq_le_p(&cxl_dstate->mbox_reg_state64 + R_CXL_MEM_DEV_STS, reg);  
-> >
-> >Why & ?  
-> 
-> braino
-> 
-> Thanks,
-> Davidlohr
-
+Reviewed-by: Gregory Price <gregory.price@memverge.com>
