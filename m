@@ -2,208 +2,162 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC41C77B7F
-	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 16:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6EDC77B7F
+	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 17:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbjEPQde (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 16 May 2023 12:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60932 "EHLO
+        id S231639AbjEPRfe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 May 2023 13:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231424AbjEPQdX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 12:33:23 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C597226BA
-        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 09:32:38 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QLMDg0Czsz67QqC;
-        Wed, 17 May 2023 00:30:59 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 16 May
- 2023 17:31:58 +0100
-Date:   Tue, 16 May 2023 17:31:56 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>
-CC:     <linux-cxl@vger.kernel.org>, Ira Weiny <ira.weiny@intel.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        "Daniel P . =?ISO-8859-1?Q?Berrang=E9?=" <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?ISO-8859-1?Q?Marc-Andr=E9?= Lureau 
-        <marcandre.lureau@redhat.com>, Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v5 0/7] QEMU CXL Provide mock CXL events and irq support
-Message-ID: <20230516173116.00007c8d@huawei.com>
-In-Reply-To: <20230423165140.16833-1-Jonathan.Cameron@huawei.com>
-References: <20230423165140.16833-1-Jonathan.Cameron@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231192AbjEPRfd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 13:35:33 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69779C9
+        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 10:35:30 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id BFF917E1E24;
+        Tue, 16 May 2023 17:35:28 +0000 (UTC)
+Received: from pdx1-sub0-mail-a247.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id DF1ED7E1D4C;
+        Tue, 16 May 2023 17:35:27 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684258528; a=rsa-sha256;
+        cv=none;
+        b=cXkOWOCvKlR6pUF6sd4/kLNtUcUVT1Y1XRdWPnkw5obc5FZZCbMF04bwVWP/BYBtCA0YIX
+        WtuGW5Oi9WezMlifl546l5bLMM++3ewh/h6bMAKFjkOWwam4VvU/0JA02QACfUUsDqr1JB
+        c9eTznGaTm09iJa46d4wyg//wTT1cWp66z/QH4nBGHS0NXYymEd6QBzq637kOGfuY2fuaj
+        daVA6/rhfsL5JoHZpOd5cIAm4AdPso139OrvqiYnlidg+un383++qXpV4+e39WG+No80sg
+        uhb75lkiwJ4f5tsUvZrSTXAlm8Nxgv9jNlNPIbFj/5wP1ojs17YlCCBFLa4USw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1684258528;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=9XyD90OnQ63YZMYy6Ta2akWb3qnbm2JeKFbGK0dbDfk=;
+        b=rYLynts+t2Ghxx49Y9gbtpCUT4taE+DDfCkkEIvWIn4GYUMWMc+JYF/3fZZNpBCtWhE/Hm
+        gWd/LO5Z/eobfBzszJ0G43eH+PwrDktJh0XfusoeTzBojGVSMBpNmdut5lelhbMlHa92G0
+        4UEi0fWIGXunIHkeUp6uAQje2mK5tnx8pOrKi6YfgHUouWLvX4NEUSBuAucM214nrSmHQw
+        No4v6k350gQppfUG32t6pCmFR5uFsqd38vkB//pAgfcNtTewD8seqkeMWOSczUi6WFKoOk
+        1qxESG8G1PNi8BeptaKbVwqaqf8eauHjpMOUiXEZT50NzmjXnCbqnNvZR8Aw5Q==
+ARC-Authentication-Results: i=1;
+        rspamd-79bb5575d7-rgq4k;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Glossy-Reaction: 0e7f0cbb4829da32_1684258528532_1548323084
+X-MC-Loop-Signature: 1684258528532:2586734644
+X-MC-Ingress-Time: 1684258528532
+Received: from pdx1-sub0-mail-a247.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.115.252.222 (trex/6.8.1);
+        Tue, 16 May 2023 17:35:28 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a247.dreamhost.com (Postfix) with ESMTPSA id 4QLNg31ZKNz4h;
+        Tue, 16 May 2023 10:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1684258527;
+        bh=9XyD90OnQ63YZMYy6Ta2akWb3qnbm2JeKFbGK0dbDfk=;
+        h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
+        b=G+pP3Deq0IRhDiPRnUmIlBW9idLUw5qM21PhuDqmoqa1HJ9kYDQypeCVaCVvYbrmo
+         JaOFDKVgJ8eXj9dadaFjajZZQHjaEHVXaU3ls8JkvqMvxmQTGRtIPrYPGjP5W1PF5T
+         VfnviJC3yWErKpmnCUHUWhMHkDQPnaospeW3odTrE+SKb2tthQDVT5XD/JtPCfh6XC
+         caMdNEtO2C2De+22TNLSFRTYbC+yLtxJFcI4CarE4H/NUKYaiKKwOpjnOesaL4ZJyR
+         VJ+Fw5NihJ5t3LQds6thQTxPTqHeuWd3JihqM9Om+/TBEBAYst2MEyr2bk+ugx5fSF
+         9zthIuRgFdhjg==
+Date:   Tue, 16 May 2023 10:02:24 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     "Li, Ming" <ming4.li@intel.com>
+Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com,
+        fan.ni@samsung.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org, dan.j.williams@intel.com
+Subject: Re: [PATCH v2] cxl/mbox: Add background cmd handling machinery
+Message-ID: <w3ejzka7keybbq5dfpyhlzmtpczsnlv2w3jwj6fmdhny3uwydy@lsfenbjjktbn>
+References: <20230502171841.21317-1-dave@stgolabs.net>
+ <20230502171841.21317-4-dave@stgolabs.net>
+ <gtvozgdx2ak7tekc3heczk5g7gj3cwuoptez6tjmkecader4lo@7t2em7rclcxn>
+ <09aaafe8-76c2-85a0-ab5b-fd337c625530@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <09aaafe8-76c2-85a0-ab5b-fd337c625530@intel.com>
+User-Agent: NeoMutt/20230407
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 23 Apr 2023 17:51:33 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On Tue, 16 May 2023, Li, Ming wrote:
 
-> v5: Rebase including version number updates to 8.1
+>On 5/3/2023 10:57 PM, Davidlohr Bueso wrote:
+>
+>> =A0/**
+>> =A0 * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+>> =A0 * @cxlds: The device state to communicate with.
+>> @@ -177,6 +205,57 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_s=
+tate *cxlds,
+>> =A0=A0=A0=A0mbox_cmd->return_code =3D
+>> =A0=A0=A0=A0=A0=A0=A0 FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status=
+_reg);
+>>
+>> +=A0=A0=A0 /*
+>> +=A0=A0=A0=A0 * Handle the background command in a synchronous manner.
+>> +=A0=A0=A0=A0 *
+>> +=A0=A0=A0=A0 * All other mailbox commands will serialize/queue on the m=
+box_mutex,
+>> +=A0=A0=A0=A0 * which we currently hold. Furthermore this also guarantee=
+s that
+>> +=A0=A0=A0=A0 * cxl_mbox_background_complete() checks are safe amongst e=
+ach other,
+>> +=A0=A0=A0=A0 * in that no new bg operation can occur in between.
+>> +=A0=A0=A0=A0 *
+>> +=A0=A0=A0=A0 * Background operations are timesliced in accordance with =
+the nature
+>> +=A0=A0=A0=A0 * of the command. In the event of timeout, the mailbox sta=
+te is
+>> +=A0=A0=A0=A0 * indeterminate until the next successful command submissi=
+on and the
+>> +=A0=A0=A0=A0 * driver can get back in sync with the hardware state.
+>> +=A0=A0=A0=A0 */
+>> +=A0=A0=A0 if (mbox_cmd->return_code =3D=3D CXL_MBOX_CMD_RC_BACKGROUND) {
+>> +=A0=A0=A0=A0=A0=A0=A0 long ret;
+>> +=A0=A0=A0=A0=A0=A0=A0 u64 bg_status_reg;
+>> +=A0=A0=A0=A0=A0=A0=A0 int i, timeout =3D mbox_cmd->poll_interval;
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 dev_dbg(dev, "Mailbox background operation (0x%04=
+x) started\n",
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mbox_cmd->opcode);
+>> +
+>> +=A0=A0=A0=A0=A0=A0=A0 for (i =3D 0; i < mbox_cmd->poll_count; i++) {
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D rcuwait_wait_event_timeout(&c=
+xlds->mbox_wait,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cxl_mbox_back=
+ground_complete(cxlds),
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 TASK_INTERRUP=
+TIBLE,
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 msecs_to_jiff=
+ies(timeout));
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret > 0)
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break;
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret < 0) /* interrupted by a sign=
+al */
+>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return ret;
+>
+>What do you think if adding a dev_dbg() here for outputting current percen=
+tage complete for debugging? is it helpful?
 
-Hi Michael,
-
-I asked a few people to look at the remaining couple of patches where
-there were only my tags so now I think all the following have
-had some review and I'm not aware of any outstanding issues with them
-
-I did postpone one piece of general feedback from Philippe for future
-work as it wasn't specific to the patch but more general feedback on
-older code. For reference, the question concerned why we have
-cxl_dstate as a structure in the CXLType3Dev rather than using the 
-QEMU device model and inheriting from it.
-
-Majority of what we have in these 6 sets (including this one)
-came from other contributors so I've reviewed and tested all those
-as part of adding my SOB when gathering them up.
-
-Anything you'd like to see in the way of additional review on these?
-
-We have a number of other series, that will hopefully be in a position
-to post for possible merge soon, but I'm guessing you'd rather we didn't
-stack more than this in one go.
-
-Other than fixes, this is all stuff left over from previous cycle.
+I don't see it being very relevant here, honestly. Something like that
+might be more usful in a longer async context without timeouts.
 
 Thanks,
-
-Jonathan
-
-> 
-> Depends on 
-> [PATCH 0/2] hw/cxl: CDAT file handling fixes.
-> [PATCH v2 0/3] hw/cxl: Fix decoder commit and uncommit handling
-> [PATCH 0/3] docs/cxl: Gathering of fixes for 8.0 CXL docs.
-> [PATCH v5 0/3] hw/mem: CXL Type-3 Volatile Memory Support
-> [PATCH v5 0/6] hw/cxl: Poison get, inject, clear
-> 
-> Based on: Message-ID: 20230421132020.7408-1-Jonathan.Cameron@huawei.com
-> Based on: Message-ID: 20230421135906.3515-1-Jonathan.Cameron@huawei.com
-> Based on: Message-ID: 20230421134507.26842-1-Jonathan.Cameron@huawei.com
-> Based on: Message-ID: 20230421160827.2227-1-Jonathan.Cameron@huawei.com
-> Based on: Message-ID: 20230423162013.4535-1-Jonathan.Cameron@huawei.com
-> 
-> Cover letter from earlier version
-> 
-> One challenge here is striking the right balance between lots of constraints
-> in the injection code to enforce particular reserved bits etc by breaking
-> out all the flags as individual parameters vs having a reasonably concise
-> API.  I think this set strikes the right balance but others may well
-> disagree :)   Note that Ira raised the question of whether we should be
-> automatically establishing the volatile flag based on the Device Physical
-> Address of the injected error. My proposal is to not do so for now, but
-> to possibly revisit tightening the checking of injected errors in future.
-> Whilst the volatile flag is straight forwards, some of the other flags that
-> could be automatically set (or perhaps checked for validiaty) are much more
-> complex. Adding verification at this stage would greatly increase the
-> complexity of the patch + we are missing other elements that would interact
-> with this.  I'm not concerned about potential breaking of backwards compatibility
-> if it only related to the injection of errors that make no sense for a real
-> device.
-> 
-> CXL Event records inform the OS of various CXL device events.  Thus far CXL
-> memory devices are emulated and therefore don't naturally generate events.
-> 
-> Add an event infrastructure and mock event injection.  Previous versions
-> included a bulk insertion of lots of events.  However, this series focuses on
-> providing the ability to inject individual events through QMP.  Only the
-> General Media Event is included in this series as an example.  Other events can
-> be added pretty easily once the infrastructure is acceptable.
-> 
-> In addition, this version updates the code to be in line with the
-> specification based on discussions around the kernel patches.
-> 
-> Injection examples;
-> 
-> { "execute": "cxl-inject-gen-media-event",
->     "arguments": {
->         "path": "/machine/peripheral/cxl-mem0",
->         "log": "informational",
->         "flags": 1,
->         "physaddr": 1000,
->         "descriptor": 3,
->         "type": 3,
->         "transaction-type": 192,
->         "channel": 3,
->         "device": 5,
->         "component-id": "iras mem"
->     }}
-> 
-> 
-> { "execute": "cxl-inject-dram-event",
->     "arguments": {
->         "path": "/machine/peripheral/cxl-mem0",
->         "log": "informational",
->         "flags": 1,
->         "physaddr": 1000,
->         "descriptor": 3,
->         "type": 3,
->         "transaction-type": 192,
->         "channel": 3,
->         "rank": 17,
->         "nibble-mask": 37421234,
->         "bank-group": 7,
->         "bank": 11,
->         "row": 2,
->         "column": 77,
->         "correction-mask": [33, 44, 55, 66]
->     }}
-> 
-> { "execute": "cxl-inject-memory-module-event",
->   "arguments": {
->     "path": "/machine/peripheral/cxl-mem0",
->     "log": "informational",
->     "flags": 1,
->     "type": 3,
->     "health-status": 3,
->     "media-status": 7,
->     "additional-status": 33,
->     "life-used": 30,
->     "temperature": -15,
->     "dirty-shutdown-count": 4,
->     "corrected-volatile-error-count": 3233,
->     "corrected-persistent-error-count": 1300
->   }}
-> 
-> Ira Weiny (4):
->   hw/cxl/events: Add event status register
->   hw/cxl/events: Wire up get/clear event mailbox commands
->   hw/cxl/events: Add event interrupt support
->   hw/cxl/events: Add injection of General Media Events
-> 
-> Jonathan Cameron (3):
->   hw/cxl: Move CXLRetCode definition to cxl_device.h
->   hw/cxl/events: Add injection of DRAM events
->   hw/cxl/events: Add injection of Memory Module Events
-> 
->  hw/cxl/cxl-device-utils.c   |  43 +++++-
->  hw/cxl/cxl-events.c         | 248 ++++++++++++++++++++++++++++++
->  hw/cxl/cxl-mailbox-utils.c  | 166 ++++++++++++++------
->  hw/cxl/meson.build          |   1 +
->  hw/mem/cxl_type3.c          | 292 +++++++++++++++++++++++++++++++++++-
->  hw/mem/cxl_type3_stubs.c    |  35 +++++
->  include/hw/cxl/cxl_device.h |  80 +++++++++-
->  include/hw/cxl/cxl_events.h | 168 +++++++++++++++++++++
->  qapi/cxl.json               | 120 +++++++++++++++
->  9 files changed, 1097 insertions(+), 56 deletions(-)
->  create mode 100644 hw/cxl/cxl-events.c
->  create mode 100644 include/hw/cxl/cxl_events.h
-> 
-
+Davidlohr
