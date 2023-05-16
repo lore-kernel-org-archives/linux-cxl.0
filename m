@@ -2,123 +2,168 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ADBC7EE24
-	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 19:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F22C77B7A
+	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 20:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbjEPTR4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 16 May 2023 15:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45638 "EHLO
+        id S229799AbjEPU6u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 May 2023 16:58:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbjEPTR4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 15:17:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E447AB8;
-        Tue, 16 May 2023 12:17:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B12EA63374;
-        Tue, 16 May 2023 19:17:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC783C433EF;
-        Tue, 16 May 2023 19:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684264674;
-        bh=yr0uqH5L7lcw6Bon72OOti1I9caZ3nRhsMf6+olPitc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M80Sd3FJPgGUW2mIUfNeFY2PFR3PUEibBoOnCrGE6B1x4FOQ6uT5DsZIx0iRtsKyv
-         VK6p9g5aB81JFKLtm7UI5S33uSCeBwYAe6xCW6hRHllXnsN+ElmCc9I8fsxUx43UwO
-         2sCnuQgbQ3tPrYrc/PWX1SK/PmHLwZS0Ql8HMeBZlzUVU8vhhI6oHoX1VwBv0sTzEx
-         WXN+0a9nMlqDJHf3i/qUYEHB5PJm0h0feCj7AW2itoj67OUlGxrqYTZ/I/A/c7Kyoq
-         FSB3B9NSfEI+1vHtrBrP3byMnMPGZmw7kv8PI01CBNOk0cw+Idn+4bMjsQ0GPxOCAL
-         sUhFI/ucJBBmg==
-Date:   Tue, 16 May 2023 14:17:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>, yangyicong@huawei.com,
-        will@kernel.org, baolin.wang@linux.alibaba.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <ZGPW4JzOOUT4ksMf@bhelgaas>
+        with ESMTP id S229486AbjEPU6t (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 16:58:49 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F82F59E0
+        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 13:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684270728; x=1715806728;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qcCj7ZrpIS1Jwyt4yRAR5ZxlQrDY5ZwBVFpdnJb8v8o=;
+  b=YL629auUb86PjeFNsS1g/lZZH+6Kmfr1McuOTbbxWmUNxX2fh4pC6QOw
+   iXLwGWd04yOiBr6fCpY4Cujf6V0qGViIT5nkBzldPn6RvO7OG6R+KLwAk
+   3gKbLvrUKtUNbOeNxQ4rvlhCTdax5NrHIDAwtiu/xFCyc+E4tiPUHMUFi
+   id2p9NvFJ82O+HnrhltxnJVd1J2DUMKuLI07xCMo3/A7Nq0naNeTeIXgX
+   t+M5ZwrdtMNXXNUtUgLQhKYcEArjnwj9odNAMe4kvuqX6Y4Dd7SfvLF0W
+   kKTbAmzvvD6ZqsF7gHt41ctXeNH+gJfSWWwY7xtCm6RnmNwiP9mPzPIC+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="349092204"
+X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
+   d="scan'208";a="349092204"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 13:58:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="766505108"
+X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
+   d="scan'208";a="766505108"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.5.122]) ([10.212.5.122])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 13:58:47 -0700
+Message-ID: <4f398988-e5fa-cbc8-f73a-bfefaf89e252@intel.com>
+Date:   Tue, 16 May 2023 13:58:47 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230516160304.00000544@Huawei.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v5 06/14] cxl: Store the access coordinates for the
+ generic ports
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
+ <168357884996.2756219.11067819935569345137.stgit@djiang5-mobl3>
+ <20230512155957.00000c2f@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230512155957.00000c2f@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, May 16, 2023 at 04:03:04PM +0100, Jonathan Cameron wrote:
-> 
-> PCI folks, Question below directed at you. Please take a look.
-> +CC linux-cxl because a similar question is going to bite us shortly
-> if we want CXL PMUs to work well on RP or Switch ports.
-> 
-> > >> +static int dwc_pcie_ras_des_discover(struct dwc_pcie_pmu_priv *priv)
-> > >> +{
-> > >> +    int index = 0;
-> > >> +    struct pci_dev *pdev = NULL;
-> > >> +    struct dwc_pcie_rp_info *rp_info;
-> > >> +
-> > >> +    INIT_LIST_HEAD(&priv->rp_infos);
-> > >> +
-> > >> +    /* Match the rootport with VSEC_RAS_DES_ID */
-> > >> +    for_each_pci_dev(pdev) {  
-> > > 
-> > > Does the PCI layer not offer a more robust mechanism for this?
-> > > (PCI fixups come to mind, but I don't actually know whether that
-> > > would be a viable approach or not.)   
-> > 
-> > I am afraid not yet. Jonathan try to add a PMU service but it is
-> > not merged into mainline.
->
-> I wouldn't read much into that 'failure'.  We never persisted with
-> that driver because it was for an old generation of hardware.
-> Mostly the aim with that was to explore the area of PCIe PMU in
-> general rather than to get the support upstream. Some of the
-> counters on that hardware were too small to be of much use anyway :)
-> 
-> Grabbing just relevant functions..
-> 
-> Bjorn, we need to figure out a way forwards for this sort of case
-> and I'd appreciate your input on the broad brush question of 'how
-> should it be done'?
-> 
-> This is a case where a PCIe port (RP here) correctly has the PCIe
-> class code so binds to the pcie_port driver, but has a VSEC (others
-> examples use DOE, or DVSEC) that provides extended functionality.
-> The referred to PCIe PMU from our older Hisilicon platforms did it
-> by adding another service driver - that probably doesn't extend
-> well.
-> 
-> The approach used here is to separately walk the PCI topology and
-> register the devices.  It can 'maybe' get away with that because no
-> interrupts and I assume resets have no nasty impacts on it because
-> the device is fairly simple.  In general that's not going to work.
-> CXL does a similar trick (which I don't much like, but too late
-> now), but we've also run into the problem of how to get interrupts
-> if not the main driver.
 
-Yes, this is a real problem.  I think the "walk all PCI devices
-looking for one we like" approach is terrible because it breaks a lot
-of driver model assumptions (no device ID to autoload module via udev,
-hotplug doesn't work, etc), but we don't have a good alternative right
-now.
 
-I think portdrv is slightly better because at least it claims the
-device in the usual way and gives a way for service drivers to
-register with it.  But I don't really like that either because it
-created a new weird /sys/bus/pci_express hierarchy full of these
-sub-devices that aren't really devices, and it doesn't solve the
-module load and hotplug issues.
+On 5/12/23 7:59 AM, Jonathan Cameron wrote:
+> On Mon, 08 May 2023 13:47:29 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Each CXL host bridge is represented by an ACPI0016 device. A generic port
+>> device handle that is an ACPI device is represented by a string of
+>> ACPI0016 device HID and UID. Create a device handle from the ACPI device
+>> and retrieve the access coordinates from the stored memory targets. The
+>> access coordinates are stored under the cxl_dport that is associated with
+>> the CXL host bridge.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/cxl/acpi.c |   28 ++++++++++++++++++++++++++++
+>>   drivers/cxl/cxl.h  |    2 ++
+>>   2 files changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+>> index f9b35e8fe810..675a4f423f4b 100644
+>> --- a/drivers/cxl/acpi.c
+>> +++ b/drivers/cxl/acpi.c
+>> @@ -537,8 +537,26 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
+>>   	return 0;
+>>   }
+>>   
+>> +static int get_genport_coordinates(struct device *dev, struct cxl_dport *dport)
+>> +{
+>> +	struct acpi_device *hb = to_cxl_host_bridge(NULL, dev);
+>> +	u8 handle[ACPI_SRAT_DEVICE_HANDLE_SIZE] = { 0 };
+>> +	int rc;
+>> +
+>> +	/* ACPI spec 6.5 tABLE 5.65 */
+> 
+> tABLE?
 
-I would like to have portdrv be completely built into the PCI core and
-not claim Root Ports or Switch Ports.  Then those devices would be
-available via the usual driver model for driver loading and binding
-and for hotplug.
+ooops caps lock
 
-Bjorn
+> 
+>> +	memcpy(handle, acpi_device_hid(hb), 8);
+>> +	memcpy(&handle[8], acpi_device_uid(hb), 4);
+>> +
+>> +	rc = acpi_get_genport_coordinates(handle, dport->genport_coord);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static int add_host_bridge_dport(struct device *match, void *arg)
+>>   {
+>> +	int ret;
+>>   	acpi_status rc;
+>>   	struct device *bridge;
+>>   	unsigned long long uid;
+>> @@ -594,6 +612,16 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+>>   	if (IS_ERR(dport))
+>>   		return PTR_ERR(dport);
+>>   
+>> +	dport->genport_coord = devm_kzalloc(dport->dport,
+>> +					    sizeof(*dport->genport_coord),
+>> +					    GFP_KERNEL);
+> 
+> It's pretty small - worth allocating separately?
+> 
+> Maybe add something on why to the patch description if there is another reason
+> for this dance.
+
+My intention was to allow detection of whether the data exists or not 
+based on if the ptr is NULL. I'll add explanation in patch description.
+
+> 
+>> +	if (!dport->genport_coord)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = get_genport_coordinates(match, dport);
+>> +	if (ret)
+>> +		dev_dbg(match, "Failed to get generic port perf coordinates.\n");
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index c1e2c3703a63..033b822a20f2 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -626,6 +626,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+>>    * @rcrb: base address for the Root Complex Register Block
+>>    * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+>>    * @port: reference to cxl_port that contains this downstream port
+>> + * @genport_coord: access coordinates (performance) from ACPI generic port
+>>    * @coord: access coordinates (performance) for switch from CDAT
+>>    * @link_latency: calculated PCIe downstream latency
+>>    */
+>> @@ -636,6 +637,7 @@ struct cxl_dport {
+>>   	resource_size_t rcrb;
+>>   	bool rch;
+>>   	struct cxl_port *port;
+>> +	struct access_coordinate *genport_coord;
+>>   	struct access_coordinate coord;
+>>   	long link_latency;
+>>   };
+>>
+>>
+> 
