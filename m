@@ -2,162 +2,307 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6EDC77B7F
-	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 17:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F46C77B75
+	for <linux-cxl@archiver.kernel.org>; Tue, 16 May 2023 17:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231639AbjEPRfe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 16 May 2023 13:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
+        id S232065AbjEPRty (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 16 May 2023 13:49:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231192AbjEPRfd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 13:35:33 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69779C9
-        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 10:35:30 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id BFF917E1E24;
-        Tue, 16 May 2023 17:35:28 +0000 (UTC)
-Received: from pdx1-sub0-mail-a247.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id DF1ED7E1D4C;
-        Tue, 16 May 2023 17:35:27 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684258528; a=rsa-sha256;
-        cv=none;
-        b=cXkOWOCvKlR6pUF6sd4/kLNtUcUVT1Y1XRdWPnkw5obc5FZZCbMF04bwVWP/BYBtCA0YIX
-        WtuGW5Oi9WezMlifl546l5bLMM++3ewh/h6bMAKFjkOWwam4VvU/0JA02QACfUUsDqr1JB
-        c9eTznGaTm09iJa46d4wyg//wTT1cWp66z/QH4nBGHS0NXYymEd6QBzq637kOGfuY2fuaj
-        daVA6/rhfsL5JoHZpOd5cIAm4AdPso139OrvqiYnlidg+un383++qXpV4+e39WG+No80sg
-        uhb75lkiwJ4f5tsUvZrSTXAlm8Nxgv9jNlNPIbFj/5wP1ojs17YlCCBFLa4USw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1684258528;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=9XyD90OnQ63YZMYy6Ta2akWb3qnbm2JeKFbGK0dbDfk=;
-        b=rYLynts+t2Ghxx49Y9gbtpCUT4taE+DDfCkkEIvWIn4GYUMWMc+JYF/3fZZNpBCtWhE/Hm
-        gWd/LO5Z/eobfBzszJ0G43eH+PwrDktJh0XfusoeTzBojGVSMBpNmdut5lelhbMlHa92G0
-        4UEi0fWIGXunIHkeUp6uAQje2mK5tnx8pOrKi6YfgHUouWLvX4NEUSBuAucM214nrSmHQw
-        No4v6k350gQppfUG32t6pCmFR5uFsqd38vkB//pAgfcNtTewD8seqkeMWOSczUi6WFKoOk
-        1qxESG8G1PNi8BeptaKbVwqaqf8eauHjpMOUiXEZT50NzmjXnCbqnNvZR8Aw5Q==
-ARC-Authentication-Results: i=1;
-        rspamd-79bb5575d7-rgq4k;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Glossy-Reaction: 0e7f0cbb4829da32_1684258528532_1548323084
-X-MC-Loop-Signature: 1684258528532:2586734644
-X-MC-Ingress-Time: 1684258528532
-Received: from pdx1-sub0-mail-a247.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.115.252.222 (trex/6.8.1);
-        Tue, 16 May 2023 17:35:28 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a247.dreamhost.com (Postfix) with ESMTPSA id 4QLNg31ZKNz4h;
-        Tue, 16 May 2023 10:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1684258527;
-        bh=9XyD90OnQ63YZMYy6Ta2akWb3qnbm2JeKFbGK0dbDfk=;
-        h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
-        b=G+pP3Deq0IRhDiPRnUmIlBW9idLUw5qM21PhuDqmoqa1HJ9kYDQypeCVaCVvYbrmo
-         JaOFDKVgJ8eXj9dadaFjajZZQHjaEHVXaU3ls8JkvqMvxmQTGRtIPrYPGjP5W1PF5T
-         VfnviJC3yWErKpmnCUHUWhMHkDQPnaospeW3odTrE+SKb2tthQDVT5XD/JtPCfh6XC
-         caMdNEtO2C2De+22TNLSFRTYbC+yLtxJFcI4CarE4H/NUKYaiKKwOpjnOesaL4ZJyR
-         VJ+Fw5NihJ5t3LQds6thQTxPTqHeuWd3JihqM9Om+/TBEBAYst2MEyr2bk+ugx5fSF
-         9zthIuRgFdhjg==
-Date:   Tue, 16 May 2023 10:02:24 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     "Li, Ming" <ming4.li@intel.com>
-Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com,
-        fan.ni@samsung.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org, dan.j.williams@intel.com
-Subject: Re: [PATCH v2] cxl/mbox: Add background cmd handling machinery
-Message-ID: <w3ejzka7keybbq5dfpyhlzmtpczsnlv2w3jwj6fmdhny3uwydy@lsfenbjjktbn>
-References: <20230502171841.21317-1-dave@stgolabs.net>
- <20230502171841.21317-4-dave@stgolabs.net>
- <gtvozgdx2ak7tekc3heczk5g7gj3cwuoptez6tjmkecader4lo@7t2em7rclcxn>
- <09aaafe8-76c2-85a0-ab5b-fd337c625530@intel.com>
+        with ESMTP id S232112AbjEPRtn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 16 May 2023 13:49:43 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F2AD2FC
+        for <linux-cxl@vger.kernel.org>; Tue, 16 May 2023 10:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684259365; x=1715795365;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QMcZhIVdzwjeSXC0Dm09Bc+DFuDL+LGvbxsR6vZB4Vw=;
+  b=iFDrYkxiMdnX1VKwuZthGP59JOHecHVxvgGKVDfJabEfqmB8e86Gir+D
+   rVmu6ZexGDJl2H2MXQZun8mot3B8WEwmA6mkQIbFHHXF3kuOdxW2wns5V
+   2yqfC6O1JrwSkiqGmDkzi7lRHnLuIWPGJ+cOn+l2+mO/OxQqHWNxApejj
+   qpqFbW9AGe0mGslyPP5hjNL1O2UfkdHrPfQPwEtZT87FwWU1CbFAJKE1Y
+   8CN/GmV6paWtimWuiPa3VKlj0k/Y/xcnTEqpWMDkT8mbS11IYqNWEejQQ
+   dfsUcj89BJzwjKteo66J1/ZhqIgvtMmJy6OJWH48n8pCsK19pS/PnqB3C
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="417200768"
+X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
+   d="scan'208";a="417200768"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 10:49:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="813540845"
+X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
+   d="scan'208";a="813540845"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.5.122]) ([10.212.5.122])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 10:49:07 -0700
+Message-ID: <dc01aad0-d96c-908a-9572-f88ca1b1104c@intel.com>
+Date:   Tue, 16 May 2023 10:49:07 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <09aaafe8-76c2-85a0-ab5b-fd337c625530@intel.com>
-User-Agent: NeoMutt/20230407
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v5 03/14] cxl: Add callback to parse the SSLBIS subtable
+ from CDAT
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com
+References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
+ <168357883158.2756219.14426990857899261700.stgit@djiang5-mobl3>
+ <20230512154151.00003a0a@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230512154151.00003a0a@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 16 May 2023, Li, Ming wrote:
 
->On 5/3/2023 10:57 PM, Davidlohr Bueso wrote:
->
->> =A0/**
->> =A0 * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
->> =A0 * @cxlds: The device state to communicate with.
->> @@ -177,6 +205,57 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_s=
-tate *cxlds,
->> =A0=A0=A0=A0mbox_cmd->return_code =3D
->> =A0=A0=A0=A0=A0=A0=A0 FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status=
-_reg);
+
+On 5/12/23 7:41 AM, Jonathan Cameron wrote:
+> On Mon, 08 May 2023 13:47:11 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> Provide a callback to parse the Switched Scoped Latency and Bandwidth
+>> Information Structure (SSLBIS) in the CDAT structures. The SSLBIS
+>> contains the bandwidth and latency information that's tied to the
+>> CXL switch that the data table has been read from. The extracted
+>> values are stored to the cxl_dport correlated by the port_id
+>> depending on the SSLBIS entry.
 >>
->> +=A0=A0=A0 /*
->> +=A0=A0=A0=A0 * Handle the background command in a synchronous manner.
->> +=A0=A0=A0=A0 *
->> +=A0=A0=A0=A0 * All other mailbox commands will serialize/queue on the m=
-box_mutex,
->> +=A0=A0=A0=A0 * which we currently hold. Furthermore this also guarantee=
-s that
->> +=A0=A0=A0=A0 * cxl_mbox_background_complete() checks are safe amongst e=
-ach other,
->> +=A0=A0=A0=A0 * in that no new bg operation can occur in between.
->> +=A0=A0=A0=A0 *
->> +=A0=A0=A0=A0 * Background operations are timesliced in accordance with =
-the nature
->> +=A0=A0=A0=A0 * of the command. In the event of timeout, the mailbox sta=
-te is
->> +=A0=A0=A0=A0 * indeterminate until the next successful command submissi=
-on and the
->> +=A0=A0=A0=A0 * driver can get back in sync with the hardware state.
->> +=A0=A0=A0=A0 */
->> +=A0=A0=A0 if (mbox_cmd->return_code =3D=3D CXL_MBOX_CMD_RC_BACKGROUND) {
->> +=A0=A0=A0=A0=A0=A0=A0 long ret;
->> +=A0=A0=A0=A0=A0=A0=A0 u64 bg_status_reg;
->> +=A0=A0=A0=A0=A0=A0=A0 int i, timeout =3D mbox_cmd->poll_interval;
+>> Coherent Device Attribute Table 1.03 2.1 Switched Scoped Latency
+>> and Bandwidth Information Structure (DSLBIS)
+>>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> I'm disagreeing with myself again. Some comments inline based
+> on a fresh read.
+> 
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> ---
+>> v5:
+>> - Store data to cxl_dport directly instead. (Dan)
+>> - Use acpi_table_parse_cdat().
+>> v3:
+>> - Add spec section in commit header (Alison)
+>> - Move CDAT parse to cxl_switch_port_probe()
+>> - Use 'struct node_hmem_attrs'
+>> ---
+>>   drivers/cxl/core/cdat.c |   88 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/cxl/cxl.h       |    8 ++++
+>>   drivers/cxl/port.c      |   12 ++++++
+>>   include/acpi/actbl1.h   |    3 ++
+>>   4 files changed, 110 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>> index 6e14d04c0453..37b135c900d5 100644
+>> --- a/drivers/cxl/core/cdat.c
+>> +++ b/drivers/cxl/core/cdat.c
+>> @@ -124,3 +124,91 @@ int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list)
+>>   	return rc;
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(cxl_cdat_endpoint_process, CXL);
 >> +
->> +=A0=A0=A0=A0=A0=A0=A0 dev_dbg(dev, "Mailbox background operation (0x%04=
-x) started\n",
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mbox_cmd->opcode);
+>> +static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
+>> +			       const unsigned long end)
+>> +{
+>> +	struct acpi_cdat_sslbis *sslbis = (struct acpi_cdat_sslbis *)header;
+>> +	struct acpi_cdat_sslbe *entry;
+>> +	struct cxl_port *port = arg;
+>> +	struct device *dev = &port->dev;
+>> +	int remain, entries, i;
+>> +	u16 len;
 >> +
->> +=A0=A0=A0=A0=A0=A0=A0 for (i =3D 0; i < mbox_cmd->poll_count; i++) {
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ret =3D rcuwait_wait_event_timeout(&c=
-xlds->mbox_wait,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cxl_mbox_back=
-ground_complete(cxlds),
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 TASK_INTERRUP=
-TIBLE,
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 msecs_to_jiff=
-ies(timeout));
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret > 0)
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break;
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (ret < 0) /* interrupted by a sign=
-al */
->> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return ret;
->
->What do you think if adding a dev_dbg() here for outputting current percen=
-tage complete for debugging? is it helpful?
+>> +	len = le16_to_cpu((__force __le16)sslbis->header.length);
+>> +	remain = len - sizeof(*sslbis);
+>> +	if (!remain || remain % sizeof(*entry) ||
+>> +	    (unsigned long)header + len > end) {
+>> +		dev_warn(dev, "Malformed SSLBIS table length: (%u)\n", len);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* Unrecognized data type, we can skip */
+>> +	if (sslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
+>> +		return 0;
+>> +
+>> +	entries = remain / sizeof(*entry);
+>> +	entry = (struct acpi_cdat_sslbe *)((unsigned long)header + sizeof(*sslbis));
+> 
+> That's a little nasty to follow.  Perhaps.
+> 	
+> 	entry = (struct acpi_cdat_sslbe *)(sslbis + 1);
 
-I don't see it being very relevant here, honestly. Something like that
-might be more usful in a longer async context without timeouts.
+Ok. I'll also update previous 2 patches with similar usages.
 
-Thanks,
-Davidlohr
+> 
+> Bonus points if we can just use a variable length entry on the end of
+> struct acpi_cdat_sslbis. Might break some other locations but would make
+> this one nicer.
+
+I had that when I was using local data structures for CDAT tables. But 
+changing the ACPI version results in touching a lot of ACPICA code 
+unfortunately.
+
+> 
+>> +
+>> +	for (i = 0; i < entries; i++) {
+>> +		u16 x = le16_to_cpu(entry->portx_id);
+>> +		u16 y = le16_to_cpu(entry->porty_id);
+>> +		struct cxl_dport *dport;
+>> +		unsigned long index;
+>> +		u16 dsp_id;
+>> +		u64 val;
+>> +
+>> +		switch (x) {
+>> +		case ACPI_CDAT_SSLBIS_US_PORT:
+>> +			dsp_id = y;
+>> +			break;
+>> +		case ACPI_CDAT_SSLBIS_ANY_PORT:
+>> +			switch (y) {
+>> +			case ACPI_CDAT_SSLBIS_US_PORT:
+>> +				dsp_id = x;
+>> +				break;
+>> +			case ACPI_CDAT_SSLBIS_ANY_PORT:
+>> +				dsp_id = ACPI_CDAT_SSLBIS_ANY_PORT;
+>> +				break;
+>> +			default:
+>> +				dsp_id = y;
+>> +				break;
+>> +			}
+>> +			break;
+>> +		default:
+>> +			dsp_id = x;
+>> +			break;
+>> +		}
+>> +
+>> +		if (check_mul_overflow(le64_to_cpu(sslbis->entry_base_unit),
+>> +				       le16_to_cpu(entry->latency_or_bandwidth),
+>> +				       &val))
+>> +			dev_warn(dev, "SSLBIS value overflowed!\n");
+>> +
+>> +		xa_for_each(&port->dports, index, dport) {
+>> +			if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
+>> +			    dsp_id == dport->port_id)
+>> +				cxl_access_coordinate_set(&dport->coord,
+>> +							  sslbis->data_type,
+>> +							  val);
+>> +		}
+>> +
+>> +		entry++;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int cxl_cdat_switch_process(struct cxl_port *port)
+>> +{
+>> +	int rc;
+>> +
+>> +	rc = acpi_table_parse_cdat(ACPI_CDAT_TYPE_SSLBIS,
+>> +				   cdat_sslbis_handler,
+>> +				   port, port->cdat.table);
+>> +	if (rc == 0)
+>> +		rc = -ENOENT;
+> 
+> I'm bored of this pattern now so hide it...
+> 
+> Howabout
+> 
+> 	acpi_table_parse_cdat_fail_emtpy() that handles the rc
+> rewrite internally. (with a better name).
+> 
+> Gets rid of all this boilerplate.
+
+ok
+
+> 
+> 
+> 
+>> +
+>> +	return rc;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_cdat_switch_process, CXL);
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index ca3d0d74f2e5..3e8020e0a132 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -600,6 +600,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+>>    * @rcrb: base address for the Root Complex Register Block
+>>    * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+>>    * @port: reference to cxl_port that contains this downstream port
+>> + * @coord: access coordinates (performance) for switch from CDAT
+>>    */
+>>   struct cxl_dport {
+>>   	struct device *dport;
+>> @@ -608,6 +609,7 @@ struct cxl_dport {
+>>   	resource_size_t rcrb;
+>>   	bool rch;
+>>   	struct cxl_port *port;
+>> +	struct access_coordinate coord;
+>>   };
+>>   
+>>   /**
+>> @@ -803,12 +805,18 @@ struct dsmas_entry {
+>>   
+>>   #ifdef CONFIG_ACPI
+>>   int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list);
+>> +int cxl_cdat_switch_process(struct cxl_port *port);
+>>   #else
+>>   static inline int cxl_cdat_endpoint_process(struct cxl_port *port,
+>>   					    struct list_head *list)
+>>   {
+>>   	return -EOPNOTSUPP;
+>>   }
+>> +
+>> +static inline int cxl_cdat_switch_process(struct cxl_port *port)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>>   #endif
+>>   
+>>   /*
+>> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> index da023feaa6e2..c5a24b75bf03 100644
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -86,7 +86,17 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+>>   	if (IS_ERR(cxlhdm))
+>>   		return PTR_ERR(cxlhdm);
+>>   
+>> -	return devm_cxl_enumerate_decoders(cxlhdm, NULL);
+>> +	rc = devm_cxl_enumerate_decoders(cxlhdm, NULL);
+>> +	if (rc < 0)
+>> +		return rc;
+>> +
+>> +	if (port->cdat.table) {
+>> +		rc = cxl_cdat_switch_process(port);
+>> +		if (rc < 0)
+>> +			dev_warn(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
+>> +	}
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   static int cxl_endpoint_port_probe(struct cxl_port *port)
+>> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+>> index 8ea7e5d64bc1..82def138a7e4 100644
+>> --- a/include/acpi/actbl1.h
+>> +++ b/include/acpi/actbl1.h
+>> @@ -419,6 +419,9 @@ struct acpi_cdat_sslbis {
+>>   	u64 entry_base_unit;
+>>   };
+>>   
+>> +#define ACPI_CDAT_SSLBIS_US_PORT	0x0100
+>> +#define ACPI_CDAT_SSLBIS_ANY_PORT	0xffff
+>> +
+>>   /* Sub-subtable for above, sslbe_entries field */
+>>   
+>>   struct acpi_cdat_sslbe {
+>>
+>>
+> 
