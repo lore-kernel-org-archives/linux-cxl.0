@@ -2,170 +2,107 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D783C77B75
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 May 2023 09:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947FBC77B7A
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 May 2023 12:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjEQJy0 convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 17 May 2023 05:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
+        id S231556AbjEQMzk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 17 May 2023 08:55:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbjEQJy0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 May 2023 05:54:26 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBE63C3A;
-        Wed, 17 May 2023 02:54:24 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QLpHh46Bkz6J8Hk;
-        Wed, 17 May 2023 17:50:08 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 17 May
- 2023 10:54:22 +0100
-Date:   Wed, 17 May 2023 10:54:21 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>, <yangyicong@huawei.com>,
-        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <rdunlap@infradead.org>, <mark.rutland@arm.com>,
-        <zhuo.song@linux.alibaba.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20230517105421.00003251@Huawei.com>
-In-Reply-To: <ZGPW4JzOOUT4ksMf@bhelgaas>
-References: <20230516160304.00000544@Huawei.com>
-        <ZGPW4JzOOUT4ksMf@bhelgaas>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230253AbjEQMzk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 May 2023 08:55:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5921C2D68;
+        Wed, 17 May 2023 05:55:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E185D6449E;
+        Wed, 17 May 2023 12:55:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C1ABC433EF;
+        Wed, 17 May 2023 12:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684328138;
+        bh=xzTFDNsRybxFIhfNkT5pB/3ffJE+aIzn77Ij9JsNwhQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rEDgMEQLFO1dHrTu7bk05PSagPHSLbTz1soCR9EqbVytR1qDw1CdCDpr1gTBIArLp
+         4Cw0/Ce9LHK5C0X9w9BavIkXm8rDgBeduEKjGPPyZ9FVgRUWbbSd0T1RKcpDwx8Rqg
+         f75QcnNaqJn2rS+98JjDV2RveeLeB3EF8HAaLFhGPhBMJdwoI3QNA6/8xCuFjJJAk4
+         Ib+SHm+mYwlO33nBBfFnkCYn8wbzMirsE4hPYInVtidxX7Zx4tj1ZPPZqO94cpzHs8
+         pQYzRbnQMwJ4d5zNG9wnmNYRy7fFZ47xzC/cc3ZKSlwxzdHUZLCNgHHeZfDL6dE8KF
+         wNPaEFdrVTzvw==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Gregory Price <gregory.price@memverge.com>,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dax: fix missing-prototype warnings
+Date:   Wed, 17 May 2023 14:55:09 +0200
+Message-Id: <20230517125532.931157-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 16 May 2023 14:17:52 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> On Tue, May 16, 2023 at 04:03:04PM +0100, Jonathan Cameron wrote:
-> > 
-> > PCI folks, Question below directed at you. Please take a look.
-> > +CC linux-cxl because a similar question is going to bite us shortly
-> > if we want CXL PMUs to work well on RP or Switch ports.
-> >   
-> > > >> +static int dwc_pcie_ras_des_discover(struct dwc_pcie_pmu_priv *priv)
-> > > >> +{
-> > > >> +    int index = 0;
-> > > >> +    struct pci_dev *pdev = NULL;
-> > > >> +    struct dwc_pcie_rp_info *rp_info;
-> > > >> +
-> > > >> +    INIT_LIST_HEAD(&priv->rp_infos);
-> > > >> +
-> > > >> +    /* Match the rootport with VSEC_RAS_DES_ID */
-> > > >> +    for_each_pci_dev(pdev) {    
-> > > > 
-> > > > Does the PCI layer not offer a more robust mechanism for this?
-> > > > (PCI fixups come to mind, but I don't actually know whether that
-> > > > would be a viable approach or not.)     
-> > > 
-> > > I am afraid not yet. Jonathan try to add a PMU service but it is
-> > > not merged into mainline.  
-> >
-> > I wouldn't read much into that 'failure'.  We never persisted with
-> > that driver because it was for an old generation of hardware.
-> > Mostly the aim with that was to explore the area of PCIe PMU in
-> > general rather than to get the support upstream. Some of the
-> > counters on that hardware were too small to be of much use anyway :)
-> > 
-> > Grabbing just relevant functions..
-> > 
-> > Bjorn, we need to figure out a way forwards for this sort of case
-> > and I'd appreciate your input on the broad brush question of 'how
-> > should it be done'?
-> > 
-> > This is a case where a PCIe port (RP here) correctly has the PCIe
-> > class code so binds to the pcie_port driver, but has a VSEC (others
-> > examples use DOE, or DVSEC) that provides extended functionality.
-> > The referred to PCIe PMU from our older Hisilicon platforms did it
-> > by adding another service driver - that probably doesn't extend
-> > well.
-> > 
-> > The approach used here is to separately walk the PCI topology and
-> > register the devices.  It can 'maybe' get away with that because no
-> > interrupts and I assume resets have no nasty impacts on it because
-> > the device is fairly simple.  In general that's not going to work.
-> > CXL does a similar trick (which I don't much like, but too late
-> > now), but we've also run into the problem of how to get interrupts
-> > if not the main driver.  
-> 
-> Yes, this is a real problem.  I think the "walk all PCI devices
-> looking for one we like" approach is terrible because it breaks a lot
-> of driver model assumptions (no device ID to autoload module via udev,
-> hotplug doesn't work, etc), but we don't have a good alternative right
-> now.
-> 
-> I think portdrv is slightly better because at least it claims the
-> device in the usual way and gives a way for service drivers to
-> register with it.  But I don't really like that either because it
-> created a new weird /sys/bus/pci_express hierarchy full of these
-> sub-devices that aren't really devices, and it doesn't solve the
-> module load and hotplug issues.
-> 
-> I would like to have portdrv be completely built into the PCI core and
-> not claim Root Ports or Switch Ports.  Then those devices would be
-> available via the usual driver model for driver loading and binding
-> and for hotplug.
+dev_dax_probe declaration for this function was removed with the only
+caller outside of device.c. Mark it static to avoid a W=1
+warning:
+drivers/dax/device.c:399:5: error: no previous prototype for 'dev_dax_probe'
 
-Let me see if I understand this correctly as I can think of a few options
-that perhaps are inline with what you are thinking.
+Similarly, run_dax() causes a warning, but this one is because the
+declaration needs to be included:
 
-1) All the portdrv stuff converted to normal PCI core helper functions
-   that a driver bound to the struct pci_dev can use.
-2) Driver core itself provides a bunch of extra devices alongside the
-   struct pci_dev one to which additional drivers can bind? - so kind
-   of portdrv handling, but squashed into the PCI device topology?
-3) Have portdrv operated under the hood, so all the services etc that
-   it provides don't require a driver to be bound at all.  Then
-   allow usual VID/DID based driver binding.
+drivers/dax/super.c:337:6: error: no previous prototype for 'run_dax'
 
-If 1 - we are going to run into class device restrictions and that will
-just move where we have to handle the potential vendor specific parts.
-We probably don't want that to be a hydra with all the functionality
-and lookups etc driven from there, so do we end up with sub devices
-of that new PCI port driver with a discover method based on either
-vsec + VID or DVSEC with devices created under the main pci_dev.
-That would have to include nastiness around interrupt discovery for
-those sub devices. So ends up roughly like port_drv.
+Fixes: 83762cb5c7c4 ("dax: Kill DEV_DAX_PMEM_COMPAT")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dax/device.c | 3 +--
+ drivers/dax/super.c  | 1 +
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I don't think 2 solves anything.
-
-For 3 - interrupts and ownership of facilities is going to be tricky
-as initially those need to be owned by the PCI core (no device driver bound)
-and then I guess handed off to the driver once it shows up?  Maybe that
-driver should call a pci_claim_port() that gives it control of everything
-and pci_release_port() that hands it all back to the core.  That seems
-racey.
-
-As another similar proposal to 3 (and one Greg KH will hate :) can we
-do something similar to vfio and allow an unbind of a class driver followed by
-a bind of a more specific one? 
-
-I think 1 is probably the easiest to implement, but it just moves
-the problem.
-
-If we had a way to reliably override the class driver if a more specific
-one exists, that might work around the problem but I don't think we
-can do that currently.
-
-Jonathan
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index af9930c03c9c..30665a3ff6ea 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -396,7 +396,7 @@ static void dev_dax_kill(void *dev_dax)
+ 	kill_dev_dax(dev_dax);
+ }
  
-
-> 
-> Bjorn
+-int dev_dax_probe(struct dev_dax *dev_dax)
++static int dev_dax_probe(struct dev_dax *dev_dax)
+ {
+ 	struct dax_device *dax_dev = dev_dax->dax_dev;
+ 	struct device *dev = &dev_dax->dev;
+@@ -471,7 +471,6 @@ int dev_dax_probe(struct dev_dax *dev_dax)
+ 	run_dax(dax_dev);
+ 	return devm_add_action_or_reset(dev, dev_dax_kill, dev_dax);
+ }
+-EXPORT_SYMBOL_GPL(dev_dax_probe);
+ 
+ static struct dax_device_driver device_dax_driver = {
+ 	.probe = dev_dax_probe,
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index c4c4728a36e4..8c05dae19bfe 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -14,6 +14,7 @@
+ #include <linux/dax.h>
+ #include <linux/fs.h>
+ #include "dax-private.h"
++#include "bus.h"
+ 
+ /**
+  * struct dax_device - anchor object for dax services
+-- 
+2.39.2
 
