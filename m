@@ -2,93 +2,170 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58814C77B7F
-	for <linux-cxl@archiver.kernel.org>; Wed, 17 May 2023 08:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D783C77B75
+	for <linux-cxl@archiver.kernel.org>; Wed, 17 May 2023 09:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230515AbjEQIu3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 17 May 2023 04:50:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38994 "EHLO
+        id S229640AbjEQJy0 convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 17 May 2023 05:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjEQIu1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 May 2023 04:50:27 -0400
+        with ESMTP id S229670AbjEQJy0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 17 May 2023 05:54:26 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 446A440EB
-        for <linux-cxl@vger.kernel.org>; Wed, 17 May 2023 01:50:25 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QLmwf465gz6DBVs;
-        Wed, 17 May 2023 16:48:34 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBE63C3A;
+        Wed, 17 May 2023 02:54:24 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QLpHh46Bkz6J8Hk;
+        Wed, 17 May 2023 17:50:08 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 17 May
- 2023 09:50:22 +0100
-Date:   Wed, 17 May 2023 09:50:21 +0100
+ 2023 10:54:22 +0100
+Date:   Wed, 17 May 2023 10:54:21 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>
-Subject: Re: [PATCH v5 00/14] cxl: Add support for QTG ID retrieval for CXL
- subsystem
-Message-ID: <20230517095021.0000204b@Huawei.com>
-In-Reply-To: <6463fa7ae35c4_250e2941f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <168357873843.2756219.5839806150467356492.stgit@djiang5-mobl3>
-        <20230512162831.00003b34@Huawei.com>
-        <6463fa7ae35c4_250e2941f@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Shuai Xue <xueshuai@linux.alibaba.com>,
+        Robin Murphy <robin.murphy@arm.com>, <yangyicong@huawei.com>,
+        <will@kernel.org>, <baolin.wang@linux.alibaba.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <rdunlap@infradead.org>, <mark.rutland@arm.com>,
+        <zhuo.song@linux.alibaba.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <20230517105421.00003251@Huawei.com>
+In-Reply-To: <ZGPW4JzOOUT4ksMf@bhelgaas>
+References: <20230516160304.00000544@Huawei.com>
+        <ZGPW4JzOOUT4ksMf@bhelgaas>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 16 May 2023 14:49:46 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Tue, 16 May 2023 14:17:52 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> Jonathan Cameron wrote:
-> > Hi Dave,
+> On Tue, May 16, 2023 at 04:03:04PM +0100, Jonathan Cameron wrote:
+> > 
+> > PCI folks, Question below directed at you. Please take a look.
+> > +CC linux-cxl because a similar question is going to bite us shortly
+> > if we want CXL PMUs to work well on RP or Switch ports.
 > >   
-> > > The QTG ID for a device is retrieved via sending a _DSM method to the ACPI0017 device.
-> > > The _DSM expects an input package of 4 DWORDS that contains the read latency, write
-> > > latency, read bandwidth, and write banwidth. These are the caluclated numbers for the
-> > > path between the CXL device and the CPU. The QTG ID is also exported as a sysfs
-> > > attribute under the mem device memory partition type:
-> > > /sys/bus/cxl/devices/memX/ram/qos_class
-> > > /sys/bus/cxl/devices/memX/pmem/qos_class
-> > > Only the first QTG ID is exported.  
+> > > >> +static int dwc_pcie_ras_des_discover(struct dwc_pcie_pmu_priv *priv)
+> > > >> +{
+> > > >> +    int index = 0;
+> > > >> +    struct pci_dev *pdev = NULL;
+> > > >> +    struct dwc_pcie_rp_info *rp_info;
+> > > >> +
+> > > >> +    INIT_LIST_HEAD(&priv->rp_infos);
+> > > >> +
+> > > >> +    /* Match the rootport with VSEC_RAS_DES_ID */
+> > > >> +    for_each_pci_dev(pdev) {    
+> > > > 
+> > > > Does the PCI layer not offer a more robust mechanism for this?
+> > > > (PCI fixups come to mind, but I don't actually know whether that
+> > > > would be a viable approach or not.)     
+> > > 
+> > > I am afraid not yet. Jonathan try to add a PMU service but it is
+> > > not merged into mainline.  
+> >
+> > I wouldn't read much into that 'failure'.  We never persisted with
+> > that driver because it was for an old generation of hardware.
+> > Mostly the aim with that was to explore the area of PCIe PMU in
+> > general rather than to get the support upstream. Some of the
+> > counters on that hardware were too small to be of much use anyway :)
 > > 
-> > The QTG DSM returning a list was done to allow for a case of mutual
-> > incompatibility between the first QTG that is returned for a particular
-> > performance point and the CFMWS that it points at.
+> > Grabbing just relevant functions..
 > > 
-> > CFMWS might say 'no pmem in here' but due to some RAM device that is a bit
-> > slow, we might end up with a QTG DSM response that says put it in that CFMWS.
+> > Bjorn, we need to figure out a way forwards for this sort of case
+> > and I'd appreciate your input on the broad brush question of 'how
+> > should it be done'?
 > > 
-> > Hence the fallback list.
+> > This is a case where a PCIe port (RP here) correctly has the PCIe
+> > class code so binds to the pcie_port driver, but has a VSEC (others
+> > examples use DOE, or DVSEC) that provides extended functionality.
+> > The referred to PCIe PMU from our older Hisilicon platforms did it
+> > by adding another service driver - that probably doesn't extend
+> > well.
 > > 
-> > That is currently hidden by this approach.  It makes things more complex, but
-> > I'd really like to see the whole of that list rather than just the first element
-> > presented for each region.  I think it's fine to let userspace then figure
-> > out if there is a missmatch.  
+> > The approach used here is to separately walk the PCI topology and
+> > register the devices.  It can 'maybe' get away with that because no
+> > interrupts and I assume resets have no nasty impacts on it because
+> > the device is fairly simple.  In general that's not going to work.
+> > CXL does a similar trick (which I don't much like, but too late
+> > now), but we've also run into the problem of how to get interrupts
+> > if not the main driver.  
 > 
-> There is some confusion here, the "Only the first QTG ID is exported"
-> statement is with respect to the case of multiple DSMAS entries per
-> partition. For the case of multiple platform QoS classes per single
-> DSMAS I would be ok if this qos_class returned a comma-separated
-> list/tuple.
+> Yes, this is a real problem.  I think the "walk all PCI devices
+> looking for one we like" approach is terrible because it breaks a lot
+> of driver model assumptions (no device ID to autoload module via udev,
+> hotplug doesn't work, etc), but we don't have a good alternative right
+> now.
 > 
-> So, for example, in a case where DSMAS0 for the 'ram' partition results
-> in QoS class-ids 0,1,2 and DSMAS1 for the 'ram' partition results in QoS
-> class-ids 3,4 then /sys/bus/cxl/devices/memX/ram/qos_class would be
-> allowed to report "0,1,2".
+> I think portdrv is slightly better because at least it claims the
+> device in the usual way and gives a way for service drivers to
+> register with it.  But I don't really like that either because it
+> created a new weird /sys/bus/pci_express hierarchy full of these
+> sub-devices that aren't really devices, and it doesn't solve the
+> module load and hotplug issues.
 > 
-Great, that works nicely.
+> I would like to have portdrv be completely built into the PCI core and
+> not claim Root Ports or Switch Ports.  Then those devices would be
+> available via the usual driver model for driver loading and binding
+> and for hotplug.
+
+Let me see if I understand this correctly as I can think of a few options
+that perhaps are inline with what you are thinking.
+
+1) All the portdrv stuff converted to normal PCI core helper functions
+   that a driver bound to the struct pci_dev can use.
+2) Driver core itself provides a bunch of extra devices alongside the
+   struct pci_dev one to which additional drivers can bind? - so kind
+   of portdrv handling, but squashed into the PCI device topology?
+3) Have portdrv operated under the hood, so all the services etc that
+   it provides don't require a driver to be bound at all.  Then
+   allow usual VID/DID based driver binding.
+
+If 1 - we are going to run into class device restrictions and that will
+just move where we have to handle the potential vendor specific parts.
+We probably don't want that to be a hydra with all the functionality
+and lookups etc driven from there, so do we end up with sub devices
+of that new PCI port driver with a discover method based on either
+vsec + VID or DVSEC with devices created under the main pci_dev.
+That would have to include nastiness around interrupt discovery for
+those sub devices. So ends up roughly like port_drv.
+
+I don't think 2 solves anything.
+
+For 3 - interrupts and ownership of facilities is going to be tricky
+as initially those need to be owned by the PCI core (no device driver bound)
+and then I guess handed off to the driver once it shows up?  Maybe that
+driver should call a pci_claim_port() that gives it control of everything
+and pci_release_port() that hands it all back to the core.  That seems
+racey.
+
+As another similar proposal to 3 (and one Greg KH will hate :) can we
+do something similar to vfio and allow an unbind of a class driver followed by
+a bind of a more specific one? 
+
+I think 1 is probably the easiest to implement, but it just moves
+the problem.
+
+If we had a way to reliably override the class driver if a more specific
+one exists, that might work around the problem but I don't think we
+can do that currently.
 
 Jonathan
+ 
 
+> 
+> Bjorn
 
