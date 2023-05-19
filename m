@@ -2,141 +2,257 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D312FC77B7A
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 02:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2B4C77B7D
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 03:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjESC6V (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 May 2023 22:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
+        id S230025AbjESDBY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 May 2023 23:01:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229945AbjESC6U (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 May 2023 22:58:20 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3881310CF;
-        Thu, 18 May 2023 19:58:18 -0700 (PDT)
+        with ESMTP id S229529AbjESDBW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 May 2023 23:01:22 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B24F10E6;
+        Thu, 18 May 2023 20:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684465098; x=1716001098;
+  t=1684465280; x=1716001280;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=lVYvIVW2ijHM6EU94P3MyA9Xq/oENLK2H4Zfidz0kJY=;
-  b=C/fkMVsexM1waDx3rMN9i34szfwTGBDqGQjTGaze3g+zhUN74/JiNZK7
-   7OSxTs9slGtAXjNBYaVogRkV1TySZR1oAwjm6tbvyQUCYGpVQyj8VqnP1
-   pxW9Y9BLcoIivjNZzSBvaJprIVb36Wm+u34JBC0mBUlk77yccZq/YlgLg
-   drEgiohqVXvFIzerwCuw2K4zOPOQTpcUWLKSCBfRIRQmY7AySKPEjoYcL
-   fBu9qWhNGnuc4ONBfpCfj3CgIpG0t7ACTJM0B6/+JAftWmYRJVFojNx2B
-   1wwBIMD1Q1ti4sN5oWV2Eb3Z+tj3XOa0xDhzoHTebCF25X3pGyCvzz2Vf
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="417953843"
+  bh=hUWtTnPkdiCSv1gD3T8DNAmXlhYNSbvOr2sFJG2z9xM=;
+  b=d7JIoEdwSCZN9/cOTSgj+tXmlBUAO+cHpd53i/we4rMHfVPeQ44Y44IP
+   6fufHfwyozJKi+hwgcXS2KlkzpBGXbFRxhZjtwgT+CFFMXQQbdpI0tG0L
+   nxBIxTZ31HH+ha7qrX2i9BuWd0Aq9BsYLjnCOvNRkJuPb9mtKZ1xAulT6
+   nSV1LSZ7TmK0CgW+Vj4476SzB9ePDTSSmdo7/SDhX5d1sKZE4XMZNn4nn
+   EwrqvT0fvrYnmQgQQz0H14LQWcXTGOt9/h/CxicAFCOoZe6n0JNGy5CX7
+   VoaCotNXNe1CPupeHo9273Frb6RhQltAMyHHEDS6cLuxt/iS4h4TXCkaO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="336854925"
 X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="417953843"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 19:58:17 -0700
+   d="scan'208";a="336854925"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 20:01:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="696552248"
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="702371204"
 X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="696552248"
+   d="scan'208";a="702371204"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.20.44])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 19:58:16 -0700
-Date:   Thu, 18 May 2023 19:58:15 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 20:01:19 -0700
+Date:   Thu, 18 May 2023 20:01:18 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         Davidlohr Bueso <dave@stgolabs.net>,
         Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH 3/4] cxl: add a firmware update mechanism using the sysfs
- firmware loader
-Message-ID: <ZGblx0pCpJPvCS7M@aschofie-mobl2>
+Subject: Re: [PATCH 4/4] tools/testing/cxl: add firmware update emulation to
+ CXL memdevs
+Message-ID: <ZGbmfsU6vc6uZ+E+@aschofie-mobl2>
 References: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
- <20230421-vv-fw_update-v1-3-22468747d72f@intel.com>
+ <20230421-vv-fw_update-v1-4-22468747d72f@intel.com>
+ <20230511171816.0000303f@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230421-vv-fw_update-v1-3-22468747d72f@intel.com>
+In-Reply-To: <20230511171816.0000303f@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 09:09:27PM -0600, Vishal Verma wrote:
-> The sysfs based firmware loader mechanism was created to easily allow
-> userspace to upload firmware images to FPGA cards. This also happens to
-> be pretty suitable to create a user-initiated but kernel-controlled
-> firmware update mechanism for CXL devices, using the CXL specified
-> mailbox commands.
+On Thu, May 11, 2023 at 05:18:16PM +0100, Jonathan Cameron wrote:
+> On Fri, 21 Apr 2023 21:09:28 -0600
+> Vishal Verma <vishal.l.verma@intel.com> wrote:
 > 
-> Since firmware update commands can be long-running, and can be processed
-> in the background by the endpoint device, it is desirable to have the
-> ability to chunk the firmware transfer down to smaller pieces, so that
-> one operation does not monopolize the mailbox, locking out any other
-> long running background commands entirely - e.g. security commands like
-> 'sanitize' or poison scanning operations.
+> > Add emulation for the 'Get FW Info', 'Transfer FW', and 'Activate FW'
+> > CXL mailbox commands to the cxl_test emulated memdevs to enable
+> > end-to-end unit testing of a firmware update flow. For now, only
+> > advertise an 'offline activation' capability as that is all the CXL
+> > memdev driver currently implements.
+> > 
+> > Add some canned values for the serial number fields, and create a
+> > platform device sysfs knob to calculate the sha256sum of the firmware
+> > image that was received, so a unit test can compare it with the original
+> > file that was uploaded.
+> > 
+> > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> Hi Vishal,
 > 
-> The firmware loader mechanism allows a natural way to perform this
-> chunking, as after each mailbox command, that is restricted to the
-> maximum mailbox payload size, the cxl memdev driver relinquishes control
-> back to the fw_loader system and awaits the next chunk of data to
-> transfer. This opens opportunities for other background commands to
-> access the mailbox and send their own slices of background commands.
+> A few trivial comments inline,
 > 
-> Add the necessary helpers and state tracking to be able to perform the
-> 'Get FW Info', 'Transfer FW', and 'Activate FW' mailbox commands as
-> described in the CXL spec. Wire these up to the firmware loader
-> callbacks, and register with that system to create the memX/firmware/
-> sysfs ABI.
-
-I just have a quick drive-by comment for you....
-
+> Thanks,
 > 
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  drivers/cxl/cxlmem.h                    |  79 ++++++++
->  drivers/cxl/core/mbox.c                 |   1 +
->  drivers/cxl/core/memdev.c               | 324 ++++++++++++++++++++++++++++++++
->  Documentation/ABI/testing/sysfs-bus-cxl |  11 ++
->  drivers/cxl/Kconfig                     |   1 +
->  5 files changed, 416 insertions(+)
+> Jonathan
 > 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 8c3302fc7738..0ecee5b558f4 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
+> > ---
+> >  tools/testing/cxl/test/mem.c | 191 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 191 insertions(+)
+> > 
+> > diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> > index 9263b04d35f7..bc99cc673550 100644
+> > --- a/tools/testing/cxl/test/mem.c
+> > +++ b/tools/testing/cxl/test/mem.c
+> > @@ -7,11 +7,14 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/sizes.h>
+> >  #include <linux/bits.h>
+> > +#include <crypto/hash.h>
+> >  #include <cxlmem.h>
+> >  
+> >  #include "trace.h"
+> >  
+> >  #define LSA_SIZE SZ_128K
+> > +#define FW_SIZE SZ_64M
+> > +#define FW_SLOTS 3
+> >  #define DEV_SIZE SZ_2G
+> >  #define EFFECT(x) (1U << x)
+> >  
+> > @@ -40,6 +43,18 @@ static struct cxl_cel_entry mock_cel[] = {
+> >  		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_HEALTH_INFO),
+> >  		.effect = cpu_to_le16(0),
+> >  	},
+> > +	{
+> > +		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_FW_INFO),
+> > +		.effect = cpu_to_le16(0),
+> > +	},
+> > +	{
+> > +		.opcode = cpu_to_le16(CXL_MBOX_OP_TRANSFER_FW),
+> > +		.effect = cpu_to_le16(EFFECT(0) | EFFECT(6)),
+> 
+> Beginning to feel like some defines for each effect might be worth
+> adding.
+> 
+> > +	},
+> > +	{
+> > +		.opcode = cpu_to_le16(CXL_MBOX_OP_ACTIVATE_FW),
+> > +		.effect = cpu_to_le16(EFFECT(0) | EFFECT(1)),
+> > +	},
+> >  };
+> 
+> ...
+> 
+> > +static int mock_transfer_fw(struct cxl_dev_state *cxlds,
+> > +			    struct cxl_mbox_cmd *cmd)
+> > +{
+> > +	struct cxl_mbox_transfer_fw *transfer = cmd->payload_in;
+> > +	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
+> > +	void *fw = mdata->fw;
+> > +	size_t offset, length;
+> > +
+> > +	offset = le32_to_cpu(transfer->offset) * CXL_FW_TRANSFER_OFFSET_ALIGN;
+> > +	length = cmd->size_in - sizeof(*transfer);
+> > +	if (offset + length > FW_SIZE)
+> > +		return -EINVAL;
+> > +
+> > +	switch (transfer->action) {
+> > +	case CXL_FW_TRANSFER_ACTION_FULL:
+> > +		if (offset != 0)
+> > +			return -EINVAL;
+> > +		fallthrough;
+> > +	case CXL_FW_TRANSFER_ACTION_END:
+> > +		if (transfer->slot == 0 || transfer->slot > FW_SLOTS)
+> > +			return -EINVAL;
+> > +		mdata->fw_size = offset + length;
+> > +		break;
+> > +	case CXL_FW_TRANSFER_ACTION_START:
+> > +	case CXL_FW_TRANSFER_ACTION_CONTINUE:
+> > +	case CXL_FW_TRANSFER_ACTION_ABORT:
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	memcpy(fw + offset, &transfer->data[0], length);
+> 
+> Slight preference for transfer->data
+> 
 
-snip
+What's the story behind that Jonathan? 
+I imagined kernel developers leaned towards the explicit.
 
-> + * Get Firmware Info
-> + * CXL rev 3.0 section 8.2.9.3.1; Table 8-56
-> + */
-> +struct cxl_mbox_get_fw_info {
-> +	u8 num_slots;
-> +	u8 slot_info;
-> +	u8 activation_cap;
-> +	u8 reserved[13];
-> +	char slot_1_revision[0x10];
-> +	char slot_2_revision[0x10];
-> +	char slot_3_revision[0x10];
-> +	char slot_4_revision[0x10];
+Alison
 
-The practice here is to use decimals [16]
 
-> +} __packed;
-> +
-
-snip
-
-> + * Transfer Firmware Input Payload
-> + * CXL rev 3.0 section 8.2.9.3.2; Table 8-57
-> + */
-> +struct cxl_mbox_transfer_fw {
-> +	u8 action;
-> +	u8 slot;
-> +	u8 reserved[2];
-> +	__le32 offset;
-> +	u8 reserved2[0x78];
-
-Here too.
-
-That's all for now.
-
+> > +	return 0;
+> > +}
+> > +
+> 
+> ...
+> 
+> > +static int do_sha256(u8 *data, unsigned int length, u8 *hash)
+> 
+> Can't use the one in include/crypto/sha2.h?  Don't think anyone really
+> cares about extreme performance here.
+> 
+> > +{
+> > +	struct crypto_shash *alg;
+> > +	struct sdesc *sdesc;
+> > +	size_t size;
+> > +	int rc;
+> > +
+> > +	alg = crypto_alloc_shash("sha256", 0, 0);
+> > +	if (IS_ERR(alg))
+> > +		return PTR_ERR(alg);
+> > +
+> > +	size = sizeof(struct shash_desc) + crypto_shash_descsize(alg);
+> > +	sdesc = kzalloc(size, GFP_KERNEL);
+> > +	if (!sdesc) {
+> > +		rc = -ENOMEM;
+> > +		goto out_shash;
+> > +	}
+> > +
+> > +	sdesc->shash.tfm = alg;
+> > +	rc = crypto_shash_digest(&sdesc->shash, data, length, hash);
+> > +
+> > +	kfree(sdesc);
+> > +out_shash:
+> > +	crypto_free_shash(alg);
+> > +	return rc;
+> > +}
+> > +
+> > +#define CHECKSUM_SIZE 32
+> > +
+> > +static ssize_t fw_buf_checksum_show(struct device *dev,
+> > +				    struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
+> > +	unsigned char *hstr, *hptr;
+> > +	u8 hash[CHECKSUM_SIZE];
+> > +	ssize_t written = 0;
+> > +	int i, rc;
+> > +
+> > +	rc = do_sha256(mdata->fw, mdata->fw_size, &hash[0]);
+> > +	if (rc) {
+> > +		dev_err(dev, "error calculating checksum: %d\n", rc);
+> > +		goto out_free;
+> > +	}
+> > +
+> > +	hstr = kzalloc((CHECKSUM_SIZE * 2) + 1, GFP_KERNEL);
+> > +	if (!hstr)
+> > +		return -ENOMEM;
+> > +
+> > +	hptr = hstr;
+> > +	for (i = 0; i < CHECKSUM_SIZE; i++)
+> > +		hptr += sprintf(hptr, "%02x", hash[i]);
+> > +
+> > +	written = sysfs_emit(buf, "%s\n", hstr);
+> > +
+> > +out_free:
+> > +	kfree(hstr);
+> > +	return written;
+> > +}
+> > +
+> > +static DEVICE_ATTR_RO(fw_buf_checksum);
+> > +
+> >  static struct attribute *cxl_mock_mem_attrs[] = {
+> >  	&dev_attr_security_lock.attr,
+> >  	&dev_attr_event_trigger.attr,
+> > +	&dev_attr_fw_buf_checksum.attr,
+> >  	NULL
+> >  };
+> >  ATTRIBUTE_GROUPS(cxl_mock_mem);
+> > 
+> 
