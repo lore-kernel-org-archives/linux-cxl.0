@@ -2,52 +2,52 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B7AC77B75
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 16:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA6BC77B75
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 16:24:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbjESQYi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 May 2023 12:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
+        id S229938AbjESQYv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 May 2023 12:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjESQYh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 12:24:37 -0400
+        with ESMTP id S230469AbjESQYu (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 12:24:50 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC3390;
-        Fri, 19 May 2023 09:24:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E189C107;
+        Fri, 19 May 2023 09:24:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684513476; x=1716049476;
+  t=1684513488; x=1716049488;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZROn1rHO/ja09swrLJPTGvhq5bcsXg4BuoD36PGk1CA=;
-  b=cE/l7UBULvW3IzLwEc0aUJ+4DdfVfDI+waS5R7/Lf+xClIMdBEGGjeOI
-   YrcxIZip3dcMWX43UQZUXw8IfYcKLNZ1679qgXbFBJP9AWuqBn8mtatqb
-   zKi8ESyAi+CVn4lnR705GicjGGwJFCdkOnVaV3bEnLsDo+DOod5lBu4Pm
-   c8JjIxYWG4o6dJ3x9+f+cUPpVGqAKAwxcTYkrSBciPhu468qosjh9zV44
-   Mtn4RDAckq2CGSDm1cr8RDEGZcsGg0yOBIFjQRChG1dOmlDCvRyguEKMn
-   OCiJbwoxEtnfXjbAAgH7FjF1uf9hjA/Not2QGcdOvy0HLiPItpnYDYeGb
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="415878671"
+  bh=sUbNuG3GZYsRg+Z0hAbGSwm0VsJYcJclFRNoWEtbnho=;
+  b=BbkDVZUMr8wRycr18BWR8D21A207lU5k7nJEfLN74YewPLzIUuHMAJ1s
+   oFfr4FFsRK0SQGosPpK/G92vHEk6ZWkwwbVMKu676lmia5JsNG608UuGC
+   7G5RijgXJNlOT0xhZK1ft+Z7sVH2L+8X4kRIxhtRggqaS6P7hi7+Qwr2J
+   Re831AoG0PGC6wT7+vJtaKhRl/KiSVy1ixVGlWfJLbExs8CCAzV7YXkeZ
+   7gwokTFf8AOfCE/N3RFx9zATsVFItmTTBkGIhfThtSVlxIFp9At+V0McA
+   GuyQ8OM3o6GtiBTeD0ksGrtlOzrVyTvEwNYHsMvJIsaNVCmMKwkXEEXAI
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="415878713"
 X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
-   d="scan'208";a="415878671"
+   d="scan'208";a="415878713"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 09:24:34 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 09:24:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="949171266"
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="949171324"
 X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
-   d="scan'208";a="949171266"
+   d="scan'208";a="949171324"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.29.189])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 09:24:33 -0700
-Subject: [PATCH v2 2/4] acpi: numa: Add genport target allocation to the HMAT
- parsing
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 09:24:45 -0700
+Subject: [PATCH v2 4/4] acpi: numa: Add helper function to retrieve the
+ performance attributes
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>, rafael@kernel.org,
         lenb@kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         lukas@wunner.de, Jonathan.Cameron@huawei.com
-Date:   Fri, 19 May 2023 09:24:32 -0700
-Message-ID: <168451347268.3465146.4639692025002595572.stgit@djiang5-mobl3>
+Date:   Fri, 19 May 2023 09:24:45 -0700
+Message-ID: <168451348545.3465146.16987968181376551174.stgit@djiang5-mobl3>
 In-Reply-To: <168451341624.3465146.15355962690295941676.stgit@djiang5-mobl3>
 References: <168451341624.3465146.15355962690295941676.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -58,145 +58,96 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add SRAT parsing for the HMAT init in order to collect the device handle
-from the Generic Port Affinity Structure. The device handle will serve as
-the key to search for target data.
-
-Consoliate the common code with alloc_memory_target() in a helper function
-alloc_target().
+Add helper to retrieve the performance attributes based on the device
+handle.  The helper function is exported so the CXL driver can use that
+to acquire the performance data between the CPU and the CXL host bridge.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
 ---
- drivers/acpi/numa/hmat.c |   53 +++++++++++++++++++++++++++++++++++++++++++---
- include/acpi/actbl3.h    |    4 +++
- 2 files changed, 53 insertions(+), 4 deletions(-)
+v2:
+- Change strncmp to memcmp. (Jonathan)
+---
+ drivers/acpi/numa/hmat.c |   35 +++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h     |   12 ++++++++++++
+ 2 files changed, 47 insertions(+)
 
 diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index abed728bf09d..e2ab1cce0add 100644
+index 82320c92abed..940d2a838598 100644
 --- a/drivers/acpi/numa/hmat.c
 +++ b/drivers/acpi/numa/hmat.c
-@@ -71,6 +71,7 @@ struct memory_target {
- 	struct access_coordinate coord[NODE_ACCESS_CLASS_MAX];
- 	struct list_head caches;
- 	struct node_cache_attrs cache_attrs;
-+	u8 device_handle[ACPI_SRAT_DEVICE_HANDLE_SIZE];
- 	bool registered;
- };
- 
-@@ -125,8 +126,7 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
- 	list_add_tail(&initiator->node, &initiators);
+@@ -107,6 +107,41 @@ static struct memory_target *find_mem_target(unsigned int mem_pxm)
+ 	return NULL;
  }
  
--static __init void alloc_memory_target(unsigned int mem_pxm,
--		resource_size_t start, resource_size_t len)
-+static __init struct memory_target *alloc_target(unsigned int mem_pxm)
- {
- 	struct memory_target *target;
- 
-@@ -134,7 +134,7 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
- 	if (!target) {
- 		target = kzalloc(sizeof(*target), GFP_KERNEL);
- 		if (!target)
--			return;
-+			return NULL;
- 		target->memory_pxm = mem_pxm;
- 		target->processor_pxm = PXM_INVAL;
- 		target->memregions = (struct resource) {
-@@ -147,6 +147,19 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
- 		INIT_LIST_HEAD(&target->caches);
- 	}
- 
-+	return target;
-+}
-+
-+static __init void alloc_memory_target(unsigned int mem_pxm,
-+				       resource_size_t start,
-+				       resource_size_t len)
++static struct memory_target *acpi_find_genport_target(u8 *device_handle)
 +{
 +	struct memory_target *target;
 +
-+	target = alloc_target(mem_pxm);
-+	if (!target)
-+		return;
++	list_for_each_entry(target, &targets, node) {
++		if (!memcmp(target->device_handle, device_handle,
++			    ACPI_SRAT_DEVICE_HANDLE_SIZE))
++			return target;
++	}
 +
- 	/*
- 	 * There are potentially multiple ranges per PXM, so record each
- 	 * in the per-target memregions resource tree.
-@@ -157,6 +170,17 @@ static __init void alloc_memory_target(unsigned int mem_pxm,
- 				start, start + len, mem_pxm);
- }
- 
-+static __init void alloc_genport_target(unsigned int mem_pxm, u8 *handle)
++	return NULL;
++}
++
++/**
++ * acpi_get_genport_coordinates - Retrieve the access coordinates for a generic port
++ * @device_handle: Device handle string (ACPI or PCI) to match up to the gen port
++ * @coord: The access coordinates written back out for the generic port
++ *
++ * Return: 0 on success. Errno on failure.
++ */
++int acpi_get_genport_coordinates(u8 *device_handle,
++				 struct access_coordinate *coord)
 +{
 +	struct memory_target *target;
 +
-+	target = alloc_target(mem_pxm);
++	target = acpi_find_genport_target(device_handle);
 +	if (!target)
-+		return;
++		return -ENOENT;
 +
-+	memcpy(target->device_handle, handle, ACPI_SRAT_DEVICE_HANDLE_SIZE);
-+}
-+
- static __init const char *hmat_data_type(u8 type)
- {
- 	switch (type) {
-@@ -498,6 +522,22 @@ static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
- 	return 0;
- }
- 
-+static __init int srat_parse_genport_affinity(union acpi_subtable_headers *header,
-+					      const unsigned long end)
-+{
-+	struct acpi_srat_generic_affinity *ga = (void *)header;
-+
-+	if (!ga)
-+		return -EINVAL;
-+
-+	if (!(ga->flags & ACPI_SRAT_GENERIC_AFFINITY_ENABLED))
-+		return 0;
-+
-+	alloc_genport_target(ga->proximity_domain, (u8 *)ga->device_handle);
++	*coord = target->coord[NODE_ACCESS_CLASS_GENPORT_SINK];
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_NS_GPL(acpi_get_genport_coordinates, CXL);
 +
- static u32 hmat_initiator_perf(struct memory_target *target,
- 			       struct memory_initiator *initiator,
- 			       struct acpi_hmat_locality *hmat_loc)
-@@ -848,6 +888,13 @@ static __init int hmat_init(void)
- 				ACPI_SRAT_TYPE_MEMORY_AFFINITY,
- 				srat_parse_mem_affinity, 0) < 0)
- 		goto out_put;
-+
-+	if (acpi_table_parse_entries(ACPI_SIG_SRAT,
-+				     sizeof(struct acpi_table_srat),
-+				     ACPI_SRAT_TYPE_GENERIC_PORT_AFFINITY,
-+				     srat_parse_genport_affinity, 0) < 0)
-+		goto out_put;
-+
- 	acpi_put_table(tbl);
+ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+ {
+ 	struct memory_initiator *initiator;
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index dcaaaffff318..56c30791318f 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -15,6 +15,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/property.h>
+ #include <linux/uuid.h>
++#include <linux/node.h>
  
- 	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
-diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
-index f51c46f4e3e4..5772185a54b2 100644
---- a/include/acpi/actbl3.h
-+++ b/include/acpi/actbl3.h
-@@ -279,12 +279,14 @@ struct acpi_srat_gic_its_affinity {
-  * 6: ACPI_SRAT_TYPE_GENERIC_PORT_AFFINITY
-  */
+ struct irq_domain;
+ struct irq_domain_ops;
+@@ -456,6 +457,17 @@ extern int acpi_blacklisted(void);
+ extern void acpi_osi_setup(char *str);
+ extern bool acpi_osi_is_win8(void);
  
-+#define ACPI_SRAT_DEVICE_HANDLE_SIZE		16
++#ifdef CONFIG_ACPI_HMAT
++int acpi_get_genport_coordinates(u8 *device_handle,
++				 struct access_coordinate *coord);
++#else
++static inline int acpi_get_genport_coordinates(u8 *device_handle,
++					       struct access_coordinate *coord)
++{
++	return -EOPNOTSUPP;
++}
++#endif
 +
- struct acpi_srat_generic_affinity {
- 	struct acpi_subtable_header header;
- 	u8 reserved;
- 	u8 device_handle_type;
- 	u32 proximity_domain;
--	u8 device_handle[16];
-+	u8 device_handle[ACPI_SRAT_DEVICE_HANDLE_SIZE];
- 	u32 flags;
- 	u32 reserved1;
- };
+ #ifdef CONFIG_ACPI_NUMA
+ int acpi_map_pxm_to_node(int pxm);
+ int acpi_get_node(acpi_handle handle);
 
 
