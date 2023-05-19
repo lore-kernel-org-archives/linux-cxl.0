@@ -2,115 +2,104 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7304AC77B7A
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 02:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF85C77B7A
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 02:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbjESCMD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 May 2023 22:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        id S229694AbjESCeR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 May 2023 22:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbjESCMB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 May 2023 22:12:01 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1419FE4A;
-        Thu, 18 May 2023 19:11:59 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 5170B540B3A;
-        Fri, 19 May 2023 02:11:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a208.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id B909554189B;
-        Fri, 19 May 2023 02:11:58 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684462318; a=rsa-sha256;
-        cv=none;
-        b=lFVuP0UoAneulIb7AnLiKzB/VWkoxfjRvq9wDf/gk5bJ0/rcRTYyHpH/RCpPhJl1iALLig
-        jIq5PhCKmV8jrX5yowgbfX8NvUPZqRuxH0cNB6YdORheHKeCOn5J547NAy4R0ogBvUAMYJ
-        u5GuLicKDmbbqa6WitM6R+0KA7BG9wwNdZ8E29aDbyL6NPNYU/GljD6b7v/zbkAWCqW6Hl
-        hqsSRd1pLvsFcOms537k03oRCdCjSkEyBkl9xH0bcXJFiZCkgSCYpaCPCadPbnCx7gfiOP
-        k4LSsgJE8zgAVzEseCnCWupQTZKhwh5O9p7tqtu8EOPXOUXqU7gQ9kd/AcwGYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1684462318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=UGS5YSwf/rGU2XZSGVPlNsADHYegr/4g6swrqUfHy7s=;
-        b=7mShLIeClaqzPUCKIdjphAH2oWfX+GzrU/n0YYf5GZwnx6vBJGOz6Ud4sISM2FFCG8sl8Q
-        6fA0t67d5XFZfEXlDgYKMRLtCiJTpLTzN7kWn7491KZ3Pl2u+AEaNvK34mXB711KlBME9t
-        xeEGsFs5xgo2bLOw8lYwP11WKZq4TxmmwcrG2pccP/TTsJspxpaOopzyO52TBYIma1edIh
-        uZ3rlsz3A3ndwiMOx/xgkMjJwidIzYl45rMtn6/mFjUOmuU4y7m/osfsrNZIrj3EibazMi
-        TnR9uo4NkkvwQJAYBDmtnqSSOHK29gc80eTbecqV+m2fbBWL3ePRuYpWfgkA4A==
-ARC-Authentication-Results: i=1;
-        rspamd-5cdf8fd7d9-fw8rh;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Stupid-Trouble: 64a12e39217dfb73_1684462319114_247395351
-X-MC-Loop-Signature: 1684462319113:2194989952
-X-MC-Ingress-Time: 1684462319113
-Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.127.59.19 (trex/6.8.1);
-        Fri, 19 May 2023 02:11:59 +0000
-Received: from offworld (unknown [104.36.25.8])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4QMr255946z9r;
-        Thu, 18 May 2023 19:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1684462318;
-        bh=UGS5YSwf/rGU2XZSGVPlNsADHYegr/4g6swrqUfHy7s=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=edgYCx8RTxJ0QaKA/sRny6kjo4yI+ie8V3T3tW3Jox9IGLLgUlCkCUW7GsXlG+fQt
-         Dy7yqwu9j4WqawEvohkJsvU0mOTsv9Qd7SadnukmYuHAiZSmWE1qX5A6PuM/zoRbpm
-         TBTJE4UzsqXG2EvTEN7GtbvfDe72pql0hx847aZO0IeAYYn6+ybr8QvRB4b8yJ4UiH
-         vlCaeg3n9I70PEXabo2MdA9a7+MdQYUl8MiZukvF+LO9FKWqmHJY5CZ3vlLgqLzcFj
-         w8FI+Ir/NVi31hL9ajSsQdWVlirdm4NCVOUg+SAuLbduizTKIzR134trbKguCnkJ5n
-         kfq78sUTFUMdw==
-Date:   Thu, 18 May 2023 18:38:46 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     LiuLele <liu.lele@qq.com>
-Cc:     dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        alison.schofield@intel.com, bhelgaas@google.com,
-        bwidawsk@kernel.org, dan.j.williams@intel.com, helgaas@kernel.org,
-        ira.weiny@intel.com, linux-acpi@vger.kernel.org,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org,
-        vishal.l.verma@intel.com
-Subject: Re: CXL memory device not created correctly
-Message-ID: <gbsxrcjtnf67jxpqmbn57nqoslpmjtuk2ycatmau3vfsmpvbrd@c2umpofn2hti>
-References: <cec6a8f5-a284-4f46-1ada-4edd625a9a2e@intel.com>
- <tencent_D9D9D358330CA573E23D490C6EE13E0DC105@qq.com>
+        with ESMTP id S229512AbjESCeQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 May 2023 22:34:16 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4EDE5C
+        for <linux-cxl@vger.kernel.org>; Thu, 18 May 2023 19:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684463655; x=1715999655;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VZ6bUFzWMxQ9oDDTbnFvaw3RybfZnQ5V4IVVCut4K/c=;
+  b=J+cTXoxIqKrVrjO5YzLizB1dmks20aKq99FDxOOglOsfjPu6LJHlMYHb
+   YGVK3hr+S5dX2ODkxiZj9gnUAE9vDOsdVNUCcgs89DJ/yBd5sXUauWQJw
+   QrX7AoBt6Vjz4kdxJc+RjTf1Gb3sIDDsjKxkjNv1gcK9/HSSFFU7uuDdu
+   9QV94ypf5d5qQoJknKgSiSNYBQNO2t82RYM5TdVAY8tZlYQyvQaFW02Ar
+   yUVcvelTIoVU1nzc0xrjuqrzYLeusI3aAK+6Ks3GAnizaFwJ7y0/lTHjY
+   noPbE8rQ7kfyMek/60q5iamdfv2AKMoYSuF2x8VH3MvXfY6IiQzashkYy
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="349775622"
+X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
+   d="scan'208";a="349775622"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 19:34:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="652881199"
+X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
+   d="scan'208";a="652881199"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.251.20.44])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 19:34:14 -0700
+Date:   Thu, 18 May 2023 19:34:13 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Junhyeok Im <junhyeok.im@samsung.com>
+Cc:     linux-cxl@vger.kernel.org, vishal.l.verma@intel.com,
+        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
+        ks0204.kim@samsung.com
+Subject: Re: [ndctl PATCH v2 2/2] cxl: add inject-poison & clear-poison
+ commands to cxl tool
+Message-ID: <ZGbgJWnC+sCttmhw@aschofie-mobl2>
+References: <20230517032311.19923-1-junhyeok.im@samsung.com>
+ <CGME20230517032403epcas2p48fbabf7aec3334b4892c87265b1a7705@epcas2p4.samsung.com>
+ <20230517032311.19923-3-junhyeok.im@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tencent_D9D9D358330CA573E23D490C6EE13E0DC105@qq.com>
-User-Agent: NeoMutt/20230407
+In-Reply-To: <20230517032311.19923-3-junhyeok.im@samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 19 May 2023, LiuLele wrote:
+On Wed, May 17, 2023 at 12:23:11PM +0900, Junhyeok Im wrote:
+> Add new commands to cli tool, to inject and clear poison into dpa(-a) on the
+> memory device(memdev), and add man page documentation for the commands
+> (inject-poison, clear-poison).
+> 
+> Since the validity verification of the dpa would be done in
+> 'cxl_validate_poison_dpa' of CXL driver, no additional logic is added
+> in this patch.
 
->In my testing CXL device /sys/bus/cxl/devices/mem0  not created, and the get error messages :
->
->```
->cxl_pci 0000:0d:00.0: Failed to get interrupt for event Info log
->```
->
->My test environment is a qemu CXL emulator with qemu v8.0.0, Linux kernel v6.3.0.
->While with kernel 5.9.13,  /sys/bus/cxl/devices/mem0  can be created.
+Hi Junhyeok,
 
-Yes, this can be annoying and would argue the probe should not error out.
-Regardless, the actual qemu support is in Jonathan's tree:
+Thanks for syncing this up with the driver changes.
 
-https://gitlab.com/jic23/qemu/-/commit/a04e6476df363d1f6bc160577b30dda6564d3f67
+How about supporting the end user with checks on that DPA cmdline parameter?
 
-Thanks,
-Davidlohr
+As you stated, the driver validate the DPA. It does emit meaningful messages
+in a debug kernel:
+dev_dbg(cxlds->dev, "device has no dpa resource\n");
+dev_dbg(cxlds->dev, "dpa:0x%llx not in resource:%pR\n",
+dev_dbg(cxlds->dev, "dpa:0x%llx is not 64-byte aligned\n"
+The driver returns the same, -EINVAL response, to all those errors.
+
+In addition to being more user friendly, stopping the bad input,
+as soon as it can be detected, is just good practice.
+
+a bit more below...
+
+> 
+> Also since it is expected no use case of injecting / clearing poison into the
+> same address for multiple devices, this command targets only one memdev,
+> like 'write-labels' command.
+> 
+>  usage: cxl {inject,clear}-poison <memdev> -a <dpa> [<options>]
+> 
+>     -v, --verbose         turn on debug
+>     -S, --serial          use serial numbers to id memdevs
+>     -a, --address <dpa>   DPA to inject or clear poison
+
+What do you think about adding a length option and supporting the inject
+and clear of a range of addresses?
+
+That's all for now,
+Alison
+
+--snip
