@@ -2,234 +2,242 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA357C7EE26
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 16:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3F1C7EE29
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 17:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbjESQnf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 May 2023 12:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34416 "EHLO
+        id S229747AbjESRJ3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 May 2023 13:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjESQne (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 12:43:34 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F7FD2
-        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 09:43:32 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-3f450815d0bso33938825e9.0
-        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 09:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684514611; x=1687106611;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EEeZ0ecCEA5JwlhNdY/XwndwIOC3P/R2CuBxuQnX/U4=;
-        b=QjnkVAjNEFN0pI/pnVXKDubNOBEe38ov3AXRIjVoyQCuQ0qDbCPBtLy6fMLelksIl2
-         4MZ5dLQfvudNBdhEdt2HJ0GPCQUM6h/mYqECJWhHaSpYWZ4vpQretrMlj7Pz0dX7zTpE
-         6jfl26wFtxY/pPdil1Ys9v+c9t2vA/seLVDbybLfIvqnL2GndBr/sMaFjZWqIIUjLyv6
-         l9RyBiW15f26WLMAy5mqZQ7N/i9gLQcqwrcj46umxZr9n5dwyoV8mXBiafEVeUlBYBIJ
-         LMH3HRt4An6+aTKOI3Nc+CjKoLD7ve48yNbtKj1RBZb67QRCkAz+pnYW8R8+jewEu7g6
-         c5vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684514611; x=1687106611;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EEeZ0ecCEA5JwlhNdY/XwndwIOC3P/R2CuBxuQnX/U4=;
-        b=hdJEQe96tGPvyM0LpW/Yk6cjCiJAhQYCevTfws1lzPdafyodRTltH16jXJYf4qi734
-         f/si2ZWK4AUQVGTAc5XRAfNogpbSFaWQV8wslvpof5Dt5bkyA72K5zizsgWAjcNtOFBW
-         hn6S/Ep2ULWuOrG2mZW9WYlGdcd73KfUecHPtq0vaUk1auXL9++bZs68FPk4o1ziLFnb
-         d9lLMPQ5wkZX0MgqgGDSfdbuJyCJpV8jKyEHEyFBLEuRt9xpPSQ52+HQzS0pFOhAWa+e
-         I/4NtmUgJOAeA6mFLqxukvtVQ1h5/OxmfAR0kVJqF6g+Qyf1gu+Af8Es3bqa8xkKDIVg
-         IEgw==
-X-Gm-Message-State: AC+VfDzrNw/B3HYqLUdUhoCzMfRHhZiBu5h01+lj+g0XP5k5RKXI+cxz
-        IFFEKtC7bZIJ2/Y31gCya+7NCw==
-X-Google-Smtp-Source: ACHHUZ4uzSD4Mxadpvu1fdzjgi9qwpL5Oua2kCNf9yWviQUi/f7Y49rOqmSbr41jQpqcMv7L7D/wLA==
-X-Received: by 2002:a1c:f709:0:b0:3f4:16bc:bd19 with SMTP id v9-20020a1cf709000000b003f416bcbd19mr1792895wmh.23.1684514610938;
-        Fri, 19 May 2023 09:43:30 -0700 (PDT)
-Received: from [192.168.69.115] (mau49-h01-176-184-41-228.dsl.sta.abo.bbox.fr. [176.184.41.228])
-        by smtp.gmail.com with ESMTPSA id l4-20020a7bc444000000b003f4272c2d0csm2875134wmi.36.2023.05.19.09.43.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 May 2023 09:43:30 -0700 (PDT)
-Message-ID: <1eb91ba2-a2e0-44e4-a07b-badccef1fe42@linaro.org>
-Date:   Fri, 19 May 2023 18:43:28 +0200
+        with ESMTP id S230480AbjESRJC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 13:09:02 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FA01705
+        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 10:08:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684516118; x=1716052118;
+  h=subject:from:to:cc:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jjGKx2gla6Qd9r3Lj4J6pwZJuuB1yYj0apRSBqvEKKc=;
+  b=Iw31fw/WeXFE/Yr9hB7a4p6jmj7+RyOnqxXtqNlGQh2XcDq8Cj6cmDAg
+   rF+iMDTmiD6o5ueZ8rmKNyU5o2xIEnFErfTsQ2ZRIWPMZNLhgeb335tWC
+   3eKvv6splVIIFK6qajnEl1D6A7VHlsk30mUwLib9IPfmjggZE7WFfRzNP
+   QHPrI5oYovK1/ute92HMASZwwEVTgk8dy0S9mK4eFhsc+y/7OGgpP68oP
+   TkQJrzHWT6RPo6FXGYri98Pi0aVU9IPXAdC19S59GnXxW0/oEHEG+DDuu
+   bRLn8oo57GBcgZosavUF8CGlp3QStuY7etCYHWGm3CZ15bz9acPZ2eFB0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="438778231"
+X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
+   d="scan'208";a="438778231"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 10:06:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="876910767"
+X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
+   d="scan'208";a="876910767"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.29.189])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 10:06:46 -0700
+Subject: [PATCH v6 02/11] cxl: Add callback to parse the DSLBIS subtable from
+ CDAT
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        Jonathan.Cameron@huawei.com
+Date:   Fri, 19 May 2023 10:06:46 -0700
+Message-ID: <168451600640.3470703.3461483051303767270.stgit@djiang5-mobl3>
+In-Reply-To: <168451588868.3470703.3527256859632103687.stgit@djiang5-mobl3>
+References: <168451588868.3470703.3527256859632103687.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.0
-Subject: Re: [PATCH v6 1/4] bswap: Add the ability to store to an unaligned 24
- bit field
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
-        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        =?UTF-8?Q?Daniel_P_=2e_Berrang=c3=a9?= <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-References: <20230519141803.29713-1-Jonathan.Cameron@huawei.com>
- <20230519141803.29713-2-Jonathan.Cameron@huawei.com>
- <27f9ad4f-bdde-f548-860b-34e52493faa2@linaro.org>
- <20230519172404.0000649e@Huawei.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230519172404.0000649e@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 19/5/23 18:24, Jonathan Cameron wrote:
-> On Fri, 19 May 2023 18:08:30 +0200
-> Philippe Mathieu-Daudé <philmd@linaro.org> wrote:
-> 
->> On 19/5/23 16:18, Jonathan Cameron wrote:
->>> From: Ira Weiny <ira.weiny@intel.com>
->>>
->>> CXL has 24 bit unaligned fields which need to be stored to.  CXL is
->>> specified as little endian.
->>>
->>> Define st24_le_p() and the supporting functions to store such a field
->>> from a 32 bit host native value.
->>>
->>> The use of b, w, l, q as the size specifier is limiting.  So "24" was
->>> used for the size part of the function name.
->>>
->>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> ---
->>>    docs/devel/loads-stores.rst |  1 +
->>>    include/qemu/bswap.h        | 27 +++++++++++++++++++++++++++
->>>    2 files changed, 28 insertions(+)
->>>
->>> diff --git a/docs/devel/loads-stores.rst b/docs/devel/loads-stores.rst
->>> index d2cefc77a2..82a79e91d9 100644
->>> --- a/docs/devel/loads-stores.rst
->>> +++ b/docs/devel/loads-stores.rst
->>> @@ -36,6 +36,7 @@ store: ``st{size}_{endian}_p(ptr, val)``
->>>    ``size``
->>>     - ``b`` : 8 bits
->>>     - ``w`` : 16 bits
->>> + - ``24`` : 24 bits
->>>     - ``l`` : 32 bits
->>>     - ``q`` : 64 bits
->>>    
->>> diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
->>> index 15a78c0db5..f546b1fc06 100644
->>> --- a/include/qemu/bswap.h
->>> +++ b/include/qemu/bswap.h
->>> @@ -8,11 +8,25 @@
->>>    #undef  bswap64
->>>    #define bswap64(_x) __builtin_bswap64(_x)
->>>    
->>> +static inline uint32_t bswap24(uint32_t x)
->>> +{
->>> +    assert((x & 0xff000000U) == 0);
->>
->> Asserting here is a bit violent. In particular because there is no
->> contract description that x should be less than N bits for bswapN()
->> in "qemu/bswap.h" API.
->>
->> But if you rather to assert ...
-> 
-> 
-> I'm fine either way.  You asked for it when reviewing v4...
-> https://lore.kernel.org/all/28a9d97a-b252-a33f-1ac0-cd36264b29ab@linaro.org/
+Provide a callback to parse the Device Scoped Latency and Bandwidth
+Information Structure (DSLBIS) in the CDAT structures. The DSLBIS
+contains the bandwidth and latency information that's tied to a DSMAS
+handle. The driver will retrieve the read and write latency and
+bandwidth associated with the DSMAS which is tied to a DPA range.
 
-Never too late to improve oneself ;)
+Coherent Device Attribute Table 1.03 2.1 Device Scoped Latency and
+Bandwidth Information Structure (DSLBIS)
 
-One month later I'm afraid the assertion would fire too often,
-resulting in unnecessary pain to developers (in particular the
-non-QEMU ones).
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
->>
->>> +
->>> +    return (((x & 0x000000ffU) << 16) |
->>> +            ((x & 0x0000ff00U) <<  0) |
->>> +            ((x & 0x00ff0000U) >> 16));
->>> +}
->>> +
->>>    static inline void bswap16s(uint16_t *s)
->>>    {
->>>        *s = __builtin_bswap16(*s);
->>>    }
->>>    
->>> +static inline void bswap24s(uint32_t *s)
->>> +{
->>> +    *s = bswap24(*s & 0x00ffffffU);
->>
->> ... and sanitize the value here ...
->>
->>> +}
->>> +
->>>    static inline void bswap32s(uint32_t *s)
->>>    {
->>>        *s = __builtin_bswap32(*s);
->>> @@ -26,11 +40,13 @@ static inline void bswap64s(uint64_t *s)
->>>    #if HOST_BIG_ENDIAN
->>>    #define be_bswap(v, size) (v)
->>>    #define le_bswap(v, size) glue(__builtin_bswap, size)(v)
->>> +#define le_bswap24(v) bswap24(v)
->>
->> ... then shouldn't you sanitize also here?
->>
-> 
-> Good point. I forgot that detail whilst fighting with s390
-> cross builds earlier ;)
-> 
->> Personally I'd just drop the assertion.
-> 
-> I'm fine with doing that.
-> 
-> Jonathan
-> 
->>
->>>    #define be_bswaps(v, size)
->>>    #define le_bswaps(p, size) \
->>>                do { *p = glue(__builtin_bswap, size)(*p); } while (0)
->>>    #else
->>>    #define le_bswap(v, size) (v)
->>> +#define le_bswap24(v) (v)
->>>    #define be_bswap(v, size) glue(__builtin_bswap, size)(v)
->>>    #define le_bswaps(v, size)
->>>    #define be_bswaps(p, size) \
->>> @@ -176,6 +192,7 @@ CPU_CONVERT(le, 64, uint64_t)
->>>     * size is:
->>>     *   b: 8 bits
->>>     *   w: 16 bits
->>> + *   24: 24 bits
->>>     *   l: 32 bits
->>>     *   q: 64 bits
->>>     *
->>> @@ -248,6 +265,11 @@ static inline void stw_he_p(void *ptr, uint16_t v)
->>>        __builtin_memcpy(ptr, &v, sizeof(v));
->>>    }
->>>    
->>> +static inline void st24_he_p(void *ptr, uint32_t v)
->>> +{
->>> +    __builtin_memcpy(ptr, &v, 3);
->>> +}
->>> +
->>>    static inline int ldl_he_p(const void *ptr)
->>>    {
->>>        int32_t r;
->>> @@ -297,6 +319,11 @@ static inline void stw_le_p(void *ptr, uint16_t v)
->>>        stw_he_p(ptr, le_bswap(v, 16));
->>>    }
->>>    
->>> +static inline void st24_le_p(void *ptr, uint32_t v)
->>> +{
->>> +    st24_he_p(ptr, le_bswap24(v));
->>> +}
->>> +
->>>    static inline void stl_le_p(void *ptr, uint32_t v)
->>>    {
->>>        stl_he_p(ptr, le_bswap(v, 32));
->>
->> Conditional to removing the assertion in bswap24():
->> Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
->>
-> 
+---
+v6:
+- Clarify cxl_cdat_endpoint_process() error paths for readability. (Jonathan)
+- Adjust dslbis ptr from header.
+v5:
+- Remove macro for common headers. (Jonathan)
+- Use acpi_table_parse_cdat().
+- Remove unlikely(). (Dan)
+v3:
+- Added spec section in commit header. (Alison)
+- Remove void * recast. (Alison)
+- Rework comment. (Alison)
+- Move CDAT parse to cxl_endpoint_port_probe()
+- Convert to use 'struct node_hmem_attrs'
+
+v2:
+- Add size check to DSLIBIS table. (Lukas)
+- Remove unnecessary entry type check. (Jonathan)
+- Move data_type check to after match. (Jonathan)
+- Skip unknown data type. (Jonathan)
+- Add overflow check for unit multiply. (Jonathan)
+- Use dev_warn() when entries parsing fail. (Jonathan)
+---
+ drivers/cxl/core/cdat.c |  102 ++++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/cxl.h       |    2 +
+ 2 files changed, 102 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index f70a3a146901..464e69a9c8e4 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2023 Intel Corporation. All rights reserved. */
+ #include <linux/acpi.h>
++#include <linux/overflow.h>
+ #include "cxlpci.h"
+ #include "cxl.h"
+ 
+@@ -36,10 +37,107 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+ 	return 0;
+ }
+ 
++static void cxl_access_coordinate_set(struct access_coordinate *coord,
++				      int access, unsigned int val)
++{
++	switch (access) {
++	case ACPI_HMAT_ACCESS_LATENCY:
++		coord->read_latency = val;
++		coord->write_latency = val;
++		break;
++	case ACPI_HMAT_READ_LATENCY:
++		coord->read_latency = val;
++		break;
++	case ACPI_HMAT_WRITE_LATENCY:
++		coord->write_latency = val;
++		break;
++	case ACPI_HMAT_ACCESS_BANDWIDTH:
++		coord->read_bandwidth = val;
++		coord->write_bandwidth = val;
++		break;
++	case ACPI_HMAT_READ_BANDWIDTH:
++		coord->read_bandwidth = val;
++		break;
++	case ACPI_HMAT_WRITE_BANDWIDTH:
++		coord->write_bandwidth = val;
++		break;
++	}
++}
++
++static int cdat_dslbis_handler(union acpi_subtable_headers *header, void *arg,
++			       const unsigned long end)
++{
++	struct acpi_cdat_header *hdr = &header->cdat;
++	struct acpi_cdat_dslbis *dslbis;
++	int size = sizeof(*hdr) + sizeof(*dslbis);
++	struct list_head *dsmas_list = arg;
++	struct dsmas_entry *dent;
++	u16 len;
++
++	len = le16_to_cpu((__force __le16)hdr->length);
++	if (len != size || (unsigned long)hdr + len > end) {
++		pr_warn("Malformed DSLBIS table length: (%u:%u)\n", size, len);
++		return -EINVAL;
++	}
++
++	/* Skip common header */
++	dslbis = (struct acpi_cdat_dslbis *)(hdr + 1);
++
++	/* Skip unrecognized data type */
++	if (dslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
++		return 0;
++
++	list_for_each_entry(dent, dsmas_list, list) {
++		__le64 le_base;
++		__le16 le_val;
++		u64 val;
++		int rc;
++
++		if (dslbis->handle != dent->handle)
++			continue;
++
++		/* Not a memory type, skip */
++		if ((dslbis->flags & ACPI_HMAT_MEMORY_HIERARCHY) !=
++		    ACPI_HMAT_MEMORY)
++			return 0;
++
++		le_base = (__force __le64)dslbis->entry_base_unit;
++		le_val = (__force __le16)dslbis->entry[0];
++		rc = check_mul_overflow(le64_to_cpu(le_base),
++					le16_to_cpu(le_val), &val);
++		if (rc)
++			pr_warn("DSLBIS value overflowed.\n");
++
++		cxl_access_coordinate_set(&dent->coord, dslbis->data_type, val);
++		break;
++	}
++
++	return 0;
++}
++
++static int cdat_table_parse_output(int rc)
++{
++	if (rc < 0)
++		return rc;
++	if (rc == 0)
++		return -ENOENT;
++
++	return 0;
++}
++
+ int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list)
+ {
+-	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
+-				list, port->cdat.table);
++	int rc;
++
++	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
++			      list, port->cdat.table);
++	rc = cdat_table_parse_output(rc);
++	if (rc)
++		return rc;
++
++	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
++			      list, port->cdat.table);
++	return cdat_table_parse_output(rc);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_cdat_endpoint_process, CXL);
+ 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f119f030e2e8..87b9e80d834c 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -8,6 +8,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/list.h>
++#include <linux/node.h>
+ #include <linux/log2.h>
+ #include <linux/io.h>
+ 
+@@ -797,6 +798,7 @@ struct dsmas_entry {
+ 	struct list_head list;
+ 	struct range dpa_range;
+ 	u8 handle;
++	struct access_coordinate coord;
+ };
+ 
+ #ifdef CONFIG_ACPI_TABLES_LIB
+
 
