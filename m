@@ -2,193 +2,108 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC98C77B7D
-	for <linux-cxl@archiver.kernel.org>; Thu, 18 May 2023 23:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F4DC77B73
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 00:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbjERXiX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 18 May 2023 19:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44150 "EHLO
+        id S229694AbjESAFC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 18 May 2023 20:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjERXiX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 May 2023 19:38:23 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21161F4
-        for <linux-cxl@vger.kernel.org>; Thu, 18 May 2023 16:38:22 -0700 (PDT)
+        with ESMTP id S229512AbjESAFC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 18 May 2023 20:05:02 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC9F10C3;
+        Thu, 18 May 2023 17:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684453102; x=1715989102;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eLXUvvBZLn5N4um3EyEfS+f6gIDh6Wzl1UgOOedzj/E=;
-  b=K2GRshpCB3CH7lKG0ipzA7nZVFUwPKKW3SYu3qdM7/B0/94vCZfXri66
-   Kwtq1azoEqqSKrJT+eKWxmJ7w3AStiske67wju2801JHVK8nTIOK4QdgJ
-   bTKSbWrhyIqIjJ08NIg2XyuK74zALBqA+ri5gSWj75igT1nCkweyovCyc
-   qraG40y31zIYKSkCHkDdZ5fR9rhdbHXZe0NvKwyIG0uoXdcgiZEBJS08A
-   PrM+nBqj1o5GZFmeVQz/LviAoNZLIcaeUs3OKhkCKJBwCXWAiJrwT52mz
-   cNfEk78njpfi5b45OWYTp7won4Z9ThnXPQ3Daf9/uPSt4iwI187FE+kcv
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="351061463"
+  t=1684454700; x=1715990700;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NxrdO54ygL7upV2uL2eTTGfGI0A4vPAHukw5zXs+2vU=;
+  b=M3+JKSlV+3QzKkxlljXzxBQZXyIWgsqB28dkaOJ/16CkKQ7zTjB5z1Xj
+   bOOZzWOAC5tdRlKtzRYlXhmcPY5qEwUXmiIHCg/NjHqb0s9cyeK7KJ+YR
+   PjpDK5W/xxO4dlOKSOsTxXf15Llk3whnRfjNrKF7I4DrkxScC35P2GV2q
+   BRJ42Go9Iu4Co2ZHmNCeoSz8X561wu5J3B9uYJwbxPDLlTfgCNiry9OIE
+   CHq110lXp3UgMlIKAcEYvjugpU8oYaXeanZ6ehrR75UX9INn0+/JRXUJr
+   +u7ag8IYfCmddOJ3xLPeTRZyFfRPqJBFJn9y5PQ3fa/woN05ky9kN+aYR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="355446205"
 X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="351061463"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 16:38:21 -0700
+   d="scan'208";a="355446205"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 17:04:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="735293378"
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="876634912"
 X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="735293378"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.16.136])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 16:38:20 -0700
-Subject: [PATCH v5 2/2] cxl: Move cxl_await_media_ready() to before capacity
- info retrieval
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, dan.j.williams@intel.com
-Cc:     Ira Weiny <ira.weiny@intel.com>
-Date:   Thu, 18 May 2023 16:38:20 -0700
-Message-ID: <168445310026.3251520.8124296540679268206.stgit@djiang5-mobl3>
-In-Reply-To: <168445102304.3241714.10279441298179336657.stgit@djiang5-mobl3>
-References: <168445102304.3241714.10279441298179336657.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+   d="scan'208";a="876634912"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.251.20.44])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 17:04:59 -0700
+From:   alison.schofield@intel.com
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>, x86@kernel.org,
+        linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] CXL: Apply SRAT defined PXM to entire CFMWS window
+Date:   Thu, 18 May 2023 17:04:54 -0700
+Message-Id: <cover.1684448934.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Move cxl_await_media_ready() to cxl_pci probe before driver starts issuing
-IDENTIFY and retrieving memory device information to ensure that the
-device is ready to provide the information. Allow pci_probe() to succeed
-even if media is not ready. Cache the media failure in cxlds and don't ask
-the device for any media information.
+From: Alison Schofield <alison.schofield@intel.com>
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Fixes: b39cb1052a5c ("cxl/mem: Register CXL memX devices")
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+The CXL subsystem requires the creation of NUMA nodes for CFMWS
+Windows not described in the SRAT. The existing implementation
+only addresses windows that the SRAT describes completely or
+not at all. This work addresses the case of partially described
+CFMWS Windows by extending proximity domains in a portion of
+a CFMWS window to the entire window.
 
----
-v5:
-- Rebase on top of v6.4-rc2
-v4:
-- Fail mem_probe() if media not ready. (Dan)
-v3:
-- Allow pci_probe() to succeed even when media is not ready. (Dan)
-- Cache media failure and skip any operation probing the media. (Dan)
----
- drivers/cxl/core/mbox.c |   15 ++++++++++-----
- drivers/cxl/cxlmem.h    |    2 ++
- drivers/cxl/mem.c       |    3 +++
- drivers/cxl/pci.c       |    6 ++++++
- drivers/cxl/port.c      |    6 ------
- 5 files changed, 21 insertions(+), 11 deletions(-)
+Introduce a NUMA helper, numa_fill_memblks(), to fill gaps in
+a numa_meminfo memblk address range. Update the CFMWS parsing
+in the ACPI driver to use numa_fill_memblks() to extend SRAT
+defined proximity domains to entire CXL windows.
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 23b9ff920d7e..2c8dc7e2b84d 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1028,7 +1028,7 @@ static int cxl_mem_get_partition_info(struct cxl_dev_state *cxlds)
-  * cxl_dev_state_identify() - Send the IDENTIFY command to the device.
-  * @cxlds: The device data for the operation
-  *
-- * Return: 0 if identify was executed successfully.
-+ * Return: 0 if identify was executed successfully or media not ready.
-  *
-  * This will dispatch the identify command to the device and on success populate
-  * structures to be exported to sysfs.
-@@ -1041,6 +1041,9 @@ int cxl_dev_state_identify(struct cxl_dev_state *cxlds)
- 	u32 val;
- 	int rc;
- 
-+	if (!cxlds->media_ready)
-+		return 0;
-+
- 	mbox_cmd = (struct cxl_mbox_cmd) {
- 		.opcode = CXL_MBOX_OP_IDENTIFY,
- 		.size_out = sizeof(id),
-@@ -1115,10 +1118,12 @@ int cxl_mem_create_range_info(struct cxl_dev_state *cxlds)
- 				   cxlds->persistent_only_bytes, "pmem");
- 	}
- 
--	rc = cxl_mem_get_partition_info(cxlds);
--	if (rc) {
--		dev_err(dev, "Failed to query partition information\n");
--		return rc;
-+	if (cxlds->media_ready) {
-+		rc = cxl_mem_get_partition_info(cxlds);
-+		if (rc) {
-+			dev_err(dev, "Failed to query partition information\n");
-+			return rc;
-+		}
- 	}
- 
- 	rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->ram_res, 0,
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index db12b6313afb..a2845a7a69d8 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -266,6 +266,7 @@ struct cxl_poison_state {
-  * @regs: Parsed register blocks
-  * @cxl_dvsec: Offset to the PCIe device DVSEC
-  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-+ * @media_ready: Indicate whether the device media is usable
-  * @payload_size: Size of space for payload
-  *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-  * @lsa_size: Size of Label Storage Area
-@@ -303,6 +304,7 @@ struct cxl_dev_state {
- 	int cxl_dvsec;
- 
- 	bool rcd;
-+	bool media_ready;
- 	size_t payload_size;
- 	size_t lsa_size;
- 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 10caf180b3fa..519edd0eb196 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -124,6 +124,9 @@ static int cxl_mem_probe(struct device *dev)
- 	struct dentry *dentry;
- 	int rc;
- 
-+	if (!cxlds->media_ready)
-+		return -EBUSY;
-+
- 	/*
- 	 * Someone is trying to reattach this device after it lost its port
- 	 * connection (an endpoint port previously registered by this memdev was
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index f7a5b8e9c102..0872f2233ed0 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -708,6 +708,12 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
- 
-+	rc = cxl_await_media_ready(cxlds);
-+	if (rc == 0)
-+		cxlds->media_ready = true;
-+	else
-+		dev_warn(&pdev->dev, "Media not active (%d)\n", rc);
-+
- 	rc = cxl_pci_setup_mailbox(cxlds);
- 	if (rc)
- 		return rc;
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index eb57324c4ad4..07c5ac598da1 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -113,12 +113,6 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 	if (rc)
- 		return rc;
- 
--	rc = cxl_await_media_ready(cxlds);
--	if (rc) {
--		dev_err(&port->dev, "Media not active (%d)\n", rc);
--		return rc;
--	}
--
- 	rc = devm_cxl_enumerate_decoders(cxlhdm, &info);
- 	if (rc)
- 		return rc;
+An RFC of this patchset was previously posted for CXL folks
+review.[1] The RFC feedback led to the implementation here,
+extending existing memblks (Dan). Also, both Jonathan and
+Dan influenced the changelog comments in the ACPI patch, with
+regards to setting expectations on this evolving heuristic.
 
+Repeating here to set reviewer expectations:
+*Note that this heuristic will evolve when CFMWS Windows present
+a wider range of characteristics. The extension of the proximity
+domain, implemented here, is likely a step in developing a more
+sophisticated performance profile in the future.
+
+[1] https://lore.kernel.org/linux-cxl/cover.1683742429.git.alison.schofield@intel.com/
+
+Alison Schofield (2):
+  x86/numa: Introduce numa_fill_memblks()
+  ACPI: NUMA: Apply SRAT proximity domain to entire CFMWS window
+
+ arch/x86/include/asm/sparsemem.h |  2 +
+ arch/x86/mm/numa.c               | 82 ++++++++++++++++++++++++++++++++
+ drivers/acpi/numa/srat.c         | 11 +++--
+ include/linux/numa.h             |  7 +++
+ 4 files changed, 99 insertions(+), 3 deletions(-)
+
+
+base-commit: f81d8f759e7f80c643027e631c586369836aac90
+-- 
+2.37.3
 
