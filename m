@@ -2,52 +2,52 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3F1C7EE29
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C387CC77B7A
 	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 17:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbjESRJ3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 May 2023 13:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
+        id S230060AbjESRJa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 May 2023 13:09:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230480AbjESRJC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 13:09:02 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FA01705
-        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 10:08:38 -0700 (PDT)
+        with ESMTP id S231165AbjESRJD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 13:09:03 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8620A18F
+        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 10:08:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684516118; x=1716052118;
+  t=1684516120; x=1716052120;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jjGKx2gla6Qd9r3Lj4J6pwZJuuB1yYj0apRSBqvEKKc=;
-  b=Iw31fw/WeXFE/Yr9hB7a4p6jmj7+RyOnqxXtqNlGQh2XcDq8Cj6cmDAg
-   rF+iMDTmiD6o5ueZ8rmKNyU5o2xIEnFErfTsQ2ZRIWPMZNLhgeb335tWC
-   3eKvv6splVIIFK6qajnEl1D6A7VHlsk30mUwLib9IPfmjggZE7WFfRzNP
-   QHPrI5oYovK1/ute92HMASZwwEVTgk8dy0S9mK4eFhsc+y/7OGgpP68oP
-   TkQJrzHWT6RPo6FXGYri98Pi0aVU9IPXAdC19S59GnXxW0/oEHEG+DDuu
-   bRLn8oo57GBcgZosavUF8CGlp3QStuY7etCYHWGm3CZ15bz9acPZ2eFB0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="438778231"
+  bh=lnwjzWJBwpZEUaH7obwI9lyJo1Yvgd3Hs8oNYc9ZqcM=;
+  b=EZDO+Vm+Mmx+XhuUp/i8bFB5sQxQH70QDohd9ZdEt6WrabaYOgUh9s4j
+   /UwvQ1UjoBpBeDt/p7JrWtak1vRlV8Abipb1u7oQbXLZeF24MmR0djTc1
+   l7vhcYwL/S7c4MYYyqaoXVWArFV1JUYffDk8VYFr5wyEXhbHUGe1pj3Rq
+   uV8yeD47s7kz7vYochFQPX+AMZxmjywci1oEqN2K72G1RT+3RY33VxyzO
+   t+JoF2O//ECXQfpA/42uq6WWFoKeSodBicFmxeNx35tuoquzBg4oeYXvh
+   /EFG1soa63uwzYWmTzCefUtNmxBDz/Ozu6o2KA+fdUpHg0x3vZ9TbWQ4B
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="337018596"
 X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
-   d="scan'208";a="438778231"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 10:06:47 -0700
+   d="scan'208";a="337018596"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 10:07:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="876910767"
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="846951202"
 X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
-   d="scan'208";a="876910767"
+   d="scan'208";a="846951202"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.29.189])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 10:06:46 -0700
-Subject: [PATCH v6 02/11] cxl: Add callback to parse the DSLBIS subtable from
- CDAT
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 10:07:23 -0700
+Subject: [PATCH v6 08/11] cxl: Compute the entire CXL path latency and
+ bandwidth data
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com
-Date:   Fri, 19 May 2023 10:06:46 -0700
-Message-ID: <168451600640.3470703.3461483051303767270.stgit@djiang5-mobl3>
+Date:   Fri, 19 May 2023 10:07:22 -0700
+Message-ID: <168451604218.3470703.3152270825986749312.stgit@djiang5-mobl3>
 In-Reply-To: <168451588868.3470703.3527256859632103687.stgit@djiang5-mobl3>
 References: <168451588868.3470703.3527256859632103687.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -58,186 +58,144 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Provide a callback to parse the Device Scoped Latency and Bandwidth
-Information Structure (DSLBIS) in the CDAT structures. The DSLBIS
-contains the bandwidth and latency information that's tied to a DSMAS
-handle. The driver will retrieve the read and write latency and
-bandwidth associated with the DSMAS which is tied to a DPA range.
+CXL Memory Device SW Guide [1] rev1.0 2.11.2 provides instruction on how to
+calculate latency and bandwidth for CXL memory device. Calculate minimum
+bandwidth and total latency for the path from the CXL device to the root
+port. The QTG id is retrieved by providing the performance data as input
+and calling the root port callback ->get_qos_class(). The retrieved id is
+stored with the cxl_port of the CXL device.
 
-Coherent Device Attribute Table 1.03 2.1 Device Scoped Latency and
-Bandwidth Information Structure (DSLBIS)
+For example for a device that is directly attached to a host bus:
+Total Latency = Device Latency (from CDAT) + Dev to Host Bus (HB) Link
+		Latency + Generic Port Latency
+Min Bandwidth = Min bandwidth for link bandwidth between HB
+		and CXL device, device CDAT bandwidth, and Generic Port
+		Bandwidth
+
+For a device that has a switch in between host bus and CXL device:
+Total Latency = Device (CDAT) Latency + Dev to Switch Link Latency +
+		Switch (CDAT) Latency + Switch to HB Link Latency +
+		Generic Port Latency
+Min Bandwidth = Min bandwidth for link bandwidth between CXL device
+		to CXL switch, CXL device CDAT bandwidth, CXL switch CDAT
+		bandwidth, CXL switch to HB bandwidth, and Generic Port
+		Bandwidth.
+
+[1]: https://cdrdv2-public.intel.com/643805/643805_CXL%20Memory%20Device%20SW%20Guide_Rev1p0.pdf
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
-v6:
-- Clarify cxl_cdat_endpoint_process() error paths for readability. (Jonathan)
-- Adjust dslbis ptr from header.
 v5:
-- Remove macro for common headers. (Jonathan)
-- Use acpi_table_parse_cdat().
-- Remove unlikely(). (Dan)
-v3:
-- Added spec section in commit header. (Alison)
-- Remove void * recast. (Alison)
-- Rework comment. (Alison)
-- Move CDAT parse to cxl_endpoint_port_probe()
-- Convert to use 'struct node_hmem_attrs'
-
-v2:
-- Add size check to DSLIBIS table. (Lukas)
-- Remove unnecessary entry type check. (Jonathan)
-- Move data_type check to after match. (Jonathan)
-- Skip unknown data type. (Jonathan)
-- Add overflow check for unit multiply. (Jonathan)
-- Use dev_warn() when entries parsing fail. (Jonathan)
+- Use new API call cxl_endpoint_get_perf_coordinates().
+- Use root_port->get_qos_class() (Dan)
+- Add endieness handling to DSM input.
 ---
- drivers/cxl/core/cdat.c |  102 ++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxl.h       |    2 +
- 2 files changed, 102 insertions(+), 2 deletions(-)
+ drivers/cxl/core/cdat.c |    1 +
+ drivers/cxl/cxl.h       |    1 +
+ drivers/cxl/port.c      |   57 +++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 56 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index f70a3a146901..464e69a9c8e4 100644
+index 73ac96e754a0..3ddb2629515f 100644
 --- a/drivers/cxl/core/cdat.c
 +++ b/drivers/cxl/core/cdat.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright(c) 2023 Intel Corporation. All rights reserved. */
- #include <linux/acpi.h>
-+#include <linux/overflow.h>
- #include "cxlpci.h"
- #include "cxl.h"
+@@ -147,6 +147,7 @@ void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
  
-@@ -36,10 +37,107 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
- 	return 0;
+ 	list_for_each_entry_safe(dentry, n, dsmas_list, list) {
+ 		list_del(&dentry->list);
++		kfree(dentry->qos_class);
+ 		kfree(dentry);
+ 	}
  }
- 
-+static void cxl_access_coordinate_set(struct access_coordinate *coord,
-+				      int access, unsigned int val)
-+{
-+	switch (access) {
-+	case ACPI_HMAT_ACCESS_LATENCY:
-+		coord->read_latency = val;
-+		coord->write_latency = val;
-+		break;
-+	case ACPI_HMAT_READ_LATENCY:
-+		coord->read_latency = val;
-+		break;
-+	case ACPI_HMAT_WRITE_LATENCY:
-+		coord->write_latency = val;
-+		break;
-+	case ACPI_HMAT_ACCESS_BANDWIDTH:
-+		coord->read_bandwidth = val;
-+		coord->write_bandwidth = val;
-+		break;
-+	case ACPI_HMAT_READ_BANDWIDTH:
-+		coord->read_bandwidth = val;
-+		break;
-+	case ACPI_HMAT_WRITE_BANDWIDTH:
-+		coord->write_bandwidth = val;
-+		break;
-+	}
-+}
-+
-+static int cdat_dslbis_handler(union acpi_subtable_headers *header, void *arg,
-+			       const unsigned long end)
-+{
-+	struct acpi_cdat_header *hdr = &header->cdat;
-+	struct acpi_cdat_dslbis *dslbis;
-+	int size = sizeof(*hdr) + sizeof(*dslbis);
-+	struct list_head *dsmas_list = arg;
-+	struct dsmas_entry *dent;
-+	u16 len;
-+
-+	len = le16_to_cpu((__force __le16)hdr->length);
-+	if (len != size || (unsigned long)hdr + len > end) {
-+		pr_warn("Malformed DSLBIS table length: (%u:%u)\n", size, len);
-+		return -EINVAL;
-+	}
-+
-+	/* Skip common header */
-+	dslbis = (struct acpi_cdat_dslbis *)(hdr + 1);
-+
-+	/* Skip unrecognized data type */
-+	if (dslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
-+		return 0;
-+
-+	list_for_each_entry(dent, dsmas_list, list) {
-+		__le64 le_base;
-+		__le16 le_val;
-+		u64 val;
-+		int rc;
-+
-+		if (dslbis->handle != dent->handle)
-+			continue;
-+
-+		/* Not a memory type, skip */
-+		if ((dslbis->flags & ACPI_HMAT_MEMORY_HIERARCHY) !=
-+		    ACPI_HMAT_MEMORY)
-+			return 0;
-+
-+		le_base = (__force __le64)dslbis->entry_base_unit;
-+		le_val = (__force __le16)dslbis->entry[0];
-+		rc = check_mul_overflow(le64_to_cpu(le_base),
-+					le16_to_cpu(le_val), &val);
-+		if (rc)
-+			pr_warn("DSLBIS value overflowed.\n");
-+
-+		cxl_access_coordinate_set(&dent->coord, dslbis->data_type, val);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cdat_table_parse_output(int rc)
-+{
-+	if (rc < 0)
-+		return rc;
-+	if (rc == 0)
-+		return -ENOENT;
-+
-+	return 0;
-+}
-+
- int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list)
- {
--	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
--				list, port->cdat.table);
-+	int rc;
-+
-+	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
-+			      list, port->cdat.table);
-+	rc = cdat_table_parse_output(rc);
-+	if (rc)
-+		return rc;
-+
-+	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
-+			      list, port->cdat.table);
-+	return cdat_table_parse_output(rc);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_cdat_endpoint_process, CXL);
- 
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f119f030e2e8..87b9e80d834c 100644
+index f5c152eb55c0..495b6271d9a5 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -8,6 +8,7 @@
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/list.h>
-+#include <linux/node.h>
- #include <linux/log2.h>
- #include <linux/io.h>
- 
-@@ -797,6 +798,7 @@ struct dsmas_entry {
- 	struct list_head list;
+@@ -843,6 +843,7 @@ struct dsmas_entry {
  	struct range dpa_range;
  	u8 handle;
-+	struct access_coordinate coord;
+ 	struct access_coordinate coord;
++	struct qos_class *qos_class;
  };
  
  #ifdef CONFIG_ACPI_TABLES_LIB
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 0f9c25645e1d..03af92217192 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -57,6 +57,53 @@ static int discover_region(struct device *dev, void *root)
+ 	return 0;
+ }
+ 
++static int cxl_port_perf_data_calculate(struct cxl_port *port,
++					struct list_head *dsmas_list)
++{
++	struct qos_class *qos_class;
++	struct access_coordinate c;
++	struct qtg_dsm_input input;
++	struct cxl_port *root_port;
++	struct cxl_root *cxl_root;
++	struct dsmas_entry *dent;
++	int rc;
++
++	rc = cxl_endpoint_get_perf_coordinates(port, &c);
++	if (rc) {
++		dev_dbg(&port->dev, "Failed to retrieve perf coordinates.\n");
++		return rc;
++	}
++
++	root_port = find_cxl_root(port);
++	cxl_root = to_cxl_root(root_port);
++	if (!cxl_root->ops || !cxl_root->ops->get_qos_class)
++		return -EOPNOTSUPP;
++
++	list_for_each_entry(dent, dsmas_list, list) {
++		dent->coord.read_latency = dent->coord.read_latency +
++					   c.read_latency;
++		dent->coord.write_latency = dent->coord.write_latency +
++					    c.write_latency;
++		dent->coord.read_bandwidth = min_t(int, c.read_bandwidth,
++						   dent->coord.read_bandwidth);
++		dent->coord.write_bandwidth = min_t(int, c.write_bandwidth,
++						    dent->coord.write_bandwidth);
++
++		input.rd_lat = cpu_to_le32(dent->coord.read_latency);
++		input.wr_lat = cpu_to_le32(dent->coord.write_latency);
++		input.rd_bw = cpu_to_le32(dent->coord.read_bandwidth);
++		input.wr_bw = cpu_to_le32(dent->coord.write_bandwidth);
++
++		qos_class = cxl_root->ops->get_qos_class(root_port, &input);
++		if (IS_ERR(qos_class))
++			continue;
++
++		dent->qos_class = qos_class;
++	}
++
++	return 0;
++}
++
+ static int cxl_switch_port_probe(struct cxl_port *port)
+ {
+ 	struct cxl_hdm *cxlhdm;
+@@ -143,10 +190,14 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+ 		LIST_HEAD(dsmas_list);
+ 
+ 		rc = cxl_cdat_endpoint_process(port, &dsmas_list);
+-		if (rc < 0)
++		if (rc < 0) {
+ 			dev_dbg(&port->dev, "Failed to parse CDAT: %d\n", rc);
+-
+-		/* Performance data processing */
++		} else {
++			rc = cxl_port_perf_data_calculate(port, &dsmas_list);
++			if (rc)
++				dev_dbg(&port->dev,
++					"Failed to do perf coord calculations.\n");
++		}
+ 
+ 		cxl_cdat_dsmas_list_destroy(&dsmas_list);
+ 	}
 
 
