@@ -2,177 +2,104 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC9EC77B7A
-	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 15:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BE8C7EE26
+	for <linux-cxl@archiver.kernel.org>; Fri, 19 May 2023 15:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232181AbjESPe1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 19 May 2023 11:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
+        id S232027AbjESPiF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 19 May 2023 11:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232145AbjESPeZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 11:34:25 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F6B11A4
-        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 08:34:24 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f41d087a84so7070825e9.1
-        for <linux-cxl@vger.kernel.org>; Fri, 19 May 2023 08:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684510463; x=1687102463;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pb9IlaicBSZmt7qrRMrBNGyHNyEEKbiHOY+2Qsbwrp8=;
-        b=OEm7ZVNFrEuKa0zKtRQstZVvGSPX5WsXc57vNzp2m2siW+Ukl2WW5esCMhd+94qKun
-         IRmb9lUr4KhEAPfLJjdaeTGEGy3XoHDOvBmy719eQSsp3yQ5o2D6hRAi+httYS2RC4D7
-         J/rmvmPeVgzy//wApP6CBDqwp1Jd91V8gmHWG8cAoRMlreUVBfMU0h0qfQzBKhF8VKgo
-         Kb3gX/SoGMFAtmeD6GmMz5qTslyOnQ1hPl2kfwrdI63w8OrNtOLHhJdabPR691AjYjJD
-         f93BqyOoWRkUAQozuOgPNEuA9g9amaQkLvusjrowMZXbZhC84O8DH454PjraaYTlLGCX
-         5cBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684510463; x=1687102463;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pb9IlaicBSZmt7qrRMrBNGyHNyEEKbiHOY+2Qsbwrp8=;
-        b=EZKEDONqT2y1ZXK+h51N061AhUROAOB+QJpoyADdQa+WV+GHHElM481aGJJKhNWZa3
-         MK8vxYAMCYjp93ZNz1AR5HbuK5G4yTc9cpZIrmN0GqGVRd4flmX+YcrzDq0QDkx6XoLO
-         /loo4Ws+XuMj5JfCgXhAUU9o6pdy1TbfvgP9Iolsf5kPMfRFmUqndVG+auaKsbNTtC2n
-         QkF3c8AmcPJRstfFGGgVlXCNQkB42MJU0GU63JHBagQlVIiPmAaCIGDYvhlajW1tTqsJ
-         WxcKyAC9fWc0gS9p+FvXpOB2LkL0hmjPqgbSBgW77QsowbWTt/wFLTrXMyCXbeqdTm7B
-         S1RA==
-X-Gm-Message-State: AC+VfDwJngupJkQMxGSM26tZVJBy+EVcC5I0eH6hw3pegzCMfdFADGu/
-        rScZS4hR4G/gDiNDw0BdWJpf9Q==
-X-Google-Smtp-Source: ACHHUZ7S6zs9OzweLMjvrmbwMW2f5GLkSI0QGJZiCAhjxUAHIGFy51/SczsTUK4bOM1a7pnTqHKHSA==
-X-Received: by 2002:a05:600c:b97:b0:3f4:1848:4dff with SMTP id fl23-20020a05600c0b9700b003f418484dffmr1863436wmb.7.1684510463008;
-        Fri, 19 May 2023 08:34:23 -0700 (PDT)
-Received: from [192.168.69.115] (mau49-h01-176-184-41-228.dsl.sta.abo.bbox.fr. [176.184.41.228])
-        by smtp.gmail.com with ESMTPSA id z20-20020a7bc7d4000000b003f4ecf1fcbcsm2747095wmk.22.2023.05.19.08.34.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 May 2023 08:34:22 -0700 (PDT)
-Message-ID: <6dc139cc-ec19-196f-017a-cb0a415af3e5@linaro.org>
-Date:   Fri, 19 May 2023 17:34:20 +0200
+        with ESMTP id S229708AbjESPiE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 19 May 2023 11:38:04 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A741A6;
+        Fri, 19 May 2023 08:38:03 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QN9tq6T5Hz67qNN;
+        Fri, 19 May 2023 23:36:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 19 May
+ 2023 16:37:59 +0100
+Date:   Fri, 19 May 2023 16:37:58 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Davidlohr Bueso <dave@stgolabs.net>, LiuLele <liu.lele@qq.com>,
+        <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+        <bhelgaas@google.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <helgaas@kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <rostedt@goodmis.org>, <vishal.l.verma@intel.com>
+Subject: Re: CXL memory device not created correctly
+Message-ID: <20230519163758.000044dc@Huawei.com>
+In-Reply-To: <646793cc665bf_1231462943c@iweiny-mobl.notmuch>
+References: <cec6a8f5-a284-4f46-1ada-4edd625a9a2e@intel.com>
+        <tencent_D9D9D358330CA573E23D490C6EE13E0DC105@qq.com>
+        <gbsxrcjtnf67jxpqmbn57nqoslpmjtuk2ycatmau3vfsmpvbrd@c2umpofn2hti>
+        <646793cc665bf_1231462943c@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.0
-Subject: Re: [PATCH v6 6/7] hw/cxl/events: Add injection of DRAM events
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>
-Cc:     linux-cxl@vger.kernel.org, linuxarm@huawei.com,
-        Ira Weiny <ira.weiny@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        =?UTF-8?Q?Daniel_P_=2e_Berrang=c3=a9?= <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-References: <20230519143043.30191-1-Jonathan.Cameron@huawei.com>
- <20230519143043.30191-7-Jonathan.Cameron@huawei.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230519143043.30191-7-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Jonathan,
+On Fri, 19 May 2023 08:20:44 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-On 19/5/23 16:30, Jonathan Cameron wrote:
-> Defined in CXL r3.0 8.2.9.2.1.2 DRAM Event Record, this event
-> provides information related to DRAM devices.
+> Davidlohr Bueso wrote:
+> > On Fri, 19 May 2023, LiuLele wrote:
+> >   
+> > >In my testing CXL device /sys/bus/cxl/devices/mem0  not created, and the get error messages :
+> > >
+> > >```
+> > >cxl_pci 0000:0d:00.0: Failed to get interrupt for event Info log
+> > >```
+> > >
+> > >My test environment is a qemu CXL emulator with qemu v8.0.0, Linux kernel v6.3.0.
+> > >While with kernel 5.9.13,  /sys/bus/cxl/devices/mem0  can be created.  
+> > 
+> > Yes, this can be annoying and would argue the probe should not error out.  
 > 
-> Example injection command in QMP:
+> I had to double check.  Events are mandatory on devices.  On checking
+> again interrupt support is mandatory as well.  So that is why I errored
+> out here.  With real HW this should not be an issue.
 > 
-> { "execute": "cxl-inject-dram-event",
->      "arguments": {
->          "path": "/machine/peripheral/cxl-mem0",
->          "log": "informational",
->          "flags": 1,
->          "physaddr": 1000,
->          "descriptor": 3,
->          "type": 3,
->          "transaction-type": 192,
->          "channel": 3,
->          "rank": 17,
->          "nibble-mask": 37421234,
->          "bank-group": 7,
->          "bank": 11,
->          "row": 2,
->          "column": 77,
->          "correction-mask": [33, 44, 55,66]
->      }}
+> > Regardless, the actual qemu support is in Jonathan's tree:
+> > 
+> > https://gitlab.com/jic23/qemu/-/commit/a04e6476df363d1f6bc160577b30dda6564d3f67  
 > 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->   hw/mem/cxl_type3.c          | 116 ++++++++++++++++++++++++++++++++++++
->   hw/mem/cxl_type3_stubs.c    |  13 ++++
->   include/hw/cxl/cxl_events.h |  23 +++++++
->   qapi/cxl.json               |  35 +++++++++++
->   4 files changed, 187 insertions(+)
+> That is the commit you need but it is probably best to use one of
+> Jonathans 'official' branches.  Looks like he just pushed a new one today.
+> 
+> https://gitlab.com/jic23/qemu/-/tree/cxl-2023-05-19
 
+Leave that one for now.  It was to get the CI tests to run. I need to tidy up
+a bit and will announce when I have a clean one...
 
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 7e1e6257ce..5e82097e76 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -55,6 +55,41 @@
->               '*device': 'uint32', '*component-id': 'str'
->               }}
->   
-> +##
-> +# @cxl-inject-dram-event:
-> +#
-> +# Inject an event record for a DRAM Event (CXL r3.0 8.2.9.2.1.2)
-> +# This event type is reported via one of the event logs specified via
-> +# the log parameter.
-> +#
-> +# @path: CXL type 3 device canonical QOM path
-> +# @log: Event Log to add the event to
-> +# @flags: header flags
-> +# @physaddr: Physical Address
+> 
+> I've not run that one yet.  So if you have issues try his previous one it
+> is working well for me.
+> 
+> https://gitlab.com/jic23/qemu/-/tree/cxl-2023-04-19
 
-Could this be a clearer description?
+That one should be good to go still I think
 
-"Physical Address (relative to @path device)"
+Jonathan
 
-> +# @descriptor: Descriptor
-> +# @type: Type
-> +# @transaction-type: Transaction Type
-> +# @channel: Channel
-> +# @rank: Rank
-> +# @nibble-mask: Identify one or more nibbles that the error affects
-
-> +# @bank-group: Bank group
-> +# @bank: Bank
-> +# @row: Row
-> +# @column: Column
-
-Why do we need bank/raw/col if we have physaddr?
-
-These are optional. Shouldn't we check they are valid
-in qmp_cxl_inject_dram_event()? (No clue, just wondering
-if there is some duplication here).
-
-> +# @correction-mask: Bits within each nibble. Used in order of bits set
-> +#                   in the nibble-mask.  Up to 4 nibbles may be covered.
-> +#
-> +# Since: 8.1
-> +##
-> +{ 'command': 'cxl-inject-dram-event',
-> +  'data': { 'path': 'str', 'log': 'CxlEventLog', 'flags': 'uint8',
-> +            'physaddr': 'uint64', 'descriptor': 'uint8',
-> +            'type': 'uint8', 'transaction-type': 'uint8',
-> +            '*channel': 'uint8', '*rank': 'uint8', '*nibble-mask': 'uint32',
-> +            '*bank-group': 'uint8', '*bank': 'uint8', '*row': 'uint32',
-> +            '*column': 'uint16', '*correction-mask': [ 'uint64' ]
-> +           }}
-> +
->   ##
->   # @cxl-inject-poison:
->   #
+> 
+> Ira
+> 
+> > 
+> > Thanks,
+> > Davidlohr  
+> 
+> 
 
