@@ -2,208 +2,113 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB576C77B7A
-	for <linux-cxl@archiver.kernel.org>; Sat, 20 May 2023 13:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5303FC77B7D
+	for <linux-cxl@archiver.kernel.org>; Sat, 20 May 2023 15:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjETNpv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 20 May 2023 09:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
+        id S229662AbjETPPl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 20 May 2023 11:15:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjETNpu (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 20 May 2023 09:45:50 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984BADE
-        for <linux-cxl@vger.kernel.org>; Sat, 20 May 2023 06:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684590349; x=1716126349;
-  h=date:from:to:cc:subject:message-id;
-  bh=SK6vr2OF2YMUVHut0ccCmXdPWT1PT2rYvn9Kc/1XNps=;
-  b=XMYJeAEHZrx0TjDfKwv7YiVHQ292TXnlbncn1R4IW0URQSqHGyq+JCbk
-   qsNm9EAS/NeE5L4QpRoQATqnw8KE2940MxDvprNcMwA436ohdXRhveUHd
-   VR7Nop7SxYy7y9PA4j4PBTeqdcGyC02IsWe+fmHy32ZNOE9xsg5I0dtV4
-   zndraMJDSH8Qh84RC2pX5siqIMpB5a2tGk4mz0YuzRIq/hPl47WvCpxWe
-   HDAIkyVwHLqFgyYyieW4oqH65dS4XoLfgJ/10WzWKRUuX/zG002M/GUpa
-   zEj5kOOzHbs4FdQvpaeARpcMvaR/aah2hbMpz0VrYzo0IQSllyKVDV6zk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10716"; a="438937880"
-X-IronPort-AV: E=Sophos;i="6.00,180,1681196400"; 
-   d="scan'208";a="438937880"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2023 06:45:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10716"; a="1032923722"
-X-IronPort-AV: E=Sophos;i="6.00,180,1681196400"; 
-   d="scan'208";a="1032923722"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 20 May 2023 06:45:47 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q0Mu2-000BYw-33;
-        Sat, 20 May 2023 13:45:46 +0000
-Date:   Sat, 20 May 2023 21:44:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [cxl:fixes] BUILD SUCCESS
- a70fc4ed20a6118837b0aecbbf789074935f473b
-Message-ID: <20230520134447.xFzjj%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        with ESMTP id S229523AbjETPPk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 20 May 2023 11:15:40 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CF8EE
+        for <linux-cxl@vger.kernel.org>; Sat, 20 May 2023 08:15:39 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-5144a9c11c7so3978074a12.2
+        for <linux-cxl@vger.kernel.org>; Sat, 20 May 2023 08:15:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684595739; x=1687187739;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=azp2lPDxMovbyKL7Tz6FjMFF9Og73b9fxvPwWXagsnE=;
+        b=CsauIKuyd4vOeG+m71SlcYkcJuqjcdhFjxXUq+BwTAVevHT7iJViz2yPZ428+fEOwm
+         ihioy1RhcjKgO7UEtvbWqziHH7zMWV2+03b4dpLA0eKEKlEnGPRsd0fGfwAfs94Q3D93
+         zS2qqdR7WCG0av/M9JHPfO6M81nIXM3bAm3Bi0C6Okj2R5zffDARWzpk/k6WYXUBf8d0
+         3vPoVkaEIsfbBPGgbgea0WKLND/e0pzMX4t79si/cLO/xVSO/HOVNEUFYWv2X+e9H+A6
+         +jIWqGQL2d+h4HQKkn2T1zrwDlPBnYusWhUlrJ5LB01308CkIpO3szt0MTjmNRzZ05Ho
+         ZhVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684595739; x=1687187739;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=azp2lPDxMovbyKL7Tz6FjMFF9Og73b9fxvPwWXagsnE=;
+        b=F8JRCuONiTPLDGO0Mp3U7RELvDw4gp+aM6kKni2BQ8ADJjyFklOucbtL7imgmOrl3p
+         Lggyj4lu6t6PwcA0zjsgUravus6+xAywz4VA7aZESUvxilBxvCEShux1eyczmJghsyRL
+         hCv37/WPQNhWwIOt/ebg98Bc6f6RN+7T0/UGdLMpKUMATp6WTMClG25H+0PIEVm+E+bt
+         w/0cvlkSkX/8xHQqSQ0jknGd4xgtlZz3+IRLvrpbiZYTZYGUESizGxrN+MtOhFLPAxKe
+         6S/aEGmJ58YqemV837EuVXpTk/tMuGu5uWthMNFlR7VJVFN+aYiYwjmVrgICGtrg3in+
+         RZ6Q==
+X-Gm-Message-State: AC+VfDw8t60Pe91fqSyTyDypTBgT9UYgBk78hMirhw+p7dDvPTWA5fHI
+        oP2wP7z5uiSH1P46XtWhRUb1ww==
+X-Google-Smtp-Source: ACHHUZ6TOvS+TALg6me6eBQDlfdKZHFuBju9MfST9Uv0Isu1nhsRvIjjHowJngtaGaQWeSr+BW3OLQ==
+X-Received: by 2002:a17:902:e887:b0:1ae:8e80:ba89 with SMTP id w7-20020a170902e88700b001ae8e80ba89mr4956926plg.0.1684595739119;
+        Sat, 20 May 2023 08:15:39 -0700 (PDT)
+Received: from ?IPV6:2602:ae:1598:4c01:d078:d94e:cb2b:a055? ([2602:ae:1598:4c01:d078:d94e:cb2b:a055])
+        by smtp.gmail.com with ESMTPSA id b2-20020a170902d88200b001ae4edac77bsm1606444plz.275.2023.05.20.08.15.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 May 2023 08:15:38 -0700 (PDT)
+Message-ID: <4dd8a802-9a8c-77ab-6355-38910eefe19e@linaro.org>
+Date:   Sat, 20 May 2023 08:15:36 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v6 1/4] bswap: Add the ability to store to an unaligned 24
+ bit field
+Content-Language: en-US
+To:     BALATON Zoltan <balaton@eik.bme.hu>,
+        Peter Maydell <peter.maydell@linaro.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Michael Roth <michael.roth@amd.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        =?UTF-8?Q?Daniel_P_=2e_Berrang=c3=a9?= <berrange@redhat.com>,
+        Eric Blake <eblake@redhat.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+References: <20230519141803.29713-1-Jonathan.Cameron@huawei.com>
+ <20230519141803.29713-2-Jonathan.Cameron@huawei.com>
+ <CAFEAcA_kjm+k7SEEnz6uw+cOJyXSoUqg2wCQ5h+W-eTfwxD=FA@mail.gmail.com>
+ <04b53845-b54f-458f-bc6f-f5aed86cdd06@eik.bme.hu>
+From:   Richard Henderson <richard.henderson@linaro.org>
+In-Reply-To: <04b53845-b54f-458f-bc6f-f5aed86cdd06@eik.bme.hu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230519164737/lkp-src/repo/*/cxl
-https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: a70fc4ed20a6118837b0aecbbf789074935f473b  cxl/port: Fix NULL pointer access in devm_cxl_add_port()
+On 5/20/23 06:15, BALATON Zoltan wrote:
+> On Sat, 20 May 2023, Peter Maydell wrote:
+>> On Fri, 19 May 2023 at 15:19, Jonathan Cameron via
+>> <qemu-devel@nongnu.org> wrote:
+>>>
+>>> From: Ira Weiny <ira.weiny@intel.com>
+>>>
+>>> CXL has 24 bit unaligned fields which need to be stored to.  CXL is
+>>> specified as little endian.
+>>>
+>>> Define st24_le_p() and the supporting functions to store such a field
+>>> from a 32 bit host native value.
+>>>
+>>> The use of b, w, l, q as the size specifier is limiting.  So "24" was
+>>> used for the size part of the function name.
+> 
+> Maybe it's clearer to use 24 but if we want to keep these somewhat consistent how about 
+> using t for Triplet, Three-bytes or Twenty-four?
 
-elapsed time: 724m
+I think it's clearer to use '3'.
+When I added 128-bit support I used cpu_ld16_mmu.
 
-configs tested: 132
-configs skipped: 4
+I think it would be clearer to not use letters anywhere, and to use units of bytes instead 
+of units of bits (no one can store just a bit), but changing everything is a big job.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r013-20230517   gcc  
-alpha                randconfig-r034-20230517   gcc  
-alpha                randconfig-r035-20230517   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230517   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                        clps711x_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                           h3600_defconfig   gcc  
-arm                      integrator_defconfig   gcc  
-arm                         mv78xx0_defconfig   clang
-arm                  randconfig-r025-20230517   clang
-arm                  randconfig-r046-20230517   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r001-20230517   clang
-csky                                defconfig   gcc  
-hexagon                          alldefconfig   clang
-hexagon              randconfig-r041-20230517   clang
-hexagon              randconfig-r045-20230517   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a001   gcc  
-i386                          randconfig-a002   clang
-i386                          randconfig-a003   gcc  
-i386                          randconfig-a004   clang
-i386                          randconfig-a005   gcc  
-i386                          randconfig-a006   clang
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r005-20230517   gcc  
-ia64                 randconfig-r011-20230517   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r005-20230517   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r003-20230517   gcc  
-loongarch            randconfig-r004-20230517   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5407c3_defconfig   gcc  
-m68k                 randconfig-r022-20230517   gcc  
-m68k                 randconfig-r024-20230517   gcc  
-microblaze           randconfig-r006-20230517   gcc  
-microblaze           randconfig-r021-20230517   gcc  
-microblaze           randconfig-r033-20230517   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-mips                     decstation_defconfig   gcc  
-mips                 randconfig-r015-20230517   clang
-mips                 randconfig-r036-20230517   gcc  
-nios2        buildonly-randconfig-r002-20230517   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r032-20230517   gcc  
-openrisc                  or1klitex_defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      bamboo_defconfig   gcc  
-powerpc                   bluestone_defconfig   clang
-powerpc      buildonly-randconfig-r003-20230517   gcc  
-powerpc                      mgcoge_defconfig   gcc  
-powerpc                  mpc866_ads_defconfig   clang
-powerpc                      ppc64e_defconfig   clang
-powerpc              randconfig-r002-20230517   clang
-powerpc                     stx_gp3_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230517   gcc  
-riscv                          rv32_defconfig   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r004-20230517   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r026-20230517   gcc  
-s390                 randconfig-r044-20230517   gcc  
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r006-20230517   gcc  
-sh                          r7780mp_defconfig   gcc  
-sh                   randconfig-r023-20230517   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r012-20230517   gcc  
-sparc64      buildonly-randconfig-r001-20230517   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                        randconfig-a001   clang
-x86_64                        randconfig-a002   gcc  
-x86_64                        randconfig-a003   clang
-x86_64                        randconfig-a004   gcc  
-x86_64                        randconfig-a005   clang
-x86_64                        randconfig-a006   gcc  
-x86_64                        randconfig-a011   gcc  
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a013   gcc  
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a015   gcc  
-x86_64                        randconfig-a016   clang
-x86_64                        randconfig-k001   clang
-x86_64                        randconfig-x051   gcc  
-x86_64                        randconfig-x052   clang
-x86_64                        randconfig-x053   gcc  
-x86_64                        randconfig-x054   clang
-x86_64                        randconfig-x055   gcc  
-x86_64                        randconfig-x056   clang
-x86_64                        randconfig-x061   gcc  
-x86_64                        randconfig-x062   clang
-x86_64                        randconfig-x063   gcc  
-x86_64                        randconfig-x064   clang
-x86_64                        randconfig-x065   gcc  
-x86_64                        randconfig-x066   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa               randconfig-r031-20230517   gcc  
-xtensa                    xip_kc705_defconfig   gcc  
+r~
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
