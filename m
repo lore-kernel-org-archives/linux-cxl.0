@@ -2,38 +2,38 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B521CC7EE2F
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 06:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A3EC77B73
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 06:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231673AbjEVGyo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 May 2023 02:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59894 "EHLO
+        id S232018AbjEVGyp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 May 2023 02:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232244AbjEVGyS (ORCPT
+        with ESMTP id S232245AbjEVGyS (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 02:54:18 -0400
-Received: from esa8.hc1455-7.c3s2.iphmx.com (esa8.hc1455-7.c3s2.iphmx.com [139.138.61.253])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791B610DE
-        for <linux-cxl@vger.kernel.org>; Sun, 21 May 2023 23:52:04 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="105543642"
+Received: from esa9.hc1455-7.c3s2.iphmx.com (esa9.hc1455-7.c3s2.iphmx.com [139.138.36.223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A090410DC
+        for <linux-cxl@vger.kernel.org>; Sun, 21 May 2023 23:52:03 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="105695682"
 X-IronPort-AV: E=Sophos;i="6.00,183,1681138800"; 
-   d="scan'208";a="105543642"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa8.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 15:52:02 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id DB4EECD7E1
-        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 15:51:57 +0900 (JST)
+   d="scan'208";a="105695682"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 15:52:00 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+        by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 3A58BD3EBD
+        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 15:51:58 +0900 (JST)
 Received: from kws-ab1.gw.nic.fujitsu.com (kws-ab1.gw.nic.fujitsu.com [192.51.206.11])
-        by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 210F1D4F5C
+        by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 760EDD3F11
         for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 15:51:57 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.226.45])
-        by kws-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id 669751145B82;
+        by kws-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id BC60D114601F;
         Mon, 22 May 2023 15:51:56 +0900 (JST)
 From:   Li Zhijian <lizhijian@fujitsu.com>
 To:     nvdimm@lists.linux.dev
 Cc:     linux-cxl@vger.kernel.org, Li Zhijian <lizhijian@fujitsu.com>
-Subject: [ndctl PATCH v2 3/6] cxl/monitor: use strcmp to compare the reserved word
-Date:   Mon, 22 May 2023 14:51:45 +0800
-Message-Id: <20230522065148.818977-4-lizhijian@fujitsu.com>
+Subject: [ndctl PATCH v2 4/6] cxl/monitor: always log started message
+Date:   Mon, 22 May 2023 14:51:46 +0800
+Message-Id: <20230522065148.818977-5-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230522065148.818977-1-lizhijian@fujitsu.com>
 References: <20230522065148.818977-1-lizhijian@fujitsu.com>
@@ -43,26 +43,31 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1408-9.0.0.1002-27642.005
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1408-9.0.1002-27642.005
-X-TMASE-Result: 10--4.808400-10.000000
-X-TMASE-MatchedRID: 5cMIDPsUQeR/s7IOpKdgtx1kSRHxj+Z5RpgtqnD1BD4yiHqxwIX2MWeX
-        mwoqwyphxQTdQMAU4mRZrjNEQuAJgh/Qfe1gmZY9IBYc5Hfv4BPBOVz0Jwcxl6vCrG0TnfVUg9x
-        e4gtUJtrIv3U+D7ZhENwU8VHXGipCHxPMjOKY7A/+HHE8LDNSg8RB0bsfrpPIcSqbxBgG0w7eBg
-        R0j9VYUfwQigB/IQfQ1Bx2kRmXWMSGYZjW7uqX8puwzcSYfG5zSzXAJYi2bOTKH+L+kVEuvO0Zn
-        KZRWS9/2MK+E9GcckZbjBuldNvkMkoq97WSHdFjfupJaud1uZCfRs6uIbkFVw==
+X-TMASE-Result: 10--12.232700-10.000000
+X-TMASE-MatchedRID: fqEte1jlzl/mh3qTH3T2BBlxrtI3TxRkTfK5j0EZbyt9hFikHEFf1nER
+        bS7OZpEDwKkZaLNGSWov47gJfywVWSfB+/OOFhyOTuctSpiuWyUUi4Ehat05499RlPzeVuQQE0o
+        8W+GU3zDOG+e9aAIpHqepbdVIZ/l3HxPMjOKY7A/+HHE8LDNSg8RB0bsfrpPIfiAqrjYtFiRAzV
+        rWwNWPwOq11iEZvCJi7mcbYkc9NgBKL3Fna1bs1X7cGd19dSFd
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-According to its document, when '-l standard' is specified, log would be
-output to the stdout. But actually, since it's using strncmp(a, b, 10)
-to compare the former 10 characters, it will also wrongly treat a filename
-starting with a substring 'standard' to stdout.
+Tell people monitor is starting rather only daemon mode will log this
+message before. It's a minor fix so that whatever stdout or logfile
+is specified, people can see a *normal* message.
 
-For example:
-$ cxl monitor -l standard.log
-
-User is most likely want to save log to ./standard.log instead of stdout.
+After this patch
+ # cxl monitor
+ cxl monitor started.
+ ^C
+ # cxl monitor -l standard.log
+ ^C
+ # cat standard.log
+ [1684735993.704815571] [818499] cxl monitor started.
+ # cxl monitor --daemon -l /var/log/daemon.log
+ # cat /var/log/daemon.log
+ [1684736075.817150494] [818509] cxl monitor started.
 
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
@@ -72,18 +77,19 @@ V2: commit log updated # Dave
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cxl/monitor.c b/cxl/monitor.c
-index f0e3c4c3f45c..179646562187 100644
+index 179646562187..0736483cc50a 100644
 --- a/cxl/monitor.c
 +++ b/cxl/monitor.c
-@@ -188,7 +188,7 @@ int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
- 	else
- 		monitor.ctx.log_priority = LOG_INFO;
+@@ -205,8 +205,8 @@ int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
+ 			err(&monitor, "daemon start failed\n");
+ 			goto out;
+ 		}
+-		info(&monitor, "cxl monitor daemon started.\n");
+ 	}
++	info(&monitor, "cxl monitor started.\n");
  
--	if (strncmp(log, "./standard", 10) == 0)
-+	if (strcmp(log, "./standard") == 0)
- 		monitor.ctx.log_fn = log_standard;
- 	else {
- 		monitor.ctx.log_file = fopen(log, "a+");
+ 	rc = monitor_event(ctx);
+ 
 -- 
 2.29.2
 
