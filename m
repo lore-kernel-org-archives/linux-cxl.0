@@ -2,236 +2,120 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C82C77B73
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 21:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4E1C77B73
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 21:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbjEVVb0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 May 2023 17:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        id S230284AbjEVV7g (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 May 2023 17:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbjEVVbX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 17:31:23 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC370CF;
-        Mon, 22 May 2023 14:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684791080; x=1716327080;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=oUe9epGSS06InU/IPFeHAeewis7hVroQaJ+pID5BafY=;
-  b=mdASMPWV4CMfkn5PEMv6kI6i4RDgWp5AHjAhivRVeLxFWo1BHzuHaG2v
-   a9YAE+QZVVojDBEU0k5PrVkVKDcYWUsfJRv3e8pGZmNWdmPd/kekdOME7
-   9/67khRVcpHploZT7n1vpfwAuOQX2a9llYi8z2jWuD6iDbpuRNI2SzOQj
-   jr1TiqEMSK6LTrTm9li9b6KdpVvFvZ7JT/tUN0FJsn+ERHZPXQencMNUd
-   guimQ/cSvklegFmlY5ScBpMPVp2tZ7u6MRd5qG7495tdoxRzwbj4XiAqB
-   E+smEfW5zggWQcHND+ZmvOlVbxkKbxsaiAm29JuRqmjHmkmtQxNFx3ltZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="418754574"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="418754574"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 14:31:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="877911296"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="877911296"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga005.jf.intel.com with ESMTP; 22 May 2023 14:31:20 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 22 May 2023 14:31:19 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 22 May 2023 14:31:19 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Mon, 22 May 2023 14:31:19 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Mon, 22 May 2023 14:31:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a38r8e80GQE8plP4Capez9g05OkvsMneOGxp73J/SKnCRM+PllcHl+CrvaxuHIYNoR7vdg2CCskyc0K7yZTu/TNQxMhibje4NNdFv8Q9HduOPM2EEaadW/MyfX3TIagDU62IaUno9nU5GrSpoYDYCUx6cOrvP08oLjQ/+FLpzVfUTAP5/sYHEuWmnWDRtGJ/RJvAM1wwNBPqzZus48I30R5x7jUDFF90+p4EjGw/I0G7U6EaA7PxeicYB+65YM6D+g8ENYEzda0hKo462sq00GsZVFHqvWKWyU/+38C+Wy7yDyJ6DfBSSoS3wmWmzsLbWXDI2bP9LDw8ug2H8pnV9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dH1ofa3VmUlNZv4btGU2alMEpupldoDhE0j5bWK4/l0=;
- b=Cqov9tsiuolEaCbk5aSwL2iB4tCVFMMnvDUP9/1BTDWaynjidhgF4UFY1LeA7ihwv8wgbnGGlngYBIZMN8swm053JU1Norg4RMsPsRA+RoG444UbgyACl0YL+LUGj3uNMipLOUmGY37BQiiktdIgA/Sn4vKG/fNFvZYGU8wzT+LDRTpfsgxRIBgoZ3OLWGtKubcaQR2OCK+I+yKJ1ZbDx2TI79JmiH9o6TB4Wal8pikzMr5HxDDpreeYiKP7VorDmPCM7BUd+mVRckxMkYSzwgFcDKKZneY0yQoPVXkk1b2Ton0VzJFzS8ajZi/3V3KAPFA5dSofq3zX0BxdwLFTvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB7946.namprd11.prod.outlook.com (2603:10b6:930:7e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
- 2023 21:31:17 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6411.028; Mon, 22 May 2023
- 21:31:16 +0000
-Date:   Mon, 22 May 2023 14:31:13 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-CC:     <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <lukas@wunner.de>,
-        <Jonathan.Cameron@huawei.com>
-Subject: RE: [PATCH v2 1/4] acpi: Move common tables helper functions to
- common lib
-Message-ID: <646bdf21b9329_33fb329410@dwillia2-xfh.jf.intel.com.notmuch>
-References: <168443445827.2966470.16511867875780059322.stgit@djiang5-mobl3>
- <168443478260.2966470.6881416930240756285.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <168443478260.2966470.6881416930240756285.stgit@djiang5-mobl3>
-X-ClientProxiedBy: BYAPR07CA0095.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::36) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        with ESMTP id S229562AbjEVV7f (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 17:59:35 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEAB5AF
+        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 14:59:34 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 031333C2914;
+        Mon, 22 May 2023 21:59:34 +0000 (UTC)
+Received: from pdx1-sub0-mail-a292.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 826873C1E6D;
+        Mon, 22 May 2023 21:59:33 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684792773; a=rsa-sha256;
+        cv=none;
+        b=tZxu+4oA4Jamtu+dqYtOawnZl7NfMHukTk0K8gyGB8P79PPwEst0pgAR2d5U8vVj0JZS/z
+        T0w3xbQHW0MAX7wRjMDVj5UXlgurxcwWrfcQOo6BKB2zlfYBu1xorvStaD9F8cszlt18mJ
+        Raua46Uf9w6W6f6NJ18NXdCEqmhUYuPV4PMyza8eMENUqQ6anTk5QvIqZAzelxYXDxsbMa
+        IlOgdSgq6rKabHJXebpyL54tr1Fkpbl6wu3Bn6A6BGn32+LlStJArO3C95TfrgDgoYyxNe
+        oyGAo3ibjy06P/kx4TrsTiN7QWRPFPKNJKGmBLGXJ1TPEpugK4xdArbtcDYLyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1684792773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=dtfYb/yMoBmCWLxrc3FVAjYYte8yB9y0OZYZKhEtWu0=;
+        b=LXWHaRfESLsouDow8s76ob+5Uc7Xh0/zYm82k3n/1QhGnZl0H2WIh5mxwA/G2equlxMATP
+        X+CtfpY4/apNjAcjvbfg1oyygmrTkDO07k/BpqqesV2aAdHJRID0XlXqrrfkXWqbam4I2C
+        kkfegvkwps8UenKLrJjlaqvOpnGxsKSrxefWF+mWX6D+5fow5sDg7feiL5qXbYA1eaETHo
+        Hx5OE+ys/DLN4A6Fv3PyiJx4XcDa8WGt61eQA0ueXGsjdUaxI8RRpIi+JFOb+iDMMC5bww
+        u4W0hFx1fFbJpY7JbvvhqirT4C3Qg9ZBJHteLaGXqdgQYDS7iocBzQGS6gSm7g==
+ARC-Authentication-Results: i=1;
+        rspamd-79bb5575d7-wg5c7;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Abaft-Turn: 3b802d552c1d9838_1684792773823_2088000080
+X-MC-Loop-Signature: 1684792773823:4050850260
+X-MC-Ingress-Time: 1684792773823
+Received: from pdx1-sub0-mail-a292.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.123.193.157 (trex/6.8.1);
+        Mon, 22 May 2023 21:59:33 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a292.dreamhost.com (Postfix) with ESMTPSA id 4QQBF00s9Jz2h;
+        Mon, 22 May 2023 14:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1684792772;
+        bh=dtfYb/yMoBmCWLxrc3FVAjYYte8yB9y0OZYZKhEtWu0=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=orrMWi4ypjL149sZXpfjII4hV03jicCY8uPd7fFjBFztZfXXEln1yMqHNHF0sn1Bq
+         HDS2yhoMHZ9vkMJflJXo7fWD2V1qvK8ek9pkk5vjcUKhVziBtYH5SSSXaGbgBqxVr7
+         y41vmTii6MAcNCEZTRuIlCCUDAM2mA8mCEzwXnafjGlWALL1HGnes6xa/cR4Y17oyd
+         BM6hDDDIbSlOcbezhRe7MwrKPJMo4nzOuB1T9tfthhzaad3OYY8GNv989v6kMe18YG
+         65T/UwxrNyqbnsaG2wLR7/iiK7xG9ySaFmjyswSJ5M9ybVriIOsO3KfsPxbceMuME5
+         Idb9IfN5MpbOQ==
+Date:   Mon, 22 May 2023 14:26:04 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com,
+        fan.ni@samsung.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/mbox: Add background cmd handling machinery
+Message-ID: <ra4parotyzuzbqitq4qdenquqhsi4yesl5yobrd7kj6wtyzhuh@vxou7lguxo6u>
+References: <20230502171841.21317-1-dave@stgolabs.net>
+ <20230502171841.21317-4-dave@stgolabs.net>
+ <gtvozgdx2ak7tekc3heczk5g7gj3cwuoptez6tjmkecader4lo@7t2em7rclcxn>
+ <6468027e5d15b_682c12945b@dwillia2-xfh.jf.intel.com.notmuch>
+ <64jusopypczmfmkeg5ulzw6gwbfv4mdnk2jilmja7iyr5dsukc@vkpwdjsjsbk5>
+ <646bb221db164_33fb3294b3@dwillia2-xfh.jf.intel.com.notmuch>
+ <ps5l5kclllyhjfaelf6p7cl4vsq6v3lp5uxoqt6u5m4ha7adw5@6q4gjq7hlxpp>
+ <646bcda53c22c_33fb3294fa@dwillia2-xfh.jf.intel.com.notmuch>
+ <dbz7qo7rsbyc7r4vtcwc5lkpzpy2uz3q3cfd7qekhghp3amn3x@264xhf4swkda>
+ <646bdce675b59_35a4829434@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7946:EE_
-X-MS-Office365-Filtering-Correlation-Id: d83c0935-c68a-4f29-c5e7-08db5b0bdfd1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y93z43P/GohyiSXfjcoLW4HQTSPqH92R9GtQ2c4E49YCnlD9aXTrph7t0HbiAyYr+I/3prFD0cxRZya2qE4ppQPWQUPpSDdCVST026mZiV7/3vlV1EL80M2dYkM+ewH9zFP6lRP0oC1mM0tUiqr1aOVsSULMgzPkvRY5BKQK1kNJ5862MVDHsd5qqmKMgdSVy1tNXkKZiiiFrSwkErrwvkZtStHMZoa+gunQJn2jemHV8dZrlzK1UYjTfo/GLyJrvmjFeiIcStWZX6stFhtieMvUVmMZSKCbPpU9tVzuFIqHm3icdQGt0WcUO6z8ttnpObQNKs1RgUKHrUzmDg12RqaOa0HpiV1VjOeotiAocIV1M+/rZlO2mSHjm/lekdMnyigaQGd8g4geihqGI8ylpnzeZ9Ynwz1KdAcJWtIFcs+ttiTYjJ5dJOoUF8g8Q1jNnrOzbX1Dx8VZTXf5RhFwzOcv7FSxRd5xNurSP7qMhEt3OB9MHEk5ShdJ2uBPLQ/jTK3GeeEb3hrpRfBYjmvx4Pdw4iO7Yziki3G5abpgsPjHQ7dWErjPsB9T882LJK13
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(346002)(136003)(396003)(376002)(451199021)(8936002)(8676002)(5660300002)(186003)(83380400001)(6512007)(6506007)(9686003)(26005)(86362001)(38100700002)(82960400001)(41300700001)(6486002)(6666004)(66556008)(66476007)(66946007)(316002)(4326008)(478600001)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3pFcNCOOcTZtbVUO0qs89rQanhbOIw6Posr5/A/D6+qIZ2+ft+uI17oQpeSV?=
- =?us-ascii?Q?KE6x/lDNiVrNEen6krX9IID0wiMv3oMqNu8e2UcSaMuY19LA1JWCrOCTHmMw?=
- =?us-ascii?Q?9hbSeviw10TdF+uUGNJ2RSYG6QVU0CJYHwElkKSvsfNwSJ47l17g/t8t4JW2?=
- =?us-ascii?Q?q+pNBY3QahjnIHIXIifYXrC3G7Xc3s9A9hTp8v1Y2isqwNPyNEcWY+L4eb8R?=
- =?us-ascii?Q?f/z2LVPaixO7OKzZ4hI8fCaEPUOvJYIeltY+IAsIATkRDetuLdXFWR3ohdZE?=
- =?us-ascii?Q?/IIueCTTrp+rApfLbBqGFCjGaqtHpG+P8eKwY+GLhP8E/IZg19F89wbI8Fqa?=
- =?us-ascii?Q?Y/LJWVrOQOnpWAFWRVqq1SqDWKjLPatPPsaVoB2zgAUG/Ag422yISxY3QxJo?=
- =?us-ascii?Q?a1iqcycjSlPrRKoro7W1ptRSBgPDFfmy5PP76WeEknOhN9Lnuw2I4U5ceRv3?=
- =?us-ascii?Q?vIuQ+4+b6XyqS2MxmUbSI07/JkBJAKRFtElpwHjddXrRHoeAJIHEqb2CwZZh?=
- =?us-ascii?Q?/+5XUmYJJjKLx7LIwp2lNS5UvBk2/Kn++AVQRchSa5OdvfmDbPOhHVqsOUUy?=
- =?us-ascii?Q?4umoVSSlpFbzNjIWSfxeJtWbAWuBZ5I1A7xIMHA6kWzqtQuQYRiK/q0meQ7v?=
- =?us-ascii?Q?WtZe5G9a1NVbtBlSvliEt4QtBmZnx+MJGGGEhPHJuqNfnMqNiV2KcvXTjqFl?=
- =?us-ascii?Q?RgiwRhT9DSoFt1UIwiwTGtJL12JBCbxdFpRY3UfE5g2iFpd4ec4jUVd11/B1?=
- =?us-ascii?Q?Ns8LNat0ddHZMj7VAqcM/7S04OBs/lJgEocvVlFIGj56iuhffRRuiOqADbt6?=
- =?us-ascii?Q?0p+olJ8yHsnJKXkpTwANeDQt+DvlLFqUtWNPLYcKgQMm14EjRb7fPoG6YK95?=
- =?us-ascii?Q?mrRbsZ/6iYgeUIHGrpBWAWCGJQUTv796H0TlvPRNYTSm2n5Uxg249qLhWy3G?=
- =?us-ascii?Q?7W/x4BiAVFBL3LuR0uFIIpRGuNRv2/xUJx71Y2Lh7UIDGaf4YTBamKyDyf/r?=
- =?us-ascii?Q?NRjd0jTWE0uVAKHrplaywRK0yizg+1GJ6UFLcqKv/FNE/qt1r2OxqYVekhiE?=
- =?us-ascii?Q?dowF74n3sfm6g+qdzL+7u/t9zPkDHM0csqjFppKGrI0HwHV9HyQPP0PKKfQZ?=
- =?us-ascii?Q?T9iI9EKeZsol7ApHTc8Lv8B+28Db9AZ0PxhbkalRxFDKNyQ1CvQ4rdRBHvT3?=
- =?us-ascii?Q?swFj+Zbo0WnQ7Uaqhhap16y7Oh0aRPIa+PZbozGDy/5BudgdM5WSBO6jOJGb?=
- =?us-ascii?Q?+FqXPTgsb0bR3osZE1ieoTn0DioZLOtUaLI93+j+l93bLCOtBoVIDD17K5aA?=
- =?us-ascii?Q?o5J8++05vaNnXfgu+ow90GbyjpHhwQPU6MroqpwbS25qDzuiwuZGcyGSU0F6?=
- =?us-ascii?Q?k6RT0acJ4Qc8jcSxD5EHo/R1OVAbvE+ciM722qS6pIcX0d7YqkqYvRGOeVc2?=
- =?us-ascii?Q?1WyxnZofmwiJTOVkqgsLMj4JU1QXU32duYGXfsxUc8xcsfYt0KAAUdF0yL+H?=
- =?us-ascii?Q?WuBMZ2sBgKiBz9mSBMIvz3qcW65OVFP/qoJfg6+gLLTvj80N/W5/fft6slLl?=
- =?us-ascii?Q?61JD60DK2fBCrbqlRKqI9mHSMnuNg1KB96akpi1b6wlfIR0HFVA25Gn91Qlo?=
- =?us-ascii?Q?Zg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d83c0935-c68a-4f29-c5e7-08db5b0bdfd1
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 21:31:16.2614
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kwJDmwk5aw9m0fwWHSBp4Cz+rR0plPnhW1UIa7cvqtGcX2yC6D6c1LyvdR1qt5H/aJbZFFyORqUovHuwBRHRc8c28gJ0t/Qgy9huiNQjZuc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7946
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <646bdce675b59_35a4829434@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: NeoMutt/20230407
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dave Jiang wrote:
-> Some of the routines in ACPI tables.c can be shared with parsing CDAT.
+On Mon, 22 May 2023, Dan Williams wrote:
 
-s,ACPI tables.c,driver/acpi/tables.c,
+>So the choices are either allow the background command wait to be
+>interruptible and then do an implied sync on the next submission, or
+>make it uninterruptible where timeouts are either a real device problem
+>or a driver issue that needs to reduce the size of the background
+>operation to fit the timeout.
 
-> However, CDAT is used by CXL and can exist on platforms that do not use
-> ACPI.
+I obviously vote for the uninterruptible option and treat timeouts as
+a rare occurrence. In my answers I was only mentioning timeout case
+because of that uninterruptible wait context. The amount of bg capable
+commands are limited, and would expect timeout parameters to be fairly
+well inspected(?).
 
-Clarify that CDAT is not an ACPI table:
+So if ok with you a v3 would have these semantics.
 
-CDAT is a device-provided data structure that is formatted similar to a
-platform-provided ACPI table.
-
-> Split out the common routine from ACPI to accomodate platforms that
-> do not support ACPI. The common routines can be built outside of ACPI if
-> ACPI_TABLES_LIB is selected.
-
-Might be just me but I get confused where this is indicating "ACPI" the
-platform vs "CONFIG_ACPI" the code. How about just:
-
-Refactor the table parsing routines in driver/acpi/tables.c into helpers
-that can be shared with the CXL driver even in the CONFIG_ACPI=n case.
-
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/Makefile          |    2 
->  drivers/acpi/Kconfig      |    4 +
->  drivers/acpi/Makefile     |    3 +
->  drivers/acpi/tables.c     |  173 ----------------------------------------
->  drivers/acpi/tables_lib.c |  194 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/acpi.h      |   63 +++++++++------
->  6 files changed, 241 insertions(+), 198 deletions(-)
->  create mode 100644 drivers/acpi/tables_lib.c
-
-Conversion looks ok to me. Even though the cover letter said "Hi Rafael,
-Please consider these for 6.5 merge window" my expectation is to take
-these through CXL with ACPI acks.
-
-One question below:
-
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index 20b118dca999..1824797f7dfe 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -31,7 +31,7 @@ obj-y				+= idle/
->  # IPMI must come before ACPI in order to provide IPMI opregion support
->  obj-y				+= char/ipmi/
->  
-> -obj-$(CONFIG_ACPI)		+= acpi/
-> +obj-y				+= acpi/
->  
->  # PnP must come after ACPI since it will eventually need to check if acpi
->  # was used and do nothing if so
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index ccbeab9500ec..ce74a20dc42f 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -6,12 +6,16 @@
->  config ARCH_SUPPORTS_ACPI
->  	bool
->  
-> +config ACPI_TABLES_LIB
-> +	bool
-> +
->  menuconfig ACPI
->  	bool "ACPI (Advanced Configuration and Power Interface) Support"
->  	depends on ARCH_SUPPORTS_ACPI
->  	select PNP
->  	select NLS
->  	select CRC32
-> +	select ACPI_TABLES_LIB
->  	default y if X86
->  	help
->  	  Advanced Configuration and Power Interface (ACPI) support for 
-> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> index feb36c0b9446..4558e2876823 100644
-> --- a/drivers/acpi/Makefile
-> +++ b/drivers/acpi/Makefile
-> @@ -13,6 +13,9 @@ tables.o: $(src)/../../include/$(CONFIG_ACPI_CUSTOM_DSDT_FILE) ;
->  
->  endif
->  
-> +obj-$(CONFIG_ACPI_TABLES_LIB)	+= acpi_tables_lib.o
-> +acpi_tables_lib-y := tables_lib.o
-
-Why is a separate object name needed?
+Thanks,
+Davidlohr
