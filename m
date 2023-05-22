@@ -2,251 +2,429 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01BAC7EE29
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 22:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623AFC77B75
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 22:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234734AbjEVWZm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 May 2023 18:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38846 "EHLO
+        id S231716AbjEVWlp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 May 2023 18:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234746AbjEVWZk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 18:25:40 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E3E12B;
-        Mon, 22 May 2023 15:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684794337; x=1716330337;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=evGWS+j5x2TNvHm6NLj+sfHQmVPEHmFMCEY2sd1i9Uw=;
-  b=N27Nho2xlXFfemRQZNxOcJ04ucm6BRHqBbDI+Pu+m8tcbWgunXXIDtAz
-   rW7o7YZIUSlhhLmoSmPuf61zMRoovSxDZIkoh2H0xKGxmxm269SMuuAzI
-   Db1nd+rQC1lQ2OYDRfriC/pOeHzkd0MTu+RnhR85BbZTUaN7MXuWjMErs
-   ln6vrzmv/X78djeN0WMeol2z5plbFW/cl82aknArxHoqXabTRFh25ywKj
-   w8mr/1OhI81ANZfhS8Frp9bmlmWBfP2cTu7ilghDhx5yGsdndxMzvDC8M
-   NUFUGRYO9+KmfAfstSJj+s6Wk/r4Mxr/iWXkZbczzX5Kc/e3Xc5wpZopB
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="342514458"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="342514458"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 15:25:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="827851498"
-X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="827851498"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga004.jf.intel.com with ESMTP; 22 May 2023 15:25:36 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 22 May 2023 15:25:36 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 22 May 2023 15:25:35 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Mon, 22 May 2023 15:25:35 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Mon, 22 May 2023 15:25:35 -0700
+        with ESMTP id S231241AbjEVWlo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 18:41:44 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2041.outbound.protection.outlook.com [40.92.53.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2254CE6
+        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 15:41:41 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aJtkIqOXXFA2Fr1osSlM1PVdQqd5//IW42oY7c5ysa26UH3reRbEx5bqVE8prs4H1DlYfO8zY5nC9nXgoTJGc83LoFPkYhXb9Sz2QNKIwY12O6+ummLUOoI4bvLwCo/3V5ALG/nfK4NKe9n8N4qbjjYItaPOxwwde7iuMSOw6RWqkkc3FgYdMZa5guZYrNm4CxLAwQ2fxemzdZpb1i13AbUS6CAR8MLe304XXrEYZMgri4ygc9Su7pKjXbL1wViWPcbNYB1hfmmUQyA0uRWXgJZJoYlNytmlBPHelL8iyl13Bd2DxDA0BqBgcJyEXMA+WE7UO3OquL2kvUTllsp2Cg==
+ b=LuureBTnTyFkBEjfu5tW9AgCLGFNHFLvu1qAapjEv46RpaW4ygoakTbfIJ+3xK8XIe6V26e7zo8dQujGYuFPj+6n2WcD0URo1M8GP+L9SUcr60A5d7KYz9LRbSjv3fCFNA6Jr/h7Vd/0tVxmBOWGiwti53Zdu3rgKDx425cEbkWCzYXS1ze1gE8teEz1US9ts5pCE202+rcjbNWks7jQlAzUyOjhOK4fQ0lwzdCSrWG5dJWq2xEXRZwgTROaHU7zy3GLus2wfVJHEM27o0y4cSDWrGoa3x3t78skpzs85nukfJazBSP+iTtm6dbey6E7xIkp9Cc9bgI3UQEZIEYHXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hnpiNbjaQDtjlvEyZ0fWMRE8hBOhHstYXXFvOPpFLxU=;
- b=XLBqF/CpzKE6CM7CG4hKySRMQRNbS2QwmGUMd7WydTez6szrSzJmhyKQbuh32Rf2GQRHDSBVg6SfEw1Y67J2GrtclvtWyK+vuS9TAtnoV9z3mGKgspNFcU1MmdcgopAvQvdlZFG+9xkUcTGFPFdJjoU+iauC8eLqJGGl7cNvFhPUNBISo4kTJOpwE5jkjevSnWNM5BkT+fLCsHvyJImu9ITEEuFM7VbeYgcuRlnZi/VKMoK6llaEfmjR+vso8lOWKq9x6yvSvtJl+8mNwIAkDm/szx1RlLA66RE68LAP/1wPqU5cB/12fOaEff1w+NtMVirx+zHrbTP5Ma3rD0K4zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB6327.namprd11.prod.outlook.com (2603:10b6:8:d1::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
- 2023 22:25:28 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6411.028; Mon, 22 May 2023
- 22:25:28 +0000
-Date:   Mon, 22 May 2023 15:25:26 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-CC:     <rafael@kernel.org>, <lenb@kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <lukas@wunner.de>, <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 1/4] acpi: Move common tables helper functions to
- common lib
-Message-ID: <646bebd5ebaac_33fb3294df@dwillia2-xfh.jf.intel.com.notmuch>
-References: <168443445827.2966470.16511867875780059322.stgit@djiang5-mobl3>
- <168443478260.2966470.6881416930240756285.stgit@djiang5-mobl3>
- <646bdf21b9329_33fb329410@dwillia2-xfh.jf.intel.com.notmuch>
- <19907ea8-85bf-6e31-0798-ef8a1e4b842a@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+ bh=Q9Sxaj2ei0JII4ZcJwc63MK3L7esTaCc7O4SZM6v/is=;
+ b=Z39+hU5AmDiXxs/Or2yKpRSNsOdJwVcw5QF2uqTnSkvn0b2E3ZNeW195MUZXdASBj1wXqgoxFtpm4QTe30lTXE8BLwV9q35Ec81T4KAUg3RR48DuCFoXe/z8QfqQFDgQ+ih1V+l0Ug5WS7vyX02FeoBSv8V1Z6uChKQ2dEPjHWFGbvc+kI+CLpoh4Uthm2YZxLdOS1tKx5oiLJKy7ddBGsvF4XkNcFkLwRIY7nPx9cayGycQiR8UjOUQVCwhQF0USUkcVVsvjOAlrgyMgQZh0vj565iPBk2msQbKJwgd+tM/87tgjdVV7N6F4Y7mAMD9Hgso8erFM6GGj8h+md4KBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q9Sxaj2ei0JII4ZcJwc63MK3L7esTaCc7O4SZM6v/is=;
+ b=f29Yz2ZviAouKTrSIhgQPDDzwtuMQqGqr1loOcUI+cbpdlLpw7NdNXou3FX9bJvQtzljT9ifHPn2Tn/8vAdcYxjDPwSJRGAzGgIzGuGm4odF5rX21riWZP6kVfzGdXNoywI+FkhTAo7qxHYaNVTv9MG3of+Qk0VSInPsk/DLeb9eyxcgS/nQhzelYvO85jiQh2ly4AqfNOBALO4w0QAuezgmjkBfpooTHL8Ib46Cl+0DGYxwmhfdGrlG76DCeMICmMKTgRFHJoY+lTCUCgzmF6RNM2zk3u0KnKRbcuIrW4aEdzL6whQzuI//2USgszQy/S/JCmwkMoRNJjabbzSpzA==
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
+ SEYPR06MB5961.apcprd06.prod.outlook.com (2603:1096:101:d6::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6411.27; Mon, 22 May 2023 22:41:33 +0000
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::248c:58fd:97db:5425]) by SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::248c:58fd:97db:5425%7]) with mapi id 15.20.6411.021; Mon, 22 May 2023
+ 22:41:33 +0000
+Date:   Mon, 22 May 2023 15:41:21 -0700
+From:   Fan Ni <nifan@outlook.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>,
+        Eric Blake <eblake@redhat.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>,
+        Thomas Huth <thuth@redhat.com>, a.manzanares@samsung.com,
+        dave@stgolabs.net, nmtadam.samsung@gmail.com, nifan@outlook.com
+Subject: Re: [PATCH v7 4/7] hw/cxl/events: Add event interrupt support
+Message-ID: <SG2PR06MB339799CA0246F92C45A5F3EEB2439@SG2PR06MB3397.apcprd06.prod.outlook.com>
+References: <20230522150947.11546-1-Jonathan.Cameron@huawei.com>
+ <CGME20230522151155uscas1p10e91528b5f7619923c286b70b891abec@uscas1p1.samsung.com>
+ <20230522150947.11546-5-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <19907ea8-85bf-6e31-0798-ef8a1e4b842a@intel.com>
-X-ClientProxiedBy: SJ0PR13CA0118.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::33) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+In-Reply-To: <20230522150947.11546-5-Jonathan.Cameron@huawei.com>
+X-TMN:  [qAb0Zz/Qhqj7ju5YKmEzvcI0HKAx/NlD5ergwjytUxk=]
+X-ClientProxiedBy: SJ0PR13CA0198.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::23) To SG2PR06MB3397.apcprd06.prod.outlook.com
+ (2603:1096:4:7a::17)
+X-Microsoft-Original-Message-ID: <ZGvvkUi7Le8puZNt@outlook.com>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB6327:EE_
-X-MS-Office365-Filtering-Correlation-Id: e546e065-8f14-4d3b-1f9d-08db5b137243
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|SEYPR06MB5961:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97755f8b-dad2-4d16-f352-08db5b15b0e8
+X-MS-Exchange-SLBlob-MailProps: WaIXnCbdHrO3yEcJ8o8qPbkkVS+87Wk/8lm69NeR/J/Mg/ASWAsd8WITM86/Wns/aWmLLr9ajD27OoL4NSYXVc2BjEKDUpsnjR70YDBCx23t+GrhrxW+8IG5dCophEf9I4nM5d8XyyNIukAxoRXKMDWOF9VQbZJOm/d/I7heaM3fOfOhRE8K2XyMSOmz/2jX9Hf8P5zXcn0/2975Bdo0pQXnfQ9B3O5BsB0Z/cpC2GfRXnvUvhTFiF0SAD2/m84ARlQS7rFOBP1cf+//plDBK7qHquGmASWwPc5VuNF49U5sSODjNIZbxPXOAJdqzKNqFzVvO+A+mxpaFqYVNWX/6ZfgkA6EM57Qv9KRSTcM2DdI7b6KgP5Tvyz0liot+cDW1eV9nean7tkQPyI07gokPMBYtGW+Y839LDwX525EYMpyT40DcO0PP+4+iypXjx/wD26EMsbn36rpFGVPynYxdgG1tZue1szCsP37b7PT8IY9C1v1L3q0BbPamd5S2zmK8VRiMJu6/29mayrU58NNcq7bMunU8jLn0/Jl8uSIlYYCRAyzKEENp2pe0iyhlbJUXqmT3Mvjn9Kc7VD6HMu7GW4TfP5VMKPqeJTnREppIE4ErdGVrESvYZ55FHEeVyrHj/Mnpm59MJC/T/ORw3SnDWtWoODVBZR91cz1uu1+bR6UrUV+GAnohRW6EfkFmBb2/toBsyvTdNTNuOF7VBT8VNNGtY/z5XlgzyPon/0ApvfSalM9UcLQ8f+d5pe/itqfZnTOcRhGyNw=
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 33Xxdf8lA9zExe3BK34fJtDtqpeSOpTvrvYxPqui12LMuT7iUAdBGjV4/YfMrkW/vnHmUWSdCO4NpexYh5XDO7pIFdNl3Z8ToWrn/CxbMuINuzFx+e6XwaZ/GJYzIqxtl6h0ckTfUU+oVi1nEmhgJY92tIkaG+KYciLw0etZYzZwDpaNwtmK1bWDV0v0pOUGzQImysLO3dcjQQib20uO/jq+P8ulx+qTw+SsAm4BCIFiYKUPqWKnpz3ghmLCBZooVbklbSeV1LknL/gM/hsEg4/BO3SSQelODpZvp8JRvHj9zgpaRWPhyaIx4RVbFcAZd+P4r0D6pORYS3A+sLzdlhNj/FHQha3RkYKg3a+Fdv24oGeCdVFBqi9QRnzIfJvZ5wmCMOsvEgRx8oAJPJQ67RMeV+lHkH53qPzijb+aOH4g7sKy0OF4kjibLiF3TdZDs5J6nzXw9lepF4Nsv9RvvGt3FY+sXzkzksa+9Wf5IHFzBgLTOtKgend2o5JT3waU4Z+L5wdLqe5DY4uh7NQZkjzkfUIGR1zn/u8IA2I7tbjpl++12v4KKbOOFpIfwFiN
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(136003)(39860400002)(366004)(346002)(396003)(451199021)(8676002)(8936002)(5660300002)(83380400001)(9686003)(6512007)(186003)(6506007)(26005)(86362001)(53546011)(82960400001)(38100700002)(478600001)(41300700001)(4326008)(66476007)(6486002)(66946007)(66556008)(110136005)(316002)(2906002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: D72qTqox7Uj+Ku/Slg/H+nGKX4GAUHY2qEiCZUSgpUDV3mifzRtRrWp7Lvbe4wO3EfMmi0hyi0g4udA6TKvhybLSwbOYju2ai6xyq2naqtmOMtyHi1vK3B9SjR4cnQ80x7nmyUCyP3TKhGq7m0RCf0uZsIMKIYpSWW3VhslGVW72lcNTAA9BoAalDvrlb3czVm65bKPGp/zqCkd6XwgoKqsr9LrQsx0zVe2Y808p+9DiScha761MnTzamyS+ZoySb1jBq3YzUn8C6UmLo7Ym86Q3xhVTtJqhfFM6Q95HK3BBHgFP6TL5/e+wObVv6tVGSUji73NMbUXcK+pDd7BLEhAE+L6P7z3YlqylAq4wHxzemyd5j+X7d/dC9KmqtEhIzD56ts4OftAN7ZnXoi4jhGMqYrOq6E1VsaLMf7BStXzsvc9XIZRfHA7j6DiF4HhvURRL++vw4sBZnVADozeBAV9jo5zSHJa6Al2u1cdbGNUIZcsK6aJupOH25COU4m6jfCNa2XLMD/14DL6c9EazO4YERfEYcpqO/GhEXVzuWvP70lDRRL2bUZ0+5GUgVwzhEw+2owuESAq55cUxwhKPS0P9P47syMMOCJ9Uw3hREOwLlhK8irAizlZx9+jupVSxselAzE1E700hBC9VFXBTzA==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VmSPQrFg704Dps1whfALlvXwnyXsrTtYw0o6ncS+NLd5bZfJ5Zp9oelJ0AXH?=
- =?us-ascii?Q?0jyF63dG0cqB280WmJsOYekFjTuMmiqk6Rd9h1xKbyIzyKKHosM4KHcoE4S+?=
- =?us-ascii?Q?2bYIJf5TXOARmqnsuAD5cv2i1XPQMyT43s8w8Q6KQMB8UCOB+jPrpiZqcK7c?=
- =?us-ascii?Q?55sb+gi5UaM5vvknhH81PW9RP2MwXMwA+JIF6KI13F9txVDdGuofDWBH9GaC?=
- =?us-ascii?Q?7SPRE0MpMhRrBbwg6eyO2h7ECKSXtzH6kL2ZI3RZzmVmXwNAKcNNUfYxuy+V?=
- =?us-ascii?Q?9RH2ABMKsdHuExv2MPEtzWM7/pP+PVX52wuEiHZ81OZ2+WRX+XQ9RO4qcPcq?=
- =?us-ascii?Q?LWNF9uowlHeolVP+jhSR5R1IVl1ytVWE9Gkji25v7lJwOSSnBjxZDQUyO1uH?=
- =?us-ascii?Q?CshCYb44Qto5WBzETbZ2R0emNaTX6ivH8zOdsfTIUsJ+F4VGYdX7rbAuRglf?=
- =?us-ascii?Q?ahV03h4A1mdCxJSQx92B+TLY9y6sv0ZuiIV+7Fqt9m+qYxg8Ex/6/eXyMTsq?=
- =?us-ascii?Q?6IP8UvukUp8pNG5UPAtFnpNflbmPiMJy+kIIl+0CVPWeLDh5q0M/Us/k+b1Q?=
- =?us-ascii?Q?PdSk/wneMveK5paAd6cakij0rkkZmQpBEaKKL1cPyNN5EhbBu5LnN1Az9hkw?=
- =?us-ascii?Q?5AZvEnGFTlf4hrgp219RlHdJGyZrMoukzjxtH3HwnZ/pOcF3xDS5MhOwPPKX?=
- =?us-ascii?Q?6UAe0t7xh3YKm0IF5ziKRiY2Rdy1f4xXJYmfA0ke2EzPGD6aqoLBsT+Zr3DG?=
- =?us-ascii?Q?P2f2taZEhCXPBai+q9ei9/L3PuiQVIKaqZnGBqZUnMs85GsAy5PV4MCwFi+M?=
- =?us-ascii?Q?DMwJeL0FLhrcfthHRbDW4uMsNG9oUvz/tHdhsNOAetvIO6pYqbn2EAvmlQsu?=
- =?us-ascii?Q?J9DooJyvGJoA9Sm0FphwF6rNt8MVXTNdI9rRlC4sYJ6v6GGRUK7xZTxlKNF8?=
- =?us-ascii?Q?zEMzwpAkiOw+oneGl7l6PZ69H0xT+5x4BMAh4uw0O2lzCQZhLF9YdPv5MiWS?=
- =?us-ascii?Q?rrWq0AQeBDqx+3Sckn7VBxUgiE/6gOrnzk0MS8BxgJMAYzc1/KDcBSHKxMdJ?=
- =?us-ascii?Q?dHT3ctj46kIfcNTy/nM+NPvRXga7TcPf/ulfJSLHZvlqpKwfEGqNvtzHZ84S?=
- =?us-ascii?Q?41Od3DHAGBtqHKyTe4Wv0YS9sycYSzkgSMdmIS0BYrHQVu0+QzNkJCo83UOF?=
- =?us-ascii?Q?lA3R4f0bEZYdzyIXIO72HWDntaUnoxgNjY6xOaw77++JZei2SIjVWcf44yDH?=
- =?us-ascii?Q?DAS2Q1HgbvWx9YUiEG32snRlGfwC+FuUxdtum9aWt0uo1xTmRFENE6/djvdy?=
- =?us-ascii?Q?vtKHAin3o5j1vdBXpLV40KO1slZKwJeQ0o1rcn0SFj40rq5dagifG8eGTpD/?=
- =?us-ascii?Q?tEHOa1T4p24TgAfPoKwDvWwwtaX2WZ9CQ6fdxVfDQ1oHS8zZ3EqMdrlBN1iC?=
- =?us-ascii?Q?58HGGGQna32sXuF18ttkg8VAPZi56ucxtxpk57VbKXpbDemudVnDKSQ0QCU5?=
- =?us-ascii?Q?CAn2vHD2Sk65ONkdeURnB1BDfC+Gu+LR91zNuU987pa2cG2KO8BGG+QPZZ4Y?=
- =?us-ascii?Q?Qrs88RtWjQrvoDdS3ozNuOFEY0eBvsn1i6dFlO2fg76+LoD3wrISNSQMrenJ?=
- =?us-ascii?Q?Nw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e546e065-8f14-4d3b-1f9d-08db5b137243
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QTJhb0lJOVRDZnpTQ01rSmhtWkV4RE5kR3M0WXduZkVvangvWnQ3V2JUV3hO?=
+ =?utf-8?B?UUk1aEp1bnBKYlZpSjRpTWlkSUNxeGVVK1RQcCtLNzI2V0Q3VVo4UjdhQ0VW?=
+ =?utf-8?B?S2Rabm5HZjBzYmR4UWc5bjU0czF0Y1RobGtOYXQvd2tiMWpieGhuak5uMmNV?=
+ =?utf-8?B?NmNLcUhiRXRlL053RlhwbXRRNUtWT3lCVE5JWFZhNHl6WEptbmVGM0RlT25l?=
+ =?utf-8?B?WXpGTWVNSHZsdWg0UE1jVHBtVHRwQnBHcUJsV2drL1JCZXQvbkh6SEkwTGJ4?=
+ =?utf-8?B?eGpyS1pwU3MrdGZ4N1ZNRU50eWs2ektnbEY3RnFyZ3VIb0F4d1BWemMyY05n?=
+ =?utf-8?B?Yk1pRE5yclJ4cXErVldvSGc5cnlhQkFQaDRCaHdsOVZJVVRISUNUeDZFbzFP?=
+ =?utf-8?B?bk9ac1F1TzNrSmJidzFwd0FuMnR6bmlZbGNTN2hSS0RmWTJWUUx0aXVrTUI0?=
+ =?utf-8?B?bHhJVUNxTGk5dnBOQ2t3L0lDbko5aTFWK09qZFc1U2h0L2xLN3lhdFVITXll?=
+ =?utf-8?B?azloQU9acDh0R2VIRGJyQXZyZ0Iva2Q1WDlWVUlYVGZSRUxWOVdPdit3ellM?=
+ =?utf-8?B?emNuMTZuS2VPQVVqeGZtZ1BENnp0em5QZ1RmbGR6QkxZSTV1TjVtb2hHRE5M?=
+ =?utf-8?B?amNqME5qN2pwd3ZZaGhtTDFoWmMwSE5Mck8yRlRCLzFLVkZZOVhZcVNIVnN0?=
+ =?utf-8?B?TDBQdW9iNUE5aXZWb0NtOU05ZVI1YlJpZmFOOVRJdzlpMFNYd2kwSmxKNDBV?=
+ =?utf-8?B?VGg5SExDSFVQbnliMDdGeU9ZT2VBalNIeHc5TVpMdUEvSTdwNGRpMk9oNG45?=
+ =?utf-8?B?TXJnS0ttNWNuSi9tREN5bjcvZnJBMWlXVWNsOURvOU0xQ2NUTzVzYzJOV3pI?=
+ =?utf-8?B?UG4zbmEwcHlLYWRydGJKZDVEMEUrT0F3V3U2TWxDcUxOd1NoUjU3WFMxc1h1?=
+ =?utf-8?B?amc0K3NPSGV3MzNJTytCbTdZSjRqeFFyTXllQU5OUkhaN0dvTE94UjdnZU5v?=
+ =?utf-8?B?OXVnNFBWMjN2NzRqT0dEZ3hZdWtFaTdkNHFhRGdnSFRZTU5KZWs0RmpEdE15?=
+ =?utf-8?B?c3ZMYkU4eHdLNFU2aFJOdms2blRYUmhEMXowUC9HR3ExdmdudExrSjhQbyt2?=
+ =?utf-8?B?VTlsM1NUaU0yQkNrcUJlYTU0QTJ6VlhkOXkwMjNrR0g3Yno4NVNWcTliNmpV?=
+ =?utf-8?B?RmY2SUhtdjRqdjRJd2ZZSWtqU05odTI5cW5SUnZvUE93RWdMcG4ydTVrb2R2?=
+ =?utf-8?B?OUVham5ubnozNzBMR0RlQk1ZaElXbW53QWNqZ2hwdmZsMXRsRUhTNHNYektR?=
+ =?utf-8?B?SjE5dTEvUUF6L3Z0QzZabmtqT0lTRitJWStYQ0ZWTUlTZzZRZXNPelpsV2RH?=
+ =?utf-8?B?L2p6RkE0M3NMdWhlZm9NTUpQQjZDeitFRUVkN1Y4SkpZMFNpTGtrckpab0ZO?=
+ =?utf-8?B?Mi93VTRVU0ozaFJGR1h4YXhpbW5ScGRYMGJEMjBMUGYraDZ0dHQ5SHVISG5D?=
+ =?utf-8?B?cEdvcjR5LzAxK3RwbUVIemQ4RCtFUmgwQWdEdzNSdXpMQ0dBNkhWQ3BKQVlt?=
+ =?utf-8?B?YlByVmpFSmZkc3U0YWdjRFJ2dkFIRlJ0Wk1UVHkwbmpDYnpuY1RhUjM2YXg5?=
+ =?utf-8?Q?R3vWd+MFhuPGamtZ02sJ/zbX1jivChG7lLyBnS+Pd4xY=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97755f8b-dad2-4d16-f352-08db5b15b0e8
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 22:25:28.5881
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 22:41:33.6544
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GTudN0f/V3TKGBVNbELBa6fKyCT/wP8QyqthMXmHrRLyqpKsh5GmYvPYqJnNu8gJP71yB7BvcQMAZRNbXQ/3kEN8p6kRznK0LZe0g0E5GX4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6327
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5961
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dave Jiang wrote:
+The 05/22/2023 16:09, Jonathan Cameron wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> On 5/22/23 14:31, Dan Williams wrote:
-> > Dave Jiang wrote:
-> >> Some of the routines in ACPI tables.c can be shared with parsing CDAT.
-> > s,ACPI tables.c,driver/acpi/tables.c,
-> >
-> >> However, CDAT is used by CXL and can exist on platforms that do not use
-> >> ACPI.
-> > Clarify that CDAT is not an ACPI table:
-> >
-> > CDAT is a device-provided data structure that is formatted similar to a
-> > platform-provided ACPI table.
-> >
-> >> Split out the common routine from ACPI to accomodate platforms that
-> >> do not support ACPI. The common routines can be built outside of ACPI if
-> >> ACPI_TABLES_LIB is selected.
-> > Might be just me but I get confused where this is indicating "ACPI" the
-> > platform vs "CONFIG_ACPI" the code. How about just:
-> >
-> > Refactor the table parsing routines in driver/acpi/tables.c into helpers
-> > that can be shared with the CXL driver even in the CONFIG_ACPI=n case.
-> >
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >> ---
-> >>   drivers/Makefile          |    2
-> >>   drivers/acpi/Kconfig      |    4 +
-> >>   drivers/acpi/Makefile     |    3 +
-> >>   drivers/acpi/tables.c     |  173 ----------------------------------------
-> >>   drivers/acpi/tables_lib.c |  194 +++++++++++++++++++++++++++++++++++++++++++++
-> >>   include/linux/acpi.h      |   63 +++++++++------
-> >>   6 files changed, 241 insertions(+), 198 deletions(-)
-> >>   create mode 100644 drivers/acpi/tables_lib.c
-> > Conversion looks ok to me. Even though the cover letter said "Hi Rafael,
-> > Please consider these for 6.5 merge window" my expectation is to take
-> > these through CXL with ACPI acks.
+> Replace the stubbed out CXL Get/Set Event interrupt policy mailbox
+> commands.  Enable those commands to control interrupts for each of the
+> event log types.
 > 
-> I thought you wanted Rafael to take the ACPI patches. But going to the 
-> CXL tree works.
+> Skip the standard input mailbox length on the Set command due to DCD
+> being optional.  Perform the checks separately.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
-Ultimately up to Rafael. Either need a stable ACPI tree baseline to base
-the CDAT work upon, or take this all through CXL.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
+>  include/hw/cxl/cxl_device.h |   6 +-
+>  include/hw/cxl/cxl_events.h |  23 ++++++++
+>  hw/cxl/cxl-events.c         |  33 ++++++++++-
+>  hw/cxl/cxl-mailbox-utils.c  | 106 +++++++++++++++++++++++++++++-------
+>  hw/mem/cxl_type3.c          |   4 +-
+>  5 files changed, 147 insertions(+), 25 deletions(-)
 > 
-> >
-> > One question below:
-> >
-> >> diff --git a/drivers/Makefile b/drivers/Makefile
-> >> index 20b118dca999..1824797f7dfe 100644
-> >> --- a/drivers/Makefile
-> >> +++ b/drivers/Makefile
-> >> @@ -31,7 +31,7 @@ obj-y				+= idle/
-> >>   # IPMI must come before ACPI in order to provide IPMI opregion support
-> >>   obj-y				+= char/ipmi/
-> >>   
-> >> -obj-$(CONFIG_ACPI)		+= acpi/
-> >> +obj-y				+= acpi/
-> >>   
-> >>   # PnP must come after ACPI since it will eventually need to check if acpi
-> >>   # was used and do nothing if so
-> >> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> >> index ccbeab9500ec..ce74a20dc42f 100644
-> >> --- a/drivers/acpi/Kconfig
-> >> +++ b/drivers/acpi/Kconfig
-> >> @@ -6,12 +6,16 @@
-> >>   config ARCH_SUPPORTS_ACPI
-> >>   	bool
-> >>   
-> >> +config ACPI_TABLES_LIB
-> >> +	bool
-> >> +
-> >>   menuconfig ACPI
-> >>   	bool "ACPI (Advanced Configuration and Power Interface) Support"
-> >>   	depends on ARCH_SUPPORTS_ACPI
-> >>   	select PNP
-> >>   	select NLS
-> >>   	select CRC32
-> >> +	select ACPI_TABLES_LIB
-> >>   	default y if X86
-> >>   	help
-> >>   	  Advanced Configuration and Power Interface (ACPI) support for
-> >> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
-> >> index feb36c0b9446..4558e2876823 100644
-> >> --- a/drivers/acpi/Makefile
-> >> +++ b/drivers/acpi/Makefile
-> >> @@ -13,6 +13,9 @@ tables.o: $(src)/../../include/$(CONFIG_ACPI_CUSTOM_DSDT_FILE) ;
-> >>   
-> >>   endif
-> >>   
-> >> +obj-$(CONFIG_ACPI_TABLES_LIB)	+= acpi_tables_lib.o
-> >> +acpi_tables_lib-y := tables_lib.o
-> > Why is a separate object name needed?
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index d3aec1bc0e..1978730fba 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -121,6 +121,8 @@ typedef struct CXLEventLog {
+>      uint16_t overflow_err_count;
+>      uint64_t first_overflow_timestamp;
+>      uint64_t last_overflow_timestamp;
+> +    bool irq_enabled;
+> +    int irq_vec;
+>      QemuMutex lock;
+>      QSIMPLEQ_HEAD(, CXLEvent) events;
+>  } CXLEventLog;
+> @@ -369,7 +371,7 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+>  
+>  uint64_t cxl_device_get_timestamp(CXLDeviceState *cxlds);
+>  
+> -void cxl_event_init(CXLDeviceState *cxlds);
+> +void cxl_event_init(CXLDeviceState *cxlds, int start_msg_num);
+>  bool cxl_event_insert(CXLDeviceState *cxlds, CXLEventLogType log_type,
+>                        CXLEventRecordRaw *event);
+>  CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+> @@ -378,6 +380,8 @@ CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+>  CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
+>                                     CXLClearEventPayload *pl);
+>  
+> +void cxl_event_irq_assert(CXLType3Dev *ct3d);
+> +
+>  void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d);
+>  
+>  #endif
+> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> index d4aaa894f1..4bf8b7aa08 100644
+> --- a/include/hw/cxl/cxl_events.h
+> +++ b/include/hw/cxl/cxl_events.h
+> @@ -80,4 +80,27 @@ typedef struct CXLClearEventPayload {
+>      uint16_t handle[];
+>  } CXLClearEventPayload;
+>  
+> +/**
+> + * Event Interrupt Policy
+> + *
+> + * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
+> + */
+> +typedef enum CXLEventIntMode {
+> +    CXL_INT_NONE     = 0x00,
+> +    CXL_INT_MSI_MSIX = 0x01,
+> +    CXL_INT_FW       = 0x02,
+> +    CXL_INT_RES      = 0x03,
+> +} CXLEventIntMode;
+> +#define CXL_EVENT_INT_MODE_MASK 0x3
+> +#define CXL_EVENT_INT_SETTING(vector) ((((uint8_t)vector & 0xf) << 4) | CXL_INT_MSI_MSIX)
+> +typedef struct CXLEventInterruptPolicy {
+> +    uint8_t info_settings;
+> +    uint8_t warn_settings;
+> +    uint8_t failure_settings;
+> +    uint8_t fatal_settings;
+> +    uint8_t dyn_cap_settings;
+> +} QEMU_PACKED CXLEventInterruptPolicy;
+> +/* DCD is optional but other fields are not */
+> +#define CXL_EVENT_INT_SETTING_MIN_LEN 4
+> +
+>  #endif /* CXL_EVENTS_H */
+> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+> index 5da1b76b97..d161d57456 100644
+> --- a/hw/cxl/cxl-events.c
+> +++ b/hw/cxl/cxl-events.c
+> @@ -13,6 +13,8 @@
+>  #include "qemu/bswap.h"
+>  #include "qemu/typedefs.h"
+>  #include "qemu/error-report.h"
+> +#include "hw/pci/msi.h"
+> +#include "hw/pci/msix.h"
+>  #include "hw/cxl/cxl.h"
+>  #include "hw/cxl/cxl_events.h"
+>  
+> @@ -26,7 +28,7 @@ static void reset_overflow(CXLEventLog *log)
+>      log->last_overflow_timestamp = 0;
+>  }
+>  
+> -void cxl_event_init(CXLDeviceState *cxlds)
+> +void cxl_event_init(CXLDeviceState *cxlds, int start_msg_num)
+>  {
+>      CXLEventLog *log;
+>      int i;
+> @@ -37,9 +39,16 @@ void cxl_event_init(CXLDeviceState *cxlds)
+>          log->overflow_err_count = 0;
+>          log->first_overflow_timestamp = 0;
+>          log->last_overflow_timestamp = 0;
+> +        log->irq_enabled = false;
+> +        log->irq_vec = start_msg_num++;
+>          qemu_mutex_init(&log->lock);
+>          QSIMPLEQ_INIT(&log->events);
+>      }
+> +
+> +    /* Override -- Dynamic Capacity uses the same vector as info */
+> +    cxlds->event_logs[CXL_EVENT_TYPE_DYNAMIC_CAP].irq_vec =
+> +                      cxlds->event_logs[CXL_EVENT_TYPE_INFO].irq_vec;
+> +
+>  }
+>  
+>  static CXLEvent *cxl_event_get_head(CXLEventLog *log)
+> @@ -215,3 +224,25 @@ CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds, CXLClearEventPayload *
+>  
+>      return CXL_MBOX_SUCCESS;
+>  }
+> +
+> +void cxl_event_irq_assert(CXLType3Dev *ct3d)
+> +{
+> +    CXLDeviceState *cxlds = &ct3d->cxl_dstate;
+> +    PCIDevice *pdev = &ct3d->parent_obj;
+> +    int i;
+> +
+> +    for (i = 0; i < CXL_EVENT_TYPE_MAX; i++) {
+> +        CXLEventLog *log = &cxlds->event_logs[i];
+> +
+> +        if (!log->irq_enabled || cxl_event_empty(log)) {
+> +            continue;
+> +        }
+> +
+> +        /*  Notifies interrupt, legacy IRQ is not supported */
+> +        if (msix_enabled(pdev)) {
+> +            msix_notify(pdev, log->irq_vec);
+> +        } else if (msi_enabled(pdev)) {
+> +            msi_notify(pdev, log->irq_vec);
+> +        }
+> +    }
+> +}
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 3f46538048..02f9b5a870 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -80,25 +80,6 @@ struct cxl_cmd {
+>      uint8_t *payload;
+>  };
+>  
+> -#define DEFINE_MAILBOX_HANDLER_ZEROED(name, size)                         \
+> -    uint16_t __zero##name = size;                                         \
+> -    static CXLRetCode cmd_##name(struct cxl_cmd *cmd,                       \
+> -                                 CXLDeviceState *cxl_dstate, uint16_t *len) \
+> -    {                                                                     \
+> -        *len = __zero##name;                                              \
+> -        memset(cmd->payload, 0, *len);                                    \
+> -        return CXL_MBOX_SUCCESS;                                          \
+> -    }
+> -#define DEFINE_MAILBOX_HANDLER_NOP(name)                                  \
+> -    static CXLRetCode cmd_##name(struct cxl_cmd *cmd,                       \
+> -                                 CXLDeviceState *cxl_dstate, uint16_t *len) \
+> -    {                                                                     \
+> -        return CXL_MBOX_SUCCESS;                                          \
+> -    }
+> -
+> -DEFINE_MAILBOX_HANDLER_ZEROED(events_get_interrupt_policy, 4);
+> -DEFINE_MAILBOX_HANDLER_NOP(events_set_interrupt_policy);
+> -
+>  static CXLRetCode cmd_events_get_records(struct cxl_cmd *cmd,
+>                                           CXLDeviceState *cxlds,
+>                                           uint16_t *len)
+> @@ -136,6 +117,88 @@ static CXLRetCode cmd_events_clear_records(struct cxl_cmd *cmd,
+>      return cxl_event_clear_records(cxlds, pl);
+>  }
+>  
+> +static CXLRetCode cmd_events_get_interrupt_policy(struct cxl_cmd *cmd,
+> +                                                  CXLDeviceState *cxlds,
+> +                                                  uint16_t *len)
+> +{
+> +    CXLEventInterruptPolicy *policy;
+> +    CXLEventLog *log;
+> +
+> +    policy = (CXLEventInterruptPolicy *)cmd->payload;
+> +    memset(policy, 0, sizeof(*policy));
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_INFO];
+> +    if (log->irq_enabled) {
+> +        policy->info_settings = CXL_EVENT_INT_SETTING(log->irq_vec);
+> +    }
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_WARN];
+> +    if (log->irq_enabled) {
+> +        policy->warn_settings = CXL_EVENT_INT_SETTING(log->irq_vec);
+> +    }
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_FAIL];
+> +    if (log->irq_enabled) {
+> +        policy->failure_settings = CXL_EVENT_INT_SETTING(log->irq_vec);
+> +    }
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_FATAL];
+> +    if (log->irq_enabled) {
+> +        policy->fatal_settings = CXL_EVENT_INT_SETTING(log->irq_vec);
+> +    }
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_DYNAMIC_CAP];
+> +    if (log->irq_enabled) {
+> +        /* Dynamic Capacity borrows the same vector as info */
+> +        policy->dyn_cap_settings = CXL_INT_MSI_MSIX;
+> +    }
+> +
+> +    *len = sizeof(*policy);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +static CXLRetCode cmd_events_set_interrupt_policy(struct cxl_cmd *cmd,
+> +                                                  CXLDeviceState *cxlds,
+> +                                                  uint16_t *len)
+> +{
+> +    CXLEventInterruptPolicy *policy;
+> +    CXLEventLog *log;
+> +
+> +    if (*len < CXL_EVENT_INT_SETTING_MIN_LEN) {
+> +        return CXL_MBOX_INVALID_PAYLOAD_LENGTH;
+> +    }
+> +
+> +    policy = (CXLEventInterruptPolicy *)cmd->payload;
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_INFO];
+> +    log->irq_enabled = (policy->info_settings & CXL_EVENT_INT_MODE_MASK) ==
+> +                        CXL_INT_MSI_MSIX;
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_WARN];
+> +    log->irq_enabled = (policy->warn_settings & CXL_EVENT_INT_MODE_MASK) ==
+> +                        CXL_INT_MSI_MSIX;
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_FAIL];
+> +    log->irq_enabled = (policy->failure_settings & CXL_EVENT_INT_MODE_MASK) ==
+> +                        CXL_INT_MSI_MSIX;
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_FATAL];
+> +    log->irq_enabled = (policy->fatal_settings & CXL_EVENT_INT_MODE_MASK) ==
+> +                        CXL_INT_MSI_MSIX;
+> +
+> +    /* DCD is optional */
+> +    if (*len < sizeof(*policy)) {
+> +        return CXL_MBOX_SUCCESS;
+> +    }
+> +
+> +    log = &cxlds->event_logs[CXL_EVENT_TYPE_DYNAMIC_CAP];
+> +    log->irq_enabled = (policy->dyn_cap_settings & CXL_EVENT_INT_MODE_MASK) ==
+> +                        CXL_INT_MSI_MSIX;
+> +
+> +    *len = sizeof(*policy);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /* 8.2.9.2.1 */
+>  static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
+>                                                 CXLDeviceState *cxl_dstate,
+> @@ -611,9 +674,10 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+>      [EVENTS][CLEAR_RECORDS] = { "EVENTS_CLEAR_RECORDS",
+>          cmd_events_clear_records, ~0, IMMEDIATE_LOG_CHANGE },
+>      [EVENTS][GET_INTERRUPT_POLICY] = { "EVENTS_GET_INTERRUPT_POLICY",
+> -        cmd_events_get_interrupt_policy, 0, 0 },
+> +                                      cmd_events_get_interrupt_policy, 0, 0 },
+>      [EVENTS][SET_INTERRUPT_POLICY] = { "EVENTS_SET_INTERRUPT_POLICY",
+> -        cmd_events_set_interrupt_policy, 4, IMMEDIATE_CONFIG_CHANGE },
+> +                                      cmd_events_set_interrupt_policy,
+> +                                      ~0, IMMEDIATE_CONFIG_CHANGE },
+>      [FIRMWARE_UPDATE][GET_INFO] = { "FIRMWARE_UPDATE_GET_INFO",
+>          cmd_firmware_update_get_info, 0, 0 },
+>      [TIMESTAMP][GET] = { "TIMESTAMP_GET", cmd_timestamp_get, 0, 0 },
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index ec5a384885..c9e347f42b 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -659,7 +659,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>      ComponentRegisters *regs = &cxl_cstate->crb;
+>      MemoryRegion *mr = &regs->component_registers;
+>      uint8_t *pci_conf = pci_dev->config;
+> -    unsigned short msix_num = 1;
+> +    unsigned short msix_num = 6;
+>      int i, rc;
+>  
+>      QTAILQ_INIT(&ct3d->error_list);
+> @@ -723,8 +723,8 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>      if (rc) {
+>          goto err_release_cdat;
+>      }
+> +    cxl_event_init(&ct3d->cxl_dstate, 2);
+>  
+> -    cxl_event_init(&ct3d->cxl_dstate);
+>      return;
+>  
+>  err_release_cdat:
+> -- 
+> 2.39.2
 > 
-> Not all code in tables.c will be shared. There are ACPI table parsing 
-> specific code in tables.c that CXL does not care about. Or do you mean 
-> just do
-> 
-> obj-$(CONFIG_ACPI_TABLES_LIB) += tables_lib.o
 
-Yes, this.
+-- 
+Fan Ni <nifan@outlook.com>
