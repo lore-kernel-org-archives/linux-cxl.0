@@ -2,302 +2,583 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EB1C77B73
-	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 19:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AE1C77B73
+	for <linux-cxl@archiver.kernel.org>; Mon, 22 May 2023 19:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234748AbjEVTbJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 May 2023 15:31:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52732 "EHLO
+        id S235442AbjEVTvS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 May 2023 15:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234154AbjEVTbI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 15:31:08 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE83E9C
-        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 12:31:01 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id A45B9502330;
-        Mon, 22 May 2023 19:31:00 +0000 (UTC)
-Received: from pdx1-sub0-mail-a206.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 259CF5027EC;
-        Mon, 22 May 2023 19:31:00 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684783860; a=rsa-sha256;
-        cv=none;
-        b=80H5UO6V2vu4UgMKa68Cr6AK97Lu7CjX1e1+5+oFWXj7yAv65GrO+ZH3eg5F5ckvaXIIyG
-        OI667oLVSjLWY0+XIPyn2M0b2zRq+7f+Ayxe7R/JmLF+vL6rFs2Op55L1zaJzn39r9a+pC
-        WKEqwvTFs+1I07GlVRqFjmYKgC/mnV7r3RxDp3ljjh6B1aG6oMS/Tn9uRjGZ7qaW2xbNn/
-        OT6vddydXRLQgaCioh1b5pcEVrME4YchhDaWwsOHZbhxlI6CbWl827Cvi1almq8800rsSQ
-        4k/HNGJjZIU1i1noX5QYXyfrOuWJdjc/wptdl/vPvIGhHGTQHzaRR0+eK4WlWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1684783860;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=sFhwY1ilRJ86On7JHrHJI1e5YeTLoZLeQGOTPmhwWgs=;
-        b=h8TKNmqCRTDmzdCYtQ/MR86Oe7jpyTpaLYe+o+Puqy0vs+mDFyuXM9frJhCEH8nUWAf+KY
-        QvPfPp10AHhOXEM3V5wNk01lIpIaSV+7lVIXKJ1ku60puHzdl0cx148+7KvOCW05rVs3JO
-        aoNsqPBiUKXa6krdtZs+kPmnIUMnxjnN5JXwNjpIk70VyLzoe/OR4klZwK6h71rHAC9huS
-        HxvUyvNTRaoIqiU+sLx0YOzL+xwI38tTMBDd4jFGs+vP/mrxrFTSySqHc1YiZVCy1usET2
-        UYIL3V1m3T328IBczQ+xPX3lnqg//UJpYSTaG3aRqzsbgBX2YEokNcWg1yetrg==
-ARC-Authentication-Results: i=1;
-        rspamd-79bb5575d7-m656l;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tasty-Soft: 718c178340f99fe4_1684783860463_3007638707
-X-MC-Loop-Signature: 1684783860463:2868091386
-X-MC-Ingress-Time: 1684783860462
-Received: from pdx1-sub0-mail-a206.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.115.252.222 (trex/6.8.1);
-        Mon, 22 May 2023 19:31:00 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a206.dreamhost.com (Postfix) with ESMTPSA id 4QQ6xb31HYz8J;
-        Mon, 22 May 2023 12:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1684783859;
-        bh=sFhwY1ilRJ86On7JHrHJI1e5YeTLoZLeQGOTPmhwWgs=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=jPcuShCz6ko84jquQNwCQajhchy6TSueGdH6CyNXchBzdWGjrFk1VxdgR/XX+n6YU
-         0fniDyBREiqKBFN/hymFDEwd9b5ahbqEqEBvB3Ot/kqgFhqn31MOHGS+604u64uTEX
-         GW9qteLFKOfjeMSY1KSA3pd/9eX0zUjfyxheRjPl37nl3qsod7pt9hQpN7O7OsJjJ1
-         DuyIUFUX4l3VF1Kwv6YmTGiGmJHwmRG6c6O9u7s2af9W49EMRRWziisHo+17K49j8Y
-         n/IlWFIfX+TYbktDttdAK0isibxshc4pKUsZ7zK7tOPETjrl7beVi0k7Oxhfcru8YD
-         xg4Gb30PsEHXQ==
-Date:   Mon, 22 May 2023 11:57:32 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, Jonathan.Cameron@huawei.com,
-        fan.ni@samsung.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/mbox: Add background cmd handling machinery
-Message-ID: <ps5l5kclllyhjfaelf6p7cl4vsq6v3lp5uxoqt6u5m4ha7adw5@6q4gjq7hlxpp>
-References: <20230502171841.21317-1-dave@stgolabs.net>
- <20230502171841.21317-4-dave@stgolabs.net>
- <gtvozgdx2ak7tekc3heczk5g7gj3cwuoptez6tjmkecader4lo@7t2em7rclcxn>
- <6468027e5d15b_682c12945b@dwillia2-xfh.jf.intel.com.notmuch>
- <64jusopypczmfmkeg5ulzw6gwbfv4mdnk2jilmja7iyr5dsukc@vkpwdjsjsbk5>
- <646bb221db164_33fb3294b3@dwillia2-xfh.jf.intel.com.notmuch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        with ESMTP id S235444AbjEVTu6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 15:50:58 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2082.outbound.protection.outlook.com [40.92.52.82])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27DEF12B
+        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 12:50:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NNY2+1mtfylTtpakMz6oUM6xD8ErDDP+c9415bZdVvffzng3ypEigGJ495BVlHs0nmvyQHflWyF/MQ5Du/AOzxdjZjMtd4kST3K1tBUR5eS7CwRYlSgWbteVDKEC9iivWJe1e6UZ8mVu4kl4woKp7gouVGn7G1ysrQwCeAHHN4XIMJiwWZwUsBlbVHJq1ktMa0yLHPQJ73LfGmHxNwnO9VE15Tt5t0a02ipDdqvInn4Ythu/El9IrYluAwGra1/NHgIQZsZEGO8tw61xsPRxIi+0S/tQBnsC4iliUclSIE+JVtbxJKRDkM+XwS2Q7Ct86dhvFXcMxkgxuzPMPj2Scw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WBO35UCzaez7CLkXANWJPWfb0JcQ0UYghIH6Nz+U6Jg=;
+ b=JQjCdMWvx7MeW3du3rfnf2R5PvbX+aaKGzOLm4RdNfHaTxieVC0Hkgs6l/pgM+6DUdDUPornkqBvFHMcWPEDh+zz1v4O07ps/AWJogtExDH/o17zNAeLnbVV8c0/F1NW4j8Hhz08kAVMZVSWFqHV35XlmXK5abNIEIU3FyHPYARh5GHdeC+CxzkmCy+d71eInSxPnoMre6AlGYs0Iq3VHNibLhq2COd6P7p+nZQb/dyPY9lwrCINNwv6JcI4k3qMB9UkOs9X8x/fkNbirB39GFe3kobNx6SBghCBC+QmeKsTR4ox9v3VqQmwySXyV51YLm8NxNgDPUqmG2EQ6RGMCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WBO35UCzaez7CLkXANWJPWfb0JcQ0UYghIH6Nz+U6Jg=;
+ b=G5SJ70flQ0g9MfrwfuY8Amx93zcwDD1t12Jn4P5x+8+kvK9k+N1FOHM2HZa2DyjwlVB5QIyIHu5YnnrPO1yY7Lr3ELC0fYnil8pPNXxYf0qGLPon0aDrTFqh7SNoOvZgYGnYZ4SPhgHosg1Oe/cM7cxTFLnfiHx73maKKDbNFhIxyg1esYpgI/ZqwbBpKRhMzOG8mxzOwc2dJTV7mE/oUf7BE4ss6B9tfeIKezP01Bd/vd6u7sDc99rQq+rwzN3QuOm+cfqZT8rs9tKl7F3JCfpIV07AXNZSM7pOyp+2VLPS3I1MKbLLKXwTzhgGG0IdRhKp8s6i7S25Stw807quWg==
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
+ SEYPR06MB6756.apcprd06.prod.outlook.com (2603:1096:101:165::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
+ 2023 19:50:44 +0000
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::248c:58fd:97db:5425]) by SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::248c:58fd:97db:5425%7]) with mapi id 15.20.6411.021; Mon, 22 May 2023
+ 19:50:44 +0000
+Date:   Mon, 22 May 2023 12:50:34 -0700
+From:   Fan Ni <nifan@outlook.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org,
+        linuxarm@huawei.com, Ira Weiny <ira.weiny@intel.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Markus Armbruster <armbru@redhat.com>,
+        Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>,
+        Eric Blake <eblake@redhat.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v7 3/7] hw/cxl/events: Wire up get/clear event mailbox
+ commands
+Message-ID: <SG2PR06MB3397AB10C301F4F596EBD688B2439@SG2PR06MB3397.apcprd06.prod.outlook.com>
+References: <20230522150947.11546-1-Jonathan.Cameron@huawei.com>
+ <CGME20230522151125uscas1p1ac7cc62cf284544e2b827d7cacaba8cd@uscas1p1.samsung.com>
+ <20230522150947.11546-4-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <646bb221db164_33fb3294b3@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20230407
+In-Reply-To: <20230522150947.11546-4-Jonathan.Cameron@huawei.com>
+X-TMN:  [qljxHMAg6dAhp8ZE7n26hPyi0JGBISys5GaLncBg6CA=]
+X-ClientProxiedBy: SJ0PR13CA0047.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::22) To SG2PR06MB3397.apcprd06.prod.outlook.com
+ (2603:1096:4:7a::17)
+X-Microsoft-Original-Message-ID: <ZGvHihvn/9h2rTVF@outlook.com>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|SEYPR06MB6756:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef422005-72c0-4603-62f9-08db5afdd46b
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uyLGe4XJcrnjrp1Y+vzMr2vbbbJ17PRw20ejb0IWNLJysMl0Pk/CjtDwVdMhvKtAcdcWg+arYf4gFDucJQphBVMYoq9RS1EaGKqpg0mSQ5n0ujQMr0193wJ58Ai4UBbB+uFJw0Ao3trOSe/3xUr8vr5KheqYTenMi4/pwvzz1HgqxYvmv0wp7zH2e4SHhWpfxMVH/4MS9Koj4eFDT1V9+nWoxHbjq6P/LXQdUYHOsMz6NlqVsIL05A+HKPx3SzO9dKMpIW9bncm2JRNcOqjMs/X4/GN1L3x2SYSef/IiRRggsHwPMFIwlbq6KDDbOGkIl3DX1zhlUUWqS+NGL56sQV+pmaRN8P2P8LzHL3o3Tuifg2HbjUE7AtUgAxJWWpDtDTFCKNYrNQxlM6oNj3tceHoIBuC8KY2omywa1u4mgPY9vHLcemdtEEq/dd0xenrbmxSJlt7Gy3Zer6cWs6ERaknPM9uWx9viQgJ/YgFl8yrKpsuuM0hdyd3EgzCrCEvhLaUKsVM0Jg99LEAkhedM7lI/6IpeQlCpg+lyXyo7qzRwLWShF6AOxn5JEzyaZSn1oW9cpESg6YSENmQ2y2fWrGWDM+Zi6bT4VSXi7bpHE1je0n80MGHMA+q1dMncsSVU
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TU1kTzIxS3pIU2FSUUlFWklTYU1ISWhxelBjLzJQS2FpZTU4a2ZrQWVsMnZK?=
+ =?utf-8?B?Wml5YnZvRHdtKzVTbU5MMFFmMzNBMmlJRFRhSmJJU09idUYxeXY2Z0QyUkYy?=
+ =?utf-8?B?TmpyZGU5cjhUL0krTmQxK2R3eENnTExmVHJEYmlEM1FhOU9vRnBBZngvRTRE?=
+ =?utf-8?B?bjNaSVhWV2hKcWFiak56NnF1MmR5a1VwQ2kzTVBzSGNCSlpydXkrVjJsRWRi?=
+ =?utf-8?B?NGc0d3lBZ3BBTW16M2F5Nk00Tng1QTltMFg4aTRZVm5lTWYxdHhMVkdBLzBN?=
+ =?utf-8?B?RG1vZkhxaUJrRXdlOWdEUzVONmZSOGp1ZmE2OThlUVNSU0pWMGY5WGdEUmJX?=
+ =?utf-8?B?bERRSGFnR2IrTGw5UUV3bm9sQkRsSFNpOW1mQTFsZzVIMitQQmMwUlNzejdN?=
+ =?utf-8?B?eVd4YlBhTHdxRGU5NCt3TTVzTGpUV2syQ1I0N0NWNUtVRWt1UUJDeFBtS3lP?=
+ =?utf-8?B?K1h3U3JKdlRBWE1RUkNpUXZ4ZjU0a25pckJjOCt4bFFGMTlWNG1EcUR0K1lI?=
+ =?utf-8?B?Z293L1FYdGdUNkRFd00vTzIxVGpaNENLZEVGeGFoSUE4Zm8rSUQwb3FrQ0Yz?=
+ =?utf-8?B?SHo2RWttOE1ub1Ntenc2blJrbW5WcFBVZGNXdERrc1pFcFRyMlkzSnVBREdT?=
+ =?utf-8?B?YkVpZjVGeHpiSnIyd3ZxaTNRdktvQjk1VHRWWlNkaWlmaUFRcjBPUjNVblI2?=
+ =?utf-8?B?RGFobnY3ZW1mcVlPL3gycE9PelZ4SERFZ1Bkb1VmMUJ0NjlVK2o1amVSWm5S?=
+ =?utf-8?B?RzNEenpqaE4zc2JWdHlYTlBqQUdFYlJKYXl0S2h0dk9EVnhzbVlHYjRid1VI?=
+ =?utf-8?B?azhLWGRjeTcvQ0t4ZzVhNjFlRG9uVVpvQlZZYUI4RmNWajVFYU82WnQwWGw3?=
+ =?utf-8?B?NWpkcHlFNm5ueXJrN2NiNHJCc01CQnJnWnE4dnhad0ZyV2JqenRneHkyNUta?=
+ =?utf-8?B?dnQ1OE9vRmtXWnhKMUtieDFSTEJzamZ1cm1oZWprY2UvN0pIN2JTaWhDZFFU?=
+ =?utf-8?B?cXlhRkhoTVFuMTJtR0lIbWE1S3Jtdk12RzkzTFVjSldpUlBMdkI2SGp4MmJF?=
+ =?utf-8?B?enFINVExRTVNVlRvckZSRUJLM2VmdWx4WXBOd292QXhWZGpCMlpDZlNadVQ2?=
+ =?utf-8?B?YlVrcWNNeEJFUXNvVGwzcUgweDF0bGp2aERTU1BLOHhhd014WkJGRW9hdW1N?=
+ =?utf-8?B?V0tKQ25PWGNERTFYV1BQcmZzaXFYM0xSMHd1cDJvQlhScTVqVysyWFZoWjhO?=
+ =?utf-8?B?T085Yk5JV1VrZ1B1eFcxektJSG5GUGtqRVEwZjFoUVVaampDOHhrM0grRXBC?=
+ =?utf-8?B?M1Y4NWQzMEdMMElqZlQvNU9sakplYjFtS0g3ZnZNNnBtbERubis3V2xKMUtt?=
+ =?utf-8?B?ZVN1WnNJdHE1ZE50OUdFKzJEblVCbWtRK3BLNktTdTEyb09uUnJXaUFmdzdk?=
+ =?utf-8?B?dlRMa3graHRwZ2dZYnNIZDRGOXRoLzNiMjNFbHdESmFheW90U2pDMXFzQ3Vn?=
+ =?utf-8?B?OFVSbVAxN2d6SVFjd05ZUjNmZDhUR0V4Nmw4NUJCMU9Id2x4N3dmYmJjQkww?=
+ =?utf-8?B?QlRTSmpnaWFzZlNlQ09xSDJBR2ZkMXoweFEyWHpsd0VFTVhoYW8wUUJBS28v?=
+ =?utf-8?Q?8TRjjB7HcIg9IDQQxLk0DuzZT7ZDCQ2k1z4GHMm9GMyI=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef422005-72c0-4603-62f9-08db5afdd46b
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 19:50:44.2894
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6756
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 22 May 2023, Dan Williams wrote:
+The 05/22/2023 16:09, Jonathan Cameron wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> CXL testing is benefited from an artificial event log injection
+> mechanism.
+> 
+> Add an event log infrastructure to insert, get, and clear events from
+> the various logs available on a device.
+> 
+> Replace the stubbed out CXL Get/Clear Event mailbox commands with
+> commands that operate on the new infrastructure.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
->Davidlohr Bueso wrote:
->> >> +	/*
->> >> +	 * Handle the background command in a synchronous manner.
->> >> +	 *
->> >> +	 * All other mailbox commands will serialize/queue on the mbox_mutex,
->> >> +	 * which we currently hold. Furthermore this also guarantees that
->> >> +	 * cxl_mbox_background_complete() checks are safe amongst each other,
->> >> +	 * in that no new bg operation can occur in between.
->> >> +	 *
->> >> +	 * Background operations are timesliced in accordance with the nature
->> >> +	 * of the command. In the event of timeout, the mailbox state is
->> >> +	 * indeterminate until the next successful command submission and the
->> >> +	 * driver can get back in sync with the hardware state.
->> >> +	 */
->> >> +	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
->> >> +		long ret;
->> >> +		u64 bg_status_reg;
->> >> +		int i, timeout = mbox_cmd->poll_interval;
->> >> +
->> >> +		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
->> >> +			mbox_cmd->opcode);
->> >> +
->> >> +		for (i = 0; i < mbox_cmd->poll_count; i++) {
->> >> +			ret = rcuwait_wait_event_timeout(&cxlds->mbox_wait,
->> >> +					cxl_mbox_background_complete(cxlds),
->> >> +					TASK_INTERRUPTIBLE,
->> >> +					msecs_to_jiffies(timeout));
->> >> +			if (ret > 0)
->> >> +				break;
->> >> +			if (ret < 0) /* interrupted by a signal */
->> >
->> >Have you tested this path? I am curious what happens on the next command
->> >submission? As far as I can see foreground commands would not be
->> >impacted but the next background submission would fail instead of wait,
->> >right?
->>
->> No, I haven't tested this path. My expectation here is that this would be
->> similar to the timeout case in that the driver returns but the hw keeps
->> processing the command. The next command, fg or bg, would be at the mercy
->> of the hw doing the right thing until it's done with the canceled one.
->
->Right, it's that "mercy" part where there needs to be documentation of
->what to expect.
->
->If someone sends SIGTERM after triggering a scan media and then
->immediately resubmits it maybe the right answer is to go into another
->interruptible sleep awaiting the last background state to clear out. It
->just seems like returning an error leaves userspace to fend for itself
->with little visibility of what it needs to do next. SIGTERM during a
->background command means, "I do not care about the previous result".
->Given the driver is mitigating long running background cycles that
->implies that waiting before submitting the next colliding command would
->not be onerous. They can always SIGTERM again if the wait gets too long.
->
->
->> >Perhaps a dev_err_ratelimited() message and an EBUSY status for when
->> >that happens to at least indicate, "hardware is still chewing on a
->> >cancelled request".  Later we can think about whether that's recoverable
->> >via a reset.
->>
->> Well but reaching this path already assumes hw didn't error out the current
->> command because the canceled one was still being run.
->>
->> Alternatively we could also just make the sleep uninterruptible, but because
->> this comes from the user triggering the bg op, I thought against it.
->
->I don't think that would solve the problem of how to detect when the
->driver is out of sync with the device and what to do to resolve that
->situation. An inopportune SIGTERM is indistinguishable from getting the
->polling interval wrong.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-It at least removes one point of potential disambiguity. This out of sync
-issue with timeouts was one of the reasons I originally proposed dealing
-with all bg commands asynchronously (which doesn't prevent users from still
-time-slicing). This approach is supposed to make the code simpler, but leaves
-this mess. Currently we state:
+See comments below in cxl_event_insert.
 
-	 * In the event of timeout, the mailbox state is
-	 * indeterminate until the next successful command submission and the
-	 * driver can get back in sync with the hardware state.
+>  include/hw/cxl/cxl_device.h |  25 +++++
+>  include/hw/cxl/cxl_events.h |  55 +++++++++
+>  hw/cxl/cxl-events.c         | 217 ++++++++++++++++++++++++++++++++++++
+>  hw/cxl/cxl-mailbox-utils.c  |  40 ++++++-
+>  hw/mem/cxl_type3.c          |   1 +
+>  hw/cxl/meson.build          |   1 +
+>  6 files changed, 337 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 9f8ee85f8a..d3aec1bc0e 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -111,6 +111,20 @@ typedef enum {
+>      CXL_MBOX_MAX = 0x17
+>  } CXLRetCode;
+>  
+> +typedef struct CXLEvent {
+> +    CXLEventRecordRaw data;
+> +    QSIMPLEQ_ENTRY(CXLEvent) node;
+> +} CXLEvent;
+> +
+> +typedef struct CXLEventLog {
+> +    uint16_t next_handle;
+> +    uint16_t overflow_err_count;
+> +    uint64_t first_overflow_timestamp;
+> +    uint64_t last_overflow_timestamp;
+> +    QemuMutex lock;
+> +    QSIMPLEQ_HEAD(, CXLEvent) events;
+> +} CXLEventLog;
+> +
+>  typedef struct cxl_device_state {
+>      MemoryRegion device_registers;
+>  
+> @@ -161,6 +175,8 @@ typedef struct cxl_device_state {
+>      uint64_t mem_size;
+>      uint64_t pmem_size;
+>      uint64_t vmem_size;
+> +
+> +    CXLEventLog event_logs[CXL_EVENT_TYPE_MAX];
+>  } CXLDeviceState;
+>  
+>  /* Initialize the register block for a device */
+> @@ -353,6 +369,15 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+>  
+>  uint64_t cxl_device_get_timestamp(CXLDeviceState *cxlds);
+>  
+> +void cxl_event_init(CXLDeviceState *cxlds);
+> +bool cxl_event_insert(CXLDeviceState *cxlds, CXLEventLogType log_type,
+> +                      CXLEventRecordRaw *event);
+> +CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+> +                                 uint8_t log_type, int max_recs,
+> +                                 uint16_t *len);
+> +CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds,
+> +                                   CXLClearEventPayload *pl);
+> +
+>  void cxl_set_poison_list_overflowed(CXLType3Dev *ct3d);
+>  
+>  #endif
+> diff --git a/include/hw/cxl/cxl_events.h b/include/hw/cxl/cxl_events.h
+> index aeb3b0590e..d4aaa894f1 100644
+> --- a/include/hw/cxl/cxl_events.h
+> +++ b/include/hw/cxl/cxl_events.h
+> @@ -10,6 +10,8 @@
+>  #ifndef CXL_EVENTS_H
+>  #define CXL_EVENTS_H
+>  
+> +#include "qemu/uuid.h"
+> +
+>  /*
+>   * CXL rev 3.0 section 8.2.9.2.2; Table 8-49
+>   *
+> @@ -25,4 +27,57 @@ typedef enum CXLEventLogType {
+>      CXL_EVENT_TYPE_MAX
+>  } CXLEventLogType;
+>  
+> +/*
+> + * Common Event Record Format
+> + * CXL rev 3.0 section 8.2.9.2.1; Table 8-42
+> + */
+> +#define CXL_EVENT_REC_HDR_RES_LEN 0xf
+> +typedef struct CXLEventRecordHdr {
+> +    QemuUUID id;
+> +    uint8_t length;
+> +    uint8_t flags[3];
+> +    uint16_t handle;
+> +    uint16_t related_handle;
+> +    uint64_t timestamp;
+> +    uint8_t maint_op_class;
+> +    uint8_t reserved[CXL_EVENT_REC_HDR_RES_LEN];
+> +} QEMU_PACKED CXLEventRecordHdr;
+> +
+> +#define CXL_EVENT_RECORD_DATA_LENGTH 0x50
+> +typedef struct CXLEventRecordRaw {
+> +    CXLEventRecordHdr hdr;
+> +    uint8_t data[CXL_EVENT_RECORD_DATA_LENGTH];
+> +} QEMU_PACKED CXLEventRecordRaw;
+> +#define CXL_EVENT_RECORD_SIZE (sizeof(CXLEventRecordRaw))
+> +
+> +/*
+> + * Get Event Records output payload
+> + * CXL rev 3.0 section 8.2.9.2.2; Table 8-50
+> + */
+> +#define CXL_GET_EVENT_FLAG_OVERFLOW     BIT(0)
+> +#define CXL_GET_EVENT_FLAG_MORE_RECORDS BIT(1)
+> +typedef struct CXLGetEventPayload {
+> +    uint8_t flags;
+> +    uint8_t reserved1;
+> +    uint16_t overflow_err_count;
+> +    uint64_t first_overflow_timestamp;
+> +    uint64_t last_overflow_timestamp;
+> +    uint16_t record_count;
+> +    uint8_t reserved2[0xa];
+> +    CXLEventRecordRaw records[];
+> +} QEMU_PACKED CXLGetEventPayload;
+> +#define CXL_EVENT_PAYLOAD_HDR_SIZE (sizeof(CXLGetEventPayload))
+> +
+> +/*
+> + * Clear Event Records input payload
+> + * CXL rev 3.0 section 8.2.9.2.3; Table 8-51
+> + */
+> +typedef struct CXLClearEventPayload {
+> +    uint8_t event_log;      /* CXLEventLogType */
+> +    uint8_t clear_flags;
+> +    uint8_t nr_recs;
+> +    uint8_t reserved[3];
+> +    uint16_t handle[];
+> +} CXLClearEventPayload;
+> +
+>  #endif /* CXL_EVENTS_H */
+> diff --git a/hw/cxl/cxl-events.c b/hw/cxl/cxl-events.c
+> new file mode 100644
+> index 0000000000..5da1b76b97
+> --- /dev/null
+> +++ b/hw/cxl/cxl-events.c
+> @@ -0,0 +1,217 @@
+> +/*
+> + * CXL Event processing
+> + *
+> + * Copyright(C) 2023 Intel Corporation.
+> + *
+> + * This work is licensed under the terms of the GNU GPL, version 2. See the
+> + * COPYING file in the top-level directory.
+> + */
+> +
+> +#include <stdint.h>
+> +
+> +#include "qemu/osdep.h"
+> +#include "qemu/bswap.h"
+> +#include "qemu/typedefs.h"
+> +#include "qemu/error-report.h"
+> +#include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_events.h"
+> +
+> +/* Artificial limit on the number of events a log can hold */
+> +#define CXL_TEST_EVENT_OVERFLOW 8
+> +
+> +static void reset_overflow(CXLEventLog *log)
+> +{
+> +    log->overflow_err_count = 0;
+> +    log->first_overflow_timestamp = 0;
+> +    log->last_overflow_timestamp = 0;
+> +}
+> +
+> +void cxl_event_init(CXLDeviceState *cxlds)
+> +{
+> +    CXLEventLog *log;
+> +    int i;
+> +
+> +    for (i = 0; i < CXL_EVENT_TYPE_MAX; i++) {
+> +        log = &cxlds->event_logs[i];
+> +        log->next_handle = 1;
+> +        log->overflow_err_count = 0;
+> +        log->first_overflow_timestamp = 0;
+> +        log->last_overflow_timestamp = 0;
+> +        qemu_mutex_init(&log->lock);
+> +        QSIMPLEQ_INIT(&log->events);
+> +    }
+> +}
+> +
+> +static CXLEvent *cxl_event_get_head(CXLEventLog *log)
+> +{
+> +    return QSIMPLEQ_FIRST(&log->events);
+> +}
+> +
+> +static CXLEvent *cxl_event_get_next(CXLEvent *entry)
+> +{
+> +    return QSIMPLEQ_NEXT(entry, node);
+> +}
+> +
+> +static int cxl_event_count(CXLEventLog *log)
+> +{
+> +    CXLEvent *event;
+> +    int rc = 0;
+> +
+> +    QSIMPLEQ_FOREACH(event, &log->events, node) {
+> +        rc++;
+> +    }
+> +
+> +    return rc;
+> +}
+> +
+> +static bool cxl_event_empty(CXLEventLog *log)
+> +{
+> +    return QSIMPLEQ_EMPTY(&log->events);
+> +}
+> +
+> +static void cxl_event_delete_head(CXLDeviceState *cxlds,
+> +                                  CXLEventLogType log_type,
+> +                                  CXLEventLog *log)
+> +{
+> +    CXLEvent *entry = cxl_event_get_head(log);
+> +
+> +    reset_overflow(log);
+> +    QSIMPLEQ_REMOVE_HEAD(&log->events, node);
+> +    if (cxl_event_empty(log)) {
+> +        cxl_event_set_status(cxlds, log_type, false);
+> +    }
+> +    g_free(entry);
+> +}
+> +
+> +/*
+> + * return true if an interrupt should be generated as a result
+> + * of inserting this event.
+> + */
+> +bool cxl_event_insert(CXLDeviceState *cxlds, CXLEventLogType log_type,
+> +                      CXLEventRecordRaw *event)
+> +{
+> +    uint64_t time;
+> +    CXLEventLog *log;
+> +    CXLEvent *entry;
+> +
+> +    if (log_type >= CXL_EVENT_TYPE_MAX) {
+> +        return false;
+> +    }
+> +
+> +    time = cxl_device_get_timestamp(cxlds);
+> +
+> +    log = &cxlds->event_logs[log_type];
+> +
+> +    QEMU_LOCK_GUARD(&log->lock);
+> +
+> +    if (cxl_event_count(log) >= CXL_TEST_EVENT_OVERFLOW) {
+> +        if (log->overflow_err_count == 0) {
+> +            log->first_overflow_timestamp = time;
+> +        }
+> +        log->overflow_err_count++;
+> +        log->last_overflow_timestamp = time;
+> +        return false;
+> +    }
+> +
+> +    entry = g_new0(CXLEvent, 1);
+> +
+> +    memcpy(&entry->data, event, sizeof(*event));
+> +
+> +    entry->data.hdr.handle = cpu_to_le16(log->next_handle);
+> +    log->next_handle++;
+> +    /* 0 handle is never valid */
+> +    if (log->next_handle == 0) {
 
->
->>
->> >> +				return ret;
->>
->> rcuwait, unlike regular wait, returns -EINTR instead of -ERESTARTSYS. I've
->> updated the return value here to the latter.
->>
->> >> +		}
->> >> +
->> >> +		if (!cxl_mbox_background_complete(cxlds)) {
->> >> +			u64 md_status =
->> >> +				readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
->> >> +
->> >> +			cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
->> >> +				    "background timeout");
->> >> +			return -ETIMEDOUT;
->> >> +		}
->> >> +
->> >> +		bg_status_reg = readq(cxlds->regs.mbox +
->> >> +				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
->> >> +		mbox_cmd->return_code =
->> >> +			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
->> >> +				  bg_status_reg);
->> >> +		dev_dbg(dev,
->> >> +			"Mailbox background operation (0x%04x) completed\n",
->> >> +			mbox_cmd->opcode);
->> >> +	}
->> >> +
->> >>	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
->> >>		dev_dbg(dev, "Mailbox operation had an error: %s\n",
->> >>			cxl_mbox_cmd_rc2str(mbox_cmd));
->> >> @@ -271,6 +350,29 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
->> >>	dev_dbg(cxlds->dev, "Mailbox payload sized %zu",
->> >>		cxlds->payload_size);
->> >>
->> >> +	rcuwait_init(&cxlds->mbox_wait);
->> >> +	if (cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ) {
->> >> +		int irq, msgnum;
->> >> +		struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->> >> +
->> >> +		msgnum = FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap);
->> >> +		irq = pci_irq_vector(pdev, msgnum);
->> >> +		if (irq < 0)
->> >> +			goto mbox_poll;
->> >> +
->> >> +		if (devm_request_irq(cxlds->dev, irq, cxl_pci_mbox_irq,
->> >> +				     IRQF_SHARED, NULL, cxlds))
->> >
->> >This needs IRQF_ONESHOT and that @dev_id needs to be globally unique in
->> >case @irq is shared. So I think you want to factor out a common helper
->> >from cxl_event_req_irq() that this can reuse. I.e. cxl_event_req_irq()
->> >already gets the flags and @dev_id right, so just create a cxl_req_irq()
->> >that takes the irq as an argument and share it.
->>
->> For the oneshot this was a hardirq, so I don't think this is needed, but
->> regardless, I've added the following helper in a new patch which both
->> events and mbox can call:
->
->Ah, right, this was hard-irq only, I missed that.
->
->I wouldn't be opposed to cxl_request_irq() following pci_request_irq()'s
->lead and taking multiple handler arguments to skip the thread invocation
->when it is not needed.
+next_handle is uint16_t, how can it be 0 after next_handle++?
 
-Sure. I was fine with just doing everything in the BH, but allowing that
-flexibility seems best.
+> +        log->next_handle++;
+> +    }
+> +    entry->data.hdr.timestamp = cpu_to_le64(time);
+> +
+> +    QSIMPLEQ_INSERT_TAIL(&log->events, entry, node);
+> +    cxl_event_set_status(cxlds, log_type, true);
+> +
+> +    /* Count went from 0 to 1 */
+> +    return cxl_event_count(log) == 1;
+> +}
+> +
+> +CXLRetCode cxl_event_get_records(CXLDeviceState *cxlds, CXLGetEventPayload *pl,
+> +                                 uint8_t log_type, int max_recs,
+> +                                 uint16_t *len)
+> +{
+> +    CXLEventLog *log;
+> +    CXLEvent *entry;
+> +    uint16_t nr;
+> +
+> +    if (log_type >= CXL_EVENT_TYPE_MAX) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    log = &cxlds->event_logs[log_type];
+> +
+> +    QEMU_LOCK_GUARD(&log->lock);
+> +
+> +    entry = cxl_event_get_head(log);
+> +    for (nr = 0; entry && nr < max_recs; nr++) {
+> +        memcpy(&pl->records[nr], &entry->data, CXL_EVENT_RECORD_SIZE);
+> +        entry = cxl_event_get_next(entry);
+> +    }
+> +
+> +    if (!cxl_event_empty(log)) {
+> +        pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
+> +    }
+> +
+> +    if (log->overflow_err_count) {
+> +        pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
+> +        pl->overflow_err_count = cpu_to_le16(log->overflow_err_count);
+> +        pl->first_overflow_timestamp = cpu_to_le64(log->first_overflow_timestamp);
+> +        pl->last_overflow_timestamp = cpu_to_le64(log->last_overflow_timestamp);
+> +    }
+> +
+> +    pl->record_count = cpu_to_le16(nr);
+> +    *len = CXL_EVENT_PAYLOAD_HDR_SIZE + (CXL_EVENT_RECORD_SIZE * nr);
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+> +CXLRetCode cxl_event_clear_records(CXLDeviceState *cxlds, CXLClearEventPayload *pl)
+> +{
+> +    CXLEventLog *log;
+> +    uint8_t log_type;
+> +    CXLEvent *entry;
+> +    int nr;
+> +
+> +    log_type = pl->event_log;
+> +
+> +    if (log_type >= CXL_EVENT_TYPE_MAX) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    log = &cxlds->event_logs[log_type];
+> +
+> +    QEMU_LOCK_GUARD(&log->lock);
+> +    /*
+> +     * Must itterate the queue twice.
+> +     * "The device shall verify the event record handles specified in the input
+> +     * payload are in temporal order. If the device detects an older event
+> +     * record that will not be cleared when Clear Event Records is executed,
+> +     * the device shall return the Invalid Handle return code and shall not
+> +     * clear any of the specified event records."
+> +     *   -- CXL 3.0 8.2.9.2.3
+> +     */
+> +    entry = cxl_event_get_head(log);
+> +    for (nr = 0; entry && nr < pl->nr_recs; nr++) {
+> +        uint16_t handle = pl->handle[nr];
+> +
+> +        /* NOTE: Both handles are little endian. */
+> +        if (handle == 0 || entry->data.hdr.handle != handle) {
+> +            return CXL_MBOX_INVALID_INPUT;
+> +        }
+> +        entry = cxl_event_get_next(entry);
+> +    }
+> +
+> +    entry = cxl_event_get_head(log);
+> +    for (nr = 0; entry && nr < pl->nr_recs; nr++) {
+> +        cxl_event_delete_head(cxlds, log_type, log);
+> +        entry = cxl_event_get_head(log);
+> +    }
+> +
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index d7e114aaae..3f46538048 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -9,6 +9,7 @@
+>  
+>  #include "qemu/osdep.h"
+>  #include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_events.h"
+>  #include "hw/pci/pci.h"
+>  #include "qemu/cutils.h"
+>  #include "qemu/log.h"
+> @@ -95,11 +96,46 @@ struct cxl_cmd {
+>          return CXL_MBOX_SUCCESS;                                          \
+>      }
+>  
+> -DEFINE_MAILBOX_HANDLER_ZEROED(events_get_records, 0x20);
+> -DEFINE_MAILBOX_HANDLER_NOP(events_clear_records);
+>  DEFINE_MAILBOX_HANDLER_ZEROED(events_get_interrupt_policy, 4);
+>  DEFINE_MAILBOX_HANDLER_NOP(events_set_interrupt_policy);
+>  
+> +static CXLRetCode cmd_events_get_records(struct cxl_cmd *cmd,
+> +                                         CXLDeviceState *cxlds,
+> +                                         uint16_t *len)
+> +{
+> +    CXLGetEventPayload *pl;
+> +    uint8_t log_type;
+> +    int max_recs;
+> +
+> +    if (cmd->in < sizeof(log_type)) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +
+> +    log_type = *((uint8_t *)cmd->payload);
+> +
+> +    pl = (CXLGetEventPayload *)cmd->payload;
+> +    memset(pl, 0, sizeof(*pl));
+> +
+> +    max_recs = (cxlds->payload_size - CXL_EVENT_PAYLOAD_HDR_SIZE) /
+> +                CXL_EVENT_RECORD_SIZE;
+> +    if (max_recs > 0xFFFF) {
+> +        max_recs = 0xFFFF;
+> +    }
+> +
+> +    return cxl_event_get_records(cxlds, pl, log_type, max_recs, len);
+> +}
+> +
+> +static CXLRetCode cmd_events_clear_records(struct cxl_cmd *cmd,
+> +                                           CXLDeviceState *cxlds,
+> +                                           uint16_t *len)
+> +{
+> +    CXLClearEventPayload *pl;
+> +
+> +    pl = (CXLClearEventPayload *)cmd->payload;
+> +    *len = 0;
+> +    return cxl_event_clear_records(cxlds, pl);
+> +}
+> +
+>  /* 8.2.9.2.1 */
+>  static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
+>                                                 CXLDeviceState *cxl_dstate,
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index d751803188..ec5a384885 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -724,6 +724,7 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+>          goto err_release_cdat;
+>      }
+>  
+> +    cxl_event_init(&ct3d->cxl_dstate);
+>      return;
+>  
+>  err_release_cdat:
+> diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
+> index cfa95ffd40..71059972d4 100644
+> --- a/hw/cxl/meson.build
+> +++ b/hw/cxl/meson.build
+> @@ -5,6 +5,7 @@ softmmu_ss.add(when: 'CONFIG_CXL',
+>                     'cxl-mailbox-utils.c',
+>                     'cxl-host.c',
+>                     'cxl-cdat.c',
+> +                   'cxl-events.c',
+>                 ),
+>                 if_false: files(
+>                     'cxl-host-stubs.c',
+> -- 
+> 2.39.2
+> 
 
->>
->> static int cxl_request_irq(struct cxl_dev_state *cxlds,
->>			  int irq, irq_handler_t handler)
->> {
->>         struct device *dev = cxlds->dev;
->>         struct cxl_dev_id *dev_id;
->>
->>         /* dev_id must be globally unique and must contain the cxlds */
->>         dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
->>         if (!dev_id)
->>	       return -ENOMEM;
->>         dev_id->cxlds = cxlds;
->>
->>         return devm_request_threaded_irq(dev, irq, NULL, handler,
->>					IRQF_SHARED | IRQF_ONESHOT, NULL,
->>					dev_id);
->> }
->>
->> >
->> >> +			goto mbox_poll;
->> >> +
->> >> +		/* only enable background cmd mbox irq support */
->> >> +		writel(CXLDEV_MBOX_CTRL_BG_CMD_IRQ,
->> >> +		       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
->> >
->> >Just in case some other code ever enables doorbell interrupts it would
->> >be nice if this performed a read-modify-write rather than assuming it
->> >can clobber that setting.
->>
->> Hmm do you mean enabling/disabling dynamically?
->
->No, grep for:
->
->"write.*CTRL"
->
->...and observe that all writes to control registers are doing a
->read-modify-write sequence.
-
-Oh, ok I get it.
-
->> Otherwise I would have
->> expected this to be a one time thing which we could just OR both bits.
->> Maybe this could be revisited when needed? Jonathan suggested enabling
->> doorbell irqs in the future, which I plan on looking into at some point.
->
->Sure, that code might be in another function also performing its own
->read-modify-write, so my comment just asking for this to be consistent
->with other control register updates in the driver.
-
-Thanks for clarifying, I had not seen it like that - will definitely update
-in the next version.
-
-Thanks,
-Davidlohr
+-- 
+Fan Ni <nifan@outlook.com>
