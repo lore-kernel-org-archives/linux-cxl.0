@@ -2,109 +2,176 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3265C7EE23
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 10:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EED1C7EE26
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 10:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230239AbjEWKj5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 May 2023 06:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
+        id S235812AbjEWKoJ convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 May 2023 06:44:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbjEWKj5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 06:39:57 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B640FF
-        for <linux-cxl@vger.kernel.org>; Tue, 23 May 2023 03:39:52 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QQW114f1Fz6J7Bm;
-        Tue, 23 May 2023 18:35:17 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 23 May
- 2023 11:39:49 +0100
-Date:   Tue, 23 May 2023 11:39:48 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Fan Ni <nifan@outlook.com>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Markus Armbruster <armbru@redhat.com>,
-        "Daniel P . =?ISO-8859-1?Q?Berrang=E9?=" <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?ISO-8859-1?Q?Marc-Andr=E9?= Lureau 
-        <marcandre.lureau@redhat.com>, "Thomas Huth" <thuth@redhat.com>
-Subject: Re: [PATCH v7 3/7] hw/cxl/events: Wire up get/clear event mailbox
- commands
-Message-ID: <20230523113948.000009f3@Huawei.com>
-In-Reply-To: <SG2PR06MB3397AB10C301F4F596EBD688B2439@SG2PR06MB3397.apcprd06.prod.outlook.com>
-References: <20230522150947.11546-1-Jonathan.Cameron@huawei.com>
-        <CGME20230522151125uscas1p1ac7cc62cf284544e2b827d7cacaba8cd@uscas1p1.samsung.com>
-        <20230522150947.11546-4-Jonathan.Cameron@huawei.com>
-        <SG2PR06MB3397AB10C301F4F596EBD688B2439@SG2PR06MB3397.apcprd06.prod.outlook.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230319AbjEWKoI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 06:44:08 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D51FD;
+        Tue, 23 May 2023 03:44:07 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-96f44435d92so101718566b.0;
+        Tue, 23 May 2023 03:44:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684838645; x=1687430645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cfm/I8yYuZ6qXjBK2xplMTOQZN+PhYua7KL9hZXBpX0=;
+        b=hC6M/B0/aO5BogEm0YaSNezw/uLzQIXm62OKUjCibdoFYr6l0cqOExGVa7Qh4yIJ2K
+         YaZZ+BgQMDvguVLT3V0O27uBigYeoL3mzombNAPtkeXi8mH3RQ5z9oI0MKwEiFZ+AIUV
+         5Mfy3K+TkE0kk8DW2mgF0fR8QLtOOCYygaw4LxRNQLmwY7DsCmNvt1SpW+qyroCRi0ht
+         MoqG2YFXZqoBpZy1R2VqYCfzafIfWoYSZ1aJ0RdBdkL+nR0zxpEmLWx0rmA1Hjy0aq+z
+         hzYKBT8VlrZxkkBIVhhiPgqB+QxoAzadrPsjYojvoOnSFBN7dK6EHzrHXOEHUVUBT+ga
+         3DBg==
+X-Gm-Message-State: AC+VfDx6FBld/9ZN1vaY4mbE/j65Lf1C8UkOX9hMBGtbgxHP/KxVUX8X
+        MM5pEpMEZt1RIgPKLurBpPtougVPAq0hqPWHX24=
+X-Google-Smtp-Source: ACHHUZ6ZDB1vpvHhXifep9fBd+kqKLI8NXg5epCVtwaHbBzVFFdcGJCDFylfVmgE7hTyOyXt7SInLCU+BXrjDlcsQ0E=
+X-Received: by 2002:a17:906:d3:b0:94f:66af:b1f7 with SMTP id
+ 19-20020a17090600d300b0094f66afb1f7mr11834819eji.1.1684838645332; Tue, 23 May
+ 2023 03:44:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+References: <168443445827.2966470.16511867875780059322.stgit@djiang5-mobl3>
+ <168443478863.2966470.17477171378435115702.stgit@djiang5-mobl3> <646bf6f826ec8_33fb329437@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <646bf6f826ec8_33fb329437@dwillia2-xfh.jf.intel.com.notmuch>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 23 May 2023 12:43:53 +0200
+Message-ID: <CAJZ5v0j93WsjQFcgkeYL_AscEY-QE0GQWBB3oeDUxaNVN0ORzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] acpi: tables: Add CDAT table parsing support
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        lukas@wunner.de, Jonathan.Cameron@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 22 May 2023 12:50:34 -0700
-Fan Ni <nifan@outlook.com> wrote:
+On Tue, May 23, 2023 at 1:13 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Dave Jiang wrote:
+> > The CDAT table is very similar to ACPI tables when it comes to sub-table
+> > and entry structures. The helper functions can be also used to parse the
+> > CDAT table. Add support to the helper functions to deal with an external
+> > CDAT table, and also handle the endieness since CDAT can be processed by a
+> > BE host. Export a function cdat_table_parse() for CXL driver to parse
+> > a CDAT table.
+> >
+> > In order to minimize ACPICA code changes, __force is being utilized to deal
+> > with the case of a big endien (BE) host parsing a CDAT. All CDAT data
+> > structure variables are being force casted to __leX as appropriate.
+> >
+> > Cc: Rafael J. Wysocki <rafael@kernel.org>
+> > Cc: Len Brown <lenb@kernel.org>
+> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> >
+> > ---
+> > v2:
+> > - Make acpi_table_header and acpi_table_cdat a union. (Jonathan)
+> > - Use local var to make acpi_table_get_length() more readable. (Jonathan)
+> > - Remove ACPI_SIG_CDAT define, already defined.
+> > ---
+> >  drivers/acpi/tables.c     |    5 +++-
+> >  drivers/acpi/tables_lib.c |   52 ++++++++++++++++++++++++++++++++++++++++++---
+> >  include/linux/acpi.h      |   22 +++++++++++++++++--
+> >  3 files changed, 72 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+> > index cfc76efd8788..f7e1ea192576 100644
+> > --- a/drivers/acpi/tables.c
+> > +++ b/drivers/acpi/tables.c
+> > @@ -241,8 +241,9 @@ int __init_or_acpilib acpi_table_parse_entries_array(
+> >               return -ENODEV;
+> >       }
+> >
+> > -     count = acpi_parse_entries_array(id, table_size, table_header,
+> > -                     proc, proc_num, max_entries);
+> > +     count = acpi_parse_entries_array(id, table_size,
+> > +                                      (union table_header *)table_header,
+>
+> I think the force cast can be cleaned up, more below...
+>
+> > +                                      proc, proc_num, max_entries);
+> >
+> >       acpi_put_table(table_header);
+> >       return count;
+> [..]
+> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> > index 57ffba91bfb5..4a5b40463048 100644
+> > --- a/include/linux/acpi.h
+> > +++ b/include/linux/acpi.h
+> > @@ -22,11 +22,17 @@
+> >  #include <acpi/acpi.h>
+> >
+> >  /* Table Handlers */
+> > +union table_header {
+> > +     struct acpi_table_header acpi;
+> > +     struct acpi_table_cdat cdat;
+> > +};
+>
+> 'table_header' seems too generic a name for a type in a header file
+> included as widely as acpi.h. How about 'union acpi_parse_header'?
+>
+> Moreover I think the type-casting when calling the helpers might look
+> better with explicit type-punning showing the conversion from ACPI and
+> CDAT callers into the common parser. Something like the following folded
+> on top (only compile tested):
+>
+> -- >8 --
+> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+> index f7e1ea192576..ef31232fdcfb 100644
+> --- a/drivers/acpi/tables.c
+> +++ b/drivers/acpi/tables.c
+> @@ -219,7 +219,7 @@ int __init_or_acpilib acpi_table_parse_entries_array(
+>         char *id, unsigned long table_size, struct acpi_subtable_proc *proc,
+>         int proc_num, unsigned int max_entries)
+>  {
+> -       struct acpi_table_header *table_header = NULL;
+> +       union acpi_convert_header hdr;
+>         int count;
+>         u32 instance = 0;
+>
+> @@ -235,17 +235,16 @@ int __init_or_acpilib acpi_table_parse_entries_array(
+>         if (!strncmp(id, ACPI_SIG_MADT, 4))
+>                 instance = acpi_apic_instance;
+>
+> -       acpi_get_table(id, instance, &table_header);
+> -       if (!table_header) {
+> +       acpi_get_table(id, instance, &hdr.acpi);
+> +       if (!hdr.acpi) {
+>                 pr_debug("%4.4s not present\n", id);
+>                 return -ENODEV;
+>         }
+>
+> -       count = acpi_parse_entries_array(id, table_size,
+> -                                        (union table_header *)table_header,
+> -                                        proc, proc_num, max_entries);
+> +       count = acpi_parse_entries_array(id, table_size, hdr.parse, proc,
+> +                                        proc_num, max_entries);
+>
+> -       acpi_put_table(table_header);
+> +       acpi_put_table(hdr.acpi);
+>         return count;
+>  }
+>
+> diff --git a/drivers/acpi/tables_lib.c b/drivers/acpi/tables_lib.c
+> index 71e2fb1735e5..bd886900762a 100644
+> --- a/drivers/acpi/tables_lib.c
+> +++ b/drivers/acpi/tables_lib.c
+> @@ -105,7 +105,7 @@ static enum acpi_subtable_type acpi_get_subtable_type(char *id)
+>  }
+>
+>  static unsigned long acpi_table_get_length(enum acpi_subtable_type type,
+> -                                          union table_header *hdr)
+> +                                          union acpi_parse_header *hdr)
 
-> The 05/22/2023 16:09, Jonathan Cameron wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > CXL testing is benefited from an artificial event log injection
-> > mechanism.
-> > 
-> > Add an event log infrastructure to insert, get, and clear events from
-> > the various logs available on a device.
-> > 
-> > Replace the stubbed out CXL Get/Clear Event mailbox commands with
-> > commands that operate on the new infrastructure.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---  
-> 
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> 
-> See comments below in cxl_event_insert.
-
-...
-
-> > +    memcpy(&entry->data, event, sizeof(*event));
-> > +
-> > +    entry->data.hdr.handle = cpu_to_le16(log->next_handle);
-> > +    log->next_handle++;
-> > +    /* 0 handle is never valid */
-> > +    if (log->next_handle == 0) {  
-> 
-> next_handle is uint16_t, how can it be 0 after next_handle++?
-
-Intent was to deal with wrap around.
-We are fine with reusing handles after sufficiently long time that
-there can't be a confusion, just not 0 as that has special
-meaning when used to 'point' to a related event
-(see definition of Related Event Record Handle)
-
-> 
-> > +        log->next_handle++;
-> > +    }
-> > +    entry->data.hdr.timestamp = cpu_to_le64(time);
-> > +
-> > +    QSIMPLEQ_INSERT_TAIL(&log->events, entry, node);
-> > +    cxl_event_set_status(cxlds, log_type, true);
-> > +
-> > +    /* Count went from 0 to 1 */
-> > +    return cxl_event_count(log) == 1;
-> > +}
+If this is going to be common library code, I'm wondering how much of
+"acpi" needs to be there in the names.
