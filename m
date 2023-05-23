@@ -2,78 +2,77 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC5FC77B75
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 17:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E797BC7EE2D
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 17:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbjEWRnd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 May 2023 13:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42558 "EHLO
+        id S230283AbjEWRuD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 May 2023 13:50:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238100AbjEWRn3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 13:43:29 -0400
-Received: from tiger.tulip.relay.mailchannels.net (tiger.tulip.relay.mailchannels.net [23.83.218.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72E4AB5;
-        Tue, 23 May 2023 10:43:22 -0700 (PDT)
+        with ESMTP id S237688AbjEWRuC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 13:50:02 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2765697;
+        Tue, 23 May 2023 10:50:01 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 6CD29262609;
-        Tue, 23 May 2023 17:43:19 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id 01A476C1E22;
+        Tue, 23 May 2023 17:43:17 +0000 (UTC)
 Received: from pdx1-sub0-mail-a250.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id DB523262595;
-        Tue, 23 May 2023 17:43:18 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684863799; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 314AF6C2559;
+        Tue, 23 May 2023 17:43:16 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1684863796; a=rsa-sha256;
         cv=none;
-        b=4ukWSsaAJr2usHupXvtBxk8OwHTTROxCjmGAK2SVMQASfhODZZa4lBe/KylNbNi3TxHaZJ
-        aJba6aGEV3uQkjcCCdIGulinbbl/HCAvJkPNyfeg0ifaVUz1yHpRd4qFkA3BchZEk6Q9aE
-        JZCTJrfdkE/MeOzV6QRwuVigvTcUeqbRD7fNU+wQA1zUM+e7iIGBCVDODyjtK0g1UOPxzz
-        L9F1aLvwkHIIW7Etgqpy+0UBySfkWFD315jt1MW3R7JAQ4QxyUB35H4STjumvryUyJUZmG
-        ElVXtFYgLUN1kFkQIOZaaazYiGjrkEo6tTjfQDJXgDN+ziDe9cYrgJdzwMaYZQ==
+        b=SJBBtMdTS1PCNy5NMFPfHz9N+mM/oc7tPsTD7P0Jk8E2pMiUF1jb3PWiy1SEgxbh8uKSfr
+        LOAExZ3HWJATrbDM9qVGP2GTH0+cqafBLlkrCkNbLj7gVePRG24L6H8Tp1YnQeOC/QLlyh
+        4+ntBzoVnmPsVhRfdyWN4XLLG4fpb9sVCX7BwZibsRjKLdSrH6ucL25RRC0b9biETTXfZC
+        inQTbJiUAQw+UxzxENuhNseibIJq45Ng8WxmLf2TQCw6rVuPXLLilGvqYcHEtXhUnsk+Vy
+        2IJxS3sseBO3be3rRhSuP03DG4CCiymPlskDVLdt837C8SlE7zKdRE7Lm0yEDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1684863799;
+        s=arc-2022; t=1684863796;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=Bh5pmBAZMINLcIjPupzC+5lllFGC0EfYDoFo0I+pOsA=;
-        b=ZfagXL2k92ZnhqKlPWE+VDc6dG2F0xNU0zgzvUQOXD4uDx1a3fzWaZuHcbLUYmhnJDRPhe
-        o+gGmnFzAAGXr+eiHHr6stkwNSPCh4fK5enoEvlgeLxz+Ot8pMNrw5Xdnrpr19hxbu4ySk
-        JopIY6G9xrozSxJMEA3N45kXn0jlino84kcGjGX9MKsWrCCboanFveoLBgHydbydU3A0kC
-        V3IMUchC1Kyyr2bR4R0nMDD1YtM1VizZbNg9xp09YVXG8zcY9PvfpFKSVDiWpKkeHJ+W+T
-        R+t6YTo+5r8GnpxV5fwQskvwXx2+KCRRGivlOntXkZJdCQW3Fd9JybuEor1jrw==
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=tYJ8eqb/EN9AAbwVRk6uJocgQlf/+ZFzRu1lCYTGfsg=;
+        b=PvFQsqza0LgjntHf0DmMkfTOBY30+GZMkB4alJ/ADniHF/JLexfMWyfMzFR0LHVOqlgW79
+        Y7Qx26SS5yQkB3FyF4uLjW1m98/p7K4JCIxjYhSY5q8BHdnyjTJI+wTAT+/wg1yyPO9JGS
+        jE0LUiyLLkQTi5F88DWOLb2cW/mjoN/lkFH2zRIOI+fcksSCaFJJjG6RfecFkw8+wEHpk0
+        Nno8tL1zT/lJcOQSLWOTxLPJPLBDvGZBUg6eA7P/+3HpuuFZ6rukWltfCJRKIe04y+HuYH
+        yVDUSRnhJbqf5FahirA6r+js69musGkmwnhq/yGq0d1shNnLKp6rHkIRZvKsCw==
 ARC-Authentication-Results: i=1;
-        rspamd-5cdf8fd7d9-7mx5b;
+        rspamd-5cdf8fd7d9-s7qtv;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Left-Scare: 7578ef46780d1bcc_1684863799244_2689381057
-X-MC-Loop-Signature: 1684863799244:2937721352
-X-MC-Ingress-Time: 1684863799244
+X-Abiding-Stupid: 0e71c7b418b1af87_1684863796760_4140042941
+X-MC-Loop-Signature: 1684863796760:640463744
+X-MC-Ingress-Time: 1684863796760
 Received: from pdx1-sub0-mail-a250.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.104.24.179 (trex/6.8.1);
-        Tue, 23 May 2023 17:43:19 +0000
+        by 100.127.59.19 (trex/6.8.1);
+        Tue, 23 May 2023 17:43:16 +0000
 Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a250.dreamhost.com (Postfix) with ESMTPSA id 4QQhVs72Nqz36;
-        Tue, 23 May 2023 10:43:17 -0700 (PDT)
+        by pdx1-sub0-mail-a250.dreamhost.com (Postfix) with ESMTPSA id 4QQhVq2FpBz6m;
+        Tue, 23 May 2023 10:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1684863798;
-        bh=Bh5pmBAZMINLcIjPupzC+5lllFGC0EfYDoFo0I+pOsA=;
+        s=dreamhost; t=1684863796;
+        bh=tYJ8eqb/EN9AAbwVRk6uJocgQlf/+ZFzRu1lCYTGfsg=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=hCCHZioq5QPrLydqF+KocM6vBONbyQ5ghX7kQBI4BIc5Ob6GqoTpFUm2QAbnxsRit
-         PRK4Hn44xafkBFJ+GNhdO/ti/1XlyfF/P09l1elqlymDdYRFdfJiSQSs8u44bQS+oo
-         XqHU5s8+eGFcsZwYSBg5gBAcavQN7yi8mXEumkeuZheXDQ13wq//jb95Z+PtyvUnd4
-         dpTrSmk39HM8S0aqIlbmFYLu8yJMRQLhcjdhgJSHMurac1lLpduEOQYekGUjIaqbEQ
-         zZpcMHoc8AZ+j7G6StXHsxIlU1btHDuPjsNzREvaNprGDvNTuTEkfwEOwQtQZQ+a8w
-         GZnCEqo+P1beQ==
+        b=JMp/bISsVxEzj1pIXW4EXTvUi3e5munz9145RL1AoES64jYHz4nc5Pk4alA4KCkkj
+         ILA7gudWbYOuVfxl9KJqsGVW+IHpGsnqQT+z1KtZuc7qDrWI2bc/KCp0LPqgx0We+2
+         f666EQyq9TParHG8p0hzdf2DRW3IKx+teI9jGLU+qSuMJRPtT9tjS+tDqJPKnCHUfN
+         vzX4J8bzGlZWI+ymIDnRB5b0sdUld/+1Hw/YMvoVC+en+CxauADftgnwbz7fj4EdYF
+         +1w/WyltzLs04kdunjvJvbi0kYc1wPEGCwhBy8Lbtz1qZbOV0QtxsE1QvSinalC76Z
+         YZllsO4McqVhQ==
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     dan.j.williams@intel.com
 Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
@@ -81,101 +80,51 @@ Cc:     dave.jiang@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
         a.manzanares@samsung.com, dave@stgolabs.net,
         linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] cxl/pci: Introduce cxl_request_irq()
-Date:   Tue, 23 May 2023 10:09:26 -0700
-Message-Id: <20230523170927.20685-4-dave@stgolabs.net>
+Subject: [PATCH v3 0/4] cxl: Handle background commands
+Date:   Tue, 23 May 2023 10:09:23 -0700
+Message-Id: <20230523170927.20685-1-dave@stgolabs.net>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230523170927.20685-1-dave@stgolabs.net>
-References: <20230523170927.20685-1-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Factor out common functionality/semantics for cxl shared interrupts
-into a new helper on top of devm_request_irq().
+Hi,
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/cxl/pci.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+This is the latest iteration of the synchronous background command handling
+work. Currently there are no users, but it is expected that firmware update
+and scan media be the first two to use it.
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index f2039fe0805d..18b8f3ce680c 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -84,6 +84,27 @@ static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
- 			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
- 			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
- 
-+struct cxl_dev_id {
-+	struct cxl_dev_state *cxlds;
-+};
-+
-+static int cxl_request_irq(struct cxl_dev_state *cxlds, int irq,
-+			   irq_handler_t handler, irq_handler_t thread_fn)
-+{
-+	struct device *dev = cxlds->dev;
-+	struct cxl_dev_id *dev_id;
-+
-+	/* dev_id must be globally unique and must contain the cxlds */
-+	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
-+	if (!dev_id)
-+		return -ENOMEM;
-+	dev_id->cxlds = cxlds;
-+
-+	return devm_request_threaded_irq(dev, irq, handler, thread_fn,
-+					 IRQF_SHARED | IRQF_ONESHOT,
-+					 NULL, dev_id);
-+}
-+
- /**
-  * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
-  * @cxlds: The device state to communicate with.
-@@ -469,10 +490,6 @@ static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
- 	return 0;
- }
- 
--struct cxl_dev_id {
--	struct cxl_dev_state *cxlds;
--};
--
- static irqreturn_t cxl_event_thread(int irq, void *id)
- {
- 	struct cxl_dev_id *dev_id = id;
-@@ -498,28 +515,18 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
- 
- static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
- {
--	struct device *dev = cxlds->dev;
--	struct pci_dev *pdev = to_pci_dev(dev);
--	struct cxl_dev_id *dev_id;
-+	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
- 	int irq;
- 
- 	if (FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting) != CXL_INT_MSI_MSIX)
- 		return -ENXIO;
- 
--	/* dev_id must be globally unique and must contain the cxlds */
--	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
--	if (!dev_id)
--		return -ENOMEM;
--	dev_id->cxlds = cxlds;
--
- 	irq =  pci_irq_vector(pdev,
- 			      FIELD_GET(CXLDEV_EVENT_INT_MSGNUM_MASK, setting));
- 	if (irq < 0)
- 		return irq;
- 
--	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
--					 IRQF_SHARED | IRQF_ONESHOT, NULL,
--					 dev_id);
-+	return cxl_request_irq(cxlds, irq, NULL, cxl_event_thread);
- }
- 
- static int cxl_event_get_int_policy(struct cxl_dev_state *cxlds,
--- 
+Patches 1-3 are requirements for the actual patch 4.
+
+Changes from v1/v2 (https://lore.kernel.org/linux-cxl/20230502171841.21317-1-dave@stgolabs.net):
+    o Picked up tags for patches 1 and 2.
+    o Added more context to the changelog in the rcuwait patch 1. (Dan)
+    o Added new patch 3 for common request irq functionality. (Dan)
+    o Misc cleanups in patch 4. (Jonathan)
+    o Don't clobber the ctrl settings. (Dan)
+    o Removed bogus warning in irq handler. (Jonathan, Dan)
+    o Make sleep uninterruptible and clarify in the changelog that
+      timeouts are in fact unexpected.
+    
+Applies against 'fixes' from cxl.git.
+
+Thanks!
+
+Davidlohr Bueso (4):
+  rcuwait: Support timeouts
+  cxl/pci: Allocate irq vectors earlier during probe
+  cxl/pci: Introduce cxl_request_irq()
+  cxl/mbox: Add background cmd handling machinery
+
+ drivers/cxl/core/mbox.c |   3 +-
+ drivers/cxl/cxl.h       |   8 +++
+ drivers/cxl/cxlmem.h    |   7 +++
+ drivers/cxl/pci.c       | 136 ++++++++++++++++++++++++++++++++++------
+ include/linux/rcuwait.h |  23 ++++++-
+ 5 files changed, 153 insertions(+), 24 deletions(-)
+
+--
 2.40.1
 
