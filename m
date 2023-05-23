@@ -2,204 +2,169 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E49C7EE26
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 10:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FBEC7EE23
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 10:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236238AbjEWKf7 convert rfc822-to-8bit (ORCPT
+        id S236456AbjEWKjQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 May 2023 06:35:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58690 "EHLO
+        Tue, 23 May 2023 06:39:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236603AbjEWKfy (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 06:35:54 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BF7120
-        for <linux-cxl@vger.kernel.org>; Tue, 23 May 2023 03:35:49 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QQVzJ2gNRz67lKb;
-        Tue, 23 May 2023 18:33:48 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 23 May
- 2023 11:35:44 +0100
-Date:   Tue, 23 May 2023 11:35:43 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Markus Armbruster <armbru@redhat.com>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>, "Ira Weiny" <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud?= =?ISO-8859-1?Q?=E9?= 
-        <philmd@linaro.org>, Dave Jiang <dave.jiang@intel.com>,
-        "Daniel P .\" =?ISO-8859-1?Q?Berrang=E9?= <berrange@redhat.com>, Eric Blake <eblake@redhat.com>, Mike Maslenkin <mike.maslenkin@gmail.com>, =?ISO-8859-1?Q?Marc-Andr=E9?= Lureau <marcandre.lureau@redhat.com>, Thomas Huth <thuth@redhat.com>"@domain.invalid
-Subject: Re: [PATCH v5 5/7] hw/cxl/events: Add injection of General Media
- Events
-Message-ID: <20230523113543.00006a1f@Huawei.com>
-In-Reply-To: <87fs7na2o8.fsf@pond.sub.org>
-References: <20230423165140.16833-1-Jonathan.Cameron@huawei.com>
-        <20230423165140.16833-6-Jonathan.Cameron@huawei.com>
-        <87lehgq1cy.fsf@pond.sub.org>
-        <20230522135737.000079c4@Huawei.com>
-        <87fs7na2o8.fsf@pond.sub.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233019AbjEWKjP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 06:39:15 -0400
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13ABFD;
+        Tue, 23 May 2023 03:39:13 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-50d897af77bso805651a12.1;
+        Tue, 23 May 2023 03:39:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684838352; x=1687430352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8+d4XqP+lXAv6/+w79rOhyj2ltYvsV9fXvdBfWn6vX0=;
+        b=BaRlFHXLyjp4kWyvWmFASkUjtIqjGSuSKbK8tn5OHSJLS9nzmdPrY6FCWWA4sCeokt
+         zmlLEczZC8NE79VQMHOn7sixVI8G6XhWHpiazhLqXX+jcixVTAZ8LPoaXuAnw+f5BMbb
+         pJOFwCEX4PvaNXitwOAA7ahxFNJCHmwO36a+KwMDTVKxtsSb9TqXtGeBczccoxL4oNss
+         RKKKQBV5PHHa/GZfdu6Ij1qAtMQJb2jPOeXsYRPMwTjtvjJxksJ0UQGEoHfgpSI5OezQ
+         Qa09DyjYoblqrx90x2bExdCINsb9Z+lBsCpj6Jp/WoHzAIlTxldCKTf5rPolwV2LM+J3
+         XyoA==
+X-Gm-Message-State: AC+VfDwH+sH0Po8g15NaW7THicHz5sjjdWG+SFfhsIarqH2wu7eGGfWq
+        7gJ6yRiwL/0vcIDehw2QY9ojGB4eaWTZnbvgS1Q=
+X-Google-Smtp-Source: ACHHUZ60NrJjLrMdWZ8Yh+fC0rWY//2DCpfPeNKXxnUljB7qcllIN4c8xwlpLgxRInx1ODBVz+HSShXTg7st81ZXwvg=
+X-Received: by 2002:a05:6402:190e:b0:50d:9ba4:52df with SMTP id
+ e14-20020a056402190e00b0050d9ba452dfmr18508445edz.3.1684838352123; Tue, 23
+ May 2023 03:39:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+References: <168443445827.2966470.16511867875780059322.stgit@djiang5-mobl3>
+ <168443478260.2966470.6881416930240756285.stgit@djiang5-mobl3>
+ <646bdf21b9329_33fb329410@dwillia2-xfh.jf.intel.com.notmuch>
+ <19907ea8-85bf-6e31-0798-ef8a1e4b842a@intel.com> <646bebd5ebaac_33fb3294df@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <646bebd5ebaac_33fb3294df@dwillia2-xfh.jf.intel.com.notmuch>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 23 May 2023 12:38:59 +0200
+Message-ID: <CAJZ5v0jipbtTNnsA0-o5ozOk8ZgWnOg34m34a9pPenTyRLj=6A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] acpi: Move common tables helper functions to
+ common lib
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, linux-acpi@vger.kernel.org,
+        linux-cxl@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, lukas@wunner.de,
+        Jonathan.Cameron@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-> >  
-> >> > +#
-> >> > +# Inject an event record for a General Media Event (CXL r3.0 8.2.9.2.1.1)    
-> >> 
-> >> What's "CXL r3.0", and where could a reader find it?  
-> >
-> > We have docs in docs/system/devices/cxl.rst that include the consortium
-> > website which has download links on the front page.  
-> 
-> cxl.rst has
-> 
->     References
->     ----------
-> 
->      - Consortium website for specifications etc:
->        http://www.computeexpresslink.org
->      - Compute Express link Revision 2 specification, October 2020
->      - CEDT CFMWS & QTG _DSM ECN May 2021
-> 
-> Should the second reference be updated to 3.0?  Exact title seems to be
-> "The Compute Express Link™ (CXL™) 3.0 specification".  Not sure we need
-> to bother with the "™" in a reference.
-
-Yes. On the todo list is to update all the references to latest released
-specification because old ones are unobtainable to non consortium members
-unless they grabbed a copy in the past.
-
-Annoyingly this will be a repeated requirement as new spec versions are released
-but the cadence should be fairly low.
-
-> 
-> >                                                      I'm not sure we want to
-> > have lots of references to the URL spread throughout QEMU.  I can add one
-> > somewhere in cxl.json if you think it is important to have one here as well.  
-> 
-> You could add an introduction right under the "# = CXL devices" heading,
-> and include a full reference to the specification there.  Suitably
-> abbreviated references like the ones you use in this patch should then
-> be fine.
-
-I tried doing that - it resulted in the index including an entry with all the text.
-So on the webpage, the contents list to the left includes whatever text you put
-in that block.
- 
-I'm not sure why, or how to fix that.
-
-> 
-> Please link to cxl.rst, too: add a label to cxl.rst, :ref: it from
-> cxl.json.
-
-Ok, I'm find doing that if it doesn't break the contents page as above.
-
-> >> Either specify the header flags here, or point to specification.  
-> >
-> > Added a reference - same reason as below, the contents is being added to
-> > with each version and we don't want to bake what is supported in this
-> > interface if we can avoid it.  
-> 
-> Symbolic flags are a much friendlier interface, but limit the interface
-> to what QEMU understands.
-> 
-> With a numeric encoding of flags, QEMU can serve as dumb transport
-> between peers who may understand more flags than QEMU does.  One peer is
-> the QMP client.  Who is the other peer?  Guest software?
-
-Guest software in this case.
-
-> 
-> Can flags be useful even though the QEMU device model doesn't understand
-> them?  Are they safe?  See below for a more general take on this.
-> 
-
-
-> >> No.  
-> >
-> > Ok this indeed ended up sparse.
-> >
-> > It is a tricky balance as I don't think it makes sense to just
-> > duplicate large chunks of the spec. 
-> > I'll have a go at summarizing what sort of things are in each.
-> > As I mention below, we could break, these down fully at the cost
-> > of constant updates as the CXL spec evolves to add new subfields
-> > or values for existing fields.  This one for example currently has
-> > 3 bits, Uncorrectable Event, Threshold Event, Poison List Overflow event.
-> > The next one currently has 3 bits defined as well, but there are 3 more
-> > queued up for inclusion.
-> >
-> > Realistically no one is going to write a descriptor without
-> > looking at the specification for the field definitions and understanding
-> > the physical geometry of their device (which will be device specific).
-> >
-> > I'm fine with tweaking the balance though if you think that makes sense.  
-> 
-> This is about picking an appropriate level of abstraction for the QMP
-> interface.
-> 
-> In your patch, it is basically a few named sequences of bits.  The
-> interface changes only when new named entities get added to the spec.
-> Spec revisions may also add new uses of existing entities' bits, but the
-> interface doesn't care.
-> 
-> The lowest imaginable level is a single sequence of bits.  Basically the
-> named bit sequences pasted together.  Now the interface changes only
-> when we run out of bits.  Mind, I'm merely exploring the limits here.
-> 
-> At higher levels we use symbols rather than bits.  This interface needs
-> to change when symbols get added to the spec.
-> 
-> I figure the deciding question is the QEMU device model's role in all
-> this.
-> 
-> When something can be used safely only when the device model knows it,
-> providing a symbolic interface doesn't add to the things QEMU needs to
-> know.  Moreover, the interface can't be misused.
-> 
-> For things where the device model acts as a dumb transport, i.e. only
-> management application and guest need to know it, not having to put he
-> knowledge into QEMU just to enable it to transport bits makes some
-> sense.  It may enable misuse.
-> 
-> So, can you tell us a bit more about what the device model needs to
-> know to function?
+On Tue, May 23, 2023 at 12:25 AM Dan Williams <dan.j.williams@intel.com> wrote:
 >
+> Dave Jiang wrote:
+> >
+> > On 5/22/23 14:31, Dan Williams wrote:
+> > > Dave Jiang wrote:
+> > >> Some of the routines in ACPI tables.c can be shared with parsing CDAT.
+> > > s,ACPI tables.c,driver/acpi/tables.c,
+> > >
+> > >> However, CDAT is used by CXL and can exist on platforms that do not use
+> > >> ACPI.
+> > > Clarify that CDAT is not an ACPI table:
+> > >
+> > > CDAT is a device-provided data structure that is formatted similar to a
+> > > platform-provided ACPI table.
+> > >
+> > >> Split out the common routine from ACPI to accomodate platforms that
+> > >> do not support ACPI. The common routines can be built outside of ACPI if
+> > >> ACPI_TABLES_LIB is selected.
+> > > Might be just me but I get confused where this is indicating "ACPI" the
+> > > platform vs "CONFIG_ACPI" the code. How about just:
+> > >
+> > > Refactor the table parsing routines in driver/acpi/tables.c into helpers
+> > > that can be shared with the CXL driver even in the CONFIG_ACPI=n case.
+> > >
+> > >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > >> ---
+> > >>   drivers/Makefile          |    2
+> > >>   drivers/acpi/Kconfig      |    4 +
+> > >>   drivers/acpi/Makefile     |    3 +
+> > >>   drivers/acpi/tables.c     |  173 ----------------------------------------
+> > >>   drivers/acpi/tables_lib.c |  194 +++++++++++++++++++++++++++++++++++++++++++++
+> > >>   include/linux/acpi.h      |   63 +++++++++------
+> > >>   6 files changed, 241 insertions(+), 198 deletions(-)
+> > >>   create mode 100644 drivers/acpi/tables_lib.c
+> > > Conversion looks ok to me. Even though the cover letter said "Hi Rafael,
+> > > Please consider these for 6.5 merge window" my expectation is to take
+> > > these through CXL with ACPI acks.
+> >
+> > I thought you wanted Rafael to take the ACPI patches. But going to the
+> > CXL tree works.
+>
+> Ultimately up to Rafael. Either need a stable ACPI tree baseline to base
+> the CDAT work upon, or take this all through CXL.
 
-For the event record injection, this is definitely the dumb transport case.
-Given a real device firmware might well create records that aren't 'valid'
-guest software has to be written with that in mind. Also, additional information
-can be added to these records in reserved bits and the guest software has
-to deal with that (+ the spec change has to be written so that it is backwards
-compatible).
+AFAIAC, it can go in via the CXL tree, but see below.
 
-For the case of Events, I don't think there is anything the device
-model needs to know (beyond the 'which device question')
+> >
+> > >
+> > > One question below:
+> > >
+> > >> diff --git a/drivers/Makefile b/drivers/Makefile
+> > >> index 20b118dca999..1824797f7dfe 100644
+> > >> --- a/drivers/Makefile
+> > >> +++ b/drivers/Makefile
+> > >> @@ -31,7 +31,7 @@ obj-y                            += idle/
+> > >>   # IPMI must come before ACPI in order to provide IPMI opregion support
+> > >>   obj-y                            += char/ipmi/
+> > >>
+> > >> -obj-$(CONFIG_ACPI)                += acpi/
+> > >> +obj-y                             += acpi/
+> > >>
+> > >>   # PnP must come after ACPI since it will eventually need to check if acpi
+> > >>   # was used and do nothing if so
+> > >> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> > >> index ccbeab9500ec..ce74a20dc42f 100644
+> > >> --- a/drivers/acpi/Kconfig
+> > >> +++ b/drivers/acpi/Kconfig
+> > >> @@ -6,12 +6,16 @@
+> > >>   config ARCH_SUPPORTS_ACPI
+> > >>    bool
+> > >>
+> > >> +config ACPI_TABLES_LIB
+> > >> +  bool
+> > >> +
+> > >>   menuconfig ACPI
+> > >>    bool "ACPI (Advanced Configuration and Power Interface) Support"
+> > >>    depends on ARCH_SUPPORTS_ACPI
+> > >>    select PNP
+> > >>    select NLS
+> > >>    select CRC32
+> > >> +  select ACPI_TABLES_LIB
+> > >>    default y if X86
+> > >>    help
+> > >>      Advanced Configuration and Power Interface (ACPI) support for
+> > >> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> > >> index feb36c0b9446..4558e2876823 100644
+> > >> --- a/drivers/acpi/Makefile
+> > >> +++ b/drivers/acpi/Makefile
+> > >> @@ -13,6 +13,9 @@ tables.o: $(src)/../../include/$(CONFIG_ACPI_CUSTOM_DSDT_FILE) ;
+> > >>
+> > >>   endif
+> > >>
+> > >> +obj-$(CONFIG_ACPI_TABLES_LIB)     += acpi_tables_lib.o
+> > >> +acpi_tables_lib-y := tables_lib.o
+> > > Why is a separate object name needed?
+> >
+> > Not all code in tables.c will be shared. There are ACPI table parsing
+> > specific code in tables.c that CXL does not care about. Or do you mean
+> > just do
+> >
+> > obj-$(CONFIG_ACPI_TABLES_LIB) += tables_lib.o
+>
+> Yes, this.
 
-That is different from the poison case in the other series, where at some
-stage we will emulate the other way of getting poison
-(normal CPU read of poisoned memory) and need to be able to use the
-provided address and length to implement that.
+First, this depends on what is there in tables_lib.c.  IMV it should
+not contain stuff that is not needed for CDAT parsing.
 
-Note that a future series will tie together generating some of these event
-records as other things happen - e.g. poison injection.  This will be
-similar to how poison list elements are added either by QMP (to simulate
-real hardware failures) and via Guest Software using a mailbox on the device
-(to simulate software driven error injection sequences).
-
-Jonathan
-
+Second, I'm not sure if drivers/acpi/ is the most appropriate location
+for it, maybe lib/ would be less confusing?
