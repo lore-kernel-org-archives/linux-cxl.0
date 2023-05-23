@@ -2,175 +2,244 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA86C7EE31
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 00:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C9EC7EE2A
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 00:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235132AbjEWAYh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 22 May 2023 20:24:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33908 "EHLO
+        id S232805AbjEWAkE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 22 May 2023 20:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235117AbjEVX2A (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 19:28:00 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5124711A;
-        Mon, 22 May 2023 16:24:05 -0700 (PDT)
+        with ESMTP id S234475AbjEWAZE (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 22 May 2023 20:25:04 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7186A9
+        for <linux-cxl@vger.kernel.org>; Mon, 22 May 2023 17:13:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684797845; x=1716333845;
+  t=1684800792; x=1716336792;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=ZTOBA/LHu5InpWEfQ0p1hw0Hpk1n9EmJ6iiP8yFq+hA=;
-  b=UfhFTNW4eU4cwOA4HhbdZedgn8eFn/5VEiql5bf+r8TUpI30/mwT8lK0
-   mJrl3sY5ibNc4+0m1HzmtDdzL0jRfrg9qpgvbS4SNiXd/ftXAMgnl/K8m
-   y6UFslS9IXIw9caIquOyzp0zB4kaOXcSl5gYnosP6JWhpOx3Sk7HU4d3M
-   m4iuo40Pp0bGvknG4C68R1g6YMljFtNqYyloVXrK8ouua20seoIU73y7a
-   zIC7J9J+poHDY5NiTJrcflUd3Lqcr549gCuG/ogYrkmnI1IU6dUbLHkHy
-   0JOBGLWpdD8E5GsJaeVU7p8nvlWTGguoRck49bgiS6t2bHTt+vKHuonPH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="350580968"
+  bh=l5lq7U8N2vnoXRB99bEgh4LPk9tvBBjBUGd1oML+RB8=;
+  b=CB4fjB0IK1VP3xAgZ6zTlUMsmdTELKQgny2YXckZbpG1mBRRNV89f2L5
+   AAouv74cwNVBNb0dZZGCaiwpzotWj0MglOupa25vKuvZ/2rYlwuwW0ZXV
+   pmmiYb/+JjGQcxpzmM47rJJeSNPYyCkhoixD/6dxJQcUxAFzLcwQA9LaO
+   JmIeSlxsaitgAI35BYIcKm2mPks5Dpbdw68/ttycFGyBkADF++sqhQKjL
+   Z6zd0U14VpL0jFEA++xoC+AkRZ9H8N9avGFdTzpKyoA1AsC3YbdU5wiDu
+   2jxoZMvngLN9BRivHOpmuIvD8k0Cnt+AOV9OA2OrAeEyWCm8oEBPx5M6I
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="418785979"
 X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="350580968"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 16:23:57 -0700
+   d="scan'208";a="418785979"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 17:13:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="768728532"
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="736626180"
 X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="768728532"
+   d="scan'208";a="736626180"
 Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga008.fm.intel.com with ESMTP; 22 May 2023 16:23:57 -0700
+  by orsmga001.jf.intel.com with ESMTP; 22 May 2023 17:11:54 -0700
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
  ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 22 May 2023 16:23:56 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ 15.1.2507.23; Mon, 22 May 2023 17:11:53 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 22 May 2023 17:11:52 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
  orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Mon, 22 May 2023 16:23:56 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Mon, 22 May 2023 17:11:52 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Mon, 22 May 2023 16:23:56 -0700
+ 15.1.2507.23; Mon, 22 May 2023 17:11:43 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IEJ945vQyo6isVb8bNrk8EX40v/zxmYrg9DKH3DVhkbm6M3VPMtGjcohk1ycWVIugquNCAoKMOGJaJHQ4MDSrgW4Pk902BKyvueHEPmoyRFQkzrO5smD1OT3SxWAqaXkTpFwHjlUqcUjrmQzYAb/Yi54icySXC+9Ef1DgMeOB8SUUFVgR/QN4oK35dEkQEH5Qj5td6+Fk0poIACybF0ZKGBh/t1CWylpdKZeNI0bwEgqF3VN08S5FgDYGQ11Wwc+zz5FlWyNNPnZ1K7HcYNlcEtJtXLY/nx5PU9YXj5/C/P9s07pMniDSraAleTZ617/sg6tt30K7QmpIUo4WDNKLA==
+ b=LgCmny3jf9d895++30Sa13bEjZK4pZGqd8vt0f7bcOEzHaaksvTnfQH9XXx/BNW6YrO79KrPcQZ/PazMuBWNuN6giiolojsLSgKQutXUSScqM5gBV1qsLVl9yLTfZqZxPtbt1933O9m+/6ZRvJZIX+nFgPERVgMN85JjYeww0KJt30xXhRKgiuS5VfkgPJzhm8I0DMRRtUHrOhe70DNzCDxy1eRBj9hqxhqoaA/g6vq2MCHkwtz/pxunKBFmXvMeAwpvg1nAU57UV8HQETurAJD8HfZfiFybJe9GjrFmJH9g7BEvOdSQM47wUSJ01kJS5Ld23gLHK/r/LvbPCsyPnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oQDgcpA2ogW3Ptv2lVsU5ILjaGKejmDguy8tj+fLAgQ=;
- b=m9SWDmKYFmpV+nF5wMHzs7oYqzz1E/FApXNc9yFOJygDIEwqjtHljlZU3juK0u6zUyPSk2biqKbeQoqKu/xhOs5g2Shh90LezaH9b+ahB0rCA4GeDg1QrBDBVL/H0z95zbcNlYnk3TvMgH32w3x85C+25+RHFcyDGf6yRLIiUyhxmpPmwDUH6mjxh/LcH8UoehpKAdZI0QnaV3sLWohpqVitiKldQmj//az1Dcua6wZVm7bUI0+2fdxdWbBBQLnwtP//sn211VzdNVpj89cKFpSAGmsSW6hIEIfu0RLFoZk8qCvL7auoECDOtzgjqPR6yOM/b7JX+f32x7aw8W4E1Q==
+ bh=JJp3C8KHy840cylZCs5rnNDOxVmeY1wRgK6Rn+8y2Hs=;
+ b=kUvmwPRnAK11sU1VjYc3k9uVyPsc30Czp91QZJOaE8U/9hNWcucOFR06Q/LU8jiof3GPeqNxW/rbj8wr/NYazR9BsNRV/moZO01yNuY/XD7jILe+ekUcJtn1KMqDjBsCqZ3Bu7Wdr36ZARN3rqyUFiZymcBvXOVYxXPrk9axZVQz36CuaMBS5ets2sbhTFzJH3nt1gqm7kK2JkCNCiIHosw+4sKeojBzh+d5oshc5XP70b+riGyb77Ou4qdZmQO5tNBG2/qzYZjPGAKEz4xk0+zk0CbNkF9JbAlgwFegeAR355e+1qBDpTxcoIhmCu4W9pz/74Dvz0zQv1xqAh3Z2w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB7515.namprd11.prod.outlook.com (2603:10b6:510:278::5) with
+ by MN0PR11MB6157.namprd11.prod.outlook.com (2603:10b6:208:3cb::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
- 2023 23:23:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Tue, 23 May
+ 2023 00:11:41 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6411.028; Mon, 22 May 2023
- 23:23:54 +0000
-Date:   Mon, 22 May 2023 16:23:52 -0700
+ ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6411.028; Tue, 23 May 2023
+ 00:11:41 +0000
+Date:   Mon, 22 May 2023 17:11:39 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <lukas@wunner.de>,
-        <Jonathan.Cameron@huawei.com>
-Subject: RE: [PATCH v2 3/4] acpi: fix misnamed define for CDAT DSMAS
-Message-ID: <646bf98890561_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <168443445827.2966470.16511867875780059322.stgit@djiang5-mobl3>
- <168443479457.2966470.18010229834586488037.stgit@djiang5-mobl3>
+To:     "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC:     'Dan Williams' <dan.j.williams@intel.com>
+Subject: RE: Questions about CXL device (type 3 memory) hotplug
+Message-ID: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <TYWPR01MB10082116669BA002263DF132A90439@TYWPR01MB10082.jpnprd01.prod.outlook.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <168443479457.2966470.18010229834586488037.stgit@djiang5-mobl3>
-X-ClientProxiedBy: SJ0PR03CA0354.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::29) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <TYWPR01MB10082116669BA002263DF132A90439@TYWPR01MB10082.jpnprd01.prod.outlook.com>
+X-ClientProxiedBy: BY3PR05CA0059.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::34) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB7515:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4264f0bd-10e1-49df-b03b-08db5b1b9c1b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MN0PR11MB6157:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7c003913-27e2-456c-6be6-08db5b22488b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IpM/QgdbxMb2Xl5sRRr1KwW0JRBaKJlfQbnrhvnbwhI4urpjQpvgP19ZoPNkrxOK1aRRkt1DBoFQYRa2GPjJpVg6ZAXY3adlYZBQEs8eXSZWF6OKjLH7SfQEq7eG2kljdXsfoapRkbEm7mKdvu1x5YjcAAvbV+8W/GqoNFVbMwo3tB5Q60Z2aBAkPRss5iz8s+eT7TcTvP0kIRQxXR7vPrCg5Pav1zktiX9WEcM8Oj5T7PPmS36Le6c+hu/MB8is+ccskKIkOJUaHvQKs+321FMYyD7p+4FzFWklSrO7c7+P7k4G+VylVC2pqezpMBdOozYkTaHF+40NNxigX2msPypkNAgb0HtJfLb/lsBDCc4B7BYaJK9OHm7LlmVJKx38kEeyNMsgnyXOvcVPXQMfdevNuD+9uYa0A5HHxe4vj9MVL32D7UhCZ7cgzhOFhhUTs10JFcDNXxFvXtzfMC4GqznNw10KaKttxyk7wptDA52tYNvveYaiRr+Jnu/l7pSHxqridBxeP6ydqFI59ue+DP63Zk5W14tTDDxJOa3lmKI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(346002)(366004)(39860400002)(136003)(451199021)(6506007)(6512007)(26005)(9686003)(966005)(6486002)(41300700001)(54906003)(66556008)(66476007)(66946007)(4326008)(478600001)(316002)(8936002)(8676002)(5660300002)(86362001)(83380400001)(82960400001)(38100700002)(2906002)(186003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: Y4V0iQUzo15YnjG4kq9DSb9GJhMhJuFDam5E1xToMX2TbThyXEFm1XAwnnK+rxQ532Pj6QTvaNw9By6Wt7uD1WF/PqnUqsCWZWXVnM6vKxG2G2ZR/TikZ0BQJOskz7aRV2NiH/FmaRbo77syp9bJTLyq4xcr5zJxNlaCSND4BC8C3DM4T+u8ufPo153LPj+NwzDKpNT/OJLH0Gp0skpqqPLE9GrUtlsIEm3LqxbTqCbs35RdXslGJrAEP6DJCCu7HNmBUVihdqQTvE0AlQnS9jr/ArZrdTcODaj6R/rQxLiDM8bBcdoM0HdZaH8QSLtro5/AG56Lnfk+dMtlv5IguTCFNlAHjBZMbnL0ccXduXBIL8s9kno/HfdllZX8g+Te1YYt2Is8UiSE6wsatk7f2WZAXU3QwfI06dva+7JRsE+3fqRGudiO6e8FlYGsVG+Sy0MvdAfFvh9qNCJRNQzCA/ZbrsEEPH/OsSIprq9eBa7dmchQaoltR8G8kPfS0YQY+/wFO1kl8RhfcKLC7hPUejzi3nHmXCEnCb/BI5MeKRlw2YbO/+sm2Bm93BUwkU7m
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(396003)(136003)(366004)(39860400002)(451199021)(5660300002)(8676002)(8936002)(83380400001)(2906002)(82960400001)(186003)(38100700002)(86362001)(107886003)(6512007)(6506007)(26005)(9686003)(110136005)(316002)(478600001)(66476007)(4326008)(66556008)(6486002)(66946007)(41300700001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Zb1yAXtehGURhBYrKfyF0pC4TXUJrfBoaMJcVpMZRruPwCo9ZXikvo6I2/3w?=
- =?us-ascii?Q?0henqnSkeLtyeMVuoC/v/a9AF7o6OBGlZFT8hYxHu1iSyKhPIcCybLT/sbgy?=
- =?us-ascii?Q?Fqa2LEKA6vXiBMeNVCD6HG1cz4oOZ7LbLYIr5HE+bZBKNrqbm/v9x2JvvvY8?=
- =?us-ascii?Q?G7rdRGv7HkN63bfoxFLil3jJj+F3bGjHQxo9E/RF2sgsrJpBatgyQgCAKUMx?=
- =?us-ascii?Q?MKdpMQClXSpDmaWIx3wabSNDF8nfbfzXLbhNd19vkF7MrDx2wlDD7iN5OkBQ?=
- =?us-ascii?Q?o3XkrOLUvJrwkRz3r0Iy9A/0zb8Xit5kwrMjW45n8uQIB4EN7PUflm7EbuEz?=
- =?us-ascii?Q?X8SDTxxkIqCaqtlj3cBiUU/dxU1ddga7Accp53cP++guEhDJCHYrEwTS94iq?=
- =?us-ascii?Q?YpMncWdEFBaZsL0wJyutDBVan7e/L4usyKJ+UuxJDf+tpZ4+e4fgg5tmqVZ0?=
- =?us-ascii?Q?MlnhXsDiTCc5yQRNyFLU7PqY978llG7nfg0ua+8c0b3vJOESZVuMSD0wmvH6?=
- =?us-ascii?Q?qiAwfcdwI2XTmSxj56ahfZz/pGMFm0GUWH/uqOwFhugT/g/kCcpnyxd4sasJ?=
- =?us-ascii?Q?n+TXe2l+61tDv99OEesaErahV2X2nzazgFbV9bwDDTIazsQcKvYzJcAeG75S?=
- =?us-ascii?Q?mIeCQKu0Mbq8C4gqVNcOQtmlPF8aXeIDUJcXCEae4x5t2/4u2pLMhgsMx3wc?=
- =?us-ascii?Q?ihB3tnbcEdhTzwbvwP5z3X+UL0LCkfKHVyVcZbBsBDX6fd4UOqtGcjMxopWI?=
- =?us-ascii?Q?6Ef0lUjFTYun7q9WdU5RFDO3DFLvuKEcqwGoWm8KYVwwXBnFgFp20zZQ/Ak2?=
- =?us-ascii?Q?m+Yl/ruIbkPryrwhZmvrRnQTi/kvRQ2RR+Fi9b44HHRvCZW3SuS+zZZ0Rxl0?=
- =?us-ascii?Q?L9CNL+mu7T5pRFE9BRkf468gh8S10XPjjgLPKEBUB+bxbR8vk3n8JqvokS5N?=
- =?us-ascii?Q?9Mcujz78mk6q/VELp2Ndo3lVlQ+88OguPYXlPw6SW4UQSpnccGh7Q1+Hq/ih?=
- =?us-ascii?Q?DZQ3YG+BqUk/ei73sVd919JBTc5dM7teUdXl2q1qtweGu7IW21TLd1MjGlUh?=
- =?us-ascii?Q?/nWWGs5Rf325ABLEraEJm7nbeaK8oJCzirxJP03P5aJqk8jEmBWgcjAO3n0z?=
- =?us-ascii?Q?hq9FKBXcXEa3GPzuT7wL9QAuwmzUZK/Nbld8yC+gXpZEgGA9dVogGDM9rbNR?=
- =?us-ascii?Q?jmj7UIyTpEuKFGN01U/6c1buKUS8P05GlNYF6oPHykk16ePyLTj944rnQti7?=
- =?us-ascii?Q?nUqJzhDgqnXHACCcAjRmBMraa0yAxaTCynIP4J1uHO0KSyxGrkqo8IUFlZ67?=
- =?us-ascii?Q?TPoUgLM2BdHWa5QKBfsU+hdSeWbFYa2uVi5PdupMc/sdwGS9/dQYiWrPVtqp?=
- =?us-ascii?Q?lM3DPdl3aZKgTEDhLqyI/yor8CRbe6oXcQl3HWfTOiG/Iryc51mDdOfWUmeI?=
- =?us-ascii?Q?neFZgoGQSxHn8r0oP1i8rxkAlSNqe6C5lrmDh1C8q9JlcVM7IvJPVRAUKnx1?=
- =?us-ascii?Q?uDGryd9n+HcFo9A0N8fSig+83ODsopP8uOWyYices54hlDz5j/X9/3NzJfPt?=
- =?us-ascii?Q?RWPvR3jdAUms91KG6gKJHX5zuL/+haqNSDN4QGvN2aHyqj3ZpcDR+LEa1OSM?=
- =?us-ascii?Q?wQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4264f0bd-10e1-49df-b03b-08db5b1b9c1b
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QIMk/0Ni3M1mBtgNrJOcostPSSC2D9GeR3bBsAZ66nSUvnyv+raiQgYLjdp7?=
+ =?us-ascii?Q?hdPDWqVsExlCI0lmecAPm/C1Brn6JXK1Z9NFcGjPfc85n4j6hw+Ec4fk/83m?=
+ =?us-ascii?Q?56l6dpDoLGAiAFT12rx23PYo7BMGCdTZkNqe9u/D83DUZjqFTs4an6qJS4SQ?=
+ =?us-ascii?Q?il2Ur+uYAYeiK/T1i6UgCv2G+9e0WQ2VnsZn808wII+uiPQs8PD1uJbVhKYQ?=
+ =?us-ascii?Q?oZBcMwhVgb6dSK/asIa3JZJhbp2ZEbIxX1Mu/BiUec+WVRcy/zGiF2ev1AKg?=
+ =?us-ascii?Q?FhYBhyTCIDglxnUlf1F+nztizFlcuHJiQyJqkvGeoKgHZcwgvh+SfPD8D1lt?=
+ =?us-ascii?Q?CEwNbD2ZJ2K6z/lT7tgncK6PGtoUJTlFr/ENn3a+b7Uctm6hXve8/gSmQR1i?=
+ =?us-ascii?Q?gre9q5MkyZGKeNcUkLYrxN+Gdi4FQjzkVh9DGUM6uariIai11oDZNw0U+M+l?=
+ =?us-ascii?Q?9laS4lOiL7/360M6aHDzRRtfp155HDJXDCeZ+eYERCR+EnOOAmJNH5jT+ucI?=
+ =?us-ascii?Q?7ObmwflUoXOhtEaIJ6Y+X+uz/MbZzNaEglIu26CEj3YKQ6LEzUUdr8XtCO6A?=
+ =?us-ascii?Q?ooSE0K05zhNSIhYr3j6u+YCQSW2C0nvbVzfpkbPBeIS+c0yCVRqwEG7xEvky?=
+ =?us-ascii?Q?iFm5PtjN95VlSoGuzk4+HVOAFZK0pnlOsAsFCUio1AJqYP7VXJqQSsSKSRD7?=
+ =?us-ascii?Q?2dW4rocQkexRigRP9iFiGIqNM3cG+YN4fVJEXHYp+tN0a2XPE8uCUdvQBobq?=
+ =?us-ascii?Q?dbsbbKi//FwyGAihHlwlFwijHw1cGn+gIiHW0S0pv1ywHH4QBN14i2YpxJbe?=
+ =?us-ascii?Q?JItStMgxar7tzYK0XJMnqladdXlGSRSrQUs6kZSMqVwjVbFB9nL9unXU5QOw?=
+ =?us-ascii?Q?OUG+gbZL1ao0htyBfsIYQSbQ3yhK3H/ANbKd5It/i94CQqJmlJZ3uLPzEhig?=
+ =?us-ascii?Q?U95yeoIxrT9EgElMjri5Eahgir4CDGDsxTioUHTOlvfSzjRaecqY0E3IGk3m?=
+ =?us-ascii?Q?9xOrXZG8du42UqSdcJrgY9rCXKe3xFds7YRJUV3RmUeR/FrILKInntJengcj?=
+ =?us-ascii?Q?BV27+SMLcbsdnGowc0LEYLmITvKc5Lg1JphMngTMp7Wrj3cU29gX+QGwlM/Z?=
+ =?us-ascii?Q?wiCQyX3X0sN3zaa2vTFvU/jTnJkBlz9bZzmcOsblwCwh43SdO8ajdJ3reaDQ?=
+ =?us-ascii?Q?Ei84bmQRQkyxcS6cgo239BkBJRBqlt7UXOCDyCvoUij2thFnvtstygJj/ehK?=
+ =?us-ascii?Q?8afV7WZENCM04GCvMgPknGMegNQXriBx5fW1Dd+ypRk+LNxmdgVADpYiSFSi?=
+ =?us-ascii?Q?YIrR9eA3iHyEvCXjuAXhxpthLE82vZPi2/ypm3m2ba1jobt9IYd5kYK5y5/e?=
+ =?us-ascii?Q?9UMqjPrWTUWY37fYhtZCgWsM0hj4Gln0Xnn5pRwT25FMISIzf31O7U9oArif?=
+ =?us-ascii?Q?izZ5QPv2QI4AzxQPw6Ca1sjzkn00o1T/nWa1dmad3zL2aceliKS1E1/0WyFz?=
+ =?us-ascii?Q?j2jrUv1CH22DZi2eb1dZOWPZhu6vYYq3ERAz6/QPMNSBUcdzEObqCa22KPKw?=
+ =?us-ascii?Q?zTyYOJXfDL3vtvZeogHYj+hcTVpbDyysb+VGIQVqBsfn0CnYrcPE6ZnDC/P6?=
+ =?us-ascii?Q?Kg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c003913-27e2-456c-6be6-08db5b22488b
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2023 23:23:54.5960
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2023 00:11:40.9752
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Smx+3gKD9lGRYgL/Kz/zgKaHd4cUNKbGLOo+lP7WEON95pr9ViUBLul06xiS2MEVB8rs7UKtXWCMbHClRw92yOjKfKm453pajt6OjstLjG4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7515
+X-MS-Exchange-CrossTenant-UserPrincipalName: rwB5Y3w1vRsvoFm4U+XX5X+IWHGxnkKL5zqGpZ2PbsaVe/1wzOS3dXNitzLxu7Q9c8ejNRghUGUnlgKLiTKyGam6zCJvDOjC63WGHPxP8DE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6157
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dave Jiang wrote:
-> ACPI_CEDT_DSMAS_NON_VOLATILE should be defined as
-> ACPI_CDAT_DSMAS_NON_VOLATILE. Fix misspelled define.
+Yasunori Gotou (Fujitsu) wrote:
+> Hello,
 > 
-> Cc: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> I have some questions about CXL device hotplug (especially type 3 memory device).
 > 
-> ---
-> See https://github.com/acpica/acpica/pull/874
-> Merged
-> ---
->  include/acpi/actbl1.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Though my team members still need to work for a remain issue of Filesystem-DAX,
+> or RDMA for persistent memory yet, I would like to move some of them for
+> CXL type 3 memory device after finish the above works.
+> This is preparation for it. I would like to confirm current status of CXL
+> type 3 memory hotplug.
 > 
-> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-> index 81b9e794424d..15df363b9144 100644
-> --- a/include/acpi/actbl1.h
-> +++ b/include/acpi/actbl1.h
-> @@ -356,7 +356,7 @@ struct acpi_cdat_dsmas {
->  
->  /* Flags for subtable above */
->  
-> -#define ACPI_CEDT_DSMAS_NON_VOLATILE        (1 << 2)
-> +#define ACPI_CDAT_DSMAS_NON_VOLATILE        (1 << 2)
+> Q1) Can PCIe hotplug driver detect and call CXL driver?
+> 
+>     CXL specification says as follows
+>     "9.9 Hot-Plug"
+>     "CXL leverages PCIe Hot-plug model and Hot-plug elements as defined in PCIe
+>     BaseSpecification and the applicable form-factor specifications."
+> 
+>     At a glance, PCIe hotplug driver seems to be able to detect any PCIe
+>     hotpluged device, and call its suitable probe/attach function. But I'm new
+>     around here, and  I'm not sure it can actually call the suitable CXL driver.
+> 
+>     Can PCIe hotplug driver recognize a CXL device and call its driver?
 
-This needs to come in through an ACPICA update. If that is going to happen
-this cycle, great, if not then I would handle it as a merge fixup after
-the fact. I.e. just live with the misspelling to keep this patch set
-ACPICA unencumbered, unless Rafael has different thoughts.
+Yes.
+
+The cxl_pci driver (drivers/cxl/pci.c) is just a typical PCI driver as
+far as the PCI hotplug driver is concerned. So add/remove events of a
+CXL card get turned into probe()/remove() events on the driver.
+
+> 
+> Q2) Can QEMU/KVM emulate CXL device hotplug?
+> 
+>    I heard that QEMU/KVM has PCIe device hotplug emulation, but I'm not sure
+>    it can hotplug CXL device.
+
+It can, but as far as the driver is concerned you can achieve the same
+by:
+
+echo $devname > /sys/bus/pci/drivers/cxl_pci/unbind
+
+...that exercises the same software flows as physical unplug.
+
+> 
+> Q3) After called CXL driver and detected a CXL type 3 memory device,
+>     what sequence is/will be executed?
+> 
+>     IIRC, kernel created /sys/devices/system/memory/memoryNNN directories when
+>     memory device is recognized. Then, online operation was executed by 
+>     a user or an application.
+>     
+>     However, CXL specification seems to require more configuration like
+>     interleave, region, and namespace by Fabric Manager (cxl command?)
+>     after device detection before memory online.
+> 
+>     So, my understanding is that the above configuration must be executed
+>     after device detection, and before memory online. Is it correct?
+
+Correct, after the device is added and the driver attaches there is
+still a step needed to configure a CXL region.
+
+For now that step is to manually run:
+
+cxl create-region
+
+...later we might consider some udev rules to automatically assemble
+regions from discovered capacity.
+
+> Q4) Current CXL drivers/tools support Hot-removal request from PCIe?
+> 
+>     CXL specification says "In a managed Hot-Remove flow, software is
+>     notified of a hot removal request."
+
+Currently there is a requirement that:
+
+cxl disable-memdev
+
+...is run before the device can be removed. There is no warning from the
+PCI hotplug driver. Which means that if end user does the wrong sequence
+they can crash the kernel / remove memory that may still be in active
+use.
+
+>     I think that CXL drivers/tools need to find which sections belongs to the
+>     requested device, and execute offline them at least. In addition,
+>     Fabric Manager may need to prepare removing the device due to configuration
+>     change.
+> 
+>     Does current CXL drivers/tools can execute them?
+>     Otherwise, does it need to be implemented yet?
+
+Currently the 'cxl disable-memdev' command is not smart about
+determining when the device is in active use it just claims that it is
+always in use. That is in progress to be improved.
+
+> Q5) How CXL driver treat region/namespace size against section size?
+>     Current x86-64 section size can be 2Gbyte, but CXL region size may be
+>     able to smaller than it. 
+
+The section size is still 128MB, the hotplug memory block size is what
+expands to 2GB. That size limits what can be onlined via the dax_kmem
+driver.
