@@ -2,277 +2,337 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65858C7EE23
-	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 08:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E13C7EE2A
+	for <linux-cxl@archiver.kernel.org>; Tue, 23 May 2023 08:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235763AbjEWINR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 23 May 2023 04:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
+        id S235812AbjEWIf2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 23 May 2023 04:35:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236130AbjEWIMn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 04:12:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33590186
-        for <linux-cxl@vger.kernel.org>; Tue, 23 May 2023 01:10:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684829436;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MrwnZp6yeMQOmeCBRF+viYsURs0tplrgN8AkC8JRKGw=;
-        b=jC11KvsyajZBWcf1rT4o+Q4nZbjcWmtQih6yLLcE6iun9aJbpiI1IAgSfkYHOMslJY7Jyo
-        tUPkD0NBnCAWs21zDhi/tVsULqJmX5SWpxGR9U/LJszP6DDdjutWBqIP7oYd4LBt9LgJ2Z
-        Ou2pKziJBkhEH3E4pE/ChkNp1WIxsTQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-641-_5opcnalPbW_CGWkF2Ksqw-1; Tue, 23 May 2023 04:10:33 -0400
-X-MC-Unique: _5opcnalPbW_CGWkF2Ksqw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 92698185A794;
-        Tue, 23 May 2023 08:10:32 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.39.192.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3BA2E40C6CD7;
-        Tue, 23 May 2023 08:10:32 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-        id 32B1521E692E; Tue, 23 May 2023 10:10:31 +0200 (CEST)
-From:   Markus Armbruster <armbru@redhat.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        =?utf-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v5 5/7] hw/cxl/events: Add injection of General Media
- Events
-References: <20230423165140.16833-1-Jonathan.Cameron@huawei.com>
-        <20230423165140.16833-6-Jonathan.Cameron@huawei.com>
-        <87lehgq1cy.fsf@pond.sub.org> <20230522135737.000079c4@Huawei.com>
-Date:   Tue, 23 May 2023 10:10:31 +0200
-In-Reply-To: <20230522135737.000079c4@Huawei.com> (Jonathan Cameron's message
-        of "Mon, 22 May 2023 13:57:37 +0100")
-Message-ID: <87fs7na2o8.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        with ESMTP id S235908AbjEWIdq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 23 May 2023 04:33:46 -0400
+Received: from esa17.fujitsucc.c3s2.iphmx.com (esa17.fujitsucc.c3s2.iphmx.com [216.71.158.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFFB2E0
+        for <linux-cxl@vger.kernel.org>; Tue, 23 May 2023 01:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1684830694; x=1716366694;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=icAqU1yWhGtPpZczt7hHpWSqX3zWOPup+nLsBZJgpfw=;
+  b=jmfDmt9WRkOJ5FPhZF4Goju6qepeZ30hMUH6rKX5kg1dvR7AWSHsknzu
+   il+bGq6kDzBIF6HUZkJ/DySly5bgpOehFyKeIFH3HVUqKdDZHW61WGh0F
+   qTsIJ7uqyFrCjVXXaqbbqjvXH2J/T0p/ZGmBjIZI6LRJQjDg6xao+W69d
+   eovwWfU2+Zg7GqHrgnIpAD0er0K94wduiyudBwjQhgAwTPjVh+Ysx8q+D
+   piJY83SWsKX0Wt036JVFOPKh16YXqm6qIJCqFMN0d5pYYmgPzyofEFocB
+   pMRDFtIC62/ML4ctbRfnFzkRFFW4IZHD2oRZUKIi6yy6YBC7e5Z/0OMIS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="84991567"
+X-IronPort-AV: E=Sophos;i="6.00,185,1681138800"; 
+   d="scan'208";a="84991567"
+Received: from mail-tycjpn01lp2176.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.176])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 17:31:31 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JdlQdGp7XVsNLqZABAL70nL9fBZeCnTIkjJzK1vlto93R+jjgn0VRuDha9OBL0HtV5YzHlsCMQiqiOILKmUl/wx8N/88w4jGrar06WAUVlr84fwfFocuinMFIsx4GenZRYc2QV/jp6V6UMAWvyY+W/efyA/+D2iYCcj9pdLRaCexilmQjFBqMnrbpZrGVUzMmMk50d1WXZBnDHlYccf+H3yDYV696IpclxzA5KbEiLdLd8NFgI5vMKQe9rDd2sjqbzZ2MHFNJQ1Xvao3PAVgwqns2UXHFqvBJSEPHU/4/mkHTrNldK2KN1Zt0XpnmnlNkGBuWj89up4huRbYlasJjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1b0tRntiJrg1TtwOJANZo2h7zDlf8fcMr7c4wURAIcQ=;
+ b=lZscwPVZyan3BfrEajoWMFehMIlu0mcl6Ehgk1j5ch6WCze7QNDI/qVZGmT+xUpEsSOZDFtK7ku7tXnTusZQgGPOOmMqcpHRs/M46yqxtnK7aRP9Nn3YWdws6G46feq3slluYzvsy3YfUuaV7AUNviFSKkInZp7oqIlRnuHg5ChAEZ3jCdTFnPc8hrjyNhn+Tf5Kwonh0wBOdT/pLwmKa5nEaLzrgl3zNlv2X9N9BlRv5AHHighN9C2kZsjUJeKanbcelOBp5HwYPKyWrOw5QtAGtMfWhUwvhxBWeKJME6YH6MpNNG4ItqRZ7kvgTD2rfECoYvDkq0xJDj5TKZoWXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TYWPR01MB10082.jpnprd01.prod.outlook.com (2603:1096:400:1e3::8)
+ by TYCPR01MB8208.jpnprd01.prod.outlook.com (2603:1096:400:105::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.29; Tue, 23 May
+ 2023 08:31:27 +0000
+Received: from TYWPR01MB10082.jpnprd01.prod.outlook.com
+ ([fe80::4e2c:7c29:6e57:524]) by TYWPR01MB10082.jpnprd01.prod.outlook.com
+ ([fe80::4e2c:7c29:6e57:524%6]) with mapi id 15.20.6411.028; Tue, 23 May 2023
+ 08:31:27 +0000
+From:   "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
+To:     'Dan Williams' <dan.j.williams@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: RE: Questions about CXL device (type 3 memory) hotplug
+Thread-Topic: Questions about CXL device (type 3 memory) hotplug
+Thread-Index: AdmMgx3ueFURs12qRVC17Zugj/nYpgAiAciAAAOnngA=
+Date:   Tue, 23 May 2023 08:31:27 +0000
+Message-ID: <TYWPR01MB10082C8CB891827C6438D311D90409@TYWPR01MB10082.jpnprd01.prod.outlook.com>
+References: <TYWPR01MB10082116669BA002263DF132A90439@TYWPR01MB10082.jpnprd01.prod.outlook.com>
+ <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=true;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2023-05-23T01:56:18Z;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED?;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ActionId=5a36f7c3-cabb-4105-b71e-1958c159f868;
+ MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0
+x-shieldmailcheckerpolicyversion: FJ-ISEC-20181130-VDI-enc
+x-shieldmailcheckermailid: 47dc1071bca443cfa8b7917f82d6caeb
+x-securitypolicycheck: OK by SHieldMailChecker v2.6.2
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYWPR01MB10082:EE_|TYCPR01MB8208:EE_
+x-ms-office365-filtering-correlation-id: 1044f241-8897-4cd6-4dce-08db5b681a1a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: KMqCW5/vh7eO4e5il2WuX1ppMEHJ4waqlDEyIyNxKrOUEdbIGiwTqHfZrS9gx71gaq2ttS1Bn+Ej9GMmyOkCdZucmJP7TwRt2wCFm948awhZW7z/LHxpvxc8H8OCmKa0DfS8C8+1QIl7hgp6063GbZERdp51c4fGwrQK6iA1yGXFQyxF7PvUS3+BrgRknH66mLyTeD6yj36u43D5xH+/qUMSKZQ4xt+cS68vip2PbztQV57BseLVa42I2z3YCHsVMEEqW9ly0Z9mr/AflMan490elVIarRmrlRdSY1g9CHBdvyt28UNeAuaiIt2yGMIl0DScSiMk9/zllKm6Zr1q+RznRci6CjGPt//ZInBEOWURLAqOtYNT0EgKLloOsJ92NeW9IJt3m5dEDkw0BFTIJxjQ49x9GNR76uCwwYups511B/IgpFWG8DOX0j8ag1uDW+4/57ZfqLLyfhj80peMGbpkbbzYzsPATShObNWsLvR/TULg7k4W7CWmmzNwWuQlhUSNrBHVGQv7D3u8n4PRK3qubBZcbEFLfVwD2Utw7zr3g7Ato3xQG5NyYgf+NetJNx2IX31j0NGf7/DbEK9GzwMAW863L9a4TrU/obFf1RaCS91uy3562iKF0fmjIYrTLAdUIO0BcIcv34UrSsfjRA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWPR01MB10082.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(1590799018)(451199021)(83380400001)(1580799015)(71200400001)(8936002)(55016003)(52536014)(8676002)(5660300002)(33656002)(38070700005)(41300700001)(122000001)(2906002)(85182001)(478600001)(86362001)(110136005)(9686003)(82960400001)(38100700002)(186003)(26005)(6506007)(64756008)(66446008)(7696005)(316002)(66556008)(76116006)(66476007)(66946007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?OFRNOHoyMXovanRIeVh1UWdXYVVPcUMxaUMxWDdvRXZyc1cxWHk3QXVn?=
+ =?iso-2022-jp?B?ZElCd2JnZzMrcS9mYVNUQ0FjQzExcGh3VnloWFBNRWZvVld0R25DNWhs?=
+ =?iso-2022-jp?B?VHN3SFFTWVNhSVNkdzlVUEFXM2dmeWZjQU9WNHUvYUY2c0wxRCt3ZG4y?=
+ =?iso-2022-jp?B?M0RZOWY1a2l3VEg3SzBZV2pVYnoyV1ZXY09sWklLcVJKSVg2TGFjRzNY?=
+ =?iso-2022-jp?B?UDFXcW0yZk5HNFR6aE42bGJKNnlEOTdZeWNTWlVvTFlBeW1aRndXRWM5?=
+ =?iso-2022-jp?B?bFM2U0VPRGc5djZLWHNvamphL1NqWTRKbUs4OERvNE94SFFFM21POExp?=
+ =?iso-2022-jp?B?K0ZBQWUrU0Fwd01WVWlJTEdLSkJkRHZQaHh0Qnh0SFBQaHlQbXJWbVN1?=
+ =?iso-2022-jp?B?S0diUUdrQkZqYzRFRWxwckt4citQa2xwQVZyVWY4NjBTQ1AveEtjRmhk?=
+ =?iso-2022-jp?B?MC82TmRGRTRjZjJ5L2c0NzlVSTd0QlhLWnRJNXR5L01hay9yUVhna0VK?=
+ =?iso-2022-jp?B?UjQxQ2VRWUdENldnR21EQTV6VHZoMXlXSjN4eTRVdHh5UHdZUzRmTDZu?=
+ =?iso-2022-jp?B?QzhkSkpWTlZhMmxISjFnOXpKMFBtSTBHWmlpNFhLUGNJZXlOWHU0MkQr?=
+ =?iso-2022-jp?B?TFEyNHlVS1lhMU1ueG1HWlJkYlFyZDFPaVlGQjBGV1BoU3RGNWhLSTE1?=
+ =?iso-2022-jp?B?Wk13eThUa0JReHlDRkw0WlFFbHUybTNZNHhBbFZtdjViSlVUT2R5Unlo?=
+ =?iso-2022-jp?B?YzlWNXFmQWZkTGt4aE1lUXVuM0hLZzlBS1Z1b0hFTHdYT29iZXlmOGxL?=
+ =?iso-2022-jp?B?eUtpSkdOaEdzTWZ6M3BMOEZ3ZTFRWjJjdzYyQ3Y3RDdlQk9XZi9wY05k?=
+ =?iso-2022-jp?B?ZVh2Tm1MbXZhU0xOMU5zZWV1aXlYemluekhIV0NnOVJORG41R2pHdWdL?=
+ =?iso-2022-jp?B?YWM1MzZnRVZZd2ZObDRSUllaaU4xZVZlZEMzV3BhQlZaSDVoc1lkNDlL?=
+ =?iso-2022-jp?B?WmtCaC9TTEE4SWdxelQrOVZ6bDFoVTdtSkNzSG9VT3hIKzFEd0IzNFli?=
+ =?iso-2022-jp?B?bFlyWUxWdWZqVjd4ZkFFRDJEWEVEWmpYSExqY2g2eFY5K2NSVnp2TjVl?=
+ =?iso-2022-jp?B?cWlvWHBxbXFyKzJycjdQemhqamh6b0dzSk5EdHZzV1VDbTdQMmZPUWRa?=
+ =?iso-2022-jp?B?Tkw5ZnN1ei82QmdXMlJYZnVvS28zTmw2VUxHVFJ4MjUyZ2VwZlQ1UFd0?=
+ =?iso-2022-jp?B?azgrd1lCd3Jjem8zS2xrTENjYXhLR1JhV0c3ckF2aTRVbitRZ0ZMSHJH?=
+ =?iso-2022-jp?B?ejBYUWFwOWVuSFYwKzlQQ0tUOWNuSDhoQ0VvS2gvVW92bGMzbFRTZnMz?=
+ =?iso-2022-jp?B?bGNZcjhnTnFreGtVOUFMZ1ZBZVZTcGllUno2eHczRjhQYmt5Q05XZHJW?=
+ =?iso-2022-jp?B?dTdCRXpDc3hXTDA1MmVDdnFJTE5oY1ZEZUVLaDdpK1h0NXJRMzVIajFL?=
+ =?iso-2022-jp?B?WERzK2NDc3oyTkRaS3RvZ0J4Z3dmcFdvRldsWEdmSCtHWGdTRGdTZzVV?=
+ =?iso-2022-jp?B?emphOEt5bk1YeEtvajdxS0pRbDlqWkUxcUtVdkRxN0JVazJVYVMvcXND?=
+ =?iso-2022-jp?B?WTRCcGVDTjZKbzJseEpWdnJhUzQ1amtZZTFJZXpLaEZpQ2d1bnpHZmFS?=
+ =?iso-2022-jp?B?dWNyUTdaajBhMWJLL3RpOCtDMXhiSUQyN2tPbnNJUEFLOVNNUFNpdmNq?=
+ =?iso-2022-jp?B?a1czNGd0MXFIMVJCUzFZaDZ0NTUrV3ZUVVFQZEMwMkVHWldMQndEeHBt?=
+ =?iso-2022-jp?B?ckJjK2pPVm51Q3RTNU93ZWNGc0hlTUZ1V0dCWnRteklMdDl6VUlML1BR?=
+ =?iso-2022-jp?B?RklycExWSEVqSnNDNy9CTWl3MDlWZm4ybm9XOEFqNncyQmVXaHJqREU0?=
+ =?iso-2022-jp?B?SkZYSmdxWE9EQ3U4SjE1Zmk3Ti9RT2t6dklMS2JlV1BaQ0hqTDBDbzE4?=
+ =?iso-2022-jp?B?ZzFia1FOUFk2L3FSVTdCeXhCRW1DTDM2UVV0MVNNdk5zMXl4elN6SW1u?=
+ =?iso-2022-jp?B?dVRkY1M2N1poc3BPUUFLMDcvN2dsaUgrSWlKZE5hb1hVR2hrZ1VJNWQx?=
+ =?iso-2022-jp?B?aFNNbHpBL2V6RW5FSnFTQXNNeHNvV05yZGtzZGp3dzJRUTBQK1p5RWRQ?=
+ =?iso-2022-jp?B?Y3BUaCt2cUZuZ3BqdHV4YitvTkt4YVA1SmZVdk1RS3RGdVZGV1RkbnVQ?=
+ =?iso-2022-jp?B?dTNoT2UwR3VLY2dYVmhVcTQ3QnEvNG9kUFRXb1pDY0hQRHdHTGxiQ1Ju?=
+ =?iso-2022-jp?B?R2g5Rg==?=
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: TKquVOuIw61ufwHXE6QpwT2/GMKQ8ZBG4xN2T3Qziit/d6CHPSSdIxlSqJF/Z8mpt1KxXgiwdC/SQoElXUA5OS4ss4MeZl5IFUM9mDLAQAWUvSmHL0BjDG36EaPYadhvvAWJUNgpT7ugXDbx9+DfH18WJTySe9c024sZfx2iFqFUDlrN8ZAB/rp+vRE8zQx/pegj55uksq2TtkNFeSXiG+3PPP1ZXruuVLY+x8qAUVaHi2HtCUcKoPDvB+p9uIIwY2Y2ebjGv4ZiIFNYImc9OIjT/jybSWekYQmehujcuEwCeb9wgL8zXa49p6v8xob9QU9yAEcOxmhip1xeChj1RiLYdm9dLAIll/nThL5bJySmMHmpwBHRUJ35jlArJ9PSNQsIqM49v7sfEaeD3B+vLo1DuYNNruArfDUaQcc4YwN4NhbC0KFr+4SHkFv6FxiEk45b58MUba1uWzbvRGW+OuXZX4fYbs0W+9qsBvwle4qxYvW1c0K/eXTE6mQS/z5VIzilQ60rV09MoXTMpej9SIFUsIPMxWYuOuipTtS6lgyJVrufJKnHe+1mryiQ6EZEbaGXQkfgBI0rza3hk8hylXAacpDOWxiXHSWXFqt4c3TxhFWYg1IZMRRsvAb5cG/VnOAPiFmTboqdEUetfaIQekjztH6+/eJjlA8xC59hrudywZQNggIz4PtztGS7WbpimHNe83u37kVT71YCT7/5p9pOk5Gb6Al9WBAcGFCvOX7ikV2g92u8Q/iX7A8wIYWXjHvPPI2+62Lzx8T5IiM6qoa2CekfQkWXQ1AIYeHovcw=
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYWPR01MB10082.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1044f241-8897-4cd6-4dce-08db5b681a1a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2023 08:31:27.5626
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aOGj4bBEOMyOBCaBgKHtaM8VCXuufP+6HlYvsvdbaFmsgOG+vzs6y1ZTvmKoyA6nJ4WRiRNzyQbhp9bY/wkdhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8208
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
 
-> On Mon, 22 May 2023 09:19:57 +0200
-> Markus Armbruster <armbru@redhat.com> wrote:
->
->> Jonathan Cameron <Jonathan.Cameron@huawei.com> writes:
->>=20
->> > From: Ira Weiny <ira.weiny@intel.com>
->> >
->> > To facilitate testing provide a QMP command to inject a general media
->> > event.  The event can be added to the log specified.
->> >
->> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>=20=20
->>=20
->> [...]
->>=20
->> > diff --git a/qapi/cxl.json b/qapi/cxl.json
->> > index ca3af3f0b2..9dcd308a49 100644
->> > --- a/qapi/cxl.json
->> > +++ b/qapi/cxl.json
->> > @@ -5,6 +5,56 @@
->> >  # =3D CXL devices
->> >  ##
->> >=20=20
->> > +##
->> > +# @CxlEventLog:
->> > +#
->> > +# CXL has a number of separate event logs for different types of even=
-t.=20=20
->>=20
->> types of events
->>=20
->> > +# Each such event log is handled and signaled independently.
->> > +#
->> > +# @informational: Information Event Log
->> > +# @warning: Warning Event Log
->> > +# @failure: Failure Event Log
->> > +# @fatal: Fatal Event Log=20=20
->>=20
->> Are these proper nouns?  If not, the words should not be capitalized.
->
-> By your definition below of them being capitalized in the CXL spec then
-> yes, they are all proper nouns.
+Thank you for your answer!
+Its progress seems to be better than I thought.
 
-Good.
+I would like to ask more questions.
 
-> ...
->
->> > +#
->> > +# Inject an event record for a General Media Event (CXL r3.0 8.2.9.2.=
-1.1)=20=20
->>=20
->> What's "CXL r3.0", and where could a reader find it?
->
-> We have docs in docs/system/devices/cxl.rst that include the consortium
-> website which has download links on the front page.
+> Yasunori Gotou (Fujitsu) wrote:
+> > Hello,
+> >
+> > I have some questions about CXL device hotplug (especially type 3 memor=
+y
+> device).
+> >
+> > Though my team members still need to work for a remain issue of
+> > Filesystem-DAX, or RDMA for persistent memory yet, I would like to
+> > move some of them for CXL type 3 memory device after finish the above
+> works.
+> > This is preparation for it. I would like to confirm current status of
+> > CXL type 3 memory hotplug.
+> >
+> > Q1) Can PCIe hotplug driver detect and call CXL driver?
+> >
+> >     CXL specification says as follows
+> >     "9.9 Hot-Plug"
+> >     "CXL leverages PCIe Hot-plug model and Hot-plug elements as defined
+> in PCIe
+> >     BaseSpecification and the applicable form-factor specifications."
+> >
+> >     At a glance, PCIe hotplug driver seems to be able to detect any PCI=
+e
+> >     hotpluged device, and call its suitable probe/attach function. But =
+I'm
+> new
+> >     around here, and  I'm not sure it can actually call the suitable CX=
+L
+> driver.
+> >
+> >     Can PCIe hotplug driver recognize a CXL device and call its driver?
+>=20
+> Yes.
+>=20
+> The cxl_pci driver (drivers/cxl/pci.c) is just a typical PCI driver as fa=
+r as the PCI
+> hotplug driver is concerned. So add/remove events of a CXL card get turne=
+d
+> into probe()/remove() events on the driver.
 
-cxl.rst has
+Sounds good!
 
-    References
-    ----------
+> >
+> > Q2) Can QEMU/KVM emulate CXL device hotplug?
+> >
+> >    I heard that QEMU/KVM has PCIe device hotplug emulation, but I'm not
+> sure
+> >    it can hotplug CXL device.
+>=20
+> It can,
 
-     - Consortium website for specifications etc:
-       http://www.computeexpresslink.org
-     - Compute Express link Revision 2 specification, October 2020
-     - CEDT CFMWS & QTG _DSM ECN May 2021
+Ok, then, are there any test-set for CXL device hotplug with QEMU/KVM emula=
+tion?
+It will be more helpful when actual CXL memory device will be released.
 
-Should the second reference be updated to 3.0?  Exact title seems to be
-"The Compute Express Link=E2=84=A2 (CXL=E2=84=A2) 3.0 specification".  Not =
-sure we need
-to bother with the "=E2=84=A2" in a reference.
 
->                                                      I'm not sure we want=
- to
-> have lots of references to the URL spread throughout QEMU.  I can add one
-> somewhere in cxl.json if you think it is important to have one here as we=
-ll.
+> but as far as the driver is concerned you can achieve the same
+> by:
+>=20
+> echo $devname > /sys/bus/pci/drivers/cxl_pci/unbind
+>=20
+> ...that exercises the same software flows as physical unplug.
 
-You could add an introduction right under the "# =3D CXL devices" heading,
-and include a full reference to the specification there.  Suitably
-abbreviated references like the ones you use in this patch should then
-be fine.
+Ok. I see.
 
-Please link to cxl.rst, too: add a label to cxl.rst, :ref: it from
-cxl.json.
+> >
+> > Q3) After called CXL driver and detected a CXL type 3 memory device,
+> >     what sequence is/will be executed?
+> >
+> >     IIRC, kernel created /sys/devices/system/memory/memoryNNN
+> directories when
+> >     memory device is recognized. Then, online operation was executed by
+> >     a user or an application.
+> >
+> >     However, CXL specification seems to require more configuration like
+> >     interleave, region, and namespace by Fabric Manager (cxl command?)
+> >     after device detection before memory online.
+> >
+> >     So, my understanding is that the above configuration must be execut=
+ed
+> >     after device detection, and before memory online. Is it correct?
+>=20
+> Correct, after the device is added and the driver attaches there is still=
+ a step
+> needed to configure a CXL region.
+>=20
+> For now that step is to manually run:
+>=20
+> cxl create-region
+>=20
+> ...later we might consider some udev rules to automatically assemble regi=
+ons
+> from discovered capacity.
 
->> Aside: the idea of a document with numbered section nested six levels
->> deep is kind of horrifying :)
->
-> Agreed!
->
->>=20
->> Again, capitalize "General Media Event" only if it's a proper noun.  If
->> "CXL r3.0" capitalizes it this way, it is.
->
-> It does capitalize it.
->
-> ...
->
->>=20
->> > +# @flags: header flags=20=20
->>=20
->> Either specify the header flags here, or point to specification.
->
-> Added a reference - same reason as below, the contents is being added to
-> with each version and we don't want to bake what is supported in this
-> interface if we can avoid it.
+Hmm, I suppose 2 types of udev rules may be necessary.
+The first one is for notify new CXL device is detected, and cxl-command ass=
+emble=20
+a region automatically.
+The second one is for notify region is configured, online is execute for ea=
+ch
+memory block on the region by the notification, and rollback when one of th=
+e block
+fails hotadd If necessary.
 
-Symbolic flags are a much friendlier interface, but limit the interface
-to what QEMU understands.
+>=20
+> > Q4) Current CXL drivers/tools support Hot-removal request from PCIe?
+> >
+> >     CXL specification says "In a managed Hot-Remove flow, software is
+> >     notified of a hot removal request."
+>=20
+> Currently there is a requirement that:
+>=20
+> cxl disable-memdev
+>=20
+> ...is run before the device can be removed. There is no warning from the =
+PCI
+> hotplug driver. Which means that if end user does the wrong sequence they
+> can crash the kernel / remove memory that may still be in active use.
 
-With a numeric encoding of flags, QEMU can serve as dumb transport
-between peers who may understand more flags than QEMU does.  One peer is
-the QMP client.  Who is the other peer?  Guest software?
+Ok.
+Though "Surprising remove" is not guaranteed by specification, I think
+"managed hot-removed flow" should be realized.
+I'll chase more what should we do about it.
 
-Can flags be useful even though the QEMU device model doesn't understand
-them?  Are they safe?  See below for a more general take on this.
 
->> > +# @physaddr: Physical Address=20=20
->>=20
->> Perhaps "Guest physical address"
->>=20
->> Address of what?
->
-> Changed already based on Phillipe's feedback on v6 to
-> Physical address (relative to @path device)
->
-> In CXL terms it's a Device Physical Address (DPA) which
-> are independent of the host (or guest) physical addresses with
-> runtime controllable mappings.
-> I'll change it to=20
->
-> @dpa: Device Physical Address (relative to @path device)
-> (and Device Physical Address is capitalized like that in the CXL spec)
+>=20
+> >     I think that CXL drivers/tools need to find which sections belongs =
+to the
+> >     requested device, and execute offline them at least. In addition,
+> >     Fabric Manager may need to prepare removing the device due to
+> configuration
+> >     change.
+> >
+> >     Does current CXL drivers/tools can execute them?
+> >     Otherwise, does it need to be implemented yet?
+>=20
+> Currently the 'cxl disable-memdev' command is not smart about determining
+> when the device is in active use it just claims that it is always in use.=
+ That is in
+> progress to be improved.
 
-Better, because the difference to guest physical address is now clear.
+Ok. I see.
 
->> We have no consistent naming convention for guest physical addresses.  I
->> see @addr, @memaddr, @gpa.  Let's not add yet another name for the same
->> thing without need.
->
-> It's none of the above (except may addr which is so vague)
->
-> I'll change to dpa.
->
-> Also added a note that some of the lower bits encode flags
-> Not this is probably why the spec uses a different name - Physical
-> Address  to distinguish this from DPA - I'll keep that naming in the
-> implementation of the record, but it's not needed in the injection
-> interface where I think DPA is less confusing.
->
->>=20
->> > +# @descriptor: Descriptor=20=20
->>=20
->> No.
->
-> Ok this indeed ended up sparse.
->
-> It is a tricky balance as I don't think it makes sense to just
-> duplicate large chunks of the spec.=20
-> I'll have a go at summarizing what sort of things are in each.
-> As I mention below, we could break, these down fully at the cost
-> of constant updates as the CXL spec evolves to add new subfields
-> or values for existing fields.  This one for example currently has
-> 3 bits, Uncorrectable Event, Threshold Event, Poison List Overflow event.
-> The next one currently has 3 bits defined as well, but there are 3 more
-> queued up for inclusion.
->
-> Realistically no one is going to write a descriptor without
-> looking at the specification for the field definitions and understanding
-> the physical geometry of their device (which will be device specific).
->
-> I'm fine with tweaking the balance though if you think that makes sense.
+>=20
+> > Q5) How CXL driver treat region/namespace size against section size?
+> >     Current x86-64 section size can be 2Gbyte, but CXL region size may =
+be
+> >     able to smaller than it.
+>=20
+> The section size is still 128MB, the hotplug memory block size is what ex=
+pands
+> to 2GB. That size limits what can be onlined via the dax_kmem driver.
 
-This is about picking an appropriate level of abstraction for the QMP
-interface.
+Oops.=20
+OK, I understand I should change my word "section" to "hotplug memory block=
+".
 
-In your patch, it is basically a few named sequences of bits.  The
-interface changes only when new named entities get added to the spec.
-Spec revisions may also add new uses of existing entities' bits, but the
-interface doesn't care.
+One of the background of this question is "rollback".
+"If memory hotadd or hotremove for a memory block fails, is rollback availa=
+ble?".
 
-The lowest imaginable level is a single sequence of bits.  Basically the
-named bit sequences pasted together.  Now the interface changes only
-when we run out of bits.  Mind, I'm merely exploring the limits here.
+If a block hotadd sequence fails in the device for some reasons, its user w=
+ants to remove
+the device for the moment, and may want to retry hotadd again or try other =
+device.
+To achieve it, already onlined blocks before failed block should be offline=
+d again.
 
-At higher levels we use symbols rather than bits.  This interface needs
-to change when symbols get added to the spec.
+If a block hotremove sequence fails in the device, its user would like to k=
+eep the device
+online to postpone replacing it or select other device for device pooling. =
+(vice vesa).
+I don't find which component handle this situation.
 
-I figure the deciding question is the QEMU device model's role in all
-this.
+I noticed that current users prefer online after device detection immediate=
+ly, and kernel
+supports it. Though it is natural for some use-case, I feel it may be obsta=
+cle for rollback of
+CXL device hotplug failure.
 
-When something can be used safely only when the device model knows it,
-providing a symbolic interface doesn't add to the things QEMU needs to
-know.  Moreover, the interface can't be misused.
+Thanks,
 
-For things where the device model acts as a dumb transport, i.e. only
-management application and guest need to know it, not having to put he
-knowledge into QEMU just to enable it to transport bits makes some
-sense.  It may enable misuse.
-
-So, can you tell us a bit more about what the device model needs to
-know to function?
 
