@@ -2,171 +2,130 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390B0C7EE2C
-	for <linux-cxl@archiver.kernel.org>; Wed, 24 May 2023 09:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F9FC77B73
+	for <linux-cxl@archiver.kernel.org>; Wed, 24 May 2023 09:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240441AbjEXJUo convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 24 May 2023 05:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44608 "EHLO
+        id S231259AbjEXJtd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 24 May 2023 05:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240628AbjEXJUn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 May 2023 05:20:43 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A04195
-        for <linux-cxl@vger.kernel.org>; Wed, 24 May 2023 02:20:36 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QR5Gm73tGz67M49;
-        Wed, 24 May 2023 17:19:12 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 24 May
- 2023 10:20:34 +0100
-Date:   Wed, 24 May 2023 10:20:33 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Markus Armbruster <armbru@redhat.com>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>, Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Dave Jiang <dave.jiang@intel.com>, <berrange@redhat.com>,
-        Eric Blake <eblake@redhat.com>,
-        Mike Maslenkin <mike.maslenkin@gmail.com>,
-        =?ISO-8859-1?Q?Marc-Andr=E9?= Lureau 
-        <marcandre.lureau@redhat.com>, "Thomas Huth" <thuth@redhat.com>
-Subject: Re: [PATCH v5 5/7] hw/cxl/events: Add injection of General Media
- Events
-Message-ID: <20230524102033.00002d41@huawei.com>
-In-Reply-To: <20230524101158.0000579d@huawei.com>
-References: <20230423165140.16833-1-Jonathan.Cameron@huawei.com>
-        <20230423165140.16833-6-Jonathan.Cameron@huawei.com>
-        <87lehgq1cy.fsf@pond.sub.org>
-        <20230522135737.000079c4@Huawei.com>
-        <87fs7na2o8.fsf@pond.sub.org>
-        <20230523113543.00006a1f@Huawei.com>
-        <87ttw35i6q.fsf@pond.sub.org>
-        <20230524101158.0000579d@huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        with ESMTP id S230353AbjEXJtc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 24 May 2023 05:49:32 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165DF93;
+        Wed, 24 May 2023 02:49:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FqY0Q4P59/jSkyhcBJGLTgu5hIgfU7OKsTfUOmB5O+d2XptaKqXp8mdSlhmQV31cZjRk2P1RerNd5q0tIFPnv38zYU0RGJr6RlmHUEwOXEvVh9djbhTcEzgW0YU6rjzL8GncryV8Wtby6vrllgow0QNYRTgom85WmpTHW4vVbPw4e8CmacpCh6DXN74L432RnxklpXuEn6Xz5RsJcKgHckIhX5wq+jXAeT4y/n2NB1VovgOMAliizzoZXu3r4XLCCvSC09V55KrJ4o//xvhlDqk3JWMAaDuV/zLrYmTnML/Sy4YnXedQRbsLD2fKC1+nnC8l9ExZmdGVaFm/52wP/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D95hhpWJqU2U2QIei4ykuVY7vz8QYbqs9IdixhMg0Dc=;
+ b=UQqwTQRWQJUwv/SrqmjuVwS6ZrNApkOhhW7FD9SXdqCrB0YkCkIwMoVjsuSHvnNLcIRSSXsNMXPHys4hPDGCy/184y/tMSTlf/1CAQMueau5Bv3e6rW0MtydazG72Nu6BXhy8SP7KCgBtv6oqIRALt2bBU6TMeij7S5oHMepxrLJzHhmFdd0TuoH/TtUKJG8SthqTwiD92NY3vHY3ohM42Rmd+XIf6VVF2o+LwaYb/huoH5Xim85H3dIUauzsro9FBMp262N2/GL6qfp0hKZU0v57c7ga1OtnO4TxwieIHzZ/botMsPDg2QCEUCq2naH19Us6HNyC0csi3K2qJuT7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D95hhpWJqU2U2QIei4ykuVY7vz8QYbqs9IdixhMg0Dc=;
+ b=H9+Ruypumvgrq0+a/NDPKZnEItOZKvBYLnXaDQyBBrDh0vWcx7Uhy8GrJseQbKKqR+vyZKE6dcNSmRD9hgZaGhGmAeEut0hrKRyEkNlN1546CANmZYKd40YWmjq1RAK/pnnhToDAP+Pcup9cuF5S50CCR/525EwOcSgYEbFV+P0=
+Received: from BN9PR03CA0335.namprd03.prod.outlook.com (2603:10b6:408:f6::10)
+ by PH8PR12MB7159.namprd12.prod.outlook.com (2603:10b6:510:229::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.15; Wed, 24 May
+ 2023 09:49:28 +0000
+Received: from BN8NAM11FT106.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:f6:cafe::46) by BN9PR03CA0335.outlook.office365.com
+ (2603:10b6:408:f6::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.29 via Frontend
+ Transport; Wed, 24 May 2023 09:49:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT106.mail.protection.outlook.com (10.13.177.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6411.31 via Frontend Transport; Wed, 24 May 2023 09:49:28 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 24 May
+ 2023 04:49:25 -0500
+Date:   Wed, 24 May 2023 11:49:22 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     kernel test robot <lkp@intel.com>
+CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
+        <linux-cxl@vger.kernel.org>, <oe-kbuild-all@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v4 13/23] cxl/hdm: Use stored Component Register mappings
+ to map HDM decoder capability
+Message-ID: <ZG3cpEj9k8S9DMAA@rric.localdomain>
+References: <20230523232214.55282-14-terry.bowman@amd.com>
+ <202305240842.zr8PTfcu-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <202305240842.zr8PTfcu-lkp@intel.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT106:EE_|PH8PR12MB7159:EE_
+X-MS-Office365-Filtering-Correlation-Id: 626655b5-32ed-4395-eb76-08db5c3c2a71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: m3cZ3MHZL/4jHuOedJZdgrbTWubdx7SZO2mj8YaoEa31ISG/EXHDyKwB9pCP2j4uQMjAugEE7ORPbiUIUEPx1zm6S0UFUY7qqWP3PoqkLWzmZGPpiUciopTIRDYg12+3BbBoU45dk3glCeWfe/mf63k71dhzmbZHZV2K4vVgjxl56dj5wG0XI6RcAeT4tfVgb0YHY8frPgO4zjjo59Nxrccldr0GPKkukZekEeZZWhs/6IGberinvEJhfXBQVkzq35j6RruUwXW4AzMjgYlnKcvwL89YRvtZVlq/fjbGzjc9LiT8V5F1ePJkNPi0yPRAdkFTTZDLqWZ97FZezrGq2FkoD4BDoV/QLfujkjvdjVDFYFTF1KGy+wP3QqB06mwAdEGWYpHplhfhf73FaPpADB2cFor6xpQA0qD27yGSEcKCEp5t7yX7Xyl6sXmcdiKgt5aH1FBquzt5CMpOHNKehI8A/YWqOl8PEN1qMFVYwvs4lF8AzPv03LxNWil3BgqKUXN0kAiFZ+CMSqNPYPqIVbAPlBNumpuNj0G1w3dg7Lgvj+v4Xp1ZTh4dlV3g9uvayPCMZf8Q1aGw2yxcttTUj+okaKnuDCUZa8Mk8TeRO897/vaVcalXsA/KJUJTjzTZgDUWEJBICW8v7U3qBrmRcjHUyw3xFop33/JAFmlIlsgcqXrDpEvlTo+OJeETjReCU1jrvO6Xt7RBJOFnnYaq65K2bdsDV0cR+oJjktFFrv6ckOHDwXLUOaADmFKdvDiDkIVvfUJRC3804LLbQIfiUw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(346002)(39860400002)(136003)(451199021)(36840700001)(46966006)(40470700004)(5660300002)(40460700003)(8676002)(7416002)(8936002)(16526019)(186003)(53546011)(4744005)(36860700001)(47076005)(426003)(336012)(2906002)(83380400001)(356005)(82310400005)(82740400003)(81166007)(40480700001)(55016003)(9686003)(26005)(316002)(70206006)(4326008)(6916009)(70586007)(6666004)(54906003)(478600001)(7696005)(41300700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 09:49:28.2490
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 626655b5-32ed-4395-eb76-08db5c3c2a71
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT106.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7159
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 24 May 2023 10:11:58 +0100
-Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+On 24.05.23 09:12:24, kernel test robot wrote:
 
-> On Tue, 23 May 2023 14:46:37 +0200
-> Markus Armbruster <armbru@redhat.com> wrote:
+> >> drivers/cxl/core/hdm.c:128:26: warning: no previous prototype for 'cxl_port_get_comp_map' [-Wmissing-prototypes]
+>      128 | struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
+>          |                          ^~~~~~~~~~~~~~~~~~~~~
 > 
-> > Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
-> > 
-> > >> >    
-> > >> >> > +#
-> > >> >> > +# Inject an event record for a General Media Event (CXL r3.0 8.2.9.2.1.1)      
-> > >> >> 
-> > >> >> What's "CXL r3.0", and where could a reader find it?    
-> > >> >
-> > >> > We have docs in docs/system/devices/cxl.rst that include the consortium
-> > >> > website which has download links on the front page.    
-> > >> 
-> > >> cxl.rst has
-> > >> 
-> > >>     References
-> > >>     ----------
-> > >> 
-> > >>      - Consortium website for specifications etc:
-> > >>        http://www.computeexpresslink.org
-> > >>      - Compute Express link Revision 2 specification, October 2020
-> > >>      - CEDT CFMWS & QTG _DSM ECN May 2021
-> > >> 
-> > >> Should the second reference be updated to 3.0?  Exact title seems to be
-> > >> "The Compute Express Link™ (CXL™) 3.0 specification".  Not sure we need
-> > >> to bother with the "™" in a reference.  
-> > >
-> > > Yes. On the todo list is to update all the references to latest released
-> > > specification because old ones are unobtainable to non consortium members
-> > > unless they grabbed a copy in the past.
-> > >
-> > > Annoyingly this will be a repeated requirement as new spec versions are released
-> > > but the cadence should be fairly low.
-> > >  
-> > >>   
-> > >> >                                                      I'm not sure we want to
-> > >> > have lots of references to the URL spread throughout QEMU.  I can add one
-> > >> > somewhere in cxl.json if you think it is important to have one here as well.    
-> > >> 
-> > >> You could add an introduction right under the "# = CXL devices" heading,
-> > >> and include a full reference to the specification there.  Suitably
-> > >> abbreviated references like the ones you use in this patch should then
-> > >> be fine.  
-> > >
-> > > I tried doing that - it resulted in the index including an entry with all the text.
-> > > So on the webpage, the contents list to the left includes whatever text you put
-> > > in that block.
-> > >  
-> > > I'm not sure why, or how to fix that.  
-> > 
-> > Show me what you tried (as a patch or something I can git-pull), and
-> > I'll have a look.
-> > 
-> > [...]
-> > 
-> Very simple to replicate the issue - see below.
 > 
-> Result of this is an extra
-> "Test text" entry in the index to the left of the html docs.
+> vim +/cxl_port_get_comp_map +128 drivers/cxl/core/hdm.c
 > 
-> In qemu-qmp-ref.html we have
-> 
-> <li class="toctree-l3"><a class="reference internal" href="#qapidoc-3297">CXL devices</a><ul>
-> <li class="toctree-l4"><a class="reference internal" href="#qapidoc-3298">Test text</a></li>
-> <li class="toctree-l4"><a class="reference internal" href="#qapidoc-3301"><code class="docutils literal notranslate"><span class="pre">CxlEventLog</span></code> (Enum)</a></li>
+>    127	
+>  > 128	struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
 
-Experimented and dived in the code a bit more and got reminded of how bad my python is
-(which is why I was avoiding looking at this :)
-One option would be to give the extra text a meaningful title so that ends up in the contents list.
+This should have been 'static' and also solves the warning then. Will
+change.
 
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -3,6 +3,8 @@
-> 
->  ##
->  # = CXL devices
-> +#
-> +# CXL Background
-> +#
-> +# Actually useful text.
->  ##
-> 
->  ##
+-Robert
 
-Can't do
-== CXL Background
-
-though to get it nicely formatted as then we loose all the actual entries from the
-contents list.  I guess they dropped down one too many levels.
-
-> 
-> diff --git a/qapi/cxl.json b/qapi/cxl.json
-> index 05c560cfe5..9f7f0485ae 100644
-> --- a/qapi/cxl.json
-> +++ b/qapi/cxl.json
-> @@ -3,6 +3,8 @@
-> 
->  ##
->  # = CXL devices
-> +#
-> +# Test text
->  ##
-> 
->  ##
-
+>    129	{
+>    130		/*
+>    131		 * HDM capability applies to Endpoints, USPs and VH Host
+>    132		 * Bridges. The Endpoint's component register mappings are
+>    133		 * located in the cxlds.
+>    134		 */
+>    135		if (is_cxl_endpoint(port)) {
+>    136			struct cxl_memdev *memdev = to_cxl_memdev(port->uport);
+>    137	
+>    138			return &memdev->cxlds->comp_map;
+>    139		}
+>    140	
+>    141		return &port->comp_map;
+>    142	}
+>    143	
