@@ -2,49 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26E2C7EE29
-	for <linux-cxl@archiver.kernel.org>; Thu, 25 May 2023 21:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DBFC77B7E
+	for <linux-cxl@archiver.kernel.org>; Thu, 25 May 2023 21:40:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233560AbjEYVkl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 25 May 2023 17:40:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
+        id S241877AbjEYVks (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 25 May 2023 17:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjEYVkk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 May 2023 17:40:40 -0400
+        with ESMTP id S241876AbjEYVkr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 May 2023 17:40:47 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEE299
-        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 14:40:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08026FB
+        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 14:40:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685050838; x=1716586838;
+  t=1685050846; x=1716586846;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VBusEgp/qdttRBFMETL2Tcjm2v6lrGYiex0SFBZqxGI=;
-  b=mRKVYeCRmHVKHzWKilHGJRxbNUEoAt2bMk8LQKpMvX39qRoNFzkIQGAa
-   mDJOQHR63nresPlhssWZ228sqdLogeciV7/17Xldfjws/uvYlO0AWgc+u
-   r+kVr0+8u1OOx23LDE6SCCc+5O4SNOKQa2d3yOn+Lb5J9ozJsCqX4/0RV
-   dx6KpniLn9SWsWeWqZ9QMptkkec6/xCf5CUItmuCTaItoqsd4rd6er5Mi
-   e8HZI5tO9+IA/v5S58GFrWfJmAyx/WGVpn+af74hSSkV8s037aGob+0LX
-   7UXHVgHX4a6XhZu5LfbNljYFIndgdSc2+2tM5sTDA81EDM4pPunR+J2LI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="351544753"
+  bh=28mY73y7A9qn9lFFLXyXDzbQPMN6D9GSBchf9t+JBzY=;
+  b=EzS6lLheZUquGAnJwm5JQXJHmwVn5Em3s6AM9kusFIQ46p1VjGWIGJkA
+   GqNyYdPD12oWAYhXfY6aNC1G1+Ov8EfGzPUYFOMQ3BjvEqXpyneLThvOV
+   dLKnMchBtuqcMd0GFcPuKDcnRzy6yFgBTHt3pnF8Ih7vx4H50D0mUvhaK
+   PnOSJioCV82pzKreNI5NZcP/LI2uVnQK9EnfTAy2R4Fy4/jw+CAwTSKTc
+   LR4M4N6xKlWggLDJMfQucw5vMad4hRmwotZtdy6M7wV04fF6BCua60iB4
+   t4/tnUgnd8Om87Ud8ZBObUpP61j4l+o134hgrhHw5JQj65CnGILhktbtw
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="351544767"
 X-IronPort-AV: E=Sophos;i="6.00,192,1681196400"; 
-   d="scan'208";a="351544753"
+   d="scan'208";a="351544767"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:40:38 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:40:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="879297336"
+X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="879297362"
 X-IronPort-AV: E=Sophos;i="6.00,192,1681196400"; 
-   d="scan'208";a="879297336"
+   d="scan'208";a="879297362"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.85.172])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:40:38 -0700
-Subject: [ndctl PATCH v2 1/3] ndctl: cxl: Add QoS class retrieval for the root
- decoder
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:40:44 -0700
+Subject: [ndctl PATCH v2 2/3] ndctl: cxl: Add QoS class support for the memory
+ device
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vishal.l.verma@intel.com
 Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Thu, 25 May 2023 14:40:37 -0700
-Message-ID: <168505083769.2768411.11179519312272146947.stgit@djiang5-mobl3>
+Date:   Thu, 25 May 2023 14:40:43 -0700
+Message-ID: <168505084360.2768411.18081838553625454981.stgit@djiang5-mobl3>
 In-Reply-To: <168505076089.2768411.10498775803334230215.stgit@djiang5-mobl3>
 References: <168505076089.2768411.10498775803334230215.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -55,169 +55,226 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add libcxl API to retrieve the QoS class for the root decoder. Also add
-support to display the QoS class for the root decoder through the 'cxl
-list' command. The qos_class is displayed behind -vvv verbose level.
+Add libcxl API to retrieve the QoS class tokens for the memory
+devices. Two API calls are added. One for 'ram' or 'volatile'
+mode and another for 'pmem' or 'persistent' mode. Support also added
+for displaying the QoS class tokens through the 'cxl list' command.
+There can be 1 or more QoS class tokens for the memory device if
+they are valid. The qos_class tokens are displayed behind -vvv
+verbose level.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
 ---
-v2:
-- Don't display qos class if not valid. (Alison)
----
- cxl/filter.h       |    4 ++++
- cxl/json.c         |   10 ++++++++++
- cxl/lib/libcxl.c   |   14 ++++++++++++++
- cxl/lib/libcxl.sym |    4 ++++
- cxl/lib/private.h  |    1 +
- cxl/libcxl.h       |    3 +++
- cxl/list.c         |    1 +
- util/json.h        |    1 +
- 8 files changed, 38 insertions(+)
+ cxl/json.c         |   36 +++++++++++++++++++++++++++++++++++-
+ cxl/lib/libcxl.c   |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym |    2 ++
+ cxl/lib/private.h  |    2 ++
+ cxl/libcxl.h       |    7 +++++++
+ 5 files changed, 96 insertions(+), 1 deletion(-)
 
-diff --git a/cxl/filter.h b/cxl/filter.h
-index c486514cf06e..b6ed94139738 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -29,6 +29,7 @@ struct cxl_filter_params {
- 	bool partition;
- 	bool alert_config;
- 	bool dax;
-+	bool qos;
- 	int verbose;
- 	struct log_ctx ctx;
- };
-@@ -83,6 +84,9 @@ static inline unsigned long cxl_filter_to_flags(struct cxl_filter_params *param)
- 		flags |= UTIL_JSON_ALERT_CONFIG;
- 	if (param->dax)
- 		flags |= UTIL_JSON_DAX | UTIL_JSON_DAX_DEVS;
-+	if (param->qos)
-+		flags |= UTIL_JSON_QOS_CLASS;
-+
- 	return flags;
- }
- 
 diff --git a/cxl/json.c b/cxl/json.c
-index 9a4b5c77c850..293ba807b44b 100644
+index 293ba807b44b..448531822b45 100644
 --- a/cxl/json.c
 +++ b/cxl/json.c
-@@ -760,6 +760,16 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 					       jobj);
- 	}
+@@ -480,12 +480,32 @@ err_jobj:
+ 	return NULL;
+ }
  
-+	if ((flags & UTIL_JSON_QOS_CLASS) && cxl_port_is_root(port)) {
-+		int qos_class = cxl_root_decoder_get_qos_class(decoder);
++static struct json_object *get_qos_json_object(struct json_object *jdev,
++					       struct qos_class *qos_class)
++{
++	struct json_object *jqos_array = json_object_new_array();
++	struct json_object *jobj;
++	int i;
 +
-+		if (qos_class != CXL_QOS_CLASS_NONE) {
-+			jobj = json_object_new_int(qos_class);
-+			if (jobj)
-+				json_object_object_add(jdecoder, "qos_class", jobj);
-+		}
++	if (!jqos_array)
++		return NULL;
++
++	for (i = 0; i < qos_class->nr; i++) {
++		jobj = json_object_new_int(qos_class->qos[i]);
++		if (jobj)
++			json_object_array_add(jqos_array, jobj);
 +	}
 +
- 	json_object_set_userdata(jdecoder, decoder, NULL);
- 	return jdecoder;
- }
-diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index 769cd8a75de9..6312676a6d22 100644
---- a/cxl/lib/libcxl.c
-+++ b/cxl/lib/libcxl.c
-@@ -1907,6 +1907,12 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 	else
- 		decoder->interleave_ways = strtoul(buf, NULL, 0);
- 
-+	sprintf(path, "%s/qos_class", cxldecoder_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		decoder->qos_class = CXL_QOS_CLASS_NONE;
-+	else
-+		decoder->qos_class = atoi(buf);
-+
- 	switch (port->type) {
- 	case CXL_PORT_ENDPOINT:
- 		sprintf(path, "%s/dpa_resource", cxldecoder_base);
-@@ -2101,6 +2107,14 @@ CXL_EXPORT unsigned long long cxl_decoder_get_size(struct cxl_decoder *decoder)
- 	return decoder->size;
- }
- 
-+CXL_EXPORT int cxl_root_decoder_get_qos_class(struct cxl_decoder *decoder)
-+{
-+	if (!cxl_port_is_root(decoder->port))
-+		return -EINVAL;
-+
-+	return decoder->qos_class;
++	return jqos_array;
 +}
 +
- CXL_EXPORT unsigned long long
- cxl_decoder_get_dpa_resource(struct cxl_decoder *decoder)
+ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		unsigned long flags)
  {
+ 	const char *devname = cxl_memdev_get_devname(memdev);
+-	struct json_object *jdev, *jobj;
++	struct json_object *jdev, *jobj, *jqos;
+ 	unsigned long long serial, size;
++	struct qos_class *qos_class;
+ 	int numa_node;
+ 
+ 	jdev = json_object_new_object();
+@@ -501,6 +521,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		jobj = util_json_object_size(size, flags);
+ 		if (jobj)
+ 			json_object_object_add(jdev, "pmem_size", jobj);
++
++		if (flags & UTIL_JSON_QOS_CLASS) {
++			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
++			jqos = get_qos_json_object(jdev, qos_class);
++			if (jqos)
++				json_object_object_add(jdev, "pmem_qos_class", jqos);
++		}
+ 	}
+ 
+ 	size = cxl_memdev_get_ram_size(memdev);
+@@ -508,6 +535,13 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
+ 		jobj = util_json_object_size(size, flags);
+ 		if (jobj)
+ 			json_object_object_add(jdev, "ram_size", jobj);
++
++		if (flags & UTIL_JSON_QOS_CLASS) {
++			qos_class = cxl_memdev_get_ram_qos_class(memdev);
++			jqos = get_qos_json_object(jdev, qos_class);
++			if (jqos)
++				json_object_object_add(jdev, "ram_qos_class", jqos);
++		}
+ 	}
+ 
+ 	if (flags & UTIL_JSON_HEALTH) {
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index 6312676a6d22..a17d298ae144 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -73,6 +73,10 @@ static void free_memdev(struct cxl_memdev *memdev, struct list_head *head)
+ 	free(memdev->dev_buf);
+ 	free(memdev->dev_path);
+ 	free(memdev->host_path);
++	if (memdev->ram_qos_class.nr)
++		free(memdev->ram_qos_class.qos);
++	if (memdev->pmem_qos_class.nr)
++		free(memdev->pmem_qos_class.qos);
+ 	free(memdev);
+ }
+ 
+@@ -1175,6 +1179,27 @@ static void *add_cxl_pmem(void *parent, int id, const char *br_base)
+ 	return NULL;
+ }
+ 
++static int *get_qos_class(struct cxl_ctx *ctx, char *buf, int *entries)
++{
++	int *varray = NULL;
++	int i = 0;
++	char *p;
++
++	p = strtok(buf, ",");
++	while (p != NULL) {
++		int val = atoi(p);
++
++		varray = reallocarray(varray, i + 1, sizeof(int));
++		varray[i] = val;
++		p = strtok(NULL, ",");
++		i++;
++	}
++
++	*entries = i;
++
++	return varray;
++}
++
+ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ {
+ 	const char *devname = devpath_to_devname(cxlmem_base);
+@@ -1184,6 +1209,7 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 	char buf[SYSFS_ATTR_SIZE];
+ 	struct stat st;
+ 	char *host;
++	int qnr;
+ 
+ 	if (!path)
+ 		return NULL;
+@@ -1211,6 +1237,20 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+ 		goto err_read;
+ 	memdev->ram_size = strtoull(buf, NULL, 0);
+ 
++	sprintf(path, "%s/pmem/qos_class", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		goto err_read;
++
++	memdev->pmem_qos_class.qos = get_qos_class(ctx, buf, &qnr);
++	memdev->pmem_qos_class.nr = qnr;
++
++	sprintf(path, "%s/ram/qos_class", cxlmem_base);
++	if (sysfs_read_attr(ctx, path, buf) < 0)
++		goto err_read;
++
++	memdev->ram_qos_class.qos = get_qos_class(ctx, buf, &qnr);
++	memdev->ram_qos_class.nr = qnr;
++
+ 	sprintf(path, "%s/payload_max", cxlmem_base);
+ 	if (sysfs_read_attr(ctx, path, buf) < 0)
+ 		goto err_read;
+@@ -1369,6 +1409,16 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
+ 	return memdev->ram_size;
+ }
+ 
++CXL_EXPORT struct qos_class *cxl_memdev_get_pmem_qos_class(struct cxl_memdev *memdev)
++{
++	return &memdev->pmem_qos_class;
++}
++
++CXL_EXPORT struct qos_class *cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev)
++{
++	return &memdev->ram_qos_class;
++}
++
+ CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
+ {
+ 	return memdev->firmware_version;
 diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index c6545c717d50..134406258ddf 100644
+index 134406258ddf..8eda705ce5a1 100644
 --- a/cxl/lib/libcxl.sym
 +++ b/cxl/lib/libcxl.sym
-@@ -250,3 +250,7 @@ global:
- 	cxl_region_get_daxctl_region;
- 	cxl_port_get_parent_dport;
- } LIBCXL_4;
-+
-+LIBCXL_6 {
-+	cxl_root_decoder_get_qos_class;
-+} LIBCXL_5;
+@@ -253,4 +253,6 @@ global:
+ 
+ LIBCXL_6 {
+ 	cxl_root_decoder_get_qos_class;
++	cxl_memdev_get_pmem_qos_class;
++	cxl_memdev_get_ram_qos_class;
+ } LIBCXL_5;
 diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index d49b560bead3..b00aa4752de5 100644
+index b00aa4752de5..c48aa2ed2252 100644
 --- a/cxl/lib/private.h
 +++ b/cxl/lib/private.h
-@@ -128,6 +128,7 @@ struct cxl_decoder {
- 	struct list_head targets;
- 	struct list_head regions;
- 	struct list_head stale_regions;
-+	int qos_class;
- };
- 
- enum cxl_decode_state {
+@@ -32,6 +32,8 @@ struct cxl_memdev {
+ 	struct list_node list;
+ 	unsigned long long pmem_size;
+ 	unsigned long long ram_size;
++	struct qos_class ram_qos_class;
++	struct qos_class pmem_qos_class;
+ 	int payload_max;
+ 	size_t lsa_size;
+ 	struct kmod_module *module;
 diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index 0218d730298f..9684a8571e88 100644
+index 9684a8571e88..7ae0453416de 100644
 --- a/cxl/libcxl.h
 +++ b/cxl/libcxl.h
-@@ -136,6 +136,8 @@ struct cxl_dport *cxl_port_get_dport_by_memdev(struct cxl_port *port,
- 	for (dport = cxl_dport_get_first(port); dport != NULL;                 \
- 	     dport = cxl_dport_get_next(dport))
+@@ -33,6 +33,11 @@ void *cxl_get_userdata(struct cxl_ctx *ctx);
+ void cxl_set_private_data(struct cxl_ctx *ctx, void *data);
+ void *cxl_get_private_data(struct cxl_ctx *ctx);
  
-+#define CXL_QOS_CLASS_NONE		-1
++struct qos_class {
++	int nr;
++	int *qos;
++};
 +
- struct cxl_decoder;
- struct cxl_decoder *cxl_decoder_get_first(struct cxl_port *port);
- struct cxl_decoder *cxl_decoder_get_next(struct cxl_decoder *decoder);
-@@ -147,6 +149,7 @@ unsigned long long cxl_decoder_get_dpa_resource(struct cxl_decoder *decoder);
- unsigned long long cxl_decoder_get_dpa_size(struct cxl_decoder *decoder);
- unsigned long long
- cxl_decoder_get_max_available_extent(struct cxl_decoder *decoder);
-+int cxl_root_decoder_get_qos_class(struct cxl_decoder *decoder);
+ struct cxl_memdev;
+ struct cxl_memdev *cxl_memdev_get_first(struct cxl_ctx *ctx);
+ struct cxl_memdev *cxl_memdev_get_next(struct cxl_memdev *memdev);
+@@ -47,6 +52,8 @@ int cxl_memdev_get_minor(struct cxl_memdev *memdev);
+ struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+ unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
++struct qos_class *cxl_memdev_get_pmem_qos_class(struct cxl_memdev *memdev);
++struct qos_class *cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev);
+ const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
  
- enum cxl_decoder_mode {
- 	CXL_DECODER_MODE_NONE,
-diff --git a/cxl/list.c b/cxl/list.c
-index c01154e7723e..57365d245850 100644
---- a/cxl/list.c
-+++ b/cxl/list.c
-@@ -118,6 +118,7 @@ int cmd_list(int argc, const char **argv, struct cxl_ctx *ctx)
- 		param.partition = true;
- 		param.alert_config = true;
- 		param.dax = true;
-+		param.qos = true;
- 		/* fallthrough */
- 	case 2:
- 		param.idle = true;
-diff --git a/util/json.h b/util/json.h
-index ea370df4d1b7..b07055005084 100644
---- a/util/json.h
-+++ b/util/json.h
-@@ -21,6 +21,7 @@ enum util_json_flags {
- 	UTIL_JSON_TARGETS	= (1 << 11),
- 	UTIL_JSON_PARTITION	= (1 << 12),
- 	UTIL_JSON_ALERT_CONFIG	= (1 << 13),
-+	UTIL_JSON_QOS_CLASS	= (1 << 14),
- };
- 
- void util_display_json_array(FILE *f_out, struct json_object *jarray,
+ /* ABI spelling mistakes are forever */
 
 
