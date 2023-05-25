@@ -2,198 +2,725 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C0DC77B7E
-	for <linux-cxl@archiver.kernel.org>; Thu, 25 May 2023 15:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCE5C77B7A
+	for <linux-cxl@archiver.kernel.org>; Thu, 25 May 2023 16:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241718AbjEYP3i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 25 May 2023 11:29:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
+        id S230131AbjEYQKH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 25 May 2023 12:10:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231344AbjEYP3g (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 May 2023 11:29:36 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3810CA3
-        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 08:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685028574; x=1716564574;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Z4p/TaH6rrgIzaJBIWGFAdhgRoryu33qVs8edzytE3o=;
-  b=Xg1okHEVZ/oAqFUYvtZs6BxA7bjDha3GB6Opp7IppHzEnzpEXyUFC4Y2
-   GZ+uYCVtC7FWk2HRYvfWP84QDrzLj9suHSwjZ1LF39j3E3Hnc5Nj+H8Mk
-   bwCo+gQIxah93IGLcObdz1L96/AzG3QNBHnsovOYJ+CFWIgdGbePpVRIM
-   VHUwLfcNO9vCJgOQcG8DqKr9ZaVm2nuSc7jNgbGcjNUekoEartYqJe/vo
-   VJBqmxepIAlJUepQEUuTLiS41oGLr9GuwfrS6OfH/xVezP7Z3lWgxrbBZ
-   bLM0xjPi6XkXzk6k+Gc9La+D0IN7QYk04EJhlySi4NOAjCsIYcd83YvIA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="357167859"
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="357167859"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 08:29:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="655231656"
-X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
-   d="scan'208";a="655231656"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga003.jf.intel.com with ESMTP; 25 May 2023 08:29:21 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+        with ESMTP id S234820AbjEYQJo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 May 2023 12:09:44 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6149E1BD
+        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 09:09:21 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QRtHV1HrGz67RCM;
+        Fri, 26 May 2023 00:07:34 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 25 May 2023 08:29:20 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 25 May 2023 08:29:20 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 25 May 2023 08:29:20 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.102)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 25 May 2023 08:29:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=STURT9EKzrAtWlSUrTDCMdYOoTQurnGrmu2EFXJhVk75FtnMrrBJSPvxWcKHoL/bYRtLpKLdv40yzxnSBG3/zDtgAjsjJmXpc1OtkgqDP3ZA7JFcf3MXeqmkXkTkKfS+7nBtBsVHgtkn2IK25uckMgz6ff9ABOapweI4cWtc7r+vSJlZtixvRWeSYWr9pB89Lji9oDbKua0qokYbI28TUG+UZgfimOz0YtHLWiVIpvwNv+jEnKTahsEWtvdvSgcbT/VGthMvIcOle9EhHX5ADmVex3yMcWjDCX3hekP8e+aajVtRp6LHweHHx1zDhrNHwE6lzqPZrlX8YKbTHKKWOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VFIVZC1ZiQBpTMuRkzhV5eLsfFBs8ByQEvBCKMg5yGY=;
- b=PIJo6wWhJsDw5+hlg6wISQwHKYnAnII+rBKbFBRIZuhYicW6JtiBemLeuLDu3wyPyvYob4C7CNaq1fDoI+ARsM9H0bay9oWiiyQMsUXUiCNrpg4xThQAVsESg5FS8z7ecffLZZRL5GNwN7+wXv1hbby1jheiPTLCVaO8e+Q/dBkSbLGJmhKGdZ29O+hkXYcFtliM6WeRWrlASRu7YUPRd2aULx7yC4UEtTBM313v8iGmxdrYI8LOdTuoUuUp/o+bsVvlf89J8py2X/A8WyMfWeYQ04mfI6NeTk3tLPBt62mwlVkwqEdqF9DqOXoMg9+pWnRNBwTF3AmcddUIKnfrdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by PH0PR11MB5013.namprd11.prod.outlook.com (2603:10b6:510:30::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.16; Thu, 25 May
- 2023 15:29:17 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::b315:faf6:e706:ca61]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::b315:faf6:e706:ca61%5]) with mapi id 15.20.6411.028; Thu, 25 May 2023
- 15:29:17 +0000
-Message-ID: <b87e4a68-d58d-03ba-539d-7e2b9e7530be@intel.com>
-Date:   Thu, 25 May 2023 08:29:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.11.0
-Subject: Re: [ndctl PATCH 1/2] CONTRIBUTING.md: document cxl mailing list
-To:     Li Zhijian <lizhijian@fujitsu.com>, <nvdimm@lists.linux.dev>
-CC:     <linux-cxl@vger.kernel.org>
-References: <20230523035704.826188-1-lizhijian@fujitsu.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230523035704.826188-1-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0370.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::15) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+ 15.1.2507.23; Thu, 25 May 2023 17:08:59 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>
+CC:     Niyas Sait <niyas.sait@linaro.org>,
+        Klaus Jensen <its@irrelevant.dk>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        Matt Johnston <matt@codeconstruct.com.au>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>,
+        Peter Maydell <peter.maydell@linaro.org>
+Subject: [RFC PATCH 0/6] hw/{cxl,i386,arm}: PoC: Emulated MCTP over I2C for CXL Fabric / Device management
+Date:   Thu, 25 May 2023 17:08:53 +0100
+Message-ID: <20230525160859.32517-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH0PR11MB5013:EE_
-X-MS-Office365-Filtering-Correlation-Id: 468d5246-0ac1-4656-26f4-08db5d34cdb5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: q9yxSc9HyaHMSfIkRckXIcNGQUrbR8nkwbA5FFw6LXzJUpg+Ghn/zO61XPQDDXtCx3C6p3XqyqNoTiH9Ms81jxAna4QN7wmBDReWpq1GcLzs/VHPakayLhU6yLxUOASGqqPuWW5FhmAeT4WVBt3/mZ4pMQAmVgFoaCMz3aqBvu8VeD2YktCvqnN42OTocu3frD/Y4ray81b/qY7rtUeLJrGfCHurx7vuulyRwgkGl8KvsQxHFQuOX4jYbTA+eT4Xfpk2lBGWx1iohUYKsAVNdyPApXKOUSUSe2KQz64b5yxZJa84WhxexMWC7WfL+QMfMU2STtaIdn4B5JGKkvqafZFs8kaDZ0WPDtOft1SCcZkDJbwKZrbb3WjdPIrUmhNcbCNfG7kGTJw76RRrhNPFdZo9t45SvrmAc0jfCfQ55CqzGjTtHgUPjAe7iTxA9qUgigwSe0oyFRk2TdyfyjFL3RuADNMp+ySSqoi/eMm4GFUdcDN+LgDSTn8n8rWh3OTdAl/myAHuG4VkfrlsW0VfJ2OfRb/Gg145yU9pmr2FdHwiIbOck0S8Rv8pGDLCbHRiQmY+kkVuPBPp1GnVwcaC35LcTDOFLoL8fAg1n44v8gxBJJeheL3i9A8A3fkBEIlo3iQUPymzms+flZpVCLK4PvPv3h4GXSruosN/u2rytWLL23JVoyRoJRyyOtrUcBu8Ofz1t8RuHFSnhwnfaDqCsxC29+o3xdxEeARM1DHG108=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(136003)(396003)(376002)(366004)(346002)(451199021)(31696002)(86362001)(82960400001)(38100700002)(36756003)(6506007)(26005)(6512007)(44832011)(186003)(53546011)(5660300002)(83380400001)(2906002)(2616005)(478600001)(66946007)(8676002)(8936002)(6486002)(66556008)(66476007)(4326008)(41300700001)(6666004)(31686004)(316002)(223123001)(45980500001)(130980200001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T25sMjJUbFJtZW9wdURTUHE2MENkOWNWTFdxbUovMDVtN09kQVFrYnRTYWxL?=
- =?utf-8?B?ODRsTkd1NlFGTG9EMzRLN0swVk9ZTzVBS0txZ25IWnhSTnNJRitHeldNTDIz?=
- =?utf-8?B?S1JQTlczaklFK281WktFblB2UVdhN256K1pQSHFJMUJuUUVaWjR1OVVlSldO?=
- =?utf-8?B?RVFLWFFuSy9KaXZWU0FBdWhsZzJnbE9FTWxkOTVtNys5ZWVwdXhJQkhPaWFW?=
- =?utf-8?B?dW1nR2xsd2JqeXJZajN1L0kzUUhCOXZpY2djZ3I4aE5qeFErOGhLbmZFSloz?=
- =?utf-8?B?RGVMR0ZSSWdObnhRZTVpckdsVDRBQ2pjYmVsSUtzdWt1SXo2aXFkWjVUKzhF?=
- =?utf-8?B?bmFhWUhxaFJYVXBhNDVKNGRGTGswVEVHbFJNNjJVbmwvUnVPMitINUIvRjBL?=
- =?utf-8?B?WHkydlhlYjlMZXRyZ1hxejdiWk9Tb25TWUtCbFhId3g5eThHQit1MGNMMkxK?=
- =?utf-8?B?UkRrV1hDb1ZwZ3pWMncyQlRnMk82T1JDYWRJQWNuc1JUVnBLZ2lxSnpQTU5X?=
- =?utf-8?B?V3lBMTI5UWRWOFhwTGRxcC9XUW5oVmVRYmhrUURtamIrRTh5b1dyQlpuSFRv?=
- =?utf-8?B?azFxU1hXUkozRzRPZEZqak8rb09XZUlUK21HTzR2NHg2dDRidmtIdWI1M3RH?=
- =?utf-8?B?YWw5b3NSSldjQ01iM1Zma3I5SnQyVnFCNjAvRGdSSGFWcjRoSEhsbmZkV1d1?=
- =?utf-8?B?MWVkbVhNakV5NnRneEZlUXJoS3g5ajltQlVPMUlScUJLUHd3eWpBYUQrQmwr?=
- =?utf-8?B?TFAxUTdGOTY2V0dOU2plRi9Va0pjemlpVnY0eHhROWt4L2dHS1lhRmQyZ0xi?=
- =?utf-8?B?VWtUN2RNK2d0SFdWYmRENCtyOGdVRG9QSCtXdGprTlVjc3VTS2JUOXdKeEVx?=
- =?utf-8?B?S1VyZVp1S1NyYW4weDVXRmdUU0UwdTdwZ3l6YldEUi9nVkpIbnl5bTRuK2p6?=
- =?utf-8?B?K1QwQVJjQzNSd3ZyaFM4VlhKRGc2YTl4aWZTL3VBRmVUZ3lMYjRLOE50K2xR?=
- =?utf-8?B?T2hISXJ1VVRhK0tpTDdiVSs3VkF3QWRkS1BlRDdVbUVBNS9GZTN1V21xMFoy?=
- =?utf-8?B?cG1ncGhSQlFrTmhZaDNTeEllOXREcktCeTJhaTdBdjgyRkJrTXV6TTNxbEdk?=
- =?utf-8?B?c0V6SldBaURySU1EZ3UvN1FDZlQ5aEZnY2R6WEZmSjhmNzg0c1VJWlRrcEd4?=
- =?utf-8?B?bGtYMG1zWklWQnRsUng3cG4rRkxzOTdWNUo4aUQxS3diYWlWUGY4bjd6UVEz?=
- =?utf-8?B?U2NmMDdkTkVBRzlLbGE4QXY5THAxNHl5Zm1XSXU0cjJod0pPNzYyalkzTXJj?=
- =?utf-8?B?RkFzR1RVR2hFQ3dLeStUbkE0NWI1Y0plQi9KWVcxU2JiYS85Njk4SUNsKzRi?=
- =?utf-8?B?aU9FZFJLNG11WG9LcitQd3kvcjJWd3BYK2huOGMrWXhZdXJ1OGQ4TGdtRUxO?=
- =?utf-8?B?aEttckZWNkc2YUNwaXk3RVNxZ1BKYXd6MjdxYXJ3NFBZZ3hWVEhqcFNRTzZj?=
- =?utf-8?B?SUZDd1B5T1VIUXcwYnhoS0dBaVhTckdqZjA2Wm1LTFNYSGZocmxjRm92eDhD?=
- =?utf-8?B?K1V2TlRwMkRLcUFCcnZSQTB1WFN2dzVucXdrOUh5WFlEYmk2MVlQcWRKeWUz?=
- =?utf-8?B?V2Vhdmo2Zk5MbUZmRFVMNHptTGN6OVlSd3BWZTdyOW9ZeC8xM3RMTmlBWkNl?=
- =?utf-8?B?OS8vRFZJKzhKVDZvQ1RENmZzam1rS2o1d3p3S1NjaEcwY3lUVmNIS1lqLzJn?=
- =?utf-8?B?bThqVnZ2VFJJMzJVaU9pWXNKbEZNRGVaYklkVXJ2VzFrYWFTMXdZdXdFUW1G?=
- =?utf-8?B?UDV2U0hqbXdJZ21ZekVMRTkvSUYrRWZST3Q1bFMvNzM5K1JvREtWcEhEdHpy?=
- =?utf-8?B?STF4b2paeGRkMWhKTjFLZVAyTG92SmpORGRCbEpqNWhOSG9iMHdwQ2RnOHRL?=
- =?utf-8?B?R2tXN3BkWGExaWRoaHJrQ0hDYXYwaUxnL1pKdnhHZ1l3ZUdoc0pPcVVKdzd2?=
- =?utf-8?B?NjRtTzhYanpFMVlFek9kSG40MmtRRnBsbXhZSXExQXNrSDVSbFBWYkVZb0hr?=
- =?utf-8?B?bEJGNnpSK3hvaTQzbndIWUk2K0hiS3ArODdDRTU4cnFGMFdzdTF3eWFXWHZT?=
- =?utf-8?Q?L44KUnPXetvIGWG5KWxKReyCA?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 468d5246-0ac1-4656-26f4-08db5d34cdb5
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2023 15:29:17.6436
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m+3Xqac/r9yaZfoCkbTnWTXEwZ7BllG9s4wX0ShtXlSiEFzBl6/yQIiCd5QltdDB2BvoEEoqizKRDzmynrLZdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5013
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Not intended for merge in anything like current form!
 
-On 5/22/23 20:57, Li Zhijian wrote:
-> Any change and question relevant to should also CC to the CXL mailing
-> list.
->
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+CC list is a bit random and I'll admit I added a few people just to make them groan.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Depends on patches 1 and 2 from.
+[PATCH v2 0/3] hw/{i2c, nvme}: mctp endpoint, nvme management interface model.
 
-Thank you for sending this Zhijian!
+Based-on: Message-ID: 20230425063540.46143-1-its@irrelevant.dk
+Arm parts also need the out of tree ARM64 cxl patches.
+Generally working  with the kernel CXL stack requires event emulation.
+
+A git tree with this near the top and all prereqs is available at:
+http://gitlab.com/jic23/qemu  cxl-2023-05-25
+
+Just over a year ago (yikes) I posted [RFC PATCH 0/2] CXL FMAPI interface over MCTP/I2C
+https://lore.kernel.org/linux-cxl/20220520170128.4436-1-Jonathan.Cameron@huawei.com/
+
+Since that time I've had a number of questions about how to build on that
+PoC to enable control of actual CXL devices.
+
+The fundamental problem at that stage was the PoC only worked with device tree
+bindings and the rest of CXL software assumes ACPI (adding DT support for
+CXL in general is a long term project).  So this series attempts to 'solve'
+that.
+
+Currently I'm only aware of one emulated I2C controller with the right
+characteristics to be able to support MCTP over I2C - aspeed-i2c.
+So lets add that to the main architectures we care about for CXL:
+- ARM64 (on top of my out of tree support github.com/jic23/qemu)
+- X86 - yup I just added an aspeed-i2c controller to pc :)
+
+The actual emulated device has been rebased on Klaus Jensen's work
+for the nvme-mi which massively reduces the amount of boilerplate
+/ state machine handling that needs to be done in this emulation.
+(great work btw Klaius!)
+
+So how to use this:
+
+For ACPI you need the kernel patches from:
+https://lore.kernel.org/linux-cxl/20230525152203.32190-1-Jonathan.Cameron@huawei.com/T/#u
+To make the aspeed i2c controller play nicely with PRP0001 based ACPI description.
+
+Example qemu command line - stripped back to include only relevant bits
+
+qemu-system-x86_64 -M q35,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+...
+ -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-mem3,share=on,mem-path=/tmp/cxltest3.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa.raw,size=1M,align=1M \
+ -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/lsa2.raw,size=1M,align=1M \
+ -object memory-backend-file,id=cxl-lsa3,share=on,mem-path=/tmp/lsa3.raw,size=1M,align=1M \
+ -object memory-backend-file,id=cxl-mem5,share=on,mem-path=/tmp/cxltest5.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-mem6,share=on,mem-path=/tmp/cxltest6.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-mem7,share=on,mem-path=/tmp/cxltest7.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-lsa5,share=on,mem-path=/tmp/lsa5.raw,size=1M,align=1M \
+ -object memory-backend-file,id=cxl-lsa6,share=on,mem-path=/tmp/lsa6.raw,size=1M,align=1M \
+ -object memory-backend-file,id=cxl-lsa7,share=on,mem-path=/tmp/lsa7.raw,size=1M,align=1M \
+ -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+ -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=2 \
+ -device cxl-rp,port=1,bus=cxl.1,id=root_port2,chassis=0,slot=3 \
+ -device cxl-upstream,port=33,bus=root_port0,id=us0,multifunction=on,addr=0.0,sn=12345678 \
+ -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+ -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+ -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
+ -device cxl-type3,bus=swport0,persistent-memdev=cxl-mem1,id=cxl-pmem0,lsa=cxl-lsa1,sn=3 \
+ -device cxl-type3,bus=swport1,persistent-memdev=cxl-mem2,id=cxl-pmem1,lsa=cxl-lsa2,sn=4 \
+ -device cxl-type3,bus=swport2,persistent-memdev=cxl-mem3,id=cxl-pmem2,lsa=cxl-lsa3,sn=5 \
+ -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k \
+ -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=4,target=us0 \
+ -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=5,target=cxl-pmem0 \
+ -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=6,target=cxl-pmem1 \
+ -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=7,target=cxl-pmem2 \
+  
+
+Install the MCTP daemon from:
+  https://github.com/CodeConstruct/mctp
+
+Bring up and enumerate the MCTP EPs:
+
+# Bring up the link
+mctp link set mctpi2c0 up
+# Assign an address to the aspeed-i2c controller
+mctp addr add 50 dev mctpi2c0
+# Assign a neetwork ID to the link (11)
+mctp link set mctpi2c0 net 11
+# Start the daemon that uses dbus for configuration.
+systemctl start mctpd.service
+# Assign EIDs to the EPs
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP AssignEndpoint say mctpi2c0 1 0x4
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP AssignEndpoint say mctpi2c0 1 0x5
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP AssignEndpoint say mctpi2c0 1 0x6
+busctl call xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp au.com.CodeConstruct.MCTP AssignEndpoint say mctpi2c0 1 0x7
+
+# Check it worked by dumping some state.
+busctl introspect xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp/11/8 xyz.openbmc_project.MCTP.Endpoint
+busctl introspect xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp/11/9 xyz.openbmc_project.MCTP.Endpoint
+busctl introspect xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp/11/10 xyz.openbmc_project.MCTP.Endpoint
+busctl introspect xyz.openbmc_project.MCTP /xyz/openbmc_project/mctp/11/11 xyz.openbmc_project.MCTP.Endpoint
+
+Use the following test program to poke them
+
+./test 8 etc (address will be printed out during configuration above, but usually starts at 8)
 
 
-> ---
->   CONTRIBUTING.md | 12 +++++++++---
->   1 file changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
-> index 4f4865db9da4..c5eb391122d5 100644
-> --- a/CONTRIBUTING.md
-> +++ b/CONTRIBUTING.md
-> @@ -5,15 +5,21 @@ Thank you for taking the time to contribute to ndctl.
->   The following is a set of guidelines that we adhere to, and request that
->   contributors follow.
->   
-> +1. **NOTE**: ndctl utils have extended to support CXL CLI, so any change
-> +   and question relevant to CXL should also CC to the CXL mailing list
-> +   **```linux-cxl@vger.kernel.org```**.
-> +
->   1. The libnvdimm (kernel subsystem) and ndctl developers primarily use
->      the [nvdimm](https://subspace.kernel.org/lists.linux.dev.html)
->      mailing list for everything. It is recommended to send patches to
-> -   **```nvdimm@lists.linux.dev```**
-> -   An archive is available on [lore](https://lore.kernel.org/nvdimm/)
-> +   **```nvdimm@lists.linux.dev```** and CC **```linux-cxl@vger.kernel.org```** if needed.
-> +   The archives are available on [nvdimm](https://lore.kernel.org/nvdimm/) and
-> +   [cxl](https://lore.kernel.org/linux-cxl/)
->   
->   1. Github [issues](https://github.com/pmem/ndctl/issues) are an acceptable
->      way to report a problem, but if you just have a question,
-> -   [email](mailto:nvdimm@lists.linux.dev) the above list.
-> +   [email](mailto:nvdimm@lists.linux.dev) the above list and CC `linux-cxl@linux-cxl@vger.kernel.org`
-> +   if needed.
->   
->   1. We follow the Linux Kernel [Coding Style Guide][cs] as applicable.
->   
+From 14ac4ad4eb97bd0536c332f08c639f980c280b93 Mon Sep 17 00:00:00 2001
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date: Thu, 25 May 2023 11:36:36 +0100
+Subject: [PATCH] Trivial MCTP CXL CCI test prog
+
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ cxl_fmapi.h |  72 +++++++++++
+ mctp.h      |  68 ++++++++++
+ test.c      | 361 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 501 insertions(+)
+ create mode 100644 cxl_fmapi.h
+ create mode 100644 mctp.h
+ create mode 100644 test.c
+
+diff --git a/cxl_fmapi.h b/cxl_fmapi.h
+new file mode 100644
+index 0000000..6e861ed
+--- /dev/null
++++ b/cxl_fmapi.h
+@@ -0,0 +1,72 @@
++
++#include <stdint.h>
++
++#define CXL_CCI_CMD_SET_INFO 0x0
++#define  CXL_IDENTIFY 0x0
++#define CXL_FM_API_CMD_SET_PHYSICAL_SWITCH 0x51
++#define  CXL_IDENTIFY_SWITCH_DEVICE 0x00
++#define  CXL_GET_PHYSICAL_PORT_STATE 0x01
++
++struct cxl_fmapi_header {
++  #define CXL_MCTP_CATEGORY_REQ 0
++  #define CXL_MCTP_CATEGORY_RESP 1
++  uint8_t category;
++  uint8_t tag;
++  uint8_t rsv1;
++  uint8_t command;
++  uint8_t command_set;
++  uint8_t pl_length[3]; /* 20 bit little endian, BO bit at bit 23 */
++  uint16_t return_code;
++  uint16_t vendor_ext_status;
++} __attribute__ ((packed));
++
++struct cxl_cci_infostat_identify_resp_pl {
++    uint16_t vendor_id;
++    uint16_t device_id;
++    uint16_t subsys_vendor_id;
++    uint16_t subsys_id;
++    uint8_t serial_num[8];
++    uint8_t max_msg;
++    uint8_t component_type;
++} __attribute__((packed));
++
++struct cxl_fmapi_ident_switch_dev_resp_pl {
++  uint8_t ingres_port_id;
++  uint8_t rsv1;
++  uint8_t num_physical_ports;
++  uint8_t num_vcs;
++  uint8_t active_port_bitmask[32];
++  uint8_t active_vcs_bitmask[32];
++  uint16_t num_total_vppb;
++  uint16_t num_active_vppb;
++} __attribute__((packed));
++
++struct cxl_fmapi_get_phys_port_state_req_pl {
++  uint8_t num_ports; /* CHECK. may get too large for MCTP message size */
++  uint8_t ports[];
++} __attribute__((packed));
++
++struct cxl_fmapi_port_state_info_block {
++  uint8_t port_id;
++  uint8_t config_state;
++  uint8_t connected_device_cxl_version;
++  uint8_t rsv1;
++  uint8_t connected_device_type;
++  uint8_t port_cxl_version_bitmask;
++  uint8_t max_link_width;
++  uint8_t negotiated_link_width;
++  uint8_t supported_link_speeds_vector;
++  uint8_t max_link_speed;
++  uint8_t current_link_speed;
++  uint8_t ltssm_state;
++  uint8_t first_lane_num;
++  uint16_t link_state;
++  uint8_t supported_ld_count;
++} __attribute__((packed));
++
++struct cxl_fmapi_get_phys_port_state_resp_pl {
++  uint8_t num_ports;
++  uint8_t rsv1[3];
++  struct cxl_fmapi_port_state_info_block ports[];
++} __attribute__((packed));
++
+diff --git a/mctp.h b/mctp.h
+new file mode 100644
+index 0000000..154ab56
+--- /dev/null
++++ b/mctp.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Management Component Transport Protocol (MCTP)
++ *
++ * Copyright (c) 2021 Code Construct
++ * Copyright (c) 2021 Google
++ */
++
++#ifndef __UAPI_MCTP_H
++#define __UAPI_MCTP_H
++
++#include <linux/types.h>
++#include <linux/socket.h>
++#include <linux/netdevice.h>
++
++typedef __u8			mctp_eid_t;
++
++struct mctp_addr {
++	mctp_eid_t		s_addr;
++};
++
++struct sockaddr_mctp {
++	__kernel_sa_family_t	smctp_family;
++	__u16			__smctp_pad0;
++	unsigned int		smctp_network;
++	struct mctp_addr	smctp_addr;
++	__u8			smctp_type;
++	__u8			smctp_tag;
++	__u8			__smctp_pad1;
++};
++
++struct sockaddr_mctp_ext {
++	struct sockaddr_mctp	smctp_base;
++	int			smctp_ifindex;
++	__u8			smctp_halen;
++	__u8			__smctp_pad0[3];
++	__u8			smctp_haddr[MAX_ADDR_LEN];
++};
++
++#define MCTP_NET_ANY		0x0
++
++#define MCTP_ADDR_NULL		0x00
++#define MCTP_ADDR_ANY		0xff
++
++#define MCTP_TAG_MASK		0x07
++#define MCTP_TAG_OWNER		0x08
++#define MCTP_TAG_PREALLOC	0x10
++
++#define MCTP_OPT_ADDR_EXT	1
++
++#define SIOCMCTPALLOCTAG	(SIOCPROTOPRIVATE + 0)
++#define SIOCMCTPDROPTAG		(SIOCPROTOPRIVATE + 1)
++
++struct mctp_ioc_tag_ctl {
++	mctp_eid_t	peer_addr;
++
++	/* For SIOCMCTPALLOCTAG: must be passed as zero, kernel will
++	 * populate with the allocated tag value. Returned tag value will
++	 * always have TO and PREALLOC set.
++	 *
++	 * For SIOCMCTPDROPTAG: userspace provides tag value to drop, from
++	 * a prior SIOCMCTPALLOCTAG call (and so must have TO and PREALLOC set).
++	 */
++	__u8		tag;
++	__u16		flags;
++};
++
++#endif /* __UAPI_MCTP_H */
+diff --git a/test.c b/test.c
+new file mode 100644
+index 0000000..20f1dbb
+--- /dev/null
++++ b/test.c
+@@ -0,0 +1,361 @@
++/*
++ * Trivial example program to exercise QEMU FMAPI Emulation over MCTP over I2C
++ */
++#include <sys/socket.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include "mctp.h"
++#include "cxl_fmapi.h"
++
++enum cxl_type {
++	cxl_switch,
++	cxl_type3,
++};
++
++static int query_cci_identify(int sd, struct sockaddr_mctp *addr, int *tag, enum cxl_type *type)
++{
++	struct cxl_cci_infostat_identify_resp_pl *pl;
++	uint8_t buf[1024];
++	struct cxl_fmapi_header *rsp_head = buf;
++
++	int rc;
++	ssize_t len;
++	struct sockaddr_mctp addrrx;
++	socklen_t addrlen = sizeof(addrrx);
++	struct cxl_fmapi_header req = {
++		.category = CXL_MCTP_CATEGORY_REQ,
++		.tag = *tag++,
++		.command = 1,
++		.command_set = 0,
++		.vendor_ext_status = 0xabcd,
++	};
++
++	printf("trying to identify\n");
++	len = sendto(sd, &req, sizeof(req), 0, (struct sockaddr *)addr, sizeof(*addr));
++	if (len != sizeof(req)) {
++		printf("Failed to send whole request for phys switch info %d %d\n", len, sizeof(req));
++		return -1;
++	}
++
++	len = recvfrom(sd, buf, sizeof(buf), 0, (struct sockaddr *)&addrrx, &addrlen);
++	if (len < 0) {
++		printf("Failed to receive response\n");
++		return -1;
++	}
++	printf("length %d\n", len);
++	pl = (void *)(rsp_head + 1);
++	printf("Vendor id  : %04x\n", pl->vendor_id);
++	printf("Device id  : %04x\n", pl->device_id);
++	printf("Subsys vid : %04x\n", pl->subsys_vendor_id);
++	printf("Subsys id  : %04x\n", pl->subsys_id);
++
++	switch (pl->component_type) {
++	case 0x00:
++		printf("Switch!\n");
++		*type = cxl_switch;
++		break;
++	case 0x03:
++		printf("Type3!\n");
++		*type = cxl_type3;
++		break;
++	}
++
++	return 0;
++}
++
++static int parse_physical_switch_identify_switch_device(void *buf, size_t buf_len)
++{
++	struct cxl_fmapi_header *rsp_head = buf;
++	struct cxl_fmapi_ident_switch_dev_resp_pl *pl = (void *)(rsp_head + 1);
++	uint8_t *b;
++	if (rsp_head->return_code != 0) {
++		printf("Error code in response %d\n", rsp_head->return_code);
++		return -1;
++	}
++	printf("Num total vppb %d\n", pl->num_total_vppb);
++	printf("Ports %d\n", pl->num_physical_ports);
++	b = pl->active_port_bitmask;
++	printf("ActivePortMask");
++	for (int i = 0; i < 32; i++)
++		printf("%02x", b[i]);
++	printf("\n");
++	return 0;
++}
++
++int query_physical_switch_info(int sd, struct sockaddr_mctp *addr, int *tag)
++{
++	uint8_t buf[1024];
++	int rc;
++	ssize_t len;
++	struct sockaddr_mctp addrrx;
++	socklen_t addrlen = sizeof(addrrx);
++	struct cxl_fmapi_header req = {
++		.category = CXL_MCTP_CATEGORY_REQ,
++		.tag = *tag++,
++		.command = CXL_IDENTIFY_SWITCH_DEVICE,
++		.command_set = CXL_FM_API_CMD_SET_PHYSICAL_SWITCH,
++		.vendor_ext_status = 0xabcd,
++	};
++
++	len = sendto(sd, &req, sizeof(req), 0, (struct sockaddr *)addr, sizeof(*addr));
++	if (len != sizeof(req)) {
++		printf("Failed to send whole request for phys switch info %d %d\n", len, sizeof(req));
++		return -1;
++	}
++
++	len = recvfrom(sd, buf, sizeof(buf), 0, (struct sockaddr *)&addrrx, &addrlen);
++	if (len < 0) {
++		printf("Failed to receive response\n");
++		return -1;
++	}
++	printf("length %d\n", len);
++	rc = parse_physical_switch_identify_switch_device(buf, len);
++	if (rc)
++		return -1;
++
++	return 0;
++}
++
++static int parse_phys_port_state_rsp(void * buf, size_t buf_len, struct cxl_fmapi_header *head)
++{
++	struct cxl_fmapi_header *rsp_head = buf;
++	struct cxl_fmapi_get_phys_port_state_resp_pl *pl = (void *)(rsp_head + 1);
++	uint32_t pl_length = rsp_head->pl_length[0] |
++		(rsp_head->pl_length[1] << 8) |
++		((rsp_head->pl_length[2] & 0xf) << 16);
++
++	if (rsp_head->category != CXL_MCTP_CATEGORY_RESP) {
++		printf("Message not a response\n");
++		return -1;
++	}
++	if (rsp_head->tag != head->tag) {
++		printf("Reply has wrong tag\n");
++		return -1;
++	}
++	if ((rsp_head->command != head->command) ||
++		(rsp_head->command_set != head->command_set)) {
++		printf("Response to wrong command\n");
++		return -1;
++	}
++
++	if (rsp_head->return_code != 0) {
++		printf("Error code in response %d\n", rsp_head->return_code);
++		printf("%x %x %x %x %x %x %x %x %x %x %x %x\n", ((uint8_t *)rsp_head)[0],((uint8_t *)rsp_head)[1],
++			((uint8_t *)rsp_head)[2],((uint8_t *)rsp_head)[3],
++			((uint8_t *)rsp_head)[4],((uint8_t *)rsp_head)[5],((uint8_t *)rsp_head)[6],
++			((uint8_t *)rsp_head)[7], ((uint8_t *)rsp_head)[8], ((uint8_t *)rsp_head)[9],
++			((uint8_t *)rsp_head)[10], ((uint8_t *)rsp_head)[11]);
++		return -1;
++	}
++
++	if (pl_length < 4 ||  pl_length < (pl->num_ports * sizeof(pl->ports[0]))) {
++		printf("too short %d %d\n", pl->num_ports);
++		return -1;
++	}
++
++	for (int i = 0; i < pl->num_ports; i++) {
++		struct cxl_fmapi_port_state_info_block *port = &pl->ports[i];
++		const char *port_states[] = {
++			[0x0] = "Disabled",
++			[0x1] = "Bind in progress",
++			[0x2] = "Unbind in progress",
++			[0x3] = "DSP",
++			[0x4] = "USP",
++			[0x5] = "Reserved",
++			//other values not present.
++			[0xf] = "Invalid Port ID"
++		  };
++		const char *connected_device_modes[] = {
++			[0] = "Not CXL / connected",
++			[1] = "CXL 1.1",
++			[2] = "CXL 2.0",
++		};
++		const char *connected_device_type[] = {
++			[0] = "No device detected",
++			[1] = "PCIe device",
++			[2] = "CXL type 1 device",
++			[3] = "CXL type 2 device",
++			[4] = "CXL type 3 device",
++			[5] = "CXL type 3 pooled device",
++			[6] = "Reserved",
++		};
++		const char *ltssm_states[] = {
++			[0] = "Detect",
++			[1] = "Polling",
++			[2] = "Configuration",
++			[3] = "Recovery",
++			[4] = "L0",
++			[5] = "L0s",
++			[6] = "L1",
++			[7] = "L2",
++			[8] = "Disabled",
++			[9] = "Loop Back",
++			[10] = "Hot Reset",
++		};
++		printf("Port%02d:\n ", port->port_id);
++		printf("\tPort state: ");
++		if (port_states[port->config_state & 0xf])
++			printf("%s\n", port_states[port->config_state]);
++		else
++			printf("Unknown state\n");
++
++		if (port->config_state == 3) { /* DSP so device could be there */
++			printf("\tConnected Device CXL Version: ");
++			if (port->connected_device_cxl_version > 2)
++				printf("Unknown CXL Version\n");
++			else
++				printf("%s\n", connected_device_modes[port->connected_device_cxl_version]);
++
++			printf("\tConnected Device Type: ");
++			if (port->connected_device_type > 7)
++				printf("Unknown\n");
++			else
++				printf("%s\n", connected_device_type[port->connected_device_type]);
++		}
++
++		printf("\tSupported CXL Modes:");
++		if (port->port_cxl_version_bitmask & 0x1)
++			printf(" 1.1");
++		if (port->port_cxl_version_bitmask & 0x2)
++			printf(" 2.0");
++		printf("\n");
++
++		printf("\tMaximum Link Width: %d Negotiated Width %d\n",
++			   port->max_link_width,
++			   port->negotiated_link_width);
++		printf("\tSupported Speeds: ");
++		if (port->supported_link_speeds_vector & 0x1)
++			printf(" 2.5 GT/s");
++		if (port->supported_link_speeds_vector & 0x2)
++			printf(" 5.0 GT/s");
++		if (port->supported_link_speeds_vector & 0x4)
++			printf(" 8.0 GT/s");
++		if (port->supported_link_speeds_vector & 0x8)
++			printf(" 16.0 GT/s");
++		if (port->supported_link_speeds_vector & 0x10)
++			printf(" 32.0 GT/s");
++		if (port->supported_link_speeds_vector & 0x20)
++			printf(" 64.0 GT/s");
++		printf("\n");
++
++		printf("\tLTSSM: ");
++		if (port->ltssm_state >= sizeof(ltssm_states))
++			printf("Unkown\n");
++		else
++			printf("%s\n", ltssm_states[port->ltssm_state]);
++	}
++}
++
++int query_ports(int sd, struct sockaddr_mctp *addr, int *tag)
++{
++	uint8_t buf[1024];
++	ssize_t len;
++	int num_ports = 4;
++	int rc;
++	uint8_t port_list[4] = { 0, 3, 7, 4 };
++	struct sockaddr_mctp addrrx;
++	socklen_t addrlen = sizeof(addrrx);
++	struct cxl_fmapi_header *head;
++	struct cxl_fmapi_get_phys_port_state_req_pl *reqpl;
++	size_t req_sz = sizeof(*reqpl) + num_ports + sizeof(*head) ;
++
++	head = malloc(req_sz);
++	*head = (struct cxl_fmapi_header) {
++		.category = CXL_MCTP_CATEGORY_REQ,
++		.tag = *tag++,
++		.command = CXL_GET_PHYSICAL_PORT_STATE,
++		.command_set = CXL_FM_API_CMD_SET_PHYSICAL_SWITCH,
++		.pl_length = {
++			req_sz & 0xff,
++			(req_sz >> 8) & 0xff,
++			(req_sz >> 16) & 0xf },
++		.vendor_ext_status = 0x1234,
++	};
++	reqpl = (void *)(head + 1);
++	*reqpl = (struct cxl_fmapi_get_phys_port_state_req_pl) {
++		.num_ports = num_ports,
++	};
++	for (int j = 0; j < num_ports; j++)
++		reqpl->ports[j] = port_list[j];
++
++	len = sendto(sd, head, req_sz, 0,
++				 (struct sockaddr *)addr, sizeof(*addr));
++
++	len = recvfrom(sd, buf, sizeof(buf), 0,
++				   (struct sockaddr *)&addrrx, &addrlen);
++	if (len < sizeof(struct cxl_fmapi_header)) {
++		printf("Too short for header\n");
++	}
++	//TODO generic check of reply.
++	if (addrrx.smctp_type != 0x7) {
++		printf("Reply does not match expected message type %x\n", addrrx.smctp_type);
++	}
++
++	rc = parse_phys_port_state_rsp(buf, len, head);
++	if (rc)
++		return rc;
++
++	return 0;
++}
++
++int main(int argv, char **argc)
++{
++	int rc, cci_sd, fmapi_sd;
++	int tag = 0; /* will increment on each use */
++	ssize_t len;
++	if (argv < 2) {
++		printf("Give an address\n");
++		return -1;
++	}
++	int dev_addr = atoi(argc[1]);
++	struct sockaddr_mctp cci_addr = {
++		.smctp_family = AF_MCTP,
++		.smctp_network = 11,
++		.smctp_addr.s_addr = dev_addr,
++		.smctp_type = 0x8, /* CXL CCI */
++		.smctp_tag = MCTP_TAG_OWNER,
++	};
++	struct sockaddr_mctp fmapi_addr = {
++		.smctp_family = AF_MCTP,
++		.smctp_network = 11,
++		.smctp_addr.s_addr = dev_addr,
++		.smctp_type = 0x7, /* CXL FMAPI */
++		.smctp_tag = MCTP_TAG_OWNER,
++	};
++	struct sockaddr_mctp addrrx;
++	socklen_t addrlen = sizeof(addrrx);
++	enum cxl_type type;
++
++	cci_sd = socket(AF_MCTP, SOCK_DGRAM, 0);
++	rc = bind(cci_sd, (struct sockaddr *)&cci_addr, sizeof(cci_addr));
++	if (rc) {
++		printf("Bind failed\n");
++		return -1;
++	}
++
++	rc = query_cci_identify(cci_sd, &cci_addr, &tag, &type);
++	if (rc)
++		return rc;
++
++	if (type == cxl_switch) {
++		fmapi_sd = socket(AF_MCTP, SOCK_DGRAM, 0);
++		rc = bind(fmapi_sd, (struct sockaddr *)&fmapi_addr, sizeof(fmapi_addr));
++		if (rc) {
++			printf("Bind failed\n");
++			return -1;
++		}
++
++		rc = query_physical_switch_info(fmapi_sd, &fmapi_addr, &tag);
++		if (rc)
++			return rc;
++
++		/* Next query some of the ports */
++		rc = query_ports(fmapi_sd, &fmapi_addr, &tag);
++		if (rc)
++			return rc;
++	}
++
++	return 0;
++}
+-- 
+2.39.2
+
+Jonathan Cameron (6):
+  hw/acpi/aml-build: add function for i2c slave device serial bus
+    description
+  HACK: arm/virt: Add aspeed-i2c controller and MCTP EP to enable MCTP
+    testing
+  HACK: hw/arm/virt: Add ACPI support for aspeed-i2c / mctp
+  HACK: hw/i386/pc: Add Aspeed i2c controller + MCTP with ACPI tables
+  misc/i2c_mctp_cxl: Initial device emulation
+  docs: cxl: Add example commandline for MCTP CXL CCIs
+
+ docs/system/devices/cxl.rst |  27 +++
+ include/hw/acpi/aml-build.h |   1 +
+ include/hw/arm/virt.h       |   2 +
+ include/hw/cxl/cxl_fmapi.h  | 102 ++++++++++
+ include/hw/i386/pc.h        |   1 +
+ hw/acpi/aml-build.c         |  17 ++
+ hw/arm/virt-acpi-build.c    |  60 ++++++
+ hw/arm/virt.c               |  92 ++++++++-
+ hw/cxl/i2c_mctp_cxl.c       | 369 ++++++++++++++++++++++++++++++++++++
+ hw/i386/acpi-build.c        |  65 +++++++
+ hw/i386/pc.c                |  20 +-
+ hw/arm/Kconfig              |   2 +
+ hw/cxl/Kconfig              |   3 +
+ hw/cxl/meson.build          |   1 +
+ hw/i2c/meson.build          |   2 +-
+ hw/i386/Kconfig             |   2 +
+ hw/misc/meson.build         |   1 +
+ 17 files changed, 762 insertions(+), 5 deletions(-)
+ create mode 100644 include/hw/cxl/cxl_fmapi.h
+ create mode 100644 hw/cxl/i2c_mctp_cxl.c
+
+-- 
+2.39.2
+
