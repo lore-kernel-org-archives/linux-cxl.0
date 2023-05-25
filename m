@@ -2,209 +2,137 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4ECC77B7E
-	for <linux-cxl@archiver.kernel.org>; Thu, 25 May 2023 21:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928EFC7EE29
+	for <linux-cxl@archiver.kernel.org>; Thu, 25 May 2023 22:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241898AbjEYVk6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 25 May 2023 17:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45178 "EHLO
+        id S234702AbjEYWBI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 25 May 2023 18:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241738AbjEYVk4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 May 2023 17:40:56 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7BB1AC
-        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 14:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685050851; x=1716586851;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=h5+BYTn34dKRvjo01UvMzf0XfpcyIImS3ZYUZuVu0mQ=;
-  b=IyzhtKmEf1p68NTiooB6wDJwYZBXUZWzzi6zEdcDABvdlX0/PCaS26an
-   iobRYMfLlvd4I93yZRG+F4gCzVZy0ju/gKqbBmDLifnV76juo533ZNzoq
-   IkeoArO4rABAEomRbkLbvv96lOpoXnshKywzCim3f6iw2Nwmmtpi/q9I1
-   gf/u8alIhW02RdOd02l5aoNE5WNZZceUuIYMfaJfQDi371cvH+5CeQdFQ
-   Tw75PPo+Bdz6bVNFtcN10Vzva1R3kC5NU/bGGCoKkT7oobBn4azZZf/ky
-   BYL6CA76gT1MH7zmJoFGkGT6QY0KHawAObdCKgZ2EMI5ZFmSCyUFUQMBq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="351544794"
-X-IronPort-AV: E=Sophos;i="6.00,192,1681196400"; 
-   d="scan'208";a="351544794"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:40:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="879297386"
-X-IronPort-AV: E=Sophos;i="6.00,192,1681196400"; 
-   d="scan'208";a="879297386"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.85.172])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:40:50 -0700
-Subject: [ndctl PATCH v2 3/3] ndctl: cxl: add QoS class check for CXL region
- creation
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vishal.l.verma@intel.com
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-Date:   Thu, 25 May 2023 14:40:49 -0700
-Message-ID: <168505084955.2768411.12826239064018270742.stgit@djiang5-mobl3>
-In-Reply-To: <168505076089.2768411.10498775803334230215.stgit@djiang5-mobl3>
-References: <168505076089.2768411.10498775803334230215.stgit@djiang5-mobl3>
-User-Agent: StGit/1.5
+        with ESMTP id S229689AbjEYWBH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 25 May 2023 18:01:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DDE183;
+        Thu, 25 May 2023 15:01:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 03ECA615C8;
+        Thu, 25 May 2023 22:01:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A547C433D2;
+        Thu, 25 May 2023 22:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685052063;
+        bh=ptE4zUO2N1qn5e28e8ELQ07KDbno8edydjVNz2FJipk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tlUgaxrF3z9IwUeA0DGL4h+NIbcmOJM/r14l3L3I9HRklMIf5eX3CeONLvzDEntda
+         osuUN5uTSj89B76YksTuXRcjG3o8fnn1/nKVfoBt6SjNv1TMJy8pxP0weYoXN08/LZ
+         NnWpZaqHEPkpZ9EFY31YI9li4C+FWhtxNf9dtO5psADQ1v26O4DYueomEjqdkpDHdo
+         L9s2ilCnNe0E8J44KETH5vfeLzcAjK1qIvGazQyKlmwaBwWn7amMIDus4DjZp+Q/fw
+         CgxEXg46iB38Nmidqd9ugZLtJxkJb0isTuKOi0eGXQXe/NfDzgbtfkzFzNEvgjyGAN
+         CxYZdeN6e4wtQ==
+Date:   Thu, 25 May 2023 17:01:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Richter <rrichter@amd.com>
+Cc:     alison.schofield@intel.com, dave.jiang@intel.com,
+        Terry Bowman <terry.bowman@amd.com>, vishal.l.verma@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        bhelgaas@google.com, Oliver O'Halloran <oohall@gmail.com>,
+        Jonathan.Cameron@huawei.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com
+Subject: Re: [PATCH v4 22/23] PCI/AER: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <ZG/anZ78FukSpERs@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZG/TKOgMTSljryHN@rric.localdomain>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The CFMWS provides a QTG ID. The kernel driver creates a root decoder that
-represents the CFMWS. A qos_class attribute is exported via sysfs for the root
-decoder.
+On Thu, May 25, 2023 at 11:29:58PM +0200, Robert Richter wrote:
+> eOn 24.05.23 16:32:35, Bjorn Helgaas wrote:
+> > On Tue, May 23, 2023 at 06:22:13PM -0500, Terry Bowman wrote:
+> > > From: Robert Richter <rrichter@amd.com>
+> > > 
+> > > In Restricted CXL Device (RCD) mode a CXL device is exposed as an
+> > > RCiEP, but CXL downstream and upstream ports are not enumerated and
+> > > not visible in the PCIe hierarchy. Protocol and link errors are sent
+> > > to an RCEC.
+> > >
+> > > Restricted CXL host (RCH) downstream port-detected errors are signaled
+> > > as internal AER errors, either Uncorrectable Internal Error (UIE) or
+> > > Corrected Internal Errors (CIE). 
+> > 
+> > From the parallelism with RCD above, I first thought that RCH devices
+> > were non-RCD mode and *were* enumerated as part of the PCIe hierarchy,
+> > but actually I suspect it's more like the following?
+> > 
+> >   ... but CXL downstream and upstream ports are not enumerated and not
+> >   visible in the PCIe hierarchy.
+> > 
+> >   Protocol and link errors from these non-enumerated ports are
+> >   signaled as internal AER errors ... via a CXL RCEC.
+> 
+> Exactly, except the RCEC is standard PCIe and also must not
+> necessarily on the same PCI bus as the CXL RCiEPs are.
 
-One or more QoS class tokens are retrieved via QTG ID _DSM from the ACPI0017
-device for a CXL memory device. The input for the _DSM is the read and write
-latency and bandwidth for the path between the device and the CPU. The
-numbers are constructed by the kernel driver for the _DSM input. When a
-device is probed, QoS class tokens  are retrieved. This is useful for a
-hot-plugged CXL memory device that does not have regions created.
+So make it "RCEC" instead of "CXL RCEC", I guess?  PCIe r6.0, sec
+7.9.10.3, allows an RCEC to be associated with RCiEPs on different
+buses, so nothing to see there.
 
-Add a check for config check during region creation. Emit a warning if the
-QoS class token from the root decoder is different than the mem device QoS
-class token. User parameter options are provided to fail instead of just
-warning.
+> > > The error source is the id of the RCEC.
+> > 
+> > This seems odd; I assume this refers to the RCEC's AER Error Source
+> > Identification register, and the ERR_COR or ERR_FATAL/NONFATAL Source
+> > Identification would ordinarily be the Requester ID of the RCiEP that
+> > "sent" the Error Message.  But you're saying it's actually the ID of
+> > the *RCEC*, not the RCiEP?
+> 
+> Right, the downstream port has its own AER ext capability in
+> non-config (io mapped) RCRB register range. Errors originating from
+> there are signaled as internal AER errors via the RCEC *with* the
+> RCEC's Requester ID. Code walks through all associated CXL endpoints,
+> determines the dport and checks its AER.
+> 
+> There is also an RDPAS structure defined in CXL but that is only a
+> different way to provide the RCEC to dport association instead of
+> using the RCEC's Endpoint Association Extended Capability. In the end
+> we get all associated RCHs and check the AER of all their dports.
+> 
+> The upstream port is signaled using the RCiEP's AER. CXL spec is
+> strict here: "Upstream Port RCRB shall not implement the AER Extended
+> Capability." The RCiEP's requestor ID is used then and its config
+> space the AER is in.
+> 
+> CXL.cachemem errors are reported with the RCiEP as requester
+> too. Status is in the CXL RAS cap and the UIE or CIE is set
+> respectively in the AER status of the RCiEP.
+>
+> > We're going to call pci_aer_handle_error() as well, to handle the
+> > non-internal errors, and I'm pretty sure that path expects the RCiEP
+> > ID there.
+> > 
+> > Whatever the answer, I'm not sure this sentence is actually relevant
+> > to this patch, since this patch doesn't read PCI_ERR_ROOT_ERR_SRC or
+> > look at struct aer_err_source.id.
+> 
+> The source id is used in aer_process_err_devices() which finally calls
+> handle_error_source() for the device with the requestor id. This is
+> the place where cxl_rch_handle_error() checks if it is an RCEC that
+> received an internal error and has cxl devices connected to it. Then,
+> the request is forwarded to the cxl_mem handler which also needs to
+> check the dport now. That is, pcie_walk_rcec() in
+> cxl_rch_handle_error() is called with the RCEC's pci handle,
+> cxl_rch_handle_error_iter() with the RCiEP's pci handle.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/cxl/cxl-create-region.txt |    9 ++++
- cxl/region.c                            |   63 +++++++++++++++++++++++++++++++
- 2 files changed, 71 insertions(+), 1 deletion(-)
+I'm still not sure this is relevant.  Isn't that last sentence just
+the way we always use pcie_walk_rcec()?
 
-diff --git a/Documentation/cxl/cxl-create-region.txt b/Documentation/cxl/cxl-create-region.txt
-index f11a412bddfe..9ab2e0fee152 100644
---- a/Documentation/cxl/cxl-create-region.txt
-+++ b/Documentation/cxl/cxl-create-region.txt
-@@ -105,6 +105,15 @@ include::bus-option.txt[]
- 	supplied, the first cross-host bridge (if available), decoder that
- 	supports the largest interleave will be chosen.
- 
-+-e::
-+--strict::
-+	Enforce strict execution where any potential error will force failure.
-+	For example, if QTG ID mismatches will cause failure.
-+
-+-q::
-+--no-enforce-qtg::
-+	Parameter to bypass QTG ID mismatch failure. Will only emit warning.
-+
- include::human-option.txt[]
- 
- include::debug-option.txt[]
-diff --git a/cxl/region.c b/cxl/region.c
-index 45f0c6a3771c..03fd862afc89 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -31,6 +31,8 @@ static struct region_params {
- 	bool force;
- 	bool human;
- 	bool debug;
-+	bool strict;
-+	bool no_qtg;
- } param = {
- 	.ways = INT_MAX,
- 	.granularity = INT_MAX,
-@@ -48,6 +50,8 @@ struct parsed_params {
- 	const char **argv;
- 	struct cxl_decoder *root_decoder;
- 	enum cxl_decoder_mode mode;
-+	bool strict;
-+	bool no_qtg;
- };
- 
- enum region_actions {
-@@ -80,7 +84,9 @@ OPT_STRING('U', "uuid", &param.uuid, \
- 	   "region uuid", "uuid for the new region (default: autogenerate)"), \
- OPT_BOOLEAN('m', "memdevs", &param.memdevs, \
- 	    "non-option arguments are memdevs"), \
--OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats")
-+OPT_BOOLEAN('u', "human", &param.human, "use human friendly number formats"), \
-+OPT_BOOLEAN('e', "strict", &param.strict, "strict execution enforcement"), \
-+OPT_BOOLEAN('q', "no-enforce-qtg", &param.no_qtg, "no enforce of QTG ID")
- 
- static const struct option create_options[] = {
- 	BASE_OPTIONS(),
-@@ -357,6 +363,9 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
- 		}
- 	}
- 
-+	p->strict = param.strict;
-+	p->no_qtg = param.no_qtg;
-+
- 	return 0;
- }
- 
-@@ -460,6 +469,56 @@ static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
- 		p->mode = CXL_DECODER_MODE_PMEM;
- }
- 
-+static bool region_qos_match_decoder(struct qos_class *qos_class, int decoder_qc)
-+{
-+	int i;
-+
-+	for (i = 0; i < qos_class->nr; i++) {
-+		if (qos_class->qos[i] == decoder_qc)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int create_region_validate_qtg_id(struct cxl_ctx *ctx,
-+					 struct parsed_params *p)
-+{
-+	struct qos_class *qos_class;
-+	int root_qos_class, i;
-+
-+	root_qos_class = cxl_root_decoder_get_qos_class(p->root_decoder);
-+	if (root_qos_class == CXL_QOS_CLASS_NONE)
-+		return 0;
-+
-+	for (i = 0; i < p->ways; i++) {
-+		struct json_object *jobj =
-+			json_object_array_get_idx(p->memdevs, i);
-+		struct cxl_memdev *memdev = json_object_get_userdata(jobj);
-+
-+		if (p->mode == CXL_DECODER_MODE_RAM)
-+			qos_class = cxl_memdev_get_ram_qos_class(memdev);
-+		else
-+			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
-+
-+		if (!region_qos_match_decoder(qos_class, root_qos_class)) {
-+			if (p->strict && !p->no_qtg) {
-+				log_err(&rl, "%s QoS Class mismatches %s\n",
-+					cxl_decoder_get_devname(p->root_decoder),
-+					cxl_memdev_get_devname(memdev));
-+
-+				return -ENXIO;
-+			}
-+
-+			log_notice(&rl, "%s QoS Class mismatches %s\n",
-+				   cxl_decoder_get_devname(p->root_decoder),
-+				   cxl_memdev_get_devname(memdev));
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int create_region_validate_config(struct cxl_ctx *ctx,
- 					 struct parsed_params *p)
- {
-@@ -500,6 +559,8 @@ found:
- 		return rc;
- 
- 	collect_minsize(ctx, p);
-+	create_region_validate_qtg_id(ctx, p);
-+
- 	return 0;
- }
- 
+If there's something *different* here about CXL, and it's important to
+this patch, sure.  But I don't see that yet.  Maybe a comment in the
+code if you think it's important to clarify something there.
 
-
+Bjorn
