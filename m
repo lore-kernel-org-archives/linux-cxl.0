@@ -2,160 +2,129 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDFEC77B73
-	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 20:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3262C77B7C
+	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 20:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbjEZUb7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 26 May 2023 16:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
+        id S229882AbjEZUdw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 26 May 2023 16:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229900AbjEZUb6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 16:31:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A281114;
-        Fri, 26 May 2023 13:31:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229716AbjEZUdv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 16:33:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37488F3
+        for <linux-cxl@vger.kernel.org>; Fri, 26 May 2023 13:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685133174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=w88dKxOFNphCNTDyDzXNErgI1kj2Vs8SaWD8y1A2bPs=;
+        b=cLo2TJCxapI+Gdhn9MzDcWHUycScyeJx5KoRvgfu4tR0tFJi5A5adOrK8ZGZ3dFiiXV7dq
+        jYDf9W1koNghoK8CWAPAG3tAgOKzFpLi7hqhwvzxcX4AjQjjb0xKo9CE2IS+GPP8VoRia5
+        aFdzMdM/OXyOxejRDJWK453sXG/0LJ8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-15-xl_oM-rdMRuwrqcHNI6L4A-1; Fri, 26 May 2023 16:32:49 -0400
+X-MC-Unique: xl_oM-rdMRuwrqcHNI6L4A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B06E360E75;
-        Fri, 26 May 2023 20:31:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F54C433EF;
-        Fri, 26 May 2023 20:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685133116;
-        bh=dgC43JNVASW0J73pGR7cjG6PDm1SnaU+sa3pg7UyPTM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HKUvPsNDMdMUCpYOuXiMJGS3ghlofdtQWNhOdtK934p4Msmm+XWZ4BHhOwz/Jq4J7
-         jOTVpx+9Tpib4DJiSSLWGPfKJ/QygEgMmdSMiXmlfHXQqPaMMWDqrWzz8Ygj+r6u+i
-         ITrmUIfw9VvSrNyvAFSmodoF3Ohgax85FZoHoHJLcq3vl17HnLtqT5cG5VURALJi0H
-         LgkSKDeV56isZvePgaU56KK0xXUzqOFZewxXpKRZnZNOfS64CjZisZLrRsqGsJ6uta
-         WX9N9b5t6IpIFs3BCrjiI+8n5LCq/KI3zMA1tp4XHn7rQVUvhGsoU/BRjKz/ouIRe+
-         m54GG6kchVkxA==
-Date:   Fri, 26 May 2023 15:31:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Richter <rrichter@amd.com>
-Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com
-Subject: Re: [PATCH v4 23/23] PCI/AER: Unmask RCEC internal errors to enable
- RCH downstream port error handling
-Message-ID: <ZHEXOlxfCCApI+NE@bhelgaas>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 393571C01510;
+        Fri, 26 May 2023 20:32:49 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.39.192.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7DFD9C154D1;
+        Fri, 26 May 2023 20:32:48 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+        id 8538A21E692E; Fri, 26 May 2023 22:32:47 +0200 (CEST)
+From:   Markus Armbruster <armbru@redhat.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Markus Armbruster <armbru@redhat.com>, <qemu-devel@nongnu.org>,
+        Michael Tsirkin <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        =?utf-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+        Eric Blake <eblake@redhat.com>,
+        Mike Maslenkin <mike.maslenkin@gmail.com>,
+        =?utf-8?Q?Marc-Andr=C3=A9?= Lureau <marcandre.lureau@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v7 7/7] hw/cxl/events: Add injection of Memory Module
+ Events
+References: <20230522150947.11546-1-Jonathan.Cameron@huawei.com>
+        <20230522150947.11546-8-Jonathan.Cameron@huawei.com>
+        <87h6rz8bnj.fsf@pond.sub.org> <20230526181004.0000512d@Huawei.com>
+Date:   Fri, 26 May 2023 22:32:47 +0200
+In-Reply-To: <20230526181004.0000512d@Huawei.com> (Jonathan Cameron's message
+        of "Fri, 26 May 2023 18:10:04 +0100")
+Message-ID: <87jzwu6dg0.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZG/cYUaZerXNqqJl@rric.localdomain>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, May 26, 2023 at 12:08:33AM +0200, Robert Richter wrote:
-> On 24.05.23 16:45:06, Bjorn Helgaas wrote:
-> > On Tue, May 23, 2023 at 06:22:14PM -0500, Terry Bowman wrote:
-> > > From: Robert Richter <rrichter@amd.com>
-> > > 
-> > > AER corrected and uncorrectable internal errors (CIE/UIE) are masked
-> > > in their corresponding mask registers per default once in power-up
-> > > state. [1][2] Enable internal errors for RCECs to receive CXL
-> > > downstream port errors of Restricted CXL Hosts (RCHs).
-> > > ...
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> writes:
 
-> > > +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> > > +{
-> > > +	int *handles_cxl = data;
-> > > +
-> > > +	*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> > 
-> > This effectively only looks at the *last* RCiEP associated with this
-> > RCEC.  I would expect a logical OR of all of them.
-> > 
-> > > +	return *handles_cxl;
-> 
-> If this is non-zero, the iteration stops. So as soon we find a cxl
-> device we can stop the loop. Else, all devices are non-cxl devs and
-> the last return is zero too.
-> 
-> Now checking the code, pci_walk_bus() works that way, but walk_rcec()
-> does not break in all cases. I think this function not working as
-> expected. We would need to check if pci_walk_bus() stopped the
-> iteration, e.g. with a return code.
-> 
-> Alternatively we could add this check:
-> 
-> 	if (!*handles_cxl)
-> 		*handles_cxl = ...
+>> > +# @temperature: Device temperature in degrees Celsius.
+>> > +#
+>> > +# @dirty-shutdown-count: Number of time the device has been unable to  
+>> 
+>> Number of times
+>> 
+>> > +#                        determine whether data loss may have occurred.
+>> > +#
+>> > +# @corrected-volatile-error-count: Total number of correctable errors in
+>> > +#                                  volatile memory.
+>> > +#
+>> > +# @corrected-persistent-error-count: Total number correctable errors in
+>> > +#                                    persistent memory  
+>> 
+>> Please format like
+>> 
+>>    # @flags: Event Record Flags.  See CXL r3.0 Table 8-42 Common Event
+>>    #     Record Format, Event Record Flags for subfield definitions.
+>>    #
+>>    # @type: Device Event Type.  See CXL r3.0 Table 8-45 Memory Module
+>>    #     Event Record for bit definitions for bit definiions.
+>>    #
+>>    # @health-status: Overall health summary bitmap.  See CXL r3.0 Table
+>>    #     8-100 Get Health Info Output Payload, Health Status for bit
+>>    #     definitions.
+>>    #
+>>    # @media-status: Overall media health summary.  See CXL r3.0 Table
+>>    #     8-100 Get Health Info Output Payload, Media Status for bit
+>>    #     definitions.
+>>    #
+>>    # @additional-status: See CXL r3.0 Table 8-100 Get Health Info Output
+>>    #     Payload, Additional Status for subfield definitions.
+>>    #
+>>    # @life-used: Percentage (0-100) of factory expected life span.
+>>    #
+>>    # @temperature: Device temperature in degrees Celsius.
+>>    #
+>>    # @dirty-shutdown-count: Number of time the device has been unable to
+>>    #     determine whether data loss may have occurred.
+>
+> With "Number of times" this runs to 71 chars. reflowed appropriately for v8
 
-If handles_cxl_error_iter() returns 1 (device is CXL mem, etc),
-pci_walk_bus() will terminate.  And handles_cxl_error_iter() also sets
-*userdata to 1, so handles_cxl_errors() will return true.
+Appreciated!
 
-I think that's all you need in this case: at least one associated
-RCiEP might report errors you care about, so you should unmask RCEC
-internal errors.  You don't need to look at *all* the RCiEPs to know
-that.
+>>    #
+>>    # @corrected-volatile-error-count: Total number of correctable errors
+>>    #     in volatile memory.
+>>    #
+>>    # @corrected-persistent-error-count: Total number correctable errors
+>>    #     in persistent memory
+>> 
+>> to blend in with recent commit a937b6aa739 (qapi: Reformat doc comments
+>> to conform to current conventions).
+>> 
+>> 
+>> > +#
 
-In the other case, cxl_rch_handle_error() does need to look at all the
-RCiEPs, and cxl_rch_handle_error_iter() always returns 0, so it should
-never terminate pci_walk_bus().
-
-So I think I raised a false alarm here, and the current patches work
-fine as-is.  But I do think it's a little bit tricky to set
-*handles_cxl and also use that as the return value and rely on it
-terminating the loop.  Maybe something like this would be more
-straightforward?
-
-  static int handles_cxl_error_iter(...)
-  {
-    ...
-    *handles_cxl |= is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-    return 0;
-  }
-
-Certainly not as efficient because it looks at more RCiEPs than
-strictly necessary.
-
-> > > +static bool handles_cxl_errors(struct pci_dev *rcec)
-> > > +{
-> > > +	int handles_cxl = 0;
-> > > +
-> > > +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> > > +	    pcie_aer_is_native(rcec))
-> > > +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> > > +
-> > > +	return !!handles_cxl;
-
-> > > @@ -1432,6 +1495,7 @@ static int aer_probe(struct pcie_device *dev)
-> > >  		return status;
-> > >  	}
-> > >  
-> > > +	cxl_rch_enable_rcec(port);
-> > 
-> > Could this be done by the driver that claims the CXL RCiEP?  There's
-> > no point in unmasking the errors before there's a driver with
-> > pci_error_handlers that can do something with them anyway.
-> 
-> This sounds reasonable at the first glance. The problem is there could
-> be many devices associated with the RCEC. Not all of them will be
-> bound to a driver and handler at the same time. We would need to
-> refcount it or maintain a list of enabled devices. But there is
-> already something similar by checking dev->driver. But right, AER
-> errors could be seen and handled then at least on PCI level. I tent to
-> permanently enable RCEC AER, but that could cause side-effects. What
-> do you think?
-
-IIUC, this really just affects CXL devices, so I think the choice is
-(1) always unmask internal errors for RCECs where those CXL devices
-report errors (as this patch does), or (2) unmask when first CXL
-driver that can handle the errors is loaded and restore previous state
-when last one is unloaded.
-
-If the RCEC *only* handles errors for CXL devices, i.e., not for a mix
-of vanilla PCIe RCiEPs and CXL RCiEPs, I think I'm OK with (1).  I
-think you said only the CXL driver knows how to collect and interpret
-the error data.  Is it OK that when no such driver is loaded, we field
-error interrupts silently, without even mentioning that an error
-occurred?  I guess without the driver, the device is probably not in
-use.
-
-Bjorn
