@@ -2,113 +2,160 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD58C77B73
-	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 19:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDFEC77B73
+	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 20:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229690AbjEZToY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 26 May 2023 15:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
+        id S229999AbjEZUb7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 26 May 2023 16:31:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbjEZToX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 15:44:23 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4516BD;
-        Fri, 26 May 2023 12:44:22 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-75b076babc3so76298885a.3;
-        Fri, 26 May 2023 12:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685130262; x=1687722262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AfNLNTpmaXslWadDEZ7wQJQB6lSbfqDgJMJHU7b+JOc=;
-        b=XfKcfVFUG8ql8usk72UncrPw3a0E7ubvh9HSFlE1XRnAt4KPI63d2BNCHeLkR82EJ7
-         nNbs74oU8tE0UZCNOaU62RLrxt10TJ1/eO72CFqvR4BAW52iUQrI2oi/gQhmYRJnvsDX
-         pXuVSuunMo3p/+EcnQrijAQIlTQkn9Z6BhjanBnqWER9jJf6wEyc9brLnS2Hu7LP6fQ4
-         UWhTwC0LbXql/ZLiygrGtFY2+gCQ7doLPiZSBt4hm9r4RMZdot33qzdMAoXfouTtXnxV
-         cnAvQfxxIVzR/UJY7AXiPSGEuycNjWuzm0u/VdIEzlHKfK+3HNItX4u3pdSwr0XvEWYn
-         5rXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685130262; x=1687722262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AfNLNTpmaXslWadDEZ7wQJQB6lSbfqDgJMJHU7b+JOc=;
-        b=EDhTmL5plqRkxoS4Ysv+zvVOCbLigWAT6vffGX3okrIxu95kJZeZV9M1BuTsNGCdaF
-         lzeI5FdW23JPoGN+ctOeT7RQHX8LECiVXiG2q/z60d0Hg2sdsfzYkeS7JtloQ9EiLabi
-         /bX1/Y6hNg0MLltK1wIbnxgh8dlrKqUt2qZmlAP4uKVv8bZ6APeERT7XZWaLr1AedfhE
-         mj8uk6U2DtnWYU1LFrD6FlRy5SZFyv9uowVFkEas66XbAmgip45IvTQsFonMPjQNFXan
-         5CN8ZnD3gmqGf9F418XK3jlynZRJomiS/T/hr1fbJFV79XnCH4fLWgNEQ+He2S/3jSIl
-         FCqQ==
-X-Gm-Message-State: AC+VfDz7N19xyAdEF6DWDrcOHtRWrDYoyEofWbTdysTGKX0hsdlroKHp
-        wB9ektJug6ZA1Ws3d4LywyBYdNzi3HERPzKaRBU=
-X-Google-Smtp-Source: ACHHUZ6ZEcPFd97gH97yiv6TcVcYAm0nDF45Vtg9uJsoHjKrP3lFJbewpSlGDQTslUSPDWj9D5OMlqFOTMCejch+IXc=
-X-Received: by 2002:ad4:5aa2:0:b0:625:76bb:b25e with SMTP id
- u2-20020ad45aa2000000b0062576bbb25emr3549508qvg.20.1685130261616; Fri, 26 May
- 2023 12:44:21 -0700 (PDT)
+        with ESMTP id S229900AbjEZUb6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 16:31:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A281114;
+        Fri, 26 May 2023 13:31:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B06E360E75;
+        Fri, 26 May 2023 20:31:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F54C433EF;
+        Fri, 26 May 2023 20:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685133116;
+        bh=dgC43JNVASW0J73pGR7cjG6PDm1SnaU+sa3pg7UyPTM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HKUvPsNDMdMUCpYOuXiMJGS3ghlofdtQWNhOdtK934p4Msmm+XWZ4BHhOwz/Jq4J7
+         jOTVpx+9Tpib4DJiSSLWGPfKJ/QygEgMmdSMiXmlfHXQqPaMMWDqrWzz8Ygj+r6u+i
+         ITrmUIfw9VvSrNyvAFSmodoF3Ohgax85FZoHoHJLcq3vl17HnLtqT5cG5VURALJi0H
+         LgkSKDeV56isZvePgaU56KK0xXUzqOFZewxXpKRZnZNOfS64CjZisZLrRsqGsJ6uta
+         WX9N9b5t6IpIFs3BCrjiI+8n5LCq/KI3zMA1tp4XHn7rQVUvhGsoU/BRjKz/ouIRe+
+         m54GG6kchVkxA==
+Date:   Fri, 26 May 2023 15:31:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Robert Richter <rrichter@amd.com>
+Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com
+Subject: Re: [PATCH v4 23/23] PCI/AER: Unmask RCEC internal errors to enable
+ RCH downstream port error handling
+Message-ID: <ZHEXOlxfCCApI+NE@bhelgaas>
 MIME-Version: 1.0
-References: <20230525152203.32190-1-Jonathan.Cameron@huawei.com> <20230525152203.32190-2-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20230525152203.32190-2-Jonathan.Cameron@huawei.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 26 May 2023 22:43:45 +0300
-Message-ID: <CAHp75VfUeGsOJP=oRw9HeA-LtBXvDwt=S7GUbAa2L4FfLfm3tQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] i2c: acpi: set slave mode flag
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-        Niyas Sait <niyas.sait@linaro.org>,
-        Klaus Jensen <its@irrelevant.dk>,
-        Andy Shevchenko <andy@kernel.org>, linux-acpi@vger.kernel.org,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        Matt Johnston <matt@codeconstruct.com.au>,
-        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
-        linux-cxl@vger.kernel.org, linuxarm@huawei.com,
-        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZG/cYUaZerXNqqJl@rric.localdomain>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, May 25, 2023 at 6:22=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> If the GenericSerialBusConnection includes the General Flag
-> for slave mode set it during parsing.
+On Fri, May 26, 2023 at 12:08:33AM +0200, Robert Richter wrote:
+> On 24.05.23 16:45:06, Bjorn Helgaas wrote:
+> > On Tue, May 23, 2023 at 06:22:14PM -0500, Terry Bowman wrote:
+> > > From: Robert Richter <rrichter@amd.com>
+> > > 
+> > > AER corrected and uncorrectable internal errors (CIE/UIE) are masked
+> > > in their corresponding mask registers per default once in power-up
+> > > state. [1][2] Enable internal errors for RCECs to receive CXL
+> > > downstream port errors of Restricted CXL Hosts (RCHs).
+> > > ...
 
-Since it's obvious that you are using the existing ACPI specification
-bits, it's a nice patch!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> > > +{
+> > > +	int *handles_cxl = data;
+> > > +
+> > > +	*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
+> > 
+> > This effectively only looks at the *last* RCiEP associated with this
+> > RCEC.  I would expect a logical OR of all of them.
+> > 
+> > > +	return *handles_cxl;
+> 
+> If this is non-zero, the iteration stops. So as soon we find a cxl
+> device we can stop the loop. Else, all devices are non-cxl devs and
+> the last return is zero too.
+> 
+> Now checking the code, pci_walk_bus() works that way, but walk_rcec()
+> does not break in all cases. I think this function not working as
+> expected. We would need to check if pci_walk_bus() stopped the
+> iteration, e.g. with a return code.
+> 
+> Alternatively we could add this check:
+> 
+> 	if (!*handles_cxl)
+> 		*handles_cxl = ...
 
-Nevertheless the remark is that most likely this feature was never
-tested on the ACPI implementations other than ACPICA (evidently by
-you). Would it be interesting to know Microsoft's point of view on
-this.
+If handles_cxl_error_iter() returns 1 (device is CXL mem, etc),
+pci_walk_bus() will terminate.  And handles_cxl_error_iter() also sets
+*userdata to 1, so handles_cxl_errors() will return true.
 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/i2c/i2c-core-acpi.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index d6037a328669..7dda5eab9645 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -125,6 +125,9 @@ static int i2c_acpi_fill_info(struct acpi_resource *a=
-res, void *data)
->         if (sb->access_mode =3D=3D ACPI_I2C_10BIT_MODE)
->                 info->flags |=3D I2C_CLIENT_TEN;
->
-> +       if (sb->slave_mode)
-> +               info->flags |=3D I2C_CLIENT_SLAVE;
-> +
->         return 1;
->  }
->
-> --
-> 2.39.2
->
+I think that's all you need in this case: at least one associated
+RCiEP might report errors you care about, so you should unmask RCEC
+internal errors.  You don't need to look at *all* the RCiEPs to know
+that.
 
+In the other case, cxl_rch_handle_error() does need to look at all the
+RCiEPs, and cxl_rch_handle_error_iter() always returns 0, so it should
+never terminate pci_walk_bus().
 
---=20
-With Best Regards,
-Andy Shevchenko
+So I think I raised a false alarm here, and the current patches work
+fine as-is.  But I do think it's a little bit tricky to set
+*handles_cxl and also use that as the return value and rely on it
+terminating the loop.  Maybe something like this would be more
+straightforward?
+
+  static int handles_cxl_error_iter(...)
+  {
+    ...
+    *handles_cxl |= is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
+    return 0;
+  }
+
+Certainly not as efficient because it looks at more RCiEPs than
+strictly necessary.
+
+> > > +static bool handles_cxl_errors(struct pci_dev *rcec)
+> > > +{
+> > > +	int handles_cxl = 0;
+> > > +
+> > > +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
+> > > +	    pcie_aer_is_native(rcec))
+> > > +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
+> > > +
+> > > +	return !!handles_cxl;
+
+> > > @@ -1432,6 +1495,7 @@ static int aer_probe(struct pcie_device *dev)
+> > >  		return status;
+> > >  	}
+> > >  
+> > > +	cxl_rch_enable_rcec(port);
+> > 
+> > Could this be done by the driver that claims the CXL RCiEP?  There's
+> > no point in unmasking the errors before there's a driver with
+> > pci_error_handlers that can do something with them anyway.
+> 
+> This sounds reasonable at the first glance. The problem is there could
+> be many devices associated with the RCEC. Not all of them will be
+> bound to a driver and handler at the same time. We would need to
+> refcount it or maintain a list of enabled devices. But there is
+> already something similar by checking dev->driver. But right, AER
+> errors could be seen and handled then at least on PCI level. I tent to
+> permanently enable RCEC AER, but that could cause side-effects. What
+> do you think?
+
+IIUC, this really just affects CXL devices, so I think the choice is
+(1) always unmask internal errors for RCECs where those CXL devices
+report errors (as this patch does), or (2) unmask when first CXL
+driver that can handle the errors is loaded and restore previous state
+when last one is unloaded.
+
+If the RCEC *only* handles errors for CXL devices, i.e., not for a mix
+of vanilla PCIe RCiEPs and CXL RCiEPs, I think I'm OK with (1).  I
+think you said only the CXL driver knows how to collect and interpret
+the error data.  Is it OK that when no such driver is loaded, we field
+error interrupts silently, without even mentioning that an error
+occurred?  I guess without the driver, the device is probably not in
+use.
+
+Bjorn
