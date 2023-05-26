@@ -2,46 +2,46 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F0CC7EE2F
-	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 04:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6EEC77B7C
+	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 04:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233019AbjEZEHb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 26 May 2023 00:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50374 "EHLO
+        id S230260AbjEZEHd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 26 May 2023 00:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230260AbjEZEH2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 00:07:28 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B56D513D
-        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 21:07:26 -0700 (PDT)
+        with ESMTP id S229942AbjEZEHb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 00:07:31 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E88B12F
+        for <linux-cxl@vger.kernel.org>; Thu, 25 May 2023 21:07:29 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id EBAE25C1EC1;
-        Fri, 26 May 2023 04:07:25 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id C8B382613EE;
+        Fri, 26 May 2023 04:07:28 +0000 (UTC)
 Received: from pdx1-sub0-mail-a281.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 5812D5C2098;
-        Fri, 26 May 2023 04:07:25 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1685074045; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 464B1260E4C;
+        Fri, 26 May 2023 04:07:28 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1685074048; a=rsa-sha256;
         cv=none;
-        b=6aAedEFqbZn4caQDeb5BF6ZXZUXMmt8d2Vpx1gTHevSBaVaH7msZlHenjsCZacNAwi+w77
-        BG2Q/r8Y2/l6eSwlsfpaePcOntjM+D8Ca7EK2mrJxXRMEVw/qSkstktDZoMKkgn6o90BP/
-        0iwEizQg2dt5eaX8ouCNN0+rs82lro3FLxjdSub2Z2M+V42YPmBsNp38w0txUQ9FhjzsTW
-        xbJtZ7C4m0c22VjxaCWC/jfl06IOqTL2NOaietCO4g2cVD0EtyG5IRfVaQzrtPPePJz2TT
-        mvfh+QCgALzrhEE1/2/9ag2OVLAcOySsLECyupjBUZPZ8m2VERvN9IMEo7JWPA==
+        b=rSaKtNu+QhKb4UuGoMJhHISIDv1uO8anf0YcO9oVzZZkb1Wsr0ZmhFAeByaFYizuGVBDse
+        hf45LZ9GCfI/SJVbw0jDAw0j/tTtB2nwAA9djiECI3V14XQJxQ+Jye1gh5qhUlxvpvO0fc
+        yAwASi5cYmj8NbZvM6Pi5zL/R4ehm4vGyd9LSawpcylfLEEm43Dp8eeYtVvVPr8lU9RDBx
+        0GOyQJOjlPPhxZNeulhTenxuc6bLixXPjSsDqY1HljWU8I2ObgiapWdJ9X/dmsG+FclmNr
+        b1YrGvjEe6FgiRpftKvvuVfx8iYzvH2A8fb4J7l9oS3TbMYNw6aNU5OL/RIv9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1685074045;
+        s=arc-2022; t=1685074048;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=ZDT4VoEtbPHgSTLCgWFCzT/wRnykxMJ/gJ2uAXppXHo=;
-        b=79EObgZbQLKYh2FbDjONEENHRwjexQD8gZ8YBC52ZrqhIkXhUfmkWwS1oAJT/Cw5sGOhjy
-        62G2z5jLf6jc5WlEw4FULoPjZn2wKriRxCMZ5yVVGzDf9eOLqRuzO3BIgQ7z7sqoMl7fXu
-        apbzagvBY27UxMQ+qUAcjn7izINUv9TwBd250EdVdAhTg3yGnKQL/eU5qloZcbAoiTjRTo
-        5FG3b2plrIrlVmOVT5SQfTIWL9jZGGwCEi/zAWIcdNmdOSf6sOlRQXLgaM/0sqY14QNwf1
-        ABUmJWJ93LE+aF3gfd32wbTXVBd1IDkc3isaMzYAVVaPLAcSPd5RM5HJ00ejXw==
+        bh=hlJe/5lHkRV4ma+TL2Wmt8zinlWFRKi30n4a+pYrJL0=;
+        b=2WpSGAOfxCejtbB7cmwnT17NgSikqpciMHyxxiQFFU5+vqtJ6xb26KSGvKyZ8yRY2LWopq
+        lQ5g+Xqxs+AqGmLcUXVYMT2OsMbuYYteZhR06Fp4ysy7Y6iaDNbPquhGFxbCiWnH2ruCWm
+        h2a4clt72ouSbthiTbLM62XSfxGRs12gC5FTizX+/KsKLWZmHwmkUO/TMtV6hvbnPuTdut
+        Jj7z6w/4KBSFUImvEm/NgcC5HqsPMv+q9o+01sisvyMmA3K0591GibvtEUEs36KYSMGhBp
+        KqFZ7uvFOiuAtd6rEi08QAY7atGbz4blIAH+t/azUA1RT7SJLSdqMoexVZ1a5w==
 ARC-Authentication-Results: i=1;
         rspamd-7d4b855556-pn845;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
@@ -49,40 +49,40 @@ X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Whispering-Shoe: 153aba085164f95e_1685074045744_806699063
-X-MC-Loop-Signature: 1685074045744:727372571
-X-MC-Ingress-Time: 1685074045744
+X-Relation-Skirt: 7adc57a2547ed57a_1685074048587_2408068052
+X-MC-Loop-Signature: 1685074048587:1264517250
+X-MC-Ingress-Time: 1685074048587
 Received: from pdx1-sub0-mail-a281.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
         by 100.109.138.46 (trex/6.8.1);
-        Fri, 26 May 2023 04:07:25 +0000
+        Fri, 26 May 2023 04:07:28 +0000
 Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a281.dreamhost.com (Postfix) with ESMTPSA id 4QSBG43V29zCV;
-        Thu, 25 May 2023 21:07:24 -0700 (PDT)
+        by pdx1-sub0-mail-a281.dreamhost.com (Postfix) with ESMTPSA id 4QSBG73k63zCV;
+        Thu, 25 May 2023 21:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1685074045;
-        bh=ZDT4VoEtbPHgSTLCgWFCzT/wRnykxMJ/gJ2uAXppXHo=;
+        s=dreamhost; t=1685074048;
+        bh=hlJe/5lHkRV4ma+TL2Wmt8zinlWFRKi30n4a+pYrJL0=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=rixUbI8fhCifDOfrVKy3xvgZfT8+gGZNoUurBo6/3ITNepzud5cSCE+T3PQKO7v2c
-         czlNIDj7fswSfrwxMiiNk8U6AXQcoDJ+WginHPaI+eG/WVq9Q4vGRLuBp8z5KrePqn
-         fQdKE8jXunCbIdA+OGRHDT8YX0KgxGFBztIfGY08xmz8qEbEfOP7evpSX3WuM/4Pf/
-         l+8Ys+XwRKl3hGkUOK7VghBCnfqnDdb9ggHCBDQcATjsZc0o+cd6LuSB9kiX9fyrfF
-         7Qmb5V9lG7pYg7RKgGFJI6iq3sxo1eMQKTLezD6joHTxrNrZFVPFi27OdOauMy7dqG
-         0Y0k+givud65A==
+        b=HAtXlcNB72lkVFRCOygjFj8ltLHJF/58aaNcsU9hhzC2ijMrr9YX+/2Mw9+EfJo8B
+         H/FASxI6jRqUyvnIxLwAkLo5SXBE2MC6ZUJDDZefe8t8LHpirbcvx4BhQmkdEewmDo
+         j8577lFd/N0L6qB92qhqubEJYrDyoMR7YyMf94zWswypM8ZPRZS4Frp4HtM4lhIa8s
+         g2LAJzbj2gSTN+bLyzdK8GxXAFMH2LQvD9AU3P4tUXJ7U5jVvbWzq2IxU9uG4xe+/U
+         mce0gHSJ00xntG6j3Wr5vxzekc4YWauI8MuBBfLWBrXuH4WXDRxzOes3MeGKziONZU
+         V+kxKJmYxucPw==
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     dan.j.williams@intel.com
 Cc:     dave.jiang@intel.com, vishal.l.verma@intel.com,
         Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
         a.manzanares@samsung.com, dave@stgolabs.net,
         linux-cxl@vger.kernel.org
-Subject: [PATCH 1/6] cxl/mem: Introduce security state sysfs file
-Date:   Thu, 25 May 2023 20:33:39 -0700
-Message-Id: <20230526033344.17167-2-dave@stgolabs.net>
+Subject: [PATCH 5/6] cxl/mem: Support Secure Erase
+Date:   Thu, 25 May 2023 20:33:43 -0700
+Message-Id: <20230526033344.17167-6-dave@stgolabs.net>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230526033344.17167-1-dave@stgolabs.net>
 References: <20230526033344.17167-1-dave@stgolabs.net>
@@ -92,182 +92,130 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add a read-only sysfs file to display the security state
-of a device (currently only pmem):
+Implement support for the non-pmem exclusive secure erase, per
+CXL specs. Create a write-only 'security/erase' sysfs file to
+perform the requested operation.
 
-    /sys/bus/cxl/devices/memX/security/state
+As with the sanitation this requires the device being offline
+and thus no active HPA-DPA decoding.
 
-This introduces a cxl_security_state structure that is
-to be the placeholder for common CXL security features.
+The expectation is that userspace can use it such as:
+
+	cxl disable-memdev memX
+	echo 1 > /sys/bus/cxl/devices/memX/security/erase
+	cxl enable-memdev memX
 
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl | 10 ++++++
- drivers/cxl/core/memdev.c               | 46 +++++++++++++++++++++++++
- drivers/cxl/cxlmem.h                    | 11 ++++++
- drivers/cxl/security.c                  |  3 ++
- 4 files changed, 70 insertions(+)
+ Documentation/ABI/testing/sysfs-bus-cxl | 10 +++++++++
+ drivers/cxl/core/mbox.c                 |  6 +++++-
+ drivers/cxl/core/memdev.c               | 28 +++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h                    |  1 +
+ 4 files changed, 44 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 48ac0d911801..721a44d8a482 100644
+index 5753cba98692..f224c1215f22 100644
 --- a/Documentation/ABI/testing/sysfs-bus-cxl
 +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -58,6 +58,16 @@ Description:
- 		affinity for this device.
+@@ -85,6 +85,16 @@ Description:
+ 		the device to be not be actively decoding any HPA ranges.
  
  
-+What:		/sys/bus/cxl/devices/memX/security/state
-+Date:		June, 2023
-+KernelVersion:	v6.5
-+Contact:	linux-cxl@vger.kernel.org
++What            /sys/bus/cxl/devices/memX/security/erase
++Date:           June, 2023
++KernelVersion:  v6.5
++Contact:        linux-cxl@vger.kernel.org
 +Description:
-+		(RO) Reading this file will display the CXL security state for
-+		that device. Such states can be: 'disabled', or those available
-+		only for persistent memory: 'locked', 'unlocked' or 'frozen'.
++		(WO) Write a boolean 'true' string value to this attribute to
++		secure erase user data by changing the media encryption keys for
++		all user data areas of the device.
 +
 +
  What:		/sys/bus/cxl/devices/*/devtype
  Date:		June, 2021
  KernelVersion:	v5.14
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 51c64829f20a..6622eac66bf1 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1102,7 +1102,7 @@ int cxl_mem_sanitize(struct cxl_dev_state *cxlds, u16 cmd)
+ 	};
+ 	struct cxl_mbox_cmd mbox_cmd = { .opcode = cmd };
+ 
+-	if (cmd != CXL_MBOX_OP_SANITIZE)
++	if (cmd != CXL_MBOX_OP_SANITIZE && cmd != CXL_MBOX_OP_SECURE_ERASE)
+ 		return -EINVAL;
+ 
+ 	rc = cxl_internal_send_cmd(cxlds, &sec_cmd);
+@@ -1120,6 +1120,10 @@ int cxl_mem_sanitize(struct cxl_dev_state *cxlds, u16 cmd)
+ 	if (sec_out & CXL_PMEM_SEC_STATE_USER_PASS_SET)
+ 		return -EINVAL;
+ 
++	if (cmd == CXL_MBOX_OP_SECURE_ERASE &&
++	    sec_out & CXL_PMEM_SEC_STATE_LOCKED)
++		return -EINVAL;
++
+ 	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+ 	if (rc < 0) {
+ 		dev_err(cxlds->dev, "Failed to sanitize device : %d", rc);
 diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 057a43267290..6e1d7d3610a2 100644
+index 90f23e53d483..d06c8539e82c 100644
 --- a/drivers/cxl/core/memdev.c
 +++ b/drivers/cxl/core/memdev.c
-@@ -107,6 +107,28 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RO(numa_node);
+@@ -163,6 +163,33 @@ static ssize_t security_sanitize_store(struct device *dev,
+ static struct device_attribute dev_attr_security_sanitize =
+ 	__ATTR(sanitize, 0200, NULL, security_sanitize_store);
  
-+static ssize_t security_state_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
++static ssize_t security_erase_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t len)
 +{
 +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
 +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+	unsigned long state = cxlds->security.state;
++	struct cxl_port *port = dev_get_drvdata(&cxlmd->dev);
++	ssize_t rc;
++	bool erase;
 +
-+	if (!(state & CXL_PMEM_SEC_STATE_USER_PASS_SET))
-+		return sysfs_emit(buf, "disabled\n");
-+	if (state & CXL_PMEM_SEC_STATE_FROZEN ||
-+	    state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT ||
-+	    state & CXL_PMEM_SEC_STATE_USER_PLIMIT)
-+		return sysfs_emit(buf, "frozen\n");
-+	if (state & CXL_PMEM_SEC_STATE_LOCKED)
-+		return sysfs_emit(buf, "locked\n");
-+	else
-+		return sysfs_emit(buf, "unlocked\n");
++	if (kstrtobool(buf, &erase) || !erase)
++		return -EINVAL;
++
++	if (!port || !is_cxl_endpoint(port))
++		return -EINVAL;
++
++	/* ensure no regions are mapped to this memdev */
++	if (port->commit_end != -1)
++		return -EBUSY;
++
++	rc = cxl_mem_sanitize(cxlds, CXL_MBOX_OP_SECURE_ERASE);
++
++	return rc ? rc : len;
 +}
-+static struct device_attribute dev_attr_security_state =
-+	__ATTR(state, 0444, security_state_show, NULL);
++static struct device_attribute dev_attr_security_erase =
++	__ATTR(erase, 0200, NULL, security_erase_store);
 +
  static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
  {
  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-@@ -352,6 +374,11 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
+@@ -411,6 +438,7 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
+ static struct attribute *cxl_memdev_security_attributes[] = {
+ 	&dev_attr_security_state.attr,
+ 	&dev_attr_security_sanitize.attr,
++	&dev_attr_security_erase.attr,
  	NULL,
  };
  
-+static struct attribute *cxl_memdev_security_attributes[] = {
-+	&dev_attr_security_state.attr,
-+	NULL,
-+};
-+
- static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
- 				  int n)
- {
-@@ -375,10 +402,16 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
- 	.attrs = cxl_memdev_pmem_attributes,
- };
- 
-+static struct attribute_group cxl_memdev_security_attribute_group = {
-+	.name = "security",
-+	.attrs = cxl_memdev_security_attributes,
-+};
-+
- static const struct attribute_group *cxl_memdev_attribute_groups[] = {
- 	&cxl_memdev_attribute_group,
- 	&cxl_memdev_ram_attribute_group,
- 	&cxl_memdev_pmem_attribute_group,
-+	&cxl_memdev_security_attribute_group,
- 	NULL,
- };
- 
-@@ -551,6 +584,15 @@ static const struct file_operations cxl_memdev_fops = {
- 	.llseek = noop_llseek,
- };
- 
-+static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+	cxlds->security.state = 0;
-+
-+	return 0;
-+}
-+
- struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
- {
- 	struct cxl_memdev *cxlmd;
-@@ -579,6 +621,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
- 	if (rc)
- 		goto err;
- 
-+	rc = cxl_memdev_security_init(cxlmd);
-+	if (rc)
-+		goto err;
-+
- 	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
- 	if (rc)
- 		return ERR_PTR(rc);
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 1d8e81c87c6a..5329274b0076 100644
+index 408ec33c8480..758fea7b9dbf 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -260,6 +260,15 @@ struct cxl_poison_state {
- 	struct mutex lock;  /* Protect reads of poison list */
- };
- 
-+/**
-+ * struct cxl_security_state - Device security state
-+ *
-+ * @state: state of last security operation
-+ */
-+struct cxl_security_state {
-+	unsigned long state;
-+};
-+
- /**
-  * struct cxl_dev_state - The driver device state
-  *
-@@ -297,6 +306,7 @@ struct cxl_poison_state {
-  * @serial: PCIe Device Serial Number
-  * @event: event log driver state
-  * @poison: poison driver state info
-+ * @security: device security state
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-  *
-  * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-@@ -336,6 +346,7 @@ struct cxl_dev_state {
- 
- 	struct cxl_event_state event;
- 	struct cxl_poison_state poison;
-+	struct cxl_security_state security;
- 
- 	struct rcuwait mbox_wait;
- 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-index 4ad4bda2d18e..9da6785dfd31 100644
---- a/drivers/cxl/security.c
-+++ b/drivers/cxl/security.c
-@@ -34,6 +34,9 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
- 		return 0;
- 
- 	sec_out = le32_to_cpu(out.flags);
-+	/* cache security state */
-+	cxlds->security.state = sec_out;
-+
- 	if (ptype == NVDIMM_MASTER) {
- 		if (sec_out & CXL_PMEM_SEC_STATE_MASTER_PASS_SET)
- 			set_bit(NVDIMM_SECURITY_UNLOCKED, &security_flags);
+@@ -392,6 +392,7 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+ 	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+ 	CXL_MBOX_OP_SANITIZE		= 0x4400,
++	CXL_MBOX_OP_SECURE_ERASE	= 0x4401,
+ 	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+ 	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+ 	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
 -- 
 2.40.1
 
