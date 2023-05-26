@@ -2,25 +2,25 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6653DC7EE23
-	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 17:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA3BC77B73
+	for <linux-cxl@archiver.kernel.org>; Fri, 26 May 2023 17:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237371AbjEZRAR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 26 May 2023 13:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
+        id S237206AbjEZRAp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 26 May 2023 13:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbjEZRAQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 13:00:16 -0400
+        with ESMTP id S230178AbjEZRAo (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 26 May 2023 13:00:44 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B205FBC
-        for <linux-cxl@vger.kernel.org>; Fri, 26 May 2023 10:00:13 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QSWMN4tg1z67hv7;
-        Sat, 27 May 2023 00:58:08 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9671A2
+        for <linux-cxl@vger.kernel.org>; Fri, 26 May 2023 10:00:43 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QSWJt1KdQz6J74Z;
+        Sat, 27 May 2023 00:55:58 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 26 May 2023 18:00:09 +0100
+ 15.1.2507.23; Fri, 26 May 2023 18:00:40 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
         Fan Ni <fan.ni@samsung.com>
@@ -35,78 +35,137 @@ CC:     <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
         Mike Maslenkin <mike.maslenkin@gmail.com>,
         =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
         Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v8 0/4] hw/cxl: Poison get, inject, clear
-Date:   Fri, 26 May 2023 18:00:06 +0100
-Message-ID: <20230526170010.574-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v8 1/4] bswap: Add the ability to store to an unaligned 24 bit field
+Date:   Fri, 26 May 2023 18:00:07 +0100
+Message-ID: <20230526170010.574-2-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230526170010.574-1-Jonathan.Cameron@huawei.com>
+References: <20230526170010.574-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-v8: Formatting fixes for QMP docs from Markus Armbruster (thanks!)
+From: Ira Weiny <ira.weiny@intel.com>
 
-The bswap naming discussions seems to have died down, so I'll stick
-with this version (24)
+CXL has 24 bit unaligned fields which need to be stored to.  CXL is
+specified as little endian.
 
-Precursors now all upstream which make this email easier to write :)
+Define st24_le_p() and the supporting functions to store such a field
+from a 32 bit host native value.
 
-The kernel support for Poison handling is now upstream.
+The use of b, w, l, q as the size specifier is limiting.  So "24" was
+used for the size part of the function name.
 
-This code has been very useful for testing and helped identify various
-corner cases.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ docs/devel/loads-stores.rst |  2 ++
+ include/qemu/bswap.h        | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-Updated cover letter.
-
-The series supports:
-1) Injection of variable length poison regions via QMP (to fake real
-   memory corruption and ensure we deal with odd overflow corner cases
-   such as clearing the middle of a large region making the list overflow
-   as we go from one long entry to two smaller entries.
-2) Read of poison list via the CXL mailbox.
-3) Injection via the poison injection mailbox command (limited to 64 byte
-   entries - spec constraint)
-4) Clearing of poison injected via either method.
-
-The implementation is meant to be a valid combination of impdef choices
-based on what the spec allowed. There are a number of places where it could
-be made more sophisticated that we might consider in future:
-* Fusing adjacent poison entries if the types match.
-* Separate injection list and main poison list, to test out limits on
-  injected poison list being smaller than the main list.
-* Poison list overflow event (needs event log support in general)
-* Connecting up to the poison list error record generation (rather complex
-  and not needed for currently kernel handling testing).
-* Triggering the synchronous and asynchronous errors that occur on reads
-  and writes of the memory when the host receives poison.
-
-As the kernel code is currently fairly simple, it is likely that the above
-does not yet matter but who knows what will turn up in future!
-
-Ira Weiny (1):
-  bswap: Add the ability to store to an unaligned 24 bit field
-
-Jonathan Cameron (3):
-  hw/cxl: QMP based poison injection support
-  hw/cxl: Add poison injection via the mailbox.
-  hw/cxl: Add clear poison mailbox command support.
-
- docs/devel/loads-stores.rst |   2 +
- qapi/cxl.json               |  21 ++++
- include/hw/cxl/cxl.h        |   1 +
- include/hw/cxl/cxl_device.h |  21 ++++
- include/qemu/bswap.h        |  25 +++++
- hw/cxl/cxl-mailbox-utils.c  | 214 ++++++++++++++++++++++++++++++++++++
- hw/mem/cxl_type3.c          |  93 ++++++++++++++++
- hw/mem/cxl_type3_stubs.c    |   6 +
- 8 files changed, 383 insertions(+)
-
+diff --git a/docs/devel/loads-stores.rst b/docs/devel/loads-stores.rst
+index d2cefc77a2..dab6dfa0ac 100644
+--- a/docs/devel/loads-stores.rst
++++ b/docs/devel/loads-stores.rst
+@@ -36,6 +36,7 @@ store: ``st{size}_{endian}_p(ptr, val)``
+ ``size``
+  - ``b`` : 8 bits
+  - ``w`` : 16 bits
++ - ``24`` : 24 bits
+  - ``l`` : 32 bits
+  - ``q`` : 64 bits
+ 
+@@ -65,6 +66,7 @@ of size ``sz`` bytes.
+ Regexes for git grep
+  - ``\<ld[us]\?[bwlq]\(_[hbl]e\)\?_p\>``
+  - ``\<st[bwlq]\(_[hbl]e\)\?_p\>``
++ - ``\<st24\(_[hbl]e\)\?_p\>``
+  - ``\<ldn_\([hbl]e\)?_p\>``
+  - ``\<stn_\([hbl]e\)?_p\>``
+ 
+diff --git a/include/qemu/bswap.h b/include/qemu/bswap.h
+index 15a78c0db5..933a66ee87 100644
+--- a/include/qemu/bswap.h
++++ b/include/qemu/bswap.h
+@@ -8,11 +8,23 @@
+ #undef  bswap64
+ #define bswap64(_x) __builtin_bswap64(_x)
+ 
++static inline uint32_t bswap24(uint32_t x)
++{
++    return (((x & 0x000000ffU) << 16) |
++            ((x & 0x0000ff00U) <<  0) |
++            ((x & 0x00ff0000U) >> 16));
++}
++
+ static inline void bswap16s(uint16_t *s)
+ {
+     *s = __builtin_bswap16(*s);
+ }
+ 
++static inline void bswap24s(uint32_t *s)
++{
++    *s = bswap24(*s & 0x00ffffffU);
++}
++
+ static inline void bswap32s(uint32_t *s)
+ {
+     *s = __builtin_bswap32(*s);
+@@ -26,11 +38,13 @@ static inline void bswap64s(uint64_t *s)
+ #if HOST_BIG_ENDIAN
+ #define be_bswap(v, size) (v)
+ #define le_bswap(v, size) glue(__builtin_bswap, size)(v)
++#define le_bswap24(v) bswap24(v)
+ #define be_bswaps(v, size)
+ #define le_bswaps(p, size) \
+             do { *p = glue(__builtin_bswap, size)(*p); } while (0)
+ #else
+ #define le_bswap(v, size) (v)
++#define le_bswap24(v) (v)
+ #define be_bswap(v, size) glue(__builtin_bswap, size)(v)
+ #define le_bswaps(v, size)
+ #define be_bswaps(p, size) \
+@@ -176,6 +190,7 @@ CPU_CONVERT(le, 64, uint64_t)
+  * size is:
+  *   b: 8 bits
+  *   w: 16 bits
++ *   24: 24 bits
+  *   l: 32 bits
+  *   q: 64 bits
+  *
+@@ -248,6 +263,11 @@ static inline void stw_he_p(void *ptr, uint16_t v)
+     __builtin_memcpy(ptr, &v, sizeof(v));
+ }
+ 
++static inline void st24_he_p(void *ptr, uint32_t v)
++{
++    __builtin_memcpy(ptr, &v, 3);
++}
++
+ static inline int ldl_he_p(const void *ptr)
+ {
+     int32_t r;
+@@ -297,6 +317,11 @@ static inline void stw_le_p(void *ptr, uint16_t v)
+     stw_he_p(ptr, le_bswap(v, 16));
+ }
+ 
++static inline void st24_le_p(void *ptr, uint32_t v)
++{
++    st24_he_p(ptr, le_bswap24(v));
++}
++
+ static inline void stl_le_p(void *ptr, uint32_t v)
+ {
+     stl_he_p(ptr, le_bswap(v, 32));
 -- 
 2.39.2
 
