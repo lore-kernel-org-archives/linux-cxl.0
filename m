@@ -2,146 +2,118 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E372C77B7A
-	for <linux-cxl@archiver.kernel.org>; Tue, 30 May 2023 13:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADF6C77B73
+	for <linux-cxl@archiver.kernel.org>; Tue, 30 May 2023 14:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbjE3NuZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 30 May 2023 09:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        id S229940AbjE3ORm convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 30 May 2023 10:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232716AbjE3NuI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 May 2023 09:50:08 -0400
+        with ESMTP id S229899AbjE3ORl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 May 2023 10:17:41 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E89E8;
-        Tue, 30 May 2023 06:50:05 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QVtyb5x5Cz6D8wn;
-        Tue, 30 May 2023 21:48:23 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02C111B;
+        Tue, 30 May 2023 07:17:09 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QVvYW0nc3z67mXG;
+        Tue, 30 May 2023 22:15:11 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 30 May
- 2023 14:50:02 +0100
-Date:   Tue, 30 May 2023 14:50:01 +0100
+ 2023 15:16:49 +0100
+Date:   Tue, 30 May 2023 15:16:48 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
-        <dan.j.williams@intel.com>, <mingo@redhat.com>, <acme@kernel.org>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v7 4/5] perf: CXL Performance Monitoring Unit driver
-Message-ID: <20230530145001.00002560@Huawei.com>
-In-Reply-To: <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
-References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com>
-        <20230526095824.16336-5-Jonathan.Cameron@huawei.com>
-        <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Niyas Sait <niyas.sait@linaro.org>,
+        Klaus Jensen <its@irrelevant.dk>,
+        Andy Shevchenko <andy@kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        Matt Johnston <matt@codeconstruct.com.au>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>
+Subject: Re: [RFC PATCH 3/6] i2c: aspeed: switch to generic fw properties.
+Message-ID: <20230530151648.00007d32@Huawei.com>
+In-Reply-To: <CAHp75Vd3ARzzWjWV=cRRghHKXMFWkrRXBa2ssCGRCZAqDEAjAA@mail.gmail.com>
+References: <20230525152203.32190-1-Jonathan.Cameron@huawei.com>
+        <20230525152203.32190-4-Jonathan.Cameron@huawei.com>
+        <CAHp75Vd3ARzzWjWV=cRRghHKXMFWkrRXBa2ssCGRCZAqDEAjAA@mail.gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Sat, 27 May 2023 00:11:09 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Hi,
+> On Thu, May 25, 2023 at 6:23 PM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > Not tested on device tree but works nicely for ACPI :)  
 
-Tidied up the typos. Thanks,
-
-> > +static int cxl_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-> > +{
-> > +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
-> > +       unsigned int target;
-> > +
-> > +       if (info->on_cpu != cpu)
-> > +               return 0;
-> > +
-> > +       info->on_cpu = -1;
-> > +       target = cpumask_any_but(cpu_online_mask, cpu);
-> > +       if (target >= nr_cpu_ids) {
-> > +               dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-> > +               return 0;
-> > +       }
-> > +
-> > +       perf_pmu_migrate_context(&info->pmu, cpu, target);
-> > +       info->on_cpu = target;
-> > +       /*
-> > +        * CPU HP lock is held so we should be guaranteed that this CPU hasn't yet
-> > +        * gone away.
-> > +        */
-> > +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
-> > +
-> > +       return 0;
-> > +}  
-> 
-> IIUC a CXL PMU hardware (say cxl_pmu_mem0.0) is shared across
-> all CPUs and it would return the same value when read from any CPU,
-> right?
-
-Correct, it will return the same value when used from any CPU.
-I'm not sure what issue you are indicating.
-
-My understanding is that, even for such cases, perf uses percpu
-variables that mean we still have to ensure that the interrupt
-handling occurs on the CPU we have migrated the context to.
-
-There are a lot of similar driver in perf already from a quick
-git grep cpumask_any_but\(cpu_online_mask, 
-
-It might be nice to enable perf to operate for these devices without
-the percpu context though. I haven't looked into whether that
-is worth doing.
-
-Jonathan
-
-
-
+I was planning to abandon these as 'on list for anyone who
+cared' but now you've reviewed them I guess I better do
+an RFC v2 :)
 
 > 
-> Thanks,
-> Namhyung
+> Needs a better commit message obviously :-)
+
+:)
+
 > 
+> ...
 > 
-> > +
-> > +static __init int cxl_pmu_init(void)
-> > +{
-> > +       int rc;
-> > +
-> > +       rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-> > +                                    "AP_PERF_CXL_PMU_ONLINE",
-> > +                                    cxl_pmu_online_cpu, cxl_pmu_offline_cpu);
-> > +       if (rc < 0)
-> > +               return rc;
-> > +       cxl_pmu_cpuhp_state_num = rc;
-> > +
-> > +       rc = cxl_driver_register(&cxl_pmu_driver);
-> > +       if (rc)
-> > +               cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
-> > +
-> > +       return rc;
-> > +}
-> > +
-> > +static __exit void cxl_pmu_exit(void)
-> > +{
-> > +       cxl_driver_unregister(&cxl_pmu_driver);
-> > +       cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
-> > +}
-> > +
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_IMPORT_NS(CXL);
-> > +module_init(cxl_pmu_init);
-> > +module_exit(cxl_pmu_exit);
-> > +MODULE_ALIAS_CXL(CXL_DEVICE_PMU);
-> > --
-> > 2.39.2
-> >  
+> > -       ret = of_property_read_u32(pdev->dev.of_node,
+> > +       ret = device_property_read_u32(&pdev->dev,
+> >                                    "bus-frequency", &bus->bus_frequency);  
+> 
+> Oh, please avoid double effort, i.e. go further and use I²C core APIs
+> for the timings. Oh, wait, do they use non-standard property?!
+
+yup :(
+
+Though it is documented as having a default of 100kHz in the devicetree
+binding so the original code shouldn't be calling dev_err() and should
+just do:
+
+	bus->frequency = I2C_MAX_STANDARD_MODE_FREQ;
+	device_property_read_u32(&pdev->dev,
+				 "bus-frequency, &bus->frequency);
+
+Fixing that is an unrelated change though. I'll do it for dt
+in a precusor patch then carry that forward to here.
+
+> 
+> ...
+> 
+> > +       bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
+> > +               device_get_match_data(&pdev->dev);  
+> 
+> Personally I prefer using pointers in driver_data so we can avoid
+> ambiguity for the 0/NULL value returned by this call. But if 0 value
+> is considered invalid here, it's probably fine.
+
+It is a pointer, just a function pointer rather than to a structure.
+I could wrap it up in a structure but that would be an unrelated
+driver change so at very least a separate patch. 
+
+> 
+> > +       if (!bus->get_clk_reg_val)
+> >                 bus->get_clk_reg_val = aspeed_i2c_24xx_get_clk_reg_val;
+> > -       else
+> > -               bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
+> > -                               match->data;  
+> 
 > 
 
