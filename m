@@ -2,150 +2,153 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6728C77B73
-	for <linux-cxl@archiver.kernel.org>; Tue, 30 May 2023 23:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD55C7EE23
+	for <linux-cxl@archiver.kernel.org>; Tue, 30 May 2023 23:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233670AbjE3Xa0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 30 May 2023 19:30:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        id S233276AbjE3Xgb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 30 May 2023 19:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233902AbjE3XaV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 May 2023 19:30:21 -0400
+        with ESMTP id S229866AbjE3Xga (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 May 2023 19:36:30 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D9E192
-        for <linux-cxl@vger.kernel.org>; Tue, 30 May 2023 16:30:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC1FAA
+        for <linux-cxl@vger.kernel.org>; Tue, 30 May 2023 16:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685489410; x=1717025410;
+  t=1685489789; x=1717025789;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=GghmWXNWjRQjpao27vixD6Xk1GPzIFLF8Qm2MrZanGY=;
-  b=LGa0h0zee6jw/hy2EWwOC9gb5Gbk7clYj5kV58KwtnqPngpHyuPTHYXz
-   xSwdst45vKmDMD8U75EL2hmNXdwDCc/NTgEPnCl5vZn8ugJGXQH8HQm8g
-   1hekdP4SBvQHrk2wT8NgDe7vK7NnTXSacB7DbbNB/SzoGPkZ0NDWhxzQ+
-   enLkbriUIOFwCBiwksSyYpE21AEKdXlMfyhHSIwESoCO2N7dqeqWK/+43
-   eFLwdWkm81UMfbDGcoXYyoo5RXMmBCzp13GVx/pF9is8L6Be7whLDj1Cr
-   79tKvY0BUY5NJJ7qe4AbZLGsV0ns4NeWYtHYGJelL9PYvclWEiZGw+lKt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="353918517"
+  bh=z24ifkaKtCfeijwmZQPYlmkSdPwpAw+t+oOQVvyxl0U=;
+  b=Z7vlhu9VhgvDR07NXGtiXAiwGuiB3z1Ehi8tIhuZadT+/ZRg9gKayCAP
+   UjDK9oRYbDuf0j8B5TzZbhv7o6vtrAY8v7wD94GUhAIXE/ZutnusDEzDz
+   wSPtdKlpQSStMpuIPRhsEZmGK0Ly91llYiCOKTgFdwlMrBKdifbpaLnh1
+   PKQn1/cpspR+L5euLh5OoT05cTLYmRYQS0l40OhLqId9F9PqZZN0c6aIS
+   dzESB5Fr4dNnY21Y8UMwyg4Xat1VCIh/VrMqCsoKnMM63X/sTMEhBXpf8
+   boykK8i5yxfbbup5smZLRkaYn9eB1E3SO4mnoUEEpSqmPZNS4K2soVroh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="353919637"
 X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
-   d="scan'208";a="353918517"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 16:30:09 -0700
+   d="scan'208";a="353919637"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 16:36:28 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="776537389"
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="706638466"
 X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
-   d="scan'208";a="776537389"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga004.fm.intel.com with ESMTP; 30 May 2023 16:30:09 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="706638466"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga002.jf.intel.com with ESMTP; 30 May 2023 16:36:28 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 30 May 2023 16:30:09 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 30 May 2023 16:36:27 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 30 May 2023 16:30:09 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 30 May 2023 16:36:27 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Tue, 30 May 2023 16:36:27 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 30 May 2023 16:30:09 -0700
+ 15.1.2507.23; Tue, 30 May 2023 16:36:27 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kMj6CSibu1PNQVGP8POK2y1m0BAATSUweMkbbXFVGpcJC/JtjvNB6YB5nkTUZc/2jJOqo/gLTBlzaGiEP2/IvLRtR9JgxXqHSm7Rf6IvZL2TVHbaz5pNDH38o3jIZ4QTkZsdmjmJs1NJ8wS6zGjinJWBeKBV6HTSQhTiTjUpF3BEenjt1dnt24yuHAVE77JqdWA6MsSnXypgwqqWW2QlDPO9lFmVqglOCpbt8SV7zmXkGTg2jns+vtY8rBnAXiTm7XI0qCneCOz/CR+o9FuLLX3yY8XdnEycvpjf6Aqdi7LczhQni4Qr8f3I2e8A/LWrB0OKvsyuS9HQjEDAKogUzQ==
+ b=eA5JGPFZS8Fon8CMGDQvLNe4MnjzUPjksNz7aVSlR69kgkiIRsJ6PdrJAUANm/BnrOSSZTvC6ml5AS4qgCNNMo5HlW8yIDei1sKFUozeR5EUIfOeWLEYQpF6ut9mCfLkRfRroUMqyVZa2cCsyl/q50AoJ93cOcVlxR+5gror2Pm3vgac/yr2Di/IB8cdHHesiftYdZZ3qLmc+ANh6i/bGv/uLwTvO8EZ8PES1XHh9f3kCT2WXt+k0R+k2Z3SP7B+o8sXgh8RsPqXXyfAFhLxBgxIjwDugjjD8fSuGvlNnp1ChDZZNTsZhZCjPRiV3KTC8MPY3Dnh+zFOIv2HnC758Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VPSwS/bjl+alG+WDzVHv8cSm0aWPysV+Pe+KpUlOaWA=;
- b=YgR8GviN0T9u1fwMQNKWnjugZb9Pj0PV5L8J/U0KinA3a8GYnFkxaUZ37pj3NY0A30HAc1JPox49kR1fhS3RlNSNv0o1dR/Yw6o8n/0jEJjNLe2gV7dtK+jtfxBJZKDhys2cDMGJ8xNlEhGs3BFyjHKFaHB0L4JLxCUE3P9QDwSvPhwjDoP8e8A3FxDrD1a6bkF/iZqaw97YmXba4pMt6aCG3ZSEp2G5AAiccm7+0rR6cKXrBNiQqVV6aKYsYAUCutWuVCbM2bikyM5ZPW6IW7p25xY9x2sJol4Y2X6YDYkFzCwAnxDq9znzk+PsakP9Ln3Ue6Y0midUaq/Ut8pgqw==
+ bh=+LoKl3HK4Qwg3776nF5EExjxI7A6YRsZJQ88ZP7ZWiI=;
+ b=UkUm/4kzMO3i81a1Ks8WXsrEcU09IGlcFpNdLlvednpxHWQ2kUr8mLgSaJUIVt59ZMUk5eoatDuY2E/pxjUO5k5Dzqv4JcVZ8aa3RfAHpRg7ZnQAP+K+GOUeUt+69q/3IJ2g516WEjpnyBA2AX/O6pK9HPCRuQYAFINKLtQSahqE8Jwe/lDMBJDj5a9X/DYDDJAg7EBx0PVsslplSwfNpCUbeM8+AWwMOaRPJajoPhLHlZzzs5U/QhCeOPq2jmgc02Geb+d9nlWcdeAA73dcQWmWAlA8Hb5OSruGRB4yR/uDHBVjdvtq6Z8ahsZji3mCpPNfLF4dekHgBl2XNUVUMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by SA2PR11MB5146.namprd11.prod.outlook.com (2603:10b6:806:116::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Tue, 30 May
- 2023 23:30:04 +0000
+ by DM4PR11MB6043.namprd11.prod.outlook.com (2603:10b6:8:62::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6433.23; Tue, 30 May 2023 23:36:25 +0000
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::6b5e:ef4b:bd3:36d2]) by PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::6b5e:ef4b:bd3:36d2%4]) with mapi id 15.20.6433.022; Tue, 30 May 2023
- 23:30:04 +0000
-Message-ID: <120e637b-c6d3-2f83-867e-42601cd16acc@intel.com>
-Date:   Tue, 30 May 2023 16:30:00 -0700
+ 23:36:25 +0000
+Message-ID: <25925dfa-d2ee-c9dc-90b8-875d2c74eed5@intel.com>
+Date:   Tue, 30 May 2023 16:36:21 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Betterbird/102.11.0
-Subject: Re: [PATCH 1/6] cxl/mem: Introduce security state sysfs file
+Subject: Re: [PATCH 2/6] cxl/mbox: Add sanitation handling machinery
 To:     Davidlohr Bueso <dave@stgolabs.net>, <dan.j.williams@intel.com>
 CC:     <vishal.l.verma@intel.com>, <Jonathan.Cameron@huawei.com>,
         <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
         <linux-cxl@vger.kernel.org>
 References: <20230526033344.17167-1-dave@stgolabs.net>
- <20230526033344.17167-2-dave@stgolabs.net>
+ <20230526033344.17167-3-dave@stgolabs.net>
 Content-Language: en-US
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230526033344.17167-2-dave@stgolabs.net>
+In-Reply-To: <20230526033344.17167-3-dave@stgolabs.net>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR13CA0017.namprd13.prod.outlook.com
- (2603:10b6:a03:180::30) To PH7PR11MB5984.namprd11.prod.outlook.com
+X-ClientProxiedBy: BYAPR06CA0032.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::45) To PH7PR11MB5984.namprd11.prod.outlook.com
  (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|SA2PR11MB5146:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09495542-d295-468f-bede-08db6165cb7a
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DM4PR11MB6043:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a2e2c0c-511a-4309-fc5a-08db6166aedf
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: af5m6uFYg+fNxHLQYvwFzWgSbZEI6Ubhd+BJNakCYA5ShrQwe/tLMuncgPgR01eJ47Lv4saDkqLUDzXLwhQlJSRrIydeSsJLgrS+B3LNxiD1dkKxDnG5TjZnFfV2tbdXs27v5sr4dhoenUTAioxMGWaGkiAebrAJ+3+R4Z3Fstb7Xw8wGS/amsDdtLmQSMs6EzAPV7OPEmNE4DIjFh2RqN80pJu74Mc3IdI9460ARq9g0zFDvyhibAtjqfk9LBkVG5Qstcfp6bx3KhGVLc7ORDILmPfPsatZ2X+f9XsKJ4jRseNHy2SkGu/SrrPnVCJHcI98az4U5kk2i0oaew6kK/BycaI7pQYkuc940fwhOUu5BXeWSXvJcjnhzbv3FiJoXDFIZQ3vqUttRmInHOEOsB/v/cjZxAJfSqu1GhERxeA4wOA02zD7bzP7XYPJKOe96qI/2gFjOjnAYMmpF6SzB8mCudpWdWMB8mVT1fYZpWm7IPYj56Xw6B+Tc+oPLRExKNoqtkl4bpBFG2jHVykjojg97XwZ5eutgTJjebVJ8zv/amyBBQh84yKusRfxBeHxe1l2eYrIY9BTK3EVMS8xWLQ2GfpdEM57wPNv8FSTOfU0r4qEchYCjzOecpALU4YLC9T7F5CbM1/LrzW7Ky+8Fg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(39860400002)(376002)(136003)(346002)(451199021)(31686004)(66946007)(66476007)(66556008)(6636002)(316002)(4326008)(478600001)(36756003)(86362001)(31696002)(53546011)(26005)(6512007)(186003)(6506007)(41300700001)(8936002)(2906002)(8676002)(44832011)(15650500001)(5660300002)(83380400001)(6486002)(6666004)(38100700002)(82960400001)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: o8mRlgwS0v2WgW3IY76DT9ct++z+MNLgoRg6NwxcDrad62gENGTDcdH6mV7peQYPYYFzaCFyHNj8hW5BuTigcHGDtlDNL8J7UPT/IIqzaFvSiX+iOrWd2BHMTK8MtUC+u0qbZ/ztQrBBrFcU5VKPhh0/RZjhfVJ8/0Nh262d81ZIJCnGh0vxyndKXP3RT9eXHW3Qg34sdILZI0B7xLyfRLPQpM5PnwrjDQrY2uEZQ41/r+PAELtoLbmLZmMdfvhi9nxtTNm/uU7DlV42FfQHYjTUJsKUKaoysABzdDZ+ahQsOpiIBp3grDxCje0FZMMGnkYgawQr5iiRx9gVAABPktLM7xdBbXtJJpLWuJHP/pSU0fxwGhDYcc7hUB8pqnYlYtgzCeeu5/ARZQou/7khoZDKgNeyOYBNGkPfZ6v4Oz+CnWKgVUiqd38XTI6WGEWeTZOqYxeewaWbDN+0c5JHKgx/XeTmnY2577kR1Tv/pmde6wj6f5eHxdHnnkiodrl1sZGKLofaIDFZtrIQY76kJhd3p8JsuvUpJt2kUXdDrezLoFkceF3/1aHtYHeYxvhkR4WJ73nrE0WY5LU8ZCAHTF4vRFTgT1OTYirRWA/u3EBMsDJogQerYY059zQQduE1g3Y8/v3Sb2YMChOve6YX5g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(376002)(346002)(366004)(451199021)(478600001)(8676002)(8936002)(5660300002)(44832011)(36756003)(31696002)(2906002)(86362001)(66556008)(82960400001)(4326008)(66946007)(6636002)(66476007)(316002)(38100700002)(41300700001)(2616005)(186003)(6512007)(53546011)(26005)(6506007)(6666004)(6486002)(31686004)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RWpHalVqRDFrem02Y1BoOTUwNStZaEdQbGw2R2h1eHZGd2QzN2VFL3VDWlVJ?=
- =?utf-8?B?MExhd2tSbzZ2TWREaFozL2FtcmY4SlMyazQrQ3htdURDcVIvNUdBc0pDS0dP?=
- =?utf-8?B?SlJVTjU3M1Ewc3ZSa2pmZ290ZEl3ZlVPeEROS2M4cUVPSDZFdkRqS3h5R3hj?=
- =?utf-8?B?SnpzSmo3RVkrVndoRzZTL2FuU2o5VTdUMSt4OHA1SEdXNW1BcXFqZ0Nhcnp2?=
- =?utf-8?B?c3hyU0dMZlNQOFJjTnQwZW5GZ3FaS0tHY1c4T2lZTkFEYlJEdkxyZmM5aHNK?=
- =?utf-8?B?MkZTdC9DdHhOZ3NNM3FkbHFac01zRktwK3ZENzFuVnQvb0ZCdlFaNU9YcG1s?=
- =?utf-8?B?YjhXMDNnMXRtME1FM05NSzR1UE1tOTZER3JMSEN0Mlk2YjUzeWtmYVQxYkZQ?=
- =?utf-8?B?bEFscy9hYjRnRHdTSWtRVy9xaUN6dUFyS1c4NFJHSk0vY2RVNHpPbXhQOC9J?=
- =?utf-8?B?Zy9UN1pBYmhuOHFENXN2QWF3Q1dKeklTc3k3UmJsOHJIUVNGdm1NSmFrdmhj?=
- =?utf-8?B?VjFHOGtuYXU3SkNBOU1nZWJ2azlCWVNjVnJSQVNPZE56WE13bXdrL3RpbDY0?=
- =?utf-8?B?KzNab3JnNktSWnUvNjVranBLb3ZCbEtKVFZnQ2N0KyszK2pZRFVaT0dINE5s?=
- =?utf-8?B?TGM3Rzd4b1U1b0t1dkFxV1pRcExkQm9rNmJTckVNUU5UWDVBOGV6cWcxb3lh?=
- =?utf-8?B?VitWS1pHRDNLL0dlb0xQYi81WERoMk1RQUFjNmtaU3BsOW9QY3QwR0ZqRjRj?=
- =?utf-8?B?T0hJdHlrWENSemhPbzlvM1VhQ01VK3FBK3dZajB2TUNTSjlKUFJGQkJZQnBp?=
- =?utf-8?B?MTcvZEVBU0htdFgrUkhXVkNKdzhpUUFhbEp0Wk8zYWZPaGM2ZmF1U2dHRnBi?=
- =?utf-8?B?cVFTU2FtOTBLSC85Kzc4NXZCQVU5S2MyazZtT1c1NE93eTZMWmI3WFNUKytu?=
- =?utf-8?B?THlQY3QzSXhSVTRKRkxuUDZtRXVzTU1DTDVQT3BrMFN4NmhuUnpJUTI2YURx?=
- =?utf-8?B?T2JQSmhUejU3L1lYSGVIYllPRWZYaW9MdzY4bElSWVd1cHgrVnQyLzlwMHUx?=
- =?utf-8?B?K1ZxTHBScHZpcE5OYk5rb3VHRlBnVWpqYjVGaU1ReTB5YW5BV1djZ2dlTHRs?=
- =?utf-8?B?dHgvekJGcWh6WVQ3VlZkRnNIMnBjMDhXRjhsWXIyaSsvZmpwMFRGTmdIUnJT?=
- =?utf-8?B?NFk4V1VsZWNaU1hkMEhrbnFhMGRhL1ppKytWdk0yRjBNT3VPdzVlc2lEU0o2?=
- =?utf-8?B?QUZwYjRRSkNuSkQyekRwOFhJc3hJQVZmbzZlMkk2WDZtaDVSK25UeTJwK0I2?=
- =?utf-8?B?Ung2SWk2aGw3OElia0pYcTZZU0FkTzdOT1dLVFRub0kzdEt4ZjlTd2ZFMlo5?=
- =?utf-8?B?d1Rsb0FuMGU0TkxubnNhdzNjWmdyZGhPK1RTeERrckJQcU9Qdk00ZlhXczhp?=
- =?utf-8?B?aGZMRXZtZ0ZQSERBYitHbVluMzEvcTEwdzBHY09UQTE3VmNQTEJmOGRLM25o?=
- =?utf-8?B?SVY2Rm5YVzFtR2FCSnpPTVZsTTh1RGV5OUhLUlY2d0dKSnVKMmlObkVLL2Ey?=
- =?utf-8?B?SktwR1JGRnFBNE5LNm8xZFRwMzFrZSttMjNXN240Znl6dVp2WjJmYzBYODB2?=
- =?utf-8?B?OXk1OTN5TXZqZ2FyMXI2VzRMVXJ2b1R2bjVGWVNrd2pONDMzNkQ0dkpDVVVD?=
- =?utf-8?B?Y3VMMklySXRzUzdLelpjcS9Kdmd4VmJjalppYlIxUFY1cmM5Y1R0QjNlaDBR?=
- =?utf-8?B?RkpyamRMQUplY3pGaHphNTB0VjJQSzFCRSsyWFE4emNUYmM2OUZHOEphejZk?=
- =?utf-8?B?UjVlY0dmTzRRc3pKTjZ1cTFKVTRUNTRkUjJuMFJIVWhZMTZNR1VySkhPaXcv?=
- =?utf-8?B?bUtIemhHVS9HbW83L2JSU01nU3VoMU50c2pJMWhkRVFJUE54T20zaXErZWpQ?=
- =?utf-8?B?aktJWXZHU0FTeEhoU09EbElWUmY0ZnFkVks4bm5vSlI3THNzWlhjMFZNd2Ju?=
- =?utf-8?B?ZVcvbzlHSTBzcTY1dEVkTTBIbGlqTEhVMDJwaDc3d3RSNXIwT1pZZ2U0NXMv?=
- =?utf-8?B?ZHJrM0MxVmN6UjRzQWFXRERWUDFiQVlCdVJBZ0hoWDB4YVYwVEo4VnY1czdV?=
- =?utf-8?Q?kbZXjC5vBp+Prds+7LF2fuuFw?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09495542-d295-468f-bede-08db6165cb7a
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SFFTVVdwcVlmbXpyRUFuaFpHa3R3TGZLeHJsQkNxNkRIMVRGTE9mNmNudGdT?=
+ =?utf-8?B?dit2UmpiUW5qWm5Jd3dqN0tXb1o2bjNwRWpPN3hLeklNMUpjTCs4bEhCcE1L?=
+ =?utf-8?B?dUlKZTMwQVhibGN0UFkxTzloWVludENSSUJtVzdSWHVKdWQyRHpHd0swZnRI?=
+ =?utf-8?B?dmQ5Y2FRcEtNS0x6L0Ezb0tsZENlMVBxdDlWaUR5d0JXUkZyNU04cTBwSFlj?=
+ =?utf-8?B?Yk5IaHIvaVhDMTJhd3FoeGJGeU5CV1pxTnJrdzJPQUIyM0NXVFJ0b1JUaFZT?=
+ =?utf-8?B?VWlqLzg0QzB6aml4WkdaZTBlcDZxbnh5cW0zREVMV0VMWkluL1Uvb0huZ2RV?=
+ =?utf-8?B?M1NtcEdBa29HWlJPbEVYQkFEL3pkUXV2U1VDWklDTWJZVHQ3cFVjMTQyRWY4?=
+ =?utf-8?B?WEpKVjRCbWY1Qnd5a1htUXBIZkp2dUVOaGh0RWNoYnM2SFlVTC9rR25oQks1?=
+ =?utf-8?B?QjBxdEN5NXlNYjhWbGJQZlVDZ0JoZlQreXhRSkZPdGxUYjRrRXpncUZkVVd3?=
+ =?utf-8?B?aStwZDh0RzcxR2RCbEtTU3N4OW5NOUhwQ1NrS1A3RGhSQTQ2cEpYakhiYitT?=
+ =?utf-8?B?STkzRHRUMTRITmIzdHdmZEZCNVcyRHE2Zy94VkpYUHlKMWxlRlE3VHZJYjVS?=
+ =?utf-8?B?R1RCSFJnYlFXMVlSKzk1TDJwZGZ6bGFRYVQzcklRWjZBVXhRQmhPM1J6cDFI?=
+ =?utf-8?B?VCtLZnhLSzc1eUpQRnhIV0M0WUFxVGpxeUtGeWtqdHQxckovNitkT243Y3By?=
+ =?utf-8?B?aW1ueEJZMFNSZTE2RTMveTdtczBRZjhNTTEwTG1iQy9CaVdNaGdXYWIzS3RH?=
+ =?utf-8?B?L2RqNGFDOHM2Y1c4aGlDZkhsUjFjSGNHNUFydGdnMlBMOWJiT1F0Z1Y1UXZE?=
+ =?utf-8?B?ZXpGbGQ0TUJtUGVBeGVSMDJxVlQrTW01cjZVeHJuK1BKMlF3RGIzeHd2YUEx?=
+ =?utf-8?B?Y1BjMjdoWVpkcG01SkNTS09NWE83cm9OUXkwZmZZbGZNcE5Wa25LcmRhNTYz?=
+ =?utf-8?B?UWVxTjFMWUg0cTIxNHdZSjJQQit1VnZHTUZYVmx5RGJLY3B2MjI0amhUS29W?=
+ =?utf-8?B?S2U0SzE0LzRhbTg2WnRJU3U5SCtQQTcwSm8xd2lCZ2hybytaWUZmM2hUelFL?=
+ =?utf-8?B?OE51OFd4bGt1em1lRjFzWHRsNk5HN0E4YVNtWUI1WkZGTkY1MHRHbjFNdHls?=
+ =?utf-8?B?SFRVVmR2MmhRSzQwOXA2TW1menQ0MHlSY0s0STdwSEFsbzl1d0svUVE0aHJG?=
+ =?utf-8?B?UXF3SW9udFJBS1BFbElCN3Zwdjh6a21pdlo0WjU1ditUMzRBN1lPTUd6Q0hx?=
+ =?utf-8?B?UlduSExTVkZIelNPc0xpZXVjU0xEemxwK0ZRbDdzd0o2NmFibWRObUNDOWww?=
+ =?utf-8?B?VkRiM3hhbklxVkxqazdQOS8relZjaHNGS2Jvak54M1dlNnRiMUxqM0FmeVls?=
+ =?utf-8?B?aGplRlNwUXlCNmtLanphZGh6OUQ3TStGcVdqVEppL3ViRDBLTVZFeTU1V0lV?=
+ =?utf-8?B?c3R1MGp4UFhpZmJRTS9QZFBOa2FMV0pTaUU3d0t6Z2g2cXhpNVZlNkh2eGpq?=
+ =?utf-8?B?SCtBRjExTjJ5RVVKV0R4Z0paNTRuNTNodFJPREU1VndBLzFqSGdqb3M0d3Vn?=
+ =?utf-8?B?dmloUGY5Q0s3bmFIbEprSllRU0NlWk5ldSs5MmVUbnBpbzU0STk3ZnBQNWVN?=
+ =?utf-8?B?Q1lUaVI5TFFscC8zQ3d0N0VnZVB4NmlPNXc5YjEydHRlUVhyYUlscDVCM0xz?=
+ =?utf-8?B?TDA5ZWV2QXQ2cUFPNkRFaHhOam51cFNOdlZXZ0ZiNVVVdXFNeDN5TThxSnRm?=
+ =?utf-8?B?U2VXSWM1Y2twZlNXa2ZnR1NEVjdpUG9kRjV4enpFdDc3WWdQdkFDVGhuYU9a?=
+ =?utf-8?B?cTZZRit1VlpPcVVQZjBQeEt6RG9QYnU4VVpRSHo4VWNKdDZIZllnMzRTZUxV?=
+ =?utf-8?B?RHgvOTU2Znh5VncyUCtZbzdBM3o0UzU1SjJsTGlQZXY3djU2OU1HNE5VOHhq?=
+ =?utf-8?B?UExxd0cwQTNENzJydHpIcWVma0FxZ3B6dXJscnkxT1BwNDNRYVlBMEh5anJi?=
+ =?utf-8?B?ZC8yV2Rid2UxQXhxWHIxNS9UWmNxTnYydVY3aTdVcG9aK2haV1FiVTZjL0JL?=
+ =?utf-8?Q?W822WoaKqFibQg51qI2mNMBt7?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a2e2c0c-511a-4309-fc5a-08db6166aedf
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 23:30:03.8650
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 23:36:25.3189
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hek47py/FyeNWGRDis4aITFi/4PbAVasqSrEOn8xgLloCubpjpo8OtYwLsv34enAcH04Qsz3LyXMxncpe0+RAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5146
+X-MS-Exchange-CrossTenant-UserPrincipalName: RWFN+bv78DvBeDsVqyDVhlod7MeTBHoxFK8aEVBi1fTWmJP126ZWw/GUm/tY6WdIB5rR8j9FVhE54OoE21y9Ig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6043
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -153,183 +156,235 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 5/25/23 20:33, Davidlohr Bueso wrote:
-> Add a read-only sysfs file to display the security state
-> of a device (currently only pmem):
+> Sanitation is by definition a device-monopolizing operation, and thus
+> the timeslicing rules for other background commands do not apply.
+> As such handle this special case asynchronously and return immediately.
+> Subsequent changes will allow completion to be pollable from userspace
+> via a sysfs file interface.
 >
->      /sys/bus/cxl/devices/memX/security/state
+> For devices that don't support interrupts for notifying background
+> command completion, self-poll with the caveat that the poller can
+> be out of sync with the ready hardware, and therefore care must be
+> taken to not allow any new commands to go through until the poller
+> sees the hw completion. The poller takes the mbox_mutex to stabilize
+> the flagging, minimizing any runtime overhead in the send path to
+> check for 'sanitize_tmo' for uncommon poll scenarios. This flag
+> also serves for sanitation (the only user of async polling) to know
+> when to queue work or simply rely on irqs.
 >
-> This introduces a cxl_security_state structure that is
-> to be the placeholder for common CXL security features.
+> The irq case is much simpler as hardware will serialize/error
+> appropriately.
 >
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+
+Just a minor nit below, otherwise
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
 > ---
->   Documentation/ABI/testing/sysfs-bus-cxl | 10 ++++++
->   drivers/cxl/core/memdev.c               | 46 +++++++++++++++++++++++++
->   drivers/cxl/cxlmem.h                    | 11 ++++++
->   drivers/cxl/security.c                  |  3 ++
->   4 files changed, 70 insertions(+)
+>   drivers/cxl/core/memdev.c | 10 +++++
+>   drivers/cxl/cxlmem.h      | 10 +++++
+>   drivers/cxl/pci.c         | 83 +++++++++++++++++++++++++++++++++++++--
+>   3 files changed, 99 insertions(+), 4 deletions(-)
 >
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 48ac0d911801..721a44d8a482 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -58,6 +58,16 @@ Description:
->   		affinity for this device.
->   
->   
-> +What:		/sys/bus/cxl/devices/memX/security/state
-> +Date:		June, 2023
-> +KernelVersion:	v6.5
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Reading this file will display the CXL security state for
-> +		that device. Such states can be: 'disabled', or those available
-> +		only for persistent memory: 'locked', 'unlocked' or 'frozen'.
-> +
-> +
->   What:		/sys/bus/cxl/devices/*/devtype
->   Date:		June, 2021
->   KernelVersion:	v5.14
 > diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 057a43267290..6e1d7d3610a2 100644
+> index 6e1d7d3610a2..02763e83545c 100644
 > --- a/drivers/cxl/core/memdev.c
 > +++ b/drivers/cxl/core/memdev.c
-> @@ -107,6 +107,28 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+> @@ -460,11 +460,21 @@ void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cm
 >   }
->   static DEVICE_ATTR_RO(numa_node);
+>   EXPORT_SYMBOL_NS_GPL(clear_exclusive_cxl_commands, CXL);
 >   
-> +static ssize_t security_state_show(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   char *buf)
+> +static void cxl_memdev_security_shutdown(struct device *dev)
 > +{
 > +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
 > +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	unsigned long state = cxlds->security.state;
 > +
-> +	if (!(state & CXL_PMEM_SEC_STATE_USER_PASS_SET))
-> +		return sysfs_emit(buf, "disabled\n");
-> +	if (state & CXL_PMEM_SEC_STATE_FROZEN ||
-> +	    state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT ||
-> +	    state & CXL_PMEM_SEC_STATE_USER_PLIMIT)
-> +		return sysfs_emit(buf, "frozen\n");
-> +	if (state & CXL_PMEM_SEC_STATE_LOCKED)
-> +		return sysfs_emit(buf, "locked\n");
-> +	else
-> +		return sysfs_emit(buf, "unlocked\n");
-> +}
-> +static struct device_attribute dev_attr_security_state =
-> +	__ATTR(state, 0444, security_state_show, NULL);
-> +
->   static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
->   {
->   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> @@ -352,6 +374,11 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
->   	NULL,
->   };
->   
-> +static struct attribute *cxl_memdev_security_attributes[] = {
-> +	&dev_attr_security_state.attr,
-> +	NULL,
-> +};
-> +
->   static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
->   				  int n)
->   {
-> @@ -375,10 +402,16 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
->   	.attrs = cxl_memdev_pmem_attributes,
->   };
->   
-> +static struct attribute_group cxl_memdev_security_attribute_group = {
-> +	.name = "security",
-> +	.attrs = cxl_memdev_security_attributes,
-> +};
-> +
->   static const struct attribute_group *cxl_memdev_attribute_groups[] = {
->   	&cxl_memdev_attribute_group,
->   	&cxl_memdev_ram_attribute_group,
->   	&cxl_memdev_pmem_attribute_group,
-> +	&cxl_memdev_security_attribute_group,
->   	NULL,
->   };
->   
-> @@ -551,6 +584,15 @@ static const struct file_operations cxl_memdev_fops = {
->   	.llseek = noop_llseek,
->   };
->   
-> +static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +
-> +	cxlds->security.state = 0;
-
-This is not necessary with cxlds allocated with devm_kzalloc()?
-
-
-> +
-> +	return 0;
+> +	if (cxlds->security.poll_tmo_secs != -1)
+> +		cancel_delayed_work_sync(&cxlds->security.poll_dwork);
 > +}
 > +
->   struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+>   static void cxl_memdev_shutdown(struct device *dev)
 >   {
->   	struct cxl_memdev *cxlmd;
-> @@ -579,6 +621,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
->   	if (rc)
->   		goto err;
+>   	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
 >   
-> +	rc = cxl_memdev_security_init(cxlmd);
-> +	if (rc)
-> +		goto err;
-> +
->   	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
->   	if (rc)
->   		return ERR_PTR(rc);
+>   	down_write(&cxl_memdev_rwsem);
+> +	cxl_memdev_security_shutdown(dev);
+>   	cxlmd->cxlds = NULL;
+>   	up_write(&cxl_memdev_rwsem);
+>   }
 > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 1d8e81c87c6a..5329274b0076 100644
+> index 5329274b0076..02ec68f97de2 100644
 > --- a/drivers/cxl/cxlmem.h
 > +++ b/drivers/cxl/cxlmem.h
-> @@ -260,6 +260,15 @@ struct cxl_poison_state {
->   	struct mutex lock;  /* Protect reads of poison list */
+> @@ -264,9 +264,18 @@ struct cxl_poison_state {
+>    * struct cxl_security_state - Device security state
+>    *
+>    * @state: state of last security operation
+> + * @poll_tmo_secs: polling timeout
+> + * @poll_dwork: polling work item
+> + *
+> + * Polling (sanitation) is only used when device mbox irqs are not
+> + * supported. As such, @poll_tmo_secs == -1 indicates that polling
+> + * is disabled. Otherwise, when enabled, @poll_tmo_secs is maxed
+> + * at 15 minutes and serialized by the mbox_mutex.
+>    */
+>   struct cxl_security_state {
+>   	unsigned long state;
+> +	int poll_tmo_secs;
+> +	struct delayed_work poll_dwork;
 >   };
 >   
-> +/**
-> + * struct cxl_security_state - Device security state
-> + *
-> + * @state: state of last security operation
+>   /**
+> @@ -380,6 +389,7 @@ enum cxl_opcode {
+>   	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
+>   	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+>   	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+> +	CXL_MBOX_OP_SANITIZE		= 0x4400,
+>   	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>   	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>   	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index a78e40e6d0e0..a0d93719ab18 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -115,16 +115,52 @@ static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
+>   
+>   static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
+>   {
+> +	u64 reg;
+> +	u16 opcode;
+>   	struct cxl_dev_id *dev_id = id;
+>   	struct cxl_dev_state *cxlds = dev_id->cxlds;
+>   
+> -	/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
+> -	if (cxl_mbox_background_complete(cxlds))
+> -		rcuwait_wake_up(&cxlds->mbox_wait);
+> +	if (!cxl_mbox_background_complete(cxlds))
+> +		goto done;
+>   
+> +	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+> +	opcode = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK, reg);
+> +	if (opcode == CXL_MBOX_OP_SANITIZE) {
+> +		dev_dbg(cxlds->dev, "Sanitation operation ended\n");
+> +	} else {
+> +		/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
+> +		rcuwait_wake_up(&cxlds->mbox_wait);
+> +	}
+> +done:
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +/*
+> + * Sanitation operation polling mode.
 > + */
-> +struct cxl_security_state {
-> +	unsigned long state;
-> +};
+> +static void cxl_mbox_sanitize_work(struct work_struct *work)
+> +{
+> +	struct cxl_dev_state *cxlds;
+> +
+> +	cxlds = container_of(work,
+> +			     struct cxl_dev_state, security.poll_dwork.work);
+> +
+> +	mutex_lock(&cxlds->mbox_mutex);
+> +	if (cxl_mbox_background_complete(cxlds)) {
+> +		cxlds->security.poll_tmo_secs = 0;
+> +		put_device(cxlds->dev);
+> +
+> +		dev_dbg(cxlds->dev, "Sanitation operation ended\n");
+> +	} else {
+> +		int timeout = cxlds->security.poll_tmo_secs + 10;
+> +
+> +		cxlds->security.poll_tmo_secs = min(15 * 60, timeout);
+> +		queue_delayed_work(system_wq, &cxlds->security.poll_dwork,
+> +				   timeout * HZ);
+> +	}
+> +	mutex_unlock(&cxlds->mbox_mutex);
+> +}
 > +
 >   /**
->    * struct cxl_dev_state - The driver device state
->    *
-> @@ -297,6 +306,7 @@ struct cxl_poison_state {
->    * @serial: PCIe Device Serial Number
->    * @event: event log driver state
->    * @poison: poison driver state info
-> + * @security: device security state
->    * @mbox_send: @dev specific transport for transmitting mailbox commands
->    *
->    * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> @@ -336,6 +346,7 @@ struct cxl_dev_state {
+>    * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+>    * @cxlds: The device state to communicate with.
+> @@ -185,6 +221,16 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>   		return -EBUSY;
+>   	}
 >   
->   	struct cxl_event_state event;
->   	struct cxl_poison_state poison;
-> +	struct cxl_security_state security;
->   
->   	struct rcuwait mbox_wait;
->   	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
-> index 4ad4bda2d18e..9da6785dfd31 100644
-> --- a/drivers/cxl/security.c
-> +++ b/drivers/cxl/security.c
-> @@ -34,6 +34,9 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
->   		return 0;
->   
->   	sec_out = le32_to_cpu(out.flags);
-> +	/* cache security state */
-> +	cxlds->security.state = sec_out;
+> +	/*
+> +	 * With sanitize polling, hardware might be done and the poller still
+> +	 * not be in sync. Ensure no new command comes in until so. Keep the
+> +	 * hardware semantics and only allow device health status.
+> +	 */
+> +	if (unlikely(cxlds->security.poll_tmo_secs > 0)) {
+> +		if (mbox_cmd->opcode != CXL_MBOX_OP_GET_HEALTH_INFO)
+> +			return -EBUSY;
+> +	}
 > +
->   	if (ptype == NVDIMM_MASTER) {
->   		if (sec_out & CXL_PMEM_SEC_STATE_MASTER_PASS_SET)
->   			set_bit(NVDIMM_SECURITY_UNLOCKED, &security_flags);
+>   	cmd_reg = FIELD_PREP(CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK,
+>   			     mbox_cmd->opcode);
+>   	if (mbox_cmd->size_in) {
+> @@ -233,11 +279,34 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>   	 */
+>   	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
+>   		u64 bg_status_reg;
+> -		int i, timeout = mbox_cmd->poll_interval_ms;
+> +		int i, timeout;
+> +
+> +		/*
+> +		 * Sanitation is a special case which monopolizes the device
+> +		 * and cannot be timesliced. Handle asynchronously instead,
+> +		 * and allow userspace to poll(2) for completion.
+> +		 */
+> +		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+> +			if (cxlds->security.poll_tmo_secs != -1) {
+> +				/* hold the device throughout */
+> +				get_device(cxlds->dev);
+> +
+> +				/* give first timeout a second */
+> +				timeout = 1;
+> +				cxlds->security.poll_tmo_secs = timeout;
+> +				queue_delayed_work(system_wq,
+> +						   &cxlds->security.poll_dwork,
+> +						   timeout * HZ);
+> +			}
+> +
+> +			dev_dbg(dev, "Sanitation operation started\n");
+> +			goto success;
+> +		}
+>   
+>   		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
+>   			mbox_cmd->opcode);
+>   
+> +		timeout = mbox_cmd->poll_interval_ms;
+>   		for (i = 0; i < mbox_cmd->poll_count; i++) {
+>   			if (rcuwait_wait_event_timeout(&cxlds->mbox_wait,
+>   				       cxl_mbox_background_complete(cxlds),
+> @@ -268,6 +337,7 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>   		return 0; /* completed but caller must check return_code */
+>   	}
+>   
+> +success:
+>   	/* #7 */
+>   	cmd_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
+>   	out_len = FIELD_GET(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK, cmd_reg);
+> @@ -376,10 +446,15 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
+>   		ctrl |= CXLDEV_MBOX_CTRL_BG_CMD_IRQ;
+>   		writel(ctrl, cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
+>   
+> +		/* flag that irqs are enabled */
+> +		cxlds->security.poll_tmo_secs = -1;
+
+Use a #define instead of -1 magic number? CXL_CMD_TIMEOUT_INVALID 
+perhaps? Would also apply to all the checking of poll_tmo_secs in this 
+patch.
+
+
+>   		return 0;
+>   	}
+>   
+>   mbox_poll:
+> +	cxlds->security.poll_tmo_secs = 0;
+> +	INIT_DELAYED_WORK(&cxlds->security.poll_dwork,
+> +			  cxl_mbox_sanitize_work);
+>   	dev_dbg(cxlds->dev, "Mailbox interrupts are unsupported");
+>   	return 0;
+>   }
