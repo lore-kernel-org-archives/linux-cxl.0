@@ -2,120 +2,106 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA97C77B7A
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 06:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F288C7EE2F
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 09:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234352AbjEaGH3 convert rfc822-to-8bit (ORCPT
+        id S234672AbjEaJdJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 May 2023 02:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
+        Wed, 31 May 2023 05:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234219AbjEaGHW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 May 2023 02:07:22 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FF712B;
-        Tue, 30 May 2023 23:07:21 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-ba8a0500f4aso4531081276.3;
-        Tue, 30 May 2023 23:07:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685513240; x=1688105240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AGAFsENMxYrhxYj1uUMDHzCM9FHKp+CT1MSPohEI99A=;
-        b=df7noEEcB4E5ttSjsFbVIIgkMVpI5nnbnWelAxZNzYOPbInpNIvg1TMFUuggNUK/Vr
-         lJdX2C2StMKd0IxmGT49Isp6aBr8FhQfhePfseGtNOPLHsy6F0tqGuOL7rFVk9/0bXdY
-         DBHA5zZp1AJ23HifHFPMBjvU5ZMT9hBrc/ioyrVo4RHtHRzc1Y8NBEnDhaR1aDxHCMlN
-         Tdxj2mY52ycCudBpDVDNMKX6GrSxnm15CsGpgelDfbx+tngqfLph6H0A7yjJ9JRXHPkI
-         shAEVlkX7RjhNV1u3BUUBDTR3CqApQ8nebL2UDMWYjLJPa+qIZK4lTPX6+3Z2uGiMNqe
-         sr+A==
-X-Gm-Message-State: AC+VfDzdaJyJJMOdlkSjY11Ud2d5f9aipLKo6QtINIJ88oIxLC6D63gU
-        sBHPr6wjWSNfwq9JmQD/45dSkIJfxCsdfFRzahk=
-X-Google-Smtp-Source: ACHHUZ63lP1QyMnZoPKTqaKWdGrNbZSzHzLvF6o5BbUWjwtKnR4QgCy2i3jVSx6r1/nuhRDHv0vzrFTgOlhXuaEWuL8=
-X-Received: by 2002:a25:264b:0:b0:ba8:1732:e334 with SMTP id
- m72-20020a25264b000000b00ba81732e334mr5221414ybm.56.1685513240201; Tue, 30
- May 2023 23:07:20 -0700 (PDT)
+        with ESMTP id S235600AbjEaJdA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 May 2023 05:33:00 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE4F6A0;
+        Wed, 31 May 2023 02:32:53 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QWP7Y5pJDz6J76m;
+        Wed, 31 May 2023 17:27:53 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 31 May
+ 2023 10:32:50 +0100
+Date:   Wed, 31 May 2023 10:32:50 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Niyas Sait <niyas.sait@linaro.org>,
+        Klaus Jensen <its@irrelevant.dk>,
+        Andy Shevchenko <andy@kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        Matt Johnston <matt@codeconstruct.com.au>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>
+Subject: Re: [RFC PATCH v2 6/6] HACK: i2c: aspeed: Comment clock out and
+ make reset optional
+Message-ID: <20230531103250.00006911@Huawei.com>
+In-Reply-To: <CAHp75VcaE2-9ZKgmcZXaA668mLZ8XETcUuUdt2asF4aEzx97gg@mail.gmail.com>
+References: <20230530145601.2592-1-Jonathan.Cameron@huawei.com>
+        <20230530145601.2592-7-Jonathan.Cameron@huawei.com>
+        <CAHp75VcaE2-9ZKgmcZXaA668mLZ8XETcUuUdt2asF4aEzx97gg@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com>
- <20230526095824.16336-5-Jonathan.Cameron@huawei.com> <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
- <20230530145001.00002560@Huawei.com>
-In-Reply-To: <20230530145001.00002560@Huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 30 May 2023 23:07:09 -0700
-Message-ID: <CAM9d7ciiVrHEKTMCUFLwDq7uvpLb4U2uvLn+uVoQbfqDeAuh9Q@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] perf: CXL Performance Monitoring Unit driver
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Liang Kan <kan.liang@linux.intel.com>, linux-cxl@vger.kernel.org,
-        peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, mingo@redhat.com, acme@kernel.org,
-        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, May 30, 2023 at 6:50 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
->
-> Hi,
->
-> Tidied up the typos. Thanks,
->
-> > > +static int cxl_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-> > > +{
-> > > +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
-> > > +       unsigned int target;
-> > > +
-> > > +       if (info->on_cpu != cpu)
-> > > +               return 0;
-> > > +
-> > > +       info->on_cpu = -1;
-> > > +       target = cpumask_any_but(cpu_online_mask, cpu);
-> > > +       if (target >= nr_cpu_ids) {
-> > > +               dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-> > > +               return 0;
-> > > +       }
-> > > +
-> > > +       perf_pmu_migrate_context(&info->pmu, cpu, target);
-> > > +       info->on_cpu = target;
-> > > +       /*
-> > > +        * CPU HP lock is held so we should be guaranteed that this CPU hasn't yet
-> > > +        * gone away.
-> > > +        */
-> > > +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
-> > > +
-> > > +       return 0;
-> > > +}
+On Tue, 30 May 2023 22:59:50 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> On Tue, May 30, 2023 at 5:59 PM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
 > >
-> > IIUC a CXL PMU hardware (say cxl_pmu_mem0.0) is shared across
-> > all CPUs and it would return the same value when read from any CPU,
-> > right?
->
-> Correct, it will return the same value when used from any CPU.
-> I'm not sure what issue you are indicating.
->
-> My understanding is that, even for such cases, perf uses percpu
-> variables that mean we still have to ensure that the interrupt
-> handling occurs on the CPU we have migrated the context to.
->
-> There are a lot of similar driver in perf already from a quick
-> git grep cpumask_any_but\(cpu_online_mask,
->
-> It might be nice to enable perf to operate for these devices without
-> the percpu context though. I haven't looked into whether that
-> is worth doing.
+> > Needs tidying up - hopefully can do clock right using ongoing
+> > work from Niyas
+> > https://linaro.atlassian.net/wiki/spaces/CLIENTPC/pages/28832333867/ACPI+Clock+Management  
+> 
+> I'm wondering how this will be solved for the cases where the
+> "clock-frequency" property is used, see below.
+> 
+> > ACPI does not provide an equivalent reset deassert / assert. _RST
+> > doesn't fit that model, so for now make the reset optional.  
+> 
+> ...
+> 
+> >  - Left the clock with the hideous hack to keep it obvious that it is
+> >    a hack given no way for us to get the clk rate on ACPI firmware yet
+> >    and I don't want to pretend there is.  
+> 
+> The workaround in some cases is to read the "clock-frequency"
+> property, which is standard de facto in several drivers / subsystems.
 
-I was thinking if we could avoid IPIs for read from other
-CPUs.  It has PERF_EV_CAP_READ_ACTIVE_PKG for some uncore events
-which can be shared among CPUs in the same package
-to skip the IPI and to read it from the local CPU.
+That's the wrong clock frequency.  I believe that property is the i2c bus clock
+frequency Documentation/devicetree/bindings/i2c/i2c.txt 
+The one being used here is the input clock.  I'd imagine there is some division
+done, but probably doesn't make sense to represent that using the clock framework
+as the i2c bus clock signal isn't directly derived from the input clock
+(pulse stretching and all sorts of other fun in I2C).  Also massive overkill
+given no one else can use this clock.
 
-But I think this can be a separate step.
+> 
+> That said, why not split this patch into two and switch the clock to
+> be optional and use the above property? Okay, one thing is that this
+> can collide probably with the generic I2C bus timings, which this
+> driver uses with a non-standard property name.
+> 
 
-Thanks,
-Namhyung
+I'd rather provide the clock from ACPI using Niyas' stuff when ready -
+it looks like a promising general solution so don't want to put an
+partial solution in before that.
+
+I kept these two changes in the last patch as I suspect they are the
+ones that can be considered a hack, given we don't actually have a
+real platform using ACPI with this device.  Anyone on aspeed know if
+anyone cares about ACPI on those BMCs?
+
+Jonathan
