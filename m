@@ -2,248 +2,201 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00D9C77B73
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 21:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A0DC77B73
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 21:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbjEaVdv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 May 2023 17:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40172 "EHLO
+        id S229724AbjEaV4n (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 May 2023 17:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbjEaVc4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 May 2023 17:32:56 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A173710F2;
-        Wed, 31 May 2023 14:32:05 -0700 (PDT)
+        with ESMTP id S229553AbjEaV4m (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 May 2023 17:56:42 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379FCA0;
+        Wed, 31 May 2023 14:56:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685568725; x=1717104725;
+  t=1685570201; x=1717106201;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=glOP7HVnv8x71jnJ4dHlLCHgBjR+spKKC9uR74wbYNo=;
-  b=fh3w8ylX6Jt0pVBZyKLBsX+myLwzVXMza0Ooa4l/+iV15ve9jPyvruNV
-   VRVwGrjQYJlkOukJkg4sgz4dZ3nxFfSsbc5yMNHrnVoyJVxS5EuGoXj4J
-   nRnpKOBFZQ7yGsHKDjVzNhfnBA2IgGx4e1TTfykutKdlSwV/kw4EcG8pg
-   d39gF+rHRMqlhm0zKUDHdenOi8nxZQKznj9oZ2IVwL4ldUomSjj3t3amf
-   LNieD0QMD/1dC9xK3ZcHFhy8Ylrbz4z1XO8PTNwzBn2ZUIwIaRS8N4QHj
-   PT77E/fyyERgtgyAvK3WJuWTSidLjfg194PuXtCJJ/IWrutGvKOTZ2jAW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="358641643"
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=GPs7XTNDi6z5v01pwWcFsKDXDybWD4ogjVl06y/ZBTU=;
+  b=kNwXV6/RP6ZNNEAw797IxV+QENLzFFEWXzg4HrstbAAqIeAUjxqfFtsF
+   Wc5izaX6NlsyoNNuMdmzEg/RZS4VxRFlbEGAHLmcOC2qpwnyiUIChIGCU
+   wwTf3hGCgIaAZUnK4bpzKf+UQJgA3rbZvnND4E7tysq/VJXqbg0VtQ9rH
+   SvLkyvH9uIgk7iIlul2OcnVSfcDH1Iyyt1LY0i5iVc31CV3k6TYuk8VhT
+   eaZwXglwPSRpazw4LVPv2P34HnaHAMtUS6lWgAimsztnor0IXxmrVrg16
+   BF7mmbJrM9aRxTTaW2xhTOsn2OgvrBTjy13Shb+eRwIlz3nt9U1nnn+h8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="418872727"
 X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
-   d="scan'208";a="358641643"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 14:31:49 -0700
+   d="scan'208";a="418872727"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 14:56:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="657512174"
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="772149448"
 X-IronPort-AV: E=Sophos;i="6.00,207,1681196400"; 
-   d="scan'208";a="657512174"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga003.jf.intel.com with ESMTP; 31 May 2023 14:31:48 -0700
+   d="scan'208";a="772149448"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga008.fm.intel.com with ESMTP; 31 May 2023 14:56:38 -0700
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 31 May 2023 14:31:48 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ 15.1.2507.23; Wed, 31 May 2023 14:56:37 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
  orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Wed, 31 May 2023 14:31:48 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Wed, 31 May 2023 14:56:37 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.49) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Wed, 31 May 2023 14:31:48 -0700
+ 15.1.2507.23; Wed, 31 May 2023 14:56:37 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iinLuiL+hrcPN0Ve0ELlRtrI7yyElJsKMoC7n6upNxJSe13DtZAK4hVAfT+ZVZLQnFO9bOPqw2xM7bsXMOl1QukOOqcWHcTGby6/SrW/XsLDNmYESwrTe3CjZuVEtu2OK9FRPGY9AbkRFV0buTbQxpqUMUujDxmTiOC0IVT681pEkaE9bDLfaWY8Dczjy80ch2P2u6eSE7WIKvD6A6nVItcM1Xu/X20mcemVEHsX96suxUz9WCDtOxyL5/UGIihhZS4HgDgy+/10nB8Kgp6FmrTu1iPKOC9OJ6tEVz8bZ8JiEQqlAlDIEscUfVx3XlBQBTlyGjzuZvJHRTQDPGM2+Q==
+ b=d1S+ItezxKYBB+2Jar4fklC/G+BrHpgIMNg5VfejPpNQcFDRTWR0H15+RNBAGFcT057PG6u/G6XhK9ROn56uGJnhm9/GmFx9fBff5Ci8d50O5GSVJZEy6tpzz+p8VhtdHd9uVQACPnMrmFYAg0ciSag4ssJ8avcEpkR2sfQuzRqR1RMyhxl/8U54OH1Rq8x0RZZSuu3M2satiubImgNJCyFJbvISf3fSQ4aSN6kQSHSBh9apDNuXreiG6lP1y6XqpyREdBSG9Ar3ARKYLr7ic6vJgsCkQwyKwoVRglBXLqMca8jpbwy9EGNRvlU2RDx4itzwFIoQbWDZ2yD08eoGOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SwdxS0V8kw3wI5iIKgEqE4a25wNhp9G7GQ9fyy/tw3Y=;
- b=N8KAt3OA9pFYpTz4Sk+32YJgMpSLMVAu9SfpwvULI1TPJ4rpq/in3r47UzqdSIfHb+GWarFdYnRvUL5Cf5iVdlEUwSSm43tY9rA8g20gDFY4zbaWPB24gPnMvcAy/1YHyNN5bzg+uHTKer/nswCW/OhDvnmWJwrD61P9Jn6YOkLMxNdaIQhohApB2lfKrIVoQCOJSo1Xh54auoH6N2Az2QcerkfKQ8+loAamOjqiOiFImFUuAug1f6g7M87l8KJmj4OStltzBqu71/izVNffuPSAv21ClXB9IXPsLIab3jetlTJV4t5kPgPy5sR6RDovIxhjr0HTz5E5ucy1ciYJqQ==
+ bh=ec93z/zxw8jyAJWDCpgByHBRv8jML667otGL4DPZ+lY=;
+ b=jY+0LDnmUDbRRj4baIQ7ZxL1AmzunhYouZQDrb70lie1rpoPKdCMqhdkfd3QiA4rDio+C8cikfoK09Q1EKN5ElK+h4Dt+5apM/KSIWpmE7sNQRexz/SmfmCG13eEU+ROnfefh2pKb2elMoV71rvf8HaMsc+kpA6Oga0Vo9+izvSYct7LZJm46sZFadX39ltENK2So73RS7d1agGd3iCTVxz0X0bIRBEUQFTE5f2/Gn//v3ijBRObIsAqCCXLqJH3mS3CXrtvRkDeSb6nnULqYFEdDokLu3qfG61ERZAO5zI7ijL0BHvAijBXLJ1s06z20b/plQG7GeTZHASKmTRqsA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ2PR11MB7647.namprd11.prod.outlook.com (2603:10b6:a03:4c3::8) with
+ by BL1PR11MB5287.namprd11.prod.outlook.com (2603:10b6:208:31b::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.24; Wed, 31 May
- 2023 21:31:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Wed, 31 May
+ 2023 21:56:36 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5%3]) with mapi id 15.20.6455.020; Wed, 31 May 2023
- 21:31:46 +0000
-Date:   Wed, 31 May 2023 14:31:43 -0700
+ 21:56:35 +0000
+Date:   Wed, 31 May 2023 14:56:33 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     Ben Cheatham <Benjamin.Cheatham@amd.com>, <rafael@kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>
-CC:     <yazen.ghannam@amd.com>, <benjamin.cheatham@amd.com>,
-        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH v2] ACPI, APEI, EINJ: Remove memory range validation for
- CXL error types
-Message-ID: <6477bcbf96b48_168e2943b@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230403151849.43408-1-Benjamin.Cheatham@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH 3/4] cxl: add a firmware update mechanism using the sysfs
+ firmware loader
+Message-ID: <6477c29121ae3_168e29438@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230421-vv-fw_update-v1-0-22468747d72f@intel.com>
+ <20230421-vv-fw_update-v1-3-22468747d72f@intel.com>
+ <646c313f20907_33fb329412@dwillia2-xfh.jf.intel.com.notmuch>
+ <a7443a348b9c2b51cf141ad1131c9befbb09724e.camel@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20230403151849.43408-1-Benjamin.Cheatham@amd.com>
-X-ClientProxiedBy: BY3PR05CA0033.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::8) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a7443a348b9c2b51cf141ad1131c9befbb09724e.camel@intel.com>
+X-ClientProxiedBy: BYAPR01CA0016.prod.exchangelabs.com (2603:10b6:a02:80::29)
+ To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7647:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76b3f3a7-0628-4abf-ad4f-08db621e6f3c
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BL1PR11MB5287:EE_
+X-MS-Office365-Filtering-Correlation-Id: 719ec02d-2e42-4884-3fac-08db6221e735
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RXsXOpszTq4CkWRAVyqSkBjGKNiTCCcVdgTUoL7ahfVI2497OxdMF7o+NCxsGycgyF3TzGZZu+hdakHQ21FhZIpVASScIXimx0G8Fo4wZToldof4SOp+6AJe/6z/SASBad3raLnszCFhObRIVMATbCLUjXfgysdahtq+OrcLQssINVkfQd2TwhHM9lLb1tzn2/XaUnzbCk2S+uw/8yczjJ3w+8Kf62P877g3RRrlWrgRThJ+14f0uUF5hc23d6BZHhrj/0AwddOcbF3awMLnxv6gEYobpMVLy9/8yh4OCNbosQbvvMhPSmGZVAqKgpEIxgid6fvWdOHzTM1jFsuL7fN0j4f2RkVImmlfJwdwjPRNf+HUQkzYgtpxECCrs3rZJwFl7XlYDeRQww/c1eSZVFcpOqfgeLdB2FN4anr/hCV6Jm5eRJENPTRAESyaGqRCZmL5woR0ISsRFgFUsgEGmhWtLw1ox7vNhZIHEjNmG6cqYn4P0VI5+SDoR2mFDOpXhpoQQEnPO8NqF5YKO2GU25xhNUDuAwB13SObN+eElDphzwg4LyA3LlI0uEtuoLHqAFUQEo7CYMB9yuoo4X3zxw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(396003)(39860400002)(136003)(366004)(451199021)(26005)(9686003)(478600001)(8936002)(8676002)(82960400001)(38100700002)(66946007)(66476007)(66556008)(6636002)(6512007)(6506007)(4326008)(6666004)(316002)(5660300002)(186003)(6486002)(41300700001)(86362001)(83380400001)(966005)(2906002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: TjXHobCoG73hcQJuuRg7Ynb52FT0fuKSHxy7Lob/dauOgezI5d2WEr3+pDKSw/rOt9a1W1gxRtA8WY7O5W501p31qOtrj12xpgIz/PVPxj/SBk8NsB4U1ns9KA1oFnlVFprkaKUI62XPSgwUPuZTrYnOOJftfE76MRUkSzxDkBFLj9t6VbBILDZp5+KVzkebsjqkLmilhgcCXFEX1sOo2bRYZwXhE79hIXJv45XXRJSw5YPYXURlp8ieI3k6kj0IP308VEY3O6t/AQ33CRGfGu02Am3SU8UIodFbFRTLoRVcH/RK5AW9yfF/BK9fz7UGJrprrducygq6NGkXUjBqhCR80u0AMJhJWzpLNUyZg6mLjL2PJTNKV4PqFWN68/R1ofbxMeixf/JDH1kSp5eun8MH7oHpMo/y60nJY9x3ziN8EqY6fl00x7ZdL9ffYppQu8OUWB6skvOvie5NBCPyz+/8sB75mJwcwzV2hIe6Cq1Z2PcouegouS/zqRAQpZHlE+cBaiqEFc1dl3XsKS5Y1y6JE03CjTYQhEK4etG99DfEvxPO/FP6y+t6YrhGNk3tGEa4leeh7CCNuVCBlHO4UlKXezhR0rBR77UR8YsFJnI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(376002)(39860400002)(346002)(136003)(451199021)(6506007)(6512007)(186003)(26005)(9686003)(38100700002)(41300700001)(83380400001)(107886003)(6486002)(478600001)(110136005)(54906003)(66946007)(82960400001)(66556008)(4326008)(66476007)(316002)(6636002)(8676002)(5660300002)(2906002)(921005)(15650500001)(8936002)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?oLSVjER60pHVqjeH9GzBRT0+sNp51FMwIUXErFiFR0AYFrn7dVX1VAKRi9xt?=
- =?us-ascii?Q?0VHs/9sE7QWpCg98GX7Wn65FKXzCv1yVxFBQ0XQnZVftVo4qJVXs9pRV5Fsb?=
- =?us-ascii?Q?tTFjq4bmQoAiey0sPoZd6I5jeqYl3dcPVp3iCjdtoBQlwvl9yJDzexC4h51N?=
- =?us-ascii?Q?bVs+ibZBPTOtUzUB13C9ErxIRlyYf9ZQeig7SxpwFxdMxi2w+3ztOoVBM46t?=
- =?us-ascii?Q?eMtqQ0EZSUcbJGVVyEEnpn+9Q3CnF+/p1UjHuzG+SidRo1TGd62v3AN1NUPD?=
- =?us-ascii?Q?A/aImZzkL0jK1Rn0UpEuq4OghdcwU2yO7cSPM5VQXUP8VIUEqaJa2k9wAtaq?=
- =?us-ascii?Q?371UWOsZH8RaqsbRLbo3kJiC4sWEyA+waySS4jrpKM/Jhvx8BQAABYDhD2S1?=
- =?us-ascii?Q?zJtuMEyva9rjHPxn2rtYMFGBd+8120XV4vOM8x5OgZhSjSGA+mRjSqY796i2?=
- =?us-ascii?Q?YbUsvcP21TdK5sImcgKtdVjIYIA1esekE2RbKTO0OHdzctnU7TI74e8IvE71?=
- =?us-ascii?Q?Z10Nc/C4wXMZsM5v4g18Bfq9lRf7d+WgnWKnvi0Xs0c/8r1C19kVcP5wgetr?=
- =?us-ascii?Q?Pqe/UhULHiAmZgw7Yy01z6UUzqdMZmBGP7gGXG9SSrxpEncesvezXpDUrPjZ?=
- =?us-ascii?Q?M3aFahb3fwtlqqcuFyhCm4CteXoHbpTY9oFoQmLLCd/bL+C6qDFmhKMe1ZpJ?=
- =?us-ascii?Q?b0WtcaVoxxOmrDFchOoIhjUWkqVWTltmhHn9gwvmE0uSy3/8li49qZOYGdE5?=
- =?us-ascii?Q?z0SHZUdt7Zq8PfCeNvkoIf12w32okM1tbp/JNeGVQ4VVtzYsAQNvQxYpqi5F?=
- =?us-ascii?Q?dJts5njmB2ep7WAlzZNvAsjvB4u0rxGejgy2wuT83PMW6LAKpidouQXXX1iV?=
- =?us-ascii?Q?plJJ1jg2OmD26dj9yumPCTX9U4u/S9x1ymUlZCt60z+gzq4ED7vLt0IrnLu9?=
- =?us-ascii?Q?P+HkQwN6Wq4TSVmExPhFX0hbZ6e11JHprlxLF5m0D2NUeHddRT8Aixo+7zw0?=
- =?us-ascii?Q?0VRnJDRqKtHYpKogdBPmrLP72s3PKuGk3nPufIVzkxDK+4UKenxldjblcEHU?=
- =?us-ascii?Q?wgpgI8Dg/QA8h0LApe+8l51Dx7vRlTaLU0TW9FBHnUmkAjETX6xFzXRrFida?=
- =?us-ascii?Q?FI2NNGGmbERRcf0XT91SSOSeJTbesnQnoGW2txwU0E6SKPBPEwXxV3A/nXKB?=
- =?us-ascii?Q?akoJqvgC6yc+lqBh/7ar881lNZYrZeQMf0HxrcIPloriD5z89KzIQB6I61Pc?=
- =?us-ascii?Q?uwjctojDn1VU9uj9W8wygNR+V1RGENh8gHu8oCFDRRaPYthitxjf7vwaKuqU?=
- =?us-ascii?Q?/YHIkUZWqN44WsN1ctiZL5dQliPLi1umqrbmFsV/W/Y9jsHBY6i5VLLSHBxZ?=
- =?us-ascii?Q?CdpETO73W2LOzYBVGgttIDIyNXRqR29KjkeY1qJptlLUqN2pX3+T09jbN1w2?=
- =?us-ascii?Q?+ZhwTNniKDaz4/nqaxeoH2BgxYWoFGOwQlylP45vFexmAFJoQINX5+YHhsKc?=
- =?us-ascii?Q?yJDgdFPrcjWM5B+ZtJBRYpW3dnkB7BMHGth868TvcxbV+0Bpo/wwVMKHarMP?=
- =?us-ascii?Q?8KCwZxyUkIk/dznxNpmFMh3ucSF+LTPnt1IXeBJSuyKoxlHmVrKkFipSI+5/?=
- =?us-ascii?Q?Sg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76b3f3a7-0628-4abf-ad4f-08db621e6f3c
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?cpzmBmotlP6d/+LfgchVc1/idiJjKNlobbMw76Jv/swKntg4ZWbqFuCqWd?=
+ =?iso-8859-1?Q?PRvWxPwOnPjbrcx142WGiY4RFjUb9K1PUpu0+4vH3CvHJf+6qdCo5M2Ksn?=
+ =?iso-8859-1?Q?aEvLiRtkyHOXTFs9NGmtU1pCNa8GWdFbGjgTNNioOV58MTcPsD3PtyM2X8?=
+ =?iso-8859-1?Q?5cEKGOlEDdUqogDEnjMZ84e5E2QecelDxZq0bPY8Sy4mVbNpzu/etlG9aq?=
+ =?iso-8859-1?Q?PQZ5gYqU6upRLPTN3u+WWzAKO2HyhHcqdxGE7/8ZfIZkA7GQsoqxtxNP2A?=
+ =?iso-8859-1?Q?YkfeuWlRdzrI/je1NgRHmQVTSD63ZTpAkigJKAYvOhYceTlDq1MyTVrsh+?=
+ =?iso-8859-1?Q?UlJradi9GzfONgf8k2GbVH7qRuqmKiJsrostOsQcOpGLQeHxQmtj7cBRsF?=
+ =?iso-8859-1?Q?JQHIMZouIGKrJ9gexhJ60yFwMz09QNg6dBm/08Ww/Tnmcb0FgtunQFIFvQ?=
+ =?iso-8859-1?Q?kZaPecZ7om8Nu4ie53CX+El37fgHNVbgzK7nmhHLi4SuDBLa29zFhZ3MQ8?=
+ =?iso-8859-1?Q?DtnchRHTJ5ZPvENN+xfD9D0IdfaZPpwsHX78Gc9PO/s4OybibHvNtC7miJ?=
+ =?iso-8859-1?Q?TEWNvHhpcif1SyewIZpiTgxIuFXV7zDXCVheXR8SQ2NSIm23x90gxBXdKD?=
+ =?iso-8859-1?Q?zQoNyLcowjq6qzSeeB6gp7c3U5eT3QxONAPjlRJUeJRiRuumOYoRxUvYVt?=
+ =?iso-8859-1?Q?vcH8WQyApw1EvGauNOgk/MgknjgYx9XlV7Kq+BKkIn5vKcB1gSaF2ax2bq?=
+ =?iso-8859-1?Q?NVdB179Q1XrlaDyC8yhSKrLttWLI3j+jNrGkHAW6wbKGM3VjGT+bkE8siu?=
+ =?iso-8859-1?Q?9EpF6tF2grJ/EeQuTFTu2uSD/MPtPVJ2xCLtbku89EUZgDaJQTb6g+4KYr?=
+ =?iso-8859-1?Q?wKoC8rrGv7Uq171NubR1OFjBYXyYSBNgP64TcJuaYP9atVZutwRL60f5qe?=
+ =?iso-8859-1?Q?DVCUlr2u4COxWU0rliR/NYHrZ8t36rTtseVHajrNmVnWjkM7WpqFAmCoG8?=
+ =?iso-8859-1?Q?mFEx8lC6Na9JxkdJ2V26soUID/HXT5/Qf+sVBZ0QfxMI2wP+UYgsSmBQuU?=
+ =?iso-8859-1?Q?9Sb+vJkDZgYTLI8bC9C66MnlU42s4gEtBZr0sstBkOxGGDfrkFgHB0d5Ap?=
+ =?iso-8859-1?Q?J/aor8A8FsHMSpGE4KikCtLCSGrXq02XctbMU6YZjGmzv2wmPexqW80PRp?=
+ =?iso-8859-1?Q?JvM6Fqoukgj1X1YHnITDBOMlc9h7imTzDXSskqa9geELKX/DT1D5Vd0Bnc?=
+ =?iso-8859-1?Q?rXt+wRzg1TtSyOEQP4vO8nNJ8mLcdooVw/LoNo/4qBmVCjNRNiHA52naNH?=
+ =?iso-8859-1?Q?6ZqHsqGNbjTGVRfUfMKRyj+PcdBYvVgQamtGF9rMOPbCsFoBUV6Upzt/qb?=
+ =?iso-8859-1?Q?AcGlTcwXKuTkkXYlOVNAVg4zqmCi7jPZVpxpJHOE0DTwTsy8wusIcU8JSu?=
+ =?iso-8859-1?Q?mJjcJFiN/ZozDXkAroPqUk4NUYjDwZ46APmJlzcBkBDVItG+V+GkmJlbVm?=
+ =?iso-8859-1?Q?bUeKbN0Fejr9OSFbWpb9YIMdAaneHgNznU+KpBP9mSJ6zRCL13qhM7J6w2?=
+ =?iso-8859-1?Q?sSwvRu1oZ2zdSCHmHvZh89GA/5NLmx3fIUTSSdGt5dJBxq2dFzUYHh5nn5?=
+ =?iso-8859-1?Q?G3bAV8T56iDj0UySb0nEuiWfwcL+kbV2mTkzO7sRsoHSbd0zcfsv4BoQ?=
+ =?iso-8859-1?Q?=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 719ec02d-2e42-4884-3fac-08db6221e735
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 21:31:45.9990
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 21:56:35.7424
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l5pq40Gl0b5vFIVxxfY/676QAWaoDXB6y9W6Y1LYVFzemTuPcvTiLd3zlFzDx7cRe3fupsq0+6rLWkr7+NiKVxEYZJyXMxqKtIY2FDnCwXY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7647
+X-MS-Exchange-CrossTenant-UserPrincipalName: qcAdjFSPU5fFFVpTWYo5NJpp2ZesfCV5JJfidDHscuE1qbbmJmxvq3CIlCLQrQNrzD9Nz7IIv7698L6q7Xgb3kuVU9eOLFF2xNJWR6ORiYc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5287
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Ben,
-
-Ben Cheatham wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
+Verma, Vishal L wrote:
+> On Mon, 2023-05-22 at 20:21 -0700, Dan Williams wrote:
+> > Vishal Verma wrote:
 > 
-> V2 Changes:
->  - Added Link tags for links
->  - removed stray unused variable
+> <snip>
+> Everything else not addressed here sounds good and I've made those
+> changes.
 > 
-> This patch is a follow up to the discussion at [1], and builds on Tony's
-> CXL error patch at [2].
+> > > 
+> > > +       remaining = size - cur_size;
+> > > +       size_in = cur_size + sizeof(*transfer);
+> > > +
+> > > +       mutex_lock(&cxlds->fw.fw_mutex);
+> > 
+> > What is this lock protecting? I.e. will the fw_loader really try to send
+> > multiple overlapping firmware update attempts?
 > 
-> The new CXL error types will use the Memory Address field in the
-> SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
-> compliant memory-mapped Downstream port. The value of the Memory Address
-> will be in the port's MMIO range, and it will not represent physical
-> (normal or persistent) memory.
-> 
-> Allow error injection for CXL 1.1 systems by skipping memory range
-> validation for CXL error injection types.
+> The lock is just to provide predictable points at which a cancel
+> request may be intercepted. The loader won't try overlapping firmware
+> transfer requests, but the ->cancel request comes from user space, and
+> could happen while there is a transfer in progress. With the lock, the
+> cancel will only be 'processed' after the current chunk's transfer is
+> done. 
 
-This just feels a bit too loose especially when the kernel has
-the cxl_acpi driver to perform the enumeration of CXL root ports.
+So right now cancel is only considered at certain points within either
+the ->write() or ->poll_complete() callbacks. The firmware upload core
+is guaranteeing that ->prepare(), ->write() and ->poll_complete() never
+overlap for a given session, and that if any of those return an error
+the upload session is terminated.
 
-I know that Terry and Robert are teaching the PCI AER core how to
-coordinate with RCRB information [1] (I still need to go dig in deeper
-on that set). I would expect ACPI EINJ could benefit from similar
-coordination and validate these addresses.
+While the lock does flush in flight ->write() and ->prepare() it does
+nothing to enforce when the cancellation is processed. It will still be
+the case that the next invocation of ->write() or ->poll_complete() will
+consider the cancel state before doing the next step.
 
-Now, is it any address in the downstream-port RCRB range that is valid,
-or only the base?
+I am failing to see what the lock is protecting. The other usage is for
+checking that ->prepare() has completed before ->write() is invoked, but
+again that is enforced by the firmware uploader workqueue.
 
-Another minor comment below...
+I think the lock and the clear_to_send bit can be eliminated. Clear to
+send is implied by ->prepare() succeeding. Convert cancel to an atomic
+flag where cxl_fw_cancel() does:
 
-[1]: http://lore.kernel.org/r/20230523232214.55282-1-terry.bowman@amd.com
+set_bit(CXL_FW_CANCEL, &cxlds->fw.state);
 
-> 
-> Output trying to inject CXL.mem error without patch:
-> 
-> -bash: echo: write error: Invalid argument
-> 
-> [1]:
-> Link: https://lore.kernel.org/linux-acpi/20221206205234.606073-1-Benjamin.Cheatham@amd.com/
-> [2]:
-> Link: https://lore.kernel.org/linux-cxl/CAJZ5v0hNQUfWViqxbJ5B4JCGJUuHpWWSpqpCFWPNpGuagoFbsQ@mail.gmail.com/T/#t
-> 
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> Signed-off-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> ---
->  drivers/acpi/apei/einj.c | 12 +++++++++++-
->  include/acpi/actbl1.h    |  6 ++++++
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
-> index 013eb621dc92..68a20326ed7c 100644
-> --- a/drivers/acpi/apei/einj.c
-> +++ b/drivers/acpi/apei/einj.c
-> @@ -37,6 +37,13 @@
->  				ACPI_EINJ_MEMORY_UNCORRECTABLE | \
->  				ACPI_EINJ_MEMORY_FATAL)
->  
-> +#define CXL_ERROR_MASK		(ACPI_EINJ_CXL_CACHE_CORRECTABLE	| \
-> +				ACPI_EINJ_CXL_CACHE_UNCORRECTABLE	| \
-> +				ACPI_EINJ_CXL_CACHE_FATAL		| \
-> +				ACPI_EINJ_CXL_MEM_CORRECTABLE		| \
-> +				ACPI_EINJ_CXL_MEM_UNCORRECTABLE		| \
-> +				ACPI_EINJ_CXL_MEM_FATAL)
-> +
->  /*
->   * ACPI version 5 provides a SET_ERROR_TYPE_WITH_ADDRESS action.
->   */
-> @@ -537,8 +544,11 @@ static int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
->  	if (type & ACPI5_VENDOR_BIT) {
->  		if (vendor_flags != SETWA_FLAGS_MEM)
->  			goto inject;
-> -	} else if (!(type & MEM_ERROR_MASK) && !(flags & SETWA_FLAGS_MEM))
-> +	} else if (!(type & MEM_ERROR_MASK) && !(flags & SETWA_FLAGS_MEM)) {
-> +		goto inject;
-> +	} else if (type & CXL_ERROR_MASK) {
->  		goto inject;
-> +	}
->  
->  	/*
->  	 * Disallow crazy address masks that give BIOS leeway to pick
-> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-> index 81b9e794424d..c39837266414 100644
-> --- a/include/acpi/actbl1.h
-> +++ b/include/acpi/actbl1.h
-> @@ -1044,6 +1044,12 @@ enum acpi_einj_command_status {
->  #define ACPI_EINJ_PLATFORM_CORRECTABLE      (1<<9)
->  #define ACPI_EINJ_PLATFORM_UNCORRECTABLE    (1<<10)
->  #define ACPI_EINJ_PLATFORM_FATAL            (1<<11)
-> +#define ACPI_EINJ_CXL_CACHE_CORRECTABLE     BIT(12)
-> +#define ACPI_EINJ_CXL_CACHE_UNCORRECTABLE   BIT(13)
-> +#define ACPI_EINJ_CXL_CACHE_FATAL           BIT(14)
-> +#define ACPI_EINJ_CXL_MEM_CORRECTABLE       BIT(15)
-> +#define ACPI_EINJ_CXL_MEM_UNCORRECTABLE     BIT(16)
-> +#define ACPI_EINJ_CXL_MEM_FATAL             BIT(17)
+...and cxl_fw_write() and cxl_fw_poll_complete() can just do:
 
-I expect these to come from the next ACPICA update just like the other
-definitions. The change in style from (x<<N) to BIT(N) was a tip-off.
-The process is to submit a pull request to the ACPICA project, for
-example:
-
-https://github.com/acpica/acpica/commit/e948142526c0
+if (test_and_clear_bit(CXL_FW_CANCEL, &cxlds->fw.state))
+	do_cancel();
