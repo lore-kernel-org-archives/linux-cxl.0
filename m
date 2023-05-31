@@ -2,82 +2,91 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0520C77B73
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 02:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4C9C7EE2C
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 02:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbjEaCSs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 30 May 2023 22:18:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54068 "EHLO
+        id S233157AbjEaCTw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 30 May 2023 22:19:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbjEaCSo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 May 2023 22:18:44 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B5B10E;
-        Tue, 30 May 2023 19:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AHO4M8sGie0OSLO/d8Ur4iCaRbtViVC/sruAnPnDQl8=; b=WFqPI8lzgzeJCE5VBFZricroLX
-        VFVwpGjv7oZfxVGuYabP5XSgYrcC99JBwmMBYwEpRi+4MJEEbTG56BDO9yUIfE/qrADTFZeCslMRu
-        dmHDK8HvHqzd6jptf2Qgnmu/t6fjtnCbxR3U+mS1QqAeiyWIkDumPeLkHT1DpFGU9UqLiJhFrFY4J
-        WBRjWzRJhXxIw+K+QX4dy+m0GYlzLwHfTPwOTjWnjlHDMoCBLYaoFCrndkR3NhfSew0gAc8HGkSrO
-        f9NTyXgLW8vAcPNrycVkq0TGk003xokLYfWfkWkFgyk36xuCMPBFI+OHX4qVbSPIaqIajw98yJJW2
-        3ILdNcZw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q4BPr-00FmRc-04;
-        Wed, 31 May 2023 02:18:23 +0000
-Date:   Tue, 30 May 2023 19:18:22 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, LiuLele <liu.lele@qq.com>,
-        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        alison.schofield@intel.com, bhelgaas@google.com,
-        bwidawsk@kernel.org, dan.j.williams@intel.com, helgaas@kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, vishal.l.verma@intel.com
-Subject: Re: CXL memory device not created correctly
-Message-ID: <ZHaubgQOFU0+r1MD@bombadil.infradead.org>
-References: <cec6a8f5-a284-4f46-1ada-4edd625a9a2e@intel.com>
- <tencent_D9D9D358330CA573E23D490C6EE13E0DC105@qq.com>
- <gbsxrcjtnf67jxpqmbn57nqoslpmjtuk2ycatmau3vfsmpvbrd@c2umpofn2hti>
- <646793cc665bf_1231462943c@iweiny-mobl.notmuch>
+        with ESMTP id S230494AbjEaCTv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 30 May 2023 22:19:51 -0400
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF20EC
+        for <linux-cxl@vger.kernel.org>; Tue, 30 May 2023 19:19:50 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="98353557"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681138800"; 
+   d="scan'208";a="98353557"
+Received: from unknown (HELO yto-r3.gw.nic.fujitsu.com) ([218.44.52.219])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 11:19:48 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+        by yto-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 64FF7D501A
+        for <linux-cxl@vger.kernel.org>; Wed, 31 May 2023 11:19:46 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+        by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 9F19ED3F2E
+        for <linux-cxl@vger.kernel.org>; Wed, 31 May 2023 11:19:45 +0900 (JST)
+Received: from localhost.localdomain (unknown [10.167.234.230])
+        by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id EE6E568957;
+        Wed, 31 May 2023 11:19:44 +0900 (JST)
+From:   Li Zhijian <lizhijian@fujitsu.com>
+To:     nvdimm@lists.linux.dev
+Cc:     linux-cxl@vger.kernel.org, dave.jiang@intel.com,
+        alison.schofield@intel.com, Li Zhijian <lizhijian@fujitsu.com>
+Subject: [ndctl PATCH v3 0/6] cxl/monitor and ndctl/monitor fixes
+Date:   Wed, 31 May 2023 10:19:30 +0800
+Message-Id: <20230531021936.7366-1-lizhijian@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <646793cc665bf_1231462943c@iweiny-mobl.notmuch>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27662.004
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27662.004
+X-TMASE-Result: 10--18.205800-10.000000
+X-TMASE-MatchedRID: VHY4TuAmxSOUEaJ+MItbXqzSsZt54aj7bo9qnUw920fozDhGeQC9EimU
+        P9th0lnVnK0E4bVZnFaGfIVSjZQwH5a3SiQKe1CZ5CghTisABMxfT3wDt+vdVw3H/quqvfm40A4
+        5IAXRxM1TeKr01gQwdETfkJk5S8qAY0bQ0Hs1qBljeVefXUd21GRVuM5hfkBCNWO9z3c712QZkb
+        arnLiOQXsxI/tIum4Yb3JmPdq59vkfE8yM4pjsD67rlQMPRoOCxEHRux+uk8jpP8tMOyYmaA==
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, May 19, 2023 at 08:20:44AM -0700, Ira Weiny wrote:
-> Davidlohr Bueso wrote:
-> > On Fri, 19 May 2023, LiuLele wrote:
-> > 
-> > >In my testing CXL device /sys/bus/cxl/devices/mem0  not created, and the get error messages :
-> > >
-> > >```
-> > >cxl_pci 0000:0d:00.0: Failed to get interrupt for event Info log
-> > >```
-> > >
-> > >My test environment is a qemu CXL emulator with qemu v8.0.0, Linux kernel v6.3.0.
-> > >While with kernel 5.9.13,  /sys/bus/cxl/devices/mem0  can be created.
-> > 
-> > Yes, this can be annoying and would argue the probe should not error out.
-> 
-> I had to double check.  Events are mandatory on devices.  On checking
-> again interrupt support is mandatory as well.  So that is why I errored
-> out here.
+V3:
+- update comit log of patch3 and patch6 per Dave's comments.
 
-The failure essentially creates a user visible regression whereas
-booting an older kernel fixes it. It is not a friendly error message
-when testing kernels / upgrading / test environments. The only thing
-I can think of is if a new kconfig symbol is introduced so to make
-such cases a bit more clearer for now as things get settled.
+V2:
+- exchange order of previous patch1 and patch2
+- add reviewed tag in patch5
+- commit log improvements
 
-Otherwise for testing this creates a few cycles of just noise. And I'd
-imagine even a few developer hours.
+It mainly fix monitor not working when log file is specified. For
+example
+$ cxl monitor -l ./cxl-monitor.log
+It seems that someone missed something at the begining.
 
-  Luis
+Furture, it compares the filename with reserved word more accurately
+
+patch1-2: It re-enables logfile(including default_log) functionality
+and simplify the sanity check in the combination relative path file
+and daemon mode.
+
+patch3 and patch6 change strncmp to strcmp to compare the acurrate
+reserved words.
+
+Li Zhijian (6):
+  cxl/monitor: Enable default_log and refactor sanity check
+  cxl/monitor: replace monitor.log_file with monitor.ctx.log_file
+  cxl/monitor: use strcmp to compare the reserved word
+  cxl/monitor: always log started message
+  Documentation/cxl/cxl-monitor.txt: Fix inaccurate description
+  ndctl/monitor: use strcmp to compare the reserved word
+
+ Documentation/cxl/cxl-monitor.txt |  3 +--
+ cxl/monitor.c                     | 45 ++++++++++++++++---------------
+ ndctl/monitor.c                   |  4 +--
+ 3 files changed, 26 insertions(+), 26 deletions(-)
+
+-- 
+2.29.2
+
