@@ -2,45 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D420C77B7A
-	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 11:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F918C7EE2D
+	for <linux-cxl@archiver.kernel.org>; Wed, 31 May 2023 16:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235353AbjEaLDo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 31 May 2023 07:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
+        id S229473AbjEaQKi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 31 May 2023 12:10:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235355AbjEaLDK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 May 2023 07:03:10 -0400
+        with ESMTP id S229520AbjEaQKh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 31 May 2023 12:10:37 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F462E7B;
-        Wed, 31 May 2023 04:02:44 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QWRC14Bmsz6D905;
-        Wed, 31 May 2023 19:01:01 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 31 May 2023 12:02:42 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Namhyung Kim <namhyung@gmail.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
-CC:     <mingo@reresetdhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v8 5/5] docs: perf: Minimal introduction the the CXL PMU device and driver
-Date:   Wed, 31 May 2023 12:00:11 +0100
-Message-ID: <20230531110011.13963-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531110011.13963-1-Jonathan.Cameron@huawei.com>
-References: <20230531110011.13963-1-Jonathan.Cameron@huawei.com>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80CBBB3
+        for <linux-cxl@vger.kernel.org>; Wed, 31 May 2023 09:10:35 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QWYyQ6Lcwz6J7Jr;
+        Thu,  1 Jun 2023 00:05:34 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 31 May
+ 2023 17:10:32 +0100
+Date:   Wed, 31 May 2023 17:10:32 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
+        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/6] cxl/mem: Introduce security state sysfs file
+Message-ID: <20230531171032.0000120f@Huawei.com>
+In-Reply-To: <20230526033344.17167-2-dave@stgolabs.net>
+References: <20230526033344.17167-1-dave@stgolabs.net>
+        <20230526033344.17167-2-dave@stgolabs.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
 X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
@@ -48,119 +45,188 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+On Thu, 25 May 2023 20:33:39 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Add a read-only sysfs file to display the security state
+> of a device (currently only pmem):
+> 
+>     /sys/bus/cxl/devices/memX/security/state
+> 
+> This introduces a cxl_security_state structure that is
+> to be the placeholder for common CXL security features.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Nothing to add to Dave's review. Given comment is minor, either
+way...
 
----
-v7
-- Added explict -a to command line examples to make it obvious the
-  counters apply only to all CPUs (no per thread or per process).
----
- Documentation/admin-guide/perf/cxl.rst   | 68 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- MAINTAINERS                              |  1 +
- 3 files changed, 70 insertions(+)
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..9233ea0d0b10
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,68 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver registers a perf PMU with the name pmu_mem<X>.<Y> on the CXL bus
-+representing the Yth CPMU for memX.
-+
-+    /sys/bus/cxl/device/pmu_mem<X>.<Y>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cxl_pmu_mem<X>.<Y>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cxl_pmu_mem0.0/clock_ticks/                        [Kernel PMU event]
-+  cxl_pmu_mem0.0/d2h_req_rdshared/                   [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpcur/                     [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpdata/                    [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpinv/                     [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -a -e cxl_pmu_mem0.0/clock_ticks/ -e cxl_pmu_mem0.0/d2h_req_rdshared/
-+
-+Vendor specific events may also be available and if so can be used via
-+
-+  $# perf stat -a -e cxl_pmu_mem0.0/vid=VID,gid=GID,mask=MASK/
-+
-+The driver does not support sampling so "perf record" is unsupported.
-+It only supports system-wide counting so attaching to a task is
-+unsupported.
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 9de64a40adab..f60be04e4e33 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -21,3 +21,4 @@ Performance monitor support
-    alibaba_pmu
-    nvidia-pmu
-    meson-ddr-pmu
-+   cxl
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 976b3e982d3a..5388b5c2e5bb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5195,6 +5195,7 @@ COMPUTE EXPRESS LINK PMU (CPMU)
- M:	Jonathan Cameron <jonathan.cameron@huawei.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
-+F:	Documentation/admin-guide/perf/cxl.rst
- F:	drivers/perf/cxl_pmu.c
- 
- CONEXANT ACCESSRUNNER USB DRIVER
--- 
-2.39.2
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 10 ++++++
+>  drivers/cxl/core/memdev.c               | 46 +++++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h                    | 11 ++++++
+>  drivers/cxl/security.c                  |  3 ++
+>  4 files changed, 70 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 48ac0d911801..721a44d8a482 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -58,6 +58,16 @@ Description:
+>  		affinity for this device.
+>  
+>  
+> +What:		/sys/bus/cxl/devices/memX/security/state
+> +Date:		June, 2023
+> +KernelVersion:	v6.5
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) Reading this file will display the CXL security state for
+> +		that device. Such states can be: 'disabled', or those available
+> +		only for persistent memory: 'locked', 'unlocked' or 'frozen'.
+> +
+> +
+>  What:		/sys/bus/cxl/devices/*/devtype
+>  Date:		June, 2021
+>  KernelVersion:	v5.14
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 057a43267290..6e1d7d3610a2 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -107,6 +107,28 @@ static ssize_t numa_node_show(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_RO(numa_node);
+>  
+> +static ssize_t security_state_show(struct device *dev,
+> +				   struct device_attribute *attr,
+> +				   char *buf)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	unsigned long state = cxlds->security.state;
+> +
+> +	if (!(state & CXL_PMEM_SEC_STATE_USER_PASS_SET))
+> +		return sysfs_emit(buf, "disabled\n");
+> +	if (state & CXL_PMEM_SEC_STATE_FROZEN ||
+> +	    state & CXL_PMEM_SEC_STATE_MASTER_PLIMIT ||
+> +	    state & CXL_PMEM_SEC_STATE_USER_PLIMIT)
+> +		return sysfs_emit(buf, "frozen\n");
+> +	if (state & CXL_PMEM_SEC_STATE_LOCKED)
+> +		return sysfs_emit(buf, "locked\n");
+> +	else
+> +		return sysfs_emit(buf, "unlocked\n");
+> +}
+> +static struct device_attribute dev_attr_security_state =
+> +	__ATTR(state, 0444, security_state_show, NULL);
+> +
+>  static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
+>  {
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> @@ -352,6 +374,11 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
+>  	NULL,
+>  };
+>  
+> +static struct attribute *cxl_memdev_security_attributes[] = {
+> +	&dev_attr_security_state.attr,
+> +	NULL,
+> +};
+> +
+>  static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+>  				  int n)
+>  {
+> @@ -375,10 +402,16 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
+>  	.attrs = cxl_memdev_pmem_attributes,
+>  };
+>  
+> +static struct attribute_group cxl_memdev_security_attribute_group = {
+> +	.name = "security",
+> +	.attrs = cxl_memdev_security_attributes,
+> +};
+> +
+>  static const struct attribute_group *cxl_memdev_attribute_groups[] = {
+>  	&cxl_memdev_attribute_group,
+>  	&cxl_memdev_ram_attribute_group,
+>  	&cxl_memdev_pmem_attribute_group,
+> +	&cxl_memdev_security_attribute_group,
+>  	NULL,
+>  };
+>  
+> @@ -551,6 +584,15 @@ static const struct file_operations cxl_memdev_fops = {
+>  	.llseek = noop_llseek,
+>  };
+>  
+> +static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
+> +{
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +
+> +	cxlds->security.state = 0;
+> +
+> +	return 0;
+> +}
+> +
+>  struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+>  {
+>  	struct cxl_memdev *cxlmd;
+> @@ -579,6 +621,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+>  	if (rc)
+>  		goto err;
+>  
+> +	rc = cxl_memdev_security_init(cxlmd);
+> +	if (rc)
+> +		goto err;
+> +
+>  	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 1d8e81c87c6a..5329274b0076 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -260,6 +260,15 @@ struct cxl_poison_state {
+>  	struct mutex lock;  /* Protect reads of poison list */
+>  };
+>  
+> +/**
+> + * struct cxl_security_state - Device security state
+> + *
+> + * @state: state of last security operation
+> + */
+> +struct cxl_security_state {
+> +	unsigned long state;
+> +};
+> +
+>  /**
+>   * struct cxl_dev_state - The driver device state
+>   *
+> @@ -297,6 +306,7 @@ struct cxl_poison_state {
+>   * @serial: PCIe Device Serial Number
+>   * @event: event log driver state
+>   * @poison: poison driver state info
+> + * @security: device security state
+>   * @mbox_send: @dev specific transport for transmitting mailbox commands
+>   *
+>   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+> @@ -336,6 +346,7 @@ struct cxl_dev_state {
+>  
+>  	struct cxl_event_state event;
+>  	struct cxl_poison_state poison;
+> +	struct cxl_security_state security;
+>  
+>  	struct rcuwait mbox_wait;
+>  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+> diff --git a/drivers/cxl/security.c b/drivers/cxl/security.c
+> index 4ad4bda2d18e..9da6785dfd31 100644
+> --- a/drivers/cxl/security.c
+> +++ b/drivers/cxl/security.c
+> @@ -34,6 +34,9 @@ static unsigned long cxl_pmem_get_security_flags(struct nvdimm *nvdimm,
+>  		return 0;
+>  
+>  	sec_out = le32_to_cpu(out.flags);
+> +	/* cache security state */
+> +	cxlds->security.state = sec_out;
+> +
+>  	if (ptype == NVDIMM_MASTER) {
+>  		if (sec_out & CXL_PMEM_SEC_STATE_MASTER_PASS_SET)
+>  			set_bit(NVDIMM_SECURITY_UNLOCKED, &security_flags);
 
