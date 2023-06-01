@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F0AC77B7E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 12:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4F4C7EE29
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 13:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbjFAM7g (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jun 2023 08:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
+        id S232964AbjFANGI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jun 2023 09:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbjFAM7g (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 08:59:36 -0400
+        with ESMTP id S232848AbjFANGI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 09:06:08 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890F7E7;
-        Thu,  1 Jun 2023 05:59:34 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX5lH6yzBz67n3K;
-        Thu,  1 Jun 2023 20:57:47 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C341D97;
+        Thu,  1 Jun 2023 06:06:06 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX5tr3TJMz67lVg;
+        Thu,  1 Jun 2023 21:04:20 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 1 Jun
- 2023 13:59:31 +0100
-Date:   Thu, 1 Jun 2023 13:59:31 +0100
+ 2023 14:06:04 +0100
+Date:   Thu, 1 Jun 2023 14:06:03 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,122 +29,137 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v4 09/23] cxl/pci: Early setup RCH dport component
- registers from RCRB
-Message-ID: <20230601135931.000046fa@Huawei.com>
-In-Reply-To: <20230523232214.55282-10-terry.bowman@amd.com>
+Subject: Re: [PATCH v4 10/23] cxl/port: Store the port's Component Register
+ mappings in struct cxl_port
+Message-ID: <20230601140603.00007ba2@Huawei.com>
+In-Reply-To: <20230523232214.55282-11-terry.bowman@amd.com>
 References: <20230523232214.55282-1-terry.bowman@amd.com>
-        <20230523232214.55282-10-terry.bowman@amd.com>
+        <20230523232214.55282-11-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 23 May 2023 18:22:00 -0500
+On Tue, 23 May 2023 18:22:01 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
 > From: Robert Richter <rrichter@amd.com>
 > 
-> CXL RAS capabilities must be enabled and accessible as soon as the CXL
-> endpoint is detected in the PCI hierarchy and bound to the cxl_pci
-> driver. This needs to be independent of other modules such as cxl_port
-> or cxl_mem.
+> CXL capabilities are stored in the Component Registers. To use them,
+> the specific I/O ranges of the capabilities must be determined by
+> probing the registers. For this, the whole Component Register range
+> needs to be mapped temporarily to detect the offset and length of a
+> capability range.
 > 
-> CXL RAS capabilities reside in the Component Registers. For an RCH
-> this is determined by probing RCRB which is implemented very late once
-> the CXL Memory Device is created.
+> In order to use more than one capability of a component (e.g. RAS and
+> HDM) the Component Register are probed and its mappings created
+> multiple times. This also causes overlapping I/O ranges as the whole
+> Component Register range must be mapped again while a capability's I/O
+> range is already mapped.
 > 
-> Change this by moving the RCRB probe to the cxl_pci driver. Do this by
-> using a new introduced function cxl_pci_find_port() similar to
-> cxl_mem_find_port() to determine the involved dport by the endpoint's
-> PCI handle. Plug this into the existing cxl_pci_setup_regs() function
-> to setup Component Registers. Probe the RCRB in case the Component
-> Registers cannot be located through the CXL Register Locator
-> capability.
+> Different capabilities cannot be setup at the same time. E.g. the RAS
+> capability must be made available as soon as the PCI driver is bound,
+> the HDM decoder is setup later during port enumeration. Moreover,
+> during early setup it is still unknown if a certain capability is
+> needed. A central capability setup is therefore not possible,
+> capabilities must be individually enabled once needed during
+> initialization.
 > 
-> This unifies code and early sets up the Component Registers at the
-> same time for both, VH and RCH mode. Only the cxl_pci driver is
-> involved for this. This allows an early mapping of the CXL RAS
-> capability registers.
+> To avoid a duplicate register probe and overlapping I/O mappings, only
+> probe the Component Registers one time and store the Component
+> Register mapping in struct port. The stored mappings can be used later
+> to iomap the capability register range when enabling the capability,
+> which will be implemented in a follow-on patch.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-One minor wording suggestion inline. I'm don't really care
-that much about it though, so.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Some minor comments...
 
 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 945ca0304d68..54c486cd65dd 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -274,13 +274,48 @@ static int cxl_pci_setup_mailbox(struct cxl_dev_state *cxlds)
->  	return 0;
+> ---
+>  drivers/cxl/core/port.c | 26 ++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h       |  2 ++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index eff91f141fde..34e929f1723b 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -686,6 +686,28 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+>  	return ERR_PTR(rc);
 >  }
 >  
-> +/* Extract RCRB, use same function interface as cxl_find_regblock(). */
-> +static int cxl_rcrb_get_comp_regs(struct pci_dev *pdev,
-> +				  enum cxl_regloc_type type,
-> +				  struct cxl_register_map *map)
+> +static int cxl_setup_comp_regs(struct device *dev, struct cxl_register_map *map,
+> +			       resource_size_t component_reg_phys)
 > +{
-> +	struct cxl_dport *dport;
-> +	resource_size_t component_reg_phys;
-> +
-> +	memset(map, 0, sizeof(*map));
-> +	map->dev = &pdev->dev;
-> +	map->resource = CXL_RESOURCE_NONE;
-> +
-> +	if (type != CXL_REGLOC_RBI_COMPONENT)
+> +	if (component_reg_phys == CXL_RESOURCE_NONE)
 > +		return -ENODEV;
 > +
-> +	if (!cxl_pci_find_port(pdev, &dport) || !dport->rch)
-> +		return -ENXIO;
-> +
-> +	component_reg_phys = cxl_probe_rcrb(&pdev->dev, dport->rcrb.base,
-> +					    NULL, CXL_RCRB_UPSTREAM);
-> +	if (component_reg_phys == CXL_RESOURCE_NONE)
-> +		return -ENXIO;
-> +
+> +	memset(map, 0, sizeof(*map));
+> +	map->dev = dev;
+> +	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
 > +	map->resource = component_reg_phys;
-> +	map->reg_type = type;
 > +	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
+setting most elements. Maybe
+	*map = (struct cxl_register_map) {
+		.dev = ...
+etc is cleaner and effectively the same thing.
+	};
 > +
-> +	return 0;
+> +	return cxl_setup_regs(map);
 > +}
 > +
->  static int cxl_pci_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
->  			      struct cxl_register_map *map)
->  {
->  	int rc;
+> +static inline int cxl_port_setup_regs(struct cxl_port *port,
+> +				      resource_size_t component_reg_phys)
+> +{
+> +	return cxl_setup_comp_regs(&port->dev, &port->comp_map,
+> +				   component_reg_phys);
+> +}
+> +
+>  static struct cxl_port *__devm_cxl_add_port(struct device *host,
+>  					    struct device *uport,
+>  					    resource_size_t component_reg_phys,
+> @@ -709,6 +731,10 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
+>  	if (rc)
+>  		goto err;
 >  
-> +	/*
-> +	 * If the Register Locator DVSEC does not contain the
-> +	 * Component Registers, try to extract them from the RCRB if
-> +	 * it is an RCH.
+> +	rc = cxl_port_setup_regs(port, component_reg_phys);
+> +	if (rc && rc != -ENODEV)
+> +		goto err;
 
-My instinct here was to wonder why having said 'if it is an RCH'
-you don't seem to be checking that first.  Perhaps
-change this text to something like.
-* Component Registers, assume it is an RCH and try to extra them
-* from an RCRB.
-*/
-?
+I'd add a comment on why not being present is fine here.
 
-> +	 */
->  	rc = cxl_find_regblock(pdev, type, map);
-> -	if (rc)
-> +	if (rc && cxl_rcrb_get_comp_regs(pdev, type, map))
->  		return rc;
->  
->  	return cxl_setup_regs(map);
+
+> +
+>  	rc = device_add(dev);
+>  	if (rc)
+>  		goto err;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index e5ae5f4e6669..c76e1f84ba61 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -552,6 +552,7 @@ struct cxl_dax_region {
+>   * @regions: cxl_region_ref instances, regions mapped by this port
+>   * @parent_dport: dport that points to this port in the parent
+>   * @decoder_ida: allocator for decoder ids
+> + * @comp_map: component register capability mappings
+>   * @nr_dports: number of entries in @dports
+>   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+>   * @commit_end: cursor to track highest committed decoder for commit ordering
+> @@ -571,6 +572,7 @@ struct cxl_port {
+>  	struct xarray regions;
+>  	struct cxl_dport *parent_dport;
+>  	struct ida decoder_ida;
+> +	struct cxl_register_map comp_map;
+>  	int nr_dports;
+>  	int hdm_end;
+>  	int commit_end;
 
