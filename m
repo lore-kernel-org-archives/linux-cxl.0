@@ -2,109 +2,122 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3D4C7EE23
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 04:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEA7C77B7E
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 09:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbjFAEVC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jun 2023 00:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
+        id S231737AbjFAJHq convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jun 2023 05:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjFAEVB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 00:21:01 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D2B101;
-        Wed, 31 May 2023 21:20:59 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 3F9DD8C2021;
-        Thu,  1 Jun 2023 04:20:59 +0000 (UTC)
-Received: from pdx1-sub0-mail-a316.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id ABB228C1F36;
-        Thu,  1 Jun 2023 04:20:58 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1685593258; a=rsa-sha256;
-        cv=none;
-        b=BdbjzErGq6v80wOWwi2VacehdOLmDDzUef/Ivj90y1yyjYrd2ZqMz/naR1tbBVPjhL3QkZ
-        tslE/906L936abXNCYxKzY+t3yTJWA93A9blnMaEQiwABMYds/KdBKArXQ572f31jAGt8t
-        mdvRQZU4iWPCgt75ZbWVSKAzNYvucuo/QVdXVcroAdTueGYqUUPieRR955x6Uj9M5pY1dd
-        6vG1qhXxFF3ptL2WHpBxgWgWjTimXNMb9QCOZVG4xPqp2ePgHrKm5B3Te2wEWYrqy/fAWX
-        2tMzZPfW2so8icdH7sglUlVK4w9EzZCPWIjJ/9vQL1LGehFUVUiI3/0999houA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1685593258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=YKUYW9MMboE6NImD3jpIGzcjkz1Sx8imCsGATqbsc7Y=;
-        b=gOiZZdwntaUARe4H9qu5yhDmhsrKu+uuIBNYE+XaF/tm1nDvk+AWWzima7ifU3Sjzb1P/W
-        nvb65jvCSuNk+7MASqNv5wbwspv680nLJj3lXqUXoBZlW0832udAk+8WmxOpGGkCICTvB8
-        JiUoLd7FGHGj+avo8cqv84yz3vK/gQvzpKqR/VrtxMGU1ZhjDPaZBmKdjqXJSNEYBoIaOu
-        Ph0SKXELo825iF5kFfgJ56wEQlvkqD0TjFUr43YpC4MTmmwwgxXXdrxKgULMQZ+PhaTemN
-        lOOl3puvzH0BOilDptSX9i6aXIpcDj+agTkNn3Dq06cYpV2u05N4+DngEYP0Eg==
-ARC-Authentication-Results: i=1;
-        rspamd-58dcc7d645-d5k62;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Robust-Lettuce: 7b7b1af03d6a4c90_1685593258927_719203131
-X-MC-Loop-Signature: 1685593258927:3178244814
-X-MC-Ingress-Time: 1685593258927
-Received: from pdx1-sub0-mail-a316.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.107.49.254 (trex/6.8.1);
-        Thu, 01 Jun 2023 04:20:58 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a316.dreamhost.com (Postfix) with ESMTPSA id 4QWtGx3vMXz4s;
-        Wed, 31 May 2023 21:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1685593258;
-        bh=YKUYW9MMboE6NImD3jpIGzcjkz1Sx8imCsGATqbsc7Y=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=hSWzwmIcIT3s7IuMFb7M0yAeXQqg6bho4aiaJkQTU1ZoMAf/ic0wcC9gc86DqxKy8
-         6WYDS6iUto6DRlvtPknE5HKtxbOTybIoxCihgDsVqYUeRkU71D50Qr8xRqDz+Mkbee
-         jCqBFYn4qM2fHJiHCTtD2bzd0NNMkKVOYiBWAwMe7x0cKJTgGd6ypUSQtftjelWv3H
-         tYERHh4Tq5BF436SMXJ+HFyLqkaW/RmUuVOEnzWEd3EJ7soVi7T6czQPbeRmVDGc04
-         AXygnPF+uqese3FOL9R40lsTxEC7knICe9ZNlP8vgE93T0Ilr7n+NHAw5ske7L21/R
-         bx2sKDr9iqFBg==
-Date:   Wed, 31 May 2023 20:46:59 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, LiuLele <liu.lele@qq.com>,
-        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        alison.schofield@intel.com, bhelgaas@google.com,
-        bwidawsk@kernel.org, dan.j.williams@intel.com, helgaas@kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, vishal.l.verma@intel.com
-Subject: Re: CXL memory device not created correctly
-Message-ID: <ns63paacatejvt5udpj7ssnyzp75aphbenw7ac5o2xcjiln6l4@lisofmey2kca>
-References: <cec6a8f5-a284-4f46-1ada-4edd625a9a2e@intel.com>
- <tencent_D9D9D358330CA573E23D490C6EE13E0DC105@qq.com>
- <gbsxrcjtnf67jxpqmbn57nqoslpmjtuk2ycatmau3vfsmpvbrd@c2umpofn2hti>
- <646793cc665bf_1231462943c@iweiny-mobl.notmuch>
- <ZHaubgQOFU0+r1MD@bombadil.infradead.org>
- <64780c904d3c_c35b294ce@iweiny-mobl.notmuch>
+        with ESMTP id S231910AbjFAJHP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 05:07:15 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FBBDB3;
+        Thu,  1 Jun 2023 02:07:14 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX0dB3mqMz6J7RV;
+        Thu,  1 Jun 2023 17:07:10 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 1 Jun
+ 2023 10:07:11 +0100
+Date:   Thu, 1 Jun 2023 10:07:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     <linux-i2c@vger.kernel.org>, Wolfram Sang <wsa@kernel.org>,
+        Niyas Sait <niyas.sait@linaro.org>,
+        Klaus Jensen <its@irrelevant.dk>,
+        Andy Shevchenko <andy@kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        Matt Johnston <matt@codeconstruct.com.au>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>,
+        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>
+Subject: Re: [RFC PATCH v3 4/7] i2c: aspeed: use a function pointer type def
+ for clk_reg_val callback
+Message-ID: <20230601100710.00000456@Huawei.com>
+In-Reply-To: <CAHp75Ve2mpPPoRG6SQ3nT1uE-y35+-sMDMPQSu97i9_5SDCYZQ@mail.gmail.com>
+References: <20230531100600.13543-1-Jonathan.Cameron@huawei.com>
+        <20230531100600.13543-5-Jonathan.Cameron@huawei.com>
+        <CAHp75Ve2mpPPoRG6SQ3nT1uE-y35+-sMDMPQSu97i9_5SDCYZQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <64780c904d3c_c35b294ce@iweiny-mobl.notmuch>
-User-Agent: NeoMutt/20230517
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 31 May 2023, Ira Weiny wrote:
+On Wed, 31 May 2023 20:42:15 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
->I don't think the kernel should be changed for following the spec.
+> On Wed, May 31, 2023 at 1:08 PM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > Rather than having to define the parameter types of this function
+> > in multiple places, use a single typedef.  
+> 
+> Suggested-by then?
+> 
+Good point.
 
-Agreed. If events are mandatory we just have to bite the bullet.
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Thanks,
-Davidlohr
+Hopefully Wolfram uses b4 and that will get picked up automatically.
+
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >
+> > ---
+> > v3: New patch to switch to a function pointer as suggested by Andy.
+> > ---
+> >  drivers/i2c/busses/i2c-aspeed.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+> > index 4363bfe06f9b..be93de56f7e4 100644
+> > --- a/drivers/i2c/busses/i2c-aspeed.c
+> > +++ b/drivers/i2c/busses/i2c-aspeed.c
+> > @@ -137,6 +137,8 @@ enum aspeed_i2c_slave_state {
+> >         ASPEED_I2C_SLAVE_STOP,
+> >  };
+> >
+> > +typedef u32 (*aspeed_get_clk_reg_val_cb)(struct device *dev, u32 divisor);
+> > +
+> >  struct aspeed_i2c_bus {
+> >         struct i2c_adapter              adap;
+> >         struct device                   *dev;
+> > @@ -145,8 +147,7 @@ struct aspeed_i2c_bus {
+> >         /* Synchronizes I/O mem access to base. */
+> >         spinlock_t                      lock;
+> >         struct completion               cmd_complete;
+> > -       u32                             (*get_clk_reg_val)(struct device *dev,
+> > -                                                          u32 divisor);
+> > +       aspeed_get_clk_reg_val_cb       get_clk_reg_val;
+> >         unsigned long                   parent_clk_frequency;
+> >         u32                             bus_frequency;
+> >         /* Transaction state. */
+> > @@ -1011,8 +1012,7 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
+> >         if (!match)
+> >                 bus->get_clk_reg_val = aspeed_i2c_24xx_get_clk_reg_val;
+> >         else
+> > -               bus->get_clk_reg_val = (u32 (*)(struct device *, u32))
+> > -                               match->data;
+> > +               bus->get_clk_reg_val = (aspeed_get_clk_reg_val_cb)(match->data);
+> >
+> >         /* Initialize the I2C adapter */
+> >         spin_lock_init(&bus->lock);
+> > --
+> > 2.39.2
+> >  
+> 
+> 
+
