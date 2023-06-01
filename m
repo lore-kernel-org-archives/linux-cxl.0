@@ -2,116 +2,80 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7F4C7EE23
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 01:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36333C7EE24
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 09:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233761AbjFFBgf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Jun 2023 21:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57898 "EHLO
+        id S237454AbjFFJ5I (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jun 2023 05:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233794AbjFFBgd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Jun 2023 21:36:33 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E23110;
-        Mon,  5 Jun 2023 18:36:30 -0700 (PDT)
-Received: from dggpemm500002.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QZtLt1qH7z1c0HN;
-        Tue,  6 Jun 2023 09:34:46 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 6 Jun 2023 09:36:27 +0800
-Subject: Re: [PATCH v3 0/4] acpi: Add CDAT parsing support to ACPI tables code
-To:     Dave Jiang <dave.jiang@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>
-CC:     Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <lukas@wunner.de>, <Jonathan.Cameron@huawei.com>
-References: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <0076edb9-7e65-eeb4-38fa-fb3c4a112a40@huawei.com>
-Date:   Tue, 6 Jun 2023 09:36:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+        with ESMTP id S237477AbjFFJ5F (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 05:57:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE24E73;
+        Tue,  6 Jun 2023 02:57:03 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qb5S708Cdz67KPR;
+        Tue,  6 Jun 2023 17:55:03 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 6 Jun
+ 2023 10:57:00 +0100
+Date:   Thu, 1 Jun 2023 14:36:53 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Terry Bowman <terry.bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v4 17/23] cxl/pci: Add RCH downstream port AER register
+ discovery
+Message-ID: <20230601143653.00000ee0@Huawei.com>
+In-Reply-To: <20230523232214.55282-18-terry.bowman@amd.com>
+References: <20230523232214.55282-1-terry.bowman@amd.com>
+        <20230523232214.55282-18-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.247]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500002.china.huawei.com (7.185.36.229)
+MIME-Version: 1.0
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 2023/6/2 5:31, Dave Jiang wrote:
-> v3:
-> - Move common code to lib/fw_table.c
-> v2:
-> - Split out with CONFIG_ACPI_TABLES_LIB to be independent
-> - Fixed 0-day issues
-> - Change CDAT releveant names to prefix with cdat/CDAT instead of
->    acpi/ACPI. (Jonathan)
-> - Make table_header a union with cdat table header instead of
->    'acpi_table_header'. (Jonathan)
-> - Removed ACPI_SIG_CDAT, already defined.
-> 
-> Hi Rafael,
-> Please consider ack these patches. Dan can take these through the CXL tree. After
-> attempting to rename the cxl_ prefixes of functions and non ACPICA data structures
-> to something more common, it seems that significant amount of ACPI code would be
-> touched for the rename. For this series I left it alone in order to have the minimal
-> changes to ACPI code.
-> 
-> I've broken out the "cxl: Add support for QTG ID retrieval for CXL subsystem" [1]
-> series in order to make it more manageable. Here's the first part of the ACPI
-> changes. These changes are added to allow reuse of ACPI tables code to parse
-> the CDAT tables. While CDAT is not part of ACPI, the table structures are similar
-> to ACPI layouts that the code can be reused with some small modifications.
-> 
-> However, in order to be properly utilized by CXL users, the tables code needs
-> to be refactored out to be independent of ACPI. For example, a PPC BE host may
-> have CXL and does not have ACPI support. But it will have CDAT to read from
-> devices and switches. I have created CONFIG_ACPI_TABLES_LIB in order to allow
-> the common code to be independent. 0-day seems to be happy now for all the
-> different configs and archs.
-> 
-> 1/4: Split out the common code from drivers/acpi/tables.c to lib/fw_table.c
-> 2/4: Add CDAT support
-> 3,4/4: These two are minor patches that has ACPICA impact. Has been merged into
->         the ACPICA git repo [3].
-> 
-> The whole series is at [2] for convenience.
-> 
-> [1]: https://lore.kernel.org/linux-cxl/168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3/T/#t
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
-> [3]: https://github.com/acpica/acpica/pull/874
-> 
-> ---
-> 
-> Dave Jiang (4):
->        acpi: Move common tables helper functions to common lib
->        lib/firmware_table: tables: Add CDAT table parsing support
->        acpi: fix misnamed define for CDAT DSMAS
->        acpi: Add defines for CDAT SSLBIS
-> 
-> 
->   drivers/acpi/Kconfig     |   1 +
->   drivers/acpi/tables.c    | 178 +----------------------------
->   include/acpi/actbl1.h    |   5 +-
->   include/linux/acpi.h     |  22 +---
->   include/linux/fw_table.h |  52 +++++++++
->   lib/Kconfig              |   3 +
->   lib/Makefile             |   2 +
->   lib/fw_table.c           | 236 +++++++++++++++++++++++++++++++++++++++
+On Tue, 23 May 2023 18:22:08 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Who will maintain this file? since it's the core function of parsing
-ACPI tables, I would like the update of this file in the future will
-Cc ACPI mailing list.
-
-Thanks
-Hanjun
+> Restricted CXL host (RCH) downstream port AER information is not currently
+> logged while in the error state. One problem preventing the error logging
+> is the AER and RAS registers are not accessible. The CXL driver requires
+> changes to find RCH downstream port AER and RAS registers for purpose of
+> error logging.
+> 
+> RCH downstream ports are not enumerated during a PCI bus scan and are
+> instead discovered using system firmware, ACPI in this case.[1] The
+> downstream port is implemented as a Root Complex Register Block (RCRB).
+> The RCRB is a 4k memory block containing PCIe registers based on the PCIe
+> root port.[2] The RCRB includes AER extended capability registers used for
+> reporting errors. Note, the RCH's AER Capability is located in the RCRB
+> memory space instead of PCI configuration space, thus its register access
+> is different. Existing kernel PCIe AER functions can not be used to manage
+> the downstream port AER capabilities and RAS registers because the port was
+> not enumerated during PCI scan and the registers are not PCI config
+> accessible.
+> 
+> Discover RCH downstream port AER extended capability registers. Use MMIO
+> accesses to search for extended AER capability in RCRB register space.
+> 
+> [1] CXL 3.0 Spec, 9.11.2 - System Firmware View of CXL 1.1 Hierarchy
+> [2] CXL 3.0 Spec, 8.2.1.1 - RCH Downstream Port RCRB
+> 
+> Co-developed-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
