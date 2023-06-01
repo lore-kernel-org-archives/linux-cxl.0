@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE0DC77B7E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 14:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78896C7EE23
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 14:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233640AbjFAOHI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jun 2023 10:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56294 "EHLO
+        id S233867AbjFAOLv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jun 2023 10:11:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233416AbjFAOHH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 10:07:07 -0400
+        with ESMTP id S231812AbjFAOLs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 10:11:48 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A913199;
-        Thu,  1 Jun 2023 07:07:01 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX7F664D3z6D8W5;
-        Thu,  1 Jun 2023 22:05:14 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD9E1A1;
+        Thu,  1 Jun 2023 07:11:37 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX7Kx5QNGz683fS;
+        Thu,  1 Jun 2023 22:09:25 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 1 Jun
- 2023 15:06:58 +0100
-Date:   Thu, 1 Jun 2023 15:06:58 +0100
+ 2023 15:11:35 +0100
+Date:   Thu, 1 Jun 2023 15:11:34 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Terry Bowman <terry.bowman@amd.com>
-CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Robert Richter <rrichter@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v4 22/23] PCI/AER: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <20230601150658.000021d4@Huawei.com>
-In-Reply-To: <20230523232214.55282-23-terry.bowman@amd.com>
-References: <20230523232214.55282-1-terry.bowman@amd.com>
-        <20230523232214.55282-23-terry.bowman@amd.com>
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bhelgaas@google.com>
+Subject: Re: [PATCH v4 23/23] PCI/AER: Unmask RCEC internal errors to enable
+ RCH downstream port error handling
+Message-ID: <20230601151134.00006281@Huawei.com>
+In-Reply-To: <ZHEXOlxfCCApI+NE@bhelgaas>
+References: <ZG/cYUaZerXNqqJl@rric.localdomain>
+        <ZHEXOlxfCCApI+NE@bhelgaas>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -50,63 +50,46 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 23 May 2023 18:22:13 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> From: Robert Richter <rrichter@amd.com>
+> > > > @@ -1432,6 +1495,7 @@ static int aer_probe(struct pcie_device *dev)
+> > > >  		return status;
+> > > >  	}
+> > > >  
+> > > > +	cxl_rch_enable_rcec(port);  
+> > > 
+> > > Could this be done by the driver that claims the CXL RCiEP?  There's
+> > > no point in unmasking the errors before there's a driver with
+> > > pci_error_handlers that can do something with them anyway.  
+> > 
+> > This sounds reasonable at the first glance. The problem is there could
+> > be many devices associated with the RCEC. Not all of them will be
+> > bound to a driver and handler at the same time. We would need to
+> > refcount it or maintain a list of enabled devices. But there is
+> > already something similar by checking dev->driver. But right, AER
+> > errors could be seen and handled then at least on PCI level. I tent to
+> > permanently enable RCEC AER, but that could cause side-effects. What
+> > do you think?  
 > 
-> In Restricted CXL Device (RCD) mode a CXL device is exposed as an
-> RCiEP, but CXL downstream and upstream ports are not enumerated and
-> not visible in the PCIe hierarchy. Protocol and link errors are sent
-> to an RCEC.
+> IIUC, this really just affects CXL devices, so I think the choice is
+> (1) always unmask internal errors for RCECs where those CXL devices
+> report errors (as this patch does), or (2) unmask when first CXL
+> driver that can handle the errors is loaded and restore previous state
+> when last one is unloaded.
 > 
-> Restricted CXL host (RCH) downstream port-detected errors are signaled
-> as internal AER errors, either Uncorrectable Internal Error (UIE) or
-> Corrected Internal Errors (CIE). The error source is the id of the
-> RCEC. A CXL handler must then inspect the error status in various CXL
-> registers residing in the dport's component register space (CXL RAS
-> capability) or the dport's RCRB (PCIe AER extended capability). [1]
-> 
-> Errors showing up in the RCEC's error handler must be handled and
-> connected to the CXL subsystem. Implement this by forwarding the error
-> to all CXL devices below the RCEC. Since the entire CXL device is
-> controlled only using PCIe Configuration Space of device 0, function
-> 0, only pass it there [2]. The error handling is limited to currently
-> supported devices with the Memory Device class code set
-> (PCI_CLASS_MEMORY_CXL, 502h), where the handler can be implemented in
-> the existing cxl_pci driver. Support of CXL devices (e.g. a CXL.cache
-> device) can be enabled later.
-> 
-> In addition to errors directed to the CXL endpoint device, a handler
-> must also inspect the CXL RAS and PCIe AER capabilities of the CXL
-> downstream port that is connected to the device.
-> 
-> Since CXL downstream port errors are signaled using internal errors,
-> the handler requires those errors to be unmasked. This is subject of a
-> follow-on patch.
-> 
-> The reason for choosing this implementation is that a CXL RCEC device
-> is bound to the AER port driver, but the driver does not allow it to
-> register a custom specific handler to support CXL. Connecting the RCEC
-> hard-wired with a CXL handler does not work, as the CXL subsystem
-> might not be present all the time. The alternative to add an
-> implementation to the portdrv to allow the registration of a custom
-> RCEC error handler isn't worth doing it as CXL would be its only user.
-> Instead, just check for an CXL RCEC and pass it down to the connected
-> CXL device's error handler. With this approach the code can entirely
-> be implemented in the PCIe AER driver and is independent of the CXL
-> subsystem. The CXL driver only provides the handler.
-> 
-> [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
-> [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pci@vger.kernel.org
-> ---
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> If the RCEC *only* handles errors for CXL devices, i.e., not for a mix
+> of vanilla PCIe RCiEPs and CXL RCiEPs, I think I'm OK with (1).  I
+> think you said only the CXL driver knows how to collect and interpret
+> the error data.  Is it OK that when no such driver is loaded, we field
+> error interrupts silently, without even mentioning that an error
+> occurred?  I guess without the driver, the device is probably not in
+> use.
+
+It might be in use.  Firmware may well have set up the CXL device and
+even have put the kernel image in that memory for example. OS first RAS
+handling won't be up until the driver loads though.  Would be a bit
+odd to mix OS first handling with firmware setup. I'd expect firmware
+first handling in that case, but I don't think anything stops the two
+being mixed.
+
+Jonathan
 
