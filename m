@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DA6C77B7E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 10:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09254C7EE23
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 10:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbjFAKRx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jun 2023 06:17:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55304 "EHLO
+        id S232540AbjFAKiS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jun 2023 06:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233384AbjFAKRZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 06:17:25 -0400
+        with ESMTP id S232545AbjFAKiR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 06:38:17 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BAA1FC0;
-        Thu,  1 Jun 2023 03:14:52 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX23j5PWSz67MCd;
-        Thu,  1 Jun 2023 18:11:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5D6107;
+        Thu,  1 Jun 2023 03:38:15 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX2fC6cTRz6J7Ts;
+        Thu,  1 Jun 2023 18:38:11 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 1 Jun
- 2023 11:13:29 +0100
-Date:   Thu, 1 Jun 2023 11:13:28 +0100
+ 2023 11:38:12 +0100
+Date:   Thu, 1 Jun 2023 11:38:11 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,12 +29,12 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v4 01/23] cxl/acpi: Probe RCRB later during RCH
- downstream port creation
-Message-ID: <20230601111328.00005620@Huawei.com>
-In-Reply-To: <20230523232214.55282-2-terry.bowman@amd.com>
+Subject: Re: [PATCH v4 02/23] cxl/rch: Prepare for caching the MMIO mapped
+ PCIe AER capability
+Message-ID: <20230601113811.00006cd5@Huawei.com>
+In-Reply-To: <20230523232214.55282-3-terry.bowman@amd.com>
 References: <20230523232214.55282-1-terry.bowman@amd.com>
-        <20230523232214.55282-2-terry.bowman@amd.com>
+        <20230523232214.55282-3-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -48,115 +48,202 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 23 May 2023 18:21:52 -0500
+On Tue, 23 May 2023 18:21:53 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> From: Robert Richter <rrichter@amd.com>
+> From: Dan Williams <dan.j.williams@intel.com>
 > 
-> The RCRB is extracted already during ACPI CEDT table parsing while the
-> data of this is needed not earlier than dport creation. This
-> implementation comes with drawbacks: During ACPI table scan there is
-> already MMIO access including mapping and unmapping, but only ACPI
-> data should be collected here. The collected data must be transferred
-> through a couple of interfaces until it is finally consumed when
-> creating the dport. This causes complex data structures and function
-> interfaces. Additionally, RCRB parsing will be extended to also
-> extract AER data, it would be much easier do this at a later point
-> during port and dport creation when the data structures are available
-> to hold that data.
+> Prepare cxl_probe_rcrb() for retrieving more than just the component
+> register block. The RCH AER handling code wants to get back to the AER
+> capability that happens to be MMIO mapped rather then configuration
+> cycles.
 > 
-> To simplify all that, probe the RCRB at a later point during RCH
-> downstream port creation. Change ACPI table parser to only extract the
-> base address of either the component registers or the RCRB. Parse and
-> extract the RCRB in devm_cxl_add_rch_dport().
+> Move RCRB specific downstream port data, like the RCRB base and the
+> AER capability offset, into its own data structure ('struct
+> cxl_rcrb_info') for cxl_probe_rcrb() to fill. Extend 'struct
+> cxl_dport' to include a 'struct cxl_rcrb_info' attribute.
+>
+There are several other refactors going on in here. I'd rather
+see it broken down into a few separate patches. See inline.
+ 
+> This centralizes all RCRB scanning in one routine.
 > 
-> This is in preparation to centralize all RCRB scanning.
-> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Co-developed-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-Hi,
-
-Some comments inline, though one of them (about extensibility of CDAT
-structures) applies just as much to the existing code so doesn't affect
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-for this patch.
-
-
 > ---
->  drivers/cxl/acpi.c      | 52 ++++++++++++++++-------------------------
->  drivers/cxl/core/port.c | 21 +++++++++++++----
->  drivers/cxl/cxl.h       |  1 -
->  3 files changed, 36 insertions(+), 38 deletions(-)
+>  drivers/cxl/core/port.c       |  7 ++++---
+>  drivers/cxl/core/regs.c       | 10 ++++++----
+>  drivers/cxl/cxl.h             | 19 ++++++++++++-------
+>  drivers/cxl/mem.c             | 16 +++++++++-------
+>  tools/testing/cxl/Kbuild      |  2 +-
+>  tools/testing/cxl/test/cxl.c  | 10 ++++++----
+>  tools/testing/cxl/test/mock.c | 12 ++++++------
+>  tools/testing/cxl/test/mock.h |  7 ++++---
+>  8 files changed, 48 insertions(+), 35 deletions(-)
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 7e1765b09e04..39227070da9b 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -373,20 +373,18 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 1a3f8729a616..618865ca6a9f 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -939,8 +939,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	if (rcrb != CXL_RESOURCE_NONE) {
+> -		component_reg_phys = cxl_rcrb_to_component(dport_dev,
+> -						rcrb, CXL_RCRB_DOWNSTREAM);
+> +		component_reg_phys =
+> +			cxl_probe_rcrb(dport_dev, rcrb, &dport->rcrb,
+> +				       CXL_RCRB_DOWNSTREAM);
+>  		if (component_reg_phys == CXL_RESOURCE_NONE) {
+>  			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
+>  			return ERR_PTR(-ENXIO);
+> @@ -957,7 +958,7 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  	dport->port_id = port_id;
+>  	dport->component_reg_phys = component_reg_phys;
+>  	dport->port = port;
+> -	dport->rcrb = rcrb;
+> +	dport->rcrb.base = rcrb;
+>  
+>  	cond_cxl_root_lock(port);
+>  	rc = add_dport(port, dport);
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 1476a0299c9b..08da4c917f99 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -332,9 +332,8 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+>  
+> -resource_size_t cxl_rcrb_to_component(struct device *dev,
+> -				      resource_size_t rcrb,
+> -				      enum cxl_rcrb which)
+> +resource_size_t cxl_probe_rcrb(struct device *dev, resource_size_t rcrb,
+> +			       struct cxl_rcrb_info *ri, enum cxl_rcrb which)
+>  {
+>  	resource_size_t component_reg_phys;
+>  	void __iomem *addr;
+> @@ -344,6 +343,8 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
+>  
+>  	if (which == CXL_RCRB_UPSTREAM)
+>  		rcrb += SZ_4K;
+> +	else if (ri)
+> +		ri->base = rcrb;
+
+I'm struggling a bit to follow flow, but I 'think' you set this to the same
+address here and at the end of __devm_cxl_add_dport()
+
+>  
+>  	/*
+>  	 * RCRB's BAR[0..1] point to component block containing CXL
+> @@ -364,6 +365,7 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
+>  	cmd = readw(addr + PCI_COMMAND);
+>  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
+>  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
+> +
+
+Trivial but I love to moan about these :)
+Stray change that shouldn't be in this patch...
+
+>  	iounmap(addr);
+>  	release_mem_region(rcrb, SZ_4K);
+>  
+> @@ -395,4 +397,4 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
+>  
+>  	return component_reg_phys;
+>  }
+> -EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_component, CXL);
+> +EXPORT_SYMBOL_NS_GPL(cxl_probe_rcrb, CXL);
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index a5cd661face2..29e0bd2b8f2a 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -267,9 +267,9 @@ enum cxl_rcrb {
+>  	CXL_RCRB_DOWNSTREAM,
+>  	CXL_RCRB_UPSTREAM,
+>  };
+> -resource_size_t cxl_rcrb_to_component(struct device *dev,
+> -				      resource_size_t rcrb,
+> -				      enum cxl_rcrb which);
+> +struct cxl_rcrb_info;
+> +resource_size_t cxl_probe_rcrb(struct device *dev, resource_size_t rcrb,
+> +			       struct cxl_rcrb_info *ri, enum cxl_rcrb which);
+>  
+>  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+>  #define CXL_TARGET_STRLEN 20
+> @@ -587,22 +587,27 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+>  	return xa_load(&port->dports, (unsigned long)dport_dev);
 >  }
 >  
->  struct cxl_chbs_context {
-> -	struct device *dev;
->  	unsigned long long uid;
-> -	resource_size_t rcrb;
-> -	resource_size_t chbcr;
+> +struct cxl_rcrb_info {
 > +	resource_size_t base;
->  	u32 cxl_version;
+> +	u16 aer_cap;
+> +};
+> +
+>  /**
+>   * struct cxl_dport - CXL downstream port
+>   * @dport: PCI bridge or firmware device representing the downstream link
+> + * @port: reference to cxl_port that contains this downstream port
+>   * @port_id: unique hardware identifier for dport in decoder target list
+>   * @component_reg_phys: downstream port component registers
+> - * @rcrb: base address for the Root Complex Register Block
+>   * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+> - * @port: reference to cxl_port that contains this downstream port
+> + * @rcrb: Data about the Root Complex Register Block layout
+>   */
+>  struct cxl_dport {
+>  	struct device *dport;
+> +	struct cxl_port *port;
+
+Why the reorder?  It's adding noise we don't need in this patch...
+
+>  	int port_id;
+>  	resource_size_t component_reg_phys;
+> -	resource_size_t rcrb;
+>  	bool rch;
+> -	struct cxl_port *port;
+> +	struct cxl_rcrb_info rcrb;
 >  };
 >  
-> -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
->  			 const unsigned long end)
->  {
->  	struct cxl_chbs_context *ctx = arg;
->  	struct acpi_cedt_chbs *chbs;
+>  /**
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 519edd0eb196..7ecdaa7f9315 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -51,7 +51,6 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+>  	struct cxl_port *parent_port = parent_dport->port;
+>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>  	struct cxl_port *endpoint, *iter, *down;
+> -	resource_size_t component_reg_phys;
+>  	int rc;
 >  
-> -	if (ctx->chbcr)
-> +	if (ctx->base)
->  		return 0;
->  
->  	chbs = (struct acpi_cedt_chbs *) header;
-> @@ -395,23 +393,16 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
->  		return 0;
->  
->  	ctx->cxl_version = chbs->cxl_version;
-> -	ctx->rcrb = CXL_RESOURCE_NONE;
-> -	ctx->chbcr = CXL_RESOURCE_NONE;
-> +	ctx->base = CXL_RESOURCE_NONE;
->  
->  	if (!chbs->base)
->  		return 0;
->  
-> -	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11) {
-> -		ctx->chbcr = chbs->base;
+>  	/*
+> @@ -71,12 +70,15 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+>  	 * host-bridge RCRB if they are not already mapped via the
+>  	 * typical register locator mechanism.
+>  	 */
+> -	if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
+> -		component_reg_phys = cxl_rcrb_to_component(
+> -			&cxlmd->dev, parent_dport->rcrb, CXL_RCRB_UPSTREAM);
+> -	else
+> -		component_reg_phys = cxlds->component_reg_phys;
+> -	endpoint = devm_cxl_add_port(host, &cxlmd->dev, component_reg_phys,
+> +	if (parent_dport->rch &&
+> +	    cxlds->component_reg_phys == CXL_RESOURCE_NONE) {
+> +		cxlds->component_reg_phys =
+> +			cxl_probe_rcrb(&cxlmd->dev, parent_dport->rcrb.base,
+> +				       NULL, CXL_RCRB_UPSTREAM);
 
-Trivial: This is a functional change and should be called out -
-previously the base address was stashed even if the length test
-fails, now it isn't. May make no difference because it was never used
-if that's the case, but would be nice to still mention it in patch description.
+This use of the component_reg_phys pointer in cxlds isn't closely related
+to the other changes. This patch would (I think) be more readable
+if that change was done in a precursor patch.
 
-Also, ACPI tables are designed to be extensible and I think that
-applies to CDAT tables as well - so this code should not be
-checking for a precise match, but rather that it is greater than
-or equal to the size we will read from.
-
-
-> +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-> +	    chbs->length != CXL_RCRB_SIZE)
->  		return 0;
-> -	}
-
->  
-> -	if (chbs->length != CXL_RCRB_SIZE)
-> -		return 0;
-> -
-> -	ctx->rcrb = chbs->base;
-> -	ctx->chbcr = cxl_rcrb_to_component(ctx->dev, chbs->base,
-> -					   CXL_RCRB_DOWNSTREAM);
-> +	ctx->base = chbs->base;
->  
->  	return 0;
->  }
+> +	}
+> +
+> +	endpoint = devm_cxl_add_port(host, &cxlmd->dev,
+> +				     cxlds->component_reg_phys,
+>  				     parent_dport);
+>  	if (IS_ERR(endpoint))
+>  		return PTR_ERR(endpoint);
 
