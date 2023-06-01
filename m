@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7CEC7EE23
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 13:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDC6C77B7A
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 13:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232877AbjFANH4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jun 2023 09:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
+        id S233472AbjFANLY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jun 2023 09:11:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232895AbjFANH4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 09:07:56 -0400
+        with ESMTP id S233356AbjFANLV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 09:11:21 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D7AE7;
-        Thu,  1 Jun 2023 06:07:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED552139;
+        Thu,  1 Jun 2023 06:11:18 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX5wQ0gv6z67LMV;
-        Thu,  1 Jun 2023 21:05:42 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX60L4ykJz687PR;
+        Thu,  1 Jun 2023 21:09:06 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 1 Jun
- 2023 14:07:51 +0100
-Date:   Thu, 1 Jun 2023 14:07:50 +0100
+ 2023 14:11:16 +0100
+Date:   Thu, 1 Jun 2023 14:11:15 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,12 +29,12 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v4 12/23] cxl/pci: Store the endpoint's Component
- Register mappings in struct cxl_dev_state
-Message-ID: <20230601140750.000006e6@Huawei.com>
-In-Reply-To: <20230523232214.55282-13-terry.bowman@amd.com>
+Subject: Re: [PATCH v4 13/23] cxl/hdm: Use stored Component Register
+ mappings to map HDM decoder capability
+Message-ID: <20230601141115.00006b6a@Huawei.com>
+In-Reply-To: <20230523232214.55282-14-terry.bowman@amd.com>
 References: <20230523232214.55282-1-terry.bowman@amd.com>
-        <20230523232214.55282-13-terry.bowman@amd.com>
+        <20230523232214.55282-14-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -48,68 +48,22 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 23 May 2023 18:22:03 -0500
+On Tue, 23 May 2023 18:22:04 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
 > From: Robert Richter <rrichter@amd.com>
 > 
-> Same as for ports and dports, also store the endpoint's Component
-> Register mappings, use struct cxl_dev_state for that.
+> Now, that the Component Register mappings are stored, use them to
+> enable and map the HDM decoder capabilities. The Component Registers
+> do not need to be probed again for this, remove probing code.
+> 
+> The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
+> Endpoint's component register mappings are located in the cxlds and
+> else in the port's structure. Provide a helper function
+> cxl_port_get_comp_map() to locate the mappings depending on the
+> component's type.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
+Other than the static you already fixed this looks good to me.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/cxl/cxlmem.h | 3 ++-
->  drivers/cxl/pci.c    | 9 +++++----
->  2 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index a2845a7a69d8..2823c5aaf3db 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -263,6 +263,7 @@ struct cxl_poison_state {
->   *
->   * @dev: The device associated with this CXL state
->   * @cxlmd: The device representing the CXL.mem capabilities of @dev
-> + * @comp_map: component register capability mappings
->   * @regs: Parsed register blocks
->   * @cxl_dvsec: Offset to the PCIe device DVSEC
->   * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-> @@ -299,7 +300,7 @@ struct cxl_poison_state {
->  struct cxl_dev_state {
->  	struct device *dev;
->  	struct cxl_memdev *cxlmd;
-> -
-> +	struct cxl_register_map comp_map;
->  	struct cxl_regs regs;
->  	int cxl_dvsec;
->  
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 54c486cd65dd..00983770ea7b 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -662,15 +662,16 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	 * still be useful for management functions so don't return an error.
->  	 */
->  	cxlds->component_reg_phys = CXL_RESOURCE_NONE;
-> -	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
-> +				&cxlds->comp_map);
->  	if (rc)
->  		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
-> -	else if (!map.component_map.ras.valid)
-> +	else if (!cxlds->comp_map.component_map.ras.valid)
->  		dev_dbg(&pdev->dev, "RAS registers not found\n");
->  
-> -	cxlds->component_reg_phys = map.resource;
-> +	cxlds->component_reg_phys = cxlds->comp_map.resource;
->  
-> -	rc = cxl_map_component_regs(&map, &cxlds->regs.component,
-> +	rc = cxl_map_component_regs(&cxlds->comp_map, &cxlds->regs.component,
->  				    BIT(CXL_CM_CAP_CAP_ID_RAS));
->  	if (rc)
->  		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
-
