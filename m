@@ -2,202 +2,122 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1914CC77B7E
-	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3B5C7EE23
+	for <linux-cxl@archiver.kernel.org>; Thu,  1 Jun 2023 21:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjFARyM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 1 Jun 2023 13:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43634 "EHLO
+        id S232401AbjFAVbt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 1 Jun 2023 17:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231493AbjFARyK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 13:54:10 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2097.outbound.protection.outlook.com [40.92.53.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67F018C
-        for <linux-cxl@vger.kernel.org>; Thu,  1 Jun 2023 10:54:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dtxJEgqba//9mqV6KIrWHEW8ph8fyjf0sQ9AxssUliCNvBIm7SNBzU8Rh8O1fHgg8tG/KPRx5HHLLNF9Sh7QuUk5KNdgNUPSUrg/MBLeV7O+AnIwzC4GFC+zhnu8W0EJGVaWfGDy1oPyPSTy3CGnmY7Yo80CmcmtwhidQGagEzDMZ/VoG4AD9KLWUNCPXR11Lib27wfX3nKlxEkuffLZ6CMLdVsIFPRy8NWUYbMSmk20lXJpggjclMyISIJ5MfFuEQBY2t4w9D/iKI/r1WZpWQD2v1KQzHCjv4lBky0CSlbduMReS3RxQ5Stemi7JExm/R0CSpb/mHXljfgOkE+2DQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sE4dHhJQhtZ55iRRQ98yjaaU4q2IRPeQ2vNGJhVC5uY=;
- b=l6A6XoEHh/vJy4cqDtESSuAB933ROUyqNpMd/Fy4qKIjHbikRniAPrPVRWwjUDOIwNLONGTC0qMUSi45rt8KdNVMPvz4T1hYxXWGxXqtmSjKl6+nTx0NraEjZlr4vwCG2LmZ8HIfm02SIWwd17+TS8qe58AMhpk8v6oVVXz0bCVubaYmq7Grz+ScqMEkBan/wO6fiPoFpbezBoPPB7qXD5jWij6wsDZfD36g13QbiCP3/8I17YfsUQACHff89LwNLMviF2uK7BOEBHfUVDXSiXZgrwOoSE1zZcBsmZ2uYRY5WfZ4OBz1rrpVrVDuYxPa4AhFP2S04daVzWIel0/RAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sE4dHhJQhtZ55iRRQ98yjaaU4q2IRPeQ2vNGJhVC5uY=;
- b=I0cwetdOs2DRlPiK/CvhVVCgIL3wRUT6qyfgDmGs/SimPyQ67feIkYnHVCcLilo2zf7f6C9UO3veSB7he8F2c3cLkI6pH3p0gw6MyG3U1J1pZVT3lQcw8mH5l8JjKqSO3dlZ8n8mIY7Irg3nLdLDzKSYCnM8sEWEsXGm8TheGL8N7osEP5UAAxwV5nXG/ShHDBJN/whnknzIAbQXHz9QuFrelDar01isvKsP1rFxFCFdI65FKXIgLREkQLXJJz5XE3epRnAfKxWcLKjIbjB54LKNFyzJMj48xEEbGbqTLRshEK24wOCmcOnASsgi/Nhh/7b3L22p27qXIv6nvZYt2A==
-Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
- TYZPR06MB5274.apcprd06.prod.outlook.com (2603:1096:400:1ff::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.22; Thu, 1 Jun
- 2023 17:54:04 +0000
-Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
- ([fe80::248c:58fd:97db:5425]) by SG2PR06MB3397.apcprd06.prod.outlook.com
- ([fe80::248c:58fd:97db:5425%7]) with mapi id 15.20.6433.018; Thu, 1 Jun 2023
- 17:54:04 +0000
-Date:   Thu, 1 Jun 2023 10:53:51 -0700
-From:   Fan Ni <nifan@outlook.com>
-To:     Li Zhijian <lizhijian@fujitsu.com>
-Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        vishal.l.verma@intel.com, a.manzanares@samsung.com,
-        dave@stgolabs.net, nmtadam.samsung@gmail.com, fan.ni@samsung.com
-Subject: Re: [ndctl PATCH] cxl/region: Fix memdevs leak
-Message-ID: <SG2PR06MB3397FB13DCA701D16A7A9EB3B2499@SG2PR06MB3397.apcprd06.prod.outlook.com>
-References: <20230531022718.7691-1-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230531022718.7691-1-lizhijian@fujitsu.com>
-X-TMN:  [PJIQp+TEbWI1MuYcbD4HmydNmo84vHET3juxqttyYrk=]
-X-ClientProxiedBy: BYAPR02CA0060.namprd02.prod.outlook.com
- (2603:10b6:a03:54::37) To SG2PR06MB3397.apcprd06.prod.outlook.com
- (2603:1096:4:7a::17)
-X-Microsoft-Original-Message-ID: <ZHjbL375k5msCzeJ@outlook.com>
+        with ESMTP id S231213AbjFAVbs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 1 Jun 2023 17:31:48 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2191184;
+        Thu,  1 Jun 2023 14:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685655107; x=1717191107;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KI6JDuT8wxF1HgAlteNxzcKARumuL/cX87STidw8uyg=;
+  b=Dhdft37DsDprcLVxWb6lvm6nhQ68/7Yafr/cCDGFt5hEMHVTgeAIRi01
+   IWEkNVTcvwZp7QjP6rYXgDvMCunF0Bs03wyW+HuKCAT1Db8EAUIt2rSCe
+   NsQtn7b4J3kTBu1xPhYgm+rmjXIbZ9wk4Dd2BzMFBEpb8co1N3PJyKUv5
+   YylGrQTgIYQ+H81SqNnG7m2d4vMDEjxBSMYkt+vE0CIXmS6lo9baxUifK
+   5qEOAMtmxT5M2zbG637lTGISOyn5R9yBEtMb8a+zwZMCJEIAofcznDt3T
+   byEmAtrBbMMEomi9FnpcVCinj07H7En6L3lQzuLaXoFzbnwkJqoK+/8lW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="421507361"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="421507361"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 14:31:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="685016401"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="685016401"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.26.132])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 14:31:46 -0700
+Subject: [PATCH v3 0/4] acpi: Add CDAT parsing support to ACPI tables code
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, rafael@kernel.org,
+        lenb@kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        lukas@wunner.de, Jonathan.Cameron@huawei.com
+Date:   Thu, 01 Jun 2023 14:31:45 -0700
+Message-ID: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|TYZPR06MB5274:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9d4f3ed-b3ab-42cb-42ea-08db62c93047
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W9IIT0XC4JFrCNIm+2y1dEI/kGEyoeHNF9kB1LrgWartw7PXanribesE4RcApvjFIXqZS/E2i6Nvzh+Mc+NilP9qjurLgG+EY/1AQRCOiMNkYu69uepsnhIjkYu1dlPz4b+MaBl+kA5RP1TfLwrlCOER8uDsUgaMeWUhcpTYuwa2qVvF6g1GPF1AqNk5wtoIeYLL6K9EXNISN9PWuYM4odTh0LJr/6nElr6Ex8eBH7SjNe/UngsBk04+DAMnY6uj6vc8D0jntW+Sn9hYV7ut7BLz0+DUKR5eJqqeOIkHxyQeNAdUAoIxIEvoViBVAloi2li0VnBsA9We+vpuu7JJNeZ2gk+OJNjwTQ+ZqMJY2c5IGG01aqgKupwV2kdTH7NRQ0ukRgHMAxsJDqEFCyMghljB1LeLPpmmTIhmXkjE1w+bCKDMvHRJ5Fv0adiE3dj71499QqJYMGScA2AYxqzI2OzTg1N01sKURbc3+WPq8h/WKNyOshSHtp60r6bODMUZ8CtpNOKagsmvyKSeRd4SZwbVd1Z180s6BExjNnhkgjqe8cVC0hJMGQ7q5QsikPBAMBgAnFK0CasOl0hOGJzeyDz3x6u8H3pUsNTPbjI9cao0D8wGO/DlpTdhSSMz+YMk
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OFNKNEgyNUZyYVUwUGJrWTBoMm54amhGVnA0MmdjRDN1anFKT1E0QVBya0lr?=
- =?utf-8?B?cFBUYWRJOVZ5aSt4VWVHTFhzZ1JYZVdWUUhxcVUyVXdKaXBjTlNVdStTTE1i?=
- =?utf-8?B?VGRyL0ZNV2xuRXRldncvd1BVd0xHUG85OXdiUWtPSlh1UUdiSzM1SEFFR2tZ?=
- =?utf-8?B?M0QrbjcvbWtWTlN3aU56MDl3VS9nSGEybGdNQllZSVB4c2x5czE4Wmc0MUor?=
- =?utf-8?B?K3F6K1dsN2orL0FFV091cXp6YTBsK1JBd3NZaGtuN1RWWU4rSkx2ZmxiVzZi?=
- =?utf-8?B?ZjRvNjJNYU5KNnNvUGVWWlF4Sm5mcGdMcVN4d1lwY2ZvR2hxWTRSVWFpUWdi?=
- =?utf-8?B?N1JuUUdIdmY5M3ZSc2xPOExMT20vMWlDV1ZsbEtHVFpPV3N6Z0ovZ3B0Q01m?=
- =?utf-8?B?TkhtQ0owZUNxbkFPQ0haWmRtcUkyOUhERW9rU2hrWWxFUS82WUNvOXNzTWJp?=
- =?utf-8?B?YWtNQndwVGZZWjlNS3hMN2drTzBya0ZpMmk3NGUzSzNyanJmVktzd09MMkdX?=
- =?utf-8?B?ckZOK3UzanNrLzRnMDlIZzRXS2hwZVlHVVV3R2dYeTE0U08zRjQ1MHBwNC9D?=
- =?utf-8?B?T1NlSzI1YXdjU3hxMlRzbE5aeDNiZ25MNWR2NjZPYjNHQmgwNXNXa0xLRWlC?=
- =?utf-8?B?VlhBb0VXS3RyV05PVEVKQWJYenYrZThuNHF5d09vV0g4Y3JJUGtpK0phcDc2?=
- =?utf-8?B?WEZPbXdxaEtaNzB4dnlCUXhNOFovenV6Y0ZSRmNvVlZ4K1dCSG9HR1F0YVpr?=
- =?utf-8?B?aDdSbUJYWTFKNW1DdEhZM2dHSCtNVFQ0VlZKdHBxUWtPMC9ZcXYydFpMOFdl?=
- =?utf-8?B?N1dlU09NTnlsOUluWnJsSHd2WEtnLzdtRHg2NGlxNysrNGJjN1YxcHovWXNP?=
- =?utf-8?B?d21idmNVdkF0NFJqd1R1bG1tZlhOVmg1V2tFbTFrbFhTNkNNdDJwUHlWanl0?=
- =?utf-8?B?NGk2TS9NZzg5dVR6VVFyV0JlTjU1SzhrV1FIQU9BQjl2bVYzbmZnQVBMbXNn?=
- =?utf-8?B?VE9haEtCNDBUU3NTdmhOZDJLUGFVZlpObk91R1l2Q09BSFdHOTJjVUtTUXQ1?=
- =?utf-8?B?NGgvUEhzTGJkelFsYk5sc2RGUHNjeFhhRHl5QWN3WFdQREFUU01TbGNxU09B?=
- =?utf-8?B?bjRoeFEyWVlsTlY1bXNDYitjaFFwRDlXbFJHSU5qMnZyQTJNOWxFMGVaY0Z5?=
- =?utf-8?B?cldOTGNlOWhqWnNPa3hEVFFaYTR2WFZtR0l6cGhXbjB4SGszLzZIMDFqdFBs?=
- =?utf-8?B?Rk1oYWhVUTFkQkxqVkl3MjdZVzBzaXBHT3FWL2thZm16alhvRFhkczRYZ3E5?=
- =?utf-8?B?ekw3REFzUTdKUkczQkdQMVAxbSt5WHlaQlV4K2IrQ3AxQmNId0tKQmF5dUNN?=
- =?utf-8?B?WGNEU2hDS2k2T0dDVUR6ZkYxRWhwWXRQM2dobDA0UUpOQWJrOWFGVG1zN2p4?=
- =?utf-8?B?RktmRlNheGhDbXhTd0FLTThrc2dWNXo3NFR2UVV3dTVleG1pYy9EZ3RoR2FH?=
- =?utf-8?B?Q3o2WjArSGJlOVJDMExicTdHVm84NFVNdzd6aG5rSDRpNVpmR1FLZnd2dVhk?=
- =?utf-8?B?NnFZMDluQTFUUFdvQi9jRTR1T05vQ0hJaTZHV3NLUmJ0TDM4SFNuOG85ZDBI?=
- =?utf-8?Q?2E+ghBgcM/iTMd3xyQoRgoCKDLbtU+U1aMSIFaNAh3+I=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9d4f3ed-b3ab-42cb-42ea-08db62c93047
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2023 17:54:04.6224
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB5274
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The 05/31/2023 10:27, Li Zhijian wrote:
-> p.memdevs should be released in error path
-> 
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
+v3:
+- Move common code to lib/fw_table.c
+v2:
+- Split out with CONFIG_ACPI_TABLES_LIB to be independent
+- Fixed 0-day issues
+- Change CDAT releveant names to prefix with cdat/CDAT instead of
+  acpi/ACPI. (Jonathan)
+- Make table_header a union with cdat table header instead of
+  'acpi_table_header'. (Jonathan)
+- Removed ACPI_SIG_CDAT, already defined.
 
-Make sense to me.
+Hi Rafael,
+Please consider ack these patches. Dan can take these through the CXL tree. After
+attempting to rename the cxl_ prefixes of functions and non ACPICA data structures
+to something more common, it seems that significant amount of ACPI code would be
+touched for the rename. For this series I left it alone in order to have the minimal
+changes to ACPI code.
 
-Fan
+I've broken out the "cxl: Add support for QTG ID retrieval for CXL subsystem" [1]
+series in order to make it more manageable. Here's the first part of the ACPI
+changes. These changes are added to allow reuse of ACPI tables code to parse
+the CDAT tables. While CDAT is not part of ACPI, the table structures are similar
+to ACPI layouts that the code can be reused with some small modifications.
 
->  cxl/region.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
-> 
-> diff --git a/cxl/region.c b/cxl/region.c
-> index 07ce4a319fd0..7f60094e8b49 100644
-> --- a/cxl/region.c
-> +++ b/cxl/region.c
-> @@ -300,11 +300,11 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
->  		if (p->mode == CXL_DECODER_MODE_RAM && param.uuid) {
->  			log_err(&rl,
->  				"can't set UUID for ram / volatile regions");
-> -			return -EINVAL;
-> +			goto err;
->  		}
->  		if (p->mode == CXL_DECODER_MODE_NONE) {
->  			log_err(&rl, "unsupported type: %s\n", param.type);
-> -			return -EINVAL;
-> +			goto err;
->  		}
->  	} else {
->  		p->mode = CXL_DECODER_MODE_PMEM;
-> @@ -314,21 +314,21 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
->  		p->size = parse_size64(param.size);
->  		if (p->size == ULLONG_MAX) {
->  			log_err(&rl, "Invalid size: %s\n", param.size);
-> -			return -EINVAL;
-> +			goto err;
->  		}
->  	}
->  
->  	if (param.ways <= 0) {
->  		log_err(&rl, "Invalid interleave ways: %d\n", param.ways);
-> -		return -EINVAL;
-> +		goto err;
->  	} else if (param.ways < INT_MAX) {
->  		p->ways = param.ways;
->  		if (!validate_ways(p, count))
-> -			return -EINVAL;
-> +			goto err;
->  	} else if (count) {
->  		p->ways = count;
->  		if (!validate_ways(p, count))
-> -			return -EINVAL;
-> +			goto err;
->  	} else
->  		p->ways = p->num_memdevs;
->  
-> @@ -336,7 +336,7 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
->  		if (param.granularity <= 0) {
->  			log_err(&rl, "Invalid interleave granularity: %d\n",
->  				param.granularity);
-> -			return -EINVAL;
-> +			goto err;
->  		}
->  		p->granularity = param.granularity;
->  	}
-> @@ -346,18 +346,22 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
->  			log_err(&rl,
->  				"size (%lu) is not an integral multiple of interleave-ways (%u)\n",
->  				p->size, p->ways);
-> -			return -EINVAL;
-> +			goto err;
->  		}
->  	}
->  
->  	if (param.uuid) {
->  		if (uuid_parse(param.uuid, p->uuid)) {
->  			error("failed to parse uuid: '%s'\n", param.uuid);
-> -			return -EINVAL;
-> +			goto err;
->  		}
->  	}
->  
->  	return 0;
-> +
-> +err:
-> +	json_object_put(p->memdevs);
-> +	return -EINVAL;
->  }
->  
->  static int parse_region_options(int argc, const char **argv,
-> -- 
-> 2.29.2
-> 
+However, in order to be properly utilized by CXL users, the tables code needs
+to be refactored out to be independent of ACPI. For example, a PPC BE host may
+have CXL and does not have ACPI support. But it will have CDAT to read from
+devices and switches. I have created CONFIG_ACPI_TABLES_LIB in order to allow
+the common code to be independent. 0-day seems to be happy now for all the
+different configs and archs.
 
--- 
-Fan Ni <nifan@outlook.com>
+1/4: Split out the common code from drivers/acpi/tables.c to lib/fw_table.c
+2/4: Add CDAT support
+3,4/4: These two are minor patches that has ACPICA impact. Has been merged into
+       the ACPICA git repo [3].
+
+The whole series is at [2] for convenience.
+
+[1]: https://lore.kernel.org/linux-cxl/168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3/T/#t
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
+[3]: https://github.com/acpica/acpica/pull/874
+
+---
+
+Dave Jiang (4):
+      acpi: Move common tables helper functions to common lib
+      lib/firmware_table: tables: Add CDAT table parsing support
+      acpi: fix misnamed define for CDAT DSMAS
+      acpi: Add defines for CDAT SSLBIS
+
+
+ drivers/acpi/Kconfig     |   1 +
+ drivers/acpi/tables.c    | 178 +----------------------------
+ include/acpi/actbl1.h    |   5 +-
+ include/linux/acpi.h     |  22 +---
+ include/linux/fw_table.h |  52 +++++++++
+ lib/Kconfig              |   3 +
+ lib/Makefile             |   2 +
+ lib/fw_table.c           | 236 +++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 302 insertions(+), 197 deletions(-)
+ create mode 100644 include/linux/fw_table.h
+ create mode 100644 lib/fw_table.c
+
+--
+
