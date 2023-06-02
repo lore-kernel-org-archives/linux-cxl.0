@@ -2,191 +2,233 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62550C7EE24
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 13:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FA8C77B7A
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 14:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234982AbjFBNCa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 2 Jun 2023 09:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
+        id S235208AbjFBOQn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 2 Jun 2023 10:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234366AbjFBNC3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 09:02:29 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB9219A
-        for <linux-cxl@vger.kernel.org>; Fri,  2 Jun 2023 06:02:27 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QXjm62KxVz6D8X5;
-        Fri,  2 Jun 2023 21:00:38 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 2 Jun
- 2023 14:02:25 +0100
-Date:   Fri, 2 Jun 2023 14:02:24 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gregory.price@memverge.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Vincent Hache <vhache@rambus.com>, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [RFC] cxl: Multi-headed device design
-Message-ID: <20230602140224.00000756@Huawei.com>
-In-Reply-To: <ZHTrMyQfd8AhxMe5@memverge.com>
-References: <ZBpe6btfLuuAS35g@memverge.com>
-        <20230515171807.00006d8f@Huawei.com>
-        <ZGMglwWwZCP4FUtW@memverge.com>
-        <20230517151859.000055b4@Huawei.com>
-        <ZHTrMyQfd8AhxMe5@memverge.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S234594AbjFBOQl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 10:16:41 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8871A4;
+        Fri,  2 Jun 2023 07:16:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZLoYNL5Bc3E1DC76CfRCas17JWy++bp/VMH84z1k8oEiq57JNZ4Luuw2HNIHZ5pn/YawXiGSP5zCluyq2nCL0MXAbFrMek96uizTEuWM6DiWzy9ImtaY8v4wD3HduP7oxmjhtMZgqU46XXysWK3cFW+ps6TFl7UcNOLTxm47STaRUInlk6aymNfwAQz8x98wtBZ0xi2RAb+dQOs1jXXmPTaUDDng1/4ERabysyH9nFYRQY+8l/Udu3N+xcSHk9nAahf/3rBImW1izho9GPHk2vIzMrZmmzKlGxyv6/N4lDt/39dAlyLQ5Qr2CoV7YLaf0YZfQdLho9o8kepbaX0xKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PxJdJH7KJuWU3tJ2igpIZ0922BMVESU82njhQzdKBbI=;
+ b=mbq5v1fNyipBBwm1v1ztOK+wBBUdHEdInynIk33UH+dduyAjBlCoTiR7OimIMv+PNthcSXsmOiU8kQH5Ux7RoBnwRrhSA+Q4QYQE0jr5lKEXoR17vLS7RsOdrxX62t0BUawso/ELze1WWv8QbG5+XxqAbRdvLRBMzmj3TsKfkzv3KmKZlcuXrC+QcMUwNa7Le8O1q47BqZKJw41T08t+Qh2RM2DJlbnDdAPpTn8I4DewfHtlryQuuxuUmu/fY56l9toCCoAZrlramS7XWrZXG6TqZwfnbiMu6DE/PO3aUt6hF6an2RL5zjet/Q9aPJ1yI24JmEH7WHwNCGE9Yic1Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PxJdJH7KJuWU3tJ2igpIZ0922BMVESU82njhQzdKBbI=;
+ b=Y+JMiDX6MQh1Lji10Ow0TiKiTuvQKK8lngfA0dogRGzeuIslWHc128Io+MncYgVgNgaBwAKVM3HAAQeFmLp5s6VTHL2nDnTvu+FthapRcQtx31Qqw8zLimZdWCm1Avz00nlRnuhnRAGlGumY4x5XQ2AxPB5ITFYimzicd5i/olE=
+Received: from DS7PR05CA0040.namprd05.prod.outlook.com (2603:10b6:8:2f::33) by
+ SN7PR12MB8604.namprd12.prod.outlook.com (2603:10b6:806:273::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Fri, 2 Jun
+ 2023 14:16:37 +0000
+Received: from DM6NAM11FT032.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:2f:cafe::a5) by DS7PR05CA0040.outlook.office365.com
+ (2603:10b6:8:2f::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.9 via Frontend
+ Transport; Fri, 2 Jun 2023 14:16:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT032.mail.protection.outlook.com (10.13.173.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6455.24 via Frontend Transport; Fri, 2 Jun 2023 14:16:36 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 2 Jun
+ 2023 09:16:13 -0500
+Date:   Fri, 2 Jun 2023 16:16:01 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v4 01/23] cxl/acpi: Probe RCRB later during RCH
+ downstream port creation
+Message-ID: <ZHn5RwXFuQOSWXaF@rric.localdomain>
+References: <20230523232214.55282-1-terry.bowman@amd.com>
+ <20230523232214.55282-2-terry.bowman@amd.com>
+ <20230601111328.00005620@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230601111328.00005620@Huawei.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT032:EE_|SN7PR12MB8604:EE_
+X-MS-Office365-Filtering-Correlation-Id: b50031e9-533d-4299-dbcb-08db6373fa04
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DhXMxxLHk5GOZLJZdL4n95BMgYHqzCTFcLdXqJWKuEskZoOp2RfWDDLQ0/QF8yT23bqJ2/la3Nw9EawXtyK0oFRyin/HfZwu9svpYs9y4Npr0duoS2txqn7cwFTAwQrlLy+CDRnxYJbNnr1rSAiQgIvaF0nX0Effv2bSXU7sG4AGcxKThwA2ur0ERowcvCEDXE/EYMpZccKat5xwCCIiHgnwh/a15fDYaBzoy/HCumgzb+3g/urRVcIVfX10L/qw4jUh3DNjvrtNsNoicgel39Q5oEJVdDN5D9Sp1Rl81+/Ex9u4ryx2DRnkEPUQ6SGYlXsmprUGtq2FMUrWeMyDWWdYQF9jPsZbbmzW7TBniHiPYPD8/8APNMfYwbrArQJkErHF/h5KmdPMPu7TPO564YAmn78gXmSSioxFk6HIDx8WiRxyyJZw18LWSSQmCQSL7gb/qC/tS8tpoaDoAJe/hvJer6f0hSiOA+/HaxDsxLla+EyCHFGEMi4jhgfVhM3uey+pMg9ug42dQS+XXsfaS9gmwGkkAm8oBuYoI2LaNx2UaJvx3atYhiMrn4sBUfFPWliA9wuq50vHuT3Ij3TxootJrjQCpa98fh49rFQi/zUany3Xqx60YKd775PJ1u1+Kp2EsyZGdzX5UPhfXVhxKpw08AKjA+h9GLAZyx0P4Yr6T4OY/Poeq+TXm69WsF20LqGEWpf6lAZUWdWeM7MmCxbzXbwpSP5AWl03KN2psge79CpPCrplAGveA4MsOdaQU/YWbE8UXNscSKH2p+OA1Q==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(39860400002)(346002)(376002)(451199021)(46966006)(36840700001)(40470700004)(36860700001)(40460700003)(47076005)(83380400001)(316002)(8936002)(81166007)(6666004)(70206006)(5660300002)(4326008)(7416002)(6916009)(70586007)(82310400005)(41300700001)(8676002)(356005)(7696005)(40480700001)(55016003)(82740400003)(54906003)(2906002)(9686003)(186003)(53546011)(16526019)(478600001)(26005)(336012)(426003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 14:16:36.9130
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b50031e9-533d-4299-dbcb-08db6373fa04
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT032.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8604
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 29 May 2023 14:13:07 -0400
-Gregory Price <gregory.price@memverge.com> wrote:
+Hi Jonathan,
 
-> On Wed, May 17, 2023 at 03:18:59PM +0100, Jonathan Cameron wrote:
-> > > 
-> > > i.e. an SLD does not require an FM-Owned LD for management, but an MHD,
-> > > MLD, and DCD all do (at least in theory).  
+On 01.06.23 11:13:28, Jonathan Cameron wrote:
+> On Tue, 23 May 2023 18:21:52 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+> 
+> > From: Robert Richter <rrichter@amd.com>
 > > 
-> > DCD 'might' though I don't think anything in the spec rules that you 'must'
-> > control the SLD/MLD via the FM-API, it's just a spec provided option.
-> > From our point of view we don't want to get more creative so lets assume
-> > it does.
+> > The RCRB is extracted already during ACPI CEDT table parsing while the
+> > data of this is needed not earlier than dport creation. This
+> > implementation comes with drawbacks: During ACPI table scan there is
+> > already MMIO access including mapping and unmapping, but only ACPI
+> > data should be collected here. The collected data must be transferred
+> > through a couple of interfaces until it is finally consumed when
+> > creating the dport. This causes complex data structures and function
+> > interfaces. Additionally, RCRB parsing will be extended to also
+> > extract AER data, it would be much easier do this at a later point
+> > during port and dport creation when the data structures are available
+> > to hold that data.
 > > 
-> > I can't immediately think of reason for a single head SLD to have an FM owned
-> > LD, though it may well have an MCTP CCI for querying stuff about it from an FM.
-> >   
-Sorry for slow reply - got distracted and forgot to cycle back to this.
-
+> > To simplify all that, probe the RCRB at a later point during RCH
+> > downstream port creation. Change ACPI table parser to only extract the
+> > base address of either the component registers or the RCRB. Parse and
+> > extract the RCRB in devm_cxl_add_rch_dport().
+> > 
+> > This is in preparation to centralize all RCRB scanning.
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > 
-> Before I go running off into the woods, it seems like it would be simple
-> enough to simply make an FM-LD "device" which simply links a mhXXX device
-> and implements its own Mailbox CCI.
+> Hi,
 > 
-> Maybe not "realistic", but to my mind this appears as a separate
-> character device in /dev/cxl/*. Maybe the realism here doesn't matter,
-> since we're just implementing for the sake of testing.  This is just a
-> straightforward way to pipe a DCD request into the device and trigger
-> DCD event log entries.
+> Some comments inline, though one of them (about extensibility of CDAT
+> structures) applies just as much to the existing code so doesn't affect
 > 
-> As commented early, this is done as a QEMU fed event.  If that's
-> sufficient, a hack like this feels like it would be at least mildly
-> cleaner and easier to test against.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> for this patch.
 
-Or MCTP over I2C which works today, but needs more commands for this :)
-
-I plan to look at the tunneling stuff shortly.  Initially I'll punt the
-guest using this to userspace, but potentially the eventual model might well be to
-make it look like a bunch of direct attached CCIs from userspace point of
-view. I'm not 100% keen on pushing the management of hotplug into the
-kernel though as particular CCIs we are tunneling to in a wider fabric
-may come and and go.  For an MHD this would be easy, not so much if
-a switch CCI with tunneling to MLDs and MH-MLDs below it.
+thanks for review. See inline.
 
 > 
 > 
-> Example: consider a user wanting to issue a DCD command to add capacity.
+> > ---
+> >  drivers/cxl/acpi.c      | 52 ++++++++++++++++-------------------------
+> >  drivers/cxl/core/port.c | 21 +++++++++++++----
+> >  drivers/cxl/cxl.h       |  1 -
+> >  3 files changed, 36 insertions(+), 38 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 7e1765b09e04..39227070da9b 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -373,20 +373,18 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> >  }
+> >  
+> >  struct cxl_chbs_context {
+> > -	struct device *dev;
+> >  	unsigned long long uid;
+> > -	resource_size_t rcrb;
+> > -	resource_size_t chbcr;
+> > +	resource_size_t base;
+> >  	u32 cxl_version;
+> >  };
+> >  
+> > -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
+> > +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
+> >  			 const unsigned long end)
+> >  {
+> >  	struct cxl_chbs_context *ctx = arg;
+> >  	struct acpi_cedt_chbs *chbs;
+> >  
+> > -	if (ctx->chbcr)
+> > +	if (ctx->base)
+> >  		return 0;
+> >  
+> >  	chbs = (struct acpi_cedt_chbs *) header;
+> > @@ -395,23 +393,16 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
+> >  		return 0;
+> >  
+> >  	ctx->cxl_version = chbs->cxl_version;
+> > -	ctx->rcrb = CXL_RESOURCE_NONE;
+> > -	ctx->chbcr = CXL_RESOURCE_NONE;
+> > +	ctx->base = CXL_RESOURCE_NONE;
+> >  
+> >  	if (!chbs->base)
+> >  		return 0;
+> >  
+> > -	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11) {
+> > -		ctx->chbcr = chbs->base;
 > 
-> Real world: this would be some out of band communication, and eventually
-> this results in a DCD command to the device that results in a
-> capacity-event showing up in the log. Maybe it happens over TCP and
-> drills down to a Redfish event that talks to the BMC that issues a
-> command over etc etc MTCP emulations, etc.
-> 
-> With a simplistic /dev/cxl/memX-fmld device a user can simply issue these
-> commands without all that, and the effect is the same.
+> Trivial: This is a functional change and should be called out -
+> previously the base address was stashed even if the length test
+> fails, now it isn't. May make no difference because it was never used
+> if that's the case, but would be nice to still mention it in patch description.
 
-Yup - something along those lines makes sense.
-
-> 
-> On the QEMU side you get something like:
-> 
-> -device cxl-type3,volatile-memdev=mem0,bus=rp0,mhd-head=0,id=mem0,mhd-main=true
-
-I'd expect this device to present the mailbox commands for tunneling to
-the FM-LD - as such I'd want a reference form here to your cxl-fmld below.
-
-> -device cxl-mhsld,type3=mem0,bus=rp0,headid=0,id=mhsld1,shmid=XXXXX
-
-Not sure why this is on the bus rp0. 
-
-> -device cxl-fmld,mhsld=mdsld1,bus=rp1,id=mem0-fmld,shmid=YYYYY
-
-To be spec compliant that cxl-fmld still has to support normal use as well
-as tunnelling to the fm owned LD - so it's a superset of a type3 device.
-
-My gut feeling is keep it simple for a PoC / supporting enablement.
-1 device on the host that is also service as the FM.
-  Probably just an extended type 3 with some more options to turn this
-  feature on.
-1 device on each other host that connects via socket
-All device share same underlying memory.
-Access bitmap is fiddly - either a push model over socket, or a shared
-bitmap like you suggest.  Either works, not sure which ends up cleaner.
-
-It may well become more devices over time, but that should be driven
-by the different types of CCI sharing common infrastructure rather than
-trying to figure out that model at the start.
-
-> 
-> on the Linux side you get:
-> /dev/cxl/mem0
-> /dev/cxl/mem0-fmld
-> 
-> in this example, the shmid for mhsld is a shared memory region created
-> with mkipc that implements the shared state (basically section bitmap
-> tracking and the actual plumbing for DCD, etc). This limits the emulation
-> of the mhsld to a single host for now, but that seems sufficient.
-> 
-> The shmid for cxl-fmld implements any shared state for the fmld,
-> including a mutex, that allows all hosts attached to the mhsld to have
-> access to the fmld.  This may or may not be realistic, but it would
-> allow all head-attached hosts to send DCD commands over its own local
-> fabric, ratehr than going out of band.
-
-Not keen on that part.  I'd like to keep close to the spec intent and only
-allow one host to access the FM-LD.
+The logic changed but the intention is to have the same checks as
+before. The length check is in only for the CXL11 case and no check
+for VH mode. This is implemented as before and no functional change,
+note the check later below in the old code which was the CXL11-only
+path.
 
 > 
-> This gets us to the point where, at a minimum, each host can issue its
-> own DCD commands to add capacity to itself.  That's step 1.
+> Also, ACPI tables are designed to be extensible and I think that
+> applies to CDAT tables as well - so this code should not be
+> checking for a precise match, but rather that it is greater than
+> or equal to the size we will read from.
 
-I don't agree with this one.  I really don't want hosts to be able to do that.
-They need to talk to one host that is acting as fabric manager - that can then
-talk to the MHD to do the allocations.
-
-> 
-> Step 2 is allow Host A to issue a DCD command to add capacity to Host B.
-> 
-> I suppose this could be done via a backgruond thread that waits on a
-> message to show up in the shared memory region?
-
-The actual setup should be done via the single host with the FM, but there
-is still a need to notify the other hosts.  I'd be tempted to do that
-via a socket rather than shared memory.  Just keep the shared memory for
-the access bitmap. Or drop that access bitmap entirely and rely on each
-host keeping track of it's own access permissions.
-
-For testing purposes I don't have a problem with insisting the owner
-of the FM-LD must be started first and closed last.  That ties lifetime
-of that host with that of the device, but that isn't too much of a problem
-given the lifetime differences we may want to test probably sit at the
-FM software layer, not the emulation of the hardware.
+I don't think the spec will change here as this is limited to RCD mode
+only. Other than e.g. capability register ranges this is a block size,
+there is no intention to extend it.
 
 > 
-> Being somewhat unfamiliar with QEMU, is it kosher to start background
-> threads that just wait on events like this, or is that generally frowed
-> upon?  If done this way, it would stimplify the creation and startup
-> sequence at least.
 > 
-> ~Gregory
+> > +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
+> > +	    chbs->length != CXL_RCRB_SIZE)
+> >  		return 0;
+> > -	}
+> 
+> >  
+> > -	if (chbs->length != CXL_RCRB_SIZE)
+> > -		return 0;
 
+Note this check here.
+
+-Robert
+
+> > -
+> > -	ctx->rcrb = chbs->base;
+> > -	ctx->chbcr = cxl_rcrb_to_component(ctx->dev, chbs->base,
+> > -					   CXL_RCRB_DOWNSTREAM);
+> > +	ctx->base = chbs->base;
+> >  
+> >  	return 0;
+> >  }
+> 
