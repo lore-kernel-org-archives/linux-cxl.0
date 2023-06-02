@@ -2,61 +2,61 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECE8C7EE2C
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 21:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BC5C7EE29
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 21:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235724AbjFBViY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 2 Jun 2023 17:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44118 "EHLO
+        id S236089AbjFBVi2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 2 Jun 2023 17:38:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236487AbjFBViX (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 17:38:23 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A531B9
-        for <linux-cxl@vger.kernel.org>; Fri,  2 Jun 2023 14:38:21 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5689335d2b6so24058957b3.3
-        for <linux-cxl@vger.kernel.org>; Fri, 02 Jun 2023 14:38:21 -0700 (PDT)
+        with ESMTP id S236487AbjFBVi1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 17:38:27 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C8FE48
+        for <linux-cxl@vger.kernel.org>; Fri,  2 Jun 2023 14:38:25 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-ba8afcc82c0so2745372276.2
+        for <linux-cxl@vger.kernel.org>; Fri, 02 Jun 2023 14:38:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20221208.gappssmtp.com; s=20221208; t=1685741900; x=1688333900;
+        d=dubeyko-com.20221208.gappssmtp.com; s=20221208; t=1685741904; x=1688333904;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kUttbGMWg8BpWC+Vm7ZfT+DefCx6yfVzGkw4JbA8/ek=;
-        b=XKQ2oYtN3catPOhXhfzYGLX1dQ5tSxdnfDLLoR+iVM7rKMbSol9Y7jDB3bxgkDsiPM
-         DEEHXHCO9P8+2VFPY3xvCm3Gq5UfKp8O7+3eWb/TEON9JOgOrskoWkRLOQHAaMnW9u+5
-         gUuoItVf49X8HMnZ4egSN4hOzg7EPsSQZC6Hrmtmb5xs3drwaycIEgIPkNw8bZDXTisZ
-         RL6ctI/xT3LUewc9dTYxTmLrVFug6Lo63YOIN3WPGSZloliP7IT6xYMCpA8JawitWIH0
-         A8zhiNsVswLIkneyjyictx/S9Gps7B/nozh8JjrRWFoBuQcnYldJN3bsppOo7j58QAcs
-         Dh4w==
+        bh=GRmfyXecY25gL49zuje7ul5XB5Erxdmv0gNgjxc7/HA=;
+        b=tEy715H+04wofUy6BMCLgJ6Sft5axd4K+36McJRrglZpuxSDM8W5NVtPKUFsa7+NHH
+         DC7fzQBCuSPBb4nldOqq7fjAQzzUozviH5Cu/1zopKCJCtJGRJ5fJWYPFc3rMVsqCPZO
+         rlEdLzNd0zFE0PZ6wdhgcF+rYHAq0jiNMkuhRx46wHSRuAayO1fw6hrAdGa5D9SDf1eA
+         4qjswDYpaq5U5U+tFXtKyISa6JCe1/dd3YKrokybTDw/cFw5k1jZoIY+lUX3dhGKQbmd
+         hbLsmQqZ4MwGXPfOAhTw4co7Nv1bs61yxSEVDjuaN6fTm6XvG6KAX1s1EV67VSdqt+vB
+         /Njw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685741900; x=1688333900;
+        d=1e100.net; s=20221208; t=1685741904; x=1688333904;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kUttbGMWg8BpWC+Vm7ZfT+DefCx6yfVzGkw4JbA8/ek=;
-        b=C6kz0IMWb9ctHECllxOBIqmN9ZaKtEDdBtG99I44XvyQ54xCtsN8BF5okM7UPM290c
-         fuL9x9ecTWg0M9D1EKLYGxYQpX24cFwnHiHMJggpMkpF0ovR5xMK4N+JLu+KAW2xgZEx
-         3kVtFa05k+faOfeHsb2HSZXsNP8kxRk/qbivPVNeUFXy0m2Px/hw08vuhi/u1NAO2ei5
-         57GkqwjcchGX8j8LppMR2DjLgmKN+7l9YFEESOHVWR1NXcwiMrlk6a93JDLi4+SMwahC
-         0M6vBNXc97VED0EKlhHgBRXE2TrxAdz2P8Ji/4Dz03NJ7OQTGcPnGtP0p9NwGKJ5mOUS
-         IFnQ==
-X-Gm-Message-State: AC+VfDwvhXFXFn/SZK6ey7CTgQ5geCuO9/J1EGMy4W0J7n2ccjSjP/TZ
-        tUE14Cbeb5oiZIxvrZZAi23YC2IczOB7unRXSB97TQ==
-X-Google-Smtp-Source: ACHHUZ4ay+9JXPoKDTwHOfBR2mxBhAHjqNO1SCtEFFh+KrYjBU6bZRw/AC5FxiFKRd4Vtcdb65f3+Q==
-X-Received: by 2002:a0d:ccca:0:b0:561:7ec:cf90 with SMTP id o193-20020a0dccca000000b0056107eccf90mr1220766ywd.42.1685741899805;
-        Fri, 02 Jun 2023 14:38:19 -0700 (PDT)
+        bh=GRmfyXecY25gL49zuje7ul5XB5Erxdmv0gNgjxc7/HA=;
+        b=eik0SFkPL0KgGTok1tP0jr1BV0X+1eqbiYo9GZ4qDWaIAE8JTBYo/bIrdMLwwsRP8p
+         vtKdO1Xmb1Pqyj8pM9W26CW7vZJsgXyET90SagBS0IWV1TeyGY8OZzzFiMSkQvYezbpS
+         Tcb3DE5PQxA5rmVKgK1weSTt+Pu4LBiITp/qNr4dzrT7QSFC4j0x20pPlgkQh4HMmew5
+         IqRUCgL9v3Z/T1Qts4mzGhOZKMPBidMa56a/3hXjwezzyoSFw11EzAtG8Rtv4X0HMWgw
+         EZHUTTrMXD4RU0jDZXgM3sJTmbHEG1GRXmj8COCai4GpN1S/PtAtfsS/M94rShFUZy06
+         75wg==
+X-Gm-Message-State: AC+VfDxKFA00USTCVaIHTf8suN2iREXmISCmy5a+/AX4fl1PneQzw1is
+        3gYbF2w051ZNMVLTWjCiRPSV8iuAfJsYJGHPdlOngQ==
+X-Google-Smtp-Source: ACHHUZ61YWOBoVww0w7WLvrInZtHdiD+iNni36xNt406VB56VvrzrLfiR4by6YluYGGRZ5JQDGA42Q==
+X-Received: by 2002:a81:844f:0:b0:565:b22c:4165 with SMTP id u76-20020a81844f000000b00565b22c4165mr1319736ywf.11.1685741903717;
+        Fri, 02 Jun 2023 14:38:23 -0700 (PDT)
 Received: from system76-pc.attlocal.net ([2600:1700:42f0:6600:901f:39a8:fe3f:30e2])
-        by smtp.gmail.com with ESMTPSA id v1-20020a0dd301000000b00559d9989490sm856302ywd.41.2023.06.02.14.38.17
+        by smtp.gmail.com with ESMTPSA id v1-20020a0dd301000000b00559d9989490sm856302ywd.41.2023.06.02.14.38.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jun 2023 14:38:19 -0700 (PDT)
+        Fri, 02 Jun 2023 14:38:22 -0700 (PDT)
 From:   Viacheslav Dubeyko <slava@dubeyko.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     a.manzanares@samsung.com, Jonathan.Cameron@huawei.com,
         nilesh.shah@zptcorp.com, slava@dubeiko.com,
         Viacheslav Dubeyko <slava@dubeyko.com>
-Subject: [RFC PATCH 2/5] CXL FM: [lib] introduce CXL FM library
-Date:   Fri,  2 Jun 2023 14:37:34 -0700
-Message-Id: <20230602213737.494750-3-slava@dubeyko.com>
+Subject: [RFC PATCH 4/5] CXL FM: [fm_orchestrator] introduce CXL FM orchestrator
+Date:   Fri,  2 Jun 2023 14:37:36 -0700
+Message-Id: <20230602213737.494750-5-slava@dubeyko.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230602213737.494750-1-slava@dubeyko.com>
 References: <20230602213737.494750-1-slava@dubeyko.com>
@@ -66,89 +66,59 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-This patch creates the CXL FM library.
+This patch creates the initial state of CXL FM orchestrator.
 
 Signed-off-by: Viacheslav Dubeyko <slava@dubeyko.com>
 CC: Adam Manzanares <a.manzanares@samsung.com>
 ---
- .gitignore            |   1 +
- Cargo.toml            |  12 ++++
- fm_library/Cargo.lock |   7 +++
- fm_library/Cargo.toml |  12 ++++
- fm_library/src/lib.rs | 133 ++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 165 insertions(+)
- create mode 100644 .gitignore
- create mode 100644 Cargo.toml
- create mode 100644 fm_library/Cargo.lock
- create mode 100644 fm_library/Cargo.toml
- create mode 100644 fm_library/src/lib.rs
+ Cargo.toml               |   4 +
+ orchestrator/Cargo.toml  |  10 ++
+ orchestrator/src/main.rs | 221 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 235 insertions(+)
+ create mode 100644 orchestrator/Cargo.toml
+ create mode 100644 orchestrator/src/main.rs
 
-diff --git a/.gitignore b/.gitignore
-new file mode 100644
-index 0000000..ea8c4bf
---- /dev/null
-+++ b/.gitignore
-@@ -0,0 +1 @@
-+/target
 diff --git a/Cargo.toml b/Cargo.toml
-new file mode 100644
-index 0000000..96fc75e
---- /dev/null
+index b8d169d..ed50825 100644
+--- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -0,0 +1,12 @@
+@@ -13,6 +13,10 @@ path = "fm_library/src/lib.rs"
+ name = "fm_daemon"
+ path = "fm_daemon/src/main.rs"
+ 
++[[bin]]
++name = "orchestrator"
++path = "orchestrator/src/main.rs"
++
+ [dependencies]
+ clap = { version = "4.0.32", features = ["derive"] }
+ daemonize = "0.5.0"
+diff --git a/orchestrator/Cargo.toml b/orchestrator/Cargo.toml
+new file mode 100644
+index 0000000..64fe7a4
+--- /dev/null
++++ b/orchestrator/Cargo.toml
+@@ -0,0 +1,10 @@
 +[package]
-+name = "fabric_manager"
++name = "orchestrator"
 +version = "0.1.0"
 +edition = "2021"
 +
 +# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 +
-+[lib]
-+name = "fm_library"
-+path = "fm_library/src/lib.rs"
-+
 +[dependencies]
-diff --git a/fm_library/Cargo.lock b/fm_library/Cargo.lock
++daemonize = "0.5.0"
++fm_library = { path = "../fm_library/" }
+diff --git a/orchestrator/src/main.rs b/orchestrator/src/main.rs
 new file mode 100644
-index 0000000..de5870a
+index 0000000..f4cec1a
 --- /dev/null
-+++ b/fm_library/Cargo.lock
-@@ -0,0 +1,7 @@
-+# This file is automatically @generated by Cargo.
-+# It is not intended for manual editing.
-+version = 3
-+
-+[[package]]
-+name = "fm_communication"
-+version = "0.1.0"
-diff --git a/fm_library/Cargo.toml b/fm_library/Cargo.toml
-new file mode 100644
-index 0000000..79dc6c4
---- /dev/null
-+++ b/fm_library/Cargo.toml
-@@ -0,0 +1,12 @@
-+[package]
-+name = "fm_communication"
-+version = "0.1.0"
-+edition = "2021"
-+
-+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-+
-+[lib]
-+name = "fm_communication"
-+path = "src/lib.rs"
-+
-+[dependencies]
-diff --git a/fm_library/src/lib.rs b/fm_library/src/lib.rs
-new file mode 100644
-index 0000000..c06fd9c
---- /dev/null
-+++ b/fm_library/src/lib.rs
-@@ -0,0 +1,133 @@
++++ b/orchestrator/src/main.rs
+@@ -0,0 +1,221 @@
 +/*
 + * CXL FM Infrastructure -- CXl Fabric Manager (FM) Infrastructure.
 + *
-+ * CXL FM library implementation.
++ * CXL FM orchestrator implementation.
 + *
 + * Copyright (c) 2023 Viacheslav Dubeyko <slava@dubeyko.com>,
 + * All rights reserved.
@@ -166,116 +136,204 @@ index 0000000..c06fd9c
 + * limitations under the License.
 + */
 +
-+pub mod cxl_fm_lib {
-+	use std::net::{TcpStream};
-+	use std::io::Write;
-+	use std::io::BufReader;
-+	use std::io::BufRead;
++extern crate daemonize;
 +
-+	/*
-+	 * Available commands
-+	 */
-+	pub const CXL_FM_DISCOVER_FM_COMMAND: &str		= "DISCOVER_FM";
-+	pub const CXL_FM_DISCOVER_CXL_DEVICE_COMMAND: &str	= "DISCOVER_CXL_DEVICE";
-+	pub const CXL_FM_DISCOVER_CXL_SWITCH_COMMAND: &str	= "DISCOVER_CXL_SWITCH";
-+	pub const CXL_FM_DISCOVER_LD_COMMAND: &str		= "DISCOVER_LOGICAL_DEVICE";
++use std::fs::File;
++use daemonize::Daemonize;
++use clap::{Arg, Command};
++use std::{
++	io::{prelude::*, BufReader},
++	net::{TcpListener, TcpStream},
++};
++pub use fm_library::cxl_fm_lib::send_responce;
++pub use fm_library::cxl_fm_lib::CxlFmOptions;
 +
-+	pub const CXL_FM_GET_FM_INFO_COMMAND: &str		= "GET_FM_INFO";
-+	pub const CXL_FM_START_FM_COMMAND: &str			= "START_FM";
-+	pub const CXL_FM_RESTART_FM_COMMAND: &str		= "RESTART_FM";
-+	pub const CXL_FM_STOP_FM_COMMAND: &str			= "STOP_FM";
-+	pub const CXL_FM_GET_FM_CONFIG_COMMAND: &str		= "GET_FM_CONFIG";
-+	pub const CXL_FM_SET_FM_CONFIG_COMMAND: &str		= "SET_FM_CONFIG";
-+	pub const CXL_FM_GET_FM_EVENTS_COMMAND: &str		= "GET_FM_EVENTS";
++/*
++ * CXL FM orchestrator version
++ */
++const CXL_FM_ORCHESTRATOR_VERSION: &str = "0.0.1";
 +
-+	pub const CXL_FM_GET_SWITCH_INFO_COMMAND: &str		= "GET_SWITCH_INFO";
-+	pub const CXL_FM_GET_SWITCH_CONFIG_COMMAND: &str	= "GET_SWITCH_CONFIG";
-+	pub const CXL_FM_SET_SWITCH_CONFIG_COMMAND: &str	= "SET_SWITCH_CONFIG";
++/*
++ * CXL FM orchestrator strings
++ */
++const CXL_FM_ORCHESTRATOR_NAME: &str = "fm_orchestrator";
++const CXL_FM_ORCHESTRATOR_DESCRIPTOR: &str = "CXL Fabric Manager (FM) orchestrator";
++const CXL_FM_ORCHESTRATOR_DEBUG_OPTION: &str = "debug";
++const CXL_FM_ORCHESTRATOR_DEBUG_OPTION_SHORT: char = 'd';
++const CXL_FM_ORCHESTRATOR_IP_ADDRESS_OPTION: &str = "ip";
++const CXL_FM_ORCHESTRATOR_IP_ADDRESS_OPTION_SHORT: char = 'i';
++const CXL_FM_ORCHESTRATOR_PORT_OPTION: &str = "port";
++const CXL_FM_ORCHESTRATOR_PORT_OPTION_SHORT: char = 'p';
 +
-+	pub const CXL_FM_GET_MHD_INFO_COMMAND: &str		= "GET_MHD_INFO";
++const CXL_FM_ORCHESTRATOR_WORKING_DIRECTORY: &str = "/tmp";
++const CXL_FM_ORCHESTRATOR_LOG_FILE_PATH: &str = "/tmp/fm_orchestrator.log";
++const CXL_FM_ORCHESTRATOR_ERROR_MESSAGES_FILE_PATH: &str = "/tmp/fm_orchestrator.err";
++const CXL_FM_ORCHESTRATOR_USER: &str = "nobody";
++const CXL_FM_ORCHESTRATOR_GROUP: &str = "bin";
++const CXL_FM_ORCHESTRATOR_GROUP_ID: u32 = 2;
++const CXL_FM_ORCHESTRATOR_UMASK: u32 = 0o777;
 +
-+	pub const CXL_FM_BIND_LD_COMMAND: &str			= "BIND_LOGICAL_DEVICE";
-+	pub const CXL_FM_UNBIND_LD_COMMAND: &str		= "UNBIND_LOGICAL_DEVICE";
-+	pub const CXL_FM_CONNECT_MLD_COMMAND: &str		= "CONNECT_MLD";
-+	pub const CXL_FM_DISCONNECT_MLD_COMMAND: &str		= "DISCONNECT_MLD";
-+	pub const CXL_FM_GET_LD_ALLOCATION_COMMAND: &str	= "GET_LD_ALLOCATION";
-+	pub const CXL_FM_SET_LD_ALLOCATION_COMMAND: &str	= "SET_LD_ALLOCATION";
-+	pub const CXL_FM_GET_QOS_CONTROL_COMMAND: &str		= "GET_LD_QOS_CONTROL";
-+	pub const CXL_FM_SET_QOS_CONTROL_COMMAND: &str		= "SET_LD_QOS_CONTROL";
-+	pub const CXL_FM_GET_QOS_STATUS_COMMAND: &str		= "GET_LD_QOS_STATUS";
-+	pub const CXL_FM_GET_QOS_BANDWIDTH_COMMAND: &str	= "GET_LD_QOS_BANDWIDTH";
-+	pub const CXL_FM_SET_QOS_BANDWIDTH_COMMAND: &str	= "SET_LD_QOS_BANDWIDTH";
-+	pub const CXL_FM_GET_QOS_BANDWIDTH_LIMIT_COMMAND: &str	= "GET_LD_QOS_BANDWIDTH_LIMIT";
-+	pub const CXL_FM_SET_QOS_BANDWIDTH_LIMIT_COMMAND: &str	= "SET_LD_QOS_BANDWIDTH_LIMIT";
-+	pub const CXL_FM_LD_ERASE: &str				= "LD_ERASE";
++/*
++ * Command line interface definition
++ */
++fn cli() -> Command {
++	Command::new(CXL_FM_ORCHESTRATOR_NAME)
++		.about(CXL_FM_ORCHESTRATOR_DESCRIPTOR)
++		.version(CXL_FM_ORCHESTRATOR_VERSION)
++		.arg_required_else_help(true)
++		.arg(Arg::new(CXL_FM_ORCHESTRATOR_DEBUG_OPTION)
++			.short(CXL_FM_ORCHESTRATOR_DEBUG_OPTION_SHORT)
++			.long(CXL_FM_ORCHESTRATOR_DEBUG_OPTION)
++			.action(clap::ArgAction::SetTrue))
++		.arg(Arg::new(CXL_FM_ORCHESTRATOR_IP_ADDRESS_OPTION)
++			.short(CXL_FM_ORCHESTRATOR_IP_ADDRESS_OPTION_SHORT)
++			.long(CXL_FM_ORCHESTRATOR_IP_ADDRESS_OPTION)
++			.action(clap::ArgAction::Set)
++			.required(true))
++		.arg(Arg::new(CXL_FM_ORCHESTRATOR_PORT_OPTION)
++			.short(CXL_FM_ORCHESTRATOR_PORT_OPTION_SHORT)
++			.long(CXL_FM_ORCHESTRATOR_PORT_OPTION)
++			.action(clap::ArgAction::Set)
++			.required(true))
++}
 +
-+	pub const CXL_FM_GET_PPB_CONFIG_COMMAND: &str		= "GET_PPB_CONFIG";
-+	pub const CXL_FM_PPB_BIND_COMMAND: &str			= "PPB_BIND";
-+	pub const CXL_FM_PPB_UNBIND_COMMAND: &str		= "PPB_UNBIND";
-+
-+	pub const CXL_FM_GET_PHYSICAL_PORT_INFO_COMMAND: &str	= "GET_PHYSICAL_PORT_INFO";
-+	pub const CXL_FM_PHYSICAL_PORT_CONTROL_COMMAND: &str	= "PHYSICAL_PORT_CONTROL";
-+	pub const CXL_FM_BIND_PHYSICAL_PORT_COMMAND: &str	= "BIND_PHYSICAL_PORT";
-+	pub const CXL_FM_UNBIND_PHYSICAL_PORT_COMMAND: &str	= "UNBIND_PHYSICAL_PORT";
-+
-+	pub const CXL_FM_MLD_PORT_TUNNEL_COMMAND: &str		= "MLD_PORT_TUNNEL";
-+	pub const CXL_FM_MLD_PORT_SEND_CONFIG_COMMAND: &str	= "MLD_PORT_SEND_CONFIG";
-+	pub const CXL_FM_MLD_PORT_SEND_MEM_REQ_COMMAND: &str	= "MLD_PORT_SEND_MEM_REQ";
-+
-+	pub const CXL_FM_DCD_GET_INFO_COMMAND: &str		= "DCD_GET_INFO";
-+	pub const CXL_FM_DCD_GET_CONFIG_COMMAND: &str		= "DCD_GET_CONFIG";
-+	pub const CXL_FM_DCD_SET_CONFIG_COMMAND: &str		= "DCD_SET_CONFIG";
-+	pub const CXL_FM_DCD_GET_EXTENT_COMMAND: &str		= "DCD_GET_EXTENT";
-+	pub const CXL_FM_DCD_ADD_CAPACITY_COMMAND: &str		= "DCD_ADD_CAPACITY";
-+	pub const CXL_FM_DCD_RELEASE_CAPACITY_COMMAND: &str	= "DCD_RELEASE_CAPACITY";
-+
-+	/*
-+	 * Service responces
-+	 */
-+	pub const CXL_FM_UNKNOWN_COMMAND: &str			= "UNKNOWN_COMMAND";
-+	pub const CXL_FM_NO_DATA: &str				= "NO_DATA";
-+
-+	/*
-+	 * struct CxlFmOptions - configuration options
-+	 * @ip_port: IP address + port
-+	 * @is_debug: does it need to show debug output?
-+	 */
-+	pub struct CxlFmOptions {
-+		pub ip_port: String,
-+		pub is_debug: bool,
++/*
++ * Discover available FM instances
++ */
++pub fn discover_fm(stream: &TcpStream, env: &CxlFmOptions) {
++	if env.is_debug {
++		println!("{}", fm_library::cxl_fm_lib::CXL_FM_DISCOVER_FM_COMMAND);
 +	}
 +
-+	/*
-+	 * Send command to FM
-+	 */
-+	pub fn send_command(mut stream: &TcpStream, command: &str, env: &CxlFmOptions) {
-+		let full_command = format!("{command}\n");
++	send_responce(stream, fm_library::cxl_fm_lib::CXL_FM_NO_DATA, env);
++}
 +
-+		if env.is_debug {
-+			println!("COMMAND: {:#?}", full_command);
-+		}
-+
-+		stream.write_all(full_command.as_bytes()).unwrap();
-+
-+		let buf_reader = BufReader::new(&mut stream);
-+		let mut response_line = buf_reader.lines();
-+
-+		if env.is_debug {
-+			println!("RESPONCE: {:#?}", response_line.next().unwrap().unwrap());
-+		}
++/*
++ * Start FM instance
++ */
++pub fn start_fm(stream: &TcpStream, env: &CxlFmOptions) {
++	if env.is_debug {
++		println!("{}", fm_library::cxl_fm_lib::CXL_FM_START_FM_COMMAND);
 +	}
 +
-+	/*
-+	 * Send responce from FM
-+	 */
-+	pub fn send_responce(mut stream: &TcpStream, responce: &str, env: &CxlFmOptions) {
-+		let full_responce = format!("{responce}\n");
++	send_responce(stream, fm_library::cxl_fm_lib::CXL_FM_NO_DATA, env);
++}
++
++/*
++ * Restart FM instance
++ */
++pub fn restart_fm(stream: &TcpStream, env: &CxlFmOptions) {
++	if env.is_debug {
++		println!("{}", fm_library::cxl_fm_lib::CXL_FM_RESTART_FM_COMMAND);
++	}
++
++	send_responce(stream, fm_library::cxl_fm_lib::CXL_FM_NO_DATA, env);
++}
++
++/*
++ * Stop FM instance
++ */
++pub fn stop_fm(stream: &TcpStream, env: &CxlFmOptions) {
++	if env.is_debug {
++		println!("{}", fm_library::cxl_fm_lib::CXL_FM_STOP_FM_COMMAND);
++	}
++
++	send_responce(stream, fm_library::cxl_fm_lib::CXL_FM_NO_DATA, env);
++}
++
++/*
++ * Connection request processing logic
++ */
++fn handle_connection(stream: &TcpStream, env: &CxlFmOptions) {
++	if env.is_debug {
++		println!("Process request...");
++	}
++
++	let buf_reader = BufReader::new(stream);
++	let request_line = buf_reader.lines().next().unwrap().unwrap();
++
++	if env.is_debug {
++		println!("Request: {:#?}", request_line);
++	}
++
++	match request_line.as_str() {
++		fm_library::cxl_fm_lib::CXL_FM_DISCOVER_FM_COMMAND => {
++			discover_fm(stream, env);
++		},
++		fm_library::cxl_fm_lib::CXL_FM_START_FM_COMMAND => {
++			start_fm(stream, env);
++		},
++		fm_library::cxl_fm_lib::CXL_FM_RESTART_FM_COMMAND => {
++			restart_fm(stream, env);
++		},
++		fm_library::cxl_fm_lib::CXL_FM_STOP_FM_COMMAND => {
++			stop_fm(stream, env);
++		},
++		_ => send_responce(stream, fm_library::cxl_fm_lib::CXL_FM_UNKNOWN_COMMAND, env),
++	}
++}
++
++/*
++ * Main logic of daemon
++ */
++fn fm_daemon_logic(env: &CxlFmOptions) {
++	if env.is_debug {
++		println!("{} {}: Daemonized!",
++			 CXL_FM_ORCHESTRATOR_NAME, CXL_FM_ORCHESTRATOR_VERSION);
++	}
++
++	loop {
++		let listener = TcpListener::bind(&env.ip_port).unwrap();
 +
 +		if env.is_debug {
-+			println!("RESPONCE: {:#?}", full_responce);
++			println!("Ready to accept connections: {}",
++				 env.ip_port);
 +		}
 +
-+		stream.write_all(full_responce.as_bytes()).unwrap();
++		for stream in listener.incoming() {
++			handle_connection(&stream.unwrap(), env);
++		}
++	};
++}
++
++/*
++ * Application logic
++ */
++fn main() {
++	let stdout = File::create(CXL_FM_ORCHESTRATOR_LOG_FILE_PATH).unwrap();
++	let stderr = File::create(CXL_FM_ORCHESTRATOR_ERROR_MESSAGES_FILE_PATH).unwrap();
++
++	let matches = cli().get_matches();
++
++	let ip = matches.get_one::<String>(CXL_FM_ORCHESTRATOR_IP_ADDRESS_OPTION).unwrap();
++	let port = matches.get_one::<String>(CXL_FM_ORCHESTRATOR_PORT_OPTION).unwrap();
++	let ip_port = format!("{ip}:{port}");
++
++	let options = CxlFmOptions {
++		ip_port: String::from(ip_port),
++		is_debug: matches.get_flag(CXL_FM_ORCHESTRATOR_DEBUG_OPTION) == true,
++	};
++
++	if options.is_debug {
++		println!("{} {}", CXL_FM_ORCHESTRATOR_NAME, CXL_FM_ORCHESTRATOR_VERSION);
++	}
++
++	let daemonize = Daemonize::new()
++			// Every method except `new` and `start`
++			// is optional, see `Daemonize` documentation
++			// for default behaviour.
++			.working_directory(CXL_FM_ORCHESTRATOR_WORKING_DIRECTORY)
++			.user(CXL_FM_ORCHESTRATOR_USER)
++			.group(CXL_FM_ORCHESTRATOR_GROUP)	// Group name
++			.group(CXL_FM_ORCHESTRATOR_GROUP_ID)	// or group id.
++			.umask(CXL_FM_ORCHESTRATOR_UMASK)	// Set umask, `0o027` by default.
++			.stdout(stdout)				// Redirect stdout to log file.
++			.stderr(stderr)				// Redirect stderr to error messages file.
++			.privileged_action(|| "Executed before drop privileges");
++
++	match daemonize.start() {
++		Ok(_) => fm_daemon_logic(&options),
++		Err(e) => eprintln!("Error, {}", e),
 +	}
 +}
 -- 
