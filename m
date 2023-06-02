@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FA8C77B7A
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 14:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FACAC77B7A
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 14:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235208AbjFBOQn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 2 Jun 2023 10:16:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
+        id S234989AbjFBOxa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 2 Jun 2023 10:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234594AbjFBOQl (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 10:16:41 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8871A4;
-        Fri,  2 Jun 2023 07:16:39 -0700 (PDT)
+        with ESMTP id S230430AbjFBOxa (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 10:53:30 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2087.outbound.protection.outlook.com [40.107.96.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BADAAE7;
+        Fri,  2 Jun 2023 07:53:25 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZLoYNL5Bc3E1DC76CfRCas17JWy++bp/VMH84z1k8oEiq57JNZ4Luuw2HNIHZ5pn/YawXiGSP5zCluyq2nCL0MXAbFrMek96uizTEuWM6DiWzy9ImtaY8v4wD3HduP7oxmjhtMZgqU46XXysWK3cFW+ps6TFl7UcNOLTxm47STaRUInlk6aymNfwAQz8x98wtBZ0xi2RAb+dQOs1jXXmPTaUDDng1/4ERabysyH9nFYRQY+8l/Udu3N+xcSHk9nAahf/3rBImW1izho9GPHk2vIzMrZmmzKlGxyv6/N4lDt/39dAlyLQ5Qr2CoV7YLaf0YZfQdLho9o8kepbaX0xKw==
+ b=CoGcUJn/Z9iQQMFnpp3hDj+wQel5ArmZWSJc4Yk6wzmWcy2K1iLnI/ZLdwnkh0Ca4c6dZpnPhdecCPHy8PSbvcLybYtZx0T62SWQOFsv8nlq/oryK78GPtzb0yZpbBZFfpHWoFwXrpBVP2hwy14yTfjoN9V+Gvwezxvxmp9ozUwV5bHr7KJXprIRCUdgYfvrf564MBgbqSerG+/ZaQJwH0ovSnOgdmM2mO4gtuvuSqUDem0xRQnHLCffKqgTEQISIFdhGWZrScw1MdY9sUAtOiX1cJG3SdmkwpHmr8BWSWM6rxoFNo02QtxvG6fAfww8mWyp8t4D5bVcb/BX44pgDA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PxJdJH7KJuWU3tJ2igpIZ0922BMVESU82njhQzdKBbI=;
- b=mbq5v1fNyipBBwm1v1ztOK+wBBUdHEdInynIk33UH+dduyAjBlCoTiR7OimIMv+PNthcSXsmOiU8kQH5Ux7RoBnwRrhSA+Q4QYQE0jr5lKEXoR17vLS7RsOdrxX62t0BUawso/ELze1WWv8QbG5+XxqAbRdvLRBMzmj3TsKfkzv3KmKZlcuXrC+QcMUwNa7Le8O1q47BqZKJw41T08t+Qh2RM2DJlbnDdAPpTn8I4DewfHtlryQuuxuUmu/fY56l9toCCoAZrlramS7XWrZXG6TqZwfnbiMu6DE/PO3aUt6hF6an2RL5zjet/Q9aPJ1yI24JmEH7WHwNCGE9Yic1Tg==
+ bh=DltpAT3RdFVNdUpx492pedzQ1cdWNt1+L/Fc7B/ZxbU=;
+ b=jn/v8mp3HFi6sppmCsUMCEhiQJihwvObr8h44e8V3lHvI7YY9HLKF/dUBhOzJimbo1ZBvwDgWWFyZ2fQoFaEvAp16/wIavUlRORRCTTYlunIml3tJHYZlBjvjKkrCM7d5HoRDiepC3a8HhFj//r7Wk4O6N8k8s2vZ7EJCbuH2BD29G4FUwtwREzxo3sAdORMiKwS+3sU5t7eb2cKtub7YPOfX78vHYCptHISExsQTgxjoxpuCRzdwxIDdBRDVjZ3zGhZkgoKBLKHDNDIvROdG05Z5EQ6fpMu14uixC0g29VoY3d4TQS10qoASxQEijqmGgKDJGJDRkJCTbbn1ZoBQw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=huawei.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PxJdJH7KJuWU3tJ2igpIZ0922BMVESU82njhQzdKBbI=;
- b=Y+JMiDX6MQh1Lji10Ow0TiKiTuvQKK8lngfA0dogRGzeuIslWHc128Io+MncYgVgNgaBwAKVM3HAAQeFmLp5s6VTHL2nDnTvu+FthapRcQtx31Qqw8zLimZdWCm1Avz00nlRnuhnRAGlGumY4x5XQ2AxPB5ITFYimzicd5i/olE=
-Received: from DS7PR05CA0040.namprd05.prod.outlook.com (2603:10b6:8:2f::33) by
- SN7PR12MB8604.namprd12.prod.outlook.com (2603:10b6:806:273::16) with
+ bh=DltpAT3RdFVNdUpx492pedzQ1cdWNt1+L/Fc7B/ZxbU=;
+ b=WM4O6QIlp+7LEzdKHgqQLL+zccJ1AHg0DHZmyPRH+jWqGjvOQDMTnSby9kaPbD7QrHFEbtpxSyirC+JV1UPKfMMsL3+l4ZlSi4eDGTWT+RnUU7UDJAUQVyo66N1ZsbxECaX+Tfgtm2IJcdM6wWD75mzxBFJceeu0Rj4ULvpUESY=
+Received: from MW4PR03CA0298.namprd03.prod.outlook.com (2603:10b6:303:b5::33)
+ by BL1PR12MB5336.namprd12.prod.outlook.com (2603:10b6:208:314::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Fri, 2 Jun
- 2023 14:16:37 +0000
-Received: from DM6NAM11FT032.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:2f:cafe::a5) by DS7PR05CA0040.outlook.office365.com
- (2603:10b6:8:2f::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.9 via Frontend
- Transport; Fri, 2 Jun 2023 14:16:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.24; Fri, 2 Jun
+ 2023 14:53:23 +0000
+Received: from CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b5:cafe::9f) by MW4PR03CA0298.outlook.office365.com
+ (2603:10b6:303:b5::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.25 via Frontend
+ Transport; Fri, 2 Jun 2023 14:53:22 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,14 +46,14 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT032.mail.protection.outlook.com (10.13.173.93) with Microsoft SMTP
+ CO1NAM11FT031.mail.protection.outlook.com (10.13.174.118) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6455.24 via Frontend Transport; Fri, 2 Jun 2023 14:16:36 +0000
+ 15.20.6455.26 via Frontend Transport; Fri, 2 Jun 2023 14:53:21 +0000
 Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 2 Jun
- 2023 09:16:13 -0500
-Date:   Fri, 2 Jun 2023 16:16:01 +0200
+ 2023 09:53:18 -0500
+Date:   Fri, 2 Jun 2023 16:53:15 +0200
 From:   Robert Richter <rrichter@amd.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
@@ -61,174 +61,268 @@ CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
         <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
         <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v4 01/23] cxl/acpi: Probe RCRB later during RCH
- downstream port creation
-Message-ID: <ZHn5RwXFuQOSWXaF@rric.localdomain>
+Subject: Re: [PATCH v4 02/23] cxl/rch: Prepare for caching the MMIO mapped
+ PCIe AER capability
+Message-ID: <ZHoCW9DsUwGQVKpB@rric.localdomain>
 References: <20230523232214.55282-1-terry.bowman@amd.com>
- <20230523232214.55282-2-terry.bowman@amd.com>
- <20230601111328.00005620@Huawei.com>
+ <20230523232214.55282-3-terry.bowman@amd.com>
+ <20230601113811.00006cd5@Huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230601111328.00005620@Huawei.com>
+In-Reply-To: <20230601113811.00006cd5@Huawei.com>
 X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT032:EE_|SN7PR12MB8604:EE_
-X-MS-Office365-Filtering-Correlation-Id: b50031e9-533d-4299-dbcb-08db6373fa04
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT031:EE_|BL1PR12MB5336:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76c587e7-a9fe-4477-db2c-08db63791c5f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DhXMxxLHk5GOZLJZdL4n95BMgYHqzCTFcLdXqJWKuEskZoOp2RfWDDLQ0/QF8yT23bqJ2/la3Nw9EawXtyK0oFRyin/HfZwu9svpYs9y4Npr0duoS2txqn7cwFTAwQrlLy+CDRnxYJbNnr1rSAiQgIvaF0nX0Effv2bSXU7sG4AGcxKThwA2ur0ERowcvCEDXE/EYMpZccKat5xwCCIiHgnwh/a15fDYaBzoy/HCumgzb+3g/urRVcIVfX10L/qw4jUh3DNjvrtNsNoicgel39Q5oEJVdDN5D9Sp1Rl81+/Ex9u4ryx2DRnkEPUQ6SGYlXsmprUGtq2FMUrWeMyDWWdYQF9jPsZbbmzW7TBniHiPYPD8/8APNMfYwbrArQJkErHF/h5KmdPMPu7TPO564YAmn78gXmSSioxFk6HIDx8WiRxyyJZw18LWSSQmCQSL7gb/qC/tS8tpoaDoAJe/hvJer6f0hSiOA+/HaxDsxLla+EyCHFGEMi4jhgfVhM3uey+pMg9ug42dQS+XXsfaS9gmwGkkAm8oBuYoI2LaNx2UaJvx3atYhiMrn4sBUfFPWliA9wuq50vHuT3Ij3TxootJrjQCpa98fh49rFQi/zUany3Xqx60YKd775PJ1u1+Kp2EsyZGdzX5UPhfXVhxKpw08AKjA+h9GLAZyx0P4Yr6T4OY/Poeq+TXm69WsF20LqGEWpf6lAZUWdWeM7MmCxbzXbwpSP5AWl03KN2psge79CpPCrplAGveA4MsOdaQU/YWbE8UXNscSKH2p+OA1Q==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(39860400002)(346002)(376002)(451199021)(46966006)(36840700001)(40470700004)(36860700001)(40460700003)(47076005)(83380400001)(316002)(8936002)(81166007)(6666004)(70206006)(5660300002)(4326008)(7416002)(6916009)(70586007)(82310400005)(41300700001)(8676002)(356005)(7696005)(40480700001)(55016003)(82740400003)(54906003)(2906002)(9686003)(186003)(53546011)(16526019)(478600001)(26005)(336012)(426003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: N60QBTkg333uZMbu4D/TSam1dkM/LfCOlMv4hJKVveQcvdg4HNIN6yMmZI37dus+8a7eB0g3t7MdS0+IDyau/ZwM5R4obY3/Dv0+eN4cthMC5YGZCLLYqQJsziffVdJtGs9WLtklSOKzUtdgZ/j8P6/pn6M/VAXXli5EY77XAudBJuWbaXBtU2gZo5b1uy0y29kmUWfanFtg/nmJ9EO2CnAZGuvTwxgPXCeHs1tF6zTuH62Azo4dZv9sguMLpEqhFvRNDC42Tfc46TAH2+uqv1DJaiOOdBdB5xkHrjucVkn6uUaxlo4GAaSd5rkziB09G/KuSfqNS4ZYc6CeXOlHqce1X6g73gs0HGYl7fma6UHrNiFK52W4yLohcMzpicZ9rNx5WU9ilw0dakCQBnu1xQXSB/wisha1plXwAqmr81ytxRlbM0lo8lZvn+jM0DIr1zoeEpWOCogEG5Hn9Hq3KEn6J2gKxzh1SWiX16v0k0qHu9w+aOj82u5NYYB376nW+5PKJv9ypVNtVEiQHHZLTrSjFxznX8upLv1ZFxtiytHd195Qcu8rX+tpuVAXL5ARJJyOGqKSqMILrnce908FV4J8yaPCL642cMnHxAqo7KDEQeN3w1M/6qzmFtLzrB3LRpCkSKvudBcWTym+P6lBNP6FJaBuOrujJn9tN4LI7LxnDOGVuhGNB+WhuNPJOzxgilFcNvsr4Pj6ckDMqzP09yGK81BPxlbEX05/REGXssRAKM9DP8yYGUjYMOUhJZuXCz5kvpbJT8g+1M6wd6urvg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(346002)(39860400002)(396003)(451199021)(40470700004)(46966006)(36840700001)(82740400003)(82310400005)(356005)(81166007)(66899021)(40460700003)(8676002)(54906003)(6916009)(70206006)(70586007)(4326008)(40480700001)(55016003)(6666004)(7696005)(478600001)(53546011)(26005)(186003)(16526019)(9686003)(316002)(7416002)(8936002)(5660300002)(36860700001)(41300700001)(47076005)(2906002)(426003)(83380400001)(336012)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 14:16:36.9130
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 14:53:21.9106
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b50031e9-533d-4299-dbcb-08db6373fa04
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76c587e7-a9fe-4477-db2c-08db63791c5f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT032.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8604
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5336
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Jonathan,
-
-On 01.06.23 11:13:28, Jonathan Cameron wrote:
-> On Tue, 23 May 2023 18:21:52 -0500
+On 01.06.23 11:38:11, Jonathan Cameron wrote:
+> On Tue, 23 May 2023 18:21:53 -0500
 > Terry Bowman <terry.bowman@amd.com> wrote:
 > 
-> > From: Robert Richter <rrichter@amd.com>
+> > From: Dan Williams <dan.j.williams@intel.com>
 > > 
-> > The RCRB is extracted already during ACPI CEDT table parsing while the
-> > data of this is needed not earlier than dport creation. This
-> > implementation comes with drawbacks: During ACPI table scan there is
-> > already MMIO access including mapping and unmapping, but only ACPI
-> > data should be collected here. The collected data must be transferred
-> > through a couple of interfaces until it is finally consumed when
-> > creating the dport. This causes complex data structures and function
-> > interfaces. Additionally, RCRB parsing will be extended to also
-> > extract AER data, it would be much easier do this at a later point
-> > during port and dport creation when the data structures are available
-> > to hold that data.
+> > Prepare cxl_probe_rcrb() for retrieving more than just the component
+> > register block. The RCH AER handling code wants to get back to the AER
+> > capability that happens to be MMIO mapped rather then configuration
+> > cycles.
 > > 
-> > To simplify all that, probe the RCRB at a later point during RCH
-> > downstream port creation. Change ACPI table parser to only extract the
-> > base address of either the component registers or the RCRB. Parse and
-> > extract the RCRB in devm_cxl_add_rch_dport().
+> > Move RCRB specific downstream port data, like the RCRB base and the
+> > AER capability offset, into its own data structure ('struct
+> > cxl_rcrb_info') for cxl_probe_rcrb() to fill. Extend 'struct
+> > cxl_dport' to include a 'struct cxl_rcrb_info' attribute.
+> >
+> There are several other refactors going on in here. I'd rather
+> see it broken down into a few separate patches. See inline.
+
+I didn't want to split Dan's patch here and just started with it as a
+base.
+
+>  
+> > This centralizes all RCRB scanning in one routine.
 > > 
-> > This is in preparation to centralize all RCRB scanning.
-> > 
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > Co-developed-by: Robert Richter <rrichter@amd.com>
 > > Signed-off-by: Robert Richter <rrichter@amd.com>
 > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> 
-> Hi,
-> 
-> Some comments inline, though one of them (about extensibility of CDAT
-> structures) applies just as much to the existing code so doesn't affect
-> 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> for this patch.
-
-thanks for review. See inline.
-
-> 
-> 
 > > ---
-> >  drivers/cxl/acpi.c      | 52 ++++++++++++++++-------------------------
-> >  drivers/cxl/core/port.c | 21 +++++++++++++----
-> >  drivers/cxl/cxl.h       |  1 -
-> >  3 files changed, 36 insertions(+), 38 deletions(-)
+> >  drivers/cxl/core/port.c       |  7 ++++---
+> >  drivers/cxl/core/regs.c       | 10 ++++++----
+> >  drivers/cxl/cxl.h             | 19 ++++++++++++-------
+> >  drivers/cxl/mem.c             | 16 +++++++++-------
+> >  tools/testing/cxl/Kbuild      |  2 +-
+> >  tools/testing/cxl/test/cxl.c  | 10 ++++++----
+> >  tools/testing/cxl/test/mock.c | 12 ++++++------
+> >  tools/testing/cxl/test/mock.h |  7 ++++---
+> >  8 files changed, 48 insertions(+), 35 deletions(-)
 > > 
-> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> > index 7e1765b09e04..39227070da9b 100644
-> > --- a/drivers/cxl/acpi.c
-> > +++ b/drivers/cxl/acpi.c
-> > @@ -373,20 +373,18 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index 1a3f8729a616..618865ca6a9f 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -939,8 +939,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+> >  		return ERR_PTR(-ENOMEM);
+> >  
+> >  	if (rcrb != CXL_RESOURCE_NONE) {
+> > -		component_reg_phys = cxl_rcrb_to_component(dport_dev,
+> > -						rcrb, CXL_RCRB_DOWNSTREAM);
+> > +		component_reg_phys =
+> > +			cxl_probe_rcrb(dport_dev, rcrb, &dport->rcrb,
+> > +				       CXL_RCRB_DOWNSTREAM);
+> >  		if (component_reg_phys == CXL_RESOURCE_NONE) {
+> >  			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
+> >  			return ERR_PTR(-ENXIO);
+> > @@ -957,7 +958,7 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+> >  	dport->port_id = port_id;
+> >  	dport->component_reg_phys = component_reg_phys;
+> >  	dport->port = port;
+> > -	dport->rcrb = rcrb;
+> > +	dport->rcrb.base = rcrb;
+> >  
+> >  	cond_cxl_root_lock(port);
+> >  	rc = add_dport(port, dport);
+> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > index 1476a0299c9b..08da4c917f99 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -332,9 +332,8 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
+> >  
+> > -resource_size_t cxl_rcrb_to_component(struct device *dev,
+> > -				      resource_size_t rcrb,
+> > -				      enum cxl_rcrb which)
+> > +resource_size_t cxl_probe_rcrb(struct device *dev, resource_size_t rcrb,
+> > +			       struct cxl_rcrb_info *ri, enum cxl_rcrb which)
+> >  {
+> >  	resource_size_t component_reg_phys;
+> >  	void __iomem *addr;
+> > @@ -344,6 +343,8 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
+> >  
+> >  	if (which == CXL_RCRB_UPSTREAM)
+> >  		rcrb += SZ_4K;
+> > +	else if (ri)
+> > +		ri->base = rcrb;
+> 
+> I'm struggling a bit to follow flow, but I 'think' you set this to the same
+> address here and at the end of __devm_cxl_add_dport()
+
+Yes, that is a duplicate assignment, good catch.
+
+> 
+> >  
+> >  	/*
+> >  	 * RCRB's BAR[0..1] point to component block containing CXL
+> > @@ -364,6 +365,7 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
+> >  	cmd = readw(addr + PCI_COMMAND);
+> >  	bar0 = readl(addr + PCI_BASE_ADDRESS_0);
+> >  	bar1 = readl(addr + PCI_BASE_ADDRESS_1);
+> > +
+> 
+> Trivial but I love to moan about these :)
+> Stray change that shouldn't be in this patch...
+
+I think it is ok to also add such trivial changes in a patch like
+this. A separate patch for trivial things (to improve) like this would
+just spam the patch queue and isn't it worth.
+
+But, there are no other changes in that area, so just keep it as is
+and simply drop the change.
+
+> 
+> >  	iounmap(addr);
+> >  	release_mem_region(rcrb, SZ_4K);
+> >  
+> > @@ -395,4 +397,4 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
+> >  
+> >  	return component_reg_phys;
+> >  }
+> > -EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_component, CXL);
+> > +EXPORT_SYMBOL_NS_GPL(cxl_probe_rcrb, CXL);
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index a5cd661face2..29e0bd2b8f2a 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -267,9 +267,9 @@ enum cxl_rcrb {
+> >  	CXL_RCRB_DOWNSTREAM,
+> >  	CXL_RCRB_UPSTREAM,
+> >  };
+> > -resource_size_t cxl_rcrb_to_component(struct device *dev,
+> > -				      resource_size_t rcrb,
+> > -				      enum cxl_rcrb which);
+> > +struct cxl_rcrb_info;
+> > +resource_size_t cxl_probe_rcrb(struct device *dev, resource_size_t rcrb,
+> > +			       struct cxl_rcrb_info *ri, enum cxl_rcrb which);
+> >  
+> >  #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+> >  #define CXL_TARGET_STRLEN 20
+> > @@ -587,22 +587,27 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+> >  	return xa_load(&port->dports, (unsigned long)dport_dev);
 > >  }
 > >  
-> >  struct cxl_chbs_context {
-> > -	struct device *dev;
-> >  	unsigned long long uid;
-> > -	resource_size_t rcrb;
-> > -	resource_size_t chbcr;
+> > +struct cxl_rcrb_info {
 > > +	resource_size_t base;
-> >  	u32 cxl_version;
+> > +	u16 aer_cap;
+> > +};
+> > +
+> >  /**
+> >   * struct cxl_dport - CXL downstream port
+> >   * @dport: PCI bridge or firmware device representing the downstream link
+> > + * @port: reference to cxl_port that contains this downstream port
+> >   * @port_id: unique hardware identifier for dport in decoder target list
+> >   * @component_reg_phys: downstream port component registers
+> > - * @rcrb: base address for the Root Complex Register Block
+> >   * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+> > - * @port: reference to cxl_port that contains this downstream port
+> > + * @rcrb: Data about the Root Complex Register Block layout
+> >   */
+> >  struct cxl_dport {
+> >  	struct device *dport;
+> > +	struct cxl_port *port;
+> 
+> Why the reorder?  It's adding noise we don't need in this patch...
+
+There is some rework of the struct anyway. @port is essential for that
+object as it reflects the hierarchy. Also, having 64 bit pointers in
+the beginning improves padding of the struct. Not a big deal but good
+reasons to change the order.
+
+> 
+> >  	int port_id;
+> >  	resource_size_t component_reg_phys;
+> > -	resource_size_t rcrb;
+> >  	bool rch;
+> > -	struct cxl_port *port;
+> > +	struct cxl_rcrb_info rcrb;
 > >  };
 > >  
-> > -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> > +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
-> >  			 const unsigned long end)
-> >  {
-> >  	struct cxl_chbs_context *ctx = arg;
-> >  	struct acpi_cedt_chbs *chbs;
+> >  /**
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index 519edd0eb196..7ecdaa7f9315 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -51,7 +51,6 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+> >  	struct cxl_port *parent_port = parent_dport->port;
+> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> >  	struct cxl_port *endpoint, *iter, *down;
+> > -	resource_size_t component_reg_phys;
+> >  	int rc;
 > >  
-> > -	if (ctx->chbcr)
-> > +	if (ctx->base)
-> >  		return 0;
-> >  
-> >  	chbs = (struct acpi_cedt_chbs *) header;
-> > @@ -395,23 +393,16 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> >  		return 0;
-> >  
-> >  	ctx->cxl_version = chbs->cxl_version;
-> > -	ctx->rcrb = CXL_RESOURCE_NONE;
-> > -	ctx->chbcr = CXL_RESOURCE_NONE;
-> > +	ctx->base = CXL_RESOURCE_NONE;
-> >  
-> >  	if (!chbs->base)
-> >  		return 0;
-> >  
-> > -	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11) {
-> > -		ctx->chbcr = chbs->base;
+> >  	/*
+> > @@ -71,12 +70,15 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+> >  	 * host-bridge RCRB if they are not already mapped via the
+> >  	 * typical register locator mechanism.
+> >  	 */
+> > -	if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
+> > -		component_reg_phys = cxl_rcrb_to_component(
+> > -			&cxlmd->dev, parent_dport->rcrb, CXL_RCRB_UPSTREAM);
+> > -	else
+> > -		component_reg_phys = cxlds->component_reg_phys;
+> > -	endpoint = devm_cxl_add_port(host, &cxlmd->dev, component_reg_phys,
+> > +	if (parent_dport->rch &&
+> > +	    cxlds->component_reg_phys == CXL_RESOURCE_NONE) {
+> > +		cxlds->component_reg_phys =
+> > +			cxl_probe_rcrb(&cxlmd->dev, parent_dport->rcrb.base,
+> > +				       NULL, CXL_RCRB_UPSTREAM);
 > 
-> Trivial: This is a functional change and should be called out -
-> previously the base address was stashed even if the length test
-> fails, now it isn't. May make no difference because it was never used
-> if that's the case, but would be nice to still mention it in patch description.
+> This use of the component_reg_phys pointer in cxlds isn't closely related
+> to the other changes. This patch would (I think) be more readable
+> if that change was done in a precursor patch.
 
-The logic changed but the intention is to have the same checks as
-before. The length check is in only for the CXL11 case and no check
-for VH mode. This is implemented as before and no functional change,
-note the check later below in the old code which was the CXL11-only
-path.
+This is an intermediate change and removed later. I will check if the
+local component_reg_phys var could be kept here until removal.
 
-> 
-> Also, ACPI tables are designed to be extensible and I think that
-> applies to CDAT tables as well - so this code should not be
-> checking for a precise match, but rather that it is greater than
-> or equal to the size we will read from.
-
-I don't think the spec will change here as this is limited to RCD mode
-only. Other than e.g. capability register ranges this is a block size,
-there is no intention to extend it.
-
-> 
-> 
-> > +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-> > +	    chbs->length != CXL_RCRB_SIZE)
-> >  		return 0;
-> > -	}
-> 
-> >  
-> > -	if (chbs->length != CXL_RCRB_SIZE)
-> > -		return 0;
-
-Note this check here.
+Thanks,
 
 -Robert
 
-> > -
-> > -	ctx->rcrb = chbs->base;
-> > -	ctx->chbcr = cxl_rcrb_to_component(ctx->dev, chbs->base,
-> > -					   CXL_RCRB_DOWNSTREAM);
-> > +	ctx->base = chbs->base;
-> >  
-> >  	return 0;
-> >  }
+> 
+> > +	}
+> > +
+> > +	endpoint = devm_cxl_add_port(host, &cxlmd->dev,
+> > +				     cxlds->component_reg_phys,
+> >  				     parent_dport);
+> >  	if (IS_ERR(endpoint))
+> >  		return PTR_ERR(endpoint);
 > 
