@@ -2,99 +2,126 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5870EC7EE29
-	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 12:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FD1C7EE2C
+	for <linux-cxl@archiver.kernel.org>; Fri,  2 Jun 2023 12:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234762AbjFBMZ0 convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 2 Jun 2023 08:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36640 "EHLO
+        id S234751AbjFBMfL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 2 Jun 2023 08:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234206AbjFBMZZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 08:25:25 -0400
+        with ESMTP id S234571AbjFBMfK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 2 Jun 2023 08:35:10 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84E31AE
-        for <linux-cxl@vger.kernel.org>; Fri,  2 Jun 2023 05:25:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813741AE;
+        Fri,  2 Jun 2023 05:35:07 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QXhws04W1z67lKb;
-        Fri,  2 Jun 2023 20:23:08 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QXj862q2Rz6D8XS;
+        Fri,  2 Jun 2023 20:32:54 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 2 Jun
- 2023 13:25:18 +0100
-Date:   Fri, 2 Jun 2023 13:25:17 +0100
+ 2023 13:35:05 +0100
+Date:   Fri, 2 Jun 2023 13:35:04 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [EXT] Re: I2C Multi-master and Controller Slave Mode in QEMU
-Message-ID: <20230602132517.00006793@Huawei.com>
-In-Reply-To: <DM6PR18MB2844DA254DE3754A3E07AC92AF49A@DM6PR18MB2844.namprd18.prod.outlook.com>
-References: <DM6PR18MB2844C8CDBF085BE599F98EBEAF7C9@DM6PR18MB2844.namprd18.prod.outlook.com>
-        <20230522154135.00002be3@Huawei.com>
-        <DM6PR18MB2844ED837509545D7BCE93D2AF409@DM6PR18MB2844.namprd18.prod.outlook.com>
-        <20230524173938.00002d7e@Huawei.com>
-        <DM6PR18MB2844EBEBA8D10343B6DB763EAF419@DM6PR18MB2844.namprd18.prod.outlook.com>
-        <20230525172307.00005a8b@Huawei.com>
-        <DM6PR18MB2844DA254DE3754A3E07AC92AF49A@DM6PR18MB2844.namprd18.prod.outlook.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, <lenb@kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <lukas@wunner.de>
+Subject: Re: [PATCH v3 1/4] acpi: Move common tables helper functions to
+ common lib
+Message-ID: <20230602133504.00001c69@Huawei.com>
+In-Reply-To: <168565511236.1098279.11767193165079131197.stgit@djiang5-mobl3>
+References: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
+        <168565511236.1098279.11767193165079131197.stgit@djiang5-mobl3>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 1 Jun 2023 23:07:54 +0000
-Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com> wrote:
+On Thu, 01 Jun 2023 14:31:52 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-> Thanks a lot. It works. I am planning to add more CXL commands, especially DCD commands. Are you or any one working ? If so I will wait :)
+> Some of the routines in ACPI driver/acpi/tables.c can be shared with
+> parsing CDAT. CDAT is a device-provided data structure that is formatted
+> similar to a platform provided ACPI table. CDAT is used by CXL and can
+> exist on platforms that do not use ACPI. Split out the common routine
+> from ACPI to accommodate platforms that do not support ACPI and move that
+> to /lib. The common routines can be built outside of ACPI if
+> FIRMWARE_TABLES is selected.
+> 
+> Link: https://lore.kernel.org/linux-cxl/CAJZ5v0jipbtTNnsA0-o5ozOk8ZgWnOg34m34a9pPenTyRLj=6A@mail.gmail.com/
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-It's on my todo list, but I'm more than happy if you do it instead.
+Minor comment to fix inline. With that tidied up
 
-I'll get on with something else:
-I want to get the mailbox based tunneling working so that we have that
-path for MHDs as well which is reasonable separate at this stage anyway
-- later on we'll want to factor out some common solutions - I suspect
-a lot of the actual command responses will be done in hw/mem/cxl_type3.c
-and hw/pci-bridge/cxl_upstream.c, but for now it's convenient
-to keep them separate.  The switch CCI stuff needs to be in the mix as well
-and will likely look a bit like how the mctp CCI hooks into the switch USP.
-The old prototype of that didn't talk to the devices at all so was returning
-made up responses.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Jonathan
+> diff --git a/include/linux/fw_table.h b/include/linux/fw_table.h
+> new file mode 100644
+> index 000000000000..ff8fa58d5818
+> --- /dev/null
+> +++ b/include/linux/fw_table.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + *  fw_tables.h - Parsing support for ACPI and ACPI-like tables provided by
+> + *                platform or device firmware
+> + *
+> + *  Copyright (C) 2001 Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
+> + *  Copyright (C) 2023 Intel Corp.
+> + */
+> +#ifndef _FW_TABLE_H_
+> +#define _FW_TABLE_H_
+> +
+> +union acpi_subtable_headers;
+> +
+> +typedef int (*acpi_tbl_entry_handler)(union acpi_subtable_headers *header,
+> +				      const unsigned long end);
+> +
+> +typedef int (*acpi_tbl_entry_handler_arg)(union acpi_subtable_headers *header,
+> +					  void *arg, const unsigned long end);
+> +
+> +struct acpi_subtable_proc {
+> +	int id;
+> +	acpi_tbl_entry_handler handler;
+> +	acpi_tbl_entry_handler_arg handler_arg;
+> +	void *arg;
+> +	int count;
+> +};
+> +
+> +#include <linux/acpi.h>
+> +#include <acpi/acpi.h>
+
+Includes mid way down the files is not a common pattern and I can't see why
+it's particularly useful to do so here.
+
++ linux/acpi.h includes acpi/acpi.h and I can't see that changing any time
+soon...
+
+> +
+> +union acpi_subtable_headers {
+> +	struct acpi_subtable_header common;
+> +	struct acpi_hmat_structure hmat;
+> +	struct acpi_prmt_module_header prmt;
+> +	struct acpi_cedt_header cedt;
+> +};
+> +
+> +int acpi_parse_entries_array(char *id, unsigned long table_size,
+> +			     struct acpi_table_header *table_header,
+> +			     struct acpi_subtable_proc *proc,
+> +			     int proc_num, unsigned int max_entries);
+> +
+> +#endif
 
 
-
-> 
-> 
-> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Sent: Thursday, May 25, 2023 9:23 AM
-> To: Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
-> Cc: linux-cxl@vger.kernel.org <linux-cxl@vger.kernel.org>
-> Subject: Re: [EXT] Re: I2C Multi-master and Controller Slave Mode in QEMU 
->  
-> 
-> > ss: Thats great ! Can you please share the code, both QEMU and kernel driver ?  
-> 
-> QEMU:  https://urldefense.proofpoint.com/v2/url?u=http-3A__gitlab.com_jic23_qemu&d=DwICAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=Zta64bwn4nurTRpD4LY2OGr8KklkMRPn7Z_Qy0o4unU&m=UQ3dgvJg_i34v2qxPCBlB3FuVUmLQ37oHw2LKVGYimsevbBm75NKu_2xDhtZ3LxL&s=DWzpkbi44uasdoDv_GxAR2to07vEd_Cr7eaKz0lpP6E&e=  cxl-2023-05-25 
-> https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dcxl_20230525160859.32517-2D1-2DJonathan.Cameron-40huawei.com_T_-23t&d=DwICAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=Zta64bwn4nurTRpD4LY2OGr8KklkMRPn7Z_Qy0o4unU&m=UQ3dgvJg_i34v2qxPCBlB3FuVUmLQ37oHw2LKVGYimsevbBm75NKu_2xDhtZ3LxL&s=3zV1e3KB_3wAesmu5jsYP7YodFFgzjydMl0vICy6Tis&e= 
-> Kernel:  To enable ACPI support in the aspeed-i2c driver used.
-> https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dcxl_20230525152203.32190-2D1-2DJonathan.Cameron-40huawei.com_T_-23t&d=DwICAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=Zta64bwn4nurTRpD4LY2OGr8KklkMRPn7Z_Qy0o4unU&m=UQ3dgvJg_i34v2qxPCBlB3FuVUmLQ37oHw2LKVGYimsevbBm75NKu_2xDhtZ3LxL&s=tPmsOiZy9jqzAIFK46Nj_WIzpX7WNf5bxge2uZUa2Yg&e= 
-> 
-> Other than enabling MCTP + the aspeed-i2c driver, not much special needed kernel side
-> (all access is from the MCTP socket interface in userspace).
-> 
-> Have fun.  It's pretty minimal at the moment.
-> For switches it pokes at the number of ports (the port status is all lies for now)
-> For Type 3 devices it just provide Identify.
-> 
-> I need to do a little more spec diving to check I've enabled them for the correct
-> MCTP bindings.
-> 
-> Jonathan
