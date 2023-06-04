@@ -2,134 +2,133 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD01CC7EE29
-	for <linux-cxl@archiver.kernel.org>; Sun,  4 Jun 2023 16:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB53C7EE23
+	for <linux-cxl@archiver.kernel.org>; Sun,  4 Jun 2023 23:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231204AbjFDQJe convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 4 Jun 2023 12:09:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47386 "EHLO
+        id S232525AbjFDXbk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 4 Jun 2023 19:31:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjFDQJd (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 4 Jun 2023 12:09:33 -0400
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1541DB3;
-        Sun,  4 Jun 2023 09:09:32 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-94ea38c90ccso72930266b.1;
-        Sun, 04 Jun 2023 09:09:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685894970; x=1688486970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YF9X4I63I2PmSlQXak66EM9u+G4hRGXTYT1CsoyXv8A=;
-        b=EoPoWHveMWJ9veG0LIcIcOdiQrJIwjwzgkZVyc61N/GJBUkYrNk0H1f9nBCsifUeEM
-         NYjhyZLcXD6M3GYMZm5wvVR9PFEcN4cJf9sh5hKza+INsn7onxP8uIrUuYu6z7AqJMZD
-         3hTXFLnfHyBWjRTymjvyhiRNRKBveuLkBw9dIJNdKEFbhTJhAAtqPjXVkJ9bQe+wypB4
-         rmQSGJyiv4wDilPg4csTlul9iwnPimZBWVobD4NQb9OiLsfmvKrF4EI0Mtiseme/R0HX
-         qQMu+tBRS2UtmE6Zv+BNzxdZzjaLM8OvQq6tgcrPU9u7wj50jkCSX1VgOBnM0hRtxSkf
-         JQ6w==
-X-Gm-Message-State: AC+VfDzgOm1nEJcN/APyu07DHKD9Zs+50tqDTFBVX/7J9en2F6+5uktB
-        iCxor252QB8J/rEmakLYEgkefYCSIj1a4KUEPMU=
-X-Google-Smtp-Source: ACHHUZ7uxNj+HwBGMoaJ4vShM+UlBmIsfu/kadNWj3tfFDYjns2iSrQRTc5TzB5cbg+jY6IMuR0GX2/+tX42EvcvCNU=
-X-Received: by 2002:a17:906:145:b0:94a:5f0d:d9d6 with SMTP id
- 5-20020a170906014500b0094a5f0dd9d6mr14762463ejh.4.1685894970362; Sun, 04 Jun
- 2023 09:09:30 -0700 (PDT)
+        with ESMTP id S230495AbjFDXbk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 4 Jun 2023 19:31:40 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD34AC
+        for <linux-cxl@vger.kernel.org>; Sun,  4 Jun 2023 16:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685921499; x=1717457499;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NdgSszNxPAoIDiPnhg4c0SahyCVo6SQMipK5vT871dc=;
+  b=b5zJo7hhh+rxiQdO6MtPf+HcKY/c+C8Zm6pBSuS4Bo0Yi4/q4gZk9l6z
+   m84aBysuLxFqW4AOROuqFMrUakBwyVfiIaNKqzBj5Qa0oW+lpRekPJS4q
+   Xt+LUR3GVBrGv1KhScG8tU/kQNiqdvDD8rpaJqm25Bes3kx3SljPCo04e
+   cTMmbFd/MGuWEXi7WF8XuUNja76BWJMqC47q8Ec+YcwtsCpdmDi8PZZbp
+   BlSSbi7YKT2YIPYcgkz2wT2pIL8BrkKOrPnqnez17z7DnXeAoSVQYD131
+   xSuASnFyVdQVVzFUdXtI+QrIgU/AAJRIXme7UH3wqxN/m9TWfMK3cAC9h
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="335860233"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="335860233"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 16:31:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="708466066"
+X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
+   d="scan'208";a="708466066"
+Received: from ezaker-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.85.189])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 16:31:38 -0700
+Subject: [PATCH 00/19] cxl: Device memory setup
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     ira.weiny@intel.com, navneet.singh@intel.com
+Date:   Sun, 04 Jun 2023 16:31:37 -0700
+Message-ID: <168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-References: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
-In-Reply-To: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Sun, 4 Jun 2023 18:09:19 +0200
-Message-ID: <CAJZ5v0gbSN5K1Q_Afsr9T3WGadg6zphGsz6ATavmiXVmRMPWcw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] acpi: Add CDAT parsing support to ACPI tables code
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, dan.j.williams@intel.com,
-        ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, lukas@wunner.de,
-        Jonathan.Cameron@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jun 1, 2023 at 11:31 PM Dave Jiang <dave.jiang@intel.com> wrote:
->
-> v3:
-> - Move common code to lib/fw_table.c
-> v2:
-> - Split out with CONFIG_ACPI_TABLES_LIB to be independent
-> - Fixed 0-day issues
-> - Change CDAT releveant names to prefix with cdat/CDAT instead of
->   acpi/ACPI. (Jonathan)
-> - Make table_header a union with cdat table header instead of
->   'acpi_table_header'. (Jonathan)
-> - Removed ACPI_SIG_CDAT, already defined.
->
-> Hi Rafael,
-> Please consider ack these patches. Dan can take these through the CXL tree. After
-> attempting to rename the cxl_ prefixes of functions and non ACPICA data structures
-> to something more common, it seems that significant amount of ACPI code would be
-> touched for the rename. For this series I left it alone in order to have the minimal
-> changes to ACPI code.
->
-> I've broken out the "cxl: Add support for QTG ID retrieval for CXL subsystem" [1]
-> series in order to make it more manageable. Here's the first part of the ACPI
-> changes. These changes are added to allow reuse of ACPI tables code to parse
-> the CDAT tables. While CDAT is not part of ACPI, the table structures are similar
-> to ACPI layouts that the code can be reused with some small modifications.
->
-> However, in order to be properly utilized by CXL users, the tables code needs
-> to be refactored out to be independent of ACPI. For example, a PPC BE host may
-> have CXL and does not have ACPI support. But it will have CDAT to read from
-> devices and switches. I have created CONFIG_ACPI_TABLES_LIB in order to allow
-> the common code to be independent. 0-day seems to be happy now for all the
-> different configs and archs.
->
-> 1/4: Split out the common code from drivers/acpi/tables.c to lib/fw_table.c
-> 2/4: Add CDAT support
-> 3,4/4: These two are minor patches that has ACPICA impact. Has been merged into
->        the ACPICA git repo [3].
->
-> The whole series is at [2] for convenience.
->
-> [1]: https://lore.kernel.org/linux-cxl/168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3/T/#t
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
-> [3]: https://github.com/acpica/acpica/pull/874
->
-> ---
->
-> Dave Jiang (4):
->       acpi: Move common tables helper functions to common lib
->       lib/firmware_table: tables: Add CDAT table parsing support
->       acpi: fix misnamed define for CDAT DSMAS
->       acpi: Add defines for CDAT SSLBIS
->
->
->  drivers/acpi/Kconfig     |   1 +
->  drivers/acpi/tables.c    | 178 +----------------------------
->  include/acpi/actbl1.h    |   5 +-
->  include/linux/acpi.h     |  22 +---
->  include/linux/fw_table.h |  52 +++++++++
->  lib/Kconfig              |   3 +
->  lib/Makefile             |   2 +
->  lib/fw_table.c           | 236 +++++++++++++++++++++++++++++++++++++++
->  8 files changed, 302 insertions(+), 197 deletions(-)
->  create mode 100644 include/linux/fw_table.h
->  create mode 100644 lib/fw_table.c
->
-> --
+There are 2 models for implementing CXL memory. To date the CXL enabling
+has been focused on the common class-device case (Type-3). The
+class-code mandates the implementation of standard mechanisms like the
+mailbox and mandatory commands. The other model (Type-2) is
+implementation specific memory typically associated with local device
+memory for an accelerator. Start the support for Type-2 and take the
+opportunity to better prepare the CXL core for "a la carte" enabling of
+optional CXL features.
 
-I think that this series can go in via the CXL tree and I'm expecting
-ACPICA to make a new release including the counterparts of patches
-[3-4/4] shortly.
+Now, to date there has not been any engagement on the list for an
+accelerator driver that wants to reuse the CXL core, but I think it is
+worth moving ahead with these patches for the following reasons:
 
-Please feel free to add
+1/ The refactoring of region creation is needed by Persistent Memory
+   support where the kernel needs to create regions from labels, not sysfs
+   input.
 
-Acled-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+2/ The 'struct cxl_dev_state' object carries infrastructure that is
+   optional outside of CXL memory-device class-code devices. That makes it
+   difficult to even start the discussion with accelerator driver authors
+   that want to evaluate what pieces of the CXL core are suitable to reuse.
 
-to the series.
+3/ The example type-2 driver in cxl_test protects against
+   type-3-exclusive assumptions from leaking back into the code base.
 
-Thanks!
+In other words it is difficult to start the "type-2" discussion when the
+kernel is ~1500 lines of change from the baseline such a driver might
+need, and the cleanups make the code more maintainable independent of an
+immediate non-test user.
+
+The first 9 patches are general cleanups, the last 10 are focused on
+refactoring region creation in support of driver-instantiated CXL memory
+regions.
+
+---
+
+Dan Williams (19):
+      cxl/regs: Clarify when a 'struct cxl_register_map' is input vs output
+      tools/testing/cxl: Remove unused @cxlds argument
+      cxl/mbox: Move mailbox related driver state to its own data structure
+      cxl/memdev: Make mailbox functionality optional
+      cxl/port: Rename CXL_DECODER_{EXPANDER,ACCELERATOR} => {HOSTMEM,DEVMEM}
+      cxl/hdm: Default CXL_DEVTYPE_DEVMEM decoders to CXL_DECODER_DEVMEM
+      cxl/region: Manage decoder target_type at decoder-attach time
+      cxl/port: Enumerate flit mode capability
+      cxl/memdev: Formalize endpoint port linkage
+      cxl/memdev: Indicate probe deferral
+      cxl/region: Factor out construct_region_{begin,end} and drop_region() for reuse
+      cxl/region: Factor out interleave ways setup
+      cxl/region: Factor out interleave granularity setup
+      cxl/region: Clarify locking requirements of cxl_region_attach()
+      cxl/region: Specify host-only vs device memory at region creation time
+      cxl/hdm: Define a driver interface for DPA allocation
+      cxl/region: Define a driver interface for HPA free space enumeration
+      cxl/region: Define a driver interface for region creation
+      tools/testing/cxl: Emulate a CXL accelerator with local memory
+
+
+ drivers/cxl/acpi.c           |    2 
+ drivers/cxl/core/hdm.c       |  164 +++++++++++++---
+ drivers/cxl/core/mbox.c      |  277 ++++++++++++++-------------
+ drivers/cxl/core/memdev.c    |  108 +++++++++-
+ drivers/cxl/core/pci.c       |   84 ++++++++
+ drivers/cxl/core/pmem.c      |    2 
+ drivers/cxl/core/port.c      |   19 +-
+ drivers/cxl/core/region.c    |  437 ++++++++++++++++++++++++++++++++++++------
+ drivers/cxl/core/regs.c      |    8 -
+ drivers/cxl/cxl.h            |   21 ++
+ drivers/cxl/cxlmem.h         |  124 ++++++++----
+ drivers/cxl/cxlpci.h         |   25 ++
+ drivers/cxl/mem.c            |   17 +-
+ drivers/cxl/pci.c            |  114 ++++++-----
+ drivers/cxl/pmem.c           |   35 ++-
+ drivers/cxl/port.c           |    5 
+ drivers/cxl/security.c       |   24 +-
+ tools/testing/cxl/test/cxl.c |   20 ++
+ tools/testing/cxl/test/mem.c |  214 ++++++++++++++-------
+ 19 files changed, 1245 insertions(+), 455 deletions(-)
+
+base-commit: 9561de3a55bed6bdd44a12820ba81ec416e705a7
