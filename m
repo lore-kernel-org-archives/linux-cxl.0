@@ -2,48 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE16C7EE23
-	for <linux-cxl@archiver.kernel.org>; Sun,  4 Jun 2023 23:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE55C7EE23
+	for <linux-cxl@archiver.kernel.org>; Sun,  4 Jun 2023 23:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232464AbjFDXdM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 4 Jun 2023 19:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54206 "EHLO
+        id S232410AbjFDXdQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 4 Jun 2023 19:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232410AbjFDXdL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 4 Jun 2023 19:33:11 -0400
+        with ESMTP id S230218AbjFDXdP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 4 Jun 2023 19:33:15 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DF1AB
-        for <linux-cxl@vger.kernel.org>; Sun,  4 Jun 2023 16:33:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F24AC
+        for <linux-cxl@vger.kernel.org>; Sun,  4 Jun 2023 16:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685921588; x=1717457588;
+  t=1685921593; x=1717457593;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Z4KyIUgCE8xVdWjLwPrKwpAaINUoR+ODWqy0rfSge4E=;
-  b=GFjNpkJa+RTsoe8p0j/RUpVs7ZxZboRiR2wla30wKPS4EvXZRbLFVFhg
-   no/aPhFYhdae/CtoTG3jahAN+ZbsQ9UVOnPKIFBXd3px7ra/+3SOyS/1/
-   xWvjwFE6C7h5RBqprmCAU6ocO/+w6iRUbXZ+oQtIYp+TYwx42Uxk67IQr
-   I+/9hpXTT1GfVGOExXiIo5/ybUuB1PwXZvPb7ZPPGlgY0O6u/5IAklHFT
-   k+lt3iZxXoCagxfN9c+vLetsKtVmrKZX2D+OCuzCJ4w2REIEkYD1HDYb/
-   5hbBAuxEHHdJEcamYLSyceivu0XzMKRKdYZe6lbptoJdljpLL3wNOrMfS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="353734230"
+  bh=4/Z2kNotKpe63IrWWO43NZGARCzIktYElFf8UTs7Wv0=;
+  b=BWVoehURYpSq/X3a/WffLW3939oiIx62nv9l2eo5bdFlAz+hCOul/oAU
+   rhHeT9rYcfbe6V2pYFIcKYd1vAAn/PYVYCyZ/06FAvO/QCNr5Qq8Ws4ZV
+   dpxxpfsgXSSgwjWgZJOIBxIISOLx8TqfahifudzfQp3yd91YYlBTT/Jfe
+   HuHM2taG4mGu02/HNYGgbrShtJ5dzMChbuh4omVePTcJKiVSb6D+cGUAd
+   ZEgmbLaz7DesgnQUOrtCW2FYOxxS4dTSiMkgcb6Gl7PY103LGgH7QGX7o
+   VOKBBF+1owTiI8Wm8vrvzehVpYWDzA9DgaxHpwICNgDQfq0s+Cx4mX6QI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="353734237"
 X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="353734230"
+   d="scan'208";a="353734237"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 16:33:08 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 16:33:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="658874826"
+X-IronPort-AV: E=McAfee;i="6600,9927,10731"; a="658874829"
 X-IronPort-AV: E=Sophos;i="6.00,217,1681196400"; 
-   d="scan'208";a="658874826"
+   d="scan'208";a="658874829"
 Received: from ezaker-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.85.189])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 16:33:07 -0700
-Subject: [PATCH 16/19] cxl/hdm: Define a driver interface for DPA allocation
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2023 16:33:13 -0700
+Subject: [PATCH 17/19] cxl/region: Define a driver interface for HPA free
+ space enumeration
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     ira.weiny@intel.com, navneet.singh@intel.com
-Date:   Sun, 04 Jun 2023 16:33:07 -0700
-Message-ID: <168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Sun, 04 Jun 2023 16:33:12 -0700
+Message-ID: <168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com>
 References: <168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -54,227 +55,208 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Region creation involves finding available DPA (device-physical-address)
-capacity to map into HPA (host-physical-address) space. Given the HPA
-capacity constraint, define an API, cxl_request_dpa(), that has the
-flexibility to map the minimum amount of memory the driver needs to
-operate vs the total possible that can be mapped given HPA availability.
+CXL region creation involves allocating capacity from device DPA
+(device-physical-address space) and assigning it to decode a given HPA
+(host-physical-address space). Before determininig how much DPA to
+allocate the amount of available HPA must be determined. Also, not all
+HPA is created equal, some specifically targets RAM, some target PMEM,
+some is prepared for the device-memory flows like HDM-D and HDM-DB, and
+some is host-only (HDM-H).
 
-Factor out the core of cxl_dpa_alloc(), that does free space scanning,
-into a cxl_dpa_freespace() helper, and use that to balance the capacity
-available to map vs the @min and @max arguments to cxl_request_dpa().
+Wrap all of those concerns into an API that retrieves a root decoder
+(platform CXL window) that fits the specified constraints and the
+capacity available for a new region.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/hdm.c |  140 +++++++++++++++++++++++++++++++++++++++++-------
- drivers/cxl/cxl.h      |    6 ++
- drivers/cxl/cxlmem.h   |    4 +
- 3 files changed, 131 insertions(+), 19 deletions(-)
+ drivers/cxl/core/region.c |  143 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h         |    5 ++
+ drivers/cxl/cxlmem.h      |    5 ++
+ 3 files changed, 153 insertions(+)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 91ab3033c781..514d30131d92 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -464,30 +464,17 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 	return rc;
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 75c5de627868..a41756249f8d 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -575,6 +575,149 @@ static int free_hpa(struct cxl_region *cxlr)
+ 	return 0;
  }
  
--int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-+static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
-+					 resource_size_t *start_out,
-+					 resource_size_t *skip_out)
- {
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	resource_size_t free_ram_start, free_pmem_start;
--	struct cxl_port *port = cxled_to_port(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct device *dev = &cxled->cxld.dev;
- 	resource_size_t start, avail, skip;
- 	struct resource *p, *last;
--	int rc;
- 
--	down_write(&cxl_dpa_rwsem);
--	if (cxled->cxld.region) {
--		dev_dbg(dev, "decoder attached to %s\n",
--			dev_name(&cxled->cxld.region->dev));
--		rc = -EBUSY;
--		goto out;
--	}
--
--	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
--		dev_dbg(dev, "decoder enabled\n");
--		rc = -EBUSY;
--		goto out;
--	}
-+	lockdep_assert_held(&cxl_dpa_rwsem);
- 
- 	for (p = cxlds->ram_res.child, last = NULL; p; p = p->sibling)
- 		last = p;
-@@ -525,11 +512,42 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 			skip_end = start - 1;
- 		skip = skip_end - skip_start + 1;
- 	} else {
--		dev_dbg(dev, "mode not set\n");
--		rc = -EINVAL;
-+		dev_dbg(cxled_dev(cxled), "mode not set\n");
-+		avail = 0;
++struct cxlrd_max_context {
++	struct device * const *host_bridges;
++	int interleave_ways;
++	unsigned long flags;
++	resource_size_t max_hpa;
++	struct cxl_root_decoder *cxlrd;
++};
++
++static int find_max_hpa(struct device *dev, void *data)
++{
++	struct cxlrd_max_context *ctx = data;
++	struct cxl_switch_decoder *cxlsd;
++	struct cxl_root_decoder *cxlrd;
++	struct resource *res, *prev;
++	struct cxl_decoder *cxld;
++	resource_size_t max;
++	unsigned int seq;
++	int found;
++
++	if (!is_root_decoder(dev))
++		return 0;
++
++	cxlrd = to_cxl_root_decoder(dev);
++	cxld = &cxlrd->cxlsd.cxld;
++	if ((cxld->flags & ctx->flags) != ctx->flags)
++		return 0;
++
++	if (cxld->interleave_ways != ctx->interleave_ways)
++		return 0;
++
++	cxlsd = &cxlrd->cxlsd;
++	do {
++		found = 0;
++		seq = read_seqbegin(&cxlsd->target_lock);
++		for (int i = 0; i < ctx->interleave_ways; i++)
++			for (int j = 0; j < ctx->interleave_ways; j++)
++				if (ctx->host_bridges[i] ==
++				    cxlsd->target[j]->dport) {
++					found++;
++					break;
++				}
++	} while (read_seqretry(&cxlsd->target_lock, seq));
++
++	if (found != ctx->interleave_ways)
++		return 0;
++
++	/*
++	 * Walk the root decoder resource range relying on cxl_region_rwsem to
++	 * preclude sibling arrival/departure and find the largest free space
++	 * gap.
++	 */
++	lockdep_assert_held_read(&cxl_region_rwsem);
++	max = 0;
++	res = cxlrd->res->child;
++	if (!res)
++		max = resource_size(cxlrd->res);
++	else
++		max = 0;
++	for (prev = NULL; res; prev = res, res = res->sibling) {
++		struct resource *next = res->sibling;
++		resource_size_t free = 0;
++
++		if (!prev && res->start > cxlrd->res->start) {
++			free = res->start - cxlrd->res->start;
++			max = max(free, max);
++		}
++		if (prev && res->start > prev->end + 1) {
++			free = res->start - prev->end + 1;
++			max = max(free, max);
++		}
++		if (next && res->end + 1 < next->start) {
++			free = next->start - res->end + 1;
++			max = max(free, max);
++		}
++		if (!next && res->end + 1 < cxlrd->res->end + 1) {
++			free = cxlrd->res->end + 1 - res->end + 1;
++			max = max(free, max);
++		}
 +	}
 +
-+	if (!avail)
-+		return 0;
-+	if (start_out)
-+		*start_out = start;
-+	if (skip_out)
-+		*skip_out = skip;
-+	return avail;
-+}
-+
-+int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
-+{
-+	struct cxl_port *port = cxled_to_port(cxled);
-+	struct device *dev = &cxled->cxld.dev;
-+	resource_size_t start, avail, skip;
-+	int rc;
-+
-+	down_write(&cxl_dpa_rwsem);
-+	if (cxled->cxld.region) {
-+		dev_dbg(dev, "decoder attached to %s\n",
-+			dev_name(&cxled->cxld.region->dev));
-+		rc = -EBUSY;
-+		goto out;
++	if (max > ctx->max_hpa) {
++		if (ctx->cxlrd)
++			put_device(cxlrd_dev(ctx->cxlrd));
++		get_device(cxlrd_dev(cxlrd));
++		ctx->cxlrd = cxlrd;
++		ctx->max_hpa = max;
++		dev_dbg(cxlrd_dev(cxlrd), "found %pa bytes of free space\n", &max);
 +	}
 +
-+	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-+		dev_dbg(dev, "decoder enabled\n");
-+		rc = -EBUSY;
- 		goto out;
- 	}
- 
-+	avail = cxl_dpa_freespace(cxled, &start, &skip);
-+
- 	if (size > avail) {
- 		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
- 			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-@@ -548,6 +566,90 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
- 	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
- }
- 
-+static int find_free_decoder(struct device *dev, void *data)
-+{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_port *port;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	port = cxled_to_port(cxled);
-+
-+	if (cxled->cxld.id != port->hdm_end + 1)
-+		return 0;
-+	return 1;
++	return 0;
 +}
 +
 +/**
-+ * cxl_request_dpa - search and reserve DPA given input constraints
-+ * @endpoint: an endpoint port with available decoders
-+ * @mode: DPA operation mode (ram vs pmem)
-+ * @min: the minimum amount of capacity the call needs
-+ * @max: extra capacity to allocate after min is satisfied
++ * cxl_hpa_freespace - find a root decoder with free capacity per constraints
++ * @endpoint: an endpoint that is mapped by the returned decoder
++ * @host_bridges: array of host-bridges that the decoder must interleave
++ * @interleave_ways: number of entries in @host_bridges
++ * @flags: CXL_DECODER_F flags for selecting RAM vs PMEM, and HDM-H vs HDM-D[B]
++ * @max: output parameter of bytes available in the returned decoder
 + *
-+ * Given that a region needs to allocate from limited HPA capacity it
-+ * may be the case that a device has more mappable DPA capacity than
-+ * available HPA. So, the expectation is that @min is a driver known
-+ * value for how much capacity is needed, and @max is based the limit of
-+ * how much HPA space is available for a new region.
++ * The return tuple of a 'struct cxl_root_decoder' and 'bytes available (@max)'
++ * is a point in time snapshot. If by the time the caller goes to use this root
++ * decoder's capacity the capacity is reduced then caller needs to loop and
++ * retry.
 + *
-+ * Returns a pinned cxl_decoder with at least @min bytes of capacity
-+ * reserved, or an error pointer. The caller is also expected to own the
-+ * lifetime of the memdev registration associated with the endpoint to
-+ * pin the decoder registered as well.
++ * The returned root decoder has an elevated reference count that needs to be
++ * put with put_device(cxlrd_dev(cxlrd)). Locking context is with
++ * cxl_{acquire,release}_endpoint(), that ensures removal of the root decoder
++ * does not race.
 + */
-+struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-+					     enum cxl_decoder_mode mode,
-+					     resource_size_t min,
-+					     resource_size_t max)
++struct cxl_root_decoder *cxl_hpa_freespace(struct cxl_port *endpoint,
++					   struct device *const *host_bridges,
++					   int interleave_ways,
++					   unsigned long flags,
++					   resource_size_t *max)
 +{
-+	struct cxl_endpoint_decoder *cxled;
-+	struct device *cxled_dev;
-+	resource_size_t alloc;
-+	int rc;
++	struct cxlrd_max_context ctx = {
++		.host_bridges = host_bridges,
++		.interleave_ways = interleave_ways,
++		.flags = flags,
++	};
++	struct cxl_port *root;
 +
-+	if (!IS_ALIGNED(min | max, SZ_256M))
++	if (!is_cxl_endpoint(endpoint))
 +		return ERR_PTR(-EINVAL);
 +
-+	down_read(&cxl_dpa_rwsem);
-+	cxled_dev = device_find_child(&endpoint->dev, NULL, find_free_decoder);
-+	if (!cxled_dev)
-+		cxled = ERR_PTR(-ENXIO);
-+	else
-+		cxled = to_cxl_endpoint_decoder(cxled_dev);
-+	up_read(&cxl_dpa_rwsem);
++	root = find_cxl_root(endpoint);
++	if (!root)
++		return ERR_PTR(-ENXIO);
 +
-+	if (IS_ERR(cxled))
-+		return cxled;
++	down_read(&cxl_region_rwsem);
++	device_for_each_child(&root->dev, &ctx, find_max_hpa);
++	up_read(&cxl_region_rwsem);
++	put_device(&root->dev);
 +
-+	rc = cxl_dpa_set_mode(cxled, mode);
-+	if (rc)
-+		goto err;
++	if (!ctx.cxlrd)
++		return ERR_PTR(-ENOMEM);
 +
-+	down_read(&cxl_dpa_rwsem);
-+	alloc = cxl_dpa_freespace(cxled, NULL, NULL);
-+	up_read(&cxl_dpa_rwsem);
-+
-+	if (max)
-+		alloc = min(max, alloc);
-+	if (alloc < min) {
-+		rc = -ENOMEM;
-+		goto err;
-+	}
-+
-+	rc = cxl_dpa_alloc(cxled, alloc);
-+	if (rc)
-+		goto err;
-+
-+	return cxled;
-+err:
-+	put_device(cxled_dev);
-+	return ERR_PTR(rc);
++	*max = ctx.max_hpa;
++	return ctx.cxlrd;
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_request_dpa, CXL);
++EXPORT_SYMBOL_NS_GPL(cxl_hpa_freespace, CXL);
 +
- static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+ static ssize_t size_store(struct device *dev, struct device_attribute *attr,
+ 			  const char *buf, size_t len)
  {
- 	u16 eig;
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 258c90727dd2..55808697773f 100644
+index 55808697773f..8400af85d99f 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -680,6 +680,12 @@ struct cxl_decoder *to_cxl_decoder(struct device *dev);
- struct cxl_root_decoder *to_cxl_root_decoder(struct device *dev);
- struct cxl_switch_decoder *to_cxl_switch_decoder(struct device *dev);
- struct cxl_endpoint_decoder *to_cxl_endpoint_decoder(struct device *dev);
-+
-+static inline struct device *cxled_dev(struct cxl_endpoint_decoder *cxled)
+@@ -686,6 +686,11 @@ static inline struct device *cxled_dev(struct cxl_endpoint_decoder *cxled)
+ 	return &cxled->cxld.dev;
+ }
+ 
++static inline struct device *cxlrd_dev(struct cxl_root_decoder *cxlrd)
 +{
-+	return &cxled->cxld.dev;
++	return &cxlrd->cxlsd.cxld.dev;
 +}
 +
  bool is_root_decoder(struct device *dev);
  bool is_switch_decoder(struct device *dev);
  bool is_endpoint_decoder(struct device *dev);
 diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index e3bcd6d12a1c..8ec5c305d186 100644
+index 8ec5c305d186..69f07186502d 100644
 --- a/drivers/cxl/cxlmem.h
 +++ b/drivers/cxl/cxlmem.h
-@@ -89,6 +89,10 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds);
- int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			 resource_size_t base, resource_size_t len,
- 			 resource_size_t skipped);
-+struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
-+					     enum cxl_decoder_mode mode,
-+					     resource_size_t min,
-+					     resource_size_t max);
+@@ -93,6 +93,11 @@ struct cxl_endpoint_decoder *cxl_request_dpa(struct cxl_port *endpoint,
+ 					     enum cxl_decoder_mode mode,
+ 					     resource_size_t min,
+ 					     resource_size_t max);
++struct cxl_root_decoder *cxl_hpa_freespace(struct cxl_port *endpoint,
++					   struct device *const *host_bridges,
++					   int interleave_ways,
++					   unsigned long flags,
++					   resource_size_t *max);
  
  static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
  					 struct cxl_memdev *cxlmd)
