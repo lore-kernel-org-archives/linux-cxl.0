@@ -2,205 +2,136 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8898DC77B73
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 11:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E6FC77B73
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 11:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjFFLLA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jun 2023 07:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45578 "EHLO
+        id S231438AbjFFLPo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jun 2023 07:15:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229879AbjFFLK7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 07:10:59 -0400
+        with ESMTP id S231939AbjFFLPn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 07:15:43 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3577E9E
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Jun 2023 04:10:58 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qb75N73vyz67KPR;
-        Tue,  6 Jun 2023 19:08:56 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F276CE49
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Jun 2023 04:15:37 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qb7Bn32Cxz67j6n;
+        Tue,  6 Jun 2023 19:13:37 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 6 Jun
- 2023 12:10:55 +0100
-Date:   Tue, 6 Jun 2023 12:10:54 +0100
+ 2023 12:15:35 +0100
+Date:   Tue, 6 Jun 2023 12:15:34 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
         <navneet.singh@intel.com>
-Subject: Re: [PATCH 03/19] cxl/mbox: Move mailbox related driver state to
- its own data structure
-Message-ID: <20230606121054.000069e1@Huawei.com>
-In-Reply-To: <168592151409.1948938.14287743104711770676.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH 04/19] cxl/memdev: Make mailbox functionality optional
+Message-ID: <20230606121534.00003870@Huawei.com>
+In-Reply-To: <168592151963.1948938.7831940219025967692.stgit@dwillia2-xfh.jf.intel.com>
 References: <168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com>
-        <168592151409.1948938.14287743104711770676.stgit@dwillia2-xfh.jf.intel.com>
+        <168592151963.1948938.7831940219025967692.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 04 Jun 2023 16:31:54 -0700
+On Sun, 04 Jun 2023 16:31:59 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> 'struct cxl_dev_state' makes too many assumptions about the capabilities
-> of a CXL device. In particular it assumes a CXL device has a mailbox and
-> all of the infrastructure and state that comes along with that.
+> In support of the Linux CXL core scaling for a wider set of CXL devices,
+> allow for the creation of memdevs with some memory device capabilities
+> disabled. Specifically, allow for CXL devices outside of those claiming
+> to be compliant with the generic CXL memory device class code, like
+> vendor specific Type-2/3 devices that host CXL.mem. This implies, allow
+> for the creation of memdevs that only support component-registers, not
+> necessarily memory-device-registers (like mailbox registers). A memdev
+> derived from a CXL endpoint that does not support generic class code
+> expectations is tagged "CXL_DEVTYPE_DEVMEM", while a memdev derived from a
+> class-code compliant endpoint is tagged "CXL_DEVTYPE_CLASSMEM".
 > 
-> In preparation for supporting accelerator / Type-2 devices that may not
-> have a mailbox and in general maintain a minimal core context structure,
-> make mailbox functionality a super-set of  'struct cxl_dev_state' with
-> 'struct cxl_memdev_state'.
-> 
-> With this reorganization it allows for CXL devices that support HDM
-> decoder mapping, but not other general-expander / Type-3 capabilities,
-> to only enable that subset without the rest of the mailbox
-> infrastructure coming along for the ride.
+> The primary assumption of a CXL_DEVTYPE_DEVMEM memdev is that it
+> optionally may not host a mailbox. Disable the command passthrough ioctl
+> for memdevs that are not CXL_DEVTYPE_CLASSMEM, and return empty strings
+> from memdev attributes associated with data retrieved via the
+> class-device-standard IDENTIFY command. Note that empty strings were
+> chosen over attribute visibility to maintain compatibility with shipping
+> versions of cxl-cli that expect those attributes to always be present.
+Hmm.  I'm not keen on this, but I guess we've ended up in this corner
+so don't have much choice.
+
 > 
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-I'm not yet sure that the division in exactly in the right place, but we
-can move things later if it turns out some elements are more general than
-we currently think.
-
-A few trivial things inline.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
-> ---
-
- 
-> -static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxlds)
-> +static struct cxl_mbox_get_supported_logs *
-> +cxl_get_gsl(struct cxl_memdev_state *mds)
-
-I'd consider keeping this on one line.  It was between 80 and 90 before and still is...
-
-
->  {
-
+Trivial stuff inline.
 
 > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index a2845a7a69d8..d3fe73d5ba4d 100644
+> index d3fe73d5ba4d..b8bdf7490d2c 100644
 > --- a/drivers/cxl/cxlmem.h
 > +++ b/drivers/cxl/cxlmem.h
-> @@ -267,6 +267,35 @@ struct cxl_poison_state {
->   * @cxl_dvsec: Offset to the PCIe device DVSEC
->   * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
->   * @media_ready: Indicate whether the device media is usable
-> + * @dpa_res: Overall DPA resource tree for the device
-> + * @pmem_res: Active Persistent memory capacity configuration
-> + * @ram_res: Active Volatile memory capacity configuration
-> + * @component_reg_phys: register base of component registers
-> + * @info: Cached DVSEC information about the device.
+> @@ -254,6 +254,20 @@ struct cxl_poison_state {
+>  	struct mutex lock;  /* Protect reads of poison list */
+>  };
+>  
+> +/*
+> + * enum cxl_devtype - delineate type-2 from a generic type-3 device
+> + * @CXL_DEVTYPE_DEVMEM - Vendor specific CXL Type-2 device implementing HDM-D or
 
-Not seeing info in this structure.
+Bit of a naming collision with other uses of DEVMEM but I can't immediately think
+of a better name so fair enough...
 
-> + * @serial: PCIe Device Serial Number
+> + *			 HDM-DB, no expectation that this device implements a
+> + *			 mailbox, or other memory-device-standard manageability
+> + *			 flows.
+no requirement that this device
+
+Expectation is a bit strong the other way to my reading.  These device might well
+implement some or all of that + other stuff that means they don't want to use the
+class code.
+
+> + * @CXL_DEVTYPE_CLASSMEM - Common class definition of a CXL Type-3 device with
+> + *			   HDM-H and class-mandatory memory device registers
 > + */
-> +struct cxl_dev_state {
-> +	struct device *dev;
-> +	struct cxl_memdev *cxlmd;
-> +	struct cxl_regs regs;
-> +	int cxl_dvsec;
-> +	bool rcd;
-> +	bool media_ready;
-> +	struct resource dpa_res;
-> +	struct resource pmem_res;
-> +	struct resource ram_res;
-> +	resource_size_t component_reg_phys;
-> +	u64 serial;
+> +enum cxl_devtype {
+> +	CXL_DEVTYPE_DEVMEM,
+> +	CXL_DEVTYPE_CLASSMEM,
 > +};
 > +
-> +/**
-> + * struct cxl_memdev_state - Generic Type-3 Memory Device Class driver data
-> + *
-> + * CXL 8.1.12.1 PCI Header - Class Code Register Memory Device defines
-> + * common memory device functionality like the presence of a mailbox and
-> + * the functionality related to that like Identify Memory Device and Get
-> + * Partition Info
-> + * @cxlds: Core driver state common across Type-2 and Type-3 devices
->   * @payload_size: Size of space for payload
->   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
->   * @lsa_size: Size of Label Storage Area
-> @@ -275,9 +304,6 @@ struct cxl_poison_state {
->   * @firmware_version: Firmware version for the memory device.
->   * @enabled_cmds: Hardware commands found enabled in CEL.
->   * @exclusive_cmds: Commands that are kernel-internal only
-> - * @dpa_res: Overall DPA resource tree for the device
-> - * @pmem_res: Active Persistent memory capacity configuration
-> - * @ram_res: Active Volatile memory capacity configuration
->   * @total_bytes: sum of all possible capacities
->   * @volatile_only_bytes: hard volatile capacity
->   * @persistent_only_bytes: hard persistent capacity
-> @@ -286,54 +312,41 @@ struct cxl_poison_state {
->   * @active_persistent_bytes: sum of hard + soft persistent
->   * @next_volatile_bytes: volatile capacity change pending device reset
->   * @next_persistent_bytes: persistent capacity change pending device reset
-> - * @component_reg_phys: register base of component registers
-> - * @info: Cached DVSEC information about the device.
-
-Not seeing this removed from this structure in this patch.
-Curiously doesn't seem to be here in first place.
-
-Probably wants precursor fix patch to get rid of it from the docs.
-
-> - * @serial: PCIe Device Serial Number
->   * @event: event log driver state
->   * @poison: poison driver state info
->   * @mbox_send: @dev specific transport for transmitting mailbox commands
+>  /**
+>   * struct cxl_dev_state - The driver device state
 >   *
-> - * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
-> + * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
->   * details on capacity parameters.
+> @@ -273,6 +287,7 @@ struct cxl_poison_state {
+>   * @component_reg_phys: register base of component registers
+>   * @info: Cached DVSEC information about the device.
+>   * @serial: PCIe Device Serial Number
+> + * @type: Generic Memory Class device or Vendor Specific Memory device
 >   */
-> -struct cxl_dev_state {
-> -	struct device *dev;
-> -	struct cxl_memdev *cxlmd;
-> -
-> -	struct cxl_regs regs;
-> -	int cxl_dvsec;
-> -
-> -	bool rcd;
-> -	bool media_ready;
-> +struct cxl_memdev_state {
-> +	struct cxl_dev_state cxlds;
->  	size_t payload_size;
->  	size_t lsa_size;
->  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
->  	char firmware_version[0x10];
->  	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
->  	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
-> -
-> -	struct resource dpa_res;
-> -	struct resource pmem_res;
-> -	struct resource ram_res;
->  	u64 total_bytes;
->  	u64 volatile_only_bytes;
->  	u64 persistent_only_bytes;
->  	u64 partition_align_bytes;
-> -
->  	u64 active_volatile_bytes;
->  	u64 active_persistent_bytes;
->  	u64 next_volatile_bytes;
->  	u64 next_persistent_bytes;
-> -
-> -	resource_size_t component_reg_phys;
-> -	u64 serial;
-> -
->  	struct cxl_event_state event;
->  	struct cxl_poison_state poison;
-> -
-> -	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
-> +	int (*mbox_send)(struct cxl_memdev_state *mds,
-> +			 struct cxl_mbox_cmd *cmd);
+>  struct cxl_dev_state {
+>  	struct device *dev;
+> @@ -286,6 +301,7 @@ struct cxl_dev_state {
+>  	struct resource ram_res;
+>  	resource_size_t component_reg_phys;
+>  	u64 serial;
+> +	enum cxl_devtype type;
 >  };
+>  
+>  /**
+> @@ -344,6 +360,8 @@ struct cxl_memdev_state {
+>  static inline struct cxl_memdev_state *
+>  to_cxl_memdev_state(struct cxl_dev_state *cxlds)
+>  {
+> +	if (cxlds->type != CXL_DEVTYPE_CLASSMEM)
+> +		return NULL;
+>  	return container_of(cxlds, struct cxl_memdev_state, cxlds);
+>  }
+>  
+> 
 
-...
-
-...
