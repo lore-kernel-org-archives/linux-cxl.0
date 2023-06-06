@@ -2,141 +2,116 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F28C7EE23
-	for <linux-cxl@archiver.kernel.org>; Mon,  5 Jun 2023 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7F4C7EE23
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 01:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233046AbjFEUqU (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 5 Jun 2023 16:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
+        id S233761AbjFFBgf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 5 Jun 2023 21:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbjFEUqT (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Jun 2023 16:46:19 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B51FF3
-        for <linux-cxl@vger.kernel.org>; Mon,  5 Jun 2023 13:46:17 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230605204616usoutp02db76c62a78ecf80b9ad7a146a724db2a~l3joJHji92009120091usoutp02H;
-        Mon,  5 Jun 2023 20:46:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230605204616usoutp02db76c62a78ecf80b9ad7a146a724db2a~l3joJHji92009120091usoutp02H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1685997976;
-        bh=UOfbD4teewBkv8DcG1fJicHqsLDcmi3rCDXPNmZv+fA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=IYBxJuqZ/C1oj7476iDihvpFhNwz0V23Zc/qQPF8LzFEuXmvpUejnvTyjGMgLDqiR
-         z4sIJaRBNWWhGpEzJ8BTuS2yNlMzoNb9Ki7GhsVw1wXIn5mDQbeC/H7JSpXn22P6jG
-         HmoyRmZ0u++ysUPpcBVEEhEySi92rG8aP5nQwuHg=
-Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230605204616uscas1p2cf331eb4146b351d25fe2e7bb9e14dbb~l3jn53Vuu1908319083uscas1p2t;
-        Mon,  5 Jun 2023 20:46:16 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id 87.16.42611.7994E746; Mon, 
-        5 Jun 2023 16:46:15 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230605204615uscas1p1931142de4b55be03c99f513b51dcb2fc~l3jnmdTkY2079620796uscas1p1j;
-        Mon,  5 Jun 2023 20:46:15 +0000 (GMT)
-X-AuditID: cbfec36f-249ff7000000a673-61-647e4997c5e9
-Received: from SSI-EX4.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 98.8C.64580.7994E746; Mon, 
-        5 Jun 2023 16:46:15 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX4.ssi.samsung.com (105.128.2.229) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Mon, 5 Jun 2023 13:46:13 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Mon,
-        5 Jun 2023 13:46:13 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-        "nifan@outlook.com" <nifan@outlook.com>
-Subject: Re: [PATCH 2/4] dax: Use device_unregister() in
- unregister_dax_mapping()
-Thread-Topic: [PATCH 2/4] dax: Use device_unregister() in
-        unregister_dax_mapping()
-Thread-Index: AQHZl+7E9FcJ9WhBj0ydpcru30sO0g==
-Date:   Mon, 5 Jun 2023 20:46:13 +0000
-Message-ID: <20230605204613.GB2344865@bgt-140510-bm03>
-In-Reply-To: <168577283989.1672036.7777592498865470652.stgit@dwillia2-xfh.jf.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0EA9431CB612054FABAF65C28BE7D60C@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S233794AbjFFBgd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 5 Jun 2023 21:36:33 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E23110;
+        Mon,  5 Jun 2023 18:36:30 -0700 (PDT)
+Received: from dggpemm500002.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QZtLt1qH7z1c0HN;
+        Tue,  6 Jun 2023 09:34:46 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 6 Jun 2023 09:36:27 +0800
+Subject: Re: [PATCH v3 0/4] acpi: Add CDAT parsing support to ACPI tables code
+To:     Dave Jiang <dave.jiang@intel.com>, <linux-acpi@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>
+CC:     Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <lukas@wunner.de>, <Jonathan.Cameron@huawei.com>
+References: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <0076edb9-7e65-eeb4-38fa-fb3c4a112a40@huawei.com>
+Date:   Tue, 6 Jun 2023 09:36:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <168565502116.1098279.131831312990693128.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.247]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djX87rTPetSDBZfsbaYPvUCo8Xqm2sY
-        Lc7POsVi8XzicyaLpUseMVus/PGH1YHNY+esu+wei/e8ZPJ4sXkmo8fm1y+YPabOrvf4vEku
-        gC2KyyYlNSezLLVI3y6BK+Nayyr2gq1sFZPm/2BtYFzJ2sXIySEhYCKxb+ZCIJuLQ0hgJaPE
-        yqWfoZxWJolvtzYwwlS13N3NDJFYyyjxd1ETO4TzkVFi2+cVjBDOUkaJmde2gw1mE1CU2Ne1
-        nQ3EFhHQlpg45yBYO7PAWiaJeTuvMoEkhAWCJY5vOsAEURQisW5mGzuErSfxpecKM4jNIqAi
-        MaVzKVgNr4CZxN83n8Bu4hQIl/jz4zwLiM0oICbx/dQasBpmAXGJW0/mM0HcLSixaPYeZghb
-        TOLfrodsELaixP3vL9kh6nUkFuz+xAZh20kc7Z8JFdeWWLbwNTPEXkGJkzOfsED0SkocXHGD
-        BeQZCYErHBIPP0+FBpKLxIuXM6FsaYnpay4DFXEA2ckSqz5yQYRzJOYv2QI1x1pi4Z/1TBMY
-        VWYhOXsWkpNmITlpFpKTZiE5aQEj6ypG8dLi4tz01GKjvNRyveLE3OLSvHS95PzcTYzABHX6
-        3+H8HYzXb33UO8TIxMF4iFGCg1lJhHeXV3WKEG9KYmVValF+fFFpTmrxIUZpDhYlcV5D25PJ
-        QgLpiSWp2ampBalFMFkmDk6pBiZGzo8R675LX2md/OiqmJL/ku0Zn6RO64YHPd71Nat0WuCp
-        OteXfVdvnE2dP/nHjuPJHBxyd5592L3PuNDHa3vweil3tq5y3kPPjKQT7gaGHVs/73XH/GSD
-        oKuNXpfYvHfuEQxWW+i2Nd0zcl2Qk+ezY9OzvKfMLP0bu3bOhtXTo2p2bA+5bBl7fmLF+dTT
-        Xhn6Xr7tFUc+t1feeeCgXSQZ/17vX92RVR33+Ew5WOWPTFIpbPysutY+tHVxUG7Ps2tvVz27
-        f7zbjo1/5frOGV69qrOjLJbJO4e0Mx/zVr9do/Dq9w7VeUGyakG293b6px7hPPki/3VKJM+d
-        yzqlyTvitC+urT8qmv3l5apbC28qsRRnJBpqMRcVJwIArpTVcb8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsWS2cA0UXe6Z12KwcyJmhbTp15gtFh9cw2j
-        xflZp1gsnk98zmSxdMkjZouVP/6wOrB57Jx1l91j8Z6XTB4vNs9k9Nj8+gWzx9TZ9R6fN8kF
-        sEVx2aSk5mSWpRbp2yVwZVxrWcVesJWtYtL8H6wNjCtZuxg5OSQETCRa7u5m7mLk4hASWM0o
-        0blqApTzkVFi1aW5TBDOUkaJnkN3mUBa2AQUJfZ1bWcDsUUEtCUmzjkI1sEssJZJYt7Oq2BF
-        wgLBEsc3HWCCKAqR6H1/B8rWk/jSc4UZxGYRUJGY0rkULM4rYCbx980nRohtSxglHhx+yAKS
-        4BQIl/jz4zyYzSggJvH91BqwBmYBcYlbT+YzQTwhILFkz3lmCFtU4uXjf1DPKUrc//6SHaJe
-        R2LB7k9sELadxNH+mVBxbYllC18zQxwhKHFy5hMWiF5JiYMrbrBMYJSYhWTdLCSjZiEZNQvJ
-        qFlIRi1gZF3FKF5aXJybXlFsnJdarlecmFtcmpeul5yfu4kRGN+n/x2O2cF479ZHvUOMTByM
-        hxglOJiVRHh3eVWnCPGmJFZWpRblxxeV5qQWH2KU5mBREuf1iJ0YLySQnliSmp2aWpBaBJNl
-        4uCUamDiZ1/S5bMn8NSSgJfrZQpbT7dt9WfeVvOrTpXzUo6O6IcpG2zf35fZtyCtfIHq92Y9
-        Y4N03SsGPz2PPKhxcIw001fxXDBbMFJPaUny7Nowz+2Tmf0erW/2eaPmfylwyorrRh7i/Qvd
-        bh84db56voLUX2Z+jwWTfmmc8Nh1a13m0UkOnoXsi5QZpnzVeX1wa/79w7w/3j6XdJ59Ntmf
-        U1E57pbKzQdvYp9/Djn1P84txPlFpL3zcRd54+cnC4z8U6/PDzvfuOCQRafKHg7P2erlQbL7
-        kucznn/0m+XVY9NrersDbDbIzXCuXRP2M9I3InNX3uvE6Tvf8CYu/tiiEzC/xeC56jO7Kaw/
-        kwzanIyVWIozEg21mIuKEwFSnQAvXgMAAA==
-X-CMS-MailID: 20230605204615uscas1p1931142de4b55be03c99f513b51dcb2fc
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230605204615uscas1p1931142de4b55be03c99f513b51dcb2fc
-References: <168577282846.1672036.13848242151310480001.stgit@dwillia2-xfh.jf.intel.com>
-        <168577283989.1672036.7777592498865470652.stgit@dwillia2-xfh.jf.intel.com>
-        <CGME20230605204615uscas1p1931142de4b55be03c99f513b51dcb2fc@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Jun 02, 2023 at 11:13:59PM -0700, Dan Williams wrote:
-> Replace an open-coded device_unregister() sequence with the helper.
->=20
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On 2023/6/2 5:31, Dave Jiang wrote:
+> v3:
+> - Move common code to lib/fw_table.c
+> v2:
+> - Split out with CONFIG_ACPI_TABLES_LIB to be independent
+> - Fixed 0-day issues
+> - Change CDAT releveant names to prefix with cdat/CDAT instead of
+>    acpi/ACPI. (Jonathan)
+> - Make table_header a union with cdat table header instead of
+>    'acpi_table_header'. (Jonathan)
+> - Removed ACPI_SIG_CDAT, already defined.
+> 
+> Hi Rafael,
+> Please consider ack these patches. Dan can take these through the CXL tree. After
+> attempting to rename the cxl_ prefixes of functions and non ACPICA data structures
+> to something more common, it seems that significant amount of ACPI code would be
+> touched for the rename. For this series I left it alone in order to have the minimal
+> changes to ACPI code.
+> 
+> I've broken out the "cxl: Add support for QTG ID retrieval for CXL subsystem" [1]
+> series in order to make it more manageable. Here's the first part of the ACPI
+> changes. These changes are added to allow reuse of ACPI tables code to parse
+> the CDAT tables. While CDAT is not part of ACPI, the table structures are similar
+> to ACPI layouts that the code can be reused with some small modifications.
+> 
+> However, in order to be properly utilized by CXL users, the tables code needs
+> to be refactored out to be independent of ACPI. For example, a PPC BE host may
+> have CXL and does not have ACPI support. But it will have CDAT to read from
+> devices and switches. I have created CONFIG_ACPI_TABLES_LIB in order to allow
+> the common code to be independent. 0-day seems to be happy now for all the
+> different configs and archs.
+> 
+> 1/4: Split out the common code from drivers/acpi/tables.c to lib/fw_table.c
+> 2/4: Add CDAT support
+> 3,4/4: These two are minor patches that has ACPICA impact. Has been merged into
+>         the ACPICA git repo [3].
+> 
+> The whole series is at [2] for convenience.
+> 
+> [1]: https://lore.kernel.org/linux-cxl/168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3/T/#t
+> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
+> [3]: https://github.com/acpica/acpica/pull/874
+> 
 > ---
->  drivers/dax/bus.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index aee695f86b44..c99ea08aafc3 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -657,8 +657,7 @@ static void unregister_dax_mapping(void *data)
->  	dev_dax->ranges[mapping->range_id].mapping =3D NULL;
->  	mapping->range_id =3D -1;
-> =20
-> -	device_del(dev);
-> -	put_device(dev);
-> +	device_unregister(dev);
->  }
-> =20
->  static struct dev_dax_range *get_dax_range(struct device *dev)
->=20
->=20
+> 
+> Dave Jiang (4):
+>        acpi: Move common tables helper functions to common lib
+>        lib/firmware_table: tables: Add CDAT table parsing support
+>        acpi: fix misnamed define for CDAT DSMAS
+>        acpi: Add defines for CDAT SSLBIS
+> 
+> 
+>   drivers/acpi/Kconfig     |   1 +
+>   drivers/acpi/tables.c    | 178 +----------------------------
+>   include/acpi/actbl1.h    |   5 +-
+>   include/linux/acpi.h     |  22 +---
+>   include/linux/fw_table.h |  52 +++++++++
+>   lib/Kconfig              |   3 +
+>   lib/Makefile             |   2 +
+>   lib/fw_table.c           | 236 +++++++++++++++++++++++++++++++++++++++
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Who will maintain this file? since it's the core function of parsing
+ACPI tables, I would like the update of this file in the future will
+Cc ACPI mailing list.
+
+Thanks
+Hanjun
