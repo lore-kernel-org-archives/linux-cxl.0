@@ -2,192 +2,296 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DED9C7EE37
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 20:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190ACC77B7A
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 20:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234124AbjFFUms (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jun 2023 16:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55662 "EHLO
+        id S239217AbjFFUqA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jun 2023 16:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234109AbjFFUmp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 16:42:45 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB5EE7E
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Jun 2023 13:42:43 -0700 (PDT)
+        with ESMTP id S233731AbjFFUp7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 16:45:59 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52D91712;
+        Tue,  6 Jun 2023 13:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686084163; x=1717620163;
+  t=1686084357; x=1717620357;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=ohIOdqOHwR7rfJZyHCoiVRwraNLX7XoEslnEJbZvqSA=;
-  b=A8pHtLET77gTyMchziYGPDTErq17xCkiAq5bo4ZYdqPLONO+zsC8UNVe
-   HMLRw+cwJgbnvMaIr7mZIGJAwmuu0XVS9/EzgssmyERzxlHj8AfiW5Vr/
-   ianvvTPiOka6acuH2pstrI6k7S1YQBDLrL39kIYTNhfjqMC9StW4QHEDU
-   iHhcH9lNz/R1yQwiLXBVsUhUHkO5WattqNt6+LGqPUB9jxZAwhuysu4qc
-   oR6/8Oikrlcy3Ni+Fi4gFv/SQHGux8DFsL28JZalcHhvjSzH9EN/CQg8M
-   0ypPGGzJs7YLIK1JWLrJ5UFEgqpP7HZbGJopjbh9Y74ss6d8QYBG4GakF
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="443163263"
+  bh=NP4X3G2dcPJm4KsWynD5Khn1ktN6ZJJRrZ3JbQhAMT4=;
+  b=cI88bZOJE6fAOc+1sKA/dTcu1LGWkU5vv8LL7wyMFpUdtWiTE5+nOl2S
+   v33EeK4/TnHKzMxppXAnNRvSZ8M8xAfN4821hMXukcAkieaom/+uECwYr
+   gRfAUdMH8vR1Xc4NeSRwg3+sPYZjshVJS8SNt2Gv59w0yTHGRV15mhsuY
+   QH8TMNteSnh4QFbxAyk8znat2BaHfY9OT7eXpXbvXMS4ARJXl7gJi6RjB
+   UPVZ1LJBBAiAtUlS97irFZRjFpXWtCEMN2wppaSQbrHEiHYdUcQwbh6AJ
+   WH7zm0dKig1pScXAzaGnMkEtuZK/hdv6AAR+5PkpzIzCrNJBmUtcdyHh3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="346399938"
 X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
-   d="scan'208";a="443163263"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 13:42:43 -0700
+   d="scan'208";a="346399938"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 13:45:57 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="738921737"
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="703344168"
 X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
-   d="scan'208";a="738921737"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jun 2023 13:42:42 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="703344168"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga007.jf.intel.com with ESMTP; 06 Jun 2023 13:45:56 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 6 Jun 2023 13:42:42 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 6 Jun 2023 13:45:43 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 6 Jun 2023 13:42:42 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Tue, 6 Jun 2023 13:45:43 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 6 Jun 2023 13:42:42 -0700
+ 15.1.2507.23; Tue, 6 Jun 2023 13:45:42 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XZK6xzGdA0YkKGIPgURTV/o0vWI+MI3nwSyI7xMvDWFLzv/OvWlAdDXadHFamhOC0iIhwok9ogRBXQTLeIXGAY0a/JgP9wwKxf21nYZi5CzGWM+rl5GFMY+YB8TPiydmu43BciPhAGmNs53I3i2qMoiwEAPtAZahyzEpCrDL7yVg7JkFnpW0TiOy1y+qVD2rs71st8jgLymla9BkzMj5CeH7Jt1dHzJJLcTCYUh2gIDPqSkKRF+uX+BjrtLtmVgtJOGFirkxN9OcUe0P7HWR8ZAFVm+lErAfepB28It/2YPz4lcFh7SavzaxE2UtgkCas+cWiiwpgC2LGYY1nQf3kg==
+ b=QxZWgyyNhxQMGZHGSxnKiR1Lxg9HFUOH/amhxBzjs4G5iWV2zOownoDxUEbQVW+ARNsWUdzMJIs+6pKXVeIdL9CoxRuXk1oJ9vClNSWl+MZynZIudhSj1Q4rrOqTmqO/9xiHXyIiS9CosH6Get1bJNydD+3BTtiArCPqcLOD52iuGYvjcIjppdlZt5QUu+JuQyTDLyq5ZmIcjZyOOj4PertgVArmvUelJhfBjyhIbGmqjDdVUsX83zjoDS1JDBw3eKezdj/EXpi54TMsQkUM+ZyYq4oKUgTzOY0YN9EK7QgFMBwL8CDoVeSekTEWGjfDcShSniTe+xqDySMCLLXNVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6L9lmbwklV6ox3xQ7MgRwATB6bKlyIF1Ulmvedq17kY=;
- b=hTdNDk23z4NjZumClMqjIV+QkRl2XXw5XFcJIjnVycu4mNy4xSWoRNote0ELJgehGrbjJJMfSx+MtBBSGmW8+vz1v9AvX+nUYqmENtCRSMibcS1zHlB94FabhWeZW7I1tUii29W2pGyB/cwPrVCm1aGotI1rOATIn2Spv09ZgdTIFrdFfBctHvsBggkknWCZiDtctZDZlcNP1/OvTjr3OJE0Nmq1QtQ59K592kTH9MBYNj/P2LuGqdU6/uV/chCunj3aI+Xv3EndDRbkpQxXgrijGl5q1dfqZvMX6J4b0JgqXmx9EBxqL70aXB2qnghAEO0fAMypoL54FPlcTdcQfA==
+ bh=ilP34sN2c1ohWvBaRB6zsS2PDIYMxli0JnXkbwa7BKE=;
+ b=W+1daoBkZRY/frLHY87x7t3kHzUrrfQQZzzygJbnZP9Koe3nGTS5shAvatmgfN7z8e7S7o4Ce+r0+YsKtUNDG5kS2rLt5t2gJ03WosgNFyJhuG9wEx3asd251A1lPZ8vCCqqD1aWrDchxFSthNpqlPt7321iStxLMI+VIU+ZH4NOHpxyY2qeW0zMUvarHRtDLfsopAe3xfX0GQlDibXQA9D4abAyBkFbRHGvuM+yOQhRlNDdxXqtCvyknai2FJvr9IkaKGi14InHBa2H7GEEcgMUZumoqAmWlBT/3oXOkV6nSYtJmYVmnZmxaPwT1BDW3inQ6zUdRISY12UMPnYeTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DM4PR11MB8158.namprd11.prod.outlook.com (2603:10b6:8:18b::7) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH0PR11MB5190.namprd11.prod.outlook.com (2603:10b6:510:3c::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.19; Tue, 6 Jun
- 2023 20:42:40 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::9679:34f7:f1b:1e7c]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::9679:34f7:f1b:1e7c%6]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
- 20:42:40 +0000
-Date:   Tue, 6 Jun 2023 13:42:35 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Fan Ni <nifan@outlook.com>, Dan Williams <dan.j.williams@intel.com>
-CC:     <nvdimm@lists.linux.dev>, Ira Weiny <ira.weiny@intel.com>,
-        <linux-cxl@vger.kernel.org>, <a.manzanares@samsung.com>,
-        <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-        <nifan@outlook.com>, <fan.ni@samsung.com>
-Subject: Re: [PATCH 4/4] dax: Cleanup extra dax_region references
-Message-ID: <647f9a3b3c76c_bf1272945b@iweiny-mobl.notmuch>
-References: <168577282846.1672036.13848242151310480001.stgit@dwillia2-xfh.jf.intel.com>
- <168577285161.1672036.8111253437794419696.stgit@dwillia2-xfh.jf.intel.com>
- <SG2PR06MB339779C9F301585300B0B4DEB252A@SG2PR06MB3397.apcprd06.prod.outlook.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Tue, 6 Jun
+ 2023 20:45:39 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
+ 20:45:39 +0000
+Date:   Tue, 6 Jun 2023 13:45:35 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>, <x86@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rppt@linux.ibm.com>
+Subject: Re: [PATCH 1/2] x86/numa: Introduce numa_fill_memblks()
+Message-ID: <647f9aef8928d_1433ac294ee@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1684448934.git.alison.schofield@intel.com>
+ <e365f4dfa7fa974118eb4e59aebc7cc423cf19a1.1684448934.git.alison.schofield@intel.com>
+ <647bd26937a11_142af829499@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZH+RFGZqAoSEIHqT@aschofie-mobl2>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <SG2PR06MB339779C9F301585300B0B4DEB252A@SG2PR06MB3397.apcprd06.prod.outlook.com>
-X-ClientProxiedBy: SJ0PR03CA0360.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::35) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+In-Reply-To: <ZH+RFGZqAoSEIHqT@aschofie-mobl2>
+X-ClientProxiedBy: BYAPR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::38) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM4PR11MB8158:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ec1c163-bfa3-4706-94fb-08db66ce91fd
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB5190:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03533882-df02-4939-4aeb-08db66cefc8c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: q+vcF8/heAeNx9d1YKLLJMYz3jWIKozn3qlbzYYli29iNwL3XTeR6EGmpL2Xa1m2VSAuv2eJJ1NZEFc3XJrOCAjHveMxjb8JhZvb0Z/J0tay4GLYraoVVNAVJeADx2epD4DR0Wfp7X+1h5NEBs4MRVwJ2LU4M83QxCJkNX+DHb9reIP8C99onY96kabC5o5Mb+R5p8kWyk2lnKOPYBZl4Jd/OjndRVmUk9sC47BUCtShxrTbxoD7kEC2ubxVFq4OQlZqZN6FySxyabgdciWXeE0HD7lShe6EwwMp1YOu3mLog+t3iKqb436vs+przYZCohDAa4cZp0f+BHlrfo8L9Adqzrakc9WGrMqF7cZEuUFc6d62rYEtd+Q1x7ekznxVVJPmJRrYrRy28oF/LAwCjD2kZggvEpmtphe8HAbLik6OEpAKxkLS5PTJ+/dJyoGBb5rQ7Z/uJZ85X4VlN8psH1W+kHEPYlwPM1lEbVsD6OxhO6UW/hzlIIhlpAirxLXJ0+rCiuYgjdlEnQqcGl7ErQMjwoAquSeMno1OV55pT9D7NKVpNtvVh9+Kl/0aJ8Hc
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(136003)(366004)(39860400002)(346002)(451199021)(8676002)(8936002)(44832011)(110136005)(5660300002)(6666004)(66556008)(6636002)(66476007)(4326008)(38100700002)(316002)(6486002)(66946007)(82960400001)(41300700001)(86362001)(478600001)(186003)(6506007)(26005)(6512007)(2906002)(9686003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: s5oaywApcK27EkYTR5CsZE2Lr5JbA5+cEKTdwtTUbyOukYUNRVYwDWOqm2/OqPC0fO4TGLrIssYK2brjbgO5mtUr23kq/3LTWeMFYKljgVdNvRe8/0BURKafwJfuybWMhYokssptvDhhRt9q/zu23HZrxwgSiozJf9BnJcdC9IQsvo3+WysHIVtOyQybE4qI3NLUk5LIMk3hzuM8Lja3vFaJMedR/CPrcHLoEKyM9s0zf20Ynxac0MFoYQopgGomv10wpd8RtdbbUlINfHnU09X8PwuUCW/U7hiTN1oq8u4Q97U/cftR/bHEuqFvRiafFhQkGDYJY4KBsDlmVV/G5UJHJfv1GOR2Go5Vg4mmelvvmBe8xe8LPNfZhN50ehuEXcJwR8Eicq1ZLu0zbJVIU1BTYKsuD6NAh7C7Kp+nbFwszvi2e+Oc6IA65Box703cZfQi+UkkeYAAyuzyG8QJPF8rQLNuEBkzj9ukk7lRzN+2WHBc/vr3HBschn9RJJMyIbKLA+yYCrzEXle9Bld4UjVPo8GfOO5LQjgdfDEk//A=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(136003)(376002)(396003)(39860400002)(366004)(451199021)(186003)(6512007)(9686003)(26005)(6506007)(83380400001)(8936002)(8676002)(5660300002)(316002)(7416002)(41300700001)(66556008)(4326008)(66476007)(66946007)(6666004)(110136005)(966005)(478600001)(2906002)(54906003)(6486002)(38100700002)(82960400001)(86362001)(66899021);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?04ppZqgfFFOXwwbaFqseCL+E9mp/MHAw48vhioW8klvmXFL/inIlh4PBzlTd?=
- =?us-ascii?Q?YRvAYsNxIoHwrfKHNrflSYEvF03HxCCINnLjFKmf/kvoTKXfGEELRViAYSlM?=
- =?us-ascii?Q?eaa02VQKbVz7h+teYRqj2ev2LRMetTTh5vjVQZ7X39MA0M34odjCCFknl/6k?=
- =?us-ascii?Q?ybK0e+1A27mADHAGXUphg1smJYjrh15D5olt+rgKnXep7bB3pqAo42bC7Icr?=
- =?us-ascii?Q?XbWUJwWtVCIxgw5fUKwzoT76xbkhogt2M5WkRzUhtXVxRFrsJh+3uZTJp4v+?=
- =?us-ascii?Q?h2b19Ny0hEk+m3lmO91OKrhxYTG34oScGtccW9ryI2wOP1RtaiYVvT5vD89N?=
- =?us-ascii?Q?RN5AlwXXLYXXQ/UmPT0NMvLQGcRccBmrHsjrX1e5DYdRwz5PLLbsonRj+q42?=
- =?us-ascii?Q?zRnh1kbx76Z+omLZedxFV7yZ8T1XZEkDf+u/In5JPb1qwkQBh7m34ZTd5Fb7?=
- =?us-ascii?Q?qO0EnAWdNT8MBeEdeaXQ2WxS9MtqwEXdaAFsRUVpDq5ulee44Azdeix4d+a/?=
- =?us-ascii?Q?5JSaSAb6+FxGOZxyHPJv61r0Xi/SYYLeQy8RpMpJIuA9s9m2gKPVTXocJbol?=
- =?us-ascii?Q?LT4DzpHjGIBHKX8xeGGRWhlIhLR0d3leB0XphXJwllRiMXNTqTKYHegU86ny?=
- =?us-ascii?Q?X5+1ERUGgCf0F+qVt5FHkQnjJ1r4K50ZPueDr+MuQNS+ThFYBmbb9L6z+0Ek?=
- =?us-ascii?Q?QMtyZt8G117YB2p/Zd7JotWTmaKhl+8vBcs5/i4LFdZUzm2DC0bbF/tztWbM?=
- =?us-ascii?Q?UUXXKXAjaU6yGAKgpBvXP0NeKypJw7WUXbQffQ9FV7zEo8ItC+h2ll4PHOcj?=
- =?us-ascii?Q?m3dx+Z77sBBe7Wn+IRp8zj9qGSRBZNOPugroFCHO4XNBa2CaRZovB0bFZAAN?=
- =?us-ascii?Q?ZdZ0DBOagANB+MdpYIjc+XlwlUzSoIE8igIZLnVHp6iiOewzeS6cm73ubeoq?=
- =?us-ascii?Q?aAROif8jEdyFteGQRtOGtDU+wbvwSgtedWtUUZ1FFFG3AjxT3ZQQtodqG0nz?=
- =?us-ascii?Q?XppB8h+4lY0HeZimoUUkEg1xE1cTXDWJK1FdfEwM/Jaaa+DKRwieLmLsuEQA?=
- =?us-ascii?Q?Xl3Ed7B/omaVkL1/wcK8PISQnBlaC2fnCK6gML6bi4LC34I7g/BxwxsGFHUa?=
- =?us-ascii?Q?21rUhGx1U1A+nNLFdvqOSLPUB4qxdIIucRH6jCu6XJFg1c9F+YmSjRxD8sg6?=
- =?us-ascii?Q?SXxRFn/43uqb0d094x5jGHrHRiA1MvwMXkb3mk6H3X0ACt5uXohkCQmzmv4o?=
- =?us-ascii?Q?2rr2R09O6p6TGPO8B3XhIDu4X28CraDU9/mC7WAHK4D2tdcBo5ICeKk8T9Fm?=
- =?us-ascii?Q?hlAm3HRU/0zCJ1IknD7aIveoQ4nyUAFu/iCOplhG4r7qTV70MMyNSp0IU9Vo?=
- =?us-ascii?Q?ba+OggqSqTmmJ1JEsslVOfKVu/ix5O4/q8EA+4Al5Ol3epxMh8OmHR0qtDLe?=
- =?us-ascii?Q?Jpn+emHMucEgM/DKV2KI0QUAmATcZGFFoljjj3E5HQsRLDiVgLNgEeQUAyGn?=
- =?us-ascii?Q?kpEuGCXXi4HDhz6Czi2xiwBezp8jeexNY4XCkpDRl1vlXycrtu5RPXuYBe8k?=
- =?us-ascii?Q?fGiGohZg5+i4u3GcDlvlid8LI+9RR7FduTpHAyIY?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ec1c163-bfa3-4706-94fb-08db66ce91fd
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aN4sCHg2f9GsTK51G2F3wxjIIWVnQ9VGCWrJ24S47vMGTVIacNFqoTafzooG?=
+ =?us-ascii?Q?8f3L6wg6HAAaQYE37NEvYD3gHjyQc53HX/+hMb3gk0RLsZxAHZ+imePjYhrS?=
+ =?us-ascii?Q?Kt408ZgcyI1RWVT2nbnS+JBa+YdC7AH2fB1FaPBb+PzN+ZcwMnX4B9LYc2om?=
+ =?us-ascii?Q?FcHj2fWtqQPjfF8BfqWIgwoc9ySV/Jw6aeOOoolykx1Kil0Y1U61pDx3yDeh?=
+ =?us-ascii?Q?MG4H6Xyup9asyrd1wC1EX/W9vCN1+AZI3AWRpqIB7XBQxiRz0+oaGSV1MXyA?=
+ =?us-ascii?Q?loYz/wHgctnEvhNE/MECIlmQMGs8OgRrAOh7B0Ozx0fphMcCMmRNVuJtFAAK?=
+ =?us-ascii?Q?jCaPBtPKv1x5pdtRosqTC7zd09Wq/1s+sHKmdFpF7N2Bh18ZRabFHk0ib9Gd?=
+ =?us-ascii?Q?bJo0oAMKjLaUf+5C6W2fZnQxP02el1rRprLQjeUR6KE418Vyrl3S5J/9mzVt?=
+ =?us-ascii?Q?3+kWUC+9ZEk1jKHfnzjz31c3Al1ivtWGrH3Wy/NN/jkjjejtOwrhhSPMAjlq?=
+ =?us-ascii?Q?cYvOwp8V/mzgU6jrJObWebXe13UUjh6ct/yJpj6LKhXHf0bKlw9uVRX3i4El?=
+ =?us-ascii?Q?v02tWmgXLl33REqVxi4Gp30p6Uz/ZYWWrSA4MnGNguR8YW22dHHDDhfyAnDc?=
+ =?us-ascii?Q?vl8hIrJQGzNNOaYCz4mw7KcvsTNJ0nWsuclqhb8XYVUy6r47fcuXmqV2pna8?=
+ =?us-ascii?Q?ZB13rjHb2dscmnHZPCPM//MHOcMTPhEMJ/fkk5i+7qLRadaYKxcF36CJGHHP?=
+ =?us-ascii?Q?FSuz0iAW7FfWhdKkiOcdBEBCWmNDcEGnKanX9BIPxexJisYGb5zGLL3WSTj/?=
+ =?us-ascii?Q?Hxda2Z3H5f0OWYafAOAcjuRyxL80A1tenjaHIbyL0o1xaFrSugLJNLFZtgaq?=
+ =?us-ascii?Q?Uyxc109IfEn2w+PBcqcwskv/jIHlhJjsKHEQHsRN3wkYJqWxWJ6yfjzHDbzO?=
+ =?us-ascii?Q?g/Fo+ZcAqHYFjaNVqVjIj9KvZ3w96lU/SggvqqPj9MzWBsMDxJsRLwuorFt/?=
+ =?us-ascii?Q?jfrBgkR84mU1RsjYTT/1++5A0CJvNqbmt2RV2iFVD0op0LE4MTID/BELE/f0?=
+ =?us-ascii?Q?QFL0t/fhyiH7sUu+Er0Ndf3z0l18uDwurSkcHEevD+mJF+NFH5Ahpbv2++HZ?=
+ =?us-ascii?Q?ZMwRPdguBJL0pmM+7uWBE5f3wEs8ZWdQGVI1KAM3JWXnX5ToVgsbvDDGUwsH?=
+ =?us-ascii?Q?Sd3iLqXNfEcxuMS+iD+lcq7eFuCWLhue3wEtKLIihm11c/p3mQgsuhnJG9VR?=
+ =?us-ascii?Q?+WXa9K8bVXHJeEpDbuOYw9C8YGW7JTgpcgiDv3B/EkOiUL/aDf4CB+P+lzyJ?=
+ =?us-ascii?Q?UQFqPI4ujVk+jPJpTppb3wdmLwLmXqMEKRT/E7fIRVVEFdiOuedst4xZ7fbH?=
+ =?us-ascii?Q?cgw1UCXBCfg1gJIM0w9BAFjmMl577fQ5MiBXVS6ngTBRzc+TLQNaAJtYKMbu?=
+ =?us-ascii?Q?2/ecq6ZKtCGJugvdfmQkqLGKf1e2mJeEheXbqJIfbrCDe68Yl+wpQhwyOkJy?=
+ =?us-ascii?Q?Xrc/OfO/F9jCogf7NxS6mWpHvsda/hBp3Z0MUla6lWLc0k74klS24TEu7YLC?=
+ =?us-ascii?Q?F94xUEyvQ/5siUhpSF6keAoILDa+9qy6rbOYNU1SqJ1ycIB547obm1hREr3j?=
+ =?us-ascii?Q?VA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03533882-df02-4939-4aeb-08db66cefc8c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 20:42:40.4716
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 20:45:39.2185
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PfZk6XsXyxbYqVWrENKRcjxNdZYMA9YW2+rcI4jiDmXuszllkTAswT6CgIotqcet0+DL4soVv62TNxA3dW/cqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB8158
+X-MS-Exchange-CrossTenant-UserPrincipalName: 520wCEFcxJaufuj6oO5EDiVlQczFd1mLeHDNZVk7S0t78izqHRQSz2sW2TzAuBkSVY2d2pE++Fhd1aKJHFTMiDj5D4kAjvFuMoCuhMcQPck=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5190
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Fan Ni wrote:
-> The 06/02/2023 23:14, Dan Williams wrote:
-> > Now that free_dev_dax_id() internally manages the references it needs
-> > the extra references taken by the dax_region drivers are not needed.
+[ add Mike, see "[Mike]" note below... ]
+
+Alison Schofield wrote:
+> On Sat, Jun 03, 2023 at 04:53:13PM -0700, Dan Williams wrote:
+> > alison.schofield@ wrote:
+> > > From: Alison Schofield <alison.schofield@intel.com>
+> > > 
+> > > numa_fill_memblks() fills in the gaps in numa_meminfo memblks
+> > > over an HPA address range.
+> > > 
+> > > The initial use case is the ACPI driver that needs to extend
+> > > SRAT defined proximity domains to an entire CXL CFMWS Window[1].
 > > 
-> > Reported-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > I feel like this demands more explanation because the "need" is not
+> > apparent. In fact its a Linux policy choice not a requirement. The next
+> > patch has some of this, but this story is needed earlier for someone
+> > that reads this patch first. Something like:
+> > 
 > 
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
-> One minor comment as below.
+> Hi Dan,
 > 
-
-[snip]
-
-> >  static struct platform_driver dax_hmem_driver = {
-> > diff --git a/drivers/dax/pmem.c b/drivers/dax/pmem.c
-> > index f050ea78bb83..ae0cb113a5d3 100644
-> > --- a/drivers/dax/pmem.c
-> > +++ b/drivers/dax/pmem.c
-> > @@ -13,7 +13,6 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
-> >  	int rc, id, region_id;
-> >  	resource_size_t offset;
-> >  	struct nd_pfn_sb *pfn_sb;
-> > -	struct dev_dax *dev_dax;
-> >  	struct dev_dax_data data;
-> >  	struct nd_namespace_io *nsio;
-> >  	struct dax_region *dax_region;
-> > @@ -65,12 +64,8 @@ static struct dev_dax *__dax_pmem_probe(struct device *dev)
-> >  		.pgmap = &pgmap,
-> >  		.size = range_len(&range),
-> >  	};
-> > -	dev_dax = devm_create_dev_dax(&data);
-> >  
-> > -	/* child dev_dax instances now own the lifetime of the dax_region */
-> > -	dax_region_put(dax_region);
-> > -
-> > -	return dev_dax;
-> > +	return devm_create_dev_dax(&data);
+> Thanks for the review :)
 > 
-> Not related to the patch, but why we do not need to check the returned
-> value of devm_create_dev_dax as above?
+> Sure, I can add the story below to make the 'need' for this function
+> more apparent, as well as s/needs/want so as not to conflate need with
+> requirement.
+> 
+> > ---
+> > 
+> > The CFWMS is an ACPI data structure that indicates *potential* locations
+> > where CXL memory can be placed. It is the playground where the CXL
+> > driver has free reign to establish regions.  That space can be populated
+> > by BIOS created regions, or driver created regions, after hotplug or
+> > other reconfiguration.
+> > 
+> > When the BIOS creates a region in a CXL Window it additionally describes
+> > that subset of the Window range in the other typical ACPI tables SRAT,
+> > SLIT, and HMAT. The rationale for the BIOS not pre-describing the entire
+> > CXL Window in SRAT, SLIT, and HMAT is that it can not predict the
+> > future. I.e. there is nothing stopping higher or lower performance
+> > devices being placed in the same Window. Compare that to ACPI memory
+> > hotplug that just onlines additional capacity in the proximity domain
+> > with little freedom for dynamic performance differentiation.
+> > 
+> > That leaves the OS with a choice, should unpopulated window capacity
+> > match the proximity domain of an existing region, or should it allocate
+> > a new one? This patch takes the simple position of minimizing proximity
+> > domain proliferation and reuse any proximity domain intersection for the
+> > entire Window. If the Window has no intersections then allocate a new
+> > proximity domain. Note that SRAT, SLIT and HMAT information can be
+> > enumerated dynamically in a standard way from device provided data.
+> > Think of CXL as the end of ACPI needing to describe memory attributes,
+> > CXL offers a standard discovery model for performance attributes, but
+> > Linux still needs to interoperate with the old regime.
+> > 
+> > ---
+> > 
+> > > 
+> > > The APCI driver expects to use numa_fill_memblks() while parsing
+> > 
+> > s/APCI/ACPI/
+> > 
+> > Again, the ACPI code does not have any expectation, this is pure OS
+> > policy decision about how to handle undescribed memory.
+> > 
+> 
+> The intent was to show the pending use case, perhaps 'wants to' use
+> this function to enact a purely OS policy decision!
 
-__dax_pmem_probe() returns struct dev_dax * so we just pass the result on.
+Sounds good, yeah I tend to read "need" as a requirement and assume that
+Linux is out of spec or something breaks if it does not do the needed
+thing.
 
-> Or do we really need the check as
-> the function already returns ERR_PTR if failed?
+> 
+> 
+> > > the CFMWS. Extending the memblks created during SRAT parsing, to
+> > > cover the entire CFMWS Window, is desirable because everything in
+> > > a CFMWS Window is expected to be of a similar performance class.
+> > > 
+> > > Requires CONFIG_NUMA_KEEP_MEMINFO.
+> > 
+> > Not sure this adds anything to the description.
+> > 
+> > > 
+> > > [1] A CXL CFMWS Window represents a contiguous CXL memory resource,
+> > > aka an HPA range. The CFMWS (CXL Fixed Memory Window Structure) is
+> > > part of the ACPI CEDT (CXL Early Discovery Table).
+> > > 
+> > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > > ---
+> > >  arch/x86/include/asm/sparsemem.h |  2 +
+> > >  arch/x86/mm/numa.c               | 82 ++++++++++++++++++++++++++++++++
+> > >  include/linux/numa.h             |  7 +++
+> > >  3 files changed, 91 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+> > > index 64df897c0ee3..1be13b2dfe8b 100644
+> > > --- a/arch/x86/include/asm/sparsemem.h
+> > > +++ b/arch/x86/include/asm/sparsemem.h
+> > > @@ -37,6 +37,8 @@ extern int phys_to_target_node(phys_addr_t start);
+> > >  #define phys_to_target_node phys_to_target_node
+> > >  extern int memory_add_physaddr_to_nid(u64 start);
+> > >  #define memory_add_physaddr_to_nid memory_add_physaddr_to_nid
+> > > +extern int numa_fill_memblks(u64 start, u64 end);
+> > > +#define numa_fill_memblks numa_fill_memblks
+> > 
+> > What is this for? The other defines are due to being an arch-specific
+> > API and the #define is how the arch declares that it has a local version
+> > to replace the generic one.
+> 
+> That define, along with the numa.h change below, are to support builds of
+> CONFIG_ARM64 and CONFIG_LOONGARCH, both include the caller acpi_parse_cfmws(),
+> of numa_fill_memblks().
 
-Yea the caller of __dax_pmem_probe() needs to handle it.
+[Mike]
 
-Ira
+Hmm, ok, but this is piling onto the maintenance burden of x86 not
+getting onboard with memblock for numa info yet. At a minimum that
+avoidance of touching the ARM64 and LOONGARCH cases needs to be called
+out, but it would be useful to have a discussion about the options here
+with questions like:
+
+- What's blocking x86 from switching to memblock?
+
+- Or, does the memblock API support what numa_fill_memblks() wants to
+  do? I.e. add a real numa_fill_memblks() implementation to
+  drivers/base/arch_numa.c rather than skip SRAT based fixups for the
+  generic case.
+
+Last I remember it was the conceptual disconnect of x86 not marking Reserved
+ranges as memory like other architectures:
+
+https://lore.kernel.org/all/20200708091520.GE128651@kernel.org/
+
+...but its been a while since this last came up and I have not been
+following memblock developments. Maybe the anwser is the same in the
+end, add x86-specific numa_fill_memblks, but this is as good a time as
+any to revisit carrying that burden.
+
+[..]
+snipped the rest, looks like we are aligned there.
