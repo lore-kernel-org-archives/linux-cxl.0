@@ -2,185 +2,166 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2FEC7EE29
-	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 15:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE45DC77B73
+	for <linux-cxl@archiver.kernel.org>; Tue,  6 Jun 2023 15:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238082AbjFFPXa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 6 Jun 2023 11:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46994 "EHLO
+        id S233274AbjFFPb1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 6 Jun 2023 11:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237833AbjFFPX2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 11:23:28 -0400
+        with ESMTP id S238030AbjFFPb0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 6 Jun 2023 11:31:26 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF54EE67
-        for <linux-cxl@vger.kernel.org>; Tue,  6 Jun 2023 08:23:26 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QbDhM0kgfz67bbM;
-        Tue,  6 Jun 2023 23:21:07 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF50DA6
+        for <linux-cxl@vger.kernel.org>; Tue,  6 Jun 2023 08:31:24 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QbDvs4yq7z6J6fX;
+        Tue,  6 Jun 2023 23:31:05 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 6 Jun
- 2023 16:23:24 +0100
-Date:   Tue, 6 Jun 2023 16:23:23 +0100
+ 2023 16:31:22 +0100
+Date:   Tue, 6 Jun 2023 16:31:21 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
         <navneet.singh@intel.com>
-Subject: Re: [PATCH 17/19] cxl/region: Define a driver interface for HPA
- free space enumeration
-Message-ID: <20230606162323.00005884@Huawei.com>
-In-Reply-To: <168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com>
+Subject: Re: [PATCH 18/19] cxl/region: Define a driver interface for region
+ creation
+Message-ID: <20230606163121.000031b6@Huawei.com>
+In-Reply-To: <168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com>
 References: <168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com>
-        <168592159290.1948938.13522227102445462976.stgit@dwillia2-xfh.jf.intel.com>
+        <168592159835.1948938.1647215579839222774.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sun, 04 Jun 2023 16:33:12 -0700
+On Sun, 04 Jun 2023 16:33:18 -0700
 Dan Williams <dan.j.williams@intel.com> wrote:
 
-> CXL region creation involves allocating capacity from device DPA
-> (device-physical-address space) and assigning it to decode a given HPA
-> (host-physical-address space). Before determininig how much DPA to
-> allocate the amount of available HPA must be determined. Also, not all
-> HPA is created equal, some specifically targets RAM, some target PMEM,
-> some is prepared for the device-memory flows like HDM-D and HDM-DB, and
-> some is host-only (HDM-H).
+> Scenarios like recreating persistent memory regions from label data and
+> establishing new regions for CXL attached accelerators with local memory
+> need a kernel internal facility to establish new regions.
+
+Could probably make the label data one a userspace problem, but I agree
+that it 'might' be done entirely in kernel.
+
 > 
-> Wrap all of those concerns into an API that retrieves a root decoder
-> (platform CXL window) that fits the specified constraints and the
-> capacity available for a new region.
-
-Interaction with QTG?  I'd guess we should be prioritizing CFMWS based
-on that if available.  Fun question of how to balance suggested QTG vs
-available HPA space.
-
-
-Otherwise, one suggestion inline.
-
-Jonathan
-
+> Introduce cxl_create_region() that takes an array of endpoint decoders
+> with reserved capacity and a root decoder object to establish a new
+> region.
 > 
 > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
 > ---
->  drivers/cxl/core/region.c |  143 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h         |    5 ++
->  drivers/cxl/cxlmem.h      |    5 ++
->  3 files changed, 153 insertions(+)
+>  drivers/cxl/core/region.c |  107 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/cxlmem.h      |    3 +
+>  2 files changed, 110 insertions(+)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 75c5de627868..a41756249f8d 100644
+> index a41756249f8d..543c4499379e 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -575,6 +575,149 @@ static int free_hpa(struct cxl_region *cxlr)
->  	return 0;
+> @@ -2878,6 +2878,104 @@ construct_region_begin(struct cxl_root_decoder *cxlrd,
+>  	return cxlr;
 >  }
 >  
-> +struct cxlrd_max_context {
-> +	struct device * const *host_bridges;
-> +	int interleave_ways;
-> +	unsigned long flags;
-> +	resource_size_t max_hpa;
-> +	struct cxl_root_decoder *cxlrd;
-> +};
-> +
-> +static int find_max_hpa(struct device *dev, void *data)
+> +static struct cxl_region *
+> +__construct_new_region(struct cxl_root_decoder *cxlrd,
+> +		       struct cxl_endpoint_decoder **cxled, int ways)
 > +{
-> +	struct cxlrd_max_context *ctx = data;
-> +	struct cxl_switch_decoder *cxlsd;
-> +	struct cxl_root_decoder *cxlrd;
-> +	struct resource *res, *prev;
-> +	struct cxl_decoder *cxld;
-> +	resource_size_t max;
-> +	unsigned int seq;
-> +	int found;
+> +	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+> +	struct cxl_region_params *p;
+> +	resource_size_t size = 0;
+> +	struct cxl_region *cxlr;
+> +	int rc, i;
 > +
-> +	if (!is_root_decoder(dev))
-> +		return 0;
+> +	if (ways < 1)
+> +		return ERR_PTR(-EINVAL);
 > +
-> +	cxlrd = to_cxl_root_decoder(dev);
-> +	cxld = &cxlrd->cxlsd.cxld;
-> +	if ((cxld->flags & ctx->flags) != ctx->flags)
-> +		return 0;
+> +	cxlr = construct_region_begin(cxlrd, cxled[0]);
+> +	if (IS_ERR(cxlr))
+> +		return cxlr;
 > +
-> +	if (cxld->interleave_ways != ctx->interleave_ways)
-> +		return 0;
+> +	rc = set_interleave_ways(cxlr, ways);
+> +	if (rc)
+> +		goto out;
 > +
-> +	cxlsd = &cxlrd->cxlsd;
-> +	do {
-> +		found = 0;
-> +		seq = read_seqbegin(&cxlsd->target_lock);
-> +		for (int i = 0; i < ctx->interleave_ways; i++)
-> +			for (int j = 0; j < ctx->interleave_ways; j++)
-> +				if (ctx->host_bridges[i] ==
-> +				    cxlsd->target[j]->dport) {
-> +					found++;
-> +					break;
-> +				}
-> +	} while (read_seqretry(&cxlsd->target_lock, seq));
+> +	rc = set_interleave_granularity(cxlr, cxld->interleave_granularity);
+> +	if (rc)
+> +		goto out;
 > +
-> +	if (found != ctx->interleave_ways)
-> +		return 0;
-> +
-> +	/*
-> +	 * Walk the root decoder resource range relying on cxl_region_rwsem to
-> +	 * preclude sibling arrival/departure and find the largest free space
-> +	 * gap.
-> +	 */
-> +	lockdep_assert_held_read(&cxl_region_rwsem);
-> +	max = 0;
-> +	res = cxlrd->res->child;
-> +	if (!res)
-> +		max = resource_size(cxlrd->res);
-
-		Maybe jump from here to after the loop would be clearer
-		or factor the loop out as a utility function to find the
-		max gap which feels like it might be generally useful to
-		have?
-
-> +	else
-> +		max = 0;
-> +	for (prev = NULL; res; prev = res, res = res->sibling) {
-> +		struct resource *next = res->sibling;
-> +		resource_size_t free = 0;
-> +
-> +		if (!prev && res->start > cxlrd->res->start) {
-> +			free = res->start - cxlrd->res->start;
-> +			max = max(free, max);
-> +		}
-> +		if (prev && res->start > prev->end + 1) {
-> +			free = res->start - prev->end + 1;
-> +			max = max(free, max);
-> +		}
-> +		if (next && res->end + 1 < next->start) {
-> +			free = next->start - res->end + 1;
-> +			max = max(free, max);
-> +		}
-> +		if (!next && res->end + 1 < cxlrd->res->end + 1) {
-> +			free = cxlrd->res->end + 1 - res->end + 1;
-> +			max = max(free, max);
-> +		}
+> +	down_read(&cxl_dpa_rwsem);
+> +	for (i = 0; i < ways; i++) {
+> +		if (!cxled[i]->dpa_res)
+> +			break;
+> +		size += resource_size(cxled[i]->dpa_res);
 > +	}
+> +	up_read(&cxl_dpa_rwsem);
 > +
-> +	if (max > ctx->max_hpa) {
-> +		if (ctx->cxlrd)
-> +			put_device(cxlrd_dev(ctx->cxlrd));
-> +		get_device(cxlrd_dev(cxlrd));
-> +		ctx->cxlrd = cxlrd;
-> +		ctx->max_hpa = max;
-> +		dev_dbg(cxlrd_dev(cxlrd), "found %pa bytes of free space\n", &max);
+> +	if (i < ways)
+> +		goto out;
+> +
+> +	rc = alloc_hpa(cxlr, size);
+> +	if (rc)
+> +		goto out;
+> +
+> +	down_read(&cxl_dpa_rwsem);
+> +	for (i = 0; i < ways; i++) {
+> +		rc = cxl_region_attach(cxlr, cxled[i], i);
+> +		if (rc)
+> +			break;
 > +	}
+> +	up_read(&cxl_dpa_rwsem);
 > +
-> +	return 0;
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = cxl_region_decode_commit(cxlr);
+> +	if (rc)
+> +		goto out;
+> +
+> +	p = &cxlr->params;
+> +	p->state = CXL_CONFIG_COMMIT;
+> +out:
+> +	construct_region_end();
+> +	if (rc) {
+> +		drop_region(cxlr);
+> +		return ERR_PTR(rc);
+> +	}
+> +	return cxlr;
 > +}
 > +
+
+>  /* Establish an empty region covering the given HPA range */
+>  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  					   struct cxl_endpoint_decoder *cxled)
+> @@ -3085,6 +3183,15 @@ static int cxl_region_probe(struct device *dev)
+>  					p->res->start, p->res->end, cxlr,
+>  					is_system_ram) > 0)
+>  			return 0;
+> +
+> +		/*
+> +		 * HDM-D[B] (device-memory) regions have accelerator
+> +		 * specific usage, skip device-dax registration.
+> +		 */
+
+As before - I'm not yet convinced that is always the case for HDM-DB
+Particularly given you support interleaving which may never make sense
+for accelerators.
+
+> +		if (cxlr->type == CXL_DECODER_DEVMEM)
+> +			return 0;
+> +
+> +		/* HDM-H routes to device-dax */
+>  		return devm_cxl_add_dax_region(cxlr);
 
