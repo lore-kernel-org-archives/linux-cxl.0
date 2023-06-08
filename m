@@ -2,205 +2,175 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22AAC7EE25
-	for <linux-cxl@archiver.kernel.org>; Thu,  8 Jun 2023 18:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D37AC7EE23
+	for <linux-cxl@archiver.kernel.org>; Thu,  8 Jun 2023 18:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbjFHShP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 8 Jun 2023 14:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
+        id S230290AbjFHSl1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 8 Jun 2023 14:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjFHShO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Jun 2023 14:37:14 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D3819BB
-        for <linux-cxl@vger.kernel.org>; Thu,  8 Jun 2023 11:37:12 -0700 (PDT)
+        with ESMTP id S229471AbjFHSl0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 8 Jun 2023 14:41:26 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C4802136
+        for <linux-cxl@vger.kernel.org>; Thu,  8 Jun 2023 11:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686249432; x=1717785432;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=4b1kkBD9U0pp60I8oGQ1Hhyech1rk0YrlToDZ5w8lxo=;
-  b=P0GKtlnrbI9xE+Hw3pSvTGy+29RqyeAZvXa6DPbJBB6jrIhARZpeFdcO
-   aC48rxgNnMa7sth3LySAxYn0tMVk/XkdbKCCBUzPYG8oTk4bQ/cA2QM3L
-   RFvPESUO+3sHf3Y2Hlam39J4rDafa3eueAwY7aeME5Qe0LAm8mU4HsVUa
-   qiLuWwPkZ+IOhafblvT2c8LFTfEXcgFT0j7biJt8m2bHk1faBA2gW1ZyB
-   YHak+njSKn5iStpoZeZeJ8E7x0u37hoVcBOacOEigZaQpYu0ynQN9nppF
-   NS2rbmIvdDxNblTZ9KOAAOiQ/UA4JUnjpgOVKHlPy1b4NWf6OB6xVp873
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="342072013"
+  t=1686249685; x=1717785685;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=sHtVGY1NH3O/K2j4kbbhI5UQ4yBSzL6J0GN4raoe/Uc=;
+  b=WXqTtaI7O5OSi/1LkLaWATOpjKhSd7Ypk1m/JzW8iy36FfAIKxUHXi4r
+   Wc6bgtI2/jaixI7KH9MHRaCI9k7T+nHPE0UzXIqC3lh6DdgspZWbrCY59
+   Q3o7o1EIInCRJhLD3amfgJYUqa7EUwDgyVJRQIma3hEsyCkKZU2gcgMSw
+   hx5V42wEyBEfbp1DLPbjz+OYeR17s6sY29LAblTeAh1de8tNPcTvH89dj
+   0lhVyMU9mRi+9EOqVpWLPmeOTixsx06cb3xlwYvRl73bDmxjDKU2K2A8I
+   ji5nZmp4tA/cOK1tiEOJ1n3QRx7vao8cMvm6K77TUEHace8j6e9XfFDzu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="337035971"
 X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
-   d="scan'208";a="342072013"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 11:37:12 -0700
+   d="scan'208";a="337035971"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 11:41:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="713211558"
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="884294300"
 X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
-   d="scan'208";a="713211558"
+   d="scan'208";a="884294300"
 Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Jun 2023 11:37:12 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+  by orsmga005.jf.intel.com with ESMTP; 08 Jun 2023 11:41:24 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
  ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 8 Jun 2023 11:37:11 -0700
+ 15.1.2507.23; Thu, 8 Jun 2023 11:41:24 -0700
 Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 8 Jun 2023 11:37:11 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.173)
+ 15.1.2507.23 via Frontend Transport; Thu, 8 Jun 2023 11:41:24 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
  by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 8 Jun 2023 11:37:11 -0700
+ 15.1.2507.23; Thu, 8 Jun 2023 11:41:21 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wk9h93htMXfGK+0FoF1PzYJvhftjZtjoA2Sc/RM+0Gd+PI4AXBeNxO7vwv1aN5Pul68V4gXIhcfZgJOR2FzisTCNUS/LD7I8CuQ/lxKAJxyCsg/VxjjOQwj4jX6FQQICZx54Hd54bzdGZ5A3Q3RH0bgVBZUPdm29tFjn44uf8qWgVgKRQJyPzXvIXF9tbVHDIDPnfSo4lWLcFG7DgAUcSbsAXOFvnmjB2an0UDSMXZu9kSNV2Wy4p8an47gBrTchYfVGdBXfY0V96PBoVecawTTrqC5aiozKI9M8F6PUElx6E9XNGEAhfthL0Sb5JF7vI4QL0PExfDbTYUCyOEPa7g==
+ b=elpQYmaFOxFCRtHneSQEnhhGDfJhDJN7Cb3dvCjHFdJYeJLNziQwN/ki9PZ/gzUUQerC1O5bfzxXMGtQimobqcb4nlPrP+XidZCEx+MuGww78U9DQrSlS9+diL89DQlSS36Ro/3xGOfv4HiXU7tTGfvUxaKT+/eg3K8DNAFvpCJ1E2z5VMxAhfozegsi1kSR1nZWOrR0R0l+gHa2oAn627iT7Z6l3UdJZ0ztUEWiwlreoWOLtrd+u5nVIuIU74nTS23dxHjLDp0xdZkay+fmKqkZQvWoeHNR+82CSJbu5Gk7c8df/aV0lzm8cluA7fhaGJR7OfwAQ/l+QmAaII/83Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mlJ0GwQT4BPvEkhKvnufjAQvMKe5PdeuiDcJG0/aHKE=;
- b=N06jssfSj7bg9HMs1UH64rYBteSVzDJiA0XgbZX0WqSFk6NrBt9qar25JJJE0EIbij5vCD5BVL+UpbD8uccVBaklEGCT4m5uJKKVQfTV0GyyaDPhz2IqTAZsrHAZZglEfPQEhy6aATeLnMMBk9bFwwRIU70C9gazpBKADvVzgEkTWuKuHo1ZEnVjxu/oXkodCRyM26L1nqjPEC29cmjd/gsHyGVHlhV/UqfVcOyTn1d9yDlHprxU647R+ZJZhGEyHX8Esu3c5rLQioctRzEpmh9a9PeAW9bIv5LSi0OkZ4WdBRrsYdw9y3dTxqAXD3aXb0xowatlQu2wW4S2xtR9kg==
+ bh=c99DNd1mGDPdXd5uSm8E2qfSpvrFLqAGGZM2NTv6low=;
+ b=OBYaHkYGKDC/L7ev3LYh/yrjIbtmHUYsBB1Ap6nQPEbQv4qW/9YRPZHBPSyeQDJBttNxFyPGmezkWNDSvl6J+FC0FhhW3UjU02Zf/OXVmABiw8TdZJW5fIxCXXFiR5GXijXqGOXthdHhlnOzi9iQt0ZwC/tEXwnEXNQ/SA3PzLvEAbU0I+7FL/98jvZq7IXibznFX3cMgC0Qa89OwK3//B5SrHSsRMwnkb+vuweuCGKTqLLCQDzBAaaSs1XeRvbFxd+v7WieA42lzdeDjSbUNmLDliBbQJukvSKBzfuxDPojqDGDhEJYCLApBGa14zuVRFEelsdIatH3NtLwH8bSUw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB5439.namprd11.prod.outlook.com (2603:10b6:5:39b::11) with
+ by DM4PR11MB7254.namprd11.prod.outlook.com (2603:10b6:8:10e::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Thu, 8 Jun
- 2023 18:37:11 +0000
+ 2023 18:41:21 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6455.030; Thu, 8 Jun 2023
- 18:37:10 +0000
-Date:   Thu, 8 Jun 2023 11:37:07 -0700
+ 18:41:20 +0000
+Date:   Thu, 8 Jun 2023 11:41:17 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
-To:     "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
-        'Dan Williams' <dan.j.williams@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: RE: Questions about CXL device (type 3 memory) hotplug
-Message-ID: <64821fd31d563_1433ac294a3@dwillia2-xfh.jf.intel.com.notmuch>
-References: <TYWPR01MB10082116669BA002263DF132A90439@TYWPR01MB10082.jpnprd01.prod.outlook.com>
- <646c04bbbd96_33fb32944b@dwillia2-xfh.jf.intel.com.notmuch>
- <TYWPR01MB10082C8CB891827C6438D311D90409@TYWPR01MB10082.jpnprd01.prod.outlook.com>
- <646cf986dd030_afb7729452@dwillia2-xfh.jf.intel.com.notmuch>
- <TYWPR01MB10082A58633DCCB1AAC5DDC3C90419@TYWPR01MB10082.jpnprd01.prod.outlook.com>
- <TYWPR01MB10082A36ECFE209E4A05BA33190479@TYWPR01MB10082.jpnprd01.prod.outlook.com>
- <6470c6a44e869_1fc5429435@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <TYWPR01MB100824F6720970B5968E1AF67904A9@TYWPR01MB10082.jpnprd01.prod.outlook.com>
- <647f73cf40c29_142af82942f@dwillia2-xfh.jf.intel.com.notmuch>
- <TYWPR01MB10082CE5542BCFCEF127CDD399050A@TYWPR01MB10082.jpnprd01.prod.outlook.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Vikram Sethi <vsethi@nvidia.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "catalin.marinas@arm.com" <Catalin.Marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        "Natu, Mahesh" <mahesh.natu@intel.com>
+Subject: Re: Questions about CXL device (type 3 memory) hotplug
+Message-ID: <648220cdade2_1433ac2949b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <BYAPR12MB3336AB6A519C709DBEA75CB5BD419@BYAPR12MB3336.namprd12.prod.outlook.com>
+ <646d8c76811cb_250e29456@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <BN8PR12MB3330831F2E666E9BB1319E66BD419@BN8PR12MB3330.namprd12.prod.outlook.com>
+ <646e7f96f33e2_33fb3294c1@dwillia2-xfh.jf.intel.com.notmuch>
+ <BYAPR12MB3336F5ADDEDBB6245BC2B48DBD489@BYAPR12MB3336.namprd12.prod.outlook.com>
+ <647f9d082eb30_142af82944e@dwillia2-xfh.jf.intel.com.notmuch>
+ <BYAPR12MB3336E224E4B3DD50ABDA04B6BD53A@BYAPR12MB3336.namprd12.prod.outlook.com>
+ <20230607161224.00004795@Huawei.com>
+ <BYAPR12MB33364B5EB908BF7239BB996BBD53A@BYAPR12MB3336.namprd12.prod.outlook.com>
+ <20230608161911.00000912@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <TYWPR01MB10082CE5542BCFCEF127CDD399050A@TYWPR01MB10082.jpnprd01.prod.outlook.com>
-X-ClientProxiedBy: BYAPR21CA0021.namprd21.prod.outlook.com
- (2603:10b6:a03:114::31) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20230608161911.00000912@Huawei.com>
+X-ClientProxiedBy: BY5PR20CA0022.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::35) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB5439:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce80cd9e-ee36-41d1-986e-08db684f5e88
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB7254:EE_
+X-MS-Office365-Filtering-Correlation-Id: 628dccaf-2b1c-4138-fccb-08db684ff3c6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 59S0wSHasg11xRw+1vKl1GRG+tb+PWzIfkoXODiU3HHoSm3D7Wl8pfNQgreYbPpj77gi9Ti4tEzgYtk4Pj4llzTajc0QV2bCZ05fKAgWxcTZkR39F9Y+FjLojTEcR22KVqfRiqnrhDUVcFjICchzzTJOtJkpOx1v8EaMytl0yLKrvMgPEcjbruvsuj+eyltuwDSMS+VmmZ+L6pF8llay+jDNdWc/gQDs96Z1UV4gUKpsvPOQ8B8xQLMzrsPNN9Jb7QZGCssWhGk/MbHzxnAG4gu7im6RVpilHjhDIO0wNCYTSHNBAyYAWWp0XowkVns3SdRRqduubZHkZImHhWMlUZoDj/vSswkpB9jE2V5zSb464ao5QQnroD4NXXsbJfN4aEUlS8IwWLOyO9kB06GWXOfDHurwFHw8Xjdn+gvEOTU4EQ5HhhlacexunETohpih4W7V+Q7LPrgjMv1KkT3OpaFSEczBsaHjZk+xwViOGrDzY3soal+wqzGGFehtxzL1NZ4VA3h/wT9gOCpLf1IzI/PB5qnWhquIJZ/JLxBbm/ujbuGcDfwxXQj6rZMmp2+k
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(136003)(376002)(396003)(366004)(39860400002)(451199021)(9686003)(6506007)(186003)(26005)(6512007)(6486002)(83380400001)(86362001)(6666004)(82960400001)(2906002)(8676002)(8936002)(478600001)(316002)(110136005)(38100700002)(41300700001)(5660300002)(66476007)(66946007)(66556008);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: rzd9ZiDQ9sS5bX/WvNzfO2MhDh+7KEI/3mvQSSBKslhXS/x0nfBh/WL81EeAYetnk1zJr4re4SFwcyLepFuSqDxcbf5X86JE0eLsBJU6U5SDrcetvWcs85+z+UOuwlp6LdbGBHDjDGPhTd5UzcSULOAI7m/RlEjj61uwGtLBNBjhWKmM3vwpLgqgxe4e5t6tKj5p0+NdgXxStgy2f65yZx+Y/kSvBagT/GaaAClPNYTNqN2JVd01yJBqihPTtcaJMeFElreLTYStmApd5lQ5aJMHCYEiTpwqSHsbvzt2h+onAuT9lOBPaL1fgrRZ+zC/gTIu0BdEizbjawKAzgnEmdsEHLZ8BOYcvp9hZCTsDhtw7deufoX293pPBeZTMcegTU+8J0SEsFr6HYpfJhD+YL83pEoF1937+aO6GPpMGtuwuEiCPyGmarv7YNaXmPHsPRUxCrpI+EVErD86QnWXqRJVTJt4HrzgGz5Yf0UQj9ZzWFtPVFyeaJ3G2LQ6ck+Rh7pKeA2JeIyt8zPxNV3uW7daIsGHBWPSeMySxBRvwpbef6WudAf2vT3Ui0OLWHHy
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(396003)(39860400002)(376002)(136003)(451199021)(83380400001)(54906003)(82960400001)(478600001)(8676002)(8936002)(41300700001)(66476007)(316002)(66946007)(66556008)(4326008)(86362001)(5660300002)(38100700002)(6486002)(6666004)(110136005)(2906002)(107886003)(186003)(26005)(6506007)(9686003)(6512007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GyEo8fO6giqs4HSI9NT93mHBq7VtwXT+yStLgu3v4Ts5R7gfqx/1/TKWK9xN?=
- =?us-ascii?Q?6Ezgrwva6Ea7O/1FDbfpXZARbi6wZBGEYB2k/t8ZkvlfJZZoBYMUlrqJTsvI?=
- =?us-ascii?Q?7bju6sBojX3hWmFZ38RZkFDXqWvQWRk9aFvQITBw+jj+YaGr6WrI1MWzogZ7?=
- =?us-ascii?Q?MR0Sh0/g1h0JLSiH7l3Dr8H3y4KLlnfmmD8jBLczlyW65tC7MaNUxzh8yCBz?=
- =?us-ascii?Q?+2vL3dZWlFA2MxWmL/AuX/+pYdCzIOdvZd7LdzPdfCep9gYYReNykF5iCrdM?=
- =?us-ascii?Q?GBDY6isJSKiEWA+B5fPJ0BZzMw/JB74jWaMKxtOZkY7Og7NQeo4rRe38qnfp?=
- =?us-ascii?Q?Cevfc6papv5JmxcikxHXbiiJpJgUPgrxA4RUk/8pMf60LetwZU5H3Xn0Nn0Z?=
- =?us-ascii?Q?prGx9ydFplT9y6mi4DoxLEoQC+P08iKkvA2oxybREQ2EcVW/MyGfasn2J4KH?=
- =?us-ascii?Q?V1EhWZ6zgYkT2e6mFKpCZadAmSsTl0CygdD2ua0phzh+2fCnZECqc4ylfxrP?=
- =?us-ascii?Q?Ew18fI4HDkY0a5KYdqETNvhvC1zk7V1R3lbfjnSvKpMiTteOGsqTsweHXFDj?=
- =?us-ascii?Q?ECEhYawadkifdhozc9ZU1ySYPp0njyrTsecbVsiYG8Lk9K9bvyAEgmjOJUIs?=
- =?us-ascii?Q?huqrB/sTAk/01rP6BK3/5cnvp1x1fepjRYPKPVmeflcl8CXd/+UOBfQUJSF8?=
- =?us-ascii?Q?l+m72Y4cNFVzWFZbCnndOo/CZs9wHnoQMCvXs/pTlIYacRh9Hpj8Swoz35Dn?=
- =?us-ascii?Q?ByGtJs4+fBRHDGEEjDhlSl3noYpEyy3/XT37LOj/ABfcE0B0yQ+STvlQZv1A?=
- =?us-ascii?Q?zAweBPbS+P82xUhrpu7M7j53hPs+BO69Y6iS5Z6ZqG1DFWLH8ttlQBLOf49A?=
- =?us-ascii?Q?EBWgspvYZ0fTBtOb8Yf2lgLOsSr8WV8+eqm146eEVEBXNmfQN/3Bx4zGQYI8?=
- =?us-ascii?Q?MCqyYxU3kCo0Nafp/dpBpJTIJU9gDNjgHrOKiEYBImcbwALw3cYIeaHyomFK?=
- =?us-ascii?Q?awnM1pZdKmUVlilXRbbtTyBMrmhn9LybD4D2SGvBUgFXX1ffwQwO7J1yx9rR?=
- =?us-ascii?Q?0T4dYxwNAoS6Lz+EJZHsY0Qa3sfOLB5w8djPDCkCPybB31GIom5+eJNMkJ/B?=
- =?us-ascii?Q?7ip0cxrQTIoFQPa1cVPf+MgVVAaHSmsd51wzZWZuii49bdnTG+bD+TOw8cbS?=
- =?us-ascii?Q?6FxjJCp+qVLEX2sULBxcGv5/UUGdYEZ7vmbZPZyJLsAOCVHbPeo+pODsJWsf?=
- =?us-ascii?Q?FV3Bvrv6Oz9ACgFJJmW3S1KJBx9yu9spaxx08kWqMqpv1tZXrf0GrawtDBiF?=
- =?us-ascii?Q?Bg1RUiPoC9qpRdayOFnKjV4eqZUj1wpbL16C5RJmqeSefTHIljdHgrQENYYw?=
- =?us-ascii?Q?Iy+Xf2aDAmfZTK6y9EdAAgPgLMlkcUzI8eoSG56YFX0mb54yDjmeSO+Hk+ei?=
- =?us-ascii?Q?6KzeLs+IqRfj/z/t6s3gEabrb5TDfWbETgB/y8PZy2Np+oHRtx8fSJUkO03m?=
- =?us-ascii?Q?beln4Xe/29QZL3IDzfr1PZdDv50LH423GRQar63hPwNQWReCGgQuII8L+Z3W?=
- =?us-ascii?Q?pcIb2r2P5DxSk7Bvczb3IZ15slxW9U8JzaYJIS0yKxqcmj2XktSYG+gPN2nR?=
- =?us-ascii?Q?ag=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce80cd9e-ee36-41d1-986e-08db684f5e88
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ny2mOcZPm+Ej2eA3vdUPnQ2yNi3cXCBhOfCM+IEOGs8Bd0zcWz1wCrK+TJAw?=
+ =?us-ascii?Q?zFSepu/3BuZtGcFKr3p0as26lWwcA1kJldaZCV+fwPByJpva8DBKGr7bZZmG?=
+ =?us-ascii?Q?TTK0TEK89oM56abuORjKnQQcLfUrn5hFupqvDZ9Xs+mbov+Tq6ubE7oBEwOa?=
+ =?us-ascii?Q?4TwqB8S3YdPzOMj1drk4gLoOz+jEc1J+lV8MMgyJ3EkRscgQBqEP8zB3Kca2?=
+ =?us-ascii?Q?uR/d5ra3JFJtwHBwgljyOcUJVAnC8Y0xwONATP5T9Qv9gvEIJlwR1E0B/PF/?=
+ =?us-ascii?Q?a8ZsF9+yRuO8hqZzoNhwOtN36+4+WBEg7AHpg0MSuRJn5PO4ioWEvT6uPXwZ?=
+ =?us-ascii?Q?8fMGy7qrdhQHArdTF/i8a9xPmJT7yt8Mk92rgwA+9dBZMygq6GNQjfRdx8Es?=
+ =?us-ascii?Q?aIVwoCXZgAnEZ8McuuqFjKUmDux1VsTEGX5LFl+hrpP2PuMCIKyHFN8AjApi?=
+ =?us-ascii?Q?NQ3HyWvB0Zl76DBzsFhQOhBxyi91C3mhMc7pl7ESIbUMphJjQwCFYziCSx3U?=
+ =?us-ascii?Q?2NBJrWl7UFZAyZzTMYih8ox00KlHLq8CbrAF+P0EMnL0fKXhwTYEGO0ezQL3?=
+ =?us-ascii?Q?NJ3ynqhWegsgUTg119q1wDXR3YB9K6YaNjD/RavUnJYuGHt0XpriyXrgcvnp?=
+ =?us-ascii?Q?H1utjwN3bNNwspz0I4OtzM2KC+h5pVhZm7M78MH1dcihi8oRpziccf50F0s8?=
+ =?us-ascii?Q?ayh8Ds6zByN9/2fBt9k0DFwWVGkz5YYo5DNqCXVYTOv6zF//mMDMadyiTp1w?=
+ =?us-ascii?Q?Xz/hH7VHy4cPhRm4Snk7VcPpjkxthH3zkiyIWVHlAuXcBrWmF0jbriSpTr19?=
+ =?us-ascii?Q?QlDgrhb13xlfiYkJl9+YRMy3mqvM7QSyCywj7WTHoUf2ULolxUviS8TNX+/I?=
+ =?us-ascii?Q?QFTCJ/00IkJ2Y1GYOtKtHXHNIAWxrRpVfw9eUILGEDUMBa0vo30MscO4Gmb2?=
+ =?us-ascii?Q?x/cj1kBd6Z1pxbCr+13BZPPk+QI6aWWhN3TuMXNgVdO1tkCK5sJuqZKZRpXV?=
+ =?us-ascii?Q?RzQWeXRR07r1kzWTIL+UCeqDUod5TZSfyERnC7+6RlDfZAJUsP/23amWNIMZ?=
+ =?us-ascii?Q?JFIA6vAErr6mA9SgrJXUlYWnYqyscjbKlJuRhEB0u9ElF1G/H91he1DsEJ90?=
+ =?us-ascii?Q?r6QWjo/G/phJjOGjOo4IQ5oIEJ8n3HCTH6eg713VConJfOdTiDfG4lQlBuos?=
+ =?us-ascii?Q?Ze8OTHwRJn3isYv6Jc0jrZ4VDJIgH983lSn+aYIRVIqXFGPsFdhmRUVjHQKm?=
+ =?us-ascii?Q?7ELXppB4Fgst1WelCff/5rBOj1H9fv8ZJ36VubzNu9+bzZwG78Dh0iKgbYNE?=
+ =?us-ascii?Q?yyO87k6rbBpjKta/vHvaHudtzomh9eFzKLQNKnVseJ59tfseOcAtYrqGvYbR?=
+ =?us-ascii?Q?f55Yf01ybPEL71HqLKf2gjjlMGA7Vy3HG7Wfagw2psasGN78/quK2ULyecev?=
+ =?us-ascii?Q?Vt8jVsCpqOlxCdfUKYIJY9CYa09ygRH45YyHb7OyU8I3tuiHXEpOt+N6DoKK?=
+ =?us-ascii?Q?z5JebulMg9X4829w92+3mdsfeAnLsE+S2z2OqtFWsxoECtoyPXyTghm6jCoD?=
+ =?us-ascii?Q?QIsuzRZ8ys5P6zPfkX9fBR8e1QmljM6p8XCNwM+fTXOVzqT01yMbUnhvCBBr?=
+ =?us-ascii?Q?xQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 628dccaf-2b1c-4138-fccb-08db684ff3c6
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2023 18:37:10.3908
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2023 18:41:20.6127
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1vVQLdwevSZeEHBNAdvuTt4hWufZI5Kc9o8QEvzps0utN8S+K80enukt6b7rgLy8uUv29TJCGZSjptpNEAlezRydnVvZEPwQ0U1/LtYreiA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5439
+X-MS-Exchange-CrossTenant-UserPrincipalName: Kf1WIM7PZVFFJyU6gYV3VurCbtTi7HxyyVGdLYH2L88hPsx+I1q9RGe08X+S0+385qrVIZiHKkycf00RmF2TdI4aDc2R5paZnCDk73PYJnM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7254
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Yasunori Gotou (Fujitsu) wrote:
-> 
-> > > Ah, sorry... My description of question was not good.
-> > > I understand that PCIe hotremove is not suitable for trigger of CXL memory.
-> > >
-> > > What I would like to ask is "Are there any agent or daemon which gets
-> > > a hotremove request from outside of server and executes offline and
-> > > cxl disable region without users operation?"
-> > > I suppose such memory pool manager (or others) would like to ask the
-> > > agent to execute such operation.
-> > > (Probably, the agent need to get the request by REST API.)
+Jonathan Cameron wrote:
+> On Wed, 7 Jun 2023 18:44:36 +0000
+> Vikram Sethi <vsethi@nvidia.com> wrote:
+[..]
+> > > So flush before to make clean (or invalid but then potentially
+> > > prefetched so clean) - tear down the HDM decoders and flush again /
+> > > invalidate so nothing stale hanging around (or do it before
+> > > bringing something new up at that Host PA). Eat or log any errors
+> > > and don't worry about it. 
 > > 
-> > No, there's no coordination between the kernel and userspace when the
-> > attention button is pressed. So any coordinated removal must be handled
-> > before the removal is attempted. I think it would be useful to have a mode of
-> > operation where pressing the attention button just notifies userspace and it
-> > handles the coordinated shutdown of the device.
-> > 
-> > If the question is having a management API to trigger removal I am not aware of
-> > any work in this space.
+> > I'm OK with this approach. When the cache flush is done at the time
+> > of the decoder tear down, there mustn't be any page table mappings to
+> > the decode HPA ranges (and if any ISA wanted to do an in kernel flush
+> > vs FW call, and needed a PTE mapping for the flush, that should be
+> > done with a non cacheable mapping).
 > 
-> Hmmmm, my question is NOT about attention button now. 
-> (I noticed that my quote of previous mail may be not good. Sorry).
-> I would like to confirm what component/method is still necessary for memory pool.
-> 
-> I imagine that there is(will be) a total memory pool manager which manages
-> a lot of Linux systems on each servers which have CXL memory.
-> And I think that an agent/daemon will be necessary in each Linux system to hotplug operation
-> like offline/online memory blocks, and/or requesting configuration of Dynamic Capacity Device 
-> to a Fabric Manager.
-> I guess such agent/daemon is not created yet for memory pool feature.
-> 
-> Here is my current understanding of an example of steps for memory pool. 
-> This does not include attention button, and use DCD.
-> 
-> 1) The pool manager will request hot remove to a daemon in a Linux system by REST API, ssl, or somekind of
->    network interface.
-> 2) Then the daemon will execute memory offline some memory blocks.
-> 3) It will correct offlined memory blocks until requested amount, and request 
->   configuration of DCD to Fabric Manager.
-> 4) Fabric Manager will configure Dynamic Capacity Device.
-> 5) The memory pool manager will detect finish of its configuration somehow, and request hot add to a daemon in
->   another Linux system.
-> 6) The daemon will request configuration of DCD to FM
-> 7) The daemon will detect new area somehow and online blocks for them.
-> 
-> If I still misunderstand something, please let me know.
+> FW magic so we don't have to care :)
 
-Yes, I agree that a daemon like that is needed, I am not aware of any
-current work in this space.
-
-However, I wonder if there is existing virtio-mem-like management
-infrastructure that could be repurposed for coordinating host-mem
-dynamic memory adjustment.  In other words coordinating a shared pool of
-memory across multiple kernel instances is a problem that has been
-solved before, CXL just makes it so that the coordination is across
-physical hosts rather than virtual.
+Hopefully a pre-HDM-teardown flush for draining writebacks and
+pre-HDM-setup-flush for clearing out clean lines brought in by
+speculation is sufficient. My worry with "FW magic" is that when it
+breaks the phone rings for kernel help.
