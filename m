@@ -2,108 +2,183 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB803C7EE25
-	for <linux-cxl@archiver.kernel.org>; Fri,  9 Jun 2023 11:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8C4C7EE25
+	for <linux-cxl@archiver.kernel.org>; Fri,  9 Jun 2023 11:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239186AbjFILJL convert rfc822-to-8bit (ORCPT
+        id S238931AbjFILUo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 9 Jun 2023 07:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54790 "EHLO
+        Fri, 9 Jun 2023 07:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238911AbjFILJA (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Jun 2023 07:09:00 -0400
+        with ESMTP id S239015AbjFILUl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Jun 2023 07:20:41 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103102113;
-        Fri,  9 Jun 2023 04:08:56 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QcyvV56M1z6GDPW;
-        Fri,  9 Jun 2023 19:06:46 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF0C211C
+        for <linux-cxl@vger.kernel.org>; Fri,  9 Jun 2023 04:20:38 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qcz8j2wMKz6J7vv;
+        Fri,  9 Jun 2023 19:18:13 +0800 (CST)
 Received: from localhost (10.126.170.42) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 9 Jun
- 2023 12:08:53 +0100
-Date:   Fri, 9 Jun 2023 12:08:52 +0100
+ 2023 12:20:34 +0100
+Date:   Fri, 9 Jun 2023 12:20:31 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weight, Russell H" <russell.h.weight@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>
-Subject: Re: [PATCH v2 1/4] cxl: add a firmware update mechanism using the
- sysfs firmware loader
-Message-ID: <20230609120852.00003c6c@Huawei.com>
-In-Reply-To: <298ed811de7148da70609ac2c6ef81f025690620.camel@intel.com>
-References: <20230602-vv-fw_update-v2-0-e9e5cd5adb44@intel.com>
-        <20230602-vv-fw_update-v2-1-e9e5cd5adb44@intel.com>
-        <20230608154905.00007551@Huawei.com>
-        <6666972e336a6749f24ce3aab7dddad63a796974.camel@intel.com>
-        <298ed811de7148da70609ac2c6ef81f025690620.camel@intel.com>
+To:     Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "<\"qemu-devel@nongnu.org\"" <qemu-devel@nongnu.org>
+Subject: Re: [EXT] Re: Concept of LD-ID in QEMU
+Message-ID: <20230609122031.00004bb8@Huawei.com>
+In-Reply-To: <DM6PR18MB2844E5BFADF8599A9393358AAF50A@DM6PR18MB2844.namprd18.prod.outlook.com>
+References: <20230607221651.2454764-1-terry.bowman@amd.com>
+        <20230607221651.2454764-15-terry.bowman@amd.com>
+        <DM6PR18MB2844C099FB0671E864AA953DAF53A@DM6PR18MB2844.namprd18.prod.outlook.com>
+        <20230608113153.000033ef@Huawei.com>
+        <20230608113631.00007a53@Huawei.com>
+        <DM6PR18MB2844E5BFADF8599A9393358AAF50A@DM6PR18MB2844.namprd18.prod.outlook.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.126.170.42]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 8 Jun 2023 20:26:43 +0000
-"Verma, Vishal L" <vishal.l.verma@intel.com> wrote:
+On Thu, 8 Jun 2023 23:38:34 +0000
+Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com> wrote:
 
-> On Thu, 2023-06-08 at 20:15 +0000, Verma, Vishal L wrote:
-> >   
-> > > > +
-> > > > +       fwl = firmware_upload_register(THIS_MODULE, &cxlmd->dev,
-> > > > +                                      dev_name(&cxlmd->dev),
-> > > > +                                      &cxl_memdev_fw_ops, cxlds);
-> > > > +       if (IS_ERR(fwl)) {
-> > > > +               dev_err(&cxlmd->dev, "Failed to register firmware loader\n");
-> > > > +               return PTR_ERR(fwl);  
-> > > 
-> > > It's called from probe only so could use dev_err_probe() for slight
-> > > simplification.  
-> > 
-> > From what I can tell, this ends up looking like:
-> > 
-> >         fwl = firmware_upload_register(THIS_MODULE, dev, dev_name(dev),
-> >                                        &cxl_memdev_fw_ops, cxlds);
-> >         rc = dev_err_probe(dev, PTR_ERR(fwl),
-> >                            "Failed to register firmware loader\n");
-> >         if (rc)
-> >                 return rc;
-> > 
-> > Is that what you meant? Happy to make the change if so.
-> > 
-> >   
-> Actually I can't drop the IS_ERR() check - so unless I'm missing
-> something, this doesn't look like much of a simplification:
+> Hi,
 > 
-> 
-> 	if (IS_ERR(fwl)) {
-> 		rc = dev_err_probe(dev, PTR_ERR(fwl),
-> 				   "Failed to register firmware loader\n");
-> 		if (rc)
-> 			return rc;
-> 	}
-> 
+> Thinking a bit more, LD in CXL are PCIe endpoint functions. Therefore 1-1 mapping of cxl-i2c device per PCIe device is sufficient, and we use function number in BDF as the LD-ID. Does it makes sense ?
 
-Ah. I replied to previous. It's simpler than that as you know rc != 0 as
-it's IS_ERR(fwl)
+LDs are PCIe endpoint functions (always function 0) as seen from the Virtual
+Heirarchies (as they end up under a particular vPBB - which look like a
+downstream port of a switch to the host) but they aren't from a more general
+topology point of view of actual fabric topology and when we are tunneling we
+address them via physical port, not virtual port I think (not read that bit
+of the spec for a while). See figure 7-23 in CXL 3.0
 
-dev_err_probe() does two helpful things over dev_err()
-1. Handles stashing the debug messages for the deferred probe cases (not
-   relevant here but harmless)
-2. Returns the variable you pass in as second argument to allow
-   return dev_err_probe()
+Outer tunneling command targets a port number (unwrapped at the switch),
+inner one targets the LD - unwrapped at the MLD and sent to appropriate LD
+including FM owned LD (if I understand this stack directly).
 
+Also no relationship between BDF and LD-ID so don't do that as the maximum
+ID is only 16 which would rather limit your PCI toplogies if that's the BDF as
+well.
+
+For now just do what you originally said and add an ID (starting from 0).
+We can probably do that automatically once more infrastructure is in place.
 
 Jonathan
+
+
+> 
+> From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Sent: Thursday, June 8, 2023 3:36 AM
+> To: Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
+> Cc: linux-cxl@vger.kernel.org <linux-cxl@vger.kernel.org>; <"qemu-devel@nongnu.org" <qemu-devel@nongnu.org>
+> Subject: [EXT] Re: Concept of LD-ID in QEMU 
+>  
+> External Email
+> 
+> ----------------------------------------------------------------------
+> 
+> Shesha,
+> 
+> You've sent an email with the 'In-reply-to' set to one of Terry's patches.
+> Please check why that happened and make sure you don't do that in future as
+> it hides your unrelated thread in email clients and the archives!
+> 
+> See
+> https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dcxl_20230607221651.2454764-2D1-2Dterry.bowman-40amd.com_T_-23t&d=DwIFAw&c=nKjWec2b6R0mOyPaz7xtfQ&r=Zta64bwn4nurTRpD4LY2OGr8KklkMRPn7Z_Qy0o4unU&m=ZMaAF9tkNCKfk8gYXMiPERZeIhavaQ7MdKtqCbShRF6w5ISrgHqAl6XDOONYbprZ&s=ERVX40JlAgnvRvPLm8sYZalsYDbpUU7YAqI0Ol0faPI&e=  
+> for example
+> 
+> ss - Apologies. Will be careful.
+> 
+> Jonathan
+> 
+> On Thu, 8 Jun 2023 11:31:53 +0100
+> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> 
+> > On Wed, 7 Jun 2023 23:01:11 +0000
+> > Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com> wrote:
+> >   
+> > > Hi,
+> > > For DCD sideband there needs to be LD-ID. Is the following approach acceptable?    
+> > 
+> > QEMU question so +CC qemu-devel
+> >   
+> > > 
+> > >  -device cxl-type3,bus=swport0,volatile-memdev=vmem0,dc-memdev=vmem1,id=cxl-vmem0,num-dc-regions=2,ldid=0 \
+> > >  -device cxl-type3,bus=swport0,volatile-memdev=vmem1,dc-memdev=vmem2,id=cxl-vmem1,num-dc-regions=2,ldid=1 \    
+> > 
+> > Those will be PCI functions at this level so you can't do this until we have more advanced switch support
+> > (it has to know about multiple VHs - right now we only support fixed config switches).  You could connect them
+> > to different switch ports - effectively that will be what it looks like when we do emulate a configurable switch.
+> >   
+> > >  -device i2c_mctp_cxl,bus=aspeed.i2c.bus.0,address=24,target=cxl-vmem0,cxl-vmem1")
+> > > 
+> > > With this configuration, the same i2c device is handing both LDs and in FMAPI commands we use the LDID specified above.    
+> > 
+> > This effectively becomes a partial implementation of either an MLD or an MH-SLD
+> > To manage the actual memory access, those will almost certainly need a bunch of other shared
+> > infrastructure.  So I'd ultimately expect the i2c_mctp_cxl device to target whatever
+> > device represents that shared infrastructure - it might be a separate device or a 'lead' type 3 device.
+> > 
+> > So I'm not sure how this will fit together longer term.  We need same infrastructure
+> > to work for a mailbox CCI on a MH-SLD/MLD as well and in that case there isn't a separate
+> > device to which we can provide multiple targets as you've done in your proposal here.
+> > 
+> > So I think we need to work out how to handle all of (I've probably forgotten something)
+> > X marks done or in progress.
+> > 
+> > X 1) i2c_mctp_cxl to an SLD (no PCI Mailbox definition for this one)
+> >   2) i2c_mctp_cxl directly to an MLD (your case)
+> > X 3) i2c_mctp_cxl to a fixed config switch (single fixed VH no MLD capable ports)
+> > X 4) PCI mailbox via switch CCI device that fixed config switch (no MLD capable ports)
+> >        Even with this simple design some fun things you can do.
+> >   5) i2c_mctp_cxl to a configurable switch (probably a separate as yet to be defined management interface - that messes with hotplug)
+> >   6) PCI mailbox via switch CCI to configurable switch (again to defined management interface).
+> >   7) i2c_mctp_cxl to an MH-SLD - probably to which ever device also has support for
+> >      tunneling to the FM owned LD via the PCI mailbox.
+> > X 8) PCI mailbox on MH-SLD tunneling to the FM owned LD.
+> >   9) i2c_mctp_cxl to an MH-MLD - similar to above - this one isn't that much more complex than MH-SLD case.
+> > X 10) PCI mailbox to MH-MLD - similar to above.
+> >   11) Tunneling via the switch CCI (then over PCI-VDM - though that detail isn't visible in QEMU) to an SLD
+> >   12) Tunneling via the switch CCI (then PCI-VDM) to an MH-SLD and on to he FM owned LD.
+> >   13) Tunneling via the switch CCI (then over PCI-VDM) to an MLD / MH-MLD
+> >  
+> > Current i2c_mctp_cxl covers 1 and 3
+> > I'm part way through the tunnelling support for (8 and 100) - need to revisit and wire up the switch CCI PoC
+> > properly which will give us 4.
+> > 
+> > 2 needs MLD support in general which we could maybe make work with a static binding in a switch but that
+> >   would be odd - so we probably need to emulate a configurable switch for that
+> > 5,6 need configurable switch
+> > 7 needs same as 2 plus tunneling part similar to 4
+> > 9 again probably configurable switch for the MLD part to make sense
+> > 11 is fairly straight forward - but not done yet.
+> > 12 also not too bad, but needs the MH-SLD part to be fleshed out (some work on going )
+> > 13 needs pretty much everything defined.
+> > 
+> > Trying to get the command line interface and device model right until we have PoC code
+> > for a few more cases is going to be at most a draft of what it might look like.
+> > 
+> > So in short, lots to do.  For now feel free to hack whatever you need in to be able
+> > to test the FM-API side of things, we can move that towards a clean command line definition
+> > once we have one figured out!
+> > 
+> > Jonathan
+> > 
+> >   
+> > > 
+> > > Thanks,
+> > > Shesha.    
+> > 
+> >   
+
