@@ -2,342 +2,199 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA005C7EE23
-	for <linux-cxl@archiver.kernel.org>; Mon, 12 Jun 2023 08:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5597C7EE2E
+	for <linux-cxl@archiver.kernel.org>; Mon, 12 Jun 2023 14:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231254AbjFLIwD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 12 Jun 2023 04:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
+        id S234848AbjFLOmP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 12 Jun 2023 10:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233555AbjFLIwC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 12 Jun 2023 04:52:02 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FB3109;
-        Mon, 12 Jun 2023 01:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686559920; x=1718095920;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=3rej1/z6cKyA2TVrH+5R9/jUoDY9kF6jAMzOdlkY4Xk=;
-  b=c9bmlI9CNm4a435tDmrGYz893HRNiiaOWMg+203Ci2za3lJzrVwTd3JI
-   1CTLOXIln8/w3WjfkGg8DX3uBvqURedYPcKF3HXP8+XHLnoh+2HC9pTpP
-   w1YYIF6WTXRyJ5uIu6iFPPv0bGSISqUX5EvlqUqfH6AyqArN/IPoegEpA
-   r2ohnAi0Zc7xyOZ8J0sEVq+BTg0F3uX2bC4g77F35IdaiqMX58KW7Cvkx
-   Hn8PryjVaTQlChoCGw/JSkRvxg9LJCfwaI+a7JIWNxjXjmzyABBMeHBrd
-   1YjQmW+oGWKrnWfwbX3a6vqTY04ELwVEn7zr/w/Vsja+K6NCWFJ2GZOm5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="347613316"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="347613316"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2023 23:56:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="835365324"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="835365324"
-Received: from apeer-mobl.amr.corp.intel.com (HELO [192.168.1.200]) ([10.251.3.238])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2023 23:56:22 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Mon, 12 Jun 2023 00:55:59 -0600
-Subject: [PATCH v3 4/4] tools/testing/cxl: add firmware update emulation to
- CXL memdevs
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S234576AbjFLOmO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 12 Jun 2023 10:42:14 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AAD9E;
+        Mon, 12 Jun 2023 07:41:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MQ3LJkMT8wFlR6C+m0mo6g2OsO+VtE4awHsJc23AF3cQgYy+BuSapHs5d6g0mqar4MUikWoTce7VAYLcJs4yhdhnJQcW4fqZ+Xa/3GVxN/iYvkJ5VH/HE/DJ74cJiZ0NXoVyu54fD1hj8EVo+7iaXG2kBIW4JlyU7LJVoIkYhz5PDCeeRcfwQuOUHzfIZN+F6GlA2zA8psHPtJYFxS7NNsiHPtntRGAHbM6WihCtfWo6lly1LUGkVK1WRYCwwi3stgSwClR/ZXxXpQxDZDtpW/O0ffM+wU7xosJlI9dg75NiErGMNKGygTMYKNocOE3UVBhx4Rf6dXWYQ5/NO5LUBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1RXzSGx9ZGWZVr7sLBR9whMNVX8Kj2bIeOL+cO549h0=;
+ b=ikcsMWGNoM+g5ph56tLqdchsbRCJKy+TGwnB2HzPs+cf74kfCn/l0Dq15zk7WrhXITBHgUwQ7qRVJBsiBWnJZGlCZkP7ZUeUpBOrbJ84LtDmSoUfD5ExKEIQnGyZpLYZrpjdmohzT/5LGDGS6WQPbJPzhSTfoA1ImlCGO5rG7dhrgJwjtBxjX0lBx36T52LCU+OB8GyEANmMXxZW5RiWX2nlXHd9173QMLn34fI4QUJI3MFjlIm7ZeqhUXntBYPZD7jTNgEu9d2q1SkHYuyEB8XHOSrTkxNYrbKZ+bx6f9LmQVRZ2tIare7RFzYrwWEqnnPAMntCi5+zP55eJnMVMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1RXzSGx9ZGWZVr7sLBR9whMNVX8Kj2bIeOL+cO549h0=;
+ b=v1dNQ6t8uV2l48G1HvD+/jQWJypZNyrxQGVwakX3lgB672mAltBuQ+1Yx2gWj3eX+GoFB7sBIurTIPWXyfXPwUvWGjtQivW7lmZPet8mCd4kRwxeGC1l5nOP4GSIyWk6XjGlnOkzlEBScyFroipafM1IYBV5TPd9CL2OvcaBbVA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ CH0PR12MB5027.namprd12.prod.outlook.com (2603:10b6:610:e2::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6455.46; Mon, 12 Jun 2023 14:41:49 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::f7fc:407f:3bae:bd96]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::f7fc:407f:3bae:bd96%3]) with mapi id 15.20.6455.037; Mon, 12 Jun 2023
+ 14:41:49 +0000
+Message-ID: <a83b46e2-62db-65bc-204a-7f67c6ee556e@amd.com>
+Date:   Mon, 12 Jun 2023 09:41:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v5 19/26] cxl/pci: Add RCH downstream port AER register
+ discovery
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>,
+        alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dave.jiang@intel.com,
+        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org
+Cc:     rrichter@amd.com, linux-kernel@vger.kernel.org, bhelgaas@google.com
+References: <20230607221651.2454764-1-terry.bowman@amd.com>
+ <20230607221651.2454764-20-terry.bowman@amd.com>
+ <6483e9801c0ae_e067a29432@dwillia2-xfh.jf.intel.com.notmuch>
+From:   Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <6483e9801c0ae_e067a29432@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230602-vv-fw_update-v3-4-869f82069c95@intel.com>
-References: <20230602-vv-fw_update-v3-0-869f82069c95@intel.com>
-In-Reply-To: <20230602-vv-fw_update-v3-0-869f82069c95@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Mailer: b4 0.13-dev-02a79
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7763;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=3rej1/z6cKyA2TVrH+5R9/jUoDY9kF6jAMzOdlkY4Xk=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDCltB6dkRbo8Mb8g/KPvSOgVh+nTu4tqxRd7fz7mMG9B6
- Voho+eTOkpZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRqreMDM9rk15GMWXtnLta
- dWpoy+/uNwJFRw5rXkg8k1V5mPXpbQeGfwq9t84aHngs/fnwc7ZLXJO1tjN0lFnN2dW/z+CWHK+
- mFQcA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+X-ClientProxiedBy: DS0PR17CA0010.namprd17.prod.outlook.com
+ (2603:10b6:8:191::26) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CH0PR12MB5027:EE_
+X-MS-Office365-Filtering-Correlation-Id: 759eab8a-73fb-4539-48e3-08db6b53279e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0G1RQijC0/SmT7BUHQcCK074WcPDtDxu2Y+Xl+K0ulDNaFj1/mXsQCjJ8MgJF8Nk4wFQVwAmqJkHt8PDKk0R9egnC/KAOWlPRUu9cP80oqt+0mMfj8rjxkiZhtIpYHbycmovRAYq+02nn7nR3zLPg0v2pmMaSCguRwD44O/lBd2pKJdl2f6SiuR4OQ57SuiGVsqyeuPOFnfbBAHOxEvkRuk/l0TVz6Eg0fcWGEzPoedO0G/hqSmmZGWut36YMrSZNDEGd8AXtj+iQJ1QLjppYG9+Dq1pHkdFZ3ioz4Dwu/AYRLQzEE12LrtwJDj92qJMZ8E/HDyevoHR9ihl9U+/BQQGtnq8vKyn2E3+4zXIGfLWPcnj49hmGFm1IuWNqbx3FPAvHaBgLQc+7QoVIrfPOszWQGVGIAoYCVo8ta58ylvbrjpmG0Q+pZMoIBnxaxB83dt19cEwbbCAC4XwL6AU0Bc1bcdwns9KbCJU5znt56FlOiBRq0ERhXgKGdoVuNzZ1rCl2CPWCPwGniUeibJLTg+0F52fPzpV6wjgeFYiN1SaeauNajmmovR4lUxqLZDboAwGSp4dJHgBcVHQpyRvbJobAXbk/PS/Xd/NsCqJL9qM57KB4A08gkMOLYTdyzG8qonjaY8MHjpOTxYYs+M1QQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(451199021)(6486002)(36756003)(83380400001)(2616005)(38100700002)(31696002)(86362001)(6512007)(53546011)(6506007)(26005)(186003)(2906002)(5660300002)(8676002)(7416002)(8936002)(316002)(41300700001)(31686004)(4326008)(66946007)(66556008)(66476007)(478600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QVFzNDdhVnc5Q1pvTnV0ZFV4Z2dKbUVVU3V3NkRvdVBVWUdiL1BJbTFlK1Zk?=
+ =?utf-8?B?UDNlSklXTE9iUUdLRXVKanhzNmZKSDVkcjVZcHlzaWxFUzBIM1g4OEZ6RGF1?=
+ =?utf-8?B?WnV1VXlOT0NtK0xKVWpQS3VJWkxXUUxzNUkyUVYyNHA5WXB3SFc0OGZSRHhG?=
+ =?utf-8?B?aDRPZTdKZ1hLd2FYWlpwRm1iMEJEK01hT2ZCWVhib01BejJlSHJxc3RnTkNC?=
+ =?utf-8?B?d0NuQ0s0ejBjZlBtTGxrWVFKZUtPcDJyUnFtUVV5OGRkb3hXY0tDUkNPYUJ5?=
+ =?utf-8?B?Z0VqeXpjdUQwbmtMaFFlL09kVUtpc2QrWTZGZHdHOGNjWGhodVo3S01FYUIx?=
+ =?utf-8?B?cnJPM0JxMmdGb2hPSUVjajRVZk1SNGVqalhlYWJ5bHRBTXV4TGV5ZFJmallQ?=
+ =?utf-8?B?NVhKQkhlck12V3lTcEQvb05OMTlMYmVyWFkyanFUdysvWmxmTmg1VkJVK3Nk?=
+ =?utf-8?B?Um1ZYXgwS3h1ZVBsY1pwVjZ0eHZrUytUVmM5azFGaVlTWnlNMkllNW5uV1Fj?=
+ =?utf-8?B?V3FmUms2c1llYkhKQlpBT3lIS1ltYnFzbVJlWU1yekZJVDU0WkFwZ1UvQUNm?=
+ =?utf-8?B?UE5zMmt1N0NMdUxuY3B2ZUdORmNnZ3Z1KytabEhtRFNEVTdEc05FQXBiRjFC?=
+ =?utf-8?B?TGJ1WVFvQmYvZ2tHNm93dkM2aEVCbEhqY3p4QzR1M3V1TWFvVnRTVjZvazFn?=
+ =?utf-8?B?ekp6bHpXTlpGM1ZUaklEZTZtZGlzclp3MVRkTlBoU014b1cyY3BGVkdhVXlS?=
+ =?utf-8?B?NkRuOXZDQis0aVhUWjEwQ1gvUExwbk94YVZSbzRGODNzYkFyWXNwZmgySzhn?=
+ =?utf-8?B?ZW83aDJPQVZpalU1dHE2M0pBZEQxV1JRYWtIcGZwYUpDTDZqbDd6cmhmWUZK?=
+ =?utf-8?B?R21FOWF1YjU3RnpaM1N6UHV2MVNCV2tKSjNGVVlkMU14U2xNdTYzOHBWL3BM?=
+ =?utf-8?B?YlhUelpJVE8vekZ1SWlkUnEvV01iZFVLY1lpbTBDeHIzZk9UT3psV01icEh6?=
+ =?utf-8?B?SFFaZ1YvcVFKdVp6UERtNzVYVFNhSlc3MUVFazVpaDFOQXA1aHJNK1lnNGRQ?=
+ =?utf-8?B?MDhoZFNucUpyVk1peWFzUHZFdjVBWXBhYTU1Q24xNDROV1dEWjNlanlaY2Rn?=
+ =?utf-8?B?Z01wdXBLZEVFVE1sNGtBSDA2SEdvQ0VqTWtsWVFVVG5abVpuWWlhY0F2eTZQ?=
+ =?utf-8?B?emdNQjBWNWlRU2V5VnRJbzN0UVQ2L211enlDcnBYajV5UE54b3RKUTJMNi9N?=
+ =?utf-8?B?UGs3Qjh1VG5rVTgybnlGc0V5eHN5SXcvdnAxN1FjazVTeFp0TE54VW1oaEI1?=
+ =?utf-8?B?YUd0Ukt4bXZIa0d1TEtGWUFFOUEvM3VSditKWG55dDQ4MGFjQ1k4N0g4SWpK?=
+ =?utf-8?B?aUNsa1hPKzFHODJZOWV4TCtoYnBSUGZkTzEwM3BINWNqUjVaOEl5cE1wWml1?=
+ =?utf-8?B?SndjdzNId2ZpcnZaQ2Rndm9nWmhWekgydm5qOEx5RWN6Y0FNRDZuU0xXYzdw?=
+ =?utf-8?B?VE9wd3lWNllWVUFjZGdXTmdJaFROSTBteVBKTVBlWTNQTlgrTTd4MXl0c1Y4?=
+ =?utf-8?B?V0w1MDNFWkV2UU5xdDVMWlJjN3lRWG0zWFFMeng5WEpZYm1oNE50L0R6UFZX?=
+ =?utf-8?B?dllPUm5vdXJzdmFJNnFMRHpsK2NWR3lEaC9kQWNWMnoxQkRVNkYwbjJrVTRu?=
+ =?utf-8?B?M0k0VFhIVUVaS2dLQ3FacU1NYnlrdG9YK01adVhhaUhuekl2QU1sUGhZZkVS?=
+ =?utf-8?B?Nm5xQnpvNWZTRTcxckFBemdmRjgwd1JBSEFmMUk4RXJNVUtQVXRWWll6SUd0?=
+ =?utf-8?B?TE1aMFJjcThnaGpITlA0cHYvZXZGNjVPRjB3bVlMOEo3UVNadHFsaHJKS2RK?=
+ =?utf-8?B?cDdkaUh5ck5DVzQxMjJEc3o0b3lVNWUvcWcrTEtUb0x2NWlVaVhRR1R0QUN1?=
+ =?utf-8?B?V1NZbDFuM2pMa1Z0ZytVL2VuaTltQ3NveWVtN1ZlNGUrdGFKVjNvcmlKWUV5?=
+ =?utf-8?B?OENvK3o2MXRwRkpwcmpnZDlaOGJ3cVVDcHZyUFNSdUl2TkpSS0E1TVFVVmJT?=
+ =?utf-8?B?Z09lWjJvdGdwc2FHYVZFUGtnOUtlZHZUYmpOSXNROEpCeXgxa084cmNCdWZT?=
+ =?utf-8?Q?F9YNqQ0OWVoWbTqgLN988bwxO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 759eab8a-73fb-4539-48e3-08db6b53279e
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2023 14:41:49.5273
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +mb0DtU9RPd+cyKVC6lJ+qi0/w9AwqPDichUUuwgQWPePlVgSmMU7AaUUt7QBxuWqj4CrjH4pOXUICrGNBhVig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5027
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add emulation for the 'Get FW Info', 'Transfer FW', and 'Activate FW'
-CXL mailbox commands to the cxl_test emulated memdevs to enable
-end-to-end unit testing of a firmware update flow. For now, only
-advertise an 'offline activation' capability as that is all the CXL
-memdev driver currently implements.
+Hi Dan,
 
-Add some canned values for the serial number fields, and create a
-platform device sysfs knob to calculate the sha256sum of the firmware
-image that was received, so a unit test can compare it with the original
-file that was uploaded.
+I added a response inline below.
 
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Russ Weight <russell.h.weight@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ben Widawsky <bwidawsk@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- tools/testing/cxl/test/mem.c | 160 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 160 insertions(+)
+On 6/9/23 22:09, Dan Williams wrote:
+> Terry Bowman wrote:
+>> Restricted CXL host (RCH) downstream port AER information is not currently
+>> logged while in the error state. One problem preventing the error logging
+>> is the AER and RAS registers are not accessible. The CXL driver requires
+>> changes to find RCH downstream port AER and RAS registers for purpose of
+>> error logging.
+>>
+>> RCH downstream ports are not enumerated during a PCI bus scan and are
+>> instead discovered using system firmware, ACPI in this case.[1] The
+>> downstream port is implemented as a Root Complex Register Block (RCRB).
+>> The RCRB is a 4k memory block containing PCIe registers based on the PCIe
+>> root port.[2] The RCRB includes AER extended capability registers used for
+>> reporting errors. Note, the RCH's AER Capability is located in the RCRB
+>> memory space instead of PCI configuration space, thus its register access
+>> is different. Existing kernel PCIe AER functions can not be used to manage
+>> the downstream port AER capabilities and RAS registers because the port was
+>> not enumerated during PCI scan and the registers are not PCI config
+>> accessible.
+>>
+>> Discover RCH downstream port AER extended capability registers. Use MMIO
+>> accesses to search for extended AER capability in RCRB register space.
+>>
+>> [1] CXL 3.0 Spec, 9.11.2 - System Firmware View of CXL 1.1 Hierarchy
+>> [2] CXL 3.0 Spec, 8.2.1.1 - RCH Downstream Port RCRB
+>>
+>> Co-developed-by: Robert Richter <rrichter@amd.com>
+>> Signed-off-by: Robert Richter <rrichter@amd.com>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>>  drivers/cxl/core/regs.c | 51 +++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 51 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+>> index ba2b1763042c..dd6c3c898cff 100644
+>> --- a/drivers/cxl/core/regs.c
+>> +++ b/drivers/cxl/core/regs.c
+>> @@ -408,6 +408,54 @@ int cxl_setup_regs(struct cxl_register_map *map)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(cxl_setup_regs, CXL);
+>>  
+>> +static void __iomem *cxl_map_reg(struct device *dev, resource_size_t addr,
+>> +				resource_size_t length)
+>> +{
+>> +	struct resource *res;
+>> +
+>> +	if (WARN_ON_ONCE(addr == CXL_RESOURCE_NONE))
+>> +		return NULL;
+>> +
+>> +	res = request_mem_region(addr, length, dev_name(dev));
+>> +	if (!res)
+>> +		return NULL;
+>> +
+>> +	return ioremap(addr, length);
+>> +}
+>> +
+>> +static void cxl_unmap_reg(void __iomem *base, resource_size_t addr,
+>> +			 resource_size_t length)
+>> +{
+>> +	iounmap(base);
+>> +	release_mem_region(addr, length);
+>> +}
+> 
+> Why redo the {request,release}_mem_region() and ioremap() vs handling
+> this inside of the existing mapping of the RCRB in this function?
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 68668d8df1cd..1166f470e0c7 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -8,11 +8,14 @@
- #include <linux/sizes.h>
- #include <linux/bits.h>
- #include <asm/unaligned.h>
-+#include <crypto/sha2.h>
- #include <cxlmem.h>
- 
- #include "trace.h"
- 
- #define LSA_SIZE SZ_128K
-+#define FW_SIZE SZ_64M
-+#define FW_SLOTS 3
- #define DEV_SIZE SZ_2G
- #define EFFECT(x) (1U << x)
- 
-@@ -72,6 +75,20 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_CLEAR_POISON),
- 		.effect = cpu_to_le16(EFFECT(DATA_CHANGE_IMMEDIATE)),
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_FW_INFO),
-+		.effect = CXL_CMD_EFFECT_NONE,
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_TRANSFER_FW),
-+		.effect = cpu_to_le16(EFFECT(CONF_CHANGE_COLD_RESET) |
-+				      EFFECT(BACKGROUND_OP)),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_ACTIVATE_FW),
-+		.effect = cpu_to_le16(EFFECT(CONF_CHANGE_COLD_RESET) |
-+				      EFFECT(CONF_CHANGE_IMMEDIATE)),
-+	},
- };
- 
- /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-@@ -123,6 +140,10 @@ struct mock_event_store {
- 
- struct cxl_mockmem_data {
- 	void *lsa;
-+	void *fw;
-+	int fw_slot;
-+	int fw_staged;
-+	size_t fw_size;
- 	u32 security_state;
- 	u8 user_pass[NVDIMM_PASSPHRASE_LEN];
- 	u8 master_pass[NVDIMM_PASSPHRASE_LEN];
-@@ -1128,6 +1149,87 @@ static struct attribute *cxl_mock_mem_core_attrs[] = {
- };
- ATTRIBUTE_GROUPS(cxl_mock_mem_core);
- 
-+static int mock_fw_info(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	struct cxl_mbox_get_fw_info fw_info = {
-+		.num_slots = FW_SLOTS,
-+		.slot_info = (mdata->fw_slot & 0x7) |
-+			     ((mdata->fw_staged & 0x7) << 3),
-+		.activation_cap = 0,
-+	};
-+
-+	strcpy(fw_info.slot_1_revision, "cxl_test_fw_001");
-+	strcpy(fw_info.slot_2_revision, "cxl_test_fw_002");
-+	strcpy(fw_info.slot_3_revision, "cxl_test_fw_003");
-+	strcpy(fw_info.slot_4_revision, "");
-+
-+	if (cmd->size_out < sizeof(fw_info))
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, &fw_info, sizeof(fw_info));
-+	return 0;
-+}
-+
-+static int mock_transfer_fw(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_transfer_fw *transfer = cmd->payload_in;
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	void *fw = mdata->fw;
-+	size_t offset, length;
-+
-+	offset = le32_to_cpu(transfer->offset) * CXL_FW_TRANSFER_ALIGNMENT;
-+	length = cmd->size_in - sizeof(*transfer);
-+	if (offset + length > FW_SIZE)
-+		return -EINVAL;
-+
-+	switch (transfer->action) {
-+	case CXL_FW_TRANSFER_ACTION_FULL:
-+		if (offset != 0)
-+			return -EINVAL;
-+		fallthrough;
-+	case CXL_FW_TRANSFER_ACTION_END:
-+		if (transfer->slot == 0 || transfer->slot > FW_SLOTS)
-+			return -EINVAL;
-+		mdata->fw_size = offset + length;
-+		break;
-+	case CXL_FW_TRANSFER_ACTION_INITIATE:
-+	case CXL_FW_TRANSFER_ACTION_CONTINUE:
-+		break;
-+	case CXL_FW_TRANSFER_ACTION_ABORT:
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	memcpy(fw + offset, transfer->data, length);
-+	return 0;
-+}
-+
-+static int mock_activate_fw(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_activate_fw *activate = cmd->payload_in;
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+
-+	if (activate->slot == 0 || activate->slot > FW_SLOTS)
-+		return -EINVAL;
-+
-+	switch (activate->action) {
-+	case CXL_FW_ACTIVATE_ONLINE:
-+		mdata->fw_slot = activate->slot;
-+		mdata->fw_staged = 0;
-+		return 0;
-+	case CXL_FW_ACTIVATE_OFFLINE:
-+		mdata->fw_staged = activate->slot;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct device *dev = cxlds->dev;
-@@ -1194,6 +1296,15 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_CLEAR_POISON:
- 		rc = mock_clear_poison(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_GET_FW_INFO:
-+		rc = mock_fw_info(cxlds, cmd);
-+		break;
-+	case CXL_MBOX_OP_TRANSFER_FW:
-+		rc = mock_transfer_fw(cxlds, cmd);
-+		break;
-+	case CXL_MBOX_OP_ACTIVATE_FW:
-+		rc = mock_activate_fw(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -1209,6 +1320,11 @@ static void label_area_release(void *lsa)
- 	vfree(lsa);
- }
- 
-+static void fw_buf_release(void *buf)
-+{
-+	vfree(buf);
-+}
-+
- static bool is_rcd(struct platform_device *pdev)
- {
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
-@@ -1241,10 +1357,19 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	mdata->lsa = vmalloc(LSA_SIZE);
- 	if (!mdata->lsa)
- 		return -ENOMEM;
-+	mdata->fw = vmalloc(FW_SIZE);
-+	if (!mdata->fw)
-+		return -ENOMEM;
-+	mdata->fw_slot = 2;
-+
- 	rc = devm_add_action_or_reset(dev, label_area_release, mdata->lsa);
- 	if (rc)
- 		return rc;
- 
-+	rc = devm_add_action_or_reset(dev, fw_buf_release, mdata->fw);
-+	if (rc)
-+		return rc;
-+
- 	cxlds = cxl_dev_state_create(dev);
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
-@@ -1286,6 +1411,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
- 
-+	rc = cxl_memdev_setup_fw_upload(cxlds);
-+	if (rc)
-+		return rc;
-+
- 	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
- 
- 	return 0;
-@@ -1324,9 +1453,40 @@ static ssize_t security_lock_store(struct device *dev, struct device_attribute *
- 
- static DEVICE_ATTR_RW(security_lock);
- 
-+static ssize_t fw_buf_checksum_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
-+	u8 hash[SHA256_DIGEST_SIZE];
-+	unsigned char *hstr, *hptr;
-+	struct sha256_state sctx;
-+	ssize_t written = 0;
-+	int i;
-+
-+	sha256_init(&sctx);
-+	sha256_update(&sctx, mdata->fw, mdata->fw_size);
-+	sha256_final(&sctx, hash);
-+
-+	hstr = kzalloc((SHA256_DIGEST_SIZE * 2) + 1, GFP_KERNEL);
-+	if (!hstr)
-+		return -ENOMEM;
-+
-+	hptr = hstr;
-+	for (i = 0; i < SHA256_DIGEST_SIZE; i++)
-+		hptr += sprintf(hptr, "%02x", hash[i]);
-+
-+	written = sysfs_emit(buf, "%s\n", hstr);
-+
-+	kfree(hstr);
-+	return written;
-+}
-+
-+static DEVICE_ATTR_RO(fw_buf_checksum);
-+
- static struct attribute *cxl_mock_mem_attrs[] = {
- 	&dev_attr_security_lock.attr,
- 	&dev_attr_event_trigger.attr,
-+	&dev_attr_fw_buf_checksum.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(cxl_mock_mem);
+The intention was to follow the same pattern as existing {request,release} 
+functions but doesn't make much sense with only one user in this case. I'll 
+fold the {request,release} logic into cxl_rcrb_to_aer().
 
--- 
-2.40.1
-
+Regards,
+Terry
