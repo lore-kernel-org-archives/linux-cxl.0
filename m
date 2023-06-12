@@ -2,300 +2,157 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B44AC7EE2E
-	for <linux-cxl@archiver.kernel.org>; Sat, 10 Jun 2023 03:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E86FC7EE23
+	for <linux-cxl@archiver.kernel.org>; Mon, 12 Jun 2023 07:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230228AbjFJDXn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 9 Jun 2023 23:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
+        id S229784AbjFLHLe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 12 Jun 2023 03:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjFJDXn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 9 Jun 2023 23:23:43 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267001730;
-        Fri,  9 Jun 2023 20:23:40 -0700 (PDT)
+        with ESMTP id S229601AbjFLHLd (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 12 Jun 2023 03:11:33 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D351A1996;
+        Mon, 12 Jun 2023 00:06:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686367420; x=1717903420;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=TxkuYx/l8pHlSaM19HIPPX69tm7UAPdgmuR9HWa/+Ck=;
-  b=Fnud/mzLPlz3gxaBYM6xeizF5Nb8aAyKbESf0AZXhx4ZdvspTfT3Pshw
-   yQTqqHOtQ+drSS8t2+fju2ix/pXTaxWOXWuMv6qGWpg4BY3Z+9s94x1qd
-   2dPa1Rt51bThwfmR2aaZT/GsrkwrD4JzGr6i3dpZI9ZmfJP1iBftYmnIZ
-   tcqsrVa+wgdVFgAfidBKY66YweRqjgtDOockgYYVHnSTkf/lv55OVLKIJ
-   x1T0fqCS6RcMN3bToCxLU/XH2+690DL8DG34zPJL2hIGcaFIfoj/wAMjr
-   TwqrNP1X++qYo27RwIYO/97xY0jsRipZOC7e7ZhL10Y1CJpwykb/NmP1j
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="356618862"
-X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
-   d="scan'208";a="356618862"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 20:23:39 -0700
+  t=1686553592; x=1718089592;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=/buRSU7Qg/qz7BuEa/y0BICq087QvKa8t2CdljU2M5E=;
+  b=VT6FiP9kSdvAxkoZQeBI4BRizlz1cE8vy1OMLTVtYgdv3CVRbot6tzah
+   RBBHBILOSO+G9ztjBJ3FT4WBZJF+rO1vNyJs5sXvnEX6Rso5eibQPgrNH
+   gzioLN/A39s+RSKuWm94gnFA4C15Ruj7onGNxHOdWbQBne/nte/M6zLUj
+   BugDcTe+jfs0/DMBvil+9V5AKvxwaafQsPANnfY+AY8fs4+Nl2cIumaRE
+   P2ll96VjR+DPdjihmAtaFtrQG8zR83ZyKrs0/ncf4gNzp8kUxDisXj+eu
+   C+frJXw6Q+15D/JrFHmz+hJ0LKIOJTu2nxyJ+n/xb9JHpVGum4N9WtXC0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="347613299"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="347613299"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2023 23:56:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="957359215"
-X-IronPort-AV: E=Sophos;i="6.00,231,1681196400"; 
-   d="scan'208";a="957359215"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga006.fm.intel.com with ESMTP; 09 Jun 2023 20:23:39 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 9 Jun 2023 20:23:38 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Fri, 9 Jun 2023 20:23:38 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Fri, 9 Jun 2023 20:23:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oUi3Ydoxofl0YwTF/zdKN0d3PZRsMOI0V2i2uX/8+qI/elr/PFfRBhqyOG+kasAtgYjt9XAwxP+VRGeeTIeKPjQwnJikNLokPOggpxwKNF1irZ24ikORPCYQnSamXfpxTFEMUN3nUKyJzMvaFUhKJO1mAhc0z1/VMJGtYy6Xr1EBpizMopmpPRu16auOMjGBuPCdOCxB3JJicMenYWa42doSpTBacBzjN0AmG7ZJqUjwXMpcvBARtcV0oZ5wtlohGYPFPlnuGAXVX7CO+yM7Ndk/P9NCMQN9u3/Tf8k02mMDNmcz3qlGfy2yMAQ/zjcjdSRTmJ1nLvnWjRm9qmtfJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sYlcOkaulHYCvjFBdB2HzQImCCFrfPgVDdpeLwd6eWQ=;
- b=KxirzvxlE9j2bIob3gP/BVJDpK3xTvBWOJPGI3xcrplj/nri5/FSK7qtLtVJIY9OyDR9+9TVupdpE5tkIrQAxDIyXPzK9bixZvdOI5PylaMIE9/NbbWXlyF+bnT/flidd+YMKaia8iwuHKiRkr9tjCU+LtbZAws6rxrNi5v0EfMaUiaMTJGu8H+nA7bapz3pJJHBUrB7xkpt8Ih2KLjRthw4r9MxMuU8kepkkuxE08udI4ll8e1klQkh6BOnc+yIyOu7i58FJ3PqVr/fPRi7rab/No8BgKlIq7qvtpKyp1azXfPapflcxnedsA7t5Fid0IbU3ooWk+Mj8GlA3Ri9gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW4PR11MB6714.namprd11.prod.outlook.com (2603:10b6:303:20f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Sat, 10 Jun
- 2023 03:23:38 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6455.030; Sat, 10 Jun 2023
- 03:23:38 +0000
-Date:   Fri, 9 Jun 2023 20:23:33 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-CC:     <terry.bowman@amd.com>, <rrichter@amd.com>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: RE: [PATCH v5 22/26] cxl/pci: Map RCH downstream AER registers for
- logging protocol errors
-Message-ID: <6483ecb5a4526_e067a29490@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230607221651.2454764-1-terry.bowman@amd.com>
- <20230607221651.2454764-23-terry.bowman@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230607221651.2454764-23-terry.bowman@amd.com>
-X-ClientProxiedBy: SJ0PR05CA0164.namprd05.prod.outlook.com
- (2603:10b6:a03:339::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="835365312"
+X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
+   d="scan'208";a="835365312"
+Received: from apeer-mobl.amr.corp.intel.com (HELO [192.168.1.200]) ([10.251.3.238])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2023 23:56:20 -0700
+From:   Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v3 0/4] cxl: Add a firmware update mechanism and cxl_test
+ emulation
+Date:   Mon, 12 Jun 2023 00:55:55 -0600
+Message-Id: <20230602-vv-fw_update-v3-0-869f82069c95@intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW4PR11MB6714:EE_
-X-MS-Office365-Filtering-Correlation-Id: f165d3b3-7fa1-420d-ee13-08db696214ac
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0AgurMw6ZUSNJld6vgowPk+cH8lXfvbmDu4R+aWEwU8OvesDKg2FSBBeqbmN9ztiImgUsSrjSaaobo8CyIRIIhcPsAnRQQPCb4f3LurLU1G5RavRvpJMPw7yhkhe5cx+cT6frWfrAnR+9Qsm3osXbcvgWLSyfwRC9nk6Q09X/qzkPJ3WbQ+B+BGRjKf/R2Y6Kign5a+BOJpqlwM5aTY4i2QfxJIFrPV3mbPkp/jDpwhz7lcZUoz8v8D26CFiw/isyVCg01cSXpZ7KF8L5UVviVx36E2mYLWN/SRpJZR8IsqilVeGCs8YX8x74/72DtMfz6h/O6/cEbMi7hD6xTsL5d8g643QmoqsxGabz/kjibT95pMzQODsgvzMy8lxi9ZzGaE0q7aHJ24JQueNjnOsoTJP3fz8mVHQ+pW4AbWsEZ0cz0+r3fUzhgVBgcQIx2Ni5Ek2ZiNThbuN3lIB2Zb20P9svXEzrNcW0wSH+7hZuNlMKj3q+fP0ornCA89vhMPjmKcXVB50NE3mrSVxN8WPak5d1c909F0BQLRyj/WR2PxoNkGqs44HjpVeLRklf03g
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(396003)(136003)(39860400002)(366004)(451199021)(82960400001)(38100700002)(478600001)(83380400001)(66946007)(66476007)(4326008)(66556008)(86362001)(6666004)(6486002)(316002)(2906002)(26005)(6506007)(186003)(6512007)(9686003)(41300700001)(5660300002)(8676002)(8936002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?M2/ecA8abpBg/a8uOhy67s7w6heiGNgogLgoy2ebxSEien4nnU78+bjQDNV+?=
- =?us-ascii?Q?GDC/M7q/mYudO9BiiMrjFo+IxfkCsYxmfMAKQnyR6p/9zi19udAVXadYqEEH?=
- =?us-ascii?Q?IknRgTzfxM8ZQqCv8gupuZ4Muy4iAvUYKnHUcGMEtuoFvCNTh/DijfX2dvU1?=
- =?us-ascii?Q?DvjtMKhgW7Ifr9qWfnep6lCLTozVod4w/kul+xI1LMRAhTZDS6P7ydEYQPHR?=
- =?us-ascii?Q?RpEh4SAciFUWyGHLKfHCl3BUaQ/c/Zyphch36f4cBVcD+kuJBmqDz6Gdq9ZF?=
- =?us-ascii?Q?o8bapaU7Z5IPxUxWvywUPTE3+/7iulZhszb86gw24c0OQigBukI1HD0dWATO?=
- =?us-ascii?Q?f+kd8T2hky2HO1YogUKOg8dDTqjhtqBF9hX6Y/k5R+zCx8NEIUHGuFEntz07?=
- =?us-ascii?Q?H/9qUIVBNMlq+7l40ou3OR2Ep+LJJhLawLIlqwaSypep7G54gbHfiBNfp5mE?=
- =?us-ascii?Q?5e0HuEE1Et4+cfi4BYUBWsMAsWCt50yOHADh10tqAR+kjRZzLQ/VzidHIimv?=
- =?us-ascii?Q?qxuToGICtEACFS30PAU6az/oysX0mvySS3HkyQ75zxIM9NAGaJqqivIi/HDV?=
- =?us-ascii?Q?MRRNrmOiDAgCvdmmwIaBvVVjf885+CWpWmD5CNYWa4fOrOFo3nYA9fOMWqyL?=
- =?us-ascii?Q?WDSOUlVtuGGb9lhLRr+wUGJEIyzvFZQy5OpbXSozvxhzKedsGVhL5mmTlvHx?=
- =?us-ascii?Q?QrlLXbZ5ipCt4iru5A3OlBmmpK3l2mmUyqlHT0kiQY9nlokgIisD0N1haQwh?=
- =?us-ascii?Q?xsbnPDTw83QYfflirqRVlnTAiUGhR/ZgStyQIv0lF9VTcJiP6JXISCWo9Lb+?=
- =?us-ascii?Q?VZ+ESwoO/g9Q7mtCzmWnxflZP2Wyu+45PX0g30ThIgGKJZ47d6IOR7ZWRLNI?=
- =?us-ascii?Q?+M0iXbh5JU5uK50Kz8D8m7wIL66XpqgKOSL4aop4zg47oYjxYd0o4Vcj1yTH?=
- =?us-ascii?Q?BE9HADIihxzN/PUysEPZzuhQsgp855fyQg47wxIolnb8ejYxCY8OLZUKSvB+?=
- =?us-ascii?Q?oLOVxfOrC5ORajNBiQZJSHcLy42zoDjZNOJ8hUh4VJ3r+BuMf8viUip0SqxJ?=
- =?us-ascii?Q?kaItIoyHCiw3vWGnsIEpJp436ZpNg34aM1R07/Uo0sAXSXXrqSh7hPxbu+oP?=
- =?us-ascii?Q?RtBVFD3QPhDKNbZFIX0j9Q+DVsj1QzT1YekT4cVUJ7DfnwnEsIvCLOyJ1l6K?=
- =?us-ascii?Q?78Rk3ck6DBzcVlrsCYdpUQwi9xRBIte4jtJCkfM0E9LsWw0fW4/FrimhrKcr?=
- =?us-ascii?Q?RVf9XDd88D7y9LdI2YJdSl+92LRLExp8QW7cnVIOqlyNqOIjcQxhM8QBfILt?=
- =?us-ascii?Q?MfnJXPxQlfTQ1ug48nM/ujOgVSjRlpkugZOxmX6foNadZDkLqoLsnwfQik5e?=
- =?us-ascii?Q?DqhC/G0I6ZYdRE5G+yXDoJ6YSDbSP5uqmVZ9lLELe5m074Bnfr1kF2kUDQvU?=
- =?us-ascii?Q?s2OU6ifbmaLIYeP9Ttwh6nx0vjVcBibEVJmyAn3rHKwERaflYJZxBxeu9cmG?=
- =?us-ascii?Q?g19i1gpPWLmuA7XoEKqGBkezSA7RixrcxPk/4t67j/Cuj35J2Uka1hrlnEsN?=
- =?us-ascii?Q?rgOPOFki+iqxjhGp0ge3LOzVwXnnkGIAgtr0lIP4Exwss8ijfaaMmZPEIFl8?=
- =?us-ascii?Q?zw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f165d3b3-7fa1-420d-ee13-08db696214ac
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2023 03:23:38.0344
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zkH8CJsOk0MoS7VkimYsbQTofyeNwS9f5NMeVr7CjRr0O9Xw1JM/906wjBdL2L5E46pLT/W/wc6xbezioDg05giQjS+1JMiANuh1kCZxP8A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6714
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHvBhmQC/2WO3Q6CMAxGX8Xs2ukoA8Qr38MYM7YiS3SQDauG8
+ O4OTPyJl1/7nZ4OLKC3GNh2MTCPZINtXQzpcsF0o9wJuTUxMxCQilwAJ+L17XjtjOqRY6LLXOV
+ C55uCRaRSAXnlldPNBBGt391p3Xms7X227Q8xNzb0rX/Mckqm6csjIfn1UMIFB5BRIwtTQL2zr
+ sfzSrcXNh0i+MB/TxJEGEvMtMmUqaT8hsdxfAIjP+pzBAEAAA==
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Russ Weight <russell.h.weight@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+X-Mailer: b4 0.13-dev-02a79
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3926;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=/buRSU7Qg/qz7BuEa/y0BICq087QvKa8t2CdljU2M5E=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDCltByfULzjF0KghmWW2nbM3UeuVxVTjU7klTQtT/pQbO
+ jK2cTt3lLIwiHExyIopsvzd85HxmNz2fJ7ABEeYOaxMIEMYuDgFYCKnLjAy7NiizHhure1Ml4OL
+ IuYezo5+o/346fTjh4R+iaVXRFQ9l2f4n8QaG/7Sz1ts3cc7f+q87Z9KCzzK593aYvlw5qfcqKY
+ bzAA=
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Terry Bowman wrote:
-> The restricted CXL host (RCH) error handler will log protocol errors
-> using AER and RAS status registers. The AER and RAS registers need
-> to be virtually memory mapped before enabling interrupts. Update
-> __devm_cxl_add_dport() to include RCH RAS and AER mapping.
-> 
-> Add 'struct cxl_regs' to 'struct cxl_dport' for saving a unique copy of
-> the RCH downstream port's mapped registers.
-> 
-> Co-developed-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/port.c | 38 ++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/regs.c |  1 +
->  drivers/cxl/cxl.h       | 11 +++++++++++
->  3 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 3111f754c740..bc5d0ee9da54 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -8,6 +8,7 @@
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/idr.h>
-> +#include <linux/aer.h>
->  #include <cxlmem.h>
->  #include <cxlpci.h>
->  #include <cxl.h>
-> @@ -947,6 +948,39 @@ static void cxl_dport_unlink(void *data)
->  	sysfs_remove_link(&port->dev.kobj, link_name);
->  }
->  
-> +static int cxl_dport_map_rch_aer(struct cxl_dport *dport)
-> +{
-> +	struct cxl_rcrb_info *ri = &dport->rcrb;
-> +	resource_size_t aer_phys;
-> +	void __iomem *dport_aer;
-> +
-> +	if (!dport->rch || !ri->aer_cap)
-> +		return -ENODEV;
-> +
-> +	aer_phys = ri->aer_cap + ri->base;
-> +	dport_aer = devm_cxl_iomap_block(dport->dev, aer_phys,
-> +					 sizeof(struct aer_capability_regs));
+Add firmware update capability to the CXL memdev driver, and emulation
+in cxl_test. Since the 'Transfer FW' mailbox command is a background
+command, this series depends on background command support [1].
 
-@dport->dev is not suitable to be the @host argument to
-devm_cxl_iomap_block(). It needs to match the lifetime of the @dport
-allocation which means @host needs to be set to @port->dev.
+Since Transfer FW can be a long-running background command, it is
+desirable to retain kernel control over it, so that one command doesn't
+monopolize the mailbox interface. The sysfs based firmware loader
+mechanism that was developed for FPGAs is a suitable candidate to help
+accomplish this. Patch 1 goes into more detail on this.
 
+The poll interval for the Transfer FW command is arbitrarily set at 1
+second, and a poll count of 30, giving us a total wait time of thirty
+seconds before which each slice of the transfer times out. This seems
+like a good mix of responsiveness and a total wait - the spec doesn't
+have any guidance on any upper or lower bounds for this. This likely
+does not need to be user-configurable, so for now it is just hard-coded
+in the driver.
 
-> +	if (!dport_aer)
-> +		return -ENOMEM;
-> +
-> +	dport->regs.dport_aer = dport_aer;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_dport_map_regs(struct cxl_dport *dport)
-> +{
-> +	struct cxl_register_map *map = &dport->comp_map;
-> +
-> +	if (!map->component_map.ras.valid)
-> +		dev_dbg(map->dev, "RAS registers not found\n");
-> +	else if (cxl_map_component_regs(map, &dport->regs.component,
-> +					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_dbg(dport->dev, "Failed to map RAS capability.\n");
-> +
-> +	return cxl_dport_map_rch_aer(dport);
-> +}
-> +
->  static struct cxl_dport *
->  __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  		     int port_id, resource_size_t component_reg_phys,
-> @@ -1000,6 +1034,10 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->  	if (rc && rc != -ENODEV)
->  		return ERR_PTR(rc);
->  
-> +	rc = cxl_dport_map_regs(dport);
-> +	if (rc && rc != -ENODEV)
-> +		return ERR_PTR(rc);
+Patch 2 is a fix for the Poison commands effect population found while
+developing these.
 
-I'll repeat the previous comment about replacing:
+Patch 3 is a cleanup to give names to command effects.
 
-	if (rc && rc != -ENODEV)
+Patch 4 implements the emulation of firmware update related commands in
+the cxl_test environment to enable unit testing.
 
-...with an optional initialization at alloc time.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.5/cxl-background
 
-> +
->  	cond_cxl_root_lock(port);
->  	rc = add_dport(port, dport);
->  	cond_cxl_root_unlock(port);
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index dd6c3c898cff..26fb4f395365 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -198,6 +198,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  
->  	return ret_val;
->  }
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, CXL);
->  
->  int cxl_map_component_regs(struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6134644b51f8..0e0bcbefefaf 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -209,6 +209,13 @@ struct cxl_regs {
->  	struct_group_tagged(cxl_device_regs, device_regs,
->  		void __iomem *status, *mbox, *memdev;
->  	);
-> +	/*
-> +	 * RCH downstream port specific RAS register
-> +	 * @aer: CXL 3.0 8.2.1.1 RCH Downstream Port RCRB
-> +	 */
-> +	struct_group_tagged(cxl_rch_regs, rch_regs,
-> +		void __iomem *dport_aer;
-> +	);
->  };
->  
->  struct cxl_reg_map {
-> @@ -255,6 +262,8 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
->  			      struct cxl_component_reg_map *map);
->  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
->  			   struct cxl_device_reg_map *map);
-> +void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
-> +				   resource_size_t length);
->  int cxl_map_component_regs(struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
->  			   unsigned long map_mask);
-> @@ -603,6 +612,7 @@ struct cxl_rcrb_info {
->   * @port_id: unique hardware identifier for dport in decoder target list
->   * @rch: Indicate whether this dport was enumerated in RCH or VH mode
->   * @rcrb: Data about the Root Complex Register Block layout
-> + * @regs: Dport parsed register blocks
->   */
->  struct cxl_dport {
->  	struct device *dev;
-> @@ -611,6 +621,7 @@ struct cxl_dport {
->  	int port_id;
->  	bool rch;
->  	struct cxl_rcrb_info rcrb;
-> +	struct cxl_regs regs;
->  };
->  
->  /**
-> -- 
-> 2.34.1
-> 
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+Changes in v3:
+- Link to v2: https://lore.kernel.org/r/20230602-vv-fw_update-v2-0-e9e5cd5adb44@intel.com
+- Collect review tags (Alison, Jonathan)
+- Remove unused leftover fw_name variable from the previous rev (Jonathan)
+- Add a comment to clarify cur_size calculation and alignment (Jonathan)
+- Clean up error return using dev_err_probe() (Jonathan)
+- Remove unintended error handling change leftover from v1 (Jonathan)
+- Refactor returning from the switch() in mock_activate_fw() (Jonathan)
 
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20230421-vv-fw_update-v1-0-22468747d72f@intel.com
+- Make command field names more consistent with the spec (Jonathan)
+- Remove pointers to info/activate/transfer from fw state (Jonathan)
+- Use struct_size() insted of open coding it (Jonathan)
+- Fix a memory leak with 'transfer' in cxl_fw_write() (Jonathan)
+- Move fw setup/teardown into a devm action (Jonathan, Dan)
+- Use decimals in command struct definitions to match the spec (Alison)
+- Move fw loader registration up into cxl_pci_probe() (Dan)
+- Remove the fw_name cargo cult (Dan)
+- Change timeout for each transfer chunk to 30s (Dan)
+- Add a timeout in cxl_fw_write() as well (not just in abort)
+- Use IS_ALIGNED() instead of open coding it (Dan)
+- Clean up cur_size calculation in ->write() (Dan)
+- Remove the lock and 'clear_to_send (Dan)
+- Use atomic bitops for the cancel flag (Dan)
+- Gate fw loader setup on command availability (Dan)
+- Clean up the effects list in cxl_test using defines (Jonathan)
+- Use the sha256 routine in include/crypto/sha2.h (Jonathan)
+
+---
+Vishal Verma (4):
+      cxl: add a firmware update mechanism using the sysfs firmware loader
+      tools/testing/cxl: Fix command effects for inject/clear poison
+      tools/testing/cxl: Use named effects for the Command Effect Log
+      tools/testing/cxl: add firmware update emulation to CXL memdevs
+
+ drivers/cxl/cxlmem.h                    |  82 +++++++++
+ drivers/cxl/core/memdev.c               | 310 ++++++++++++++++++++++++++++++++
+ drivers/cxl/pci.c                       |   4 +
+ tools/testing/cxl/test/mem.c            | 192 +++++++++++++++++++-
+ Documentation/ABI/testing/sysfs-bus-cxl |  11 ++
+ drivers/cxl/Kconfig                     |   1 +
+ 6 files changed, 591 insertions(+), 9 deletions(-)
+---
+base-commit: ccadf1310fb0bc8d2cbcd14f94a6279c12ea9bee
+change-id: 20230602-vv-fw_update-e1c96a60c687
+
+Best regards,
+-- 
+Vishal Verma <vishal.l.verma@intel.com>
 
