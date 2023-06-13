@@ -2,122 +2,227 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE54EB64D0
-	for <linux-cxl@archiver.kernel.org>; Tue, 13 Jun 2023 15:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4993BEB64D0
+	for <linux-cxl@archiver.kernel.org>; Tue, 13 Jun 2023 16:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235583AbjFMPvg (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 13 Jun 2023 11:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        id S239828AbjFMQIG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 13 Jun 2023 12:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235653AbjFMPvf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Jun 2023 11:51:35 -0400
+        with ESMTP id S243010AbjFMQIC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Jun 2023 12:08:02 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2358618C
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Jun 2023 08:51:34 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QgY1S3VjKz6J79p;
-        Tue, 13 Jun 2023 23:50:52 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71021985
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Jun 2023 09:08:00 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QgYLT6dTdz67GCV;
+        Wed, 14 Jun 2023 00:05:37 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 13 Jun
- 2023 16:51:31 +0100
-Date:   Tue, 13 Jun 2023 16:51:30 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+ 2023 17:07:56 +0100
+Date:   Tue, 13 Jun 2023 17:07:55 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Davidlohr Bueso <dave@stgolabs.net>
 CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
         <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v6 0/7] cxl: Support device sanitation
-Message-ID: <20230613165130.00006259@huawei.com>
-In-Reply-To: <20230613162611.00007b0b@Huawei.com>
+Subject: Re: [PATCH 3/7] cxl/mbox: Add sanitation handling machinery
+Message-ID: <20230613170755.000011b9@Huawei.com>
+In-Reply-To: <20230612181038.14421-4-dave@stgolabs.net>
 References: <20230612181038.14421-1-dave@stgolabs.net>
-        <20230613162611.00007b0b@Huawei.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        <20230612181038.14421-4-dave@stgolabs.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 13 Jun 2023 16:26:11 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Mon, 12 Jun 2023 11:10:34 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Hi Davidlohr,
+> Sanitation is by definition a device-monopolizing operation, and thus
+> the timeslicing rules for other background commands do not apply.
+> As such handle this special case asynchronously and return immediately.
+> Subsequent changes will allow completion to be pollable from userspace
+> via a sysfs file interface.
 > 
-> > Testing.
-> > ========
-> > 
-> > o There are the mock device tests for Sanitize and Secure Erase.
-> > 
-> > o The latest (v2) qemu bg/sanitize support series is posted here:
-> > 	https://lore.kernel.org/linux-cxl/20230418172337.19207-1-dave@stgolabs.net/  
+> For devices that don't support interrupts for notifying background
+> command completion, self-poll with the caveat that the poller can
+> be out of sync with the ready hardware, and therefore care must be
+> taken to not allow any new commands to go through until the poller
+> sees the hw completion. The poller takes the mbox_mutex to stabilize
+> the flagging, minimizing any runtime overhead in the send path to
+> check for 'sanitize_tmo' for uncommon poll scenarios.
 > 
-> That doesn't seem to have support for reading back the security state so
-> the stuff this set adds fails before it gets going.
-> Am I missing another series?
+> The irq case is much simpler as hardware will serialize/error
+> appropriately.
 > 
-I hacked in enough to get things to carry on...
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Following might be something I've broken locally but on basis
-it might not...  Note my QEMU is odd right now as I'm in middle
-of a big refactor of the CCI handling, but this should still not happen
-even if I happen to have broken QEMU side of things in some weird way.
+Not updated the check against -1 for whether to poll or not.
 
-My base is more or less mainline + background set as queued on CXL
-tree plus this set.
+Which I'm guessing is the bug I'm seeing whilst testing this on qemu
 
-However similar traces to below happen when I poke a 1 into
-sanitize
+> ---
+>  drivers/cxl/core/memdev.c | 10 +++++
+>  drivers/cxl/cxlmem.h      |  7 ++++
+>  drivers/cxl/pci.c         | 77 +++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 91 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 1bbb7e39fc93..834f418b6bcb 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -460,11 +460,21 @@ void clear_exclusive_cxl_commands(struct cxl_dev_state *cxlds, unsigned long *cm
+>  }
+>  EXPORT_SYMBOL_NS_GPL(clear_exclusive_cxl_commands, CXL);
+>  
+> +static void cxl_memdev_security_shutdown(struct device *dev)
+> +{
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +
+> +	if (cxlds->security.poll)
+> +		cancel_delayed_work_sync(&cxlds->security.poll_dwork);
+> +}
+> +
+>  static void cxl_memdev_shutdown(struct device *dev)
+>  {
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>  
+>  	down_write(&cxl_memdev_rwsem);
+> +	cxl_memdev_security_shutdown(dev);
+>  	cxlmd->cxlds = NULL;
+>  	up_write(&cxl_memdev_rwsem);
+>  }
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 091f1200736b..3a9df1044144 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -264,9 +264,15 @@ struct cxl_poison_state {
+>   * struct cxl_security_state - Device security state
+>   *
+>   * @state: state of last security operation
+> + * @poll: polling for sanitation is enabled, device has no mbox irq support
+> + * @poll_tmo_secs: polling timeout
+> + * @poll_dwork: polling work item
+>   */
+>  struct cxl_security_state {
+>  	unsigned long state;
+> +	bool poll;
+> +	int poll_tmo_secs;
+> +	struct delayed_work poll_dwork;
+>  };
+>  
+>  /**
+> @@ -379,6 +385,7 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
+>  	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+>  	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+> +	CXL_MBOX_OP_SANITIZE		= 0x4400,
+>  	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>  	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>  	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 4b2575502f49..c92eab55a5a7 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -115,18 +115,52 @@ static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
+>  
+>  static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
+>  {
+> +	u64 reg;
+> +	u16 opcode;
+>  	struct cxl_dev_id *dev_id = id;
+>  	struct cxl_dev_state *cxlds = dev_id->cxlds;
+>  
+>  	if (!cxl_mbox_background_complete(cxlds))
+>  		return IRQ_NONE;
+>  
+> -	/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
+> -	rcuwait_wake_up(&cxlds->mbox_wait);
+> +	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+> +	opcode = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK, reg);
+> +	if (opcode == CXL_MBOX_OP_SANITIZE) {
+> +		dev_dbg(cxlds->dev, "Sanitation operation ended\n");
+> +	} else {
+> +		/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
+> +		rcuwait_wake_up(&cxlds->mbox_wait);
+> +	}
+>  
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +/*
+> + * Sanitation operation polling mode.
+> + */
+> +static void cxl_mbox_sanitize_work(struct work_struct *work)
+> +{
+> +	struct cxl_dev_state *cxlds;
+> +
+> +	cxlds = container_of(work,
+> +			     struct cxl_dev_state, security.poll_dwork.work);
+> +
+> +	mutex_lock(&cxlds->mbox_mutex);
+> +	if (cxl_mbox_background_complete(cxlds)) {
+> +		cxlds->security.poll_tmo_secs = 0;
+> +		put_device(cxlds->dev);
+> +
+> +		dev_dbg(cxlds->dev, "Sanitation operation ended\n");
+> +	} else {
+> +		int timeout = cxlds->security.poll_tmo_secs + 10;
+> +
+> +		cxlds->security.poll_tmo_secs = min(15 * 60, timeout);
+> +		queue_delayed_work(system_wq, &cxlds->security.poll_dwork,
+> +				   timeout * HZ);
+> +	}
+> +	mutex_unlock(&cxlds->mbox_mutex);
+> +}
+> +
+>  /**
+>   * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+>   * @cxlds: The device state to communicate with.
+> @@ -187,6 +221,16 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  		return -EBUSY;
+>  	}
+>  
+> +	/*
+> +	 * With sanitize polling, hardware might be done and the poller still
+> +	 * not be in sync. Ensure no new command comes in until so. Keep the
+> +	 * hardware semantics and only allow device health status.
+> +	 */
+> +	if (unlikely(cxlds->security.poll_tmo_secs > 0)) {
+> +		if (mbox_cmd->opcode != CXL_MBOX_OP_GET_HEALTH_INFO)
+> +			return -EBUSY;
+> +	}
+> +
+>  	cmd_reg = FIELD_PREP(CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK,
+>  			     mbox_cmd->opcode);
+>  	if (mbox_cmd->size_in) {
+> @@ -235,11 +279,34 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_dev_state *cxlds,
+>  	 */
+>  	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
+>  		u64 bg_status_reg;
+> -		int i, timeout = mbox_cmd->poll_interval_ms;
+> +		int i, timeout;
+> +
+> +		/*
+> ++		 * Sanitation is a special case which monopolizes the device
+> +		 * and cannot be timesliced. Handle asynchronously instead,
+> +		 * and allow userspace to poll(2) for completion.
+> +		 */
+> +		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+> +			if (cxlds->security.poll_tmo_secs != -1) {
+Should be checking your new poll boolean.
 
- This appears to be:
-
-        WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
-then
-        WARN_ON_ONCE(!list_empty(&work->entry));
-
-triggering.
-
-------------[ cut here ]------------                                                                                                                                                                                                                                    
- WARNING: CPU: 3 PID: 617 at kernel/workqueue.c:1663 __queue_delayed_work+0xb8/0xe8                                                                                                                                                                                       
- Modules linked in: cxl_pmem cxl_mem cxl_port cxl_pmu cxl_acpi cxl_pci cxl_core                                                                                                                                                                                           
- CPU: 3 PID: 617 Comm: bash Not tainted 6.4.0-rc6+ #790                                                                                                                                                                                                                   
- Hardware name: QEMU QEMU Virtual Machine, BIOS unknown unknown                                                                                                                                                                                                           
- pstate: 014000c5 (nzcv daIF +PAN -UAO -TCO +DIT -SSBS BTYPE=--)                                                                                                                                                                                                         
- pc : __queue_delayed_work+0xb8/0xe8                                                                                                                                                                                                                                      
- lr : queue_delayed_work_on+0x70/0x98                                                                                                                                                                                                                                     
- sp : ffff800008a23b10                                                                                                                                                                                                                                                    
- x29: ffff800008a23b10 x28: ffff0000f6de5880 x27: ffff0000c14d9c80                                                                                                                                                                                                        
- x26: ffff8000085510a8 x25: ffff0000c0a490d0 x24: ffff0000c14d9cd8                                                                                                                                                                                                        
- x23: ffff800008a23da8 x22: fffffffffffffff2 x21: 0000000000000000                                                                                                                                                                                                        
- x20: 0000000000000001 x19: 0000000000000000 x18: 0000000000000000                                                                                                                                                                                                       
- x17: 0000000000000000 x16: ffffba73a9885008 x15: 0000aaaad5a0b6b0
- x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
- x11: 0000000000000000 x10: 0000000000000000 x9 : ffffba73a9885078
- x8 : ffff800008a23c98 x7 : 0000000000000000 x6 : 0000000000000000
- x5 : ffffba73a9884ea8 x4 : 0000000000000100 x3 : 00000000000000fa
- x2 : ffff0000c14d9e98 x1 : ffff0000c0028600 x0 : ffff0000c14d9eb8
-Call trace:
-  __queue_delayed_work+0xb8/0xe8
-  queue_delayed_work_on+0x70/0x98
-  cxl_pci_mbox_send+0x404/0x580 [cxl_pci]
-  cxl_internal_send_cmd+0x48/0x110 [cxl_core]
-  cxl_mem_sanitize+0xbc/0x140 [cxl_core]
-  security_sanitize_store+0x98/0xf0 [cxl_core]
-  dev_attr_store+0x20/0x40
-  sysfs_kf_write+0x4c/0x68
-  kernfs_fop_write_iter+0x128/0x200
-  vfs_write+0x1ac/0x2e8
-  ksys_write+0x74/0x110
-  __arm64_sys_write+0x24/0x38
-  invoke_syscall.constprop.0+0x58/0xf8
-  do_el0_svc+0x60/0x168
-  el0_svc+0x38/0xf0
-  el0t_64_sync_handler+0xf4/0x120
-  el0t_64_sync+0x190/0x198
- ---[ end trace 0000000000000000 ]---
+Jonathan
+> +				/* hold the device throughout */
