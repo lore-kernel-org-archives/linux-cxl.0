@@ -2,261 +2,361 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D51AEB64D7
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 00:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E24EB64D7
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 01:06:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241534AbjFNApV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 13 Jun 2023 20:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
+        id S232902AbjFNBGV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 13 Jun 2023 21:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231713AbjFNApU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Jun 2023 20:45:20 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA8419A5
-        for <linux-cxl@vger.kernel.org>; Tue, 13 Jun 2023 17:45:19 -0700 (PDT)
+        with ESMTP id S232435AbjFNBGU (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 13 Jun 2023 21:06:20 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EF31BE5
+        for <linux-cxl@vger.kernel.org>; Tue, 13 Jun 2023 18:06:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686703519; x=1718239519;
+  t=1686704778; x=1718240778;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=bqpo0Vi6IZpocFfH4Id5Owsl6sdU39clIpQ6rdm+rOA=;
-  b=LiDeI4JpG/rkceETJ4VBGmIvo7eR/hQdSRV/1kTidILL+OvuB11Dl4VT
-   5VcYC2kaJ892oynSyFltkH3S6KEacQ671rHo3OqwMwomNpsaFPBnb5mK9
-   P9NI2kDcUE5ks2ILGNA6McKToaUGt/nzlQ0RYbviaAg1Tfk3SGlMHy/Vq
-   DBVYnzErT4WB8emyNOUiQ2jsd0K7WdDL8b6bX5eo7W1dQhlpkcYfFXkVE
-   P4V+29FaFlxCJ4LWss5zixJsqowzhfQgNA3gdAeij0q3dDspOy/keAbk4
-   QgOp7MTdUO/RXONA3Lf1uYNyuHkMgPTZLDUeJFUC8ocTA7+ptzYqta6ji
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="422085698"
+  bh=w/c4Ep9R02I66UWU3ArtVLaERG27kKdIgoVLNpJVgkk=;
+  b=d2c2F4IsG/jyZeq60I61IqrRQPA2H0MhcRNa7jbI9Q4Ec21e3OWbreJb
+   Wvkyd58hmCToHlo4PlAB0UOZlwsB3q0bkxCkO7Hxx4DfcucWJ84eplepf
+   ViPTNKUaFP8/A8S95Tb8zyTus2bStuqgEA7PIIiFAvQviuV8DG9wTDi8r
+   6Ak/2SA/89/YTFtV9IamD7JB3B4g7TueCHsaf1ULMZIReX4qX7E/P+gMg
+   qcgulV+ucs/vC46lt3+yxPFR4BVgH6UyKgGf5WoheA2Mwo0l5hmWtwa5i
+   0l4UGtui/G9+TxFPQT8oYqIztVJwGlQ4oW6bI6mubhWC/KR73Xd38wuil
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="338123563"
 X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
-   d="scan'208";a="422085698"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 17:45:18 -0700
+   d="scan'208";a="338123563"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 18:06:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="1041977103"
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="662197573"
 X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
-   d="scan'208";a="1041977103"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Jun 2023 17:45:18 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+   d="scan'208";a="662197573"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga003.jf.intel.com with ESMTP; 13 Jun 2023 18:06:18 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 13 Jun 2023 17:45:18 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 13 Jun 2023 18:06:17 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 13 Jun 2023 17:45:18 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.23; Tue, 13 Jun 2023 18:06:17 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Tue, 13 Jun 2023 18:06:17 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 13 Jun 2023 17:45:17 -0700
+ 15.1.2507.23; Tue, 13 Jun 2023 18:06:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f24v2t4zxXEn4DmvM1JPo831eO8mEPwZQ3H9Epb/PdzCJjGidYBlg6nssIrd9mJf9GdlIKxX8OJYWx2/4Taw/7L8KdLFYtM78StgNbaD7lyzzuBx5tblfb4rtHUQkKcxbxiLJzNmZmrbW44OHPKcy1nEoFbvvRmlvL1OQpkexG7xINmW6NgOVLqBVyIlY7nmmRfMU/HSPAxymwAdsNfhDqGmtOKcu6+JwCKZ5+XnSyUnFzZO+41OglN3vAygcL2i1UVAD04QDYHzKKcE7uQQjrWsVuq5n6gBgBpVAcim95kVraGKlx5IrIEB59tQ8oJbsDmi/Cm7NkVGPwuedqgkaQ==
+ b=J78k9WK2ESq+l2clb0cSzr7PT0+SQdtI7MuMADXUuvGaTABnfAtex7x38zpAhx6h1ALkfb/albNO5RoSG9eJtORH8hM8D1skG8EZXJQTnSj1wI8qQzeZjihmGPOzdW646fZP7/5muhOxlIJzLRFabU1m/gUEPdHkFJGVwKZuEU3nwqv841ywbU2Fay9/ssKiNXoj+D9Ym/H6k7p47hYxdPJjc6/bVY2SPgQ539KavDdeU5SZSUJANbSQ3FLMveyULZ4O0kmdoOgW6ZTNZ76gwEDsT+NGJktBesL4hAMbi4jUeX5Mzpd65KsGghB5kNps/ylCRnxEhRpYVz21laW7xw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tgrqk6AUnRfrZUFvRf6a+IgfVTsOsOeI6MI/QgrHuUM=;
- b=NuT4kJ4CiBZJGbe4kRdIWuUawRe2LTbaUTNTjyrnKtXKsq3sowJ9E1A84THr7I0js56mojhdp8WI0rPHLLVitWA8TJewBofvq3FmhOuxNcVZF3Gi6U5/BH4WFSJwIzCwhxF/yquc8r8UklD2VGwtSxrPqutAsaIOFwhtFd/bqEIyy7h70+gNexPcWhh9zz1H0dZN4WD6gjq6amUmUDKVdGTGfNAMpFcF+YEL38/55rvz56xdJx9jcGW6a+llnuPCK/6Ngsx929lc5iZ1tklwhMHDhB5rR5AhTAvYGnXvQlTyXymBmtmZMOZpzCiF2aroFd8GB8EtFru6GajWix/vgQ==
+ bh=tBEFH6UYZv79J0HY/0dvsu4hGNnHpIPOjfQZLVePMH8=;
+ b=EcVH4ISei/VyOiy0hSkiz/d4w1OQdApb2KVehvYK1h8iC0OxiIABHi5IQxa4ssucMtUC5PmM8+/T7jXmdcau5zsOuHdJu8U9ulNGxaHQBrHWu0H6PJoWAKnDaRv7dze+PwFTFumw0rC+SFTGXvuSOGWdRj96Pji6fxmbx5NCu8GJgdWRWFQ3CcF9prLXggigDVnF5srzPpd51HU1wv4ZgB/shzH/WKwWzRPIUARGzGwq+vCeLfQSTgT+Un+YCyb4IG26Mp8ZQp/Fbwx/SdvjcfX9gUWeO0HL7k8etmIQnnoCiTNoJZ+4KM3ynqoHUOAbM4cVG51b94x+5Ay/OkO5Vw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA3PR11MB7582.namprd11.prod.outlook.com (2603:10b6:806:31e::17) with
+ by CO1PR11MB5122.namprd11.prod.outlook.com (2603:10b6:303:95::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Wed, 14 Jun
- 2023 00:45:16 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.44; Wed, 14 Jun
+ 2023 01:06:15 +0000
 Received: from PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
  ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6455.030; Wed, 14 Jun 2023
- 00:45:16 +0000
-Date:   Tue, 13 Jun 2023 17:45:13 -0700
+ 01:06:15 +0000
+Date:   Tue, 13 Jun 2023 18:06:12 -0700
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Dan Williams <dan.j.williams@intel.com>
 CC:     <linux-cxl@vger.kernel.org>, <ira.weiny@intel.com>,
         <navneet.singh@intel.com>
-Subject: Re: [PATCH 03/19] cxl/mbox: Move mailbox related driver state to its
- own data structure
-Message-ID: <64890d99746c5_2f4fca29457@dwillia2-xfh.jf.intel.com.notmuch>
+Subject: Re: [PATCH 08/19] cxl/port: Enumerate flit mode capability
+Message-ID: <648912849903_2f4fca2945e@dwillia2-xfh.jf.intel.com.notmuch>
 References: <168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com>
- <168592151409.1948938.14287743104711770676.stgit@dwillia2-xfh.jf.intel.com>
- <20230606121054.000069e1@Huawei.com>
+ <168592154146.1948938.12085726872761686977.stgit@dwillia2-xfh.jf.intel.com>
+ <20230606140419.00007a54@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230606121054.000069e1@Huawei.com>
-X-ClientProxiedBy: BYAPR05CA0098.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::39) To PH8PR11MB8107.namprd11.prod.outlook.com
+In-Reply-To: <20230606140419.00007a54@Huawei.com>
+X-ClientProxiedBy: BYAPR07CA0097.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::38) To PH8PR11MB8107.namprd11.prod.outlook.com
  (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA3PR11MB7582:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9398188-6d9b-48f1-9a56-08db6c709eab
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO1PR11MB5122:EE_
+X-MS-Office365-Filtering-Correlation-Id: f8675b54-5518-477b-e312-08db6c738d0a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8gkGQyK7fDXpA/1+kOK4ZR/tX35jblVvVXhJHAwz7jB0EnkeXjCC2/GiTlgi6WQWLUwQGrahZ7Ex/QypdQGPZ3hzQdWdB2faCApdvWxKxVXSJtUmd4ljNRtlfCphiMjebgo97eqxFXiuUf6TsO0E1Y3DcaMWNWg3yOefYc8ZCrO2GYshK4HzzWkKlUbsQCgVTfx4Ph9r9K5IWaL1J0V+s/LVsU3zISe5xnVPjKdfGy6j5y+B+aeLKzZiPfa1Sbl3Bs1vPQnqVcbaoY8qj8oM44wMyxC1XshTMM1y/IRQnJo1zUGeVeSsB75x6C4f6d2K40wdUdqAxEJdmgDjpjlUExKNRepbQXyYQUHbPif3wA6yWeobQgdnBYM5i3grYQxRIHEtpYaZPioijjdZD3DFfCyD0+Ih6hsjalGQ5bsKNK+l4PLCe0QIhKeNjje6iMgDMOxGwblEM6cah8yeqoSbcu0uosjTSY47vfQwB6BCtoaW+TLpE8/dQ6lDRcjKhBoRjmcyw3umJ9tarE6jbNqiQ2yhgIYZ49zfO/hGsBPNNFoCsExlzdJFvYz1XBsdMA+u
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(39860400002)(346002)(136003)(366004)(376002)(451199021)(2906002)(83380400001)(15650500001)(86362001)(38100700002)(82960400001)(316002)(6486002)(6666004)(41300700001)(5660300002)(110136005)(8936002)(107886003)(8676002)(478600001)(66476007)(66946007)(6512007)(66556008)(4326008)(6506007)(26005)(9686003)(186003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: xLXn33qaxTMgvIEvznYoi/clTQ0K8u3qLKYWFRWczv9iwZYIrnCDOFdBwc4+QTfL1/FWW44D0Gkn1gloB01vcxJqoTfayBjLOnTyZ1MrHXcf2yc56DktHpEP0SbphohEM/YKWtfvW4xZSayvaQ6YmR924vFnzjkuorTnmNGbfoAeOqzEnhb7B5Dow+atTbm6xnMpGBNqd4sFzMUQCV+hW7Ol+tz7FpIx08+4bKqt104Vc+EOuZWtVoroZCODa0gbfn5FMaNNxK3SSQEupp3W1UVoPaaZaUMxQS4AxMzySknUTYRBgPwip7T7Ql0OTdJYrxGK4VtCp+OT9mcKOU5ly0u8TOhHLmsPlZfOdgVcM5AzYcO7u8/zMrrCvNO2ZXftVN+b8KurlCVjw2bperiJWnbGaZP/Xi9Kvdsk7u81J8Z7TgFXm74GHF7UCfimaf7JMKCavsAFBtseq9aBEFLU0CgW1p91QlVeC1sUv4m8UPM7wjO02mQXFEv2Shh3LRxNpnpb9kF+anBLuOA8j57+RlPj4AgI3rsyfui3gaCzXkqgXOuutbMW4rj/FJlDA6wm
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(366004)(39860400002)(346002)(376002)(451199021)(107886003)(6486002)(6666004)(83380400001)(38100700002)(86362001)(82960400001)(6512007)(6506007)(9686003)(26005)(186003)(2906002)(110136005)(66556008)(478600001)(316002)(66476007)(4326008)(41300700001)(5660300002)(8936002)(8676002)(66946007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5hDfJCvzq/BiSqYwJ0uYbWRVHjz85OVFHSjsT9DBkODIWAQCJgNsjiAMObB/?=
- =?us-ascii?Q?nbfQakGyHNXpiQ+pdFP1XbEPqg4L+QKuQ2u427GqvjYHDLIxJZOkfUDtdYBi?=
- =?us-ascii?Q?pS97dzKYYhDpbIbsu7xyIImL3TVA3PZvFhQKYEXPTGRL0cnHjm2jKZ45m8qZ?=
- =?us-ascii?Q?JDBHo1bh4/w5obQqfHxNTeBlwXgz/xRCxrHIDRU1uqawZKajcv9I7yrzBIGI?=
- =?us-ascii?Q?P/+ga8BN/dXcr7POoK3w2e4/DTyFGgLav5N9uyG9Z4PRHsbekiQjjRPS+766?=
- =?us-ascii?Q?e2ESm5DEU3ZSgvlxPHuTinD7CiAQuedoR+3OC7Gvvl48ZSBPNw89UVdxPASP?=
- =?us-ascii?Q?XDPBmP0VNd/PNm/T6+A4RZw8VfwgRLKUSulvZPgP1Dm/czCzMw+rBmT+ceFU?=
- =?us-ascii?Q?e63kJTKGsGj4IUvaZ2VvnnLIrGJFbjqI3hyMzukzNBpcBrgzF81DwG5l8UMm?=
- =?us-ascii?Q?+82jJXDHmLm41hgQZKn1cN6l09DRBC9uo4xEqFD4aQt4JDTifBOIJPQ2U3F7?=
- =?us-ascii?Q?P7xla+5K2aG4qy8zHTcETrpytWMGiocvqO0ql7UhsZb/9rVzPDjEHP9A8G88?=
- =?us-ascii?Q?7JwU5UY3tgOqEyUPT3tyFiBeZBKkCeegeitM5GfvFutzytVwwT/tsUrCTRSN?=
- =?us-ascii?Q?2wQhaYXdG4IygwdSZSyCQhdwHp6Zer6O4i8GDBJcdfR2vmtMFT2itAEmERCh?=
- =?us-ascii?Q?2gWwe8pOTx+QPQK26QS7PsOPtDtkZqQXQ7Ny8nV+W9LuMJTk1+16sgf7cIT4?=
- =?us-ascii?Q?jyTGLj5zC7/KJHIzXNEhxxVGx8vx3le3bHpPPnS0BX7uJE7d6Oddb5Sop+hf?=
- =?us-ascii?Q?h5rSlEWY+8HPRVrdbMYNwYc3YfFFJUNG5gihNPXki3o9NSJyWaepqDeB+GCF?=
- =?us-ascii?Q?y0Ml67jHTN8q6YL/6UkgQQ2Qipxb0CVAOL1zx54YTTUFAVNcFCyvpQ+79zdy?=
- =?us-ascii?Q?1gHph6iBgTvKhNcYXqqRiYGKBxh/aT0pdB6QVMLE5/cRTJs/pOacWhg5fx4m?=
- =?us-ascii?Q?ACbM4A1Qkvt5TOakslnKDugqF+PUDHscOihGFJCRqwqMJ7tapVwriZcs2yG2?=
- =?us-ascii?Q?HJOXqYuHOmFKRTzeXDDADBOhl5wHk3B7kHnKiyLsD2O+KcQoZp50a+QOt4VO?=
- =?us-ascii?Q?wzCI3qx8vdXjhAUC0mGwBiNq5UyIqzzlrzTspooY0GhvJL2WhEp1jRhuq6Pq?=
- =?us-ascii?Q?0BfELWZIllFWgvz0kpeohP83GlnxzGp4EpYbmSKJzsfK6D22hUOHGz9KoC0c?=
- =?us-ascii?Q?/i8Khw5zr7W40XyaLaRokHhxf5yYN1bfUtoZpZUdAZ3gnXRsMLtTMIcMN8mG?=
- =?us-ascii?Q?cAAhzueBF0fCsqJVFUBuQ1akPESpiUwNcNYcwYP3cE374yE17u8yAMgS+IkB?=
- =?us-ascii?Q?ujYEfLPRYUBd3PxMHJj9vqzm94iyVZ1JyqGx38MvJS2LHuYfwO7bQpDWkrIW?=
- =?us-ascii?Q?czdNi5eFDVsJmGR77D57raJl7XX/H5YX97645jZC0tKu+OlpgpUSu93VbFFA?=
- =?us-ascii?Q?jEDCNydQpJJu3tUXm9g42XgKfSyKNYQVQHFVpcNLvT68dA+WmZD6hPUIyp1b?=
- =?us-ascii?Q?TIpSmY04FTbgNddzUUdHkHWXe62y1+M0PvDzK6bp6U0ezcvgYle19gg3onq2?=
- =?us-ascii?Q?bg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9398188-6d9b-48f1-9a56-08db6c709eab
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?r4DhOXFbocZXQgsS5I5rpoz7yxHdo31UII3ZZca6+ErdVXJsR6WI/XueLUVJ?=
+ =?us-ascii?Q?EsEXXIP8lp6RfsguLhheggkKnwL1efFLuiTVGO9+2a2gWIpHogVbPol2Ohjk?=
+ =?us-ascii?Q?Wm1+jvWiOzSgQoNnWHiy6xOXSFtdLCXc4MYgyFQJQ11NV83iJTVWVHTWYyLp?=
+ =?us-ascii?Q?X8WJqvwLQ4d6Jwf0MUG+eeuxA1si+L07VFvpywHAt/60ylFLNXUL/NiSGPgg?=
+ =?us-ascii?Q?oHaRjO2E0Ys8WHpcGyFYwIfjdFRCpPaUsj+GRUan5Y/flCDDhlIn9316SzQj?=
+ =?us-ascii?Q?wA+ccTLXpFF7dEKap76hLfXnpZ2UFI05AMHRCRkPoVZOVuYuZqxINGhOBrlM?=
+ =?us-ascii?Q?b0pgk/9eYoJ2dj0DlM57iT7X/EBZFCvH2+RCUIjNwttnkM941ndiJWTHqrKD?=
+ =?us-ascii?Q?jC2XluxdqEJNeWO2HJr41N51pj8tvYC8qPtDgn5qn2R/o7QIfNYHMvSvZ/xL?=
+ =?us-ascii?Q?CrViO3/sAvGi6In5aWwCTo5cCSawcP1XV2zBrMn0WtRr5O728tQbc6Wpq4Mk?=
+ =?us-ascii?Q?qhB+mFlLgNtkcTIhkPOwuFEuvLvFysATfCrFwsOL0JbbjfO76IYqpNxKeNY5?=
+ =?us-ascii?Q?NvdP5F3BujHqs7GAvWiIFq/Ao5WRlbTjI/igyMxrc+w9Wa4UDek0GPVWzx8C?=
+ =?us-ascii?Q?ppa3bE4Imqh6VUzX8rAhuieqBlXJHpkvGwFIMhQCU2RREfAGcvkM1e6G/Gx0?=
+ =?us-ascii?Q?YnXmIOfhdap+UJYEJIl3zKCJxGpfZEIk5cVZNb/Yxym0nuP+uciV6WmnOQx5?=
+ =?us-ascii?Q?Zh1enV/Z7W+zsrlPS9P5jEes0xs+zCZ8ACBdWDryWSRrUuElij9n+jBhuNiF?=
+ =?us-ascii?Q?QnxjkN7BYuOXCeA4nss06U7nBV1VyhIMJ7WdtgbKNdgJMriZOZgPrfzf9/IX?=
+ =?us-ascii?Q?28HypU4gZwnSByZkXZJC9wcTxH6/Eu3Ew3AL1qozP6vFpXxxJOg3R3QsO1XK?=
+ =?us-ascii?Q?hmxTGzAIxZRyFGVHb9AOTl2Is/pz1iFVlCQ6OORLAKmL6rFzHUNbWsvl9fz/?=
+ =?us-ascii?Q?8AaaEFjXfLq3Wok0+zoQPEYvHS2C3LO/d/bHFqe4lXkzl5diLz1gppSJpDjt?=
+ =?us-ascii?Q?F5cIFEV/d+jjJkUDQ8aJOlCBKlN9mwomTUlMg7exJfTSu2T20P1UZDd6xfDw?=
+ =?us-ascii?Q?GHiefgwzAc1BzJ+wRiE7bNSy6J5rdmdUZ9lZ0yLp1frt1jp+itr0RyS/Bf5n?=
+ =?us-ascii?Q?biWNVDpoBD+8tMQ6Ytlkzo9+z9AzSg/kRIbG2U8cgxEXZLt4svo3lB6aAjfZ?=
+ =?us-ascii?Q?PV9TfMoGBmfNub7bct6affmLq0zw7bLNIIy2DfWHWlzAljhWUOocM2+rR0oQ?=
+ =?us-ascii?Q?kzsizUnrVYF15UiDCpUHbvVndlX/zKNZbVngTbo6St40WYkXkDhmHALSFR0l?=
+ =?us-ascii?Q?eeI8mA+CaJiIPErvgJhzeUJMjaCG3Vt6FeKhIKAPnJmZ9OR2fPTSyEFFS7Lv?=
+ =?us-ascii?Q?o4YIUmcJvvvVhX/dGOkmBsfZptEXCwFlVaxoZ/0+sDKmHmGAeaxUDnc8Wp/e?=
+ =?us-ascii?Q?QcnWzqbtXuCGy5L19mIroI0dNGzmC6C2naIolYHWoOpcKkWKKPeApWz1MJEI?=
+ =?us-ascii?Q?KzPC73zxGNfeCoIgU24aU+NnheUg54WGc4ygtF69DTg/JVG4QlyBVresZoz9?=
+ =?us-ascii?Q?4A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8675b54-5518-477b-e312-08db6c738d0a
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 00:45:15.9441
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 01:06:14.8158
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FQHt/V99V84gQ4O4kwbT9c6mCClxl5K80DtCAcaxv6f14FTmIAOv9+dtd28Mzf8l4OVtGVEfNFvLCm0cvbrDpxZGxVZ1j7FTfxSEWktksiw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7582
+X-MS-Exchange-CrossTenant-UserPrincipalName: 08RLMxl12bhT7HBv4PgknYnBd9RGWt/eo7pVXqi3IpyRp+HQ84JUec88Aea9TgJytdi3zMBBnh1Xng+p6w6WP1zzeI0GpHUESl9CrezOyYM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5122
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 Jonathan Cameron wrote:
-> On Sun, 04 Jun 2023 16:31:54 -0700
+> On Sun, 04 Jun 2023 16:32:21 -0700
 > Dan Williams <dan.j.williams@intel.com> wrote:
 > 
-> > 'struct cxl_dev_state' makes too many assumptions about the capabilities
-> > of a CXL device. In particular it assumes a CXL device has a mailbox and
-> > all of the infrastructure and state that comes along with that.
+> > Per CXL 3.0 Section 9.14 Back-Invalidation Configuration, in order to
+> > enable an HDM-DB range (CXL.mem region with device initiated
+> > back-invalidation support), all ports in the path between the endpoint and
+> > the host bridge must be in 256-bit flit-mode.
 > > 
-> > In preparation for supporting accelerator / Type-2 devices that may not
-> > have a mailbox and in general maintain a minimal core context structure,
-> > make mailbox functionality a super-set of  'struct cxl_dev_state' with
-> > 'struct cxl_memdev_state'.
-> > 
-> > With this reorganization it allows for CXL devices that support HDM
-> > decoder mapping, but not other general-expander / Type-3 capabilities,
-> > to only enable that subset without the rest of the mailbox
-> > infrastructure coming along for the ride.
+> > Even for typical Type-3 class devices it is useful to enumerate link
+> > capabilities through the chain for debug purposes.
 > > 
 > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > 
-> I'm not yet sure that the division in exactly in the right place, but we
-> can move things later if it turns out some elements are more general than
-> we currently think.
-
-Agree, it is more along the lines of: the current trajectory of 'struct
-cxl_dev_state' is unsustainable, stem the tide, and revisit as needed.
-
-> 
-> A few trivial things inline.
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
+> A few minor comments. In particularly that the field you have in here doesn't
+> distinguish between 256 byte flits and otherwise.  That's done with the PCI spec
+> field not this one which is about latency optimization.
 > 
 > > ---
+> >  drivers/cxl/core/hdm.c  |    2 +
+> >  drivers/cxl/core/pci.c  |   84 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/core/port.c |    6 +++
+> >  drivers/cxl/cxl.h       |    2 +
+> >  drivers/cxl/cxlpci.h    |   25 +++++++++++++-
+> >  drivers/cxl/port.c      |    5 +++
+> >  6 files changed, 122 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index ca3b99c6eacf..91ab3033c781 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -3,8 +3,10 @@
+> >  #include <linux/seq_file.h>
+> >  #include <linux/device.h>
+> >  #include <linux/delay.h>
+> > +#include <linux/pci.h>
+> >  
+> >  #include "cxlmem.h"
+> > +#include "cxlpci.h"
+> >  #include "core.h"
+> I'm not following why link related patch should change includes in hdm relate c file?
+> Maybe later once you use it this makes sense?
+
+Definitely. I missed that this straggled in here.
+
 > 
->  
-> > -static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_dev_state *cxlds)
-> > +static struct cxl_mbox_get_supported_logs *
-> > +cxl_get_gsl(struct cxl_memdev_state *mds)
 > 
-> I'd consider keeping this on one line.  It was between 80 and 90 before and still is...
+> >  
+> >  /**
+> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> > index 67f4ab6daa34..b62ec17ccdde 100644
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -519,6 +519,90 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
 > 
-> 
-> >  {
-> 
-> 
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index a2845a7a69d8..d3fe73d5ba4d 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -267,6 +267,35 @@ struct cxl_poison_state {
-> >   * @cxl_dvsec: Offset to the PCIe device DVSEC
-> >   * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
-> >   * @media_ready: Indicate whether the device media is usable
-> > + * @dpa_res: Overall DPA resource tree for the device
-> > + * @pmem_res: Active Persistent memory capacity configuration
-> > + * @ram_res: Active Volatile memory capacity configuration
-> > + * @component_reg_phys: register base of component registers
-> > + * @info: Cached DVSEC information about the device.
-> 
-> Not seeing info in this structure.
-> 
-> > + * @serial: PCIe Device Serial Number
-> > + */
-> > +struct cxl_dev_state {
-> > +	struct device *dev;
-> > +	struct cxl_memdev *cxlmd;
-> > +	struct cxl_regs regs;
-> > +	int cxl_dvsec;
-> > +	bool rcd;
-> > +	bool media_ready;
-> > +	struct resource dpa_res;
-> > +	struct resource pmem_res;
-> > +	struct resource ram_res;
-> > +	resource_size_t component_reg_phys;
-> > +	u64 serial;
-> > +};
 > > +
-> > +/**
-> > + * struct cxl_memdev_state - Generic Type-3 Memory Device Class driver data
-> > + *
-> > + * CXL 8.1.12.1 PCI Header - Class Code Register Memory Device defines
-> > + * common memory device functionality like the presence of a mailbox and
-> > + * the functionality related to that like Identify Memory Device and Get
-> > + * Partition Info
-> > + * @cxlds: Core driver state common across Type-2 and Type-3 devices
-> >   * @payload_size: Size of space for payload
-> >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
-> >   * @lsa_size: Size of Label Storage Area
-> > @@ -275,9 +304,6 @@ struct cxl_poison_state {
-> >   * @firmware_version: Firmware version for the memory device.
-> >   * @enabled_cmds: Hardware commands found enabled in CEL.
-> >   * @exclusive_cmds: Commands that are kernel-internal only
-> > - * @dpa_res: Overall DPA resource tree for the device
-> > - * @pmem_res: Active Persistent memory capacity configuration
-> > - * @ram_res: Active Volatile memory capacity configuration
-> >   * @total_bytes: sum of all possible capacities
-> >   * @volatile_only_bytes: hard volatile capacity
-> >   * @persistent_only_bytes: hard persistent capacity
-> > @@ -286,54 +312,41 @@ struct cxl_poison_state {
-> >   * @active_persistent_bytes: sum of hard + soft persistent
-> >   * @next_volatile_bytes: volatile capacity change pending device reset
-> >   * @next_persistent_bytes: persistent capacity change pending device reset
-> > - * @component_reg_phys: register base of component registers
-> > - * @info: Cached DVSEC information about the device.
+> > +int cxl_probe_link(struct cxl_port *port)
+> > +{
+> > +	struct pci_dev *pdev = cxl_port_to_pci(port);
+> > +	u16 cap, en, parent_features;
+> > +	struct cxl_port *parent_port;
+> > +	struct device *dev;
+> > +	int rc, dvsec;
+> > +	u32 hdr;
+> > +
+> > +	if (!pdev) {
+> > +		/*
+> > +		 * Assume host bridges support all features, the root
+> > +		 * port will dictate the actual enabled set to endpoints.
+> > +		 */
+> > +		return 0;
+> > +	}
+> > +
+> > +	dev = &pdev->dev;
+> > +	dvsec = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> > +					  CXL_DVSEC_FLEXBUS_PORT);
+> > +	if (!dvsec) {
+> > +		dev_err(dev, "Failed to enumerate port capabilities\n");
+> > +		return -ENXIO;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Cache the link features for future determination of HDM-D or
+> > +	 * HDM-DB support
+> > +	 */
+> > +	rc = pci_read_config_dword(pdev, dvsec + PCI_DVSEC_HEADER1, &hdr);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_CAP_OFFSET,
+> > +				  &cap);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_STATUS_OFFSET,
+> > +				  &en);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	if (PCI_DVSEC_HEADER1_REV(hdr) < 2)
+> > +		cap &= ~CXL_DVSEC_FLEXBUS_REV2_MASK;
+> > +
+> > +	if (PCI_DVSEC_HEADER1_REV(hdr) < 1)
+> > +		cap &= ~CXL_DVSEC_FLEXBUS_REV1_MASK;
 > 
-> Not seeing this removed from this structure in this patch.
-> Curiously doesn't seem to be here in first place.
+> I talk about this below, but I'd not normally expect to see this.
+> Anyone who used those bits out of usage defined by later specs has buggy 
+> hardware and should quirk it rather than having it built in here.
+
+True, makes sense.
+
 > 
-> Probably wants precursor fix patch to get rid of it from the docs.
+> > +
+> > +	en &= cap;
+> > +	parent_port = to_cxl_port(port->dev.parent);
+> > +	parent_features = parent_port->features;
+> > +
+> > +	/* Enforce port features are plumbed through to the host bridge */
+> > +	port->features = en & CXL_DVSEC_FLEXBUS_ENABLE_MASK & parent_features;
+> > +
+> > +	dev_dbg(dev, "features:%s%s%s%s%s%s%s\n",
+> > +		en & CXL_DVSEC_FLEXBUS_CACHE_ENABLED ? " cache" : "",
+> > +		en & CXL_DVSEC_FLEXBUS_IO_ENABLED ? " io" : "",
+> > +		en & CXL_DVSEC_FLEXBUS_MEM_ENABLED ? " mem" : "",
+> > +		en & CXL_DVSEC_FLEXBUS_FLIT68_ENABLED ? " flit68" : "",
+> > +		en & CXL_DVSEC_FLEXBUS_MLD_ENABLED ? " mld" : "",
+> > +		en & CXL_DVSEC_FLEXBUS_FLIT256_ENABLED ? " flit256" : "",
+> 
+> Definitely want that text to be more explicit about latency optimized
 
-I did some digging and it turns out the cxlmem.h is not even built
-during a docs build, but I went ahead and added another patch to clean
-up warnings from:
+Ok, see below, I think dropping flit size altogether from these names
+makes sense.
 
-./scripts/kernel-doc drivers/cxl/cxlmem.h
+> 
+> > +		en & CXL_DVSEC_FLEXBUS_PBR_ENABLED ? " pbr" : "");
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_probe_link, CXL);
+> > +
+> >  #define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
+> >  #define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
+> >  #define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
+> 
+> 
+> > diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> > index 7c02e55b8042..7f82ffb5b4be 100644
+> > --- a/drivers/cxl/cxlpci.h
+> > +++ b/drivers/cxl/cxlpci.h
+> > @@ -45,8 +45,28 @@
+> >  /* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
+> >  #define CXL_DVSEC_DEVICE_GPF					5
+> >  
+> > -/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
+> > -#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
+> > +/* CXL 3.0 8.2.1.3: PCIe DVSEC for Flex Bus Port */
+> > +#define CXL_DVSEC_FLEXBUS_PORT					7
+> > +#define   CXL_DVSEC_FLEXBUS_CAP_OFFSET		0xA
+> > +#define     CXL_DVSEC_FLEXBUS_CACHE_CAPABLE	BIT(0)
+> > +#define     CXL_DVSEC_FLEXBUS_IO_CAPABLE	BIT(1)
+> > +#define     CXL_DVSEC_FLEXBUS_MEM_CAPABLE	BIT(2)
+> > +#define     CXL_DVSEC_FLEXBUS_FLIT68_CAPABLE	BIT(5)
+> 
+> This one includes the stuff that makes it 2.0 rather than 1.1  Might need a longer
+> name to avoid miss use? (I checked the 1.1 spec and reserved so would be 0).
 
-I will note though that the extra kdoc descriptor was not flagged, only
-missing attribute definitions are flagged.
+So maybe I will drop the flit size from the name until a conflict
+arises. I.e. this bit is relevant for all known flit sizes that support
+VH topologies.
+
+> 
+> > +#define     CXL_DVSEC_FLEXBUS_MLD_CAPABLE	BIT(6)
+> > +#define     CXL_DVSEC_FLEXBUS_REV1_MASK		GENMASK(6, 5)
+> 
+> Unusual approach.. Shouldn't be needed as those bits were RsvdP so
+> no one should have set them and now we are supporting the new bits
+> so should be good without masking.
+
+Agree.
+
+> 
+> > +#define     CXL_DVSEC_FLEXBUS_FLIT256_CAPABLE	BIT(13)
+> 
+> Not just flit256, but the latency optimized one (split in two kind of
+> with separate CRCs)  So this name needs to be something like
+> FLEXBUS_LAT_OPT_FLIT256_CAPABLE
+
+Until a non-flit256 latency optimized mechanism is added the flit size
+is redundant in this name.
+
+> 
+> 
+> > +#define     CXL_DVSEC_FLEXBUS_PBR_CAPABLE	BIT(14)
+> > +#define     CXL_DVSEC_FLEXBUS_REV2_MASK		GENMASK(14, 13)
+> > +#define   CXL_DVSEC_FLEXBUS_STATUS_OFFSET	0xE
+> > +#define     CXL_DVSEC_FLEXBUS_CACHE_ENABLED	BIT(0)
+> > +#define     CXL_DVSEC_FLEXBUS_IO_ENABLED	BIT(1)
+> > +#define     CXL_DVSEC_FLEXBUS_MEM_ENABLED	BIT(2)
+> > +#define     CXL_DVSEC_FLEXBUS_FLIT68_ENABLED	BIT(5)
+> 
+> Again, not just FLIT68, but the VH stuff from CXL 2.0 as well.
+> 
+> > +#define     CXL_DVSEC_FLEXBUS_MLD_ENABLED	BIT(6)
+> > +#define     CXL_DVSEC_FLEXBUS_FLIT256_ENABLED	BIT(13)
+> Also latency optimized is key here, not 256 bit (though you need
+> that as well).
+> 
+> > +#define     CXL_DVSEC_FLEXBUS_PBR_ENABLED	BIT(14)
+> > +#define     CXL_DVSEC_FLEXBUS_ENABLE_MASK \
+> > +	(GENMASK(2, 0) | GENMASK(6, 5) | GENMASK(14, 13))
+> Ok - I guess the resvP requires this dance.
+> >  
+> 
+
+
