@@ -2,343 +2,145 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AEDC0015E
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 17:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1FFEB64D8
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 19:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236793AbjFNRS2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 13:18:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
+        id S232203AbjFNTTi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 15:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236305AbjFNRST (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 13:18:19 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87DC92686;
-        Wed, 14 Jun 2023 10:18:14 -0700 (PDT)
+        with ESMTP id S229703AbjFNTTh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 15:19:37 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351572135
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 12:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686763094; x=1718299094;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=+EJu3qMR6xgl0nug2pw0HRRUOjawuGubA03KO1cVnIo=;
-  b=nW7smaWZlQ108FofsYwC/PesF6toXlnM9bqwafOyygEMJYJJpZsrhuua
-   k2uXqFK7vCnvupy7mkexWC4MaozVusIqdy4g3JV8pmNEG6oQYCLUcN2PM
-   fvlvUBEL99BBBK9Nl2KLS6luHM58X0sD9KOni9QoxDmybv1pr9MPcoioF
-   gheg+9tmE38WBPNiqIFkMu8pZalPAKeuiweFyEvYMrBrch3pADGs272E8
-   u8EKn8l/vFJM6p9xZ09D8SpSyVnbG68G0Tid8sd2kPGp8pvN0LjABMPH9
-   8Zmg7koFTwpR/XwX7e/XXo/mRtBkYEtW5iqVhorFwNL+2WB2bM7H8Z7uD
+  t=1686770376; x=1718306376;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to;
+  bh=hfyzo/aij+WjRH3zSJkrl2bGy16dWXEU3/TU3zImZws=;
+  b=VHoWY8EreJ9bxS6pEfCBh2fsKck5oXhjjI2PEcpad31dda69YiQz7aYu
+   zC1G8qGWzzZ5XSiXJ2CGXICBu0eWs0BjrRIkB6HnRS9U1z9bZ6LNz//hq
+   oJ/p4Rt9Wd0Noi9yCSf7EGf2G+bLZYK+Ozo3gQ5jj3+3EQb5Lvv6mtA90
+   bN4nuNDLbLy2TnE35cJPDeT6ABOflySPMHM7n1M1zesx8cf+k6ktuchhT
+   dQoEn6xBEsgZY9cNRKYzkaGb1eXTfaF0Ju3+lFG2SFEXVDYTLf81yBiE4
+   M6jt6LWa8vuib/iTu9u2WSEHJ5YbttMWVqXU1OGm9FMX0APxzIlRQvxrO
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="362054389"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338347256"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="362054389"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 10:18:10 -0700
+   d="scan'208";a="338347256"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:19:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="662470748"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="886384224"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="662470748"
-Received: from mahbubu1-mobl.amr.corp.intel.com (HELO [192.168.1.200]) ([10.209.44.245])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 10:18:09 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Wed, 14 Jun 2023 11:17:43 -0600
-Subject: [PATCH v4 4/4] tools/testing/cxl: add firmware update emulation to
- CXL memdevs
+   d="scan'208";a="886384224"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.116.198])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:19:29 -0700
+From:   ira.weiny@intel.com
+Subject: [PATCH 0/5] cxl/dcd: Add support for Dynamic Capacity Devices
+ (DCD)
+Date:   Wed, 14 Jun 2023 12:16:27 -0700
+Message-Id: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230602-vv-fw_update-v4-4-c6265bd7343b@intel.com>
-References: <20230602-vv-fw_update-v4-0-c6265bd7343b@intel.com>
-In-Reply-To: <20230602-vv-fw_update-v4-0-c6265bd7343b@intel.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
+X-B4-Tracking: v=1; b=H4sIAAsSimQC/1WNMQ7CMAwAv1J5xlISIANfQQxp7FAPhMguFajq3
+ 0nZGE+6061grMIGl2EF5UVMnrWDPwyQp1TvjEKdIbhwdNGdkDLh/Gkc8NVsVk4PdJn8ucTgYyH
+ o4ZiMcdRU87Sn//YuNOUi79/1etu2LyAk6w2FAAAA
+To:     Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Mailer: b4 0.13-dev-02a79
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7811;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=+EJu3qMR6xgl0nug2pw0HRRUOjawuGubA03KO1cVnIo=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDCmd3/xnPtpf4cTqV3e44msoj5k3V8WbY/fb2H9ysm/5W
- fC82mpVRykLgxgXg6yYIsvfPR8Zj8ltz+cJTHCEmcPKBDKEgYtTACZSHczwk7H/vdeXTZEXvoup
- clxj1PFxcuCZY108b3vxy4aTPxeftWX4n6a657+getoxtbfP1h5QnMW2R3zF0sq5wnneLEn/7t9
- dxgQA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+X-Mailer: b4 0.13-dev-9a8cd
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1686770367; l=3214;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=hfyzo/aij+WjRH3zSJkrl2bGy16dWXEU3/TU3zImZws=;
+ b=xh6cLJmLC/0mGibj7k+TsXFba22EEO1ZxHMVkt9YKgN0rAJAIvjqx4XgO9mhA8gzmSZENHp29
+ EJaXDqGiMdKAX3fLxC2CaoROEv8p4O3wfWvElH20aPXHQa3wn/5fWIU
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Add emulation for the 'Get FW Info', 'Transfer FW', and 'Activate FW'
-CXL mailbox commands to the cxl_test emulated memdevs to enable
-end-to-end unit testing of a firmware update flow. For now, only
-advertise an 'offline activation' capability as that is all the CXL
-memdev driver currently implements.
+I'm submitting these on behalf of Navneet.  There was a round of
+internal discussion which left a few questions but we want to get the
+public discussion going.  A first public preview was posted by Dan.[1]
 
-Add some canned values for the serial number fields, and create a
-platform device sysfs knob to calculate the sha256sum of the firmware
-image that was received, so a unit test can compare it with the original
-file that was uploaded.
+The series has been rebased on the type-2 work posted from Dan.[2]  As
+discussed in the community call, not all of that series is required for
+these patches.  This will get rebased on the subset of those patches he
+is targeting for 6.5.  The series was tested using Fan Ni's Qemu DCD
+series.[3]
 
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: Russ Weight <russell.h.weight@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
+[cover letter]
+
+A Dynamic Capacity Device (DCD) (CXL 3.0 spec 9.13.3) is a CXL memory
+device that implements dynamic capacity.  Dynamic capacity feature
+allows memory capacity to change dynamically, without the need for
+resetting the device.
+
+Provide initial patches to enable DCD on non interleaving regions.
+Details:
+
+- Get the dynamic capacity region information from cxl device and add
+  the advertised DC memory to driver managed resources
+- Get the device dynamic capacity extent list from the device and
+  maintain it in the host and add the preallocated memory to the host
+- Dynamic capacity region support
+- DCD region provisioning via Dax
+- Dynamic capacity event records
+        a. Add capacity Events
+	b. Release capacity events
+	c. Add the memory to the host dc region
+	d. Release the memory from the host dc region
+- Trace Dynamic Capacity events
+- Send add capacity response to device
+- Send release dynamic capacity to device
+
+Cc: Navneet Singh <navneet.singh@intel.com>
+Cc: Fan Ni <fan.ni@samsung.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Ben Widawsky <bwidawsk@kernel.org>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Cc: linux-cxl@vger.kernel.org
+
+[1] https://lore.kernel.org/all/64326437c1496_934b2949f@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+[2] https://lore.kernel.org/all/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/
+[3] https://lore.kernel.org/all/6483946e8152f_f1132294a2@iweiny-mobl.notmuch/
+
 ---
- tools/testing/cxl/test/mem.c | 160 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 160 insertions(+)
+Navneet Singh (5):
+      cxl/mem : Read Dynamic capacity configuration from the device
+      cxl/region: Add dynamic capacity cxl region support.
+      cxl/mem : Expose dynamic capacity configuration to userspace
+      cxl/mem: Add support to handle DCD add and release capacity events.
+      cxl/mem: Trace Dynamic capacity Event Record
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index 68668d8df1cd..1166f470e0c7 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -8,11 +8,14 @@
- #include <linux/sizes.h>
- #include <linux/bits.h>
- #include <asm/unaligned.h>
-+#include <crypto/sha2.h>
- #include <cxlmem.h>
- 
- #include "trace.h"
- 
- #define LSA_SIZE SZ_128K
-+#define FW_SIZE SZ_64M
-+#define FW_SLOTS 3
- #define DEV_SIZE SZ_2G
- #define EFFECT(x) (1U << x)
- 
-@@ -72,6 +75,20 @@ static struct cxl_cel_entry mock_cel[] = {
- 		.opcode = cpu_to_le16(CXL_MBOX_OP_CLEAR_POISON),
- 		.effect = cpu_to_le16(EFFECT(DATA_CHANGE_IMMEDIATE)),
- 	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_GET_FW_INFO),
-+		.effect = CXL_CMD_EFFECT_NONE,
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_TRANSFER_FW),
-+		.effect = cpu_to_le16(EFFECT(CONF_CHANGE_COLD_RESET) |
-+				      EFFECT(BACKGROUND_OP)),
-+	},
-+	{
-+		.opcode = cpu_to_le16(CXL_MBOX_OP_ACTIVATE_FW),
-+		.effect = cpu_to_le16(EFFECT(CONF_CHANGE_COLD_RESET) |
-+				      EFFECT(CONF_CHANGE_IMMEDIATE)),
-+	},
- };
- 
- /* See CXL 2.0 Table 181 Get Health Info Output Payload */
-@@ -123,6 +140,10 @@ struct mock_event_store {
- 
- struct cxl_mockmem_data {
- 	void *lsa;
-+	void *fw;
-+	int fw_slot;
-+	int fw_staged;
-+	size_t fw_size;
- 	u32 security_state;
- 	u8 user_pass[NVDIMM_PASSPHRASE_LEN];
- 	u8 master_pass[NVDIMM_PASSPHRASE_LEN];
-@@ -1128,6 +1149,87 @@ static struct attribute *cxl_mock_mem_core_attrs[] = {
- };
- ATTRIBUTE_GROUPS(cxl_mock_mem_core);
- 
-+static int mock_fw_info(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	struct cxl_mbox_get_fw_info fw_info = {
-+		.num_slots = FW_SLOTS,
-+		.slot_info = (mdata->fw_slot & 0x7) |
-+			     ((mdata->fw_staged & 0x7) << 3),
-+		.activation_cap = 0,
-+	};
-+
-+	strcpy(fw_info.slot_1_revision, "cxl_test_fw_001");
-+	strcpy(fw_info.slot_2_revision, "cxl_test_fw_002");
-+	strcpy(fw_info.slot_3_revision, "cxl_test_fw_003");
-+	strcpy(fw_info.slot_4_revision, "");
-+
-+	if (cmd->size_out < sizeof(fw_info))
-+		return -EINVAL;
-+
-+	memcpy(cmd->payload_out, &fw_info, sizeof(fw_info));
-+	return 0;
-+}
-+
-+static int mock_transfer_fw(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_transfer_fw *transfer = cmd->payload_in;
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+	void *fw = mdata->fw;
-+	size_t offset, length;
-+
-+	offset = le32_to_cpu(transfer->offset) * CXL_FW_TRANSFER_ALIGNMENT;
-+	length = cmd->size_in - sizeof(*transfer);
-+	if (offset + length > FW_SIZE)
-+		return -EINVAL;
-+
-+	switch (transfer->action) {
-+	case CXL_FW_TRANSFER_ACTION_FULL:
-+		if (offset != 0)
-+			return -EINVAL;
-+		fallthrough;
-+	case CXL_FW_TRANSFER_ACTION_END:
-+		if (transfer->slot == 0 || transfer->slot > FW_SLOTS)
-+			return -EINVAL;
-+		mdata->fw_size = offset + length;
-+		break;
-+	case CXL_FW_TRANSFER_ACTION_INITIATE:
-+	case CXL_FW_TRANSFER_ACTION_CONTINUE:
-+		break;
-+	case CXL_FW_TRANSFER_ACTION_ABORT:
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	memcpy(fw + offset, transfer->data, length);
-+	return 0;
-+}
-+
-+static int mock_activate_fw(struct cxl_dev_state *cxlds,
-+			    struct cxl_mbox_cmd *cmd)
-+{
-+	struct cxl_mbox_activate_fw *activate = cmd->payload_in;
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(cxlds->dev);
-+
-+	if (activate->slot == 0 || activate->slot > FW_SLOTS)
-+		return -EINVAL;
-+
-+	switch (activate->action) {
-+	case CXL_FW_ACTIVATE_ONLINE:
-+		mdata->fw_slot = activate->slot;
-+		mdata->fw_staged = 0;
-+		return 0;
-+	case CXL_FW_ACTIVATE_OFFLINE:
-+		mdata->fw_staged = activate->slot;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd)
- {
- 	struct device *dev = cxlds->dev;
-@@ -1194,6 +1296,15 @@ static int cxl_mock_mbox_send(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *
- 	case CXL_MBOX_OP_CLEAR_POISON:
- 		rc = mock_clear_poison(cxlds, cmd);
- 		break;
-+	case CXL_MBOX_OP_GET_FW_INFO:
-+		rc = mock_fw_info(cxlds, cmd);
-+		break;
-+	case CXL_MBOX_OP_TRANSFER_FW:
-+		rc = mock_transfer_fw(cxlds, cmd);
-+		break;
-+	case CXL_MBOX_OP_ACTIVATE_FW:
-+		rc = mock_activate_fw(cxlds, cmd);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -1209,6 +1320,11 @@ static void label_area_release(void *lsa)
- 	vfree(lsa);
- }
- 
-+static void fw_buf_release(void *buf)
-+{
-+	vfree(buf);
-+}
-+
- static bool is_rcd(struct platform_device *pdev)
- {
- 	const struct platform_device_id *id = platform_get_device_id(pdev);
-@@ -1241,10 +1357,19 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	mdata->lsa = vmalloc(LSA_SIZE);
- 	if (!mdata->lsa)
- 		return -ENOMEM;
-+	mdata->fw = vmalloc(FW_SIZE);
-+	if (!mdata->fw)
-+		return -ENOMEM;
-+	mdata->fw_slot = 2;
-+
- 	rc = devm_add_action_or_reset(dev, label_area_release, mdata->lsa);
- 	if (rc)
- 		return rc;
- 
-+	rc = devm_add_action_or_reset(dev, fw_buf_release, mdata->fw);
-+	if (rc)
-+		return rc;
-+
- 	cxlds = cxl_dev_state_create(dev);
- 	if (IS_ERR(cxlds))
- 		return PTR_ERR(cxlds);
-@@ -1286,6 +1411,10 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
- 
-+	rc = cxl_memdev_setup_fw_upload(cxlds);
-+	if (rc)
-+		return rc;
-+
- 	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
- 
- 	return 0;
-@@ -1324,9 +1453,40 @@ static ssize_t security_lock_store(struct device *dev, struct device_attribute *
- 
- static DEVICE_ATTR_RW(security_lock);
- 
-+static ssize_t fw_buf_checksum_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
-+	u8 hash[SHA256_DIGEST_SIZE];
-+	unsigned char *hstr, *hptr;
-+	struct sha256_state sctx;
-+	ssize_t written = 0;
-+	int i;
-+
-+	sha256_init(&sctx);
-+	sha256_update(&sctx, mdata->fw, mdata->fw_size);
-+	sha256_final(&sctx, hash);
-+
-+	hstr = kzalloc((SHA256_DIGEST_SIZE * 2) + 1, GFP_KERNEL);
-+	if (!hstr)
-+		return -ENOMEM;
-+
-+	hptr = hstr;
-+	for (i = 0; i < SHA256_DIGEST_SIZE; i++)
-+		hptr += sprintf(hptr, "%02x", hash[i]);
-+
-+	written = sysfs_emit(buf, "%s\n", hstr);
-+
-+	kfree(hstr);
-+	return written;
-+}
-+
-+static DEVICE_ATTR_RO(fw_buf_checksum);
-+
- static struct attribute *cxl_mock_mem_attrs[] = {
- 	&dev_attr_security_lock.attr,
- 	&dev_attr_event_trigger.attr,
-+	&dev_attr_fw_buf_checksum.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(cxl_mock_mem);
+ drivers/cxl/Kconfig       |  11 +
+ drivers/cxl/core/core.h   |   7 +
+ drivers/cxl/core/hdm.c    | 234 ++++++++++++++++++--
+ drivers/cxl/core/mbox.c   | 540 +++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/memdev.c |  72 +++++++
+ drivers/cxl/core/port.c   |  18 ++
+ drivers/cxl/core/region.c | 337 ++++++++++++++++++++++++++++-
+ drivers/cxl/core/trace.h  |  68 +++++-
+ drivers/cxl/cxl.h         |  32 ++-
+ drivers/cxl/cxlmem.h      | 146 ++++++++++++-
+ drivers/cxl/pci.c         |  14 +-
+ drivers/dax/bus.c         |  11 +-
+ drivers/dax/bus.h         |   5 +-
+ drivers/dax/cxl.c         |   4 +
+ 14 files changed, 1453 insertions(+), 46 deletions(-)
+---
+base-commit: 034a16d0165be3e092d60685be7b1b05e6f3059b
+change-id: 20230604-dcd-type2-upstream-0cd15f6216fd
 
+Best regards,
 -- 
-2.40.1
+Ira Weiny <ira.weiny@intel.com>
 
