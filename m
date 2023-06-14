@@ -2,71 +2,67 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDC5EB64D9
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 08:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB72EB64D9
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 08:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237322AbjFNIdK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 04:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
+        id S243640AbjFNIhI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 04:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234266AbjFNIdI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 04:33:08 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BFB19AC;
-        Wed, 14 Jun 2023 01:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kfogN8xbf7/stcsXdqrLFvOjiQCC1x162a5W5DN6bEk=; b=e+2/4S4ZBZlNXOGN1LVdbSvAUZ
-        AXLgS7Ai/PPFdhlX18C4SNeStJXNyrIWQXyV5Rqbu4rhpuViH2ZUToPkyb2oWIfwqp0RH3T9zm4zb
-        MRLmBfLuo0iV0B/17KNaQNK/NWyt7MhbDY3A4IuYeUtIWO2V8boESpK61l6iCvUwkr19WSj2vlRFO
-        S7cZ9aK8Z3NWFNzIiLY1qsf+skB+uLvUxAuE178/TwZbFckYtbxy4bbANsgus0ZK9iWjCZAN5RJ2I
-        ATbvWPJ9+rRCNbbHuHyiw7WsReWdbYF8AwXnVBBP9sAVoiYBIIv0030RScqPD45Eamwi2Gn9gcY9u
-        v8W1PaSQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q9Lvl-00AcBr-0D;
-        Wed, 14 Jun 2023 08:32:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F3A73002F1;
-        Wed, 14 Jun 2023 10:32:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 56C6F27F86A4E; Wed, 14 Jun 2023 10:32:40 +0200 (CEST)
-Date:   Wed, 14 Jun 2023 10:32:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     alison.schofield@intel.com
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Mike Rapoport <rppt@kernel.org>, x86@kernel.org,
-        linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] CXL: Apply SRAT defined PXM to entire CFMWS window
-Message-ID: <20230614083240.GC1639749@hirez.programming.kicks-ass.net>
-References: <cover.1686712819.git.alison.schofield@intel.com>
+        with ESMTP id S233114AbjFNIhH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 04:37:07 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E9719AC
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 01:37:04 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QgzHh3dH2z6GD22;
+        Wed, 14 Jun 2023 16:34:40 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 14 Jun
+ 2023 09:37:01 +0100
+Date:   Wed, 14 Jun 2023 09:36:59 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
+        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 3/7] cxl/mbox: Add sanitation handling machinery
+Message-ID: <20230614093659.00006b5c@Huawei.com>
+In-Reply-To: <giuweh2q6au33ycip6wiz6lf5g4wdhoyawfqoosq3x3atitjet@gtc2a6hzp63e>
+References: <20230612181038.14421-1-dave@stgolabs.net>
+        <20230612181038.14421-4-dave@stgolabs.net>
+        <20230613170755.000011b9@Huawei.com>
+        <giuweh2q6au33ycip6wiz6lf5g4wdhoyawfqoosq3x3atitjet@gtc2a6hzp63e>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1686712819.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 09:35:23PM -0700, alison.schofield@intel.com wrote:
-> The CXL subsystem requires the creation of NUMA nodes for CFMWS
+On Tue, 13 Jun 2023 09:28:54 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-The thing is CXL some persistent memory thing, right? But what is this
-CFMWS thing? I don't think I've ever seen that particular combination of
-letters together.
+> On Tue, 13 Jun 2023, Jonathan Cameron wrote:
+> 
+> >> +		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+> >> +			if (cxlds->security.poll_tmo_secs != -1) {  
+> >Should be checking your new poll boolean.  
+> 
+> Yes, again sorry for the oversight.
+
+Other than that, LGTM and with the fix
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> 
+> Thanks,
+> Davidlohr
+
