@@ -2,50 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E31EB64D8
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10185EB64D8
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 19:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233083AbjFNTTq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 15:19:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
+        id S229576AbjFNTUA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 15:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbjFNTTp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 15:19:45 -0400
+        with ESMTP id S236002AbjFNTTy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 15:19:54 -0400
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954EB2135
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 12:19:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E8142682
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 12:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686770384; x=1718306384;
+  t=1686770393; x=1718306393;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to;
-  bh=wc3sJukGyeQA36C7Ys0D/O75E9VKGDdHLKsuYCJXNV0=;
-  b=DB+alultGLMxge1Xi++nfZwlGZgLUiXV0yYcwS0P4jvSLBd+Ggwi6X5Q
-   KB92dwccXd7rs/YD1xqqUezj7yNy9p8ln8IA4YA5M2Fs0MTJJ1Mz5SSwx
-   k7ZmqugjMEUTUEoHwTODG5d6sOp8aSfRt0yv8n+m9T6l1boZGChCGA4XC
-   lHEjkFlXsinTCTPecg2EnST0rgKIJoXhzhyCE1k7I3xsmKqLMLygZ2Dlr
-   e1ZWlJ9DnS2VlwXqOA0+N4aC9B+ItYPBz5xd9FcDZDJ+aUD3LKrKLfUHo
-   Gnz2SPv5ICebgxarNAUo+Pv15dzU8YC9a2Zv6Xvk1mloT+5bdIUA6Qim4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338347329"
+  bh=ID0J+3Kp49Mg9ETt5IT049MYB4ZipCCxdK/sLh9D2L4=;
+  b=CG+KJzi22mS01DFpzfBS4EnhSJo250f7ydkRrIIaRSZGbnZIh7FdtiS2
+   uSA7x12AJFiWt3KoHT4sQIvWcHzl0EWPDp4Klw75bA17PFkfktn3Blnvd
+   2ac28y6gVKJHq2J/jBXFADypmPTDrVQLYY4dIXtbNdoSo6qFRLRGQt5ta
+   mW91hZDWB6mOmBEN05H6Si7KQZbzDUIypfpUMGSakZFZqfpzycEdIMT57
+   hlYOXdBtxzHg6wa80hGbxpHz9RtzNhtAo9E59QB1WlmAXxv/g4MnXipk1
+   lJNswwzTf34PSx6fAsfzTPYFJqtO5jd0J2Y7PsMFOu3f6PykW0g6sju0b
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338347383"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="338347329"
+   d="scan'208";a="338347383"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:19:44 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:19:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="886384262"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="886384309"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="886384262"
+   d="scan'208";a="886384309"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.116.198])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:19:42 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 12:19:51 -0700
 From:   ira.weiny@intel.com
-Date:   Wed, 14 Jun 2023 12:16:30 -0700
-Subject: [PATCH 3/5] cxl/mem : Expose dynamic capacity configuration to
- userspace
+Date:   Wed, 14 Jun 2023 12:16:32 -0700
+Subject: [PATCH 5/5] cxl/mem: Trace Dynamic capacity Event Record
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230604-dcd-type2-upstream-v1-3-71b6341bae54@intel.com>
+Message-Id: <20230604-dcd-type2-upstream-v1-5-71b6341bae54@intel.com>
 References: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
 In-Reply-To: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
 To:     Navneet Singh <navneet.singh@intel.com>,
@@ -55,11 +54,11 @@ To:     Navneet Singh <navneet.singh@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-cxl@vger.kernel.org
 X-Mailer: b4 0.13-dev-9a8cd
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1686770367; l=3766;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1686770367; l=3458;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=fljXcPz+ZQgKoffq99siBW3SK44DWVen0PdBI49pnCM=;
- b=+M2qKT6J7yGGimy4rXyHTr1x1qQJ2lTdEkAGcMTfPebtq7VOu3ZHcl3lQxT+01YYQm4ksyUXw
- O1ZsrSSHtwlAx9gNlabVqPHnOfrVMc72hYYFwWIp/8cMxlEz0J+ntvx
+ bh=o0Z/5qX3MI+qx48VNONUHgNMI4ceicmOt0MHT01Dktc=;
+ b=KYQ5/LY/WR+yPSOWA4ld4H+appCY+HtJAG0jy3X+Ef/PWNXcHHsKEvhX7GEGFiGqCNNiI8Zjj
+ Tu0TkfdSbJTB/jW6X7SwAX7SsZ48WL/6d9GKmgJ71mg60rwyI4Gn3iB
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
@@ -68,121 +67,114 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Navneet Singh <navneet.singh@intel.com>
 
-Exposing driver cached dynamic capacity configuration through sysfs
-attributes.User will create one or more dynamic capacity
-cxl regions based on this information and map the dynamic capacity of
-the device into HDM ranges using one or more HDM decoders.
+CXL rev 3.0 section 8.2.9.2.1.5 defines the Dynamic Capacity Event Record
+Determine if the event read is a Dynamic capacity event record and
+if so trace the record for the debug purpose.
+
+Add DC trace points to the trace log.
 
 Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 
 ---
 [iweiny: fixups]
-[djbw: fixups, no sign-off: preview only]
+[djbw: no sign-off: preview only]
 ---
- drivers/cxl/core/memdev.c | 72 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/cxl/core/mbox.c  |  5 ++++
+ drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 5d1ba7a72567..beeb5fa3a0aa 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -99,6 +99,20 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_pmem_size =
- 	__ATTR(size, 0444, pmem_size_show, NULL);
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index db9295216de5..802dacd09772 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -888,6 +888,11 @@ static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 				(struct cxl_event_mem_module *)record;
  
-+static ssize_t dc_regions_count_show(struct device *dev, struct device_attribute *attr,
-+		char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	int len = 0;
+ 		trace_cxl_memory_module(cxlmd, type, rec);
++	} else if (uuid_equal(id, &dc_event_uuid)) {
++		struct dcd_event_dyn_cap *rec =
++				(struct dcd_event_dyn_cap *)record;
 +
-+	len = sysfs_emit(buf, "0x%x\n", mds->nr_dc_region);
-+	return len;
-+}
-+
-+struct device_attribute dev_attr_dc_regions_count =
-+	__ATTR(dc_regions_count, 0444, dc_regions_count_show, NULL);
-+
- static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -362,6 +376,57 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
- 	NULL,
- };
++		trace_cxl_dynamic_capacity(cxlmd, type, rec);
+ 	} else {
+ 		/* For unknown record types print just the header */
+ 		trace_cxl_generic_event(cxlmd, type, record);
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index e11651255780..468c2c8b4347 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -704,6 +704,71 @@ TRACE_EVENT(cxl_poison,
+ 	)
+ );
  
-+static ssize_t show_size_regionN(struct cxl_memdev *cxlmd, char *buf, int pos)
-+{
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++/*
++ * DYNAMIC CAPACITY Event Record - DER
++ *
++ * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
++ */
 +
-+	return sysfs_emit(buf, "0x%llx\n", mds->dc_region[pos].decode_len);
-+}
++#define CXL_DC_ADD_CAPACITY			0x00
++#define CXL_DC_REL_CAPACITY			0x01
++#define CXL_DC_FORCED_REL_CAPACITY		0x02
++#define CXL_DC_REG_CONF_UPDATED			0x03
++#define show_dc_evt_type(type)	__print_symbolic(type,		\
++	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
++	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
++	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
++	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
++)
 +
-+#define SIZE_ATTR_RO(n)                                              \
-+static ssize_t dc##n##_size_show(                                       \
-+	struct device *dev, struct device_attribute *attr, char *buf)  \
-+{                                                                      \
-+	return show_size_regionN(to_cxl_memdev(dev), buf, (n));             \
-+}                                                                      \
-+static DEVICE_ATTR_RO(dc##n##_size)
-+SIZE_ATTR_RO(0);
-+SIZE_ATTR_RO(1);
-+SIZE_ATTR_RO(2);
-+SIZE_ATTR_RO(3);
-+SIZE_ATTR_RO(4);
-+SIZE_ATTR_RO(5);
-+SIZE_ATTR_RO(6);
-+SIZE_ATTR_RO(7);
++TRACE_EVENT(cxl_dynamic_capacity,
 +
-+static struct attribute *cxl_memdev_dc_attributes[] = {
-+	&dev_attr_dc0_size.attr,
-+	&dev_attr_dc1_size.attr,
-+	&dev_attr_dc2_size.attr,
-+	&dev_attr_dc3_size.attr,
-+	&dev_attr_dc4_size.attr,
-+	&dev_attr_dc5_size.attr,
-+	&dev_attr_dc6_size.attr,
-+	&dev_attr_dc7_size.attr,
-+	&dev_attr_dc_regions_count.attr,
-+	NULL,
-+};
++	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
++		 struct dcd_event_dyn_cap  *rec),
 +
-+static umode_t cxl_dc_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++	TP_ARGS(cxlmd, log, rec),
 +
-+	if (a == &dev_attr_dc_regions_count.attr)
-+		return a->mode;
++	TP_STRUCT__entry(
++		CXL_EVT_TP_entry
 +
-+	if (n < mds->nr_dc_region)
-+		return a->mode;
++		/* Dynamic capacity Event */
++		__field(u8, event_type)
++		__field(u16, hostid)
++		__field(u8, region_id)
++		__field(u64, dpa_start)
++		__field(u64, length)
++		__array(u8, tag, CXL_EVENT_DC_TAG_SIZE)
++		__field(u16, sh_extent_seq)
++	),
 +
-+	return 0;
-+}
++	TP_fast_assign(
++		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
 +
- static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
- 				  int n)
- {
-@@ -385,10 +450,17 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
- 	.attrs = cxl_memdev_pmem_attributes,
- };
++		/* Dynamic_capacity Event */
++		__entry->event_type = rec->data.event_type;
++
++		/* DCD event record data */
++		__entry->hostid = le16_to_cpu(rec->data.host_id);
++		__entry->region_id = rec->data.region_index;
++		__entry->dpa_start = le64_to_cpu(rec->data.extent.start_dpa);
++		__entry->length = le64_to_cpu(rec->data.extent.length);
++		memcpy(__entry->tag, &rec->data.extent.tag, CXL_EVENT_DC_TAG_SIZE);
++		__entry->sh_extent_seq = le16_to_cpu(rec->data.extent.shared_extn_seq);
++	),
++
++	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
++		"starting_dpa=%llx length=%llx tag=%s " \
++		"shared_extent_sequence=%d",
++		show_dc_evt_type(__entry->event_type),
++		__entry->hostid,
++		__entry->region_id,
++		__entry->dpa_start,
++		__entry->length,
++		__print_hex(__entry->tag, CXL_EVENT_DC_TAG_SIZE),
++		__entry->sh_extent_seq
++	)
++);
++
+ #endif /* _CXL_EVENTS_H */
  
-+static struct attribute_group cxl_memdev_dc_attribute_group = {
-+	.name = "dc",
-+	.attrs = cxl_memdev_dc_attributes,
-+	.is_visible = cxl_dc_visible,
-+};
-+
- static const struct attribute_group *cxl_memdev_attribute_groups[] = {
- 	&cxl_memdev_attribute_group,
- 	&cxl_memdev_ram_attribute_group,
- 	&cxl_memdev_pmem_attribute_group,
-+	&cxl_memdev_dc_attribute_group,
- 	NULL,
- };
- 
+ #define TRACE_INCLUDE_FILE trace
 
 -- 
 2.40.0
