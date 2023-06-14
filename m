@@ -2,67 +2,115 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB72EB64D9
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 08:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DC3EB64D9
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 09:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243640AbjFNIhI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 04:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60172 "EHLO
+        id S243903AbjFNJK6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 05:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233114AbjFNIhH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 04:37:07 -0400
+        with ESMTP id S243726AbjFNJK5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 05:10:57 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E9719AC
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 01:37:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A435810D5;
+        Wed, 14 Jun 2023 02:10:55 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QgzHh3dH2z6GD22;
-        Wed, 14 Jun 2023 16:34:40 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qh04g3LXWz6H7tc;
+        Wed, 14 Jun 2023 17:10:11 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 14 Jun
- 2023 09:37:01 +0100
-Date:   Wed, 14 Jun 2023 09:36:59 +0100
+ 2023 10:10:52 +0100
+Date:   Wed, 14 Jun 2023 10:10:51 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <vishal.l.verma@intel.com>, <fan.ni@samsung.com>,
-        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 3/7] cxl/mbox: Add sanitation handling machinery
-Message-ID: <20230614093659.00006b5c@Huawei.com>
-In-Reply-To: <giuweh2q6au33ycip6wiz6lf5g4wdhoyawfqoosq3x3atitjet@gtc2a6hzp63e>
-References: <20230612181038.14421-1-dave@stgolabs.net>
-        <20230612181038.14421-4-dave@stgolabs.net>
-        <20230613170755.000011b9@Huawei.com>
-        <giuweh2q6au33ycip6wiz6lf5g4wdhoyawfqoosq3x3atitjet@gtc2a6hzp63e>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <alison.schofield@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Len Brown" <lenb@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Mike Rapoport" <rppt@kernel.org>, <x86@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] CXL: Apply SRAT defined PXM to entire CFMWS
+ window
+Message-ID: <20230614101051.00006602@Huawei.com>
+In-Reply-To: <20230614083240.GC1639749@hirez.programming.kicks-ass.net>
+References: <cover.1686712819.git.alison.schofield@intel.com>
+        <20230614083240.GC1639749@hirez.programming.kicks-ass.net>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 13 Jun 2023 09:28:54 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Wed, 14 Jun 2023 10:32:40 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Tue, 13 Jun 2023, Jonathan Cameron wrote:
+> On Tue, Jun 13, 2023 at 09:35:23PM -0700, alison.schofield@intel.com wrote:
+> > The CXL subsystem requires the creation of NUMA nodes for CFMWS  
 > 
-> >> +		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
-> >> +			if (cxlds->security.poll_tmo_secs != -1) {  
-> >Should be checking your new poll boolean.  
+> The thing is CXL some persistent memory thing, right? But what is this
+> CFMWS thing? I don't think I've ever seen that particular combination of
+> letters together.
 > 
-> Yes, again sorry for the oversight.
+Hi Peter,
 
-Other than that, LGTM and with the fix
+To save time before the US based folk wake up.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Both persistent and volatile memory found on CXL devices (mostly volatile on
+early devices).
 
-> 
-> Thanks,
-> Davidlohr
+CXL Fixed Memory Window (structure) (CFMWS - defined in 9.17.1.3 of CXL r3.0
+- via an ACPI table (CEDT).  CFMWS, as a term, is sometimes abused in the kernel
+(and here) for the window rather than the structure describing the window
+(the S on the end).
 
+CFMWS - A region of Host Physical Address (HPA) Space which routes accesses to CXL Host
+bridges. A CFMWS describes interleaving as well (so multiple target host bridges).
+If multiple interleave setups are available, then you'll see multiple CFMWS entries
+- so different statically regions of HPA can route to same host bridges with different
+interleave setups (decoding via the configurable part to hit different actual memory
+on the downstream devices). 
+Where accesses are routed after that depends on the configurable parts
+of the CXL topology (Host-Managed Device Memory (HDM) decoders in host bridges,
+switches etc).  Note that a CFMWS address may route to nowhere if downstream
+devices aren't available / configured yet.
+
+CFMWS is the CXL specification avoiding defining interfaces for controlling
+the host address space to CXL host bridge mapping as those vary so much across
+host implementations + not always configurable at runtime anyway. Also includes
+a bunch of other details about the region (too many details perhaps!)
+
+Who does the configuration (BIOS / kernel) varies across implementations
+and we have OS managed hotplug so the OS always has to do some of it
+(personally I prefer the kernel doing everything :)
+It's made messier by CXL 1.1 hosts where a lot less was discoverable so
+generally the BIOS has to do the heavy lifting. For CXL 2.0 onwards the OS
+'might' do everything except whatever is needed on the host to configure
+the CXL Fixed Memory Windows it is advertising.
+
+Note there is no requirement that the access characteristics of memory mapped
+into a given CFMWS should be remotely consistent across the whole window
+ - some of the window may route through switches, and to directly connected
+   devices.
+That's a simplifying assumption made today as we don't yet know the full
+scope of what people are building.
+
+Hope that helps (rather than causing confusion!)
+
+Jonathan
