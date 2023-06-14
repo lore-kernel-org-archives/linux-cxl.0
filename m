@@ -2,185 +2,226 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5574EB64DB
-	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 13:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D16EB64D8
+	for <linux-cxl@archiver.kernel.org>; Wed, 14 Jun 2023 14:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244315AbjFNNdq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 09:33:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45052 "EHLO
+        id S245461AbjFNOPD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 10:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230321AbjFNNdo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 09:33:44 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3CD01FC4;
-        Wed, 14 Jun 2023 06:33:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686749623; x=1718285623;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=H756GnvTH2vIA46z4gQnq21dgdKIPRLx6c66maEb8Oc=;
-  b=mjSLugAFnVjtYPnNlyWJuoaiYOk1V4JkjxSiSldNFYS92TQpbFIgGe5t
-   o5p1YoW7mHnA8kqE8jTec2fsFX0YwlhCrUJ7tcRomd3+FK9yvTqq5l5w3
-   4PfFufdCkM2Lrn7x0JVIJxU53SsxaD6oZZ1k4Fwv0Bcv1nDGmd6pRKSB+
-   VWBWayFMGkmAdoNbv71ByYFNlbiUfbdLwF1eIXxcNzwbP0txqg2iaTjls
-   AhCfOPE1BWI3qqo2bOluU5kunNUoccOHj3xyyABbaPdcagtbevfOZRkJ2
-   ZvxRdm1d8YXFwlAg9FkHmPFe3FM0VLF51NXiXML6XHXY43ZNPiXt7yFeb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="356103766"
-X-IronPort-AV: E=Sophos;i="6.00,242,1681196400"; 
-   d="scan'208";a="356103766"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 06:33:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="741841798"
-X-IronPort-AV: E=Sophos;i="6.00,242,1681196400"; 
-   d="scan'208";a="741841798"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jun 2023 06:33:42 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 14 Jun 2023 06:33:42 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 14 Jun 2023 06:33:42 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Wed, 14 Jun 2023 06:33:42 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Wed, 14 Jun 2023 06:33:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h4qWQpSjNPZh5FOcxv7YUXvJrvI7/0dPfG7chItEA8l4DJgsjTFU64AI+l6fbCBABbZsk2FTco7D473ZTMzSNbHKDumC3yplg3ugOI0IdSLjWqSyyoKzn+zziP20MqRpvbt+JqlsuAaoiN15g/be5yEYPwo1MdcuwFtj+F2nd+H53asBptC/VaZ8mnZYrSRjdZNB5ZDth6p9R1V/RzPYq0rWM2o2ucZaiVcoltjbuiiA9wUn5iszrEmhdAjEq3nTRsM1fGc4i5qkL+QR7Vu0qBy/0GvNkYK4xiY+EAD9fAh9L2TyHIc+HZ6+3GlVn3A2ZHkKkULwj9EkmiKJaI3C+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VsWNHkF6QSVyu9MzKV3TU1XK/hJmT1wh6PzzrBPvDIU=;
- b=HbuOGZpTpWkLq+0BcrKWNwcbZx9KI4S2B/YTXqzbiBSFI2AwxqD4gYA0eKm72ACJsfa/OFhI8fz2UtdqW+kWZ6lwVQt3hTRA4Cvb663SlJCdnnTi++5tzT04brZWrk5fGn3NrZ6Yaaqe/lPOnGmbpEENEJMoTqEdGiw/ry2DUZHI2wm1MZyOLPTKtD54g9WrtGlcD4HmwOePEneacsH/lM0LmbK+yAvK6LnUVg1B3PV5u0mHvWJRZfBMHusvSAr202X4gYZnue0jgpVb3Emw1MT1hFJo9wRu/050hsZaq308btdkP7TTS7ME2k70/RYc3ZxA6mr/n0sOu9olOFzqqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB6372.namprd11.prod.outlook.com (2603:10b6:208:3ac::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Wed, 14 Jun
- 2023 13:33:37 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6455.030; Wed, 14 Jun 2023
- 13:33:37 +0000
-Date:   Wed, 14 Jun 2023 06:33:34 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     <alison.schofield@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
+        with ESMTP id S245489AbjFNOOZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 10:14:25 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0339D10D8;
+        Wed, 14 Jun 2023 07:14:21 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qh6ml0TPXz6J7Z5;
+        Wed, 14 Jun 2023 22:11:51 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 14 Jun
+ 2023 15:14:18 +0100
+Date:   Wed, 14 Jun 2023 15:14:17 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+CC:     Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        "Mike Rapoport" <rppt@kernel.org>, <x86@kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] CXL: Apply SRAT defined PXM to entire CFMWS window
-Message-ID: <6489c1ae90a38_142af82946c@dwillia2-xfh.jf.intel.com.notmuch>
-References: <cover.1686712819.git.alison.schofield@intel.com>
- <20230614083240.GC1639749@hirez.programming.kicks-ass.net>
- <20230614101051.00006602@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230614101051.00006602@Huawei.com>
-X-ClientProxiedBy: SJ0PR13CA0109.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::24) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: Re: [PATCH v3 1/4] cxl: add a firmware update mechanism using the
+ sysfs firmware loader
+Message-ID: <20230614151417.00002f46@Huawei.com>
+In-Reply-To: <20230602-vv-fw_update-v3-1-869f82069c95@intel.com>
+References: <20230602-vv-fw_update-v3-0-869f82069c95@intel.com>
+        <20230602-vv-fw_update-v3-1-869f82069c95@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6372:EE_
-X-MS-Office365-Filtering-Correlation-Id: b074df41-4e13-4ed7-25cd-08db6cdbf521
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: seQi42eTMABbCPWsEFnxmjXeLpTfDd3Sg277DrGty7Z/e8CpyFTYyK2wjptGAE+zvmejg2j1MVtSrHv8fyL2Org40AQ0f2q5oRSyhgyIdDnmwAvEPwtKndiYqmYTDkEgR1mF2Fhj3QeR+tlviatTDTkadn39y/ty3HijkALQ0+E71Fyk7+Gw2KGMidLEfwxX87edOvKkpV8Z1xbWfiz3qkD8OQLQSxwa/I8dnG62k7MDMBD72KleTtvmlvjf+xvgDDKupB4IFHSnbvz5Hx14KzqdT9xujhElWaamKjvzODwTMIMkAbtAMNnnpx/J8CfQqbC58U7DNna5w7KNjp7igcqWhF/TCQNqHe2ilkQCfS2ALPlciY/lkUt0PcQHy+lqxNshkVIj5UF719difCtqEJPVavphrmkoHLpFPwGkUTocr+KCfdU73LjZzzZ4pk+W1I+RErU1xUUbOLJumdWNuAOq0oTK9x1+OuSBa8VMdlQ09pMKton21CZTH9tlQXCsCb7C7a2/BD4GQXjDAD43Q5ygroOMsUzE66suf2XikK4VU56sKxC8MjnRldhMcHRl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(376002)(136003)(346002)(366004)(451199021)(6506007)(6512007)(9686003)(41300700001)(38100700002)(83380400001)(186003)(6486002)(6666004)(26005)(66476007)(66556008)(478600001)(54906003)(110136005)(316002)(66946007)(82960400001)(4326008)(5660300002)(8676002)(7416002)(8936002)(2906002)(4744005)(86362001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kCeXZHScmdYh4svVjg0+OgGgNy41kYf+RBHWvU8BagkZJf4lGfSy9wZyegtX?=
- =?us-ascii?Q?dwBc8XE1O2K1uyk8cJTDGVW5iblsd/3kZdQVGbmffusL8ahJX2ucT1ypxlh3?=
- =?us-ascii?Q?SxmgInCffSWqwtljYeRgtdPa4Btr8hOdlYUSYGcwmWrLpAPWHImv8Ye6BbOd?=
- =?us-ascii?Q?EQS6JobH0MERU+t42DZRQVPWVWakT8rKwKZOhhn0MbTeOB0KIPU050Bph9hi?=
- =?us-ascii?Q?Jlu6KhBUSaHaMhl1VRRrZfssu6Yt5LB3IAgiys+Ghzwf/lkAw0szq2fZLMD/?=
- =?us-ascii?Q?V6qKDC9V8s6HHhLk4Tu1E0cNUlSW+DFPjOgbHlWP+XUBv/Y7AG2OkOqKMz/8?=
- =?us-ascii?Q?1HICZpBAU6ifw56XgP87iNvAuA6Csw2+RjRRGUOExbUEHZf747Saj1PxJPxf?=
- =?us-ascii?Q?kbGk1hIIypzxZhumxvYLJCMXMDkiYQR7pIpz6pWQFRMVK+NG3XyTLVoFijw+?=
- =?us-ascii?Q?lY81LkYI8dMQG9o9h5geHjKlL3dKR1kI9otCVfdRZadBKjim+tYzpoJliyBN?=
- =?us-ascii?Q?h3KZsFVZs6Ld6UFaBvtF/TyrsTDoaM2N9MziHLshwY7LytFJs3+sd3fQIasQ?=
- =?us-ascii?Q?jMPa62FvaTpf2Nvw9L1POLtuYMrneQTwSJBp+d/773z0tB/sl0lUOgGG4+GX?=
- =?us-ascii?Q?8Q82fL3blm/Rp2NHkz8PbR7iWxPeEM/VolrzF+DP/4/pKA3ypkj2dynlJV/W?=
- =?us-ascii?Q?AblAr2gygGh4jyMz1RkANLJzSVb24KLIHCTwWi9t+aUZusJoMFu9DqC1wXpW?=
- =?us-ascii?Q?f1y0k8tFXCbCV0epdXxSssChadyk0/a9Br8pdnxBLew9rTfX4Z2O++j7zxlx?=
- =?us-ascii?Q?fvfvDkJVEOZ8ovMFVRT+mgxj+u+GmocGjGOQHApMZ+XZIakbl+YEMBtCHFuQ?=
- =?us-ascii?Q?ABFjlQgu/e+csHqYSoR4Rx8p2lg6xCpwiFMO3aA2rSYuq7mbBMIVt+u0k1vU?=
- =?us-ascii?Q?QXRVJA+hDoCoOtXUyBdOdNoB3D7fbuBupBiXjCh4FYjLdXZ2pPMY74vyhtDh?=
- =?us-ascii?Q?Z8rVtxQO7eh8iXgA7fN0taB9kzc/SkpebAFvpU/SpghTdO4wIfjhBCil3SBR?=
- =?us-ascii?Q?eU2Qm8tdf0PXlrU39t643sXDtLw8/rQk/v0tNZt6sVXdDYTtDk7A3h5ol6eA?=
- =?us-ascii?Q?l2zNu1RyFS+lRazHJgmmWn+eUmYxgI50gvBeFolwwxOrswrgulZwLG/1C64u?=
- =?us-ascii?Q?/mbStUjstpl/38Uec+/Pb/lVNUgy1O0+1YfhjwLpVkuA+ErEad3UEvEHJ7YL?=
- =?us-ascii?Q?Tfb8mfY2eG3SLTtC9gmqn877tj68c0zUmI7LCJqE2Zl/LiyiA8j7gXDGqo3n?=
- =?us-ascii?Q?LnPhfySx/mqYZn6kdqcbnVFeH2Z5jxs75y6pHac0PYJg9kZMY2Ka4nZnz915?=
- =?us-ascii?Q?rQu0NP7B8bEVflvrBljweapxVDhClnXBzJw/k8vPMXo1TzSFR0DAofg+irP/?=
- =?us-ascii?Q?G0k0lCORD0ivw46hTOzOsh2hQSHfXu5AybrY7m/NaztJbKVFH88QiuOjNRor?=
- =?us-ascii?Q?xJk/AEa3RiWYMOcm3b+Q6dEKIMTNGAlI7yQ8ms5qr46wfZx/LCjNUDZXTkug?=
- =?us-ascii?Q?Ay6ml0lLPZO30OfFJ87dYW8i8b1MzIo0rXr2+rcDg26LWHz5QV+mbyVch+/l?=
- =?us-ascii?Q?/A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: b074df41-4e13-4ed7-25cd-08db6cdbf521
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 13:33:37.0877
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R3wer15YU+a7EbJzAq73dPEoHjL3lZqmwbMOjRKgdDwO9fmYATjxwuIC+CBahSx/MoFi5LYwzZLXd2qkNMeaTS85rsTvTuFnr6P5C34ezxw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6372
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> On Wed, 14 Jun 2023 10:32:40 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Tue, Jun 13, 2023 at 09:35:23PM -0700, alison.schofield@intel.com wrote:
-> > > The CXL subsystem requires the creation of NUMA nodes for CFMWS  
-> > 
-> > The thing is CXL some persistent memory thing, right? But what is this
-> > CFMWS thing? I don't think I've ever seen that particular combination of
-> > letters together.
-> > 
-> Hi Peter,
-> 
-> To save time before the US based folk wake up.
-> 
-[..]
-> Note there is no requirement that the access characteristics of memory mapped
-> into a given CFMWS should be remotely consistent across the whole window
->  - some of the window may route through switches, and to directly connected
->    devices.
-> That's a simplifying assumption made today as we don't yet know the full
-> scope of what people are building.
-> 
-> Hope that helps (rather than causing confusion!)
+On Mon, 12 Jun 2023 00:55:56 -0600
+Vishal Verma <vishal.l.verma@intel.com> wrote:
 
-Thanks Jonathan! Patch 1 changelog also goes into more detail.
+> The sysfs based firmware loader mechanism was created to easily allow
+> userspace to upload firmware images to FPGA cards. This also happens to
+> be pretty suitable to create a user-initiated but kernel-controlled
+> firmware update mechanism for CXL devices, using the CXL specified
+> mailbox commands.
+> 
+> Since firmware update commands can be long-running, and can be processed
+> in the background by the endpoint device, it is desirable to have the
+> ability to chunk the firmware transfer down to smaller pieces, so that
+> one operation does not monopolize the mailbox, locking out any other
+> long running background commands entirely - e.g. security commands like
+> 'sanitize' or poison scanning operations.
+> 
+> The firmware loader mechanism allows a natural way to perform this
+> chunking, as after each mailbox command, that is restricted to the
+> maximum mailbox payload size, the cxl memdev driver relinquishes control
+> back to the fw_loader system and awaits the next chunk of data to
+> transfer. This opens opportunities for other background commands to
+> access the mailbox and send their own slices of background commands.
+> 
+> Add the necessary helpers and state tracking to be able to perform the
+> 'Get FW Info', 'Transfer FW', and 'Activate FW' mailbox commands as
+> described in the CXL spec. Wire these up to the firmware loader
+> callbacks, and register with that system to create the memX/firmware/
+> sysfs ABI.
+> 
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+> Cc: Russ Weight <russell.h.weight@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Ben Widawsky <bwidawsk@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+
+One issue and one trivial comment inline.
+With those fixed up and subject to the fact I haven't looked at the firmware
+class before...
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 057a43267290..3234885ad804 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -1,6 +1,7 @@
+
+
+> +
+> +static enum fw_upload_err cxl_fw_write(struct fw_upload *fwl, const u8 *data,
+> +				       u32 offset, u32 size, u32 *written)
+> +{
+> +	struct cxl_dev_state *cxlds = fwl->dd_handle;
+> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +	struct cxl_mbox_transfer_fw *transfer;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	u32 cur_size, remaining;
+> +	size_t size_in;
+> +	int rc;
+> +
+> +	*written = 0;
+> +
+> +	/* Offset has to be aligned to 128B (CXL-3.0 8.2.9.3.2 Table 8-57) */
+> +	if (!IS_ALIGNED(offset, CXL_FW_TRANSFER_ALIGNMENT)) {
+> +		dev_err(&cxlmd->dev,
+> +			"misaligned offset for FW transfer slice (%u)\n",
+> +			offset);
+> +		return FW_UPLOAD_ERR_RW_ERROR;
+> +	}
+> +
+> +	/*
+> +	 * Pick transfer size based on cxlds->payload_size
+> +	 * @size must bw 128-byte aligned, ->payload_size is a power of 2
+> +	 * starting at 256 bytes, and sizeof(*transfer) is 128.
+> +	 * These constraints imply that @cur_size will always be 128b aligned.
+> +	 */
+> +	cur_size = min_t(size_t, size, cxlds->payload_size - sizeof(*transfer));
+> +
+> +	remaining = size - cur_size;
+> +	size_in = struct_size(transfer, data, cur_size);
+> +
+> +	if (test_and_clear_bit(CXL_FW_CANCEL, cxlds->fw.state))
+> +		return cxl_fw_do_cancel(fwl);
+> +
+> +	/*
+> +	 * Slot numbers are 1-indexed
+> +	 * cur_slot is the 0-indexed next_slot (i.e. 'cur_slot - 1 + 1')
+> +	 * Check for rollover using modulo, and 1-index it by adding 1
+> +	 */
+> +	cxlds->fw.next_slot = (cxlds->fw.cur_slot % cxlds->fw.num_slots) + 1;
+> +
+> +	/* Do the transfer via mailbox cmd */
+> +	transfer = kzalloc(size_in, GFP_KERNEL);
+> +	if (!transfer)
+> +		return FW_UPLOAD_ERR_RW_ERROR;
+> +
+> +	transfer->offset = cpu_to_le32(offset / CXL_FW_TRANSFER_ALIGNMENT);
+> +	memcpy(transfer->data, data + offset, cur_size);
+> +	if (cxlds->fw.oneshot) {
+> +		transfer->action = CXL_FW_TRANSFER_ACTION_FULL;
+> +		transfer->slot = cxlds->fw.next_slot;
+> +	} else {
+> +		if (offset == 0) {
+> +			transfer->action = CXL_FW_TRANSFER_ACTION_INITIATE;
+> +		} else if (remaining == 0) {
+> +			transfer->action = CXL_FW_TRANSFER_ACTION_END;
+> +			transfer->slot = cxlds->fw.next_slot;
+> +		} else {
+> +			transfer->action = CXL_FW_TRANSFER_ACTION_CONTINUE;
+> +		}
+> +	}
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_TRANSFER_FW,
+> +		.size_in = size_in,
+> +		.payload_in = transfer,
+> +		.poll_interval_ms = 1000,
+> +		.poll_count = 30,
+> +	};
+> +
+> +	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
+> +	if (rc < 0) {
+> +		kfree(transfer);
+
+Double free.  Drop this one.
+
+> +		rc = FW_UPLOAD_ERR_RW_ERROR;
+> +		goto out_free;
+> +	}
+> +
+> +	*written = cur_size;
+> +
+> +	/* Activate FW if oneshot or if the last slice was written */
+> +	if (cxlds->fw.oneshot || remaining == 0) {
+> +		dev_dbg(&cxlmd->dev, "Activating firmware slot: %d\n",
+> +			cxlds->fw.next_slot);
+> +		rc = cxl_mem_activate_fw(cxlds, cxlds->fw.next_slot);
+> +		if (rc < 0) {
+> +			dev_err(&cxlmd->dev, "Error activating firmware: %d\n",
+> +				rc);
+> +			rc = FW_UPLOAD_ERR_HW_ERROR;
+> +			goto out_free;
+> +		}
+> +	}
+> +
+> +	rc = FW_UPLOAD_ERR_NONE;
+> +
+> +out_free:
+> +	kfree(transfer);
+> +	return rc;
+> +}
+
+
+
+>  static const struct file_operations cxl_memdev_fops = {
+>  	.owner = THIS_MODULE,
+>  	.unlocked_ioctl = cxl_memdev_ioctl,
+> @@ -582,6 +891,7 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
+>  	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+> +
+
+What is this stray white space change I see before me? :)
+
+
+>  	return cxlmd;
+>  
+>  err:
+
