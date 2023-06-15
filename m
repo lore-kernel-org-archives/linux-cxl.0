@@ -2,49 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85373EB64DB
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 01:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AC1EB64D8
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 01:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236994AbjFOBaW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 21:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39108 "EHLO
+        id S236787AbjFOBa1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 21:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236909AbjFOBaW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 21:30:22 -0400
+        with ESMTP id S236982AbjFOBa0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 21:30:26 -0400
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D36F26A8
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 18:30:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BF9212A
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 18:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686792620; x=1718328620;
+  t=1686792626; x=1718328626;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kfC9e9hdSfLaMLgx4RojrLbIF/YbNbOm1Yck5JCEGF4=;
-  b=G/3SXo+bIR2kE5hUBU+Z71mCrIGGNjSaexdfd3V2NUeUAmZzhWHqbSQ0
-   PLBe8PgW4IYNAsReusEvnMIPB+Q4mYIjHgoAYKZMscf9B0eRjH8P8RmfS
-   /i1m+PkrZZ4A8ZyYt2OOlYmP9zRU0b1spLN0LW0oiNRzjtcKpLujdLGct
-   JqYRVv5wGq5ZgHRu2GFlmRYADJOxlR+wyazN+ZQxk/jrc8BxtT0+GuZtO
-   PVG2hpizjHK4xjRo4egziIX6i0ZzDcfbrYwLBbdjTnRp5pd8nH6zYJbrb
-   hQPzA7SRB07qv0T7q6h7XgkkkMKY4HDTNskhOUUWULeBtMz0SNzQYRFUr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338412388"
+  bh=gN8BJtVwevndGATx0j5H+aVeVis6ShXYsLCj7Mb/sF0=;
+  b=KgP6x3JWPVITZ8bkCDGon8SNiwzXD5bCF9jQtqBZfZMlSlUizUXSZO6N
+   5SXDknB2cCEDh1gbYI7YOnrQhvlHC3+PirzHt3V7223SsJ8F1eJ3zBzYL
+   TeaD6RN/FqpizuR6ujAY8M+8Sduaw2ptgmV3gALllPnbAs1lT6p31MzLP
+   g4hT2XqIvJ3i634RYN4t6RNvI04WGJuVdwgCK3x1bVWNzyDRWbWYUzTYE
+   XrSmJboCNdEqr2qs0j4HkN9s2H9FYJXMQIRBBhwpjFcK0T7bvUQbljzGv
+   s95mXGTyrVk6f3qChXpOn6wZgK5rTktCD0z2Ou0RUHw+s4EINMQ/E+92S
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338412402"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="338412388"
+   d="scan'208";a="338412402"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:20 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="782307325"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="782307422"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="782307325"
+   d="scan'208";a="782307422"
 Received: from rtpearso-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.87.28])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:20 -0700
-Subject: [PATCH v2 08/12] cxl/hdm: Default CXL_DEVTYPE_DEVMEM decoders to
- CXL_DECODER_DEVMEM
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:25 -0700
+Subject: [PATCH v2 09/12] cxl/region: Manage decoder target_type at
+ decoder-attach time
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date:   Wed, 14 Jun 2023 18:30:19 -0700
-Message-ID: <168679261945.3436160.11673393474107374595.stgit@dwillia2-xfh.jf.intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Date:   Wed, 14 Jun 2023 18:30:25 -0700
+Message-ID: <168679262543.3436160.13053831955768440312.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <168679257511.3436160.9707734364766526576.stgit@dwillia2-xfh.jf.intel.com>
 References: <168679257511.3436160.9707734364766526576.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -55,123 +56,43 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In preparation for device-memory region creation, arrange for decoders
-of CXL_DEVTYPE_DEVMEM memdevs to default to CXL_DECODER_DEVMEM for their
-target type.
+Switch-level (mid-level) decoders between the platform root and an
+endpoint can dynamically switch modes between HDM-H and HDM-D[B]
+depending on which region they target. Use the region type to fixup each
+decoder that gets allocated to map the given region.
 
-Revisit this if a device ever shows up that wants to offer mixed HDM-H
-(Host-Only Memory) and HDM-DB support, or an CXL_DEVTYPE_DEVMEM device
-that supports HDM-H.
+Note that endpoint decoders are meant to determine the region type, so
+warn if those ever need to be fixed up, but since it is possible to
+continue do so.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/hdm.c |   35 ++++++++++++++++++++++++++---------
- drivers/cxl/cxl.h      |    2 +-
- 2 files changed, 27 insertions(+), 10 deletions(-)
+ drivers/cxl/core/region.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 79170de13d89..715c1f103739 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -572,7 +572,7 @@ static void cxld_set_type(struct cxl_decoder *cxld, u32 *ctrl)
- {
- 	u32p_replace_bits(ctrl,
- 			  !!(cxld->target_type == CXL_DECODER_HOSTONLYMEM),
--			  CXL_HDM_DECODER0_CTRL_TYPE);
-+			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 6a875f86901b..013f3656e661 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -809,6 +809,18 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+ 		return -EBUSY;
+ 	}
+ 
++	/*
++	 * Endpoints should already match the region type, but backstop that
++	 * assumption with an assertion. Switch-decoders change mapping-type
++	 * based on what is mapped when they are assigned to a region.
++	 */
++	dev_WARN_ONCE(&cxlr->dev,
++		      port == cxled_to_port(cxled) &&
++			      cxld->target_type != cxlr->type,
++		      "%s:%s mismatch decoder type %d -> %d\n",
++		      dev_name(&cxled_to_memdev(cxled)->dev),
++		      dev_name(&cxld->dev), cxld->target_type, cxlr->type);
++	cxld->target_type = cxlr->type;
+ 	cxl_rr->decoder = cxld;
+ 	return 0;
  }
- 
- static int cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
-@@ -794,8 +794,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			    int *target_map, void __iomem *hdm, int which,
- 			    u64 *dpa_base, struct cxl_endpoint_dvsec_info *info)
- {
-+	struct cxl_endpoint_decoder *cxled = NULL;
- 	u64 size, base, skip, dpa_size, lo, hi;
--	struct cxl_endpoint_decoder *cxled;
- 	bool committed;
- 	u32 remainder;
- 	int i, rc;
-@@ -828,6 +828,8 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		return -ENXIO;
- 	}
- 
-+	if (info)
-+		cxled = to_cxl_endpoint_decoder(&cxld->dev);
- 	cxld->hpa_range = (struct range) {
- 		.start = base,
- 		.end = base + size - 1,
-@@ -838,7 +840,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		cxld->flags |= CXL_DECODER_F_ENABLE;
- 		if (ctrl & CXL_HDM_DECODER0_CTRL_LOCK)
- 			cxld->flags |= CXL_DECODER_F_LOCK;
--		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl))
-+		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl))
- 			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
- 		else
- 			cxld->target_type = CXL_DECODER_DEVMEM;
-@@ -857,12 +859,28 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		}
- 		port->commit_end = cxld->id;
- 	} else {
--		/* unless / until type-2 drivers arrive, assume type-3 */
--		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_TYPE, ctrl) == 0) {
--			ctrl |= CXL_HDM_DECODER0_CTRL_TYPE;
-+		if (cxled) {
-+			struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+			struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+			/*
-+			 * Default by devtype until a device arrives that needs
-+			 * more precision.
-+			 */
-+			if (cxlds->type == CXL_DEVTYPE_CLASSMEM)
-+				cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-+			else
-+				cxld->target_type = CXL_DECODER_DEVMEM;
-+		} else {
-+			/* To be overridden by region type at commit time */
-+			cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-+		}
-+
-+		if (!FIELD_GET(CXL_HDM_DECODER0_CTRL_HOSTONLY, ctrl) &&
-+		    cxld->target_type == CXL_DECODER_HOSTONLYMEM) {
-+			ctrl |= CXL_HDM_DECODER0_CTRL_HOSTONLY;
- 			writel(ctrl, hdm + CXL_HDM_DECODER0_CTRL_OFFSET(which));
- 		}
--		cxld->target_type = CXL_DECODER_HOSTONLYMEM;
- 	}
- 	rc = eiw_to_ways(FIELD_GET(CXL_HDM_DECODER0_CTRL_IW_MASK, ctrl),
- 			  &cxld->interleave_ways);
-@@ -881,7 +899,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		port->id, cxld->id, cxld->hpa_range.start, cxld->hpa_range.end,
- 		cxld->interleave_ways, cxld->interleave_granularity);
- 
--	if (!info) {
-+	if (!cxled) {
- 		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
- 		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
- 		target_list.value = (hi << 32) + lo;
-@@ -904,7 +922,6 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 	lo = readl(hdm + CXL_HDM_DECODER0_SKIP_LOW(which));
- 	hi = readl(hdm + CXL_HDM_DECODER0_SKIP_HIGH(which));
- 	skip = (hi << 32) + lo;
--	cxled = to_cxl_endpoint_decoder(&cxld->dev);
- 	rc = devm_cxl_dpa_reserve(cxled, *dpa_base + skip, dpa_size, skip);
- 	if (rc) {
- 		dev_err(&port->dev,
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index ae0965ac8c5a..f309b1387858 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -56,7 +56,7 @@
- #define   CXL_HDM_DECODER0_CTRL_COMMIT BIT(9)
- #define   CXL_HDM_DECODER0_CTRL_COMMITTED BIT(10)
- #define   CXL_HDM_DECODER0_CTRL_COMMIT_ERROR BIT(11)
--#define   CXL_HDM_DECODER0_CTRL_TYPE BIT(12)
-+#define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
- #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
- #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
- #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
 
