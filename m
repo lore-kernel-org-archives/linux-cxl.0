@@ -2,1249 +2,1205 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CA3EB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A833EB64D9
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 16:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjFOQlq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Jun 2023 12:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41354 "EHLO
+        id S230002AbjFOQ7H (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Jun 2023 12:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232126AbjFOQl3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 12:41:29 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2092.outbound.protection.outlook.com [40.92.53.92])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0978FE69
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Jun 2023 09:41:25 -0700 (PDT)
+        with ESMTP id S230045AbjFOQ7E (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 12:59:04 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C7611C
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Jun 2023 09:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686848341; x=1718384341;
+  h=message-id:date:subject:to:references:from:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=cWyHDXWTImVJ7gpnDsK6kND36M6Y1bvNNdz33duIwZ4=;
+  b=G3PnB79btssYNIlL0VHvLMM/Ta6t55ROjYgGkOjYkybFu9M+k0r9mLoC
+   eriMUgfCGquigGz8qBN7bbsJVVbQa8VqmQtUn+NrobqT7D0mlGtZ0KPgI
+   ZngWS640ojtMNSm7Q48wufDGSgz+UL1SK35noGjjZArFzaHQzMJaq/Ek7
+   m+PzlDlPKhH9mHmqWreLEPZaaIV87Y35R6xpQuvFtLNNpVBazzVVA4sxe
+   hXzfy4if94FS2urGmm8U0B3wch8TCAf36IgIsJVG9xOBLMjIkP5CGLLqq
+   4Ycl0N4Ky2I/fcjs0r0ltYqzdm1vFO/9GdZpBAtokrlh1mzp3OYZ1uxAj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="358973203"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="358973203"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 09:58:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="689852910"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="689852910"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga006.jf.intel.com with ESMTP; 15 Jun 2023 09:58:57 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 15 Jun 2023 09:58:55 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Thu, 15 Jun 2023 09:58:55 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Thu, 15 Jun 2023 09:58:55 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eN09DU7SjJrM0NgaHn8+bP1sIs0JERyENaITZ1uuHNpCasxdDJS3ZlYVNP4lFUPU8dhB5wRuDfVfptyYTvsWvd4w1v2kE4VTdH6y4Gg+IWdUoauC3TGDPi4mCRZAbESRBdTg/DC340kP2GJOr+CmzNMS+9HC9XCsxkFHCiLOqouq7STet/ADohoLi+ym0pYTMb2GA/JSYcwSexDvEQ2Kj1DfXoM2yVMrDNnWLcATaEHJXUBeIzn6KE3Z2r377Qr02FGsr/JZ+Nfd8k5T5p5idfpLGbjG+cMZOtlmlOOj662FHFAyzZvajwazO8jnSF5V6l6+gifNzQ8oKjkWjr776g==
+ b=h4DeUPSXWtI/+nUPVCO0pU9Bz41dcjMJMBmjCPqYf0tyDynbZTkhWabP3l35zayltmbXOVkn35I8R5Hz0usdo3D2DeKUiHJEeYK0nlVMrjIzrhR9T9rMMMWm06ORbVXEQDW1sDNiOBOmGacH2M/iFYFLCpmX3gE+w6QN+fvC8LmnowPN1lWShx3CzpiPGF+Oo8Khs9vFo12BjtIkdmy8ajgmjLQNCpIHXUAXIQNa6DcjVr+fEIBRXcRiL/iCwMx9buyfhJTHrakwhXKRsvZ3Vue0FFyRYkUHPy9y9mRjkHO/j1rFaad51Q9RGo8YA+46umJtnRZr7jZL7rbMpaugzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sWJ6MR2V+2w9Ui+0FNzoqzgpvbR7G77x1rT3Y8qrzJg=;
- b=VNGwtfqKJf5cZKb1I8xn3fq9HZ8KixPl8gVtzMUUCjxvhxYE85S3AtgGAgUvWQUZXZ47DaRFii2Dv6/aC9rvES4QTWJA99FEvgRk3BgV4XrSRV5SGnx1HD58acjmFcyVwbr17ePXTwBJAlSFT/5C8p1mPNen47waT2qUD2kFji20at+xeb8NLXMMNItzTeVnYCwygJjWDRoSeh30zswmSgeVLS9tliZG3nAkyUwAdJJ6R0dDAFoufMe/bYCIXQl5GoVckn3zeDjDxH7b2VMEN/nHUP185jKr42hPM57SkhrEt+ExMfftReOfAEhcr6/8jT5rpuWhTZqaPe8TM6Nxig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sWJ6MR2V+2w9Ui+0FNzoqzgpvbR7G77x1rT3Y8qrzJg=;
- b=QCy/WAJlIYzFf8vdCFn6RFd9nLGQdYwgVmJE1/BQhC8DYpvro7eZNHcmf4jyrefJHbLqucLZj1rcXCQyIPYqPlYvvXnAblCQO+nCgfCV7/uWqCy3mX5pTNAYcR/6GxC5404El9PbdGwx3CkZVonSPpKnsuX/+lvAUsxV2xxkg44q+ctmrnJKbk/BCWdvfo/JHdaCDOGLsnDaoeyOOVCXcw766tq0dmIYBw0HCeK5mX3Ntmp9I/NK5dD4HE8iWdK6ay+1YRsu3accWBo25yElqHym+og2pWsVufUDb84z8fi/2QrL5Swb7c0IgKZVBtF1/tNsyE2l/tYtV2AxnH9w9A==
-Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
- TYZPR06MB4479.apcprd06.prod.outlook.com (2603:1096:400:8e::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6477.37; Thu, 15 Jun 2023 16:41:19 +0000
-Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
- ([fe80::33a7:c9e1:75ae:3227]) by SG2PR06MB3397.apcprd06.prod.outlook.com
- ([fe80::33a7:c9e1:75ae:3227%4]) with mapi id 15.20.6477.028; Thu, 15 Jun 2023
- 16:41:20 +0000
-From:   nifan@outlook.com
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave@stgolabs.net, a.manzanares@samsung.com, sunfishho12@gmail.com,
-        nmtadam.samsung@gmail.com, nifan@outlook.com, fan.ni@samsung.com
-Subject: [ndctl PATCH v2 2/2] cxl-graph: Add cxl graph command to construct CXL topology graph images
-Date:   Thu, 15 Jun 2023 09:40:50 -0700
-Message-ID: <SG2PR06MB33972E16C90E7365A0C1600FB25BA@SG2PR06MB3397.apcprd06.prod.outlook.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230615164050.3248000-1-nifan@outlook.com>
-References: <20230615164050.3248000-1-nifan@outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN:  [bUTCpZttXmgcjr/9VUP/MsHckZIt1XeE]
-X-ClientProxiedBy: BYAPR07CA0047.namprd07.prod.outlook.com
- (2603:10b6:a03:60::24) To SG2PR06MB3397.apcprd06.prod.outlook.com
- (2603:1096:4:7a::17)
-X-Microsoft-Original-Message-ID: <20230615164050.3248000-3-nifan@outlook.com>
+ bh=rsd4BIld4r0QgWjWSOIs9J9XNxBpu+CPHs7MODOlXGs=;
+ b=V9PFcKx/xZetDPr4OT1o1TGw9NYBHRM/DON+mp7V48MeZ4o7IpxbclIVWYNNeT11NYoZzfyi/C89/+eC5YEyyuVUprEBD9nPIBK6qet+x9yqrSU6IXVdcerOZ7Ln2TVJEhrPYLTIV6O+bXkN9oIF+ZSOuZnUxcwF6t/iZcmoDjPVD5+6hxq2TYX96+Z3AkFMFkbUS9f+l/E6zPyjryF0VHB9zo8WqrIMrFCGuL11BnbQUPIhggBRu9s6xEgtKWHCs3EQCia4khi9AWgLll5CDKAwMXuzqV1h2phyVDYV6qsDVG2Y+ArFH7ollmIUEYM04GNxXEFyAHrAP68MRQ4NeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by PH8PR11MB8106.namprd11.prod.outlook.com (2603:10b6:510:255::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Thu, 15 Jun
+ 2023 16:58:52 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::ef38:9181:fb78:b528]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::ef38:9181:fb78:b528%7]) with mapi id 15.20.6500.025; Thu, 15 Jun 2023
+ 16:58:52 +0000
+Message-ID: <c8d5594f-846b-2075-2a65-1378de9bfdfb@intel.com>
+Date:   Thu, 15 Jun 2023 09:58:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Betterbird/102.11.1
+Subject: Re: [PATCH 4/5] cxl/mem: Add support to handle DCD add and release
+ capacity events.
+To:     <ira.weiny@intel.com>, Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>
+References: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
+ <20230604-dcd-type2-upstream-v1-4-71b6341bae54@intel.com>
+Content-Language: en-US
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v1-4-71b6341bae54@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0045.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::20) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|TYZPR06MB4479:EE_
-X-MS-Office365-Filtering-Correlation-Id: 807ae718-fc3a-40ea-e979-08db6dbf58ad
-X-MS-Exchange-SLBlob-MailProps: ZILSnhm0P3k8zbo6QEKMNIjQbqf1y1/6ECGjJZmRu45nU8E35hViODNPUQIblEnGqA4ros/l48uqENO/8aHuyYXURTNlKAqMRtz0yxSegxHXBuYPlj298I0sDo7j6k7qFGRx5jwv6XGo/F9UqExbaqOd8Rfrw5BkG2cGzKvfaW1gSy3k3tLm8TFyY+4GDaPM4ja6k15/6ZwG8lZmyPDyIokZRdNpvcA22omkGreieYFjO4BxqzHm/YGX/EhIYuEjI1Jh+MP+d82STapE6UBxV2h0UMr1BVPniBB1VfsOLpI7zBK4ZpM4zvAst0CrF0ycsNHEP0nKP0xzy1aNwmbiBOBdj2wGG0pADZiv9GTt/xx7aoeoOZtMj8JqPgXTU9Wnswm6CyEvoBbTk2B0WDLrl+pJCQqI7/Bm7jsVNgsybqnMDwnljfIHEJEg2CFeX9B4wfPIQh+sV5MNDbnvwRj6urb144xZ92UHw08DgbnhfOPbYcdstKKMaLxMqLU/fwAu9+GHvLqGHPzYqxeiWL+Rzw5o7UyN6VhopqJTu3SeUkdWignLxAP3CM8eUcNCge7+6OO+xpU+5pDylsPzojo1cNosDNUh1YMGu9cbvXIrelctkdOFXH/UQYHF9PV+yB4poyeDhBW8erdVU8z1tAjVj+dMN3s+bjIGE/M3CSK5THh58rRl66Fb6m6HslyxS4mDfx30X3FKylJe0eH/eP9l8aOmb79DQ3tdRTitX4XxvGa1nN/GdCo2cAyB58wZSTR4pUHd3m2v9Uhyi1nIMETdRyPOf10X2N9U
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH8PR11MB8106:EE_
+X-MS-Office365-Filtering-Correlation-Id: 381c8405-5fb8-444e-caf8-08db6dc1cbdd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ebCvgEIzMis2GeNSbEH7OadjhS4jlqBlys63NbijtSnmHoPQAAJC7dZN0cpwbjnj7ttHNU1XJd1isgZKpw4cw6dd0jlMavqPz67C6+N1f1XZ3B7grbnqdT2cDOFD48t0bC9ECpin1BikQ7zDPq88sT9YPAdVJQI7Wg+0SkzayOkCAJmsdFNBaDOUY6mdgguP2fDER9re8fbQbUKlcBHITVJHrOo8Y9HNQtOUxrCF90JNYvZyJNOF/gCKN8ZyxOkYv5NUlaIOZn5Ap9Oh6v5g+wLSByaRDUILHBXVGbXD1Kgbk/EzSSwmMgXzE18r6pYltHxUEe+GMhvAJ/ozJSqJ7Fw5tGdiTDWDfjRi8aRcztZ7BlgbYNCGS4sFK2Hr/iuvLoSnp7O34xB1z6xLrGm0gb71C8YOIQPYtxv4soaDO5nRLCkvWbZRJXaEToTLy6nnj/HPCJZmV53w7pXGhqEDmKavfsn6C3K9EskMqxw4SA5qY0v7m3KzKIX7S4B1mXy0MGcNT32QYgAxUGfeZyMiaF/r7eWQNmAfa1zTkkj7dgRNSgY3YOTXyXzDlCrGbQzfkc4UOKtIGlMVorJwBOyltwbOmd/+DszPnxRhRTw/M0Q=
+X-Microsoft-Antispam-Message-Info: ZJazJzBgRAOs8VZDLyC2aPFpm/0rCVTOLEbhSLRJO79onHmWfE5HHOvYV0yZD3uecLVP4ufYF1gXTDg27KEg2PVz1J/iuMFz1uLYTctcSehPJmMGdkRTqntP8p/rTSXcmmSOYa4KvovTBsfnlm8BWTN32GAR0lhL1cAE+5V0ppHCTBJQUBrMiluEw2giVtOaN5alph8xLV6pvSCJpAJp1y8nosjolVyrR6B3Y2BafrPv6cSkhNOgnIwOjtP12TbMEMOtKOC6gOn98uHHI9bfdpgNFY0HhNlnXtFQGbIv5Y1dAHpZjG97cU1wKa0V9b3iTQwdyooCBn7Qp/iVBdb8LG4So12k1sqgqw1nPeOtvVUskHCY3K6Vewa33vdPzVwX/forGNWP39bFH0bHWOnIHfIyY6n3tONFKYu21zjvbKia8ggbhu+L9AzTblIDuGqtKyJPQfhwOZmzY0TPBsK4E754Fxu4PrJtWjeHmYUF0rlybqJlyA5WO1c6ttMfkfWOs++zhbs0okTafGF4r48yFqD/WALaFgSCPY+0Z5IRDfFJRKT6ZJ2iRiWJzRKL40XxMio/P3XzT/27erGVIZ2uqtcAUEJ2cNRRp0UO/VIqejt4q9H8+hieURA21LjGqNzaQxA8lAY1jOQdO7KIu9fRUg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(346002)(39860400002)(136003)(366004)(396003)(451199021)(478600001)(83380400001)(86362001)(31696002)(6666004)(6486002)(66946007)(66556008)(38100700002)(110136005)(66476007)(82960400001)(26005)(6506007)(6512007)(31686004)(53546011)(186003)(316002)(2616005)(41300700001)(5660300002)(8936002)(44832011)(30864003)(2906002)(36756003)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xrTLf5+YgKOheT1fPUJ//pC7GxuUcw8Vc9F53f9IV7S4E0inDnaswYtvSgH4?=
- =?us-ascii?Q?21PVPsEs/TuTVHblRwbjmDnMzcZBTzxCyind1c+GmV5ECbR6KjoEI7cerdqs?=
- =?us-ascii?Q?562IVsVFYwK53OnF1KsJrUCIRLXHqTujRg/MwVCvVtG+cFLLWkePd2P3rGvQ?=
- =?us-ascii?Q?/ieDUhISURKPCHeJI4LfLcnkaI/PiR49f2HoNtM1WXFUHJwzI4j1J6zsrali?=
- =?us-ascii?Q?IKUWF4KyRTZze+1CcXhyaVzgvtF5ch+T2+KCvUu7OjRFTMVf13FESHcgxA+B?=
- =?us-ascii?Q?x6ISiQchMxmrtfips6/Egqs+rtqcpjDT//Iv929Qwk6+Ya16NH5C6Or17fLs?=
- =?us-ascii?Q?jU2/H00dv+x3YC3lIqrPuNM2pvrouIBr0VLnmJbJyQ7PfY8zYsqkdSv7Ewbs?=
- =?us-ascii?Q?bCobzZo5TBnYprS7jhdw6LPBNUyKwZ1sXLbmod2851bfNTRKBNmT6IU11VUH?=
- =?us-ascii?Q?mhuAKyTfa8/yjahVv5dYdfFLHwQbGio67poec19OW07VJ8wXMzlDrk+Zg75z?=
- =?us-ascii?Q?/xNT49iGqY0csXQJKRwevvMzhSQIII69+EF6lCeIckrtL9IVHmS+kk38zJnf?=
- =?us-ascii?Q?uqlL+wC+YHYAk70vub4RrelZYYK/QCVaFb3jILkyaXihsLgcUo1ebDKjBuRz?=
- =?us-ascii?Q?u+f7IGKI5GPicCb7vcOGTe6aSdd4CnfO2Iknt9Nf2CkbNhHe7IpLSrTgmpD5?=
- =?us-ascii?Q?sC+YV0QvR1BRjfkOgV/zUb7/xOHohpSFQKpezedSEXNw4nzhUaWOF/9fcVfh?=
- =?us-ascii?Q?OMgEd4GcWgwBQQF+Dz0cmD8DuwvCihcDjQBKdwI5mgU82KMx8RYUy6Z39gNv?=
- =?us-ascii?Q?bAi9yT5/pQS06MNZie/EJKuCzfQ5PkIDtpC5aAd0OEXZpsVLHJvtMYa+10SJ?=
- =?us-ascii?Q?lmPC23QOm9HjG2VllpthqGeGvj5Q0yFPR9RcUrKOK2lC73qoXzOiKTK6dXSp?=
- =?us-ascii?Q?7mGqRYWOfbPnOnIG+K1RlP9c8S3DpX9aK6GZnz4ATuiCC77gC0JypDapaLGx?=
- =?us-ascii?Q?3O4FYJds5SZBBrNUoYOoz2an6zLqHyR/WWsF6nNsZJ9lZHE/jJEwv/VpgM8f?=
- =?us-ascii?Q?kbVVTQbWHdfiO8Um4F03IV4RJBIQW9cY3J2msG1a8YsIYFyydUCdo2ul1gKg?=
- =?us-ascii?Q?4uf3vM3qxQXo63sveJCLMB/+++gzKTAPXj3JD+O1Fg1kMrHCtRoJ1ZAEGQMf?=
- =?us-ascii?Q?D+oDh/BcQXw5Bx5e0JvWEUn1bGovOql7zkLYGg=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 807ae718-fc3a-40ea-e979-08db6dbf58ad
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dnRzaStjNmNFd1BUZnpyZmlFbnpROERpdkZoMlVTUEN2UGt2dm1hOHk0bGRO?=
+ =?utf-8?B?QWJVTmNZNFVhaTRaOXpTRUFCdDB4ZW9Zc0pnUkl4SmZJSmhKdElWM3dSb1VP?=
+ =?utf-8?B?SWVoVzRVTFFKVmprNnVLQldPRG4xazBlV1Qva1ZoZjBBTjBmcHMzMjhKNi9j?=
+ =?utf-8?B?NGxLKzQrV0ZnK2ZvM3FyelRZVzdHS3FoRWFlYnF3b3B3L2xMbjdWbzZLQkZO?=
+ =?utf-8?B?VzdtVG9jMG5iWmI2VjZaUGVzNnlBUGErT0s4T0lLeWdmUHJEYmVJNUsvaEZK?=
+ =?utf-8?B?dnYvc1ZNZThSK2lwK0hPdE5xQ1p3OXNSWTBOeVM0V0lkdGFBM0NiQm9JczY3?=
+ =?utf-8?B?bldEM2lPTkQ1TExZMG0rYTdKMVRmMXFDelh4ZU1KL0RTUnNrbzl1TjBhYVFy?=
+ =?utf-8?B?c3dRL0lOa2tVaHpORFdXQ3Z1UUFzRnQ1SmZUUnlJUGFtMlNyTVRobUZwdHFh?=
+ =?utf-8?B?ejIxeDhPM3lZaTU4eCtjSGdKUkFzUXpLdnZ2THpZMjJpWXpPcXhFQ2N0amJV?=
+ =?utf-8?B?VjZSbHBleHRvdkhsb3FlSEtSaENDRkk3M0duS1g2SlJtdGF3bTc3OEFNcTJl?=
+ =?utf-8?B?UHNFUkVKaUxOdmhpemFjUjVSREpHcXZEdFhFak9ISmdNWFh6YzhTVXRzcmJJ?=
+ =?utf-8?B?N1hGZFVrdGxBLzZWRmZRKzlrNjZXRndvOVY4UG44Z2cxRE9mbnJ6ZmJrVGlY?=
+ =?utf-8?B?RUZyZEFGVWdneW1jc0RiWjJVdldnZTI1SUxuc1lGZUtkbFhtdnBMaTFadE1E?=
+ =?utf-8?B?a2Y2am5nQWdTS3p0SmE4NDZoUGNmTzMrVHo4clNCSU1KTkxGcFFxRFpPc3o3?=
+ =?utf-8?B?YWlWYWVrMWNYZ2N2RUM4N0cvdU9QM1hMeVVGbU9teVY0UzJDQzZRZnFOeCta?=
+ =?utf-8?B?S2dRUjAvbVhhL3RwTWhXN0FhbnhNTEtzaXQvYVBrNDdYMnNaeDlpZ1FIcHpM?=
+ =?utf-8?B?ckN3eGprOXpQSUk3eFdPUVlQV1JiL01JOGhnTDUyMENibmJSTHZkdjFaT1dm?=
+ =?utf-8?B?VlpqaThYMk80VXZlcHhXWjk1Q1UwVzFTT1o2Z1NEbit3SGg4ekpVV2VXUXdJ?=
+ =?utf-8?B?RjhzeVBacjYyUkt1cVowL3NBL1o3dENzeW5uQ283eXNGck9PNjFid2dqd1hG?=
+ =?utf-8?B?bUVsNTMwYnRpcVA3R2hzTXlZeFk1MVNxa1ZWWmNJTmJwcFpXYzBHd1ZvMUYz?=
+ =?utf-8?B?aXF1QjRHRVJUcHpEOUtDRlhEMUFjM2VYWkpLNTJvUGRwaW5yRVkrMWNXMi95?=
+ =?utf-8?B?U0R5T3BwcEJsTmRpeGNqalFBbVc0YlU0a0FEaG9SRVhPQ3ZXRnAyYTBIbURl?=
+ =?utf-8?B?czBUQmN5YjNsNnh2RzYzQ1VKTG8yNDBaN0MvSjZ2Ujh2VC8yR2hmQ0RZalhZ?=
+ =?utf-8?B?Mi93ZVppbDBEMlBiSFFBaDNJWVhQK0ZzMC8xdEd1MEJud2FLK1FFQ0Vpb1E3?=
+ =?utf-8?B?QXN5cUJUczJVUUo4SGdGYUd3M3FzZk1hZHZRbjg0a004Um94VG9ZaWxyWElv?=
+ =?utf-8?B?U290V0tVRDl0UU53OE9ZSWtGVVJWN3FsN2tpZnJOd1dWUCtKWkwvVW5UV1hp?=
+ =?utf-8?B?WlBsWERrdHkyY3hkeGd1ZkNjbkVKR1VpcE9yWlV2YmNySTZiWDA2RzJnWVhO?=
+ =?utf-8?B?bXZpV1NPTnVJWGJ4WEprSUhzN1RqcXZEVXI1UXhYWjJXYTZiVXFkb3ZxbjZj?=
+ =?utf-8?B?OW9HNzk2M241d1o1ZUlodWl5cGxkQWlZZnFUL1NIdEJIU3ptTEhYRzJ5ZFlS?=
+ =?utf-8?B?NDA5VDZNUFljWFgraWV4RmRHdHhVTjNPQWliQ1ZrOTA5bFJsbTgxNS9uWXFy?=
+ =?utf-8?B?NVBFZjFhaWNvOXZoUjFwSmJiVmp4eloybExTbVEwYW5MWHR4Y3UrejlwaDlX?=
+ =?utf-8?B?QzkzOVV3ZVNEbXdZYlhIbVoyd2I4Z3cvNVBMWkplaWpFNXJ6MktIK2hhZU9H?=
+ =?utf-8?B?L1Q5dk1ieDNUck1tSFY1UmdkTTZzYzBiaVhLUTNEUFpoNkJyeGRLTkxPVFBV?=
+ =?utf-8?B?NDRJbE92UytyQitlUjdjR3ZiOERReTdaSEFpeXBFWTJXRVdFMi91MCt0WWhx?=
+ =?utf-8?B?UzBDTTJHYTNvU0RQNHpuZXhjOHlENkZUU1RNOHVMQ1FnY3pHeXFKWFNGZTl4?=
+ =?utf-8?Q?Ft+8918rp657ow01vPZKIv8RM?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 381c8405-5fb8-444e-caf8-08db6dc1cbdd
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 16:41:20.1465
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 16:58:52.1308
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB4479
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k4HM/wxd/4R5wqvBSwVVOu+QUGDRtgzL0Cr9xN6eEt9rS/Zmotio0iDbScf8ey/VZ1/Kx91+K9gTGpMNRK9W0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8106
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Fan Ni <nifan@outlook.com>
 
-This adds a new command "cxl graph" to plot the cxl topology graph or
-dump cxl topology to a json formatted file based on the output format
-type (-t graph/plain). The command requires cxl port/memdev components have
-the "parent_dport" attribute so the topology can be correctly plotted.
-The CXL topology can be either read from a file passed to the command with
-"--input" option or parsed at runtime as "cxl list" does, and output will be
-stored in a file given by "--output".
 
-This addition makes it easier to visualize the CXL topology.
-Also, being able to choose to use an input text file
-allows one to visualize the CXL topology while not having
-access to CXL hardware, which may be convenient.
+On 6/14/23 12:16, ira.weiny@intel.com wrote:
+> From: Navneet Singh <navneet.singh@intel.com>
+> 
+> A dynamic capacity device utilizes events to signal the host about the
+> changes to the allocation of DC blocks. The device communicates the
+> state of these blocks of dynamic capacity through an extent list that
+> describes the starting DPA and length of all blocks the host can access.
+> 
+> Based on the dynamic capacity add or release event type,
+> dynamic memory represented by the extents are either added
+> or removed as devdax device.
+> 
+> Process the dynamic capacity add and release events.
+> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> 
+> ---
+> [iweiny: Remove invalid comment]
+> ---
+>   drivers/cxl/core/mbox.c   | 345 +++++++++++++++++++++++++++++++++++++++++++++-
+>   drivers/cxl/core/region.c | 214 +++++++++++++++++++++++++++-
+>   drivers/cxl/core/trace.h  |   3 +-
+>   drivers/cxl/cxl.h         |   4 +-
+>   drivers/cxl/cxlmem.h      |  76 ++++++++++
+>   drivers/cxl/pci.c         |  10 +-
+>   drivers/dax/bus.c         |  11 +-
+>   drivers/dax/bus.h         |   5 +-
+>   8 files changed, 652 insertions(+), 16 deletions(-)
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Rather large patch. Can this be broken into the add and release events?
 
-The change is based on Matthew Ho' patch as list below[1].
 
-The main changes include,
-    1) Instead of implementing the topology plotting function as a
-    subcommand of 'cxl list', we add a new cxl command 'cxl graph', and use
-    '-t' option to determine whether plotting the cxl topology graph or
-    dumping the topology to json formatted plain file.
-    2) Instead of using `root port` attribute for plotting the topology,
-    the `parent_dport` attribute of the memdev and port.objects are leveraged
-    to plot the topology which enables plotting graph for more complicated
-    cxl topology.
-    3) Add a function to validate the cxl topology input file when `--input`
-    option is used.
-    4) Move all the graph related functions to graph.c.
-    5) Add a new '-t graph/plain' option indicating the output format
-    (graph or json formatted plain file).
-    6). Add Documentation/cxl/cxl-graph.txt.
-    7). Add support for plotting cxl topology with inactive memdev.
-    8). Fix some issues in graph plotting related functions.
-    9). Fix the error messages, using error() instead of printf.
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index c5b696737c87..db9295216de5 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -767,6 +767,14 @@ static const uuid_t log_uuid[] = {
+>   	[VENDOR_DEBUG_UUID] = DEFINE_CXL_VENDOR_DEBUG_UUID,
+>   };
+>   
+> +/* See CXL 3.0 8.2.9.2.1.5 */
+> +enum dc_event {
+> +	ADD_CAPACITY,
+> +	RELEASE_CAPACITY,
+> +	FORCED_CAPACITY_RELEASE,
+> +	REGION_CONFIGURATION_UPDATED,
+> +};
+> +
+>   /**
+>    * cxl_enumerate_cmds() - Enumerate commands for a device.
+>    * @mds: The driver data for the operation
+> @@ -852,6 +860,14 @@ static const uuid_t mem_mod_event_uuid =
+>   	UUID_INIT(0xfe927475, 0xdd59, 0x4339,
+>   		  0xa5, 0x86, 0x79, 0xba, 0xb1, 0x13, 0xb7, 0x74);
+>   
+> +/*
+> + * Dynamic Capacity Event Record
+> + * CXL rev 3.0 section 8.2.9.2.1.3; Table 8-45
+> + */
+> +static const uuid_t dc_event_uuid =
+> +	UUID_INIT(0xca95afa7, 0xf183, 0x4018, 0x8c,
+> +		0x2f, 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a);
+> +
+>   static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>   				   enum cxl_event_log_type type,
+>   				   struct cxl_event_record_raw *record)
+> @@ -945,6 +961,188 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+>   	return rc;
+>   }
+>   
+> +static int cxl_send_dc_cap_response(struct cxl_memdev_state *mds,
+> +				struct cxl_mbox_dc_response *res,
+> +				int extent_cnt, int opcode)
+> +{
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	int rc, size;
+> +
+> +	size = struct_size(res, extent_list, extent_cnt);
+> +	res->extent_list_size = cpu_to_le32(extent_cnt);
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = opcode,
+> +		.size_in = size,
+> +		.payload_in = res,
+> +	};
+> +
+> +	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +
+> +	return rc;
+> +
+> +}
 
-[1] Matthew Ho's patch:
-https://lore.kernel.org/linux-cxl/cover.1660895649.git.sunfishho12@gmail.com/
----
- Documentation/cxl/cxl-graph.txt | 106 +++++
- config.h.meson                  |   3 +
- cxl/builtin.h                   |   1 +
- cxl/cxl.c                       |   1 +
- cxl/filter.c                    |  15 +-
- cxl/filter.h                    |   5 +
- cxl/graph.c                     | 806 ++++++++++++++++++++++++++++++++
- cxl/meson.build                 |   9 +
- meson.build                     |   5 +
- meson_options.txt               |   1 +
- ndctl.spec.in                   |   1 +
- 11 files changed, 949 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/cxl/cxl-graph.txt
- create mode 100644 cxl/graph.c
+Return cxl_internal_send_cmd() directly
 
-diff --git a/Documentation/cxl/cxl-graph.txt b/Documentation/cxl/cxl-graph.txt
-new file mode 100644
-index 0000000..f8040e0
---- /dev/null
-+++ b/Documentation/cxl/cxl-graph.txt
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2022 Fan Ni <fan.ni@samsung.com>
-+
-+cxl-graph(1)
-+===========
-+
-+NAME
-+----
-+cxl-graph - plot or dump the CXL topology to a graph or a json formatted file.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl graph' [<options>]
-+
-+options:
-+-m::
-+--memdev=::
-+	Specify CXL memory device name(s) ("mem0"), device id(s) ("0"),
-+	and/or host device name(s) ("0000:35:00.0") to filter the listing.
-+-M::
-+--memdevs::
-+	Include CXL memory devices in the listing
-+
-+-e::
-+--endpoint::
-+	Specify CXL endpoint device name(s), or device id(s) to filter
-+	the emitted endpoint(s).
-+-E::
-+--endpoints::
-+	Include endpoint objects (CXL Memory Device decoders) in the
-+	listing.
-+
-+-b::
-+--bus=::
-+	Specify CXL root device name(s), device id(s), and / or CXL bus provider
-+	names to filter the listing. The supported provider names are "ACPI.CXL"
-+	and "cxl_test".
-+
-+-p::
-+--port=::
-+	Specify CXL Port device name(s) ("port2"), device id(s) ("2"), host
-+	device name(s) ("pci0000:34"), and / or port type name(s) to filter the
-+	listing. The supported port type names are "root" and "switch".
-+
-+-v::
-+--verbose::
-+	Increase verbosity of the output. This can be specified
-+	multiple times to be even more verbose on the
-+	informational and miscellaneous output, and can be used
-+	to override omitted flags for showing specific
-+	information. Note that cxl list --verbose --verbose is
-+	equivalent to cxl list -vv.
-+	- *-v*
-+	  Enable --memdevs, --regions, --buses,
-+	  --ports, --decoders, and --targets.
-+	- *-vv*
-+	  Everything *-v* provides, plus include disabled
-+	  devices with --idle.
-+	- *-vvv*
-+	  Everything *-vv* provides, plus enable
-+	  --health and --partition.
-+
-+-t::
-+	Identify the output format of the CXL topology, with "plain"
-+	it will dump the cxl topology to a json formatted file, and
-+	with "graph" it will generate a graph showing the cxl topology.
-+	"graph" is the choice by default.
-+
-+-o::
-+--output-file::
-+	Create an image of the CXL topology or a json formatted representation of
-+	the CXL based on the output format given by "-t" option. If no output file
-+	is given, by default cxl-topology-graph.png is used for "graph" output
-+	format, and "cxl-topology-plain.json" is used for "plain" output format.
-+
-+--input::
-+	Take a json-formatted file with valid CXL topology and generate
-+	a graph showing the CXL topology accordingly or dump it to the output file
-+	based on the output format.
-+
-+--debug::
-+	If the cxl tool was built with debug enabled, turn on debug
-+	messages.
-+
-+EXAMPLE
-+-------
-+----
-+1. Taking 'cxl list' output as input to plot a graph
-+	cxl list -vvv > input.json
-+	cxl graph -t graph --input input.json [-o graph.png]
-+
-+2. Parsing the cxl topology as cxl list does and plotting a graph
-+	cxl graph -vvv -t graph [-o a.png/a.jpg/a.jpeg]
-+
-+3. Parsing the cxl topology as cxl list does and dump the topology to a json
-+formatted file
-+	cxl graph -vvv -t plain -o a.txt/a.json
-+
-+include::human-option.txt[]
-+
-+include::../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-graph[1]
-diff --git a/config.h.meson b/config.h.meson
-index 5441dff..162e8ba 100644
---- a/config.h.meson
-+++ b/config.h.meson
-@@ -22,6 +22,9 @@
- /* cxl monitor support */
- #mesondefine ENABLE_LIBTRACEFS
- 
-+/* cxl graph support */
-+#mesondefine Enable_LIBGVC
-+
- /* Define to 1 if big-endian-arch */
- #mesondefine HAVE_BIG_ENDIAN
- 
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-index 9baa43b..773eb00 100644
---- a/cxl/builtin.h
-+++ b/cxl/builtin.h
-@@ -22,6 +22,7 @@ int cmd_create_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
-+int cmd_graph(int argc, const char **argv, struct cxl_ctx *ctx);
- #ifdef ENABLE_LIBTRACEFS
- int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
- #else
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-index 3be7026..76493e4 100644
---- a/cxl/cxl.c
-+++ b/cxl/cxl.c
-@@ -77,6 +77,7 @@ static struct cmd_struct commands[] = {
- 	{ "disable-region", .c_fn = cmd_disable_region },
- 	{ "destroy-region", .c_fn = cmd_destroy_region },
- 	{ "monitor", .c_fn = cmd_monitor },
-+	{ "graph", .c_fn = cmd_graph },
- };
- 
- int main(int argc, const char **argv)
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 6e8d421..b06dff5 100644
---- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -1170,10 +1170,6 @@ struct json_object *cxl_filter_walk(struct cxl_ctx *ctx,
- 			}
- 		}
- walk_children:
--		dbg(p, "walk decoders\n");
--		walk_decoders(port, p, pick_array(jchilddecoders, jbusdecoders),
--			      pick_array(jchildregions, jregions), flags);
--
- 		dbg(p, "walk rch endpoints\n");
- 		if (p->endpoints || p->memdevs || p->decoders)
- 			walk_endpoints(port, p,
-@@ -1182,12 +1178,23 @@ walk_children:
- 				       pick_array(jchilddecoders, jepdecoders),
- 				       flags);
- 
-+		/*
-+		 * Need to walk ports before walking decoder so dport will be
-+		 * properly initialized which is needed to get the correct
-+		 * parent_dport of a port. This is needed if we plot the cxl
-+		 * graph after some region is created.
-+		 */
- 		dbg(p, "walk ports\n");
- 		walk_child_ports(port, p, pick_array(jchildports, jports),
- 				 pick_array(jchilddecoders, jportdecoders),
- 				 pick_array(jchildeps, jeps),
- 				 pick_array(jchilddecoders, jepdecoders),
- 				 pick_array(jchilddevs, jdevs), flags);
-+
-+		dbg(p, "walk decoders\n");
-+		walk_decoders(port, p, pick_array(jchilddecoders, jbusdecoders),
-+			      pick_array(jchildregions, jregions), flags);
-+
- 		cond_add_put_array_suffix(jbus, "ports", devname, jchildports);
- 		cond_add_put_array_suffix(jbus, "endpoints", devname,
- 					  jchildeps);
-diff --git a/cxl/filter.h b/cxl/filter.h
-index c486514..0efc446 100644
---- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -6,6 +6,8 @@
- #include <stdbool.h>
- #include <util/log.h>
- #include <util/json.h>
-+#include <json-c/json.h>
-+#include <graphviz/gvc.h>
- 
- struct cxl_filter_params {
- 	const char *memdev_filter;
-@@ -31,6 +33,9 @@ struct cxl_filter_params {
- 	bool dax;
- 	int verbose;
- 	struct log_ctx ctx;
-+	const char *input_file;
-+	const char *output_file;
-+	const char *output_format; /*plain/graph*/
- };
- 
- struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
-diff --git a/cxl/graph.c b/cxl/graph.c
-new file mode 100644
-index 0000000..eea13fa
---- /dev/null
-+++ b/cxl/graph.c
-@@ -0,0 +1,806 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2022 Fan Ni <fan.ni@samsung.com>
-+// Copyright (C) 2022 Matthew Ho <sunfishho12@gmail.com>
-+
-+#include <stdio.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <limits.h>
-+#include <util/json.h>
-+#include <json-c/json.h>
-+#include <cxl/libcxl.h>
-+#include <util/parse-options.h>
-+
-+#include <graphviz/gvc.h>
-+#include <util/util.h>
-+#include <util/log.h>
-+
-+#include "filter.h"
-+
-+static struct cxl_filter_params param;
-+static bool debug;
-+
-+static bool device_has_parent_dport(struct json_object *dev)
-+{
-+	json_object_object_foreach(dev, property, value_json) {
-+		if (!strcmp(property, "parent_dport"))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool device_has_dport(struct json_object *dev)
-+{
-+	json_object_object_foreach(dev, property, value_json) {
-+		if (!strcmp(property, "nr_dports"))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static Agnode_t *create_node(Agraph_t *graph, char *label, bool created)
-+{
-+	return agnode(graph, label, created);
-+}
-+
-+static const char *find_device_type(struct json_object *device)
-+{
-+	char *value;
-+	int depth = -1;
-+	bool is_device = false;
-+
-+	json_object_object_foreach(device, property, value_json) {
-+		value = (char *)json_object_get_string(value_json);
-+		if (!strcmp(property, "bus") &&
-+		    !strcmp(value, "root0"))
-+			return "ACPI0017 Device";
-+		if (!strcmp(property, "depth")) {
-+			depth = json_object_get_int(value_json);
-+			if (is_device) {
-+				if (depth == 1)
-+					return "Host Bridge";
-+				else
-+					return "Switch Port";
-+			}
-+		}
-+		if (!strcmp(property, "endpoint"))
-+			return "Endpoint";
-+		if (!strcmp(property, "parent_dport")) {
-+			is_device = true;
-+			if (depth == 1)
-+				return "Host Bridge";
-+			if (depth > 1)
-+				return "Switch Port";
-+		}
-+		if (!strcmp(property, "memdev"))
-+			return "Type 3 Memory Device";
-+		if (!strcmp(property, "dport"))
-+			return "dport";
-+		if (!strcmp(property, "decoder"))
-+			return "decoder";
-+		if (!strcmp(property, "provider") &&
-+		    !strcmp(value, "cxl_test"))
-+			return "cxl_acpi.0";
-+	}
-+
-+	dbg(&param, "unknown device:\n%s\n",
-+		json_object_to_json_string_ext(device, JSON_C_TO_STRING_PRETTY));
-+	return NULL;
-+}
-+
-+static bool check_device_type(struct json_object *device, char *type)
-+{
-+	const char *dev_type = find_device_type(device);
-+
-+	if (dev_type)
-+		return !strcmp(dev_type, type);
-+	return false;
-+}
-+
-+/* for labeling purposes */
-+static const char *find_device_ID(struct json_object *device)
-+{
-+	const char *dev_type = find_device_type(device);
-+	json_object *ID = NULL;
-+
-+	if (!dev_type)
-+		return NULL;
-+
-+	if (!strcmp(dev_type, "ACPI0017 Device"))
-+		json_object_object_get_ex(device, "bus", &ID);
-+
-+	if (!strcmp(dev_type, "Host Bridge")
-+		|| !strcmp(dev_type, "Switch Port"))
-+		json_object_object_get_ex(device, "host", &ID);
-+
-+	if (!strcmp(dev_type, "Endpoint"))
-+		json_object_object_get_ex(device, "endpoint", &ID);
-+
-+	if (!strcmp(dev_type, "Type 3 Memory Device"))
-+		json_object_object_get_ex(device, "memdev", &ID);
-+
-+	if (!strcmp(dev_type, "dport"))
-+		json_object_object_get_ex(device, "dport", &ID);
-+
-+	return json_object_get_string(ID);
-+}
-+
-+static bool is_device(struct json_object *device)
-+{
-+	const char *dev_type = find_device_type(device);
-+
-+	if (dev_type)
-+		return (strcmp(dev_type, "dport") && strcmp(dev_type, "decoder"));
-+
-+	return false;
-+}
-+
-+static const char *find_parent_dport(struct json_object *device)
-+{
-+	json_object *rp;
-+
-+	if (!json_object_object_get_ex(device, "parent_dport", &rp))
-+		return NULL;
-+
-+	return json_object_get_string(rp);
-+}
-+
-+static char *find_parent_dport_label(struct json_object *device)
-+{
-+	char *rp_node_name;
-+	const char *id = find_parent_dport(device);
-+
-+	if (!id)
-+		return NULL;
-+
-+	asprintf(&rp_node_name, "dPort\nID: %s", id);
-+	if (!rp_node_name)
-+		error("asprintf failed in %s\n", __func__);
-+
-+	return rp_node_name;
-+}
-+
-+static char *find_root_port_label(struct json_object *device)
-+{
-+	char *rp_node_name;
-+	const char *id = find_parent_dport(device);
-+
-+	if (!id)
-+		return NULL;
-+
-+	asprintf(&rp_node_name, "Root Port\nID: %s", id);
-+	if (!rp_node_name)
-+		error("asprintf failed in %s\n", __func__);
-+
-+	return rp_node_name;
-+}
-+
-+static char *label_device(struct json_object *device)
-+{
-+	char *label;
-+	const char *ID = find_device_ID(device);
-+	const char *devname = find_device_type(device);
-+
-+	assert(devname);
-+	asprintf(&label, "%s\nID: %s", devname, ID);
-+	if (!label)
-+		error("label allocation failed in %s\n", __func__);
-+
-+	return label;
-+}
-+
-+static void create_root_ports(struct json_object *host_bridge, Agraph_t *graph,
-+		       Agnode_t *hb)
-+{
-+	json_object *rps, *rp, *id_json;
-+	char *id, *dport_label;
-+	Agnode_t *dport;
-+	size_t nr_dports, idx;
-+
-+	assert(check_device_type(host_bridge, "Host Bridge"));
-+	if (!json_object_object_get_ex(host_bridge, "dports", &rps)) {
-+		dbg(&param, "no dports attribute found at host bridge\n");
-+		return;
-+	}
-+
-+	nr_dports = json_object_array_length(rps);
-+	for (idx = 0; idx < nr_dports; idx++) {
-+		rp = json_object_array_get_idx(rps, idx);
-+		json_object_object_get_ex(rp, "dport", &id_json);
-+		id = (char *)json_object_get_string(id_json);
-+		asprintf(&dport_label, "Root Port\nID: %s", id);
-+		if (!dport_label)
-+			error("label allocation failed when creating root port\n");
-+		dport = create_node(graph, dport_label, 1);
-+		agedge(graph, hb, dport, 0, 1);
-+		free(dport_label);
-+	}
-+}
-+
-+static void create_downstream_ports(struct json_object *sw_port,
-+		Agraph_t *graph, Agnode_t *sw)
-+{
-+	json_object *dps, *dp, *id_json;
-+	char *id, *dport_label;
-+	Agnode_t *dport;
-+	size_t nr_dports, idx;
-+
-+	assert(check_device_type(sw_port, "Switch Port"));
-+	if (!json_object_object_get_ex(sw_port, "dports", &dps)) {
-+		dbg(&param, "no dports attribute found at switch port\n");
-+		return;
-+	}
-+
-+	nr_dports = json_object_array_length(dps);
-+	for (idx = 0; idx < nr_dports; idx++) {
-+		dp = json_object_array_get_idx(dps, idx);
-+		json_object_object_get_ex(dp, "dport", &id_json);
-+		id = (char *)json_object_get_string(id_json);
-+		asprintf(&dport_label, "dPort\nID: %s", id);
-+		if (!dport_label)
-+			error("label allocation failed when creating downstream port\n");
-+		dport = create_node(graph, dport_label, 1);
-+		agedge(graph, sw, dport, 0, 1);
-+		free(dport_label);
-+	}
-+}
-+
-+/* for determining number of devices listed in a json array */
-+static size_t count_top_devices(struct json_object *top_array)
-+{
-+	size_t dev_counter = 0;
-+	size_t top_array_len = json_object_array_length(top_array);
-+
-+	for (size_t idx = 0; idx < top_array_len; idx++)
-+		if (is_device(json_object_array_get_idx(top_array, idx)))
-+			dev_counter++;
-+
-+	return dev_counter;
-+}
-+
-+static Agnode_t *plot_anon_memdevs(struct json_object *current_array,
-+		Agraph_t *graph)
-+{
-+	size_t json_array_len, nr_top_devices;
-+	size_t idx;
-+	Agnode_t *node, *root;
-+	char *label;
-+	json_object *device;
-+
-+	json_array_len = json_object_array_length(current_array);
-+	nr_top_devices = count_top_devices(current_array);
-+	if (!nr_top_devices)
-+		return NULL;
-+
-+	assert(nr_top_devices == json_array_len);
-+	label = "anon memdevs";
-+	root = create_node(graph, label, 1);
-+
-+	for (idx = 0; idx < json_array_len; idx++) {
-+		device = json_object_array_get_idx(current_array, idx);
-+		label = label_device(device);
-+		node = create_node(graph, label, 1);
-+		agsafeset(node, "shape", "box", "");
-+		agedge(graph, root, node, 0, 1);
-+		free(label);
-+	}
-+	return root;
-+}
-+
-+static Agnode_t **draw_subtree(struct json_object *current_array,
-+		Agraph_t *graph)
-+{
-+	size_t json_array_len, nr_top_devices, obj_idx, td_idx;
-+	size_t idx, nr_sub_devs, nr_devs_connected;
-+	char *label, *parent_dport_label;
-+	Agnode_t **top_devices, **sub_devs, *parent_node;
-+	bool is_hb, is_sw;
-+	json_object *device, *subdev_arr, *subdev;
-+	json_object_iter subdev_iter;
-+
-+	json_array_len = json_object_array_length(current_array);
-+	nr_top_devices = count_top_devices(current_array);
-+
-+	if (!nr_top_devices) {
-+		dbg(&param, "no top devices, return directly\n");
-+		return NULL;
-+	}
-+
-+	top_devices = malloc(nr_top_devices * sizeof(device));
-+	if (!top_devices) {
-+		error("allocate memory for top_devices failed\n");
-+		return NULL;
-+	}
-+
-+	td_idx = 0;
-+	for (obj_idx = 0; obj_idx < json_array_len; obj_idx++) {
-+		device = json_object_array_get_idx(current_array, obj_idx);
-+		if (!is_device(device))
-+			continue;
-+
-+		label = label_device(device);
-+		top_devices[td_idx] = create_node(graph, label, 1);
-+
-+		agsafeset(top_devices[td_idx], "shape", "box", "");
-+
-+		is_hb = check_device_type(device, "Host Bridge");
-+		is_sw = check_device_type(device, "Switch Port");
-+
-+		if ((is_hb || is_sw) && !device_has_dport(device)) {
-+			error("no nr_dports attribute in the json obj for %s\n",
-+					is_hb ? "CXL host bridge" : "CXL switch");
-+			return top_devices;
-+		}
-+
-+		/* Create root port nodes if device is a host bridge */
-+		if (is_hb)
-+			create_root_ports(device, graph, top_devices[td_idx]);
-+		else if (is_sw)
-+			create_downstream_ports(device, graph, top_devices[td_idx]);
-+
-+		free(label);
-+
-+		/* Iterate through all keys and values of an object (device) */
-+		json_object_object_foreachC(device, subdev_iter) {
-+			bool is_endpoint = check_device_type(device, "Endpoint");
-+			char *key = subdev_iter.key;
-+
-+			if (is_endpoint && !strcmp(key, "memdev")) {
-+				/*subdev_arr = convert_json_obj_to_array(subdev_arr);*/
-+				Agnode_t *node;
-+
-+				label = label_device(subdev_iter.val);
-+				node = create_node(graph, label, 1);
-+				agsafeset(node, "shape", "box", "");
-+				free(label);
-+				agedge(graph, top_devices[td_idx], node, 0, 1);
-+				break;
-+			}
-+
-+			subdev_arr = subdev_iter.val;
-+			if (!json_object_is_type(subdev_arr, json_type_array))
-+				continue;
-+			nr_sub_devs = count_top_devices(subdev_arr);
-+			sub_devs = draw_subtree(subdev_arr, graph);
-+			if (!sub_devs)
-+				continue;
-+			if (!is_hb && !is_sw) {
-+				for (idx = 0; idx < nr_sub_devs; idx++)
-+					agedge(graph, top_devices[td_idx], sub_devs[idx], 0, 1);
-+				free(sub_devs);
-+				continue;
-+			}
-+
-+			nr_devs_connected = 0;
-+			for (idx = 0;
-+			     idx < json_object_array_length(subdev_arr);
-+			     idx++) {
-+				subdev = json_object_array_get_idx(subdev_arr, idx);
-+				if (!is_device(subdev))
-+					continue;
-+
-+				if (is_hb)
-+					parent_dport_label = find_root_port_label(subdev);
-+				else
-+					parent_dport_label = find_parent_dport_label(subdev);
-+				if (!parent_dport_label) {
-+					error("graph function requires parent_dport attribute\n");
-+					return NULL;
-+				}
-+				/* with flag = 0, it will search to locate an existing node */
-+				parent_node = create_node(graph, parent_dport_label, 0);
-+				if (parent_node) {
-+					agedge(graph, parent_node,
-+						sub_devs[nr_devs_connected++], 0, 1);
-+					free(parent_dport_label);
-+				} else {
-+					dbg(&param, "create parent node failed: %s\n",
-+						parent_dport_label);
-+				}
-+			}
-+			free(sub_devs);
-+		}
-+		td_idx++;
-+	}
-+
-+	return top_devices;
-+}
-+
-+struct json_object *parse_json_text(const char *path)
-+{
-+	FILE *fp;
-+	char *json_as_string;
-+	size_t file_len;
-+	json_object *json;
-+
-+	fp = fopen(path, "r");
-+	if (!fp)
-+		error("could not read file\n");
-+	fseek(fp, 0, SEEK_END);
-+	file_len = ftell(fp);
-+	fseek(fp, 0, SEEK_SET);
-+	json_as_string = malloc(file_len + 1);
-+	if (!json_as_string ||
-+	    fread(json_as_string, 1, file_len, fp) != file_len) {
-+		free(json_as_string);
-+		error("could not read file %s\n", path);
-+	}
-+	json_as_string[file_len] = '\0';
-+	json = json_tokener_parse(json_as_string);
-+	return json;
-+}
-+
-+static void draw_graph(struct json_object *current_array,
-+		Agraph_t *graph)
-+{
-+	size_t json_array_len = json_object_array_length(current_array);
-+	size_t idx;
-+	json_object_iter iter;
-+	json_object *device;
-+	Agnode_t *anon_memdevs = NULL;
-+	Agnode_t **top_devices = NULL;
-+	size_t num_top_devices = 0;
-+
-+	if (json_array_len == 1) {
-+		if (draw_subtree(current_array, graph))
-+			free(top_devices);
-+	} else {
-+		for (idx = 0; idx < json_array_len; idx++) {
-+			device = json_object_array_get_idx(current_array, idx);
-+			json_object_object_foreachC(device, iter) {
-+				char *key = iter.key;
-+				json_object *val = iter.val;
-+
-+				if (!strcmp(key, "anon memdevs")) {
-+					anon_memdevs = plot_anon_memdevs(val, graph);
-+				} else if (!strcmp(key, "buses")) {
-+					num_top_devices = json_object_array_length(val);
-+					top_devices = draw_subtree(val, graph);
-+				} else {
-+					error("unknown top key from cxl topology\n");
-+				}
-+			}
-+		}
-+		if (anon_memdevs && top_devices) {
-+			Agnode_t *root = create_node(graph, "CXL sub-system", 1);
-+
-+			agsafeset(root, "shape", "box", "");
-+			agedge(graph, root, anon_memdevs, 0, 1);
-+			for (idx = 0; idx < num_top_devices; idx++)
-+				agedge(graph, root, top_devices[idx], 0, 1);
-+		}
-+		if (top_devices)
-+			free(top_devices);
-+	}
-+}
-+
-+static int create_image(const char *filename, json_object *platform)
-+{
-+	int rs = 0;
-+	char *output_file = (char *)filename;
-+	GVC_t *gvc;
-+	Agraph_t *graph;
-+	char *of_extension = strrchr(output_file, '.');
-+	FILE *FP;
-+
-+	gvc = gvContext();
-+	if (!gvc) {
-+		error("Creating gvContext failed");
-+		return -1;
-+	}
-+	graph = agopen("graph", Agdirected, 0);
-+	if (!graph) {
-+		error("agopen failed when creating cxl topology image");
-+		rs = -1;
-+		goto free_ctx;
-+	}
-+
-+	if (!of_extension || (strcmp(of_extension, ".png") &&
-+			strcmp(of_extension, ".jpeg") &&
-+			strcmp(of_extension, ".jpg"))) {
-+		error("unsupported output image type, only png/jpeg/jpg supported\n");
-+		rs = -1;
-+		goto close_graph;
-+	}
-+
-+	draw_graph(platform, graph);
-+	if (gvLayout(gvc, graph, "dot")) {
-+		error("gvLayout failed when creating cxl topology image");
-+		rs = -1;
-+		goto close_graph;
-+	}
-+
-+	FP = fopen(output_file, "w");
-+	if (!FP) {
-+		error("open %s for storing the graph failed", output_file);
-+		rs = -1;
-+		goto create_exit;
-+	} else {
-+		gvRender(gvc, graph, strrchr(output_file, '.') + 1, FP);
-+		fclose(FP);
-+	}
-+
-+create_exit:
-+	gvFreeLayout(gvc, graph);
-+close_graph:
-+	agclose(graph);
-+free_ctx:
-+	gvFreeContext(gvc);
-+
-+	return rs;
-+}
-+
-+static const struct option options[] = {
-+	OPT_STRING('m', "memdev", &param.memdev_filter, "memory device name(s)",
-+		   "filter by CXL memory device name(s)"),
-+	OPT_BOOLEAN('M', "memdevs", &param.memdevs,
-+		    "include CXL memory device info"),
-+	OPT_STRING('b', "bus", &param.bus_filter, "bus device name",
-+		   "filter by CXL bus device name(s)"),
-+	OPT_STRING('p', "port", &param.port_filter, "port device name",
-+		   "filter by CXL port device name(s)"),
-+	OPT_STRING('e', "endpoint", &param.endpoint_filter,
-+		   "endpoint device name",
-+		   "filter by CXL endpoint device name(s)"),
-+	OPT_BOOLEAN('E', "endpoints", &param.endpoints,
-+		    "include CXL endpoint info"),
-+	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
-+	OPT_STRING(0, "input", &param.input_file,
-+		   "input file path for creating topology image",
-+		   "path to file containing a json array describing the topology"),
-+	OPT_STRING('o', "output-file", &param.output_file, "output file path",
-+		   "path to file to generate graph or dump cxl topology to"),
-+	OPT_STRING('t', "output-format", &param.output_format, "output format",
-+		   "way to output cxl topology: plain or graph (by default)"),
-+	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
-+#ifdef ENABLE_DEBUG
-+	OPT_BOOLEAN(0, "debug", &debug, "debug graph plot"),
-+#endif
-+	OPT_END(),
-+};
-+
-+static int num_list_flags(void)
-+{
-+	return !!param.memdevs + !!param.buses + !!param.ports +
-+	       !!param.endpoints + !!param.decoders + !!param.regions;
-+}
-+
-+static bool validate_cxl_topology_input_helper(json_object *cur_array,
-+		bool bus_detected, bool hb_detected)
-+{
-+	size_t arr_len, obj_idx;
-+	size_t nr_top_devices;
-+	bool is_hb, is_sw, is_endpoint, is_memdev;
-+	json_object *device;
-+	json_object_iter subdev_iter;
-+
-+	arr_len = json_object_array_length(cur_array);
-+	nr_top_devices = count_top_devices(cur_array);
-+	if (!nr_top_devices)
-+		goto validate_exit;
-+
-+	for (obj_idx = 0; obj_idx < arr_len; obj_idx++) {
-+		device = json_object_array_get_idx(cur_array, obj_idx);
-+		if (!is_device(device))
-+			continue;
-+
-+		if (check_device_type(device, "ACPI0017 Device"))
-+			bus_detected = true;
-+
-+		is_hb = check_device_type(device, "Host Bridge");
-+		is_sw = check_device_type(device, "Switch Port");
-+		is_endpoint = check_device_type(device, "Endpoint");
-+		is_memdev = check_device_type(device, "Type 3 Memory Device");
-+		if (is_memdev || is_endpoint) {
-+			if (!hb_detected || !bus_detected)
-+				return false;
-+		}
-+		/* cxl switch must be below cxl HB */
-+		if (is_sw) {
-+			if (!hb_detected || !bus_detected)
-+				return false;
-+		}
-+		if (is_hb) {
-+			if (!bus_detected)
-+				return false;
-+			hb_detected = true;
-+		}
-+		if (is_hb || is_sw) {
-+			if (!device_has_dport(device)) {
-+				error("dport not found for cxl HB or switch.\n ");
-+				return false;
-+			}
-+		}
-+		if ((is_hb || is_sw || is_endpoint || is_memdev)
-+				&& !device_has_parent_dport(device)) {
-+			error("parent_dport not found in cxl topology.\n ");
-+			return false;
-+		}
-+
-+		json_object_object_foreachC(device, subdev_iter) {
-+			char *key = subdev_iter.key;
-+			json_object *subdev_arr = subdev_iter.val;
-+
-+			if (!json_object_is_type(subdev_arr, json_type_array))
-+				continue;
-+			/* skip dports list */
-+			if (!strcmp(key, "dports"))
-+				continue;
-+			if (!validate_cxl_topology_input_helper(subdev_arr,
-+						bus_detected, hb_detected))
-+				return false;
-+		}
-+	}
-+
-+validate_exit:
-+	return bus_detected;
-+}
-+
-+static bool validate_cxl_topology_input(json_object *cur_array)
-+{
-+	size_t json_array_len = json_object_array_length(cur_array);
-+	size_t idx;
-+	json_object_iter iter;
-+	json_object *device;
-+
-+	if (json_array_len == 1)
-+		return validate_cxl_topology_input_helper(cur_array, false, false);
-+
-+	for (idx = 0; idx < json_array_len; idx++) {
-+		device = json_object_array_get_idx(cur_array, idx);
-+		json_object_object_foreachC(device, iter) {
-+			char *key = iter.key;
-+			json_object *val = iter.val;
-+
-+			if (!strcmp(key, "anon memdevs")) {
-+				;
-+			} else if (!strcmp(key, "buses")) {
-+				if (!validate_cxl_topology_input_helper(val, false, false))
-+					return false;
-+			} else {
-+				error("unsupported top key from cxl topology: %s\n",
-+						key);
-+				return false;
-+			}
-+		}
-+	}
-+	return true;
-+}
-+
-+int cmd_graph(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	const char * const u[] = {
-+		"cxl graph [<options>]",
-+		NULL
-+	};
-+	int i;
-+	json_object *platform;
-+	FILE *fp;
-+	int rs = 0;
-+
-+	argc = parse_options(argc, argv, options, u, 0);
-+	for (i = 0; i < argc; i++)
-+		error("unknown parameter \"%s\"\n", argv[i]);
-+
-+	if (argc)
-+		usage_with_options(u, options);
-+
-+	if (num_list_flags() == 0) {
-+		if (param.memdev_filter)
-+			param.memdevs = true;
-+		if (param.port_filter)
-+			param.ports = true;
-+		if (param.endpoint_filter)
-+			param.endpoints = true;
-+	}
-+
-+	param.buses = true;
-+	param.ports = true;
-+	param.targets = true;
-+	param.decoders = true;
-+	if (!param.endpoints && !param.memdevs) {
-+		param.memdevs = true;
-+		param.endpoints = true;
-+	}
-+
-+	switch (param.verbose) {
-+	default:
-+	case 3:
-+		param.health = true;
-+		param.partition = true;
-+		param.alert_config = true;
-+		/* fallthrough */
-+	case 2:
-+		param.idle = true;
-+		/* fallthrough */
-+	case 1:
-+		param.buses = true;
-+		param.ports = true;
-+		param.endpoints = true;
-+		param.decoders = true;
-+		param.targets = true;
-+		/*fallthrough*/
-+	case 0:
-+		break;
-+	}
-+
-+	log_init(&param.ctx, "cxl graph", "CXL_GRAPH_LOG");
-+	if (debug) {
-+		cxl_set_log_priority(ctx, LOG_DEBUG);
-+		param.ctx.log_priority = LOG_DEBUG;
-+	}
-+
-+	if (!param.output_format)
-+		param.output_format = "graph";
-+	else if (strcmp(param.output_format, "graph")
-+		&& strcmp(param.output_format, "plain")) {
-+		error("only plain/graph is accepted for output_format\n");
-+		return 0;
-+	}
-+
-+	if (!param.output_file) {
-+		dbg(&param, "no output file given, using topology.png by default\n");
-+		if (!strcmp(param.output_format, "graph"))
-+			param.output_file = "cxl-topology-graph.png";
-+		else
-+			param.output_file = "cxl-topology-plain.json";
-+	}
-+
-+	if (param.input_file) {
-+		if (access(param.input_file, R_OK)) {
-+			error("input file %s cannot be accessed\n", param.input_file);
-+			return -EPERM;
-+		}
-+
-+		platform = parse_json_text(param.input_file);
-+		if (!validate_cxl_topology_input(platform)) {
-+			error("cxl topology from input file `%s` not valid.\n",
-+					param.input_file);
-+			dbg(&param, "%s\t%s\t%s\t%s\t%s\t%s\n",
-+				"valid cxl topology should include following info:\n",
-+				"1): cxl bus;\n",
-+				"2): cxl host bridge (HB);\n",
-+				"3): cxl memdev;\n",
-+				"4): nr_dport attribute for HB and switch (if exists);\n",
-+				"5): parent_dport attribute for port and memdev objects.\n");
-+			dbg(&param, "please generate input file with %s or %s",
-+				"\'cxl list\' with -v/-vv/-vvv option",
-+				"use \'cxl graph -t plain\'\n");
-+			return -1;
-+		}
-+		if (!strcmp(param.output_format, "graph")) {
-+			rs = create_image(param.output_file, platform);
-+			goto graph_exit;
-+		} else
-+			goto dump_plain;
-+	}
-+
-+	dbg(&param, "walk topology\n");
-+	platform = cxl_filter_walk(ctx, &param);
-+	if (!platform)
-+		return -ENOMEM;
-+
-+	if (!strcmp(param.output_format, "graph"))
-+		rs = create_image(param.output_file, platform);
-+	else {
-+dump_plain:
-+		fp = fopen(param.output_file, "w+");
-+		if (!fp) {
-+			error("dump to output file %s failed.\n", param.output_file);
-+			rs = -1;
-+		} else {
-+			fprintf(fp, "%s\n", json_object_to_json_string_ext(platform,
-+				JSON_C_TO_STRING_PRETTY));
-+			fclose(fp);
-+		}
-+	}
-+
-+graph_exit:
-+	if (!rs)
-+		;
-+		/*util_display_json_array(stdout, platform, cxl_filter_to_flags(&param));*/
-+	return 0;
-+}
-diff --git a/cxl/meson.build b/cxl/meson.build
-index 61b4d87..346768f 100644
---- a/cxl/meson.build
-+++ b/cxl/meson.build
-@@ -25,6 +25,15 @@ deps = [
-   versiondep,
- ]
- 
-+if get_option('libgvc').enabled()
-+  cxl_src += [
-+    'graph.c',
-+  ]
-+  deps += [
-+    graphviz,
-+  ]
-+endif
-+
- if get_option('libtracefs').enabled()
-   cxl_src += [
-     'event_trace.c',
-diff --git a/meson.build b/meson.build
-index 50e83cf..4eabaf0 100644
---- a/meson.build
-+++ b/meson.build
-@@ -143,6 +143,10 @@ kmod = dependency('libkmod')
- libudev = dependency('libudev')
- uuid = dependency('uuid')
- json = dependency('json-c')
-+if get_option('libgvc').enabled()
-+  graphviz = dependency('libgvc')
-+endif
-+
- if get_option('libtracefs').enabled()
-   traceevent = dependency('libtraceevent')
-   tracefs = dependency('libtracefs')
-@@ -237,6 +241,7 @@ conf.set('ENABLE_DESTRUCTIVE', get_option('destructive').enabled())
- conf.set('ENABLE_LOGGING', get_option('logging').enabled())
- conf.set('ENABLE_DEBUG', get_option('dbg').enabled())
- conf.set('ENABLE_LIBTRACEFS', get_option('libtracefs').enabled())
-+conf.set('ENABLE_LIBGVC', get_option('libgvc').enabled())
- 
- typeof_code = '''
-   void func() {
-diff --git a/meson_options.txt b/meson_options.txt
-index 5c41b1a..08e6c3a 100644
---- a/meson_options.txt
-+++ b/meson_options.txt
-@@ -3,6 +3,7 @@ option('version-tag', type : 'string',
- option('docs', type : 'feature', value : 'enabled')
- option('asciidoctor', type : 'feature', value : 'enabled')
- option('libtracefs', type : 'feature', value : 'enabled')
-+option('libgvc', type : 'feature', value : 'enabled')
- option('systemd', type : 'feature', value : 'enabled')
- option('keyutils', type : 'feature', value : 'enabled',
-   description : 'enable nvdimm device passphrase management')
-diff --git a/ndctl.spec.in b/ndctl.spec.in
-index 7702f95..66cdf71 100644
---- a/ndctl.spec.in
-+++ b/ndctl.spec.in
-@@ -31,6 +31,7 @@ BuildRequires:	pkgconfig(uuid)
- BuildRequires:	pkgconfig(json-c)
- BuildRequires:	pkgconfig(bash-completion)
- BuildRequires:	pkgconfig(systemd)
-+BuildRequires:  graphviz
- BuildRequires:	keyutils-libs-devel
- BuildRequires:	systemd-rpm-macros
- BuildRequires:	iniparser-devel
--- 
-2.39.2
+> +
+> +static int cxl_prepare_ext_list(struct cxl_mbox_dc_response **res,
+'res' always triggers "resource" in my head. Maybe either spell it out 
+or 'resp'?
 
+> +					int *n, struct range *extent)
+
+Maybe a parameter more descriptive than 'n'?
+
+
+> +{
+> +	struct cxl_mbox_dc_response *dc_res;
+
+Same comment as 'res'
+
+> +	unsigned int size;
+> +
+> +	if (!extent)
+> +		size = struct_size(dc_res, extent_list, 0);
+> +	else
+> +		size = struct_size(dc_res, extent_list, *n + 1);
+> +
+> +	dc_res = krealloc(*res, size, GFP_KERNEL);
+> +	if (!dc_res)
+> +		return -ENOMEM;
+> +
+> +	if (extent) {
+> +		dc_res->extent_list[*n].dpa_start = cpu_to_le64(extent->start);
+> +		memset(dc_res->extent_list[*n].reserved, 0, 8);
+
+SZ_8 perhaps?
+
+> +		dc_res->extent_list[*n].length =
+> +				cpu_to_le64(range_len(extent));
+> +		(*n)++;
+> +	}
+> +
+> +	*res = dc_res;
+> +	return 0;
+> +}
+> +/**
+> + * cxl_handle_dcd_event_records() - Read DCD event records.
+> + * @mds: The memory device state
+> + *
+> + * Returns 0 if enumerate completed successfully.
+
+Please also add "errno on failure."
+
+> + *
+> + * CXL devices can generate DCD events to add or remove extents in the list.
+> + */
+> +static int cxl_handle_dcd_event_records(struct cxl_memdev_state *mds,
+> +					struct cxl_event_record_raw *rec)
+> +{
+> +	struct cxl_mbox_dc_response *dc_res = NULL;
+> +	struct device *dev = mds->cxlds.dev;
+> +	uuid_t *id = &rec->hdr.id;
+> +	struct dcd_event_dyn_cap *record =
+> +			(struct dcd_event_dyn_cap *)rec;
+> +	int extent_cnt = 0, rc = 0;
+> +	struct cxl_dc_extent_data *extent;
+> +	struct range alloc_range, rel_range;
+> +	resource_size_t dpa, size;
+> +
+> +	if (!uuid_equal(id, &dc_event_uuid))
+> +		return -EINVAL;
+> +
+> +	switch (record->data.event_type) {
+> +	case ADD_CAPACITY:
+> +		extent = devm_kzalloc(dev, sizeof(*extent), GFP_ATOMIC);
+> +		if (!extent)
+> +			return -ENOMEM;
+> +
+> +		extent->dpa_start = le64_to_cpu(record->data.extent.start_dpa);
+> +		extent->length = le64_to_cpu(record->data.extent.length);
+> +		memcpy(extent->tag, record->data.extent.tag,
+> +				sizeof(record->data.extent.tag));
+
+A general comment, the alignment of second line in this patch is 
+inconsistent
+
+> +		extent->shared_extent_seq =
+> +			le16_to_cpu(record->data.extent.shared_extn_seq);
+> +		dev_dbg(dev, "Add DC extent DPA:0x%llx LEN:%llx\n",
+> +					extent->dpa_start, extent->length);
+> +		alloc_range = (struct range) {
+> +			.start = extent->dpa_start,
+> +			.end = extent->dpa_start + extent->length - 1,
+> +		};
+> +
+> +		rc = cxl_add_dc_extent(mds, &alloc_range);
+> +		if (rc < 0) {
+> +			dev_dbg(dev, "unconsumed DC extent DPA:0x%llx LEN:%llx\n",
+> +					extent->dpa_start, extent->length);
+> +			rc = cxl_prepare_ext_list(&dc_res, &extent_cnt, NULL);
+> +			if (rc < 0) {
+> +				dev_err(dev, "Couldn't create extent list %d\n",
+> +									rc);
+> +				devm_kfree(dev, extent);
+> +				return rc;
+> +			}
+> +
+> +			rc = cxl_send_dc_cap_response(mds, dc_res,
+> +					extent_cnt, CXL_MBOX_OP_ADD_DC_RESPONSE);
+> +			if (rc < 0) {
+> +				devm_kfree(dev, extent);
+> +				goto out;
+
+Please be consistent in direct return vs single path error out. Mixing 
+makes it more difficult to read.
+
+> +			}
+> +
+> +			kfree(dc_res);
+> +			devm_kfree(dev, extent);
+> +
+> +			return 0;
+> +		}
+> +
+> +		rc = xa_insert(&mds->dc_extent_list, extent->dpa_start, extent,
+> +				GFP_KERNEL);
+> +		if (rc < 0)
+> +			goto out;
+> +
+> +		mds->num_dc_extents++;
+> +		rc = cxl_prepare_ext_list(&dc_res, &extent_cnt, &alloc_range);
+> +		if (rc < 0) {
+> +			dev_err(dev, "Couldn't create extent list %d\n", rc);
+> +			return rc;
+> +		}
+> +
+> +		rc = cxl_send_dc_cap_response(mds, dc_res, extent_cnt,
+> +					      CXL_MBOX_OP_ADD_DC_RESPONSE);
+> +		if (rc < 0)
+> +			goto out;
+> +
+> +		break;
+> +
+> +	case RELEASE_CAPACITY:
+> +		dpa = le64_to_cpu(record->data.extent.start_dpa);
+> +		size = le64_to_cpu(record->data.extent.length);
+> +		dev_dbg(dev, "Release DC extents DPA:0x%llx LEN:%llx\n",
+> +				dpa, size);
+> +		extent = xa_load(&mds->dc_extent_list, dpa);
+> +		if (!extent) {
+> +			dev_err(dev, "No extent found with DPA:0x%llx\n", dpa);
+> +			return -EINVAL;
+> +		}
+> +
+> +		rel_range = (struct range) {
+> +			.start = dpa,
+> +			.end = dpa + size - 1,
+> +		};
+> +
+> +		rc = cxl_release_dc_extent(mds, &rel_range);
+> +		if (rc < 0) {
+> +			dev_dbg(dev, "withhold DC extent DPA:0x%llx LEN:%llx\n",
+> +									dpa, size);
+> +			return 0;
+> +		}
+> +
+> +		xa_erase(&mds->dc_extent_list, dpa);
+> +		devm_kfree(dev, extent);
+> +		mds->num_dc_extents--;
+> +		rc = cxl_prepare_ext_list(&dc_res, &extent_cnt, &rel_range);
+> +		if (rc < 0) {
+> +			dev_err(dev, "Couldn't create extent list %d\n", rc);
+> +			return rc;
+> +		}
+> +
+> +		rc = cxl_send_dc_cap_response(mds, dc_res, extent_cnt,
+> +					      CXL_MBOX_OP_RELEASE_DC);
+> +		if (rc < 0)
+> +			goto out;
+> +
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +out:
+> +	kfree(dc_res);
+> +	return rc;
+> +}
+> +
+>   static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>   				    enum cxl_event_log_type type)
+>   {
+> @@ -982,9 +1180,17 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>   		if (!nr_rec)
+>   			break;
+>   
+> -		for (i = 0; i < nr_rec; i++)
+> +		for (i = 0; i < nr_rec; i++) {
+>   			cxl_event_trace_record(cxlmd, type,
+>   					       &payload->records[i]);
+> +			if (type == CXL_EVENT_TYPE_DCD) {
+> +				rc = cxl_handle_dcd_event_records(mds,
+> +						&payload->records[i]);
+> +				if (rc)
+> +					dev_err_ratelimited(dev,
+> +						"dcd event failed: %d\n", rc);
+> +			}
+> +		}
+>   
+>   		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+>   			trace_cxl_overflow(cxlmd, type, payload);
+> @@ -1024,6 +1230,8 @@ void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status)
+>   		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
+>   	if (status & CXLDEV_EVENT_STATUS_INFO)
+>   		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
+> +	if (status & CXLDEV_EVENT_STATUS_DCD)
+> +		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_DCD);
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, CXL);
+>   
+> @@ -1244,6 +1452,140 @@ int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds)
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_dev_dynamic_capacity_identify, CXL);
+>   
+> +int cxl_dev_get_dc_extent_cnt(struct cxl_memdev_state *mds,
+> +			      unsigned int *extent_gen_num)
+> +{
+> +	struct device *dev = mds->cxlds.dev;
+> +	struct cxl_mbox_dc_extents *dc_extents;
+> +	struct cxl_mbox_get_dc_extent get_dc_extent;
+> +	unsigned int total_extent_cnt;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	int rc;
+> +
+> +	/* Check GET_DC_EXTENT_LIST is supported by device */
+> +	if (!test_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds)) {
+> +		dev_dbg(dev, "unsupported cmd : get dyn cap extent list\n");
+> +		return 0;
+> +	}
+> +
+> +	dc_extents = kvmalloc(mds->payload_size, GFP_KERNEL);
+> +	if (!dc_extents)
+> +		return -ENOMEM;
+> +
+> +	get_dc_extent = (struct cxl_mbox_get_dc_extent) {
+> +		.extent_cnt = 0,
+> +		.start_extent_index = 0,
+> +	};
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
+> +		.payload_in = &get_dc_extent,
+> +		.size_in = sizeof(get_dc_extent),
+> +		.size_out = mds->payload_size,
+> +		.payload_out = dc_extents,
+> +		.min_out = 1,
+> +	};
+> +	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +	if (rc < 0)
+> +		goto out;
+> +
+> +	total_extent_cnt = le32_to_cpu(dc_extents->total_extent_cnt);
+> +	*extent_gen_num = le32_to_cpu(dc_extents->extent_list_num);
+> +	dev_dbg(dev, "Total extent count :%d Extent list Generation Num: %d\n",
+> +			total_extent_cnt, *extent_gen_num);
+> +out:
+> +
+> +	kvfree(dc_extents);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	return total_extent_cnt;
+> +
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dev_get_dc_extent_cnt, CXL);
+> +
+> +int cxl_dev_get_dc_extents(struct cxl_memdev_state *mds,
+> +			   unsigned int index, unsigned int cnt)
+> +{
+> +	/* See CXL 3.0 Table 125 dynamic capacity config  Output Payload */
+> +	struct device *dev = mds->cxlds.dev;
+> +	struct cxl_mbox_dc_extents *dc_extents;
+> +	struct cxl_mbox_get_dc_extent get_dc_extent;
+> +	unsigned int extent_gen_num, available_extents, total_extent_cnt;
+> +	int rc;
+> +	struct cxl_dc_extent_data *extent;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	struct range alloc_range;
+> +
+> +	/* Check GET_DC_EXTENT_LIST is supported by device */
+> +	if (!test_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds)) {
+> +		dev_dbg(dev, "unsupported cmd : get dyn cap extent list\n");
+> +		return 0;
+> +	}
+> +
+> +	dc_extents = kvmalloc(mds->payload_size, GFP_KERNEL);
+> +	if (!dc_extents)
+> +		return -ENOMEM;
+> +	get_dc_extent = (struct cxl_mbox_get_dc_extent) {
+> +		.extent_cnt = cnt,
+> +		.start_extent_index = index,
+> +	};
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
+> +		.payload_in = &get_dc_extent,
+> +		.size_in = sizeof(get_dc_extent),
+> +		.size_out = mds->payload_size,
+> +		.payload_out = dc_extents,
+> +		.min_out = 1,
+> +	};
+> +	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +	if (rc < 0)
+> +		goto out;
+> +
+> +	available_extents = le32_to_cpu(dc_extents->ret_extent_cnt);
+> +	total_extent_cnt = le32_to_cpu(dc_extents->total_extent_cnt);
+> +	extent_gen_num = le32_to_cpu(dc_extents->extent_list_num);
+> +	dev_dbg(dev, "No Total extent count :%d Extent list Generation Num:%d\n",
+> +			total_extent_cnt, extent_gen_num);
+> +
+> +
+> +	for (int i = 0; i < available_extents ; i++) {
+> +		extent = devm_kzalloc(dev, sizeof(*extent), GFP_KERNEL);
+> +		if (!extent) {
+> +			rc = -ENOMEM;
+> +			goto out;
+> +		}
+> +		extent->dpa_start = le64_to_cpu(dc_extents->extent[i].start_dpa);
+> +		extent->length = le64_to_cpu(dc_extents->extent[i].length);
+> +		memcpy(extent->tag, dc_extents->extent[i].tag,
+> +					sizeof(dc_extents->extent[i].tag));
+> +		extent->shared_extent_seq =
+> +				le16_to_cpu(dc_extents->extent[i].shared_extn_seq);
+> +		dev_dbg(dev, "dynamic capacity extent[%d] DPA:0x%llx LEN:%llx\n",
+> +				i, extent->dpa_start, extent->length);
+> +
+> +		alloc_range = (struct range){
+> +			.start = extent->dpa_start,
+> +			.end = extent->dpa_start + extent->length - 1,
+> +		};
+> +
+> +		rc = cxl_add_dc_extent(mds, &alloc_range);
+> +		if (rc < 0)
+> +			goto out;
+> +		rc = xa_insert(&mds->dc_extent_list, extent->dpa_start, extent,
+> +				GFP_KERNEL);
+> +	}
+> +
+> +out:
+> +	kvfree(dc_extents);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	return available_extents;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dev_get_dc_extents, CXL);
+> +
+>   static int add_dpa_res(struct device *dev, struct resource *parent,
+>   		       struct resource *res, resource_size_t start,
+>   		       resource_size_t size, const char *type)
+> @@ -1452,6 +1794,7 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>   	mutex_init(&mds->event.log_lock);
+>   	mds->cxlds.dev = dev;
+>   	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+> +	xa_init(&mds->dc_extent_list);
+>   
+>   	return mds;
+>   }
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 144232c8305e..ba45c1c3b0a9 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1,6 +1,7 @@
+>   // SPDX-License-Identifier: GPL-2.0-only
+>   /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>   #include <linux/memregion.h>
+> +#include <linux/interrupt.h>
+>   #include <linux/genalloc.h>
+>   #include <linux/device.h>
+>   #include <linux/module.h>
+> @@ -11,6 +12,8 @@
+>   #include <cxlmem.h>
+>   #include <cxl.h>
+>   #include "core.h"
+> +#include "../../dax/bus.h"
+> +#include "../../dax/dax-private.h"
+>   
+>   /**
+>    * DOC: cxl core region
+> @@ -166,6 +169,38 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+>   	return 0;
+>   }
+>   
+> +static int cxl_region_manage_dc(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	unsigned int extent_gen_num;
+> +	int i, rc;
+> +
+> +	/* Designed for Non Interleaving flow with the assumption one
+
+comment need to go to next line
+/*
+  * comment
+  */
+
+> +	 * cxl_region will map the complete device DC region's DPA range
+> +	 */
+> +	for (i = 0; i < p->nr_targets; i++) {
+> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
+> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +		struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+> +
+> +		rc = cxl_dev_get_dc_extent_cnt(mds, &extent_gen_num);
+> +		if (rc < 0)
+Need {} since else if does
+> +			goto err;
+
+I would just do return rc here. No need for the goto. and then else if() 
+below would become if()
+
+> +		else if (rc > 1) {
+> +			rc = cxl_dev_get_dc_extents(mds, rc, 0);
+> +			if (rc < 0)
+> +				goto err;
+> +			mds->num_dc_extents = rc;
+> +			mds->dc_extents_index = rc - 1;
+> +		}
+> +		mds->dc_list_gen_num = extent_gen_num;
+> +		dev_dbg(mds->cxlds.dev, "No of preallocated extents :%d\n", rc);
+> +	}
+> +	return 0;
+> +err:
+> +	return rc;
+> +}
+> +
+>   static int commit_decoder(struct cxl_decoder *cxld)
+>   {
+>   	struct cxl_switch_decoder *cxlsd = NULL;
+> @@ -2865,11 +2900,14 @@ static int devm_cxl_add_dc_region(struct cxl_region *cxlr)
+>   		return PTR_ERR(cxlr_dax);
+>   
+>   	cxlr_dc = kzalloc(sizeof(*cxlr_dc), GFP_KERNEL);
+> -	if (!cxlr_dc) {
+> -		rc = -ENOMEM;
+> -		goto err;
+> -	}
+> +	if (!cxlr_dc)
+> +		return -ENOMEM;
+>   
+> +	rc = request_module("dax_cxl");
+> +	if (rc) {
+> +		dev_err(dev, "failed to load dax-ctl module\n");
+> +		goto load_err;
+> +	}
+>   	dev = &cxlr_dax->dev;
+>   	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+>   	if (rc)
+> @@ -2891,10 +2929,24 @@ static int devm_cxl_add_dc_region(struct cxl_region *cxlr)
+>   	xa_init(&cxlr_dc->dax_dev_list);
+>   	cxlr->cxlr_dc = cxlr_dc;
+>   	rc = devm_add_action_or_reset(&cxlr->dev, cxl_dc_region_release, cxlr);
+> -	if (!rc)
+> -		return 0;
+> +	if (rc)
+> +		goto err;
+> +
+> +	if (!dev->driver) {
+> +		dev_err(dev, "%s Driver not attached\n", dev_name(dev));
+> +		rc = -ENXIO;
+> +		goto err;
+> +	}
+> +
+> +	rc = cxl_region_manage_dc(cxlr);
+> +	if (rc)
+> +		goto err;
+> +
+> +	return 0;
+> +
+>   err:
+>   	put_device(dev);
+> +load_err:
+>   	kfree(cxlr_dc);
+>   	return rc;
+>   }
+> @@ -3076,6 +3128,156 @@ struct cxl_region *cxl_create_region(struct cxl_root_decoder *cxlrd,
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_create_region, CXL);
+>   
+> +static int match_ep_decoder_by_range(struct device *dev, void *data)
+> +{
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct range *dpa_range = data;
+> +
+> +	if (!is_endpoint_decoder(dev))
+> +		return 0;
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	if (!cxled->cxld.region)
+> +		return 0;
+> +
+> +	if (cxled->dpa_res->start <= dpa_range->start &&
+> +				cxled->dpa_res->end >= dpa_range->end)
+> +		return 1;
+> +
+> +	return 0;
+
+Return the compare directly
+
+> +}
+> +
+> +int cxl_release_dc_extent(struct cxl_memdev_state *mds,
+> +			  struct range *rel_range)
+> +{
+> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_dc_region *cxlr_dc;
+> +	struct dax_region *dax_region;
+> +	resource_size_t dpa_offset;
+> +	struct cxl_region *cxlr;
+> +	struct range hpa_range;
+> +	struct dev_dax *dev_dax;
+> +	resource_size_t hpa;
+> +	struct device *dev;
+> +	int ranges, rc = 0;
+> +
+> +	/*
+> +	 * Find the cxl endpoind decoder with which has the extent dpa range and
+> +	 * get the cxl_region, dax_region refrences.
+> +	 */
+> +	dev = device_find_child(&cxlmd->endpoint->dev, rel_range,
+> +				match_ep_decoder_by_range);
+> +	if (!dev) {
+> +		dev_err(mds->cxlds.dev, "%pr not mapped\n", rel_range);
+> +		return PTR_ERR(dev);
+
+dev would be NULL and PTR_ERR() won't work. Maybe 'return -ENODEV'? 
+device_find_child() doesn't return ERRPTR it seems.
+
+> +	}
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	hpa_range = cxled->cxld.hpa_range;
+> +	cxlr = cxled->cxld.region;
+> +	cxlr_dc = cxlr->cxlr_dc;
+> +
+> +	/* DPA to HPA translation */
+> +	if (cxled->cxld.interleave_ways == 1) {
+> +		dpa_offset = rel_range->start - cxled->dpa_res->start;
+> +		hpa = hpa_range.start + dpa_offset;
+> +	} else {
+> +		dev_err(mds->cxlds.dev, "Interleaving DC not supported\n");
+> +		return -EINVAL;
+> +	}
+
+Check != 1 first and return. Then you don't need else.
+
+> +
+> +	dev_dax = xa_load(&cxlr_dc->dax_dev_list, hpa);
+> +	if (!dev_dax)
+> +		return -EINVAL;
+> +
+> +	dax_region = dev_dax->region;
+> +	ranges = dev_dax->nr_range;
+> +
+> +	while (ranges) {
+> +		int i = ranges - 1;
+> +		struct dax_mapping *mapping = dev_dax->ranges[i].mapping;
+> +
+> +		devm_release_action(dax_region->dev, unregister_dax_mapping,
+> +								&mapping->dev);
+> +		ranges--;
+> +	}
+> +
+> +	dev_dbg(mds->cxlds.dev, "removing devdax device:%s\n",
+> +						dev_name(&dev_dax->dev));
+> +	devm_release_action(dax_region->dev, unregister_dev_dax,
+> +							&dev_dax->dev);
+> +	xa_erase(&cxlr_dc->dax_dev_list, hpa);
+> +
+> +	return rc;
+> +}
+> +
+> +int cxl_add_dc_extent(struct cxl_memdev_state *mds, struct range *alloc_range)
+> +{
+> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_dax_region *cxlr_dax;
+> +	struct cxl_dc_region *cxlr_dc;
+> +	struct dax_region *dax_region;
+> +	resource_size_t dpa_offset;
+> +	struct dev_dax_data data;
+> +	struct dev_dax *dev_dax;
+> +	struct cxl_region *cxlr;
+> +	struct range hpa_range;
+> +	resource_size_t hpa;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	/*
+> +	 * Find the cxl endpoind decoder with which has the extent dpa range and
+> +	 * get the cxl_region, dax_region refrences.
+> +	 */
+> +	dev = device_find_child(&cxlmd->endpoint->dev, alloc_range,
+> +				match_ep_decoder_by_range);
+> +	if (!dev) {
+> +		dev_err(mds->cxlds.dev, "%pr not mapped\n",	alloc_range);
+
+A lot of extra spaces after ','
+
+> +		return PTR_ERR(dev);
+
+Same comment as earlier.
+
+> +	}
+> +
+> +	cxled = to_cxl_endpoint_decoder(dev);
+> +	hpa_range = cxled->cxld.hpa_range;
+> +	cxlr = cxled->cxld.region;
+> +	cxlr_dc = cxlr->cxlr_dc;
+> +	cxlr_dax = cxlr_dc->cxlr_dax;
+> +	dax_region = dev_get_drvdata(&cxlr_dax->dev);
+> +
+> +	/* DPA to HPA translation */
+> +	if (cxled->cxld.interleave_ways == 1) {
+> +		dpa_offset = alloc_range->start - cxled->dpa_res->start;
+> +		hpa = hpa_range.start + dpa_offset;
+> +	} else {
+> +		dev_err(mds->cxlds.dev, "Interleaving DC not supported\n");
+> +		return -EINVAL;
+> +	}
+
+Check == 1 first and return. No need for else.
+
+
+> +
+> +	data = (struct dev_dax_data) {
+> +		.dax_region = dax_region,
+> +		.id = -1,
+
+magic id number
+
+> +		.size = 0,
+> +	};
+> +
+> +	dev_dax = devm_create_dev_dax(&data);
+> +	if (IS_ERR(dev_dax))
+> +		return PTR_ERR(dev_dax);
+> +
+> +	if (IS_ALIGNED(range_len(alloc_range), max_t(unsigned long,
+> +				dev_dax->align, memremap_compat_align()))) {
+> +		rc = alloc_dev_dax_range(dev_dax, hpa,
+> +					range_len(alloc_range));
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	rc = xa_insert(&cxlr_dc->dax_dev_list, hpa, dev_dax, GFP_KERNEL);
+> +
+> +	return rc;
+> +}
+> +
+>   /* Establish an empty region covering the given HPA range */
+>   static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>   					   struct cxl_endpoint_decoder *cxled)
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index a0b5819bc70b..e11651255780 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -122,7 +122,8 @@ TRACE_EVENT(cxl_aer_correctable_error,
+>   		{ CXL_EVENT_TYPE_INFO, "Informational" },	\
+>   		{ CXL_EVENT_TYPE_WARN, "Warning" },		\
+>   		{ CXL_EVENT_TYPE_FAIL, "Failure" },		\
+> -		{ CXL_EVENT_TYPE_FATAL, "Fatal" })
+> +		{ CXL_EVENT_TYPE_FATAL, "Fatal" },		\
+> +		{ CXL_EVENT_TYPE_DCD, "DCD" })
+>   
+>   TRACE_EVENT(cxl_overflow,
+>   
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 7ac1237938b7..60c436b7ebb1 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -163,11 +163,13 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>   #define CXLDEV_EVENT_STATUS_WARN		BIT(1)
+>   #define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
+>   #define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
+> +#define CXLDEV_EVENT_STATUS_DCD			BIT(4)
+>   
+>   #define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
+>   				 CXLDEV_EVENT_STATUS_WARN |	\
+>   				 CXLDEV_EVENT_STATUS_FAIL |	\
+> -				 CXLDEV_EVENT_STATUS_FATAL)
+> +				 CXLDEV_EVENT_STATUS_FATAL|	\
+> +				 CXLDEV_EVENT_STATUS_DCD)
+>   
+>   /* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
+>   #define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 9c0b2fa72bdd..0440b5c04ef6 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -5,6 +5,7 @@
+>   #include <uapi/linux/cxl_mem.h>
+>   #include <linux/cdev.h>
+>   #include <linux/uuid.h>
+> +#include <linux/xarray.h>
+>   #include "cxl.h"
+>   
+>   /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+> @@ -226,6 +227,7 @@ struct cxl_event_interrupt_policy {
+>   	u8 warn_settings;
+>   	u8 failure_settings;
+>   	u8 fatal_settings;
+> +	u8 dyncap_settings;
+>   } __packed;
+>   
+>   /**
+> @@ -296,6 +298,13 @@ enum cxl_devtype {
+>   #define CXL_MAX_DC_REGION 8
+>   #define CXL_DC_REGION_SRTLEN 8
+>   
+> +struct cxl_dc_extent_data {
+> +	u64 dpa_start;
+> +	u64 length;
+> +	u8 tag[16];
+> +	u16 shared_extent_seq;
+> +};
+> +
+>   /**
+>    * struct cxl_dev_state - The driver device state
+>    *
+> @@ -406,6 +415,11 @@ struct cxl_memdev_state {
+>   		u8 flags;
+>   	} dc_region[CXL_MAX_DC_REGION];
+>   
+> +	u32 dc_list_gen_num;
+> +	u32 dc_extents_index;
+> +	struct xarray dc_extent_list;
+> +	u32 num_dc_extents;
+> +
+>   	size_t dc_event_log_size;
+>   	struct cxl_event_state event;
+>   	struct cxl_poison_state poison;
+> @@ -470,6 +484,17 @@ enum cxl_opcode {
+>   	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+>   		  0x40, 0x3d, 0x86)
+>   
+> +
+> +struct cxl_mbox_dc_response {
+> +	__le32 extent_list_size;
+> +	u8 reserved[4];
+> +	struct updated_extent_list {
+> +		__le64 dpa_start;
+> +		__le64 length;
+> +		u8 reserved[8];
+> +	} __packed extent_list[];
+> +} __packed;
+> +
+>   struct cxl_mbox_get_supported_logs {
+>   	__le16 entries;
+>   	u8 rsvd[6];
+> @@ -555,6 +580,7 @@ enum cxl_event_log_type {
+>   	CXL_EVENT_TYPE_WARN,
+>   	CXL_EVENT_TYPE_FAIL,
+>   	CXL_EVENT_TYPE_FATAL,
+> +	CXL_EVENT_TYPE_DCD,
+>   	CXL_EVENT_TYPE_MAX
+>   };
+>   
+> @@ -639,6 +665,35 @@ struct cxl_event_mem_module {
+>   	u8 reserved[0x3d];
+>   } __packed;
+>   
+> +/*
+> + * Dynamic Capacity Event Record
+> + * CXL rev 3.0 section 8.2.9.2.1.5; Table 8-47
+> + */
+> +
+> +#define CXL_EVENT_DC_TAG_SIZE	0x10
+> +struct cxl_dc_extent {
+> +	__le64 start_dpa;
+> +	__le64 length;
+> +	u8 tag[CXL_EVENT_DC_TAG_SIZE];
+> +	__le16 shared_extn_seq;
+> +	u8 reserved[6];
+> +} __packed;
+> +
+> +struct dcd_record_data {
+> +	u8 event_type;
+> +	u8 reserved;
+> +	__le16 host_id;
+> +	u8 region_index;
+> +	u8 reserved1[3];
+> +	struct cxl_dc_extent extent;
+> +	u8 reserved2[32];
+> +} __packed;
+> +
+> +struct dcd_event_dyn_cap {
+> +	struct cxl_event_record_hdr hdr;
+> +	struct dcd_record_data data;
+> +} __packed;
+> +
+>   struct cxl_mbox_get_partition_info {
+>   	__le64 active_volatile_cap;
+>   	__le64 active_persistent_cap;
+> @@ -684,6 +739,19 @@ struct cxl_mbox_dynamic_capacity {
+>   #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+>   #define CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG BIT(0)
+>   
+> +struct cxl_mbox_get_dc_extent {
+> +	__le32 extent_cnt;
+> +	__le32 start_extent_index;
+> +} __packed;
+> +
+> +struct cxl_mbox_dc_extents {
+> +	__le32 ret_extent_cnt;
+> +	__le32 total_extent_cnt;
+> +	__le32 extent_list_num;
+> +	u8 rsvd[4];
+> +	struct cxl_dc_extent extent[];
+> +}  __packed;
+> +
+>   /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>   struct cxl_mbox_set_timestamp_in {
+>   	__le64 timestamp;
+> @@ -826,6 +894,14 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
+>   int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
+>   int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
+>   
+> +/* FIXME why not have these be static in mbox.c? */
+> +int cxl_add_dc_extent(struct cxl_memdev_state *mds, struct range *alloc_range);
+> +int cxl_release_dc_extent(struct cxl_memdev_state *mds, struct range *rel_range);
+> +int cxl_dev_get_dc_extent_cnt(struct cxl_memdev_state *mds,
+> +			      unsigned int *extent_gen_num);
+> +int cxl_dev_get_dc_extents(struct cxl_memdev_state *mds, unsigned int cnt,
+> +			   unsigned int index);
+> +
+>   #ifdef CONFIG_CXL_SUSPEND
+>   void cxl_mem_active_inc(void);
+>   void cxl_mem_active_dec(void);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index ac1a41bc083d..558ffbcb9b34 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -522,8 +522,8 @@ static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
+>   		return irq;
+>   
+>   	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
+> -					 IRQF_SHARED | IRQF_ONESHOT, NULL,
+> -					 dev_id);
+> +					IRQF_SHARED | IRQF_ONESHOT, NULL,
+> +					dev_id);
+
+Stray edit?
+
+>   }
+>   
+>   static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
+> @@ -555,6 +555,7 @@ static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
+>   		.warn_settings = CXL_INT_MSI_MSIX,
+>   		.failure_settings = CXL_INT_MSI_MSIX,
+>   		.fatal_settings = CXL_INT_MSI_MSIX,
+> +		.dyncap_settings = CXL_INT_MSI_MSIX,
+>   	};
+>   
+>   	mbox_cmd = (struct cxl_mbox_cmd) {
+> @@ -608,6 +609,11 @@ static int cxl_event_irqsetup(struct cxl_memdev_state *mds)
+>   		return rc;
+>   	}
+>   
+> +	rc = cxl_event_req_irq(cxlds, policy.dyncap_settings);
+> +	if (rc) {
+> +		dev_err(cxlds->dev, "Failed to get interrupt for event dc log\n");
+> +		return rc;
+> +	}
+>   	return 0;
+>   }
+>   
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 227800053309..b2b27033f589 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -434,7 +434,7 @@ static void free_dev_dax_ranges(struct dev_dax *dev_dax)
+>   		trim_dev_dax_range(dev_dax);
+>   }
+>   
+> -static void unregister_dev_dax(void *dev)
+> +void unregister_dev_dax(void *dev)
+>   {
+>   	struct dev_dax *dev_dax = to_dev_dax(dev);
+>   
+> @@ -445,6 +445,7 @@ static void unregister_dev_dax(void *dev)
+>   	free_dev_dax_ranges(dev_dax);
+>   	put_device(dev);
+>   }
+> +EXPORT_SYMBOL_GPL(unregister_dev_dax);
+>   
+>   /* a return value >= 0 indicates this invocation invalidated the id */
+>   static int __free_dev_dax_id(struct dev_dax *dev_dax)
+> @@ -641,7 +642,7 @@ static void dax_mapping_release(struct device *dev)
+>   	kfree(mapping);
+>   }
+>   
+> -static void unregister_dax_mapping(void *data)
+> +void unregister_dax_mapping(void *data)
+>   {
+>   	struct device *dev = data;
+>   	struct dax_mapping *mapping = to_dax_mapping(dev);
+> @@ -658,7 +659,7 @@ static void unregister_dax_mapping(void *data)
+>   	device_del(dev);
+>   	put_device(dev);
+>   }
+> -
+> +EXPORT_SYMBOL_GPL(unregister_dax_mapping);
+>   static struct dev_dax_range *get_dax_range(struct device *dev)
+>   {
+>   	struct dax_mapping *mapping = to_dax_mapping(dev);
+> @@ -793,7 +794,7 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
+>   	return 0;
+>   }
+>   
+> -static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
+> +int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
+>   		resource_size_t size)
+>   {
+>   	struct dax_region *dax_region = dev_dax->region;
+> @@ -853,6 +854,8 @@ static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
+>   
+>   	return rc;
+>   }
+> +EXPORT_SYMBOL_GPL(alloc_dev_dax_range);
+> +
+>   
+>   static int adjust_dev_dax_range(struct dev_dax *dev_dax, struct resource *res, resource_size_t size)
+>   {
+
+Split the dax bus changes out as a prep patch?
+
+> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+> index 8cd79ab34292..aa8418c7aead 100644
+> --- a/drivers/dax/bus.h
+> +++ b/drivers/dax/bus.h
+> @@ -47,8 +47,11 @@ int __dax_driver_register(struct dax_device_driver *dax_drv,
+>   	__dax_driver_register(driver, THIS_MODULE, KBUILD_MODNAME)
+>   void dax_driver_unregister(struct dax_device_driver *dax_drv);
+>   void kill_dev_dax(struct dev_dax *dev_dax);
+> +void unregister_dev_dax(void *dev);
+> +void unregister_dax_mapping(void *data);
+>   bool static_dev_dax(struct dev_dax *dev_dax);
+> -
+> +int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
+> +					resource_size_t size);
+>   /*
+>    * While run_dax() is potentially a generic operation that could be
+>    * defined in include/linux/dax.h we don't want to grow any users
+> 
