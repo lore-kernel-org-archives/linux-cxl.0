@@ -2,408 +2,583 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6451EB64D9
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 21:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4431FEB64DB
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 21:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237672AbjFOVhS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Jun 2023 17:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39902 "EHLO
+        id S230116AbjFOVls (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Jun 2023 17:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjFOVhQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 17:37:16 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C39296E
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Jun 2023 14:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686865035; x=1718401035;
-  h=message-id:date:subject:to:references:from:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=HoSkzgn6qd2iRdzxDjln/uZik/z/S90lRAYQdQGBnys=;
-  b=TrynjqBumMLyMbo6BcYBWEeGXJty9M6JkXJW0Gkx8hX4pZAPSSKdXzLl
-   ZSRT34XTMeWCEqcoxNkm0crhLZJSDNtav0MlcwJ9Ga2f9XeadGqv4IWrJ
-   aRhp8/HGugfpCVzbSXKfcFRURlpEabJrmeVAYNYsQRsNMgx7AL263Bk1U
-   IIQRTagjnEOxky5SsigV3FZRfhVde90Cn4hPU0vifPDgCXUs26pHA8AV+
-   XdAkusPj1PRyhdWadzCSmUzLgbYu30uMHKX7CndVGxwW2xsrMwcOW0cGF
-   5vH1FBikf/MBkG2MBoY5OPunr8h0KfrjRxTs0mp5asuEqVuptd9PJSGQ9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="387644319"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="387644319"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 14:37:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="777896614"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="777896614"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Jun 2023 14:37:14 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 15 Jun 2023 14:37:13 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 15 Jun 2023 14:37:13 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 15 Jun 2023 14:37:13 -0700
+        with ESMTP id S229603AbjFOVlq (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 17:41:46 -0400
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2076.outbound.protection.outlook.com [40.92.52.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C5272971
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Jun 2023 14:41:41 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mGyaIpIStoIIKv+KbyqaJGHuquyJYE+NelUyJG26mTvR9tLvk2rrIF0AOn+B+Bh+Aq/Peeiyyy6zCNktZJDGuYw5dKjYNp2GIbHYeZKJYeR6ditjq+fduxZn+KA6XaD+IP5a78OlJAmFTT/clDcATvDUscmqUtJda0JfGdvgzJ0Ym0UOHtqzH2eB9lA6kmEKg01eaKIUzyz/jAxvQ94q8Dgq0ZzVlrt2XlBQibbBZdl0kNWAJf34LpWkpKGpP3dSljgPpaZWJ83pRSJ5k9OdIPqQ5TRafemkJuTS9N6Ty4eOmK3V4/QQp3SzKZR+ieZdPi+NsDMBbbuHVIm835wW0w==
+ b=dp5FgIBjkfO+LwPPKubzU47KtyEm6/A0vwq64B+2qMRAdIHHiK8Q4M8myHrST/r7yXvIFv7ZZWO9rzf+Hb4bfPA1sQBCtcXlaPE38IGhKTQ1/zk+KUzLKLJkUEf5DQqJSKHRO97FsTNRHNK7cD4gQx+TXMg3xnTbtK+0joo+Lnh4OlDghx8LB9cmY1uqBpjyYOxB6+0RFpBwIatkFJZUDRfGSEqGouOPcMnuJUb92mYm36442PIKbWLpsaEc4ob6ibaP/lLIuQTfB0dKSfG+0ke5HD6eMFWaV+PQIeepEa8dweUNPn/OvrR3MWtCTLhq9oKRyhtZ6HYRga1DgQuNhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bWWI6FvwTto1sOtWhNlob0D9054ee95ZoLZZm45j/uM=;
- b=O1hYfO3lz1oIzQ90CTxhsUnVQG5taWzkyCFBvvO2iH83tXU8wC98DkzNGR/GKlcB5dGIziFyBDfJLj/AYgClmeCXnUpmMQDcj0x33pnZtdJY8WeKHaSG/SbvelWuSDma8fW6HNNOHz1PP6LUtNXgrTX5cTIKA2uj9FHcWDjAwvh74+L/BFLgDsZgtQ1qbEHWwMHGlU5fnFWseuCQyK2fk1ojlx4eEisptFeVbyaFM71ceh65Yk4mUgA+YrdtlVzlZgSpQEADJ2rcaQwCdq1vfqaVlj7SJd8iSOtoUDydukQkqpIsL01qDseVWxxiSc0zvx5i0Mz2CCw/PjSi95lTjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by CY8PR11MB7876.namprd11.prod.outlook.com (2603:10b6:930:7d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Thu, 15 Jun
- 2023 21:37:11 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::ef38:9181:fb78:b528]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::ef38:9181:fb78:b528%7]) with mapi id 15.20.6500.025; Thu, 15 Jun 2023
- 21:37:11 +0000
-Message-ID: <cc9a65cf-7766-91fc-201d-35dccb64c957@intel.com>
-Date:   Thu, 15 Jun 2023 14:37:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.11.1
-Subject: Re: [PATCH v2 11/12] cxl/port: Enumerate cxl link capabilities
-To:     Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-References: <168679257511.3436160.9707734364766526576.stgit@dwillia2-xfh.jf.intel.com>
- <168679263707.3436160.10946564604121831708.stgit@dwillia2-xfh.jf.intel.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <168679263707.3436160.10946564604121831708.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY3PR03CA0002.namprd03.prod.outlook.com
- (2603:10b6:a03:39a::7) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+ bh=g77Aq0HLtjte5/yPK62VKNNwsXLqS0zmAm4X7bmTyZI=;
+ b=YhsrqFfWyb+b3UYZKb53BIHruaNUS6wsU/k1VfCqy4A+g2/8+hIAHY+aKAmS9Aw9yIgKE2myH1IsS7Ak9oswgr7/PFlpml01+RdVYOYWQ1ukbeMdhqDBgi6X+0GLq2xqaL+uuKzNw9hNzO+5ZF4TvnX7VNFB0WF9Q/PyCyDm3xLrX4Vn9ca8HiWBo+5mOYxdb9Yuw8YnMd8P0LSAr6LiKHoIs15QJkZeJCRBxakPTwyc6dzx5QYapDhtDHhUjjqYZDyfqzsy5Nf6Y4vXe9AJj8ax3Vpx9pou0+ovCMxAV7WsHjl8bIPWahr5LkGIjc/Qm0bi3esQX6xbbrRlAMv6pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g77Aq0HLtjte5/yPK62VKNNwsXLqS0zmAm4X7bmTyZI=;
+ b=k1FNNE601AAbOd1XsfSFrCkFdLKX4QzQbJAIH34w7UqPKtdw5HNxeQ3XZhGMUKDELeVHk8w0gbR2wgcTVt9BadZebEj7G5DArGs6OAVwEPeXBtKlqNrwulZrDkgNH/xcIQ2s33ZDCPVkIpty5cCQU7t3n1GrzekAeD6AzbDpWB1RtS4bYtc/RoiDQfvpKxGWStCVCWY/ITAtADmweiQugRVxonpcqgZAufHnG8/rsM9drCBDQaI4fiHobFy6cOrcV0KOwSL1cqPUrmf4mIYSVR9/W5Gx/RqetCCYMgl3ki8YI0a9/O1ZC5vQ7L8G16kYFjSDx+FFLYszhfGvwk9AOg==
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
+ TYZPR06MB4030.apcprd06.prod.outlook.com (2603:1096:400:24::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6500.29; Thu, 15 Jun 2023 21:41:37 +0000
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::33a7:c9e1:75ae:3227]) by SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::33a7:c9e1:75ae:3227%4]) with mapi id 15.20.6477.028; Thu, 15 Jun 2023
+ 21:41:36 +0000
+Date:   Thu, 15 Jun 2023 14:41:28 -0700
+From:   Fan Ni <nifan@outlook.com>
+To:     ira.weiny@intel.com
+Cc:     Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/5] cxl/mem : Read Dynamic capacity configuration from
+ the device
+Message-ID: <SG2PR06MB339714FAF99C022569BB193CB25BA@SG2PR06MB3397.apcprd06.prod.outlook.com>
+References: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
+ <20230604-dcd-type2-upstream-v1-1-71b6341bae54@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230604-dcd-type2-upstream-v1-1-71b6341bae54@intel.com>
+X-TMN:  [lowUr81M6Hzl2YtWtb7DSpDdldpm1oV1]
+X-ClientProxiedBy: BYAPR01CA0048.prod.exchangelabs.com (2603:10b6:a03:94::25)
+ To SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17)
+X-Microsoft-Original-Message-ID: <ZIuFiGAyiCMMv7i3@outlook.com>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|CY8PR11MB7876:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5dd52036-0986-4868-98eb-08db6de8ad4a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|TYZPR06MB4030:EE_
+X-MS-Office365-Filtering-Correlation-Id: bd825cb2-93c3-4d39-9b1a-08db6de94b0d
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 05Z0aHQNh2xvaKeA4tjaLlvTnC5MkwTJOhyF/i+h1JAnjCXqafR8BOTXxHRqvygVW4FLhOlaRiO3XSX84Qn0CKVW94Z+0KjkiGQ5RUdQYYC5+H8w+jF0UyZR6OMVPI3+1+3xX/FMAmP++QoJH3K4tFJj6NqaOc9I/oK52eMoZNGU+gOo7Lab1gcg054JP/ptWMj2oykMgBf086qL/UsLfrFXHoHQbKUw6WO3kwBotKHkBfEwYzB3aNssv7yUdL+JwCQTVT+7c+yA4Q+lz5stjDqW8nCh1rrVE/yQe5NM+Ax4h3KFPpLY6/SeRmVQrjNQNw5jBipE9IzBqcYvP7cmOwoe8P8zYOtWizKKsSmRxzSrjhjVXRjG4Gh1Rsfh4EvJu+d9VOo8O8IFwQytUXE+cPweL58uyRhywV3M5a2gB3q0VV9lkvyC/ZWGA208HsQH0iM3Sx97ZPj2GjCBBL7v4xbSEpssWcKdvFxd5rsNkb+48+M5j8g0GJO94sKWrUchSjCuEugMlJKTT36cppSF3vpzd31Ki3BtZjHLzkCkJNw3MFBBUCLMlQekCfQiT+mKgULLbGZ3oYGnoGDCK+mWLGx42lIH1rC6KYYSYzXaOb9dZUDdcUo+3O7s1cgWYyfl/NtClbB6WXHPot9irSj6WA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(39860400002)(366004)(346002)(376002)(396003)(451199021)(8676002)(8936002)(2906002)(82960400001)(38100700002)(5660300002)(66946007)(316002)(66476007)(66556008)(31686004)(83380400001)(2616005)(41300700001)(36756003)(478600001)(53546011)(6512007)(26005)(186003)(6666004)(6506007)(6486002)(44832011)(31696002)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 5qxHDoqfTrSNnVcnNX6DVujACsMBdmekEw+yl3C2YYjdQj0n5HVPhz/NYRwrtiVo2LoWLbsGbrQgIto5kKRNqi2ltZBA9iy/zw1NwgVW/dXXSehMbqKRuDWlObO2A+vWjR2s+aiMdqO9yQQqqUPwwiTM1lLYaZ2wFDLZOOjzkaDPrSmvQx5USVoskamzkXoxCr4uuDWiiJZZRTE2s0XYxzaEOgBF/F3REINWbNLGB4v8Z2FWu+c2qUwQqo9f/OVnyaCnThGSol5FdSaYj0MimmAEHMhiciOO8haaIFfBEqVFre0sfVmJeRDVCyvtp5DN+YspMSLsgFlYk3HsbTZGFH8w3lCdkZn3lzFwlWM+YAaOqDBzZMYE/hwXI0ikH/7FZeRLMNH4ezNiO6du2YSdjJoB/05HCLfgVBrOdkL8hG93ZcHA+DHvmilnQLk6TVwn4J7KD4eAjp7gP0Bi4kU4O64z7CIsTgLXDUhF0mU+tPvI/s7qMPsc4VnWIxL+/lTlKLF2QPjQPEvl1DNYSgTiK7a3iTDkLdDylzel8BECiHNHkkgadCpr6Jk0ezXSqfAOETRR16qhrur8rqyvpY4CXqgzrsE1JHTlrzflhnj6bxdib7uKe6J8Zup8fxFEkSPK
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YmpXZnNkMFo4WEZnZlFTNDRzRldqSlFKRWoxVllLSnFTaUJSdU51dmhDd0Q3?=
- =?utf-8?B?TTkrNVh6d2FUZnducTBXdXdSb251eHhEWmdjWEExZ0Q2NFVjc0NQVFlzRTgz?=
- =?utf-8?B?VE1Qd2hlYWlWZUpQV3p6YjlVakF0ZlJZNnQvdjVlYkIxRCtmaGRjekU0c1hS?=
- =?utf-8?B?eFliWEF2OXVFbnJtRkR0Ny9nOG1jRnVDcGJSOWxvRmJPOFNoVURpeGQ0SjVC?=
- =?utf-8?B?a2FBWE5VZDN5dTN6ZEZmMVlxeEVGRXVVKzFOdjhvMmtBMUl0emMyK05EcWtR?=
- =?utf-8?B?eFpVejg0blRKSE9EZXR3ZU5TU1Zqb1hDZ3JDOTBTVngzK0F5Y3R1Q3JDZmd5?=
- =?utf-8?B?WFBwQk9kRUpCM0VqSzBJeHNFVklIa2VVdTJIaFN0NGwyTk1LQVRDUlhkM0d4?=
- =?utf-8?B?blB5ZzVPT0hQYTM4eWwyaU9aeU9nK1dYNS9pWndqeHROaHhCYmxSdGVwUnor?=
- =?utf-8?B?MGVINm12ZXR5c2RwZTFVMHpFSFJid1ZKaFZoSjhyUUJybFBMK2JtZkNFZDZX?=
- =?utf-8?B?RVltRTRJMzh5ZExLSzhLNi9Ud1NFVDBUZnJDRXFjUWdvSXArVC93R29teVlY?=
- =?utf-8?B?QkRueU90UDJWQXd5ZEdTRjZBaEJHY0lyTUZqNTJVSVI0MTlhZXpQZmlNMGZS?=
- =?utf-8?B?VHRuWm0yN0pTRGZiNnJTMk9ScHlJSWh3M2phWWN5bmQ4MElzMXhvSUwyUXI5?=
- =?utf-8?B?OTArTElPM3RiRWphOVhob0ZZL0dRcWZzeXVjNUpBdUZEa3dWVG5sdzZRdEI0?=
- =?utf-8?B?WE1DYUZ1Y1d5cDgwRHc1MEwwMHR3RGZuQ0FqYjB3WjVub0JaeEN4MFdCTHBW?=
- =?utf-8?B?TGxQdWtYTEdMeWc5T2dnL3JmMFJkK041N1hrbU9maXoxQ1VQeWJ2OTltRWZz?=
- =?utf-8?B?Nm43ZzJGcEI0dDIzVllOcG82NHpSazFxK1pnbWxPQjZTR0tXY3VmZU1WVktY?=
- =?utf-8?B?eTlSV0hDS21iOGNEU2d1MGJVMm9xMEpubExSb3ZrV2x0QUFHaVNJNjZrR3I0?=
- =?utf-8?B?MVlKVEhZMUwrS0s5UWROc1Z4WUN4VFpCYnpTR0J5cTFiQWZHaUl4SjRQd0lY?=
- =?utf-8?B?aWpsVEwrUnFEY1pJeDVtM0lORGl2YytYUTAxWWxNSmNwcTFETWpzNnordFRq?=
- =?utf-8?B?MWcyRHRpaVhWaUEwYVBxZWpESENaRDhSRGE3TlloS0ZSUU9sQWczdXdrQlJu?=
- =?utf-8?B?UXF3WkVURzBybTJEWXltNTVpdWtiRTJ4QS9najkrVlVtYWpXeVdVWXF4RzRY?=
- =?utf-8?B?T0pQKzN2M1hXUXFwMmg4OXlsYjBXOFZxaWduZWdyd25Wd20vbDZvTUdOTzB1?=
- =?utf-8?B?MHBGWjZyeWR4NzVtNW9PbnR0WWpUY01WelA0RXlSVmRGOEQ0Z25yZjFNZW40?=
- =?utf-8?B?cWQxWUNHc3BLbjBaaTNyNTZweWVtdDNHK0RNaW4za3JTYVY0cnNNM1BQckcr?=
- =?utf-8?B?bk9zU2ZodjdxZUczUlVUOCtIejFnUDVpR1l6Wk85eWVZNTJVbEMvdmR2aXps?=
- =?utf-8?B?K1pWaW9NaDZSNllLRy91OEdkemFxTXVLN25yVXNwNm9WbWNQUTNCZGZBU05I?=
- =?utf-8?B?NjdIZ0wzbTlZTlFIRUt6QXljYy93TENqWXhZRUtYVlhXL0U5cVlSTGl0aXJV?=
- =?utf-8?B?TmtZbEdMVHB3elBSbkVEdjhCdTdnclorVlZoK1N0aWJmb3VrS1BFYjRtbHpK?=
- =?utf-8?B?Zkl3a0U3bWxOQkVxUmphZXFtcVplNW0xZTE5Mndxa0lHT1pDZlhXT2hMUmZK?=
- =?utf-8?B?S0w5WjcrOWdnU0VrU2hCdVJYK2k5a1ZMb3h0UHN6MGJIUkNVUlNkRGpuNTF6?=
- =?utf-8?B?ZGFGZ0c5THhIYXVEbHcvOW9jYXQweDl2SFVGNU0xVHdzTTZjVFpaY2RabWF0?=
- =?utf-8?B?TjVUckNvY1NrdElRRlNhdURNd3pXWmNVWFlTKzd2UXRmWittenBUcEg2VjVu?=
- =?utf-8?B?S1RuU2VvL3RmMnRicXc3NVhvYXBQSDdKZTZaWlR0eGNEclgzNzZxUWJqYzNv?=
- =?utf-8?B?andRdmV3ZGtub3pOQUFWUFlQSzJ5NXpIb0ZuUXpwYWJNdm9PWnYzRzlTclBF?=
- =?utf-8?B?V0FPbituYmhhNkxFWGxmSHdGb0Y3dE1RcWRRVEZvNlJEenRjNWkremtOZmk1?=
- =?utf-8?B?NFFGYWx2WUs4OUt6NGFaK2U3cUJWYnA2Q0JsUkpVNVU5a2VLTHRzZXNsTmNT?=
- =?utf-8?B?RGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dd52036-0986-4868-98eb-08db6de8ad4a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a2NwUlNSK3o5Z3VmSHlkcVBrcXJldEtFYWtaa2JydFZMa2EvdWhxa0tRTUYy?=
+ =?utf-8?B?OUczMmMvZDg4NG5GdEdIQldwVnlrNnlFd3FoNmFKeHk3eXdEOU80dlAvS3V1?=
+ =?utf-8?B?V0E2VllHbHFQYUwyMm04N3lZME12NldJVEg2YzNwUVArMkMyaEl4MEthcmhh?=
+ =?utf-8?B?dEY3RDRDc2UzSTBncnk0R2wxZXpVc1FWU2dFa3pnOTZLWi9mMUdGNXcrcXlB?=
+ =?utf-8?B?eU02OXFQaEJJajVKT2NEbjVVZzMvOCtUbTVMalBoWi9SdElDc2t3ZEovd2pE?=
+ =?utf-8?B?TDk2bGd1eHNHWDA4V2pMb0t0RlBmamNhRTBGaitqRmJpbGx1QlY5bEJEcFlW?=
+ =?utf-8?B?bWVqWTNETHIyb3JoaHhTcjFRWnI5eDlqMFNmbmRYZ3Y2TWVERWhnQ1V1VDNT?=
+ =?utf-8?B?NlZqMkNOeVNtbmgvTXhVUmVDVEM3aWJIRkRTV1MxcUgrbjhacjhpSEdCbllq?=
+ =?utf-8?B?Q1JteTJxOTAybFlxTTRDS3NaREJ1WXRyd2lmQzIvYitXRW94QkRib3owTE5w?=
+ =?utf-8?B?WGVGSzduUC9oRStNa1NJbWdDM1lhTFplczhFZzM5dVNpeXAyMGhybFdoYTRr?=
+ =?utf-8?B?elk1b3NCRjVKZ2llSjV4KzhaY3Z0ZmNyNGpRTjd3THZKNDA2NERuK01yWGNz?=
+ =?utf-8?B?d3ZWeVd0YjFlUU9rL29ueGJvdlBwb0Z2REFKcldSNTRwMW5ZcG1SWUhqWlJO?=
+ =?utf-8?B?N3FLYU8yV1Y0U0JvMXg1YnpqZ3VONEZzQ3NacnZPb0t6UHN3NklDM2JFYlN5?=
+ =?utf-8?B?cDdFcXViaURvcGdyeisvM1luUzNFYkVOdU1sUXl2am1HTk5QY2FIVVJ4NFVJ?=
+ =?utf-8?B?VnYwRnU1Z2VlZXcwY2NlcGI4dnJVNFc1TVdIOTNVNkVIdUV6L0dOaVdIOHBO?=
+ =?utf-8?B?MlU1cnlicUhqSGp5UnB5Sm1HbHp2TWU4VVdrOFV2VHp2RElCZUg5TnNqNm5S?=
+ =?utf-8?B?MGkzcVBJU0VCWVpaVUY5WisrY1NlVER6ZGMvUDh6SHBKY0JPQnUwYXlHYUJX?=
+ =?utf-8?B?dStPYVBhWm1UNG1vWGx2eG0ya1NiRVczU1FncU9pZXB0OXRhOVM3SHR2RlVD?=
+ =?utf-8?B?MlZkNkp4cHc2NXgzekhOMVRkVzJpR3d2YkNzUFJrb3NKTU11R1k2aGwwbFpy?=
+ =?utf-8?B?Um5EVEFiTVk2Q1lPNGpLVVJwaXdXMW5KKzY3ek9LczN3WnNNK0FlbU51QnRL?=
+ =?utf-8?B?SS92N3R0ZWhObmlDR0hYUkdvVk5BZTZ0SzdocHBIQnhTbWNoQnQ3eTduQkRs?=
+ =?utf-8?B?MU9UeHozRTVHVnRVeXNkUW45M3ZtcDZHOVdrd0ZYT0lrOWJFTTNWM1ZWbzBT?=
+ =?utf-8?B?NDZNY09la0hEZm1aQlNaQjhtUHQrM0l1dTdBdnRWRnBaSU5HenRINVlzNTFI?=
+ =?utf-8?B?RmQ4QUxaK3JvMlQzTllSQjV4L09EOG55OStIaEk3Nk1JNnVqZEozNkR4QU5B?=
+ =?utf-8?B?UVhlWXV4a3VBNVJWTHh4TWt1bXNyT3IwczIwaDZqKzhvZlVEMUtBd1hEdFJQ?=
+ =?utf-8?B?QkI0THdibmcyUXRBa2RuTjdOUzVOK1pUSk1YcEloTmRxTGRuaXByRXBVSlpW?=
+ =?utf-8?B?NGd6d0EwcGYzUCtSMzc4WnVlYmR4ZVpzSGRudktmWTBmUnJ0ZzFHL21VZEtP?=
+ =?utf-8?B?MHNLdUYwVkx2bFExWDZ3VENkdERaZ1E9PQ==?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd825cb2-93c3-4d39-9b1a-08db6de94b0d
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 21:37:11.1477
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 21:41:36.4010
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0agL8ZhqxKGah1DpJ/5CNDfEA6r2/Tt7CZNzNYohNNtXS9X364QhyXstsZB6ZsU/wFtqAob2ZiNqRJ93uqoRHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7876
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB4030
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 6/14/23 18:30, Dan Williams wrote:
-> Per CXL 3.0 9.14 "Back-Invalidation Configuration", in order to enable
-> an HDM-DB range (CXL.mem region with device initiated back-invalidation
-> support), all ports in the path between the endpoint and the host bridge
-> must be in 256-bit flit-mode.
+The 06/14/2023 12:16, ira.weiny@intel.com wrote:
+> From: Navneet Singh <navneet.singh@intel.com>
 > 
-> Even for typical Type-3 class devices it is useful to enumerate link
-> capabilities through the topology for debug purposes.
+> Read the Dynamic capacity configuration and store dynamic capacity region
+> information in the device state which driver will use to map into the HDM
+> ranges.
 > 
-> See CXL 3.0 Table-64 "256B Flit Mode vs. 68B Flit Mode Operation", for
-> how to determine 64B vs 256B Flit mode operation.
+> Implement Get Dynamic Capacity Configuration (opcode 4800h) mailbox
+> command as specified in CXL 3.0 spec section 8.2.9.8.9.1.
 > 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> 
 > ---
->   drivers/cxl/core/pci.c  |  113 +++++++++++++++++++++++++++++++++++++++++++++++
->   drivers/cxl/core/port.c |    6 ++
->   drivers/cxl/cxl.h       |    7 +++
->   drivers/cxl/cxlpci.h    |   24 +++++++++-
->   drivers/cxl/port.c      |    5 ++
->   5 files changed, 153 insertions(+), 2 deletions(-)
+> [iweiny: ensure all mds->dc_region's are named]
+> ---
+>  drivers/cxl/core/mbox.c | 190 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  drivers/cxl/cxlmem.h    |  70 +++++++++++++++++-
+>  drivers/cxl/pci.c       |   4 +
+>  3 files changed, 256 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 67f4ab6daa34..7440f84be6c8 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -519,6 +519,119 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->   }
->   EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
->   
-> +static struct pci_dev *cxl_port_to_pci(struct cxl_port *port)
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 3ca0bf12c55f..c5b696737c87 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -111,6 +111,37 @@ static u8 security_command_sets[] = {
+>  	0x46, /* Security Passthrough */
+>  };
+>  
+> +static bool cxl_is_dcd_command(u16 opcode)
 > +{
-> +	struct device *dev;
+> +#define CXL_MBOX_OP_DCD_CMDS 0x48
 > +
-> +	if (is_cxl_endpoint(port))
-> +		dev = port->uport->parent;
-> +	else
-> +		dev = port->uport;
+> +	if ((opcode >> 8) == CXL_MBOX_OP_DCD_CMDS)
+> +		return true;
 > +
-> +	if (!dev_is_pci(dev))
-> +		return NULL;
-> +
-> +	return to_pci_dev(dev);
+> +	return false;
 > +}
 > +
-> +int cxl_probe_link(struct cxl_port *port)
+> +static void cxl_set_dcd_cmd_enabled(struct cxl_memdev_state *mds,
+> +					u16 opcode)
 > +{
-> +	u16 cap, en, lnksta, lnksta2, parent_features;
-> +	struct pci_dev *pdev = cxl_port_to_pci(port);
-> +	struct cxl_port *parent_port;
-> +	unsigned long features;
-> +	struct device *dev;
-> +	int rc, dvsec;
-> +	u32 hdr;
+> +	switch (opcode) {
+> +	case CXL_MBOX_OP_GET_DC_CONFIG:
+> +		set_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
+> +		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_ADD_DC_RESPONSE:
+> +		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, mds->dcd_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_RELEASE_DC:
+> +		set_bit(CXL_DCD_ENABLED_RELEASE, mds->dcd_cmds);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
 > +
-> +	if (!pdev) {
-> +		/*
-> +		 * Assume host bridges support all features, the root
-> +		 * port will dictate the actual enabled set to endpoints.
-> +		 */
+>  static bool cxl_is_security_command(u16 opcode)
+>  {
+>  	int i;
+> @@ -666,6 +697,7 @@ static int cxl_xfer_log(struct cxl_memdev_state *mds, uuid_t *uuid,
+>  static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>  {
+>  	struct cxl_cel_entry *cel_entry;
+> +	struct cxl_mem_command *cmd;
+>  	const int cel_entries = size / sizeof(*cel_entry);
+>  	struct device *dev = mds->cxlds.dev;
+>  	int i;
+> @@ -674,11 +706,12 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>  
+>  	for (i = 0; i < cel_entries; i++) {
+>  		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+> -		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+> +		cmd = cxl_mem_find_command(opcode);
+>  
+> -		if (!cmd && !cxl_is_poison_command(opcode)) {
+> -			dev_dbg(dev,
+> -				"Opcode 0x%04x unsupported by driver\n", opcode);
+> +		if (!cmd && !cxl_is_poison_command(opcode) &&
+> +		    !cxl_is_dcd_command(opcode)) {
+> +			dev_dbg(dev, "Opcode 0x%04x unsupported by driver\n",
+> +				opcode);
+>  			continue;
+>  		}
+>  
+> @@ -688,6 +721,9 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>  		if (cxl_is_poison_command(opcode))
+>  			cxl_set_poison_cmd_enabled(&mds->poison, opcode);
+>  
+> +		if (cxl_is_dcd_command(opcode))
+> +			cxl_set_dcd_cmd_enabled(mds, opcode);
+> +
+>  		dev_dbg(dev, "Opcode 0x%04x enabled\n", opcode);
+>  	}
+>  }
+> @@ -1059,7 +1095,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds)
+>  	if (rc < 0)
+>  		return rc;
+>  
+> -	mds->total_bytes =
+> +	mds->total_static_capacity =
+>  		le64_to_cpu(id.total_capacity) * CXL_CAPACITY_MULTIPLIER;
+>  	mds->volatile_only_bytes =
+>  		le64_to_cpu(id.volatile_capacity) * CXL_CAPACITY_MULTIPLIER;
+> @@ -1077,10 +1113,137 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds)
+>  		mds->poison.max_errors = min_t(u32, val, CXL_POISON_LIST_MAX);
+>  	}
+>  
+> +	mds->dc_event_log_size = le16_to_cpu(id.dc_event_log_size);
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dev_state_identify, CXL);
+>  
+> +/**
+> + * cxl_dev_dynamic_capacity_identify() - Reads the dynamic capacity
+> + * information from the device.
+> + * @mds: The memory device state
+> + * Return: 0 if identify was executed successfully.
+> + *
+> + * This will dispatch the get_dynamic_capacity command to the device
+> + * and on success populate structures to be exported to sysfs.
+> + */
+> +int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds)
+> +{
+> +	struct cxl_dev_state *cxlds = &mds->cxlds;
+> +	struct device *dev = cxlds->dev;
+> +	struct cxl_mbox_dynamic_capacity *dc;
+> +	struct cxl_mbox_get_dc_config get_dc;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	u64 next_dc_region_start;
+> +	int rc, i;
+> +
+> +	for (i = 0; i < CXL_MAX_DC_REGION; i++)
+> +		sprintf(mds->dc_region[i].name, "dc%d", i);
+> +
+> +	/* Check GET_DC_CONFIG is supported by device */
+> +	if (!test_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds)) {
+> +		dev_dbg(dev, "unsupported cmd: get_dynamic_capacity_config\n");
 > +		return 0;
 > +	}
 > +
-> +	dev = &pdev->dev;
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_DVSEC_VENDOR_ID_CXL,
-> +					  CXL_DVSEC_FLEXBUS_PORT);
-> +	if (!dvsec) {
-> +		dev_err(dev, "Failed to enumerate port capabilities\n");
-> +		return -ENXIO;
+> +	dc = kvmalloc(mds->payload_size, GFP_KERNEL);
+> +	if (!dc)
+> +		return -ENOMEM;
+> +
+> +	get_dc = (struct cxl_mbox_get_dc_config) {
+> +		.region_count = CXL_MAX_DC_REGION,
+> +		.start_region_index = 0,
+> +	};
+> +
+> +	mbox_cmd = (struct cxl_mbox_cmd) {
+> +		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
+> +		.payload_in = &get_dc,
+> +		.size_in = sizeof(get_dc),
+> +		.size_out = mds->payload_size,
+> +		.payload_out = dc,
+> +		.min_out = 1,
+> +	};
+> +	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
+> +	if (rc < 0)
+> +		goto dc_error;
+> +
+> +	mds->nr_dc_region = dc->avail_region_count;
+> +
+> +	if (mds->nr_dc_region < 1 || mds->nr_dc_region > CXL_MAX_DC_REGION) {
+> +		dev_err(dev, "Invalid num of dynamic capacity regions %d\n",
+> +			mds->nr_dc_region);
+> +		rc = -EINVAL;
+> +		goto dc_error;
 > +	}
 > +
-> +	/*
-> +	 * Cache the link features for future determination of 256B Flit
-> +	 * mode dependent operation support e.g. HDM-DB.
-> +	 */
-> +	rc = pci_read_config_dword(pdev, dvsec + PCI_DVSEC_HEADER1, &hdr);
-> +	if (rc)
-> +		return rc;
+> +	for (i = 0; i < mds->nr_dc_region; i++) {
+> +		struct cxl_dc_region_info *dcr = &mds->dc_region[i];
 > +
-> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_CAP_OFFSET,
-> +				  &cap);
-> +	if (rc)
-> +		return rc;
+> +		dcr->base = le64_to_cpu(dc->region[i].region_base);
+> +		dcr->decode_len =
+> +			le64_to_cpu(dc->region[i].region_decode_length);
+> +		dcr->decode_len *= CXL_CAPACITY_MULTIPLIER;
+> +		dcr->len = le64_to_cpu(dc->region[i].region_length);
+> +		dcr->blk_size = le64_to_cpu(dc->region[i].region_block_size);
 > +
-> +	rc = pci_read_config_word(pdev, dvsec + CXL_DVSEC_FLEXBUS_STATUS_OFFSET,
-> +				  &en);
-> +	if (rc)
-> +		return rc;
-> +
-> +	features = en & cap & CXL_DVSEC_FLEXBUS_ENABLE_MASK;
-> +	if ((features & CXL_DVSEC_FLEXBUS_CXL_MASK) == 0)
-> +		goto no_cxl;
-> +
-> +	/* Determine flit mode from link speed and CXL active */
-> +	rc = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnksta);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* CXL 3.0 Table-64 256B Flit Mode vs. 68B Flit Mode Operation */
-> +	switch (FIELD_GET(PCI_EXP_LNKSTA_CLS, lnksta)) {
-> +	case PCI_EXP_LNKSTA_CLS_2_5GB:
-> +	case PCI_EXP_LNKSTA_CLS_5_0GB:
-> +		break;
-> +	case PCI_EXP_LNKSTA_CLS_8_0GB:
-> +	case PCI_EXP_LNKSTA_CLS_16_0GB:
-> +	case PCI_EXP_LNKSTA_CLS_32_0GB:
-> +		if ((lnksta2 & PCI_EXP_LNKSTA2_FLIT) == 0) {
-> +			features |= CXL_PORT_FEATURE_FLIT68;
-> +			break;
+> +		/* Check regions are in increasing DPA order */
+> +		if ((i + 1) < mds->nr_dc_region) {
+> +			next_dc_region_start =
+> +				le64_to_cpu(dc->region[i + 1].region_base);
+> +			if ((dcr->base > next_dc_region_start) ||
+> +			    ((dcr->base + dcr->decode_len) > next_dc_region_start)) {
+> +				dev_err(dev,
+> +					"DPA ordering violation for DC region %d and %d\n",
+> +					i, i + 1);
+> +				rc = -EINVAL;
+> +				goto dc_error;
+> +			}
 > +		}
-> +		fallthrough;
-> +	case PCI_EXP_LNKSTA_CLS_64_0GB:
-> +	default:
-> +		features |= CXL_PORT_FEATURE_FLIT256;
-> +		break;
+> +
+> +		/* Check the region is 256 MB aligned */
+> +		if (!IS_ALIGNED(dcr->base, SZ_256M)) {
+> +			dev_err(dev, "DC region %d not aligned to 256MB\n", i);
+> +			rc = -EINVAL;
+> +			goto dc_error;
+> +		}
+> +
+> +		/* Check Region base and length are aligned to block size */
+> +		if (!IS_ALIGNED(dcr->base, dcr->blk_size) ||
+> +		    !IS_ALIGNED(dcr->len, dcr->blk_size)) {
+> +			dev_err(dev, "DC region %d not aligned to %#llx\n", i,
+> +				dcr->blk_size);
+> +			rc = -EINVAL;
+> +			goto dc_error;
+> +		}
+> +
+> +		dcr->dsmad_handle =
+> +			le32_to_cpu(dc->region[i].region_dsmad_handle);
+> +		dcr->flags = dc->region[i].flags;
+> +		sprintf(dcr->name, "dc%d", i);
+> +
+> +		dev_dbg(dev,
+> +			"DC region %s DPA: %#llx LEN: %#llx BLKSZ: %#llx\n",
+> +			dcr->name, dcr->base, dcr->decode_len, dcr->blk_size);
 > +	}
 > +
-> +no_cxl:
-> +	parent_port = to_cxl_port(port->dev.parent);
-> +	parent_features = parent_port->features;
-> +
-> +	/* Enforce port features are plumbed through to the host bridge */
-> +	features &= parent_features;
-> +
-> +	dev_dbg(dev, "features:%s%s%s%s%s%s%s%s%s\n",
-> +		features & CXL_DVSEC_FLEXBUS_CACHE_ENABLED ? " cache" : "",
-> +		features & CXL_DVSEC_FLEXBUS_IO_ENABLED ? " io" : "",
-> +		features & CXL_DVSEC_FLEXBUS_MEM_ENABLED ? " mem" : "",
-> +		features & CXL_DVSEC_FLEXBUS_VH_ENABLED ? " vh" : "",
-> +		features & CXL_DVSEC_FLEXBUS_MLD_ENABLED ? " mld" : "",
-> +		features & CXL_DVSEC_FLEXBUS_LATOPT_ENABLED ? " latopt" : "",
-> +		features & CXL_DVSEC_FLEXBUS_PBR_ENABLED ? " pbr" : "",
-> +		features & CXL_PORT_FEATURE_FLIT68 ? " flit68" : "",
-> +		features & CXL_PORT_FEATURE_FLIT256 ? " flit256" : "");
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_probe_link, CXL);
-> +
->   #define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
->   #define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
->   #define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 6d7811b26b5a..bf8f25063914 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -665,6 +665,12 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
->   	} else
->   		dev->parent = uport;
->   
 > +	/*
-> +	 * Assume all CXL link capabilities for root-device-to-host-bridge link,
-> +	 * cxl_probe_link() will fix this up later in cxl_probe_link() for all
-> +	 * other ports.
+> +	 * Calculate entire DPA range of all configured regions which will be mapped by
+> +	 * one or more HDM decoders
 > +	 */
-> +	port->features = CXL_DVSEC_FLEXBUS_ENABLE_MASK;
->   	port->component_reg_phys = component_reg_phys;
->   	ida_init(&port->decoder_ida);
->   	port->hdm_end = -1;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f309b1387858..74548f8f5f4c 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -536,6 +536,10 @@ struct cxl_dax_region {
->   	struct range hpa_range;
->   };
->   
-> +/* These start after CXL_DVSEC_FLEXBUS_*_ENABLED bits in port->features */
-> +#define CXL_PORT_FEATURE_FLIT68 BIT(16)
-> +#define CXL_PORT_FEATURE_FLIT256 BIT(17)
+> +	mds->total_dynamic_capacity =
+> +		mds->dc_region[mds->nr_dc_region - 1].base +
+> +		mds->dc_region[mds->nr_dc_region - 1].decode_len -
+> +		mds->dc_region[0].base;
+> +	dev_dbg(dev, "Total dynamic capacity: %#llx\n",
+> +		mds->total_dynamic_capacity);
 > +
->   /**
->    * struct cxl_port - logical collection of upstream port devices and
->    *		     downstream port devices to construct a CXL memory
-> @@ -557,6 +561,8 @@ struct cxl_dax_region {
->    * @depth: How deep this port is relative to the root. depth 0 is the root.
->    * @cdat: Cached CDAT data
->    * @cdat_available: Should a CDAT attribute be available in sysfs
-> + * @features: active link features (see CXL_DVSEC_FLEXBUS_*_ENABLED +
-> + *  CXL_PORT_FEATURE_*)
->    */
->   struct cxl_port {
->   	struct device dev;
-> @@ -579,6 +585,7 @@ struct cxl_port {
->   		size_t length;
->   	} cdat;
->   	bool cdat_available;
-> +	unsigned long features;
->   };
->   
->   static inline struct cxl_dport *
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 7c02e55b8042..0da6618e0df7 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -45,8 +45,27 @@
->   /* CXL 2.0 8.1.7: GPF DVSEC for CXL Device */
->   #define CXL_DVSEC_DEVICE_GPF					5
->   
-> -/* CXL 2.0 8.1.8: PCIe DVSEC for Flex Bus Port */
-> -#define CXL_DVSEC_PCIE_FLEXBUS_PORT				7
-> +/* CXL 3.0 8.2.1.3: PCIe DVSEC for Flex Bus Port */
-> +#define CXL_DVSEC_FLEXBUS_PORT					7
-> +#define   CXL_DVSEC_FLEXBUS_CAP_OFFSET		0xA
-> +#define     CXL_DVSEC_FLEXBUS_CACHE_CAPABLE	BIT(0)
-> +#define     CXL_DVSEC_FLEXBUS_IO_CAPABLE	BIT(1)
-> +#define     CXL_DVSEC_FLEXBUS_MEM_CAPABLE	BIT(2)
-> +#define     CXL_DVSEC_FLEXBUS_VH_CAPABLE	BIT(5)
-> +#define     CXL_DVSEC_FLEXBUS_MLD_CAPABLE	BIT(6)
-> +#define     CXL_DVSEC_FLEXBUS_LATOPT_CAPABLE	BIT(13)
-> +#define     CXL_DVSEC_FLEXBUS_PBR_CAPABLE	BIT(14)
-> +#define   CXL_DVSEC_FLEXBUS_STATUS_OFFSET	0xE
-> +#define     CXL_DVSEC_FLEXBUS_CACHE_ENABLED	BIT(0)
-> +#define     CXL_DVSEC_FLEXBUS_IO_ENABLED	BIT(1)
-> +#define     CXL_DVSEC_FLEXBUS_MEM_ENABLED	BIT(2)
-> +#define     CXL_DVSEC_FLEXBUS_VH_ENABLED	BIT(5)
-> +#define     CXL_DVSEC_FLEXBUS_MLD_ENABLED	BIT(6)
-> +#define     CXL_DVSEC_FLEXBUS_LATOPT_ENABLED	BIT(13)
-> +#define     CXL_DVSEC_FLEXBUS_PBR_ENABLED	BIT(14)
-> +#define     CXL_DVSEC_FLEXBUS_ENABLE_MASK \
-> +	(GENMASK(2, 0) | GENMASK(6, 5) | GENMASK(14, 13))
-> +#define CXL_DVSEC_FLEXBUS_CXL_MASK GENMASK(2, 0)
->   
->   /* CXL 2.0 8.1.9: Register Locator DVSEC */
->   #define CXL_DVSEC_REG_LOCATOR					8
-> @@ -88,6 +107,7 @@ int devm_cxl_port_enumerate_dports(struct cxl_port *port);
->   struct cxl_dev_state;
->   int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
->   			struct cxl_endpoint_dvsec_info *info);
-> +int cxl_probe_link(struct cxl_port *port);
->   void read_cdat_data(struct cxl_port *port);
->   void cxl_cor_error_detected(struct pci_dev *pdev);
->   pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index c23b6164e1c0..5ffe3c7d2f5e 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -140,6 +140,11 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
->   static int cxl_port_probe(struct device *dev)
->   {
->   	struct cxl_port *port = to_cxl_port(dev);
-> +	int rc;
+> +dc_error:
+> +	kvfree(dc);
+> +	return rc;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dev_dynamic_capacity_identify, CXL);
 > +
-> +	rc = cxl_probe_link(port);
+>  static int add_dpa_res(struct device *dev, struct resource *parent,
+>  		       struct resource *res, resource_size_t start,
+>  		       resource_size_t size, const char *type)
+> @@ -1112,6 +1275,11 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+>  	struct cxl_dev_state *cxlds = &mds->cxlds;
+>  	struct device *dev = cxlds->dev;
+>  	int rc;
+> +	size_t untenanted_mem =
+> +		mds->dc_region[0].base - mds->total_static_capacity;
+> +
+> +	mds->total_capacity = mds->total_static_capacity +
+> +			untenanted_mem + mds->total_dynamic_capacity;
+>  
+>  	if (!cxlds->media_ready) {
+>  		cxlds->dpa_res = DEFINE_RES_MEM(0, 0);
+> @@ -1121,13 +1289,23 @@ int cxl_mem_create_range_info(struct cxl_memdev_state *mds)
+>  	}
+>  
+>  	cxlds->dpa_res =
+> -		(struct resource)DEFINE_RES_MEM(0, mds->total_bytes);
+> +		(struct resource)DEFINE_RES_MEM(0, mds->total_capacity);
+> +
+> +	for (int i = 0; i < CXL_MAX_DC_REGION; i++) {
+
+should it be i < mds->nr_dc_region???
+
+> +		struct cxl_dc_region_info *dcr = &mds->dc_region[i];
+> +
+> +		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->dc_res[i],
+> +				 dcr->base, dcr->decode_len, dcr->name);
+> +		if (rc)
+> +			return rc;
+> +	}
+>  
+>  	if (mds->partition_align_bytes == 0) {
+>  		rc = add_dpa_res(dev, &cxlds->dpa_res, &cxlds->ram_res, 0,
+>  				 mds->volatile_only_bytes, "ram");
+>  		if (rc)
+>  			return rc;
+> +
+>  		return add_dpa_res(dev, &cxlds->dpa_res, &cxlds->pmem_res,
+>  				   mds->volatile_only_bytes,
+>  				   mds->persistent_only_bytes, "pmem");
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 89e560ea14c0..9c0b2fa72bdd 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -239,6 +239,15 @@ struct cxl_event_state {
+>  	struct mutex log_lock;
+>  };
+>  
+> +/* Device enabled DCD commands */
+> +enum dcd_cmd_enabled_bits {
+> +	CXL_DCD_ENABLED_GET_CONFIG,
+> +	CXL_DCD_ENABLED_GET_EXTENT_LIST,
+> +	CXL_DCD_ENABLED_ADD_RESPONSE,
+> +	CXL_DCD_ENABLED_RELEASE,
+> +	CXL_DCD_ENABLED_MAX
+> +};
+> +
+>  /* Device enabled poison commands */
+>  enum poison_cmd_enabled_bits {
+>  	CXL_POISON_ENABLED_LIST,
+> @@ -284,6 +293,9 @@ enum cxl_devtype {
+>  	CXL_DEVTYPE_CLASSMEM,
+>  };
+>  
+> +#define CXL_MAX_DC_REGION 8
+> +#define CXL_DC_REGION_SRTLEN 8
+> +
+>  /**
+>   * struct cxl_dev_state - The driver device state
+>   *
+> @@ -300,6 +312,8 @@ enum cxl_devtype {
+>   * @dpa_res: Overall DPA resource tree for the device
+>   * @pmem_res: Active Persistent memory capacity configuration
+>   * @ram_res: Active Volatile memory capacity configuration
+> + * @dc_res: Active Dynamic Capacity memory configuration for each possible
+> + *          region
+>   * @component_reg_phys: register base of component registers
+>   * @info: Cached DVSEC information about the device.
+>   * @serial: PCIe Device Serial Number
+> @@ -315,6 +329,7 @@ struct cxl_dev_state {
+>  	struct resource dpa_res;
+>  	struct resource pmem_res;
+>  	struct resource ram_res;
+> +	struct resource dc_res[CXL_MAX_DC_REGION];
+>  	resource_size_t component_reg_phys;
+>  	u64 serial;
+>  	enum cxl_devtype type;
+> @@ -334,9 +349,12 @@ struct cxl_dev_state {
+>   *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+>   * @mbox_mutex: Mutex to synchronize mailbox access.
+>   * @firmware_version: Firmware version for the memory device.
+> + * @dcd_cmds: List of DCD commands implemented by memory device
+>   * @enabled_cmds: Hardware commands found enabled in CEL.
+>   * @exclusive_cmds: Commands that are kernel-internal only
+> - * @total_bytes: sum of all possible capacities
+> + * @total_capacity: Sum of static and dynamic capacities
+> + * @total_static_capacity: Sum of RAM and PMEM capacities
+> + * @total_dynamic_capacity: Complete DPA range occupied by DC regions
+>   * @volatile_only_bytes: hard volatile capacity
+>   * @persistent_only_bytes: hard persistent capacity
+>   * @partition_align_bytes: alignment size for partition-able capacity
+> @@ -344,6 +362,10 @@ struct cxl_dev_state {
+>   * @active_persistent_bytes: sum of hard + soft persistent
+>   * @next_volatile_bytes: volatile capacity change pending device reset
+>   * @next_persistent_bytes: persistent capacity change pending device reset
+> + * @nr_dc_region: number of DC regions implemented in the memory device
+> + * @dc_region: array containing info about the DC regions
+> + * @dc_event_log_size: The number of events the device can store in the
+> + * Dynamic Capacity Event Log before it overflows
+>   * @event: event log driver state
+>   * @poison: poison driver state info
+>   * @mbox_send: @dev specific transport for transmitting mailbox commands
+> @@ -357,9 +379,13 @@ struct cxl_memdev_state {
+>  	size_t lsa_size;
+>  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+>  	char firmware_version[0x10];
+> +	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX);
+>  	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+>  	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+> -	u64 total_bytes;
+> +
+
+Remove blank line ?
+
+> +	u64 total_capacity;
+> +	u64 total_static_capacity;
+> +	u64 total_dynamic_capacity;
+>  	u64 volatile_only_bytes;
+>  	u64 persistent_only_bytes;
+>  	u64 partition_align_bytes;
+> @@ -367,6 +393,20 @@ struct cxl_memdev_state {
+>  	u64 active_persistent_bytes;
+>  	u64 next_volatile_bytes;
+>  	u64 next_persistent_bytes;
+> +
+> +	u8 nr_dc_region;
+> +
+
+Remove blank line?
+
+Fan
+> +	struct cxl_dc_region_info {
+> +		u8 name[CXL_DC_REGION_SRTLEN];
+> +		u64 base;
+> +		u64 decode_len;
+> +		u64 len;
+> +		u64 blk_size;
+> +		u32 dsmad_handle;
+> +		u8 flags;
+> +	} dc_region[CXL_MAX_DC_REGION];
+> +
+> +	size_t dc_event_log_size;
+>  	struct cxl_event_state event;
+>  	struct cxl_poison_state poison;
+>  	int (*mbox_send)(struct cxl_memdev_state *mds,
+> @@ -415,6 +455,10 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_UNLOCK		= 0x4503,
+>  	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+>  	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
+> +	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
+> +	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
+> +	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
+> +	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
+>  	CXL_MBOX_OP_MAX			= 0x10000
+>  };
+>  
+> @@ -462,6 +506,7 @@ struct cxl_mbox_identify {
+>  	__le16 inject_poison_limit;
+>  	u8 poison_caps;
+>  	u8 qos_telemetry_caps;
+> +	__le16 dc_event_log_size;
+>  } __packed;
+>  
+>  /*
+> @@ -617,7 +662,27 @@ struct cxl_mbox_set_partition_info {
+>  	u8 flags;
+>  } __packed;
+>  
+> +struct cxl_mbox_get_dc_config {
+> +	u8 region_count;
+> +	u8 start_region_index;
+> +} __packed;
+> +
+> +/* See CXL 3.0 Table 125 get dynamic capacity config Output Payload */
+> +struct cxl_mbox_dynamic_capacity {
+> +	u8 avail_region_count;
+> +	u8 rsvd[7];
+> +	struct cxl_dc_region_config {
+> +		__le64 region_base;
+> +		__le64 region_decode_length;
+> +		__le64 region_length;
+> +		__le64 region_block_size;
+> +		__le32 region_dsmad_handle;
+> +		u8 flags;
+> +		u8 rsvd[3];
+> +	} __packed region[];
+> +} __packed;
+>  #define  CXL_SET_PARTITION_IMMEDIATE_FLAG	BIT(0)
+> +#define CXL_DYNAMIC_CAPACITY_SANITIZE_ON_RELEASE_FLAG BIT(0)
+>  
+>  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>  struct cxl_mbox_set_timestamp_in {
+> @@ -742,6 +807,7 @@ enum {
+>  int cxl_internal_send_cmd(struct cxl_memdev_state *mds,
+>  			  struct cxl_mbox_cmd *cmd);
+>  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+> +int cxl_dev_dynamic_capacity_identify(struct cxl_memdev_state *mds);
+>  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+>  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+>  int cxl_mem_create_range_info(struct cxl_memdev_state *mds);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 4e2845b7331a..ac1a41bc083d 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -742,6 +742,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> +	rc = cxl_dev_dynamic_capacity_identify(mds);
 > +	if (rc)
 > +		return rc;
->   
->   	if (is_cxl_endpoint(port))
->   		return cxl_endpoint_port_probe(port);
+> +
+>  	rc = cxl_mem_create_range_info(mds);
+>  	if (rc)
+>  		return rc;
 > 
+> -- 
+> 2.40.0
+> 
+
+-- 
+Fan Ni <nifan@outlook.com>
