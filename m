@@ -2,50 +2,47 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AC1EB64D8
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 01:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700BCEB64D9
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 01:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236787AbjFOBa1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 21:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39142 "EHLO
+        id S236909AbjFOBag (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 21:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236982AbjFOBa0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 21:30:26 -0400
+        with ESMTP id S237002AbjFOBad (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 21:30:33 -0400
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BF9212A
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 18:30:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 390762125
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 18:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686792626; x=1718328626;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gN8BJtVwevndGATx0j5H+aVeVis6ShXYsLCj7Mb/sF0=;
-  b=KgP6x3JWPVITZ8bkCDGon8SNiwzXD5bCF9jQtqBZfZMlSlUizUXSZO6N
-   5SXDknB2cCEDh1gbYI7YOnrQhvlHC3+PirzHt3V7223SsJ8F1eJ3zBzYL
-   TeaD6RN/FqpizuR6ujAY8M+8Sduaw2ptgmV3gALllPnbAs1lT6p31MzLP
-   g4hT2XqIvJ3i634RYN4t6RNvI04WGJuVdwgCK3x1bVWNzyDRWbWYUzTYE
-   XrSmJboCNdEqr2qs0j4HkN9s2H9FYJXMQIRBBhwpjFcK0T7bvUQbljzGv
-   s95mXGTyrVk6f3qChXpOn6wZgK5rTktCD0z2Ou0RUHw+s4EINMQ/E+92S
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338412402"
+  t=1686792632; x=1718328632;
+  h=subject:from:to:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=6MjfyQWWmtxlSd+nOeVy+ZaSTbDkcyWNJ3LH8vOJIT0=;
+  b=ejTAo3uqvJMpD69bj2svwN5oFzOgq4DLnPoFuyx60aZvuZLUVWq/Sada
+   sLcnk0a/aXdk6CcSQd9Kl1dT5n8L0TaM7uE6xpLKzDQAzFS5GErANlDxp
+   3wzIp5CvH7UJm45TF5pShUDerrqUYuzM43F7OXswAG06sb8fMdHPkL7P5
+   /WGa+3wYprBvzbXVC9NWzLBwGqU06U9G9SV8v87/z69MVc5ggXOoBO+ZU
+   ls9OHV/1Ioz/mSpbhJUlcoXzzqLCjGnrv9mMP20iU9h/bdinNE4waHmp4
+   bsBBkaD7VMIVRbwP9Ixt1+T7/jfxV9iHxZNeQkDOdscKZ4IfX8QTzPeTV
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="338412426"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="338412402"
+   d="scan'208";a="338412426"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:26 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="782307422"
+X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="782307513"
 X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="782307422"
+   d="scan'208";a="782307513"
 Received: from rtpearso-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.87.28])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:25 -0700
-Subject: [PATCH v2 09/12] cxl/region: Manage decoder target_type at
- decoder-attach time
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 18:30:31 -0700
+Subject: [PATCH v2 10/12] cxl/pci: Unconditionally unmask 256B Flit errors
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Date:   Wed, 14 Jun 2023 18:30:25 -0700
-Message-ID: <168679262543.3436160.13053831955768440312.stgit@dwillia2-xfh.jf.intel.com>
+Date:   Wed, 14 Jun 2023 18:30:31 -0700
+Message-ID: <168679263124.3436160.6228910132469454346.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <168679257511.3436160.9707734364766526576.stgit@dwillia2-xfh.jf.intel.com>
 References: <168679257511.3436160.9707734364766526576.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -56,43 +53,54 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Switch-level (mid-level) decoders between the platform root and an
-endpoint can dynamically switch modes between HDM-H and HDM-D[B]
-depending on which region they target. Use the region type to fixup each
-decoder that gets allocated to map the given region.
+The current check for 256B Flit mode is incomplete and unnecessary. It
+is incomplete because it fails to consider the link speed, or check for
+CXL link capabilities. It is unnecessary because unconditionally
+unmasking 256B Flit errors is a nop when 256B Flit operation is not
+available.
 
-Note that endpoint decoders are meant to determine the region type, so
-warn if those ever need to be fixed up, but since it is possible to
-continue do so.
+Remove this check in preparation for creating a cxl_probe_link() helper
+to centralize this detection.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/region.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/cxl/pci.c |   18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 6a875f86901b..013f3656e661 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -809,6 +809,18 @@ static int cxl_rr_alloc_decoder(struct cxl_port *port, struct cxl_region *cxlr,
- 		return -EBUSY;
- 	}
- 
-+	/*
-+	 * Endpoints should already match the region type, but backstop that
-+	 * assumption with an assertion. Switch-decoders change mapping-type
-+	 * based on what is mapped when they are assigned to a region.
-+	 */
-+	dev_WARN_ONCE(&cxlr->dev,
-+		      port == cxled_to_port(cxled) &&
-+			      cxld->target_type != cxlr->type,
-+		      "%s:%s mismatch decoder type %d -> %d\n",
-+		      dev_name(&cxled_to_memdev(cxled)->dev),
-+		      dev_name(&cxld->dev), cxld->target_type, cxlr->type);
-+	cxld->target_type = cxlr->type;
- 	cxl_rr->decoder = cxld;
- 	return 0;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4e2845b7331a..3f78082014cc 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -368,19 +368,6 @@ static bool is_cxl_restricted(struct pci_dev *pdev)
+ 	return pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END;
  }
+ 
+-/*
+- * CXL v3.0 6.2.3 Table 6-4
+- * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+- * mode, otherwise it's 68B flits mode.
+- */
+-static bool cxl_pci_flit_256(struct pci_dev *pdev)
+-{
+-	u16 lnksta2;
+-
+-	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+-	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
+-}
+-
+ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+ {
+ 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
+@@ -407,9 +394,8 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
+ 		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
+ 		orig_val = readl(addr);
+ 
+-		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
+-		if (!cxl_pci_flit_256(pdev))
+-			mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
++		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK |
++		       CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
+ 		val = orig_val & ~mask;
+ 		writel(val, addr);
+ 		dev_dbg(&pdev->dev,
 
