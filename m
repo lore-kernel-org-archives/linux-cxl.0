@@ -2,50 +2,55 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7602AEB64DB
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 19:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1A5EB64DA
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 21:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbjFOTxn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Jun 2023 15:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
+        id S229843AbjFOVXr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Jun 2023 17:23:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjFOTxn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 15:53:43 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E682959;
-        Thu, 15 Jun 2023 12:53:41 -0700 (PDT)
+        with ESMTP id S230219AbjFOVXr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 17:23:47 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE2D92967;
+        Thu, 15 Jun 2023 14:23:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686858821; x=1718394821;
+  t=1686864226; x=1718400226;
   h=subject:from:to:cc:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=uSLUhUff4RDrXVZo5KeY8oJYT0jcBZtmgkEDqpDLyvA=;
-  b=XoW6LFxXLRrObis2c1PuEGPshAqEViqW1PwWCrdwkYlk48Q08BJOh4QG
-   cnLbzh1czxLsllUKZ50K2679yM/RmOvEBkSSduel0Vl9cydl+BBowbtwG
-   drNTMSuUslIEZRCd3AsyZbeMafmNkx5HLMXFyEe3HlsKN3SdehF4wnThN
-   Oz2VtDwLuuQLBT0CF+Bl/PU8ytWgZrkVhF9MYQOJk9BRuDoRZfV7vP94n
-   jbAKzkeYpF15eG49UrzO+WHAN1/c+Z/biBC/pZ+LFHrhnlBX2NEV0L/dM
-   hK+tqWMEWz0exW2ZsTeL5dXr3hIC5Lf0i1etDUXwoBo9GYgHUg3QP9SX1
+  bh=ZPKMmEltPj786W57CKF56+/tPQ7KVZQQ9FCw8gYJ4NY=;
+  b=PLpozLSKYopiLi0TW7cUaCaddZEVsMyN7JnDDnV1m8Wu5vEZys2HDJFM
+   jf0A7Cpj5l8fmOzP++d5FMP7AIp9UgTVL2oej8O9hDyRJJtzsJMmmLLAg
+   /ZJdo4zLgmEnfq610dPk8Q37uFj0TelkMnohUSn+XGXxPBlmdPre8k+qG
+   GXRuB4HbefIh35WBWbz7v7Jrqf/CE2CIXyZYPNIBUtEIC6qqHQIvCJ+8c
+   ZwM9nsuzGVwjauA0vytgjpglIP/MnbzBUSijg+xDBrY5iyYI6lOwU5w3A
+   gLlWXV+cCYnIJu6gIIRsnkuZjGE1baF4sM+XFgC8T9gYVOT+aR7s/0bEl
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="445405142"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="424975384"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="445405142"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 12:53:41 -0700
+   d="scan'208";a="424975384"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 14:23:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="802545334"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="825457805"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="802545334"
-Received: from leoliu1-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.76.7])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 12:53:40 -0700
-Subject: [PATCH] Revert "cxl/port: Enable the HDM decoder capability for
- switch ports"
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     stable@vger.kernel.org, ira.weiny@intel.com
-Date:   Thu, 15 Jun 2023 12:53:40 -0700
-Message-ID: <168685882012.3475336.16733084892658264991.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="825457805"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.110.129])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 14:23:44 -0700
+Subject: [PATCH v3 0/6] acpi: numa: add target support for generic port to
+ HMAT parsing
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, lukas@wunner.de,
+        Jonathan.Cameron@huawei.com
+Date:   Thu, 15 Jun 2023 14:23:43 -0700
+Message-ID: <168686408822.2950427.16242077816997472103.stgit@djiang5-mobl3>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -53,173 +58,48 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-commit eb0764b822b9 ("cxl/port: Enable the HDM decoder capability for switch ports")
+v3:
+- Break out ACPI_SRAT_DEVICE_HANDLE_SIZE define. Merged into ACPICA repo.
+- Break out code in hmat_parse_locality() to improve readability. (Jonathan)
+- Drop continue after setting gen target access data. (Jonathan)
+v2:
+- Add check for memory type for setting GENPORT access data. (Jonathan)
+- NODE_ACCESS_CLASS_GENPORT to NODE_ACCESS_CLASS_GENPORT_SINK
+- Change strncmp() to memcmp() for device handle compare
 
-...was added on the observation of CXL memory not being accessible after
-setting up a region on a "cold-plugged" device. A "cold-plugged" CXL
-device is one that was not present at boot, so platform-firmware/BIOS
-has no chance to set it up.
+Hi Rafael,
+Please consider acking this series. Dan will take it through his CXL tree.
+This is the second set of ACPI changes that's part of the "cxl: Add support for
+QTG ID retrieval for CXL subsystem" [1]. It has dependency on the patch [2]
+that was sent to you and GregKH and Greg has ack'd. But it's independent of the
+first set of ACPI changes [3]. The series adds support to store the device handle
+from the SRAT Generic Port Affinity Structure in correlation with a proximity
+domain. And later on the HMAT is parsed and the performance data is stored
+associated with the proximity domain. A helper function is added to allow the CXL
+driver to retrieve the performance data that matches with the device handle later
+on. The full series of CXL code is at this git repo [4] for usage reference.
 
-While it is true that the debug found the enable bit clear in the
-host-bridge's instance of the global control register (CXL 3.0
-8.2.4.19.2 CXL HDM Decoder Global Control Register), that bit is
-described as:
 
-"This bit is only applicable to CXL.mem devices and shall
-return 0 on CXL Host Bridges and Upstream Switch Ports."
+[1]: https://lore.kernel.org/linux-cxl/168193556660.1178687.15477509915255912089.stgit@djiang5-mobl3/T/#t 
+[2]: https://lore.kernel.org/lkml/168332248685.2190392.1983307884583782116.stgit@djiang5-mobl3/
+[3]: https://lore.kernel.org/linux-acpi/168330787964.2042604.17648905811002211147.stgit@djiang5-mobl3/T/#t
+[4]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=cxl-qtg
 
-So it is meant to be zero, and further testing confirmed that this "fix"
-had no effect on the failure. Revert it, and be more vigilant about
-proposed fixes in the future. Since the original copied stable@, flag
-this revert for stable@ as well.
-
-Cc: <stable@vger.kernel.org>
-Fixes: eb0764b822b9 ("cxl/port: Enable the HDM decoder capability for switch ports")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/pci.c        |   27 ++++-----------------------
- drivers/cxl/cxl.h             |    1 -
- drivers/cxl/port.c            |   14 +++++---------
- tools/testing/cxl/Kbuild      |    1 -
- tools/testing/cxl/test/mock.c |   15 ---------------
- 5 files changed, 9 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 7440f84be6c8..552203c13b39 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -308,36 +308,17 @@ static void disable_hdm(void *_cxlhdm)
- 	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
- }
- 
--int devm_cxl_enable_hdm(struct cxl_port *port, struct cxl_hdm *cxlhdm)
-+static int devm_cxl_enable_hdm(struct device *host, struct cxl_hdm *cxlhdm)
- {
--	void __iomem *hdm;
-+	void __iomem *hdm = cxlhdm->regs.hdm_decoder;
- 	u32 global_ctrl;
- 
--	/*
--	 * If the hdm capability was not mapped there is nothing to enable and
--	 * the caller is responsible for what happens next.  For example,
--	 * emulate a passthrough decoder.
--	 */
--	if (IS_ERR(cxlhdm))
--		return 0;
--
--	hdm = cxlhdm->regs.hdm_decoder;
- 	global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
--
--	/*
--	 * If the HDM decoder capability was enabled on entry, skip
--	 * registering disable_hdm() since this decode capability may be
--	 * owned by platform firmware.
--	 */
--	if (global_ctrl & CXL_HDM_DECODER_ENABLE)
--		return 0;
--
- 	writel(global_ctrl | CXL_HDM_DECODER_ENABLE,
- 	       hdm + CXL_HDM_DECODER_CTRL_OFFSET);
- 
--	return devm_add_action_or_reset(&port->dev, disable_hdm, cxlhdm);
-+	return devm_add_action_or_reset(host, disable_hdm, cxlhdm);
- }
--EXPORT_SYMBOL_NS_GPL(devm_cxl_enable_hdm, CXL);
- 
- int cxl_dvsec_rr_decode(struct device *dev, int d,
- 			struct cxl_endpoint_dvsec_info *info)
-@@ -511,7 +492,7 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
- 	if (info->mem_enabled)
- 		return 0;
- 
--	rc = devm_cxl_enable_hdm(port, cxlhdm);
-+	rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
- 	if (rc)
- 		return rc;
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 74548f8f5f4c..d743df66a582 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -717,7 +717,6 @@ struct cxl_endpoint_dvsec_info {
- struct cxl_hdm;
- struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
- 				   struct cxl_endpoint_dvsec_info *info);
--int devm_cxl_enable_hdm(struct cxl_port *port, struct cxl_hdm *cxlhdm);
- int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 				struct cxl_endpoint_dvsec_info *info);
- int devm_cxl_add_passthrough_decoder(struct cxl_port *port);
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 5ffe3c7d2f5e..43718d0396d7 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -60,17 +60,13 @@ static int discover_region(struct device *dev, void *root)
- static int cxl_switch_port_probe(struct cxl_port *port)
- {
- 	struct cxl_hdm *cxlhdm;
--	int rc, nr_dports;
--
--	nr_dports = devm_cxl_port_enumerate_dports(port);
--	if (nr_dports < 0)
--		return nr_dports;
-+	int rc;
- 
--	cxlhdm = devm_cxl_setup_hdm(port, NULL);
--	rc = devm_cxl_enable_hdm(port, cxlhdm);
--	if (rc)
-+	rc = devm_cxl_port_enumerate_dports(port);
-+	if (rc < 0)
- 		return rc;
- 
-+	cxlhdm = devm_cxl_setup_hdm(port, NULL);
- 	if (!IS_ERR(cxlhdm))
- 		return devm_cxl_enumerate_decoders(cxlhdm, NULL);
- 
-@@ -79,7 +75,7 @@ static int cxl_switch_port_probe(struct cxl_port *port)
- 		return PTR_ERR(cxlhdm);
- 	}
- 
--	if (nr_dports == 1) {
-+	if (rc == 1) {
- 		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
- 		return devm_cxl_add_passthrough_decoder(port);
- 	}
-diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-index 6f9347ade82c..fba7bec96acd 100644
---- a/tools/testing/cxl/Kbuild
-+++ b/tools/testing/cxl/Kbuild
-@@ -6,7 +6,6 @@ ldflags-y += --wrap=acpi_pci_find_root
- ldflags-y += --wrap=nvdimm_bus_register
- ldflags-y += --wrap=devm_cxl_port_enumerate_dports
- ldflags-y += --wrap=devm_cxl_setup_hdm
--ldflags-y += --wrap=devm_cxl_enable_hdm
- ldflags-y += --wrap=devm_cxl_add_passthrough_decoder
- ldflags-y += --wrap=devm_cxl_enumerate_decoders
- ldflags-y += --wrap=cxl_await_media_ready
-diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
-index 284416527644..de3933a776fd 100644
---- a/tools/testing/cxl/test/mock.c
-+++ b/tools/testing/cxl/test/mock.c
-@@ -149,21 +149,6 @@ struct cxl_hdm *__wrap_devm_cxl_setup_hdm(struct cxl_port *port,
- }
- EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_setup_hdm, CXL);
- 
--int __wrap_devm_cxl_enable_hdm(struct cxl_port *port, struct cxl_hdm *cxlhdm)
--{
--	int index, rc;
--	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
--
--	if (ops && ops->is_mock_port(port->uport))
--		rc = 0;
--	else
--		rc = devm_cxl_enable_hdm(port, cxlhdm);
--	put_cxl_mock_ops(index);
--
--	return rc;
--}
--EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_enable_hdm, CXL);
--
- int __wrap_devm_cxl_add_passthrough_decoder(struct cxl_port *port)
- {
- 	int rc, index;
+Dave Jiang (6):
+      acpi: numa: Create enum for memory_target access coordinates indexing
+      ACPICA: Add a define for size of acpi_srat_generic_affinity DeviceHandle
+      acpi: numa: Add genport target allocation to the HMAT parsing
+      acpi: Break out nesting for hmat_parse_locality()
+      acpi: numa: Add setting of generic port system locality attributes
+      acpi: numa: Add helper function to retrieve the performance attributes
+
+
+ drivers/acpi/numa/hmat.c | 151 +++++++++++++++++++++++++++++++++------
+ include/acpi/actbl3.h    |   4 +-
+ include/linux/acpi.h     |  12 ++++
+ 3 files changed, 144 insertions(+), 23 deletions(-)
+
+--
 
