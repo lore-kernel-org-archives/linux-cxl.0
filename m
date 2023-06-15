@@ -2,194 +2,157 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAD5EB64D9
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 00:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD71EB64D8
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 00:52:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbjFOAkw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 14 Jun 2023 20:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
+        id S229529AbjFOAwN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 14 Jun 2023 20:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbjFOAkq (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 20:40:46 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4031137
-        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 17:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686789645; x=1718325645;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dNwQLbpx7NYRBoNN0z07sgUdN+nd9MWLC4o6by4bTW4=;
-  b=lsxHkuY3KuSout4xnb8C5Fwx2B60r4IVCvHKG88FbBTAasaFQFxWY8xQ
-   ZV9FADsKb9zhII4L7RhynjPRnEQeilWI/L/3fhUGgekAKQkO8kKcQ6OyR
-   qW3GEBvPDhn/F1LlqjOGzy5LuD5FWpw9MTwxa3q+hEmKvp1aQ7pNhImFj
-   cKpD0OGl/id8GG6Y9h2u2SnaBEcQuxghM/GUdvRiVTZyt/On+NDNAfcda
-   hSC4OPqRzZTk0XFUdTxKaZ1qfi6Ylt/R0BFYyioiXNcifU+M37H35Z/iz
-   U7NJcXs3pomrrD7JVKONpQluclICGPJf4SLsS0T+tXX2gMo9qYYSMvf/X
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="356265369"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="356265369"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 17:40:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="712255257"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="712255257"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.193.191])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 17:40:44 -0700
-Date:   Wed, 14 Jun 2023 17:40:42 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     ira.weiny@intel.com
-Cc:     Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/5] cxl/mem : Expose dynamic capacity configuration to
- userspace
-Message-ID: <ZIpeCsiJgLcD7eju@aschofie-mobl2>
-References: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
- <20230604-dcd-type2-upstream-v1-3-71b6341bae54@intel.com>
+        with ESMTP id S230018AbjFOAwM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 14 Jun 2023 20:52:12 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2694F1BE3
+        for <linux-cxl@vger.kernel.org>; Wed, 14 Jun 2023 17:52:10 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 3FB6988290D;
+        Thu, 15 Jun 2023 00:52:09 +0000 (UTC)
+Received: from pdx1-sub0-mail-a253.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 53738880D2C;
+        Thu, 15 Jun 2023 00:52:08 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1686790328; a=rsa-sha256;
+        cv=none;
+        b=1bnGn9TbHWQIbY1jCHeaYN23M3T3bNLPi39uj/eqaUQM4jW4IgeY//bCoyoUeI3yKvUp1i
+        CxxdiqoDFnkS3fbbVkef6aRnzVyYA918PYZzVQYE/H18yxLIHAN3D1Z+GW2ESLTHfJfUG2
+        P2wBoXjaMkVCGClD6orATMnMb2D+UNzpspfHCm2XRd+f50pfdQZsT6ZA2d+icChrMxtWmg
+        MI2YtMw0wWfvJmI/bXp9IxHk8xuX/szKAy6qHOspRfE+ZUk4VGcm5uTPLNm4H3MqK7kHsl
+        BKvOCD2Hv1yjK4xwdubtAyi/oc+J/dtkKQ5W3Iovm9bjhbVTL2P1T9rl0lG4Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1686790328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         dkim-signature; bh=i2BYmRcXV3UxeollC+fZ7Ou00wZ4822rq9LxA2bYzwg=;
+        b=p92yufy4+76OAIuLWYbirqPoOgw/dQQ8rsl6NPcG56SCNKuMc5WaNf8nH6iq2Q0uSXd4K5
+        R4GyhfdjWxuZ1dwBD62n/RgateC6NPlXjZlgTL6gUqFL3NJv3H0auHPPBKezTZDgrKmbOP
+        SwqUPCzMxVlsEv1FG5CMsLT4qJBP/aJbdfasM55sKXRIzZMCxg7X1dRHTkfrCFKBr57hXD
+        pI+7mMsMah2J99xOn3uy7VhawKj6oRXHzosHI1dMKcRoHaBpVDIUNbJ8zU7Tarm6U/aBi8
+        R0X8Xzxv8x7oo7UcpeUbdHlsldryGvWnZ/cLAilxnK2qZTtK6kcnM9OyoMjM9g==
+ARC-Authentication-Results: i=1;
+        rspamd-6c69b8658d-vd55d;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Spicy-Versed: 692d69bb41759f96_1686790329004_117822117
+X-MC-Loop-Signature: 1686790329004:263332199
+X-MC-Ingress-Time: 1686790329004
+Received: from pdx1-sub0-mail-a253.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.119.120.43 (trex/6.9.1);
+        Thu, 15 Jun 2023 00:52:09 +0000
+Received: from offworld (unknown [172.58.19.87])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a253.dreamhost.com (Postfix) with ESMTPSA id 4QhNzV5wHPz9g;
+        Wed, 14 Jun 2023 17:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1686790328;
+        bh=i2BYmRcXV3UxeollC+fZ7Ou00wZ4822rq9LxA2bYzwg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=dlURHfyDbn6RPndKmhlcRg8FQWqadycClVwEIvKfdQA2HIU+dXEMjNuQZ2bSpIEIh
+         TorxAYHickdeKlldbpkgoIAB2W/79Sxe/4JxI16xB8q1z8GSguEy7MrM2+kTm1YwTj
+         SV5cavyrN37AMRhZJYBvTsbwk3apo0L2X6HlCtfgB58WFcoMLvzlghWeO/92LjFdgF
+         sCBtJw6l/QBJyxwqr4/AVkFwF3fOZ+QtuOJVdwBSUStXZoqEjLFKMIB6X/VMQKy8yU
+         mHEboCV+9kWwzcD+14xbT2sKxpHbOyv6MuyWVZDdWVWIRX2BlaZEk0SPFM+5G7CS1c
+         p0CyngN8jwULA==
+Date:   Wed, 14 Jun 2023 17:17:15 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     linux-cxl@vger.kernel.org, linux-mm@kvack.org
+Cc:     dan.j.williams@intel.com, a.manzanares@samsung.com,
+        Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
+        ira.weiny@intel.com, alison.schofield@intel.com,
+        dave.jiang@intel.com, vishal.l.verma@intel.com,
+        gourry.memverge@gmail.com, terry.bowman@amd.com, rrichter@amd.com,
+        viacheslav.dubeyko@bytedance.com, sheshas@marvell.com,
+        dave@stgolabs.net
+Subject: [ANNOUNCE/CFP] CXL Microconference at LPC 2023
+Message-ID: <a4c2gx2tnm4ckax7qkx2trnvmqjssfytc45sb2zikuayd2marc@rpsjp4icgsvn>
+Mail-Followup-To: linux-cxl@vger.kernel.org, linux-mm@kvack.org, 
+        dan.j.williams@intel.com, a.manzanares@samsung.com, Jonathan.Cameron@huawei.com, 
+        fan.ni@samsung.com, ira.weiny@intel.com, alison.schofield@intel.com, 
+        dave.jiang@intel.com, vishal.l.verma@intel.com, gourry.memverge@gmail.com, 
+        terry.bowman@amd.com, rrichter@amd.com, viacheslav.dubeyko@bytedance.com, 
+        sheshas@marvell.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20230604-dcd-type2-upstream-v1-3-71b6341bae54@intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 12:16:30PM -0700, Ira Weiny wrote:
-> From: Navneet Singh <navneet.singh@intel.com>
-> 
-> Exposing driver cached dynamic capacity configuration through sysfs
-> attributes.User will create one or more dynamic capacity
-> cxl regions based on this information and map the dynamic capacity of
-> the device into HDM ranges using one or more HDM decoders.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> 
-> ---
-> [iweiny: fixups]
-> [djbw: fixups, no sign-off: preview only]
-> ---
->  drivers/cxl/core/memdev.c | 72 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
+Hello,
 
-Add the documentation of these new attributes in this patch.
-Documentation/ABI/testing/sysfs-bus-cxl
+I am pleased to announce that we will have a CXL MC this year at Plumbers,
+and hereby invite the community in our call for participation.
 
-A bit of my ignorance here, but when I keep seeing the word
-'regions' below, it makes me wonder whether these attributes
-are in the right place?
+https://lpc.events/event/17/abstracts/1453/
 
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 5d1ba7a72567..beeb5fa3a0aa 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -99,6 +99,20 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
->  static struct device_attribute dev_attr_pmem_size =
->  	__ATTR(size, 0444, pmem_size_show, NULL);
->  
-> +static ssize_t dc_regions_count_show(struct device *dev, struct device_attribute *attr,
-> +		char *buf)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +	int len = 0;
-> +
-> +	len = sysfs_emit(buf, "0x%x\n", mds->nr_dc_region);
+Compute Express Link is a cache coherent fabric that in recent years
+has been gaining momentum in the industry. CXL 3.0 launched just before
+Plumbers 2022 (where very early discussions were had), bringing new
+challenges such as dynamic capacity devices and large scale fabrics,
+two features that bring significant challenges to Linux. There has
+also been controversy and confusion in the Linux kernel community
+about the state and future of CXL, regarding its usage and integration
+into, for example, the core memory management subsystem. Many concerns
+have been put to rest through proper clarification and setting of
+expectations.
 
-Prefer using this notation: %#llx
-grep for the sysfs_emit's to see customary usage.
+The Compute Express Link microconference focuses on how to evolve the
+Linux CXL kernel driver and userspace components for support of the
+CXL 2.0 spec (and beyond). The microconference provides a space to open
+the discussion, incorporate more perspectives, and grow the CXL community
+with a goal that the CXL Linux plumbing serves the needs of the CXL
+ecosystem while balancing the needs of the Linux project. Specifically,
+this microconference welcomes submissions detailing industry and academia
+use cases in order to develop usage model scenarios. Finally, it will
+be a good opportunity to have existing upstream CXL developers available
+in a forum to discuss current CXL support and to communicate areas that
+need additional involvement.
 
-> +	return len;
-> +}
-> +
-> +struct device_attribute dev_attr_dc_regions_count =
-> +	__ATTR(dc_regions_count, 0444, dc_regions_count_show, NULL);
-> +
->  static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
->  			   char *buf)
->  {
-> @@ -362,6 +376,57 @@ static struct attribute *cxl_memdev_ram_attributes[] = {
->  	NULL,
->  };
->  
-> +static ssize_t show_size_regionN(struct cxl_memdev *cxlmd, char *buf, int pos)
-> +{
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	return sysfs_emit(buf, "0x%llx\n", mds->dc_region[pos].decode_len);
-> +}
-> +
-> +#define SIZE_ATTR_RO(n)                                              \
-> +static ssize_t dc##n##_size_show(                                       \
-> +	struct device *dev, struct device_attribute *attr, char *buf)  \
-> +{                                                                      \
-> +	return show_size_regionN(to_cxl_memdev(dev), buf, (n));             \
-> +}                                                                      \
-> +static DEVICE_ATTR_RO(dc##n##_size)
-> +SIZE_ATTR_RO(0);
-> +SIZE_ATTR_RO(1);
-> +SIZE_ATTR_RO(2);
-> +SIZE_ATTR_RO(3);
-> +SIZE_ATTR_RO(4);
-> +SIZE_ATTR_RO(5);
-> +SIZE_ATTR_RO(6);
-> +SIZE_ATTR_RO(7);
-> +
-> +static struct attribute *cxl_memdev_dc_attributes[] = {
-> +	&dev_attr_dc0_size.attr,
-> +	&dev_attr_dc1_size.attr,
-> +	&dev_attr_dc2_size.attr,
-> +	&dev_attr_dc3_size.attr,
-> +	&dev_attr_dc4_size.attr,
-> +	&dev_attr_dc5_size.attr,
-> +	&dev_attr_dc6_size.attr,
-> +	&dev_attr_dc7_size.attr,
-> +	&dev_attr_dc_regions_count.attr,
-> +	NULL,
-> +};
-> +
-> +static umode_t cxl_dc_visible(struct kobject *kobj, struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +
-> +	if (a == &dev_attr_dc_regions_count.attr)
-> +		return a->mode;
-> +
-> +	if (n < mds->nr_dc_region)
-> +		return a->mode;
-> +
-> +	return 0;
-> +}
-> +
->  static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
->  				  int n)
->  {
-> @@ -385,10 +450,17 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
->  	.attrs = cxl_memdev_pmem_attributes,
->  };
->  
-> +static struct attribute_group cxl_memdev_dc_attribute_group = {
-> +	.name = "dc",
-> +	.attrs = cxl_memdev_dc_attributes,
-> +	.is_visible = cxl_dc_visible,
-> +};
-> +
->  static const struct attribute_group *cxl_memdev_attribute_groups[] = {
->  	&cxl_memdev_attribute_group,
->  	&cxl_memdev_ram_attribute_group,
->  	&cxl_memdev_pmem_attribute_group,
-> +	&cxl_memdev_dc_attribute_group,
->  	NULL,
->  };
->  
-> 
-> -- 
-> 2.40.0
-> 
+Suggested topics:
+- Ecosystem & Architectural review
+- Dynamic Capacity Devices
+- Fabric Management
+- QEMU support
+- Security (ie: IDE/SPDM)
+- Managing vendor specificity
+- Type 2 accelerator support (bias flip management)
+- Coherence management of type2/3 memory (back-invalidation)
+- P2P (UIO)
+- RAS (GPF, AER)
+- Hotplug (QoS throttling, policies, daxctl)
+- Hot remove
+- Documentation
+- Memory tiering topics that can relate to cxl (out of scope of MM/performance MCs)
+- Industry and academia use cases
+
+Proposals can be submitted here, by August 6th:
+
+https://lpc.events/event/17/abstracts/
+
+For more information, feel free to contact the Compute Express Link MC Leads:
+     Davidlohr Bueso <dave@stgolabs.net>
+     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+     Adam Manzanares <a.manzanares@samsung.com>
+     Dan Williams <dan.j.williams@intel.com>
+
+Thank you.
