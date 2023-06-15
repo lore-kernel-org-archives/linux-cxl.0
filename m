@@ -2,235 +2,177 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD27EB64D9
-	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 16:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC18EB64D9
+	for <linux-cxl@archiver.kernel.org>; Thu, 15 Jun 2023 16:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjFOQQW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 15 Jun 2023 12:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
+        id S232362AbjFOQlp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 15 Jun 2023 12:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231382AbjFOQQU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 12:16:20 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F95B1BC3
-        for <linux-cxl@vger.kernel.org>; Thu, 15 Jun 2023 09:16:18 -0700 (PDT)
+        with ESMTP id S229459AbjFOQlT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 15 Jun 2023 12:41:19 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2016.outbound.protection.outlook.com [40.92.53.16])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A180E69
+        for <linux-cxl@vger.kernel.org>; Thu, 15 Jun 2023 09:41:18 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HfYE59+x5empOEgSkey9mX17cliQHb0ttSC0G6wCGh2BtKEcbRedVMtJnmqaVAIyQH0VJTz2IZmtnLuhDWKWYwUWTbyc3kxa/0AspwSci3esbLMOrZ+TuUMpfNg3960lO1rdjIqX+SSzGtiFZWREZi/aQVezfrQ7rpH0kPh6Nc2D2lD+ehOQAg0FrbRoAPDIvGPNCpBgO8UJT65Kl2cuBcBxp4kgXxMeoeITb8BGQc4EXWiPGdFGUxtbOxYgRY68jqfBIwQwdf0TKj5mQ+MDtS+nTdQX1RQycyX1x+Qhju+r3cb3dk00Oeraz2OPrKSKoR+g+WIiDXsic+YVCl20nA==
+ b=ROw/IJt8+/w7K8U1ffijD7i6lqQAdoAC7jP88k7oyGWGZbqBcO8nA0xRkd3kbOp89/wi46z6p0dpKqIQpkv+1MP7YnMeaBfli+vvuzxEMHW5LHJC7PYOIukTkoUiFt237Uem/dEVtaFqkGW4qd+EM6O820H+h21rlHpWJUgmnTqtTdWUNC7FmGbJMiSY/kiQmM7xs1sdAPcZkN39j2/a6YyPPiOxcn9Oa7OrTa2cPYiGHFFSN78DdakOirarWth5pnHDzvsiy0ubnFX0F4ovB9iBpLibZsMMkSqn+8395/feblAFEBhP8j0BgDT0qpe82YfyQTNHuKPyyEYc0rv3tg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gc//pDDuXzeHtV9/pl5Kxhqp9rvVlRYNUn/p08/f0LI=;
- b=jJVEKVSyRr1Z72WKkzWRY6Xex5kWPkICn8RMrkNaBWOQk9qxTRRIhxYUMfKKEvJJ3Q2r+e3ZN1a62jt4L233sF4pytVO2PKyVcOdBEZfEUK/57ETFHt8DltBfiy1Xw79GHHCl/6tGi7d5KwF1Odz7bzJJZfInO9+aQhnPK8UFYf1Vu1Q4c2P5hMZh3cWPWyGwRtOU7U6F34Apvz7bv7frmaP8Ir5pbulJWrMhfGyP2332jo1GQMgXYZJtVIYUZ6uSycHtGXMvJHHhbiK6QRnJJH9wbBAUeedULVjyXB3x7rx/xeN1VwPf94+s0f1/SVvyKUi3ztng7Gx3GbdQcZsBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
+ bh=jMnvX3m59ZOKp/pMHPGf9fzFAcpqn14LUXL1EF/1DWU=;
+ b=W8bq/Qsc5kfRtR0SeBxTPSAzGeD7rX3Er3co+RkZL8d1m+oczqNtm8Et/c6NzuYpop8dfycdts84l2Ru5Y9dmGwmyJdeBmaTGiiBpFzD1TnJTtXgWo2oSRc1Byz+oMrgrqEIeusSMG8Ff2u2G6rQmv9TIgo1XXIEiW6KEJyl2TZgiWDbrDhpj7C3RodCH7IRJokYauoIiUOdMkKbphTP3v6BfmTfdwisE7ytkzYOFXrzH0snSiq2xuKhNn16+DxVBkYEX7DNF6JzRzoqK4jIi6oO8OrHy86LvWdAbu1L2Bd/naNIzwQrIpxN5/ZiSiAcGVAmUiOce21fGy/neVKxMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gc//pDDuXzeHtV9/pl5Kxhqp9rvVlRYNUn/p08/f0LI=;
- b=ksL1t+ff57FDPh3ZY/yZIlDsXiik6WMVnbmgyeQ5wyFvdZjG4BGEWleJ7eisGhOeXB8/0aIcBdd2jKpM8YSfhBXI0B2ntv8Qbo7Pv01nOfe9sQE9llhVrbcZ7AIl860ZXhVO9NnueEPw+g8d1rMcEd+thCM2G91bWJZ+FQXuszE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by CH3PR17MB6571.namprd17.prod.outlook.com (2603:10b6:610:124::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.29; Thu, 15 Jun
- 2023 16:16:14 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7e82:eb7d:47cd:2ebc]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::7e82:eb7d:47cd:2ebc%4]) with mapi id 15.20.6477.037; Thu, 15 Jun 2023
- 16:16:13 +0000
-Date:   Thu, 15 Jun 2023 12:16:05 -0400
-From:   Gregory Price <gregory.price@memverge.com>
+ bh=jMnvX3m59ZOKp/pMHPGf9fzFAcpqn14LUXL1EF/1DWU=;
+ b=d4HqjIpIvnZohhhsmlj8+mA03zjcF5vZignfbYmnljwPPpAjTbMXjU/0aXOTnTlsSxS28jIF96MM3B+wsdxkRhs4wzFWzIDxwIQPE2KuROaSQeXWgAd+H/JbMfJr6Yl8rDkxayFKjutK36DEOHsy4+EDNRGfUqS6XUgeLP9RfcXU+Be+tK+tvr/DncSfbzWNAHhgATXpAWDig855EaOJokzS6TRC1Xk06tumgXlyGVSIlnjPwyhK3jPFuOPb7Oqn1ZXJCEevACp3+1oOYSRI09+bqj7JAwjhxx2xfxfaYIK1NLXsJUxp/AIhIjyVmNF/+D/Ix3wdv79o6XDyZRb93A==
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
+ TYZPR06MB4479.apcprd06.prod.outlook.com (2603:1096:400:8e::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6477.37; Thu, 15 Jun 2023 16:41:13 +0000
+Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::33a7:c9e1:75ae:3227]) by SG2PR06MB3397.apcprd06.prod.outlook.com
+ ([fe80::33a7:c9e1:75ae:3227%4]) with mapi id 15.20.6477.028; Thu, 15 Jun 2023
+ 16:41:13 +0000
+From:   nifan@outlook.com
 To:     linux-cxl@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [BUG] Root port fails to match with port driver on non-RCH topology
-Message-ID: <ZIs5Ra+9SGGbUZoZ@memverge.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-ClientProxiedBy: SJ0PR05CA0005.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::10) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave@stgolabs.net, a.manzanares@samsung.com, sunfishho12@gmail.com,
+        nmtadam.samsung@gmail.com, nifan@outlook.com, fan.ni@samsung.com
+Subject: [ndctl PATCH v2 0/2] cxl-graph: add a new command to construct CXL topology graph images
+Date:   Thu, 15 Jun 2023 09:40:48 -0700
+Message-ID: <SG2PR06MB3397455E672F8820385E3D95B25BA@SG2PR06MB3397.apcprd06.prod.outlook.com>
+X-Mailer: git-send-email 2.39.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN:  [gyxz1XszKE0Ukb0H0aA5xBlW4h3MttyN]
+X-ClientProxiedBy: BYAPR07CA0047.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::24) To SG2PR06MB3397.apcprd06.prod.outlook.com
+ (2603:1096:4:7a::17)
+X-Microsoft-Original-Message-ID: <20230615164050.3248000-1-nifan@outlook.com>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CH3PR17MB6571:EE_
-X-MS-Office365-Filtering-Correlation-Id: 261ef3e5-d1ec-459e-ffe5-08db6dbbd6a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|TYZPR06MB4479:EE_
+X-MS-Office365-Filtering-Correlation-Id: a57e3cce-f8ff-402a-8ece-08db6dbf54b1
+X-MS-Exchange-SLBlob-MailProps: mWtqiNqNgRuoOpO/k49dL8CDjq0refW4xFDe2vbpbaQuPPjTuf3KPOAXBHw7IGMcx+ZZXiBXIq/C7ekoKb+4UshNlM5rsnOtaU3oOqDvUCykybiwaWvDBg9Ln1u0BjnIAw7pS0DycdiTbCUcnMD4HLK7lD7/x90PhDN2yutzCEP1hgih14UoRjlUBHK9f6h71AWKK8+5FwpWMEOnMuJhmoYEM0yC/cso9tb1cUYeULP/7+bk6Q77YTTlt/ZFcmS83A4cgNONEyCVWN1XJykna+PWH4mEwowSsjRgjNpcR2v8+u94PIhYEa/+2jPQkG2LypnSOjVBP0LAvr9sH5L3ySm5es3OcPxT1SEoFeYAlPFAOLwvZlArvsLnf/ni6kMgTQX9zbvjFjh2fC3P12Pcq/5Xjj18mxFcGhbq1MwC1wI/r8AaEfY7PASfjeNZBa09/4+jxi5xtCFw0FwGlPkbHa72BgUhisFpJBur1MfD0iW5FcVBMrvVsox0aZ3sMtKjxdzsyQ9hYpJAc3+TYD8F7G9PdhsM8HM7XovlM4NkWL7OoaQ82WOCFwjhjlN/3RbKNR7Dehrb8wLdalh69D05Ruo4s/oPRV4Rzcmfisg+Fye3LPbMekfWrvmorvHgKWoFB/JV9lVsWESBesuZy8LaKEPH58Lvd+8Q1v1NgehfNHr4/Ei2GAbOrEPHb2dDL7Dwmjtm7KpYnqApj0e/dJ+Bb1PU9jtv+VllKd39ZZP2wDXA5pYMAV49m6jXPmXfhx/QUrVsaYQ/wAdfyrWGd/HIK3MhUmBpnnWXrlItnF1ODvg=
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: //SQSb4OUjxVOViVMP2IeenluTfvQAAY/NLuDV76Cx8ywbRJuZTCbXawIPZS9uzpI/3MXNiZII7Hly53mEYPRbjE1yH8PKhkyqGjQ1HN1MzcsQHUSygBZgpjtESnpBw4lROsJKTc1wim5pz6ip1THnonBfKHjRUUukcAbnbCxOVhGq5Y+WBmPWL6ENP16QIzZFUppeKRl0cz1f9O0viom2b+zmQ117+pHkV6weFSkkN7xhNvYJ9NRQrBAhnDo3cpUmJT+8lOcv/JLmSooBGUYRrJQY9yaWpvaznHcuOmm8Jjz6J+NefhXKKf/kRX5CTjMjISPbjKNbrYtXZOJQQWwMER821+A/SeCj37J2vCv556nNgb/H4L4eijLpdCG1G6hBP9qcgrBaU4/fu8lc9uICxgHe+tp15ggygC6e2BE2ZiP32A+w0cDwMOggV753hE2TJcD9I4AluIKKL5tPuXWfXrY08aNdown5RSbR7VkVosRRNWviGyRkz5qjhG22YCQIobZxyPy7k3olwK9oIseI/cOWZ2ZLJ+FUyJSY9FI5QjyrDAgJA3OqY5Ekk+lq9gy2KFaVN20Vq0BvWxI0e0iJkDTnPr8JLuJN8fudH0KGY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(39840400004)(366004)(396003)(136003)(451199021)(6486002)(86362001)(316002)(6666004)(8676002)(41300700001)(26005)(83380400001)(6512007)(5660300002)(38100700002)(6506007)(44832011)(8936002)(36756003)(66556008)(6916009)(4326008)(66946007)(478600001)(186003)(54906003)(2906002)(66476007)(2616005)(67856001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: HGUIaBiyfMf1oMiMZME3gKNWNHwmEU8PhxmKkc8JUmpZUdlngrbrpSd0L5oLr41Lw+swZQnVsLZB/T6+IfiFTcmcJTFJXxIY5dVj0ac41++coJMllr1uyMdZJ6d2xSSRGbb1u6hBLnaDFNYBsC3ZpFhqI3xlAKT23Kf2yN9DQx8RIcwAxh2bnavKQW2N4YcBTOcUT5My2KGdpVbEIMIcae24i1qEY6118m3zje0fCPKTw/wrmkI0phrzcWoltcjE3OkB6IASfzCas8JVzR2NJmDTHIWfUzuGCxztN7+FhMpJ4GIHgqYN4ELjm+5MEenMZuDnazAnGeAvl95KbC+iSCmTGsP8cFOk4FM4UDg0FmnovnU5eriybCZl5L23zuwms2FeoXZimTg1Yt+bkPig4OdT32Oz+cR/6s7mmo2EtcBjkzTsKhpPU44d8xY7oN2FraBA3DO9Sou7ZZr6KMulUaQpFDEtFjUeC6r+01kiGgUyIYWG4Z5lpncjE+/pfWfmejt74gE1RV8GRpx2BQRxEHAVwYvUKQ7CtW/qOn84++C1PJpGnRtLdNnYCyAIiRcBwYvKwC9Iv/Ek9EZkEfZQDzDSnoQyGPJH7KaFMgEdiyAWccpQCNcMJ45UJRI095SOM7b8JZTBqjKWRbD0dr5+aw==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kIctDkYbIplX57yRtUPyMd/l17zDClvx4PfFbpq0uD1ou0wu09uk66LjLHLm?=
- =?us-ascii?Q?mSgOyT9IUtancixbai9x83LOsfFIqDSnHJjlggmQZw7w0kb0J8ukmwQ8ZW2N?=
- =?us-ascii?Q?WF40SWnKKOWRUoedhKOkoF7FP4+F1amB2wyOOnSbl86IR//yUmEKUldYEu8T?=
- =?us-ascii?Q?J9NDAqK+Gz5005UsRHaSul1hNj7jhRSPEiVQXjCT4rS6wgx5ESy1Qap0frU/?=
- =?us-ascii?Q?L/a8qLhZ83WB/cyWsk+wwi82y1/87ncIzdkoatAJ2kaxJJA0D339tMXyx+be?=
- =?us-ascii?Q?gdGu2EUPAgPY3JQlWF1iNEbtEZSifLRFUGr+mcwMi/2Sv+naoh1MkdUHlTQz?=
- =?us-ascii?Q?2bco5kIvxX1Ck6qP6znlUPiKTq/QqSTQK1FIFzGh9gZ8f57ALcZ1saMQ0T7s?=
- =?us-ascii?Q?1zYChMsc+R+iY0jQ+3qGxiAL5iHKl1moNH4tymqu/K5+Q85D2asJP5wiecSG?=
- =?us-ascii?Q?2w5ojHA2C8r/SYsyzGgvjdCNr9H2SWBWXfHK0YGargpNpXw2Fvnn54r+s0Cc?=
- =?us-ascii?Q?pSu93c81uvqwwgkO1oru4J7B56FYfBgq+8q1qELyHXFOOw3NajJ8cUOp5xQj?=
- =?us-ascii?Q?q0Cs5xlgH55rNMu+hGVgW5SyRQ6noEHaGCgfTLWFt5lgs5+HmT2mVEUfzRvZ?=
- =?us-ascii?Q?DLL+Z0TGdiN4uRya+Jvk7D1yi9YNc21wdIoZH/YAT3jiYMJORUDl3416FfjC?=
- =?us-ascii?Q?HCKotobJsXqq8Yiw3sCzcmavSAMkRhfAVqhV2INnGZlUyLCtgca/Fq3/esNu?=
- =?us-ascii?Q?86saqokmNW4hkvMavcJD0DgMlke6lgSWdkA5cyPNIT4+chljdtvYPv5zSf7U?=
- =?us-ascii?Q?WOPII4YD1O82iyzW8NWvvGGix6yYlPSFNJ/KHSdpPXpf97mS1ynolXM8NGtw?=
- =?us-ascii?Q?LwUIxpd3CeQGKWY6gLqJPKe1itAa4VfP55RChT2KDNx6krwFzZQYpAvkbdMA?=
- =?us-ascii?Q?ddcl/hLSigPLdJwqBfDcNlVVM9URmd8l2+/oCTYjRrPGgDbSptJiBlqTHipq?=
- =?us-ascii?Q?NQQCmillTjXt2eut53oz29s6cITMt65gEep+HdZSQ2qwW8+6rzqx4FDL8Zf3?=
- =?us-ascii?Q?RINGcUKqFy7Z5geMCHTGXktpnuzbCL9ICPRKiRCsJ7RPi9AY0QwFBbFCCwYi?=
- =?us-ascii?Q?N8YUbNw7IAXEnS0kga4PjwjC8pXfRx82aTuFnBku0E+1RFyEjjqCksBhynQh?=
- =?us-ascii?Q?+M6uJ48a7ELGEFWdoITdydJDRRXkkc4keuIS6PX5On+jd0jvDn15MMJcpsms?=
- =?us-ascii?Q?KJOqsm7ESie71X+nNgo5Olhq6wzz4czyy8KGNY6ynCAoOigomP5MLjNZq+df?=
- =?us-ascii?Q?QdQXaeA7wRrvhMFFaHWWq9IRf5X7UK+Aa4VX8XUlULbK7HuqbSCbE3BNnAqC?=
- =?us-ascii?Q?c6bSBNN7N8mj7ZE7ZY7xoP2zip9OjaOLePJ3nI73xEimU+Fyq8LfJrxZgRJk?=
- =?us-ascii?Q?D4J8jeT5ekQor5vXS/VmAWaDfHePOwcidgz16Y5o1GX9rguocoahB1XzHaiq?=
- =?us-ascii?Q?8HV3jYQ3z/ERq4dRR31FkWPT6hfgavIJTfxg6ob73scKfYKl1UcLy0e9kMfL?=
- =?us-ascii?Q?iyl9ZML51u4P1LI3FWhfw2KEhNPqf7It37p/4wnHSgfw9DDvI/P+3zkNPDKP?=
- =?us-ascii?Q?3Q=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 261ef3e5-d1ec-459e-ffe5-08db6dbbd6a1
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0nJIH1wi7O6sV1UmrOqTxNYKi88gSkMgX1FYMKN2h/37Y697Q00E7n5EDMEE?=
+ =?us-ascii?Q?PG1hfMe2opLBp25AnkLGPSisVFmb+sNUOuFwSq5TLIIgVk1l1O0OJ7mgcW8o?=
+ =?us-ascii?Q?iCe1Z+rz7oygXa7t3aGG1W2RaVlBlTp0XTragXvhM87zlSzDmJQU2q/Tixz5?=
+ =?us-ascii?Q?lP8gnzT18wpPRDWODGFNUT1Cm2DsbwCwlAGeoaOoqJI4kZRBuepTMfiL9vzT?=
+ =?us-ascii?Q?i5BOPL5t6knmlEuvs5HVEu6hk3mAibdUHG+lVqAUSkzPS3T8eissbNINDeY2?=
+ =?us-ascii?Q?IXK9hJpxVNHbRoKsJboHxz3HLgM6cwgGI0bP5sLUBjLhhVaTzyJA0rG0KuCk?=
+ =?us-ascii?Q?Fo1AmvVWqFfTpir8JabHMmVvAR0TtrdKVQzNPK6GMUVQjuNX2Yni98gXhQpZ?=
+ =?us-ascii?Q?+6UNjVXp/0W4wT7iAY5/RZPnzT3wqfPd64Qg5nt4OAclwshyNh3w6S28Xkpt?=
+ =?us-ascii?Q?D611LkSzgc3Frzk2RBMXiVA3XbVZtA5Z5LG8XSWpw89uOU20oQDSYXjOzTzm?=
+ =?us-ascii?Q?zYCd0ygGEpvl18VNE0UDp/GaXEWx5yymTKZcQWGNdcDZUDSUTVmx3n1DQw7t?=
+ =?us-ascii?Q?qfAovPOsmg5kUppBS1ZYWpqrTNC4e3hNxkOzA8U7L8xhn+nlyNW0plxTGDoc?=
+ =?us-ascii?Q?jxMmmxtkPT6wS/ElN/HVAtVitZaD35fS+nl877YgWaFee/jDAlXKwFWWyeyU?=
+ =?us-ascii?Q?h1Y283V1jPOt3n72/D+nyOMhElwMPNrP3nxt7U2c60uAHBQaGBU4fqmu1Pdc?=
+ =?us-ascii?Q?xGXHM/+SV8HO4kML5fKb/9SiAjWr55zLPbp6rQrR9IQ/7Xf918WRybes9hMR?=
+ =?us-ascii?Q?PwhYsFJ2+JlSo9nA9+cvp6SbcCu5UqoSzUKx8tw4hr9euFStBFNjYDC19RxT?=
+ =?us-ascii?Q?16TOS/xm+sZ4zO9J/wXWFN8kLQhABuCPpyjUJVCBDdbUhm6ahtw2Io6H7dHy?=
+ =?us-ascii?Q?ph/yQBjHx1GrZmjUO8P45J8E8cbkV+mDS+8GMxgBQlxs965+jD4dtRd1VRO9?=
+ =?us-ascii?Q?LgyHMG7DbceBoBnl8GzAOgoc/eSGM9QQM5nm0ejywBQznd/QauPxkcwUxHBI?=
+ =?us-ascii?Q?A/yrdpGrOL4t8eu2FOIEGyaJGWV3QdW0DNzZQSKb+eTLkJW/0rvYxZMoed0b?=
+ =?us-ascii?Q?qg2nuRZ6AZdjlIyIelQPb3cI0DO6TmOYo5dJ+aNXJOW9FK6o2RQBIJQRIn/P?=
+ =?us-ascii?Q?hGXUszF3a4+4hFoGTy4qpwkMeebpvr+CAP2xkw=3D=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a57e3cce-f8ff-402a-8ece-08db6dbf54b1
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 16:16:13.3356
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 16:41:13.5964
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sAyypC9IbdIkR9dwaBH9XDMGXDCoHpVzQyyDfJMFk/TzLgASRpN5zgPrlfKXg9dCEwE+cVdCCatEFzY5T2QHeh0kIYulNGE0Ja6cda3TztA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR17MB6571
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB4479
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On boot in an AMD Genoa production system with EFI_MEMORY_SP set, the
-root port fails to enable port topology.  Notably, this is not an RCH
-system, so i'm not sure this code path has been tested previously.
+From: Fan Ni <nifan@outlook.com>
+
+v1[1]->v2:
+1. Simplified Patch 1 which adds parent_dport attribute to root port and
+memdev for plotting cxl topology by leveraging the existing function
+`cxl_port_get_parent_dport` in ndctl v77.
+2. Introduced a new cxl command 'cxl graph' for cxl topology plotting instead
+of implementing the functionality as an option in 'cxl list'.
+3. Moved all graph plotting code to a separated file: graph.c.
+4. Reverted the changes made to `cxl list` functionality, now its behavior
+remains the same as before.
+5. Added a new option "-t" for cxl graph command, it takes either 'plain' or
+'graph' to determine whether we dump cxl topology to a json formatted file
+or plot the topology to a graph. By default, it will plot the graph.
+6. Added a function to validate the input cxl topology for "--input" option.
+7. Added new code logic to handle cases where there are inactive memdevs.
+8 Modified the plotting logic to make plotting work properly with different
+user inputs (from options supported by cxl graph). For example, now we can plot
+topology graph only for a specific endpoint or memdev.
+9. Fix some comments and bugs in graph.c
+
+Below is the cover letter of v1[1]:
+This patch series extends the `cxl list` subcommand to show the cxl
+topology visually. Mattew Ho first worked on the code and provided an
+initial patch as list below[1].
+
+This patch series includes the following two patches,
+1) Patch 1 adds a parent_dport attribute to ports and type 3 memory devices
+to show which downstream port a component is attached. This attribute will be 
+used in patch 2 to generate the cxl topology graph.
+2) Patch 2 extends the `cxl list` subcommand to dump the cxl topology to a
+json format file or generate a graph showing the cxl topology. To use the
+extended function, the option `-o output.suffix` is added. Acceptable output
+suffixes include .jpeg, .jpg and .png for generating a graph and for other
+suffix, it will dump the json-formatted cxl topology to the file, which
+can be used the input file (with --input option) to generate the graph
+later.
+
+Patch 2 reuses the plotting functions in Matthew Ho's patch, which are updated
+to work with parent_dport attribute in patch 1. Also, some bugs are
+fixed. More detailed changes are listed in Patch 2's commit log.
+
+The patch series is applied cleanly on ndctl v77, and tested with the
+following different cxl topologies,
+1) a single memdev attached the only root port of the single HB in the system;
+2) two memdevs attached to the two root ports of the single HB in the system;
+3) four memdevs attached to two HBs, each of which has two root ports;
+4) four memdevs attached to the downstream ports of a cxl switch which is
+attached to one of the two root ports of a HB in the system.
 
 
-Nebulous message in dmesg:
+[1] [ndctl PATCH 0/2] cxl-list: Construct CXL topology graph images
+https://lore.kernel.org/linux-cxl/20221220182510.2734032-1-fan.ni@samsung.com/
+[2] Mattew Ho's patch:
+https://lore.kernel.org/linux-cxl/cover.1660895649.git.sunfishho12@gmail.com/
 
-[   15.589072] cxl_mem mem0: CXL port topology root0 not enabled
+Fan Ni (2):
+  cxl/list: Add parent_dport attribute to memdev and root port listing
+  cxl-graph: Add cxl graph command to construct CXL topology graph
+    images
 
-A bit non-obvious what is occuring here, this occurs during endpoint
-allocation, at this point is cxl_mem_probe:
+ Documentation/cxl/cxl-graph.txt | 106 +++++
+ config.h.meson                  |   3 +
+ cxl/builtin.h                   |   1 +
+ cxl/cxl.c                       |   1 +
+ cxl/filter.c                    |  15 +-
+ cxl/filter.h                    |   5 +
+ cxl/graph.c                     | 806 ++++++++++++++++++++++++++++++++
+ cxl/json.c                      |  23 +-
+ cxl/meson.build                 |   9 +
+ meson.build                     |   5 +
+ meson_options.txt               |   1 +
+ ndctl.spec.in                   |   1 +
+ 12 files changed, 969 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/cxl/cxl-graph.txt
+ create mode 100644 cxl/graph.c
 
-drivers/cxl/mem.c
-static int cxl_mem_probe(struct device *dev)
-{
-...
-    if (dport->rch)
-        endpoint_parent = parent_port->uport;
-    else
-        endpoint_parent = &parent_port->dev;
+-- 
+2.39.2
 
-    device_lock(endpoint_parent);
-    if (!endpoint_parent->driver) {
-        dev_err(dev, "CXL port topology %s not enabled\n",
-            dev_name(endpoint_parent));
-        rc = -ENXIO;
-        goto unlock;
-    }
-...
-}
-
-
-endpoint_parent->driver is NULL.  In this case, endpoint driver traces
-back to root0 not having it's driver set.  This occurs only when the
-type matching fails:
-
-drivers/cxl/core/port.c
-static int cxl_bus_match(struct device *dev, struct device_driver *drv)
-{
-    return cxl_device_id(dev) == to_cxl_drv(drv)->id;
-}
-
-
-As it turns out, this can never return true for the root port.
-
-drivers/cxl/core/port.c
-static int cxl_device_id(const struct device *dev)
-{
-...
-    if (is_cxl_port(dev)) {
-        if (is_cxl_root(to_cxl_port(dev)))
-            return CXL_DEVICE_ROOT;
-        return CXL_DEVICE_PORT;
-    }
-...
-}
-
-drivers/cxl/port.c
-static struct cxl_driver cxl_port_driver = {
-    .name = "cxl_port",
-    .probe = cxl_port_probe,
-    .id = CXL_DEVICE_PORT,
-    .drv = {
-        .dev_groups = cxl_port_attribute_groups,
-    },
-};
-
-
-the root will always be identified as CXL_DEVICE_ROOT and can never
-match the port driver.  As a result, the >driver field can never be
-set by the device drive base:
-
-
-static int __device_attach_driver(struct device_driver *drv, void *_data)
-{
-...
-        ret = driver_match_device(drv, dev);
-...
-        driver_probe_device(drv, dev)
-}
-
-static int driver_probe_device(struct device_driver *drv, struct device *dev)
-{
-...
-        ret = __driver_probe_device(drv, dev);
-...
-}
-
-static int __driver_probe_device(struct device_driver *drv, struct device *dev)
-{
-...
-                ret = really_probe(dev, drv);
-...
-}
-
-static int really_probe(struct device *dev, struct device_driver *drv)
-{
-...
-re_probe:
-        dev->driver = drv;
-...
-}
-
-
-
-
-Unfortunately, I added this as a hack, but it did not resolve the issue.
-
-I'm a bit lost in the device-driver core trying to track down the exact
-path that is being taken, it's possible another subsequent error is
-occuring that subsequently fails as well.
-
-
-~Gregory
-
-
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 4d1f9c5b5029..7f99e4f790d8 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1853,7 +1853,9 @@ static int cxl_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
-
- static int cxl_bus_match(struct device *dev, struct device_driver *drv)
- {
--       return cxl_device_id(dev) == to_cxl_drv(drv)->id;
-+       int devid = cxl_device_id(dev);
-+       int drvid = to_cxl_drv(drv)->id
-+       return (devid == drvid) || (devid == CXL_DEVICE_ROOT && drvid == CXL_DEVICE_PORT);
- }
