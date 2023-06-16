@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781FFEB64D7
-	for <linux-cxl@archiver.kernel.org>; Fri, 16 Jun 2023 21:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF63EB64DA
+	for <linux-cxl@archiver.kernel.org>; Fri, 16 Jun 2023 21:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231191AbjFPVlx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Jun 2023 17:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45660 "EHLO
+        id S232981AbjFPVmA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 16 Jun 2023 17:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbjFPVlw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Jun 2023 17:41:52 -0400
+        with ESMTP id S244034AbjFPVl7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Jun 2023 17:41:59 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23EB30F9
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Jun 2023 14:41:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC1830F9
+        for <linux-cxl@vger.kernel.org>; Fri, 16 Jun 2023 14:41:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686951711; x=1718487711;
+  t=1686951718; x=1718487718;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nhh0GxKLg4XfvkeGt27bLZoOVkEoK3AzNbM89srPxUw=;
-  b=m/B/wiOGfWlaetxuLR8EtYH6vbvZ4jJxuNZTvxUpDh8NV3Iw6RElgM7c
-   Q2D/Vr9nJTSdNsiULPnbrVMDiLf03TFXEoP3JpIUEVCcqxW97Bhc7pEFB
-   VZysZ7yetuNMwhvzngCmLQdhTdNfV4WVKg0uiMP1AWPXK4lHI0yAylCT4
-   BDwxNFBHUf836/2jR5Q+ygR7uhAQmLHSIdaNi4FrY+lTV/171pyrlVvqU
-   w98UvjKD8Rh6sPOGA2GA/7El66ukcu4s+13fy7YcXeFFvQPTo+tMi1UJ7
-   N7R8eVK5dnR2MUcWJHdr6nBl7irx0p5+7e5tLRpJYIM+J2dDlpHyYqOn8
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="422973137"
+  bh=PliS2jvCC7voXgrd0jSWde0Yb20KWDuxmpchoD4s2hk=;
+  b=TC35VloMyDjfxBsaFLVvEYL7MbsIMrGJ3v5ZqJeYtFKUVPcgvtmhWNoJ
+   vms9DTrztx/sN7uBfBkE9hOUFX2YSOjeH6XdvhDrDfa0rDhONXh7TtMEk
+   BoCSJ+03t9uGhPn/w49PQid21D0GJXIYTO2uBja52QJQiMvqsU3dMZdFX
+   YqzHQGgsXFlRL6opwAvfvK9zWxnN+Hx+xkz1PeVvn1h76G+/iLP6z5ZnH
+   y6SAtyxtPHejAioJMerR3v5T4f+wurD9PuJdTlewkCmtdyoSxx30jT3pa
+   pbiKLzgtokfAoLzIP33WHiecIhGN8qnRepA2rZeWuiIqVPddCmgmHir/y
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="422973148"
 X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
-   d="scan'208";a="422973137"
+   d="scan'208";a="422973148"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 14:41:51 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 14:41:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="713028863"
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="713028927"
 X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
-   d="scan'208";a="713028863"
+   d="scan'208";a="713028927"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [192.168.1.177]) ([10.212.16.91])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 14:41:50 -0700
-Subject: [PATCH v7 02/11] cxl: Add callback to parse the DSLBIS subtable from
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 14:41:57 -0700
+Subject: [PATCH v7 03/11] cxl: Add callback to parse the SSLBIS subtable from
  CDAT
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org
@@ -46,8 +46,8 @@ Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         Jonathan.Cameron@huawei.com
-Date:   Fri, 16 Jun 2023 14:41:50 -0700
-Message-ID: <168695171034.3031571.3803744736163501384.stgit@djiang5-mobl3>
+Date:   Fri, 16 Jun 2023 14:41:56 -0700
+Message-ID: <168695171654.3031571.3769868161269973864.stgit@djiang5-mobl3>
 In-Reply-To: <168695160531.3031571.4875512229068707023.stgit@djiang5-mobl3>
 References: <168695160531.3031571.4875512229068707023.stgit@djiang5-mobl3>
 User-Agent: StGit/1.5
@@ -58,186 +58,193 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Provide a callback to parse the Device Scoped Latency and Bandwidth
-Information Structure (DSLBIS) in the CDAT structures. The DSLBIS
-contains the bandwidth and latency information that's tied to a DSMAS
-handle. The driver will retrieve the read and write latency and
-bandwidth associated with the DSMAS which is tied to a DPA range.
+Provide a callback to parse the Switched Scoped Latency and Bandwidth
+Information Structure (SSLBIS) in the CDAT structures. The SSLBIS
+contains the bandwidth and latency information that's tied to the
+CXL switch that the data table has been read from. The extracted
+values are stored to the cxl_dport correlated by the port_id
+depending on the SSLBIS entry.
 
-Coherent Device Attribute Table 1.03 2.1 Device Scoped Latency and
-Bandwidth Information Structure (DSLBIS)
+Coherent Device Attribute Table 1.03 2.1 Switched Scoped Latency
+and Bandwidth Information Structure (DSLBIS)
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
 v6:
-- Clarify cxl_cdat_endpoint_process() error paths for readability. (Jonathan)
-- Adjust dslbis ptr from header.
+- Adjust sslbis ptr w/o common header.
 v5:
-- Remove macro for common headers. (Jonathan)
+- Store data to cxl_dport directly instead. (Dan)
 - Use acpi_table_parse_cdat().
-- Remove unlikely(). (Dan)
 v3:
-- Added spec section in commit header. (Alison)
-- Remove void * recast. (Alison)
-- Rework comment. (Alison)
-- Move CDAT parse to cxl_endpoint_port_probe()
-- Convert to use 'struct node_hmem_attrs'
-
-v2:
-- Add size check to DSLIBIS table. (Lukas)
-- Remove unnecessary entry type check. (Jonathan)
-- Move data_type check to after match. (Jonathan)
-- Skip unknown data type. (Jonathan)
-- Add overflow check for unit multiply. (Jonathan)
-- Use dev_warn() when entries parsing fail. (Jonathan)
+- Add spec section in commit header (Alison)
+- Move CDAT parse to cxl_switch_port_probe()
+- Use 'struct node_hmem_attrs'
 ---
- drivers/cxl/core/cdat.c |  102 ++++++++++++++++++++++++++++++++++++++++++++++-
- drivers/cxl/cxl.h       |    2 +
- 2 files changed, 102 insertions(+), 2 deletions(-)
+ drivers/cxl/core/cdat.c |   93 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h       |    8 ++++
+ drivers/cxl/port.c      |    6 +++
+ 3 files changed, 107 insertions(+)
 
 diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index a858fd1b5744..361983393666 100644
+index 361983393666..f233cebca37a 100644
 --- a/drivers/cxl/core/cdat.c
 +++ b/drivers/cxl/core/cdat.c
-@@ -2,6 +2,7 @@
- /* Copyright(c) 2023 Intel Corporation. All rights reserved. */
- #include <linux/acpi.h>
- #include <linux/fw_table.h>
-+#include <linux/overflow.h>
- #include "cxlpci.h"
- #include "cxl.h"
- 
-@@ -37,10 +38,107 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
- 	return 0;
+@@ -153,4 +153,97 @@ void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
  }
+ EXPORT_SYMBOL_NS_GPL(cxl_cdat_dsmas_list_destroy, CXL);
  
-+static void cxl_access_coordinate_set(struct access_coordinate *coord,
-+				      int access, unsigned int val)
-+{
-+	switch (access) {
-+	case ACPI_HMAT_ACCESS_LATENCY:
-+		coord->read_latency = val;
-+		coord->write_latency = val;
-+		break;
-+	case ACPI_HMAT_READ_LATENCY:
-+		coord->read_latency = val;
-+		break;
-+	case ACPI_HMAT_WRITE_LATENCY:
-+		coord->write_latency = val;
-+		break;
-+	case ACPI_HMAT_ACCESS_BANDWIDTH:
-+		coord->read_bandwidth = val;
-+		coord->write_bandwidth = val;
-+		break;
-+	case ACPI_HMAT_READ_BANDWIDTH:
-+		coord->read_bandwidth = val;
-+		break;
-+	case ACPI_HMAT_WRITE_BANDWIDTH:
-+		coord->write_bandwidth = val;
-+		break;
-+	}
-+}
-+
-+static int cdat_dslbis_handler(union acpi_subtable_headers *header, void *arg,
++static int cdat_sslbis_handler(union acpi_subtable_headers *header, void *arg,
 +			       const unsigned long end)
 +{
-+	struct acpi_cdat_header *hdr = &header->cdat;
-+	struct acpi_cdat_dslbis *dslbis;
-+	int size = sizeof(*hdr) + sizeof(*dslbis);
-+	struct list_head *dsmas_list = arg;
-+	struct dsmas_entry *dent;
++	struct acpi_cdat_sslbis *sslbis;
++	int size = sizeof(header->cdat) + sizeof(*sslbis);
++	struct cxl_port *port = arg;
++	struct device *dev = &port->dev;
++	struct acpi_cdat_sslbe *entry;
++	int remain, entries, i;
 +	u16 len;
 +
-+	len = le16_to_cpu((__force __le16)hdr->length);
-+	if (len != size || (unsigned long)hdr + len > end) {
-+		pr_warn("Malformed DSLBIS table length: (%u:%u)\n", size, len);
++	len = le16_to_cpu((__force __le16)header->cdat.length);
++	remain = len - size;
++	if (!remain || remain % sizeof(*entry) ||
++	    (unsigned long)header + len > end) {
++		dev_warn(dev, "Malformed SSLBIS table length: (%u)\n", len);
 +		return -EINVAL;
 +	}
 +
 +	/* Skip common header */
-+	dslbis = (struct acpi_cdat_dslbis *)(hdr + 1);
++	sslbis = (struct acpi_cdat_sslbis *)((unsigned long)header +
++					     sizeof(header->cdat));
 +
-+	/* Skip unrecognized data type */
-+	if (dslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
++	/* Unrecognized data type, we can skip */
++	if (sslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
 +		return 0;
 +
-+	list_for_each_entry(dent, dsmas_list, list) {
++	entries = remain / sizeof(*entry);
++	entry = (struct acpi_cdat_sslbe *)((unsigned long)header + sizeof(*sslbis));
++
++	for (i = 0; i < entries; i++) {
++		u16 x = le16_to_cpu((__force __le16)entry->portx_id);
++		u16 y = le16_to_cpu((__force __le16)entry->porty_id);
 +		__le64 le_base;
 +		__le16 le_val;
++		struct cxl_dport *dport;
++		unsigned long index;
++		u16 dsp_id;
 +		u64 val;
-+		int rc;
 +
-+		if (dslbis->handle != dent->handle)
-+			continue;
++		switch (x) {
++		case ACPI_CDAT_SSLBIS_US_PORT:
++			dsp_id = y;
++			break;
++		case ACPI_CDAT_SSLBIS_ANY_PORT:
++			switch (y) {
++			case ACPI_CDAT_SSLBIS_US_PORT:
++				dsp_id = x;
++				break;
++			case ACPI_CDAT_SSLBIS_ANY_PORT:
++				dsp_id = ACPI_CDAT_SSLBIS_ANY_PORT;
++				break;
++			default:
++				dsp_id = y;
++				break;
++			}
++			break;
++		default:
++			dsp_id = x;
++			break;
++		}
 +
-+		/* Not a memory type, skip */
-+		if ((dslbis->flags & ACPI_HMAT_MEMORY_HIERARCHY) !=
-+		    ACPI_HMAT_MEMORY)
-+			return 0;
++		le_base = (__force __le64)sslbis->entry_base_unit;
++		le_val = (__force __le16)entry->latency_or_bandwidth;
 +
-+		le_base = (__force __le64)dslbis->entry_base_unit;
-+		le_val = (__force __le16)dslbis->entry[0];
-+		rc = check_mul_overflow(le64_to_cpu(le_base),
-+					le16_to_cpu(le_val), &val);
-+		if (rc)
-+			pr_warn("DSLBIS value overflowed.\n");
++		if (check_mul_overflow(le64_to_cpu(le_base),
++				       le16_to_cpu(le_val), &val))
++			dev_warn(dev, "SSLBIS value overflowed!\n");
 +
-+		cxl_access_coordinate_set(&dent->coord, dslbis->data_type, val);
-+		break;
++		xa_for_each(&port->dports, index, dport) {
++			if (dsp_id == ACPI_CDAT_SSLBIS_ANY_PORT ||
++			    dsp_id == dport->port_id)
++				cxl_access_coordinate_set(&dport->coord,
++							  sslbis->data_type,
++							  val);
++		}
++
++		entry++;
 +	}
 +
 +	return 0;
 +}
 +
-+static int cdat_table_parse_output(int rc)
++int cxl_cdat_switch_process(struct cxl_port *port)
 +{
-+	if (rc < 0)
-+		return rc;
-+	if (rc == 0)
-+		return -ENOENT;
-+
-+	return 0;
-+}
-+
- int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list)
- {
--	return cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
--				list, port->cdat.table);
 +	int rc;
 +
-+	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSMAS, cdat_dsmas_handler,
-+			      list, port->cdat.table);
-+	rc = cdat_table_parse_output(rc);
-+	if (rc)
-+		return rc;
-+
-+	rc = cdat_table_parse(ACPI_CDAT_TYPE_DSLBIS, cdat_dslbis_handler,
-+			      list, port->cdat.table);
++	rc = cdat_table_parse(ACPI_CDAT_TYPE_SSLBIS, cdat_sslbis_handler,
++			      port, port->cdat.table);
 +	return cdat_table_parse_output(rc);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_cdat_endpoint_process, CXL);
- 
++}
++EXPORT_SYMBOL_NS_GPL(cxl_cdat_switch_process, CXL);
++
+ MODULE_IMPORT_NS(CXL);
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f4b6b34721f9..b431847c4eb5 100644
+index b431847c4eb5..952778230d5f 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -8,6 +8,7 @@
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
- #include <linux/list.h>
-+#include <linux/node.h>
- #include <linux/log2.h>
- #include <linux/io.h>
- 
-@@ -798,6 +799,7 @@ struct dsmas_entry {
- 	struct list_head list;
- 	struct range dpa_range;
- 	u8 handle;
+@@ -600,6 +600,7 @@ cxl_find_dport_by_dev(struct cxl_port *port, const struct device *dport_dev)
+  * @rcrb: base address for the Root Complex Register Block
+  * @rch: Indicate whether this dport was enumerated in RCH or VH mode
+  * @port: reference to cxl_port that contains this downstream port
++ * @coord: access coordinates (performance) for switch from CDAT
+  */
+ struct cxl_dport {
+ 	struct device *dport;
+@@ -608,6 +609,7 @@ struct cxl_dport {
+ 	resource_size_t rcrb;
+ 	bool rch;
+ 	struct cxl_port *port;
 +	struct access_coordinate coord;
  };
  
+ /**
+@@ -805,6 +807,7 @@ struct dsmas_entry {
  #ifdef CONFIG_FIRMWARE_TABLE
+ int cxl_cdat_endpoint_process(struct cxl_port *port, struct list_head *list);
+ void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list);
++int cxl_cdat_switch_process(struct cxl_port *port);
+ #else
+ static inline int cxl_cdat_endpoint_process(struct cxl_port *port,
+ 					    struct list_head *list)
+@@ -815,6 +818,11 @@ static inline int cxl_cdat_endpoint_process(struct cxl_port *port,
+ static inline void cxl_cdat_dsmas_list_destroy(struct list_head *dsmas_list)
+ {
+ }
++
++static inline int cxl_cdat_switch_process(struct cxl_port *port)
++{
++	return -EOPNOTSUPP;
++}
+ #endif
+ 
+ /*
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index 3b861c41a579..8b36a8633a15 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -82,6 +82,12 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+ 		return PTR_ERR(cxlhdm);
+ 	}
+ 
++	if (port->cdat.table) {
++		rc = cxl_cdat_switch_process(port);
++		if (rc < 0)
++			dev_warn(&port->dev, "Failed to parse SSLBIS: %d\n", rc);
++	}
++
+ 	if (nr_dports == 1) {
+ 		dev_dbg(&port->dev, "Fallback to passthrough decoder\n");
+ 		return devm_cxl_add_passthrough_decoder(port);
 
 
