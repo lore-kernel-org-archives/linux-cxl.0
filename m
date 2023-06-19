@@ -2,135 +2,100 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A774EB64DB
-	for <linux-cxl@archiver.kernel.org>; Sat, 17 Jun 2023 01:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2A6EB64DA
+	for <linux-cxl@archiver.kernel.org>; Mon, 19 Jun 2023 07:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbjFQBYp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 16 Jun 2023 21:24:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
+        id S229534AbjFSHk4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 19 Jun 2023 03:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjFQBYo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 16 Jun 2023 21:24:44 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F9C3A89
-        for <linux-cxl@vger.kernel.org>; Fri, 16 Jun 2023 18:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686965083; x=1718501083;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K7tluqE3P57+t6+elFobmBO3ulslD61Io2yb0mi+Kt4=;
-  b=AnUYvjFe9aifjAHXjZQ/cPAo0lE6V6fehMxx/Ba5tMmiDDeRvP94pf5P
-   Gju7DUhx/SjUJc3w9GI4iYFfkcrFBSAVBcZ7TRurRwpRlO/wHrO47ndNq
-   VADIF5F9bJZwuvUVkUUfOBzn7c3ZhDzm/PHmKdUrXQSwIFQxlRkMZ6joT
-   U3FNfQ0bV3yyCsnUh5dN0tdlwdFPQhQqJ56+WLNhuUrBX46y8E9JQP7wy
-   lPQTIwyamfyYUdcE7wASeHesT63NCwM9HgXNPwwLvlce8eyakytM3UtCd
-   +cr/I9q27xf/A24ryHNz/V4xrHTCMtGNa/OK9u3H7ZQ0asKaCWXliahdo
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="362762340"
-X-IronPort-AV: E=Sophos;i="6.00,249,1681196400"; 
-   d="scan'208";a="362762340"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 18:24:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="713073323"
-X-IronPort-AV: E=Sophos;i="6.00,249,1681196400"; 
-   d="scan'208";a="713073323"
-Received: from slovely-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.23.80])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 18:24:34 -0700
-Subject: [PATCH 2/3] cxl/region: Flag partially torn down regions as unusable
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Date:   Fri, 16 Jun 2023 18:24:34 -0700
-Message-ID: <168696507423.3590522.16254212607926684429.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <168696506332.3590522.12981963617215460385.stgit@dwillia2-xfh.jf.intel.com>
-References: <168696506332.3590522.12981963617215460385.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        with ESMTP id S229473AbjFSHk4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 19 Jun 2023 03:40:56 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F324B1;
+        Mon, 19 Jun 2023 00:40:53 -0700 (PDT)
+Received: from dggpemm500002.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Ql1pJ4PZZztQYY;
+        Mon, 19 Jun 2023 15:38:16 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 19 Jun 2023 15:40:50 +0800
+Subject: Re: [PATCH v4 1/4] acpi: Move common tables helper functions to
+ common lib
+To:     Dave Jiang <dave.jiang@intel.com>, <linux-acpi@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        <lenb@kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <lukas@wunner.de>,
+        <Jonathan.Cameron@huawei.com>
+References: <168677921156.2787985.6927511816148622557.stgit@djiang5-mobl3>
+ <168677928492.2787985.344130142021460418.stgit@djiang5-mobl3>
+From:   Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <2ae8d202-8c0d-d7d7-dec6-ef95d823a433@huawei.com>
+Date:   Mon, 19 Jun 2023 15:40:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <168677928492.2787985.344130142021460418.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.247]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500002.china.huawei.com (7.185.36.229)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-cxl_region_decode_reset() walks all the decoders associated with a given
-region and disables them. Due to decoder ordering rules it is possible
-that a switch in the topology notices that a given decoder can not be
-shutdown before another region with a higher HPA is shutdown first. That
-can leave the region in a partially committed state.
+On 2023/6/15 5:48, Dave Jiang wrote:
+> Some of the routines in ACPI driver/acpi/tables.c can be shared with
+> parsing CDAT. CDAT is a device-provided data structure that is formatted
+> similar to a platform provided ACPI table. CDAT is used by CXL and can
+> exist on platforms that do not use ACPI. Split out the common routine
+> from ACPI to accommodate platforms that do not support ACPI and move that
+> to /lib. The common routines can be built outside of ACPI if
+> FIRMWARE_TABLES is selected.
+> 
+> Link: https://lore.kernel.org/linux-cxl/CAJZ5v0jipbtTNnsA0-o5ozOk8ZgWnOg34m34a9pPenTyRLj=6A@mail.gmail.com/
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> v4:
+> - Add MAINTAINERS entry (Hanjun)
+> - Move __init_or_acpilib outside CONFIG_ACPI (0-day)
+> ---
+>   MAINTAINERS              |    2
+>   drivers/acpi/Kconfig     |    1
+>   drivers/acpi/tables.c    |  173 ------------------------------------------
+>   include/linux/acpi.h     |   42 +++-------
+>   include/linux/fw_table.h |   43 ++++++++++
+>   lib/Kconfig              |    3 +
+>   lib/Makefile             |    2
+>   lib/fw_table.c           |  189 ++++++++++++++++++++++++++++++++++++++++++++++
+>   8 files changed, 251 insertions(+), 204 deletions(-)
+>   create mode 100644 include/linux/fw_table.h
+>   create mode 100644 lib/fw_table.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 250518fc70ff..2145438e00dc 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -371,6 +371,8 @@ F:	include/acpi/
+>   F:	include/linux/acpi.h
+>   F:	include/linux/fwnode.h
+>   F:	tools/power/acpi/
+> +F:	include/linux/fw_table.h
+> +F:	lib/fw_table.c
 
-Capture that state in a new CXL_REGION_F_NEEDS_RESET flag and require
-that a successful cxl_region_decode_reset() attempt must be completed
-before cxl_region_probe() accepts the region.
+I think it's better in alphabetical order, others look
+good to me,
 
-This is a corollary for the bug that Jonathan identified in "CXL/region
-:  commit reset of out of order region appears to succeed." [1].
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
 
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Link: http://lore.kernel.org/r/20230316171441.0000205b@Huawei.com [1]
-Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/cxl/core/region.c |   12 ++++++++++++
- drivers/cxl/cxl.h         |    8 ++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index d48c5916f2e9..31f498f0fb3a 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -182,14 +182,19 @@ static int cxl_region_decode_reset(struct cxl_region *cxlr, int count)
- 				rc = cxld->reset(cxld);
- 			if (rc)
- 				return rc;
-+			set_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
- 		}
- 
- endpoint_reset:
- 		rc = cxled->cxld.reset(&cxled->cxld);
- 		if (rc)
- 			return rc;
-+		set_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
- 	}
- 
-+	/* all decoders associated with this region have been torn down */
-+	clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
-+
- 	return 0;
- }
- 
-@@ -2876,6 +2881,13 @@ static int cxl_region_probe(struct device *dev)
- 		goto out;
- 	}
- 
-+	if (test_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags)) {
-+		dev_err(&cxlr->dev,
-+			"failed to activate, re-commit region and retry\n");
-+		rc = -ENXIO;
-+		goto out;
-+	}
-+
- 	/*
- 	 * From this point on any path that changes the region's state away from
- 	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 187abd8ba673..cd7bf6697a51 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -469,6 +469,14 @@ struct cxl_region_params {
-  */
- #define CXL_REGION_F_AUTO 0
- 
-+/*
-+ * Require that a committed region successfully complete a teardown once
-+ * any of its associated decoders have been torn down. This maintains
-+ * the commit state for the region since there are committed decoders,
-+ * but blocks cxl_region_probe().
-+ */
-+#define CXL_REGION_F_NEEDS_RESET 1
-+
- /**
-  * struct cxl_region - CXL region
-  * @dev: This region's device
-
+Thanks
+Hanjun
