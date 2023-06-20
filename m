@@ -2,211 +2,101 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ED2EB64D7
-	for <linux-cxl@archiver.kernel.org>; Tue, 20 Jun 2023 13:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F71EB64D7
+	for <linux-cxl@archiver.kernel.org>; Tue, 20 Jun 2023 14:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231649AbjFTNP1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 20 Jun 2023 09:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48424 "EHLO
+        id S232568AbjFTOe7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 20 Jun 2023 10:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbjFTNPZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Jun 2023 09:15:25 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EC01716;
-        Tue, 20 Jun 2023 06:15:24 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35KD94PA016292;
-        Tue, 20 Jun 2023 13:14:52 GMT
+        with ESMTP id S229932AbjFTOe6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Jun 2023 10:34:58 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E319E10D5;
+        Tue, 20 Jun 2023 07:34:56 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35KE8kuR006675;
+        Tue, 20 Jun 2023 14:34:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type; s=pp1; bh=H3BTlpVBypn/HUSJmwRVHEmC2PE6s+8bLrqyH4SKjio=;
- b=rykL9/vrDus2UGuiv2B8ecixd3wfY+XxpMSZ6LrzBTuN7m+sKbwfiLTU7tu2keZhZLj3
- hRavxxIt0FeMvmHP65mj2U2F6pz9DzEqXXaesH4JzTtnFK3kh+sxfZ16XXdInAFaiVfF
- pT/miH0IXMZUlQsWVtusjm1e4YmBgutEEHYs4qvGORiJ0r38cnkNRmOsCRDMoJnfc88J
- 6uTFOAK1OG5Sbuv+TKlqmUcCVWyjWxY/CVg2OqmSKs9ecvJRjZ60U1Y8Ar02InAS4FFa
- ZO7N7E46cB8FPWCbCZ70deKDJxt/Wg/9dy7cHf//dA96N+VWJ2lIkPvfStDi1IMlfVPP xA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbcg88jqe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 13:14:51 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35KDBWBl000800;
-        Tue, 20 Jun 2023 13:14:51 GMT
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=7K/xsQqVPbIPN37kjzszKxy8hUlBb8VKcQNWTP2aNZk=;
+ b=YrRc2nily0Mxdazm5AXcppS3MolSKDWRYB9SPqjxhConKjAmqcITOIaLIMkc4UTRqRMS
+ EQq/0m0hvWvMyyvNoSCs2J8mFRQtmZLWTLC+xlNXQUJPvm8FnTM7C+muqns5e1WuqYT3
+ s90yy81hRkoCVZdCJQoltKKjj0kftTtamD3IehyH98VSBN+1UetN7AqIuv5NS10Mavjs
+ EZw8JHECD+5xymvvv+kAsiztbUHwxyGfJ8elhHWv8GCNIYAbGUy+UGbtZd4XgK8P+lil
+ Nmv4TxlWfRZr4nwU2MHBmSgBRFz6/EZAx9kBwykO3jIqnWoBvAfV7DYqBXgiMu8d3PKy dg== 
 Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbcg88jpj-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbda9sc9v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 13:14:50 +0000
+        Tue, 20 Jun 2023 14:34:38 +0000
 Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35K2uqrY021786;
-        Tue, 20 Jun 2023 13:14:48 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3r94f52309-1
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35KDl90a030431;
+        Tue, 20 Jun 2023 14:03:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3r94f523u3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Jun 2023 13:14:48 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35KDEkL642337012
+        Tue, 20 Jun 2023 14:03:40 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35KE3aUQ23659116
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Jun 2023 13:14:46 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2135720040;
-        Tue, 20 Jun 2023 13:14:46 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53CFC20043;
-        Tue, 20 Jun 2023 13:14:42 +0000 (GMT)
-Received: from tarunpc (unknown [9.199.157.25])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 20 Jun 2023 13:14:42 +0000 (GMT)
+        Tue, 20 Jun 2023 14:03:36 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD0BE2004B;
+        Tue, 20 Jun 2023 14:03:36 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0A6920040;
+        Tue, 20 Jun 2023 14:03:34 +0000 (GMT)
+Received: from tarunpc.in.ibm.com (unknown [9.199.157.25])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Jun 2023 14:03:34 +0000 (GMT)
 From:   Tarun Sahu <tsahu@linux.ibm.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        aneesh.kumar@linux.ibm.com
-Subject: Re: [PATCH 3/3] dax/kmem: Always enroll hotplugged memory for
- memmap_on_memory
-In-Reply-To: <20230613-vv-kmem_memmap-v1-3-f6de9c6af2c6@intel.com>
-References: <20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com>
- <20230613-vv-kmem_memmap-v1-3-f6de9c6af2c6@intel.com>
-Date:   Tue, 20 Jun 2023 18:44:40 +0530
-Message-ID: <87zg4uwa0v.fsf@linux.ibm.com>
+To:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dave.jiang@intel.com,
+        dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        aneesh.kumar@linux.ibm.com, jaypatel@linux.ibm.com,
+        tsahu@linux.ibm.com
+Subject: [PATCH] dax/kmem: Pass valid argument to memory_group_register_static
+Date:   Tue, 20 Jun 2023 19:33:32 +0530
+Message-Id: <20230620140332.30578-1-tsahu@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: k445iHDRACRzPCIxEzPCR5_a3eK4s88q
-X-Proofpoint-GUID: uz0hnxRkr9FUlWfHMTCrnrTx7dGX1Mqi
+X-Proofpoint-GUID: HL3Nuj0em6Fb1yUMU-9ZvkkBmytcqfY_
+X-Proofpoint-ORIG-GUID: HL3Nuj0em6Fb1yUMU-9ZvkkBmytcqfY_
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-20_09,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 bulkscore=0 clxscore=1011
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306200117
+ definitions=2023-06-20_10,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 priorityscore=1501 adultscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306200131
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+memory_group_register_static takes maximum number of pages as the argument
+while dev_dax_kmem_probe passes total_len (in bytes) as the argument.
 
-Hi Vishal,
+Signed-off-by: Tarun Sahu <tsahu@linux.ibm.com>
+---
+ drivers/dax/kmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Vishal Verma <vishal.l.verma@intel.com> writes:
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index 7b36db6f1cbd..898ca9505754 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -99,7 +99,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	if (!data->res_name)
+ 		goto err_res_name;
+ 
+-	rc = memory_group_register_static(numa_node, total_len);
++	rc = memory_group_register_static(numa_node, PFN_UP(total_len));
+ 	if (rc < 0)
+ 		goto err_reg_mgid;
+ 	data->mgid = rc;
+-- 
+2.31.1
 
-> With DAX memory regions originating from CXL memory expanders or
-> NVDIMMs, the kmem driver may be hot-adding huge amounts of system memory
-> on a system without enough 'regular' main memory to support the memmap
-> for it. To avoid this, ensure that all kmem managed hotplugged memory is
-> added with the MHP_MEMMAP_ON_MEMORY flag to place the memmap on the
-> new memory region being hot added.
->
-
-Some architectures doesn't have support for MEMMAP_ON_MEMORY, bypassing
-the check mhp_memmap_on_memory() might cause problems on such
-architectures (for e.g PPC64).
-
-> To do this, call add_memory() in chunks of memory_block_size_bytes() as
-> that is a requirement for memmap_on_memory. Additionally, Use the
-> mhp_flag to force the memmap_on_memory checks regardless of the
-> respective module parameter setting.
->
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  drivers/dax/kmem.c | 49 ++++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 36 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index 7b36db6f1cbd..0751346193ef 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -12,6 +12,7 @@
->  #include <linux/mm.h>
->  #include <linux/mman.h>
->  #include <linux/memory-tiers.h>
-> +#include <linux/memory_hotplug.h>
->  #include "dax-private.h"
->  #include "bus.h"
->  
-> @@ -105,6 +106,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  	data->mgid = rc;
->  
->  	for (i = 0; i < dev_dax->nr_range; i++) {
-> +		u64 cur_start, cur_len, remaining;
->  		struct resource *res;
->  		struct range range;
->  
-> @@ -137,21 +139,42 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  		res->flags = IORESOURCE_SYSTEM_RAM;
->  
->  		/*
-> -		 * Ensure that future kexec'd kernels will not treat
-> -		 * this as RAM automatically.
-> +		 * Add memory in chunks of memory_block_size_bytes() so that
-> +		 * it is considered for MHP_MEMMAP_ON_MEMORY
-> +		 * @range has already been aligned to memory_block_size_bytes(),
-> +		 * so the following loop will always break it down cleanly.
->  		 */
-> -		rc = add_memory_driver_managed(data->mgid, range.start,
-> -				range_len(&range), kmem_name, MHP_NID_IS_MGID);
-> +		cur_start = range.start;
-> +		cur_len = memory_block_size_bytes();
-> +		remaining = range_len(&range);
-> +		while (remaining) {
-> +			mhp_t mhp_flags = MHP_NID_IS_MGID;
->  
-> -		if (rc) {
-> -			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
-> -					i, range.start, range.end);
-> -			remove_resource(res);
-> -			kfree(res);
-> -			data->res[i] = NULL;
-> -			if (mapped)
-> -				continue;
-> -			goto err_request_mem;
-> +			if (mhp_supports_memmap_on_memory(cur_len,
-> +							  MHP_MEMMAP_ON_MEMORY))
-> +				mhp_flags |= MHP_MEMMAP_ON_MEMORY;
-> +			/*
-> +			 * Ensure that future kexec'd kernels will not treat
-> +			 * this as RAM automatically.
-> +			 */
-> +			rc = add_memory_driver_managed(data->mgid, cur_start,
-> +						       cur_len, kmem_name,
-> +						       mhp_flags);
-> +
-> +			if (rc) {
-> +				dev_warn(dev,
-> +					 "mapping%d: %#llx-%#llx memory add failed\n",
-> +					 i, cur_start, cur_start + cur_len - 1);
-> +				remove_resource(res);
-> +				kfree(res);
-> +				data->res[i] = NULL;
-> +				if (mapped)
-> +					continue;
-> +				goto err_request_mem;
-> +			}
-> +
-> +			cur_start += cur_len;
-> +			remaining -= cur_len;
->  		}
->  		mapped++;
->  	}
->
-> -- 
-> 2.40.1
