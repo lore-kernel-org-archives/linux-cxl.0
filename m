@@ -2,224 +2,734 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EECEB64D7
-	for <linux-cxl@archiver.kernel.org>; Wed, 21 Jun 2023 00:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D313EB64D8
+	for <linux-cxl@archiver.kernel.org>; Wed, 21 Jun 2023 02:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbjFUAHA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 20 Jun 2023 20:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
+        id S229949AbjFUCom (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 20 Jun 2023 22:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjFUAG7 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Jun 2023 20:06:59 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312241BC
-        for <linux-cxl@vger.kernel.org>; Tue, 20 Jun 2023 17:06:57 -0700 (PDT)
+        with ESMTP id S229923AbjFUCol (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 20 Jun 2023 22:44:41 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D66B10F1
+        for <linux-cxl@vger.kernel.org>; Tue, 20 Jun 2023 19:44:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687306017; x=1718842017;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=CG74mUX22U2UyNDpdLMK64gasGzYxEb7zAdo88UpBaI=;
-  b=aOb7SzPsGdy84L31GBYBc6PaH1M0XV2NvidZabjPm9B8t9UFuDn3/nT0
-   Jz/psWohNFnHd9vEKSMnbHZQYZtmam8O+IbEwbTmuzqA6TnZmeMTqgL5S
-   Qu6u3tTOUv8jc4pN4fe6fa1O0uPgIL9vIQcsRvbDCfH5mGpl1nvNwr49E
-   Osr4KGzKobLgILOwwMrvnAhkK2uzkqoBAEHiZRGtCbgy9oea7raVSt9zc
-   EhaEj7elh8aygE15UJwMahxRbFxcQJ3YYYT0u0j40NsMc1Ov8Rtg3cYwg
-   s50qPUdz6ZLVQA7G6UGj0h2REiYvIiydXjkkBOJ5Sp5zxqDxIpophfQNo
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="357511836"
-X-IronPort-AV: E=Sophos;i="6.00,258,1681196400"; 
-   d="scan'208";a="357511836"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 17:06:56 -0700
+  t=1687315479; x=1718851479;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=hL3vmu4U5/u/aZZkby6aBoTFv9a/1p2Qg/R5QJSq8e0=;
+  b=LSjw6pl4iJhxmXyG5l8TMFkXT7LMlz5KvZaf7pSRfLy5pY0zTFkFFmlv
+   cDlFwvDvQYUywUndOTjxpZ9t+TzcHV7JbdVMc/C8PGvxePIVI0OW+51K1
+   Qomnnkk/DAL2nwhzYPtR9WMUDoTSB1ztdowWkxVz+aMnzfm/CaFPMeLs8
+   4Wu/ol4Ke6JX5htLWfFrtzPWEyPIQaMSR5NBZ9R/1D81VLVnybcOQMN+L
+   CqB5rDg9dCEMK2x/IJL+Hztszx1oCtY+RkQgRIYVLfaeMwR/sHmc4oeqm
+   rn/uXw6U1l/xdQAPwTaZDafEPfiTW/7Pm4uzC8fCo4LLcvSVNs+pWY+N6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="358915777"
+X-IronPort-AV: E=Sophos;i="6.00,259,1681196400"; 
+   d="scan'208";a="358915777"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 19:44:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="960968813"
-X-IronPort-AV: E=Sophos;i="6.00,258,1681196400"; 
-   d="scan'208";a="960968813"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Jun 2023 17:06:56 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 20 Jun 2023 17:06:56 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="708526355"
+X-IronPort-AV: E=Sophos;i="6.00,259,1681196400"; 
+   d="scan'208";a="708526355"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga007.jf.intel.com with ESMTP; 20 Jun 2023 19:44:26 -0700
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 20 Jun 2023 17:06:55 -0700
+ 15.1.2507.23; Tue, 20 Jun 2023 19:44:26 -0700
 Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
  orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 20 Jun 2023 17:06:55 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.44) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Tue, 20 Jun 2023 19:44:26 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 20 Jun 2023 17:06:55 -0700
+ 15.1.2507.23; Tue, 20 Jun 2023 19:44:25 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TrYNbMrJfpo+BOuNTwnrtlOmWSLkJfrwmC9ifJUZFU8+8A0wHGWLQr+Jgx0aQt6dRALSPRgNFXWywARowclXl741cd3ErKplyiHblWsw8/ohMceekV3z3pqPp4bP5T+ncC3bs7NRqUpLoWExrElmyJEYhZv3Q5ALvh1eU4b6SRefspZCkyVV0lpDwRq/a/+vRMROtHn5PcMrlTVmozP66Nok70Y6Nm7+2Ke4omNVd6qzUxOGLLxGzfNFD7gNSpovv1rdPr9bWhVoi392VvorrtUasIwb+bKnGaHP9OKOiy6s/vrsW1Jvv0GV83GxcuFZKx2RCN/2MCLajaOsMJFstQ==
+ b=Jz5BXXN++RKo3hk+0SUCycz6eXOGZBr6H0c0Rr+0MW2ZKBDpyCjG4rpwwCLqfaHeeYSYWhboOxsKDrE2+GL7Nf0XPnGBXHye0kGWVTKsofD9uQB483NaoNVSV/KpTtClHasx1DmNvHkwVCSjcaN5wbtC0aV1c7kPb5Thhf6+WX+qLzkToxbGVWfPusp1pBVdICkakZu3sr/i7SaK2mc06trj0XUcDV4iVnO0/KPaa9+dFQTgIggLHDal7PasXWSmMk2eAIrPhLq74VyZ1g4ADsPE5mx6vRc2CUS9EnOlMBGjFgP0MSZPdPqGkVq0sPUUCBR5w123eUGRo0Fp8ingPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mR0I+WaDJC+kusKTTGu4lL4aPYJHINTs3af30KOkWXs=;
- b=R1/9J1Djo+NkbaDnHhDwFMb18g+hicy2DiISxSwlYjGEagrBK9dcazEDXtNNk8qfZ4KxcqpkCgEl7vJhXKBa7OWdt59uwLQU4yhIOjKL5H3yhJfiPh+vppdEmqrZqdtc2pNGDuzDkqaO8RFFt6AcEeRkMI2eoxhUKc7K/4o9gnvwJBkYhViND7RmWoIl5Zor3TcuvWXQX+aD0XX1EFNsc6hP/qyi7IkfZt9dWKySyC+q5pKQnxZWWl20cEAqCH6Y7EgW2GY1f9uTmyTKJNSCq2wgUdcJ6wcIJxc5KvvqjqlsOe5KjP5DICjcXD2BKBkr9aEOl8un45eYgfOAqqnu0Q==
+ bh=h2PhU2vmcvJWD1WWcjueE9ffizWfQME7OTjSEhC98Jk=;
+ b=ZjX8BXbhlIA0YCeaX2y0TyDmFxuAZKZSikbt0mQpQ+5iPImgRgp20wuKMVMnTBl5eBdow9TtQwqySugDfnxR86TO+6Jr6K+4KhYXXf21OyLndyAkwR0QLXfllszbBZvSL4FOitVIbJAi4e0iURwfkOYIx+eq2a1idq5qDW+Jp1i+4oCoCjfX3LVUs/pWAwIeAdcnOdYgp2VwZKqnYnLxWaYI1PWkZiMm53KvYcdJj/4inngLr9TAW44pIHXZoqGbjw6y2dxvNodokToinEt36ZJyNqiRVYx2klRoOZU9kodCtbSo6C86WGng9XGWQS1BRKEIOI0O+B8Pb4a+mWNm9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by PH0PR11MB7563.namprd11.prod.outlook.com (2603:10b6:510:286::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.21; Wed, 21 Jun
- 2023 00:06:53 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::ef38:9181:fb78:b528]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::ef38:9181:fb78:b528%7]) with mapi id 15.20.6500.036; Wed, 21 Jun 2023
- 00:06:53 +0000
-Message-ID: <e4f8ca3d-9950-a541-4e51-4a55ab4a7742@intel.com>
-Date:   Tue, 20 Jun 2023 17:06:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.11.1
-Subject: Re: [PATCH 3/3] cxl/region: Fix state transitions after reset failure
-To:     Dan Williams <dan.j.williams@intel.com>,
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by DS0PR11MB7928.namprd11.prod.outlook.com (2603:10b6:8:fe::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6500.37; Wed, 21 Jun 2023 02:44:22 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::7237:cab8:f7f:52a5]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::7237:cab8:f7f:52a5%7]) with mapi id 15.20.6500.036; Wed, 21 Jun 2023
+ 02:44:23 +0000
+Date:   Tue, 20 Jun 2023 19:44:15 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        <ira.weiny@intel.com>
+CC:     Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         <linux-cxl@vger.kernel.org>
-CC:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <168696506332.3590522.12981963617215460385.stgit@dwillia2-xfh.jf.intel.com>
- <168696507968.3590522.14484000711718573626.stgit@dwillia2-xfh.jf.intel.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <168696507968.3590522.14484000711718573626.stgit@dwillia2-xfh.jf.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR04CA0016.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::26) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+Subject: Re: [PATCH 2/5] cxl/region: Add dynamic capacity cxl region support.
+Message-ID: <649263ff75fcc_483a294d9@iweiny-mobl.notmuch>
+References: <20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com>
+ <20230604-dcd-type2-upstream-v1-2-71b6341bae54@intel.com>
+ <ZIyTFpniGlEv2QEo@aschofie-mobl2>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZIyTFpniGlEv2QEo@aschofie-mobl2>
+X-ClientProxiedBy: SJ0PR03CA0106.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::21) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH0PR11MB7563:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7b87ca8-d098-4e65-cda2-08db71eb6b29
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DS0PR11MB7928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36de6347-b3ff-4aa9-28e0-08db72016b0c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: I9pXSKbN50ZG06ZkZjwYPjSYTq0gxyOlrcs3LwDUEGX5QHr3X7ueDv3yrowa0iXZqndx4Cb8tQ01exz9bg8ewuA1Ni8zWBx92Pie5ujvyc7fIiF0ef9F8ZhHgQuS9BLmuQh0IBvhqPLZ48I+zg6ueyWh9wBZvFZkzpjSv8wtU1JMaaz69ilRCjBell9lCnQgnauyfPA/oRNGb671/r7KyRBEDNYcZ6GfWDJsdczZ2xNkPmLs6dGSM+CoEvqXx5IoaC3H/SFBs2ysPrB76sBAtJi6zw7XA8wo9Sdh1aCgl9waHwHGagF4I5G6t/zlA3cjKZy5AMXi6g6V9gDc6zDUS9cpQk2yohM6XZ+JWh5Q0rcoe4FZZC62tWVaCo3gf+w+z5V6Kc6zGzAfCp0Q2NHl7CAbDyIkz+HrU7Tg6O3RmMXwBy2Lz+xEzQAI/ofBebAFzwAR1UlJWCK62AvObWHbSEE3XUIv86jjfYvcaDPT0059cmgWHM/6mHDvaDTaHeaTxzaP9QM9WQBuJUNGKQviKCybXRUhuI1ibAcJPnUZ0DjxKkyzLPEz4iPnZ7Q0NDuZCjJdhBllC9ESfU1AE0/7dTOVyvF484rO5cfzlKpY9CJ7zTR3hQF0FU424iNHSrC1Htu9RwNriDr3A/o0sADbiw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(346002)(136003)(39860400002)(366004)(396003)(451199021)(8936002)(8676002)(5660300002)(44832011)(31686004)(4326008)(66556008)(66476007)(66946007)(316002)(41300700001)(2906002)(6486002)(966005)(478600001)(53546011)(6506007)(26005)(6512007)(186003)(36756003)(83380400001)(38100700002)(82960400001)(86362001)(31696002)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: RcSfjhariTvCY1+dQNRnmOsXSet/45OuYqpCxJr5S8WfogXs6E7be5EQ38gWaHG4DFlTX7ra/ImOOQJC8m80T/O7koOf4k7Nq6sECAW85OeuSTX843d8A/tDTqCUC7Wj35LbOCBj0a9U1Ra0uhAlXO5qZpitV8hMSoxoxXqhK73fOdvEKQdd0M1IJ2ZswkQsAVY/CBKZVxz5FGsROZTu+apafYaUXT5YgWrwhOraF50HSy0bYG0si6OyFpesgF1SrGxHPMa/2wD8BZ2ANG/b1yXEbDWYNziEns2N04hl1BxSffM1y9mcss64qSJ/ZPKMlPeAfNqB2poWHLlYsyxE9IxQOXlX/J1jLUdK/CEYv+oHdVi5mybmfAnWDXG6dQ/6GvYEEjtm58fe6XNBP/9W1CcnVC2V0WspW25aov8ETMYxBdGy2mcKrUN7ZHW2eFDY/sjiOTeS2N06815dYU/IBA9KtiSDWtaw0zZwvYsm/hnjiSjmTtvUj3hTALkIQW4ldL6zbOp7BGM2cRuei7u8S0rBRxxOT8v2x5qhavcQYqo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(376002)(366004)(136003)(39860400002)(346002)(451199021)(38100700002)(82960400001)(966005)(86362001)(6666004)(6486002)(186003)(6506007)(9686003)(26005)(8676002)(6512007)(8936002)(30864003)(44832011)(5660300002)(478600001)(54906003)(316002)(41300700001)(66946007)(66476007)(4326008)(66556008)(2906002)(66899021)(83380400001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?di9XN1Jmc0xMbnlCZG1RYkZlNk5rTzJGOVppY25JZzA0YkZZR2ltNHliQXNq?=
- =?utf-8?B?WHVPT1RXNHJxR2VUMWJZclRUYlRKbEl3bnk3YjZKUVZnOUJyWFMwcUdvMTE0?=
- =?utf-8?B?dHd1Q0F1WWdoOEcvd054YkZoNlNOUVRObytBN3RBWnJJZVV6NHNRcGtweHVt?=
- =?utf-8?B?b00rUldwVHRsRFFBcTNCalVJYUtsbzQzN1dpdkFuL2hMc2EzZkgxUS96U3My?=
- =?utf-8?B?UXZWbHdDb1ZXVlFsNEtBVkhBMmVHdGlRNXc4U1hpN1QzMXpDZ2dzUU5mUVMz?=
- =?utf-8?B?RGFDdFVka2RURjJtcGJhUnFtTWgwN2xGTWhVYjlUbHozZUg2WTVkcnE1QTY3?=
- =?utf-8?B?RFVsODBZbGVnenk1ZHJ1OVBDdG81NjUzT3pDa3NlTGlzOU5XaDFZZndFMEFG?=
- =?utf-8?B?RElEd3VXYytweGcxTm1ZSjRhUzNOa3QrTnRieExNTk9pMWZFZzd1R0Rob1BT?=
- =?utf-8?B?enpjWDIwL2hsYnJ0QmJJYlJ3anhEdis5Mkx4dndmaWdTSFM1cXM3c3luOFdj?=
- =?utf-8?B?S3pXYk1iTGFXTUJzY2JDZGt5elZkaGdHdFpyeUl0RHFmZW5UWS9LY3o2TFY0?=
- =?utf-8?B?SUw0dlRydzZMVmpyNDBNNy9ZeTNmZjk0Y04wNmhVeGhNQXBRSFJ0MFJrUFRs?=
- =?utf-8?B?dXNvWU9NT2phZVZUMDBtUU1NOE1Jb1VUS1ArTnpnSDlYY2JMY0dyTDhnbHZM?=
- =?utf-8?B?MC9kZUh1dWUyVlYwRFlvNnkyRkxWRnl2bzNocFVNUm9tM2wvc1hERmJic2JG?=
- =?utf-8?B?am1lSjJ0UVZWSkxzZVppdGFXcjYrUlpRc1lJalZ4TU81VmdaK1RZejFKa2hR?=
- =?utf-8?B?Yk5rbnlJUmo2TUtWMUliTE9BSWpkeDR6SGVzMThHMjNNMkNJNmtHTDJld0Rw?=
- =?utf-8?B?Zi9KUG9EcGtjWVdxbVdMT2Qrcnk1WWJtTzd4OVdZMyt4TUh3TnpVeEVUWXBK?=
- =?utf-8?B?SC9zT21pZkNhSm1oTmZweWViRFc0R1JoMERmd3VnY1RCL2RkNDFVNEtxRytB?=
- =?utf-8?B?cHFERWxNNnBvc3JnRnAyYldWVEV1eDNFZDArSTJYVHg0Ym4vZDhkSHJPclRr?=
- =?utf-8?B?Y3YzTGYxQUJvb2diQXRlcnF6OUNOWFAxSGE3OHczeEhETXI3RE00OUdEMG5a?=
- =?utf-8?B?dUZPZ0Y0dnNNa3M3SDFKMmpweUJYMDBoU2ZTR0dBeXVCY2NYTTl2b0NHT1JT?=
- =?utf-8?B?bjd5SDhPVHoweUlrNjc2RmdYSzRrOFpkUXBxbllCWk1pTGtKVTBnWXU1Wkg4?=
- =?utf-8?B?bjZXa1UxYk14T2Vxend3TzZBNHkyTWdNVmwxcWI1YUxaUk81UmlQbjZCUWg3?=
- =?utf-8?B?RndRM24xRDBzaHpQcDJlQjYrSSt0NHY4UHRwM2ozWTlkM09vU3o4b0Ezazdk?=
- =?utf-8?B?cXMzS2JUVU13T1V3MnV0cjhPN1Q5V1JwNTNCYXlmY2kvUThMakptM1I0WXZz?=
- =?utf-8?B?UjdEc3Z0ejY5ejB1S1B3d0lZT0poWXhsMGZBSHRoellOS3RHWVZsZVg0Z28y?=
- =?utf-8?B?SGVpdnJZc3FIc0duRjBlMVA2RGhwSlhST29ZOHlnTkNnZ2JaN2Z4Y0RoSlM5?=
- =?utf-8?B?U2pJOHlDQWR3Sm9sQkJGbFM4b2ZtK3k2RjlZTzY4eVU2ODBOcFhyQmwrVlRQ?=
- =?utf-8?B?Nnkwbzd2bHdIWUhBVnJjQ3BtcHUwRG9LREs4UnJ6TlhCQkU4VWFvRTJSSzdm?=
- =?utf-8?B?T2RCek1CNGJqVTJqQzFKOFpOdzlZUllsK21ZSlE1Rkd4SHAxdWd0RzNjRTNv?=
- =?utf-8?B?SWswMXNib1lrNmdQVVc3WmpaUXVmWDRtbndIbzJzanRZU3hSWlg3Wkc4TEpZ?=
- =?utf-8?B?dDE5aUZROE9DNTVhWjFxanB3b3BRaUIxUk1OT1NkMGxPZ1NpRWJqMzhzR1BD?=
- =?utf-8?B?SFR6RmxXT1hUT01RR0t6aFlsWEhaZWZKY1RpV1hlZ1NPTGdRbUxFWTRpQnh4?=
- =?utf-8?B?amFtTWpPTVhSN2djUHhISytzcEdTMXB0WTU2UURwVWtwTDdXVTAyd2tXZnQ1?=
- =?utf-8?B?TkxNWnhGMEc0L09YOW5OOHkrMlFWaEFPVnV2Y1BqRDlSV3hBRS9Kc2NNUTkv?=
- =?utf-8?B?R2NZSFEwSDAzY2pXelZNbXBIQUZqZ2JFSGJHY28zL0VneGpocmY3ZkRvcDBJ?=
- =?utf-8?B?K3E2TlhsM1I1VGMveG1qL0EwRGpQbm1zSG5IYlhIekRnNGRXQlZEYWNOOXNr?=
- =?utf-8?B?Q2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7b87ca8-d098-4e65-cda2-08db71eb6b29
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?u2Xm/rGsy1Oi8m5FQ1j0N/AFqNR7PAcEtcCD/m+3mmN9esIVMsCrU1xaP3Av?=
+ =?us-ascii?Q?6jfUyXwn8zwdUQIPaSVQaBGAt3ZkR6Qt5UsG/KIkxETN54L0Dy961eigMW+K?=
+ =?us-ascii?Q?cIFO+cIwR+S4+ODk8/4tP5lQy5hgiUydakR16BX8Iczx3q3W4rxXdKusqKZd?=
+ =?us-ascii?Q?KiDna+Kqv+W0GF/BTWPJKLV73Mfe93kV6ApDKDTRxCmFrLGOf2yA86Hlf5V/?=
+ =?us-ascii?Q?3tbq3pDfxW8U+BD7firoc4mFCF1GTFPZS84NRMoxK1wJriDUwJhDEgiD+eiR?=
+ =?us-ascii?Q?CfM6+RviiBPExOKuJ8qNBMcJxVmTF43lCwazZu6y6wQ9hO8F3P9txOtGjFzI?=
+ =?us-ascii?Q?O9LO44pbQY7+gVTV3IWyapIlcyBT2vI1QW2qLFnyfR39vTWa7/vHVxZwPi2t?=
+ =?us-ascii?Q?BXFfbHZu+0N+mqxvXfYdwFJLAez30aLhxBeJbf2JbKswEHMmGTVkzsvMgCNB?=
+ =?us-ascii?Q?FRozADNW9+F6LFj9QBXMlq2M3tfzXiBErUUkKSxSLMBlZvFNUAXdWaHScdki?=
+ =?us-ascii?Q?07TEYZBNwoBbVS5fCcdYRbiIHpbZQ/ZjFgXWpKeXS+4gNUqpBLtBeqK5J4pw?=
+ =?us-ascii?Q?CtPCSvvrFcd1CfY9XRF2CmyYXO/4VlRfsK4cY1rbcYagm22PLQ/4aJfiROss?=
+ =?us-ascii?Q?bSgfrpVMf7UmHulLSrrSGm0dVw4NPY9VMXhBmBPDT7xNV39dd5bykYWZuSL5?=
+ =?us-ascii?Q?uDzKYFzwONoxvrk4V5C4mJwh5mbm1PSsghSN6YNmjfaPmQfzzs2TM2zjlyn/?=
+ =?us-ascii?Q?pONpbyVAXFIfTS6pvchf+iJxnz9ZSNm1y2OuaRjmJDF16OXlH9kbhgwICpWA?=
+ =?us-ascii?Q?ormomzJbdhYDYppTM/rXcLJo0Ez0KYKFcoTpPy4Wl2gH2sACyCwb9o+BH1G2?=
+ =?us-ascii?Q?JoKmjGw91+PU0R9Lqr/09vo3rXtC64/5XfMpyx9D1krIyfwmchTb9rAAhPxe?=
+ =?us-ascii?Q?Qx85qThgwu+K+Qxr3kxm74yEmT5gkJf4ei3auMPgjQg6OlALw5M8LJQwid07?=
+ =?us-ascii?Q?2Dd7TjqluKgMRRyCfSPFcZ2RtFekDYAp2ZP6eFkmPqrED/15v3pVC9jYvPO2?=
+ =?us-ascii?Q?acP2U803ohtm+Ys/9bTDEhjgMfh+4doJWtDkWWNThP7czpNzwblCS/BG5eYp?=
+ =?us-ascii?Q?RarK0dUp20ZBx8wxrCnjJAfW0XcfudxKTuf4ee3EMhK8AAv2MuRD8J3wa+Je?=
+ =?us-ascii?Q?WPQWwbPoAEdXIy3+VPYzuopSyMs6CHHX6LEItmIU29pOp5JH0ynIz+IXMimz?=
+ =?us-ascii?Q?4dKp1IujnaVg+iwLhga53mFgkMjrYVSfd/QU+Lcc0ViyBdIFDBsSqIrZihK8?=
+ =?us-ascii?Q?bj1VgxebbUQ/fc8j84fXg8HXOp9mal0Ggmwg8iDQE7b10JM8Py0Y7NhE0RCm?=
+ =?us-ascii?Q?qSU2PPmohDWg7V/sWjtXTdcu3xd/kcIxw2/zcxZ6ot8H81zLGJYDH5QEzcSm?=
+ =?us-ascii?Q?sQmZZzNv87snuOuSs4CHvzZKZ2vzgSxBbqRfr50dp9D8bRQw3LtV+1R4MrcM?=
+ =?us-ascii?Q?xAKK0ZiiGMdy4IgJjcAkWXkmgTNUT5LJUBPvLOyvhrpGmR2ms5D+MoCXd+NH?=
+ =?us-ascii?Q?HvQ+sWVCv/pJwnbUOHF1tNr9c8Zdo2Yu4K4WY2ic?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36de6347-b3ff-4aa9-28e0-08db72016b0c
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 00:06:53.5873
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 02:44:22.4732
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iaaYewVjxSH7SxF9KFJ/ZCGl9mtTWHdad76qiT7PCt/6FhCprlG2tFxz37/ubIjO+x4R2UBW9Ge0nxBvWmZwvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7563
+X-MS-Exchange-CrossTenant-UserPrincipalName: SLSQ5Sw6nHV4muQurg+zfQ5fjCFz4cxKy4ZOYdW4VwhQuhhhic3fxInMtUPDsKGcHYHbQqGRFXbnKvyqUdls9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7928
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-
-
-On 6/16/23 18:24, Dan Williams wrote:
-> Jonathan reports that failed attempts to reset a region (teardown its
-> HDM decoder configuration) mistakenly advance the state of the region
-> to "not committed". Revert to the previous state of the region on reset
-> failure so that the reset can be re-attempted.
+Alison Schofield wrote:
+> On Wed, Jun 14, 2023 at 12:16:29PM -0700, Ira Weiny wrote:
+> > From: Navneet Singh <navneet.singh@intel.com>
+> > 
+> > CXL devices optionally support dynamic capacity. CXL Regions must be
+> > created to access this capacity.
+> > 
+> > Add sysfs entries to create dynamic capacity cxl regions. Provide a new
+> > Dynamic Capacity decoder mode which targets dynamic capacity on devices
+> > which are added to that region.
+> > 
+> > Below are the steps to create and delete dynamic capacity region0
+> > (example).
+> > 
+> >     region=$(cat /sys/bus/cxl/devices/decoder0.0/create_dc_region)
+> >     echo $region> /sys/bus/cxl/devices/decoder0.0/create_dc_region
+> >     echo 256 > /sys/bus/cxl/devices/$region/interleave_granularity
+> >     echo 1 > /sys/bus/cxl/devices/$region/interleave_ways
+> > 
+> >     echo "dc0" >/sys/bus/cxl/devices/decoder1.0/mode
+> >     echo 0x400000000 >/sys/bus/cxl/devices/decoder1.0/dpa_size
+> > 
+> >     echo 0x400000000 > /sys/bus/cxl/devices/$region/size
+> >     echo  "decoder1.0" > /sys/bus/cxl/devices/$region/target0
+> >     echo 1 > /sys/bus/cxl/devices/$region/commit
+> >     echo $region > /sys/bus/cxl/drivers/cxl_region/bind
+> > 
+> >     echo $region> /sys/bus/cxl/devices/decoder0.0/delete_region
+> > 
+> > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 > 
-> Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-> Closes: http://lore.kernel.org/r/20230316171441.0000205b@Huawei.com
-> Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   drivers/cxl/core/region.c |   26 +++++++++++++++-----------
->   1 file changed, 15 insertions(+), 11 deletions(-)
+> Hi,
+> I took another pass at this and offered more feedback.
+> I do think that if the big part - the cxl_dpa_reserve()
+> was more 'chunkified' it would be easier to review for
+> actual functionality.
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 31f498f0fb3a..38db377e13f1 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -296,9 +296,11 @@ static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
->   	if (rc)
->   		return rc;
->   
-> -	if (commit)
-> +	if (commit) {
->   		rc = cxl_region_decode_commit(cxlr);
-> -	else {
-> +		if (rc == 0)
-> +			p->state = CXL_CONFIG_COMMIT;
-> +	} else {
->   		p->state = CXL_CONFIG_RESET_PENDING;
->   		up_write(&cxl_region_rwsem);
->   		device_release_driver(&cxlr->dev);
-> @@ -308,18 +310,20 @@ static ssize_t commit_store(struct device *dev, struct device_attribute *attr,
->   		 * The lock was dropped, so need to revalidate that the reset is
->   		 * still pending.
->   		 */
-> -		if (p->state == CXL_CONFIG_RESET_PENDING)
-> +		if (p->state == CXL_CONFIG_RESET_PENDING) {
->   			rc = cxl_region_decode_reset(cxlr, p->interleave_ways);
-> +			/*
-> +			 * Revert to committed since there may still be active
-> +			 * decoders associated with this region, or move forward
-> +			 * to active to mark the reset successful
-> +			 */
-> +			if (rc)
-> +				p->state = CXL_CONFIG_COMMIT;
-> +			else
-> +				p->state = CXL_CONFIG_ACTIVE;
-> +		}
->   	}
->   
-> -	if (rc)
-> -		goto out;
-> -
-> -	if (commit)
-> -		p->state = CXL_CONFIG_COMMIT;
-> -	else if (p->state == CXL_CONFIG_RESET_PENDING)
-> -		p->state = CXL_CONFIG_ACTIVE;
-> -
->   out:
->   	up_write(&cxl_region_rwsem);
->   
+> I'd also like to see the commit log be a bit more specific
+> in enumerated the things this patch intends to do.
 > 
+> Many of my comments are about style. Some checkpatch --strict
+> would call out and some are addressed in the kernel coding
+> style - Documentation/process/coding-style.rst
+
+As I said before I did not run with --strict
+
+I've done a quick run through with --strict and will ensure it is done
+again after I refactor the code.
+
+> 
+> But really, my goal is that when this code merges, that as
+> I scroll through a file, say region.c, I see a consistent
+> coding style. I shouldn't be able to notice that oh, Dan
+> wrote that, and Ira that, and Navneet wrote that piece.
+
+I agree.
+
+> 
+> I think it's important because differences in style distract
+> from focusing on the functionality of the code.
+> 
+> (off my soap box now ;)
+> 
+> Alison
+> 
+> 
+> > 
+> > ---
+> > [iweiny: fixups]
+> > [iweiny: remove unused CXL_DC_REGION_MODE macro]
+> > [iweiny: Make dc_mode_to_region_index static]
+> > [iweiny: simplify <sysfs>/create_dc_region]
+> > [iweiny: introduce decoder_mode_is_dc]
+> > [djbw: fixups, no sign-off: preview only]
+> > ---
+> >  drivers/cxl/Kconfig       |  11 +++
+> >  drivers/cxl/core/core.h   |   7 ++
+> >  drivers/cxl/core/hdm.c    | 234 ++++++++++++++++++++++++++++++++++++++++++----
+> >  drivers/cxl/core/port.c   |  18 ++++
+> >  drivers/cxl/core/region.c | 135 ++++++++++++++++++++++++--
+> >  drivers/cxl/cxl.h         |  28 ++++++
+> >  drivers/dax/cxl.c         |   4 +
+> >  7 files changed, 409 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index ff4e78117b31..df034889d053 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -121,6 +121,17 @@ config CXL_REGION
+> >  
+> >  	  If unsure say 'y'
+> >  
+> > +config CXL_DCD
+> > +	bool "CXL: DCD Support"
+> 
+> "CXL DCD: Dynamic Capacity Device Support"
+> is more in line with others in this file, and expands the acronym onetime.
+
+done.
+
+> 
+> > +	default CXL_BUS
+> > +	depends on CXL_REGION
+> > +	help
+> > +	  Enable the CXL core to provision CXL DCD regions.
+> > +	  CXL devices optionally support dynamic capacity and DCD region
+> > +	  maps the dynamic capacity regions DPA's into Host HPA ranges.
+> > +
+> > +	  If unsure say 'y'
+> > +
+> >  config CXL_REGION_INVALIDATION_TEST
+> >  	bool "CXL: Region Cache Management Bypass (TEST)"
+> >  	depends on CXL_REGION
+> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> > index 27f0968449de..725700ab5973 100644
+> > --- a/drivers/cxl/core/core.h
+> > +++ b/drivers/cxl/core/core.h
+> > @@ -9,6 +9,13 @@ extern const struct device_type cxl_nvdimm_type;
+> >  
+> >  extern struct attribute_group cxl_base_attribute_group;
+> >  
+> > +#ifdef CONFIG_CXL_DCD
+> > +extern struct device_attribute dev_attr_create_dc_region;
+> > +#define SET_CXL_DC_REGION_ATTR(x) (&dev_attr_##x.attr),
+> > +#else
+> > +#define SET_CXL_DC_REGION_ATTR(x)
+> > +#endif
+> > +
+> >  #ifdef CONFIG_CXL_REGION
+> >  extern struct device_attribute dev_attr_create_pmem_region;
+> >  extern struct device_attribute dev_attr_create_ram_region;
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 514d30131d92..29649b47d177 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -233,14 +233,23 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> >  	struct resource *res = cxled->dpa_res;
+> >  	resource_size_t skip_start;
+> > +	resource_size_t skipped = cxled->skip;
+> 
+> Reverse x-tree.
+
+Done.
+
+> 
+> >  
+> >  	lockdep_assert_held_write(&cxl_dpa_rwsem);
+> >  
+> >  	/* save @skip_start, before @res is released */
+> > -	skip_start = res->start - cxled->skip;
+> > +	skip_start = res->start - skipped;
+> 
+> Why did the assignment of skip_start need to change here?
+
+I believe this was done for consistency because skipped now represents
+cxled->skip, however...
+
+> 
+> >  	__release_region(&cxlds->dpa_res, res->start, resource_size(res));
+> > -	if (cxled->skip)
+> > -		__release_region(&cxlds->dpa_res, skip_start, cxled->skip);
+> > +	if (cxled->skip != 0) {
+> > +		while (skipped != 0) {
+
+... what is more concerning is we now effectively have.
+
+	if (skipped != 0) {
+		while (skipped != 0) {
+			...
+
+:-(
+
+> > +			res = xa_load(&cxled->skip_res, skip_start);
+> > +			__release_region(&cxlds->dpa_res, skip_start,
+> > +							resource_size(res));
+> 
+> The above appears poorlty aligned.
+
+fixed.
+
+> 
+> > +			xa_erase(&cxled->skip_res, skip_start);
+> > +			skip_start += resource_size(res);
+> > +			skipped -= resource_size(res);
+> > +			}
+> 
+> This bracket appears poorly aligned.
+
+This is very poorly aligned.  I'll run --strict before sending V2.
+
+> 
+> > +	}
+> >  	cxled->skip = 0;
+> >  	cxled->dpa_res = NULL;
+> >  	put_device(&cxled->cxld.dev);
+> > @@ -267,6 +276,19 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+> >  	__cxl_dpa_release(cxled);
+> >  }
+> >  
+> > +static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
+> > +{
+> > +	int index = 0;
+> > +
+> > +	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
+> > +		if (mode == i)
+> > +			return index;
+> > +		index++;
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> >  static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> >  			     resource_size_t base, resource_size_t len,
+> >  			     resource_size_t skipped)
+> > @@ -275,7 +297,11 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> >  	struct cxl_port *port = cxled_to_port(cxled);
+> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> >  	struct device *dev = &port->dev;
+> > +	struct device *ed_dev = &cxled->cxld.dev;
+> > +	struct resource *dpa_res = &cxlds->dpa_res;
+> > +	resource_size_t skip_len = 0;
+> >  	struct resource *res;
+> > +	int rc, index;
+> >  
+> 
+> Above poorly aligned.
+
+Do you mean reverse x-tree?
+
+> 
+> >  	lockdep_assert_held_write(&cxl_dpa_rwsem);
+> >  
+> > @@ -304,28 +330,119 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> >  	}
+> >  
+> >  	if (skipped) {
+> 
+> This has excessive indentation, so started out with a monster
+> if skipped is begging for a refactoring.
+
+Yea I agree.  Dave pointed this out as well.  What I have to be sure about
+is the logic here.
+
+> 
+> I find it odd that the DCD case got inserted before the 'default'
+> or non-DCD case here.
+
+Yea I'm working with Navneet on this.
+
+> 
+> 
+> > -		res = __request_region(&cxlds->dpa_res, base - skipped, skipped,
+> > -				       dev_name(&cxled->cxld.dev), 0);
+> > -		if (!res) {
+> > -			dev_dbg(dev,
+> > -				"decoder%d.%d: failed to reserve skipped space\n",
+> > -				port->id, cxled->cxld.id);
+> > -			return -EBUSY;
+> > +		resource_size_t skip_base = base - skipped;
+> > +
+> > +		if (decoder_mode_is_dc(cxled->mode)) {
+> 
+> This may be cleaner to introduce as a separate function for
+> handling _mode_id_dc.
+
+Yes I think all the DC in this function should be handled in it's own
+function to clarify how that is handled.
+
+I think it will make the diff/review easier as well because it will be
+more clear how things are with and without DCD.
+
+> 
+> > +			if (resource_size(&cxlds->ram_res) &&
+> > +					skip_base <= cxlds->ram_res.end) {
+> > +				skip_len = cxlds->ram_res.end - skip_base + 1;
+> > +				res = __request_region(dpa_res, skip_base,
+> > +						skip_len, dev_name(ed_dev), 0);
+> > +				if (!res)
+> > +					goto error;
+> > +
+> > +				rc = xa_insert(&cxled->skip_res, skip_base, res,
+> > +								GFP_KERNEL);
+> > +				skip_base += skip_len;
+> > +			}
+> > +
+> > +			if (resource_size(&cxlds->ram_res) &&
+> > +					skip_base <= cxlds->pmem_res.end) {
+> > +				skip_len = cxlds->pmem_res.end - skip_base + 1;
+> > +				res = __request_region(dpa_res, skip_base,
+> > +						skip_len, dev_name(ed_dev), 0);
+> > +				if (!res)
+> > +					goto error;
+> > +
+> > +				rc = xa_insert(&cxled->skip_res, skip_base, res,
+> > +								GFP_KERNEL);
+> > +				skip_base += skip_len;
+> > +			}
+> 
+> The above 2 if (resource_size() cases have redundant code. 
+> Pull it out, refactor.
+
+Redundant except that the second ram_res needs to be pmem_res.  After
+that change I'll have to evaluate how much is duplicated.  As I said above
+I'm working with Navneet to see how this logic can be broken down.  It is
+a big function now.
+
+> 
+> > +
+> > +			index = dc_mode_to_region_index(cxled->mode);
+> > +			for (int i = 0; i <= index; i++) {
+> > +				struct resource *dcr = &cxlds->dc_res[i];
+> > +
+> > +				if (skip_base < dcr->start) {
+> > +					skip_len = dcr->start - skip_base;
+> > +					res = __request_region(dpa_res,
+> > +							skip_base, skip_len,
+> > +							dev_name(ed_dev), 0);
+> > +					if (!res)
+> > +						goto error;
+> > +
+> > +					rc = xa_insert(&cxled->skip_res, skip_base,
+> > +							res, GFP_KERNEL);
+> > +					skip_base += skip_len;
+> > +				}
+> > +
+> > +				if (skip_base == base) {
+> > +					dev_dbg(dev, "skip done!\n");
+> > +					break;
+> > +				}
+> > +
+> > +				if (resource_size(dcr) &&
+> > +						skip_base <= dcr->end) {
+> > +					if (skip_base > base)
+> > +						dev_err(dev, "Skip error\n");
+> > +
+> > +					skip_len = dcr->end - skip_base + 1;
+> > +					res = __request_region(dpa_res, skip_base,
+> > +							skip_len,
+> > +							dev_name(ed_dev), 0);
+> > +					if (!res)
+> > +						goto error;
+> > +
+> > +					rc = xa_insert(&cxled->skip_res, skip_base,
+> > +							res, GFP_KERNEL);
+> > +					skip_base += skip_len;
+> > +				}
+> > +			}
+> 
+> 
+> And, below,we are back to the original code.
+> This would be more readable, reviewable if the DCD support was
+> added in separate function that are then called from here.
+
+Yep!
+
+> 
+> > +		} else	{
+> > +			res = __request_region(dpa_res, base - skipped, skipped,
+> > +							dev_name(ed_dev), 0);
+> > +			if (!res)
+> > +				goto error;
+> > +
+> > +			rc = xa_insert(&cxled->skip_res, skip_base, res,
+> > +								GFP_KERNEL);
+> >  		}
+> >  	}
+> > -	res = __request_region(&cxlds->dpa_res, base, len,
+> > -			       dev_name(&cxled->cxld.dev), 0);
+> > +
+> > +	res = __request_region(dpa_res, base, len, dev_name(ed_dev), 0);
+> >  	if (!res) {
+> >  		dev_dbg(dev, "decoder%d.%d: failed to reserve allocation\n",
+> > -			port->id, cxled->cxld.id);
+> 
+> General comment - look over the dev_dbg() messages and consider placing
+> them after the code. I recall, others that were needlessly between lines
+> of code.
+
+At the end of the block?
+
+> 
+> 
+> > -		if (skipped)
+> > -			__release_region(&cxlds->dpa_res, base - skipped,
+> > -					 skipped);
+> > +				port->id, cxled->cxld.id);
+> > +		if (skipped) {
+> > +			resource_size_t skip_base = base - skipped;
+> > +
+> > +			while (skipped != 0) {
+> > +				if (skip_base > base)
+> > +					dev_err(dev, "Skip error\n");
+> > +
+> > +				res = xa_load(&cxled->skip_res, skip_base);
+> > +				__release_region(dpa_res, skip_base,
+> > +							resource_size(res));
+> > +				xa_erase(&cxled->skip_res, skip_base);
+> > +				skip_base += resource_size(res);
+> > +				skipped -= resource_size(res);
+> > +			}
+> > +		}
+> 
+> 		Can that debug message go here ?
+
+Not sure.  But we have another issue of:
+
+if (skipped) {
+	while (skipped) {
+	...
+
+which is redundant I think.  I'll have to see about skip_base.
+
+> 
+> >  		return -EBUSY;
+> >  	}
+> >  	cxled->dpa_res = res;
+> >  	cxled->skip = skipped;
+> >  
+> > +	for (int mode = CXL_DECODER_DC0; mode <= CXL_DECODER_DC7; mode++) {
+> > +		int index = dc_mode_to_region_index(mode);
+> > +
+> > +		if (resource_contains(&cxlds->dc_res[index], res)) {
+> > +			cxled->mode = mode;
+> > +			dev_dbg(dev, "decoder%d.%d: %pr mode: %d\n", port->id,
+> > +				cxled->cxld.id, cxled->dpa_res, cxled->mode);
+> 
+> Can this move to ....
+> 
+> 
+> > +			goto success;
+> > +		}
+> > +	}
+> >  	if (resource_contains(&cxlds->pmem_res, res))
+> >  		cxled->mode = CXL_DECODER_PMEM;
+> >  	else if (resource_contains(&cxlds->ram_res, res))
+> > @@ -336,9 +453,16 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> >  		cxled->mode = CXL_DECODER_MIXED;
+> >  	}
+> >  
+> > +success:
+> >  	port->hdm_end++;
+> >  	get_device(&cxled->cxld.dev);
+> 
+> here...dev_dbg() success message. That pairs it nicely with the
+> error message below.
+
+I think it can.  I think we have a case here where there was an attempt
+not to change the initial behavior of the code even so much as adding a
+debug message.  But I think the over all flow would be better with the
+debug here.
+
+> 
+> >  	return 0;
+> > +
+> > +error:
+> > +	dev_dbg(dev, "decoder%d.%d: failed to reserve skipped space\n",
+> > +			port->id, cxled->cxld.id);
+> > +	return -EBUSY;
+> > +
+> >  }
+> >  
+> >  int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> > @@ -429,6 +553,14 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+> >  	switch (mode) {
+> >  	case CXL_DECODER_RAM:
+> >  	case CXL_DECODER_PMEM:
+> > +	case CXL_DECODER_DC0:
+> > +	case CXL_DECODER_DC1:
+> > +	case CXL_DECODER_DC2:
+> > +	case CXL_DECODER_DC3:
+> > +	case CXL_DECODER_DC4:
+> > +	case CXL_DECODER_DC5:
+> > +	case CXL_DECODER_DC6:
+> > +	case CXL_DECODER_DC7:
+> >  		break;
+> >  	default:
+> >  		dev_dbg(dev, "unsupported mode: %d\n", mode);
+> > @@ -456,6 +588,16 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+> >  		goto out;
+> >  	}
+> >  
+> > +	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
+> > +		int index = dc_mode_to_region_index(i);
+> > +
+> > +		if (mode == i && !resource_size(&cxlds->dc_res[index])) {
+> > +			dev_dbg(dev, "no available dynamic capacity\n");
+> 
+> I see this one is following the pattern in the function :)
+> 
+> 
+> > +			rc = -ENXIO;
+> > +			goto out;
+> > +		}
+> > +	}
+> > +
+> >  	cxled->mode = mode;
+> >  	rc = 0;
+> >  out:
+> > @@ -469,10 +611,12 @@ static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
+> 
+> Hmmm...I don't have cxl_dpa_freespace() in my cxl/next? Where's that?
+
+That was in the patches from Dan which this series depends on.
+
+https://lore.kernel.org/all/168592158743.1948938.7622563891193802610.stgit@dwillia2-xfh.jf.intel.com/
+
+> 
+> 
+> >  					 resource_size_t *skip_out)
+> >  {
+> >  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> > -	resource_size_t free_ram_start, free_pmem_start;
+> > +	resource_size_t free_ram_start, free_pmem_start, free_dc_start;
+> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > +	struct device *dev = &cxled->cxld.dev;
+> >  	resource_size_t start, avail, skip;
+> >  	struct resource *p, *last;
+> > +	int index;
+> 
+> Why break the alignment above?
+
+What do you mean?
+
+> 
+> >  
+> >  	lockdep_assert_held(&cxl_dpa_rwsem);
+> >  
+> > @@ -490,6 +634,20 @@ static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
+> >  	else
+> >  		free_pmem_start = cxlds->pmem_res.start;
+> >  
+> > +	/*
+> > +	 * One HDM Decoder per DC region to map memory with different
+> > +	 * DSMAS entry.
+> > +	 */
+> 
+> It seems this comment is missing a verb. Why not align?
+
+align?
+
+with DSMAS on the end like this?
+
+	/*
+	 * One HDM Decoder per DC region to map memory with different DSMAS
+	 * entry.
+	 */
+
+> > +	index = dc_mode_to_region_index(cxled->mode);
+> > +	if (index >= 0) {
+> > +		if (cxlds->dc_res[index].child) {
+> > +			dev_err(dev, "Cannot allocated DPA from DC Region: %d\n"
+> 
+> s/allocated/allocate
+
+Fixed.
+
+> 
+> ,
+> > +					index);
+> > +			return -EINVAL;
+> > +		}
+> > +		free_dc_start = cxlds->dc_res[index].start;
+> > +	}
+> > +
+> >  	if (cxled->mode == CXL_DECODER_RAM) {
+> >  		start = free_ram_start;
+> >  		avail = cxlds->ram_res.end - start + 1;
+> > @@ -511,6 +669,29 @@ static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
+> >  		else
+> >  			skip_end = start - 1;
+> >  		skip = skip_end - skip_start + 1;
+> > +	} else if (decoder_mode_is_dc(cxled->mode)) {
+> > +		resource_size_t skip_start, skip_end;
+> > +
+> > +		start = free_dc_start;
+> > +		avail = cxlds->dc_res[index].end - start + 1;
+> > +		if ((resource_size(&cxlds->pmem_res) == 0) || !cxlds->pmem_res.child)
+> > +			skip_start = free_ram_start;
+> > +		else
+> > +			skip_start = free_pmem_start;
+> > +		/*
+> > +		 * If some dc region is already mapped, then that allocation
+> 
+> maybe s/some/any ?
+
+Fixed.
+
+Ira
