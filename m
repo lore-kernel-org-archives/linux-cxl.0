@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E976BEB64D8
-	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 11:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE3BEB64D8
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 13:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbjFVLRZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 22 Jun 2023 07:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
+        id S231378AbjFVNHm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 22 Jun 2023 09:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbjFVLRT (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 07:17:19 -0400
+        with ESMTP id S231569AbjFVNHf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 09:07:35 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 943A91BDF;
-        Thu, 22 Jun 2023 04:17:18 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QmySS4Tjfz67Gvv;
-        Thu, 22 Jun 2023 19:14:32 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C18C1FC6;
+        Thu, 22 Jun 2023 06:07:30 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qn0vg5fLCz6J6kS;
+        Thu, 22 Jun 2023 21:04:47 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 22 Jun
- 2023 12:17:16 +0100
-Date:   Thu, 22 Jun 2023 12:17:15 +0100
+ 2023 14:07:27 +0100
+Date:   Thu, 22 Jun 2023 14:07:26 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,70 +29,75 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v6 13/27] cxl/mem: Prepare for early RCH dport component
- register setup
-Message-ID: <20230622121715.000056fb@Huawei.com>
-In-Reply-To: <20230622035126.4130151-14-terry.bowman@amd.com>
+Subject: Re: [PATCH v6 27/27] PCI/AER: Unmask RCEC internal errors to enable
+ RCH downstream port error handling
+Message-ID: <20230622140726.00002dce@Huawei.com>
+In-Reply-To: <20230622035126.4130151-28-terry.bowman@amd.com>
 References: <20230622035126.4130151-1-terry.bowman@amd.com>
-        <20230622035126.4130151-14-terry.bowman@amd.com>
+        <20230622035126.4130151-28-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 21 Jun 2023 22:51:12 -0500
+On Wed, 21 Jun 2023 22:51:26 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
 > From: Robert Richter <rrichter@amd.com>
 > 
-> In order to move the RCH dport component register setup to cxl_pci the
-> base address must be stored in CXL device state (cxlds) for both
-> modes, RCH and VH. Store it in cxlds->component_reg_phys and use it
-> for endpoint creation.
+> AER corrected and uncorrectable internal errors (CIE/UIE) are masked
+> in their corresponding mask registers per default once in power-up
+> state. [1][2] Enable internal errors for RCECs to receive CXL
+> downstream port errors of Restricted CXL Hosts (RCHs).
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> [1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
+> [2] PCIe Base Spec r6.0, 7.8.4.3 Uncorrectable Error Mask Register,
+>     7.8.4.6 Correctable Error Mask Register
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Seems reasonable.
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Trivial suggestion inline. Either way
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> ---
->  drivers/cxl/mem.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 4cc461c22b8b..7638a7f8f333 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -51,7 +51,6 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  	struct cxl_port *parent_port = parent_dport->port;
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  	struct cxl_port *endpoint, *iter, *down;
-> -	resource_size_t component_reg_phys;
->  	int rc;
+
 >  
->  	/*
-> @@ -72,11 +71,11 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  	 * typical register locator mechanism.
->  	 */
->  	if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
-> -		component_reg_phys =
-> +		cxlds->component_reg_phys =
->  			cxl_rcd_component_reg_phys(&cxlmd->dev, parent_dport);
-> -	else
-> -		component_reg_phys = cxlds->component_reg_phys;
-> -	endpoint = devm_cxl_add_port(host, &cxlmd->dev, component_reg_phys,
+> +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> +{
+> +	int *handles_cxl = data;
 > +
-> +	endpoint = devm_cxl_add_port(host, &cxlmd->dev,
-> +				     cxlds->component_reg_phys,
->  				     parent_dport);
->  	if (IS_ERR(endpoint))
->  		return PTR_ERR(endpoint);
+> +	if (!*handles_cxl)
+> +		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
+
+All bools, why not make handles_cxl a bool and avoid need for !! below?
+
+> +
+> +	/* Non-zero terminates iteration */
+> +	return *handles_cxl;
+> +}
+> +
+> +static bool handles_cxl_errors(struct pci_dev *rcec)
+> +{
+> +	int handles_cxl = 0;
+> +
+> +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
+> +	    pcie_aer_is_native(rcec))
+> +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
+> +
+> +	return !!handles_cxl;
+
+This is the one you can get rid of the !! on if you make handles_cxl a bool.
+
+> +}
 
