@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE3BEB64D8
-	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 13:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D634EB64D8
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 13:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231378AbjFVNHm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 22 Jun 2023 09:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
+        id S230400AbjFVNNB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 22 Jun 2023 09:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbjFVNHf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 09:07:35 -0400
+        with ESMTP id S229437AbjFVNNA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 09:13:00 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C18C1FC6;
-        Thu, 22 Jun 2023 06:07:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4D51BD7;
+        Thu, 22 Jun 2023 06:12:58 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qn0vg5fLCz6J6kS;
-        Thu, 22 Jun 2023 21:04:47 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qn1212SWGz67k9Y;
+        Thu, 22 Jun 2023 21:10:17 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 22 Jun
- 2023 14:07:27 +0100
-Date:   Thu, 22 Jun 2023 14:07:26 +0100
+ 2023 14:12:56 +0100
+Date:   Thu, 22 Jun 2023 14:12:55 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,12 +29,12 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v6 27/27] PCI/AER: Unmask RCEC internal errors to enable
- RCH downstream port error handling
-Message-ID: <20230622140726.00002dce@Huawei.com>
-In-Reply-To: <20230622035126.4130151-28-terry.bowman@amd.com>
+Subject: Re: [PATCH v6 25/27] cxl/pci: Disable root port interrupts in RCH
+ mode
+Message-ID: <20230622141255.00006d13@Huawei.com>
+In-Reply-To: <20230622035126.4130151-26-terry.bowman@amd.com>
 References: <20230622035126.4130151-1-terry.bowman@amd.com>
-        <20230622035126.4130151-28-terry.bowman@amd.com>
+        <20230622035126.4130151-26-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -48,56 +48,101 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 21 Jun 2023 22:51:26 -0500
+On Wed, 21 Jun 2023 22:51:24 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
-> From: Robert Richter <rrichter@amd.com>
-> 
-> AER corrected and uncorrectable internal errors (CIE/UIE) are masked
-> in their corresponding mask registers per default once in power-up
-> state. [1][2] Enable internal errors for RCECs to receive CXL
-> downstream port errors of Restricted CXL Hosts (RCHs).
-> 
-> [1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
-> [2] PCIe Base Spec r6.0, 7.8.4.3 Uncorrectable Error Mask Register,
->     7.8.4.6 Correctable Error Mask Register
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> The RCH root port contains root command AER registers that should not be
+> enabled.[1] Disable these to prevent root port interrupts.
 
-Trivial suggestion inline. Either way
+I'm a little dubious about a 'because the spec says' so argument.
+If we can describe the path by which spurious interrupts turn up then
+great - if not then fair enough.
 
+One trivial spelling thing inline. With that fixed.
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-
+> 
+> [1] CXL 3.0 - 12.2.1.1 RCH Downstream Port-detected Errors
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/core.h |  6 ++++++
+>  drivers/cxl/core/pci.c  | 29 +++++++++++++++++++++++++++++
+>  drivers/cxl/core/port.c |  3 +++
+>  3 files changed, 38 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 87467c633123..880bac9db376 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -86,4 +86,10 @@ enum cxl_poison_trace_type {
+>  	CXL_POISON_TRACE_CLEAR,
+>  };
 >  
-> +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+> +#ifdef CONFIG_PCIEAER_CXL
+> +void cxl_disable_rch_root_ints(struct cxl_dport *dport);
+> +#else
+> +static inline void cxl_disable_rch_root_ints(struct cxl_dport *dport) { };
+> +#endif
+> +
+>  #endif /* __CXL_CORE_H__ */
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9e0eba5ccfc4..39a2f9f4f115 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -838,6 +838,35 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  		cxl_handle_rdport_ras(cxlds, dport);
+>  }
+>  
+> +void cxl_disable_rch_root_ints(struct cxl_dport *dport)
 > +{
-> +	int *handles_cxl = data;
+> +	void __iomem *aer_base = dport->regs.dport_aer;
+> +	struct pci_host_bridge *bridge;
+> +	u32 aer_cmd_mask, aer_cmd;
 > +
-> +	if (!*handles_cxl)
-> +		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-
-All bools, why not make handles_cxl a bool and avoid need for !! below?
-
+> +	if (!aer_base)
+> +		return;
 > +
-> +	/* Non-zero terminates iteration */
-> +	return *handles_cxl;
+> +	bridge = to_pci_host_bridge(dport->dport_dev);
+> +
+> +	/*
+> +	 * Disable RCH root port command interrupts.
+> +	 * CXL 3.0 12.2.1.1 - RCH Downstream Port-detected Errors
+> +	 *
+> +	 * This sequnce may not be necessary. CXL spec states disabling
+
+Spell check. (I often forget as well :(
+
+
+> +	 * the root cmd register's interrupts is required. But, PCI spec
+> +	 * shows these are disabled by default on reset.
+> +	 */
+> +	if (bridge->native_cxl_error) {
+> +		aer_cmd_mask = (PCI_ERR_ROOT_CMD_COR_EN |
+> +				PCI_ERR_ROOT_CMD_NONFATAL_EN |
+> +				PCI_ERR_ROOT_CMD_FATAL_EN);
+> +		aer_cmd = readl(aer_base + PCI_ERR_ROOT_COMMAND);
+> +		aer_cmd &= ~aer_cmd_mask;
+> +		writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
+> +	}
 > +}
 > +
-> +static bool handles_cxl_errors(struct pci_dev *rcec)
-> +{
-> +	int handles_cxl = 0;
+>  #else
+>  static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
+>  #endif
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 87a12e69aa8e..2d812bbaf05f 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1035,6 +1035,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  
+>  	cxl_dport_map_regs(dport);
+>  
+> +	if (dport->rch)
+> +		cxl_disable_rch_root_ints(dport);
 > +
-> +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> +	    pcie_aer_is_native(rcec))
-> +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +
-> +	return !!handles_cxl;
-
-This is the one you can get rid of the !! on if you make handles_cxl a bool.
-
-> +}
+>  	cond_cxl_root_lock(port);
+>  	rc = add_dport(port, dport);
+>  	cond_cxl_root_unlock(port);
 
