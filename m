@@ -2,141 +2,160 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4C8EB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 13:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6531EB64DA
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 14:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230305AbjFVN4i (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 22 Jun 2023 09:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49548 "EHLO
+        id S229806AbjFVODJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 22 Jun 2023 10:03:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjFVN4h (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 09:56:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E30382105
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Jun 2023 06:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687442145;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p6G7WiAZOcQ9lIcGNb7i76CvK3NP16OpxiaWi+YzEms=;
-        b=eykX3TcPt8nSqIq4RLEinznRc9OzrVsVCS6WJJigYRJO+LVBP8R1VzcNfPYheO5mb7jHon
-        zd5O0Yv7o8kGfEo8zkyqLww6KJBhgjWnG3hikuJ4s75qKiERWw4MhmdzN+LzRQhcWo+Hs+
-        dkJH5uMwuConuOqG2dR7DUB2LMlsV6Q=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-Okv_1_yoMiye0wMjDYuTRQ-1; Thu, 22 Jun 2023 09:55:43 -0400
-X-MC-Unique: Okv_1_yoMiye0wMjDYuTRQ-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4f624a4ea72so5206255e87.2
-        for <linux-cxl@vger.kernel.org>; Thu, 22 Jun 2023 06:55:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687442141; x=1690034141;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p6G7WiAZOcQ9lIcGNb7i76CvK3NP16OpxiaWi+YzEms=;
-        b=NH+INI4CJhMS4oO/Iyia7MfP/I2WLELzn8aTmihAJquOAc/6ejWsbZ6yHIe+5oc40q
-         qUZZ4jKRSZTrcyeITI5Us0/NI27PtAka7LfIG0Dtp9lragnHsYx8wRvXjb493q4Zxb7m
-         x9vZFngOEpqBbqozVaseTaMcXJ16qil733KBa6POzQC9FaKt3hWJkJZT+sQBW1JBDvhM
-         JD+aWYpLzAn/IRCRszjlFGt+RZX34SOcwkkUwqs1kHLccKGBJr1HRxcbScgVFboWmeAx
-         +5YqAnIJKX4SwjGdEe8DipRi4B6EO/HGfWmDYuspYNRzYxYO6BziZmjv0Eiw04kB9qm6
-         plGw==
-X-Gm-Message-State: AC+VfDwz6PqJCYVBjWA9U92PPKZDdz4WNXKYfIBxpTCHJ/rPkOjVdnUG
-        n3BI6DQusqG/FTiOj05bxbl1wGzgJkHb4EBX+uIGKKRp3QNCA437BkFOclsD9iPYUz7LcBVOy4S
-        ySR7hrqmQM32DqOt+eYJk
-X-Received: by 2002:a05:6512:2e7:b0:4f8:71ca:bb15 with SMTP id m7-20020a05651202e700b004f871cabb15mr9177800lfq.48.1687442141565;
-        Thu, 22 Jun 2023 06:55:41 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4B3PJA6vAcVuODvAd1+uWbP6euZQ43Yz3zVopBeuZdQAZiCsBeOr4t+6/ZZr44BUky2qiISA==
-X-Received: by 2002:a05:6512:2e7:b0:4f8:71ca:bb15 with SMTP id m7-20020a05651202e700b004f871cabb15mr9177762lfq.48.1687442140970;
-        Thu, 22 Jun 2023 06:55:40 -0700 (PDT)
-Received: from [192.168.3.108] (p4ff23922.dip0.t-ipconnect.de. [79.242.57.34])
-        by smtp.gmail.com with ESMTPSA id z5-20020a1c4c05000000b003fa78d1055esm399654wmf.21.2023.06.22.06.55.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Jun 2023 06:55:40 -0700 (PDT)
-Message-ID: <39fe2152-c4fc-6b8e-90e8-1060234a1943@redhat.com>
-Date:   Thu, 22 Jun 2023 15:55:38 +0200
-MIME-Version: 1.0
+        with ESMTP id S231366AbjFVOC5 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 10:02:57 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED211FC1;
+        Thu, 22 Jun 2023 07:02:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cw4mwPHQ0/rRq+2Su8ooWfxFjCF2tgQTctF2VD3+12lh3w2cG5HxnO7AMlK3MC4LctHUVwvufH1vOOMpweWXjFzguLnLpqge7hzLMVPq9IUr3cCU2BAtXtrLxIfX2NmkYDgUgJDTQ8B9Inl9CtNgLk3kh7xhGbM01hIAEw9VzlOUvABUDUpE24GRDnTQIkA4yv8IDuFBsHaYWDPuCtCdtJnUeULIce0ouVLMM29aanMfQ5l4o9zRIHiNu4W62CV+hVMyU8Hp/zGc2juKcTN3XEVxFS8qDScHUpS6hzh1T0Dl6W/NTHYSkSoWAqn1NUegUYBPSB5I1HR4ByzPXFvHeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ICDj6SSf0MABL+1qT6m7qMjqrQpLU19zDID/i5SAgkA=;
+ b=VaxgHqhlarF9rTQ7lArIC5MFmXp+cT3njsfzyuP3vWompeBNz7D0CfrVuCLP3iou34phyRucZWbLborpwt6NUpjEQnELrqgelkl1zi2kJ84AwGPNkJPkHxJPj2ZIbqU5qcYcYp4OYN3RSzL7vjr5e3jglztQ53uZpOFKPsT40UrH7ps75fWgZnQ9Hg8FUEd9uooFEDF219AQ11lgBrDKzje8dbS2kM/cnZHXNXcx59q4J8zoV67uvnoRWQTuxBJE/E7qOzVeiKLl6JusjBlXsMNn92aCAIaJ2w6elUO3jvizQki6em5dEyDvx1FastBggzy9KRSxuG24Z4zbHHOikg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ICDj6SSf0MABL+1qT6m7qMjqrQpLU19zDID/i5SAgkA=;
+ b=1GrxaGU6RCTuAoEaTqahW59+6Xv+WgPpjRt+JmVoJv+SZfNw4dONDIFyEHu0M/NKBtzLq4vn22gyr5Y0lcT274bWKG5bS0Yj2uJIGd3Ei4RO4ttV8RzgTssRTA6bZ0ysIiS7pGp+inbX4J6ab8KHOBBf+ka1fkqefFnlsN4khQg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB6380.namprd12.prod.outlook.com (2603:10b6:208:3b3::7)
+ by IA0PR12MB7721.namprd12.prod.outlook.com (2603:10b6:208:433::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Thu, 22 Jun
+ 2023 14:02:53 +0000
+Received: from BL3PR12MB6380.namprd12.prod.outlook.com
+ ([fe80::c39d:ccaa:b3f3:6b38]) by BL3PR12MB6380.namprd12.prod.outlook.com
+ ([fe80::c39d:ccaa:b3f3:6b38%6]) with mapi id 15.20.6521.023; Thu, 22 Jun 2023
+ 14:02:53 +0000
+Message-ID: <cb2ca23e-dbde-7e1c-8e3c-3163292fd824@amd.com>
+Date:   Thu, 22 Jun 2023 09:02:50 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 0/3] mm: use memmap_on_memory semantics for dax/kmem
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-References: <20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com>
- <29c9b998-f453-59f2-5084-9b4482b489cf@redhat.com>
- <b61a9efdff30fbff9477369ded05d133e0de7335.camel@intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <b61a9efdff30fbff9477369ded05d133e0de7335.camel@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v6 03/27] cxl: Updates for CXL Test to work with RCH
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
+        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
+        dave.jiang@intel.com, linux-cxl@vger.kernel.org, rrichter@amd.com,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com
+References: <20230622035126.4130151-1-terry.bowman@amd.com>
+ <20230622035126.4130151-4-terry.bowman@amd.com>
+ <20230622105326.00006302@Huawei.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From:   Terry Bowman <Terry.Bowman@amd.com>
+In-Reply-To: <20230622105326.00006302@Huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN9PR03CA0985.namprd03.prod.outlook.com
+ (2603:10b6:408:109::30) To BL3PR12MB6380.namprd12.prod.outlook.com
+ (2603:10b6:208:3b3::7)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB6380:EE_|IA0PR12MB7721:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b2748f8-f295-4351-f7ce-08db73295f29
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nORtekZKiEV/RYWAb8bcEPKWa9O4VmcBj1kFV9UNlqJBw6vJP3ULKBSANWnWlmzfLzAXgqyexj07DlF/Y+SU7OdS+YTqOhgXhd3pTSrMp35VKrP2+vAykwugooy/ECJ/RNaeIVTlQUXza39kCY8HGKG7GcOewjjEo7cXwNhkccAYzDephWb5feIbb1VJDjdsobfLXdyAu6JMbGMYfGAosNRxaLGUz0frR7cnIvZXp8XSgJoAXnCqRPd2fwYbo/BsmDXLVIidXzkDNhO/vdmlz0PEjVI5KriZ03421U7GzTina/0bM++k041GQQ0o38ZUfEYS9GWPPelU4J55heZdG9FLZPEOCmlypgd/MyGk37U9NgFK2hb8yD3XUVBjJ6/uLt5WSApJwhS1apqlRav0OYmehtNhnsUKYAGBBg82+ynUSMVef/FeSXyZ6bVlxVkTczPqCexjIscGhDT7myR/mtWBUfzVzHRwl+oudYtdcxOlIM1U+rGSuUCujr+qc1wYOw26J4yRl2cAi9rIhpiwK5EOk9s3XeN04rvbSfIF6k2DXrdNYq9RCYQjUpwsXVT1Rf3QUCJ9ssCBTLwg9L6gmL+HMKILSFJuLo5Wz73Bwp0+WVmjFUddZNWA6i5fMYOIifcQboV3Ov0R+w473a5WFA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(396003)(39860400002)(346002)(136003)(451199021)(2906002)(6486002)(38100700002)(2616005)(83380400001)(6512007)(53546011)(186003)(31696002)(86362001)(41300700001)(478600001)(316002)(4326008)(36756003)(66476007)(66946007)(66556008)(6916009)(5660300002)(31686004)(6506007)(8676002)(8936002)(15650500001)(7416002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z3pFb2xhekY0YkZUS3NJSDRvNmtkOWpCNkxnWFRYQ2VtZzB5VnlBeGxGaTh1?=
+ =?utf-8?B?UExyTG8wZzExRGdZaWJIcUxzQWRuK2h0OU0waVdkYkpQS21PZ01rZ0Jrb2c2?=
+ =?utf-8?B?YTNYQXp2Yk9NbXFQWkN3ZW81WG1sQlVoaHM3ZHpiK2NHNmZRYzNtc0tFejJr?=
+ =?utf-8?B?TVBXNTJFcVExckxzN2p1MGdiTTU3S0dWTUV2TkhNd2d3ell1ZHowd3dPUnZt?=
+ =?utf-8?B?NDBRWnVBa0k0OFdTRCtwNGlpdi9MdnA0ZlBvTzQ3Y2Nub3hiRUJHSUY1Tzlq?=
+ =?utf-8?B?MGRIUjI2cWdxSy9uWkxQT0MwdWhzSk5nTzBMLzFIcUNwOGFOYnhNdEJYTWdQ?=
+ =?utf-8?B?VXA0WG1qMkNEZVpCQzhzQWZVbnhTYzYyYWNoTHlkVmk1Sml2N0FwdHc4M29v?=
+ =?utf-8?B?cStJNko4dmNLOXV2SGREZEdyMkFYVzZ1MnB6blozd3o1WFFtTHc2TXE5L0k1?=
+ =?utf-8?B?clFZdXRnVFJ3SjJwL1p0b2l6Q1F3M0h3UDdQUmF1Ym01MzJlTGZMREJJa2tN?=
+ =?utf-8?B?SktKSUVlc2oyOTJrMjNsR2xlSGJMbUdOMllWdGxUeVVpNHpDYjJId2hPZkIw?=
+ =?utf-8?B?aENLK01DOFd6ZlROVzA1cStkc3lDUXJrbW1za0dIeVIrRzhKM1dBUkdUZnhw?=
+ =?utf-8?B?UTZOWG80bWJQTDBkNDcyV2RjZmZYZm5mZFlVSVhObWF0aXVRRG1nZFVzZytL?=
+ =?utf-8?B?WTZTbllkc2dFejR1NjBMNXRXVTR4VitDOVlSMmsvbElzQ0t3OGVtU3YrZGho?=
+ =?utf-8?B?dnVEMStyeDdxdUUxWkhLNldOM01OUndRbWNyc2F5WFBZblE0d2dFTG9RbUJv?=
+ =?utf-8?B?aE5NSHIvUkVQZm5Vd2U0QlY3ZC9CSEwwSGxyWGhGK2t1S0lmS0x4QTlzUzZY?=
+ =?utf-8?B?UmE0UEo4anl2K2FrbWRhRkthbjFoV05yZG01YldsVWNMU05UcUVYZ2FDVi94?=
+ =?utf-8?B?bm8veGVZV3psZ0QzSEFyWithWGtYbWZJNnF3ZGppcm1SM05VTlphaVR1cndR?=
+ =?utf-8?B?SnZKaGtMVlNCTGF5UVlzRWFPTy96SXhycjhKZXBXcUc1MnEzbC8zdFg3Mkho?=
+ =?utf-8?B?ejhNVXNKcVZVWHVFQVluT1JERUdJOFQ2OStZOXVUZnphWFZZV0E5aUc2c0tp?=
+ =?utf-8?B?QnNtdlo4bUVVTlZpNC9RbExySTFGRUJWYmp3ZzMvdTVDUVRVMDVmYmRFNzg3?=
+ =?utf-8?B?YnZCRjdDN0VLN2Vkd1ZWOTJNVTh6ajVJWGx6czV3emhFMG1YYytDbWFHSHli?=
+ =?utf-8?B?bE5OUTZPbUh0UEdXQ1hkeEtkamRwb3NFcU0zcFBUdjJ0T3JMUk9MS0RKTTBZ?=
+ =?utf-8?B?RHN0SHc2aDFCL1ZOQnBQUFEza001TGFBRU44cUpvd1REY1VlUDI1S1Jka1lt?=
+ =?utf-8?B?V0dIMFk2aUpIalFVN1ZUSXc0YnZHL0pVQWtaY1NQS3pZcUdiSlhvUUVSR244?=
+ =?utf-8?B?UldFK0huZkFtelpvY25DdmFnL0Iwd3dhSG1CeVlLTnlQS3dXUURQYkd3d1d2?=
+ =?utf-8?B?U1kwVGM5VnVGdmM2OUpyaFlFdGl5UFNxaGx4czR3Y3hkbE1lVWFCZFU0MFBn?=
+ =?utf-8?B?WTh1bUx1TGNSVEI0WnN5UnNXUnVKQjE4Szk3dkdGbnprTzRVeG1KWEd3Y3Qw?=
+ =?utf-8?B?YjRJdkE1Tjc0bU1XV29TTWtOVVR1c3BDTUY4MytYa2tpZm1mT2dvTlU2RmNH?=
+ =?utf-8?B?SWJDU1RZYWNxcW1CZjE3R2xLYVQwR3FpYU9RQUxkS1ZTcWJVZGxqanhFdkRu?=
+ =?utf-8?B?MDArOXV5aUd3ckVwSk5hdWh1U3NHUUhsODR0cHJoK2sxVHVrb1Q4SjkxMktj?=
+ =?utf-8?B?K3VpN3ZFQ0ZKY28xbnVIK0lVZ1J3RkdsLyt3S2lGM3ZGTDdjVU1ua0J4eThh?=
+ =?utf-8?B?ZER0MndxQzNmWmw0UUx1dTdRRDlTMFR1alczVG9veFR1TnFIaktvR2d1aDMz?=
+ =?utf-8?B?ekNwSmJEMFEyQUUzODJmK052VmFpbDNlSHZ3Zk9oeFkwUENWeEx1ajBOVmNh?=
+ =?utf-8?B?Wkd3VkRoZmF6Szhoa0d4Y2RwZjQ2OURKclJuNTZ2bWp2QzN2QUZGWUxnVi8z?=
+ =?utf-8?B?M2puMHVhMHQ1cGxYQTc0KzNETmZrRFJkclpzV2UwK09BWWdNMTBMWS9pZGVW?=
+ =?utf-8?B?YmhZRURDNWlKMU14TlZMeTg2dGFzc3lraWpjMkgxR3A0ZlBvUDNPT2x0S0dV?=
+ =?utf-8?Q?yvxzrFoMf1ggxDY6RHicEQTV4lL799g/MjH5jIKHsTUp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2748f8-f295-4351-f7ce-08db73295f29
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6380.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 14:02:53.5563
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aiGl4ThIyHvciZ5+uVjqW+QILc3eMfC4Fu3KgJ3pOqqg5tJL15naG9mpHXm/6lubILwnAn8pKdNEv/lwq60lvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7721
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 21.06.23 21:32, Verma, Vishal L wrote:
-> On Fri, 2023-06-16 at 09:44 +0200, David Hildenbrand wrote:
->> On 16.06.23 00:00, Vishal Verma wrote:
->>> The dax/kmem driver can potentially hot-add large amounts of memory
->>> originating from CXL memory expanders, or NVDIMMs, or other 'device
->>> memories'. There is a chance there isn't enough regular system memory
->>> available to fit ythe memmap for this new memory. It's therefore
->>> desirable, if all other conditions are met, for the kmem managed memory
->>> to place its memmap on the newly added memory itself.
->>>
->>> Arrange for this by first allowing for a module parameter override for
->>> the mhp_supports_memmap_on_memory() test using a flag, adjusting the
->>> only other caller of this interface in dirvers/acpi/acpi_memoryhotplug.c,
->>> exporting the symbol so it can be called by kmem.c, and finally changing
->>> the kmem driver to add_memory() in chunks of memory_block_size_bytes().
+Hi Jonathan,
+
+On 6/22/23 04:53, Jonathan Cameron wrote:
+> On Wed, 21 Jun 2023 22:51:02 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+> 
+>> From: Dan Williams <dan.j.williams@intel.com>
 >>
->> 1) Why is the override a requirement here? Just let the admin configure
->> it then then add conditional support for kmem.
+>> CXL test needs to be updated to work with latest RCH changes.
+>> Add CXL test support for devm_cxl_add_rch_dport and
+>> cxl_rcd_component_reg_phys functions.
+>>
+>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> Signed-off-by: Robert Richter <rrichter@amd.com>
 > 
-> Configure it in the current way using the module parameter to
-> memory_hotplug? The whole module param check feels a bit awkward,
-> especially since memory_hotplug is builtin, the only way to supply the
-> param is on the kernel command line as opposed to a modprobe config.
-
-Yes, and that's nothing special. Runtime toggling is not implemented.
-
+> This chain is getting confusing.
 > 
-> The goal with extending mhp_supports_memmap_on_memory() to check for
-> support with or without consideration for the module param is that it
-> makes it a bit more flexible for callers like kmem.
+> Why a SoB from Robert on this one?
+> As Terry sent the series I'd expect Terry to be last unless there
+> was some codevelopment involved in which case that should be indicated
+> in the tags.
+> 
 
-Not convinced yet that the global parameter should be bypassed TBH. And 
-if so, this should be a separate patch on top that is completely 
-optional for the remainder of the series.
+This was a mistake on my part. I'll remove Robert. Thanks for pointing out.
 
+Regards,
+Terry
 
-In any case, there has to be some admin control over that, because
-
-1) You usually don't want vmemmap on potentially slow memory
-2) Using memmap-on-memory prohibits gigantic pages from forming on that 
-memory (when runtime-allocating them).
-
-So "just doing that" without any config knob is problematic.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> For weird corner cases it's worth adding some comments on why a SoB chain
+> is non obvious.
+> 
+> I'm far from an expert on cxl-test so I'll leave reviewing this in
+> depth to others.  FWIW looks fine to me.
+> 
+> Jonathan
+> 
