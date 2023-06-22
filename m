@@ -2,38 +2,34 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67207EB64D8
-	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 13:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F39EB64D8
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 13:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbjFVNsE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 22 Jun 2023 09:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
+        id S229650AbjFVNuN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 22 Jun 2023 09:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230433AbjFVNro (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 09:47:44 -0400
+        with ESMTP id S229628AbjFVNuM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 09:50:12 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B0DB1997;
-        Thu, 22 Jun 2023 06:47:44 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qn1p631Whz6J6Hk;
-        Thu, 22 Jun 2023 21:45:02 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8FCB118
+        for <linux-cxl@vger.kernel.org>; Thu, 22 Jun 2023 06:50:10 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qn1rx2mCxz6J6FM;
+        Thu, 22 Jun 2023 21:47:29 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 22 Jun
- 2023 14:47:41 +0100
-Date:   Thu, 22 Jun 2023 14:47:41 +0100
+ 2023 14:50:08 +0100
+Date:   Thu, 22 Jun 2023 14:50:07 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <rafael@kernel.org>, <lenb@kernel.org>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <lukas@wunner.de>
-Subject: Re: [PATCH v3 5/6] acpi: numa: Add setting of generic port system
- locality attributes
-Message-ID: <20230622144741.00007964@Huawei.com>
-In-Reply-To: <168686425375.2950427.10184250250033053574.stgit@djiang5-mobl3>
-References: <168686408822.2950427.16242077816997472103.stgit@djiang5-mobl3>
-        <168686425375.2950427.10184250250033053574.stgit@djiang5-mobl3>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 03/12] cxl: Fix kernel-doc warnings
+Message-ID: <20230622145007.000020ad@Huawei.com>
+In-Reply-To: <168679259170.3436160.3686460404739136336.stgit@dwillia2-xfh.jf.intel.com>
+References: <168679257511.3436160.9707734364766526576.stgit@dwillia2-xfh.jf.intel.com>
+        <168679259170.3436160.3686460404739136336.stgit@dwillia2-xfh.jf.intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -47,63 +43,56 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 15 Jun 2023 14:24:13 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Wed, 14 Jun 2023 18:29:51 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Add generic port support for the parsing of HMAT system locality sub-table.
-> The attributes will be added to the third array member of the access
-> coordinates in order to not mix with the existing memory attributes. It only
-> provides the system locality attributes from initator to the generic port
-> targets and is missing the rest of the data to the actual memory device.
+> After Jonathan noticed [1] that 'struct cxl_dev_state' had a kernel-doc
+> entry without a corresponding struct attribute I ran the kernel-doc
+> script to see what else might be broken. Fix these warnings:
 > 
-> The complete attributes will be updated when a memory device is
-> attached and the system locality information is calculated end to end.
+> drivers/cxl/cxlmem.h:199: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>  * Event Interrupt Policy
+> drivers/cxl/cxlmem.h:224: warning: Function parameter or member 'buf' not described in 'cxl_event_state'
+> drivers/cxl/cxlmem.h:224: warning: Function parameter or member 'log_lock' not described in 'cxl_event_state'
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-With rename of device_handle, or a comment perhaps, in earlier patch.
+> Note that scripts/kernel-doc only finds missing kernel-doc entries. It
+> does not warn on too many kernel-doc entries, i.e. it did not catch the
+> fact that @info refers to a not present member.
+> 
+> Link: http://lore.kernel.org/r/20230606121054.000069e1@Huawei.com [1]
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+FWIW given how trivial this is.
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> 
 > ---
-> v3:
-> - Drop continue after setting gen target access data. (Jonathan)
-> v2:
-> - Fix commit log runon sentence. (Jonathan)
-> - Add a check for memory type for skipping other access levels. (Jonathan)
-> - NODE_ACCESS_CLASS_GENPORT to NODE_ACCESS_CLASS_GENPORT_SINK. (Jonathan)
-> ---
->  drivers/acpi/numa/hmat.c |    4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/cxl/cxlmem.h |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> index cb240f5233fe..32b951cd5ee4 100644
-> --- a/drivers/acpi/numa/hmat.c
-> +++ b/drivers/acpi/numa/hmat.c
-> @@ -60,6 +60,7 @@ struct target_cache {
->  enum {
->  	NODE_ACCESS_CLASS_0 = 0,
->  	NODE_ACCESS_CLASS_1,
-> +	NODE_ACCESS_CLASS_GENPORT_SINK,
->  	NODE_ACCESS_CLASS_MAX,
->  };
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index a2845a7a69d8..8e4ba5b52902 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -195,7 +195,7 @@ static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
+>   */
+>  #define CXL_CAPACITY_MULTIPLIER SZ_256M
 >  
-> @@ -329,6 +330,9 @@ static __init void hmat_update_target(unsigned int tgt_pxm, unsigned int init_px
->  		return;
->  
->  	if (target && target->processor_pxm == init_pxm) {
-> +		if (*target->device_handle)
-
-Just for reference - this is where I suddenly wondered what a generic thing
-like a device_handle had to do with this path ;)
-
-> +			hmat_update_target_access(target, type, value,
-> +						  NODE_ACCESS_CLASS_GENPORT_SINK);
-Real nitpick but could we put them in order of the enum... 
-That is put this at the end.
-
->  		hmat_update_target_access(target, type, value,
->  					  NODE_ACCESS_CLASS_0);
->  		/* If the node has a CPU, update access 1 */
-> 
+> -/**
+> +/*
+>   * Event Interrupt Policy
+>   *
+>   * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
+> @@ -215,8 +215,8 @@ struct cxl_event_interrupt_policy {
+>  /**
+>   * struct cxl_event_state - Event log driver state
+>   *
+> - * @event_buf: Buffer to receive event data
+> - * @event_log_lock: Serialize event_buf and log use
+> + * @buf: Buffer to receive event data
+> + * @log_lock: Serialize event_buf and log use
+>   */
+>  struct cxl_event_state {
+>  	struct cxl_get_event_payload *buf;
 > 
 
