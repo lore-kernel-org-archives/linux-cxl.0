@@ -2,85 +2,84 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE83EB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 22:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AC9EB64DA
+	for <linux-cxl@archiver.kernel.org>; Thu, 22 Jun 2023 22:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbjFVWgX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 22 Jun 2023 18:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56308 "EHLO
+        id S230489AbjFVWix (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 22 Jun 2023 18:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231228AbjFVWgU (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 18:36:20 -0400
+        with ESMTP id S230083AbjFVWiv (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 22 Jun 2023 18:38:51 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436FE19AF;
-        Thu, 22 Jun 2023 15:36:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AF310F6;
+        Thu, 22 Jun 2023 15:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687473378; x=1719009378;
+  t=1687473530; x=1719009530;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=ACvKFe2hNqs3qSMM7WATPlWsgc+6Lx2Rlae0FNNrQoE=;
-  b=R7FvbsiSQwaGE68Ui1xMPfHBmAUkKnO1Oc0wDOYubOisTptdfTSyjydx
-   7nF8FE/aRHs+4PDp9jCKT0nGfFautZO/WVucMKGcLmCYkSSKq0V8W6K0q
-   jZ/kjAIlbLnCaxWsKaOnD+JQUkayMJXcQtRYl1JXwxa6jIoJ5uVw5JfpY
-   FMlskd+mK+23yDn3w5CD2WM4lZjZLjfJEEfMI/Z0Tezm9Ef1y6pNjvX2b
-   YHfD/VTZVdzCTyoXrBT0JmOX1gLMwJcUQPAnK/4q0SFUr5wt+tMcxgf0a
-   oyeUnnWOQ59VOhcfYPg/9CoF/wtUH2DKDLwZQNPLjqwwRyA14E3RiXOyu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="426610316"
+  bh=2p+mRwb9gt2AfRV71Mw9FJCl0xYb5DBXlk9XvUVuZ84=;
+  b=lxXXavDvmFxLbEekiEKb062FNkcGAOBj3aYDyV8QS+eChT56RyKHrPVM
+   U3DCvMZNYzNLed/2l8Hc6nXR2anbDQD6ucWBwVsXvzsvYvSkX8tVv61OS
+   jBWsii7hlKHtVm3Dhm+1zxzUcO/2qJ0cA7m3TYXv2WRndv8QobbgR8lBv
+   nZ7L7MbNk2xR5Lr+Djz2GQQQq5libHwQ0c5gfyPCBRDrwA4jlBWNUd84c
+   htqBgpj+LYntQDorifajah6UEyHtYohg3YXtfhlsm/E15V7EigNBJugkb
+   i0ohGHeClFnthBZ1Mv8bWz50DWE+64Yk/Y0BD892UVifs5pDAujWtPGKi
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="426610799"
 X-IronPort-AV: E=Sophos;i="6.01,150,1684825200"; 
-   d="scan'208";a="426610316"
+   d="scan'208";a="426610799"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2023 15:36:17 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2023 15:38:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="859630983"
+X-IronPort-AV: E=McAfee;i="6600,9927,10749"; a="859631981"
 X-IronPort-AV: E=Sophos;i="6.01,150,1684825200"; 
-   d="scan'208";a="859630983"
+   d="scan'208";a="859631981"
 Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Jun 2023 15:36:17 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+  by fmsmga001.fm.intel.com with ESMTP; 22 Jun 2023 15:38:34 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
  fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 22 Jun 2023 15:36:16 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.23; Thu, 22 Jun 2023 15:38:34 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 22 Jun 2023 15:36:16 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.23; Thu, 22 Jun 2023 15:38:34 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 22 Jun 2023 15:36:16 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Thu, 22 Jun 2023 15:38:34 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.102)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 22 Jun 2023 15:36:15 -0700
+ 15.1.2507.23; Thu, 22 Jun 2023 15:38:33 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l4oy3vqj2fxn9+2V2jNTl7lr3T60hj3S1lPNdCmg4EDL9pX2f7rruQzMUbIVa6DWUHwVixQ3aoreHwUSTAn4sq4zg4zl3ZsWXCexc7bANMCv9ys6uSaaAL4PBh9kCOyRmxst1fXBabu1LWFvDT4JyjBuVZKoHzFt8S6keww98T2ocPP3EP5NbmiPYjHuhcMTX6heaqJOLOQm18maZwNWETpOY7cDHc7e/qP/dKHzctssiEb13om+CocsLd3lpPL8aZsaXEPFVBqADomyu+2heQY0v8IYWFNfOtY/wwa1K1JjR9GJb00RNLWE30hkOXRcKPqy3tfaJmgHY3Gh2Wuuzw==
+ b=lXjEDnbZ+2kIH5PXpins52tAFx/dRKgWWsFtCj08taXCyx67N+uw7LKof5FJ2lPkyTqGl1NOpyFvpld2cp7sKA71MdIcD/AfD1eXcmxxXZEaG3ys/cdxZgZR/dk41RIBh0xbJKxEBj47PVygIYoMcjXw2ReM8Tu0MU8MLo16ELLQCDVZsNny/VN2SOBbzoFr1aB0RF2Rp1/NqxJqa9EQaWnuPQbCdJHJDGE1KYMSmqU50AGGOoEYIei4plqCKxTlTES7o1bC8Ac1Pg16MitKoS0ajStqe0q/AuPNPqil37joEEYP89pUnfUaZFKNMqqWXSDs1gBPDQBIfrdOG81Ktg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=m7tVB/3iXJI6xUyJdM1a369SEOsAWbc+l1S8P247lsc=;
- b=Oc1somw83jTxlPyDgRPZueYy6QIp364RKSQEAYGx6eGcRkSNU5LyelVP1hkA16dAkh+WhCP6nQ52YPO5XralxUGb9M/iMPMqOhBzLAtfSvl+peqxkdNPfiIrDXZlEloGUmCkC5sBWRj79US7m8/42gyW9NBDh0OtzYt/FdmmZq0qdFo2Es+y7y0Ea2PAHXzu0BN42bxbBc6csXfFtXYTK86ddWhle+nnR0nMK7K7M67AXXwx1qvIU29VYDYXEBzZCy5zplc4s8yT3NmFhrD7F+Qgi1xQyJ5U5gcxbAOVU57EDyMM6tgysyBrS3U+BmfrkQ2cFxw1U1YAD7aBr5U9VA==
+ bh=sABVqCZKLliaXZFngLtMMxKWfekN3ZIihDvQI5dCB2o=;
+ b=dVzjIOvENm0O3XiqFF6mZGkSYuxZS8hmUWXRa1V1rj6qCT5IQYNUgLGiA2CJp0ML0+XYtIr1GOXB8yUs16vTKvy9sg7WgQh+tu4WVit6601itPxqleLlu2btG8CSsMjnjaFBS0aepdW3dP/zKW3dJroU/gpcQkGwKDyMLJcf/xha8OVx8UW2mXrrdQII1YuVZhpMaSmL0SBWlxkHtnud/71G4FihNUMrS/rWQ7NybbOhoQ6hVPG74PXvaiBfbxQOUgDUB/Y8xlhckzwigTpXOb0pztGO/osL85MXScmsmQJFi6U5V00712U0nUGOQHHDN8AaRStfVc6w+7CMgRPn/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by CO6PR11MB5636.namprd11.prod.outlook.com (2603:10b6:5:357::21) with
+ by PH7PR11MB8549.namprd11.prod.outlook.com (2603:10b6:510:308::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Thu, 22 Jun
- 2023 22:36:14 +0000
+ 2023 22:38:26 +0000
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::ef38:9181:fb78:b528]) by PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::ef38:9181:fb78:b528%7]) with mapi id 15.20.6521.024; Thu, 22 Jun 2023
- 22:36:14 +0000
-Message-ID: <8f6b4669-78ae-3244-a15a-c893c617fde0@intel.com>
-Date:   Thu, 22 Jun 2023 15:36:09 -0700
+ 22:38:26 +0000
+Message-ID: <ea00deef-fcbb-a2d0-f806-cfe73ac0de42@intel.com>
+Date:   Thu, 22 Jun 2023 15:38:22 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Betterbird/102.11.1
-Subject: Re: [PATCH v6 02/27] cxl/acpi: Probe RCRB later during RCH downstream
- port creation
+Subject: Re: [PATCH v6 03/27] cxl: Updates for CXL Test to work with RCH
 To:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
         <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
         <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
@@ -88,72 +87,72 @@ To:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
 CC:     <rrichter@amd.com>, <linux-kernel@vger.kernel.org>,
         <bhelgaas@google.com>
 References: <20230622035126.4130151-1-terry.bowman@amd.com>
- <20230622035126.4130151-3-terry.bowman@amd.com>
+ <20230622035126.4130151-4-terry.bowman@amd.com>
 Content-Language: en-US
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230622035126.4130151-3-terry.bowman@amd.com>
+In-Reply-To: <20230622035126.4130151-4-terry.bowman@amd.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR20CA0035.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::48) To PH7PR11MB5984.namprd11.prod.outlook.com
+X-ClientProxiedBy: BYAPR07CA0092.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::33) To PH7PR11MB5984.namprd11.prod.outlook.com
  (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|CO6PR11MB5636:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3c2b614-9eae-430c-33f6-08db737115b1
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH7PR11MB8549:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f137619-16c4-441b-9b6d-08db7371648a
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3tIDxamNL3ndQ76qCnBsVJXKSNbJWfbZcRZi3JYsIEFI45jkJIsxOtobC2EJEYDtBuGPpJDFEYRlb0XF6iZqcLhIHST97AGHR2YBB/OPVu4582+cwlOimemjOUSIVVZkCjdL2BRvUTKYiPr3i1LVEtEnjTBYeeWFCltfyNsT8gIiWvHTy7xritxx7n8bakwABFyB0UrGmRZACB67H7fWM6FLG8smO453/6WB0tPhGAgr/CAxEUVk2G7mbc1XMkUxS3OlXSKLeFTzIbGEK7QlySMxW4oFEMZqdOZIZR3kOcRei8yNFMIh+pRFRe7rjaYpE6nxVZ1iozPoJPlb/iDblTSOowvTTh1eXzsvL8r4dZoB7rzq7LtCQ77FWXrKMMktVTz+dIqBeOwRnh8dhWACa8RtuSA4d1vkr9syjN+LF4V1qepCqRj73y0/71hmVb9beaGW0g6OnVwU8yaCH209yXhdmi/zEHahA9O11EXa6f0EKfxcysICYZ/vQSrM2OvjL9rOH07+eWhT8fQ3kcY4zzxtqpk6fNpnK5LQ0dICRbfgWycGQt3VjyFoDD843W11azMpUQceUss/R7QPEYb3CcgWaiHq4i+oA+cazpf4tpRooSXGFcpjdVDRxnneFnvP27xYCZcvg+WdUvDDiybC/A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(346002)(39860400002)(396003)(376002)(451199021)(86362001)(31696002)(38100700002)(8676002)(41300700001)(8936002)(66946007)(66476007)(66556008)(2616005)(316002)(44832011)(83380400001)(5660300002)(6486002)(53546011)(478600001)(6506007)(6666004)(6512007)(4326008)(186003)(26005)(82960400001)(36756003)(2906002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: JXMs06QagYQQWkxqNJdaxRPTDfx/mXUoTmTsNrZXNTKASkeK18gMIy8tuUORHSIF4LzAInLBe4xddTRyFtcJamIwg4Jzhuxga6/KyZkcx4WVpEzVprWg2wG1fRB17TvrvnPW7El5MayR+I9quzICCLchV3Y7NbPU+W7s1z2dYBV4NxdT1lSdfSfDJKEMzfUUiOwjytb3BuLAlBWR4vXpox5GTLF6K+Q3nOTj/K2VbdDsP706gI4bir/fI+m5R2Eg8K7TxIPZ1UvyUIsmYqkOtUypG0ytS4CnMtAIuWUM3vRKgkpUXflGm2qEAFx8EFO04Aq8bG0uwAMzZx54DsTYmzj5FQ6no70CCQAvXefkP65UFJoH+Um6n6IDKZ7kxTPd8q8aXxg60vPyGjPu1pprXa/WqRvrjjCZndPG00zb0fDUfap/RNefMNywJa/44vcuvqUMcuEyIeEdvnje1QWk3f5tOBFtAGNlKy4xyPNc/jOhs2QJCdycoc1T+XDd9XPMgIwnm0fWYwRE5Jld/m4jxmcYwcfX+ynkj9CiFqZzi78mOJWvYz3dSr38fwdWgIkSOk5W7YTF+JJAEpU8Zx+LQKN4z4CBSkYHKhHyFrEnSyyaU2zyujeUJn/wgbRwmHu+3iQlS8poKEEy62XwkTevdw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(366004)(376002)(396003)(39860400002)(136003)(451199021)(2906002)(38100700002)(82960400001)(4326008)(316002)(86362001)(8936002)(2616005)(8676002)(31696002)(41300700001)(66476007)(66946007)(66556008)(83380400001)(6506007)(53546011)(6486002)(478600001)(6666004)(36756003)(6512007)(26005)(31686004)(44832011)(15650500001)(186003)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SkM0ZjZtd3kvbXZ1eFNVOUNiVUFhQjBJMkNFdFhwUm05UEY5VGJoZlZLVnF4?=
- =?utf-8?B?RmREK2YxaEdaRzhtWU8wQ0xIUUdWVXBuUi84K3hsL2RUY0lqUXVwcEowam03?=
- =?utf-8?B?TktFbDI3eDk1bG5CMllSSCtJZDhaZGhvdjR0WVhvZTdNSFN5MGhzSzc0TC9Q?=
- =?utf-8?B?OVpMQUUvVlByVUdBdk1LV3EvVE5UNkxwdmlydDFGUldvd1NwMkNvTHpyK3h6?=
- =?utf-8?B?U0hiOGpOU3lrVEZoMExzSmhPWlpzTGtIaVFJQUhZKzFiUEpnOWYvQ3NzWGJX?=
- =?utf-8?B?Nm5SMDJYZ2hwZ0FwNmpMYW9UZVU1Z1I4NitCREdjcUhhVVgzNktQNG8wWDhm?=
- =?utf-8?B?Y3EzenBXZnpVUVozSTdaalNMSWZJUExjNWQveHk3cWlNNCtIejByRDMrK1lT?=
- =?utf-8?B?L2ZNRFkzMGQvajliMDI3Snh4VTl5MHFJYzdZUGk3MUd5SDdyOE5pR0o5WjA2?=
- =?utf-8?B?VlhrcGVtNlEramcrTzRCR0tlYUo3TGtoYWgvek5kTXNQR0dKdnIzVUdZUHdp?=
- =?utf-8?B?Ynd5SFFWOXRGNTU4SlZjVEhJSVhIR2pRbkFHbTdMWEhXN0NnaElTWnlRcmo5?=
- =?utf-8?B?UHY5eGdVcTVqUWlNVzdJeXV0WDl4L1VzTVFoZm5vMVM1d25wK3JGUlVJMEFa?=
- =?utf-8?B?YjZSSjFRVFkrL2tuNnJDN1FiRTFlNDVoUmpsSVpwVE9LSlR3Tyt0Ymt2WWVm?=
- =?utf-8?B?eFg2S2V1WnI4RllVYmZqOEc2ajVkM1NVTXVHQkZHWkxNdm9STTc5WUd5RWJa?=
- =?utf-8?B?ejNzQlJva0NzNGIvUjdJSFhYUGl6LzN4ck1kYVJ0Q3ZRdnJQY0VuM29YeXRv?=
- =?utf-8?B?aWhHd3VBQUN2VmdXVzZsSzlUTTF4VVNZL2doQVIxb0J4Y2d4RnQ1VUo5aDdF?=
- =?utf-8?B?SnlBWVJlZGh3MlFIR0JsRVBNclJrblBnSEZqejRXdzBYeE1kME4rNlJ4NUJO?=
- =?utf-8?B?V2ZRSlVLQWVDRWFqYytBWHFjMjdGTTZjdFFZTk9XbitZNDlwN2RPWlhpZjFS?=
- =?utf-8?B?V1BKZ1ZRcEo3TFFab1Mzd2Nhdk53aDFVeFd0c3FFUE5FK2lsaVlVTjlhaTdy?=
- =?utf-8?B?S25GQXJSMEpQMEM4N3dWZjVzNldvdlFqakw4TVA3SUtyVlpJRGdZNUJPUVRJ?=
- =?utf-8?B?RVZyeW9sY0p4ZnlmN0l4WHY1STdqVGhJU3B4SFhLdGNad1pUOHBsTUVwUlky?=
- =?utf-8?B?elBlYjhpRWE1VGR3VTA5bzRkL1JSVEdhMURpMndoRWJiN0piZmE2Z1c0RFkz?=
- =?utf-8?B?bDJtWjh6Qmc1Ly90enFQeXJ4KzNHTWUyanZCamJGV0NJNFFGQW5lZjErZDVK?=
- =?utf-8?B?VkRMUGhrUk1YQWpzMkluWHNQNVBwaytic0tpMEQwV3kraDVQTWZTd3MrWWQx?=
- =?utf-8?B?S2xPOWY2UnN1TTZrM0N4em1BKzlaa29IM0RTSCtOcGx1SzZsUko3MDlmSlJS?=
- =?utf-8?B?bE9Mc0hIWGFSdTBuOHk0dG5KZW1jUWlDTjFHZ1l0aStQRlN0UXFLNTNycHNW?=
- =?utf-8?B?L1NKRmV0dDBZMmMyYmgzRGhTeXdvdGY5QUUweUM3c28wcEM3bDZBVkJQbjNj?=
- =?utf-8?B?R0s4NmxoQlhoZ2p0d0VwY28xV214L3BteUdDUWZxMHZQQ3FxRllCRjY4azVN?=
- =?utf-8?B?RStwTXJSNG5tOXFQVGpXT05oWk5kK1lFR29iaEcrWUk1UWxtb0dkWEZmM01w?=
- =?utf-8?B?R1gzU0w1NXAvazZKRVl5TGVzUndvbExIYTc5WHlQd2daUUZsZnJXYy9tVjZB?=
- =?utf-8?B?K09RYUp0Q3AwSkhwSjc4aXJNcU5CZm1TNDRQc1d4eGZZV1VVaGZxQXlhMS9F?=
- =?utf-8?B?SlhSZGtlZWdrWkllZ3I1bUluR3o2aDlmSnM1VDllUExNQyswVGpLdVJJZlNy?=
- =?utf-8?B?OGlYc1dhV3dSMk15RzVsMGlUMnI3bHBOTDR5T3pHY0dDdFp1djBHOHRtUTBu?=
- =?utf-8?B?UkhDd1I5Wnh3bnN2WnRlNHo5QmxJQWRKSGJ3bE9BeEZuS2ZlUGoxM2FqaSs2?=
- =?utf-8?B?dS9HL0RxWnNZQTVxVkRUUnN6VWFMNkEvczNnK3NJSE9ZTUFhc3JUZWl4YUF1?=
- =?utf-8?B?eEVXdTJwc3hTclFlSHhlRmZWa1ZMSzZ4akZWU2hpTjI0MGlWcW90aWtFazVu?=
- =?utf-8?Q?IGJ+JmRy0YrJGWVmEJYD6sb6F?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3c2b614-9eae-430c-33f6-08db737115b1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?REVLZGdzS1lTTHJlRlRaOXBRVVdIWmovZ2QwM2N5Q1hac2dxTGpHWTZEeUFr?=
+ =?utf-8?B?MTNUUmFuYXFTVEZrdk03WjJtMUpURVJSZk4wd1NQa1dlTDlJNDcvZVpLWE9U?=
+ =?utf-8?B?aFp5VktXMDZySG5od3pOTEhFZW4zZ0Q5ZW5PeFN1VnN2NlEzMWFHY05oMjZo?=
+ =?utf-8?B?WUI5UWZDMGtyMTNHK3U5NDNERnlCSGxqYk9jS01HcFdjUk1UbWN2SWtZVWhu?=
+ =?utf-8?B?UXFoYnJUUTQwdWFCQVdYaVAyaU1iRld1dTRuU2pmNnFKVGFtbFg2R3ZXSTc5?=
+ =?utf-8?B?b2lXWUpra1hYL00wNjJ4cDNMaDFTUVJnUisyN0F0dVBNeTFGNkx6dDVFNFNB?=
+ =?utf-8?B?WVJXTTZNNnNPcVYyTUFndEplUXJjSnhLeHhrQmdjQTJPZGZYU21JY0d1dmN6?=
+ =?utf-8?B?WWp1VnRzRVNuRTdxUk91WWdFcVNxK2Evb2hIeHpnNkdqR0VOU21OMU9sSm03?=
+ =?utf-8?B?WS9xL2YwRkRUdUZVQWN4NUIvb0ZWNHRHVmp4Q1RyMEVZVUpXaDF2RG1sNUEy?=
+ =?utf-8?B?TWdiaEc5ei9Qa0lkMktpb3Jpek1KMVZCdFpldEtFZE9tTndJSEpCakpLYmtS?=
+ =?utf-8?B?L0g4TW90Yk1Vb2c2RnlYZHNVdVp3bEdyNFRObTNLbGhtMXIwR0FFY2dhaWhI?=
+ =?utf-8?B?RVBRLyttMXVWMjd5UDZVR3llMUdnRWxwakM1ZlFRc1V1SGFYT050TUx5NDNx?=
+ =?utf-8?B?VlZ0MDRJcjk1LzNWZDAwZXd4d0g3aHB4QzNCNVZPQ24wdER4SHZzeU42cHlq?=
+ =?utf-8?B?eGgvMkdoNGloaVFsWVFUcmNWSHFRUUMwMmczSDRLNVloVWhCR3l3Z0JHYVBj?=
+ =?utf-8?B?K0FHTU8wRE5oK25wS1Q1TDFDM2IzV2daVE0xZGNVcGJOWmkzcmlmQ3Z0VWhp?=
+ =?utf-8?B?MmlmODlWWFJHUHc4VXZ0aGZub0hCMVpuZDFTRzJJNjA5VThnRGxJSnErU0pT?=
+ =?utf-8?B?YzEyT1RMbytyeUltbTgzeFMvUGs3QXZwU2dCakc3TU9EUitlZkNDZ2VjSEtO?=
+ =?utf-8?B?WStNSHN6WFBJeE1LZGlxOWdKQXdZT3pKc1podHJVekhvbW9ObEdyREZpQmtp?=
+ =?utf-8?B?K1dxa1lJQzJoQ2FVOUl5NDZUZUFTd1JlUmxVSmY5Mk82OUZtRFcrZk9uQmZL?=
+ =?utf-8?B?QTJqWEVRWGV0UExvM3d4WXorcjRnUVFYUUJZeUlsSkJ2YytybGI2TEw0Mitj?=
+ =?utf-8?B?TjJsZHdlQ2JLYTdhY2thT0lITWQvbHlSaXdQVXY3SjJLR01LdlpiSlJUL0JH?=
+ =?utf-8?B?alJKZDVCMjhjT1hDSHJUN3hqbmFJVzJobFVBZCs3d3VDalMwa1hUWXU3T3N4?=
+ =?utf-8?B?RXZ0SC8rNUNCNFlySW9wYUppRjc5a0s0QjRVZ21oMEZ3dGlrTkE1YnY1U3ph?=
+ =?utf-8?B?Nkc1akpBbTlSMU12VVB3ckRMcDVWcDQxd0tlZXlNSlZWek5MekhudUtOY1lo?=
+ =?utf-8?B?dUxBMVgyL2lJUERHdUFoR3owTGhFK3dKWDl3VjAwcTNLVlVrZGdNYUF5OS9x?=
+ =?utf-8?B?NGU3VXRuQWEzRHVCY2V0RnFuMDJvWUJSVlhEVXRqb041ZUUzK0pDVFV1THVX?=
+ =?utf-8?B?ZnJZQXVDanQ5UTN5b3RhQTJCQVpjdUo4VkZESEhGZnBNeHhpRE1GbXNkSXNB?=
+ =?utf-8?B?NTNpd2o1MW04enprd29jQnNSN3phNGFLQlU0cFdXczdhMjl6S2t6QThWSEVu?=
+ =?utf-8?B?eXBhbXpKa3lqeUd5T096dC9hWWdySllqZVZzT1dNdnN0MTM1T2hwbE9vbTdx?=
+ =?utf-8?B?Q2tKMmo3dkovSER3NEhJZHErQ0ROdFR2ZUpjRXFPVU9xaTYyV01tY05aTTFw?=
+ =?utf-8?B?RW16ZklzNjcyMzZBTTRvUDE3UkM0WllQamovVkxqbktQS0VqV00vT2duSno2?=
+ =?utf-8?B?d1ZkZjQ0MEoyY1hZUy8rNXh4Mkhaa2xzbGpxMDkva3N2VlcyNWxTdkFKeW9B?=
+ =?utf-8?B?RmVNbk9pMUpaRVJpOFFpeW9WTUFZeTZISUJZQU9MZHRoMGp2WHltVlJuVU9P?=
+ =?utf-8?B?SkxQSXZYTDBwS3ZFVDFSRDFDOUVZekc2bk52bGlGSmlkVFA1YXJVSEZYNmxs?=
+ =?utf-8?B?N09VTUdNbkNJb1RuRklrdWQvaUNJb25ob1k4R25seGhkMFVwM2V3YjVaYWtG?=
+ =?utf-8?Q?lDObRCjkvvNsYMF7X72vSrSPC?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f137619-16c4-441b-9b6d-08db7371648a
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 22:36:13.7590
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 22:38:26.1381
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vT/jlVFQuadZpQ6JCCGTYjToLF5PZhfGEX6oJ2Oag2TUNc/NHm6Ir/BAxZUBvhosGENEsnzckboTFSk6Ou1ovA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR11MB5636
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2GjQkmhl04xq/BhyrNklcnLJ7Ke8G3KQznso24csp8Vga6Oqn36PwhF5gp+Vk1cLPKoscxQDi3MPV+OiDJsuxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8549
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -162,209 +161,239 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 6/21/23 20:51, Terry Bowman wrote:
-> From: Robert Richter <rrichter@amd.com>
+> From: Dan Williams <dan.j.williams@intel.com>
 > 
-> The RCRB is extracted already during ACPI CEDT table parsing while the
-> data of this is needed not earlier than dport creation. This
-> implementation comes with drawbacks: During ACPI table scan there is
-> already MMIO access including mapping and unmapping, but only ACPI
-> data should be collected here. The collected data must be transferred
-> through a couple of interfaces until it is finally consumed when
-> creating the dport. This causes complex data structures and function
-> interfaces. Additionally, RCRB parsing will be extended to also
-> extract AER data, it would be much easier do this at a later point
-> during port and dport creation when the data structures are available
-> to hold that data.
+> CXL test needs to be updated to work with latest RCH changes.
+> Add CXL test support for devm_cxl_add_rch_dport and
+> cxl_rcd_component_reg_phys functions.
 > 
-> To simplify all that, probe the RCRB at a later point during RCH
-> downstream port creation. Change ACPI table parser to only extract the
-> base address of either the component registers or the RCRB. Parse and
-> extract the RCRB in devm_cxl_add_rch_dport().
-> 
-> This is in preparation to centralize all RCRB scanning.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
 > ---
->   drivers/cxl/acpi.c      | 51 +++++++++++++++++------------------------
->   drivers/cxl/core/port.c | 21 +++++++++++++----
->   drivers/cxl/cxl.h       |  1 -
->   3 files changed, 37 insertions(+), 36 deletions(-)
+>   drivers/cxl/core/core.h       |  8 ++++++++
+>   drivers/cxl/core/port.c       |  4 ++--
+>   drivers/cxl/core/regs.c       | 15 +++++++++++----
+>   drivers/cxl/cxl.h             | 11 +++--------
+>   drivers/cxl/mem.c             |  4 ++--
+>   tools/testing/cxl/Kbuild      |  3 ++-
+>   tools/testing/cxl/test/cxl.c  | 10 ----------
+>   tools/testing/cxl/test/mock.c | 34 +++++++++++++++++++++++++++-------
+>   tools/testing/cxl/test/mock.h |  3 ---
+>   9 files changed, 55 insertions(+), 37 deletions(-)
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 7e1765b09e04..70cd9ac73a8b 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -372,21 +372,21 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->   	return 0;
->   }
->   
-> +/* Note, @dev is used by mock_acpi_table_parse_cedt() */
->   struct cxl_chbs_context {
->   	struct device *dev;
->   	unsigned long long uid;
-> -	resource_size_t rcrb;
-> -	resource_size_t chbcr;
-> +	resource_size_t base;
->   	u32 cxl_version;
->   };
->   
-> -static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
-> +static int cxl_get_chbs(union acpi_subtable_headers *header, void *arg,
->   			 const unsigned long end)
->   {
->   	struct cxl_chbs_context *ctx = arg;
->   	struct acpi_cedt_chbs *chbs;
->   
-> -	if (ctx->chbcr)
-> +	if (ctx->base)
->   		return 0;
->   
->   	chbs = (struct acpi_cedt_chbs *) header;
-> @@ -395,23 +395,16 @@ static int cxl_get_chbcr(union acpi_subtable_headers *header, void *arg,
->   		return 0;
->   
->   	ctx->cxl_version = chbs->cxl_version;
-> -	ctx->rcrb = CXL_RESOURCE_NONE;
-> -	ctx->chbcr = CXL_RESOURCE_NONE;
-> +	ctx->base = CXL_RESOURCE_NONE;
->   
->   	if (!chbs->base)
->   		return 0;
->   
-> -	if (chbs->cxl_version != ACPI_CEDT_CHBS_VERSION_CXL11) {
-> -		ctx->chbcr = chbs->base;
-> -		return 0;
-> -	}
-> -
-> -	if (chbs->length != CXL_RCRB_SIZE)
-> +	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-> +	    chbs->length != CXL_RCRB_SIZE)
->   		return 0;
->   
-> -	ctx->rcrb = chbs->base;
-> -	ctx->chbcr = cxl_rcrb_to_component(ctx->dev, chbs->base,
-> -					   CXL_RCRB_DOWNSTREAM);
-> +	ctx->base = chbs->base;
->   
->   	return 0;
->   }
-> @@ -443,33 +436,31 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->   		.dev = match,
->   		.uid = uid,
->   	};
-> -	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbcr, &ctx);
-> +	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CHBS, cxl_get_chbs, &ctx);
->   
-> -	if (!ctx.chbcr) {
-> +	if (!ctx.base) {
->   		dev_warn(match, "No CHBS found for Host Bridge (UID %lld)\n",
->   			 uid);
->   		return 0;
->   	}
->   
-> -	if (ctx.rcrb != CXL_RESOURCE_NONE)
-> -		dev_dbg(match, "RCRB found for UID %lld: %pa\n", uid, &ctx.rcrb);
-> -
-> -	if (ctx.chbcr == CXL_RESOURCE_NONE) {
-> -		dev_warn(match, "CHBCR invalid for Host Bridge (UID %lld)\n",
-> +	if (ctx.base == CXL_RESOURCE_NONE) {
-> +		dev_warn(match, "CHBS invalid for Host Bridge (UID %lld)\n",
->   			 uid);
->   		return 0;
->   	}
->   
-> -	dev_dbg(match, "CHBCR found: %pa\n", &ctx.chbcr);
-> -
->   	pci_root = acpi_pci_find_root(hb->handle);
->   	bridge = pci_root->bus->bridge;
-> -	if (ctx.cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11)
-> -		dport = devm_cxl_add_rch_dport(root_port, bridge, uid,
-> -					       ctx.chbcr, ctx.rcrb);
-> -	else
-> -		dport = devm_cxl_add_dport(root_port, bridge, uid,
-> -					   ctx.chbcr);
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 27f0968449de..bd0a5788c696 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -63,6 +63,14 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
+>   int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
+>   resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
+>   resource_size_t cxl_dpa_resource_start(struct cxl_endpoint_decoder *cxled);
 > +
-> +	if (ctx.cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11) {
-> +		dev_dbg(match, "RCRB found for UID %lld: %pa\n", uid, &ctx.base);
-> +		dport = devm_cxl_add_rch_dport(root_port, bridge, uid, ctx.base);
-> +	} else {
-> +		dev_dbg(match, "CHBCR found for UID %lld: %pa\n", uid, &ctx.base);
-> +		dport = devm_cxl_add_dport(root_port, bridge, uid, ctx.base);
-> +	}
+> +enum cxl_rcrb {
+> +	CXL_RCRB_DOWNSTREAM,
+> +	CXL_RCRB_UPSTREAM,
+> +};
+> +resource_size_t __rcrb_to_component(struct device *dev, resource_size_t rcrb,
+> +				    enum cxl_rcrb which);
 > +
->   	if (IS_ERR(dport))
->   		return PTR_ERR(dport);
+>   extern struct rw_semaphore cxl_dpa_rwsem;
 >   
+>   int cxl_memdev_init(void);
 > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index e7c284c890bc..1a3f8729a616 100644
+> index 1a3f8729a616..45f5299af7a6 100644
 > --- a/drivers/cxl/core/port.c
 > +++ b/drivers/cxl/core/port.c
-> @@ -938,12 +938,25 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
->   	if (!dport)
+> @@ -939,8 +939,8 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
 >   		return ERR_PTR(-ENOMEM);
 >   
-> +	if (rcrb != CXL_RESOURCE_NONE) {
-> +		component_reg_phys = cxl_rcrb_to_component(dport_dev,
-> +						rcrb, CXL_RCRB_DOWNSTREAM);
-> +		if (component_reg_phys == CXL_RESOURCE_NONE) {
-> +			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
-> +			return ERR_PTR(-ENXIO);
-> +		}
-> +
-> +		dport->rch = true;
-> +	}
-> +
-> +	if (component_reg_phys != CXL_RESOURCE_NONE)
-> +		dev_dbg(dport_dev, "Component Registers found for dport: %pa\n",
-> +			&component_reg_phys);
-> +
->   	dport->dport = dport_dev;
->   	dport->port_id = port_id;
->   	dport->component_reg_phys = component_reg_phys;
->   	dport->port = port;
-> -	if (rcrb != CXL_RESOURCE_NONE)
-> -		dport->rch = true;
->   	dport->rcrb = rcrb;
+>   	if (rcrb != CXL_RESOURCE_NONE) {
+> -		component_reg_phys = cxl_rcrb_to_component(dport_dev,
+> -						rcrb, CXL_RCRB_DOWNSTREAM);
+> +		component_reg_phys = __rcrb_to_component(dport_dev, rcrb,
+> +							 CXL_RCRB_DOWNSTREAM);
+>   		if (component_reg_phys == CXL_RESOURCE_NONE) {
+>   			dev_warn(dport_dev, "Invalid Component Registers in RCRB");
+>   			return ERR_PTR(-ENXIO);
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 1476a0299c9b..564dd430258a 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -332,9 +332,8 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>   }
+>   EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
 >   
->   	cond_cxl_root_lock(port);
-> @@ -1004,14 +1017,12 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_add_dport, CXL);
->    * @port: the cxl_port that references this dport
->    * @dport_dev: firmware or PCI device representing the dport
->    * @port_id: identifier for this dport in a decoder's target list
-> - * @component_reg_phys: optional location of CXL component registers
->    * @rcrb: mandatory location of a Root Complex Register Block
->    *
->    * See CXL 3.0 9.11.8 CXL Devices Attached to an RCH
->    */
->   struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->   					 struct device *dport_dev, int port_id,
-> -					 resource_size_t component_reg_phys,
->   					 resource_size_t rcrb)
+> -resource_size_t cxl_rcrb_to_component(struct device *dev,
+> -				      resource_size_t rcrb,
+> -				      enum cxl_rcrb which)
+> +resource_size_t __rcrb_to_component(struct device *dev, resource_size_t rcrb,
+> +				    enum cxl_rcrb which)
 >   {
->   	struct cxl_dport *dport;
-> @@ -1022,7 +1033,7 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->   	}
+>   	resource_size_t component_reg_phys;
+>   	void __iomem *addr;
+> @@ -395,4 +394,12 @@ resource_size_t cxl_rcrb_to_component(struct device *dev,
 >   
->   	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
-> -				     component_reg_phys, rcrb);
-> +				     CXL_RESOURCE_NONE, rcrb);
->   	if (IS_ERR(dport)) {
->   		dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
->   			dev_name(&port->dev), PTR_ERR(dport));
+>   	return component_reg_phys;
+>   }
+> -EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_component, CXL);
+> +
+> +resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+> +					   struct cxl_dport *dport)
+> +{
+> +	if (!dport->rch)
+> +		return CXL_RESOURCE_NONE;
+> +	return __rcrb_to_component(dev, dport->rcrb, CXL_RCRB_UPSTREAM);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_rcd_component_reg_phys, CXL);
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index f93a28538962..a5cd661face2 100644
+> index a5cd661face2..28888bb0c088 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -671,7 +671,6 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
->   				     resource_size_t component_reg_phys);
->   struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->   					 struct device *dport_dev, int port_id,
-> -					 resource_size_t component_reg_phys,
->   					 resource_size_t rcrb);
+> @@ -262,14 +262,9 @@ int cxl_map_device_regs(struct device *dev, struct cxl_device_regs *regs,
+>   enum cxl_regloc_type;
+>   int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
+>   		      struct cxl_register_map *map);
+> -
+> -enum cxl_rcrb {
+> -	CXL_RCRB_DOWNSTREAM,
+> -	CXL_RCRB_UPSTREAM,
+> -};
+> -resource_size_t cxl_rcrb_to_component(struct device *dev,
+> -				      resource_size_t rcrb,
+> -				      enum cxl_rcrb which);
+> +struct cxl_dport;
+> +resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+> +					   struct cxl_dport *dport);
 >   
->   struct cxl_decoder *to_cxl_decoder(struct device *dev);
+>   #define CXL_RESOURCE_NONE ((resource_size_t) -1)
+>   #define CXL_TARGET_STRLEN 20
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 519edd0eb196..45d4c32d78b0 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -72,8 +72,8 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
+>   	 * typical register locator mechanism.
+>   	 */
+>   	if (parent_dport->rch && cxlds->component_reg_phys == CXL_RESOURCE_NONE)
+> -		component_reg_phys = cxl_rcrb_to_component(
+> -			&cxlmd->dev, parent_dport->rcrb, CXL_RCRB_UPSTREAM);
+> +		component_reg_phys =
+> +			cxl_rcd_component_reg_phys(&cxlmd->dev, parent_dport);
+>   	else
+>   		component_reg_phys = cxlds->component_reg_phys;
+>   	endpoint = devm_cxl_add_port(host, &cxlmd->dev, component_reg_phys,
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index 6f9347ade82c..8a87d7d5f7f8 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -12,7 +12,8 @@ ldflags-y += --wrap=devm_cxl_enumerate_decoders
+>   ldflags-y += --wrap=cxl_await_media_ready
+>   ldflags-y += --wrap=cxl_hdm_decode_init
+>   ldflags-y += --wrap=cxl_dvsec_rr_decode
+> -ldflags-y += --wrap=cxl_rcrb_to_component
+> +ldflags-y += --wrap=devm_cxl_add_rch_dport
+> +ldflags-y += --wrap=cxl_rcd_component_reg_phys
+>   
+>   DRIVERS := ../../../drivers
+>   CXL_SRC := $(DRIVERS)/cxl
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index bf00dc52fe96..f5c04787bcc8 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -971,15 +971,6 @@ static int mock_cxl_port_enumerate_dports(struct cxl_port *port)
+>   	return 0;
+>   }
+>   
+> -resource_size_t mock_cxl_rcrb_to_component(struct device *dev,
+> -					   resource_size_t rcrb,
+> -					   enum cxl_rcrb which)
+> -{
+> -	dev_dbg(dev, "rcrb: %pa which: %d\n", &rcrb, which);
+> -
+> -	return (resource_size_t) which + 1;
+> -}
+> -
+>   static struct cxl_mock_ops cxl_mock_ops = {
+>   	.is_mock_adev = is_mock_adev,
+>   	.is_mock_bridge = is_mock_bridge,
+> @@ -988,7 +979,6 @@ static struct cxl_mock_ops cxl_mock_ops = {
+>   	.is_mock_dev = is_mock_dev,
+>   	.acpi_table_parse_cedt = mock_acpi_table_parse_cedt,
+>   	.acpi_evaluate_integer = mock_acpi_evaluate_integer,
+> -	.cxl_rcrb_to_component = mock_cxl_rcrb_to_component,
+>   	.acpi_pci_find_root = mock_acpi_pci_find_root,
+>   	.devm_cxl_port_enumerate_dports = mock_cxl_port_enumerate_dports,
+>   	.devm_cxl_setup_hdm = mock_cxl_setup_hdm,
+> diff --git a/tools/testing/cxl/test/mock.c b/tools/testing/cxl/test/mock.c
+> index 284416527644..30119a16ae85 100644
+> --- a/tools/testing/cxl/test/mock.c
+> +++ b/tools/testing/cxl/test/mock.c
+> @@ -259,24 +259,44 @@ int __wrap_cxl_dvsec_rr_decode(struct device *dev, int dvsec,
+>   }
+>   EXPORT_SYMBOL_NS_GPL(__wrap_cxl_dvsec_rr_decode, CXL);
+>   
+> -resource_size_t __wrap_cxl_rcrb_to_component(struct device *dev,
+> -					     resource_size_t rcrb,
+> -					     enum cxl_rcrb which)
+> +struct cxl_dport *__wrap_devm_cxl_add_rch_dport(struct cxl_port *port,
+> +						struct device *dport_dev,
+> +						int port_id,
+> +						resource_size_t rcrb)
+> +{
+> +	int index;
+> +	struct cxl_dport *dport;
+> +	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+> +
+> +	if (ops && ops->is_mock_port(dport_dev)) {
+> +		dport = devm_cxl_add_dport(port, dport_dev, port_id,
+> +					   CXL_RESOURCE_NONE);
+> +		if (!IS_ERR(dport))
+> +			dport->rch = true;
+> +	} else
+> +		dport = devm_cxl_add_rch_dport(port, dport_dev, port_id, rcrb);
+> +	put_cxl_mock_ops(index);
+> +
+> +	return dport;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(__wrap_devm_cxl_add_rch_dport, CXL);
+> +
+> +resource_size_t __wrap_cxl_rcd_component_reg_phys(struct device *dev,
+> +						  struct cxl_dport *dport)
+>   {
+>   	int index;
+>   	resource_size_t component_reg_phys;
+>   	struct cxl_mock_ops *ops = get_cxl_mock_ops(&index);
+>   
+>   	if (ops && ops->is_mock_port(dev))
+> -		component_reg_phys =
+> -			ops->cxl_rcrb_to_component(dev, rcrb, which);
+> +		component_reg_phys = CXL_RESOURCE_NONE;
+>   	else
+> -		component_reg_phys = cxl_rcrb_to_component(dev, rcrb, which);
+> +		component_reg_phys = cxl_rcd_component_reg_phys(dev, dport);
+>   	put_cxl_mock_ops(index);
+>   
+>   	return component_reg_phys;
+>   }
+> -EXPORT_SYMBOL_NS_GPL(__wrap_cxl_rcrb_to_component, CXL);
+> +EXPORT_SYMBOL_NS_GPL(__wrap_cxl_rcd_component_reg_phys, CXL);
+>   
+>   MODULE_LICENSE("GPL v2");
+>   MODULE_IMPORT_NS(ACPI);
+> diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+> index bef8817b01f2..a94223750346 100644
+> --- a/tools/testing/cxl/test/mock.h
+> +++ b/tools/testing/cxl/test/mock.h
+> @@ -15,9 +15,6 @@ struct cxl_mock_ops {
+>   					     acpi_string pathname,
+>   					     struct acpi_object_list *arguments,
+>   					     unsigned long long *data);
+> -	resource_size_t (*cxl_rcrb_to_component)(struct device *dev,
+> -						 resource_size_t rcrb,
+> -						 enum cxl_rcrb which);
+>   	struct acpi_pci_root *(*acpi_pci_find_root)(acpi_handle handle);
+>   	bool (*is_mock_bus)(struct pci_bus *bus);
+>   	bool (*is_mock_port)(struct device *dev);
