@@ -2,61 +2,61 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7358EB64D7
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 22:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 793F1C001DC
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 22:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbjFWWTN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Jun 2023 18:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
+        id S232359AbjFWWT7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Jun 2023 18:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232343AbjFWWTH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 18:19:07 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E0F272A;
-        Fri, 23 Jun 2023 15:18:59 -0700 (PDT)
+        with ESMTP id S231881AbjFWWTt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 18:19:49 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA1902977;
+        Fri, 23 Jun 2023 15:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687558739; x=1719094739;
+  t=1687558777; x=1719094777;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=t48uJ/GRUKSRqB5prlo4xK1zOW7//dRTrgn7fi05ctU=;
-  b=iVLcjwpwYizj0U3cRp48QQEERgCvIz9l5Mo/pKbPjFJ2DLWT3cfp5OP/
-   0f+fEjAaVhlpqYqGBRDo58kOCZiUVhQx5rF8jTxTpCJAm444bzSv5IrMW
-   SRmEGtdmdp8IiXsvlnv5PjyjyLocDIGxPYwnza1AGzvE7fsM9Kv0pdrhJ
-   U+CyDXpbjCtBE1n08f7XiHb1s6G93t0XzvWUhRUzSEy7bgDcPt0cdlkS6
-   0jSqJUv5QY9kSfsCPyug7UnOYWkaWCxY0Wv3PIgQ/PbRqSHwlTxCpS00K
-   sa+03kLPs/urHgY+lDeK0OV+bnzkkdfs+DrEBHYA/pj3BG/QSgF8prgiR
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="340467043"
+  bh=EwRHsVqqhjKoDe/sBSBvP5spa8o7yr+Ag2pCnDk8Au8=;
+  b=M+6MsVXXn0/0Xg1iOBPg1gqEDXcSH9MPpu4BZDgVjkY4fdds/l1YhsXy
+   T3DZDH6shnSxsEoSGdzSQrkpP2RrdnRqAh7t6ieu/IHcsg07Ue60SX4rz
+   1PCTfVtNt8X4gTKkmzAvm+LJf3ocCbZdNrfmPVJMKqJRRU27/Aw8Fo5Wz
+   JW0loXrwzK7xgkgjfOLPYngE973ww/807tVp4dsR9uaAlxTjckW++jaTj
+   V3tcgs/uvP6lzsnQ4q07rkNJJShRp7WoAo++EAQNYkbOaPyZaIWvye5MK
+   A6eaM9UmrjWPfcQGrSTfUr2R6wA7Xhhz/lySh7KGH5xIijXw26zmy3yO9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="350642002"
 X-IronPort-AV: E=Sophos;i="6.01,153,1684825200"; 
-   d="scan'208";a="340467043"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2023 15:18:59 -0700
+   d="scan'208";a="350642002"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2023 15:19:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="839597616"
+X-IronPort-AV: E=McAfee;i="6600,9927,10750"; a="780740953"
 X-IronPort-AV: E=Sophos;i="6.01,153,1684825200"; 
-   d="scan'208";a="839597616"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga004.jf.intel.com with ESMTP; 23 Jun 2023 15:18:58 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="780740953"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jun 2023 15:19:35 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 23 Jun 2023 15:18:58 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ 15.1.2507.23; Fri, 23 Jun 2023 15:19:35 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Fri, 23 Jun 2023 15:18:58 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Fri, 23 Jun 2023 15:19:35 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.102)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Fri, 23 Jun 2023 15:18:57 -0700
+ 15.1.2507.23; Fri, 23 Jun 2023 15:19:35 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m+ocuWK+F9lMuy9GLdHAdOX0eEewqJ5cnppnmgXVNIcaJoy6egc04uR04SMsac1H4674Jw+2vxE8U+m16RtDSe0zSWQ/J0SObf12YQ3zM7TJJDWLTJYzAg+Q1kSMDS+yLECtukOLOI5R7ix5WSv783iGEXFY4/7aKOUi46YSwjGl4sbdr97JF28igDxYCKMVkGX3Xy8RzHq/DV816DH5RNuwYUJIGhJrawDeuN1lowMsYGc0qJeJH4hS71KkiOXXHrBi/D7sQYX/orEdXGOneTycD0H5w1WWX860BJRtV4657SRpTtEzF0SWXnojnP4Si17tYsSsz3Ln8ydrMU8Hsg==
+ b=NddEyBtuxNKxMNkiB4+yASwQQWDg8lIt+WWUL+blX0nHoKpVfy3jGMJl8qtCOM2exhNJlPSMKTCpAlo6IIx9LFmc6zPhy/H9lUJ+6xPEbWmkYw5G6taajTN6k7IsMx10hO8fRSnTr1HFFKxYbos/iEFGlstKslbWkcfa8NMFBYcrvRWgTS3KlQYTY/jtfKTSI9E97Sd4rTzb+odmlCmP/rNxfLCm3gR6lBGHVOTGaNYiRZzOXZMCuULbwSdGT+BJOC4FgGVK8IhyJxkTdFz2PhG0JuidfqkDaKp7AfVbFY2YGt3xaXa7qnoEuwPdGceDrYwnRUBqnOAtyikyBoCVIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pFurBMlE/MdWXBPze0LHOco2/az6ZKfrGiW0rjtaMQA=;
- b=JfZ2DX9pvt38Bqw1NLV50/p3onMiXxr6ww4NU/EVVPS8H4b/wcyHXdzz3G8dO/MybzsnxNH7SVmXyymL4RjIT26mDimsMhQ2WbbmdFNZ8ONHnS6vwBSiX5SkpwOzQZBm8u8N1JMhnmm3O+ru3rswP1tkOf1gQSnlSWSTNUtNVzRGpmWOACJK1yfBw6JCP1+pNJpSmpIkYQIUFwI58jXwwDLNQ2SXNsYhYpP9FEzs37jSMrLOlWCFzMBeEEAMpvAeYinLpUzlXvXlrV4U/BPNpU0Iva1R0y95SSFkZcpf05uRoF3WqMF1VJb+c+WHEcTIzKy9DGBEHdt7YRCLgiA0/Q==
+ bh=gX914Yq5cLShwRQtb66OAE5+Zosu7n4Y9l9G0DO8VCo=;
+ b=Dj1zt+7S3HozBzEW6cuutdHxgwh4QHPZI5hBa3VXLbU7on2G3x7qgt6ELDQfPrALiX1NJMe0bX/uA9Qo00BuJzLJABz3MN+3JMm84ThDN0tdCenzT9Km6Gk7YzJcJjffe6VrJifEGDG51uTsHCcUcT/R5de8R8Frm81Yvu/B0xAAbTxH3XUHFN71CNLonPdZhqnH0KGCL2LpsQGyj3Ymp/IKIBCm2bRgPgHyQx/lu8mzT8hPG64Evf/ycVE0VdRN2ZLhSWNPAxX3C4FDIPagNyBSCvz1KeQo2h7JI+OUVYsTwkvWO9VrtVlu0iXlr8SQr5EIrQUXR+QT8jxZXcSGbQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -66,17 +66,17 @@ Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
  by BL1PR11MB5430.namprd11.prod.outlook.com (2603:10b6:208:31e::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24; Fri, 23 Jun
- 2023 22:18:56 +0000
+ 2023 22:19:33 +0000
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::ef38:9181:fb78:b528]) by PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::ef38:9181:fb78:b528%7]) with mapi id 15.20.6521.024; Fri, 23 Jun 2023
- 22:18:56 +0000
-Message-ID: <60626151-d838-c335-47e9-246bdbe02dec@intel.com>
-Date:   Fri, 23 Jun 2023 15:18:51 -0700
+ 22:19:33 +0000
+Message-ID: <5f99d057-66f1-8a6c-9107-490af0eff3f2@intel.com>
+Date:   Fri, 23 Jun 2023 15:19:29 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Betterbird/102.11.1
-Subject: Re: [PATCH v7 26/27] PCI/AER: Unmask RCEC internal errors to enable
- RCH downstream port error handling
+Subject: Re: [PATCH v7 27/27] cxl/core/regs: Rename phys_addr in
+ cxl_map_component_regs()
 To:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
         <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
         <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
@@ -84,71 +84,71 @@ To:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
 CC:     <rrichter@amd.com>, <linux-kernel@vger.kernel.org>,
         <bhelgaas@google.com>
 References: <20230622205523.85375-1-terry.bowman@amd.com>
- <20230622205523.85375-27-terry.bowman@amd.com>
+ <20230622205523.85375-28-terry.bowman@amd.com>
 Content-Language: en-US
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230622205523.85375-27-terry.bowman@amd.com>
+In-Reply-To: <20230622205523.85375-28-terry.bowman@amd.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR04CA0002.namprd04.prod.outlook.com
- (2603:10b6:a03:40::15) To PH7PR11MB5984.namprd11.prod.outlook.com
+X-ClientProxiedBy: BYAPR04CA0014.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::27) To PH7PR11MB5984.namprd11.prod.outlook.com
  (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|BL1PR11MB5430:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5be109e0-88f3-48c3-793b-08db7437d580
+X-MS-Office365-Filtering-Correlation-Id: 83ae630f-2a33-45bf-d225-08db7437ebbc
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E4LqESrBHJJu8sbazlEnSSLqbEZjmLpgIlBkCNujeo5rfQqeqG2WmtrLLjqQpAU1IJ0rBTzVGRVgaM8wsgCsqCnr6mb/y9Ib//Y4W2rlbJ2+RTc39QmjbcP4skhndze8le1uxC3K026/2d1gF4hHg9TQw40SFq9kwMoXviTNAmK73mmYASXQwSr/gT+z62GOS9V3Wb+Ei5avnfDI3UxVejStpKv/BUw0qSq2r59ivnFJ0F0/Tf8Bgk0VeeZ/qgfT6oIGVSWd5u6EY0ROMsCuZuNhBsc7ViUGgFX46Hn/L5dUAvLD7buFHwMr6/Eu5u2jKouKKAeLUCrxmArkbCdjAg+S7Kx9w9YhUJ16AFATVleqDwEFQA353cJxdwczJM7/9PZ46IcudtHSrRL7sjnOq3dzCt+yYAjN/anLWzwgKkf1sVsOaz/sMM2a+YV5IlZL6gT5t35GhSmxSnCYitDBCMm454esVF/rYfi7GTmWn0+4bZoCCs2xM+4qQ+NTPRi/aG3SSVe7jA5RPaYhrwJBJq+dSbfGJsRnN2jquncgqcFU/hVFkzJyGzBQ+k0AKbO715hAB/0uDt4iL3BTY9UEVsb7JplCIN8Ur/LHsSjibCukm0mOp+JhT+v3Vd8LA8RsVmFtINmXmpdkzJnIRdH7ZA==
+X-Microsoft-Antispam-Message-Info: AwJDN+RTghj1zVNf4cfmzL/n1zWCVi3JePLdnzkPrQ99yeDgL3oZI+yhwuBHWkbG948FkI4RgpfV6366s5ImOrcbgzmyY8tqXZLgz/RKg2LjwPaQj2OdWg6+YukbVq6sjW+E2sUW0AttQ2htrYsFqpXV7G08MGo2lgVnMr7dag3N+LejiAsW1UiSrXoIhfQDNYGk50DYO8PVpDNZS3DXq+TCMbdt69yoDNZ6xx94FgK0ZR2NOm4l7pOoCn8dWgTDQPyTcQXPrFA1DzbKizzqRxuusSuHehp7N5Xy0szpRwuQcf7RqA1K4Lps0NcL/usG9pJutUcR1h7NuXMs++FIC48IpQHl1AfpL/ykV8KkF4e/EkaskNvewqCWJvyf+E9+QjyaGyQWMeqU7JvUNvt66T6Qj8licp+dPxnMKHVgn2SMM7vfNA5WVO2TbvypHqKonRHNdPeAlyRMMEJPVxJr6vJDiTuMkWupbA/lFMPj2DuJ02BeElea2j3OZmpv7oaT0tkZ5w/dGQ+H3+FabJlKrQcOly7G20QMX+pBxx6E2CpQxdHHHUSAoE+UKio8T+yBQJYgJALalzpSXUYm8u8Cfuuf276rlQ7KPI9BV7CXAZmkFk619WIHDEByqSUtMGJjbs0n5HDVUpqPaHFv0cCKNA==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(376002)(346002)(366004)(396003)(136003)(451199021)(6666004)(478600001)(5660300002)(6506007)(53546011)(6486002)(83380400001)(4326008)(66946007)(8936002)(66476007)(66556008)(8676002)(41300700001)(31686004)(44832011)(2906002)(36756003)(26005)(186003)(6512007)(38100700002)(82960400001)(2616005)(316002)(31696002)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YWdEczJzODg5QVk0dmRpRTB5aVN0bExMaU9xb0IzY24zb1RrM1NES2ppVGZP?=
- =?utf-8?B?QTZ3MjRiUGlGRWNpOForeE1ySFAyRFB5TGFNSi83bGdKcHdLZTh5UXdOTi9G?=
- =?utf-8?B?MGxCWmJYdy9qZXNLOEx1N1pybVFjUGp5MWExZFdkVkNqaFU0STBxaGZvTFh5?=
- =?utf-8?B?a0M1VWJMTWNjZFg1bzJDRnZ5V0hyTS93cDNNQVFOejZnd1E3UmdmcmpZZWRE?=
- =?utf-8?B?YWpBS3NFNmpVN1FkaWdLMExWTU9kYTlMcHdNbStDQXJnZ2NzdklkM1VqZWJF?=
- =?utf-8?B?VVJPRG9SNWFBblNxT053Q05RS0pndnVPa1ZxbWVlcDFtRkErUUNiSlhncGg0?=
- =?utf-8?B?MUpJVGFrc2dybkYveEhoK3pnd3MxR2FGZVNMK2s2VHp1SVNuYUdtWkc4Z1pK?=
- =?utf-8?B?QmlDUy9ycGFUVmRBSWxiWHRJQ3J6SmFxRTZETHkvRlg2ak5hQm8rMFM0eCt2?=
- =?utf-8?B?dkVNeGlnZTU0eFFGZTlwb25YcFFITUk1c2pTNkhWZGdZT250a01zbDlSellH?=
- =?utf-8?B?YytObkVQSkRXSmFtdCtleDFOWDdGMHZiTVJrVzdaQlpJWjZSeFBVYllpZ1No?=
- =?utf-8?B?RkFLZ3BGYURMaCt5MER6MGNnRWxDRTBxa2Z2dWh5N3VObnJpWE1NRjM5NTJp?=
- =?utf-8?B?UXF0WHFtS3EyNlNIejllbmJZLytKNU5TekFWajBwL09iRTlrYTBQd2pnWWhS?=
- =?utf-8?B?MUZrNnRuL1V5YTdkMFdvNWVEV3RHOWpMVDQ5NktRVzVRU25kZ0RGTUM0K2tS?=
- =?utf-8?B?VjJFNkpZcnhPWmF3eWpNdm9wZEtBeTFDSkUxNnhicGtDelRkYzgvSU0ya3Ba?=
- =?utf-8?B?U01wa2t3aXkzYnlXTUM1dnhPQzF0SklMQ1d0Y2dTQUdXTDIzQlhNTXVYK08z?=
- =?utf-8?B?V1ZucWFSVTR0OERVSFlhYjd4RHA4ZDA2VkhubFcxSlZFc3JjTmZRbyt3cTJH?=
- =?utf-8?B?Y0xrZEF3dGJoQmI4eGxUNEZETVBmV243M1h2R2Z1TFo0YkJuY09YcEh4UnhP?=
- =?utf-8?B?Q1EzNlNTS3Z6K04vR2JaQzRYekZTTmlSMkhta0FXSVYyQlh1M2Fhd0VtL2JK?=
- =?utf-8?B?NWZFa1JiM3JydmZwbzJkMnJ3cFNxcFZSbTQvR2Q2TEo5U1BCa1kyc01FWSt1?=
- =?utf-8?B?M3htakx5WEkxY2NzajdGMTVDNGE3QzFJekxYMUJvL21UK3hidW5NRE9rUVdm?=
- =?utf-8?B?dzg1SXJyckpvdTJWTkx2eDU3dEx1aThMUjIyTUJlZnNJVjVGaG1ISGdCaEFG?=
- =?utf-8?B?dmV5bDZxYlJsdllHMFI3blh4OGxrRjJhWHpoYzY0Z3V6RUZvcWxtL3kwVitW?=
- =?utf-8?B?NFUyaVNpMDIrY2xMa0VDdms3NUVqTlg0TTRzWVBnUEJUYzNtV2Y5NzJqZ094?=
- =?utf-8?B?YW9GcWlUWmJidWZHSjZhN051WTE3Y3I3dGR1V2E4ek55T3hWZFAvVlNwUlVs?=
- =?utf-8?B?WTkxTlZaM1JKeEhMMmJnVFI4K1FBcU5hdnhlT3d3ZXJxaXVyZ2ErYk0yT0ZS?=
- =?utf-8?B?TFJuMlFwZWNtaGhmd1N3cjg5U1VyUnBVSEczNUdmbXoxVEFxcGF4L2o4YVFy?=
- =?utf-8?B?RWZOZDNLV3lLdTZyYWNwdTBzNFE2Wk93MlAvWE12RWFHdzdTS1hKQ0xaNWEr?=
- =?utf-8?B?djVGcHJZZnpqbGE3WlZ4Q242WUgxSnlQSmpYeTJzWW9TZktEcTY4dnJnaDZ2?=
- =?utf-8?B?WVpHN0NmclhheGkwWWtVclpUanlGZWROcTZlQTN6T3o0M2k3dU11RFZ6VlFO?=
- =?utf-8?B?MzRkSEo2V3ZUSW0xR2ZHV3BGRXoxalpTMlkzblZKdjhQL1RuV09aWENpUkZy?=
- =?utf-8?B?aDlOL0dFUk4wamNEZStERERPSXo1Si9Uall0ckd0RGVORm5ZVUtna3hDZzJN?=
- =?utf-8?B?dEtMRkN1L2ZsQ2lGeHFkQk9heVZtRms3MEhvcG5TVzB5ZXVmenZIbUdBYUUw?=
- =?utf-8?B?OHArYktwVzJJVUhOMWZ3NWFpMUlKRHpYVjJ1elpEWncrT2Q4bnJkSmxEM1p6?=
- =?utf-8?B?aEZFK3dod1Y2b3BzbTNyMkRlczlGcUI2M0VEWlpyWGVBS2JmOVR4aUN1d0Zr?=
- =?utf-8?B?bHpOY0dqbUJ5eVJPNldwSGVlTHhhV2NCVlRHbzRlNWFGWWswMFN4NjBjT3di?=
- =?utf-8?Q?1PJ8is0ao3cnNtAC8FreCXvwJ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5be109e0-88f3-48c3-793b-08db7437d580
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VFIvWEhBOFBzbDhQZCt3RzEyTXM5WU9tY1o0YkliRTVJTzZMeGNuV2dpdEpH?=
+ =?utf-8?B?RE9hcVAwSlliMk1rTW9JUms0RFFwRFJpQ0tNUlNucFpWMy9MWEVCUlBDUFMr?=
+ =?utf-8?B?MndHT0laY2FWS3RiallDMHpuT0R1SFlpbnN2V01NOFJWc3FLRmQ5L1gvckZC?=
+ =?utf-8?B?MFphZkJqYUxTekFTdW1XUnhDNmlOdllhZHlSWHpIbTU3SnZXWnMzOFh1UzVV?=
+ =?utf-8?B?L2x6aFl2cHNzTlpIb3d5K0p4NGRWQXc3d1VLZFlxRXJaTDlWdHBqdkpMOHlq?=
+ =?utf-8?B?YUhsV2dTSWhTdk9iTHVCd2lUYzcweTQ3NEREanJ5V1NrZnMrQTI0dHhRVUlJ?=
+ =?utf-8?B?ZXozVlJkOGRZcU1zWEpMbU94WG1VenZHS0ZUVXNadlNmSkxtanNTVEZtSU4r?=
+ =?utf-8?B?QVFQSFZTT0JOTzVSVUhhSW9rYi8vWDNqYytBL3FORnVQZitUY3pYQWg5cFpY?=
+ =?utf-8?B?NE1KRWp0TkV6anVsMW1tTlpnOFFJTFRPMmd3SzdaRGJ1NnVrczZ0SmtsNms4?=
+ =?utf-8?B?c2dnZFovS1IvVkFzTzBTb0ZXcTRmUWFmL2l1L2J2Q1FRZktQWlUrYzdXRlpk?=
+ =?utf-8?B?bzdJeDBEZUN2UU9TVHlyQ3FvakN5aE1mbkxwb2pkV0hhcG1VOHNRc0RBRVhW?=
+ =?utf-8?B?eE9wR3kzdktvd3dOQ1g3MjVTeHhkc3p6UCtkbCtFa0RJbllQZGw0RWp2Z1kz?=
+ =?utf-8?B?T2ppdG50cktVa0JOUzQ3ak5QRFB6VVptZFE5UFFDRFVOTHRsblRWeU1aSkpM?=
+ =?utf-8?B?UHBDbFZuVGpRK2czeUoyRXU1RnJ0akJHUXVTYXdjZFl6ZldvWS9lbHJrUlFi?=
+ =?utf-8?B?WVZ4RzEybVRpdmRxeUJZWll6MEVDOWNPNDNtOGEvRGxINGViR3VZU0hGbXky?=
+ =?utf-8?B?c1FmVThyMlJsRUVtdzJmTnVnOGltVnA5emN4UFNDSUNWZ2dUWm55bndoN1Zl?=
+ =?utf-8?B?Rm5UVW9XU3FaUlpRQ3l1QkwycnZ3bVJrRS92cHRKU2szMU9yaWVKTFFDN1R5?=
+ =?utf-8?B?ZW5wTUltSVZRMjVSbGJ6b0ltM2NKSHorNmQ0eldZcENyQlpWZ3BhOW5mcjVH?=
+ =?utf-8?B?T3p5TUJwdXZEN2cyMEdGRTEyNHJkeEU1UU5NM1d4YWNTVEd6TkhXbWtYYXRu?=
+ =?utf-8?B?aFRJd2dWTHMzeDRjazIybmhiN3dJMElDUVF3elA2MWYvWnhETVlrRzZJWDRp?=
+ =?utf-8?B?RGVmS3UzSlRDYnJnOUVWcWMxbXl1alZWeHFrdDMycU5TOHRFbFVNQWxuQnZT?=
+ =?utf-8?B?dEdqUEo3ZExBR2xRWnM3UXc2T2t0dE9NTlZmTDI0a1dMRGtZQ2U5WG1vQkJ6?=
+ =?utf-8?B?OXJGcHhUV1NXZm9EL2t1cWlreUtMU3lQRks0QXcvWTJGcTFmcWV2WUtmOVdw?=
+ =?utf-8?B?YTFDVE5LSERBN0IwRmllK0hjSHo4NW1GblBmK3l2QlFSUWx0SEVCeEl2Tk5S?=
+ =?utf-8?B?bmhXeWx3alFyaU8zZGVxU2hYOVpuYU5iaHk2b3FCS2xPMzArQ3dPMzErcWcr?=
+ =?utf-8?B?TGs4RUFtbXg3MkJlWTdHdDEvOEhTbG0wMnY2SGwrb2JVdnpBQ0lHSG5mb09q?=
+ =?utf-8?B?ek53VWJHSFEwYm1lK1MxVy84V3kwV0ZMUWVzK3Jya1JYWnltZWtKb29hNzNi?=
+ =?utf-8?B?MmFmMmtrN08zL0RqWHUyZHRVdVJESjRTWjIxQXpOa1ZEUVlYWDd4RTR5U2RU?=
+ =?utf-8?B?UmtPclN0UW5Fc2hFdVdLMVhNcGU3bzFucW9Gb2hYYU8wbEkyWDJqeHhmU0lu?=
+ =?utf-8?B?akhPakJlRXFiNXFCRzIvOHhZN3N0M1FvVXlGWnl3Y3YxWU96TkliOW43My9R?=
+ =?utf-8?B?N0tUK1VGZXFJdUdmOWhHV29HTGNKUXFOMjR1S2xjRjRYeDd2YXl6NExxWXlv?=
+ =?utf-8?B?cEIzVTRTS1lQRFdtUEpMVXJGWXl2dGNGNWhISEhBSU5lT1EyYTZ5SjFrRHEr?=
+ =?utf-8?B?aGJVT0p0bVZVKzhtakxteDJwMFhySUEzWmhFTjdZQ0tIVjJralFEeXNLMy9u?=
+ =?utf-8?B?NTA5TTdwVlVNVnVLRVlxeldrOFBIZFMyVTVTaHpINllTTWRvcWdubXJWTWV0?=
+ =?utf-8?B?MHEyd05pWWMxRVB4K1Y4Y2JhN2tNMWx3NlRWaFB3blozTG8vK1VOdUM0ZzVw?=
+ =?utf-8?Q?hrhMXvJ6j0n2hDX9bf0CYBTpL?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83ae630f-2a33-45bf-d225-08db7437ebbc
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2023 22:18:55.8456
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2023 22:19:33.1993
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w4C5CTUNk1NLDgNtjfhottgEJ418PVEP3BdNZRPvnc+8GRvr6V/9pXCYONbmWX7hHHREKZU5m6Lcjwx0og4LKQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: d77EAg+sYFLNOHibjBx5G2/fG4r4307CzHZy8KhR80geR4+tvMlJZyiVA9A5gA+nEyorWWu1cd+Tbd+AFlr0iA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5430
 X-OriginatorOrg: intel.com
 Precedence: bulk
@@ -160,106 +160,40 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 On 6/22/23 13:55, Terry Bowman wrote:
 > From: Robert Richter <rrichter@amd.com>
 > 
-> AER corrected and uncorrectable internal errors (CIE/UIE) are masked
-> in their corresponding mask registers per default once in power-up
-> state. [1][2] Enable internal errors for RCECs to receive CXL
-> downstream port errors of Restricted CXL Hosts (RCHs).
+> Trivial change that renames variable phys_addr in
+> cxl_map_component_regs() to shorten its length to keep the 80 char
+> size limit for the line and also for consistency between the different
+> paths.
 > 
-> [1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
-> [2] PCIe Base Spec r6.0, 7.8.4.3 Uncorrectable Error Mask Register,
->      7.8.4.6 Correctable Error Mask Register
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Robert Richter <rrichter@amd.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   drivers/pci/pcie/aer.c | 57 ++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 57 insertions(+)
+>   drivers/cxl/core/regs.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index c354ca5e8f2b..916fbca95e53 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -948,6 +948,30 @@ static bool find_source_device(struct pci_dev *parent,
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 982ef79670c7..ba351a887040 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -216,16 +216,16 @@ int cxl_map_component_regs(struct cxl_register_map *map,
 >   
->   #ifdef CONFIG_PCIEAER_CXL
+>   	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
+>   		struct mapinfo *mi = &mapinfo[i];
+> -		resource_size_t phys_addr;
+> +		resource_size_t addr;
+>   		resource_size_t length;
 >   
-> +/**
-> + * pci_aer_unmask_internal_errors - unmask internal errors
-> + * @dev: pointer to the pcie_dev data structure
-> + *
-> + * Unmasks internal errors in the Uncorrectable and Correctable Error
-> + * Mask registers.
-> + *
-> + * Note: AER must be enabled and supported by the device which must be
-> + * checked in advance, e.g. with pcie_aer_is_native().
-> + */
-> +static void pci_aer_unmask_internal_errors(struct pci_dev *dev)
-> +{
-> +	int aer = dev->aer_cap;
-> +	u32 mask;
-> +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, &mask);
-> +	mask &= ~PCI_ERR_UNC_INTN;
-> +	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_MASK, mask);
-> +
-> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_MASK, &mask);
-> +	mask &= ~PCI_ERR_COR_INTERNAL;
-> +	pci_write_config_dword(dev, aer + PCI_ERR_COR_MASK, mask);
-> +}
-> +
->   static bool is_cxl_mem_dev(struct pci_dev *dev)
->   {
->   	/*
-> @@ -1027,7 +1051,39 @@ static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->   		pcie_walk_rcec(dev, cxl_rch_handle_error_iter, info);
->   }
->   
-> +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> +{
-> +	bool *handles_cxl = data;
-> +
-> +	if (!*handles_cxl)
-> +		*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> +
-> +	/* Non-zero terminates iteration */
-> +	return *handles_cxl;
-> +}
-> +
-> +static bool handles_cxl_errors(struct pci_dev *rcec)
-> +{
-> +	bool handles_cxl = false;
-> +
-> +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
-> +	    pcie_aer_is_native(rcec))
-> +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> +
-> +	return handles_cxl;
-> +}
-> +
-> +static void cxl_rch_enable_rcec(struct pci_dev *rcec)
-> +{
-> +	if (!handles_cxl_errors(rcec))
-> +		return;
-> +
-> +	pci_aer_unmask_internal_errors(rcec);
-> +	pci_info(rcec, "CXL: Internal errors unmasked");
-> +}
-> +
->   #else
-> +static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
->   static inline void cxl_rch_handle_error(struct pci_dev *dev,
->   					struct aer_err_info *info) { }
->   #endif
-> @@ -1428,6 +1484,7 @@ static int aer_probe(struct pcie_device *dev)
->   		return status;
+>   		if (!mi->rmap->valid)
+>   			continue;
+>   		if (!test_bit(mi->rmap->id, &map_mask))
+>   			continue;
+> -		phys_addr = map->resource + mi->rmap->offset;
+> +		addr = map->resource + mi->rmap->offset;
+>   		length = mi->rmap->size;
+> -		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
+> +		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
+>   		if (!*(mi->addr))
+>   			return -ENOMEM;
 >   	}
->   
-> +	cxl_rch_enable_rcec(port);
->   	aer_enable_rootport(rpc);
->   	pci_info(port, "enabled with IRQ %d\n", dev->irq);
->   	return 0;
