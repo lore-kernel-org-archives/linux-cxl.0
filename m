@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF89EB64D7
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 13:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE52BEB64D7
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 13:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbjFWNaQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Jun 2023 09:30:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
+        id S231211AbjFWNcc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Jun 2023 09:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjFWNaP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 09:30:15 -0400
+        with ESMTP id S229657AbjFWNcb (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 09:32:31 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929B62688;
-        Fri, 23 Jun 2023 06:30:14 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QndMK29Prz6GD5l;
-        Fri, 23 Jun 2023 21:27:25 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45B52130;
+        Fri, 23 Jun 2023 06:32:30 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QndRp0hpJz6J66G;
+        Fri, 23 Jun 2023 21:31:18 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 23 Jun
- 2023 14:30:12 +0100
-Date:   Fri, 23 Jun 2023 14:30:11 +0100
+ 2023 14:32:28 +0100
+Date:   Fri, 23 Jun 2023 14:32:27 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,12 +29,12 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v7 27/27] cxl/core/regs: Rename phys_addr in
- cxl_map_component_regs()
-Message-ID: <20230623143011.00007076@Huawei.com>
-In-Reply-To: <20230622205523.85375-28-terry.bowman@amd.com>
+Subject: Re: [PATCH v7 14/27] cxl/port: Store the port's Component Register
+ mappings in struct cxl_port
+Message-ID: <20230623143227.00001bf6@Huawei.com>
+In-Reply-To: <20230622205523.85375-15-terry.bowman@amd.com>
 References: <20230622205523.85375-1-terry.bowman@amd.com>
-        <20230622205523.85375-28-terry.bowman@amd.com>
+        <20230622205523.85375-15-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -48,48 +48,38 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 22 Jun 2023 15:55:23 -0500
+On Thu, 22 Jun 2023 15:55:10 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
 > From: Robert Richter <rrichter@amd.com>
 > 
-> Trivial change that renames variable phys_addr in
-> cxl_map_component_regs() to shorten its length to keep the 80 char
-> size limit for the line and also for consistency between the different
-> paths.
+> CXL capabilities are stored in the Component Registers. To use them,
+> the specific I/O ranges of the capabilities must be determined by
+> probing the registers. For this, the whole Component Register range
+> needs to be mapped temporarily to detect the offset and length of a
+> capability range.
+> 
+> In order to use more than one capability of a component (e.g. RAS and
+> HDM) the Component Register are probed and its mappings created
+> multiple times. This also causes overlapping I/O ranges as the whole
+> Component Register range must be mapped again while a capability's I/O
+> range is already mapped.
+> 
+> Different capabilities cannot be setup at the same time. E.g. the RAS
+> capability must be made available as soon as the PCI driver is bound,
+> the HDM decoder is setup later during port enumeration. Moreover,
+> during early setup it is still unknown if a certain capability is
+> needed. A central capability setup is therefore not possible,
+> capabilities must be individually enabled once needed during
+> initialization.
+> 
+> To avoid a duplicate register probe and overlapping I/O mappings, only
+> probe the Component Registers one time and store the Component
+> Register mapping in struct port. The stored mappings can be used later
+> to iomap the capability register range when enabling the capability,
+> which will be implemented in a follow-on patch.
 > 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
-Fair enough on consistency side.  I don't care about being just over 80 chars :)
-
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  drivers/cxl/core/regs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 982ef79670c7..ba351a887040 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -216,16 +216,16 @@ int cxl_map_component_regs(struct cxl_register_map *map,
->  
->  	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
->  		struct mapinfo *mi = &mapinfo[i];
-> -		resource_size_t phys_addr;
-> +		resource_size_t addr;
->  		resource_size_t length;
->  
->  		if (!mi->rmap->valid)
->  			continue;
->  		if (!test_bit(mi->rmap->id, &map_mask))
->  			continue;
-> -		phys_addr = map->resource + mi->rmap->offset;
-> +		addr = map->resource + mi->rmap->offset;
->  		length = mi->rmap->size;
-> -		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
-> +		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
->  		if (!*(mi->addr))
->  			return -ENOMEM;
->  	}
-
