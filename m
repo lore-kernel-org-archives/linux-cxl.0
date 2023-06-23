@@ -2,41 +2,39 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CBBEB64D7
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 13:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF89EB64D7
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 13:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231543AbjFWN3E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Jun 2023 09:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        id S229715AbjFWNaQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Jun 2023 09:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230235AbjFWN3C (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 09:29:02 -0400
+        with ESMTP id S229873AbjFWNaP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 09:30:15 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D0F1715;
-        Fri, 23 Jun 2023 06:28:59 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QndL036jMz6J7Yh;
-        Fri, 23 Jun 2023 21:26:16 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 929B62688;
+        Fri, 23 Jun 2023 06:30:14 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QndMK29Prz6GD5l;
+        Fri, 23 Jun 2023 21:27:25 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 23 Jun
- 2023 14:28:57 +0100
-Date:   Fri, 23 Jun 2023 14:28:56 +0100
+ 2023 14:30:12 +0100
+Date:   Fri, 23 Jun 2023 14:30:11 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Terry Bowman <Terry.Bowman@amd.com>
+To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v6 25/27] cxl/pci: Disable root port interrupts in RCH
- mode
-Message-ID: <20230623142856.000004c5@Huawei.com>
-In-Reply-To: <7c11f087-72ee-eb18-cdcb-774d7848dcef@amd.com>
-References: <20230622035126.4130151-1-terry.bowman@amd.com>
-        <20230622035126.4130151-26-terry.bowman@amd.com>
-        <20230622141255.00006d13@Huawei.com>
-        <7c11f087-72ee-eb18-cdcb-774d7848dcef@amd.com>
+Subject: Re: [PATCH v7 27/27] cxl/core/regs: Rename phys_addr in
+ cxl_map_component_regs()
+Message-ID: <20230623143011.00007076@Huawei.com>
+In-Reply-To: <20230622205523.85375-28-terry.bowman@amd.com>
+References: <20230622205523.85375-1-terry.bowman@amd.com>
+        <20230622205523.85375-28-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -50,38 +48,48 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 22 Jun 2023 11:33:30 -0500
-Terry Bowman <Terry.Bowman@amd.com> wrote:
+On Thu, 22 Jun 2023 15:55:23 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-> Hi Jonathan,
+> From: Robert Richter <rrichter@amd.com>
 > 
-> On 6/22/23 08:12, Jonathan Cameron wrote:
-> > On Wed, 21 Jun 2023 22:51:24 -0500
-> > Terry Bowman <terry.bowman@amd.com> wrote:
-> >   
-> >> The RCH root port contains root command AER registers that should not be
-> >> enabled.[1] Disable these to prevent root port interrupts.  
-> > 
-> > I'm a little dubious about a 'because the spec says' so argument.
-> > If we can describe the path by which spurious interrupts turn up then
-> > great - if not then fair enough.
-> >   
+> Trivial change that renames variable phys_addr in
+> cxl_map_component_regs() to shorten its length to keep the 80 char
+> size limit for the line and also for consistency between the different
+> paths.
 > 
-> This was added to follow the spec. The RCH downstream port contains
-> root port control pci express capability for enabling and disabling root
-> port interrupts. The interrupts are (should be) disabled by default at
-> powerup according to the PCI spec. We know SW does not enable because
-> the RCH downstream port is not enumerated or managed by a port driver. I
-> cant say this patch is absolutely necessary but was not comfortable with
-> removing it either and want to avoid undefined behavior.
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+
+Fair enough on consistency side.  I don't care about being just over 80 chars :)
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/core/regs.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-Maybe we should just abuse firmware authors and blame them for potentially
-having changed the default :)
-
-Fine as is.
-
-Jonathan
-
-> Regards,
-> Terry
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 982ef79670c7..ba351a887040 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -216,16 +216,16 @@ int cxl_map_component_regs(struct cxl_register_map *map,
+>  
+>  	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
+>  		struct mapinfo *mi = &mapinfo[i];
+> -		resource_size_t phys_addr;
+> +		resource_size_t addr;
+>  		resource_size_t length;
+>  
+>  		if (!mi->rmap->valid)
+>  			continue;
+>  		if (!test_bit(mi->rmap->id, &map_mask))
+>  			continue;
+> -		phys_addr = map->resource + mi->rmap->offset;
+> +		addr = map->resource + mi->rmap->offset;
+>  		length = mi->rmap->size;
+> -		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
+> +		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
+>  		if (!*(mi->addr))
+>  			return -ENOMEM;
+>  	}
 
