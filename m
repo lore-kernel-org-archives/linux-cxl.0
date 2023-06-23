@@ -2,305 +2,86 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943C3EB64D7
-	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 12:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CBBEB64D7
+	for <linux-cxl@archiver.kernel.org>; Fri, 23 Jun 2023 13:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjFWMgJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 23 Jun 2023 08:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
+        id S231543AbjFWN3E (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 23 Jun 2023 09:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjFWMgH (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 08:36:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997062685
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Jun 2023 05:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687523717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kOH7WzwTI4VChT7oNEuEyQV7U0mT1MDvKKV+43PfARA=;
-        b=BHdygKPuwkEQvm9NofhaAU0hq/Kb24wXNiDy9L2Tyvj8P8auUdrSi6LSPwdYEzDzIJk7xk
-        g2ijwrlM+A4IlZC82q2vM89lWtyowwojBBM3exarDwTMVzm4Mjm2RT9FPLKyS7DQA/7E3p
-        7S6rBumCqDwRM3kL5SAGMogUoPz/J1w=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-acXUNv2XO362L-4DRI7lYg-1; Fri, 23 Jun 2023 08:35:14 -0400
-X-MC-Unique: acXUNv2XO362L-4DRI7lYg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3fa77cc7df1so4326125e9.3
-        for <linux-cxl@vger.kernel.org>; Fri, 23 Jun 2023 05:35:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687523713; x=1690115713;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kOH7WzwTI4VChT7oNEuEyQV7U0mT1MDvKKV+43PfARA=;
-        b=ZqJElQiRF16ZM3JOaatg/nOysTBbuHEO8jWrV8+b6Ni9iCkXBKJOncTFvxfLLLJpZL
-         tYrMtou8/X+N2il/Vszv14n/YFdozq2mKylKuLa2YbkdWDvIAFFomtXw4KYRgXb2fMfo
-         10o5VWypS1n4YXEWwa9Qq2gnqRL53mqjuh/QWAv5QM78Q86T39fSCCDxY/xNwswsJift
-         SsiRstgjR+ot/3wTRjzkx3IXdUVWid6wKJPJyNgXCtN2aB0ho4dpqgIs43E4tN0XNtbT
-         DoALTE2IFreClqBPZaIAEO0d74KNhmkvVjbuHfYzrzdXjQGkp2jejfvT7ejjK8RKVNnj
-         jSBg==
-X-Gm-Message-State: AC+VfDyLxSPTfguZih8YThrI3/tVhSqlxnTqN6ZkCUL4p8K2hSytlGo2
-        bw9f0l+qDDrSaURyfEhAJKFebaM2UQGQLRcwOHW3WvicUpKsQ86E15eGjuCWwAoFPr87rWleJ8d
-        w07JHvD9pe5HeHdd+dX91
-X-Received: by 2002:a05:600c:299:b0:3f9:ba2:5d19 with SMTP id 25-20020a05600c029900b003f90ba25d19mr12835819wmk.33.1687523713256;
-        Fri, 23 Jun 2023 05:35:13 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6Y0g/ua8drcZZs4ihly3xkcq6phAdx3XddFTb5zM1PH+jlNfkw8ytfERFImOnmq5MJYMecVQ==
-X-Received: by 2002:a05:600c:299:b0:3f9:ba2:5d19 with SMTP id 25-20020a05600c029900b003f90ba25d19mr12835796wmk.33.1687523712888;
-        Fri, 23 Jun 2023 05:35:12 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c729:1700:9783:58ba:9db:1221? (p200300cbc7291700978358ba09db1221.dip0.t-ipconnect.de. [2003:cb:c729:1700:9783:58ba:9db:1221])
-        by smtp.gmail.com with ESMTPSA id p8-20020a7bcc88000000b003f7e4639aabsm2310854wma.10.2023.06.23.05.35.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 05:35:12 -0700 (PDT)
-Message-ID: <c0f51e0e-63ba-2cd2-fb07-a924a081a3fe@redhat.com>
-Date:   Fri, 23 Jun 2023 14:35:11 +0200
+        with ESMTP id S230235AbjFWN3C (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 23 Jun 2023 09:29:02 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D0F1715;
+        Fri, 23 Jun 2023 06:28:59 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QndL036jMz6J7Yh;
+        Fri, 23 Jun 2023 21:26:16 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 23 Jun
+ 2023 14:28:57 +0100
+Date:   Fri, 23 Jun 2023 14:28:56 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Terry Bowman <Terry.Bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v6 25/27] cxl/pci: Disable root port interrupts in RCH
+ mode
+Message-ID: <20230623142856.000004c5@Huawei.com>
+In-Reply-To: <7c11f087-72ee-eb18-cdcb-774d7848dcef@amd.com>
+References: <20230622035126.4130151-1-terry.bowman@amd.com>
+        <20230622035126.4130151-26-terry.bowman@amd.com>
+        <20230622141255.00006d13@Huawei.com>
+        <7c11f087-72ee-eb18-cdcb-774d7848dcef@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 1/3] mm/memory_hotplug: Allow an override for the
- memmap_on_memory param
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com>
- <20230613-vv-kmem_memmap-v1-1-f6de9c6af2c6@intel.com>
- <87mt0qy3j9.fsf@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <87mt0qy3j9.fsf@linux.ibm.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 23.06.23 10:40, Aneesh Kumar K.V wrote:
-> Vishal Verma <vishal.l.verma@intel.com> writes:
-> 
->> For memory hotplug to consider MHP_MEMMAP_ON_MEMORY behavior, the
->> 'memmap_on_memory' module parameter was a hard requirement.
->>
->> In preparation for the dax/kmem driver to use memmap_on_memory
->> semantics, arrange for the module parameter check to be bypassed via the
->> appropriate mhp_flag.
->>
->> Recall that the kmem driver could contribute huge amounts of hotplugged
->> memory originating from special purposes devices such as CXL memory
->> expanders. In some cases memmap_on_memory may be the /only/ way this new
->> memory can be hotplugged. Hence it makes sense for kmem to have a way to
->> force memmap_on_memory without depending on a module param, if all the
->> other conditions for it are met.
->>
->> The only other user of this interface is acpi/acpi_memoryhotplug.c,
->> which only enables the mhp_flag if an initial
->> mhp_supports_memmap_on_memory() test passes. Maintain the existing
->> behavior and semantics for this by performing the initial check from
->> acpi without the MHP_MEMMAP_ON_MEMORY flag, so its decision falls back
->> to the module parameter.
->>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Len Brown <lenb@kernel.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Dave Jiang <dave.jiang@intel.com>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: Huang Ying <ying.huang@intel.com>
->> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
->> ---
->>   include/linux/memory_hotplug.h |  2 +-
->>   drivers/acpi/acpi_memhotplug.c |  2 +-
->>   mm/memory_hotplug.c            | 24 ++++++++++++++++--------
->>   3 files changed, 18 insertions(+), 10 deletions(-)
->>
->> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
->> index 9fcbf5706595..c9ddcd3cad70 100644
->> --- a/include/linux/memory_hotplug.h
->> +++ b/include/linux/memory_hotplug.h
->> @@ -358,7 +358,7 @@ extern struct zone *zone_for_pfn_range(int online_type, int nid,
->>   extern int arch_create_linear_mapping(int nid, u64 start, u64 size,
->>   				      struct mhp_params *params);
->>   void arch_remove_linear_mapping(u64 start, u64 size);
->> -extern bool mhp_supports_memmap_on_memory(unsigned long size);
->> +extern bool mhp_supports_memmap_on_memory(unsigned long size, mhp_t mhp_flags);
->>   #endif /* CONFIG_MEMORY_HOTPLUG */
->>   
->>   #endif /* __LINUX_MEMORY_HOTPLUG_H */
->> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
->> index 24f662d8bd39..119d3bb49753 100644
->> --- a/drivers/acpi/acpi_memhotplug.c
->> +++ b/drivers/acpi/acpi_memhotplug.c
->> @@ -211,7 +211,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
->>   		if (!info->length)
->>   			continue;
->>   
->> -		if (mhp_supports_memmap_on_memory(info->length))
->> +		if (mhp_supports_memmap_on_memory(info->length, 0))
->>   			mhp_flags |= MHP_MEMMAP_ON_MEMORY;
->>   		result = __add_memory(mgid, info->start_addr, info->length,
->>   				      mhp_flags);
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index 8e0fa209d533..bb3845830922 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -1283,15 +1283,21 @@ static int online_memory_block(struct memory_block *mem, void *arg)
->>   	return device_online(&mem->dev);
->>   }
->>   
->> -bool mhp_supports_memmap_on_memory(unsigned long size)
->> +bool mhp_supports_memmap_on_memory(unsigned long size, mhp_t mhp_flags)
->>   {
->>   	unsigned long nr_vmemmap_pages = size / PAGE_SIZE;
->>   	unsigned long vmemmap_size = nr_vmemmap_pages * sizeof(struct page);
->>   	unsigned long remaining_size = size - vmemmap_size;
->>   
->>   	/*
->> -	 * Besides having arch support and the feature enabled at runtime, we
->> -	 * need a few more assumptions to hold true:
->> +	 * The MHP_MEMMAP_ON_MEMORY flag indicates a caller that wants to force
->> +	 * memmap_on_memory (if other conditions are met), regardless of the
->> +	 * module parameter. drivers/dax/kmem.c is an example, where large
->> +	 * amounts of hotplug memory may come from, and the only option to
->> +	 * successfully online all of it is to place the memmap on this memory.
->> +	 *
->> +	 * Besides having arch support and the feature enabled at runtime or
->> +	 * via the mhp_flag, we need a few more assumptions to hold true:
->>   	 *
->>   	 * a) We span a single memory block: memory onlining/offlinin;g happens
->>   	 *    in memory block granularity. We don't want the vmemmap of online
->> @@ -1315,10 +1321,12 @@ bool mhp_supports_memmap_on_memory(unsigned long size)
->>   	 *       altmap as an alternative source of memory, and we do not exactly
->>   	 *       populate a single PMD.
->>   	 */
->> -	return mhp_memmap_on_memory() &&
->> -	       size == memory_block_size_bytes() &&
->> -	       IS_ALIGNED(vmemmap_size, PMD_SIZE) &&
->> -	       IS_ALIGNED(remaining_size, (pageblock_nr_pages << PAGE_SHIFT));
->> +
->> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) || mhp_memmap_on_memory())
->> +		return size == memory_block_size_bytes() &&
->> +		       IS_ALIGNED(vmemmap_size, PMD_SIZE) &&
->> +		       IS_ALIGNED(remaining_size, (pageblock_nr_pages << PAGE_SHIFT));
->> +	return false;
->>   }
->>   
->>   /*
->> @@ -1375,7 +1383,7 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->>   	 * Self hosted memmap array
->>   	 */
->>   	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
->> -		if (!mhp_supports_memmap_on_memory(size)) {
->> +		if (!mhp_supports_memmap_on_memory(size, mhp_flags)) {
->>   			ret = -EINVAL;
->>   			goto error;
->>   		}
->>
-> 
-> I was working on enabling memmap_on_memory for ppc64 and came across
-> this. Can we do this as below?
-> 
-> commit d55eddf71032cad3e057d8fa4c61ad2b8e05aaa8
-> Author: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Date:   Fri Jun 23 12:11:31 2023 +0530
-> 
->      mm/hotplug: Allow to force enable memmap on memory
->      
->      In some cases like DAX kmem, we want to enable memmap on memory
->      even if we have memory_hotplug.memmap_on_memory disabled. This
->      patch enables such usage. DAX kmem can use MHP_MEMMAP_ON_MEMORY
->      directly to request for memmap on memory.
->      
->      Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> 
-> diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
-> index 24f662d8bd39..4d0096fc4cc2 100644
-> --- a/drivers/acpi/acpi_memhotplug.c
-> +++ b/drivers/acpi/acpi_memhotplug.c
-> @@ -211,8 +211,7 @@ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
->   		if (!info->length)
->   			continue;
->   
-> -		if (mhp_supports_memmap_on_memory(info->length))
-> -			mhp_flags |= MHP_MEMMAP_ON_MEMORY;
-> +		mhp_flags |= get_memmap_on_memory_flags();
->   		result = __add_memory(mgid, info->start_addr, info->length,
->   				      mhp_flags);
->   
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 9fcbf5706595..f7f534084393 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -359,6 +359,13 @@ extern int arch_create_linear_mapping(int nid, u64 start, u64 size,
->   				      struct mhp_params *params);
->   void arch_remove_linear_mapping(u64 start, u64 size);
->   extern bool mhp_supports_memmap_on_memory(unsigned long size);
-> +bool mhp_memmap_on_memory(void);
->   #endif /* CONFIG_MEMORY_HOTPLUG */
->   
-> +static inline unsigned long get_memmap_on_memory_flags(void)
-> +{
-> +	if (mhp_memmap_on_memory())
-> +		return MHP_MEMMAP_ON_MEMORY;
-> +	return 0;
-> +}
->   #endif /* __LINUX_MEMORY_HOTPLUG_H */
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index eb18d1ac7e84..85d29909fd89 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -50,7 +50,7 @@ static bool memmap_on_memory __ro_after_init;
->   module_param(memmap_on_memory, bool, 0444);
->   MODULE_PARM_DESC(memmap_on_memory, "Enable memmap on memory for memory hotplug");
->   
-> -static inline bool mhp_memmap_on_memory(void)
-> +bool mhp_memmap_on_memory(void)
->   {
->   	return memmap_on_memory;
->   }
-> @@ -1316,10 +1316,9 @@ bool mhp_supports_memmap_on_memory(unsigned long size)
->   	 *       altmap as an alternative source of memory, and we do not exactly
->   	 *       populate a single PMD.
->   	 */
-> -	return mhp_memmap_on_memory() &&
-> -	       size == memory_block_size_bytes() &&
-> -	       IS_ALIGNED(vmemmap_size, PMD_SIZE) &&
-> -	       IS_ALIGNED(remaining_size, (pageblock_nr_pages << PAGE_SHIFT));
-> +	return size == memory_block_size_bytes() &&
-> +		IS_ALIGNED(vmemmap_size, PMD_SIZE) &&
-> +		IS_ALIGNED(remaining_size, (pageblock_nr_pages << PAGE_SHIFT));
->   }
->   
->   /*
-> 
+On Thu, 22 Jun 2023 11:33:30 -0500
+Terry Bowman <Terry.Bowman@amd.com> wrote:
 
-Any forced enablement will have to cleanly handle try_remove_memory() as 
-well.
+> Hi Jonathan,
+> 
+> On 6/22/23 08:12, Jonathan Cameron wrote:
+> > On Wed, 21 Jun 2023 22:51:24 -0500
+> > Terry Bowman <terry.bowman@amd.com> wrote:
+> >   
+> >> The RCH root port contains root command AER registers that should not be
+> >> enabled.[1] Disable these to prevent root port interrupts.  
+> > 
+> > I'm a little dubious about a 'because the spec says' so argument.
+> > If we can describe the path by which spurious interrupts turn up then
+> > great - if not then fair enough.
+> >   
+> 
+> This was added to follow the spec. The RCH downstream port contains
+> root port control pci express capability for enabling and disabling root
+> port interrupts. The interrupts are (should be) disabled by default at
+> powerup according to the PCI spec. We know SW does not enable because
+> the RCH downstream port is not enumerated or managed by a port driver. I
+> cant say this patch is absolutely necessary but was not comfortable with
+> removing it either and want to avoid undefined behavior.
+> 
+Maybe we should just abuse firmware authors and blame them for potentially
+having changed the default :)
 
-memmap_on_memory needs a doc update then, and even the "forced 
-enablement" has to still be explicitly enabled by the admin.
+Fine as is.
 
-... but I'm still not convinced that memmap_on_memory should be 
-overridden. Needs good justification.
+Jonathan
 
--- 
-Cheers,
-
-David / dhildenb
+> Regards,
+> Terry
 
