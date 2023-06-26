@@ -2,92 +2,91 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D10EB64D9
-	for <linux-cxl@archiver.kernel.org>; Mon, 26 Jun 2023 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF897EB64D7
+	for <linux-cxl@archiver.kernel.org>; Mon, 26 Jun 2023 22:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232715AbjFZS6q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 26 Jun 2023 14:58:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
+        id S232133AbjFZWL2 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 26 Jun 2023 18:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232713AbjFZS6h (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 26 Jun 2023 14:58:37 -0400
+        with ESMTP id S232068AbjFZWLQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 26 Jun 2023 18:11:16 -0400
 Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7052210D5
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Jun 2023 11:58:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7838E3A97
+        for <linux-cxl@vger.kernel.org>; Mon, 26 Jun 2023 15:08:06 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 9A0A73E17C5;
-        Mon, 26 Jun 2023 18:52:46 +0000 (UTC)
-Received: from pdx1-sub0-mail-a285.dreamhost.com (unknown [127.0.0.6])
+        by relay.mailchannels.net (Postfix) with ESMTP id 9945C641BEF;
+        Mon, 26 Jun 2023 22:08:02 +0000 (UTC)
+Received: from pdx1-sub0-mail-a207.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 1FF813E1791;
-        Mon, 26 Jun 2023 18:52:46 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1687805566; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 4D9566417CA;
+        Mon, 26 Jun 2023 22:08:01 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1687817281; a=rsa-sha256;
         cv=none;
-        b=Bbl57T2+ADi2oyZLQPnU1DJ9orITy19mNQ7yA46zhHgzahMt5oSdKo+1yGTyRYC/Wj1nHF
-        Ag3yjaWQrD7J0hhJ7cU1knAnyo6gGPUCPtC+hCKlpkt5yWkcCdA8TrjgbjdWaN3Wp8lpbP
-        8WNxF/qwFqUi7hHq4VZUR3ZrD3hwQ31dRGPyJzr5krzAolfODeDjdhG8damcQNiS8qbuKI
-        X8i5ykP4liI394wKxImeqYkTW6CR1un20A3JTyBfPyozOhXv7deuiRZsPZN+IzRsck9xaf
-        TsluCCQ+Kq4NJ9k/d6D3qnnzuS1DWuwjFwKqEL26qDaXP0StCILiVYto/Z0yoQ==
+        b=3Yl1mbwtseQzSYK8nEa59Bl5XUaFOOZH4JgK3Ct9SUGp2y+WdC8+zuqbJ3Im4Qeznp+YoI
+        4OwIcFaZl/gt08zG881Wfh9GNkTFa5zc0HRyoAxR/BCdc7DUkdtYOI3WEzogl3PdKpPdHH
+        GqVO84gLQDfg5uhS38XPP7a09A34MYqABGA5uzOxttYPnwNmf77kOFgs4BOSu8x8pKqAoS
+        seD7CrcPkVgvMEmkX4F80cyy8gDOb31MWruP9Hq/3AajrPNN/dTcCsNv2l0m8bkJoXkcYH
+        7l1GB6Ae8+3WC/NRreV8jCzGMMW4+Qdg8+I9iY3dUp2YHDj1wEPjOgwoDKDuUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1687805566;
+        s=arc-2022; t=1687817281;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=ndrgzQV9OrDQCKwRJGquwDPjRE+v+eH1jIXyfzBqfME=;
-        b=ZxhkhgQdwHu6NmdVHS9FOe+8zbMEtmugqgd71DfkR5qvKY0e+yv4T4BCPmQS1I8uID1VXD
-        ceMFlMNF2QkOxcjJP4zWE4TBtsXI5LLvP2hY7cjADz1DZvgDhl1otHTQbEUNII7gB2nIK0
-        dYtDEpuNenc4xqaPA3JSfvSiOrhgLCYc6jpWWdsAIRFoXz7rsyUL0bM2gZ4kJS2Y8wzXk/
-        Bq+PWYpDq8daC2eF6TJrV6O4v8w9YaQ8vJEK4RIUtAp0s8WWkHFq7IwBwJGoS8/gAWYCBe
-        h9PdQ2fwHaxtDeCw1yuF69P4Tu9ILd8SML6iYt/o6lBYf91d/Q+HsX2WMNgOLQ==
+        bh=OOPnw0Xtk1GuUQHoF4meQ2eV2F9wx3waLvV64d4tLN4=;
+        b=N2xfoiNZ2cLFiD77areQuZgvzdXua80fVSlVub99XBhQhzANVAFtEs4GV0oscYCXHsn32N
+        +4NWHM8GwkM5a25TSkhzLOmOfP/5Yqof+G8qRI4n3hX3PVhEIWWwl2T02gODp8CFm6fShi
+        hJvg6iTCV+GZCvOyTnhkzuCvhzyGhxwgNdpd6igYcl8hk9bzcB8K2gwVBwlL6DkoCBnHvy
+        fyFqF20TIH7bcqHk27qWGm3TAk8rrzqMjsb9XozCIRpQBXYWskkN92Odc+X2VyJqa+AWIX
+        Ub14ZdjP7bHNXavDhNTIeRW3eWTUyKs3AnTWR2rgE9VNSjOlOSUOxdC+3uTccQ==
 ARC-Authentication-Results: i=1;
-        rspamd-85899d6fcc-pjvxq;
+        rspamd-9fcc56855-gcssm;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Scare-Gusty: 6e1ca9822166fa75_1687805566429_2532144591
-X-MC-Loop-Signature: 1687805566429:2624849073
-X-MC-Ingress-Time: 1687805566429
-Received: from pdx1-sub0-mail-a285.dreamhost.com (pop.dreamhost.com
+X-Gusty-Cellar: 3f310a13451fb7cc_1687817282403_3261843728
+X-MC-Loop-Signature: 1687817282403:1665034919
+X-MC-Ingress-Time: 1687817282403
+Received: from pdx1-sub0-mail-a207.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.107.49.251 (trex/6.9.1);
-        Mon, 26 Jun 2023 18:52:46 +0000
+        by 100.103.24.91 (trex/6.9.1);
+        Mon, 26 Jun 2023 22:08:02 +0000
 Received: from offworld (host86-183-53-156.range86-183.btcentralplus.com [86.183.53.156])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a285.dreamhost.com (Postfix) with ESMTPSA id 4QqcRJ0rv5z74;
-        Mon, 26 Jun 2023 11:52:43 -0700 (PDT)
+        by pdx1-sub0-mail-a207.dreamhost.com (Postfix) with ESMTPSA id 4QqhmX1MCQz46;
+        Mon, 26 Jun 2023 15:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1687805565;
-        bh=H1fMt8arYi4MgFdhH6YsZzTc13v8DYJ1Xj8QefHifZ0=;
+        s=dreamhost; t=1687817281;
+        bh=OOPnw0Xtk1GuUQHoF4meQ2eV2F9wx3waLvV64d4tLN4=;
         h=Date:From:To:Cc:Subject:Content-Type;
-        b=efFVL3nQcaoG8S/JxUsvCAi5lvfMjve8ysSumG7qQ6Ucxg6lYUvvrVb6XDVM7Q50n
-         aewx2CpGadfwJRQH2pi2A6khRGAFDUywYyHn4h4KU9xv+mJ11JcZy4mq16YrrKmpH9
-         tqxXib7XGjHEldOYBCoyUBqP96wB/InnOGyBX+yQw7ZXexY9RS0+6Az14XmQUbkEtT
-         X1SUmL8mB/+0eacapax2oazIdgm0WXBEpB9BxRwQitgPZSVh1Ob/AVgZTWY+0Ffnbp
-         yhbWRMOh+8fPSAg0scqOyiZ3FDJEScVZ8rFhPrsHy3+ZaEU5ud2dQNTzEiC73/yAko
-         qbboW0TBR6jeQ==
-Date:   Mon, 26 Jun 2023 11:17:12 -0700
+        b=HOyjKxo0xRZWlISxv83Cks1FA11BKN4YXGjoR/ojI+r+PH1Z3ahd6bu/cmtQJYZYB
+         7DBOL3unZMQMwWTgui/6eOHWQuq6tJMHraYgWrGy7CFco1/j0SNgUA5C7Z0ad3rViS
+         COCpY8R0uatL70up0wFyXkKQ2LFJEfQSK9a/nng4k9shdIcFfVNfkiBadqd5nvqSPS
+         dxBSdBene7VIui98st8zooxLxhgZXVJl9SkKPJPB8bRSMu1Cln4JMbHdMQveG6CcMa
+         JpMUCUxtEsdJo+Kz5RJYTTMTmzJYulNle9+Q12duo7x54dZOVrbmwQ59zB9o82FEBv
+         vYX7DdS2H0hpg==
+Date:   Mon, 26 Jun 2023 14:32:18 -0700
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     dave.jiang@intel.com, vishal.l.verma@intel.com,
         Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
         a.manzanares@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/7] cxl/mbox: Add sanitation handling machinery
-Message-ID: <mj5tguq7esouitvet7msjuzfrvawordwinuh3pvrmvombiqkta@6hbtqvgfiekx>
+Subject: Re: [PATCH v6 0/7] cxl: Support device sanitation
+Message-ID: <ll3imaqzzqkhmsa2r4rxxzhmgnpoayuasb3ay5dfx47f7avco2@j6bmlcelamco>
 References: <20230612181038.14421-1-dave@stgolabs.net>
- <20230612181038.14421-4-dave@stgolabs.net>
- <6498bbfb35c6f_2ed72947a@dwillia2-xfh.jf.intel.com.notmuch>
+ <6498c35a934ab_8e178294b9@dwillia2-xfh.jf.intel.com.notmuch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <6498bbfb35c6f_2ed72947a@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <6498c35a934ab_8e178294b9@dwillia2-xfh.jf.intel.com.notmuch>
 User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -95,51 +94,15 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 On Sun, 25 Jun 2023, Dan Williams wrote:
 
->Davidlohr Bueso wrote:
->>  static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
->>  {
->> +	u64 reg;
->> +	u16 opcode;
->>	struct cxl_dev_id *dev_id = id;
->>	struct cxl_dev_state *cxlds = dev_id->cxlds;
->>
->>	if (!cxl_mbox_background_complete(cxlds))
->>		return IRQ_NONE;
->>
->> -	/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
->> -	rcuwait_wake_up(&cxlds->mbox_wait);
->> +	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
->> +	opcode = FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_OPCODE_MASK, reg);
->> +	if (opcode == CXL_MBOX_OP_SANITIZE) {
->> +		dev_dbg(cxlds->dev, "Sanitation operation ended\n");
->> +	} else {
->> +		/* short-circuit the wait in __cxl_pci_mbox_send_cmd() */
->> +		rcuwait_wake_up(&cxlds->mbox_wait);
+>This looks good to me after s/([sS])anitation/\1anitization/ throughout
+>and some othe minor fixups that I mentioned.
 >
->Just a question, is there any harm in awaking this even though nothing
->is waiting? I.e. just wondering if this has functional purpose or is
->just for cleanliness?
+>Merged for v6.5.
 
-No, there is no harm in calling the wakeup if nothing is blocked.
-rcuwait will check for nil task pointer before calling wake_up_process().
-In such cases it will be a nop.
+fyi per https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=pending&id=0c36b6ad436a38b167af16e6c690c890b8b2df62
+this seems to be missing this fix:
 
-...
-
->>
->> +	/*
->> +	 * With sanitize polling, hardware might be done and the poller still
->> +	 * not be in sync. Ensure no new command comes in until so. Keep the
->> +	 * hardware semantics and only allow device health status.
->> +	 */
->> +	if (unlikely(cxlds->security.poll_tmo_secs > 0)) {
->
->CPUs and compilers do a decent job at likely/unlikely branch prediction,
->and given mailbox operations are a slow path I can not imagine this
->unlikely() annotation makes any measurable difference.
-
-So this was more about documenting the rare case more than an actual performance
-optimization. Either way is fine I guess.
+https://lore.kernel.org/linux-cxl/ispowzuk5fg2u7zbpenocvyihh4t3kywtszcbg245unypzduex@jenknfy62rjl/
 
 Thanks,
 Davidlohr
