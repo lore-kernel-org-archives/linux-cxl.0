@@ -2,302 +2,260 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C2C0015E
-	for <linux-cxl@archiver.kernel.org>; Tue, 27 Jun 2023 21:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829ACEB64D9
+	for <linux-cxl@archiver.kernel.org>; Tue, 27 Jun 2023 23:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjF0VNi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 27 Jun 2023 17:13:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33630 "EHLO
+        id S229718AbjF0XBi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 27 Jun 2023 19:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjF0VNh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Jun 2023 17:13:37 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2077.outbound.protection.outlook.com [40.92.53.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3711727
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Jun 2023 14:13:35 -0700 (PDT)
+        with ESMTP id S229645AbjF0XBh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Jun 2023 19:01:37 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5064D2940
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Jun 2023 16:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687906896; x=1719442896;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=zmGUe7EY9xpBLVkrTG/k3COs5fX9H86HQ20uL93Z+zo=;
+  b=V1kkzL1uVx+nOYfDfTX3p2S6HWdKFwjyxoYAyP1oTy7XKQ2LstN2AQld
+   DH8ZCH/Ta2BFu6Z5QERiGxxvIM1OYTdAlgUC1r9dkEcjpXwkxokD7siUI
+   AdS2Ymycr0W7Bple//t6by8kHkO/di7TGXbeWLYUy7Q1jdPZkX/cZXmqa
+   LMXYyHDP+bCZTYjs3WrykkXjUn27p9obKz6cWHI2GXIc4xeYpktvbbL9N
+   QpE4kBuQdJTnFIIeX9ijDnmB5faYIQcR9Ss1b0Fawf12JWRP4k8eVIwvY
+   jm4GkWKtFUw6VJ05XHJDH3PxcbZTXaQATjZ8+S5wF5hjpk6Mdt4oS1u/o
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="346462607"
+X-IronPort-AV: E=Sophos;i="6.01,163,1684825200"; 
+   d="scan'208";a="346462607"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2023 16:01:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10754"; a="840850717"
+X-IronPort-AV: E=Sophos;i="6.01,163,1684825200"; 
+   d="scan'208";a="840850717"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga004.jf.intel.com with ESMTP; 27 Jun 2023 16:01:20 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 27 Jun 2023 16:01:18 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Tue, 27 Jun 2023 16:01:18 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Tue, 27 Jun 2023 16:01:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nv+eRzDK+TO8zNrmGPl3kkvq8YPf5Di+bk2E8dSvmyd5vwpkIztvmFZWdQCQ0x2wnuFq7NQRA54skHrdkSJYLcqYyunOpyjz8J5G9hk6QX034EVDeq/7UwjP5T1eXbS8waZKJs6uxyU2LlIKXW7qqwprc4G1FeS3JHCzmvpuDY9nKT7QDhW2S0Napzljf7I65NoJu+YXH0X1k/MzjB8oLg1WwXzIo5N9reabw4j8v76kILPwEFpO41bXDg3FZPZKE/bnLei6eewjkkWybES2vFNLLYoFNNsJGyxEputaWLg1oHKcicAqflyD7XzRVj1qrPVKgvELV7sFthrmqM0x6g==
+ b=Ner1/9Tl6CvNTzRWd/dYTmxG17cIfYIcL1SEN8Bj/D9vi2jfGjk6RJZO2PmEd7irV4tGKBTrpBXP8I+byp+7zxndrKnhVfjxZPuQCAXiLgFxJxWyowOm2Okv9XXEhElYjD/pTx30Evcw3QumXRFru1wubL6jb/zuhNPCOsAyX0CzT/edb7yiVecHpHSobOl8gfPsqlvbObdjtkVj5URor6I0TnNVDl5AZ6ETZayT3180PJ6tfx5n9tsVl2GDy12U/P0HzQQ0vctTHy++V2JvQKryXHBMPYEgaHpS+Ax0SQh8zwiLfUw4EC+gJUrSNv5C3cG2csG25/4WA5BwQxNVJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UPY0i+3Ql9GaudCLSxnhBBbxj3eUUJ6eSyTLn3A1tlc=;
- b=FyZP43oPMDRqohGhGuQuwBWopk4t4hX4kCG+XB0Zx06snHwo3/TyCyyZ3IxyQWJ8TU1lPATwu+j/Jn+86yLt9O5+5/1DN8y+dN9FcAfehRJurEF2/bulPHR+gviDVLl25WfwgQD51B+POzgf8T2/533xKRI0C9UOQdUCFuCpDx5+8gvzLJavu+oya40kRuvbXm/+KIBQuBrLP/JB+8LDoDGnjkg+Fj1//Z8+QCsQWA/ww5nsHAgmpkPbQde2Q1sZnT6IEL0sVNQ0RlDhlPEVRwaNFctjxG+N/1gLkg5l8ScWr+rYuQ1kTbqden9wo1Vyun08v1tvno3CF802QMc/Ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UPY0i+3Ql9GaudCLSxnhBBbxj3eUUJ6eSyTLn3A1tlc=;
- b=Phni0p21qBk3sehoD2KD0rBN6RWXDySZuxKtY1BW6d4PDUWqugg5pT32rzKfG7IM+mz4uzAhUo/zXF5EndyCYt9SFBXbq69rGv0r4Jc17HI9wk3wDt9ic8QBEPw22L/Hs1VtUqFzT87Hm+oYFApeq1EEIeejks0ixOBon4Nwd0Pf22Q+AC62NXnqBOO8IzZL9qkWSHKScpGZSBFAjZv0MK+mvInMcKJygoDHr966H56FrrhRdmw7moIH9Wb+cRNMSWOALbRfrbqo7dqS3mXxF8vxMLPZmBLYDTvJZsolMru3EBiw9T4daaF0TeQ/Mjw9umB5dz7fXEQDMvPgATAveg==
-Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
- SI2PR06MB4266.apcprd06.prod.outlook.com (2603:1096:4:154::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6521.24; Tue, 27 Jun 2023 21:13:29 +0000
-Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
- ([fe80::33a7:c9e1:75ae:3227]) by SG2PR06MB3397.apcprd06.prod.outlook.com
- ([fe80::33a7:c9e1:75ae:3227%4]) with mapi id 15.20.6521.026; Tue, 27 Jun 2023
- 21:13:29 +0000
-Date:   Tue, 27 Jun 2023 14:13:17 -0700
-From:   "nifan@outlook.com" <nifan@outlook.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Nathan Fontenot <nafonten@amd.com>, Fan Ni <fan.ni@samsung.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "gregory.price@memverge.com" <gregory.price@memverge.com>,
-        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
-        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>
-Subject: Re: [RFC 2/7] hw/cxl/cxl-mailbox-utils: Add dynamic capacity region
- representative and mailbox command support
-Message-ID: <SG2PR06MB339789E75307E3B63C5EA83EB227A@SG2PR06MB3397.apcprd06.prod.outlook.com>
-References: <20230511175609.2091136-1-fan.ni@samsung.com>
- <CGME20230511175641uscas1p165a19a1416facf6603bf1a417121f0dc@uscas1p1.samsung.com>
- <20230511175609.2091136-3-fan.ni@samsung.com>
- <5cf2a93d-1a20-c87b-5276-69feb5056e72@amd.com>
- <20230515145835.000076b9@Huawei.com>
-Content-Type: text/plain; charset=utf-8
+ bh=UVX9pEagqzEX3FyESlQOvImovoZZxS2FtfJHpYIbAjY=;
+ b=IllGtB3mj1ZGipT5vp0JQfb2ZMHDkmGP1+sEq54Q9XtiaKjjhVuPdML3RWpiRc0cmRKg0LUE35qiqIDV070XiZ48m3jKskVvWsAjBdNyJzOaHeZMA3glVKBW4t0Uv6GZhRN7k7hIF8dSq9LXiLEMDGWqhSuq0gg71mm/mqfPoeQFz9f5Gh5xaamx6yxGHgvHtliAXC7Ar/vG9/wSPZcE70rU1YeZH51kEdvFuWy5jFzezMbwC/ZDe7cR5JhfNH0k0JJJzjBfC4PvpOe9PgNX6UqwE+NCPeNYjrkulskZljj5i0ugYWg7L2R6J1CdgkgeOZOqEOf0w4EVsflv1UKI4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DM4PR11MB6551.namprd11.prod.outlook.com (2603:10b6:8:b9::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.15; Tue, 27 Jun
+ 2023 23:01:15 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::aeb:12b5:6ac9:fab0]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::aeb:12b5:6ac9:fab0%7]) with mapi id 15.20.6500.029; Tue, 27 Jun 2023
+ 23:01:15 +0000
+Date:   Tue, 27 Jun 2023 16:01:12 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <dave.jiang@intel.com>, <vishal.l.verma@intel.com>,
+        <Jonathan.Cameron@huawei.com>, <fan.ni@samsung.com>,
+        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: RE: [PATCH] cxl/pci: Use correct flag for sanitize polling
+Message-ID: <649b6a384f56b_11e68529444@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230612181038.14421-1-dave@stgolabs.net>
+ <6498c35a934ab_8e178294b9@dwillia2-xfh.jf.intel.com.notmuch>
+ <ll3imaqzzqkhmsa2r4rxxzhmgnpoayuasb3ay5dfx47f7avco2@j6bmlcelamco>
+ <649a1583f3331_8e178294f6@dwillia2-xfh.jf.intel.com.notmuch>
+ <7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx>
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20230515145835.000076b9@Huawei.com>
-X-TMN:  [NcAQuERlHtMXeXdFbng+oQWVzDWefKIE]
-X-ClientProxiedBy: CH2PR03CA0024.namprd03.prod.outlook.com
- (2603:10b6:610:59::34) To SG2PR06MB3397.apcprd06.prod.outlook.com
- (2603:1096:4:7a::17)
-X-Microsoft-Original-Message-ID: <ZJtQ7cP9/KBYNCy2@outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx>
+X-ClientProxiedBy: MW4PR03CA0356.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::31) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|SI2PR06MB4266:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1f7bf8f-0381-4bfa-2244-08db77535a99
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB6551:EE_
+X-MS-Office365-Filtering-Correlation-Id: dbd43248-386f-420b-dfdd-08db776268a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ONHsVujR0+Cf+nInIyhxB+NsuqzKXKR2EO0/6hjfV5B083tdh0QWD1oWkRFkLNa+ym23lpHk5Jvw1spSCstN5jtz4+KFyQZ8OZeCWRz7OOwUVJHhyjaT16p0Gl5ihrlAQxloqyJOb55Yny39fI5BSA4kVqQJPdcoRYqRY/GhpnjNK/+WwBJwRTNVTU3VbK9tVn6NvZaiaIMyS3P+ZJNrDbLP1WdfDdiTHmzTgdnoZbk0qjGMo4XsJvoWPGFZ+Lngr42O8uWAeVhPIdadWTMTFca3f99rdZvrbdf31smMCqB4Sy3JqtOVrCYWk+dNpQzMnrE3jA/mK+7Fa9EUWGQCcoVjQ5x32i8BtSBqVHgTj9JUglb9v6FBV/Dnb0mR2oBu/JJzXNn/8xbklG/GLyVmm+t114h4pL/gmP/X8xQybD8jbQoGQhh60ybQS6wWifKMCZV5r6TlJ9HIOurSX+m75QcOzY+dbhyDJssrc7lASRErT7BPoxvF3s+xv1O0Bml+WVLxSHGwFMRJzukHOBE4Qd45TDbhApum7GOAOmxLF9/gMmb+ffC4FbEvPUIKtdIX
+X-Microsoft-Antispam-Message-Info: DIHwPMCIKlhCiuGcX9O/H4Me7o6g66MnRmp3xlrOgMg4gg3tIAaqobT/2nejJrPOf1223WFRYhVSchxtQ0Ca289OVWhKt4ug4gRZOISp24gQjF8NKaA8oNqq/idiQSQcZvOrrQKi9kPAFeDjDgWNLxIV0ZjHmCTkTLW8tnCXUJN+s8Kz1vAAf100jE1OqxauJxSFtR2J84Wp6+uLxRfem/HbWKZ0z/JhJF6K/odlxLvatgkBzTwV8TvA2kRk8ZpgAmy/QCV2Tq2bV/yLZ8r32yOj7yl6fMkVQTdmZjm2u4S99iacj0IJ0LQCAhokLMld6wQhrEEFAAc6sBMcmAbLk4SvpejLgCm7vqOpGcKLNHft+TqeKuCJwFer5BfZowSpMDxHXHWpeCN2j4JJozALDGdn3GcXQiw3ZqrhgiWFEG2+PYAFRWTitCi4yox7Nio/LEikNX4VTKCFqSc2PmlxyR4R1sYTqIau7q4XkAUJcSfHJYAWJfu87CZp9M1METcESTNYzUS5p1dcf1wUBPUeyZ4YT0jNBCtL3YMpZk1Ibtk4oxUge/LTN5JJmNlO+BMqEfwix2gClouCowaWrT3q3A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(396003)(136003)(376002)(346002)(451199021)(82960400001)(38100700002)(86362001)(84970400001)(4326008)(6486002)(41300700001)(966005)(8676002)(5660300002)(478600001)(6506007)(8936002)(6512007)(26005)(9686003)(186003)(83380400001)(2906002)(316002)(66946007)(110136005)(6666004)(66476007)(66556008);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N2ZQY2V2emNObThNWmYzWGJtUlgxWDdEWHc0OGR1QWhOZFVrRzhQbjA5S0V5?=
- =?utf-8?B?UjZNaks1Y0o2N3diaTQyVTlFeWlPQklBTVBNRXQ5dS9YeDQrRkhmNDVWVVhD?=
- =?utf-8?B?M3VQQXIzcVJpQmlXTHBDOTdNRThoTEw2OENNMGsyQm9BbzdZK3pwdnA3Qmxk?=
- =?utf-8?B?UDNyMi94V0g2UzMxNE5vUXV0TFBNalBVQ0J3MnZiMDNBWGN6dTR6NUtxUGR3?=
- =?utf-8?B?VlpIbEdHRmVwcW9WZGtLbmRSQnVId0VodGh3eWRMeUE5cHh3NnZoVW8rZTIz?=
- =?utf-8?B?YmVsdnhtc0t6alBCNGhUOU9GQlNBK2VIY0xOOVNsSlhWQ0N5dzBNV0RHdll0?=
- =?utf-8?B?Y2dGTWFoZ2JpSG9UN2hlTXdZQWZPcS9vb2N6MGpjSFkxNzBPRldydC93ZFFy?=
- =?utf-8?B?TW1mQW0xRXdvci9saE40Q01aTVZBOU5udzM0U2NEZ0s3dUdlbHBIZ0xXN3Jy?=
- =?utf-8?B?MjhGQ0d6dVI3aHZzTlpRRSs1U1pyWnVxcXliSUZsT2tsVXdwZUhsS0xsVExK?=
- =?utf-8?B?SytobW9LWld5bVVYem1RUGt3VWVyY3NZMVR0Zk5taGZpa041bHBxczVua0VF?=
- =?utf-8?B?c3dBOGxDOWZWZVBxcEVZRjVIVlljem9BN2J6cjlpb2haSEtHUkRHeEo1dmVW?=
- =?utf-8?B?SDFqMk05V2NUTFpXZzlldk9WMVhnWEZjZ3RDdGZEcitVVWJZS3NYeWhoM1Bn?=
- =?utf-8?B?eEVUSHBZazAyZG9ZR0pxcXdyWis4a0VEQXVCdnlOdGF2SHFMYkxTY2ZMNWV1?=
- =?utf-8?B?TTByL1EyVUZITWVzcWpYNE00TGJWMzMwT2N3eTc3NkUyUXpmY1NiSU13OHBz?=
- =?utf-8?B?blJmWWN4MUQ1eVBqK3kvZHprc1ZKc0dwMTF1TXEvMEp3eFB1U3B6SmRBVUtq?=
- =?utf-8?B?SWZrc3pVVmRUVnV4S09aSmZMenRrcjhEbkRhODd2SWxFc0lQUUJqM1ZjZ0pE?=
- =?utf-8?B?ZERDZGxGazdDWjl0NzdpeFQ0Nlp0QXZGNk5LaFc3RzVPU05GQkFJNlJFWXMv?=
- =?utf-8?B?TXYrVkNwQlBUKzRWRmlQNTIyZkNQZEF4MStlNHlxOG5oN1lYbXNCcm83bEM2?=
- =?utf-8?B?S1BLOW9ZR3lDajhCS2hYVkI3MTlUN2YyTmRuOTFZTTdWYm9uSTJrMkpmbUw2?=
- =?utf-8?B?VmZYd3NlbFU5OFdmVkZrbWNwZkpmcHpiMi85WHpaMVRvNjVYdWpMeSs5anZJ?=
- =?utf-8?B?SkhHRFc3WEI1aHNqN09nUUxKazRzd3FVUnZCSXNSdUJVcDJPbDY4VjJpVmc1?=
- =?utf-8?B?MDc5bFc0em1yTnNMcnc4Yk5ONW95RVY5RFhYZGxXcVk4alRXZzF0eXJJSU1t?=
- =?utf-8?B?ME9TWDZray9YSU5qblRBZkFrMDRNQlI4KzZiRmtxVWJRZTlScEY2dElKNXY4?=
- =?utf-8?B?a2l4bWNOUWgrMWJZQlp1dnEzWEVTRElLSlE1VmdsOFAvVzF3bWpPL05lQUFY?=
- =?utf-8?B?UmhRYTdyQkJEUWtTS3NnOWx5QjZSck1teGFlZmpYMW51elhTRFNZT2M4cllL?=
- =?utf-8?B?ekU2N0F6YkwyTGZ5Q01wc3BrWW9IMDhSNUgzSHRpVEtteW1FNUFSSHp4d25L?=
- =?utf-8?B?emRVL2cya2wxOElKUFBpNkI2aWFpWmlYMFhmelFQSjZnWnVsK2I2OWs3c1NZ?=
- =?utf-8?B?cndmdS8ydzk4b0J0U1ErVm54L2NqK0E9PQ==?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1f7bf8f-0381-4bfa-2244-08db77535a99
-X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T3puZlNRSmhtcFlDTUF1NlczNTdOM0NlTDNPMmJrZDd4QW5od0FEQ1hiM3R2?=
+ =?utf-8?B?SHJVVTVjbXovWWpZcDdSdEh6dzNtSUtmQk5seXBRemN1YTJ1VDVSOEpXcHlL?=
+ =?utf-8?B?eEdaMjlrdkVHMVBpQU5Pa1hlclFqNHVvUnBYaEFQY2lRTFh1eXBnN3pKZ2tJ?=
+ =?utf-8?B?UlJJRGlWbTBIdVp6bWFHdGE5azlsTWtGdlhFNUx4cTN3R2RRRHpKYkR1bjQw?=
+ =?utf-8?B?Mm90Q1pCKzZSMmZkSHdOQ3FwTWNVRHpIVFNJT1BrbVU5R053QXpFMnFNdkUr?=
+ =?utf-8?B?bENmZUhZS1dIWWFPK3FGTXNSQnRCaWM0QjFRM3dGeXRzL2Rta2lBaWp1eVV2?=
+ =?utf-8?B?MURwOEt6bmhLMTZ2dHpQa205R2pmaHExNERDcWVuc1pFQi81RHpwelNENExa?=
+ =?utf-8?B?ZFRoOHYxNkp6UGRWWks2aU05VVd3ejNLaTJxdUxTT3h4WUNpTHVwU3l6STJs?=
+ =?utf-8?B?VjRDYVhmc3FIaGVkRk5BbjFsZW9tY0JPSXVxcDkrcEtQTW84aXJQL0JnM3NN?=
+ =?utf-8?B?THJGZS9VcExpOHVmQ2RJQW1DWWQzWUZTSnlSZWNGOE53ZTdoWEpsYlZCdFRs?=
+ =?utf-8?B?Q1lzYnBzcDZyV2ZlcklGcEI5WE1kcU9ERjg4TEF5RFlNTk8vaUdpSE9GZkVG?=
+ =?utf-8?B?YytCc1pzVGxxMkExRjJ3eDdZSjFDMWJsZlpZSVNkd3g4S3lmV0hLdlFtNU8w?=
+ =?utf-8?B?c3EwYmlIUTFIZUY3emJuUzlrWXI0VXVFbFZwUUw2Si9KSVkyVE9MU3ZQMEIz?=
+ =?utf-8?B?aHhGK0hveGtodHpja2JEVkljUXR3MUszOSsyQ1pkc0YxUVNwSVZOaHAzc2NO?=
+ =?utf-8?B?YnJuZ090cU5LUktzK3krMTRtSzZpZmNQamxzLzBBNnB0SmxQY1RVbVo5c1Ew?=
+ =?utf-8?B?UWxyaWt5MzVONVNhK0NaYy9nVHRWcTIwaDhwSkRoNEg1ZTZFVGpPcThHUUtv?=
+ =?utf-8?B?WkdBTDZ0N25zSllrdThJcFVTRUY5bkpER1pKc1NYOTY0bkFEZnNwTUp6Mlc2?=
+ =?utf-8?B?eUxVL3NIN1FlYWJRankvZGdyMVJuWmh1WVJwaTR0bC9QV01panVzcTFhKzRh?=
+ =?utf-8?B?cUhuR2ZtSDBwNGExOGI1VjR5dkFlREFpazhsWitiQ0l0UUxZU0ZvRTRNOEFT?=
+ =?utf-8?B?ckxZRTQ5RGJhcDVqUS9jeFl3RlEzZTBjNHV0M1NNS09HNlpoTmlUakNCbGts?=
+ =?utf-8?B?ekVadmxDLzRhSmR1M2YwMWdVd08ybGxGYzJKdndhTkkrOVhzYm4rd0pLZURF?=
+ =?utf-8?B?QWRRNWh3S2QvUWYrWm83eWl5Rm9TZS9TUTlQRExGRkpscTZibXVhb3RYaS91?=
+ =?utf-8?B?RFVaenhRd1VuV2VRNW5MNDY3d3Y5cXZzc3lpZEFQUmUyNDZHVzl0MVlLb1dn?=
+ =?utf-8?B?VU9FWmkzak5yZFNyWC95S3cwNkxSYnZ4OEFZY0dsZ2xONGg3UGVPcHpYTEpB?=
+ =?utf-8?B?N1lZdHBURzM3TFVMM2dmM0t6L1h6Y2V3ZVk1Wkl1OUdpRUd1RDdGbkcwUDFS?=
+ =?utf-8?B?d2ZLdnpuM0lHZ2tVOVpZK0V5VDhnVXpmK0FSVmszZW1kMWEzS29mS1RnUWpW?=
+ =?utf-8?B?OWxHZUxNbDBBSUExMk1YbXBwNGxsYWdsMmRSUkFvWUJoTmc2WnpxMlRGYThw?=
+ =?utf-8?B?ajFYUk1VVlIwNFB0ZlFPRU9iUDZBRmZqODhEeU1oU3ZLTTdoVkFodFVyRFZE?=
+ =?utf-8?B?ejRyeURmeTBteTFKdFQxUTBENkU5dEJVK1I3RXREWTFMQ1I0UUxYY2wzajlD?=
+ =?utf-8?B?ajl2Q2ZrSS83K2NDajVYcXVxT1ZzQkRDYTF6MmdiWlRyM3lUazRLcUNLTitw?=
+ =?utf-8?B?TGlKTGhiWjZyaTU0YTQ1SWRtWG9jYVp0cWFINndxRXc4alFkRytXRjRBN3RI?=
+ =?utf-8?B?dVVNeEl5a3VwalNqblVoZXg4WEhRMEFVTEhtaTlMYWFDZk96UWJqb1dZUXM1?=
+ =?utf-8?B?TzVtOXhTc3lFQklYYm9lYWx1aE1wWmQ1NkpJeC9LdENFWWVaY0VLaVdmbmNx?=
+ =?utf-8?B?SlFXZllqbHFYa2FpZUVhTTZ3ME54bmZob0FGWVdpb3lmbUtxNlJjbmVRd0k4?=
+ =?utf-8?B?UGREREtOcUlubDBQVVVoTGNnSWUraFdadk1MNnpNVDB6S2lyLzNmcmdmNnNa?=
+ =?utf-8?B?SWNYQTVFalpVZlVuYnI5NTJqVURkQmYveC8vcHNwdkwrNW80UStubzVkcU1x?=
+ =?utf-8?B?Y0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbd43248-386f-420b-dfdd-08db776268a7
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2023 21:13:29.4858
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2023 23:01:15.1476
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB4266
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UXHJYBMlNwrea5GSBSpwveR0670cdfIzRmv6urZyLOnFuUs4C5DpROkKzpp8A8jC6/jSFl8dKk7Kg9V1R0ZP79DiPaCGu1igEbRP25BehMY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6551
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The 05/15/2023 14:58, Jonathan Cameron wrote:
-> On Thu, 11 May 2023 16:53:23 -0500
-> Nathan Fontenot <nafonten@amd.com> wrote:
+Davidlohr Bueso wrote:
+> This is a bogus value, left behind from a previous version.
 > 
-> > On 5/11/23 12:56, Fan Ni wrote:
-> > > From: Fan Ni <nifan@outlook.com>
-> > > 
-> > > Per cxl spec 3.0, add dynamic capacity region representative based on
-> > > Table 8-126 and extend the cxl type3 device definition to include dc region
-> > > information. Also, based on info in 8.2.9.8.9.1, add 'Get Dynamic Capacity
-> > > Configuration' mailbox support.
-> > > 
-> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> > > ---
-> > >  hw/cxl/cxl-mailbox-utils.c  | 68 +++++++++++++++++++++++++++++++++++++
-> > >  include/hw/cxl/cxl_device.h | 16 +++++++++
-> > >  2 files changed, 84 insertions(+)
-> > > 
-> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > > index 7ff4fbdf22..61c77e52d8 100644
-> > > --- a/hw/cxl/cxl-mailbox-utils.c
-> > > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > > @@ -81,6 +81,8 @@ enum {
-> > >          #define GET_POISON_LIST        0x0
-> > >          #define INJECT_POISON          0x1
-> > >          #define CLEAR_POISON           0x2
-> > > +	DCD_CONFIG = 0x48, /*8.2.9.8.9*/
-> > > +		#define GET_DC_REGION_CONFIG   0x0
-> > >      PHYSICAL_SWITCH = 0x51
-> > >          #define IDENTIFY_SWITCH_DEVICE      0x0
-> > >  };
-> > > @@ -935,6 +937,70 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
-> > >      return CXL_MBOX_SUCCESS;
-> > >  }
-> > >  
-> > > +/*
-> > > + * cxl spec 3.0: 8.2.9.8.9.2
-> > > + * Get Dynamic Capacity Configuration
-> > > + **/
-> > > +static CXLRetCode cmd_dcd_get_dyn_cap_config(struct cxl_cmd *cmd,
-> > > +		CXLDeviceState *cxl_dstate,
-> > > +		uint16_t *len)
-> > > +{
-> > > +	struct get_dyn_cap_config_in_pl {
-> > > +		uint8_t region_cnt;
-> > > +		uint8_t start_region_id;
-> > > +	} QEMU_PACKED;
-> > > +
-> > > +    struct get_dyn_cap_config_out_pl {
-> > > +		uint8_t num_regions;
-> > > +		uint8_t rsvd1[7];
-> > > +		struct {
-> > > +			uint64_t base;
-> > > +			uint64_t decode_len;
-> > > +			uint64_t region_len;
-> > > +			uint64_t block_size;
-> > > +			uint32_t dsmadhandle;
-> > > +			uint8_t flags;
-> > > +			uint8_t rsvd2[3];
-> > > +		} QEMU_PACKED records[];  
-> > 
-> > Could you declare CXLDCD_Region as QEMU_PACKED and use it here instead of
-> > re-defining the region structure?
+> Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>   drivers/cxl/pci.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Could be done, but care needed on the endian conversions.  I wouldn't
-> mind seeing this always held as little endian state though. We'd have
-> done that anyway if it was a memory mapped command set rather than read
-> via the mailbox so there is plenty of precedence.
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 48f88d96029d..1cb1494c28fe 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -295,7 +295,7 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+> 		 * and allow userspace to poll(2) for completion.
+> 		 */
+> 		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+> -			if (mds->security.poll_tmo_secs != -1) {
+> +			if (mds->security.poll) {
+> 				/* hold the device throughout */
+> 				get_device(cxlds->dev);
 > 
-> Jonathan
+> --
+> 2.41.0
 
-I will leave it as it is for now.
-> 
-> > 
-> > > +	} QEMU_PACKED;
-> > > +
-> > > +	struct get_dyn_cap_config_in_pl *in = (void *)cmd->payload;
-> > > +	struct get_dyn_cap_config_out_pl *out = (void *)cmd->payload;
-> > > +	struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
-> > > +	uint16_t record_count = 0, i = 0;
-> > > +	uint16_t out_pl_len;
-> > > +
-> > > +	if (in->start_region_id >= ct3d->dc.num_regions)
-> > > +		record_count = 0;
-> > > +	else if (ct3d->dc.num_regions - in->start_region_id < in->region_cnt)
-> > > +		record_count = ct3d->dc.num_regions - in->start_region_id;
-> > > +	else
-> > > +		record_count = in->region_cnt;
-> > > +
-> > > +	out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
-> > > +	assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
-> > > +
-> > > +	memset(out, 0, out_pl_len);
-> > > +	out->num_regions = record_count;
-> > > +	for (; i < record_count; i++) {
-> > > +		stq_le_p(&out->records[i].base,
-> > > +			ct3d->dc.regions[in->start_region_id+i].base);
-> > > +		stq_le_p(&out->records[i].decode_len,
-> > > +			ct3d->dc.regions[in->start_region_id+i].decode_len);
-> > > +		stq_le_p(&out->records[i].region_len,
-> > > +			ct3d->dc.regions[in->start_region_id+i].len);
-> > > +		stq_le_p(&out->records[i].block_size,
-> > > +			ct3d->dc.regions[in->start_region_id+i].block_size);
-> > > +		stl_le_p(&out->records[i].dsmadhandle,
-> > > +			ct3d->dc.regions[in->start_region_id+i].dsmadhandle);
-> > > +		out->records[i].flags
-> > > +			= ct3d->dc.regions[in->start_region_id+i].flags;  
-> > 
-> > In this loop your reading from 'in' and writing to 'out' where in and out both
-> > point to the same payload buffer. It works because of the structure layouts but
-> > feels like a bug waiting to happen. Perhaps saving start_region to a local variable
-> > and using that for the loop?
-> 
-> Does it work?  There is a memset of out above.
-> Definitely need a local copy of start_region_id before that.
-> This might only be working because of good fortune / compilers being 'clever'.
-> 
-> Jonathan
+I had to pick this up manually because 'git am' complains:
 
-Yes. We need a local variable to record the start_region_id.
+    error: corrupt patch at line 10
 
-Thanks Nathan for catching the issue.
+Just letting you know in case you can spot the issue because I am still
+scratching my head. Here are the steps I took to apply it manually:
 
-Fan
-> 
-> 
-> > 
-> > -Nathan
-> > 
-> > > +	}
-> > > +
-> > > +	*len = out_pl_len;
-> > > +	return CXL_MBOX_SUCCESS;
-> > > +}
-> > > +
-> > >  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-> > >  #define IMMEDIATE_DATA_CHANGE (1 << 2)
-> > >  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> > > @@ -973,6 +1039,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
-> > >          cmd_media_inject_poison, 8, 0 },
-> > >      [MEDIA_AND_POISON][CLEAR_POISON] = { "MEDIA_AND_POISON_CLEAR_POISON",
-> > >          cmd_media_clear_poison, 72, 0 },
-> > > +	[DCD_CONFIG][GET_DC_REGION_CONFIG] = { "DCD_GET_DC_REGION_CONFIG",
-> > > +		cmd_dcd_get_dyn_cap_config, 2, 0 },
-> > >  };
-> > >  
-> > >  static struct cxl_cmd cxl_cmd_set_sw[256][256] = {
-> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > > index e285369693..8a04e53e90 100644
-> > > --- a/include/hw/cxl/cxl_device.h
-> > > +++ b/include/hw/cxl/cxl_device.h
-> > > @@ -383,6 +383,17 @@ typedef struct CXLPoison {
-> > >  typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
-> > >  #define CXL_POISON_LIST_LIMIT 256
-> > >  
-> > > +#define DCD_MAX_REGION_NUM 8
-> > > +
-> > > +typedef struct CXLDCD_Region {
-> > > +	uint64_t base;
-> > > +	uint64_t decode_len; /* in multiples of 256MB */
-> > > +	uint64_t len;
-> > > +	uint64_t block_size;
-> > > +	uint32_t dsmadhandle;
-> > > +	uint8_t flags;
-> > > +} CXLDCD_Region;
-> > > +
-> > >  struct CXLType3Dev {
-> > >      /* Private */
-> > >      PCIDevice parent_obj;
-> > > @@ -414,6 +425,11 @@ struct CXLType3Dev {
-> > >      unsigned int poison_list_cnt;
-> > >      bool poison_list_overflowed;
-> > >      uint64_t poison_list_overflow_ts;
-> > > +
-> > > +	struct dynamic_capacity {
-> > > +		uint8_t num_regions; // 1-8
-> > > +		struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
-> > > +	} dc;
-> > >  };
-> > >  
-> > >  #define TYPE_CXL_TYPE3 "cxl-type3"  
-> 
+---
 
--- 
-Fan Ni <nifan@outlook.com>
+$ b4 shazam -sl -P _ 7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx
+Grabbing thread from lore.kernel.org/all/7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+  Added from v6: 1 patches
+Analyzing 18 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  ✓ [PATCH] cxl/pci: Use correct flag for sanitize polling
+    + Link: https://lore.kernel.org/r/7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx
+    + Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+  ---
+  ✓ Signed: DKIM/stgolabs.net
+---
+Total patches: 1 (cherrypicked: <7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx>)
+---
+Applying: cxl/pci: Use correct flag for sanitize polling
+Patch failed at 0001 cxl/pci: Use correct flag for sanitize polling
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+error: corrupt patch at line 10
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+$ b4 am -sl -P _ 7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx
+Analyzing 1 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  ✓ [PATCH] cxl/pci: Use correct flag for sanitize polling
+    + Link: https://lore.kernel.org/r/7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx
+    + Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+  ---
+  ✓ Signed: DKIM/stgolabs.net
+---
+Total patches: 1 (cherrypicked: <7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx>)
+---
+ Link: https://lore.kernel.org/r/7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx
+ Base: not specified
+       git am ./20230627_dave_cxl_pci_use_correct_flag_for_sanitize_polling.mbx
+$ cat ./20230627_dave_cxl_pci_use_correct_flag_for_sanitize_polling.mbx | patch -p1
+patching file drivers/cxl/pci.c
+$ git add drivers/cxl/pci.c
+$ git am --continue
+Applying: cxl/pci: Use correct flag for sanitize polling
+$ git show
+commit 71baec7b8500c92f9723f39d06a7ae465483da1f (HEAD -> for-6.5/cxl)
+Author: Davidlohr Bueso <dave@stgolabs.net>
+Date:   Tue Jun 27 01:02:02 2023 -0700
+
+    cxl/pci: Use correct flag for sanitize polling
+    
+    This is a bogus value, left behind from a previous version.
+    
+    Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
+    Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+    Link: https://lore.kernel.org/r/7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx
+    Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 48f88d96029d..1cb1494c28fe 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -295,7 +295,7 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+                 * and allow userspace to poll(2) for completion.
+                 */
+                if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+-                       if (mds->security.poll_tmo_secs != -1) {
++                       if (mds->security.poll) {
+                                /* hold the device throughout */
+                                get_device(cxlds->dev);
+
+
