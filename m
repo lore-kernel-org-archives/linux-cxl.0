@@ -2,45 +2,44 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2694EB64DC
-	for <linux-cxl@archiver.kernel.org>; Tue, 27 Jun 2023 20:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741C2C0015E
+	for <linux-cxl@archiver.kernel.org>; Tue, 27 Jun 2023 21:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231740AbjF0Uw7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 27 Jun 2023 16:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
+        id S229488AbjF0VNi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 27 Jun 2023 17:13:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbjF0Uwz (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Jun 2023 16:52:55 -0400
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2071.outbound.protection.outlook.com [40.92.107.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7ED2D53
-        for <linux-cxl@vger.kernel.org>; Tue, 27 Jun 2023 13:52:47 -0700 (PDT)
+        with ESMTP id S229481AbjF0VNh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Jun 2023 17:13:37 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2077.outbound.protection.outlook.com [40.92.53.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3711727
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Jun 2023 14:13:35 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TmWkxzWlJRLl7c344STgd/oA42XFYUIi86tJzQjLiaZE1L5ob8vKb9fBTuLlOfgLbLBA69rCtxLfph6VXSuxsJz4uNIW+L5jIoCn83HpwPoT/uGHWrSTrzGersvgKoLghyeiR5djcEfSe1GbHsWi93fOYhHOCXRjhQVMirr0zXj6KIhusMWrJzvmoqg9T433gpayLcJzWDizpm2YOV51FAL16Eua/iIDGJewv3FQ34j75L/WuM/JA8AeWiBxdfbTG4K6iW1nAZzgOEk2Wr1sSDTAbMp/f9ASL2HgpGrbAeWgqcXcmYFxuQ0STr+NOAIhwmYtnn0f5gTF/6591Y8AWA==
+ b=Nv+eRzDK+TO8zNrmGPl3kkvq8YPf5Di+bk2E8dSvmyd5vwpkIztvmFZWdQCQ0x2wnuFq7NQRA54skHrdkSJYLcqYyunOpyjz8J5G9hk6QX034EVDeq/7UwjP5T1eXbS8waZKJs6uxyU2LlIKXW7qqwprc4G1FeS3JHCzmvpuDY9nKT7QDhW2S0Napzljf7I65NoJu+YXH0X1k/MzjB8oLg1WwXzIo5N9reabw4j8v76kILPwEFpO41bXDg3FZPZKE/bnLei6eewjkkWybES2vFNLLYoFNNsJGyxEputaWLg1oHKcicAqflyD7XzRVj1qrPVKgvELV7sFthrmqM0x6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NkK52er+SV68jxT7K1+niT1C6qy93CapmraJbO4fHB8=;
- b=PK2igGtxWI2eJxUo2eIe5Obhb2ovsUjp7Sw1gWUZ8qsprT56uu3xaswnvrcBGKTuCtdsLljq/MCx9B2skEKfcOkqjt6pNKu3Eca0lGVWWqf3USoHSJU+0+c+lz3BuHE/BoCMZ/vCPVm5Qgp531GdZH5YiY5p0j3PrcDrwwUoi+Wcgmvsw1/7VLPy7tUVNMYSSDbKm9WQMdLauWGShsLlTpzRbAEpjL46RDs7pW3aMlDPl6HkzBDPMAFWHni5KIXM3tmVgGKQ1yDqnMEaX3XCrM8EBNg048lTCesybYotLgM0Y0HpIo66xVGRo2tw3F1aJR40X/ftZYilmeMtlEdnag==
+ bh=UPY0i+3Ql9GaudCLSxnhBBbxj3eUUJ6eSyTLn3A1tlc=;
+ b=FyZP43oPMDRqohGhGuQuwBWopk4t4hX4kCG+XB0Zx06snHwo3/TyCyyZ3IxyQWJ8TU1lPATwu+j/Jn+86yLt9O5+5/1DN8y+dN9FcAfehRJurEF2/bulPHR+gviDVLl25WfwgQD51B+POzgf8T2/533xKRI0C9UOQdUCFuCpDx5+8gvzLJavu+oya40kRuvbXm/+KIBQuBrLP/JB+8LDoDGnjkg+Fj1//Z8+QCsQWA/ww5nsHAgmpkPbQde2Q1sZnT6IEL0sVNQ0RlDhlPEVRwaNFctjxG+N/1gLkg5l8ScWr+rYuQ1kTbqden9wo1Vyun08v1tvno3CF802QMc/Ow==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NkK52er+SV68jxT7K1+niT1C6qy93CapmraJbO4fHB8=;
- b=gIdxgsAR6FpNfy55P47XK7k8kUkDf4V2uBNWVv5Vt2aeQ7hXg9UQi7bSVOqdIvugp7SmOPSqQ/OrVq+uIYjg1c0GGjFgrEy6rzXWOBm1UhRYANWLlrrSPl9mxN2o2zBdhylSXYT2LDH5u0NCmpPmXAtN0YrkeXRF0TdXpvoOS+4t516PX8jpHHuCxwb3x+nq0N4RmBLGLDz/N8e0Q7z7jDZE5gek5DqaLJ/gti64thWaBg7ZgLhyH5jJ+kWoSOtKEOf90pVr759u68FlQ4lqrFMAR3dry1mUpkG4Wno/hHdFgOHVmxW8nqu1xAFdwBC4SAUrzRKiJgRYzNBp6z+lXA==
+ bh=UPY0i+3Ql9GaudCLSxnhBBbxj3eUUJ6eSyTLn3A1tlc=;
+ b=Phni0p21qBk3sehoD2KD0rBN6RWXDySZuxKtY1BW6d4PDUWqugg5pT32rzKfG7IM+mz4uzAhUo/zXF5EndyCYt9SFBXbq69rGv0r4Jc17HI9wk3wDt9ic8QBEPw22L/Hs1VtUqFzT87Hm+oYFApeq1EEIeejks0ixOBon4Nwd0Pf22Q+AC62NXnqBOO8IzZL9qkWSHKScpGZSBFAjZv0MK+mvInMcKJygoDHr966H56FrrhRdmw7moIH9Wb+cRNMSWOALbRfrbqo7dqS3mXxF8vxMLPZmBLYDTvJZsolMru3EBiw9T4daaF0TeQ/Mjw9umB5dz7fXEQDMvPgATAveg==
 Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
- TY0PR06MB5777.apcprd06.prod.outlook.com (2603:1096:400:270::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Tue, 27 Jun
- 2023 20:52:43 +0000
+ SI2PR06MB4266.apcprd06.prod.outlook.com (2603:1096:4:154::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6521.24; Tue, 27 Jun 2023 21:13:29 +0000
 Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
  ([fe80::33a7:c9e1:75ae:3227]) by SG2PR06MB3397.apcprd06.prod.outlook.com
  ([fe80::33a7:c9e1:75ae:3227%4]) with mapi id 15.20.6521.026; Tue, 27 Jun 2023
- 20:52:43 +0000
-Date:   Tue, 27 Jun 2023 13:52:25 -0700
+ 21:13:29 +0000
+Date:   Tue, 27 Jun 2023 14:13:17 -0700
 From:   "nifan@outlook.com" <nifan@outlook.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Fan Ni <fan.ni@samsung.com>,
+Cc:     Nathan Fontenot <nafonten@amd.com>, Fan Ni <fan.ni@samsung.com>,
         "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
         "gregory.price@memverge.com" <gregory.price@memverge.com>,
@@ -50,330 +49,254 @@ Cc:     Fan Ni <fan.ni@samsung.com>,
         "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
         Adam Manzanares <a.manzanares@samsung.com>,
         "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-        navneet.singh@intel.com
-Subject: Re: [Qemu RFC 0/7] Early enabling of DCD emulation in Qemu
-Message-ID: <SG2PR06MB33970B719515271CBD0303E5B227A@SG2PR06MB3397.apcprd06.prod.outlook.com>
-References: <CGME20230511175641uscas1p2b1877f9179709b69e293acdd7e57104c@uscas1p2.samsung.com>
- <20230511175609.2091136-1-fan.ni@samsung.com>
- <20230515140036.00003301@Huawei.com>
+        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>
+Subject: Re: [RFC 2/7] hw/cxl/cxl-mailbox-utils: Add dynamic capacity region
+ representative and mailbox command support
+Message-ID: <SG2PR06MB339789E75307E3B63C5EA83EB227A@SG2PR06MB3397.apcprd06.prod.outlook.com>
+References: <20230511175609.2091136-1-fan.ni@samsung.com>
+ <CGME20230511175641uscas1p165a19a1416facf6603bf1a417121f0dc@uscas1p1.samsung.com>
+ <20230511175609.2091136-3-fan.ni@samsung.com>
+ <5cf2a93d-1a20-c87b-5276-69feb5056e72@amd.com>
+ <20230515145835.000076b9@Huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230515140036.00003301@Huawei.com>
-X-TMN:  [zmaMoHEcKn88ne3C8Ry6azTK7V8N6grK]
-X-ClientProxiedBy: CH2PR08CA0001.namprd08.prod.outlook.com
- (2603:10b6:610:5a::11) To SG2PR06MB3397.apcprd06.prod.outlook.com
+In-Reply-To: <20230515145835.000076b9@Huawei.com>
+X-TMN:  [NcAQuERlHtMXeXdFbng+oQWVzDWefKIE]
+X-ClientProxiedBy: CH2PR03CA0024.namprd03.prod.outlook.com
+ (2603:10b6:610:59::34) To SG2PR06MB3397.apcprd06.prod.outlook.com
  (2603:1096:4:7a::17)
-X-Microsoft-Original-Message-ID: <ZJtMCRxJCuFmmS/d@outlook.com>
+X-Microsoft-Original-Message-ID: <ZJtQ7cP9/KBYNCy2@outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|TY0PR06MB5777:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3ac0abd-5852-4835-ae38-08db775073c1
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|SI2PR06MB4266:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1f7bf8f-0381-4bfa-2244-08db77535a99
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S0thiMGx7a2vjkNnLCsEZh8v5pq1Zzbb9wKIsY1sCGbWf3o+PVqPkhDu08OLPfXneV1g0bAUTqqMDnqlYEpveTtjIE+nRgzqLtJQjx/i426nZRe7KT7xbDOY3NqM8kx7ddUiX+7HNxJnolG4uoX0dA0KfV1C7pZxogmJ9+EapqX2zvAlDLNDSxEO5ULaIULzTLrfYMLGIZEgVC0zmpAG+tM5fy3mnGvOI4Ttg5lzymNd45pfwHzMtyYkVK7TZA+beeedr7ioZXnkXrw3DN+kUrv6QrpbR5Yx1uNFkbfhlpkC5rVA6aXCZGsNFrpzaAzuOg5wZP4g+rnhqGvG44wr85wZfN9I3dyLusmSmqjfWd9Vs5vv5wcUOEM46xBZpAfgMrHKmZZRFK2DR260yxDZKogYq+hntuOHY7B6WweUL14K/KmDMhHWE3pU6yY7em68QYyAhDvjCSvpcqsh0WHmxOZLdDFoU7pyyPlswnj712Ig3VMa6yN8zPXaoU/xnABd+zwybf8RXpBsUtcxpQMyk8Tnnoev6hYiSjqgMm2THA4fF0fJXJR9x+5qcrnGrd4KSG07IqDnBevsKwrx+cVtVg==
+X-Microsoft-Antispam-Message-Info: ONHsVujR0+Cf+nInIyhxB+NsuqzKXKR2EO0/6hjfV5B083tdh0QWD1oWkRFkLNa+ym23lpHk5Jvw1spSCstN5jtz4+KFyQZ8OZeCWRz7OOwUVJHhyjaT16p0Gl5ihrlAQxloqyJOb55Yny39fI5BSA4kVqQJPdcoRYqRY/GhpnjNK/+WwBJwRTNVTU3VbK9tVn6NvZaiaIMyS3P+ZJNrDbLP1WdfDdiTHmzTgdnoZbk0qjGMo4XsJvoWPGFZ+Lngr42O8uWAeVhPIdadWTMTFca3f99rdZvrbdf31smMCqB4Sy3JqtOVrCYWk+dNpQzMnrE3jA/mK+7Fa9EUWGQCcoVjQ5x32i8BtSBqVHgTj9JUglb9v6FBV/Dnb0mR2oBu/JJzXNn/8xbklG/GLyVmm+t114h4pL/gmP/X8xQybD8jbQoGQhh60ybQS6wWifKMCZV5r6TlJ9HIOurSX+m75QcOzY+dbhyDJssrc7lASRErT7BPoxvF3s+xv1O0Bml+WVLxSHGwFMRJzukHOBE4Qd45TDbhApum7GOAOmxLF9/gMmb+ffC4FbEvPUIKtdIX
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eE1CVWVHdE0rMDJvZm9ESkVnOHBxZ2lFM1hBUHEvU2lYbVZRcDNkMVduL1Vn?=
- =?utf-8?B?ZWVxRkp5aTllMTNPRCtac3VleEswVElNdXY1bGtCb2dtRUM1ZE1PL0F4OWVB?=
- =?utf-8?B?R2lzVzlLVEg1Vm95NjliVzR1cDMzQks3US9BVFhJL2JuRFJqMWlSbUo5eWFm?=
- =?utf-8?B?VkhmeFQ0K2tTdmVIYnNRclNrOXhhcDhKM1VHdVRDOWx4MTUySDJZSVJFclo0?=
- =?utf-8?B?cUNtd3hVYUJTRk8yWk9JN3kxeE5tcmFFQUVTaGthdzV3U3p1d1dyRkpEZHp5?=
- =?utf-8?B?U1FIWlVtRjcxTnBHcUk4ZlRqNVRnM1gzMmM1WnEweFluTmxhSXZrVVpackg2?=
- =?utf-8?B?SXlydjhsSzM5V2kvdm9ROXV5dHF4cm04L1VBcWhtQ0VWSHZPS01wK0lxOUox?=
- =?utf-8?B?Q0NXSkt4NVQrVW9SOWxvQUdERDBkUHErOElsTW1nblp0aVhnWldhTERHSWRq?=
- =?utf-8?B?Z2FGYnRXWDdrYkMzbFg4Ym5aQWpVUnl2a1pUR2xXUklUdDBjaFpJTmpHMU5m?=
- =?utf-8?B?Q0huT053WWhManhHb0o2VHhnUzl5SEUrTjRpOHgrM3psQmpXaXhqeFRQZFdl?=
- =?utf-8?B?ZlU5Wnc1NzVuZy9WWkUwTE9sR01JZTBzYlMrV0QwYlhXcXNoeUtZQ29ZOGNY?=
- =?utf-8?B?aGNKZHJSNHFuWm5aUmQwSzhzSllNZmVhbjAyZDNDeDdNaEVpempEMElqQUJL?=
- =?utf-8?B?RkNOdVJad1VOelNHSjljbEF6Z0lnVHhDbHJFOGJZU0gxUjBUU0ppMXVDSE9y?=
- =?utf-8?B?M2JqREk4UTFEYkxNbVMvV1luZFRGTWRPd3l6WDBmVGlCYzhtcHJsUm5iWXJl?=
- =?utf-8?B?T3BUeUYrK2I4Mlo0aFgrRE80TWp6c0RZRCtPaDg0aVZQaUMxTFhDaVZuWHRy?=
- =?utf-8?B?UVdoSXdrU2JneTEzbUwvVHd6cUVnMGl3YlpOU0Jra0tOQ1JGclI1cmJ3V0tL?=
- =?utf-8?B?R29iOThiR2ZuVFJ3R1M2aFh1ZmRCMjllOTEralVHOUw4ekw5dlJGTHMvY0RX?=
- =?utf-8?B?d25rTGtVZTkydFdjYWRNN2g2dkE1bktCbmZQZXZMcENkNzU1NlNMMXdCUnUy?=
- =?utf-8?B?QmJqTFlSckRVbEN0UE5rQ2RjcVB4WFJaWHA1bW0xbGswZGZSNENyNDhrZXJt?=
- =?utf-8?B?SEpwZ3poME5HNWNURFRDWjNHazVyYm9mUmp0TFNjRE1YL3VmRWt1QzZoTzRB?=
- =?utf-8?B?elp2YkcrclBBTndVMDl3cjRBMVJJZDJldnRzaVFWRkdHM2ppRFZEU1hlUnV0?=
- =?utf-8?B?V2ZQTTl1OTgyNjdtWVRZa01qd1U0UEdSVHI0OUNRT0V5Sk8yV0NGMnlKREZE?=
- =?utf-8?B?QjJYeHFwa0tTTWJPT0J1VGxUT2EvYlY2dWlIOGxIM1IvSnFOdFRrK1YvMXMz?=
- =?utf-8?B?c1RjZmFMVmdlVTBqN3RoOWZvMUdiRTJXRDl6TnNzZXBFNUlJR2lnZXRoV0hN?=
- =?utf-8?B?Qkh4L1NRVjQ2ejZxak4vYUhCU1dhTU1ocVBRWG5JclJ2aTM0RDhkMWl1Tytn?=
- =?utf-8?B?MUpPa2pWOHMwbWx6NGFnYlJCM2tIL2I0SlB0VmlLeitYbDJFY2FJSTV0MnBN?=
- =?utf-8?B?ZDZ3UmprcW5haWRLT0poQjlUR3NWRElreldLaCtjSEdqUlRSajdIdjY1NWV1?=
- =?utf-8?B?UzJuTGdIbWUzK2NjRm9xMmtCajZvbnc9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N2ZQY2V2emNObThNWmYzWGJtUlgxWDdEWHc0OGR1QWhOZFVrRzhQbjA5S0V5?=
+ =?utf-8?B?UjZNaks1Y0o2N3diaTQyVTlFeWlPQklBTVBNRXQ5dS9YeDQrRkhmNDVWVVhD?=
+ =?utf-8?B?M3VQQXIzcVJpQmlXTHBDOTdNRThoTEw2OENNMGsyQm9BbzdZK3pwdnA3Qmxk?=
+ =?utf-8?B?UDNyMi94V0g2UzMxNE5vUXV0TFBNalBVQ0J3MnZiMDNBWGN6dTR6NUtxUGR3?=
+ =?utf-8?B?VlpIbEdHRmVwcW9WZGtLbmRSQnVId0VodGh3eWRMeUE5cHh3NnZoVW8rZTIz?=
+ =?utf-8?B?YmVsdnhtc0t6alBCNGhUOU9GQlNBK2VIY0xOOVNsSlhWQ0N5dzBNV0RHdll0?=
+ =?utf-8?B?Y2dGTWFoZ2JpSG9UN2hlTXdZQWZPcS9vb2N6MGpjSFkxNzBPRldydC93ZFFy?=
+ =?utf-8?B?TW1mQW0xRXdvci9saE40Q01aTVZBOU5udzM0U2NEZ0s3dUdlbHBIZ0xXN3Jy?=
+ =?utf-8?B?MjhGQ0d6dVI3aHZzTlpRRSs1U1pyWnVxcXliSUZsT2tsVXdwZUhsS0xsVExK?=
+ =?utf-8?B?SytobW9LWld5bVVYem1RUGt3VWVyY3NZMVR0Zk5taGZpa041bHBxczVua0VF?=
+ =?utf-8?B?c3dBOGxDOWZWZVBxcEVZRjVIVlljem9BN2J6cjlpb2haSEtHUkRHeEo1dmVW?=
+ =?utf-8?B?SDFqMk05V2NUTFpXZzlldk9WMVhnWEZjZ3RDdGZEcitVVWJZS3NYeWhoM1Bn?=
+ =?utf-8?B?eEVUSHBZazAyZG9ZR0pxcXdyWis4a0VEQXVCdnlOdGF2SHFMYkxTY2ZMNWV1?=
+ =?utf-8?B?TTByL1EyVUZITWVzcWpYNE00TGJWMzMwT2N3eTc3NkUyUXpmY1NiSU13OHBz?=
+ =?utf-8?B?blJmWWN4MUQ1eVBqK3kvZHprc1ZKc0dwMTF1TXEvMEp3eFB1U3B6SmRBVUtq?=
+ =?utf-8?B?SWZrc3pVVmRUVnV4S09aSmZMenRrcjhEbkRhODd2SWxFc0lQUUJqM1ZjZ0pE?=
+ =?utf-8?B?ZERDZGxGazdDWjl0NzdpeFQ0Nlp0QXZGNk5LaFc3RzVPU05GQkFJNlJFWXMv?=
+ =?utf-8?B?TXYrVkNwQlBUKzRWRmlQNTIyZkNQZEF4MStlNHlxOG5oN1lYbXNCcm83bEM2?=
+ =?utf-8?B?S1BLOW9ZR3lDajhCS2hYVkI3MTlUN2YyTmRuOTFZTTdWYm9uSTJrMkpmbUw2?=
+ =?utf-8?B?VmZYd3NlbFU5OFdmVkZrbWNwZkpmcHpiMi85WHpaMVRvNjVYdWpMeSs5anZJ?=
+ =?utf-8?B?SkhHRFc3WEI1aHNqN09nUUxKazRzd3FVUnZCSXNSdUJVcDJPbDY4VjJpVmc1?=
+ =?utf-8?B?MDc5bFc0em1yTnNMcnc4Yk5ONW95RVY5RFhYZGxXcVk4alRXZzF0eXJJSU1t?=
+ =?utf-8?B?ME9TWDZray9YSU5qblRBZkFrMDRNQlI4KzZiRmtxVWJRZTlScEY2dElKNXY4?=
+ =?utf-8?B?a2l4bWNOUWgrMWJZQlp1dnEzWEVTRElLSlE1VmdsOFAvVzF3bWpPL05lQUFY?=
+ =?utf-8?B?UmhRYTdyQkJEUWtTS3NnOWx5QjZSck1teGFlZmpYMW51elhTRFNZT2M4cllL?=
+ =?utf-8?B?ekU2N0F6YkwyTGZ5Q01wc3BrWW9IMDhSNUgzSHRpVEtteW1FNUFSSHp4d25L?=
+ =?utf-8?B?emRVL2cya2wxOElKUFBpNkI2aWFpWmlYMFhmelFQSjZnWnVsK2I2OWs3c1NZ?=
+ =?utf-8?B?cndmdS8ydzk4b0J0U1ErVm54L2NqK0E9PQ==?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3ac0abd-5852-4835-ae38-08db775073c1
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1f7bf8f-0381-4bfa-2244-08db77535a99
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2023 20:52:43.2035
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2023 21:13:29.4858
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5777
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB4266
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The 05/15/2023 14:00, Jonathan Cameron wrote:
-> On Thu, 11 May 2023 17:56:40 +0000
-> Fan Ni <fan.ni@samsung.com> wrote:
+The 05/15/2023 14:58, Jonathan Cameron wrote:
+> On Thu, 11 May 2023 16:53:23 -0500
+> Nathan Fontenot <nafonten@amd.com> wrote:
 > 
-> > Since the early draft of DCD support in kernel is out
-> > (https://lore.kernel.org/linux-cxl/20230417164126.GA1904906@bgt-140510-bm03/T/#t),
-> > this patch series provide dcd emulation in qemu so people who are interested
-> > can have an early try. It is noted that the patch series may need to be updated
-> > accordingly if the kernel side implementation changes.
+> > On 5/11/23 12:56, Fan Ni wrote:
+> > > From: Fan Ni <nifan@outlook.com>
+> > > 
+> > > Per cxl spec 3.0, add dynamic capacity region representative based on
+> > > Table 8-126 and extend the cxl type3 device definition to include dc region
+> > > information. Also, based on info in 8.2.9.8.9.1, add 'Get Dynamic Capacity
+> > > Configuration' mailbox support.
+> > > 
+> > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > > ---
+> > >  hw/cxl/cxl-mailbox-utils.c  | 68 +++++++++++++++++++++++++++++++++++++
+> > >  include/hw/cxl/cxl_device.h | 16 +++++++++
+> > >  2 files changed, 84 insertions(+)
+> > > 
+> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > > index 7ff4fbdf22..61c77e52d8 100644
+> > > --- a/hw/cxl/cxl-mailbox-utils.c
+> > > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > > @@ -81,6 +81,8 @@ enum {
+> > >          #define GET_POISON_LIST        0x0
+> > >          #define INJECT_POISON          0x1
+> > >          #define CLEAR_POISON           0x2
+> > > +	DCD_CONFIG = 0x48, /*8.2.9.8.9*/
+> > > +		#define GET_DC_REGION_CONFIG   0x0
+> > >      PHYSICAL_SWITCH = 0x51
+> > >          #define IDENTIFY_SWITCH_DEVICE      0x0
+> > >  };
+> > > @@ -935,6 +937,70 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
+> > >      return CXL_MBOX_SUCCESS;
+> > >  }
+> > >  
+> > > +/*
+> > > + * cxl spec 3.0: 8.2.9.8.9.2
+> > > + * Get Dynamic Capacity Configuration
+> > > + **/
+> > > +static CXLRetCode cmd_dcd_get_dyn_cap_config(struct cxl_cmd *cmd,
+> > > +		CXLDeviceState *cxl_dstate,
+> > > +		uint16_t *len)
+> > > +{
+> > > +	struct get_dyn_cap_config_in_pl {
+> > > +		uint8_t region_cnt;
+> > > +		uint8_t start_region_id;
+> > > +	} QEMU_PACKED;
+> > > +
+> > > +    struct get_dyn_cap_config_out_pl {
+> > > +		uint8_t num_regions;
+> > > +		uint8_t rsvd1[7];
+> > > +		struct {
+> > > +			uint64_t base;
+> > > +			uint64_t decode_len;
+> > > +			uint64_t region_len;
+> > > +			uint64_t block_size;
+> > > +			uint32_t dsmadhandle;
+> > > +			uint8_t flags;
+> > > +			uint8_t rsvd2[3];
+> > > +		} QEMU_PACKED records[];  
 > > 
-> > To support DCD emulation, the patch series add DCD related mailbox command
-> > support (CXL Spec 3.0: 8.2.9.8.9), and extend the cxl type3 memory device
-> > with dynamic capacity extent and region representative.
-> > To support read/write to the dynamic capacity of the device, a host backend
-> > is provided and necessary check mechnism is added to ensure the dynamic
-> > capacity accessed is backed with active dc extents.
-> > Currently FM related mailbox commands (cxl spec 3.0: 7.6.7.6) is not supported
-> > , but we add two qmp interfaces for adding/releasing dynamic capacity extents.
-> > Also, the support for multiple hosts sharing the same DCD case is missing.
-> > 
-> > Things we can try with the patch series together with kernel dcd code:
-> > 1. Create DC regions to cover the address range of the dynamic capacity
-> > regions.
-> > 2. Add/release dynamic capacity extents to the device and notify the
-> > kernel.
-> > 3. Test kernel side code to accept added dc extents and create dax devices,
-> > and release dc extents and notify the device
-> > 4. Online the memory range backed with dc extents and let application use
-> > them.
-> > 
-> > The patch series is based on Jonathan's local qemu branch:
-> > https://gitlab.com/jic23/qemu/-/tree/cxl-2023-02-28
-> > 
-> > Simple tests peformed with the patch series:
-> > 1 Install cxl modules:
-> > 
-> > modprobe -a cxl_acpi cxl_core cxl_pci cxl_port cxl_mem
-> > 
-> > 2 Create dc regions:
-> > 
-> > region=$(cat /sys/bus/cxl/devices/decoder0.0/create_dc_region)
-> > echo $region> /sys/bus/cxl/devices/decoder0.0/create_dc_region
-> > echo 256 > /sys/bus/cxl/devices/$region/interleave_granularity
-> > echo 1 > /sys/bus/cxl/devices/$region/interleave_ways
-> > echo "dc" >/sys/bus/cxl/devices/decoder2.0/mode
-> > echo 0x10000000 >/sys/bus/cxl/devices/decoder2.0/dpa_size
-> > echo 0x10000000 > /sys/bus/cxl/devices/$region/size
-> > echo  "decoder2.0" > /sys/bus/cxl/devices/$region/target0
-> > echo 1 > /sys/bus/cxl/devices/$region/commit
-> > echo $region > /sys/bus/cxl/drivers/cxl_region/bind
-> > 
-> > /home/fan/cxl/tools-and-scripts# cxl list
-> > [
-> >   {
-> >     "memdevs":[
-> >       {
-> >         "memdev":"mem0",
-> >         "pmem_size":536870912,
-> >         "ram_size":0,
-> >         "serial":0,
-> >         "host":"0000:0d:00.0"
-> >       }
-> >     ]
-> >   },
-> >   {
-> >     "regions":[
-> >       {
-> >         "region":"region0",
-> >         "resource":45365592064,
-> >         "size":268435456,
-> >         "interleave_ways":1,
-> >         "interleave_granularity":256,
-> >         "decode_state":"commit"
-> >       }
-> >     ]
-> >   }
-> > ]
-> > 
-> > 3 Add two dc extents (128MB each) through qmp interface
-> > 
-> > { "execute": "qmp_capabilities" }
-> > 
-> > { "execute": "cxl-add-dynamic-capacity-event",
-> > 	"arguments": {
-> > 		 "path": "/machine/peripheral/cxl-pmem0",
-> > 		"region-id" : 0,
-> > 		 "num-extent": 2,
-> > 		"dpa":0,
-> > 		"extent-len": 128
-> > 	}
-> > }
-> > 
-> > /home/fan/cxl/tools-and-scripts# lsmem
-> > RANGE                                  SIZE   STATE REMOVABLE   BLOCK
-> > 0x0000000000000000-0x000000007fffffff    2G  online       yes    0-15
-> > 0x0000000100000000-0x000000027fffffff    6G  online       yes   32-79
-> > 0x0000000a90000000-0x0000000a9fffffff  256M offline           338-339
-> > 
-> > Memory block size:       128M
-> > Total online memory:       8G
-> > Total offline memory:    256M
-> > 
-> > 
-> > 4.Online the momory with 'daxctl online-memory dax0.0' to online the memory
-> > 
-> > /home/fan/cxl/ndctl# ./build/daxctl/daxctl online-memory dax0.0
-> > [  230.730553] Fallback order for Node 0: 0 1
-> > [  230.730825] Fallback order for Node 1: 1 0
-> > [  230.730953] Built 2 zonelists, mobility grouping on.  Total pages: 2042541
-> > [  230.731110] Policy zone: Normal
-> > onlined memory for 1 device
-> > 
-> > root@bgt-140510-bm03:/home/fan/cxl/ndctl# lsmem
-> > RANGE                                  SIZE   STATE REMOVABLE BLOCK
-> > 0x0000000000000000-0x000000007fffffff    2G  online       yes  0-15
-> > 0x0000000100000000-0x000000027fffffff    6G  online       yes 32-79
-> > 0x0000000a90000000-0x0000000a97ffffff  128M  online       yes   338
-> > 0x0000000a98000000-0x0000000a9fffffff  128M offline             339
-> > 
-> > Memory block size:       128M
-> > Total online memory:     8.1G
-> > Total offline memory:    128M
-> > 
-> > 5 using dc extents as regular memory
-> > 
-> > /home/fan/cxl/ndctl# numactl --membind=1 ls
-> > CONTRIBUTING.md  README.md  clean_config.sh  cscope.out   git-version-gen
-> > ndctl	       scripts	test.h      version.h.in COPYING		 acpi.h
-> > config.h.meson   cxl	  make-git-snapshot.sh	ndctl.spec.in  sles	tools
-> > Documentation	 build	    contrib	     daxctl	  meson.build		rhel
-> > tags	topology.png LICENSES	 ccan	    cscope.files
-> > git-version  meson_options.txt	rpmbuild.sh    test	util
-> > 
-> > 
-> > QEMU command line cxl configuration:
-> > 
-> > RP1="-object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/cxltest.raw,size=512M \
-> > -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/cxltest2.raw,size=512M \
-> > -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/lsa.raw,size=512M \
-> > -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-> > -device cxl-rp,port=0,bus=cxl.1,id=root_port13,chassis=0,slot=2 \
-> > -device cxl-type3,bus=root_port13,memdev=cxl-mem1,lsa=cxl-lsa1,dc-memdev=cxl-mem2,id=cxl-pmem0,num-dc-regions=1\
-> > -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k"
-> > 
-> > 
-> > Kernel DCD support used to test the changes
-> > 
-> > The code is tested with the posted kernel dcd support:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-6.5/dcd-preview
-> > 
+> > Could you declare CXLDCD_Region as QEMU_PACKED and use it here instead of
+> > re-defining the region structure?
 > 
-> Very nice!  +CC Navneet who may want to comment on the below (and the
-> emulation as well)
+> Could be done, but care needed on the endian conversions.  I wouldn't
+> mind seeing this always held as little endian state though. We'd have
+> done that anyway if it was a memory mapped command set rather than read
+> via the mailbox so there is plenty of precedence.
 > 
-> I've not had a chance to look at the code on the kernel side yet.
+> Jonathan
 
-Thanks Jonathan for all the comments for the series, will reflect them
-in the next version.
+I will leave it as it is for now.
+> 
+> > 
+> > > +	} QEMU_PACKED;
+> > > +
+> > > +	struct get_dyn_cap_config_in_pl *in = (void *)cmd->payload;
+> > > +	struct get_dyn_cap_config_out_pl *out = (void *)cmd->payload;
+> > > +	struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+> > > +	uint16_t record_count = 0, i = 0;
+> > > +	uint16_t out_pl_len;
+> > > +
+> > > +	if (in->start_region_id >= ct3d->dc.num_regions)
+> > > +		record_count = 0;
+> > > +	else if (ct3d->dc.num_regions - in->start_region_id < in->region_cnt)
+> > > +		record_count = ct3d->dc.num_regions - in->start_region_id;
+> > > +	else
+> > > +		record_count = in->region_cnt;
+> > > +
+> > > +	out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
+> > > +	assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> > > +
+> > > +	memset(out, 0, out_pl_len);
+> > > +	out->num_regions = record_count;
+> > > +	for (; i < record_count; i++) {
+> > > +		stq_le_p(&out->records[i].base,
+> > > +			ct3d->dc.regions[in->start_region_id+i].base);
+> > > +		stq_le_p(&out->records[i].decode_len,
+> > > +			ct3d->dc.regions[in->start_region_id+i].decode_len);
+> > > +		stq_le_p(&out->records[i].region_len,
+> > > +			ct3d->dc.regions[in->start_region_id+i].len);
+> > > +		stq_le_p(&out->records[i].block_size,
+> > > +			ct3d->dc.regions[in->start_region_id+i].block_size);
+> > > +		stl_le_p(&out->records[i].dsmadhandle,
+> > > +			ct3d->dc.regions[in->start_region_id+i].dsmadhandle);
+> > > +		out->records[i].flags
+> > > +			= ct3d->dc.regions[in->start_region_id+i].flags;  
+> > 
+> > In this loop your reading from 'in' and writing to 'out' where in and out both
+> > point to the same payload buffer. It works because of the structure layouts but
+> > feels like a bug waiting to happen. Perhaps saving start_region to a local variable
+> > and using that for the loop?
+> 
+> Does it work?  There is a memset of out above.
+> Definitely need a local copy of start_region_id before that.
+> This might only be working because of good fortune / compilers being 'clever'.
+> 
+> Jonathan
+
+Yes. We need a local variable to record the start_region_id.
+
+Thanks Nathan for catching the issue.
 
 Fan
-
 > 
 > 
-> > commit: f425bc34c600e2a3721d6560202962ec41622815
 > > 
-> > To make the test work, we have made the following changes to the above kernel commit:
+> > -Nathan
 > > 
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index 5f04bbc18af5..5f421d3c5cef 100644
-> > --- a/drivers/cxl/core/mbox.c
-> > +++ b/drivers/cxl/core/mbox.c
-> > @@ -68,6 +68,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
-> >  	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
-> >  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
-> >  	CXL_CMD(GET_DC_EXTENT_LIST, 0x8, CXL_VARIABLE_PAYLOAD, 0),
-> > +	CXL_CMD(GET_DC_CONFIG, 0x2, CXL_VARIABLE_PAYLOAD, 0),
-> >  };
-> >  
-> >  /*
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 291c716abd49..ae10e3cf43a1 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -194,7 +194,7 @@ static int cxl_region_manage_dc(struct cxl_region *cxlr)
-> >  		}
-> >  		cxlds->dc_list_gen_num = extent_gen_num;
-> >  		dev_dbg(cxlds->dev, "No of preallocated extents :%d\n", rc);
-> > -		enable_irq(cxlds->cxl_irq[CXL_EVENT_TYPE_DCD]);
-> > +		/*enable_irq(cxlds->cxl_irq[CXL_EVENT_TYPE_DCD]);*/
-> 
-> Some race condition that means we need to enable the DCD event earlier?
-> 
-> >  	}
-> >  	return 0;
-> >  err:
-> > @@ -2810,7 +2810,8 @@ int cxl_add_dc_extent(struct cxl_dev_state *cxlds, struct resource *alloc_dpa_re
-> >  				dev_dax->align, memremap_compat_align()))) {
-> >  		rc = alloc_dev_dax_range(dev_dax, hpa,
-> >  					resource_size(alloc_dpa_res));
-> > -		return rc;
-> > +		if (rc)
-> > +			return rc;
-> 
-> No idea on this one as it's in the code I haven't looked at yet!
-> 
-> >  	}
-> >  
-> >  	rc = xa_insert(&cxlr_dc->dax_dev_list, hpa, dev_dax, GFP_KERNEL);
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 9e45b1056022..653bec203838 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -659,7 +659,7 @@ static int cxl_event_irqsetup(struct cxl_dev_state *cxlds)
-> >  
-> >  	/* Driver enables DCD interrupt after creating the dc cxl_region */
-> >  	rc = cxl_event_req_irq(cxlds, policy.dyncap_settings, CXL_EVENT_TYPE_DCD,
-> > -					IRQF_SHARED | IRQF_ONESHOT | IRQF_NO_AUTOEN);
-> > +					IRQF_SHARED | IRQF_ONESHOT);
-> 
-> This will be otherside of the removal of the enable above.
-> 
-> >  	if (rc) {
-> >  		dev_err(cxlds->dev, "Failed to get interrupt for event dc log\n");
-> >  		return rc;
-> > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> > index 6ca85861750c..910a48259239 100644
-> > --- a/include/uapi/linux/cxl_mem.h
-> > +++ b/include/uapi/linux/cxl_mem.h
-> > @@ -47,6 +47,7 @@
-> >  	___C(SCAN_MEDIA, "Scan Media"),                                   \
-> >  	___C(GET_SCAN_MEDIA, "Get Scan Media Results"),                   \
-> >  	___C(GET_DC_EXTENT_LIST, "Get dynamic capacity extents"),         \
-> > +	___C(GET_DC_CONFIG, "Get dynamic capacity configuration"),         \
-> >  	___C(MAX, "invalid / last command")
-> >  
-> >  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
-> > 
-> > 
-> > 
-> > Fan Ni (7):
-> >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
-> >     payload of identify memory device command
-> >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
-> >     and mailbox command support
-> >   hw/mem/cxl_type3: Add a parameter to pass number of DC regions the
-> >     device supports in qemu command line
-> >   hw/mem/cxl_type3: Add DC extent representative to cxl type3 device
-> >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
-> >     dynamic capacity response
-> >   Add qmp interfaces to add/release dynamic capacity extents
-> >   hw/mem/cxl_type3: add read/write support to dynamic capacity
-> > 
-> >  hw/cxl/cxl-mailbox-utils.c  | 389 +++++++++++++++++++++++++++-
-> >  hw/mem/cxl_type3.c          | 492 +++++++++++++++++++++++++++++++-----
-> >  include/hw/cxl/cxl_device.h |  50 +++-
-> >  include/hw/cxl/cxl_events.h |  16 ++
-> >  qapi/cxl.json               |  44 ++++
-> >  5 files changed, 924 insertions(+), 67 deletions(-)
-> > 
+> > > +	}
+> > > +
+> > > +	*len = out_pl_len;
+> > > +	return CXL_MBOX_SUCCESS;
+> > > +}
+> > > +
+> > >  #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+> > >  #define IMMEDIATE_DATA_CHANGE (1 << 2)
+> > >  #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+> > > @@ -973,6 +1039,8 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+> > >          cmd_media_inject_poison, 8, 0 },
+> > >      [MEDIA_AND_POISON][CLEAR_POISON] = { "MEDIA_AND_POISON_CLEAR_POISON",
+> > >          cmd_media_clear_poison, 72, 0 },
+> > > +	[DCD_CONFIG][GET_DC_REGION_CONFIG] = { "DCD_GET_DC_REGION_CONFIG",
+> > > +		cmd_dcd_get_dyn_cap_config, 2, 0 },
+> > >  };
+> > >  
+> > >  static struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > > index e285369693..8a04e53e90 100644
+> > > --- a/include/hw/cxl/cxl_device.h
+> > > +++ b/include/hw/cxl/cxl_device.h
+> > > @@ -383,6 +383,17 @@ typedef struct CXLPoison {
+> > >  typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+> > >  #define CXL_POISON_LIST_LIMIT 256
+> > >  
+> > > +#define DCD_MAX_REGION_NUM 8
+> > > +
+> > > +typedef struct CXLDCD_Region {
+> > > +	uint64_t base;
+> > > +	uint64_t decode_len; /* in multiples of 256MB */
+> > > +	uint64_t len;
+> > > +	uint64_t block_size;
+> > > +	uint32_t dsmadhandle;
+> > > +	uint8_t flags;
+> > > +} CXLDCD_Region;
+> > > +
+> > >  struct CXLType3Dev {
+> > >      /* Private */
+> > >      PCIDevice parent_obj;
+> > > @@ -414,6 +425,11 @@ struct CXLType3Dev {
+> > >      unsigned int poison_list_cnt;
+> > >      bool poison_list_overflowed;
+> > >      uint64_t poison_list_overflow_ts;
+> > > +
+> > > +	struct dynamic_capacity {
+> > > +		uint8_t num_regions; // 1-8
+> > > +		struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
+> > > +	} dc;
+> > >  };
+> > >  
+> > >  #define TYPE_CXL_TYPE3 "cxl-type3"  
 > 
 
 -- 
