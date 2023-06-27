@@ -2,216 +2,118 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D221EB64D7
-	for <linux-cxl@archiver.kernel.org>; Tue, 27 Jun 2023 01:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC14AEB64D9
+	for <linux-cxl@archiver.kernel.org>; Tue, 27 Jun 2023 08:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjF0BUp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 26 Jun 2023 21:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
+        id S231423AbjF0Iio (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 27 Jun 2023 04:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbjF0BUo (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 26 Jun 2023 21:20:44 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2858D1998
-        for <linux-cxl@vger.kernel.org>; Mon, 26 Jun 2023 18:20:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687828843; x=1719364843;
-  h=date:from:to:cc:subject:message-id;
-  bh=LE9TlgIGkuu162gUugWzGHuLM/7cEaJspGLfr8YFDlU=;
-  b=IUJ2BguyYCohNo37FWG6rvIYN7EGIsLSL5xS9PlfS7xLam1OMZUDRX7l
-   2FWW0bdHC/CqkH2KkuO0tp6XDFG/nI4R3n2xuRIzzNsVLp88E73fNYCfZ
-   hXnNBcrAQbCncksemI4DipjVvonH3pROMdog0NerpxN4f99oDYu+IswZp
-   BvgdSkzADsfIwuNNFLCGRA49CnHoEEXGn/x1Wl0ZbJBHAOk5dERxcVbM3
-   JOpo6wF5tt+yhIT9tFrFLoHCq5Q+Gv5VjDy3sk5fSKhrcmbcKbmezMr1K
-   mR2N8js9fxGRUtsE9a5GrCM7UCYIkkuoyr+PCPSp1fIDlXZrsZBOUz4GN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="391879256"
-X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
-   d="scan'208";a="391879256"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2023 18:20:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10753"; a="719592958"
-X-IronPort-AV: E=Sophos;i="6.01,161,1684825200"; 
-   d="scan'208";a="719592958"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Jun 2023 18:20:40 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qDxNo-000BMP-0N;
-        Tue, 27 Jun 2023 01:20:40 +0000
-Date:   Tue, 27 Jun 2023 09:20:38 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S231219AbjF0Ii2 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 27 Jun 2023 04:38:28 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688E71B0
+        for <linux-cxl@vger.kernel.org>; Tue, 27 Jun 2023 01:37:41 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 57861880D10;
+        Tue, 27 Jun 2023 08:37:40 +0000 (UTC)
+Received: from pdx1-sub0-mail-a229.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id CEA8A880E26;
+        Tue, 27 Jun 2023 08:37:39 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1687855059; a=rsa-sha256;
+        cv=none;
+        b=Wtq49F5ctCB1shkEAd7GeMrQURPDaCUJdDaEC4iYkNl5ltNfsNlSGkN7525LNdHNXFduBF
+        uJJctVGcpnE3xbB9budfISetLGmEollhx5b5Ssmnv6Lrg7E9z/EfAwFM+VsXCOG0iqr+so
+        jHdjf/7OsJS1Rgtd1S0sGZfTA4Ifkr+0BLGwcGWcJDcJrX4eq44aPSdwIk29NMzTCf9jjB
+        /NfYDhf23+yx5qy2Kh9hnMPpZyUKX70XzDTPvSeaUlK1G8BtFTVfydkJtnUWGo2deU/wFb
+        TjxMbSFyy5DsOfUIzJ0jhuCMJYsHxEhm5LssLKTCNFyki1wmDAhiIqK3B0Gdyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1687855059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=VwuLXFy2VqQcm5HmKDk/jT/CloAe8Cp8oEfRoM/XAk8=;
+        b=zdlF4kOm8n8jYVUWiscNLMs4bI5UJJiXfIF4Iy9c1kIwzHC61b4k2vCK95aoDkXznWkuDp
+        O4TVcZ1d2D0Hk76AnVXuXJcCCZUTj6Wo0WHcwndsOVQS9Oou2Q5+2DWihPG3EL6SaCf7kN
+        U3HRccO1pzTXX3umLUoLdX18n8WbADK+wsBJhIUOkVd/F8Ii7ewpJE97jAQhdxmpmOCGaQ
+        J0YRd0od5YALpGYGlcuBglavVgAr2Mj8RIfHplkPL3ZzW1zsXUcbRRwzGk43pZFwBT3Sn7
+        W4YhlOyS6F8sxl0W0HYHLXCC72Z5aD2258hRQUdOnk6611kzSm6W7qhMkM1lbA==
+ARC-Authentication-Results: i=1;
+        rspamd-9fcc56855-twxqs;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Supply-Spill: 37bb6f1a4c8ac3b8_1687855060151_2635174159
+X-MC-Loop-Signature: 1687855060151:729753962
+X-MC-Ingress-Time: 1687855060151
+Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.126.30.17 (trex/6.9.1);
+        Tue, 27 Jun 2023 08:37:40 +0000
+Received: from offworld (host86-183-53-156.range86-183.btcentralplus.com [86.183.53.156])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4Qqyl54PHVz6W;
+        Tue, 27 Jun 2023 01:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1687855059;
+        bh=VwuLXFy2VqQcm5HmKDk/jT/CloAe8Cp8oEfRoM/XAk8=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=gka/sfZl9+grAZpBjXAUcmkwD3yVQPWCLNz8KwuwICwNccBMfdCZ9NpW27Sf3F1Q0
+         /LoToBCdk7acq3pRjv1mhFNJeBBVCyIQgW8Ta+W+y6eVoop0vxVRrow+8oBcHXrLdB
+         bj1NKs3kwMw5BHcsAG82gRLXPAfjpSozVe8ful9Gr6FFcW1Pco6cuf4+3tqsLhhCey
+         RbpyMfW5nWhR9zjBCcI1krrevLOAO47b6HMRrjxI8dSxqNcyNyldIX1esi8VGE3NcM
+         Eb9cc/WDv3at7k2tA/1yb7iqWUdgqTmZzee3j1RjxnozgkaNZ6Gd+rEe1FDfcd63lg
+         PshHBJ28/XK+A==
+Date:   Tue, 27 Jun 2023 01:02:02 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [cxl:pending] BUILD SUCCESS
- 0c0df63177e37ae826d803280eb2c5b6b6a7a9a4
-Message-ID: <202306270936.vhP4DCnP-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc:     dave.jiang@intel.com, vishal.l.verma@intel.com,
+        Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
+        a.manzanares@samsung.com, linux-cxl@vger.kernel.org
+Subject: [PATCH] cxl/pci: Use correct flag for sanitize polling
+Message-ID: <7q3vcjqidtmxmys4n34g6b3mygvhaen7yikzxanpz56lw43fz7@7subbtbfkmyx>
+References: <20230612181038.14421-1-dave@stgolabs.net>
+ <6498c35a934ab_8e178294b9@dwillia2-xfh.jf.intel.com.notmuch>
+ <ll3imaqzzqkhmsa2r4rxxzhmgnpoayuasb3ay5dfx47f7avco2@j6bmlcelamco>
+ <649a1583f3331_8e178294f6@dwillia2-xfh.jf.intel.com.notmuch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <649a1583f3331_8e178294f6@dwillia2-xfh.jf.intel.com.notmuch>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git pending
-branch HEAD: 0c0df63177e37ae826d803280eb2c5b6b6a7a9a4  Merge branch 'for-6.5/cxl-rch-eh' into for-6.5/cxl
+This is a bogus value, left behind from a previous version.
 
-elapsed time: 1308m
+Fixes: 0c36b6ad436a ("cxl/mbox: Add sanitization handling machinery")
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+  drivers/cxl/pci.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-configs tested: 142
-configs skipped: 10
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 48f88d96029d..1cb1494c28fe 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -295,7 +295,7 @@ static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+		 * and allow userspace to poll(2) for completion.
+		 */
+		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+-			if (mds->security.poll_tmo_secs != -1) {
++			if (mds->security.poll) {
+				/* hold the device throughout */
+				get_device(cxlds->dev);
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r025-20230626   gcc  
-alpha                randconfig-r036-20230626   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                 nsimosci_hs_smp_defconfig   gcc  
-arc                  randconfig-r043-20230626   gcc  
-arc                           tb10x_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                            dove_defconfig   clang
-arm                       imx_v4_v5_defconfig   clang
-arm                        multi_v7_defconfig   gcc  
-arm                       netwinder_defconfig   clang
-arm                  randconfig-r001-20230626   gcc  
-arm                  randconfig-r016-20230626   clang
-arm                  randconfig-r034-20230626   gcc  
-arm                  randconfig-r046-20230626   clang
-arm                           tegra_defconfig   gcc  
-arm                         wpcm450_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r031-20230626   clang
-arm64                randconfig-r036-20230626   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r013-20230626   gcc  
-hexagon              randconfig-r041-20230626   clang
-hexagon              randconfig-r045-20230626   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230626   clang
-i386         buildonly-randconfig-r005-20230626   clang
-i386         buildonly-randconfig-r006-20230626   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230626   clang
-i386                 randconfig-i002-20230626   clang
-i386                 randconfig-i003-20230626   clang
-i386                 randconfig-i004-20230626   clang
-i386                 randconfig-i005-20230626   clang
-i386                 randconfig-i006-20230626   clang
-i386                 randconfig-i011-20230626   gcc  
-i386                 randconfig-i012-20230626   gcc  
-i386                 randconfig-i013-20230626   gcc  
-i386                 randconfig-i014-20230626   gcc  
-i386                 randconfig-i015-20230626   gcc  
-i386                 randconfig-i016-20230626   gcc  
-i386                 randconfig-r002-20230626   clang
-i386                 randconfig-r021-20230626   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5407c3_defconfig   gcc  
-m68k                 randconfig-r011-20230626   gcc  
-m68k                 randconfig-r015-20230626   gcc  
-m68k                 randconfig-r024-20230626   gcc  
-microblaze           randconfig-r021-20230626   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                          ath79_defconfig   clang
-mips                     decstation_defconfig   gcc  
-mips                           ip22_defconfig   clang
-mips                     loongson2k_defconfig   clang
-mips                 randconfig-r006-20230626   gcc  
-mips                 randconfig-r035-20230626   gcc  
-mips                          rb532_defconfig   gcc  
-mips                        vocore2_defconfig   gcc  
-mips                           xway_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r012-20230626   gcc  
-nios2                randconfig-r024-20230626   gcc  
-nios2                randconfig-r032-20230626   gcc  
-openrisc                            defconfig   gcc  
-openrisc             randconfig-r026-20230626   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc               randconfig-r004-20230626   gcc  
-parisc               randconfig-r012-20230626   gcc  
-parisc               randconfig-r023-20230626   gcc  
-parisc               randconfig-r031-20230626   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                   currituck_defconfig   gcc  
-powerpc                      pcm030_defconfig   gcc  
-powerpc                      ppc44x_defconfig   clang
-powerpc                     redwood_defconfig   gcc  
-powerpc                     tqm8541_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                randconfig-r022-20230626   gcc  
-riscv                randconfig-r025-20230626   gcc  
-riscv                randconfig-r042-20230626   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r011-20230626   gcc  
-s390                 randconfig-r044-20230626   gcc  
-sh                               allmodconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                   randconfig-r001-20230626   gcc  
-sh                   randconfig-r003-20230626   gcc  
-sh                   randconfig-r005-20230626   gcc  
-sh                   randconfig-r006-20230626   gcc  
-sh                   randconfig-r014-20230626   gcc  
-sh                             sh03_defconfig   gcc  
-sh                           sh2007_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r002-20230626   gcc  
-sparc                randconfig-r003-20230626   gcc  
-sparc64              randconfig-r013-20230626   gcc  
-sparc64              randconfig-r016-20230626   gcc  
-sparc64              randconfig-r022-20230626   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r032-20230626   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230626   clang
-x86_64       buildonly-randconfig-r002-20230626   clang
-x86_64       buildonly-randconfig-r003-20230626   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r004-20230626   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--
+2.41.0
