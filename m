@@ -2,183 +2,195 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81014EB64DA
-	for <linux-cxl@archiver.kernel.org>; Sat,  1 Jul 2023 00:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FF6C0015E
+	for <linux-cxl@archiver.kernel.org>; Sat,  1 Jul 2023 11:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjGAAUM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 30 Jun 2023 20:20:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51820 "EHLO
+        id S229980AbjGALhP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 1 Jul 2023 07:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjGAAUK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 30 Jun 2023 20:20:10 -0400
+        with ESMTP id S230006AbjGALhP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 1 Jul 2023 07:37:15 -0400
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026D53A9B;
-        Fri, 30 Jun 2023 17:20:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EF6128
+        for <linux-cxl@vger.kernel.org>; Sat,  1 Jul 2023 04:37:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688170810; x=1719706810;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=5MBvmA3hGni23DEtMj5j1MCcSREpQT+SEdinTMMCMx8=;
-  b=VTYq9nytEhaivHAj9NWLNm3gzUmp6i1+bBmBrEI84nUGEAxb/aPk1VfV
-   TR638cZ1jdSiBi4klFLRvglCWWvCiZQj9HVAqWDe/oCy9bVQWk8TUJLCy
-   wNUccwHDacAYfunH9j5tB/4h24J9ZsphiwNl4EBSB+FDXsDwYBiGDrbj1
-   5hQYOELrljEme0+3a0MRm/FCveNCKKh/69+E6zhzEVeasC72XoOzTlfP6
-   xbWThX3LLsIDGj+obQPr5YsxS9hbjpfpeCEKa+ze9nzrWK8wY5iHqZuRY
-   X8oyMwa3JX5pfBFPlqnpdee8stI6Wzrla8TzToxsp098GC6X40vFKsPTA
+  t=1688211434; x=1719747434;
+  h=date:from:to:cc:subject:message-id;
+  bh=0mOkgQPI2LAZNtmhDmiAL+4o6Ffrn6J5DKJT0U3IL64=;
+  b=OCq7fuXJk10dbqW3eD9X9jBeZXIDL3bsM/yz9G1dIiq3aKuttGoicZlI
+   kGnPCaCghZmhbHBk5shkT+KUYR630SmthPdhov3zFW2JtuScRGcH6Ztzj
+   YJYg4fyCRiz2qyZEmkzIHeONq8YPQC89PeRLJKHr2JP37crvZGuWSLSMM
+   QMPKn2B7kn/njoLOeErEpyuEfKAyN/MQRxxtV4rhZ9P+ESyPipsAYd82M
+   5rza2fuiI0p75+Ko5e746FToedrjYoZJgHlwa0xsgEcuN79/NBpfPZ6d0
+   LLL4Qdoxsx8WLQp96zALzuPQrbyYAm6MoZTYJLJD++b4V75bevCNU0Vru
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="393254647"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="393254647"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2023 17:20:09 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="393320645"
+X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
+   d="scan'208";a="393320645"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2023 04:37:12 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="831130605"
-X-IronPort-AV: E=Sophos;i="6.01,172,1684825200"; 
-   d="scan'208";a="831130605"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga002.fm.intel.com with ESMTP; 30 Jun 2023 17:20:09 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 30 Jun 2023 17:20:09 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 30 Jun 2023 17:20:08 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Fri, 30 Jun 2023 17:20:08 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Fri, 30 Jun 2023 17:20:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JB0ksycTQp4Y2YBT+lfs6U2DjXYkUgomyc1BGe976jKQKlhOUJ0Cy8j0ffitPrkOBn9kw7q3ylYj0eb1FaiUmYnlmaQgjSdGBh1mOull3eeUkPqG037hqV/IppTm+7QBUVgUT1B0sYQmKcTyeCKfD6oiLdZVcwNESMsVALji28R3CFWuGKR7o0zkdbvLXhkMGFdhVTZ+dDcl3sXlgz02t5IS5X3ilCEZTbQBum6vAYRJR3U0FwtaFGohbH1kXW4a2ge08TAceVOG0c7jwVyqN+GpvAiZt9Mwvo+C3o8Hfh6HMTobeaMkIIMrC+0IVtuKRpIV8h8AYleUitFki7KA+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sL5FHyXQ4oYlHPicza0nJU4+sbt+rlkdTr/2NA06KpM=;
- b=JgXmFHgw3YNdL96QzKSQPymxmSfPKvJwJBGGA0LKcSBygbWVaaef26X4Mg/JTuT3a8qY8iCV85GBvvMMetNXA8C/EtlOzuJEL+OY+iVx1nGEwmDa6NZzLmSKlSrtunvkZpwqbZfzg0jxkDmEVkb75NA6c+j5N0yqKrdZNCPosPeKx3A2kZxmziI3seqX7rPNcMW7kXFNeroQXb/0VhOjvaArCz4YPfB3vNC5cW62RCKke93h5s0RcoMinO//q80IS1IM6QHmzVGdMeBBPEtgUje/OBkmSozlJg+8amFspUvviZ4SSJ9kMvFBK89OAY9/pePQopAX28yVEyK373fJGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM8PR11MB5701.namprd11.prod.outlook.com (2603:10b6:8:20::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.19; Sat, 1 Jul
- 2023 00:20:06 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::aeb:12b5:6ac9:fab0]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::aeb:12b5:6ac9:fab0%7]) with mapi id 15.20.6500.029; Sat, 1 Jul 2023
- 00:20:06 +0000
-Date:   Fri, 30 Jun 2023 17:20:02 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-CC:     <terry.bowman@amd.com>, <rrichter@amd.com>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v8 00/14] cxl/pci: Add support for RCH RAS error handling
-Message-ID: <649f71329689f_14494294cc@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20230630231635.3132638-1-terry.bowman@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230630231635.3132638-1-terry.bowman@amd.com>
-X-ClientProxiedBy: MW4PR03CA0247.namprd03.prod.outlook.com
- (2603:10b6:303:b4::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM8PR11MB5701:EE_
-X-MS-Office365-Filtering-Correlation-Id: 50531197-2f25-449d-b795-08db79c8ebce
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mo0OMiiNisFKYdpeMH0lrsDzJuQOM2AUfwj9Ut3g1PUwH2smJpJttYyk4Qa0yNkaiJZFpmo/tTIMxheaXMaPu41HHgpjt+NUDUNzb84JdM+NFo3f243MzukhBXk56J98nbzItMAOLO0MFjg/DM8W2v9I6cOYqcOqmVlOPoKVuSESyLpZU9Sk2+UbB4AqOwVhdx7OeePHDVcLFSYehh0EBgr8MpDewrqz+0vD5craKEC93BiV7pdJhimepqruIFnKLrylzskm060ZoCs75IJnajQYAjbHfkIgf6hxFRw21tBzhi1VJwJTsMNZtnpbVoYVfzNtux1+LKCfhd5alTdHS+n5unYKCBd/cVsM79zRNb1ygqW5rkChNkjjQCQhGWZX5E0R5ZzxD9C3XZbL3HhJad27XJnvhbPZHG6SrvaQ3QvA4/q12zysRsa3HokJvivwFmhE7wOVuXxtOTayDIFMMTa80taBx6e+mstNkiFvul2aoPYK5Xo6E7hZZ0/YDF0NAMzqsoGh6XoQOff4jjkJ7yQNumrSJfOmHL03wJtndzA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(346002)(39860400002)(376002)(136003)(451199021)(83380400001)(2906002)(38100700002)(82960400001)(8936002)(8676002)(5660300002)(86362001)(6512007)(41300700001)(66556008)(66476007)(4326008)(66946007)(6666004)(316002)(6486002)(478600001)(186003)(9686003)(6506007)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tu162WkGC3PKUgInZ/VHhDUJLaI2h8huQYlMkYEP8jVuyIz/N19x01MD7/Tw?=
- =?us-ascii?Q?W0LH4qWX1YRTh6qkxHRv6Ug4k2irvOThG6aZWPhwQCBJ+siCQqKnUV/CUi3H?=
- =?us-ascii?Q?5S6ak2qnkuHbpthFXdugcpf+lW3gWWberjX6D+kSaVy57b/Q/tKNjY+Zb/J4?=
- =?us-ascii?Q?btIrZ4E8bXj3GzAHAXxPeEHw0pPTeU/TGoXWEWqODj5guNlczob3SQDwzkTY?=
- =?us-ascii?Q?+tM512P7PXZrqJ2Gi9nTARfITA7PF84pT5ZoBaPTGjCOk8FRBf0X8KnmKon7?=
- =?us-ascii?Q?8nZCOq6bQ4EeybcM12OixtJdxtBmo8DL1Ly37CdTYverh3rIA6pwe3Bjbj2m?=
- =?us-ascii?Q?0l76cXTYuQPUsE8MRwf9cYpOtwXvTGelGp38PhHKA3cpV1hrSb6NVxsgSd67?=
- =?us-ascii?Q?t5E/T5wc0MY6oNcHIXLeU5JbMp3tpcmdJscfpe5MQHVtPkQkpjOwXp3LzmnT?=
- =?us-ascii?Q?CBGnte/pw85UBrOmO8W2MiusdOZtna1lMOhCSCEDtHVeumzYw7Ax0PpIexy9?=
- =?us-ascii?Q?z4U2P4c2UJ4rlSPEOTl2bstWrqkg9Pgibf8iCrbV2HKrZBkrX/KpFM+/I1nT?=
- =?us-ascii?Q?v9icCYPiefEtFNJn1Cl9wYAmsjGFNIt63ryVVg7H4mcRwP4lpANpeFtGi0dq?=
- =?us-ascii?Q?A8Dw/fAnZUKwcmjK3/bo7BT663qsdNKucgkm85A5bDRe9g4ZjpkfdDKVN1zT?=
- =?us-ascii?Q?jtpqaNp4nKCdNAbMZsp4N5FhWWxYh0i/RnCQITBO/U78fO9l5wyI64R+j42P?=
- =?us-ascii?Q?dYTj7VTQFmoSKe4HEYRN9bHjhuix7ryOuTcj2kbndEw3t4UBh8JizwbxVAfc?=
- =?us-ascii?Q?iyBpoAfNN8vQYzrU9dTWGViOcmlFeAEopdPvGra1atIxZiNj5UYSxZ7hM9vG?=
- =?us-ascii?Q?vUp9nPEo8T4QwI2usi+yLo0DYvt/W0OP7oS62Mhax6hbjidjpUBjV6e5WTsd?=
- =?us-ascii?Q?Ucw7OndbR4VqsU0qgW/FkbvOwaRxfWF6UMRSOR/ZCA9bodbnPR0MRPNNTVxt?=
- =?us-ascii?Q?R3LSkP/rQR74IUqHaYyGqBGfx8sSh5vMms2af9+202RMXEwQ8THhYUK47Plm?=
- =?us-ascii?Q?uJQC7vIhNOQdZSJpc0OGoCcalitZsRvdInlLZ9IQ5tEskFpc0bi9khmyAM+w?=
- =?us-ascii?Q?aM9dQKScaUcryg+jCJfZoTqwbdp4BHqIZZf5VP9W/+Mo1cSgOry11uWlJQaQ?=
- =?us-ascii?Q?ugzgv6PGhzIVkQKTS1aPipf3AoC2FU1HGmw8OZIWaa/7jQZSU5NbjtGVJonz?=
- =?us-ascii?Q?B3noNOLsXTMJib8Veo9Z+vfoQRhd4eeyNvM9eOoQRraDnb3FFqCgXUFF0xvq?=
- =?us-ascii?Q?3zBBy15W4SSLeHXOYdyR0gboT1D5FfoLHHsR7y4JX0QvQf9e78tGgtzdn6rx?=
- =?us-ascii?Q?9PETl/Zj8zkRzxzmKA52pho1V1ezpLp3TCjUoBx5AHVUPZrVnxs/+g/PeVZr?=
- =?us-ascii?Q?eyWJoTnPtrMISY8TlG/4jvYKBYjs7uptaFnk2m/sPNawY6MAsNsMg9+i6Wt6?=
- =?us-ascii?Q?MCOqTuZzqfIx5DD2f43H6QpKSDKb1sD2ZVcXAWDXhljqUYdss4AqOploxZmh?=
- =?us-ascii?Q?piwS5NojL6PLnSmBaxneSogkeuZeDmpHBp6E3SYPw+OLByr86rvnX/tAN5aN?=
- =?us-ascii?Q?4Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50531197-2f25-449d-b795-08db79c8ebce
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2023 00:20:06.1126
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ay+87+p53Kn5Pmn2UO69L8698a4Ql5Hrd0/LbiqSRNleAOt2hm8o3D0VKz1il89zpGUTqYahY4WmNL4kj+vuvi2PTkRCxI2lGD/PlHE/8sI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR11MB5701
-X-OriginatorOrg: intel.com
+X-IronPort-AV: E=McAfee;i="6600,9927,10757"; a="668269271"
+X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
+   d="scan'208";a="668269271"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 01 Jul 2023 04:37:10 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qFYub-000Fzf-2k;
+        Sat, 01 Jul 2023 11:37:09 +0000
+Date:   Sat, 01 Jul 2023 19:36:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
+Message-ID: <202307011920.eJSKroqh-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Terry Bowman wrote:
-> This patchset enables CXL RCH error handling. This is necessary because RCH
-> downstream port protocol error handling is implemented uniquely and not
-> currently supported. These patches address the following:
-> 
->    * Discovery and mapping of RCH downstream port AER registers.
-> 
->    * AER portdrv changes to support CXL RCH protocol errors. 
-> 
->    * Interrupt setup specific to RCH mode: enabling RCEC internal
->      errors and disabling root port interrupts.
-> 
-> Changes in V8:
->   - Rebased onto: commit
->     0c0df63177e3 ("Merge branch 'for-6.5/cxl-rch-eh' into for-6.5/cxl")
->   - cxl/port: Pre-initialize component register mappings
->     - Added patch to pre-initialize component register mappings.
->   - cxl/pci: Remove Component Register base address from
->     - Separated removal of Component Register base address in struct
->     cxl_dev_state to not break functionality.
->   - cxl/hdm: Use stored Component Register mappings to map HDM decoder
->     capability
->     - Implemented a less strict check in devm_cxl_setup_hdm(), be tolerant
->     if HDM decoder registers are not implemented.
->   - cxl/pci: Map RCH downstream AER registers for  logging protocol errors
->     - Fixed uninitialized access of map->dev in cxl_dport_map_regs().
->   - PCI/AER: Forward RCH downstream port-detected errors to the CXL.mem
->     dev handler
->     - Fix typo in patch description.
->   - cxl/pci: Update CXL error logging to use RAS register address
->     - Fix typo in patch description.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9  cxl: Fix one kernel-doc comment
 
-Hey Terry, thank you for turning this around so quickly. I will have a
-look and see if this is suitable as a follow-up merge for v6.5 next week
-since it would be nice to finish this off this cycle, but no promises.
+elapsed time: 723m
+
+configs tested: 121
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r004-20230701   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                  randconfig-r043-20230630   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                      integrator_defconfig   gcc  
+arm                          pxa168_defconfig   clang
+arm                             pxa_defconfig   gcc  
+arm                  randconfig-r046-20230630   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r025-20230629   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r034-20230701   gcc  
+hexagon              randconfig-r003-20230701   clang
+hexagon              randconfig-r041-20230630   clang
+hexagon              randconfig-r045-20230630   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230701   gcc  
+i386         buildonly-randconfig-r005-20230701   gcc  
+i386         buildonly-randconfig-r006-20230701   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230629   gcc  
+i386                 randconfig-i002-20230629   gcc  
+i386                 randconfig-i003-20230629   gcc  
+i386                 randconfig-i004-20230629   gcc  
+i386                 randconfig-i005-20230629   gcc  
+i386                 randconfig-i006-20230629   gcc  
+i386                 randconfig-i011-20230701   clang
+i386                 randconfig-i012-20230701   clang
+i386                 randconfig-i013-20230701   clang
+i386                 randconfig-i014-20230701   clang
+i386                 randconfig-i015-20230701   clang
+i386                 randconfig-i016-20230701   clang
+i386                 randconfig-r013-20230630   clang
+i386                 randconfig-r035-20230701   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r012-20230630   gcc  
+loongarch            randconfig-r032-20230701   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        m5407c3_defconfig   gcc  
+m68k                 randconfig-r016-20230630   gcc  
+microblaze           randconfig-r002-20230701   gcc  
+microblaze           randconfig-r005-20230701   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r024-20230629   gcc  
+nios2                randconfig-r036-20230701   gcc  
+openrisc                         alldefconfig   gcc  
+openrisc             randconfig-r014-20230630   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                   currituck_defconfig   gcc  
+powerpc                          g5_defconfig   clang
+powerpc                     sequoia_defconfig   gcc  
+powerpc                     tqm8560_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230630   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230630   clang
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          kfr2r09_defconfig   gcc  
+sh                   randconfig-r031-20230701   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                          urquell_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r022-20230629   gcc  
+sparc64              randconfig-r006-20230701   gcc  
+sparc64              randconfig-r011-20230630   gcc  
+sparc64              randconfig-r015-20230630   gcc  
+sparc64              randconfig-r023-20230629   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r033-20230701   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230701   gcc  
+x86_64       buildonly-randconfig-r002-20230701   gcc  
+x86_64       buildonly-randconfig-r003-20230701   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-r026-20230629   clang
+x86_64               randconfig-x001-20230629   clang
+x86_64               randconfig-x002-20230629   clang
+x86_64               randconfig-x003-20230629   clang
+x86_64               randconfig-x004-20230629   clang
+x86_64               randconfig-x005-20230629   clang
+x86_64               randconfig-x006-20230629   clang
+x86_64               randconfig-x011-20230629   gcc  
+x86_64               randconfig-x012-20230629   gcc  
+x86_64               randconfig-x013-20230629   gcc  
+x86_64               randconfig-x014-20230629   gcc  
+x86_64               randconfig-x015-20230629   gcc  
+x86_64               randconfig-x016-20230629   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
