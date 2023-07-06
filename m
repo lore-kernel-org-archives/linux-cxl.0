@@ -2,140 +2,129 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC0DEB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu,  6 Jul 2023 01:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4226EB64D9
+	for <linux-cxl@archiver.kernel.org>; Thu,  6 Jul 2023 06:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232692AbjGFBqa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 5 Jul 2023 21:46:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50580 "EHLO
+        id S233689AbjGFGiy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 6 Jul 2023 02:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232414AbjGFBqa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 5 Jul 2023 21:46:30 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2147C122
-        for <linux-cxl@vger.kernel.org>; Wed,  5 Jul 2023 18:46:29 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QxK736fT2z67cDq;
-        Thu,  6 Jul 2023 09:43:27 +0800 (CST)
-Received: from localhost (10.34.206.101) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+        with ESMTP id S233477AbjGFGix (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 6 Jul 2023 02:38:53 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2219019B;
+        Wed,  5 Jul 2023 23:38:50 -0700 (PDT)
+Received: from canpemm500002.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QxRdF3rm2zPjxF;
+        Thu,  6 Jul 2023 14:36:33 +0800 (CST)
+Received: from huawei.com (10.174.151.185) by canpemm500002.china.huawei.com
+ (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 6 Jul
- 2023 02:46:24 +0100
-Date:   Thu, 6 Jul 2023 09:46:20 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Fan Ni <nifan@outlook.com>
-CC:     <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <vishal.l.verma@intel.com>, <a.manzanares@samsung.com>,
-        <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-        <fan.ni@samsung.com>
-Subject: Re: [Question] How to set up DVSEC CXL Range Registers for DCD
- devices
-Message-ID: <20230706094620.000035d2@Huawei.com>
-In-Reply-To: <SG2PR06MB339718DD083E76EEA06008F2B225A@SG2PR06MB3397.apcprd06.prod.outlook.com>
-References: <SG2PR06MB339718DD083E76EEA06008F2B225A@SG2PR06MB3397.apcprd06.prod.outlook.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+ 2023 14:38:46 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <akpm@linux-foundation.org>, <dan.j.williams@intel.com>,
+        <vishal.l.verma@intel.com>, <dave.jiang@intel.com>
+CC:     <ying.huang@intel.com>, <nvdimm@lists.linux.dev>,
+        <linux-cxl@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
+Subject: [PATCH] memory tier: rename destroy_memory_type() to put_memory_type()
+Date:   Thu, 6 Jul 2023 14:39:05 +0800
+Message-ID: <20230706063905.543800-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.34.206.101]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.151.185]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 29 Jun 2023 10:10:48 -0700
-Fan Ni <nifan@outlook.com> wrote:
+It appears that destroy_memory_type() isn't a very good name because
+we usually will not free the memory_type here. So rename it to a more
+appropriate name i.e. put_memory_type().
 
-> Hi,
-> 
-> When preparing the DCD patches for QEMU emulation and testing, I hit an issue
-> when trying to load the cxl modules. The issue happens when the kernel tries
-> to do cxl pci probe where it checks whether the media is ready
-> through cxl_await_media_ready. The function will check dvsec mem range.
-> 
-> In current QEMU code, the dvsec range registers for type3 memdev is set
-> only for static ram and pmem in function build_dvsecs, which will cause
-> the kernel fails the check of media ready of DCD devices without static
-> capacity.
-> 
-> About the issue, I have following questions that want to ask and
-> clarify,
-> 
-> 1. do we allow DCD device have no static (RAM/PMEM) capacity at all and
-> only dynamic capacity?
+Suggested-by: Huang, Ying <ying.huang@intel.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ drivers/dax/kmem.c           | 4 ++--
+ include/linux/memory-tiers.h | 4 ++--
+ mm/memory-tiers.c            | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-Yes.  That will probably be a reasonably common configuration so definitely
-want that to work.
-
-> 
-> 2. Do we need to set dvsec range registers for dynamic capacity? And how
-> if needed?
-
-hmm.  I think we should.  Given a DCD device is not an eRCD (though it may
-be operating in RCD mode) the memory types are all from CDAT - so I think
-we 'could' use either one or two ranges to cover the DCD range.
-
-Desired interleave is messy but it's only a hint anyway so meh.
-Memory active timeout might potentially be different for say a PMEM region
-between a volatile range and DCD range but I guess it just needs to be
-the biggest of anything covered.
-
-The writeable registers are fine as we should be using HDM decoders anyway
-if DCD is involved so they are ignored.
-
-Whilst QEMU doesn't support it (as no RCH support yet) I can't see a general
-reason why you can't have DCD on an RCH host as long as the BIOS knows how
-to deal with HDM decoders so that the routing is set up to the DCD address
-range as well as the other two.  Probably easier if the device doesn't have
-all of static volatile region, static PMEM region, DCD region... though might
-be able to make that work on some RCH hosts.
-
-Jonathan
-
-> 
-> In current Qemu code, we assume at least one of ram or pmem static capacity
-> exists. The code logic of build_dvsec looks like below,
-> if (vmem){
-> 	set rang1 base and size with vmem info;
-> 	if (pmem)
-> 		set range2 base and size with pmem info;
-> } else {
-> 	set range1 base and size with pmem info;
-> }
-> 
-> To fix the issue above and make kernel works for DCD (with no static ram/pmem),
-> I updated the logic as below and it seems to pass the modprobe.
-> 
-> if (vmem) {
-> 	set rang1 base and size with vmem info;
-> 	if (pmem)
-> 		set range2 base and size with pmem info;
-> 	else if (dc){
-> 		set range2 base and size with dc info;
-> 	}
-> } else if (pmem){
-> 	set rang1 base and size with pmem info;
-> 	if (dc)
-> 		set range2 base and size with dc info;
-> } else 
-> 	set rang1 base and size with dc info;
-> 
-> Is the above logic reasonable? If not, what is the right way?
-
-Seems like it covers the devices I'd expect people to build, but
-we do want to poke the corners with the QEMU emulation so
-should probably allow for all 3 being described...  Maybe not
-to start with though.  So for now, perhaps print a warning if you
-hit all 3 at once?
-
-
-> 
-> 
-> Thanks,
-> Fan
-> 
-> 
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index 898ca9505754..c57acb73e3db 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -264,7 +264,7 @@ static int __init dax_kmem_init(void)
+ 	return rc;
+ 
+ error_dax_driver:
+-	destroy_memory_type(dax_slowmem_type);
++	put_memory_type(dax_slowmem_type);
+ err_dax_slowmem_type:
+ 	kfree_const(kmem_name);
+ 	return rc;
+@@ -275,7 +275,7 @@ static void __exit dax_kmem_exit(void)
+ 	dax_driver_unregister(&device_dax_kmem_driver);
+ 	if (!any_hotremove_failed)
+ 		kfree_const(kmem_name);
+-	destroy_memory_type(dax_slowmem_type);
++	put_memory_type(dax_slowmem_type);
+ }
+ 
+ MODULE_AUTHOR("Intel Corporation");
+diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.h
+index fc9647b1b4f9..437441cdf78f 100644
+--- a/include/linux/memory-tiers.h
++++ b/include/linux/memory-tiers.h
+@@ -33,7 +33,7 @@ struct memory_dev_type {
+ #ifdef CONFIG_NUMA
+ extern bool numa_demotion_enabled;
+ struct memory_dev_type *alloc_memory_type(int adistance);
+-void destroy_memory_type(struct memory_dev_type *memtype);
++void put_memory_type(struct memory_dev_type *memtype);
+ void init_node_memory_type(int node, struct memory_dev_type *default_type);
+ void clear_node_memory_type(int node, struct memory_dev_type *memtype);
+ #ifdef CONFIG_MIGRATION
+@@ -68,7 +68,7 @@ static inline struct memory_dev_type *alloc_memory_type(int adistance)
+ 	return NULL;
+ }
+ 
+-static inline void destroy_memory_type(struct memory_dev_type *memtype)
++static inline void put_memory_type(struct memory_dev_type *memtype)
+ {
+ 
+ }
+diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+index 1719fa3bcf02..c49ab03f49b1 100644
+--- a/mm/memory-tiers.c
++++ b/mm/memory-tiers.c
+@@ -560,11 +560,11 @@ struct memory_dev_type *alloc_memory_type(int adistance)
+ }
+ EXPORT_SYMBOL_GPL(alloc_memory_type);
+ 
+-void destroy_memory_type(struct memory_dev_type *memtype)
++void put_memory_type(struct memory_dev_type *memtype)
+ {
+ 	kref_put(&memtype->kref, release_memtype);
+ }
+-EXPORT_SYMBOL_GPL(destroy_memory_type);
++EXPORT_SYMBOL_GPL(put_memory_type);
+ 
+ void init_node_memory_type(int node, struct memory_dev_type *memtype)
+ {
+@@ -586,7 +586,7 @@ void clear_node_memory_type(int node, struct memory_dev_type *memtype)
+ 	 */
+ 	if (!node_memory_types[node].map_count) {
+ 		node_memory_types[node].memtype = NULL;
+-		destroy_memory_type(memtype);
++		put_memory_type(memtype);
+ 	}
+ 	mutex_unlock(&memory_tier_lock);
+ }
+-- 
+2.33.0
 
