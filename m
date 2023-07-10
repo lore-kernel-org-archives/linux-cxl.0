@@ -2,131 +2,80 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D4AC0015E
-	for <linux-cxl@archiver.kernel.org>; Mon, 10 Jul 2023 20:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12FCEB64D9
+	for <linux-cxl@archiver.kernel.org>; Mon, 10 Jul 2023 23:14:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231623AbjGJUDP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 10 Jul 2023 16:03:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56310 "EHLO
+        id S229538AbjGJXO3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 10 Jul 2023 19:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbjGJUDF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Jul 2023 16:03:05 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 840E4133;
-        Mon, 10 Jul 2023 13:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689019384; x=1720555384;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pExp2WMXGyNpxCyGDYOXewD2SNqta6zQBIAwkyT6MEY=;
-  b=iEGdRBBBKct/8vbUN5DV9bIQlxrdxPbbFuQmu5al7PtEgtpaWaD4zKza
-   NzsDzCY/56m20Ws7yc22sFtUnHWKgbdtxdZRJ7gb8rqVDIezhfIKAnHxN
-   r7hYa2NBGzEkluOMfSaWscJgoKeKg+ikCVER4TTbyAu2OwH51ZIkVnsmh
-   K0RG0XkDBiVTjr7B9SZq/AujnNFKD5WhxZsFaBBVYoRGaTWFThczaPwc3
-   3APuWymlFaqcTUZFJeCMSrZz2StvABVHtzfEymnWieUCKp9VLdWB7wuS8
-   JHH/INNi7a4kYehWJuujwkSc2BAnTw9PBfTQKiaw7jGPondCFgzR6w2mh
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="344764078"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="344764078"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 13:03:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="714903601"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="714903601"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.93.201])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 13:03:02 -0700
-From:   alison.schofield@intel.com
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Mike Rapoport <rppt@kernel.org>
-Cc:     Alison Schofield <alison.schofield@intel.com>, x86@kernel.org,
-        linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derick Marks <derick.w.marks@intel.com>
-Subject: [PATCH v4 2/2] ACPI: NUMA: Apply SRAT proximity domain to entire CFMWS window
-Date:   Mon, 10 Jul 2023 13:02:59 -0700
-Message-Id: <eaa0b7cffb0951a126223eef3cbe7b55b8300ad9.1689018477.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1689018477.git.alison.schofield@intel.com>
-References: <cover.1689018477.git.alison.schofield@intel.com>
+        with ESMTP id S231134AbjGJXO1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Jul 2023 19:14:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014E5137;
+        Mon, 10 Jul 2023 16:14:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 948FF6125F;
+        Mon, 10 Jul 2023 23:14:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9602C433C8;
+        Mon, 10 Jul 2023 23:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689030866;
+        bh=3pacJFdrciplk9UTyYfKnVqmTOkTDznXreLebZgCpcc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FFa1cwZMYTNEk2+uKOfl/u+Z354qKOEXsU7dCcJNHIgSwW3g81vYZuz+hbnKvFKHJ
+         TwCwS1KkJzzi2H6SiZnQY8tlT13Js5S3z4dxDXczn3VEVUGwV+MhTDwxWawomkIPZN
+         DuQzYbNxYHwFiTK8quELngQuJ+onwLUNBvK29jwcgyR3OHWncK9CsjzClfxOWXUiwl
+         OD+y4x3gRviZCmYPG+lPvvx0lGr/HREp/B4kNTUHUWrOhF8BM28cgTFH8hNFM0vL9o
+         gTBfHPFSgaVmbrP4qP9oML6CUJBSBLLz+HExEWfdcNBQ/4Mp6qJLRoUke6uiqVQ3Co
+         Keod6VwjvIbfA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] cxl/pci: Remove unnecessary aer.h include
+Date:   Mon, 10 Jul 2023 18:14:16 -0500
+Message-Id: <20230710231416.232751-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Commit fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each
-CFMWS not in SRAT") did not account for the case where the BIOS
-only partially describes a CFMWS Window in the SRAT. That means
-the omitted address ranges, of a partially described CFMWS Window,
-do not get assigned to a NUMA node.
+<linux/aer.h> is unused, so remove it.
 
-Replace the call to phys_to_target_node() with numa_add_memblks().
-Numa_add_memblks() searches an HPA range for existing memblk(s)
-and extends those memblk(s) to fill the entire CFMWS Window.
-
-Extending the existing memblks is a simple strategy that reuses
-SRAT defined proximity domains from part of a window to fill out
-the entire window, based on the knowledge* that all of a CFMWS
-window is of a similar performance class.
-
-*Note that this heuristic will evolve when CFMWS Windows present
-a wider range of characteristics. The extension of the proximity
-domain, implemented here, is likely a step in developing a more
-sophisticated performance profile in the future.
-
-There is no change in behavior when the SRAT does not describe
-the CFMWS Window at all. In that case, a new NUMA node with a
-single memblk covering the entire CFMWS Window is created.
-
-Fixes: fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT")
-Reported-by: Derick Marks <derick.w.marks@intel.com>
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-Tested-by: Derick Marks <derick.w.marks@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Ben Widawsky <bwidawsk@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/acpi/numa/srat.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/cxl/pci.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 1f4fc5f8a819..12f330b0eac0 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -310,11 +310,16 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 	start = cfmws->base_hpa;
- 	end = cfmws->base_hpa + cfmws->window_size;
- 
--	/* Skip if the SRAT already described the NUMA details for this HPA */
--	node = phys_to_target_node(start);
--	if (node != NUMA_NO_NODE)
-+	/*
-+	 * The SRAT may have already described NUMA details for all,
-+	 * or a portion of, this CFMWS HPA range. Extend the memblks
-+	 * found for any portion of the window to cover the entire
-+	 * window.
-+	 */
-+	if (!numa_fill_memblks(start, end))
- 		return 0;
- 
-+	/* No SRAT description. Create a new node. */
- 	node = acpi_map_pxm_to_node(*fake_pxm);
- 
- 	if (node == NUMA_NO_NODE) {
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 1cb1494c28fe..8314cf2ac16a 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -8,7 +8,6 @@
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/pci.h>
+-#include <linux/aer.h>
+ #include <linux/io.h>
+ #include "cxlmem.h"
+ #include "cxlpci.h"
 -- 
-2.37.3
+2.34.1
 
