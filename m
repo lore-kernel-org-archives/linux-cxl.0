@@ -2,187 +2,211 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D977EB64DC
-	for <linux-cxl@archiver.kernel.org>; Sun,  9 Jul 2023 11:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09BDEB64D9
+	for <linux-cxl@archiver.kernel.org>; Mon, 10 Jul 2023 10:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229915AbjGILuu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 9 Jul 2023 07:50:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46026 "EHLO
+        id S230396AbjGJKmW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 10 Jul 2023 06:42:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbjGILut (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 9 Jul 2023 07:50:49 -0400
-Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA2AF1
-        for <linux-cxl@vger.kernel.org>; Sun,  9 Jul 2023 04:50:48 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10765"; a="123951980"
-X-IronPort-AV: E=Sophos;i="6.01,192,1684767600"; 
-   d="scan'208";a="123951980"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2023 20:50:46 +0900
-Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
-        by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id A3CD8D4240
-        for <linux-cxl@vger.kernel.org>; Sun,  9 Jul 2023 20:50:43 +0900 (JST)
-Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-        by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id D4004D52E7
-        for <linux-cxl@vger.kernel.org>; Sun,  9 Jul 2023 20:50:42 +0900 (JST)
-Received: from [10.167.215.54] (unknown [10.167.215.54])
-        by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 4FC906BC48;
-        Sun,  9 Jul 2023 20:50:42 +0900 (JST)
-Message-ID: <697878b5-ecea-3172-695c-db9191548216@fujitsu.com>
-Date:   Sun, 9 Jul 2023 19:50:41 +0800
+        with ESMTP id S231604AbjGJKmG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Jul 2023 06:42:06 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8711E12A
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Jul 2023 03:42:01 -0700 (PDT)
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742bso48035225e9.2
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Jul 2023 03:42:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688985720; x=1691577720;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X7Mh11QsaJnmcKpvOw1jYdGIGgwBZmnNztJ9ynLvHRg=;
+        b=kmLHRLv3bmT6f0astx89laCnlsoNtN4sJixvvBuNGHs7RFePnrsMpjiQ3B1LpIj9rL
+         2iK0BprinNhogYQisLpGMD/werd7j9Fsu/mzs4hjWHkwb/2t7AFjd/THZwnNUt4osk7L
+         Ri+THhzb3ZRG5E1d22Kz/OFzPB4yaAQcpgAZXr59uE8QlUehVkyptXedU/QbVELGTrFh
+         DVlCGGYRGhhVXO78t3WFqb4+/zWcU4Hp0nCbeZx1j3O9C4LziDMcZH/IkAvcYTSPYKIq
+         ebKUVKk/5GX9tSlZZfp3/ZxxjH+fdm8mEm8Ucqqz+dzV47WztmAGgAYjTiz6GX1Y7nrC
+         xDEg==
+X-Gm-Message-State: ABy/qLadayaqaX+HGUWugiB7yFi1XMPPyli2/WIHN5AnoiTBemrgdeET
+        ysVX3LAbopu07BvvVrBVp5jDtpMLeUU=
+X-Google-Smtp-Source: APBJJlGfhRNPfY1AXWeYTJLhlvFhAAN1AN4JbWWFH83g0oepy5A/SYkiBmYk6VrYP7PllYV4ZGlCig==
+X-Received: by 2002:adf:e0ca:0:b0:314:13e2:2f6c with SMTP id m10-20020adfe0ca000000b0031413e22f6cmr10944098wri.58.1688985719619;
+        Mon, 10 Jul 2023 03:41:59 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-004.fbsv.net. [2a03:2880:31ff:4::face:b00c])
+        by smtp.gmail.com with ESMTPSA id k15-20020adff5cf000000b00314398e4dd4sm11410451wrp.54.2023.07.10.03.41.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jul 2023 03:41:59 -0700 (PDT)
+Date:   Mon, 10 Jul 2023 03:41:57 -0700
+From:   Breno Leitao <leitao@debian.org>
+To:     Alison Schofield <alison.schofield@intel.com>
+Cc:     vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] cxl/acpi: Release device after dev_err
+Message-ID: <ZKvgdcu5k+JjRtlW@gmail.com>
+References: <20230707161616.3554167-1-leitao@debian.org>
+ <ZKiPFu0KY0alQxCJ@aschofie-mobl2>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [NDCTL PATCH] cxl/region: Always use the correct target position
-To:     nvdimm@lists.linux.dev
-Cc:     linux-cxl@vger.kernel.org
-References: <20230630151245.1318-1-yangx.jy@fujitsu.com>
-From:   Xiao Yang <yangx.jy@fujitsu.com>
-In-Reply-To: <20230630151245.1318-1-yangx.jy@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27740.007
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27740.007
-X-TMASE-Result: 10--23.468000-10.000000
-X-TMASE-MatchedRID: 6Yvl3or3fgqPvrMjLFD6eDo39wOA02LhG24YVeuZGmOZtziFUn+D+eAf
-        SNitoKTvLluBF7lCexn0lZqQGuQv90zOmjZzSvazrmLeMrcoM6gL8TGleseLPMiCh8yBqE+tK7m
-        JD0QzrgT4EXi5HZwxNmDe3UNYdGMnNp8NVhNwDC6/QNwZdfw3FVF5adRR2Ej1b3Wpj9NSXKy/BR
-        68O365bn9eOltIlLtr8Pwm1A0EoTfmh3qTH3T2BM69emDs42ddfS0Ip2eEHny+qryzYw2E8LLn+
-        0Vm71Lc+x/oWSsuvysLbigRnpKlKSBuGJWwgxAra7leoU/OMhPyMXSQdzxi9A==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZKiPFu0KY0alQxCJ@aschofie-mobl2>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi all,
-
-Kindly ping.
-
-This patch can only fixes the case that 2 way interleave is enabled 
-across 2 CXL host bridges and each host bridge has 1 CXL Root Port.
-PS: In other word, this patch is wrong when 2 way interleave is enabled 
-across 2 CXL host bridges and each host bridge has 2 CXL Root Ports.
-
-I am trying to find a better solution. If you have any suggestion, 
-please let me know.
-
-Best Regards,
-Xiao Yang
-
-On 2023/6/30 23:12, Xiao Yang wrote:
-> create_region() uses the wrong target position in some cases.
-> For example, cxl create-region command fails to create a new
-> region in 2 way interleave set when mem0 connects target1(position:1)
-> and mem1 connects target0(position:0):
+On Fri, Jul 07, 2023 at 03:17:58PM -0700, Alison Schofield wrote:
+> On Fri, Jul 07, 2023 at 09:16:16AM -0700, Breno Leitao wrote:
+> > Kfence is detecting a user-after-free in the CXL, when cxl_decoder_add()
+> > fails. Kfence drops this message, after the following:
+> > 
+> >   BUG: KFENCE: use-after-free read in resource_string
+> > 
+> > This is happening in cxl_parse_cfmws(), and here is a simplified flow
+> > that is coming from Kfence.
+> > 
+> > Use-after-free:
+> > 	_dev_err
+> > 	cxl_parse_cfmws
+> > 	acpi_table_parse_entries_array
+> > 	acpi_table_parse_cedt
+> > 	cxl_acpi_probe
+> > 
+> > Free:
+> > 	cxl_decoder_release
+> > 	device_release
+> > 	kobject_put
+> > 	cxl_parse_cfmws
+> > 	acpi_table_parse_entries_array
+> > 	acpi_table_parse_cedt
+> > 	cxl_acpi_probe
+> > 
+> > Alloc:
+> > 	cxl_decoder_alloc
+> > 	cxl_parse_cfmws
+> > 	acpi_table_parse_entries_array
+> > 	acpi_table_parse_cedt
+> > 	cxl_acpi_probe
+> > 	platform_probe
+> > 
+> > From my reading of the issue, the device struct being used by
+> > dev_err() was removed in the put_device() before.
 > 
-> $ cxl list -M -P -D -T -u
-> [
->    {
->      "ports":[
->        {
->          "port":"port1",
->          "host":"pci0000:16",
->          "depth":1,
->          "nr_dports":1,
->          "dports":[
->            {
->              "dport":"0000:16:00.0",
->              "id":"0"
->            }
->          ],
->          "memdevs:port1":[
->            {
->              "memdev":"mem0",
->              "ram_size":"512.00 MiB (536.87 MB)",
->              "serial":"0",
->              "host":"0000:17:00.0"
->            }
->          ]
->        },
->        {
->          "port":"port2",
->          "host":"pci0000:0c",
->          "depth":1,
->          "nr_dports":1,
->          "dports":[
->            {
->              "dport":"0000:0c:00.0",
->              "id":"0"
->            }
->          ],
->          "memdevs:port2":[
->            {
->              "memdev":"mem1",
->              "ram_size":"512.00 MiB (536.87 MB)",
->              "serial":"0",
->              "host":"0000:0d:00.0"
->            }
->          ]
->        }
->      ]
->    },
->    {
->      "root decoders":[
->        {
->          "decoder":"decoder0.0",
->          "resource":"0x750000000",
->          "size":"4.00 GiB (4.29 GB)",
->          "interleave_ways":2,
->          "interleave_granularity":8192,
->          "max_available_extent":"4.00 GiB (4.29 GB)",
->          "pmem_capable":true,
->          "volatile_capable":true,
->          "accelmem_capable":true,
->          "nr_targets":2,
->          "targets":[
->            {
->              "target":"pci0000:16",
->              "alias":"ACPI0016:00",
->              "position":1,
->              "id":"0x16"
->            },
->            {
->              "target":"pci0000:0c",
->              "alias":"ACPI0016:01",
->              "position":0,
->              "id":"0xc"
->            }
->          ]
->        }
->      ]
->    }
-> ]
+> Hi Breno, 
 > 
-> $ cxl create-region -t ram -d decoder0.0 -m mem0 mem1
-> cxl region: create_region: region0: failed to set target0 to mem0
-> cxl region: cmd_create_region: created 0 regions
+> I'm not familiar w kfence, but I don't follow what it finds
+> suspect here. Does kfence point to exact offensive lines of
+> code, or ???
+
+Unfortunately I do not lines that match anything public. Collecting them
+might be hard also, since kfence problems during failure mode are not
+easy to reproduce.
+
+> The put_device() removed &cxld->dev and the dev_err() that
+> this patch moves the put after, was using 'dev', which was
+> assigned from ctx.dev. It is not the same as &cxld->dev. I
+> wonder if Kfence thinks we can get to the next dev_dbg()
+> statement and misuse &cxld->dev.
+
+Any chance that "struct device_type->release"() might be touching
+ctx->dev? This is because "struct device_type->release"() is calling
+during the put operation, which seems to be the one de-allocating the
+resource.
+
+> More below...
 > 
-> Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
-> ---
->   cxl/region.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/cxl/region.c b/cxl/region.c
-> index 07ce4a3..946b5ff 100644
-> --- a/cxl/region.c
-> +++ b/cxl/region.c
-> @@ -667,6 +667,8 @@ static int create_region(struct cxl_ctx *ctx, int *count,
->   		struct json_object *jobj =
->   			json_object_array_get_idx(p->memdevs, i);
->   		struct cxl_memdev *memdev = json_object_get_userdata(jobj);
-> +		struct cxl_target *target = cxl_decoder_get_target_by_memdev(p->root_decoder,
-> +										memdev);
->   
->   		ep_decoder = cxl_memdev_find_decoder(memdev);
->   		if (!ep_decoder) {
-> @@ -683,7 +685,7 @@ static int create_region(struct cxl_ctx *ctx, int *count,
->   			try(cxl_decoder, set_mode, ep_decoder, p->mode);
->   		}
->   		try(cxl_decoder, set_dpa_size, ep_decoder, size/p->ways);
-> -		rc = cxl_region_set_target(region, i, ep_decoder);
-> +		rc = cxl_region_set_target(region, cxl_target_get_position(target), ep_decoder);
->   		if (rc) {
->   			log_err(&rl, "%s: failed to set target%d to %s\n",
->   				devname, i, cxl_memdev_get_devname(memdev));
+> > 
+> > Put the device just after the message is printed.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  drivers/cxl/acpi.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> > index 658e6b84a769..5179bf4211d8 100644
+> > --- a/drivers/cxl/acpi.c
+> > +++ b/drivers/cxl/acpi.c
+> > @@ -291,14 +291,13 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+> >  	}
+> >  	rc = cxl_decoder_add(cxld, target_map);
+> >  err_xormap:
+> > -	if (rc)
+> > -		put_device(&cxld->dev);
+> > -	else
+> > -		rc = cxl_decoder_autoremove(dev, cxld);
+> >  	if (rc) {
+> >  		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+> >  			cxld->hpa_range.start, cxld->hpa_range.end);
+> > +		put_device(&cxld->dev);
+> >  		return 0;
+> > +	} else {
+> > +		rc = cxl_decoder_autoremove(dev, cxld);
+> >  	}
+> >  	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
+> >  		dev_name(&cxld->dev),
+> > -- 
+> > 2.34.1
+> > 
+> 
+> (pulled in fresh code snippet to get the dev_dbg() in view.)
+> 
+> >	}
+> >	rc = cxl_decoder_add(cxld, target_map);
+> >err_xormap:
+> >	if (rc)
+> >		put_device(&cxld->dev);
+> >
+> 
+> This puts &cxld->dev, not dev.
+> 
+> >
+> >	else
+> >		rc = cxl_decoder_autoremove(dev, cxld);
+> >	if (rc) {
+> >		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+> >			cxld->hpa_range.start, cxld->hpa_range.end);
+> >		return 0;
+> 
+> This return avoids getting to the next dev_dbg() statement after
+> put_device(). We cannot get to the next dev_dbg() statement when
+> rc is non zero, but it seems kfence thinks we can.
+
+Oh, the problems is on dev_err() not on dev_dbg(). Basically on the
+return path.
+
+Here is what dmesg says:
+
+	cxl root0: Failed to populate active decoder targets
+	cxl_acpi ACPI0017:00: Failed to add decoder for [mem 0x4080000000-0x2baffffffff flags 0x200]
+	cxl root0: Failed to populate active decoder targets
+	cxl_acpi ACPI0017:00: Failed to add decoder for [mem 0x2bb00000000-0x5357fffffff flags 0x200]
+	cxl root0: Failed to populate active decoder targets
+	==================================================================
+	BUG: KFENCE: use-after-free read in resource_string+0x80/0x570\x0a
+	Use-after-free read at 0x(____ptrval____) (in kfence-#111):
+	 resource_string+0x80/0x570
+	 pointer+0x389/0x3c0
+	 vsnprintf+0x214/0x670
+	 pointer+0x1b2/0x3c0
+	 vsnprintf+0x214/0x670
+	 vprintk_store+0x102/0x450
+	 vprintk_emit+0x6f/0x1b0
+	 dev_vprintk_emit+0x117/0x163
+	 dev_printk_emit+0x51/0x6b
+	 _dev_err+0x6e/0x88
+	 cxl_parse_cfmws+0x2a0/0x2d
+	 acpi_table_parse_entries_array+0x1fc/0x330
+	 acpi_table_parse_cedt+0x4f/0x70
+	 cxl_acpi_probe+0xd6/0x150
+	 platform_probe+0x2f/0x60
+	 really_probe+0x1f5/0x340
+	 driver_probe_device+0x1e/0x80
+	 __driver_attach+0xfc/0x190
+	 bus_for_each_dev+0x76/0xb0
+	 bus_add_driver+0x1bb/0x230
+	 driver_register+0x85/0x120
+	 do_one_initcall+0xbe/0x240
+	 kernel_init_freeable+0x1cc/0x2d2
+	 kernel_init+0x16/0x1a0
+	 ret_from_fork+0x1f/0x30
