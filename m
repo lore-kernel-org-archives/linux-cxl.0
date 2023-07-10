@@ -2,144 +2,181 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E95DEB64D9
-	for <linux-cxl@archiver.kernel.org>; Mon, 10 Jul 2023 16:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E754BEB64D9
+	for <linux-cxl@archiver.kernel.org>; Mon, 10 Jul 2023 16:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbjGJQNG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 10 Jul 2023 12:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
+        id S231760AbjGJQ7Z (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 10 Jul 2023 12:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233445AbjGJQNB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Jul 2023 12:13:01 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C41A11F
-        for <linux-cxl@vger.kernel.org>; Mon, 10 Jul 2023 09:12:59 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id EE4B76C1C59;
-        Mon, 10 Jul 2023 16:12:57 +0000 (UTC)
-Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 158926C2039;
-        Mon, 10 Jul 2023 16:12:57 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1689005577; a=rsa-sha256;
-        cv=none;
-        b=AOWsXpZc3S/zEprDk3x6q8ABL+oJTydWC0GnlXKUmriZx+f/ItzfriItzSZMH+JLNwKRzw
-        oqKbKlxfu6ziLQBPk/ABEZZil+VrjMuDtyoH7sE0bHXT74uQI+96X3thWgZyH2c/TB8OXm
-        f5ryzKin88PQpIvotegnCXTCi8HutgTF/Cx0BQz6lnvBq+Iy6mbtfuyWVJWZVIoCHJ93BF
-        1ryLJZD4rBCawKgDvju9sHCeisxCMM403XSexdzU67MERvUXDNZJMh95BdvNRH2eyyrjTm
-        TKJRZYOs1WE88X5nu5X5xqAGNV3jApKEDDiQkAYX6dStm3XP7JFuyMScnvmdqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1689005577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=8L32kq3qzWCO6ysyOFQIZqQGPy5sVzk6EvCBa/ThBAI=;
-        b=MffjqDC+hnY7FiiLiGeqnr6Vm6diexrBwrVBTmtTZIKaUTJ/hLSa9CV7LhZJfR2t5SE8R3
-        lMxapGnSFfWKOUJNM9DwZUqOgWVqHd0GLC1x7l44fMo2ksSVST9tOUI14SeElUdmJnhZIw
-        SEwJxPOvWXouNoFRYnteMVeFUtwVcT5jAqkwXzCnqqUsipzVTg9hyoZeCjMJYqQFJo2cBT
-        tMhMTuSGU50kRpsoY5hf3uczNIBX7HJuwSUS3U86y31+95sK4tEch8B69v2z3dlaExqXqf
-        yRiijbEJ/Mff74ci0y43ERpopzcynIkncno9lcxhRem0fjZc4T+lRcgJP2G3kQ==
-ARC-Authentication-Results: i=1;
-        rspamd-7d9c4d5c9b-rvf7c;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Broad-Abortive: 0bfa44600ac13a95_1689005577397_1069515946
-X-MC-Loop-Signature: 1689005577396:1513233869
-X-MC-Ingress-Time: 1689005577396
-Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.103.24.120 (trex/6.9.1);
-        Mon, 10 Jul 2023 16:12:57 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4R08DR73qGzLt;
-        Mon, 10 Jul 2023 09:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1689005576;
-        bh=8L32kq3qzWCO6ysyOFQIZqQGPy5sVzk6EvCBa/ThBAI=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=nSuQzrFDMAMd06a/hOzuYKvj+Hc8s2JZBhbPb2JABKKrz8Ed/ZGpep8f65M4xG/EH
-         9KFKTzGovEG5FzEgYEZh2DZ2RvWEkU8lg77RQu9mhFswCZYmqZpu5XYBf426GggtMz
-         Qkm0bWvmzkvmPXo18P1X37yjKtspxnu+38/XjaXCAPUzL9KvUiMAIJEjKZlDGaX7DL
-         OQ3R5gahnqzAYxGl58doXZExG3qTUWIgF/YwtFLJ+tL3cY/ortLvVcbKNN7PxiNGJL
-         Uw4cEEVumzomtRsC4AcBlEglnRSF3Jpc4+5DJcoBxD1zSB7HBxrQuUCkIeYrcb+1m3
-         IH06PklInF/CA==
-Date:   Mon, 10 Jul 2023 08:36:39 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Fan Ni <nifan@outlook.com>, linux-cxl@vger.kernel.org,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        a.manzanares@samsung.com, nmtadam.samsung@gmail.com,
-        fan.ni@samsung.com
-Subject: Re: [Question] How to set up DVSEC CXL Range Registers for DCD
- devices
-Message-ID: <qvclgbexammsjxgnoqc7oeeisofl62escgjnzhqdgnapfj4pqi@zcl2jh2slajy>
-References: <SG2PR06MB339718DD083E76EEA06008F2B225A@SG2PR06MB3397.apcprd06.prod.outlook.com>
- <20230706094620.000035d2@Huawei.com>
+        with ESMTP id S230402AbjGJQ7Y (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 10 Jul 2023 12:59:24 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0545EEA
+        for <linux-cxl@vger.kernel.org>; Mon, 10 Jul 2023 09:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689008363; x=1720544363;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=7F/SKytEXMP9gRPtKaTz8fZD4JEs1fRV/S06NP3T6Kk=;
+  b=Kc+8uuP5PNGeLfbF7jhdZuVMaSMe5+4kGl48QXfXhcv2T1/NRWF+5wGf
+   KyHAo2HD6P4trF68Boy7wvTCnfxi+fgXZwRZP+C4gy5MAJjJzcgp4Qk7O
+   1gf8T91Oo818kqlTgCJ7i3xiiRTrtFgYVlkI+x/aGEqHsUpIok9rIFBv+
+   YTO+ryiARKB5PCA8DSZFNwDZx8hEOJLONkTBKbFIM4p+grQqcOW9K+IhU
+   y7VGZgYLDlItlGE/Pqw6l4WhPt1neeo9c1MUWu7p6FhA3Ex0ip70W08/0
+   9uKAJs7NYwwbgo3rWfpHtKR8HxlG6Hjn0nvfJA/Od6wVDuMM1sovOpQN4
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="430477840"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="430477840"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 09:59:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="894858791"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="894858791"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga005.jf.intel.com with ESMTP; 10 Jul 2023 09:59:21 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 10 Jul 2023 09:59:19 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 10 Jul 2023 09:59:18 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Mon, 10 Jul 2023 09:59:18 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Mon, 10 Jul 2023 09:59:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P2ihkXWRqU8dvPhPBHRmuiFMRPQ64k77CnDiWjaPuNolgiayIZYdTZbhDn/c+cj2UPnYAH2Kyxah9a3yUBjiulj/JKgfzfDs41kZsabrr4xyNZsrru/zgdtCwcOQ59qWLcS3yEOvddy/yR9JbpoM2pCB4ZLjVo+lhiAjwfyHhNnX+4lIJagWTv2NkblNTHKb3nNMs8yLmM6xj4X3NNERzhDkL2GWSfkKePE/Q6fiKQmLBSorJf5z4qBCUHOgN4pFyrmtImybc/R6zvfMBoO8lKrkucC6FumICjG+uK+brYIFtF42O+uk2/AhusLFI+CxsQZoj4ZdoQ/X2Rcpsao7Uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7F/SKytEXMP9gRPtKaTz8fZD4JEs1fRV/S06NP3T6Kk=;
+ b=UXnxcCsIZNrkMC07PBbLRA249RIMZPy3dBIePhTf0TSvIkjVMGTlTw1fKIJ2BNkCfTXtQjjzs4MSbZSYguVecuDsW8w+flq4NmwWe5WiMG5NxmNLEoNsZY2+HtSHUdDDaQ88nLHyJp0qT/B650f7koh5dOBRo2X9le17C87G6WsFx/IpHkTPZroM+uax1McROx+goIrYfwYKjbQOAfyjzPKhUlia7MZy3tY4Gl9FSg+2zcJGmG7jRPJPpXWZ8awtMNyMV/XLtu+g4Mf0o78XE4d8v2O8HRQgoAKqGRmzAhZEE0tFtaf6+jkK47yyKqkrXas7Pk6PaApC7pPW8ZFVKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
+ by MW4PR11MB6809.namprd11.prod.outlook.com (2603:10b6:303:1e9::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.29; Mon, 10 Jul
+ 2023 16:59:17 +0000
+Received: from MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::8e37:caf2:1d81:631d]) by MW4PR11MB7125.namprd11.prod.outlook.com
+ ([fe80::8e37:caf2:1d81:631d%3]) with mapi id 15.20.6565.026; Mon, 10 Jul 2023
+ 16:59:17 +0000
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "lizhijian@fujitsu.com" <lizhijian@fujitsu.com>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>
+CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Schofield, Alison" <alison.schofield@intel.com>
+Subject: Re: [ndctl PATCH v3 1/6] cxl/monitor: Enable default_log and refactor
+ sanity check
+Thread-Topic: [ndctl PATCH v3 1/6] cxl/monitor: Enable default_log and
+ refactor sanity check
+Thread-Index: AQHZk2ZoIreSFbNtSUiNvW6bENx3vK+r3qEAgAcz9wCAAGZTAA==
+Date:   Mon, 10 Jul 2023 16:59:17 +0000
+Message-ID: <49b68658b6abb3f36823507a18692ea3af1afb02.camel@intel.com>
+References: <20230531021936.7366-1-lizhijian@fujitsu.com>
+         <20230531021936.7366-2-lizhijian@fujitsu.com>
+         <3aed308abaa24becebacb559501c9b1ade9c0597.camel@intel.com>
+         <895193f2-6d4e-e481-69ca-74ac2c0fee5f@fujitsu.com>
+In-Reply-To: <895193f2-6d4e-e481-69ca-74ac2c0fee5f@fujitsu.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|MW4PR11MB6809:EE_
+x-ms-office365-filtering-correlation-id: 98a7f108-e395-4a69-16ea-08db8166ff51
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rkN8dRIB6U/7qaqoOoMIgXl2wfsDn5/OUJX6v2bTi+iBtpTz8/deaT7Jgqyn+VarXHf/4SZeueTQNLcJT442f2c5bhvEkun7z7ZcNP8mLIa7VU35ja7xjjVIN16wIilzyvUq1BpnORJRI4F0dqxdlhDL2weMpgjfm3BUCJit9586T8sOELpICSW4j/k0+vrYLbmNNIK5ZpiYB6QHB244i/QgSDfPEBUIhfgfzKyPeBq/VR4G3H4efMLT5XLBESuBrpdU+LQEOfoBLGWvrPPiHJXCQQHRz2j1nUk8YYFjJKR9bQKLOYkvlLM003Upj9Q1wzFrAcOnkZZM3BOeVYX7WH5oerKA+aIsFrFcObL4BbUhzi4LcdAfsu4DaLHT0I6PWVAxYXimIWdv60DhvGTyhZMdoaAKMfnSQXMe66X8Ors6o+RLiDsW/XEiWMDP6sFpMxUxTiuDHNiSLeKbS+7IL75SF9NqU/aVw9PHLE4wRk5G06iylxM3CwrtMNJyCORqBcT3RfcU+JUUok/YXY9YVDxMki3JpAeRdWKdAx8xu5ysTk7oQdRUhrAcnwPdK/guxqxPZd7BuVpUnSbt33dzMtJGdxeAlzbIFugddm2IjSDeEcw9nuEH3CGnPj+grDel
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(136003)(366004)(39860400002)(346002)(451199021)(71200400001)(478600001)(4326008)(76116006)(54906003)(110136005)(6506007)(26005)(6512007)(107886003)(6486002)(2906002)(186003)(41300700001)(8936002)(66476007)(66946007)(8676002)(66556008)(5660300002)(66446008)(316002)(64756008)(122000001)(38100700002)(82960400001)(4744005)(38070700005)(86362001)(2616005)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?blUwT3ZYS0EvekNSWVdQdmo1eURYMTlnWHhMZG12OHFzMXhzVHFOVzlLL1BO?=
+ =?utf-8?B?RjQzRmhINS8vYUkva2tML3hMMVl2L2ZYa29YQXVLb0FzS0VNb3R5emlzM0g4?=
+ =?utf-8?B?dVpZVWJYNVgzd1NoTnloT3FzL2ZWQXhCNTk0N0k2U3JnTlRkZmxzbkVFMmdM?=
+ =?utf-8?B?M3lNSjNFMDUvZk9uekdUazExM0RpVHpCTjl3bWRwR3pPTFJ0SkZRQ2R1VG4z?=
+ =?utf-8?B?UkRQTnlYNnU4MW4vMGRoMDk3THJkNEx6UEowbmhwK24wRnd2cDdWejV6WXRE?=
+ =?utf-8?B?bGlQVWdkNTQ0cC8zQlRXdTdFcmFqdTdZNzl2ZndMUDhVY0NlSHo4b2NlRER4?=
+ =?utf-8?B?Ynp0OXZHOFpXV216OExWTi9FcnJMeGNodUNNdm1UQjZoNW1FdC9NUWtIL3ht?=
+ =?utf-8?B?dmdFVXBIVWhVWjZuRHlTZVZFbHYzN09lVVY5NU84VUtiNU1kbVh1dlcxUElT?=
+ =?utf-8?B?RktkajNQWXNxejF1eUREbTZaY1FncGxENWwzNzFTMkFNUjN3ZTVZUndNYnky?=
+ =?utf-8?B?VElENi9KZlhGNXhCVnJraUJ6eS9ob2tuWERRV1pmWDJJV2l1c213dXFjaHhT?=
+ =?utf-8?B?c01kM0hGYWxPelRNcE14VXR5eWpKeG83RlU0ZkR4cmJhenFpZWg4ZHIyMExU?=
+ =?utf-8?B?cGdPK1BQTzdUblZnZ2Nhdm5nQVhoZmdNTG00L01FZFNtR2RPeGhXRUV2Q000?=
+ =?utf-8?B?MUdvTUlqYXZoOUlSL1lUS09jTGk2Q0ZLK3BUc0kxdWVkZ3Y0cnBJSnVPN3k4?=
+ =?utf-8?B?c3E2eXVIaGFKYnQ0azJlTjBsYnZ6d0tMZWI2SHhtUERKRE90dzY4RUQ1ZjMz?=
+ =?utf-8?B?aDN3Ylg3SnJ3dlNmNlFyelNLeG1SOW1ya1lVdkVVNXZvTDRFMkNLQWZ4WVRa?=
+ =?utf-8?B?QTdLclJQNTh2MUVsNDk1dnpUeUFoVkd1YW5wQ1pQNE9jcFhxaEtqVERnUTFj?=
+ =?utf-8?B?dGNPZGV0NXdrZXBxelJIMlBvOGkvZ0Rhd3FrRjJ6SHA2T29YU3JXSkIrVmlh?=
+ =?utf-8?B?T0t6SzJQbVo5bWhud0hvdU1Yb2hWNldoay9HYjZYRExxZktFUTlWdVhmWC9M?=
+ =?utf-8?B?VjBuS0Uvd3gxM3E1bzJvSWpmTG9GR1V1eUdYOFRCcUxBOTlObGZUZi96aER4?=
+ =?utf-8?B?SFlsQWVzZDcvRG9TRmxLTDhsZlZEZzhZYVBJZkRVU2kyR3d6amFoYyswUUl2?=
+ =?utf-8?B?N29vNTd6Umw0SFhMalRQMk5CTDNiWHNudzdHOWsxZmtJLzR6R0hKN2VYckdk?=
+ =?utf-8?B?QllWNEF1ekd5bUE4bUkwNzF6OHNvd3djeDJ1dTJSNVE1TGUzMkN5Y0NJN3F5?=
+ =?utf-8?B?UDg0bWNTK3p5STR0VTNYQWhQRHVoREk2OTFrdjJsOUpNSC9DZXZZRUYyWmll?=
+ =?utf-8?B?c0ZER1RXV080bmUxQTV5Mk50Ty9ZVU9FOEgvejNkM3hxRDlwcjltU2dRUmUx?=
+ =?utf-8?B?NjgvcHN0eWswRUhoL3M5VUloRnJrUHQ5ek4vVUEwaDFCS1lGQkNCcmJPSkx1?=
+ =?utf-8?B?MDBkcDlCaG5WQjBtajV3b21WT2xFVU5aQ2xTSnRMVGZBNVpWbS96MURDRVgr?=
+ =?utf-8?B?Q1JkM29TMk80L1hTYThoSGFXeXZsMWxqaVdBT0ZuWFRFT3VsWW0vL3F1ZkI0?=
+ =?utf-8?B?UnQ0di9oQ3crSGRtUkUxeGNkMEt0QXphUG56UHVtbVZzbzdxTVNGV1BzRjRS?=
+ =?utf-8?B?SEhBT1FzZ0JXT3hBdkhUWngvbi95TU5hc1VBOTZROXYvMmsxeTdRWFQyTTdx?=
+ =?utf-8?B?amkrdHJEMFVsQnFtNEtVRzJIbGE3aE1jVTNYYTRnSE5ac3U3OTJZYkJLZVdm?=
+ =?utf-8?B?eXc2Q3FRR1BGN3lLTFFlUGhHYWliMHFySUQ0QUZzL0FWZisrQmxPcVNxRndT?=
+ =?utf-8?B?NlRNNEw2Rk1sYnVHTFNQQ2MxeTZJNEdjSHo2V21DZy9mdmh5TS85cUZVL09z?=
+ =?utf-8?B?dVRORlZBekFZS1JRYVhzZCtVd0JNS3M1cjlqTjY2RFRncHhaRGFkcWtlaVFv?=
+ =?utf-8?B?QmtudXdjbklsc1lqQ0Z2TElyK2w0eit3dzBzK241Y3UrVHZOdUg4TnlWKzRG?=
+ =?utf-8?B?bktWdXNmSVlNNHE1UmpUVzI4WE1QTmY5WmtqVFBXY1NiaVphTEM5Z0R3MitC?=
+ =?utf-8?B?UXJHcVJET21uWlNNckxEOVU5UVQ5dWE2d3NSVnR3NWdMVlU5bnFGZEZ3elIv?=
+ =?utf-8?B?T3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8D8C089584849840A497E65F38EC9847@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230706094620.000035d2@Huawei.com>
-User-Agent: NeoMutt/20230517
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98a7f108-e395-4a69-16ea-08db8166ff51
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2023 16:59:17.3165
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EV4VPwJXXKlTQMaMpD7OrjSnLhmUrUKD0umxaqgZZCsJLL+LrQrStGxLs4U4TwY3apv3Fzix0UuGuuiuu7WlM37/i/gKMvKxtouHXEn9xk8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6809
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 06 Jul 2023, Jonathan Cameron wrote:
-
->On Thu, 29 Jun 2023 10:10:48 -0700
->Fan Ni <nifan@outlook.com> wrote:
->
->> Hi,
->>
->> When preparing the DCD patches for QEMU emulation and testing, I hit an issue
->> when trying to load the cxl modules. The issue happens when the kernel tries
->> to do cxl pci probe where it checks whether the media is ready
->> through cxl_await_media_ready. The function will check dvsec mem range.
->>
->> In current QEMU code, the dvsec range registers for type3 memdev is set
->> only for static ram and pmem in function build_dvsecs, which will cause
->> the kernel fails the check of media ready of DCD devices without static
->> capacity.
->>
->> About the issue, I have following questions that want to ask and
->> clarify,
->>
->> 1. do we allow DCD device have no static (RAM/PMEM) capacity at all and
->> only dynamic capacity?
->
->Yes.  That will probably be a reasonably common configuration so definitely
->want that to work.
->
->>
->> 2. Do we need to set dvsec range registers for dynamic capacity? And how
->> if needed?
->
->hmm.  I think we should.  Given a DCD device is not an eRCD (though it may
->be operating in RCD mode) the memory types are all from CDAT - so I think
->we 'could' use either one or two ranges to cover the DCD range.
->
->Desired interleave is messy but it's only a hint anyway so meh.
->Memory active timeout might potentially be different for say a PMEM region
->between a volatile range and DCD range but I guess it just needs to be
->the biggest of anything covered.
-
-Btw, we probably want to robustify cxl_await_media_ready() to 1) check for
-Mem_HwInit_Mode=1 and 2) rely more on Memory_Active_Timeout to set the module
-parameter.
-
-Also, I was under the impression we wouldn't want to set the dvsec for dynamic
-capacity exactly because of the active memory timeout, which makes no sense
-for dcd.
-
-Thanks,
-Davidlohr
+T24gTW9uLCAyMDIzLTA3LTEwIGF0IDEwOjUzICswMDAwLCBaaGlqaWFuIExpIChGdWppdHN1KSB3
+cm90ZToNCj4gPiA+IA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgbG9nX2luaXQoJm1vbml0b3Iu
+Y3R4LCAiY3hsL21vbml0b3IiLA0KPiA+ID4gIkNYTF9NT05JVE9SX0xPRyIpOw0KPiA+ID4gLcKg
+wqDCoMKgwqDCoMKgbW9uaXRvci5jdHgubG9nX2ZuID0gbG9nX3N0YW5kYXJkOw0KPiA+ID4gK8Kg
+wqDCoMKgwqDCoMKgaWYgKG1vbml0b3IubG9nKQ0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGxvZyA9IG1vbml0b3IubG9nOw0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgZWxzZQ0K
+PiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGxvZyA9IG1vbml0b3IuZGFlbW9u
+ID8gZGVmYXVsdF9sb2cgOg0KPiA+ID4gIi4vc3RhbmRhcmQiOw0KPiA+IA0KPiA+IEkgdGhpbmsg
+dGhlIG9yaWdpbmFsICcuL3N0YW5kYXJkJyB3YXMgdXNlZCB0aGF0IHdheSBiZWNhdXNlDQo+ID4g
+Zml4X2ZpbGVuYW1lKCkgYWRkZWQgdGhlICcuLycgcHJlZml4LiANCj4gDQo+IEF0IHByZXNlbnQs
+ICcuLycgd2lsbCBzdGlsbCBiZSBhZGRlZCBieSBwYXJzZV9vcHRpb25zX3ByZWZpeCgpIGF0IHRo
+ZQ0KPiBiZWdpbm5pbmcuDQo+IA0KQWggeWVzIEkgbWlzc2VkIHRoaXMgLSBJIG11c3QndmUgY29u
+ZnVzZWQgbXkgdGVzdCBhdHRlbXB0cyAtIHlvdSdyZQ0KcmlnaHQsICdzdGFuZGFyZCcgYmVoYXZl
+cyBhcyBleHBlY3RlZCAoc3Rkb3V0KSBhbmQgJy4vc3RhbmRhcmQgYWxzbw0Kd29ya3MgYXMgZXhw
+ZWN0ZWQgKGNyZWF0ZXMgYSBmaWxlIGNhbGxlZCBzdGFuZGFyZCBpbiB0aGUgY3dkKS4NCg0K
