@@ -2,69 +2,62 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7D5EB64DC
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Jul 2023 18:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CFDEB64DC
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Jul 2023 18:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbjGKSMx (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Jul 2023 14:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
+        id S229573AbjGKSOA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Jul 2023 14:14:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjGKSMw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Jul 2023 14:12:52 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 646B2E0
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Jul 2023 11:12:51 -0700 (PDT)
+        with ESMTP id S230344AbjGKSOA (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Jul 2023 14:14:00 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 193B910EF
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Jul 2023 11:13:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689099171; x=1720635171;
+  t=1689099239; x=1720635239;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=DPDb7HE8r+eZsSUEblVddL/lb8rfKq524Dq+UggIoug=;
-  b=fydCmFgmIJEW2LpT8sBGamnBRZz9PQZGEFrw8Z6Bjti9UAKwniOUBAuQ
-   iN8BOZjHac1hQiJ15fhsW06gcAWsn/RPZ+THqcZV/mka37JdzelBty2nA
-   3mRGwhAysp3cYnlQRxAlqyVGywWrPXYRmuQqS3Yk6rneRk9cdKnP0j2OV
-   L/kSfr9Zu7ZQq6pmWuETdTACKJdWGKmreoVXLzdVPXWqned6qp4o2Xipk
-   DZW+kvm6Uoj0PxzgZS7q7K3P7Hf4R+s0ZnbF/Q3cqiluHGCK7VvtKl+BQ
-   NS/PXldI/neDA9zmaVcG0mKYIdiU4iDgohozT8+EEP0jdUCi5+4yAcfEX
+  bh=8Yv/cZ6RYNvsCj4aSBTsKLXR9mnOz02x1pNaZWd/vrU=;
+  b=QFD+t/WdryPdFp6CTcsQgAwuDO8WKt21aueGw9DWe4gP8X3OTDSvTCv6
+   76mIIw6ZlgukdYcyTHKO+w+r40HQLLYDcJrzUIl3YBShXAAAgZoZEuGJW
+   p5y/xWTow3sBooqHiMJNFMMnG2hYrmKnP5nq5V8w/XQI6wzJEMQBlbFyi
+   wkuDgiEfzH8R5c4xmqGLAAs2daroLYpIJjnMruYjzhzfO2uPFl1jlZHJM
+   b2D+R28YTedWGuhEXn4lmu75iOfDSakhaj6N953ja+UBam6f8oCBTPBf5
+   J8UlvtOCNqi8B3U/oHicqayIrA5V9kJtau6yiS4uowJ7cVZ6ChiSfpFKA
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="367297087"
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="354580629"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="367297087"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:57:23 -0700
+   d="scan'208";a="354580629"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:58:35 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="811287549"
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="750863490"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="811287549"
+   d="scan'208";a="750863490"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.140.181])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:57:23 -0700
-Date:   Tue, 11 Jul 2023 10:57:21 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:58:35 -0700
+Date:   Tue, 11 Jul 2023 10:58:33 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Li Zhijian <lizhijian@fujitsu.com>
 Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
         Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [ndctl PATCH v4 1/4] cxl/monitor: Enable default_log and
- refactor sanity check
-Message-ID: <ZK2YAbZpJXNa7dw2@aschofie-mobl2>
+Subject: Re: [ndctl PATCH v4 4/4] Documentation/cxl/cxl-monitor.txt: Fix
+ inaccurate description
+Message-ID: <ZK2YSQPSPbofvV7y@aschofie-mobl2>
 References: <20230711115344.562823-1-lizhijian@fujitsu.com>
- <20230711115344.562823-2-lizhijian@fujitsu.com>
+ <20230711115344.562823-5-lizhijian@fujitsu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230711115344.562823-2-lizhijian@fujitsu.com>
+In-Reply-To: <20230711115344.562823-5-lizhijian@fujitsu.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 07:53:41PM +0800, Li Zhijian wrote:
-> The default_log(/var/log/cxl-monitor.log) should be used when no '-l'
-> argument is specified in daemon mode, but it was not working at all.
-> 
-> Simplify the sanity checks so that the default log file is assigned
-> correctly, and the behavior is consistent with the documentation.
-> 
-> Remove the unnecessary fix_filename() for monitor.log since
-> parse_options_prefix() has done similar stuff if needed.
+On Tue, Jul 11, 2023 at 07:53:44PM +0800, Li Zhijian wrote:
+> No syslog is supported by cxl-monitor
 
 Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
@@ -72,78 +65,25 @@ Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 > ---
-> V4: add reviewed tag and minor fixes: comment style and change log.
-> V2: exchange order of previous patch1 and patch2 # Alison
->     a few commit log updated
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> V2: add Reviewed-by tag
 > ---
->  cxl/monitor.c | 38 ++++++++++++++++++++------------------
->  1 file changed, 20 insertions(+), 18 deletions(-)
+>  Documentation/cxl/cxl-monitor.txt | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/cxl/monitor.c b/cxl/monitor.c
-> index e3469b9a4792..d8245ed8d0e9 100644
-> --- a/cxl/monitor.c
-> +++ b/cxl/monitor.c
-> @@ -164,6 +164,7 @@ int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
->  	};
->  	const char *prefix ="./";
->  	int rc = 0, i;
-> +	const char *log;
+> diff --git a/Documentation/cxl/cxl-monitor.txt b/Documentation/cxl/cxl-monitor.txt
+> index 3fc992e4d4d9..c284099f16c3 100644
+> --- a/Documentation/cxl/cxl-monitor.txt
+> +++ b/Documentation/cxl/cxl-monitor.txt
+> @@ -39,8 +39,7 @@ OPTIONS
+>  --log=::
+>  	Send log messages to the specified destination.
+>  	- "<file>":
+> -	  Send log messages to specified <file>. When fopen() is not able
+> -	  to open <file>, log messages will be forwarded to syslog.
+> +	  Send log messages to specified <file>.
+>  	- "standard":
+>  	  Send messages to standard output.
 >  
->  	argc = parse_options_prefix(argc, argv, prefix, options, u, 0);
->  	for (i = 0; i < argc; i++)
-> @@ -171,32 +172,33 @@ int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
->  	if (argc)
->  		usage_with_options(u, options);
->  
-> +	/* sanity check */
-> +	if (monitor.daemon && monitor.log && !strncmp(monitor.log, "./", 2)) {
-> +		error("relative path or 'standard' are not compatible with daemon mode\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	log_init(&monitor.ctx, "cxl/monitor", "CXL_MONITOR_LOG");
-> -	monitor.ctx.log_fn = log_standard;
-> +	if (monitor.log)
-> +		log = monitor.log;
-> +	else
-> +		log = monitor.daemon ? default_log : "./standard";
->  
->  	if (monitor.verbose)
->  		monitor.ctx.log_priority = LOG_DEBUG;
->  	else
->  		monitor.ctx.log_priority = LOG_INFO;
->  
-> -	if (monitor.log) {
-> -		if (strncmp(monitor.log, "./", 2) != 0)
-> -			fix_filename(prefix, (const char **)&monitor.log);
-> -		if (strncmp(monitor.log, "./standard", 10) == 0 && !monitor.daemon) {
-> -			monitor.ctx.log_fn = log_standard;
-> -		} else {
-> -			const char *log = monitor.log;
-> -
-> -			if (!monitor.log)
-> -				log = default_log;
-> -			monitor.log_file = fopen(log, "a+");
-> -			if (!monitor.log_file) {
-> -				rc = -errno;
-> -				error("open %s failed: %d\n", monitor.log, rc);
-> -				goto out;
-> -			}
-> -			monitor.ctx.log_fn = log_file;
-> +	if (strncmp(log, "./standard", 10) == 0)
-> +		monitor.ctx.log_fn = log_standard;
-> +	else {
-> +		monitor.log_file = fopen(log, "a+");
-> +		if (!monitor.log_file) {
-> +			rc = -errno;
-> +			error("open %s failed: %d\n", log, rc);
-> +			goto out;
->  		}
-> +		monitor.ctx.log_fn = log_file;
->  	}
->  
->  	if (monitor.daemon) {
 > -- 
 > 2.29.2
 > 
