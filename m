@@ -2,115 +2,123 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA32BC001B0
-	for <linux-cxl@archiver.kernel.org>; Tue, 11 Jul 2023 17:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81061EB64DC
+	for <linux-cxl@archiver.kernel.org>; Tue, 11 Jul 2023 17:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230385AbjGKR6P (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 11 Jul 2023 13:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53022 "EHLO
+        id S229911AbjGKR7l (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 11 Jul 2023 13:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231266AbjGKR6O (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Jul 2023 13:58:14 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9B8170C
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Jul 2023 10:58:13 -0700 (PDT)
+        with ESMTP id S230266AbjGKR7l (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 11 Jul 2023 13:59:41 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3837510D2
+        for <linux-cxl@vger.kernel.org>; Tue, 11 Jul 2023 10:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689098293; x=1720634293;
+  t=1689098380; x=1720634380;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=LrQ2feoJb0lTsvXApIj7daksJddOoRFr0OInB5Y1dyY=;
-  b=UHdl2L60oaP+rSAOip/nZnPYtxuhmG2rpgqgGfiiP7osWNTeUA0eCR1i
-   iWFn+kI4JPQu2RB/UQU/hDB/jmmQQcgtTb8jDqJOk7HuwA+AKB5q57wHB
-   mtymP0HgvguDa57j2t8lNNt1htvTsAzBEFq6V3jSkFdt1qz77HRIkYp3q
-   frqiRFBQEzczC6qYGYiZGgIIfHtqxt2F4oEglc4T5cAdLsKcy3pWBeCej
-   cjBujV3MRnOxzqTLsGzQ5A0A7aolyFF2TFwWrhawFKX3ji968+cBURgmw
-   A+ddhLRA6KGvs2IIDxDvHBZ0IbAhRcRKHx8NHkiAQKXpJfaxr6VyPb0g/
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="362159131"
+  bh=bRVTZaz2t4181flWqGOZRCbLyIGNkOJzBypJ9G1bTo8=;
+  b=G0SeOp9NQlFa3Jb0Z61bZEi/PsdJ+lqP9rV+0wDxtigvKn/lRavaNz5B
+   mq6rSuoTfVJ3fCbKn2Ap+5XnolSgh3Waz/wmO0WSNHC2UurCanVMzT1V3
+   BLPnja7CbBW38VSfialn+qUFq7QG5YZb+bHjNyWPTHpPVsUDjaYCAXrj9
+   pIz95lUz1524NSlPeOfKxP6OD7anR5B1DyZzoS8CFr8YpR1t+U6V3vkVS
+   rgiJ+ss7toU6wIOBcRGx4ex/IXon0tXISxCmijmIEohIUjmbnKWQNNAkF
+   L/SojcP9sZwBA2rcbqwPajjk01FIXLpJWXI47ouz2KfOpcNAgXO+1N7qt
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="428406193"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="362159131"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:58:13 -0700
+   d="scan'208";a="428406193"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:29:28 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="715255731"
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="698503230"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="715255731"
+   d="scan'208";a="698503230"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.140.181])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:58:12 -0700
-Date:   Tue, 11 Jul 2023 10:58:11 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:29:28 -0700
+Date:   Tue, 11 Jul 2023 10:29:26 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
-To:     Li Zhijian <lizhijian@fujitsu.com>
-Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [ndctl PATCH v4 3/4] ndctl: use strcmp for reserved word in
- monitor commands
-Message-ID: <ZK2YM7nlCrEmz1+9@aschofie-mobl2>
-References: <20230711115344.562823-1-lizhijian@fujitsu.com>
- <20230711115344.562823-4-lizhijian@fujitsu.com>
+To:     Breno Leitao <leitao@debian.org>
+Cc:     vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+        ave.jiang@intel.com
+Subject: Re: [PATCH v2] cxl/acpi: Release device after dev_err()
+Message-ID: <ZK2RdpFO3aEqyFY6@aschofie-mobl2>
+References: <20230711161704.3033220-1-leitao@debian.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230711115344.562823-4-lizhijian@fujitsu.com>
+In-Reply-To: <20230711161704.3033220-1-leitao@debian.org>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 07:53:43PM +0800, Li Zhijian wrote:
-> According to the tool's documentation, when '-l standard' is specified,
-> log would be output to the stdout. But since it's using strncmp(a, b, 10)
-> to compare the former 10 characters, it will also wrongly detect a filename
-> starting with a substring 'standard' as stdout.
+On Tue, Jul 11, 2023 at 09:17:04AM -0700, Breno Leitao wrote:
+> Kfence detected an user-after-free in the CXL driver. This happens in
+> the cxl_decoder_add() fail path. Kfence drops this message:
 > 
-> For example:
-> $ cxl monitor -l standard.log
+>   BUG: KFENCE: use-after-free read in resource_string
 > 
-> User is most likely want to save log to ./standard.log instead of stdout.
+> This is happening in cxl_parse_cfmws(), where put_device() is called,
+> releasing cxld->dev, and then, later, dev_err(cxld->dev) is called
+> referencing the released device.
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Hi Breno,
+
+How do you see the above happening? I don't see a dev_err(cxld->dev)
+after the put. There is a dev_name(&cxld->dev), but it can never be
+reached after the put, because we return before that line is reached.
+
+Like I said in v1 - maybe the only problem here is that the resource
+is not freed.
+
+Alison
+
+
 
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
-> V4: combine ndctl/monitor to one patch
-> V3: Improve commit log # Dave
-> V2: commit log updated # Dave
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
->  cxl/monitor.c   | 2 +-
->  ndctl/monitor.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+> Just release the device after the message is printed/dev_err().  On top
+> of that, cxl_parse_cfmws() must fail (returns rc) in case of
+> cxl_decoder_add() or cxl_decoder_autoremove() failing (rc != 0), instead
+> of swallowing the error and returning 0.
 > 
-> diff --git a/cxl/monitor.c b/cxl/monitor.c
-> index e83455b63d35..a85452a4dc82 100644
-> --- a/cxl/monitor.c
-> +++ b/cxl/monitor.c
-> @@ -188,7 +188,7 @@ int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx)
->  	else
->  		monitor.ctx.log_priority = LOG_INFO;
->  
-> -	if (strncmp(log, "./standard", 10) == 0)
-> +	if (strcmp(log, "./standard") == 0)
->  		monitor.ctx.log_fn = log_standard;
->  	else {
->  		monitor.ctx.log_file = fopen(log, "a+");
-> diff --git a/ndctl/monitor.c b/ndctl/monitor.c
-> index 89903def63d4..bd8a74863476 100644
-> --- a/ndctl/monitor.c
-> +++ b/ndctl/monitor.c
-> @@ -610,9 +610,9 @@ int cmd_monitor(int argc, const char **argv, struct ndctl_ctx *ctx)
->  	if (monitor.log) {
->  		if (strncmp(monitor.log, "./", 2) != 0)
->  			fix_filename(prefix, (const char **)&monitor.log);
-> -		if (strncmp(monitor.log, "./syslog", 8) == 0)
-> +		if (strcmp(monitor.log, "./syslog") == 0)
->  			monitor.ctx.log_fn = log_syslog;
-> -		else if (strncmp(monitor.log, "./standard", 10) == 0)
-> +		else if (strcmp(monitor.log, "./standard") == 0)
->  			monitor.ctx.log_fn = log_standard;
->  		else {
->  			monitor.ctx.log_file = fopen(monitor.log, "a+");
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> v1 -> v2
+>  * Return the error (rc) instead of swalling it
+> 
+> ---
+>  drivers/cxl/acpi.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 658e6b84a769..efead5cc8a89 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -291,14 +291,16 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>  	}
+>  	rc = cxl_decoder_add(cxld, target_map);
+>  err_xormap:
+> -	if (rc)
+> -		put_device(&cxld->dev);
+> -	else
+> -		rc = cxl_decoder_autoremove(dev, cxld);
+>  	if (rc) {
+>  		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+>  			cxld->hpa_range.start, cxld->hpa_range.end);
+> -		return 0;
+> +		put_device(&cxld->dev);
+> +		return rc;
+> +	}
+> +	rc = cxl_decoder_autoremove(dev, cxld);
+> +	if (rc) {
+> +		dev_err(dev, "Failed to register autoremove action\n");
+> +		return rc;
+>  	}
+>  	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
+>  		dev_name(&cxld->dev),
 > -- 
-> 2.29.2
+> 2.34.1
 > 
