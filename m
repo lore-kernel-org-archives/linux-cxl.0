@@ -2,98 +2,142 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D8EB64DD
-	for <linux-cxl@archiver.kernel.org>; Wed, 12 Jul 2023 14:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD47EB64DA
+	for <linux-cxl@archiver.kernel.org>; Wed, 12 Jul 2023 15:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232173AbjGLOZG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Jul 2023 10:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
+        id S233382AbjGLPo1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 12 Jul 2023 11:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231827AbjGLOZF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Jul 2023 10:25:05 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A981993
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Jul 2023 07:25:00 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fbf1b82d9cso72263815e9.2
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Jul 2023 07:25:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689171899; x=1691763899;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AIuejJj8sZ9ghKm3BGL2Tt3pnRyQTtLeWAdAz28xm4I=;
-        b=ZS25J56ULzxJsNnmfK6CGylet1ENoueQXRrTcqxLTEeau9We289/MCO8dCmin/zbI7
-         M9fIKL+1JO0rLICL4f9viQrPNfrTvy94dXQjhL+28nyGzpZNCrTq09ObsgELd+qok+ID
-         N8YC/NLf+kYN92DdINtRqbwr7/X/hNoLH64WiFKsB76L97CDHF4eO7UQsnnZySElY7Tc
-         RxrIO/EBb7mnyqG+8o85rTrIHDz2ByZ5eMo5LKP70q7F8tTl8n1Kq9BnsIWZtMgnA7RN
-         v/viocJYrAgkudJCu3uNmVKtb52WVo2Gz3earsvtQzrtLj+E5+VJRr/zyKKNyzAaUrtf
-         /q1Q==
-X-Gm-Message-State: ABy/qLZJPHgr9R48qP+bI2M8XEcup62a/fFmqFBEWBcuo+K4ge6ESVSB
-        rztt1aeF+haTAgiGrGunWg5ZLlXk8pM=
-X-Google-Smtp-Source: APBJJlHsLksyVBZifPJfzQo8teX4FktnlFX2x9+9vvWTFimHgq0AQ733zhUCsi+PpgcN0Om8qPWfEA==
-X-Received: by 2002:adf:e2d2:0:b0:314:1560:cc68 with SMTP id d18-20020adfe2d2000000b003141560cc68mr17291062wrj.56.1689171898690;
-        Wed, 12 Jul 2023 07:24:58 -0700 (PDT)
-Received: from gmail.com (fwdproxy-cln-005.fbsv.net. [2a03:2880:31ff:5::face:b00c])
-        by smtp.gmail.com with ESMTPSA id c17-20020a056000105100b0031433d8af0dsm5257100wrx.18.2023.07.12.07.24.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 07:24:58 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 07:24:56 -0700
-From:   Breno Leitao <leitao@debian.org>
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
-        ave.jiang@intel.com
-Subject: Re: [PATCH v2] cxl/acpi: Release device after dev_err()
-Message-ID: <ZK63uG6WkBJC/5+l@gmail.com>
-References: <20230711161704.3033220-1-leitao@debian.org>
- <ZK2W50voY8augr8m@aschofie-mobl2>
+        with ESMTP id S231856AbjGLPo0 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Jul 2023 11:44:26 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC4219A7
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Jul 2023 08:44:24 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 51F97141C17;
+        Wed, 12 Jul 2023 15:44:24 +0000 (UTC)
+Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 57008140EF7;
+        Wed, 12 Jul 2023 15:44:23 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1689176663; a=rsa-sha256;
+        cv=none;
+        b=Jgv/+bFmHToGyLkV1ACc+SCoX+NN/J4wdVoVyIMvVHkcaoG50Wb24UGiPLCL53sdXd2S57
+        /eRp1WGP9Hc85fa/aUojMZdV12tWKaN2eAJv8onaAgtLsAAXIPobTcs1rK3UKSsLixlpZn
+        +nv3PAAiNeHdhiHJj8TzrYGyBzVBS8jMghs08Xnegvpdvd6ScUaWhV8M/TbGIZPgz0vtSp
+        FasRvCURCC4ThJl/fiS+HPYt9LAvHt/wbdQQHNmA/nlEJOo45vGvsbwethKFnluc2ABURM
+        RfjgK/5zEmo5DUS3UB8OtQ+DfePc2yGoCS7I2s6lzUiUJH+KtUT7pRhSK/oHEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1689176663;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=+Nwv4OTPBGtVJOGjZUss1kkTgtXvLO9sCoJf9CP/d4I=;
+        b=iQJWQHwwwQgm5C6vwX1RNN3XYJnJghnvJ03TV+mjeT+43neOZM7You30YYMwObeCvd1HpQ
+        5mjDlTmzv/OZPZeHFPUbTiOxZ9HFuuHDdNlTGio0F+6rxwl5vMXcKLQer8EGDfWjg0xE9m
+        eL3XpWmohlFf1Kb6PmQ7bZALxRAACy1kZo8fPBg+jObEh1KGOURmWRykdZiGLFi3ypVBYI
+        398BBJc93ADhCouFHS8TqJxuWgtFBj4M5NSxSZxmnk9TsFSBpR4dKJjP417tB+zggSHTjE
+        W54/4qowom2P2FfQQtbcUyj5pMhnI0DL40yjFen8rwjbMDLNzLJikxb5sRHukg==
+ARC-Authentication-Results: i=1;
+        rspamd-5595f87fc9-mg5xj;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Industry-Abortive: 0fe5f76d2d4add6b_1689176663692_1982780177
+X-MC-Loop-Signature: 1689176663692:2281207018
+X-MC-Ingress-Time: 1689176663692
+Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.115.231.136 (trex/6.9.1);
+        Wed, 12 Jul 2023 15:44:23 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4R1MVZ3wjPz6s;
+        Wed, 12 Jul 2023 08:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1689176663;
+        bh=+Nwv4OTPBGtVJOGjZUss1kkTgtXvLO9sCoJf9CP/d4I=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Xac2o1tAXxdl90NExD+vEqduIG4kXuQu06QFaWQxpJVYbUjnDqQkw5y9la74JA2dT
+         7HCEhWi1tkrBiVQFwoMs+3Wmzi335oE7Jg/t9/nkESS4eGlTJjHUowN2iT+uuXnGSM
+         H3UHAzbPAPmNIJfvxUBrG+I0cIaQqLVaCxmq17AoSIrt7yer9LFFIlTB4ovMY2SvTf
+         Y0dNIr3x89LuIqS9+qZH2ITrm0mXZ4hfbL88fTDyvRvDtG4Yd3qNRUApCN9ArJyfz5
+         d0PtR6oMkKxLC1+/eoNXZZxSClb4H44fBjdzdl26q1/JvLgKu/oi3qfqbPn0AZEhrU
+         PdRc/lzmuPBLQ==
+Date:   Wed, 12 Jul 2023 08:07:52 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH] cxl: Update MAINTAINERS
+Message-ID: <zlt563tl4efor4wixv37sdevqjdsasjousxj4aiyjbjqi22lyp@vxkgzu55fkmy>
+References: <168911543699.1871721.9186039943252294173.stgit@dwillia2-xfh.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <ZK2W50voY8augr8m@aschofie-mobl2>
+In-Reply-To: <168911543699.1871721.9186039943252294173.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello Alison,
+On Tue, 11 Jul 2023, Dan Williams wrote:
 
-On Tue, Jul 11, 2023 at 10:52:39AM -0700, Alison Schofield wrote:
-> On Tue, Jul 11, 2023 at 09:17:04AM -0700, Breno Leitao wrote:
-> > Kfence detected an user-after-free in the CXL driver. This happens in
-> > the cxl_decoder_add() fail path. Kfence drops this message:
-> > 
-> >   BUG: KFENCE: use-after-free read in resource_string
-> > 
-> > This is happening in cxl_parse_cfmws(), where put_device() is called,
-> > releasing cxld->dev, and then, later, dev_err(cxld->dev) is called
-> > referencing the released device.
-> > 
-> > Just release the device after the message is printed/dev_err().  On top
-> > of that, cxl_parse_cfmws() must fail (returns rc) in case of
-> > cxl_decoder_add() or cxl_decoder_autoremove() failing (rc != 0), instead
-> > of swallowing the error and returning 0.
-> 
-> Breno,
-> 
-> Is kfence satisfied if you do this?
+>Ben, thank you for all the work to get the CXL subsystem off the ground
+>and establishing QEMU as a place where hardware vendors can collaborate
+>on the new advancements and mechanisms appearing in the CXL
+>specification.
+>
+>Jonathan, thank you for your continued review and collaboration, you have
+>been a defacto CXL maintainer for a while now.
+>
+>Davidlohr, thank you for getting the background command infrastructure
+>off the ground and your leadership on and off the lists.
+>
+>Cc: Davidlohr Bueso <dave@stgolabs.net>
+>Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+>Cc: Ben Widawsky <bwidawsk@kernel.org>
+>Cc: Adam Manzanares <a.manzanares@samsung.com>
+>Cc: Alison Schofield <alison.schofield@intel.com>
+>Cc: Vishal Verma <vishal.l.verma@intel.com>
+>Cc: Ira Weiny <ira.weiny@intel.com>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Yes, this approach solves the complaints from kfence/kasan. I am
-wondering if "cxld" is what is being freed up here at device_put().
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
 
-> iff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 658e6b84a769..642983da01cb 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -297,7 +297,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
->                 rc = cxl_decoder_autoremove(dev, cxld);
->         if (rc) {
->                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
-> -                       cxld->hpa_range.start, cxld->hpa_range.end);
-> +                       res->start, res->end);
->                 return 0;
->         }
->         dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
-
-Do you prefer this patch above, mine patch or a mix of both?
-
-Thanks
+>---
+> MAINTAINERS |    3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+>diff --git a/MAINTAINERS b/MAINTAINERS
+>index 3be1bdfe8ecc..eba395274018 100644
+>--- a/MAINTAINERS
+>+++ b/MAINTAINERS
+>@@ -5140,10 +5140,11 @@ S:	Maintained
+> F:	include/linux/compiler_attributes.h
+>
+> COMPUTE EXPRESS LINK (CXL)
+>+M:	Davidlohr Bueso <dave@stgolabs.net>
+>+M:	Jonathan Cameron <jonathan.cameron@huawei.com>
+> M:	Alison Schofield <alison.schofield@intel.com>
+> M:	Vishal Verma <vishal.l.verma@intel.com>
+> M:	Ira Weiny <ira.weiny@intel.com>
+>-M:	Ben Widawsky <bwidawsk@kernel.org>
+> M:	Dan Williams <dan.j.williams@intel.com>
+> L:	linux-cxl@vger.kernel.org
+> S:	Maintained
+>
