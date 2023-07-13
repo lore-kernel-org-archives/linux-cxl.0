@@ -2,98 +2,133 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20619C001B0
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Jul 2023 19:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367C4C0015E
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Jul 2023 20:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232900AbjGMTHI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Jul 2023 15:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54506 "EHLO
+        id S232270AbjGMUbl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Jul 2023 16:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230249AbjGMTHF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Jul 2023 15:07:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8C22712
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Jul 2023 12:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689275179;
+        with ESMTP id S231807AbjGMUbk (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Jul 2023 16:31:40 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2A92121
+        for <linux-cxl@vger.kernel.org>; Thu, 13 Jul 2023 13:31:39 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id DD060141268;
+        Thu, 13 Jul 2023 20:31:37 +0000 (UTC)
+Received: from pdx1-sub0-mail-a313.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 368581417D8;
+        Thu, 13 Jul 2023 20:31:37 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1689280297; a=rsa-sha256;
+        cv=none;
+        b=aK12w/N2V2YWGP/2HFWUax4snF/VKytEXhu9f3wgOxCEHlDrebw7dOOg7HCiPuhCyywWQo
+        c5SgoiNEqogoh2PnIjQh5n5HQgs7LyARkrHquQSJUkKILnNr+5gw2k3NuwQ7aI4KlTuRKx
+        WcGpLacabcnMpJLX1bCLlhGxJg+R4EstbEjGqZ0WVN3cNvOTObURgRXRmAgFJRKhwZLfSo
+        /B7vTwJ10yRa0m5BwtuW5K2PFNy040slEHYKqNSzAT2xMDwEIVeoR9CKNn/mtU2/IfZZl/
+        X0vIwzs3VNZ62I0KXZL/WWXZU6cePo69uCXrR+u7c6clPFPOQfDafDAXjipTTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1689280297;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mV8Nsc8QqObfioHox/0m6vCcDaS/dZuwe57a5YlQQl8=;
-        b=APrp/DFEtu8F8h6ur5zzO7NAdfugsntf+kcebk6HbK2t4d83Hw663m0aK+pf0ozw4fgcm4
-        PToUdTBvCfszuzrwn+hPHELxxCNwkvo0wfLix8OI+9Zt+E/bBgBLpTEAgSHkoS4vUYlnN2
-        0r61cQ+5+Sk/ig5Wsw3xQLj8blwdaaE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-634-iCmcfC-GOe-C3oZCLVi3ig-1; Thu, 13 Jul 2023 15:06:15 -0400
-X-MC-Unique: iCmcfC-GOe-C3oZCLVi3ig-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:dkim-signature;
+        bh=DH8z4FJ5hHLI77wXPCUjJKIVl6whz5q2SGY/Zt9Wyk4=;
+        b=SObIlExvRIIxwAmapWylBPz6GFRvNwglz5CzlKpAklxJ3OelJMPCN8Ze0jnJupzui9A5R7
+        MGdLDgp2nzlQXiBL4Q2jj+UCI9Kjna5xIIvrHs/4lUfQFYc68sTHp4mIVM0XseiF8b/cnY
+        6zvvx4SKN0eRqM7OgdUguBumxVPJt0K1cJDFfzvqQQRPY4KCd9AzxypFmDV/vhRsf+6Xk6
+        rtVbX4WmgwrML3Pa2VVmvC+CUqPyS5obkQzgW6XWqaqBIZ4/CVWTlPf/9y+tw9lLLasDau
+        JdWbz5jZK+Vjh43RtWxnz0XL3SXpJZSUHGIRNFkq2oL3wyBKCEwhegusEuGzGg==
+ARC-Authentication-Results: i=1;
+        rspamd-5595f87fc9-zmt67;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Reaction-Industry: 6ee965ed4b9484dd_1689280297482_1709596642
+X-MC-Loop-Signature: 1689280297482:659144134
+X-MC-Ingress-Time: 1689280297482
+Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.110.146.72 (trex/6.9.1);
+        Thu, 13 Jul 2023 20:31:37 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EFC588D1683;
-        Thu, 13 Jul 2023 19:06:13 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F0BB111E3E9;
-        Thu, 13 Jul 2023 19:06:13 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 0/3] mm: use memmap_on_memory semantics for dax/kmem
-References: <20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com>
-        <29c9b998-f453-59f2-5084-9b4482b489cf@redhat.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Thu, 13 Jul 2023 15:12:02 -0400
-In-Reply-To: <29c9b998-f453-59f2-5084-9b4482b489cf@redhat.com> (David
-        Hildenbrand's message of "Fri, 16 Jun 2023 09:44:50 +0200")
-Message-ID: <x49fs5r7hj1.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4R25qX3ywZz2c;
+        Thu, 13 Jul 2023 13:31:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1689280297;
+        bh=DH8z4FJ5hHLI77wXPCUjJKIVl6whz5q2SGY/Zt9Wyk4=;
+        h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+        b=SEo9zrN05wVJDVO4gJZHFTh1UlLRcGzDYcQRuIjsTt0yYp17Rvns5tO3L88RmL750
+         EKmjaKFPb6qwNGshkecKLNHZspwwQN0aiBYsO0bMQLDLi5h4MRlx5xW3fNCx5DYg2f
+         VI1SBHvofqujQgzNzozgnFZSYotAQPehZS1awguB/t7OeehfzBTm6WHwtME/8UG3uD
+         lsHAvoOtGbdzb1ekxlW85MIBzedvMP5tPFCoMb8yYokP2/UY6FWTxo4Lz5p7cMZqLd
+         l33AjIzYiGfQbCh+v5f3tSQhStIn93g3ZGnWzH7JPWMQwy0kl3Ha1SJsmxPekGstoG
+         6YJRQvhaYHirA==
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     vishal.l.verma@intel.com
+Cc:     dan.j.williams@intel.com, dave.jiang@intel.com, fan.ni@samsung.com,
+        a.manzanares@samsung.com, dave@stgolabs.net,
+        linux-cxl@vger.kernel.org
+Subject: [PATCH -ndctl v2 0/2] cxl: Support memdev sanitation
+Date:   Thu, 13 Jul 2023 12:54:49 -0700
+Message-ID: <20230713195455.19769-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-David Hildenbrand <david@redhat.com> writes:
+Hi,
 
-> On 16.06.23 00:00, Vishal Verma wrote:
->> The dax/kmem driver can potentially hot-add large amounts of memory
->> originating from CXL memory expanders, or NVDIMMs, or other 'device
->> memories'. There is a chance there isn't enough regular system memory
->> available to fit ythe memmap for this new memory. It's therefore
->> desirable, if all other conditions are met, for the kmem managed memory
->> to place its memmap on the newly added memory itself.
->>
->> Arrange for this by first allowing for a module parameter override for
->> the mhp_supports_memmap_on_memory() test using a flag, adjusting the
->> only other caller of this interface in dirvers/acpi/acpi_memoryhotplug.c,
->> exporting the symbol so it can be called by kmem.c, and finally changing
->> the kmem driver to add_memory() in chunks of memory_block_size_bytes().
->
-> 1) Why is the override a requirement here? Just let the admin
-> configure it then then add conditional support for kmem.
->
-> 2) I recall that there are cases where we don't want the memmap to
-> land on slow memory (which online_movable would achieve). Just imagine
-> the slow PMEM case. So this might need another configuration knob on
-> the kmem side.
+Changes from v1 (https://lore.kernel.org/linux-cxl/20230423015920.11384-1-dave@stgolabs.net/)
+    o Added a LIBCXL_6 section for new symbols.
+    o s/sanitation/sanitization
+    o In patch 2's manpage documented that sanitize does not
+      involve explicit CPU cacheline management.
+    o s/host_path/dev_path in patch 2.
 
-From my memory, the case where you don't want the memmap to land on
-*persistent memory* is when the device is small (such as NVDIMM-N), and
-you want to reserve as much space as possible for the application data.
-This has nothing to do with the speed of access.
+These are the cxl-tool new subcommands for device sanitation for the kernel
+side equivalent (v6.5+).
 
--Jeff
+Obviously the naming of the interfaces are derived from what is currently there
+for ndctl. However note that the new cxl wait-sanitize and sanitize-memdev
+commands do not rely on pmem security, such as ndctl_dimm_get_security().
+However, the kernel does consult pmem security before sending the approving
+the operation, so no harm no foul.
+
+This code is also available at:
+     https://github.com/davidlohr/ndctl/tree/cxl-memdev-sanitation-v2
+
+Thanks!
+
+Davidlohr Bueso (2):
+  cxl/memdev: Introduce wait-sanitize functionality
+  cxl/memdev: Introduce sanitize-memdev functionality
+
+ Documentation/cxl/cxl-sanitize-memdev.txt | 68 ++++++++++++++++
+ Documentation/cxl/cxl-wait-sanitize.txt   | 39 ++++++++++
+ Documentation/cxl/lib/libcxl.txt          |  2 +
+ Documentation/cxl/meson.build             |  2 +
+ cxl/builtin.h                             |  2 +
+ cxl/cxl.c                                 |  2 +
+ cxl/lib/libcxl.c                          | 94 +++++++++++++++++++++++
+ cxl/lib/libcxl.sym                        |  6 ++
+ cxl/libcxl.h                              |  2 +
+ cxl/memdev.c                              | 73 ++++++++++++++++++
+ 10 files changed, 290 insertions(+)
+ create mode 100644 Documentation/cxl/cxl-sanitize-memdev.txt
+ create mode 100644 Documentation/cxl/cxl-wait-sanitize.txt
+
+--
+2.41.0
 
