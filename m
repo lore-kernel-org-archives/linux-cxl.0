@@ -2,115 +2,283 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C88AEB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu, 13 Jul 2023 01:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631C9EB64DD
+	for <linux-cxl@archiver.kernel.org>; Thu, 13 Jul 2023 04:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232304AbjGMBuk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 12 Jul 2023 21:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        id S233604AbjGMEi7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 13 Jul 2023 00:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231984AbjGMBuj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 12 Jul 2023 21:50:39 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830F4B0
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Jul 2023 18:50:38 -0700 (PDT)
+        with ESMTP id S232133AbjGMEi7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Jul 2023 00:38:59 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40934E69
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Jul 2023 21:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689213038; x=1720749038;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=udcdwjxpF7URdNHmndDcYW8BAHvjB294d/omZ49+8oY=;
-  b=DhWwb0TtjqTcYPuBMiG1m9+zunv8LB0Q/55OR28yES066DOZQzh+YAVm
-   6j6FSnKOovt2ligHWtpzV93xwA65v6VMMsNpAsxvq/g8a+NrqHn+CtR7H
-   DaTSy+8lP/6Cr7PDhuoflA6XyNmHxmaMLviejtCav71jToiMd7143VCBd
-   8hHeyYtzg+aaamJPXdL7LnbfblmXe/4cM3IQvuvR48yIPfMChmalc9BA/
-   wuiQq4mPx89ClWkg+SJle+uS2HBfikzjgvNrXgmx38SIYLxb1WFG4Fz8j
-   PFfjFcKcfu6neAG+BodF5duxPX+dMUg/G3pCppGubZw7MJq2S5jbcy7x+
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="428806436"
+  t=1689223137; x=1720759137;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xcpsR7YUSRyw4eH5lkfwIGOwAn6KbbK5QrAINingYrU=;
+  b=S9PHYtOnQv2vAQAEW7Y3iOFDZsMBCZ826++76Vd0sDJ8BjvsqbmUPnta
+   T9l58bba42zWYoluLtuAe5B5w56YEqgNI5O2qvf+BP8s6S13IiLzwiMxp
+   iwjoD0wQRgtl+9MKM7cvFsBxF2JcKygeap2LpBzhQWf744sRbc2IULiYq
+   X53uPfPuZ1CktpVCS6y/iQ1BXeC1lGWPWJZzj8t7ZjPqEhb0ttOJp32fM
+   EHeMgSr5hwJ1nrya7b+j89g9q1tBTes33hg4oeJtbLbdMZEXjxbeB5aK+
+   n+05XhHBtS7B2Pu1CJqJ36w4NqCCtKd309zPFh6c1pM+/nOTelaMfRsie
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="368618396"
 X-IronPort-AV: E=Sophos;i="6.01,201,1684825200"; 
-   d="scan'208";a="428806436"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 18:50:38 -0700
+   d="scan'208";a="368618396"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 21:38:56 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="787256821"
+X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="968458908"
 X-IronPort-AV: E=Sophos;i="6.01,201,1684825200"; 
-   d="scan'208";a="787256821"
-Received: from bpulavar-mobl.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.209.97.133])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 18:50:36 -0700
-Subject: [PATCH v2] cxl: Update MAINTAINERS
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Adam Manzanares <a.manzanares@samsung.com>
-Date:   Wed, 12 Jul 2023 18:50:36 -0700
-Message-ID: <168921298745.190279.14706856880354094471.stgit@dwillia2-xfh.jf.intel.com>
-User-Agent: StGit/0.18-3-g996c
+   d="scan'208";a="968458908"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.210.253])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 21:38:56 -0700
+Date:   Wed, 12 Jul 2023 21:38:54 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Breno Leitao <leitao@debian.org>
+Cc:     vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+        ave.jiang@intel.com
+Subject: Re: [PATCH v2] cxl/acpi: Release device after dev_err()
+Message-ID: <ZK9/3niYV9yuxv1I@aschofie-mobl2>
+References: <20230711161704.3033220-1-leitao@debian.org>
+ <ZK2RdpFO3aEqyFY6@aschofie-mobl2>
+ <ZK6dmYrWJrSrQb15@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZK6dmYrWJrSrQb15@gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ben, thank you for all the work to get the CXL subsystem off the ground
-and establishing QEMU as a place where hardware vendors can collaborate
-on the new advancements and mechanisms appearing in the CXL
-specification.
+On Wed, Jul 12, 2023 at 05:33:29AM -0700, Breno Leitao wrote:
+> On Tue, Jul 11, 2023 at 10:29:26AM -0700, Alison Schofield wrote:
+> > On Tue, Jul 11, 2023 at 09:17:04AM -0700, Breno Leitao wrote:
+> > > Kfence detected an user-after-free in the CXL driver. This happens in
+> > > the cxl_decoder_add() fail path. Kfence drops this message:
+> > > 
+> > >   BUG: KFENCE: use-after-free read in resource_string
+> > > 
+> > > This is happening in cxl_parse_cfmws(), where put_device() is called,
+> > > releasing cxld->dev, and then, later, dev_err(cxld->dev) is called
+> > > referencing the released device.
+> > 
+> > Hi Breno,
+> > 
+> > How do you see the above happening? I don't see a dev_err(cxld->dev)
+> > after the put. There is a dev_name(&cxld->dev), but it can never be
+> > reached after the put, because we return before that line is reached.
+> > 
+> > Like I said in v1 - maybe the only problem here is that the resource
+> > is not freed.
+> 
+> The message seems to be clear that we are using a component on the
+> dev_err() that was freed before in device_put(). Let's get more data to
+> discover what exactly, if it is not the device structure.
+> 
+> I've enabled KASAN in the kernel (6.4.2) to give us more information on
+> what is happening, and I was able to decode the stack as well. It tells
+> us where the memory was allocated, freed and re-used later.
+>
 
-Jonathan, thank you for your continued review and collaboration, you have
-been a defacto CXL maintainer for a while now.
+Thanks for all the info and the intro to Kfence.
 
-Davidlohr, thank you for getting the background command infrastructure
-off the ground and your leadership on and off the lists.
+I satified my curiosity on a couple of things...
 
-Dave Jiang, thank you for yor continued attention to all the
-cross-subsytem plumbing issues that CXL continues to create.
+Where the ref on &cxld.dev was taken:
+cxl_parse_cfmws()
+  cxl_root_decoder_alloc()
+    cxl_switch_decoder_init()
+      cxl_decoder_init()
+        device_initialize()  *Reference taken here
 
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Ben Widawsky <bwidawsk@kernel.org>
-Cc: Adam Manzanares <a.manzanares@samsung.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
-Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Reviewed-by: Adam Manzanares <a.manzanares@samsung.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
-Changes in v2:
-- Show Dave Jiang his due as well.
+And my question about freeing the cxl_res resource in the error path
+you are touching. That's not a problem, the resource cleanup was
+already scheduled in the devm remove action.(Thanks Dan)
 
- MAINTAINERS |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Now, back to your patch ;)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3be1bdfe8ecc..82de99b6b340 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5140,10 +5140,12 @@ S:	Maintained
- F:	include/linux/compiler_attributes.h
- 
- COMPUTE EXPRESS LINK (CXL)
-+M:	Davidlohr Bueso <dave@stgolabs.net>
-+M:	Jonathan Cameron <jonathan.cameron@huawei.com>
-+M:	Dave Jiang <dave.jiang@intel.com>
- M:	Alison Schofield <alison.schofield@intel.com>
- M:	Vishal Verma <vishal.l.verma@intel.com>
- M:	Ira Weiny <ira.weiny@intel.com>
--M:	Ben Widawsky <bwidawsk@kernel.org>
- M:	Dan Williams <dan.j.williams@intel.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
+I suggest the simplest change to avoid the NULL dereference, which
+is using local vars.
 
+The catch on swallowing the rc return is important, but does not
+belong in this patch. So, a patchset of 2 works.
+
+Please put a Fixes tag on each patch.
+
+Thanks,
+Alison
+
+>   [  265.369387] cxl root0: Failed to populate active decoder targets
+>   [  265.382953] ==================================================================
+>   [  265.398951] BUG: KASAN: slab-use-after-free in cxl_parse_cfmws (drivers/cxl/acpi.c:299)
+>   [  265.413953] Read of size 8 at addr ffff888311c90380 by task swapper/0/1
+>   [  265.421954]
+>   [  265.438960] Hardware name: Wiwynn Great Lake POC/Great Lake, BIOS Y35GLE03 06/09/2023
+>   [  265.457954] Call Trace:
+>   [  265.457954]  <TASK>
+>   [  265.457954] dump_stack_lvl (lib/dump_stack.c:107)
+>   [  265.486982] ? preempt_count_add (kernel/sched/core.c:5815)
+>   [  265.486982] ? show_regs_print_info (lib/dump_stack.c:98)
+>   [  265.503961] ? log_buf_vmcoreinfo_setup (kernel/printk/printk.c:2346)
+>   [  265.503961] ? _printk (kernel/printk/printk.c:2354)
+>   [  265.526956] print_report (mm/kasan/report.c:352 mm/kasan/report.c:462)
+>   [  265.535950] ? __virt_addr_valid (./include/linux/mmzone.h:1901 ./include/linux/mmzone.h:1997 arch/x86/mm/physaddr.c:65)
+>   [  265.544951] ? __phys_addr (arch/x86/mm/physaddr.h:7 arch/x86/mm/physaddr.c:28)
+>   [  265.551956] ? cxl_parse_cfmws (drivers/cxl/acpi.c:299)
+>   [  265.558953] kasan_report (mm/kasan/report.c:?)
+>   [  265.568961] ? cxl_parse_cfmws (drivers/cxl/acpi.c:299)
+>   [  265.568961] cxl_parse_cfmws (drivers/cxl/acpi.c:299)
+>   [  265.568961] ? cxl_acpi_lock_reset_class (drivers/cxl/acpi.c:199)
+>   [  265.568961] ? __devres_alloc_node (drivers/base/devres.c:120 drivers/base/devres.c:167)
+>   [  265.601954] ? acpi_os_signal_semaphore (drivers/acpi/osl.c:?)
+>   [  265.601954] ? acpi_ut_release_mutex (drivers/acpi/acpica/utmutex.c:?)
+>   [  265.601954] ? acpi_get_table (drivers/acpi/acpica/tbxface.c:340)
+>   [  265.634959] ? cxl_acpi_lock_reset_class (drivers/cxl/acpi.c:199)
+>   [  265.634959] acpi_table_parse_entries_array (drivers/acpi/tables.c:358 drivers/acpi/tables.c:417)
+>   [  265.634959] ? ipmi_platform_add (drivers/acpi/tables.c:394)
+>   [  265.667955] ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4291)
+>   [  265.678956] ? print_irqtrace_events (kernel/locking/lockdep.c:4290)
+>   [  265.689951] acpi_table_parse_cedt (drivers/acpi/tables.c:444)
+>   [  265.698958] ? acpi_table_print_madt_entry (drivers/acpi/tables.c:443)
+>   [  265.710954] ? _raw_spin_unlock_irqrestore (./arch/x86/include/asm/preempt.h:104 ./include/linux/spinlock_api_smp.h:152 kernel/locking/spinlock.c:194)
+>   [  265.710954] ? cxl_acpi_lock_reset_class (drivers/cxl/acpi.c:199)
+>   [  265.710954] ? devres_log (drivers/base/trace.h:41 drivers/base/devres.c:70)
+>   [  265.710954] ? __list_add_valid (lib/list_debug.c:30)
+>   [  265.745954] cxl_acpi_probe (drivers/cxl/acpi.c:?)
+>   [  265.745954] ? trigger_poison_list_store (drivers/cxl/acpi.c:628)
+>   [  265.767959] ? kernfs_put (./include/linux/instrumented.h:96 ./include/linux/atomic/atomic-instrumented.h:576 fs/kernfs/dir.c:539)
+>   [  265.767959] platform_probe (drivers/base/platform.c:1404)
+>   [  265.767959] really_probe (drivers/base/dd.c:? drivers/base/dd.c:658)
+>   [  265.767959] driver_probe_device (drivers/base/dd.c:830)
+>   [  265.767959] __driver_attach (drivers/base/dd.c:1217)
+>   [  265.767959] bus_for_each_dev (drivers/base/bus.c:367)
+>   [  265.818964] ? driver_attach (drivers/base/dd.c:1157)
+>   [  265.826959] ? bus_remove_file (drivers/base/bus.c:356)
+>   [  265.835952] bus_add_driver (drivers/base/bus.c:674)
+>   [  265.843954] driver_register (drivers/base/driver.c:247)
+>   [  265.852957] do_one_initcall (init/main.c:1246)
+>   [  265.854953] ? cxl_mem_driver_init (drivers/cxl/acpi.c:724)
+>   [  265.854953] ? efi_enabled (init/main.c:1237)
+>   [  265.854953] ? preempt_count_sub (kernel/sched/core.c:5839)
+>   [  265.887953] ? _raw_spin_unlock_irqrestore (./arch/x86/include/asm/preempt.h:104 ./include/linux/spinlock_api_smp.h:152 kernel/locking/spinlock.c:194)
+>   [  265.892961] ? _raw_spin_unlock (kernel/locking/spinlock.c:193)
+>   [  265.899958] ? _raw_spin_lock_irqsave (kernel/locking/spinlock.c:162)
+>   [  265.899958] ? _raw_spin_lock (kernel/locking/spinlock.c:161)
+>   [  265.899958] ? stack_trace_save (kernel/stacktrace.c:123)
+>   [  265.899958] ? stack_trace_snprint (kernel/stacktrace.c:114)
+>   [  265.899958] ? filter_irq_stacks (kernel/stacktrace.c:395)
+>   [  265.954957] ? __stack_depot_save (lib/stackdepot.c:441)
+>   [  265.963958] ? kasan_set_track (mm/kasan/common.c:52)
+>   [  265.972950] ? kasan_set_track (mm/kasan/common.c:46 mm/kasan/common.c:52)
+>   [  265.981960] ? __kasan_kmalloc (mm/kasan/common.c:383)
+>   [  265.989954] ? __kmalloc (./include/linux/kasan.h:196 mm/slab_common.c:966 mm/slab_common.c:979)
+>   [  265.996957] ? kernel_init_freeable (init/main.c:1329 init/main.c:1354 init/main.c:1571)
+>   [  265.998954] ? kernel_init (init/main.c:1464)
+>   [  265.998954] ? ret_from_fork (arch/x86/entry/entry_64.S:314)
+>   [  266.019957] ? rcu_is_watching (./arch/x86/include/asm/atomic.h:29 ./include/linux/context_tracking.h:122 kernel/rcu/tree.c:695)
+>   [  266.031960] ? lock_release (kernel/locking/lockdep.c:116 kernel/locking/lockdep.c:5718)
+>   [  266.033954] ? read_lock_is_recursive (kernel/locking/lockdep.c:5673)
+>   [  266.033954] ? __might_resched (kernel/sched/core.c:10118)
+>   [  266.033954] ? next_arg (lib/cmdline.c:266)
+>   [  266.033954] ? skip_spaces (lib/string_helpers.c:853)
+>   [  266.033954] ? parse_args (kernel/params.c:180)
+>   [  266.082957] ? ethnl_default_set_doit (kernel/params.c:171)
+>   [  266.082957] ? __kmem_cache_alloc_node (mm/slub.c:3451 mm/slub.c:3490)
+>   [  266.104959] ? kernel_init_freeable (init/main.c:1329 init/main.c:1354 init/main.c:1571)
+>   [  266.114954] ? kernel_init_freeable (init/main.c:1329 init/main.c:1354 init/main.c:1571)
+>   [  266.124959] kernel_init_freeable (init/main.c:1318 init/main.c:1335 init/main.c:1354 init/main.c:1571)
+>   [  266.135041] ? repair_env_string (init/main.c:1544)
+>   [  266.142954] ? _raw_spin_lock_irq (kernel/locking/spinlock.c:171)
+>   [  266.145957] ? _raw_spin_lock_irqsave (kernel/locking/spinlock.c:169)
+>   [  266.160959] ? _raw_spin_unlock_irq (./arch/x86/include/asm/irqflags.h:42 ./arch/x86/include/asm/irqflags.h:77 ./include/linux/spinlock_api_smp.h:159 kernel/locking/spinlock.c:202)
+>   [  266.160959] ? lockdep_hardirqs_on (kernel/locking/lockdep.c:4399)
+>   [  266.177955] ? rest_init (init/main.c:1454)
+>   [  266.177955] kernel_init (init/main.c:1464)
+>   [  266.177955] ? rest_init (init/main.c:1454)
+>   [  266.177955] ret_from_fork (arch/x86/entry/entry_64.S:314)
+>   [  266.208957]  </TASK>
+> 
+> Allocation:
+> 
+>   [  266.208957] Allocated by task 1:
+>   [  266.225958] kasan_set_track (mm/kasan/common.c:46 mm/kasan/common.c:52)
+>   [  266.225958] __kasan_kmalloc (mm/kasan/common.c:383)
+>   [  266.245960] __kmalloc (./include/linux/kasan.h:196 mm/slab_common.c:966 mm/slab_common.c:979)
+>   [  266.253956] cxl_root_decoder_alloc (drivers/cxl/core/port.c:1599)
+>   [  266.263028] cxl_parse_cfmws (drivers/cxl/acpi.c:?)
+>   [  266.271963] acpi_table_parse_entries_array (drivers/acpi/tables.c:358 drivers/acpi/tables.c:417)
+>   [  266.278955] acpi_table_parse_cedt (drivers/acpi/tables.c:444)
+>   [  266.290958] cxl_acpi_probe (drivers/cxl/acpi.c:?)
+>   [  266.290958] platform_probe (drivers/base/platform.c:1404)
+>   [  266.290958] really_probe (drivers/base/dd.c:? drivers/base/dd.c:658)
+>   [  266.290958] driver_probe_device (drivers/base/dd.c:830)
+>   [  266.321954] __driver_attach (drivers/base/dd.c:1217)
+>   [  266.321954] bus_for_each_dev (drivers/base/bus.c:367)
+>   [  266.335959] bus_add_driver (drivers/base/bus.c:674)
+>   [  266.335959] driver_register (drivers/base/driver.c:247)
+>   [  266.354963] do_one_initcall (init/main.c:1246)
+>   [  266.354963] kernel_init_freeable (init/main.c:1318 init/main.c:1335 init/main.c:1354 init/main.c:1571)
+>   [  266.354963] kernel_init (init/main.c:1464)
+>   [  266.386951] ret_from_fork (arch/x86/entry/entry_64.S:314)
+> 
+> Free:
+> 
+>   [  266.398959] Freed by task 1:
+>   [  266.405955] kasan_set_track (mm/kasan/common.c:46 mm/kasan/common.c:52)
+>   [  266.413958] kasan_save_free_info (./include/linux/kasan.h:59 mm/kasan/generic.c:523)
+>   [  266.422954] ____kasan_slab_free (mm/kasan/common.c:238)
+>   [  266.430954] __kmem_cache_free (mm/slub.c:1807 mm/slub.c:3786 mm/slub.c:3799)
+>   [  266.430954] device_release (drivers/base/core.c:2488)
+>   [  266.430954] kobject_put (lib/kobject.c:687 lib/kobject.c:714 ./include/linux/kref.h:65 lib/kobject.c:731)
+>   [  266.430954] cxl_parse_cfmws (drivers/cxl/acpi.c:?)
+>   [  266.465954] acpi_table_parse_entries_array (drivers/acpi/tables.c:358 drivers/acpi/tables.c:417)
+>   [  266.465954] acpi_table_parse_cedt (drivers/acpi/tables.c:444)
+>   [  266.483958] cxl_acpi_probe (drivers/cxl/acpi.c:?)
+>   [  266.494971] platform_probe (drivers/base/platform.c:1404)
+>   [  266.494971] really_probe (drivers/base/dd.c:? drivers/base/dd.c:658)
+>   [  266.494971] driver_probe_device (drivers/base/dd.c:830)
+>   [  266.519092] __driver_attach (drivers/base/dd.c:1217)
+>   [  266.525962] bus_for_each_dev (drivers/base/bus.c:367)
+>   [  266.538961] bus_add_driver (drivers/base/bus.c:674)
+>   [  266.546958] driver_register (drivers/base/driver.c:247)
+>   [  266.555952] do_one_initcall (init/main.c:1246)
+>   [  266.562953] kernel_init_freeable (init/main.c:1318 init/main.c:1335 init/main.c:1354 init/main.c:1571)
+>   [  266.572957] kernel_init (init/main.c:1464)
+>   [  266.574954] ret_from_fork (arch/x86/entry/entry_64.S:314)
+>   [  266.588962]
+>   [  266.588962] The buggy address belongs to the object at ffff888311c90000
+>   [  266.588962]  which belongs to the cache kmalloc-2k of size 2048
+>   [  266.613962] The buggy address is located 896 bytes inside of
+>   [  266.613962]  freed 2048-byte region [ffff888311c90000, ffff888311c90800)
+>   [  266.613962]
+>   [  266.613962] The buggy address belongs to the physical page:
+>   [  266.652959] page:(____ptrval____) refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x311c90
+>   [  266.683955] head:(____ptrval____) order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+>   [  266.701958] flags: 0xbfffe0000010200(slab|head|node=0|zone=2|lastcpupid=0x1ffff)
+>   [  266.716961] page_type: 0xffffffff()
+>   [  266.718953] raw: 0bfffe0000010200 ffff88828004d200 dead000000000122 0000000000000000
+>   [  266.718953] raw: 0000000000000000 0000000080080008 00000001ffffffff 0000000000000000
+>   [  266.753954] page dumped because: kasan: bad access detected
+>   [  266.753954]
+>   [  266.753954] Memory state around the buggy address:
+>   [  266.781963]  ffff888311c90280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   [  266.781963]  ffff888311c90300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   [  266.808959] >ffff888311c90380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   [  266.834953]                    ^
+>   [  266.841955]  ffff888311c90400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   [  266.855954]  ffff888311c90480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   [  266.862954] ==================================================================
+>   [  266.890372] cxl_acpi ACPI0017:00: Failed to add decode range [0x4080000000 - 0x2baffffffff]
+>   [  266.908904] cxl root0: Failed to populate active decoder targets
+>   [  266.921887] cxl_acpi ACPI0017:00: Failed to add decode range [0x2bb00000000 - 0x5357fffffff]
+>   [  266.940899] cxl root0: Failed to populate active decoder targets
+>   [  266.953884] cxl_acpi ACPI0017:00: Failed to add decode range [0x53580000000 - 0x7afffffffff]
+>   [  266.972954] cxl root0: Failed to populate active decoder targets
+>   [  266.985963] cxl_acpi ACPI0017:00: Failed to add decode range [0x7b000000000 - 0xf1fffffffff]
