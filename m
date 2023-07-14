@@ -2,83 +2,64 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED7CEB64DA
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 09:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CC2EB64DA
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 11:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235905AbjGNJc4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Jul 2023 05:32:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
+        id S235014AbjGNLhT convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Jul 2023 07:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235869AbjGNJcR (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 05:32:17 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5E83AB3
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 02:31:55 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fbc59de009so15267555e9.3
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 02:31:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689327113; x=1691919113;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QUa04DXat8Oft1/qI5RJH6sC63r0kW7kNckDU9CwGdU=;
-        b=K94cearCqqUcV3Mq07TD/zv9TuyWj7dPs+8RQvwFh8AJTMz+Bu5eN8f3Qk9VXndNRE
-         peXUW5uvzk0kYzAposv/XvG8ZxxE/yb9YM3WAtPqjUxxZ3MIjrjRyb492SRU1BAx93er
-         qheMOxNP56rHystA5ODewmqRkQbdh4wh07oQjly8LfXVR70rGqyab5aNstDBlbgDySDy
-         1toOosTOGVrhnqtxNLB8YmU7pNTQE9A2LZMpoZVQnIIEtJEw2UUyHgrSjhwJLXCjbkjp
-         6kFsScFmH+/PlqHl90wRvxHUwySdMa2bV+GRdpuCJg3pmqFj2d2zw8sfWzP2ys5ego8J
-         DlQg==
-X-Gm-Message-State: ABy/qLahewt0+TxpSU8YNm2gi49D4PKFuXQZjgqWi1dzkmrWUajCz9xz
-        6vMafipJi5J4UF1buKi6AFs=
-X-Google-Smtp-Source: APBJJlFpEl+vM9XDgNl/dpLBJ396A+R8QzUArp494bqCpK1pP158nbtxVO2/n3vPKQJ5i51aOEjbuA==
-X-Received: by 2002:a7b:c40d:0:b0:3fc:1a6:7764 with SMTP id k13-20020a7bc40d000000b003fc01a67764mr3431247wmi.16.1689327113340;
-        Fri, 14 Jul 2023 02:31:53 -0700 (PDT)
-Received: from localhost (fwdproxy-cln-001.fbsv.net. [2a03:2880:31ff:1::face:b00c])
-        by smtp.gmail.com with ESMTPSA id p26-20020a7bcc9a000000b003fbb5506e54sm985290wma.29.2023.07.14.02.31.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 02:31:52 -0700 (PDT)
-From:   Breno Leitao <leitao@debian.org>
-To:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com
-Cc:     linux-cxl@vger.kernel.org, dave.jiang@intel.com
-Subject: [PATCH v3 2/2] cxl/acpi: Do not swallow errors
-Date:   Fri, 14 Jul 2023 02:31:46 -0700
-Message-Id: <20230714093146.2253438-2-leitao@debian.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230714093146.2253438-1-leitao@debian.org>
-References: <20230714093146.2253438-1-leitao@debian.org>
+        with ESMTP id S233017AbjGNLhS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 07:37:18 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B1EE210A
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 04:37:13 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R2Tsn6Gxsz67VkC;
+        Fri, 14 Jul 2023 19:34:53 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 14 Jul
+ 2023 12:37:11 +0100
+Date:   Fri, 14 Jul 2023 12:37:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: Region ID in Initiate Dynamic Capacity Release
+Message-ID: <20230714123710.00004140@Huawei.com>
+In-Reply-To: <DM6PR18MB28445F66E323501519D4861BAF37A@DM6PR18MB2844.namprd18.prod.outlook.com>
+References: <DM6PR18MB28445F66E323501519D4861BAF37A@DM6PR18MB2844.namprd18.prod.outlook.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Driver initialization is returning success (return 0) even if the
-initialization (cxl_decoder_add() or acpi_table_parse_cedt()) failed,
-and the hardware was already released (put_device()).
+On Thu, 13 Jul 2023 21:54:47 +0000
+Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com> wrote:
 
-Return the error instead of swallowing it.
+> Hello All,
+>    In "Initiate Dynamic Capacity Add Request", LD-ID and region-id to which capacity is added are specified. However, in case of "Initiate Dynamic Capacity Release", no region-id is specified in the request payload. However, specification says that f "Initiate Dynamic Capacity Release" command fails with "Invalid Input" if invalid region-id is specified. Is this an errata ? This is true in both CXL3.0 and CXL3.1 (draft).
 
-Fixes: f4ce1f766f1e ("cxl/acpi: Convert CFMWS parsing to ACPI sub-table helpers")
+Hi Shesha
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please do not discuss consortium draft documents on public lists.  Here we can
+only talk about those that are published.
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 642983da01cb..815b43859c16 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -298,7 +298,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 	if (rc) {
- 		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
- 			res->start, res->end);
--		return 0;
-+		return rc;
- 	}
- 	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
- 		dev_name(&cxld->dev),
--- 
-2.34.1
+Also, these questions are probably better addressed within the CXL consortium (SSWG) anyway.
 
+Jonathan
+
+> 
+> Secondly, can we add capacities to 'a' LD from multiple regions, meaning, can "Initiate Dynamic Capacity Add Request", be executed twice on the same LD, with different region-ids in the two calls.
+> 
+> Thanks,
+> Shesha.
