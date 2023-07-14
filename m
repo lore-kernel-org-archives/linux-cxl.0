@@ -2,92 +2,83 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD29DEB64DC
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 09:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED7CEB64DA
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 09:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235891AbjGNJcw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Jul 2023 05:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56558 "EHLO
+        id S235905AbjGNJc4 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Jul 2023 05:32:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235866AbjGNJcK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 05:32:10 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187661989
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 02:31:54 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-3fbea14706eso15618015e9.2
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 02:31:53 -0700 (PDT)
+        with ESMTP id S235869AbjGNJcR (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 05:32:17 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5E83AB3
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 02:31:55 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-3fbc59de009so15267555e9.3
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 02:31:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689327112; x=1691919112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=806DvyXAfQqmT7skSPuE/RMsUihBIw6a7gALPJkpbTQ=;
-        b=i6Y3G5wjEbFl/570rlt9gzi/hfEDCvjXUkfgVL6zroNWTYVUQCcpcTC/Bj3WirpGfq
-         ZOwMeXstv57DsDB0mrWhOdOApuz771V/E7GzaUBi3nJF1g3tZLwIUU404S05j+HCh8LU
-         dYSjbnOqrpt5uYqBUEg/r6q70HmHZzQOKU1MqNh4Xo/TFyk/vN6NZ599C6eM2KNNb/mo
-         JT1FEgz/bnK17HZgZaRBKXn6L4VaiQsSe/gpEX2qGxY9QceXU3dp1nf/oFQAYVs0j0sy
-         gKxgIjsXj08v4yKBtr3zeLXql8rthFk4CpA7YoGtgfkVKevR3zKzQMk+enWwnTwlAnme
-         6neg==
-X-Gm-Message-State: ABy/qLZbtX48aa9LScZqpULm3CAO3gW3Kg1sqXFnZoa59MmZfQBze4r/
-        zW2J5kYOW2NWv7jMASCAsKfzhAcrN6c=
-X-Google-Smtp-Source: APBJJlF+E/J8tcXBU0Cl7kepLmTagsCnUNG0gvRojQbpBLs1VvSs+/iITvDKNNkp6C2l/xmnBfg2Fw==
-X-Received: by 2002:a1c:ed0c:0:b0:3fa:9590:a365 with SMTP id l12-20020a1ced0c000000b003fa9590a365mr3430334wmh.17.1689327112091;
-        Fri, 14 Jul 2023 02:31:52 -0700 (PDT)
-Received: from localhost (fwdproxy-cln-013.fbsv.net. [2a03:2880:31ff:d::face:b00c])
-        by smtp.gmail.com with ESMTPSA id f23-20020a1c6a17000000b003fbdbd0a7desm988645wmc.27.2023.07.14.02.31.51
+        d=1e100.net; s=20221208; t=1689327113; x=1691919113;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QUa04DXat8Oft1/qI5RJH6sC63r0kW7kNckDU9CwGdU=;
+        b=K94cearCqqUcV3Mq07TD/zv9TuyWj7dPs+8RQvwFh8AJTMz+Bu5eN8f3Qk9VXndNRE
+         peXUW5uvzk0kYzAposv/XvG8ZxxE/yb9YM3WAtPqjUxxZ3MIjrjRyb492SRU1BAx93er
+         qheMOxNP56rHystA5ODewmqRkQbdh4wh07oQjly8LfXVR70rGqyab5aNstDBlbgDySDy
+         1toOosTOGVrhnqtxNLB8YmU7pNTQE9A2LZMpoZVQnIIEtJEw2UUyHgrSjhwJLXCjbkjp
+         6kFsScFmH+/PlqHl90wRvxHUwySdMa2bV+GRdpuCJg3pmqFj2d2zw8sfWzP2ys5ego8J
+         DlQg==
+X-Gm-Message-State: ABy/qLahewt0+TxpSU8YNm2gi49D4PKFuXQZjgqWi1dzkmrWUajCz9xz
+        6vMafipJi5J4UF1buKi6AFs=
+X-Google-Smtp-Source: APBJJlFpEl+vM9XDgNl/dpLBJ396A+R8QzUArp494bqCpK1pP158nbtxVO2/n3vPKQJ5i51aOEjbuA==
+X-Received: by 2002:a7b:c40d:0:b0:3fc:1a6:7764 with SMTP id k13-20020a7bc40d000000b003fc01a67764mr3431247wmi.16.1689327113340;
+        Fri, 14 Jul 2023 02:31:53 -0700 (PDT)
+Received: from localhost (fwdproxy-cln-001.fbsv.net. [2a03:2880:31ff:1::face:b00c])
+        by smtp.gmail.com with ESMTPSA id p26-20020a7bcc9a000000b003fbb5506e54sm985290wma.29.2023.07.14.02.31.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 02:31:51 -0700 (PDT)
+        Fri, 14 Jul 2023 02:31:52 -0700 (PDT)
 From:   Breno Leitao <leitao@debian.org>
 To:     alison.schofield@intel.com, vishal.l.verma@intel.com,
         ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com
 Cc:     linux-cxl@vger.kernel.org, dave.jiang@intel.com
-Subject: [PATCH v3 1/2] cxl/acpi: Fix UAF in the error path
-Date:   Fri, 14 Jul 2023 02:31:45 -0700
-Message-Id: <20230714093146.2253438-1-leitao@debian.org>
+Subject: [PATCH v3 2/2] cxl/acpi: Do not swallow errors
+Date:   Fri, 14 Jul 2023 02:31:46 -0700
+Message-Id: <20230714093146.2253438-2-leitao@debian.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230714093146.2253438-1-leitao@debian.org>
+References: <20230714093146.2253438-1-leitao@debian.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-KASAN and KFENCE detected an user-after-free in the CXL driver. This
-happens in the cxl_decoder_add() fail path. KASAN prints the following
-error:
+Driver initialization is returning success (return 0) even if the
+initialization (cxl_decoder_add() or acpi_table_parse_cedt()) failed,
+and the hardware was already released (put_device()).
 
-   BUG: KASAN: slab-use-after-free in cxl_parse_cfmws (drivers/cxl/acpi.c:299)
+Return the error instead of swallowing it.
 
-This is happening in cxl_parse_cfmws(), where put_device() is called,
-releasing cxld, which is accessed later.
+Fixes: f4ce1f766f1e ("cxl/acpi: Convert CFMWS parsing to ACPI sub-table helpers")
 
-Just use the local variables in the dev_err() instead of pointing to the
-released memory.
-
-Fixes: e50fe01e1f2a ("cxl/core: Drop ->platform_res attribute for root decoders")
 Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-v1 -> v2
- * Return the error (rc) instead of swalling it
-v2 -> v3
- * Split the change in two patches
- * Fix the reference instead of the order
-
  drivers/cxl/acpi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 658e6b84a769..642983da01cb 100644
+index 642983da01cb..815b43859c16 100644
 --- a/drivers/cxl/acpi.c
 +++ b/drivers/cxl/acpi.c
-@@ -297,7 +297,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 		rc = cxl_decoder_autoremove(dev, cxld);
+@@ -298,7 +298,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
  	if (rc) {
  		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
--			cxld->hpa_range.start, cxld->hpa_range.end);
-+			res->start, res->end);
- 		return 0;
+ 			res->start, res->end);
+-		return 0;
++		return rc;
  	}
  	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
+ 		dev_name(&cxld->dev),
 -- 
 2.34.1
 
