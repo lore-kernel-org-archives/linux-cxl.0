@@ -2,186 +2,190 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4257CEB64DC
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 03:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D204C001DE
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 08:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231292AbjGNDYb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 13 Jul 2023 23:24:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
+        id S235087AbjGNIgp (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Jul 2023 04:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234722AbjGNDY3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 13 Jul 2023 23:24:29 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D571FFC
-        for <linux-cxl@vger.kernel.org>; Thu, 13 Jul 2023 20:24:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689305068; x=1720841068;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lstUPfRoWI1oEN5Bl2t9SketFE9yXusTZpvP3sSwEL0=;
-  b=kKvKunaJV3QZ066L+xL5FKiaQW7E5Lwg1zCiCLRTKc8P4D+5hw8z+10T
-   sUqq7yb3BVuGXbEMHcK1CKB4dQiYRP8dbMe04VgftKH6NAL62RGlpGF7v
-   l6nQZu5JfR+B+NvlipywCTz75PEsyolO8YUbai46VDSQoJGzT2182jeSk
-   Ucy3Y6yJINSVVP0bGPxwlOB8UQ28bwlX28wYvh3CUanQcZ+G9kvr+js4v
-   cTvs9XBcErNgPWKg+RvalbQQUOXjo24UWZuA70NgyDN70l/YFk61XzDMo
-   1TdliuBqRDSb3gfR2RmU8j4K38RV8xKdspYUDv0oni1pVW1N7VEr6crqe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="429143386"
-X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="429143386"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 20:24:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10770"; a="722229537"
-X-IronPort-AV: E=Sophos;i="6.01,204,1684825200"; 
-   d="scan'208";a="722229537"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.98.14])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2023 20:24:28 -0700
-Date:   Thu, 13 Jul 2023 20:24:26 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     vishal.l.verma@intel.com, dan.j.williams@intel.com,
-        dave.jiang@intel.com, fan.ni@samsung.com, a.manzanares@samsung.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 2/2] cxl/memdev: Introduce sanitize-memdev functionality
-Message-ID: <ZLC/6mWTE+2WxcGd@aschofie-mobl2>
-References: <20230713195455.19769-1-dave@stgolabs.net>
- <20230713195455.19769-3-dave@stgolabs.net>
+        with ESMTP id S235377AbjGNIgj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 04:36:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60EF21FC4
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 01:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689323752;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fH2TVmHvkuGKbv2hcI4xKi7nRAASFrz5xNlTKuAGh58=;
+        b=SELPjBVbjQwxBrAHze8MiMgBNlSDroeeqI011MisB30qlD9YrS4NX6MTd3TBTt/XmcMN+Q
+        uU24xjQ5TS0mjhuO9lO9FgsUiifiGItTTW1K+fif7Abkun/PhYOhxg36HkjzTeX7m30EhG
+        iGvuaGJ8V9spmjiGDjTUGzWEDy4OPfY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-301-Ni8WOMGLMf6BxGJojRtj8Q-1; Fri, 14 Jul 2023 04:35:51 -0400
+X-MC-Unique: Ni8WOMGLMf6BxGJojRtj8Q-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3141c6f4173so999007f8f.1
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 01:35:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689323750; x=1691915750;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fH2TVmHvkuGKbv2hcI4xKi7nRAASFrz5xNlTKuAGh58=;
+        b=i6cZ9Mel1D8z9zb9ofNSmPMYqrMFZuRYAm3qpmRgLxkxc3wmooeQp35JbyRyd2KZnx
+         ZURwP24MmyIlulVadUihRV+Vt32gG929PK2drGHfz/bR2Hhxd1Kh4QSwgj5/p57R7KMn
+         pqUi/BiqxZU+Xo/ToDqsAxQFXj82VpBoVYSUi6z15JYBCFCplEkcoqJ/J8KXZXwfUjwk
+         6ozJsm7fdGvNl00WihaHjqKMh+3sNIHF5sJTeMlaTawDnQU49MUOZsDvfi5tYMAP5v+3
+         aBIxArOAHChD2SNNugEbb6qku9ezikd8bWECV2BNqTw6CFFPqm/WB+u7+xpP7mLW8AOH
+         oqlg==
+X-Gm-Message-State: ABy/qLbd3myjns2+ox6lUorDUDWuqsi4ud/KWk41B2Yds+ZNrF2uDfHw
+        7slC9Xxqeqc7pgkzaOCnlwM0+MMgBp9eQFe+9s41QrwVclLXndn+9hznNVLmxBIGeck/GVeLNrA
+        XK5HJPiwgGsvH8MAbO8BT
+X-Received: by 2002:a5d:4006:0:b0:314:21b4:8322 with SMTP id n6-20020a5d4006000000b0031421b48322mr3144965wrp.10.1689323750009;
+        Fri, 14 Jul 2023 01:35:50 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGnmP51HKlsUWs7J70Wsu4Nis9jH3dnqaKZpH2XGHxORN4tmFKjwWx8/wDgKSU/KYu85DXo5Q==
+X-Received: by 2002:a5d:4006:0:b0:314:21b4:8322 with SMTP id n6-20020a5d4006000000b0031421b48322mr3144944wrp.10.1689323749637;
+        Fri, 14 Jul 2023 01:35:49 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70a:4500:8a9e:a24a:133d:86bb? (p200300cbc70a45008a9ea24a133d86bb.dip0.t-ipconnect.de. [2003:cb:c70a:4500:8a9e:a24a:133d:86bb])
+        by smtp.gmail.com with ESMTPSA id l18-20020a5d6752000000b0031434cebcd8sm10132122wrw.33.2023.07.14.01.35.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Jul 2023 01:35:49 -0700 (PDT)
+Message-ID: <cfeecd92-3aa4-a07d-b71a-793531785692@redhat.com>
+Date:   Fri, 14 Jul 2023 10:35:47 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230713195455.19769-3-dave@stgolabs.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+To:     Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Dave Jiang <dave.jiang@intel.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20230613-vv-kmem_memmap-v1-0-f6de9c6af2c6@intel.com>
+ <29c9b998-f453-59f2-5084-9b4482b489cf@redhat.com>
+ <x49fs5r7hj1.fsf@segfault.boston.devel.redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH 0/3] mm: use memmap_on_memory semantics for dax/kmem
+In-Reply-To: <x49fs5r7hj1.fsf@segfault.boston.devel.redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 12:54:51PM -0700, Davidlohr Bueso wrote:
-> Add a new cxl_memdev_sanitize() to libcxl to support triggering memory
-> device sanitation, in either Sanitize and/or Secure Erase, per the
-> CXL 3.0 specs.
-
-Hi David,
-
-Seems like maybe the commit msg and log got outdated. You actually
-do the whole sh-bang here, not just an Introduction of the libcxl
-accessors.
-
-A few tidbits follow -
-
+On 13.07.23 21:12, Jeff Moyer wrote:
+> David Hildenbrand <david@redhat.com> writes:
 > 
-> This is analogous to 'ndctl sanitize-dimm'.
+>> On 16.06.23 00:00, Vishal Verma wrote:
+>>> The dax/kmem driver can potentially hot-add large amounts of memory
+>>> originating from CXL memory expanders, or NVDIMMs, or other 'device
+>>> memories'. There is a chance there isn't enough regular system memory
+>>> available to fit ythe memmap for this new memory. It's therefore
+>>> desirable, if all other conditions are met, for the kmem managed memory
+>>> to place its memmap on the newly added memory itself.
+>>>
+>>> Arrange for this by first allowing for a module parameter override for
+>>> the mhp_supports_memmap_on_memory() test using a flag, adjusting the
+>>> only other caller of this interface in dirvers/acpi/acpi_memoryhotplug.c,
+>>> exporting the symbol so it can be called by kmem.c, and finally changing
+>>> the kmem driver to add_memory() in chunks of memory_block_size_bytes().
+>>
+>> 1) Why is the override a requirement here? Just let the admin
+>> configure it then then add conditional support for kmem.
+>>
+>> 2) I recall that there are cases where we don't want the memmap to
+>> land on slow memory (which online_movable would achieve). Just imagine
+>> the slow PMEM case. So this might need another configuration knob on
+>> the kmem side.
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  Documentation/cxl/cxl-sanitize-memdev.txt | 68 +++++++++++++++++++++++
->  Documentation/cxl/cxl-wait-sanitize.txt   |  4 ++
->  Documentation/cxl/lib/libcxl.txt          |  1 +
->  Documentation/cxl/meson.build             |  1 +
->  cxl/builtin.h                             |  1 +
->  cxl/cxl.c                                 |  1 +
->  cxl/lib/libcxl.c                          | 16 ++++++
->  cxl/lib/libcxl.sym                        |  1 +
->  cxl/libcxl.h                              |  1 +
->  cxl/memdev.c                              | 47 ++++++++++++++++
->  10 files changed, 141 insertions(+)
->  create mode 100644 Documentation/cxl/cxl-sanitize-memdev.txt
-> 
-> diff --git a/Documentation/cxl/cxl-sanitize-memdev.txt b/Documentation/cxl/cxl-sanitize-memdev.txt
-> new file mode 100644
-> index 000000000000..25aa3f55b789
-> --- /dev/null
-> +++ b/Documentation/cxl/cxl-sanitize-memdev.txt
-> @@ -0,0 +1,68 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +cxl-sanitize-memdev(1)
-> +======================
-> +
-> +NAME
-> +----
-> +cxl-sanitize-memdev - Perform a cryptographic destruction or sanitization
-> +of the contents of the given memdevs.
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'cxl sanitize-memdev' <mem0> [<mem1>..<memN>] [<options>]
-> +
-> +DESCRIPTION
-> +-----------
-> +The 'sanitize-memdev' command performs two different methods of
-> +sanitization, per the CXL 3.0+ specification. It is required that
-> +the memdev be disabled before sanitizing, such that the device
-> +cannot be actively decoding any HPA ranges at the time. This
-> +permits avoiding explicit global CPU cache management, relying
-> +instead on the implict cache flushing when a region transitions
-> +between active to commited.
+>  From my memory, the case where you don't want the memmap to land on
+> *persistent memory* is when the device is small (such as NVDIMM-N), and
+> you want to reserve as much space as possible for the application data.
+> This has nothing to do with the speed of access.
 
-s/implict/implicit
-s/commited/committed
+Now that you mention it, I also do remember the origin of the altmap --
+to achieve exactly that: place the memmap on the device.
 
-snip
-> +--sanitize::
-> +	Sanitize the device to securely re-purpose or decommission it. This is
-> +	done by ensuring that all user data and meta data, whether it resides
+commit 4b94ffdc4163bae1ec73b6e977ffb7a7da3d06d3
+Author: Dan Williams <dan.j.williams@intel.com>
+Date:   Fri Jan 15 16:56:22 2016 -0800
 
-s/meta data/metadata or meta-data
+     x86, mm: introduce vmem_altmap to augment vmemmap_populate()
+     
+     In support of providing struct page for large persistent memory
+     capacities, use struct vmem_altmap to change the default policy for
+     allocating memory for the memmap array.  The default vmemmap_populate()
+     allocates page table storage area from the page allocator.  Given
+     persistent memory capacities relative to DRAM it may not be feasible to
+     store the memmap in 'System Memory'.  Instead vmem_altmap represents
+     pre-allocated "device pages" to satisfy vmemmap_alloc_block_buf()
+     requests.
 
-snip
->  
-> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> index 172dfb47a2dd..baf2a917ea6c 100644
-> --- a/cxl/lib/libcxl.c
-> +++ b/cxl/lib/libcxl.c
-> @@ -4046,6 +4046,22 @@ CXL_EXPORT int cxl_memdev_wait_sanitize(struct cxl_memdev *memdev)
->  	return rc;
->  }
->  
-> +int cxl_memdev_sanitize(struct cxl_memdev *memdev, const char *op)
-> +{
-> +	struct cxl_ctx *ctx = cxl_memdev_get_ctx(memdev);
-> +	char *path = memdev->dev_buf;
-> +	int len = memdev->buf_len;
-> +
-> +	if (snprintf(path, len,
-> +		     "%s/security/%s", memdev->dev_path, op) >= len) {
-> +		err(ctx, "%s: buffer too small!\n",
-> +		    cxl_memdev_get_devname(memdev));
-> +		return -ERANGE;
-> +	}
-> +
-> +	return sysfs_write_attr(ctx, path, "1");
-
-Write that attribute w new line "1\n"
+In PFN_MODE_PMEM (and only then), we use the altmap (don't see a way to
+configure it).
 
 
-> +}
-> +
-snip
+BUT that case is completely different from the "System RAM" mode. The memmap
+of an NVDIMM in pmem mode is barely used by core-mm (i.e., not the buddy).
 
-> +static int action_sanitize_memdev(struct cxl_memdev *memdev,
-> +				  struct action_context *actx)
-> +{
-> +	int rc = 0;
-> +
-> +	if (cxl_memdev_is_enabled(memdev))
-> +		return -EBUSY;
-> +
-> +	/* let Sanitize be the default */
-> +	if (!param.secure_erase && !param.sanitize)
-> +		param.sanitize = true;
-> +
-> +	if (param.secure_erase)
-> +		rc = cxl_memdev_sanitize(memdev, "erase");
-> +	if (param.sanitize)
-> +		rc = cxl_memdev_sanitize(memdev, "sanitize");
-> +	else
-> +		rc = -EINVAL;
+In comparison, if the buddy and everybody else works on the memmap in
+"System RAM", it's much more significant if that resides on slow memory.
 
-What's the deal w supporting secure erase with sanitize?
-Seems useless, but perhaps it's cheap.
 
-Alison
+Looking at
 
-> 
+commit 9b6e63cbf85b89b2dbffa4955dbf2df8250e5375
+Author: Michal Hocko <mhocko@suse.com>
+Date:   Tue Oct 3 16:16:19 2017 -0700
+
+     mm, page_alloc: add scheduling point to memmap_init_zone
+     
+     memmap_init_zone gets a pfn range to initialize and it can be really
+     large resulting in a soft lockup on non-preemptible kernels
+     
+       NMI watchdog: BUG: soft lockup - CPU#31 stuck for 23s! [kworker/u642:5:1720]
+       [...]
+       task: ffff88ecd7e902c0 ti: ffff88eca4e50000 task.ti: ffff88eca4e50000
+       RIP: move_pfn_range_to_zone+0x185/0x1d0
+       [...]
+       Call Trace:
+         devm_memremap_pages+0x2c7/0x430
+         pmem_attach_disk+0x2fd/0x3f0 [nd_pmem]
+         nvdimm_bus_probe+0x64/0x110 [libnvdimm]
+
+
+It's hard to tell if that was only required due to the memmap for these devices
+being that large, or also partially because the access to the memmap is slower
+that it makes a real difference.
+
+
+I recall that we're also often using ZONE_MOVABLE on such slow memory
+to not end up placing other kernel data structures on there: especially,
+user space page tables as I've been told.
+
+
+@Dan, any insight on the performance aspects when placing the memmap on
+(slow) memory and having that memory be consumed by the buddy where we frequently
+operate on the memmap?
+
+-- 
+Cheers,
+
+David / dhildenb
+
