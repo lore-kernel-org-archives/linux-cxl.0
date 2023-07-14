@@ -2,168 +2,329 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B78BEB64DC
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 16:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21EC9C00528
+	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 17:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235405AbjGNQab (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Jul 2023 12:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
+        id S236537AbjGNRyT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Jul 2023 13:54:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233758AbjGNQaa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 12:30:30 -0400
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99F42723
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 09:30:29 -0700 (PDT)
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ECFMwA006926;
-        Fri, 14 Jul 2023 09:30:15 -0700
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2043.outbound.protection.outlook.com [104.47.51.43])
-        by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3rtptxb570-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jul 2023 09:30:15 -0700
+        with ESMTP id S236736AbjGNRx4 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 13:53:56 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2062a.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BAF421E;
+        Fri, 14 Jul 2023 10:53:27 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DWTgcXNQQWwug0kYhy34dd2M8ic2j9zYE7ueTSWIzhbjZDEeQM9Du0GVIOdNoUd2fTfs1Z0FS7tP+tyUFkYKysxnOJogCjdsW/rQpAsFqvGyDspfZW82i+87TyWOJ2uXJEc6rP6aD4QqdQWmcraN1u425DuaXGUQ2h345QIE1/qsnC1c7CNclNX8XLJf8upS3e6X1eusp/OZ3vfYmaVHXm9c+RbDd4LdkuVEBxkFUIanqmofk6Hz8Pr1ZrQQbP83teyLInEGw7FCKgNpoR3y/vHhxMtgIo18LgrkCienrNdjQDw+AY9uYNxov740tJKgqXFIw6qXnGvtSsuXN7bpXQ==
+ b=ZhG3Z16MXuGIeskMqNdndPb/t1PG3MahEfl5ZcR/CnDRZsdrIaDes7/OiAobEp/+y5VK/bV1KSuUdkQwt8BoLnOZQK0PzTSJwE2MmzSJKUiBmj5Am6i6FfbqzaSHKKnG6BOdZRMsWsvYXDgQOPnclfSGW954Ya6Wz338YgyKkJWkoOss5qhFdTEu/SqFwR+MmMzkB7ajLffcKrp9NyxLZA/vuHiE/VKrVXf272FwljUsajpSjfu6pfe7wKlcl8m26SJvV21zya6FCrArEQYCyOjanvh7UDy4ucSckNf9ytBjpAwXupuRNshd4f3IQUj5SNw5BaV/feuqBQ2mMyvxTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wPwIhupVYyGFTWSwqoGzLgp4lSWxZanFYoK/0uLEOqE=;
- b=AviKUu8l4U3fKMYHKDEVLi07Gcat2tbNNsS1ZhZYmZJRc8MmT2QhLWPgDNqBqUIvC3HVzbrhp/42SuU6dgwMpu9FJ0umd8Xu7qnofghJpCYl5aciiX67pgY3NTsAyFArcYhs4gsZqCGxKj4vQFQIwISvbV0kQ+DKIAPCDPJT/s3QqVnPM3ZEt+jw29w3mMI5uVaNPKmE422n6NlbM2/VQlFbe3eNOcs5YD7ojaZS/FE3RHGxHx4CWZ7CRnQ+uHbRaHpWIahMBrGr5H5kZrJ+Mvn/NvPWF2myAMpNLP3wIvz8QfmXban0kjfKWkgBCVzFYbkYgt8Tjw72zdFxt8XPWA==
+ bh=mlq/gzREhu7/IHJs+9DXnSJ3x5cVyk8Lp7NuN3zHoKg=;
+ b=ZFOHLoM0qAliJrFCKQZYeBVWyymNVe8/aEa5p/PqEpR9u4ZHG0Pe4ukGQTPPY4CSiRlSHP6RRld1HrpIIA/LzQtYdkYPiIAPNBvjmi2pbz/lS563atT6aWI9VJKK0bIVf+IYATF1Uq16+7MxIb/CUSomRmOGIFPtsxsUqB5dbqwBKokn/bVl0Z6PQMhRLQFxWtucIrWIf73INxYfgY1nLGvvT47HgbY2OpncLzSb7hCVoTHdcnyh5N+/3RSHr2eJVczEa2lk6KlHkl5MaKksZgcg7kcJtfXxqN58rqIsUmB6QcFAPPJMvPxbZ5Nk1zXPx7FgsmNLKV1MsZFAMSb87A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wPwIhupVYyGFTWSwqoGzLgp4lSWxZanFYoK/0uLEOqE=;
- b=G8lfdkudsn8iWzNJ59dwZdWUJ32WU7JM+5x0Azk4L4VNPq13KDJQz8bjuvuZD+Gge9DNwMnnSCk3EdpnUiNXEuM13qC8uRS9ASO4uGtN6ui+WiPgKrJf7T5fncDICoYTh5lha3kzG2ND/3lZ8pEeYBwKI2+xDDop1ultDrcUSeo=
-Received: from DM6PR18MB2844.namprd18.prod.outlook.com (2603:10b6:5:16f::29)
- by DM6PR18MB3588.namprd18.prod.outlook.com (2603:10b6:5:2a6::13) with
+ bh=mlq/gzREhu7/IHJs+9DXnSJ3x5cVyk8Lp7NuN3zHoKg=;
+ b=fstRtje+WFrt3Oxq9aUIaTWs+1wN5avk30Woxhj9NgBig5JBqtBcNO0G7tJYoGYQ0+qBfx8sW0LjrQ8rZqfCyOTQMDJPZohccqSZL7HHPQwBOGSGYMNOYWXXwckoXN0saAUrFvX+nP4C7nDWZGc9TJ8DfTuX8uN+Q6R8ycEGyAw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
+ by SJ0PR12MB7457.namprd12.prod.outlook.com (2603:10b6:a03:48d::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.28; Fri, 14 Jul
- 2023 16:30:13 +0000
-Received: from DM6PR18MB2844.namprd18.prod.outlook.com
- ([fe80::2062:be85:326:f267]) by DM6PR18MB2844.namprd18.prod.outlook.com
- ([fe80::2062:be85:326:f267%4]) with mapi id 15.20.6588.027; Fri, 14 Jul 2023
- 16:30:13 +0000
-From:   Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [EXT] Re: Region ID in Initiate Dynamic Capacity Release
-Thread-Topic: [EXT] Re: Region ID in Initiate Dynamic Capacity Release
-Thread-Index: AQHZtdNYoBbsqj5G/UeS++gHMfD/fa+5I2YAgABQYgM=
-Date:   Fri, 14 Jul 2023 16:30:13 +0000
-Message-ID: <DM6PR18MB2844ED1B34E4E54C3D00EAFCAF34A@DM6PR18MB2844.namprd18.prod.outlook.com>
-References: <DM6PR18MB28445F66E323501519D4861BAF37A@DM6PR18MB2844.namprd18.prod.outlook.com>
- <20230714123710.00004140@Huawei.com>
-In-Reply-To: <20230714123710.00004140@Huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR18MB2844:EE_|DM6PR18MB3588:EE_
-x-ms-office365-filtering-correlation-id: 05296006-7a14-4cc1-7599-08db84879958
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iFMS5H4YBFYV/2mXqnkz0Vj2/joaHbi2UrLC6Jq5sUc3ZdFhJtZqUEcHaD/j6/ksuZrnMybHFofW64icBcCjQXi4VRoqDlMzf6SDMbKTLzrxMMnCuyyBMGwmSonr08uthEIBekp/UH46Fbp910/CCYvwUjT3miDxHFOaAqG+Cgl8F6vXq83Vb8y1qNup0lCVszqAnlYc2/9TRB76DdaOXKD4WjOMkmDWONTA4AYwicrfLxYa9+dPlYcM8SqlDaO6qsMMic4emCPQYNsbKQFL9wREzYrx3DJArXkcdkwqsJKFR+zz95lQdJeJwJsuvhGGCTxY4szYhhbY/tA0GKGZHZujWPuIHA/WdyQN+5SpjxTXVpM7Zqvgq4kVM6WmJT3KMNXhrRTnki4ulaiP3FAZR0zjpsHl4sdY3DBi0gLBUuCGt3U8RyYMW9FOKjC4I9V9LN5rZKb0TEtxZvUDA/ARNymJKUj1DFWkPqBpvfHO0SJpYsVM9wbX8wGAVmzxVLVYlu4zkFDcK7rhAXsBsgbiqRr+sJUyBNh+gExMEKRM3PzyKKgk9WlS8CJ3ORLglxTamsqFeD298wvG4c/uTfZ/g3atJHtZG6RSLesND++A3oKR2WKiOAH+RtYIfxZ3OGHM
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB2844.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(451199021)(55016003)(41300700001)(33656002)(38100700002)(8936002)(8676002)(52536014)(71200400001)(5660300002)(478600001)(9686003)(7696005)(4326008)(316002)(6916009)(122000001)(91956017)(66556008)(66476007)(66446008)(64756008)(66946007)(76116006)(86362001)(2906002)(83380400001)(53546011)(6506007)(186003)(26005)(38070700005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?3hcAslQFw//ohPLEjv0Qg4cO0f+7l3WRfPQJkHLbOAkMLNMo/2f58RWxRP?=
- =?iso-8859-1?Q?3N/2E0pldwVFc8igDM8WGWeopqW+HAtwBNyf1CmN4SBZfbVeJT3AM4CEuM?=
- =?iso-8859-1?Q?lYCJyI/ABlYuUCM7UR6msTZR01tNozgzxe8tshQ3NrE4APQWi7MolFnd5u?=
- =?iso-8859-1?Q?Al8jWhgj5nt8yVQcRpxZdsrU5WFwoNUkfj8V1G1PyOrOTm3Qdr0TScotr7?=
- =?iso-8859-1?Q?9jhZ6lPlwSGb2aIRZBwkV33k7IbRUj/6ok27RGng5YZ0OnbhtnuZS0Ssxa?=
- =?iso-8859-1?Q?T+bnO4Y7MfHvobCJbSdwfpIMVGV3CMs39mDhaaSnYDjSWtV96twBsS1BjZ?=
- =?iso-8859-1?Q?g09HrFadTuH7oAPOk4xUX1O9wknqxlVHiN4wqsJvH13keFWF4QH+bn6gRR?=
- =?iso-8859-1?Q?cl2ZnfqrOe7cbaKpI5o38X/vqbvCPxC+1SIiFWTDmssJw3c37o/qt9rAZe?=
- =?iso-8859-1?Q?vsuLlMSyK5CKS8206o4G0zvSeYBczr1QlDFDCtw+MEGlj3ZY5yquukWA1k?=
- =?iso-8859-1?Q?mjJWjfjWMjAXH47n1ZIGmqiXWQhtopimPql/6o9jlPSSC71QonVx8dIdl9?=
- =?iso-8859-1?Q?3Uk3Sbtgl+wWlMtvNqIfv9i4dyfFSNbNsmyx9XXsB7WsOUEiPv1DjnNL2d?=
- =?iso-8859-1?Q?nTEPbTu9asiIMmfLQuwf1sTy4fA4UA1KApxuhetXrMa35XlDSuRHLyeGBd?=
- =?iso-8859-1?Q?WNYh96auRaLiOBhhoX+QHF507iXo1qFoH2zc7dWBMpKOYOFSA/QZFXhsRj?=
- =?iso-8859-1?Q?XsWtxQ3ZkXj++93h+lxnZilHd/5AQBmWvZ6nal1jLeUIeGIsLNI/Owxu3+?=
- =?iso-8859-1?Q?8Mezfn4N+UehDg+wayKcpit2j+iqEtilNp0ylXzU1x2WW0NV+xDywx2vlm?=
- =?iso-8859-1?Q?/0XvW1FDlV8ABZxRmxmxIRymfLLD9RO0+L/V27m35h7AEU9duZop/Nndan?=
- =?iso-8859-1?Q?/Y72Aff8aDeDJSpStAgPPi1qXrtFuzYCjzZtI8h5VmjiGn9R2yrO0Jhi2D?=
- =?iso-8859-1?Q?aFe8SDw4jjGHxHJQQXfqjh8A1xd7zGzHfDRsulTu7ksoiOLue4wmGmJoxZ?=
- =?iso-8859-1?Q?CXfwywHZM18ZZDmlIWFqJZzN2VN4ZRVa79lse1Cp5zafVRevTz+qu4XsVu?=
- =?iso-8859-1?Q?hhz+AL1bHCPEcppc4Ba9DoFN82/N61qqr1f44RG0j5BsfN5ZQ9Gjy6QhPN?=
- =?iso-8859-1?Q?E8gjywSIcnSHN3K34KxNXj4PuDH43/hH/XIUedMq/Sk1UbGdZfS56MHmzu?=
- =?iso-8859-1?Q?7o+BtPrrOtpf5GTgw2MnNscf9eJwwRfBbZxkdj3MIAetoLxDfVUwn4j6Qj?=
- =?iso-8859-1?Q?PR6jkCLz7GotIH4qSl1PEGgSFJEb1W7SXPiq4mrGS9q/piWGmuWxiBGWMh?=
- =?iso-8859-1?Q?WQczVCrto8Spr6KLO0UiJJpThU0902c+bGSABHk7S4BNtOdbCK4B6qUAA0?=
- =?iso-8859-1?Q?Zvry8eKRORTbQtl2ei6dV9F3zTnRKER5CIGF0qP9hEj8tXgbwlEIlt41Kx?=
- =?iso-8859-1?Q?uWtHCvgWsdOU3mwA5aAM1Soe7L7bqUeFpVWA9VBhLWNvpnP0vZj++kb7sO?=
- =?iso-8859-1?Q?UCjZdX4+TONKdM835h3YaD3w6PIBu83iVIXpkvQc2tYc5kJBZHkMZFUi8M?=
- =?iso-8859-1?Q?8qwkOhhOT0thUHXiUc8Lf49O0/2Hn5R1Yq?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.27; Fri, 14 Jul
+ 2023 17:46:32 +0000
+Received: from DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::99e6:13cd:ab83:9a2e]) by DM6PR12MB3657.namprd12.prod.outlook.com
+ ([fe80::99e6:13cd:ab83:9a2e%5]) with mapi id 15.20.6588.027; Fri, 14 Jul 2023
+ 17:46:32 +0000
+Date:   Fri, 14 Jul 2023 19:46:00 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
+        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [PATCH v8 03/14] cxl/hdm: Use stored Component Register mappings
+ to map HDM decoder capability
+Message-ID: <ZLGJ2Nm1OD/HoqZ6@rric.localdomain>
+References: <20230630231635.3132638-1-terry.bowman@amd.com>
+ <20230630231635.3132638-4-terry.bowman@amd.com>
+ <64a36a4a39351_8e178294c5@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64a36a4a39351_8e178294c5@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: FR2P281CA0118.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9d::10) To DM6PR12MB3657.namprd12.prod.outlook.com
+ (2603:10b6:5:149::18)
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|SJ0PR12MB7457:EE_
+X-MS-Office365-Filtering-Correlation-Id: f5b1111d-dd48-48e7-48f0-08db84924265
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: w132C15X0V1C++8KMWA9Wa8NsXXVqywq9MksUT9Ad6/yhqpHs4QjJ8vR0hTZxyK0tH9u6WvD+0YymYkNhGV0wv19eaAr1HFX+LsNOopflVcLXoEZrA4EMVrCoZGZ+LjyCB/OdSpocbEm52vZkupprTd7pwPqDJWMGqaG9L8jgpUKjUQOuDFBoqP4+I2iz0p1L/SfCNYL5eq3VeHzdCht/NMhNWnyUvcR7SR3surz/l+mCxOXk5zCng6vrOO2MkkmAo+EEPrKFveX88r9MWQPpUVKJzAG5b0nALMZYnFErkATRrqhIrxntPbXLRK3pSyY1N0uaSyaDS5va51VbKkSJK8SIpQkL8pXmFavCcOGlYm8kPOJKWu6JVsyyU0nQ2xtP5MmAOO7bH+oeCOrqXOyXIr1Mny0lXJ1u4jwgodfCwCOYyilHEaUerewXEd2mXDe+n/MEIPldhJPlm9LKQceuWAjoD7PNUBToB7BHCNuZhXPWr0lqbOl3YdFvUV7wSMod6pVD9UxqUEhehJvqI1TyT0BB+NZhvEmL5ieGBIJIEV81h1Zp5RiBBUK3mC0Fxa1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(451199021)(5660300002)(38100700002)(7416002)(41300700001)(8936002)(8676002)(316002)(2906002)(6512007)(6506007)(9686003)(26005)(53546011)(6486002)(6666004)(478600001)(83380400001)(186003)(4326008)(66476007)(66556008)(6916009)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7Dsq0POgb6vJnR5+h7jbfIAox1JM8Ds1XFsi0dOocuhm+0ri525Lqtw3WLN/?=
+ =?us-ascii?Q?U64xdJCWWsGXKLZLlI3YNKPGFBBAVuQ8fTaetzleIoHaRs/mRs0vdv34V0jf?=
+ =?us-ascii?Q?sCpMbb1i0H6wRDTRiaEDtBJTbnTzrFmPGdObVAGnto8VamlDi4fDkrHJaFk4?=
+ =?us-ascii?Q?BKloVrwBKioMm5zRwF+27V5X+cXB6g/H6/3cv9p2SF8xtE7aifUPwFmawo2T?=
+ =?us-ascii?Q?8A3ZZLoBpxfmx3Xjbe7iCpo/f35KAZKOQ+HTmrn/26Fg3277bn4sf71aI8OS?=
+ =?us-ascii?Q?B88LYglse1lQlOIhnhNqYlPADIWF+PajWw/JvqesKAcuW+4DVImtwdNcsxCT?=
+ =?us-ascii?Q?M+ymLOQ5rFGFaFRpq0dNKtIoiJINAxbEJ/rbabwtiZ+k1xrPGRSKL7e//ZTm?=
+ =?us-ascii?Q?XqgsZ3Ewx/fccOlxw/uE3h0qeyIBO2ikyzbxoLJMjNvCZJGNwbAxKChfLx7U?=
+ =?us-ascii?Q?20x6HNN805KWmeqar8hEdGC/xTql15Ds0QlBr2PCNdIE/gALaM6JWcncyRfq?=
+ =?us-ascii?Q?ufb4GzCLCH/CaipYVaYzNwAs2NajlOBHgwey9JYdG/0HmoI0OcJR3jzP+IwE?=
+ =?us-ascii?Q?j/JJ3IDqnnxsC6nfTB61PER532TnCXWzGfsWH5C6VFtwguzCy3UsqHCZsbHj?=
+ =?us-ascii?Q?UOiDHWY1cX5iDA7aMhv/pZHho5v0PBR+R7AOzQrPWbaAgRwQDKVbkCUChk8w?=
+ =?us-ascii?Q?CdYsEqNBJq1p0+JP8ZQb1w/NxMxUMVxI1Y7AnOGl+E+X6igj1YhqO0iYfVjv?=
+ =?us-ascii?Q?fvkWoR3rdtY1Wz9+KpC0OxqycRL3Xv7lwJVvjWS47FQdgeXEvN6BiR9wddNs?=
+ =?us-ascii?Q?F4grMP1qKoF8SpE6wyoHjgRIv8/yDfaQQvrxVDVnN3AH3en6M7nqTRC1I3vo?=
+ =?us-ascii?Q?sIvFFwJ3Xnfb4F7gdDLFV4c1VNw3Wzg0cr7RzrPI2I7OPrcEaHrxIX0L7NVS?=
+ =?us-ascii?Q?QB7yUA7KmLillRtR7K4pnURFi7z4NcYBwZSq4HPYVI7mkczg7yQZuTe9Ysee?=
+ =?us-ascii?Q?NbeYjZJN2FujFDIrygjMYPkmO3U4g2aMvzlOBup73UqZxcZPC2NLZjqBjAEF?=
+ =?us-ascii?Q?PZKbF1JJFswaewzyoaxhnxGzi5phU1CZiXdtfJ0k1RmR4SVlQXhkbL1/+Nrc?=
+ =?us-ascii?Q?xy7h2P3E+06/n5vucrHjUZUAhH2yh4LBTWJQq9iFj2CJBalS3SLMJnu6lztm?=
+ =?us-ascii?Q?mv44E8JW1Kv6iaI/7jyEFC+Te/vdyPjGxKzMft5ar7qaJCIuVwDfN5ezTBRp?=
+ =?us-ascii?Q?whRfDwuZpMQoLjacrmoEikHisekOBRA6d+Elkl3VYzfAmv4O47srKkaTjRZX?=
+ =?us-ascii?Q?oOdR2wQbQt+mseFAXoWQaATyFGKMEru15bzz3CzG0JDQOvBfLU8G4QJH1yCk?=
+ =?us-ascii?Q?KYtcwn+hCeS8X6/PdilqSrsI3ER3X/RfqM2mTfizwbICEI2n+yHMB2aFFBDa?=
+ =?us-ascii?Q?bju3vMpPA2cHqlLpmxR2gqiE0Fu4mkB6kj6ZpB55GQn1EaMnJ1ATPzz5hVUT?=
+ =?us-ascii?Q?x0s0tkpUqKGHL+jDN1JBiB7DjAnaS3NMLhpZSV32l5be/mh0PPgW6sgPWRLo?=
+ =?us-ascii?Q?bRhS4hz9gGm0qqYw1BhlD1m2RXVJxewT0yrST5OU?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5b1111d-dd48-48e7-48f0-08db84924265
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR18MB2844.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05296006-7a14-4cc1-7599-08db84879958
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2023 16:30:13.1080
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2023 17:46:32.1211
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5p9mT0lYJWM/+mxXHs7EnOA+Ob14M9dhOEuGwa/lZ4liUc/NWXud/wSgVVJ+1XOGFu5MmeWz038bUL+Ox5aaXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB3588
-X-Proofpoint-GUID: 8G7fMG_EgtsWJ-nLDqMx3jMKhNubRGV5
-X-Proofpoint-ORIG-GUID: 8G7fMG_EgtsWJ-nLDqMx3jMKhNubRGV5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-14_08,2023-07-13_01,2023-05-22_02
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JFgSE5KHajx+RolQEdXpIzp/I9gg71zbY0k4baYBTEDaAGJsudyE9yYTajAVVCb7ho3YXEmnhubprvFXI0Z0zA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7457
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-=0A=
-=0A=
-=0A=
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>=0A=
-Sent: Friday, July 14, 2023 4:37 AM=0A=
-To: Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>=0A=
-Cc: linux-cxl@vger.kernel.org <linux-cxl@vger.kernel.org>=0A=
-Subject: [EXT] Re: Region ID in Initiate Dynamic Capacity Release =0A=
-=A0=0A=
-External Email=0A=
-=0A=
-----------------------------------------------------------------------=0A=
-On Thu, 13 Jul 2023 21:54:47 +0000=0A=
-Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com> wrote:=0A=
-=0A=
-> Hello All,=0A=
-> =A0 =A0In "Initiate Dynamic Capacity Add Request", LD-ID and region-id to=
- which capacity is added are specified. However, in case of "Initiate Dynam=
-ic Capacity Release", no region-id is specified in the request payload. How=
-ever, specification says that f "Initiate Dynamic Capacity Release" command=
- fails with "Invalid Input" if invalid region-id is specified. Is this an e=
-rrata ? This is true in both CXL3.0 and CXL3.1 (draft).=0A=
-=0A=
-Hi Shesha=0A=
-=0A=
-Please do not discuss consortium draft documents on public lists.=A0 Here w=
-e can=0A=
-only talk about those that are published.=0A=
-=0A=
-SS: Sure, what I have mentioned above is true for CXL 3.0. =0A=
-=0A=
-Also, these questions are probably better addressed within the CXL consorti=
-um (SSWG) anyway.=0A=
-=0A=
-SS: Okay, I will try finding out how to contact them. If you know please le=
-t me know how to approach the consortium. That would help.=0A=
-=0A=
-Jonathan=0A=
-=0A=
-> =0A=
-> Secondly, can we add capacities to 'a' LD from multiple regions, meaning,=
- can "Initiate Dynamic Capacity Add Request", be executed twice on the same=
- LD, with different region-ids in the two calls.=0A=
-> =0A=
-> Thanks,=0A=
-> Shesha.=
+Dan,
+
+On 03.07.23 17:39:38, Dan Williams wrote:
+> Terry Bowman wrote:
+> > From: Robert Richter <rrichter@amd.com>
+> > 
+> > Now, that the Component Register mappings are stored, use them to
+> > enable and map the HDM decoder capabilities. The Component Registers
+> > do not need to be probed again for this, remove probing code.
+> > 
+> > The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
+> > Endpoint's component register mappings are located in the cxlds and
+> > else in the port's structure. Provide a helper function
+> > cxl_port_get_comp_map() to locate the mappings depending on the
+> > component's type.
+> 
+> This causes a regression that cxl_test tripped over. It's likely
+> something you could reproduce without cxl_test just be reloading the
+> cxl_port driver. Root cause below, but here is what I see on a test run:
+> 
+> # meson test -C build --suite cxl
+> ninja: no work to do.
+> ninja: Entering directory `/root/git/ndctl/build'
+> [113/113] Linking target ndctl/ndctl
+> 1/6 ndctl:cxl / cxl-topology.sh             OK              12.78s
+> 2/6 ndctl:cxl / cxl-region-sysfs.sh         OK               7.72s
+> 3/6 ndctl:cxl / cxl-labels.sh               FAIL             1.53s   (exit status 129 or signal 1 SIGHUP)
+> >>> LD_LIBRARY_PATH=/root/git/ndctl/build/cxl/lib:/root/git/ndctl/build/ndctl/lib:/root/git/ndctl/build/daxctl/lib NDCTL=/root/git/ndctl/build/ndctl/ndctl DAXCTL=/root/git/ndctl/build/daxctl/daxctl MALLOC_PERTURB_=67 TEST_PATH=/root/git/ndctl/build/test DATA_PATH=/root/git/ndctl/test /bin/bash /root/git/ndctl/test/cxl-labels.sh
+
+I have tried various combinations of revisions and setups (patch #3,
+#5 and #14, ndctl:pending/v77, cxl_test only with both, "ACPI0017" and
+cxl_pci_probe() disabled), but could not reproduce this. Tests always
+pass for me:
+
+[51/51] Linking target ndctl/ndctl
+1/6 ndctl:cxl / cxl-topology.sh             OK              18.59s
+2/6 ndctl:cxl / cxl-region-sysfs.sh         OK              12.26s
+3/6 ndctl:cxl / cxl-labels.sh               OK              28.25s
+4/6 ndctl:cxl / cxl-create-region.sh        OK              19.56s
+5/6 ndctl:cxl / cxl-xor-region.sh           OK              10.57s
+6/6 ndctl:cxl / cxl-security.sh             OK               9.77s
+
+Ok:                 6
+Expected Fail:      0
+Fail:               0
+Unexpected Pass:    0
+Skipped:            0
+Timeout:            0
+
+Full log written to /root/ndctl/build/meson-logs/testlog.txt
+
+
+
+> 
+> 4/6 ndctl:cxl / cxl-create-region.sh        OK              17.05s
+> 5/6 ndctl:cxl / cxl-xor-region.sh           OK               5.18s
+> 6/6 ndctl:cxl / cxl-security.sh             OK               4.68s
+> 
+> Ok:                 5   
+> Expected Fail:      0   
+> Fail:               1   
+> Unexpected Pass:    0   
+> Skipped:            0   
+> Timeout:            0   
+> 
+> Full log written to /root/git/ndctl/build/meson-logs/testlog.txt
+> 
+> It's not that cxl-labels.sh causes the error, it is loading and
+> unloading the port driver trips over the problem below:
+> 
+> > 
+> > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > ---
+> >  drivers/cxl/core/hdm.c | 64 +++++++++++++++++++++++-------------------
+> >  1 file changed, 35 insertions(+), 29 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 4449b34a80cc..b0f59e63e0d2 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -81,26 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+> >  		cxlhdm->interleave_mask |= GENMASK(14, 12);
+> >  }
+> >  
+> > -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+> > -				struct cxl_component_regs *regs)
+> > -{
+> > -	struct cxl_register_map map = {
+> > -		.dev = &port->dev,
+> > -		.resource = port->component_reg_phys,
+> > -		.base = crb,
+> > -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
+> > -	};
+> > -
+> > -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
+> > -	if (!map.component_map.hdm_decoder.valid) {
+> > -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
+> > -		/* unique error code to indicate no HDM decoder capability */
+> > -		return -ENODEV;
+> > -	}
+> > -
+> > -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
+> > -}
+> > -
+> >  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> >  {
+> >  	struct cxl_hdm *cxlhdm;
+> > @@ -145,6 +125,22 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> >  	return true;
+> >  }
+> >  
+> > +static struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
+> > +{
+> > +	/*
+> > +	 * HDM capability applies to Endpoints, USPs and VH Host
+> > +	 * Bridges. The Endpoint's component register mappings are
+> > +	 * located in the cxlds.
+> > +	 */
+> > +	if (is_cxl_endpoint(port)) {
+> > +		struct cxl_memdev *memdev = to_cxl_memdev(port->uport_dev);
+> > +
+> > +		return &memdev->cxlds->comp_map;
+> 
+> ...but why? The issue here is that the @dev argument in that map is the
+> memdev parent PCI device. However, in this context the @dev for devm
+> operations wants to be &port->dev.
+
+The cxl_pci driver stores the comp_map of the endpoint in the cxlds
+structure, struct cxl_port is not yet available at this point. See
+patch #2 of this series ("cxl/pci: Store the endpoint's Component
+Register mappings in struct cxl_dev_state").
+
+> 
+> > +	}
+> > +
+> > +	return &port->comp_map;
+> 
+> ...so this is fine, and folding in the following resolves the test
+> failure.
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index b0f59e63e0d2..6f111f487795 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -125,22 +125,6 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+>         return true;
+>  }
+>  
+> -static struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
+> -{
+> -       /*
+> -        * HDM capability applies to Endpoints, USPs and VH Host
+> -        * Bridges. The Endpoint's component register mappings are
+> -        * located in the cxlds.
+> -        */
+> -       if (is_cxl_endpoint(port)) {
+> -               struct cxl_memdev *memdev = to_cxl_memdev(port->uport_dev);
+> -
+> -               return &memdev->cxlds->comp_map;
+> -       }
+> -
+> -       return &port->comp_map;
+> -}
+> -
+>  /**
+>   * devm_cxl_setup_hdm - map HDM decoder component registers
+>   * @port: cxl_port to map
+> @@ -160,8 +144,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+>         cxlhdm->port = port;
+>         dev_set_drvdata(dev, cxlhdm);
+>  
+> -       comp_map = cxl_port_get_comp_map(port);
+> -
+> +       comp_map = &port->comp_map;
+
+Can you check if the following works instead, I think the
+pre-initialization is missing in cxl_mock_mem_probe() for
+cxl_test:
+
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index d6d067fbee97..4c4e33de4d74 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1333,6 +1333,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+ 	mutex_init(&mds->mbox_mutex);
+ 	mutex_init(&mds->event.log_lock);
+ 	mds->cxlds.dev = dev;
++	mds->cxlds.comp_map.dev = dev;
++	mds->cxlds.comp_map.resource = CXL_RESOURCE_NONE;
+ 	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+ 
+ 	return mds;
+-- 
+2.30.2
+
+The cxl_pci driver always has something valid or fails otherwise.
+
+If that works the change should be merged into patch #2.
+
+Thanks,
+
+-Robert
+
+
+>         if (comp_map->resource == CXL_RESOURCE_NONE) {
+>                 if (info && info->mem_enabled) {
+>                         cxlhdm->decoder_count = info->ranges;
+> 
+> 
+> Am I missing why the cxlds->comp_map needs to be reused?
+> 
+> Note that I am out and may not be able to respond further until next
+> week.
