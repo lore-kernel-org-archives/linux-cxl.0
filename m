@@ -2,191 +2,252 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB74EB64DC
-	for <linux-cxl@archiver.kernel.org>; Fri, 14 Jul 2023 22:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFE6C001B0
+	for <linux-cxl@archiver.kernel.org>; Sat, 15 Jul 2023 02:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbjGNWde (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 14 Jul 2023 18:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33162 "EHLO
+        id S229958AbjGOCDD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 14 Jul 2023 22:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjGNWdc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 18:33:32 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55572D73
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 15:33:31 -0700 (PDT)
+        with ESMTP id S229965AbjGOCDC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 14 Jul 2023 22:03:02 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1B41BEB
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Jul 2023 19:02:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689374011; x=1720910011;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=89rUYhwjrhjtryflX/eX73aWN4AsXJLEQzpWG5Ukd6U=;
-  b=Z9Rk893t4ZsWc3P558mxkOxFQaXP+UOwhOX4ro9rexvDDUMEXjeRUPWF
-   0qec46dN87RrUsQZvgQFP9J8xVC9T5xFYyKYQhi/syCxdfm26SRQhxJfi
-   JDdOHhkN4XzIhrZgNmrt5immDFA3kn3K+gW9RzF2fSTJlhXN+54wl8aUz
-   lAlxglYau8xRllcgCw0djuoeITR1b6PJHZVl0ftfnoxsk80tpZheNf2V/
-   RY8aMjlQtg97epuRqi3aM1xDj0T/47hlbc8YhcAAd5bXZwzcAZlg65kQg
-   xn1wavHnpdmgSLTfZCxh5+6MIrq7XNn+KAHDXSoundlzNviKwK2fw+BeA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="368236109"
-X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
-   d="scan'208";a="368236109"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 15:33:30 -0700
+  t=1689386571; x=1720922571;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=87NLTqJhwjITkyX61/dEteUq9vdfCzTqw9XvpTVICp4=;
+  b=MIx7v+jKYFR8/Z3vPZD7pI1DMGxdkXbbn/qc9+8F303dO2pY6yRBqhj/
+   cXqSK7ddAtiS+smRwnk25Uz+0E+zMPEjmu9dsxl8QvhpvTgoZwNnVrFVZ
+   9y1SjXOT6N5kqvsUP62um5gzkvtllsdJreX8+Se134hxvzECnQypbRPKm
+   /rrvyli2uwlOhnwx8yp5aLP/9uKCFyNIXERQHwjbpjUzc3t4EuDrzywR4
+   iQXEY6NDxFmmcwmvT/p/xMLGRQ8SarqZgGd8TiVSfxadIgZSneiZ1rKBH
+   P/zGeIgSAKsgzYxsz5H8AMpzGJJD15AxqJStrpUbThQzCM3KFjN1BGPI7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="369169100"
+X-IronPort-AV: E=Sophos;i="6.01,207,1684825200"; 
+   d="scan'208";a="369169100"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 19:02:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="757719178"
-X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
-   d="scan'208";a="757719178"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga001.jf.intel.com with ESMTP; 14 Jul 2023 15:33:29 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 14 Jul 2023 15:33:29 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 14 Jul 2023 15:33:29 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Fri, 14 Jul 2023 15:33:29 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Fri, 14 Jul 2023 15:33:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iVxRvPPb7Kx1oWXQmam47KI0MAv7YO5Hr42C234vtC9K6ns2Iv8R10Ue32MCxW6nvOcb5CKsBIwc1HLZs8SEhNIYEiqNejEZu8pZkM6iwTmUIZ4LbKOp8gYAv2meSxeacZ+50Nvh1Gch2iw6HLxtq3EvVo/uYud01ObzlBQ04klO5e82UghKEsCFEcyNGDrb5Ky0rl0j1m3q5BLoYq60S1le1hKmmzOIxNnxEzX8uYHTfAfCgO6ycfHEgZbev12kFnDMC5P8KN547oK2UiYUB2dAFLajzcYMyX/TyZOKegfNIoYS25y8tUJtOHQxz3sl78oEKKwRZc1HRX1lCkQqlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=89rUYhwjrhjtryflX/eX73aWN4AsXJLEQzpWG5Ukd6U=;
- b=exRj22fMm6Lq/L7GlnsR4VhghSQQw3ZTX47DpvIugBQit1Uq3K3pT+5LaNzLqYWW+MM61gAmK93zJBs7wZeOZrAxQWBXXyTKSZhf3h45WG1G9L1iIpTikJuzdMgFZEjeJkETjFFjkD2YlB3mP7uTsTiEzJW3lopTUqQiurB5bJdQWxmCSj0JLrIYMxBnbnY5ZyO6B8dSCeVgMWWq93IfBwj94R4t6HcgbMQ32B44uBSMsfmQyRdwisUyuLA1xJ9oq1gWyqnrgqmhPl8onopt55+2AQuFp3sas00emsb5EAduSVYJA67wKbp80PHXgN3de/xneR2jV12AVpo5lrXPvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com (2603:10b6:303:219::12)
- by DM8PR11MB5640.namprd11.prod.outlook.com (2603:10b6:8:3f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.28; Fri, 14 Jul
- 2023 22:33:27 +0000
-Received: from MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::c482:66a7:a0b3:7b7]) by MW4PR11MB7125.namprd11.prod.outlook.com
- ([fe80::c482:66a7:a0b3:7b7%4]) with mapi id 15.20.6588.028; Fri, 14 Jul 2023
- 22:33:27 +0000
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "leitao@debian.org" <leitao@debian.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] cxl/acpi: Do not swallow errors
-Thread-Topic: [PATCH v3 2/2] cxl/acpi: Do not swallow errors
-Thread-Index: AQHZtjYXeLXRU8ptPUqHgnBZ/Rs0kq+52fuA
-Date:   Fri, 14 Jul 2023 22:33:27 +0000
-Message-ID: <bef6ee32461ed5000d0f21b2c33405a9704461c7.camel@intel.com>
-References: <20230714093146.2253438-1-leitao@debian.org>
-         <20230714093146.2253438-2-leitao@debian.org>
-In-Reply-To: <20230714093146.2253438-2-leitao@debian.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW4PR11MB7125:EE_|DM8PR11MB5640:EE_
-x-ms-office365-filtering-correlation-id: 13158608-085d-46be-ce98-08db84ba57a9
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xAjfcXE0ZiBpO52jy87+hCXbtQ8UabumBLRwjDtVyb3t2KhGTHauimm2WERqajOYibtzfMk94V+fbb3qT2+NFwkHS4l15kNvinq6rEBWihpgZfjNlBLSsHDAFoNSMY5uDdlHjumIGtM3XauEiqONVAWEF/AUdNBNpTrO3Elg+FXKAsOEwg6Y72QDv5Al17g0I1drlC44PylFbuq6wYuhiTkmCR66DexwJQS9KQMn8+qhFo8VL8fQCotfugSxpma+fXl6FYQxCGgUtjgz07yWo9AjhL9CL9Lmzsac6bnw8O5X7Mb90GTJDGJA2ieEkY4A/5GV/V3aig/vHf8akpDpOjsB7AyMLfPEhXXDOnabySqEkRE8nfqElSKzp/zuHXBAaZn55net4VyhRNt9Pfj9+Dwv/HoNz0RHCf/kxJKhcRio7aKCiSZzqD/I/v6yrqDeOfNsbe8IZtUdm68CXgY4jpZG5dgufkLHvMiVOFifpIIYTY8RgxgNCf1K/+xj7WKlMPEbqYJSwDC8InVSGGP959VIIEAwBOXsAXp8EEBRTS2qgP6rmZq1NWvfOWCMDqNWJBmivrgRpm3MtKq99Ezub+3LB/SQ8lpDeiBWOv1NErGgqRKPkfLA5x2xGof/xYvDRN6jVqbgV1tFq1Tl6AaTDQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB7125.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(376002)(396003)(136003)(39860400002)(451199021)(122000001)(82960400001)(26005)(6506007)(38100700002)(478600001)(110136005)(54906003)(5660300002)(91956017)(8936002)(8676002)(6636002)(4326008)(76116006)(66946007)(66556008)(66476007)(66446008)(64756008)(6512007)(86362001)(41300700001)(316002)(6486002)(71200400001)(2616005)(186003)(38070700005)(36756003)(2906002)(83380400001)(150783002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UzhEZWErOWc0ekt4Y2VBYUE0Q1o3ZVZMSWlXbnB5LzlTb1ptSEhhWlhEUHJX?=
- =?utf-8?B?YklMNmszbk51WGhzMExtZCsyWXlwb3N6VVcrbHIyaFdQbFVZc3pOaVp6T2tw?=
- =?utf-8?B?czlNUHBqSFRxRFhVdTAveU1DaXdJamZWTnRpdVBPUkV2eS82UEJZRjVJUFAx?=
- =?utf-8?B?Y2ZSNjExZEQrL1V5THA4SGE1c3NqS3JrU1FTZTZ2dndsUkV5MjJnYk9ucXND?=
- =?utf-8?B?TWpVM3VIOFhGVHBOKzRmb01LZ1M0b2tTQklSOGorOVBBOGJiVUhNRGNJaGpH?=
- =?utf-8?B?R0hVU2k4bHN0WXhydWxpdWxIRnd0K0pueUg2aWcyV0d2WC9YczRnNUtKdlBH?=
- =?utf-8?B?Uy9wckJUWnFYbmpGZkJURkxPTXVTZ0RmWmV2SmFSelgzQjh6aENYeDZaWWlx?=
- =?utf-8?B?WVNoRitHVFJhNGVUSjN0aXMyMFplZE0vQ2tPOFJCYzRnd1laMWYvWDVpVFFR?=
- =?utf-8?B?cTZRdzhNc0tKK21RZG4rSWdES1hZbGYrT2FGc1A4dXpLc1ozckhSZzI3dXU4?=
- =?utf-8?B?QkNVQWdlR3ZoTFlSOEs0OUlBbGFFVWZTWnh5ZXhtNWtQeCtDNFFjM1ExNFNB?=
- =?utf-8?B?Q0hXYWwwQlBnMmZLckhDSnhSSVVCL3RNRFVnMFNlWjFiKytIMU12RWQrVkZi?=
- =?utf-8?B?QmxDN1VNZEV2aXNDT0JmT2E5b3ZxempNS1NoYXp6TFAxeGJHNzJmcmh4SlBi?=
- =?utf-8?B?ZU1iU25UWkpmdVZHQ21QaHp3Q0JsM29heVJXSHBsdyt6djRjQ1RQNGE2Zmsx?=
- =?utf-8?B?M0d3ZVpXYUVxUGt6RmdtUndrcXo1Z3h2U0dKZFBXWlRZZEdRMFUvU1pTRWo5?=
- =?utf-8?B?RU9NNWs1OHRPT0dsUjdLMzZzNVd2Q3FrelhKUVg5UE1rNC9UamRENjJ3MXR3?=
- =?utf-8?B?d2txaWVkcmhQSXIxdEd3Tm52MDNmbHhReVZzR3pzakRsMzBDL3lhMlJyUzRa?=
- =?utf-8?B?ekdtZjUrYXdUcngwWXU1ZjRJMVU3UVBweUNmaXZSQU1EUTNWM2dHT0htQUF3?=
- =?utf-8?B?SVpaNE1CYk5qMUtodWZ6Q3AwTG1pUFlLMktkWS92ZnFNTG1mWXhvV25rWTd6?=
- =?utf-8?B?eE52WEkvVGRheFlOZDVPaG9EQlE5NE5MeGZqd1dOa0ZmeXVsaUNrTk5Ed0Mx?=
- =?utf-8?B?c0I4ZlhrZmpTWldEQndWcXdPZFRHSXFjVGZScHYrTWJBNWVWZTZjYmgwd0R4?=
- =?utf-8?B?M1JVM014YW8xR2RzeUxGN2g0V0pxNDhWamhEbGFsMmtJeE1TUG1abHFDcFdW?=
- =?utf-8?B?TFpxUXJvZ0NRUU1icllsSkhTRGQ0cXFtYldBQXZWOFZkczg1VEpOWkdSaHgz?=
- =?utf-8?B?Q0tEcFZ4azU1RFVvRGlEVnRMNis4QzNnYy9lZXBURjJyOFByTnRmMXdwZ29P?=
- =?utf-8?B?NjlvSTdjaVJtUVZXWlVMdXB6TEFFemxzcE9ZWjI4cjA0SmdEUThwUjh0c2o0?=
- =?utf-8?B?c1Z5UlN3RzU0OTRjckFiZktKZVFLUkNKQmZFVEwwS1VxQXg2ZzJKVmdEbDlv?=
- =?utf-8?B?dFVMb3NZeWw0SkhZcDYzVm90TnR1M1NtZDh2SWtySlNJRS8wQXREdjRKOUhj?=
- =?utf-8?B?SW1XK1UzRUt0UWFNdVh0b1VWWWZrYWwzRkE1eFk4SWtmQ1FRVzh5YStpbFlC?=
- =?utf-8?B?T3RidEV0UjI5MXpHc1Z3dFlFdWx6ai9WbC9oRGwxT2xxLzgrVktTQkdRRlFw?=
- =?utf-8?B?YXhTVGhLWXJ6cWEyY3FWQlhTbSs2T0RKUzdDRWhXcEFBUURDSFk2Z2lQSVo4?=
- =?utf-8?B?VFR1dE9aa3dkUHpNTDlqSHQ5TkNCeERoYmVTblNxMEpSdmlxTVlPdU50bG4w?=
- =?utf-8?B?ODVRcHFmWjdGM1RieE9XaDZCL281ajJzaDVxb3M1OTViZjFjMkhQaUhZR2ti?=
- =?utf-8?B?V1dESVJLaTk3bmc5YmNhZmNKdEF3QWxRdUhvdnNvVDk5Y3dLb0cyYUs4NjZY?=
- =?utf-8?B?Wm9NQ0pQNkpLTy9vMTlxbEphRGkrbXN5L2xvRGtVMksxRUMzcHJOMEhxVmlz?=
- =?utf-8?B?TEJYVlhOL1NPUG9XVmZWR3BZNlZjOXFUbnJOcHZKMlF2TlpBKzJSSDZNa3pt?=
- =?utf-8?B?NHlLOXEzYkZLMEtWbUZOcWxIckRad1dWR3lRb2xTODlkS29UbVE5eFFCUWRH?=
- =?utf-8?B?ZWRYTTY0b3loUHFoZFRpalBaRmNtZ1loVUx1UmpxZU9sblpodGJ4RnlScXp5?=
- =?utf-8?B?RlE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7631A97071F7794A874C700DC0DB93A4@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="846675313"
+X-IronPort-AV: E=Sophos;i="6.01,207,1684825200"; 
+   d="scan'208";a="846675313"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 14 Jul 2023 19:02:48 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qKUcR-0007pr-23;
+        Sat, 15 Jul 2023 02:02:47 +0000
+Date:   Sat, 15 Jul 2023 10:02:25 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Breno Leitao <leitao@debian.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [cxl:fixes 4/5] drivers/cxl/acpi.c:299:30: warning: format '%llx'
+ expects argument of type 'long long unsigned int', but argument 3 has type
+ 'resource_size_t' {aka 'unsigned int'}
+Message-ID: <202307151059.2vvBt55H-lkp@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB7125.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13158608-085d-46be-ce98-08db84ba57a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2023 22:33:27.2207
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x859CcWY1K0jEnUcMcAj2aJ/1NQt0biiS4JhI8ImKnddYwN+mHdplkshRuNI2XWjeMooAWgJHpM9ansKoHcu/13Q4JzJ3To3WeNYA8gRxms=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR11MB5640
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-T24gRnJpLCAyMDIzLTA3LTE0IGF0IDAyOjMxIC0wNzAwLCBCcmVubyBMZWl0YW8gd3JvdGU6DQo+
-IERyaXZlciBpbml0aWFsaXphdGlvbiBpcyByZXR1cm5pbmcgc3VjY2VzcyAocmV0dXJuIDApIGV2
-ZW4gaWYgdGhlDQo+IGluaXRpYWxpemF0aW9uIChjeGxfZGVjb2Rlcl9hZGQoKSBvciBhY3BpX3Rh
-YmxlX3BhcnNlX2NlZHQoKSkgZmFpbGVkLA0KPiBhbmQgdGhlIGhhcmR3YXJlIHdhcyBhbHJlYWR5
-IHJlbGVhc2VkIChwdXRfZGV2aWNlKCkpLg0KPiANCj4gUmV0dXJuIHRoZSBlcnJvciBpbnN0ZWFk
-IG9mIHN3YWxsb3dpbmcgaXQuDQo+IA0KPiBGaXhlczogZjRjZTFmNzY2ZjFlICgiY3hsL2FjcGk6
-IENvbnZlcnQgQ0ZNV1MgcGFyc2luZyB0byBBQ1BJIHN1Yi10YWJsZSBoZWxwZXJzIikNCj4gDQo+
-IFNpZ25lZC1vZmYtYnk6IEJyZW5vIExlaXRhbyA8bGVpdGFvQGRlYmlhbi5vcmc+DQoNCkZZSSB0
-aGVyZSBzaG91bGQgbm90IGJlIGEgYmxhbmsgbGluZSBiZXR3ZWVuIHRoZSBGaXhlcyB0YWcgYW5k
-IG90aGVyDQp0YWdzIChQYXRjaCAxIGhhcyBpdCByaWdodCkuIFRoaXMgY2FuIGJyZWFrIGdpdCdz
-IHZpZXcgb2YgdGhlIHRyYWlsZXJzLg0KDQpJIGZpeGVkIHRoaXMgdXAgd2hpbGUgYXBwbHlpbmcg
-YW5kIHdoaWxlIGF0IGl0IGRpZCBhIGJpdCBvZiBjb21taXQNCm1lc3NhZ2UgbWFzc2FnaW5nIGZv
-ciBib3RoIHBhdGNoZXMuDQoNCj4gLS0tDQo+IMKgZHJpdmVycy9jeGwvYWNwaS5jIHwgMiArLQ0K
-PiDCoDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2FjcGkuYyBiL2RyaXZlcnMvY3hsL2FjcGkuYw0KPiBp
-bmRleCA2NDI5ODNkYTAxY2IuLjgxNWI0Mzg1OWMxNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9j
-eGwvYWNwaS5jDQo+ICsrKyBiL2RyaXZlcnMvY3hsL2FjcGkuYw0KPiBAQCAtMjk4LDcgKzI5OCw3
-IEBAIHN0YXRpYyBpbnQgY3hsX3BhcnNlX2NmbXdzKHVuaW9uIGFjcGlfc3VidGFibGVfaGVhZGVy
-cyAqaGVhZGVyLCB2b2lkICphcmcsDQo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocmMpIHsNCj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBhZGQg
-ZGVjb2RlIHJhbmdlIFslI2xseCAtICUjbGx4XVxuIiwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVzLT5zdGFydCwgcmVzLT5lbmQpOw0KPiAtwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7DQo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqByZXR1cm4gcmM7DQo+IMKgwqDCoMKgwqDCoMKgwqB9DQo+IMKgwqDCoMKg
-wqDCoMKgwqBkZXZfZGJnKGRldiwgImFkZDogJXMgbm9kZTogJWQgcmFuZ2UgWyUjbGx4IC0gJSNs
-bHhdXG4iLA0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldl9uYW1lKCZjeGxk
-LT5kZXYpLA0KDQo=
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+head:   0e99e96b85fc2c608a65d05063f40c671214b2da
+commit: 3840e10e8dcafc89a2d96ab7dbb640434c8da8cf [4/5] cxl/acpi: Fix a use-after-free in cxl_parse_cfmws()
+config: i386-randconfig-i005-20230714 (https://download.01.org/0day-ci/archive/20230715/202307151059.2vvBt55H-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230715/202307151059.2vvBt55H-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307151059.2vvBt55H-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/platform_device.h:13,
+                    from drivers/cxl/acpi.c:3:
+   drivers/cxl/acpi.c: In function 'cxl_parse_cfmws':
+>> drivers/cxl/acpi.c:299:30: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 3 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
+     299 |                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+         |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ^~~
+   include/linux/dev_printk.h:144:56: note: in expansion of macro 'dev_fmt'
+     144 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                        ^~~~~~~
+   drivers/cxl/acpi.c:299:17: note: in expansion of macro 'dev_err'
+     299 |                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+         |                 ^~~~~~~
+   drivers/cxl/acpi.c:299:63: note: format string is defined here
+     299 |                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+         |                                                           ~~~~^
+         |                                                               |
+         |                                                               long long unsigned int
+         |                                                           %#x
+   drivers/cxl/acpi.c:299:30: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
+     299 |                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+         |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                              ^~~
+   include/linux/dev_printk.h:144:56: note: in expansion of macro 'dev_fmt'
+     144 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                        ^~~~~~~
+   drivers/cxl/acpi.c:299:17: note: in expansion of macro 'dev_err'
+     299 |                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+         |                 ^~~~~~~
+   drivers/cxl/acpi.c:299:71: note: format string is defined here
+     299 |                 dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+         |                                                                   ~~~~^
+         |                                                                       |
+         |                                                                       long long unsigned int
+         |                                                                   %#x
+
+
+vim +299 drivers/cxl/acpi.c
+
+f4ce1f766f1ebf Dan Williams     2021-10-29  196  
+f4ce1f766f1ebf Dan Williams     2021-10-29  197  static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+f4ce1f766f1ebf Dan Williams     2021-10-29  198  			   const unsigned long end)
+3e23d17ce1980c Alison Schofield 2021-06-17  199  {
+a5c25802168993 Dan Williams     2021-09-08  200  	int target_map[CXL_DECODER_MAX_INTERLEAVE];
+f4ce1f766f1ebf Dan Williams     2021-10-29  201  	struct cxl_cfmws_context *ctx = arg;
+f4ce1f766f1ebf Dan Williams     2021-10-29  202  	struct cxl_port *root_port = ctx->root_port;
+974854ab072853 Dan Williams     2022-07-12  203  	struct resource *cxl_res = ctx->cxl_res;
+f9db85bfec0dcc Alison Schofield 2022-11-30  204  	struct cxl_cxims_context cxims_ctx;
+0f157c7fa1a0e1 Dan Williams     2022-07-12  205  	struct cxl_root_decoder *cxlrd;
+f4ce1f766f1ebf Dan Williams     2021-10-29  206  	struct device *dev = ctx->dev;
+3e23d17ce1980c Alison Schofield 2021-06-17  207  	struct acpi_cedt_cfmws *cfmws;
+f9db85bfec0dcc Alison Schofield 2022-11-30  208  	cxl_calc_hb_fn cxl_calc_hb;
+3e23d17ce1980c Alison Schofield 2021-06-17  209  	struct cxl_decoder *cxld;
+419af595b11891 Dan Williams     2022-05-22  210  	unsigned int ways, i, ig;
+974854ab072853 Dan Williams     2022-07-12  211  	struct resource *res;
+419af595b11891 Dan Williams     2022-05-22  212  	int rc;
+3e23d17ce1980c Alison Schofield 2021-06-17  213  
+f4ce1f766f1ebf Dan Williams     2021-10-29  214  	cfmws = (struct acpi_cedt_cfmws *) header;
+3e23d17ce1980c Alison Schofield 2021-06-17  215  
+3e23d17ce1980c Alison Schofield 2021-06-17  216  	rc = cxl_acpi_cfmws_verify(dev, cfmws);
+3e23d17ce1980c Alison Schofield 2021-06-17  217  	if (rc) {
+3e23d17ce1980c Alison Schofield 2021-06-17  218  		dev_err(dev, "CFMWS range %#llx-%#llx not registered\n",
+f4ce1f766f1ebf Dan Williams     2021-10-29  219  			cfmws->base_hpa,
+f4ce1f766f1ebf Dan Williams     2021-10-29  220  			cfmws->base_hpa + cfmws->window_size - 1);
+f4ce1f766f1ebf Dan Williams     2021-10-29  221  		return 0;
+3e23d17ce1980c Alison Schofield 2021-06-17  222  	}
+3e23d17ce1980c Alison Schofield 2021-06-17  223  
+c99b2e8cf79616 Dave Jiang       2022-12-05  224  	rc = eiw_to_ways(cfmws->interleave_ways, &ways);
+419af595b11891 Dan Williams     2022-05-22  225  	if (rc)
+419af595b11891 Dan Williams     2022-05-22  226  		return rc;
+83351ddb786b30 Dave Jiang       2022-12-05  227  	rc = eig_to_granularity(cfmws->granularity, &ig);
+419af595b11891 Dan Williams     2022-05-22  228  	if (rc)
+419af595b11891 Dan Williams     2022-05-22  229  		return rc;
+419af595b11891 Dan Williams     2022-05-22  230  	for (i = 0; i < ways; i++)
+a5c25802168993 Dan Williams     2021-09-08  231  		target_map[i] = cfmws->interleave_targets[i];
+a5c25802168993 Dan Williams     2021-09-08  232  
+974854ab072853 Dan Williams     2022-07-12  233  	res = kzalloc(sizeof(*res), GFP_KERNEL);
+974854ab072853 Dan Williams     2022-07-12  234  	if (!res)
+974854ab072853 Dan Williams     2022-07-12  235  		return -ENOMEM;
+974854ab072853 Dan Williams     2022-07-12  236  
+974854ab072853 Dan Williams     2022-07-12  237  	res->name = kasprintf(GFP_KERNEL, "CXL Window %d", ctx->id++);
+974854ab072853 Dan Williams     2022-07-12  238  	if (!res->name)
+974854ab072853 Dan Williams     2022-07-12  239  		goto err_name;
+974854ab072853 Dan Williams     2022-07-12  240  
+974854ab072853 Dan Williams     2022-07-12  241  	res->start = cfmws->base_hpa;
+974854ab072853 Dan Williams     2022-07-12  242  	res->end = cfmws->base_hpa + cfmws->window_size - 1;
+974854ab072853 Dan Williams     2022-07-12  243  	res->flags = IORESOURCE_MEM;
+974854ab072853 Dan Williams     2022-07-12  244  
+974854ab072853 Dan Williams     2022-07-12  245  	/* add to the local resource tracking to establish a sort order */
+974854ab072853 Dan Williams     2022-07-12  246  	rc = insert_resource(cxl_res, res);
+974854ab072853 Dan Williams     2022-07-12  247  	if (rc)
+974854ab072853 Dan Williams     2022-07-12  248  		goto err_insert;
+974854ab072853 Dan Williams     2022-07-12  249  
+f9db85bfec0dcc Alison Schofield 2022-11-30  250  	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_MODULO)
+f9db85bfec0dcc Alison Schofield 2022-11-30  251  		cxl_calc_hb = cxl_hb_modulo;
+f9db85bfec0dcc Alison Schofield 2022-11-30  252  	else
+f9db85bfec0dcc Alison Schofield 2022-11-30  253  		cxl_calc_hb = cxl_hb_xor;
+f9db85bfec0dcc Alison Schofield 2022-11-30  254  
+f9db85bfec0dcc Alison Schofield 2022-11-30  255  	cxlrd = cxl_root_decoder_alloc(root_port, ways, cxl_calc_hb);
+0f157c7fa1a0e1 Dan Williams     2022-07-12  256  	if (IS_ERR(cxlrd))
+f4ce1f766f1ebf Dan Williams     2021-10-29  257  		return 0;
+3e23d17ce1980c Alison Schofield 2021-06-17  258  
+0f157c7fa1a0e1 Dan Williams     2022-07-12  259  	cxld = &cxlrd->cxlsd.cxld;
+48667f676189ec Dan Williams     2021-09-21  260  	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+5aa39a9165cfc8 Dan Williams     2023-06-14  261  	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+e50fe01e1f2a4a Dan Williams     2022-05-18  262  	cxld->hpa_range = (struct range) {
+974854ab072853 Dan Williams     2022-07-12  263  		.start = res->start,
+974854ab072853 Dan Williams     2022-07-12  264  		.end = res->end,
+e50fe01e1f2a4a Dan Williams     2022-05-18  265  	};
+419af595b11891 Dan Williams     2022-05-22  266  	cxld->interleave_ways = ways;
+e77483055c325f Dan Williams     2022-07-22  267  	/*
+e77483055c325f Dan Williams     2022-07-22  268  	 * Minimize the x1 granularity to advertise support for any
+e77483055c325f Dan Williams     2022-07-22  269  	 * valid region granularity
+e77483055c325f Dan Williams     2022-07-22  270  	 */
+e77483055c325f Dan Williams     2022-07-22  271  	if (ways == 1)
+e77483055c325f Dan Williams     2022-07-22  272  		ig = CXL_DECODER_MIN_GRANULARITY;
+419af595b11891 Dan Williams     2022-05-22  273  	cxld->interleave_granularity = ig;
+48667f676189ec Dan Williams     2021-09-21  274  
+f9db85bfec0dcc Alison Schofield 2022-11-30  275  	if (cfmws->interleave_arithmetic == ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
+f9db85bfec0dcc Alison Schofield 2022-11-30  276  		if (ways != 1 && ways != 3) {
+f9db85bfec0dcc Alison Schofield 2022-11-30  277  			cxims_ctx = (struct cxl_cxims_context) {
+f9db85bfec0dcc Alison Schofield 2022-11-30  278  				.dev = dev,
+f9db85bfec0dcc Alison Schofield 2022-11-30  279  				.cxlrd = cxlrd,
+f9db85bfec0dcc Alison Schofield 2022-11-30  280  			};
+f9db85bfec0dcc Alison Schofield 2022-11-30  281  			rc = acpi_table_parse_cedt(ACPI_CEDT_TYPE_CXIMS,
+f9db85bfec0dcc Alison Schofield 2022-11-30  282  						   cxl_parse_cxims, &cxims_ctx);
+f9db85bfec0dcc Alison Schofield 2022-11-30  283  			if (rc < 0)
+f9db85bfec0dcc Alison Schofield 2022-11-30  284  				goto err_xormap;
+14628aec8415e4 Alison Schofield 2022-12-04  285  			if (!cxlrd->platform_data) {
+14628aec8415e4 Alison Schofield 2022-12-04  286  				dev_err(dev, "No CXIMS for HBIG %u\n", ig);
+14628aec8415e4 Alison Schofield 2022-12-04  287  				rc = -EINVAL;
+14628aec8415e4 Alison Schofield 2022-12-04  288  				goto err_xormap;
+14628aec8415e4 Alison Schofield 2022-12-04  289  			}
+f9db85bfec0dcc Alison Schofield 2022-11-30  290  		}
+f9db85bfec0dcc Alison Schofield 2022-11-30  291  	}
+48667f676189ec Dan Williams     2021-09-21  292  	rc = cxl_decoder_add(cxld, target_map);
+f9db85bfec0dcc Alison Schofield 2022-11-30  293  err_xormap:
+48667f676189ec Dan Williams     2021-09-21  294  	if (rc)
+48667f676189ec Dan Williams     2021-09-21  295  		put_device(&cxld->dev);
+48667f676189ec Dan Williams     2021-09-21  296  	else
+48667f676189ec Dan Williams     2021-09-21  297  		rc = cxl_decoder_autoremove(dev, cxld);
+48667f676189ec Dan Williams     2021-09-21  298  	if (rc) {
+e50fe01e1f2a4a Dan Williams     2022-05-18 @299  		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+3840e10e8dcafc Breno Leitao     2023-07-14  300  			res->start, res->end);
+f4ce1f766f1ebf Dan Williams     2021-10-29  301  		return 0;
+da6aafec3dca61 Alison Schofield 2021-06-17  302  	}
+e50fe01e1f2a4a Dan Williams     2022-05-18  303  	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
+e50fe01e1f2a4a Dan Williams     2022-05-18  304  		dev_name(&cxld->dev),
+e50fe01e1f2a4a Dan Williams     2022-05-18  305  		phys_to_target_node(cxld->hpa_range.start),
+e50fe01e1f2a4a Dan Williams     2022-05-18  306  		cxld->hpa_range.start, cxld->hpa_range.end);
+da6aafec3dca61 Alison Schofield 2021-06-17  307  
+f4ce1f766f1ebf Dan Williams     2021-10-29  308  	return 0;
+974854ab072853 Dan Williams     2022-07-12  309  
+974854ab072853 Dan Williams     2022-07-12  310  err_insert:
+974854ab072853 Dan Williams     2022-07-12  311  	kfree(res->name);
+974854ab072853 Dan Williams     2022-07-12  312  err_name:
+974854ab072853 Dan Williams     2022-07-12  313  	kfree(res);
+974854ab072853 Dan Williams     2022-07-12  314  	return -ENOMEM;
+da6aafec3dca61 Alison Schofield 2021-06-17  315  }
+da6aafec3dca61 Alison Schofield 2021-06-17  316  
+
+:::::: The code at line 299 was first introduced by commit
+:::::: e50fe01e1f2a4aba2275edee7d5c77ac87674ddb cxl/core: Drop ->platform_res attribute for root decoders
+
+:::::: TO: Dan Williams <dan.j.williams@intel.com>
+:::::: CC: Dan Williams <dan.j.williams@intel.com>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
