@@ -2,98 +2,80 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7184BEB64DC
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 Jul 2023 10:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A2AEB64DC
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Jul 2023 10:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230014AbjGQK2S (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 17 Jul 2023 06:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
+        id S229756AbjGQKuM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Jul 2023 06:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjGQK2R (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Jul 2023 06:28:17 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901AB1A8;
-        Mon, 17 Jul 2023 03:28:16 -0700 (PDT)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-3fbf1b82de7so26187025e9.1;
-        Mon, 17 Jul 2023 03:28:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689589695; x=1692181695;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dkZqDw+1/Brauf2lZXhoxi+see4xLt/P00aPxZ1mK3o=;
-        b=VCMMHu6Wfo831KNSBeblau/aq6gmo6Gc7MLaXewDGkMur0bbA0vl3t4HCqCb+JowNV
-         cmuycIYARujd2J3lMpIbZro+U+7EI1BYSE6nWTKtMcLlNR59qYTQIqP0xkW8VybqdbQ/
-         N+mNi3lu3X7ude3CHuW+j61D/YLJB2zqTGsLgXeckYp6xZoaEQ6zXt0+BVn5hw1XfFvL
-         3ji16hpPl06pKRghkI8Wc82pGAicWRGJHLmDEYghGt5L0UFegt1JqOowk0/s0ROKnfNY
-         Z9l6t6jfiR7IyBkRIfQryXpx8s+UOe/GoTkBKnYFVCzR6u1cygVmlksrTn+4oUyYCi2z
-         RADQ==
-X-Gm-Message-State: ABy/qLafE3LoCD5sY9O63ecUoe8NtMj4a/yRpvAbwCkYvO4LfA68LMIY
-        GhVxszta5Dsu+Cn4YG398OY=
-X-Google-Smtp-Source: APBJJlFDOQsZ9zZZ/bg213cfh+z43UqeoawNZRd5hrD4XvGCfgSKnL6YNQlW/vAzPzh9NQh3fV/LJg==
-X-Received: by 2002:a05:600c:4689:b0:3fa:955a:9291 with SMTP id p9-20020a05600c468900b003fa955a9291mr7656892wmo.9.1689589694806;
-        Mon, 17 Jul 2023 03:28:14 -0700 (PDT)
-Received: from localhost (fwdproxy-cln-018.fbsv.net. [2a03:2880:31ff:12::face:b00c])
-        by smtp.gmail.com with ESMTPSA id m9-20020adfe949000000b0031128382ed0sm18845454wrn.83.2023.07.17.03.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jul 2023 03:28:14 -0700 (PDT)
-From:   Breno Leitao <leitao@debian.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     leit@meta.com, kernel test robot <lkp@intel.com>,
-        linux-cxl@vger.kernel.org (open list:COMPUTE EXPRESS LINK (CXL)),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] cxl/acpi: Use printk specifier for resource
-Date:   Mon, 17 Jul 2023 03:26:20 -0700
-Message-Id: <20230717102625.4083462-1-leitao@debian.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S230372AbjGQKuK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Jul 2023 06:50:10 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9AAE72;
+        Mon, 17 Jul 2023 03:50:07 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R4Jgs5Yn7z6J6qr;
+        Mon, 17 Jul 2023 18:47:37 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 17 Jul
+ 2023 11:50:04 +0100
+Date:   Mon, 17 Jul 2023 11:50:03 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Chenyuan Mi <michenyuan@huawei.com>
+CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <rrichter@amd.com>, <alison.schofield@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl: Fix memory leak bug in alloc_mock_res()
+Message-ID: <20230717115003.00007f73@Huawei.com>
+In-Reply-To: <20230717041609.1162445-1-michenyuan@huawei.com>
+References: <20230717041609.1162445-1-michenyuan@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Commit 3840e10e8dca ("cxl/acpi: Fix a use-after-free in cxl_parse_cfmws()")
-is using %llx to print resources pointers, but it is incorrect on 32-bits
-system, causing the following compilation warning on i386:
+On Mon, 17 Jul 2023 04:16:09 +0000
+Chenyuan Mi <michenyuan@huawei.com> wrote:
 
-	 drivers/cxl/acpi.c:300:4: warning: format specifies type 'unsigned long long' but the argument has type 'resource_size_t' (aka 'unsigned int') [-Wformat]
+> When gen_pool_alloc_algo() fails, the error handling path
+> forgets to free 'res'. It would cause a memory leak bug.
+> 
+> Fix it by add kfree() in error handling path.
+> 
+> Signed-off-by: Chenyuan Mi <michenyuan@huawei.com>
 
-Instead of using pointers to the resource, uses the proper printk
-specifier that knows how to handle the struct "resources".
++CC linux-cxl list
 
-This is the new format, being printed now:
+Please make sure to include that for any future CXL patches.
 
-	Failed to add decode range: [mem 0x4080000000-0x2baffffffff flags 0x200]
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202307151059.2vvBt55H-lkp@intel.com/
-Fixes: 3840e10e8dca ("cxl/acpi: Fix a use-after-free in cxl_parse_cfmws()")
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/cxl/acpi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 815b43859c16..d1c559879dcc 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -296,8 +296,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 	else
- 		rc = cxl_decoder_autoremove(dev, cxld);
- 	if (rc) {
--		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
--			res->start, res->end);
-+		dev_err(dev, "Failed to add decode range: %pr", res);
- 		return rc;
- 	}
- 	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
--- 
-2.34.1
+> ---
+>  tools/testing/cxl/test/cxl.c |   4 +++-
+>  1 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 0e78d8e19895..250ffd147067 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -405,8 +405,10 @@ static struct cxl_mock_res *alloc_mock_res(resource_size_t size, int align)
+>  	INIT_LIST_HEAD(&res->list);
+>  	phys = gen_pool_alloc_algo(cxl_mock_pool, size,
+>  				   gen_pool_first_fit_align, &data);
+> -	if (!phys)
+> +	if (!phys) {
+> +		kfree(res);
+>  		return NULL;
+> +	}
+>  
+>  	res->range = (struct range) {
+>  		.start = phys,
 
