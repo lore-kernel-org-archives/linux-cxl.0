@@ -2,421 +2,203 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527E0EB64DC
-	for <linux-cxl@archiver.kernel.org>; Mon, 17 Jul 2023 16:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF296C001DC
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Jul 2023 16:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231310AbjGQQ2B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 17 Jul 2023 12:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38634 "EHLO
+        id S230218AbjGQQ3S (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Jul 2023 12:29:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbjGQQ2A (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Jul 2023 12:28:00 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDFB12E
-        for <linux-cxl@vger.kernel.org>; Mon, 17 Jul 2023 09:27:58 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R4S9h6TTdz6J744;
-        Tue, 18 Jul 2023 00:25:28 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+        with ESMTP id S231612AbjGQQ3C (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Jul 2023 12:29:02 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930E612E;
+        Mon, 17 Jul 2023 09:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689611338; x=1721147338;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=OOO5T1w6aDFxDYetXs7QKLSXOOYpZQmyJwdtz3bPCGg=;
+  b=TTv8NiRU4dP9v+MD8+++QaR2zt4XQJzuH8AhXETxZD7QOm7aq7dbVtE2
+   VvCnXcIp42awYKOPGB30ZWg9yh+hJojRaVbH8mmCixYA1J2msbrqgfuWF
+   7BYOGTl/Wm2cikS1F8uveNZdqrsv2tq/adcT+A2Mdx5hOHVGhLDEA1vVH
+   ilCU7XI5P/tubCdPg9USEISqLhSnehFrfJsuJmzrxSJ2Y5nzZby3V7KJL
+   D2SiECHlGgNm6kW/3dtGBxdunCaZHvJk1wK6ljPm+SXV7ft8z/35WXuLz
+   xHJC7MUvowtZGRzex2J71itIiRSQD/MR5RD1YRBo3V9azH55f2g8NlDlz
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="350837111"
+X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
+   d="scan'208";a="350837111"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2023 09:28:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10774"; a="897262929"
+X-IronPort-AV: E=Sophos;i="6.01,211,1684825200"; 
+   d="scan'208";a="897262929"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jul 2023 09:28:57 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 17 Jul 2023 17:27:56 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+ 15.1.2507.27; Mon, 17 Jul 2023 09:28:55 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 17 Jul 2023 09:28:55 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Mon, 17 Jul 2023 09:28:55 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Mon, 17 Jul 2023 09:28:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nli8U9RG5XpvVpJrllsPmVjl8ibvzQkQxAOnmhi5/58VQ5eTDGDgBln7ZSrzffTPffiF3xjDXmsJr7ynngK44K6HA6H3rckyxpZisISlAskxvy1nkt6QhIXd3vhKAIn2Ualp2amzlJKq7p7W08CPoP5nUBDvyDrzEC3ZOiAuCtCpS3ZIIJykANtB4R04hT0sLbghXkczqq5ND+mxajppEiwhk1mZJhqsM8HDkrDmEqarWaSrGEwPEycTAkLGQQRjMHvcPxZUbZ98LYPUK8tBxm8/M7pHAo02wqP6EezeqR4U9DZKu1bPw+AFkg61bL67wgOz4+yzu0o6vL6zCPK9Ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xfCbIiMhCnRsqGt4WalmAme6FfMElSfbv3fKHtKPCj0=;
+ b=PG8XXCqxkp8Ugk8c0AQNl1uoBl/HgzGDRt+HwGGqmTkLjvu2wzssKk9dq7dx/LaKRGU256CzGZV57sLbXa3k/oCSyip5xq37rY1zTerZhCPhJ8qTDmJD2rDJGCijufGBQAshc5FTEkorUY/gE6rSTci0aXxDhJnT95cGXqAZzxvOnpSr8NlR7fw4xBNvX0bmoB+5h0TQCr2IuKpps83L5Za4qTwjq9ftDDHlJYXFCrOnYafFLpVGH7XQ8NwLWfp1Ed1CMXmlJycWK1pHLxiIhFvyzd8dmlTnREBAjgNuw4yjwh5Rn1qxJ6T2iG3RoLKKLpr3oDuhG8Qt+Nek0PQdVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by DM4PR11MB7205.namprd11.prod.outlook.com (2603:10b6:8:113::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Mon, 17 Jul
+ 2023 16:28:51 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::be6a:199e:4fc1:aa80]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::be6a:199e:4fc1:aa80%6]) with mapi id 15.20.6588.031; Mon, 17 Jul 2023
+ 16:28:51 +0000
+Message-ID: <a607c370-030a-2b96-9aca-886a23248e83@intel.com>
+Date:   Mon, 17 Jul 2023 09:28:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Betterbird/102.13.0
+Subject: Re: [PATCH] cxl/acpi: Use printk specifier for resource
+To:     Breno Leitao <leitao@debian.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>,
-        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
-        <linux@huawei.com>
-Subject: [RFC PATCH v3 4/4] cxl/pci: Add support for stand alone CXL Switch mailbox CCI
-Date:   Mon, 17 Jul 2023 17:25:57 +0100
-Message-ID: <20230717162557.8625-5-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230717162557.8625-1-Jonathan.Cameron@huawei.com>
-References: <20230717162557.8625-1-Jonathan.Cameron@huawei.com>
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <leit@meta.com>, kernel test robot <lkp@intel.com>,
+        "open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20230717102625.4083462-1-leitao@debian.org>
+Content-Language: en-US
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230717102625.4083462-1-leitao@debian.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR06CA0005.namprd06.prod.outlook.com
+ (2603:10b6:a03:d4::18) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DM4PR11MB7205:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69276b99-8c9a-48fd-2d53-08db86e2e78d
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YBssLnUVw55isZ09eRajtevqSvyjT8k5lEKTCD9GLDqtfDYUwrh5PRZ/Iz+zp03dzN5m7kxCE9DPlWSphMbDSzNx9D2X7TQeDsUrKZs8lg1arcMyWgWh0x09Sc/IOb1q7W9QhrQzwfnT6dc2TUiHORPZCVevgOjNTI8Urp+cU1Bc1U1g95Wc1aIHV4bJG5tisfOvpxcqXYCRJVZCe5TZeygk339l1KS8T1wLN2D/p6Sm2F4OX+vFZE5rtj1rUp1DsW8hg23OzlU7+bAySHMBcxdBtow+ONkHwJse8cQbOzSwZa4CplTUhp0k7uBC5HwcIsFnZ9vNztOnCacz6xsldxiOpe56piM0d5AKrYQMLz0aqJuQpEbKLNiYQmmoCCwf/+WG6bnoww21j64nxUEM2JE1hNwCT7e9oVqejAxpSnjV40jicVw3WagpzGtUhB9wdwk3Jg/PezYG8E4CAK2mmUDjRHSZ/isfCyM//JGbXrqZxuRYlPtoGXIORDT7oWtRZpGlxy6yZ8MIFPasPlUVnQnsCKagv1KpbFCFM5hH1co5b+vrBCeSAUc1x+Ob2ji9W5NpbDCHsFTVcrsW0EPBvJ+tao7LpWGXyi0M0QzrxwpjknBKdRqZRgXsyeeUM7gen+wbPLmLokC+P4929vaNQQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(376002)(136003)(396003)(346002)(451199021)(31686004)(86362001)(31696002)(2906002)(36756003)(44832011)(6636002)(966005)(6512007)(2616005)(186003)(83380400001)(26005)(6506007)(53546011)(38100700002)(82960400001)(6486002)(54906003)(6666004)(110136005)(316002)(4326008)(66946007)(66476007)(66556008)(8936002)(478600001)(5660300002)(41300700001)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YU92SDkraU8vaHZ0NW9uQjBENkxQT2FPczNSbjRDUVc1VUcyUTVIWnhsMGx6?=
+ =?utf-8?B?V0txWFlOQTV2eHhUUGlMQWFobndBMUw1Y0JvcGVYL1ZhQ1UrWmpnK0c2WGJH?=
+ =?utf-8?B?ek9PbktsUTF0a3lkZktZMXNZa0xqempoUWhPeWhYcjhSNUVoVEkzQlNmaHZR?=
+ =?utf-8?B?cHdZVTRoMHYrL0dQcVplc2FjNEt6cTNHWDdlV1VwZjNHU0MvM1QrVTFkajYv?=
+ =?utf-8?B?Mjc0WWlwVjN1MDBhS05kQUV5VTlSZWhYaUZncC9aTTB4YmRyZi9LUUgwVzho?=
+ =?utf-8?B?b09tM3ZpeXFKNFVBSnFORUJLVUp1YnB6cW1ZTmQrSW9sOFZZa1hGeWZMMHIx?=
+ =?utf-8?B?OHZ6NnZkSyszSGhYV0EwNVRidzI4ZkZtSmIwZkNaZGpHK1A5THJ6cVVOT3I1?=
+ =?utf-8?B?bUFhTzQxWk4zQ1RKekY0THpPd0s3TFQ5blllejQvT1pUV3RvaWI5cUtTYnY2?=
+ =?utf-8?B?a1BqZytKZGxUTWV0UkZmL0MrUW1DZm1OckozTnZ1RkdwZWhmMWhIWERxOU1M?=
+ =?utf-8?B?YS84Y2w3TThLOGE4dGxiQm84aHFMVTNoTWhFdXltVmZtSUpuUnE2TXJQNlVr?=
+ =?utf-8?B?aTJmdnYrQW9heitIQXFTcmZCVk9VZUZTZXVwd3RwWkVac2xqajNQenZXdTNS?=
+ =?utf-8?B?VlhUdVBUeVI2M3FOK0ZCeG1HUWMwN1NlSzBNMDhMS0x6VGdkU3VwWFM5Sm1F?=
+ =?utf-8?B?cklraE15Z2NwaHE4NHZwSEd4KzNmR2VSS0YwZkU5dXZnNUJQL3d2ZWJocm9x?=
+ =?utf-8?B?ZTQ1eVFpcXJQZW4wV1RwNGxmOFgzTlJyVmZiQnd5eU5YeWFGRUhnWlNkWXA2?=
+ =?utf-8?B?WUlUeFpmMlJHeFVlTmlUTlhhK1VzeXRQRW1MZFVvdzdhMmZiZlQzMm9NeDVR?=
+ =?utf-8?B?WXRrU0hiVTMwV1E2NFVKbUJmQ1BQOEI1YWJjaldsSUlPdE5WL3IwM0dCWk9n?=
+ =?utf-8?B?REJrYXVuY2FyMjdrU2JraXpobGRaTkJ5QmlidGN5ZzV6aExQb0ZxOTA5YzZq?=
+ =?utf-8?B?bnh6YnFKYzFtMXZ2VnlNWnF3bmlJMjh3VkpodWFWMnIyT3JidjlRWk1rZExL?=
+ =?utf-8?B?U3VzVGhCd3V1NXEwT3JzUmtMc0NpWEF0dCtYUkdhWFhOZmJhSWxuRDBjczc3?=
+ =?utf-8?B?UGF5cnpHZEhtTEhpZmZCcUVjMWpVOXhTWFdic2h4T1VyVUJxVDM0cFRTMmQ3?=
+ =?utf-8?B?QTJ0dFBER3ZpZ1kyMzdMbXFwTTh5a0p5MUszWlJMRnR6UHg5RURSeHVhcWtW?=
+ =?utf-8?B?dE9nSnNaWHdLNFRkbWYrL0Z6SFgxOTV4WTg0T08zbXI2dVRYNTFwWmtXREVU?=
+ =?utf-8?B?SGFGY2F6SjJsT0pieG9SMnEveVQyY0dyMC9hZDZyZHY2SjlHSnpJMTBIdDdp?=
+ =?utf-8?B?Q0xhNFRwSmtWY2dmNmZoblFjSDQ3ZTN6WUpEbzM5TGlSVUNXbEUzRFFjQ3cw?=
+ =?utf-8?B?Q1VCWktKZ2FUMlpLVVlKOENQaGMrL0xKSEhTL2tlNGFyMm5tYmNtWjBmYWlY?=
+ =?utf-8?B?ZXhlNUtPSkM1Skp4aHh4bjNpUU0rVTdTU0xaWWY4T3ZKZ05rQld1djNEK0k2?=
+ =?utf-8?B?cy9GdWVXam10Zzc5VktNQXZOWHJPa2ZERXQzWksyMHh2WmJvYjk0a3F6cldD?=
+ =?utf-8?B?QXovWDhwalMyM1FQRERLVE1kR0RDdkRnZ1JVSEpqQU53V0JzZWRNSmFHeTA3?=
+ =?utf-8?B?WGRid3BDakNwVUdreGlGYmRNbU16cmdlUVhaTW94REJFeHJMYXNSUkRWdG1r?=
+ =?utf-8?B?STRaa3lGN2tydzBYTUJHa1RxVW1CaVVLK3psTXNWdGRSMWpDU2hXREF4UStL?=
+ =?utf-8?B?STlSaHFKMGdkQ2tPeUpPUXlLbXhpc0ZQNEVVV0JBOXk4c0Q4ZEZRR3hrNEdQ?=
+ =?utf-8?B?cERTanFubm5XSmNrck1DRUFMbzRrdk9RNUpwSDBjb09OVGVJdUp5K3ZqSEd5?=
+ =?utf-8?B?cHdiQ0pSN1llc2hVTHRsVlRma1RJRUlSaEtFTmV6c2FzMlV0U3FQQjdWTVJO?=
+ =?utf-8?B?WDVqbG56VUhFNFZaeWk4OUV0Sy9wcnh2MW50L0t1Z2g0Q090NkFXSUJZbWY2?=
+ =?utf-8?B?OXJHRjlRcHFpWkFpRzhwK3NkNFRSWE4vM2F4Y1cyZGREbVBmb1RqbDI2VU1r?=
+ =?utf-8?Q?+gPq7LzhzNUUUtSrGACW2byd3?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69276b99-8c9a-48fd-2d53-08db86e2e78d
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2023 16:28:51.0964
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M+R7RUzomMn9H0wHz66KLANgINh98Dim9F2kiBmicfjdYqMCQU33efU2kGtxvVgy6/rQVZGHv4CwySwNWcYtsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7205
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-CXL 3.0 defines a mailbox PCI function independent of any other CXL
-components. The intent is that instances of this mailbox will be found
-as additional PCI functions of upstream CXL switch ports.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/cxl/Kconfig          |  14 +++
- drivers/cxl/Makefile         |   2 +
- drivers/cxl/core/Makefile    |   1 +
- drivers/cxl/core/core.h      |   1 +
- drivers/cxl/core/mbox.c      |   6 ++
- drivers/cxl/core/port.c      |   4 +
- drivers/cxl/cxlmem.h         |  15 +++
- drivers/cxl/switch-cci.c     | 182 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/cxl_mem.h |   4 +
- 9 files changed, 229 insertions(+)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index fcbf8295fde3..9a304ab60692 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -152,5 +152,19 @@ config CXL_PMU
- 	  Say 'y/m' to enable a driver that will attach to performance
- 	  monitoring units and provide standard perf based interfaces.
- 
-+	  If unsure say 'm'.
-+
-+config CXL_SWITCH
-+	tristate "CXL switch mailbox access"
-+	help
-+	  The CXL r3.0 specification defines a "CXL switch CCI" sub-class in the
-+	  PCI "Serial" base class of devices. Device's identified by
-+	  this class code provide a mailbox interface to allow control of CXL
-+	  switch configuration over inband PCI.
-+
-+	  Say 'y/m' to enable a driver that will attach to CXL Switch CCI
-+	  devices enumerated by the CXL switch CCI class code for configuration
-+	  and management primarily via the mailbox interface.
-+
- 	  If unsure say 'm'.
- endif
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index db321f48ba52..1e5f5b8b4d73 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -5,9 +5,11 @@ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
- obj-$(CONFIG_CXL_PORT) += cxl_port.o
-+obj-$(CONFIG_CXL_SWITCH) += cxl_switch_cci.o
- 
- cxl_mem-y := mem.o
- cxl_pci-y := pci.o
- cxl_acpi-y := acpi.o
- cxl_pmem-y := pmem.o security.o
- cxl_port-y := port.o
-+cxl_switch_cci-y := switch-cci.o
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 1f66b5d4d935..d8a0ffa0f8cc 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -13,5 +13,6 @@ cxl_core-y += mbox.o
- cxl_core-y += pci.o
- cxl_core-y += hdm.o
- cxl_core-y += pmu.o
-+cxl_core-y += switch-cci.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 5491d3a3c095..23d21d290db5 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -80,6 +80,7 @@ extern struct rw_semaphore cxl_dpa_rwsem;
- int cxl_memdev_init(void);
- void cxl_memdev_exit(void);
- void cxl_mbox_init(void);
-+int cxl_switch_cci_init(void);
- 
- enum cxl_poison_trace_type {
- 	CXL_POISON_TRACE_LIST,
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index eb6123b54f0a..c77b8ffb6ea8 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -8,6 +8,7 @@
- #include <cxlmbox.h>
- #include <cxlpci.h>
- #include <cxlmem.h>
-+#include <cxlpci.h>
- #include <cxl.h>
- 
- #include "core.h"
-@@ -55,6 +56,8 @@ static bool cxl_raw_allow_all;
-  * 0, and the user passed in 1, it is an error.
-  */
- static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
-+	CXL_CMD(INFO_STAT_IDENTIFY, 0, 0x12, 0),
-+	CXL_CMD(GET_BG_CMD_STATUS, 0, 8, 0),
- 	CXL_CMD(IDENTIFY, 0, 0x43, CXL_CMD_FLAG_FORCE_ENABLE),
- #ifdef CONFIG_CXL_MEM_RAW_COMMANDS
- 	CXL_CMD(RAW, CXL_VARIABLE_PAYLOAD, CXL_VARIABLE_PAYLOAD, 0),
-@@ -72,6 +75,9 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
- 	CXL_CMD(GET_SHUTDOWN_STATE, 0, 0x1, 0),
- 	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
- 	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-+	CXL_CMD(IDENTIFY_SWITCH_DEVICE, 0, 0x49, 0),
-+	CXL_CMD(TUNNEL_MANAGEMENT_COMMAND, CXL_VARIABLE_PAYLOAD,
-+		CXL_VARIABLE_PAYLOAD, 0),
- };
- 
- /*
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 724be8448eb4..ce3fb0d406d7 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2020,6 +2020,10 @@ static __init int cxl_core_init(void)
- 	if (rc)
- 		return rc;
- 
-+	rc = cxl_switch_cci_init();
-+	if (rc)
-+		return rc;
-+
- 	cxl_bus_wq = alloc_ordered_workqueue("cxl_port", 0);
- 	if (!cxl_bus_wq) {
- 		rc = -ENOMEM;
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index edc173715814..b0e7fbdbcfb3 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -456,6 +456,17 @@ struct cxl_memdev_state {
- 	struct cxl_fw_state fw;
- };
- 
-+struct cxl_swdev {
-+	struct device dev;
-+	struct cdev cdev;
-+	struct cxl_mbox mbox;
-+	struct cxl_dev_state cxlds;
-+	int id;
-+};
-+
-+struct cxl_swdev *cxl_swdev_alloc(struct device *parent);
-+void cxl_swdev_shutdown(struct cxl_swdev *cxlswd);
-+
- static inline struct cxl_memdev_state *
- to_cxl_memdev_state(struct cxl_dev_state *cxlds)
- {
-@@ -466,6 +477,8 @@ to_cxl_memdev_state(struct cxl_dev_state *cxlds)
- 
- enum cxl_opcode {
- 	CXL_MBOX_OP_INVALID		= 0x0000,
-+	CXL_MBOX_OP_INFO_STAT_IDENTIFY	= 0x0001,
-+	CXL_MBOX_OP_GET_BG_CMD_STATUS	= 0x0002,
- 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
- 	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
- 	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-@@ -501,6 +514,8 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_UNLOCK		= 0x4503,
- 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
- 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
-+	CXL_MBOX_OP_IDENTIFY_SWITCH_DEVICE	= 0x5100,
-+	CXL_MBOX_OP_TUNNEL_MANAGEMENT_COMMAND	= 0x5300,
- 	CXL_MBOX_OP_MAX			= 0x10000
- };
- 
-diff --git a/drivers/cxl/switch-cci.c b/drivers/cxl/switch-cci.c
-new file mode 100644
-index 000000000000..80a4a3724f26
---- /dev/null
-+++ b/drivers/cxl/switch-cci.c
-@@ -0,0 +1,182 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright(c) Huawei Technologies
-+ * Based on cxl/pci.c Copyright(c) 2020 Intel Corporation. All rights reserved.
-+ */
-+
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/moduleparam.h>
-+#include <linux/module.h>
-+#include <linux/delay.h>
-+#include <linux/sizes.h>
-+#include <linux/mutex.h>
-+#include <linux/list.h>
-+#include <linux/pci.h>
-+#include <linux/io.h>
-+#include "cxlmem.h"
-+#include "cxlpci.h"
-+#include "cxlswitch.h"
-+#include "cxl.h"
-+
-+static irqreturn_t cxl_swmbcci_mbox_irq(int irq, void *d)
-+{
-+	return cxl_mbox_irq(irq, d);
-+}
-+
-+static int cxl_swmbcci_setup_mailbox(struct cxl_mbox *mbox)
-+{
-+	const int cap = readl(mbox->mbox + CXLDEV_MBOX_CAPS_OFFSET);
-+
-+	/*
-+	 * A command may be in flight from a previous driver instance,
-+	 * think kexec, do one doorbell wait so that
-+	 * __cxl_pci_mbox_send_cmd() can assume that it is the only
-+	 * source for future doorbell busy events.
-+	 */
-+	if (cxl_pci_mbox_wait_for_doorbell(mbox) != 0) {
-+		u64 md_status = 0;
-+
-+		if (mbox->get_status)
-+			md_status = mbox->get_status(mbox);
-+		cxl_err(mbox->dev, md_status, "timeout awaiting mailbox idle");
-+
-+		return -ETIMEDOUT;
-+	}
-+
-+	mbox->payload_size =
-+		1 << FIELD_GET(CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK, cap);
-+
-+	/*
-+	 * CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register
-+	 *
-+	 * If the size is too small, mandatory commands will not work and so
-+	 * there's no point in going forward. If the size is too large, there's
-+	 * no harm is soft limiting it.
-+	 */
-+	mbox->payload_size = min_t(size_t, mbox->payload_size, SZ_1M);
-+	if (mbox->payload_size < 256) {
-+		dev_err(mbox->dev, "Mailbox is too small (%zub)",
-+			mbox->payload_size);
-+		return -ENXIO;
-+	}
-+
-+	dev_dbg(mbox->dev, "Mailbox payload sized %zu", mbox->payload_size);
-+
-+	rcuwait_init(&mbox->mbox_wait);
-+
-+	if (cap & CXLDEV_MBOX_CAP_BG_CMD_IRQ) {
-+		u32 ctrl;
-+		int irq, msgnum, rc;
-+		struct pci_dev *pdev = to_pci_dev(mbox->dev);
-+
-+		msgnum = FIELD_GET(CXLDEV_MBOX_CAP_IRQ_MSGNUM_MASK, cap);
-+		irq = pci_irq_vector(pdev, msgnum);
-+		if (irq < 0)
-+			goto mbox_poll;
-+
-+		rc = devm_request_threaded_irq(mbox->dev, irq, cxl_swmbcci_mbox_irq,
-+					       NULL, IRQF_SHARED | IRQF_ONESHOT,
-+					       NULL, mbox);
-+		if (rc)
-+			goto mbox_poll;
-+
-+		/* enable background command mbox irq support */
-+		ctrl = readl(mbox->mbox + CXLDEV_MBOX_CTRL_OFFSET);
-+		ctrl |= CXLDEV_MBOX_CTRL_BG_CMD_IRQ;
-+		writel(ctrl, mbox->mbox + CXLDEV_MBOX_CTRL_OFFSET);
-+
-+		return 0;
-+	}
-+
-+mbox_poll:
-+	if (mbox->special_init_poll)
-+		mbox->special_init_poll(mbox);
-+
-+	dev_dbg(mbox->dev, "Mailbox interrupts are unsupported");
-+	return 0;
-+}
-+
-+
-+static int cxl_swmbcci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct cxl_register_map map;
-+	struct cxl_swdev *cxlswd;
-+	int rc;
-+
-+	rc = pcim_enable_device(pdev);
-+	if (rc)
-+		return rc;
-+
-+	cxlswd = cxl_swdev_alloc(&pdev->dev);
-+	if (IS_ERR(cxlswd))
-+		return PTR_ERR(cxlswd);
-+
-+	mutex_init(&cxlswd->mbox.mbox_mutex);
-+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
-+	if (rc)
-+		return rc;
-+	rc = cxl_setup_regs(&map);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_map_device_regs(&map, &cxlswd->cxlds.regs.device_regs);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_map_mbox_regs(&map, &cxlswd->mbox.mbox);
-+	if (rc)
-+		return rc;
-+
-+	cxlswd->mbox.status = cxlswd->cxlds.regs.status;
-+	cxlswd->mbox.dev = &pdev->dev;
-+
-+	rc = cxl_swmbcci_setup_mailbox(&cxlswd->mbox);
-+	if (rc)
-+		return rc;
-+
-+
-+	pci_set_drvdata(pdev, cxlswd);
-+
-+	rc = cxl_enumerate_cmds(&cxlswd->mbox);
-+	if (rc)
-+		goto error_put_device;
-+
-+	rc = cdev_device_add(&cxlswd->cdev, &cxlswd->dev);
-+	if (rc)
-+		goto error_put_device;
-+
-+	return 0;
-+
-+error_put_device:
-+	cxl_swdev_shutdown(cxlswd);
-+	put_device(&cxlswd->dev);
-+	return rc;
-+}
-+
-+static void cxl_swbmcci_remove(struct pci_dev *pdev)
-+{
-+	struct cxl_swdev *cxlswd = pci_get_drvdata(pdev);
-+	struct device *dev = &cxlswd->dev;
-+
-+	cxl_swdev_shutdown(cxlswd);
-+	cdev_device_del(&cxlswd->cdev, dev);
-+	put_device(&cxlswd->dev);
-+}
-+
-+static const struct pci_device_id cxl_swmbcci_pci_tbl[] = {
-+	{ PCI_DEVICE_CLASS(PCI_CLASS_SERIAL_CXL_SWITCH_CCI, ~0) },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(pci, cxl_swmbcci_pci_tbl);
-+
-+static struct pci_driver cxl_swmbcci_driver = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = cxl_swmbcci_pci_tbl,
-+	.probe = cxl_swmbcci_probe,
-+	.remove = cxl_swbmcci_remove,
-+};
-+
-+module_pci_driver(cxl_swmbcci_driver);
-+MODULE_DESCRIPTION("CXL Switch CCI mailbox access driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(CXL);
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 14bc6e742148..b62aeba9d5c6 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -46,6 +46,10 @@
- 	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
- 	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
- 	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
-+	___C(INFO_STAT_IDENTIFY, "Get Information"),			  \
-+	___C(GET_BG_CMD_STATUS, "Background Command Status"),	\
-+	___C(IDENTIFY_SWITCH_DEVICE, "Identify Switch Device"),		\
-+	___C(TUNNEL_MANAGEMENT_COMMAND, "Tunnel Management Command"),     \
- 	___C(MAX, "invalid / last command")
- 
- #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
--- 
-2.39.2
+On 7/17/23 03:26, Breno Leitao wrote:
+> Commit 3840e10e8dca ("cxl/acpi: Fix a use-after-free in cxl_parse_cfmws()")
+> is using %llx to print resources pointers, but it is incorrect on 32-bits
+> system, causing the following compilation warning on i386:
+> 
+> 	 drivers/cxl/acpi.c:300:4: warning: format specifies type 'unsigned long long' but the argument has type 'resource_size_t' (aka 'unsigned int') [-Wformat]
+> 
+> Instead of using pointers to the resource, uses the proper printk
+> specifier that knows how to handle the struct "resources".
+> 
+> This is the new format, being printed now:
+> 
+> 	Failed to add decode range: [mem 0x4080000000-0x2baffffffff flags 0x200]
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202307151059.2vvBt55H-lkp@intel.com/
+> Fixes: 3840e10e8dca ("cxl/acpi: Fix a use-after-free in cxl_parse_cfmws()")
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>   drivers/cxl/acpi.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 815b43859c16..d1c559879dcc 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -296,8 +296,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>   	else
+>   		rc = cxl_decoder_autoremove(dev, cxld);
+>   	if (rc) {
+> -		dev_err(dev, "Failed to add decode range [%#llx - %#llx]\n",
+> -			res->start, res->end);
+> +		dev_err(dev, "Failed to add decode range: %pr", res);
+>   		return rc;
+>   	}
+>   	dev_dbg(dev, "add: %s node: %d range [%#llx - %#llx]\n",
