@@ -2,232 +2,155 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DE6EB64DC
-	for <linux-cxl@archiver.kernel.org>; Sat, 15 Jul 2023 13:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58BAEB64DC
+	for <linux-cxl@archiver.kernel.org>; Mon, 17 Jul 2023 06:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbjGONBD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 15 Jul 2023 09:01:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
+        id S229469AbjGQGeM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 17 Jul 2023 02:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjGONBC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 15 Jul 2023 09:01:02 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 441A035B5
-        for <linux-cxl@vger.kernel.org>; Sat, 15 Jul 2023 06:01:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689426061; x=1720962061;
-  h=date:from:to:cc:subject:message-id;
-  bh=weCwuMknhH0oRrg6TxLKZZZA/H1pAMCmD+f5TzC/efo=;
-  b=bjEwsvl/Xa6j+Z6UyEvv7w4Ac5ONN1v64VzlK+/zO+9YOqRC/A4IhAjK
-   FiAJjUyjDbB2vyR38lrwP6yOH66fcJwYeWN2OzyZh8k9coJ/DEvChSsb6
-   xybl4xydxOc8UnOWjtxjkc+Ofru52Anyrrq7K432ISbMbcwrQVAb9/m7V
-   kLrcheM5WvUxHnfDDsNGCUC9e82TSiPFSiOiTZfj24A94WS7DkJw14DKD
-   LTjnIgIppP21TGX7CfUAGONaTQ6wGYun/xxzX+zlPRGMgl4jKIkYYev33
-   2f9vQGgHYF4e8bqQFwQ3jbuvpDh98xhfduk2LRp07pIttnwNOaX4avVtX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10772"; a="369206081"
-X-IronPort-AV: E=Sophos;i="6.01,208,1684825200"; 
-   d="scan'208";a="369206081"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2023 06:01:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10772"; a="757876451"
-X-IronPort-AV: E=Sophos;i="6.01,208,1684825200"; 
-   d="scan'208";a="757876451"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jul 2023 06:00:59 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qKetO-0008AR-0x;
-        Sat, 15 Jul 2023 13:00:58 +0000
-Date:   Sat, 15 Jul 2023 21:00:20 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
+        with ESMTP id S229450AbjGQGeL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 17 Jul 2023 02:34:11 -0400
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC88D9
+        for <linux-cxl@vger.kernel.org>; Sun, 16 Jul 2023 23:34:09 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230717062626epoutp015e5349b399ebe72a2c979a8bf3dec56e~yk65CaWm12493924939epoutp01i
+        for <linux-cxl@vger.kernel.org>; Mon, 17 Jul 2023 06:26:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230717062626epoutp015e5349b399ebe72a2c979a8bf3dec56e~yk65CaWm12493924939epoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1689575186;
+        bh=J5pfay+vlkQzijjCfhEB6lCY4J+B6tZrRk6bAir7ttg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fI8pMMEDdfzjtvdBd59TerDaCkBYOIVc97nlrmrbXekcpdzkzk+cCOCppbsb10/kO
+         iqZjgcFa9Vs2oauDcvOIm4ZcBnPZ3MFG2pXbY3FEUKWenpYXgHWem9cahgshwn9a7G
+         a5qxY9Tq7hmGePIyeLLEI0DeuXbSi813721aBzIQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230717062626epcas2p3b5b4d2e28f4219513a38aa33cf858e08~yk64fhWZy0784607846epcas2p3c;
+        Mon, 17 Jul 2023 06:26:26 +0000 (GMT)
+Received: from epsmges2p2.samsung.com (unknown [182.195.36.100]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4R4BtT54T0z4x9Pv; Mon, 17 Jul
+        2023 06:26:25 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        16.8E.40133.11FD4B46; Mon, 17 Jul 2023 15:26:25 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20230717062624epcas2p2c5a14cb450b04ccc0ccd2292312d9636~yk63N8kX13261632616epcas2p2z;
+        Mon, 17 Jul 2023 06:26:24 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230717062624epsmtrp20af06d8ef2adeb0a1cc010ce2dd367e5~yk63M4Zok0871408714epsmtrp2N;
+        Mon, 17 Jul 2023 06:26:24 +0000 (GMT)
+X-AuditID: b6c32a46-4edb870000009cc5-97-64b4df11f83e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        75.9F.34491.01FD4B46; Mon, 17 Jul 2023 15:26:24 +0900 (KST)
+Received: from jehoon-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.133]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230717062624epsmtip259361e9fe7e20a78254512b004bd0a84~yk62_uWHm1559215592epsmtip2i;
+        Mon, 17 Jul 2023 06:26:24 +0000 (GMT)
+From:   Jehoon Park <jehoon.park@samsung.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     nvdimm@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [cxl:fixes] BUILD SUCCESS WITH WARNING
- 0e99e96b85fc2c608a65d05063f40c671214b2da
-Message-ID: <202307152118.Hs2xlSf4-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>
+Subject: [ndctl PATCH RESEND 1/2] cxl: Update a revision by CXL 3.0
+ specification
+Date:   Mon, 17 Jul 2023 15:29:07 +0900
+Message-Id: <20230717062908.8292-2-jehoon.park@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20230717062908.8292-1-jehoon.park@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBKsWRmVeSWpSXmKPExsWy7bCmha7g/S0pBs+WKVrcfXyBzWL61AuM
+        FiduNrJZrL65htFi/9PnLBYHXjewW6xaeI3NYvHRGcwWR/dwWJyfdYrFYuWPP6wWtyYcY3Lg
+        8Wg58pbVY/Gel0weLzbPZPTo27KK0WPq7HqPz5vkAtiism0yUhNTUosUUvOS81My89JtlbyD
+        453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgE5UUihLzCkFCgUkFhcr6dvZFOWXlqQqZOQX
+        l9gqpRak5BSYF+gVJ+YWl+al6+WlllgZGhgYmQIVJmRnXL48kbFgCWfF9kv9jA2Mt9m7GDk5
+        JARMJHpWLWPrYuTiEBLYwShx/edidgjnE6PEp+unmSCcb4wS2+aegWvZt/I3I0RiL6PEmTOL
+        mCGcXiaJzm0dTCBVbALaEve3b2ADsUUEZCWa1z0AG8UssJlZYtnOc2AJYYFgiflP28HGsgio
+        Styf/hKsmVfAWuJ/5yYmiHXyEqs3HGAGsTkFbCRmTP/KCBH/yi6xbZ8BhO0i8f3gaTYIW1ji
+        1fEtUKdKSXx+txcqni/x8+QtVgi7QOLTlw8sELaxxLubz4HiHEDHaUqs36UPYkoIKEscuQVW
+        wSzAJ9Fx+C87RJhXoqNNCKJRVaLr+AeoY6QlDl85ygxhe0h0rV3MCgmSfkaJpU8+M01glJuF
+        sGABI+MqRrHUguLc9NRiowIjeIwl5+duYgQnQS23HYxT3n7QO8TIxMF4iFGCg1lJhPf7qk0p
+        QrwpiZVVqUX58UWlOanFhxhNgUE3kVlKNDkfmIbzSuINTSwNTMzMDM2NTA3MlcR577XOTRES
+        SE8sSc1OTS1ILYLpY+LglGpgMnwQUzTDbrrExLk37kxRdI3UZg26N3/rMS5pi5K9i54l703h
+        bBaIZXDVNyts31n1/UXjrMtPWueumsKoMvPQvEOHb2Z8d6iP0ayb8GH6NHPW25MSjT/tOTNT
+        39LunfmdTYsZ92kve1+4KmS9n1r6NnO7wCcbFXndohnWTV5V90roaOJptTU793wPclg5a/38
+        b58P7DvVVRN9+0/S7pzTAp98TI3ZX03akLrL11vLzm5B4I+HpdsXFtucjfBnmfmV4cQ766nT
+        OdtU1APCK71nT29aoZT1ZJYly7Jbey3LmyI/fXSL4E1PX/hDudx5fd/JSeHL2suyuHOEtRo/
+        H4tInHF3Z1R+vI5t+mNhNad8NiWW4oxEQy3mouJEAC86mZkLBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCLMWRmVeSWpSXmKPExsWy7bCSvK7A/S0pBuuajCzuPr7AZjF96gVG
+        ixM3G9ksVt9cw2ix/+lzFosDrxvYLVYtvMZmsfjoDGaLo3s4LM7POsVisfLHH1aLWxOOMTnw
+        eLQcecvqsXjPSyaPF5tnMnr0bVnF6DF1dr3H501yAWxRXDYpqTmZZalF+nYJXBmXL09kLFjC
+        WbH9Uj9jA+Nt9i5GTg4JAROJfSt/M3YxcnEICexmlNj/BiYhLXGv+QqULSxxv+UIK0RRN5PE
+        us/bmEESbALaEve3b2ADsUUEZCWa1z1gAiliFtjLLNEx8zwrSEJYIFBi1sqFYJNYBFQl7k9/
+        yQRi8wpYS/zv3MQEsUFeYvWGA2BDOQVsJGZM/8oIYgsB1Tx48Zt5AiPfAkaGVYySqQXFuem5
+        xYYFhnmp5XrFibnFpXnpesn5uZsYwQGrpbmDcfuqD3qHGJk4GA8xSnAwK4nwfl+1KUWINyWx
+        siq1KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QDk8T2kwuk9sv9PazG
+        sexsfutJh5+dijsspnSHRi0LmyPasesK57NZqQ3uHBwX+GoT/t//OJHBRufCgiWsjKuW/tp8
+        h8c6hXXhvvX/XzPU8s5TOBKzYJPI8rrXMT0bmy8c+3hu3o2+qmcnTHfKXjmTYXXD8P43X/mI
+        YosDO3Ywvlr8o7/5x7K7q/kfvC173fU+3FJ726kWpRals/5XOTuWln1I8T8wwd8uIbvML2eD
+        2TOdvXWKjPGLrm3WWSda9ZtrYlFfVeLaTx4e/PellzwyWyOUNmWn+HKOiotuvK+zZ+xbqh7z
+        7mV8Y2TRIomY5/ybZ/+Ws92/9ZXdReYjSnKLFlQIOTBH67K4lO48ET3JpUmJpTgj0VCLuag4
+        EQCbSymNxwIAAA==
+X-CMS-MailID: 20230717062624epcas2p2c5a14cb450b04ccc0ccd2292312d9636
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230717062624epcas2p2c5a14cb450b04ccc0ccd2292312d9636
+References: <20230717062908.8292-1-jehoon.park@samsung.com>
+        <CGME20230717062624epcas2p2c5a14cb450b04ccc0ccd2292312d9636@epcas2p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: 0e99e96b85fc2c608a65d05063f40c671214b2da  cxl/acpi: Return 'rc' instead of '0' in cxl_parse_cfmws()
+Update the value of device temperature field when it is not implemented.
+(CXL 3.0 8.2.9.8.3.1)
 
-Warning reports:
+Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
+---
+ cxl/json.c        | 2 +-
+ cxl/lib/private.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-https://lore.kernel.org/oe-kbuild-all/202307151059.2vvBt55H-lkp@intel.com
-
-Warning: (recently discovered and may have been fixed)
-
-drivers/cxl/acpi.c:299:30: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 3 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
-
-Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-`-- i386-randconfig-i005-20230714
-    `-- drivers-cxl-acpi.c:warning:format-llx-expects-argument-of-type-long-long-unsigned-int-but-argument-has-type-resource_size_t-aka-unsigned-int
-
-elapsed time: 815m
-
-configs tested: 147
-configs skipped: 5
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r036-20230714   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
-arc                  randconfig-r043-20230714   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm                        clps711x_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          moxart_defconfig   clang
-arm                            mps2_defconfig   gcc  
-arm                         mv78xx0_defconfig   clang
-arm                         nhk8815_defconfig   gcc  
-arm                       omap2plus_defconfig   gcc  
-arm                         orion5x_defconfig   clang
-arm                          pxa168_defconfig   clang
-arm                  randconfig-r046-20230714   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r024-20230715   gcc  
-csky                 randconfig-r035-20230714   gcc  
-hexagon              randconfig-r022-20230715   clang
-hexagon              randconfig-r041-20230714   clang
-hexagon              randconfig-r045-20230714   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230714   gcc  
-i386         buildonly-randconfig-r005-20230714   gcc  
-i386         buildonly-randconfig-r006-20230714   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230714   gcc  
-i386                 randconfig-i002-20230714   gcc  
-i386                 randconfig-i003-20230714   gcc  
-i386                 randconfig-i004-20230714   gcc  
-i386                 randconfig-i005-20230714   gcc  
-i386                 randconfig-i006-20230714   gcc  
-i386                 randconfig-i011-20230714   clang
-i386                 randconfig-i012-20230714   clang
-i386                 randconfig-i013-20230714   clang
-i386                 randconfig-i014-20230714   clang
-i386                 randconfig-i015-20230714   clang
-i386                 randconfig-i016-20230714   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        mvme147_defconfig   gcc  
-m68k                        mvme16x_defconfig   gcc  
-m68k                 randconfig-r001-20230714   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     decstation_defconfig   gcc  
-mips                           ip27_defconfig   clang
-mips                malta_qemu_32r6_defconfig   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r013-20230714   gcc  
-openrisc                    or1ksim_defconfig   gcc  
-openrisc             randconfig-r004-20230714   gcc  
-openrisc             randconfig-r005-20230714   gcc  
-openrisc             randconfig-r011-20230714   gcc  
-openrisc             randconfig-r012-20230714   gcc  
-openrisc             randconfig-r016-20230714   gcc  
-openrisc             randconfig-r026-20230715   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                     akebono_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                        fsp2_defconfig   clang
-powerpc                       holly_defconfig   gcc  
-powerpc                    klondike_defconfig   gcc  
-powerpc                      makalu_defconfig   gcc  
-powerpc                       maple_defconfig   gcc  
-powerpc                     mpc5200_defconfig   clang
-powerpc                 mpc834x_itx_defconfig   gcc  
-powerpc               mpc834x_itxgp_defconfig   clang
-powerpc                 mpc836x_rdk_defconfig   clang
-powerpc              randconfig-r014-20230714   clang
-powerpc              randconfig-r015-20230714   clang
-powerpc                  storcenter_defconfig   gcc  
-powerpc                     tqm5200_defconfig   clang
-powerpc                      tqm8xx_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230714   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r002-20230714   gcc  
-s390                 randconfig-r032-20230714   gcc  
-s390                 randconfig-r044-20230714   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r006-20230714   gcc  
-sh                   randconfig-r025-20230715   gcc  
-sh                          rsk7269_defconfig   gcc  
-sh                           se7722_defconfig   gcc  
-sh                     sh7710voipgw_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                        sh7785lcr_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc64_defconfig   gcc  
-sparc64              randconfig-r034-20230714   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230714   gcc  
-x86_64       buildonly-randconfig-r002-20230714   gcc  
-x86_64       buildonly-randconfig-r003-20230714   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230714   clang
-x86_64               randconfig-x002-20230714   clang
-x86_64               randconfig-x003-20230714   clang
-x86_64               randconfig-x004-20230714   clang
-x86_64               randconfig-x005-20230714   clang
-x86_64               randconfig-x006-20230714   clang
-x86_64               randconfig-x011-20230714   gcc  
-x86_64               randconfig-x012-20230714   gcc  
-x86_64               randconfig-x013-20230714   gcc  
-x86_64               randconfig-x014-20230714   gcc  
-x86_64               randconfig-x015-20230714   gcc  
-x86_64               randconfig-x016-20230714   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r003-20230714   gcc  
-xtensa               randconfig-r021-20230715   gcc  
-xtensa                    smp_lx200_defconfig   gcc  
-
+diff --git a/cxl/json.c b/cxl/json.c
+index 9a4b5c7..3661eb9 100644
+--- a/cxl/json.c
++++ b/cxl/json.c
+@@ -155,7 +155,7 @@ static struct json_object *util_cxl_memdev_health_to_json(
+ 	}
+ 
+ 	field = cxl_cmd_health_info_get_temperature(cmd);
+-	if (field != 0xffff) {
++	if (field != 0x7fff) {
+ 		jobj = json_object_new_int(field);
+ 		if (jobj)
+ 			json_object_object_add(jhealth, "temperature", jobj);
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index d49b560..e92592d 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -324,7 +324,7 @@ struct cxl_cmd_set_partition {
+ #define CXL_CMD_HEALTH_INFO_EXT_CORRECTED_PERSISTENT_WARNING		(1)
+ 
+ #define CXL_CMD_HEALTH_INFO_LIFE_USED_NOT_IMPL				0xff
+-#define CXL_CMD_HEALTH_INFO_TEMPERATURE_NOT_IMPL			0xffff
++#define CXL_CMD_HEALTH_INFO_TEMPERATURE_NOT_IMPL			0x7fff
+ 
+ static inline int check_kmod(struct kmod_ctx *kmod_ctx)
+ {
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
