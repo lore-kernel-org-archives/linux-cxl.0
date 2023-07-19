@@ -2,184 +2,414 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30FDC001B0
-	for <linux-cxl@archiver.kernel.org>; Wed, 19 Jul 2023 17:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9637C001B0
+	for <linux-cxl@archiver.kernel.org>; Wed, 19 Jul 2023 18:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbjGSRmn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 19 Jul 2023 13:42:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35104 "EHLO
+        id S230388AbjGSScq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 19 Jul 2023 14:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230498AbjGSRmm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Jul 2023 13:42:42 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB351FC8
-        for <linux-cxl@vger.kernel.org>; Wed, 19 Jul 2023 10:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689788560; x=1721324560;
-  h=message-id:date:subject:to:references:from:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=6rOzmrBrHkfRiNAeFKBbYZErQx7jacfSy/c4dSm3og8=;
-  b=ig3o0MkCO4vDjOCrSkKJqGJzH2Jdd2lek0rdfaWOhMYpaHDxnNRZ+Y5G
-   4NoCkZNV9BXFSq8lbPiP/kIkzX0SslT67KqMla1sRfk0rtwxhvu5YonwH
-   FRAGb8WTvDwXL/8D3+qYGuoJL3kU4ab03s80qsaT2BwNU0qh6mqy8jwDu
-   vOq03hT1NfnYxX8OgCi124uCaGDYVSxbAOyah/hkUh0FmrNFNRsRktCf8
-   24mR4hSczBgkI31Ef+sj+Ukx+2V19GfpIxs4WTypFjzaDKeVQdjB6x9Uz
-   Ro2I5uaog28YcqSFtM0gN1mkSixSyJbg+RYoFyaPcqWrePZ6UO1BG1tuq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="346123199"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="346123199"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2023 10:42:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="718078859"
-X-IronPort-AV: E=Sophos;i="6.01,216,1684825200"; 
-   d="scan'208";a="718078859"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga007.jf.intel.com with ESMTP; 19 Jul 2023 10:42:39 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 19 Jul 2023 10:42:38 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 19 Jul 2023 10:42:38 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Wed, 19 Jul 2023 10:42:38 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.106)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Wed, 19 Jul 2023 10:42:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZVy+xmPpGlhoKdEAVMWISXTCns7AoalyZzRz5VIPxO6SjkHiStfN5OWVIX6DuM9s2guyMBqJIWnZsTGf2AOii7zUjQjoTl5AJ/UjIXEdzHm3rDyiyXY/t6KUNDrM1VWwMt8JBA1VZ4zj+iBMgrTDf6Qx8osEO3NKQZQLbqo6FBdHov+xURO7DvpoEcK716pNb1SX3+s49CuDhfnx0ZwRmiwuEGE1iuNbCgw63jqSA3gA3N5Eo7Cb2Ro1LhcYtUnvv1Pvaf4rg6ve/0U9exuP6oTz+rdiVafkTmQSFWDxnOvbYbFZp6FGmbjLX8kWpKXclxMG/nRhGs1a7zdgm+mxTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=64DestQdylxE9On+mfTR/HWecTgxRDYtxTsKTE3Q02U=;
- b=jNU+dBsHf0wKe+4m6pVvx0YKQBY9Mbx/TK4HUIAmXiKyM6ooM/No9J8qm/DviImHbAfFqm+1qvzU5jSKfYuhOvXVeKiWVmEIEQldW3Nl2OI2QrNS71tlNffFukf225RRNEy3wOfOqwJsGeCGgKyW5xXgRqL7MuqhYlHYvoE7y6aXjMTWwHTXamusKM9umy9EBuz6GyzCxw/k3FVcPrbaihXJ4qD1kido+ugCZ18fLqJ4NI8ZdBI6yCTzOAh+QKaKOfgxv6gkd+kI5op04imtnKf3aaqmNEe559mYhd2ULnOsFd5i7P0i7elaVE4HqoGghzCFoMR8/dUp0OV2a3gITQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by IA1PR11MB6100.namprd11.prod.outlook.com (2603:10b6:208:3d4::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.31; Wed, 19 Jul
- 2023 17:42:34 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::be6a:199e:4fc1:aa80]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::be6a:199e:4fc1:aa80%6]) with mapi id 15.20.6588.031; Wed, 19 Jul 2023
- 17:42:34 +0000
-Message-ID: <e3b01acd-688c-ca51-e0c1-f8a62a2d38e6@intel.com>
-Date:   Wed, 19 Jul 2023 10:42:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.13.0
-Subject: Re: [PATCH] tools/testing/cxl: Remove unused SZ_512G macro
-To:     Xiao Yang <yangx.jy@fujitsu.com>, <linux-cxl@vger.kernel.org>
-References: <20230719163103.3392-1-yangx.jy@fujitsu.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230719163103.3392-1-yangx.jy@fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR16CA0008.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::21) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+        with ESMTP id S230348AbjGSScm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 19 Jul 2023 14:32:42 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C78B6
+        for <linux-cxl@vger.kernel.org>; Wed, 19 Jul 2023 11:32:38 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id 3f1490d57ef6-ca9804dc6e4so53613276.0
+        for <linux-cxl@vger.kernel.org>; Wed, 19 Jul 2023 11:32:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689791557; x=1690396357;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dZNO0lAS38XkkxRCJG38vZhvleKkSXD1W1EGlNTFzi0=;
+        b=FwyxyfwUr5gOA738WI6fOV/88x+fPhoGOBrTexUy9nm/zDNuYc1d86UfARRShePJoI
+         kDQWpM44BNxm+NyIQd7O6x1b9lFQW19b+nlubzJVuj3lAC83o+5k0YjjTxZPk0dhZdnK
+         y7ithA3VVqGp92AYBemfDrBqfni8YG27PLNDZYVnFgOGdIhnVxdbizNLOfPo7SNHKkKW
+         3Tjd3yiGIhbA5IjDBcnWpjqZWREMAMVkafoLHLB2f1buEsTHdzFYemrQUvDB9AV4g4I7
+         dT9TBqdj/35Tn1YLT+P8tq4C4CA+EDK9cmhXBAPwmSwRnHe/AtwMhdqfy4FUPEcsMSwh
+         JntQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689791557; x=1690396357;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dZNO0lAS38XkkxRCJG38vZhvleKkSXD1W1EGlNTFzi0=;
+        b=hSZq/5+Q0eF+9di5imEnN+Y24U4WTCeFsMapt8SuMtiJktjEMl48opM8WRx8jQ9GJU
+         SQYpHxT6GZhpR4uxqzJQ8bXHaPKvLPom4SCzZiI15tXngQwG9X4GOX8ZhLestPe0s4iT
+         8EgtPv2rPk4/qnIMZos35zbVL3eJfo/RqhUyL1I1SJbo19y7lj+A47h+Aj8QfhrhvY7X
+         YaMqWliUT/socD71Sif3+rkEnUfheSmiV9tQkVzfyVMmXPLxgYtHl5EsKf17SaqqtUYu
+         L0F2rVKuST1Xx96u8hK0dGvb4tT0CG4dJF+33U1e7LtE9a4+tA4qb8xBbTEgNdf7z+vG
+         bWBw==
+X-Gm-Message-State: ABy/qLYw9EijIPfez4Ce4qjrkeBraErrFJbg/D7FB0XCIRkLw2c1SwPW
+        nIY0VovGSaGJKkg4Ca6sX/x3WOo46ex3
+X-Google-Smtp-Source: APBJJlEi7akNhCM3CYRV5xw0Zp3j+/QfKtdWXhZWOIxpeR376H/0vtRvBRppO6iC0Jl/tHxUM/Pi+Q==
+X-Received: by 2002:a25:abec:0:b0:c75:593f:d4ab with SMTP id v99-20020a25abec000000b00c75593fd4abmr3309559ybi.22.1689791557375;
+        Wed, 19 Jul 2023 11:32:37 -0700 (PDT)
+Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id y80-20020a253253000000b00c4e1589475esm1005053yby.27.2023.07.19.11.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jul 2023 11:32:36 -0700 (PDT)
+From:   Gregory Price <gourry.memverge@gmail.com>
+X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
+To:     qemu-devel@nongnu.org
+Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>
+Subject: [RFC] cxl/type3: minimum MHD cci support
+Date:   Wed, 19 Jul 2023 14:32:19 -0400
+Message-Id: <20230719183219.8093-1-gregory.price@memverge.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|IA1PR11MB6100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7dc0622c-1adb-4499-361f-08db887f88f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N3Jme9QBoSRAvA9GbzxIef+Dt3vlrwCsEF7NP8KHD0jruy5O4Lsb9pq6DKZN8o8S7gEEMNRGL++KtnCOO1pHYTeToJgH4qJvS2Cr1zm2sP7PN6xdiDSHag9qRDtkhfo/VktbEs1Pj561U9HSU+lQPsWuj4gtHv9/weV6ipbOFKdyAPkSYMd8ezeWch9Xqmx6gbkVUgo+OFrYZ5xDQAaqwvVEkDE99afcF33VONvAaskUr9ZQS8NS24lHTCDQ2Tvc5Le52159eohtmMT0kvkmgw+xtesuAuEch/Q+nGAQi61ZCnwVkyTCeIYhg28m0GgY3QYMl6KjzvjNxpp7up6hiSZA8isbe/cJimb8YW6PNSioMxfP81c4Q3YqcqwdveDP/YThcHOABKkmrm7sFMCzdAGb7T5VHoHCRYQc6/RswC9mNe0n9UynaxkV81QBKXiVeAQYo9CwP2RbhSqZupE/h9PYtz3aTUftuZ+D7PnTxqULlUGwqZYNRSXhBCC6fqTsNS7Yv9ObQuQX2t0itI4Z60L5ZmnhUJIGp4lwCmHbuL15Zzhvh7HpW9OfzGi80i8Q1EQe4YHMWEKAR0tEFJ9u0RtaHmm2ss7O49TF+UnmpiBbDiY0ztQjW/EOoniAwgBLG3eJiAOcf4/gn79nx/F81Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(39860400002)(396003)(366004)(346002)(376002)(451199021)(66556008)(478600001)(6486002)(186003)(36756003)(316002)(6512007)(2616005)(53546011)(2906002)(6506007)(66476007)(5660300002)(66946007)(38100700002)(44832011)(8676002)(8936002)(41300700001)(82960400001)(26005)(31696002)(83380400001)(4744005)(86362001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VlpRYk5EK0RVVHpkRUllcEZCSFM5OXNpQTJGSlBadmhOZjkrbXlqWjVzU3ZB?=
- =?utf-8?B?MkY0Y1NxODluZ1pVSmd0VWdQVml5eDFiREd3SzljaGRyaU5sUzl1RTFWc1JX?=
- =?utf-8?B?REE0SWthbTRLWlpUcWRTWDFPMzF5UjFpK0lLRllSRi92L3puSEoyVlhSd2x3?=
- =?utf-8?B?b3NiSUZKdzFMNTcxNUVPT0cwMk1aNGRYemFkOHE0VDhzRkN4RWhCVnI0WVhI?=
- =?utf-8?B?WmVXWDNNczhvbHRDdUFMZnZBeUZsa2JESlg1M0hYUExhS2g0WTBvZG9xV3FX?=
- =?utf-8?B?THJ5R2JSZmYzY2k3TFR1amJ4VlJTd0Y4dzgxNk1aQ3haRUFpOTg4azVXV1lQ?=
- =?utf-8?B?RXlidllOSUc1OVp5QnY5SGpycTFIQWorN1Z0VFNLTjdnY2Jxci8xZzJFZzRK?=
- =?utf-8?B?WGhBU0R3OVh1TUxHd003NkhzQ1J4ZFFZakN3YnpWVzZYUlQyaUJ6SDNwWkhB?=
- =?utf-8?B?UGdZZklXUFRpZVRnNjJabXJ2UUhGSWVXSHU1VkJuelRGQUwzcko2WjJnTEZw?=
- =?utf-8?B?OCtlYnlxRWkwWGQ2Mkl0RElnS0xudmV5QStucVpydlEyUXhyVWpzeTJrZzdZ?=
- =?utf-8?B?UXRueFdpRWpFNUR5OVdkU0NNNzdDeGVTc2NWN2NFNnR4aTlkVTJROWtOb3BB?=
- =?utf-8?B?SG9Xb25XczFCOWN6M0NqUkFXeXBOODlTblRqTUt4a2dncXFHektnRXdKNE9j?=
- =?utf-8?B?dC9jU25SRFNxQ0tMbHcxa1dNcTNxZkhBVDRVbHkySWtmMjdjRXZyM1NldE5k?=
- =?utf-8?B?VElRSlo2L0R2K2VuNEtwbkY4QTFWMm5wNG1JUGRRS0xPVE9PNk56bXV3MzJt?=
- =?utf-8?B?YkxIMWhuVGxZc0JIZVM0K3RrSDNjQWFqL0dmV2NiK0lmQUFESTBQYTRMUSs0?=
- =?utf-8?B?SkNjWG55QUx1bDd3V3JXRDY2c1VsVksxMjZJb3I4bnQ1TFRWS1U5MDE0QmJI?=
- =?utf-8?B?OTJNMGE4ZnZtYm9SbHJCRzNIcW5laXlWaEZQdlNZcEZDeVhjRkorR0tHR1pW?=
- =?utf-8?B?M2pUei81eWoxWTlGL0VjQ2pVMjY1eCtEVUxEMUoyYlRsZDBVMVdWai9NbEFw?=
- =?utf-8?B?SFUwZHlYSkZoUVgycmE0TFp0azNucWtZQlhRMHY5YVlGVy9lVC9ybFAxTUlr?=
- =?utf-8?B?YnJDbGN3NFM3aTRMOXhIRTdRZld2SC9vamtXcW9ETExjVkhtVTlEaEZBUGp3?=
- =?utf-8?B?aEV1Qkc2aVUwSVE2STRTbU1VNXloVHRVSk1udnZHdWVmUlM2RG1NNXBUaHda?=
- =?utf-8?B?OWlFZHcxVFN0OHlVTWphM3lHVERvcDRsM0E5M0J4Wk96emR3b1IwSEZWYnVX?=
- =?utf-8?B?RUVpd1daMG5kaE1lZnM5MDFDWFQybWd1eGpCT1NyY3d0aW9KdVQ4aUN6NG91?=
- =?utf-8?B?amdWOTNLV1NMMjd6aE52c1pNM083bW9HWnoxdUdxdHBlRFNLbHFUQmZ0SWtp?=
- =?utf-8?B?Q2dSRmNheTdyQ0F4Yi95WW16N2dMWXVLQUpNMTRJQW1rMHFmSmVVMU1CbUVY?=
- =?utf-8?B?d2h4QTV6S0U3akZHM2l3M3B0dCs4NGF6Ykl6WDRjc2p5L3EybzhnS3F4cjgx?=
- =?utf-8?B?dFR0dDc1cDcvR1V1Ync4WGhGaUpabEhBMWxidnhxRnowRkZoM2ZwTjNwQkFi?=
- =?utf-8?B?RitZZU4zZ0k3OGZPUktUdmVSQVIzU21VM3pib3VkdzNKZjR1ZWVWWmU4emF4?=
- =?utf-8?B?Y0J2T1B0K0R6SUs1YVJZaUJxUU05UUJJYTVJVktEZC9VOGhiS2d3R1BzbzR5?=
- =?utf-8?B?cFluUDlhODZ0T3ZpelBOc1MvSGpmTWpyNzJES0VXbmFsNGt5ME1ZVWZiQ1ps?=
- =?utf-8?B?a1pZNlNCK1ZETFZpL0I5TE1MeEJFc0lYQ1JuSHFvdEoyYVBIUkwzRTR3T2Y5?=
- =?utf-8?B?RklkWFo0ak1Yb2VIcDlVZllEQ2Jmd3dXa0xwUTRneU8yTnFoY2NsM2lXMVlv?=
- =?utf-8?B?SzBMcG5OS1dnM2x5KzR4YlU5MTRHdEpLTExrYXo2YTlPRndLYkxjRWl0aGtC?=
- =?utf-8?B?TGVPK3RMTW1ReWNtTVJYcHg2RjJpUGxMSXdVTUNKTTc0Z3ZmZnhZTklRbExC?=
- =?utf-8?B?YVdUY2ZRdStRVnRiRUVxazBtQUZrV0JnNFFFamQwOE5GajBCODNoM3Vha3By?=
- =?utf-8?Q?N536r9BaettmZhQ7GNuEZfkla?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dc0622c-1adb-4499-361f-08db887f88f9
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2023 17:42:34.5249
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: al37YMa+i+YXSAqNUiJZgrm6CMraO4F83+DTrA+HD/Z/WpGE+WrPKWfOhgolr1l/vIeEv2nIZKhfiC4DVD9egw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6100
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Implement the MHD GET_INFO cci command and add a shared memory
+region to the type3 device to host the information.
+
+Add a helper program to initialize this shared memory region.
+
+For now, limit the number of LD's to the number of heads. Later,
+this limitation will need to be lifted for MH-MLDs.
+
+Intended use case:
+
+1. Create the shared memory region
+2. Format the shared memory region
+3. Launch QEMU with `is_mhd=true,mhd_head=N,mhd_shmid=$shmid`
+
+shmid=`ipcmk -M 4096 | grep -o -E '[0-9]+' | head -1`
+cxl_mhd_init 4 $shmid
+qemu-system-x86_64 \
+  -nographic \
+  -accel kvm \
+  -drive file=./mhd.qcow2,format=qcow2,index=0,media=disk,id=hd \
+  -m 4G,slots=4,maxmem=8G \
+  -smp 4 \
+  -machine type=q35,cxl=on,hmat=on \
+  -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
+  -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
+  -object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=4G,share=true \
+  -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0,sn=66666,is_mhd=true,mhd_head=0,mhd_shmid=$shmid \
+  -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=4G
 
 
-On 7/19/23 09:31, Xiao Yang wrote:
-> SZ_512G macro has become useless since commit b2f3b74e1072
-> ("tools/testing/cxl: Move cxl_test resources to the top of memory")
-> so remove it directly.
-> 
-> Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks for the cleanup
+Comments:
 
-> ---
->   tools/testing/cxl/test/cxl.c | 4 ----
->   1 file changed, 4 deletions(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 0e78d8e19895..fb6ab9cef84f 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -999,10 +999,6 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
->   #define SZ_64G (SZ_32G * 2)
->   #endif
->   
-> -#ifndef SZ_512G
-> -#define SZ_512G (SZ_64G * 8)
-> -#endif
-> -
->   static __init int cxl_rch_init(void)
->   {
->   	int rc, i;
+base repo: https://gitlab.com/jic23/qemu
+base branch: cxl-2023-07-17
+
+Originally I wanted to add this as a separate CCI, but I realized this
+wouldn't work as intended because that would require a separate pci/cxl
+device in /dev/ to tunnel messages though.  This is not how this will
+present on real devices, so I went away from that.
+
+Next I wanted to simply *dynamically* add the command to the existing
+CCI in the type3 device, but these are statically defined in
+cxl-mailbox.
+
+I settled for simply adding the cci command to the type 3 device by
+default, and checking for whether `is_mhd` is set in the command.
+
+Ultimately, for MHD, they are likely to have a bunch of vendor specific
+commands associated with them *and* a bunch of vendor specific state. It
+would be nice to able to have something like "cci_add_command_set()" to
+the cci-mailbox, and an interface to override certain type3 functions
+such as read/write (but this is an exercise for a later patch set).
+
+---
+ hw/cxl/cxl-mailbox-utils.c  | 53 +++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          | 50 +++++++++++++++++++++++++++++
+ include/hw/cxl/cxl_device.h | 12 +++++++
+ tools/cxl/cxl_mhd_init.c    | 63 +++++++++++++++++++++++++++++++++++++
+ tools/cxl/meson.build       |  3 ++
+ tools/meson.build           |  1 +
+ 6 files changed, 182 insertions(+)
+ create mode 100644 tools/cxl/cxl_mhd_init.c
+ create mode 100644 tools/cxl/meson.build
+
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 2819914e8d..9ef4d7f5e0 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -84,6 +84,8 @@ enum {
+         #define GET_PHYSICAL_PORT_STATE     0x1
+     TUNNEL = 0x53,
+         #define MANAGEMENT_COMMAND     0x0
++    MHD = 0x55,
++        #define GET_MHD_INFO     0x0
+ };
+ 
+ /* CCI Message Format CXL r3.0 Figure 7-19 */
+@@ -1155,6 +1157,56 @@ static CXLRetCode cmd_media_clear_poison(const struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
+ 
++static CXLRetCode cmd_mhd_get_info(const struct cxl_cmd *cmd,
++                                   uint8_t *payload_in,
++                                   size_t len_in,
++                                   uint8_t *payload_out,
++                                   size_t *len_out,
++                                   CXLCCI *cci)
++{
++    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
++    struct {
++        uint8_t start_ld;
++        uint8_t ldmap_len;
++    } QEMU_PACKED *input = (void *)payload_in;
++
++    struct {
++        uint8_t nr_lds;
++        uint8_t nr_heads;
++        uint16_t resv1;
++        uint8_t start_ld;
++        uint8_t ldmap_len;
++        uint16_t resv2;
++        uint8_t ldmap[];
++    } QEMU_PACKED *output = (void *)payload_out;
++
++    uint8_t start_ld = input->start_ld;
++    uint8_t ldmap_len = input->ldmap_len;
++    uint8_t i;
++
++    if (!ct3d->is_mhd) {
++        return CXL_MBOX_UNSUPPORTED;
++    }
++
++    if (start_ld >= ct3d->mhd_state->nr_lds) {
++        return CXL_MBOX_INVALID_INPUT;
++    }
++
++    output->nr_lds = ct3d->mhd_state->nr_lds;
++    output->nr_heads = ct3d->mhd_state->nr_heads;
++    output->resv1 = 0;
++    output->start_ld = start_ld;
++    output->resv2 = 0;
++
++    for (i = 0; i < ldmap_len && (start_ld + i) < output->nr_lds; i++) {
++        output->ldmap[i] = ct3d->mhd_state->ldmap[start_ld + i];
++    }
++    output->ldmap_len = i;
++
++    *len_out = sizeof(*output) + output->ldmap_len;
++    return CXL_MBOX_SUCCESS;
++}
++
+ #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+ #define IMMEDIATE_DATA_CHANGE (1 << 2)
+ #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+@@ -1195,6 +1247,7 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+         cmd_media_inject_poison, 8, 0 },
+     [MEDIA_AND_POISON][CLEAR_POISON] = { "MEDIA_AND_POISON_CLEAR_POISON",
+         cmd_media_clear_poison, 72, 0 },
++    [MHD][GET_MHD_INFO] = {"GET_MULTI_HEADED_INFO", cmd_mhd_get_info, 2, 0},
+ };
+ 
+ static const struct cxl_cmd cxl_cmd_set_sw[256][256] = {
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index efb7dece80..98282aabab 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -18,6 +18,7 @@
+ #include "hw/cxl/cxl.h"
+ #include "hw/pci/msix.h"
+ #include "hw/pci/spdm.h"
++#include <sys/shm.h>
+ 
+ #define DWORD_BYTE 4
+ 
+@@ -794,6 +795,45 @@ static DOEProtocol doe_spdm_prot[] = {
+     { }
+ };
+ 
++static bool cxl_setup_mhd(CXLType3Dev *ct3d, Error **errp)
++{
++    if (ct3d->is_mhd && (!ct3d->mhd_shmid || (ct3d->mhd_head == ~(0)))) {
++        error_setg(errp, "is_mhd requires a shared memory region (mhd_shmid) and mhd_head < 32");
++        return false;
++    } else if (!ct3d->is_mhd && (ct3d->mhd_shmid || (ct3d->mhd_head == ~(0)))) {
++        error_setg(errp, "(is_mhd,mhd_head,mhd_shmid) fields must be used together");
++        return false;
++    } else if (!ct3d->is_mhd) {
++        return true;
++    }
++
++    if (ct3d->mhd_head >= 32) {
++        error_setg(errp, "MHD Head ID must be between 0-31");
++        return false;
++    }
++
++    ct3d->mhd_state = shmat(ct3d->mhd_shmid, NULL, 0);
++    if (ct3d->mhd_state == (void*)-1) {
++        ct3d->mhd_state = NULL;
++        error_setg(errp, "Unable to attach MHD State. Check ipcs is valid");
++        return false;
++    }
++
++    /* For now, limit the number of heads to the number of LD's (SLD) */
++    if (ct3d->mhd_state->nr_heads <= ct3d->mhd_head) {
++        error_setg(errp, "Invalid head ID for multiheaded device.");
++        return false;
++    }
++
++    if (ct3d->mhd_state->nr_lds <= ct3d->mhd_head) {
++        error_setg(errp, "MHD Shared state does not have sufficient lds.");
++        return false;
++    }
++
++    ct3d->mhd_state->ldmap[ct3d->mhd_head] = ct3d->mhd_head;
++    return true;
++}
++
+ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+ {
+     CXLType3Dev *ct3d = CXL_TYPE3(pci_dev);
+@@ -806,6 +846,10 @@ static void ct3_realize(PCIDevice *pci_dev, Error **errp)
+ 
+     QTAILQ_INIT(&ct3d->error_list);
+ 
++    if (!cxl_setup_mhd(ct3d, errp)) {
++        return;
++    }
++
+     if (!cxl_setup_memory(ct3d, errp)) {
+         return;
+     }
+@@ -910,6 +954,9 @@ static void ct3_exit(PCIDevice *pci_dev)
+     if (ct3d->hostvmem) {
+         address_space_destroy(&ct3d->hostvmem_as);
+     }
++    if (ct3d->mhd_state) {
++        shmdt(ct3d->mhd_state);
++    }
+ }
+ 
+ static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
+@@ -1067,6 +1114,9 @@ static Property ct3_props[] = {
+     DEFINE_PROP_UINT64("sn", CXLType3Dev, sn, UI64_NULL),
+     DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
+     DEFINE_PROP_UINT16("spdm", CXLType3Dev, spdm_port, 0),
++    DEFINE_PROP_BOOL("is_mhd", CXLType3Dev, is_mhd, false),
++    DEFINE_PROP_UINT32("mhd_head", CXLType3Dev, mhd_head, 0),
++    DEFINE_PROP_UINT32("mhd_shmid", CXLType3Dev, mhd_shmid, 0),
+     DEFINE_PROP_END_OF_LIST(),
+ };
+ 
+diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+index c68981b618..ebaa613c7b 100644
+--- a/include/hw/cxl/cxl_device.h
++++ b/include/hw/cxl/cxl_device.h
+@@ -406,6 +406,12 @@ typedef struct CXLPoison {
+ typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+ #define CXL_POISON_LIST_LIMIT 256
+ 
++struct CXLMHD_SharedState {
++    uint8_t nr_heads;
++    uint8_t nr_lds;
++    uint8_t ldmap[];
++};
++
+ struct CXLType3Dev {
+     /* Private */
+     PCIDevice parent_obj;
+@@ -440,6 +446,12 @@ struct CXLType3Dev {
+     unsigned int poison_list_cnt;
+     bool poison_list_overflowed;
+     uint64_t poison_list_overflow_ts;
++
++    /* Multi-headed Device */
++    bool is_mhd;
++    uint32_t mhd_head;
++    uint32_t mhd_shmid;
++    struct CXLMHD_SharedState *mhd_state;
+ };
+ 
+ #define TYPE_CXL_TYPE3 "cxl-type3"
+diff --git a/tools/cxl/cxl_mhd_init.c b/tools/cxl/cxl_mhd_init.c
+new file mode 100644
+index 0000000000..1303aa9494
+--- /dev/null
++++ b/tools/cxl/cxl_mhd_init.c
+@@ -0,0 +1,63 @@
++#include <signal.h>
++#include <stdbool.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ipc.h>
++#include <sys/shm.h>
++#include <sys/types.h>
++#include <unistd.h>
++
++struct mhd_state {
++    uint8_t nr_heads;
++    uint8_t nr_lds;
++    uint8_t ldmap[];
++};
++
++int main(int argc, char *argv[]) {
++    int shmid = 0;
++    uint32_t heads = 0;
++    struct mhd_state* mhd_state = 0;
++    uint8_t i;
++
++    if (argc != 3) {
++        printf("usage: cxl_mhd_init <heads> <shmid>\n"
++                "\theads         : number of heads on the device\n"
++                "\tshmid         : /tmp/mytoken.tmp\n");
++        return -1;
++    }
++
++    // must have at least 1 head
++    heads = (uint32_t)atoi(argv[1]);
++    if (heads == 0 || heads > 32) {
++        printf("bad heads argument (1-32)\n");
++        return -1;
++    }
++
++    shmid = (uint32_t)atoi(argv[2]);
++    if (shmid== 0) {
++        printf("bad shmid argument\n");
++        return -1;
++    }
++
++    mhd_state = shmat(shmid, NULL, 0);
++    if (mhd_state == (void*)-1) {
++        printf("Unable to attach to shared memory\n");
++        return -1;
++    }
++
++    // Initialize the mhd_state
++    size_t mhd_state_size = sizeof(struct mhd_state) + (sizeof(uint8_t) * heads);
++    memset(mhd_state, 0, mhd_state_size);
++    mhd_state->nr_heads = heads;
++    mhd_state->nr_lds = heads;
++
++    // Head ID == LD ID for now
++    for (i = 0; i < heads; i++)
++        mhd_state->ldmap[i] = i;
++
++    printf("mhd initialized\n");
++    shmdt(mhd_state);
++    return 0;
++}
+diff --git a/tools/cxl/meson.build b/tools/cxl/meson.build
+new file mode 100644
+index 0000000000..218658fe69
+--- /dev/null
++++ b/tools/cxl/meson.build
+@@ -0,0 +1,3 @@
++executable('cxl_mhd_init', files('cxl_mhd_init.c'),
++  install: true,
++  install_dir: get_option('libexecdir'))
+diff --git a/tools/meson.build b/tools/meson.build
+index e69de29bb2..91a1d788cb 100644
+--- a/tools/meson.build
++++ b/tools/meson.build
+@@ -0,0 +1 @@
++subdir('cxl')
+-- 
+2.39.1
+
