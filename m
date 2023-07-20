@@ -2,320 +2,164 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B968EB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jul 2023 07:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C87AEB64DD
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jul 2023 12:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjGTHOf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Jul 2023 03:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
+        id S229613AbjGTMSo (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Jul 2023 08:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjGTHOe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Jul 2023 03:14:34 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D225F19A7;
-        Thu, 20 Jul 2023 00:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689837272; x=1721373272;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=k4XpCfq0ZxU/xUvbPf7nQuvL2vPIJUVSa8ob3/AsbKg=;
-  b=jzJ4IC5SMO+sGD4tHjMrpU2G+0CRQWeMfihltFO39iyj8QvbnmzmCiXu
-   cHvmVwQJ2ZNFX+NyxRK70qTEu4r81ViXaZ+roDLbkanaHAWPDVp1uQjk2
-   npdW7RQzqeR6qN0RF3uims4hUBManXSgUI/aseAf7TOCu6lK1rllgB0/I
-   FjJy8zYqp5K2Z+7g5qWcOtQXcdbJypOkqqm2p+4GdnTwKppzHyTkBPrOf
-   ZZLGMnbW+12+Gj5ADrj7RPolnGQU1URAFOAXzperbmf73iREnbt5AFOa5
-   rHy8b2/6/DGmrIlAtw72w8xZn+AuyQLOae1+ayxbXhXIBNOLD4UgVkyUc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="430424007"
-X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
-   d="scan'208";a="430424007"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 00:14:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10776"; a="794334967"
-X-IronPort-AV: E=Sophos;i="6.01,218,1684825200"; 
-   d="scan'208";a="794334967"
-Received: from mfgalan-mobl1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.213.172.204])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 00:14:29 -0700
-From:   Vishal Verma <vishal.l.verma@intel.com>
-Date:   Thu, 20 Jul 2023 01:14:23 -0600
-Subject: [PATCH v2 2/3] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230720-vv-kmem_memmap-v2-2-88bdaab34993@intel.com>
-References: <20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com>
-In-Reply-To: <20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
+        with ESMTP id S229451AbjGTMSj (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Jul 2023 08:18:39 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5882115
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Jul 2023 05:18:37 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R6BTb3dvVz6J7pH;
+        Thu, 20 Jul 2023 20:15:15 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 20 Jul
+ 2023 13:18:34 +0100
+Date:   Thu, 20 Jul 2023 13:18:33 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Gregory Price <gregory.price@memverge.com>
+CC:     <linux-cxl@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7769;
- i=vishal.l.verma@intel.com; h=from:subject:message-id;
- bh=k4XpCfq0ZxU/xUvbPf7nQuvL2vPIJUVSa8ob3/AsbKg=;
- b=owGbwMvMwCXGf25diOft7jLG02pJDCk77l1RLYhbXWCzitdb+8Lhnk2Tb7DpHwm7w/ZyWs22J
- ZYZZ1KEO0pZGMS4GGTFFFn+7vnIeExuez5PYIIjzBxWJpAhDFycAjCRdbcY/ueUHputFtleKatx
- u6V+w0y1WofLhnM4luy4NinkuyBXswXDX9FDsx8wlRm5XmgKW2f8xVBd7s+bqcw/30wwLHTduvi
- AJBMA
-X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
- fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
+        <qemu-devel@nongnu.org>, <linuxarm@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Viacheslav Dubeyko" <slava@dubeyko.com>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        Fan Ni <fan.ni@samsung.com>, Michael Tsirkin <mst@redhat.com>,
+        Jonathan Zhang <jonzhang@meta.com>,
+        Klaus Jensen <k.jensen@samsung.com>
+Subject: Re: [RFC PATCH 10/17] misc/i2c_mctp_cxl: Initial device emulation
+Message-ID: <20230720131833.0000575c@Huawei.com>
+In-Reply-To: <ZLgwI5N/4RV2kpq1@memverge.com>
+References: <20230717171646.8972-1-Jonathan.Cameron@huawei.com>
+        <20230717171646.8972-11-Jonathan.Cameron@huawei.com>
+        <ZLcEkSLAj5yXVOVc@memverge.com>
+        <20230719091947.000043ac@Huawei.com>
+        <ZLgwI5N/4RV2kpq1@memverge.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is currently
-restricted to 'memblock_size' chunks of memory being added. Adding a
-larger span of memory precludes memmap_on_memory semantics.
+On Wed, 19 Jul 2023 14:49:07 -0400
+Gregory Price <gregory.price@memverge.com> wrote:
 
-For users of hotplug such as kmem, large amounts of memory might get
-added from the CXL subsystem. In some cases, this amount may exceed the
-available 'main memory' to store the memmap for the memory being added.
-In this case, it is useful to have a way to place the memmap on the
-memory being added, even if it means splitting the addition into
-memblock-sized chunks.
+> On Wed, Jul 19, 2023 at 09:19:47AM +0100, Jonathan Cameron wrote:
+> > On Tue, 18 Jul 2023 17:30:57 -0400
+> > Gregory Price <gregory.price@memverge.com> wrote:
+> >   
+> > > On Mon, Jul 17, 2023 at 06:16:39PM +0100, Jonathan Cameron wrote:  
+> > > > @@ -397,8 +401,9 @@ struct CXLType3Dev {
+> > > >      AddressSpace hostpmem_as;
+> > > >      CXLComponentState cxl_cstate;
+> > > >      CXLDeviceState cxl_dstate;
+> > > > -    CXLCCI cci;
+> > > > -    
+> > > > +    CXLCCI cci; /* Primary PCI mailbox CCI */
+> > > > +    CXLCCI oob_mctp_cci; /* Initialized only if targetted */
+> > > > +    
+> > > 
+> > > I've been humming and hawing over this on the MHD stuff because I wanted
+> > > to figure out how to "add a CCI command" to a type-3 device without
+> > > either having a billion definitions for CCI command sets - or doing
+> > > something like this.
+> > > 
+> > > I don't hate this design pattern, I just want to ask whether your
+> > > intent is to end up with CXLType3Dev hosting many CXLCCI's based on what
+> > > wrapper types you have. 
+> > > 
+> > > Example: a type-3 device with mctp pass through and the MHD command set
+> > > 
+> > > CXLType3Dev {
+> > >     ...
+> > >     CXLCCI cci;
+> > >     CXLCCI oob_mctp_cci;
+> > >     CXLCCI mhd_cci;
+> > >     ...
+> > > }  
+> > 
+> > Yes - that's what I was thinking.  In some cases a CCI may be accessed by
+> > tunneling on a different CCI on the same device as well as the option
+> > of tunneling to different devices.
+> > 
+> > So far the set that we'll end up with isn't too large. And if some aren't
+> > used for a given instantiation that's fine if it keeps the code simple.
+> > We may end up with other MCTP buses and to keep things consistent each one
+> > will need it's own target CXLCCI. If we need to rethink and make it dynamic
+> > to some degree we can look at it later.
+> >   
+> 
+> Maybe a dangerous suggestion.  Right now the CCI's are static:
+> 
+> static const struct cxl_cmd cxl_cmd_set[256][256]
 
-Change add_memory_resource() to loop over memblock-sized chunks of
-memory if caller requested memmap_on_memory, and if other conditions for
-it are met,. Teach try_remove_memory() to also expect that a memory
-range being removed might have been split up into memblock sized chunks,
-and to loop through those as needed.
+That's defined by the ID space for the commands.  There can't be more than
+that many currently..
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
----
- mm/memory_hotplug.c | 154 +++++++++++++++++++++++++++++++---------------------
- 1 file changed, 91 insertions(+), 63 deletions(-)
+> 
+> how difficult might it be to allow these tables to be dynamic instead?
+> Then we could add an interface like this:
+> 
+> void cxl_add_cmd_set(CXLCCI *cci, CXLCCI *cmd_set, payload_max) {
+> 	copy(cci, cmd_set);
+> }
+> 
+> This would enable not just adding sub-components piece-meal, but also if
+> someone wants to model a real device with custom CCI commands, they can
+> simply define a CCI set and pass it in via
+> 
+> cxl_add_cmd_set(&ct3d->cci, my_cmd_set, payload_max);
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e9bcacbcbae2..20456f0d28e6 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1286,6 +1286,35 @@ bool mhp_supports_memmap_on_memory(unsigned long size)
- }
- EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
- 
-+static int add_memory_create_devices(int nid, struct memory_group *group,
-+				     u64 start, u64 size, mhp_t mhp_flags)
-+{
-+	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
-+	struct vmem_altmap mhp_altmap = {};
-+	int ret;
-+
-+	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY)) {
-+		mhp_altmap.free = PHYS_PFN(size);
-+		mhp_altmap.base_pfn = PHYS_PFN(start);
-+		params.altmap = &mhp_altmap;
-+	}
-+
-+	/* call arch's memory hotadd */
-+	ret = arch_add_memory(nid, start, size, &params);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* create memory block devices after memory was added */
-+	ret = create_memory_block_devices(start, size, mhp_altmap.alloc,
-+					  group);
-+	if (ret) {
-+		arch_remove_memory(start, size, NULL);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
-  * and online/offline operations (triggered e.g. by sysfs).
-@@ -1294,11 +1323,10 @@ EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
-  */
- int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
- {
--	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
-+	unsigned long memblock_size = memory_block_size_bytes();
- 	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
--	struct vmem_altmap mhp_altmap = {};
- 	struct memory_group *group = NULL;
--	u64 start, size;
-+	u64 start, size, cur_start;
- 	bool new_node = false;
- 	int ret;
- 
-@@ -1339,27 +1367,20 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
- 	/*
- 	 * Self hosted memmap array
- 	 */
--	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
--		if (!mhp_supports_memmap_on_memory(size)) {
--			ret = -EINVAL;
-+	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) &&
-+	    mhp_supports_memmap_on_memory(memblock_size)) {
-+		for (cur_start = start; cur_start < start + size;
-+		     cur_start += memblock_size) {
-+			ret = add_memory_create_devices(nid, group, cur_start,
-+							memblock_size,
-+							mhp_flags);
-+			if (ret)
-+				goto error;
-+		}
-+	} else {
-+		ret = add_memory_create_devices(nid, group, start, size, mhp_flags);
-+		if (ret)
- 			goto error;
--		}
--		mhp_altmap.free = PHYS_PFN(size);
--		mhp_altmap.base_pfn = PHYS_PFN(start);
--		params.altmap = &mhp_altmap;
--	}
--
--	/* call arch's memory hotadd */
--	ret = arch_add_memory(nid, start, size, &params);
--	if (ret < 0)
--		goto error;
--
--	/* create memory block devices after memory was added */
--	ret = create_memory_block_devices(start, size, mhp_altmap.alloc,
--					  group);
--	if (ret) {
--		arch_remove_memory(start, size, NULL);
--		goto error;
- 	}
- 
- 	if (new_node) {
-@@ -2035,12 +2056,38 @@ void try_offline_node(int nid)
- }
- EXPORT_SYMBOL(try_offline_node);
- 
--static int __ref try_remove_memory(u64 start, u64 size)
-+static void __ref __try_remove_memory(int nid, u64 start, u64 size,
-+				     struct vmem_altmap *altmap)
- {
--	struct vmem_altmap mhp_altmap = {};
--	struct vmem_altmap *altmap = NULL;
--	unsigned long nr_vmemmap_pages;
--	int rc = 0, nid = NUMA_NO_NODE;
-+	/* remove memmap entry */
-+	firmware_map_remove(start, start + size, "System RAM");
-+
-+	/*
-+	 * Memory block device removal under the device_hotplug_lock is
-+	 * a barrier against racing online attempts.
-+	 */
-+	remove_memory_block_devices(start, size);
-+
-+	mem_hotplug_begin();
-+
-+	arch_remove_memory(start, size, altmap);
-+
-+	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
-+		memblock_phys_free(start, size);
-+		memblock_remove(start, size);
-+	}
-+
-+	release_mem_region_adjustable(start, size);
-+
-+	if (nid != NUMA_NO_NODE)
-+		try_offline_node(nid);
-+
-+	mem_hotplug_done();
-+}
-+
-+static int try_remove_memory(u64 start, u64 size)
-+{
-+	int rc, nid = NUMA_NO_NODE;
- 
- 	BUG_ON(check_hotplug_memory_range(start, size));
- 
-@@ -2058,20 +2105,21 @@ static int __ref try_remove_memory(u64 start, u64 size)
- 		return rc;
- 
- 	/*
--	 * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
--	 * the same granularity it was added - a single memory block.
-+	 * For memmap_on_memory, the altmaps could have been added on
-+	 * a per-memblock basis. Loop through the entire range if so,
-+	 * and remove each memblock and its altmap
- 	 */
- 	if (mhp_memmap_on_memory()) {
--		nr_vmemmap_pages = walk_memory_blocks(start, size, NULL,
--						      get_nr_vmemmap_pages_cb);
--		if (nr_vmemmap_pages) {
--			if (size != memory_block_size_bytes()) {
--				pr_warn("Refuse to remove %#llx - %#llx,"
--					"wrong granularity\n",
--					start, start + size);
--				return -EINVAL;
--			}
-+		unsigned long memblock_size = memory_block_size_bytes();
-+		struct vmem_altmap mhp_altmap = {};
-+		struct vmem_altmap *altmap;
-+		u64 cur_start;
- 
-+		for (cur_start = start; cur_start < start + size;
-+		     cur_start += memblock_size) {
-+			unsigned long nr_vmemmap_pages =
-+				walk_memory_blocks(start, memblock_size, NULL,
-+						   get_nr_vmemmap_pages_cb);
- 			/*
- 			 * Let remove_pmd_table->free_hugepage_table do the
- 			 * right thing if we used vmem_altmap when hot-adding
-@@ -2079,33 +2127,13 @@ static int __ref try_remove_memory(u64 start, u64 size)
- 			 */
- 			mhp_altmap.alloc = nr_vmemmap_pages;
- 			altmap = &mhp_altmap;
-+			__try_remove_memory(nid, cur_start, memblock_size,
-+						 altmap);
- 		}
-+	} else {
-+		__try_remove_memory(nid, start, size, NULL);
- 	}
- 
--	/* remove memmap entry */
--	firmware_map_remove(start, start + size, "System RAM");
--
--	/*
--	 * Memory block device removal under the device_hotplug_lock is
--	 * a barrier against racing online attempts.
--	 */
--	remove_memory_block_devices(start, size);
--
--	mem_hotplug_begin();
--
--	arch_remove_memory(start, size, altmap);
--
--	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
--		memblock_phys_free(start, size);
--		memblock_remove(start, size);
--	}
--
--	release_mem_region_adjustable(start, size);
--
--	if (nid != NUMA_NO_NODE)
--		try_offline_node(nid);
--
--	mem_hotplug_done();
- 	return 0;
- }
- 
+Ok.  I'm potentially fine with people adding an interface for this, but
+only if they plan to also upstream the QEMU emulation of their actual
+device.
 
--- 
-2.41.0
+> 
+> Which lets the existing /dev/cxl/memN device dispatch those commands,
+> and makes modeling real devices an easier endeavor.
+> 
+> Only downside is that this may require changing the command structure to
+> include a callback type and pointer per cci function. The upside is this
+> would also allow commands to be written somewhat agnostic to the device
+> they're being inherited by and allow for device nesting like...
+> 
+> -device cxl-type3, id=ct3d
+> -device cxl-mhd, target=ct3d
+> -device my_vendor_cxl_type3, target=ct3d
+> etc etc
+> 
+> otherwise we're probably going to end up with a cxl-type3 -device line
+> 300 characters long.
+> 
+> Maybe that's over-generalizing a bit much n.n;
+
+I'd look to just inherit from a cxl type 3, like Ira did in the PoC for
+type 2 support.   We can then easily add a path to replace the commands
+set with whatever anyone wants.  I'm not sure we want the command line
+to be used to configure such a device as it'll both get very complex and
+prove increasingly hard to test more than a small subset of options.
+
+https://lore.kernel.org/all/20230517-rfc-type2-dev-v1-0-6eb2e470981b@intel.com/
+
+
+Jonathan
+
+> 
+> ~Gregory
 
