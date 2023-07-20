@@ -2,41 +2,41 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2E0EB64DD
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jul 2023 20:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F186C0015E
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jul 2023 20:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjGTUin (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Jul 2023 16:38:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35748 "EHLO
+        id S229744AbjGTUio (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Jul 2023 16:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjGTUim (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Jul 2023 16:38:42 -0400
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2058.outbound.protection.outlook.com [40.92.107.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 738611731
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Jul 2023 13:38:40 -0700 (PDT)
+        with ESMTP id S229576AbjGTUin (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Jul 2023 16:38:43 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2098.outbound.protection.outlook.com [40.92.107.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FF22726
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Jul 2023 13:38:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GHJ2o2RkVxIdHIKSmi6s8hTMvrwSWHsHu2vugXa33PWmXIxp+fvoySayzkvd1ZtlCDOcUnO7lzrFAOywPH42Kn21rZRhP1kfSQOqbrgSpqiG1gvE6C6jmhuDOEipwgEnHb06vLlIk7TJGh7kEEQpDT6PPcSBGMrRubXzo7yqp/9TUDdcvq8tjvqe3gyJrvysRZmE6iN1F0ZMjpBasekPj+LkHTCYbYWnDmc73wPKxaG7fuvhC6xBhShhsy1LHnA0+87m9sqZlM2y9Q+DDCwAjmC2r7c/TZtgU4BW7rSTQEEjXOi1f/QYppKB4ja0FLsAPD0hQ9U57TFrzjCaQ6EdGA==
+ b=mzM4xvm4gb/YGNflkXd59nN7/nMp5HR5A/+Yr1c1wPCAIXmwHuaw6zx5Fz2nrMhAKriFirvOomrLyPypcycaUKcM5yFYdeBtC2atddnzngSKYVkx6/fa4oTfnZBX9Sv1wliPmVcOAbJrpm/wlt3jiYeUmKszIMjyHdolXGWkyEJho9YBNImdUEB+oYY4sR32JuGgigEbLiv8+MGS5hHjQHgRES1SxorJpOox7ZOAQ8NQf5dG86Tm4Ef+/ZB2jkGT8G1yxF9ocrLCrmmZgp+TvgWtvs42ow4mKa3HPNciORSEgpEUlWwPKpTJXIrcEUhhcnctKpy59VwKNGcLyyRUxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E5orTEgp313dgjIIm1iwcaXWxROhyMBCbIEjzU3IuzM=;
- b=DziEoSh9Av2h++iVBNsCgvj0tF7B4l34Azp3ghsYKEnS28gm3U5x6GjB0S5+5iQ9oFS1GDhuD8Bq88rpzU3jJ/0EUY6myJxYRaY5PscBbWLEi2aZ9r/9hScZ5lJDZsHEKgX5FNzGECXrUA8WdKue6cZvMWwzVzpgYvFRqNOb/xyErk34pCTBYdGB70SYbiuAPHBfsa+TqclK0TgYxM5a9BXhQe8ruCaABQyETpftIcG9BgOyzw1SbDGSyxiNK2iebkJhfBg7AWuoZmnpGbzfYDhYJEvkFigmyUoSGg2+eC9hGt8u3yBkYKm5Dm8IvLNijTMDjkL9ZfEIGVx62wBevw==
+ bh=xchX4tF+wgvfzrYJrYOEhfjyoDWDLGbRTx5w9dajLqU=;
+ b=BMGggIrqB+FBi+gNw6QdMXOIHXBTrc0E1cO1RFvdDT5yTSi0kXaZ1l0opQX9/xizBQuk5eptw4mWdalel9O1Zw766EQJheYYLEDJBFrsbxYbP3EeFL8zyRU/b+naupWEHLNHj9ePJj4IKubNzT5yTApjqz1ejQwhM98oatemX5n7bGggi4DvmHQcM3FGcoufL/Ew+nKk+4DeH04Acm8U8UBijjcd/Mb371t8nQudpJ1lp+XegAO4ya+Jp5orYygih/f59t3eUNm2g0kOQy2odjFZXWrCqd0DRiLvDAu+XAssHvk8fGJ90YHzIAkm7SlbfyEGq9byVWd19wYIkL/fKQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E5orTEgp313dgjIIm1iwcaXWxROhyMBCbIEjzU3IuzM=;
- b=VeLiYgkk0cZ0Pub5pVhHlEg4DK2UKCYtnk8cCaRhPM9uuZr0hP4fhlvftm5GqolL7OAsZIMRIt7y872uyQGwiCmBHSYcjtrkepFzvqcYF1ZYZkT6QBoAoOTuNMmvdMsvWDT1W3H51sd8DKXuO8I3hNDU7pyBGwomOAtgZmzKyTgIFRNOF8kcUim+S7M6AlZJTx/bbGJsOGAFQdlJV09oQgJPXBIGJsr8fnaiU4nVnWf/1Ge9/CeCX4zwPkMMb6ps63MaHyA/2d/0LJdX8O1mxvEKcXzlrOdj8iqqHv4dWSRUQXYMGd6tbR9GSGUx5v7h1EaJVAoLKxIZHAgj7RNH1w==
+ bh=xchX4tF+wgvfzrYJrYOEhfjyoDWDLGbRTx5w9dajLqU=;
+ b=P7X/lgo+cxZqg9shNWaEXBuYxP6h+93iXgTfXcJB/WW6/Hdk/C0TGGh0AO7oiw/YwcS+nSvxYdpPXxbtPgPbdrYqea7lrvSjLR8X+c+DZWDZRF8kQirQo6bSG6IJwMMEJUbsKA1crNCY1fWvM5VhcQeVv9nZP6fqY+b2CutwBitdAdTG07QlVBR6enDRcYEJMrJpGMPHJTNZSA8Nrn4DVI5XVEjkFxvPS4CsTCRqJ/pgc3fDM6tTeUG8cd3ydfYlCXtooL7yGlJ8rg3uU4iMcICl2vEe+yRyTPz8OUODENvS+X26yeS5VraZOCefVL9DFG6mGXCMfZ++XvuPBO95SQ==
 Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
  KL1PR0601MB4100.apcprd06.prod.outlook.com (2603:1096:820:24::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Thu, 20 Jul
- 2023 20:38:31 +0000
+ 2023 20:38:32 +0000
 Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
  ([fe80::450:9c8c:9058:c94c]) by SG2PR06MB3397.apcprd06.prod.outlook.com
  ([fe80::450:9c8c:9058:c94c%5]) with mapi id 15.20.6609.024; Thu, 20 Jul 2023
- 20:38:31 +0000
+ 20:38:32 +0000
 From:   nifan@outlook.com
 To:     qemu-devel@nongnu.org
 Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
@@ -45,54 +45,54 @@ Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
         dan.j.williams@intel.com, a.manzanares@samsung.com,
         dave@stgolabs.net, nmtadam.samsung@gmail.com,
         Fan Ni <nifan@outlook.com>, Fan Ni <fan.ni@samsung.com>
-Subject: [PATCH 5/9] hw/mem/cxl_type3: Add host backend and address space handling for DC regions
-Date:   Thu, 20 Jul 2023 13:37:04 -0700
-Message-ID: <SG2PR06MB33975BC8BD669EE2CE3880B0B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
+Subject: [PATCH 6/9] hw/mem/cxl_type3: Add DC extent list representative and get DC extent list mailbox support
+Date:   Thu, 20 Jul 2023 13:37:05 -0700
+Message-ID: <SG2PR06MB33979E360C762512BCDF4173B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230720203708.25825-1-nifan@outlook.com>
 References: <20230720203708.25825-1-nifan@outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN:  [C1sYar+TzjFE9yql5CsFQUwMDkFYDzDL]
+X-TMN:  [uVeTdj6vuyl39quOT07lJpFu7L+ffF0K]
 X-ClientProxiedBy: BYAPR03CA0008.namprd03.prod.outlook.com
  (2603:10b6:a02:a8::21) To SG2PR06MB3397.apcprd06.prod.outlook.com
  (2603:1096:4:7a::17)
-X-Microsoft-Original-Message-ID: <20230720203708.25825-6-nifan@outlook.com>
+X-Microsoft-Original-Message-ID: <20230720203708.25825-7-nifan@outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|KL1PR0601MB4100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5cfba9b9-558a-4948-b121-08db89612d38
-X-MS-Exchange-SLBlob-MailProps: 9IecXKUgicAYce+YIvRqgnoEwnxu+bmn4WK0pvigUmRttW27tsG+DQnjrdGjJmgyRqkXVwSm/1WIMw8/qJSodpRrL27KyBUBmgzQfkhDpoE18z7dgg8TwDqKIQisVxRH7O2tBm0KOKZtLCqW7vNdBP3sEGgOnwBizw99GUlwv3WvKMfor1YuRZSd1VCItPmo5FSbxoUcaaxgmmHJMqm2dDx21ttjLIHXZWseSOrld2v2gfYAiLSE0bZsvvjMw7AWTv+y87/Qir8+CV8by1kVP3t8r5Ar7uoNyYi7z5b2oNIWZVLvMZPFhlQRmcKH9NN0taqJJ+Z0dmuxT6PYmlj1p1jeVHkomw485wb6rZ2Pu8+6rX5dhYmGuW3jIKFDiduhPtTRXSXWYsaNWbPLABhmq9/EJNLYPkXwmGgmPFGqLSQnSwC/6aM7PcgSyUziUn1K+NLnKviVk18aR85TkQp+XwSAdJEnvPcOgtpkNrHOp9dQoBmC2WwcquZDeGBSagwa4BCKeq7Wmlpemkm/4LkqV+XKSPDgcTcWOVLHmhC3i3+r1AkjGroyfp28QIJ0waZHMlmCWYEsMkKyCzwmAV3A+rGMwW+tV/536nRcfvUlpGSAJFC3kW1CRFq461wHU3BuA12LMZRVb4cMjzJCN+Oeay2h/w82J6haBLoSKe4ZFsspB95jeo/sAQzSUTJjYCCSZMV6MtBKGgiW+8TzRbV0fqkvaOnSyB4SHiOKZG6XfDNtVyQyQQIaOA==
+X-MS-Office365-Filtering-Correlation-Id: b3b6f487-3e13-464a-039e-08db89612f5d
+X-MS-Exchange-SLBlob-MailProps: quCBMN2EvO/qzAKd82WE1LuLgf/v/GCyEduUCc1jlcU90pe+mvHZutQxPkLDk+gMaZSWh+3JH4erfU/KBdCUWUS1kWuF/TVTx7o39JDWEDhATrSyHm1bvTXc5FHTIOlfpJSHSuhuDN+5X6dbEJav/2DXhE25h/zumpkW4+cTpk5UZ8V1O9jw9qYWs7hFzWMc354jLhdeENOkFkvDbijgqb6B1RxmSuBJ/pa7umC4iB7wev8e63lnxvc835a7TAEKMty70O8lo41+e4xy1N0iTJ8nBNccbiM5g3diZcSFa6Vm7r68+2kS2SHq0tluYpCoIphXYcdCqHExE9zNFWf3X/GF+Lk1WCI81d5VwBnoPTNuDKTaZEyh40pIZWqiKsuFgq4KzQxII4J6CJvDuyjuPb1MQSp85NDYp0PHq+PbeidqI+PoorzXKRdi0WLzyzThXWWcmSf4oMGl2H+Pn5sS90PHRvQw7zG26mAyTpZpdW6yCBhwbiPpIRbfCCJB2HPlPk5n+cL7/hWUZfXw0MA5hACDZsIxlIAkGiUet9X7+RYdIpyuj+NP8cXJuFb2xrQvzIRTgdvsH+2Y3eEh8+ELbLMgj0oLjTSUyVpk2QYIy0dOmuVZrIlPiaXMqIZqiCe18Cp1WN0b90MxteE+N/OD52lKlK4u4HpQNmXHhP/6AL2DtgR05LbhdFJxrjaJrYu2BUzfl7bjuPRWUvsqQkFvfw==
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: etgTZ0H0eZ0r3ktDP9FxZ/ThhL2It3i5Fyos/ec+7MrIXVIDr6DFDCGP2yBA3xV56+PZ+mQzUq17aKYySG/Qw56TQXtZBxbXepgWE2j3wilzHBe6q2DRxl0Xh/QxYp3dV/dAo8Gb6JhC50FPhbSNogq+wh7eUGy8IJZ8uaENZI4/Mzc4Ywwz+b2ORNaomsbk10XRDU5QJf9hT+mOS7KFalj7z4d+OrDCPriQUQhqafT/x45gznk5arXTi0N7SUXS5caPk0lmnAe/lV9CGzRs05uC7DVVDI15rOevBLkKSFCox+Ih0OBfjyLaGF8vz5mqDfsxK3QeVsdFdCmnOzDkOusgd0k5Z5JQ3RjQQtfWXMwtlK0Mjlz3ohLEly8mQu+SC61M4S7eCAoXa13f1Rg2pJwDrDt6ylJ4KUD9cSKI099qSBuKbwR55B6t/blHK3KBKfdNMIvmART6Y29UvJ4NdtMxqN/xxNmiH/z3EvD+noWxcSKiYJGUk2Kcx0g2RbiDQJUFJzphUJ1weFtdOxJoV030seAY4p+dZZ9Ly87hZyM4B5hAQVX1vtTHFlNIOSOej9GPcADdg+ektciVuRmczoJD3fL0Vt1XiA8jYVBtQ2rJarhUKPOLSdGgCp0AfMhZ
+X-Microsoft-Antispam-Message-Info: bml133tPTVYts+cFHP5oz4sutaFfyJ40nadWmrvhCw2/qCFIbj5ZWBY9yy1vHTfXXH/PJxjqBvGeqLaWiq8bOZoZVe4mmFgerqkw0ZkePEzGQIaw5e7VX0g7w6A5unGsMJU525act5hCcbwH2HZZODJBL0GNm25ukLVtsAUOmKDzjlngJuBsW6sG2MgEYx3kiYlKm9S8W7xRTBEag3fqwrUVChs4mu19aMikXvwXD1szcBBPV3KG97/4+rqi2HYF384cU9EnQ7B6PBCsqZfIJ0WHweJCqU1xtCehzOVJvnZwdV7s/Eir/famBMtPUzCB7tb8IZcWL62TM6VochsfR+TI4V4MKAS4mp/EnugPFO7ONU2kAU76bQ69urZtcazPvT2K/VVwWBh6pi5k0yRdUj95g+nBwHmYeWMvCqayxm+p/ZX2AabNVMUnooZ6WqCEsNYDKp5myvss/Z9YT+yUypkAxJBK2eycTu6yGdn3i1aeE4fCex/0oJSduhCyIckmD8aT8awVnu0b8DT0m6Weu1COsAVDyk7cn4SKBZpjaugODfeh8RKeZHQY7BuKQXgm0Ied4tM0M335nul6Lriaw3X5vfZYwooSyly3R7+2Tg2FfjYhQT6OdCsCTzaJsBgH
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YAf+Ciibf/Sl6MZcJoOkW5xgFlLwrecpgDa/1YD7szMYZtXhYs000bahQKdC?=
- =?us-ascii?Q?UjpRu7IBICn5gNQ+Fj+vucSOmyf9X48zouuzcahO3uuUAQSTz3f8t+5rzLVZ?=
- =?us-ascii?Q?vHeGA2epJFZKO5IOyKLnZf8JLga10ydPy0zih3dsUvYJIf60873F2vCF4f3r?=
- =?us-ascii?Q?XAwib6Sr2ISyQy/Mi3HY3ufcZ4l45lYPAiplcRTpXgk/JFZxZiSYxjDUSKAC?=
- =?us-ascii?Q?pLN+EGj+lTSJlXcpabFyAcsi0oXmFfv0cS1MpfzSidjPUDTMfDRnI6O081H0?=
- =?us-ascii?Q?1f0n8qrhsEurFPuENxmScKrY+Bv2yfeB5YlT1WYhFhI2kxEJchUqUWbUEepM?=
- =?us-ascii?Q?XYlZJ074pNNIJ9dmxRhhHoUSf2WUy7pu9DmshUY4BR/8iKmI9vXVsCa/ko6/?=
- =?us-ascii?Q?MyXiEk51MXygCRcLV8wNh2MO1HFCWsqSwumvfIRo4KlzdtjGoZGvddtp4tLX?=
- =?us-ascii?Q?SBQnSC1wSjJasZ/nDD55lvNq1SZUzPM3V7VPvtfgWvILWFzUAg7XVccV0t/F?=
- =?us-ascii?Q?LukW0qefnxKUbQrKPZhl2ugqrPsowcucjIdkYehzmsLJRgfcptp5qEdaXlPq?=
- =?us-ascii?Q?U8OZlLC53noN0pvOdCsJrN9cqYpSUO09sqky/1jtRE/xSFn9uYOUuvpAhsah?=
- =?us-ascii?Q?xVMF+HTGWQZ7j/O4OWe2ia6KSFfUBiJS1BpQyTrNcvUR/IURS4I8GLCKP9H7?=
- =?us-ascii?Q?B2mxJIyuReDi9uS4bfazHeinZpKfOJ3Xwla6Sg72s2yjcR3ed3d9YIQhSxrP?=
- =?us-ascii?Q?eJFNZtUU3rny0Uj/2w7167LdDoN4wP4m8TTbvT4g2BVPnq/JkZDWxT4D+yoc?=
- =?us-ascii?Q?EQces0jYosRJD8Xv7WCBsdH4foLWIsDyhQ0ckPDacL8e3EwaNO7M7ewvXJkv?=
- =?us-ascii?Q?2aBUZiY+D/Hw9YhDPced6eiBeinAr6B/vTrTq8KdzGFmSHlr4TDVe1jIao6d?=
- =?us-ascii?Q?2tg86rHwU5ytOYyEkEvUFL8N5MFfvtNtL+K/7Q6yLChTeNj5ccT+ScMNQe/g?=
- =?us-ascii?Q?hotCpRlB0G0KpCRidw/mtjroBXa4zaCKxLY2unTdPetabbogmCtrQ3hq2CCn?=
- =?us-ascii?Q?S6SmYEaDGweoqu3ozxaTSiHOib91QtCVZHLIITEMoQV8XyNWUUpY3ibshOic?=
- =?us-ascii?Q?C/fS5wqVQmwSClYdypPSqe9//0kWrspSgk/4ldbChuPm+CKzW4W7OSJ2YiI7?=
- =?us-ascii?Q?tQNLLG3XkFzaHxqakqmNH6ZhHzLHllxRUct91Q=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?veK6YQ3sGVJFybsQdWbgQ6oanVKvgy6PaOHvI+iPpk9TLR+moAUzi2+SI/lC?=
+ =?us-ascii?Q?xNU3ic74f8Eh3cWkY0yLbCaS2Yx86JygzK2V7Ja3nNXJzbq06eFOwO7hxfpC?=
+ =?us-ascii?Q?j7JD78uNIsuBSj/BJQJiTPTUtT3Z5GuP1eVa3RZWcPx4vH9oaQKfCgr9kcIM?=
+ =?us-ascii?Q?5LBxcsiZB8dS1ozxow5BxVCVosNa0O4LS7p1tiUfFnvRYrk2X+OK/zIQ/t9u?=
+ =?us-ascii?Q?KKU/nUbs7hkaetYNYxTwqO0T6JHwGdBxYCOvoskKEXxrN75KEpYBGLd1KODj?=
+ =?us-ascii?Q?fdTXbVa7GfKirG90jdwDblFE2N3GICOMz2tlx4u0KvJBQBkta617funECThQ?=
+ =?us-ascii?Q?G18XolhlkwXYDmnK36UlzqCXwwbGiG5AvE+BmLeljb7SvzKyvn59KUg3TOg2?=
+ =?us-ascii?Q?DZDmYB3qL3hsV1IwbBnwqIQZvedYFF2NVtfww3VDgtFtJLEjBNPiHUan4e16?=
+ =?us-ascii?Q?IryNrUmL1v62OgrC8yjD7i4VDNWSjsPqHqmOnat/DBIJdmoyyarvt4k7TTZ5?=
+ =?us-ascii?Q?GMxKpJuFg2+gctKcBZ1Oi+wZDMxQi3qJLabK5rV7Fv/CvWOumS5Pma4XRAoW?=
+ =?us-ascii?Q?U76uhEijKLgac0/3Jlx6wa67QtAs6qkwSrjk9AFDVUaVMnbpDRNzWj5bbqxH?=
+ =?us-ascii?Q?xeOHyvJ2W+YlqaOej7mrEyz54ygZe2IZ4LEIn2DbU4y3eJnYDuDspP/RJ3q4?=
+ =?us-ascii?Q?Pc4MkdEuq8I6G+PVj/m0w8BFopdWS2ixoEbP3hjWR9QHt3qpZxDoRqHBxBYM?=
+ =?us-ascii?Q?mGy/0fqposR5I+CufVdzcHaXDkvQYgFn+3fZJBQczRJy1ELuUt/Mk86C1Xjk?=
+ =?us-ascii?Q?sgL56mQWyX8msJJZ0Zwq4pplxXs1HSNX/iCPuKNFSp/P9F+RRjhBH9CjIqio?=
+ =?us-ascii?Q?O6lBtEtdrGEgsHqerIYmcxWuVfcNJY3sPOj1Tirimzk6N0flj/KkVe6/h+4n?=
+ =?us-ascii?Q?7hKSg7TZAZ2i3TpCGTvuqNIxCZxXbzqOLdbqDbrflQI6p3bKb1+rpstKJ+Ye?=
+ =?us-ascii?Q?IAEJ2UVtvOl/0N0974tVvu3vUdLIpUwU0zt/mg0ya+MPkNo7hj0FLO3VEAH0?=
+ =?us-ascii?Q?pabm5lmFRfCWD+nYMeDiGQGytigbHOQHea87gZfSa+bxllHkNrEGbEFBv3VB?=
+ =?us-ascii?Q?oPg/1tczShdgGBP/sSfZjEgKsS/dLMs7FYdPyJvOBajLzCmfmiqbj/NKPRDg?=
+ =?us-ascii?Q?s7Y/pxG6HmKpYEqhqdUNI8WD4M25lyzsRztdPw=3D=3D?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cfba9b9-558a-4948-b121-08db89612d38
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3b6f487-3e13-464a-039e-08db89612f5d
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 20:37:46.9303
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 20:37:50.4786
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -104,480 +104,166 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Fan Ni <nifan@outlook.com>
 
-Add (file/memory backed) host backend, all the dynamic capacity regions
-will share a single, large enough host backend. Set up address space for
-DC regions to support read/write operations to dynamic capacity for DCD.
-
-With the change, following supports are added:
-1. add a new property to type3 device "nonvolatile-dc-memdev" to point to host
-   memory backend for dynamic capacity;
-2. add namespace for dynamic capacity for read/write support;
-3. create cdat entries for each dynamic capacity region;
-4. fix dvsec range registers to include DC regions.
+Add dynamic capacity extent list representative to the definition of
+CXLType3Dev and add get DC extent list mailbox command per
+CXL.spec.3.0:.8.2.9.8.9.2.
 
 Signed-off-by: Fan Ni <fan.ni@samsung.com>
 ---
- hw/cxl/cxl-mailbox-utils.c  |  19 +++-
- hw/mem/cxl_type3.c          | 203 +++++++++++++++++++++++++++++-------
- include/hw/cxl/cxl_device.h |   4 +
- 3 files changed, 185 insertions(+), 41 deletions(-)
+ hw/cxl/cxl-mailbox-utils.c  | 71 +++++++++++++++++++++++++++++++++++++
+ hw/mem/cxl_type3.c          |  1 +
+ include/hw/cxl/cxl_device.h | 23 ++++++++++++
+ 3 files changed, 95 insertions(+)
 
 diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index 59d57ae245..c497298a1d 100644
+index c497298a1d..754ab68b78 100644
 --- a/hw/cxl/cxl-mailbox-utils.c
 +++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -388,9 +388,11 @@ static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
-         char fw_rev4[0x10];
-     } QEMU_PACKED *fw_info;
-     QEMU_BUILD_BUG_ON(sizeof(*fw_info) != 0x50);
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+@@ -83,6 +83,7 @@ enum {
+         #define CLEAR_POISON           0x2
+     DCD_CONFIG  = 0x48, /*r3.0: 8.2.9.8.9*/
+         #define GET_DC_CONFIG          0x0
++        #define GET_DYN_CAP_EXT_LIST   0x1
+     PHYSICAL_SWITCH = 0x51
+         #define IDENTIFY_SWITCH_DEVICE      0x0
+ };
+@@ -1018,6 +1019,73 @@ static CXLRetCode cmd_dcd_get_dyn_cap_config(struct cxl_cmd *cmd,
+     return CXL_MBOX_SUCCESS;
+ }
  
-     if ((cxl_dstate->vmem_size < CXL_CAPACITY_MULTIPLIER) ||
--        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER)) {
-+        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER) ||
-+        (ct3d->dc.total_capacity < CXL_CAPACITY_MULTIPLIER)) {
-         return CXL_MBOX_INTERNAL_ERROR;
-     }
- 
-@@ -531,7 +533,8 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
-     CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
- 
-     if ((!QEMU_IS_ALIGNED(cxl_dstate->vmem_size, CXL_CAPACITY_MULTIPLIER)) ||
--        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER))) {
-+        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER)) ||
-+        (!QEMU_IS_ALIGNED(ct3d->dc.total_capacity, CXL_CAPACITY_MULTIPLIER))) {
-         return CXL_MBOX_INTERNAL_ERROR;
-     }
- 
-@@ -566,9 +569,11 @@ static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
-         uint64_t next_pmem;
-     } QEMU_PACKED *part_info = (void *)cmd->payload;
-     QEMU_BUILD_BUG_ON(sizeof(*part_info) != 0x20);
-+    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
- 
-     if ((!QEMU_IS_ALIGNED(cxl_dstate->vmem_size, CXL_CAPACITY_MULTIPLIER)) ||
--        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER))) {
-+        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER)) ||
-+        (!QEMU_IS_ALIGNED(ct3d->dc.total_capacity, CXL_CAPACITY_MULTIPLIER))) {
-         return CXL_MBOX_INTERNAL_ERROR;
-     }
- 
-@@ -880,7 +885,13 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
-     struct clear_poison_pl *in = (void *)cmd->payload;
- 
-     dpa = ldq_le_p(&in->dpa);
--    if (dpa + CXL_CACHE_LINE_SIZE > cxl_dstate->static_mem_size) {
-+    if (dpa + CXL_CACHE_LINE_SIZE >= cxl_dstate->static_mem_size
-+            && ct3d->dc.num_regions == 0) {
-+        return CXL_MBOX_INVALID_PA;
++/*
++ * cxl spec 3.0: 8.2.9.8.9.2
++ * Get Dynamic Capacity Extent List (Opcode 4810h)
++ */
++static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(struct cxl_cmd *cmd,
++        CXLDeviceState *cxl_dstate,
++        uint16_t *len)
++{
++    struct get_dyn_cap_ext_list_in_pl {
++        uint32_t extent_cnt;
++        uint32_t start_extent_id;
++    } QEMU_PACKED;
++
++    struct get_dyn_cap_ext_list_out_pl {
++        uint32_t count;
++        uint32_t total_extents;
++        uint32_t generation_num;
++        uint8_t rsvd[4];
++        CXLDCExtent_raw records[];
++    } QEMU_PACKED;
++
++    struct get_dyn_cap_ext_list_in_pl *in = (void *)cmd->payload;
++    struct get_dyn_cap_ext_list_out_pl *out = (void *)cmd->payload;
++    struct CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev,
++            cxl_dstate);
++    uint16_t record_count = 0, i = 0, record_done = 0;
++    CXLDCDExtentList *extent_list = &ct3d->dc.extents;
++    CXLDCD_Extent *ent;
++    uint16_t out_pl_len;
++    uint32_t start_extent_id = in->start_extent_id;
++
++    if (start_extent_id > ct3d->dc.total_extent_count) {
++        return CXL_MBOX_INVALID_INPUT;
 +    }
 +
-+    if (ct3d->dc.num_regions && dpa + CXL_CACHE_LINE_SIZE >=
-+            cxl_dstate->static_mem_size + ct3d->dc.total_capacity) {
-         return CXL_MBOX_INVALID_PA;
-     }
++    record_count = MIN(in->extent_cnt,
++            ct3d->dc.total_extent_count - start_extent_id);
++
++    out_pl_len = sizeof(*out) + record_count * sizeof(out->records[0]);
++    /* May need more processing here in the future */
++    assert(out_pl_len <= CXL_MAILBOX_MAX_PAYLOAD_SIZE);
++
++    memset(out, 0, out_pl_len);
++    stl_le_p(&out->count, record_count);
++    stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
++    stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
++
++    if (record_count > 0) {
++        QTAILQ_FOREACH(ent, extent_list, node) {
++            if (i++ < start_extent_id) {
++                continue;
++            }
++            stq_le_p(&out->records[record_done].start_dpa, ent->start_dpa);
++            stq_le_p(&out->records[record_done].len, ent->len);
++            memcpy(&out->records[record_done].tag, ent->tag, 0x10);
++            stw_le_p(&out->records[record_done].shared_seq, ent->shared_seq);
++            record_done++;
++            if (record_done == record_count) {
++                break;
++            }
++        }
++    }
++
++    *len = out_pl_len;
++    return CXL_MBOX_SUCCESS;
++}
++
+ #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+ #define IMMEDIATE_DATA_CHANGE (1 << 2)
+ #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+@@ -1058,6 +1126,9 @@ static struct cxl_cmd cxl_cmd_set[256][256] = {
+         cmd_media_clear_poison, 72, 0 },
+     [DCD_CONFIG][GET_DC_CONFIG] = { "DCD_GET_DC_CONFIG",
+         cmd_dcd_get_dyn_cap_config, 2, 0 },
++    [DCD_CONFIG][GET_DYN_CAP_EXT_LIST] = {
++        "DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_ext_list,
++        8, 0 },
+ };
  
+ static struct cxl_cmd cxl_cmd_set_sw[256][256] = {
 diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 27b5920f7d..af1d919be3 100644
+index af1d919be3..608063ac52 100644
 --- a/hw/mem/cxl_type3.c
 +++ b/hw/mem/cxl_type3.c
-@@ -20,6 +20,7 @@
- #include "hw/pci/spdm.h"
+@@ -789,6 +789,7 @@ static int cxl_create_dc_regions(CXLType3Dev *ct3d)
  
- #define DWORD_BYTE 4
-+#define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
- 
- /* Default CDAT entries for a memory region */
- enum {
-@@ -33,8 +34,8 @@ enum {
- };
- 
- static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
--                                         int dsmad_handle, MemoryRegion *mr,
--                                         bool is_pmem, uint64_t dpa_base)
-+        int dsmad_handle, uint8_t flags,
-+        uint64_t dpa_base, uint64_t size)
- {
-     g_autofree CDATDsmas *dsmas = NULL;
-     g_autofree CDATDslbis *dslbis0 = NULL;
-@@ -53,9 +54,9 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-             .length = sizeof(*dsmas),
-         },
-         .DSMADhandle = dsmad_handle,
--        .flags = is_pmem ? CDAT_DSMAS_FLAG_NV : 0,
-+        .flags = flags,
-         .DPA_base = dpa_base,
--        .DPA_length = memory_region_size(mr),
-+        .DPA_length = size,
-     };
- 
-     /* For now, no memory side cache, plausiblish numbers */
-@@ -137,9 +138,9 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-          * NV: Reserved - the non volatile from DSMAS matters
-          * V: EFI_MEMORY_SP
-          */
--        .EFI_memory_type_attr = is_pmem ? 2 : 1,
-+        .EFI_memory_type_attr = flags ? 2 : 1,
-         .DPA_offset = 0,
--        .DPA_length = memory_region_size(mr),
-+        .DPA_length = size,
-     };
- 
-     /* Header always at start of structure */
-@@ -158,21 +159,28 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-     g_autofree CDATSubHeader **table = NULL;
-     CXLType3Dev *ct3d = priv;
-     MemoryRegion *volatile_mr = NULL, *nonvolatile_mr = NULL;
-+    MemoryRegion *dc_mr = NULL;
-     int dsmad_handle = 0;
-     int cur_ent = 0;
-     int len = 0;
-     int rc, i;
-+    uint64_t vmr_size = 0, pmr_size = 0;
- 
--    if (!ct3d->hostpmem && !ct3d->hostvmem) {
-+    if (!ct3d->hostpmem && !ct3d->hostvmem && !ct3d->dc.num_regions) {
-         return 0;
+         region_base += region->len;
      }
- 
-+    if (ct3d->hostpmem && ct3d->hostvmem && ct3d->dc.host_dc) {
-+        warn_report("The device has static ram and pmem and dynamic capacity");
-+    }
-+
-     if (ct3d->hostvmem) {
-         volatile_mr = host_memory_backend_get_memory(ct3d->hostvmem);
-         if (!volatile_mr) {
-             return -EINVAL;
-         }
-         len += CT3_CDAT_NUM_ENTRIES;
-+        vmr_size = volatile_mr->size;
-     }
- 
-     if (ct3d->hostpmem) {
-@@ -181,6 +189,19 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
-             return -EINVAL;
-         }
-         len += CT3_CDAT_NUM_ENTRIES;
-+        pmr_size = nonvolatile_mr->size;
-+    }
-+
-+    if (ct3d->dc.num_regions) {
-+        if (ct3d->dc.host_dc) {
-+            dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-+            if (!dc_mr) {
-+                return -EINVAL;
-+            }
-+            len += CT3_CDAT_NUM_ENTRIES * ct3d->dc.num_regions;
-+        } else {
-+            return -EINVAL;
-+        }
-     }
- 
-     table = g_malloc0(len * sizeof(*table));
-@@ -190,8 +211,8 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
- 
-     /* Now fill them in */
-     if (volatile_mr) {
--        rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
--                                           false, 0);
-+        rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++,
-+                0, 0, vmr_size);
-         if (rc < 0) {
-             return rc;
-         }
-@@ -200,14 +221,37 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
- 
-     if (nonvolatile_mr) {
-         rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
--                                           nonvolatile_mr, true,
--                                           (volatile_mr ?
--                                            memory_region_size(volatile_mr) : 0));
-+                CDAT_DSMAS_FLAG_NV, vmr_size, pmr_size);
-         if (rc < 0) {
-             goto error_cleanup;
-         }
-         cur_ent += CT3_CDAT_NUM_ENTRIES;
-     }
-+
-+    if (dc_mr) {
-+        uint64_t region_base = vmr_size + pmr_size;
-+
-+        /*
-+         * Currently we create cdat entries for each region, should we only
-+         * create dsmas table instead??
-+         * We assume all dc regions are non-volatile for now.
-+         *
-+         */
-+        for (i = 0; i < ct3d->dc.num_regions; i++) {
-+            rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent])
-+                    , dsmad_handle++
-+                    , CDAT_DSMAS_FLAG_NV | CDAT_DSMAS_FLAG_DYNAMIC_CAP
-+                    , region_base, ct3d->dc.regions[i].len);
-+            if (rc < 0) {
-+                goto error_cleanup;
-+            }
-+            ct3d->dc.regions[i].dsmadhandle = dsmad_handle - 1;
-+
-+            cur_ent += CT3_CDAT_NUM_ENTRIES;
-+            region_base += ct3d->dc.regions[i].len;
-+        }
-+    }
-+
-     assert(len == cur_ent);
- 
-     *cdat_table = g_steal_pointer(&table);
-@@ -435,11 +479,24 @@ static void build_dvsecs(CXLType3Dev *ct3d)
-             range2_size_hi = ct3d->hostpmem->size >> 32;
-             range2_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-                              (ct3d->hostpmem->size & 0xF0000000);
-+        } else if (ct3d->dc.host_dc) {
-+            range2_size_hi = ct3d->dc.host_dc->size >> 32;
-+            range2_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-+                             (ct3d->dc.host_dc->size & 0xF0000000);
-         }
--    } else {
-+    } else if (ct3d->hostpmem) {
-         range1_size_hi = ct3d->hostpmem->size >> 32;
-         range1_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-                          (ct3d->hostpmem->size & 0xF0000000);
-+        if (ct3d->dc.host_dc) {
-+            range2_size_hi = ct3d->dc.host_dc->size >> 32;
-+            range2_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-+                             (ct3d->dc.host_dc->size & 0xF0000000);
-+        }
-+    } else {
-+        range1_size_hi = ct3d->dc.host_dc->size >> 32;
-+        range1_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-+            (ct3d->dc.host_dc->size & 0xF0000000);
-     }
- 
-     dvsec = (uint8_t *)&(CXLDVSECDevice){
-@@ -708,7 +765,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
- }
- 
- /*
-- * Create a dc region to test "Get Dynamic Capacity Configuration" command.
-+ * Create dc regions.
-+ * TODO: region parameters are hard coded, may need to change in the future.
-  */
- static int cxl_create_dc_regions(CXLType3Dev *ct3d)
- {
-@@ -739,7 +797,8 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
- {
-     DeviceState *ds = DEVICE(ct3d);
- 
--    if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem) {
-+    if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem
-+            && !ct3d->dc.num_regions) {
-         error_setg(errp, "at least one memdev property must be set");
-         return false;
-     } else if (ct3d->hostmem && ct3d->hostpmem) {
-@@ -807,6 +866,50 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
-         return false;
-     }
- 
-+    ct3d->dc.total_capacity = 0;
-+    if (ct3d->dc.host_dc) {
-+        MemoryRegion *dc_mr;
-+        char *dc_name;
-+        uint64_t total_region_size = 0;
-+        int i;
-+
-+        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-+        if (!dc_mr) {
-+            error_setg(errp, "dynamic capacity must have backing device");
-+            return false;
-+        }
-+        /* FIXME: set dc as nonvolatile for now */
-+        memory_region_set_nonvolatile(dc_mr, true);
-+        memory_region_set_enabled(dc_mr, true);
-+        host_memory_backend_set_mapped(ct3d->dc.host_dc, true);
-+        if (ds->id) {
-+            dc_name = g_strdup_printf("cxl-dcd-dpa-dc-space:%s", ds->id);
-+        } else {
-+            dc_name = g_strdup("cxl-dcd-dpa-dc-space");
-+        }
-+        address_space_init(&ct3d->dc.host_dc_as, dc_mr, dc_name);
-+
-+        for (i = 0; i < ct3d->dc.num_regions; i++) {
-+            total_region_size += ct3d->dc.regions[i].len;
-+        }
-+        /* Make sure the host backend is large enough to cover all dc range */
-+        if (total_region_size > memory_region_size(dc_mr)) {
-+            error_setg(errp,
-+                "too small host backend size, increase to %lu MiB or more",
-+                total_region_size / 1024 / 1024);
-+            return false;
-+        }
-+
-+        if (dc_mr->size % CXL_CAPACITY_MULTIPLIER != 0) {
-+            error_setg(errp, "DC region size is unaligned to %lx",
-+                    CXL_CAPACITY_MULTIPLIER);
-+            return false;
-+        }
-+
-+        ct3d->dc.total_capacity = total_region_size;
-+        g_free(dc_name);
-+    }
-+
-     return true;
- }
- 
-@@ -916,6 +1019,9 @@ err_release_cdat:
- err_free_special_ops:
-     g_free(regs->special_ops);
- err_address_space_free:
-+    if (ct3d->dc.host_dc) {
-+        address_space_destroy(&ct3d->dc.host_dc_as);
-+    }
-     if (ct3d->hostpmem) {
-         address_space_destroy(&ct3d->hostpmem_as);
-     }
-@@ -935,6 +1041,9 @@ static void ct3_exit(PCIDevice *pci_dev)
-     cxl_doe_cdat_release(cxl_cstate);
-     spdm_sock_fini(ct3d->doe_spdm.socket);
-     g_free(regs->special_ops);
-+    if (ct3d->dc.host_dc) {
-+        address_space_destroy(&ct3d->dc.host_dc_as);
-+    }
-     if (ct3d->hostpmem) {
-         address_space_destroy(&ct3d->hostpmem_as);
-     }
-@@ -999,16 +1108,24 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
-                                        AddressSpace **as,
-                                        uint64_t *dpa_offset)
- {
--    MemoryRegion *vmr = NULL, *pmr = NULL;
-+    MemoryRegion *vmr = NULL, *pmr = NULL, *dc_mr = NULL;
-+    uint64_t vmr_size = 0, pmr_size = 0, dc_size = 0;
- 
-     if (ct3d->hostvmem) {
-         vmr = host_memory_backend_get_memory(ct3d->hostvmem);
-+        vmr_size = memory_region_size(vmr);
-     }
-     if (ct3d->hostpmem) {
-         pmr = host_memory_backend_get_memory(ct3d->hostpmem);
-+        pmr_size = memory_region_size(pmr);
-+    }
-+    if (ct3d->dc.host_dc) {
-+        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-+        /* Do we want dc_size to be dc_mr->size or not?? */
-+        dc_size = ct3d->dc.total_capacity;
-     }
- 
--    if (!vmr && !pmr) {
-+    if (!vmr && !pmr && !dc_mr) {
-         return -ENODEV;
-     }
- 
-@@ -1016,19 +1133,19 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
-         return -EINVAL;
-     }
- 
--    if (*dpa_offset > ct3d->cxl_dstate.static_mem_size) {
-+    if ((*dpa_offset >= vmr_size + pmr_size + dc_size) ||
-+       (*dpa_offset >= vmr_size + pmr_size && ct3d->dc.num_regions == 0)) {
-         return -EINVAL;
-     }
- 
--    if (vmr) {
--        if (*dpa_offset < memory_region_size(vmr)) {
--            *as = &ct3d->hostvmem_as;
--        } else {
--            *as = &ct3d->hostpmem_as;
--            *dpa_offset -= memory_region_size(vmr);
--        }
--    } else {
-+    if (*dpa_offset < vmr_size) {
-+        *as = &ct3d->hostvmem_as;
-+    } else if (*dpa_offset < vmr_size + pmr_size) {
-         *as = &ct3d->hostpmem_as;
-+        *dpa_offset -= vmr_size;
-+    } else {
-+        *as = &ct3d->dc.host_dc_as;
-+        *dpa_offset -= (vmr_size + pmr_size);
-     }
++    QTAILQ_INIT(&ct3d->dc.extents);
  
      return 0;
-@@ -1095,6 +1212,8 @@ static Property ct3_props[] = {
-     DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
-     DEFINE_PROP_UINT16("spdm", CXLType3Dev, spdm_port, 0),
-     DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
-+    DEFINE_PROP_LINK("nonvolatile-dc-memdev", CXLType3Dev, dc.host_dc,
-+                    TYPE_MEMORY_BACKEND, HostMemoryBackend *),
-     DEFINE_PROP_END_OF_LIST(),
- };
- 
-@@ -1161,33 +1280,43 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
- 
- static bool set_cacheline(CXLType3Dev *ct3d, uint64_t dpa_offset, uint8_t *data)
- {
--    MemoryRegion *vmr = NULL, *pmr = NULL;
-+    MemoryRegion *vmr = NULL, *pmr = NULL, *dc_mr = NULL;
-     AddressSpace *as;
-+    uint64_t vmr_size = 0, pmr_size = 0, dc_size = 0;
- 
-     if (ct3d->hostvmem) {
-         vmr = host_memory_backend_get_memory(ct3d->hostvmem);
-+        vmr_size = memory_region_size(vmr);
-     }
-     if (ct3d->hostpmem) {
-         pmr = host_memory_backend_get_memory(ct3d->hostpmem);
-+        pmr_size = memory_region_size(pmr);
-     }
-+    if (ct3d->dc.host_dc) {
-+        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-+        dc_size = ct3d->dc.total_capacity;
-+     }
- 
--    if (!vmr && !pmr) {
-+    if (!vmr && !pmr && !dc_mr) {
-         return false;
-     }
- 
--    if (dpa_offset + CXL_CACHE_LINE_SIZE > ct3d->cxl_dstate.static_mem_size) {
-+    if (dpa_offset >= vmr_size + pmr_size + dc_size) {
-+        return false;
-+    }
-+    if (dpa_offset + CXL_CACHE_LINE_SIZE >= vmr_size + pmr_size
-+            && ct3d->dc.num_regions == 0) {
-         return false;
-     }
- 
--    if (vmr) {
--        if (dpa_offset < memory_region_size(vmr)) {
--            as = &ct3d->hostvmem_as;
--        } else {
--            as = &ct3d->hostpmem_as;
--            dpa_offset -= memory_region_size(vmr);
--        }
--    } else {
-+    if (dpa_offset < vmr_size) {
-+        as = &ct3d->hostvmem_as;
-+    } else if (dpa_offset < vmr_size + pmr_size) {
-         as = &ct3d->hostpmem_as;
-+        dpa_offset -= vmr->size;
-+    } else {
-+        as = &ct3d->dc.host_dc_as;
-+        dpa_offset -= (vmr_size + pmr_size);
-     }
- 
-     address_space_write(as, dpa_offset, MEMTXATTRS_UNSPECIFIED, &data,
+ }
 diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index a32ee6d6ba..ddb24271a8 100644
+index ddb24271a8..a9cfe4e904 100644
 --- a/include/hw/cxl/cxl_device.h
 +++ b/include/hw/cxl/cxl_device.h
-@@ -426,6 +426,10 @@ struct CXLType3Dev {
-     uint64_t poison_list_overflow_ts;
+@@ -384,6 +384,25 @@ typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
  
-     struct dynamic_capacity {
-+        HostMemoryBackend *host_dc;
-+        AddressSpace host_dc_as;
-+        uint64_t total_capacity; /* 256M aligned */
+ #define DCD_MAX_REGION_NUM 8
+ 
++typedef struct CXLDCD_Extent_raw {
++    uint64_t start_dpa;
++    uint64_t len;
++    uint8_t tag[0x10];
++    uint16_t shared_seq;
++    uint8_t rsvd[0x6];
++} QEMU_PACKED CXLDCExtent_raw;
 +
++typedef struct CXLDCD_Extent {
++    uint64_t start_dpa;
++    uint64_t len;
++    uint8_t tag[0x10];
++    uint16_t shared_seq;
++    uint8_t rsvd[0x6];
++
++    QTAILQ_ENTRY(CXLDCD_Extent) node;
++} CXLDCD_Extent;
++typedef QTAILQ_HEAD(, CXLDCD_Extent) CXLDCDExtentList;
++
+ typedef struct CXLDCD_Region {
+     uint64_t base;
+     uint64_t decode_len; /* in multiples of 256MB */
+@@ -432,6 +451,10 @@ struct CXLType3Dev {
+ 
          uint8_t num_regions; /* 0-8 regions */
          struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
++        CXLDCDExtentList extents;
++
++        uint32_t total_extent_count;
++        uint32_t ext_list_gen_seq;
      } dc;
+ };
+ 
 -- 
 2.39.2
 
