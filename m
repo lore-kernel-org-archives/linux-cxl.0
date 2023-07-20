@@ -2,32 +2,32 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4009EB64DA
-	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jul 2023 20:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3949DC0015E
+	for <linux-cxl@archiver.kernel.org>; Thu, 20 Jul 2023 20:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbjGTUih (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 20 Jul 2023 16:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
+        id S229452AbjGTUii (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 20 Jul 2023 16:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjGTUih (ORCPT
+        with ESMTP id S229683AbjGTUih (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Thu, 20 Jul 2023 16:38:37 -0400
 Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2058.outbound.protection.outlook.com [40.92.107.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9930E1731
-        for <linux-cxl@vger.kernel.org>; Thu, 20 Jul 2023 13:38:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48302271E
+        for <linux-cxl@vger.kernel.org>; Thu, 20 Jul 2023 13:38:36 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e9szZ4bZXcTMLuLRpuCPULGhWSzDPTTGq3L9HX4TCIuFFgPJyfw0GOsyH7fRx5w5aPqG7KO+8uJWYcb0qrfXQv7iVp+9fWDDhHrJtLXTP7wBXVQVL3LibeFoYApwyH11Ps9iOgsl982rfw5Q4z4AQY+jdGSETNynlhBw7CwNXVQcodvSEO/VkE4d88OsdsF7ccwgJsu7tO8aJ8B5HVpXJEPoVX5NmIerCzbw9uQl147u0VfBvLrumE06CL0LPhwdNCRokP4/rQyE/ogVkb7Rp4eoWnrYt1OHb4qSfj40N8wIKRqrH2XAzu1jV1Umijs+jE/aU5ayhVpy+w00AIuUSQ==
+ b=MWUXVJEWl2frjECw3/4bYzHXPupcZud7oFZydAXpEpcCEV4i5q0aoEM3ZJNIFIRzO+pSPZzm/aoEHvs1naQy6xO9U/+sfu5J+z3DLAr3bWvr3KpbmZdZYm70SefzEq7Tp40sRaJ7GO52XV+JNRfAT0TyGxH05YLG0gcYnEMjgWqw7yotrdzLwlL3zwDj5O5JfNliURGCYTSz2Hg33Dg1HD01aF/WRguUMR24q0cIhs4yimBTX1RHhzSF9/eq0cY4tXCO/YdAwJI7AhKhLGp3cBpTUmuGfNeYpLgsJWmoKZcqx3CWpXThZAyl//YQ+XHF2p0tX/uWahf3BCvgF0VfBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yX4gP7cmE0jmp4P7QFEeIYCwM1JW3mdRn7vJ6P0weyI=;
- b=cBtYoa/b2Pjkz9M4Sr7fQLwt/eb3rde2G6/rywk6uto0VOdUEWEKB46swdsnfNDFGRbYlnDcLXivz9qLtrFN4PveS8oPv33/i0lr5Eiw4wYMihEoHzyMUjf1UhCe2Lbv9GZZToUiASoElrnLZijlAt3Rs9LQC/umv7sL45CzeZLz+FCP6aEdV9K0DAUj1pR9fjg96WtiWVEg4sqCLDHFhEhnMS7p2YtOBt3GDWwerw+QCTWXHwMsv44/IG3jTE6H9Ibs8hsp2NY/XTWOuh7Ls14Ng54f6IOKufD1eVKBjojTQUQIF4XCaY4aam+QF1qFJyLkDgvBlbbM5+u6az7FBg==
+ bh=zc3snFHch0Yog7PbxZY00Kvf0mJgyeR3W6EURrCYLtA=;
+ b=BjnMrhmHNw0zuttPLpBjl20Gn4adv8IgG30Cqq+VMngfMMqp4FUFDb9/9MzOXbm6PXF4RH3BETd/mrZd23aodouOBAgEONEvcU7/LP0MK0bIyL6XMbcb/+MhRfjPQtqFauTYx84VDAnieoQHLnH/NU8PZm/tIWz+373IUXgIYxXNO6qpwcJy0KdMG2mtQ4zqUnZC0TCGkyu7q42HVpDR+QGIH/pmA0ixcvD6ZiYW4+mKQm9yJh/LXhs8io6xCfWWeV9TT/35n4JTAUA70j0zf0wHrxnBO37ten31GBMm+vJKkdMruoYaAU8PC9nQAzhRCPSudaS5LdD1jAFwlFsE2Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yX4gP7cmE0jmp4P7QFEeIYCwM1JW3mdRn7vJ6P0weyI=;
- b=MY8Bt7ahI5yX70/3hcnXBAkB7c7wW45CKDyF+KvRwM9qu8l1IfDSG0r+cy9mo33s42kFJCCreE836YVCwo91aHei4z9ktXq7TA4wuA8xGxx8soLrWMEwyENLvYKHIS/T9O7sxBzUe6+VF/M/kDXCEWEy2lIlCgxThOZK9oeTtX3/mqI8GMbVfzpwvHr2yaXJaXBYEDmDoNNKn+JGWvrgDDrnVrhF8SHbaDoD/FtfXN6TwZVxx5GioRJeEqDzqR2XyIFdBgoSxMzNxXy8LOkBS1XO4jRJwyFAAMGrHGgiogKA6h6r2i6X/HSflaqU9YmXaWsJrBanS10Yf8Xy1jrkiQ==
+ bh=zc3snFHch0Yog7PbxZY00Kvf0mJgyeR3W6EURrCYLtA=;
+ b=lLzvTZAfrIMAgl7dylTM7viNJlTsvXTLMSrp3vXEqn2pYDrVC8Qm8lJbknH/bdlAxnkMC8INGfXaHij+L7txGEOTmHnqUHeBujT8u581xO+Ynx7IG9g5xfDIf13ppuNybIIm8Jup0w2gdl0vOikKGa59ZACMkD4qPGg0SfzffqR9wdgqEg7fz2ubC2uJqFZZKNQ+0ebuFF183HmXXEJlBuarJWown8Lthu6rur4rgxwYX0lKzg3IX261q8JUEq1qBPRlUf8oZYmpJN/4UnPg56oDpnwJ54Tt79pajgdTPVwgnw4IsmUDnqpUg8u7URcmIrm+iRRgFsxjliKGDrHoeQ==
 Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
  KL1PR0601MB4100.apcprd06.prod.outlook.com (2603:1096:820:24::13) with
  Microsoft SMTP Server (version=TLS1_2,
@@ -36,7 +36,7 @@ Received: from SG2PR06MB3397.apcprd06.prod.outlook.com (2603:1096:4:7a::17) by
 Received: from SG2PR06MB3397.apcprd06.prod.outlook.com
  ([fe80::450:9c8c:9058:c94c]) by SG2PR06MB3397.apcprd06.prod.outlook.com
  ([fe80::450:9c8c:9058:c94c%5]) with mapi id 15.20.6609.024; Thu, 20 Jul 2023
- 20:37:28 +0000
+ 20:38:29 +0000
 From:   nifan@outlook.com
 To:     qemu-devel@nongnu.org
 Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
@@ -44,53 +44,55 @@ Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
         cbrowy@avery-design.com, ira.weiny@intel.com,
         dan.j.williams@intel.com, a.manzanares@samsung.com,
         dave@stgolabs.net, nmtadam.samsung@gmail.com,
-        Fan Ni <nifan@outlook.com>
-Subject: [Qemu PATCH 0/9] Enabling DCD emulation support in Qemu
-Date:   Thu, 20 Jul 2023 13:36:59 -0700
-Message-ID: <SG2PR06MB33976BB3F9C47CBE08F02D09B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
+        Fan Ni <nifan@outlook.com>, Fan Ni <fan.ni@samsung.com>
+Subject: [PATCH 1/9] hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output payload of identify memory device command
+Date:   Thu, 20 Jul 2023 13:37:00 -0700
+Message-ID: <SG2PR06MB3397F3E74A083607F7492FA4B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230720203708.25825-1-nifan@outlook.com>
+References: <20230720203708.25825-1-nifan@outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN:  [hEJeCfUOvIoSh/EqANQ0Ju6AJirbujao]
+X-TMN:  [ZWUtNriF/S9k+E5ELQxCU4jKTSI1uvfD]
 X-ClientProxiedBy: BYAPR03CA0008.namprd03.prod.outlook.com
  (2603:10b6:a02:a8::21) To SG2PR06MB3397.apcprd06.prod.outlook.com
  (2603:1096:4:7a::17)
-X-Microsoft-Original-Message-ID: <20230720203708.25825-1-nifan@outlook.com>
+X-Microsoft-Original-Message-ID: <20230720203708.25825-2-nifan@outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SG2PR06MB3397:EE_|KL1PR0601MB4100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44799932-469b-43cf-95ae-08db896121de
-X-MS-Exchange-SLBlob-MailProps: cn60g5V53KPsqNME0xQJrzHWqF+9xFSr+Zi9WDsuRF7mXQVoVD7zwBt/veIRh16+YCu6q6LvRX7fRcbvSuFldfO27VTGl6JWphcjviDV86vURZwgbRM3611pZstXArsfccVxrvwh3gmhB+kpk4c1NdrBbblChiObylKiTb4Q4yvfgyjeCu6CQlG6OxxikUNJh8H3xbj/S1npYLYCZxf+DdRqJxjUNmB4njaipS4ctsv1XGusADfkcBVT7mtujQDe801UWeO4e6iZ7Fh/nQbJcLw0/6Lj4ynuLY+RWkG8+J0FmV1Eat4gT36uGy34JHpwHa5ZI2toBEP6jlZZHg4GzWrgRAy84pdUfEHOCU25g9THsoJYisKj+cu4rE5VP8zefafqSA2xbrBqEVAGGqvRshEIoPQ0r9c2CUxdWvS6aAefhBS/++w29cZ0VhpG8jyM81vCpybYz08wrFzvBRtjC+9W97z+uHAMDWm6InNlb1gWDBtHehun89g6ZgTNFrSuUdezcfsALLK5THipstgNTPn4NRiaeHCGj1ho0qOhuTxRkA4TqUCoILeFluwnmf04bvlsD+sL64MZ5EByiRxuSFxUTIHP4Mq1q9pacEObcw6YMB42rP9ePMmPP4jIWSRw/TWSaxX6byLjDhcOThwYG/VtN1FxZdDz96qj4l+CGTjn5SKQYDGnQsfCEeFw8Aj18T3BTVk27HgpdpHWWEnazLD1fQzGc0FAZExIqZhTBxCppDGmXTnmEHq8dplYJXLIuuEhVdoRIn8t+LeuMYLMKKq5izCuESgezqyLJdTd1hQlxH4g3p//RSbVNVX+DEEngknunUV6a4ddoqyeYXBf0ROkft+D87EXWKB6OIyy5UIefw+KpjKjAQ==
+X-MS-Office365-Filtering-Correlation-Id: 0b7c0c3b-d6db-40e2-e421-08db89612440
+X-MS-Exchange-SLBlob-MailProps: quCBMN2EvO/qzAKd82WE1LuLgf/v/GCyttTW/NfaJP+njiN2Q09vijKbf4HcMlm9miLmM8HjhSWih62GlvObcwv7XfEzomJzIejInGrQ9/32FfIqXZsi2IrYdbhqZbmqH1UJv/zQKocXE0zi/YQ5DQ/9WCediFPfpJ+OZhgh5pGkl/xc7iBy+XcNxDDsQBa+9JCmIhzLuGFUfURURAKPSzC4hucOgcXlWDmpuzpMlDb7oP8w1HuKo2o5sywz8DkseRB1aj1GlU9HhSsVJ1OKN10/FArG2CbF/jMF0FBntadwDU5t2t+sx1KZsGXz/MlprtYTf+OCJQeUSrG2A+b9U6TWd6ehRdCkS8nQpMA2i6T3gELkZbXbX3nIiEX/mquUjjRij02ivLKa4rEzYtJYBMw0x9PvQGrkyS8z50NdUi8qmqivcg1insl2NCrzMuaRbcQ587fTvOKsaB7dZGWV1je6uQprhQMoQnafvWtBb0ZNaS3zoTBoyRMaAyerl2G8noWmheF2jl7B4CsvVc+BSRQT0cWGcolucwKXyRXuMCe/VpP8y1Dlk3wz4OuLT3XHQsxDGrOlQ7f8C11AIY8slHTebDP972XvzvIEECL0oSwlKmHJ96pyz0b3bwkZNDxx39o+61R/gI1/VlktTRg5yra/io4ALvuuelGL0pgnDY1TXUGD3vQcuLhDoUhEQpabL/E7loP+WP/eGydtLBb3hg==
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PNfqlOQbyK6AT465atZI2kCJFo+qchRNhF3i9prPzhyCLcGMdAdUL+keEZ478c9FhOla9tU6ba9n59rPgoS4DtVlz+jnqsDg8Vtuthk3aBVseOyaQt0sw+rexrKtDj/17e1k7wFijfyBe/XWPC1tI6rvYGrfvpl+T0pcSjoecYIdZ+6xMTbipV5MqJ2CKjsrTuIKlsnOq68wn6yIXg8pcwwwqPnbHvcC2nUrcWHLRKTuQR3XSKYzeQXuQ7s29lYz7hib72JfBbJi0ovMP5hJe+azcor+pkCVg6X8kHsnJ01mMOcz6l/57aBQL3REhQyihUkp5DSX1E3X6xMTpQnn2DWt+XpIIXuYpI/YgEvUzck1ui+CHifcI/EDOXGVJCy//m8uu3uCa2K3TqPTms1b8Mj/AytkYOWKW23t43hcVzXgvMJ3yNvLlPfqYCUZnDMunaFm1eXkG2kFamp34n12T6yYilE2+PQaPnj8Kx/T9ANLGBmM2EC0O952l4UKi9GoL/nzzwyec1sFmOB6/FhnoekNpsgPXjajBWkWnpo0+I2BmHviLtSe42GTA1KLerDvd/KIdhxw6oYDELxMq9SL7XAEm58BuqSI5QYjY4qskHI=
+X-Microsoft-Antispam-Message-Info: 9si9HO14/g6U71kMMZL522i4ryOkDp2K8aZOSiUhb1RnXmDuIAVp5A1igzU8nBpD3ZInyYlRxSxOFMz76iOx0bilBcN09P3Jm8qL9nLqjS9dQZOpXpKglHiTQiuJXfXszJlAm29m0tQNJZGw8M3YIjbmTtbMLVU9ji6lNOr9C/lzNwvModJR2leuJOnwhblhQnQ1jeeJDJBNlAxyYuqdDNIT4ZQbWepbdNxC7Bs6jzZygKLd9RyRBzaVViMC/bgyFYacr9sWz6nSAjpV30rV6QYxLQ8pPQgl2uocknda5lBV7LX4+ac6FgwkyZapJZW14bd5uBq/t4uoQWOT6g+mPBLDW3UPLMVxXBl/0HPsug+LWzq2Lr+soP8S8rLdA7a8n5sbF1UwnvVXAVpzbmBrfduLvACsxURTPxobJP4sazJrOuCByrCihTjf07ycyvByMaWjGnvZSeV9TxXzF/4LtLG+A9qJ+oJPWVqJuex0EVVDIvHofa2cqmtlfIR5bqAIrz5cCXupMXlFrxzUA5VrU4YcoAS5gOvvzEcySWgGnEocCzGT2aalYpO3LyzIt3GY680YmKuL4rzoO5rZCmtSLOPlUWvVkoD+yT0wB/9kcam8EArO28envzhIFHTy5SIQ
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?K3h4ypE9dn1GCha73W48u3UxULg+k7KbnvbbiJogIyzG6Xhlkn+ky0xbnHqc?=
- =?us-ascii?Q?B8/sIfsbdeQL+iRT+1UGCWn2jG3NduJjsx1epVf9V9gyElux9Q9QeBv8pcSJ?=
- =?us-ascii?Q?49prNOThuAq/WeWnAcJ4eTtPkAa9/3/7E2dsFQITOr+pFg0AWbSGQpr94SSj?=
- =?us-ascii?Q?52dSXO1jIMM6Cv0+9szk9fHg70cVPS+w9WwaQCxE/B05KbAwE65xYoOA+JuW?=
- =?us-ascii?Q?Plf4WHclNsIHA9X5KuuC+hq06DjEa616QMCnSRXhJnRUaqmPMC87y7bshwA6?=
- =?us-ascii?Q?54w0qZba6Gzd1DdFZG1K9G9hijeX17HIU5+1VKdMRzdKvjP2vZjXkHnNtLkh?=
- =?us-ascii?Q?nzzWGYQx6ae4lfH/svBOuwQk+5r+/kbjQ6XGosd1PFiWYprqhLYOuOqUHcG+?=
- =?us-ascii?Q?t+NnALUKPj6jGdgHsi1m4TMAoRjoBZ/qoUG9voYN+rj9zuws+emseD2/iIRS?=
- =?us-ascii?Q?oLg0wxR2+fs1Hfy43JawAe3bHUy1xBBtZfbvNe9OSiFRcRI0g0guQaAqS4NZ?=
- =?us-ascii?Q?mhATNZrEMvyli2YmX0UcKESU7mCSwTYhUBrjm6APY3wpVvmVlx5tdgE/IW9i?=
- =?us-ascii?Q?KJLJWBTaJkQmJT5GT9bL7rtxuzOO8vcJfYDA+N4r6EJ/EfWLIQcwXptkHJko?=
- =?us-ascii?Q?EymJXcGiKiupcqmbFjpadSwf+P59VXsd9qX0yavZvkJ8/DE/ooIPDjwkWLMi?=
- =?us-ascii?Q?V7U7fdbkzU2QiTq7KxY8m/hI3MfRIfXsBWCyiBFIUnX9p8nKRK0ikXOArBiW?=
- =?us-ascii?Q?6sbRGylUK+XqgahtLov2vnSHPIDSgbll3TVDI181G6zvq0zgqxIO58BR714G?=
- =?us-ascii?Q?jGOSBO9NS2RxodvIpskJoTYlNRLT3IlUZWzl+2S4MYsvr7WcRZGV8wIV9ou+?=
- =?us-ascii?Q?qDZToY5ua1XgbOB5+U9NxMD7sWeNV0S1rlxZJYiSR2i9j20tK2Uiq+vU1tr3?=
- =?us-ascii?Q?el6RPp5KqE4p/pHsN/TFyUnVJWxOBgRg/mORojruinTl4xR95Meg5mTxPW+i?=
- =?us-ascii?Q?IuYI61P5TQ5kIXpwT847C4Cy4rmb3enJOLIgyz8m/HmtOJ3X3yRPiZh5uRN3?=
- =?us-ascii?Q?Is7j4N/q3FCyIfBdbFzCIW8KmSYhCDqOWjsRA5REpmmHn/yrN+PK641JNHXd?=
- =?us-ascii?Q?bzPq/eRP18b7q2grsRPEvYZrC41oyIVP1Og9Bzp1jyxSNhIlLYWCbCdEz8Rg?=
- =?us-ascii?Q?Ur2ATdNxmueMWOTB1BLA+DMbflNK4GPyMtJsHA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xQEMKXR52+B0vrymMtemDk4mgc7S87hxG4wpo8GnyBrLNKISeCD7RxlUDyBm?=
+ =?us-ascii?Q?LK7XEfpVE1kVQ1nJeH6vvXmeoAJ2aP5B41T2gizHfpBNB9tvNJLrvSDpOXrk?=
+ =?us-ascii?Q?qc3li4uKaVcwDsQJmGZjvdZkiNJYoT0TMPYCNahI3enW32GELukv7M8yjf8y?=
+ =?us-ascii?Q?44l9Ip90B9xLqvU58Dsy0HkQ05FhX83pEuhoFa270cbg8Dxmdsot74TdpKGq?=
+ =?us-ascii?Q?699pXRNfq2lbSICmP2cEwR9SRAyofrAZRclhHDyeniCGzDHAvSGjNv9gFoA5?=
+ =?us-ascii?Q?OSAoCO/xLrUt56EErjaG1xTAo3VRdu6a4t+x1LWAVP/smOZj48xKKmZqd/TM?=
+ =?us-ascii?Q?E/5XBt6Xz70o8IKu//fCBUP0Nd1Vab/cHClBaZOIE8J3urZ+jEUQB5APaNM7?=
+ =?us-ascii?Q?rUjKT5bh7oYylJHMqrNS3xEvy/ifTebAwmuGgIGnJkiEh3ISOTEnQON15cca?=
+ =?us-ascii?Q?sWV2EKU7vdCWHT+3LV5gOBhJBl0yHJIvydWNNxQyaHEjiKcWZmdUT0Iymcch?=
+ =?us-ascii?Q?24Vs+9CAC8VVg9OeoQwKrcmFitA/fDoTVYT4slPSdzXgGBxF1STAvp2wLWAM?=
+ =?us-ascii?Q?r3eRBBXdP2Nh3kowQZEoGLNgREPGkZ4G8uQe7uYSNsIKRGvcMTsshRsFi4gO?=
+ =?us-ascii?Q?eNDRE9QafMKDcGwzYPkhqTs/fAvcwOGfSnY+nOgK7n0q084WSLa1CZn9znJS?=
+ =?us-ascii?Q?x5G0yAD1PnkKcrdhvoTTPr+s0AwJjNBiFaibgI9TPQJ8d0MWtWo4FtqhjmGr?=
+ =?us-ascii?Q?NK4IjNVWGTxrwVY2WUJuU8kQjC3hWzTTJR2WY+JOlC3Yp5V0HR9jxHnG2a+y?=
+ =?us-ascii?Q?dFuN7AbR9HkKMw3iMAcn/zOTb3PH5Fsk0LAMJSKSy7awhIbTUkw5mgbGfYVZ?=
+ =?us-ascii?Q?OdG2daWqHozHulXBsi4QHn5pRWE/uXqIKAUA67DFBK/InqdisN4wNRgIW/FJ?=
+ =?us-ascii?Q?3mWlAMEPzj0UJUJ3z631mqh0AFMlFSmP0FN129RPiiz3sZwvxydRj5vFitGE?=
+ =?us-ascii?Q?rJtzYe78e72SUhOqLK1n0lz2N3i8GqKVbXTJ055TOarUsKRjT0PjcO0J10Jb?=
+ =?us-ascii?Q?JKzKJPXz4WKE/0c8RF78Vw5fTC6yYzkcGwtgyS0gvdgteoM/whxuiJDthKO3?=
+ =?us-ascii?Q?rHJ6EOs8WWPqoPXONkNM9q3hsOW2GaDYKZ5H6EJAHNIeQnthQgYpUCBoTNtW?=
+ =?us-ascii?Q?etCHf8ComZmssTfcK5iZFMcBsPH/fgBM4gIKWw=3D=3D?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44799932-469b-43cf-95ae-08db896121de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b7c0c3b-d6db-40e2-e421-08db89612440
 X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3397.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 20:37:28.0547
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 20:37:31.8432
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -102,69 +104,48 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 From: Fan Ni <nifan@outlook.com>
 
-The patch series provides dynamic capacity device (DCD) emulation in Qemu.
-More specifically, it provides the following functionalities:
-1. Extended type3 memory device to support DC regions and extents.
-2. Implemented DCD related mailbox command support in CXL r3.0: 8.2.9.8.9.
-3. ADD QMP interfaces for adding and releasing DC extents to simulate FM
-functions for DCD described in cxl r3.0: 7.6.7.6.5 and 7.6.7.6.6.
-4. Add new ct3d properties for DCD devices (host backend, number of dc
-regions, etc.)
-5. Add read/write support from/to DC regions of the device.
-6. Add mechanism to validate accessed to DC region address space.
+Based on CXL spec 3.0 Table 8-94 (Identify Memory Device Output
+Payload), dynamic capacity event log size should be part of
+output of the Identify command.
+Add dc_event_log_size to the output payload for the host to get the info.
 
-A more detailed description can be found from the previously posted RFC[1].
+Signed-off-by: Fan Ni <fan.ni@samsung.com>
+---
+ hw/cxl/cxl-mailbox-utils.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Compared to the previously posted RFC[1], following changes have been made:
-1. Rebased the code on top of Jonathan's branch
-https://gitlab.com/jic23/qemu/-/tree/cxl-2023-05-25.
-2. Extracted the rename of mem_size to a separated patch.(Jonathan)
-3. Reordered the patch series to improve its readability.(Jonathan)
-4. Split the validation of accesses to DC region address space as a separate
-patch.
-5. Redesigned the QMP interfaces for adding and releasing DC extents to make
-them easier to understand and act like existing QMP interfaces (like the
-interface for cxl-inject-uncorrectable-errors). (Jonathan)
-6. Updated dvsec range register setting to support DCD devices without static
-capacity.
-7. Fixed other issues mentioned in the comments (Jonathan&Nathan Fontenot).
-8. Fixed the format issues and checked with checkpatch.pl under qemu code dir.
-
-
-The code is tested with the DCD patch series at the kernel side[2]. The test
-is similar to those mentioned in the cover letter of [1].
-
-
-[1]: https://lore.kernel.org/all/20230511175609.2091136-1-fan.ni@samsung.com/
-[2]: https://lore.kernel.org/linux-cxl/649da378c28a3_968bb29420@iweiny-mobl.notmuch/T/#t
-
-Fan Ni (9):
-  hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
-    payload of identify memory device command
-  hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
-    and mailbox command support
-  include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
-    type3 memory devices
-  hw/mem/cxl_type3: Add support to create DC regions to type3 memory
-    devices
-  hw/mem/cxl_type3: Add host backend and address space handling for DC
-    regions
-  hw/mem/cxl_type3: Add DC extent list representative and get DC extent
-    list mailbox support
-  hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
-    dynamic capacity response
-  hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
-    extents
-  hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
-
- hw/cxl/cxl-mailbox-utils.c  | 421 +++++++++++++++++++++++++++-
- hw/mem/cxl_type3.c          | 539 +++++++++++++++++++++++++++++++++---
- hw/mem/cxl_type3_stubs.c    |   6 +
- include/hw/cxl/cxl_device.h |  49 +++-
- include/hw/cxl/cxl_events.h |  16 ++
- qapi/cxl.json               |  49 ++++
- 6 files changed, 1034 insertions(+), 46 deletions(-)
-
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index ad7a6116e4..b013e30314 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -21,6 +21,8 @@
+ #include "sysemu/hostmem.h"
+ 
+ #define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
++/* Experimental value: dynamic capacity event log size */
++#define CXL_DC_EVENT_LOG_SIZE 8
+ 
+ /*
+  * How to add a new command, example. The command set FOO, with cmd BAR.
+@@ -519,8 +521,9 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
+         uint16_t inject_poison_limit;
+         uint8_t poison_caps;
+         uint8_t qos_telemetry_caps;
++        uint16_t dc_event_log_size;
+     } QEMU_PACKED *id;
+-    QEMU_BUILD_BUG_ON(sizeof(*id) != 0x43);
++    QEMU_BUILD_BUG_ON(sizeof(*id) != 0x45);
+ 
+     CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
+     CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
+@@ -543,6 +546,7 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
+     st24_le_p(id->poison_list_max_mer, 256);
+     /* No limit - so limited by main poison record limit */
+     stw_le_p(&id->inject_poison_limit, 0);
++    stw_le_p(&id->dc_event_log_size, CXL_DC_EVENT_LOG_SIZE);
+ 
+     *len = sizeof(*id);
+     return CXL_MBOX_SUCCESS;
 -- 
 2.39.2
 
