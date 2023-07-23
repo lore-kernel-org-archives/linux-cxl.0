@@ -2,222 +2,352 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0487FC001DE
-	for <linux-cxl@archiver.kernel.org>; Sun, 23 Jul 2023 04:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72889C001DF
+	for <linux-cxl@archiver.kernel.org>; Sun, 23 Jul 2023 14:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbjGWE5L (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 23 Jul 2023 00:57:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59464 "EHLO
+        id S229557AbjGWOx7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 23 Jul 2023 10:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjGWE5K (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Jul 2023 00:57:10 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B09BE7B
-        for <linux-cxl@vger.kernel.org>; Sat, 22 Jul 2023 21:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690088228; x=1721624228;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Gb4dpqtPbqE71HOGlII8XtpcKD2dtbfy/LDRwRcT3T0=;
-  b=m0LBtrkyCX0Nt7B4LBdm/J7YJ/pGvlR5qKv/e9RDSnNI6e4Iiheg0woh
-   Q5Li8LEMGKGqOvM7lNG6Tmgl8bCyR5jwDnE4hdyI93i/BFBI605BE2sdD
-   1ERbzfGI5jWBe9hoYr7HdNst8xHNw2wamVsQv8mUoOcWqmhd3VsMnf6Iu
-   NgLiNA2BItc7ewgpVmIerCtpLXigX2Z0tyjUBmejmvGBLu5fYsQJVZ1Y5
-   J70NrIIBKe7N4DPQpwQF8cbxo2QN8VS1nCpVrg7niKL42EQRjkOredDlc
-   DoF4aGymfrgD27WE3iNqEMtlh1urWImxf32PcgnuCP5AjpwoJfZrxD+Nu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10779"; a="352142982"
-X-IronPort-AV: E=Sophos;i="6.01,226,1684825200"; 
-   d="scan'208";a="352142982"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2023 21:57:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10779"; a="760407171"
-X-IronPort-AV: E=Sophos;i="6.01,226,1684825200"; 
-   d="scan'208";a="760407171"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga001.jf.intel.com with ESMTP; 22 Jul 2023 21:57:07 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 22 Jul 2023 21:57:06 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Sat, 22 Jul 2023 21:57:06 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.106)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Sat, 22 Jul 2023 21:57:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SZWLYvfU7R0A9co3riIOXXdsmky8LjxWX1tWGGytCQYlPle+lwzXVhDs7dojnNNYA/1JgEz78p9i1YbVxPzHH6ygzo6WCpBBeXpI4hi9/5zlLVP8l3YwK58swk6dPOmE+xzcTE4x3bTWp4nZLsViAMiJK9bgW2a40pGXRIgiy2fGEfGA0bZbgtDA7DSWhGhwFZVkP08/GOsVHWkJmkbBR2yFmHG6MLkdLI+hGSnThAT58zROL4gmKKnfJeOtBOS7D6Zb9JgnsRW8JXsvrnSMln2ueku59aVa/vK9ziLjimGmDdvh2dFJUcjAoMP8gHzTSmWbj3AczVmCC7B09f2xEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KxrQ8nR4qwKpiXGK6sWPcUibhmJjvBQdd5I9yQLKp3I=;
- b=coYksCBkOYIRmk9Qt9QpiK6QXitHlEQKzTnTfb9TfGSCEpseaLQxGujOjhs0+tEJ9sgtWSQ9ASe+PdRQXObIGYf4ED7CCS0Gla8xbdvuiVWVbfhT0TvMYrB0MxbAgE1wn6meKu+0KpiPMwCNijNMbsUMxoFDpWMYTmHhAkE1QmgA8kfCDIRDXyCjrUhS+w/+EieDhuf0+1Umo5ZVA23KQlXLH5gsrrDuDzK0qU6oNO6l0XiN76Vl5QWrDBnUdV9yEm+oTwF5N9UdyEG/QP+oA/Wwgs+cMTJS34aaSXU+X2vV7AykudUzNjUAeYQQVb4HYVFm+ctXs1hQ0Vdz/ZQLpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SA0PR11MB4672.namprd11.prod.outlook.com (2603:10b6:806:96::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.31; Sun, 23 Jul
- 2023 04:57:04 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6609.030; Sun, 23 Jul 2023
- 04:57:04 +0000
-Date:   Sat, 22 Jul 2023 21:57:00 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     <nifan@outlook.com>, <qemu-devel@nongnu.org>
-CC:     <jonathan.cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
-        <gregory.price@memverge.com>, <hchkuo@avery-design.com.tw>,
-        <cbrowy@avery-design.com>, <ira.weiny@intel.com>,
-        <dan.j.williams@intel.com>, <a.manzanares@samsung.com>,
-        <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>,
-        Fan Ni <nifan@outlook.com>
-Subject: Re: [Qemu PATCH 0/9] Enabling DCD emulation support in Qemu
-Message-ID: <64bcb31c9a8dc_760de2941@iweiny-mobl.notmuch>
-References: <SG2PR06MB33976BB3F9C47CBE08F02D09B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB33976BB3F9C47CBE08F02D09B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
-X-ClientProxiedBy: SJ0PR13CA0004.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::9) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+        with ESMTP id S229554AbjGWOx6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 23 Jul 2023 10:53:58 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021E0C9;
+        Sun, 23 Jul 2023 07:53:56 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36NE7aiD003504;
+        Sun, 23 Jul 2023 14:53:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : in-reply-to : references : date : message-id : mime-version :
+ content-type; s=pp1; bh=UOUQ0aIG3tMZ1kPV0iy5M7XtmGItPeZ5AGFodoLAnZI=;
+ b=hVavILof0mNPNiAs4RRSPmnEUhHl6vXQWYuqDHG09PHfSE8e1HZVTgo3i3CLhzJJL0mG
+ q5G4N+htgl41fu2gJET8Qdpod+QGJGuncjcbUEiQ4fgdRVR7O3hQK6J4xh1CWYVR0pFB
+ P6ojYQLpRzNN0OC3KErc0dO2iWAC7Voozq8cNUsO1LMXtQq4YzM25d5viJCfW1BYTUI/
+ lph3UwkGswwR11jhGhyoNbS0lpccYWGbpKE5WiNomqb5huAsehsFU/sod/oqtmWMvITx
+ OgVMzllIw6SO1ahU5xUNVlDA81iWnIOF0ly/yfCycAkOYmBQSIZfV5DZSsphXtlhAThy 4w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s0mw8wqee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 23 Jul 2023 14:53:30 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36NEkFf3024226;
+        Sun, 23 Jul 2023 14:53:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s0mw8wqe8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 23 Jul 2023 14:53:29 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36NC0qYD014384;
+        Sun, 23 Jul 2023 14:53:28 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s0stxcb0w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 23 Jul 2023 14:53:28 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36NErRD05046898
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 23 Jul 2023 14:53:27 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACC1158062;
+        Sun, 23 Jul 2023 14:53:27 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADF9158059;
+        Sun, 23 Jul 2023 14:53:22 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.43.39.113])
+        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Sun, 23 Jul 2023 14:53:22 +0000 (GMT)
+X-Mailer: emacs 29.0.91 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: split memmap_on_memory
+ requests across memblocks
+In-Reply-To: <20230720-vv-kmem_memmap-v2-2-88bdaab34993@intel.com>
+References: <20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com>
+ <20230720-vv-kmem_memmap-v2-2-88bdaab34993@intel.com>
+Date:   Sun, 23 Jul 2023 20:23:19 +0530
+Message-ID: <87a5vmadcw.fsf@linux.ibm.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA0PR11MB4672:EE_
-X-MS-Office365-Filtering-Correlation-Id: f75df93a-5634-4d65-a1d1-08db8b39420f
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GU0ldQ+nb7hjwyxLeHhgEQfUjKi6gBYL6Ee+NzYWPTRnHrvaZLYpE8d+oB+Q2IhGOGDtWaOF+BoAsEiyGQBAJEIEOA8WTdloN1eSCEklKVq5aVB1972VKVDKU83qbLPP07dUNa1kL/VmFCVTS0PaSuwxxmtKgrEOB5UhUZbHcqb+2FtXxWq7z/lXqN0PFiYrO7cUsYVOKC74035tcs4uODd6/g/LpWucrpJzKZxWjksYNqR2jkQ8Qh9F3R9uBq4NkH7qTa/2En40yEA0YpbV9mcZkNwm2A15unpj3AYcnfBUUOLCDfPl9/BCN1+pJMGKjqIYzWJnQcY1K0sdiEDHKxeqAvdpa+rtYZ5IljsJ7PVqaKJABrVl1XDGcgWPa4pl4CJ0k+0bLDh0QkQgIKL6cZx6QjDehLcyYsuKgLqxoqtRYRA5FkbzzrZZn0SsV/PRgUeNuAgSnz9fAMFEO3w5GI411ARLBwYtN7X3cqgqtPq1iAGZpG5YCgR5oh4PsDBt+ln26BQcJDwZn2Zc+5eSbey1vIbQsLXSldZll1D/u2U9Etu1RbmDIp+pVI7gZavDXRorcjtUuLySYtyns6SWxQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(376002)(346002)(136003)(39860400002)(366004)(451199021)(38100700002)(83380400001)(8936002)(8676002)(7416002)(44832011)(5660300002)(478600001)(66556008)(66476007)(4326008)(316002)(66946007)(41300700001)(26005)(186003)(6506007)(45080400002)(966005)(6486002)(6512007)(6666004)(9686003)(2906002)(86362001)(82960400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yXdeNleoULDktR0EttF2pfciTOCN8jUTjV+VhVCh04WJrotzbgysFLPkYGfo?=
- =?us-ascii?Q?gjG8IVwkdNr8ZRzfOJHa0Vuk/YmlsHzKL26F7qVV1XdxRiLP40Yr3bMQRtzy?=
- =?us-ascii?Q?Kulc2GtsK+N+nOrcu7CbfFRL/1Lrtv6Dgni53baVlDCVm+kY+CHMZG4de6HF?=
- =?us-ascii?Q?XJ7qj19zKEo5fxOM5RWSo748cC6U4nY6ms7J0AFmKQnZcZhNiriGIikTK7f0?=
- =?us-ascii?Q?vwuk7XyMJC46nQM2UG8Xyu27gZWcol3StHYr53QbrK4qYW86prZSgXHE4j8h?=
- =?us-ascii?Q?PNEnSpiUD3Eo9n74vVXTg/sKxd/4TGWLhi0o385QyIQ/Lc1VBmWxj/IazPIW?=
- =?us-ascii?Q?hzHmBkV0fuWQ/rh7dpQkKVFeYR6wKMfdtPDBpoMQeXMI8qrr/S3t1+IUN6aD?=
- =?us-ascii?Q?OeDUw11bEbLiWNwE2LY/G9wHHWtCSp1H0YbLKeDHoEN0DStrasNAABzYaxvW?=
- =?us-ascii?Q?CtI9p2HruUEhMIAAhLroZpHgNTbu9RBugd7sYuWTr1iWOGDw5SCnhfVPgK0K?=
- =?us-ascii?Q?79wbAIF0zQJ7zIBzo9yNKWNQ6gEAD2Z2riSPMLPUfvRKfqyWMdQz/dwPwu46?=
- =?us-ascii?Q?fegavFLVhlhnHRQY43zNP1dMieCD1/mzyWUxzsWepIuBDq+eaB3ARYQQIvIH?=
- =?us-ascii?Q?5NkjPENdGt71OF+AQ36gVvoVjSHSjv6XQgC+ZLWDmL2td9wDdH0nB/OlnFvV?=
- =?us-ascii?Q?sESq2r47qFDsTqBqrGWMtbOkA7KipO807qAuUnceowqqlCnIM/DskNFna6Yc?=
- =?us-ascii?Q?9XObhvmTn0h1SBx/y7hdtxOBnnkEC115amRHSwwSbDul/tg/UNHYlAntMzoy?=
- =?us-ascii?Q?CSLfc9Ooy+oAYm/BjZLYqVzr7hiPo+HW2qgYAgK4Brd3TXdtSWJFWBOEoFoB?=
- =?us-ascii?Q?saHFfpp2LrVUuIZ3xXJAPBklcWePWVJtAFb7Mrlucf7rRQwNQXdAaYEVt0XC?=
- =?us-ascii?Q?k255CGG2qwwBbGvhQSxDE7KoVmtaUnwPVpmDsd4Liboj3BbiVA8rZejDwgD2?=
- =?us-ascii?Q?hfOMEVnRkvqqQsKOKjV+AWNiQS5UGLZ9m4jw75sqOo7s5RShglg4m0GNKImg?=
- =?us-ascii?Q?RQGP/a/uWqujrJH/1iFAnXrNEaRb8m8KFYmTUGuOiWScmJHOUe1kO+ITA/Mi?=
- =?us-ascii?Q?8F2p0O/cKBeeuRfFi5pWSVo7mDuQS0dTF4wrDRUPG6BOMVgpjkO8qtNZsD1+?=
- =?us-ascii?Q?u83gMEebVSkEZfsMGrv5VIdnqF72C79xERgB5xULlh7/HS1IxHQxWjmMYUwC?=
- =?us-ascii?Q?djEFm/RdQbsh/hUbz4K+j/13HmXBd8ACzhtLrJkTXWrFmAuR8bPxmznSILe7?=
- =?us-ascii?Q?bIHFzAFjcYkYQ+GOgIjg8s+8eyvT2GYIx6SGX8oSkxAgbKtr73Xi8sIOLDjD?=
- =?us-ascii?Q?3aJuAIqPkCp+nOmCcriB6AztNkpS13xuGUro0rvo6Xtc9RybT17RgqIjTUAT?=
- =?us-ascii?Q?Q0FPqacsrn16/rg0B+IPCcCKZpfaFuEfGOa+wCmWQiMuBIxZi9Czz4lZkXC5?=
- =?us-ascii?Q?NlnbRwaAeXVxqZZNuOHTbGrXQGODRXA/2GPzzEo66iNm84WAmSs6gbjq/Jol?=
- =?us-ascii?Q?nTzqSnknYcYs5z6uVyevohrpmHV1VoK800/F/uZ7?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f75df93a-5634-4d65-a1d1-08db8b39420f
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2023 04:57:04.3048
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TSMtYMywkq8WZINKpfa4Q1PUFBFFVmxAoXNjMBU0ZVsAet65TlbypEO9npD9+USWnQEAlTShr91/BQe1vSgDeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4672
-X-OriginatorOrg: intel.com
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: D-UmcYDsQlgdmR3uA39CuKFCIjjXE_7f
+X-Proofpoint-GUID: Mp5Xv6-BD6HwkUxJNdGxki9y-wcKUbtL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-23_04,2023-07-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 adultscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307230135
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-nifan@ wrote:
-> From: Fan Ni <nifan@outlook.com>
-> 
-> The patch series provides dynamic capacity device (DCD) emulation in Qemu.
-> More specifically, it provides the following functionalities:
-> 1. Extended type3 memory device to support DC regions and extents.
-> 2. Implemented DCD related mailbox command support in CXL r3.0: 8.2.9.8.9.
-> 3. ADD QMP interfaces for adding and releasing DC extents to simulate FM
-> functions for DCD described in cxl r3.0: 7.6.7.6.5 and 7.6.7.6.6.
-> 4. Add new ct3d properties for DCD devices (host backend, number of dc
-> regions, etc.)
-> 5. Add read/write support from/to DC regions of the device.
-> 6. Add mechanism to validate accessed to DC region address space.
-> 
+Vishal Verma <vishal.l.verma@intel.com> writes:
 
-Sorry I see them in this other thread now.
+> The MHP_MEMMAP_ON_MEMORY flag for hotplugged memory is currently
+> restricted to 'memblock_size' chunks of memory being added. Adding a
+> larger span of memory precludes memmap_on_memory semantics.
+>
+> For users of hotplug such as kmem, large amounts of memory might get
+> added from the CXL subsystem. In some cases, this amount may exceed the
+> available 'main memory' to store the memmap for the memory being added.
+> In this case, it is useful to have a way to place the memmap on the
+> memory being added, even if it means splitting the addition into
+> memblock-sized chunks.
+>
+> Change add_memory_resource() to loop over memblock-sized chunks of
+> memory if caller requested memmap_on_memory, and if other conditions for
+> it are met,. Teach try_remove_memory() to also expect that a memory
+> range being removed might have been split up into memblock sized chunks,
+> and to loop through those as needed.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> ---
+>  mm/memory_hotplug.c | 154 +++++++++++++++++++++++++++++++---------------------
+>  1 file changed, 91 insertions(+), 63 deletions(-)
+>
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e9bcacbcbae2..20456f0d28e6 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1286,6 +1286,35 @@ bool mhp_supports_memmap_on_memory(unsigned long size)
+>  }
+>  EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
+>  
+> +static int add_memory_create_devices(int nid, struct memory_group *group,
+> +				     u64 start, u64 size, mhp_t mhp_flags)
+> +{
+> +	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> +	struct vmem_altmap mhp_altmap = {};
+> +	int ret;
+> +
+> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY)) {
+> +		mhp_altmap.free = PHYS_PFN(size);
+> +		mhp_altmap.base_pfn = PHYS_PFN(start);
+> +		params.altmap = &mhp_altmap;
+> +	}
+> +
+> +	/* call arch's memory hotadd */
+> +	ret = arch_add_memory(nid, start, size, &params);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* create memory block devices after memory was added */
+> +	ret = create_memory_block_devices(start, size, mhp_altmap.alloc,
+> +					  group);
+> +	if (ret) {
+> +		arch_remove_memory(start, size, NULL);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+>   * and online/offline operations (triggered e.g. by sysfs).
+> @@ -1294,11 +1323,10 @@ EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
+>   */
+>  int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  {
+> -	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> +	unsigned long memblock_size = memory_block_size_bytes();
+>  	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+> -	struct vmem_altmap mhp_altmap = {};
+>  	struct memory_group *group = NULL;
+> -	u64 start, size;
+> +	u64 start, size, cur_start;
+>  	bool new_node = false;
+>  	int ret;
+>  
+> @@ -1339,27 +1367,20 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  	/*
+>  	 * Self hosted memmap array
+>  	 */
+> -	if (mhp_flags & MHP_MEMMAP_ON_MEMORY) {
+> -		if (!mhp_supports_memmap_on_memory(size)) {
+> -			ret = -EINVAL;
+> +	if ((mhp_flags & MHP_MEMMAP_ON_MEMORY) &&
+> +	    mhp_supports_memmap_on_memory(memblock_size)) {
+> +		for (cur_start = start; cur_start < start + size;
+> +		     cur_start += memblock_size) {
+> +			ret = add_memory_create_devices(nid, group, cur_start,
+> +							memblock_size,
+> +							mhp_flags);
+> +			if (ret)
+> +				goto error;
+> +		}
 
-https://lore.kernel.org/all/SG2PR06MB3397F3E74A083607F7492FA4B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com/
+We should handle the below error details here. 
 
-Thanks,
-Ira
+1) If we hit an error after some blocks got added, should we iterate over rest of the dev_dax->nr_range.
+2) With some blocks added if we return a failure here, we remove the
+resource in dax_kmem. Is that ok? 
 
-> A more detailed description can be found from the previously posted RFC[1].
-> 
-> Compared to the previously posted RFC[1], following changes have been made:
-> 1. Rebased the code on top of Jonathan's branch
-> https://gitlab.com/jic23/qemu/-/tree/cxl-2023-05-25.
-> 2. Extracted the rename of mem_size to a separated patch.(Jonathan)
-> 3. Reordered the patch series to improve its readability.(Jonathan)
-> 4. Split the validation of accesses to DC region address space as a separate
-> patch.
-> 5. Redesigned the QMP interfaces for adding and releasing DC extents to make
-> them easier to understand and act like existing QMP interfaces (like the
-> interface for cxl-inject-uncorrectable-errors). (Jonathan)
-> 6. Updated dvsec range register setting to support DCD devices without static
-> capacity.
-> 7. Fixed other issues mentioned in the comments (Jonathan&Nathan Fontenot).
-> 8. Fixed the format issues and checked with checkpatch.pl under qemu code dir.
-> 
-> 
-> The code is tested with the DCD patch series at the kernel side[2]. The test
-> is similar to those mentioned in the cover letter of [1].
-> 
-> 
-> [1]: https://lore.kernel.org/all/20230511175609.2091136-1-fan.ni@samsung.com/
-> [2]: https://lore.kernel.org/linux-cxl/649da378c28a3_968bb29420@iweiny-mobl.notmuch/T/#t
-> 
-> Fan Ni (9):
->   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
->     payload of identify memory device command
->   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
->     and mailbox command support
->   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
->     type3 memory devices
->   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
->     devices
->   hw/mem/cxl_type3: Add host backend and address space handling for DC
->     regions
->   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
->     list mailbox support
->   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
->     dynamic capacity response
->   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
->     extents
->   hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
-> 
->  hw/cxl/cxl-mailbox-utils.c  | 421 +++++++++++++++++++++++++++-
->  hw/mem/cxl_type3.c          | 539 +++++++++++++++++++++++++++++++++---
->  hw/mem/cxl_type3_stubs.c    |   6 +
->  include/hw/cxl/cxl_device.h |  49 +++-
->  include/hw/cxl/cxl_events.h |  16 ++
->  qapi/cxl.json               |  49 ++++
->  6 files changed, 1034 insertions(+), 46 deletions(-)
-> 
+IMHO error handling with partial creation of memory blocks in a resource range should be
+documented with this change.
+
+
+> +	} else {
+> +		ret = add_memory_create_devices(nid, group, start, size, mhp_flags);
+> +		if (ret)
+>  			goto error;
+> -		}
+> -		mhp_altmap.free = PHYS_PFN(size);
+> -		mhp_altmap.base_pfn = PHYS_PFN(start);
+> -		params.altmap = &mhp_altmap;
+> -	}
+> -
+> -	/* call arch's memory hotadd */
+> -	ret = arch_add_memory(nid, start, size, &params);
+> -	if (ret < 0)
+> -		goto error;
+> -
+> -	/* create memory block devices after memory was added */
+> -	ret = create_memory_block_devices(start, size, mhp_altmap.alloc,
+> -					  group);
+> -	if (ret) {
+> -		arch_remove_memory(start, size, NULL);
+> -		goto error;
+>  	}
+>  
+>  	if (new_node) {
+> @@ -2035,12 +2056,38 @@ void try_offline_node(int nid)
+>  }
+>  EXPORT_SYMBOL(try_offline_node);
+>  
+> -static int __ref try_remove_memory(u64 start, u64 size)
+> +static void __ref __try_remove_memory(int nid, u64 start, u64 size,
+> +				     struct vmem_altmap *altmap)
+>  {
+> -	struct vmem_altmap mhp_altmap = {};
+> -	struct vmem_altmap *altmap = NULL;
+> -	unsigned long nr_vmemmap_pages;
+> -	int rc = 0, nid = NUMA_NO_NODE;
+> +	/* remove memmap entry */
+> +	firmware_map_remove(start, start + size, "System RAM");
+> +
+> +	/*
+> +	 * Memory block device removal under the device_hotplug_lock is
+> +	 * a barrier against racing online attempts.
+> +	 */
+> +	remove_memory_block_devices(start, size);
+> +
+> +	mem_hotplug_begin();
+> +
+> +	arch_remove_memory(start, size, altmap);
+> +
+> +	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+> +		memblock_phys_free(start, size);
+> +		memblock_remove(start, size);
+> +	}
+> +
+> +	release_mem_region_adjustable(start, size);
+> +
+> +	if (nid != NUMA_NO_NODE)
+> +		try_offline_node(nid);
+> +
+> +	mem_hotplug_done();
+> +}
+> +
+> +static int try_remove_memory(u64 start, u64 size)
+> +{
+> +	int rc, nid = NUMA_NO_NODE;
+>  
+>  	BUG_ON(check_hotplug_memory_range(start, size));
+>  
+> @@ -2058,20 +2105,21 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>  		return rc;
+>  
+>  	/*
+> -	 * We only support removing memory added with MHP_MEMMAP_ON_MEMORY in
+> -	 * the same granularity it was added - a single memory block.
+> +	 * For memmap_on_memory, the altmaps could have been added on
+> +	 * a per-memblock basis. Loop through the entire range if so,
+> +	 * and remove each memblock and its altmap
+>  	 */
+>  	if (mhp_memmap_on_memory()) {
+> -		nr_vmemmap_pages = walk_memory_blocks(start, size, NULL,
+> -						      get_nr_vmemmap_pages_cb);
+> -		if (nr_vmemmap_pages) {
+> -			if (size != memory_block_size_bytes()) {
+> -				pr_warn("Refuse to remove %#llx - %#llx,"
+> -					"wrong granularity\n",
+> -					start, start + size);
+> -				return -EINVAL;
+> -			}
+> +		unsigned long memblock_size = memory_block_size_bytes();
+> +		struct vmem_altmap mhp_altmap = {};
+> +		struct vmem_altmap *altmap;
+> +		u64 cur_start;
+>  
+> +		for (cur_start = start; cur_start < start + size;
+> +		     cur_start += memblock_size) {
+> +			unsigned long nr_vmemmap_pages =
+> +				walk_memory_blocks(start, memblock_size, NULL,
+> +						   get_nr_vmemmap_pages_cb);
+>  			/*
+>  			 * Let remove_pmd_table->free_hugepage_table do the
+>  			 * right thing if we used vmem_altmap when hot-adding
+> @@ -2079,33 +2127,13 @@ static int __ref try_remove_memory(u64 start, u64 size)
+>  			 */
+>  			mhp_altmap.alloc = nr_vmemmap_pages;
+>  			altmap = &mhp_altmap;
+> +			__try_remove_memory(nid, cur_start, memblock_size,
+> +						 altmap);
+>  		}
+> +	} else {
+> +		__try_remove_memory(nid, start, size, NULL);
+>  	}
+>  
+> -	/* remove memmap entry */
+> -	firmware_map_remove(start, start + size, "System RAM");
+> -
+> -	/*
+> -	 * Memory block device removal under the device_hotplug_lock is
+> -	 * a barrier against racing online attempts.
+> -	 */
+> -	remove_memory_block_devices(start, size);
+> -
+> -	mem_hotplug_begin();
+> -
+> -	arch_remove_memory(start, size, altmap);
+> -
+> -	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+> -		memblock_phys_free(start, size);
+> -		memblock_remove(start, size);
+> -	}
+> -
+> -	release_mem_region_adjustable(start, size);
+> -
+> -	if (nid != NUMA_NO_NODE)
+> -		try_offline_node(nid);
+> -
+> -	mem_hotplug_done();
+>  	return 0;
+>  }
+>  
+>
 > -- 
-> 2.39.2
-> 
-
-
+> 2.41.0
