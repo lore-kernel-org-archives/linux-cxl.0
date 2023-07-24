@@ -2,122 +2,146 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8645FC001B0
-	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jul 2023 06:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695C8C001B0
+	for <linux-cxl@archiver.kernel.org>; Mon, 24 Jul 2023 08:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230143AbjGXGCZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Jul 2023 02:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46156 "EHLO
+        id S229705AbjGXI6y (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 24 Jul 2023 04:58:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjGXGCZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jul 2023 02:02:25 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417A0E4E;
-        Sun, 23 Jul 2023 23:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690178543; x=1721714543;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=hJeqyaPA2/UiA3SdbIjwXePXzRG8vLnfEgD/5hSNAoM=;
-  b=f+FjhiMNs3YFPyJvqp1QQh/20dkSQE2zVguid+8DOte5+SYbjC4MwbBr
-   NmXeLhxh3MArGeJhghLXUe9g74XiUlgr37uFzFNajSGbCLC282+MxRVSn
-   Un52bq3E99VpIOxLwwzJxolBP9a/XGSIe0NMOa9UQDFo3feuBANoPcFCV
-   yMApRZNknxckCIvnE2ieKfecGlUNb+TGF3csk6NY37yv4J0bVhEOGmJR2
-   EBlXHdMGXqst+z0L5RpUgynih0TKYONCcabRbrcGcmX/O0cqmTagTEqaY
-   zx5I5EQJLHZzxjDsQol7wNP/XVjVUEkh7adnj6tadnj93E2I5AlCGyA/3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="366243571"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="366243571"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2023 23:02:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="849500142"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="849500142"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2023 23:02:11 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH v2 1/3] mm/memory_hotplug: Export symbol
- mhp_supports_memmap_on_memory()
-References: <20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com>
-        <20230720-vv-kmem_memmap-v2-1-88bdaab34993@intel.com>
-Date:   Mon, 24 Jul 2023 14:00:34 +0800
-In-Reply-To: <20230720-vv-kmem_memmap-v2-1-88bdaab34993@intel.com> (Vishal
-        Verma's message of "Thu, 20 Jul 2023 01:14:22 -0600")
-Message-ID: <87sf9d26il.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+        with ESMTP id S232111AbjGXI5z (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jul 2023 04:57:55 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A62CE64
+        for <linux-cxl@vger.kernel.org>; Mon, 24 Jul 2023 01:57:51 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4R8Yr01xHPz688p7;
+        Mon, 24 Jul 2023 16:54:24 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 24 Jul
+ 2023 09:57:48 +0100
+Date:   Mon, 24 Jul 2023 09:57:48 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     <nifan@outlook.com>, <qemu-devel@nongnu.org>,
+        <linux-cxl@vger.kernel.org>, <gregory.price@memverge.com>,
+        <hchkuo@avery-design.com.tw>, <cbrowy@avery-design.com>,
+        <dan.j.williams@intel.com>, <a.manzanares@samsung.com>,
+        <dave@stgolabs.net>, <nmtadam.samsung@gmail.com>
+Subject: Re: [Qemu PATCH 0/9] Enabling DCD emulation support in Qemu
+Message-ID: <20230724095748.00007e46@Huawei.com>
+In-Reply-To: <64bcb1f6ee016_760de2943b@iweiny-mobl.notmuch>
+References: <SG2PR06MB33976BB3F9C47CBE08F02D09B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com>
+        <64bcb1f6ee016_760de2943b@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Vishal Verma <vishal.l.verma@intel.com> writes:
+On Sat, 22 Jul 2023 21:52:06 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> In preparation for dax drivers, which can be built as modules,
-> to use this interface, export it with EXPORT_SYMBOL_GPL(). Add a #else
-> case for the symbol for builds without CONFIG_MEMORY_HOTPLUG.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> ---
->  include/linux/memory_hotplug.h | 5 +++++
->  mm/memory_hotplug.c            | 1 +
->  2 files changed, 6 insertions(+)
->
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 013c69753c91..fc5da07ad011 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -355,6 +355,11 @@ extern int arch_create_linear_mapping(int nid, u64 start, u64 size,
->  				      struct mhp_params *params);
->  void arch_remove_linear_mapping(u64 start, u64 size);
->  extern bool mhp_supports_memmap_on_memory(unsigned long size);
-> +#else
-> +static inline bool mhp_supports_memmap_on_memory(unsigned long size)
-> +{
-> +	return false;
-> +}
->  #endif /* CONFIG_MEMORY_HOTPLUG */
+> nifan@ wrote:
+> > From: Fan Ni <nifan@outlook.com>
+> > 
+> > The patch series provides dynamic capacity device (DCD) emulation in Qemu.  
+> 
+> I don't the patches on the list.
+> 
+> https://lore.kernel.org/all/SG2PR06MB33976BB3F9C47CBE08F02D09B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com/
+> 
+> Did they get sent?
+Something odd going on...
+They are in https://lists.nongnu.org/archive/html/qemu-devel/2023-07/msg04105.html
+though threading is broken.
+Also seems to have made it to qemu-devel on lore
+https://lore.kernel.org/all/SG2PR06MB3397F3E74A083607F7492FA4B23EA@SG2PR06MB3397.apcprd06.prod.outlook.com/
 
-It appears that there is no user of mhp_supports_memmap_on_memory() that
-may be compiled with !CONFIG_MEMORY_HOTPLUG?
+Might be a backlog somewhere that will take a while to drain...
 
---
-Best Regards,
-Huang, Ying
+Fan, perhaps just resend the lot and make sure the threading works so we can find them more easily.
 
->  #endif /* __LINUX_MEMORY_HOTPLUG_H */
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 3f231cf1b410..e9bcacbcbae2 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1284,6 +1284,7 @@ bool mhp_supports_memmap_on_memory(unsigned long size)
->  	       IS_ALIGNED(vmemmap_size, PMD_SIZE) &&
->  	       IS_ALIGNED(remaining_size, (pageblock_nr_pages << PAGE_SHIFT));
->  }
-> +EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
->  
->  /*
->   * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+Jonathan
+
+
+> 
+> Ira
+> 
+> > More specifically, it provides the following functionalities:
+> > 1. Extended type3 memory device to support DC regions and extents.
+> > 2. Implemented DCD related mailbox command support in CXL r3.0: 8.2.9.8.9.
+> > 3. ADD QMP interfaces for adding and releasing DC extents to simulate FM
+> > functions for DCD described in cxl r3.0: 7.6.7.6.5 and 7.6.7.6.6.
+> > 4. Add new ct3d properties for DCD devices (host backend, number of dc
+> > regions, etc.)
+> > 5. Add read/write support from/to DC regions of the device.
+> > 6. Add mechanism to validate accessed to DC region address space.
+> > 
+> > A more detailed description can be found from the previously posted RFC[1].
+> > 
+> > Compared to the previously posted RFC[1], following changes have been made:
+> > 1. Rebased the code on top of Jonathan's branch
+> > https://gitlab.com/jic23/qemu/-/tree/cxl-2023-05-25.
+> > 2. Extracted the rename of mem_size to a separated patch.(Jonathan)
+> > 3. Reordered the patch series to improve its readability.(Jonathan)
+> > 4. Split the validation of accesses to DC region address space as a separate
+> > patch.
+> > 5. Redesigned the QMP interfaces for adding and releasing DC extents to make
+> > them easier to understand and act like existing QMP interfaces (like the
+> > interface for cxl-inject-uncorrectable-errors). (Jonathan)
+> > 6. Updated dvsec range register setting to support DCD devices without static
+> > capacity.
+> > 7. Fixed other issues mentioned in the comments (Jonathan&Nathan Fontenot).
+> > 8. Fixed the format issues and checked with checkpatch.pl under qemu code dir.
+> > 
+> > 
+> > The code is tested with the DCD patch series at the kernel side[2]. The test
+> > is similar to those mentioned in the cover letter of [1].
+> > 
+> > 
+> > [1]: https://lore.kernel.org/all/20230511175609.2091136-1-fan.ni@samsung.com/
+> > [2]: https://lore.kernel.org/linux-cxl/649da378c28a3_968bb29420@iweiny-mobl.notmuch/T/#t
+> > 
+> > Fan Ni (9):
+> >   hw/cxl/cxl-mailbox-utils: Add dc_event_log_size field to output
+> >     payload of identify memory device command
+> >   hw/cxl/cxl-mailbox-utils: Add dynamic capacity region representative
+> >     and mailbox command support
+> >   include/hw/cxl/cxl_device: Rename mem_size as static_mem_size for
+> >     type3 memory devices
+> >   hw/mem/cxl_type3: Add support to create DC regions to type3 memory
+> >     devices
+> >   hw/mem/cxl_type3: Add host backend and address space handling for DC
+> >     regions
+> >   hw/mem/cxl_type3: Add DC extent list representative and get DC extent
+> >     list mailbox support
+> >   hw/cxl/cxl-mailbox-utils: Add mailbox commands to support add/release
+> >     dynamic capacity response
+> >   hw/cxl/events: Add qmp interfaces to add/release dynamic capacity
+> >     extents
+> >   hw/mem/cxl_type3: Add dpa range validation for accesses to dc regions
+> > 
+> >  hw/cxl/cxl-mailbox-utils.c  | 421 +++++++++++++++++++++++++++-
+> >  hw/mem/cxl_type3.c          | 539 +++++++++++++++++++++++++++++++++---
+> >  hw/mem/cxl_type3_stubs.c    |   6 +
+> >  include/hw/cxl/cxl_device.h |  49 +++-
+> >  include/hw/cxl/cxl_events.h |  16 ++
+> >  qapi/cxl.json               |  49 ++++
+> >  6 files changed, 1034 insertions(+), 46 deletions(-)
+> > 
+> > -- 
+> > 2.39.2
+> >   
+> 
+> 
+> 
+
