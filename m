@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B93C41513
-	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jul 2023 03:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73FCC00528
+	for <linux-cxl@archiver.kernel.org>; Tue, 25 Jul 2023 06:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbjGYDQ0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 24 Jul 2023 23:16:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33322 "EHLO
+        id S230000AbjGYGuN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 25 Jul 2023 02:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbjGYDQZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 24 Jul 2023 23:16:25 -0400
+        with ESMTP id S229483AbjGYGuM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 25 Jul 2023 02:50:12 -0400
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C8610EF;
-        Mon, 24 Jul 2023 20:16:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FE68E;
+        Mon, 24 Jul 2023 23:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690254983; x=1721790983;
-  h=from:to:cc:subject:references:date:in-reply-to:
+  t=1690267811; x=1721803811;
+  h=from:to:cc:subject:in-reply-to:references:date:
    message-id:mime-version;
-  bh=eXqEf3qlKPxbWMmz2TfO/Y35RDERdVQkGU4AZ8/UTeY=;
-  b=FE+Gm8qKZASj4+owYumKxdStPDTvs+XYzkBpnGU2gIRBUDhT0HU4xfde
-   bJvKgeRbdKyUdDMPDBIVIcsLLwTHesHWjpqKK0RB/8xliKMTWRp33Q1bp
-   18CZ5X9DQ+MJ2yiqSWH8ep3tfUj9D/EQCShYbtScGi25APWZUPiPfh+31
-   MQuFLrtL0z+rrMJdtoECfGPmGw1qfWb2wXroop+R0T3gBlvm9pyP8jkvE
-   MJXwi0LwFk+mckCKG93T9LyVyhoBkuos8bu1+nwWoKc7NjLPVhzpvS8qs
-   vRywYcLKOhQkTK1VEcaUwSXbVcqrQOZFhGlG1RJ9No1L6y9R7crFqhMbJ
+  bh=sMXp8XuVx7sja1Zb9TfJOl/mMXazPG34qUPoSd0z870=;
+  b=HeyeRT4vEGYP1dT/vgdWjFTZL8Y2iA5lgHvM7mSuhlQxvlztFQqxXBSO
+   AJLgrY5ew5b6ZY1UoTUVwiF5SQAczoe5OitkA4g4ASwXaKS/cJ2UGjWsi
+   nfqUy7fpaPIXfvFNDqN7MVudSMpTX0xE8gaUIf+AaPZFfcrgr9fOwg6AT
+   CRA+vp563AkOGU573kRhqOKeRgMUZYYxrLiBz4nhkZUcMBIz1pfR2AHrb
+   qF35cDrIGlZT+uWmMtFYw+Pa7katgTa6CXQjLkHcBh6WXlOxQT+krOBz6
+   z4yQCnZxZSw3hPQsKZE4CzwHRfxCxX3MJ3vKSPMaiAOeIyQAwUxV4EgRR
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="347211935"
-X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
-   d="scan'208";a="347211935"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 20:16:23 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="347242146"
+X-IronPort-AV: E=Sophos;i="6.01,230,1684825200"; 
+   d="scan'208";a="347242146"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 23:50:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="729174386"
-X-IronPort-AV: E=Sophos;i="6.01,229,1684825200"; 
-   d="scan'208";a="729174386"
+X-IronPort-AV: E=McAfee;i="6600,9927,10781"; a="1056698073"
+X-IronPort-AV: E=Sophos;i="6.01,230,1684825200"; 
+   d="scan'208";a="1056698073"
 Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 20:16:19 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 23:49:39 -0700
 From:   "Huang, Ying" <ying.huang@intel.com>
 To:     Alistair Popple <apopple@nvidia.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
@@ -52,86 +52,68 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
         "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
         Michal Hocko <mhocko@kernel.org>,
         Yang Shi <shy828301@gmail.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
- calculation algorithms management
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH RESEND 3/4] acpi, hmat: calculate abstract distance with
+ HMAT
+In-Reply-To: <87ila8zo80.fsf@nvdebian.thelocal> (Alistair Popple's message of
+        "Tue, 25 Jul 2023 12:45:01 +1000")
 References: <20230721012932.190742-1-ying.huang@intel.com>
-        <20230721012932.190742-2-ying.huang@intel.com>
-        <87r0owzqdc.fsf@nvdebian.thelocal>
-Date:   Tue, 25 Jul 2023 11:14:38 +0800
-In-Reply-To: <87r0owzqdc.fsf@nvdebian.thelocal> (Alistair Popple's message of
-        "Tue, 25 Jul 2023 12:13:49 +1000")
-Message-ID: <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <20230721012932.190742-4-ying.huang@intel.com>
+        <87ila8zo80.fsf@nvdebian.thelocal>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+Date:   Tue, 25 Jul 2023 14:47:47 +0800
+Message-ID: <87h6psxzak.fsf@yhuang6-desk2.ccr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ascii
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi, Alistair,
-
-Thanks a lot for comments!
-
 Alistair Popple <apopple@nvidia.com> writes:
 
 > Huang Ying <ying.huang@intel.com> writes:
 >
->> The abstract distance may be calculated by various drivers, such as
->> ACPI HMAT, CXL CDAT, etc.  While it may be used by various code which
->> hot-add memory node, such as dax/kmem etc.  To decouple the algorithm
->> users and the providers, the abstract distance calculation algorithms
->> management mechanism is implemented in this patch.  It provides
->> interface for the providers to register the implementation, and
->> interface for the users.
+>> A memory tiering abstract distance calculation algorithm based on ACPI
+>> HMAT is implemented.  The basic idea is as follows.
+>>
+>> The performance attributes of system default DRAM nodes are recorded
+>> as the base line.  Whose abstract distance is MEMTIER_ADISTANCE_DRAM.
+>> Then, the ratio of the abstract distance of a memory node (target) to
+>> MEMTIER_ADISTANCE_DRAM is scaled based on the ratio of the performance
+>> attributes of the node to that of the default DRAM nodes.
 >
-> I wonder if we need this level of decoupling though? It seems to me like
-> it would be simpler and better for drivers to calculate the abstract
-> distance directly themselves by calling the desired algorithm (eg. ACPI
-> HMAT) and pass this when creating the nodes rather than having a
-> notifier chain.
+> The problem I encountered here with the calculations is that HBM memory
+> ended up in a lower-tiered node which isn't what I wanted (at least when
+> that HBM is attached to a GPU say).
 
-Per my understanding, ACPI HMAT and memory device drivers (such as
-dax/kmem) may belong to different subsystems (ACPI vs. dax).  It's not
-good to call functions across subsystems directly.  So, I think it's
-better to use a general subsystem: memory-tier.c to decouple them.  If
-it turns out that a notifier chain is unnecessary, we can use some
-function pointers instead.
+I have tested the series on a server machine with HBM (pure HBM, not
+attached to a GPU).  Where, HBM is placed in a higher tier than DRAM.
 
-> At the moment it seems we've only identified two possible algorithms
-> (ACPI HMAT and CXL CDAT) and I don't think it would make sense for one
-> of those to fallback to the other based on priority, so why not just
-> have drivers call the correct algorithm directly?
+> I suspect this is because the calculations are based on the CPU
+> point-of-view (access1) which still sees lower bandwidth to remote HBM
+> than local DRAM, even though the remote GPU has higher bandwidth access
+> to that memory. Perhaps we need to be considering access0 as well?
+> Ie. HBM directly attached to a generic initiator should be in a higher
+> tier regardless of CPU access characteristics?
 
-For example, we have a system with PMEM (persistent memory, Optane
-DCPMM, or AEP, or something else) in DIMM slots and CXL.mem connected
-via CXL link to a remote memory pool.  We will need ACPI HMAT for PMEM
-and CXL CDAT for CXL.mem.  One way is to make dax/kmem identify the
-types of the device and call corresponding algorithms.  The other way
-(suggested by this series) is to make dax/kmem call a notifier chain,
-then CXL CDAT or ACPI HMAT can identify the type of device and calculate
-the distance if the type is correct for them.  I don't think that it's
-good to make dax/kem to know every possible types of memory devices.
+What's your requirements for memory tiers on the machine?  I guess you
+want to put GPU attache HBM in a higher tier and put DRAM in a lower
+tier.  So, cold HBM pages can be demoted to DRAM when there are memory
+pressure on HBM?  This sounds reasonable from GPU point of view.
 
->> Multiple algorithm implementations can cooperate via calculating
->> abstract distance for different memory nodes.  The preference of
->> algorithm implementations can be specified via
->> priority (notifier_block.priority).
->
-> How/what decides the priority though? That seems like something better
-> decided by a device driver than the algorithm driver IMHO.
+The above requirements may be satisfied via calculating abstract
+distance based on access0 (or combined with access1).  But I suspect
+this will be a general solution.  I guess that any memory devices that
+are used mainly by the memory initiators other than CPUs want to put
+themselves in a higher memory tier than DRAM, regardless of its
+access0.
 
-Do we need the memory device driver specific priority?  Or we just share
-a common priority?  For example, the priority of CXL CDAT is always
-higher than that of ACPI HMAT?  Or architecture specific?
+One solution is to put GPU HBM in the highest memory tier (with smallest
+abstract distance) always in GPU device driver regardless its HMAT
+performance attributes.  Is it possible?
 
-And, I don't think that we are forced to use the general notifier chain
-interface in all memory device drivers.  If the memory device driver has
-better understanding of the memory device, it can use other way to
-determine abstract distance.  For example, a CXL memory device driver
-can identify abstract distance by itself.  While other memory device drivers
-can use the general notifier chain interface at the same time.
+> That said I'm not entirely convinced the HMAT tables I'm testing against
+> are accurate/complete.
 
 --
 Best Regards,
