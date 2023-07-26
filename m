@@ -2,1231 +2,172 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5D5C001DC
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36335C001DF
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 20:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbjGZSND (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Jul 2023 14:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
+        id S229608AbjGZUiD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Jul 2023 16:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjGZSNC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 14:13:02 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F04E4D
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Jul 2023 11:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
- s=s31663417; t=1690395166; x=1690999966; i=fan.ni@gmx.us;
- bh=TejIwcoJxraOdGAYlYA1Q+yUK3HZFYWc0WkLB2l0Ih8=;
- h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
- b=I49d8osEGI8R5FmhPNCoyC3mcHVMltNRSDURGrBZoHEl+0M3DC/wwcSH0swHpagDp8M4NHJ
- n9toolr+5+ww3B+tA7tUxrHybMc299YgTaE0h+wDNhm3fwtS1Q+/hpOIW6+b9C2Rd05jEc827
- iZrVCOsHW5gYOM8VfKn4SMSDcE/IavnCJuKxV2cCjAijUxENkSy1aHyx6hK9VGAP3hXDDjICC
- a8yqPRNryWoKmic8NaFruGUr1jAZZaBVQmORTqAea58wC3+0cC9g86gA/NgeTMSLZLXTywWXS
- CEHflmH5pBPxwN95a/RXjhFc3SIDPcp5Bc26WcKae4zQzH6aiklA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([172.58.46.179]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MRTRH-1qCInM2Ks1-00NU9n; Wed, 26 Jul 2023 20:12:46 +0200
-From:   fan.ni@gmx.us
-To:     linux-cxl@vger.kernel.org
-Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave@stgolabs.net, a.manzanares@samsung.com, sunfishho12@gmail.com,
-        Fan Ni <nifan@outlook.com>, Fan Ni <fan.ni@samsung.com>
-Subject: [ndctl PATCH v2 RESEND 2/2] cxl-graph: Add cxl graph command to construct CXL topology graph images
-Date:   Wed, 26 Jul 2023 11:09:55 -0700
-Message-Id: <20230726180955.88834-3-fan.ni@gmx.us>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230726180955.88834-1-fan.ni@gmx.us>
-References: <20230726180955.88834-1-fan.ni@gmx.us>
+        with ESMTP id S231516AbjGZUht (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 16:37:49 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B7410F9
+        for <linux-cxl@vger.kernel.org>; Wed, 26 Jul 2023 13:37:48 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 81F2FC1DA2;
+        Wed, 26 Jul 2023 20:37:47 +0000 (UTC)
+Received: from pdx1-sub0-mail-a272.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id ECB26C0E8B;
+        Wed, 26 Jul 2023 20:37:46 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1690403867; a=rsa-sha256;
+        cv=none;
+        b=IXepS5io0W2EDlxjxOVRahpLGVhSIyImcGMICxAau1NrUMD7GBoDO/f3QngsdF9EmaktfU
+        6S5I7pHEaXcejKa0Ze8xiUFnyMEk5PcChZALv3UVbIxj2XWrpRHh0SymieOCO+cCWtcbKZ
+        FajAiUSl9bKL7dFOxOZxE5Mqx0NyisAJQm4z5fCdCeLk0BgZBqCFyl/irT3GFDo36Az7Sg
+        75jkbhrlKLeF2W3jvU1y7M60IVul5tyQw5MhFKPxs5qmFq3dSZHh1pbEsk5cDvJsLN0e77
+        BrwaiRlEAWX9VvJOcZhrJ8SIqoz9vAGk8wnVROChPsq0sFeZqAG7bYYHYneI7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1690403867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=vqjklyv31KaL4OdF+JFBqflLUWEGyfJ3ro0OT7CSuzk=;
+        b=Tu3MAzJwYxLFWJ0dphbmHEH+Lf5kGyvSlbL67QaceBJIwZI5johgnhSJyQNtiPPQBhmTvW
+        E1Kl5yROoIlQGxavSEN0DJ5qWdMTUnIbfFgkB6PiD0u2HiuDI8oIJ+Xu/97nb+iS20Iorq
+        2qigT8lxbAO7fcUQK1H6oFpqL5Y/bT4pCN4WYHT1Duj7OHtQyROwUtfHPv694XCbbGB35r
+        T9VmDvR/VG1h83GPjPQ7rGq1VDD34y1WOA/ykZOP+H7I7X9mcL4SWrIlPg9rTaR1fJqH/2
+        iFR7l/GzMeEvwEtXGUB8z1kDFViRJ221t+UBkVTY71Lw41QvSXJW+2eq6rG7fg==
+ARC-Authentication-Results: i=1;
+        rspamd-649dfb7d6-br5h7;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Coil-Bottle: 0da97e6e50239814_1690403867329_2357483514
+X-MC-Loop-Signature: 1690403867329:890071381
+X-MC-Ingress-Time: 1690403867329
+Received: from pdx1-sub0-mail-a272.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.121.0.89 (trex/6.9.1);
+        Wed, 26 Jul 2023 20:37:47 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a272.dreamhost.com (Postfix) with ESMTPSA id 4RB5Ld6gFsz93;
+        Wed, 26 Jul 2023 13:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1690403866;
+        bh=vqjklyv31KaL4OdF+JFBqflLUWEGyfJ3ro0OT7CSuzk=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=FYKxqfZ19GBdrycyBQ4/5pedQGSfL/NaXQhSRLf8VRnIKluE87re6oCn/klSdFU2J
+         j6iMHEps+hjZxlHNZc0/eE8pLY9+Msam4viuwcYtWNRvrfFQnWH+V2o/WUwCH6dMSN
+         A8NbFD34+En9W2ZV0NI26VOEAY9LQGyoGlwD2WceBIGzxnum2ZnK6NPO+FgBrCmUGc
+         csVVuGBGNQy2M4sGu5F7eh3THcKopCCoOYMGh7j19uG3PDmLYM4FaHP8AaUT2GolG0
+         QbmIIsQIHHI4wtlNF69DBh4cLgb2s7gcnnC4DOA+PUcxjWVouP5lzyjRQ/ARTkDokg
+         pxFJ2XZhIHHGA==
+Date:   Wed, 26 Jul 2023 13:00:31 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linuxarm@huawei.com, Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>, fan.ni@samsung.com,
+        a.manzanares@samsung.com
+Subject: Re: [RFC PATCH v4 4/4] cxl/pci: Add support for stand alone CXL
+ Switch mailbox CCI
+Message-ID: <r7djcwxcuzsvqcwbct3iiyljdhpsobvgjwuxjmlew3cuo52lcg@xkrkc4srqzju>
+References: <20230719091931.27799-1-Jonathan.Cameron@huawei.com>
+ <20230719091931.27799-5-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:APVpH/zXpAOrfWg0RnDKUCJI9tCF1Qoza5yo7fbPYbgjF8quO6k
- LR80YHRMxdt+3DxshynWa7bypIx+5A4lU+3H4g02ik1Zc917mB5eAfa+qKdbVuAsBuFLVuw
- SLN38HF7RsQC8CR3H+4kdg4aVT6+WLEJkv4F0feQ1yZE/eINj15qy9PiPyCSlmn70vk/5L2
- VP6a8O2CUBcAdTywpILLA==
-UI-OutboundReport: notjunk:1;M01:P0:50Abh44nbAk=;PVxwAh+oLZkzJcftUJCFkyI2f4h
- THUFXG9x37V+JbIoXLgbABP4AuWfhXVTotSTOcqPXJOLUvLkhNt0s6L3ZTcsuSZHMhFHDg/Xg
- r66uMugLFzUE6q15D9qvRDEmeFw7WW0ZaaIq7uxjKQYMY99nBG4hgRRQYEpSBOZ7zmF4myfOj
- tSJqmeepyKKQZ1kMFrVtAXhjayq0uR+7BjMK4q8OsCJEFPpTbeVy+y/+9C/Qhm6zd0Y/XmeHW
- icqlmPiuK1pptoTJoGcwQodflsE1iskttXgnnNptII+1ZVV+NTkwVhOx1krPnow76Pc8+ZQIo
- xDQgcZGXgPGZN86Hwfq5fCrrMAbaxqWLYw3gbXJidPmqexX7vvol3XRRokgHiCKpShViimEIw
- 63eDaVQk7AX6c4YP77Sqkvk1eEgs/Zz02qU3tTTvxVEqw6sBrCru0wqIprlMza0SMvoXSA7NP
- xu/U3bgDtLTy8Zzra8qaPtDnIzJlaWzHMGc0s6IriiVfjG70FGV9Bnoc8LTA118VsXyjjLsfN
- vVpfsEAP1EjtKDb8yKRviFus01aCg7LZ9Rzie0EfgBfddso8PKOeqvj5ST4B/dmPoyKRkEQ7F
- nvhkqlYmEvtwSbxNz7Tn+zgv/z/1hwmBmoJCnuY3kRFWukW19eK7PYZNQEB6NOQE7ywSupEk4
- kqCEjlCnblhuVQgwYBLynSMa4PDt/IEQ+uJl2tnhA5S9zfmJ/I5qILnoSPrdY5waepsk0ElJ2
- WYSB2fIIYdZwTV5ytkBDoMeZVD5AK45Bsq+jYIU2+xPIFNkF5gIhzYTNPfqT7fNcfIgOQTdjB
- lTiFe7boUa1+4MTqSTli1hR2sN8n4TiW7YDYN6W2L/IKzL5oUDgBxWtfwAXgBmkeeoAr2j9wn
- Jz2wxfuvWhByOXYJBOM1AXT2r2Bt06LLDkDiAhz9M7rvhzupYySiLivQbEPusbMlybQ8VyZJX
- O/c6Z+PW7ORT9t6oup7oG9It0xQ=
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230719091931.27799-5-Jonathan.Cameron@huawei.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Fan Ni <nifan@outlook.com>
+On Wed, 19 Jul 2023, Jonathan Cameron wrote:
 
-This adds a new command "cxl graph" to plot the cxl topology graph or
-dump cxl topology to a json formatted file based on the output format
-type (-t graph/plain). The command requires cxl port/memdev components hav=
-e
-the "parent_dport" attribute so the topology can be correctly plotted.
-The CXL topology can be either read from a file passed to the command with
-"--input" option or parsed at runtime as "cxl list" does, and output will =
-be
-stored in a file given by "--output".
+>+static int cxl_swmbcci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>+{
+>+	struct cxl_register_map map;
+>+	struct cxl_swdev *cxlswd;
+>+	int rc;
+>+
+>+	rc = pcim_enable_device(pdev);
+>+	if (rc)
+>+		return rc;
+>+
+>+	cxlswd = cxl_swdev_alloc(&pdev->dev);
+>+	if (IS_ERR(cxlswd))
+>+		return PTR_ERR(cxlswd);
+>+
+>+	mutex_init(&cxlswd->mbox.mbox_mutex);
+>+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+>+	if (rc)
+>+		return rc;
+>+	rc = cxl_setup_regs(&map);
+>+	if (rc)
+>+		return rc;
+>+
+>+	rc = cxl_map_device_regs(&map, &cxlswd->cxlds.regs.device_regs);
+>+	if (rc)
+>+		return rc;
+>+
+>+	rc = cxl_map_mbox_regs(&map, &cxlswd->mbox.mbox);
+>+	if (rc)
+>+		return rc;
+>+
+>+	cxlswd->mbox.status = cxlswd->cxlds.regs.status;
+>+	cxlswd->mbox.dev = &pdev->dev;
+>+
+>+	rc = cxl_swmbcci_setup_mailbox(&cxlswd->mbox);
+>+	if (rc)
+>+		return rc;
+>+
+>+
+>+	pci_set_drvdata(pdev, cxlswd);
+>+
+>+	rc = cxl_enumerate_cmds(&cxlswd->mbox);
 
-This addition makes it easier to visualize the CXL topology.
-Also, being able to choose to use an input text file
-allows one to visualize the CXL topology while not having
-access to CXL hardware, which may be convenient.
+Making the whole mbox more generically available makes me wonder if
+we want to start using Get Supported Logs Sub-List instead of the current
+gsl? The spec is pretty explicit about this:
 
-Signed-off-by: Fan Ni <fan.ni@samsung.com>
+""
+It is strongly recommended that the Get Supported Logs Sub-List (see
+Section 8.2.9.5.6) is supported by Components and used by software instead of Get
+Supported Logs so that requestors may control the output payload size, as needed.
+Type 3 Devices that implement support for the Get Supported Logs opcode on an
+MCTP-based CCI shall also support the Get Supported Logs Sub-List opcode.
+""
 
-The change is based on Matthew Ho' patch as list below[1].
+Thanks,
+Davidlohr
 
-The main changes include,
-    1) Instead of implementing the topology plotting function as a
-    subcommand of 'cxl list', we add a new cxl command 'cxl graph', and us=
-e
-    '-t' option to determine whether plotting the cxl topology graph or
-    dumping the topology to json formatted plain file.
-    2) Instead of using `root port` attribute for plotting the topology,
-    the `parent_dport` attribute of the memdev and port.objects are levera=
-ged
-    to plot the topology which enables plotting graph for more complicated
-    cxl topology.
-    3) Add a function to validate the cxl topology input file when `--inpu=
-t`
-    option is used.
-    4) Move all the graph related functions to graph.c.
-    5) Add a new '-t graph/plain' option indicating the output format
-    (graph or json formatted plain file).
-    6). Add Documentation/cxl/cxl-graph.txt.
-    7). Add support for plotting cxl topology with inactive memdev.
-    8). Fix some issues in graph plotting related functions.
-    9). Fix the error messages, using error() instead of printf.
-
-[1] Matthew Ho's patch:
-https://lore.kernel.org/linux-cxl/cover.1660895649.git.sunfishho12@gmail.c=
-om/
-=2D--
- Documentation/cxl/cxl-graph.txt | 106 +++++
- config.h.meson                  |   3 +
- cxl/builtin.h                   |   1 +
- cxl/cxl.c                       |   1 +
- cxl/filter.c                    |  15 +-
- cxl/filter.h                    |   5 +
- cxl/graph.c                     | 806 ++++++++++++++++++++++++++++++++
- cxl/meson.build                 |   9 +
- meson.build                     |   5 +
- meson_options.txt               |   1 +
- ndctl.spec.in                   |   1 +
- 11 files changed, 949 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/cxl/cxl-graph.txt
- create mode 100644 cxl/graph.c
-
-diff --git a/Documentation/cxl/cxl-graph.txt b/Documentation/cxl/cxl-graph=
-.txt
-new file mode 100644
-index 0000000..f8040e0
-=2D-- /dev/null
-+++ b/Documentation/cxl/cxl-graph.txt
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2022 Fan Ni <fan.ni@samsung.com>
-+
-+cxl-graph(1)
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+NAME
-+----
-+cxl-graph - plot or dump the CXL topology to a graph or a json formatted =
-file.
-+
-+SYNOPSIS
-+--------
-+[verse]
-+'cxl graph' [<options>]
-+
-+options:
-+-m::
-+--memdev=3D::
-+	Specify CXL memory device name(s) ("mem0"), device id(s) ("0"),
-+	and/or host device name(s) ("0000:35:00.0") to filter the listing.
-+-M::
-+--memdevs::
-+	Include CXL memory devices in the listing
-+
-+-e::
-+--endpoint::
-+	Specify CXL endpoint device name(s), or device id(s) to filter
-+	the emitted endpoint(s).
-+-E::
-+--endpoints::
-+	Include endpoint objects (CXL Memory Device decoders) in the
-+	listing.
-+
-+-b::
-+--bus=3D::
-+	Specify CXL root device name(s), device id(s), and / or CXL bus provider
-+	names to filter the listing. The supported provider names are "ACPI.CXL"
-+	and "cxl_test".
-+
-+-p::
-+--port=3D::
-+	Specify CXL Port device name(s) ("port2"), device id(s) ("2"), host
-+	device name(s) ("pci0000:34"), and / or port type name(s) to filter the
-+	listing. The supported port type names are "root" and "switch".
-+
-+-v::
-+--verbose::
-+	Increase verbosity of the output. This can be specified
-+	multiple times to be even more verbose on the
-+	informational and miscellaneous output, and can be used
-+	to override omitted flags for showing specific
-+	information. Note that cxl list --verbose --verbose is
-+	equivalent to cxl list -vv.
-+	- *-v*
-+	  Enable --memdevs, --regions, --buses,
-+	  --ports, --decoders, and --targets.
-+	- *-vv*
-+	  Everything *-v* provides, plus include disabled
-+	  devices with --idle.
-+	- *-vvv*
-+	  Everything *-vv* provides, plus enable
-+	  --health and --partition.
-+
-+-t::
-+	Identify the output format of the CXL topology, with "plain"
-+	it will dump the cxl topology to a json formatted file, and
-+	with "graph" it will generate a graph showing the cxl topology.
-+	"graph" is the choice by default.
-+
-+-o::
-+--output-file::
-+	Create an image of the CXL topology or a json formatted representation o=
-f
-+	the CXL based on the output format given by "-t" option. If no output fi=
-le
-+	is given, by default cxl-topology-graph.png is used for "graph" output
-+	format, and "cxl-topology-plain.json" is used for "plain" output format.
-+
-+--input::
-+	Take a json-formatted file with valid CXL topology and generate
-+	a graph showing the CXL topology accordingly or dump it to the output fi=
-le
-+	based on the output format.
-+
-+--debug::
-+	If the cxl tool was built with debug enabled, turn on debug
-+	messages.
-+
-+EXAMPLE
-+-------
-+----
-+1. Taking 'cxl list' output as input to plot a graph
-+	cxl list -vvv > input.json
-+	cxl graph -t graph --input input.json [-o graph.png]
-+
-+2. Parsing the cxl topology as cxl list does and plotting a graph
-+	cxl graph -vvv -t graph [-o a.png/a.jpg/a.jpeg]
-+
-+3. Parsing the cxl topology as cxl list does and dump the topology to a j=
-son
-+formatted file
-+	cxl graph -vvv -t plain -o a.txt/a.json
-+
-+include::human-option.txt[]
-+
-+include::../copyright.txt[]
-+
-+SEE ALSO
-+--------
-+linkcxl:cxl-graph[1]
-diff --git a/config.h.meson b/config.h.meson
-index 5441dff..162e8ba 100644
-=2D-- a/config.h.meson
-+++ b/config.h.meson
-@@ -22,6 +22,9 @@
- /* cxl monitor support */
- #mesondefine ENABLE_LIBTRACEFS
-
-+/* cxl graph support */
-+#mesondefine Enable_LIBGVC
-+
- /* Define to 1 if big-endian-arch */
- #mesondefine HAVE_BIG_ENDIAN
-
-diff --git a/cxl/builtin.h b/cxl/builtin.h
-index 9baa43b..773eb00 100644
-=2D-- a/cxl/builtin.h
-+++ b/cxl/builtin.h
-@@ -22,6 +22,7 @@ int cmd_create_region(int argc, const char **argv, struc=
-t cxl_ctx *ctx);
- int cmd_enable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_disable_region(int argc, const char **argv, struct cxl_ctx *ctx);
- int cmd_destroy_region(int argc, const char **argv, struct cxl_ctx *ctx);
-+int cmd_graph(int argc, const char **argv, struct cxl_ctx *ctx);
- #ifdef ENABLE_LIBTRACEFS
- int cmd_monitor(int argc, const char **argv, struct cxl_ctx *ctx);
- #else
-diff --git a/cxl/cxl.c b/cxl/cxl.c
-index 3be7026..76493e4 100644
-=2D-- a/cxl/cxl.c
-+++ b/cxl/cxl.c
-@@ -77,6 +77,7 @@ static struct cmd_struct commands[] =3D {
- 	{ "disable-region", .c_fn =3D cmd_disable_region },
- 	{ "destroy-region", .c_fn =3D cmd_destroy_region },
- 	{ "monitor", .c_fn =3D cmd_monitor },
-+	{ "graph", .c_fn =3D cmd_graph },
- };
-
- int main(int argc, const char **argv)
-diff --git a/cxl/filter.c b/cxl/filter.c
-index 6e8d421..b06dff5 100644
-=2D-- a/cxl/filter.c
-+++ b/cxl/filter.c
-@@ -1170,10 +1170,6 @@ struct json_object *cxl_filter_walk(struct cxl_ctx =
-*ctx,
- 			}
- 		}
- walk_children:
--		dbg(p, "walk decoders\n");
--		walk_decoders(port, p, pick_array(jchilddecoders, jbusdecoders),
--			      pick_array(jchildregions, jregions), flags);
--
- 		dbg(p, "walk rch endpoints\n");
- 		if (p->endpoints || p->memdevs || p->decoders)
- 			walk_endpoints(port, p,
-@@ -1182,12 +1178,23 @@ walk_children:
- 				       pick_array(jchilddecoders, jepdecoders),
- 				       flags);
-
-+		/*
-+		 * Need to walk ports before walking decoder so dport will be
-+		 * properly initialized which is needed to get the correct
-+		 * parent_dport of a port. This is needed if we plot the cxl
-+		 * graph after some region is created.
-+		 */
- 		dbg(p, "walk ports\n");
- 		walk_child_ports(port, p, pick_array(jchildports, jports),
- 				 pick_array(jchilddecoders, jportdecoders),
- 				 pick_array(jchildeps, jeps),
- 				 pick_array(jchilddecoders, jepdecoders),
- 				 pick_array(jchilddevs, jdevs), flags);
-+
-+		dbg(p, "walk decoders\n");
-+		walk_decoders(port, p, pick_array(jchilddecoders, jbusdecoders),
-+			      pick_array(jchildregions, jregions), flags);
-+
- 		cond_add_put_array_suffix(jbus, "ports", devname, jchildports);
- 		cond_add_put_array_suffix(jbus, "endpoints", devname,
- 					  jchildeps);
-diff --git a/cxl/filter.h b/cxl/filter.h
-index c486514..0efc446 100644
-=2D-- a/cxl/filter.h
-+++ b/cxl/filter.h
-@@ -6,6 +6,8 @@
- #include <stdbool.h>
- #include <util/log.h>
- #include <util/json.h>
-+#include <json-c/json.h>
-+#include <graphviz/gvc.h>
-
- struct cxl_filter_params {
- 	const char *memdev_filter;
-@@ -31,6 +33,9 @@ struct cxl_filter_params {
- 	bool dax;
- 	int verbose;
- 	struct log_ctx ctx;
-+	const char *input_file;
-+	const char *output_file;
-+	const char *output_format; /*plain/graph*/
- };
-
- struct cxl_memdev *util_cxl_memdev_filter(struct cxl_memdev *memdev,
-diff --git a/cxl/graph.c b/cxl/graph.c
-new file mode 100644
-index 0000000..eea13fa
-=2D-- /dev/null
-+++ b/cxl/graph.c
-@@ -0,0 +1,806 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2022 Fan Ni <fan.ni@samsung.com>
-+// Copyright (C) 2022 Matthew Ho <sunfishho12@gmail.com>
-+
-+#include <stdio.h>
-+#include <errno.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <limits.h>
-+#include <util/json.h>
-+#include <json-c/json.h>
-+#include <cxl/libcxl.h>
-+#include <util/parse-options.h>
-+
-+#include <graphviz/gvc.h>
-+#include <util/util.h>
-+#include <util/log.h>
-+
-+#include "filter.h"
-+
-+static struct cxl_filter_params param;
-+static bool debug;
-+
-+static bool device_has_parent_dport(struct json_object *dev)
-+{
-+	json_object_object_foreach(dev, property, value_json) {
-+		if (!strcmp(property, "parent_dport"))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool device_has_dport(struct json_object *dev)
-+{
-+	json_object_object_foreach(dev, property, value_json) {
-+		if (!strcmp(property, "nr_dports"))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static Agnode_t *create_node(Agraph_t *graph, char *label, bool created)
-+{
-+	return agnode(graph, label, created);
-+}
-+
-+static const char *find_device_type(struct json_object *device)
-+{
-+	char *value;
-+	int depth =3D -1;
-+	bool is_device =3D false;
-+
-+	json_object_object_foreach(device, property, value_json) {
-+		value =3D (char *)json_object_get_string(value_json);
-+		if (!strcmp(property, "bus") &&
-+		    !strcmp(value, "root0"))
-+			return "ACPI0017 Device";
-+		if (!strcmp(property, "depth")) {
-+			depth =3D json_object_get_int(value_json);
-+			if (is_device) {
-+				if (depth =3D=3D 1)
-+					return "Host Bridge";
-+				else
-+					return "Switch Port";
-+			}
-+		}
-+		if (!strcmp(property, "endpoint"))
-+			return "Endpoint";
-+		if (!strcmp(property, "parent_dport")) {
-+			is_device =3D true;
-+			if (depth =3D=3D 1)
-+				return "Host Bridge";
-+			if (depth > 1)
-+				return "Switch Port";
-+		}
-+		if (!strcmp(property, "memdev"))
-+			return "Type 3 Memory Device";
-+		if (!strcmp(property, "dport"))
-+			return "dport";
-+		if (!strcmp(property, "decoder"))
-+			return "decoder";
-+		if (!strcmp(property, "provider") &&
-+		    !strcmp(value, "cxl_test"))
-+			return "cxl_acpi.0";
-+	}
-+
-+	dbg(&param, "unknown device:\n%s\n",
-+		json_object_to_json_string_ext(device, JSON_C_TO_STRING_PRETTY));
-+	return NULL;
-+}
-+
-+static bool check_device_type(struct json_object *device, char *type)
-+{
-+	const char *dev_type =3D find_device_type(device);
-+
-+	if (dev_type)
-+		return !strcmp(dev_type, type);
-+	return false;
-+}
-+
-+/* for labeling purposes */
-+static const char *find_device_ID(struct json_object *device)
-+{
-+	const char *dev_type =3D find_device_type(device);
-+	json_object *ID =3D NULL;
-+
-+	if (!dev_type)
-+		return NULL;
-+
-+	if (!strcmp(dev_type, "ACPI0017 Device"))
-+		json_object_object_get_ex(device, "bus", &ID);
-+
-+	if (!strcmp(dev_type, "Host Bridge")
-+		|| !strcmp(dev_type, "Switch Port"))
-+		json_object_object_get_ex(device, "host", &ID);
-+
-+	if (!strcmp(dev_type, "Endpoint"))
-+		json_object_object_get_ex(device, "endpoint", &ID);
-+
-+	if (!strcmp(dev_type, "Type 3 Memory Device"))
-+		json_object_object_get_ex(device, "memdev", &ID);
-+
-+	if (!strcmp(dev_type, "dport"))
-+		json_object_object_get_ex(device, "dport", &ID);
-+
-+	return json_object_get_string(ID);
-+}
-+
-+static bool is_device(struct json_object *device)
-+{
-+	const char *dev_type =3D find_device_type(device);
-+
-+	if (dev_type)
-+		return (strcmp(dev_type, "dport") && strcmp(dev_type, "decoder"));
-+
-+	return false;
-+}
-+
-+static const char *find_parent_dport(struct json_object *device)
-+{
-+	json_object *rp;
-+
-+	if (!json_object_object_get_ex(device, "parent_dport", &rp))
-+		return NULL;
-+
-+	return json_object_get_string(rp);
-+}
-+
-+static char *find_parent_dport_label(struct json_object *device)
-+{
-+	char *rp_node_name;
-+	const char *id =3D find_parent_dport(device);
-+
-+	if (!id)
-+		return NULL;
-+
-+	asprintf(&rp_node_name, "dPort\nID: %s", id);
-+	if (!rp_node_name)
-+		error("asprintf failed in %s\n", __func__);
-+
-+	return rp_node_name;
-+}
-+
-+static char *find_root_port_label(struct json_object *device)
-+{
-+	char *rp_node_name;
-+	const char *id =3D find_parent_dport(device);
-+
-+	if (!id)
-+		return NULL;
-+
-+	asprintf(&rp_node_name, "Root Port\nID: %s", id);
-+	if (!rp_node_name)
-+		error("asprintf failed in %s\n", __func__);
-+
-+	return rp_node_name;
-+}
-+
-+static char *label_device(struct json_object *device)
-+{
-+	char *label;
-+	const char *ID =3D find_device_ID(device);
-+	const char *devname =3D find_device_type(device);
-+
-+	assert(devname);
-+	asprintf(&label, "%s\nID: %s", devname, ID);
-+	if (!label)
-+		error("label allocation failed in %s\n", __func__);
-+
-+	return label;
-+}
-+
-+static void create_root_ports(struct json_object *host_bridge, Agraph_t *=
-graph,
-+		       Agnode_t *hb)
-+{
-+	json_object *rps, *rp, *id_json;
-+	char *id, *dport_label;
-+	Agnode_t *dport;
-+	size_t nr_dports, idx;
-+
-+	assert(check_device_type(host_bridge, "Host Bridge"));
-+	if (!json_object_object_get_ex(host_bridge, "dports", &rps)) {
-+		dbg(&param, "no dports attribute found at host bridge\n");
-+		return;
-+	}
-+
-+	nr_dports =3D json_object_array_length(rps);
-+	for (idx =3D 0; idx < nr_dports; idx++) {
-+		rp =3D json_object_array_get_idx(rps, idx);
-+		json_object_object_get_ex(rp, "dport", &id_json);
-+		id =3D (char *)json_object_get_string(id_json);
-+		asprintf(&dport_label, "Root Port\nID: %s", id);
-+		if (!dport_label)
-+			error("label allocation failed when creating root port\n");
-+		dport =3D create_node(graph, dport_label, 1);
-+		agedge(graph, hb, dport, 0, 1);
-+		free(dport_label);
-+	}
-+}
-+
-+static void create_downstream_ports(struct json_object *sw_port,
-+		Agraph_t *graph, Agnode_t *sw)
-+{
-+	json_object *dps, *dp, *id_json;
-+	char *id, *dport_label;
-+	Agnode_t *dport;
-+	size_t nr_dports, idx;
-+
-+	assert(check_device_type(sw_port, "Switch Port"));
-+	if (!json_object_object_get_ex(sw_port, "dports", &dps)) {
-+		dbg(&param, "no dports attribute found at switch port\n");
-+		return;
-+	}
-+
-+	nr_dports =3D json_object_array_length(dps);
-+	for (idx =3D 0; idx < nr_dports; idx++) {
-+		dp =3D json_object_array_get_idx(dps, idx);
-+		json_object_object_get_ex(dp, "dport", &id_json);
-+		id =3D (char *)json_object_get_string(id_json);
-+		asprintf(&dport_label, "dPort\nID: %s", id);
-+		if (!dport_label)
-+			error("label allocation failed when creating downstream port\n");
-+		dport =3D create_node(graph, dport_label, 1);
-+		agedge(graph, sw, dport, 0, 1);
-+		free(dport_label);
-+	}
-+}
-+
-+/* for determining number of devices listed in a json array */
-+static size_t count_top_devices(struct json_object *top_array)
-+{
-+	size_t dev_counter =3D 0;
-+	size_t top_array_len =3D json_object_array_length(top_array);
-+
-+	for (size_t idx =3D 0; idx < top_array_len; idx++)
-+		if (is_device(json_object_array_get_idx(top_array, idx)))
-+			dev_counter++;
-+
-+	return dev_counter;
-+}
-+
-+static Agnode_t *plot_anon_memdevs(struct json_object *current_array,
-+		Agraph_t *graph)
-+{
-+	size_t json_array_len, nr_top_devices;
-+	size_t idx;
-+	Agnode_t *node, *root;
-+	char *label;
-+	json_object *device;
-+
-+	json_array_len =3D json_object_array_length(current_array);
-+	nr_top_devices =3D count_top_devices(current_array);
-+	if (!nr_top_devices)
-+		return NULL;
-+
-+	assert(nr_top_devices =3D=3D json_array_len);
-+	label =3D "anon memdevs";
-+	root =3D create_node(graph, label, 1);
-+
-+	for (idx =3D 0; idx < json_array_len; idx++) {
-+		device =3D json_object_array_get_idx(current_array, idx);
-+		label =3D label_device(device);
-+		node =3D create_node(graph, label, 1);
-+		agsafeset(node, "shape", "box", "");
-+		agedge(graph, root, node, 0, 1);
-+		free(label);
-+	}
-+	return root;
-+}
-+
-+static Agnode_t **draw_subtree(struct json_object *current_array,
-+		Agraph_t *graph)
-+{
-+	size_t json_array_len, nr_top_devices, obj_idx, td_idx;
-+	size_t idx, nr_sub_devs, nr_devs_connected;
-+	char *label, *parent_dport_label;
-+	Agnode_t **top_devices, **sub_devs, *parent_node;
-+	bool is_hb, is_sw;
-+	json_object *device, *subdev_arr, *subdev;
-+	json_object_iter subdev_iter;
-+
-+	json_array_len =3D json_object_array_length(current_array);
-+	nr_top_devices =3D count_top_devices(current_array);
-+
-+	if (!nr_top_devices) {
-+		dbg(&param, "no top devices, return directly\n");
-+		return NULL;
-+	}
-+
-+	top_devices =3D malloc(nr_top_devices * sizeof(device));
-+	if (!top_devices) {
-+		error("allocate memory for top_devices failed\n");
-+		return NULL;
-+	}
-+
-+	td_idx =3D 0;
-+	for (obj_idx =3D 0; obj_idx < json_array_len; obj_idx++) {
-+		device =3D json_object_array_get_idx(current_array, obj_idx);
-+		if (!is_device(device))
-+			continue;
-+
-+		label =3D label_device(device);
-+		top_devices[td_idx] =3D create_node(graph, label, 1);
-+
-+		agsafeset(top_devices[td_idx], "shape", "box", "");
-+
-+		is_hb =3D check_device_type(device, "Host Bridge");
-+		is_sw =3D check_device_type(device, "Switch Port");
-+
-+		if ((is_hb || is_sw) && !device_has_dport(device)) {
-+			error("no nr_dports attribute in the json obj for %s\n",
-+					is_hb ? "CXL host bridge" : "CXL switch");
-+			return top_devices;
-+		}
-+
-+		/* Create root port nodes if device is a host bridge */
-+		if (is_hb)
-+			create_root_ports(device, graph, top_devices[td_idx]);
-+		else if (is_sw)
-+			create_downstream_ports(device, graph, top_devices[td_idx]);
-+
-+		free(label);
-+
-+		/* Iterate through all keys and values of an object (device) */
-+		json_object_object_foreachC(device, subdev_iter) {
-+			bool is_endpoint =3D check_device_type(device, "Endpoint");
-+			char *key =3D subdev_iter.key;
-+
-+			if (is_endpoint && !strcmp(key, "memdev")) {
-+				/*subdev_arr =3D convert_json_obj_to_array(subdev_arr);*/
-+				Agnode_t *node;
-+
-+				label =3D label_device(subdev_iter.val);
-+				node =3D create_node(graph, label, 1);
-+				agsafeset(node, "shape", "box", "");
-+				free(label);
-+				agedge(graph, top_devices[td_idx], node, 0, 1);
-+				break;
-+			}
-+
-+			subdev_arr =3D subdev_iter.val;
-+			if (!json_object_is_type(subdev_arr, json_type_array))
-+				continue;
-+			nr_sub_devs =3D count_top_devices(subdev_arr);
-+			sub_devs =3D draw_subtree(subdev_arr, graph);
-+			if (!sub_devs)
-+				continue;
-+			if (!is_hb && !is_sw) {
-+				for (idx =3D 0; idx < nr_sub_devs; idx++)
-+					agedge(graph, top_devices[td_idx], sub_devs[idx], 0, 1);
-+				free(sub_devs);
-+				continue;
-+			}
-+
-+			nr_devs_connected =3D 0;
-+			for (idx =3D 0;
-+			     idx < json_object_array_length(subdev_arr);
-+			     idx++) {
-+				subdev =3D json_object_array_get_idx(subdev_arr, idx);
-+				if (!is_device(subdev))
-+					continue;
-+
-+				if (is_hb)
-+					parent_dport_label =3D find_root_port_label(subdev);
-+				else
-+					parent_dport_label =3D find_parent_dport_label(subdev);
-+				if (!parent_dport_label) {
-+					error("graph function requires parent_dport attribute\n");
-+					return NULL;
-+				}
-+				/* with flag =3D 0, it will search to locate an existing node */
-+				parent_node =3D create_node(graph, parent_dport_label, 0);
-+				if (parent_node) {
-+					agedge(graph, parent_node,
-+						sub_devs[nr_devs_connected++], 0, 1);
-+					free(parent_dport_label);
-+				} else {
-+					dbg(&param, "create parent node failed: %s\n",
-+						parent_dport_label);
-+				}
-+			}
-+			free(sub_devs);
-+		}
-+		td_idx++;
-+	}
-+
-+	return top_devices;
-+}
-+
-+struct json_object *parse_json_text(const char *path)
-+{
-+	FILE *fp;
-+	char *json_as_string;
-+	size_t file_len;
-+	json_object *json;
-+
-+	fp =3D fopen(path, "r");
-+	if (!fp)
-+		error("could not read file\n");
-+	fseek(fp, 0, SEEK_END);
-+	file_len =3D ftell(fp);
-+	fseek(fp, 0, SEEK_SET);
-+	json_as_string =3D malloc(file_len + 1);
-+	if (!json_as_string ||
-+	    fread(json_as_string, 1, file_len, fp) !=3D file_len) {
-+		free(json_as_string);
-+		error("could not read file %s\n", path);
-+	}
-+	json_as_string[file_len] =3D '\0';
-+	json =3D json_tokener_parse(json_as_string);
-+	return json;
-+}
-+
-+static void draw_graph(struct json_object *current_array,
-+		Agraph_t *graph)
-+{
-+	size_t json_array_len =3D json_object_array_length(current_array);
-+	size_t idx;
-+	json_object_iter iter;
-+	json_object *device;
-+	Agnode_t *anon_memdevs =3D NULL;
-+	Agnode_t **top_devices =3D NULL;
-+	size_t num_top_devices =3D 0;
-+
-+	if (json_array_len =3D=3D 1) {
-+		if (draw_subtree(current_array, graph))
-+			free(top_devices);
-+	} else {
-+		for (idx =3D 0; idx < json_array_len; idx++) {
-+			device =3D json_object_array_get_idx(current_array, idx);
-+			json_object_object_foreachC(device, iter) {
-+				char *key =3D iter.key;
-+				json_object *val =3D iter.val;
-+
-+				if (!strcmp(key, "anon memdevs")) {
-+					anon_memdevs =3D plot_anon_memdevs(val, graph);
-+				} else if (!strcmp(key, "buses")) {
-+					num_top_devices =3D json_object_array_length(val);
-+					top_devices =3D draw_subtree(val, graph);
-+				} else {
-+					error("unknown top key from cxl topology\n");
-+				}
-+			}
-+		}
-+		if (anon_memdevs && top_devices) {
-+			Agnode_t *root =3D create_node(graph, "CXL sub-system", 1);
-+
-+			agsafeset(root, "shape", "box", "");
-+			agedge(graph, root, anon_memdevs, 0, 1);
-+			for (idx =3D 0; idx < num_top_devices; idx++)
-+				agedge(graph, root, top_devices[idx], 0, 1);
-+		}
-+		if (top_devices)
-+			free(top_devices);
-+	}
-+}
-+
-+static int create_image(const char *filename, json_object *platform)
-+{
-+	int rs =3D 0;
-+	char *output_file =3D (char *)filename;
-+	GVC_t *gvc;
-+	Agraph_t *graph;
-+	char *of_extension =3D strrchr(output_file, '.');
-+	FILE *FP;
-+
-+	gvc =3D gvContext();
-+	if (!gvc) {
-+		error("Creating gvContext failed");
-+		return -1;
-+	}
-+	graph =3D agopen("graph", Agdirected, 0);
-+	if (!graph) {
-+		error("agopen failed when creating cxl topology image");
-+		rs =3D -1;
-+		goto free_ctx;
-+	}
-+
-+	if (!of_extension || (strcmp(of_extension, ".png") &&
-+			strcmp(of_extension, ".jpeg") &&
-+			strcmp(of_extension, ".jpg"))) {
-+		error("unsupported output image type, only png/jpeg/jpg supported\n");
-+		rs =3D -1;
-+		goto close_graph;
-+	}
-+
-+	draw_graph(platform, graph);
-+	if (gvLayout(gvc, graph, "dot")) {
-+		error("gvLayout failed when creating cxl topology image");
-+		rs =3D -1;
-+		goto close_graph;
-+	}
-+
-+	FP =3D fopen(output_file, "w");
-+	if (!FP) {
-+		error("open %s for storing the graph failed", output_file);
-+		rs =3D -1;
-+		goto create_exit;
-+	} else {
-+		gvRender(gvc, graph, strrchr(output_file, '.') + 1, FP);
-+		fclose(FP);
-+	}
-+
-+create_exit:
-+	gvFreeLayout(gvc, graph);
-+close_graph:
-+	agclose(graph);
-+free_ctx:
-+	gvFreeContext(gvc);
-+
-+	return rs;
-+}
-+
-+static const struct option options[] =3D {
-+	OPT_STRING('m', "memdev", &param.memdev_filter, "memory device name(s)",
-+		   "filter by CXL memory device name(s)"),
-+	OPT_BOOLEAN('M', "memdevs", &param.memdevs,
-+		    "include CXL memory device info"),
-+	OPT_STRING('b', "bus", &param.bus_filter, "bus device name",
-+		   "filter by CXL bus device name(s)"),
-+	OPT_STRING('p', "port", &param.port_filter, "port device name",
-+		   "filter by CXL port device name(s)"),
-+	OPT_STRING('e', "endpoint", &param.endpoint_filter,
-+		   "endpoint device name",
-+		   "filter by CXL endpoint device name(s)"),
-+	OPT_BOOLEAN('E', "endpoints", &param.endpoints,
-+		    "include CXL endpoint info"),
-+	OPT_BOOLEAN('i', "idle", &param.idle, "include disabled devices"),
-+	OPT_STRING(0, "input", &param.input_file,
-+		   "input file path for creating topology image",
-+		   "path to file containing a json array describing the topology"),
-+	OPT_STRING('o', "output-file", &param.output_file, "output file path",
-+		   "path to file to generate graph or dump cxl topology to"),
-+	OPT_STRING('t', "output-format", &param.output_format, "output format",
-+		   "way to output cxl topology: plain or graph (by default)"),
-+	OPT_INCR('v', "verbose", &param.verbose, "increase output detail"),
-+#ifdef ENABLE_DEBUG
-+	OPT_BOOLEAN(0, "debug", &debug, "debug graph plot"),
-+#endif
-+	OPT_END(),
-+};
-+
-+static int num_list_flags(void)
-+{
-+	return !!param.memdevs + !!param.buses + !!param.ports +
-+	       !!param.endpoints + !!param.decoders + !!param.regions;
-+}
-+
-+static bool validate_cxl_topology_input_helper(json_object *cur_array,
-+		bool bus_detected, bool hb_detected)
-+{
-+	size_t arr_len, obj_idx;
-+	size_t nr_top_devices;
-+	bool is_hb, is_sw, is_endpoint, is_memdev;
-+	json_object *device;
-+	json_object_iter subdev_iter;
-+
-+	arr_len =3D json_object_array_length(cur_array);
-+	nr_top_devices =3D count_top_devices(cur_array);
-+	if (!nr_top_devices)
-+		goto validate_exit;
-+
-+	for (obj_idx =3D 0; obj_idx < arr_len; obj_idx++) {
-+		device =3D json_object_array_get_idx(cur_array, obj_idx);
-+		if (!is_device(device))
-+			continue;
-+
-+		if (check_device_type(device, "ACPI0017 Device"))
-+			bus_detected =3D true;
-+
-+		is_hb =3D check_device_type(device, "Host Bridge");
-+		is_sw =3D check_device_type(device, "Switch Port");
-+		is_endpoint =3D check_device_type(device, "Endpoint");
-+		is_memdev =3D check_device_type(device, "Type 3 Memory Device");
-+		if (is_memdev || is_endpoint) {
-+			if (!hb_detected || !bus_detected)
-+				return false;
-+		}
-+		/* cxl switch must be below cxl HB */
-+		if (is_sw) {
-+			if (!hb_detected || !bus_detected)
-+				return false;
-+		}
-+		if (is_hb) {
-+			if (!bus_detected)
-+				return false;
-+			hb_detected =3D true;
-+		}
-+		if (is_hb || is_sw) {
-+			if (!device_has_dport(device)) {
-+				error("dport not found for cxl HB or switch.\n ");
-+				return false;
-+			}
-+		}
-+		if ((is_hb || is_sw || is_endpoint || is_memdev)
-+				&& !device_has_parent_dport(device)) {
-+			error("parent_dport not found in cxl topology.\n ");
-+			return false;
-+		}
-+
-+		json_object_object_foreachC(device, subdev_iter) {
-+			char *key =3D subdev_iter.key;
-+			json_object *subdev_arr =3D subdev_iter.val;
-+
-+			if (!json_object_is_type(subdev_arr, json_type_array))
-+				continue;
-+			/* skip dports list */
-+			if (!strcmp(key, "dports"))
-+				continue;
-+			if (!validate_cxl_topology_input_helper(subdev_arr,
-+						bus_detected, hb_detected))
-+				return false;
-+		}
-+	}
-+
-+validate_exit:
-+	return bus_detected;
-+}
-+
-+static bool validate_cxl_topology_input(json_object *cur_array)
-+{
-+	size_t json_array_len =3D json_object_array_length(cur_array);
-+	size_t idx;
-+	json_object_iter iter;
-+	json_object *device;
-+
-+	if (json_array_len =3D=3D 1)
-+		return validate_cxl_topology_input_helper(cur_array, false, false);
-+
-+	for (idx =3D 0; idx < json_array_len; idx++) {
-+		device =3D json_object_array_get_idx(cur_array, idx);
-+		json_object_object_foreachC(device, iter) {
-+			char *key =3D iter.key;
-+			json_object *val =3D iter.val;
-+
-+			if (!strcmp(key, "anon memdevs")) {
-+				;
-+			} else if (!strcmp(key, "buses")) {
-+				if (!validate_cxl_topology_input_helper(val, false, false))
-+					return false;
-+			} else {
-+				error("unsupported top key from cxl topology: %s\n",
-+						key);
-+				return false;
-+			}
-+		}
-+	}
-+	return true;
-+}
-+
-+int cmd_graph(int argc, const char **argv, struct cxl_ctx *ctx)
-+{
-+	const char * const u[] =3D {
-+		"cxl graph [<options>]",
-+		NULL
-+	};
-+	int i;
-+	json_object *platform;
-+	FILE *fp;
-+	int rs =3D 0;
-+
-+	argc =3D parse_options(argc, argv, options, u, 0);
-+	for (i =3D 0; i < argc; i++)
-+		error("unknown parameter \"%s\"\n", argv[i]);
-+
-+	if (argc)
-+		usage_with_options(u, options);
-+
-+	if (num_list_flags() =3D=3D 0) {
-+		if (param.memdev_filter)
-+			param.memdevs =3D true;
-+		if (param.port_filter)
-+			param.ports =3D true;
-+		if (param.endpoint_filter)
-+			param.endpoints =3D true;
-+	}
-+
-+	param.buses =3D true;
-+	param.ports =3D true;
-+	param.targets =3D true;
-+	param.decoders =3D true;
-+	if (!param.endpoints && !param.memdevs) {
-+		param.memdevs =3D true;
-+		param.endpoints =3D true;
-+	}
-+
-+	switch (param.verbose) {
-+	default:
-+	case 3:
-+		param.health =3D true;
-+		param.partition =3D true;
-+		param.alert_config =3D true;
-+		/* fallthrough */
-+	case 2:
-+		param.idle =3D true;
-+		/* fallthrough */
-+	case 1:
-+		param.buses =3D true;
-+		param.ports =3D true;
-+		param.endpoints =3D true;
-+		param.decoders =3D true;
-+		param.targets =3D true;
-+		/*fallthrough*/
-+	case 0:
-+		break;
-+	}
-+
-+	log_init(&param.ctx, "cxl graph", "CXL_GRAPH_LOG");
-+	if (debug) {
-+		cxl_set_log_priority(ctx, LOG_DEBUG);
-+		param.ctx.log_priority =3D LOG_DEBUG;
-+	}
-+
-+	if (!param.output_format)
-+		param.output_format =3D "graph";
-+	else if (strcmp(param.output_format, "graph")
-+		&& strcmp(param.output_format, "plain")) {
-+		error("only plain/graph is accepted for output_format\n");
-+		return 0;
-+	}
-+
-+	if (!param.output_file) {
-+		dbg(&param, "no output file given, using topology.png by default\n");
-+		if (!strcmp(param.output_format, "graph"))
-+			param.output_file =3D "cxl-topology-graph.png";
-+		else
-+			param.output_file =3D "cxl-topology-plain.json";
-+	}
-+
-+	if (param.input_file) {
-+		if (access(param.input_file, R_OK)) {
-+			error("input file %s cannot be accessed\n", param.input_file);
-+			return -EPERM;
-+		}
-+
-+		platform =3D parse_json_text(param.input_file);
-+		if (!validate_cxl_topology_input(platform)) {
-+			error("cxl topology from input file `%s` not valid.\n",
-+					param.input_file);
-+			dbg(&param, "%s\t%s\t%s\t%s\t%s\t%s\n",
-+				"valid cxl topology should include following info:\n",
-+				"1): cxl bus;\n",
-+				"2): cxl host bridge (HB);\n",
-+				"3): cxl memdev;\n",
-+				"4): nr_dport attribute for HB and switch (if exists);\n",
-+				"5): parent_dport attribute for port and memdev objects.\n");
-+			dbg(&param, "please generate input file with %s or %s",
-+				"\'cxl list\' with -v/-vv/-vvv option",
-+				"use \'cxl graph -t plain\'\n");
-+			return -1;
-+		}
-+		if (!strcmp(param.output_format, "graph")) {
-+			rs =3D create_image(param.output_file, platform);
-+			goto graph_exit;
-+		} else
-+			goto dump_plain;
-+	}
-+
-+	dbg(&param, "walk topology\n");
-+	platform =3D cxl_filter_walk(ctx, &param);
-+	if (!platform)
-+		return -ENOMEM;
-+
-+	if (!strcmp(param.output_format, "graph"))
-+		rs =3D create_image(param.output_file, platform);
-+	else {
-+dump_plain:
-+		fp =3D fopen(param.output_file, "w+");
-+		if (!fp) {
-+			error("dump to output file %s failed.\n", param.output_file);
-+			rs =3D -1;
-+		} else {
-+			fprintf(fp, "%s\n", json_object_to_json_string_ext(platform,
-+				JSON_C_TO_STRING_PRETTY));
-+			fclose(fp);
-+		}
-+	}
-+
-+graph_exit:
-+	if (!rs)
-+		;
-+		/*util_display_json_array(stdout, platform, cxl_filter_to_flags(&param)=
-);*/
-+	return 0;
-+}
-diff --git a/cxl/meson.build b/cxl/meson.build
-index 61b4d87..346768f 100644
-=2D-- a/cxl/meson.build
-+++ b/cxl/meson.build
-@@ -25,6 +25,15 @@ deps =3D [
-   versiondep,
- ]
-
-+if get_option('libgvc').enabled()
-+  cxl_src +=3D [
-+    'graph.c',
-+  ]
-+  deps +=3D [
-+    graphviz,
-+  ]
-+endif
-+
- if get_option('libtracefs').enabled()
-   cxl_src +=3D [
-     'event_trace.c',
-diff --git a/meson.build b/meson.build
-index 50e83cf..4eabaf0 100644
-=2D-- a/meson.build
-+++ b/meson.build
-@@ -143,6 +143,10 @@ kmod =3D dependency('libkmod')
- libudev =3D dependency('libudev')
- uuid =3D dependency('uuid')
- json =3D dependency('json-c')
-+if get_option('libgvc').enabled()
-+  graphviz =3D dependency('libgvc')
-+endif
-+
- if get_option('libtracefs').enabled()
-   traceevent =3D dependency('libtraceevent')
-   tracefs =3D dependency('libtracefs')
-@@ -237,6 +241,7 @@ conf.set('ENABLE_DESTRUCTIVE', get_option('destructive=
-').enabled())
- conf.set('ENABLE_LOGGING', get_option('logging').enabled())
- conf.set('ENABLE_DEBUG', get_option('dbg').enabled())
- conf.set('ENABLE_LIBTRACEFS', get_option('libtracefs').enabled())
-+conf.set('ENABLE_LIBGVC', get_option('libgvc').enabled())
-
- typeof_code =3D '''
-   void func() {
-diff --git a/meson_options.txt b/meson_options.txt
-index 5c41b1a..08e6c3a 100644
-=2D-- a/meson_options.txt
-+++ b/meson_options.txt
-@@ -3,6 +3,7 @@ option('version-tag', type : 'string',
- option('docs', type : 'feature', value : 'enabled')
- option('asciidoctor', type : 'feature', value : 'enabled')
- option('libtracefs', type : 'feature', value : 'enabled')
-+option('libgvc', type : 'feature', value : 'enabled')
- option('systemd', type : 'feature', value : 'enabled')
- option('keyutils', type : 'feature', value : 'enabled',
-   description : 'enable nvdimm device passphrase management')
-diff --git a/ndctl.spec.in b/ndctl.spec.in
-index 7702f95..66cdf71 100644
-=2D-- a/ndctl.spec.in
-+++ b/ndctl.spec.in
-@@ -31,6 +31,7 @@ BuildRequires:	pkgconfig(uuid)
- BuildRequires:	pkgconfig(json-c)
- BuildRequires:	pkgconfig(bash-completion)
- BuildRequires:	pkgconfig(systemd)
-+BuildRequires:  graphviz
- BuildRequires:	keyutils-libs-devel
- BuildRequires:	systemd-rpm-macros
- BuildRequires:	iniparser-devel
-=2D-
-2.39.2
-
+>+	if (rc)
+>+		goto error_put_device;
+>+
+>+	rc = cdev_device_add(&cxlswd->cdev, &cxlswd->dev);
+>+	if (rc)
+>+		goto error_put_device;
+>+
+>+	return 0;
+>+
+>+error_put_device:
+>+	cxl_swdev_shutdown(cxlswd);
+>+	put_device(&cxlswd->dev);
+>+	return rc;
+>+}
