@@ -2,104 +2,180 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F29DC001DE
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 07:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D828C001DC
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 07:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232578AbjGZHhF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Jul 2023 03:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60762 "EHLO
+        id S232790AbjGZHhI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Jul 2023 03:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232274AbjGZHgN (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 03:36:13 -0400
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0E71BC3;
-        Wed, 26 Jul 2023 00:35:04 -0700 (PDT)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1bbaa549bcbso775411fac.3;
-        Wed, 26 Jul 2023 00:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690356903; x=1690961703;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zpAr8v012KhqX1+x4NzPtOBVQVImVkoVUEI38Fgz8rc=;
-        b=i0eKRsjIyVVbYd1lVLYFxs9VTw0eWkseRLxPrzo9du3bo1l6Nzh8E1FwkWGBF2qugV
-         Y8U1q5Ph/70usobN09D7YmqaNyyArEvNbSprA0/2uxpvKlv2uQjCaMfnHMva3Yb0f1FB
-         ddR0dZZn6opfxuiMHySD5eknjPBwgYMHlgrpOlRVhVGAT+8UonayAU5yvdTKTDQqTPEK
-         CFNrU2R2qA6Ym9PDMgNAS4IsDymUeoyhRfRgmnew0xzJg0+Nkb02anrDM6/qucjm96FN
-         SUZSp9zve0eb2iVwngD3Gf1tsbeYG/NR5YxVxCmFRUxRguroX6gNXx11a/Glro8JQyJz
-         Z3FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690356903; x=1690961703;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zpAr8v012KhqX1+x4NzPtOBVQVImVkoVUEI38Fgz8rc=;
-        b=DWSMpdWVVe/fzRWip3kvwYRZjCrE8hjTue8NPHzLHYyi11VUvZcR8M/FvPK3A5vPjU
-         EJYKfUNm4wzRfp+nrKu9wfMPVzys7ktJ1hTey7LP9o371p9T85/SRi8gIC3d7jYGs06V
-         MUsq4GfQqnbx21W+Ckfu3ewB5mqFIyvUUnXiaO/HHJS+zS0z4tgwlRn4/Xx8p2hlzvzI
-         8r/ELiRxG64zfFFoJ4C15TBWuZl6jv8xIaLblzj3VOuBBb/KsDowPQn6zbHm5tpxNOln
-         D8WfW50tA5KozeDERU5YqlQhZggroeleuj5nSjOfQCV5UaDWNZbMTxOF7GnblDgnPGog
-         5vpw==
-X-Gm-Message-State: ABy/qLZ5KKfLblYvmGZRCNvC5j//cUkQq9AziG96VZxQXyZkNYrqV79s
-        3coaGvAQlS3ey4BHjhgRAl97QGx3VJU=
-X-Google-Smtp-Source: APBJJlFFomszN8kP3yspGJBy2E3RSVrZUxTKDq37vM5cokbTsNsZRBeutqBDHbNe6M8AoC5aMFbX+w==
-X-Received: by 2002:a05:6870:3049:b0:1bb:979d:5b05 with SMTP id u9-20020a056870304900b001bb979d5b05mr1623942oau.57.1690356903596;
-        Wed, 26 Jul 2023 00:35:03 -0700 (PDT)
-Received: from cxl-test.. ([103.181.222.211])
-        by smtp.gmail.com with ESMTPSA id hi16-20020a17090b30d000b0025be7b69d73sm692301pjb.12.2023.07.26.00.35.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 00:35:03 -0700 (PDT)
-From:   Raghu Halharvi <raghuhack78@gmail.com>
-To:     linux-cxl@vger.kernel.org,
-        Alison Schofield <alison.schofield@intel.com>,
-        raghuhack78@gmail.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, vishal.l.verma@intel.com
-Cc:     linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v7 2/2] cxl/region: Remove else after return statement
-Date:   Wed, 26 Jul 2023 07:34:21 +0000
-Message-Id: <20230726073421.2452-3-raghuhack78@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230726073421.2452-1-raghuhack78@gmail.com>
-References: <20230726073421.2452-1-raghuhack78@gmail.com>
+        with ESMTP id S231859AbjGZHgQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 03:36:16 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB68DD;
+        Wed, 26 Jul 2023 00:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690356918; x=1721892918;
+  h=from:to:cc:subject:references:date:in-reply-to:
+   message-id:mime-version;
+  bh=6qVZBUs21Wpj2aQjHSwyHHybwSsIvWbW48TAPSEojyI=;
+  b=mCUDzwLl38z3ni6L3EOAGiy1sL3sfPdd0Q8dQRPnIL0DVNPfGIkfTt40
+   kkDpfsicBD4FmzUvXdTXJyVRbYwdVTbtuC1C1fbsW+X8AuY0ExfQfcFJl
+   ypNetggn9k3R9htzu/v+aoo23OKFdEt0V2oc8VRph/7xk5+QmNA1vc6jM
+   +gF2o1+e3uc0SDScjnfOYY9q9zqcfX6bfgSW96eolGRMMOjVm0Ftbw9G6
+   e/Ioi8SqDZ4UFOmSZDIKfW7P0TafqKUSQjIkMp/aM5qrUNX+ECeJaCbnG
+   huVnzEIs39y9xwzeUOkEWVIeSom/rWHaxSIzIQEyoluaPbEQhueW4uDJw
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="398875133"
+X-IronPort-AV: E=Sophos;i="6.01,231,1684825200"; 
+   d="scan'208";a="398875133"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 00:35:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10782"; a="726408026"
+X-IronPort-AV: E=Sophos;i="6.01,231,1684825200"; 
+   d="scan'208";a="726408026"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 00:35:13 -0700
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     Alistair Popple <apopple@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Wei Xu <weixugc@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <shy828301@gmail.com>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
+ calculation algorithms management
+References: <20230721012932.190742-1-ying.huang@intel.com>
+        <20230721012932.190742-2-ying.huang@intel.com>
+        <87r0owzqdc.fsf@nvdebian.thelocal>
+        <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87sf9cxupz.fsf@nvdebian.thelocal>
+Date:   Wed, 26 Jul 2023 15:33:26 +0800
+In-Reply-To: <87sf9cxupz.fsf@nvdebian.thelocal> (Alistair Popple's message of
+        "Tue, 25 Jul 2023 18:26:15 +1000")
+Message-ID: <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Issue found with checkpatch
+Alistair Popple <apopple@nvidia.com> writes:
 
-The else section here is redundant after return statement, removing it.
-Sanity and correctness is not affected due to this fix.
+> "Huang, Ying" <ying.huang@intel.com> writes:
+>
+>> Hi, Alistair,
+>>
+>> Thanks a lot for comments!
+>>
+>> Alistair Popple <apopple@nvidia.com> writes:
+>>
+>>> Huang Ying <ying.huang@intel.com> writes:
+>>>
+>>>> The abstract distance may be calculated by various drivers, such as
+>>>> ACPI HMAT, CXL CDAT, etc.  While it may be used by various code which
+>>>> hot-add memory node, such as dax/kmem etc.  To decouple the algorithm
+>>>> users and the providers, the abstract distance calculation algorithms
+>>>> management mechanism is implemented in this patch.  It provides
+>>>> interface for the providers to register the implementation, and
+>>>> interface for the users.
+>>>
+>>> I wonder if we need this level of decoupling though? It seems to me like
+>>> it would be simpler and better for drivers to calculate the abstract
+>>> distance directly themselves by calling the desired algorithm (eg. ACPI
+>>> HMAT) and pass this when creating the nodes rather than having a
+>>> notifier chain.
+>>
+>> Per my understanding, ACPI HMAT and memory device drivers (such as
+>> dax/kmem) may belong to different subsystems (ACPI vs. dax).  It's not
+>> good to call functions across subsystems directly.  So, I think it's
+>> better to use a general subsystem: memory-tier.c to decouple them.  If
+>> it turns out that a notifier chain is unnecessary, we can use some
+>> function pointers instead.
+>>
+>>> At the moment it seems we've only identified two possible algorithms
+>>> (ACPI HMAT and CXL CDAT) and I don't think it would make sense for one
+>>> of those to fallback to the other based on priority, so why not just
+>>> have drivers call the correct algorithm directly?
+>>
+>> For example, we have a system with PMEM (persistent memory, Optane
+>> DCPMM, or AEP, or something else) in DIMM slots and CXL.mem connected
+>> via CXL link to a remote memory pool.  We will need ACPI HMAT for PMEM
+>> and CXL CDAT for CXL.mem.  One way is to make dax/kmem identify the
+>> types of the device and call corresponding algorithms.
+>
+> Yes, that is what I was thinking.
+>
+>> The other way (suggested by this series) is to make dax/kmem call a
+>> notifier chain, then CXL CDAT or ACPI HMAT can identify the type of
+>> device and calculate the distance if the type is correct for them.  I
+>> don't think that it's good to make dax/kem to know every possible
+>> types of memory devices.
+>
+> Do we expect there to be lots of different types of memory devices
+> sharing a common dax/kmem driver though? Must admit I'm coming from a
+> GPU background where we'd expect each type of device to have it's own
+> driver anyway so wasn't expecting different types of memory devices to
+> be handled by the same driver.
 
-Signed-off-by: Raghu Halharvi <raghuhack78@gmail.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/cxl/core/region.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Now, dax/kmem.c is used for
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e115ba382e04..bfd3b13dd2c1 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -133,11 +133,11 @@ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
- 				&cxlr->dev,
- 				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
- 			return 0;
--		} else {
--			dev_err(&cxlr->dev,
--				"Failed to synchronize CPU cache state\n");
--			return -ENXIO;
- 		}
-+
-+		dev_err(&cxlr->dev,
-+			"Failed to synchronize CPU cache state\n");
-+		return -ENXIO;
- 	}
- 
- 	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
--- 
-2.39.2
+- PMEM (Optane DCPMM, or AEP)
+- CXL.mem
+- HBM (attached to CPU)
 
+I understand that for a CXL GPU driver it's OK to call some CXL CDAT
+helper to identify the abstract distance of memory attached to GPU.
+Because there's no cross-subsystem function calls.  But it looks not
+very clean to call from dax/kmem.c to CXL CDAT because it's a
+cross-subsystem function call.
+
+>>>> Multiple algorithm implementations can cooperate via calculating
+>>>> abstract distance for different memory nodes.  The preference of
+>>>> algorithm implementations can be specified via
+>>>> priority (notifier_block.priority).
+>>>
+>>> How/what decides the priority though? That seems like something better
+>>> decided by a device driver than the algorithm driver IMHO.
+>>
+>> Do we need the memory device driver specific priority?  Or we just share
+>> a common priority?  For example, the priority of CXL CDAT is always
+>> higher than that of ACPI HMAT?  Or architecture specific?
+>
+> Ok, thanks. Having read the above I think the priority is
+> unimportant. Algorithms can either decide to return a distance and
+> NOTIFY_STOP_MASK if they can calculate a distance or NOTIFY_DONE if they
+> can't for a specific device.
+
+Yes.  In most cases, there are no overlaps among algorithms.
+
+>> And, I don't think that we are forced to use the general notifier
+>> chain interface in all memory device drivers.  If the memory device
+>> driver has better understanding of the memory device, it can use other
+>> way to determine abstract distance.  For example, a CXL memory device
+>> driver can identify abstract distance by itself.  While other memory
+>> device drivers can use the general notifier chain interface at the
+>> same time.
+>
+> Whilst I think personally I would find that flexibility useful I am
+> concerned it means every driver will just end up divining it's own
+> distance rather than ensuring data in HMAT/CDAT/etc. is correct. That
+> would kind of defeat the purpose of it all then.
+
+But we have no way to enforce that too.
+
+--
+Best Regards,
+Huang, Ying
