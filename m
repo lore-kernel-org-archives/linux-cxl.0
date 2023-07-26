@@ -2,46 +2,46 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB187C001E0
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 05:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABE4C001DE
+	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 05:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjGZF6B (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Jul 2023 01:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41522 "EHLO
+        id S230293AbjGZF6C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Jul 2023 01:58:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230293AbjGZF57 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 01:57:59 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E18D1995
-        for <linux-cxl@vger.kernel.org>; Tue, 25 Jul 2023 22:57:58 -0700 (PDT)
+        with ESMTP id S230143AbjGZF56 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 01:57:58 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3A01982
+        for <linux-cxl@vger.kernel.org>; Tue, 25 Jul 2023 22:57:57 -0700 (PDT)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 77A6590182D;
-        Wed, 26 Jul 2023 05:57:57 +0000 (UTC)
+        by relay.mailchannels.net (Postfix) with ESMTP id D56DD901627;
+        Wed, 26 Jul 2023 05:57:56 +0000 (UTC)
 Received: from pdx1-sub0-mail-a240.dreamhost.com (unknown [127.0.0.6])
         (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 0AD2C9017A6;
-        Wed, 26 Jul 2023 05:57:57 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1690351077; a=rsa-sha256;
+        by relay.mailchannels.net (Postfix) with ESMTPA id 47AFD901A01;
+        Wed, 26 Jul 2023 05:57:56 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1690351076; a=rsa-sha256;
         cv=none;
-        b=yLcCGw7ncHFav8TvchZjnXQbmw0rrQjqGkaBoXL91yjAks1jfmFgRTeVRs9yECLMPGoCNu
-        QNT0jrxoiusfd00HuAV9Uxp1K37/w2XufIZOV7hxpE0J6cfz4bSyqAzZse/NLInenJFfQx
-        XUwslIqGEMTFQxGOp9b9+RRY45Zlh1t3Eiya1DMHfLEROG7LxDMKhppu8TXXc96a087zkX
-        QDdjrGRtF+ml3PpDJ5qTqrO8lgC3Ba8m+F4kkJppowfihfSj6sY5aPDB4bktEJH+Yp41Rd
-        D6uWAnMXDVM2MQnq/rwkUEy/Sd0NtgkkYOysdtaCj+k+IR/4aBeGP+ksKOkPxQ==
+        b=xhGp/WVXhdVLh5XclRqu8Z74vYyOOudbesYOxqsyZVN1OHDJnXW8h050RuzxLQmZIUZ0bv
+        a12ziNDdRxl7FmfE2+Mo0fIS46Z03sqBV75+BkQRrLwwYAqpEXgrjxq0vaGP8Y/gpIdmru
+        h+DlbTEHVg+mOfQiunSeOlcGURYGRCPiEf2COVSXSLJpZs6v/92S4y3DBzs00T7fnmp/4Q
+        ovTxtKelUHTpeizBEu9diXOQu93p4gOQcPG53EHCdmHUBB/ZA2HxYiCJKcIX0ilPHyX4iA
+        UEfOcG1C9gPqpD+shlAhW9dwtqolIGo10Ngir10eNRghSUjf9dprhL4CVWQabA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
  d=mailchannels.net;
-        s=arc-2022; t=1690351077;
+        s=arc-2022; t=1690351076;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=H/9uORMFHViYZ/WYdnGZmR3jvE01Jxyrl5CczKfVeSg=;
-        b=MaRYyZujLuz+Di8CI08Uf0edS4OR14IZ8TrzFxmBPYa+xYXG2Ga3H6g7zFy4MhbBlxHU1N
-        z8LLDBLTewfmylMcg/NPgnnsAxK+uF+jBzznAcVbizIAAET7Xhhoe41/w49CLVjXT223kg
-        NeFWulLzoGLF91BMkaa7YG+WBzQrYIz4v9f/9t4wJBt+wQhdwUuQv7zq5vdsl1luk8XWgl
-        0MfvoSpmURiJtM76hSdq4hpGwHEri5bTcVEzYF5QewOkHSsH/Z8IliMUyoUCTs5CqgqM/j
-        6oTNFBEzNUnhtVHn6vRHOMWcOul9TEv/GDurrLBFtKRl+s4mYeZiV3e5jsFhIQ==
+        bh=LO8JD7Nln053u2c4qsQ3BL9S5JIJlz5OVQGPHXKevys=;
+        b=MOQpDMeo1JwW+kexvq3DFUBp1T/aave/Wop5xXP4iXjgfnP4T535SiZ7slTtxd1qHGsxW+
+        MoW+RFapJFdfF3fkE1uMMM279oFdMIFpDmx6ytQFdEod9rxCTfpLiPDoPjwBRGPpgwAyM1
+        J2Aejt6srSLr1w5IR/lBbNUx+5+u8Ac9Ld8PW1eBLXIovTGTZCIv+h3EO0sE/stuvr0DDF
+        FSbpR49dU2LkLKHdweWkKmQtL30HNJJhAUCIhHVvw8GMpr/xAXHc4lPi54bPyqncfTB4Ux
+        PW5YkwKR5W9xFGIt1WqQ9TYu4JkgzhRYjVMOaOLACwD3lmLA1/OXfTV0zONJjA==
 ARC-Authentication-Results: i=1;
         rspamd-d58c88954-npfzb;
         auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
@@ -49,39 +49,39 @@ X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Quick-Company: 7595139b01bd7fa5_1690351077320_1755573927
-X-MC-Loop-Signature: 1690351077320:451146119
-X-MC-Ingress-Time: 1690351077319
+X-Little-Occur: 6d8771d321d79e81_1690351076699_4274607401
+X-MC-Loop-Signature: 1690351076699:1478576246
+X-MC-Ingress-Time: 1690351076699
 Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
         by 100.97.140.16 (trex/6.9.1);
-        Wed, 26 Jul 2023 05:57:57 +0000
+        Wed, 26 Jul 2023 05:57:56 +0000
 Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4R9jqS25M0z1t;
-        Tue, 25 Jul 2023 22:57:56 -0700 (PDT)
+        by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4R9jqR4KchzY8;
+        Tue, 25 Jul 2023 22:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
         s=dreamhost; t=1690351076;
-        bh=MHABQArLBSm5wEdnmq0OIM2jYtAYYCtdeBpSn4U+Wa4=;
+        bh=LO8JD7Nln053u2c4qsQ3BL9S5JIJlz5OVQGPHXKevys=;
         h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-        b=dYxhRnoCEqmNLNMYIh0KU1SB1gdFmqroYcMoPfxHpIk4T0VaMZtcWFjbxvZ3RR7rg
-         pX5Zp/x8l4Hu4+TmMO3QM6d5sXoIQ7TUv71MCqunF6tRulD5TG5lQdVH5w2P1zF5pI
-         /jyf+1bMofVi/Hf2VhztEXLyzpb4cQywHip0AP04WI5AKLugjZTbvf+7IGPaPy+eBJ
-         l2Ly+z6N8+CUvhtW7LeOMm5HGcypT7C+R7CtH78OQ6tKRXYnhiXhRA0FDwxWC59GTs
-         gENSTrFKJ7kDXffJebd65ug7qLbqfrpUKvtHN+3I4yJZcwokos/OK0qNNxGp/R/Bp6
-         8VrGFGf89Fxtw==
+        b=X9+X9ue5npshGd1sDbBhDeO9feFae+S0Fk+KwFscRmkMGcREELis1cda9Y0ITaAd+
+         sCIfPPkqfFXyzkt+NjPPMGm0qcoe+NZDnX4E0ktHPqLghJmFN8c5UpozxbMLe/FC4d
+         d0BAKm05Z8i47yb6FMTlkzc0bU0/VoPAhJrdjXU5EynyJCIw1PRa9DwhLetS/3rP7M
+         j1NqK8S83SYSSh8OO1lziOTh6rGnvA/YO+YKx8xD5Y94JsaPgi3vxABY6xM+rLHNV7
+         WCmaQiJUJwFOAoW0EzuuxfQGDARCwaNmXfUBBWoxvgxR5kfAgtKpAff95Gy+luS+3g
+         ent7JM0afg/6Q==
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     dan.j.williams@intel.com
 Cc:     vishal.l.verma@intel.com, jonathan.cameron@huawei.com,
         fan.ni@samsung.com, dave.jiang@intel.com, a.manzanares@samsung.com,
         dave@stgolabs.net, linux-cxl@vger.kernel.org
-Subject: [PATCH 2/3] cxl/memdev: Document security state in kern-doc
-Date:   Tue, 25 Jul 2023 22:19:39 -0700
-Message-ID: <20230726051940.3570-3-dave@stgolabs.net>
+Subject: [PATCH 1/3] cxl/memdev: Improve sanitize ABI descriptions
+Date:   Tue, 25 Jul 2023 22:19:38 -0700
+Message-ID: <20230726051940.3570-2-dave@stgolabs.net>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230726051940.3570-1-dave@stgolabs.net>
 References: <20230726051940.3570-1-dave@stgolabs.net>
@@ -91,25 +91,45 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-... as is the case with all members of struct cxl_memdev_state.
+Be more detailed about the CPU cache management situation. The same
+goes for both sanitize and secure erase.
 
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/cxl/cxlmem.h | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 79e99c873ca2..083c6e58bc49 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -434,6 +434,7 @@ struct cxl_dev_state {
-  * @next_persistent_bytes: persistent capacity change pending device reset
-  * @event: event log driver state
-  * @poison: poison driver state info
-+ * @security: security driver state info
-  * @fw: firmware upload / activation state
-  * @mbox_send: @dev specific transport for transmitting mailbox commands
-  *
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 6350dd82b9a9..c4c4acb1f3b3 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -82,7 +82,11 @@ Description:
+ 		whether it resides in persistent capacity, volatile capacity,
+ 		or the LSA, is made permanently unavailable by whatever means
+ 		is appropriate for the media type. This functionality requires
+-		the device to be not be actively decoding any HPA ranges.
++		the device to be disabled, that is, not actively decoding any
++		HPA ranges. This permits avoiding explicit global CPU cache
++		management, relying instead for it to be done when a region
++		transitions between software programmed and hardware committed
++		states.
+ 
+ 
+ What            /sys/bus/cxl/devices/memX/security/erase
+@@ -92,7 +96,12 @@ Contact:        linux-cxl@vger.kernel.org
+ Description:
+ 		(WO) Write a boolean 'true' string value to this attribute to
+ 		secure erase user data by changing the media encryption keys for
+-		all user data areas of the device.
++		all user data areas of the device. This functionality requires
++		the device to be disabled, that is, not actively decoding any
++		HPA ranges. This permits avoiding explicit global CPU cache
++		management, relying instead for it to be done when a region
++		transitions between software programmed and hardware committed
++		states.
+ 
+ 
+ What:		/sys/bus/cxl/devices/memX/firmware/
 -- 
 2.41.0
 
