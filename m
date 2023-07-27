@@ -2,224 +2,180 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D7DC0015E
-	for <linux-cxl@archiver.kernel.org>; Wed, 26 Jul 2023 20:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B81C41513
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jul 2023 03:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjGZUnh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 26 Jul 2023 16:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33194 "EHLO
+        id S230083AbjG0DpR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 26 Jul 2023 23:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbjGZUng (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 16:43:36 -0400
-Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B185D100
-        for <linux-cxl@vger.kernel.org>; Wed, 26 Jul 2023 13:43:33 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230726204329usoutp01b75727ca2cafc98b462b8c4f4dc9cb71~1hawvgbt21550015500usoutp01h;
-        Wed, 26 Jul 2023 20:43:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230726204329usoutp01b75727ca2cafc98b462b8c4f4dc9cb71~1hawvgbt21550015500usoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1690404209;
-        bh=l+H6dCv5ybsIfLB+hEQtf+MLB17PtOJq5usrp2cmDHA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=e1y5U9kD+VS03CQARav3iLq4BeLgWWz9eqkXN2KtpEOZbptrxx2HdFe9BC4WPTKVf
-         ObV5jq+ibrPX0kdDLGKTkE+XhPW3nTd1ziBDhZjb9AIIe16kD4uka55qd+abwp69hu
-         6jWg7RBvF1rM9uA6GAT4cRmcpSZVPRT/P6VlycZs=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230726204329uscas1p27269d871ed5f705cccad682d32cdb5e8~1hawrCtzs0282902829uscas1p29;
-        Wed, 26 Jul 2023 20:43:29 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id E3.47.51475.17581C46; Wed,
-        26 Jul 2023 16:43:29 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230726204329uscas1p1ac598f7d24000ef115a2430131e3e879~1hawW3uCj1213512135uscas1p1Z;
-        Wed, 26 Jul 2023 20:43:29 +0000 (GMT)
-X-AuditID: cbfec36d-635ff7000001c913-59-64c18571f792
-Received: from SSI-EX3.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 81.3A.44215.07581C46; Wed,
-        26 Jul 2023 16:43:29 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX3.ssi.samsung.com (105.128.2.228) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Wed, 26 Jul 2023 13:43:28 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Wed,
-        26 Jul 2023 13:43:28 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     "fan.ni@gmx.us" <fan.ni@gmx.us>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "sunfishho12@gmail.com" <sunfishho12@gmail.com>
-Subject: Re: [ndctl PATCH v2 RESEND 0/2] cxl-graph: add a new command to
- construct CXL topology graph images
-Thread-Topic: [ndctl PATCH v2 RESEND 0/2] cxl-graph: add a new command to
-        construct CXL topology graph images
-Thread-Index: AQHZwAHUJK0XStnXB0eNcaGi/9i+2Q==
-Date:   Wed, 26 Jul 2023 20:43:28 +0000
-Message-ID: <20230726204319.GA253308@bgt-140510-bm03>
-In-Reply-To: <20230726180955.88834-1-fan.ni@gmx.us>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BED10DB5E8EA4148888B2F6E2610FD8D@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231489AbjG0DpO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 26 Jul 2023 23:45:14 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2086.outbound.protection.outlook.com [40.107.92.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD237270F;
+        Wed, 26 Jul 2023 20:45:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bZlz+tm7i9OQU9FxUC20WoSiCLsN5FnOiD8DsKbbuFh3Pjpo5xSaio/hIUStuZZRSkwei1yXnfx9qJp+ErXNqSxAnce47sO+PLBZhty5DlyP0U8Nlxq71i3h/mJK8lIZEqWyN2Y6F55JzDmDu9MxNbJkr4ubtDa2+qtWn9k1A2fKlg69FFb8YO0Z6vZ1BJzlq+9kzkWTU8R+091vKSEM4TzllXsQCT0m+3+DIzQiZRLrCx1WA2KMrT6ylK82A8jx+/nyqaYjbK5UVZ7eWsZV1m8NIFQEjWDao+Vd5Ospgl/MDgBKbkq43dnheSf1D7AjI9/TBEKzQOQ5aBJs++rThg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sNX/A9rIuO5fyFEJsdkooAlfON5Gpli576KIOx+/2/Q=;
+ b=LYFSpaj36RtlAiTQN7BAjroXAfJY8CrxeA37hUSRrACPiE0csTDiZueqlUINX8hbLZnKlaOjagX/gc/W6JOve7NoK2hDztnluwNJSwvtq+EcKY4P8zcD5VjxLR7OAeq2cuSEoXRJ2NZqTCetlrH6v/TVQct2JOTmfU9kZpILI+fwTP6u0PWr/hWd4/XokRloHDKBeX17PVQF4MdxzGmiDO2NGr0zCfoFkq2jqYPJyJ619diuk99zxWOh5DG9Q4kTqlaLSwZFk901WOt+DcOPOP8eptsHpxCDSNo2o4GfyXFdzmh5kP07pIUYzAsgv6eD2m/mh32tH1hrZEqyihfmMA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sNX/A9rIuO5fyFEJsdkooAlfON5Gpli576KIOx+/2/Q=;
+ b=kVcDfJ+9Q1SIiJtZNTk5AMvin7FZNLAzEMfhOzmYly4mlg/WFgZ/Cwem40WzTrKyl1pHx4/3HzRsvFWhkWpaz8NkNw4Rg9go7qhWJsSeHfBdn78dplue81XHi/GAUmr6AOlLUap/mCEN0IKisLtpOqvkWIwLfINQ7RjWkFhBc0oYqzpZoGYjA0RAYncnSY/L7Rc1vwG/GrHOavq/6sVd2//HL2mDN1CJ0GLisfE3zwkMCxwOkcV2l5GpW8U7GInRp7qLr0WcpfSn+XLsKsqMA/97u1YCNjT7wpONKeRBu3tLRZyUZxdSrSDOcMrpfvVXEgLIz0JavBCPRDRfETyuCw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
+ by PH0PR12MB7837.namprd12.prod.outlook.com (2603:10b6:510:282::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.32; Thu, 27 Jul
+ 2023 03:45:04 +0000
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::c833:9a5c:258e:3351]) by BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::c833:9a5c:258e:3351%4]) with mapi id 15.20.6609.032; Thu, 27 Jul 2023
+ 03:45:03 +0000
+References: <20230721012932.190742-1-ying.huang@intel.com>
+ <20230721012932.190742-2-ying.huang@intel.com>
+ <87r0owzqdc.fsf@nvdebian.thelocal>
+ <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87sf9cxupz.fsf@nvdebian.thelocal>
+ <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-agent: mu4e 1.8.13; emacs 28.2
+From:   Alistair Popple <apopple@nvidia.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Wei Xu <weixugc@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <shy828301@gmail.com>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
+ calculation algorithms management
+Date:   Thu, 27 Jul 2023 13:42:15 +1000
+In-reply-to: <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Message-ID: <87351axbk6.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SY2PR01CA0046.ausprd01.prod.outlook.com
+ (2603:10c6:1:15::34) To BYAPR12MB3176.namprd12.prod.outlook.com
+ (2603:10b6:a03:134::26)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRmVeSWpSXmKPExsWy7djXc7qFrQdTDO4dULKYPvUCo8Xqm2sY
-        LW6dOsxocX7WKRaLxp+LgNwJx5gc2Dx2zrrL7vFs9zpmj8V7XjJ5TJ1d7/F5k1wAaxSXTUpq
-        TmZZapG+XQJXRtvRSYwFnSoVHev2MjUwHpLuYuTgkBAwkdgyN7+LkYtDSGAlo8Tmo7sYIZxW
-        JomWOTeYuhg5wYp2vDjGApFYyyjR9qMdyvnEKPFg2gR2CGcZo0TzhedgLWwCihL7urazgdgi
-        AsoSW67/AJvLLLCdSWLX03Z2kOXCAnkSH5ZmQNTkS9zatpQRwtaTODPvJgtICYuAqsTT2cEg
-        Jq+AqUT/NDWQCk4BY4kLW+eATWcUEJP4fmoN2FZmAXGJW0/mQx0tKLFo9h5mCFtM4t+uh2wQ
-        tqLE/e8v2SHqdSQW7P7EBmHbScxZ+g1qjrbEsoWvwXp5geacnPmEBaJXUuLgihtgv0sIXOCQ
-        +DH/CiNEwkXiWh9MkbTE37vLmCDBmyyx6iMXRDhHYv6SLVAl1hIL/6xnmsCoMgvJ2bOQnDQL
-        yUmzkJw0C8lJCxhZVzGKlxYX56anFhvmpZbrFSfmFpfmpesl5+duYgSmo9P/DufuYNxx66Pe
-        IUYmDsZDjBIczEoivIYx+1KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8xrankwWEkhPLEnNTk0t
-        SC2CyTJxcEo1MDFM7HGZcqjg5wfpjPoHM2a2SvdevfTk/b1KzfzP0luuFXUcvrTNn9uY59QG
-        R/0vBctunNLeyy9sVXNg/UamAJU19W7zlzusyFphw3gi6NL8mFncTVJTPkbYW/TPvj73sbPV
-        wqrZm7W/P9I8Il8Ww6F3wHr1q7M1Bj2mvBeuty2b/71Q/PDH2S7JRvIzin4x/Pq3tEz6XPY3
-        /nfer2XcIz5O+9T68LvztZwwt5uteXxn+qsmM62aM/2GhtAzrecRK3KsJc4c/P2+IkjszIsP
-        TYWizH5+rB68dnw9YkYW/xYZTN2sXZY73fXh9aCQ46GHluq0rJCZ4PbhoOS/ZL8tBy0aGTp0
-        50W4H1k95wiT4QclluKMREMt5qLiRAC9eqDLtgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsWS2cA0Sbew9WCKwdvV3BbTp15gtFh9cw2j
-        xa1Thxktzs86xWLR+HMRkDvhGJMDm8fOWXfZPZ7tXsfssXjPSyaPqbPrPT5vkgtgjeKySUnN
-        ySxLLdK3S+DKaDs6ibGgU6WiY91epgbGQ9JdjJwcEgImEjteHGPpYuTiEBJYzSgxdf4TRgjn
-        E6PE2kuzoZxljBJvW3+wgbSwCShK7OvaDmaLCChLbLn+A6yIWWA7k8Sup+3sXYwcHMICeRIf
-        lmZA1ORL3N13CapeT+LMvJssICUsAqoST2cHg5i8AqYS/dPUQCqEBIwkzs19yQxicwoYS1zY
-        Ogesk1FATOL7qTVMIDazgLjErSfzmSAeEJBYsuc8M4QtKvHy8T9WCFtR4v73l+wQ9ToSC3Z/
-        YoOw7STmLP0GNUdbYtnC12C9vAKCEidnPmGB6JWUOLjiBssERolZSNbNQjJqFpJRs5CMmoVk
-        1AJG1lWM4qXFxbnpFcVGeanlesWJucWleel6yfm5mxiB0Xz63+HoHYy3b33UO8TIxMF4iFGC
-        g1lJhNcwZl+KEG9KYmVValF+fFFpTmrxIUZpDhYlcd6XURPjhQTSE0tSs1NTC1KLYLJMHJxS
-        DUzLBRZuVlG35/jEmfR0eq4Vj6v0Y3MWFjbtGm/mioueAsti/or+nC31avWeNz8Ov3/U/nFL
-        vs7Geyuao8qm/Utf13TqHdf9b3+nvk2/v+jNA+Vi84VvrPa83ffYZuEks8kv/362Xih4JoaF
-        e9n9SX+4HA99XmrsNmvVLD525njp0JnTd3lmBN2svW7+41VpUFa96kF7of/ZrkGGkz4m6C0U
-        ZvqeMUePIfvtyesn5ELWim0S7L67epJlLY+zxW032ZUf9i1c+XmV2+ui9Ppp95ofvqzv0dnx
-        lW15aISpyEOrVzYTgwpm3db77PU/+/HOS0/qMi9Y58yqfBfUJMNaf9p9nvLxBXf3TDgvtdqq
-        Qb9QX4mlOCPRUIu5qDgRAK7pjG9VAwAA
-X-CMS-MailID: 20230726204329uscas1p1ac598f7d24000ef115a2430131e3e879
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230726204329uscas1p1ac598f7d24000ef115a2430131e3e879
-References: <20230726180955.88834-1-fan.ni@gmx.us>
-        <CGME20230726204329uscas1p1ac598f7d24000ef115a2430131e3e879@uscas1p1.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3176:EE_|PH0PR12MB7837:EE_
+X-MS-Office365-Filtering-Correlation-Id: f807bd33-a63c-4c4a-6527-08db8e53dc44
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: P6g9lx/odSfY6Qidpx2oyYL7BrJ5d3bTniFa5drH4Y1Ve3QcFCty30hvEt6SkWO+YKTKzVb4Qmj8vEim1a8yO8Znz8rqVc7Aq7TY9yZWQvGhBr1TYFSvyLy0IU+QeMWMBsAPdwbW3Btgk2R2rpDPX6yngJ+jmrxTEaEn9Di457+QgMUhqWDHxkYh53eAI6qI4gdE0Rs/ReOgElTbuXfYIbyYk5+YdDqfA1G+OjTrPkhRBEfXuKFZekNIkpB26QTKdp0YPpnOFx4CT5Y3sKexeJt7vOXxBpUKQDMP5W02+TBVRDRP+oVykrfSz6eIKtfdv5LFVebWLyeBvtbzZwYTN/LXVPLqLtGr+OWxYtQnS8HhFDw1bhUbPv1yH6+tkMW4SBa2rs33VM1prf6/NBc5Nexqzgt6JMH7oL5YDz0an53oFBW5Z1hszaXgKOFhnG50PPu4EDu0HI9q9nlbADVoBH5yN0MTnz5nnhhFTNv3YAMAK3jc4Qfx8n1FwxFYjkD+J7nhJoRf1hquFTh+SxezxSctg7/toA8xlctMbBIXTOT0uyjk2JZBgKgioq2bX9IS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(39860400002)(136003)(376002)(366004)(451199021)(5660300002)(38100700002)(66556008)(83380400001)(8936002)(9686003)(7416002)(8676002)(6916009)(6486002)(316002)(478600001)(66946007)(41300700001)(54906003)(6666004)(6506007)(4326008)(26005)(186003)(2906002)(66476007)(6512007)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4xpDh6mKPCHPqauXQ8uVlb3A3RAOaod2KaP5DsOpCGaMbRrIixctj4cY1g6c?=
+ =?us-ascii?Q?/BDZqWtqjwsz8ASV1kAdo6lnvuBotTR9Hc1VlB78Fhu+RZmjvKuMauU7hTnj?=
+ =?us-ascii?Q?FTk7ieYWnYN1Cy2Jfuywk/9WA9EkuYPTAysttA709b02z1+XJcH0FDGYiOlb?=
+ =?us-ascii?Q?VZ94TimJsRXnL3KNu+pEqREHiZQ5UlJMx2knAX0DRypcfeNRYzN/0tdwbWTi?=
+ =?us-ascii?Q?B9MZTMFHH/HFcWZnt3WNC9CkNU+qIGDnIzBgVAOh9Jx3qiL5rzh+sQ9L2d8z?=
+ =?us-ascii?Q?9sSTvn1QVjoICP8fUc69c9wEL7/3QwIBflFT/qSMQQ5h5iIwaaDlfheFZaqm?=
+ =?us-ascii?Q?WGbkKtIXiaYKkQiuvR8XXv+Q4cSNRvmk5JccT+PL20K+8Dn48JvEs/XhTzX+?=
+ =?us-ascii?Q?QgLbkaOzrAo/pxhhH2KPwWxfB+QZh5tDzv3mEtOWGZiSlMrl+aziDCvs/AGa?=
+ =?us-ascii?Q?EIRt+wfCHfPYvBGgtc5R0896DSE2Q26lE5Ozed6Dh1LEwWh4XoNDorccbz44?=
+ =?us-ascii?Q?Vp1IP7WVsYfAX9aZBUSYdNvclc5W/zIfkanr85+2n3OIr515ulHf+roia/jE?=
+ =?us-ascii?Q?4sGdUDkBuRRVnQuLOLXaC7zWZ0oyMDPl1eSoGjIlSqpGrQ7Pte+QJa6vHWHp?=
+ =?us-ascii?Q?FO+VEfdO1Q+c/Qzjjd6IP/rojNJTttg5rm/UxmzvV7hBZJ8kTD5/akdMvVsl?=
+ =?us-ascii?Q?+S7P+zGgtL0du/++uUqShdRlCKFaeCAWsFkQTK9LTdXNVcXkPVg3xy0Drlui?=
+ =?us-ascii?Q?pzwCDdTofcuFCJF6BsNev9dfqSqLBwpib/AqjxYr5FK0zkT1x8KMOJIzC0DF?=
+ =?us-ascii?Q?jxfWBGORInLF7/iccuMcMizcLTsxgfWMjCMqDSSKnUNmZzk4l/qsLCd0Q6Yv?=
+ =?us-ascii?Q?DplzDakhMAcJIO8E1k1g2bw0OeH6j6rl+IC8pLG7exmbyQGX0T/kiPe23S5m?=
+ =?us-ascii?Q?YAA39R0Dlk015noR+7Je8n3esMaNhsqbbAcFTjd7N9asulhtuZuPnsx0lfvY?=
+ =?us-ascii?Q?CldKENHdFWOnPkG72umu993+Md/X7TPHUoXtlsLO0OKOnrRw+FxKubKuI+aq?=
+ =?us-ascii?Q?BfI6zlhMQlryOARWP9wqk+b5FrkowiJjFzi3wC6n3xy4M2gF90oKxNWvQY2z?=
+ =?us-ascii?Q?/dItk1JdBoKKBYVQLD+tL8mbYCSRhxnAqtpJHgOOgKB2oucEnqShwuLSTD5i?=
+ =?us-ascii?Q?EZ6TzNVoetH4yTxHyeLLdQJ0M4PeMUgRgcQ6BImPk2QK8396T4HcpCaWYcbp?=
+ =?us-ascii?Q?91SgsXqxxjZ/uwj/Dl81XyukL6ghueA03EnpEKtA6HfipldsiEB6NMvCtgNd?=
+ =?us-ascii?Q?FWKLQPAVzppJb7bcdQSDPlfi4sAHpjbdp8B4ANTP4I7szG9GW5Tp/s5vtoBn?=
+ =?us-ascii?Q?WW+1I34suIcg13gH1jI5lkewJAojhzr66bGooOdmjUv5brWvtoGGJMTByjrF?=
+ =?us-ascii?Q?W45Dyv9GR8Lfo4NtphW+oNiQj3WI0FTHohtibZkz/wT6mhVmC443qwVqdXJp?=
+ =?us-ascii?Q?4ebobsLrOgfjkhqWMoPeMw5Cs/feKP74oZ8N52Mpuk5/SpsPZgSkx/qyL3e3?=
+ =?us-ascii?Q?oHByVaLIHCXmjaOcNgVgTS9BKZEeKzWkgzlNlLNE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f807bd33-a63c-4c4a-6527-08db8e53dc44
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2023 03:45:03.3497
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z3OBLFhEfs10b8EeheWxo9TH8l1SQtVimSu8g5UroeZzgZhAVI1LlFzFcg6svMOAPpk5NFBjYIm2J8O+Trj2QA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7837
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 11:09:53AM -0700, fan.ni@gmx.us wrote:
 
-FYI. If you want to use the code directly, try the below code repo:
-https://github.com/moking/ndctl/tree/patch-gen
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-> From: Fan Ni <fan.ni@gmx.us>
->=20
-> FYI. The thread of the previous sending (list below) seems broken, making=
- it
-> hard to track and review, so resend the series.
-> https://lore.kernel.org/linux-cxl/SG2PR06MB3397455E672F8820385E3D95B25BA@=
-SG2PR06MB3397.apcprd06.prod.outlook.com/
->=20
->=20
-> v1[1]->v2:
-> 1. Simplified Patch 1 which adds parent_dport attribute to root port and
-> memdev for plotting cxl topology by leveraging the existing function
-> `cxl_port_get_parent_dport` in ndctl v77.
-> 2. Introduced a new cxl command 'cxl graph' for cxl topology plotting ins=
-tead
-> of implementing the functionality as an option in 'cxl list'.
-> 3. Moved all graph plotting code to a separated file: graph.c.
-> 4. Reverted the changes made to `cxl list` functionality, now its behavio=
-r
-> remains the same as before.
-> 5. Added a new option "-t" for cxl graph command, it takes either 'plain'=
- or
-> 'graph' to determine whether we dump cxl topology to a json formatted fil=
-e
-> or plot the topology to a graph. By default, it will plot the graph.
-> 6. Added a function to validate the input cxl topology for "--input" opti=
-on.
-> 7. Added new code logic to handle cases where there are inactive memdevs.
-> 8 Modified the plotting logic to make plotting work properly with differe=
-nt
-> user inputs (from options supported by cxl graph). For example, now we ca=
-n plot
-> topology graph only for a specific endpoint or memdev.
-> 9. Fix some comments and bugs in graph.c
->=20
-> Below is the cover letter of v1[1]:
-> This patch series extends the `cxl list` subcommand to show the cxl
-> topology visually. Mattew Ho first worked on the code and provided an
-> initial patch as list below[1].
->=20
-> This patch series includes the following two patches,
-> 1) Patch 1 adds a parent_dport attribute to ports and type 3 memory devic=
-es
-> to show which downstream port a component is attached. This attribute wil=
-l be
-> used in patch 2 to generate the cxl topology graph.
-> 2) Patch 2 extends the `cxl list` subcommand to dump the cxl topology to =
-a
-> json format file or generate a graph showing the cxl topology. To use the
-> extended function, the option `-o output.suffix` is added. Acceptable out=
-put
-> suffixes include .jpeg, .jpg and .png for generating a graph and for othe=
-r
-> suffix, it will dump the json-formatted cxl topology to the file, which
-> can be used the input file (with --input option) to generate the graph
-> later.
->=20
-> Patch 2 reuses the plotting functions in Matthew Ho's patch, which are up=
-dated
-> to work with parent_dport attribute in patch 1. Also, some bugs are
-> fixed. More detailed changes are listed in Patch 2's commit log.
->=20
-> The patch series is applied cleanly on ndctl v77, and tested with the
-> following different cxl topologies,
-> 1) a single memdev attached the only root port of the single HB in the sy=
-stem;
-> 2) two memdevs attached to the two root ports of the single HB in the sys=
-tem;
-> 3) four memdevs attached to two HBs, each of which has two root ports;
-> 4) four memdevs attached to the downstream ports of a cxl switch which is
-> attached to one of the two root ports of a HB in the system.
->=20
->=20
-> [1] [ndctl PATCH 0/2] cxl-list: Construct CXL topology graph images
-> https://lore.kernel.org/linux-cxl/20221220182510.2734032-1-fan.ni@samsung=
-.com/
-> [2] Mattew Ho's patch:
-> https://lore.kernel.org/linux-cxl/cover.1660895649.git.sunfishho12@gmail.=
-com/
->=20
-> Fan Ni (2):
->   cxl/list: Add parent_dport attribute to memdev and root port listing
->   cxl-graph: Add cxl graph command to construct CXL topology graph
->     images
->=20
->  Documentation/cxl/cxl-graph.txt | 106 +++++
->  config.h.meson                  |   3 +
->  cxl/builtin.h                   |   1 +
->  cxl/cxl.c                       |   1 +
->  cxl/filter.c                    |  15 +-
->  cxl/filter.h                    |   5 +
->  cxl/graph.c                     | 806 ++++++++++++++++++++++++++++++++
->  cxl/json.c                      |  23 +-
->  cxl/meson.build                 |   9 +
->  meson.build                     |   5 +
->  meson_options.txt               |   1 +
->  ndctl.spec.in                   |   1 +
->  12 files changed, 969 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/cxl/cxl-graph.txt
->  create mode 100644 cxl/graph.c
->=20
-> --
-> 2.39.2
->=20
-> =
+>>> The other way (suggested by this series) is to make dax/kmem call a
+>>> notifier chain, then CXL CDAT or ACPI HMAT can identify the type of
+>>> device and calculate the distance if the type is correct for them.  I
+>>> don't think that it's good to make dax/kem to know every possible
+>>> types of memory devices.
+>>
+>> Do we expect there to be lots of different types of memory devices
+>> sharing a common dax/kmem driver though? Must admit I'm coming from a
+>> GPU background where we'd expect each type of device to have it's own
+>> driver anyway so wasn't expecting different types of memory devices to
+>> be handled by the same driver.
+>
+> Now, dax/kmem.c is used for
+>
+> - PMEM (Optane DCPMM, or AEP)
+> - CXL.mem
+> - HBM (attached to CPU)
+
+Thanks a lot for the background! I will admit to having a faily narrow
+focus here.
+
+>>> And, I don't think that we are forced to use the general notifier
+>>> chain interface in all memory device drivers.  If the memory device
+>>> driver has better understanding of the memory device, it can use other
+>>> way to determine abstract distance.  For example, a CXL memory device
+>>> driver can identify abstract distance by itself.  While other memory
+>>> device drivers can use the general notifier chain interface at the
+>>> same time.
+>>
+>> Whilst I think personally I would find that flexibility useful I am
+>> concerned it means every driver will just end up divining it's own
+>> distance rather than ensuring data in HMAT/CDAT/etc. is correct. That
+>> would kind of defeat the purpose of it all then.
+>
+> But we have no way to enforce that too.
+
+Enforce that HMAT/CDAT/etc. is correct? Agree we can't enforce it, but
+we can influence it. If drivers can easily ignore the notifier chain and
+do their own thing that's what will happen.
+
+>>> While other memory device drivers can use the general notifier chain
+>>> interface at the same time.
+
+How would that work in practice though? The abstract distance as far as
+I can tell doesn't have any meaning other than establishing preferences
+for memory demotion order. Therefore all calculations are relative to
+the rest of the calculations on the system. So if a driver does it's own
+thing how does it choose a sensible distance? IHMO the value here is in
+coordinating all that through a standard interface, whether that is HMAT
+or something else.
+
+ - Alistair
