@@ -2,146 +2,138 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4345FEB64DD
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jul 2023 05:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34292C001E0
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jul 2023 09:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbjG0Fqm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jul 2023 01:46:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35004 "EHLO
+        id S232663AbjG0Juq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jul 2023 05:50:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232220AbjG0FqY (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jul 2023 01:46:24 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815EE3A98;
-        Wed, 26 Jul 2023 22:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690436744; x=1721972744;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=CZIXORpK/pKO7gqM7gZSvX2ogA1eMyUczHdXGcg8arI=;
-  b=iGB2h2HoC7QTwTrkr85LTSaLWD01CG7AAB+FMMEsRvouvahuIIdS0hy3
-   VzzD/UndxWbs8cnQOUvl6U20DSVtQFXHc/bJINHdFron3aKYlL3AKdnzL
-   4e/I1fQZ/dF+8Vj9JvjhBWK707NrzDYzygbbXlfwXj9Gzv0vzDG8pQOEk
-   Y9hjhX+iWBVbiiutvcJTUFsWV8tM4tMjs0onB19popSweJSSjKAgcUy8o
-   iN0AW8jhC6tRiWU2zq+WR9gK++S6MAW0ipooR6oL7LgdbY45GkIsWgXEq
-   GSsHajGZVMjbJdiuca8ej8rl56XZuqWCGGNzCrPDU36llnakkNBZ342Qw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10783"; a="371821339"
-X-IronPort-AV: E=Sophos;i="6.01,234,1684825200"; 
-   d="scan'208";a="371821339"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 22:43:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10783"; a="756522804"
-X-IronPort-AV: E=Sophos;i="6.01,234,1684825200"; 
-   d="scan'208";a="756522804"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2023 22:43:00 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Alistair Popple <apopple@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Wei Xu <weixugc@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <shy828301@gmail.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
- calculation algorithms management
-References: <20230721012932.190742-1-ying.huang@intel.com>
-        <20230721012932.190742-2-ying.huang@intel.com>
-        <87r0owzqdc.fsf@nvdebian.thelocal>
-        <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87sf9cxupz.fsf@nvdebian.thelocal>
-        <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87351axbk6.fsf@nvdebian.thelocal>
-        <87edkuvw6m.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87y1j2vvqw.fsf@nvdebian.thelocal>
-Date:   Thu, 27 Jul 2023 13:41:23 +0800
-In-Reply-To: <87y1j2vvqw.fsf@nvdebian.thelocal> (Alistair Popple's message of
-        "Thu, 27 Jul 2023 14:07:31 +1000")
-Message-ID: <87a5vhx664.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+        with ESMTP id S232949AbjG0Ju1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jul 2023 05:50:27 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBDFE77
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jul 2023 02:50:04 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RBQpt3N15z6GDGR;
+        Thu, 27 Jul 2023 17:44:54 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 27 Jul
+ 2023 10:49:17 +0100
+Date:   Thu, 27 Jul 2023 10:49:16 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <linux-cxl@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>, <linuxarm@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Shesha Bhushan Sreenivasamurthy" <sheshas@marvell.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>, <fan.ni@samsung.com>,
+        <a.manzanares@samsung.com>
+Subject: Re: [RFC PATCH v4 4/4] cxl/pci: Add support for stand alone CXL
+ Switch mailbox CCI
+Message-ID: <20230727104916.00007a21@Huawei.com>
+In-Reply-To: <r7djcwxcuzsvqcwbct3iiyljdhpsobvgjwuxjmlew3cuo52lcg@xkrkc4srqzju>
+References: <20230719091931.27799-1-Jonathan.Cameron@huawei.com>
+        <20230719091931.27799-5-Jonathan.Cameron@huawei.com>
+        <r7djcwxcuzsvqcwbct3iiyljdhpsobvgjwuxjmlew3cuo52lcg@xkrkc4srqzju>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alistair Popple <apopple@nvidia.com> writes:
+On Wed, 26 Jul 2023 13:00:31 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> "Huang, Ying" <ying.huang@intel.com> writes:
->
->> Alistair Popple <apopple@nvidia.com> writes:
->>
->>> "Huang, Ying" <ying.huang@intel.com> writes:
->>>
->>>>>> And, I don't think that we are forced to use the general notifier
->>>>>> chain interface in all memory device drivers.  If the memory device
->>>>>> driver has better understanding of the memory device, it can use other
->>>>>> way to determine abstract distance.  For example, a CXL memory device
->>>>>> driver can identify abstract distance by itself.  While other memory
->>>>>> device drivers can use the general notifier chain interface at the
->>>>>> same time.
->>>>>
->>>>> Whilst I think personally I would find that flexibility useful I am
->>>>> concerned it means every driver will just end up divining it's own
->>>>> distance rather than ensuring data in HMAT/CDAT/etc. is correct. That
->>>>> would kind of defeat the purpose of it all then.
->>>>
->>>> But we have no way to enforce that too.
->>>
->>> Enforce that HMAT/CDAT/etc. is correct? Agree we can't enforce it, but
->>> we can influence it. If drivers can easily ignore the notifier chain and
->>> do their own thing that's what will happen.
->>
->> IMHO, both enforce HMAT/CDAT/etc is correct and enforce drivers to use
->> general interface we provided.  Anyway, we should try to make HMAT/CDAT
->> works well, so drivers want to use them :-)
->
-> Exactly :-)
->
->>>>>> While other memory device drivers can use the general notifier chain
->>>>>> interface at the same time.
->>>
->>> How would that work in practice though? The abstract distance as far as
->>> I can tell doesn't have any meaning other than establishing preferences
->>> for memory demotion order. Therefore all calculations are relative to
->>> the rest of the calculations on the system. So if a driver does it's own
->>> thing how does it choose a sensible distance? IHMO the value here is in
->>> coordinating all that through a standard interface, whether that is HMAT
->>> or something else.
->>
->> Only if different algorithms follow the same basic principle.  For
->> example, the abstract distance of default DRAM nodes are fixed
->> (MEMTIER_ADISTANCE_DRAM).  The abstract distance of the memory device is
->> in linear direct proportion to the memory latency and inversely
->> proportional to the memory bandwidth.  Use the memory latency and
->> bandwidth of default DRAM nodes as base.
->>
->> HMAT and CDAT report the raw memory latency and bandwidth.  If there are
->> some other methods to report the raw memory latency and bandwidth, we
->> can use them too.
->
-> Argh! So we could address my concerns by having drivers feed
-> latency/bandwidth numbers into a standard calculation algorithm right?
-> Ie. Rather than having drivers calculate abstract distance themselves we
-> have the notifier chains return the raw performance data from which the
-> abstract distance is derived.
+> On Wed, 19 Jul 2023, Jonathan Cameron wrote:
+> 
+> >+static int cxl_swmbcci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >+{
+> >+	struct cxl_register_map map;
+> >+	struct cxl_swdev *cxlswd;
+> >+	int rc;
+> >+
+> >+	rc = pcim_enable_device(pdev);
+> >+	if (rc)
+> >+		return rc;
+> >+
+> >+	cxlswd = cxl_swdev_alloc(&pdev->dev);
+> >+	if (IS_ERR(cxlswd))
+> >+		return PTR_ERR(cxlswd);
+> >+
+> >+	mutex_init(&cxlswd->mbox.mbox_mutex);
+> >+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
+> >+	if (rc)
+> >+		return rc;
+> >+	rc = cxl_setup_regs(&map);
+> >+	if (rc)
+> >+		return rc;
+> >+
+> >+	rc = cxl_map_device_regs(&map, &cxlswd->cxlds.regs.device_regs);
+> >+	if (rc)
+> >+		return rc;
+> >+
+> >+	rc = cxl_map_mbox_regs(&map, &cxlswd->mbox.mbox);
+> >+	if (rc)
+> >+		return rc;
+> >+
+> >+	cxlswd->mbox.status = cxlswd->cxlds.regs.status;
+> >+	cxlswd->mbox.dev = &pdev->dev;
+> >+
+> >+	rc = cxl_swmbcci_setup_mailbox(&cxlswd->mbox);
+> >+	if (rc)
+> >+		return rc;
+> >+
+> >+
+> >+	pci_set_drvdata(pdev, cxlswd);
+> >+
+> >+	rc = cxl_enumerate_cmds(&cxlswd->mbox);  
+> 
+> Making the whole mbox more generically available makes me wonder if
+> we want to start using Get Supported Logs Sub-List instead of the current
+> gsl? The spec is pretty explicit about this:
+> 
+> ""
+> It is strongly recommended that the Get Supported Logs Sub-List (see
+> Section 8.2.9.5.6) is supported by Components and used by software instead of Get
+> Supported Logs so that requestors may control the output payload size, as needed.
+> Type 3 Devices that implement support for the Get Supported Logs opcode on an
+> MCTP-based CCI shall also support the Get Supported Logs Sub-List opcode.
+> ""
 
-Now, memory device drivers only need a general interface to get the
-abstract distance from the NUMA node ID.  In the future, if they need
-more interfaces, we can add them.  For example, the interface you
-suggested above.
+Agreed - it would be good to make that move on any devices that support
+the command.  Patches welcome :)
 
---
-Best Regards,
-Huang, Ying
+
+Jonathan
+
+> 
+> Thanks,
+> Davidlohr
+> 
+> >+	if (rc)
+> >+		goto error_put_device;
+> >+
+> >+	rc = cdev_device_add(&cxlswd->cdev, &cxlswd->dev);
+> >+	if (rc)
+> >+		goto error_put_device;
+> >+
+> >+	return 0;
+> >+
+> >+error_put_device:
+> >+	cxl_swdev_shutdown(cxlswd);
+> >+	put_device(&cxlswd->dev);
+> >+	return rc;
+> >+}  
+
