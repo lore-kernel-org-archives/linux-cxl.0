@@ -2,138 +2,183 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34292C001E0
-	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jul 2023 09:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2073AC001DC
+	for <linux-cxl@archiver.kernel.org>; Thu, 27 Jul 2023 21:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232663AbjG0Juq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 27 Jul 2023 05:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35536 "EHLO
+        id S231477AbjG0V1C (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 27 Jul 2023 17:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232949AbjG0Ju1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jul 2023 05:50:27 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBDFE77
-        for <linux-cxl@vger.kernel.org>; Thu, 27 Jul 2023 02:50:04 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RBQpt3N15z6GDGR;
-        Thu, 27 Jul 2023 17:44:54 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 27 Jul
- 2023 10:49:17 +0100
-Date:   Thu, 27 Jul 2023 10:49:16 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <linux-cxl@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>, <linuxarm@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Shesha Bhushan Sreenivasamurthy" <sheshas@marvell.com>,
-        Gregory Price <gregory.price@memverge.com>,
-        Viacheslav Dubeyko <slava@dubeyko.com>, <fan.ni@samsung.com>,
-        <a.manzanares@samsung.com>
-Subject: Re: [RFC PATCH v4 4/4] cxl/pci: Add support for stand alone CXL
- Switch mailbox CCI
-Message-ID: <20230727104916.00007a21@Huawei.com>
-In-Reply-To: <r7djcwxcuzsvqcwbct3iiyljdhpsobvgjwuxjmlew3cuo52lcg@xkrkc4srqzju>
-References: <20230719091931.27799-1-Jonathan.Cameron@huawei.com>
-        <20230719091931.27799-5-Jonathan.Cameron@huawei.com>
-        <r7djcwxcuzsvqcwbct3iiyljdhpsobvgjwuxjmlew3cuo52lcg@xkrkc4srqzju>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230204AbjG0V07 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 27 Jul 2023 17:26:59 -0400
+Received: from mgamail.intel.com (unknown [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E44E1FC4
+        for <linux-cxl@vger.kernel.org>; Thu, 27 Jul 2023 14:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690493217; x=1722029217;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=Wti/jXSZfQ/t2DS4yBYQhpyKMfzz6KR66DqQJw09Fxo=;
+  b=Yab4ksaXexKfotYkDBk5LE3X7gbRtjRmKTU/deTS/AVpKVnglqXdd4Nd
+   PtVci3zraeTFrmfQ4RPwub2UJNjJ/c32sXvu8NE4m2o1fKCBU2sy6wDnk
+   ZZ6Q2QCJ7zIA1FSSvDkd6g4gy/9lIrI3H8BRkbvM/VqtzoqgZLz3/XW7o
+   QZWvmqwGOK9DBLcB8mWRyOy/FZvVOB81d1t3oDB6e7sNWmfND6t7TkWo7
+   WxbvekALyFwEODJHY9KIdpJlNReaivtTFkEHo6gPUgMNDXH/wdNgWoZ14
+   gEuKpMCl2T6l4VO9fv2Sj5nZvKZ01Ausdsby2pO3eMMNlrD7/is1R1svT
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="399373686"
+X-IronPort-AV: E=Sophos;i="6.01,236,1684825200"; 
+   d="scan'208";a="399373686"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 14:26:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="721020671"
+X-IronPort-AV: E=Sophos;i="6.01,236,1684825200"; 
+   d="scan'208";a="721020671"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.124.125])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2023 14:26:56 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Thu, 27 Jul 2023 14:21:09 -0700
+Subject: [PATCH ndctl] ndctl/cxl/test: Add CXL event test
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Message-Id: <20230726-cxl-event-v1-1-1cf8cb02b211@intel.com>
+X-B4-Tracking: v=1; b=H4sIAMTfwmQC/x2NQQqEMAxFryJZTyBTRRmvIrNIa9TAmJFWRBDvb
+ nX5Pu/zDkgSVRK0xQFRNk36twzvVwFhYhsFtc8MjlxJjasx7D+UTWzFPhCxGz6Vrwmy7zkJ+sg
+ Wpvsxs9o9L1EG3Z9E9z3PC4tk8DtyAAAA
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-c6835
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1690493215; l=3320;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=Wti/jXSZfQ/t2DS4yBYQhpyKMfzz6KR66DqQJw09Fxo=;
+ b=1kCWbI3eVo/adZgF0XED9DM2ToWNVzwIaK2JeL/foEL4SRRIzpUqAr258dvLudp3FiPbcUCNh
+ +cc/pGIYTB4ABKbRDaHAkzqxQcDSHJHYQ1sdNPq4fD28VBG0TRn26MJ
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 26 Jul 2023 13:00:31 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+Previously CXL event testing was run by hand.  This reduces testing
+coverage including a lack of regression testing.
 
-> On Wed, 19 Jul 2023, Jonathan Cameron wrote:
-> 
-> >+static int cxl_swmbcci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >+{
-> >+	struct cxl_register_map map;
-> >+	struct cxl_swdev *cxlswd;
-> >+	int rc;
-> >+
-> >+	rc = pcim_enable_device(pdev);
-> >+	if (rc)
-> >+		return rc;
-> >+
-> >+	cxlswd = cxl_swdev_alloc(&pdev->dev);
-> >+	if (IS_ERR(cxlswd))
-> >+		return PTR_ERR(cxlswd);
-> >+
-> >+	mutex_init(&cxlswd->mbox.mbox_mutex);
-> >+	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_MEMDEV, &map);
-> >+	if (rc)
-> >+		return rc;
-> >+	rc = cxl_setup_regs(&map);
-> >+	if (rc)
-> >+		return rc;
-> >+
-> >+	rc = cxl_map_device_regs(&map, &cxlswd->cxlds.regs.device_regs);
-> >+	if (rc)
-> >+		return rc;
-> >+
-> >+	rc = cxl_map_mbox_regs(&map, &cxlswd->mbox.mbox);
-> >+	if (rc)
-> >+		return rc;
-> >+
-> >+	cxlswd->mbox.status = cxlswd->cxlds.regs.status;
-> >+	cxlswd->mbox.dev = &pdev->dev;
-> >+
-> >+	rc = cxl_swmbcci_setup_mailbox(&cxlswd->mbox);
-> >+	if (rc)
-> >+		return rc;
-> >+
-> >+
-> >+	pci_set_drvdata(pdev, cxlswd);
-> >+
-> >+	rc = cxl_enumerate_cmds(&cxlswd->mbox);  
-> 
-> Making the whole mbox more generically available makes me wonder if
-> we want to start using Get Supported Logs Sub-List instead of the current
-> gsl? The spec is pretty explicit about this:
-> 
-> ""
-> It is strongly recommended that the Get Supported Logs Sub-List (see
-> Section 8.2.9.5.6) is supported by Components and used by software instead of Get
-> Supported Logs so that requestors may control the output payload size, as needed.
-> Type 3 Devices that implement support for the Get Supported Logs opcode on an
-> MCTP-based CCI shall also support the Get Supported Logs Sub-List opcode.
-> ""
+Add a CXL test as part of the meson test infrastructure.  Passing is
+predicated on receiving the appropriate number of errors in each log.
+Individual event values are not checked.
 
-Agreed - it would be good to make that move on any devices that support
-the command.  Patches welcome :)
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ test/cxl-events.sh | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build   |  2 ++
+ 2 files changed, 70 insertions(+)
 
+diff --git a/test/cxl-events.sh b/test/cxl-events.sh
+new file mode 100644
+index 000000000000..f51046ec39ad
+--- /dev/null
++++ b/test/cxl-events.sh
+@@ -0,0 +1,68 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2023 Intel Corporation. All rights reserved.
++
++. $(dirname $0)/common
++
++set -ex
++
++trap 'err $LINENO' ERR
++
++check_prereq "jq"
++
++modprobe -r cxl_test
++modprobe cxl_test
++
++dev_path="/sys/bus/platform/devices"
++
++test_cxl_events()
++{
++	memdev="$1"
++
++	echo "TEST: triggering $memdev"
++	echo 1 > $dev_path/$memdev/event_trigger
++}
++
++readarray -t memdevs < <("$CXL" list -b cxl_test -Mi | jq -r '.[].host')
++
++echo "TEST: Prep event trace"
++echo "" > /sys/kernel/tracing/trace
++echo 1 > /sys/kernel/tracing/events/cxl/enable
++echo 1 > /sys/kernel/tracing/tracing_on
++
++# Only need to test 1 device
++#for memdev in ${memdevs[@]}; do
++#done
++
++test_cxl_events "$memdevs"
++
++echo 0 > /sys/kernel/tracing/tracing_on
++
++echo "TEST: Events seen"
++cat /sys/kernel/tracing/trace
++num_overflow=$(grep "cxl_overflow" /sys/kernel/tracing/trace | wc -l)
++num_fatal=$(grep "log=Fatal" /sys/kernel/tracing/trace | wc -l)
++num_failure=$(grep "log=Failure" /sys/kernel/tracing/trace | wc -l)
++num_info=$(grep "log=Informational" /sys/kernel/tracing/trace | wc -l)
++echo "     LOG     (Expected) : (Found)"
++echo "     overflow      ( 1) : $num_overflow"
++echo "     Fatal         ( 2) : $num_fatal"
++echo "     Failure       (16) : $num_failure"
++echo "     Informational ( 3) : $num_info"
++
++if [ "$num_overflow" -ne 1 ]; then
++	err "$LINENO"
++fi
++if [ "$num_fatal" -ne 2 ]; then
++	err "$LINENO"
++fi
++if [ "$num_failure" -ne 16 ]; then
++	err "$LINENO"
++fi
++if [ "$num_info" -ne 3 ]; then
++	err "$LINENO"
++fi
++
++check_dmesg "$LINENO"
++
++modprobe -r cxl_test
+diff --git a/test/meson.build b/test/meson.build
+index a956885f6df6..a33255bde1a8 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -155,6 +155,7 @@ cxl_sysfs = find_program('cxl-region-sysfs.sh')
+ cxl_labels = find_program('cxl-labels.sh')
+ cxl_create_region = find_program('cxl-create-region.sh')
+ cxl_xor_region = find_program('cxl-xor-region.sh')
++cxl_events = find_program('cxl-events.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -183,6 +184,7 @@ tests = [
+   [ 'cxl-labels.sh',          cxl_labels,	  'cxl'   ],
+   [ 'cxl-create-region.sh',   cxl_create_region,  'cxl'   ],
+   [ 'cxl-xor-region.sh',      cxl_xor_region,     'cxl'   ],
++  [ 'cxl-events.sh',          cxl_events,         'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
 
-Jonathan
+---
+base-commit: 2fd570a0ed788b1bd0971dfdb1466a5dbcb79775
+change-id: 20230726-cxl-event-dc00a2f94b60
 
-> 
-> Thanks,
-> Davidlohr
-> 
-> >+	if (rc)
-> >+		goto error_put_device;
-> >+
-> >+	rc = cdev_device_add(&cxlswd->cdev, &cxlswd->dev);
-> >+	if (rc)
-> >+		goto error_put_device;
-> >+
-> >+	return 0;
-> >+
-> >+error_put_device:
-> >+	cxl_swdev_shutdown(cxlswd);
-> >+	put_device(&cxlswd->dev);
-> >+	return rc;
-> >+}  
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
 
