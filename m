@@ -2,150 +2,156 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973A6C0015E
-	for <linux-cxl@archiver.kernel.org>; Fri, 28 Jul 2023 18:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F86EC0015E
+	for <linux-cxl@archiver.kernel.org>; Fri, 28 Jul 2023 18:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234015AbjG1SC1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 28 Jul 2023 14:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+        id S229874AbjG1SMZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 28 Jul 2023 14:12:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjG1SC0 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Jul 2023 14:02:26 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAAE19AF
-        for <linux-cxl@vger.kernel.org>; Fri, 28 Jul 2023 11:02:25 -0700 (PDT)
+        with ESMTP id S229539AbjG1SMY (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 28 Jul 2023 14:12:24 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2FC1724
+        for <linux-cxl@vger.kernel.org>; Fri, 28 Jul 2023 11:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690567345; x=1722103345;
+  t=1690567943; x=1722103943;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=2qrr+Z9ZResJwl42i8ulxGFK+e4q0xrudFcx4awuKjI=;
-  b=aiQrOVJODtocg9NIp2UoLi+ZdXrvnFeTfGjejagoCywqnQ5i0BdYRK4e
-   UbT1nuImMWy2K9UiTGVeNuY607kx7z3d7dTZ10mQm7ExYjFSiAKh2HC2z
-   yfGjpLIiZjyjAabvvs5jjxqWB/l1tHH3mnhJmJNcGHszy7tcgc/sOGJIG
-   QChkGhxZYmTXIiZQ2dxe8Ty46BUd36cIUiW0qBgyJyy7kWKHsEOpsoN7+
-   G41icdygyEFFMUjy09TVCs1Wh0cmMk0GdFUIYCfKd2/q/QbGdHGXGL2dE
-   u/+gPCV59udljdKg+DYirT0Jl4G9rjTSZZ5+GY4pRNLz4iakHYMuqk2u5
+  bh=t2IY/LCpnzx89Utb09PEteKGL9dQgkctGD6/hv2nnGE=;
+  b=HMShVeraKXZKZrC8e6k9rtQ1XDVfIIiM9s8RUWclSk58zQB3RKtyHmJf
+   BS+2RObBwSOq8RUsOCOVdcgT+VR7OUTVe2WexzlgR2nuJWKLNj8YfkUS2
+   54FQBrvvkcnjf9kzGmomA/B3SMrkJLasVnK1YPln3efcvNtYno5OO5HZW
+   zZd37njurPgcch8PxccMdyFdpVI5UuSrWXq0cxmgNmM2CA2724yFcOVMN
+   p/7Ccf+DKz1bafrJCIadT72oku4PdjeeKH8KLs4dqWRQB3jidWiqdVhnr
+   nWMqiRas8cZP1pha5Ke1n7u8QlLfM6EDXRMTTUld6cU7vT3SvlfS7qDnO
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="372278773"
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="432467005"
 X-IronPort-AV: E=Sophos;i="6.01,238,1684825200"; 
-   d="scan'208";a="372278773"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2023 11:02:24 -0700
+   d="scan'208";a="432467005"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2023 11:12:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="730852902"
+X-IronPort-AV: E=McAfee;i="6600,9927,10784"; a="841400400"
 X-IronPort-AV: E=Sophos;i="6.01,238,1684825200"; 
-   d="scan'208";a="730852902"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Jul 2023 11:02:24 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+   d="scan'208";a="841400400"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Jul 2023 11:12:22 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 28 Jul 2023 11:02:24 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.27; Fri, 28 Jul 2023 11:12:21 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Fri, 28 Jul 2023 11:02:24 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.174)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.27; Fri, 28 Jul 2023 11:12:21 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Fri, 28 Jul 2023 11:12:21 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Fri, 28 Jul 2023 11:02:24 -0700
+ 15.1.2507.27; Fri, 28 Jul 2023 11:12:21 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FJxK2yDvIVzKvNGP/aCiRg6dCSxDSkqgGV2ryDneEqV4kpzA0MOAcLg2TC9axzKXB5rwTQbEC9WAoebiPhYgypokxRN3/dvKpIUec2sZOWSXg6IDb0CMuYcSE05xgUZFEMp4tNyq3cBNIHkv0jfEoxIli44kgBx7EqX/br9rbrCNcMPhGehSZogLD+clxh53fDayYIkO+RqLrQN10jICCLB/3bX/EIpnazHHipIH5NHnzryUrI7kpTGZQG7eXoe7jZuvm3sZydAGvF9xo6iXFeuHJSQmwqAyX0YZ+Joqro60W9NLyNkxwmtIiWYvAoGtn3Z8IHgEdDhHFPRMLvdFjQ==
+ b=aF1A8ah6NvT45zPqgnhcbEesk3bH7pSk+oKkEZQAxrQCrbVhTpbu2MqIZrKSDHoYALjCpOTNZ51Igf1LOgJJG2HXCjQhqbtAVMF3fn/bsZ1GsA0mYdWpAbKkZ8ENB7W8gRAVlS31COgjh69GRDx4Au0cKraP5g0dtz7iWk9wKTR7OtTTkYfzaH9OXRVVJHIsxBW0ldMoOKoHlNIRfZqhpbi0TOS4x004/cg5oIFaEwbnWczFf9dhGxHu21242RPW18mbHez7sKN74St0ARKCtYjy/1VFHzpWmogoft9zip2idjm6S0jAlqmI+L7JAY3T1nc9bgAhxh0kRe6tnxKDpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yaMgjXG/s2YZ9KPPBkqh0QQi1tXHt/2uhuYw87cG8wY=;
- b=jxhwk3O2CUBYs5zYHHE1TMumTosyVBgISOUzEFu9VAaIi8ahTMFobUj4EnEFIIFK5B1pzwnt45sqGxfsfBKg4hacDpUsm3LbYvN6Nu6Cn9uF9ppyCY2TBBPtj0/xG45UhEYIhaFiXee4Iy/JdaqyVMb4vBz+pcH0qF2dHEgLWKXnEJURsFwFqLWXCjLqo/Piua5UquG1t71tbmy79/0qbA8kNmkEmzZn3GzkyCqkLghX74SqD8/3tg3LkfyC55Af68mZ9pI4zqxwu0KYZw5v0DWbM4StTUHv1tAzhmhv962dqqr7RimRCp2eh9oVJrt4PLXWBCBINHkWbv9+YiyTAQ==
+ bh=19bmqQy9j9qtzKDt+Xei4tfPOaRVMMSair8y71IRiq0=;
+ b=Aeo28NG3en1q5tb5dJQzGSMMVM0kZw9hPJq3Rv4nENmhbxC4w1c+0AmgmkSOAAt8ClSMpb0NHoov7o1MczvY4RMRymU4KQnJnPCpemkR7MriWoK9jqp/kRoJPoBXmUA8aCzjjK7WPHNnOTCVmjwYiClXZSsawgiPVo9STT/YK+x9+eAqy8pxfW4fWRxV98RlC4z7Yti35SkWgkVUeyEXaVrB3WD7fgMTDmDzYjORo/gpPQ6E0oDn8+fNlq06D207WfO3fIoiSzg6fGlTPT7xQqCLAmf6qWYbNTZHzXLRkz6i31ZMAt0JwWOWbmDMJoGew9Ar5HbrifINsSHe/MVUGw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by PH8PR11MB6729.namprd11.prod.outlook.com (2603:10b6:510:1c5::22) with
+ by DM4PR11MB7376.namprd11.prod.outlook.com (2603:10b6:8:100::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Fri, 28 Jul
- 2023 18:02:21 +0000
+ 2023 18:12:19 +0000
 Received: from PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::be6a:199e:4fc1:aa80]) by PH7PR11MB5984.namprd11.prod.outlook.com
  ([fe80::be6a:199e:4fc1:aa80%6]) with mapi id 15.20.6631.035; Fri, 28 Jul 2023
- 18:02:21 +0000
-Message-ID: <b6b58948-494f-7d04-3572-4e63174b3a2b@intel.com>
-Date:   Fri, 28 Jul 2023 11:02:18 -0700
+ 18:12:19 +0000
+Message-ID: <c0dfc440-9f58-90ae-4233-bdb3bd5681ea@intel.com>
+Date:   Fri, 28 Jul 2023 11:12:16 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Betterbird/102.13.0
-Subject: Re: [PATCH 2/3] cxl/memdev: Document security state in kern-doc
+Subject: Re: [PATCH 3/3] cxl/memdev: Only show sanitize sysfs files when
+ supported
 To:     Davidlohr Bueso <dave@stgolabs.net>, <dan.j.williams@intel.com>
 CC:     <vishal.l.verma@intel.com>, <jonathan.cameron@huawei.com>,
         <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
         <linux-cxl@vger.kernel.org>
 References: <20230726051940.3570-1-dave@stgolabs.net>
- <20230726051940.3570-3-dave@stgolabs.net>
+ <20230726051940.3570-4-dave@stgolabs.net>
 Content-Language: en-US
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230726051940.3570-3-dave@stgolabs.net>
+In-Reply-To: <20230726051940.3570-4-dave@stgolabs.net>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0229.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::24) To PH7PR11MB5984.namprd11.prod.outlook.com
+X-ClientProxiedBy: SJ0PR05CA0192.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::17) To PH7PR11MB5984.namprd11.prod.outlook.com
  (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH8PR11MB6729:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2f7ada5-d386-4cf4-d282-08db8f94ca4c
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|DM4PR11MB7376:EE_
+X-MS-Office365-Filtering-Correlation-Id: 46ab8b5d-99e5-4031-f96b-08db8f962e6a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t9yPRhBuZ6R9uVhsTBx5V7B62PBCgyKXZ49dua2SRQBEXl4clKxa8YG65PABSdqi2EHlN/zQ5uy20451G8XqtkGyDD3LzWG9qB0zEP+SC8GjcUJdnG/awvm1plx9aE9m82ZrmsQ29LgyL5amVHyuHpkAZ6XVIZJszzpeoGtgNSNjtGZynbMrm5lYuuZkzDwWRyHxxL0FK/qCsILoMLwdsoqXZYC2oHfiGSevpGqRKGSK80KUDgv9jKWa0vwbsoI84XNiE5lIaidB1ZxiIOyR0KCI9ehTo7ZyHkCvOt38X1ZAeOp7VAmi76H82rPs71YOh1Ot/mjRczRhc1E+nLSVvai8dHZKMwHLL7yeNuABwMpbrxoy+4ZaIByvb/s9H81PG4F16zubI1K52ZJxS8AzFsnPLuQt1jQHuCKx/D83cUchXD63pknjCsPgRVZPuRV+mMOd1b6oaC0A79n5C/RAcxUQ5cJv7WZVvfDiYmeA1SJCfe2JBTMivvouxzYYRXa0O2I945j1os+soMlEnFJmAFq6FZ2x/Lh3kBJ/mpLTe4USEeInpfsmH5pr9Pm3dK0SCUtfk5ypSr8Ie+UUkzciAxUIGH55ZnLrE/4PGQhSAVayl5WjYXbGJawwtBe3H9m1lSsqgAGgAJNSLXdftEckUw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(346002)(376002)(366004)(136003)(451199021)(15650500001)(2906002)(6666004)(6486002)(2616005)(36756003)(38100700002)(4744005)(186003)(5660300002)(44832011)(86362001)(83380400001)(31696002)(31686004)(41300700001)(8676002)(8936002)(26005)(316002)(6506007)(53546011)(66946007)(66476007)(6512007)(478600001)(4326008)(82960400001)(66556008)(6636002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: zGOTVCSuIA3RicaHpy6H6fGkQ9BZdVf2HX0esUy2SOGb95+F3T4V8aqAqj8TCYocAiJUtIXIYJb6V9mci9grjQ9fgOAJWkgP96lP2wrdOJLK8xgM20blQd2bWV4gSeq9DqJJfEmYx1tHIm3I9YTJLk8e564w7ZTadZo790vNTG+npVc79E25wPiPsJuwJ5pG3LMokxAnsCj4Nkt1Wmj1a5BSTUERs7H0D5PgGJ1F8vF5p/zMzvjxg651pu/vxynuzDBL2IOSE45RyoJRR6PyHoc6DEdxU1YcqRtkQnq/iFNst3u0qQQrSbD0/m6LNAvgwD4gcqWKZAtLwCvic9hY+yDFCmnbtBAyIaRJ7WsSZANVJVISsuZDdTkbZDFJfvSoFt+RHW/oXjSBOWLd2UacydSmuPr1XJoUDxajVW18fnv5KaVSIHjAxQxvVrUrzAbFapkaGrFyX83jhfp1LUIue+yI2V9QFdL5VDD6eQiMYhwpvXXHYTjqYlWSLaggjbrH4GF+L1o7UVdyvxf3S3s6PQ+9BBFAqW2zIufs984/spxH6OD3JUnQqaUrUzT+yNtddeZ2q5YdJ6fYA00sNqlYiSejse7xZAFgLMrVQ+ttI2p/rsCdlYl/wM0iHW9T71fak3oXtOUY1DmplOHWPwnA+Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(376002)(136003)(366004)(396003)(346002)(451199021)(6666004)(478600001)(82960400001)(6486002)(83380400001)(53546011)(6506007)(26005)(6512007)(66476007)(66946007)(66556008)(38100700002)(6636002)(186003)(4326008)(31686004)(2616005)(5660300002)(86362001)(44832011)(41300700001)(316002)(2906002)(8676002)(8936002)(31696002)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?LzlYV01LanpVOXl3cEhMcjN6ditraFp5RmEvU1pjWGo0RmZMeDh1QXhRM1Uy?=
- =?utf-8?B?R3JlaHU3SHhkc1ZKK2d0bTI1WVNOWGZDUFR2cElmZmkvQ3hJQmVvR3paNmc1?=
- =?utf-8?B?QmRJNjlHZnh1TUI5a0FnOEd3c24vdTAybkl4cEorTlpJM1lDOXpGcHkwaVZr?=
- =?utf-8?B?TTJhSm85aklEZjBnSktNeUVjYnh4TmhBZ1ZqQURZcUc4QXQxKzBBQTA1MHR6?=
- =?utf-8?B?aHUwcWtNa3RQWXNZREs1UW1EQ2lUU1hqZ3JNNXUwOE9za1M4VW5zTFFVVjZX?=
- =?utf-8?B?WmJNMjV1aDRUb0RoRG5WdFpROTN0VElhSW5GaXYveG1SUWxxMVdXcEI4Yi95?=
- =?utf-8?B?TXRSTFdjazZkVFJCMjRrOVpEN2JsaFU0VmlTL3RUK0VzQzc5Szh4ZzlIT0Z3?=
- =?utf-8?B?T1o4d1lqVkZUS3MweEc3R2E2VjFKMUtpcUpjbjNXQ05XeVpKY1BOUDFCdDNq?=
- =?utf-8?B?SjdNbjFYeVhudGZmYmZ2dmFWTW0waHZpdkVJdFpWeUtGOE15VHMyaW5wQThl?=
- =?utf-8?B?ZnVmQ3g5VDV3MEdkZ1RSeDJCWmZhRDhCc0FmQzQrNCtvUWh5alZITjRYNGlk?=
- =?utf-8?B?a09HSDBnR3ZiR0w5ajVOUjRzUDcyZGM4UEhLVThNWERxNlVWbDJSQlJKUUZV?=
- =?utf-8?B?R2NtNVdMVG15dFhucnFIQ1dDS2VRRzczczhOWVU5MW1IWm9ZdGFOb2ZWNmFL?=
- =?utf-8?B?bzFObzBQZjJma2RZbi9CelFaNU1SR085UHhNSGg4VExKWVR2NmlOWDJEMnNy?=
- =?utf-8?B?V09YR09YYjk4VTRuaXNkdFBYUXlqOExZd0dRTXZSWFVGNk5tNWdJbk13N3JW?=
- =?utf-8?B?UWZ6OUNIVnVkUGNlaXFSRlBjK1lBcklWV1N6UVY2bGhMbWFWc0pSMlRqRVRK?=
- =?utf-8?B?a3o4YkVmTjFWY1lDcGdFc2h4YzRuMkh0V20xc2pydUV3NFQ5WkhJeGlsSFFr?=
- =?utf-8?B?bjZUZjFZbkxZbzJJNDdWQUVCQ1M3ZW0xdjZjV2tlUW01OWdRcG51bTRNeHUv?=
- =?utf-8?B?NXpsNkZXWXRyVEdTdFRmeG8zT29zeE9kVHZpMk9vakVnQVFJR081enVsclhB?=
- =?utf-8?B?ZHZtb2szQXZtUnNjOFNqVkJYSjVUWlNVTEFKZWw4RVhHUHBIZ0lCM2tpYXBZ?=
- =?utf-8?B?TktIYldNS21sY3c3RFNOV2NhQ0I0Vk96VDRiMHF0TXZjZFl3a203ZXNzQVdj?=
- =?utf-8?B?bzR3d1BPMmZHTlRzOCt5bDRHUVFJdUt0dlRDM2xlZlhNeEdKNnJEU1NTV1po?=
- =?utf-8?B?ODJrYkhxbEpGRTBCclB1bVlNMElHQmJRTE5LT3hvOWpKVEs5aGRjSmNEU3V6?=
- =?utf-8?B?SjdBK2hKUXJLREVGa3hIbXBqS1JyQm5teVFkdW9TS3B4aHU0WnZucWlnd2sy?=
- =?utf-8?B?MHJYUGxEMDBjdTZ5ZzVDRkxBVm9MRDlaekQ2M1dkanFMenR0N2JwUVM1bjZK?=
- =?utf-8?B?b1VRdGM2Uy9aZ242NVlXbzYwNm1rVnFiRVlxSHE2R0IwL2pYaC9XK0JrMUZ1?=
- =?utf-8?B?SCtjNjk5SEM2TXFOYzVQUjNPZDcyUDAwUG1wb2tYSHlCb3k3OHkvNlhUVDcv?=
- =?utf-8?B?OURnRXFocVJLNzRTdnVlMGdIcDQ4ZW53MUhpcDM3QzBPRTNtVkVVZlo5OWdG?=
- =?utf-8?B?WjFMQW5UanRjYnpPLzBnT08vVWF5TU1WdVZsUlI1K0taS2tPT1V4Y1FEMUwx?=
- =?utf-8?B?MXJpcUVXVWNtOGVsUEtxQkkrMllXYWQ3aDhZenVFZTA1L29Ua0xaN3hyZndh?=
- =?utf-8?B?cjZ3RlkxUkNZTTJUOTJ5ditLS3BNODFOdEs0VlJ0R0orcjIvQmxya1EyNExC?=
- =?utf-8?B?RmN1bEJVSktwMWZyRThvZXR4d0I1ZytSbklHVU91aDRFYUhMVXEzVHRONGVK?=
- =?utf-8?B?SS8wUTZsZVdycTkvWGg3d01jeEwrM3BNUnlLM1NEeloyVnJjMkdQWEdkNGFs?=
- =?utf-8?B?SkRPdEhsT3FDdllocDlCckdScmVVL09hV3d0WXNvL0pmNHhPRGI2YUt4cm5n?=
- =?utf-8?B?ZDh4RTJEVlZLaUdLLzZhSHpEUUtFSmtnamsvbFFPMmUvUXdrcUlvTTNlSi9s?=
- =?utf-8?B?dk52RjN5WHNQNXowcHRwS3RuNDZjWVNvMUY2RzF3ZDBMRmNqc0RrTmdaT3h2?=
- =?utf-8?Q?x6Hw1+64Wgh5uiaeUyeJ7Y9Bc?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2f7ada5-d386-4cf4-d282-08db8f94ca4c
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S1BSR2RNRkxaWkNiMlozWkt5ZkZRTWhnNVlXb004alpuMFNOUlVYK2RjVmYx?=
+ =?utf-8?B?di84TnlMMkNwYXVaVkVCY1ptL3l3T0VjeWlQYkRCWmp3U3Y2M2l0WHZJZzg2?=
+ =?utf-8?B?d2FxckFTVWJ1QnVsOTdJYld3Y1VBVDBWTFg2L2tQd0loYmFod3lhdVJMMnFN?=
+ =?utf-8?B?Yk4wVk5nYkc1bGMzU282MG9XanRlMkQwZ3hPNjB2SGxmeWZpSFRUNEJjZnBy?=
+ =?utf-8?B?Q0xzdXNVNE85ZW5sd0JkUnVYamFaZnNGWVp3Ky83UENqR3ZoeDBISlRHQXp6?=
+ =?utf-8?B?RVdDSGlBL21HSnAyaXJHVW1Hc0htbDhrZXlmTG5YN1E5UlRqVkRjNXhFeExQ?=
+ =?utf-8?B?N0NJbGJMcnZwenZIc3V3eVV1WG1GYVA2TjhTNTJidjN6SFYrc1g0TU1qL2Q0?=
+ =?utf-8?B?N3pnRk9ZU0ZlL3VoMlBqZGtyd3VkRjNBaVZXQy9LK0xoYVhWZTB0dVVEVUhl?=
+ =?utf-8?B?dkkybHhqKzZ5aXdLd0ppdFhzMXlUTUMxa2JWY1Zsd2dJWUZOSDBsT2hTb1Zu?=
+ =?utf-8?B?VUlFWk93UEEzUjZGNjFXQVovM0N4N28wWmNRQmhzbk9JSnoyMWo0WFJCRENk?=
+ =?utf-8?B?SmlnbklkSGc5MThmaS9rL0loaHExb2JhenNHSndPQjJiVDAvL0pDM2s0S0FM?=
+ =?utf-8?B?N1BNQUoxazhTZEMzMWo0M2g0L3VYemluQlVxN0hTUDQ2OG8xVkJjcjgwS0Zl?=
+ =?utf-8?B?QzRQMUgveXBJOHNCeVNvODkreFUxNjFlcU9tZDMzT1drT2RGT3l0UEdCSWho?=
+ =?utf-8?B?cU5NSHlWWnZwRm5PMFJGSWg4cXlKamNLRUd4RVNBYkVUNnlIaVJoV0hHczZm?=
+ =?utf-8?B?RnRxS1FZZ2czTGQ5VmtRY0RxSXhZRXBmMVlWREw5SWIwU0kwMDhLWENaUnFY?=
+ =?utf-8?B?eW5aZkNwNzFLNjk4VEhhb05pVC9MTDNydjJ5c3gvQTNmRWRUOWtMVThzVGdF?=
+ =?utf-8?B?cVdiVEpiTVZsRHVCVy85NkM1ZmdNNW11SDNPWXlwNStqcXNnVklVVSt1V2Yv?=
+ =?utf-8?B?SUNyWStURlNRZzlzbVg2dTV3QlZuczl0d1Z6Q0pwVUZweVNhVFliVXNhMHF6?=
+ =?utf-8?B?UXJqQUd0eE9BbFNxbTRkZTNzekhMN1VNQXU3SytGNEdCdThHSnFQNUJVYTRF?=
+ =?utf-8?B?UUFtbmNMNmxBczF1MEt4Mm1SNFRuV0tsVVVBWEVLQmdhTFd1d3F3Ri9iNFdZ?=
+ =?utf-8?B?RDJqUUlVYlNrcTNKalo2L1pEZnY1S2ZiRFFRaldTdTVLVVA0Y1BwQkpkV0NV?=
+ =?utf-8?B?eXducmE1OXRDQzJ5VFhSYnN5dzZuZWhkS2djRncyK1NvQmQ0SGpUOFVsZjdF?=
+ =?utf-8?B?Yk4vbkNobUhaQm5QQld4ZFVCdk9va3JKcUhBMXVEYjZocFkrd3JqbEgvNllS?=
+ =?utf-8?B?TFRLenFuNm8rWUxwUXIzdFhjWjI4Z3FVTGN3SFNmVndKVUduQjk4d1Z6R2JE?=
+ =?utf-8?B?VTJDV0d5andNR2dCWWdhc2FLWTJZR2dYU2k3NHVVTGx1Wk5xZ294eFpRU2lK?=
+ =?utf-8?B?K1JuRk15TW0xVUpVTVFEQitZemVOWTMwN29aanZBL0tOT2x0TEJmUHFFTzNK?=
+ =?utf-8?B?RExCNXVGQ1ZXZWNxTy85dVRZeFYzeFlQQVJiYjRmVW5teDZrUi9HY3FVMXhP?=
+ =?utf-8?B?SjE2VEdXdVNubFIvR1dJQklQd1dTM1c1Ly9pbEU2K3RiQ2J1ZGVPck1HbmV0?=
+ =?utf-8?B?dWZhRi92Q2FYYXppeDAwZHZ6MHFPOHdTaFNTdkVmbHJsOUx0cTVGVDk5Z1VK?=
+ =?utf-8?B?RU5Rc1hqdWNBZEwvWXJjWER6V09Ka1NFeDlZUHNITloxMWc1ZDN5ckNHQUFs?=
+ =?utf-8?B?TjFBWHZRYkozcWxRczV1Z3lGRE03bWRWM1hCbXMzMzRMeVJ4NGNJcW1XSlFD?=
+ =?utf-8?B?T0xZM0J6elNxbHFuQUNiNHp4Z05sRm5GWmxxTGRHbStwNFVpdklEMDBNK1RM?=
+ =?utf-8?B?WXJ6MnRTRlp5ZTJHeERWeWxYT3VxZDVXaHdNS0RXUHIvSGpuNW5YbzhLdFh5?=
+ =?utf-8?B?VDQxdW5xTG91Mkx5czd5RDduUHJNdWVKZlhJKzNWMEVndjdVMm5qbEsvZ0Ny?=
+ =?utf-8?B?ZDc5cVVvblNCU0srMCtsUE1uTnhrODNiUDJ2cmk1enJ1RnhzVlZGek5PRDRB?=
+ =?utf-8?B?cWtLYXR1Kzg2ZHVHN2RIM3N4Q2dZK0JMeDVCdDVPR1lDVXRPaUJ5SkRqbDBv?=
+ =?utf-8?B?R3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46ab8b5d-99e5-4031-f96b-08db8f962e6a
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 18:02:21.6522
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 18:12:19.1706
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3N8+tGSa3URDwdNGWuLENdPpeGpfVlTNW0ouJOSoEuAsCHhN7mbR94EUJPPfTa2tleXN7Oc/3HOcEzDmDqXQWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6729
+X-MS-Exchange-CrossTenant-UserPrincipalName: u4B+GSUFQ09591Jm0UuQvQkiMQJeLpxkWOD/IpgyJqLVeh+/H8Nim9agVLz6ARk3eLMkWm6KITVglkBGzm8Ebg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7376
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
@@ -154,25 +160,190 @@ X-Mailing-List: linux-cxl@vger.kernel.org
 
 
 On 7/25/23 22:19, Davidlohr Bueso wrote:
-> ... as is the case with all members of struct cxl_memdev_state.
+> If the device does not support Sanitize or Secure Erase commands,
+> hide the respective sysfs interfaces such that the operation can
+> never be attempted.
+> 
+> In order to be generic, keep track of the enabled security commands
+> found in the CEL - the driver does not support Security Passthrough.
 > 
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+
+LGTM
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   drivers/cxl/cxlmem.h | 1 +
->   1 file changed, 1 insertion(+)
+>   Documentation/ABI/testing/sysfs-bus-cxl |  6 ++--
+>   drivers/cxl/core/mbox.c                 | 45 ++++++++++++++++++++++++-
+>   drivers/cxl/core/memdev.c               | 19 +++++++++++
+>   drivers/cxl/cxlmem.h                    | 15 +++++++++
+>   4 files changed, 82 insertions(+), 3 deletions(-)
 > 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index c4c4acb1f3b3..087f762ebfd5 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -86,7 +86,8 @@ Description:
+>   		HPA ranges. This permits avoiding explicit global CPU cache
+>   		management, relying instead for it to be done when a region
+>   		transitions between software programmed and hardware committed
+> -		states.
+> +		states. If this file is not present, then there is no hardware
+> +		support for the operation.
+>   
+>   
+>   What            /sys/bus/cxl/devices/memX/security/erase
+> @@ -101,7 +102,8 @@ Description:
+>   		HPA ranges. This permits avoiding explicit global CPU cache
+>   		management, relying instead for it to be done when a region
+>   		transitions between software programmed and hardware committed
+> -		states.
+> +		states. If this file is not present, then there is no hardware
+> +		support for the operation.
+>   
+>   
+>   What:		/sys/bus/cxl/devices/memX/firmware/
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index d6d067fbee97..ca60bb8114f2 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -121,6 +121,45 @@ static bool cxl_is_security_command(u16 opcode)
+>   	return false;
+>   }
+>   
+> +static void cxl_set_security_cmd_enabled(struct cxl_security_state *security,
+> +					 u16 opcode)
+> +{
+> +	switch (opcode) {
+> +	case CXL_MBOX_OP_SANITIZE:
+> +		set_bit(CXL_SEC_ENABLED_SANITIZE, security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_SECURE_ERASE:
+> +		set_bit(CXL_SEC_ENABLED_SECURE_ERASE,
+> +			security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_GET_SECURITY_STATE:
+> +		set_bit(CXL_SEC_ENABLED_GET_SECURITY_STATE,
+> +			security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_SET_PASSPHRASE:
+> +		set_bit(CXL_SEC_ENABLED_SET_PASSPHRASE,
+> +			security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_DISABLE_PASSPHRASE:
+> +		set_bit(CXL_SEC_ENABLED_DISABLE_PASSPHRASE,
+> +			security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_UNLOCK:
+> +		set_bit(CXL_SEC_ENABLED_UNLOCK, security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_FREEZE_SECURITY:
+> +		set_bit(CXL_SEC_ENABLED_FREEZE_SECURITY,
+> +			security->enabled_cmds);
+> +		break;
+> +	case CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE:
+> +		set_bit(CXL_SEC_ENABLED_PASSPHRASE_SECURE_ERASE,
+> +			security->enabled_cmds);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+>   static bool cxl_is_poison_command(u16 opcode)
+>   {
+>   #define CXL_MBOX_OP_POISON_CMDS 0x43
+> @@ -677,7 +716,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>   		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+>   		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+>   
+> -		if (!cmd && !cxl_is_poison_command(opcode)) {
+> +		if (!cmd && (!cxl_is_poison_command(opcode) ||
+> +			     !cxl_is_security_command(opcode))) {
+>   			dev_dbg(dev,
+>   				"Opcode 0x%04x unsupported by driver\n", opcode);
+>   			continue;
+> @@ -689,6 +729,9 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>   		if (cxl_is_poison_command(opcode))
+>   			cxl_set_poison_cmd_enabled(&mds->poison, opcode);
+>   
+> +		if (cxl_is_security_command(opcode))
+> +			cxl_set_security_cmd_enabled(&mds->security, opcode);
+> +
+>   		dev_dbg(dev, "Opcode 0x%04x enabled\n", opcode);
+>   	}
+>   }
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index f99e7ec3cc40..14b547c07f54 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -477,9 +477,28 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
+>   	.attrs = cxl_memdev_pmem_attributes,
+>   };
+>   
+> +static umode_t cxl_memdev_security_visible(struct kobject *kobj,
+> +					   struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+> +
+> +	if (a == &dev_attr_security_sanitize.attr &&
+> +	    !test_bit(CXL_SEC_ENABLED_SANITIZE, mds->security.enabled_cmds))
+> +		return 0;
+> +
+> +	if (a == &dev_attr_security_erase.attr &&
+> +	    !test_bit(CXL_SEC_ENABLED_SECURE_ERASE, mds->security.enabled_cmds))
+> +		return 0;
+> +
+> +	return a->mode;
+> +}
+> +
+>   static struct attribute_group cxl_memdev_security_attribute_group = {
+>   	.name = "security",
+>   	.attrs = cxl_memdev_security_attributes,
+> +	.is_visible = cxl_memdev_security_visible,
+>   };
+>   
+>   static const struct attribute_group *cxl_memdev_attribute_groups[] = {
 > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 79e99c873ca2..083c6e58bc49 100644
+> index 083c6e58bc49..f86afef90c91 100644
 > --- a/drivers/cxl/cxlmem.h
 > +++ b/drivers/cxl/cxlmem.h
-> @@ -434,6 +434,7 @@ struct cxl_dev_state {
->    * @next_persistent_bytes: persistent capacity change pending device reset
->    * @event: event log driver state
->    * @poison: poison driver state info
-> + * @security: security driver state info
->    * @fw: firmware upload / activation state
->    * @mbox_send: @dev specific transport for transmitting mailbox commands
+> @@ -244,6 +244,19 @@ enum poison_cmd_enabled_bits {
+>   	CXL_POISON_ENABLED_MAX
+>   };
+>   
+> +/* Device enabled security commands */
+> +enum security_cmd_enabled_bits {
+> +	CXL_SEC_ENABLED_SANITIZE,
+> +	CXL_SEC_ENABLED_SECURE_ERASE,
+> +	CXL_SEC_ENABLED_GET_SECURITY_STATE,
+> +	CXL_SEC_ENABLED_SET_PASSPHRASE,
+> +	CXL_SEC_ENABLED_DISABLE_PASSPHRASE,
+> +	CXL_SEC_ENABLED_UNLOCK,
+> +	CXL_SEC_ENABLED_FREEZE_SECURITY,
+> +	CXL_SEC_ENABLED_PASSPHRASE_SECURE_ERASE,
+> +	CXL_SEC_ENABLED_MAX
+> +};
+> +
+>   /**
+>    * struct cxl_poison_state - Driver poison state info
 >    *
+> @@ -346,6 +359,7 @@ struct cxl_fw_state {
+>    * struct cxl_security_state - Device security state
+>    *
+>    * @state: state of last security operation
+> + * @enabled_cmds: All security commands enabled in the CEL
+>    * @poll: polling for sanitization is enabled, device has no mbox irq support
+>    * @poll_tmo_secs: polling timeout
+>    * @poll_dwork: polling work item
+> @@ -353,6 +367,7 @@ struct cxl_fw_state {
+>    */
+>   struct cxl_security_state {
+>   	unsigned long state;
+> +	DECLARE_BITMAP(enabled_cmds, CXL_SEC_ENABLED_MAX);
+>   	bool poll;
+>   	int poll_tmo_secs;
+>   	struct delayed_work poll_dwork;
