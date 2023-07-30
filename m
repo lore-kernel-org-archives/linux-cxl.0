@@ -2,204 +2,98 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A58C001DC
-	for <linux-cxl@archiver.kernel.org>; Sat, 29 Jul 2023 10:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400CC0015E
+	for <linux-cxl@archiver.kernel.org>; Sun, 30 Jul 2023 02:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230471AbjG2Ky5 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 29 Jul 2023 06:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
+        id S229483AbjG3CRu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 29 Jul 2023 22:17:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229895AbjG2Ky4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 29 Jul 2023 06:54:56 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAFE33AB7
-        for <linux-cxl@vger.kernel.org>; Sat, 29 Jul 2023 03:54:51 -0700 (PDT)
+        with ESMTP id S229448AbjG3CRt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 29 Jul 2023 22:17:49 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885B826BF;
+        Sat, 29 Jul 2023 19:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690628091; x=1722164091;
-  h=date:from:to:cc:subject:message-id;
-  bh=dVlTMnoJGJx1mwTwOIHqJXiqQk4heCfGGijlr7hpdx0=;
-  b=Kf9V+NqD9ASKN41v2jIjxN2mAe44nL3w757ehSM6XC3Elm8HZ3polEOt
-   F5tzZvhgrypL5zQk3QMOnxwGudfZyTRy+GrHdkOyAlQg5pnx/DYDqQ1/d
-   wOVxe1Adet7seZVUOsJe4GiY+4SQmnAIFDgzINpahE4PMqjfgECVPgaBb
-   0c+GY54crGxF/7yqc6hBIUFnZD7QmWhfEaqfJvVRjfQNztpYal2HSj8eK
-   J7qAcEX71uVDeJSOYBCLjD/I/9kGi8zXhtIBH41jk0YTRed3nT0Axcsht
-   WVr3vfb0c8L1m4kT8+hHWtTmhyPkAglZOcfmqXKeZYcQDxnQPXDtZ5oQM
+  t=1690683468; x=1722219468;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4wDGaGKo6PLfCUabc1B5tsUUYI3cEeGdCdYqo2+gK4U=;
+  b=cIn2TF5Ylu98/Dd1/v7GvIrh3kCuEum/ZzFLnY87uM+n/VkYXmzDZ4sx
+   1WTXtEpDHCZXxN3f9+lnUpkWOogdYqPZCCbCmyw8OyKKu70ryjzNb/vXF
+   rTDAeiQKfGCO2H0zIYIQGy8vWF8inm9zlHdEwA4GRNHge3YD/tJP6N19h
+   D4mcW+eW12NR6UdOTJybR25sBPCKSmbX8euy9GHsU8CZyia0WjEKlHzrR
+   vKk2NuYmdwIq0buvbUIvoDpJYGwldhaLhrLShKT4/BwwtLVBpKfXyKtPx
+   +CQcOlSvEyr2ORnYMKnqsEdhZOeTbVN9nQ5sELo460cQyDhscxR6AqfJd
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10785"; a="367637702"
+X-IronPort-AV: E=McAfee;i="6600,9927,10786"; a="371506912"
 X-IronPort-AV: E=Sophos;i="6.01,240,1684825200"; 
-   d="scan'208";a="367637702"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2023 03:54:51 -0700
+   d="scan'208";a="371506912"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2023 19:17:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10785"; a="851509354"
-X-IronPort-AV: E=Sophos;i="6.01,240,1684825200"; 
-   d="scan'208";a="851509354"
-Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 29 Jul 2023 03:54:48 -0700
-Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qPhay-0003zJ-2p;
-        Sat, 29 Jul 2023 10:54:48 +0000
-Date:   Sat, 29 Jul 2023 18:54:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Vishal Verma <vishal.l.verma@intel.com>
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: [cxl:fixes] BUILD SUCCESS
- 11dcd3b6a3aac1cace09f35407a47a311fdb0259
-Message-ID: <202307291826.HQlQULyQ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
+   d="scan'208";a="871227345"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.203.2])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2023 19:17:43 -0700
+Date:   Sat, 29 Jul 2023 19:17:40 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Raghu Halharvi <raghuhack78@gmail.com>
+Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com,
+        bwidawsk@kernel.org, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v7 1/2] cxl/mbox: Remove redundant dev_err() after failed
+ mem alloc
+Message-ID: <ZMXIRBPwrocRBD74@aschofie-mobl2>
+References: <20230726073421.2452-1-raghuhack78@gmail.com>
+ <20230726073421.2452-2-raghuhack78@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230726073421.2452-2-raghuhack78@gmail.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
-branch HEAD: 11dcd3b6a3aac1cace09f35407a47a311fdb0259  cxl/region: Remove else after return statement
+On Wed, Jul 26, 2023 at 07:34:20AM +0000, Raghu Halharvi wrote:
+> Issue found with checkpatch
+> 
+> A return of errno should be good enough if the memory allocation fails,
+> the error message here is redundant as per the coding style, removing
+> it.
+> 
+> Signed-off-by: Raghu Halharvi <raghuhack78@gmail.com>
+> Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-elapsed time: 823m
+Thanks for follow-up Raghu!
 
-configs tested: 130
-configs skipped: 3
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r022-20230727   gcc  
-alpha                randconfig-r023-20230727   gcc  
-alpha                randconfig-r036-20230728   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
-arc                  randconfig-r043-20230728   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                      footbridge_defconfig   gcc  
-arm                        neponset_defconfig   clang
-arm                         nhk8815_defconfig   gcc  
-arm                          pxa910_defconfig   gcc  
-arm                  randconfig-r046-20230728   gcc  
-arm                           sama5_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r024-20230727   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r006-20230728   gcc  
-csky                 randconfig-r035-20230728   gcc  
-hexagon                             defconfig   clang
-hexagon              randconfig-r041-20230728   clang
-hexagon              randconfig-r045-20230728   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230728   gcc  
-i386         buildonly-randconfig-r005-20230728   gcc  
-i386         buildonly-randconfig-r006-20230728   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230728   gcc  
-i386                 randconfig-i002-20230728   gcc  
-i386                 randconfig-i003-20230728   gcc  
-i386                 randconfig-i004-20230728   gcc  
-i386                 randconfig-i005-20230728   gcc  
-i386                 randconfig-i006-20230728   gcc  
-i386                 randconfig-i011-20230728   clang
-i386                 randconfig-i012-20230728   clang
-i386                 randconfig-i013-20230728   clang
-i386                 randconfig-i014-20230728   clang
-i386                 randconfig-i015-20230728   clang
-i386                 randconfig-i016-20230728   clang
-i386                 randconfig-r001-20230728   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r004-20230728   gcc  
-m68k                 randconfig-r021-20230727   gcc  
-m68k                 randconfig-r031-20230728   gcc  
-microblaze           randconfig-r002-20230728   gcc  
-microblaze           randconfig-r016-20230728   gcc  
-microblaze           randconfig-r025-20230727   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      bmips_stb_defconfig   clang
-mips                         cobalt_defconfig   gcc  
-mips                     decstation_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r013-20230728   gcc  
-openrisc                         alldefconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc               randconfig-r026-20230727   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      chrp32_defconfig   gcc  
-powerpc                       ebony_defconfig   clang
-powerpc                 mpc836x_rdk_defconfig   clang
-powerpc                     powernv_defconfig   clang
-powerpc                     ppa8548_defconfig   clang
-powerpc              randconfig-r011-20230728   clang
-powerpc              randconfig-r014-20230728   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230728   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r032-20230728   gcc  
-s390                 randconfig-r044-20230728   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r003-20230728   gcc  
-sh                   randconfig-r005-20230728   gcc  
-sh                   randconfig-r015-20230728   gcc  
-sh                   randconfig-r034-20230728   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                      rts7751r2d1_defconfig   gcc  
-sh                           se7721_defconfig   gcc  
-sh                        sh7757lcr_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230728   gcc  
-x86_64       buildonly-randconfig-r002-20230728   gcc  
-x86_64       buildonly-randconfig-r003-20230728   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r033-20230728   gcc  
-x86_64               randconfig-x001-20230728   clang
-x86_64               randconfig-x002-20230728   clang
-x86_64               randconfig-x003-20230728   clang
-x86_64               randconfig-x004-20230728   clang
-x86_64               randconfig-x005-20230728   clang
-x86_64               randconfig-x006-20230728   clang
-x86_64               randconfig-x011-20230728   gcc  
-x86_64               randconfig-x012-20230728   gcc  
-x86_64               randconfig-x013-20230728   gcc  
-x86_64               randconfig-x014-20230728   gcc  
-x86_64               randconfig-x015-20230728   gcc  
-x86_64               randconfig-x016-20230728   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r012-20230728   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/cxl/core/mbox.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index d6d067fbee97..af7f37cea871 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1325,10 +1325,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>  	struct cxl_memdev_state *mds;
+>  
+>  	mds = devm_kzalloc(dev, sizeof(*mds), GFP_KERNEL);
+> -	if (!mds) {
+> -		dev_err(dev, "No memory available\n");
+> +	if (!mds)
+>  		return ERR_PTR(-ENOMEM);
+> -	}
+>  
+>  	mutex_init(&mds->mbox_mutex);
+>  	mutex_init(&mds->event.log_lock);
+> -- 
+> 2.39.2
+> 
