@@ -2,320 +2,197 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7241EB64DD
-	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jul 2023 03:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B05C001DC
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jul 2023 05:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjGaDUM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 30 Jul 2023 23:20:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50454 "EHLO
+        id S229454AbjGaFEQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 31 Jul 2023 01:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjGaDUL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 30 Jul 2023 23:20:11 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 363A8183
-        for <linux-cxl@vger.kernel.org>; Sun, 30 Jul 2023 20:20:08 -0700 (PDT)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230731032005epoutp03ed643ab66733321a4584fc27daa4b11c~21aLYXO-E2896228962epoutp03D
-        for <linux-cxl@vger.kernel.org>; Mon, 31 Jul 2023 03:20:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230731032005epoutp03ed643ab66733321a4584fc27daa4b11c~21aLYXO-E2896228962epoutp03D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1690773605;
-        bh=8bptU998lu3yxBAXjsg08onw4RTsSHqxvnTbQybWofc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FG5I/doJfdlKrA4M7KCeo39f88jB/bEYEoX3aQ1Ghpt/FJAPhjYZ6iFjykRj/i074
-         r5KT2UUcXwze+d16KsLaFjr5IssnD2OSOjR+b2EAFXe4UJciy6kn5tyGAtrg7iQfgc
-         S224rMv7FvkTOraysT77kSW+yMoJW7NER0xtVFR0=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230731032004epcas2p2010cef021552af34648bdab99e0ce077~21aK0qqDq3202032020epcas2p2p;
-        Mon, 31 Jul 2023 03:20:04 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.89]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4RDk502nzHz4x9Q3; Mon, 31 Jul
-        2023 03:20:04 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C3.67.40133.46827C46; Mon, 31 Jul 2023 12:20:04 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20230731032003epcas2p220996143d692a12ec21c4a18f5e310a4~21aJyI29q2952629526epcas2p2M;
-        Mon, 31 Jul 2023 03:20:03 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230731032003epsmtrp29e921f78c80eace1a72d7102d3ef21f4~21aJxO9Ch2823628236epsmtrp2I;
-        Mon, 31 Jul 2023 03:20:03 +0000 (GMT)
-X-AuditID: b6c32a46-d17dea8000009cc5-c9-64c728648245
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        41.07.14748.36827C46; Mon, 31 Jul 2023 12:20:03 +0900 (KST)
-Received: from jehoon-Precision-7920-Tower (unknown [10.229.83.133]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230731032003epsmtip17fa56728a4672072871ded27ac2af54e~21aJl_IH73250232502epsmtip1i;
-        Mon, 31 Jul 2023 03:20:03 +0000 (GMT)
-Date:   Mon, 31 Jul 2023 12:23:05 +0900
-From:   Jehoon Park <jehoon.park@samsung.com>
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Schofield, Alison" <alison.schofield@intel.com>,
-        "im, junhyeok" <junhyeok.im@samsung.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "bwidawsk@kernel.org" <bwidawsk@kernel.org>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "ks0204.kim@samsung.com" <ks0204.kim@samsung.com>
-Subject: Re: [ndctl PATCH 2/2] cxl: add 'set-alert-config' command to cxl
- tool
-Message-ID: <20230731032305.GB17128@jehoon-Precision-7920-Tower>
-MIME-Version: 1.0
-In-Reply-To: <6aae3a0c078eaed0324831111d0d95c0b2e42b14.camel@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMJsWRmVeSWpSXmKPExsWy7bCmqW6KxvEUgxcLBC3uPr7AZtE8eTGj
-        xfSpFxgtTtxsZLPY//Q5i8XiozOYLY7u4bA4P+sUi8XKH39YLW5NOMbkwOWxeM9LJo9NqzrZ
-        PF5snsno0bdlFaPH501yAaxR2TYZqYkpqUUKqXnJ+SmZeem2St7B8c7xpmYGhrqGlhbmSgp5
-        ibmptkouPgG6bpk5QEcpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yVUgtScgrMC/SKE3OL
-        S/PS9fJSS6wMDQyMTIEKE7Iz7h3pZCo45FNxY/p+pgbGT45djJwcEgImEs8vPWLuYuTiEBLY
-        wSix6uZpRgjnE6PElKcf2SGcb4wSr3qvMcG03Lxxgw0isZdRYsOjTijnJ6PEl+dbWECqWARU
-        Jc7tXM4IYrMJaEvc376BDcQWETCQ2D5rLdgOZoE1zBL7rpwEKxIWCJD4cOwP2ApeAQeJ1Qee
-        s0DYghInZz4BszkF3CVOP1sANkhUQFniwLbjTCCDJAQWckjsOLaTHeI+F4kHK9+wQtjCEq+O
-        b4GKS0l8freXDcLOl/h58hZUTYHEpy8fWCBsY4l3N5+DxZkFMiRmdn8CinMAxZUljtxigQjz
-        SXQc/ssOEeaV6GgTguhUleg6/oERwpaWOHzlKDOE7SHR3jiNCRJA/xglbt7ewzqBUX4Wktdm
-        IdkGYetJ3Jg6hQ3Clpdo3jqbeRbQOmagucv/cUCYmhLrd+kvYGRbxSiWWlCcm55abFRgBI/6
-        5PzcTYzg1KvltoNxytsPeocYmTgYDzFKcDArifCeCjiUIsSbklhZlVqUH19UmpNafIjRFBhp
-        E5mlRJPzgck/ryTe0MTSwMTMzNDcyNTAXEmc917r3BQhgfTEktTs1NSC1CKYPiYOTqkGpt67
-        /w4/O2x9LWf/18TfkxXufMgRm1jxOfqpTcfDMnNmozVGSVqnfIzDl8w8tmGjQqT4tCv39odq
-        zPsQxd/kPatCd5f8d8OLmRffmwf9+XzowUa/gJQDiuLCtTahikcr/yudWL/x9JfNR7pjxRM3
-        r9/FP3Umu3xN+sRTIUfuPGo/5b8yhc3z8ZLORwz3lv9Wf5067/Hy/3fE/m5m/VXGkiD6Qkvu
-        5aYutz3p8/W2zc/+c/73hkqdpwcDljzf6az/Vv2A/cV0PX9NLt8nvMFfP0W8vnlzkaPqCV+v
-        k5uyD1/xjChZ69Yc+Oi2ieyUCzVPI9UdFqRZFfl3SMWUmmhr7Ch66l/4dRfr0Wf5u3p/vZ6r
-        xFKckWioxVxUnAgAFKQRS0YEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpikeLIzCtJLcpLzFFi42LZdlhJTjdZ43iKwc0l2hZ3H19gs2ievJjR
-        YvrUC4wWJ242slnsf/qcxWLx0RnMFkf3cFicn3WKxWLljz+sFrcmHGNy4PJYvOclk8emVZ1s
-        Hi82z2T06NuyitHj8ya5ANYoLpuU1JzMstQifbsEroz+lUtYC+57VkxdKtbAuNq+i5GTQ0LA
-        ROLmjRtsILaQwG5GibVXhSDi0hL3mq+wQ9jCEvdbjrBC1HxnlNh+2RLEZhFQlTi3czkjiM0m
-        oC1xf/sGsDkiAgYS22etBYpzcTALbGKW2HV0BRNIQljAT+LEoztgNq+Ag8TqA89ZQIqEBP4x
-        Sqx4fgYqIShxcuYTFhCbWUBHYufWO0BTOYBsaYnl/zggwvISzVtnM4PYnALuEqefLQBbLCqg
-        LHFg23GmCYxCs5BMmoVk0iyESbOQTFrAyLKKUTK1oDg3PTfZsMAwL7Vcrzgxt7g0L10vOT93
-        EyM4mrQ0djDem/9P7xAjEwfjIUYJDmYlEd5TAYdShHhTEiurUovy44tKc1KLDzFKc7AoifMa
-        zpidIiSQnliSmp2aWpBaBJNl4uCUamC6cj3u0gNZY7P205WmS3NeSWcWB0tuCMlflmKsv9ff
-        PTVLzXGiw+qErScNZ5k8F3ONeGC8M1zhh3Px43MVug+7REOP7vvB4aksXHAkV8e4lf+x74/f
-        cmFO+eGBwufFXBUl922ay3LHm/f3Dl+p44lSIo5PKpdJpAgfWzuHceHCReuV93MvWHn5Ss6a
-        ukNy5VrvXipf+Drn88+XDw8msATxfS/dsfqa7P762fF7YjfwP94u+Y43yOmrzh9Z67aDm/UY
-        vjksDbw/c2smQ+/uJvYJt/2C5XWKMyIrNadvfsx6s18g7uUcjfVzesV8Ixnkrx/4kb+n6nLE
-        +XCfg16L+T7/fMxyUptxX9ZR5kKNx0xKLMUZiYZazEXFiQDhu+IUFQMAAA==
-X-CMS-MailID: 20230731032003epcas2p220996143d692a12ec21c4a18f5e310a4
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e26e_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230711070820epcas2p4ec4884b434c9cb748d5ebda4dd385955
-References: <20230711071019.7151-1-jehoon.park@samsung.com>
-        <CGME20230711070820epcas2p4ec4884b434c9cb748d5ebda4dd385955@epcas2p4.samsung.com>
-        <20230711071019.7151-3-jehoon.park@samsung.com>
-        <6aae3a0c078eaed0324831111d0d95c0b2e42b14.camel@intel.com>
+        with ESMTP id S229379AbjGaFEP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Jul 2023 01:04:15 -0400
+Received: from mgamail.intel.com (unknown [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E8741BF
+        for <linux-cxl@vger.kernel.org>; Sun, 30 Jul 2023 22:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690779854; x=1722315854;
+  h=date:from:to:cc:subject:message-id;
+  bh=BXnFWXXKeItgMihbwPhsoBGvYUJCD8XV4Yt408gjiXg=;
+  b=kqj2L5WE6NqqBZ0OoZrfxffFtOKSjm3CI4QrqXZUTwdK2G2fV5NyPjlO
+   CmpiSSHAsZLF4pBu+gB1M8PSaxXtAGiJ5HHBk9YyWBvXVSk++Rs3Y6jql
+   6hprCrhHjYswNmI64JuOLBXwZavNm2UUILHLfTkVmzDlWGFn2xPb6xuWu
+   j2Jfe1Mqmvq7mDDmKTPoG8QhaFLGz6/HVhb9tUMqyHS550QsHo3depnie
+   F46fLz7KTgOjxPfOGH5zIaHO8v4AobPbzSL5F5rlgGjtlpHlsnrWd1Val
+   viqexh6tJtcqG5hdWCZzkU+hdJx59Kn4XA5SXj7vAuAKoPAXOzU4vNyzu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="399868501"
+X-IronPort-AV: E=Sophos;i="6.01,243,1684825200"; 
+   d="scan'208";a="399868501"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2023 22:04:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10787"; a="757809447"
+X-IronPort-AV: E=Sophos;i="6.01,243,1684825200"; 
+   d="scan'208";a="757809447"
+Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 30 Jul 2023 22:04:07 -0700
+Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qQL4Q-0004wN-0T;
+        Mon, 31 Jul 2023 05:03:53 +0000
+Date:   Mon, 31 Jul 2023 13:03:43 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Vishal Verma <vishal.l.verma@intel.com>
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: [cxl:fixes] BUILD SUCCESS
+ c4b53e8ad3a7452392f3ecd882f06f3416a021e0
+Message-ID: <202307311334.HJr6uuow-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-------0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e26e_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git fixes
+branch HEAD: c4b53e8ad3a7452392f3ecd882f06f3416a021e0  cxl/region: Remove else after return statement
 
-On Mon, Jul 24, 2023 at 10:07:47PM +0000, Verma, Vishal L wrote:
-> Hi Jehoon,
-> 
-> Thanks for adding this. A few minor comments below, otherwise these
-> look good.
-> 
+elapsed time: 720m
 
-Hi, Vishal.
+configs tested: 123
+configs skipped: 6
 
-Thank you for comments. I agree with all of them, especially the use of strcmp.
-I missed the awkward case you mentioned.
-I'll send v2 patch soon with applying those comments.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Jehoon
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r011-20230731   gcc  
+arc                  randconfig-r014-20230731   gcc  
+arc                  randconfig-r043-20230730   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   milbeaut_m10v_defconfig   clang
+arm                  randconfig-r046-20230730   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r001-20230730   clang
+arm64                randconfig-r016-20230731   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r034-20230730   gcc  
+hexagon              randconfig-r035-20230730   clang
+hexagon              randconfig-r041-20230730   clang
+hexagon              randconfig-r045-20230730   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230731   gcc  
+i386         buildonly-randconfig-r005-20230731   gcc  
+i386         buildonly-randconfig-r006-20230731   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230731   gcc  
+i386                 randconfig-i002-20230731   gcc  
+i386                 randconfig-i003-20230731   gcc  
+i386                 randconfig-i004-20230731   gcc  
+i386                 randconfig-i005-20230731   gcc  
+i386                 randconfig-i006-20230731   gcc  
+i386                 randconfig-i011-20230731   clang
+i386                 randconfig-i012-20230731   clang
+i386                 randconfig-i013-20230731   clang
+i386                 randconfig-i014-20230731   clang
+i386                 randconfig-i015-20230731   clang
+i386                 randconfig-i016-20230731   clang
+i386                 randconfig-r002-20230730   clang
+i386                 randconfig-r024-20230731   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                            q40_defconfig   gcc  
+m68k                 randconfig-r015-20230731   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       bmips_be_defconfig   gcc  
+mips                     cu1000-neo_defconfig   clang
+mips                 randconfig-r022-20230731   gcc  
+mips                 randconfig-r032-20230730   gcc  
+nios2                               defconfig   gcc  
+openrisc             randconfig-r036-20230730   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-64bit_defconfig   gcc  
+parisc               randconfig-r003-20230730   gcc  
+parisc               randconfig-r026-20230731   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                        icon_defconfig   clang
+powerpc                 linkstation_defconfig   gcc  
+powerpc                 mpc8315_rdb_defconfig   clang
+powerpc               mpc834x_itxgp_defconfig   clang
+powerpc                     tqm8555_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                randconfig-r006-20230730   clang
+riscv                randconfig-r025-20230731   clang
+riscv                randconfig-r042-20230730   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r021-20230731   clang
+s390                 randconfig-r044-20230730   gcc  
+sh                               allmodconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r023-20230731   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r033-20230730   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230731   gcc  
+x86_64       buildonly-randconfig-r002-20230731   gcc  
+x86_64       buildonly-randconfig-r003-20230731   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230731   clang
+x86_64               randconfig-x002-20230731   clang
+x86_64               randconfig-x003-20230731   clang
+x86_64               randconfig-x004-20230731   clang
+x86_64               randconfig-x005-20230731   clang
+x86_64               randconfig-x006-20230731   clang
+x86_64               randconfig-x011-20230731   gcc  
+x86_64               randconfig-x012-20230731   gcc  
+x86_64               randconfig-x013-20230731   gcc  
+x86_64               randconfig-x014-20230731   gcc  
+x86_64               randconfig-x015-20230731   gcc  
+x86_64               randconfig-x016-20230731   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                  nommu_kc705_defconfig   gcc  
+xtensa               randconfig-r012-20230731   gcc  
+xtensa               randconfig-r013-20230731   gcc  
 
-> On Tue, 2023-07-11 at 16:10 +0900, Jehoon Park wrote:
-> > Add a new command: 'set-alert-config', which configures device's warning alert
-> > 
-> >  usage: cxl set-alert-config <mem0> [<mem1>..<memN>] [<options>]
-> > 
-> >     -v, --verbose         turn on debug
-> >     -S, --serial          use serial numbers to id memdevs
-> >     -L, --life-used-threshold <threshold>
-> >                           threshold value for life used warning alert
-> >         --life-used-alert <'on' or 'off'>
-> >                           enable or disable life used warning alert
-> >     -O, --over-temperature-threshold <threshold>
-> >                           threshold value for device over temperature warning alert
-> >         --over-temperature-alert <'on' or 'off'>
-> >                           enable or disable device over temperature warning alert
-> >     -U, --under-temperature-threshold <threshold>
-> >                           threshold value for device under temperature warning alert
-> >         --under-temperature-alert <'on' or 'off'>
-> >                           enable or disable device under temperature warning alert
-> >     -V, --volatile-mem-err-threshold <threshold>
-> >                           threshold value for corrected volatile mem error warning alert
-> >         --volatile-mem-err-alert <'on' or 'off'>
-> >                           enable or disable corrected volatile mem error warning alert
-> >     -P, --pmem-err-threshold <threshold>
-> >                           threshold value for corrected pmem error warning alert
-> >         --pmem-err-alert <'on' or 'off'>
-> >                           enable or disable corrected pmem error warning alert
-> 
-> No need to include the full usage text in the commit message - this is
-> available in the man page. Just mention and describe what functionality
-> is being added.
-> 
-> > 
-> > Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
-> > ---
-> >  Documentation/cxl/cxl-set-alert-config.txt |  96 +++++++++
-> >  Documentation/cxl/meson.build              |   1 +
-> >  cxl/builtin.h                              |   1 +
-> >  cxl/cxl.c                                  |   1 +
-> >  cxl/memdev.c                               | 219 ++++++++++++++++++++-
-> >  5 files changed, 317 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/cxl/cxl-set-alert-config.txt
-> > 
-> > diff --git a/Documentation/cxl/cxl-set-alert-config.txt b/Documentation/cxl/cxl-set-alert-config.txt
-> > new file mode 100644
-> > index 0000000..a291c09
-> > --- /dev/null
-> > +++ b/Documentation/cxl/cxl-set-alert-config.txt
-> > @@ -0,0 +1,96 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +cxl-set-alert-config(1)
-> > +=======================
-> > +
-> > +NAME
-> > +----
-> > +cxl-set-alert-config - set the warning alert threshold on a CXL memdev
-> > +
-> > +SYNOPSIS
-> > +--------
-> > +[verse]
-> > +'cxl set-alert-config <mem0> [<mem1>..<memN>] [<options>]'
-> > +
-> > +DESCRIPTION
-> > +-----------
-> > +CXL device raises an alert when its health status is changed. Critical alert
-> > +shall automatically be configured by the device after a device reset.
-> > +If supported, programmable warning thresholds also be initialized to vendor
-> > +recommended defaults, then could be configured by the host.
-> 
-> s/host/user/ ?
-> 
-> > 
-> <snip>
-> >  
-> > +static int validate_alert_threshold(enum cxl_setalert_event event,
-> > +                                   int threshold)
-> > +{
-> > +       if (event == CXL_SETALERT_LIFE_USED) {
-> > +               if (threshold < 0 || threshold > 100) {
-> > +                       log_err(&ml, "Invalid life used threshold: %d\n",
-> > +                               threshold);
-> > +                       return -EINVAL;
-> > +               }
-> > +       } else if (event == CXL_SETALERT_OVER_TEMP ||
-> > +                  event == CXL_SETALERT_UNDER_TEMP) {
-> > +               if (threshold < SHRT_MIN || threshold > SHRT_MAX) {
-> > +                       log_err(&ml,
-> > +                               "Invalid device temperature threshold: %d\n",
-> > +                               threshold);
-> > +                       return -EINVAL;
-> > +               }
-> > +       } else {
-> > +               if (threshold < 0 || threshold > USHRT_MAX) {
-> > +                       log_err(&ml,
-> > +                               "Invalid corrected mem error threshold: %d\n",
-> > +                               threshold);
-> > +                       return -EINVAL;
-> > +               }
-> > +       }
-> > +       return 0;
-> > +}
-> > +
-> > +#define alert_param_set_threshold(arg, alert_event)                           \
-> > +{                                                                             \
-> > +       if (!param.arg##_alert) {                                             \
-> > +               if (param.arg##_threshold) {                                  \
-> > +                       log_err(&ml, "Action not specified\n");               \
-> > +                       return -EINVAL;                                       \
-> > +               }                                                             \
-> > +       } else if (strncmp(param.arg##_alert, "on", 2) == 0) {                \
-> 
-> I see that ndctl-inject-smart also does strncmp, but I'm wondering if
-> we should be a little more strict and use strcmp instead.
-> 
-> The option parser won't give us strings that are not nul-terminated, so
-> it should be safe, and it will avoid something awkward like
-> "--some-alert=onward".
-> 
-> Ideally we probably want a helper similar to the kernel's kstrtobool(),
-> which would handle all of {on,true,1,t} and different capitalization as
-> well, but that can be a follow on patch.
-> 
-> > +               if (param.arg##_threshold) {                                  \
-> > +                       char *endptr;                                         \
-> > +                       alertctx.arg##_threshold =                            \
-> > +                               strtol(param.arg##_threshold, &endptr, 10);   \
-> > +                       if (endptr[0] != '\0') {                              \
-> > +                               log_err(&ml, "Invalid threshold: %s\n",       \
-> > +                                       param.arg##_threshold);               \
-> > +                               return -EINVAL;                               \
-> > +                       }                                                     \
-> > +                       rc = validate_alert_threshold(                        \
-> > +                               alert_event, alertctx.arg##_threshold);       \
-> > +                       if (rc != 0)                                          \
-> > +                               return rc;                                    \
-> > +                       alertctx.valid_alert_actions |= 1 << alert_event;     \
-> > +                       alertctx.enable_alert_actions |= 1 << alert_event;    \
-> > +               } else {                                                      \
-> > +                       log_err(&ml, "Threshold not specified\n");            \
-> > +                       return -EINVAL;                                       \
-> > +               }                                                             \
-> > +       } else if (strncmp(param.arg##_alert, "off", 3) == 0) {               \
-> > +               if (!param.arg##_threshold) {                                 \
-> > +                       alertctx.valid_alert_actions |= 1 << alert_event;     \
-> > +                       alertctx.enable_alert_actions &= ~(1 << alert_event); \
-> > +               } else {                                                      \
-> > +                       log_err(&ml, "Disable not require threshold\n");      \
-> > +                       return -EINVAL;                                       \
-> > +               }                                                             \
-> > +       } else {                                                              \
-> > +               log_err(&ml, "Invalid action: %s\n", param.arg##_alert);      \
-> > +               return -EINVAL;                                               \
-> > +       }                                                                     \
-> > +}
-> > +
-> > 
-> 
-> <snip>
-> 
-> > +int cmd_set_alert_config(int argc, const char **argv, struct cxl_ctx *ctx)
-> > +{
-> > +       int count = memdev_action(
-> > +               argc, argv, ctx, action_set_alert_config, set_alert_options,
-> > +               "cxl set-alert-config <mem0> [<mem1>..<memN>] [<options>]");
-> > +       log_info(&ml, "set alert configuration %d mem%s\n",
-> 
-> Maybe "set alert configuration for %d ..."
-> 
-> > +                count >= 0 ? count : 0, count > 1 ? "s" : "");
-> > +
-> > +       return count >= 0 ? 0 : EXIT_FAILURE;
-> > +}
-> 
-
-------0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e26e_
-Content-Type: text/plain; charset="utf-8"
-
-
-------0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e26e_--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
