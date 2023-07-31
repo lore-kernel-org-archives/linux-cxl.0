@@ -2,114 +2,266 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394E5C001DF
-	for <linux-cxl@archiver.kernel.org>; Sun, 30 Jul 2023 20:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D0DEB64DD
+	for <linux-cxl@archiver.kernel.org>; Mon, 31 Jul 2023 03:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjG3URJ convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Sun, 30 Jul 2023 16:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
+        id S229554AbjGaDOY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sun, 30 Jul 2023 23:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjG3URI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sun, 30 Jul 2023 16:17:08 -0400
-X-Greylist: delayed 453 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 30 Jul 2023 13:17:07 PDT
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3285B184
-        for <linux-cxl@vger.kernel.org>; Sun, 30 Jul 2023 13:17:06 -0700 (PDT)
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay08.hostedemail.com (Postfix) with ESMTP id A6F0514092B;
-        Sun, 30 Jul 2023 20:09:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf06.hostedemail.com (Postfix) with ESMTPA id E055420010;
-        Sun, 30 Jul 2023 20:09:27 +0000 (UTC)
-Message-ID: <15913bee637e2cff63626dc64c0577abc1ad9c6c.camel@perches.com>
-Subject: Re: [PATCH v7 2/2] cxl/region: Remove else after return statement
-From:   Joe Perches <joe@perches.com>
-To:     Alison Schofield <alison.schofield@intel.com>,
-        Raghu Halharvi <raghuhack78@gmail.com>
-Cc:     linux-cxl@vger.kernel.org, ira.weiny@intel.com,
-        bwidawsk@kernel.org, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, linux-kernel@vger.kernel.org,
-        Dave Jiang <dave.jiang@intel.com>
-Date:   Sun, 30 Jul 2023 13:09:26 -0700
-In-Reply-To: <ZMXIi+HC3uFQyvGK@aschofie-mobl2>
-References: <20230726073421.2452-1-raghuhack78@gmail.com>
-         <20230726073421.2452-3-raghuhack78@gmail.com>
-         <ZMXIi+HC3uFQyvGK@aschofie-mobl2>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S229510AbjGaDOW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sun, 30 Jul 2023 23:14:22 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359E3D3
+        for <linux-cxl@vger.kernel.org>; Sun, 30 Jul 2023 20:14:19 -0700 (PDT)
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230731031414epoutp024df3c6ecbf044970ca1d1263895753e3~21VEWeG8L2533625336epoutp02Y
+        for <linux-cxl@vger.kernel.org>; Mon, 31 Jul 2023 03:14:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230731031414epoutp024df3c6ecbf044970ca1d1263895753e3~21VEWeG8L2533625336epoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1690773254;
+        bh=EvoVRW/Nwv0Mk71/ODo2TILsmOB0YaLo+kBS7XvAhD4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CLoPwekrvBGMZ8DNQVzB8pFt9sGo3cmj519i1k4TVo2mc5h97lLNigJXEMP8ET/g5
+         H1Q1p7TUgBma0Ed6+UPAdIrPDJQa6ZcVySoEY459PSPBPYWpS5ZnUl3h7AJbJm65GS
+         QZ6leJ8vkyDWUMFWwfdcE1Rj2Yj6+qW49Dt0hxrs=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20230731031413epcas2p23ec3171d16e8a0973bfe8a5b5dcd9946~21VDy0kkq0777407774epcas2p2X;
+        Mon, 31 Jul 2023 03:14:13 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.68]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4RDjyF1gQlz4x9Q2; Mon, 31 Jul
+        2023 03:14:13 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E7.C0.32393.50727C46; Mon, 31 Jul 2023 12:14:13 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230731031412epcas2p4fb2631d72b455f205252e00b15119ef2~21VC3CVgB1185711857epcas2p4q;
+        Mon, 31 Jul 2023 03:14:12 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230731031412epsmtrp2553e33729e4c62270639b0a19ed88794~21VC2EjZ02510525105epsmtrp2J;
+        Mon, 31 Jul 2023 03:14:12 +0000 (GMT)
+X-AuditID: b6c32a48-adffa70000007e89-20-64c727056922
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        59.A6.14748.40727C46; Mon, 31 Jul 2023 12:14:12 +0900 (KST)
+Received: from jehoon-Precision-7920-Tower (unknown [10.229.83.133]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20230731031412epsmtip11523e846057b23b76409a21db47c51eb~21VClbqOF3257032570epsmtip1v;
+        Mon, 31 Jul 2023 03:14:12 +0000 (GMT)
+Date:   Mon, 31 Jul 2023 12:17:14 +0900
+From:   Jehoon Park <jehoon.park@samsung.com>
+To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
+Cc:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Schofield, Alison" <alison.schofield@intel.com>,
+        "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+        "im, junhyeok" <junhyeok.im@samsung.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "ks0204.kim@samsung.com" <ks0204.kim@samsung.com>
+Subject: Re: [ndctl PATCH RESEND 2/2] libcxl: Fix accessors for temperature
+ field to support negative value
+Message-ID: <20230731031714.GA17128@jehoon-Precision-7920-Tower>
 MIME-Version: 1.0
-X-Stat-Signature: jf6edj6agmfhkqjuihobpbi8y3n3153w
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: E055420010
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18+cDEPJpffcih+mU6D8ESFeoFIhNVo0w4=
-X-HE-Tag: 1690747767-968619
-X-HE-Meta: U2FsdGVkX1/Qj55gyDmRDC+wgo4dOuGUxV6Bw9W20Pj4+TsbuvdqlOTXqa44eS8qjtzC2qNAe9SH44uIC8IzIWlfxdhvqva4K/uqrfQeHct4SbnGOkEXiHf+qBknIy+9hVpTAMsJkfN/KcNDYR5OBrackmHk+RvPwkZKSmT+C0W7xZfoO9xgO2mfZrubWTJwexS+HLxz5MoWNfF4PjycgnGxnBE7RmuNjIQceowGfEKfkQNAcbpzJGYfrTucZTVBHuOn2kTmypmF7nJfh6KN+F8jkWJYDLYsxkyRuU6/X5MeJJs4zz0+htLeIpP37lTeA0zmug19PUJWac0HNghsWfIW1kvCXuzlMG7Fp7WV+dlxCsILcjRYlA==
+In-Reply-To: <ad6439d56a07c6fac2dc58a4b37fd852f79cfec8.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmhS6r+vEUg10tbBZ3H19gs5g+9QKj
+        xYmbjWwWq2+uYbTY//Q5i8WqhdfYLBYfncFscXQPh8X5WadYLFb++MNqcWvCMSYHbo+WI29Z
+        PRbvecnk8WLzTEaPvi2rGD2mzq73+LxJLoAtKtsmIzUxJbVIITUvOT8lMy/dVsk7ON453tTM
+        wFDX0NLCXEkhLzE31VbJxSdA1y0zB+g6JYWyxJxSoFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpB
+        Sk6BeYFecWJucWleul5eaomVoYGBkSlQYUJ2xqq/D9kKZhlUfPlzkqWBcbNmFyMHh4SAicSV
+        vVZdjFwcQgI7GCV+N35nhnA+MUqsWHCTEcL5xigx++8XoAwnWMfmQ5vYIRJ7GSW2/HwGVfWT
+        UWLOwwYmkCoWAVWJ+ydawTrYBLQl7m/fwAZiiwgYSGyftRasgVngObPE4u9/GEESwgK5Evv6
+        lrOC2LwCDhJv5s1kgrAFJU7OfMICYnMKuEv03D0LZosKKEsc2HacCWSQhMAWDomTM+5C3eci
+        8fH+TXYIW1ji1fEtULaUxOd3e9kg7HyJnydvsULYBRKfvnxggbCNJd7dfA4WZxbIkDjyuo8V
+        EkrKEkdusUCE+SQ6Dv9lhwjzSnS0CUF0qkp0Hf/ACGFLSxy+chTqGg+JmVtmQcP0H6PEt9/n
+        mScwys9C8tosJNsgbD2JG1OnsEHY8hLNW2czzwJaxww0d/k/DghTU2L9Lv0FjGyrGMVSC4pz
+        01OLjQpM4DGfnJ+7iRGcirU8djDOfvtB7xAjEwfjIUYJDmYlEd5TAYdShHhTEiurUovy44tK
+        c1KLDzGaAiNtIrOUaHI+MBvklcQbmlgamJiZGZobmRqYK4nz3mudmyIkkJ5YkpqdmlqQWgTT
+        x8TBKdXA1NNW8Ln4t269b5bTtxMpcQ++H6rMPTB/z2G74DSlDTskbAKut8yYl/zn4lxWY/XN
+        ZbH3jxfdl/HacsA9MZTZL8qnJWQrn0logVDMW4b1DjtCU7845rWdFSsy7/m9fdL6aL0pKlEX
+        F1rtqq7ikVucfsnrh1LQpn5ti/3a7bLbO+ZKy2kJMYZIzF59ouf1hpW258vvsQa5px08Gc70
+        Qtn3vKNjCMP/uQtOnhetfLJykuZSxX2v2/TctvYXu3sFfRNiSkjyqwi897Rnyr4/i/33bBXV
+        lVwmwTe97fvmCUX3Dqo6v3urnfuwwLt1e2nGgyXbs4V9Z4ZwhaUUhSXpZskfrI1YvndV2B6B
+        RaWMx9iUWIozEg21mIuKEwH0pvMGTgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LZdlhJTpdF/XiKwbTjyhZ3H19gs5g+9QKj
+        xYmbjWwWq2+uYbTY//Q5i8WqhdfYLBYfncFscXQPh8X5WadYLFb++MNqcWvCMSYHbo+WI29Z
+        PRbvecnk8WLzTEaPvi2rGD2mzq73+LxJLoAtissmJTUnsyy1SN8ugSvjydX3zAXbdSu+NPQx
+        NjC+Ueti5OSQEDCR2HxoE3sXIxeHkMBuRon5p7cyQSSkJe41X2GHsIUl7rccYYUo+s4oMbvr
+        NjNIgkVAVeL+iVYwm01AW+L+9g1sILaIgIHE9llrGUEamAXeMkt8uHKcBSQhLJArsa9vOSuI
+        zSvgIPFm3kwmiKn/GCWubFjDBpEQlDg58wlYA7OAjsTOrXeA4hxAtrTE8n8cEGF5ieats8EW
+        cwq4S/TcPQtWLiqgLHFg23GmCYxCs5BMmoVk0iyESbOQTFrAyLKKUTK1oDg3PTfZsMAwL7Vc
+        rzgxt7g0L10vOT93EyM4yrQ0djDem/9P7xAjEwfjIUYJDmYlEd5TAYdShHhTEiurUovy44tK
+        c1KLDzFKc7AoifMazpidIiSQnliSmp2aWpBaBJNl4uCUamBqYetU0HxnsMzLnSVq8eHtG+en
+        iCeHNzkpTFqVcE+Oa9aK3S/OM6czCbxNfZKS+OriafPKxuW7V/Ysvye8YJPV9jwbz41WOvfL
+        OJlv7a/iT7AN5S1Jn73uy8XNOV+0i0xWCPz7WC7d847l8K4PDxrjz5z+xD2xu9Jevdre3vpN
+        xbufAjO3Gh051Tdx49c5tndn5b45rb/k/sRUn695k3J/ta7Y9Pvf4wqJNV677h6I1ziyfk/t
+        6xk+hxYJshdIdtbvuPfOLkBjZzCT/azdx9wKWjgsvNdUnv03s+SY9dLjkSy11jd2eYTJaU81
+        zt/EYLXn0JzS1+oczGnbDvnlHbin88+nqzY/dPU5n9NnDSIZlFiKMxINtZiLihMBsOAZAiED
+        AAA=
+X-CMS-MailID: 20230731031412epcas2p4fb2631d72b455f205252e00b15119ef2
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e11a_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230717062633epcas2p44517748291e35d023f19cf00b4f85788
+References: <20230717062908.8292-1-jehoon.park@samsung.com>
+        <CGME20230717062633epcas2p44517748291e35d023f19cf00b4f85788@epcas2p4.samsung.com>
+        <20230717062908.8292-3-jehoon.park@samsung.com>
+        <ad6439d56a07c6fac2dc58a4b37fd852f79cfec8.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Sat, 2023-07-29 at 19:18 -0700, Alison Schofield wrote:
-> On Wed, Jul 26, 2023 at 07:34:21AM +0000, Raghu Halharvi wrote:
-> > Issue found with checkpatch
+------0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e11a_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+
+On Mon, Jul 24, 2023 at 09:08:21PM +0000, Verma, Vishal L wrote:
+> On Mon, 2023-07-17 at 15:29 +0900, Jehoon Park wrote:
+> > Add a new macro function to retrieve a signed value such as a temperature.
+> > Replace indistinguishable error numbers with debug message.
 > > 
-> > The else section here is redundant after return statement, removing it.
-> > Sanity and correctness is not affected due to this fix.
-> > 
-> > Signed-off-by: Raghu Halharvi <raghuhack78@gmail.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> 
-> 
+> > Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
 > > ---
-> >  drivers/cxl/core/region.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >  cxl/lib/libcxl.c | 36 ++++++++++++++++++++++++++----------
+> >  1 file changed, 26 insertions(+), 10 deletions(-)
 > > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e115ba382e04..bfd3b13dd2c1 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -133,11 +133,11 @@ static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
-> >  				&cxlr->dev,
-> >  				"Bypassing cpu_cache_invalidate_memregion() for testing!\n");
-> >  			return 0;
-> > -		} else {
-> > -			dev_err(&cxlr->dev,
-> > -				"Failed to synchronize CPU cache state\n");
-> > -			return -ENXIO;
-> >  		}
+> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> > index 769cd8a..fca7faa 100644
+> > --- a/cxl/lib/libcxl.c
+> > +++ b/cxl/lib/libcxl.c
+> > @@ -3452,11 +3452,21 @@ cxl_cmd_alert_config_get_life_used_prog_warn_threshold(struct cxl_cmd *cmd)
+> >                          life_used_prog_warn_threshold);
+> >  }
+> >  
+> > +#define cmd_get_field_s16(cmd, n, N, field)                            \
+> > +do {                                                                   \
+> > +       struct cxl_cmd_##n *c =                                         \
+> > +               (struct cxl_cmd_##n *)cmd->send_cmd->out.payload;       \
+> > +       int rc = cxl_cmd_validate_status(cmd, CXL_MEM_COMMAND_ID_##N);  \
+> > +       if (rc)                                                         \
+> > +               return 0xffff;                                          \
+> > +       return (int16_t)le16_to_cpu(c->field);                                  \
+> > +} while(0)
 > > +
-> > +		dev_err(&cxlr->dev,
-> > +			"Failed to synchronize CPU cache state\n");
-> > +		return -ENXIO;
-> >  	}
-> >  
-> >  	cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-> > -- 
-> > 2.39.2
-> > 
+> >  CXL_EXPORT int
+> >  cxl_cmd_alert_config_get_dev_over_temperature_crit_alert_threshold(
+> >         struct cxl_cmd *cmd)
+> >  {
+> > -       cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> > +       cmd_get_field_s16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> >                           dev_over_temperature_crit_alert_threshold);
+> >  }
+> >  
+> > @@ -3464,7 +3474,7 @@ CXL_EXPORT int
+> >  cxl_cmd_alert_config_get_dev_under_temperature_crit_alert_threshold(
+> >         struct cxl_cmd *cmd)
+> >  {
+> > -       cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> > +       cmd_get_field_s16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> >                           dev_under_temperature_crit_alert_threshold);
+> >  }
+> >  
+> > @@ -3472,7 +3482,7 @@ CXL_EXPORT int
+> >  cxl_cmd_alert_config_get_dev_over_temperature_prog_warn_threshold(
+> >         struct cxl_cmd *cmd)
+> >  {
+> > -       cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> > +       cmd_get_field_s16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> >                           dev_over_temperature_prog_warn_threshold);
+> >  }
+> >  
+> > @@ -3480,7 +3490,7 @@ CXL_EXPORT int
+> >  cxl_cmd_alert_config_get_dev_under_temperature_prog_warn_threshold(
+> >         struct cxl_cmd *cmd)
+> >  {
+> > -       cmd_get_field_u16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> > +       cmd_get_field_s16(cmd, get_alert_config, GET_ALERT_CONFIG,
+> >                           dev_under_temperature_prog_warn_threshold);
+> >  }
+> >  
+> > @@ -3695,28 +3705,34 @@ static int health_info_get_life_used_raw(struct cxl_cmd *cmd)
+> >  CXL_EXPORT int cxl_cmd_health_info_get_life_used(struct cxl_cmd *cmd)
+> >  {
+> >         int rc = health_info_get_life_used_raw(cmd);
+> > +       struct cxl_ctx *ctx = cxl_memdev_get_ctx(cmd->memdev);
+> >  
+> >         if (rc < 0)
+> > -               return rc;
+> > +               dbg(ctx, "%s: Invalid command status\n",
+> > +                   cxl_memdev_get_devname(cmd->memdev));
+> >         if (rc == CXL_CMD_HEALTH_INFO_LIFE_USED_NOT_IMPL)
+> > -               return -EOPNOTSUPP;
+> > +               dbg(ctx, "%s: Life Used not implemented\n",
+> > +                   cxl_memdev_get_devname(cmd->memdev));
+> >         return rc;
+> >  }
+> >  
+> >  static int health_info_get_temperature_raw(struct cxl_cmd *cmd)
+> >  {
+> > -       cmd_get_field_u16(cmd, get_health_info, GET_HEALTH_INFO,
+> > +       cmd_get_field_s16(cmd, get_health_info, GET_HEALTH_INFO,
+> >                                  temperature);
+> >  }
+> >  
+> >  CXL_EXPORT int cxl_cmd_health_info_get_temperature(struct cxl_cmd *cmd)
+> >  {
+> >         int rc = health_info_get_temperature_raw(cmd);
+> > +       struct cxl_ctx *ctx = cxl_memdev_get_ctx(cmd->memdev);
+> >  
+> > -       if (rc < 0)
+> > -               return rc;
+> > +       if (rc == 0xffff)
+> > +               dbg(ctx, "%s: Invalid command status\n",
+> > +                   cxl_memdev_get_devname(cmd->memdev));
+> >         if (rc == CXL_CMD_HEALTH_INFO_TEMPERATURE_NOT_IMPL)
+> > -               return -EOPNOTSUPP;
+> > +               dbg(ctx, "%s: Device Temperature not implemented\n",
+> > +                   cxl_memdev_get_devname(cmd->memdev));
+> 
+> Hi Jehoon,
+> 
+> libcxl tends to just return errno codes for simple accessors liek this,
+> and leave it up to the caller to print additional information about why
+> the call might have failed. Even though these are dbg() messages, I'd
+> prefer leaving them out of this patch, and if there is a call site
+> where this fails and there isn't an adequate error message printed as
+> to why, then add these prints there.
+> 
+> Rest of the conversion to s16 looks good.
+> 
 
-My preference would be for this function to be something like:
----
-static int cxl_region_invalidate_memregion(struct cxl_region *cxlr)
-{
-	if (cpu_cache_has_invalidate_memregion()) {
-		cpu_cache_invalidate_memregion(IORES_DESC_CXL);
-		return 0;
-	}
+Hi, Vishal.
 
-	if (IS_ENABLED(CONFIG_CXL_REGION_INVALIDATION_TEST)) {
-		dev_warn_once(&cxlr->dev,
-			      "Bypassing cpu_cache_invalidate_memregion() for testing!\n");
-		return 0;
-	}
+Thank you for comment. I agree with the behavior of libcxl accessors as you
+explained. FYI, the reason I replaced errno codes with dbg messages is that
+those accessors are retreiving signed values. I thought returning errno codes
+is not distinguishable from retrieved values when they are negative.
+However, it looks like an overkill because a memory device works below-zero
+temperature would not make sense in real world.
 
-	dev_err(&cxlr->dev, "Failed to synchronize CPU cache state\n");
-	return -ENXIO;
-}
+I'll send revised patch soon after reverting to errno codes and fixing
+related codes in cxl/json.c.
 
+Jehoon
+
+> >         return rc;
+> >  }
+> >  
+> 
+
+------0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e11a_
+Content-Type: text/plain; charset="utf-8"
+
+
+------0fR5D8yIpNNl77tk4nXhNCfTmNnUnmvpDlxfu2XVSHf_RJiV=_1e11a_--
