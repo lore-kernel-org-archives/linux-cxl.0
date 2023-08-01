@@ -2,234 +2,242 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8492EB64DD
-	for <linux-cxl@archiver.kernel.org>; Tue,  1 Aug 2023 03:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509F5C04A6A
+	for <linux-cxl@archiver.kernel.org>; Tue,  1 Aug 2023 18:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbjHADbk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 31 Jul 2023 23:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51546 "EHLO
+        id S231997AbjHASqQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 1 Aug 2023 14:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjHADbj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 31 Jul 2023 23:31:39 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984C91BC7;
-        Mon, 31 Jul 2023 20:31:37 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 0DB4090108E;
-        Tue,  1 Aug 2023 03:23:38 +0000 (UTC)
-Received: from pdx1-sub0-mail-a289.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 89F8F90106F;
-        Tue,  1 Aug 2023 03:23:37 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1690860217; a=rsa-sha256;
-        cv=none;
-        b=a8SG6Ws+6T/1GiXldgiPJiYpOZ26rOGSGQKfi+y/FeVIrMRufgYmi/wQivHRIgtZ4J32U3
-        zXSAthzOHyJyRvzvRdTpst4bS1tGslP5ZB/6IAfKFqqEbCeb1yf0kM0Mtv6NPoNFeFvNkY
-        MU6KXDRciLjOf4fgjXh/P7YyHgVrWj41QgNg1GSXseROgwzpquMHNlvZT6/SMgXaGMPTcq
-        ujl6IR0bmTO4dshbufuQXqkMYcNKg4pF5Nw2Bg79HeewyE/gM3RASgtnGysYOwKo4+vfFw
-        kF6EcbBdAxKhxqmIVtHEb43+bZ+f/sHKg1hzjB4Mwpv1aWP2MeePaAxa1ZlAzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1690860217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=EVokbC9sqCzqTBizE65suosBfXjzjvxy76/UCH5cCpU=;
-        b=ZI8rjckEvdyf83TK6ipG86D0jkGPoX8WDtOINo25/WplF0LvuHT5qcgHY1Fuz458okPsER
-        nYpIFwVztqx8HahXa8o0JezTM4zXXxO1OWGpwcD70MUs1AzLTTDaLMNVzr+pbigwnOxyBg
-        OM7dSe6mHGTJYGgSMl7EEWLVOmOYk0eGGmms/15JYW6E9ictsjTqm0NR2vjvi8V4rFs10Y
-        hofItlrXKoCgtT064MdtNlU2KT1SV20WGEMGei/Uq5VQCEUQY404dbV4kfIt2B9rQfB3ax
-        tI4FJiUUVVzn/Hxz+kJNqF2/CLqtAngXh5tL/d1OhFhwVEUXJD8mjn04h3cagg==
-ARC-Authentication-Results: i=1;
-        rspamd-849d547c58-xc6tw;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Share-Thoughtful: 024708fa33c9dbb4_1690860217854_3725728623
-X-MC-Loop-Signature: 1690860217854:2378317259
-X-MC-Ingress-Time: 1690860217854
-Received: from pdx1-sub0-mail-a289.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.124.60.171 (trex/6.9.1);
-        Tue, 01 Aug 2023 03:23:37 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a289.dreamhost.com (Postfix) with ESMTPSA id 4RFL6b6lC3z4G;
-        Mon, 31 Jul 2023 20:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1690860217;
-        bh=EVokbC9sqCzqTBizE65suosBfXjzjvxy76/UCH5cCpU=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=fgcQJP/Vc1QIcO/XmLU2Em4anvDyO2nPYTBwb7HshcwiIXDstrrMeNhsF1+aYvCom
-         SXsyVs2Y+vyqa/hvFDyyAmcjzNougbRy39Md6/dmKs4xBT5EbMetGElW/vujBRKVHL
-         ZMl/r/rAF6aA2qkmBJkyfQPEmFMWwYGZXBeWZM1sOUavjrRCcsVrayseDXJj/bH4xl
-         b6fyEAAJ3ErmO0+NwhqPrqDO6AQtPSTkNr3C+feNAYBaQcNJ26fv6VataKaQSDyxr7
-         Q5Rs4mj2qy7gkIqpJyHJCTjj/dKFbc3LLw14fbBuF8Whv15w/GOx+r1QsUcdLLx7/9
-         okgHFQBt13oUw==
-Date:   Mon, 31 Jul 2023 19:46:01 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        with ESMTP id S231856AbjHASqM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Aug 2023 14:46:12 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04C10358E;
+        Tue,  1 Aug 2023 11:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690915549; x=1722451549;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=wHHHBRQldCeoTitZ6rlOL14VuNopCqWQ3rXxgNBbB5c=;
+  b=cPkAQXfkYPwVdUtSESGZ4bonErMuiA1o+YUhmJZh9fm/4VypvQICcVgo
+   CC0Uj/N7/dEH429/P+uPA1e5eo2r8XSBh8FUC7Kv5N/2tdqOLIzEfQXUW
+   Pz/Mn52AgepEH8jPmZq1ppfccbXKqN2HzDO3Z6JkXgQiEwY0NsCbGP5G3
+   LG2nrh3VLOjVj/YhfvEENQNVDcczuYG7R1GXbvUql1iXngvartfCzhBXu
+   c2oi6aaARbLIh+qGtk/iitFL4ZnOZ18AqbGR1lwwqWOoMphLkaBW3xnYU
+   Y76HlImgF8u0U4TyEabG9S/z/qxychQ+/Af8N533IfYh3rdNaY3/W0tQj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="359428459"
+X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
+   d="scan'208";a="359428459"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 11:45:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="818898592"
+X-IronPort-AV: E=Sophos;i="6.01,247,1684825200"; 
+   d="scan'208";a="818898592"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Aug 2023 11:45:17 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 1 Aug 2023 11:45:16 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Tue, 1 Aug 2023 11:45:16 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.106)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Tue, 1 Aug 2023 11:45:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fFYMXuneGpGbP/bYLFXj8QKYjkKKOMg78mII1hPbzr9FoEp7pxjNY+8vrlLqnTBgCWmIjAbmTj0Vm8JFWdUCFvS0qEDGYbQvwxaVX11xpPv0SKzVBweboejZCRee2GY0IGayfIPfXGVXgATW8m7MktjSk+h5nuaGqBYiDPCCRT0R6sr4ZCqnYK6FmkmcwtTCyPKZFaeFAtQmXzJoHpkznYEW/36gmViGh8ggS6Cjo1tx6rSw6mzLcVXlJVQssTdlEvQZ7zRR1Qc9hNJjBliy4/3VgL8WCIkm1wdZYN+bIuOkm7/SRRUIZbkVnPtYS5wCC47uTeVZ65JR91Qb36lWdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9QYo/GWx8lqmjnZ1bYOIlDLHuMEZRn2ui5/1RxP7byk=;
+ b=G8CAeALDX9rg7xtvyYt7chvSJXiwrjjkoJtXB9m/HZYpqN0Dzrj4+k8egVmx5Xm0VqPnP6ZtFp8G/rNTS8/VB8uJzM5EaNkSdftdmnlcc64NAo1l3IOr5EaelHZk5DJ+9TW726Pc9sddc/NDtsyg2gYGJVH7/9M91UsBXcX3SdTCksDzvl6hk9pS65OjNcIpvwVZ/yMmW45wIJfVEu3Ihg0pnr+BtGk1BbA+U0PgIoxyKSz6p3NJ04Uiz6c6ft1ecvP1qmFO1yex+Xr/6Z/frEUFSDhYRRXUczg2KVBgub6Zj9YqwDEuuwNo951szBaxu6Lcc6Ga3APyCzq+0CMtVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SN7PR11MB6994.namprd11.prod.outlook.com (2603:10b6:806:2ad::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Tue, 1 Aug
+ 2023 18:45:09 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6631.043; Tue, 1 Aug 2023
+ 18:45:09 +0000
+Date:   Tue, 1 Aug 2023 11:45:05 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl/memdev: Avoid mailbox functionality on device memory
- CXL devices
-Message-ID: <ogv7evtgf5rcljd4ev7rxx6buqg7y3kwlqing2tfshh2ac5zf6@juclnksnv4ki>
-References: <20230728-cxl-fix-devmemdev-v1-1-dbd3269b3295@intel.com>
- <64c4562fb7531_a88b29481@dwillia2-xfh.jf.intel.com.notmuch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: RE: [PATCH] cxl/mbox: Fix debug message print
+Message-ID: <64c952b14b4e8_26168294af@iweiny-mobl.notmuch>
+References: <20230731-cxl-fix-clear-event-debug-print-v1-1-42c068f500d1@intel.com>
+ <64c831da6af64_52483294fb@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <64c4562fb7531_a88b29481@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20230517
+In-Reply-To: <64c831da6af64_52483294fb@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: SJ0PR03CA0250.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0::15) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB6994:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5d1ccb5-a749-4475-f12f-08db92bf6e6f
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jj6XZ0xPm0XCXzQiCYeUpkadrU+pHA03wweAVAab5lxiLE03J/LJ5/pE0AdexkjcDIkI3aspujXXMtMX6TvMj1fmRK4tM1nKpo2+thWty7NHdFvwLgfs21lRN+iLFBEih07BfGbeuckfwhq3HsX97QUvFmdgOosigQUfeUEpMgCg/FQp7xmhUVBNaQt5/8Jxc9M+fX/Iac5dEYGw+qSu8YNYF7Tgi2lp98DXiEwJOtiublBDoqOkhUapkNMh+vBIP0kHzUG/Dnhg/pLbEdpxrnyWya2Cq5oXst/Ofs+Aqf/T5tAHXYCRuWoFpogZ+lcazmMsbtsUHS3JhSKkjQwWohNa+9pPyY3UnCgkPu9nMeXdDKMUW6lMSA/Qds+JRxIFLhKujnFApUXo3uRcfPmnfk1ltfItonf5mVRwULKaEysisNFo+kvZ5ca9e9GRZNeR65+fO3YJ3osyiuakcwF3/f5hNi1IQPUQ5MHdxhvSNMrqdZPyzoM8Wa2PjV7oAn6nkt5K5qiuxtwsO4CybtvbbCC1WQZBUXlkCPHa8XYgOja6ejdVSY/4ZK3ko0efmPm8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(39860400002)(376002)(366004)(136003)(346002)(451199021)(2906002)(8676002)(8936002)(5660300002)(41300700001)(316002)(86362001)(15650500001)(44832011)(6512007)(9686003)(107886003)(6506007)(26005)(478600001)(6486002)(82960400001)(6666004)(83380400001)(186003)(4326008)(110136005)(66476007)(66556008)(66946007)(54906003)(6636002)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OknOI5+YTFw5/ZVogdIysLgpS+oGCswFWH+l6hLduOzBVVW0xN7CGIhSfhA3?=
+ =?us-ascii?Q?1Rj94zubd3XpgRnrYHeEGe1gT/bzu6mf7enXFv29rbsDr24E/NCKLk1Uzw/Y?=
+ =?us-ascii?Q?84u2e64Ljw4ACPxpH7u/MAN5IRZHQUnt4aaklw4Iqtcik6PkSkCxm2Xo7XMU?=
+ =?us-ascii?Q?jTj6Oh76iasmmhgJVNouBnGErNxKmCTRQOqWoxcZHzemDY+SrDMCUmHZ1+x8?=
+ =?us-ascii?Q?DcZxfLuYHI9XPrh58DChHd9J9cMYLiSyHBWqfrpE1QiegDyiMldXhRg2VwsU?=
+ =?us-ascii?Q?bzFHUZXAMNajopIWrVJu3ih31v8/ROVL8qXREtcDznCab4tizuTMnJBUjZY5?=
+ =?us-ascii?Q?P9ySqbofwK4p2YD7Fly4OAcrgfm44suHe4fa8Df5ZLQZ8i9uHtX6KFKoAJu3?=
+ =?us-ascii?Q?JZELRk2f4zcjjY3I/8SzQmWaVJlbQPrWD3Kuneo/iLa1PE0uXJ9/L9cUplwb?=
+ =?us-ascii?Q?5ybh3pPGrK2l00YQ4BXMnkGfxCc6sMGEuojj7shx1Jt3ASipCcuSvtCOrJvp?=
+ =?us-ascii?Q?e29zz4nZAYz4dOklyPXPFCmTtsRGZ8LRRoTmOWo7pLfKd14/fSweT0jH60fD?=
+ =?us-ascii?Q?uxRJIfKdK2YP6V3+NK/6KfDiNrc8s3owjvtxKpG+4KwzgzX7wkFFUkKJcu+C?=
+ =?us-ascii?Q?Czj+cEQM+VH295TKZvWf+dlKkLem68iPMIvLUkJaQnrdVqTkiy9ZNdFOFp/u?=
+ =?us-ascii?Q?LO9unAi4CES5BZw1NQZ+iM80H3+YBcK5ExB25mRb7OU6amVqTo90hP6zchQ4?=
+ =?us-ascii?Q?x7PwFM4eIAdmihFIBhTqHrMO+oe8RytKcYawd/kYfvN+detBP5RsyIhTFrE1?=
+ =?us-ascii?Q?coLQiuURAcjydU1Fz/rMB1axK4g7BQpiIRSTXmKnRAfPpNj6lXrASL3O06ls?=
+ =?us-ascii?Q?aP0fGohjbcitxphez18kWlZhw6gNHh+1VtYwi851PgOUX5RBwARhHmwDd77o?=
+ =?us-ascii?Q?kQrV9I3/OR5GyNoKNGi1v4WGEcD3fbjKLK6vv9NX4nd8GvrTCK+0/65ID8hN?=
+ =?us-ascii?Q?aS1E+Qo79hBjDQ/kVOBULVSm/LCUw9gaCruZpTuSMtLDbnNCPcxANIjLnTBr?=
+ =?us-ascii?Q?ULUOvqxsgRt0B5SNblxB8lk7ooK1ORI7VumeZPnUWGmx3ISMVbRA6/C+8oks?=
+ =?us-ascii?Q?hamQyES1M0Pv7a0SvPAnuHjjy+wM7Y+jmVrDW2TPnG2ybT6qweAHwqTbeSpD?=
+ =?us-ascii?Q?BiIalInJYhCPzpZAZOy/VWgDmGo7L0PCEnuhdoVZP9gI3ucmJSQgU28pxE3M?=
+ =?us-ascii?Q?KSNpeAaYl9FrWHZDtudhDAZJh1gGMs+CyjSREpd5U50x7Tx2OSN15wG62A3q?=
+ =?us-ascii?Q?0VO5aoWPaiT46g7hli6AawL7nii5HzwU55nBZV0Ew30MQjC8LA3/kvLTyJpG?=
+ =?us-ascii?Q?z18B6/SnopqKaWEfbFMf1Dh+AyhBf6JW44BE3Pk3w0j9QbQjeihIgKviWUxM?=
+ =?us-ascii?Q?E6mW1Lc1NRnDaqONz11mw2fuYHFSMtxFOh+d0N5hNM6RHZVKmP6XjItnZcnU?=
+ =?us-ascii?Q?GvCAyVpMmByCXSC9tvXVdB1V6Jy70wc8/AJ/dTvbOOnIGoyJatkC3uUdeUn5?=
+ =?us-ascii?Q?VWGzwWUQket/tMbcRqvAABm9M2hkElKc4/g9LvPW?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5d1ccb5-a749-4475-f12f-08db92bf6e6f
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2023 18:45:09.4897
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z493UtZfKREs41u4RcTgO9GtaxVziEAYuEs8biKHf30/J8ZrM7PgkDhWjpzXtqJNkvLo4UmTl51H6lfi1XucVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6994
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 28 Jul 2023, Dan Williams wrote:
+Dan Williams wrote:
+> Ira Weiny wrote:
+> > The handle value used to report an event being cleared by dev_dbg() is
+> > incorrect due to a post increment of the payload handle index.
+> > 
+> > Delay the increment of the index until after the print.  Also add the
+> > debugging for event processing which was useful in finding this bug.
+> > 
+> > To: Davidlohr Bueso <dave@stgolabs.net>
+> > To: Jonathan Cameron <jonathan.cameron@huawei.com>
+> > To: Dave Jiang <dave.jiang@intel.com>
+> > To: Alison Schofield <alison.schofield@intel.com>
+> > To: Vishal Verma <vishal.l.verma@intel.com>
+> > To: Dan Williams <dan.j.williams@intel.com>
+> 
+> Is this some new process recommendation to use "To:", I would only
+> expect Cc: for maintainers.
 
->Ira Weiny wrote:
->> Using the proposed type-2 cxl-test device[1] the following
->> splat was observed:
->>
->>   BUG: kernel NULL pointer dereference, address: 0000000000000278
->>   [...]
->>   RIP: 0010:devm_cxl_add_memdev+0x1de/0x2c0 [cxl_core]
->
->It would be useful to decode this to a line number, the rest of this
->call trace is not adding much.
->
->>   [...]
->>   Call Trace:
->>    <TASK>
->>    ? __die+0x1f/0x70
->>    ? page_fault_oops+0x149/0x420
->>    ? fixup_exception+0x22/0x310
->>    ? kernelmode_fixup_or_oops+0x84/0x110
->>    ? exc_page_fault+0x6d/0x150
->>    ? asm_exc_page_fault+0x22/0x30
->>    ? devm_cxl_add_memdev+0x1de/0x2c0 [cxl_core]
->>    cxl_mock_mem_probe+0x632/0x870 [cxl_mock_mem]
->>    platform_probe+0x40/0x90
->>    really_probe+0x19e/0x3e0
->>    ? __pfx___driver_attach+0x10/0x10
->>    __driver_probe_device+0x78/0x160
->>    driver_probe_device+0x1f/0x90
->>    __driver_attach+0xce/0x1c0
->>    bus_for_each_dev+0x63/0xa0
->>    bus_add_driver+0x112/0x210
->>    driver_register+0x55/0x100
->>    ? __pfx_cxl_mock_mem_driver_init+0x10/0x10 [cxl_mock_mem]
->>    [...]
->>
->> Commit f6b8ab32e3ec made the mailbox functionality optional.  However,
->> some mailbox functionality was merged after that patch.  Therefore some
->> mailbox functionality can be accessed on a device which did not set up
->> the mailbox.
->
->cxl_memdev_security_init() definitely needs to move out of
->devm_cxl_add_memdev() and after that I do not think @mds NULL checks
->need to be sprinkled everywhere. In other words something is wrong at a
->higher level if we get into some of these helper functions without the
->memory device state.
+It is just what b4 does because all those folks are listed as maintainers.
 
-Right, so we can move it directly into cxl_pci_probe() - just as with other
-mbox based functionality. This leaves me wondering, however, what to do about
-the cxl_memdev_security_shutdown() counterpart. As with the below diff, leaving
-it as is and just adding a mds nil check might still be considering a layering
-violation in that it would be asymmetrical wrt to the init; but this is tightly
-coupled with cxl_memdev_unregister().
+> 
+> > Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> Jonathan gets listed twice because?
 
-Ira does the below fix the crash?
+That is odd.  I did not notice that.
 
-Thanks,
-Davidlohr
+> 
+> > Cc: linux-cxl@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> 
+> I assume this is because b4 takes its address from the patch itself?
+> 
+> It just feels a bit too noisy.
 
-----8<-------
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 14b547c07f54..4d1bf80c0e54 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -561,7 +561,7 @@ static void cxl_memdev_security_shutdown(struct device *dev)
-  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-  
--	if (mds->security.poll)
-+	if (mds && mds->security.poll)
-  		cancel_delayed_work_sync(&mds->security.poll_dwork);
-  }
-  
-@@ -1009,11 +1009,11 @@ static void put_sanitize(void *data)
-  	sysfs_put(mds->security.sanitize_node);
-  }
-  
--static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
-+int cxl_memdev_security_state_init(struct cxl_memdev_state *mds)
-  {
--	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
--	struct device *dev = &cxlmd->dev;
-+
-+	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct device *dev = &cxlds->cxlmd->dev;
-  	struct kernfs_node *sec;
-  
-  	sec = sysfs_get_dirent(dev->kobj.sd, "security");
-@@ -1029,7 +1029,8 @@ static int cxl_memdev_security_init(struct cxl_memdev *cxlmd)
-  	}
-  
-  	return devm_add_action_or_reset(cxlds->dev, put_sanitize, mds);
-- }
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_memdev_security_state_init, CXL);
-  
-  struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
-  {
-@@ -1059,10 +1060,6 @@ struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds)
-  	if (rc)
-  		goto err;
-  
--	rc = cxl_memdev_security_init(cxlmd);
--	if (rc)
--		goto err;
--
-  	rc = devm_add_action_or_reset(cxlds->dev, cxl_memdev_unregister, cxlmd);
-  	if (rc)
-  		return ERR_PTR(rc);
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index f86afef90c91..441270770519 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -884,6 +884,7 @@ static inline void cxl_mem_active_dec(void)
-  #endif
-  
-  int cxl_mem_sanitize(struct cxl_memdev_state *mds, u16 cmd);
-+int cxl_memdev_security_state_init(struct cxl_memdev_state *mds);
-  
-  struct cxl_hdm {
-  	struct cxl_component_regs regs;
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 1cb1494c28fe..5242dbf0044d 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -887,6 +887,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-  	if (IS_ERR(cxlmd))
-  		return PTR_ERR(cxlmd);
-  
-+	rc = cxl_memdev_security_state_init(mds);
-+	if (rc)
-+		return rc;
-+
-  	rc = cxl_memdev_setup_fw_upload(mds);
-  	if (rc)
-  		return rc;
+Yea b4 generated the list and I just copied it here.  Vishal is correct
+that this is automatically put in the tracking cover letter commit b4 uses
+but I copied it here because it was not a series.  I'll skip this in the
+future.
+
+> 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > ---
+> > NOTE: This does fix a bug in the patch referenced below.  However, I
+> > don't think that warrants back porting because this is only a debug
+> > print.
+> 
+> I don't think that's a reason not to flag for backport. Smaller things
+> than this have been backported, and if it saves someone getting confused
+> in the field its worth it.
+
+Ok.
+
+> 
+> > 
+> > Fixes: 6ebe28f9ec72 ("cxl/mem: Read, trace, and clear events on driver load")
+> > ---
+> >  drivers/cxl/core/mbox.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index d6d067fbee97..f052d5f174ee 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -882,9 +882,10 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+> >  	 */
+> >  	i = 0;
+> >  	for (cnt = 0; cnt < total; cnt++) {
+> > -		payload->handles[i++] = get_pl->records[cnt].hdr.handle;
+> > +		payload->handles[i] = get_pl->records[cnt].hdr.handle;
+> >  		dev_dbg(mds->cxlds.dev, "Event log '%d': Clearing %u\n", log,
+> >  			le16_to_cpu(payload->handles[i]));
+> > +		i++;
+> >  
+> >  		if (i == max_handles) {
+> >  			payload->nr_recs = i;
+> > @@ -946,9 +947,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  		if (!nr_rec)
+> >  			break;
+> >  
+> > -		for (i = 0; i < nr_rec; i++)
+> > +		for (i = 0; i < nr_rec; i++) {
+> > +			dev_dbg(dev, "Event log %d: processing handle %u\n",
+> > +				type,
+> > +				le16_to_cpu(payload->records[i].hdr.handle));
+> >  			cxl_event_trace_record(cxlmd, type,
+> >  					       &payload->records[i]);
+> 
+> This looks unrelated to the fix.
+
+It helped me to debug the issue.  Since you want this marked as a fix for
+backport I will split this out.  Potentially just squash it into some
+other patch or make it stand alone.
+
+Ira
