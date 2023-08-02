@@ -2,42 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1055EC04A6A
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Aug 2023 16:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C2FC001E0
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Aug 2023 16:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230369AbjHBQ1n (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 2 Aug 2023 12:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34744 "EHLO
+        id S229892AbjHBQa7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Aug 2023 12:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbjHBQ1m (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Aug 2023 12:27:42 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F6861FFA;
-        Wed,  2 Aug 2023 09:27:40 -0700 (PDT)
+        with ESMTP id S230352AbjHBQa6 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Aug 2023 12:30:58 -0400
+Received: from mgamail.intel.com (unknown [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2992103;
+        Wed,  2 Aug 2023 09:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690993661; x=1722529661;
+  t=1690993857; x=1722529857;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=0tSFjpEs5UlhC+O+bw+rDjme00w81L/vG49zgOEoiJY=;
-  b=Qzc16tjw4RFlxlw9Onar/1NfK1B5uyRnLYyPQlR6g7wmoSx1ciDgkcv+
-   kUWfur2qBRlPLauAQKvWJjWGKYiWepgmQtu5Atj2Qt0fSnGkDqlda/3Mi
-   SPSXS9SFAvOeIksPlkZGM5OHnpn4Ug6bGVDmInDN9BZNAEwQwYRNF6Nt8
-   Ya9fyBHG+St3F/ZeMgoamioO6py7EaaBj8YHiuTRg/8W6ID8I6pILo04k
-   rN9sJJKIBeKB4xHMkf34rGkaGATQmj8VAUW0jwxtMxGxq+3by/v/GClET
-   bdFfID8Wjbh/C9hF74hCQb5XIOYuCPk91Mq6+PMZRGexHc/yH3yNz+Cwt
+  bh=SlGswAwlAjq4WiwF81fXJRiJ5jzv9+AjmUr0rgLvFgg=;
+  b=fKMzSa3Y/larMNMdGejhpyImLcdNBZ6hNHPLbBxxLi74RuJDkm9HPb/r
+   bRfEcO2KxXE2l1qlsfaWlVte92Xcer05PDQ98n4FVFqoemqy+JNeYLEaI
+   rXUdUWUYje2rxCjjk5IAM6eKYOgF8Jf4LtaFTA+L9SyTKLBEVieq4NEuJ
+   9B+igiXDppnPUU2zYE537S8VnO+s35jKS1oAzZTu0b6tU83N5tkVQUg+W
+   Y3m+qUx9J3ZXi03vZJi/bHBc+OD+JDKy0OWrvDmAmi3OJzwqgS5/ufUWy
+   6vbw/RCTzI2S2IPFnNgugFL1kqjFpgAqQN+zmFT7wL4wdCMO+8xurSxrC
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="456006618"
+X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="435956073"
 X-IronPort-AV: E=Sophos;i="6.01,249,1684825200"; 
-   d="scan'208";a="456006618"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 09:26:06 -0700
+   d="scan'208";a="435956073"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 09:29:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.01,202,1684825200"; 
-   d="scan'208";a="872564979"
+X-IronPort-AV: E=McAfee;i="6600,9927,10790"; a="722910510"
+X-IronPort-AV: E=Sophos;i="6.01,249,1684825200"; 
+   d="scan'208";a="722910510"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.146.50])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 09:26:07 -0700
-Date:   Wed, 2 Aug 2023 09:26:03 -0700
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2023 09:29:25 -0700
+Date:   Wed, 2 Aug 2023 09:29:23 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 Cc:     Davidlohr Bueso <dave@stgolabs.net>,
@@ -46,57 +47,49 @@ Cc:     Davidlohr Bueso <dave@stgolabs.net>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] cxl/mbox: Use correct handle in events debug
- message
-Message-ID: <ZMqDm5IJQv9sR3TO@aschofie-mobl2>
+Subject: Re: [PATCH v2 2/2] cxl/mbox: Add handle to event processing debug
+Message-ID: <ZMqEY2qj8s8uKZlN@aschofie-mobl2>
 References: <20230731-cxl-fix-clear-event-debug-print-v2-0-9bdd08d386e9@intel.com>
- <20230731-cxl-fix-clear-event-debug-print-v2-1-9bdd08d386e9@intel.com>
+ <20230731-cxl-fix-clear-event-debug-print-v2-2-9bdd08d386e9@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230731-cxl-fix-clear-event-debug-print-v2-1-9bdd08d386e9@intel.com>
+In-Reply-To: <20230731-cxl-fix-clear-event-debug-print-v2-2-9bdd08d386e9@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 01:13:28PM -0700, Ira Weiny wrote:
-> The handle value used to report an event being cleared by dev_dbg() is
-> incorrect due to a post increment of the payload handle index.
+On Tue, Aug 01, 2023 at 01:13:29PM -0700, Ira Weiny wrote:
+> Knowing which handle is being processed helped in debugging new event
+> code.  Add a dev_dbg() message with this information.
 > 
-> Delay the increment of the index until after the print.
-> 
-> Fixes: 6ebe28f9ec72 ("cxl/mem: Read, trace, and clear events on driver load")
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-> 
 > ---
-> Changes for v2
-> [Dan] Go ahead and mark this for backporting
-> [Dan] Remove 'To/Cc' cruft from individual patches
-> [Dan/Alison] Split out the additional debugging
-> [Alison] New oneliner
-> ---
->  drivers/cxl/core/mbox.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/mbox.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index d6d067fbee97..a1c490f66bbf 100644
+> index a1c490f66bbf..f052d5f174ee 100644
 > --- a/drivers/cxl/core/mbox.c
 > +++ b/drivers/cxl/core/mbox.c
-> @@ -882,9 +882,10 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
->  	 */
->  	i = 0;
->  	for (cnt = 0; cnt < total; cnt++) {
-> -		payload->handles[i++] = get_pl->records[cnt].hdr.handle;
-> +		payload->handles[i] = get_pl->records[cnt].hdr.handle;
->  		dev_dbg(mds->cxlds.dev, "Event log '%d': Clearing %u\n", log,
->  			le16_to_cpu(payload->handles[i]));
-> +		i++;
+> @@ -947,9 +947,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+>  		if (!nr_rec)
+>  			break;
 >  
->  		if (i == max_handles) {
->  			payload->nr_recs = i;
+> -		for (i = 0; i < nr_rec; i++)
+> +		for (i = 0; i < nr_rec; i++) {
+> +			dev_dbg(dev, "Event log %d: processing handle %u\n",
+> +				type,
+> +				le16_to_cpu(payload->records[i].hdr.handle));
+>  			cxl_event_trace_record(cxlmd, type,
+>  					       &payload->records[i]);
+> +		}
+
+Is dev_dbg() overkill when the info is in the trace event?
+
+>  
+>  		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+>  			trace_cxl_overflow(cxlmd, type, payload);
 > 
 > -- 
 > 2.41.0
