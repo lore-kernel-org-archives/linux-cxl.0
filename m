@@ -2,209 +2,249 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14391C001E0
-	for <linux-cxl@archiver.kernel.org>; Wed,  2 Aug 2023 00:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A32C001DE
+	for <linux-cxl@archiver.kernel.org>; Wed,  2 Aug 2023 05:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbjHBATv (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 1 Aug 2023 20:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45316 "EHLO
+        id S231378AbjHBFTn (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 2 Aug 2023 01:19:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229727AbjHBATs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 1 Aug 2023 20:19:48 -0400
-Received: from mgamail.intel.com (unknown [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501AF26B5;
-        Tue,  1 Aug 2023 17:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690935584; x=1722471584;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=K/gEktcs9Zf5EqyoG1QBErVngPTygi88mBJsbzdsv/U=;
-  b=FC22jCaHC7+CHAoTwOGHhH23IAW9AFZjhwat1gSUt8W6hLkQfIK5UyAx
-   V18hLniU/BwItn2RxA3Y6W868Y74ddYu/tR5SPvvOQfTnq/RkFDmffa4v
-   rpf6zy8d9K0Y2PPUiuWQx2tJEiz6uj1oHcpa/vzDE0QfGohddzhqAkXSf
-   6tM4GdDam4ExLg5ZkeRsLRRS0GCmamMob9JKhdZfjq4bT17DFwg/tC8qI
-   1p1A5oMtjBeEu2zT4gtTHcN3d7RTpnztOyYWjJJV5KSUJNFYKn71PFEiE
-   F+MmDpU9f8mzssbvPxmEo31suZLeG+RM4RJ0ylgCrWXQIUAEuKUIFJGYs
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="373086968"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="373086968"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2023 17:19:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10789"; a="794380435"
-X-IronPort-AV: E=Sophos;i="6.01,248,1684825200"; 
-   d="scan'208";a="794380435"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Aug 2023 17:19:43 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 1 Aug 2023 17:19:43 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 1 Aug 2023 17:19:42 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Tue, 1 Aug 2023 17:19:42 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.102)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+        with ESMTP id S232398AbjHBFTP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 2 Aug 2023 01:19:15 -0400
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595F635AA
+        for <linux-cxl@vger.kernel.org>; Tue,  1 Aug 2023 22:18:40 -0700 (PDT)
+Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3722274A008019;
+        Wed, 2 Aug 2023 05:18:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pps0720;
+ bh=cLfiq/PMOoVp5Im+WHxGEc0LSq3YGqMmqsV74LYMoIU=;
+ b=jz/Z0rezBaPbdeATFJizkvA47y3AEGBDIG0A3b77d/lQh3ID3wtLAhpn3BY9fhzinP/V
+ nWzUe8R93aKZoNOp13GCmDZNnHlkMcRHlnAaxpKSIVuv8OkQbP4nMCOz6pJ7PBdG+F44
+ zhxauP3UOnb/FYfENxQHAhqOfrDrpUCHsHSde6QTL9mfQXU0xOne76hRZ7xnsNDkzL5h
+ n3Tq3piHHHAmm6ZzsnN4/paAdpaQDvJLYsIAael3GYjjC421bDSsvDlYynViLp34ZwoE
+ fPqH1Anno4ZU6noSQ0qG+l10hDZ2CphIGURAa47DUn1TKMNSlFN6W8/9lNBlU1eNX7e0 VQ== 
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3s797c36bn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Aug 2023 05:18:12 +0000
+Received: from p1wg14925.americas.hpqcorp.net (unknown [10.119.18.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 16C39801709;
+        Wed,  2 Aug 2023 05:18:07 +0000 (UTC)
+Received: from p1wg14923.americas.hpqcorp.net (10.119.18.111) by
+ p1wg14925.americas.hpqcorp.net (10.119.18.114) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Tue, 1 Aug 2023 17:19:42 -0700
+ 15.2.986.42; Tue, 1 Aug 2023 17:17:55 -1200
+Received: from P1WG14918.americas.hpqcorp.net (16.230.19.121) by
+ p1wg14923.americas.hpqcorp.net (10.119.18.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42
+ via Frontend Transport; Tue, 1 Aug 2023 17:17:55 -1200
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (192.58.206.38)
+ by edge.it.hpe.com (16.230.19.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Wed, 2 Aug 2023 05:17:55 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fq9jXy8mZ2yqn+JIvQ3IwSrCN16XbvQTVRYnZSmJMIt3vIY/0SUtTHBfTyZ+bDxuDcnDA5a9OTb41C1zZDkSyE6AawHI4fTwH/GuyjkamPUgLdm9oVTAGXIN7DwPECYPJdRIbQepAR25zPlvdv92JZ9QX76MTMbsXp80SEPT8M3CsNQg5P4npnXezibJnZ42W9AUP4+471UetniIeRaes+TfS7/4/ILWn1JR3VRoospMB6T5ub7V13qCM+05BHsZIxoeisLMni7UbOrlpZqy912xEx05r7qGq7IB0h2R0OjNfYmFpqKLxCd7/j5+jeWegi+eKNELvVKOdWLVO2fZqA==
+ b=R0uf/G8Vqwc2W4u+Gc+04cymTVBlJgZhxDNu9NQgGkHvGpidn4sdNw6rkN2H9j42oQPdUxDsYoyGgKUhOl08sUVXlzBx6rT+YFDKpd+ogOl863lfppCWoGJfz1BOGcWogZrROjd0AF5vwt2dUefnMRY2AJK5BUTKg2Dl4s1TnEY+fn5VW2SjvbmdNLe/YhIZezOhhHSg0+VTaYU8G93pq/047oNTAxVRfR7DzL0slozML95kpEEWb77Y5aKOzO+/eKe1AGuxGfvMRDi8H/Nyy4ZGAgtMAhAuBpeedi8um03xzp9ei7XVv/b05BeKVO0ZwG+rNLde633XOWpON4d/dA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iRZP8JXs4J3f8Ag3Gt89A1fJB8HahCEYhSmSfLHxEXQ=;
- b=AQ2FPsCThlPn2NW2R9iGCqNf8YhlHHiCP1fUSxaMXmHQ11vPRwt0RVdKlCSxQ6fXwM+N7X8VTgv1syXtegrEMEKdSyGTS52eB++OIIljMXuiT3JvW1O0HQAV7Ld51N5Aw+XPJMWlbi2+AQbBj4F5j5gnq9agMbef2SyF9ilfVOB+GZFUGSmzgCz1MZBjRwKGkvLCk/2l8rT0ebrKnuZPlza7jvwFItXQLUIbvcpervwP/fQksvshtrEBVNWkOZGspmYNMmoOCeqUwIlq7QtiggNav+HEY+ku/kTW7vodPlJ8KPs1/9YdJDqVe1WEzRC+P40WjL0pVB0+1xMtUd7f6w==
+ bh=g/9ZnzXSZnI2JSCNUIm2TgKGzMTYCcS8v5cakFdj/08=;
+ b=YSSTswRlNfxmzxD9C9JnEnKy+1K9//BgY8Q/SAxz1RDJOzbBCmyL+L6SQnrGU5C+m8pzkJUKS2p574RmzrQlN6uA0Dh34JavTroO+twOZ4GKbhTjG0CKiHvOw6dxUcnn8Ag/PRy02WR7eYnn5UDvUFOUDm2HF/o85oYDFgsvWZEeQjVUASdyMpjjIitLGBcOv7W3O6ZkoPBqPiFWj8E5ir7EK18e8Hyt43yqnbuYYOUUwk4heQSF4YiQ6zYm0EupsMs9X3bVbGIGKas6EqEk8glG0uY7Y4Q94+6/V9adsoFJC7yhUgqaXRpbB5akoA2QgXHdZbhnuUjnLlzFTpTj4w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB7107.namprd11.prod.outlook.com (2603:10b6:930:51::5) with
+ smtp.mailfrom=hpe.com; dmarc=pass action=none header.from=hpe.com; dkim=pass
+ header.d=hpe.com; arc=none
+Received: from PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:510:151::12)
+ by SJ0PR84MB1483.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:a03:431::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.45; Wed, 2 Aug
- 2023 00:19:38 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::4556:2d4e:a29c:3712]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::4556:2d4e:a29c:3712%4]) with mapi id 15.20.6631.026; Wed, 2 Aug 2023
- 00:19:38 +0000
-Date:   Tue, 1 Aug 2023 17:19:34 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Lukas Wunner <lukas@wunner.de>, Vidya Sagar <vidyas@nvidia.com>
-CC:     <bhelgaas@google.com>, <alex.williamson@redhat.com>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vsethi@nvidia.com>, <kthota@nvidia.com>, <mmaddireddy@nvidia.com>,
-        <sagar.tv@gmail.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V3] PCI: pciehp: Disable ACS Source Validation during
- hot-remove
-Message-ID: <64c9a116e75f3_5ea6e2945f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230111190533.29979-1-vidyas@nvidia.com>
- <20230730191519.3124390-1-vidyas@nvidia.com>
- <20230730194026.GA19962@wunner.de>
- <7880aa6e-9fc5-c026-138f-42bef3c48b69@nvidia.com>
- <20230731195930.GA13000@wunner.de>
+ 2023 05:17:52 +0000
+Received: from PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::9d82:c195:aed6:e7f]) by PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM
+ ([fe80::9d82:c195:aed6:e7f%5]) with mapi id 15.20.6631.042; Wed, 2 Aug 2023
+ 05:17:52 +0000
+From:   "Parthasarathy, Mohan (HPC/AI and Labs)" 
+        <mohan_parthasarathy@hpe.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        "\"Parthasarathy, Mohan (HPC/AI and Labs)\\\"
+        <mohan_parthasarathy@hpe.com>\"@domain.invalid" 
+        <"Parthasarathy, Mohan (HPC/AI and Labs)\" <mohan_parthasarathy@hpe.com>"@domain.invalid>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "shiju.jose@huawei.com" <shiju.jose@huawei.com>
+Subject: RE: CXL RAS flows on Linux
+Thread-Topic: CXL RAS flows on Linux
+Thread-Index: AdnDdQ/HkPSCwFRjR96+kVl3igVdZwALg8mAAFdWmeA=
+Date:   Wed, 2 Aug 2023 05:17:52 +0000
+Message-ID: <PH7PR84MB15824E0BBD613DB10848F87D880BA@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
+References: <PH7PR84MB1582BBE2FB47C45DC4BFE78D8805A@PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM>
+ <20230731123535.00002d5c@Huawei.com>
+In-Reply-To: <20230731123535.00002d5c@Huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR84MB1582:EE_|SJ0PR84MB1483:EE_
+x-ms-office365-filtering-correlation-id: 68794657-ccf9-4856-040e-08db9317d260
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: em44V2pSjJ3lscaHpfAqnXr9GurNpqlFib5AW6Ac7GQEzqFEXGLLXTKEU8awmj+7v0tB6wbza128wWHAmewo/WzemWR1ITFJokBMuPG5dvf2htYFlHM5fv4mk7edmfmHdXWllculqE2JqQamaEwC0RyxGQ/IDov6cwRJaiKUeWZReO5KOZ1emD3VaAmjdo+xRluumOEV+0HfGdz8JymnELlBN5OpmXOwzuQMIMkdNxprgp767UXPcV7eIjjAsRhL9hj1rsf8IAzNhWK8fHR2yWtUUr5Gk+1irRvun4mE/pVWfX9dD3qyfceaXYgJbkdjGNUZcKRO3SfwY932r4bwGCBRvTf3P3OVlUS7I6CifF2aqSntF76ZdIwD/vFSx2WfCOiLBAtupKmoCvcpBkc5t7Q7dJVPgfen7atoWbnkGfViZZhghcCgF0TjDkqrhQ1c5Ebkfsc7uYFTdcbmg4+/6GftqliRn+6Hgn9bwSIvtW7V0r/emzHfT7VRbYeWduYknMlu3dH2KLKYmdLoCl3ui6ZOT0lEdO15BQcEMdX2Ps0MTjFmn62ngmsAZRqxDNjjx61E/8codSj85sMKjHsENjQ+FhwS+ORBuLiectGCSyRa1v1q0qQkZnwxvLwZaEhIhSJUf3DRGbdD3GxG4WAFDVMmKxmx4a7HMe+2+3hECZk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(346002)(39860400002)(376002)(366004)(451199021)(64756008)(66446008)(66556008)(66476007)(4326008)(52536014)(66946007)(76116006)(2906002)(38100700002)(122000001)(82960400001)(53546011)(186003)(6506007)(26005)(38070700005)(83380400001)(110136005)(54906003)(55016003)(86362001)(478600001)(33656002)(9686003)(966005)(71200400001)(7696005)(41300700001)(84970400001)(8676002)(8936002)(5660300002)(316002)(2611002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?XA1azuTa+AfFHkFRRXnT5eTvirIIMZk7AUvsbEHxr0T2QQ0px15pa98DxbSn?=
+ =?us-ascii?Q?QSKLwV5/kSXNZ87wl7hgAOl1YjSDDKcY6SM8xJsXkEaK1pVAxXCc/J5G5QAh?=
+ =?us-ascii?Q?/IBzfaz2HpOtqbAKolN8tRCqOzJTcTkee8LjnbPab/8eSjOJaYuJq7ciq0+W?=
+ =?us-ascii?Q?E7ir0INM1oJwCIQuKj/PfzT7utzW6+M0Z/nlGDkH+pH5NnHpFMhnSnf/0fG7?=
+ =?us-ascii?Q?3q8UcC2pltiGwSl2EfuL74c7iamaA+Jsg6n+xXLi+C9DGYDQYY+zcxPpReIw?=
+ =?us-ascii?Q?HauXewVBc1pj6xq1vx2LrrhuAR5Njh1x9X2AFGCd3T8mzOXVOlDf1OAOfN3E?=
+ =?us-ascii?Q?mKOtRuAYs1XmoXSYvI3itYQCwYTtQbOx6G2u1VBKqgAzSMDhAAl9FzG/SMRS?=
+ =?us-ascii?Q?SxJ4W272YKNdD0D3esHXqtsUurVl5fWICZBQ/sKsqI10AsXC4diC7kzcwCgv?=
+ =?us-ascii?Q?LMQCzzmgUTM0B76ocRDyzkNn+HXYv5sNcLQrKlXbRtbRWaoiSQ7qQP9hLNJU?=
+ =?us-ascii?Q?gcghcVuzxtgYudXaoGwH9hf0fuOwsMofVOJFWyMzjwMXMnn5XGXRlSTmIXVB?=
+ =?us-ascii?Q?Mkqw52Yu7j2dZ4EBLOqPLXv8YrvlSRThaxjaSvJ9u+f0GGaBrDRCPGuqIo3H?=
+ =?us-ascii?Q?Xf87JJwAPRCh76W05M4Mm1n2AQgDhFH/NW3EYenfz1sT18RbLaZUKo63YdWx?=
+ =?us-ascii?Q?60z5I8rtsjS+5qNh7TOijZEcJ2UheCQ15r+mMZIC1Fa+zPTiXBeHMiT0iv7d?=
+ =?us-ascii?Q?m5KdarqP13gqnyMfDpDPjku9WI7NbJ+ssqS1qxQ0eBNJlyh5kADLZXGE4w3f?=
+ =?us-ascii?Q?K+bkNih+X7xwYS956jePwwuzpyMFYALB56dnHFUNLB5PdgQoCMAw5oddxX5w?=
+ =?us-ascii?Q?k+RQsuDUd2gzQxQcAnDCwlH0JIqZeAavlD3zYr6ZnT6TB8q1zpO1vzp7vYDn?=
+ =?us-ascii?Q?WNP3cC3VO3K0p2NaJpk3qM68SMEa5jQBhhmWsQsJV9NDyE/6bnAzuWvRRMIY?=
+ =?us-ascii?Q?uOe7qAwOgX2QMMYmK17AYeSSxXOWuyxcZeRfyBdcE4XUBCNpveyGZW5hycGw?=
+ =?us-ascii?Q?Xv+wT/iVvX+cjChIIgQ/aAxABLEl41PRuYmaHqXFohCSNNeztSXxnzcK7n22?=
+ =?us-ascii?Q?lP3YkYoXKW84TokmAjG90fUqKn6+Su7jC8RNrGk+RDxyVqh+B0D5ljFEMgWI?=
+ =?us-ascii?Q?gpHmDrm9YYkmCllueW+WIVHPfPgp6H1urb2vErKmRX96PagfXM7ZrHItz94G?=
+ =?us-ascii?Q?JLK5K1LEPQ8Kc2GFEZJnJ2UVHyd4CoX9a+bzJJ9/MO+u9fYb2CX7zIq6+hKv?=
+ =?us-ascii?Q?wZeKAX6yeBuwW2LWUL3uNsciKqIQWf0S3B/hf4/UqhCtXpRS6K/nxTIvxySk?=
+ =?us-ascii?Q?J0D1fa+YcdZhrTwcLE0vjSKOKsCKIAJM8sd6Wnuou23CqypynmQMBxwsylge?=
+ =?us-ascii?Q?kjM81k2fag7dJNgbkrXdstFb87KLxE8vmbjBBcqlCHIxEgKVPUMOz/PBe8F6?=
+ =?us-ascii?Q?i7INVwun9vaD63L54WcCeL/or44C8dnKp0Ov6NaFh/Ss1fx4c/FKK4TE1mO1?=
+ =?us-ascii?Q?j+eAjHFLajUhtCh1GkFR77AAgTrH0OFz209ROHkcFb/1MA1ck7OZ1MT9Gs2E?=
+ =?us-ascii?Q?0A=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230731195930.GA13000@wunner.de>
-X-ClientProxiedBy: MW4PR04CA0233.namprd04.prod.outlook.com
- (2603:10b6:303:87::28) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7107:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36dca965-fe90-4eb2-c0e6-08db92ee284a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: reERp5bDM4aIXz+P/2kyqGSSqArtkkfvugd6NGwKpcBAxC2K58CMjLQoGoATqAV+uz0XRHiIsjomLrewQDrsTHOsVYdONh/xE13K726FpIRjCerLRKtMuAZ7KWgw+ovSjwFs+hiIzaGiV3qHELQ5NpQvOxwQ9fJ0xRW+/Suz++AinIJRRw7iqtidT+OSq/0cxmEn1V1SrZy9UjBgkgkRouSyfRlBf+YS9POKBmnGfPpI93I3m7gYtRxF+hzR5IIWpCV/DVD1AqS4aOWwwfG5eIw95PiEHG6QfJ+VqHLa/83D6nj3Q9ySTjgaRBgNUz2X+7c/koYPiGuK1VZ2nTrFJU8l2f9AkIlo1HqDbQ1OOtMu9L53rPYq4JcfjOkoa0GCWJCbTwzWS0RyzFMW1D5znJ7Ki/8ekzHvdD6nsqzJpQTr4uq9bcRuIh2mmHYW7UXGKNvBAE1wt6e4HZX5zEfVIVV4kp1kIH8k2R31tGMGZFOIzVAzZgvFB3ucQcdFs33DXrZ5fjA+uzZXJKwa+o8IMVLtYvYXrUw4lZoWmY946/gex44/IeX+rcpghhSnwB0M
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(39860400002)(396003)(376002)(346002)(136003)(451199021)(86362001)(66946007)(66556008)(66476007)(53546011)(6506007)(6486002)(6512007)(6666004)(9686003)(110136005)(186003)(26005)(38100700002)(478600001)(82960400001)(41300700001)(2906002)(8676002)(8936002)(7416002)(5660300002)(83380400001)(316002)(4326008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D4V6Wga8RKvRZ64eLQ/VCpq2q7a5ZVmBXBVIUjka6GNbqXbS5FbcmbsSsBTP?=
- =?us-ascii?Q?fJQOwcbuegHILwvMn8k5iwEYBxfuPY2Fu25YtEIaHQAdx5cjPbQtFQ25vsr6?=
- =?us-ascii?Q?Bnq43hSyy7/fI/3kt3JZ7mJ8Oqui7Yxo9F0Ssi+V+9fDVgFqSn+mQIYhR84U?=
- =?us-ascii?Q?/nAeKQ18+ElJOnuSgpicEq2Wev7oNGfOADHs3JiiY/CIwLqgHGr+R+2OFX1F?=
- =?us-ascii?Q?w0kiBTeXii9qy66YR//fnnhuW0Sx+9EDxVam0NEheJN1cEBazfdhfYhZC9XJ?=
- =?us-ascii?Q?gTLwMAyhOFMf3YbN2epKoY5n3X7nAGWWR63lbFXvnzrOOSkbst+xp5jwWwg+?=
- =?us-ascii?Q?JlvVIM+MGRszRsb78+vK4hB6TC12s2XlUXhQU8gJs7EUei3O86x3YvECxp+r?=
- =?us-ascii?Q?fwkNsNZTWI6+U+L0sEcS2/ONblBZh7XgP3gBrNrVi7tnu//9DnTGdMaqlVTq?=
- =?us-ascii?Q?foLW1fybFTf+RPQkrSW5EsWUo+N58e0lp5V8pmMx0nB9WI75ofqGvFhXbsJR?=
- =?us-ascii?Q?tj1KPRMR3DSsQIQRDVUWH9XiRsU+k4ifmplJTiE6keH6I5q++8qVU+hw1LY/?=
- =?us-ascii?Q?DzWFih8qhTdsSvMZgJUI1mPv8Laz9lqwAtNNMVHvo27lo1wAu6sVsforLhWU?=
- =?us-ascii?Q?ShX04zTduE4oGTHxTFl7y/qI2k+bH/71za2nG05kpVk83DG+21Gycx6rmcDq?=
- =?us-ascii?Q?mFkh3yZZE/uWHktwySX3k2yhXHBf1/pck6Gxh9/aAyz0FywkLkcXG5+3kTku?=
- =?us-ascii?Q?slJsZvIz9qlAASwJJ/6ULpSGZGFVkfUFvSJ9v5ZJWNoqEz/peD0XMwzfyLmX?=
- =?us-ascii?Q?MsSzmPxNP80PtpNSMv/VEw+P5R/DyyiSeZFI1qYelfLGw+YBnVYZV0QsbfoL?=
- =?us-ascii?Q?G9IoY+a9XEvccNwhIBSWcJJi+1JzZyXgL6BIavQw05KJYU4nPLPaivRWCiS4?=
- =?us-ascii?Q?0CstDlkiYsRLkMGGenn8BGYaDJb6rjWtbo4M7/HaTi/OfCQEu79zTTIXNf0i?=
- =?us-ascii?Q?rkWKyIVcuMMgHWbGR43Kx22y6wIfSYHxG3Iby4cYg2W/p79xG9so2zTi1fWK?=
- =?us-ascii?Q?sgrd9I+0yWkECQ0/vIYwwduiQ8+6vSYrzIPUu9+Rv/FD2U1kciX4qH/cmSWT?=
- =?us-ascii?Q?uJpTkIcUm1uLHEWSylgLV1GPxAEbheuSLV9fG0PSC5/wwvjhjd2mss3mZ7/7?=
- =?us-ascii?Q?JVZN8rLK6Y1MyKo9VKvPCtLkdNXBAo8Dq+LAVtdOutrjm8GY6P4uC5FFPA6z?=
- =?us-ascii?Q?qHxmqSbBxJEmmHwA0B3WkTw2AjfYfvbSp3DSJVO+hSTimNJVvu6NDPcJcJGY?=
- =?us-ascii?Q?T+210ZlvodGw36Zp/XIBf/bu+IfcVi05ghzQ999WwvLU7H9rT2PuoUiNnPw6?=
- =?us-ascii?Q?Op4iudyxvO2SAAPD2CAb3n+mwrjktHv1rmKlNd0sBGjtHYEDt38zaL/hWCnE?=
- =?us-ascii?Q?V5oW4qiyl1MeOx3pe5WYzsm+pXpDYqa8HEGpVEFCDzWjvdbl+xVX3Aw3pbKr?=
- =?us-ascii?Q?D0lpQWd1eIJQU0Ol7+MevHHmcLvdiIocGlt1I4/Pq6DhoZ4JJo1lxI7jPjNF?=
- =?us-ascii?Q?xGL0J7SKyRANI1xLye4Lucqfk7oZMZMwN4FcBGD9tUg7HZxGEIM7Bk6U5iwX?=
- =?us-ascii?Q?Uw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36dca965-fe90-4eb2-c0e6-08db92ee284a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2023 00:19:38.1643
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR84MB1582.NAMPRD84.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68794657-ccf9-4856-040e-08db9317d260
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2023 05:17:52.6091
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VZt9x7jFpSCQulJ6sZIoK5NrYqolfpFbRxflEdyob1YjgNPzullR3B78v6boj+87PxVdAFuAcyKqNcvhMj+uHUjJHbqPzaldTeE/S6tK5iI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7107
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W71l1ja8M30CjWfBa8j6ekxc5rhf40Jx75KP/Jn98A8qZ6+FabUC3Jq4rGk1BdbyaCrThYJwHv4uBhCbEZetUgYErOgJSxXYcAUmu56+6/M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR84MB1483
+X-OriginatorOrg: hpe.com
+X-Proofpoint-ORIG-GUID: 9h7GW2iqXS0XeWFegbfE66FLMlDp_MKN
+X-Proofpoint-GUID: 9h7GW2iqXS0XeWFegbfE66FLMlDp_MKN
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 2 URL's were un-rewritten
+MIME-Version: 1.0
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-02_03,2023-08-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=859 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2308020047
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-[ add linux-cxl ]
+Thanks, Jonathan. I will look into your suggestions and get back if I face =
+any issues.
 
-Hi Vidya, Lukas highlighted this thread to me as we, in linux-cxl land,
-are also seeing conflicts between ACS source validation and flows like
-CXL PM.
+Regards,
+Mohan
 
-Lukas Wunner wrote:
-> On Mon, Jul 31, 2023 at 01:32:27AM +0530, Vidya Sagar wrote:
-> > On 7/31/2023 1:10 AM, Lukas Wunner wrote:
-> > > On Mon, Jul 31, 2023 at 12:45:19AM +0530, Vidya Sagar wrote:
-> > > > PCIe 6.0, 6.12.1.1 specifies that downstream devices are permitted to
-> > > > send upstream messages before they have been assigned a bus number and
-> > > > such messages have a Requester ID with Bus number set to 00h.
-> > > > If the Downstream port has ACS Source Validation enabled, these messages
-> > > > will be detected as ACS violation error.
-> > > > 
-> > > > Hence, disable ACS Source Validation in the bridge device during
-> > > > hot-remove operation and re-enable it after enumeration of the
-> > > > downstream hierarchy but before binding the respective device drivers.
-> > > 
-> > > What are these messages that are sent before assignment of a bus number?
-> > 
-> > One example is the DRS (Device Readiness Status) message.
-> 
-> Please mention that in the commit message.
-> 
-> 
-> > > What's the user-visible issue that occurs when they're blocked?
-> > 
-> > I'm not sure about the issue one can observe when they are blocked, but, we
-> > have seen one issue when they are not blocked. When an endpoint sends a DRS
-> > message and an ACS violation is raised for it, the system can trigger DPC
-> > (Downstream Port Containment) if it is configured to do so for ACS
-> > violations. Once the DPC is released after handling it, system would go for
-> > link-up again, which results in root port receiving DRS once again from the
-> > endpoint and the cycle continues.
-> 
-> As an alternative to disabling ACS, have you explored masking ACS
-> Violations (PCI_ERR_UNC_ACSV) upon de-enumeration of a device and
-> unmasking them after assignment of a bus number?
 
-The problem is that still prevents things like CXL PM negotiation from
-completing.
+-----Original Message-----
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>=20
+Sent: Monday, July 31, 2023 5:06 PM
+To: "Parthasarathy, Mohan (HPC/AI and Labs)\" <mohan_parthasarathy@hpe.com>=
+"@domain.invalid
+Cc: linux-cxl@vger.kernel.org; shiju.jose@huawei.com
+Subject: Re: CXL RAS flows on Linux
 
-The conflict for CXL PM can hopefully be fixed in the spec and future
-devices, but that is at least a full generation of CXL devices that will
-fail to handle hotplug and secondary-bus resets.
+On Mon, 31 Jul 2023 06:06:27 +0000
+"Parthasarathy, Mohan (HPC/AI and Labs)"         <mohan_parthasarathy@hpe.c=
+om> wrote:
 
-One proposal I had for this was to enforce that the Downstream Port
-disables bus-master-enable and enforces P2P to redirect upstream when
-source validation is turned off. Then, when the device re-establishes
-the link and is re-enabled source-validation can be turned back on
-before downstream-port bus-master enable is set so that there is no
-window to launch memory-cycle attacks while source-validation is turned
-off.
+> Hi all,
 
-Is that something you would be willing to investigate for the next round
-of this patch Vidya?
+Hi Mohan,
+
+Great to have more interest in this aspect.
+
+>=20
+> I am very interested in the RAS enablement for CXL on Linux. Is there a R=
+AS project for CXL/Linux ?
+
+I'm not aware of a separate project, just mixture of work in the kernel and=
+ standard tools such as RAS daemon.  You'll find all the relevant stuff in =
+the archive linux-cxl https://lore.kernel.org/linux-cxl/
+
+We are definitely only part of the way there for RAS flows - have reporting=
+ but beyond that there is a lot of work still to do.
+
+>=20
+> 1)	Do we have a design specification somewhere on the RAS interfaces on L=
+inux for CXL that I can read on this ? Any document describing the correcta=
+ble and uncorrectable error flows for CXL.mem?
+
+From Linux side of things I'm not aware of any public docs (there will be v=
+arious internal ones in the companies are contributing).
+
+
+> 2)	Are there any error injections tests and testcases that I can experime=
+nt with to see the RAS flows with CXL on Linux, using QEMU ?
+
+The infrastructure is there but we don't have any automated scripted flows =
+yet.  Note we got some of this stuff upstream only recently so you will wan=
+t to build directly from the master branch or wait for the next qemu releas=
+e in a few weeks time. My staging branch at gitlab.com/jic23/qemu (cxl-* wh=
+atever latest date available is) runs ahead of that for features but I don'=
+t think we have much ras stuff in the queue currently.
+https://gitlab.com/jic23/qemu/-/commits/cxl-2023-07-17/=20
+
+
+Documentation is lagging as well, so most of the instructions are in the co=
+mmit messages
+e.g. For poison
+https://gitlab.com/qemu-project/qemu/-/commits/master/hw/cxl=20
+For DRAM event records etc
+https://lore.kernel.org/linux-cxl/20230530133603.16934-1-Jonathan.Cameron@h=
+uawei.com/
+Similar for Uncor and Cor events... They've been in for a while, so easiest
+is to look at the json files for cxl
+https://elixir.bootlin.com/qemu/v8.1.0-rc1/source/qapi/cxl.json
+
+For now RAS Daemon upstream support is lagging though you can see the RAS e=
+vents
+are there and there is a pull request for the various event queue based rep=
+orts.
+https://github.com/mchehab/rasdaemon/commits/master=20
+https://github.com/mchehab/rasdaemon/pull/104
+
+Injection is all done via the QMP interface qemu provides.
+
+I've not used it but I gather https://github.com/pmem/run_qemu is useful
+for bringing up suitable qemu configs to poke.
+
+If no events are coming through, check that the internal errors aren't
+masked in AER as I don't think we've fully resolved how to control
+that masking in the kernel yet.
+
+Let me know how you get on. We should document this stuff better but
+as ever there are too many things on the todo list :(
+
+Jonathan
+
+>=20
+> Any pointers for both would be very much appreciated.=20
+>=20
+> Thanks and Regards,
+> Mohan
+
