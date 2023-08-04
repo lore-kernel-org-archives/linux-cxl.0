@@ -2,144 +2,147 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAACC001DB
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Aug 2023 23:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9511DC04A6A
+	for <linux-cxl@archiver.kernel.org>; Sat,  5 Aug 2023 00:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbjHDX1f (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 4 Aug 2023 19:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
+        id S229750AbjHEAgB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 4 Aug 2023 20:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjHDX1e (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 19:27:34 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902F24EED
-        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 16:27:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691191649; x=1722727649;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=joZXmGjPAxRZoRKr6hWOPeQbk/gmp8Fuufduol5rRh8=;
-  b=XuCbwrUj9+zdzemxcT/37TXQYO4g8vXKLy15EKildNA8cm7Gmyj1uDc5
-   uFZNhyD+gqzzEzglz/FZQJbmg77VhIl+3x8bFQNFdwV9jvWa47dXrxc7s
-   Eu51Em+wwj7X1a40h4UTkmsXVW3+2Dbk1UeNkx7POvbJeFGN1XYKvWoip
-   fm/NFO5ItQkxhHAzvpCa/7jqkbeEe7tMtCkiZHCSHArHKy2oJafB57sYE
-   K41NlsKTFU2w+geJ6pwBLCuyAByDcqCwJFXEjIsnMNZiR4LLcE4YQ7DH4
-   jUxYTP2622B8oL/6OQrP4syqiMmuWAelJCw0qE7re+LFfq5ubpW1Iwjwn
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="349860921"
-X-IronPort-AV: E=Sophos;i="6.01,256,1684825200"; 
-   d="scan'208";a="349860921"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 16:27:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="795610398"
-X-IronPort-AV: E=Sophos;i="6.01,256,1684825200"; 
-   d="scan'208";a="795610398"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.168.219])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 16:27:28 -0700
-From:   alison.schofield@intel.com
-To:     Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org
-Subject: [PATCH] cxl/region: Refactor granularity select in cxl_port_setup_targets()
-Date:   Fri,  4 Aug 2023 16:27:26 -0700
-Message-Id: <20230804232726.1672782-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S229436AbjHEAf7 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 20:35:59 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13684EDE
+        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 17:35:57 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id D7CCE80830;
+        Sat,  5 Aug 2023 00:28:06 +0000 (UTC)
+Received: from pdx1-sub0-mail-a202.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 642578122A;
+        Sat,  5 Aug 2023 00:28:06 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1691195286; a=rsa-sha256;
+        cv=none;
+        b=BROaUglZFjj8bLV7T26EmdZP4XbFayQSrukvYOIkbeFT+4H3OTGbQeArKDhLe4pKdmEPyE
+        QiHNh5pSRdi3onPbqJwfPXzW2NbtaAQ+0ARjyMslckcBsOGkm9s94d4oNEX9kKvTkUPgCY
+        nur0150lpM/2d/I/XgyWMwuzVAEmAhcRUWXap2Tz9Houli4vibZNWm7UeFd/a2bLBEBuIq
+        MC02W5Nb2b5DIKCaagS/O4Notefw1znRHn18T0nMvqWVx1EiHvv8dR6kDtGSlw6m+1+y9G
+        1gBTMUEI2Tiq/FBTMQBOTZBm8bOFpZRt0ZopHquhLTRwQkenYpOeCVKv4P9zYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1691195286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=0xoVEnSLxpaCzmXMzTeYot2YZ62NSLeKyxDufltPtOg=;
+        b=kykfkU6UrOCZpmREAHnZlGPFYNclUCT6psaNVUXtYMoh9CK/HJg/YGgVS5qHN+epAIjiCK
+        D8U3kHMg6rLOFF2dgChqXXyW0wYHizESUY2mA9HuX9oL6Lvd4IW4+QBvmdI5YYt6tk+Uz2
+        ef9MGjEybiSREoPofJqmQaaECIFGR6IeZVJWI9fA9thQRjeqX2o0ubb3fKBI3NJwykh2IP
+        JJrTH9e+1cD+pucWH50Td13dUwlliUrXGFguqLvLKRVokPlnurUXdZtBNdGdDzs8hVj0Zh
+        DcRDzMHB0LhR0AjHKCezJVsCZZK1KM1u4KoyfDyoR2MjGlO0ULbIWoL4fn8Sng==
+ARC-Authentication-Results: i=1;
+        rspamd-849d547c58-t6msn;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Whimsical-Chief: 2ca4d1bd2978990b_1691195286685_1857406697
+X-MC-Loop-Signature: 1691195286685:2777194971
+X-MC-Ingress-Time: 1691195286685
+Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.122.193.216 (trex/6.9.1);
+        Sat, 05 Aug 2023 00:28:06 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4RHk2F1Pxqz19;
+        Fri,  4 Aug 2023 17:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1691195286;
+        bh=0xoVEnSLxpaCzmXMzTeYot2YZ62NSLeKyxDufltPtOg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=kyFsdhPV8NlfUt3snQhcwiFQyOe88mzuYlqELToqm8wLy31LBWxO4L+abafwQcuzo
+         5eHqmiPbwHHgS+E9pX2BhbudqD4HaPWCgTTdKqYHs+26o3XCF8siqlpM8Cl4PkNd4O
+         QfORbK1QKkLXiSL3UNw2I7D7StHMAVFQxiSzSNdoFFMp6GVXJHsxCvzO3B42gs2vme
+         5m94JlrtpypZQMik+xVh1un3UTtyAHF3TOVZuDPj1PvMCjZeg19shJvWwjDlSYqD6+
+         2uLrMISohEwOFMon183TVqN94sxDyk0TFVc3V+4k1Njw3a6gHM0UkQfu9frPpDvkY2
+         cI702VaJXne9A==
+Date:   Fri, 4 Aug 2023 16:50:15 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        fan.ni@samsung.com, dave.jiang@intel.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 3/3] cxl/memdev: Only show sanitize sysfs files when
+ supported
+Message-ID: <emvsx2ugpmxexkk6sic2mv3xb55h4avr23grsltisxxb77osi2@gt34rlkmcnhj>
+References: <20230726051940.3570-1-dave@stgolabs.net>
+ <20230726051940.3570-4-dave@stgolabs.net>
+ <20230804151612.000066cf@Huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230804151612.000066cf@Huawei.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
+On Fri, 04 Aug 2023, Jonathan Cameron wrote:
 
-In cxl_port_setup_targets() the region driver validates the
-configuration of auto-discovered region decoders, as well
-as decoders the driver is preparing to program.
+>On Tue, 25 Jul 2023 22:19:40 -0700
+>Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+>> If the device does not support Sanitize or Secure Erase commands,
+>> hide the respective sysfs interfaces such that the operation can
+>> never be attempted.
+>>
+>> In order to be generic, keep track of the enabled security commands
+>> found in the CEL - the driver does not support Security Passthrough.
+>>
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>
+>Ah just realized I was too late on this one as it's upstream. Ah well I'll
+>comment anyway (I'd already reviewed most of it :)
 
-The existing calculations use the encrypted interleave granularity
-value, the eig, to create an interleave granularity that properly
-fans out when routing an x1 interleave to a greater than x1 interleave.
+Yes, this has already been picked up by Linus. Regardless, thanks for
+having a look at the series.
 
-That all worked well, until this config came along:
-Host Bridge: 2 way at 256 granularity
-    Switch Decoder_A:	1 way at 512
-        Endpoint_X:	2 way at 512
-    Switch Decoder_B:	1 way at 512
-        Endpoint_Y:	2 way at 512
+>
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-cxl |  6 ++--
+>>  drivers/cxl/core/mbox.c                 | 45 ++++++++++++++++++++++++-
+>>  drivers/cxl/core/memdev.c               | 19 +++++++++++
+>>  drivers/cxl/cxlmem.h                    | 15 +++++++++
+>>  4 files changed, 82 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+>> index c4c4acb1f3b3..087f762ebfd5 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+>> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+>> @@ -86,7 +86,8 @@ Description:
+>>		HPA ranges. This permits avoiding explicit global CPU cache
+>>		management, relying instead for it to be done when a region
+>>		transitions between software programmed and hardware committed
+>> -		states.
+>> +		states. If this file is not present, then there is no hardware
+>> +		support for the operation.
+>
+>Or older kernel....
+>
+>I don't think we need to talk about when they aren't present as it just complicates
+>the ABI docs.  The similar case for the DOE is there to explain the weird corner
+>of it's there, but broken.
+>An example were it's not documented (I think) is the poison commands so I think
+>we should keep that absence as meaning the obvious (you can't use the interface).
 
-When the Host Bridge interleave is greater that 1, and the root
-decoder interleave is exactly 1, the region driver needs to
-consider the number of targets in the region when calculating
-the expected granularity.
+*nod* - I'll have that present for the future.
 
-While examining the existing logic, and trying to cover the case
-above, a couple of simplifications appeared, hence this proposed
-refactoring.
-
-The first simplicfication is to apply the logic to the unencrypted
-values and use the existing helper function granularity_to_eig() to
-translate the desired granularity to the encrypted form. This means
-the comment and code regarding setting address bits is discarded.
-Although that logic was not wrong, it adds a level of complexity that
-is not required in the granularity selection. The eig and eiw are
-indeed part of the routing instructions programmed into the decoders.
-Up-level the discussion to plain ways and granularity for clearer
-analysis.
-
-The second simplification reduces the logic to a single granularity
-calculation that works for all cases. The new calculation doesn't
-care if parent_iw => 1,  because parent_iw is used as a multiplier.
-
-The refactor cleans up a useless assignment of eiw, made after the iw
-is already calculated.
-
-Regression testing included an examination of all of the ways and
-granularity selections made during a run of the cxl_test unit tests.
-There were no differences in selections before and after this patch.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/region.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e115ba382e04..5a1cc59cca99 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1154,16 +1154,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	}
- 
- 	/*
--	 * If @parent_port is masking address bits, pick the next unused address
--	 * bit to route @port's targets.
-+	 * Interleave granularity is a multiple of @parent_port granularity.
-+	 * Multiplier is the parent port interleave ways.
- 	 */
--	if (parent_iw > 1 && cxl_rr->nr_targets > 1) {
--		u32 address_bit = max(peig + peiw, eiw + peig);
--
--		eig = address_bit - eiw + 1;
--	} else {
--		eiw = peiw;
--		eig = peig;
-+	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
-+	if (rc) {
-+		dev_dbg(&cxlr->dev,
-+			"%s: invalid granularity calculation (%d * %d)\n",
-+			dev_name(&parent_port->dev), parent_ig, parent_iw);
-+		return rc;
- 	}
- 
- 	rc = eig_to_granularity(eig, &ig);
-
-base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
--- 
-2.37.3
-
+Thanks,
+Davidlohr
