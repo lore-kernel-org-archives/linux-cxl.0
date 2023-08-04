@@ -2,562 +2,306 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476DDC001DB
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Aug 2023 16:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C87CC001DB
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Aug 2023 16:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbjHDQgb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 4 Aug 2023 12:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48630 "EHLO
+        id S229923AbjHDQmB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 4 Aug 2023 12:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjHDQga (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 12:36:30 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFCCB2
-        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 09:36:27 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RHWTk6pC3z688hZ;
-        Sat,  5 Aug 2023 00:32:42 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 4 Aug
- 2023 17:36:24 +0100
-Date:   Fri, 4 Aug 2023 17:36:23 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Fan Ni <fan.ni@samsung.com>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "gregory.price@memverge.com" <gregory.price@memverge.com>,
-        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
-        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        "dave@stgolabs.net" <dave@stgolabs.net>,
-        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
-        "nifan@outlook.com" <nifan@outlook.com>
-Subject: Re: [Qemu PATCH v2 5/9] hw/mem/cxl_type3: Add host backend and
- address space handling for DC regions
-Message-ID: <20230804173623.00007707@Huawei.com>
-In-Reply-To: <20230725183939.2741025-6-fan.ni@samsung.com>
-References: <20230725183939.2741025-1-fan.ni@samsung.com>
-        <CGME20230725183957uscas1p1eeb8e8eccc6c00b460d183027642374b@uscas1p1.samsung.com>
-        <20230725183939.2741025-6-fan.ni@samsung.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229663AbjHDQlm (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 12:41:42 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79402B2
+        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 09:41:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dtf1p+6/Z5xANPCpsLe72JCubfVNkRTqxAb7Lvpt0hFQQ8wNXO8Nyhm63iJSR1t9axgl6cxFT5n9kCzOp/sNB7j4cjkoMnKt0dIAJ33nvw1vAp+2FIEQ4DzhgvBPJta11SEs6QW3NWEZTZIeAXzN027QRT6J88kPL1Z/oPimtJzXrdkX6c9pbub0qt4fC+82v5Hx6ffoUh/y+vvO1cQenaEi2c4rQidxDZ62a956DfXFQjYiOuQUBAI1ritDZfOc6o/xd9CVkQfNrkWgvuCtLw2evPDtirBHXS3AMqSBKpU2jfGsXehGNrUkJPCXu7UzUtDvWTMjWRRNUXl2yB+qwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YKqOWo/deKUHHtKe+tveTaWLRJoX2tc/N10v6a1x2R0=;
+ b=S86iZsaA6MnR2m9ceidaIddOEDHnG2ROstY1Pygj/9AaUQ5+Cu5Z28Kn1xlwGG3CXIfegzwCnHX2/gnsr7WJxSEOyInRN4D9EXMm94EOknOWRiJa11/BWhPpqzOzyidDipRZio5KclW5o2HC14KrcNKdw8iUdmZci4rnQE1KovjOsBvngn1J80IGu/mAPQSaxi3MGoR8GGijjzz9XcEqCa/q6OCugmsG4IKIzkcUJhmnznWrpp6bG1quFtt54UKxQZq+O8bOcNFL3wKPnZBPTxvmcoWdDBKD6kbeHfWJJbA8oDfKaJ2cRH7ztpiNPyCT4bLL1iSHPyUeMtcJPKJEsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YKqOWo/deKUHHtKe+tveTaWLRJoX2tc/N10v6a1x2R0=;
+ b=I42JmKLqrfend91+whLxwjfxsA8Nswz/SPOlrEDCaEE1R1aNj1sqpM37RTQdJdrfXY5EWhB0Xy4BuEfK3lVdNUKeBXI4HWUT36fE5mISHrHeo4xcn0rJ0zKoVdTa2xMfMJU6XE3KYFp6N7z+b0p5+aPZNUXE3kgvlsp9UGrauvs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by PH0PR17MB6532.namprd17.prod.outlook.com (2603:10b6:510:2a2::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.47; Fri, 4 Aug
+ 2023 16:41:36 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::28b3:ad85:6a11:3872]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::28b3:ad85:6a11:3872%6]) with mapi id 15.20.6652.020; Fri, 4 Aug 2023
+ 16:41:35 +0000
+Date:   Fri, 4 Aug 2023 12:41:26 -0400
+From:   Gregory Price <gregory.price@memverge.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Gregory Price <gourry.memverge@gmail.com>, qemu-devel@nongnu.org,
+        linux-cxl@vger.kernel.org, junhee.ryu@sk.com, kwangjin.ko@sk.com
+Subject: Re: [PATCH 2/4] cxl/mailbox: interface to add CCI commands to an
+ existing CCI
+Message-ID: <ZM0qNhbVxsSEs7nQ@memverge.com>
+References: <20230721163505.1910-1-gregory.price@memverge.com>
+ <20230721163505.1910-3-gregory.price@memverge.com>
+ <20230804161414.00006eaa@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230804161414.00006eaa@huawei.com>
+X-ClientProxiedBy: BYAPR01CA0027.prod.exchangelabs.com (2603:10b6:a02:80::40)
+ To SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|PH0PR17MB6532:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7594983a-d35f-4687-dc59-08db9509a99d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8rktlwGLFmdl3VCYqTAoBZ4RMLqXa5ydYVnIlu1kQTkaUSbuuF/KY/GjESuqOGT8iPlikJ25DSd2AbM2LrMp1QzJaEwONVdHOle4N50pYC8NEjddcvHVvBOtX0RP61q5V93gI5p/lZKN5cNmQHKKb0vsaK7/kXOqc5mQHMAA9zFngfnbytzbKRfGSGCrNT8EvJwhbPYBXqAtAMPNJSHweVdiPmWcvQxj0QAxgdX3CxpDTn9zZMNarOjugd9Es9Mlse6Vi4aSjbifcXlC8U+Oop/boeV5ET/LE65cvSjOe9v94bEAhi9eQ2GfbCS72nY+TnMPIiosGkUCtrvGJ9XBhhcR3Mk+bZLwpOqKebFQ/R8AYwIW3+Dz1CiDd98O3gNJ6Cs75UT6/S/0IXkYORkBXUB4gipZXrr5v5JPMHRbii3+aaj+ohUnnAINc3Vq8fmjCMDbzy9dwvsnaEzBcT8R/lUlsEyKAfZJqujQSCIATkc/x/2zL57cJI4XRWyY3pQvqjyPxr/Flcakpr+GBsUn3vfF8ICkfUusKOEqMk/Ohxs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(376002)(39830400003)(346002)(136003)(1800799003)(186006)(451199021)(8936002)(2616005)(8676002)(26005)(83380400001)(6506007)(53546011)(4326008)(66556008)(2906002)(66946007)(6916009)(5660300002)(66476007)(316002)(44832011)(15650500001)(6486002)(6666004)(966005)(6512007)(478600001)(38100700002)(36756003)(86362001)(41300700001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LZGV8MEIueTJ83g+4kBCWTodmiibQUAd1jHxOrdoS5o1VpGOkTKp1xHAADwx?=
+ =?us-ascii?Q?UAHWKl3CZlEG2NZ9D2saLEGzE6m3GHtE/3H1WW4E/0tbBppQHYl2ZyG+YU0A?=
+ =?us-ascii?Q?7MAyEPGx74luNBkmDWmi2mDAkUZ8OO0XmAm5uFqPAUiZOLIjZolCjKxPPUjj?=
+ =?us-ascii?Q?myYvcQw6E8RzYJXg79BLptAtmp6nTFuASMdoM+LEKcbu/+E6z/4mRxc9TnJ6?=
+ =?us-ascii?Q?Wh26vl7K80stAvEuF749Lv0dzi9nXitqUspzZhV78zIigWLRR7obFvrrXVM/?=
+ =?us-ascii?Q?KwEI+I65yHkznBhSL1K/UZSaggMVq9eWHh8mhsR66t2prZ8T8eO6fEQre3Aq?=
+ =?us-ascii?Q?kam8kVsmL1MesKpePvrZ7zK+KYtC/STtlZ8nTVCW9RBj9ISjLR5NifafOK+C?=
+ =?us-ascii?Q?2Sm2q7IdzRVguSi/Q6KKAgqHM0UoH8B2aBHzMzau6Iw4BzQisiOBwHgEAJC2?=
+ =?us-ascii?Q?UUqk4oeoosvxBEf3xeQOTKTRtyHHwbo7rj5cum/zRzkq/CfVj5ngkqx3GwO1?=
+ =?us-ascii?Q?h7IjKAHri9IjZSKlSxLd8Qgs0wQRZWYjXFdqcDcEuRdEljIErRFe9t1AS5N4?=
+ =?us-ascii?Q?FCKDsO2GmKifqiYQU5taoOAeuZA+TL9FrCBYskY/6NVy3js13wl8id8qP3+T?=
+ =?us-ascii?Q?F1ERTYml+NToAtvdBivemRsotAXUmFsqC+QPxpAejXFCfc5nW81h6v7tQDKP?=
+ =?us-ascii?Q?xZokhypCET4jGC0dpzzrdBJY8FrkSvRocShateCkTiKBx4UifBc3TUCU+5MM?=
+ =?us-ascii?Q?YWoqJza/xMAFVP1LC8bR3Dsx1fXqkIIWGuubNUTFiB+4mMHKPNgoA1JlGoO4?=
+ =?us-ascii?Q?9uZLUX0T8AiI/I0dYUPK0bBE2DZhuE0lbygr0ZrWdM05odBLepC7X2avHuqc?=
+ =?us-ascii?Q?jkcW5rDI6UQyEWL5HQcjBPdmUZqcPNHsfY0bFsoQVJk0Aul42Y287i2ur04x?=
+ =?us-ascii?Q?uphfp2jH1QLQBI0mX3FrHWQWHJc96X7dZ2hvFGdGQqLus31JSEhJTUZgRg8b?=
+ =?us-ascii?Q?47YNxx0TZIeFobeBWNpsm3ZDjvmLP1GgKFu9JD1ep+ikSLh0G9M9vPXpD3k0?=
+ =?us-ascii?Q?wAAfSEcPOPuRHQhSe4Zc9rewIOSO+Sn/EnVDvResd3GmvQOP1+kgG0XJKI7j?=
+ =?us-ascii?Q?gxXGCMDEkk0r503nhrTnGkBzn10uix9i/5C9yc72WIrrz+xHIW+X2Hjjgg9V?=
+ =?us-ascii?Q?gQ8LTVwwjI4e3iX1u8Nqb1JhxBbl0/emilLLXLbC9lZYc1yW3wgKe0OTobGR?=
+ =?us-ascii?Q?eiwOaXFBFSBjL3oSObHsignZPGs+x/xQWPtcGkorJt2L9WduhmVxKC9uShQX?=
+ =?us-ascii?Q?b0MpIDvvLzDdVK6a1OIo4Z8HpnQnPRFrMazFbHchxHJnZfaycUJ8gSVvqM5s?=
+ =?us-ascii?Q?tZukuVU6P1Z0bCFLxoH84xKNPjGaF7zFFaLGuPwTmzyNROVLcyj1y5wlslUK?=
+ =?us-ascii?Q?4csAtg/yorESwvFm9gUfq6WA/lq5ZBg5ci0r4msOQJUZjzAG5aHkFE/pPXDE?=
+ =?us-ascii?Q?+BbvWz1hTK6ckPQc6sdm6GRAnBUXD0czYbsYdwYczmd9Ym9f7xy3bCqV15KX?=
+ =?us-ascii?Q?JGXEJAg35W/28sN0HfJYA2xHu2Xs6LHb1OjF7sjaR9HyiqGVvu8irmgZuCKq?=
+ =?us-ascii?Q?Jg=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7594983a-d35f-4687-dc59-08db9509a99d
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2023 16:41:35.5689
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 13VJcCDcttuQm9jJxfyw7KucNXuiKSOfKwi7zrGxhlE8oValv/5xTZUjbZqHozeD0AvtcWjSwxoGh4MPhJZwiu+RYEKXbOTkxSEvq3gkKwI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR17MB6532
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 25 Jul 2023 18:39:56 +0000
-Fan Ni <fan.ni@samsung.com> wrote:
-
-> From: Fan Ni <nifan@outlook.com>
+On Fri, Aug 04, 2023 at 04:14:14PM +0100, Jonathan Cameron wrote:
+> On Fri, 21 Jul 2023 12:35:06 -0400
+> Gregory Price <gourry.memverge@gmail.com> wrote:
 > 
-> Add (file/memory backed) host backend, all the dynamic capacity regions
-> will share a single, large enough host backend. Set up address space for
-> DC regions to support read/write operations to dynamic capacity for DCD.
+> > This enables wrapper devices to customize the base device's CCI
+> > (for example, with custom commands outside the specification)
+> > without the need to change the base device.
+> > 
+> > The also enabled the base device to dispatch those commands without
+> > requiring additional driver support.
+> > 
+> > Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> > ---
+> >  hw/cxl/cxl-mailbox-utils.c  | 19 +++++++++++++++++++
+> >  include/hw/cxl/cxl_device.h |  2 ++
+> >  2 files changed, 21 insertions(+)
+> > 
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index ddee3f1718..cad0cd0adb 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -1383,6 +1383,25 @@ static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[
+> >      }
+> >  }
+> >  
+> > +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256], size_t payload_max)
+> > +{
+> > +    cci->payload_max = payload_max > cci->payload_max ? payload_max : cci->payload_max;
+> > +    for (int set = 0; set < 256; set++) {
+> > +        for (int cmd = 0; cmd < 256; cmd++) {
+> > +            if (cxl_cmd_set[set][cmd].handler) {
+> > +                const struct cxl_cmd *c = &cxl_cmd_set[set][cmd];
+> > +                cci->cxl_cmd_set[set][cmd] = *c;
+> Don't interleave definitions and code.
 > 
-> With the change, following supports are added:
-> 1. add a new property to type3 device "nonvolatile-dc-memdev" to point to host
->    memory backend for dynamic capacity;
-> 2. add namespace for dynamic capacity for read/write support;
-> 3. create cdat entries for each dynamic capacity region;
-> 4. fix dvsec range registers to include DC regions.
+> > +                struct cel_log *log =
+> > +                    &cci->cel_log[cci->cel_size];
+> > +
+> > +                log->opcode = (set << 8) | cmd;
+> > +                log->effect = c->effect;
+> > +                cci->cel_size++;
 > 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-Hi Fan,
+> So my gut feeling on this is based on the large amount of overlapping code.  I might queue it
+> as it stands, but I'd like to see this refactored.
+> 
+> 1) Single copy routine used in all places that copie in any new entries to cci->cxl_cmd_set[][]
+> 2) A single cel_log builder function to be called in normal path and after an update. Just rebuild
+> the whole thing rather than trying to append to it I think.
+> 
+> Something like (so far untested but I'll poke it with Fan's code in a few mins)
+> 
+> However this is all proving rather costly in space so maybe we need a better
+> representation for the sparse nature of cxl comamnds - a job for another day.
 
-I'm not sure if we want to do all regions backed by one memory backend
-or one backend each.  It will become complex when some are shared
-(e.g. what Gregory is working on).
+I'd certainly considered the issue of space, but it seemed better to
+blow up the size in one commit and then come back around and change the
+structure out from under the work this unblocks.  What we save in space
+we sacrifice in complexity, but the structure seems simple enough that a
+change shouldn't take a ton of scrutiny to get right.
 
-A few questions inline.  In particular there are subtle changes to
-existing handling that are either bug fixes (in which case they need
-to be sent first) or bugs / have no effect and shouldn't be in here.
+One downside of the approach here is what happens when there's an
+overlap and custom devices build up over time.  As in - if i steal the
+0xFF command group for my custom emulated MHMLD DCD Everything Super Device,
+what happens if the spec finally comes around to defining 0xFF as a real
+command set?
 
+tl;dr: Should the copy function error on overlap detections?
 
+Quick read-back through the spec, I don't see explicit carve-outs for
+reserved command regions for custom sets, might be worth a discussion.
+
+For now it shouldn't be an issue.
+
+> 
+> 
+> From 8ab48adfb2b481be0702b84a0d172a4f142b0df6 Mon Sep 17 00:00:00 2001
+> From: Gregory Price <gourry.memverge@gmail.com>
+> Date: Fri, 21 Jul 2023 12:35:06 -0400
+> Subject: [PATCH] cxl/mailbox: interface to add CCI commands to an existing CCI
+> 
+> This enables wrapper devices to customize the base device's CCI
+> (for example, with custom commands outside the specification)
+> without the need to change the base device.
+> 
+> The also enabled the base device to dispatch those commands without
+> requiring additional driver support.
+> 
+> Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> Link: https://lore.kernel.org/r/20230721163505.1910-3-gregory.price@memverge.com
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> --
+> Heavily edited by Jonathan Cameron to increase code reuse
 > ---
->  hw/cxl/cxl-mailbox-utils.c  |  19 +++-
->  hw/mem/cxl_type3.c          | 203 +++++++++++++++++++++++++++++-------
->  include/hw/cxl/cxl_device.h |   4 +
->  3 files changed, 185 insertions(+), 41 deletions(-)
+>  include/hw/cxl/cxl_device.h |  2 ++
+>  hw/cxl/cxl-mailbox-utils.c  | 21 +++++++++++++++++++--
+>  2 files changed, 21 insertions(+), 2 deletions(-)
 > 
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 0c9254dff9..2a3050fbad 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -297,6 +297,8 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
+>  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>                                    DeviceState *d, size_t payload_max);
+>  void cxl_init_cci(CXLCCI *cci, size_t payload_max);
+> +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+> +                          size_t payload_max);
+>  int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+>                              size_t len_in, uint8_t *pl_in,
+>                              size_t *len_out, uint8_t *pl_out,
 > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> index dd5ea95af8..0511b8e6f7 100644
+> index 37703f254f..852e5a046b 100644
 > --- a/hw/cxl/cxl-mailbox-utils.c
 > +++ b/hw/cxl/cxl-mailbox-utils.c
-> @@ -388,9 +388,11 @@ static CXLRetCode cmd_firmware_update_get_info(struct cxl_cmd *cmd,
->          char fw_rev4[0x10];
->      } QEMU_PACKED *fw_info;
->      QEMU_BUILD_BUG_ON(sizeof(*fw_info) != 0x50);
-> +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
->  
->      if ((cxl_dstate->vmem_size < CXL_CAPACITY_MULTIPLIER) ||
-> -        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER)) {
-> +        (cxl_dstate->pmem_size < CXL_CAPACITY_MULTIPLIER) ||
-> +        (ct3d->dc.total_capacity < CXL_CAPACITY_MULTIPLIER)) {
->          return CXL_MBOX_INTERNAL_ERROR;
+> @@ -1353,9 +1353,9 @@ static void bg_timercb(void *opaque)
 >      }
->  
-> @@ -531,7 +533,8 @@ static CXLRetCode cmd_identify_memory_device(struct cxl_cmd *cmd,
->      CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
->  
->      if ((!QEMU_IS_ALIGNED(cxl_dstate->vmem_size, CXL_CAPACITY_MULTIPLIER)) ||
-> -        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER))) {
-> +        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER)) ||
-> +        (!QEMU_IS_ALIGNED(ct3d->dc.total_capacity, CXL_CAPACITY_MULTIPLIER))) {
->          return CXL_MBOX_INTERNAL_ERROR;
->      }
->  
-> @@ -566,9 +569,11 @@ static CXLRetCode cmd_ccls_get_partition_info(struct cxl_cmd *cmd,
->          uint64_t next_pmem;
->      } QEMU_PACKED *part_info = (void *)cmd->payload;
->      QEMU_BUILD_BUG_ON(sizeof(*part_info) != 0x20);
-> +    CXLType3Dev *ct3d = container_of(cxl_dstate, CXLType3Dev, cxl_dstate);
->  
->      if ((!QEMU_IS_ALIGNED(cxl_dstate->vmem_size, CXL_CAPACITY_MULTIPLIER)) ||
-> -        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER))) {
-> +        (!QEMU_IS_ALIGNED(cxl_dstate->pmem_size, CXL_CAPACITY_MULTIPLIER)) ||
-> +        (!QEMU_IS_ALIGNED(ct3d->dc.total_capacity, CXL_CAPACITY_MULTIPLIER))) {
->          return CXL_MBOX_INTERNAL_ERROR;
->      }
->  
-> @@ -880,7 +885,13 @@ static CXLRetCode cmd_media_clear_poison(struct cxl_cmd *cmd,
->      struct clear_poison_pl *in = (void *)cmd->payload;
->  
->      dpa = ldq_le_p(&in->dpa);
-> -    if (dpa + CXL_CACHE_LINE_SIZE > cxl_dstate->static_mem_size) {
-> +    if (dpa + CXL_CACHE_LINE_SIZE >= cxl_dstate->static_mem_size
-
-If there is already a bug here we should pull it out. If not I can't
-see why the >= change is here.  
-
-> +            && ct3d->dc.num_regions == 0) {
-> +        return CXL_MBOX_INVALID_PA;
-> +    }
-> +
-> +    if (ct3d->dc.num_regions && dpa + CXL_CACHE_LINE_SIZE >=
-> +            cxl_dstate->static_mem_size + ct3d->dc.total_capacity) {
->          return CXL_MBOX_INVALID_PA;
->      }
->  
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index b29bb2309a..76bbd9f785 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -20,6 +20,7 @@
->  #include "hw/pci/spdm.h"
->  
->  #define DWORD_BYTE 4
-> +#define CXL_CAPACITY_MULTIPLIER   (256 * MiB)
->  
->  /* Default CDAT entries for a memory region */
->  enum {
-> @@ -33,8 +34,8 @@ enum {
->  };
->  
->  static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
-> -                                         int dsmad_handle, MemoryRegion *mr,
-> -                                         bool is_pmem, uint64_t dpa_base)
-> +        int dsmad_handle, uint8_t flags,
-> +        uint64_t dpa_base, uint64_t size)
->  {
->      g_autofree CDATDsmas *dsmas = NULL;
->      g_autofree CDATDslbis *dslbis0 = NULL;
-> @@ -53,9 +54,9 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->              .length = sizeof(*dsmas),
->          },
->          .DSMADhandle = dsmad_handle,
-> -        .flags = is_pmem ? CDAT_DSMAS_FLAG_NV : 0,
-> +        .flags = flags,
->          .DPA_base = dpa_base,
-> -        .DPA_length = memory_region_size(mr),
-> +        .DPA_length = size,
->      };
->  
->      /* For now, no memory side cache, plausiblish numbers */
-> @@ -137,9 +138,9 @@ static int ct3_build_cdat_entries_for_mr(CDATSubHeader **cdat_table,
->           * NV: Reserved - the non volatile from DSMAS matters
->           * V: EFI_MEMORY_SP
->           */
-> -        .EFI_memory_type_attr = is_pmem ? 2 : 1,
-> +        .EFI_memory_type_attr = flags ? 2 : 1,
-
-This doesn't look good.  Previously we used a boolean to control
-this now you are using flags which contains other things?
-
-I don't see the flags expanding that much more, so instead of
-this I'd just change the function to take two booleans.
-is_pmem, is_dynamic
-
->          .DPA_offset = 0,
-> -        .DPA_length = memory_region_size(mr),
-> +        .DPA_length = size,
->      };
->  
->      /* Header always at start of structure */
-> @@ -158,21 +159,28 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->      g_autofree CDATSubHeader **table = NULL;
->      CXLType3Dev *ct3d = priv;
->      MemoryRegion *volatile_mr = NULL, *nonvolatile_mr = NULL;
-> +    MemoryRegion *dc_mr = NULL;
->      int dsmad_handle = 0;
->      int cur_ent = 0;
->      int len = 0;
->      int rc, i;
-> +    uint64_t vmr_size = 0, pmr_size = 0;
->  
-> -    if (!ct3d->hostpmem && !ct3d->hostvmem) {
-> +    if (!ct3d->hostpmem && !ct3d->hostvmem && !ct3d->dc.num_regions) {
->          return 0;
->      }
->  
-> +    if (ct3d->hostpmem && ct3d->hostvmem && ct3d->dc.host_dc) {
-> +        warn_report("The device has static ram and pmem and dynamic capacity");
-> +    }
-> +
->      if (ct3d->hostvmem) {
->          volatile_mr = host_memory_backend_get_memory(ct3d->hostvmem);
->          if (!volatile_mr) {
->              return -EINVAL;
->          }
->          len += CT3_CDAT_NUM_ENTRIES;
-> +        vmr_size = volatile_mr->size;
->      }
->  
->      if (ct3d->hostpmem) {
-> @@ -181,6 +189,19 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->              return -EINVAL;
->          }
->          len += CT3_CDAT_NUM_ENTRIES;
-> +        pmr_size = nonvolatile_mr->size;
-> +    }
-> +
-> +    if (ct3d->dc.num_regions) {
-> +        if (ct3d->dc.host_dc) {
-> +            dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> +            if (!dc_mr) {
-> +                return -EINVAL;
-> +            }
-> +            len += CT3_CDAT_NUM_ENTRIES * ct3d->dc.num_regions;
-> +        } else {
-> +            return -EINVAL;
-> +        }
->      }
->  
->      table = g_malloc0(len * sizeof(*table));
-> @@ -190,8 +211,8 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->  
->      /* Now fill them in */
->      if (volatile_mr) {
-> -        rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++, volatile_mr,
-> -                                           false, 0);
-> +        rc = ct3_build_cdat_entries_for_mr(table, dsmad_handle++,
-> +                0, 0, vmr_size);
->          if (rc < 0) {
->              return rc;
->          }
-> @@ -200,14 +221,37 @@ static int ct3_build_cdat_table(CDATSubHeader ***cdat_table, void *priv)
->  
->      if (nonvolatile_mr) {
->          rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent]), dsmad_handle++,
-> -                                           nonvolatile_mr, true,
-> -                                           (volatile_mr ?
-> -                                            memory_region_size(volatile_mr) : 0));
-> +                CDAT_DSMAS_FLAG_NV, vmr_size, pmr_size);
-
-These lines don't end up that long, so I'd prefer to keep aligned 
-with the brackets where we can do so and stay under 80 chars.
-
->          if (rc < 0) {
->              goto error_cleanup;
->          }
->          cur_ent += CT3_CDAT_NUM_ENTRIES;
->      }
-> +
-> +    if (dc_mr) {
-> +        uint64_t region_base = vmr_size + pmr_size;
-> +
-> +        /*
-> +         * Currently we create cdat entries for each region, should we only
-> +         * create dsmas table instead??
-> +         * We assume all dc regions are non-volatile for now.
-> +         *
-> +         */
-> +        for (i = 0; i < ct3d->dc.num_regions; i++) {
-> +            rc = ct3_build_cdat_entries_for_mr(&(table[cur_ent])
-> +                    , dsmad_handle++
-> +                    , CDAT_DSMAS_FLAG_NV | CDAT_DSMAS_FLAG_DYNAMIC_CAP
-> +                    , region_base, ct3d->dc.regions[i].len);
-
-Formatting should have those , on the end of lines, not start of next ones.
-
-> +            if (rc < 0) {
-> +                goto error_cleanup;
-> +            }
-> +            ct3d->dc.regions[i].dsmadhandle = dsmad_handle - 1;
-> +
-> +            cur_ent += CT3_CDAT_NUM_ENTRIES;
-> +            region_base += ct3d->dc.regions[i].len;
-> +        }
-> +    }
-> +
->      assert(len == cur_ent);
->  
->      *cdat_table = g_steal_pointer(&table);
-> @@ -435,11 +479,24 @@ static void build_dvsecs(CXLType3Dev *ct3d)
->              range2_size_hi = ct3d->hostpmem->size >> 32;
->              range2_size_lo = (2 << 5) | (2 << 2) | 0x3 |
->                               (ct3d->hostpmem->size & 0xF0000000);
-> +        } else if (ct3d->dc.host_dc) {
-> +            range2_size_hi = ct3d->dc.host_dc->size >> 32;
-> +            range2_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-> +                             (ct3d->dc.host_dc->size & 0xF0000000);
->          }
-> -    } else {
-> +    } else if (ct3d->hostpmem) {
->          range1_size_hi = ct3d->hostpmem->size >> 32;
->          range1_size_lo = (2 << 5) | (2 << 2) | 0x3 |
->                           (ct3d->hostpmem->size & 0xF0000000);
-> +        if (ct3d->dc.host_dc) {
-> +            range2_size_hi = ct3d->dc.host_dc->size >> 32;
-> +            range2_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-> +                             (ct3d->dc.host_dc->size & 0xF0000000);
-> +        }
-> +    } else {
-> +        range1_size_hi = ct3d->dc.host_dc->size >> 32;
-> +        range1_size_lo = (2 << 5) | (2 << 2) | 0x3 |
-> +            (ct3d->dc.host_dc->size & 0xF0000000);
->      }
-I think we concluded in that other thread that DCD doesn't belong in here
-at all?  I'll leave it for now though.
-
->  
->      dvsec = (uint8_t *)&(CXLDVSECDevice){
-> @@ -708,7 +765,8 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
 >  }
 >  
->  /*
-> - * Create a dc region to test "Get Dynamic Capacity Configuration" command.
-> + * Create dc regions.
-> + * TODO: region parameters are hard coded, may need to change in the future.
->   */
->  static int cxl_create_dc_regions(CXLType3Dev *ct3d)
+> -void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> +static void cxl_rebuild_cel(CXLCCI *cci)
 >  {
-> @@ -739,7 +797,8 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
->  {
->      DeviceState *ds = DEVICE(ct3d);
->  
-> -    if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem) {
-> +    if (!ct3d->hostmem && !ct3d->hostvmem && !ct3d->hostpmem
-> +            && !ct3d->dc.num_regions) {
->          error_setg(errp, "at least one memdev property must be set");
->          return false;
->      } else if (ct3d->hostmem && ct3d->hostpmem) {
-> @@ -807,6 +866,50 @@ static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
->          return false;
+> -    cci->payload_max = payload_max;
+> +    cci->cel_size = 0; /* Reset for a fresh build */
+>      for (int set = 0; set < 256; set++) {
+>          for (int cmd = 0; cmd < 256; cmd++) {
+>              if (cci->cxl_cmd_set[set][cmd].handler) {
+> @@ -1369,6 +1369,13 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+>              }
+>          }
 >      }
->  
-> +    ct3d->dc.total_capacity = 0;
-> +    if (ct3d->dc.host_dc) {
-> +        MemoryRegion *dc_mr;
-> +        char *dc_name;
-> +        uint64_t total_region_size = 0;
-> +        int i;
+> +}
 > +
-> +        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> +        if (!dc_mr) {
-> +            error_setg(errp, "dynamic capacity must have backing device");
-> +            return false;
-> +        }
-> +        /* FIXME: set dc as nonvolatile for now */
-
-Yup. This is where we need to think about interface, or decide
-that no one cares about PMEM DCD on basis it's a pain to deal with
-and I think some stuff is still not well defined in the spec.
-
-> +        memory_region_set_nonvolatile(dc_mr, true);
-> +        memory_region_set_enabled(dc_mr, true);
-> +        host_memory_backend_set_mapped(ct3d->dc.host_dc, true);
-> +        if (ds->id) {
-> +            dc_name = g_strdup_printf("cxl-dcd-dpa-dc-space:%s", ds->id);
-> +        } else {
-> +            dc_name = g_strdup("cxl-dcd-dpa-dc-space");
-> +        }
-> +        address_space_init(&ct3d->dc.host_dc_as, dc_mr, dc_name);
+> +void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> +{
+> +    cci->payload_max = payload_max;
+> +    cxl_rebuild_cel(cci);
 > +
-> +        for (i = 0; i < ct3d->dc.num_regions; i++) {
-> +            total_region_size += ct3d->dc.regions[i].len;
-> +        }
-> +        /* Make sure the host backend is large enough to cover all dc range */
-> +        if (total_region_size > memory_region_size(dc_mr)) {
-> +            error_setg(errp,
-> +                "too small host backend size, increase to %lu MiB or more",
-> +                total_region_size / 1024 / 1024);
-
-/ MiB
-
-> +            return false;
-> +        }
-> +
-> +        if (dc_mr->size % CXL_CAPACITY_MULTIPLIER != 0) {
-> +            error_setg(errp, "DC region size is unaligned to %lx",
-> +                    CXL_CAPACITY_MULTIPLIER);
-> +            return false;
-> +        }
-> +
-> +        ct3d->dc.total_capacity = total_region_size;
-> +        g_free(dc_name);
-> +    }
-> +
->      return true;
+>      cci->bg.complete_pct = 0;
+>      cci->bg.starttime = 0;
+>      cci->bg.runtime = 0;
+> @@ -1387,10 +1394,19 @@ static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[
+>      }
 >  }
 >  
-> @@ -916,6 +1019,9 @@ err_release_cdat:
->  err_free_special_ops:
->      g_free(regs->special_ops);
->  err_address_space_free:
-> +    if (ct3d->dc.host_dc) {
-> +        address_space_destroy(&ct3d->dc.host_dc_as);
-> +    }
->      if (ct3d->hostpmem) {
->          address_space_destroy(&ct3d->hostpmem_as);
->      }
-> @@ -935,6 +1041,9 @@ static void ct3_exit(PCIDevice *pci_dev)
->      cxl_doe_cdat_release(cxl_cstate);
->      spdm_sock_fini(ct3d->doe_spdm.socket);
->      g_free(regs->special_ops);
-> +    if (ct3d->dc.host_dc) {
-> +        address_space_destroy(&ct3d->dc.host_dc_as);
-> +    }
->      if (ct3d->hostpmem) {
->          address_space_destroy(&ct3d->hostpmem_as);
->      }
-> @@ -999,16 +1108,24 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
->                                         AddressSpace **as,
->                                         uint64_t *dpa_offset)
+> +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+> +                                 size_t payload_max)
+> +{
+> +    cci->payload_max = payload_max > cci->payload_max ? payload_max : cci->payload_max;
+> +    cxl_copy_cci_commands(cci, cxl_cmd_set);
+> +    cxl_rebuild_cel(cci);
+> +}
+> +
+>  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>                                    DeviceState *d, size_t payload_max)
 >  {
-> -    MemoryRegion *vmr = NULL, *pmr = NULL;
-> +    MemoryRegion *vmr = NULL, *pmr = NULL, *dc_mr = NULL;
-> +    uint64_t vmr_size = 0, pmr_size = 0, dc_size = 0;
->  
->      if (ct3d->hostvmem) {
->          vmr = host_memory_backend_get_memory(ct3d->hostvmem);
-> +        vmr_size = memory_region_size(vmr);
->      }
->      if (ct3d->hostpmem) {
->          pmr = host_memory_backend_get_memory(ct3d->hostpmem);
-> +        pmr_size = memory_region_size(pmr);
-> +    }
-> +    if (ct3d->dc.host_dc) {
-> +        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> +        /* Do we want dc_size to be dc_mr->size or not?? */
-
-yes, I think we do. No need for qemu to care about remapping and complex
-allocation strategies.  The host can't tell if we are doing that or not
-anyway.
-
-> +        dc_size = ct3d->dc.total_capacity;
->      }
->  
-> -    if (!vmr && !pmr) {
-> +    if (!vmr && !pmr && !dc_mr) {
->          return -ENODEV;
->      }
->  
-> @@ -1016,19 +1133,19 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
->          return -EINVAL;
->      }
->  
-> -    if (*dpa_offset > ct3d->cxl_dstate.static_mem_size) {
-> +    if ((*dpa_offset >= vmr_size + pmr_size + dc_size) ||
-> +       (*dpa_offset >= vmr_size + pmr_size && ct3d->dc.num_regions == 0)) {
->          return -EINVAL;
->      }
->  
-> -    if (vmr) {
-> -        if (*dpa_offset < memory_region_size(vmr)) {
-> -            *as = &ct3d->hostvmem_as;
-> -        } else {
-> -            *as = &ct3d->hostpmem_as;
-> -            *dpa_offset -= memory_region_size(vmr);
-> -        }
-> -    } else {
-> +    if (*dpa_offset < vmr_size) {
-> +        *as = &ct3d->hostvmem_as;
-> +    } else if (*dpa_offset < vmr_size + pmr_size) {
->          *as = &ct3d->hostpmem_as;
-> +        *dpa_offset -= vmr_size;
-> +    } else {
-> +        *as = &ct3d->dc.host_dc_as;
-> +        *dpa_offset -= (vmr_size + pmr_size);
->      }
->  
->      return 0;
-> @@ -1101,6 +1218,8 @@ static Property ct3_props[] = {
->      DEFINE_PROP_STRING("cdat", CXLType3Dev, cxl_cstate.cdat.filename),
->      DEFINE_PROP_UINT16("spdm", CXLType3Dev, spdm_port, 0),
->      DEFINE_PROP_UINT8("num-dc-regions", CXLType3Dev, dc.num_regions, 0),
-> +    DEFINE_PROP_LINK("nonvolatile-dc-memdev", CXLType3Dev, dc.host_dc,
-> +                    TYPE_MEMORY_BACKEND, HostMemoryBackend *),
-
-I think we will want a more adaptable interface for this, but I'll apply with this for now
-so we have something to iterate on.
-
->      DEFINE_PROP_END_OF_LIST(),
->  };
->  
-> @@ -1167,33 +1286,43 @@ static void set_lsa(CXLType3Dev *ct3d, const void *buf, uint64_t size,
->  
->  static bool set_cacheline(CXLType3Dev *ct3d, uint64_t dpa_offset, uint8_t *data)
+>      cxl_copy_cci_commands(cci, cxl_cmd_set_sw);
+> +    cxl_rebuild_cel(cci);
+>      cci->d = d;
+>      cci->intf = intf;
+>      cxl_init_cci(cci, payload_max);
+> @@ -1399,6 +1415,7 @@ void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+>  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
 >  {
-> -    MemoryRegion *vmr = NULL, *pmr = NULL;
-> +    MemoryRegion *vmr = NULL, *pmr = NULL, *dc_mr = NULL;
->      AddressSpace *as;
-> +    uint64_t vmr_size = 0, pmr_size = 0, dc_size = 0;
+>      cxl_copy_cci_commands(cci, cxl_cmd_set);
+> +    cxl_rebuild_cel(cci);
+>      cci->d = d;
 >  
->      if (ct3d->hostvmem) {
->          vmr = host_memory_backend_get_memory(ct3d->hostvmem);
-> +        vmr_size = memory_region_size(vmr);
->      }
->      if (ct3d->hostpmem) {
->          pmr = host_memory_backend_get_memory(ct3d->hostpmem);
-> +        pmr_size = memory_region_size(pmr);
->      }
-> +    if (ct3d->dc.host_dc) {
-> +        dc_mr = host_memory_backend_get_memory(ct3d->dc.host_dc);
-> +        dc_size = ct3d->dc.total_capacity;
-> +     }
->  
-> -    if (!vmr && !pmr) {
-> +    if (!vmr && !pmr && !dc_mr) {
->          return false;
->      }
->  
-> -    if (dpa_offset + CXL_CACHE_LINE_SIZE > ct3d->cxl_dstate.static_mem_size) {
-> +    if (dpa_offset >= vmr_size + pmr_size + dc_size) {
-
-What is reasoning behind not having offset + cacheline size here?
-DC blocks are multiples of CXL_CACHE_LINE_SIZE anyway.
-
-
-> +        return false;
-> +    }
-> +    if (dpa_offset + CXL_CACHE_LINE_SIZE >= vmr_size + pmr_size
-> +            && ct3d->dc.num_regions == 0) {
-
-This is getting messy - we have the dc_size set above on basis
-of one condition and this checked on num_regions.
-
-Need to only allow backed regions to keep this simpler.
-
->          return false;
->      }
-
+>      /* No separation for PCI MB as protocol handled in PCI device */
+> -- 
+> 2.39.2
+> 
+> 
+> 
+> > +            }
+> > +        }
+> > +    }
+> > +}
+> > +
+> >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf, DeviceState *d, size_t payload_max)
+> >  {
+> >      cxl_copy_cci_commands(cci, cxl_cmd_set_sw);
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 9a3c8b2dfa..abc8405cc5 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -297,6 +297,8 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
+> >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+> >                                    DeviceState *d, size_t payload_max);
+> >  void cxl_init_cci(CXLCCI *cci, size_t payload_max);
+> > +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+> > +                          size_t payload_max);
+> >  int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+> >                              size_t len_in, uint8_t *pl_in,
+> >                              size_t *len_out, uint8_t *pl_out,
+> 
