@@ -2,344 +2,335 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C404C00528
-	for <linux-cxl@archiver.kernel.org>; Fri,  4 Aug 2023 11:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE004C001DF
+	for <linux-cxl@archiver.kernel.org>; Fri,  4 Aug 2023 11:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjHDLGA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 4 Aug 2023 07:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        id S229449AbjHDLyW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 4 Aug 2023 07:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbjHDLF5 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 07:05:57 -0400
+        with ESMTP id S229445AbjHDLyV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 07:54:21 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F119B
-        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 04:05:54 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RHMhV52vdz6HJbZ;
-        Fri,  4 Aug 2023 18:41:30 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 4 Aug
- 2023 11:46:17 +0100
-Date:   Fri, 4 Aug 2023 11:46:16 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>,
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B17D126
+        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 04:54:16 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RHPBt470rz685Td;
+        Fri,  4 Aug 2023 19:49:26 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Fri, 4 Aug 2023 12:54:13 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>, <linuxarm@huawei.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Ira Weiny" <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        "Viacheslav A . Dubeyko" <viacheslav.dubeyko@bytedance.com>
-Subject: Re: [RFC PATCH v2 4/4] cxl/pci: Add support for stand alone CXL
- Switch mailbox CCI
-Message-ID: <20230804114616.000032d7@Huawei.com>
-In-Reply-To: <6397d1d288fed_b05d1294b4@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221025104243.20836-1-Jonathan.Cameron@huawei.com>
-        <20221025104243.20836-5-Jonathan.Cameron@huawei.com>
-        <6397d1d288fed_b05d1294b4@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>
+Subject: [RFC PATCH v5 0/4] CXL: Standalone switch CCI driver
+Date:   Fri, 4 Aug 2023 12:54:10 +0100
+Message-ID: <20230804115414.14391-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 12 Dec 2022 17:13:54 -0800
-Dan Williams <dan.j.williams@intel.com> wrote:
+Based on cxl/fixes as I'm not expecting this to land this cycle
+and there was a messy clash that would make this unlikely to apply
+shortly.
 
-> Jonathan Cameron wrote:
-> > CXL 3.0 defines a mailbox PCI function independent of any other CXL
-> > components. The intent is that instances of this mailbox will be found
-> > as additional PCI functions of upstream CXL switch ports.
-> > 
-> > RFC: Including this directly in cxl/pci.c as a second pci_driver, is a
-> > bit hacky.  The alternative is to factor out all the common
-> > infrastructure to a library module shared by the Type 3 PCI driver
-> > and the Switch CCI driver.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > ---
-> > V2: Thanks to Viacheslav Dubeyko for review.
-> >  - Drop double free of IDA in error path.
-> >  - Switch to cxl_send_cmd()
-> >  - Hex constant for size.
-> >  - Shuffle code to put the release down near alloc.
-> >  - Correctly handle shutdown in unregister path by setting the
-> >    cxlswd->cxlds = NULL.
-> >  - Use new define in pci_ids.h instead of opencoding the class code.
-> > 
-> > Options to consider:
-> > 1 - Factor out all the shared code and have a separate module for
-> >     switch CCI driver. Messy!
-> > 2 - Is sharing the allow lists between type 3 devices and switch CCI
-> >     an issue? Not a whole lot of overlap...
-> > ---
-> >  drivers/cxl/core/Makefile     |   1 +
-> >  drivers/cxl/core/core.h       |   1 +
-> >  drivers/cxl/core/mbox.c       |   5 ++
-> >  drivers/cxl/core/port.c       |   4 +
-> >  drivers/cxl/core/switch-cci.c | 149 ++++++++++++++++++++++++++++++++++  
-> 
-> Warning, incoming bikeshed comment: How about dropping the CCI term?
-> It is really only used in the specification to indicate the class of
-> transports that can convey CXL commands, but as far as Linux terminology
-> it's just a mailbox. As for the filename, perhaps switchdev.c?
-> 
-I'd forgotten to actually incorporate this in previous versions.
+RFC v5 changes: Thanks to DavidLohr for review
+- Renames of files etc as Dan suggested several versions back.
+- Split cxlmem and cxlswd more thoroughly by getting rid of
+  cxl_dev_state which was only needed for one iomem mappping.
+  Handling the two users of that mapping is a little ugly but
+  I can't currently think of a better way.
+- Use same chardev major number and IDA as CXL memdevs.
+- Move a lot more infrastructure definition into cxlmbox.h.
+  Note we could definitely do more on this as a lot of the stuff in
+  core/mbox.c is not applicable to all types of devices. However
+  that reorg can wait.
+- Thin out the callbacks. One wasn't used and another was only used
+  right next to where it was defined. Also add docs.
 
-There are far too many mailboxes kicking around, but sure switchdev.c sounds
-safe enough and we are distant enough from other uses of that term in the
-kernel that it shouldn't be a problem.
+This is getting cleaner, so I'd definitely like feedback on the
+basic refactoring. There are open questions around how to control
+access once we add more commands given many are footguns.
 
-I have kept one CCI reference in the module description mostly so there
-is something for grep to hit if anyone is searching for the spec term.
+I'm sharing it at this stage to provide a test path for the QEMU
+rework that enables emulation of the various different types of
+CCI (PCI Mailbox / MCTP over I2C / Tunneled versions of each).
+There are open questions from earlier versions around how we manage
+the security of these. To a certain extent we wouldn't expect
+to often see a switch-cci connected to a CXL host (except when
+emulating), but we should probably not assume that.
 
-> 
-> >  drivers/cxl/cxlmem.h          |   3 +
-> >  drivers/cxl/cxlpci.h          |   3 +
-> >  drivers/cxl/cxlswitch.h       |  18 ++++  
-> 
-> The only reason the "cxl" prefix is there for cxlmem.h and cxlpci.h is
-> to not collide with "mem.h" and "pci.h" for usermode-linux builds and
-> the like that confuse the core that includes those headers by include
-> search path. So this one can just be switch.h unless and until a build
-> robot says otherwise.
-Done.
+CXL rev 3.0 introduced the option for a PCI function, intended to sit on an
+upstream port of a CXL switch.  This function provides a mailbox
+interface similar to that seen on CXL type 3 devices. However, the
+command set is mostly different and intended for Fabric management.
+Note however that as we add support for multi headed devices (MHDs)
+a subset of commands will be available on selected MHD type 3 mailboxes.
+(tunnelling DCD commands for example)
 
-> 
-> >  drivers/cxl/pci.c             |  95 +++++++++++++++++++++-
-> >  include/uapi/linux/cxl_mem.h  |   3 +
-> >  10 files changed, 281 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> > index 79c7257f4107..18275e153437 100644
-> > --- a/drivers/cxl/core/Makefile
-> > +++ b/drivers/cxl/core/Makefile
-> > @@ -10,4 +10,5 @@ cxl_core-y += memdev.o
-> >  cxl_core-y += mbox.o
-> >  cxl_core-y += pci.o
-> >  cxl_core-y += hdm.o
-> > +cxl_core-y += switch-cci.o
-> >  cxl_core-$(CONFIG_CXL_REGION) += region.o
-> > diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> > index 0835942bcea6..f6a35e7f980c 100644
-> > --- a/drivers/cxl/core/core.h
-> > +++ b/drivers/cxl/core/core.h
-> > @@ -73,5 +73,6 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
-> >  int cxl_memdev_init(void);
-> >  void cxl_memdev_exit(void);
-> >  void cxl_mbox_init(void);
-> > +int cxl_switch_cci_init(void);
-> >  
-> >  #endif /* __CXL_CORE_H__ */
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index 3823d450fdd2..76987f2e30e2 100644
-> > --- a/drivers/cxl/core/mbox.c
-> > +++ b/drivers/cxl/core/mbox.c
-> > @@ -5,6 +5,7 @@
-> >  #include <linux/debugfs.h>
-> >  #include <linux/mutex.h>
-> >  #include <cxlmem.h>
-> > +#include <cxlpci.h>
-> >  #include <cxl.h>
-> >  
-> >  #include "core.h"
-> > @@ -43,6 +44,8 @@ static bool cxl_raw_allow_all;
-> >   * 0, and the user passed in 1, it is an error.
-> >   */
-> >  static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
-> > +	CXL_CMD(INFO_STAT_IDENTIFY, 0, 0x12, 0),  
-> 
-> Ah, guess this answers the earlier question about raw only or not.
-> However if there is a non-zero possibility of this being used in
-> production then it likely does want to be formalized.
-> 
-> > +	CXL_CMD(GET_BG_CMD_STATUS, 0, 8, 0),  
-> 
-> This is only for "Bind vPPB", right? In that case the result of the Bind
-> comes via an event, correct? Perhaps this command does not need to be
-> exposed. At least there is no use case to expose it even for endpoint
-> background commands since userspace has no mechanism to reliably
-> associate to which command that status refers.
-Ok. Dropped.
+See: CXL rev 3.0
+7.2.9 Switch Mailbox CCI
+8.1.13 Switch Malibox CCI Configuration Space Layout
+8.2.8.6 Switch Mailbox CCI capability 
 
-> 
-> >  	CXL_CMD(IDENTIFY, 0, 0x43, CXL_CMD_FLAG_FORCE_ENABLE),
-> >  #ifdef CONFIG_CXL_MEM_RAW_COMMANDS
-> >  	CXL_CMD(RAW, CXL_VARIABLE_PAYLOAD, CXL_VARIABLE_PAYLOAD, 0),
-> > @@ -65,6 +68,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
-> >  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-> >  	CXL_CMD(SCAN_MEDIA, 0x11, 0, 0),
-> >  	CXL_CMD(GET_SCAN_MEDIA, 0, CXL_VARIABLE_PAYLOAD, 0),
-> > +	CXL_CMD(IDENTIFY_SWITCH_DEVICE, 0, 0x49, 0),  
-> 
-> >  };
-> >  
-> >  /*
-> > @@ -552,6 +556,7 @@ int cxl_send_cmd(struct cxl_dev_state *cxlds, struct device *dev,
-> >  
-> >  	return 0;
-> >  }
-> > +EXPORT_SYMBOL_GPL(cxl_send_cmd);  
-> 
-> Why?
-No idea - probably cruft from the way this code evolved. Gone.
+It is probably relatively unusual that a typical host of CXL devices
+will have access to the one of these devices, in many cases they will
+be on a port connected to a BMC or similar. There are a few use cases
+where the host might be in charge of the configuration.
 
-> 
-> >  
-> >  static int cxl_xfer_log(struct cxl_dev_state *cxlds, uuid_t *uuid, u32 size, u8 *out)
-> >  {
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index bffde862de0b..3b2e93bc4684 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -1859,6 +1859,10 @@ static __init int cxl_core_init(void)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	rc = cxl_switch_cci_init();
-> > +	if (rc)
-> > +		return rc;
-> > +
-> >  	cxl_bus_wq = alloc_ordered_workqueue("cxl_port", 0);
-> >  	if (!cxl_bus_wq) {
-> >  		rc = -ENOMEM;
-> > diff --git a/drivers/cxl/core/switch-cci.c b/drivers/cxl/core/switch-cci.c
-> > new file mode 100644
-> > index 000000000000..8c3f2b8a3b53
-> > --- /dev/null
-> > +++ b/drivers/cxl/core/switch-cci.c
+These are very convenient for testing in conjunction with the QEMU
+emulation though so far CXL switch and type 3 emulation is in QEMU
+is not complex enough to make these particular interesting.
+
+This initial support provides only a few commands but I'm sending it
+out as an RFC to get some input on how we should refactor the CXL core
+code to support these devices that use some of the provide functionality.
+
+Example command line based on CXL QEMU emulation branch at
+https://gitlab.com/jic23/qemu cxl-2023-07-17
+
+qemu-system-aarch64 -M virt,nvdimm=on,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+ ...
+ -object memory-backend-file,id=cxl-mem1,share=on,mem-path=/tmp/t3_cxl1.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/tmp/t3_lsa1.raw,size=1M,align=1M \
+ -object memory-backend-file,id=cxl-mem2,share=on,mem-path=/tmp/t3_cxl2.raw,size=256M,align=256M \
+ -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/tmp/t3_lsa2.raw,size=1M,align=1M \
+ -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+ -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
+ -device cxl-upstream,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+ -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+ -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+ -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+ -device cxl-type3,bus=swport0,memdev=cxl-mem1,id=cxl-pmem1,lsa=cxl-lsa1,sn=3 \
+ -device cxl-type3,bus=swport1,memdev=cxl-mem2,id=cxl-pmem2,lsa=cxl-lsa2,sn=4 \
+ -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=1k
+
+Really hacky test program:
+
+//Testswitch.c
+#include <linux/types.h>
+#include <stdint.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#define __user
+#include "cxl_mem.h" /* include/uapi/linux/cxl_mem.h */
+
+/* Move to appropriate header later */
+struct cxl_cmd_infostat_identify_rsp {
+  uint16_t pcie_vid;
+  uint16_t pcie_did;
+  uint16_t pcie_subsys_vid;
+  uint16_t pcie_subsys_id;
+  uint64_t sn;
+  uint8_t max_message_size;
+  uint8_t component_type;
+};
+
+struct cxl_cmd_infostat_get_bg_cmd_sts_rsp { 
+  uint8_t status;
+  uint8_t rsvd;
+  uint16_t opcode;
+  uint16_t returncode;
+  uint16_t vendor_ext_status;
+};
+
+struct cxl_cmd_identify_switch_device_rsp {
+  uint8_t ingress_port_id;
+  uint8_t rsvd;
+  uint8_t num_physical_ports;
+  uint8_t num_vcs;
+  uint8_t active_port_bm[0x20];
+  uint8_t vcs_bm[0x20];
+  uint16_t total_num_vPPBs;
+  uint16_t num_bound_vPPBs;
+  uint8_t num_hdm_decoders;
+} __attribute__((packed));
+
+struct cci_message {
+  uint8_t message_cat;
+  uint8_t tag;
+  uint8_t resv;
+  uint8_t command;
+  uint8_t command_set;
+  uint8_t pl_length[3];
+  uint16_t ret_code;
+  uint16_t vendor_ext;
+  uint8_t payload[];
+};
+
+struct cxl_cmd_tunnel_command_req {
+  uint8_t id;
+  uint8_t target_type;
+  #define TUNNEL_TARGET_TYPE_PORT_OR_LD  0
+  #define TUNNEL_TARGET_TYPE_LD_POOL_CCI 1
+  uint16_t command_size;
+  struct cci_message message;
+};
+
+struct cxl_cmd_tunnel_command_resp {
+  uint16_t length;
+  uint16_t resv;
+  struct cci_message message;
+};
 
 
-> > +static int cxl_swdev_open(struct inode *inode, struct file *file)
-> > +{
-> > +	struct cxl_memdev *cxlswd =  
-> 
-> I do think a common cxl_dev is warranted, but this looks like
-> s/cxl_memdev/cxl_swdev/ typo.
+int main()
+{
+  struct cxl_send_command cmd = {};
+  struct cxl_cmd_infostat_identify_rsp is_identify;
+  struct cxl_cmd_identify_switch_device_rsp switch_identify;
+  struct cxl_cmd_infostat_get_bg_cmd_sts_rsp bg_cmd_status;
+  struct cxl_cmd_tunnel_command_req *tunnel_req;
+  struct cxl_cmd_tunnel_command_resp *tunnel_resp;
+  int fd;
+  int rc, i;
+  int tun_cmd_size, tun_resp_size;
 
-Indeed a typo. I'm not convinced a common cxl_dev makes sense. Not much to
-it and adds another layer + I think adds unneeded complexity.
+  printf("Starting\n");
+  fd = open("/dev/cxl/switch0", O_RDWR);
+  if (fd < 0) {
+    printf("could not open file\n");
+    return 0;
+  }
+  cmd.id = CXL_MEM_COMMAND_ID_RAW;
+  cmd.id = CXL_MEM_COMMAND_ID_INFO_STAT_IDENTIFY;
+  cmd.out.size = sizeof(is_identify);
+  cmd.out.payload = (__u64)&is_identify;
 
-> 
-> > +		container_of(inode->i_cdev, typeof(*cxlswd), cdev);
-> > +
-> > +	get_device(&cxlswd->dev);
-> > +	file->private_data = cxlswd;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int cxl_swdev_release_file(struct inode *inode, struct file *file)
-> > +{
-> > +	struct cxl_swdev *cxlswd =
-> > +		container_of(inode->i_cdev, typeof(*cxlswd), cdev);
-> > +
-> > +	put_device(&cxlswd->dev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct file_operations cxl_swdev_fops = {
-> > +	.owner = THIS_MODULE,
-> > +	.unlocked_ioctl = cxl_swdev_ioctl,
-> > +	.open = cxl_swdev_open,
-> > +	.release = cxl_swdev_release_file,
-> > +	.compat_ioctl = compat_ptr_ioctl,
-> > +	.llseek = noop_llseek,
-> > +};
-> > +
-> > +void cxl_swdev_shutdown(struct cxl_swdev *cxlswd)
-> > +{
-> > +	down_write(&cxl_swdev_rwsem);
-> > +	cxlswd->cxlds = NULL;
-> > +	up_write(&cxl_swdev_rwsem);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_swdev_shutdown, CXL);
-> > +
-> > +static void cxl_swdev_release(struct device *dev)
-> > +{
-> > +	struct cxl_swdev *cxlswd = to_cxl_swdev(dev);
-> > +
-> > +	ida_free(&cxl_swdev_ida, cxlswd->id);
-> > +	kfree(cxlswd);
-> > +}
-> > +
-> > +static const struct device_type cxl_swdev_type = {
-> > +	.name = "cxl_swdev",
-> > +	.release = cxl_swdev_release,
-> > +	.devnode = cxl_swdev_devnode,
-> > +};
-> > +
-> > +struct cxl_swdev *cxl_swdev_alloc(struct cxl_dev_state *cxlds)
-> > +{
-> > +	struct cxl_swdev *cxlswd;
-> > +	struct device *dev;
-> > +	struct cdev *cdev;
-> > +	int rc;
-> > +
-> > +	cxlswd = kzalloc(sizeof(*cxlswd), GFP_KERNEL);
-> > +	if (!cxlswd)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	rc = ida_alloc_range(&cxl_swdev_ida, 0, 10, GFP_KERNEL);
-> > +	if (rc < 0) {
-> > +		kfree(cxlswd);
-> > +		return ERR_PTR(rc);
-> > +	}
-> > +
-> > +	cxlswd->id = rc;
-> > +	cxlswd->cxlds = cxlds;
-> > +	dev = &cxlswd->dev;
-> > +	device_initialize(dev);
-> > +	dev->parent = cxlds->dev;
-> > +	dev->bus = &cxl_bus_type;
-> > +	dev->devt = MKDEV(cxl_sw_major, cxlswd->id);
-> > +	dev->type = &cxl_swdev_type;
-> > +	device_set_pm_not_required(dev);
-> > +	cdev = &cxlswd->cdev;
-> > +	cdev_init(cdev, &cxl_swdev_fops);
-> > +	rc = dev_set_name(dev, "swcci%d", cxlswd->id);  
-> 
-> How about just "switch%d"? Likely this will also want some late binding
-> linkage to the eventual cxl_port that gets registered for this switch.
+  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
+  if (rc) {
+    printf("rc %d\n", rc);
+    if (rc < 0)
+      return rc;
+  } 
 
-So far I'm not seeing much point in that linkage. This functionality may
-well be exposed on a USP with no CXL capabilities at all. 
+  printf("Identify on switch:\n");
+  printf("VID:0x%04x DID:0x%04x\n", is_identify.pcie_vid, is_identify.pcie_did);
+  printf("Subsys: VID:0x%04x DID:0x%04x\n", is_identify.pcie_subsys_vid, is_identify.pcie_subsys_id);
 
-> 
-> > +	if (rc) {
-> > +		put_device(dev);
-> > +		return ERR_PTR(rc);
-> > +	}
-> > +
-> > +	return cxlswd;
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_swdev_alloc, CXL);  
-> 
-> I think a few exports can be saved if this is changed to alloc+add like
-> other cxl core apis.
+  cmd.id = CXL_MEM_COMMAND_ID_GET_BG_CMD_STATUS;
+  cmd.out.size = sizeof(bg_cmd_status);
+  cmd.out.payload = (__u64)&bg_cmd_status;
 
-Sorry, I don't follow. 
+  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
+  if (rc) {
+    printf("rc %d\n", rc);
+    if (rc < 0)
+      return rc;
+  }
 
-> 
-> > +
-> > +__init int cxl_switch_cci_init(void)
-> > +{
-> > +	dev_t devt;
-> > +	int rc;
-> > +
-> > +	rc = alloc_chrdev_region(&devt, 0, 10, "cxlsw");
-> > +	if (rc)
-> > +		return rc;
-> > +	cxl_sw_major = MAJOR(devt);
-> > +
-> > +	return 0;
-> > +}
+  cmd.id = CXL_MEM_COMMAND_ID_IDENTIFY_SWITCH_DEVICE;
+  cmd.out.size = sizeof(switch_identify);
+  cmd.out.payload = (__u64)&switch_identify;
+
+  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
+  if (rc) {
+    printf("rc %d\n", rc);
+    if (rc < 0)
+      return rc;
+  }
+
+  printf("Switch indent ingress=%#x #ports=%d\n",
+	 switch_identify.ingress_port_id,
+	 switch_identify.num_physical_ports);
+  for (i = 0; i < sizeof(switch_identify.active_port_bm); i++) {
+    int j;
+    for (j = 0; j < 8; j++) {
+      if (switch_identify.active_port_bm[i] & 1 << j) {
+	printf("Port %x active\n", i * 8 + j);
+      }
+    }
+  }
+
+  tun_cmd_size = sizeof(*tunnel_req);
+  tunnel_req = malloc(tun_cmd_size);
+  tun_resp_size = sizeof(*tunnel_resp) + sizeof(struct cxl_cmd_infostat_identify_rsp);
+  tunnel_resp = malloc(tun_resp_size);
+  tunnel_req->target_type = TUNNEL_TARGET_TYPE_PORT_OR_LD;
+  tunnel_req->command_size = sizeof(tunnel_req->message);
+  tunnel_req->message.command = 0x01;
+  tunnel_req->message.command_set = 0x0; // tunnels within tunnels
+  
+  cmd.id = CXL_MEM_COMMAND_ID_TUNNEL_MANAGEMENT_COMMAND;
+  cmd.in.payload = tunnel_req;
+  cmd.in.size = tun_cmd_size;
+  cmd.out.size = tun_resp_size;
+  cmd.out.payload = tunnel_resp;
+
+  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
+  if (rc) {
+    printf("rc from tunnel cmd is %d\n", rc);
+    if (rc < 0)
+      return rc;
+  }
+  printf("message response size %d\n", cmd.out.size);
+  {
+    struct cxl_cmd_infostat_identify_rsp *pl = (void *)tunnel_resp->message.payload;
+  	printf("Vendor id  : %04x\n", pl->pcie_vid);
+	printf("Device id  : %04x\n", pl->pcie_did);
+	printf("Subsys vid : %04x\n", pl->pcie_subsys_vid);
+	printf("Subsys id  : %04x\n", pl->pcie_subsys_id);
+
+	switch (pl->component_type) {
+	case 0x00:
+		printf("Switch!\n");
+		break;
+	case 0x03:
+		printf("Type3!\n");
+		break;
+	}
+  }  
+  return 0;	 
+}
+
+Jonathan Cameron (4):
+  cxl: mbox: Preparatory move of functions to core/mbox.c and cxlmbox.h
+  cxl: mbox: Factor out the mbox specific data for reuse in switch cci
+  PCI: Add PCI_CLASS_SERIAL_CXL_SWITCH_CCI class ID to pci_ids.h
+  cxl/pci: Add support for stand alone CXL Switch mailbox CCI
+
+ drivers/cxl/Kconfig          |  14 ++
+ drivers/cxl/Makefile         |   2 +
+ drivers/cxl/core/Makefile    |   1 +
+ drivers/cxl/core/core.h      |  12 +-
+ drivers/cxl/core/mbox.c      | 455 +++++++++++++++++++++++++++--------
+ drivers/cxl/core/memdev.c    |  44 ++--
+ drivers/cxl/core/regs.c      |  35 ++-
+ drivers/cxl/core/switchdev.c | 129 ++++++++++
+ drivers/cxl/cxl.h            |   4 +-
+ drivers/cxl/cxlmbox.h        | 203 ++++++++++++++++
+ drivers/cxl/cxlmem.h         | 176 ++------------
+ drivers/cxl/pci.c            | 436 ++++++++++-----------------------
+ drivers/cxl/pmem.c           |   6 +-
+ drivers/cxl/security.c       |  13 +-
+ drivers/cxl/switch.h         |  19 ++
+ drivers/cxl/switchdev.c      | 170 +++++++++++++
+ include/linux/pci_ids.h      |   1 +
+ include/uapi/linux/cxl_mem.h |   4 +
+ 18 files changed, 1128 insertions(+), 596 deletions(-)
+ create mode 100644 drivers/cxl/core/switchdev.c
+ create mode 100644 drivers/cxl/cxlmbox.h
+ create mode 100644 drivers/cxl/switch.h
+ create mode 100644 drivers/cxl/switchdev.c
+
+-- 
+2.39.2
+
