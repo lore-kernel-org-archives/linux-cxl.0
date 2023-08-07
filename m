@@ -2,921 +2,237 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E505C00528
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 15:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F25C41513
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 16:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbjHGPgP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Aug 2023 11:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
+        id S231374AbjHGQ4u (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Aug 2023 12:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230389AbjHGPgO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 11:36:14 -0400
+        with ESMTP id S230489AbjHGQ4o (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 12:56:44 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD1210DC
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 08:36:11 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RKKzN2Qd1z67HqD;
-        Mon,  7 Aug 2023 23:31:12 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FDA1FC7;
+        Mon,  7 Aug 2023 09:56:23 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RKMlH5c02z6HJf6;
+        Tue,  8 Aug 2023 00:50:51 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 7 Aug
- 2023 16:36:08 +0100
-Date:   Mon, 7 Aug 2023 16:36:07 +0100
+ 2023 17:55:47 +0100
+Date:   Mon, 7 Aug 2023 17:55:46 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gourry.memverge@gmail.com>
-CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-        <junhee.ryu@sk.com>, <kwangjin.ko@sk.com>,
-        Gregory Price <gregory.price@memverge.com>
-Subject: Re: [PATCH 4/4] cxl/vendor: SK hynix Niagara Multi-Headed SLD
- Device
-Message-ID: <20230807163607.00004f63@Huawei.com>
-In-Reply-To: <20230721163505.1910-5-gregory.price@memverge.com>
-References: <20230721163505.1910-1-gregory.price@memverge.com>
-        <20230721163505.1910-5-gregory.price@memverge.com>
+To:     Huang Ying <ying.huang@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Wei Xu <weixugc@google.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <shy828301@gmail.com>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH RESEND 2/4] acpi, hmat: refactor
+ hmat_register_target_initiators()
+Message-ID: <20230807175546.00001566@Huawei.com>
+In-Reply-To: <20230721012932.190742-3-ying.huang@intel.com>
+References: <20230721012932.190742-1-ying.huang@intel.com>
+        <20230721012932.190742-3-ying.huang@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 21 Jul 2023 12:35:09 -0400
-Gregory Price <gourry.memverge@gmail.com> wrote:
+On Fri, 21 Jul 2023 09:29:30 +0800
+Huang Ying <ying.huang@intel.com> wrote:
 
-> Create a new device to emulate the SK hynix Niagara MHSLD platform.
+> Previously, in hmat_register_target_initiators(), the performance
+> attributes are calculated and the corresponding sysfs links and files
+> are created too.  Which is called during memory onlining.
 > 
-> This device has custom CCI commands that allow for applying isolation
-> to each memory block between hosts. This enables an early form of
-> dynamic capacity, whereby the NUMA node maps the entire region, but
-> the host is responsible for asking the device which memory blocks
-> are allocated to it, and therefore may be onlined.
+> But now, to calculate the abstract distance of a memory target before
+> memory onlining, we need to calculate the performance attributes for
+> a memory target without creating sysfs links and files.
 > 
-> To instantiate, wrap a cxl-type3 mhd in a cxl-skh-niagara like so:
+> To do that, hmat_register_target_initiators() is refactored to make it
+> possible to calculate performance attributes separately.
 > 
-> -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0,sn=66666,is_mhd=true,mhd_head=0,mhd_shmid=15
-> -device cxl-skh-niagara,target=cxl-mem0
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Cc: Wei Xu <weixugc@google.com>
+> Cc: Alistair Popple <apopple@nvidia.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Dave Hansen <dave.hansen@intel.com>
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Yang Shi <shy828301@gmail.com>
+> Cc: Rafael J Wysocki <rafael.j.wysocki@intel.com>
 
-Hmm. I'm not sure why the wrapping makes sense rather than inheriting form
-the cxl-type3 device - with appropriate class provided overrides of functions
-etc and relying on the qemu object model to allow you to cast up
-and down the inheritance tree.
+Unfortunately I don't think I still have the tables I used to test the
+generic initiator and won't get time to generate them all again in
+next few weeks.  So just a superficial review for now.
+I 'think' the cleanup looks good but the original code was rather fiddly
+so I'm not 100% sure nothing is missed.
 
-A few related bits inline on that.
+One comment inline on the fact the list is now sorted twice.
 
-> 
-> The linux kernel will require raw CXL commands enabled to allow for
-> passing through of Niagara CXL commands via the CCI mailbox.
-> 
-> The Niagara MH-SLD has a slightly different shared memory region
-> than the base MHD, so an additional tool ('init_niagara') is located
-> in the vendor subdirectory.  Utilize this in place of cxl_mhd_init.
-> 
-> usage: init_niagara <heads> <sections> <section_size> <shmid>
->         heads         : number of heads on the device
->         sections      : number of sections
->         section_size  : size of a section in 128mb increments
->         shmid         : shmid produced by ipcmk
-> 
-> Example:
-> $shmid1=ipcmk -M 131072
-> ./init_niagara 4 32 1 $shmid1
-> 
-> Signed-off-by: Gregory Price <gregory.price@memverge.com>
-> Signed-off-by: Junhee Ryu <junhee.ryu@sk.com>
-> Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
-
-I'm definitely fine with emulating real devices that go beyond what is
-defined in the CXL spec, so great to see one being proposed.
-
-Most comments are cleanup related.
 
 > ---
->  hw/cxl/Kconfig                          |   4 +
->  hw/cxl/meson.build                      |   2 +
->  hw/cxl/vendor/meson.build               |   1 +
->  hw/cxl/vendor/skhynix/.gitignore        |   1 +
->  hw/cxl/vendor/skhynix/init_niagara.c    |  99 +++++
->  hw/cxl/vendor/skhynix/meson.build       |   1 +
->  hw/cxl/vendor/skhynix/skhynix_niagara.c | 521 ++++++++++++++++++++++++
->  7 files changed, 629 insertions(+)
->  create mode 100644 hw/cxl/vendor/meson.build
->  create mode 100644 hw/cxl/vendor/skhynix/.gitignore
->  create mode 100644 hw/cxl/vendor/skhynix/init_niagara.c
->  create mode 100644 hw/cxl/vendor/skhynix/meson.build
->  create mode 100644 hw/cxl/vendor/skhynix/skhynix_niagara.c
+>  drivers/acpi/numa/hmat.c | 81 +++++++++++++++-------------------------
+>  1 file changed, 30 insertions(+), 51 deletions(-)
 > 
-> diff --git a/hw/cxl/Kconfig b/hw/cxl/Kconfig
-> index c9b2e46bac..dd6c54b54d 100644
-> --- a/hw/cxl/Kconfig
-> +++ b/hw/cxl/Kconfig
-> @@ -2,5 +2,9 @@ config CXL
->      bool
->      default y if PCI_EXPRESS
+> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> index bba268ecd802..2dee0098f1a9 100644
+> --- a/drivers/acpi/numa/hmat.c
+> +++ b/drivers/acpi/numa/hmat.c
+> @@ -582,28 +582,25 @@ static int initiators_to_nodemask(unsigned long *p_nodes)
+>  	return 0;
+>  }
 >  
-> +config CXL_VENDOR
-> +    bool
-> +    default y
-> +
->  config I2C_MCTP_CXL
->      bool
-> diff --git a/hw/cxl/meson.build b/hw/cxl/meson.build
-> index 1393821fc4..e8c8c1355a 100644
-> --- a/hw/cxl/meson.build
-> +++ b/hw/cxl/meson.build
-> @@ -15,3 +15,5 @@ system_ss.add(when: 'CONFIG_CXL',
->  system_ss.add(when: 'CONFIG_I2C_MCTP_CXL', if_true: files('i2c_mctp_cxl.c'))
+> -static void hmat_register_target_initiators(struct memory_target *target)
+> +static void hmat_update_target_attrs(struct memory_target *target,
+> +				     unsigned long *p_nodes, int access)
+>  {
+> -	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
+>  	struct memory_initiator *initiator;
+> -	unsigned int mem_nid, cpu_nid;
+> +	unsigned int cpu_nid;
+>  	struct memory_locality *loc = NULL;
+>  	u32 best = 0;
+> -	bool access0done = false;
+>  	int i;
 >  
->  system_ss.add(when: 'CONFIG_ALL', if_true: files('cxl-host-stubs.c'))
-> +
-> +subdir('vendor')
-> diff --git a/hw/cxl/vendor/meson.build b/hw/cxl/vendor/meson.build
-> new file mode 100644
-> index 0000000000..12db8991f1
-> --- /dev/null
-> +++ b/hw/cxl/vendor/meson.build
-> @@ -0,0 +1 @@
-> +subdir('skhynix')
-> diff --git a/hw/cxl/vendor/skhynix/.gitignore b/hw/cxl/vendor/skhynix/.gitignore
-> new file mode 100644
-> index 0000000000..6d96de38ea
-> --- /dev/null
-> +++ b/hw/cxl/vendor/skhynix/.gitignore
-> @@ -0,0 +1 @@
-> +init_niagara
-> diff --git a/hw/cxl/vendor/skhynix/init_niagara.c b/hw/cxl/vendor/skhynix/init_niagara.c
-> new file mode 100644
-> index 0000000000..28612339e0
-> --- /dev/null
-> +++ b/hw/cxl/vendor/skhynix/init_niagara.c
+> -	mem_nid = pxm_to_node(target->memory_pxm);
+> +	bitmap_zero(p_nodes, MAX_NUMNODES);
+>  	/*
+> -	 * If the Address Range Structure provides a local processor pxm, link
+> +	 * If the Address Range Structure provides a local processor pxm, set
+>  	 * only that one. Otherwise, find the best performance attributes and
+> -	 * register all initiators that match.
+> +	 * collect all initiators that match.
+>  	 */
+>  	if (target->processor_pxm != PXM_INVAL) {
+>  		cpu_nid = pxm_to_node(target->processor_pxm);
+> -		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> -		access0done = true;
+> -		if (node_state(cpu_nid, N_CPU)) {
+> -			register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
+> +		if (access == 0 || node_state(cpu_nid, N_CPU)) {
+> +			set_bit(target->processor_pxm, p_nodes);
+>  			return;
+>  		}
+>  	}
+> @@ -617,47 +614,10 @@ static void hmat_register_target_initiators(struct memory_target *target)
+>  	 * We'll also use the sorting to prime the candidate nodes with known
+>  	 * initiators.
+>  	 */
+> -	bitmap_zero(p_nodes, MAX_NUMNODES);
+>  	list_sort(NULL, &initiators, initiator_cmp);
+>  	if (initiators_to_nodemask(p_nodes) < 0)
+>  		return;
 
-I'm not sure we should burry tooling all the way down here.  Not much under tools though.
+One result of this refactor is that a few things run twice, that previously only ran once
+like this list_sort()
+Not necessarily a problem though as probably fairly cheap.
 
-> @@ -0,0 +1,99 @@
-> +/*
-> + * SPDX-License-Identifier: GPL-2.0-or-later
-> + *
-> + * Copyright (c) 2023 MemVerge Inc.
-> + * Copyright (c) 2023 SK hynix Inc.
-> + *
-> + * Reference list:
-> + * From www.computeexpresslink.org
-> + * Compute Express Link (CXL) Specification revision 3.0 Version 1.0
-
-Not much CXL 3.0 in this file!
-
-> + */
-> +
-> +#include <signal.h>
-> +#include <stdbool.h>
-> +#include <stdint.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ipc.h>
-> +#include <sys/shm.h>
-> +#include <sys/types.h>
-> +#include <unistd.h>
-> +
-> +struct niagara_state {
-> +    uint8_t nr_heads;
-> +    uint8_t nr_lds;
-> +    uint8_t ldmap[65536];
-> +    uint32_t total_sections;
-> +    uint32_t free_sections;
-> +    uint32_t section_size;
-> +    uint32_t sections[];
-> +};
-> +
-> +int main(int argc, char *argv[]) {
-
-New line before {
-
-It's in the qemu tree, so we should stick to qemu style mostly.
-
-> +    int shmid = 0;
-> +    uint32_t sections = 0;
-> +    uint32_t section_size = 0;
-> +    uint32_t heads = 0;
-> +    struct niagara_state* niagara_state = 0;
-
-NULL
-
-> +    uint8_t i;
-> +
-> +    if (argc != 5) {
-> +        printf("usage: init_niagara <heads> <sections> <section_size> <shmid>\n"
-> +                "\theads         : number of heads on the device\n"
-> +                "\tsections      : number of sections\n"
-> +                "\tsection_size  : size of a section in 128mb increments\n"
-> +                "\tshmid         : /tmp/mytoken.tmp\n\n"
-> +                "It is recommended your shared memory region is at least 128kb\n");
-> +        return -1;
-> +    }
-> +
-> +    // must have at least 1 head
-> +    heads = (uint32_t)atoi(argv[1]);
-> +    if (heads == 0 || heads > 32) {
-> +        printf("bad heads argument (1-32)\n");
-> +        return -1;
-> +    }
-> +
-> +    // Get number of sections
-> +    sections = (uint32_t)atoi(argv[2]);
-> +    if (sections == 0) {
-> +        printf("bad sections argument\n");
-> +        return -1;
-> +    }
-> +
-> +    section_size = (uint32_t)atoi(argv[3]);
-> +    if (sections == 0) {
-> +        printf("bad section size argument\n");
-> +        return -1;
-> +    }
-> +
-> +    shmid = (uint32_t)atoi(argv[4]);
-> +    if (shmid== 0) {
-> +        printf("bad shmid argument\n");
-> +        return -1;
-> +    }
-> +
-> +    niagara_state = shmat(shmid, NULL, 0);
-> +    if (niagara_state == (void*)-1) {
-> +        printf("Unable to attach to shared memory\n");
-> +        return -1;
-> +    }
-> +
-> +    // Initialize the niagara_state
-> +    size_t niagara_state_size = sizeof(struct niagara_state) + (sizeof(uint32_t) * sections);
-> +    memset(niagara_state, 0, niagara_state_size);
-> +    niagara_state->nr_heads = heads;
-> +    niagara_state->nr_lds = heads;
-> +    niagara_state->total_sections = sections;
-> +    niagara_state->free_sections = sections;
-> +    niagara_state->section_size = section_size;
-> +
-> +    memset(&niagara_state->ldmap, '\xff', sizeof(niagara_state->ldmap));
-> +    for (i = 0; i < heads; i++)
-> +        niagara_state->ldmap[i] = i;
-> +
-> +    printf("niagara initialized\n");
-> +    shmdt(niagara_state);
-> +    return 0;
+>  
+> -	if (!access0done) {
+> -		for (i = WRITE_LATENCY; i <= READ_BANDWIDTH; i++) {
+> -			loc = localities_types[i];
+> -			if (!loc)
+> -				continue;
+> -
+> -			best = 0;
+> -			list_for_each_entry(initiator, &initiators, node) {
+> -				u32 value;
+> -
+> -				if (!test_bit(initiator->processor_pxm, p_nodes))
+> -					continue;
+> -
+> -				value = hmat_initiator_perf(target, initiator,
+> -							    loc->hmat_loc);
+> -				if (hmat_update_best(loc->hmat_loc->data_type, value, &best))
+> -					bitmap_clear(p_nodes, 0, initiator->processor_pxm);
+> -				if (value != best)
+> -					clear_bit(initiator->processor_pxm, p_nodes);
+> -			}
+> -			if (best)
+> -				hmat_update_target_access(target, loc->hmat_loc->data_type,
+> -							  best, 0);
+> -		}
+> -
+> -		for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
+> -			cpu_nid = pxm_to_node(i);
+> -			register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> -		}
+> -	}
+> -
+> -	/* Access 1 ignores Generic Initiators */
+> -	bitmap_zero(p_nodes, MAX_NUMNODES);
+> -	if (initiators_to_nodemask(p_nodes) < 0)
+> -		return;
+> -
+>  	for (i = WRITE_LATENCY; i <= READ_BANDWIDTH; i++) {
+>  		loc = localities_types[i];
+>  		if (!loc)
+> @@ -667,7 +627,7 @@ static void hmat_register_target_initiators(struct memory_target *target)
+>  		list_for_each_entry(initiator, &initiators, node) {
+>  			u32 value;
+>  
+> -			if (!initiator->has_cpu) {
+> +			if (access == 1 && !initiator->has_cpu) {
+>  				clear_bit(initiator->processor_pxm, p_nodes);
+>  				continue;
+>  			}
+> @@ -681,14 +641,33 @@ static void hmat_register_target_initiators(struct memory_target *target)
+>  				clear_bit(initiator->processor_pxm, p_nodes);
+>  		}
+>  		if (best)
+> -			hmat_update_target_access(target, loc->hmat_loc->data_type, best, 1);
+> +			hmat_update_target_access(target, loc->hmat_loc->data_type, best, access);
+>  	}
 > +}
-> diff --git a/hw/cxl/vendor/skhynix/meson.build b/hw/cxl/vendor/skhynix/meson.build
-> new file mode 100644
-> index 0000000000..4e57db65f1
-> --- /dev/null
-> +++ b/hw/cxl/vendor/skhynix/meson.build
-> @@ -0,0 +1 @@
-> +system_ss.add(when: 'CONFIG_CXL_VENDOR', if_true: files('skhynix_niagara.c',))
-> diff --git a/hw/cxl/vendor/skhynix/skhynix_niagara.c b/hw/cxl/vendor/skhynix/skhynix_niagara.c
-> new file mode 100644
-> index 0000000000..1224978585
-> --- /dev/null
-> +++ b/hw/cxl/vendor/skhynix/skhynix_niagara.c
-> @@ -0,0 +1,521 @@
-> +/*
-> + * SPDX-License-Identifier: GPL-2.0-or-later
-> + *
-> + * Copyright (c) 2023 MemVerge Inc.
-> + * Copyright (c) 2023 SK hynix Inc.
-> + *
-> + * Reference list:
-> + * From www.computeexpresslink.org
-> + * Compute Express Link (CXL) Specification revision 3.0 Version 1.0
-> + */
 > +
-> +#include "qemu/osdep.h"
-> +#include "hw/irq.h"
-> +#include "migration/vmstate.h"
-> +#include "qapi/error.h"
-> +#include "hw/cxl/cxl.h"
-> +#include "hw/cxl/cxl_device.h"
-> +#include "hw/pci/pcie.h"
-> +#include "hw/pci/pcie_port.h"
-> +#include "hw/qdev-properties.h"
-> +
-> +#define MIN_MEMBLK_SIZE (1024*1024*128)
-> +
-> +/*
-> + * The shared state cannot have 2 variable sized regions
-> + * so we have to max out the ldmap.
-> +*/
-> +typedef struct Niagara_Shared_State Niagara_Shared_State;
-
-Qemu is all camel case for types and combined struct definitions
-with typdefs
-
-typedef struct NiagraSharedState {
-    uint8_t nr_heads;
-    uint8_t nr_lds;
-    uint8_t ldmap[65536];
-    uint32_t total_sections;
-    uint32_t free_sections;
-    uint32_t section_size;
-    uint32_t sections[];
-} NiagraSharedstate;
-
-> +struct Niagara_Shared_State {
-> +    uint8_t nr_heads;
-> +    uint8_t nr_lds;
-> +    uint8_t ldmap[65536];
-> +    uint32_t total_sections;
-> +    uint32_t free_sections;
-> +    uint32_t section_size;
-> +    uint32_t sections[];
-> +};
-> +
-> +#define IMMEDIATE_CONFIG_CHANGE (1 << 1)
-> +#define IMMEDIATE_DATA_CHANGE (1 << 2)
-> +#define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> +#define IMMEDIATE_LOG_CHANGE (1 << 4)
-> +#define SECURITY_STATE_CHANGE (1 << 5)
-> +#define BACKGROUND_OPERATION (1 << 6)
-
-Lift these out of the core cxl code into a suitable header rather than
-repeating. Fair enough not in first RFC though.
-
-> +
-> +enum {
-> +    NIAGARA = 0xC0
-
-Good it's in the vendor defined space. I wondered after your
-comment earlier on there not being one defined!
-
-> +        #define GET_SECTION_STATUS 0x0
-> +        #define SET_SECTION_ALLOC 0x1
-> +        #define SET_SECTION_RELEASE 0x2
-> +        #define SET_SECTION_SIZE 0x3
-> +        #define MOVE_DATA 0x4
-> +        #define GET_SECTION_MAP 0x5
-> +        #define CLEAR_SECTION 0x99
-> +};
-> +
-> +static CXLRetCode cmd_niagara_get_section_status(const struct cxl_cmd *cmd,
-> +                                               uint8_t *payload_in,
-> +                                               size_t len_in,
-> +                                               uint8_t *payload_out,
-> +                                               size_t *len_out,
-> +                                               CXLCCI *cci)
+> +static void __hmat_register_target_initiators(struct memory_target *target,
+> +					      unsigned long *p_nodes,
+> +					      int access)
 > +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    Niagara_Shared_State *niagara_state = (Niagara_Shared_State*)ct3d->mhd_state;
-> +    struct {
-> +        uint32_t total_section_count;
-> +        uint32_t free_section_count;
-> +    } QEMU_PACKED *output = (void *)payload_out;
+> +	unsigned int mem_nid, cpu_nid;
+> +	int i;
 > +
-> +    if (!ct3d->is_mhd)
-> +        return CXL_MBOX_UNSUPPORTED;
-> +
-> +    output->total_section_count = niagara_state->total_sections;
-> +    output->free_section_count = niagara_state->free_sections;
-> +
-> +    *len_out = sizeof(*output);
-> +
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +#define MHD_SECTION_ALLOC_POLICY_ALL_OR_NOTHING 0
-> +#define MHD_SECTION_ALLOC_POLICY_BEST_EFFORT 1
-> +#define MHD_SECTION_ALLOC_POLICY_MANUAL 2
-
-Even though they are buried down here, good to name these so they
-are niagara specific.
-
-> +static CXLRetCode cmd_niagara_set_section_alloc(const struct cxl_cmd *cmd,
-> +                                              uint8_t *payload_in,
-> +                                              size_t len_in,
-> +                                              uint8_t *payload_out,
-> +                                              size_t *len_out,
-> +                                              CXLCCI *cci)
+> +	mem_nid = pxm_to_node(target->memory_pxm);
+> +	hmat_update_target_attrs(target, p_nodes, access);
+>  	for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
+>  		cpu_nid = pxm_to_node(i);
+> -		register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
+> +		register_memory_node_under_compute_node(mem_nid, cpu_nid, access);
+>  	}
+>  }
+>  
+> +static void hmat_register_target_initiators(struct memory_target *target)
 > +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    Niagara_Shared_State *niagara_state = (Niagara_Shared_State*)ct3d->mhd_state;
-> +    struct {
-> +        uint8_t policy;
-> +        uint8_t reserved1[3];
-> +        uint32_t section_count;
-> +        uint8_t reserved2[4];
-> +        uint32_t extent_count;
-> +        struct {
-> +            uint32_t start_section_id;
-> +            uint32_t section_count;
-> +            uint8_t reserved[8];
-> +        } extents[];
-> +    } QEMU_PACKED *input = (void *)payload_in;
-> +    struct {
-> +        uint32_t section_count;
-> +        uint32_t extent_count;
-> +        struct {
-> +            uint32_t start_section_id;
-> +            uint32_t section_count;
-> +            uint8_t reserved[8];
-> +        } extents[];
-> +    } QEMU_PACKED *output = (void *)payload_out;
+> +	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
 > +
-> +    uint8_t policy = input->policy;
-> +    uint32_t count = input->section_count;
-> +    uint32_t i = 0;
-> +
-> +    if (count == 0 || count > niagara_state->total_sections) {
-> +        return CXL_MBOX_INVALID_INPUT;
-> +    }
-> +
-> +    if (input->policy == MHD_SECTION_ALLOC_POLICY_MANUAL) {
-> +        /* iterate input extents and count total sections for validation */
-> +        uint32_t ttl_sec = 0;
-> +        for (i = 0; i < input->extent_count; i++) {
-> +            uint32_t start = input->extents[i].start_section_id;
-> +            uint32_t end = start + input->extents[i].section_count;
-> +            if ((start >= niagara_state->total_sections) || (end > niagara_state->total_sections))
-> +                return CXL_MBOX_INVALID_INPUT;
-> +            ttl_sec += input->extents[i].section_count;
-> +        }
-> +        if (ttl_sec != input->section_count)
-
-Brackets needed.
-
-> +            return CXL_MBOX_INVALID_INPUT;
-> +    }
-> +
-> +    uint32_t *section_ids = malloc(count*sizeof(uint32_t));
-
-docs/devel/style.rst:
-
-"
-Declarations
-============
-
-Mixed declarations (interleaving statements and declarations within
-blocks) are generally not allowed; declarations should be at the beginning
-of blocks
-"
-
-This is looking like it might benefit from being split into multiple functions
-as a lot going on in here!
-
-> +    uint32_t *sections = &niagara_state->sections[0];
-> +    uint32_t allocated = 0;
-> +
-> +    if (input->policy & MHD_SECTION_ALLOC_POLICY_MANUAL) {
-> +        uint32_t cur_extent = 0;
-
-No need to init. Also blank line after declarations
-
-> +        for (cur_extent = 0; cur_extent < input->extent_count; cur_extent++) {
-> +            uint32_t start_section = input->extents[cur_extent].start_section_id;
-> +            uint32_t count = input->extents[cur_extent].section_count;
-> +            uint32_t cur_section;
-blank line here etc.
-
-> +            for (cur_section = input->extents[cur_extent].start_section_id;
-> +                 cur_section < (start_section + count);
-
-Brackets don't add anything.
-
-> +                 cur_section++) {
-> +                uint32_t *section = &sections[cur_section];
-> +                uint32_t old_value = __sync_fetch_and_or(section, (1 << ct3d->mhd_head));
-> +                /* if the old value wasn't 0, this section was already claimed
-
-Wrong comment syntax.
-
-> +                 * if it was owned by use already, just continue and don't count it
-> +                 */
-> +                if (old_value & (1 << ct3d->mhd_head)) {
-> +                    continue;
-
-You continued, no need for an else after it.
-
-> +                } else if (old_value != 0) {
-> +                    __sync_fetch_and_and(section, ~(1 << ct3d->mhd_head));
-> +                    continue;
-> +                }
-> +                __sync_fetch_and_sub(&niagara_state->free_sections, 1);
-> +                section_ids[allocated++] = i;
-> +            }
-> +        }
-> +    } else {
-> +        /* Iterate the the section list and allocate free sections */
-> +        for (i = 0; (i < niagara_state->total_sections) && (allocated != count); i++) {
-> +            uint32_t old_value = __sync_fetch_and_or(&sections[i], (1 << ct3d->mhd_head));
-> +            /* if the old value wasn't 0, this section was already claimed
-As above
-
-> +             * if it was owned by use already, just continue and don't count it
-> +             */
-> +            if (old_value & (1 << ct3d->mhd_head)) {
-> +                continue;
-
-Continued so no point in else
-
-> +            } else if (old_value != 0) {
-> +                __sync_fetch_and_and(&sections[i], ~(1 << ct3d->mhd_head));
-> +                continue;
-> +            }
-> +            __sync_fetch_and_sub(&niagara_state->free_sections, 1);
-> +            section_ids[allocated++] = i;
-
-Quite a bit common with previous leg.  Perhaps a utility function with that
-stuff factored out?
-
-> +        }
-> +    }
-> +
-> +    if ((policy & MHD_SECTION_ALLOC_POLICY_ALL_OR_NOTHING) &&
-> +        (allocated != count)) {
-> +        goto all_or_nothing_fail;
-> +    }
-> +
-> +    /* Build the output */
-> +    output->section_count = allocated;
-> +    uint32_t extents = 0;
-> +    uint32_t previous = 0;
-> +    for (i=0; i < allocated; i++) {
-> +        if (i == 0) {
-> +            /* start the first extent */
-> +            output->extents[extents].start_section_id = section_ids[i];
-> +            output->extents[extents].section_count = 1;
-> +            extents++;
-> +        }
-> +        else if (section_ids[i] == (previous+1)) {
-> +            /* increment the current extent */
-> +            output->extents[extents-1].section_count++;
-> +        }
-> +        else {
-> +            /* start a new extent */
-> +            output->extents[extents].start_section_id = section_ids[i];
-> +            output->extents[extents].section_count = 1;
-> +            extents++;
-> +        }
-> +        previous = section_ids[i];
-> +    }
-> +    output->extent_count = extents;
-> +
-> +    *len_out = (8+(16*extents));
-> +
-> +    free(section_ids);
-
-Looks like a g_autofree pointer would help.
-
-> +    return CXL_MBOX_SUCCESS;
-> +all_or_nothing_fail:
-> +    /* free any successfully allocated sections */
-> +    for (i = 0; i < allocated; i++) {
-> +        __sync_fetch_and_and(&sections[i], ~(1 << ct3d->mhd_head));
-> +        __sync_fetch_and_add(&niagara_state->free_sections, 1);
-> +    }
-> +    free(section_ids);
-> +    return CXL_MBOX_INTERNAL_ERROR;
+> +	__hmat_register_target_initiators(target, p_nodes, 0);
+> +	__hmat_register_target_initiators(target, p_nodes, 1);
 > +}
 > +
-> +#define MHD_SECTION_RELEASE_POLICY_NONE 0
-> +#define MHD_SECTION_RELEASE_POLICY_CLEARING 1
-> +#define MHD_SECTION_RELEASE_POLICY_RANDOMIZING 2
-
-As above, I'd like these in a niagra specific namespace.
-
-> +static CXLRetCode cmd_niagara_set_section_release(const struct cxl_cmd *cmd,
-> +                                                uint8_t *payload_in,
-> +                                                size_t len_in,
-> +                                                uint8_t *payload_out,
-> +                                                size_t *len_out,
-> +                                                CXLCCI *cci)
-> +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    Niagara_Shared_State *niagara_state = (Niagara_Shared_State*)ct3d->mhd_state;
-> +    struct {
-> +        uint32_t extent_count;
-> +        uint8_t policy;
-> +        uint8_t reserved[3];
-> +        struct {
-> +            uint32_t start_section_id;
-> +            uint32_t section_count;
-> +            uint8_t reserved[8];
-> +        } extents[];
-> +    } QEMU_PACKED *input = (void *)payload_in;
-> +    uint32_t i, j;
-> +
-> +    uint32_t* sections = &niagara_state->sections[0];
-> +    for (i = 0; i < input->extent_count; i++) {
-> +        uint32_t start = input->extents[i].start_section_id;
-> +        for (j = 0; j < input->extents[i].section_count; j++) {
-> +            uint32_t old_val = __sync_fetch_and_and(&sections[start+j], ~(1 << ct3d->mhd_head));
-
-Fix up spacing around operators.
-
-> +            if (old_val & (1 << ct3d->mhd_head))
-> +                __sync_fetch_and_add(&niagara_state->free_sections, 1);
-
-{}
-
-> +
-> +            // TODO: Policy
-> +        }
-> +    }
-> +
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +static CXLRetCode cmd_niagara_set_section_size(const struct cxl_cmd *cmd,
-> +                                             uint8_t *payload_in,
-> +                                             size_t len_in,
-> +                                             uint8_t *payload_out,
-> +                                             size_t *len_out,
-> +                                             CXLCCI *cci)
-> +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    Niagara_Shared_State *niagara_state = (Niagara_Shared_State*)ct3d->mhd_state;
-
-My gut feeling for now would be to pull the mhd shared state into this driver state
-as that will reduce impact on the main type 3 driver whilst we work out what this
-all looks like.
-
-> +    struct {
-> +        uint8_t section_unit;
-> +        uint8_t reserved[7];
-> +    } QEMU_PACKED *input = (void *)payload_in;
-> +    struct {
-> +        uint8_t section_unit;
-> +        uint8_t reserved[7];
-> +    } QEMU_PACKED *output = (void *)payload_out;
-> +
-> +    if (niagara_state->section_size ==  (1 << (input->section_unit - 1)))
-> +        goto set_section_size_success;
-
-I'd just have the handling here to simplify flow.  Or flip condition and indent the
-rest.
-
-{}
-
-> +
-> +    /* Check that there are no actively alloc'd sections */
-> +    if(niagara_state->free_sections != niagara_state->total_sections)
-> +        return CXL_MBOX_INTERNAL_ERROR;
-
-{}
-
-> +
-> +    uint32_t prev_section_size = niagara_state->section_size;
-> +    uint32_t prev_total_sections = niagara_state->total_sections;
-> +
-> +    niagara_state->section_size = (1 << (input->section_unit - 1));
-> +    niagara_state->total_sections = (prev_section_size * prev_total_sections) / niagara_state->section_size;
-> +    niagara_state->free_sections = niagara_state->total_sections;
-> +
-> +set_section_size_success:
-> +    output->section_unit = input->section_unit;
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +#define MHD_MOVE_DATA_POLICY_CLEARING 0
-> +#define MHD_MOVE_DATA_POLICY_NONE 1
-> +static CXLRetCode cmd_niagara_move_data(const struct cxl_cmd *cmd,
-> +                                      uint8_t *payload_in,
-> +                                      size_t len_in,
-> +                                      uint8_t *payload_out,
-> +                                      size_t *len_out,
-> +                                      CXLCCI *cci)
-> +{
-> +    struct {
-> +        uint32_t extent_count;
-> +        uint8_t policy;
-> +        uint8_t reserved[3];
-> +        struct {
-> +            uint32_t source_section_id;
-> +            uint32_t source_data_offset;
-> +            uint32_t destination_section_id;
-> +            uint32_t destination_data_offset;
-> +            uint32_t data_length;
-> +            uint8_t reserved[4];
-> +        } extents;
-> +    } QEMU_PACKED *input = (void *)payload_in;
-> +
-> +    struct {
-> +        uint64_t task_id;
-> +        uint32_t bitset[];
-> +    } QEMU_PACKED *output = (void *)payload_out;
-> +
-> +    (void)input;
-> +    (void)output;
-
-Don't supply this one either if not implemented yet!  Be nice to us
-reviewers :)
-
-> +
-> +    return CXL_MBOX_UNSUPPORTED;
-> +}
-> +
-> +static CXLRetCode cmd_niagara_clear_section(const struct cxl_cmd *cmd,
-> +                                          uint8_t *payload_in,
-> +                                          size_t len_in,
-> +                                          uint8_t *payload_out,
-> +                                          size_t *len_out,
-> +                                          CXLCCI *cci)
-> +{
-> +    return CXL_MBOX_UNSUPPORTED;
-
-Umm. Don't supply it then! :)
-
-> +}
-> +
-> +#define MHD_GSM_QUERY_FREE 0
-> +#define MHD_GSM_QUERY_ALLOCATED 1
-> +static CXLRetCode cmd_niagara_get_section_map(const struct cxl_cmd *cmd,
-> +                                            uint8_t *payload_in,
-> +                                            size_t len_in,
-> +                                            uint8_t *payload_out,
-> +                                            size_t *len_out,
-> +                                            CXLCCI *cci)
-> +{
-> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
-> +    Niagara_Shared_State *niagara_state = (Niagara_Shared_State*)ct3d->mhd_state;
-> +    struct {
-> +        uint8_t query_type;
-> +        uint8_t reserved[7];
-> +    } QEMU_PACKED *input = (void *)payload_in;
-> +    struct {
-> +        uint32_t ttl_section_count;
-> +        uint32_t qry_section_count;
-> +        uint8_t bitset[];
-> +    } QEMU_PACKED *output = (void *)payload_out;
-> +
-> +    uint8_t query_type = input->query_type;
-> +    uint32_t i;
-> +
-> +    if ((query_type != MHD_GSM_QUERY_FREE) && (query_type != MHD_GSM_QUERY_ALLOCATED))
-> +        return CXL_MBOX_INVALID_INPUT;
-> +
-> +    output->ttl_section_count = niagara_state->total_sections;
-> +    output->qry_section_count = 0;
-> +    uint32_t bytes = (output->ttl_section_count/8);
-> +    if (output->ttl_section_count % 8)
-> +        bytes += 1;
-> +    for (i = 0; i < bytes; i++)
-> +        output->bitset[i] = 0x0;
-> +
-> +    /* Iterate the the section list and check the bits */
-> +    uint32_t* sections = &niagara_state->sections[0];
-
-run scripts/checkpatch.pl on HEAD~3..HEAD or similar and fix every error and warning.
-
-> +    for (i = 0; (i < niagara_state->total_sections); i++) {
-> +        uint32_t section = sections[i];
-> +        if (((query_type == MHD_GSM_QUERY_FREE) && (!section)) ||
-> +            ((query_type == MHD_GSM_QUERY_ALLOCATED) && (section & (1 << ct3d->mhd_head)))) {
-> +            uint32_t byte = i / 8;
-> +            uint8_t bit = (1 << (i % 8));
-> +            output->bitset[byte] |= bit;
-> +            output->qry_section_count++;
-> +        }
-> +    }
-> +
-> +    *len_out = (8+bytes);
-
-Spaces around +
-
-> +    return CXL_MBOX_SUCCESS;
-> +}
-> +
-> +static bool mhdsld_access_valid(CXLType3Dev *ct3d, uint64_t dpa_offset, unsigned int size) {
-> +    Niagara_Shared_State *niagara_state = (Niagara_Shared_State*)ct3d->mhd_state;
-> +    if (ct3d->mhd_state) {
-> +        uint32_t section = (dpa_offset / MIN_MEMBLK_SIZE);
-> +        if (!(niagara_state->sections[section] & (1 << ct3d->mhd_head))) {
-> +            return false;
-> +        }
-> +    }
-> +    return true;
-> +}
-> +
-> +static const struct cxl_cmd cxl_cmd_set_niagara[256][256] = {
-> +    [NIAGARA][GET_SECTION_STATUS] = { "GET_SECTION_STATUS",
-> +        cmd_niagara_get_section_status, 0, 0 },
-> +    [NIAGARA][SET_SECTION_ALLOC] = { "SET_SECTION_ALLOC",
-> +        cmd_niagara_set_section_alloc, ~0,
-> +        (IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE |
-> +         IMMEDIATE_POLICY_CHANGE | IMMEDIATE_LOG_CHANGE)
-> +    },
-> +    [NIAGARA][SET_SECTION_RELEASE] = { "SET_SECTION_RELEASE",
-> +        cmd_niagara_set_section_release, ~0,
-> +        (IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE |
-> +         IMMEDIATE_POLICY_CHANGE | IMMEDIATE_LOG_CHANGE)
-> +    },
-> +    [NIAGARA][SET_SECTION_SIZE] = { "SET_SECTION_SIZE",
-> +        cmd_niagara_set_section_size, 8,
-> +        (IMMEDIATE_CONFIG_CHANGE | IMMEDIATE_DATA_CHANGE |
-> +         IMMEDIATE_POLICY_CHANGE | IMMEDIATE_LOG_CHANGE)
-> +    },
-> +    [NIAGARA][MOVE_DATA] = { "MOVE_DATA",
-> +        cmd_niagara_move_data, ~0, IMMEDIATE_DATA_CHANGE },
-> +    [NIAGARA][GET_SECTION_MAP] = { "GET_SECTION_MAP",
-> +        cmd_niagara_get_section_map, 8 , IMMEDIATE_DATA_CHANGE },
-> +    [NIAGARA][CLEAR_SECTION] = { "CLEAR_SECTION",
-> +        cmd_niagara_clear_section, 0, IMMEDIATE_DATA_CHANGE },
-> +};
-> +
-> +enum cxl_dev_type {
-> +    cxl_type3,
-> +};
-> +
-> +struct CXL_Niagara_State {
-> +    PCIDevice parent_obj;
-
-Why not inherit from CXLType3Dev? Should end up simpler and
-more standard which will help upstreaming.
-
-
-> +    PCIDevice *target;
-> +    enum cxl_dev_type type;
-> +    CXLCCI *cci;
-> +};
-> +
-> +struct CXL_NiagaraClass {
-> +    PCIDeviceClass parent_class;
-> +};
-> +
-
-One blank line only.
-
-> +
-> +#define TYPE_CXL_Niagara "cxl-skh-niagara"
-> +OBJECT_DECLARE_TYPE(CXL_Niagara_State, CXL_NiagaraClass, CXL_Niagara)
-> +
-> +static Property cxl_niagara_props[] = {
-> +    DEFINE_PROP_LINK("target", CXL_Niagara_State,
-> +                     target, TYPE_PCI_DEVICE, PCIDevice *),
-> +    DEFINE_PROP_END_OF_LIST(),
-> +};
-> +
-> +static void cxl_niagara_realize(DeviceState *d, Error **errp)
-> +{
-> +    CXL_Niagara_State *s = CXL_Niagara(d);
-> +
-> +    if (object_dynamic_cast(OBJECT(s->target), TYPE_CXL_TYPE3)) {
-> +        CXLType3Dev *ct3d = CXL_TYPE3(s->target);
-> +
-> +        if (!ct3d->is_mhd) {
-> +            error_setg(errp, "Niagara target must be a cxl-type3 mhd");
-> +            return;
-> +        }
-> +
-> +        s->type = cxl_type3;
-> +        s->cci = &ct3d->cci;
-> +
-> +        ct3d->mhd_access_valid = mhdsld_access_valid;
-> +        return;
-> +    }
-> +
-> +    error_setg(errp, "Unhandled target type for CXL Niagara MHSLD");
-> +}
-> +
-> +static void cxl_niagara_reset(DeviceState *d)
-> +{
-> +    CXL_Niagara_State *s = CXL_Niagara(d);
-> +
-> +    if (object_dynamic_cast(OBJECT(s->target), TYPE_CXL_TYPE3)) {
-> +        CXLType3Dev *ct3d = CXL_TYPE3(s->target);
-> +        cxl_add_cci_commands(&ct3d->cci, cxl_cmd_set_niagara, 512);
-> +        return;
-> +    }
-> +}
-> +
-> +static void cxl_niagara_class_init(ObjectClass *klass, void *data)
-> +{
-> +    DeviceClass *dc = DEVICE_CLASS(klass);
-> +    dc->realize = cxl_niagara_realize;
-> +    dc->reset = cxl_niagara_reset;
-> +    device_class_set_props(dc, cxl_niagara_props);
-> +}
-> +
-> +static const TypeInfo cxl_niagara_info = {
-> +    .name = TYPE_CXL_Niagara,
-> +    .parent = TYPE_CXL_TYPE3,
-> +    .class_size = sizeof(struct CXL_NiagaraClass),
-> +    .class_init = cxl_niagara_class_init,
-> +    .instance_size = sizeof(CXL_Niagara_State),
-
-I'd embed the type3 in the state.
-
-> +    .interfaces = (InterfaceInfo[]) {
-> +        { INTERFACE_CXL_DEVICE },
-> +        { INTERFACE_PCIE_DEVICE },
-> +        {}
-> +    },
-> +};
-> +
-> +static void cxl_niagara_register_types(void)
-> +{
-> +    type_register_static(&cxl_niagara_info);
-> +}
-> +
-> +type_init(cxl_niagara_register_types)
+>  static void hmat_register_target_cache(struct memory_target *target)
+>  {
+>  	unsigned mem_nid = pxm_to_node(target->memory_pxm);
 
