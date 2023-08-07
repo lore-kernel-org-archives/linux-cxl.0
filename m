@@ -2,169 +2,95 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F70C04A6A
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 14:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05360C001B0
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 14:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230486AbjHGOYS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Aug 2023 10:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38804 "EHLO
+        id S231295AbjHGO2J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Aug 2023 10:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233570AbjHGOYQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 10:24:16 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6DA7170A
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 07:24:11 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RKJNK0TYsz6HJc0;
-        Mon,  7 Aug 2023 22:19:13 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 7 Aug
- 2023 15:24:08 +0100
-Date:   Mon, 7 Aug 2023 15:24:07 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <alison.schofield@intel.com>
-CC:     Davidlohr Bueso <dave@stgolabs.net>,
+        with ESMTP id S234092AbjHGO2F (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 10:28:05 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096F9F0
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 07:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691418485; x=1722954485;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=w0NdACBQd8S24q5ewB+9ymxEbqntXLLVHYaze7jjWF0=;
+  b=mP/lAnAuwD+Q2EvyvmzdbWJxYZhzLYdtjQRLKfA7+rSyv3nOWajmQpaT
+   5qALwAne6ZUbG+w/EmSqUepT/Owko3GWIsaPnwHmDJxIxNcD9y9gQ5n5B
+   eTQ8HmHTzzQswRbUOug1TiRXL4iWZ/qTUSVzLrJI4k1Hyhb6w/559eKwT
+   TiRS7LgXj3pOw+Z8L1eD6WuVgLU8oxdagc2XwYr+CVyd5id2LwqaTEOc1
+   EijojJjikeamJLArn3342LGHnChlsWRnUNgMaagEVb3EDg+iU+kkAHTWD
+   sL4fbaw5QxtTL9t2gUoJbjYC87tZVkL/YkJJRlAOJib6PeQUwhT6cBNok
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="370556054"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="370556054"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 07:28:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="707887232"
+X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
+   d="scan'208";a="707887232"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP; 07 Aug 2023 07:28:02 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qT1DE-00FJgw-38;
+        Mon, 07 Aug 2023 17:28:00 +0300
+Date:   Mon, 7 Aug 2023 17:28:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] cxl/region: Try to add a region resource to a
- soft reserved parent
-Message-ID: <20230807152407.000070e6@Huawei.com>
-In-Reply-To: <6cd07222f169d951921486306187e87951853035.1691176651.git.alison.schofield@intel.com>
-References: <cover.1691176651.git.alison.schofield@intel.com>
-        <6cd07222f169d951921486306187e87951853035.1691176651.git.alison.schofield@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] cxl/mbox: Remove useless cast in
+ cxl_mem_create_range_info()
+Message-ID: <ZND/cKkWvby8hPl6@smile.fi.intel.com>
+References: <20230804190309.1665132-1-alison.schofield@intel.com>
+ <20230807143334.00005448@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807143334.00005448@Huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri,  4 Aug 2023 12:31:39 -0700
-alison.schofield@intel.com wrote:
+On Mon, Aug 07, 2023 at 02:33:34PM +0100, Jonathan Cameron wrote:
+> On Fri,  4 Aug 2023 12:03:09 -0700
+> alison.schofield@intel.com wrote:
+> 
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > DEFINE_RES_MEM() returns a struct resource so the cast is not needed.
+> > Remove it.
 
-> From: Alison Schofield <alison.schofield@intel.com>
+> Good to call out this is a result of Andy's cleanup
 > 
-> During region autodiscovery, the region driver always inserts the
-> region resource as a child of the root decoder, a CXL WINDOW. It
-> has the effect of making a soft reserved resource, with an exactly
-> matching address range, a child of the region resource.
+> 42c4211f1 ("resource: Convert DEFINE_RES_NAMED() to be a compound literal")
 > 
-> It looks like this in /proc/iomem:
-> 
-> 2080000000-29dbfffffff : CXL Window 0
->   2080000000-247fffffff : region0
->     2080000000-247fffffff : Soft Reserved
-> 
-> Search for soft reserved resources that include the region resource,
-> and add the new region resource as a child of that found resource.
-> If a soft reserved resource is not found, insert to the root decoder
-> as usual.
-> 
-> With this change, it looks like this:
-> 
-> 2080000000-29dbfffffff : CXL Window 0
->   2080000000-247fffffff : Soft Reserved
->     2080000000-247fffffff : region0
-> 
-> This odd parenting only occurs when the resources are an exact match.
-> When the region resource only uses part of a soft reserved resource,
-> the parenting appears more logical like this:
-> 
-> 2080000000-29dbfffffff : CXL Window 0
->   2080000000-287fffffff : Soft Reserved
->     2080000000-247fffffff : region0
-> 
-> Aside from the more logical appearance, this change is in preparation
-> for further cleanup in region teardown. A follow-on patch intends to
-> find and free soft reserved resources upon region teardown.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> I thought we'd long caught all of these (IIRC there were a few at the time).
+> Ah well.
 
-Hi Alison
+We caught only compile-time errors. The "casting" of the compound literal is
+only a warning which doesn't affect code generation.
 
-A comment and a question inline.
+Btw, Alison, the commit message should really be more clear about those macros.
+They are compound literals, which are associated with the corresponding data
+type. It's not a cast there, but only on the side of the user. I'm not a native
+speaker to suggest on how to amend, maybe Jonathan can help?
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Jonathan
-
-> ---
->  drivers/cxl/core/region.c | 32 ++++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e115ba382e04..36c0c0dd5697 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2709,6 +2709,28 @@ static int match_region_by_range(struct device *dev, void *data)
->  	return rc;
->  }
->  
-> +static int insert_resource_soft_reserved(struct resource *soft_res, void *arg)
-> +{
-> +	struct resource *parent, *new, *res = arg;
-> +	bool found = false;
-> +
-> +	parent = soft_res->parent;
-> +	if (!parent)
-> +		return 0;
-> +
-> +	/* Caller provides a copy of soft_res. Find the actual resource. */
-> +	for (new = parent->child; new; new = new->sibling) {
-> +		if (resource_contains(new, soft_res)) {
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +	if (found)
-> +		return insert_resource(new, res) == 0;
-
-Why not do this in the the if above then directly return there?
-Also, should we get an error here, does it make sense to carry on?
-(I don't think we can get an error, but if that's the case we shouldn't
- be checking for one)  If it's a corner we aren't sure about, good
-to add a comment on what the error case might be and what we are doing
-as a result.
-
-> +
-> +	return 0;
-> +}
-> +
->  /* Establish an empty region covering the given HPA range */
->  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  					   struct cxl_endpoint_decoder *cxled)
-> @@ -2719,7 +2741,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  	struct cxl_region_params *p;
->  	struct cxl_region *cxlr;
->  	struct resource *res;
-> -	int rc;
-> +	int rc = 0;
->  
->  	do {
->  		cxlr = __create_region(cxlrd, cxled->mode,
-> @@ -2755,7 +2777,13 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
->  				    dev_name(&cxlr->dev));
-> -	rc = insert_resource(cxlrd->res, res);
-> +
-> +	/* Try inserting to a Soft Reserved parent, fallback to root decoder */
-> +	if (walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED, 0,
-> +				res->start, res->end, res,
-> +				insert_resource_soft_reserved) != 1)
-> +		rc = insert_resource(cxlrd->res, res);
-> +
->  	if (rc) {
->  		/*
->  		 * Platform-firmware may not have split resources like "System
 
