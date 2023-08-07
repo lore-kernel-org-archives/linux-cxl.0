@@ -2,95 +2,264 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05360C001B0
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 14:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D78BC001B0
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 14:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbjHGO2J (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Aug 2023 10:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
+        id S233706AbjHGObJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Aug 2023 10:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234092AbjHGO2F (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 10:28:05 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096F9F0
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 07:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691418485; x=1722954485;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w0NdACBQd8S24q5ewB+9ymxEbqntXLLVHYaze7jjWF0=;
-  b=mP/lAnAuwD+Q2EvyvmzdbWJxYZhzLYdtjQRLKfA7+rSyv3nOWajmQpaT
-   5qALwAne6ZUbG+w/EmSqUepT/Owko3GWIsaPnwHmDJxIxNcD9y9gQ5n5B
-   eTQ8HmHTzzQswRbUOug1TiRXL4iWZ/qTUSVzLrJI4k1Hyhb6w/559eKwT
-   TiRS7LgXj3pOw+Z8L1eD6WuVgLU8oxdagc2XwYr+CVyd5id2LwqaTEOc1
-   EijojJjikeamJLArn3342LGHnChlsWRnUNgMaagEVb3EDg+iU+kkAHTWD
-   sL4fbaw5QxtTL9t2gUoJbjYC87tZVkL/YkJJRlAOJib6PeQUwhT6cBNok
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="370556054"
-X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
-   d="scan'208";a="370556054"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 07:28:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="707887232"
-X-IronPort-AV: E=Sophos;i="6.01,262,1684825200"; 
-   d="scan'208";a="707887232"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP; 07 Aug 2023 07:28:02 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qT1DE-00FJgw-38;
-        Mon, 07 Aug 2023 17:28:00 +0300
-Date:   Mon, 7 Aug 2023 17:28:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     alison.schofield@intel.com, Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/mbox: Remove useless cast in
- cxl_mem_create_range_info()
-Message-ID: <ZND/cKkWvby8hPl6@smile.fi.intel.com>
-References: <20230804190309.1665132-1-alison.schofield@intel.com>
- <20230807143334.00005448@Huawei.com>
+        with ESMTP id S233685AbjHGObI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 10:31:08 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E8A31BD4
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 07:30:47 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RKJYT1X15z67bHh;
+        Mon,  7 Aug 2023 22:27:09 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 7 Aug
+ 2023 15:30:43 +0100
+Date:   Mon, 7 Aug 2023 15:30:42 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Gregory Price <gregory.price@memverge.com>
+CC:     Gregory Price <gourry.memverge@gmail.com>, <qemu-devel@nongnu.org>,
+        <linux-cxl@vger.kernel.org>, <junhee.ryu@sk.com>,
+        <kwangjin.ko@sk.com>
+Subject: Re: [PATCH 2/4] cxl/mailbox: interface to add CCI commands to an
+ existing CCI
+Message-ID: <20230807153042.00007bed@Huawei.com>
+In-Reply-To: <ZM0qNhbVxsSEs7nQ@memverge.com>
+References: <20230721163505.1910-1-gregory.price@memverge.com>
+        <20230721163505.1910-3-gregory.price@memverge.com>
+        <20230804161414.00006eaa@huawei.com>
+        <ZM0qNhbVxsSEs7nQ@memverge.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230807143334.00005448@Huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 02:33:34PM +0100, Jonathan Cameron wrote:
-> On Fri,  4 Aug 2023 12:03:09 -0700
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
+On Fri, 4 Aug 2023 12:41:26 -0400
+Gregory Price <gregory.price@memverge.com> wrote:
+
+> On Fri, Aug 04, 2023 at 04:14:14PM +0100, Jonathan Cameron wrote:
+> > On Fri, 21 Jul 2023 12:35:06 -0400
+> > Gregory Price <gourry.memverge@gmail.com> wrote:
+> >   
+> > > This enables wrapper devices to customize the base device's CCI
+> > > (for example, with custom commands outside the specification)
+> > > without the need to change the base device.
+> > > 
+> > > The also enabled the base device to dispatch those commands without
+> > > requiring additional driver support.
+> > > 
+> > > Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> > > ---
+> > >  hw/cxl/cxl-mailbox-utils.c  | 19 +++++++++++++++++++
+> > >  include/hw/cxl/cxl_device.h |  2 ++
+> > >  2 files changed, 21 insertions(+)
+> > > 
+> > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > > index ddee3f1718..cad0cd0adb 100644
+> > > --- a/hw/cxl/cxl-mailbox-utils.c
+> > > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > > @@ -1383,6 +1383,25 @@ static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[
+> > >      }
+> > >  }
+> > >  
+> > > +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256], size_t payload_max)
+> > > +{
+> > > +    cci->payload_max = payload_max > cci->payload_max ? payload_max : cci->payload_max;
+> > > +    for (int set = 0; set < 256; set++) {
+> > > +        for (int cmd = 0; cmd < 256; cmd++) {
+> > > +            if (cxl_cmd_set[set][cmd].handler) {
+> > > +                const struct cxl_cmd *c = &cxl_cmd_set[set][cmd];
+> > > +                cci->cxl_cmd_set[set][cmd] = *c;  
+> > Don't interleave definitions and code.
+> >   
+> > > +                struct cel_log *log =
+> > > +                    &cci->cel_log[cci->cel_size];
+> > > +
+> > > +                log->opcode = (set << 8) | cmd;
+> > > +                log->effect = c->effect;
+> > > +                cci->cel_size++;  
 > > 
-> > DEFINE_RES_MEM() returns a struct resource so the cast is not needed.
-> > Remove it.
-
-> Good to call out this is a result of Andy's cleanup
+> > So my gut feeling on this is based on the large amount of overlapping code.  I might queue it
+> > as it stands, but I'd like to see this refactored.
+> > 
+> > 1) Single copy routine used in all places that copie in any new entries to cci->cxl_cmd_set[][]
+> > 2) A single cel_log builder function to be called in normal path and after an update. Just rebuild
+> > the whole thing rather than trying to append to it I think.
+> > 
+> > Something like (so far untested but I'll poke it with Fan's code in a few mins)
+> > 
+> > However this is all proving rather costly in space so maybe we need a better
+> > representation for the sparse nature of cxl comamnds - a job for another day.  
 > 
-> 42c4211f1 ("resource: Convert DEFINE_RES_NAMED() to be a compound literal")
+> I'd certainly considered the issue of space, but it seemed better to
+> blow up the size in one commit and then come back around and change the
+> structure out from under the work this unblocks.  What we save in space
+> we sacrifice in complexity, but the structure seems simple enough that a
+> change shouldn't take a ton of scrutiny to get right.
+
+Makes sense.
+
 > 
-> I thought we'd long caught all of these (IIRC there were a few at the time).
-> Ah well.
+> One downside of the approach here is what happens when there's an
+> overlap and custom devices build up over time.  As in - if i steal the
+> 0xFF command group for my custom emulated MHMLD DCD Everything Super Device,
+> what happens if the spec finally comes around to defining 0xFF as a real
+> command set?
 
-We caught only compile-time errors. The "casting" of the compound literal is
-only a warning which doesn't affect code generation.
+We don't support your command unless it's in the vendor defined space.
+Opcodes c000h-ffffh are all yours to do what you like with :)
 
-Btw, Alison, the commit message should really be more clear about those macros.
-They are compound literals, which are associated with the corresponding data
-type. It's not a cast there, but only on the side of the user. I'm not a native
-speaker to suggest on how to amend, maybe Jonathan can help?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> tl;dr: Should the copy function error on overlap detections?
+Maybe.. If it's easy we definitely could do that even if it's considered a
+bug if it occurs.
+> 
+> Quick read-back through the spec, I don't see explicit carve-outs for
+> reserved command regions for custom sets, might be worth a discussion.
+8.2.9 Component Command Interface
+"Opcodes C000h-FFFFh describe vendor specific commands."
 
+Jonathan
+
+> 
+> For now it shouldn't be an issue.
+> 
+> > 
+> > 
+> > From 8ab48adfb2b481be0702b84a0d172a4f142b0df6 Mon Sep 17 00:00:00 2001
+> > From: Gregory Price <gourry.memverge@gmail.com>
+> > Date: Fri, 21 Jul 2023 12:35:06 -0400
+> > Subject: [PATCH] cxl/mailbox: interface to add CCI commands to an existing CCI
+> > 
+> > This enables wrapper devices to customize the base device's CCI
+> > (for example, with custom commands outside the specification)
+> > without the need to change the base device.
+> > 
+> > The also enabled the base device to dispatch those commands without
+> > requiring additional driver support.
+> > 
+> > Signed-off-by: Gregory Price <gregory.price@memverge.com>
+> > Link: https://lore.kernel.org/r/20230721163505.1910-3-gregory.price@memverge.com
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > --
+> > Heavily edited by Jonathan Cameron to increase code reuse
+> > ---
+> >  include/hw/cxl/cxl_device.h |  2 ++
+> >  hw/cxl/cxl-mailbox-utils.c  | 21 +++++++++++++++++++--
+> >  2 files changed, 21 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 0c9254dff9..2a3050fbad 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -297,6 +297,8 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
+> >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+> >                                    DeviceState *d, size_t payload_max);
+> >  void cxl_init_cci(CXLCCI *cci, size_t payload_max);
+> > +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+> > +                          size_t payload_max);
+> >  int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+> >                              size_t len_in, uint8_t *pl_in,
+> >                              size_t *len_out, uint8_t *pl_out,
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index 37703f254f..852e5a046b 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -1353,9 +1353,9 @@ static void bg_timercb(void *opaque)
+> >      }
+> >  }
+> >  
+> > -void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> > +static void cxl_rebuild_cel(CXLCCI *cci)
+> >  {
+> > -    cci->payload_max = payload_max;
+> > +    cci->cel_size = 0; /* Reset for a fresh build */
+> >      for (int set = 0; set < 256; set++) {
+> >          for (int cmd = 0; cmd < 256; cmd++) {
+> >              if (cci->cxl_cmd_set[set][cmd].handler) {
+> > @@ -1369,6 +1369,13 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> >              }
+> >          }
+> >      }
+> > +}
+> > +
+> > +void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+> > +{
+> > +    cci->payload_max = payload_max;
+> > +    cxl_rebuild_cel(cci);
+> > +
+> >      cci->bg.complete_pct = 0;
+> >      cci->bg.starttime = 0;
+> >      cci->bg.runtime = 0;
+> > @@ -1387,10 +1394,19 @@ static void cxl_copy_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmds)[
+> >      }
+> >  }
+> >  
+> > +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+> > +                                 size_t payload_max)
+> > +{
+> > +    cci->payload_max = payload_max > cci->payload_max ? payload_max : cci->payload_max;
+> > +    cxl_copy_cci_commands(cci, cxl_cmd_set);
+> > +    cxl_rebuild_cel(cci);
+> > +}
+> > +
+> >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+> >                                    DeviceState *d, size_t payload_max)
+> >  {
+> >      cxl_copy_cci_commands(cci, cxl_cmd_set_sw);
+> > +    cxl_rebuild_cel(cci);
+> >      cci->d = d;
+> >      cci->intf = intf;
+> >      cxl_init_cci(cci, payload_max);
+> > @@ -1399,6 +1415,7 @@ void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+> >  void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max)
+> >  {
+> >      cxl_copy_cci_commands(cci, cxl_cmd_set);
+> > +    cxl_rebuild_cel(cci);
+> >      cci->d = d;
+> >  
+> >      /* No separation for PCI MB as protocol handled in PCI device */
+> > -- 
+> > 2.39.2
+> > 
+> > 
+> >   
+> > > +            }
+> > > +        }
+> > > +    }
+> > > +}
+> > > +
+> > >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf, DeviceState *d, size_t payload_max)
+> > >  {
+> > >      cxl_copy_cci_commands(cci, cxl_cmd_set_sw);
+> > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > > index 9a3c8b2dfa..abc8405cc5 100644
+> > > --- a/include/hw/cxl/cxl_device.h
+> > > +++ b/include/hw/cxl/cxl_device.h
+> > > @@ -297,6 +297,8 @@ void cxl_initialize_mailbox_t3(CXLCCI *cci, DeviceState *d, size_t payload_max);
+> > >  void cxl_initialize_mailbox_swcci(CXLCCI *cci, DeviceState *intf,
+> > >                                    DeviceState *d, size_t payload_max);
+> > >  void cxl_init_cci(CXLCCI *cci, size_t payload_max);
+> > > +void cxl_add_cci_commands(CXLCCI *cci, const struct cxl_cmd (*cxl_cmd_set)[256],
+> > > +                          size_t payload_max);
+> > >  int cxl_process_cci_message(CXLCCI *cci, uint8_t set, uint8_t cmd,
+> > >                              size_t len_in, uint8_t *pl_in,
+> > >                              size_t *len_out, uint8_t *pl_out,  
+> >   
 
