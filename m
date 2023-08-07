@@ -2,159 +2,308 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A94C001DB
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 06:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC4EC001B0
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 08:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbjHGGfz (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Aug 2023 02:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41704 "EHLO
+        id S231199AbjHGIyS (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Aug 2023 04:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbjHGGfx (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 02:35:53 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67A31172C
-        for <linux-cxl@vger.kernel.org>; Sun,  6 Aug 2023 23:35:51 -0700 (PDT)
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230807063549epoutp03104d2f23da85a7a5cd7da11baac1e156~5BmFC_CyJ0969309693epoutp03b
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 06:35:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230807063549epoutp03104d2f23da85a7a5cd7da11baac1e156~5BmFC_CyJ0969309693epoutp03b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1691390149;
-        bh=Leo3A7Oaszp/5S8ja3I/nQK908gdWsvtnK3ZBXA6d14=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n9frTeBIO/WiyW4iLHc0zCdIYBJDOf86JLV2TPEFOlBJoKSDp4dS/Kr1WyKBQxtsT
-         cs3gnp3WcoTD68ShjTIWgq9JfGjzV4u5PZzcS0dg4VF6m1GrBwWWFRQ+fyNmDgf9ZC
-         6IG6sjui69CEDz+YeVDyeV5WhYZlqsBPgGDvXsz4=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20230807063549epcas2p1b287f00db141e525463430f31424eb10~5BmEl1OHB0959509595epcas2p1H;
-        Mon,  7 Aug 2023 06:35:49 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.102]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4RK65c5n3Gz4x9Px; Mon,  7 Aug
-        2023 06:35:48 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        49.53.49986.4C090D46; Mon,  7 Aug 2023 15:35:48 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20230807063547epcas2p4ccb33e410e77a94e088f283b8c2925db~5BmDTkOLd2298722987epcas2p4T;
-        Mon,  7 Aug 2023 06:35:47 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230807063547epsmtrp21083b8acda708987a7f7d44191720004~5BmDStPi72086220862epsmtrp2G;
-        Mon,  7 Aug 2023 06:35:47 +0000 (GMT)
-X-AuditID: b6c32a43-5f9ff7000000c342-75-64d090c4a3fa
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EF.1F.34491.3C090D46; Mon,  7 Aug 2023 15:35:47 +0900 (KST)
-Received: from jehoon-Precision-7920-Tower.dsn.sec.samsung.com (unknown
-        [10.229.83.133]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230807063547epsmtip25ab034ba4198fd5b9a10c1356fd1bb94~5BmDBUzlQ2291222912epsmtip2S;
-        Mon,  7 Aug 2023 06:35:47 +0000 (GMT)
-From:   Jehoon Park <jehoon.park@samsung.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     nvdimm@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Kyungsan Kim <ks0204.kim@samsung.com>,
-        Junhyeok Im <junhyeok.im@samsung.com>,
-        Jehoon Park <jehoon.park@samsung.com>
-Subject: [ndctl PATCH v2 3/3] cxl: Fix the checking value when listing
- device's health info
-Date:   Mon,  7 Aug 2023 15:35:49 +0900
-Message-Id: <20230807063549.5942-4-jehoon.park@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230807063549.5942-1-jehoon.park@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKKsWRmVeSWpSXmKPExsWy7bCmqe6RCRdSDA7M0rG4+/gCm8X0qRcY
-        LU7cbGSzWH1zDaPF/qfPWSwOvG5gt1i18BqbxeKjM5gtju7hsDg/6xSLxcoff1gtbk04xuTA
-        49Fy5C2rx+I9L5k8XmyeyejRt2UVo8fU2fUenzfJBbBFZdtkpCampBYppOYl56dk5qXbKnkH
-        xzvHm5oZGOoaWlqYKynkJeam2iq5+AToumXmAJ2opFCWmFMKFApILC5W0rezKcovLUlVyMgv
-        LrFVSi1IySkwL9ArTswtLs1L18tLLbEyNDAwMgUqTMjOeNWcUfCLs6Jt+UH2BsbZHF2MnBwS
-        AiYS7csmsXYxcnEICexglNh55hQbhPOJUWLKu0ZGCOcbo8T152eYYVr6D51ngkjsZZSYOPcm
-        VFUvk8TP/ndgVWwC2hL3t29gA7FFBGQlmtc9AOtgFtjMLLFs5zmwhLBArMT7o3fZuxg5OFgE
-        VCVarrqAhHkFrCVWtS2E2iYvsXrDATCbU8BGYt3Fd6wQ8Y/sEvN7tSFsF4k7tz4zQdjCEq+O
-        b2GHsKUkPr/bywZh50v8PHkLqrdA4tOXDywQtrHEu5vPWUFOYBbQlFi/Sx/ElBBQljhyC6yC
-        WYBPouPwX3aIMK9ER5sQRKOqRNfxD4wQtrTE4StHoQ72kFjYDmELCfQDA3F38gRGuVkI8xcw
-        Mq5iFEstKM5NT002KjCER1dyfu4mRnD603LewXhl/j+9Q4xMHIyHGCU4mJVEeOc9OZ8ixJuS
-        WFmVWpQfX1Sak1p8iNEUGHATmaVEk/OBCTivJN7QxNLAxMzM0NzI1MBcSZz3XuvcFCGB9MSS
-        1OzU1ILUIpg+Jg5OqQYmbwH5KcKur5Marn69mVRmXPinoFRDjvHrrX1bEib42PlsTS00Lb5f
-        OOUg8/EVsuE6R31PPTLJezBrs3Dp6xOf9iU2+5e8m8LFuOCLiulqabe20qMr6j5kCqhHmVs8
-        y3o12fTtzm1Gn+2LdT68X/vgmU1gwY0kRVlO3yeTZIvfPTj5xa3L/eCU+kuzIn73fVu7cFFO
-        4xMuG7FAk887D/gHrWmZdiN53scMVn3l6M4zV8Rr2t19U/KYn9W3MpXuN+u1SNzyf2rztqgr
-        fMdsGNru3nK1eBLfyzTz7zqj7sO9yufy5m9/xrP/3Y71scwz7l0/WiWRa7SNVfrN/MC/tSwO
-        x22EmmZ+Vlunfufq06umSizFGYmGWsxFxYkAsa4BrwgEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSvO7hCRdSDPpmGVvcfXyBzWL61AuM
-        FiduNrJZrL65htFi/9PnLBYHXjewW6xaeI3NYvHRGcwWR/dwWJyfdYrFYuWPP6wWtyYcY3Lg
-        8Wg58pbVY/Gel0weLzbPZPTo27KK0WPq7HqPz5vkAtiiuGxSUnMyy1KL9O0SuDJeNWcU/OKs
-        aFt+kL2BcTZHFyMnh4SAiUT/ofNMXYxcHEICuxkl5jZ2M0IkpCXuNV9hh7CFJe63HGGFKOpm
-        kli/5x0zSIJNQFvi/vYNbCC2iICsRPO6B2CTmAX2Mkt0zDwP1MHBISwQLfH3qw2IySKgKtFy
-        1QWknFfAWmJV20JmiPnyEqs3HACzOQVsJNZdfAfWKQRUc/xe4gRGvgWMDKsYJVMLinPTc4sN
-        CwzzUsv1ihNzi0vz0vWS83M3MYIDVUtzB+P2VR/0DjEycTAeYpTgYFYS4Z335HyKEG9KYmVV
-        alF+fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp2ampBalFMFkmDk6pBqb0Tf9Z0zgXnDc1fC+3
-        /6p0j3vuwZX77T/43TrgtXX2tm2vo49UHZt1JO5mb2hE3exlKuznj0RMXiq9Ia5/7d/ov3Em
-        j0555exR6jlrOO1zTm/G/9lr9l5epq/pNFvuumjS5YnRWd61rvmTrH1tViptnc+VZLnHSS/c
-        LJh788U7p6rfZSukNealnP6ecmn//JJPEUp7m5Yre87IX/TnaW/Q308yAhN+vZ5xh79uSohm
-        2b6OtOt8d1NfV9xd+Khw0SmrGyHbu/45nmDd25LeOVPTX75rxlPH5Nilu9RvWksuNVjM8+pp
-        YPodK669nrWrPrn9W79nnYTIwnR38Vvy6ode9vp47PJ+sWLa75cVGZxPlFiKMxINtZiLihMB
-        SjpmfMMCAAA=
-X-CMS-MailID: 20230807063547epcas2p4ccb33e410e77a94e088f283b8c2925db
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
+        with ESMTP id S230382AbjHGIxt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 04:53:49 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD4710FD
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 01:53:46 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RK94d2TMfz67sgR;
+        Mon,  7 Aug 2023 16:50:09 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 7 Aug
+ 2023 09:53:43 +0100
+Date:   Mon, 7 Aug 2023 09:53:42 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Fan Ni <fan.ni@samsung.com>
+CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "gregory.price@memverge.com" <gregory.price@memverge.com>,
+        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
+        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+        "nifan@outlook.com" <nifan@outlook.com>
+Subject: Re: [Qemu PATCH v2 9/9] hw/mem/cxl_type3: Add dpa range validation
+ for accesses to dc regions
+Message-ID: <20230807095342.00006f88@Huawei.com>
+In-Reply-To: <20230725183939.2741025-10-fan.ni@samsung.com>
+References: <20230725183939.2741025-1-fan.ni@samsung.com>
+        <CGME20230725183957uscas1p2ca5293c7229ab989ad1a2d95395436a6@uscas1p2.samsung.com>
+        <20230725183939.2741025-10-fan.ni@samsung.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230807063547epcas2p4ccb33e410e77a94e088f283b8c2925db
-References: <20230807063549.5942-1-jehoon.park@samsung.com>
-        <CGME20230807063547epcas2p4ccb33e410e77a94e088f283b8c2925db@epcas2p4.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Fix the value for checking device's life used and temperature fields are
-implemented.
+On Tue, 25 Jul 2023 18:39:56 +0000
+Fan Ni <fan.ni@samsung.com> wrote:
 
-Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
----
- cxl/json.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+> From: Fan Ni <nifan@outlook.com>
+> 
+> Not all dpa range in the dc regions is valid to access until an extent
+> covering the range has been added. Add a bitmap for each region to
+> record whether a dc block in the region has been backed by dc extent.
+> For the bitmap, a bit in the bitmap represents a dc block. When a dc
+> extent is added, all the bits of the blocks in the extent will be set,
+> which will be cleared when the extent is released.
+> 
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Hi Fan,
 
-diff --git a/cxl/json.c b/cxl/json.c
-index 7678d02..102bfaf 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (C) 2015-2021 Intel Corporation. All rights reserved.
-+#include <errno.h>
- #include <limits.h>
- #include <util/json.h>
- #include <uuid/uuid.h>
-@@ -238,15 +239,15 @@ static struct json_object *util_cxl_memdev_health_to_json(
- 		json_object_object_add(jhealth, "ext_corrected_persistent", jobj);
- 
- 	/* other fields */
--	field = cxl_cmd_health_info_get_life_used(cmd);
--	if (field != 0xff) {
--		jobj = json_object_new_int(field);
-+	rc = cxl_cmd_health_info_get_life_used(cmd);
-+	if (rc != -EOPNOTSUPP) {
-+		jobj = json_object_new_int(rc);
- 		if (jobj)
- 			json_object_object_add(jhealth, "life_used_percent", jobj);
- 	}
- 
- 	field = cxl_cmd_health_info_get_temperature(cmd);
--	if (field != 0xffff) {
-+	if (field != INT_MAX) {
- 		jobj = json_object_new_int(field);
- 		if (jobj)
- 			json_object_object_add(jhealth, "temperature", jobj);
--- 
-2.17.1
+A few of the bits of feedback apply broadly across the series.  Given I'm
+rebasing this anyway to give myself something to test I'll tidy things up
+(feel free to disagree with and revert any changes !) 
+and push a tree out in next day or two.  I'll message when I've done so.
+
+Jonathan
+
+> ---
+>  hw/mem/cxl_type3.c          | 155 ++++++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_device.h |   1 +
+>  2 files changed, 156 insertions(+)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 41a828598a..51943a36fc 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -787,13 +787,37 @@ static int cxl_create_dc_regions(CXLType3Dev *ct3d)
+>          /* dsmad_handle is set when creating cdat table entries */
+>          region->flags = 0;
+>  
+> +        region->blk_bitmap = bitmap_new(region->len / region->block_size);
+
+In common with many allocators in qemu if this fails it calls abort()
+internally so no need to handle potential errors.
+
+> +        if (!region->blk_bitmap) {
+> +            break;
+> +        }
+> +
+>          region_base += region->len;
+>      }
+> +
+> +    if (i < ct3d->dc.num_regions) {
+> +        while (--i >= 0) {
+> +            g_free(ct3d->dc.regions[i].blk_bitmap);
+> +        }
+> +        return -1;
+> +    }
+> +
+>      QTAILQ_INIT(&ct3d->dc.extents);
+>  
+>      return 0;
+>  }
+>  
+> +static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
+> +{
+> +    int i;
+> +    struct CXLDCD_Region *region;
+> +
+> +    for (i = 0; i < ct3d->dc.num_regions; i++) {
+> +        region = &ct3d->dc.regions[i];
+> +        g_free(region->blk_bitmap);
+> +    }
+> +}
+> +
+>  static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+>  {
+>      DeviceState *ds = DEVICE(ct3d);
+> @@ -1021,6 +1045,7 @@ err_free_special_ops:
+>      g_free(regs->special_ops);
+>  err_address_space_free:
+>      if (ct3d->dc.host_dc) {
+> +        cxl_destroy_dc_regions(ct3d);
+>          address_space_destroy(&ct3d->dc.host_dc_as);
+>      }
+>      if (ct3d->hostpmem) {
+> @@ -1043,6 +1068,7 @@ static void ct3_exit(PCIDevice *pci_dev)
+>      spdm_sock_fini(ct3d->doe_spdm.socket);
+>      g_free(regs->special_ops);
+>      if (ct3d->dc.host_dc) {
+> +        cxl_destroy_dc_regions(ct3d);
+>          address_space_destroy(&ct3d->dc.host_dc_as);
+>      }
+>      if (ct3d->hostpmem) {
+> @@ -1053,6 +1079,110 @@ static void ct3_exit(PCIDevice *pci_dev)
+>      }
+>  }
+>  
+> +/*
+> + * This function will marked the dpa range [dpa, dap + len) to be backed and
+> + * accessible, this happens when a dc extent is added and accepted by the
+> + * host.
+> + */
+> +static void set_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+> +        uint64_t len)
+> +{
+> +    int i;
+> +    CXLDCD_Region *region = &ct3d->dc.regions[0];
+> +
+> +    if (dpa < region->base
+> +            || dpa >= region->base + ct3d->dc.total_capacity)
+> +        return;
+> +
+> +    /*
+> +     * spec 3.0 9.13.3: Regions are used in increasing-DPA order, with
+> +     * Region 0 being used for the lowest DPA of Dynamic Capacity and
+> +     * Region 7 for the highest DPA.
+> +     * So we check from the last region to find where the dpa belongs.
+> +     * access across multiple regions is not allowed.
+> +     **/
+> +    for (i = ct3d->dc.num_regions - 1; i >= 0; i--) {
+> +        region = &ct3d->dc.regions[i];
+> +        if (dpa >= region->base) {
+> +            break;
+> +        }
+> +    }
+> +
+> +    bitmap_set(region->blk_bitmap, (dpa - region->base) / region->block_size,
+> +            len / region->block_size);
+> +}
+> +
+> +/*
+> + * This function check whether a dpa range [dpa, dpa + len) has been backed
+> + * with dc extents, used when validating read/write to dc regions
+> + */
+> +static bool test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+> +        uint64_t len)
+> +{
+> +    int i;
+> +    CXLDCD_Region *region = &ct3d->dc.regions[0];
+> +    uint64_t nbits;
+> +    long nr;
+> +
+> +    if (dpa < region->base
+> +            || dpa >= region->base + ct3d->dc.total_capacity)
+> +        return false;
+> +
+> +    /*
+> +     * spec 3.0 9.13.3: Regions are used in increasing-DPA order, with
+> +     * Region 0 being used for the lowest DPA of Dynamic Capacity and
+> +     * Region 7 for the highest DPA.
+> +     * So we check from the last region to find where the dpa belongs.
+> +     * access across multiple regions is not allowed.
+> +     */
+> +    for (i = ct3d->dc.num_regions - 1; i >= 0; i--) {
+> +        region = &ct3d->dc.regions[i];
+> +        if (dpa >= region->base) {
+> +            break;
+> +        }
+> +    }
+> +
+> +    nr = (dpa - region->base) / region->block_size;
+> +    nbits = len / region->block_size;
+> +    return find_next_zero_bit(region->blk_bitmap, nbits, nr) >= nr + nbits;
+> +}
+> +
+> +/*
+> + * This function will marked the dpa range [dpa, dap + len) to be unbacked and
+> + * inaccessible, this happens when a dc extent is added and accepted by the
+> + * host.
+> + */
+> +static void clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+> +        uint64_t len)
+> +{
+> +    int i;
+> +    CXLDCD_Region *region = &ct3d->dc.regions[0];
+> +    uint64_t nbits;
+> +    long nr;
+> +
+> +    if (dpa < region->base
+> +            || dpa >= region->base + ct3d->dc.total_capacity)
+> +        return;
+> +
+> +    /*
+> +     * spec 3.0 9.13.3: Regions are used in increasing-DPA order, with
+> +     * Region 0 being used for the lowest DPA of Dynamic Capacity and
+> +     * Region 7 for the highest DPA.
+> +     * So we check from the last region to find where the dpa belongs.
+> +     * access across multiple regions is not allowed.
+> +     */
+> +    for (i = ct3d->dc.num_regions - 1; i >= 0; i--) {
+> +        region = &ct3d->dc.regions[i];
+> +        if (dpa >= region->base) {
+> +            break;
+> +        }
+> +    }
+> +
+> +    nr = (dpa - region->base) / region->block_size;
+> +    nbits = len / region->block_size;
+> +    bitmap_clear(region->blk_bitmap, nr, nbits);
+> +}
+> +
+>  static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
+>  {
+>      uint32_t *cache_mem = ct3d->cxl_cstate.crb.cache_mem_registers;
+> @@ -1145,6 +1275,10 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
+>          *as = &ct3d->hostpmem_as;
+>          *dpa_offset -= vmr_size;
+>      } else {
+> +        if (!test_region_block_backed(ct3d, *dpa_offset, size)) {
+> +            return -ENODEV;
+> +        }
+> +
+>          *as = &ct3d->dc.host_dc_as;
+>          *dpa_offset -= (vmr_size + pmr_size);
+>      }
+> @@ -1944,6 +2078,27 @@ static void qmp_cxl_process_dynamic_capacity_event(const char *path,
+>      }
+>  
+>      g_free(extents);
+> +
+> +    /* Another choice is to do the set/clear after getting mailbox response*/
+> +    list = records;
+> +    while (list) {
+> +        dpa = list->value->dpa * 1024 * 1024;
+> +        len = list->value->len * 1024 * 1024;
+> +        rid = list->value->region_id;
+> +
+> +        switch (type) {
+> +        case DC_EVENT_ADD_CAPACITY:
+> +            set_region_block_backed(dcd, dpa, len);
+> +            break;
+> +        case DC_EVENT_RELEASE_CAPACITY:
+> +            clear_region_block_backed(dcd, dpa, len);
+> +            break;
+> +        default:
+> +            error_setg(errp, "DC event type not handled yet");
+> +            break;
+> +        }
+> +        list = list->next;
+> +    }
+>  }
+>  
+>  void qmp_cxl_add_dynamic_capacity_event(const char *path,
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 01a5eaca48..1f85c88017 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -412,6 +412,7 @@ typedef struct CXLDCD_Region {
+>      uint64_t block_size;
+>      uint32_t dsmadhandle;
+>      uint8_t flags;
+> +    unsigned long *blk_bitmap;
+>  } CXLDCD_Region;
+>  
+>  struct CXLType3Dev {
 
