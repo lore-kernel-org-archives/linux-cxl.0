@@ -2,252 +2,179 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF18C00528
-	for <linux-cxl@archiver.kernel.org>; Sat,  5 Aug 2023 02:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A83EB64DD
+	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 06:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbjHECtX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 4 Aug 2023 22:49:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33856 "EHLO
+        id S229713AbjHGGcC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Aug 2023 02:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjHECtV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 4 Aug 2023 22:49:21 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D804B4EDD
-        for <linux-cxl@vger.kernel.org>; Fri,  4 Aug 2023 19:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1691203760; x=1722739760;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=I371uZiO/j9YJQUKQRPcp+UPUkFgwJXj4I2R80lj4Ys=;
-  b=bGLu0MvYNlTX91JdkHlDEZz45Gvtx6a1/NLvCa8RG8GiR/OzHuuvhauK
-   Y/H2Icy7PfxgKPhwRwq53NDHisRdoO5juA0NEsMqepTTLMP/XD8Jd7jAJ
-   6xKL8CqN6XmeNE4qwNmQMWuR3VSkztGn2+9yhqT8UXrE6mdrVEMdWXdXA
-   +UhOfYkqqyXkEI84GQGHqVhsA9Wu/5GTt9+XGFSlKSjiilzYM2Bv2oGeo
-   jMFss6KbeaU0ewcc3tR2xD6c72PcJVh8yq9XEkShGG0jENpBnDFB6eazD
-   vwFqHnAdZxK5qyb8gp6oP/QixyuRy6rnERtRf4aPI3iCgiS4NWJ5rDvvQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="355213634"
-X-IronPort-AV: E=Sophos;i="6.01,256,1684825200"; 
-   d="scan'208";a="355213634"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 19:49:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="707228186"
-X-IronPort-AV: E=Sophos;i="6.01,256,1684825200"; 
-   d="scan'208";a="707228186"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga006.jf.intel.com with ESMTP; 04 Aug 2023 19:49:20 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 4 Aug 2023 19:49:19 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 4 Aug 2023 19:49:19 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Fri, 4 Aug 2023 19:49:19 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.103)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Fri, 4 Aug 2023 19:49:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OXZKXHwcvuWQZ1gQj2qqOzNhgYsNk921ISlL84o+xuPwQiQa1RJvKStJhKo+sOud0FYeuZgFF9ZrF1NtsL9MGKfPkHYUtcETAIfgHO1uZ5Ki42W7R4FFaAs5CRxCOj9GNdAXZK/758MpDXgU/PYuPVZHzi78UD3gvd3n27a0olDFu2RI5f9c3PvDmSeRCE1NYiFw91U4Iyy7pdvzquW1h3ht6GkO6GGB+6TFo8iwPcWgRRwZ/Y1MEHsgAgvHrnTyrpoGRoI57t8n1OAUeLrfEt1TF/Odu5QwL20OGZUtd2vFXyDGyeZy0NfJx+wYbZXrwMqP7THs3ETgmetbrBl4VQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H5SBMlcP5fOBu9vMs6E5/nSXAB21U/LGJG7RXgIxrb8=;
- b=lO9zMKYSDrX6E/yYBU9g4mUDth9T/Yt9mkh/OdDsUw2IAKP94sjSl6+vlYF8S8BjsF1RhOltuDZBQTH7BxwTaRLzu0Y/FPhF85xmkU1MCy1H/Vt/tYwqtZcbMJjFdY7QUeL/yf4J91X3eSeFejbvcN5Cbt7jNQgwOjp5ee85Rv1AmkgsSVefZaNxnvjG+TLWbIg1OkyAW6ayxhzSCbX4unMYSgI2di1VqEwSuL2lxGAU3LdBbwdOzY4N9DmIwpeK51A+nrlWi3Hu9IG7L/G78kHUFPZYY6VtMvtFNUKiX55dZetqIhu4lCmiDYAwQ6ViRTgixA2FgPf8+UP0j5OPWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB5077.namprd11.prod.outlook.com (2603:10b6:510:3b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.22; Sat, 5 Aug
- 2023 02:49:17 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::4556:2d4e:a29c:3712]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::4556:2d4e:a29c:3712%4]) with mapi id 15.20.6631.046; Sat, 5 Aug 2023
- 02:49:17 +0000
-Date:   Fri, 4 Aug 2023 19:49:14 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+        with ESMTP id S229663AbjHGGcB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 02:32:01 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AF0170B
+        for <linux-cxl@vger.kernel.org>; Sun,  6 Aug 2023 23:31:59 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230807063149epoutp0363eadbe64b1d9498e3968be15d87f11e~5BilopKC90260702607epoutp03X
+        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 06:31:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230807063149epoutp0363eadbe64b1d9498e3968be15d87f11e~5BilopKC90260702607epoutp03X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1691389910;
+        bh=JTHPhuIu6eT5cLDRTvpmwVqKdwaUdLKMZeQAgPzUMmI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=jfYJJ1JMPW61aZKUwo7YXKQ90DOEh53f9pk2bSeVZFjWRPTV7yVZMaFasUIcVkJch
+         o1FhlAKkM+Ax7iIrn1oHAalmkbf8jyXQYK2QUxqxnAzRk4qah5hWT/MrW8/2LEPVwO
+         yohOWMd5X7ZZwTzntYhED8vKH7qDvl7ethFALlnA=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20230807063149epcas2p2887a108aadbcd1a47ac790f93ebd7f4d~5BilIcCc61820818208epcas2p2V;
+        Mon,  7 Aug 2023 06:31:49 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.89]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4RK61066Xbz4x9Ps; Mon,  7 Aug
+        2023 06:31:48 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3B.FE.49913.4DF80D46; Mon,  7 Aug 2023 15:31:48 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230807063148epcas2p44093513a86545a3d1b0c3e0900f7ff4b~5BikAKTHy2998429984epcas2p46;
+        Mon,  7 Aug 2023 06:31:48 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230807063148epsmtrp23737d2be457fd741162f100b26561cff~5Bij-SDFP1927519275epsmtrp2x;
+        Mon,  7 Aug 2023 06:31:48 +0000 (GMT)
+X-AuditID: b6c32a45-5cfff7000000c2f9-92-64d08fd4a569
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        39.82.30535.4DF80D46; Mon,  7 Aug 2023 15:31:48 +0900 (KST)
+Received: from jehoon-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.133]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20230807063148epsmtip1943860c79de0715750b8897e6724b56c~5Bij0Qp1R1458314583epsmtip1C;
+        Mon,  7 Aug 2023 06:31:48 +0000 (GMT)
+From:   Jehoon Park <jehoon.park@samsung.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     nvdimm@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH] cxl/region: Refactor granularity select in
- cxl_port_setup_targets()
-Message-ID: <64cdb8aa91847_2138e294bb@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230804232726.1672782-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230804232726.1672782-1-alison.schofield@intel.com>
-X-ClientProxiedBy: MW4PR03CA0097.namprd03.prod.outlook.com
- (2603:10b6:303:b7::12) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB5077:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2678c36-9e10-4904-074d-08db955e8fb3
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BtBS8Tsn3rRTiBCX1qFVlK4UmJQUyMSJT8ecK3DCuB+5iFidmKajykLyUO14EIpwZS3c3JNGLBO7slVmh7jczCtiiYuOF8iE3xldeTfnxcGdX2JyTGXOwvx7Co8+DrwoVzBl8uwyK4UWLD1kTDJf4i0EnlMaD92uz1Dy+AUhcG71+n9BQ5Zw/nhfBYBcx2VGJ4cyuMwI9OZHuQHjpZQeW8NpDmHFsamtyhH3NXtzxN/HaDiClUfq6aOME2BhprcH430s84AogH2zBUf1VQVL1eSn9+TLto9a9M+7fg1GXYPjtD270h/YEqSvEQO6ijT4ybmTqSJE3WpZ0c+dgGQafKQIvKtzdqUoC3A+jIeIh5He10wfC01O9hpMe3H/UD9Ol9kg9qGyo/2FkrgnTFd6D/1kIKlbHhJsNPO2KpPZ83WTvL38a7JVQxH/A2ZE6bQrrNpPnWVTwhS28VloLk05FFtwaGZB8YHm1hAB8E07PmuQ5UGEOwakDtTg6jkI4VNvDn+08qhJxLJA696YLqppxjsvn4vDGDaTaQogCtCK62NW7Nt0cUfqAx0yjAAFoNwQ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(136003)(396003)(346002)(376002)(366004)(451199021)(1800799003)(186006)(6512007)(9686003)(4326008)(316002)(86362001)(478600001)(38100700002)(6666004)(66946007)(66556008)(6486002)(66476007)(82960400001)(110136005)(6506007)(41300700001)(26005)(8676002)(8936002)(2906002)(83380400001)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?V40DslkaGf/949xi0eya3X85nRGwf2v/vqRG4U+ptyW/1FnEaspoyadz2p/3?=
- =?us-ascii?Q?IzzBk8o5f5q3zdPEw5/FRmSDJ0xLnCAggPR1UKI7BoM5IMxiqktCadokySvO?=
- =?us-ascii?Q?o/Np0tvbzhB+gRRxUTFu0xiMtuVGEwcTmwVOlyNOIiJ19qQWXRS/uJO2+mKm?=
- =?us-ascii?Q?06ngyYQLdUu6IGa4cBzPaY+QzK+GNLdqfPFuUsjQT0+MNgRrFWGZeF5WJOOk?=
- =?us-ascii?Q?OUr2JNcn2ylTzHjV4jocE3fDCS75I5AvCD/v4oyzmyKRNVRMQLz+pTv9mVmJ?=
- =?us-ascii?Q?SV85Pt8LS24uqI5iINjV/LmdNOhGJveKPPiQk8nxXwYvPsPkow51c7J90miT?=
- =?us-ascii?Q?+0+6bTCalYEiiLPD2VlOSjv8D8vbQ4nuQc7Mn1S2ezoZUZAIi6opr3R1NQ1V?=
- =?us-ascii?Q?Ov0AZ5H+vzkI/+UONdlJXn2dxlFc/NEzuj9LHPj7RI/OTxoOoMcmQSjPWUJu?=
- =?us-ascii?Q?Ene12kq5hSutPbCvUgouNj9LhCWdniEFd1RLEB2inpYem8DnNEXvO2V3/Eu2?=
- =?us-ascii?Q?eFRcQEzyWK4N6OxXBydQkbqCQqtTSDFIbz0Xyp2MYwuPiF9RgkUIV++Z62sg?=
- =?us-ascii?Q?Ml4Ut4fs05mVhJHQwEgo5ntOPpaeJHDS5gcn4ThHlNWavL/6YBhx4aeE1/Aj?=
- =?us-ascii?Q?RvArb68ZGs7imdGZt1FTiurhujfji2YApYKK34sQEX3ZcT95yoireb2uSELr?=
- =?us-ascii?Q?sFa20NCJ7K/bOLIVdEebqhS2y7pOzahJpq8k2yIevPA9quY39PoeE1bdWMNA?=
- =?us-ascii?Q?yam+k/ZsPM6buuPSP0I0AN/GXWBMMmWwrq53o8+Ggo4Y/pJk8tJ/C/83FeI8?=
- =?us-ascii?Q?vRSj2aVc+oLRTAc/A0CZ1EXvllWnKa+APmF4LggwQ3cf1J+8neaO2mlFTdPM?=
- =?us-ascii?Q?oJIKoptkDKTFUO6Lzuk9KEUfx+Esh2+iKY46QOiJR3J5Cup5w4ebQg8cGdJR?=
- =?us-ascii?Q?epqxUIMlJpS2i8GUyB+KkihtepPVuVoD9aklLobiAIPIMAa/RezLFJHIi3FH?=
- =?us-ascii?Q?1uqSiXET8aFNLPhRXkDfBNvxKdqW2kD+I9oVh4I9Uj2ZdD/qsxYERUNYBDbL?=
- =?us-ascii?Q?vLD7OAF8MUtfGZh7YXScPmEpeNZRllUp8X4I37/LrFOr8rGvrNy0TmBPGUlb?=
- =?us-ascii?Q?sV08aC/oduf5Pl/TMX3aUwECdBWZQqkVO4VwQWB3PSVhIBGNzErndomrkyMg?=
- =?us-ascii?Q?yXnOu6EkcUf/8EqL2x/hzDBLG6i+qtkvM+7rTAqEbVUzCoa7sb3s0Y4olTGB?=
- =?us-ascii?Q?k9mYdYPG6EqilYTXO4yWKzCL+1v5OlrRQyk4ig8l88r/WK34QA+yf0iJkjLm?=
- =?us-ascii?Q?98MI2Kh+yZWmFsWIdqYC6uVtClZjIbeKcGsS/o7z987BT/ntxIq8vHrbMxh4?=
- =?us-ascii?Q?JaTO84Q7K9wcrMkdc6qYoXgLPPkv0Dz8L9P0FozuaJykC6vlAWQ8D4AP4tet?=
- =?us-ascii?Q?LD6S6ApB7ueyDr4MWl9WiqwAkSIDC8/VEfiqHrJxjC+ipOCj1gtgpuQ2ohy3?=
- =?us-ascii?Q?wEMHQ45Xn8BcbTpMFQz+B+rPvIakaVD5wNCDCdu3JAYYX1i9hHSoCleNZS+Z?=
- =?us-ascii?Q?TAAz0iCZTegVwuzZPhLTt01v9XtsGrMJ1QXU3LxxqM2Hlae77WpfmElBoBXM?=
- =?us-ascii?Q?tw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2678c36-9e10-4904-074d-08db955e8fb3
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2023 02:49:17.5059
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z7lqrQ9CIY1ze//Qei5V9C4iPQYFUwBcQEXvPR6k7cz1Ms5WfbnF9Zbs41RvhuFPrFiabdXK+BCr6fpwGyO+LUlpyNOPKMuOKDOQLSTgMXI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5077
-X-OriginatorOrg: intel.com
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>
+Subject: [ndctl PATCH v2 0/2] Add support for Set Alert Configuration
+ mailbox command
+Date:   Mon,  7 Aug 2023 15:33:33 +0900
+Message-Id: <20230807063335.5891-1-jehoon.park@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJKsWRmVeSWpSXmKPExsWy7bCmme6V/gspBm13dS3uPr7AZjF96gVG
+        ixM3G9ksVt9cw2ix/+lzFosDrxvYLVYtvMZmsfjoDGaLo3s4LM7POsVisfLHH1aLWxOOMTnw
+        eLQcecvqsXjPSyaPF5tnMnr0bVnF6DF1dr3H501yAWxR2TYZqYkpqUUKqXnJ+SmZeem2St7B
+        8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QCcqKZQl5pQChQISi4uV9O1sivJLS1IVMvKL
+        S2yVUgtScgrMC/SKE3OLS/PS9fJSS6wMDQyMTIEKE7IzLj95xlhwT7Ti/PHzzA2MfwW6GDk4
+        JARMJO5sDexi5OIQEtjBKLF47n4mCOcTo8T/RcfZIJxvjBI3720DcjjBOl48fgtVtZdR4uCs
+        NawQTi+TxLyLZ5hAqtgEtCXub98A1iEiICvRvO4BWAezwGZmiWU7z4ElhAXCJf58ussMcgiL
+        gKrE6wNuIGFeAWuJOzs/MkFsk5dYveEAM4R9i13i9CNXCNtF4l/DG0YIW1ji1fEt7BC2lMTn
+        d3uhLs2X+HnyFiuEXSDx6csHFgjbWOLdzeesIGuZBTQl1u/ShwSFssSRW2AVzAJ8Eh2H/7JD
+        hHklOtqEIBpVJbqOf4BaKi1x+MpRqMM8JL4fOQJmCwnESnTu+M84gVF2FsL8BYyMqxjFUguK
+        c9NTi40KDOFRlJyfu4kRnOa0XHcwTn77Qe8QIxMH4yFGCQ5mJRHeeU/OpwjxpiRWVqUW5ccX
+        leakFh9iNAUG1kRmKdHkfGCizSuJNzSxNDAxMzM0NzI1MFcS573XOjdFSCA9sSQ1OzW1ILUI
+        po+Jg1OqgWma9+btW2J+Pz59tzunXW1u35tZc9KVD+9P/HNBRHy23OX0Xz5cHRsXWZx/s+Zn
+        Wm3j7UMLPdn1Q44mz4m1Tt91vGzRUoOli/RKkqy05QJXqRbXcacWli1buvaW26YqN+ljrXqu
+        cw5x/zh2TljbzmjNomyJdRvfTOTqWZiqWlewIII1rqxVjV3w7KG5QktZc8XKL63doxLE7G/9
+        xODzm5aEvccXFF57OuMEj1zwz/hfE5eeFXi493evvd4f+akvVnJtrWf3/Ol2Yuq6H8nrAh9M
+        4liQ7/mccfWUF1M/ba3tumBx6a6xM3tWinxN98+/zzrbdabOfNbccMb7uj2j5uo1BdEisW0C
+        gduW7bL4NGuPEktxRqKhFnNRcSIAXqHdsvwDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNLMWRmVeSWpSXmKPExsWy7bCSnO6V/gspBr82c1rcfXyBzWL61AuM
+        FiduNrJZrL65htFi/9PnLBYHXjewW6xaeI3NYvHRGcwWR/dwWJyfdYrFYuWPP6wWtyYcY3Lg
+        8Wg58pbVY/Gel0weLzbPZPTo27KK0WPq7HqPz5vkAtiiuGxSUnMyy1KL9O0SuDIuP3nGWHBP
+        tOL88fPMDYx/BboYOTkkBEwkXjx+y9TFyMUhJLCbUeLV/g0sEAlpiXvNV9ghbGGJ+y1HWCGK
+        upkkjt7cCJZgE9CWuL99AxuILSIgK9G87gHYJGaBvcwSHTPPs4IkhAVCJS68Wg00lYODRUBV
+        4vUBN5Awr4C1xJ2dH5kgFshLrN5wgHkCI88CRoZVjJKpBcW56bnFhgVGeanlesWJucWleel6
+        yfm5mxjB4aeltYNxz6oPeocYmTgYDzFKcDArifDOe3I+RYg3JbGyKrUoP76oNCe1+BCjNAeL
+        kjjvt9e9KUIC6YklqdmpqQWpRTBZJg5OqQam46LNEYtOyJv84yrqSQ332HtvO5OGgU5yysY/
+        ByKLj117UPuZ5XlS0rXMZ/+rQjYkfWYV/iZperJkyrGCzjDzP5yh6S6XzLlLbu+o97T5v/7U
+        kYb/CVtmRL9beVBw66RyrQVr9bobZE45vjzrw6WVdMal40L5Y8bp/AembDSacEvNtXaS0sqC
+        j+IOz8wWnA82/Lt45b6cDiOGuz/Vsw5PeNGZsn/jRfa0O9HaNbeu9p3d9bQ+k9G8//Ozb/Vd
+        hZIVlYkPTUw25p57ONP4u1zx9Kij8j2hm6SCer1adDUjJpia5J/R4q3eGXE6VqBxqmgJc664
+        a9U69+WTf54KkziXl2+iUGjJ9/RsreWvO91KLMUZiYZazEXFiQBRDKskrgIAAA==
+X-CMS-MailID: 20230807063148epcas2p44093513a86545a3d1b0c3e0900f7ff4b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230807063148epcas2p44093513a86545a3d1b0c3e0900f7ff4b
+References: <CGME20230807063148epcas2p44093513a86545a3d1b0c3e0900f7ff4b@epcas2p4.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-alison.schofield@ wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> In cxl_port_setup_targets() the region driver validates the
-> configuration of auto-discovered region decoders, as well
-> as decoders the driver is preparing to program.
-> 
-> The existing calculations use the encrypted interleave granularity
+CXL 3.0 Spec 8.2.9.8.3.3 defines Set Alert Configuration mailbox command.
+This patchset adds support for the command to configure warning alert.
 
-s/encrypted/encoded/
+Example:
+# ./cxl set-alert-config mem0 -L 30 --life-used-alert=on
+{
+  "memdev":"mem0",
+  "ram_size":"1024.00 MiB (1073.74 MB)",
+  "alert_config":{
+    "life_used_prog_warn_threshold_valid":true,
+    "dev_over_temperature_prog_warn_threshold_valid":false,
+    "dev_under_temperature_prog_warn_threshold_valid":false,
+    "corrected_volatile_mem_err_prog_warn_threshold_valid":false,
+    "corrected_pmem_err_prog_warn_threshold_valid":false,
+    "life_used_prog_warn_threshold_writable":true,
+    "dev_over_temperature_prog_warn_threshold_writable":true,
+    "dev_under_temperature_prog_warn_threshold_writable":true,
+    "corrected_volatile_mem_err_prog_warn_threshold_writable":true,
+    "corrected_pmem_err_prog_warn_threshold_writable":true,
+    "life_used_crit_alert_threshold":75,
+    "life_used_prog_warn_threshold":30,
+    "dev_over_temperature_crit_alert_threshold":0,
+    "dev_under_temperature_crit_alert_threshold":0,
+    "dev_over_temperature_prog_warn_threshold":0,
+    "dev_under_temperature_prog_warn_threshold":0,
+    "corrected_volatile_mem_err_prog_warn_threshold":0,
+    "corrected_pmem_err_prog_warn_threshold":0
+  },
+  "serial":"0",
+  "host":"0000:0d:00.0"
+}
+cxl memdev: cmd_set_alert_config: set alert configuration 1 mem
 
-> value, the eig, to create an interleave granularity that properly
-> fans out when routing an x1 interleave to a greater than x1 interleave.
-> 
-> That all worked well, until this config came along:
-> Host Bridge: 2 way at 256 granularity
->     Switch Decoder_A:	1 way at 512
->         Endpoint_X:	2 way at 512
->     Switch Decoder_B:	1 way at 512
->         Endpoint_Y:	2 way at 512
-> 
-> When the Host Bridge interleave is greater that 1, and the root
+The implementation is based on the 'ndctl-inject-smart'. Variable and function
+names are aligned with the implementation of 'Get Alert Configuration'.
 
-s/that/than/
+Changes in v2
+- Rebase on the latest pending branch
+- Remove full usage text in the commit message (Vishal)
+- Correct texts in document and log_info() (Vishal)
+- Change strncmp() to strcmp() for parsing params (Vishal)
+- Link to v1: https://lore.kernel.org/r/20230711071019.7151-1-jehoon.park@samsung.com
 
-> decoder interleave is exactly 1, the region driver needs to
-> consider the number of targets in the region when calculating
-> the expected granularity.
-> 
-> While examining the existing logic, and trying to cover the case
-> above, a couple of simplifications appeared, hence this proposed
-> refactoring.
-> 
-> The first simplicfication is to apply the logic to the unencrypted
+Jehoon Park (2):
+  libcxl: add support for Set Alert Configuration mailbox command
+  cxl: add 'set-alert-config' command to cxl tool
 
-s/unencrypted/nominal/
+ Documentation/cxl/cxl-set-alert-config.txt |  96 +++++++++
+ Documentation/cxl/lib/libcxl.txt           |   1 +
+ Documentation/cxl/meson.build              |   1 +
+ cxl/builtin.h                              |   1 +
+ cxl/cxl.c                                  |   1 +
+ cxl/lib/libcxl.c                           |  21 ++
+ cxl/lib/libcxl.sym                         |  12 ++
+ cxl/lib/private.h                          |  12 ++
+ cxl/libcxl.h                               |  16 ++
+ cxl/memdev.c                               | 220 ++++++++++++++++++++-
+ 10 files changed, 380 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/cxl-set-alert-config.txt
 
-> values and use the existing helper function granularity_to_eig() to
-> translate the desired granularity to the encrypted form. This means
-> the comment and code regarding setting address bits is discarded.
-> Although that logic was not wrong, it adds a level of complexity that
-> is not required in the granularity selection. The eig and eiw are
-> indeed part of the routing instructions programmed into the decoders.
-> Up-level the discussion to plain ways and granularity for clearer
-> analysis.
-> 
-> The second simplification reduces the logic to a single granularity
-> calculation that works for all cases. The new calculation doesn't
-> care if parent_iw => 1,  because parent_iw is used as a multiplier.
-> 
-> The refactor cleans up a useless assignment of eiw, made after the iw
-> is already calculated.
-> 
-> Regression testing included an examination of all of the ways and
-> granularity selections made during a run of the cxl_test unit tests.
-> There were no differences in selections before and after this patch.
 
-Fixes: ("27b3f8d13830 cxl/region: Program target lists")
+base-commit: a871e6153b11fe63780b37cdcb1eb347b296095c
+-- 
+2.17.1
 
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/core/region.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-
-Fix *and* less code!? Yes, please!
-
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e115ba382e04..5a1cc59cca99 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1154,16 +1154,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  	}
->  
->  	/*
-> -	 * If @parent_port is masking address bits, pick the next unused address
-> -	 * bit to route @port's targets.
-> +	 * Interleave granularity is a multiple of @parent_port granularity.
-> +	 * Multiplier is the parent port interleave ways.
->  	 */
-> -	if (parent_iw > 1 && cxl_rr->nr_targets > 1) {
-> -		u32 address_bit = max(peig + peiw, eiw + peig);
-> -
-> -		eig = address_bit - eiw + 1;
-> -	} else {
-> -		eiw = peiw;
-> -		eig = peig;
-> +	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
-
-I was going to say "wait, does this work with x3 parent_iw", and I
-believe it does because this:
-
-                /*
-                 * For purposes of address bit routing, use power-of-2 math for
-                 * switch ports.
-                 */
-                if (!is_power_of_2(parent_iw))
-                        parent_iw /= 3;
-
-...is handled in the is_cxl_root(parent_port) case.
-
-A thing of beauty this patch. Ship it! (modulo those minor nits above).
