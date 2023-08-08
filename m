@@ -2,805 +2,432 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE82C001DB
-	for <linux-cxl@archiver.kernel.org>; Mon,  7 Aug 2023 21:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9AEC001B0
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Aug 2023 03:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjHGVg7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 7 Aug 2023 17:36:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58902 "EHLO
+        id S230184AbjHHDBT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 7 Aug 2023 23:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjHGVg6 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 17:36:58 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2080.outbound.protection.outlook.com [40.107.92.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FBFE7F
-        for <linux-cxl@vger.kernel.org>; Mon,  7 Aug 2023 14:36:55 -0700 (PDT)
+        with ESMTP id S231236AbjHHDBQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 7 Aug 2023 23:01:16 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A2E10E9;
+        Mon,  7 Aug 2023 20:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691463670; x=1722999670;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=SuHoEiY4yjQx4acTSE9YWAZw9oQlS0nR2g2jvvb5k2k=;
+  b=X3LOlp1GWM9agAk5j4z+9tyhI5n8HDdxHyIxeJ5H0n18HdKgYjUn3Q7L
+   hU8FrWNtTbnA5miCvBnE3qEehMdcCzJzwNJRfWu5AcH5+zDN8XLywjMVK
+   9HGWy3nPO9IQc0b7bFFoxyqTGdqkil23CxZYkl3GuofX22F1MkZzsghZG
+   eD/IYMQd+Ue6XXeDEZpmBnWzOaWL/baUDMc+bOv5CFvVBnq25QVC4vt+Y
+   AQ43VJ3aYwl8HABE16cUz06nE52qemfC+69Sm3aKcnDEHkp4fmFJxZvII
+   ZcFpIn0u7gOzz1WV3xnx70mDCURQ0x0uw7QiHq5Lyu+0vfKpqIpEq4q3G
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="374377528"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="374377528"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2023 20:00:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="760738104"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="760738104"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga008.jf.intel.com with ESMTP; 07 Aug 2023 20:00:47 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 7 Aug 2023 20:00:47 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 7 Aug 2023 20:00:47 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Mon, 7 Aug 2023 20:00:47 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Mon, 7 Aug 2023 20:00:47 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V6tk2fgkthCyiYnAvG+2mmStZtqMJbPog7YHgscN6yuzet0emeoAhTnQMVesVUwuh+jhKaGuTcjRv4Yll05afC3t6RQABW8RhcMrUT+2YurlhPYCDrPylyws0tXIMz7U1S1uqj2ftPPBI9k2hSrC6CP8igEVhnMiiBdBX+rgF8DRbuWTpmyxtoQ4jMl7Hs8cXxOn0luC7M4CKUMtv1oloraEaswRGZ8/rF9VVnf3I0uRUCizrK6EDjupDtphYdaXXPJwDVcMwDmtGNvLxlZ7OEF0goLC/QVpwZOodUluKctpE3NXz8fn03FPwJC5t76eEzNseVTCOd4DniPMQrPCJw==
+ b=XUn4U87HsY7EP6SYopMO4HNQQ7dFNb3q3WRSflYt297oA+Jo0rHzmXucWd4+i+RPkSXLuBSAucmH5gajDDGwVg82BTjR4XWsB8Cr89DTLYeu6NG6N/nMzDPm2gBOws2lcotdMEsSb03ZxfzFleLHqzFRPzp7QBx4Q2HDrlrMy4CBdam7VUSbp/hfs7piOsX29EXHVRN5pGt1iRH+yextme0T9wDny3/Ba+TfP3uRPCIt0Xyy4DRkyFR9k68xURQQ6Gg4jWL6BDdr7XQ996/nlQtgzbj2RKDY6afCLZtsgsGo9aBdIpis923lmeD5zITxbt//q9VcisBYHMWcuDEjfg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ii86rUJuT5Iah0jCy8S3M8RP2Bfh2+EH9Vajyr4larA=;
- b=euy1i1QzJCj/RZijX5InDWPC9yI5PaNPg0gRhjnsGHGk4G1RvGodolWlznzJ3cQSuatVV0f+5CM4uYrxTdcfC99DSdlsr+RKtWgUGL8KTKVvESvEPZtHCrOzjgJnFIyKMm1pjz2uoZNOXH3+0SpMoKRHrFekyKbt3/7fLId685vrJ28hJxvmOvN5M05yVAzhyQ1jgyCBaAKOusuhKhD39OWS7RKzCwLu/umYu+Ok7YhEpdAuvo1WsYZcn1cnE31KB5oNy/GO+DLl3posDyAkZY3bSBpWVJ5JjFkhbs6GyMEeEZagS+/yATHOnmahjb3NiCckASLNDLHGTighHBaqwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ii86rUJuT5Iah0jCy8S3M8RP2Bfh2+EH9Vajyr4larA=;
- b=zzqXHouu9Alp7g/cwLnT6ykKsChe4NVG5+kJRWDxHOncHcW60m3igFzZngjz6oQ9gwju6OifAA5IEOvSi9ZSalOgVPuOcVeQFC8IZdtDs0BMJeuRwiYq5+BpDnayzIyBm1wCN8tsAjh+2AUomoKMvtvmKdc2mpewGDlCmzFo4CE=
-Received: from SA1PR03CA0011.namprd03.prod.outlook.com (2603:10b6:806:2d3::23)
- by MW5PR12MB5599.namprd12.prod.outlook.com (2603:10b6:303:194::16) with
+ bh=EZPn1Lh3y/bgsiDqR4AzGMpGbPF2bPmadNrZ9AopaHE=;
+ b=nMAjQ2gxB+z8N+phn47bx/9ELUYUPKP+uj5RTdr/AqQGzYuF/SApiNnP2+GGCy/skrPzq51krzjaOBdRP5P1b2RPm6qqN84kC1gLUwJffZB2Q/XBJLqgInK5L+WLvCXtcAleerm6kAHgz2Az67np3sqqBc9725djNi8ElFOlbgSNnQ+6eiC8nUySy4/m4hSpmTeQcAVDxBH6yfagy0SKr+sbqFcJUkRZie8uRR01FeWJGQKFTbEdhkHr5J/Dsj724O2CaiuBGL0sxuS26xlDDbyvGGZ6fAkUSCnTOA8bIJdNu91r+Cgj/Lnbjel14XydsEfJBaT0rldAYKb1mFfykQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CY5PR11MB6162.namprd11.prod.outlook.com (2603:10b6:930:29::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.21; Mon, 7 Aug
- 2023 21:36:53 +0000
-Received: from SA2PEPF00001506.namprd04.prod.outlook.com
- (2603:10b6:806:2d3:cafe::49) by SA1PR03CA0011.outlook.office365.com
- (2603:10b6:806:2d3::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27 via Frontend
- Transport; Mon, 7 Aug 2023 21:36:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00001506.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6652.19 via Frontend Transport; Mon, 7 Aug 2023 21:36:52 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 7 Aug
- 2023 16:36:51 -0500
-From:   Terry Bowman <terry.bowman@amd.com>
-To:     <nvdimm@lists.linux.dev>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <vishal.l.verma@intel.com>,
-        <mav@ixsystems.com>
-CC:     <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>
-Subject: [ndctl RFC 1/1] cxl: Script to manage regions during CXL device hotplug remove-reinsert
-Date:   Mon, 7 Aug 2023 16:36:35 -0500
-Message-ID: <20230807213635.3633907-2-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230807213635.3633907-1-terry.bowman@amd.com>
-References: <20230807213635.3633907-1-terry.bowman@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.27; Tue, 8 Aug
+ 2023 03:00:45 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::4556:2d4e:a29c:3712]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::4556:2d4e:a29c:3712%4]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
+ 03:00:44 +0000
+Date:   Mon, 7 Aug 2023 20:00:41 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Robert Richter <rrichter@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dave.jiang@intel.com>,
+        <Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
+Subject: Re: [PATCH v8 03/14] cxl/hdm: Use stored Component Register mappings
+ to map HDM decoder capability
+Message-ID: <64d1afd97d33e_5ea6e2947e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230630231635.3132638-1-terry.bowman@amd.com>
+ <20230630231635.3132638-4-terry.bowman@amd.com>
+ <64a36a4a39351_8e178294c5@dwillia2-xfh.jf.intel.com.notmuch>
+ <ZLGJ2Nm1OD/HoqZ6@rric.localdomain>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZLGJ2Nm1OD/HoqZ6@rric.localdomain>
+X-ClientProxiedBy: MW4PR04CA0390.namprd04.prod.outlook.com
+ (2603:10b6:303:81::35) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001506:EE_|MW5PR12MB5599:EE_
-X-MS-Office365-Filtering-Correlation-Id: dd326b5a-e1eb-4441-92fe-08db978e6a20
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY5PR11MB6162:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38aea18d-1c39-4a89-ad0c-08db97bba859
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aSn+kFSDvT4EFIGTsy9m5ww09aXN2ZTo0ZOyyOauq+XL4uwjjP+wKOtXr6SmYz177C1wtqRGHz1yt5K1fGce/YwTEaGF05mca2LQcBWO1N18dxdEAyvKRWCbPOCKoRpEGOids+ZqvSUSmVnJmIMvIzsJeBf8YuRbAlqLsVlOzjQmu6jtpNyh2fjl1AIBFAdbQq6n3VUt8PqcyCtuRyOSkzJtx8mMmRdDTK36A6u2R+06uyyNvrPJwRNdEuXbG9g/mMDgWVISuAw4D32zBoyfGZuLh+hcjb6EkaVK6c4T1uFdjW4xNBmRDTOD22E7kiAo+GX69StQyFroTTIb/bqLrjrIvOwyB7yJb5QeNb/mhZs3nylgQ4jx4p/+vtqYiF0LFzeNyXHxSutVWruA9gSesI4T8a2lQuH4jvLRHGRlhD03Q2cYW6/jIlQS7K2T9XzemPmmf0NumYjsOgIJ4DNPjwITS3VJkK2dObPPkSNhZKR4Z01h/rkG8um4/uIKL7eT6kmAUz3f6UNzhJf0aU8rB3eMhvQfA5mbj/7R1Wk1izPh53TWpt5+wm7bnS6OflFAz0AtWNnke8gRU6wiKTD6sGQEMNmab/75cdIi9Vuug/SO75yX7mi3uDa1j/ISs+tJJ1SaUL8RSfbxpm3Ux5UiZb5PE8+6I/hfQ9FwV8etdH5YfjV5FXF1ajqlUcZfXb+UzLZo+VSwYvyDTnKGXVIBX9b1Qh/5JrHAipd8u6C4kxL82RQtMlYcstUGBD0Dk2Lv3eYQgBvSOucMa9632+iwkGsPg5oDBt+t1gX1gHzBa4M=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(346002)(376002)(136003)(186006)(1800799003)(82310400008)(451199021)(46966006)(36840700001)(40470700004)(7696005)(6666004)(40460700003)(86362001)(40480700001)(26005)(36860700001)(1076003)(336012)(426003)(2616005)(36756003)(83380400001)(47076005)(81166007)(82740400003)(356005)(5660300002)(30864003)(41300700001)(16526019)(8676002)(8936002)(4326008)(2906002)(70586007)(70206006)(316002)(478600001)(44832011)(110136005)(54906003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2023 21:36:52.4102
+X-Microsoft-Antispam-Message-Info: H28mF5XVaUoAjAiKHBuvjn6rDrzcIkpdhARvqHn8b5HXjCDJVOCFVRCwJk5tKeoB9mcCS7dWotFTD1hZm/NgiQFEG+JaNH5i0av1hUw/SFU/j9//UNk4m6oH3b6mp2E1lHhA7CPKBETzFpwzYGuW34XkuLl5WFqF2tRJZOYEydq9PpDPTsNSI5Wtim6zLhbR/OFhQUg5RndDVE+63LDrE5R9YwRO2cBxVE25f6mhVBH7kT462ESu12n0SK5jgZ57gRGAv6lkYbrexPschsPyT/Ffp0ZIuspHWhIrmbJRZDHwgSqCc6DgElNQLcjXE4GDRWk4StaTqqpKfS87bdvC5H7fv4F1Ge2MMS6ZlTFpX/TrQWioQnZnifHR6gEVMvDbpU7RWUVF5y86xBPZRdayt8QyxImj5mvTg8G630oAWuF4Qn7LQrben6t/Rn2zoE4dk2pLcLxkG/OgBN7KqA02dvfbJrYKG88G9CPep6H2aCdUHmtcKBE0r0TTy1MFCY4e4rn/7Kw7UYUeI8OD5d5O1Nm18nNwzwEc/mJ5Z4K8dq5n23nO4+5RKKn+68m0m6msQikhmL09CwexqvosVlFstaw3CUIHoY5JTKrAQuPiiAjruT622iS4MZvRnNXBUDeg24cs0PjJpT1FDEXHXK8O9w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(396003)(136003)(346002)(376002)(90011799007)(451199021)(90021799007)(186006)(1800799003)(8676002)(8936002)(5660300002)(4326008)(41300700001)(316002)(86362001)(83380400001)(2906002)(30864003)(9686003)(6512007)(6666004)(6486002)(6506007)(53546011)(26005)(66476007)(66556008)(66946007)(82960400001)(478600001)(110136005)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7rVfZp6ySXa4CeNxGlT8u0hUwrDCuofbY4losWe8oW629yx4fOoQOyZcpWQp?=
+ =?us-ascii?Q?VcL2WfB/DvRhsEcZzJ3lhOHFL5058mLqTbz3X7a6jtsFlE5gKGwtiXIiJENS?=
+ =?us-ascii?Q?c/dqVbh2dKXYQgqKrmfE2wbou+Wmw2AX15/l/Q6icuV/Nz9FgS5OczcbIgZv?=
+ =?us-ascii?Q?chXtwTWYhqLNmWXJnHYE87wACtxvoPyY58A+xgqHUUCI2g5Ob/tUiGgLRuXJ?=
+ =?us-ascii?Q?Gey1BMJv8AaXX56q//bSVQAgiqiW1hpGsk0AA9ahjuIy8+q0vzt5qtK15nqZ?=
+ =?us-ascii?Q?gAsijsNWJtATEHMIsp8RtBoCEmkH1mzuiWVD5hfayJHkRBeKki7C8vT73yuv?=
+ =?us-ascii?Q?7l2fiLXctSskMlSQxhRmQDrEmjm2Po7jZWqftX3809dhogPakkC6ltg3JQKZ?=
+ =?us-ascii?Q?iOWM2tl7vjx+TAFfTLicfI05dMjX/hP4uja7YWX18seex04kCfdwyXKteEs8?=
+ =?us-ascii?Q?N5WKgKYBoVyYvuW3cUvymdOwIidOJNNqbFaOBqqxVB6ThQZGv6saTmBq8+E4?=
+ =?us-ascii?Q?AHTdcUTiK2q2ztK6z1dOH6jSVn7fr+YUwGMNskatcN7d2cd9DM+eS+ctCIMa?=
+ =?us-ascii?Q?R6R/zAG/lvlhK6DrGrJPOdIgCDBxpbndvZynH8JmAmW1MSphQmnqpps97ST5?=
+ =?us-ascii?Q?Ni1pB90rZtn8fw1A/pJLl8BYz1H/6ZYRzrQ+Hk22xGKkCmnCTJCXuPpY3hk4?=
+ =?us-ascii?Q?UAk/tOJEM+OpUrZgncIBXYmsY2WTyx2NMz7xX+Nv2pYNwrG90RFZ8F3Wp04N?=
+ =?us-ascii?Q?g55T1nt8Eo5JfSIybKZFlHBVcX5eFlB6YUB+tFnZgiZAgndNqsbJB9Z9l40q?=
+ =?us-ascii?Q?vRkl87cu/3VMfgq9IoiR7wUOcd5rcvW2sgQEFnLTr6mFNNogYbqJzYL8syYE?=
+ =?us-ascii?Q?HAJlE1KXXprsCuh8/H3rQGy5M+msb7rlXkCihI7o3Tg2KAu/C26/TXzFOzEx?=
+ =?us-ascii?Q?l62q6Wyw4knDD6mTdjkd0GHA/qTfHG1z/fbUEw/7CZ81Ii6LVkkpnaG4Yxwh?=
+ =?us-ascii?Q?evM+bCvtwmB/3N+02h0jN8tIQQ3rf7CQB1OFAdItw4t9/H8MK6DbPnP1p8ZT?=
+ =?us-ascii?Q?J4DVI7kHOEnslftof66jvT2BMTGDtGCnaNQSSCjQRaeTghJKwLTDMtNeaJ9I?=
+ =?us-ascii?Q?GJFpu3+HN402e+bGUqEF2Lf3bxMdV/i8eyJ+EJ/85YqEI8excESidDCYKXj1?=
+ =?us-ascii?Q?qn+12X6CFLVdnF+GAP/AgJ8sjY4PCWXjm2KQcmyEBVXOzbYiXPkAFz5liCky?=
+ =?us-ascii?Q?a/X38AgReSen6c2WBsqnMnwIdgaPrq2qVzJh2BmCVbcTuTkKDBiN8LE8I+dM?=
+ =?us-ascii?Q?Z4+qHLvjZdU+tOfw4LQhrJVWiCzvV4m+tW1pongmxNnmhECYtNfbsO2SUGol?=
+ =?us-ascii?Q?0VMF7VtmLSkMiHZk05cB+xgRu38bJDxFdtyrzXHovKxNMonE8lN4PIXHoNuQ?=
+ =?us-ascii?Q?ZytEb8a0hlSglNP9bOAjrp3D0led6szQ+INsFWmE155CWENEfTJzsuQSsj7N?=
+ =?us-ascii?Q?mtUdaAvF6IUUQaCzgb/99WrH7PafD3HR1U3mX7AMT8/SzsOhbOQlmZzFRNdY?=
+ =?us-ascii?Q?HhZ7s6yGYDIekzxVJvPlqAhkweEWkdcEDk7aRgy9lu36dJP7NgGnC7sgF8vH?=
+ =?us-ascii?Q?sw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38aea18d-1c39-4a89-ad0c-08db97bba859
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2023 03:00:44.4383
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd326b5a-e1eb-4441-92fe-08db978e6a20
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF00001506.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5599
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8oZ0hqCC3YHQ8FvsGHkjgu7nz9wcB8MZ+8dxdx9B/I+SEbRMLGHEa7V0nxNHYFDxXqQwM5UTtaOOVAnmhyaF9J4rgYjIKJTZ3ClsIj8cQx0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6162
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hotplug removing a CXL device and hotplug reinserting the same device
-currently requires manual interaction for managing the device
-region. The CXL device region must be manually destroyed before
-hotplug removal and manually created after hotplug reinsertion.
+Robert Richter wrote:
+> Dan,
+> 
+> On 03.07.23 17:39:38, Dan Williams wrote:
+> > Terry Bowman wrote:
+> > > From: Robert Richter <rrichter@amd.com>
+> > > 
+> > > Now, that the Component Register mappings are stored, use them to
+> > > enable and map the HDM decoder capabilities. The Component Registers
+> > > do not need to be probed again for this, remove probing code.
+> > > 
+> > > The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
+> > > Endpoint's component register mappings are located in the cxlds and
+> > > else in the port's structure. Provide a helper function
+> > > cxl_port_get_comp_map() to locate the mappings depending on the
+> > > component's type.
+> > 
+> > This causes a regression that cxl_test tripped over. It's likely
+> > something you could reproduce without cxl_test just be reloading the
+> > cxl_port driver. Root cause below, but here is what I see on a test run:
+> > 
+> > # meson test -C build --suite cxl
+> > ninja: no work to do.
+> > ninja: Entering directory `/root/git/ndctl/build'
+> > [113/113] Linking target ndctl/ndctl
+> > 1/6 ndctl:cxl / cxl-topology.sh             OK              12.78s
+> > 2/6 ndctl:cxl / cxl-region-sysfs.sh         OK               7.72s
+> > 3/6 ndctl:cxl / cxl-labels.sh               FAIL             1.53s   (exit status 129 or signal 1 SIGHUP)
+> > >>> LD_LIBRARY_PATH=/root/git/ndctl/build/cxl/lib:/root/git/ndctl/build/ndctl/lib:/root/git/ndctl/build/daxctl/lib NDCTL=/root/git/ndctl/build/ndctl/ndctl DAXCTL=/root/git/ndctl/build/daxctl/daxctl MALLOC_PERTURB_=67 TEST_PATH=/root/git/ndctl/build/test DATA_PATH=/root/git/ndctl/test /bin/bash /root/git/ndctl/test/cxl-labels.sh
+> 
+> I have tried various combinations of revisions and setups (patch #3,
+> #5 and #14, ndctl:pending/v77, cxl_test only with both, "ACPI0017" and
+> cxl_pci_probe() disabled), but could not reproduce this. Tests always
+> pass for me:
 
-Create a script to automatically destroy and recreate the region
-during CXL device hotplug remove-reinsert. Save region characteristics to
-a file before destroying the region and hotplug remove. Use the region
-characteristics stored in the file to recreate the region after
-hotplug reinsert.
+Apologies for the long delay in getting back to this. July had some
+major personal interrupts to attend.
 
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
----
- README.txt     | 311 +++++++++++++++++++++++++++++++++++++++++
- cxl-hotplug.py | 366 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 677 insertions(+)
- create mode 100644 README.txt
- create mode 100755 cxl-hotplug.py
+> 
+> [51/51] Linking target ndctl/ndctl
+> 1/6 ndctl:cxl / cxl-topology.sh             OK              18.59s
+> 2/6 ndctl:cxl / cxl-region-sysfs.sh         OK              12.26s
+> 3/6 ndctl:cxl / cxl-labels.sh               OK              28.25s
+> 4/6 ndctl:cxl / cxl-create-region.sh        OK              19.56s
+> 5/6 ndctl:cxl / cxl-xor-region.sh           OK              10.57s
+> 6/6 ndctl:cxl / cxl-security.sh             OK               9.77s
+> 
+> Ok:                 6
+> Expected Fail:      0
+> Fail:               0
+> Unexpected Pass:    0
+> Skipped:            0
+> Timeout:            0
+> 
+> Full log written to /root/ndctl/build/meson-logs/testlog.txt
 
-diff --git a/README.txt b/README.txt
-new file mode 100644
-index 0000000..97fa793
---- /dev/null
-+++ b/README.txt
-@@ -0,0 +1,311 @@
-+                          ____________________
-+
-+                           CXL-HOTPLUG.README
-+                          ____________________
-+
-+
-+Table of Contents
-+_________________
-+
-+1. Purpose
-+2. Requirements
-+.. 1. Kernel - v6.4.0
-+.. 2. ndctl - v77 or later
-+.. 3. QEMU - v8.0.3 + the following patches:
-+.. 4. Python modules:
-+.. 5. Additional tool details
-+3. Usage
-+4. Examples
-+.. 1. Swap a device
-+.. 2. Manually unplug and plugin a device
-+.. 3. Manually unplug and plugin a device (w/ step by step details)
-+
-+
-+
-+
-+
-+1 Purpose
-+=========
-+
-+  Hotplug adding and removing CXL devices requires region management not
-+  automatically provided. For instance, if a CXL device is added then a
-+  region must be 'created' before the memory can be used. Likewise, a
-+  region must be 'destroyed' before a CXL device can be
-+  removed. Removing a CXL device before a region is 'destroyed' can
-+  result in CXL device data loss or corruption.
-+
-+  This tool aims to provide region delete and create automation for an
-+  existing CXL device. The typical usage is to hotplug remove an
-+  existing CXL device and then hotplug readd the same device immediately
-+  or at some later time.
-+
-+  An unplug function is provided that will 'destroy' the region making
-+  the device ready for hotplug removal. Note, 'destroying' a PMEM region
-+  incurrs no loss of data. 'destroying' a RAM region will lose the
-+  region data. This tool saves the region structure information so that
-+  the device's region can be created in the future. After the device is
-+  hot hotplug added in the future the region information is used to
-+  recreate the region. The region information is saved to a default file
-+  or can be directed to a specific file provided on the tool comandline.
-+
-+  This tool provides a swap function that automatically executes the
-+  unplug and plugin functions.
-+
-+  This tool is currently limited to non interleaved devices.
-+
-+
-+2 Requirements
-+==============
-+
-+  Tested using the following:
-+
-+
-+2.1 Kernel - v6.4.0
-+~~~~~~~~~~~~~~~~~~~
-+
-+  To include the following kernel config settings:
-+  ,----
-+  | scripts/config --enable LIBNVDIMM
-+  | scripts/config --enable CONFIG_CXL_BUS
-+  | scripts/config --enable CONFIG_CXL_PCI
-+  | scripts/config --enable CONFIG_CXL_ACPI
-+  | scripts/config --enable CONFIG_CXL_MEM
-+  | scripts/config --enable CONFIG_CXL_PMEM
-+  | scripts/config --enable CONFIG_CXL_PORT
-+  | scripts/config --enable CONFIG_CXL_SUSPEND
-+  | scripts/config --enable CONFIG_CXL_REGION
-+  | scripts/config --enable CONFIG_CXL_REGION_INVALIDATION_TEST
-+  | scripts/config --enable CONFIG_PCIEAER_CXL
-+  | scripts/config --enable CONFIG_TRANSPARENT_HUGEPAGE
-+  | scripts/config --enable CONFIG_DEV_DAX
-+  | scripts/config --enable CONFIG_DEV_DAX_HMEM
-+  | scripts/config --enable CONFIG_DEV_DAX_KMEM
-+  | scripts/config --enable CONFIG_DEV_DAX_PMEM
-+  `----
-+  The above configures for statically linked drivers. They could be
-+  dynamically linked as modules as well.
-+
-+
-+2.2 ndctl - v77 or later
-+~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+
-+2.3 QEMU - v8.0.3 + the following patches:
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+  20230227163157.6621-1-Jonathan.Cameron@huawei.com
-+  20230303150908.27889-1-Jonathan.Cameron@huawei.com
-+  <https://lore.kernel.org/linux-cxl/20230303152903.28103-1-Jonathan.Cameron@huawei.com/\#r>
-+
-+
-+2.4 Python modules:
-+~~~~~~~~~~~~~~~~~~~
-+
-+  The following python modules are required: json subprocess os argparse
-+  logging
-+
-+
-+2.5 Additional tool details
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+  <https://confluence.amd.com/display/ALK/CXL+QEMU>
-+
-+
-+3 Usage
-+=======
-+
-+  The utility requires one of the sub-commands: plugin,unplug,list,swap.
-+
-+  Commandline usage information:
-+  ,----
-+  | usage: cxl-hotplug.py [-h] {plugin,unplug,list,swap} ...
-+  | 
-+  | positional arguments:
-+  | {plugin,unplug,list,swap}
-+  | 
-+  | options:
-+  |   -h, --help            show this help message and exit
-+  `----
-+
-+  Commandline plugin usage information:
-+  ,----
-+  | usage: cxl-hotplug.py plugin [-h] -m MEMDEV [-c CONFIG_FILE] [-d]
-+  | 
-+  | options:
-+  |   -h, --help      show this help message and exit
-+  |   -m MEMDEV       CXL memory device to prepare for unplug
-+  |   -c CONFIG_FILE  CXL JSON configuration file to use
-+  |   -d, --debug     Enable debugging
-+  `----
-+
-+  Commandline unplug usage information:
-+  ,----
-+  | usage: cxl-hotplug.py unplug [-h] -m MEMDEV [-c CONFIG_FILE] [-d]
-+  | 
-+  | options:
-+  |   -h, --help      show this help message and exit
-+  |   -m MEMDEV       CXL memory device to prepare for unplug
-+  |   -c CONFIG_FILE  CXL JSON configuration file to save
-+  |   -d, --debug     Enable debugging
-+  `----
-+
-+  Commandline swap usage information:
-+  ,----
-+  | usage: cxl-hotplug.py swap [-h] -m MEMDEV [-d]
-+  | 
-+  | options:
-+  |   -h, --help   show this help message and exit
-+  |   -m MEMDEV    CXL memory device to swap
-+  |   -d, --debug  Enable debugging
-+  `----
-+
-+
-+4 Examples
-+==========
-+
-+4.1 Swap a device
-+~~~~~~~~~~~~~~~~~
-+
-+  ,----
-+  | # cxl create-region -t ram -m  mem0 -d decoder0.0 -w 1 -s 256M
-+  | # ./cxl-hotplug.py swap -m mem0
-+  | Device 'mem0' can now be safely removed.
-+  | Card is ready for removal.
-+  | Press any key to continue after card reinsertion.
-+  | Region created for 'mem0'.
-+  `----
-+
-+
-+4.2 Manually unplug and plugin a device
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+  ,----
-+  | # cxl create-region -t ram -m  mem0 -d decoder0.0 -w 1 -s 256M
-+  | # ./cxl-hotplug.py unplug -m mem0 -c my-cxl.json
-+  | # ./cxl-hotplug.py plugin -m mem0 -c my-cxl.json
-+  `----
-+
-+
-+4.3 Manually unplug and plugin a device (w/ step by step details)
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+  ,----
-+  | # cxl list 
-+  | [
-+  |   {
-+  |     "memdev":"mem0",
-+  |     "ram_size":268435456,
-+  |     "serial":0,
-+  |     "host":"0000:0d:00.0"
-+  |   }
-+  | ]
-+  | 
-+  | # ./cxl-hotplug.py list
-+  | Device        Region Name        Region Size        Movable
-+  | ======        ===========        ===========        =======
-+  |   mem0                 NA                 NA             NA
-+  | 
-+  | # cxl  create-region -t ram -m  mem0 -d decoder0.0 -w 1 -s 256M 
-+  | {
-+  |   "region":"region0",
-+  |   "resource":"0x890000000",
-+  |   "size":"256.00 MiB (268.44 MB)",
-+  |   "type":"ram",
-+  |   "interleave_ways":1,
-+  |   "interleave_granularity":256,
-+  |   "decode_state":"commit",
-+  |   "mappings":[
-+  |     {
-+  |       "position":0,
-+  |       "memdev":"mem0",
-+  |       "decoder":"decoder2.0"
-+  |     }
-+  |   ]
-+  | }
-+  | cxl region: cmd_create_region: created 1 region
-+  | 
-+  | # cxl list 
-+  | [
-+  |   {
-+  |     "memdevs":[
-+  |       {
-+  | 	"memdev":"mem0",
-+  | 	"ram_size":268435456,
-+  | 	"serial":0,
-+  | 	"host":"0000:0d:00.0"
-+  |       }
-+  |     ]
-+  |   },
-+  |   {
-+  |     "regions":[
-+  |       {
-+  | 	"region":"region0",
-+  | 	"resource":36775657472,
-+  | 	"size":268435456,
-+  | 	"type":"ram",
-+  | 	"interleave_ways":1,
-+  | 	"interleave_granularity":256,
-+  | 	"decode_state":"commit"
-+  |       }
-+  |     ]
-+  |   }
-+  | ]
-+  | 
-+  | # ./cxl-hotplug.py list
-+  | Device        Region Name        Region Size        Movable
-+  | ======        ===========        ===========        =======
-+  |   mem0            region0          268435456           True
-+  | 
-+  | # ./cxl-hotplug.py unplug -m mem0 
-+  | Device 'mem0' can now be safely removed.
-+  | 
-+  | # cxl list 
-+  | [
-+  |   {
-+  |     "memdev":"mem0",
-+  |     "ram_size":268435456,
-+  |     "serial":0,
-+  |     "host":"0000:0d:00.0"
-+  |   }
-+  | ]
-+  | 
-+  | # ./cxl-hotplug.py list
-+  | Device        Region Name        Region Size        Movable
-+  | ======        ===========        ===========        =======
-+  |   mem0                 NA                 NA             NA
-+  | 
-+  | # ./cxl-hotplug.py plugin -m mem0 
-+  | Region created for 'mem0'.
-+  | 
-+  | # cxl list 
-+  | [
-+  |   {
-+  |     "memdevs":[
-+  |       {
-+  | 	"memdev":"mem0",
-+  | 	"ram_size":268435456,
-+  | 	"serial":0,
-+  | 	"host":"0000:0d:00.0"
-+  |       }
-+  |     ]
-+  |   },
-+  |   {
-+  |     "regions":[
-+  |       {
-+  | 	"region":"region0",
-+  | 	"resource":36775657472,
-+  | 	"size":268435456,
-+  | 	"type":"ram",
-+  | 	"interleave_ways":1,
-+  | 	"interleave_granularity":256,
-+  | 	"decode_state":"commit"
-+  |       }
-+  |     ]
-+  |   }
-+  | ]
-+  | 
-+  | # ./cxl-hotplug.py list
-+  | Device        Region Name        Region Size        Movable
-+  | ======        ===========        ===========        =======
-+  |   mem0            region0          268435456           True
-+  `----
-diff --git a/cxl-hotplug.py b/cxl-hotplug.py
-new file mode 100755
-index 0000000..971e4e7
---- /dev/null
-+++ b/cxl-hotplug.py
-@@ -0,0 +1,366 @@
-+#!/usr/bin/python3
-+# SPDX-License-Identifier: LGPL-2.1
-+#
-+# Copyright (C) 2023, Advanced Micro Devices (AMD). All rights reserved.
-+#
-+# @Author - Terry Bowman
-+#
-+# Utility to support CXL hotplug removal and re-insertion. The purpose
-+# is to recreate a CXL region during insertion that existed before
-+# removal.
-+#
-+# '--unplug' sub-command option will save the CXL region information to
-+# a file before a manual hotplug removal.
-+#
-+# '--plugin' sub-command after hotplug insertion will recreate a device
-+# region using the details from the configuration file.
-+#
-+# '--swap' sub-command will run the same functionality as '--unplug',
-+# then prompt for when the card is plugged in, and then execute the
-+# '--plugin' functionality.
-+#
-+# '--list' sub-command will list the CXL devices and associated regions.
-+#
-+
-+import json
-+import subprocess
-+import os
-+import argparse
-+import logging
-+import tempfile
-+
-+class cxl_json:
-+
-+    cxl_memdev_json = {}
-+    decoders_root_json = {}
-+    regions_decoder_json = {}
-+    daxregion_json = {}
-+    daxregion_devices_json = {}
-+
-+    def cxl_list_memdev(self, memdev):
-+        result = subprocess.run(["cxl", "list", "-m", memdev, "-RBMTXEPD"],
-+                                capture_output=True, text=True)
-+        if result.returncode != 0:
-+            print("Error: cxl list command failed for: " + memdev)
-+            exit(1)
-+
-+        result_json = json.loads(result.stdout)
-+
-+        if not result_json:
-+            print("CXL list is empty for: " + memdev)
-+            exit(1)
-+
-+        return(result_json[0])
-+
-+    # Cache embedded json dictionaries to make more easily accessible.
-+    # This helps in later processing .
-+    #
-+    # If the CXL json dictionary is missing any CXL components than this
-+    # implies a CXL device is not configured. In this case exit with an
-+    # error and message.
-+    def decode_json(self, fatal_error = True):
-+        for key in self.cxl_memdev_json:
-+            if key.startswith('decoders:root'):
-+                self.decoders_root_json = self.cxl_memdev_json[key][0]
-+        if self.decoders_root_json == None or \
-+           len(self.decoders_root_json) == 0:
-+            if fatal_error == True:
-+                print("Error: Failed to find decoder root CXL json.")
-+                exit(1)
-+            else:
-+                return
-+
-+        regions_decoder_key = "regions:" + self.decoders_root_json.get('decoder')
-+        if self.decoders_root_json.get(regions_decoder_key) == None:
-+            if fatal_error == True:
-+                print("Error: Failed to find region decoder in CXL json.")
-+                exit(1)
-+            else:
-+                return
-+
-+        self.regions_decoder_json = self.decoders_root_json.get(regions_decoder_key)[0]
-+        if len(self.regions_decoder_json) == 0:
-+            if fatal_error == True:
-+                print("Error: Failed to find region decoder in CXL json.")
-+                exit(1)
-+            else:
-+                return
-+
-+        # PMEM CXL JSON does not include DAX keys searched for below, return early
-+        if 'pmem' == self.regions_decoder_json.get('type'):
-+            return;
-+
-+        for key in self.regions_decoder_json:
-+            if key.startswith('daxregion'):
-+                self.daxregion_json = self.regions_decoder_json[key]
-+        if len(self.daxregion_json) == 0:
-+            if fatal_error == True:
-+                print("Error: Failed to find daxregion in CXL json.")
-+                exit(1)
-+            else:
-+                return
-+
-+        for key in self.daxregion_json:
-+            if key.startswith('devices'):
-+                self.daxregion_devices_json = self.daxregion_json[key][0]
-+        if len(self.daxregion_devices_json) == 0:
-+            if fatal_error == True:
-+                print("Error: Failed to find daxregion devices in CXL json.")
-+                exit(1)
-+            else:
-+                return
-+
-+    def get_block_size_bytes(self):
-+        result = subprocess.run(["cat", "/sys/devices/system/memory/block_size_bytes"],
-+                                capture_output=True, text=True)
-+        if result.returncode != 0:
-+            print("Error: cxl destroy-region command failed. rc = " +
-+                  str(result.returncode))
-+            exit(1)
-+        return int(result.stdout, 16)
-+
-+    def is_region_movable(self):
-+
-+        # PMEM doesn't have movable concept
-+        if 'pmem' == self.regions_decoder_json.get('type'):
-+            return True;
-+
-+        block_size_bytes = self.get_block_size_bytes()
-+        resource = self.regions_decoder_json.get('resource')
-+        resource_size = self.regions_decoder_json.get('size')
-+        start_block = int(resource/block_size_bytes)
-+        stop_block = int((resource+resource_size)/block_size_bytes - 1)
-+        is_movable = True
-+
-+        for i in range(0,(stop_block-start_block + 1)):
-+            block = start_block + i
-+            block_str = ("/sys/devices/system/memory/memory" + str(block) +
-+                         "/valid_zones")
-+            result = subprocess.run(["cat", block_str],
-+                                    capture_output=True, text=True)
-+            if result.returncode != 0:
-+                print("Error: Block cat command failed. rc = " +
-+                      str(result.returncode))
-+                exit(1)
-+
-+            if "Movable" not in result.stdout:
-+                is_movable = False
-+                break;
-+
-+        return is_movable
-+
-+class cxl_unplug(cxl_json):
-+
-+    def __init__(self, memdev, config_file):
-+        # Capture the current CXL (and DAX) configurations. Save
-+        # configurations to file for using later with '--plugin'
-+        # hot-plug adding the memory device.
-+        self.cxl_memdev_json = self.cxl_list_memdev(memdev)
-+        self.serialize_json(self.cxl_memdev_json, config_file)
-+        self.decode_json()
-+
-+        if (self.regions_decoder_json.get('interleave_ways')>1):
-+            print("Interleaved devices are not supported.")
-+            exit(1)
-+
-+    def serialize_json(self, json_str, filename):
-+        with open( filename , "w" ) as write:
-+            json.dump(json_str, write)
-+
-+    def is_dax_memory_offline(self, dax_dev_json):
-+        result = subprocess.run(["daxctl", "list"],
-+                                capture_output=True, text=True)
-+        if result.returncode != 0:
-+            print("Error: daxctl offline command failed command. rc = " +
-+                  str(result.returncode))
-+            exit(1)
-+
-+        dax_dev_online_mb = json.loads(result.stdout)[0]["online_memblocks"]
-+        logging.debug("online_memblocks = " +
-+                      str(json.loads(result.stdout)[0]["online_memblocks"]))
-+        return dax_dev_online_mb == 0
-+
-+    def offline_dax_memory(self):
-+        # Note: self.daxregion_devices_json['movable'] JSON key is missing
-+        # when True (ndctl v77). As a result, use the function region_movable()
-+        if self.is_region_movable() == False:
-+            print("Error: Entire region memory is not zone movable.")
-+            exit(1)
-+
-+        dax_dev = self.daxregion_devices_json['chardev']
-+        result=subprocess.run(["daxctl", "offline-memory", dax_dev],
-+                              capture_output=True, text=True)
-+        if result.returncode != 0:
-+            if self.is_dax_memory_offline(dax_dev) == False:
-+                print("Error: daxctl offline command failed. rc = " +
-+                      str(result.returncode))
-+                exit(1)
-+
-+    def offline_memory(self):
-+        if 'ram' == self.regions_decoder_json.get('type'):
-+            self.offline_dax_memory()
-+
-+    def cxl_destroy_region(self):
-+        result = subprocess.run(["cxl", "destroy-region",
-+                                 str(self.regions_decoder_json.get('region')),
-+                                 "--force"],
-+                                capture_output=True, text=True)
-+        if result.returncode != 0:
-+            print("Error: cxl destroy-region command failed. rc = " +
-+                  str(result.returncode))
-+            exit(1)
-+
-+    def unplug(self):
-+        unplug_dev.offline_memory()
-+        unplug_dev.cxl_destroy_region()
-+        print("Device \'" + args.memdev + "\' can now be safely removed.")
-+
-+class cxl_plugin(cxl_json):
-+
-+    def __init__(self, config_file):
-+        f = open(config_file)
-+        self.cxl_memdev_json = json.load(f)
-+        self.decode_json()
-+
-+        if (self.regions_decoder_json.get('interleave_ways')>1):
-+            print("Interleaved devices are not supported.")
-+            exit(1)
-+
-+    def cxl_create_region(self, cxl_memdev_json, memdev):
-+        type = self.regions_decoder_json.get('type');
-+        decoder = self.decoders_root_json.get('decoder')
-+        interleave_ways = self.regions_decoder_json.get('interleave_ways')
-+        interleave_granularity = self.regions_decoder_json.get('interleave_granularity')
-+        size = self.regions_decoder_json.get('size')
-+
-+        result = subprocess.run(["cxl", "create-region",
-+                                 "-m", memdev,
-+                                 "-t", type,
-+                                 "-d", decoder,
-+                                 "-w", str(interleave_ways),
-+                                 "-s", str(size),
-+                                 "--debug"],
-+                                capture_output=True, text=True)
-+        if result.returncode!=0:
-+            print("Error: cxl destroy-region command failed. rc = " +
-+                  str(result.returncode))
-+            exit(1)
-+
-+    def plugin(self, memdev):
-+        self.cxl_create_region(self.cxl_memdev_json, memdev)
-+        print("Region created for \'" + memdev + "\'.")
-+
-+class cxl_list(cxl_json):
-+
-+    cxl_memdevs_json = {}
-+
-+    def __init__(self):
-+        self.cxl_memdevs_json = self.cxl_list_memdevs()
-+
-+    def display_memdevs(self):
-+        if (self.cxl_memdevs_json == None):
-+            print("Error: Failed to find memory devices")
-+            return
-+
-+        if (len(self.cxl_memdevs_json) == 0):
-+            print("Error: Failed to find memory devices")
-+            return
-+
-+        print("Device        Region Name        Region Size        Movable")
-+        print("======        ===========        ===========        =======")
-+
-+        for memdev in self.cxl_memdevs_json:
-+            self.cxl_memdev_json = self.cxl_list_memdev(memdev['memdev'])
-+            self.decode_json(fatal_error = False)
-+            if len(self.regions_decoder_json) != 0:
-+                region = self.regions_decoder_json.get('region');
-+                size = self.regions_decoder_json.get('size')
-+                is_movable_str = "True"
-+                if self.is_region_movable() == 0:
-+                        is_movable_str = "False"
-+            else:
-+                region = 'NA'
-+                size = 'NA'
-+                is_movable_str = 'NA'
-+
-+            print("%6s %18s %18s %14s" %
-+                  (memdev['memdev'], region, size, is_movable_str))
-+
-+    def cxl_list_memdevs(self):
-+        result = subprocess.run(["cxl", "list", "-M"],
-+                                capture_output=True, text=True)
-+        if result.returncode != 0:
-+            print("Error: cxl list command failed.")
-+            exit(1)
-+
-+        logging.debug("cxl_memdevs_json = " + result.stdout)
-+        self.cxl_memdevs_json = json.loads(result.stdout);
-+
-+        return(self.cxl_memdevs_json)
-+
-+def init_args():
-+    parser = argparse.ArgumentParser()
-+    subparsers = parser.add_subparsers(dest='subparser_name', required=True)
-+
-+    parser_plugin = subparsers.add_parser('plugin')
-+    parser_plugin.add_argument('-m', dest='memdev',
-+                               help='CXL memory device to prepare for unplug',
-+                               required=True)
-+    parser_plugin.add_argument('-c', dest='config_file',
-+                               help='CXL JSON configuration file to save/use',
-+                               required=False, default="cxl.json")
-+    parser_plugin.add_argument('-d', '--debug', help='Enable debug logging',
-+                               required=False, action='store_true')
-+
-+    parser_unplug = subparsers.add_parser('unplug')
-+    parser_unplug.add_argument('-m', dest='memdev',
-+                               help='CXL memory device to prepare for unplug',
-+                               required=True)
-+    parser_unplug.add_argument('-c', dest='config_file',
-+                               help='CXL JSON configuration file to save/use',
-+                               required=False, default="cxl.json")
-+    parser_unplug.add_argument('-d', '--debug', help='Enable debugging',
-+                               required=False, action='store_true')
-+
-+    parser_list = subparsers.add_parser('list')
-+    parser_list.add_argument('-d', '--debug', help='Enable debugging',
-+                             required=False, action='store_true')
-+
-+    parser_swap = subparsers.add_parser('swap')
-+    parser_swap.add_argument('-m', dest='memdev',
-+                               help='CXL memory device to swap',
-+                               required=True)
-+    parser_swap.add_argument('-d', '--debug', help='Enable debugging',
-+                             required=False, action='store_true')
-+
-+    return parser.parse_args()
-+
-+args = init_args()
-+if args.debug:
-+    logging.basicConfig(level=logging.DEBUG)
-+
-+logging.debug("args = " + str(args))
-+
-+if args.subparser_name == 'list':
-+    list_dev = cxl_list();
-+    list_dev.display_memdevs()
-+
-+if args.subparser_name == 'unplug':
-+    unplug_dev = cxl_unplug(args.memdev, args.config_file);
-+    unplug_dev.unplug()
-+
-+if args.subparser_name == 'plugin':
-+    plugin_dev = cxl_plugin(args.config_file);
-+    plugin_dev.plugin(args.memdev)
-+
-+if args.subparser_name == 'swap':
-+    f, filename = tempfile.mkstemp()
-+    unplug_dev = cxl_unplug(args.memdev, filename);
-+    unplug_dev.unplug()
-+
-+    print("Card is ready for removal.")
-+    input("Press any key to continue after card reinsertion.")
-+
-+    plugin_dev = cxl_plugin(filename);
-+    plugin_dev.plugin(args.memdev)
-+    os.close(f)
--- 
-2.34.1
+So it turns out it is not cxl_test that is failing instead it is the
+tests noticing a regression of the VH base case. I am running
+cxl-topology.sh in a QEMU environment with a local device defined, and
+that local device is hitting a probe regression.
+
+When cxl_test goes to count the expected disabled devices it sees one
+more because the QEMU device is also disabled.
+
+++ jq 'map(select(.state == "disabled")) | length'
++ count=5
++ (( count == 4 ))
++ err 170
+++ basename /root/git/ndctl/test/cxl-topology.sh
++ echo test/cxl-topology.sh: failed at line 170
+
+...i.e. only 4 devices are expected to be disabled, not the 5th one that
+was not on the cxl_test bus. I assume you are running without any other
+CXL devices?
+
+I will look into making that a more formalized case so that failure is
+not QEMU configuration dependent, but please make sure that QEMU CXL
+configs do not regress.
+
+> > 
+> > 4/6 ndctl:cxl / cxl-create-region.sh        OK              17.05s
+> > 5/6 ndctl:cxl / cxl-xor-region.sh           OK               5.18s
+> > 6/6 ndctl:cxl / cxl-security.sh             OK               4.68s
+> > 
+> > Ok:                 5   
+> > Expected Fail:      0   
+> > Fail:               1   
+> > Unexpected Pass:    0   
+> > Skipped:            0   
+> > Timeout:            0   
+> > 
+> > Full log written to /root/git/ndctl/build/meson-logs/testlog.txt
+> > 
+> > It's not that cxl-labels.sh causes the error, it is loading and
+> > unloading the port driver trips over the problem below:
+> > 
+> > > 
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > > ---
+> > >  drivers/cxl/core/hdm.c | 64 +++++++++++++++++++++++-------------------
+> > >  1 file changed, 35 insertions(+), 29 deletions(-)
+> > > 
+> > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > > index 4449b34a80cc..b0f59e63e0d2 100644
+> > > --- a/drivers/cxl/core/hdm.c
+> > > +++ b/drivers/cxl/core/hdm.c
+> > > @@ -81,26 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+> > >  		cxlhdm->interleave_mask |= GENMASK(14, 12);
+> > >  }
+> > >  
+> > > -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+> > > -				struct cxl_component_regs *regs)
+> > > -{
+> > > -	struct cxl_register_map map = {
+> > > -		.dev = &port->dev,
+> > > -		.resource = port->component_reg_phys,
+> > > -		.base = crb,
+> > > -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
+> > > -	};
+> > > -
+> > > -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
+> > > -	if (!map.component_map.hdm_decoder.valid) {
+> > > -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
+> > > -		/* unique error code to indicate no HDM decoder capability */
+> > > -		return -ENODEV;
+> > > -	}
+> > > -
+> > > -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
+> > > -}
+> > > -
+> > >  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> > >  {
+> > >  	struct cxl_hdm *cxlhdm;
+> > > @@ -145,6 +125,22 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> > >  	return true;
+> > >  }
+> > >  
+> > > +static struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
+> > > +{
+> > > +	/*
+> > > +	 * HDM capability applies to Endpoints, USPs and VH Host
+> > > +	 * Bridges. The Endpoint's component register mappings are
+> > > +	 * located in the cxlds.
+> > > +	 */
+> > > +	if (is_cxl_endpoint(port)) {
+> > > +		struct cxl_memdev *memdev = to_cxl_memdev(port->uport_dev);
+> > > +
+> > > +		return &memdev->cxlds->comp_map;
+> > 
+> > ...but why? The issue here is that the @dev argument in that map is the
+> > memdev parent PCI device. However, in this context the @dev for devm
+> > operations wants to be &port->dev.
+> 
+> The cxl_pci driver stores the comp_map of the endpoint in the cxlds
+> structure, struct cxl_port is not yet available at this point.
+
+When you say "this point" you mean "that point" in cxl_pci, right? I
+initially took that to mean literally "this" point in the quoted code
+above.
+
+> See patch #2 of this series ("cxl/pci: Store the endpoint's Component
+> Register mappings in struct cxl_dev_state").
+> 
+> > 
+> > > +	}
+> > > +
+> > > +	return &port->comp_map;
+> > 
+> > ...so this is fine, and folding in the following resolves the test
+> > failure.
+> > 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index b0f59e63e0d2..6f111f487795 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -125,22 +125,6 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> >         return true;
+> >  }
+> >  
+> > -static struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
+> > -{
+> > -       /*
+> > -        * HDM capability applies to Endpoints, USPs and VH Host
+> > -        * Bridges. The Endpoint's component register mappings are
+> > -        * located in the cxlds.
+> > -        */
+> > -       if (is_cxl_endpoint(port)) {
+> > -               struct cxl_memdev *memdev = to_cxl_memdev(port->uport_dev);
+> > -
+> > -               return &memdev->cxlds->comp_map;
+> > -       }
+> > -
+> > -       return &port->comp_map;
+> > -}
+> > -
+> >  /**
+> >   * devm_cxl_setup_hdm - map HDM decoder component registers
+> >   * @port: cxl_port to map
+> > @@ -160,8 +144,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+> >         cxlhdm->port = port;
+> >         dev_set_drvdata(dev, cxlhdm);
+> >  
+> > -       comp_map = cxl_port_get_comp_map(port);
+> > -
+> > +       comp_map = &port->comp_map;
+> 
+> Can you check if the following works instead, I think the
+> pre-initialization is missing in cxl_mock_mem_probe() for
+> cxl_test:
+> 
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index d6d067fbee97..4c4e33de4d74 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1333,6 +1333,8 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev)
+>  	mutex_init(&mds->mbox_mutex);
+>  	mutex_init(&mds->event.log_lock);
+>  	mds->cxlds.dev = dev;
+> +	mds->cxlds.comp_map.dev = dev;
+> +	mds->cxlds.comp_map.resource = CXL_RESOURCE_NONE;
+
+This has the same problem. @dev is specifying the lifetime of the
+mapping. The lifetime of the mapping needs to be relative to the driver
+using the registers. So if the cxl_port driver is mapping the component
+registers the only valid device in the comp_map is &port->dev.
+
+I notice that cxl_port_get_comp_map() endpoint port as an argument. That
+endpoint port was instantiated with @cxlmd, but it seems not with
+@cxlmd->cxlds->comp_map information which is available. Lets just fix
+that. I.e. move devm_cxl_add_endpoint() into the core and make it
+initialize @endpoint->comp_map with @cxlds->comp_map while switching
+@dev in the @endpoint->comp_map to be @endpoint->dev, and not
+@cxlds->dev.
+
+...but it turns out that is the second bug in this patch. As I went to
+try to reproduce this failure for a single port VH configuration I
+notice another bug, a regression of this fix:
+
+   7bba261e0aa6 cxl/port: Scan single-target ports for decoders
+
+...because there is no requirement for single port switches /
+host-bridges to have HDM decoders per the specification, and the
+original patch is turning HDM decoders not present as a hard failure.
+
+>  	mds->cxlds.type = CXL_DEVTYPE_CLASSMEM;
+>  
+>  	return mds;
+> -- 
+> 2.30.2
+> 
+> The cxl_pci driver always has something valid or fails otherwise.
+
+Understood, just copy that map at __devm_cxl_add_port() time. I am
+thinking devm_cxl_add_endpoint() moves into core/port.c and it calls
+__devm_cxl_add_port() directly with a new parameter to take a passed in
+@comp_map or @component_reg_phys for the switch port case.
+
+> 
+> If that works the change should be merged into patch #2.
+> 
+> Thanks,
+> 
+> -Robert
+> 
+> 
+> >         if (comp_map->resource == CXL_RESOURCE_NONE) {
+> >                 if (info && info->mem_enabled) {
+> >                         cxlhdm->decoder_count = info->ranges;
+> > 
+> > 
+> > Am I missing why the cxlds->comp_map needs to be reused?
+> > 
+> > Note that I am out and may not be able to respond further until next
+> > week.
+
 
