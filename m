@@ -2,228 +2,173 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3412C001E0
-	for <linux-cxl@archiver.kernel.org>; Tue,  8 Aug 2023 21:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5468BC001E0
+	for <linux-cxl@archiver.kernel.org>; Tue,  8 Aug 2023 21:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236633AbjHHVUJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 8 Aug 2023 17:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48954 "EHLO
+        id S229812AbjHHViL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 8 Aug 2023 17:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235519AbjHHVT4 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Aug 2023 17:19:56 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2086.outbound.protection.outlook.com [40.107.94.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5810C88B2A;
-        Tue,  8 Aug 2023 12:38:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WJV4jjf2ayUdLIin7goW+Za5sLkZb/jAwJditr60aVz3mtFv5P7ILVv0d5ux2y4Ya5XLP7GkonWWirP6ZAXu4q2c3/KWQfV0l99WOzG3rDdnwQqFV+Fm5+SAsWQJlmiYV5utX4UqGj3xfJH+nayuDK8sKeTSBmIDoQXzeasi24T2r+BXUEbD4W3E9puonzdQ81q67q2mdJ3TYUDxcjuzfuMRoVNVRYeH34Oek37mNzcUpJ08RjkYvlJnLfqw7jEWukELe5ztC8UCY8lrsl+10KMTJHPNq2eu7nHgqqNexzpORiSQWXiw6Scmxe0u7K7Jjk5dG/7kq5KjHj+Z0MKm2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B/PV5TPtDwG3HAGozQw1YzsmPpnv0YXhKsG0+VmUbZI=;
- b=HXMZniMuzOborOEbWZJrnxUKYqplyP/MdZMfsGICHDKRiKdGZG/dF9z9sTlputWlxy/MFWTsx3e/D6WHHXPVXCi6t1nggamG86yXAFDQTaeaKjNQAosEeDUGXypR1SBeNI6+NpS/rKuNmS9Gh9Y8e48h1ZS2pf7w9ld0VnIyKELA+cJtCNdAeamibeegDEqM0H2lLLbn5U2xC9VcnEkMTsWTllNFNJF4WJ54Q6F3/CYExqqpAfabydMp+kmysVrrMMGrmXhF0TM518AUMsKNJRDsp2xw3uMHH/n0LiYC0OXn8iLvrVS+B3KdTVkxnAhaxt6+g0rjuWwiyOtHmFC1uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B/PV5TPtDwG3HAGozQw1YzsmPpnv0YXhKsG0+VmUbZI=;
- b=AE9t6VNFBk0u3KrMCfivtPUvdYFgb5Js3wzjVq8SYSCIa/hYCNY/47b+JLS2/YMzBqSxvWNB1k538L/VukxkP9n2Mum4Gkm2DfUfktlUfsAz93cv5VLBfi1YTc1wtVoBjXfGlf7N8k/VVOnLRP0ltdsY0MXWJXVeJrN252VwYCM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by IA1PR12MB6305.namprd12.prod.outlook.com (2603:10b6:208:3e7::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.25; Tue, 8 Aug
- 2023 19:38:01 +0000
-Received: from BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::6d09:667e:d48d:dc1a]) by BYAPR12MB2869.namprd12.prod.outlook.com
- ([fe80::6d09:667e:d48d:dc1a%6]) with mapi id 15.20.6652.026; Tue, 8 Aug 2023
- 19:38:01 +0000
-Message-ID: <f044379c-f363-0c94-cde3-8b062f1628ee@amd.com>
-Date:   Tue, 8 Aug 2023 12:37:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 1/3] cxl/pci: Fix appropriate checking for _OSC while
- handling CXL RAS registers
-Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        with ESMTP id S230284AbjHHViG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 8 Aug 2023 17:38:06 -0400
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9AADA15C
+        for <linux-cxl@vger.kernel.org>; Tue,  8 Aug 2023 10:05:23 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230808073542epoutp02cd9110893c06942b0dab82886b2903aa~5WDpLCU9m1772717727epoutp02c
+        for <linux-cxl@vger.kernel.org>; Tue,  8 Aug 2023 07:35:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230808073542epoutp02cd9110893c06942b0dab82886b2903aa~5WDpLCU9m1772717727epoutp02c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1691480142;
+        bh=tBq9IoyDxGSev3Ld/OSnOu1FQ+tHbuEp4Bg5BSa6JwQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=g9Di6h2djSdYVG07QoD93F6oXVLkeTXT9ORI9IlWbzhm/ruLn+3yQJ8Gh85XJqgmD
+         i3VGdDayhslxEhFOiN0F2/DMn9VewRJ8Qf5PVsyrCcuowlSrU6ox+z+8pFMtKyclqH
+         gpwOFK2IfIZrARM8/oVAlnLQrs/qyUhU2m1KqMKc=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20230808073541epcas2p12939e82ebfdcdbb1b1f18c39d5388e01~5WDoglrQj2522325223epcas2p1b;
+        Tue,  8 Aug 2023 07:35:41 +0000 (GMT)
+Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.69]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4RKlND6rLbz4x9Q3; Tue,  8 Aug
+        2023 07:35:40 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D2.46.29526.C40F1D46; Tue,  8 Aug 2023 16:35:40 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230808073540epcas2p16c3298cb407ada78de8ebbb8327576f9~5WDnTj3Ii2520525205epcas2p1D;
+        Tue,  8 Aug 2023 07:35:40 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230808073540epsmtrp27d89aafe56e0a62623cec44221f4582e~5WDnSxgIO2836828368epsmtrp2-;
+        Tue,  8 Aug 2023 07:35:40 +0000 (GMT)
+X-AuditID: b6c32a4d-637c170000047356-b4-64d1f04cdb9b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C5.CD.14748.C40F1D46; Tue,  8 Aug 2023 16:35:40 +0900 (KST)
+Received: from jehoon-Precision-7920-Tower (unknown [10.229.83.133]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230808073540epsmtip2310590a7815e753b4ddd923be3e38acb~5WDnCWQpw1474314743epsmtip2X;
+        Tue,  8 Aug 2023 07:35:40 +0000 (GMT)
+Date:   Tue, 8 Aug 2023 16:38:42 +0900
+From:   Jehoon Park <jehoon.park@samsung.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Robert Richter <rrichter@amd.com>
-References: <20230721214740.256602-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230721214740.256602-2-Smita.KoralahalliChannabasappa@amd.com>
- <64d1b3e78629f_5ea6e2944@dwillia2-xfh.jf.intel.com.notmuch>
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-In-Reply-To: <64d1b3e78629f_5ea6e2944@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PH0P220CA0030.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:d3::30) To BYAPR12MB2869.namprd12.prod.outlook.com
- (2603:10b6:a03:132::30)
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>
+Subject: Re: [ndctl PATCH v2 1/3] libcxl: Update a revision by CXL 3.0
+ specification
+Message-ID: <20230808073842.GA4397@jehoon-Precision-7920-Tower>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|IA1PR12MB6305:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9dc1b9bd-a746-49c6-cfa0-08db9846f9cf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L6nFJbYohz/5qMo0mfGlMEEe5q+Fp5mWNGk+4syUq/a587KY1/tRLdeK73Z++iw7ZD8wY95d6vOBPwZF4wSozR6BRfLxv41Kve4nvKgHamjqOMyGlI8X8AmH8tMYaZyxMBdN5LeoD3aYhDzKDK9OEfC/ZmiQE3LIQgXJACblkrRHxy4sBqRQ41YD6q9yptJDwwivAJi6EcdqZkjIOt9qG3XaS2mwxGUO5/QtiZGioSowbBRgSR82dTM5a2xvY7xnYoZA/O9X9lYLMYGtgWu5MkAHnNlwk0OAqOfG3jjvGiXXYSKrT/whXyIPambOXYdlQOKiZy9pNURw2pH9DlBMUKk43aEuOolxqyUczR9A5V65VTQiF47DFt6S4GTNkIXjGIHaGCpEZewDMrBx+4fHuH3gXDyh86rM9JeCoiK8tO1GMwTqXYj6UrKVWTJjw9nZx8CkpFjYWLRzjTAMhA3svzuihfO5gSjuqHPsE8Pux9+ywCcbwEUoKON+ZjOCTmy6uYsszrRZ/B8tN9oTSVQeaQLrbpsTEu1RkK8ytJWijqb7M9aBqm6Esx9nQcx0nt5IukzXqm3Cr7BFv2z/yaHzJeUNOEGCJ5nKtw1QG6q/LNTAvu7LzlOVfrLIfkbRCoU1Po1SLvPLRYwVubV5VItb8A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(39860400002)(376002)(136003)(366004)(451199021)(1800799003)(186006)(66899021)(2616005)(86362001)(6486002)(6666004)(966005)(31696002)(6512007)(478600001)(26005)(6506007)(36756003)(53546011)(54906003)(41300700001)(7416002)(316002)(5660300002)(4326008)(2906002)(8676002)(38100700002)(66556008)(66476007)(66946007)(8936002)(83380400001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U2d6NExRdEpSamVVcjJoYUlBdkdUOVJaWmtVcFNsVTRmemdCZUI2ZWpaam1n?=
- =?utf-8?B?T0lDQi8xOEZPWmdWNkcyaVVoY0RnVHl3UnZKejB4aTllZ2xzSk9HYzIwdEVM?=
- =?utf-8?B?WFJaWXFYZE5IMXJTR09DeUg5RmNiMWVMTzJWeXVBTDVzKzJueDVnVEo3d1da?=
- =?utf-8?B?NE9qaFdWU1J4TzdhOUxYaU10c2lvUUhjWU5CNktJaWF6bXZrSk4xcWw3ajJB?=
- =?utf-8?B?cmtKOS9aWjRVbXJsMmw2OFJpTFVHUnpyT0lEQkxuTkpUZjBoTlRTMjVZemFs?=
- =?utf-8?B?NUc3empkTklSM1FaZ2lTbUxHZkl1bnJHR1A5eFNPcCtISDZLUTVUQ1hYcU45?=
- =?utf-8?B?YzUyMVhXVXloRXRyYkFDSlVkNDlpSDQ1Y3QxeVlERVo3MEZYOFhQT2MxZDgz?=
- =?utf-8?B?R2xJVHVsZ2k0QjlnRjI5RUpWK3U4aXhycytlYU9tejJDbXR6ckF0M3Z2U3No?=
- =?utf-8?B?NENialN5NlYxa0taT3VWR2t1U09EWWoxb0ZOSUpCTUw3YTRlTGxRZVhNeGgw?=
- =?utf-8?B?WHNxU2hhbzJaMTFIRzgvNURuVnNCK1RGakJ0RWNwMTBNM2pyOUM5dVE4QW1o?=
- =?utf-8?B?d0FMeTAvUmh0QllKSEhBT1RSaUNjc0l5b0tOcEd6OFJRb0VsbVRZeXJUYk13?=
- =?utf-8?B?Z2ZROXlrS3FuSTd1a2drYTFERm9tTWI2aHJjalhyemo0YnR2ZmhNYnU3ODU0?=
- =?utf-8?B?R1hKT3BDUjcwSG8zdGVCTzZFb2I3ZEJoQVpCYnJicXNPUldMVWRkVTlmc2FC?=
- =?utf-8?B?SktnZEhuK3pxc3ppRFdIQkNWcVJON1N5bm83a0RmTUs0dDNjQnlueVlxUmdK?=
- =?utf-8?B?b1MwTzN6aFNFZHhaSVNlMGlGOFJhdGxFaWtWQndneml3bG11MHpaaGhITWZX?=
- =?utf-8?B?d0VCMUhtN0VOaFlQOVF2MTA4aUREOGJBTWNaTjVTUGNLSXNVSEJ4aElvOVZ4?=
- =?utf-8?B?MlE5QjBIQkUyUExPVjVvYTR5L0ErMnY1YUlpS0lKZ25vUW1oVVpWWFlqSGhn?=
- =?utf-8?B?UFg1RVpJc0k3ckVkdHFJWFRnb0ZUVUsxbzRwL01kZWVtVC85NkZvQ1J3bWlE?=
- =?utf-8?B?Ly9xdUsveTFmdE5TUE5uUTlmbUxJUUhTSGNqZlNqS1Z4b1RlYlNwZDJMMTdS?=
- =?utf-8?B?WEJVczlEeG5kRytsRFd0ZkpDc25hbWdOYUV4MHZtMElTem9BcGpqeW1RNHEw?=
- =?utf-8?B?amN0MGhlVTVGaThkSUUwdWVKOGJUWWNnREN3djEycVZHb2wyZFk0c2JKWDZr?=
- =?utf-8?B?Sll0SnViSVcxTDMrdTNTZEJ6UndCa2dBVGJjWmxqdmFZYzkvbGltSFZWNXVk?=
- =?utf-8?B?ZFFkTEZTcXhxZnU2Vi84TWdBVmY3NVRnTU9RN2IxSERORm1BbDhvZHluQWtH?=
- =?utf-8?B?OUVYZjRldWdoNVNZNStEeXF5WDVkMTJpYmtYRWhaU05xdENZQlI0Y1ppd0I4?=
- =?utf-8?B?MFlLV0dOblM3QTRMczBENkRtYVEzeUFuVW9MUkM1VmhlVDIvUTdXVWtrbjl6?=
- =?utf-8?B?bmk4bHhGdlNpUzdINnJybjhWd0lpaXhxdTBZOEF6M0NoOW10QzNVb3hiR1BO?=
- =?utf-8?B?bThGTjdMVktDaUxPT09UaGRUVWpwc0dBck5ITFRwd1BqTUxOOW0xQUEreWww?=
- =?utf-8?B?RUFLL2grci9RblYxR1h6c2NkMG5La2N3MUI2eHFPNXRLZ0tiZXdhRzQ0Wk9Y?=
- =?utf-8?B?Tk11dWdWNEt1Z21jc2tkUExyVDhSQU9ScXRQOWhkbXgwYmtmOTlnRmZ1K3NG?=
- =?utf-8?B?NVhZTWY0UGFRMy9ER3Y4WjNGd2xncXJwQWRLb1dmMGgvZ0xGSWg3VEpJRnE0?=
- =?utf-8?B?Zk5TMkUyYUtOSzFQM1hEZEpMZE1lQ2k2RXhHVWFaanlzR2ROejdZMDNTWEpw?=
- =?utf-8?B?cGl4NHFieUhNNmlCVDE5UnJEczhvakV5U2U2UmF3eEtRcHQ4OVY4Q2Z3OFNG?=
- =?utf-8?B?NFBXWXhNRG9RMnpQalNVQWEvT1pkb3l4b05peHgxWU1NeDVJQ0pDSzQ1NUla?=
- =?utf-8?B?Ykw3cmk5TEM2anZjSXM2WlUwTDNuRW9KTi9HbXJ5Uko1cTd2eEVRbzZrNEFT?=
- =?utf-8?B?Y1c5SG9yZ00rTUVPVlAvRHRBODZoVGVOYWVjaWJpenJwaDF1c2MwWGhvQjFj?=
- =?utf-8?Q?//vgrcdb4VZhNUUfOLqxa7NVs?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc1b9bd-a746-49c6-cfa0-08db9846f9cf
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2023 19:38:01.1480
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lWKwyjQk8RCOXeG+y5pobstPjuY+zJqwIZMEHYJUzw1UsMYcspo0Xhzho2kWDGymHyXh1hZGRGZ7h3u0ZoZQrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6305
+In-Reply-To: <20230807140206.00006232@Huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHc3rby8VYuat1ntQ5m4uLj1Foa0svjjKzMWgGLt2YS2a2dXe9
+        d4XQ19qyoS6hGB4N2wgzAaRkWEOcjo2AljnBguUlgnGga3AwmA9wdsNBKe5hEFzpxcX/Pr/v
+        73nO7xwMEbSjIizP7GBsZspIoGu4Z3t3JEuyQ1dpqbNSSU5OjaBkbfUIIC+NFaPkt2PfAfLC
+        nbtc0j/jjCGbjo+iZGP/UYTs92HksHuIS37z70MeOV51kbNnraak70+eptH3O0cT9NYBTWVb
+        E9BU1xdpFs48q0X356fmMhTN2MSMWW+h88wGNZGVo3tZp0yWyiSyFFJFiM2UiVET6dlaSUae
+        MTIiIf6YMhZEJC1ltxNJaak2S4GDEeda7A41wVhpo1VlTbRTJnuB2ZBoZhy7ZVKpXBkJfD8/
+        1zfo5VgD6wq9rl8QJyhZWwFiMYgrYOU1J1IB1mAC3AfglaHrMawRBnBx4vKq528Ab/i+5zxO
+        uXnhr1VHJ4D3D5/mssYDALsn6sFKFBffCqc87VFG8efhjR9a0RUW4nIY+Lo72gPBGxAYPH6N
+        t+JYj78FG8+Fowl8/EV4quUIyvJTcLBumrvCsbgMlteORMfYgMdD/9kBzkohiDdjsKzBjbDz
+        pcOlkHeV18M/BtpiWBbBhdlOlGULfDA4zmPZCsP3Q1yWd8HZsbtRHcFzYeujzghjET0e9o1z
+        WXkddPUuxbAyH7rKBGzmc7BiIARY3gR7A/2rE2jgctft1TsNAlgc+hFUgS3uJ47mfqIbywnQ
+        cz6MuiMtkEitk8sYiztgS0eSB/CagIix2k0GRi+3yiRm5pP/V663mM6A6BveufccmGlZSuwB
+        HAz0AIghhJDfMD1MC/g0deAgY7PobAVGxt4DlJFlfYmINugtkU9gduhkihSpIjlZppIrpSpi
+        I//X0q9oAW6gHEw+w1gZ2+M8DhYrcnK+8AdvbXzGQv+muN78ypGFiWN5rjbXrYS08sWXlsXS
+        PRztewda99Gb42bp6o6ussl53omcmqfV7pJ3hO96NyXMK4OvY+BNuhbfHYjrz3zU1z2pv/25
+        3xcvdinvJUzftJTWzZ06epquC3VXb/60s+PDrLTa7dneuPFWvmnxxMk5eQ2o/GB7LFOllBxU
+        fTZX2tzWxacOK+bbf/Jd3pJ9Lz7tStWdxn+K/JceImH5z1sVgZzXXuh4NVOU/xFIVQeKhi5m
+        FaYLG5bqM3I8Y9DDT9q339Gkm9RktKZoi5OxHkONzmceLZx645DQ6CGcgzNXrcTwtuXybbvQ
+        AU7moc7R828TXHsuJduJ2OzUf0ygcaZMBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFLMWRmVeSWpSXmKPExsWy7bCSvK7Ph4spBl1nBSzuPr7AZjF96gVG
+        ixM3G9ksVt9cw2ix/+lzFosDrxvYLVYtvMZmsfjoDGaLo3s4LM7POsVisfLHH1aLWxOOMTnw
+        eLQcecvqsXjPSyaPF5tnMnr0bVnF6DF1dr3H501yAWxRXDYpqTmZZalF+nYJXBmXf+1hLJjC
+        U7H03R7GBsa7nF2MnBwSAiYSD/Z/ZQaxhQR2M0rc+xgOEZeWuNd8hR3CFpa433KEtYuRC6jm
+        O6PElfdrWUASLAIqEo8X7GQEsdkEtCXub9/ABmKLCBhJXFl2kB2kgVlgGbPEpuaZYBuEBcIk
+        Fu/4BNbAK2AvsWL9JDaIqS8YJab86WWDSAhKnJz5BGwDs4CWxI1/L5m6GDmAbGmJ5f84QMKc
+        AoYS7dMvMIHYogLKEge2HWeawCg4C0n3LCTdsxC6FzAyr2KUTC0ozk3PTTYsMMxLLdcrTswt
+        Ls1L10vOz93ECI4eLY0djPfm/9M7xMjEwXiIUYKDWUmEd96T8ylCvCmJlVWpRfnxRaU5qcWH
+        GKU5WJTEeQ1nzE4REkhPLEnNTk0tSC2CyTJxcEo1MJ1+vXcf6+EcrT2TWLTc/JcIX331q/FO
+        hd3EH3emm7E8OKQQl91lFyS+9YS4+9tiicenfOY6Fqpdz1ui8uo+k0Ryt+XeyxszEnpDOhnU
+        PXjPtrxMrXNeeuB51Owy8+/7yjXLfzX9qFfg3fnyl+EEHr+/v47+q0tS7HgeZ3xP8W5i7rUo
+        mfVzJvPfKVsinBJkH8C3MzuHOWPz0q1rz+y5cuy/DPcHq+tLNTV178RZ+P26//ulnNpMD08O
+        7qLeH5unV4n/iPlQddiz+NxB2cfsH/Y+vyez6Wt71q2g6f1zLL/tzmDKPXh6enN0RnL9i+Cf
+        Pd+3hnyclnrt7s+GeRlCE3MFXrOYf6vgqbilmfdqirwSS3FGoqEWc1FxIgCq68wnDQMAAA==
+X-CMS-MailID: 20230808073540epcas2p16c3298cb407ada78de8ebbb8327576f9
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----epwi_rqhNG8Msojpj3uLMMcmnOFPbGwp42J4v7mfPu1fUkEb=_7956b_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230807063523epcas2p45f74891b764d920b2a9bd22ddf6b6998
+References: <20230807063549.5942-1-jehoon.park@samsung.com>
+        <CGME20230807063523epcas2p45f74891b764d920b2a9bd22ddf6b6998@epcas2p4.samsung.com>
+        <20230807063549.5942-2-jehoon.park@samsung.com>
+        <20230807140206.00006232@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 8/7/2023 8:17 PM, Dan Williams wrote:
-> Smita Koralahalli wrote:
->> According to Section 9.17.2, Table 9-26 of CXL Specification [1], owner
->> of AER should also own CXL Protocol Error Management as there is no
->> explicit control of CXL Protocol error. And the CXL RAS Cap registers
->> reported on Protocol errors should check for AER _OSC rather than CXL
->> Memory Error Reporting Control _OSC.
->>
->> The CXL Memory Error Reporting Control _OSC specifically highlights
->> handling Memory Error Logging and Signaling Enhancements. These kinds of
->> errors are reported through a device's mailbox and can be managed
->> independently from CXL Protocol Errors.
->>
->> This change fixes handling and reporting CXL Protocol Errors and RAS
->> registers natively with native AER and FW-First CXL Memory Error Reporting
->> Control.
-> 
-> I feel like this could be said more succinctly and with an indication of
-> what the end user should expect to see. Something like:
-> 
-> "cxl_pci fails to unmask CXL protocol errors when CXL memory error
-> reporting is not granted native control. Given that CXL memory error
-> reporting uses the event interface and protocol errors use AER, unmask
-> protocol errors based only on the native AER setting. Without this
-> change end user deployments will fail to report protocol errors in the
-> case where native memory error handling is not granted to Linux."
+------epwi_rqhNG8Msojpj3uLMMcmnOFPbGwp42J4v7mfPu1fUkEb=_7956b_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Sure, will make the change for a more clearer description. Thanks!
+On Mon, Aug 07, 2023 at 02:02:06PM +0100, Jonathan Cameron wrote:
+> On Mon,  7 Aug 2023 15:35:47 +0900
+> Jehoon Park <jehoon.park@samsung.com> wrote:
 > 
->>
->> [1] Compute Express Link (CXL) Specification, Revision 3.1, Aug 1 2022.
->>
->> Fixes: 248529edc86f ("cxl: add RAS status unmasking for CXL")
->> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
->> ---
->> v2:
->> 	Added fixes tag.
->> 	Included what the patch fixes in commit message.
->> ---
->>   drivers/cxl/pci.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
->> index 1cb1494c28fe..2323169b6e5f 100644
->> --- a/drivers/cxl/pci.c
->> +++ b/drivers/cxl/pci.c
->> @@ -541,9 +541,9 @@ static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->>   		return 0;
->>   	}
->>   
->> -	/* BIOS has CXL error control */
->> -	if (!host_bridge->native_cxl_error)
->> -		return -ENXIO;
->> +	/* BIOS has PCIe AER error control */
->> +	if (!host_bridge->native_aer)
->> +		return 0;
+> > Update the predefined value for device temperature field when it is not
+> > implemented. (CXL 3.0.8.2.9.8.3.1)
+> > 
+> > Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
+> Hi Jehoon,
 > 
-> The error code does not matter here and changing it makes the patch that
-> bit much more noisier than it needs to be. So just leave it as:
-
-Doing this will return an error from cxl_pci probe thereby failing the 
-device node creation in FW-First AER/DPC. I cannot think of other places 
-where we reference the device node in FW-First mode but I have a place 
-where this could potentially be a roadblock.
-
-I'm trying to add trace events support for FW-First Protocol Errors. 
-https://lore.kernel.org/linux-cxl/D9381C12-A585-4089-873B-3707C17823D3@fb.com/T/#mcaf8a78c1295372ab811be7e1ccb6a8a4d99f3e9
-
-And we already have an existing trace_cxl_aer_correctable_error() and 
-similarly for uncorrectable error for native protocol error reporting. I 
-was trying to reuse the same function for fw-first as well. This 
-function references cxl memory device node which will be NULL in 
-FW-First if this returns an error.
-
-I don't mind having a separate trace event function for FW-First mode as 
-it would simplify things especially when dealing with RCH DP.. But there 
-may be other potential places where we might reference this device node 
-in FW-First. Please advice.
-
-Thanks,
-Smita
-
+> Key here is not that it was in 3.0, but that it was changed in 2.0 Errata F38
+> and as such software doesn't need to cope with the old (wrong) value.
 > 
-> 	return -ENXIO;
+> Good to state that clearly in the patch description.  If it had been merely
+> a change for 3.0 there would have needed to be an enable bit to change the
+> default behavior (or something like that).
 > 
->>   
->>   	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
->>   	if (rc)
->> -- 
->> 2.17.1
->>
+> Otherwise LGTM
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> 
+Hi Jonathan, thanks for the reviews.
+
+I will correct the revision history in the next patch.
+
+> > ---
+> >  cxl/lib/private.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+> > index a641727..a692fd5 100644
+> > --- a/cxl/lib/private.h
+> > +++ b/cxl/lib/private.h
+> > @@ -360,7 +360,7 @@ struct cxl_cmd_set_partition {
+> >  #define CXL_CMD_HEALTH_INFO_EXT_CORRECTED_PERSISTENT_WARNING		(1)
+> >  
+> >  #define CXL_CMD_HEALTH_INFO_LIFE_USED_NOT_IMPL				0xff
+> > -#define CXL_CMD_HEALTH_INFO_TEMPERATURE_NOT_IMPL			0xffff
+> > +#define CXL_CMD_HEALTH_INFO_TEMPERATURE_NOT_IMPL			0x7fff
+> >  
+> >  static inline int check_kmod(struct kmod_ctx *kmod_ctx)
+> >  {
 > 
 
+------epwi_rqhNG8Msojpj3uLMMcmnOFPbGwp42J4v7mfPu1fUkEb=_7956b_
+Content-Type: text/plain; charset="utf-8"
+
+
+------epwi_rqhNG8Msojpj3uLMMcmnOFPbGwp42J4v7mfPu1fUkEb=_7956b_--
