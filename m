@@ -2,125 +2,113 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D5BC04FDF
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Aug 2023 16:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49796C001B0
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Aug 2023 17:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233549AbjHJQl0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Aug 2023 12:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40286 "EHLO
+        id S233730AbjHJRCy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Aug 2023 13:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234512AbjHJQlB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 12:41:01 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD44A8
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 09:41:01 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-4fe655796faso1729220e87.2
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 09:41:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691685659; x=1692290459;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ca3TZndavt4jIZhjML9ZUNghyRq+9cHaQAL0Og1JAs=;
-        b=XdBD/f5HTJtz3+ukrnX5G0blFyX7X4dhYV8nqQFdWX2qVmUPe4r/W1DDuaPCRisFNX
-         SXhPqLQxMGn+gMMhDQN+canO1j7s8klx8DeLi31iOEna00YwuOO/SWb6XEZT/wBnubnm
-         QDcN9P7ej6rkirPak4mfZ0iapiYh4uTsP32M6iwCWLGr3TuVPQpdgBekix+JBhyKKnZr
-         Rj8Ou5/sfFV5aw8wtuvS18MoAaU0oHUWx3P0fgBLULXf8CTq+gOJd+TSnYS6Pvi3YPTn
-         lNxfS6eIf4ZVUB7x1acv6cJDbozsmzFVSTuvnF4Yme+fWr6x37Z2v//aUlBeAYgxpVQ0
-         bl1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691685659; x=1692290459;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ca3TZndavt4jIZhjML9ZUNghyRq+9cHaQAL0Og1JAs=;
-        b=dBjjZICFpKwn9qQiy022gFJmbSophlt1p5iQWYO9bhR7dIYr1rAzIT08tr3AO5phPv
-         MTAnGy318I0P4rnPQmtVkIu31ly8I36bEUHoPMHECKCCq4cx5zVzze5KlDsTLmICKwGd
-         jasgUoQFBrW3v+pJ/RaNT0t+nsViMe4hbNpQLL/OsMNR3aD0GYpDIiVXe4lNYfEWN5BY
-         O9tfVRGZ+j9zs7s4IaS+Pp9/oz0r5YzJS+G9l5Ym4qIPt2jRlJybzHKUy1W6Z/Z8aCP/
-         MQafE/td92y7de43y0cNxX2ey0qDA7Liowff92lHPfObgud2jd9AITJQQQB5w8sKlosl
-         E7Fg==
-X-Gm-Message-State: AOJu0YwWdOzrF3YoTzXMYzkDf2YiCkmNbrHz01UZmDEbLW3cN0kyFOrW
-        8Y1HGXWRSPs9jCM7g0+GbM75w7XSoeWog2AryT9JH8Ub
-X-Google-Smtp-Source: AGHT+IHrGl+RJB879F/qdJ2R6Joc7OWzKdqySFPxgFOUamdDu2UZk2Vm4toiP2tULpWMr63mXp3dTC8UdaGI6TXW3Fw=
-X-Received: by 2002:ac2:4d8f:0:b0:4f8:5717:e421 with SMTP id
- g15-20020ac24d8f000000b004f85717e421mr1985305lfe.40.1691685659093; Thu, 10
- Aug 2023 09:40:59 -0700 (PDT)
+        with ESMTP id S232905AbjHJRCx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 13:02:53 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3C6268E
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 10:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
+ s=s31663417; t=1691686944; x=1692291744; i=fan.ni@gmx.us;
+ bh=NTKjMd6cWbRH9lPienkTSSAfXZFsPgC9Ft1FHBVsqE0=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=SYU4B7orUAqXEzIIUmRRtzNSYHaqAFAgTCzvJojUqS2CsmedCr8jHlgXxtrl+5B8VKdkKso
+ 3WCxrvSR0xslfmz6q5lC8jkF0uonrY/iYZqxo2EvLq/FnOCNSvn+khnlC2O9pTnLtFygjaUDU
+ Pn2McviDrjh6mLlJIlb+CBcdqhZxWE72t5omDAuPuCDDXtj8+epOZSfjyBnKC9BxSeLizVzQg
+ E0UA+zucjDojMTcJXN0N84XxoFlxnpSfzPIU34imTWG4iFrUZVwjNc+8XRboKuNwEr5IH8/6l
+ 3YXqL8NY88KEEmfCbgxihbj+7FfVOOHQM3MCQeFUcCLoMfg0QgVA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N6sn1-1pjLWa2XV9-018MHQ; Thu, 10
+ Aug 2023 19:02:24 +0200
+Date:   Thu, 10 Aug 2023 10:02:13 -0700
+From:   Fan Ni <fan.ni@gmx.us>
+To:     Xiao Yang <yangx.jy@fujitsu.com>
+Cc:     vishal.l.verma@intel.com, nvdimm@lists.linux.dev,
+        linux-cxl@vger.kernel.org
+Subject: Re: [NDCTL PATCH] daxctl: Remove unused mem_zone variable
+Message-ID: <ZNUYFSTHC6kEirhm@debian>
+References: <20230809154636.11887-1-yangx.jy@fujitsu.com>
 MIME-Version: 1.0
-References: <CAEvOrRz9s8CumbuMbkCU+eCHgAp20X6q0i1D6fi5vfa5_F6JnA@mail.gmail.com>
- <20230810173322.0000543c@Huawei.com>
-In-Reply-To: <20230810173322.0000543c@Huawei.com>
-From:   Ravi Kanth <mvrravikanth@gmail.com>
-Date:   Thu, 10 Aug 2023 22:10:48 +0530
-Message-ID: <CAEvOrRyvaFBzhzP7kxWeCpYY-u5wjwAo6076FGhN_k-+NadUDA@mail.gmail.com>
-Subject: Re: Support for CXL v3.0 spec with QEMU
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230809154636.11887-1-yangx.jy@fujitsu.com>
+X-Provags-ID: V03:K1:InO/P3hdUC3Y0wt8g+4uYcdhffBO1FkmAl1hpUbN9TCY6PNlaO8
+ qvvYxnjZ7jMkXNVC2K53RwGRqTHb+wgTpslBLMWJ9ID5kdkA7qCU1WpZp/CUME0DaO8niD+
+ XQrLYhAlrQbQcbEH+kEZQtZzKtzdZeuOH+Otx+Mk6yi+FMCZ6uE+iZL6DVDtSgL+pQwjMmT
+ c/KVOZUnn3Ph2uPFU8LMw==
+UI-OutboundReport: notjunk:1;M01:P0:Um3mtyNSTyI=;6j1CnMNjGBLImrWhA49zFCaAUg3
+ yaduGnaMD9gcaLBIU4vsNNk1YP+V1u6VxzSht1SCU5XUZTFqEueHkSk9Im8fUZogfi6B0D5FD
+ Jmu8F8pwB5JTQ0pIL62oF2j8Gy2CA8/8hT00OcN99HjygJq3/N5q5OYIBqCcDQ+Tlol3Ox5UQ
+ 69ugWmI/dbTW5iLH81kEMgL7qVKu0QH/31acYhVnqVnxwt+OYMB+ruxQ9q5QEVj0CuvJHiSAJ
+ CdpCrO1SD7Nsr0yFCM0SslKjKayVG3qi6VEEQ7r/IdW9NZei9NqV1pogHL8QrvvGNghcsMwBL
+ B3O4HlP0Crvn74i8jecFrkQhZfkyG1wEqgqa9CAxUNHdc//sZsmc81qxGrZUNNJDurLYHqoMG
+ ZKLjyv9cFJe5fRNWVhfGQSda8s7trOH3FT94a6tvHob9ktopjCmHE2DkrRP9oJhO5qwumB8k6
+ DpbZT/F5WHd8HiCzr7smXzX0RetuNdEdVKnY74tkJBvhihPCOABYy3rJtRxTfvKwrB45XFu7l
+ VpN6RBgZMwy6r/8teW7imT86wwfydknlG6O+S93rT+KG/qDE6rZnhSqyAWmJOEWpNG2YPPYuE
+ AMzl1O9zsOdRGJjhodevB+FTnKNC+2WYvKJ4MUp3HUO6Wj0pfR0hZR72YjSwwTXh/WX9FXYpY
+ gRGmTAB7Ca5JpMMdk70XRbQ9l+xCuJK/4KWgJJWwRodnmIpH+ffw1EytpvLJydB9FzU5Jxxlb
+ yemu7RC25zR4TCzpRESYXaodo9pegagogP3+clBiZDbr0zeQeeOMmi5gH+ntYMAGfGzvJGKu5
+ gIOa2TQMUPI+6ivj3TFTMUkVYoB/peYMIycJBy9R8M2Qhr0Ag+rgq3+LZmz3rdvDJBeL3FTeQ
+ MAqJeX7OfdJ9I6UfewREuEWZeIWAaLBbZcGq8MxxIb7oK/cOhsl2q9EsamJSoCT76p0rHzsHx
+ xO99oMAVBZyBeoKz8LTkQkm0w3o=
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Thanks Jonathan for pointing this out. I will definitely take a look
-at this. Current support for the simulation of CCI mailbox is only via
-MCTP messages or even via CXL driver IOCTLs?
+On Wed, Aug 09, 2023 at 11:46:36PM +0800, Xiao Yang wrote:
+> mem_zone variable has never been used so remove it.
+>
+> Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
+> ---
+>  daxctl/device.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/daxctl/device.c b/daxctl/device.c
+> index d2d206b..360ae8b 100644
+> --- a/daxctl/device.c
+> +++ b/daxctl/device.c
+> @@ -59,7 +59,6 @@ enum memory_zone {
+>  	MEM_ZONE_MOVABLE,
+>  	MEM_ZONE_NORMAL,
+>  };
 
-Ravi
+The enum definition is not used also.
 
-On Thu, Aug 10, 2023 at 10:03=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Thu, 10 Aug 2023 21:42:12 +0530
-> Ravi Kanth <mvrravikanth@gmail.com> wrote:
->
-> > Hello,
->
-> Hi Ravi,
->
-> >
-> > I am writing this mail to know if the latest QEMU has support for CXL
-> > spec v3.0? I understand from the older tutorials that QEMU has support
-> > for CXL v2.0. Is there any update to QEMU to support the CXL v3.0? I
-> > would like to specifically test the CCI mailbox functionality which
-> > has been added to CXL v3.0 spec.
->
-> The nature of the CXL specification and the QEMU support is that for
-> devices there isn't a clear divide between different generations of
-> the specification. By that I mean, that a device based on the CXL 2.0
-> specification is compatible with the CXL 3.0 specification. As such,
-> the QEMU emulation has focused on features of interest - it is a far
-> from complete implementation of all the options in the CXL 2.0
-> specification but conversely there are some parts of CXL 3.0 are supporte=
-d.
->
-> Note that the particular CCI functionality is not yet ready for CXL upstr=
-eam,
-> but we do have some support in the staging tree I maintain.
->
-> https://gitlab.com/jic23/qemu/-/commits/cxl-2023-08-07/
-> specifically
-> https://gitlab.com/jic23/qemu/-/commit/2eb7e6402a45b359c304cea894a1d27625=
-a4b80c
->
-> Note at this stage we only support subset of commands.
-> Contributions of more support welcomed!
->
-> Intent of the current support and related MCTP CCI access (over I2C) is
-> to enable ecosystem development, particularly of fabric managers.
-> For that a tiny subset of commands was sufficient to be sure the architec=
-ture
-> inside QEMU worked and that the proposed kernel code functions correctly.
->
-> Jonathan
->
-> >
-> > Thank you in advance for your assistance.
-> >
-> > Ravi
->
+Fan
 
-
---=20
-Regards
-M.V.R.Ravi Kanth
+> -static enum memory_zone mem_zone =3D MEM_ZONE_MOVABLE;
+>
+>  enum device_action {
+>  	ACTION_RECONFIG,
+> @@ -469,8 +468,6 @@ static const char *parse_device_options(int argc, co=
+nst char **argv,
+>  				align =3D __parse_size64(param.align, &units);
+>  		} else if (strcmp(param.mode, "system-ram") =3D=3D 0) {
+>  			reconfig_mode =3D DAXCTL_DEV_MODE_RAM;
+> -			if (param.no_movable)
+> -				mem_zone =3D MEM_ZONE_NORMAL;
+>  		} else if (strcmp(param.mode, "devdax") =3D=3D 0) {
+>  			reconfig_mode =3D DAXCTL_DEV_MODE_DEVDAX;
+>  			if (param.no_online) {
+> @@ -494,9 +491,6 @@ static const char *parse_device_options(int argc, co=
+nst char **argv,
+>  			align =3D __parse_size64(param.align, &units);
+>  		/* fall through */
+>  	case ACTION_ONLINE:
+> -		if (param.no_movable)
+> -			mem_zone =3D MEM_ZONE_NORMAL;
+> -		/* fall through */
+>  	case ACTION_DESTROY:
+>  	case ACTION_OFFLINE:
+>  	case ACTION_DISABLE:
+> --
+> 2.40.1
+>
