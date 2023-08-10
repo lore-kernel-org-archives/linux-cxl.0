@@ -2,153 +2,102 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C135C001B0
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Aug 2023 08:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B23C001DB
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Aug 2023 10:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjHJIV0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Aug 2023 04:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59992 "EHLO
+        id S231336AbjHJKfR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Aug 2023 06:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232196AbjHJIVZ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 04:21:25 -0400
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BEDAC
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 01:21:25 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230810082123epoutp0264aac0d1616e4064309db5778a24da30~59_GSxg1c0816808168epoutp02Z
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 08:21:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230810082123epoutp0264aac0d1616e4064309db5778a24da30~59_GSxg1c0816808168epoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1691655683;
-        bh=TV9praheqYMa1Yz2hAnqcTTM6ObCGENXWShMrnyGeO0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p2KR69SaZwGnynpTN94SfvOXBHxbQ4Lc1M8KE0LO9M0VpPJ21scipdliY5o0wbyZ6
-         wfRIGYJytjFv9XD4mx7ZCVWABYbsMYHn9MWMS7ZV88PmTUnzeMKnSOAs0cszqxwMsS
-         RfsuWKi5AlOKzL4NKHFVhmfCC93tnkkBW891Gq8Y=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20230810082122epcas2p435c50358082de854b89f74129e1c3e7e~59_FzSk5B2037220372epcas2p4-;
-        Thu, 10 Aug 2023 08:21:22 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.91]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4RM0J20lVNz4x9Q1; Thu, 10 Aug
-        2023 08:21:22 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.E1.40133.10E94D46; Thu, 10 Aug 2023 17:21:21 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230810082121epcas2p3eb7acc9bdf13cafe9ef79a6fdd06b679~59_ENlXZw2608826088epcas2p3I;
-        Thu, 10 Aug 2023 08:21:21 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230810082121epsmtrp14b948958d0cb16bec4292a75ba5d23eb~59_EM2ivI3202132021epsmtrp1A;
-        Thu, 10 Aug 2023 08:21:21 +0000 (GMT)
-X-AuditID: b6c32a46-4edb870000009cc5-c1-64d49e01189c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0C.24.64355.00E94D46; Thu, 10 Aug 2023 17:21:20 +0900 (KST)
-Received: from jehoon-Precision-7920-Tower.dsn.sec.samsung.com (unknown
-        [10.229.83.133]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230810082120epsmtip14a0b07628db31283f3e1f4241692741d~59_D7iKzo1945419454epsmtip1U;
-        Thu, 10 Aug 2023 08:21:20 +0000 (GMT)
-From:   Jehoon Park <jehoon.park@samsung.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     nvdimm@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Kyungsan Kim <ks0204.kim@samsung.com>,
-        Junhyeok Im <junhyeok.im@samsung.com>,
-        Jehoon Park <jehoon.park@samsung.com>
-Subject: [ndctl PATCH v3 3/3] cxl/json.c: Fix the error checking logic when
- listing device's health info
-Date:   Thu, 10 Aug 2023 17:23:54 +0900
-Message-Id: <20230810082354.5992-4-jehoon.park@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230810082354.5992-1-jehoon.park@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsWy7bCmqS7jvCspBncatSzuPr7AZjF96gVG
-        ixM3G9ksVt9cw2ix/+lzFosDrxvYLVYtvMZmsfjoDGaLo3s4LM7POsVisfLHH1aLWxOOMTnw
-        eLQcecvqsXjPSyaPF5tnMnr0bVnF6DF1dr3H501yAWxR2TYZqYkpqUUKqXnJ+SmZeem2St7B
-        8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QCcqKZQl5pQChQISi4uV9O1sivJLS1IVMvKL
-        S2yVUgtScgrMC/SKE3OLS/PS9fJSS6wMDQyMTIEKE7Iz/n2YwFhwj6Niwf19TA2Mc9i7GDk5
-        JARMJCZev8jaxcjFISSwg1Fi8v8NbBDOJ0aJbV1djHDOq+8rmGFaJlxYwA6R2MkoMb9jPwuE
-        08skse34QRaQKjYBbYn720FmcXKICMhKNK97wARSxCywmVli2c5zYAlhgSyJuQ+/M4HYLAKq
-        Eg/33QWzeQWsJV70XWaBWCcvsXrDAbDVnAI2Ep/3rgS7VkLgLbvE9TNtjBBFLhL/l8+EahCW
-        eHV8C9R7UhIv+9ug7HyJnydvsULYBRKfvnyAqjeWeHfzOVCcA+g6TYn1u/RBTAkBZYkjt8Aq
-        mAX4JDoO/2WHCPNKdLQJQTSqSnQd/wB1gLTE4StHoQHkIfFz+VMmSJj0M0rMfT6LaQKj3CyE
-        BQsYGVcxiqUWFOempxYbFRjBoyw5P3cTIzgNarntYJzy9oPeIUYmDsZDjBIczEoivLbBl1KE
-        eFMSK6tSi/Lji0pzUosPMZoCw24is5Rocj4wEeeVxBuaWBqYmJkZmhuZGpgrifPea52bIiSQ
-        nliSmp2aWpBaBNPHxMEp1cBUPoGh9stFI0Vpf4d5HhpfC97828wqVsrktGSD/u49Yfl3G9LZ
-        dbY2reu/pRQ6v/mw/o+yLbIJKs/dRO8EzHjrf6twP9v0aZ/TJGtfnt69eu7MP4+62q+Lz1h5
-        Lu/9jPD2HNELTSIRGt1lG/KL55fcvF8oKHJSXq4+eYO7orl07gqrj653lobdv7z8kdvtYz2G
-        rrZdl/yaXJq2CVhlueY8Dta82Z/FvcYjV0TZbqPL34I/Dz9Oub162zImyf4Pt9a2e1xXkNJL
-        /VjxKN6xgaN1y8V3Zf4Lr68+J/CCbVV/4KoFySu3L5NMV17XsJJZ826rU8zj/ccnPjjEm3vs
-        09RJy0WjT2r6t/+r2GDk6fBNiaU4I9FQi7moOBEAzEBbGQwEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWy7bCSnC7DvCspBi82m1rcfXyBzWL61AuM
-        FiduNrJZrL65htFi/9PnLBYHXjewW6xaeI3NYvHRGcwWR/dwWJyfdYrFYuWPP6wWtyYcY3Lg
-        8Wg58pbVY/Gel0weLzbPZPTo27KK0WPq7HqPz5vkAtiiuGxSUnMyy1KL9O0SuDL+fZjAWHCP
-        o2LB/X1MDYxz2LsYOTkkBEwkJlxYAGRzcQgJbGeUON7fzwiRkJa413wFqkhY4n7LEVaIom4m
-        idYzJ9lAEmwC2hL3t28As0UEZCWa1z1gAiliFtjLLNEx8zwrSEJYIEOitWUzM4jNIqAq8XDf
-        XSYQm1fAWuJF32UWiA3yEqs3HACr4RSwkfi8dyVYrxBQzYyl81gnMPItYGRYxSiaWlCcm56b
-        XGCoV5yYW1yal66XnJ+7iREcqFpBOxiXrf+rd4iRiYPxEKMEB7OSCK9t8KUUId6UxMqq1KL8
-        +KLSnNTiQ4zSHCxK4rzKOZ0pQgLpiSWp2ampBalFMFkmDk6pBibh1v7Qeo8l3ZarHl85uu7y
-        a6P929foT+e593nqNMYLvOwnbt/XyjirECF5QY1ZZbZE7Nef76Jkqqdd2O7ec3KdjFGrSaj1
-        jf8vDi7W/XxF8+hqqwWmP2V+vZqtuubzU68XFtvu/Jpsv9278f2RLUvzOwQkbjqrf1Oa8r38
-        TQZDKc9O+T6v//0fLj4T6RT6E7yTyVNY/4O0r1mRlL2vSVSSKUP8PPVrMpLLV7l/Citm/eiy
-        eNFLi1UPdkl/+spsN2ertsFvYfWlHSFufxLNH/azv6o8P/VAD+/dQxnaHXdcSyTE55prH2tY
-        sfy8B9vvjD2vNn1tWOR1f/eRzeWcU0wzXk6a6dJzUrh6uvy04itdSizFGYmGWsxFxYkA2OEt
-        e8MCAAA=
-X-CMS-MailID: 20230810082121epcas2p3eb7acc9bdf13cafe9ef79a6fdd06b679
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
+        with ESMTP id S230114AbjHJKfQ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 06:35:16 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B609EF2
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 03:35:15 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RM3B91FWcz6J6lG;
+        Thu, 10 Aug 2023 18:31:29 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 10 Aug
+ 2023 11:35:12 +0100
+Date:   Thu, 10 Aug 2023 11:35:12 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Maverickk 78 <maverickk1778@gmail.com>
+CC:     Jonathan Cameron via <qemu-devel@nongnu.org>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: CXL volatile memory is not listed
+Message-ID: <20230810113512.00000516@Huawei.com>
+In-Reply-To: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
+References: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230810082121epcas2p3eb7acc9bdf13cafe9ef79a6fdd06b679
-References: <20230810082354.5992-1-jehoon.park@samsung.com>
-        <CGME20230810082121epcas2p3eb7acc9bdf13cafe9ef79a6fdd06b679@epcas2p3.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Change the variable type for storing result of life used field accessor
-: u32 to int.
-Fix the value for checking device's life used field is implemented.
+On Wed, 9 Aug 2023 04:21:47 +0530
+Maverickk 78 <maverickk1778@gmail.com> wrote:
 
-Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
----
- cxl/json.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/cxl/json.c b/cxl/json.c
-index 89e5fd0..102bfaf 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (C) 2015-2021 Intel Corporation. All rights reserved.
-+#include <errno.h>
- #include <limits.h>
- #include <util/json.h>
- #include <uuid/uuid.h>
-@@ -238,9 +239,9 @@ static struct json_object *util_cxl_memdev_health_to_json(
- 		json_object_object_add(jhealth, "ext_corrected_persistent", jobj);
+> Hello,
+> 
+> I am running qemu-system-x86_64
+> 
+> qemu-system-x86_64 --version
+> QEMU emulator version 8.0.92 (v8.1.0-rc2-80-g0450cf0897)
+>
++Cc linux-cxl as the answer is more todo with linux than qemu.
  
- 	/* other fields */
--	field = cxl_cmd_health_info_get_life_used(cmd);
--	if (field != 0xff) {
--		jobj = json_object_new_int(field);
-+	rc = cxl_cmd_health_info_get_life_used(cmd);
-+	if (rc != -EOPNOTSUPP) {
-+		jobj = json_object_new_int(rc);
- 		if (jobj)
- 			json_object_object_add(jhealth, "life_used_percent", jobj);
- 	}
--- 
-2.17.1
+> qemu-system-x86_64 \
+> -m 2G,slots=4,maxmem=4G \
+> -smp 4 \
+> -machine type=q35,accel=kvm,cxl=on \
+> -enable-kvm \
+> -nographic \
+> -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
+> -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
+> -object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=1G,share=true \
+> -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
+> -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
+
+There are some problems upstream at the moment (probably not cxl related but
+I'm digging). So today I can't boot an x86 machine. (goody)
+
+
+More generally for the flow that would bring the memory up as system ram
+you would typically need the bios to have done the CXL enumeration or
+a bunch of scripts in the kernel to have done it.  In general it can't
+be fully automated, because there are policy decisions to make on things like
+interleaving.
+
+I'm not aware of any open source BIOSs that do it yet.  So you have
+to rely on the same kernel paths as for persistent memory - manual configuration
+etc in the kernel. 
+
+There is support in ndctl for those enabling flows, so I'd look there
+for more information
+
+Jonathan
+
+
+> 
+> 
+> I was expecting the CXL memory to be listed in "System Ram", the lsmem
+> shows only 2G memory which is System RAM, it's not listing the CXL
+> memory.
+> 
+> Do I need to pass any particular parameter in the kernel command line?
+> 
+> Is there any documentation available? I followed the inputs provided in
+> 
+> https://lore.kernel.org/linux-mm/Y+CSOeHVLKudN0A6@kroah.com/T/
+> 
+> Is there any documentation/blog listed?
 
