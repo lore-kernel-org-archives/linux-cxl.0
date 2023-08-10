@@ -2,102 +2,67 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B23C001DB
-	for <linux-cxl@archiver.kernel.org>; Thu, 10 Aug 2023 10:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E38C001B0
+	for <linux-cxl@archiver.kernel.org>; Thu, 10 Aug 2023 16:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231336AbjHJKfR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Aug 2023 06:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36724 "EHLO
+        id S233002AbjHJQMZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Aug 2023 12:12:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbjHJKfQ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 06:35:16 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B609EF2
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 03:35:15 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RM3B91FWcz6J6lG;
-        Thu, 10 Aug 2023 18:31:29 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 10 Aug
- 2023 11:35:12 +0100
-Date:   Thu, 10 Aug 2023 11:35:12 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Maverickk 78 <maverickk1778@gmail.com>
-CC:     Jonathan Cameron via <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: CXL volatile memory is not listed
-Message-ID: <20230810113512.00000516@Huawei.com>
-In-Reply-To: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
-References: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233284AbjHJQMZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 12:12:25 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DAC270E
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 09:12:24 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4fe45da0a89so2584708e87.1
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 09:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691683943; x=1692288743;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PIWo1jE6PSmoM/dv42Zbv4IihGAAtAl+uxyHEAdsHvQ=;
+        b=TTmfaqRSMTKd50BgoaKB4aAZaXUG1RJL6PXQQOeIG1zEn51jSOUL8nX457EyXMFmSI
+         KCQp0hOTWPh5YuOUAGILXkq2RMM59yRH56vxwNgRtfAcT9Yij1PH7rZLrH1ofyBE6slF
+         kdX+TMAnOjZDTeaRUpOsrxCXx3JRCtQukbv9/2/AEy8yIN01HnJIRpI3+5elqmKucQk3
+         yYea8Cn667viq38M8OQiU1G77MndbDi/WbfvbaiAFCcRa/Lq/87omqDRpuPNIctuCyFD
+         +1LX1GMd8yykAvu1mZm4dAmJ312Y0WquFhF5gpR83Wri/FurqRdRuQHznmRJFtwg1gGj
+         fvEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691683943; x=1692288743;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PIWo1jE6PSmoM/dv42Zbv4IihGAAtAl+uxyHEAdsHvQ=;
+        b=ST21GXpj06c0tX8kxb6T31+YREcxmrI3W9ibz5ZB6wgfu9pbZdzxglT1rLWnmRALM+
+         3LTI/7DppNrObovQd2XU1SZsL+l0JgoRQtUFOhhQ8DivAm1Qc5kswHhDiU8X3L+KAxvi
+         9w50/AUcAFYFfskx1e8UzqNjYEFxP8bMyan0fZ9dGiP2vRyXSHMe3CcSps9SGg5RCbRr
+         K/Rme0NsSNHgYLMGvkYcmvNw9/exAgrov/h7LFu7x5bUny4OFRMAOVjX/I2fuCZg/P2O
+         UfJYxEv8EEnuiJmoaExLyq93DK8t9kcSGSScIVgkYRiWcScbft91gFOIV0gk/IHwQqdY
+         sQZg==
+X-Gm-Message-State: AOJu0Yy+R7VJUkOUyNt7cStm96T5c1Ev8f18TkLzBP54JvLQHXCHTdF6
+        GRQB1bdzirRRimI0sqoLP/5kjFJBOfBCiERGI8l3imZ14Yw=
+X-Google-Smtp-Source: AGHT+IGsysh5Kb3LYHdviHf0IyYB3D37QT8whqE9FhIAe2Kad59Byk8D5w/B1QTbkUC0oYjL0oBGCMOOz+N9vJp4Hlo=
+X-Received: by 2002:ac2:5b5e:0:b0:4fe:7e3d:de7 with SMTP id
+ i30-20020ac25b5e000000b004fe7e3d0de7mr976694lfp.29.1691683942558; Thu, 10 Aug
+ 2023 09:12:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+From:   Ravi Kanth <mvrravikanth@gmail.com>
+Date:   Thu, 10 Aug 2023 21:42:12 +0530
+Message-ID: <CAEvOrRz9s8CumbuMbkCU+eCHgAp20X6q0i1D6fi5vfa5_F6JnA@mail.gmail.com>
+Subject: Support for CXL v3.0 spec with QEMU
+To:     linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 9 Aug 2023 04:21:47 +0530
-Maverickk 78 <maverickk1778@gmail.com> wrote:
+Hello,
 
-> Hello,
-> 
-> I am running qemu-system-x86_64
-> 
-> qemu-system-x86_64 --version
-> QEMU emulator version 8.0.92 (v8.1.0-rc2-80-g0450cf0897)
->
-+Cc linux-cxl as the answer is more todo with linux than qemu.
- 
-> qemu-system-x86_64 \
-> -m 2G,slots=4,maxmem=4G \
-> -smp 4 \
-> -machine type=q35,accel=kvm,cxl=on \
-> -enable-kvm \
-> -nographic \
-> -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
-> -object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=1G,share=true \
-> -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
-> -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
+I am writing this mail to know if the latest QEMU has support for CXL
+spec v3.0? I understand from the older tutorials that QEMU has support
+for CXL v2.0. Is there any update to QEMU to support the CXL v3.0? I
+would like to specifically test the CCI mailbox functionality which
+has been added to CXL v3.0 spec.
 
-There are some problems upstream at the moment (probably not cxl related but
-I'm digging). So today I can't boot an x86 machine. (goody)
+Thank you in advance for your assistance.
 
-
-More generally for the flow that would bring the memory up as system ram
-you would typically need the bios to have done the CXL enumeration or
-a bunch of scripts in the kernel to have done it.  In general it can't
-be fully automated, because there are policy decisions to make on things like
-interleaving.
-
-I'm not aware of any open source BIOSs that do it yet.  So you have
-to rely on the same kernel paths as for persistent memory - manual configuration
-etc in the kernel. 
-
-There is support in ndctl for those enabling flows, so I'd look there
-for more information
-
-Jonathan
-
-
-> 
-> 
-> I was expecting the CXL memory to be listed in "System Ram", the lsmem
-> shows only 2G memory which is System RAM, it's not listing the CXL
-> memory.
-> 
-> Do I need to pass any particular parameter in the kernel command line?
-> 
-> Is there any documentation available? I followed the inputs provided in
-> 
-> https://lore.kernel.org/linux-mm/Y+CSOeHVLKudN0A6@kroah.com/T/
-> 
-> Is there any documentation/blog listed?
-
+Ravi
