@@ -2,100 +2,115 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB2DC001B0
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Aug 2023 01:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFB5C001B0
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Aug 2023 02:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231289AbjHKBQ3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 10 Aug 2023 21:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53578 "EHLO
+        id S229954AbjHKCWi (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 10 Aug 2023 22:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231317AbjHKBQ2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 21:16:28 -0400
-Received: from esa10.hc1455-7.c3s2.iphmx.com (esa10.hc1455-7.c3s2.iphmx.com [139.138.36.225])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21BD42D47
-        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 18:16:27 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="115615497"
-X-IronPort-AV: E=Sophos;i="6.01,163,1684767600"; 
-   d="scan'208";a="115615497"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 10:16:25 +0900
-Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
-        by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8C8BAC68E4
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Aug 2023 10:16:22 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-        by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id D1053D3F2F
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Aug 2023 10:16:21 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.215.54])
-        by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id E2F8E200649E2;
-        Fri, 11 Aug 2023 10:16:20 +0900 (JST)
-From:   Xiao Yang <yangx.jy@fujitsu.com>
-To:     vishal.l.verma@intel.com, fan.ni@gmx.us, nvdimm@lists.linux.dev
-Cc:     linux-cxl@vger.kernel.org, Xiao Yang <yangx.jy@fujitsu.com>
-Subject: [PATCH v2] daxctl: Remove unused memory_zone and mem_zone
-Date:   Fri, 11 Aug 2023 09:16:18 +0800
-Message-Id: <20230811011618.17290-1-yangx.jy@fujitsu.com>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S229475AbjHKCWh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 10 Aug 2023 22:22:37 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8D12727
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 19:22:37 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-34914684b62so5646725ab.3
+        for <linux-cxl@vger.kernel.org>; Thu, 10 Aug 2023 19:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691720557; x=1692325357;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XbbCx49wRpP4DxUXKnhwVZHka1TPFZPDIatFvbZ4Jug=;
+        b=YEUdjllhtxycgD6IrlkShVoS8icFqsXRe9CcGz9/FpruV/EetUADiuAw/HHt3bgjVf
+         SO/IeQCGMqVNj/KoRggxjNy9bNjFr/DWoAQLS6SsPrs27td/rRqxv6/Gu86ByYyw4KEY
+         Y+L/Wq5HewHpPMROUFaiJFTyZhsqvknVdlqdpErpw35gF3oCd8I1IknxLDJxaoASM2RZ
+         rWhuzTedKhrnVsvBDM5X9jAcirlxs4Ljl0KLl4gdUlIe84djSx023hDIpqYFP0Pygscn
+         s0mLM2sMCZJ6wX1WoX0HBafa+F1cUnuEJL1VSrW51hMonHMB66x9ffeY8CcbdHieDiLb
+         mCBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691720557; x=1692325357;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XbbCx49wRpP4DxUXKnhwVZHka1TPFZPDIatFvbZ4Jug=;
+        b=YIJNrPk5/O8DEZ7kviMszhr8iMxn9wtvNbRjQ2J+XhNCUBAgmPZn4El0AhCGabCRCA
+         kvD2nykN/eXBCoGSW4bRcXVFADn6Rx1gIQNLdYaXUXHHeVByv2YUVmswER/5ivMe4Zzc
+         MLZkaR35eHcTWu5aTyrOm9MOqvG//z1fk8NDEAJCB/hZCfXQHLggmvgzDcx3CazVTRFk
+         uGPCBY+FVef1TEJxh5O18cHhUPbzjuX1Pdka8j70acSmR7ky34DFxGzrL7EvEYa5+tjk
+         ACvxORVG8GiYpZunAJlNQE6va7ZOEIbt8KiO5f2v4QyXSc5koVoGX/qhGPr6PpQM6xJ4
+         AG8Q==
+X-Gm-Message-State: AOJu0YzBMcdbYUuwr/WizhbFCKRnn+aZu+HfYcWysespZLRS04qOm+9/
+        SSqH0VCmbvJmoWo+9Pa+nBiCoICUhwtUSEf0X8Z/iWvO
+X-Google-Smtp-Source: AGHT+IHjqUSZ3i7Fjwy9A3JxZl5rrWF0bAn3QNc5pbA8T/p6nOJcvtBFCa0gr2CX3ROLjxdbLWJXLubuKjQJeGm7MgI=
+X-Received: by 2002:a05:6e02:1be2:b0:348:1a1d:79a5 with SMTP id
+ y2-20020a056e021be200b003481a1d79a5mr773169ilv.15.1691720556754; Thu, 10 Aug
+ 2023 19:22:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27806.003
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27806.003
-X-TMASE-Result: 10--2.672500-10.000000
-X-TMASE-MatchedRID: xRVQIH6ETKBlJTodqNqEzhFbgtHjUWLywTlc9CcHMZerwqxtE531VIpb
-        wG9fIuITDzcc9hL6UiAXWBETjFf6a8MF9KO3qJTAGYJhRh6ssev5UnqVnIHSz6SIGrjDxszFo8W
-        MkQWv6iV3LAytsQR4e42j49Ftap9ExlblqLlYqXLyyUWKNF5ySLbvNPCk69ACEWiMUb7t52yZno
-        lNeuquWy8EQGKJu2Tn7P6dqhLRTWUG4ciDXFfbboqXdq6k8aGvyY7NiLRL/fsRZbRsQk5MBUB1Q
-        Pq9bxnWZkAxAwjIrrMHz/H0kiLyEqGAtHMDjkk9
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+References: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
+ <ZNURN6Zzf2hJfmt/@debian>
+In-Reply-To: <ZNURN6Zzf2hJfmt/@debian>
+From:   Maverickk 78 <maverickk1778@gmail.com>
+Date:   Fri, 11 Aug 2023 07:52:25 +0530
+Message-ID: <CALfBBTuRdwCcc-A88kMN7iub9BHx2xfFkfP8Lbrc+oSwfCS2nw@mail.gmail.com>
+Subject: Re: CXL volatile memory is not listed
+To:     Fan Ni <fan.ni@gmx.us>
+Cc:     Jonathan Cameron via <qemu-devel@nongnu.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The enum memory_zone definition and mem_zone variable
-have never been used so remove them.
+Thanks Fan,
 
-Signed-off-by: Xiao Yang <yangx.jy@fujitsu.com>
----
- daxctl/device.c | 11 -----------
- 1 file changed, 11 deletions(-)
+cxl create-region works like a charm :)
 
-diff --git a/daxctl/device.c b/daxctl/device.c
-index d2d206b..8391343 100644
---- a/daxctl/device.c
-+++ b/daxctl/device.c
-@@ -55,12 +55,6 @@ static unsigned long flags;
- static struct mapping *maps = NULL;
- static long long nmaps = -1;
- 
--enum memory_zone {
--	MEM_ZONE_MOVABLE,
--	MEM_ZONE_NORMAL,
--};
--static enum memory_zone mem_zone = MEM_ZONE_MOVABLE;
--
- enum device_action {
- 	ACTION_RECONFIG,
- 	ACTION_ONLINE,
-@@ -469,8 +463,6 @@ static const char *parse_device_options(int argc, const char **argv,
- 				align = __parse_size64(param.align, &units);
- 		} else if (strcmp(param.mode, "system-ram") == 0) {
- 			reconfig_mode = DAXCTL_DEV_MODE_RAM;
--			if (param.no_movable)
--				mem_zone = MEM_ZONE_NORMAL;
- 		} else if (strcmp(param.mode, "devdax") == 0) {
- 			reconfig_mode = DAXCTL_DEV_MODE_DEVDAX;
- 			if (param.no_online) {
-@@ -494,9 +486,6 @@ static const char *parse_device_options(int argc, const char **argv,
- 			align = __parse_size64(param.align, &units);
- 		/* fall through */
- 	case ACTION_ONLINE:
--		if (param.no_movable)
--			mem_zone = MEM_ZONE_NORMAL;
--		/* fall through */
- 	case ACTION_DESTROY:
- 	case ACTION_OFFLINE:
- 	case ACTION_DISABLE:
--- 
-2.40.1
+Since this gets listed as "System Ram(kmem)", I guess the kernel
+treats it as regular memory and
+allocates it to the applications when needed?
+or is there an extra effort needed to make it available for
+applications on the host?
 
+On Thu, 10 Aug 2023 at 22:03, Fan Ni <fan.ni@gmx.us> wrote:
+>
+> On Wed, Aug 09, 2023 at 04:21:47AM +0530, Maverickk 78 wrote:
+> > Hello,
+> >
+> > I am running qemu-system-x86_64
+> >
+> > qemu-system-x86_64 --version
+> > QEMU emulator version 8.0.92 (v8.1.0-rc2-80-g0450cf0897)
+> >
+> > qemu-system-x86_64 \
+> > -m 2G,slots=4,maxmem=4G \
+> > -smp 4 \
+> > -machine type=q35,accel=kvm,cxl=on \
+> > -enable-kvm \
+> > -nographic \
+> > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
+> > -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
+> > -object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=1G,share=true \
+> > -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
+> > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G
+> >
+> >
+> > I was expecting the CXL memory to be listed in "System Ram", the lsmem
+> > shows only 2G memory which is System RAM, it's not listing the CXL
+> > memory.
+> >
+> > Do I need to pass any particular parameter in the kernel command line?
+> >
+> > Is there any documentation available? I followed the inputs provided in
+> >
+> > https://lore.kernel.org/linux-mm/Y+CSOeHVLKudN0A6@kroah.com/T/
+> >
+> > Is there any documentation/blog listed?
+>
+> If I remember it correctly, for volatile cxl memory, we need to create a
+> region and then it will be discovered as system memory and shows up.
+>
+> Try to create a region with "cxl create-region".
+>
+> Fan
+> >
