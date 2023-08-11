@@ -2,162 +2,147 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19662C04A6A
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Aug 2023 07:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74983C001DB
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Aug 2023 12:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbjHKHuL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Aug 2023 03:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43684 "EHLO
+        id S233288AbjHKMEs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Aug 2023 08:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231126AbjHKHuK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Aug 2023 03:50:10 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2058.outbound.protection.outlook.com [40.107.244.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D9A61FED;
-        Fri, 11 Aug 2023 00:50:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NLzgh6TPIjDLQDP+rxeKNr1sk9YXmNy6RVYnZ3TN9KQey8bm1M5hO8Z23ouWlxUKlZPcJCamYRmdrtEofeZMAumUgFAujp25B+fWXwLyxHG5oQY+1H27UdmT8SVFtkZ62gRrr/It2P+FCqqlFIZ/Ij9UMCcOThP/MpjpkmC+Gn9ik2woL3kb4wtVNk8aEfiaR3XYu5HynsATE8azOEPGJOP+mzowMZv5zGC+14pyLL4TSXsWGep0OCjCGn2XT4lNvIr+OW0uM9q3oA9hky4BPGHFcpabOJKW2AuEHvkX9gPjW7GNq3ESdDhQapMCtr7Os9bQl3A/negzOD1LnK9ycA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Hw5b61BK7kMsPz81vl1JsC74qAmCufX0vAw1h8yQLdE=;
- b=IL7jaLH8EzyBJ6YAtqix13v3BBZ8+0dGbKXbaP9rda0cPWZ+jsjWnrIXYIlRaYiAiFUC+9Q8IhUPYTM+N2qlBHEIS7Xgg4E2F4EUJyXqsmj2Y5I/jepynE3I90p95S0rA2MA+q1thWrO4mdBWDTON2e5QLHqmVNDGFbld/ntacdLxO0TAohydcmcv3dIgmsex6N1I/Rz9v7KZoiDr0lt9y+Ehk9lofUxrVrcc9Yxrky5GMeIA6JdSl+yOjfs+1OCkI+oVR3cJ7ao5PqY3kFhYwnbwvk3c0KLJ2hG7VWQSVb6q7OtTtqi5h4hpHOKeSdsDl4/xUiIEFkq8HxCfVBIwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hw5b61BK7kMsPz81vl1JsC74qAmCufX0vAw1h8yQLdE=;
- b=hXYCf2M41+wkEXGq5h32IioK5k/x1JLW5vI2Xa+c8Kl8poju6Nu6E9xAUeVlN3xe3pl7UjNx5aSTnEM8N8kzbkgxcTVZpuAlM3vSPWKRuTyckjx15NhD52cH3ng0JWjiuLQwzZTwhgTvZdUIlQNeLafRj/eBdq9VLjGHHJkX8Cw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6434.namprd12.prod.outlook.com (2603:10b6:208:3ae::10)
- by SN7PR12MB7348.namprd12.prod.outlook.com (2603:10b6:806:29b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Fri, 11 Aug
- 2023 07:50:04 +0000
-Received: from IA1PR12MB6434.namprd12.prod.outlook.com
- ([fe80::17b8:2ba3:147e:b8cd]) by IA1PR12MB6434.namprd12.prod.outlook.com
- ([fe80::17b8:2ba3:147e:b8cd%6]) with mapi id 15.20.6652.029; Fri, 11 Aug 2023
- 07:50:04 +0000
-Message-ID: <1d5a74b2-bab4-4876-5fa1-2c06e83b55bc@amd.com>
-Date:   Fri, 11 Aug 2023 13:19:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH RESEND 0/4] memory tiering: calculate abstract distance
- based on ACPI HMAT
-Content-Language: en-US
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Wei Xu <weixugc@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <shy828301@gmail.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>
-References: <20230721012932.190742-1-ying.huang@intel.com>
- <875y6dj3ok.fsf@nvdebian.thelocal>
- <20230724105818.6f7b10fc8c318ea5aae9e188@linux-foundation.org>
- <6c8ed42d-ea71-c11e-2689-c4fc23845ccf@amd.com>
- <87il9mccxi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From:   Bharata B Rao <bharata@amd.com>
-In-Reply-To: <87il9mccxi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0035.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:97::14) To IA1PR12MB6434.namprd12.prod.outlook.com
- (2603:10b6:208:3ae::10)
+        with ESMTP id S231939AbjHKMEs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Aug 2023 08:04:48 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB3390
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Aug 2023 05:04:47 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-4fe7e1ef45dso3048480e87.1
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Aug 2023 05:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691755485; x=1692360285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nqmEEc4M2LAf4R+M40eOS2iP1bQtXeyk09PLxnu28xg=;
+        b=cKB9cuMNQ/fTBqDf1xu3aW6C1NhiJZcNa2AeqRfdh/D6MnJGruXWSYDDO/DqZg7kBK
+         uaDX4e5Qf9cmmfIEiEybpIkdIhg/SOM3DXlScaHErD9kDwjiiU8XacYDZjXfwjmW2W4r
+         BQsmdO2Eg4rlRMGm+3qAo5uNUb8fsKQL5L4JHKiUDc6A21IM6M8G6fOrTrZgdx+fLaoJ
+         i0rQZ1UrNagE3uVjg7g8BNk2io1cCQAjHDEaUg+RvjFvLCvxsh1lk1yYCrjcgDEDRbzV
+         EfzKVOLP33ZpKTWb5oMjvQaElcDlMZAdaeCPzDodBMnDfFjAcIxOfR3JvraYdbNNEiHU
+         MBMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691755485; x=1692360285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nqmEEc4M2LAf4R+M40eOS2iP1bQtXeyk09PLxnu28xg=;
+        b=aLqoUcHfEEgo9T8JWw4Iyb4omCT/D0IGb/oTQhBDk5ydyFc3T2OXpaUdAprjwTekzk
+         drg4VFE+3OjA0hbYsTgtobNwYoFpyY56XR9r8pGRwa9iLsZ1CauHlR6OAwwcu29/eGOb
+         0qItF+t0ArHMybnNSuIpPQf3lCWOh9ExEF5YKmJsoP1ku0Zlcyp7TuBmG4/Ay5EasGq5
+         /JpUO8gUz7djh1h6xo737crrL7iYasaClI2yFMJzjrsXIyxZhzaDlyQ20rP+YLP1L/rH
+         0HD+FZVIDVbtJS3HCOP11HtgSAsbbyluWFQMXaOeJgoLK9oOUU/sZtNkdkXnG2DKKahw
+         ClJA==
+X-Gm-Message-State: AOJu0YzwXOdcyalnEb90k9RDzLS1E/KZ+wGY/UekPuS0WuqqM9YZ1Flx
+        Gdghu3wzT1C8Cp62kNZN5uok3bslmWMu+PXvkl1cww28
+X-Google-Smtp-Source: AGHT+IHVeFuG50IrMuoFo4InaXdj0SZ36nsKSTCs3ewWVi3rsKyuw+q5WPrUPx2TgowaP75QKQRFyGCckqN5jFXN0z8=
+X-Received: by 2002:a05:6512:60a:b0:4fb:76a5:2325 with SMTP id
+ b10-20020a056512060a00b004fb76a52325mr1104560lfe.24.1691755485063; Fri, 11
+ Aug 2023 05:04:45 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6434:EE_|SN7PR12MB7348:EE_
-X-MS-Office365-Filtering-Correlation-Id: 847eeb60-4025-411b-c462-08db9a3f92bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cn/kuyTIObXecBSHn6XdvpI5ROxFfPAC0h1jz7de+0zmnOiLXSNlLgdWcA0MN7A4Rqyi9eUFXpZymratvMjxxB3iJnlTy7oUhv+KCl6UkPl3FWpuVbol0JxZQcF9MUIzaKt3lxbEGbCxurKFoKZRVdkkXeTK1+u/oFuVvVcVCQxzuaR3rSo8CiIf5D6ur9Ki9nbZHf3VhA4Dx9kLGANmYoLA9VaArUht5atZmYy2bh68y2VzaCo7wJhD8wouIpSzPFMbhD59Zzy1btpNLmAfhNgTwm7Pt5hLI2uzHKo9PvMYIkZYdYXdw8WnI1F3qPNF8A5detWE6Rf59vxpynKJbH3xz8rDj+D/dCSR93e1QMCQroQ1zXB+Ccm3mMK8yDbHxSRC8SPyzeiuR09mv6wT5v5+FiS3o775g/3dl9ULN0lJchDofMQK78II9giOy4DZM9hl9DOasUMs3vhJ4p/HxHFGeI7o+28OvlOBXrhEb8FBGW4ECADw/RGIR3776zLAkCNL3E+MXsm7PgEe89gNn5FVa3FTIJrjaessHEjLnmys3Go03zJ4YqCdgNKLZOXXkUDoaleGmt0DTQV/jmOY/0SIplPDSywXZI41dMBmXgbtTwvUQ9h9zJ76ERv5hHS1xEBDwY+wOr6q80/tygs9bw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6434.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(396003)(376002)(366004)(39860400002)(136003)(1800799006)(186006)(451199021)(8676002)(4326008)(54906003)(66476007)(66556008)(38100700002)(2906002)(6916009)(478600001)(66946007)(5660300002)(41300700001)(7416002)(8936002)(31686004)(4744005)(316002)(31696002)(86362001)(6666004)(6486002)(6512007)(36756003)(2616005)(53546011)(26005)(6506007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UGpxNkFrcnhDUHNabFFFVVNVZy9iSWJFbzhpRVZ3Q1RtQUV3Q25jRVYxZkRN?=
- =?utf-8?B?V3lUaWFIcG5veVVuRlRYMDN6d0JJQzNyVUNkL0Y4SlM2NjBKeW9JZmF5VStD?=
- =?utf-8?B?R1J1dnNwa0trU25EcTdoTThNRjFoOEJtVUVGMWdPb3hjcEpBc2JXUUpSSk1J?=
- =?utf-8?B?RytBWWhPWmtTVG9GQURqUUc1c1FYWE1pYlJZdFpQcGx5QmtyRnVmQkoyQWZx?=
- =?utf-8?B?U0pENEdmbzNmaU4zMTduTS9qWEhyc1ZzSlZuajFVQmdZQmFGL3pacHgyQ005?=
- =?utf-8?B?VFl4WHdMS08vbzRYZnA1NlM5Wjd6MzluRHU1S0tzRkkvcE5BT2UyR1RPWWh5?=
- =?utf-8?B?bms0S1NUQkdleit6NzkrcTFBNFdoMkNablNHVEVDRjVFYndaYmxvYzZzWlph?=
- =?utf-8?B?d1dtMGJLc1RjMlIwNkdrQXp0cHhrS0JCWUM0NlRBcWZFUmc1bm1MMnQwWFVn?=
- =?utf-8?B?Z2RXc2xROUlNV0pFQmpSbU80K2dINEdJOFFKMHd2R3BHZlFDTVFFMEthNVlK?=
- =?utf-8?B?ZUJiUnlRL0xscDEyQSs1c3QwKzdmRzNkWmxoc3lTbWpCNXpmYzl5Lzlxd1Fi?=
- =?utf-8?B?NlpkWTUzVWd0d0ZpWUxPdHlpZjF6bnNVTlRBc29TbHdlWXFuSDZtZUg3TWQw?=
- =?utf-8?B?V1BlVFh4UUVVeU5ZU3VZZ2tnMXYvdFA0TjliWlovV3QxU2YzeXhUUGtUNnM5?=
- =?utf-8?B?dGdtYXB3WkV1cVg5cVlKU2E0eXZWeHV0WGZiL1ZSVFh5anhwTGZXK2JYZUMw?=
- =?utf-8?B?VkVSZ1FtOVlGaTE2ekZpb1dQNXJlK0hJMnFVdlNqNEhSNlVqK0tKRFJ1dzBN?=
- =?utf-8?B?aTNLTXhxa0VTaXNNZ3NlN0dseVNGckVCYjltTS83ckNnWkF5NFhySU1wU0F5?=
- =?utf-8?B?R1ZSdENjWXdFNy8wdC9zYUN4OTIrenRnd1pXaFR4TnRZZy90eWcvcmtjREF6?=
- =?utf-8?B?QUFBMXF0SWZqMGJ6d3JaMERpTnZhUStLWUtDYzFwaTBoYi9EeUFNYmcxdUVH?=
- =?utf-8?B?N09xRVZQVEJiMnZSazBqbjhseHZPdVFUZzkxUDdmUE5DdzIxbUs2Q3FDWndY?=
- =?utf-8?B?TjdJRXVpNlRoSVVvdW9MU0xTbUI5VVlLVjg0QlJleXJqeEtqcFVmc3RYbTd6?=
- =?utf-8?B?SDN1RjZEd1N6QzkvYXVJekJZamxmYkRQaUVpbURJQ1dCT0pTRVdUcGVXOSt5?=
- =?utf-8?B?UlJqK3JQcVhMVEw3Qzg2Z0xPWTc4MlFkUDRQTy9FWlNBK0ZIR21zSGpubity?=
- =?utf-8?B?TVdaUGp6N2VDdEg2Q3JiY0lDQWJTd2pkaytsSnNzZ3A4NFRIOHV0eExGZXdB?=
- =?utf-8?B?VnRJeTBFSGFIZzUvaVFvSUQ3UnBMNi9SalhFcXVTZGFCUWM0TStIMVlXU2Zj?=
- =?utf-8?B?L1J5WEtKSEVnLzJFOGR6OG1FQktpMHU1QWYzMkxOcEtkVjVXZTdHNjVOQ1pU?=
- =?utf-8?B?b3lQZ3FIeGZqL2ZhejlSUUlnY3FJaGVYaTJqZUtsL2NnNjE2QVB3RlRJekE2?=
- =?utf-8?B?Yk12WThNZkcwYnU0YnBHQkx5UmoyN2NFVGZJWkowYklZN1p2VEpLNkIxOFBB?=
- =?utf-8?B?V1k1ZlJWM2dCSnM5WVgydGxkdjZNTEM4OEZSUU4vR09Ta0JlODdHTGVEaEtK?=
- =?utf-8?B?ZDVYeFdPSVpWREhNZ2Z1QkRFNUV3aThVNkxjd3JPdXFFZTZQVEVIUnJacXZC?=
- =?utf-8?B?a0dCcEt5NEFJSXlmczZFNDgwVWNFWXBVNUlUVjFjWmtDaFV3Nk02VnpxT3V4?=
- =?utf-8?B?cFY3MDQySXp5cXByeHVZS0xiY2VMNWlWOWZHaDFjR1EwTFVaNGpjTUNmTUtS?=
- =?utf-8?B?djRmN2VSZXNOSE00NDhoNStXbldjeG8zWGlnbXhMejRhL29FenhqRUlPV0h3?=
- =?utf-8?B?NU1tNXo0Rk4yTmlMSjM2SXZLVUJCejArRFQyTWhsSFNqMXBrakxqa2pqbjQ3?=
- =?utf-8?B?V2FYSzVYNk5TL2ZraVFTRWlJQ3BPc0FpQyswbTFteFY0YTBDVUorQnlJWXR0?=
- =?utf-8?B?S3ZDMXdPQlpjWXNFUVM2WkNyZ2xHNTVyNXp5YTQySXRIZjhPb1ZRS3FiQlJu?=
- =?utf-8?B?WWxGUVV1dlZHVXBDWE5JS3lWL0VUUUdkSDhrYjZqcURwMytpeUFxeUJaaVhZ?=
- =?utf-8?Q?jGaYeI5dNTbDqS9tQOCW9lFDM?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 847eeb60-4025-411b-c462-08db9a3f92bc
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6434.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2023 07:50:04.2973
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M709VkpIQwGwXNN+NvLPG5GIUQcBK9NrKtheV4n+VLJwXiLBXBrQMjZZnoZQfbs61vc6kTi+HaQBgpqIvi+09Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7348
+References: <CAEvOrRz9s8CumbuMbkCU+eCHgAp20X6q0i1D6fi5vfa5_F6JnA@mail.gmail.com>
+ <20230810173322.0000543c@Huawei.com> <CAEvOrRyvaFBzhzP7kxWeCpYY-u5wjwAo6076FGhN_k-+NadUDA@mail.gmail.com>
+In-Reply-To: <CAEvOrRyvaFBzhzP7kxWeCpYY-u5wjwAo6076FGhN_k-+NadUDA@mail.gmail.com>
+From:   Ravi Kanth <mvrravikanth@gmail.com>
+Date:   Fri, 11 Aug 2023 17:34:33 +0530
+Message-ID: <CAEvOrRzPNwNFrg4Brw7axzgxv6WFeYr0rnsDGmSSNpn9hca-3Q@mail.gmail.com>
+Subject: Re: Support for CXL v3.0 spec with QEMU
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, Sajjan Rao <sajjanr@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+Hi Jonathan,
+We build qemu with your repository code but we do not see any changes
+in the output of lspci. Do we have any prerequisites / command
+parameters w.r.t on how we boot the qemu for your changes to take
+effect? Please let us know.
 
-On 11-Aug-23 11:56 AM, Huang, Ying wrote:
-> Hi, Rao,
-> 
-> Bharata B Rao <bharata@amd.com> writes:
-> 
->> On 24-Jul-23 11:28 PM, Andrew Morton wrote:
->>> On Fri, 21 Jul 2023 14:15:31 +1000 Alistair Popple <apopple@nvidia.com> wrote:
->>>
->>>> Thanks for this Huang, I had been hoping to take a look at it this week
->>>> but have run out of time. I'm keen to do some testing with it as well.
->>>
->>> Thanks.  I'll queue this in mm-unstable for some testing.  Detailed
->>> review and testing would be appreciated.
->>
->> I gave this series a try on a 2P system with 2 CXL cards. I don't trust the
->> bandwidth and latency numbers reported by HMAT here, but FWIW, this patchset
->> puts the CXL nodes on a lower tier than DRAM nodes.
-> 
-> Thank you very much!
-> 
-> Can I add your "Tested-by" for the series?
+Thanks for your help.
 
-Yes if the above test qualifies for it, please go ahead.
+Thanks
+Ravi
 
-Regards,
-Bharata.
+On Thu, Aug 10, 2023 at 10:10=E2=80=AFPM Ravi Kanth <mvrravikanth@gmail.com=
+> wrote:
+>
+> Thanks Jonathan for pointing this out. I will definitely take a look
+> at this. Current support for the simulation of CCI mailbox is only via
+> MCTP messages or even via CXL driver IOCTLs?
+>
+> Ravi
+>
+> On Thu, Aug 10, 2023 at 10:03=E2=80=AFPM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Thu, 10 Aug 2023 21:42:12 +0530
+> > Ravi Kanth <mvrravikanth@gmail.com> wrote:
+> >
+> > > Hello,
+> >
+> > Hi Ravi,
+> >
+> > >
+> > > I am writing this mail to know if the latest QEMU has support for CXL
+> > > spec v3.0? I understand from the older tutorials that QEMU has suppor=
+t
+> > > for CXL v2.0. Is there any update to QEMU to support the CXL v3.0? I
+> > > would like to specifically test the CCI mailbox functionality which
+> > > has been added to CXL v3.0 spec.
+> >
+> > The nature of the CXL specification and the QEMU support is that for
+> > devices there isn't a clear divide between different generations of
+> > the specification. By that I mean, that a device based on the CXL 2.0
+> > specification is compatible with the CXL 3.0 specification. As such,
+> > the QEMU emulation has focused on features of interest - it is a far
+> > from complete implementation of all the options in the CXL 2.0
+> > specification but conversely there are some parts of CXL 3.0 are suppor=
+ted.
+> >
+> > Note that the particular CCI functionality is not yet ready for CXL ups=
+tream,
+> > but we do have some support in the staging tree I maintain.
+> >
+> > https://gitlab.com/jic23/qemu/-/commits/cxl-2023-08-07/
+> > specifically
+> > https://gitlab.com/jic23/qemu/-/commit/2eb7e6402a45b359c304cea894a1d276=
+25a4b80c
+> >
+> > Note at this stage we only support subset of commands.
+> > Contributions of more support welcomed!
+> >
+> > Intent of the current support and related MCTP CCI access (over I2C) is
+> > to enable ecosystem development, particularly of fabric managers.
+> > For that a tiny subset of commands was sufficient to be sure the archit=
+ecture
+> > inside QEMU worked and that the proposed kernel code functions correctl=
+y.
+> >
+> > Jonathan
+> >
+> > >
+> > > Thank you in advance for your assistance.
+> > >
+> > > Ravi
+> >
+>
+>
+> --
+> Regards
+> M.V.R.Ravi Kanth
+
+
+
+--=20
+Regards
+M.V.R.Ravi Kanth
