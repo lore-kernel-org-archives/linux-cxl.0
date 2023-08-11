@@ -2,142 +2,143 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF99C41513
-	for <linux-cxl@archiver.kernel.org>; Fri, 11 Aug 2023 13:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC92EB64DD
+	for <linux-cxl@archiver.kernel.org>; Fri, 11 Aug 2023 15:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233241AbjHKNzV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 11 Aug 2023 09:55:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
+        id S235737AbjHKPhT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 11 Aug 2023 11:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235295AbjHKNzD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Aug 2023 09:55:03 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BEFE1994
-        for <linux-cxl@vger.kernel.org>; Fri, 11 Aug 2023 06:55:01 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RMlfM5ppYz6HJTd;
-        Fri, 11 Aug 2023 21:54:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 11 Aug
- 2023 14:54:59 +0100
-Date:   Fri, 11 Aug 2023 14:54:58 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Maverickk 78 <maverickk1778@gmail.com>
-CC:     Jonathan Cameron via <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: CXL volatile memory is not listed
-Message-ID: <20230811145458.000029c7@Huawei.com>
-In-Reply-To: <CALfBBTud4Y7qxKB8nkZ5Lo5sQs-7-F9Rkso+iQGvLO07VyRcDA@mail.gmail.com>
-References: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
-        <20230810113512.00000516@Huawei.com>
-        <CALfBBTud4Y7qxKB8nkZ5Lo5sQs-7-F9Rkso+iQGvLO07VyRcDA@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S230419AbjHKPhT (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 11 Aug 2023 11:37:19 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D3010E4
+        for <linux-cxl@vger.kernel.org>; Fri, 11 Aug 2023 08:37:18 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 462A7C1159;
+        Fri, 11 Aug 2023 15:37:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a237.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 85607C0978;
+        Fri, 11 Aug 2023 15:37:16 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1691768236; a=rsa-sha256;
+        cv=none;
+        b=eoyNF2rXFtg6Sj47ZBIiFIWmYh7o1+hWoJMkTLz+jzjZ6upGuwWysAB/dW1aydbLw7bpTT
+        WMp9Hr1LqRG18566AHYB0sNS/BWoSonfLWKdsTKwGd5442YCt2PAZ7B2F7KwdR8QSqjhoZ
+        bmcU4E2ki7Lv3EgrYy4jX+P/k1kqCUKxOmQ+LWgT8WoRVLmnE+BDYQM3aaDR3fel6nRNB6
+        phHZW1JFlacAEmA9BO2vrwtVxvE4erR5RDnnSjLcT9dO5xWqD/dZZ9dL//gnQBx8Fha7Sm
+        i5HRuTwNf3I+pgLSb08hD87t1w85zfCoAwAL1gLqZpdo+yOzj6xmX8yjQrF2xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1691768236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=OsAuu6Ebx4RoWdLj3CJYRj729mIOrHeeebRein8MPmg=;
+        b=dD2a7/XzzUSWaTOmXJ4HBUsTBXxDk9z6tUMCYJPXtpB9ce1PDoSwBuP7Ziw8ziGESHa0ja
+        ugO14qcPTPt6t2Q+7iPRlqBRZiMXdMJxSY0icDJidWeDarl57OPC3jk97mZZwkrHA1qg33
+        Ok05ewD2e0xk67MTUTemhwrMXHdra+9NNJlpMpG42lQ0wRgooJd/8uALo6t/HKP1Cg3yKo
+        p7Mbs6108fgEKxZmvCei5tsAQTZXQbzmyTIrHzYBj1VdAN+adEoj8KmkaA5JiO19Ru3Wkz
+        9/5OEkrN0pKrCEKRPeqLhTXB+1X2mLThpgDQAKblKIqQKsjTdp7AglzXqj8jmQ==
+ARC-Authentication-Results: i=1;
+        rspamd-849d547c58-cvljt;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Harbor-Scare: 5a5e702b18da45c8_1691768238020_3528326660
+X-MC-Loop-Signature: 1691768238019:604148469
+X-MC-Ingress-Time: 1691768238019
+Received: from pdx1-sub0-mail-a237.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.109.205.135 (trex/6.9.1);
+        Fri, 11 Aug 2023 15:37:18 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a237.dreamhost.com (Postfix) with ESMTPSA id 4RMnwW6Mqcz3J;
+        Fri, 11 Aug 2023 08:37:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1691768236;
+        bh=OsAuu6Ebx4RoWdLj3CJYRj729mIOrHeeebRein8MPmg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=c0odIp+q9qFVCsDg02o0neE2IjUjYURk8a5wQGO5JQEYE2PZ/qqzu9mQzWhLSGBMA
+         giVdfjZdi1y9jDZsIQICnv7j6rpG6XP8agN2Kr+cusnefP1gXquJ5xvqAnejbSY8bW
+         7oJ8HcIONSga3m/trKkwOXL0+wzH3pfE2ZKSn8ytm1h3RWieWYTFHxJjUMQPyRRz0X
+         w2n/q2cJ6K2fb4+Rx7wXJu+BhzC7ouQajuk8YhJM8gRc9w7cwS3Gf+i9VKgPBVrwsh
+         OKDgow/ciNsO7UZ0jdagBJUX2ZtmI+sxRhx7X8sHDXMubMQTOmrFLIfV1SkCuOrIrp
+         uBCrOGX9pli0w==
+Date:   Fri, 11 Aug 2023 07:58:59 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        fan.ni@samsung.com, dave.jiang@intel.com, a.manzanares@samsung.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/3] cxl/memdev: Improve sanitize ABI descriptions
+Message-ID: <xeuejntym6mzsfviba5wvbovrolohsz32dvuoonulsc7pymwr6@nb6vxlalanog>
+References: <20230726051940.3570-1-dave@stgolabs.net>
+ <20230726051940.3570-2-dave@stgolabs.net>
+ <20230804150238.00005c89@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230804150238.00005c89@Huawei.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 11 Aug 2023 08:04:26 +0530
-Maverickk 78 <maverickk1778@gmail.com> wrote:
+On Fri, 04 Aug 2023, Jonathan Cameron wrote:
 
-> Jonathan,
-> 
-> > More generally for the flow that would bring the memory up as system ram
-> > you would typically need the bios to have done the CXL enumeration or
-> > a bunch of scripts in the kernel to have done it.  In general it can't
-> > be fully automated, because there are policy decisions to make on things like
-> > interleaving.  
-> 
-> BIOS CXL enumeration? is CEDT not enough? or BIOS further needs to
-> create an entry
-> in the e820 table?
-On intel platforms 'maybe' :)  I know how it works on those that just
-use the nice standard EFI tables - less familiar with the e820 stuff :)
+>On Tue, 25 Jul 2023 22:19:38 -0700
+>Davidlohr Bueso <dave@stgolabs.net> wrote:
+>
+>> Be more detailed about the CPU cache management situation. The same
+>> goes for both sanitize and secure erase.
+>>
+>> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+>> index 6350dd82b9a9..c4c4acb1f3b3 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+>> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+>> @@ -82,7 +82,11 @@ Description:
+>>		whether it resides in persistent capacity, volatile capacity,
+>>		or the LSA, is made permanently unavailable by whatever means
+>>		is appropriate for the media type. This functionality requires
+>> -		the device to be not be actively decoding any HPA ranges.
+>> +		the device to be disabled, that is, not actively decoding any
+>> +		HPA ranges. This permits avoiding explicit global CPU cache
+>> +		management, relying instead for it to be done when a region
+>> +		transitions between software programmed and hardware committed
+>> +		states.
+>
+>That worries me a bit.  Sounds like we are leaving a possible attack vector
+>after a user will assume that all data is definitely gone and their secrets secure.
+>
+>I'm not sure what the attack would be, but I'd be happier if we didn't forgo
+>the cache evictions.  This is not exactly a fast path at any time.
+>However I though region tear down (and resulting HDM decoder disables) were followed
+>by a flush anyway so there should be nothing there...
 
-CEDT says where to find the the various bits of system related CXL stuff.
-Nothing in there on the configuration that should be used such as interleaving
-as that depends on what the administrator wants. Or on what the BIOS has
-decided the users should have.
+I had similar concerns, but ultimately could not come up with a potential
+attack scenario by not doing the flushing explicitly, which is before+after the
+operation, per the spec.
 
-> 
-> >
-> > I'm not aware of any open source BIOSs that do it yet.  So you have
-> > to rely on the same kernel paths as for persistent memory - manual configuration
-> > etc in the kernel.
-> >  
-> Manual works with "cxl create regiton"  :)
-Great.
+https://lore.kernel.org/linux-cxl/6422888b688fd_21a8294a3@dwillia2-xfh.jf.intel.com.notmuch/
 
-Jonathan
+The main motivation for avoiding these calls is not really that this is a fast
+path, but it's that the global CPU flushing affects system-wide. That said, it's hard
+to argue on defaulting on the safe side and just doing the flushes - exactly because
+of reasons we don't know until too late. Dan?
 
-> 
-> On Thu, 10 Aug 2023 at 16:05, Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Wed, 9 Aug 2023 04:21:47 +0530
-> > Maverickk 78 <maverickk1778@gmail.com> wrote:
-> >  
-> > > Hello,
-> > >
-> > > I am running qemu-system-x86_64
-> > >
-> > > qemu-system-x86_64 --version
-> > > QEMU emulator version 8.0.92 (v8.1.0-rc2-80-g0450cf0897)
-> > >  
-> > +Cc linux-cxl as the answer is more todo with linux than qemu.
-> >  
-> > > qemu-system-x86_64 \
-> > > -m 2G,slots=4,maxmem=4G \
-> > > -smp 4 \
-> > > -machine type=q35,accel=kvm,cxl=on \
-> > > -enable-kvm \
-> > > -nographic \
-> > > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> > > -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
-> > > -object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=1G,share=true \
-> > > -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
-> > > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G  
-> >
-> > There are some problems upstream at the moment (probably not cxl related but
-> > I'm digging). So today I can't boot an x86 machine. (goody)
-> >
-> >
-> > More generally for the flow that would bring the memory up as system ram
-> > you would typically need the bios to have done the CXL enumeration or
-> > a bunch of scripts in the kernel to have done it.  In general it can't
-> > be fully automated, because there are policy decisions to make on things like
-> > interleaving.
-> >
-> > I'm not aware of any open source BIOSs that do it yet.  So you have
-> > to rely on the same kernel paths as for persistent memory - manual configuration
-> > etc in the kernel.
-> >
-> > There is support in ndctl for those enabling flows, so I'd look there
-> > for more information
-> >
-> > Jonathan
-> >
-> >  
-> > >
-> > >
-> > > I was expecting the CXL memory to be listed in "System Ram", the lsmem
-> > > shows only 2G memory which is System RAM, it's not listing the CXL
-> > > memory.
-> > >
-> > > Do I need to pass any particular parameter in the kernel command line?
-> > >
-> > > Is there any documentation available? I followed the inputs provided in
-> > >
-> > > https://lore.kernel.org/linux-mm/Y+CSOeHVLKudN0A6@kroah.com/T/
-> > >
-> > > Is there any documentation/blog listed?  
-> >  
-
+Thanks,
+Davidlohr
