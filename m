@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FC1C001B0
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Aug 2023 00:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976E0C001B0
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Aug 2023 00:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231511AbjHOAM0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Aug 2023 20:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        id S229750AbjHOANb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Aug 2023 20:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233633AbjHOAMK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Aug 2023 20:12:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F6C9172E
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 17:12:09 -0700 (PDT)
+        with ESMTP id S233638AbjHOANK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Aug 2023 20:13:10 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7481715
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 17:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692058329; x=1723594329;
+  t=1692058389; x=1723594389;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=jK7guuAgsAzRVOi2f8dDMjAxBbozDfI9pEiweo9y+Tc=;
-  b=l//Il+yw7c4yfHwFvE408HdOwtdyrDrr7gMgqI1nLiyQFbBMqzLok7AS
-   cmFLfh4ig/JACQtbToHMSYQ0OFSrPhD3q1iq++Xokuk1FN5nwAjfoFTHA
-   V29zVSbaj8Bw2wPv+b2mFLTuhwFbqE1o5j9RtPXvml8Ay5cxBQfBfYQji
-   4CLK2EpWbGxJr9BnmCRaJwyB9S33QFhZYrcxy/RoB5NTQ1XTeMtM0T2vF
-   pK0iN3ES/S1g1wTu1A0FsYxmNSHR3MUwxQ6MgY7DAyQWzmL+YtLB8Kinq
-   TZzQbci50EobgUtVpLwyDeyrz9j5gImtjXSrDQ5eE2kHeGURJPhvKRWEM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="362315117"
+  bh=M8izhfAWfLsbjmbfkp9NTlJYQ4yXDoM/CY7F7JQ2JlA=;
+  b=MP3fgmOrH+Qi9V/ICUBycPjyL5d336wBVRoPASPOYkM1YiMqFB/nTicr
+   NlqMM6eYXzRuJFJ9YRP0us1FLzYduWhaOESARd6mCQJr9YVOy+WotMbzD
+   P0ZH+U6YMHj7rxu7bVNVwGy2LYG0uPrClhhxlXw2Kq7H6UFNSuzj/44WP
+   WzUETrEEGW3XEfu7ECQykf3G/LVgiSublgstGyXCPxTaevx8rHVzd/Dfr
+   EG+2S3NgzkJ7Q96LwP4/X8DehOL8dphfSYYVLuely1PfuGysPR+XlXEeG
+   X/c8AT3D0jYqwyEBgFHtI+zmm5nSPZVHMHxNg7yfu7pJvzJ5z8EhSN1AZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="369639305"
 X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
-   d="scan'208";a="362315117"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:12:09 -0700
+   d="scan'208";a="369639305"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:13:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="683476913"
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="736708752"
 X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
-   d="scan'208";a="683476913"
+   d="scan'208";a="736708752"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.148.210])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:12:08 -0700
-Date:   Mon, 14 Aug 2023 17:12:07 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:13:07 -0700
+Date:   Mon, 14 Aug 2023 17:13:05 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     Davidlohr Bueso <dave@stgolabs.net>,
@@ -47,123 +47,215 @@ Cc:     Davidlohr Bueso <dave@stgolabs.net>,
         Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] cxl/region: Try to add a region resource to a
- soft reserved parent
-Message-ID: <ZNrC15kuvuJoO57H@aschofie-mobl2>
+Subject: Re: [PATCH v2 2/2] cxl/region: Remove a soft reserved resource at
+ region teardown
+Message-ID: <ZNrDEY4G5oAwChy9@aschofie-mobl2>
 References: <cover.1691176651.git.alison.schofield@intel.com>
- <6cd07222f169d951921486306187e87951853035.1691176651.git.alison.schofield@intel.com>
- <e6431435-e9cd-8595-bb3d-f0a132eae371@intel.com>
+ <2aa10593dbe6a4a8da35077aa492c8aacd363901.1691176651.git.alison.schofield@intel.com>
+ <f0d84d36-44a5-840c-9ff3-0dcdfdeb69ee@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e6431435-e9cd-8595-bb3d-f0a132eae371@intel.com>
+In-Reply-To: <f0d84d36-44a5-840c-9ff3-0dcdfdeb69ee@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Aug 09, 2023 at 04:22:03PM -0700, Dave Jiang wrote:
+On Wed, Aug 09, 2023 at 04:34:43PM -0700, Dave Jiang wrote:
 > 
 > 
 > On 8/4/23 12:31, alison.schofield@intel.com wrote:
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > During region autodiscovery, the region driver always inserts the
-> > region resource as a child of the root decoder, a CXL WINDOW. It
-> > has the effect of making a soft reserved resource, with an exactly
-> > matching address range, a child of the region resource.
-> > 
-> > It looks like this in /proc/iomem:
-> > 
-> > 2080000000-29dbfffffff : CXL Window 0
-> >    2080000000-247fffffff : region0
-> >      2080000000-247fffffff : Soft Reserved
-> > 
-> > Search for soft reserved resources that include the region resource,
-> > and add the new region resource as a child of that found resource.
+> > When CXL regions are created through autodiscovery their resource
+> > may be a child of a soft reserved resource. Today, when such a
+> > region is destroyed, its soft reserved resource remains in place.
+> > That means that the HPA range that the region could release, is
+> > actually unavailable for reuse.
 > 
-> Don't think the comma is needed here.
+> I think it reads better without the comma here.
 
-Got it. Thanks!
-
+Agree. Thanks!
+Alison
 
 > 
-> > If a soft reserved resource is not found, insert to the root decoder
-> > as usual.
 > > 
-> > With this change, it looks like this:
+> > Free the soft reserved resource on region teardown by examining
+> > the alignment of the resources, and handling accordingly. The
+> > two resources, will be exactly aligned, partially aligned, or not
+> > aligned at all.
 > > 
-> > 2080000000-29dbfffffff : CXL Window 0
-> >    2080000000-247fffffff : Soft Reserved
-> >      2080000000-247fffffff : region0
+> > |----------- "Soft Reserved" -----------|
+> > |-------------- "Region #" -------------|
+> > Exactly aligned. Any dangling children move up to a parent on removal.
+> > The removal of this soft reserved seems guaranteed, however, the
+> > availability of the address range for use depends on complete cleanup
+> > of the region child resources also.
 > > 
-> > This odd parenting only occurs when the resources are an exact match.
-> > When the region resource only uses part of a soft reserved resource,
-> > the parenting appears more logical like this:
+> > |----------- "Soft Reserved" -----------|
+> > |-------- "Region #" -------|
+> > or
+> > |----------- "Soft Reserved" -----------|
+> >              |-------- "Region #" -------|
+> > Either start or end aligns. Unlike removing a resource, which simply
+> > moves child resources up the resource tree, adjustments fail if any
+> > child resources map the range being truncated. So, this one will fail
+> > for dangling child resources of the region.
 > > 
-> > 2080000000-29dbfffffff : CXL Window 0
-> >    2080000000-287fffffff : Soft Reserved
-> >      2080000000-247fffffff : region0
-> > 
-> > Aside from the more logical appearance, this change is in preparation
-> > for further cleanup in region teardown. A follow-on patch intends to
-> > find and free soft reserved resources upon region teardown.
+> > |---------- "Soft Reserved" ----------|
+> >          |---- "Region #" ----|
+> > No alignment. Freeing the resource of a region in the middle is possible
+> > if no child resources map the leading or trailing address space.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > > ---
-> >   drivers/cxl/core/region.c | 32 ++++++++++++++++++++++++++++++--
-> >   1 file changed, 30 insertions(+), 2 deletions(-)
+> >   drivers/cxl/core/region.c | 132 +++++++++++++++++++++++++++++++++++---
+> >   1 file changed, 123 insertions(+), 9 deletions(-)
 > > 
 > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e115ba382e04..36c0c0dd5697 100644
+> > index 36c0c0dd5697..b8a02afa3514 100644
 > > --- a/drivers/cxl/core/region.c
 > > +++ b/drivers/cxl/core/region.c
-> > @@ -2709,6 +2709,28 @@ static int match_region_by_range(struct device *dev, void *data)
-> >   	return rc;
+> > @@ -569,22 +569,136 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+> >   	return 0;
 > >   }
-> > +static int insert_resource_soft_reserved(struct resource *soft_res, void *arg)
+> > +static int add_soft_reserved(struct resource *parent, resource_size_t start,
+> > +			     resource_size_t len, unsigned long flags)
 > > +{
-> > +	struct resource *parent, *new, *res = arg;
-> > +	bool found = false;
+> > +	struct resource *res;
+> > +	int rc;
 > > +
-> > +	parent = soft_res->parent;
-> > +	if (!parent)
-> > +		return 0;
+> > +	res = kmalloc(sizeof(*res), GFP_KERNEL);
+> > +	if (!res)
+> > +		return -ENOMEM;
 > > +
-> > +	/* Caller provides a copy of soft_res. Find the actual resource. */
-> > +	for (new = parent->child; new; new = new->sibling) {
-> > +		if (resource_contains(new, soft_res)) {
-> > +			found = true;
-> > +			break;
-> > +		}
-> > +	}
-> > +	if (found)
-> > +		return insert_resource(new, res) == 0;
+> > +	*res = DEFINE_RES_MEM_NAMED(start, len, "Soft Reserved");
 > > +
-> > +	return 0;
+> > +	res->desc = IORES_DESC_SOFT_RESERVED;
+> > +	res->flags = res->flags | flags;
+> > +	rc = insert_resource(parent, res);
+> > +	if (rc)
+> > +		kfree(res);
+> > +
+> > +	return rc;
 > > +}
 > > +
-> >   /* Establish an empty region covering the given HPA range */
-> >   static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> >   					   struct cxl_endpoint_decoder *cxled)
-> > @@ -2719,7 +2741,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> >   	struct cxl_region_params *p;
-> >   	struct cxl_region *cxlr;
-> >   	struct resource *res;
-> > -	int rc;
-> > +	int rc = 0;
-> >   	do {
-> >   		cxlr = __create_region(cxlrd, cxled->mode,
-> > @@ -2755,7 +2777,13 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
-> >   	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
-> >   				    dev_name(&cxlr->dev));
-> > -	rc = insert_resource(cxlrd->res, res);
+> > +static void remove_soft_reserved(struct cxl_region *cxlr, struct resource *soft,
+> > +				 resource_size_t start, resource_size_t end)
+> > +{
+> > +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
+> > +	resource_size_t new_start, new_end;
+> > +	struct resource *parent;
+> > +	unsigned long flags;
+> > +	int rc;
 > > +
-> > +	/* Try inserting to a Soft Reserved parent, fallback to root decoder */
-> > +	if (walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED, 0,
-> > +				res->start, res->end, res,
-> > +				insert_resource_soft_reserved) != 1)
-> > +		rc = insert_resource(cxlrd->res, res);
+> > +	/* Prevent new usage while removing or adjusting the resource */
+> > +	mutex_lock(&cxlrd->range_lock);
 > > +
-> >   	if (rc) {
-> >   		/*
-> >   		 * Platform-firmware may not have split resources like "System
+> > +	/* Aligns at both resource start and end */
+> > +	if (soft->start == start && soft->end == end) {
+> > +		rc = remove_resource(soft);
+> > +		if (rc)
+> > +			dev_dbg(&cxlr->dev,
+> > +				"cannot remove soft reserved resource %pr\n",
+> > +				soft);
+> > +		else
+> > +			kfree(soft);
+> > +
+> > +		goto out;
+> > +	}
+> > +
+> > +	/* Aligns at either resource start or end */
+> > +	if (soft->start == start || soft->end == end) {
+> > +		if (soft->start == start) {
+> > +			new_start = end + 1;
+> > +			new_end = soft->end;
+> > +		} else {
+> > +			new_start = soft->start;
+> > +			new_end = start + 1;
+> > +		}
+> > +		rc =  adjust_resource(soft, new_start, new_end - new_start + 1);
+> > +		if (rc)
+> > +			dev_dbg(&cxlr->dev,
+> > +				"cannot adjust soft reserved resource %pr\n",
+> > +				soft);
+> > +		goto out;
+> > +	}
+> > +
+> > +	/*
+> > +	 * No alignment. Attempt a 3-way split that removes the part of
+> > +	 * the resource the region occupied, and then creates new soft
+> > +	 * reserved resources for the leading and trailing addr space.
+> > +	 * adjust_resource() will stop the attempt if there are any
+> > +	 * child resources.
+> > +	 */
+> > +
+> > +	/* Save the original soft reserved resource params before adjusting */
+> > +	new_start = soft->start;
+> > +	new_end = soft->end;
+> > +	parent = soft->parent;
+> > +	flags = soft->flags;
+> > +
+> > +	rc = adjust_resource(soft, start, end - start);
+> > +	if (rc) {
+> > +		dev_dbg(&cxlr->dev,
+> > +			"cannot adjust soft reserved resource %pr\n", soft);
+> > +		goto out;
+> > +	}
+> > +	rc = remove_resource(soft);
+> > +	if (rc)
+> > +		dev_warn(&cxlr->dev,
+> > +			 "cannot remove soft reserved resource %pr\n", soft);
+> > +
+> > +	rc = add_soft_reserved(parent, new_start, start - new_start, flags);
+> > +	if (rc)
+> > +		dev_warn(&cxlr->dev,
+> > +			 "cannot add new soft reserved resource at %pa\n",
+> > +			 &new_start);
+> > +
+> > +	rc = add_soft_reserved(parent, end + 1, new_end - end, flags);
+> > +	if (rc)
+> > +		dev_warn(&cxlr->dev,
+> > +			 "cannot add new soft reserved resource at %pa + 1\n",
+> > +			 &end);
+> > +out:
+> > +	mutex_unlock(&cxlrd->range_lock);
+> > +}
+> > +
+> >   static void cxl_region_iomem_release(struct cxl_region *cxlr)
+> >   {
+> >   	struct cxl_region_params *p = &cxlr->params;
+> > +	struct resource *parent, *res = p->res;
+> > +	resource_size_t start, end;
+> >   	if (device_is_registered(&cxlr->dev))
+> >   		lockdep_assert_held_write(&cxl_region_rwsem);
+> > -	if (p->res) {
+> > -		/*
+> > -		 * Autodiscovered regions may not have been able to insert their
+> > -		 * resource.
+> > -		 */
+> > -		if (p->res->parent)
+> > -			remove_resource(p->res);
+> > -		kfree(p->res);
+> > -		p->res = NULL;
+> > +	if (!res)
+> > +		return;
+> > +	/*
+> > +	 * Autodiscovered regions may not have been able to insert their
+> > +	 * resource. If a Soft Reserved parent resource exists, try to
+> > +	 * remove that also.
+> > +	 */
+> > +	if (p->res->parent) {
+> > +		parent = p->res->parent;
+> > +		start = p->res->start;
+> > +		end = p->res->end;
+> > +		remove_resource(p->res);
+> > +		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags) &&
+> > +		    parent->desc == IORES_DESC_SOFT_RESERVED)
+> > +			remove_soft_reserved(cxlr, parent, start, end);
+> >   	}
+> > +
+> > +	kfree(p->res);
+> > +	p->res = NULL;
+> >   }
+> >   static int free_hpa(struct cxl_region *cxlr)
