@@ -2,146 +2,222 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C7C001DB
-	for <linux-cxl@archiver.kernel.org>; Mon, 14 Aug 2023 07:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B30C001B0
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Aug 2023 00:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233158AbjHNHVJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Aug 2023 03:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47938 "EHLO
+        id S231192AbjHOALW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Aug 2023 20:11:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233155AbjHNHVF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Aug 2023 03:21:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAFB010CE
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 00:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691997617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BKY0cWansTn2sEL2WxZ0Fij0kBQM026mOZKicS65Eq4=;
-        b=RXuS2IjBm/ooV+hoo98s0n3WsnS6BXgU29wbUF3qX0wwhG52qCcW8M5gSAsBWb3nK0AeAN
-        mWE6NFj+Ohhn2QzHJWkgg7x/mqvzE7A/EoACYBbUX23tK9NQ5ii3sqCNlcC/vYy5tbM/Fo
-        hdlP/gnJmBWXcVpRZL03wBj/S6WSNJY=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-260-9jAd_yJ8P4G_FanpjFs_Ew-1; Mon, 14 Aug 2023 03:20:15 -0400
-X-MC-Unique: 9jAd_yJ8P4G_FanpjFs_Ew-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b9cd6a555aso38588951fa.3
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 00:20:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691997613; x=1692602413;
-        h=content-transfer-encoding:in-reply-to:organization:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BKY0cWansTn2sEL2WxZ0Fij0kBQM026mOZKicS65Eq4=;
-        b=ZDrDFaWE8x7pXyzeys5Zjw9SYOJTTG+MqhqVoZSSf3PRj6em69bNbAbbtMsM1C/fEP
-         o+rybScsP7c3yNizq5LuYNFWLAkuF9u3e2UZLl46a+iOYMRh2OhAFMBRh2nBoEBpZYFe
-         TyP3O3htfKgB7G5uylTKQpjsSMfjYFtU1OxdBtZZvTGBFxnnnez/BOrGb196Nm5VLknN
-         5M5h0NEjKEWACGnk+lZOAsingAFA5ASFLIueJU+x2dVD5muAc9mkWIScJDBe30h2rGb5
-         vQiaeXCCYIw3R7va24lUhOTiPard3aXy8uE9oFN9fx6SmruFmdkHMLSLMdhkOUxKzK+f
-         ebWw==
-X-Gm-Message-State: AOJu0YzmROcLKi8qmhF7iegyVcF5vY8SwTUnfJVBKNKNDXVWumiyJOXZ
-        NqrVaL4EDFk2rjZvuzjT+TyKB1S4o4e1wXy/UvWNpu2+IHzhepY3Lf59wX3vBfl/AtQTcDHAFI9
-        wFZ2W0A2Y5EpD8MTxYMxi
-X-Received: by 2002:a05:6512:3985:b0:4fd:f77d:5051 with SMTP id j5-20020a056512398500b004fdf77d5051mr7102540lfu.26.1691997613535;
-        Mon, 14 Aug 2023 00:20:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxFH/xSsrS7cCDMRZUmdj0b6BcGtlavDhBDrFjlcKGEEig3zD2C6+9p5Bp+5A4BT4BRvhHWQ==
-X-Received: by 2002:a05:6512:3985:b0:4fd:f77d:5051 with SMTP id j5-20020a056512398500b004fdf77d5051mr7102519lfu.26.1691997613136;
-        Mon, 14 Aug 2023 00:20:13 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2b:d900:2d94:8433:b532:3418? (p200300d82f2bd9002d948433b5323418.dip0.t-ipconnect.de. [2003:d8:2f2b:d900:2d94:8433:b532:3418])
-        by smtp.gmail.com with ESMTPSA id n20-20020a7bc5d4000000b003fe2a40d287sm13602203wmk.1.2023.08.14.00.20.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Aug 2023 00:20:12 -0700 (PDT)
-Message-ID: <6ce08d40-332b-217e-6203-c73dd7203e96@redhat.com>
-Date:   Mon, 14 Aug 2023 09:20:11 +0200
+        with ESMTP id S231511AbjHOAKw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Aug 2023 20:10:52 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20251715
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 17:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692058251; x=1723594251;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XMc72IhyVSkHswoPTsm0F32ueYDrhmfHP2+xd9/fZpI=;
+  b=bExxdbqzOWDk/0S33KNshjjW0YEdt7skTe2Q1JvTZjGqLkHc+D9pH1gp
+   ai2JBI4dRVlOUPyePPAInA2gpaU9uKHrUL8TNjG71TKIKhjv+C8Z59zsf
+   lh7pqPnFjxK6NhnTjpclelsZGGoGXDNfTnTc773iiEzKEh9USVshPAYgG
+   cS3IpPCVWdHsl3+c7ILDzoBZzFZ/J/k8yM+3NOWfRcy8GlxIhUJ+tZ7TV
+   J1exajq1KzOGHdXfggJbCwGcgj+dNFqjG5zc6qO0HHctqyFoFrcf6RmKk
+   q8piamlTWpPUU9tyaLJ3cL+BOiuziV8ilHVoC89uGEBPeIAar8GsLW4Oj
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="357131779"
+X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
+   d="scan'208";a="357131779"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:10:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="1064258914"
+X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
+   d="scan'208";a="1064258914"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.148.210])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:10:50 -0700
+Date:   Mon, 14 Aug 2023 17:10:48 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] cxl/region: Try to add a region resource to a
+ soft reserved parent
+Message-ID: <ZNrCiNDgFEopsC7e@aschofie-mobl2>
+References: <cover.1691176651.git.alison.schofield@intel.com>
+ <6cd07222f169d951921486306187e87951853035.1691176651.git.alison.schofield@intel.com>
+ <20230807152407.000070e6@Huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: split memmap_on_memory requests
- across memblocks
-To:     "Huang, Ying" <ying.huang@intel.com>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "Jonathan.Cameron@Huawei.com" <Jonathan.Cameron@Huawei.com>,
-        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-        "jmoyer@redhat.com" <jmoyer@redhat.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bernhard Walle <bernhard.walle@gmx.de>
-References: <20230720-vv-kmem_memmap-v2-0-88bdaab34993@intel.com>
- <20230720-vv-kmem_memmap-v2-2-88bdaab34993@intel.com>
- <87wmyp26sw.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <abe41c22f72ad600541c6f2b199180b1cbcbb780.camel@intel.com>
- <87jzty9l6w.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <87jzty9l6w.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807152407.000070e6@Huawei.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 14.08.23 08:45, Huang, Ying wrote:
-> "Verma, Vishal L" <vishal.l.verma@intel.com> writes:
+On Mon, Aug 07, 2023 at 03:24:07PM +0100, Jonathan Cameron wrote:
+> On Fri,  4 Aug 2023 12:31:39 -0700
+> alison.schofield@intel.com wrote:
 > 
->> On Mon, 2023-07-24 at 13:54 +0800, Huang, Ying wrote:
->>> Vishal Verma <vishal.l.verma@intel.com> writes:
->>>
->>>>
->>>> @@ -2035,12 +2056,38 @@ void try_offline_node(int nid)
->>>>   }
->>>>   EXPORT_SYMBOL(try_offline_node);
->>>>
->>>> -static int __ref try_remove_memory(u64 start, u64 size)
->>>> +static void __ref __try_remove_memory(int nid, u64 start, u64 size,
->>>> +                                    struct vmem_altmap *altmap)
->>>>   {
->>>> -       struct vmem_altmap mhp_altmap = {};
->>>> -       struct vmem_altmap *altmap = NULL;
->>>> -       unsigned long nr_vmemmap_pages;
->>>> -       int rc = 0, nid = NUMA_NO_NODE;
->>>> +       /* remove memmap entry */
->>>> +       firmware_map_remove(start, start + size, "System RAM");
->>>
->>> If mhp_supports_memmap_on_memory(), we will call
->>> firmware_map_add_hotplug() for whole range.  But here we may call
->>> firmware_map_remove() for part of range.  Is it OK?
->>>
->>
->> Good point, this is a discrepancy in the add vs remove path. Can the
->> firmware memmap entries be moved up a bit in the add path, and is it
->> okay to create these for each memblock? Or should these be for the
->> whole range? I'm not familiar with the implications. (I've left it as
->> is for v3 for now, but depending on the direction I can update in a
->> future rev).
+> > From: Alison Schofield <alison.schofield@intel.com>
+> > 
+> > During region autodiscovery, the region driver always inserts the
+> > region resource as a child of the root decoder, a CXL WINDOW. It
+> > has the effect of making a soft reserved resource, with an exactly
+> > matching address range, a child of the region resource.
+> > 
+> > It looks like this in /proc/iomem:
+> > 
+> > 2080000000-29dbfffffff : CXL Window 0
+> >   2080000000-247fffffff : region0
+> >     2080000000-247fffffff : Soft Reserved
+> > 
+> > Search for soft reserved resources that include the region resource,
+> > and add the new region resource as a child of that found resource.
+> > If a soft reserved resource is not found, insert to the root decoder
+> > as usual.
+> > 
+> > With this change, it looks like this:
+> > 
+> > 2080000000-29dbfffffff : CXL Window 0
+> >   2080000000-247fffffff : Soft Reserved
+> >     2080000000-247fffffff : region0
+> > 
+> > This odd parenting only occurs when the resources are an exact match.
+> > When the region resource only uses part of a soft reserved resource,
+> > the parenting appears more logical like this:
+> > 
+> > 2080000000-29dbfffffff : CXL Window 0
+> >   2080000000-287fffffff : Soft Reserved
+> >     2080000000-247fffffff : region0
+> > 
+> > Aside from the more logical appearance, this change is in preparation
+> > for further cleanup in region teardown. A follow-on patch intends to
+> > find and free soft reserved resources upon region teardown.
+> > 
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > 
-> Cced more firmware map developers and maintainers.
+> Hi Alison
 > 
-> Per my understanding, we should create one firmware memmap entry for
-> each memblock.
+> A comment and a question inline.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> >  drivers/cxl/core/region.c | 32 ++++++++++++++++++++++++++++++--
+> >  1 file changed, 30 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index e115ba382e04..36c0c0dd5697 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -2709,6 +2709,28 @@ static int match_region_by_range(struct device *dev, void *data)
+> >  	return rc;
+> >  }
+> >  
+> > +static int insert_resource_soft_reserved(struct resource *soft_res, void *arg)
+> > +{
+> > +	struct resource *parent, *new, *res = arg;
+> > +	bool found = false;
+> > +
+> > +	parent = soft_res->parent;
+> > +	if (!parent)
+> > +		return 0;
+> > +
+> > +	/* Caller provides a copy of soft_res. Find the actual resource. */
+> > +	for (new = parent->child; new; new = new->sibling) {
+> > +		if (resource_contains(new, soft_res)) {
+> > +			found = true;
+> > +			break;
+> > +		}
+> > +	}
+> > +	if (found)
+> > +		return insert_resource(new, res) == 0;
+> 
 
-Ideally we should create it for the whole range, ti limit the ranges. 
-But it really only matters for DIMMs; for dax/kmem, we'll not create any 
-firmware entries.
+Thanks for the review Jonathan,
 
--- 
-Cheers,
+> Why not do this in the the if above then directly return there?
+That would be better. Thanks.
 
-David / dhildenb
+
+> Also, should we get an error here, does it make sense to carry on?
+> (I don't think we can get an error, but if that's the case we shouldn't
+>  be checking for one)  If it's a corner we aren't sure about, good
+> to add a comment on what the error case might be and what we are doing
+> as a result.'
+
+
+I see now this is hiding 2 cases in one error return
+1) no soft reserved found
+2) soft reserved found but failed to insert.
+
+I think it can get an error if firmware set up soft reserved on bad
+boundaries.
+
+...scroll down...
+
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /* Establish an empty region covering the given HPA range */
+> >  static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+> >  					   struct cxl_endpoint_decoder *cxled)
+> > @@ -2719,7 +2741,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+> >  	struct cxl_region_params *p;
+> >  	struct cxl_region *cxlr;
+> >  	struct resource *res;
+> > -	int rc;
+> > +	int rc = 0;
+> >  
+> >  	do {
+> >  		cxlr = __create_region(cxlrd, cxled->mode,
+> > @@ -2755,7 +2777,13 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+> >  
+> >  	*res = DEFINE_RES_MEM_NAMED(hpa->start, range_len(hpa),
+> >  				    dev_name(&cxlr->dev));
+> > -	rc = insert_resource(cxlrd->res, res);
+> > +
+> > +	/* Try inserting to a Soft Reserved parent, fallback to root decoder */
+> > +	if (walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED, 0,
+> > +				res->start, res->end, res,
+> > +				insert_resource_soft_reserved) != 1)
+> > +		rc = insert_resource(cxlrd->res, res);
+> > +
+
+I'll rework this error handling to not try to insert to root decoder if
+insert to soft reserved fails. Only try to insert to root decoder if soft
+reserved does not exist.
+
+> >  	if (rc) {
+> >  		/*
+> >  		 * Platform-firmware may not have split resources like "System
+>
+
+I think the insert to soft reserved can fail as describe here:
+(Let me show this complete error case above)
+
+	if (rc) {
+                /*
+                 * Platform-firmware may not have split resources like "System
+                 * RAM" on CXL window boundaries see cxl_region_iomem_release()
+                 */
+                dev_warn(cxlmd->dev.parent,
+                         "%s:%s: %s %s cannot insert resource\n",
+                         dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+                         __func__, dev_name(&cxlr->dev));
+        }
+
+
+
 
