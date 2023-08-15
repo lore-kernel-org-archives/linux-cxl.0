@@ -2,43 +2,43 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976E0C001B0
-	for <linux-cxl@archiver.kernel.org>; Tue, 15 Aug 2023 00:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF01CC001B0
+	for <linux-cxl@archiver.kernel.org>; Tue, 15 Aug 2023 00:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbjHOANb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 14 Aug 2023 20:13:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
+        id S233040AbjHOARQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 14 Aug 2023 20:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233638AbjHOANK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Aug 2023 20:13:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7481715
-        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 17:13:09 -0700 (PDT)
+        with ESMTP id S233678AbjHOARI (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 14 Aug 2023 20:17:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF08B1723
+        for <linux-cxl@vger.kernel.org>; Mon, 14 Aug 2023 17:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692058389; x=1723594389;
+  t=1692058627; x=1723594627;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=M8izhfAWfLsbjmbfkp9NTlJYQ4yXDoM/CY7F7JQ2JlA=;
-  b=MP3fgmOrH+Qi9V/ICUBycPjyL5d336wBVRoPASPOYkM1YiMqFB/nTicr
-   NlqMM6eYXzRuJFJ9YRP0us1FLzYduWhaOESARd6mCQJr9YVOy+WotMbzD
-   P0ZH+U6YMHj7rxu7bVNVwGy2LYG0uPrClhhxlXw2Kq7H6UFNSuzj/44WP
-   WzUETrEEGW3XEfu7ECQykf3G/LVgiSublgstGyXCPxTaevx8rHVzd/Dfr
-   EG+2S3NgzkJ7Q96LwP4/X8DehOL8dphfSYYVLuely1PfuGysPR+XlXEeG
-   X/c8AT3D0jYqwyEBgFHtI+zmm5nSPZVHMHxNg7yfu7pJvzJ5z8EhSN1AZ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="369639305"
+  bh=jFc+jOQDUYtWpuypeq2s3t7TlP6fFAIwQXxumkHBJAc=;
+  b=C3saqESKEiocgSqOrp6ExNDq2ZVdN1JLK3nK0xWs56xwV0/AmHfPHA+N
+   yq5Y0iHtHjdr9ZRpQCnme5doUalCrl664uUTQva4OzzDZLYashEy65d/c
+   G/gQs9UdiuMRxSlIQzg+MpKbCYBNmIuKie3azBmtnrs01IE0gIY328NQ5
+   UC5z9F+usfJzNb3jjFA6ML7Ssz+iGOlL2Zu/PZmQZUk6Wbh9vUFdQRUpo
+   H5y8MNXn+iUTe0+spxC1sdrzw41P99BDbplUg3ussbpUI5Ym/D9Q+UrUH
+   r7vMxpGB5/9H3KlDcy5/ihuhqI8Z4MxhZL9U0byvftBlaCCSF7cHqnYtB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="357132462"
 X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
-   d="scan'208";a="369639305"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:13:07 -0700
+   d="scan'208";a="357132462"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:17:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="736708752"
+X-IronPort-AV: E=McAfee;i="6600,9927,10802"; a="1064261032"
 X-IronPort-AV: E=Sophos;i="6.01,173,1684825200"; 
-   d="scan'208";a="736708752"
+   d="scan'208";a="1064261032"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.212.148.210])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:13:07 -0700
-Date:   Mon, 14 Aug 2023 17:13:05 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2023 17:17:06 -0700
+Date:   Mon, 14 Aug 2023 17:17:05 -0700
 From:   Alison Schofield <alison.schofield@intel.com>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     Davidlohr Bueso <dave@stgolabs.net>,
@@ -47,215 +47,122 @@ Cc:     Davidlohr Bueso <dave@stgolabs.net>,
         Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] cxl/region: Remove a soft reserved resource at
- region teardown
-Message-ID: <ZNrDEY4G5oAwChy9@aschofie-mobl2>
-References: <cover.1691176651.git.alison.schofield@intel.com>
- <2aa10593dbe6a4a8da35077aa492c8aacd363901.1691176651.git.alison.schofield@intel.com>
- <f0d84d36-44a5-840c-9ff3-0dcdfdeb69ee@intel.com>
+Subject: Re: [PATCH] cxl/region: Refactor granularity select in
+ cxl_port_setup_targets()
+Message-ID: <ZNrEAfT/4wXTNHjT@aschofie-mobl2>
+References: <20230804232726.1672782-1-alison.schofield@intel.com>
+ <6a944c93-6ad6-c934-afa5-276277d4757d@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0d84d36-44a5-840c-9ff3-0dcdfdeb69ee@intel.com>
+In-Reply-To: <6a944c93-6ad6-c934-afa5-276277d4757d@intel.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Aug 09, 2023 at 04:34:43PM -0700, Dave Jiang wrote:
+On Wed, Aug 09, 2023 at 03:28:36PM -0700, Dave Jiang wrote:
 > 
 > 
-> On 8/4/23 12:31, alison.schofield@intel.com wrote:
+> On 8/4/23 16:27, alison.schofield@intel.com wrote:
 > > From: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > When CXL regions are created through autodiscovery their resource
-> > may be a child of a soft reserved resource. Today, when such a
-> > region is destroyed, its soft reserved resource remains in place.
-> > That means that the HPA range that the region could release, is
-> > actually unavailable for reuse.
+> > In cxl_port_setup_targets() the region driver validates the
+> > configuration of auto-discovered region decoders, as well
+> > as decoders the driver is preparing to program.
+> > 
+> > The existing calculations use the encrypted interleave granularity
 > 
-> I think it reads better without the comma here.
+> s/encrypted/encoded/
 
-Agree. Thanks!
-Alison
+Thanks. I'll clean up the language around this to use encoded & normal.
+
 
 > 
+> > value, the eig, to create an interleave granularity that properly
+> > fans out when routing an x1 interleave to a greater than x1 interleave.
 > > 
-> > Free the soft reserved resource on region teardown by examining
-> > the alignment of the resources, and handling accordingly. The
-> > two resources, will be exactly aligned, partially aligned, or not
-> > aligned at all.
+> > That all worked well, until this config came along:
+> > Host Bridge: 2 way at 256 granularity
+> >      Switch Decoder_A:	1 way at 512
+> >          Endpoint_X:	2 way at 512
+> >      Switch Decoder_B:	1 way at 512
+> >          Endpoint_Y:	2 way at 512
 > > 
-> > |----------- "Soft Reserved" -----------|
-> > |-------------- "Region #" -------------|
-> > Exactly aligned. Any dangling children move up to a parent on removal.
-> > The removal of this soft reserved seems guaranteed, however, the
-> > availability of the address range for use depends on complete cleanup
-> > of the region child resources also.
+> > When the Host Bridge interleave is greater that 1, and the root
+> > decoder interleave is exactly 1, the region driver needs to
+> > consider the number of targets in the region when calculating
+> > the expected granularity.
 > > 
-> > |----------- "Soft Reserved" -----------|
-> > |-------- "Region #" -------|
-> > or
-> > |----------- "Soft Reserved" -----------|
-> >              |-------- "Region #" -------|
-> > Either start or end aligns. Unlike removing a resource, which simply
-> > moves child resources up the resource tree, adjustments fail if any
-> > child resources map the range being truncated. So, this one will fail
-> > for dangling child resources of the region.
+> > While examining the existing logic, and trying to cover the case
+> > above, a couple of simplifications appeared, hence this proposed
+> > refactoring.
 > > 
-> > |---------- "Soft Reserved" ----------|
-> >          |---- "Region #" ----|
-> > No alignment. Freeing the resource of a region in the middle is possible
-> > if no child resources map the leading or trailing address space.
+> > The first simplicfication is to apply the logic to the unencrypted
+> s/simplicfication/simplification/
+> s/unencrypted/normal?/
+
+Got it.
+
+
+> 
+> 
+> > values and use the existing helper function granularity_to_eig() to
+> > translate the desired granularity to the encrypted form. This means
+> 
+> s/encrypted/encoded/
+
+Got it.
+
+> 
+> > the comment and code regarding setting address bits is discarded.
+> > Although that logic was not wrong, it adds a level of complexity that
+> > is not required in the granularity selection. The eig and eiw are
+> > indeed part of the routing instructions programmed into the decoders.
+> > Up-level the discussion to plain ways and granularity for clearer
+> > analysis.
+> > 
+> > The second simplification reduces the logic to a single granularity
+> > calculation that works for all cases. The new calculation doesn't
+> > care if parent_iw => 1,  because parent_iw is used as a multiplier.
+> > 
+> > The refactor cleans up a useless assignment of eiw, made after the iw
+> > is already calculated.
+> > 
+> > Regression testing included an examination of all of the ways and
+> > granularity selections made during a run of the cxl_test unit tests.
+> > There were no differences in selections before and after this patch.
 > > 
 > > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > > ---
-> >   drivers/cxl/core/region.c | 132 +++++++++++++++++++++++++++++++++++---
-> >   1 file changed, 123 insertions(+), 9 deletions(-)
+> >   drivers/cxl/core/region.c | 17 ++++++++---------
+> >   1 file changed, 8 insertions(+), 9 deletions(-)
 > > 
 > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 36c0c0dd5697..b8a02afa3514 100644
+> > index e115ba382e04..5a1cc59cca99 100644
 > > --- a/drivers/cxl/core/region.c
 > > +++ b/drivers/cxl/core/region.c
-> > @@ -569,22 +569,136 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
-> >   	return 0;
-> >   }
-> > +static int add_soft_reserved(struct resource *parent, resource_size_t start,
-> > +			     resource_size_t len, unsigned long flags)
-> > +{
-> > +	struct resource *res;
-> > +	int rc;
-> > +
-> > +	res = kmalloc(sizeof(*res), GFP_KERNEL);
-> > +	if (!res)
-> > +		return -ENOMEM;
-> > +
-> > +	*res = DEFINE_RES_MEM_NAMED(start, len, "Soft Reserved");
-> > +
-> > +	res->desc = IORES_DESC_SOFT_RESERVED;
-> > +	res->flags = res->flags | flags;
-> > +	rc = insert_resource(parent, res);
-> > +	if (rc)
-> > +		kfree(res);
-> > +
-> > +	return rc;
-> > +}
-> > +
-> > +static void remove_soft_reserved(struct cxl_region *cxlr, struct resource *soft,
-> > +				 resource_size_t start, resource_size_t end)
-> > +{
-> > +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> > +	resource_size_t new_start, new_end;
-> > +	struct resource *parent;
-> > +	unsigned long flags;
-> > +	int rc;
-> > +
-> > +	/* Prevent new usage while removing or adjusting the resource */
-> > +	mutex_lock(&cxlrd->range_lock);
-> > +
-> > +	/* Aligns at both resource start and end */
-> > +	if (soft->start == start && soft->end == end) {
-> > +		rc = remove_resource(soft);
-> > +		if (rc)
-> > +			dev_dbg(&cxlr->dev,
-> > +				"cannot remove soft reserved resource %pr\n",
-> > +				soft);
-> > +		else
-> > +			kfree(soft);
-> > +
-> > +		goto out;
-> > +	}
-> > +
-> > +	/* Aligns at either resource start or end */
-> > +	if (soft->start == start || soft->end == end) {
-> > +		if (soft->start == start) {
-> > +			new_start = end + 1;
-> > +			new_end = soft->end;
-> > +		} else {
-> > +			new_start = soft->start;
-> > +			new_end = start + 1;
-> > +		}
-> > +		rc =  adjust_resource(soft, new_start, new_end - new_start + 1);
-> > +		if (rc)
-> > +			dev_dbg(&cxlr->dev,
-> > +				"cannot adjust soft reserved resource %pr\n",
-> > +				soft);
-> > +		goto out;
-> > +	}
-> > +
-> > +	/*
-> > +	 * No alignment. Attempt a 3-way split that removes the part of
-> > +	 * the resource the region occupied, and then creates new soft
-> > +	 * reserved resources for the leading and trailing addr space.
-> > +	 * adjust_resource() will stop the attempt if there are any
-> > +	 * child resources.
-> > +	 */
-> > +
-> > +	/* Save the original soft reserved resource params before adjusting */
-> > +	new_start = soft->start;
-> > +	new_end = soft->end;
-> > +	parent = soft->parent;
-> > +	flags = soft->flags;
-> > +
-> > +	rc = adjust_resource(soft, start, end - start);
+> > @@ -1154,16 +1154,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+> >   	}
+> >   	/*
+> > -	 * If @parent_port is masking address bits, pick the next unused address
+> > -	 * bit to route @port's targets.
+> > +	 * Interleave granularity is a multiple of @parent_port granularity.
+> > +	 * Multiplier is the parent port interleave ways.
+> >   	 */
+> > -	if (parent_iw > 1 && cxl_rr->nr_targets > 1) {
+> > -		u32 address_bit = max(peig + peiw, eiw + peig);
+> > -
+> > -		eig = address_bit - eiw + 1;
+> > -	} else {
+> > -		eiw = peiw;
+> > -		eig = peig;
+> > +	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
 > > +	if (rc) {
 > > +		dev_dbg(&cxlr->dev,
-> > +			"cannot adjust soft reserved resource %pr\n", soft);
-> > +		goto out;
-> > +	}
-> > +	rc = remove_resource(soft);
-> > +	if (rc)
-> > +		dev_warn(&cxlr->dev,
-> > +			 "cannot remove soft reserved resource %pr\n", soft);
-> > +
-> > +	rc = add_soft_reserved(parent, new_start, start - new_start, flags);
-> > +	if (rc)
-> > +		dev_warn(&cxlr->dev,
-> > +			 "cannot add new soft reserved resource at %pa\n",
-> > +			 &new_start);
-> > +
-> > +	rc = add_soft_reserved(parent, end + 1, new_end - end, flags);
-> > +	if (rc)
-> > +		dev_warn(&cxlr->dev,
-> > +			 "cannot add new soft reserved resource at %pa + 1\n",
-> > +			 &end);
-> > +out:
-> > +	mutex_unlock(&cxlrd->range_lock);
-> > +}
-> > +
-> >   static void cxl_region_iomem_release(struct cxl_region *cxlr)
-> >   {
-> >   	struct cxl_region_params *p = &cxlr->params;
-> > +	struct resource *parent, *res = p->res;
-> > +	resource_size_t start, end;
-> >   	if (device_is_registered(&cxlr->dev))
-> >   		lockdep_assert_held_write(&cxl_region_rwsem);
-> > -	if (p->res) {
-> > -		/*
-> > -		 * Autodiscovered regions may not have been able to insert their
-> > -		 * resource.
-> > -		 */
-> > -		if (p->res->parent)
-> > -			remove_resource(p->res);
-> > -		kfree(p->res);
-> > -		p->res = NULL;
-> > +	if (!res)
-> > +		return;
-> > +	/*
-> > +	 * Autodiscovered regions may not have been able to insert their
-> > +	 * resource. If a Soft Reserved parent resource exists, try to
-> > +	 * remove that also.
-> > +	 */
-> > +	if (p->res->parent) {
-> > +		parent = p->res->parent;
-> > +		start = p->res->start;
-> > +		end = p->res->end;
-> > +		remove_resource(p->res);
-> > +		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags) &&
-> > +		    parent->desc == IORES_DESC_SOFT_RESERVED)
-> > +			remove_soft_reserved(cxlr, parent, start, end);
+> > +			"%s: invalid granularity calculation (%d * %d)\n",
+> > +			dev_name(&parent_port->dev), parent_ig, parent_iw);
+> > +		return rc;
 > >   	}
-> > +
-> > +	kfree(p->res);
-> > +	p->res = NULL;
-> >   }
-> >   static int free_hpa(struct cxl_region *cxlr)
+> >   	rc = eig_to_granularity(eig, &ig);
+> > 
+> > base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
