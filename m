@@ -2,145 +2,241 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43095C7113C
-	for <linux-cxl@archiver.kernel.org>; Fri, 18 Aug 2023 14:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C4C71155
+	for <linux-cxl@archiver.kernel.org>; Fri, 18 Aug 2023 15:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352983AbjHROWI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 18 Aug 2023 10:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
+        id S1377915AbjHRPBq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 18 Aug 2023 11:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377799AbjHROVm (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Aug 2023 10:21:42 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362E444AD
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Aug 2023 07:21:07 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6b9e478e122so729989a34.1
-        for <linux-cxl@vger.kernel.org>; Fri, 18 Aug 2023 07:21:07 -0700 (PDT)
+        with ESMTP id S1377938AbjHRPB3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 18 Aug 2023 11:01:29 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA3ECD
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Aug 2023 08:01:27 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6bd0afbd616so852424a34.0
+        for <linux-cxl@vger.kernel.org>; Fri, 18 Aug 2023 08:01:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=zptcorp-com.20221208.gappssmtp.com; s=20221208; t=1692368466; x=1692973266;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=99sGZIKgxCK53DlS6QmRK3Uk9lULewHMd2a4hKrilsk=;
-        b=IXJ6iElg4KUVZhI5+f4+NaFLae2QI5q/9+9iM5kT9VJ6P3MRztAf9ZKZS5UfTt2IU1
-         lTLMewgubVIAEBWL3Qthl15TWnnvwv/y2yrm9jKErsf5wPfhG8miuGMvHd43zUe6FVz8
-         iGSgylDshkUEMkk/d07k1rk1V/3gvnefQokpDmJYA5/6vRB6ezMpUgbGwif4aZWRBXVo
-         38ECMsN4gc5rwAYTFsuB6+v3cl12oIt1TgsVJiRm4fCTalLAh4DLo20mKjWcNN+LYr63
-         k1PSEAz1kz/HITTAvn0Z75mrAbrWNvOo+rR4KUw/fu2WePL8gGKise39CJYDGL9EdrKu
-         kRtA==
+        d=zptcorp-com.20221208.gappssmtp.com; s=20221208; t=1692370887; x=1692975687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Kje/PV1xglcggGamancPzKU941PuqAntqW1KXqMmmM=;
+        b=49/W4fouQKW2VTKcDkIzv5a+6QwkSox2NIaX0nvZsFcZiJJnhaJGGV1XdAjAERvVKh
+         dgLRePBtHQvHC3yGcS1B23Q2rLuCxHfxdBd1x45NM8Ln1ol02qM8zdPnnccBswD6R/Xg
+         CfWaJFymLjbbZxWHNFRcuLIzp2unFNbfRJmHCTye9qblx0nXfUQzYd/Pw8g9ApNaRZwN
+         jTDyYcYcbxWWdffw3GvVx2dN/9SpBt6TcwG0Us1nieCqcSdUpPwXh3SgJ7Wr3stINluX
+         Tc4IXbxn+D6SQX+9gV73Trgg5RFkcTggF6tXqH82aofmHqJxy2143AC93Tes0EJIpFp7
+         OYUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692368466; x=1692973266;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=99sGZIKgxCK53DlS6QmRK3Uk9lULewHMd2a4hKrilsk=;
-        b=hM1LbVi8GpVNWiW/ov/j1AH7N5eZJZelmOVbCIkMff5MZwDry5bWKx5Wk461yFnD/O
-         akUSlLAeI5WxxUqiycynOH74flKjqkltRBEhCAXesoNY6zIjTDLMBCt5BL7THOVPgMlr
-         oKV7Jn5kGXNkHWQJ+WIbBGvmdEd69UA4Kx3H7+AfSIPVyZweNsFMioWJNrjtpaZ54PFi
-         cocblLRvelFBZMqzJDNQhzhjZ2Od/WvBUiEGRGu0r8Do4FDrV2lDYpyYCm57wsB9ONCk
-         8pHj6WcThuRWLII/4rL/IqxVY9zy+GfY4goAlsPOYeuzVPZjdTYrwRvLBKyB1BIhLg1K
-         Pxag==
-X-Gm-Message-State: AOJu0Yy6m2g8AE+zVNu5+7wqFrGx9a4Eb0HK3wqm+9xvgUFIfUPvSZ4n
-        ePVz5C+EMv1mzM54m+ScjkW6QKNIj3E3WxHdyDw2woJJCYo49odGH+kubQ5YvUf/oW3R/dSALih
-        QV1XT3kIu8+xI4X20AxilO+j6oV3reTqYcJw5A1ooGsc=
-X-Google-Smtp-Source: AGHT+IHDdCPJjWKHB4moiYjqJyxPZmhgVD16vkK7gw9N4DHBZKOffHI3Gx8GnNHJbF4dQ9ww3GuWGE4CmbCjdSdVHh4=
-X-Received: by 2002:a05:6830:1d47:b0:6b7:54cb:7bf9 with SMTP id
- p7-20020a0568301d4700b006b754cb7bf9mr2772463oth.0.1692368466323; Fri, 18 Aug
- 2023 07:21:06 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692370887; x=1692975687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Kje/PV1xglcggGamancPzKU941PuqAntqW1KXqMmmM=;
+        b=UdmvIty0SGG81fR/3oS//e6mgMUFkaaSakxc8W6Eda4QRCsj1YlNRhoG+PcyzsJhAR
+         /i3FxiIvBTqGdE0/BkQSGgS8Ti3Qa5xPBGlc9mt2WpLFNuHdBKkEoRuLOIpMi82a9jhY
+         5UfOxQXK1usvIayOw/xNRKce/VMs/xPsJdeFjFdinFf6Fv8qBEU+BTF5U0VRWuXxdkzT
+         K9Pgv/JMq+J1I1CIGcwpDB9meBcSLQSTVUy4KTP8BEGDFhV7Avc0nc4CKk86PH3mcFWi
+         m28P58qVEjvPXaba2okC0T6gbn10Fw1k+xJx8k3wXt2FSJakSy2oSau6pWoWVXh//E82
+         H95g==
+X-Gm-Message-State: AOJu0YyRm3O87LfTH9gkbq6cqfozpcDC1F45FmQVJOw3uZc2utuwhPFg
+        8lfrrFyKTSt0c1QXcoBF04Dx26RUt4KXmcKKtcQKDaf0PnJWMlVMRKZFXfcjlRuHViQ2pzi0esL
+        vHc8GU3OSohXiePzxKe1oe7ENh17D5jf5+SY3kijV
+X-Google-Smtp-Source: AGHT+IExbWFGOiSmGJviT1YFZ8O5IMRVDMqA6foYBWIUO8proNm6fVkIZVAtbQxwMZj5myTIHO6pJKW9eOonKbQ98sE=
+X-Received: by 2002:a05:6830:1d95:b0:6bc:f6d0:87d2 with SMTP id
+ y21-20020a0568301d9500b006bcf6d087d2mr2455379oti.38.1692370887136; Fri, 18
+ Aug 2023 08:01:27 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com>
+In-Reply-To: <CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com>
 From:   Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com>
-Date:   Fri, 18 Aug 2023 16:20:55 +0200
-Message-ID: <CAGEDW0dTTvnm-ZzSv_aDLNKj-gZja1A2s3+HKfY8wBn5rX4XdQ@mail.gmail.com>
-Subject: QEMU freeze with CXL memory in Normal zone and stress-ng
-To:     linux-cxl@vger.kernel.org
+Date:   Fri, 18 Aug 2023 17:01:16 +0200
+Message-ID: <CAGEDW0fWCfuG3KrNSwDjNVGAZVL9NJgF26Jqyd840HfQdNGLbA@mail.gmail.com>
+Subject: Re: qemu cxl memory expander shows numa_node -1
+To:     Sajjan Rao <sajjanr@gmail.com>
+Cc:     linux-cxl@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hello,
+Hi,
 
-I have noticed a system-wide freeze when using CXL memory as RAM in
-the Normal zone to run stress-ng. I am writing to check if this is a
-known issue and/or if anyone has hints on how to debug this.
+I am not an expert (and not 100% sure if that's what you want to do),
+but here's one way to get your configuration to work:
+1. Disable KVM.
+2. Remove the CXL NUMA node from the QEMU command.
+3. Use the ndctl utilities in the guest to initialize your CXL memory
+and associated NUMA node.
 
-Versions tested:
-- linux-stable v6.4.11
-- QEMU from https://gitlab.com/jic23/qemu/ - branches cxl-2023-05-19,
-cxl-2023-05-25, cxl-2023-07-17 (cxl-2023-07-17 also tested with linux
-v6.5-rc6; haven=E2=80=99t managed to boot with cxl-2023-08-07)
-- ndctl v77
-- stress-ng, version 0.15.06
-- Debian GNU/Linux 12 (bookworm)
+More specifically, I changed your QEMU command as follows:
 
-To reproduce, start QEMU with the command:
-    qemu-system-x86_64 -drive
-file=3D/images/debian-12-cxl.qco
-w2,format=3Dqcow2,index=3D0,media=3Ddisk,id=3Dhd
-\
-    -m 2G,slots=3D8,maxmem=3D8G \
-    -smp 4 \
-    -kernel /linux/arch/x86_64/boot/bzImage \
-    -append "root=3D/dev/sda1 console=3DttyS0 serial" \
-    -machine type=3Dq35,nvdimm=3Don,cxl=3Don \
-    -object memory-backend-ram,id=3Dcxl-mem1,share=3Don,size=3D1G \
-    -object memory-backend-ram,id=3Dcxl-lsa1,share=3Don,size=3D128M \
-    -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
-    -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Droot_port_cxl,chassis=3D0,slot=
+    qemu-system-x86_64 \
+     -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+     -machine type=3Dq35,cxl=3Don \
+     -m 8G \
+     -smp cpus=3D8 \
+     -object memory-backend-ram,size=3D4G,id=3Dm0 \
+     -object memory-backend-ram,size=3D4G,id=3Dm1 \
+     -object memory-backend-ram,size=3D2G,id=3Dcxl-mem1 \
+     -numa node,memdev=3Dm0,cpus=3D0-3,nodeid=3D0 \
+     -numa node,memdev=3Dm1,cpus=3D4-7,nodeid=3D1 \
+     -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.168.0.9  \
+     -device virtio-net-pci,netdev=3Dnet0 \
+     -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+     -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,slot=
 =3D2 \
-    -device cxl-type3,bus=3Droot_port_cxl,memdev=3Dcxl-mem1,lsa=3Dcxl-lsa1,=
-id=3Dcxl-mem0
-\
-    -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D1G
+     -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl-mem1,id=3Dc=
+xl-mem1 \
+     -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+     -nographic
 
-Initialize CXL region as RAM in zone Normal:
-    cxl create-region -d decoder0.0
-    ndctl create-namespace --region=3Dregion0 --mode devdax --continue
-    echo offline > /sys/devices/system/memory/auto_online_blocks
-    daxctl reconfigure-device --no-movable --mode=3Dsystem-ram all
+In the guest, install ndctl: https://github.com/pmem/ndctl
 
-Running "ls" on the CXL memory  (NUMA node 1) works fine:
-    root@cxl-img:~# numactl --membind 1 ls /usr
-    bin    include  lib32  libexec  local  share
-    games  lib      lib64  libx32   sbin   src
+After that, you should be able to see the CXL memory:
+    root@cxl-img:~# cxl list
+    [
+      {
+        "memdev":"mem0",
+        "ram_size":2147483648,
+        "serial":0,
+        "host":"0000:0d:00.0"
+      }
+    ]
 
-Running stress-ng in CXL completely freezes the system. No interaction
-with the guest is possible after a few seconds:
-    root@cxl-img:~# numactl --membind 1 stress-ng --vm 1 --vm-bytes 10M -t =
-10s
-    stress-ng: info: [238] setting to a 10 second run per stressor
-    stress-ng: info: [238] dispatching hogs: 1 vm
+And initialize it as RAM:
+    root@cxl-img:~# cxl create-region -d decoder0.0 -s 2147483648 -t ram
+    ...
 
-Running stress-ng in NUMA node 0 (not CXL) works fine. When the VM
-freezes, the QEMU monitor can still be accessed, but the guest kernel
-does not seem to respond to any external commands, e.g., (qemu)
-sendkey alt-sysrq-c. Then, QEMU also freezes when trying to quit it.
-I have tried to debug the (guest) kernel using gdb (starting QEMU with
-the -s flag) but, after the freeze happens, gdb reports that =E2=80=9CThe
-target is not responding to interrupt requests=E2=80=9D.
-Debugging QEMU works but I haven=E2=80=99t managed to find something
-helpful that way. Also tried (briefly) kdb with no luck there either -
-the kernel does not respond at all.
+root@cxl-img:~# lsmem --output-all
+    RANGE                                  SIZE  STATE REMOVABLE BLOCK
+NODE  ZONES
+    0x0000000000000000-0x0000000007ffffff  128M online       yes     0
+   0   None
+    0x0000000008000000-0x000000007fffffff  1.9G online       yes  1-15
+   0  DMA32
+    0x0000000100000000-0x000000017fffffff    2G online       yes 32-47
+   0 Normal
+    0x0000000180000000-0x000000027fffffff    4G online       yes 48-79
+   1 Normal
+    0x0000000290000000-0x000000030fffffff    2G online       yes 82-97
+   2 Normal
 
-Patching hw/mem/cxl_type3.c functions cxl_type3_read() and
-cxl_type3_write() to count the calls shows that CXL accesses happen in
-both cases. In the "ls" invocation, I see around 100k reads and 100k
-writes; in the "stress-ng" case, I see approximately 4 million reads
-and 2.3 million writes before the VM freezes.
+    Memory block size:       128M
+    Total online memory:      10G
+    Total offline memory:      0B
 
-The issue does not appear if the CXL memory is initialized in the
-Movable zone instead, i.e., when using the daxctl command without the
---no-movable flag:
-    daxctl reconfigure-device --mode=3Dsystem-ram all
 
-The issue however appears when using a volatile CXL device and
-initializing CXL as Normal with the command:
-    cxl create-region -d decoder0.0 -s 1073741824 -t ram
+    root@cxl-img:~# cat /proc/iomem
+    ...
+    290000000-38fffffff : CXL Window 0
+      290000000-30fffffff : region0
+        290000000-30fffffff : dax0.0
+          290000000-30fffffff : System RAM (kmem)
 
-Any ideas are welcome, thanks in advance!
+
+Then you can generate traffic in the CXL NUMA node, for example:
+
+    root@cxl-img:~# numactl --membind 2 ls
+
+Note: The above is with linux v6.4.11.
+
+Hope that helps!
 
 Kind regards,
 Dimitris
+
+
+
+
+
+
+
+On Fri, Aug 18, 2023 at 11:39=E2=80=AFAM Sajjan Rao <sajjanr@gmail.com> wro=
+te:
+>
+> Hello,
+>
+> I have a qemu + cxl configuration coming up with one configured type 3
+> device. My goal is to generate some cxl.mem traffic in this
+> configuration.
+> However the numa_node is always showing as -1. I have tried various
+> qemu command line parameters including to explicitly set numa_node for
+> cxl devices.
+>
+> Here is my qemu command line
+> --------
+> qemu-system-x86_64 \
+>  -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+>  -machine type=3Dq35,accel=3Dkvm,cxl=3Don \
+>  -m 10G \
+>  -smp cpus=3D8 \
+>  -object memory-backend-ram,size=3D4G,id=3Dm0 \
+>  -object memory-backend-ram,size=3D4G,id=3Dm1 \
+>  -object memory-backend-ram,size=3D2G,id=3Dcxl-mem1 \
+>  -numa node,memdev=3Dm0,cpus=3D0-1,nodeid=3D0 \
+>  -numa node,memdev=3Dm1,cpus=3D2-3,nodeid=3D1 \
+>  -numa node,memdev=3Dcxl-mem1,cpus=3D4-7,nodeid=3D2 \
+>  -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.168.0.9  \
+>  -device virtio-net-pci,netdev=3Dnet0 \
+>  -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+>  -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,slot=
+=3D2 \
+>  -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl-mem1,id=3Dcxl=
+-mem1 \
+>  -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+>  -enable-kvm \
+>  -nographic
+> -----
+>
+> I see that the cxl device is listed in lspci output
+> ------
+> #lspci | grep -i cxl
+> 0d:00.0 CXL: Intel Corporation Device 0d93 (rev 01)
+>
+> #lspci -s 0d:00.0 -vvv | grep -i numa
+> #
+>
+> -------
+>
+> sysfs output
+> ----------
+> #cat /sys/bus/cxl/devices/mem0/numa_node
+> -1
+> --------
+>
+> numactl output
+>
+> ------------------
+> #numactl -H
+> available: 3 nodes (0-2)
+> node 0 cpus: 0 1
+> node 0 size: 3910 MB
+> node 0 free: 3776 MB
+> node 1 cpus: 2 3
+> node 1 size: 4031 MB
+> node 1 free: 3927 MB
+> node 2 cpus: 4 5 6 7
+> node 2 size: 2011 MB
+> node 2 free: 1785 MB
+> node distances:
+> node   0   1   2
+>   0:  10  20  20
+>   1:  20  10  20
+>   2:  20  20  10
+> -------------------
+>
+> The numa_node 2 is expected to be mapped to a CXL device, I do see
+> some activity in numastat output, but it's unclear if this is really
+> mapped to the CXL device since the device itself says numa_node is -1
+> (expected to show 2).
+>
+> Has anybody seen this behavior? Any help will be greatly appreciated.
+>
+> Thanks,
+> Sajjan
 
 --=20
 **CONFIDENTIALITY NOTICE:*
