@@ -2,323 +2,312 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ACFEE49A8
-	for <linux-cxl@archiver.kernel.org>; Sat, 19 Aug 2023 12:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D2AEE49A6
+	for <linux-cxl@archiver.kernel.org>; Mon, 21 Aug 2023 10:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229718AbjHSMoe (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 19 Aug 2023 08:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
+        id S234540AbjHUKBH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Aug 2023 06:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjHSMod (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 19 Aug 2023 08:44:33 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697CA255DF
-        for <linux-cxl@vger.kernel.org>; Sat, 19 Aug 2023 05:43:21 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-34bbb4b580eso4272015ab.0
-        for <linux-cxl@vger.kernel.org>; Sat, 19 Aug 2023 05:43:21 -0700 (PDT)
+        with ESMTP id S232433AbjHUKBG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Aug 2023 06:01:06 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8FBA1
+        for <linux-cxl@vger.kernel.org>; Mon, 21 Aug 2023 03:01:03 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-52a069edca6so1302335a12.3
+        for <linux-cxl@vger.kernel.org>; Mon, 21 Aug 2023 03:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20221208.gappssmtp.com; s=20221208; t=1692449001; x=1693053801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3lPt9bOjFivDo87V3ytl/FnY4Rf+fYowvMDHnMldtPU=;
-        b=I5Pg84JnHDLPV3xfwn1iyQ3F+tW2ky5RnzoGGq+FiYHrrM5ztW3qK1R3AOOLRPz+w2
-         u0QaYSQ3SLeTmz0Tw+vjcb7pC9TYt4xUej4VepvyWvN1cVfGzJSKcmkj5sH5T7Z2EB1o
-         fLgHPrYJrSFr6OboEMT1QPzICElK25G/2jdovRl3wqN1oN+jal5C8cUZ0rajI54+zxbh
-         q0mYXD9vfQ6shzR502SckT4iiYudB3PRwUUt0Cri0vuU2QzbZpqNVui8CuycgcxbkXo4
-         HY3Jpkzz2jex2jWOmHqKOS2X11o4Xgcn6sEpzZfZPXdfwXQ2zmA70NS6eFn29w7ALaGt
-         AZog==
+        d=gmail.com; s=20221208; t=1692612062; x=1693216862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8iJAVYSByH5t509oud7k69tbujLFo+H5RnpmT6Mt2t8=;
+        b=oJM9yPI+FCYABUWKjiTy1zwCla04plgqtd/AttLqLUYufXXd1qfR5lcXopbla2rBRW
+         MxvqHhpv4VXJPqCOPdGUoq/jGiRvY0WjH5y9oeJf8x9UhzUYDP5NIkcfT5REH5bsrePX
+         ybdV8k2kZZJN6OEZNoemGCmFsiBfxC2W0DjoAcZ8hrl+NIxx6fSpApHmGvbkXiBlck+i
+         XamokmQoMlIZ4J8gaw2uo+u4p8qSLA+CdQ7FE8zE1AlLIxzpZn9K2ujL1OvV93LjngI2
+         1yIp9tuip7N7ok7CC1bm+KgIgO74OhdeTZaNvOxT68KqM1+pjHC1w1cV5XvYhwY/IibB
+         a5Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692449001; x=1693053801;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3lPt9bOjFivDo87V3ytl/FnY4Rf+fYowvMDHnMldtPU=;
-        b=asX55TF98D9yLDznwGxF5vltMazV0FraAM0DQwlrxQO2G8Ox28RBwm2aDAacagzLGc
-         +184+t2zea7aMdZgprvK53eld0kUz+8ZeDMSUpPiP4GFC5mgDMP/yGXN2t/sgM33nMfC
-         ukxCmJUQpvVFD+7ILDEK5KeK/52Z0+ZTr2BgzuZD+4Zze932enxQyglfLDe6WlarUYv7
-         7VsIvOGjPBkyEBBR67euLsqgogS7dUdFY015EncUp5RvBLEPsoxXXe+aSs8vo5UvnoY9
-         gzFjG/hxQJcmXHXMSL0HeITudqBhtM73oXzt4ANicNynivIDizOJbe3HE6LC5VV5FOor
-         5aOQ==
-X-Gm-Message-State: AOJu0YwA319qcVvyTe8j/9kk57vOhW9pu4VCtGQOahFoUk7DSOUuyoaM
-        ITiZahTavnS2DSXaewRQv3vciA==
-X-Google-Smtp-Source: AGHT+IErDWBWM6urJLWVW030sV6IIJWZ4eVZz3kS4uCCmdfwb3GjG5pDZPeLMVtsW75y8rvFbwnNZw==
-X-Received: by 2002:a05:6e02:caf:b0:349:983c:493b with SMTP id 15-20020a056e020caf00b00349983c493bmr2493565ilg.8.1692449000572;
-        Sat, 19 Aug 2023 05:43:20 -0700 (PDT)
-Received: from nixos.tailf4e9e.ts.net ([47.75.78.161])
-        by smtp.googlemail.com with ESMTPSA id m30-20020a63711e000000b0056365ee8603sm3220511pgc.67.2023.08.19.05.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Aug 2023 05:43:20 -0700 (PDT)
-From:   Xueshi Hu <xueshi.hu@smartx.com>
-To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, jayalk@intworks.biz, daniel@ffwll.ch,
-        deller@gmx.de, bcrl@kvack.org, viro@zeniv.linux.org.uk,
-        brauner@kernel.org, jack@suse.com, tytso@mit.edu,
-        adilger.kernel@dilger.ca, miklos@szeredi.hu,
-        mike.kravetz@oracle.com, muchun.song@linux.dev, djwong@kernel.org,
-        willy@infradead.org, akpm@linux-foundation.org, hughd@google.com
-Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        Xueshi Hu <xueshi.hu@smartx.com>
-Subject: [PATCH] fs: clean up usage of noop_dirty_folio
-Date:   Sat, 19 Aug 2023 20:42:25 +0800
-Message-Id: <20230819124225.1703147-1-xueshi.hu@smartx.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20221208; t=1692612062; x=1693216862;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8iJAVYSByH5t509oud7k69tbujLFo+H5RnpmT6Mt2t8=;
+        b=aXrtZtMmj7FT2+GDcVXK4VXmW/zA2l0fUsSHTlOcNkXwTxvLi2ROVAVJo+jI9/1IyC
+         THofDHE+DDpFYO7sIGEQ2WqHaMenwfZB86lXf+Xzy2+gVCSeaY49CfM1JFfYodrxpMRz
+         KCyDoYk85mzX+qi5iYcNi0axVtbqGSpVjCknUrdHvfuLLtarOHSzeJsL5pyuyHGnc3lS
+         netzfU1gX3IgK3h0LMfimpCbBuFHrzS8zMg6eCffpQtVJSAg5EG0uN/pvmD5QW5kLt1U
+         o9ZL3hpzF8c35KKbpFA8igJ+v8sC2XXYYajkwLHAXXXIpxmILJzH0IkL89BQPouJQ+nW
+         8dBA==
+X-Gm-Message-State: AOJu0Yz9x7lhdC48v5QGuyML/PoVEWYHdFnZWuAJ607shQqUgSRaXoep
+        rxchJ5q7hKqbq21BV5l1DjnmXXvGZ/CYtelvGVnrn2o1Fqc=
+X-Google-Smtp-Source: AGHT+IFIUacRctIXgTF0DSGp+fVl+nFb4+XjR/VfD5/yrjqRYKohZPEjn3fAs3iq8q/ubKYQJHSEmCY0A0hdK9JRLDE=
+X-Received: by 2002:a50:ef08:0:b0:525:7d81:71ee with SMTP id
+ m8-20020a50ef08000000b005257d8171eemr4382836eds.15.1692612061063; Mon, 21 Aug
+ 2023 03:01:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAAg4PaqsGZvkDk_=PH+Oz-yeEUVcVsrumncAgegRKuxe_YoFhA@mail.gmail.com>
+ <CAGEDW0fWCfuG3KrNSwDjNVGAZVL9NJgF26Jqyd840HfQdNGLbA@mail.gmail.com>
+In-Reply-To: <CAGEDW0fWCfuG3KrNSwDjNVGAZVL9NJgF26Jqyd840HfQdNGLbA@mail.gmail.com>
+From:   Sajjan Rao <sajjanr@gmail.com>
+Date:   Mon, 21 Aug 2023 15:30:49 +0530
+Message-ID: <CAAg4Pard=zh_5p650UcNdQEoQWZLM6G7KRqdPQHLmaR4oZMJ3w@mail.gmail.com>
+Subject: Re: qemu cxl memory expander shows numa_node -1
+To:     Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com>
+Cc:     linux-cxl@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-In folio_mark_dirty(), it will automatically fallback to
-noop_dirty_folio() if a_ops->dirty_folio is not registered.
+Hello Dimitrios,
 
-As anon_aops, dev_dax_aops and fb_deferred_io_aops becames empty, remove
-them too.
+Thank you for the pointers. I have the 6.4.10 kernel and modified the
+qemu options, but now I see an error creating the region.
+Is there anything else I missed?
 
-Signed-off-by: Xueshi Hu <xueshi.hu@smartx.com>
----
- drivers/dax/device.c                | 5 -----
- drivers/video/fbdev/core/fb_defio.c | 5 -----
- fs/aio.c                            | 1 -
- fs/ext2/inode.c                     | 1 -
- fs/ext4/inode.c                     | 1 -
- fs/fuse/dax.c                       | 1 -
- fs/hugetlbfs/inode.c                | 1 -
- fs/libfs.c                          | 5 -----
- fs/xfs/xfs_aops.c                   | 1 -
- include/linux/pagemap.h             | 1 -
- mm/page-writeback.c                 | 6 +++---
- mm/secretmem.c                      | 1 -
- mm/shmem.c                          | 1 -
- mm/swap_state.c                     | 1 -
- 14 files changed, 3 insertions(+), 28 deletions(-)
+[root@cxl-test /]# cxl create-region -d decoder0.0 -s 268435456 -t ram
+[ 4144.982608] cxl region0: Failed to synchronize CPU cache state
+cxl region: create_region: region0: failed to commit decode: No such
+device or address
 
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index 30665a3ff6ea..018aa9f88ec7 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -345,10 +345,6 @@ static unsigned long dax_get_unmapped_area(struct file *filp,
- 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
- }
- 
--static const struct address_space_operations dev_dax_aops = {
--	.dirty_folio	= noop_dirty_folio,
--};
--
- static int dax_open(struct inode *inode, struct file *filp)
- {
- 	struct dax_device *dax_dev = inode_dax(inode);
-@@ -358,7 +354,6 @@ static int dax_open(struct inode *inode, struct file *filp)
- 	dev_dbg(&dev_dax->dev, "trace\n");
- 	inode->i_mapping = __dax_inode->i_mapping;
- 	inode->i_mapping->host = __dax_inode;
--	inode->i_mapping->a_ops = &dev_dax_aops;
- 	filp->f_mapping = inode->i_mapping;
- 	filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
- 	filp->f_sb_err = file_sample_sb_err(filp);
-diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
-index 274f5d0fa247..08be3592281f 100644
---- a/drivers/video/fbdev/core/fb_defio.c
-+++ b/drivers/video/fbdev/core/fb_defio.c
-@@ -221,10 +221,6 @@ static const struct vm_operations_struct fb_deferred_io_vm_ops = {
- 	.page_mkwrite	= fb_deferred_io_mkwrite,
- };
- 
--static const struct address_space_operations fb_deferred_io_aops = {
--	.dirty_folio	= noop_dirty_folio,
--};
--
- int fb_deferred_io_mmap(struct fb_info *info, struct vm_area_struct *vma)
- {
- 	vma->vm_ops = &fb_deferred_io_vm_ops;
-@@ -307,7 +303,6 @@ void fb_deferred_io_open(struct fb_info *info,
- {
- 	struct fb_deferred_io *fbdefio = info->fbdefio;
- 
--	file->f_mapping->a_ops = &fb_deferred_io_aops;
- 	fbdefio->open_count++;
- }
- EXPORT_SYMBOL_GPL(fb_deferred_io_open);
-diff --git a/fs/aio.c b/fs/aio.c
-index 77e33619de40..4cf386f9cb1c 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -484,7 +484,6 @@ static int aio_migrate_folio(struct address_space *mapping, struct folio *dst,
- #endif
- 
- static const struct address_space_operations aio_ctx_aops = {
--	.dirty_folio	= noop_dirty_folio,
- 	.migrate_folio	= aio_migrate_folio,
- };
- 
-diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
-index 75983215c7a1..ce191bdf1c78 100644
---- a/fs/ext2/inode.c
-+++ b/fs/ext2/inode.c
-@@ -971,7 +971,6 @@ const struct address_space_operations ext2_aops = {
- static const struct address_space_operations ext2_dax_aops = {
- 	.writepages		= ext2_dax_writepages,
- 	.direct_IO		= noop_direct_IO,
--	.dirty_folio		= noop_dirty_folio,
- };
- 
- /*
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 43775a6ca505..67c1710c01b0 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3561,7 +3561,6 @@ static const struct address_space_operations ext4_da_aops = {
- static const struct address_space_operations ext4_dax_aops = {
- 	.writepages		= ext4_dax_writepages,
- 	.direct_IO		= noop_direct_IO,
--	.dirty_folio		= noop_dirty_folio,
- 	.bmap			= ext4_bmap,
- 	.swap_activate		= ext4_iomap_swap_activate,
- };
-diff --git a/fs/fuse/dax.c b/fs/fuse/dax.c
-index 8e74f278a3f6..50ca767cbd5e 100644
---- a/fs/fuse/dax.c
-+++ b/fs/fuse/dax.c
-@@ -1326,7 +1326,6 @@ bool fuse_dax_inode_alloc(struct super_block *sb, struct fuse_inode *fi)
- static const struct address_space_operations fuse_dax_file_aops  = {
- 	.writepages	= fuse_dax_writepages,
- 	.direct_IO	= noop_direct_IO,
--	.dirty_folio	= noop_dirty_folio,
- };
- 
- static bool fuse_should_enable_dax(struct inode *inode, unsigned int flags)
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 7b17ccfa039d..5404286f0c13 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -1266,7 +1266,6 @@ static void hugetlbfs_destroy_inode(struct inode *inode)
- static const struct address_space_operations hugetlbfs_aops = {
- 	.write_begin	= hugetlbfs_write_begin,
- 	.write_end	= hugetlbfs_write_end,
--	.dirty_folio	= noop_dirty_folio,
- 	.migrate_folio  = hugetlbfs_migrate_folio,
- 	.error_remove_page	= hugetlbfs_error_remove_page,
- };
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 5b851315eeed..982f220a9ee3 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -627,7 +627,6 @@ const struct address_space_operations ram_aops = {
- 	.read_folio	= simple_read_folio,
- 	.write_begin	= simple_write_begin,
- 	.write_end	= simple_write_end,
--	.dirty_folio	= noop_dirty_folio,
- };
- EXPORT_SYMBOL(ram_aops);
- 
-@@ -1231,16 +1230,12 @@ EXPORT_SYMBOL(kfree_link);
- 
- struct inode *alloc_anon_inode(struct super_block *s)
- {
--	static const struct address_space_operations anon_aops = {
--		.dirty_folio	= noop_dirty_folio,
--	};
- 	struct inode *inode = new_inode_pseudo(s);
- 
- 	if (!inode)
- 		return ERR_PTR(-ENOMEM);
- 
- 	inode->i_ino = get_next_ino();
--	inode->i_mapping->a_ops = &anon_aops;
- 
- 	/*
- 	 * Mark the inode dirty from the very beginning,
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 451942fb38ec..300acea9ee63 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -590,6 +590,5 @@ const struct address_space_operations xfs_address_space_operations = {
- 
- const struct address_space_operations xfs_dax_aops = {
- 	.writepages		= xfs_dax_writepages,
--	.dirty_folio		= noop_dirty_folio,
- 	.swap_activate		= xfs_iomap_swapfile_activate,
- };
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 716953ee1ebd..9de3be51dee2 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -1074,7 +1074,6 @@ bool folio_clear_dirty_for_io(struct folio *folio);
- bool clear_page_dirty_for_io(struct page *page);
- void folio_invalidate(struct folio *folio, size_t offset, size_t length);
- int __set_page_dirty_nobuffers(struct page *page);
--bool noop_dirty_folio(struct address_space *mapping, struct folio *folio);
- 
- #ifdef CONFIG_MIGRATION
- int filemap_migrate_folio(struct address_space *mapping, struct folio *dst,
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index d3f42009bb70..638ec965cf0b 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2588,13 +2588,12 @@ int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
- /*
-  * For address_spaces which do not use buffers nor write back.
-  */
--bool noop_dirty_folio(struct address_space *mapping, struct folio *folio)
-+static bool noop_dirty_folio(struct address_space *mapping, struct folio *folio)
- {
- 	if (!folio_test_dirty(folio))
- 		return !folio_test_set_dirty(folio);
- 	return false;
- }
--EXPORT_SYMBOL(noop_dirty_folio);
- 
- /*
-  * Helper function for set_page_dirty family.
-@@ -2799,7 +2798,8 @@ bool folio_mark_dirty(struct folio *folio)
- 		 */
- 		if (folio_test_reclaim(folio))
- 			folio_clear_reclaim(folio);
--		return mapping->a_ops->dirty_folio(mapping, folio);
-+		if (mapping->a_ops->dirty_folio)
-+			return mapping->a_ops->dirty_folio(mapping, folio);
- 	}
- 
- 	return noop_dirty_folio(mapping, folio);
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index 86442a15d12f..3fe1c35f9c8d 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -157,7 +157,6 @@ static void secretmem_free_folio(struct folio *folio)
- }
- 
- const struct address_space_operations secretmem_aops = {
--	.dirty_folio	= noop_dirty_folio,
- 	.free_folio	= secretmem_free_folio,
- 	.migrate_folio	= secretmem_migrate_folio,
- };
-diff --git a/mm/shmem.c b/mm/shmem.c
-index f5af4b943e42..90a7c046894a 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4088,7 +4088,6 @@ static int shmem_error_remove_page(struct address_space *mapping,
- 
- const struct address_space_operations shmem_aops = {
- 	.writepage	= shmem_writepage,
--	.dirty_folio	= noop_dirty_folio,
- #ifdef CONFIG_TMPFS
- 	.write_begin	= shmem_write_begin,
- 	.write_end	= shmem_write_end,
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index f8ea7015bad4..3666439487db 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -30,7 +30,6 @@
-  */
- static const struct address_space_operations swap_aops = {
- 	.writepage	= swap_writepage,
--	.dirty_folio	= noop_dirty_folio,
- #ifdef CONFIG_MIGRATION
- 	.migrate_folio	= migrate_folio,
- #endif
--- 
-2.40.1
+Thanks,
+Sajjan
 
+-- qemu
+
+qemu-system-x86_64 \
+ -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+ -machine type=3Dq35,cxl=3Don \
+ -m 4G \
+ -smp cpus=3D2 \
+ -accel tcg,thread=3Dsingle \
+ -object memory-backend-ram,size=3D4G,id=3Dm0 \
+ -object memory-backend-ram,size=3D256M,id=3Dcxl-mem1 \
+ -numa node,memdev=3Dm0,cpus=3D0-1,nodeid=3D0 \
+ -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.168.0.9  \
+ -device virtio-net-pci,netdev=3Dnet0 \
+ -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+ -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,slot=3D2=
+ \
+ -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl-mem1,id=3Dcxl-m=
+em1 \
+ -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+ -nographic
+
+-----
+
+[root@cxl-test /]# uname -r
+6.4.10-200.fc38.x86_64
+[root@cxl-test /]# cxl list
+[
+  {
+    "memdev":"mem0",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:0d:00.0"
+  }
+]
+[root@cxl-test /]# cxl create-region -d decoder0.0 -s 268435456 -t ram
+[ 4144.982608] cxl region0: Failed to synchronize CPU cache state
+cxl region: create_region: region0: failed to commit decode: No such
+device or address
+
+[root@cxl-test /]#
+
+On Fri, Aug 18, 2023 at 8:31=E2=80=AFPM Dimitrios Palyvos
+<dimitrios.palyvos@zptcorp.com> wrote:
+>
+> Hi,
+>
+> I am not an expert (and not 100% sure if that's what you want to do),
+> but here's one way to get your configuration to work:
+> 1. Disable KVM.
+> 2. Remove the CXL NUMA node from the QEMU command.
+> 3. Use the ndctl utilities in the guest to initialize your CXL memory
+> and associated NUMA node.
+>
+> More specifically, I changed your QEMU command as follows:
+>
+>     qemu-system-x86_64 \
+>      -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+>      -machine type=3Dq35,cxl=3Don \
+>      -m 8G \
+>      -smp cpus=3D8 \
+>      -object memory-backend-ram,size=3D4G,id=3Dm0 \
+>      -object memory-backend-ram,size=3D4G,id=3Dm1 \
+>      -object memory-backend-ram,size=3D2G,id=3Dcxl-mem1 \
+>      -numa node,memdev=3Dm0,cpus=3D0-3,nodeid=3D0 \
+>      -numa node,memdev=3Dm1,cpus=3D4-7,nodeid=3D1 \
+>      -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.168.0.9 =
+ \
+>      -device virtio-net-pci,netdev=3Dnet0 \
+>      -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+>      -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,sl=
+ot=3D2 \
+>      -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl-mem1,id=
+=3Dcxl-mem1 \
+>      -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+>      -nographic
+>
+> In the guest, install ndctl: https://github.com/pmem/ndctl
+>
+> After that, you should be able to see the CXL memory:
+>     root@cxl-img:~# cxl list
+>     [
+>       {
+>         "memdev":"mem0",
+>         "ram_size":2147483648,
+>         "serial":0,
+>         "host":"0000:0d:00.0"
+>       }
+>     ]
+>
+> And initialize it as RAM:
+>     root@cxl-img:~# cxl create-region -d decoder0.0 -s 2147483648 -t ram
+>     ...
+>
+> root@cxl-img:~# lsmem --output-all
+>     RANGE                                  SIZE  STATE REMOVABLE BLOCK
+> NODE  ZONES
+>     0x0000000000000000-0x0000000007ffffff  128M online       yes     0
+>    0   None
+>     0x0000000008000000-0x000000007fffffff  1.9G online       yes  1-15
+>    0  DMA32
+>     0x0000000100000000-0x000000017fffffff    2G online       yes 32-47
+>    0 Normal
+>     0x0000000180000000-0x000000027fffffff    4G online       yes 48-79
+>    1 Normal
+>     0x0000000290000000-0x000000030fffffff    2G online       yes 82-97
+>    2 Normal
+>
+>     Memory block size:       128M
+>     Total online memory:      10G
+>     Total offline memory:      0B
+>
+>
+>     root@cxl-img:~# cat /proc/iomem
+>     ...
+>     290000000-38fffffff : CXL Window 0
+>       290000000-30fffffff : region0
+>         290000000-30fffffff : dax0.0
+>           290000000-30fffffff : System RAM (kmem)
+>
+>
+> Then you can generate traffic in the CXL NUMA node, for example:
+>
+>     root@cxl-img:~# numactl --membind 2 ls
+>
+> Note: The above is with linux v6.4.11.
+>
+> Hope that helps!
+>
+> Kind regards,
+> Dimitris
+>
+>
+>
+>
+>
+>
+>
+> On Fri, Aug 18, 2023 at 11:39=E2=80=AFAM Sajjan Rao <sajjanr@gmail.com> w=
+rote:
+> >
+> > Hello,
+> >
+> > I have a qemu + cxl configuration coming up with one configured type 3
+> > device. My goal is to generate some cxl.mem traffic in this
+> > configuration.
+> > However the numa_node is always showing as -1. I have tried various
+> > qemu command line parameters including to explicitly set numa_node for
+> > cxl devices.
+> >
+> > Here is my qemu command line
+> > --------
+> > qemu-system-x86_64 \
+> >  -hda /var/lib/libvirt/images/CXL-Test_1.qcow2 \
+> >  -machine type=3Dq35,accel=3Dkvm,cxl=3Don \
+> >  -m 10G \
+> >  -smp cpus=3D8 \
+> >  -object memory-backend-ram,size=3D4G,id=3Dm0 \
+> >  -object memory-backend-ram,size=3D4G,id=3Dm1 \
+> >  -object memory-backend-ram,size=3D2G,id=3Dcxl-mem1 \
+> >  -numa node,memdev=3Dm0,cpus=3D0-1,nodeid=3D0 \
+> >  -numa node,memdev=3Dm1,cpus=3D2-3,nodeid=3D1 \
+> >  -numa node,memdev=3Dcxl-mem1,cpus=3D4-7,nodeid=3D2 \
+> >  -netdev user,id=3Dnet0,net=3D192.168.0.0/24,dhcpstart=3D192.168.0.9  \
+> >  -device virtio-net-pci,netdev=3Dnet0 \
+> >  -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,id=3Dcxl.1 \
+> >  -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3Dcxl_rp_port0,chassis=3D0,slot=
+=3D2 \
+> >  -device cxl-type3,bus=3Dcxl_rp_port0,volatile-memdev=3Dcxl-mem1,id=3Dc=
+xl-mem1 \
+> >  -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.size=3D4G \
+> >  -enable-kvm \
+> >  -nographic
+> > -----
+> >
+> > I see that the cxl device is listed in lspci output
+> > ------
+> > #lspci | grep -i cxl
+> > 0d:00.0 CXL: Intel Corporation Device 0d93 (rev 01)
+> >
+> > #lspci -s 0d:00.0 -vvv | grep -i numa
+> > #
+> >
+> > -------
+> >
+> > sysfs output
+> > ----------
+> > #cat /sys/bus/cxl/devices/mem0/numa_node
+> > -1
+> > --------
+> >
+> > numactl output
+> >
+> > ------------------
+> > #numactl -H
+> > available: 3 nodes (0-2)
+> > node 0 cpus: 0 1
+> > node 0 size: 3910 MB
+> > node 0 free: 3776 MB
+> > node 1 cpus: 2 3
+> > node 1 size: 4031 MB
+> > node 1 free: 3927 MB
+> > node 2 cpus: 4 5 6 7
+> > node 2 size: 2011 MB
+> > node 2 free: 1785 MB
+> > node distances:
+> > node   0   1   2
+> >   0:  10  20  20
+> >   1:  20  10  20
+> >   2:  20  20  10
+> > -------------------
+> >
+> > The numa_node 2 is expected to be mapped to a CXL device, I do see
+> > some activity in numastat output, but it's unclear if this is really
+> > mapped to the CXL device since the device itself says numa_node is -1
+> > (expected to show 2).
+> >
+> > Has anybody seen this behavior? Any help will be greatly appreciated.
+> >
+> > Thanks,
+> > Sajjan
+>
+> --
+> **CONFIDENTIALITY NOTICE:*
+> *
+> *The contents of this email message and any
+> attachments are intended solely for the addressee(s) and may contain
+> confidential and/or privileged information and may be legally protected
+> from disclosure. If you are not the intended recipient of this message or
+> their agent, or if this message has been addressed to you in error, pleas=
+e
+> immediately alert the sender by reply email and then delete this message
+> and any attachments. If you are not the intended recipient, you are hereb=
+y
+> notified that any use, dissemination, copying, or storage of this message
+> or its attachments is strictly prohibited. *
