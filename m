@@ -2,94 +2,252 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DA7EE49A6
-	for <linux-cxl@archiver.kernel.org>; Mon, 21 Aug 2023 12:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66F3EE4993
+	for <linux-cxl@archiver.kernel.org>; Mon, 21 Aug 2023 18:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234794AbjHUMVM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Aug 2023 08:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48658 "EHLO
+        id S237077AbjHUSOt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Aug 2023 14:14:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232733AbjHUMVL (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Aug 2023 08:21:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33784E2;
-        Mon, 21 Aug 2023 05:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5IiWcS1pGUM8RhlF+xFAzuOei17PLjfs94NmDiNvo6g=; b=MR/QHwNqCgmOxVS7c6EPkcvTOM
-        ewCAH+I5VyIrZrxJzwYfZLZdCgL8s90TQvZ+npslaTk64GCHlebjy/zTEFSP1XKvpvz0F1mp04dGb
-        Q4Mw4xNqTcDxevU3YZo9ZuZG7u7901KOLFAZQFBrfJj6DTvFoLmKqeOrbe9EGAWJD80G+5oUvjC9E
-        GE7/tDN7WYGjkchDeLjeoEXqx63p+j9VqmffpAwOVP34B8h7G2NH+m2Ijbr5WZl9m60lEmymGlSTH
-        3KMB/ugwe8njVx8yVWKJI7O8kZmYJA5QdxgWpCri1u728bx/fA3oJh+UCaWAdHAzd3/DRUeZhFvtJ
-        MESTOvHA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qY3tZ-00A7pc-KQ; Mon, 21 Aug 2023 12:20:33 +0000
-Date:   Mon, 21 Aug 2023 13:20:33 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Xueshi Hu <xueshi.hu@smartx.com>, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, dave.jiang@intel.com,
-        jayalk@intworks.biz, daniel@ffwll.ch, deller@gmx.de,
-        bcrl@kvack.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-        jack@suse.com, tytso@mit.edu, adilger.kernel@dilger.ca,
-        miklos@szeredi.hu, mike.kravetz@oracle.com, muchun.song@linux.dev,
-        djwong@kernel.org, akpm@linux-foundation.org, hughd@google.com,
-        nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] fs: clean up usage of noop_dirty_folio
-Message-ID: <ZONWka8NpDVGzI8h@casper.infradead.org>
-References: <20230819124225.1703147-1-xueshi.hu@smartx.com>
- <20230821111643.5vxtktznjqk42cak@quack3>
+        with ESMTP id S236158AbjHUSOs (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Aug 2023 14:14:48 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D2B710E
+        for <linux-cxl@vger.kernel.org>; Mon, 21 Aug 2023 11:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692641684; x=1724177684;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dBhUPfL41O3d3+5y359VALWO/si9HvuvMds6LKMnTIs=;
+  b=gydhm+0DLUdNiKEutV87CHibkvegU4ecdaQR7TZwrkOz13e/VaTdWLmp
+   3O/1Qf1qJkMLoOoeZkgkQSECf35MUYuQP8HmA3XduDX/I6Du1YL/OcW6L
+   9E6WjuM8H6O4yIspyakaBGTIzCjfsiZ+RH6vTLQ9wdOQsSC5akmxZnOYe
+   RNXgxf1mz0QAhXwNp4r2fts4NYCCaADhkZFs1ttVLJd8NTpxrxHvPdQeM
+   qELP0OVRJI3OMdV5lbCvSJISRJkUwBRhYTk8Bdt/J/L5VmSwomfBYiIvG
+   13wNH1+XQ5Jox6jeh9W8cnSKsJJHtqaF5vl5t/5Hvttpg2/sjHcsLrXpx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="353978361"
+X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
+   d="scan'208";a="353978361"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 11:14:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="859569977"
+X-IronPort-AV: E=Sophos;i="6.01,190,1684825200"; 
+   d="scan'208";a="859569977"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.106.94])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 11:14:41 -0700
+From:   alison.schofield@intel.com
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Derick Marks <derick.w.marks@intel.com>
+Subject: [PATCH v3 2/2] cxl/region: Remove a soft reserved resource at region teardown
+Date:   Mon, 21 Aug 2023 11:14:37 -0700
+Message-Id: <29312c0765224ae76862d59a17748c8188fb95f1.1692638817.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1692638817.git.alison.schofield@intel.com>
+References: <cover.1692638817.git.alison.schofield@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230821111643.5vxtktznjqk42cak@quack3>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 21, 2023 at 01:16:43PM +0200, Jan Kara wrote:
-> On Sat 19-08-23 20:42:25, Xueshi Hu wrote:
-> > In folio_mark_dirty(), it will automatically fallback to
-> > noop_dirty_folio() if a_ops->dirty_folio is not registered.
-> > 
-> > As anon_aops, dev_dax_aops and fb_deferred_io_aops becames empty, remove
-> > them too.
-> > 
-> > Signed-off-by: Xueshi Hu <xueshi.hu@smartx.com>
-> 
-> Yeah, looks sensible to me but for some callbacks we are oscilating between
-> all users having to provide some callback and providing some default
-> behavior for NULL callback. I don't have a strong opinion either way so
-> feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> But I guess let's see what Matthew thinks about this and what plans he has
-> so that we don't switch back again in the near future. Matthew?
+From: Alison Schofield <alison.schofield@intel.com>
 
-I was hoping Christoph would weigh in ;-)  I don't have a strong
-feeling here, but it seems to me that a NULL ->dirty_folio() should mean
-"do the noop thing" rather than "do the buffer_head thing" or "do the
-filemap thing".  In 0af573780b0b, the buffer_head default was removed.
-I think enough time has passed that we're OK to change what a NULL
-->dirty_folio means (plus we also changed the name of ->set_page_dirty()
-to ->dirty_folio())
+When CXL regions are created through autodiscovery their resource
+may be a child of a soft reserved resource. Currently, when such a
+region is destroyed, its soft reserved resource remains in place.
+That means that the HPA range that the region could release is
+actually unavailable for reuse.
 
-So Ack to the concept.  One minor change I'd request:
+Free the soft reserved resource on region teardown by examining
+the alignment of the resources, and handling accordingly. The
+two resources will be exactly aligned, partially aligned, or not
+aligned at all.
 
--bool noop_dirty_folio(struct address_space *mapping, struct folio *folio)
-+static bool noop_dirty_folio(struct address_space *mapping, struct folio *folio)
- {
- 	if (!folio_test_dirty(folio))
- 		return !folio_test_set_dirty(folio);
- 	return false;
+|----------- "Soft Reserved" -----------|
+|-------------- "Region #" -------------|
+Exactly aligned. Any dangling children move up to a parent on removal.
+The removal of this soft reserved seems guaranteed, however the
+availability of the address range for reuse depends on complete cleanup
+of the region child resources also.
+
+|----------- "Soft Reserved" -----------|
+|-------- "Region #" -------|
+or
+|----------- "Soft Reserved" -----------|
+            |-------- "Region #" -------|
+Either start or end aligns. Unlike removing a resource, which simply
+moves child resources up the resource tree, adjustments fail if any
+child resources map the range being truncated. So this one will fail
+for dangling child resources of the region.
+
+|---------- "Soft Reserved" ----------|
+        |---- "Region #" ----|
+No alignment. Freeing the resource of a region in the middle succeeds
+if no child resources map the leading or trailing address space.
+
+Reported-by: Derick Marks <derick.w.marks@intel.com>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ drivers/cxl/core/region.c | 130 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 121 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 5c487aab15ad..dcf8d4ad2cf4 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -569,22 +569,134 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+ 	return 0;
  }
--EXPORT_SYMBOL(noop_dirty_folio);
+ 
++static int add_soft_reserved(struct resource *parent, resource_size_t start,
++			     resource_size_t len, unsigned long flags)
++{
++	struct resource *res __free(kfree) = kmalloc(sizeof(*res), GFP_KERNEL);
++	int rc;
++
++	if (!res)
++		return -ENOMEM;
++
++	*res = DEFINE_RES_MEM_NAMED(start, len, "Soft Reserved");
++
++	res->desc = IORES_DESC_SOFT_RESERVED;
++	res->flags = res->flags | flags;
++	rc = insert_resource(parent, res);
++	if (rc)
++		return rc;
++
++	no_free_ptr(res);
++	return 0;
++}
++
++static void remove_soft_reserved(struct cxl_region *cxlr, struct resource *soft,
++				 resource_size_t start, resource_size_t end)
++{
++	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
++	resource_size_t new_start, new_end;
++	struct resource *parent;
++	unsigned long flags;
++	int rc;
++
++	/* Prevent new usage while removing or adjusting the resource */
++	guard(mutex)(&cxlrd->range_lock);
++
++	/* Aligns at both resource start and end */
++	if (soft->start == start && soft->end == end) {
++		rc = remove_resource(soft);
++		if (rc)
++			dev_dbg(&cxlr->dev,
++				"cannot remove soft reserved resource %pr\n",
++				soft);
++		else
++			kfree(soft);
++
++		return;
++	}
++
++	/* Aligns at either resource start or end */
++	if (soft->start == start || soft->end == end) {
++		if (soft->start == start) {
++			new_start = end + 1;
++			new_end = soft->end;
++		} else {
++			new_start = soft->start;
++			new_end = start + 1;
++		}
++		rc =  adjust_resource(soft, new_start, new_end - new_start + 1);
++		if (rc)
++			dev_dbg(&cxlr->dev,
++				"cannot adjust soft reserved resource %pr\n",
++				soft);
++		return;
++	}
++
++	/*
++	 * No alignment. Attempt a 3-way split that removes the part of
++	 * the resource the region occupied, and then creates new soft
++	 * reserved resources for the leading and trailing addr space.
++	 * adjust_resource() will stop the attempt if there are any
++	 * child resources.
++	 */
++
++	/* Save the original soft reserved resource params before adjusting */
++	new_start = soft->start;
++	new_end = soft->end;
++	parent = soft->parent;
++	flags = soft->flags;
++
++	rc = adjust_resource(soft, start, end - start);
++	if (rc) {
++		dev_dbg(&cxlr->dev,
++			"cannot adjust soft reserved resource %pr\n", soft);
++		return;
++	}
++	rc = remove_resource(soft);
++	if (rc)
++		dev_warn(&cxlr->dev,
++			 "cannot remove soft reserved resource %pr\n", soft);
++
++	rc = add_soft_reserved(parent, new_start, start - new_start, flags);
++	if (rc)
++		dev_warn(&cxlr->dev,
++			 "cannot add new soft reserved resource at %pa\n",
++			 &new_start);
++
++	rc = add_soft_reserved(parent, end + 1, new_end - end, flags);
++	if (rc)
++		dev_warn(&cxlr->dev,
++			 "cannot add new soft reserved resource at %pa + 1\n",
++			 &end);
++}
++
+ static void cxl_region_iomem_release(struct cxl_region *cxlr)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
++	struct resource *parent, *res = p->res;
++	resource_size_t start, end;
+ 
+ 	if (device_is_registered(&cxlr->dev))
+ 		lockdep_assert_held_write(&cxl_region_rwsem);
+-	if (p->res) {
+-		/*
+-		 * Autodiscovered regions may not have been able to insert their
+-		 * resource.
+-		 */
+-		if (p->res->parent)
+-			remove_resource(p->res);
+-		kfree(p->res);
+-		p->res = NULL;
++	if (!res)
++		return;
++	/*
++	 * Autodiscovered regions may not have been able to insert their
++	 * resource. If a Soft Reserved parent resource exists, try to
++	 * remove that also.
++	 */
++	if (p->res->parent) {
++		parent = p->res->parent;
++		start = p->res->start;
++		end = p->res->end;
++		remove_resource(p->res);
++		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags) &&
++		    parent->desc == IORES_DESC_SOFT_RESERVED)
++			remove_soft_reserved(cxlr, parent, start, end);
+ 	}
++
++	kfree(p->res);
++	p->res = NULL;
+ }
+ 
+ static int free_hpa(struct cxl_region *cxlr)
+-- 
+2.37.3
 
-Please inline this into folio_mark_dirty() instead of calling it.
