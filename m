@@ -2,267 +2,155 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE3EE4993
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Aug 2023 07:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FCBEE49AE
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Aug 2023 18:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233161AbjHVHio (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Aug 2023 03:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34212 "EHLO
+        id S229537AbjHVSJf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Aug 2023 14:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbjHVHin (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Aug 2023 03:38:43 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2088.outbound.protection.outlook.com [40.107.220.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E12C116;
-        Tue, 22 Aug 2023 00:38:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g0D1onw0hdaMcWAZ3qQ2uLC54WJ63Huzh0exxM2EpUCCwo6iiivEoPezPgCNBFj/8iYX0CVUq679+byEkjltfawdD9BgIIXSdmQhdE4eSbLdVdCHlZClkG0FrUca81bYxqF3Zlv9nJ4RBrJCJ2HZ33rRB7OplsCcoQlc1OaskPkMh+C4BSC94vii3GlxnLmfDi9wfzszDPpi4YwFNUB/pt52HGDeUSzvCkk18eqIc2/oJqTu1zALb41rqViXLqlv9M9xWAEVqQaaARlsTmlY7edBpoLD/dXtPoHrqZS83rz2kPSIR265d5leR0Th3l2xCBjaiCHxSzSO11gVUgOviA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=20o4qcor3z9cNEIevtNrbG9Jlr8wL1BRyiWOwNC3gYc=;
- b=Q61ArdWYDeHrdoKFC5QZAtMaWMUmIpk914vMF6GQeWCwhDQcj/rqlAD3+2x3uVd8CzmJpMFSNJFZYzfpe/qw8svWYuR3S8qtjHMTLMfO4vrr1KtSRf+OM5AoqQeXJspSsqMHLHbNGcdwXUtxuFFPdbHg8iv5fl/ceG4rJYhUoCvvVmWdj5p3sC5iHQeTppMC1o5VKNWFRCxF1PCVTSx8ey0KU2JMAJK6aQuUBcZ9PEr+dyX8wewRrbKIwxVt0ntT+0VLUgwfQwYeCpmY3kdny3KKf+KlhUUlNwttrXkuT2MCh5sV7VmJ0gjqnHJ+dUIi1gLJ6JghMPGeXKV8ol9CYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=20o4qcor3z9cNEIevtNrbG9Jlr8wL1BRyiWOwNC3gYc=;
- b=rAIF/TUjhzV8SjnKoAHl1W/6frA9QI7sXgYgIjS5NqBnxV4LQ4KarWZ1C7i0O39FanIavo+gh/6yIqUvefNMkUH/QGNjmIipzGm76LmxDGCpY4b1gSI3NYYMvOkdkkJYvx/eiY9lXakVp5Y2pzd1uOy/WzJVtIZq1Lozw1m74jo4A4Ce9QLubfjpmY0YPi0oJyEIQPjxCtuKO4DLpL76q6TTgBmhQtqjAaxghgb1KtA3+0O6gx7POWnAsCtU0t60mqsJMsuBeAgdGbssiey5cy5UtFJpS9762LftZLLaBHRH3zMSI6OjHGTG0OI6QfNSwLgY/vX5N7qo/4FoOZYilQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
- by BY5PR12MB5000.namprd12.prod.outlook.com (2603:10b6:a03:1d7::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Tue, 22 Aug
- 2023 07:38:39 +0000
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::3bf6:11f3:64d7:2475]) by BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::3bf6:11f3:64d7:2475%7]) with mapi id 15.20.6699.022; Tue, 22 Aug 2023
- 07:38:38 +0000
-References: <20230721012932.190742-1-ying.huang@intel.com>
- <20230721012932.190742-5-ying.huang@intel.com>
- <87edkwznsf.fsf@nvdebian.thelocal>
- <87cz0gxylp.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <871qfwwqi3.fsf@nvdebian.thelocal>
- <87a5ukc6nr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-agent: mu4e 1.8.13; emacs 28.2
-From:   Alistair Popple <apopple@nvidia.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Wei Xu <weixugc@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <shy828301@gmail.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH RESEND 4/4] dax, kmem: calculate abstract distance with
- general interface
-Date:   Tue, 22 Aug 2023 17:36:22 +1000
-In-reply-to: <87a5ukc6nr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Message-ID: <87sf8ble6g.fsf@nvdebian.thelocal>
-Content-Type: text/plain
-X-ClientProxiedBy: SY6PR01CA0156.ausprd01.prod.outlook.com
- (2603:10c6:10:1ba::8) To BYAPR12MB3176.namprd12.prod.outlook.com
- (2603:10b6:a03:134::26)
+        with ESMTP id S229512AbjHVSJf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Aug 2023 14:09:35 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB95196
+        for <linux-cxl@vger.kernel.org>; Tue, 22 Aug 2023 11:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692727772; x=1724263772;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2l/axvsWrj1cIq+9nWiU0DCIXBolbV++92OP6x5N5dY=;
+  b=AZHR5WNV1HcQOBD1HN194TYb4KYSZInkqVoRLSi/0xYfLvsF6M6mEVvy
+   bp023rOx5Tv2hAgZy9ROddSNmRfqgV3xTkloRUdZo4CVmpG0PO8KI4KHF
+   tKTjI7O+an/NwPdfDlU1X69u5KLNrsKbdCtE3RvRT7jQ1V3dJisJ3eGhi
+   5EiZUvGpo1gG3xSvIFNvRECLGvXPRBpHjouveLdxL3nyVtXH2aNIs5kLP
+   /mQZlGQSRpOoeFmMzfzhshg6jmF7vfiV1UXO6x7kekpB9slKComlKRsLQ
+   9qRb/mxLlD4DlZvjPxYkoalVRBv4rh9XkH9dd0e3OIpSFD1oaeiQDamA4
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="353515446"
+X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
+   d="scan'208";a="353515446"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 11:09:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="713273015"
+X-IronPort-AV: E=Sophos;i="6.01,193,1684825200"; 
+   d="scan'208";a="713273015"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.212.133.51])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 11:09:30 -0700
+From:   alison.schofield@intel.com
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org
+Subject: [PATCH v2] cxl/region: Refactor granularity select in cxl_port_setup_targets()
+Date:   Tue, 22 Aug 2023 11:09:28 -0700
+Message-Id: <20230822180928.117596-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3176:EE_|BY5PR12MB5000:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebeca8ee-dec5-4989-28ae-08dba2e2ccf2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yPddi3rG4JQoOmvZOyBxUllQqqCsCdMJhzN1RDqj4wYUxgIa9RVRCU8Q8Rb3DR02CAYomIPhDOTuy39wbG9GLq9hxIFgKhs5VnDegTtEd0eWezU/iXDhcL+mbFmGm/B4DU+UJTC8kBeqbTW0cz+zZTnmQF6MuQfPqxajQfzEDfBB+/uBotEw6zvIhm2SItBhQVXWcongEEyKPRbGjxWybWCsQcikgXVLLwAq5XjhzmkNjRW8TvyTT6A/Bf/kGNAc6X+MOvB41A8WO7yEryQAUruIZlFLS5ePMNEjQKX6w6+z0W2IyJDPp8ccS/MoU7l6aY6Px48RBfNIH3ScTUyvPXx7RAvUihRJSKhuQDtqBYjilPdsnip8pmdVImFJSb1JGUn/EZf23/BhJT1C8bhP3Sm9lzQODTagIBUdyhIWpJvRYDl+Z5JfEujlKLVSaSw0T0rXtsJC4iVl4ShM86QC3JiaiaC/vDIvDyzxMcqZHveXNan01pyfGmIqtxS+sNqKaa6FPcSaub8DvV0ip3Wrx8PO7Zl+aqmxgFATFTdjPjMeWmRM95sWMM0djqe3oyIk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(39860400002)(346002)(376002)(366004)(1800799009)(186009)(451199024)(54906003)(6916009)(66476007)(66556008)(316002)(66946007)(6512007)(9686003)(8676002)(8936002)(4326008)(41300700001)(478600001)(6666004)(38100700002)(6506007)(6486002)(83380400001)(2906002)(7416002)(86362001)(5660300002)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?grYESB61KVLkveFW0QlOTpSJ+IUU8YpftgH3kqdm0bPtbHmBNnXMsjvMqW69?=
- =?us-ascii?Q?IcD5Z6vCcz4UyWBnEJANnsBGcKYypKg+bkYGC6HaX9Qk7YznmNi8wNdeXGpw?=
- =?us-ascii?Q?Pc2b5ZyAuSpmuuFgkZw16lYHVzlWnwqWJZcq00+5xoF6MiXPo7bgqBXG/xdt?=
- =?us-ascii?Q?AI+2fxsyVP6pot09MfBlS/uuRjyHa/HbD5NJ0GgxnE+uylXX/+kgLPk+yPpb?=
- =?us-ascii?Q?mYHocfiCJJwfJooxfo+n4wHq3PSiMaB7WlnOHOFZZhg+SwkFIxhDk5MJybMl?=
- =?us-ascii?Q?8tRVtTYDLFhlvvrqqhsGxtO+IQ+jcGWAqjZaTjjO9KTVU8i+82lSDXbiTKqX?=
- =?us-ascii?Q?KWnWyJWyF2gdeA/voA7iiO0j0bthvDdRXtvDyWbk9jCvnojSRvwrOVUUcH9R?=
- =?us-ascii?Q?bZJirvvYjfsmWkEY7V/Gruoko94rma8W0E/qus2pwD3LOmSwkbq5XKm/zBXJ?=
- =?us-ascii?Q?rW9fxIrsI4Vcw4oPCov8smJITioOv7g3Cjuf+R/v+/gjlC4qQ7yQIli9TZJD?=
- =?us-ascii?Q?REpBEt5z2yjKkLVXulh9oc/Yy1TCRywl4l9x/SKR7nOGx7ZK1v33PlQPsBtm?=
- =?us-ascii?Q?9mGk7nhHTuxhheEooyEVw0vamM7BBR8FqkmSI3c2H5KtcNNoQdxaOgZ7lmzO?=
- =?us-ascii?Q?KJrsftVAMPFSqOxyzU3ZV6RTvfFJu7TnV8GbBRQSsV+ONccgtRFi+sPela6s?=
- =?us-ascii?Q?QxCIHkBY7adnNx2b3ElxEq0gPuw8V2SCl1H5GIDD0gmFGWGkEO3WIfKJtaK9?=
- =?us-ascii?Q?Y0t0HVL0zr6Qv3B/NLjKRWFQj/G3rvwp37N4Ic+IqzPj9ZHWa8g8osbiyHj3?=
- =?us-ascii?Q?AkhxAAPPq+gBbGBHLspmvpmp2ZmNdUITUziUSxu2sFDHRtSlhmlSTs8VHUAS?=
- =?us-ascii?Q?IataYGpHwc+H0tiuy4q995599POalmzGKfDwN9YMj4oZwCqNfU6lb/0I6j4D?=
- =?us-ascii?Q?X71w/nTrSYmNyEKT1EfuftPOtwMLcDvT8avqS5yq4Vodu+FvOb8qHR0iAHmX?=
- =?us-ascii?Q?ND1m3/LaWiUHIdiFXetK27L1JzGcCAdpSD3hShfqqJrfkREskCcEFOvWDdGI?=
- =?us-ascii?Q?5BKWC8ScDbxw5/hS/fnrqLC35WQ2ao+UwIHaK8nPmmq5dRTmlfFv94rS/Fzr?=
- =?us-ascii?Q?ch5ABLMp1+gGrilai+nvFJEZtregqiJTFuW0gn6bmRw97SxMYcCRwhalllso?=
- =?us-ascii?Q?2hZDRwMXKSUC3rFezuvMKlvuUqKXNOILCZA5R/8GmzXYptEX2ZfF9KNWDgJt?=
- =?us-ascii?Q?VKV+dZH5XBNhmUdPT3a+E3XQcs/AChd6qPACs8bZBQOF51ACa53h/T+jdurr?=
- =?us-ascii?Q?x581QnAtDvOfLjE2zFDDrvW+m3lWdeydm57yIKIWAFyO1yuoXZpuWQj5u0Ih?=
- =?us-ascii?Q?8rSOuQLyqvyV58hRP+DbxiouyfgfLrgsdlM+R2HLAufN4GprSepcW3t6V48d?=
- =?us-ascii?Q?32TlWDj7f8WrNSDqg1pU4uZ20RXZ/aN38ZbcVR7tXhkQtLa5i5FZMWJ+ZlTr?=
- =?us-ascii?Q?c5G5NfUiplYa3QlB/99TgpKuUc/MZJuKcJXacHyxXoNk1IHtprjwlMuDakkE?=
- =?us-ascii?Q?iyukYQFR1cj56jy2OAKo0iJ4YBT3TZVLk/yr1wO5?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebeca8ee-dec5-4989-28ae-08dba2e2ccf2
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2023 07:38:38.9170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: skMOyU08HLQcKG/fU+y4xExwZLBaEKRhZdEBvspagUqejgaMWDmwvm3zgRokWywpFdC5lE4kqQsxu0b1vfLe+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5000
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+From: Alison Schofield <alison.schofield@intel.com>
 
-"Huang, Ying" <ying.huang@intel.com> writes:
+In cxl_port_setup_targets() the region driver validates the
+configuration of auto-discovered region decoders, as well
+as decoders the driver is preparing to program.
 
-> Alistair Popple <apopple@nvidia.com> writes:
->
->> "Huang, Ying" <ying.huang@intel.com> writes:
->>
->>> Alistair Popple <apopple@nvidia.com> writes:
->>>
->>>> Huang Ying <ying.huang@intel.com> writes:
->>>>
->>>>> Previously, a fixed abstract distance MEMTIER_DEFAULT_DAX_ADISTANCE is
->>>>> used for slow memory type in kmem driver.  This limits the usage of
->>>>> kmem driver, for example, it cannot be used for HBM (high bandwidth
->>>>> memory).
->>>>>
->>>>> So, we use the general abstract distance calculation mechanism in kmem
->>>>> drivers to get more accurate abstract distance on systems with proper
->>>>> support.  The original MEMTIER_DEFAULT_DAX_ADISTANCE is used as
->>>>> fallback only.
->>>>>
->>>>> Now, multiple memory types may be managed by kmem.  These memory types
->>>>> are put into the "kmem_memory_types" list and protected by
->>>>> kmem_memory_type_lock.
->>>>
->>>> See below but I wonder if kmem_memory_types could be a common helper
->>>> rather than kdax specific?
->>>>
->>>>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->>>>> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>>>> Cc: Wei Xu <weixugc@google.com>
->>>>> Cc: Alistair Popple <apopple@nvidia.com>
->>>>> Cc: Dan Williams <dan.j.williams@intel.com>
->>>>> Cc: Dave Hansen <dave.hansen@intel.com>
->>>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
->>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>> Cc: Michal Hocko <mhocko@kernel.org>
->>>>> Cc: Yang Shi <shy828301@gmail.com>
->>>>> Cc: Rafael J Wysocki <rafael.j.wysocki@intel.com>
->>>>> ---
->>>>>  drivers/dax/kmem.c           | 54 +++++++++++++++++++++++++++---------
->>>>>  include/linux/memory-tiers.h |  2 ++
->>>>>  mm/memory-tiers.c            |  2 +-
->>>>>  3 files changed, 44 insertions(+), 14 deletions(-)
->>>>>
->>>>> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
->>>>> index 898ca9505754..837165037231 100644
->>>>> --- a/drivers/dax/kmem.c
->>>>> +++ b/drivers/dax/kmem.c
->>>>> @@ -49,14 +49,40 @@ struct dax_kmem_data {
->>>>>  	struct resource *res[];
->>>>>  };
->>>>>  
->>>>> -static struct memory_dev_type *dax_slowmem_type;
->>>>> +static DEFINE_MUTEX(kmem_memory_type_lock);
->>>>> +static LIST_HEAD(kmem_memory_types);
->>>>> +
->>>>> +static struct memory_dev_type *kmem_find_alloc_memorty_type(int adist)
->>>>> +{
->>>>> +	bool found = false;
->>>>> +	struct memory_dev_type *mtype;
->>>>> +
->>>>> +	mutex_lock(&kmem_memory_type_lock);
->>>>> +	list_for_each_entry(mtype, &kmem_memory_types, list) {
->>>>> +		if (mtype->adistance == adist) {
->>>>> +			found = true;
->>>>> +			break;
->>>>> +		}
->>>>> +	}
->>>>> +	if (!found) {
->>>>> +		mtype = alloc_memory_type(adist);
->>>>> +		if (!IS_ERR(mtype))
->>>>> +			list_add(&mtype->list, &kmem_memory_types);
->>>>> +	}
->>>>> +	mutex_unlock(&kmem_memory_type_lock);
->>>>> +
->>>>> +	return mtype;
->>>>> +}
->>>>> +
->>>>>  static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->>>>>  {
->>>>>  	struct device *dev = &dev_dax->dev;
->>>>>  	unsigned long total_len = 0;
->>>>>  	struct dax_kmem_data *data;
->>>>> +	struct memory_dev_type *mtype;
->>>>>  	int i, rc, mapped = 0;
->>>>>  	int numa_node;
->>>>> +	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
->>>>>  
->>>>>  	/*
->>>>>  	 * Ensure good NUMA information for the persistent memory.
->>>>> @@ -71,6 +97,11 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->>>>>  		return -EINVAL;
->>>>>  	}
->>>>>  
->>>>> +	mt_calc_adistance(numa_node, &adist);
->>>>> +	mtype = kmem_find_alloc_memorty_type(adist);
->>>>> +	if (IS_ERR(mtype))
->>>>> +		return PTR_ERR(mtype);
->>>>> +
->>>>
->>>> I wrote my own quick and dirty module to test this and wrote basically
->>>> the same code sequence.
->>>>
->>>> I notice your using a list of memory types here though. I think it would
->>>> be nice to have a common helper that other users could call to do the
->>>> mt_calc_adistance() / kmem_find_alloc_memory_type() /
->>>> init_node_memory_type() sequence and cleanup as my naive approach would
->>>> result in a new memory_dev_type per device even though adist might be
->>>> the same. A common helper would make it easy to de-dup those.
->>>
->>> If it's useful, we can move kmem_find_alloc_memory_type() to
->>> memory-tier.c after some revision.  But I tend to move it after we have
->>> the second user.  What do you think about that?
->>
->> Usually I would agree, but this series already introduces a general
->> interface for calculating adist even though there's only one user and
->> implementation. So if we're going to add a general interface I think it
->> would be better to make it more usable now rather than after variations
->> of it have been cut and pasted into other drivers.
->
-> In general, I would like to introduce complexity when necessary.  So, we
-> can discuss the necessity of the general interface firstly.  We can do
-> that in [1/4] of the series.
+The existing calculations use the encoded interleave granularity
+value to create an interleave granularity that properly fans out
+when routing an x1 interleave to a greater than x1 interleave.
 
-Do we need one memory_dev_type per adistance or per adistance+device?
+That all worked well, until this config came along:
+Host Bridge: 2 way at 256 granularity
+    Switch Decoder_A:	1 way at 512
+        Endpoint_X:	2 way at 256
+    Switch Decoder_B:	1 way at 512
+        Endpoint_Y:	2 way at 256
 
-If IUC correctly I think it's the former. Logically that means
-memory_dev_types should be managed by the memory-tiering subsystem
-because they are system wide rather than driver specific resources. That
-we need to add the list field to struct memory_dev_type specifically for
-use by dax/kmem supports that idea.
+When the Host Bridge interleave is greater than 1 and the root
+decoder interleave is exactly 1, the region driver needs to
+consider the number of targets in the region when calculating
+the expected granularity.
 
-Also I'm not sure why you consider moving the
-kmem_memory_types/kmem_find_alloc_memory_type()/etc. functions into
-mm/memory-tiers.c to add complexity. Isn't it just moving code around or
-am I missing some other subtlety that makes this hard? I really think
-logically memory-tiering.c is where management of the various
-memory_dev_types belongs.
+While examining the existing logic, and trying to cover the case
+above, a couple of simplifications appeared, hence this proposed
+refactoring.
 
-Thanks.
-Alistair
+The first simplification is to apply the logic to the nominal
+values and use the existing helper function granularity_to_eig() to
+translate the desired granularity to the encoded form. This means
+the comment and code regarding setting address bits is discarded.
+Although that logic is not wrong, it adds a level of complexity that
+is not required in the granularity selection. The eig and eiw are
+indeed part of the routing instructions programmed into the decoders.
+Up-level the discussion to nominal ways and granularity for clearer
+analysis.
+
+The second simplification reduces the logic to a single granularity
+calculation that works for all cases. The new calculation doesn't
+care if parent_iw => 1 because parent_iw is used as a multiplier.
+
+The refactor cleans up a useless assignment of eiw made after the
+iw is already calculated.
+
+Regression testing included an examination of all of the ways and
+granularity selections made during a run of the cxl_test unit tests.
+There were no differences in selections before and after this patch.
+
+Fixes: ("27b3f8d13830 cxl/region: Program target lists")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+
+Changes in v2:
+- No changes to the code. Commit log fixups only.
+- Correct the commit log example. Endpoints are 2 * 256 (Jonathan)
+- Use 'encoded' and 'nominal' when referring to the interleave
+  granularity format (Dan, DaveJ) 
+- Commit log grammar & spelling fixups (Dan, DaveJ)
+- Add Fixes Tag (Dan)
+- v1: https://lore.kernel.org/linux-cxl/20230804232726.1672782-1-alison.schofield@intel.com/
+
+ drivers/cxl/core/region.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e115ba382e04..5a1cc59cca99 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1154,16 +1154,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 	}
+ 
+ 	/*
+-	 * If @parent_port is masking address bits, pick the next unused address
+-	 * bit to route @port's targets.
++	 * Interleave granularity is a multiple of @parent_port granularity.
++	 * Multiplier is the parent port interleave ways.
+ 	 */
+-	if (parent_iw > 1 && cxl_rr->nr_targets > 1) {
+-		u32 address_bit = max(peig + peiw, eiw + peig);
+-
+-		eig = address_bit - eiw + 1;
+-	} else {
+-		eiw = peiw;
+-		eig = peig;
++	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
++	if (rc) {
++		dev_dbg(&cxlr->dev,
++			"%s: invalid granularity calculation (%d * %d)\n",
++			dev_name(&parent_port->dev), parent_ig, parent_iw);
++		return rc;
+ 	}
+ 
+ 	rc = eig_to_granularity(eig, &ig);
+
+base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
+-- 
+2.37.3
+
