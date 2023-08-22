@@ -2,205 +2,147 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B31EE49AB
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Aug 2023 01:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D82CEE4996
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Aug 2023 01:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbjHVBAr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Aug 2023 21:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
+        id S232050AbjHVBnQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 21 Aug 2023 21:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjHVBAr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Aug 2023 21:00:47 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922CAD7;
-        Mon, 21 Aug 2023 18:00:43 -0700 (PDT)
+        with ESMTP id S230404AbjHVBnP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Aug 2023 21:43:15 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC01110
+        for <linux-cxl@vger.kernel.org>; Mon, 21 Aug 2023 18:43:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692666043; x=1724202043;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version;
-  bh=PpIQtwVVDLgNvYt1ipLFOy1XV/k+n83Ca/rODVEtFaw=;
-  b=JUWsQNKWf6AJdzsIvdMQ1EY0fW32TFu7VxCMze1FiLSOV1X/hq0HhJcu
-   6bG766P3T9SOfGJkZCV/M/9Ksh7Mbefz73ZXv8VUcfX8tgrhSBpZSRjH6
-   Q/Ce3ZldSuvSHNhwZOHILSSYQ8eLWO3jRnqBYHc6JqVWmlriYfSIL7amD
-   LixXTCS4T+Vn7YMBhXL1k3GQM6bc+bC2cLWwFdPablQym4RjMuH2YTAOW
-   0QJROYpo+i67nEecDJ1gFG9MB2CH05vn05dtRAQhNOpAZ9VHrsLjEojBF
-   o5PHOV6YDX08fWLECM4P2lbsQ/I8Izh+uv18E+KMEHylC5dtdx4EM3cEQ
+  t=1692668594; x=1724204594;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=P+8fQ3zeQF1hEsBBHOWt42u3UgfLNXjlcwY79CeZlO8=;
+  b=GUE3f2ogriJTf+22YHfmsq/mj8pwp8l72KgT64jetnp11oM+20bL0+Tn
+   3vXdnJj92tAOFAs1c3QoQRFFlDJXmL5d7VSe30iPEVMyENZNBoLpKuY1q
+   ERJNenAWBkb3Jg3AIlgdvpqMTW9W6cGs5VDK7MQuzbdkpDjJrxVwFJVUy
+   MuLNRSYHOwLmqc0GYcPyMQeK+GPv+2AO6sfT2HfjOUra5I6tdQpBcC22p
+   dE/CY1wcxs/ZcevXVPw8sfOdBQnSlCEvOxuY3/3iNLSUXKU5gl9I4HK+b
+   JsiLEwAf7X8AhjwOQs7rNAq8UDyWQy91PgKtSbQvbbo7tK1P6+TzCXicL
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="354072402"
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="376486375"
 X-IronPort-AV: E=Sophos;i="6.01,191,1684825200"; 
-   d="scan'208";a="354072402"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 18:00:42 -0700
+   d="scan'208";a="376486375"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 18:43:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="685853988"
+X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="806113314"
 X-IronPort-AV: E=Sophos;i="6.01,191,1684825200"; 
-   d="scan'208";a="685853988"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 18:00:35 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Alistair Popple <apopple@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Wei Xu <weixugc@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Davidlohr Bueso" <dave@stgolabs.net>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <shy828301@gmail.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
- calculation algorithms management
-References: <20230721012932.190742-1-ying.huang@intel.com>
-        <20230721012932.190742-2-ying.huang@intel.com>
-        <87r0owzqdc.fsf@nvdebian.thelocal>
-        <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87sf9cxupz.fsf@nvdebian.thelocal>
-        <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87351axbk6.fsf@nvdebian.thelocal>
-        <87edkuvw6m.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87y1j2vvqw.fsf@nvdebian.thelocal>
-        <87a5vhx664.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87lef0x23q.fsf@nvdebian.thelocal>
-        <87r0oack40.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87cyzgwrys.fsf@nvdebian.thelocal>
-        <87il98c8ms.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87edjwlzn7.fsf@nvdebian.thelocal>
-Date:   Tue, 22 Aug 2023 08:58:20 +0800
-In-Reply-To: <87edjwlzn7.fsf@nvdebian.thelocal> (Alistair Popple's message of
-        "Tue, 22 Aug 2023 09:52:43 +1000")
-Message-ID: <875y57dhar.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+   d="scan'208";a="806113314"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.106.94])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 18:43:06 -0700
+From:   alison.schofield@intel.com
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org
+Subject: [PATCH v2] cxl/region: Match auto-discovered region decoders by HPA range
+Date:   Mon, 21 Aug 2023 18:43:03 -0700
+Message-Id: <20230822014303.110509-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Alistair Popple <apopple@nvidia.com> writes:
+From: Alison Schofield <alison.schofield@intel.com>
 
-> "Huang, Ying" <ying.huang@intel.com> writes:
->
->> Alistair Popple <apopple@nvidia.com> writes:
->>
->>> "Huang, Ying" <ying.huang@intel.com> writes:
->>>
->>>> Hi, Alistair,
->>>>
->>>> Sorry for late response.  Just come back from vacation.
->>>
->>> Ditto for this response :-)
->>>
->>> I see Andrew has taken this into mm-unstable though, so my bad for not
->>> getting around to following all this up sooner.
->>>
->>>> Alistair Popple <apopple@nvidia.com> writes:
->>>>
->>>>> "Huang, Ying" <ying.huang@intel.com> writes:
->>>>>
->>>>>> Alistair Popple <apopple@nvidia.com> writes:
->>>>>>
->>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
->>>>>>>
->>>>>>>> Alistair Popple <apopple@nvidia.com> writes:
->>>>>>>>
->>>>>>>>>>>> While other memory device drivers can use the general notifier chain
->>>>>>>>>>>> interface at the same time.
->>>>>>>>>
->>>>>>>>> How would that work in practice though? The abstract distance as far as
->>>>>>>>> I can tell doesn't have any meaning other than establishing preferences
->>>>>>>>> for memory demotion order. Therefore all calculations are relative to
->>>>>>>>> the rest of the calculations on the system. So if a driver does it's own
->>>>>>>>> thing how does it choose a sensible distance? IHMO the value here is in
->>>>>>>>> coordinating all that through a standard interface, whether that is HMAT
->>>>>>>>> or something else.
->>>>>>>>
->>>>>>>> Only if different algorithms follow the same basic principle.  For
->>>>>>>> example, the abstract distance of default DRAM nodes are fixed
->>>>>>>> (MEMTIER_ADISTANCE_DRAM).  The abstract distance of the memory device is
->>>>>>>> in linear direct proportion to the memory latency and inversely
->>>>>>>> proportional to the memory bandwidth.  Use the memory latency and
->>>>>>>> bandwidth of default DRAM nodes as base.
->>>>>>>>
->>>>>>>> HMAT and CDAT report the raw memory latency and bandwidth.  If there are
->>>>>>>> some other methods to report the raw memory latency and bandwidth, we
->>>>>>>> can use them too.
->>>>>>>
->>>>>>> Argh! So we could address my concerns by having drivers feed
->>>>>>> latency/bandwidth numbers into a standard calculation algorithm right?
->>>>>>> Ie. Rather than having drivers calculate abstract distance themselves we
->>>>>>> have the notifier chains return the raw performance data from which the
->>>>>>> abstract distance is derived.
->>>>>>
->>>>>> Now, memory device drivers only need a general interface to get the
->>>>>> abstract distance from the NUMA node ID.  In the future, if they need
->>>>>> more interfaces, we can add them.  For example, the interface you
->>>>>> suggested above.
->>>>>
->>>>> Huh? Memory device drivers (ie. dax/kmem.c) don't care about abstract
->>>>> distance, it's a meaningless number. The only reason they care about it
->>>>> is so they can pass it to alloc_memory_type():
->>>>>
->>>>> struct memory_dev_type *alloc_memory_type(int adistance)
->>>>>
->>>>> Instead alloc_memory_type() should be taking bandwidth/latency numbers
->>>>> and the calculation of abstract distance should be done there. That
->>>>> resovles the issues about how drivers are supposed to devine adistance
->>>>> and also means that when CDAT is added we don't have to duplicate the
->>>>> calculation code.
->>>>
->>>> In the current design, the abstract distance is the key concept of
->>>> memory types and memory tiers.  And it is used as interface to allocate
->>>> memory types.  This provides more flexibility than some other interfaces
->>>> (e.g. read/write bandwidth/latency).  For example, in current
->>>> dax/kmem.c, if HMAT isn't available in the system, the default abstract
->>>> distance: MEMTIER_DEFAULT_DAX_ADISTANCE is used.  This is still useful
->>>> to support some systems now.  On a system without HMAT/CDAT, it's
->>>> possible to calculate abstract distance from ACPI SLIT, although this is
->>>> quite limited.  I'm not sure whether all systems will provide read/write
->>>> bandwith/latency data for all memory devices.
->>>>
->>>> HMAT and CDAT or some other mechanisms may provide the read/write
->>>> bandwidth/latency data to be used to calculate abstract distance.  For
->>>> them, we can provide a shared implementation in mm/memory-tiers.c to map
->>>> from read/write bandwith/latency to the abstract distance.  Can this
->>>> solve your concerns about the consistency among algorithms?  If so, we
->>>> can do that when we add the second algorithm that needs that.
->>>
->>> I guess it would address my concerns if we did that now. I don't see why
->>> we need to wait for a second implementation for that though - the whole
->>> series seems to be built around adding a framework for supporting
->>> multiple algorithms even though only one exists. So I think we should
->>> support that fully, or simplfy the whole thing and just assume the only
->>> thing that exists is HMAT and get rid of the general interface until a
->>> second algorithm comes along.
->>
->> We will need a general interface even for one algorithm implementation.
->> Because it's not good to make a dax subsystem driver (dax/kmem) to
->> depend on a ACPI subsystem driver (acpi/hmat).  We need some general
->> interface at subsystem level (memory tier here) between them.
->
-> I don't understand this argument. For a single algorithm it would be
-> simpler to just define acpi_hmat_calculate_adistance() and a static
-> inline version of it that returns -ENOENT when !CONFIG_ACPI than adding
-> a layer of indirection through notifier blocks. That breaks any
-> dependency on ACPI and there's plenty of precedent for this approach in
-> the kernel already.
+Currently, when the region driver attaches a region to a port, it
+selects the ports next available decoder to program.
 
-ACPI is a subsystem, so it's OK for dax/kmem to depends on CONFIG_ACPI.
-But HMAT is a driver of ACPI subsystem (controlled via
-CONFIG_ACPI_HMAT).  It's not good for a driver of DAX subsystem
-(dax/kmem) to depend on a *driver* of ACPI subsystem.
+With the addition of auto-discovered regions, a port decoder has
+already been programmed so grabbing the next available decoder can
+be a mismatch when there is more than one region using the port.
 
-Yes.  Technically, there's no hard wall to prevent this.  But I think
-that a good design should make drivers depends on subsystems or drivers
-of the same subsystem, NOT drivers of other subsystems.
+The failure appears like this with CXL DEBUG enabled:
 
---
-Best Regards,
-Huang, Ying
+[] cxl_core:alloc_region_ref:754: cxl region0: endpoint9: HPA order violation region0:[mem 0x14780000000-0x1478fffffff flags 0x200] vs [mem 0x880000000-0x185fffffff flags 0x200]
+[] cxl_core:cxl_port_attach_region:972: cxl region0: endpoint9: failed to allocate region reference
+
+When CXL DEBUG is not enabled, there is no failure message. The region
+just never materializes. Users can suspect this issue if they know their
+firmware has programmed decoders so that more than one region is using
+a port. Note that the problem may appear intermittently, ie not on
+every reboot.
+
+Add a matching method for auto-discovered regions that finds a decoder
+based on an HPA range. The decoder range must exactly match the region
+resource parameter.
+
+Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+
+Changes in v2:
+- Use cxlr->params for HPA match rather than requiring cxled (Dan)
+- dev_warn() if decoder already assigned to a region (Dan)
+- Add failure footprint to commit log (Dan)
+- Add Fixes Tag (Dan)
+- v1: https://lore.kernel.org/linux-cxl/20230804213004.1669658-1-alison.schofield@intel.com/
+
+ drivers/cxl/core/region.c | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e115ba382e04..b08aec9f0af8 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -717,13 +717,40 @@ static int match_free_decoder(struct device *dev, void *data)
+ 	return 0;
+ }
+ 
++static int match_auto_decoder(struct device *dev, void *data)
++{
++	struct cxl_region_params *p = data;
++	struct cxl_decoder *cxld;
++	struct range *r;
++
++	if (!is_switch_decoder(dev))
++		return 0;
++
++	cxld = to_cxl_decoder(dev);
++	r = &cxld->hpa_range;
++
++	if (p->res && p->res->start == r->start && p->res->end == r->end) {
++		if (cxld->region) {
++			dev_WARN(dev, "decoder already attached to %s\n",
++				 dev_name(&cxld->region->dev));
++			return 0;
++		}
++		return 1;
++	}
++	return 0;
++}
++
+ static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
+ 						   struct cxl_region *cxlr)
+ {
+ 	struct device *dev;
+ 	int id = 0;
+ 
+-	dev = device_find_child(&port->dev, &id, match_free_decoder);
++	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
++		dev = device_find_child(&port->dev, &cxlr->params,
++					match_auto_decoder);
++	else
++		dev = device_find_child(&port->dev, &id, match_free_decoder);
+ 	if (!dev)
+ 		return NULL;
+ 	/*
+
+base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
+-- 
+2.37.3
+
