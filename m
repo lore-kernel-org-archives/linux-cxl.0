@@ -2,147 +2,270 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D82CEE4996
-	for <linux-cxl@archiver.kernel.org>; Tue, 22 Aug 2023 01:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D618FEE49A3
+	for <linux-cxl@archiver.kernel.org>; Tue, 22 Aug 2023 07:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232050AbjHVBnQ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 21 Aug 2023 21:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42570 "EHLO
+        id S233321AbjHVHS7 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 22 Aug 2023 03:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbjHVBnP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 21 Aug 2023 21:43:15 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC01110
-        for <linux-cxl@vger.kernel.org>; Mon, 21 Aug 2023 18:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692668594; x=1724204594;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=P+8fQ3zeQF1hEsBBHOWt42u3UgfLNXjlcwY79CeZlO8=;
-  b=GUE3f2ogriJTf+22YHfmsq/mj8pwp8l72KgT64jetnp11oM+20bL0+Tn
-   3vXdnJj92tAOFAs1c3QoQRFFlDJXmL5d7VSe30iPEVMyENZNBoLpKuY1q
-   ERJNenAWBkb3Jg3AIlgdvpqMTW9W6cGs5VDK7MQuzbdkpDjJrxVwFJVUy
-   MuLNRSYHOwLmqc0GYcPyMQeK+GPv+2AO6sfT2HfjOUra5I6tdQpBcC22p
-   dE/CY1wcxs/ZcevXVPw8sfOdBQnSlCEvOxuY3/3iNLSUXKU5gl9I4HK+b
-   JsiLEwAf7X8AhjwOQs7rNAq8UDyWQy91PgKtSbQvbbo7tK1P6+TzCXicL
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="376486375"
-X-IronPort-AV: E=Sophos;i="6.01,191,1684825200"; 
-   d="scan'208";a="376486375"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 18:43:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="806113314"
-X-IronPort-AV: E=Sophos;i="6.01,191,1684825200"; 
-   d="scan'208";a="806113314"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.209.106.94])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2023 18:43:06 -0700
-From:   alison.schofield@intel.com
-To:     Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org
-Subject: [PATCH v2] cxl/region: Match auto-discovered region decoders by HPA range
-Date:   Mon, 21 Aug 2023 18:43:03 -0700
-Message-Id: <20230822014303.110509-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S233262AbjHVHSt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Aug 2023 03:18:49 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20606.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::606])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CADCC8;
+        Tue, 22 Aug 2023 00:18:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jynj75gb9DHuw9g3EpcVCmf382sUCueHEwquGjup+i5PJQbLiF6WLxaoJw+lt/V0JeYIyAvFD7KlLvbqaYZALLPyqXKjqb5NxIlXR1zr2pwx31zOlCN+Nnvgs+b41b/7Sz2yi1pqos1X3ZRxyjMdVk1clmOSLQi/XV6HxrCyi6jXWSSXwxxL46BsrwUPXamaMP+yOjtKpMqhwGtpnnLmt6OmNtCalic8NCqCWS1aqahJF+bPJK/VlJycnm8RnnllhVFT3g9uJWk4vQ6kM9EUKKU9cmVjb3SJnSx+YnAf1/RA0sMhPo/ECxe7PZXa1NYdSjjdhhij9xnQBcHuFcSxLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S2PuXH32eHu0jE3UAwJwAxUYKmy5fMqdgcAlGOG5zhE=;
+ b=JZ1helfDx8wGkvkP2SeF2pqt4co3ITjysWDwtfulakeiWl/qUJxZkTJL5pnccqdl7Ou67N2mFWPNjZhTYkKkV72YTMGRdYVpZgGa+LcjjhFWcdv5TegjMsrku7UcQdm94OndjpkRYUOhAGgVffpSeA1DNz0+SOXag6D6KJuHmE8bnV6M4ZduRVe+4lQHoyfEqSQB7882Mmsu1a1h9Xe0jC9Fcmu7yA0bo10rBJmrvt+5AbR8rS8OrjJ6YQn3LRTCwLDxtpmFNBMQxz8yweuoKkJM7s+lfYmQITSF+jbAFBQCr99QbPtVg0iRc1RxInUrcr6xAVqL2NRkB2O4CdUK7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S2PuXH32eHu0jE3UAwJwAxUYKmy5fMqdgcAlGOG5zhE=;
+ b=EQg+drTNKk76C2LZkGU8/r45K+ruO+TLORKbEQxm26LpOIEPT0pRFY0FcJyZibDssccpUtlU/PdkfZLbwrKsbf25FhagNpHRLD7/Dsjn1rG/UQ0DQFRfAaeosDmnjTzuBh9OKgYt7NL5NxFpevfBz24PX4iBtkw3Jo+vJiOs3NwxtMWyDgpLTBnYFPEdG8lleqgtwLW9MC6NFqkJ3TuJ+x5n9g2kwftnI+7a48R+/8BuSIrfbFcJzcCwHvg9BP6LkNGqUBTwiBEP+dqTu4J7+U5r/9BqD8LHdtdg/Pj2ViTgqnf954mVXOTxOLA6aNz5ZNgNJduP9Mf18TYJYQE2qQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
+ by BL1PR12MB5754.namprd12.prod.outlook.com (2603:10b6:208:391::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Tue, 22 Aug
+ 2023 07:12:04 +0000
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::3bf6:11f3:64d7:2475]) by BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::3bf6:11f3:64d7:2475%7]) with mapi id 15.20.6699.022; Tue, 22 Aug 2023
+ 07:12:04 +0000
+References: <20230721012932.190742-1-ying.huang@intel.com>
+ <20230721012932.190742-2-ying.huang@intel.com>
+ <87r0owzqdc.fsf@nvdebian.thelocal>
+ <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87sf9cxupz.fsf@nvdebian.thelocal>
+ <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87351axbk6.fsf@nvdebian.thelocal>
+ <87edkuvw6m.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87y1j2vvqw.fsf@nvdebian.thelocal>
+ <87a5vhx664.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87lef0x23q.fsf@nvdebian.thelocal>
+ <87r0oack40.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87cyzgwrys.fsf@nvdebian.thelocal>
+ <87il98c8ms.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <87edjwlzn7.fsf@nvdebian.thelocal>
+ <875y57dhar.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-agent: mu4e 1.8.13; emacs 28.2
+From:   Alistair Popple <apopple@nvidia.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Wei Xu <weixugc@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <shy828301@gmail.com>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
+ calculation algorithms management
+Date:   Tue, 22 Aug 2023 17:11:34 +1000
+In-reply-to: <875y57dhar.fsf@yhuang6-desk2.ccr.corp.intel.com>
+Message-ID: <87wmxnlfer.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SY5PR01CA0038.ausprd01.prod.outlook.com
+ (2603:10c6:10:1f8::17) To BYAPR12MB3176.namprd12.prod.outlook.com
+ (2603:10b6:a03:134::26)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3176:EE_|BL1PR12MB5754:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2382f94c-8d73-4ab6-72d5-08dba2df169a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AcS9pyukz9jSzli9IjPOFXpUX0KicYxSNNgGJxNcmzS4MncPEbmlIO07yUXvo2NPnF020ihQs2MzwquHxpOMl4EpjEW+T5NIIZCvxBX8dOr4q+Zww/P/PWp3izZewZRjbpZTP46ZRw9T8Y5kCgGOY+l4GJb/AjlGbp39uLJhgdSFFhIcBSNIucNUpCsMwWs7QlnLdufAZNMorh2pny/R5vBKd/EPnWOraMuT6Av0suQz3A2BnTyw76mygTLrpjoh2/0PLpRMJs+ZWEyWx+tJp0YL6VWhexE+NnVsLLqYfgBiBDqQw4QXRLy1jb/SaSz1J+gxlBPNI2IM1m2o/Fg9YTtosGHW0LCut/FUoY52KszxfzqBt3eX6F+R4UegIcd04Is0XCi6DOAwrCHKgLzadCZbbU2D6elClxI4jVot4eddtUnUZ2Hk3k/pf58/7UUaMUpbhJIXtYmTz3Vz0UHTqWd6zNYniy9GxAtUEqW1g5U5hYcCx0TQvuoDoRV/WN07CI9GUC2pWoeRrZEgZ+rtbJ0tRcC363MMqI9BuuqAnkYC1sxTmylZdZJ3yLfR0A7r
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(39860400002)(346002)(376002)(366004)(1800799009)(186009)(451199024)(54906003)(6916009)(66476007)(66556008)(316002)(66946007)(6512007)(9686003)(8676002)(8936002)(4326008)(41300700001)(478600001)(6666004)(38100700002)(6506007)(6486002)(83380400001)(2906002)(7416002)(86362001)(5660300002)(26005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6VndzWHPjXOdbS0TsErf4xQrCuYnVbQIUeTabUcyLlpAPuRYwtC+MDxBar8I?=
+ =?us-ascii?Q?G+7SQ+blGbq1k9NCHfgiZKVh/FmGvWuHxqBz5Wn/fg+kDNfoGev76sS3oGNw?=
+ =?us-ascii?Q?zZcbUm73XwQhwNPCyOJLRcq+UpaRJajzUKxrh2F86ZO6Vgh6yvNdclDpGxij?=
+ =?us-ascii?Q?DL7NDt9U12n8iov+SkhTe7zCJ5liVT2dzFg1RuSo44TJze4hcpM22xrCM8yo?=
+ =?us-ascii?Q?vADRb0h9QjIR/bVsdH8JSCNeCK+UVMqZUsAgvzQZCI/B0gaU6FaCYh6LILYM?=
+ =?us-ascii?Q?BWwrVD4F8cEilKbJwwhIEdL++V/JAyKzYgvxeZhSaqTZ0dHUh9lQEsw3RuP8?=
+ =?us-ascii?Q?+h5Ts/zsvfaAXcAgNsM/Vavp04FhPrEnq9XLSrmL17IHm3vKmqpc2lG2mDVF?=
+ =?us-ascii?Q?dUQcdFv5zIxdO6IsEzRwulSxERThXOwJ4wRhM+ypRsYjeT67cgsPhA+LB3Rk?=
+ =?us-ascii?Q?2K+Tuv7rdW9On4voQlah+jcfgvY6QM5cHruLryjVvcHnp02Qmv+svDEoArju?=
+ =?us-ascii?Q?7QRb2dpMvxz5gKW/Vr3fnj/PmqnkUUNWEEiAiPbPYz0jiXvLrMvM/MoO+Etf?=
+ =?us-ascii?Q?8vD7SEfYFeNtXwbz/fAXslhVocnaDo7GU2EiFI5HJ1U6h+bxO3ueuuK+mxWd?=
+ =?us-ascii?Q?AAQLSPJ58t+HtvZ9tSY8V+Pz3qvYwNc7NZqgOch6ufhQ837tTxmuTM+o81M6?=
+ =?us-ascii?Q?vcV3nb9esHY8FKMJ7P6mUDZNm4oKVDwDl7aFaWabzU37CyxHWfXJa3TYTJsv?=
+ =?us-ascii?Q?ZuyiJfV2dqmableRcUTf1+yQxDhxfoHlxDslmv0saMETrOENmjAWLiW8q3uf?=
+ =?us-ascii?Q?z56jUwxHUzFtr3JUajHS6schkN0WuSWqO4+KpiddIqgNkQG7EXvsBq3njwV6?=
+ =?us-ascii?Q?GpUaRr9dqNORBE3p+EpqxOFKvYN545HFO4OsJPB7g8VAoouFZnOjIkljWqT/?=
+ =?us-ascii?Q?BDR8GzmbBv+He9z2Z/kpgk8fH898zPMCggxJhfEktklEKROJE1wB4JWsGQun?=
+ =?us-ascii?Q?MYWWPYCHOjlDbCc5y0MXiTuK0+TPGwGKUcNUj4Kd0scSg3F6QYbtwkCjDO6P?=
+ =?us-ascii?Q?Paj5mbIgIAZchDpSu/C4ZOHtFzwJ6vETuCRX1UoDkB5qG7YttIuSrCeC+trO?=
+ =?us-ascii?Q?Akvjpylf0p0G2xpOIhL5QoVIzfehsqqHGEImDz5yzacFh+bgcuz/SxugB/rA?=
+ =?us-ascii?Q?AOqM+uzQ5NArEeBUSN1bJYNPoMA0AFv7dGncKXAVNb7NJV/riOzTLqliqJA2?=
+ =?us-ascii?Q?AYmPd3dY/9u7vdh045m4ITv6Lstt+5EOmUZM/vNf2+cNW5WHGbUxG0IlErQa?=
+ =?us-ascii?Q?azuXLvJU1VdRAPyfmuEV6OSeWDE/n+bHkYazNibh/Xd5cczDnbrVcGVdcqwM?=
+ =?us-ascii?Q?FgOTC02L6XiPAynyDluCFFzZHTSXY47zSATRIYys0wWMf9UkpMUunHwwCKop?=
+ =?us-ascii?Q?pmN9ORoX/EcIZgDt5YTW8PRECU4yePzMm0aOUa3xptmNinQm8/W109urfsk3?=
+ =?us-ascii?Q?BFU9dL6ZHFJKn+29YNwyKcahyFS9yg6X4wVTZYQ2tdiFdEPPZEgcNHxRjF0C?=
+ =?us-ascii?Q?q8h7ow9sd6yyKmj54CaEOxa8N6K9qCo7XxMVpeMW?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2382f94c-8d73-4ab6-72d5-08dba2df169a
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2023 07:12:04.4775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zBRZvUUMWg98/knLOWRT4yofH05X+eq6LdcoAUrJsfIbBNwgZuux+j9YFIWlRnX6gMrp0J8k1wnEzL4jAJiWyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5754
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Alison Schofield <alison.schofield@intel.com>
 
-Currently, when the region driver attaches a region to a port, it
-selects the ports next available decoder to program.
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-With the addition of auto-discovered regions, a port decoder has
-already been programmed so grabbing the next available decoder can
-be a mismatch when there is more than one region using the port.
+> Alistair Popple <apopple@nvidia.com> writes:
+>
+>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>
+>>> Alistair Popple <apopple@nvidia.com> writes:
+>>>
+>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>
+>>>>> Hi, Alistair,
+>>>>>
+>>>>> Sorry for late response.  Just come back from vacation.
+>>>>
+>>>> Ditto for this response :-)
+>>>>
+>>>> I see Andrew has taken this into mm-unstable though, so my bad for not
+>>>> getting around to following all this up sooner.
+>>>>
+>>>>> Alistair Popple <apopple@nvidia.com> writes:
+>>>>>
+>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>>>
+>>>>>>> Alistair Popple <apopple@nvidia.com> writes:
+>>>>>>>
+>>>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>>>>>
+>>>>>>>>> Alistair Popple <apopple@nvidia.com> writes:
+>>>>>>>>>
+>>>>>>>>>>>>> While other memory device drivers can use the general notifier chain
+>>>>>>>>>>>>> interface at the same time.
+>>>>>>>>>>
+>>>>>>>>>> How would that work in practice though? The abstract distance as far as
+>>>>>>>>>> I can tell doesn't have any meaning other than establishing preferences
+>>>>>>>>>> for memory demotion order. Therefore all calculations are relative to
+>>>>>>>>>> the rest of the calculations on the system. So if a driver does it's own
+>>>>>>>>>> thing how does it choose a sensible distance? IHMO the value here is in
+>>>>>>>>>> coordinating all that through a standard interface, whether that is HMAT
+>>>>>>>>>> or something else.
+>>>>>>>>>
+>>>>>>>>> Only if different algorithms follow the same basic principle.  For
+>>>>>>>>> example, the abstract distance of default DRAM nodes are fixed
+>>>>>>>>> (MEMTIER_ADISTANCE_DRAM).  The abstract distance of the memory device is
+>>>>>>>>> in linear direct proportion to the memory latency and inversely
+>>>>>>>>> proportional to the memory bandwidth.  Use the memory latency and
+>>>>>>>>> bandwidth of default DRAM nodes as base.
+>>>>>>>>>
+>>>>>>>>> HMAT and CDAT report the raw memory latency and bandwidth.  If there are
+>>>>>>>>> some other methods to report the raw memory latency and bandwidth, we
+>>>>>>>>> can use them too.
+>>>>>>>>
+>>>>>>>> Argh! So we could address my concerns by having drivers feed
+>>>>>>>> latency/bandwidth numbers into a standard calculation algorithm right?
+>>>>>>>> Ie. Rather than having drivers calculate abstract distance themselves we
+>>>>>>>> have the notifier chains return the raw performance data from which the
+>>>>>>>> abstract distance is derived.
+>>>>>>>
+>>>>>>> Now, memory device drivers only need a general interface to get the
+>>>>>>> abstract distance from the NUMA node ID.  In the future, if they need
+>>>>>>> more interfaces, we can add them.  For example, the interface you
+>>>>>>> suggested above.
+>>>>>>
+>>>>>> Huh? Memory device drivers (ie. dax/kmem.c) don't care about abstract
+>>>>>> distance, it's a meaningless number. The only reason they care about it
+>>>>>> is so they can pass it to alloc_memory_type():
+>>>>>>
+>>>>>> struct memory_dev_type *alloc_memory_type(int adistance)
+>>>>>>
+>>>>>> Instead alloc_memory_type() should be taking bandwidth/latency numbers
+>>>>>> and the calculation of abstract distance should be done there. That
+>>>>>> resovles the issues about how drivers are supposed to devine adistance
+>>>>>> and also means that when CDAT is added we don't have to duplicate the
+>>>>>> calculation code.
+>>>>>
+>>>>> In the current design, the abstract distance is the key concept of
+>>>>> memory types and memory tiers.  And it is used as interface to allocate
+>>>>> memory types.  This provides more flexibility than some other interfaces
+>>>>> (e.g. read/write bandwidth/latency).  For example, in current
+>>>>> dax/kmem.c, if HMAT isn't available in the system, the default abstract
+>>>>> distance: MEMTIER_DEFAULT_DAX_ADISTANCE is used.  This is still useful
+>>>>> to support some systems now.  On a system without HMAT/CDAT, it's
+>>>>> possible to calculate abstract distance from ACPI SLIT, although this is
+>>>>> quite limited.  I'm not sure whether all systems will provide read/write
+>>>>> bandwith/latency data for all memory devices.
+>>>>>
+>>>>> HMAT and CDAT or some other mechanisms may provide the read/write
+>>>>> bandwidth/latency data to be used to calculate abstract distance.  For
+>>>>> them, we can provide a shared implementation in mm/memory-tiers.c to map
+>>>>> from read/write bandwith/latency to the abstract distance.  Can this
+>>>>> solve your concerns about the consistency among algorithms?  If so, we
+>>>>> can do that when we add the second algorithm that needs that.
+>>>>
+>>>> I guess it would address my concerns if we did that now. I don't see why
+>>>> we need to wait for a second implementation for that though - the whole
+>>>> series seems to be built around adding a framework for supporting
+>>>> multiple algorithms even though only one exists. So I think we should
+>>>> support that fully, or simplfy the whole thing and just assume the only
+>>>> thing that exists is HMAT and get rid of the general interface until a
+>>>> second algorithm comes along.
+>>>
+>>> We will need a general interface even for one algorithm implementation.
+>>> Because it's not good to make a dax subsystem driver (dax/kmem) to
+>>> depend on a ACPI subsystem driver (acpi/hmat).  We need some general
+>>> interface at subsystem level (memory tier here) between them.
+>>
+>> I don't understand this argument. For a single algorithm it would be
+>> simpler to just define acpi_hmat_calculate_adistance() and a static
+>> inline version of it that returns -ENOENT when !CONFIG_ACPI than adding
+>> a layer of indirection through notifier blocks. That breaks any
+>> dependency on ACPI and there's plenty of precedent for this approach in
+>> the kernel already.
+>
+> ACPI is a subsystem, so it's OK for dax/kmem to depends on CONFIG_ACPI.
+> But HMAT is a driver of ACPI subsystem (controlled via
+> CONFIG_ACPI_HMAT).  It's not good for a driver of DAX subsystem
+> (dax/kmem) to depend on a *driver* of ACPI subsystem.
+>
+> Yes.  Technically, there's no hard wall to prevent this.  But I think
+> that a good design should make drivers depends on subsystems or drivers
+> of the same subsystem, NOT drivers of other subsystems.
 
-The failure appears like this with CXL DEBUG enabled:
+Thanks, I wasn't really thinking of HMAT as an ACPI driver. I understand
+where you're coming from but I really don't see the problem with using a
+static inline. It doesn't create dependencies (you could still use
+dax/kmem without ACPI) and results in smaller and easier to follow code.
 
-[] cxl_core:alloc_region_ref:754: cxl region0: endpoint9: HPA order violation region0:[mem 0x14780000000-0x1478fffffff flags 0x200] vs [mem 0x880000000-0x185fffffff flags 0x200]
-[] cxl_core:cxl_port_attach_region:972: cxl region0: endpoint9: failed to allocate region reference
+IMHO it's far more obvious that a call to acpi_hmat_calcaulte_adist()
+returns either a default if ACPI HMAT isn't configured or a calculated
+value than it is to figure out what notifiers may or may not be
+registered at runtime and what priority they may be called in from
+mt_calc_adistance().
 
-When CXL DEBUG is not enabled, there is no failure message. The region
-just never materializes. Users can suspect this issue if they know their
-firmware has programmed decoders so that more than one region is using
-a port. Note that the problem may appear intermittently, ie not on
-every reboot.
-
-Add a matching method for auto-discovered regions that finds a decoder
-based on an HPA range. The decoder range must exactly match the region
-resource parameter.
-
-Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
-
-Changes in v2:
-- Use cxlr->params for HPA match rather than requiring cxled (Dan)
-- dev_warn() if decoder already assigned to a region (Dan)
-- Add failure footprint to commit log (Dan)
-- Add Fixes Tag (Dan)
-- v1: https://lore.kernel.org/linux-cxl/20230804213004.1669658-1-alison.schofield@intel.com/
-
- drivers/cxl/core/region.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e115ba382e04..b08aec9f0af8 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -717,13 +717,40 @@ static int match_free_decoder(struct device *dev, void *data)
- 	return 0;
- }
- 
-+static int match_auto_decoder(struct device *dev, void *data)
-+{
-+	struct cxl_region_params *p = data;
-+	struct cxl_decoder *cxld;
-+	struct range *r;
-+
-+	if (!is_switch_decoder(dev))
-+		return 0;
-+
-+	cxld = to_cxl_decoder(dev);
-+	r = &cxld->hpa_range;
-+
-+	if (p->res && p->res->start == r->start && p->res->end == r->end) {
-+		if (cxld->region) {
-+			dev_WARN(dev, "decoder already attached to %s\n",
-+				 dev_name(&cxld->region->dev));
-+			return 0;
-+		}
-+		return 1;
-+	}
-+	return 0;
-+}
-+
- static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
- 						   struct cxl_region *cxlr)
- {
- 	struct device *dev;
- 	int id = 0;
- 
--	dev = device_find_child(&port->dev, &id, match_free_decoder);
-+	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
-+		dev = device_find_child(&port->dev, &cxlr->params,
-+					match_auto_decoder);
-+	else
-+		dev = device_find_child(&port->dev, &id, match_free_decoder);
- 	if (!dev)
- 		return NULL;
- 	/*
-
-base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
--- 
-2.37.3
-
+It appears you think that is a bad design, but I don't understand
+why. What does this approach give us that a simpler approach wouldn't?
