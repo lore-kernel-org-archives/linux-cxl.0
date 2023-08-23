@@ -2,43 +2,44 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD4C3DA6F
-	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 17:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF30C3DA6F
+	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 17:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233797AbjHWRCl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 23 Aug 2023 13:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
+        id S232076AbjHWRDa convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 23 Aug 2023 13:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229518AbjHWRCk (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 13:02:40 -0400
+        with ESMTP id S229518AbjHWRD3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 13:03:29 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E1C0E52
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Aug 2023 10:02:38 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RWC8L0C0fz6K6Kp;
-        Thu, 24 Aug 2023 00:58:10 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0182E68
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Aug 2023 10:03:26 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RWCFY586hz67Q5S
+        for <linux-cxl@vger.kernel.org>; Thu, 24 Aug 2023 01:02:41 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 23 Aug
- 2023 18:02:35 +0100
-Date:   Wed, 23 Aug 2023 18:02:34 +0100
+ 2023 18:03:24 +0100
+Date:   Wed, 23 Aug 2023 18:03:23 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Maverickk 78 <maverickk1778@gmail.com>
-CC:     Jonathan Cameron via <qemu-devel@nongnu.org>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: CXL volatile memory is not listed
-Message-ID: <20230823180234.00005fa2@Huawei.com>
-In-Reply-To: <CALfBBTsMLP8_eTfmFt5mB+ywF1D0WTR7m=PBqUVzhhvcwC+zYA@mail.gmail.com>
-References: <CALfBBTtUtydebmJuh6JZ5RAXZfx5OgJ+RCug1apbZa4mm17rJQ@mail.gmail.com>
-        <20230810113512.00000516@Huawei.com>
-        <CALfBBTud4Y7qxKB8nkZ5Lo5sQs-7-F9Rkso+iQGvLO07VyRcDA@mail.gmail.com>
-        <20230811145458.000029c7@Huawei.com>
-        <CALfBBTsMLP8_eTfmFt5mB+ywF1D0WTR7m=PBqUVzhhvcwC+zYA@mail.gmail.com>
+To:     Ravi Kanth <mvrravikanth@gmail.com>
+CC:     <linux-cxl@vger.kernel.org>, Sajjan Rao <sajjanr@gmail.com>
+Subject: Re: Support for CXL v3.0 spec with QEMU
+Message-ID: <20230823180323.000052d5@Huawei.com>
+In-Reply-To: <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
+References: <CAEvOrRz9s8CumbuMbkCU+eCHgAp20X6q0i1D6fi5vfa5_F6JnA@mail.gmail.com>
+        <20230810173322.0000543c@Huawei.com>
+        <CAEvOrRyvaFBzhzP7kxWeCpYY-u5wjwAo6076FGhN_k-+NadUDA@mail.gmail.com>
+        <CAEvOrRzPNwNFrg4Brw7axzgxv6WFeYr0rnsDGmSSNpn9hca-3Q@mail.gmail.com>
+        <20230811145223.000040de@Huawei.com>
+        <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.202.227.76]
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
@@ -47,142 +48,130 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 18 Aug 2023 10:48:35 +0530
-Maverickk 78 <maverickk1778@gmail.com> wrote:
+On Wed, 16 Aug 2023 17:11:17 +0530
+Ravi Kanth <mvrravikanth@gmail.com> wrote:
 
-> Hi Jonathan,
+> Thanks, Jonathan. We were able to now see the CCI endpoint in the lspci output.
 > 
-> The use case of CXL switch will always need some sort of management
-> agent + FM configuring the available CXL memory connected.
-> 
-> In most cases it would be bmc controller configuring MLD/MHD's to
-> host, and in very rare scenarios it may be one of the host interacting
-> with FM firmware inside the switch which would do the trick.
-> 
-> Another use case is static hardcoding between CXL memory & host in
-> built in cxl switch
-> 
-> There is no scenario where one of the host BIOS can push the select
-> CXL memory to itself.
-> 
-> 
-> Is my understanding correct?
+> However, we are not able to see the /dev/cxl/switch0 node. Should we
+> be loading the cxl driver with the changes suggested by you in the
+> link below? If yes, We are not able to download the source code as we
+> do not see the git repository for the same. Is this part of the
+> mainline?
 
-It's possible that a particular set of systems work on the basis
-of the FM (BMC) in a memory appliance etc having already set up the
-memory before the hosts using it are booted.  This would be done for
-legacy systems / unaware operating systems for instances.
-In those cases the BIOS could enumerate and configure everything present
-when it starts and provide that info the the OS running on the host as
-EFI (and/or e820) and SRAT etc.
-
-If doing more dynamic memory pooling, I'd expect the OS to do all the
-hard work.  Note a common case in real systems is likely to be Multi Head
-devices for memory pooling, but they also require configuration before the
-memory is available to the host, so the points above are the same.
+Not yet part of mainline so you will have to apply the patches and build
+a custom kernel. 
 
 Jonathan
 
 > 
+> https://lore.kernel.org/linux-cxl/20230804115414.14391-1-Jonathan.Cameron@huawei.com/T/#t
 > 
+> Ravi
 > 
-> On Fri, 11 Aug 2023 at 19:25, Jonathan Cameron
+> On Fri, Aug 11, 2023 at 7:22 PM Jonathan Cameron
 > <Jonathan.Cameron@huawei.com> wrote:
 > >
-> > On Fri, 11 Aug 2023 08:04:26 +0530
-> > Maverickk 78 <maverickk1778@gmail.com> wrote:
+> > On Fri, 11 Aug 2023 17:34:33 +0530
+> > Ravi Kanth <mvrravikanth@gmail.com> wrote:
 > >  
-> > > Jonathan,
-> > >  
-> > > > More generally for the flow that would bring the memory up as system ram
-> > > > you would typically need the bios to have done the CXL enumeration or
-> > > > a bunch of scripts in the kernel to have done it.  In general it can't
-> > > > be fully automated, because there are policy decisions to make on things like
-> > > > interleaving.  
-> > >
-> > > BIOS CXL enumeration? is CEDT not enough? or BIOS further needs to
-> > > create an entry
-> > > in the e820 table?  
-> > On intel platforms 'maybe' :)  I know how it works on those that just
-> > use the nice standard EFI tables - less familiar with the e820 stuff :)
+> > > Hi Jonathan,
+> > > We build qemu with your repository code but we do not see any changes
+> > > in the output of lspci. Do we have any prerequisites / command
+> > > parameters w.r.t on how we boot the qemu for your changes to take
+> > > effect? Please let us know.  
 > >
-> > CEDT says where to find the the various bits of system related CXL stuff.
-> > Nothing in there on the configuration that should be used such as interleaving
-> > as that depends on what the administrator wants. Or on what the BIOS has
-> > decided the users should have.
-> >  
-> > >  
-> > > >
-> > > > I'm not aware of any open source BIOSs that do it yet.  So you have
-> > > > to rely on the same kernel paths as for persistent memory - manual configuration
-> > > > etc in the kernel.
-> > > >  
-> > > Manual works with "cxl create regiton"  :)  
-> > Great.
+> > As the switch cci is a separate PCI function it needs to be explicitly
+> > added. See the cover letter of kernel switch-cci RFC:
+> >
+> > https://lore.kernel.org/linux-cxl/20230804115414.14391-1-Jonathan.Cameron@huawei.com
+> >
+> >  -device cxl-upstream,bus=cxl_rp_port0,id=us0,addr=0.0,multifunction=on, \
+> >  -device cxl-switch-mailbox-cci,bus=cxl_rp_port0,addr=0.1,target=us0 \
+> >  -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4 \
+> >  -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
+> >
+> > Is the switch part of it.
+> >
+> > We don't yet have the additions for MHDs though some discussion on how to
+> > do it has happened.  Those will support some FMAPI command via tunnelling throuhg
+> > the main mailbox.
+> >
+> > I'm on vacation from tonight until the 22nd, so good luck. Feel free
+> > to post questions in meantime but my reply will take a while!
 > >
 > > Jonathan
 > >  
 > > >
-> > > On Thu, 10 Aug 2023 at 16:05, Jonathan Cameron
-> > > <Jonathan.Cameron@huawei.com> wrote:  
+> > > Thanks for your help.
+> > >
+> > > Thanks
+> > > Ravi
+> > >
+> > > On Thu, Aug 10, 2023 at 10:10 PM Ravi Kanth <mvrravikanth@gmail.com> wrote:  
 > > > >
-> > > > On Wed, 9 Aug 2023 04:21:47 +0530
-> > > > Maverickk 78 <maverickk1778@gmail.com> wrote:
-> > > >  
-> > > > > Hello,
+> > > > Thanks Jonathan for pointing this out. I will definitely take a look
+> > > > at this. Current support for the simulation of CCI mailbox is only via
+> > > > MCTP messages or even via CXL driver IOCTLs?
+> > > >
+> > > > Ravi
+> > > >
+> > > > On Thu, Aug 10, 2023 at 10:03 PM Jonathan Cameron
+> > > > <Jonathan.Cameron@huawei.com> wrote:  
 > > > > >
-> > > > > I am running qemu-system-x86_64
-> > > > >
-> > > > > qemu-system-x86_64 --version
-> > > > > QEMU emulator version 8.0.92 (v8.1.0-rc2-80-g0450cf0897)
+> > > > > On Thu, 10 Aug 2023 21:42:12 +0530
+> > > > > Ravi Kanth <mvrravikanth@gmail.com> wrote:
 > > > > >  
-> > > > +Cc linux-cxl as the answer is more todo with linux than qemu.
-> > > >  
-> > > > > qemu-system-x86_64 \
-> > > > > -m 2G,slots=4,maxmem=4G \
-> > > > > -smp 4 \
-> > > > > -machine type=q35,accel=kvm,cxl=on \
-> > > > > -enable-kvm \
-> > > > > -nographic \
-> > > > > -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52 \
-> > > > > -device cxl-rp,id=rp0,bus=cxl.0,chassis=0,port=0,slot=0 \
-> > > > > -object memory-backend-file,id=mem0,mem-path=/tmp/mem0,size=1G,share=true \
-> > > > > -device cxl-type3,bus=rp0,volatile-memdev=mem0,id=cxl-mem0 \
-> > > > > -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=1G  
-> > > >
-> > > > There are some problems upstream at the moment (probably not cxl related but
-> > > > I'm digging). So today I can't boot an x86 machine. (goody)
-> > > >
-> > > >
-> > > > More generally for the flow that would bring the memory up as system ram
-> > > > you would typically need the bios to have done the CXL enumeration or
-> > > > a bunch of scripts in the kernel to have done it.  In general it can't
-> > > > be fully automated, because there are policy decisions to make on things like
-> > > > interleaving.
-> > > >
-> > > > I'm not aware of any open source BIOSs that do it yet.  So you have
-> > > > to rely on the same kernel paths as for persistent memory - manual configuration
-> > > > etc in the kernel.
-> > > >
-> > > > There is support in ndctl for those enabling flows, so I'd look there
-> > > > for more information
-> > > >
-> > > > Jonathan
-> > > >
-> > > >  
+> > > > > > Hello,  
 > > > > >
+> > > > > Hi Ravi,
+> > > > >  
+> > > > > >
+> > > > > > I am writing this mail to know if the latest QEMU has support for CXL
+> > > > > > spec v3.0? I understand from the older tutorials that QEMU has support
+> > > > > > for CXL v2.0. Is there any update to QEMU to support the CXL v3.0? I
+> > > > > > would like to specifically test the CCI mailbox functionality which
+> > > > > > has been added to CXL v3.0 spec.  
 > > > > >
-> > > > > I was expecting the CXL memory to be listed in "System Ram", the lsmem
-> > > > > shows only 2G memory which is System RAM, it's not listing the CXL
-> > > > > memory.
+> > > > > The nature of the CXL specification and the QEMU support is that for
+> > > > > devices there isn't a clear divide between different generations of
+> > > > > the specification. By that I mean, that a device based on the CXL 2.0
+> > > > > specification is compatible with the CXL 3.0 specification. As such,
+> > > > > the QEMU emulation has focused on features of interest - it is a far
+> > > > > from complete implementation of all the options in the CXL 2.0
+> > > > > specification but conversely there are some parts of CXL 3.0 are supported.
 > > > > >
-> > > > > Do I need to pass any particular parameter in the kernel command line?
+> > > > > Note that the particular CCI functionality is not yet ready for CXL upstream,
+> > > > > but we do have some support in the staging tree I maintain.
 > > > > >
-> > > > > Is there any documentation available? I followed the inputs provided in
+> > > > > https://gitlab.com/jic23/qemu/-/commits/cxl-2023-08-07/
+> > > > > specifically
+> > > > > https://gitlab.com/jic23/qemu/-/commit/2eb7e6402a45b359c304cea894a1d27625a4b80c
 > > > > >
-> > > > > https://lore.kernel.org/linux-mm/Y+CSOeHVLKudN0A6@kroah.com/T/
+> > > > > Note at this stage we only support subset of commands.
+> > > > > Contributions of more support welcomed!
 > > > > >
-> > > > > Is there any documentation/blog listed?  
-> > > >  
+> > > > > Intent of the current support and related MCTP CCI access (over I2C) is
+> > > > > to enable ecosystem development, particularly of fabric managers.
+> > > > > For that a tiny subset of commands was sufficient to be sure the architecture
+> > > > > inside QEMU worked and that the proposed kernel code functions correctly.
+> > > > >
+> > > > > Jonathan
+> > > > >  
+> > > > > >
+> > > > > > Thank you in advance for your assistance.
+> > > > > >
+> > > > > > Ravi  
+> > > > >  
+> > > >
+> > > >
+> > > > --
+> > > > Regards
+> > > > M.V.R.Ravi Kanth  
+> > >
+> > >
+> > >  
 > >  
+> 
+> 
 
