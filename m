@@ -2,217 +2,1070 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10B5C27C40
-	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 19:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16A2C27C40
+	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 20:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232901AbjHWTjd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 23 Aug 2023 15:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33092 "EHLO
+        id S236761AbjHWUzd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 23 Aug 2023 16:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238384AbjHWTjS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 15:39:18 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C73E610D4
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Aug 2023 12:39:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nwX3oY8ZlieBw7iBdY+ERcY5Gr8asidZJDj2+TSi24dha0t0Yl9jDhCnx7QoaOgiSGKKgkoI0ezEom3WeQthuexR7sYh+tB8UbAKjVPMM5rXQsWA6G8Dr+ZN3gZEw9eOrNYEfRyDap0P35kzhffvnnLghVx4BJfjnpefQHJz1bIBIYJ95CuNWZVQqJHoY2d2GCyl9i7iXZtTxARWmDvKynUBJUD5yykFE5bvE7Hm5AdyAYfgs0iOxN5GWf73D2g96LES266cF32yvLCV5p8NFbXeUFMUIZjHoA6loesJX52arJ180CbdhbCiWQPpZjul4yKjzAD/hKfrsNsU8wFCLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3vpFh9MUn6uRZnAKkd/VdOsE50/odVdWuVB91qKDiMY=;
- b=ja4CGlN//nfdK5sCHI5sNmhqik+rfTQQ143n93wHNI1uNvkhmSTcqxOQpgbd/m6ZySjQJiLezIl1+2kLAxIKtbvk7yu4NuSl0pSS8RTbBn/JocEHH+sxc0JcBpuMYJ7Ah8tD/2BiYmDgQt3U5PXpslTfoZkXSMJXzjAGf1qxIk9hPpjcbnfvD+IQ2ntDNUFnLW/Ud4KLFPVABYNeLgnSBZ2/yt2XcuT2v5UUWC8MNccoSoyF4TBVmsNNe+D7Gvz2QrBvzgfMhrg8pWeKfXWckJiDyMewhAyB520jle6M8FCTFe/nEuPuOq99tFHkOW6COr0Pph5kpY6u2UGwZ/0jAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3vpFh9MUn6uRZnAKkd/VdOsE50/odVdWuVB91qKDiMY=;
- b=dohUPfmJF21usrpkCkQDWj5ksCUyTwIRjb6+iqazkMeBLVf1VrzFt4W1rsmzwc3tZUunrLqrLXYo3ZBHDf46LWOSRxg81EBAarBoXhkmD/dWLxxD7zPkt+qNowbLR+elDZsSvb421gBvjIIwDBM2YqdPXcJ2e43tpOaMGu3OAko=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by CY5PR17MB6120.namprd17.prod.outlook.com (2603:10b6:930:33::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.26; Wed, 23 Aug
- 2023 19:39:10 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::180f:5cff:3e12:e654]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::180f:5cff:3e12:e654%2]) with mapi id 15.20.6699.020; Wed, 23 Aug 2023
- 19:39:10 +0000
-Date:   Wed, 23 Aug 2023 15:39:02 -0400
-From:   Gregory Price <gregory.price@memverge.com>
+        with ESMTP id S236742AbjHWUzJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 16:55:09 -0400
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231D710C8
+        for <linux-cxl@vger.kernel.org>; Wed, 23 Aug 2023 13:55:04 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 62D564C1138;
+        Wed, 23 Aug 2023 20:55:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a204.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 99F9C4C0186;
+        Wed, 23 Aug 2023 20:55:02 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1692824102; a=rsa-sha256;
+        cv=none;
+        b=rUchPfgWiNNqxin19CwOmBxEjyp1gokLxHX4ziWzW6Qu4GdSIs7/YU+vRA8i/ov4Zyguhq
+        6xUrNDytJ6isqpM2wbTxuq0T77rNDPlJdN4q90n413L+oArO6FLBTFPrs9xUsQupbw+5UA
+        8ciFPAbSF65caH4T3ozYXAZo0iQT8gSv49BiEQRF/LwQTtQJGd6KfYbnN9rvFGkSk+kstF
+        H2Bvz1cv83i9lunAzsPdtPpAV577ioXFfZlYLIZbjJxB7QxLtTAs0FXJ7IpooNzMOJ49KR
+        OEbocycv0Du5FpM5rq+qfO5bm4UWllebOIrJpnY8FavtBi0jb6PH1l8quVPXVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1692824102;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=oG9XylOFOT0gIi+IEkLZe44xX84xVMa62F9+kGNjOEg=;
+        b=bTaOdRq1kfob4aChp1dLo4NVcBGk/9MOQWbzmYOJ8m14RvGU3zvbjs/ks5POu4nWs1WWFE
+        0difUYnoIOLq11OSVT/r3EekwZ3wLTEwfCKdIXX2DY6TY4D+kbHsjlUbWVmfRtXUcnA1Wq
+        +RSnsDukIJZTIceU2fcPtB3FpZwUEQV1xdT50srrYlz93ga3MLqPrcFo2AS4LPWRsvLbcM
+        o1OY7AEVdKIxjwmO476YskJ6plP7xRwRJ6W/+zWHbzA5I/d3qm4swIgQ9u1u07wDJYvTxO
+        3N0hG29riVfd6VyOnngLjUHiXT5mR0qtSvfiuqFz+nwrTSGxDlMe8LXz0xsVyw==
+ARC-Authentication-Results: i=1;
+        rspamd-7878b5d4b5-kgdgs;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Illegal-Print: 511b4660115694ba_1692824103253_2949603603
+X-MC-Loop-Signature: 1692824103253:3757121709
+X-MC-Ingress-Time: 1692824103253
+Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.117.184.92 (trex/6.9.1);
+        Wed, 23 Aug 2023 20:55:03 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4RWJPd4ZpXz62;
+        Wed, 23 Aug 2023 13:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1692824102;
+        bh=oG9XylOFOT0gIi+IEkLZe44xX84xVMa62F9+kGNjOEg=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=m42R/K1tGovb8gBauDLZcczTp6T5TCh4B639+r1mMQw4vj46pjMAwZ8yoNYyzjfie
+         SKXOzC/lS9DtKD1NIPjJd4eKwp0f/vhXPpeYbzfnaNudUmjtaCVAs0OaX1p0wL7O82
+         jonM0VhzrVcf9cOy5wiYGThc6xwHTwyHVQyyHM3FaPGomURzEuGqLuZqBgVBROstrV
+         SXitpaYDTETw6+Ct/eXYRNuTh/woYskXmcsZQfuxFc0cocnzUO85cXogIIe94tgTG0
+         lFjtzN91XSk7ZJm1CAxrCGgNlYMPXgKfUwDBjKrIo/CCCS4X84uFA4FphylQw0ACqI
+         rctHBcxu0Bh8Q==
+Date:   Wed, 23 Aug 2023 13:16:04 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com>,
-        linux-cxl@vger.kernel.org
-Subject: Re: QEMU freeze with CXL memory in Normal zone and stress-ng
-Message-ID: <ZOZgVm3fx8fEf8xq@memverge.com>
-References: <CAGEDW0dTTvnm-ZzSv_aDLNKj-gZja1A2s3+HKfY8wBn5rX4XdQ@mail.gmail.com>
- <20230823175526.0000368e@Huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230823175526.0000368e@Huawei.com>
-X-ClientProxiedBy: BYAPR07CA0028.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::41) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linuxarm@huawei.com, Alison Schofield <alison.schofield@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
+        Gregory Price <gregory.price@memverge.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>, fan.ni@samsung.com,
+        a.manzanares@samsung.com
+Subject: Re: [RFC PATCH v5 1/4] cxl: mbox: Preparatory move of functions to
+ core/mbox.c and cxlmbox.h
+Message-ID: <rkdwnch2fslpitax2pl5xvizpzxxfygf3w4j3gwaqame7qtjpi@ovwujhzo6gi3>
+References: <20230804115414.14391-1-Jonathan.Cameron@huawei.com>
+ <20230804115414.14391-2-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CY5PR17MB6120:EE_
-X-MS-Office365-Filtering-Correlation-Id: 376ddd1d-730c-4d61-cc12-08dba4109f62
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7ccVYy566I3lDfz594nFNMPzMxnyBoBG6ZrtlkB8L5SH4ysddlfL+wOLtOKQQLqLf63kPwce/nIoc2CEXqnH/Y/GCgmLnduYYspjpGPecJYT3l8t6PRH46IFCcK3WIWuqdyJv6YIjZ4O5OFIGsyWykjDpqg/K+VOTtn/Bk6EKrqdvlbnIH/gWWkoY5608qcOk+vr/lzy0IkX7gz+awqLl3LtAvxdbGZu/PcHMLBXRHwv8kw5+nWCI0UAvp71zpBZA7+kjaz7h12D6pnQLvLtiCW5i8EVTNVb47ASajl+khAa1t6/IIiS0iGP88H3JW5d7rcycFttJd307zvmhe2pdQqWWPVR1I/L+0RBxX3P2IeIWXSLCv7VPvfKvQnZ8HRxDHZnz2dXjxg+J8NMtonOsb0g+M1E23/IR9oogYGjgB4cX7/6aNahEDuEiOJ+SaSZmEiRVoqU/pyrLgfmQKo26AdkrkKAT8O09PyRtIKvYdtWFu8uPfcdVnNeqBc5eRYwydOStBlHXo2c3JMGAN406KGpRoVv0ThsNTPPfhy9capb3WqAUMJcvc8DbkAtV+5H
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(396003)(366004)(39840400004)(376002)(1800799009)(186009)(451199024)(6666004)(6512007)(6486002)(6506007)(38100700002)(66899024)(26005)(83380400001)(36756003)(2616005)(316002)(6916009)(2906002)(41300700001)(66476007)(66946007)(66556008)(5660300002)(44832011)(4326008)(8676002)(8936002)(86362001)(478600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SFZDL010bDNKbCtuMk1EY2tZWDVJVGlIZUdVZWpibFRNZEtCUzBlUmNnek9X?=
- =?utf-8?B?VlVrUFl0R0VqVkovTVczRVpiQXpuenBZaVJwYkVtMGlVbXR5R2RiUy92R2FI?=
- =?utf-8?B?S0FwQm1mUnVXL05mMDhWNmc5RGRsVDVsaldESGVOOXRvc2c3eUFLQzUyL05Y?=
- =?utf-8?B?NlhlR3ZEZGFrUFRIWmpUa0kwSlRVcnBWaGlmSU5NNDVnT3l3aFVtU0pvRlFH?=
- =?utf-8?B?UjE4TlZscy9xdk9TMHY0L01VaEh1SWNlVHR6T3RYeVhKTFdmTmZvQ3JIN3pY?=
- =?utf-8?B?cGgxKzUrdkNqeDhKT0NCYktobFJzS0hrNDRNcXlGRTc2eGQ2VzFMaFFmUU9B?=
- =?utf-8?B?MThnMVhzenF5L0JueVFXdURnci9uRnQ0dlpvVFREdWR0UWZWbmxWZzA1NlFy?=
- =?utf-8?B?S2NZUzBrTWlxRHlnbmlyQlZqMWJJYmtJbTN2TUlRSkFBV3htRkQ0dXhwT3E3?=
- =?utf-8?B?VzRBaGdOMk5vaUtSMG9KNXdSQ2NweDRzMmF1Y1V5TGF6bDNDZEtnWHpZVE42?=
- =?utf-8?B?K3NCd3pTN2FWWUNxWDhycXdJaHNlaGFoZThxZWJuRFl1VTNyeXV1aks4TWt2?=
- =?utf-8?B?cWJoUjY3OW1JejBFdmw0NFh2WVBndGNOaVBpOWZUeldDbTMwVDhnNlJyMlV3?=
- =?utf-8?B?WFh6WFptY2JxMmpVMS9lWUtRb3ZhQ0o0QXpkOVVSaTAwOFkrc20xZXpFbk9J?=
- =?utf-8?B?NnkxTnlrZ0JkanNIbFJPYklxUW9Zbk5mTm5YZ0hnYUFkN2pPVEV4c0tFcVd6?=
- =?utf-8?B?Y01DS1ZYQUZlQlJJYmFjUWU1YWtJZzdJbk1HT01zOEMxWWRiNG9QWXNvMi9p?=
- =?utf-8?B?eXgrN3RVZ2VxQzAxTDUra1NPY0g0ZUlQNXltNEx5akFMYmNwU29UQXR1UEVT?=
- =?utf-8?B?SkZ3RkM5VWl1cVhwVUtnaiswdUhveFlndlI4alN0N1V6VVByelRLOFNzYVJy?=
- =?utf-8?B?VTIyL1E2TVMzZGtwR0ZVeDY2L2pjNXlaRk9wUzVKWW92cUx6STd0eHRmQU1G?=
- =?utf-8?B?dXhoMkdRcFNMSlpMbk9DeDkvcjc1VDFFc0JDUC9EUVZoR2VuWEQ5c3BEMThv?=
- =?utf-8?B?SG1kMXRjUXZmZllTZWVUOTJja2kxM1lXd1pQZ3ZzTFBEYWMvKzgxc1BxTUcy?=
- =?utf-8?B?OGFxUk56Y2tiOHhvYnVTNlMrb1cwcW92a3NzY1ZQOUdiNDBrckJSOEZvbEt0?=
- =?utf-8?B?Q1NFUWN3enFHSkVCbTl2OStheWdQZ1VJYlJLc09vSVRWdFd4WVhkQzJnNHdL?=
- =?utf-8?B?NWhhUVR6QkI2dUZHYXdlVUcwanVFNjM0SGJORDFWVjBxQXJDa0hIV1h3cjBP?=
- =?utf-8?B?UGhISmxIU0RuQW9RUi9YVGc2UjJqTitObTRpKytTZkVBem1MalgvMXNEQWVW?=
- =?utf-8?B?WnIxZCtKeE1IcXVhWnFLN3MzR3U4YWxQYzNIZG55aEM3VGpaa3gwRmxpcmFB?=
- =?utf-8?B?K2JDNXpUdllWdUFxMzhyNS92bWxBM2JKdFlpVXNSNzgrZ2hMaklLYTlocUYv?=
- =?utf-8?B?U3lDYlFOTHFrQ1BGNUp4UlF0M1JrMW9IU3VhMzVrSHV0d1ZrVjk4a0RoWncr?=
- =?utf-8?B?THlxclgyOUQwaGlNVHBWckpMdDJYQ0ttZ1BxNGhGZHI1Uk5Da2Q5Sm1qZXc1?=
- =?utf-8?B?QmlmQW84bE1NaUdkUTU4SlFWMEIzVGg1KzczYVgzSWZXS2pnVVpZcld6eHdU?=
- =?utf-8?B?TlR4UzNMWVpmYUQzY1Q1ZDVQYTdpZWVQZytUckVWVjhVUit4VWF5RlpESk9u?=
- =?utf-8?B?bUFMdS9rNWZsOVRaWFVmTUw2RCtxNWpNTDlud29CRzdxWXBGNFFmYmJhWWxz?=
- =?utf-8?B?ZGRLdXN0c0hwejg0a3ErZllZVnI5K2R1VTBjaVFha2IyTlR3TFo1OGlNN0dO?=
- =?utf-8?B?ZDB6TlV5VmZVcThwZkprWEE2MFlkaXlxWWgxQWlsb2xhUS8vRzhXY0xqaVBO?=
- =?utf-8?B?eEEwSWxRVU5UcVpxZlRaQVduU092a2lpWndLbisrUUpkc3hvWU4zbVpkT2NE?=
- =?utf-8?B?L0JoMnkvTmVReWQydlVRL0lVV3FERWZ1NVhSbEJKTnNrSWl2Yzc1KzRBa1BC?=
- =?utf-8?B?VHpFQ0I2eFRTaGFNdTBXOE1NSUNmZ0YwcUVSOENUWkZjaGFBZS9NMFlUdGhw?=
- =?utf-8?B?NEJHUWlHQ0dLTjNDNWlrVklYOVA5Nk02aU1GOE4wS0tIOWd0dmY4TjJKdGRi?=
- =?utf-8?B?dkE9PQ==?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 376ddd1d-730c-4d61-cc12-08dba4109f62
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2023 19:39:10.5808
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P4u9hAvadJVB43k7NByqCPcwhK7ddz1FYpWcCT38CvL//ATfot10rV3wEQBXydsUrW2OF2rSaNnNgK5J6PF/19q+P/RFPw9x2BUR99yq/Jg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR17MB6120
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230804115414.14391-2-Jonathan.Cameron@huawei.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 05:55:26PM +0100, Jonathan Cameron wrote:
-> On Fri, 18 Aug 2023 16:20:55 +0200
-> Dimitrios Palyvos <dimitrios.palyvos@zptcorp.com> wrote:
-> 
-> > Hello,
-> > 
-> > I have noticed a system-wide freeze when using CXL memory as RAM in
-> > the Normal zone to run stress-ng. I am writing to check if this is a
-> > known issue and/or if anyone has hints on how to debug this.
-> > 
-...
-> > 
-> > Running stress-ng in NUMA node 0 (not CXL) works fine. When the VM
-> > freezes, the QEMU monitor can still be accessed, but the guest kernel
-> > does not seem to respond to any external commands, e.g., (qemu)
-> > sendkey alt-sysrq-c. Then, QEMU also freezes when trying to quit it.
-> > I have tried to debug the (guest) kernel using gdb (starting QEMU with
-> > the -s flag) but, after the freeze happens, gdb reports that “The
-> > target is not responding to interrupt requests”.
-> > Debugging QEMU works but I haven’t managed to find something
-> > helpful that way. Also tried (briefly) kdb with no luck there either -
-> > the kernel does not respond at all.
-> > 
-> > Patching hw/mem/cxl_type3.c functions cxl_type3_read() and
-> > cxl_type3_write() to count the calls shows that CXL accesses happen in
-> > both cases. In the "ls" invocation, I see around 100k reads and 100k
-> > writes; in the "stress-ng" case, I see approximately 4 million reads
-> > and 2.3 million writes before the VM freezes.
-> 
-> Long shot, but can you add code to print the address and size of each access.
-> There might be something nasty around edge conditions that we've gotten
-> wrong in the emulation - I thought I'd poked them all but maybe not.
-> 
-> Right now I can't boot QEMU x86_64 TCG to due to an unrelated crash (nothing
-> to do with CXL at all but is present in 8.1.0 release) so hard for me to
-> try and replicate :(
-> 
-> Jonathan
-> 
-> > 
-> > The issue does not appear if the CXL memory is initialized in the
-> > Movable zone instead, i.e., when using the daxctl command without the
-> > --no-movable flag:
-> >     daxctl reconfigure-device --mode=system-ram all
-> > 
-> > The issue however appears when using a volatile CXL device and
-> > initializing CXL as Normal with the command:
-> >     cxl create-region -d decoder0.0 -s 1073741824 -t ram
-> > 
-> > Any ideas are welcome, thanks in advance!
-> > 
-> > Kind regards,
-> > Dimitris
-> > 
-> 
+On Fri, 04 Aug 2023, Jonathan Cameron wrote:
 
-Something i think that is not well understood is just HOW slow the
-performance of CXL memory in QEMU is right now.
+>A later patch will modify this code to separate out the mbox
+>functionality from the memdev.  This patch is intended to make
+>that a little more readable.  Related move of cxl_err(), cxl_cmd_err()
+>to make them accessible from other parts of the cxl core code.
+>
+>Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-1) No caching of this region is allowed at all because it is considered
-   an MMIO region by QEMU/TCG.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-2) Code running out of this region cannot produce TCG buffers, and so
-   any code page hosted on this region must be constantly fetched, by the
-   TCG non-JIT/binary translation emulation engine - even if it was
-   previously executed.
-
-   This can cause instructions/sec to drop from 100s of millions to less
-   than a million in my experience.  Degenerate cases can be very bad.
-
-3) Beyond instruction fetching, any data access requires an MMIO-style
-   data-fetch, as opposed to a simple memory buffer mapping and direct
-   access (e.g. what normally happens in a TCG buffer cache).
-
-When you initialize the region in ZONE_NORMAL (--no-movable), what
-you're really saying is "sure, place kernel resources there".  Once you
-get memory pressure, you have the potential to start having the entire
-system utilize cxl memory for kernel resources, as opposed to just
-stress-ng.
-
-To me, what you're describing isn't the system freezing.  I have
-observed that the performance of CXL memory is so poor that the kernel
-will simply prefer not to use the memory at all (as it in will prefer
-using swap space instead, because it's that slow).
-
-When a system crawls to a halt like this, it's anyone's guess as to
-whether things like watchdogs and background tasks start preventing
-forward progress.  Your interrupt injections may be masked by emulated
-timers and all kinds of other stuff.  Basically you end up in a
-starvation situation, and the only real answer to that problem is
-"execute faster".
-
-
-Until there is work to enable caching of CXL-hosted memory, I'm inclined
-to say "Working as intended" because the accesses are happening and the
-system appears stable - if extremely slow and non-responsive.
-
-~Gregory
+>---
+>v5: Move the related cxl_cmd etc header definitions as well as the
+>implementation.
+>
+> drivers/cxl/core/mbox.c | 261 ++++++++++++++++++++++++++++++++++++++-
+> drivers/cxl/cxlmbox.h   | 146 ++++++++++++++++++++++
+> drivers/cxl/cxlmem.h    | 148 ++--------------------
+> drivers/cxl/pci.c       | 265 +---------------------------------------
+> 4 files changed, 418 insertions(+), 402 deletions(-)
+>
+>diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>index ca60bb8114f2..6f359dc1c6d3 100644
+>--- a/drivers/cxl/core/mbox.c
+>+++ b/drivers/cxl/core/mbox.c
+>@@ -1,10 +1,12 @@
+> // SPDX-License-Identifier: GPL-2.0-only
+> /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+>+#include <linux/io-64-nonatomic-lo-hi.h>
+> #include <linux/security.h>
+> #include <linux/debugfs.h>
+> #include <linux/ktime.h>
+> #include <linux/mutex.h>
+> #include <asm/unaligned.h>
+>+#include <cxlmbox.h>
+> #include <cxlpci.h>
+> #include <cxlmem.h>
+> #include <cxl.h>
+>@@ -12,6 +14,14 @@
+> #include "core.h"
+> #include "trace.h"
+>
+>+
+>+/* CXL 2.0 - 8.2.8.4 */
+>+#define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
+>+
+>+#define cxl_doorbell_busy(cxlds)                                                \
+>+	(readl((cxlds)->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET) &                  \
+>+	 CXLDEV_MBOX_CTRL_DOORBELL)
+>+
+> static bool cxl_raw_allow_all;
+>
+> /**
+>@@ -219,6 +229,253 @@ static const char *cxl_mem_opcode_to_name(u16 opcode)
+>	return cxl_command_names[c->info.id].name;
+> }
+>
+>+int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+>+{
+>+	const unsigned long start = jiffies;
+>+	unsigned long end = start;
+>+
+>+	while (cxl_doorbell_busy(cxlds)) {
+>+		end = jiffies;
+>+
+>+		if (time_after(end, start + CXL_MAILBOX_TIMEOUT_MS)) {
+>+			/* Check again in case preempted before timeout test */
+>+			if (!cxl_doorbell_busy(cxlds))
+>+				break;
+>+			return -ETIMEDOUT;
+>+		}
+>+		cpu_relax();
+>+	}
+>+
+>+	dev_dbg(cxlds->dev, "Doorbell wait took %dms",
+>+		jiffies_to_msecs(end) - jiffies_to_msecs(start));
+>+	return 0;
+>+}
+>+EXPORT_SYMBOL_NS_GPL(cxl_pci_mbox_wait_for_doorbell, CXL);
+>+
+>+bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
+>+{
+>+	u64 reg;
+>+
+>+	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+>+	return FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, reg) == 100;
+>+}
+>+EXPORT_SYMBOL_NS_GPL(cxl_mbox_background_complete, CXL);
+>+
+>+/**
+>+ * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+>+ * @mds: The memory device driver data
+>+ * @mbox_cmd: Command to send to the memory device.
+>+ *
+>+ * Context: Any context. Expects mbox_mutex to be held.
+>+ * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
+>+ *         Caller should check the return code in @mbox_cmd to make sure it
+>+ *         succeeded.
+>+ *
+>+ * This is a generic form of the CXL mailbox send command thus only using the
+>+ * registers defined by the mailbox capability ID - CXL 2.0 8.2.8.4. Memory
+>+ * devices, and perhaps other types of CXL devices may have further information
+>+ * available upon error conditions. Driver facilities wishing to send mailbox
+>+ * commands should use the wrapper command.
+>+ *
+>+ * The CXL spec allows for up to two mailboxes. The intention is for the primary
+>+ * mailbox to be OS controlled and the secondary mailbox to be used by system
+>+ * firmware. This allows the OS and firmware to communicate with the device and
+>+ * not need to coordinate with each other. The driver only uses the primary
+>+ * mailbox.
+>+ */
+>+static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+>+				   struct cxl_mbox_cmd *mbox_cmd)
+>+{
+>+	struct cxl_dev_state *cxlds = &mds->cxlds;
+>+	void __iomem *payload = cxlds->regs.mbox + CXLDEV_MBOX_PAYLOAD_OFFSET;
+>+	struct device *dev = cxlds->dev;
+>+	u64 cmd_reg, status_reg;
+>+	size_t out_len;
+>+	int rc;
+>+
+>+	lockdep_assert_held(&mds->mbox_mutex);
+>+
+>+	/*
+>+	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
+>+	 *   1. Caller reads MB Control Register to verify doorbell is clear
+>+	 *   2. Caller writes Command Register
+>+	 *   3. Caller writes Command Payload Registers if input payload is non-empty
+>+	 *   4. Caller writes MB Control Register to set doorbell
+>+	 *   5. Caller either polls for doorbell to be clear or waits for interrupt if configured
+>+	 *   6. Caller reads MB Status Register to fetch Return code
+>+	 *   7. If command successful, Caller reads Command Register to get Payload Length
+>+	 *   8. If output payload is non-empty, host reads Command Payload Registers
+>+	 *
+>+	 * Hardware is free to do whatever it wants before the doorbell is rung,
+>+	 * and isn't allowed to change anything after it clears the doorbell. As
+>+	 * such, steps 2 and 3 can happen in any order, and steps 6, 7, 8 can
+>+	 * also happen in any order (though some orders might not make sense).
+>+	 */
+>+
+>+	/* #1 */
+>+	if (cxl_doorbell_busy(cxlds)) {
+>+		u64 md_status =
+>+			readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+>+
+>+		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
+>+			    "mailbox queue busy");
+>+		return -EBUSY;
+>+	}
+>+
+>+	/*
+>+	 * With sanitize polling, hardware might be done and the poller still
+>+	 * not be in sync. Ensure no new command comes in until so. Keep the
+>+	 * hardware semantics and only allow device health status.
+>+	 */
+>+	if (mds->security.poll_tmo_secs > 0) {
+>+		if (mbox_cmd->opcode != CXL_MBOX_OP_GET_HEALTH_INFO)
+>+			return -EBUSY;
+>+	}
+>+
+>+	cmd_reg = FIELD_PREP(CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK,
+>+			     mbox_cmd->opcode);
+>+	if (mbox_cmd->size_in) {
+>+		if (WARN_ON(!mbox_cmd->payload_in))
+>+			return -EINVAL;
+>+
+>+		cmd_reg |= FIELD_PREP(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK,
+>+				      mbox_cmd->size_in);
+>+		memcpy_toio(payload, mbox_cmd->payload_in, mbox_cmd->size_in);
+>+	}
+>+
+>+	/* #2, #3 */
+>+	writeq(cmd_reg, cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
+>+
+>+	/* #4 */
+>+	dev_dbg(dev, "Sending command: 0x%04x\n", mbox_cmd->opcode);
+>+	writel(CXLDEV_MBOX_CTRL_DOORBELL,
+>+	       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
+>+
+>+	/* #5 */
+>+	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+>+	if (rc == -ETIMEDOUT) {
+>+		u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+>+
+>+		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status, "mailbox timeout");
+>+		return rc;
+>+	}
+>+
+>+	/* #6 */
+>+	status_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_STATUS_OFFSET);
+>+	mbox_cmd->return_code =
+>+		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
+>+
+>+	/*
+>+	 * Handle the background command in a synchronous manner.
+>+	 *
+>+	 * All other mailbox commands will serialize/queue on the mbox_mutex,
+>+	 * which we currently hold. Furthermore this also guarantees that
+>+	 * cxl_mbox_background_complete() checks are safe amongst each other,
+>+	 * in that no new bg operation can occur in between.
+>+	 *
+>+	 * Background operations are timesliced in accordance with the nature
+>+	 * of the command. In the event of timeout, the mailbox state is
+>+	 * indeterminate until the next successful command submission and the
+>+	 * driver can get back in sync with the hardware state.
+>+	 */
+>+	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
+>+		u64 bg_status_reg;
+>+		int i, timeout;
+>+
+>+		/*
+>+		 * Sanitization is a special case which monopolizes the device
+>+		 * and cannot be timesliced. Handle asynchronously instead,
+>+		 * and allow userspace to poll(2) for completion.
+>+		 */
+>+		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+>+			if (mds->security.poll) {
+>+				/* hold the device throughout */
+>+				get_device(cxlds->dev);
+>+
+>+				/* give first timeout a second */
+>+				timeout = 1;
+>+				mds->security.poll_tmo_secs = timeout;
+>+				queue_delayed_work(system_wq,
+>+						   &mds->security.poll_dwork,
+>+						   timeout * HZ);
+>+			}
+>+
+>+			dev_dbg(dev, "Sanitization operation started\n");
+>+			goto success;
+>+		}
+>+
+>+		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
+>+			mbox_cmd->opcode);
+>+
+>+		timeout = mbox_cmd->poll_interval_ms;
+>+		for (i = 0; i < mbox_cmd->poll_count; i++) {
+>+			if (rcuwait_wait_event_timeout(&mds->mbox_wait,
+>+				       cxl_mbox_background_complete(cxlds),
+>+				       TASK_UNINTERRUPTIBLE,
+>+				       msecs_to_jiffies(timeout)) > 0)
+>+				break;
+>+		}
+>+
+>+		if (!cxl_mbox_background_complete(cxlds)) {
+>+			dev_err(dev, "timeout waiting for background (%d ms)\n",
+>+				timeout * mbox_cmd->poll_count);
+>+			return -ETIMEDOUT;
+>+		}
+>+
+>+		bg_status_reg = readq(cxlds->regs.mbox +
+>+				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+>+		mbox_cmd->return_code =
+>+			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
+>+				  bg_status_reg);
+>+		dev_dbg(dev,
+>+			"Mailbox background operation (0x%04x) completed\n",
+>+			mbox_cmd->opcode);
+>+	}
+>+
+>+	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
+>+		dev_dbg(dev, "Mailbox operation had an error: %s\n",
+>+			cxl_mbox_cmd_rc2str(mbox_cmd));
+>+		return 0; /* completed but caller must check return_code */
+>+	}
+>+
+>+success:
+>+	/* #7 */
+>+	cmd_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
+>+	out_len = FIELD_GET(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK, cmd_reg);
+>+
+>+	/* #8 */
+>+	if (out_len && mbox_cmd->payload_out) {
+>+		/*
+>+		 * Sanitize the copy. If hardware misbehaves, out_len per the
+>+		 * spec can actually be greater than the max allowed size (21
+>+		 * bits available but spec defined 1M max). The caller also may
+>+		 * have requested less data than the hardware supplied even
+>+		 * within spec.
+>+		 */
+>+		size_t n;
+>+
+>+		n = min3(mbox_cmd->size_out, mds->payload_size, out_len);
+>+		memcpy_fromio(mbox_cmd->payload_out, payload, n);
+>+		mbox_cmd->size_out = n;
+>+	} else {
+>+		mbox_cmd->size_out = 0;
+>+	}
+>+
+>+	return 0;
+>+}
+>+
+>+static int cxl_pci_mbox_send(struct cxl_memdev_state *mds,
+>+			     struct cxl_mbox_cmd *cmd)
+>+{
+>+	int rc;
+>+
+>+	mutex_lock_io(&mds->mbox_mutex);
+>+	rc = __cxl_pci_mbox_send_cmd(mds, cmd);
+>+	mutex_unlock(&mds->mbox_mutex);
+>+
+>+	return rc;
+>+}
+>+
+> /**
+>  * cxl_internal_send_cmd() - Kernel internal interface to send a mailbox command
+>  * @mds: The driver data for the operation
+>@@ -249,7 +506,7 @@ int cxl_internal_send_cmd(struct cxl_memdev_state *mds,
+>
+>	out_size = mbox_cmd->size_out;
+>	min_out = mbox_cmd->min_out;
+>-	rc = mds->mbox_send(mds, mbox_cmd);
+>+	rc = cxl_pci_mbox_send(mds, mbox_cmd);
+>	/*
+>	 * EIO is reserved for a payload size mismatch and mbox_send()
+>	 * may not return this error.
+>@@ -588,7 +845,7 @@ static int handle_mailbox_cmd_from_user(struct cxl_memdev_state *mds,
+>		cxl_mem_opcode_to_name(mbox_cmd->opcode),
+>		mbox_cmd->opcode, mbox_cmd->size_in);
+>
+>-	rc = mds->mbox_send(mds, mbox_cmd);
+>+	rc = cxl_pci_mbox_send(mds, mbox_cmd);
+>	if (rc)
+>		goto out;
+>
+>diff --git a/drivers/cxl/cxlmbox.h b/drivers/cxl/cxlmbox.h
+>new file mode 100644
+>index 000000000000..2b83b870a5e6
+>--- /dev/null
+>+++ b/drivers/cxl/cxlmbox.h
+>@@ -0,0 +1,146 @@
+>+/* SPDX-License-Identifier: GPL-2.0-only */
+>+
+>+#ifndef __CXLMBOX_H__
+>+#define __CXLMBOX_H__
+>+
+>+struct cxl_dev_state;
+>+int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds);
+>+bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds);
+>+
+>+/**
+>+ * struct cxl_mbox_cmd - A command to be submitted to hardware.
+>+ * @opcode: (input) The command set and command submitted to hardware.
+>+ * @payload_in: (input) Pointer to the input payload.
+>+ * @payload_out: (output) Pointer to the output payload. Must be allocated by
+>+ *		 the caller.
+>+ * @size_in: (input) Number of bytes to load from @payload_in.
+>+ * @size_out: (input) Max number of bytes loaded into @payload_out.
+>+ *            (output) Number of bytes generated by the device. For fixed size
+>+ *            outputs commands this is always expected to be deterministic. For
+>+ *            variable sized output commands, it tells the exact number of bytes
+>+ *            written.
+>+ * @min_out: (input) internal command output payload size validation
+>+ * @poll_count: (input) Number of timeouts to attempt.
+>+ * @poll_interval_ms: (input) Time between mailbox background command polling
+>+ *                    interval timeouts.
+>+ * @return_code: (output) Error code returned from hardware.
+>+ *
+>+ * This is the primary mechanism used to send commands to the hardware.
+>+ * All the fields except @payload_* correspond exactly to the fields described in
+>+ * Command Register section of the CXL 2.0 8.2.8.4.5. @payload_in and
+>+ * @payload_out are written to, and read from the Command Payload Registers
+>+ * defined in CXL 2.0 8.2.8.4.8.
+>+ */
+>+struct cxl_mbox_cmd {
+>+	u16 opcode;
+>+	void *payload_in;
+>+	void *payload_out;
+>+	size_t size_in;
+>+	size_t size_out;
+>+	size_t min_out;
+>+	int poll_count;
+>+	int poll_interval_ms;
+>+	u16 return_code;
+>+};
+>+
+>+/*
+>+ * Per CXL 3.0 Section 8.2.8.4.5.1
+>+ */
+>+#define CMD_CMD_RC_TABLE							\
+>+	C(SUCCESS, 0, NULL),							\
+>+	C(BACKGROUND, -ENXIO, "background cmd started successfully"),           \
+>+	C(INPUT, -ENXIO, "cmd input was invalid"),				\
+>+	C(UNSUPPORTED, -ENXIO, "cmd is not supported"),				\
+>+	C(INTERNAL, -ENXIO, "internal device error"),				\
+>+	C(RETRY, -ENXIO, "temporary error, retry once"),			\
+>+	C(BUSY, -ENXIO, "ongoing background operation"),			\
+>+	C(MEDIADISABLED, -ENXIO, "media access is disabled"),			\
+>+	C(FWINPROGRESS, -ENXIO,	"one FW package can be transferred at a time"), \
+>+	C(FWOOO, -ENXIO, "FW package content was transferred out of order"),    \
+>+	C(FWAUTH, -ENXIO, "FW package authentication failed"),			\
+>+	C(FWSLOT, -ENXIO, "FW slot is not supported for requested operation"),  \
+>+	C(FWROLLBACK, -ENXIO, "rolled back to the previous active FW"),         \
+>+	C(FWRESET, -ENXIO, "FW failed to activate, needs cold reset"),		\
+>+	C(HANDLE, -ENXIO, "one or more Event Record Handles were invalid"),     \
+>+	C(PADDR, -EFAULT, "physical address specified is invalid"),		\
+>+	C(POISONLMT, -ENXIO, "poison injection limit has been reached"),        \
+>+	C(MEDIAFAILURE, -ENXIO, "permanent issue with the media"),		\
+>+	C(ABORT, -ENXIO, "background cmd was aborted by device"),               \
+>+	C(SECURITY, -ENXIO, "not valid in the current security state"),         \
+>+	C(PASSPHRASE, -ENXIO, "phrase doesn't match current set passphrase"),   \
+>+	C(MBUNSUPPORTED, -ENXIO, "unsupported on the mailbox it was issued on"),\
+>+	C(PAYLOADLEN, -ENXIO, "invalid payload length"),			\
+>+	C(LOG, -ENXIO, "invalid or unsupported log page"),			\
+>+	C(INTERRUPTED, -ENXIO, "asynchronous event occurred"),			\
+>+	C(FEATUREVERSION, -ENXIO, "unsupported feature version"),		\
+>+	C(FEATURESELVALUE, -ENXIO, "unsupported feature selection value"),	\
+>+	C(FEATURETRANSFERIP, -ENXIO, "feature transfer in progress"),		\
+>+	C(FEATURETRANSFEROOO, -ENXIO, "feature transfer out of order"),		\
+>+	C(RESOURCEEXHAUSTED, -ENXIO, "resources are exhausted"),		\
+>+	C(EXTLIST, -ENXIO, "invalid Extent List"),				\
+>+
+>+#undef C
+>+#define C(a, b, c) CXL_MBOX_CMD_RC_##a
+>+enum  { CMD_CMD_RC_TABLE };
+>+#undef C
+>+#define C(a, b, c) { b, c }
+>+struct cxl_mbox_cmd_rc {
+>+	int err;
+>+	const char *desc;
+>+};
+>+
+>+static const
+>+struct cxl_mbox_cmd_rc cxl_mbox_cmd_rctable[] = { CMD_CMD_RC_TABLE };
+>+#undef C
+>+
+>+static inline const char *cxl_mbox_cmd_rc2str(struct cxl_mbox_cmd *mbox_cmd)
+>+{
+>+	return cxl_mbox_cmd_rctable[mbox_cmd->return_code].desc;
+>+}
+>+
+>+static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
+>+{
+>+	return cxl_mbox_cmd_rctable[mbox_cmd->return_code].err;
+>+}
+>+
+>+enum cxl_opcode {
+>+	CXL_MBOX_OP_INVALID		= 0x0000,
+>+	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+>+	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+>+	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
+>+	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
+>+	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+>+	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>+	CXL_MBOX_OP_TRANSFER_FW		= 0x0201,
+>+	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>+	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+>+	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+>+	CXL_MBOX_OP_GET_LOG		= 0x0401,
+>+	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+>+	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+>+	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+>+	CXL_MBOX_OP_GET_LSA		= 0x4102,
+>+	CXL_MBOX_OP_SET_LSA		= 0x4103,
+>+	CXL_MBOX_OP_GET_HEALTH_INFO	= 0x4200,
+>+	CXL_MBOX_OP_GET_ALERT_CONFIG	= 0x4201,
+>+	CXL_MBOX_OP_SET_ALERT_CONFIG	= 0x4202,
+>+	CXL_MBOX_OP_GET_SHUTDOWN_STATE	= 0x4203,
+>+	CXL_MBOX_OP_SET_SHUTDOWN_STATE	= 0x4204,
+>+	CXL_MBOX_OP_GET_POISON		= 0x4300,
+>+	CXL_MBOX_OP_INJECT_POISON	= 0x4301,
+>+	CXL_MBOX_OP_CLEAR_POISON	= 0x4302,
+>+	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
+>+	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+>+	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+>+	CXL_MBOX_OP_SANITIZE		= 0x4400,
+>+	CXL_MBOX_OP_SECURE_ERASE	= 0x4401,
+>+	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>+	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>+	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+>+	CXL_MBOX_OP_UNLOCK		= 0x4503,
+>+	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+>+	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
+>+	CXL_MBOX_OP_MAX			= 0x10000
+>+};
+>+
+>+#endif /* __CXLMBOX_H__ */
+>diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>index 706f8a6d1ef4..2b4f4c932501 100644
+>--- a/drivers/cxl/cxlmem.h
+>+++ b/drivers/cxl/cxlmem.h
+>@@ -6,6 +6,7 @@
+> #include <linux/cdev.h>
+> #include <linux/uuid.h>
+> #include <linux/rcuwait.h>
+>+#include "cxlmbox.h"
+> #include "cxl.h"
+>
+> /* CXL 2.0 8.2.8.5.1.1 Memory Device Status Register */
+>@@ -31,6 +32,17 @@
+>	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
+>	 CXLMDEV_RESET_NEEDED_NOT)
+>
+>+#define cxl_err(dev, status, msg)                                        \
+>+	dev_err_ratelimited(dev, msg ", device state %s%s\n",                  \
+>+			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+>+			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>+
+>+#define cxl_cmd_err(dev, cmd, status, msg)                               \
+>+	dev_err_ratelimited(dev, msg " (opcode: %#x), device state %s%s\n",    \
+>+			    (cmd)->opcode,                                     \
+>+			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+>+			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>+
+> /**
+>  * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
+>  * @dev: driver core device object
+>@@ -100,102 +112,6 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+>	return xa_load(&port->endpoints, (unsigned long)&cxlmd->dev);
+> }
+>
+>-/**
+>- * struct cxl_mbox_cmd - A command to be submitted to hardware.
+>- * @opcode: (input) The command set and command submitted to hardware.
+>- * @payload_in: (input) Pointer to the input payload.
+>- * @payload_out: (output) Pointer to the output payload. Must be allocated by
+>- *		 the caller.
+>- * @size_in: (input) Number of bytes to load from @payload_in.
+>- * @size_out: (input) Max number of bytes loaded into @payload_out.
+>- *            (output) Number of bytes generated by the device. For fixed size
+>- *            outputs commands this is always expected to be deterministic. For
+>- *            variable sized output commands, it tells the exact number of bytes
+>- *            written.
+>- * @min_out: (input) internal command output payload size validation
+>- * @poll_count: (input) Number of timeouts to attempt.
+>- * @poll_interval_ms: (input) Time between mailbox background command polling
+>- *                    interval timeouts.
+>- * @return_code: (output) Error code returned from hardware.
+>- *
+>- * This is the primary mechanism used to send commands to the hardware.
+>- * All the fields except @payload_* correspond exactly to the fields described in
+>- * Command Register section of the CXL 2.0 8.2.8.4.5. @payload_in and
+>- * @payload_out are written to, and read from the Command Payload Registers
+>- * defined in CXL 2.0 8.2.8.4.8.
+>- */
+>-struct cxl_mbox_cmd {
+>-	u16 opcode;
+>-	void *payload_in;
+>-	void *payload_out;
+>-	size_t size_in;
+>-	size_t size_out;
+>-	size_t min_out;
+>-	int poll_count;
+>-	int poll_interval_ms;
+>-	u16 return_code;
+>-};
+>-
+>-/*
+>- * Per CXL 3.0 Section 8.2.8.4.5.1
+>- */
+>-#define CMD_CMD_RC_TABLE							\
+>-	C(SUCCESS, 0, NULL),							\
+>-	C(BACKGROUND, -ENXIO, "background cmd started successfully"),           \
+>-	C(INPUT, -ENXIO, "cmd input was invalid"),				\
+>-	C(UNSUPPORTED, -ENXIO, "cmd is not supported"),				\
+>-	C(INTERNAL, -ENXIO, "internal device error"),				\
+>-	C(RETRY, -ENXIO, "temporary error, retry once"),			\
+>-	C(BUSY, -ENXIO, "ongoing background operation"),			\
+>-	C(MEDIADISABLED, -ENXIO, "media access is disabled"),			\
+>-	C(FWINPROGRESS, -ENXIO,	"one FW package can be transferred at a time"), \
+>-	C(FWOOO, -ENXIO, "FW package content was transferred out of order"),    \
+>-	C(FWAUTH, -ENXIO, "FW package authentication failed"),			\
+>-	C(FWSLOT, -ENXIO, "FW slot is not supported for requested operation"),  \
+>-	C(FWROLLBACK, -ENXIO, "rolled back to the previous active FW"),         \
+>-	C(FWRESET, -ENXIO, "FW failed to activate, needs cold reset"),		\
+>-	C(HANDLE, -ENXIO, "one or more Event Record Handles were invalid"),     \
+>-	C(PADDR, -EFAULT, "physical address specified is invalid"),		\
+>-	C(POISONLMT, -ENXIO, "poison injection limit has been reached"),        \
+>-	C(MEDIAFAILURE, -ENXIO, "permanent issue with the media"),		\
+>-	C(ABORT, -ENXIO, "background cmd was aborted by device"),               \
+>-	C(SECURITY, -ENXIO, "not valid in the current security state"),         \
+>-	C(PASSPHRASE, -ENXIO, "phrase doesn't match current set passphrase"),   \
+>-	C(MBUNSUPPORTED, -ENXIO, "unsupported on the mailbox it was issued on"),\
+>-	C(PAYLOADLEN, -ENXIO, "invalid payload length"),			\
+>-	C(LOG, -ENXIO, "invalid or unsupported log page"),			\
+>-	C(INTERRUPTED, -ENXIO, "asynchronous event occured"),			\
+>-	C(FEATUREVERSION, -ENXIO, "unsupported feature version"),		\
+>-	C(FEATURESELVALUE, -ENXIO, "unsupported feature selection value"),	\
+>-	C(FEATURETRANSFERIP, -ENXIO, "feature transfer in progress"),		\
+>-	C(FEATURETRANSFEROOO, -ENXIO, "feature transfer out of order"),		\
+>-	C(RESOURCEEXHAUSTED, -ENXIO, "resources are exhausted"),		\
+>-	C(EXTLIST, -ENXIO, "invalid Extent List"),				\
+>-
+>-#undef C
+>-#define C(a, b, c) CXL_MBOX_CMD_RC_##a
+>-enum  { CMD_CMD_RC_TABLE };
+>-#undef C
+>-#define C(a, b, c) { b, c }
+>-struct cxl_mbox_cmd_rc {
+>-	int err;
+>-	const char *desc;
+>-};
+>-
+>-static const
+>-struct cxl_mbox_cmd_rc cxl_mbox_cmd_rctable[] ={ CMD_CMD_RC_TABLE };
+>-#undef C
+>-
+>-static inline const char *cxl_mbox_cmd_rc2str(struct cxl_mbox_cmd *mbox_cmd)
+>-{
+>-	return cxl_mbox_cmd_rctable[mbox_cmd->return_code].desc;
+>-}
+>-
+>-static inline int cxl_mbox_cmd_rc2errno(struct cxl_mbox_cmd *mbox_cmd)
+>-{
+>-	return cxl_mbox_cmd_rctable[mbox_cmd->return_code].err;
+>-}
+>-
+> /*
+>  * CXL 2.0 - Memory capacity multiplier
+>  * See Section 8.2.9.5
+>@@ -490,46 +406,6 @@ to_cxl_memdev_state(struct cxl_dev_state *cxlds)
+>	return container_of(cxlds, struct cxl_memdev_state, cxlds);
+> }
+>
+>-enum cxl_opcode {
+>-	CXL_MBOX_OP_INVALID		= 0x0000,
+>-	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+>-	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
+>-	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
+>-	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
+>-	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
+>-	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>-	CXL_MBOX_OP_TRANSFER_FW		= 0x0201,
+>-	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+>-	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+>-	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+>-	CXL_MBOX_OP_GET_LOG		= 0x0401,
+>-	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+>-	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
+>-	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+>-	CXL_MBOX_OP_GET_LSA		= 0x4102,
+>-	CXL_MBOX_OP_SET_LSA		= 0x4103,
+>-	CXL_MBOX_OP_GET_HEALTH_INFO	= 0x4200,
+>-	CXL_MBOX_OP_GET_ALERT_CONFIG	= 0x4201,
+>-	CXL_MBOX_OP_SET_ALERT_CONFIG	= 0x4202,
+>-	CXL_MBOX_OP_GET_SHUTDOWN_STATE	= 0x4203,
+>-	CXL_MBOX_OP_SET_SHUTDOWN_STATE	= 0x4204,
+>-	CXL_MBOX_OP_GET_POISON		= 0x4300,
+>-	CXL_MBOX_OP_INJECT_POISON	= 0x4301,
+>-	CXL_MBOX_OP_CLEAR_POISON	= 0x4302,
+>-	CXL_MBOX_OP_GET_SCAN_MEDIA_CAPS	= 0x4303,
+>-	CXL_MBOX_OP_SCAN_MEDIA		= 0x4304,
+>-	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
+>-	CXL_MBOX_OP_SANITIZE		= 0x4400,
+>-	CXL_MBOX_OP_SECURE_ERASE	= 0x4401,
+>-	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
+>-	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
+>-	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
+>-	CXL_MBOX_OP_UNLOCK		= 0x4503,
+>-	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+>-	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
+>-	CXL_MBOX_OP_MAX			= 0x10000
+>-};
+>-
+> #define DEFINE_CXL_CEL_UUID                                                    \
+>	UUID_INIT(0xda9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, 0x96, 0xb1, 0x62,     \
+>		  0x3b, 0x3f, 0x17)
+>diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>index 1cb1494c28fe..b11f2e7ad9fb 100644
+>--- a/drivers/cxl/pci.c
+>+++ b/drivers/cxl/pci.c
+>@@ -10,6 +10,7 @@
+> #include <linux/pci.h>
+> #include <linux/aer.h>
+> #include <linux/io.h>
+>+#include "cxlmbox.h"
+> #include "cxlmem.h"
+> #include "cxlpci.h"
+> #include "cxl.h"
+>@@ -32,13 +33,6 @@
+>  *  - Registers a CXL mailbox with cxl_core.
+>  */
+>
+>-#define cxl_doorbell_busy(cxlds)                                                \
+>-	(readl((cxlds)->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET) &                  \
+>-	 CXLDEV_MBOX_CTRL_DOORBELL)
+>-
+>-/* CXL 2.0 - 8.2.8.4 */
+>-#define CXL_MAILBOX_TIMEOUT_MS (2 * HZ)
+>-
+> /*
+>  * CXL 2.0 ECN "Add Mailbox Ready Time" defines a capability field to
+>  * dictate how long to wait for the mailbox to become ready. The new
+>@@ -52,39 +46,6 @@ static unsigned short mbox_ready_timeout = 60;
+> module_param(mbox_ready_timeout, ushort, 0644);
+> MODULE_PARM_DESC(mbox_ready_timeout, "seconds to wait for mailbox ready");
+>
+>-static int cxl_pci_mbox_wait_for_doorbell(struct cxl_dev_state *cxlds)
+>-{
+>-	const unsigned long start = jiffies;
+>-	unsigned long end = start;
+>-
+>-	while (cxl_doorbell_busy(cxlds)) {
+>-		end = jiffies;
+>-
+>-		if (time_after(end, start + CXL_MAILBOX_TIMEOUT_MS)) {
+>-			/* Check again in case preempted before timeout test */
+>-			if (!cxl_doorbell_busy(cxlds))
+>-				break;
+>-			return -ETIMEDOUT;
+>-		}
+>-		cpu_relax();
+>-	}
+>-
+>-	dev_dbg(cxlds->dev, "Doorbell wait took %dms",
+>-		jiffies_to_msecs(end) - jiffies_to_msecs(start));
+>-	return 0;
+>-}
+>-
+>-#define cxl_err(dev, status, msg)                                        \
+>-	dev_err_ratelimited(dev, msg ", device state %s%s\n",                  \
+>-			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+>-			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>-
+>-#define cxl_cmd_err(dev, cmd, status, msg)                               \
+>-	dev_err_ratelimited(dev, msg " (opcode: %#x), device state %s%s\n",    \
+>-			    (cmd)->opcode,                                     \
+>-			    status & CXLMDEV_DEV_FATAL ? " fatal" : "",        \
+>-			    status & CXLMDEV_FW_HALT ? " firmware-halt" : "")
+>-
+> struct cxl_dev_id {
+>	struct cxl_dev_state *cxlds;
+> };
+>@@ -106,14 +67,6 @@ static int cxl_request_irq(struct cxl_dev_state *cxlds, int irq,
+>					 NULL, dev_id);
+> }
+>
+>-static bool cxl_mbox_background_complete(struct cxl_dev_state *cxlds)
+>-{
+>-	u64 reg;
+>-
+>-	reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+>-	return FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_PCT_MASK, reg) == 100;
+>-}
+>-
+> static irqreturn_t cxl_pci_mbox_irq(int irq, void *id)
+> {
+>	u64 reg;
+>@@ -168,221 +121,6 @@ static void cxl_mbox_sanitize_work(struct work_struct *work)
+>	mutex_unlock(&mds->mbox_mutex);
+> }
+>
+>-/**
+>- * __cxl_pci_mbox_send_cmd() - Execute a mailbox command
+>- * @mds: The memory device driver data
+>- * @mbox_cmd: Command to send to the memory device.
+>- *
+>- * Context: Any context. Expects mbox_mutex to be held.
+>- * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
+>- *         Caller should check the return code in @mbox_cmd to make sure it
+>- *         succeeded.
+>- *
+>- * This is a generic form of the CXL mailbox send command thus only using the
+>- * registers defined by the mailbox capability ID - CXL 2.0 8.2.8.4. Memory
+>- * devices, and perhaps other types of CXL devices may have further information
+>- * available upon error conditions. Driver facilities wishing to send mailbox
+>- * commands should use the wrapper command.
+>- *
+>- * The CXL spec allows for up to two mailboxes. The intention is for the primary
+>- * mailbox to be OS controlled and the secondary mailbox to be used by system
+>- * firmware. This allows the OS and firmware to communicate with the device and
+>- * not need to coordinate with each other. The driver only uses the primary
+>- * mailbox.
+>- */
+>-static int __cxl_pci_mbox_send_cmd(struct cxl_memdev_state *mds,
+>-				   struct cxl_mbox_cmd *mbox_cmd)
+>-{
+>-	struct cxl_dev_state *cxlds = &mds->cxlds;
+>-	void __iomem *payload = cxlds->regs.mbox + CXLDEV_MBOX_PAYLOAD_OFFSET;
+>-	struct device *dev = cxlds->dev;
+>-	u64 cmd_reg, status_reg;
+>-	size_t out_len;
+>-	int rc;
+>-
+>-	lockdep_assert_held(&mds->mbox_mutex);
+>-
+>-	/*
+>-	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
+>-	 *   1. Caller reads MB Control Register to verify doorbell is clear
+>-	 *   2. Caller writes Command Register
+>-	 *   3. Caller writes Command Payload Registers if input payload is non-empty
+>-	 *   4. Caller writes MB Control Register to set doorbell
+>-	 *   5. Caller either polls for doorbell to be clear or waits for interrupt if configured
+>-	 *   6. Caller reads MB Status Register to fetch Return code
+>-	 *   7. If command successful, Caller reads Command Register to get Payload Length
+>-	 *   8. If output payload is non-empty, host reads Command Payload Registers
+>-	 *
+>-	 * Hardware is free to do whatever it wants before the doorbell is rung,
+>-	 * and isn't allowed to change anything after it clears the doorbell. As
+>-	 * such, steps 2 and 3 can happen in any order, and steps 6, 7, 8 can
+>-	 * also happen in any order (though some orders might not make sense).
+>-	 */
+>-
+>-	/* #1 */
+>-	if (cxl_doorbell_busy(cxlds)) {
+>-		u64 md_status =
+>-			readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+>-
+>-		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status,
+>-			    "mailbox queue busy");
+>-		return -EBUSY;
+>-	}
+>-
+>-	/*
+>-	 * With sanitize polling, hardware might be done and the poller still
+>-	 * not be in sync. Ensure no new command comes in until so. Keep the
+>-	 * hardware semantics and only allow device health status.
+>-	 */
+>-	if (mds->security.poll_tmo_secs > 0) {
+>-		if (mbox_cmd->opcode != CXL_MBOX_OP_GET_HEALTH_INFO)
+>-			return -EBUSY;
+>-	}
+>-
+>-	cmd_reg = FIELD_PREP(CXLDEV_MBOX_CMD_COMMAND_OPCODE_MASK,
+>-			     mbox_cmd->opcode);
+>-	if (mbox_cmd->size_in) {
+>-		if (WARN_ON(!mbox_cmd->payload_in))
+>-			return -EINVAL;
+>-
+>-		cmd_reg |= FIELD_PREP(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK,
+>-				      mbox_cmd->size_in);
+>-		memcpy_toio(payload, mbox_cmd->payload_in, mbox_cmd->size_in);
+>-	}
+>-
+>-	/* #2, #3 */
+>-	writeq(cmd_reg, cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
+>-
+>-	/* #4 */
+>-	dev_dbg(dev, "Sending command: 0x%04x\n", mbox_cmd->opcode);
+>-	writel(CXLDEV_MBOX_CTRL_DOORBELL,
+>-	       cxlds->regs.mbox + CXLDEV_MBOX_CTRL_OFFSET);
+>-
+>-	/* #5 */
+>-	rc = cxl_pci_mbox_wait_for_doorbell(cxlds);
+>-	if (rc == -ETIMEDOUT) {
+>-		u64 md_status = readq(cxlds->regs.memdev + CXLMDEV_STATUS_OFFSET);
+>-
+>-		cxl_cmd_err(cxlds->dev, mbox_cmd, md_status, "mailbox timeout");
+>-		return rc;
+>-	}
+>-
+>-	/* #6 */
+>-	status_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_STATUS_OFFSET);
+>-	mbox_cmd->return_code =
+>-		FIELD_GET(CXLDEV_MBOX_STATUS_RET_CODE_MASK, status_reg);
+>-
+>-	/*
+>-	 * Handle the background command in a synchronous manner.
+>-	 *
+>-	 * All other mailbox commands will serialize/queue on the mbox_mutex,
+>-	 * which we currently hold. Furthermore this also guarantees that
+>-	 * cxl_mbox_background_complete() checks are safe amongst each other,
+>-	 * in that no new bg operation can occur in between.
+>-	 *
+>-	 * Background operations are timesliced in accordance with the nature
+>-	 * of the command. In the event of timeout, the mailbox state is
+>-	 * indeterminate until the next successful command submission and the
+>-	 * driver can get back in sync with the hardware state.
+>-	 */
+>-	if (mbox_cmd->return_code == CXL_MBOX_CMD_RC_BACKGROUND) {
+>-		u64 bg_status_reg;
+>-		int i, timeout;
+>-
+>-		/*
+>-		 * Sanitization is a special case which monopolizes the device
+>-		 * and cannot be timesliced. Handle asynchronously instead,
+>-		 * and allow userspace to poll(2) for completion.
+>-		 */
+>-		if (mbox_cmd->opcode == CXL_MBOX_OP_SANITIZE) {
+>-			if (mds->security.poll) {
+>-				/* hold the device throughout */
+>-				get_device(cxlds->dev);
+>-
+>-				/* give first timeout a second */
+>-				timeout = 1;
+>-				mds->security.poll_tmo_secs = timeout;
+>-				queue_delayed_work(system_wq,
+>-						   &mds->security.poll_dwork,
+>-						   timeout * HZ);
+>-			}
+>-
+>-			dev_dbg(dev, "Sanitization operation started\n");
+>-			goto success;
+>-		}
+>-
+>-		dev_dbg(dev, "Mailbox background operation (0x%04x) started\n",
+>-			mbox_cmd->opcode);
+>-
+>-		timeout = mbox_cmd->poll_interval_ms;
+>-		for (i = 0; i < mbox_cmd->poll_count; i++) {
+>-			if (rcuwait_wait_event_timeout(&mds->mbox_wait,
+>-				       cxl_mbox_background_complete(cxlds),
+>-				       TASK_UNINTERRUPTIBLE,
+>-				       msecs_to_jiffies(timeout)) > 0)
+>-				break;
+>-		}
+>-
+>-		if (!cxl_mbox_background_complete(cxlds)) {
+>-			dev_err(dev, "timeout waiting for background (%d ms)\n",
+>-				timeout * mbox_cmd->poll_count);
+>-			return -ETIMEDOUT;
+>-		}
+>-
+>-		bg_status_reg = readq(cxlds->regs.mbox +
+>-				      CXLDEV_MBOX_BG_CMD_STATUS_OFFSET);
+>-		mbox_cmd->return_code =
+>-			FIELD_GET(CXLDEV_MBOX_BG_CMD_COMMAND_RC_MASK,
+>-				  bg_status_reg);
+>-		dev_dbg(dev,
+>-			"Mailbox background operation (0x%04x) completed\n",
+>-			mbox_cmd->opcode);
+>-	}
+>-
+>-	if (mbox_cmd->return_code != CXL_MBOX_CMD_RC_SUCCESS) {
+>-		dev_dbg(dev, "Mailbox operation had an error: %s\n",
+>-			cxl_mbox_cmd_rc2str(mbox_cmd));
+>-		return 0; /* completed but caller must check return_code */
+>-	}
+>-
+>-success:
+>-	/* #7 */
+>-	cmd_reg = readq(cxlds->regs.mbox + CXLDEV_MBOX_CMD_OFFSET);
+>-	out_len = FIELD_GET(CXLDEV_MBOX_CMD_PAYLOAD_LENGTH_MASK, cmd_reg);
+>-
+>-	/* #8 */
+>-	if (out_len && mbox_cmd->payload_out) {
+>-		/*
+>-		 * Sanitize the copy. If hardware misbehaves, out_len per the
+>-		 * spec can actually be greater than the max allowed size (21
+>-		 * bits available but spec defined 1M max). The caller also may
+>-		 * have requested less data than the hardware supplied even
+>-		 * within spec.
+>-		 */
+>-		size_t n;
+>-
+>-		n = min3(mbox_cmd->size_out, mds->payload_size, out_len);
+>-		memcpy_fromio(mbox_cmd->payload_out, payload, n);
+>-		mbox_cmd->size_out = n;
+>-	} else {
+>-		mbox_cmd->size_out = 0;
+>-	}
+>-
+>-	return 0;
+>-}
+>-
+>-static int cxl_pci_mbox_send(struct cxl_memdev_state *mds,
+>-			     struct cxl_mbox_cmd *cmd)
+>-{
+>-	int rc;
+>-
+>-	mutex_lock_io(&mds->mbox_mutex);
+>-	rc = __cxl_pci_mbox_send_cmd(mds, cmd);
+>-	mutex_unlock(&mds->mbox_mutex);
+>-
+>-	return rc;
+>-}
+>-
+> static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
+> {
+>	struct cxl_dev_state *cxlds = &mds->cxlds;
+>@@ -416,7 +154,6 @@ static int cxl_pci_setup_mailbox(struct cxl_memdev_state *mds)
+>		return -ETIMEDOUT;
+>	}
+>
+>-	mds->mbox_send = cxl_pci_mbox_send;
+>	mds->payload_size =
+>		1 << FIELD_GET(CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK, cap);
+>
+>--
+>2.39.2
+>
