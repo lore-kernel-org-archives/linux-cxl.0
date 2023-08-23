@@ -2,320 +2,131 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9C2C3DA66
-	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 23:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D3C7113B
+	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 23:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238638AbjHWXV6 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 23 Aug 2023 19:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34460 "EHLO
+        id S238517AbjHWXnm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 23 Aug 2023 19:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238571AbjHWXVp (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 19:21:45 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DE4E5F
-        for <linux-cxl@vger.kernel.org>; Wed, 23 Aug 2023 16:21:42 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id BD7E2C1775;
-        Wed, 23 Aug 2023 23:21:41 +0000 (UTC)
-Received: from pdx1-sub0-mail-a204.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 165A1C16D3;
-        Wed, 23 Aug 2023 23:21:41 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1692832901; a=rsa-sha256;
-        cv=none;
-        b=KPShAwV0ZamjNdJH50qDo++qerggY0sk6oeNx/Bt9fbyrUQdrFWDk76y2F9j4Of+/VQ0G9
-        0egAW78Sx8KpjTCtjVuXaKg2MYG8M49MjbBfWvpfEran0N6VNVe2/V/WygvXqNnlI+/uaM
-        iJQlsE5M6fU+0EKzuzEYzk4dnghjA+rd+kneurbTZRXS0CGIPCfhMO5mC9ME/GGmdD+LSu
-        rNwmNE/CQB6/bFUGu8Nt2Cn2zFiPVpoLclwpEpH9HAqIsiC45jqDzSYrhe2YJ0N9NhMviN
-        q/V84l8hsvFbnifv9B6KLKyBoBO1ZJyhQz1ftumbDdoIA4oBmBF06cJZVCdJDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1692832901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=QjVMIhe3I1dxpOuHC+caRg+jOFZGtsCaQpr9MIHeHew=;
-        b=vJQAklHmGWZTd7hFGi1ND6zMyE823cmZqX4fLLJ8OOXNihKPfJKgw3LrEmxjuKosCiMt9X
-        5BFYUfzT6TvXtgJXWMzQ7UKTHFzDkJ94EMcDDFaZ28dyBqs7muuluaGFB3Ug/gL0FswU/2
-        CwpKPYm4ykeZHvtOPzb+pm4nxh9PSktxa6DtBk3e5u+Wg/bNXcKRkC7P/V0j6OObSlyy+m
-        gTsMHlEzQTk/92bPMBC8YITIm/GVdFVOsbqFui13ziuX9SdUZAJ8B97+2AhMdlwhtvUGlK
-        j4ndZai7HSs+G3FFc6vQKC5DQqM8csN4EkNfzz9lMXL8Bkjat53yKHZQ/UqAdQ==
-ARC-Authentication-Results: i=1;
-        rspamd-5c4f45d774-m48d7;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Turn-Celery: 0abb2ced4143ee4c_1692832901556_1928060678
-X-MC-Loop-Signature: 1692832901556:1193091089
-X-MC-Ingress-Time: 1692832901556
-Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.104.240.35 (trex/6.9.1);
-        Wed, 23 Aug 2023 23:21:41 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4RWMfr1bCSzPq;
-        Wed, 23 Aug 2023 16:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1692832900;
-        bh=QjVMIhe3I1dxpOuHC+caRg+jOFZGtsCaQpr9MIHeHew=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=cEiID2FHObZMuzci3/LpEycgbu4sJS8y+nco71vE6TIjlf+krB67s0kwNMzEhPPIC
-         NkGWk29UXRZL9dGNI7BkGxD5oxwwOrWr5pPt/yFZxzg5zLskFUYKdpJV5XvGWcSDCZ
-         1xT5pP4U5U8DRb8KsYVdLLNVsXnXDb1DUSmM3YousZXsScA850oHpsOxwzRAQe3MF9
-         HvpunjsWIAcvlSJSQ/fEHsr0NY2pcM6QSrDOCVqI1SCFtgaFnVsB9RIzg2+l6oPo55
-         rmK8W8sSBzzFHqP2a7hruVnbA8JJbLHIOiLlSR0rknB3pFnYo6knMyIhlQ1oMwWc+M
-         1pr0P6ImSncvQ==
-Date:   Wed, 23 Aug 2023 15:42:43 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        linuxarm@huawei.com, Alison Schofield <alison.schofield@intel.com>,
+        with ESMTP id S231812AbjHWXnX (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 19:43:23 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2050.outbound.protection.outlook.com [40.107.100.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2067710CA;
+        Wed, 23 Aug 2023 16:43:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EiCS525cqKxDxO//7zf1orOBqCI1LXxOYvPP9QUlfdaBM7clRQdytFc/aWc0foIW4XyUG+H23kipaQilysqtcEVgNAd1mTNXa7uwgMTAQS2yzuH+mGopxl++OO05lNBTo5J4mTlcWVXzIWqzoOwOE8XCufmOCQ9PQxSuPTtugLrrG9y7I0jA3haEWoov5XXMwc2JiVCNwMiogfs1b2AQzyqVLo9dmKvWpvI0TQgcQofbb4/DS96MfFvYP75SgmT+2DL84HoZiPmkPQn1myZkSszCyoXo6BxpJ+t4RluihDZZdGTPDrtcHrNWsVjfCQbLZ2lqAprKO9axp+pYlH/VBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=641DbmTm3KLt3NEeDq/Xm42pfHAFTS5YSw4UG45sHmk=;
+ b=krjJDHChg4sNbky1nMFxK4nMxxrap3RoBAkVGrNS/qzvqHDYl7k4m5mbzzDhDIBgU7kNzIUFMT3hUG7vmvv9S8gDGyl/TUyHW1q7Z91mY8r/kd8l4mW4wUphlWi8jMVbuak3rPR5Ad/yNf9J5W13mzuogONbGTact3xihSleii1tsg2xj9vq6y6yZ7295vEZaymIWzkx0vir9vW6ECepAWRBGBMl8ytT2lR+jFOnQ9s/8iSYlW6IBJpE4iCOeOn9L96ZpbCy23qbE17+Q+K0fjpQ7AgdUyDexc7aZGWFlRR4HT+/SeKwQm4a0iAecqMMlA9yh0dznfCls6ew9yLaBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=641DbmTm3KLt3NEeDq/Xm42pfHAFTS5YSw4UG45sHmk=;
+ b=C/yGwkRkxcgOB7818WzC1bVpo8cnKWVNNH5BGl2A3/cwEbirXAZU8F7blJprSFGdw1golF3p4re4PMnR9Uis99MqkYqOz4oPbNYXx1k8A6rBlD0hf8LgvMnW67e/64IQ2EU6X05VdjHjWoksVOqiYs9U6M88b2BzRz3en3XtU4w=
+Received: from CYXPR02CA0086.namprd02.prod.outlook.com (2603:10b6:930:ce::23)
+ by LV3PR12MB9143.namprd12.prod.outlook.com (2603:10b6:408:19e::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.24; Wed, 23 Aug
+ 2023 23:43:18 +0000
+Received: from CY4PEPF0000E9D7.namprd05.prod.outlook.com
+ (2603:10b6:930:ce:cafe::25) by CYXPR02CA0086.outlook.office365.com
+ (2603:10b6:930:ce::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.27 via Frontend
+ Transport; Wed, 23 Aug 2023 23:43:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D7.mail.protection.outlook.com (10.167.241.78) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6699.14 via Frontend Transport; Wed, 23 Aug 2023 23:43:18 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 23 Aug
+ 2023 18:43:17 -0500
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-cxl@vger.kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <oohall@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Shesha Bhushan Sreenivasamurthy <sheshas@marvell.com>,
-        Gregory Price <gregory.price@memverge.com>,
-        Viacheslav Dubeyko <slava@dubeyko.com>, fan.ni@samsung.com,
-        a.manzanares@samsung.com
-Subject: Re: [RFC PATCH v5 0/4] CXL: Standalone switch CCI driver
-Message-ID: <kppexf75p3dqdvg7faktkfaukuykgexyktinyk22w3ogulpadc@b3o6nn45tlkt>
-References: <20230804115414.14391-1-Jonathan.Cameron@huawei.com>
+        "Ben Widawsky" <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Robert Richter <rrichter@amd.com>,
+        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v4 0/3] PCI/AER, CXL: Fix appropriate _OSC check for CXL RAS Cap
+Date:   Wed, 23 Aug 2023 23:43:02 +0000
+Message-ID: <20230823234305.27333-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230804115414.14391-1-Jonathan.Cameron@huawei.com>
-User-Agent: NeoMutt/20230517
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D7:EE_|LV3PR12MB9143:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a166060-e4be-4517-2824-08dba432ba6e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ewZL7ItUfZVdmxMfPgBzAltwfSQBfBgRpy+L3lcgqyMZoqF/+krwyFUTDIF3s31J0twWjGh3kZTs0v71mJuAJDqrYJgsCZwplbB6aqktCxqWxKiNcWHR0e5PPOWHoP+T+rEMWd8tVjCdhTIloWNwa4JwnPSonkxDkm4xaOcDGRTS/L+GPl4n4XRG/d/baysnoXKJpU74P7mGQA5eph3mD91fVMLO82+bViEjYs39M+l2WIFK3WQ5mdPWpKzfuX1CknOnNOtGnDYnFDafnZQlJjR1dUcbMiItf/fwkKU8Eq6vKWVnsyBtPgYjtRTb1Ch0MP+3uzBDISu5NfP3vD3HggbHV3xsQ4FqLrIioUgtBYOmV/WSdP7q9m7VBim6nN7UhVlD0nxNqV1Fp+Cj/uk5urepoEQawIYGCjAYUkvsjQ4lpbbok63t/WHPJSnTOKJlH4F20Ft56D1SotK3wblhr2jOWGzUWQd7mtNwAkGPGHMR8uWZ/f6Znl5sF+h8Hf5+lo/xmJM62OkSl3X42cHH0HrXisjQXn45JuFrjdHZ1HE9gS9YvxAmbiztuNhUTIQpPLxzjm5/crO+uIxT8YT5dhHRKp9+C92sDvPGqOJobxdrQw+d0G2AYyV7lSJmTzwn7LQ4YMF4nsFD0XD4e4ZtV4V2V5ONSTCyTO/tara597A3IYJ+DPSZkwtCQzYkp7I+FJGdEgKe/67Ft7o6BOBUC9e4S82e+VuM/i8ijQmmJAvyU6MJ+mu43JdRkIsXvnUg
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(376002)(346002)(186009)(1800799009)(451199024)(82310400011)(46966006)(36840700001)(40470700004)(54906003)(70586007)(316002)(70206006)(110136005)(8676002)(8936002)(2616005)(966005)(4326008)(36756003)(40460700003)(41300700001)(1076003)(356005)(82740400003)(81166007)(478600001)(6666004)(40480700001)(83380400001)(7416002)(4744005)(2906002)(47076005)(7696005)(36860700001)(86362001)(426003)(336012)(5660300002)(16526019)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2023 23:43:18.5064
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a166060-e4be-4517-2824-08dba432ba6e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9D7.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9143
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 04 Aug 2023, Jonathan Cameron wrote:
+This series of patches fixes the appropriate _OSC check for CXL RAS
+registers.
 
->//Testswitch.c
->#include <linux/types.h>
->#include <stdint.h>
->#include <sys/ioctl.h>
->#include <stdio.h>
->#include <fcntl.h>
->#include <stdlib.h>
->#define __user
->#include "cxl_mem.h" /* include/uapi/linux/cxl_mem.h */
->
->/* Move to appropriate header later */
->struct cxl_cmd_infostat_identify_rsp {
->  uint16_t pcie_vid;
->  uint16_t pcie_did;
->  uint16_t pcie_subsys_vid;
->  uint16_t pcie_subsys_id;
->  uint64_t sn;
->  uint8_t max_message_size;
->  uint8_t component_type;
->};
->
->struct cxl_cmd_infostat_get_bg_cmd_sts_rsp {
->  uint8_t status;
->  uint8_t rsvd;
->  uint16_t opcode;
->  uint16_t returncode;
->  uint16_t vendor_ext_status;
->};
->
->struct cxl_cmd_identify_switch_device_rsp {
->  uint8_t ingress_port_id;
->  uint8_t rsvd;
->  uint8_t num_physical_ports;
->  uint8_t num_vcs;
->  uint8_t active_port_bm[0x20];
->  uint8_t vcs_bm[0x20];
->  uint16_t total_num_vPPBs;
->  uint16_t num_bound_vPPBs;
->  uint8_t num_hdm_decoders;
->} __attribute__((packed));
->
->struct cci_message {
->  uint8_t message_cat;
->  uint8_t tag;
->  uint8_t resv;
->  uint8_t command;
->  uint8_t command_set;
->  uint8_t pl_length[3];
->  uint16_t ret_code;
->  uint16_t vendor_ext;
->  uint8_t payload[];
->};
->
->struct cxl_cmd_tunnel_command_req {
->  uint8_t id;
->  uint8_t target_type;
->  #define TUNNEL_TARGET_TYPE_PORT_OR_LD  0
->  #define TUNNEL_TARGET_TYPE_LD_POOL_CCI 1
->  uint16_t command_size;
->  struct cci_message message;
->};
->
->struct cxl_cmd_tunnel_command_resp {
->  uint16_t length;
->  uint16_t resv;
->  struct cci_message message;
->};
->
->
->int main()
->{
->  struct cxl_send_command cmd = {};
->  struct cxl_cmd_infostat_identify_rsp is_identify;
->  struct cxl_cmd_identify_switch_device_rsp switch_identify;
->  struct cxl_cmd_infostat_get_bg_cmd_sts_rsp bg_cmd_status;
->  struct cxl_cmd_tunnel_command_req *tunnel_req;
->  struct cxl_cmd_tunnel_command_resp *tunnel_resp;
->  int fd;
->  int rc, i;
->  int tun_cmd_size, tun_resp_size;
->
->  printf("Starting\n");
->  fd = open("/dev/cxl/switch0", O_RDWR);
->  if (fd < 0) {
->    printf("could not open file\n");
->    return 0;
->  }
->  cmd.id = CXL_MEM_COMMAND_ID_RAW;
->  cmd.id = CXL_MEM_COMMAND_ID_INFO_STAT_IDENTIFY;
->  cmd.out.size = sizeof(is_identify);
->  cmd.out.payload = (__u64)&is_identify;
->
->  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
->  if (rc) {
->    printf("rc %d\n", rc);
->    if (rc < 0)
->      return rc;
->  }
->
->  printf("Identify on switch:\n");
->  printf("VID:0x%04x DID:0x%04x\n", is_identify.pcie_vid, is_identify.pcie_did);
->  printf("Subsys: VID:0x%04x DID:0x%04x\n", is_identify.pcie_subsys_vid, is_identify.pcie_subsys_id);
->
->  cmd.id = CXL_MEM_COMMAND_ID_GET_BG_CMD_STATUS;
->  cmd.out.size = sizeof(bg_cmd_status);
->  cmd.out.payload = (__u64)&bg_cmd_status;
->
->  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
->  if (rc) {
->    printf("rc %d\n", rc);
->    if (rc < 0)
->      return rc;
->  }
+First patch addresses the _OSC check.
 
-I was under the impression that the BG status command would not be
-exported to userspace (I assume its wanted for for bind vppb). While
-polling on the status of the bg command, how does a user determine
-whether or not the command finished and a new (same) one kicks in?
-In theory userspace could poll forever.
+Second patch moves around pcie_aer_is_native() function declaration to a
+common location to be used by cxl/pci module and third patch reuses
+pcie_aer_is_native() in cxl/pci module.
 
-Thanks,
-Davidlohr
+Link to v3:
+https://lore.kernel.org/all/20230803230129.127590-1-Smita.KoralahalliChannabasappa@amd.com
 
->
->  cmd.id = CXL_MEM_COMMAND_ID_IDENTIFY_SWITCH_DEVICE;
->  cmd.out.size = sizeof(switch_identify);
->  cmd.out.payload = (__u64)&switch_identify;
->
->  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
->  if (rc) {
->    printf("rc %d\n", rc);
->    if (rc < 0)
->      return rc;
->  }
->
->  printf("Switch indent ingress=%#x #ports=%d\n",
->	 switch_identify.ingress_port_id,
->	 switch_identify.num_physical_ports);
->  for (i = 0; i < sizeof(switch_identify.active_port_bm); i++) {
->    int j;
->    for (j = 0; j < 8; j++) {
->      if (switch_identify.active_port_bm[i] & 1 << j) {
->	printf("Port %x active\n", i * 8 + j);
->      }
->    }
->  }
->
->  tun_cmd_size = sizeof(*tunnel_req);
->  tunnel_req = malloc(tun_cmd_size);
->  tun_resp_size = sizeof(*tunnel_resp) + sizeof(struct cxl_cmd_infostat_identify_rsp);
->  tunnel_resp = malloc(tun_resp_size);
->  tunnel_req->target_type = TUNNEL_TARGET_TYPE_PORT_OR_LD;
->  tunnel_req->command_size = sizeof(tunnel_req->message);
->  tunnel_req->message.command = 0x01;
->  tunnel_req->message.command_set = 0x0; // tunnels within tunnels
->
->  cmd.id = CXL_MEM_COMMAND_ID_TUNNEL_MANAGEMENT_COMMAND;
->  cmd.in.payload = tunnel_req;
->  cmd.in.size = tun_cmd_size;
->  cmd.out.size = tun_resp_size;
->  cmd.out.payload = tunnel_resp;
->
->  rc = ioctl(fd, CXL_MEM_SEND_COMMAND, &cmd);
->  if (rc) {
->    printf("rc from tunnel cmd is %d\n", rc);
->    if (rc < 0)
->      return rc;
->  }
->  printf("message response size %d\n", cmd.out.size);
->  {
->    struct cxl_cmd_infostat_identify_rsp *pl = (void *)tunnel_resp->message.payload;
->	printf("Vendor id  : %04x\n", pl->pcie_vid);
->	printf("Device id  : %04x\n", pl->pcie_did);
->	printf("Subsys vid : %04x\n", pl->pcie_subsys_vid);
->	printf("Subsys id  : %04x\n", pl->pcie_subsys_id);
->
->	switch (pl->component_type) {
->	case 0x00:
->		printf("Switch!\n");
->		break;
->	case 0x03:
->		printf("Type3!\n");
->		break;
->	}
->  }
->  return 0;
->}
->
->Jonathan Cameron (4):
->  cxl: mbox: Preparatory move of functions to core/mbox.c and cxlmbox.h
->  cxl: mbox: Factor out the mbox specific data for reuse in switch cci
->  PCI: Add PCI_CLASS_SERIAL_CXL_SWITCH_CCI class ID to pci_ids.h
->  cxl/pci: Add support for stand alone CXL Switch mailbox CCI
->
-> drivers/cxl/Kconfig          |  14 ++
-> drivers/cxl/Makefile         |   2 +
-> drivers/cxl/core/Makefile    |   1 +
-> drivers/cxl/core/core.h      |  12 +-
-> drivers/cxl/core/mbox.c      | 455 +++++++++++++++++++++++++++--------
-> drivers/cxl/core/memdev.c    |  44 ++--
-> drivers/cxl/core/regs.c      |  35 ++-
-> drivers/cxl/core/switchdev.c | 129 ++++++++++
-> drivers/cxl/cxl.h            |   4 +-
-> drivers/cxl/cxlmbox.h        | 203 ++++++++++++++++
-> drivers/cxl/cxlmem.h         | 176 ++------------
-> drivers/cxl/pci.c            | 436 ++++++++++-----------------------
-> drivers/cxl/pmem.c           |   6 +-
-> drivers/cxl/security.c       |  13 +-
-> drivers/cxl/switch.h         |  19 ++
-> drivers/cxl/switchdev.c      | 170 +++++++++++++
-> include/linux/pci_ids.h      |   1 +
-> include/uapi/linux/cxl_mem.h |   4 +
-> 18 files changed, 1128 insertions(+), 596 deletions(-)
-> create mode 100644 drivers/cxl/core/switchdev.c
-> create mode 100644 drivers/cxl/cxlmbox.h
-> create mode 100644 drivers/cxl/switch.h
-> create mode 100644 drivers/cxl/switchdev.c
->
->--
->2.39.2
->
+Smita Koralahalli (3):
+  cxl/pci: Fix appropriate checking for _OSC while handling CXL RAS
+    registers
+  PCI/AER: Export pcie_aer_is_native()
+  cxl/pci: Replace host_bridge->native_aer with pcie_aer_is_native()
+
+ drivers/cxl/pci.c          | 7 +++----
+ drivers/pci/pcie/aer.c     | 1 +
+ drivers/pci/pcie/portdrv.h | 2 --
+ include/linux/aer.h        | 2 ++
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+2.17.1
+
