@@ -2,42 +2,42 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0F9EE49AD
-	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 02:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6973DEE49A3
+	for <linux-cxl@archiver.kernel.org>; Wed, 23 Aug 2023 05:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231392AbjHWCQF (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 22 Aug 2023 22:16:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36204 "EHLO
+        id S232771AbjHWF6q (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 23 Aug 2023 01:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbjHWCQE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 22 Aug 2023 22:16:04 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7202CEF;
-        Tue, 22 Aug 2023 19:15:59 -0700 (PDT)
+        with ESMTP id S231238AbjHWF6q (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 23 Aug 2023 01:58:46 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DB78E57;
+        Tue, 22 Aug 2023 22:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692756959; x=1724292959;
+  t=1692770313; x=1724306313;
   h=from:to:cc:subject:references:date:in-reply-to:
    message-id:mime-version;
-  bh=weET49PXqdwT0hzjZq+4RXPZJW4sshvEkGy2Va57pBQ=;
-  b=F9NF48MwHtGdBJ6QAgiw+KK7TdjER2Q2XQ+QYq8aNmeWK4K3aUpqXTlo
-   ftODTaZmY7QfBUDTmY4SSEvE2P77nOfk9C/YaW+PaWcdNcEY3Ym9ehnlL
-   pJn/mRXiAny0zNi6yc5vifvmJnw/M3cvf62h/GdtOZztRIB7G0MWAIFun
-   sWoV11i/JGECOkdbP68MTpytu4gByw4VgCA1yH9xVBBO+/i3MlSUf4z1P
-   u0t8s2P1OkT9GrHJ7iAmQHS7m+7ipb89hUaDdQVzbYOmg+W8OSU9tAcoQ
-   LmSCoeGMgFFe4WSrqHsgEtubg4dDZqrTBEQTld0OTODYCh1LvMMD4ZmmJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="354373070"
-X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="354373070"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:15:45 -0700
+  bh=LW+RWmleuQGwpDrnLOlCnwX6p1Gg6/2pGZbejbm+ZBY=;
+  b=DbCMyGmYQ5JDta6u8Pcz3/sb89Y/BnXjAf92yetJ0Z8KQJCGW2DQCN3r
+   M1YZCH9WTlfcPRnebPczOaRZxM/089lWBynnCgC4HIQyGpKXtYTYfB3y3
+   YhSPR16pJQc6i3XZ87VBdp4jQwXLU/lmPDsOq6OKSaGB9OaPbcJGucagE
+   tUSQBa/kFxf5jJ5XNcSqsLVqrryWi5ZTLiVNne2VMr0qUGGV4kYRLkFWd
+   ib3EUPe3V58Tu5oItxD3AoRnwSuTclELmECpYqjMWeTwrfkXzdC7o75f4
+   k5r4AX47MyN/mLtvYQ0Oj7EMsHwyji+09jUA3jCu8+IKjHExBEtv5ulpW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="372964705"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="372964705"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:58:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="771553193"
-X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="771553193"
+X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="713437752"
+X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
+   d="scan'208";a="713437752"
 Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:15:41 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 22:58:28 -0700
 From:   "Huang, Ying" <ying.huang@intel.com>
 To:     Alistair Popple <apopple@nvidia.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
@@ -52,20 +52,31 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
         "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
         Michal Hocko <mhocko@kernel.org>,
         Yang Shi <shy828301@gmail.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH RESEND 4/4] dax, kmem: calculate abstract distance with
- general interface
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH RESEND 1/4] memory tiering: add abstract distance
+ calculation algorithms management
 References: <20230721012932.190742-1-ying.huang@intel.com>
-        <20230721012932.190742-5-ying.huang@intel.com>
-        <87edkwznsf.fsf@nvdebian.thelocal>
-        <87cz0gxylp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <871qfwwqi3.fsf@nvdebian.thelocal>
-        <87a5ukc6nr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <87sf8ble6g.fsf@nvdebian.thelocal>
-Date:   Wed, 23 Aug 2023 10:13:31 +0800
-In-Reply-To: <87sf8ble6g.fsf@nvdebian.thelocal> (Alistair Popple's message of
-        "Tue, 22 Aug 2023 17:36:22 +1000")
-Message-ID: <87lee2bj5g.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <20230721012932.190742-2-ying.huang@intel.com>
+        <87r0owzqdc.fsf@nvdebian.thelocal>
+        <87r0owy95t.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87sf9cxupz.fsf@nvdebian.thelocal>
+        <878rb3xh2x.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87351axbk6.fsf@nvdebian.thelocal>
+        <87edkuvw6m.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87y1j2vvqw.fsf@nvdebian.thelocal>
+        <87a5vhx664.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87lef0x23q.fsf@nvdebian.thelocal>
+        <87r0oack40.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87cyzgwrys.fsf@nvdebian.thelocal>
+        <87il98c8ms.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87edjwlzn7.fsf@nvdebian.thelocal>
+        <875y57dhar.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        <87wmxnlfer.fsf@nvdebian.thelocal>
+Date:   Wed, 23 Aug 2023 13:56:03 +0800
+In-Reply-To: <87wmxnlfer.fsf@nvdebian.thelocal> (Alistair Popple's message of
+        "Tue, 22 Aug 2023 17:11:34 +1000")
+Message-ID: <878ra2b8uk.fsf@yhuang6-desk2.ccr.corp.intel.com>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ascii
@@ -83,157 +94,150 @@ Alistair Popple <apopple@nvidia.com> writes:
 >>>
 >>>> Alistair Popple <apopple@nvidia.com> writes:
 >>>>
->>>>> Huang Ying <ying.huang@intel.com> writes:
+>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
 >>>>>
->>>>>> Previously, a fixed abstract distance MEMTIER_DEFAULT_DAX_ADISTANCE is
->>>>>> used for slow memory type in kmem driver.  This limits the usage of
->>>>>> kmem driver, for example, it cannot be used for HBM (high bandwidth
->>>>>> memory).
+>>>>>> Hi, Alistair,
 >>>>>>
->>>>>> So, we use the general abstract distance calculation mechanism in kmem
->>>>>> drivers to get more accurate abstract distance on systems with proper
->>>>>> support.  The original MEMTIER_DEFAULT_DAX_ADISTANCE is used as
->>>>>> fallback only.
+>>>>>> Sorry for late response.  Just come back from vacation.
+>>>>>
+>>>>> Ditto for this response :-)
+>>>>>
+>>>>> I see Andrew has taken this into mm-unstable though, so my bad for not
+>>>>> getting around to following all this up sooner.
+>>>>>
+>>>>>> Alistair Popple <apopple@nvidia.com> writes:
 >>>>>>
->>>>>> Now, multiple memory types may be managed by kmem.  These memory types
->>>>>> are put into the "kmem_memory_types" list and protected by
->>>>>> kmem_memory_type_lock.
->>>>>
->>>>> See below but I wonder if kmem_memory_types could be a common helper
->>>>> rather than kdax specific?
->>>>>
->>>>>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->>>>>> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>>>>> Cc: Wei Xu <weixugc@google.com>
->>>>>> Cc: Alistair Popple <apopple@nvidia.com>
->>>>>> Cc: Dan Williams <dan.j.williams@intel.com>
->>>>>> Cc: Dave Hansen <dave.hansen@intel.com>
->>>>>> Cc: Davidlohr Bueso <dave@stgolabs.net>
->>>>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>>>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>>> Cc: Michal Hocko <mhocko@kernel.org>
->>>>>> Cc: Yang Shi <shy828301@gmail.com>
->>>>>> Cc: Rafael J Wysocki <rafael.j.wysocki@intel.com>
->>>>>> ---
->>>>>>  drivers/dax/kmem.c           | 54 +++++++++++++++++++++++++++---------
->>>>>>  include/linux/memory-tiers.h |  2 ++
->>>>>>  mm/memory-tiers.c            |  2 +-
->>>>>>  3 files changed, 44 insertions(+), 14 deletions(-)
+>>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>>>>
+>>>>>>>> Alistair Popple <apopple@nvidia.com> writes:
+>>>>>>>>
+>>>>>>>>> "Huang, Ying" <ying.huang@intel.com> writes:
+>>>>>>>>>
+>>>>>>>>>> Alistair Popple <apopple@nvidia.com> writes:
+>>>>>>>>>>
+>>>>>>>>>>>>>> While other memory device drivers can use the general notifier chain
+>>>>>>>>>>>>>> interface at the same time.
+>>>>>>>>>>>
+>>>>>>>>>>> How would that work in practice though? The abstract distance as far as
+>>>>>>>>>>> I can tell doesn't have any meaning other than establishing preferences
+>>>>>>>>>>> for memory demotion order. Therefore all calculations are relative to
+>>>>>>>>>>> the rest of the calculations on the system. So if a driver does it's own
+>>>>>>>>>>> thing how does it choose a sensible distance? IHMO the value here is in
+>>>>>>>>>>> coordinating all that through a standard interface, whether that is HMAT
+>>>>>>>>>>> or something else.
+>>>>>>>>>>
+>>>>>>>>>> Only if different algorithms follow the same basic principle.  For
+>>>>>>>>>> example, the abstract distance of default DRAM nodes are fixed
+>>>>>>>>>> (MEMTIER_ADISTANCE_DRAM).  The abstract distance of the memory device is
+>>>>>>>>>> in linear direct proportion to the memory latency and inversely
+>>>>>>>>>> proportional to the memory bandwidth.  Use the memory latency and
+>>>>>>>>>> bandwidth of default DRAM nodes as base.
+>>>>>>>>>>
+>>>>>>>>>> HMAT and CDAT report the raw memory latency and bandwidth.  If there are
+>>>>>>>>>> some other methods to report the raw memory latency and bandwidth, we
+>>>>>>>>>> can use them too.
+>>>>>>>>>
+>>>>>>>>> Argh! So we could address my concerns by having drivers feed
+>>>>>>>>> latency/bandwidth numbers into a standard calculation algorithm right?
+>>>>>>>>> Ie. Rather than having drivers calculate abstract distance themselves we
+>>>>>>>>> have the notifier chains return the raw performance data from which the
+>>>>>>>>> abstract distance is derived.
+>>>>>>>>
+>>>>>>>> Now, memory device drivers only need a general interface to get the
+>>>>>>>> abstract distance from the NUMA node ID.  In the future, if they need
+>>>>>>>> more interfaces, we can add them.  For example, the interface you
+>>>>>>>> suggested above.
+>>>>>>>
+>>>>>>> Huh? Memory device drivers (ie. dax/kmem.c) don't care about abstract
+>>>>>>> distance, it's a meaningless number. The only reason they care about it
+>>>>>>> is so they can pass it to alloc_memory_type():
+>>>>>>>
+>>>>>>> struct memory_dev_type *alloc_memory_type(int adistance)
+>>>>>>>
+>>>>>>> Instead alloc_memory_type() should be taking bandwidth/latency numbers
+>>>>>>> and the calculation of abstract distance should be done there. That
+>>>>>>> resovles the issues about how drivers are supposed to devine adistance
+>>>>>>> and also means that when CDAT is added we don't have to duplicate the
+>>>>>>> calculation code.
 >>>>>>
->>>>>> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
->>>>>> index 898ca9505754..837165037231 100644
->>>>>> --- a/drivers/dax/kmem.c
->>>>>> +++ b/drivers/dax/kmem.c
->>>>>> @@ -49,14 +49,40 @@ struct dax_kmem_data {
->>>>>>  	struct resource *res[];
->>>>>>  };
->>>>>>  
->>>>>> -static struct memory_dev_type *dax_slowmem_type;
->>>>>> +static DEFINE_MUTEX(kmem_memory_type_lock);
->>>>>> +static LIST_HEAD(kmem_memory_types);
->>>>>> +
->>>>>> +static struct memory_dev_type *kmem_find_alloc_memorty_type(int adist)
->>>>>> +{
->>>>>> +	bool found = false;
->>>>>> +	struct memory_dev_type *mtype;
->>>>>> +
->>>>>> +	mutex_lock(&kmem_memory_type_lock);
->>>>>> +	list_for_each_entry(mtype, &kmem_memory_types, list) {
->>>>>> +		if (mtype->adistance == adist) {
->>>>>> +			found = true;
->>>>>> +			break;
->>>>>> +		}
->>>>>> +	}
->>>>>> +	if (!found) {
->>>>>> +		mtype = alloc_memory_type(adist);
->>>>>> +		if (!IS_ERR(mtype))
->>>>>> +			list_add(&mtype->list, &kmem_memory_types);
->>>>>> +	}
->>>>>> +	mutex_unlock(&kmem_memory_type_lock);
->>>>>> +
->>>>>> +	return mtype;
->>>>>> +}
->>>>>> +
->>>>>>  static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->>>>>>  {
->>>>>>  	struct device *dev = &dev_dax->dev;
->>>>>>  	unsigned long total_len = 0;
->>>>>>  	struct dax_kmem_data *data;
->>>>>> +	struct memory_dev_type *mtype;
->>>>>>  	int i, rc, mapped = 0;
->>>>>>  	int numa_node;
->>>>>> +	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
->>>>>>  
->>>>>>  	/*
->>>>>>  	 * Ensure good NUMA information for the persistent memory.
->>>>>> @@ -71,6 +97,11 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->>>>>>  		return -EINVAL;
->>>>>>  	}
->>>>>>  
->>>>>> +	mt_calc_adistance(numa_node, &adist);
->>>>>> +	mtype = kmem_find_alloc_memorty_type(adist);
->>>>>> +	if (IS_ERR(mtype))
->>>>>> +		return PTR_ERR(mtype);
->>>>>> +
+>>>>>> In the current design, the abstract distance is the key concept of
+>>>>>> memory types and memory tiers.  And it is used as interface to allocate
+>>>>>> memory types.  This provides more flexibility than some other interfaces
+>>>>>> (e.g. read/write bandwidth/latency).  For example, in current
+>>>>>> dax/kmem.c, if HMAT isn't available in the system, the default abstract
+>>>>>> distance: MEMTIER_DEFAULT_DAX_ADISTANCE is used.  This is still useful
+>>>>>> to support some systems now.  On a system without HMAT/CDAT, it's
+>>>>>> possible to calculate abstract distance from ACPI SLIT, although this is
+>>>>>> quite limited.  I'm not sure whether all systems will provide read/write
+>>>>>> bandwith/latency data for all memory devices.
+>>>>>>
+>>>>>> HMAT and CDAT or some other mechanisms may provide the read/write
+>>>>>> bandwidth/latency data to be used to calculate abstract distance.  For
+>>>>>> them, we can provide a shared implementation in mm/memory-tiers.c to map
+>>>>>> from read/write bandwith/latency to the abstract distance.  Can this
+>>>>>> solve your concerns about the consistency among algorithms?  If so, we
+>>>>>> can do that when we add the second algorithm that needs that.
 >>>>>
->>>>> I wrote my own quick and dirty module to test this and wrote basically
->>>>> the same code sequence.
->>>>>
->>>>> I notice your using a list of memory types here though. I think it would
->>>>> be nice to have a common helper that other users could call to do the
->>>>> mt_calc_adistance() / kmem_find_alloc_memory_type() /
->>>>> init_node_memory_type() sequence and cleanup as my naive approach would
->>>>> result in a new memory_dev_type per device even though adist might be
->>>>> the same. A common helper would make it easy to de-dup those.
+>>>>> I guess it would address my concerns if we did that now. I don't see why
+>>>>> we need to wait for a second implementation for that though - the whole
+>>>>> series seems to be built around adding a framework for supporting
+>>>>> multiple algorithms even though only one exists. So I think we should
+>>>>> support that fully, or simplfy the whole thing and just assume the only
+>>>>> thing that exists is HMAT and get rid of the general interface until a
+>>>>> second algorithm comes along.
 >>>>
->>>> If it's useful, we can move kmem_find_alloc_memory_type() to
->>>> memory-tier.c after some revision.  But I tend to move it after we have
->>>> the second user.  What do you think about that?
+>>>> We will need a general interface even for one algorithm implementation.
+>>>> Because it's not good to make a dax subsystem driver (dax/kmem) to
+>>>> depend on a ACPI subsystem driver (acpi/hmat).  We need some general
+>>>> interface at subsystem level (memory tier here) between them.
 >>>
->>> Usually I would agree, but this series already introduces a general
->>> interface for calculating adist even though there's only one user and
->>> implementation. So if we're going to add a general interface I think it
->>> would be better to make it more usable now rather than after variations
->>> of it have been cut and pasted into other drivers.
+>>> I don't understand this argument. For a single algorithm it would be
+>>> simpler to just define acpi_hmat_calculate_adistance() and a static
+>>> inline version of it that returns -ENOENT when !CONFIG_ACPI than adding
+>>> a layer of indirection through notifier blocks. That breaks any
+>>> dependency on ACPI and there's plenty of precedent for this approach in
+>>> the kernel already.
 >>
->> In general, I would like to introduce complexity when necessary.  So, we
->> can discuss the necessity of the general interface firstly.  We can do
->> that in [1/4] of the series.
+>> ACPI is a subsystem, so it's OK for dax/kmem to depends on CONFIG_ACPI.
+>> But HMAT is a driver of ACPI subsystem (controlled via
+>> CONFIG_ACPI_HMAT).  It's not good for a driver of DAX subsystem
+>> (dax/kmem) to depend on a *driver* of ACPI subsystem.
+>>
+>> Yes.  Technically, there's no hard wall to prevent this.  But I think
+>> that a good design should make drivers depends on subsystems or drivers
+>> of the same subsystem, NOT drivers of other subsystems.
 >
-> Do we need one memory_dev_type per adistance or per adistance+device?
+> Thanks, I wasn't really thinking of HMAT as an ACPI driver. I understand
+> where you're coming from but I really don't see the problem with using a
+> static inline. It doesn't create dependencies (you could still use
+> dax/kmem without ACPI) and results in smaller and easier to follow code.
 >
-> If IUC correctly I think it's the former. Logically that means
-> memory_dev_types should be managed by the memory-tiering subsystem
-> because they are system wide rather than driver specific resources. That
-> we need to add the list field to struct memory_dev_type specifically for
-> use by dax/kmem supports that idea.
+> IMHO it's far more obvious that a call to acpi_hmat_calcaulte_adist()
+> returns either a default if ACPI HMAT isn't configured or a calculated
+> value than it is to figure out what notifiers may or may not be
+> registered at runtime and what priority they may be called in from
+> mt_calc_adistance().
+>
+> It appears you think that is a bad design, but I don't understand
+> why. What does this approach give us that a simpler approach wouldn't?
 
-In the original design (page 9/10/11 of [1]), memory_dev_type (Memory
-Type) is driver specific.
+Think about all these again.  Finally I admit you are right.  The
+general interface is better mainly if there are multiple implementations
+of the interface.
 
-[1] https://lpc.events/event/16/contributions/1209/attachments/1042/1995/Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
+In this series, we provide just one implementation: HMAT.  And, the
+second one: CDAT will be implemented soon.  And, CDAT will use the same
+method to translate from read/write bandwidth/latency to adistance.  So,
+I suggest to:
 
-Memory devices with same adistance but was enumerated by different
-drivers will be put in different memory_dev_type.  As a not-so-realistic
-example, even if the PMEM devices in DIMM slots and the CXL.mem devices
-in CXL slots have same adistance, their memory_dev_type will be
-different.  Because the memory devices enumerated by the same driver
-should be managed in the same way, but memory devices enumerated by
-different drivers may be not.  For example, if we adjust the adistance
-of the PMEM devices to put them in the lower memory tier via
-not-yet-implemented abstract_distance_offset sysfs knob, we may not want
-to adjust it of CXL.mem devices at the same time.
+- Keep the general interface (and notifier chain), for HMAT and soon
+  available CDAT
 
-> Also I'm not sure why you consider moving the
-> kmem_memory_types/kmem_find_alloc_memory_type()/etc. functions into
-> mm/memory-tiers.c to add complexity. Isn't it just moving code around or
-> am I missing some other subtlety that makes this hard? I really think
-> logically memory-tiering.c is where management of the various
-> memory_dev_types belongs.
+- Move the code to translate from read/write bandwidth/latency to
+  adistance to memory-tiers.c.  Which is used by HMAT now and will be
+  used by CDAT soon.  And it can be used by other drivers.
 
-IMHO, it depends on whether these functions are shared by at least 2
-drivers.  If so, we can put them in mm/memory-tiers.c.  Otherwise, we
-should keep them in the driver.
+What do you think about that?
 
 --
 Best Regards,
