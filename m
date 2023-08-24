@@ -2,244 +2,373 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0346CC88CB9
-	for <linux-cxl@archiver.kernel.org>; Thu, 24 Aug 2023 16:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536D1C7113B
+	for <linux-cxl@archiver.kernel.org>; Thu, 24 Aug 2023 20:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242685AbjHXQpB (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 24 Aug 2023 12:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44726 "EHLO
+        id S243595AbjHXUvK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 24 Aug 2023 16:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242766AbjHXQow (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 24 Aug 2023 12:44:52 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E791BCE
-        for <linux-cxl@vger.kernel.org>; Thu, 24 Aug 2023 09:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692895483; x=1724431483;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4WRU6hEyqTqaY0Jo3HVwFICRR+jX1llzN7aXxm0Y9Ec=;
-  b=GItRZ148ikE4bw9ebEdmP3XjhdgMABDl38z9Rruk8K/iipjrU4LQhxVD
-   thYErL3o0MJ7+TffnE1W/F9Gd7pyHc6SwgAspCLdNhuf+vobjcgXOH8WI
-   Fh/tTjsz8+2dRKyCidOYssEZmEJB7by5I9IER9plJfzVqOHzj3eQaQvKi
-   paveVu38kQxETtKeENNWU5E6amPwWBp5RJ5dIC7dbRjAJU70U+jzy2TAu
-   mXL9Lbc9C4sWtYn+5v+M90BxrgAv9nsDyHHePJ2xkHir9CaPa6va//837
-   jVFvrn0rQAFpuJSBa9zEoRs4abIm6yxMnmRujpnMXpj+VSxyp1Khs5Ht7
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="364689090"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="364689090"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2023 09:44:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="802598769"
-X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="802598769"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Aug 2023 09:44:38 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 24 Aug 2023 09:44:33 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Thu, 24 Aug 2023 09:44:33 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Thu, 24 Aug 2023 09:44:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RyavhPUN9lny6fQua0pjZ0UZGA4ypXKYMPUc59bfSUwyUAyBHZpLZjRmfFO6TdoZ1zV3DEphb4AZSyUvSad6qRLKaVJ83Z0QPQ1fyDhugpmtbkurh1Pl2V+8c0DjqYlfoQlgyFRkeav4RBywWw3+K+MEZth18o34767v/VlT+dxlLSuGD1XszXTOzs3OUd7Fvao0PkrtZyAoI8RH3gw4B0Yggau6/gphlBGWvkEI4E3f1QOhap3fdU81+LxezZ2XKCDLppQjz9aXdNpAgLmQlH/likfRQXWeyCwstH1Ca7VWkad3LADOCN4ZYW3Y5Jz7ohBj14Jk/frCFBhggB+yOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v+kB2oexOZT4jgTCLdoFB+uVKZwHjrHinLxPgpCD4gw=;
- b=HclMdbtk6juO2NYOFV/7xc0waVU24nasKkczUIKccqUaF8hgN+E77vUd0unwDB+sn8kIn+d7sDuu0irGLVhuaY+srHAINSp8y4lyq5zgamDuuiO/N+nFSn6xa5kh1mFbZv4ma9yUdF4zrz6gfAjQq9ouCW8s857Toj4wbmoVCVV9Jt9Nt4ZYSjo/1q51hCS+CHnz10TaOol6ccw0oQOSLMj8vbGmkSqFbBnhVGatv0KPDOotpG/C4HyUu24f93VdT+e+5lso1xF+QZ0FrGejloavTCtySUf1Fetw1p8y1egEH2yiNwgu7RBmbweeQ3HebkBgVFhCk8D6MPJ9MQpmJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5990.namprd11.prod.outlook.com (2603:10b6:8:71::5) by
- PH0PR11MB5158.namprd11.prod.outlook.com (2603:10b6:510:3b::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6699.27; Thu, 24 Aug 2023 16:44:30 +0000
-Received: from DS7PR11MB5990.namprd11.prod.outlook.com
- ([fe80::c542:a94c:fc8a:52fc]) by DS7PR11MB5990.namprd11.prod.outlook.com
- ([fe80::c542:a94c:fc8a:52fc%6]) with mapi id 15.20.6699.027; Thu, 24 Aug 2023
- 16:44:30 +0000
-Message-ID: <51aded82-7c46-dd16-67df-2dfbd9bd58f9@intel.com>
-Date:   Thu, 24 Aug 2023 09:44:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.13.0
-Subject: Re: [PATCH v2] cxl/region: Match auto-discovered region decoders by
- HPA range
-To:     <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <linux-cxl@vger.kernel.org>
-References: <20230822014303.110509-1-alison.schofield@intel.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230822014303.110509-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR01CA0049.prod.exchangelabs.com (2603:10b6:a03:94::26)
- To DS7PR11MB5990.namprd11.prod.outlook.com (2603:10b6:8:71::5)
+        with ESMTP id S243605AbjHXUuz (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 24 Aug 2023 16:50:55 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AEE1989
+        for <linux-cxl@vger.kernel.org>; Thu, 24 Aug 2023 13:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
+ s=s31663417; t=1692910154; x=1693514954; i=fan.ni@gmx.us;
+ bh=cojvJ9Sk6Ei6IcvAfsXiEAhgupuX7yHbHAR5oyAk7YM=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=sLNe/uVSq5lQyagkSc6tJa0AcMFL+DwnDwRfDoP0SCFQ5LPaP1zmbRJLfuFJJTxDjFwmQNE
+ K7fbDmvjn27u5A9mFMcbiV+9HL4KXpNec+BOGRZjVXe5juTcrN+6roNPtutJOXZFm20V8E1Zn
+ l/7VkwbxH1zuDY582XBv+48iFE7L7751ffOwVsUHprfcu24k2bE63wrSrHJ1h41US2KBuQ9FC
+ D86338VWJfPTatKLf+Ym1hv4AV8la6cL3UoKwkxnZBv5lvaty7Jjc0jEGKovfNzb3g8ZjVWZg
+ SGt+0IVLXXHywwm5vGLP6pImtaGi2IMFa4HRp/C3v63QFywvYHlA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mel7v-1pyZbQ48hR-00anqO; Thu, 24
+ Aug 2023 22:49:14 +0200
+Date:   Thu, 24 Aug 2023 13:49:00 -0700
+From:   Fan Ni <fan.ni@gmx.us>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Fan Ni <fan.ni@samsung.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "gregory.price@memverge.com" <gregory.price@memverge.com>,
+        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
+        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+        "nifan@outlook.com" <nifan@outlook.com>
+Subject: Re: [Qemu PATCH v2 9/9] hw/mem/cxl_type3: Add dpa range validation
+ for accesses to dc regions
+Message-ID: <ZOfCPADXcYMGIGC4@debian>
+References: <20230725183939.2741025-1-fan.ni@samsung.com>
+ <CGME20230725183957uscas1p2ca5293c7229ab989ad1a2d95395436a6@uscas1p2.samsung.com>
+ <20230725183939.2741025-10-fan.ni@samsung.com>
+ <20230807095342.00006f88@Huawei.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5990:EE_|PH0PR11MB5158:EE_
-X-MS-Office365-Filtering-Correlation-Id: ced2cd99-a405-4775-42d1-08dba4c16300
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bZkI8qX+AkWu2pPXHUj/cInDp1hLMT+HT20xieFGLPLVL4qQPgwZlUu0N6h0HN0bkamjvdrH5+s0DSEeXhyLRNrcytPUGSyh2UzV+0c0f5a/RhCNPXvA7kIZoSJeSkapE2xp+HRqtEGDc7F+si0IJnKX5MyUqduOqHqnsp6+uMbigzxnNA5mDoYKmkyWcEQAvsC8xe5B9NQ1j4MbUxB+Yk5KYVGGpfnfZMyk5AebJRaTPKx8bt1A7LDoYN/gioiAH+NngIEVcnf1XfsVP5eCqcIRL3ScrSINxTZSjH/pjo6S8QaFwASMWRTjHM0ud2sTc53vNIcasFPm6/mgU+X3qGe2CBxS/G6C+ouzy1bRFNvaLkkxVVbxwP8aHieNWEVhx1QupmowNSHEmTHACaYC3pQpj6mBtYR+dR+Rk7lA5t0CZ1pNiz4Sy3ge3kGOQsZLWkcLXaPMmQK7RYOs/lMyXmDpN1jk9he9hPSXHVhlq/5OTSzThbQKQGg9oQC4MFOc8ZEhtxoTsTy4mzH6k2206Y5MgO7Z2GcMxtQQs80ff1Z26Edy7ogYUXnEVcYRODn+a9DSIBHpag9yD+S2NwiEliyWdsGqE0gOVW6kxt6xNvH+qUcByo1PQwOilSoF7jCS
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5990.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(396003)(376002)(136003)(186009)(1800799009)(451199024)(66946007)(26005)(83380400001)(6512007)(53546011)(2616005)(41300700001)(66556008)(66476007)(2906002)(6636002)(316002)(5660300002)(44832011)(8936002)(4326008)(8676002)(110136005)(478600001)(6486002)(6506007)(6666004)(966005)(82960400001)(31696002)(86362001)(38100700002)(36756003)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dzQ4S0srZW1CQlEzQTlrQWF1NXNmMFBwR1pHbFIvLysrWWhiN3ZCWGxFOHpa?=
- =?utf-8?B?NjRieWhuN3ZsemlRYVdoTTExRzh1TVc1dDBaZnkwMTlSczkwRTgyeGFUZlEx?=
- =?utf-8?B?TEFvN2dsZ0hGRjJpMzdPVExQZGhUbVUzME1IMXRDWllha1B3WXk4Z1EwR0d1?=
- =?utf-8?B?MXZyRVlLeGc0QVlwbnIyaENPMXI1TFhYTVhvSDlTWXdDQ3gvTHVBWU50NFlm?=
- =?utf-8?B?MmpGd0EweTJaMEZhbmpsU0JjTEpvUDl6RElqenVrbVViQ05JSkFvK2ZwcWZu?=
- =?utf-8?B?SEVSOHJleEo0NW9nMDY5bWVRVXR5N2pEOVBzL2d1bVc0ODZhVytSMGlyVUMz?=
- =?utf-8?B?TmI5ZVM4WnU4K3RFVGJzemlZb3hnRFlpUk1jbElNZTAvV2YvazFlNE1JeGx2?=
- =?utf-8?B?MGVNcmdtL1UxZXRXcnAyb0ZJSTFRS1hLQnlGUVRuRldQUW04dFp3LzhDUEg4?=
- =?utf-8?B?YnR3blF4S3dnUXhJZUJiMHhwcXZUZXA2cEtoZU9SQk96Qk5pdDZzQldDZnIv?=
- =?utf-8?B?SmdBQUU4ekg1U1FrNmdwbk1nUjlyMWtRajQ4dEduODlRa3Y1Ty9hN2RDTnE4?=
- =?utf-8?B?NmlQWXBWL3ovcW1CbTg5d2NKQ2tFMkdiQnNnSVhmUnhqajNJcm5pazluUGdF?=
- =?utf-8?B?MzhHc1BMdGhPellEdmtFMzVqUmFnK04wUERaYVp4VTZOVHBteFJsYUJCRG5U?=
- =?utf-8?B?elFtdWN4TDJ3Zy9iR3FkYndIREltK1RlbW8zQjF1QnFCWGxtM0dRcUFqRHJQ?=
- =?utf-8?B?UW4rdFFMVHlXREh0ODExdXhGRUptMGJkQ0pFTC9ieUNKNDlhQVMwRCtjRXBH?=
- =?utf-8?B?Rkg4d0pNM0k2ZmdxQXl1SHE4S3ZUSy9pWmxZaHFwbHd1RFRidkNjSldOVlh2?=
- =?utf-8?B?LyszRTNWeWJVSnYyMU15U3I2T3Y0bmZEQ1o0L3Jla3pUSmtHVXpDZCtFb3ps?=
- =?utf-8?B?YUJNT2dHSldzK3MzaFZ0RWxBTjlIYUV5aHFYRlY3S3V0S1ltL3hDTFlaSTlK?=
- =?utf-8?B?N3JNQjZPRE5zZ3I4VVVSSWFiTjYvdkQwUHBuT3FvRzlmQVRNaS9kSTRiSktI?=
- =?utf-8?B?akNLY2FYWnFBQWZUeFZ5blh0UGdYeWk5YktRY2lFV2U5UmlzdHpxZ3ROc3Z3?=
- =?utf-8?B?RXQ4ZDV6UExCcmlKNzdQbU9qT1hLaTMxSVhBZU1oaDJLM3R5L3BldFcwcGpU?=
- =?utf-8?B?OXpFODJKMDZ0bWR1dys0eWdlSDdlbFl1RDJBdWpkZ01Kb0hKc3pCcUhGc1B3?=
- =?utf-8?B?RlhxbFpLazZGVUx4S1dtNkdpT2dFbldyc1lUejNXSjNYUFU1aHFiRHBsZnAy?=
- =?utf-8?B?azNscGJYaGFnbVFPT0FDUk50d3NCSUlQVjJzSzFybi8wQllCMXJrWEt0VGtv?=
- =?utf-8?B?dDRTcnZHTk9TeW1mdlp6Tnd4VWxxWjBDSHBIUGlWTEwvb0tUUURKazJVeVVE?=
- =?utf-8?B?WEw1U2FGOXVzMk1lWklyb056M09KT1V1ME1oNm1EUlFFRHZ2cnA2L0JUVWd2?=
- =?utf-8?B?RTJubjJoRzN6UjdGcHBrWkxwRi8xQmVoMEw2eDcvMEdFK1Z2cDFNWEo2Vmls?=
- =?utf-8?B?ejFxMm45Sm5Ud1ZYV2MzR001ZnJkdFRjSVJYTHNQMnNOWk9IRmVraVdGZkNx?=
- =?utf-8?B?dzk3VEY3REtJMUtiYWVqUEFkbXhXRmtGV0hwaER4Qi92OVNLUVFGU01Hb2Jv?=
- =?utf-8?B?bXlCQmxLSFV5bWROWksrdk9pMW1ZUk0wVXpXQlF3dXRqVk9tWTU5UmplSE5F?=
- =?utf-8?B?VHBsSEpQanc4cEJxdHJSNHFQb3BLMzhyMVg0NGx4ZWpWV0xRU1p6K0pHM1Rw?=
- =?utf-8?B?S0o4STY3S0NvWUZUUjdKU3JRLzlVdkUrYXBUSGlHWHpUS2pxL3N2YWQxaWhq?=
- =?utf-8?B?MC80MU8rMGlHcWU1aktjM0Fqa3Vva0JBODNrSFZOQXIxcDlHUG1QcGdlZXg1?=
- =?utf-8?B?cWtFZFV4RWgvUG5YblpSK3NUcHRpdnNKdHpvZm53dGVJNjZ1TlJiV2FkOWZu?=
- =?utf-8?B?UFpSZktxVzZKUmx1Q3BVN1dLZHpHejJuQkhIbU5jcURadmpqOTZLV053b1h4?=
- =?utf-8?B?S20veVlDa3pac3pVVVFTU2ErNEV3S3FzMW5tNFdoZjVTZjhmeGwxSkFURDcr?=
- =?utf-8?Q?UvAm919vwyGFsPGtm0/X6c019?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ced2cd99-a405-4775-42d1-08dba4c16300
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5990.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2023 16:44:30.1266
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h91htypk0h8LL9amAJQLBE/rLaLK+k2/h+fFOma1PlhPo6Y+a4EjpE4OJSC6E2UZTov0tX1MSixHhGip8iZvDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5158
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807095342.00006f88@Huawei.com>
+X-Provags-ID: V03:K1:3Z+LimPkf0jWtknBKvIuplqjYkTd/DAekeLJBu8RUW4sWIdP6UU
+ ok8XjJr/tbUyJGLBKipJTgH0QgGEYf09yFVSQZM6hvGwjzPOf3eioDpWNAEAenK/3U7Tx4v
+ 6rgKsfAr3OxsQjx1R/gBKUjrTocA7+N5de9ZUs7piHtZMewB7DpiSnU1YzzCMFeuel+pUF0
+ ez4cZmJ4ppjf0oW8Xx1GQ==
+UI-OutboundReport: notjunk:1;M01:P0:aT6Nt0nTZOs=;ATfsrix915RjtRhcu21F2G6xnlQ
+ vCWRcjxt7gqeaMyh1cKzuaHJjmt3BxMy6/txLAZ0vFDXxcBLT4Oh9cwoKP2fm/hqd1yFIlpus
+ kDn08rwURtQIOi3ivSJJmuMEvYMLuxjFV5VNs8WFvHuxdmIuNID6HhkyX9OBF2sRyAfpsMK7X
+ coTdE3kS5VFrZRpTzbrLDZNZqQ3fEKUSAln/gWbHhKtX8Rhn+wjSPc7mE0IR/yh8p9IXOaxCZ
+ hkLQUfRt1rE0oX+yfqvBlsh0RI753MVLqGn72C5B7Cdxa/WfbdeToPx4QQ1VyoOkVIOOAtaG5
+ GE2GgPGoyrPWUtY143kLQFqdb69iliB84pWpWjghOMNbwfBoXK71eXpyBOm4WDZLqufuEk2ww
+ Hlz0QBOSbLO1vv84n+P7u3ACN1JefHxW0l66z40tm7mkO41FoHYLXWqffJhOhQd5rpVzJuxM0
+ CpCYi9VVJjCGxheWgFl29Jy4fHFVhYoU1IxVPxOkD+dGuAHTK3j2FjGWoLEUCfWNFPtRkrYna
+ GLmmJRL8juCyBIKbyyN0BNYTssIOC1hmvgMpLj+lK3065TKQc62C1epUxycDs6/d7B4CD/woG
+ qBvHX3MkkRCUSn8zeUSHd3hW3Yx6Q7gZmDlSO2TG1NmO6mN2uBf4oucQY6rWBlky+vw6Epcbm
+ PSMzjNfm+gGVlyvtrAaVFYlNuaYtbtWn9mKuSDtxjTOKdWcSdUOA24TwCZqbypPVWh0pU9w38
+ k7xY2/VtM1IVnoi00iS0T4OGh0zBkL6P6rMSsXBzCTQ4tI+wkqbxfoPRnUJzrMcELxL4uCzjd
+ cAe054+fceZJyhzznd8ekHxzu1kGTx2tMwdL1jKXVRujWa4tnJZouAYYA6cUK2oFL7/gPLsDV
+ l10PPZTOI4NOAqq5ZPZjO2FYgeeWWSsyIMO7mI+E+ZEfwzEDv2PmFj49c7MLJINd8IzW8kyY4
+ rBxeNbtiqntR3IIi1jqeh8JcXLU=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Mon, Aug 07, 2023 at 09:53:42AM +0100, Jonathan Cameron wrote:
+> On Tue, 25 Jul 2023 18:39:56 +0000
+> Fan Ni <fan.ni@samsung.com> wrote:
+>
+> > From: Fan Ni <nifan@outlook.com>
+> >
+> > Not all dpa range in the dc regions is valid to access until an extent
+> > covering the range has been added. Add a bitmap for each region to
+> > record whether a dc block in the region has been backed by dc extent.
+> > For the bitmap, a bit in the bitmap represents a dc block. When a dc
+> > extent is added, all the bits of the blocks in the extent will be set,
+> > which will be cleared when the extent is released.
+> >
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> Hi Fan,
+>
+> A few of the bits of feedback apply broadly across the series.  Given I'=
+m
+> rebasing this anyway to give myself something to test I'll tidy things u=
+p
+> (feel free to disagree with and revert any changes !)
+> and push a tree out in next day or two.  I'll message when I've done so.
+>
+> Jonathan
 
+Hi Jonathan,
+I tried DCD with your branch "cxl-2023-08-07", and noticed the
+following,
+1. You made some changes to the bitmap functionality, now it is only
+used to validate extents when adding/releasing dc extents. My original
+thought of adding the bitmap is to 1) validating extents for extent
+add/release as you do; 2) Add validating when doing read/write to the dc
+regions since some address region may not have valid extent added yet.
+Do you think 2) is not necessary?
 
-On 8/21/23 18:43, alison.schofield@intel.com wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
-> 
-> Currently, when the region driver attaches a region to a port, it
-> selects the ports next available decoder to program.
-> 
-> With the addition of auto-discovered regions, a port decoder has
-> already been programmed so grabbing the next available decoder can
-> be a mismatch when there is more than one region using the port.
-> 
-> The failure appears like this with CXL DEBUG enabled:
-> 
-> [] cxl_core:alloc_region_ref:754: cxl region0: endpoint9: HPA order violation region0:[mem 0x14780000000-0x1478fffffff flags 0x200] vs [mem 0x880000000-0x185fffffff flags 0x200]
-> [] cxl_core:cxl_port_attach_region:972: cxl region0: endpoint9: failed to allocate region reference
-> 
-> When CXL DEBUG is not enabled, there is no failure message. The region
-> just never materializes. Users can suspect this issue if they know their
-> firmware has programmed decoders so that more than one region is using
-> a port. Note that the problem may appear intermittently, ie not on
-> every reboot.
-> 
-> Add a matching method for auto-discovered regions that finds a decoder
-> based on an HPA range. The decoder range must exactly match the region
-> resource parameter.
-> 
-> Fixes: a32320b71f08 ("cxl/region: Add region autodiscovery")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+2. Your change introduced a bug in the code.
+https://gitlab.com/jic23/qemu/-/blob/cxl-2023-08-07/hw/cxl/cxl-mailbox-uti=
+ls.c?ref_type=3Dheads#L1394
+ct3d->dc.num_regions should be ct3d->dc.num_regions-1.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> 
-> Changes in v2:
-> - Use cxlr->params for HPA match rather than requiring cxled (Dan)
-> - dev_warn() if decoder already assigned to a region (Dan)
-> - Add failure footprint to commit log (Dan)
-> - Add Fixes Tag (Dan)
-> - v1: https://lore.kernel.org/linux-cxl/20230804213004.1669658-1-alison.schofield@intel.com/
-> 
->   drivers/cxl/core/region.c | 29 ++++++++++++++++++++++++++++-
->   1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e115ba382e04..b08aec9f0af8 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -717,13 +717,40 @@ static int match_free_decoder(struct device *dev, void *data)
->   	return 0;
->   }
->   
-> +static int match_auto_decoder(struct device *dev, void *data)
-> +{
-> +	struct cxl_region_params *p = data;
-> +	struct cxl_decoder *cxld;
-> +	struct range *r;
-> +
-> +	if (!is_switch_decoder(dev))
-> +		return 0;
-> +
-> +	cxld = to_cxl_decoder(dev);
-> +	r = &cxld->hpa_range;
-> +
-> +	if (p->res && p->res->start == r->start && p->res->end == r->end) {
-> +		if (cxld->region) {
-> +			dev_WARN(dev, "decoder already attached to %s\n",
-> +				 dev_name(&cxld->region->dev));
-> +			return 0;
-> +		}
-> +		return 1;
-> +	}
-> +	return 0;
-> +}
-> +
->   static struct cxl_decoder *cxl_region_find_decoder(struct cxl_port *port,
->   						   struct cxl_region *cxlr)
->   {
->   	struct device *dev;
->   	int id = 0;
->   
-> -	dev = device_find_child(&port->dev, &id, match_free_decoder);
-> +	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
-> +		dev = device_find_child(&port->dev, &cxlr->params,
-> +					match_auto_decoder);
-> +	else
-> +		dev = device_find_child(&port->dev, &id, match_free_decoder);
->   	if (!dev)
->   		return NULL;
->   	/*
-> 
-> base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
+Thanks,
+Fan
+
+>
+> > ---
+> >  hw/mem/cxl_type3.c          | 155 +++++++++++++++++++++++++++++++++++=
++
+> >  include/hw/cxl/cxl_device.h |   1 +
+> >  2 files changed, 156 insertions(+)
+> >
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 41a828598a..51943a36fc 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -787,13 +787,37 @@ static int cxl_create_dc_regions(CXLType3Dev *ct=
+3d)
+> >          /* dsmad_handle is set when creating cdat table entries */
+> >          region->flags =3D 0;
+> >
+> > +        region->blk_bitmap =3D bitmap_new(region->len / region->block=
+_size);
+>
+> In common with many allocators in qemu if this fails it calls abort()
+> internally so no need to handle potential errors.
+>
+> > +        if (!region->blk_bitmap) {
+> > +            break;
+> > +        }
+> > +
+> >          region_base +=3D region->len;
+> >      }
+> > +
+> > +    if (i < ct3d->dc.num_regions) {
+> > +        while (--i >=3D 0) {
+> > +            g_free(ct3d->dc.regions[i].blk_bitmap);
+> > +        }
+> > +        return -1;
+> > +    }
+> > +
+> >      QTAILQ_INIT(&ct3d->dc.extents);
+> >
+> >      return 0;
+> >  }
+> >
+> > +static void cxl_destroy_dc_regions(CXLType3Dev *ct3d)
+> > +{
+> > +    int i;
+> > +    struct CXLDCD_Region *region;
+> > +
+> > +    for (i =3D 0; i < ct3d->dc.num_regions; i++) {
+> > +        region =3D &ct3d->dc.regions[i];
+> > +        g_free(region->blk_bitmap);
+> > +    }
+> > +}
+> > +
+> >  static bool cxl_setup_memory(CXLType3Dev *ct3d, Error **errp)
+> >  {
+> >      DeviceState *ds =3D DEVICE(ct3d);
+> > @@ -1021,6 +1045,7 @@ err_free_special_ops:
+> >      g_free(regs->special_ops);
+> >  err_address_space_free:
+> >      if (ct3d->dc.host_dc) {
+> > +        cxl_destroy_dc_regions(ct3d);
+> >          address_space_destroy(&ct3d->dc.host_dc_as);
+> >      }
+> >      if (ct3d->hostpmem) {
+> > @@ -1043,6 +1068,7 @@ static void ct3_exit(PCIDevice *pci_dev)
+> >      spdm_sock_fini(ct3d->doe_spdm.socket);
+> >      g_free(regs->special_ops);
+> >      if (ct3d->dc.host_dc) {
+> > +        cxl_destroy_dc_regions(ct3d);
+> >          address_space_destroy(&ct3d->dc.host_dc_as);
+> >      }
+> >      if (ct3d->hostpmem) {
+> > @@ -1053,6 +1079,110 @@ static void ct3_exit(PCIDevice *pci_dev)
+> >      }
+> >  }
+> >
+> > +/*
+> > + * This function will marked the dpa range [dpa, dap + len) to be bac=
+ked and
+> > + * accessible, this happens when a dc extent is added and accepted by=
+ the
+> > + * host.
+> > + */
+> > +static void set_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+> > +        uint64_t len)
+> > +{
+> > +    int i;
+> > +    CXLDCD_Region *region =3D &ct3d->dc.regions[0];
+> > +
+> > +    if (dpa < region->base
+> > +            || dpa >=3D region->base + ct3d->dc.total_capacity)
+> > +        return;
+> > +
+> > +    /*
+> > +     * spec 3.0 9.13.3: Regions are used in increasing-DPA order, wit=
+h
+> > +     * Region 0 being used for the lowest DPA of Dynamic Capacity and
+> > +     * Region 7 for the highest DPA.
+> > +     * So we check from the last region to find where the dpa belongs=
+.
+> > +     * access across multiple regions is not allowed.
+> > +     **/
+> > +    for (i =3D ct3d->dc.num_regions - 1; i >=3D 0; i--) {
+> > +        region =3D &ct3d->dc.regions[i];
+> > +        if (dpa >=3D region->base) {
+> > +            break;
+> > +        }
+> > +    }
+> > +
+> > +    bitmap_set(region->blk_bitmap, (dpa - region->base) / region->blo=
+ck_size,
+> > +            len / region->block_size);
+> > +}
+> > +
+> > +/*
+> > + * This function check whether a dpa range [dpa, dpa + len) has been =
+backed
+> > + * with dc extents, used when validating read/write to dc regions
+> > + */
+> > +static bool test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+> > +        uint64_t len)
+> > +{
+> > +    int i;
+> > +    CXLDCD_Region *region =3D &ct3d->dc.regions[0];
+> > +    uint64_t nbits;
+> > +    long nr;
+> > +
+> > +    if (dpa < region->base
+> > +            || dpa >=3D region->base + ct3d->dc.total_capacity)
+> > +        return false;
+> > +
+> > +    /*
+> > +     * spec 3.0 9.13.3: Regions are used in increasing-DPA order, wit=
+h
+> > +     * Region 0 being used for the lowest DPA of Dynamic Capacity and
+> > +     * Region 7 for the highest DPA.
+> > +     * So we check from the last region to find where the dpa belongs=
+.
+> > +     * access across multiple regions is not allowed.
+> > +     */
+> > +    for (i =3D ct3d->dc.num_regions - 1; i >=3D 0; i--) {
+> > +        region =3D &ct3d->dc.regions[i];
+> > +        if (dpa >=3D region->base) {
+> > +            break;
+> > +        }
+> > +    }
+> > +
+> > +    nr =3D (dpa - region->base) / region->block_size;
+> > +    nbits =3D len / region->block_size;
+> > +    return find_next_zero_bit(region->blk_bitmap, nbits, nr) >=3D nr =
++ nbits;
+> > +}
+> > +
+> > +/*
+> > + * This function will marked the dpa range [dpa, dap + len) to be unb=
+acked and
+> > + * inaccessible, this happens when a dc extent is added and accepted =
+by the
+> > + * host.
+> > + */
+> > +static void clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa=
+,
+> > +        uint64_t len)
+> > +{
+> > +    int i;
+> > +    CXLDCD_Region *region =3D &ct3d->dc.regions[0];
+> > +    uint64_t nbits;
+> > +    long nr;
+> > +
+> > +    if (dpa < region->base
+> > +            || dpa >=3D region->base + ct3d->dc.total_capacity)
+> > +        return;
+> > +
+> > +    /*
+> > +     * spec 3.0 9.13.3: Regions are used in increasing-DPA order, wit=
+h
+> > +     * Region 0 being used for the lowest DPA of Dynamic Capacity and
+> > +     * Region 7 for the highest DPA.
+> > +     * So we check from the last region to find where the dpa belongs=
+.
+> > +     * access across multiple regions is not allowed.
+> > +     */
+> > +    for (i =3D ct3d->dc.num_regions - 1; i >=3D 0; i--) {
+> > +        region =3D &ct3d->dc.regions[i];
+> > +        if (dpa >=3D region->base) {
+> > +            break;
+> > +        }
+> > +    }
+> > +
+> > +    nr =3D (dpa - region->base) / region->block_size;
+> > +    nbits =3D len / region->block_size;
+> > +    bitmap_clear(region->blk_bitmap, nr, nbits);
+> > +}
+> > +
+> >  static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64=
+_t *dpa)
+> >  {
+> >      uint32_t *cache_mem =3D ct3d->cxl_cstate.crb.cache_mem_registers;
+> > @@ -1145,6 +1275,10 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3=
+Dev *ct3d,
+> >          *as =3D &ct3d->hostpmem_as;
+> >          *dpa_offset -=3D vmr_size;
+> >      } else {
+> > +        if (!test_region_block_backed(ct3d, *dpa_offset, size)) {
+> > +            return -ENODEV;
+> > +        }
+> > +
+> >          *as =3D &ct3d->dc.host_dc_as;
+> >          *dpa_offset -=3D (vmr_size + pmr_size);
+> >      }
+> > @@ -1944,6 +2078,27 @@ static void qmp_cxl_process_dynamic_capacity_ev=
+ent(const char *path,
+> >      }
+> >
+> >      g_free(extents);
+> > +
+> > +    /* Another choice is to do the set/clear after getting mailbox re=
+sponse*/
+> > +    list =3D records;
+> > +    while (list) {
+> > +        dpa =3D list->value->dpa * 1024 * 1024;
+> > +        len =3D list->value->len * 1024 * 1024;
+> > +        rid =3D list->value->region_id;
+> > +
+> > +        switch (type) {
+> > +        case DC_EVENT_ADD_CAPACITY:
+> > +            set_region_block_backed(dcd, dpa, len);
+> > +            break;
+> > +        case DC_EVENT_RELEASE_CAPACITY:
+> > +            clear_region_block_backed(dcd, dpa, len);
+> > +            break;
+> > +        default:
+> > +            error_setg(errp, "DC event type not handled yet");
+> > +            break;
+> > +        }
+> > +        list =3D list->next;
+> > +    }
+> >  }
+> >
+> >  void qmp_cxl_add_dynamic_capacity_event(const char *path,
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 01a5eaca48..1f85c88017 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -412,6 +412,7 @@ typedef struct CXLDCD_Region {
+> >      uint64_t block_size;
+> >      uint32_t dsmadhandle;
+> >      uint8_t flags;
+> > +    unsigned long *blk_bitmap;
+> >  } CXLDCD_Region;
+> >
+> >  struct CXLType3Dev {
+>
