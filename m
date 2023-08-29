@@ -2,52 +2,54 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0126AC83F1A
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1226CC83F1C
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235644AbjH2FYY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 01:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53126 "EHLO
+        id S235640AbjH2FYX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 01:24:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235647AbjH2FYG (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:24:06 -0400
+        with ESMTP id S235634AbjH2FXw (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:23:52 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B61F19A;
-        Mon, 28 Aug 2023 22:24:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F72198;
+        Mon, 28 Aug 2023 22:23:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693286643; x=1724822643;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=CRtmUhD14GT5Q6ZjiafnJto9DQ4XwPEExp4RUj6Mt6k=;
-  b=QL6VJ5Z6TEfOdCmsbyLW8f9O/yReNTz1zHH4hLYBQsGU/nZOf027Qwpr
-   EH8H/rnOktPNMNlmXyvIfYWeJL4HVgGpE67j8/sDtsz/QdqH+XRS0ljAF
-   tVD7VBllCmmvAFocbXvlWBGOjyh4xlketTmGhkpmf3xMd7O+zyHRbb8Rg
-   o7EMXffojOfWYGF22/krkdj+YV+kj2l+0eap32XOaRQVBtB7N5n2E1G4M
-   BikAHZJRBDkeSSRjjHp1vk6C+/lT0nb2nFxzJ5dve8u+HPzgimArcjVgL
-   eZ/Nk/3juPH8mFirlrni5WJWmmlSVQKIeRyXhmlyz0wr2SoLaYf3ee97X
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625190"
+  t=1693286629; x=1724822629;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=A5E1QO0Muv9CKMLT/sotcOqRhE+vFwm9Hd7FndpNHeo=;
+  b=BLH28EZH68rs/EQxN5bJ+nj3FE5k1goW8jAr9OwymzzjqFrjqbgqzdAu
+   z4BaAmWA1wx9w79gw/AxCTq9sb0Bo3Tos6j06mAAQijRfDf9ipWrOGHBR
+   E5cv5q6cJUWbee9n0MkJg+bggpAr5o956XlkAdGuoEuMbyQXa3CEzbacJ
+   zy8kREt89Wb18AhA+jpdFXWgydGu6bScI++bNgizaOCaZG5f56qwybQVu
+   SHuy3rM26UrayR2VEZG1zEOOPpe+4dxLev/u2wsX+7w+7+tjmPQtQW87r
+   RdwLiuCht3oJ7nFZnYg8uBmzMw3UR2eVxQOyfOeIfkAhT/i12YA37/MVB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625153"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="441625190"
+   d="scan'208";a="441625153"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:36 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556335"
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556282"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="738556335"
+   d="scan'208";a="738556282"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.37.183])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:36 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:30 -0700
 From:   Ira Weiny <ira.weiny@intel.com>
-Date:   Mon, 28 Aug 2023 22:20:56 -0700
-Subject: [PATCH RFC v2 05/18] cxl/port: Add Dynamic Capacity mode support
- to endpoint decoders
+Subject: [PATCH RFC v2 00/18] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Date:   Mon, 28 Aug 2023 22:20:51 -0700
+Message-Id: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230604-dcd-type2-upstream-v2-5-f740c47e7916@intel.com>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+X-B4-Tracking: v=1; b=H4sIADOA7WQC/32OzQqDMBCEX0X23C1J1BR6KhT6AL0WD/lZa6BGS
+ VKpiO/e6K2XHmfmG2YWiBQcRTgXCwSaXHSDz0IcCjCd8k9CZ7MGwUTJJKvQGotpHknge4wpkOq
+ RGcvrVgouWwu5qFUk1EF5023VX3oDxkCt++yrD7jfrtBks3MxDWHen0x8j/6NThwZnriWZcW1o
+ rq6OJ/odTRDD826rl/jEZ2B2gAAAA==
 To:     Dan Williams <dan.j.williams@intel.com>
 Cc:     Navneet Singh <navneet.singh@intel.com>,
         Fan Ni <fan.ni@samsung.com>,
@@ -59,151 +61,142 @@ Cc:     Navneet Singh <navneet.singh@intel.com>,
         Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-c6835
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=4798;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=5925;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=CRtmUhD14GT5Q6ZjiafnJto9DQ4XwPEExp4RUj6Mt6k=;
- b=RilpG+uu7lsmLcHfusjl1xkPACJJMfXQ69OmjoYc9afp5P/uj+9qxbjGxqbmUOLMSXihiz0RB
- dawlgwbXYxlBZbWujCu07iw8OHRgAf76AewYhBFQOQKSIBT8yZMDuTR
+ bh=A5E1QO0Muv9CKMLT/sotcOqRhE+vFwm9Hd7FndpNHeo=;
+ b=FfwSS3QN/OUCY00XcZhHEU4cknG+tUPOXkOrlrGwmGBg+IG4WBIOLWmPCyIGe/Ql0ScO6gPjr
+ 8XFaLwV+HMDCsj/PdqAjp6YBlRqpo5TUNdl63RRQSovFBK9xwF8C2wk
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Endpoint decoders used to map Dynamic Capacity must be configured to
-point to the correct Dynamic Capacity (DC) Region.  The decoder mode
-currently represents the partition the decoder points to such as ram or
-pmem.
+A Dynamic Capacity Device (DCD) (CXL 3.0 spec 9.13.3) is a CXL memory
+device that implements dynamic capacity.  Dynamic capacity feature
+allows memory capacity to change dynamically, without the need for
+resetting the device.
 
-Expand the mode to include DC Regions.
+Even though this is marked v2 by b4, this is effectively a whole new
+series for DCD support.  Quite a bit of the core support was completed
+by Navneet in [4].  However, the architecture through the CXL region,
+DAX region, and DAX Device layers is completely different.  Particular
+attention was paid to:
 
-Co-developed-by: Navneet Singh <navneet.singh@intel.com>
-Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+	1) managing skip resources in the hardware device
+	2) ensuring the host OS only sent a release memory mailbox
+	   response when all DAX devices are done using an extent
+	3) allowing dax devices to span extents
+	4) allowing dax devices to use parts of extents
+
+I could say all of the review comments from v1 are addressed but frankly
+the series has changed so much that I can't guarantee anything.
+
+The series continues to be based on the type-2 work posted from Dan.[2]
+However, my branch with that work is a bit dated.  Therefore I have
+posted this series on github here.[5]
+
+Testing was sped up with cxl-test and ndctl dcd support.  A preview of
+that work is on github.[6]  In addition Fan Ni's Qemu DCD series was
+used part of the time.[3]
+
+The major parts of this series are:
+
+- Get the dynamic capacity (DC) region information from cxl device
+- Configure device DC regions reported by hardware
+- Enhance CXL and DAX regions for DC
+	a. maintain separation between the hardware extents and the CXL
+	   region extents to provide for the addition of interleaving in
+	   the future.
+- Get and maintain the hardware extent lists for each device via an
+  initial extent list and DC event records
+        a. Add capacity Events
+	b. Add capacity response
+	b. Release capacity events
+	d. Release capacity response
+- Notify region layers of extent changes
+- Allow for DAX devices to be created on extents which are surfaced
+- Maintain references on extents which are in use
+	a. Send Release capacity Response only when DAX devices are not
+	   using memory
+- Allow DAX region extent labels to change to allow for flexibility in
+  DAX device creation in the future (further enhancements are required
+  to ndctl for this)
+- Trace Dynamic Capacity events
+- Add cxl-test infrastructure to allow for faster unit testing
+
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Navneet Singh <navneet.singh@intel.com>
+Cc: Fan Ni <fan.ni@samsung.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+[1] https://lore.kernel.org/all/64326437c1496_934b2949f@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+[2] https://lore.kernel.org/all/168592149709.1948938.8663425987110396027.stgit@dwillia2-xfh.jf.intel.com/
+[3] https://lore.kernel.org/all/6483946e8152f_f1132294a2@iweiny-mobl.notmuch/
+[4] https://lore.kernel.org/r/20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com
+[5] https://github.com/weiny2/linux-kernel/commits/dcd-v2-2023-08-28
+[6] https://github.com/weiny2/ndctl/tree/dcd-region2
 
 ---
-Changes for v2:
-[iweiny: split from region creation patch]
+Changes in v2:
+- iweiny: Complete rework of the entire series
+- Link to v1: https://lore.kernel.org/r/20230604-dcd-type2-upstream-v1-0-71b6341bae54@intel.com
+
 ---
- Documentation/ABI/testing/sysfs-bus-cxl | 19 ++++++++++---------
- drivers/cxl/core/hdm.c                  | 24 ++++++++++++++++++++++++
- drivers/cxl/core/port.c                 | 16 ++++++++++++++++
- 3 files changed, 50 insertions(+), 9 deletions(-)
+Ira Weiny (15):
+      cxl/hdm: Debug, use decoder name function
+      cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+      cxl/region: Add Dynamic Capacity decoder and region modes
+      cxl/port: Add Dynamic Capacity mode support to endpoint decoders
+      cxl/port: Add Dynamic Capacity size support to endpoint decoders
+      cxl/region: Add Dynamic Capacity CXL region support
+      cxl/mem: Read extents on memory device discovery
+      cxl/mem: Handle DCD add and release capacity events.
+      cxl/region: Expose DC extents on region driver load
+      cxl/region: Notify regions of DC changes
+      dax/bus: Factor out dev dax resize logic
+      dax/region: Support DAX device creation on dynamic DAX regions
+      tools/testing/cxl: Make event logs dynamic
+      tools/testing/cxl: Add DC Regions to mock mem data
+      tools/testing/cxl: Add Dynamic Capacity events
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 6350dd82b9a9..2268ffcdb604 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -257,22 +257,23 @@ Description:
- 
- What:		/sys/bus/cxl/devices/decoderX.Y/mode
- Date:		May, 2022
--KernelVersion:	v6.0
-+KernelVersion:	v6.0, v6.6 (dcY)
- Contact:	linux-cxl@vger.kernel.org
- Description:
- 		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
- 		translates from a host physical address range, to a device local
- 		address range. Device-local address ranges are further split
--		into a 'ram' (volatile memory) range and 'pmem' (persistent
--		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
--		'mixed', or 'none'. The 'mixed' indication is for error cases
--		when a decoder straddles the volatile/persistent partition
--		boundary, and 'none' indicates the decoder is not actively
--		decoding, or no DPA allocation policy has been set.
-+		into a 'ram' (volatile memory) range, 'pmem' (persistent
-+		memory) range, or Dynamic Capacity (DC) range. The 'mode'
-+		attribute emits one of 'ram', 'pmem', 'dcY', 'mixed', or
-+		'none'. The 'mixed' indication is for error cases when a
-+		decoder straddles the volatile/persistent partition boundary,
-+		and 'none' indicates the decoder is not actively decoding, or
-+		no DPA allocation policy has been set.
- 
- 		'mode' can be written, when the decoder is in the 'disabled'
--		state, with either 'ram' or 'pmem' to set the boundaries for the
--		next allocation.
-+		state, with 'ram', 'pmem', or 'dcY' to set the boundaries for
-+		the next allocation.
- 
- 
- What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index a254f79dd4e8..3f4af1f5fac8 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -267,6 +267,19 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- 	__cxl_dpa_release(cxled);
- }
- 
-+static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
-+{
-+	int index = 0;
-+
-+	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
-+		if (mode == i)
-+			return index;
-+		index++;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			     resource_size_t base, resource_size_t len,
- 			     resource_size_t skipped)
-@@ -429,6 +442,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 	switch (mode) {
- 	case CXL_DECODER_RAM:
- 	case CXL_DECODER_PMEM:
-+	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
- 		break;
- 	default:
- 		dev_dbg(dev, "unsupported mode: %d\n", mode);
-@@ -456,6 +470,16 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 		goto out;
- 	}
- 
-+	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
-+		int index = dc_mode_to_region_index(i);
-+
-+		if (mode == i && !resource_size(&cxlds->dc_res[index])) {
-+			dev_dbg(dev, "no available dynamic capacity\n");
-+			rc = -ENXIO;
-+			goto out;
-+		}
-+	}
-+
- 	cxled->mode = mode;
- 	rc = 0;
- out:
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index f58cf01f8d2c..ce4a66865db3 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -197,6 +197,22 @@ static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
- 		mode = CXL_DECODER_PMEM;
- 	else if (sysfs_streq(buf, "ram"))
- 		mode = CXL_DECODER_RAM;
-+	else if (sysfs_streq(buf, "dc0"))
-+		mode = CXL_DECODER_DC0;
-+	else if (sysfs_streq(buf, "dc1"))
-+		mode = CXL_DECODER_DC1;
-+	else if (sysfs_streq(buf, "dc2"))
-+		mode = CXL_DECODER_DC2;
-+	else if (sysfs_streq(buf, "dc3"))
-+		mode = CXL_DECODER_DC3;
-+	else if (sysfs_streq(buf, "dc4"))
-+		mode = CXL_DECODER_DC4;
-+	else if (sysfs_streq(buf, "dc5"))
-+		mode = CXL_DECODER_DC5;
-+	else if (sysfs_streq(buf, "dc6"))
-+		mode = CXL_DECODER_DC6;
-+	else if (sysfs_streq(buf, "dc7"))
-+		mode = CXL_DECODER_DC7;
- 	else
- 		return -EINVAL;
- 
+Navneet Singh (3):
+      cxl/mem: Read Dynamic capacity configuration from the device
+      cxl/mem: Expose device dynamic capacity configuration
+      cxl/mem: Trace Dynamic capacity Event Record
 
+ Documentation/ABI/testing/sysfs-bus-cxl |  56 ++-
+ drivers/cxl/core/core.h                 |   1 +
+ drivers/cxl/core/hdm.c                  | 215 ++++++++-
+ drivers/cxl/core/mbox.c                 | 646 +++++++++++++++++++++++++-
+ drivers/cxl/core/memdev.c               |  77 ++++
+ drivers/cxl/core/port.c                 |  19 +
+ drivers/cxl/core/region.c               | 418 +++++++++++++++--
+ drivers/cxl/core/trace.h                |  65 +++
+ drivers/cxl/cxl.h                       |  99 +++-
+ drivers/cxl/cxlmem.h                    | 138 +++++-
+ drivers/cxl/mem.c                       |  50 ++
+ drivers/cxl/pci.c                       |   8 +
+ drivers/dax/Makefile                    |   1 +
+ drivers/dax/bus.c                       | 263 ++++++++---
+ drivers/dax/bus.h                       |   1 +
+ drivers/dax/cxl.c                       | 213 ++++++++-
+ drivers/dax/dax-private.h               |  61 +++
+ drivers/dax/extent.c                    | 133 ++++++
+ tools/testing/cxl/test/mem.c            | 782 +++++++++++++++++++++++++++-----
+ 19 files changed, 3005 insertions(+), 241 deletions(-)
+---
+base-commit: c76cce37fb6f3796e8e146677ba98d3cca30a488
+change-id: 20230604-dcd-type2-upstream-0cd15f6216fd
+
+Best regards,
 -- 
-2.41.0
+Ira Weiny <ira.weiny@intel.com>
 
