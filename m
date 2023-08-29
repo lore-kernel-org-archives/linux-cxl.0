@@ -2,293 +2,348 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B610C71153
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 01:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0EC83F17
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 04:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231202AbjH2BIc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 28 Aug 2023 21:08:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        id S231890AbjH2EB1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 00:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233237AbjH2BIJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 28 Aug 2023 21:08:09 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED30131
-        for <linux-cxl@vger.kernel.org>; Mon, 28 Aug 2023 18:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693271286; x=1724807286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vl8bnalZBy3AIf5BhJhLKSMBn52oA0HvzxX2XWqXRWs=;
-  b=aRHuT0LAi+oj0XRivYFO57WTzmvk2TDwKGHqpNVejqVDNCrZkM5niVgj
-   qMCSOQmrE5oT9H/nIO8Z4QSn5CqtO4gq13LCBi4kTo9d4ndqabe0jJ8n6
-   olEfgCj3QyQvhXiA0LBaK9Qr3RXvP/ctn4c6yUYQXirA7GSOnZLIezxCJ
-   FFqNrpZNHKS8uIPY+UHCLyQn0JWlXoiujC5XfC4qV1JA6PhNzKjOn9oaj
-   BGPC3rOKsAdogqxx7GY6J4RTR4Vbu93cwQvZTazSl2X+5Fq9EmttglntQ
-   nTxsBHlJWq6CBuC0NanDwEgFmW+JH7NpJfAXbc9IWzqz1PVWASaeoDuAx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="375214256"
-X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="375214256"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 18:08:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="741620312"
-X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="741620312"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.62.233])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 18:08:04 -0700
-Date:   Mon, 28 Aug 2023 18:08:02 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org, Derick Marks <derick.w.marks@intel.com>
-Subject: Re: [PATCH v3 2/2] cxl/region: Remove a soft reserved resource at
- region teardown
-Message-ID: <ZO1E8i4i0QU2MANZ@aschofie-mobl2>
-References: <cover.1692638817.git.alison.schofield@intel.com>
- <29312c0765224ae76862d59a17748c8188fb95f1.1692638817.git.alison.schofield@intel.com>
- <20230825125415.00000bfc@Huawei.com>
+        with ESMTP id S233721AbjH2EBZ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 00:01:25 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C1C102
+        for <linux-cxl@vger.kernel.org>; Mon, 28 Aug 2023 21:01:21 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 41be03b00d2f7-56c250ff3d3so3313383a12.1
+        for <linux-cxl@vger.kernel.org>; Mon, 28 Aug 2023 21:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20221208.gappssmtp.com; s=20221208; t=1693281681; x=1693886481;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vW2xZrgOBf7/lcfCHTYPKJqiFUoci6FDNrP7hA/F5mY=;
+        b=N4OjkWgHlNm2j+1sJQ/VfYSaViy1jFytlyQldIKp/1RVYyqLDfa9yHV/jsQU3l6nom
+         07Xnja18i+9oKhTgew9NY6am5zPtY0ZrMNPwbn9xv/Ko26wleErRFr//r1j6kxWQrZD+
+         elhQbaBTb2bWEPTgQn3v8SMtBpn+g9zI66kOZ6BmqO8K05ivfOwNmW+XgLSLzwPY2buE
+         NqCUSbLHQc7hrruuE/j73gdu1OQNy7QcobHfCbFFAlcuob3B4wrPbvotw144wSOlEbH/
+         vvDtZVJvU1oLwpc1w0TLiFNrE0qFzMXEM6DSDJZJnasJbGv4YLu5KUs0XMZMJQPDb0FX
+         JRMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693281681; x=1693886481;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vW2xZrgOBf7/lcfCHTYPKJqiFUoci6FDNrP7hA/F5mY=;
+        b=ClOIPQHtzoTnvxZQdfJB8v7+5kXAbD6BesPBf1vFp3DLY3INqSF2hmoqy1tmPzU0d7
+         Dv329jye+mnikJBLLUgb8I9zJV3iiAroPqxR9M77JChc3R75Gl5ytlsKdp++Upw4C/Vp
+         Z1unw4a+bjp9qcbiF9rXfc37tXWd7BUxgqrp5i/Iv50XF0Ic0i76hgKDg5FvzCQqw7d8
+         6LEIOgxNfbzXV7sCXul7SN5GPizsT/NyF4UIPQjDRPfNx7Gyb3wZTVdAj0boGZ8XGMmJ
+         FVKOWBqEFXdAW3zCVPGbyeEQEGR9aJzr92OKrHhXh15DHtFkVAcpWAQ6o9DKgo1x+JsH
+         K+vg==
+X-Gm-Message-State: AOJu0YwA1ZVl4oUfsWfgku2+A3ROaxBVb9aGQLpU23BsEZOHwYe9/HJx
+        eHNQyiLpZX7oZhx4VD/6Iw545A==
+X-Google-Smtp-Source: AGHT+IGWoGnsHFtszBF+Q8YxqB32W7pP7GM/+pMqWGPpzcZTlPbv9SDSMuD+nBTjjNKxZd3XIUYTZg==
+X-Received: by 2002:a17:90a:e2ce:b0:269:3757:54bb with SMTP id fr14-20020a17090ae2ce00b00269375754bbmr2123024pjb.11.1693281680391;
+        Mon, 28 Aug 2023 21:01:20 -0700 (PDT)
+Received: from nixos.tailf4e9e.ts.net ([8.210.91.195])
+        by smtp.googlemail.com with ESMTPSA id a6-20020a17090a008600b00268188ea4b9sm8551079pja.19.2023.08.28.21.01.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Aug 2023 21:01:20 -0700 (PDT)
+From:   Xueshi Hu <xueshi.hu@smartx.com>
+To:     hch@infradead.org, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com, dave.jiang@intel.com,
+        jayalk@intworks.biz, daniel@ffwll.ch, deller@gmx.de,
+        bcrl@kvack.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
+        jack@suse.com, tytso@mit.edu, adilger.kernel@dilger.ca,
+        miklos@szeredi.hu, mike.kravetz@oracle.com, muchun.song@linux.dev,
+        djwong@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
+        hughd@google.com
+Cc:     nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-aio@kvack.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        Xueshi Hu <xueshi.hu@smartx.com>, Jan Kara <jack@suse.cz>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v3] fs: clean up usage of noop_dirty_folio
+Date:   Tue, 29 Aug 2023 12:00:29 +0800
+Message-Id: <20230829040029.473810-1-xueshi.hu@smartx.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230825125415.00000bfc@Huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 12:54:15PM +0100, Jonathan Cameron wrote:
-> On Mon, 21 Aug 2023 11:14:37 -0700
-> alison.schofield@intel.com wrote:
-> 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > When CXL regions are created through autodiscovery their resource
-> > may be a child of a soft reserved resource. Currently, when such a
-> > region is destroyed, its soft reserved resource remains in place.
-> > That means that the HPA range that the region could release is
-> > actually unavailable for reuse.
-> > 
-> > Free the soft reserved resource on region teardown by examining
-> > the alignment of the resources, and handling accordingly. The
-> > two resources will be exactly aligned, partially aligned, or not
-> > aligned at all.
-> > 
-> > |----------- "Soft Reserved" -----------|
-> > |-------------- "Region #" -------------|
-> > Exactly aligned. Any dangling children move up to a parent on removal.
-> > The removal of this soft reserved seems guaranteed, however the
-> > availability of the address range for reuse depends on complete cleanup
-> > of the region child resources also.
-> > 
-> > |----------- "Soft Reserved" -----------|
-> > |-------- "Region #" -------|
-> > or
-> > |----------- "Soft Reserved" -----------|
-> >             |-------- "Region #" -------|
-> > Either start or end aligns. Unlike removing a resource, which simply
-> > moves child resources up the resource tree, adjustments fail if any
-> > child resources map the range being truncated. So this one will fail
-> > for dangling child resources of the region.
-> > 
-> > |---------- "Soft Reserved" ----------|
-> >         |---- "Region #" ----|
-> > No alignment. Freeing the resource of a region in the middle succeeds
-> > if no child resources map the leading or trailing address space.
-> > 
-> > Reported-by: Derick Marks <derick.w.marks@intel.com>
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  drivers/cxl/core/region.c | 130 +++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 121 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 5c487aab15ad..dcf8d4ad2cf4 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -569,22 +569,134 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
-> >  	return 0;
-> >  }
-> >  
-> > +static int add_soft_reserved(struct resource *parent, resource_size_t start,
-> > +			     resource_size_t len, unsigned long flags)
-> > +{
-> > +	struct resource *res __free(kfree) = kmalloc(sizeof(*res), GFP_KERNEL);
-> > +	int rc;
-> > +
-> > +	if (!res)
-> > +		return -ENOMEM;
-> > +
-> > +	*res = DEFINE_RES_MEM_NAMED(start, len, "Soft Reserved");
-> > +
-> > +	res->desc = IORES_DESC_SOFT_RESERVED;
-> > +	res->flags = res->flags | flags;
-> > +	rc = insert_resource(parent, res);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	no_free_ptr(res);
-> 
-> nitpick but I'd like a blank line here :)
+In folio_mark_dirty(), it can automatically fallback to
+noop_dirty_folio() if a_ops->dirty_folio is not registered.
 
-Got it.
+In anon_aops, dev_dax_aops and fb_deferred_io_aops, replacing .dirty_folio
+with NULL makes them identical to default (empty_aops) and since we never
+compare ->a_ops pointer with either of those, we can remove them
+completely.
 
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +static void remove_soft_reserved(struct cxl_region *cxlr, struct resource *soft,
-> > +				 resource_size_t start, resource_size_t end)
-> > +{
-> > +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> > +	resource_size_t new_start, new_end;
-> > +	struct resource *parent;
-> > +	unsigned long flags;
-> > +	int rc;
-> > +
-> > +	/* Prevent new usage while removing or adjusting the resource */
-> > +	guard(mutex)(&cxlrd->range_lock);
-> > +
-> > +	/* Aligns at both resource start and end */
-> > +	if (soft->start == start && soft->end == end) {
-> > +		rc = remove_resource(soft);
-> > +		if (rc)
-> > +			dev_dbg(&cxlr->dev,
-> > +				"cannot remove soft reserved resource %pr\n",
-> > +				soft);
-> > +		else
-> > +			kfree(soft);
-> Really trivial readability comment but I'd prefer...
-> 		if (rc) {
-> 			dev_dbg(&cxlr->...
-> 			        soft);
-> 			return
-> 		}
-> 
-> 		kfree(soft)
-> 
-> 		return;
-> 
-> So that the error path is indented and the good path not.
-> Maybe that's just how my brain works though so feel free to ignore this one. 
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Xueshi Hu <xueshi.hu@smartx.com>
+---
+Changes in v3:
+- correct the rationale of removal three empty aops
+- v2: https://lore.kernel.org/linux-mm/20230828144242.GZ3390869@ZenIV/T/#t
 
-I'll do it. I appreciate the suggestion.
+Changes in v2:
+- make noop_dirty_folio() inline as suggested by Matthew
+- v1: https://lore.kernel.org/linux-mm/ZOxAfrz9etoVUfLQ@infradead.org/T/#m073d45909b1df03ff09f382557dc4e84d0607c49
 
-> 
-> > +
-> > +		return;
-> > +	}
-> > +
-> > +	/* Aligns at either resource start or end */
-> > +	if (soft->start == start || soft->end == end) {
-> > +		if (soft->start == start) {
-> > +			new_start = end + 1;
-> > +			new_end = soft->end;
-> > +		} else {
-> > +			new_start = soft->start;
-> > +			new_end = start + 1;
-> > +		}
-> > +		rc =  adjust_resource(soft, new_start, new_end - new_start + 1);
-> > +		if (rc)
-> > +			dev_dbg(&cxlr->dev,
-> > +				"cannot adjust soft reserved resource %pr\n",
-> > +				soft);
-> > +		return;
-> > +	}
-> > +
-> > +	/*
-> > +	 * No alignment. Attempt a 3-way split that removes the part of
-> > +	 * the resource the region occupied, and then creates new soft
-> > +	 * reserved resources for the leading and trailing addr space.
-> > +	 * adjust_resource() will stop the attempt if there are any
-> > +	 * child resources.
-> > +	 */
-> > +
-> > +	/* Save the original soft reserved resource params before adjusting */
-> > +	new_start = soft->start;
-> > +	new_end = soft->end;
-> > +	parent = soft->parent;
-> > +	flags = soft->flags;
-> > +
-> > +	rc = adjust_resource(soft, start, end - start);
-> > +	if (rc) {
-> > +		dev_dbg(&cxlr->dev,
-> > +			"cannot adjust soft reserved resource %pr\n", soft);
-> > +		return;
-> > +	}
-> > +	rc = remove_resource(soft);
-> > +	if (rc)
-> > +		dev_warn(&cxlr->dev,
-> > +			 "cannot remove soft reserved resource %pr\n", soft);
-> 
-> I'd like a comment on this first bit.  Why adjust a resource only to throw it
-> away?
+ drivers/dax/device.c                |  5 -----
+ drivers/video/fbdev/core/fb_defio.c |  5 -----
+ fs/aio.c                            |  1 -
+ fs/ext2/inode.c                     |  1 -
+ fs/ext4/inode.c                     |  1 -
+ fs/fuse/dax.c                       |  1 -
+ fs/hugetlbfs/inode.c                |  1 -
+ fs/libfs.c                          |  5 -----
+ fs/xfs/xfs_aops.c                   |  1 -
+ include/linux/pagemap.h             |  1 -
+ mm/page-writeback.c                 | 18 +++++-------------
+ mm/secretmem.c                      |  1 -
+ mm/shmem.c                          |  1 -
+ mm/swap_state.c                     |  1 -
+ 14 files changed, 5 insertions(+), 38 deletions(-)
 
-I intended to give the big picture in the block comment above. Scroll up
-and see /* No alignment... 
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index 30665a3ff6ea..018aa9f88ec7 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -345,10 +345,6 @@ static unsigned long dax_get_unmapped_area(struct file *filp,
+ 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
+ }
+ 
+-static const struct address_space_operations dev_dax_aops = {
+-	.dirty_folio	= noop_dirty_folio,
+-};
+-
+ static int dax_open(struct inode *inode, struct file *filp)
+ {
+ 	struct dax_device *dax_dev = inode_dax(inode);
+@@ -358,7 +354,6 @@ static int dax_open(struct inode *inode, struct file *filp)
+ 	dev_dbg(&dev_dax->dev, "trace\n");
+ 	inode->i_mapping = __dax_inode->i_mapping;
+ 	inode->i_mapping->host = __dax_inode;
+-	inode->i_mapping->a_ops = &dev_dax_aops;
+ 	filp->f_mapping = inode->i_mapping;
+ 	filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
+ 	filp->f_sb_err = file_sample_sb_err(filp);
+diff --git a/drivers/video/fbdev/core/fb_defio.c b/drivers/video/fbdev/core/fb_defio.c
+index 274f5d0fa247..08be3592281f 100644
+--- a/drivers/video/fbdev/core/fb_defio.c
++++ b/drivers/video/fbdev/core/fb_defio.c
+@@ -221,10 +221,6 @@ static const struct vm_operations_struct fb_deferred_io_vm_ops = {
+ 	.page_mkwrite	= fb_deferred_io_mkwrite,
+ };
+ 
+-static const struct address_space_operations fb_deferred_io_aops = {
+-	.dirty_folio	= noop_dirty_folio,
+-};
+-
+ int fb_deferred_io_mmap(struct fb_info *info, struct vm_area_struct *vma)
+ {
+ 	vma->vm_ops = &fb_deferred_io_vm_ops;
+@@ -307,7 +303,6 @@ void fb_deferred_io_open(struct fb_info *info,
+ {
+ 	struct fb_deferred_io *fbdefio = info->fbdefio;
+ 
+-	file->f_mapping->a_ops = &fb_deferred_io_aops;
+ 	fbdefio->open_count++;
+ }
+ EXPORT_SYMBOL_GPL(fb_deferred_io_open);
+diff --git a/fs/aio.c b/fs/aio.c
+index 77e33619de40..4cf386f9cb1c 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -484,7 +484,6 @@ static int aio_migrate_folio(struct address_space *mapping, struct folio *dst,
+ #endif
+ 
+ static const struct address_space_operations aio_ctx_aops = {
+-	.dirty_folio	= noop_dirty_folio,
+ 	.migrate_folio	= aio_migrate_folio,
+ };
+ 
+diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+index 75983215c7a1..ce191bdf1c78 100644
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -971,7 +971,6 @@ const struct address_space_operations ext2_aops = {
+ static const struct address_space_operations ext2_dax_aops = {
+ 	.writepages		= ext2_dax_writepages,
+ 	.direct_IO		= noop_direct_IO,
+-	.dirty_folio		= noop_dirty_folio,
+ };
+ 
+ /*
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 43775a6ca505..67c1710c01b0 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3561,7 +3561,6 @@ static const struct address_space_operations ext4_da_aops = {
+ static const struct address_space_operations ext4_dax_aops = {
+ 	.writepages		= ext4_dax_writepages,
+ 	.direct_IO		= noop_direct_IO,
+-	.dirty_folio		= noop_dirty_folio,
+ 	.bmap			= ext4_bmap,
+ 	.swap_activate		= ext4_iomap_swap_activate,
+ };
+diff --git a/fs/fuse/dax.c b/fs/fuse/dax.c
+index 8e74f278a3f6..50ca767cbd5e 100644
+--- a/fs/fuse/dax.c
++++ b/fs/fuse/dax.c
+@@ -1326,7 +1326,6 @@ bool fuse_dax_inode_alloc(struct super_block *sb, struct fuse_inode *fi)
+ static const struct address_space_operations fuse_dax_file_aops  = {
+ 	.writepages	= fuse_dax_writepages,
+ 	.direct_IO	= noop_direct_IO,
+-	.dirty_folio	= noop_dirty_folio,
+ };
+ 
+ static bool fuse_should_enable_dax(struct inode *inode, unsigned int flags)
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 7b17ccfa039d..5404286f0c13 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1266,7 +1266,6 @@ static void hugetlbfs_destroy_inode(struct inode *inode)
+ static const struct address_space_operations hugetlbfs_aops = {
+ 	.write_begin	= hugetlbfs_write_begin,
+ 	.write_end	= hugetlbfs_write_end,
+-	.dirty_folio	= noop_dirty_folio,
+ 	.migrate_folio  = hugetlbfs_migrate_folio,
+ 	.error_remove_page	= hugetlbfs_error_remove_page,
+ };
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 5b851315eeed..982f220a9ee3 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -627,7 +627,6 @@ const struct address_space_operations ram_aops = {
+ 	.read_folio	= simple_read_folio,
+ 	.write_begin	= simple_write_begin,
+ 	.write_end	= simple_write_end,
+-	.dirty_folio	= noop_dirty_folio,
+ };
+ EXPORT_SYMBOL(ram_aops);
+ 
+@@ -1231,16 +1230,12 @@ EXPORT_SYMBOL(kfree_link);
+ 
+ struct inode *alloc_anon_inode(struct super_block *s)
+ {
+-	static const struct address_space_operations anon_aops = {
+-		.dirty_folio	= noop_dirty_folio,
+-	};
+ 	struct inode *inode = new_inode_pseudo(s);
+ 
+ 	if (!inode)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	inode->i_ino = get_next_ino();
+-	inode->i_mapping->a_ops = &anon_aops;
+ 
+ 	/*
+ 	 * Mark the inode dirty from the very beginning,
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index 451942fb38ec..300acea9ee63 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -590,6 +590,5 @@ const struct address_space_operations xfs_address_space_operations = {
+ 
+ const struct address_space_operations xfs_dax_aops = {
+ 	.writepages		= xfs_dax_writepages,
+-	.dirty_folio		= noop_dirty_folio,
+ 	.swap_activate		= xfs_iomap_swapfile_activate,
+ };
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 716953ee1ebd..9de3be51dee2 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -1074,7 +1074,6 @@ bool folio_clear_dirty_for_io(struct folio *folio);
+ bool clear_page_dirty_for_io(struct page *page);
+ void folio_invalidate(struct folio *folio, size_t offset, size_t length);
+ int __set_page_dirty_nobuffers(struct page *page);
+-bool noop_dirty_folio(struct address_space *mapping, struct folio *folio);
+ 
+ #ifdef CONFIG_MIGRATION
+ int filemap_migrate_folio(struct address_space *mapping, struct folio *dst,
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index d3f42009bb70..d2d739109bfe 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2585,17 +2585,6 @@ int do_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 	return ret;
+ }
+ 
+-/*
+- * For address_spaces which do not use buffers nor write back.
+- */
+-bool noop_dirty_folio(struct address_space *mapping, struct folio *folio)
+-{
+-	if (!folio_test_dirty(folio))
+-		return !folio_test_set_dirty(folio);
+-	return false;
+-}
+-EXPORT_SYMBOL(noop_dirty_folio);
+-
+ /*
+  * Helper function for set_page_dirty family.
+  *
+@@ -2799,10 +2788,13 @@ bool folio_mark_dirty(struct folio *folio)
+ 		 */
+ 		if (folio_test_reclaim(folio))
+ 			folio_clear_reclaim(folio);
+-		return mapping->a_ops->dirty_folio(mapping, folio);
++		if (mapping->a_ops->dirty_folio)
++			return mapping->a_ops->dirty_folio(mapping, folio);
+ 	}
+ 
+-	return noop_dirty_folio(mapping, folio);
++	if (!folio_test_dirty(folio))
++		return !folio_test_set_dirty(folio);
++	return false;
+ }
+ EXPORT_SYMBOL(folio_mark_dirty);
+ 
+diff --git a/mm/secretmem.c b/mm/secretmem.c
+index 86442a15d12f..3fe1c35f9c8d 100644
+--- a/mm/secretmem.c
++++ b/mm/secretmem.c
+@@ -157,7 +157,6 @@ static void secretmem_free_folio(struct folio *folio)
+ }
+ 
+ const struct address_space_operations secretmem_aops = {
+-	.dirty_folio	= noop_dirty_folio,
+ 	.free_folio	= secretmem_free_folio,
+ 	.migrate_folio	= secretmem_migrate_folio,
+ };
+diff --git a/mm/shmem.c b/mm/shmem.c
+index d963c747dabc..9bdef68a088a 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -4090,7 +4090,6 @@ static int shmem_error_remove_page(struct address_space *mapping,
+ 
+ const struct address_space_operations shmem_aops = {
+ 	.writepage	= shmem_writepage,
+-	.dirty_folio	= noop_dirty_folio,
+ #ifdef CONFIG_TMPFS
+ 	.write_begin	= shmem_write_begin,
+ 	.write_end	= shmem_write_end,
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index f8ea7015bad4..3666439487db 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -30,7 +30,6 @@
+  */
+ static const struct address_space_operations swap_aops = {
+ 	.writepage	= swap_writepage,
+-	.dirty_folio	= noop_dirty_folio,
+ #ifdef CONFIG_MIGRATION
+ 	.migrate_folio	= migrate_folio,
+ #endif
+-- 
+2.40.1
 
-Did you overlook that or do you want more explanation or something else?
-
-Thanks,
-Alison
-
-> 
-> 
-> > +
-> > +	rc = add_soft_reserved(parent, new_start, start - new_start, flags);
-> > +	if (rc)
-> > +		dev_warn(&cxlr->dev,
-> > +			 "cannot add new soft reserved resource at %pa\n",
-> > +			 &new_start);
-> > +
-> > +	rc = add_soft_reserved(parent, end + 1, new_end - end, flags);
-> > +	if (rc)
-> > +		dev_warn(&cxlr->dev,
-> > +			 "cannot add new soft reserved resource at %pa + 1\n",
-> > +			 &end);
-> > +}
-> > +
-> >  static void cxl_region_iomem_release(struct cxl_region *cxlr)
-> >  {
-> >  	struct cxl_region_params *p = &cxlr->params;
-> > +	struct resource *parent, *res = p->res;
-> > +	resource_size_t start, end;
-> >  
-> >  	if (device_is_registered(&cxlr->dev))
-> >  		lockdep_assert_held_write(&cxl_region_rwsem);
-> > -	if (p->res) {
-> > -		/*
-> > -		 * Autodiscovered regions may not have been able to insert their
-> > -		 * resource.
-> > -		 */
-> > -		if (p->res->parent)
-> > -			remove_resource(p->res);
-> > -		kfree(p->res);
-> > -		p->res = NULL;
-> > +	if (!res)
-> > +		return;
-> > +	/*
-> > +	 * Autodiscovered regions may not have been able to insert their
-> > +	 * resource. If a Soft Reserved parent resource exists, try to
-> > +	 * remove that also.
-> > +	 */
-> > +	if (p->res->parent) {
-> > +		parent = p->res->parent;
-> > +		start = p->res->start;
-> > +		end = p->res->end;
-> > +		remove_resource(p->res);
-> > +		if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags) &&
-> > +		    parent->desc == IORES_DESC_SOFT_RESERVED)
-> > +			remove_soft_reserved(cxlr, parent, start, end);
-> >  	}
-> > +
-> > +	kfree(p->res);
-> > +	p->res = NULL;
-> >  }
-> >  
-> >  static int free_hpa(struct cxl_region *cxlr)
-> 
