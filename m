@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D94C83F12
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E274C83F12
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 13:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235213AbjH2Nyb (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 09:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
+        id S236354AbjH2N6r (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 09:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236525AbjH2NyI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 09:54:08 -0400
+        with ESMTP id S236627AbjH2N6c (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 09:58:32 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB8E194;
-        Tue, 29 Aug 2023 06:54:05 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZph9186cz67nc4;
-        Tue, 29 Aug 2023 21:49:45 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4864E0;
+        Tue, 29 Aug 2023 06:58:29 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZpL74jLhz6K6Fx;
+        Tue, 29 Aug 2023 21:34:07 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 14:54:02 +0100
-Date:   Tue, 29 Aug 2023 14:54:01 +0100
+ 2023 14:38:52 +0100
+Date:   Tue, 29 Aug 2023 14:38:51 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Terry Bowman <terry.bowman@amd.com>
 CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
@@ -29,67 +29,94 @@ CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
         <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v9 15/15] cxl/core/regs: Rename phys_addr in
- cxl_map_component_regs()
-Message-ID: <20230829145401.0000554a@Huawei.com>
-In-Reply-To: <20230825233211.3029825-16-terry.bowman@amd.com>
+Subject: Re: [PATCH v9 01/15] cxl/port: Pre-initialize component register
+ mappings
+Message-ID: <20230829143851.00006467@Huawei.com>
+In-Reply-To: <20230825233211.3029825-2-terry.bowman@amd.com>
 References: <20230825233211.3029825-1-terry.bowman@amd.com>
-        <20230825233211.3029825-16-terry.bowman@amd.com>
+        <20230825233211.3029825-2-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 25 Aug 2023 18:32:11 -0500
+On Fri, 25 Aug 2023 18:31:57 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
 > From: Robert Richter <rrichter@amd.com>
-> 
-> Trivial change that renames variable phys_addr in
-> cxl_map_component_regs() to shorten its length to keep the 80 char
-> size limit for the line and also for consistency between the different
-> paths.
-> 
-LGTM
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
+Hi Robert, Terry,
+
+> 
+> The component registers of a component may not exist or are not
+> needed.
+
+How do we now it's not needed in this function?
+Perhaps "may not exist." is the bit that matters in this sentence.
+
+> The setup may fail for that reason. In some cases the
+> initialization should continue anyway. Thus, always initialize struct
+> cxl_register_map with valid values. In case of errors, zero it, set a
+> value for @dev and make @resource a the valid value using
+
+make @resource CXL_RESOURCE_NONE.
+
+(not "a the")
+
+> CXL_RESOURCE_NONE.
+
+It might be worth making it clear that this will (I think) only matter
+for future usecases and isn't a fix for how this function is used today.
+
+> 
 > Signed-off-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Otherwise seems sensible to me with one comment below.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
->  drivers/cxl/core/regs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/cxl/core/port.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 5cb78b76c757..f8f26fe80489 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -217,16 +217,16 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 724be8448eb4..2d22e7a5629b 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -693,16 +693,17 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+>  static int cxl_setup_comp_regs(struct device *dev, struct cxl_register_map *map,
+>  			       resource_size_t component_reg_phys)
+>  {
+> -	if (component_reg_phys == CXL_RESOURCE_NONE)
+> -		return 0;
+> -
+>  	*map = (struct cxl_register_map) {
+>  		.dev = dev,
+> -		.reg_type = CXL_REGLOC_RBI_COMPONENT,
+
+Could set this explicitly to CXL_REGLOC_RBI_EMPTY
+which is what happens anyway, but it isn't obvious that
+0 maps to something that indicates this doesn't exist.
+
+>  		.resource = component_reg_phys,
+> -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
+>  	};
 >  
->  	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
->  		struct mapinfo *mi = &mapinfo[i];
-> -		resource_size_t phys_addr;
-> +		resource_size_t addr;
->  		resource_size_t length;
+> +	if (component_reg_phys == CXL_RESOURCE_NONE)
+> +		return 0;
+> +
+> +	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
+> +	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
+> +
+>  	return cxl_setup_regs(map);
+>  }
 >  
->  		if (!mi->rmap->valid)
->  			continue;
->  		if (!test_bit(mi->rmap->id, &map_mask))
->  			continue;
-> -		phys_addr = map->resource + mi->rmap->offset;
-> +		addr = map->resource + mi->rmap->offset;
->  		length = mi->rmap->size;
-> -		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
-> +		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
->  		if (!*(mi->addr))
->  			return -ENOMEM;
->  	}
 
