@@ -2,116 +2,126 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A8CC71153
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 21:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DF0C71153
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 21:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjH2VsY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 17:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
+        id S231250AbjH2Vt0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 17:49:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231749AbjH2VsD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 17:48:03 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C1CD7;
-        Tue, 29 Aug 2023 14:48:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693345680; x=1724881680;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=PiPj+zZYTp3WoxOjrotjdMcnCLnciTQjwmqbXEeRGb0=;
-  b=Fb+Lemq0bJH8RmDTnH/9mm/otl9RgW+SZWUg2UDPTD9eVZNoCh9DYtWu
-   3LHTVn9vXojM/U1G907OVS93lH7YJnqe99IvNHFaxT4NKOBiYpWjgUETv
-   Ill/unjM1GW1b0AgcJoTkYkFZw8lZbqq7oFz2CNzsuoMh4lRq7eNem3QF
-   KjPQzpG+mixhl5THcFGXlmpLPj0scnlq3cBLqHnDlWPP7Kni1WV+F3zja
-   FmQ32raGjVU7ovaJh45lHWC2CAMmAhG3kXM5qi1qKar9NjHhtYW0US26Z
-   QmXcnI9bDH8PWkI/dAfWcz7YeDWaXqR4uaXGyRsc/yoIvf8aACIo0L56n
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="354996516"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="354996516"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:47:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="688669193"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="688669193"
-Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.150.239])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:47:57 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-Date:   Tue, 29 Aug 2023 14:47:46 -0700
-Subject: [PATCH] cxl/region: Clarify pointers in unregister_region()
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230829-cxl-clarify-ptrs-v1-1-40e0705c6188@intel.com>
-X-B4-Tracking: v=1; b=H4sIAIFn7mQC/x2NQQrCQAwAv1JyNlBTFqtfEQ/ZNWsDdS1JKZXSv
- 7v1OAzDbOBiKg63ZgOTRV0/pcL51EAauLwE9VkZqKWu7emKaR0xjWyavzjN5pi7nkKIFwkUoWa
- RXTAalzQc4Zt9FjvEZJJ1/b/uj33/AQ82MN17AAAA
-To:     Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        with ESMTP id S237237AbjH2VtJ (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 17:49:09 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D914ACC3;
+        Tue, 29 Aug 2023 14:49:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
+ s=s31663417; t=1693345720; x=1693950520; i=fan.ni@gmx.us;
+ bh=a9Wnn2WFAKosOzabvPuR9+jFl4rAp8iJnreXsjbwH0Q=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=Q2Z27HapZN0BavqN1ThoOPaAeM9dDonJ5ssWsvbCt/tKqCaRa866100nQaG5+7ZxUj5KCGo
+ 37u+RZc3sLxfhnVvEqh3IdRYXvqvgUAQ/o2gQtS9W6QXxTZgYTX3tMofPNG7pYY+dyc/0ZSbC
+ 8tr7/bRPxLpVW9h4Gud99qpl6n1Z5d6AEWKdui2CTtq6E3mwiwpw6VAR9YDG8BJ1Qjk3g7dtV
+ ybIeOE+TLMtvUGvCUiHXg1FDZysIDdx5gieBSPaIHoTfA2DMTKTCRcEZ6t9srdPzI1m5iWfc5
+ vuIVrYJsxwfxPxE4qk4qtnKCIUyuuygYY+Dp3qC4o55+ujlGD73A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([50.205.20.42]) by mail.gmx.net (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MryXH-1pwnSs2d8v-00nylh; Tue, 29
+ Aug 2023 23:48:40 +0200
+Date:   Tue, 29 Aug 2023 14:48:28 -0700
+From:   Fan Ni <fan.ni@gmx.us>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>
-X-Mailer: b4 0.13-dev-c6835
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693345677; l=1534;
- i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=PiPj+zZYTp3WoxOjrotjdMcnCLnciTQjwmqbXEeRGb0=;
- b=PF3lyJ3yU784xODWaECpKEgdsgF5PC0YX3bJSjXd4VTluk2VIVXPBF3Fm7srfY8yiKjY6tgLp
- hSdAB/pG5CYCVT7FsXi56UHbbzgwSwMjd8rugcMJnCtZMKqMGVfwBq0
-X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
- pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 01/18] cxl/hdm: Debug, use decoder name function
+Message-ID: <ZO5nrKyE/snTdE9D@debian>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+ <20230604-dcd-type2-upstream-v2-1-f740c47e7916@intel.com>
+ <20230829150320.00007f08@Huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230829150320.00007f08@Huawei.com>
+X-Provags-ID: V03:K1:NHousnP49LQdt2FZt+BuG85wA2deMqMCR17CP+ov3XNePx0V9t9
+ khkmI1CQj09ejvZB5jI4lHuZmwkf8y5MlnOlnzVXxo39oUhLEu8d05qGEJ3nZ+LKCu80rJ8
+ oCbzOtkAa2/mK3NYIcmuRcSM4s7aMgOEH2YV85ZV6hPsAIyHnCtFTnlaT6rjOdSpjRjPlZq
+ lHlc9XN6whtMGiryLt+rg==
+UI-OutboundReport: notjunk:1;M01:P0:UbirIdvpEZQ=;83OU6fRnDwzmVaJV+wlbK60rZd5
+ 117TRmSHk4n+1HFQGiNhVuGwWdRfdCmPSCmtOgErCymN7CR2KUDXhbL80+JQmEYFmCQy5gUuE
+ /EleYr9WRqJ/SW22jvhp5guDV6SDfsq0kJSfv442/l9y1KJ0qjbng0NDyDsNNkmKABQVG5c3w
+ NXt+G7tk1ulcBngi+h7mYjXsZNQYTRCkjZ0B5TVgwjBnrZnqpvO94zoCRWDsVcPUqxVzkJrmH
+ BFwiDdsLicuZ37+Eoc1l1LCKFBm7dIKUwyhnqGhe/2xgGsJpgLpWRYXpuwhkUc201ZSOU5b3u
+ 5Y2T+jrY7SY3H57NAXTeRUxSeLaOEWR5YmkfJcXwjGSrUwvtADceirgCpuEfMk968S7C0q4BI
+ 8iG9WMcA0KiOGY+ImvA4wwMPAkH/3Gbw/Xn90iOVL93ETL+POPju537C+ojSjpUsAhnQyndfX
+ nqULu8w0QynHAiwneu9OWmACSGyjPCIV1f94kQCaT64VfuWRwMZ2jnFkXbm+VBC4/Rs+d3in6
+ 57eAXDClJ0IFkoPq4vDFv2yxlfzb1T64HlnOwetwGoHDyTP0bnRA0QnH9nnZO3EXL6NRk8fL4
+ A9EHTYunZ3/QszrofB5QhNHOvPehyCN+YhED9+F15BtQHxsff/mwA+S/fVOw1hg6AagcO9557
+ 03nDeNxJ522kqmXif+JPgV1lH4RzS5/dbEWdWzhH1NfbMBu8mOzv9n+DLq6v3kiRMleZDKSoi
+ 6ZWKAgu5YerHMZLnsl9ONIrAdXRHEZaHCT5DcY7Doo4sd8XtmQMDot2946XWYXc5wZK4LQ0i6
+ xDngN1Q01A1wu0dsVZUFUeF2bZoI2Q3uhkcrwREQw8o1bjTobsD4MvIO7jb9ElvCbGlyd+roK
+ fNdUdv0FRXcKI67TQdQl45C39t7Sse2/dosznCtseU7Wkgjp1Sa3Av/zV+BXvtnPDYXHC8O6c
+ p8Qjxg+xJw63eiLAk6Yct+7MSG0=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-devm_add_action_or_reset() passes a void * data parameter to the
-callback.  In the case of CXL regions, unregister_region() is passed a
-struct cxl_region *.
+On Tue, Aug 29, 2023 at 03:03:20PM +0100, Jonathan Cameron wrote:
+> On Mon, 28 Aug 2023 22:20:52 -0700
+> Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> > The decoder enum has a name conversion function defined now.
+> >
+> > Use that instead of open coding.
+> >
+> > Suggested-by: Navneet Singh <navneet.singh@intel.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> >
+>
+> Perhaps pull this one out so it can go upstream before the rest are read=
+y,
+> or could be picked up from here.
+>
+> Whilst we probably won't see the other decoder modes in here, there
+> is no reason why anyone reading the code should have to figure that out.
+> As such much better to use the more generic function.
+>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>
 
-unregister_region() incorrectly interprets this as a struct device
-pointer.  Fortunately the device structure was the first member of
-cxl_region.  Therefore the code still works.  However, should struct
-cxl_region change the bug could be subtle.
+Agreed. This patch can be pulled out and picked up before the rest.
 
-Use the proper types in unregister_region() and extract the device
-pointer correctly.
 
-Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
-Cc: Ben Widawsky <bwidawsk@kernel.org>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- drivers/cxl/core/region.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e115ba382e04..471d305ef675 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2018,10 +2018,11 @@ static struct cxl_region *to_cxl_region(struct device *dev)
- 	return container_of(dev, struct cxl_region, dev);
- }
- 
--static void unregister_region(void *dev)
-+static void unregister_region(void *_cxlr)
- {
--	struct cxl_region *cxlr = to_cxl_region(dev);
-+	struct cxl_region *cxlr = _cxlr;
- 	struct cxl_region_params *p = &cxlr->params;
-+	struct device *dev = &cxlr->dev;
- 	int i;
- 
- 	device_del(dev);
 
----
-base-commit: 1c59d383390f970b891b503b7f79b63a02db2ec5
-change-id: 20230829-cxl-clarify-ptrs-f38255b7e52b
-
-Best regards,
--- 
-Ira Weiny <ira.weiny@intel.com>
-
+> > ---
+> > Changes for v2:
+> > [iweiny: new patch, split out]
+> > ---
+> >  drivers/cxl/core/hdm.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index b01a77b67511..a254f79dd4e8 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -550,8 +550,7 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxl=
+ed, unsigned long long size)
+> >
+> >  	if (size > avail) {
+> >  		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
+> > -			cxled->mode =3D=3D CXL_DECODER_RAM ? "ram" : "pmem",
+> > -			&avail);
+> > +			cxl_decoder_mode_name(cxled->mode), &avail);
+> >  		rc =3D -ENOSPC;
+> >  		goto out;
+> >  	}
+> >
+>
