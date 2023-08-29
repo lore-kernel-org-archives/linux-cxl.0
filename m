@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 421ACC6FA8F
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 15:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEEDC83F12
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 16:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjH2P0s (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 11:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43802 "EHLO
+        id S235467AbjH2QAE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 12:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237289AbjH2P0j (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 11:26:39 -0400
+        with ESMTP id S237054AbjH2P7i (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 11:59:38 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50577CD7;
-        Tue, 29 Aug 2023 08:26:04 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZrjn0zZRz686y1;
-        Tue, 29 Aug 2023 23:21:17 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFEF12F;
+        Tue, 29 Aug 2023 08:59:34 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZsSx1wZJz6J7Xw;
+        Tue, 29 Aug 2023 23:55:13 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 16:26:01 +0100
-Date:   Tue, 29 Aug 2023 16:26:00 +0100
+ 2023 16:59:31 +0100
+Date:   Tue, 29 Aug 2023 16:59:30 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -32,189 +32,129 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 09/18] cxl/mem: Read extents on memory device
- discovery
-Message-ID: <20230829162600.00004ac2@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-9-f740c47e7916@intel.com>
+Subject: Re: [PATCH RFC v2 10/18] cxl/mem: Handle DCD add and release
+ capacity events.
+Message-ID: <20230829165930.0000208c@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-10-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-9-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-10-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:21:00 -0700
+On Mon, 28 Aug 2023 22:21:01 -0700
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> When a Dynamic Capacity Device (DCD) is realized some extents may
-> already be available within the DC Regions.  This can happen if the host
-> has accepted extents and been rebooted or any other time the host driver
-> software has become out of sync with the device hardware.
+> A Dynamic Capacity Device (DCD) utilizes events to signal the host about
+> the changes to the allocation of Dynamic Capacity (DC) extents. The
+> device communicates the state of DC extents through an extent list that
+> describes the starting DPA, length, and meta data of the blocks the host
+> can access.
 > 
-> Read the available extents during probe and store them for later
-> use.
+> Process the dynamic capacity add and release events.  The addition or
+> removal of extents can occur at any time.  Adding asynchronous memory is
+> straight forward.  Also remember the host is under no obligation to
+> respond to a release event until it is done with the memory.  Introduce
+> extent kref's to handle the delay of extent release.
+> 
+> In the case of a force removal, access to the memory will fail and may
+> cause a crash.  However, the extent tracking object is preserved for the
+> region to safely tear down as long as the memory is not accessed.
 > 
 > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-A few minor comments inline.
+Minor stuff inline.
 
-Thanks,
 
-Jonathan
-
-> ---
-> Change for v2:
-> [iweiny: new patch]
-> ---
->  drivers/cxl/core/mbox.c | 195 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    |  36 +++++++++
->  drivers/cxl/pci.c       |   4 +
->  3 files changed, 235 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index d769814f80e2..9b08c40ef484 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -824,6 +824,37 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
-
-...
-
-> +static int cxl_dev_get_dc_extent_cnt(struct cxl_memdev_state *mds,
-> +				     unsigned int *extent_gen_num)
+> +static int cxl_prepare_ext_list(struct cxl_mbox_dc_response **res,
+> +				int *n, struct range *extent)
 > +{
-> +	struct cxl_mbox_get_dc_extent get_dc_extent;
-> +	struct cxl_mbox_dc_extents dc_extents;
-> +	struct device *dev = mds->cxlds.dev;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	unsigned int count;
-> +	int rc;
+> +	struct cxl_mbox_dc_response *dc_res;
+> +	unsigned int size;
 > +
-> +	/* Check GET_DC_EXTENT_LIST is supported by device */
-> +	if (!test_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds)) {
-> +		dev_dbg(dev, "unsupported cmd : get dyn cap extent list\n");
-> +		return 0;
-> +	}
-> +
-> +	get_dc_extent = (struct cxl_mbox_get_dc_extent) {
-> +		.extent_cnt = cpu_to_le32(0),
-> +		.start_extent_index = cpu_to_le32(0),
-> +	};
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
-> +		.payload_in = &get_dc_extent,
-> +		.size_in = sizeof(get_dc_extent),
-> +		.size_out = mds->payload_size,
+> +	if (!extent)
+> +		size = struct_size(dc_res, extent_list, 0);
 
-If all you are after is the count, then size_out can be a lot smaller than that
-I think as we know it can't return any extents.
+This is confusing as if you did have *n > 0 I'd kind of expect
+this to just not extend the list rather than shortening it.
+Now I guess that never happens, but locally it looks odd.
 
-> +		.payload_out = &dc_extents,
-> +		.min_out = 1,
-> +	};
-> +
-> +	rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	count = le32_to_cpu(dc_extents.total_extent_cnt);
-> +	*extent_gen_num = le32_to_cpu(dc_extents.extent_list_num);
-> +
-> +	return count;
-> +}
-> +
-> +static int cxl_dev_get_dc_extents(struct cxl_memdev_state *mds,
-> +				  unsigned int start_gen_num,
-> +				  unsigned int exp_cnt)
-> +{
-> +	struct cxl_mbox_dc_extents *dc_extents;
-> +	unsigned int start_index, total_read;
-> +	struct device *dev = mds->cxlds.dev;
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	int retry = 3;
+Maybe just handle that case in a separate function as it doesn't
+share much code with the case where there is an extent and I would
+assume we always know at the caller which one we want.
 
-Why 3?
 
-> +	int rc;
+> +	else
+> +		size = struct_size(dc_res, extent_list, *n + 1);
+
+Might be clearer with a local variable for the number of extents.
+
+extents_count = *n;
+
+if (extent)
+	extents_count++;
+
+size = struct_size(dc_res, extent_list, extents_count);
+
+Though I'm not sure that really helps.  Maybe this will just need
+to be a little confusing :)
+
 > +
-> +	/* Check GET_DC_EXTENT_LIST is supported by device */
-> +	if (!test_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds)) {
-> +		dev_dbg(dev, "unsupported cmd : get dyn cap extent list\n");
-> +		return 0;
-> +	}
-> +
-> +	dc_extents = kvmalloc(mds->payload_size, GFP_KERNEL);
-
-Maybe __free magic would simplify this enough to be useful.
-
-> +	if (!dc_extents)
+> +	dc_res = krealloc(*res, size, GFP_KERNEL);
+> +	if (!dc_res)
 > +		return -ENOMEM;
 > +
-> +reset:
-> +	total_read = 0;
-> +	start_index = 0;
-> +	do {
-> +		unsigned int nr_ext, total_extent_cnt, gen_num;
-> +		struct cxl_mbox_get_dc_extent get_dc_extent;
+> +	if (extent) {
+> +		dc_res->extent_list[*n].dpa_start = cpu_to_le64(extent->start);
+> +		memset(dc_res->extent_list[*n].reserved, 0, 8);
+> +		dc_res->extent_list[*n].length = cpu_to_le64(range_len(extent));
+> +		(*n)++;
+> +	}
 > +
-> +		get_dc_extent = (struct cxl_mbox_get_dc_extent) {
-> +			.extent_cnt = exp_cnt - start_index,
-> +			.start_extent_index = start_index,
-> +		};
-> +		
-> +		mbox_cmd = (struct cxl_mbox_cmd) {
-> +			.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
-> +			.payload_in = &get_dc_extent,
-> +			.size_in = sizeof(get_dc_extent),
-> +			.size_out = mds->payload_size,
-> +			.payload_out = dc_extents,
-> +			.min_out = 1,
-> +		};
-> +		
-> +		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
-> +		if (rc < 0)
-> +			goto out;
-> +		
-> +		nr_ext = le32_to_cpu(dc_extents->ret_extent_cnt);
-> +		total_read += nr_ext;
-> +		total_extent_cnt = le32_to_cpu(dc_extents->total_extent_cnt);
-> +		gen_num = le32_to_cpu(dc_extents->extent_list_num);
+> +	*res = dc_res;
+> +	return 0;
+> +}
+
 > +
-> +		dev_dbg(dev, "Get extent list count:%d generation Num:%d\n",
-> +			total_extent_cnt, gen_num);
+> +/* Returns 0 if the event was handled successfully. */
+> +static int cxl_handle_dcd_event_records(struct cxl_memdev_state *mds,
+> +					struct cxl_event_record_raw *rec)
+> +{
+> +	struct dcd_event_dyn_cap *record = (struct dcd_event_dyn_cap *)rec;
+> +	uuid_t *id = &rec->hdr.id;
+> +	int rc;
 > +
-> +		if (gen_num != start_gen_num || exp_cnt != total_extent_cnt) {
-> +			dev_err(dev, "Extent list changed while reading; %u != %u : %u != %u\n",
-> +				gen_num, start_gen_num, exp_cnt, total_extent_cnt);
-> +			if (retry--)
-> +				goto reset;
-> +			return -EIO;
-> +		}
-> +		
-> +		for (int i = 0; i < nr_ext ; i++) {
-> +			dev_dbg(dev, "Storing extent %d/%d\n",
-> +				start_index + i, exp_cnt);
-> +			rc = cxl_store_dc_extent(mds, &dc_extents->extent[i]);
-> +			if (rc)
-> +				goto out;
-> +		}
+> +	if (!uuid_equal(id, &dc_event_uuid))
+> +		return -EINVAL;
 > +
-> +		start_index += nr_ext;
-> +	} while (exp_cnt > total_read);
+> +	switch (record->data.event_type) {
+> +	case DCD_ADD_CAPACITY:
+> +		rc = cxl_handle_dcd_add_event(mds, &record->data.extent);
+> +		break;
+
+I guess it might not be consistent with local style...
+		return cxl_handle_dcd_add_event()  etc
+
+> +	case DCD_RELEASE_CAPACITY:
+> +        case DCD_FORCED_CAPACITY_RELEASE:
+> +		rc = cxl_handle_dcd_release_event(mds, &record->data.extent);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
 > +
-> +out:
-> +	kvfree(dc_extents);
 > +	return rc;
 > +}
+> +
 
 
