@@ -2,26 +2,26 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D6C71153
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 14:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230CEC71153
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 14:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230359AbjH2OEI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 10:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
+        id S236902AbjH2OIY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 10:08:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236693AbjH2ODh (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 10:03:37 -0400
+        with ESMTP id S236834AbjH2OIB (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 10:08:01 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAA5114;
-        Tue, 29 Aug 2023 07:03:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76EA11AE;
+        Tue, 29 Aug 2023 07:07:49 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZpyj3fHJz6HJjy;
-        Tue, 29 Aug 2023 22:02:21 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZpzD2r8Wz6K6M7;
+        Tue, 29 Aug 2023 22:02:48 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 15:03:21 +0100
-Date:   Tue, 29 Aug 2023 15:03:20 +0100
+ 2023 15:07:32 +0100
+Date:   Tue, 29 Aug 2023 15:07:32 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -32,11 +32,12 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 01/18] cxl/hdm: Debug, use decoder name function
-Message-ID: <20230829150320.00007f08@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-1-f740c47e7916@intel.com>
+Subject: Re: [PATCH RFC v2 02/18] cxl/mbox: Flag support for Dynamic
+ Capacity Devices (DCD)
+Message-ID: <20230829150732.00004181@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-2-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-1-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-2-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -50,46 +51,53 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:20:52 -0700
+On Mon, 28 Aug 2023 22:20:53 -0700
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> The decoder enum has a name conversion function defined now.
+> Per the CXL 3.0 specification software must check the Command Effects
+> Log (CEL) to know if a device supports DC.  If the device does support
+> DC the specifics of the DC Regions (0-7) are read through the mailbox.
 > 
-> Use that instead of open coding.
+> Flag DC Device (DCD) commands in a device if they are supported.
+> Subsequent patches will key off these bits to configure a DCD.
 > 
-> Suggested-by: Navneet Singh <navneet.singh@intel.com>
+> Co-developed-by: Navneet Singh <navneet.singh@intel.com>
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
 
-Perhaps pull this one out so it can go upstream before the rest are ready,
-or could be picked up from here.
+Trivial unrelated change seems to have sneaked in. Other than that
+this looks good to me.
 
-Whilst we probably won't see the other decoder modes in here, there
-is no reason why anyone reading the code should have to figure that out.
-As such much better to use the more generic function.
+So with that tidied up.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> ---
-> Changes for v2:
-> [iweiny: new patch, split out]
-> ---
->  drivers/cxl/core/hdm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index b01a77b67511..a254f79dd4e8 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -550,8 +550,7 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+
+Thanks,
+
+Jonathan
+
+> +
+>  static bool cxl_is_security_command(u16 opcode)
+>  {
+>  	int i;
+> @@ -677,9 +705,10 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>  		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+>  		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
 >  
->  	if (size > avail) {
->  		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
-> -			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
-> -			&avail);
-> +			cxl_decoder_mode_name(cxled->mode), &avail);
->  		rc = -ENOSPC;
->  		goto out;
->  	}
-> 
+> -		if (!cmd && !cxl_is_poison_command(opcode)) {
+> -			dev_dbg(dev,
+> -				"Opcode 0x%04x unsupported by driver\n", opcode);
+> +		if (!cmd && !cxl_is_poison_command(opcode) &&
+> +		    !cxl_is_dcd_command(opcode)) {
+> +			dev_dbg(dev, "Opcode 0x%04x unsupported by driver\n",
+> +				opcode);
+
+Clang format has been playing?
+Better to leave this alone and save reviewers wondering what the change
+in the dev_dbg() was.
+
+>  			continue;
+>  		}
 
