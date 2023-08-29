@@ -2,49 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E46C83F26
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C224C71153
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235646AbjH2FY1 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 01:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
+        id S235709AbjH2FYa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 01:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235665AbjH2FYO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:24:14 -0400
+        with ESMTP id S235666AbjH2FYP (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:24:15 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7185319B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98BE198;
         Mon, 28 Aug 2023 22:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693286651; x=1724822651;
+  t=1693286652; x=1724822652;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=DZMaf28aqfjymKMjlQYhoxICqfP5W5OJWqpOsQJfEv4=;
-  b=d+CE8HVHwruafsvotXhxSzTxxPWOGTJvldAlsJsT5KRU3L8L9S7YECxk
-   M8yebkT9AG3fC/7SzvYNkcqy7V5Op1ogX995cnadfKKXP45YgFbMtigg4
-   zkUWPyUgA+tai8nmCFdHapkjbCaqZOTIk3t0XbEXIu7ATt635Usmi+OPr
-   0zwCw+jaRcdV1LJWbhZUKjaxV53Rlpgcr7UyHIG8LPZbPrKWthQd/wjQ/
-   6HmxlJ55Fyb0Dm5TYmQJuogO+Nge6519DiGXV7eKuyPTrkVmIDHSi3zB/
-   Zs3xoIb4aPOTQTmAET+LFSgYhSK5KKEW1lMb0aBw64jO6+oSrJUImaxn5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625251"
+  bh=zQkGdDHYCbC/ziYaa0AFs4TNsDCAF/BwwDD+JF1yBcU=;
+  b=fildFUE6oAaTk1pnQqDIwx2obRmkDdsUBBg7rXjjTAP60BRxk9EGL8U9
+   HREktQEYctl5k6H4gWQITFw5S+jOy5MOqiYKZk3PbBtIoSjBbb4LtVahu
+   VwhfCGBl3ax9Olml5o9mLqVUDNgkqAA4HmqjjcrA4OSYNAJnmTplUe/rY
+   LGdq+I7y9dRvNlp55NMVUOZEIVFUKFQ/YPDmAzJn1M9VvtG3rJ6pATMTA
+   s+NHuxulSJVVJF2IEsMWVeXUMvxmDJg5HU5BIkocm6Xp04VAioBhQYBVo
+   KrxxccXWGfPc+l0d9P0I+dXrZmXhaOQISRmDz4UlhVy9lFYCI5DqQyXAL
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625243"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="441625251"
+   d="scan'208";a="441625243"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:49 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:48 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556431"
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556415"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="738556431"
+   d="scan'208";a="738556415"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.37.183])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:49 -0700
-From:   ira.weiny@intel.com
-Date:   Mon, 28 Aug 2023 22:21:06 -0700
-Subject: [PATCH RFC v2 15/18] cxl/mem: Trace Dynamic capacity Event Record
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:47 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Mon, 28 Aug 2023 22:21:04 -0700
+Subject: [PATCH RFC v2 13/18] dax/bus: Factor out dev dax resize logic
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230604-dcd-type2-upstream-v2-15-f740c47e7916@intel.com>
+Message-Id: <20230604-dcd-type2-upstream-v2-13-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 In-Reply-To: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
@@ -58,127 +58,253 @@ Cc:     Navneet Singh <navneet.singh@intel.com>,
         Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-c6835
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=3471;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=8374;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=SkFWqVM1cpX13lEJuDcPSmo7A5I8/gNre3e4u4Y5C1o=;
- b=fHj3NceUK4qggURnK1NFp9VSp2SqReAkE5YbMlRMT5Nh504PzIxI1151YDCCrvlobitFjkU/Z
- jQ0JWRfjiZACR6gyzJu6+Kg7UPofwhlhi93pnLyDcPmbirDSOynxJIE
+ bh=zQkGdDHYCbC/ziYaa0AFs4TNsDCAF/BwwDD+JF1yBcU=;
+ b=SJ6URvjXJ/bWBKBHjdjLJr0jCvokK+k9hzrEC88hLUmjD3Wb76Bd8DSSOCSXchPZEmUlbiw4z
+ pNq7DQSeQ2PDTv8yW+I1JRAvOztwDbYQl5CZNGlTZ8GjEhroE8Sp6BV
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Navneet Singh <navneet.singh@intel.com>
+Dynamic Capacity regions must limit dev dax resources to those areas
+which have extents backing real memory.  Four alternatives were
+considered to manage the intersection of region space and extents:
 
-CXL rev 3.0 section 8.2.9.2.1.5 defines the Dynamic Capacity Event Record
-Determine if the event read is a Dynamic capacity event record and
-if so trace the record for the debug purpose.
+1) Create a single region resource child on region creation which
+   reserves the entire region.  Then as extents are added punch holes in
+   this reservation.  This requires new resource manipulation to punch
+   the holes and still requires an additional iteration over the extent
+   areas which may already have existing dev dax resources used.
 
-Add DC trace points to the trace log.
+2) Maintain an ordered xarray of extents which can be queried while
+   processing the resize logic.  The issue is that existing region->res
+   children may artificially limit the allocation size sent to
+   alloc_dev_dax_range().  IE the resource children can't be directly
+   used in the resize logic to find where space in the region is.
 
-Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+3) Maintain a separate resource tree with extents.  This option is the
+   same as 2) but with a different data structure.  Most ideally we have
+   some unified representation of the resource tree.
+
+4) Create region resource children for each extent.  Manage the dax dev
+   resize logic in the same way as before but use a region child
+   (extent) resource as the parents to find space within each extent.
+
+Option 4 can leverage the existing resize algorithm to find space within
+the extents.
+
+In preparation for this change, factor out the dev_dax_resize logic.
+For static regions use dax_region->res as the parent to find space for
+the dax ranges.  Future patches will use the same algorithm with
+individual extent resources as the parent.
+
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
 ---
-[iweiny: fixups]
----
- drivers/cxl/core/mbox.c  |  5 ++++
- drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
+ drivers/dax/bus.c | 128 +++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 79 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 9d9c13e13ecf..9462c34aa1dc 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -939,6 +939,11 @@ static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 				(struct cxl_event_mem_module *)record;
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index b76e49813a39..ea7ae82b4687 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -817,11 +817,10 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
+ 	return 0;
+ }
  
- 		trace_cxl_memory_module(cxlmd, type, rec);
-+	} else if (uuid_equal(id, &dc_event_uuid)) {
-+		struct dcd_event_dyn_cap *rec =
-+				(struct dcd_event_dyn_cap *)record;
-+
-+		trace_cxl_dynamic_capacity(cxlmd, type, rec);
- 	} else {
- 		/* For unknown record types print just the header */
- 		trace_cxl_generic_event(cxlmd, type, record);
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index a0b5819bc70b..1899c5cc96b9 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -703,6 +703,71 @@ TRACE_EVENT(cxl_poison,
- 	)
- );
+-static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
+-		resource_size_t size)
++static int alloc_dev_dax_range(struct resource *parent, struct dev_dax *dev_dax,
++			       u64 start, resource_size_t size)
+ {
+ 	struct dax_region *dax_region = dev_dax->region;
+-	struct resource *res = &dax_region->res;
+ 	struct device *dev = &dev_dax->dev;
+ 	struct dev_dax_range *ranges;
+ 	unsigned long pgoff = 0;
+@@ -839,14 +838,14 @@ static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
+ 		return 0;
+ 	}
  
+-	alloc = __request_region(res, start, size, dev_name(dev), 0);
++	alloc = __request_region(parent, start, size, dev_name(dev), 0);
+ 	if (!alloc)
+ 		return -ENOMEM;
+ 
+ 	ranges = krealloc(dev_dax->ranges, sizeof(*ranges)
+ 			* (dev_dax->nr_range + 1), GFP_KERNEL);
+ 	if (!ranges) {
+-		__release_region(res, alloc->start, resource_size(alloc));
++		__release_region(parent, alloc->start, resource_size(alloc));
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -997,50 +996,45 @@ static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
+ 	return true;
+ }
+ 
+-static ssize_t dev_dax_resize(struct dax_region *dax_region,
+-		struct dev_dax *dev_dax, resource_size_t size)
 +/*
-+ * DYNAMIC CAPACITY Event Record - DER
++ * dev_dax_resize_static - Expand the device into the unused portion of the
++ * region. This may involve adjusting the end of an existing resource, or
++ * allocating a new resource.
 + *
-+ * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
++ * @parent: parent resource to allocate this range in.
++ * @dev_dax: DAX device we are creating this range for
++ * @to_alloc: amount of space to alloc; must be <= space available in @parent
++ *
++ * Return the amount of space allocated or -ERRNO on failure
 + */
-+
-+#define CXL_DC_ADD_CAPACITY			0x00
-+#define CXL_DC_REL_CAPACITY			0x01
-+#define CXL_DC_FORCED_REL_CAPACITY		0x02
-+#define CXL_DC_REG_CONF_UPDATED			0x03
-+#define show_dc_evt_type(type)	__print_symbolic(type,		\
-+	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
-+	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
-+	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
-+	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
-+)
-+
-+TRACE_EVENT(cxl_dynamic_capacity,
-+
-+	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-+		 struct dcd_event_dyn_cap  *rec),
-+
-+	TP_ARGS(cxlmd, log, rec),
-+
-+	TP_STRUCT__entry(
-+		CXL_EVT_TP_entry
-+
-+		/* Dynamic capacity Event */
-+		__field(u8, event_type)
-+		__field(u16, hostid)
-+		__field(u8, region_id)
-+		__field(u64, dpa_start)
-+		__field(u64, length)
-+		__array(u8, tag, CXL_DC_EXTENT_TAG_LEN)
-+		__field(u16, sh_extent_seq)
-+	),
-+
-+	TP_fast_assign(
-+		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-+
-+		/* Dynamic_capacity Event */
-+		__entry->event_type = rec->data.event_type;
-+
-+		/* DCD event record data */
-+		__entry->hostid = le16_to_cpu(rec->data.host_id);
-+		__entry->region_id = rec->data.region_index;
-+		__entry->dpa_start = le64_to_cpu(rec->data.extent.start_dpa);
-+		__entry->length = le64_to_cpu(rec->data.extent.length);
-+		memcpy(__entry->tag, &rec->data.extent.tag, CXL_DC_EXTENT_TAG_LEN);
-+		__entry->sh_extent_seq = le16_to_cpu(rec->data.extent.shared_extn_seq);
-+	),
-+
-+	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
-+		"starting_dpa=%llx length=%llx tag=%s " \
-+		"shared_extent_sequence=%d",
-+		show_dc_evt_type(__entry->event_type),
-+		__entry->hostid,
-+		__entry->region_id,
-+		__entry->dpa_start,
-+		__entry->length,
-+		__print_hex(__entry->tag, CXL_DC_EXTENT_TAG_LEN),
-+		__entry->sh_extent_seq
-+	)
-+);
-+
- #endif /* _CXL_EVENTS_H */
++static ssize_t dev_dax_resize_static(struct resource *parent,
++				     struct dev_dax *dev_dax,
++				     resource_size_t to_alloc)
+ {
+-	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
+-	resource_size_t dev_size = dev_dax_size(dev_dax);
+-	struct resource *region_res = &dax_region->res;
+-	struct device *dev = &dev_dax->dev;
+ 	struct resource *res, *first;
+-	resource_size_t alloc = 0;
+ 	int rc;
  
- #define TRACE_INCLUDE_FILE trace
+-	if (dev->driver)
+-		return -EBUSY;
+-	if (size == dev_size)
+-		return 0;
+-	if (size > dev_size && size - dev_size > avail)
+-		return -ENOSPC;
+-	if (size < dev_size)
+-		return dev_dax_shrink(dev_dax, size);
+-
+-	to_alloc = size - dev_size;
+-	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
+-			"resize of %pa misaligned\n", &to_alloc))
+-		return -ENXIO;
+-
+-	/*
+-	 * Expand the device into the unused portion of the region. This
+-	 * may involve adjusting the end of an existing resource, or
+-	 * allocating a new resource.
+-	 */
+-retry:
+-	first = region_res->child;
+-	if (!first)
+-		return alloc_dev_dax_range(dev_dax, dax_region->res.start, to_alloc);
++	first = parent->child;
++	if (!first) {
++		rc = alloc_dev_dax_range(parent, dev_dax,
++					   parent->start, to_alloc);
++		if (rc)
++			return rc;
++		return to_alloc;
++	}
+ 
+-	rc = -ENOSPC;
+ 	for (res = first; res; res = res->sibling) {
+ 		struct resource *next = res->sibling;
++		resource_size_t alloc;
+ 
+ 		/* space at the beginning of the region */
+-		if (res == first && res->start > dax_region->res.start) {
+-			alloc = min(res->start - dax_region->res.start, to_alloc);
+-			rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, alloc);
+-			break;
++		if (res == first && res->start > parent->start) {
++			alloc = min(res->start - parent->start, to_alloc);
++			rc = alloc_dev_dax_range(parent, dev_dax,
++						 parent->start, alloc);
++			if (rc)
++				return rc;
++			return alloc;
+ 		}
+ 
+ 		alloc = 0;
+@@ -1049,21 +1043,55 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
+ 			alloc = min(next->start - (res->end + 1), to_alloc);
+ 
+ 		/* space at the end of the region */
+-		if (!alloc && !next && res->end < region_res->end)
+-			alloc = min(region_res->end - res->end, to_alloc);
++		if (!alloc && !next && res->end < parent->end)
++			alloc = min(parent->end - res->end, to_alloc);
+ 
+ 		if (!alloc)
+ 			continue;
+ 
+ 		if (adjust_ok(dev_dax, res)) {
+ 			rc = adjust_dev_dax_range(dev_dax, res, resource_size(res) + alloc);
+-			break;
++			if (rc)
++				return rc;
++			return alloc;
+ 		}
+-		rc = alloc_dev_dax_range(dev_dax, res->end + 1, alloc);
+-		break;
++		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc);
++		if (rc)
++			return rc;
++		return alloc;
+ 	}
+-	if (rc)
+-		return rc;
++
++	/* available was already calculated and should never be an issue */
++	dev_WARN_ONCE(&dev_dax->dev, 1, "space not found?");
++	return 0;
++}
++
++static ssize_t dev_dax_resize(struct dax_region *dax_region,
++		struct dev_dax *dev_dax, resource_size_t size)
++{
++	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
++	resource_size_t dev_size = dev_dax_size(dev_dax);
++	struct device *dev = &dev_dax->dev;
++	resource_size_t alloc = 0;
++
++	if (dev->driver)
++		return -EBUSY;
++	if (size == dev_size)
++		return 0;
++	if (size > dev_size && size - dev_size > avail)
++		return -ENOSPC;
++	if (size < dev_size)
++		return dev_dax_shrink(dev_dax, size);
++
++	to_alloc = size - dev_size;
++	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
++			"resize of %pa misaligned\n", &to_alloc))
++		return -ENXIO;
++
++retry:
++	alloc = dev_dax_resize_static(&dax_region->res, dev_dax, to_alloc);
++	if (alloc <= 0)
++		return alloc;
+ 	to_alloc -= alloc;
+ 	if (to_alloc)
+ 		goto retry;
+@@ -1154,7 +1182,8 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
+ 
+ 	to_alloc = range_len(&r);
+ 	if (alloc_is_aligned(dev_dax, to_alloc))
+-		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
++		rc = alloc_dev_dax_range(&dax_region->res, dev_dax, r.start,
++					 to_alloc);
+ 	device_unlock(dev);
+ 	device_unlock(dax_region->dev);
+ 
+@@ -1371,7 +1400,8 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
+ 	device_initialize(dev);
+ 	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
+ 
+-	rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, data->size);
++	rc = alloc_dev_dax_range(&dax_region->res, dev_dax, dax_region->res.start,
++				 data->size);
+ 	if (rc)
+ 		goto err_range;
+ 
 
 -- 
 2.41.0
