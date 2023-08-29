@@ -2,49 +2,49 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C224C71153
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03897C83F2A
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235709AbjH2FYa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 01:24:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40500 "EHLO
+        id S235704AbjH2FY3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 01:24:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235666AbjH2FYP (ORCPT
+        with ESMTP id S235670AbjH2FYP (ORCPT
         <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:24:15 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E98BE198;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE03D19F;
         Mon, 28 Aug 2023 22:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693286652; x=1724822652;
+  t=1693286651; x=1724822651;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=zQkGdDHYCbC/ziYaa0AFs4TNsDCAF/BwwDD+JF1yBcU=;
-  b=fildFUE6oAaTk1pnQqDIwx2obRmkDdsUBBg7rXjjTAP60BRxk9EGL8U9
-   HREktQEYctl5k6H4gWQITFw5S+jOy5MOqiYKZk3PbBtIoSjBbb4LtVahu
-   VwhfCGBl3ax9Olml5o9mLqVUDNgkqAA4HmqjjcrA4OSYNAJnmTplUe/rY
-   LGdq+I7y9dRvNlp55NMVUOZEIVFUKFQ/YPDmAzJn1M9VvtG3rJ6pATMTA
-   s+NHuxulSJVVJF2IEsMWVeXUMvxmDJg5HU5BIkocm6Xp04VAioBhQYBVo
-   KrxxccXWGfPc+l0d9P0I+dXrZmXhaOQISRmDz4UlhVy9lFYCI5DqQyXAL
+  bh=HxC49ptcM11EQrSwTVo9fff8MdM44gflowq6hgE56Pg=;
+  b=ANtBq7GrkA5d+xk+Zku/1aVhrvBY69YA9sjdk37B/oL4GswoOTQuzRtg
+   J3Zq1EgSJw08P4xQp2lh1Sqq5iac/8L3Zrk5c17C/4kEzXkWOd8yhRrwM
+   lFd3jyqBlF8CiUa/ekkSXrd6IU7T+gUxfqW8tXq3IflGlg5MsKv7OACk6
+   8v8zaI7NGNUB5tY+bx67ADiBauvvi8786CVxGCohOl8W66ZyjvN7drUH7
+   G/SuPA6QeKqxBM/lLunhi5YRF7Jwi1Y7WRmyIW/nSk9uSSL/seR3MDHK7
+   cX+WcFx42qjUzYmSd4xrryAPp9SasH+oEiIykaCtM5EkS20USzk1holEW
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625243"
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625259"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="441625243"
+   d="scan'208";a="441625259"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:48 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556415"
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556449"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="738556415"
+   d="scan'208";a="738556449"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.37.183])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:47 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:51 -0700
 From:   Ira Weiny <ira.weiny@intel.com>
-Date:   Mon, 28 Aug 2023 22:21:04 -0700
-Subject: [PATCH RFC v2 13/18] dax/bus: Factor out dev dax resize logic
+Date:   Mon, 28 Aug 2023 22:21:07 -0700
+Subject: [PATCH RFC v2 16/18] tools/testing/cxl: Make event logs dynamic
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230604-dcd-type2-upstream-v2-13-f740c47e7916@intel.com>
+Message-Id: <20230604-dcd-type2-upstream-v2-16-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 In-Reply-To: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
@@ -58,253 +58,458 @@ Cc:     Navneet Singh <navneet.singh@intel.com>,
         Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-c6835
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=8374;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=15039;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=zQkGdDHYCbC/ziYaa0AFs4TNsDCAF/BwwDD+JF1yBcU=;
- b=SJ6URvjXJ/bWBKBHjdjLJr0jCvokK+k9hzrEC88hLUmjD3Wb76Bd8DSSOCSXchPZEmUlbiw4z
- pNq7DQSeQ2PDTv8yW+I1JRAvOztwDbYQl5CZNGlTZ8GjEhroE8Sp6BV
+ bh=HxC49ptcM11EQrSwTVo9fff8MdM44gflowq6hgE56Pg=;
+ b=acVEqavLR8gB4MiTLWbKow6gzi2Tq94v6Z32al0pOqE7ws7am0eqEqR/rHQN6urqtGZK8j8SC
+ JCsgi7SbSvFC3f9FjXWNWK5qzCZHBV5mTTiBH9qYjuBNKj5ZUnBHPSz
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dynamic Capacity regions must limit dev dax resources to those areas
-which have extents backing real memory.  Four alternatives were
-considered to manage the intersection of region space and extents:
+The test event logs were created as static arrays as an easy way to mock
+events.  Dynamic Capacity Device (DCD) test support requires events be
+created dynamically when extents are created/destroyed.
 
-1) Create a single region resource child on region creation which
-   reserves the entire region.  Then as extents are added punch holes in
-   this reservation.  This requires new resource manipulation to punch
-   the holes and still requires an additional iteration over the extent
-   areas which may already have existing dev dax resources used.
-
-2) Maintain an ordered xarray of extents which can be queried while
-   processing the resize logic.  The issue is that existing region->res
-   children may artificially limit the allocation size sent to
-   alloc_dev_dax_range().  IE the resource children can't be directly
-   used in the resize logic to find where space in the region is.
-
-3) Maintain a separate resource tree with extents.  This option is the
-   same as 2) but with a different data structure.  Most ideally we have
-   some unified representation of the resource tree.
-
-4) Create region resource children for each extent.  Manage the dax dev
-   resize logic in the same way as before but use a region child
-   (extent) resource as the parents to find space within each extent.
-
-Option 4 can leverage the existing resize algorithm to find space within
-the extents.
-
-In preparation for this change, factor out the dev_dax_resize logic.
-For static regions use dax_region->res as the parent to find space for
-the dax ranges.  Future patches will use the same algorithm with
-individual extent resources as the parent.
+Modify the event log storage to be dynamically allocated.  Thus they can
+accommodate the dynamic events required by DCD.  Reuse the static event
+data to create the dynamic events in the new logs without inventing
+complex event injection through the test sysfs.  Simplify the processing
+of the logs by using the event log array index as the handle.  Add a
+lock to manage concurrency to come with DCD extent testing.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- drivers/dax/bus.c | 128 +++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 79 insertions(+), 49 deletions(-)
+ tools/testing/cxl/test/mem.c | 276 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 170 insertions(+), 106 deletions(-)
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index b76e49813a39..ea7ae82b4687 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -817,11 +817,10 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
+diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+index 51be202fabd0..6a036c8d215d 100644
+--- a/tools/testing/cxl/test/mem.c
++++ b/tools/testing/cxl/test/mem.c
+@@ -118,18 +118,27 @@ static struct {
+ 
+ #define PASS_TRY_LIMIT 3
+ 
+-#define CXL_TEST_EVENT_CNT_MAX 15
++#define CXL_TEST_EVENT_CNT_MAX 17
+ 
+ /* Set a number of events to return at a time for simulation.  */
+ #define CXL_TEST_EVENT_CNT 3
+ 
++/*
++ * @next_handle: next handle (index) to be stored to
++ * @cur_handle: current handle (index) to be returned to the user on get_event
++ * @nr_events: total events in this log
++ * @nr_overflow: number of events added past the log size
++ * @lock: protect these state variables
++ * @events: array of pending events to be returned.
++ */
+ struct mock_event_log {
+-	u16 clear_idx;
+-	u16 cur_idx;
++	u16 next_handle;
++	u16 cur_handle;
+ 	u16 nr_events;
+ 	u16 nr_overflow;
+-	u16 overflow_reset;
+-	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX];
++	rwlock_t lock;
++	/* 1 extra slot to accommodate that handles can't be 0 */
++	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX+1];
+ };
+ 
+ struct mock_event_store {
+@@ -163,64 +172,76 @@ static struct mock_event_log *event_find_log(struct device *dev, int log_type)
+ 	return &mdata->mes.mock_logs[log_type];
+ }
+ 
+-static struct cxl_event_record_raw *event_get_current(struct mock_event_log *log)
+-{
+-	return log->events[log->cur_idx];
+-}
+-
+-static void event_reset_log(struct mock_event_log *log)
+-{
+-	log->cur_idx = 0;
+-	log->clear_idx = 0;
+-	log->nr_overflow = log->overflow_reset;
+-}
+-
+-/* Handle can never be 0 use 1 based indexing for handle */
+-static u16 event_get_clear_handle(struct mock_event_log *log)
+-{
+-	return log->clear_idx + 1;
+-}
+-
+ /* Handle can never be 0 use 1 based indexing for handle */
+-static __le16 event_get_cur_event_handle(struct mock_event_log *log)
++static void event_inc_handle(u16 *handle)
+ {
+-	u16 cur_handle = log->cur_idx + 1;
+-
+-	return cpu_to_le16(cur_handle);
+-}
+-
+-static bool event_log_empty(struct mock_event_log *log)
+-{
+-	return log->cur_idx == log->nr_events;
++	*handle = (*handle + 1) % CXL_TEST_EVENT_CNT_MAX;
++	if (!*handle)
++		*handle = *handle + 1;
+ }
+ 
++/* Add the event or free it on 'overflow' */
+ static void mes_add_event(struct mock_event_store *mes,
+ 			  enum cxl_event_log_type log_type,
+ 			  struct cxl_event_record_raw *event)
+ {
++	struct device *dev = mes->mds->cxlds.dev;
+ 	struct mock_event_log *log;
++	u16 handle;
+ 
+ 	if (WARN_ON(log_type >= CXL_EVENT_TYPE_MAX))
+ 		return;
+ 
+ 	log = &mes->mock_logs[log_type];
+ 
+-	if ((log->nr_events + 1) > CXL_TEST_EVENT_CNT_MAX) {
++	write_lock(&log->lock);
++
++	handle = log->next_handle;
++	if ((handle + 1) == log->cur_handle) {
+ 		log->nr_overflow++;
+-		log->overflow_reset = log->nr_overflow;
+-		return;
++		dev_dbg(dev, "Overflowing %d\n", log_type);
++		devm_kfree(dev, event);
++		goto unlock;
+ 	}
+ 
+-	log->events[log->nr_events] = event;
++	dev_dbg(dev, "Log %d; handle %u\n", log_type, handle);
++	event->hdr.handle = cpu_to_le16(handle);
++	log->events[handle] = event;
++	event_inc_handle(&log->next_handle);
+ 	log->nr_events++;
++
++unlock:
++	write_unlock(&log->lock);
++}
++
++static void mes_del_event(struct device *dev,
++			  struct mock_event_log *log,
++			  u16 handle)
++{
++	struct cxl_event_record_raw *cur;
++
++	lockdep_assert(lockdep_is_held(&log->lock));
++
++	dev_dbg(dev, "Clearing event %u; cur %u\n", handle, log->cur_handle);
++	cur = log->events[handle];
++	if (!cur) {
++		dev_err(dev, "Mock event index %u empty? nr_events %u",
++			handle, log->nr_events);
++		return;
++	}
++	log->events[handle] = NULL;
++
++	event_inc_handle(&log->cur_handle);
++	log->nr_events--;
++	devm_kfree(dev, cur);
+ }
+ 
+ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+ {
+ 	struct cxl_get_event_payload *pl;
+ 	struct mock_event_log *log;
+-	u16 nr_overflow;
+ 	u8 log_type;
++	u16 handle;
+ 	int i;
+ 
+ 	if (cmd->size_in != sizeof(log_type))
+@@ -233,30 +254,38 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+ 	if (log_type >= CXL_EVENT_TYPE_MAX)
+ 		return -EINVAL;
+ 
+-	memset(cmd->payload_out, 0, cmd->size_out);
+-
+ 	log = event_find_log(dev, log_type);
+-	if (!log || event_log_empty(log))
++	if (!log)
+ 		return 0;
+ 
++	memset(cmd->payload_out, 0, cmd->size_out);
+ 	pl = cmd->payload_out;
+ 
+-	for (i = 0; i < CXL_TEST_EVENT_CNT && !event_log_empty(log); i++) {
+-		memcpy(&pl->records[i], event_get_current(log),
+-		       sizeof(pl->records[i]));
+-		pl->records[i].hdr.handle = event_get_cur_event_handle(log);
+-		log->cur_idx++;
++	read_lock(&log->lock);
++
++	handle = log->cur_handle;
++	dev_dbg(dev, "Get log %d handle %u next %u\n",
++		log_type, handle, log->next_handle);
++	for (i = 0;
++	     i < CXL_TEST_EVENT_CNT && handle != log->next_handle;
++	     i++, event_inc_handle(&handle)) {
++		struct cxl_event_record_raw *cur;
++
++		cur = log->events[handle];
++		dev_dbg(dev, "Sending event log %d handle %d idx %u\n",
++			log_type, le16_to_cpu(cur->hdr.handle), handle);
++		memcpy(&pl->records[i], cur, sizeof(pl->records[i]));
+ 	}
+ 
+ 	pl->record_count = cpu_to_le16(i);
+-	if (!event_log_empty(log))
++	if (log->nr_events > i)
+ 		pl->flags |= CXL_GET_EVENT_FLAG_MORE_RECORDS;
+ 
+ 	if (log->nr_overflow) {
+ 		u64 ns;
+ 
+ 		pl->flags |= CXL_GET_EVENT_FLAG_OVERFLOW;
+-		pl->overflow_err_count = cpu_to_le16(nr_overflow);
++		pl->overflow_err_count = cpu_to_le16(log->nr_overflow);
+ 		ns = ktime_get_real_ns();
+ 		ns -= 5000000000; /* 5s ago */
+ 		pl->first_overflow_timestamp = cpu_to_le64(ns);
+@@ -265,16 +294,17 @@ static int mock_get_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+ 		pl->last_overflow_timestamp = cpu_to_le64(ns);
+ 	}
+ 
++	read_unlock(&log->lock);
  	return 0;
  }
  
--static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
--		resource_size_t size)
-+static int alloc_dev_dax_range(struct resource *parent, struct dev_dax *dev_dax,
-+			       u64 start, resource_size_t size)
+ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
  {
- 	struct dax_region *dax_region = dev_dax->region;
--	struct resource *res = &dax_region->res;
- 	struct device *dev = &dev_dax->dev;
- 	struct dev_dax_range *ranges;
- 	unsigned long pgoff = 0;
-@@ -839,14 +838,14 @@ static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
- 		return 0;
+ 	struct cxl_mbox_clear_event_payload *pl = cmd->payload_in;
+-	struct mock_event_log *log;
+ 	u8 log_type = pl->event_log;
++	struct mock_event_log *log;
++	int nr, rc = 0;
+ 	u16 handle;
+-	int nr;
+ 
+ 	if (log_type >= CXL_EVENT_TYPE_MAX)
+ 		return -EINVAL;
+@@ -283,24 +313,23 @@ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+ 	if (!log)
+ 		return 0; /* No mock data in this log */
+ 
+-	/*
+-	 * This check is technically not invalid per the specification AFAICS.
+-	 * (The host could 'guess' handles and clear them in order).
+-	 * However, this is not good behavior for the host so test it.
+-	 */
+-	if (log->clear_idx + pl->nr_recs > log->cur_idx) {
+-		dev_err(dev,
+-			"Attempting to clear more events than returned!\n");
+-		return -EINVAL;
+-	}
++	write_lock(&log->lock);
+ 
+ 	/* Check handle order prior to clearing events */
+-	for (nr = 0, handle = event_get_clear_handle(log);
+-	     nr < pl->nr_recs;
+-	     nr++, handle++) {
++	handle = log->cur_handle;
++	for (nr = 0;
++	     nr < pl->nr_recs && handle != log->next_handle;
++	     nr++, event_inc_handle(&handle)) {
++
++		dev_dbg(dev, "Checking clear of %d handle %u plhandle %u\n",
++			log_type, handle,
++			le16_to_cpu(pl->handles[nr]));
++
+ 		if (handle != le16_to_cpu(pl->handles[nr])) {
+-			dev_err(dev, "Clearing events out of order\n");
+-			return -EINVAL;
++			dev_err(dev, "Clearing events out of order %u %u\n",
++				handle, le16_to_cpu(pl->handles[nr]));
++			rc = -EINVAL;
++			goto unlock;
+ 		}
  	}
  
--	alloc = __request_region(res, start, size, dev_name(dev), 0);
-+	alloc = __request_region(parent, start, size, dev_name(dev), 0);
- 	if (!alloc)
- 		return -ENOMEM;
+@@ -308,25 +337,12 @@ static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+ 		log->nr_overflow = 0;
  
- 	ranges = krealloc(dev_dax->ranges, sizeof(*ranges)
- 			* (dev_dax->nr_range + 1), GFP_KERNEL);
- 	if (!ranges) {
--		__release_region(res, alloc->start, resource_size(alloc));
-+		__release_region(parent, alloc->start, resource_size(alloc));
- 		return -ENOMEM;
- 	}
+ 	/* Clear events */
+-	log->clear_idx += pl->nr_recs;
+-	return 0;
+-}
++	for (nr = 0; nr < pl->nr_recs; nr++)
++		mes_del_event(dev, log, le16_to_cpu(pl->handles[nr]));
  
-@@ -997,50 +996,45 @@ static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
- 	return true;
+-static void cxl_mock_event_trigger(struct device *dev)
+-{
+-	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
+-	struct mock_event_store *mes = &mdata->mes;
+-	int i;
+-
+-	for (i = CXL_EVENT_TYPE_INFO; i < CXL_EVENT_TYPE_MAX; i++) {
+-		struct mock_event_log *log;
+-
+-		log = event_find_log(dev, i);
+-		if (log)
+-			event_reset_log(log);
+-	}
+-
+-	cxl_mem_get_event_records(mes->mds, mes->ev_status);
++unlock:
++	write_unlock(&log->lock);
++	return rc;
  }
  
--static ssize_t dev_dax_resize(struct dax_region *dax_region,
--		struct dev_dax *dev_dax, resource_size_t size)
-+/*
-+ * dev_dax_resize_static - Expand the device into the unused portion of the
-+ * region. This may involve adjusting the end of an existing resource, or
-+ * allocating a new resource.
-+ *
-+ * @parent: parent resource to allocate this range in.
-+ * @dev_dax: DAX device we are creating this range for
-+ * @to_alloc: amount of space to alloc; must be <= space available in @parent
-+ *
-+ * Return the amount of space allocated or -ERRNO on failure
-+ */
-+static ssize_t dev_dax_resize_static(struct resource *parent,
-+				     struct dev_dax *dev_dax,
-+				     resource_size_t to_alloc)
- {
--	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
--	resource_size_t dev_size = dev_dax_size(dev_dax);
--	struct resource *region_res = &dax_region->res;
--	struct device *dev = &dev_dax->dev;
- 	struct resource *res, *first;
--	resource_size_t alloc = 0;
- 	int rc;
+ struct cxl_event_record_raw maint_needed = {
+@@ -429,8 +445,29 @@ static int mock_set_timestamp(struct cxl_dev_state *cxlds,
+ 	return 0;
+ }
  
--	if (dev->driver)
--		return -EBUSY;
--	if (size == dev_size)
--		return 0;
--	if (size > dev_size && size - dev_size > avail)
--		return -ENOSPC;
--	if (size < dev_size)
--		return dev_dax_shrink(dev_dax, size);
--
--	to_alloc = size - dev_size;
--	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
--			"resize of %pa misaligned\n", &to_alloc))
--		return -ENXIO;
--
--	/*
--	 * Expand the device into the unused portion of the region. This
--	 * may involve adjusting the end of an existing resource, or
--	 * allocating a new resource.
--	 */
--retry:
--	first = region_res->child;
--	if (!first)
--		return alloc_dev_dax_range(dev_dax, dax_region->res.start, to_alloc);
-+	first = parent->child;
-+	if (!first) {
-+		rc = alloc_dev_dax_range(parent, dev_dax,
-+					   parent->start, to_alloc);
-+		if (rc)
-+			return rc;
-+		return to_alloc;
-+	}
- 
--	rc = -ENOSPC;
- 	for (res = first; res; res = res->sibling) {
- 		struct resource *next = res->sibling;
-+		resource_size_t alloc;
- 
- 		/* space at the beginning of the region */
--		if (res == first && res->start > dax_region->res.start) {
--			alloc = min(res->start - dax_region->res.start, to_alloc);
--			rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, alloc);
--			break;
-+		if (res == first && res->start > parent->start) {
-+			alloc = min(res->start - parent->start, to_alloc);
-+			rc = alloc_dev_dax_range(parent, dev_dax,
-+						 parent->start, alloc);
-+			if (rc)
-+				return rc;
-+			return alloc;
- 		}
- 
- 		alloc = 0;
-@@ -1049,21 +1043,55 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
- 			alloc = min(next->start - (res->end + 1), to_alloc);
- 
- 		/* space at the end of the region */
--		if (!alloc && !next && res->end < region_res->end)
--			alloc = min(region_res->end - res->end, to_alloc);
-+		if (!alloc && !next && res->end < parent->end)
-+			alloc = min(parent->end - res->end, to_alloc);
- 
- 		if (!alloc)
- 			continue;
- 
- 		if (adjust_ok(dev_dax, res)) {
- 			rc = adjust_dev_dax_range(dev_dax, res, resource_size(res) + alloc);
--			break;
-+			if (rc)
-+				return rc;
-+			return alloc;
- 		}
--		rc = alloc_dev_dax_range(dev_dax, res->end + 1, alloc);
--		break;
-+		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc);
-+		if (rc)
-+			return rc;
-+		return alloc;
- 	}
--	if (rc)
--		return rc;
+-static void cxl_mock_add_event_logs(struct mock_event_store *mes)
++/* Create a dynamically allocated event out of a statically defined event. */
++static void add_event_from_static(struct mock_event_store *mes,
++				  enum cxl_event_log_type log_type,
++				  struct cxl_event_record_raw *raw)
++{
++	struct device *dev = mes->mds->cxlds.dev;
++	struct cxl_event_record_raw *rec;
 +
-+	/* available was already calculated and should never be an issue */
-+	dev_WARN_ONCE(&dev_dax->dev, 1, "space not found?");
-+	return 0;
++	rec = devm_kzalloc(dev, sizeof(*rec), GFP_KERNEL);
++	if (!rec) {
++		dev_err(dev, "Failed to alloc event for log\n");
++		return;
++	}
++
++	memcpy(rec, raw, sizeof(*rec));
++	mes_add_event(mes, log_type, rec);
 +}
 +
-+static ssize_t dev_dax_resize(struct dax_region *dax_region,
-+		struct dev_dax *dev_dax, resource_size_t size)
++static void cxl_mock_add_event_logs(struct cxl_mockmem_data *mdata)
+ {
++	struct mock_event_store *mes = &mdata->mes;
++	struct device *dev = mes->mds->cxlds.dev;
++
+ 	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
+ 			   &gen_media.validity_flags);
+ 
+@@ -438,43 +475,60 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+ 			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
+ 			   &dram.validity_flags);
+ 
+-	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+-	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
++	dev_dbg(dev, "Generating fake event logs %d\n",
++		CXL_EVENT_TYPE_INFO);
++	add_event_from_static(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
++	add_event_from_static(mes, CXL_EVENT_TYPE_INFO,
+ 		      (struct cxl_event_record_raw *)&gen_media);
+-	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
++	add_event_from_static(mes, CXL_EVENT_TYPE_INFO,
+ 		      (struct cxl_event_record_raw *)&mem_module);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
+ 
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
++	dev_dbg(dev, "Generating fake event logs %d\n",
++		CXL_EVENT_TYPE_FAIL);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
++		      (struct cxl_event_record_raw *)&mem_module);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+ 		      (struct cxl_event_record_raw *)&dram);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+ 		      (struct cxl_event_record_raw *)&gen_media);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+ 		      (struct cxl_event_record_raw *)&mem_module);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+ 		      (struct cxl_event_record_raw *)&dram);
+ 	/* Overflow this log */
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
+ 
+-	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+-	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
++	dev_dbg(dev, "Generating fake event logs %d\n",
++		CXL_EVENT_TYPE_FATAL);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
++	add_event_from_static(mes, CXL_EVENT_TYPE_FATAL,
+ 		      (struct cxl_event_record_raw *)&dram);
+ 	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
+ }
+ 
++static void cxl_mock_event_trigger(struct device *dev)
 +{
-+	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
-+	resource_size_t dev_size = dev_dax_size(dev_dax);
-+	struct device *dev = &dev_dax->dev;
-+	resource_size_t alloc = 0;
++	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
++	struct mock_event_store *mes = &mdata->mes;
 +
-+	if (dev->driver)
-+		return -EBUSY;
-+	if (size == dev_size)
-+		return 0;
-+	if (size > dev_size && size - dev_size > avail)
-+		return -ENOSPC;
-+	if (size < dev_size)
-+		return dev_dax_shrink(dev_dax, size);
++	cxl_mock_add_event_logs(mdata);
++	cxl_mem_get_event_records(mes->mds, mes->ev_status);
++}
 +
-+	to_alloc = size - dev_size;
-+	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
-+			"resize of %pa misaligned\n", &to_alloc))
-+		return -ENXIO;
+ static int mock_gsl(struct cxl_mbox_cmd *cmd)
+ {
+ 	if (cmd->size_out < sizeof(mock_gsl_payload))
+@@ -1391,6 +1445,14 @@ static ssize_t event_trigger_store(struct device *dev,
+ }
+ static DEVICE_ATTR_WO(event_trigger);
+ 
++static void init_event_log(struct mock_event_log *log)
++{
++	rwlock_init(&log->lock);
++	/* Handle can never be 0 use 1 based indexing for handle */
++	log->cur_handle = 1;
++	log->next_handle = 1;
++}
 +
-+retry:
-+	alloc = dev_dax_resize_static(&dax_region->res, dev_dax, to_alloc);
-+	if (alloc <= 0)
-+		return alloc;
- 	to_alloc -= alloc;
- 	if (to_alloc)
- 		goto retry;
-@@ -1154,7 +1182,8 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
+ static int __cxl_mock_mem_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1458,7 +1520,9 @@ static int __cxl_mock_mem_probe(struct platform_device *pdev)
+ 		return rc;
  
- 	to_alloc = range_len(&r);
- 	if (alloc_is_aligned(dev_dax, to_alloc))
--		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc);
-+		rc = alloc_dev_dax_range(&dax_region->res, dev_dax, r.start,
-+					 to_alloc);
- 	device_unlock(dev);
- 	device_unlock(dax_region->dev);
+ 	mdata->mes.mds = mds;
+-	cxl_mock_add_event_logs(&mdata->mes);
++	for (int i = 0; i < CXL_EVENT_TYPE_MAX; i++)
++		init_event_log(&mdata->mes.mock_logs[i]);
++	cxl_mock_add_event_logs(mdata);
  
-@@ -1371,7 +1400,8 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
- 	device_initialize(dev);
- 	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
- 
--	rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, data->size);
-+	rc = alloc_dev_dax_range(&dax_region->res, dev_dax, dax_region->res.start,
-+				 data->size);
- 	if (rc)
- 		goto err_range;
- 
+ 	cxlmd = devm_cxl_add_memdev(cxlds);
+ 	if (IS_ERR(cxlmd))
 
 -- 
 2.41.0
