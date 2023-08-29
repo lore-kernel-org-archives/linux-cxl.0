@@ -2,50 +2,50 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C046C83F22
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D1DC83F1F
 	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 05:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235679AbjH2FYZ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 01:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
+        id S235635AbjH2FYY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 01:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235652AbjH2FYI (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:24:08 -0400
+        with ESMTP id S235646AbjH2FYG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 01:24:06 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AADE19F;
-        Mon, 28 Aug 2023 22:24:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D172198;
+        Mon, 28 Aug 2023 22:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693286645; x=1724822645;
+  t=1693286642; x=1724822642;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=eqjAzrt81I+d9AMuS1dkyNzCVMovQ02UMNJu2fNRH7k=;
-  b=KeUhA/cW9TuXGx+gqvjc3Cy2kXP3W3Uoq/LVBYEdXjlu4xXD4Kp+2m9U
-   VbeVl8ttwF7edltSlXYYzA3Tyi3R8F2Arii9XGh0duxQWm18lh+eS+Oen
-   uRJt3cIAbZ5swnc7fBKd/F5SurTSFLEN4YXduEGgHGjgCqx9Ke9aCyqRK
-   1V/B4J10lYqv+GzksD/1pqv2/GlNRkYr+2fELdxsy3Ta3b5g15eVX3Ti4
-   XXErMtsXu7bRUBtiiPXAPaceMUuaaUAqEAERaR9+W9uZdoPVoffiOIz0b
-   bwioPyWkoqBqlyNE2nZ73hSWXcMScUZ8NFW5bARl6g48982l+H1LUUzg4
+  bh=vIuADnUsFOHSO13BA58d0KR02uIC0W8w3AHCzp9q8Xo=;
+  b=jqNIq26hbSB5VZ3Vg7tx+P0C+3K0+/XdXCFoJlWbQGEdaMl7WC/3qqTw
+   TPlA+ZzSplVUTuWVOLkj0ut5KaY4ph4zKiWZ2mXUcRLG6vujPO1UuSiIP
+   V4I0gzd8dkeofHX2qWGha/rLmqwh7v8tfeNm3aY7bMdagZWjk3ovPPsMe
+   Zv0I5EUrcPnj0o10+V6HyWG6gKNydBoHlYOdJbeSo+97D3sj+GjdEDru/
+   M/B4o8TzpjeNZwRVNE/f8uoW3/CtZlKGeuFdpOIWcr4Bzlfx5dDZQ12od
+   xhe8/xE8hCQzjC/HSmXzm1oWE0+N2H1XMWivj3C7nHsCyK45m9vMv1yKp
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625204"
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="441625168"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="441625204"
+   d="scan'208";a="441625168"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:38 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556355"
+X-IronPort-AV: E=McAfee;i="6600,9927,10816"; a="738556303"
 X-IronPort-AV: E=Sophos;i="6.02,208,1688454000"; 
-   d="scan'208";a="738556355"
+   d="scan'208";a="738556303"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.212.37.183])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:39 -0700
-From:   ira.weiny@intel.com
-Date:   Mon, 28 Aug 2023 22:20:58 -0700
-Subject: [PATCH RFC v2 07/18] cxl/mem: Expose device dynamic capacity
- configuration
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 22:23:32 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Mon, 28 Aug 2023 22:20:53 -0700
+Subject: [PATCH RFC v2 02/18] cxl/mbox: Flag support for Dynamic Capacity
+ Devices (DCD)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230604-dcd-type2-upstream-v2-7-f740c47e7916@intel.com>
+Message-Id: <20230604-dcd-type2-upstream-v2-2-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 In-Reply-To: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
@@ -59,178 +59,144 @@ Cc:     Navneet Singh <navneet.singh@intel.com>,
         Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
         linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13-dev-c6835
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=5256;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693286607; l=4400;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=7WyZeI7HHwXXYdsbWOXaLecKTJZGgbj+4df/Tk05OHo=;
- b=Ng6gxuVs6hObZp1XDMup9d7Jt4+YhxIKbSzV+524D2TKZYVOzwv4NsuEfZxvxWJBfvqDSV9Tp
- M+qmC/Y9zL0Bk2ciJfu5YrQNlBWD8MwP3DmnbUYE6K/2kkINQGMgDev
+ bh=vIuADnUsFOHSO13BA58d0KR02uIC0W8w3AHCzp9q8Xo=;
+ b=ie3PJYt6OSaV2n9zSkSmECkucUzBHRdfgUmTcZSiR1Fevc2wie+t4Ads+h8tsA196OllPCnDq
+ 1JEZi/vGJMDDx7UpG6v4TOGehcg2HCigjq4xAuGZI5cN27Ap7HwTUAG
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Navneet Singh <navneet.singh@intel.com>
+Per the CXL 3.0 specification software must check the Command Effects
+Log (CEL) to know if a device supports DC.  If the device does support
+DC the specifics of the DC Regions (0-7) are read through the mailbox.
 
-To properly configure CXL regions on Dynamic Capacity Devices (DCD),
-user space will need to know the details of the DC Regions available on
-a device.
-
-Expose driver dynamic capacity configuration through sysfs
-attributes.
+Flag DC Device (DCD) commands in a device if they are supported.
+Subsequent patches will key off these bits to configure a DCD.
 
 Co-developed-by: Navneet Singh <navneet.singh@intel.com>
 Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes for v2:
-[iweiny: Rebased on latest master/type2 work]
-[iweiny: add documentation for sysfs entries]
-[iweiny: s/dc_regions_count/region_count/]
-[iweiny: s/dcY_size/regionY_size/]
-[alison: change size format to %#llx]
-[iweiny: change count format to %d]
-[iweiny: Formatting updates]
-[iweiny: Fix crash when device is not a mem device: found with cxl-test]
+Changes for v2
+[iweiny: new patch]
 ---
- Documentation/ABI/testing/sysfs-bus-cxl | 17 ++++++++
- drivers/cxl/core/memdev.c               | 77 +++++++++++++++++++++++++++++++++
- 2 files changed, 94 insertions(+)
+ drivers/cxl/core/mbox.c | 38 +++++++++++++++++++++++++++++++++++---
+ drivers/cxl/cxlmem.h    | 15 +++++++++++++++
+ 2 files changed, 50 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 2268ffcdb604..aa65dc5b4e13 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -37,6 +37,23 @@ Description:
- 		identically named field in the Identify Memory Device Output
- 		Payload in the CXL-2.0 specification.
- 
-+What:		/sys/bus/cxl/devices/memX/dc/region_count
-+Date:		July, 2023
-+KernelVersion:	v6.6
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Number of Dynamic Capacity (DC) regions supported on the
-+		device.  May be 0 if the device does not support Dynamic
-+		Capacity.
-+
-+What:		/sys/bus/cxl/devices/memX/dc/regionY_size
-+Date:		July, 2023
-+KernelVersion:	v6.6
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Size of the Dynamic Capacity (DC) region Y.  Only
-+		available on devices which support DC and only for those
-+		region indexes supported by the device.
- 
- What:		/sys/bus/cxl/devices/memX/serial
- Date:		January, 2022
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 492486707fd0..397262e0ebd2 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -101,6 +101,20 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_pmem_size =
- 	__ATTR(size, 0444, pmem_size_show, NULL);
- 
-+static ssize_t region_count_show(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	int len = 0;
-+
-+	len = sysfs_emit(buf, "%d\n", mds->nr_dc_region);
-+	return len;
-+}
-+
-+struct device_attribute dev_attr_region_count =
-+	__ATTR(region_count, 0444, region_count_show, NULL);
-+
- static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -454,6 +468,62 @@ static struct attribute *cxl_memdev_security_attributes[] = {
- 	NULL,
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index f052d5f174ee..554ec97a7c39 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -111,6 +111,34 @@ static u8 security_command_sets[] = {
+ 	0x46, /* Security Passthrough */
  };
  
-+static ssize_t show_size_regionN(struct cxl_memdev *cxlmd, char *buf, int pos)
++static bool cxl_is_dcd_command(u16 opcode)
 +{
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
++#define CXL_MBOX_OP_DCD_CMDS 0x48
 +
-+	return sysfs_emit(buf, "%#llx\n", mds->dc_region[pos].decode_len);
++	return (opcode >> 8) == CXL_MBOX_OP_DCD_CMDS;
 +}
 +
-+#define REGION_SIZE_ATTR_RO(n)						\
-+static ssize_t region##n##_size_show(struct device *dev,		\
-+				     struct device_attribute *attr,	\
-+				     char *buf)				\
-+{									\
-+	return show_size_regionN(to_cxl_memdev(dev), buf, (n));		\
-+}									\
-+static DEVICE_ATTR_RO(region##n##_size)
-+REGION_SIZE_ATTR_RO(0);
-+REGION_SIZE_ATTR_RO(1);
-+REGION_SIZE_ATTR_RO(2);
-+REGION_SIZE_ATTR_RO(3);
-+REGION_SIZE_ATTR_RO(4);
-+REGION_SIZE_ATTR_RO(5);
-+REGION_SIZE_ATTR_RO(6);
-+REGION_SIZE_ATTR_RO(7);
-+
-+static struct attribute *cxl_memdev_dc_attributes[] = {
-+	&dev_attr_region0_size.attr,
-+	&dev_attr_region1_size.attr,
-+	&dev_attr_region2_size.attr,
-+	&dev_attr_region3_size.attr,
-+	&dev_attr_region4_size.attr,
-+	&dev_attr_region5_size.attr,
-+	&dev_attr_region6_size.attr,
-+	&dev_attr_region7_size.attr,
-+	&dev_attr_region_count.attr,
-+	NULL,
-+};
-+
-+static umode_t cxl_dc_visible(struct kobject *kobj, struct attribute *a, int n)
++static void cxl_set_dcd_cmd_enabled(struct cxl_memdev_state *mds,
++					u16 opcode)
 +{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+
-+	/* Not a memory device */
-+	if (!mds)
-+		return 0;
-+
-+	if (a == &dev_attr_region_count.attr)
-+		return a->mode;
-+
-+	if (n < mds->nr_dc_region)
-+		return a->mode;
-+
-+	return 0;
++	switch (opcode) {
++	case CXL_MBOX_OP_GET_DC_CONFIG:
++		set_bit(CXL_DCD_ENABLED_GET_CONFIG, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
++		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_ADD_DC_RESPONSE:
++		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, mds->dcd_cmds);
++		break;
++	case CXL_MBOX_OP_RELEASE_DC:
++		set_bit(CXL_DCD_ENABLED_RELEASE, mds->dcd_cmds);
++		break;
++	default:
++		break;
++	}
 +}
 +
- static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
- 				  int n)
+ static bool cxl_is_security_command(u16 opcode)
  {
-@@ -482,11 +552,18 @@ static struct attribute_group cxl_memdev_security_attribute_group = {
- 	.attrs = cxl_memdev_security_attributes,
+ 	int i;
+@@ -677,9 +705,10 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+ 		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+ 
+-		if (!cmd && !cxl_is_poison_command(opcode)) {
+-			dev_dbg(dev,
+-				"Opcode 0x%04x unsupported by driver\n", opcode);
++		if (!cmd && !cxl_is_poison_command(opcode) &&
++		    !cxl_is_dcd_command(opcode)) {
++			dev_dbg(dev, "Opcode 0x%04x unsupported by driver\n",
++				opcode);
+ 			continue;
+ 		}
+ 
+@@ -689,6 +718,9 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+ 		if (cxl_is_poison_command(opcode))
+ 			cxl_set_poison_cmd_enabled(&mds->poison, opcode);
+ 
++		if (cxl_is_dcd_command(opcode))
++			cxl_set_dcd_cmd_enabled(mds, opcode);
++
+ 		dev_dbg(dev, "Opcode 0x%04x enabled\n", opcode);
+ 	}
+ }
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index adfba72445fc..5f2e65204bf9 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -247,6 +247,15 @@ struct cxl_event_state {
+ 	struct mutex log_lock;
  };
  
-+static struct attribute_group cxl_memdev_dc_attribute_group = {
-+	.name = "dc",
-+	.attrs = cxl_memdev_dc_attributes,
-+	.is_visible = cxl_dc_visible,
++/* Device enabled DCD commands */
++enum dcd_cmd_enabled_bits {
++	CXL_DCD_ENABLED_GET_CONFIG,
++	CXL_DCD_ENABLED_GET_EXTENT_LIST,
++	CXL_DCD_ENABLED_ADD_RESPONSE,
++	CXL_DCD_ENABLED_RELEASE,
++	CXL_DCD_ENABLED_MAX
 +};
 +
- static const struct attribute_group *cxl_memdev_attribute_groups[] = {
- 	&cxl_memdev_attribute_group,
- 	&cxl_memdev_ram_attribute_group,
- 	&cxl_memdev_pmem_attribute_group,
- 	&cxl_memdev_security_attribute_group,
-+	&cxl_memdev_dc_attribute_group,
- 	NULL,
+ /* Device enabled poison commands */
+ enum poison_cmd_enabled_bits {
+ 	CXL_POISON_ENABLED_LIST,
+@@ -436,6 +445,7 @@ struct cxl_dev_state {
+  *                (CXL 2.0 8.2.9.5.1.1 Identify Memory Device)
+  * @mbox_mutex: Mutex to synchronize mailbox access.
+  * @firmware_version: Firmware version for the memory device.
++ * @dcd_cmds: List of DCD commands implemented by memory device
+  * @enabled_cmds: Hardware commands found enabled in CEL.
+  * @exclusive_cmds: Commands that are kernel-internal only
+  * @total_bytes: sum of all possible capacities
+@@ -460,6 +470,7 @@ struct cxl_memdev_state {
+ 	size_t lsa_size;
+ 	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+ 	char firmware_version[0x10];
++	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX);
+ 	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+ 	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+ 	u64 total_bytes;
+@@ -525,6 +536,10 @@ enum cxl_opcode {
+ 	CXL_MBOX_OP_UNLOCK		= 0x4503,
+ 	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
+ 	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
++	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
++	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
++	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
++	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
+ 	CXL_MBOX_OP_MAX			= 0x10000
  };
  
 
