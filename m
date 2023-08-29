@@ -2,171 +2,116 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5FFC83F14
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 16:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A8CC71153
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 21:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237521AbjH2Qqt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 12:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41804 "EHLO
+        id S229507AbjH2VsY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 17:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237537AbjH2Qql (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 12:46:41 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209601A1;
-        Tue, 29 Aug 2023 09:46:39 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZtWG5Wlyz67PFb;
-        Wed, 30 Aug 2023 00:42:18 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 17:46:36 +0100
-Date:   Tue, 29 Aug 2023 17:46:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+        with ESMTP id S231749AbjH2VsD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 17:48:03 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C1CD7;
+        Tue, 29 Aug 2023 14:48:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693345680; x=1724881680;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=PiPj+zZYTp3WoxOjrotjdMcnCLnciTQjwmqbXEeRGb0=;
+  b=Fb+Lemq0bJH8RmDTnH/9mm/otl9RgW+SZWUg2UDPTD9eVZNoCh9DYtWu
+   3LHTVn9vXojM/U1G907OVS93lH7YJnqe99IvNHFaxT4NKOBiYpWjgUETv
+   Ill/unjM1GW1b0AgcJoTkYkFZw8lZbqq7oFz2CNzsuoMh4lRq7eNem3QF
+   KjPQzpG+mixhl5THcFGXlmpLPj0scnlq3cBLqHnDlWPP7Kni1WV+F3zja
+   FmQ32raGjVU7ovaJh45lHWC2CAMmAhG3kXM5qi1qKar9NjHhtYW0US26Z
+   QmXcnI9bDH8PWkI/dAfWcz7YeDWaXqR4uaXGyRsc/yoIvf8aACIo0L56n
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="354996516"
+X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
+   d="scan'208";a="354996516"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:47:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="688669193"
+X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
+   d="scan'208";a="688669193"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.150.239])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:47:57 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Tue, 29 Aug 2023 14:47:46 -0700
+Subject: [PATCH] cxl/region: Clarify pointers in unregister_region()
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230829-cxl-clarify-ptrs-v1-1-40e0705c6188@intel.com>
+X-B4-Tracking: v=1; b=H4sIAIFn7mQC/x2NQQrCQAwAv1JyNlBTFqtfEQ/ZNWsDdS1JKZXSv
+ 7v1OAzDbOBiKg63ZgOTRV0/pcL51EAauLwE9VkZqKWu7emKaR0xjWyavzjN5pi7nkKIFwkUoWa
+ RXTAalzQc4Zt9FjvEZJJ1/b/uj33/AQ82MN17AAAA
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 15/18] cxl/mem: Trace Dynamic capacity Event
- Record
-Message-ID: <20230829174635.00004371@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-15-f740c47e7916@intel.com>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-15-f740c47e7916@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-c6835
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693345677; l=1534;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=PiPj+zZYTp3WoxOjrotjdMcnCLnciTQjwmqbXEeRGb0=;
+ b=PF3lyJ3yU784xODWaECpKEgdsgF5PC0YX3bJSjXd4VTluk2VIVXPBF3Fm7srfY8yiKjY6tgLp
+ hSdAB/pG5CYCVT7FsXi56UHbbzgwSwMjd8rugcMJnCtZMKqMGVfwBq0
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:21:06 -0700
-ira.weiny@intel.com wrote:
+devm_add_action_or_reset() passes a void * data parameter to the
+callback.  In the case of CXL regions, unregister_region() is passed a
+struct cxl_region *.
 
-> From: Navneet Singh <navneet.singh@intel.com>
-> 
-> CXL rev 3.0 section 8.2.9.2.1.5 defines the Dynamic Capacity Event Record
-> Determine if the event read is a Dynamic capacity event record and
-> if so trace the record for the debug purpose.
-> 
-> Add DC trace points to the trace log.
+unregister_region() incorrectly interprets this as a struct device
+pointer.  Fortunately the device structure was the first member of
+cxl_region.  Therefore the code still works.  However, should struct
+cxl_region change the bug could be subtle.
 
-Probably should say why these might be useful...
+Use the proper types in unregister_region() and extract the device
+pointer correctly.
 
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
+Cc: Ben Widawsky <bwidawsk@kernel.org>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ drivers/cxl/core/region.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> [iweiny: fixups]
-> ---
->  drivers/cxl/core/mbox.c  |  5 ++++
->  drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 70 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9d9c13e13ecf..9462c34aa1dc 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -939,6 +939,11 @@ static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
->  				(struct cxl_event_mem_module *)record;
->  
->  		trace_cxl_memory_module(cxlmd, type, rec);
-> +	} else if (uuid_equal(id, &dc_event_uuid)) {
-> +		struct dcd_event_dyn_cap *rec =
-> +				(struct dcd_event_dyn_cap *)record;
-> +
-> +		trace_cxl_dynamic_capacity(cxlmd, type, rec);
->  	} else {
->  		/* For unknown record types print just the header */
->  		trace_cxl_generic_event(cxlmd, type, record);
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index a0b5819bc70b..1899c5cc96b9 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -703,6 +703,71 @@ TRACE_EVENT(cxl_poison,
->  	)
->  );
->  
-> +/*
-> + * DYNAMIC CAPACITY Event Record - DER
-> + *
-> + * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
-> + */
-> +
-> +#define CXL_DC_ADD_CAPACITY			0x00
-> +#define CXL_DC_REL_CAPACITY			0x01
-> +#define CXL_DC_FORCED_REL_CAPACITY		0x02
-> +#define CXL_DC_REG_CONF_UPDATED			0x03
-> +#define show_dc_evt_type(type)	__print_symbolic(type,		\
-> +	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
-> +	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
-> +	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
-> +	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
-> +)
-> +
-> +TRACE_EVENT(cxl_dynamic_capacity,
-> +
-> +	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
-> +		 struct dcd_event_dyn_cap  *rec),
-> +
-> +	TP_ARGS(cxlmd, log, rec),
-> +
-> +	TP_STRUCT__entry(
-> +		CXL_EVT_TP_entry
-> +
-> +		/* Dynamic capacity Event */
-> +		__field(u8, event_type)
-> +		__field(u16, hostid)
-> +		__field(u8, region_id)
-> +		__field(u64, dpa_start)
-> +		__field(u64, length)
-> +		__array(u8, tag, CXL_DC_EXTENT_TAG_LEN)
-> +		__field(u16, sh_extent_seq)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
-> +
-> +		/* Dynamic_capacity Event */
-> +		__entry->event_type = rec->data.event_type;
-> +
-> +		/* DCD event record data */
-> +		__entry->hostid = le16_to_cpu(rec->data.host_id);
-> +		__entry->region_id = rec->data.region_index;
-> +		__entry->dpa_start = le64_to_cpu(rec->data.extent.start_dpa);
-> +		__entry->length = le64_to_cpu(rec->data.extent.length);
-> +		memcpy(__entry->tag, &rec->data.extent.tag, CXL_DC_EXTENT_TAG_LEN);
-> +		__entry->sh_extent_seq = le16_to_cpu(rec->data.extent.shared_extn_seq);
-> +	),
-> +
-> +	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
-> +		"starting_dpa=%llx length=%llx tag=%s " \
-> +		"shared_extent_sequence=%d",
-> +		show_dc_evt_type(__entry->event_type),
-> +		__entry->hostid,
-> +		__entry->region_id,
-> +		__entry->dpa_start,
-> +		__entry->length,
-> +		__print_hex(__entry->tag, CXL_DC_EXTENT_TAG_LEN),
-> +		__entry->sh_extent_seq
-> +	)
-> +);
-> +
->  #endif /* _CXL_EVENTS_H */
->  
->  #define TRACE_INCLUDE_FILE trace
-> 
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e115ba382e04..471d305ef675 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2018,10 +2018,11 @@ static struct cxl_region *to_cxl_region(struct device *dev)
+ 	return container_of(dev, struct cxl_region, dev);
+ }
+ 
+-static void unregister_region(void *dev)
++static void unregister_region(void *_cxlr)
+ {
+-	struct cxl_region *cxlr = to_cxl_region(dev);
++	struct cxl_region *cxlr = _cxlr;
+ 	struct cxl_region_params *p = &cxlr->params;
++	struct device *dev = &cxlr->dev;
+ 	int i;
+ 
+ 	device_del(dev);
+
+---
+base-commit: 1c59d383390f970b891b503b7f79b63a02db2ec5
+change-id: 20230829-cxl-clarify-ptrs-f38255b7e52b
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
 
