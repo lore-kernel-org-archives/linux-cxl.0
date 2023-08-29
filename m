@@ -2,28 +2,28 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94728C71153
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 16:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5FFC83F14
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 16:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjH2QlY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 12:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35518 "EHLO
+        id S237521AbjH2Qqt (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 12:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236025AbjH2QlE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 12:41:04 -0400
+        with ESMTP id S237537AbjH2Qql (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 12:46:41 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C8D198;
-        Tue, 29 Aug 2023 09:40:57 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZtNh3fGbz67ZCK;
-        Wed, 30 Aug 2023 00:36:36 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209601A1;
+        Tue, 29 Aug 2023 09:46:39 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZtWG5Wlyz67PFb;
+        Wed, 30 Aug 2023 00:42:18 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 17:40:54 +0100
-Date:   Tue, 29 Aug 2023 17:40:53 +0100
+ 2023 17:46:36 +0100
+Date:   Tue, 29 Aug 2023 17:46:35 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
+To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
         Navneet Singh <navneet.singh@intel.com>,
         Fan Ni <fan.ni@samsung.com>,
@@ -32,11 +32,12 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 12/18] cxl/region: Notify regions of DC changes
-Message-ID: <20230829174053.000008a1@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-12-f740c47e7916@intel.com>
+Subject: Re: [PATCH RFC v2 15/18] cxl/mem: Trace Dynamic capacity Event
+ Record
+Message-ID: <20230829174635.00004371@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-15-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-12-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-15-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -50,257 +51,122 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:21:03 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Mon, 28 Aug 2023 22:21:06 -0700
+ira.weiny@intel.com wrote:
 
-> In order for a user to use dynamic capacity effectively they need to
-> know when dynamic capacity is available.  Thus when Dynamic Capacity
-> (DC) extents are added or removed by a DC device the regions affected
-> need to be notified.  Ultimately the DAX region uses the memory
-> associated with DC extents.  However, remember that CXL DAX regions
-> maintain any interleave details between devices.
+> From: Navneet Singh <navneet.singh@intel.com>
 > 
-> When a DCD event occurs, iterate all CXL endpoint decoders and notify
-> regions which contain the endpoints affected by the event.  In turn
-> notify the DAX regions of the changes to the DAX region extents.
+> CXL rev 3.0 section 8.2.9.2.1.5 defines the Dynamic Capacity Event Record
+> Determine if the event read is a Dynamic capacity event record and
+> if so trace the record for the debug purpose.
 > 
-> For now interleave is handled by creating simple 1:1 mappings between
-> the CXL DAX region and DAX region layers.  Future implementations will
-> need to resolve when to actually surface a DAX region extent and pass
-> the notification along.
+> Add DC trace points to the trace log.
+
+Probably should say why these might be useful...
+
+
 > 
-> Remember that adding capacity is safe because there is no chance of the
-> memory being in use.  Also remember at this point releasing capacity is
-> straight forward because DAX devices do not yet have references to the
-> extents.  Future patches will handle that complication.
-> 
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-
-A few trivial comments on this.  Lot here so I'll take a closer look
-at some point after doing a light pass over the rest of the series.
-
-
-
-
-
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 80cffa40e91a..d3c4c9c87392 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -104,6 +104,55 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
->  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
->  			 cxl_debugfs_poison_clear, "%llx\n");
+> ---
+> [iweiny: fixups]
+> ---
+>  drivers/cxl/core/mbox.c  |  5 ++++
+>  drivers/cxl/core/trace.h | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 70 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 9d9c13e13ecf..9462c34aa1dc 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -939,6 +939,11 @@ static void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+>  				(struct cxl_event_mem_module *)record;
 >  
-> +static int match_ep_decoder_by_range(struct device *dev, void *data)
-> +{
-> +	struct cxl_dc_extent_data *extent = data;
-> +	struct cxl_endpoint_decoder *cxled;
+>  		trace_cxl_memory_module(cxlmd, type, rec);
+> +	} else if (uuid_equal(id, &dc_event_uuid)) {
+> +		struct dcd_event_dyn_cap *rec =
+> +				(struct dcd_event_dyn_cap *)record;
 > +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-
-blank line
-
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	return cxl_dc_extent_in_ed(cxled, extent);
-> +}
-> +
-> +static struct cxl_endpoint_decoder *cxl_find_ed(struct cxl_memdev_state *mds,
-> +						struct cxl_dc_extent_data *extent)
-> +{
-> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct device *dev;
-> +
-> +	dev = device_find_child(&endpoint->dev, extent,
-> +				match_ep_decoder_by_range);
-> +	if (!dev) {
-> +		dev_dbg(mds->cxlds.dev, "Extent DPA:%llx LEN:%llx not mapped\n",
-> +			extent->dpa_start, extent->length);
-> +		return NULL;
-> +	}
-> +
-> +	return to_cxl_endpoint_decoder(dev);
-> +}
-> +
-> +static int cxl_mem_notify(struct device *dev, struct cxl_drv_nd *nd)
-> +{
-> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_dc_extent_data *extent;
-> +	int rc = 0;
-> +
-> +	extent = nd->extent;
-> +	dev_dbg(dev, "notify DC action %d DPA:%llx LEN:%llx\n",
-> +		nd->event, extent->dpa_start, extent->length);
-> +
-> +	cxled = cxl_find_ed(mds, extent);
-> +	if (!cxled)
-> +		return 0;
-Blank line.
-
-> +	rc = cxl_ed_notify_extent(cxled, nd);
-> +	put_device(&cxled->cxld.dev);
-> +	return rc;
-> +}
-> +
->  static int cxl_mem_probe(struct device *dev)
->  {
->  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> @@ -247,6 +296,7 @@ __ATTRIBUTE_GROUPS(cxl_mem);
->  static struct cxl_driver cxl_mem_driver = {
->  	.name = "cxl_mem",
->  	.probe = cxl_mem_probe,
-> +	.notify = cxl_mem_notify,
->  	.id = CXL_DEVICE_MEMORY_EXPANDER,
->  	.drv = {
->  		.dev_groups = cxl_mem_groups,
-> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-> index 057b00b1d914..44cbd28668f1 100644
-> --- a/drivers/dax/cxl.c
-> +++ b/drivers/dax/cxl.c
-> @@ -59,6 +59,29 @@ static int cxl_dax_region_create_extent(struct dax_region *dax_region,
->  	return 0;
->  }
+> +		trace_cxl_dynamic_capacity(cxlmd, type, rec);
+>  	} else {
+>  		/* For unknown record types print just the header */
+>  		trace_cxl_generic_event(cxlmd, type, record);
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index a0b5819bc70b..1899c5cc96b9 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -703,6 +703,71 @@ TRACE_EVENT(cxl_poison,
+>  	)
+>  );
 >  
-> +static int cxl_dax_region_add_extent(struct cxl_dax_region *cxlr_dax,
-> +				     struct cxl_dr_extent *cxl_dr_ext)
-> +{
-
-Why not have this helper in the earlier patch that introduced the code
-this is factoring out?  Will reduce churn in the set whilst not much hurting
-readability of that patch.
-
-> +	/*
-> +	 * get not zero is important because this is racing with the
-> +	 * region driver which is racing with the memory device which
-> +	 * could be removing the extent at the same time.
-> +	 */
-> +	if (cxl_dr_extent_get_not_zero(cxl_dr_ext)) {
-> +		struct dax_region *dax_region;
-> +		int rc;
+> +/*
+> + * DYNAMIC CAPACITY Event Record - DER
+> + *
+> + * CXL rev 3.0 section 8.2.9.2.1.5 Table 8-47
+> + */
 > +
-> +		dax_region = dev_get_drvdata(&cxlr_dax->dev);
-> +		dev_dbg(&cxlr_dax->dev, "Creating HPA:%llx LEN:%llx\n",
-> +			cxl_dr_ext->hpa_offset, cxl_dr_ext->hpa_length);
-> +		rc = cxl_dax_region_create_extent(dax_region, cxl_dr_ext);
-> +		cxl_dr_extent_put(cxl_dr_ext);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +	return 0;
-Perhaps flip logic
-	if (!cxl_dr_extent_get_not_zero())
-		return 0;
-
-etc to reduce the code indent.
-> +}
+> +#define CXL_DC_ADD_CAPACITY			0x00
+> +#define CXL_DC_REL_CAPACITY			0x01
+> +#define CXL_DC_FORCED_REL_CAPACITY		0x02
+> +#define CXL_DC_REG_CONF_UPDATED			0x03
+> +#define show_dc_evt_type(type)	__print_symbolic(type,		\
+> +	{ CXL_DC_ADD_CAPACITY,	"Add capacity"},		\
+> +	{ CXL_DC_REL_CAPACITY,	"Release capacity"},		\
+> +	{ CXL_DC_FORCED_REL_CAPACITY,	"Forced capacity release"},	\
+> +	{ CXL_DC_REG_CONF_UPDATED,	"Region Configuration Updated"	} \
+> +)
 > +
->  static int cxl_dax_region_create_extents(struct cxl_dax_region *cxlr_dax)
->  {
->  	struct cxl_dr_extent *cxl_dr_ext;
-> @@ -66,27 +89,68 @@ static int cxl_dax_region_create_extents(struct cxl_dax_region *cxlr_dax)
+> +TRACE_EVENT(cxl_dynamic_capacity,
+> +
+> +	TP_PROTO(const struct cxl_memdev *cxlmd, enum cxl_event_log_type log,
+> +		 struct dcd_event_dyn_cap  *rec),
+> +
+> +	TP_ARGS(cxlmd, log, rec),
+> +
+> +	TP_STRUCT__entry(
+> +		CXL_EVT_TP_entry
+> +
+> +		/* Dynamic capacity Event */
+> +		__field(u8, event_type)
+> +		__field(u16, hostid)
+> +		__field(u8, region_id)
+> +		__field(u64, dpa_start)
+> +		__field(u64, length)
+> +		__array(u8, tag, CXL_DC_EXTENT_TAG_LEN)
+> +		__field(u16, sh_extent_seq)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		CXL_EVT_TP_fast_assign(cxlmd, log, rec->hdr);
+> +
+> +		/* Dynamic_capacity Event */
+> +		__entry->event_type = rec->data.event_type;
+> +
+> +		/* DCD event record data */
+> +		__entry->hostid = le16_to_cpu(rec->data.host_id);
+> +		__entry->region_id = rec->data.region_index;
+> +		__entry->dpa_start = le64_to_cpu(rec->data.extent.start_dpa);
+> +		__entry->length = le64_to_cpu(rec->data.extent.length);
+> +		memcpy(__entry->tag, &rec->data.extent.tag, CXL_DC_EXTENT_TAG_LEN);
+> +		__entry->sh_extent_seq = le16_to_cpu(rec->data.extent.shared_extn_seq);
+> +	),
+> +
+> +	CXL_EVT_TP_printk("event_type='%s' host_id='%d' region_id='%d' " \
+> +		"starting_dpa=%llx length=%llx tag=%s " \
+> +		"shared_extent_sequence=%d",
+> +		show_dc_evt_type(__entry->event_type),
+> +		__entry->hostid,
+> +		__entry->region_id,
+> +		__entry->dpa_start,
+> +		__entry->length,
+> +		__print_hex(__entry->tag, CXL_DC_EXTENT_TAG_LEN),
+> +		__entry->sh_extent_seq
+> +	)
+> +);
+> +
+>  #endif /* _CXL_EVENTS_H */
 >  
->  	dev_dbg(&cxlr_dax->dev, "Adding extents\n");
->  	xa_for_each(&cxlr_dax->extents, index, cxl_dr_ext) {
-> -		/*
-> -		 * get not zero is important because this is racing with the
-> -		 * region driver which is racing with the memory device which
-> -		 * could be removing the extent at the same time.
-> -		 */
-> -		if (cxl_dr_extent_get_not_zero(cxl_dr_ext)) {
-> -			struct dax_region *dax_region;
-> -			int rc;
-> -
-> -			dax_region = dev_get_drvdata(&cxlr_dax->dev);
-> -			dev_dbg(&cxlr_dax->dev, "Found OFF:%llx LEN:%llx\n",
-> -				cxl_dr_ext->hpa_offset, cxl_dr_ext->hpa_length);
-> -			rc = cxl_dax_region_create_extent(dax_region, cxl_dr_ext);
-> -			cxl_dr_extent_put(cxl_dr_ext);
-> -			if (rc)
-> -				return rc;
-> -		}
-> +		int rc;
-> +
-> +		rc = cxl_dax_region_add_extent(cxlr_dax, cxl_dr_ext);
-> +		if (rc)
-> +			return rc;
->  	}
->  	return 0;
->  }
->  
-> +static int match_cxl_dr_extent(struct device *dev, void *data)
-> +{
-> +	struct dax_reg_ext_dev *dr_reg_ext_dev;
-> +	struct dax_region_extent *dr_extent;
-> +
-> +	if (!is_dr_ext_dev(dev))
-> +		return 0;
-> +
-> +	dr_reg_ext_dev = to_dr_ext_dev(dev);
-> +	dr_extent = dr_reg_ext_dev->dr_extent;
-> +	return data == dr_extent->private_data;
-> +}
-> +
-> +static int cxl_dax_region_rm_extent(struct cxl_dax_region *cxlr_dax,
-> +				    struct cxl_dr_extent *cxl_dr_ext)
-> +{
-> +	struct dax_reg_ext_dev *dr_reg_ext_dev;
-> +	struct dax_region *dax_region;
-> +	struct device *dev;
-> +
-> +	dev = device_find_child(&cxlr_dax->dev, cxl_dr_ext,
-> +				match_cxl_dr_extent);
-> +	if (!dev)
-> +		return -EINVAL;
+>  #define TRACE_INCLUDE_FILE trace
+> 
 
-blank line.
-
-> +	dr_reg_ext_dev = to_dr_ext_dev(dev);
-> +	put_device(dev);
-> +	dax_region = dev_get_drvdata(&cxlr_dax->dev);
-> +	dax_region_ext_del_dev(dax_region, dr_reg_ext_dev);
-blank line
-
-> +	return 0;
-> +}
-> +
-> +static int cxl_dax_region_notify(struct device *dev,
-> +				 struct cxl_drv_nd *nd)
-> +{
-> +	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-> +	struct cxl_dr_extent *cxl_dr_ext = nd->cxl_dr_ext;
-> +	int rc = 0;
-> +
-> +	switch (nd->event) {
-> +	case DCD_ADD_CAPACITY:
-> +		rc = cxl_dax_region_add_extent(cxlr_dax, cxl_dr_ext);
-> +		break;
-
-Early returns in here will perhaps make this more readable and definitely
-make it more compact.
-
-> +	case DCD_RELEASE_CAPACITY:
-> +	case DCD_FORCED_CAPACITY_RELEASE:
-> +		rc = cxl_dax_region_rm_extent(cxlr_dax, cxl_dr_ext);
-> +		break;
-> +	default:
-> +		dev_err(&cxlr_dax->dev, "Unknown DC event %d\n", nd->event);
-> +		break;
-> +	}
-> +	return rc;
-> +}
-> +
->  static int cxl_dax_region_probe(struct device *dev)
->  {
->  	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-> @@ -134,6 +198,7 @@ static int cxl_dax_region_probe(struct device *dev)
->  static struct cxl_driver cxl_dax_region_driver = {
->  	.name = "cxl_dax_region",
->  	.probe = cxl_dax_region_probe,
-> +	.notify = cxl_dax_region_notify,
->  	.id = CXL_DEVICE_DAX_REGION,
->  	.drv = {
->  		.suppress_bind_attrs = true,
