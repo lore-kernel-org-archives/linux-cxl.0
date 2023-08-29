@@ -2,121 +2,94 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E274C83F12
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 13:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D6C71153
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 14:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236354AbjH2N6r (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 09:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        id S230359AbjH2OEI (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 10:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236627AbjH2N6c (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 09:58:32 -0400
+        with ESMTP id S236693AbjH2ODh (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 10:03:37 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4864E0;
-        Tue, 29 Aug 2023 06:58:29 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZpL74jLhz6K6Fx;
-        Tue, 29 Aug 2023 21:34:07 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAA5114;
+        Tue, 29 Aug 2023 07:03:24 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZpyj3fHJz6HJjy;
+        Tue, 29 Aug 2023 22:02:21 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 14:38:52 +0100
-Date:   Tue, 29 Aug 2023 14:38:51 +0100
+ 2023 15:03:21 +0100
+Date:   Tue, 29 Aug 2023 15:03:20 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Terry Bowman <terry.bowman@amd.com>
-CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
-        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v9 01/15] cxl/port: Pre-initialize component register
- mappings
-Message-ID: <20230829143851.00006467@Huawei.com>
-In-Reply-To: <20230825233211.3029825-2-terry.bowman@amd.com>
-References: <20230825233211.3029825-1-terry.bowman@amd.com>
-        <20230825233211.3029825-2-terry.bowman@amd.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 01/18] cxl/hdm: Debug, use decoder name function
+Message-ID: <20230829150320.00007f08@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-1-f740c47e7916@intel.com>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-1-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 25 Aug 2023 18:31:57 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+On Mon, 28 Aug 2023 22:20:52 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> From: Robert Richter <rrichter@amd.com>
-
-Hi Robert, Terry,
-
+> The decoder enum has a name conversion function defined now.
 > 
-> The component registers of a component may not exist or are not
-> needed.
-
-How do we now it's not needed in this function?
-Perhaps "may not exist." is the bit that matters in this sentence.
-
-> The setup may fail for that reason. In some cases the
-> initialization should continue anyway. Thus, always initialize struct
-> cxl_register_map with valid values. In case of errors, zero it, set a
-> value for @dev and make @resource a the valid value using
-
-make @resource CXL_RESOURCE_NONE.
-
-(not "a the")
-
-> CXL_RESOURCE_NONE.
-
-It might be worth making it clear that this will (I think) only matter
-for future usecases and isn't a fix for how this function is used today.
-
+> Use that instead of open coding.
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Otherwise seems sensible to me with one comment below.
+> Suggested-by: Navneet Singh <navneet.singh@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+
+Perhaps pull this one out so it can go upstream before the rest are ready,
+or could be picked up from here.
+
+Whilst we probably won't see the other decoder modes in here, there
+is no reason why anyone reading the code should have to figure that out.
+As such much better to use the more generic function.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/cxl/core/port.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+> Changes for v2:
+> [iweiny: new patch, split out]
+> ---
+>  drivers/cxl/core/hdm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 724be8448eb4..2d22e7a5629b 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -693,16 +693,17 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
->  static int cxl_setup_comp_regs(struct device *dev, struct cxl_register_map *map,
->  			       resource_size_t component_reg_phys)
->  {
-> -	if (component_reg_phys == CXL_RESOURCE_NONE)
-> -		return 0;
-> -
->  	*map = (struct cxl_register_map) {
->  		.dev = dev,
-> -		.reg_type = CXL_REGLOC_RBI_COMPONENT,
-
-Could set this explicitly to CXL_REGLOC_RBI_EMPTY
-which is what happens anyway, but it isn't obvious that
-0 maps to something that indicates this doesn't exist.
-
->  		.resource = component_reg_phys,
-> -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
->  	};
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index b01a77b67511..a254f79dd4e8 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -550,8 +550,7 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
 >  
-> +	if (component_reg_phys == CXL_RESOURCE_NONE)
-> +		return 0;
-> +
-> +	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
-> +	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
-> +
->  	return cxl_setup_regs(map);
->  }
->  
+>  	if (size > avail) {
+>  		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
+> -			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
+> -			&avail);
+> +			cxl_decoder_mode_name(cxled->mode), &avail);
+>  		rc = -ENOSPC;
+>  		goto out;
+>  	}
+> 
 
