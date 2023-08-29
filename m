@@ -2,28 +2,28 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BE8C83F12
-	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 15:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8BAC71153
+	for <linux-cxl@archiver.kernel.org>; Tue, 29 Aug 2023 15:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231527AbjH2PJk (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 29 Aug 2023 11:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58160 "EHLO
+        id S232167AbjH2PPE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 29 Aug 2023 11:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237152AbjH2PJ1 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 11:09:27 -0400
+        with ESMTP id S234923AbjH2POy (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 29 Aug 2023 11:14:54 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A481BD;
-        Tue, 29 Aug 2023 08:09:23 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZrM245X0z67qpK;
-        Tue, 29 Aug 2023 23:05:02 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15233BD;
+        Tue, 29 Aug 2023 08:14:52 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RZrSr75dqz6K5km;
+        Tue, 29 Aug 2023 23:10:04 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 16:09:20 +0100
-Date:   Tue, 29 Aug 2023 16:09:19 +0100
+ 2023 16:14:49 +0100
+Date:   Tue, 29 Aug 2023 16:14:49 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
+To:     <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
         Navneet Singh <navneet.singh@intel.com>,
         Fan Ni <fan.ni@samsung.com>,
@@ -32,12 +32,12 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 06/18] cxl/port: Add Dynamic Capacity size
- support to endpoint decoders
-Message-ID: <20230829160919.00007f69@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-6-f740c47e7916@intel.com>
+Subject: Re: [PATCH RFC v2 07/18] cxl/mem: Expose device dynamic capacity
+ configuration
+Message-ID: <20230829161449.00000c7a@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-7-f740c47e7916@intel.com>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-6-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-7-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -51,243 +51,185 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:20:57 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Mon, 28 Aug 2023 22:20:58 -0700
+ira.weiny@intel.com wrote:
 
-> To support Dynamic Capacity Devices (DCD) endpoint decoders will need to
-> map DC Regions (partitions).  Part of this is assigning the size of the
-> DC Region DPA to the decoder in addition to any skip value from the
-> previous decoder which exists.  This must be done within a continuous
-> DPA space.  Two complications arise with Dynamic Capacity regions which
-> did not exist with Ram and PMEM partitions.  First, gaps in the DPA
-> space can exist between and around the DC Regions.  Second, the Linux
-> resource tree does not allow a resource to be marked across existing
-> nodes within a tree.
+> From: Navneet Singh <navneet.singh@intel.com>
 > 
-> For clarity, below is an example of an 60GB device with 10GB of RAM,
-> 10GB of PMEM and 10GB for each of 2 DC Regions.  The desired CXL mapping
-> is 5GB of RAM, 5GB of PMEM, and all 10GB of DC1.
+> To properly configure CXL regions on Dynamic Capacity Devices (DCD),
+> user space will need to know the details of the DC Regions available on
+> a device.
 > 
->      DPA RANGE
->      (dpa_res)
-> 0GB        10GB       20GB       30GB       40GB       50GB       60GB
-> |----------|----------|----------|----------|----------|----------|
-> 
-> RAM         PMEM                  DC0                   DC1
->  (ram_res)  (pmem_res)            (dc_res[0])           (dc_res[1])
-> |----------|----------|   <gap>  |----------|   <gap>  |----------|
-> 
->  RAM        PMEM                                        DC1
-> |XXXXX|----|XXXXX|----|----------|----------|----------|XXXXXXXXXX|
-> 0GB   5GB  10GB  15GB 20GB       30GB       40GB       50GB       60GB
-> 
-> The previous skip resource between RAM and PMEM was always a child of
-> the RAM resource and fit nicely (see X below).  Because of this
-> simplicity this skip resource reference was not stored in any CXL state.
-> On release the skip range could be calculated based on the endpoint
-> decoders stored values.
-> 
-> Now when DC1 is being mapped 4 skip resources must be created as
-> children.  One of the PMEM resource (A), two of the parent DPA resource
-> (B,D), and one more child of the DC0 resource (C).
-> 
-> 0GB        10GB       20GB       30GB       40GB       50GB       60GB
-> |----------|----------|----------|----------|----------|----------|
->                            |                     |
-> |----------|----------|    |     |----------|    |     |----------|
->         |          |       |          |          |
->        (X)        (A)     (B)        (C)        (D)
-> 	v          v       v          v          v
-> |XXXXX|----|XXXXX|----|----------|----------|----------|XXXXXXXXXX|
->        skip       skip  skip        skip      skip
-> 
-> Expand the calculation of DPA freespace and enhance the logic to support
-> mapping/unmapping DC DPA space.  To track the potential of multiple skip
-> resources an xarray is attached to the endpoint decoder.  The existing
-> algorithm is consolidated with the new one to store a single skip
-> resource in the same way as multiple skip resources.
+> Expose driver dynamic capacity configuration through sysfs
+> attributes.
 > 
 > Co-developed-by: Navneet Singh <navneet.singh@intel.com>
 > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-
-Various minor things noticed inline.
-
-Jonathan
-
 > 
+One trivial comment inline.  I wondered a bit if it would
+be better to not present dc at all on devices that don't support
+dynamic capacity, but for now there isn't an elegant way to do that
+(some discussions and patches are flying around however so maybe this
+ will be resolved before this series merges giving us that elegant
+ option).
+
+With commented code tidied up
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
 > ---
-> An alternative of using reserve_region_with_split() was considered.
-> The advantage of that would be keeping all the resource information
-> stored solely in the resource tree rather than having separate
-> references to them.  However, it would best be implemented with a call
-> such as release_split_region() [name TBD?] which could find all the leaf
-> resources in the range and release them.  Furthermore, it is not clear
-> if reserve_region_with_split() is really intended for anything outside
-> of init code.  In the end this algorithm seems straight forward enough.
-> 
 > Changes for v2:
-> [iweiny: write commit message]
-> [iweiny: remove unneeded changes]
-> [iweiny: split from region creation patch]
-> [iweiny: Alter skip algorithm to use 'anonymous regions']
-> [iweiny: enhance debug messages]
-> [iweiny: consolidate skip resource creation]
-> [iweiny: ensure xa_destroy() is called]
-> [iweiny: consolidate region requests further]
-> [iweiny: ensure resource is released on xa_insert]
+> [iweiny: Rebased on latest master/type2 work]
+> [iweiny: add documentation for sysfs entries]
+> [iweiny: s/dc_regions_count/region_count/]
+> [iweiny: s/dcY_size/regionY_size/]
+> [alison: change size format to %#llx]
+> [iweiny: change count format to %d]
+> [iweiny: Formatting updates]
+> [iweiny: Fix crash when device is not a mem device: found with cxl-test]
 > ---
->  drivers/cxl/core/hdm.c  | 188 +++++++++++++++++++++++++++++++++++++++++++-----
->  drivers/cxl/core/port.c |   2 +
->  drivers/cxl/cxl.h       |   2 +
->  3 files changed, 176 insertions(+), 16 deletions(-)
+>  Documentation/ABI/testing/sysfs-bus-cxl | 17 ++++++++
+>  drivers/cxl/core/memdev.c               | 77 +++++++++++++++++++++++++++++++++
+>  2 files changed, 94 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 3f4af1f5fac8..3cd048677816 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-
-
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index 2268ffcdb604..aa65dc5b4e13 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -37,6 +37,23 @@ Description:
+>  		identically named field in the Identify Memory Device Output
+>  		Payload in the CXL-2.0 specification.
+>  
+> +What:		/sys/bus/cxl/devices/memX/dc/region_count
+> +Date:		July, 2023
+> +KernelVersion:	v6.6
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) Number of Dynamic Capacity (DC) regions supported on the
+> +		device.  May be 0 if the device does not support Dynamic
+> +		Capacity.
 > +
-> +static int cxl_reserve_dpa_skip(struct cxl_endpoint_decoder *cxled,
-> +				resource_size_t base, resource_size_t skipped)
+> +What:		/sys/bus/cxl/devices/memX/dc/regionY_size
+> +Date:		July, 2023
+> +KernelVersion:	v6.6
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) Size of the Dynamic Capacity (DC) region Y.  Only
+> +		available on devices which support DC and only for those
+> +		region indexes supported by the device.
+>  
+>  What:		/sys/bus/cxl/devices/memX/serial
+>  Date:		January, 2022
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 492486707fd0..397262e0ebd2 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -101,6 +101,20 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+>  static struct device_attribute dev_attr_pmem_size =
+>  	__ATTR(size, 0444, pmem_size_show, NULL);
+>  
+> +static ssize_t region_count_show(struct device *dev, struct device_attribute *attr,
+> +				 char *buf)
 > +{
-> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +	struct cxl_port *port = cxled_to_port(cxled);
-> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	resource_size_t skip_base = base - skipped;
-> +	resource_size_t size, skip_len = 0;
-> +	struct device *dev = &port->dev;
-> +	int rc, index;
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+> +	int len = 0;
 > +
-> +	size = resource_size(&cxlds->ram_res);
-> +	if (size && skip_base <= cxlds->ram_res.end) {
+> +	len = sysfs_emit(buf, "%d\n", mds->nr_dc_region);
+> +	return len;
 
-This size only used in this if statement I'd just put it inline.
- 
-> +		skip_len = cxlds->ram_res.end - skip_base + 1;
-> +		rc = cxl_request_skip(cxled, skip_base, skip_len);
-> +		if (rc)
-> +			return rc;
-> +		skip_base += skip_len;
-> +	}
+return sysfs_emit(buf, "...);
+	
+> +}
 > +
-> +	if (skip_base == base) {
-> +		dev_dbg(dev, "skip done!\n");
-
-Not sure that dbg is much help as other places below where skip also done...
-
+> +struct device_attribute dev_attr_region_count =
+> +	__ATTR(region_count, 0444, region_count_show, NULL);
+> +
+>  static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+>  {
+> @@ -454,6 +468,62 @@ static struct attribute *cxl_memdev_security_attributes[] = {
+>  	NULL,
+>  };
+>  
+> +static ssize_t show_size_regionN(struct cxl_memdev *cxlmd, char *buf, int pos)
+> +{
+> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+> +
+> +	return sysfs_emit(buf, "%#llx\n", mds->dc_region[pos].decode_len);
+> +}
+> +
+> +#define REGION_SIZE_ATTR_RO(n)						\
+> +static ssize_t region##n##_size_show(struct device *dev,		\
+> +				     struct device_attribute *attr,	\
+> +				     char *buf)				\
+> +{									\
+> +	return show_size_regionN(to_cxl_memdev(dev), buf, (n));		\
+> +}									\
+> +static DEVICE_ATTR_RO(region##n##_size)
+> +REGION_SIZE_ATTR_RO(0);
+> +REGION_SIZE_ATTR_RO(1);
+> +REGION_SIZE_ATTR_RO(2);
+> +REGION_SIZE_ATTR_RO(3);
+> +REGION_SIZE_ATTR_RO(4);
+> +REGION_SIZE_ATTR_RO(5);
+> +REGION_SIZE_ATTR_RO(6);
+> +REGION_SIZE_ATTR_RO(7);
+> +
+> +static struct attribute *cxl_memdev_dc_attributes[] = {
+> +	&dev_attr_region0_size.attr,
+> +	&dev_attr_region1_size.attr,
+> +	&dev_attr_region2_size.attr,
+> +	&dev_attr_region3_size.attr,
+> +	&dev_attr_region4_size.attr,
+> +	&dev_attr_region5_size.attr,
+> +	&dev_attr_region6_size.attr,
+> +	&dev_attr_region7_size.attr,
+> +	&dev_attr_region_count.attr,
+> +	NULL,
+> +};
+> +
+> +static umode_t cxl_dc_visible(struct kobject *kobj, struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> +	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+> +
+> +	/* Not a memory device */
+> +	if (!mds)
 > +		return 0;
-> +	}
 > +
-> +	size = resource_size(&cxlds->pmem_res);
-> +	if (size && skip_base <= cxlds->pmem_res.end) {
-
-size only used in this if statement. I'd just put
-the resource_size() bit inline.
-
-> +		skip_len = cxlds->pmem_res.end - skip_base + 1;
-> +		rc = cxl_request_skip(cxled, skip_base, skip_len);
-> +		if (rc)
-> +			return rc;
-> +		skip_base += skip_len;
-> +	}
+> +	if (a == &dev_attr_region_count.attr)
+> +		return a->mode;
 > +
-> +	index = dc_mode_to_region_index(cxled->mode);
-> +	for (int i = 0; i <= index; i++) {
-> +		struct resource *dcr = &cxlds->dc_res[i];
-> +
-> +		if (skip_base < dcr->start) {
-> +			skip_len = dcr->start - skip_base;
-> +			rc = cxl_request_skip(cxled, skip_base, skip_len);
-> +			if (rc)
-> +				return rc;
-> +			skip_base += skip_len;
-> +		}
-> +
-> +		if (skip_base == base) {
-> +			dev_dbg(dev, "skip done!\n");
-
-As above - perhaps some more info?
-
-> +			break;
-> +		}
-> +
-> +		if (resource_size(dcr) && skip_base <= dcr->end) {
-> +			if (skip_base > base)
-> +				dev_err(dev, "Skip error\n");
-
-Not return ?  If there is a reason to carry on, I'd like a comment to say what it is.
-
-> +
-> +			skip_len = dcr->end - skip_base + 1;
-> +			rc = cxl_request_skip(cxled, skip_base, skip_len);
-> +			if (rc)
-> +				return rc;
-> +			skip_base += skip_len;
-> +		}
-> +	}
+> +	if (n < mds->nr_dc_region)
+> +		return a->mode;
 > +
 > +	return 0;
 > +}
 > +
-
-
-> @@ -492,11 +607,13 @@ static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
->  					 resource_size_t *start_out,
->  					 resource_size_t *skip_out)
+>  static umode_t cxl_memdev_visible(struct kobject *kobj, struct attribute *a,
+>  				  int n)
 >  {
-> +	resource_size_t free_ram_start, free_pmem_start, free_dc_start;
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	resource_size_t free_ram_start, free_pmem_start;
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +	struct device *dev = &cxled->cxld.dev;
-
-There is one existing (I think) call to dev_dbg(cxled_dev(cxled) ...
-in this function.  So both should use that here, and should convert that one
-case to using dev.
-
->  	resource_size_t start, avail, skip;
->  	struct resource *p, *last;
-> +	int index;
+> @@ -482,11 +552,18 @@ static struct attribute_group cxl_memdev_security_attribute_group = {
+>  	.attrs = cxl_memdev_security_attributes,
+>  };
 >  
->  	lockdep_assert_held(&cxl_dpa_rwsem);
->  
-> @@ -514,6 +631,20 @@ static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
->  	else
->  		free_pmem_start = cxlds->pmem_res.start;
->  
-> +	/*
-> +	 * Limit each decoder to a single DC region to map memory with
-> +	 * different DSMAS entry.
-> +	 */
-> +	index = dc_mode_to_region_index(cxled->mode);
-> +	if (index >= 0) {
-> +		if (cxlds->dc_res[index].child) {
-> +			dev_err(dev, "Cannot allocate DPA from DC Region: %d\n",
-> +				index);
-> +			return -EINVAL;
-> +		}
-> +		free_dc_start = cxlds->dc_res[index].start;
-> +	}
+> +static struct attribute_group cxl_memdev_dc_attribute_group = {
+> +	.name = "dc",
+> +	.attrs = cxl_memdev_dc_attributes,
+> +	.is_visible = cxl_dc_visible,
+> +};
 > +
->  	if (cxled->mode == CXL_DECODER_RAM) {
->  		start = free_ram_start;
->  		avail = cxlds->ram_res.end - start + 1;
-> @@ -535,6 +666,29 @@ static resource_size_t cxl_dpa_freespace(struct cxl_endpoint_decoder *cxled,
->  		else
->  			skip_end = start - 1;
->  		skip = skip_end - skip_start + 1;
-> +	} else if (cxl_decoder_mode_is_dc(cxled->mode)) {
-> +		resource_size_t skip_start, skip_end;
-> +
-> +		start = free_dc_start;
-> +		avail = cxlds->dc_res[index].end - start + 1;
-> +		if ((resource_size(&cxlds->pmem_res) == 0) || !cxlds->pmem_res.child)
-
-Previous patch used !resource_size()
-I prefer compare with 0 like you have here, but which ever is chosen, things should
-be consistent.
-
-...
+>  static const struct attribute_group *cxl_memdev_attribute_groups[] = {
+>  	&cxl_memdev_attribute_group,
+>  	&cxl_memdev_ram_attribute_group,
+>  	&cxl_memdev_pmem_attribute_group,
+>  	&cxl_memdev_security_attribute_group,
+> +	&cxl_memdev_dc_attribute_group,
+>  	NULL,
+>  };
+>  
+> 
 
