@@ -2,104 +2,122 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A857C6FA8F
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8615EC83F1D
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244526AbjH3SxH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
+        id S245546AbjH3SxP (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Aug 2023 14:53:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243454AbjH3LDn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 07:03:43 -0400
+        with ESMTP id S244048AbjH3MXn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 08:23:43 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14091BF
-        for <linux-cxl@vger.kernel.org>; Wed, 30 Aug 2023 04:03:39 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbLrT3hGrz6K631;
-        Wed, 30 Aug 2023 18:58:49 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0D5CC5;
+        Wed, 30 Aug 2023 05:23:40 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbNj61Wk1z6HJcm;
+        Wed, 30 Aug 2023 20:22:34 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 30 Aug
- 2023 12:03:36 +0100
-Date:   Wed, 30 Aug 2023 12:03:36 +0100
+ 2023 13:23:36 +0100
+Date:   Wed, 30 Aug 2023 13:23:35 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <deepak.ukey@samsung.com>,
-        <sathya.m@samsung.com>, <d.palani@samsung.com>,
-        <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] cxl: Add Support for Get Timestamp
-Message-ID: <20230830120336.00006308@Huawei.com>
-In-Reply-To: <20230829152014.15452-1-dave@stgolabs.net>
-References: <20230829152014.15452-1-dave@stgolabs.net>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 18/18] tools/testing/cxl: Add Dynamic Capacity
+ events
+Message-ID: <20230830132335.0000162e@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-18-f740c47e7916@intel.com>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-18-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 29 Aug 2023 08:20:14 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+On Mon, 28 Aug 2023 22:21:09 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> Add the call to the UAPI such that userspace may corelate the
-> timestamps from the device log with system wall time, if, for
-> example there's any sort of inaccuracy or skew in the device.
+> OS software needs to be alerted when new extents arrive on a Dynamic
+> Capacity Device (DCD).  On test DCDs extents are added through sysfs.
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> Add events on DCD extent injection.  Directly call the event irq
+> callback to simulate irqs to process the test extents.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Trivial comments inline.
 
-Seems sensible to me.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Jonathan.Cameron@huawei.com>
 
 > ---
->  drivers/cxl/core/mbox.c      | 1 +
->  drivers/cxl/cxlmem.h         | 1 +
->  include/uapi/linux/cxl_mem.h | 1 +
->  3 files changed, 3 insertions(+)
+>  tools/testing/cxl/test/mem.c | 57 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index ca60bb8114f2..2444faac1e4c 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -63,6 +63,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
->  	CXL_CMD(GET_SHUTDOWN_STATE, 0, 0x1, 0),
->  	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
->  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
-> +	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
->  };
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index d6041a2145c5..20364fee9df9 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -2008,6 +2008,41 @@ static bool new_extent_valid(struct device *dev, size_t new_start,
+>  	return false;
+>  }
 >  
->  /*
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 706f8a6d1ef4..ec6dfcc7bb99 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -500,6 +500,7 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
->  	CXL_MBOX_OP_TRANSFER_FW		= 0x0201,
->  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
-> +	CXL_MBOX_OP_GET_TIMESTAMP	= 0x0300,
->  	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
->  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
->  	CXL_MBOX_OP_GET_LOG		= 0x0401,
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index 14bc6e742148..42066f4eb890 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -46,6 +46,7 @@
->  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
->  	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
->  	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
-> +	___C(GET_TIMESTAMP, "Get Timestamp"),                             \
->  	___C(MAX, "invalid / last command")
->  
->  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> +struct dcd_event_dyn_cap dcd_event_rec_template = {
+> +	.hdr = {
+> +		.id = UUID_INIT(0xca95afa7, 0xf183, 0x4018,
+> +				0x8c, 0x2f, 0x95, 0x26, 0x8e, 0x10, 0x1a, 0x2a),
+> +		.length = sizeof(struct dcd_event_dyn_cap),
+> +	},
+> +};
+> +
+> +static int send_dc_event(struct mock_event_store *mes, enum dc_event type,
+> +			 u64 start, u64 length, const char *tag_str)
+
+Arguably it's not sending the event, but rather adding it to the event log and
+flicking the irq. So maybe naming needs some thought?
+
+> +{
+> +	struct device *dev = mes->mds->cxlds.dev;
+> +	struct dcd_event_dyn_cap *dcd_event_rec;
+> +
+> +	dcd_event_rec = devm_kzalloc(dev, sizeof(*dcd_event_rec), GFP_KERNEL);
+> +	if (!dcd_event_rec)
+> +		return -ENOMEM;
+> +
+> +	memcpy(dcd_event_rec, &dcd_event_rec_template, sizeof(*dcd_event_rec));
+
+devm_kmemdup?
+
+> +	dcd_event_rec->data.event_type = type;
+> +	dcd_event_rec->data.extent.start_dpa = cpu_to_le64(start);
+> +	dcd_event_rec->data.extent.length = cpu_to_le64(length);
+> +	memcpy(dcd_event_rec->data.extent.tag, tag_str,
+> +	       min(sizeof(dcd_event_rec->data.extent.tag),
+> +		   strlen(tag_str)));
+> +
+> +	mes_add_event(mes, CXL_EVENT_TYPE_DCD,
+> +		      (struct cxl_event_record_raw *)dcd_event_rec);
+> +
+> +	/* Fake the irq */
+> +	cxl_mem_get_event_records(mes->mds, CXLDEV_EVENT_STATUS_DCD);
+> +
+> +	return 0;
+> +}
+> +
+
 
