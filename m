@@ -2,231 +2,115 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D0EC83F19
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4CFC83F18
 	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244180AbjH3Sww (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53044 "EHLO
+        id S244005AbjH3Swy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Aug 2023 14:52:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243904AbjH3MMF (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 08:12:05 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2F31B0;
-        Wed, 30 Aug 2023 05:12:00 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbNMs5Hhtz6J7YY;
-        Wed, 30 Aug 2023 20:07:37 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 30 Aug
- 2023 13:11:48 +0100
-Date:   Wed, 30 Aug 2023 13:11:47 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        with ESMTP id S1343636AbjH3Q2C (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 12:28:02 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 150A5B9;
+        Wed, 30 Aug 2023 09:27:58 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 437C0900F0A;
+        Wed, 30 Aug 2023 16:27:58 +0000 (UTC)
+Received: from pdx1-sub0-mail-a204.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id BD2BC9004E1;
+        Wed, 30 Aug 2023 16:27:57 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1693412877; a=rsa-sha256;
+        cv=none;
+        b=H4dTlF1ZhpSWKLwLBeyZimfRa351+sBRCe8MQuSmMwaokJR/hJ2G3qHTy/gZEgECIZDjot
+        gQSTY71NtoRmCev5fatR/B/ciXFXoEYXOLHp19V6Kvefn4/73N9BKBGoOIylITOYuWYjsc
+        gf3L6YDJKMyPD/gFumkY32S2wHEFgWY8nSZTSCdhMjyAy5TdfGiazzP5Hqyk+eNrgmZct5
+        /QB2lqOGDi5V4sqvsV3y9m85ZMwBgtMwOsTmdivQMtE3GVElX3aEmvlsreFVFFn+r+Cyxj
+        lLtcXCNPl6hiJciKdJCmyYNsOuwVUYNIO/vLKI2KHll1x8c+3pp50Ct/G7PRFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1693412877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=aRWRZ6nCWmC/bKztsak+ItGZcWnENbj+WAmkTqUrQWk=;
+        b=krRAL5y3yDkoB92zx7zibnfLi1ad/WrBpe+OIpAey+KexZewhQ1mpoWhT7cFJGB1t1y2ES
+        TdcOJNZd4tW9NQhF8oowsku2c8ROt5uw7xDccMAFS4drhw7gvUrnNcTvtaAA9P8Qm0RIO9
+        c7jTNQRQVMSDIfamFLL/PminKlNJiNKzVgkHq37Kyjs1BGdnj5XjzWX/D12pH9dxaiAKlo
+        caSxtHayDvbavQaL5X4w8K8CBiaH+y62B0Ls5eZrtCpxZaY46A27u2YNOcZiqvpH3UmTn5
+        bTLRwCtC5h3TLqAtulgSsr4NpsJsbQI8ho7HdK7hEOQxkoWjqQlnLA1V7xAk3g==
+ARC-Authentication-Results: i=1;
+        rspamd-6fd95854bb-m87fk;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Abortive-White: 033784c548e8b77a_1693412878064_951284777
+X-MC-Loop-Signature: 1693412878064:1738632074
+X-MC-Ingress-Time: 1693412878064
+Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.116.104.140 (trex/6.9.1);
+        Wed, 30 Aug 2023 16:27:58 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4RbV8F0jdHz2f;
+        Wed, 30 Aug 2023 09:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1693412877;
+        bh=aRWRZ6nCWmC/bKztsak+ItGZcWnENbj+WAmkTqUrQWk=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Y8vQDNU2V7B5Y6CgBnAqXi7lruMvKu90CJo7mM2tqOkDdvRLJiQ0Zfs4SCk0LnXcu
+         BVFL0xZ2/JNi3CR37/nnkVjlAI6I1qi85tM6ulGz8OGM8hq1nv5cLDJ+tZIa4k8gjK
+         y07QPP3tR3/6vSLWLvcouDDEiMZHGxpp2emZTjqKC4Pazo9ShfwdJqkdlMZFKZ5987
+         ZCYm9BA+ZdhplFSiFlHiVR/89973O1mHe55mEACnHb49S3yoTthz7Nqd4k7XW6bRQ2
+         Jzf02HyQ5DMMtfao5B/jvh3PZqsPgkUIXqsy7gnkkjndYp5z686tK+rPDgN25wlgA6
+         fnANXHWU07G1Q==
+Date:   Wed, 30 Aug 2023 08:48:37 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 16/18] tools/testing/cxl: Make event logs dynamic
-Message-ID: <20230830131147.000034bc@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-16-f740c47e7916@intel.com>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-16-f740c47e7916@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ben Widawsky <bwidawsk@kernel.org>
+Subject: Re: [PATCH] cxl/region: Clarify pointers in unregister_region()
+Message-ID: <uksugjuktrlak5uvbndrtho7gwhvnxe2xftwxlqg4o4bemuar2@3gyuczh6n7dq>
+References: <20230829-cxl-clarify-ptrs-v1-1-40e0705c6188@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230829-cxl-clarify-ptrs-v1-1-40e0705c6188@intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:21:07 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Tue, 29 Aug 2023, Ira Weiny wrote:
 
-> The test event logs were created as static arrays as an easy way to mock
-> events.  Dynamic Capacity Device (DCD) test support requires events be
-> created dynamically when extents are created/destroyed.
-> 
-> Modify the event log storage to be dynamically allocated.  Thus they can
-> accommodate the dynamic events required by DCD.  Reuse the static event
-> data to create the dynamic events in the new logs without inventing
-> complex event injection through the test sysfs.  Simplify the processing
-> of the logs by using the event log array index as the handle.  Add a
-> lock to manage concurrency to come with DCD extent testing.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Diff did a horrible job on readability of this patch.
+>devm_add_action_or_reset() passes a void * data parameter to the
+>callback.  In the case of CXL regions, unregister_region() is passed a
+>struct cxl_region *.
+>
+>unregister_region() incorrectly interprets this as a struct device
+>pointer.  Fortunately the device structure was the first member of
+>cxl_region.  Therefore the code still works.  However, should struct
+>cxl_region change the bug could be subtle.
+>
+>Use the proper types in unregister_region() and extract the device
+>pointer correctly.
+>
+>Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
+>Cc: Ben Widawsky <bwidawsk@kernel.org>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Ah well. Comments superficial only.
-
-Jonathan
-
-> ---
->  tools/testing/cxl/test/mem.c | 276 ++++++++++++++++++++++++++-----------------
->  1 file changed, 170 insertions(+), 106 deletions(-)
-> 
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 51be202fabd0..6a036c8d215d 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -118,18 +118,27 @@ static struct {
->  
->  #define PASS_TRY_LIMIT 3
->  
-> -#define CXL_TEST_EVENT_CNT_MAX 15
-> +#define CXL_TEST_EVENT_CNT_MAX 17
->  
->  /* Set a number of events to return at a time for simulation.  */
->  #define CXL_TEST_EVENT_CNT 3
->  
-> +/*
-> + * @next_handle: next handle (index) to be stored to
-> + * @cur_handle: current handle (index) to be returned to the user on get_event
-> + * @nr_events: total events in this log
-> + * @nr_overflow: number of events added past the log size
-> + * @lock: protect these state variables
-> + * @events: array of pending events to be returned.
-> + */
->  struct mock_event_log {
-> -	u16 clear_idx;
-> -	u16 cur_idx;
-> +	u16 next_handle;
-> +	u16 cur_handle;
->  	u16 nr_events;
->  	u16 nr_overflow;
-> -	u16 overflow_reset;
-> -	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX];
-> +	rwlock_t lock;
-> +	/* 1 extra slot to accommodate that handles can't be 0 */
-> +	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX+1];
-
-Spaces around +
-
->  };
->  
-
-...
-
-
->  
-> -static void cxl_mock_add_event_logs(struct mock_event_store *mes)
-> +/* Create a dynamically allocated event out of a statically defined event. */
-> +static void add_event_from_static(struct mock_event_store *mes,
-> +				  enum cxl_event_log_type log_type,
-> +				  struct cxl_event_record_raw *raw)
-> +{
-> +	struct device *dev = mes->mds->cxlds.dev;
-> +	struct cxl_event_record_raw *rec;
-> +
-> +	rec = devm_kzalloc(dev, sizeof(*rec), GFP_KERNEL);
-> +	if (!rec) {
-> +		dev_err(dev, "Failed to alloc event for log\n");
-> +		return;
-> +	}
-> +
-> +	memcpy(rec, raw, sizeof(*rec));
-
-devm_kmemdup()?
-
-
-> +	mes_add_event(mes, log_type, rec);
-> +}
-> +
-> +static void cxl_mock_add_event_logs(struct cxl_mockmem_data *mdata)
->  {
-> +	struct mock_event_store *mes = &mdata->mes;
-> +	struct device *dev = mes->mds->cxlds.dev;
-> +
->  	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
->  			   &gen_media.validity_flags);
->  
-> @@ -438,43 +475,60 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
->  			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
->  			   &dram.validity_flags);
->  
-> -	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
-> +	dev_dbg(dev, "Generating fake event logs %d\n",
-> +		CXL_EVENT_TYPE_INFO);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_INFO,
->  		      (struct cxl_event_record_raw *)&gen_media);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_INFO,
->  		      (struct cxl_event_record_raw *)&mem_module);
->  	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
->  
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +	dev_dbg(dev, "Generating fake event logs %d\n",
-> +		CXL_EVENT_TYPE_FAIL);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
-> +		      (struct cxl_event_record_raw *)&mem_module);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
->  		      (struct cxl_event_record_raw *)&dram);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
->  		      (struct cxl_event_record_raw *)&gen_media);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
->  		      (struct cxl_event_record_raw *)&mem_module);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
->  		      (struct cxl_event_record_raw *)&dram);
->  	/* Overflow this log */
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
->  	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
->  
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
-> -	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
-> +	dev_dbg(dev, "Generating fake event logs %d\n",
-> +		CXL_EVENT_TYPE_FATAL);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
-> +	add_event_from_static(mes, CXL_EVENT_TYPE_FATAL,
->  		      (struct cxl_event_record_raw *)&dram);
->  	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
->  }
->  
-> +static void cxl_mock_event_trigger(struct device *dev)
-> +{
-> +	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
-> +	struct mock_event_store *mes = &mdata->mes;
-> +
-> +	cxl_mock_add_event_logs(mdata);
-> +	cxl_mem_get_event_records(mes->mds, mes->ev_status);
-> +}
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
