@@ -2,120 +2,104 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E69AC83F17
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A857C6FA8F
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243680AbjH3SxE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:53:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54702 "EHLO
+        id S244526AbjH3SxH (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 30 Aug 2023 14:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244044AbjH3MUn (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 08:20:43 -0400
+        with ESMTP id S243454AbjH3LDn (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 07:03:43 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE489CC5;
-        Wed, 30 Aug 2023 05:20:40 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbNdg5rsbz6HJdJ;
-        Wed, 30 Aug 2023 20:19:35 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14091BF
+        for <linux-cxl@vger.kernel.org>; Wed, 30 Aug 2023 04:03:39 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbLrT3hGrz6K631;
+        Wed, 30 Aug 2023 18:58:49 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 30 Aug
- 2023 13:20:38 +0100
-Date:   Wed, 30 Aug 2023 13:20:37 +0100
+ 2023 12:03:36 +0100
+Date:   Wed, 30 Aug 2023 12:03:36 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 17/18] tools/testing/cxl: Add DC Regions to mock
- mem data
-Message-ID: <20230830132037.00005348@Huawei.com>
-In-Reply-To: <20230604-dcd-type2-upstream-v2-17-f740c47e7916@intel.com>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-17-f740c47e7916@intel.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <deepak.ukey@samsung.com>,
+        <sathya.m@samsung.com>, <d.palani@samsung.com>,
+        <fan.ni@samsung.com>, <a.manzanares@samsung.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH] cxl: Add Support for Get Timestamp
+Message-ID: <20230830120336.00006308@Huawei.com>
+In-Reply-To: <20230829152014.15452-1-dave@stgolabs.net>
+References: <20230829152014.15452-1-dave@stgolabs.net>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 28 Aug 2023 22:21:08 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+On Tue, 29 Aug 2023 08:20:14 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> To test DC regions the mock memory devices will need to store
-> information about the regions and manage fake extent data.
+> Add the call to the UAPI such that userspace may corelate the
+> timestamps from the device log with system wall time, if, for
+> example there's any sort of inaccuracy or skew in the device.
 > 
-> Define mock_dc_region information within the mock memory data.  Add
-> sysfs entries on the mock device to inject and delete extents.
-> 
-> The inject format is <start>:<length>:<tag>
-> The delete format is <start>
-> 
-> Add DC mailbox commands to the CEL and implement those commands.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Looks fine to me.  Totally trivial comment inline.
+Seems sensible to me.
 
-FWIW
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-
-> +
->  static int mock_gsl(struct cxl_mbox_cmd *cmd)
->  {
->  	if (cmd->size_out < sizeof(mock_gsl_payload))
-> @@ -1315,6 +1429,148 @@ static int mock_activate_fw(struct cxl_mockmem_data *mdata,
->  	return -EINVAL;
->  }
+> ---
+>  drivers/cxl/core/mbox.c      | 1 +
+>  drivers/cxl/cxlmem.h         | 1 +
+>  include/uapi/linux/cxl_mem.h | 1 +
+>  3 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index ca60bb8114f2..2444faac1e4c 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -63,6 +63,7 @@ static struct cxl_mem_command cxl_mem_commands[CXL_MEM_COMMAND_ID_MAX] = {
+>  	CXL_CMD(GET_SHUTDOWN_STATE, 0, 0x1, 0),
+>  	CXL_CMD(SET_SHUTDOWN_STATE, 0x1, 0, 0),
+>  	CXL_CMD(GET_SCAN_MEDIA_CAPS, 0x10, 0x4, 0),
+> +	CXL_CMD(GET_TIMESTAMP, 0, 0x8, 0),
+>  };
 >  
-
-Bit inconsistent on whether there are one or two blank lines between functions.
-
-> +static int mock_get_dc_config(struct device *dev,
-> +			      struct cxl_mbox_cmd *cmd)
-> +{
-> +	struct cxl_mbox_get_dc_config *dc_config = cmd->payload_in;
-> +	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
-> +	u8 region_requested, region_start_idx, region_ret_cnt;
-> +	struct cxl_mbox_dynamic_capacity *resp;
-> +
-> +	region_requested = dc_config->region_count;
-> +	if (NUM_MOCK_DC_REGIONS < region_requested)
-> +		region_requested = NUM_MOCK_DC_REGIONS;
-> +
-> +	if (cmd->size_out < struct_size(resp, region, region_requested))
-> +		return -EINVAL;
-> +
-> +	memset(cmd->payload_out, 0, cmd->size_out);
-> +	resp = cmd->payload_out;
-> +
-> +	region_start_idx = dc_config->start_region_index;
-> +	region_ret_cnt = 0;
-> +	for (int i = 0; i < NUM_MOCK_DC_REGIONS; i++) {
-> +		if (i >= region_start_idx) {
-> +			memcpy(&resp->region[region_ret_cnt],
-> +				&mdata->dc_regions[i],
-> +				sizeof(resp->region[region_ret_cnt]));
-> +			region_ret_cnt++;
-> +		}
-> +	}
-> +	resp->avail_region_count = region_ret_cnt;
-> +
-> +	dev_dbg(dev, "Returning %d dc regions\n", region_ret_cnt);
-> +	return 0;
-> +}
-
+>  /*
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 706f8a6d1ef4..ec6dfcc7bb99 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -500,6 +500,7 @@ enum cxl_opcode {
+>  	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
+>  	CXL_MBOX_OP_TRANSFER_FW		= 0x0201,
+>  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+> +	CXL_MBOX_OP_GET_TIMESTAMP	= 0x0300,
+>  	CXL_MBOX_OP_SET_TIMESTAMP	= 0x0301,
+>  	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+>  	CXL_MBOX_OP_GET_LOG		= 0x0401,
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index 14bc6e742148..42066f4eb890 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -46,6 +46,7 @@
+>  	___C(GET_SCAN_MEDIA_CAPS, "Get Scan Media Capabilities"),         \
+>  	___DEPRECATED(SCAN_MEDIA, "Scan Media"),                          \
+>  	___DEPRECATED(GET_SCAN_MEDIA, "Get Scan Media Results"),          \
+> +	___C(GET_TIMESTAMP, "Get Timestamp"),                             \
+>  	___C(MAX, "invalid / last command")
+>  
+>  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
 
