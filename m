@@ -2,99 +2,231 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993C7C83F1D
-	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D0EC83F19
+	for <linux-cxl@archiver.kernel.org>; Wed, 30 Aug 2023 18:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239171AbjH3Sww (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S244180AbjH3Sww (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Wed, 30 Aug 2023 14:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46448 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243464AbjH3LGK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 07:06:10 -0400
+        with ESMTP id S243904AbjH3MMF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 30 Aug 2023 08:12:05 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227891BF;
-        Wed, 30 Aug 2023 04:06:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2F31B0;
+        Wed, 30 Aug 2023 05:12:00 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbLvG3V1Mz6K60k;
-        Wed, 30 Aug 2023 19:01:14 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RbNMs5Hhtz6J7YY;
+        Wed, 30 Aug 2023 20:07:37 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 30 Aug
- 2023 12:06:01 +0100
-Date:   Wed, 30 Aug 2023 12:06:01 +0100
+ 2023 13:11:48 +0100
+Date:   Wed, 30 Aug 2023 13:11:47 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Davidlohr Bueso <dave@stgolabs.net>,
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ben Widawsky <bwidawsk@kernel.org>
-Subject: Re: [PATCH] cxl/region: Clarify pointers in unregister_region()
-Message-ID: <20230830120601.000043a6@Huawei.com>
-In-Reply-To: <20230829-cxl-clarify-ptrs-v1-1-40e0705c6188@intel.com>
-References: <20230829-cxl-clarify-ptrs-v1-1-40e0705c6188@intel.com>
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 16/18] tools/testing/cxl: Make event logs dynamic
+Message-ID: <20230830131147.000034bc@Huawei.com>
+In-Reply-To: <20230604-dcd-type2-upstream-v2-16-f740c47e7916@intel.com>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-16-f740c47e7916@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 29 Aug 2023 14:47:46 -0700
+On Mon, 28 Aug 2023 22:21:07 -0700
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> devm_add_action_or_reset() passes a void * data parameter to the
-> callback.  In the case of CXL regions, unregister_region() is passed a
-> struct cxl_region *.
+> The test event logs were created as static arrays as an easy way to mock
+> events.  Dynamic Capacity Device (DCD) test support requires events be
+> created dynamically when extents are created/destroyed.
 > 
-> unregister_region() incorrectly interprets this as a struct device
-> pointer.  Fortunately the device structure was the first member of
-> cxl_region.  Therefore the code still works.  However, should struct
-> cxl_region change the bug could be subtle.
+> Modify the event log storage to be dynamically allocated.  Thus they can
+> accommodate the dynamic events required by DCD.  Reuse the static event
+> data to create the dynamic events in the new logs without inventing
+> complex event injection through the test sysfs.  Simplify the processing
+> of the logs by using the event log array index as the handle.  Add a
+> lock to manage concurrency to come with DCD extent testing.
 > 
-> Use the proper types in unregister_region() and extract the device
-> pointer correctly.
-> 
-> Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
-> Cc: Ben Widawsky <bwidawsk@kernel.org>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+Diff did a horrible job on readability of this patch.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Ah well. Comments superficial only.
+
+Jonathan
 
 > ---
->  drivers/cxl/core/region.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  tools/testing/cxl/test/mem.c | 276 ++++++++++++++++++++++++++-----------------
+>  1 file changed, 170 insertions(+), 106 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e115ba382e04..471d305ef675 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2018,10 +2018,11 @@ static struct cxl_region *to_cxl_region(struct device *dev)
->  	return container_of(dev, struct cxl_region, dev);
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index 51be202fabd0..6a036c8d215d 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -118,18 +118,27 @@ static struct {
+>  
+>  #define PASS_TRY_LIMIT 3
+>  
+> -#define CXL_TEST_EVENT_CNT_MAX 15
+> +#define CXL_TEST_EVENT_CNT_MAX 17
+>  
+>  /* Set a number of events to return at a time for simulation.  */
+>  #define CXL_TEST_EVENT_CNT 3
+>  
+> +/*
+> + * @next_handle: next handle (index) to be stored to
+> + * @cur_handle: current handle (index) to be returned to the user on get_event
+> + * @nr_events: total events in this log
+> + * @nr_overflow: number of events added past the log size
+> + * @lock: protect these state variables
+> + * @events: array of pending events to be returned.
+> + */
+>  struct mock_event_log {
+> -	u16 clear_idx;
+> -	u16 cur_idx;
+> +	u16 next_handle;
+> +	u16 cur_handle;
+>  	u16 nr_events;
+>  	u16 nr_overflow;
+> -	u16 overflow_reset;
+> -	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX];
+> +	rwlock_t lock;
+> +	/* 1 extra slot to accommodate that handles can't be 0 */
+> +	struct cxl_event_record_raw *events[CXL_TEST_EVENT_CNT_MAX+1];
+
+Spaces around +
+
+>  };
+>  
+
+...
+
+
+>  
+> -static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+> +/* Create a dynamically allocated event out of a statically defined event. */
+> +static void add_event_from_static(struct mock_event_store *mes,
+> +				  enum cxl_event_log_type log_type,
+> +				  struct cxl_event_record_raw *raw)
+> +{
+> +	struct device *dev = mes->mds->cxlds.dev;
+> +	struct cxl_event_record_raw *rec;
+> +
+> +	rec = devm_kzalloc(dev, sizeof(*rec), GFP_KERNEL);
+> +	if (!rec) {
+> +		dev_err(dev, "Failed to alloc event for log\n");
+> +		return;
+> +	}
+> +
+> +	memcpy(rec, raw, sizeof(*rec));
+
+devm_kmemdup()?
+
+
+> +	mes_add_event(mes, log_type, rec);
+> +}
+> +
+> +static void cxl_mock_add_event_logs(struct cxl_mockmem_data *mdata)
+>  {
+> +	struct mock_event_store *mes = &mdata->mes;
+> +	struct device *dev = mes->mds->cxlds.dev;
+> +
+>  	put_unaligned_le16(CXL_GMER_VALID_CHANNEL | CXL_GMER_VALID_RANK,
+>  			   &gen_media.validity_flags);
+>  
+> @@ -438,43 +475,60 @@ static void cxl_mock_add_event_logs(struct mock_event_store *mes)
+>  			   CXL_DER_VALID_BANK | CXL_DER_VALID_COLUMN,
+>  			   &dram.validity_flags);
+>  
+> -	mes_add_event(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+> +	dev_dbg(dev, "Generating fake event logs %d\n",
+> +		CXL_EVENT_TYPE_INFO);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_INFO, &maint_needed);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_INFO,
+>  		      (struct cxl_event_record_raw *)&gen_media);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_INFO,
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_INFO,
+>  		      (struct cxl_event_record_raw *)&mem_module);
+>  	mes->ev_status |= CXLDEV_EVENT_STATUS_INFO;
+>  
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> +	dev_dbg(dev, "Generating fake event logs %d\n",
+> +		CXL_EVENT_TYPE_FAIL);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &maint_needed);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+> +		      (struct cxl_event_record_raw *)&mem_module);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+>  		      (struct cxl_event_record_raw *)&dram);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+>  		      (struct cxl_event_record_raw *)&gen_media);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+>  		      (struct cxl_event_record_raw *)&mem_module);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL,
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL,
+>  		      (struct cxl_event_record_raw *)&dram);
+>  	/* Overflow this log */
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FAIL, &hardware_replace);
+>  	mes->ev_status |= CXLDEV_EVENT_STATUS_FAIL;
+>  
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+> -	mes_add_event(mes, CXL_EVENT_TYPE_FATAL,
+> +	dev_dbg(dev, "Generating fake event logs %d\n",
+> +		CXL_EVENT_TYPE_FATAL);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FATAL, &hardware_replace);
+> +	add_event_from_static(mes, CXL_EVENT_TYPE_FATAL,
+>  		      (struct cxl_event_record_raw *)&dram);
+>  	mes->ev_status |= CXLDEV_EVENT_STATUS_FATAL;
 >  }
 >  
-> -static void unregister_region(void *dev)
-> +static void unregister_region(void *_cxlr)
->  {
-> -	struct cxl_region *cxlr = to_cxl_region(dev);
-> +	struct cxl_region *cxlr = _cxlr;
->  	struct cxl_region_params *p = &cxlr->params;
-> +	struct device *dev = &cxlr->dev;
->  	int i;
->  
->  	device_del(dev);
-> 
-> ---
-> base-commit: 1c59d383390f970b891b503b7f79b63a02db2ec5
-> change-id: 20230829-cxl-clarify-ptrs-f38255b7e52b
-> 
-> Best regards,
+> +static void cxl_mock_event_trigger(struct device *dev)
+> +{
+> +	struct cxl_mockmem_data *mdata = dev_get_drvdata(dev);
+> +	struct mock_event_store *mes = &mdata->mes;
+> +
+> +	cxl_mock_add_event_logs(mdata);
+> +	cxl_mem_get_event_records(mes->mds, mes->ev_status);
+> +}
 
