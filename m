@@ -2,44 +2,44 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D093C83F01
-	for <linux-cxl@archiver.kernel.org>; Thu, 31 Aug 2023 12:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0279FC83F01
+	for <linux-cxl@archiver.kernel.org>; Thu, 31 Aug 2023 12:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242037AbjHaMWu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 31 Aug 2023 08:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56142 "EHLO
+        id S242754AbjHaMoN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 31 Aug 2023 08:44:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240724AbjHaMWt (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Aug 2023 08:22:49 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A548719A;
-        Thu, 31 Aug 2023 05:22:46 -0700 (PDT)
+        with ESMTP id S242640AbjHaMoH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Aug 2023 08:44:07 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2046.outbound.protection.outlook.com [40.107.95.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9638DCDB;
+        Thu, 31 Aug 2023 05:44:04 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CUlgSbjppXLRQMYYOw9X3t84vlAZNNNu60W1fXc8xOvLZOxpmgU1YSG3LYg8fSNADKgIk/VbavgW3E0RWdL9TShcLsf2GlOYZ+QJJfCG3i7nr+oLKrlPNiDw01xyIiWFiFyXxssdVQ0sMxORV1WvCf7oMkppITbCSrupMeVUArkBb8LeT33OzP7xr6b2PlcwMNTVCBl9GDmwyt2qgdO+cLI7snlmfyvgCglKqdaEA9lAO3tyR90vulas10mJN2cmaeKFUlZ1JAqbh/AltHXnTftFtw0E0S1a/bp/aFHD66szpW3dUGtZJDVBC3cUtx3vj4/ehC8giOyqbrRRNcA9TQ==
+ b=eFl5Ms9g93ApTgNHoupzu6swP1GxNOFsfEzrl9HA2MSiLeU2zcu6obglIqowEU/t7QNRo9xs8X7CqAfPrvMDQ74kpsubAXQyqPZYuSEJt1DptWLAlhNeSUfm5Sj3rFN9ahgIZKMAjx59UCAVap4KtPPgWNhu+mUb1G4Q4RkeipXPzj3heiw2jfoX+e0KfHs2d1yzujYR618IJcCuo5gpaWPIIt3/TrNCTyT+pmUa1jrBGcKGyn1DBEOV8ul+0ZPA3a1UHdwAo0h0s+yEaTOXznoz3J+f6hOqIpCNPzC2u16Cz2HRTaF+Hjq7cn56ypJPlaWt3gcSP6xNlRN2vXteFQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sDl8HbSibBRN8VtbYHLrNZ5XJu9z5Upg5bpa+kDBpFk=;
- b=dI2ZtgajYrxmKPO37YO76Qe0kxV3WESEKPKLIX5heJmp3MVuCO9bfHbA0PdYnc0zauuhX0QQFm1EGLvtFqAPvCcu+Pjt4rMJNq1BlT2oBfHMoiI+ng+kzm/8vwRaIBekoEJak/JGloacLfv1iqCR3BuCQnKMTFLA2yHgqHpxwhog87W36pfSvNvZcG/gdZDaWaPogmFmskfD4Hdb1F2Q+c/0rTvFNZK6JZ4f7JdlE9HnOuCiEcAvfozeeejty4q0Gen51R1n0W4v1xP4vEFwwyiHtxnaYWOfkNRC2AX9SwtparWDN5R3U33Y+x2lzhNI50cPHj/XnphH893j7XbiuA==
+ bh=C9g0VfqM/vFZRPnxhSK0n8E6J2VT8EdVl/kE4eWG5Cc=;
+ b=DXjron5rJxxnt81CnyDid76Al41rBMpLaqBccSEBaI9ROFpXkKmjieFINBuE08NX8F/2FfVsQb2G3RTqUfwC/juQL8tozNoG4DthCMCu1PLqFyGGy/skaSyPGBO61GU3AU7hPzfV2ByJvLqusIwDMOzj/QAgPJoWXc6Wrmh+kCg6t+FwippS7xnsp/mnD5hWsACyiIETbOLcJzJ0rNjhow2ViZ8IyB3X1tYbgHjOF2e/2wNp2zt15pMYLrF4oUiPlA1JosKOKiW/2z5V2pPvyyjmKEZ67dr9NQlxLkN2G50CrKJxQMRj1UvEjdiuUIrNZx0q6dYbL9MV0QR/fyERqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sDl8HbSibBRN8VtbYHLrNZ5XJu9z5Upg5bpa+kDBpFk=;
- b=g0OO5KTp98Y9URoCQ0/2864fr4Va3qDMO+Vb+k74ZyM468KDrINTvimB4tOGMefECPEHP+1OiLFvuwtkXisSRe7WKbA3iFJNeOqRaN5+AT0iTWb3bNiph5N3ZpgszEISt1nPRVPwSSgHjH2hD2MrZz9v6Z2vHRkKUpNXOOilYDY=
+ bh=C9g0VfqM/vFZRPnxhSK0n8E6J2VT8EdVl/kE4eWG5Cc=;
+ b=KNtrhnKmEbu5dXkCzmIdQ3oA1IBi7jT/KI5xT6MgASa+2AgMbxSvxc2Wz3xZvM/93Kt1cec15DL1UoWVkipg9kER3duYQaqHFQkzNPcO9Q4KZRxnGTa/V1SyxgLDlJtbggrQXFFEh//mbBpsxBJdjI5tMv4Ws3fQACPq/WA2Dxs=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
- by PH0PR12MB7488.namprd12.prod.outlook.com (2603:10b6:510:1e9::17) with
+ by MW3PR12MB4363.namprd12.prod.outlook.com (2603:10b6:303:56::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.35; Thu, 31 Aug
- 2023 12:22:43 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.21; Thu, 31 Aug
+ 2023 12:44:00 +0000
 Received: from DM6PR12MB3657.namprd12.prod.outlook.com
  ([fe80::1dc1:222:24b8:16b8]) by DM6PR12MB3657.namprd12.prod.outlook.com
  ([fe80::1dc1:222:24b8:16b8%4]) with mapi id 15.20.6745.022; Thu, 31 Aug 2023
- 12:22:43 +0000
-Date:   Thu, 31 Aug 2023 14:22:35 +0200
+ 12:44:00 +0000
+Date:   Thu, 31 Aug 2023 14:43:53 +0200
 From:   Robert Richter <rrichter@amd.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
@@ -47,170 +47,201 @@ Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
         dan.j.williams@intel.com, dave.jiang@intel.com,
         linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         bhelgaas@google.com
-Subject: Re: [PATCH v9 01/15] cxl/port: Pre-initialize component register
- mappings
-Message-ID: <ZPCGCwakf3BeV7gp@rric.localdomain>
+Subject: Re: [PATCH v9 02/15] cxl/regs: Prepare for multiple users of
+ register mappings
+Message-ID: <ZPCLCSngB95EGBMk@rric.localdomain>
 References: <20230825233211.3029825-1-terry.bowman@amd.com>
- <20230825233211.3029825-2-terry.bowman@amd.com>
- <20230829143851.00006467@Huawei.com>
+ <20230825233211.3029825-3-terry.bowman@amd.com>
+ <20230829145254.00003259@Huawei.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230829143851.00006467@Huawei.com>
-X-ClientProxiedBy: FRYP281CA0002.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::12)
- To DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
+In-Reply-To: <20230829145254.00003259@Huawei.com>
+X-ClientProxiedBy: FR2P281CA0086.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9b::14) To DM6PR12MB3657.namprd12.prod.outlook.com
+ (2603:10b6:5:149::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|PH0PR12MB7488:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a846661-7720-4671-b3bd-08dbaa1cf995
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|MW3PR12MB4363:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29d57228-ba76-4ef6-8e92-08dbaa1ff2f8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aVhSxv+Uo+ngqR4P14j9Wr+K+W45mgUw/TXrT5h2kmbLrqVCrpN/nuTykdNLfw6FDNNU4zc28m/PXtO1VBofAznLkZyWTHCr3wPX8zpWyOZBCA4m1Cd8z2tcshW43EXiCbMrh0A41C1ocuRBJrfrqHDs+Sgao1BnIM3lvz3GgC149zNbqv5dCmg7BniSGNG8wf/+ZJYJieVVOgi5Ddu+8mDa5zKehRYB4TpLlVMDVZgERS3wqkJUNNCbK0WSH7Qu2cMW96sOa2sKnlvQJOgSqCvjmOzmOcnmPd4/tWFJ4w/57f4ocd41PUCI924lQwPLfW/ApCSDyTbzG1ryPoIEAx/+eUd5pTRTA0QUInyNn3fQNjpCPLhOHBgixjDSnfM84heRS2BJG9dB6xxLg1r2c7lBDpiQbBlwy+aGogKg7psVnyzoL1TGMmqxm68lrYJaJ9PxrGkq+/HiCBSj9BppSogKkub+URI60uS1DemQZEYNioTAUf/hcgQd1BSSsdHVtuo7WDmhgLzxjVcBAvwbez51EtFz7cACk7skCDXukA0+7NTZ10AEJ9AZbuB8UAXY
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(376002)(136003)(346002)(366004)(451199024)(1800799009)(186009)(6512007)(9686003)(38100700002)(41300700001)(316002)(5660300002)(4326008)(7416002)(83380400001)(26005)(8676002)(2906002)(6916009)(8936002)(6666004)(66556008)(6506007)(6486002)(66476007)(478600001)(53546011)(66946007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: XUzOjTOVyf9NEswxjf+hbAuXPRt0fkpxdKjJX9Br3N+0C01cHmvjBQvhpBYP6Z42vt0kwNZZ4XZdUDYLegqqULjDOKXFBtqQHEuZ59E8knLt+JoJKBx58EUHh8f5ktFEWIkRClxL/2uWyR4J5qbvTUtRliBGa4vcX7Mp5zPgbD/uqtNO15pXG8aHxAGyGweOxRtEIuk0QkLZnGmjYCQGuroz8gtqOMiDlpY1kx3tBIzZ8xzC6DEvuHE2BFRKosjsdNG8BI/4zlUQDwQoVg9QOwTspbFRK8ODhC9DG61tiW3HDBAbm/ld7/+VXqpDiFtpXJHOpaVFHHnYwGOx9QOMlv29KDxAIJObk19/gepflZBPXkq0Zz6aVuCjvbQCy/DY2SqfEKobnAYprRhitxaR5Dtqrf67onfnqCMhs1in7OmDP4M7RZrue5MYBegaH50N+ByHy6LsnydW8ESibGf4vZqC9kB9/hEhZ0qlH0KlZmQDwBPSA++XaS9eWk/s6quL29PuqLRYw86zVYePdeJf60VdZOynuzr8Xw6PJDzX0HlYkeboLZwqHwhp+xmhu5A1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(346002)(376002)(396003)(136003)(1800799009)(186009)(451199024)(6666004)(6486002)(6506007)(9686003)(6512007)(53546011)(478600001)(83380400001)(2906002)(26005)(7416002)(41300700001)(66476007)(6916009)(66556008)(316002)(66946007)(8936002)(8676002)(5660300002)(4326008)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wT8tFwpmx+LtXcz1JdMGUpNdDAhI2N6dMC3WOAuEhWTQs+LLF7Q+i9DJlpEv?=
- =?us-ascii?Q?IBeKl1RSG/rWtERebce0/8JmmjmYU66r1QT8X0zwaTe3A+Cx4yq37XG1fyf/?=
- =?us-ascii?Q?Y9MwaDjZVjA3g+6l0mSpES4TAL5/2cQiXTX7daA6E1FVpnYVnTrGvrlISQCU?=
- =?us-ascii?Q?WPSxkNexIhM+WTt+wISe+OBtWXnHddgiE7WA6/CQ8V5ztmi7wWK1kVa/5vlp?=
- =?us-ascii?Q?2tuLQ3CrzP1Z244x7TlIsIf1+Y4yzZr1V0vTBqom7P0rF8mXGR4omXOJpK0N?=
- =?us-ascii?Q?mYl8Twp1PyUsmwiY7CFuLn8v0vGW0VR/8rhIVg894ILHayAOP8qfslcKfeuk?=
- =?us-ascii?Q?KXN9gwdJANMeXDBJe0mXatjH92IUFTAAcYhBaHW011N+rVdd/MGv9W3dg2wO?=
- =?us-ascii?Q?fmGUCftQ6c0dCAN4XM8VwLWi0IPSEcJrFOgJvDCDmQ2GB+AjPJWY2gE6mRfz?=
- =?us-ascii?Q?c4QmZSgZXGVFxi2HlxgYYPy+loifdgdXKjO/3jDuIo7VNFlN7vrEDFobeflt?=
- =?us-ascii?Q?ZJT02eYebU/Ze2rQpTstDjCOs9sp3XyZn6+r0LpO/FJlVkjpm4xPL5bF9Mx0?=
- =?us-ascii?Q?VGodIqx4Go3h5fq7PzJP8nnrIdMcajF2s+M61EhqDPjPH4AbFA2tkGku1okZ?=
- =?us-ascii?Q?Kiu1NoPwfVRLsYkfaY4v1WHjTGmuZkMr+EfCqW4umGp7t4rj6r+qjlzWstdT?=
- =?us-ascii?Q?dwwtnnFOIg9uP8WaiahWHxHoyDk0Q1/R2dv7k/hCTAf4Qbqd0Bx3711G60W8?=
- =?us-ascii?Q?0yOGVcnLaoe2pWQgkzZZsRmKlmf5lRpfMkdsMfjmXtRjeQCZWEYyw8SxUtyr?=
- =?us-ascii?Q?r4WOQSTXN4FI5es+YDVNtcE+dKHytHvilx/4vHcBfaMdCSsxyekJ6IogTejj?=
- =?us-ascii?Q?rUUFwVpYAmP/EaaI3QOWpLdeknzv/xKNntfnmnT+0RIOhVyMhRtPsnoMbTVK?=
- =?us-ascii?Q?onxiqp56CkP9s5BnPszwb/d78fimmx9FJcSVv/C2L8jjUYIxJBEKYKkq/wyV?=
- =?us-ascii?Q?ok+D/CqOAjdcDXEuDmNDHR+VyqpvsbVMUrGYFwQzaeK41Ypk5K+pXn+01Y0j?=
- =?us-ascii?Q?qxsnKX0JZ1ylCXzZhdQ7exJ7vf94DtKYjgpfiOOnm0pFvFbRHwIyCz9ksLXv?=
- =?us-ascii?Q?8kyN5bv2bOfmJFQfpqry+yiLtjrLdco2feksv5G9OfeJ8fj5XgzcRmKwXPmW?=
- =?us-ascii?Q?7SGG8PXMM+Zd3Y4SSV5f7sW3HVPvpfi1GoEQCYpGvkUDm6OERBRgahd4SG/6?=
- =?us-ascii?Q?Degm8mu/+QRwVf3SmCV4SI9x5d2zKFQxS8XGPq+R1RDcPaR/oPdMKXlvPV1a?=
- =?us-ascii?Q?rSs1kcJPTMr4TSwYoNHr+1MWbiifb+sY08aDRAjU+VNuZRPR0esEX2VTEpvT?=
- =?us-ascii?Q?l6KA+TepyqQsIzI7lheUe1bjtaM2WBGy3uD7oMmGqWsKa3MlO5OPu96OkoCX?=
- =?us-ascii?Q?95XffX14IIMD0a0asN/7Z8uL8Ng0FVs9iqpAlpT8WPB9hhYtYhEj+7FmHQxe?=
- =?us-ascii?Q?zYeF/SFgb0KclhEmVN3fwfLsgd8nukl4Q9heRI+UrvJxk5blytwuvkYfOtha?=
- =?us-ascii?Q?8EUCoVYkVY27wGlEnLcIjZRrvI69CpNAGI/wE0vt?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HtgYaqc5uDHOvmSRkJdnEWskdNj9NPgqDhHwYi+hsz9uBoDwmNSElbSgYOT9?=
+ =?us-ascii?Q?pen0h1ZrZHMIaGZRwY5JyeiN+CispJCu6hayqhdZlmz+fAZewHw5d5aVJX6z?=
+ =?us-ascii?Q?6ieH6j+k7C2VfMX01/9jb4ml5IauFZQTHx/rx5jpG2V4uFrFUFs1cq5Egu1w?=
+ =?us-ascii?Q?7euaBVodISHi+gJAhQXl4ufDK1LDbPNYH7H28eH7tQAGan07AJ/lwFW/ijfN?=
+ =?us-ascii?Q?IcdYfHfACrf4I/ef/Krp1+t+KoPFpwp7uKI03h9hlv6il0RjFCqWZMe3k41q?=
+ =?us-ascii?Q?helfL9FXqGqJLI03rK6oroTNl/uIzlHpDrCb1eLpJ5T0UV7InWvSUR5VbPpE?=
+ =?us-ascii?Q?XZoaQdMLTWOxKJcTnEJhsCPqgNOt7LyOiAZCiqVPKFVSn+BDPtLKiKlHhg+4?=
+ =?us-ascii?Q?A0aF9G/mSXB1nx5JKsWD3CiGL8OaOArA4tv8p//fPctdZpaJRlSexK6w6s99?=
+ =?us-ascii?Q?onCtIPN1d6hsa3n2eEu/lB5Rx6ot6k99sALjP3w6fonKJVZ8+IcQ8uOlICDG?=
+ =?us-ascii?Q?3pLtXBMm6okhlWvvRNVjw1jcFMLjpNeaROcMtI0MUn92iUY6R2og4Yq3fqg7?=
+ =?us-ascii?Q?yMPL23bTTNNWkYp+OZR3p0InMlXJdjD7+etTw+CWcOyUGd1m/qZtPupysVtq?=
+ =?us-ascii?Q?/zRnt2f60MUwTvugwrNQ+5UKZTrF2PB4sP3ljdOEhsmuj23uBVd+5IjwKP5O?=
+ =?us-ascii?Q?GevaDNbA0FFwm972Q6+Rh/9D2FHTQ1icyfFtfu0Bkb252K+RBN3os0WGMjmf?=
+ =?us-ascii?Q?RaPlYzP7kE/ey8OObTDTmn6YICBowBE3wSLbkeZYO/0+AOwo/JFU0XgQOmyh?=
+ =?us-ascii?Q?25ysjtDig1GFYNV3hrJDQGd3onJYbU6/Ow/xlHd7prS69j7no9Q1Mh4ORksk?=
+ =?us-ascii?Q?GeoSuTnKz3BwrYXFwCerncdpx2cHR04qFdvh4a/ETKsyVzi1OVvVXalMO8+q?=
+ =?us-ascii?Q?boZJytu77CHwd/UdOF9KilewbkA1bC4TZ1K5qNO4wh8OUHg7DjYxEyMydTJQ?=
+ =?us-ascii?Q?Gl/EqYrinPqrx7yJcIoIwJukdUeRAxHBCh1S27ziSk8dzgIa3Mq2evXbZNHE?=
+ =?us-ascii?Q?r011zBK9uBJkzupzm+4xhal+abyZhcr+1vj/XwVq6aqbFmlJ25blqNvs9vSI?=
+ =?us-ascii?Q?S5w9cqyTm5pbXTRFkbS2JwvVdk1Erpwulfdrrck7bsNey0L5mpHFuTWeLmHr?=
+ =?us-ascii?Q?LvgywEN63Ilv6ZePOe+cGGApAHJvi2qgmm0Wo9CfuLTiId7eiFPYTu5aI/9Y?=
+ =?us-ascii?Q?NwOg5Vq7mAnQPSxZBGwsZCaYBeYV9+rQ6iXvtiEkl8ae8sh5S9Z3skAMcmqF?=
+ =?us-ascii?Q?zXQ42uOSpRzQuvwM5gV0pyT0Od4208lumb0m928n+PWoFgSAVaS+iAxy9e+Y?=
+ =?us-ascii?Q?ecvcFjhgAV2q09X0KHbGWL3bSwyRPjATvX7P99JT4GzWpZfIpD8hPF+FhP8e?=
+ =?us-ascii?Q?etZkCEPwaV0BPoPRZIhPx7RMO7nGxg5LdnIQdynTuCN0dfZVuviPt0gbGzEZ?=
+ =?us-ascii?Q?1Rgu5P7zuf2PU5QRLZ0DDlsfORZKWngUeTBtV3DpmHUFGh4IHeCqsu22Gq1m?=
+ =?us-ascii?Q?mYu1La7HmqKeBIK9V4zSFT8hoNupm0KZ1ezzzaHF?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a846661-7720-4671-b3bd-08dbaa1cf995
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29d57228-ba76-4ef6-8e92-08dbaa1ff2f8
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2023 12:22:42.9216
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2023 12:44:00.1752
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Dtitsov/XDF0J2FFPwawG2pITtk2UEqm8OqFXxMD2r9GPBg373ws8tebSS37u9m9K6fkFW1STRgoOs2u7ILLAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7488
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vs6XaXHV0IcTxfnHpaVIlJGA69nDLhBmbywcoGq0PefUus3ir3Cr7GtOmFrtlrVvT3TIpgvSPk3Y516GgIW2HA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4363
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 29.08.23 14:38:51, Jonathan Cameron wrote:
-> On Fri, 25 Aug 2023 18:31:57 -0500
+On 29.08.23 14:52:54, Jonathan Cameron wrote:
+> On Fri, 25 Aug 2023 18:31:58 -0500
 > Terry Bowman <terry.bowman@amd.com> wrote:
 > 
 > > From: Robert Richter <rrichter@amd.com>
-> 
-> Hi Robert, Terry,
-> 
 > > 
-> > The component registers of a component may not exist or are not
-> > needed.
-> 
-> How do we now it's not needed in this function?
-> Perhaps "may not exist." is the bit that matters in this sentence.
-> 
-> > The setup may fail for that reason. In some cases the
-> > initialization should continue anyway. Thus, always initialize struct
-> > cxl_register_map with valid values. In case of errors, zero it, set a
-> > value for @dev and make @resource a the valid value using
-> 
-> make @resource CXL_RESOURCE_NONE.
-> 
-> (not "a the")
-> 
-> > CXL_RESOURCE_NONE.
-> 
-> It might be worth making it clear that this will (I think) only matter
-> for future usecases and isn't a fix for how this function is used today.
-
-I reworded the whole text:
-
-"""
-The component registers of a component may not exist and
-cxl_setup_comp_regs() will fail for that reason. In another case,
-Software may not use and set those registers up. cxl_setup_comp_regs()
-is then called with a base address of CXL_RESOURCE_NONE. Both are
-valid cases, but the function returns without initializing the
-register map.
-
-Now, a missing component register block is not necessarily a reason to
-fail (feature is optional or its existence checked later). Change
-cxl_setup_comp_regs() to also use components with the component
-register block missing. Thus, always initialize struct
-cxl_register_map with valid values, set @dev and make @resource
-CXL_RESOURCE_NONE.
-
-The change is in preparation of follow-on patches.
-"""
-
-I hope that is better now.
-
-> 
+> > The function devm_cxl_iomap_block() is used to map register mappings
+> > of CXL component or device registers. A @dev is used to unmap the IO
+> > regions during device removal.
+> > 
+> > Now, there are multiple devices using the register mappings. E.g. the
+> > RAS cap of the Component Registers is used by cxl_pci, the HDM cap
+> > used in cxl_mem. This could cause IO blocks not being freed and a
+> > subsequent reinitialization to fail if the same device is used for
+> > both.
+> > 
+> > To prevent that, expand cxl_map_component_regs() to pass a @dev to be
+> > used with devm to IO unmap. This allows to pass the device that
+> > actually is creating and using the IO region.
+> > 
+> > For symmetry also change the function i/f of cxl_map_device_regs().
 > > 
 > > Signed-off-by: Robert Richter <rrichter@amd.com>
 > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Otherwise seems sensible to me with one comment below.
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> I'm not sure we should leave map->dev around after this change
+> as it's not obvious where it is valid to use and where it isn't.
 > 
-> > ---
-> >  drivers/cxl/core/port.c | 11 ++++++-----
-> >  1 file changed, 6 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index 724be8448eb4..2d22e7a5629b 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -693,16 +693,17 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
-> >  static int cxl_setup_comp_regs(struct device *dev, struct cxl_register_map *map,
-> >  			       resource_size_t component_reg_phys)
-> >  {
-> > -	if (component_reg_phys == CXL_RESOURCE_NONE)
-> > -		return 0;
-> > -
-> >  	*map = (struct cxl_register_map) {
-> >  		.dev = dev,
-> > -		.reg_type = CXL_REGLOC_RBI_COMPONENT,
-> 
-> Could set this explicitly to CXL_REGLOC_RBI_EMPTY
-> which is what happens anyway, but it isn't obvious that
-> 0 maps to something that indicates this doesn't exist.
+> Perhaps we just need to pass the device into the few calls
+> that use it other than the ones you have here.
 
-Will change that.
+I have checked that and it turned out we would need to pass @dev
+through multiple functions (see cxl_setup_regs()). So I left it in as
+devm is a special case (mis)using it.
+
+> 
+> This patch itself looks fine to me.
+
+I will take it as a Reviewed-by:?
 
 Thanks,
 
 -Robert
 
-
 > 
-> >  		.resource = component_reg_phys,
-> > -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
-> >  	};
+> Jonathan
+> 
+> > ---
+> >  drivers/cxl/core/hdm.c  | 3 ++-
+> >  drivers/cxl/core/regs.c | 4 ++--
+> >  drivers/cxl/cxl.h       | 2 ++
+> >  drivers/cxl/pci.c       | 4 ++--
+> >  4 files changed, 8 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 4449b34a80cc..17c8ba8c75e0 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -98,7 +98,8 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+> >  		return -ENODEV;
+> >  	}
 > >  
-> > +	if (component_reg_phys == CXL_RESOURCE_NONE)
-> > +		return 0;
-> > +
-> > +	map->reg_type = CXL_REGLOC_RBI_COMPONENT;
-> > +	map->max_size = CXL_COMPONENT_REG_BLOCK_SIZE;
-> > +
-> >  	return cxl_setup_regs(map);
+> > -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
+> > +	return cxl_map_component_regs(&map, &port->dev, regs,
+> > +				      BIT(CXL_CM_CAP_CAP_ID_HDM));
 > >  }
 > >  
+> >  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> > diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> > index 6281127b3e9d..dfc3e272e7d8 100644
+> > --- a/drivers/cxl/core/regs.c
+> > +++ b/drivers/cxl/core/regs.c
+> > @@ -201,10 +201,10 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+> >  }
+> >  
+> >  int cxl_map_component_regs(const struct cxl_register_map *map,
+> > +			   struct device *dev,
+> >  			   struct cxl_component_regs *regs,
+> >  			   unsigned long map_mask)
+> >  {
+> > -	struct device *dev = map->dev;
+> >  	struct mapinfo {
+> >  		const struct cxl_reg_map *rmap;
+> >  		void __iomem **addr;
+> > @@ -235,9 +235,9 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+> >  EXPORT_SYMBOL_NS_GPL(cxl_map_component_regs, CXL);
+> >  
+> >  int cxl_map_device_regs(const struct cxl_register_map *map,
+> > +			struct device *dev,
+> >  			struct cxl_device_regs *regs)
+> >  {
+> > -	struct device *dev = map->dev;
+> >  	resource_size_t phys_addr = map->resource;
+> >  	struct mapinfo {
+> >  		const struct cxl_reg_map *rmap;
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 76d92561af29..ec8ba9ebcf64 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -274,9 +274,11 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+> >  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+> >  			   struct cxl_device_reg_map *map);
+> >  int cxl_map_component_regs(const struct cxl_register_map *map,
+> > +			   struct device *dev,
+> >  			   struct cxl_component_regs *regs,
+> >  			   unsigned long map_mask);
+> >  int cxl_map_device_regs(const struct cxl_register_map *map,
+> > +			struct device *dev,
+> >  			struct cxl_device_regs *regs);
+> >  int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
+> >  		     struct cxl_register_map *map);
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 48f88d96029d..88ddcff8a0b2 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -827,7 +827,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	rc = cxl_map_device_regs(&map, &cxlds->regs.device_regs);
+> > +	rc = cxl_map_device_regs(&map, cxlds->dev, &cxlds->regs.device_regs);
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > @@ -844,7 +844,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  
+> >  	cxlds->component_reg_phys = map.resource;
+> >  
+> > -	rc = cxl_map_component_regs(&map, &cxlds->regs.component,
+> > +	rc = cxl_map_component_regs(&map, cxlds->dev, &cxlds->regs.component,
+> >  				    BIT(CXL_CM_CAP_CAP_ID_RAS));
+> >  	if (rc)
+> >  		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
 > 
