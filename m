@@ -2,187 +2,189 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1576C83F2F
-	for <linux-cxl@archiver.kernel.org>; Thu, 31 Aug 2023 17:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A5BC83F2F
+	for <linux-cxl@archiver.kernel.org>; Thu, 31 Aug 2023 17:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239828AbjHaRBd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 31 Aug 2023 13:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
+        id S245687AbjHaRDD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 31 Aug 2023 13:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236107AbjHaRBc (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Aug 2023 13:01:32 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B85CD1;
-        Thu, 31 Aug 2023 10:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
- s=s31663417; t=1693501265; x=1694106065; i=fan.ni@gmx.us;
- bh=12xJbrsFviKVQ6obHknRx+VPF50PuuJTDbIVzk6hhXQ=;
- h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=Vxf9y1yoqlziysECGrBWWhHShju+yas7a0zOHisUbhz1Gikj3nwN/n8W1w5ulS6JrzsNt2q
- pP5U44vrqo5yAVTEV5bQxpk7JvmQArOqFP1o7q+J5XU8e80mmg4yFglvUWdNUaF2B6F9+I94z
- qo+qn7bU8Ur85pmj0xVJO9JsSZQjYyOPUfQD9LE+2HyKxkOcaiX+YuUpBxTCzpPXcwTnoodCu
- HHT7SNjtw+kc0rkMVD3ix9a/Gh53RW3wXT0woIYJbM9hGk6qmwsz5wSYRY+49squyVU6GM17X
- M0UGv9lYCieKnMVW2+MYbN7lLh9G6wsVwAe9j3ENQqxSx80Q53Aw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1M2O2Q-1qfbrS2TF8-003uwQ; Thu, 31
- Aug 2023 19:01:05 +0200
-Date:   Thu, 31 Aug 2023 10:00:50 -0700
-From:   Fan Ni <fan.ni@gmx.us>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 04/18] cxl/region: Add Dynamic Capacity decoder
- and region modes
-Message-ID: <ZPDHQnLctLmRIxaS@debian>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
- <20230604-dcd-type2-upstream-v2-4-f740c47e7916@intel.com>
+        with ESMTP id S236107AbjHaRDC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Aug 2023 13:03:02 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2088.outbound.protection.outlook.com [40.107.243.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05C9E8F;
+        Thu, 31 Aug 2023 10:03:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aIoAPjtFnd077DKUg0oS9qaAT/8BqsDbz1GSiGf+O7BfLynLncmjqlvR4kjJ/81nsfyMEfnAD0hMaPNz8Y1J57p8TP+kMeMaChWhlBCj8OREhf1+MhpcTBEFIUTgpUf2sn3Tu7SgcGjibLGfgzhtA+WoMK4wVy4NtZnuW22ZEbkVmZZybbRwDMMExB2wB3ot/Hf8PDAIq9jelj8eR9C61FHKFP3F2pVDLZIUiXWogMdwHL1wGLl8CuYKUhauyGmog2FgPafLnjhNRdnTVKbdKliucJsl0ihgarxGjokXRk/Qf7M3T66N7Epw1OXMktFYKXic3hggP3r+bSgc0h/1FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nKTwBQSQJY0K9wjFNf9fNy55PIqVdxgtMnfwSIJGyk0=;
+ b=W+ACGSWMQits/YGNu70lWWVhUPYPEzEkjXpN5YzympXyictA42jVBCbdI82JAgcBEYriYa8ckdm61URAg4Qb/6SmKM/N6X/ffmxu/3486Tc/oiUk66MBD0iqnvJLWj9FHLjeFlMmb/IQMbJBgqqjp40jPV8oGi4lFcNZZdH2SEQMUf/0B6K6TacGclTlTop78oN5iOEAdiOxDUGbcvnqtfg67zUO4ergVdjnNHuKsqFliwOY9LThV0Axq3peKnioeXFLhowRuA1RE7czkCGpAqbCQGVmA9uEo9gAvnE6N5dn1iL/+YysPkP9uRPJMYx2aZ4mM+pw4M0vccZ3JVotvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nKTwBQSQJY0K9wjFNf9fNy55PIqVdxgtMnfwSIJGyk0=;
+ b=kq76Lp/UvJHU3ZwWM3C74h0XrLxMRCnF0NGzsd0555o9yguZ8xhho/VuPqXTYLf0SAc+vSg66EBoZ5JjXRtIHm6kl82WtTL7Lkjn0Fl3Tm4GhB+mQbuIA/Et/F9wgrty2PNgE7ujPDsxsZBJ775dqFpvnjto9GPvcIzETWH9cjs=
+Received: from PH7PR13CA0002.namprd13.prod.outlook.com (2603:10b6:510:174::6)
+ by CY5PR12MB6105.namprd12.prod.outlook.com (2603:10b6:930:2a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.21; Thu, 31 Aug
+ 2023 17:02:57 +0000
+Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
+ (2603:10b6:510:174:cafe::86) by PH7PR13CA0002.outlook.office365.com
+ (2603:10b6:510:174::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.15 via Frontend
+ Transport; Thu, 31 Aug 2023 17:02:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6745.17 via Frontend Transport; Thu, 31 Aug 2023 17:02:57 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 31 Aug
+ 2023 12:02:56 -0500
+From:   Terry Bowman <terry.bowman@amd.com>
+To:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>
+CC:     <terry.bowman@amd.com>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        <linux-pci@vger.kernel.org>
+Subject: [PATCH v10 08/15] PCI/AER: Refactor cper_print_aer() for use by CXL driver module
+Date:   Thu, 31 Aug 2023 12:02:41 -0500
+Message-ID: <20230831170248.185078-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230604-dcd-type2-upstream-v2-4-f740c47e7916@intel.com>
-X-Provags-ID: V03:K1:Wo30mn8KL5AYnbXla4xHQE/ks0lbOf6H+vps7K5NMiSPQmOo86H
- yHdYKjwSZeorZVLVgvOSjtIE1Pj6VK/1HDhIr/Z3/bhieC6Q1eKZfW6FepxDkfmsK1gyYbL
- nWDYPHmXCHyQNi6V9Ru4Ob//shufS6rmFaqxRs2GU3Z/rpblLcE9l94haCnwvDtt7a+PP4b
- Bz2NWD9MMuAy3jogTmljg==
-UI-OutboundReport: notjunk:1;M01:P0:YRBXR8R57cE=;TOED1LF3wD16BU3J2YyjnBOtFxv
- kGl/08Otca/LP4aJcIY6BmKTdjYzubRe+Lkan0QwtdHRZvOZt+1umW24N7UYPLGUSxipUjRHi
- seyLo6jXq0lW+nfVuqsaGlTJihL43gDmR4GZ7mDPPaV0K5MsF0XweWIiFwUqptscRZzm9z9GD
- xEmJb1gpcHr6JU2zl1KmDS30hhwNTWGJTmuzHtRCU9+psjkjoXrYS2RFMHWzcUqVYmOTXVzzv
- bUA4XT0m9UQqpqNKkyF7zyUIEnZZ2poflsQAtPT1ptJSyZOcBZhsOYvZDyxlJqmEZ3SBZ4vHx
- hIk8621FE/lfB1qSfzP4iG/QAt6mqGYI2lWnXOegwiZC9ay607Z5HuHEv3R3Zid6WChEKkmcE
- 6AyIx97VwtJAE9vsECsy05NGPNx4M7rWSzj4HjrxkWQ8WXAB+Lyv2zImODcb58K2+13PpV2rt
- 8QXa4xINx5uOF6a4pKFHbCBPxlsL+Ql1W7Xo5wBwuxQ4RTcGDGDTgi4F1rsn/73bHRjdScLF9
- p48FDfpsVS8ca9c04/+j/qIybYWYuXy6xr3jD2l068VH7X26KDg3sVPXNzcp7ZTjeIJWfK1yn
- BcYKxdqPVHBrTjFC4ykbTyU+txYAt9k9SIVpELVLQwtMiQkLVkpIfV28Tx/d7BEDPcEChdqHE
- hyZPTGQbIu/PD2T/Cw5yapWzIq/KmeqiQV32aiFkmOJMyWYL/1EDei/GzYGUZb02vC8fxo4UK
- 6z8Fv7v4izEZ/NQU/vh5opFkB1iNFvRtaC63FDJMCoRc+Ly/XX+bCU05c0XsJGBtaImy+3vpi
- u4GwnTfb0uGUXmFGwf7oNiDLDgrzjKNXsmladindObLkhAw2TMj2jUEzusXvsFYuWNBkkxffs
- on676OcLGnuFND0wkoJrwdy9Wjdz2VutLyRsc5Bk2DpVWfjX1/otmbWt13MVytk3BkNP9zy7Q
- fnaO2nxw7z/B8b18+odW8pi7APc=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|CY5PR12MB6105:EE_
+X-MS-Office365-Filtering-Correlation-Id: a15e1a94-0741-46a9-375b-08dbaa441fcd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: S0dUlgvG/otTPE1mpxZZ0Fjq1znelBCjtyRx3DDrTdvHdr58yisN5Y/2RQWy7dhzwrLmLhrFMnN/WkjXAeHSMylqHKivg3MCpioiDaWdQqvfimQ8RdWKR0Q7r1guxZMNCtvd16z+BQ6+9JgPtkmLKvNWI0TILwLhb6EK4YdzINPIe0jkH4P5ycJIe9qkZcN0lE2fNaz6r+mXihCdoM3whY8pSn/LzavdZIQl8s4H5amWyGdZZZDybBZrP7nW3zS1dl3iRhXrIJlDMhllmvcPR8xirqUEfMr2OVGFTiY9jL1KfMBUtMQjQsJPGmWqLuNd4qMY6AQy/1XH5YCjOnRbeatvvynPHxnnzonAWEt8C5tmEdpLirviVj/qecA+YbBtt38++5qBFGlpSl4jegsybXtoB7ZUPZmfr24NBhn+mNaNrk1yfrG+4POrGuPW361dXiIf0yqmWpE7fLwFKjTUepT6W10+HpbLOcqqAbigv2fVmrDO8K6L3I0anma95MPE8JUIQiJ7cGgMQyLtnhtSk2SzWZ1izxoRUZCaviACbPFUS/OeGH2W8EnWwA01gtfCf1GPb61sqQr1J7GKERmxduiP1DCJ9gybAIk8qqfhNhr5lQ+u1U9WR4B67x0mKj+Okm+2kufPWhjmBwqAM45S/s5UN8PnGBvgJbkxD4xeGQx9L6FkGRM2eZ+nptExu6bseW1QPey/jjMad+0mC68OYP64TuNdHFCcbVtTOgqHLkpZe2dWJucg/5jN/jGrdQIBcGEE7unkOdUHvkp1QyBtUg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(136003)(376002)(396003)(82310400011)(451199024)(1800799009)(186009)(40470700004)(46966006)(36840700001)(1076003)(2616005)(36860700001)(41300700001)(8936002)(8676002)(4326008)(5660300002)(44832011)(7696005)(6666004)(47076005)(83380400001)(336012)(26005)(16526019)(426003)(82740400003)(356005)(40480700001)(70206006)(70586007)(110136005)(54906003)(316002)(36756003)(2906002)(86362001)(7416002)(478600001)(81166007)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2023 17:02:57.0004
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a15e1a94-0741-46a9-375b-08dbaa441fcd
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF000015C8.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6105
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Aug 28, 2023 at 10:20:55PM -0700, Ira Weiny wrote:
-> Both regions and decoders will need a new mode to reflect the new type
-> of partition they are targeting on a device.  Regions reflect a dynamic
-> capacity type which may point to different Dynamic Capacity (DC)
-> Regions.  Decoder mode reflects a specific DC Region.
->
-> Define the new modes to use in subsequent patches and the helper
-> functions associated with them.
->
-> Co-developed-by: Navneet Singh <navneet.singh@intel.com>
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->
+The CXL driver plans to use cper_print_aer() for logging restricted CXL
+host (RCH) AER errors. cper_print_aer() is not currently exported and
+therefore not usable by the CXL drivers built as loadable modules. Export
+the cper_print_aer() function. Use the EXPORT_SYMBOL_NS_GPL() variant
+to restrict the export to CXL drivers.
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+The CONFIG_ACPI_APEI_PCIEAER kernel config is currently used to enable
+cper_print_aer(). cper_print_aer() logs the AER registers and is
+useful in PCIE AER logging outside of APEI. Remove the
+CONFIG_ACPI_APEI_PCIEAER dependency to enable cper_print_aer().
 
-> ---
-> Changes for v2:
-> [iweiny: split out from: Add dynamic capacity cxl region support.]
-> ---
->  drivers/cxl/core/region.c |  4 ++++
->  drivers/cxl/cxl.h         | 23 +++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 75041903b72c..69af1354bc5b 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1772,6 +1772,8 @@ static bool cxl_modes_compatible(enum cxl_region_m=
-ode rmode,
->  		return true;
->  	if (rmode =3D=3D CXL_REGION_PMEM && dmode =3D=3D CXL_DECODER_PMEM)
->  		return true;
-> +	if (rmode =3D=3D CXL_REGION_DC && cxl_decoder_mode_is_dc(dmode))
-> +		return true;
->
->  	return false;
->  }
-> @@ -2912,6 +2914,8 @@ cxl_decoder_to_region_mode(enum cxl_decoder_mode m=
-ode)
->  		return CXL_REGION_PMEM;
->  	case CXL_DECODER_DEAD:
->  		return CXL_REGION_DEAD;
-> +	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
-> +		return CXL_REGION_DC;
->  	case CXL_DECODER_MIXED:
->  	default:
->  		return CXL_REGION_MIXED;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index ed282dcd5cf5..d41f3f14fbe3 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -356,6 +356,14 @@ enum cxl_decoder_mode {
->  	CXL_DECODER_NONE,
->  	CXL_DECODER_RAM,
->  	CXL_DECODER_PMEM,
-> +	CXL_DECODER_DC0,
-> +	CXL_DECODER_DC1,
-> +	CXL_DECODER_DC2,
-> +	CXL_DECODER_DC3,
-> +	CXL_DECODER_DC4,
-> +	CXL_DECODER_DC5,
-> +	CXL_DECODER_DC6,
-> +	CXL_DECODER_DC7,
->  	CXL_DECODER_MIXED,
->  	CXL_DECODER_DEAD,
->  };
-> @@ -366,6 +374,14 @@ static inline const char *cxl_decoder_mode_name(enu=
-m cxl_decoder_mode mode)
->  		[CXL_DECODER_NONE] =3D "none",
->  		[CXL_DECODER_RAM] =3D "ram",
->  		[CXL_DECODER_PMEM] =3D "pmem",
-> +		[CXL_DECODER_DC0] =3D "dc0",
-> +		[CXL_DECODER_DC1] =3D "dc1",
-> +		[CXL_DECODER_DC2] =3D "dc2",
-> +		[CXL_DECODER_DC3] =3D "dc3",
-> +		[CXL_DECODER_DC4] =3D "dc4",
-> +		[CXL_DECODER_DC5] =3D "dc5",
-> +		[CXL_DECODER_DC6] =3D "dc6",
-> +		[CXL_DECODER_DC7] =3D "dc7",
->  		[CXL_DECODER_MIXED] =3D "mixed",
->  	};
->
-> @@ -374,10 +390,16 @@ static inline const char *cxl_decoder_mode_name(en=
-um cxl_decoder_mode mode)
->  	return "mixed";
->  }
->
-> +static inline bool cxl_decoder_mode_is_dc(enum cxl_decoder_mode mode)
-> +{
-> +	return (mode >=3D CXL_DECODER_DC0 && mode <=3D CXL_DECODER_DC7);
-> +}
-> +
->  enum cxl_region_mode {
->  	CXL_REGION_NONE,
->  	CXL_REGION_RAM,
->  	CXL_REGION_PMEM,
-> +	CXL_REGION_DC,
->  	CXL_REGION_MIXED,
->  	CXL_REGION_DEAD,
->  };
-> @@ -388,6 +410,7 @@ static inline const char *cxl_region_mode_name(enum =
-cxl_region_mode mode)
->  		[CXL_REGION_NONE] =3D "none",
->  		[CXL_REGION_RAM] =3D "ram",
->  		[CXL_REGION_PMEM] =3D "pmem",
-> +		[CXL_REGION_DC] =3D "dc",
->  		[CXL_REGION_MIXED] =3D "mixed",
->  	};
->
->
-> --
-> 2.41.0
->
+The cper_print_aer() function name implies CPER specific use but is useful
+in non-CPER cases as well. Rename cper_print_aer() to pci_print_aer().
+
+Also, update cxl_core to import CXL namespace imports.
+
+Co-developed-by: Robert Richter <rrichter@amd.com>
+Signed-off-by: Robert Richter <rrichter@amd.com>
+Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Cc: "Oliver O'Halloran" <oohall@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/core/port.c | 1 +
+ drivers/pci/pcie/aer.c  | 9 +++++----
+ include/linux/aer.h     | 2 +-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index da4f1b303d6c..45f8846d8c8a 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -2063,3 +2063,4 @@ static void cxl_core_exit(void)
+ subsys_initcall(cxl_core_init);
+ module_exit(cxl_core_exit);
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(CXL);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index f6c24ded134c..d3344fcf1f79 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -771,9 +771,10 @@ int cper_severity_to_aer(int cper_severity)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
++#endif
+ 
+-void cper_print_aer(struct pci_dev *dev, int aer_severity,
+-		    struct aer_capability_regs *aer)
++void pci_print_aer(struct pci_dev *dev, int aer_severity,
++		   struct aer_capability_regs *aer)
+ {
+ 	int layer, agent, tlp_header_valid = 0;
+ 	u32 status, mask;
+@@ -812,7 +813,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
+ 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+ 			aer_severity, tlp_header_valid, &aer->header_log);
+ }
+-#endif
++EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
+ 
+ /**
+  * add_error_device - list device to be handled
+@@ -1009,7 +1010,7 @@ static void aer_recover_work_func(struct work_struct *work)
+ 			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+ 			continue;
+ 		}
+-		cper_print_aer(pdev, entry.severity, entry.regs);
++		pci_print_aer(pdev, entry.severity, entry.regs);
+ 		if (entry.severity == AER_NONFATAL)
+ 			pcie_do_recovery(pdev, pci_channel_io_normal,
+ 					 aer_root_reset);
+diff --git a/include/linux/aer.h b/include/linux/aer.h
+index 97f64ba1b34a..8f124b904314 100644
+--- a/include/linux/aer.h
++++ b/include/linux/aer.h
+@@ -64,7 +64,7 @@ static inline void pci_save_aer_state(struct pci_dev *dev) {}
+ static inline void pci_restore_aer_state(struct pci_dev *dev) {}
+ #endif
+ 
+-void cper_print_aer(struct pci_dev *dev, int aer_severity,
++void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 		    struct aer_capability_regs *aer);
+ int cper_severity_to_aer(int cper_severity);
+ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+-- 
+2.34.1
+
