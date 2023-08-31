@@ -2,138 +2,224 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7006C83F35
-	for <linux-cxl@archiver.kernel.org>; Thu, 31 Aug 2023 17:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FBFC83F10
+	for <linux-cxl@archiver.kernel.org>; Thu, 31 Aug 2023 17:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346869AbjHaREa (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 31 Aug 2023 13:04:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60544 "EHLO
+        id S231377AbjHaR0U (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 31 Aug 2023 13:26:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346860AbjHaRE3 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Aug 2023 13:04:29 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F20ACD6;
-        Thu, 31 Aug 2023 10:04:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cNhCh9B8Idkd9UiB8MdwSMKBDPN+R9UpyCkJVf10l4w0VRgTCDw1t84DWbuhovj2sHAtM9G2LhnGaqgd0Gp8KtYP6DPIQsV2wITubdVw9t2AJmHMtoGDHpftv4aLu5Tz4AEzD9/ulKEHcYIxC1kwYjHrb2ICEv4Kvcmj89G5SwtxlIiwiBMxUrYpPCRsdw1RRXtzBMj62ElPg5cRlgDLcOLgYKBDRerNvWfJEKtuCM3lX/zA2Bg2x+GWrMHyq+IfuGvQUpVMUw98bIhGe3f7QaBS/X7F26sOeLSYTZ0OdRumAsZ7knmtyizOwyEEeNcvkjBMBZAwyldXbTUIVb6d4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NrvKsLLmcCbywLhMPwXf6Me1xobXx/KBZ7GQIIfi65U=;
- b=Gi6GsntDoJLuFC8QxnnzWDa1aIbbZ06gQTRa9qie16ze+rDAMtOQOGM+NJwq5gr3qvZDWC4L4owjRbdJKCoW8a0wH3RwStxg4Mv9NZSaER3KvHKCMG2Ujr5LD0NVzy/oQUhLYud6boUAXPPZwnGDG798t9aolQEnIOCf0Mh/u9Mlf2rpzl0bY4yGLc4w5fwvMO9XRtO7XLH5KGu4aqH3fRXjyV/wdDjM0GE3if1Re/sh9DiV2SR8mUf5Qidu31Xq5gei5xsqf0BhkrNswbo9F90qbQZyFRpCCsshqT1LXBA+mdWIb2N2UVm2xCUdV0GpLj6FSFvjl1n/jQHoYRFbJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NrvKsLLmcCbywLhMPwXf6Me1xobXx/KBZ7GQIIfi65U=;
- b=QBtCrikXaBu7BdW8tYPdi5YwanxXdgFcFlON+245kO+hnG7WVGV9EnsAnhS3iTxaM9kPmOimY7Rbx+L7yV27ccYNuq3VT1AF0E64GPiXsRJYqcaPobSV2WdkkbbBsnVPlDH1xwRKCKcR50ReAgDamQdP2HT4MfzcnVrjOKOBXnQ=
-Received: from PH8PR21CA0018.namprd21.prod.outlook.com (2603:10b6:510:2ce::8)
- by IA0PR12MB7507.namprd12.prod.outlook.com (2603:10b6:208:441::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Thu, 31 Aug
- 2023 17:04:15 +0000
-Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
- (2603:10b6:510:2ce:cafe::e6) by PH8PR21CA0018.outlook.office365.com
- (2603:10b6:510:2ce::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.15 via Frontend
- Transport; Thu, 31 Aug 2023 17:04:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6745.17 via Frontend Transport; Thu, 31 Aug 2023 17:04:14 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 31 Aug
- 2023 12:04:13 -0500
-From:   Terry Bowman <terry.bowman@amd.com>
-To:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
-        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>
-CC:     <terry.bowman@amd.com>, <rrichter@amd.com>,
-        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: [PATCH v10 15/15] cxl/core/regs: Rename phys_addr in cxl_map_component_regs()
-Date:   Thu, 31 Aug 2023 12:02:48 -0500
-Message-ID: <20230831170248.185078-8-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230831170248.185078-1-terry.bowman@amd.com>
-References: <20230831170248.185078-1-terry.bowman@amd.com>
+        with ESMTP id S242561AbjHaR0U (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 31 Aug 2023 13:26:20 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5559D1B2;
+        Thu, 31 Aug 2023 10:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
+ s=s31663417; t=1693502752; x=1694107552; i=fan.ni@gmx.us;
+ bh=QkNThFNl/IRsfsmzhYGbjpsuKXfa7sROQrJsuIPp6Fk=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=G8BLnDniCevNBthds3xwEAkfC3HvKYHAuMK5hKt11nSmZuAdWOxv+0B0Fhk2Yxp+VfwMza4
+ J7GfQMDVLMWf+jQJbSZsz5hwKHSIBgoRgplhUH0KRfI/UPRt1ouIUh9gBaPKkxx5ePnHizSQF
+ XTTXjrPZdgUwPtIRB11K0xoK0V8q2RhDPL7Dygpzoy/QeicqMAnMLhg7JQ0ukLsG2dl3FI9bk
+ QnUbGoqAExUAfBfPPNlrmazHwpGTTHTLcrwelCxbNwEw1naxivLcOAJIYzrCzyWmhBJYkJAwB
+ 1sg0MZxqMf1SC67Qze8Kk1fhBMlJgE08wSOTmMzCTwPmOAquUqMA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MatVb-1q5RkC2JcR-00cQYl; Thu, 31
+ Aug 2023 19:25:52 +0200
+Date:   Thu, 31 Aug 2023 10:25:40 -0700
+From:   Fan Ni <fan.ni@gmx.us>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2 05/18] cxl/port: Add Dynamic Capacity mode support
+ to endpoint decoders
+Message-ID: <ZPDNFEi1RRGoTWhr@debian>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+ <20230604-dcd-type2-upstream-v2-5-f740c47e7916@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|IA0PR12MB7507:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ab71038-3508-4718-b7d6-08dbaa444e33
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yV8LAE3KWPMftisvgCakyMiGMQvgLdtDX9G1M3C+ZeaUoQhlB4wAbag8yOBdf371+F7Rr+j/yCSkpYL1ykN+KdhydwcFHdJOuKZXfuzBOIOHQWqpVoGPrG6aMy9ObwAuOTl9u4Jf57gt0M861xSXfHU3jTPl2KUlcDKl1zvttf3oX8NJfKBZKLbDYhT60Fpthji2UcFAoMInpLMmWQwjOt8JvISRel9bhQSSjZ/icvTklMWPddFMwKm5dVQ08IRDJuN+qO35NOCx6AXIMPxylE0E6cwSyoziunh6/HbWbBaPLEW/64jhRGSVh3kCHjaACq8IRe4jw6q1syc9Z3pFT1wWovkk8dk71Jfl44XdCJZAIFIvhTEM3Xo5a5p84B1X/cJrHqmPzyBJ0yvkjNUUJtvojfTY1kbu3RLSA0XZiDAj+P8VGthnPR0jCKqd5XnHs38GVBU4G+RSBqayAVlQMXQ/jTcX0TIgyCS9SiA4Tw250B9D+JvKRkeZYJhh3DjCETfPBvJ52/22pVhsPULuNa62igXErud5058UL/rEJMyLFHf/28KyOvtNWjWYI6PzcWr8vbHrtkmWDCSKxSJkhWv104wVpu1bGGo1LKG+vfs+u/p/vOzAT9ANBI4StHNjz92L6c2aSOX8GCCihmWBJyEzTAr008Pdk5UB8NbD2l0lvMkzVc77yfPC/8J15KleQT0Lldel1d7migSwscWLnz4t9C3e9SYhpMScAi5bWXpv+QpPuxK/2/CyHFTIJwH+RHCVtXMD5FXdaf9s8ECn1A==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(136003)(346002)(376002)(186009)(1800799009)(451199024)(82310400011)(40470700004)(46966006)(36840700001)(8936002)(6666004)(82740400003)(7696005)(47076005)(36756003)(40480700001)(86362001)(81166007)(356005)(36860700001)(40460700003)(2616005)(26005)(70206006)(336012)(426003)(5660300002)(16526019)(478600001)(1076003)(70586007)(110136005)(2906002)(41300700001)(4326008)(83380400001)(44832011)(7416002)(54906003)(316002)(8676002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2023 17:04:14.8942
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ab71038-3508-4718-b7d6-08dbaa444e33
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF000015C6.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7507
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230604-dcd-type2-upstream-v2-5-f740c47e7916@intel.com>
+X-Provags-ID: V03:K1:RV9VBC88o9a7oe/0Gorhbc6mBMd4dbP0AzLP+3WmJC2WF3f4qWo
+ XGSRCAgrD92VfjcL3Io/bjl3VipVm24adn/ifUDmdRvKC0T6pKDM+XLVr30VYMYAWeLs/oX
+ OvbGcM2Ah8OWAHQ/6/6zZ7FkfJ7pklAHneZ2gIcpZ2i+JrsPrmzvhaKG/2SHf9cCjGc+nXf
+ CcUmtQ0/+NvgGq1Amip3Q==
+UI-OutboundReport: notjunk:1;M01:P0:bn6trh9Em5A=;nPjKzDeny4W4Pu5WCtxkCvjmE0g
+ LiYcHPfgxV5W3j0VbENfJvuf0jof7TKHwFhDZHLoQT6YxJ/DtJtn0EIgGtl2sOyfBVMHoPs63
+ axBojDjap9VBm0/R4pMQfaWLSaIsDLk2O+Hm4JmCCHEHlzuE05zFHc9v+xmK4y6SvgGdW6692
+ nvCXpg8/QAqdi3EwPZQSh5OLj/Z+kkQbRS8Y6UsaZbH5pKKBABatLGDDsSneA3ftz3L6rLnN5
+ VCzuq3yMBIBo0fy8GjivZVS0yQtUOgB2XaUbfQZh4YYLMrhYZMhyo8aUlbRm7EVE0nWPxXsv9
+ huxQ+XRZxoHojR4rCNdOXYNV8Ge/kQHMoEHnxtt4rRLc7J0hW3kcPMwP57yQzWrPzKoFPEhhs
+ KuNzXWMxz0rEDkAz0iE0NI2mtGGnl3101k31rUmdxE9g/D9qKrGKnDDOn1lfceA8SzMBO8G1b
+ xWSfjqshXlGF9qlR8uQtrplhKcqYnh2DrADzCXSwIxOJE+Nro4/WiL1vni+AJz2azWNjeSPgC
+ OTU0MfrKMqjym6COxYtTmQWTyuUtOX9qlQFa7lGzfJyb7y3p0AgNOcPTVQWN73vl33woJo2y6
+ izT5kwrYfpHYkp83erBNDZBJCFzLXTb3Zn+ov9Omv6tW1/p7wBIvS2eFSY3CvFk2nO8KDoCcx
+ jRp5qq6SLwC/30B+U9XNjQdbohIdkedhx5FnMt4j60AsbhVmp9jysXPxJnj5Aubg8ZTKJx7Qw
+ ew2/6EM2hnHVmnqm6DSzaj4+HSAGFA3Hx6NQuIst5DRmj7XwPOqdBdaG/XdJIEfikrwwooNGO
+ QAu8SpCmqaAwWrfI6ikz6p8nzpkOatv3Gnih83P4j2OemHXbA/rdDJpD/amUb0UvXku/018XJ
+ pIqF8f5h4SbDBlWVbMdO6nm8H4/PadG4VSOofsX87wYkNrGBuneW83XGUxzzC4Wnz1IkES/P5
+ e9xKnmWjUnVvtu/1GFWsjjm1M4I=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-From: Robert Richter <rrichter@amd.com>
+On Mon, Aug 28, 2023 at 10:20:56PM -0700, Ira Weiny wrote:
+> Endpoint decoders used to map Dynamic Capacity must be configured to
+> point to the correct Dynamic Capacity (DC) Region.  The decoder mode
+> currently represents the partition the decoder points to such as ram or
+> pmem.
+>
+> Expand the mode to include DC Regions.
+>
+> Co-developed-by: Navneet Singh <navneet.singh@intel.com>
+> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>
 
-Trivial change that renames variable phys_addr in
-cxl_map_component_regs() to shorten its length to keep the 80 char
-size limit for the line and also for consistency between the different
-paths.
+I have the same question about how dc_mode_to_region_index is
+implemented and used as Jonathan.
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/cxl/core/regs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Nice to see the code spit out, it is easier to review now.
 
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index 5cb78b76c757..f8f26fe80489 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -217,16 +217,16 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
- 
- 	for (i = 0; i < ARRAY_SIZE(mapinfo); i++) {
- 		struct mapinfo *mi = &mapinfo[i];
--		resource_size_t phys_addr;
-+		resource_size_t addr;
- 		resource_size_t length;
- 
- 		if (!mi->rmap->valid)
- 			continue;
- 		if (!test_bit(mi->rmap->id, &map_mask))
- 			continue;
--		phys_addr = map->resource + mi->rmap->offset;
-+		addr = map->resource + mi->rmap->offset;
- 		length = mi->rmap->size;
--		*(mi->addr) = devm_cxl_iomap_block(dev, phys_addr, length);
-+		*(mi->addr) = devm_cxl_iomap_block(dev, addr, length);
- 		if (!*(mi->addr))
- 			return -ENOMEM;
- 	}
--- 
-2.34.1
+Fan
 
+> ---
+> Changes for v2:
+> [iweiny: split from region creation patch]
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 19 ++++++++++---------
+>  drivers/cxl/core/hdm.c                  | 24 ++++++++++++++++++++++++
+>  drivers/cxl/core/port.c                 | 16 ++++++++++++++++
+>  3 files changed, 50 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI=
+/testing/sysfs-bus-cxl
+> index 6350dd82b9a9..2268ffcdb604 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -257,22 +257,23 @@ Description:
+>
+>  What:		/sys/bus/cxl/devices/decoderX.Y/mode
+>  Date:		May, 2022
+> -KernelVersion:	v6.0
+> +KernelVersion:	v6.0, v6.6 (dcY)
+>  Contact:	linux-cxl@vger.kernel.org
+>  Description:
+>  		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+>  		translates from a host physical address range, to a device local
+>  		address range. Device-local address ranges are further split
+> -		into a 'ram' (volatile memory) range and 'pmem' (persistent
+> -		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
+> -		'mixed', or 'none'. The 'mixed' indication is for error cases
+> -		when a decoder straddles the volatile/persistent partition
+> -		boundary, and 'none' indicates the decoder is not actively
+> -		decoding, or no DPA allocation policy has been set.
+> +		into a 'ram' (volatile memory) range, 'pmem' (persistent
+> +		memory) range, or Dynamic Capacity (DC) range. The 'mode'
+> +		attribute emits one of 'ram', 'pmem', 'dcY', 'mixed', or
+> +		'none'. The 'mixed' indication is for error cases when a
+> +		decoder straddles the volatile/persistent partition boundary,
+> +		and 'none' indicates the decoder is not actively decoding, or
+> +		no DPA allocation policy has been set.
+>
+>  		'mode' can be written, when the decoder is in the 'disabled'
+> -		state, with either 'ram' or 'pmem' to set the boundaries for the
+> -		next allocation.
+> +		state, with 'ram', 'pmem', or 'dcY' to set the boundaries for
+> +		the next allocation.
+>
+>
+>  What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index a254f79dd4e8..3f4af1f5fac8 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -267,6 +267,19 @@ static void devm_cxl_dpa_release(struct cxl_endpoin=
+t_decoder *cxled)
+>  	__cxl_dpa_release(cxled);
+>  }
+>
+> +static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
+> +{
+> +	int index =3D 0;
+> +
+> +	for (int i =3D CXL_DECODER_DC0; i <=3D CXL_DECODER_DC7; i++) {
+> +		if (mode =3D=3D i)
+> +			return index;
+> +		index++;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+>  			     resource_size_t base, resource_size_t len,
+>  			     resource_size_t skipped)
+> @@ -429,6 +442,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cx=
+led,
+>  	switch (mode) {
+>  	case CXL_DECODER_RAM:
+>  	case CXL_DECODER_PMEM:
+> +	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
+>  		break;
+>  	default:
+>  		dev_dbg(dev, "unsupported mode: %d\n", mode);
+> @@ -456,6 +470,16 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *c=
+xled,
+>  		goto out;
+>  	}
+>
+> +	for (int i =3D CXL_DECODER_DC0; i <=3D CXL_DECODER_DC7; i++) {
+> +		int index =3D dc_mode_to_region_index(i);
+> +
+> +		if (mode =3D=3D i && !resource_size(&cxlds->dc_res[index])) {
+> +			dev_dbg(dev, "no available dynamic capacity\n");
+> +			rc =3D -ENXIO;
+> +			goto out;
+> +		}
+> +	}
+> +
+>  	cxled->mode =3D mode;
+>  	rc =3D 0;
+>  out:
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f58cf01f8d2c..ce4a66865db3 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -197,6 +197,22 @@ static ssize_t mode_store(struct device *dev, struc=
+t device_attribute *attr,
+>  		mode =3D CXL_DECODER_PMEM;
+>  	else if (sysfs_streq(buf, "ram"))
+>  		mode =3D CXL_DECODER_RAM;
+> +	else if (sysfs_streq(buf, "dc0"))
+> +		mode =3D CXL_DECODER_DC0;
+> +	else if (sysfs_streq(buf, "dc1"))
+> +		mode =3D CXL_DECODER_DC1;
+> +	else if (sysfs_streq(buf, "dc2"))
+> +		mode =3D CXL_DECODER_DC2;
+> +	else if (sysfs_streq(buf, "dc3"))
+> +		mode =3D CXL_DECODER_DC3;
+> +	else if (sysfs_streq(buf, "dc4"))
+> +		mode =3D CXL_DECODER_DC4;
+> +	else if (sysfs_streq(buf, "dc5"))
+> +		mode =3D CXL_DECODER_DC5;
+> +	else if (sysfs_streq(buf, "dc6"))
+> +		mode =3D CXL_DECODER_DC6;
+> +	else if (sysfs_streq(buf, "dc7"))
+> +		mode =3D CXL_DECODER_DC7;
+>  	else
+>  		return -EINVAL;
+>
+>
+> --
+> 2.41.0
+>
