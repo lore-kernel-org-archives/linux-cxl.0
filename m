@@ -2,40 +2,39 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED729CA0FE1
-	for <linux-cxl@archiver.kernel.org>; Fri,  1 Sep 2023 09:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AD3CA0FE1
+	for <linux-cxl@archiver.kernel.org>; Fri,  1 Sep 2023 09:15:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231927AbjIAJKK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 1 Sep 2023 05:10:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
+        id S232273AbjIAJPf (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 1 Sep 2023 05:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231508AbjIAJKK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 1 Sep 2023 05:10:10 -0400
+        with ESMTP id S232025AbjIAJPf (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 1 Sep 2023 05:15:35 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3992C91;
-        Fri,  1 Sep 2023 02:10:07 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RcXJm4g6wz6HJgt;
-        Fri,  1 Sep 2023 17:08:56 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BBAE7B;
+        Fri,  1 Sep 2023 02:15:32 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RcXR05MYQz67ftX;
+        Fri,  1 Sep 2023 17:14:20 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Fri, 1 Sep
- 2023 10:10:04 +0100
-Date:   Fri, 1 Sep 2023 10:10:03 +0100
+ 2023 10:15:28 +0100
+Date:   Fri, 1 Sep 2023 10:15:27 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dave.jiang@intel.com>,
+To:     Terry Bowman <terry.bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
         <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
         <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>
-Subject: Re: [PATCH v9 02/15] cxl/regs: Prepare for multiple users of
+Subject: Re: [PATCH v10 02/15] cxl/regs: Prepare for multiple users of
  register mappings
-Message-ID: <20230901101003.000074f1@Huawei.com>
-In-Reply-To: <64f0d7dbf05f6_31c2db2948e@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230825233211.3029825-1-terry.bowman@amd.com>
-        <20230825233211.3029825-3-terry.bowman@amd.com>
-        <64f0d7dbf05f6_31c2db2948e@dwillia2-xfh.jf.intel.com.notmuch>
+Message-ID: <20230901101527.000031ba@Huawei.com>
+In-Reply-To: <20230831152031.184295-3-terry.bowman@amd.com>
+References: <20230831152031.184295-1-terry.bowman@amd.com>
+        <20230831152031.184295-3-terry.bowman@amd.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -49,61 +48,118 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 31 Aug 2023 11:11:40 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
+On Thu, 31 Aug 2023 10:20:18 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-> Terry Bowman wrote:
-> > From: Robert Richter <rrichter@amd.com>
-> > 
-> > The function devm_cxl_iomap_block() is used to map register mappings
-> > of CXL component or device registers. A @dev is used to unmap the IO
-> > regions during device removal.
-> > 
-> > Now, there are multiple devices using the register mappings. E.g. the
-> > RAS cap of the Component Registers is used by cxl_pci, the HDM cap
-> > used in cxl_mem. This could cause IO blocks not being freed and a
-> > subsequent reinitialization to fail if the same device is used for
-> > both.
-> > 
-> > To prevent that, expand cxl_map_component_regs() to pass a @dev to be
-> > used with devm to IO unmap. This allows to pass the device that
-> > actually is creating and using the IO region.
-> > 
-> > For symmetry also change the function i/f of cxl_map_device_regs().  
+> From: Robert Richter <rrichter@amd.com>
 > 
-> I think @dev is too ambiguous as a name. I.e. when does @dev refer to
-> the 'struct device *' instance that the registers belong, and when does
-> @dev refer to the 'struct device *' instance hosting the mapping for
-> devm operations?
+> The function devm_cxl_iomap_block() is used to map register mappings
+> of CXL component or device registers. A @dev is used to unmap the IO
+> regions during device removal.
 > 
-> One of the ways I have tried to disambiguate that distinction is using
-> the name @host to explicitly refer to the context of devm operations,
-> and @dev is only for context for dev_dbg() operations. Can you clarify
-> this patch by using @host everywhere that the devm context is being
-> handled?
+> Now, there are multiple devices using the register mappings. E.g. the
+> RAS cap of the Component Registers is used by cxl_pci, the HDM cap
+> used in cxl_mem. This could cause IO blocks not being freed and a
+> subsequent reinitialization to fail if the same device is used for
+> both.
 > 
-> This would also satisfy Jonathan's concern. I think it needs to be the
-> case that @map is explicit about when it is conveying some @dev context for
-> dev_dbg() messages and when it is conveying the @host for devm
-> operations because those are 2 different concepts.
-
-I should read all the replies before I reply to any of them.
-Agreed that renaming it would satisfy my concern over the confusion.
-
+> To prevent that, expand cxl_map_component_regs() to pass a @dev to be
+> used with devm to IO unmap. This allows to pass the device that
+> actually is creating and using the IO region.
 > 
-> It looks like @dev argument you are plumbing here is for when @map->dev
-> cannot be used for devm operations, so at a minimum use @host as the
-> variable name to make that clear...
+> For symmetry also change the function i/f of cxl_map_device_regs().
 > 
-> ...or always make it the case that @map carries an @host parameter which
-> would mean that ports would need their own copy of the comp_map versus
-> directly reusing the one in the cxlds since those 2 mapping instances
-> need different @host parameters. That feels cleaner to me then
-> "sometimes map->dev can be used for devm and sometimes not". @map->host
-> is always the devm context.
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Agreed that may be better still.
+I was ambiguous in reply to previous, but my RB not valid here as it
+stands.  Just replying so that doesn't get lost for v11!
 
-Jonathan
-
+> ---
+>  drivers/cxl/core/hdm.c  | 3 ++-
+>  drivers/cxl/core/regs.c | 4 ++--
+>  drivers/cxl/cxl.h       | 2 ++
+>  drivers/cxl/pci.c       | 4 ++--
+>  4 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 4449b34a80cc..17c8ba8c75e0 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -98,7 +98,8 @@ static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
+>  		return -ENODEV;
+>  	}
+>  
+> -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
+> +	return cxl_map_component_regs(&map, &port->dev, regs,
+> +				      BIT(CXL_CM_CAP_CAP_ID_HDM));
+>  }
+>  
+>  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 6281127b3e9d..dfc3e272e7d8 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -201,10 +201,10 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
+>  }
+>  
+>  int cxl_map_component_regs(const struct cxl_register_map *map,
+> +			   struct device *dev,
+>  			   struct cxl_component_regs *regs,
+>  			   unsigned long map_mask)
+>  {
+> -	struct device *dev = map->dev;
+>  	struct mapinfo {
+>  		const struct cxl_reg_map *rmap;
+>  		void __iomem **addr;
+> @@ -235,9 +235,9 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  EXPORT_SYMBOL_NS_GPL(cxl_map_component_regs, CXL);
+>  
+>  int cxl_map_device_regs(const struct cxl_register_map *map,
+> +			struct device *dev,
+>  			struct cxl_device_regs *regs)
+>  {
+> -	struct device *dev = map->dev;
+>  	resource_size_t phys_addr = map->resource;
+>  	struct mapinfo {
+>  		const struct cxl_reg_map *rmap;
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 76d92561af29..ec8ba9ebcf64 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -274,9 +274,11 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>  			   struct cxl_device_reg_map *map);
+>  int cxl_map_component_regs(const struct cxl_register_map *map,
+> +			   struct device *dev,
+>  			   struct cxl_component_regs *regs,
+>  			   unsigned long map_mask);
+>  int cxl_map_device_regs(const struct cxl_register_map *map,
+> +			struct device *dev,
+>  			struct cxl_device_regs *regs);
+>  int cxl_map_pmu_regs(struct pci_dev *pdev, struct cxl_pmu_regs *regs,
+>  		     struct cxl_register_map *map);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 48f88d96029d..88ddcff8a0b2 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -827,7 +827,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = cxl_map_device_regs(&map, &cxlds->regs.device_regs);
+> +	rc = cxl_map_device_regs(&map, cxlds->dev, &cxlds->regs.device_regs);
+>  	if (rc)
+>  		return rc;
+>  
+> @@ -844,7 +844,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  
+>  	cxlds->component_reg_phys = map.resource;
+>  
+> -	rc = cxl_map_component_regs(&map, &cxlds->regs.component,
+> +	rc = cxl_map_component_regs(&map, cxlds->dev, &cxlds->regs.component,
+>  				    BIT(CXL_CM_CAP_CAP_ID_RAS));
+>  	if (rc)
+>  		dev_dbg(&pdev->dev, "Failed to map RAS capability.\n");
 
