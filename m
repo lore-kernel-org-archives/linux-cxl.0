@@ -2,88 +2,111 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19009C001DB
-	for <linux-cxl@archiver.kernel.org>; Sat,  2 Sep 2023 14:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D05DC001DB
+	for <linux-cxl@archiver.kernel.org>; Sun,  3 Sep 2023 02:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbjIBO7N (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 2 Sep 2023 10:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
+        id S233880AbjICCwm (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Sat, 2 Sep 2023 22:52:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232495AbjIBO7L (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 2 Sep 2023 10:59:11 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958661706
-        for <linux-cxl@vger.kernel.org>; Sat,  2 Sep 2023 07:59:08 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4fe15bfb1adso130635e87.0
-        for <linux-cxl@vger.kernel.org>; Sat, 02 Sep 2023 07:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693666747; x=1694271547; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4SABuL+uXgGmHiLnH+elbso2HPH3mPzksBTp/wYBICw=;
-        b=OSiyzrw6cYYoeQv+dMpacWaFzjU2dTi5fedgEqMglFRZG9zpAhxvvrDhyEHZ3CH6sp
-         Fm/9K15TDWD21HRUL09qwRwOF/vmcDg/quzVviQLAFF4Z21aDPjKoSc6ZbK9KNjPmNgO
-         qcdl0zTqD+RIpWgeh70pRTxKif5qjrMTn3aj8NWb5CjnW5mvzW4YAu0yk/neJ7Tn6/Mo
-         bjXztVyZRsGVQ54cBqs9I3xjkv/IeTqFRscmGC/Ks0gHYRRAGZhgGvD61WWfsUAq/xMQ
-         3ecykQ1R7c4Yg/d28ObUW9xjbcqsbtU5cW6A+0uQozYrACz7iSIeU8TgMGUP8DFQkaiP
-         xi7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693666747; x=1694271547;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4SABuL+uXgGmHiLnH+elbso2HPH3mPzksBTp/wYBICw=;
-        b=YDpDuLKX0x+vpNh2sE/hzeh85K4JILwlIvRVHzF+ZqVS1zjj6akdW4KtO6ZvibWGLC
-         npka4No8KSA0pHyKcNLt9Vj+Vp1GqPOTOutbU6DNHGSO/ZAnQtEcWBS6KOyd2OqELrnw
-         W/8Z5cQgtGNbLmH24rnUw+wizL5JE6NPXsSml/uXrOWwBzB02klCxYzVE3G8DWQgLhjZ
-         bd4mlzhLvLViBUdrUL8E/UVFz2jqms1ZKcECH+FvNV1kqre97odglwtohT8moYuFmarv
-         L2hRFNPRsYaYFfOgCznOSzV2UzTugk59SHQ7xS+9wCj+Q5PFPGwPAaDjvxX+4ulU4fWZ
-         yn8A==
-X-Gm-Message-State: AOJu0YxXOsGyoe08ara0BzaPx8E2MydMEiBzLHnNdSeFbpmJdppt8Q0F
-        gyyBcQsZYzvc5HieMtBVfNoT/IALm13VdKA2C6I=
-X-Google-Smtp-Source: AGHT+IFQJqQWncz3TENfeZbuaKfTJwAyqywFmzhoZQ8XEQzLc+vMw2gvwRrs+0glGFeflATEOQC+hr4e2EqGkL2Hobo=
-X-Received: by 2002:a05:6512:15a3:b0:4fe:15b5:a5f9 with SMTP id
- bp35-20020a05651215a300b004fe15b5a5f9mr4051890lfb.54.1693666746539; Sat, 02
- Sep 2023 07:59:06 -0700 (PDT)
+        with ESMTP id S232539AbjICCwl (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Sat, 2 Sep 2023 22:52:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8749E186;
+        Sat,  2 Sep 2023 19:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693709558; x=1725245558;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=zqyXNb+xEyrrtyKE9UchbnAugfiW3FoObXQ1vbuMsYk=;
+  b=c8oYB91ylfYurdzfB+NB8kHB+4bu1HbYh3V+Cy41zsWNS6h4Ti2QtzXl
+   kZIdT8pWl4NWBmp5WKu/TqvuILNc+WuY83jqhHC8tV/yp44xDOciPdVod
+   oe10Tzv/YobuPFfsZ7mCxV44JVBhXhyfmwkKzqonD9u/7ycM7WXupJpJm
+   nBW9TmI3of18FbbjJ1UuJplUvYoeLFxP2CUMZtUwg2JdI5mQCHKMAf0fb
+   WaVJ2YXUCDZUzbj0l604vZLx0NrW0n9c/Eo41LBkSAsOyqI7jiIGMl2RB
+   34omT1dzDPTEHPl8CFVaX4Aefl10uC4rL1cZf3xhjhx91VSzsozy9D/Oy
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10821"; a="407417570"
+X-IronPort-AV: E=Sophos;i="6.02,223,1688454000"; 
+   d="scan'208";a="407417570"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2023 19:52:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10821"; a="855172775"
+X-IronPort-AV: E=Sophos;i="6.02,223,1688454000"; 
+   d="scan'208";a="855172775"
+Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.188.150])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2023 19:52:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Sat, 02 Sep 2023 19:52:26 -0700
+Subject: [PATCH] cxl/hdm: Debug, use decoder name function
 MIME-Version: 1.0
-References: <CAEvOrRz9s8CumbuMbkCU+eCHgAp20X6q0i1D6fi5vfa5_F6JnA@mail.gmail.com>
- <20230810173322.0000543c@Huawei.com> <CAEvOrRyvaFBzhzP7kxWeCpYY-u5wjwAo6076FGhN_k-+NadUDA@mail.gmail.com>
- <CAEvOrRzPNwNFrg4Brw7axzgxv6WFeYr0rnsDGmSSNpn9hca-3Q@mail.gmail.com>
- <20230811145223.000040de@Huawei.com> <CAEvOrRzE76U2g_8=V3F-4fqwosRz3n9kO+40E_iG74EcbQBxtw@mail.gmail.com>
- <20230823180323.000052d5@Huawei.com> <CAEvOrRyquLL6-d=vOyB9NNOPVE370qjV0zu8XBsTJmpOBx2UNw@mail.gmail.com>
- <ZPHyoJsZDnzpU7C4@memverge.com> <CAEvOrRw2e3cn=2fNXO8_iX0kg09an-OSx1fnjx7ciGGhZo9f9A@mail.gmail.com>
- <CAEvOrRy9qoydCqxq7xv1QNM+z+YQZyQORtqdDU2VcVKP42CJhA@mail.gmail.com> <SJ0PR17MB5512449C5FFD76AD50B3D3AF83E4A@SJ0PR17MB5512.namprd17.prod.outlook.com>
-In-Reply-To: <SJ0PR17MB5512449C5FFD76AD50B3D3AF83E4A@SJ0PR17MB5512.namprd17.prod.outlook.com>
-From:   Ravi Kanth <mvrravikanth@gmail.com>
-Date:   Sat, 2 Sep 2023 20:28:54 +0530
-Message-ID: <CAEvOrRwOWT5HuoUsjkUyt6HpXQhWVR2Hv6cxJPP+4+0xNQpM8g@mail.gmail.com>
-Subject: Re: Support for CXL v3.0 spec with QEMU
-To:     Gregory Price <gregory.price@memverge.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Sajjan Rao <sajjanr@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230902-use-decoder-name-v1-1-06374ed7a400@intel.com>
+X-B4-Tracking: v=1; b=H4sIAOn082QC/x2NQQ7CMAwEv1L5jKWQqAf4CuLgJEvrQ1NkA0Kq+
+ ndSjqPZ0W7kMIXTddjI8FHXtXU4nwYqs7QJrLUzxRBTuITIbwdXlLXCuMkCjjmLhJTKmEA9y9I
+ X2aSV+QgX8RfsEE/DQ7//r9t933/vqLTQewAAAA==
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Navneet Singh <navneet.singh@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Fan Ni <fan.ni@samsung.com>, Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-c6835
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693709556; l=1258;
+ i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
+ bh=zqyXNb+xEyrrtyKE9UchbnAugfiW3FoObXQ1vbuMsYk=;
+ b=/ypefwMRvycsCYqNTsahjyTvXxGSeyYsMYKuSKZ2t/pUFjSfYzAqfb042xWc71k6iDvoymPfo
+ pGD7VUXKLklCWvvHE8+RMRR2eBOQjxHw/nY5edtdX5jGhpJmdXg6Zoi
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ok. Got it. Thanks Gregory.
+The decoder enum has a name conversion function defined now.
 
-Ravi
+Use that instead of open coding.
 
-On Fri, Sep 1, 2023 at 10:07=E2=80=AFPM Gregory Price
-<gregory.price@memverge.com> wrote:
->
->
-> > However we saw the below crash when we sent the command for the first t=
-ime.
->
-> That's expected, there's an explicit warning the first time a raw command=
- is sent.   This is intended behavior, no crash has occurred.
+Suggested-by: Navneet Singh <navneet.singh@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+Changes:
+[iweiny: split out from DCD series]
+https://lore.kernel.org/r/20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com
+---
+ drivers/cxl/core/hdm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 4449b34a80cc..4fa49923eac0 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -530,8 +530,7 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size)
+ 
+ 	if (size > avail) {
+ 		dev_dbg(dev, "%pa exceeds available %s capacity: %pa\n", &size,
+-			cxled->mode == CXL_DECODER_RAM ? "ram" : "pmem",
+-			&avail);
++			cxl_decoder_mode_name(cxled->mode), &avail);
+ 		rc = -ENOSPC;
+ 		goto out;
+ 	}
 
+---
+base-commit: 1c59d383390f970b891b503b7f79b63a02db2ec5
+change-id: 20230902-use-decoder-name-2bbaa033c53e
 
---=20
-Ravi
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
