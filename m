@@ -2,129 +2,143 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCEEC83F33
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Sep 2023 17:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE849C83F33
+	for <linux-cxl@archiver.kernel.org>; Mon,  4 Sep 2023 17:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbjIDRCW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Sep 2023 13:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55230 "EHLO
+        id S234852AbjIDRYr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Sep 2023 13:24:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbjIDRCW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Sep 2023 13:02:22 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA85CC5
-        for <linux-cxl@vger.kernel.org>; Mon,  4 Sep 2023 10:02:18 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RfZZP32Rqz6J81N;
-        Tue,  5 Sep 2023 00:57:49 +0800 (CST)
-Received: from localhost (10.48.153.57) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 4 Sep
- 2023 18:02:15 +0100
-Date:   Mon, 4 Sep 2023 18:02:14 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gregory Price <gourry.memverge@gmail.com>
-CC:     <qemu-devel@nongnu.org>, <linux-cxl@vger.kernel.org>,
-        <junhee.ryu@sk.com>, <kwangjin.ko@sk.com>,
-        Gregory Price <gregory.price@memverge.com>
-Subject: Re: [PATCH 4/5] cxl/type3: add an optional mhd validation function
- for memory accesses
-Message-ID: <20230904180214.00007e32@Huawei.com>
-In-Reply-To: <20230901012914.226527-5-gregory.price@memverge.com>
-References: <20230901012914.226527-1-gregory.price@memverge.com>
-        <20230901012914.226527-5-gregory.price@memverge.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233853AbjIDRYr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Sep 2023 13:24:47 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2CECDE;
+        Mon,  4 Sep 2023 10:24:43 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 18279100CDA;
+        Mon,  4 Sep 2023 17:24:43 +0000 (UTC)
+Received: from pdx1-sub0-mail-a204.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 917A1101008;
+        Mon,  4 Sep 2023 17:24:42 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1693848282; a=rsa-sha256;
+        cv=none;
+        b=y88M6KqhxwseuuM9cTLVE0pB6aIhUrg5YyledG03J99j5HlHJGd7T3uw7pj0I4GGpEKphp
+        KS28FgVttypAooKFClfa9OMKCnGuf1F2sXRM46uKA08RZK5GP15sQCypiFXYZvXfDQ8I8T
+        15J8wc0BgDv2JQq2SVc5UulHo1Q7G2DgLytSCuu0jgz4sCsra+RsU39ciwFpZrNrhanBe4
+        aOCMImPImISgUx+CV/1FKGsITflUzbljySP7l/YhHG3/v7vjhRsOTqoTBHnctXE9c5sJo8
+        RN8ShXkC/L1f567XhV3Aj/VIFBmcI3a5RZ19oqLsGj5DQV4C0e7WV9/1xDZvpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1693848282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=zNxbRKdOxnfy7EF/WgaXxgReIzw1Vwdxu7N06Gd5Clk=;
+        b=jmn+yBmKLqMu5Qr7kZy7CsIOOr1mK9YDYkcUjeSmzkgo1uSa0qu1tBkcrpHoHD0efujX2D
+        W8r2rpXbs4b+qhpf4iMRVGVQJKfMMOHoxf9m1m7Ca1QdEbTSce1Bk1qhI42ge/CJpWQxk4
+        eahKTZKq28eGMdBgJh5srLLFtrGJh8mlnLIQh5nQcluR0SXEARM4ouiwWQOmm6nMc5im6a
+        TQ70NOedSfUmr76yfrrb4b6/kTkYjv6z9sjttcMfqo+vnb6PoVxkMzH1WDZxWnq3g4nUVv
+        BqGEI1vGwEhxOorOq6MfQwwmGBHFhlbUD+MrvWuOZwo5RG8I2STiURgIuauWHw==
+ARC-Authentication-Results: i=1;
+        rspamd-bfd6864c7-5nddj;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Chief-Whistle: 7df3e558529e9a78_1693848282876_472946407
+X-MC-Loop-Signature: 1693848282876:2993707340
+X-MC-Ingress-Time: 1693848282876
+Received: from pdx1-sub0-mail-a204.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.120.241.104 (trex/6.9.1);
+        Mon, 04 Sep 2023 17:24:42 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a204.dreamhost.com (Postfix) with ESMTPSA id 4Rfb9P6gDbz9w;
+        Mon,  4 Sep 2023 10:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1693848282;
+        bh=zNxbRKdOxnfy7EF/WgaXxgReIzw1Vwdxu7N06Gd5Clk=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=iG6x2FFNIwaCNhikWqhcHXave+3SlWxYDEQ7dUFZ9Pq4bTfQprFWPfFFKrXCkhQ7P
+         JQtdFLv46r9HbEACjmAY24SHoqzZeAnIjOpHng4OllwwxKxbdK4z2f4k7TFC7xf7Q8
+         T3Z+bRo0IsCqzKdzuexEPC28P9+rRqIGB5wzn9EJEWCKdfQ/iIpVxu1FeE26FHg8sR
+         hJoVi+z7jFBj/E2vtIyz1ulpWfoHGVmB4pAxkaojmTh8Sd+jRblq9aytfn84oULhuh
+         i231DX/K+vILdv8AylQ/C2m754FP4z29LFr1Q5vx30EJlhqIoJcAhUUTdfh1/ZGDWg
+         EwlEbrwLlh8tw==
+Date:   Mon, 4 Sep 2023 10:24:34 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cxl/mbox: Fix CEL logic for poison and security commands
+Message-ID: <v4gxbhybb2zhxowdyn6ri6tham22aemfvqc4xu7r65x6uhp6zi@2fiholdfp6sb>
+References: <20230903-cxl-cel-fix-v1-1-e260c9467be3@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.153.57]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20230903-cxl-cel-fix-v1-1-e260c9467be3@intel.com>
+User-Agent: NeoMutt/20230517
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Thu, 31 Aug 2023 21:29:13 -0400
-Gregory Price <gourry.memverge@gmail.com> wrote:
+On Sun, 03 Sep 2023, Ira Weiny wrote:
 
-> When memory accesses are made, some MHSLD's would validate the address
-> is within the scope of allocated sections.  To do this, the base device
-> must call an optional function set by inherited devices.
-> 
-> Signed-off-by: Gregory Price <gregory.price@memverge.com>
+>The following debug output was observed while testing CXL
+>
+>cxl_core:cxl_walk_cel:721: cxl_mock_mem cxl_mem.0: Opcode 0x4300 unsupported by driver
+>
+>opcode 0x4300 (Get Poison) is supported by the driver and the mock
+>device supports it.  The logic should be checking that the opcode is
+>both not poison and not security.
+>
+>Fix the logic to allow poison and security commands.
 
-This sort of callback addition can be done via class initialization.
-E.g. get_lsa_size()
-https://elixir.bootlin.com/qemu/latest/source/hw/mem/cxl_type3.c#L1494
-as the callback is the same for all instances of the class which
-in next patch is CXLNiagraClass where you already set the
-PCIClass callbacks in cxl_niagara_class_init()
+Hmm yeah sorry about that.
 
-You can then use something like:
-CXLType3Class *cvc = CXL_TYPE3_GET_CLASS(ct3d);
-cvc->mhd_access_valid(ct3d, dpa_offset, size);
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-Jonathan
-
-> ---
->  hw/mem/cxl_type3.c          | 15 +++++++++++++++
->  include/hw/cxl/cxl_device.h |  3 +++
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index a8d4a12f3e..8e1565f2fc 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1034,6 +1034,10 @@ void ct3_realize(PCIDevice *pci_dev, Error **errp)
->              goto err_release_cdat;
->          }
->      }
-> +
-> +    /* Devices which inherit ct3d should initialize these after ct3_realize */
-> +    ct3d->mhd_access_valid = NULL;
-> +
->      return;
->  
->  err_release_cdat:
-> @@ -1259,6 +1263,11 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
->          return MEMTX_ERROR;
->      }
->  
-> +    if (ct3d->mhd_access_valid &&
-> +        !ct3d->mhd_access_valid(d, dpa_offset, size)) {
-> +        return MEMTX_ERROR;
-> +    }
-> +
->      if (sanitize_running(&ct3d->cci)) {
->          qemu_guest_getrandom_nofail(data, size);
->          return MEMTX_OK;
-> @@ -1279,6 +1288,12 @@ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
->      if (res) {
->          return MEMTX_ERROR;
->      }
-> +
-> +    if (ct3d->mhd_access_valid &&
-> +        !ct3d->mhd_access_valid(d, dpa_offset, size)) {
-> +        return MEMTX_ERROR;
-> +    }
-> +
->      if (sanitize_running(&ct3d->cci)) {
->          return MEMTX_OK;
->      }
-> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> index 4ad38b689c..b1b39a9aa0 100644
-> --- a/include/hw/cxl/cxl_device.h
-> +++ b/include/hw/cxl/cxl_device.h
-> @@ -489,6 +489,9 @@ struct CXLType3Dev {
->          uint8_t num_regions; /* 0-8 regions */
->          CXLDCDRegion regions[DCD_MAX_REGION_NUM];
->      } dc;
-> +
-> +    /* Multi-headed Device */
-> +    bool (*mhd_access_valid)(PCIDevice *d, uint64_t addr, unsigned int size);
->  };
->  
->  #define TYPE_CXL_TYPE3 "cxl-type3"
-
+>
+>Fixes: ad64f5952ce3 ("cxl/memdev: Only show sanitize sysfs files when supported")
+>Cc: Davidlohr Bueso <dave@stgolabs.net>
+>Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>---
+> drivers/cxl/core/mbox.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>index ca60bb8114f2..b315bdab9197 100644
+>--- a/drivers/cxl/core/mbox.c
+>+++ b/drivers/cxl/core/mbox.c
+>@@ -716,8 +716,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
+>		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
+>		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
+>
+>-		if (!cmd && (!cxl_is_poison_command(opcode) ||
+>-			     !cxl_is_security_command(opcode))) {
+>+		if (!cmd && !cxl_is_poison_command(opcode) &&
+>+		    !cxl_is_security_command(opcode)) {
+>			dev_dbg(dev,
+>				"Opcode 0x%04x unsupported by driver\n", opcode);
+>			continue;
+>
+>---
+>base-commit: 1c59d383390f970b891b503b7f79b63a02db2ec5
+>change-id: 20230903-cxl-cel-fix-9da269bf0f21
+>
+>Best regards,
+>--
+>Ira Weiny <ira.weiny@intel.com>
+>
