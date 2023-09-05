@@ -2,325 +2,176 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80BDC71153
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 00:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983A5C71153
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 00:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230416AbjIEAGT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Sep 2023 20:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
+        id S237503AbjIEAOh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Sep 2023 20:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbjIEAGS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Sep 2023 20:06:18 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB7A1B4;
-        Mon,  4 Sep 2023 17:06:14 -0700 (PDT)
+        with ESMTP id S232553AbjIEAOg (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Sep 2023 20:14:36 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38903E6;
+        Mon,  4 Sep 2023 17:14:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693872374; x=1725408374;
+  t=1693872873; x=1725408873;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=85yZgsLoQSgSzC3B+h9DrHitoPwVtb9Sa+bGVnaTL04=;
-  b=KRHeFXv0rFq1uN4R93cvG0ESJlrOOaKLWcA3PqyoMNtk6xm2SGz1sn2O
-   lJREL2a4dcMQkP3LT57lsfp3ZnclQlTDuSHVly9Ih+JToQRSsEo2XvAj8
-   eiWYPZypmXJ9rpHOQuvKAZy+vBCtwVmqCi+2vHNA1gSDgFZymQj4vSlIo
-   82JJIH7VheBQgNN30ELXOHRYYddnmNBJkDrAd6WYWqZ0666SUzhVm57wA
-   SE+fo8o8/EoFnlZ9zFlzMCSIQ84kBE70sRrBMJF4z7+x1ylcUgfrt4VXn
-   P9pibzt0Nr/ByM2JxUwIvf9RIPQOYouIurLbsa5UXFpPWav/4stfntTRQ
+  bh=jXTml8ROylRcpxrDeh4M3sSBh0Z2uZU+fib1foNMrZI=;
+  b=JiKnljQaa1iOZNIj2ltzZ48Bjvx7ILRH0jlCyXmRAWVLdJ3dO8Ts+Dak
+   4wF+UjOT3fzHCSodCfUp7CyD21UdZpVv0MCori9EG0+tjlvIWzHN+6zQd
+   I3dKoiX2eWqydhdClPeQYLSA4YVnnqU730EDFOMYCnrDk1QlxFwv+qjGF
+   2Z3Rim7ukjYLR9rgGiTFrR/ccug63mPNyAhvHMfn+71IDrSD9ze1aiOBy
+   4irrSNxeUq7GamU4Flii/D7tHNGjhWnNROY1DDnzQb7JfQzb9z/AdjX4v
+   MhZVEuiegXzTtn1+bx9t+wV1NmNmlBD779kefsLNwKjcEanb9d7Z4F0r7
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="407658276"
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="440643559"
 X-IronPort-AV: E=Sophos;i="6.02,227,1688454000"; 
-   d="scan'208";a="407658276"
+   d="scan'208";a="440643559"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 17:06:14 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 17:14:32 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="806389309"
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="806391108"
 X-IronPort-AV: E=Sophos;i="6.02,227,1688454000"; 
-   d="scan'208";a="806389309"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Sep 2023 17:06:11 -0700
+   d="scan'208";a="806391108"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Sep 2023 17:14:32 -0700
 Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 4 Sep 2023 17:06:08 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ 15.1.2507.27; Mon, 4 Sep 2023 17:14:31 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
  fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Mon, 4 Sep 2023 17:06:08 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.27 via Frontend Transport; Mon, 4 Sep 2023 17:14:31 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Mon, 4 Sep 2023 17:06:07 -0700
+ 15.1.2507.27; Mon, 4 Sep 2023 17:14:31 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QnmDeLAVXAml4xcYdOPAPrBw+bXlevI3xea6E+1c9LK17ywAfF+SvPEdYgfm+KusfhfZvXOrMeDue0iG37K2Mns1xWftHhjdRWQtEEs/lA0wL+K+pdNJ96xJaTzeGblmvJj6nA4hm18iCT/zkUPFroplmOhVlXlewTeFMWZFkTIo183rid5kQbhbYvffGQalSbuIZ2uBPiDslPiN2Oa3CSwEif53WT0NBlJ97x4n2VHCBJEC/GMMcVX6Tn9igx+seiw75kTHJkH7QVFEZjY7xMGz7HSFatbX8jHoRwOhjdlF62xa/N5Y4I+8Rsr6fS8CjZ/38Th+JywnJoaCtMd1Bg==
+ b=Sh0uHGa+5UcMfWHlonWc1ADcRBDH0WKwDYmwSoNrN23Nrjrs4krkf1c2PtwdZGjG5wTdl5VVelI4sA601CnKlXMphxpjK6rb8Bfpo87s9YvRWUV5iC/778xweny8TFq+63rpd6y+2yZ99xmYANoRLnrz//zare3FTfszavkSEgFPZKdohDR9SIucxT2a8kzDvWjZolgqHLg7m5gwtoVYjVj2jepy4hfNPp47izBK2NriaZu03CwDDDGyTh26DWhAP2syXAsYgVwKaRq2n5+F3s53mY/JObwExWeMs44k34bOaF47lw0nf+5mvGQftIRk4Ei5csRyxjlKeWhUw3Ex7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LiYk/xvGxs5WaaXiUI9u2arIhd+eq6u15Z9SoWqa5F8=;
- b=ZWmK/A02AEA8/OJRJAfeasT5cF5VzRD3tzD3eWj74M9nuw4MSST50h8xM8q4/aGRLLxfXCd3Cr3EHvIeTqrQy0pxVXaZmYZKbh5um/yOsBcp4LklzoS4LXRcWIL6nIZHLtotabAE5nAahVmiOVnwdbrdhcuwsd0dBNUzYNGZpfNPzN60M3nbNfMBQwHJwbYeu8MbnwoXQPdCBUz36yTGAl5iWJ76fWPu0jx3QSRMRZv0evzXMx8eh8C4SIBqwH3HwuLKVslBxf7D98VmPK1Xq6lY/gIFNQbNjJmsE/p2R47Oa8IChIFDS88tztHcQOR9+fMwGD12xvJeApol681FsQ==
+ bh=wdqquMmJBgBEhEF2NWtWvZ1hE0FdPMdfjJj3E1oijVU=;
+ b=QeRnd+7EMDVgeMMmu3Jz4D/6PqJpyauqLq75ta+ElBi4Q0iMHoTK97sC9SbfDi1PtQmSi5MuNvZy4UwNaxs18vSoOo/wmCRkQYILKcaRMGwOhOMLpzUdgqFAgGr2C/iCgMLA0HSEo56rzLT7Mu8HkeVLeyGY3kfDYQUK+Oe9K4h4p+ajGx3rFyvhlqkn4nbmWuEwuVKSHQjT4N6Oa4TzWfkDVHJH+rLutKXT1xjgniRM9cLwcM2iTezBVpcOyX5CUe9ScIBHStAUXLaPydeJv4Up+X0iSGmaEENm3jrzJwbh+HJXBluOYrECGxendWHjqku5T0/yZ3PWC1H+b1njig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH0PR11MB5029.namprd11.prod.outlook.com (2603:10b6:510:30::15) with
+ by SJ1PR11MB6250.namprd11.prod.outlook.com (2603:10b6:a03:459::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.32; Tue, 5 Sep
- 2023 00:06:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
+ 2023 00:14:29 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
- 00:06:05 +0000
-Date:   Mon, 4 Sep 2023 17:05:59 -0700
+ 00:14:29 +0000
+Date:   Mon, 4 Sep 2023 17:14:25 -0700
 From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Navneet Singh <navneet.singh@intel.com>,
+To:     Dave Jiang <dave.jiang@intel.com>, <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     Navneet Singh <navneet.singh@intel.com>,
         Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 05/18] cxl/port: Add Dynamic Capacity mode support
- to endpoint decoders
-Message-ID: <64f670e7d52e2_1e8e7829411@iweiny-mobl.notmuch>
+Subject: Re: [PATCH RFC v2 03/18] cxl/mem: Read Dynamic capacity
+ configuration from the device
+Message-ID: <64f672e1d4da7_1e8e78294c7@iweiny-mobl.notmuch>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
- <20230604-dcd-type2-upstream-v2-5-f740c47e7916@intel.com>
- <20230829154945.00002870@Huawei.com>
+ <20230604-dcd-type2-upstream-v2-3-f740c47e7916@intel.com>
+ <db3bd5d0-640a-b121-f3e7-cfb73dc6c9ff@intel.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230829154945.00002870@Huawei.com>
-X-ClientProxiedBy: SJ0PR03CA0009.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::14) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <db3bd5d0-640a-b121-f3e7-cfb73dc6c9ff@intel.com>
+X-ClientProxiedBy: BYAPR21CA0011.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::21) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB5029:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7895447c-89ec-48f8-2d46-08dbada3e5b7
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ1PR11MB6250:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b79f2df-398e-40fd-9625-08dbada5123c
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PQ8ijpsdCB2OAXAmLHD/FykUhSCtKdkmY7k5IsBSXcTnXn0s4A5e4tulaJRW8mEQFZCM2MrhJblKPnxQO2QI3+07obgDa0QlmBPdk4IleOteTNlCk2bIO9T3tnncU6DAM6kgYCOZcJFHF2nACxbNY9HpoiTiVctVfnWtEpKzI03T/753d8B5X+Uc3wwTH0UODqYRrqH3CZJ8GRNjLxVsd7qClKkALb7m1j1GovuMgNrjo5Si396cC7znaT5ygeQQTAifnq0uiq+bXIc0EZ66CtpXQptELt70wYeRUhzwMZNPKcHnj79irGUQPXGBOf+7gFS4Hw0TqvcPZ6E/OkZZ60QC9Kh2RsMOI6L5wT+kRLQVbh67/LrHKpyBGXWTUvJJ1cfZIuLIjVuOWsr68tKKR7lyJonB2tSoroosT9TGr+BSrxODoNAuq5EUymKT8de8m1zOygU7X7X/alBTkeQca1yk+re/nk14aSxGjyPIXUwkRSezHJVmh/JiqPdIWcEj4Dfu8HsM0jI4fqG6Cm6n8nvFjcNL0Pe7Go9fENkQQ5frZzlftWSS5QZVBHN8oDyN
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(136003)(346002)(376002)(186009)(1800799009)(451199024)(41300700001)(66899024)(6666004)(6486002)(6506007)(478600001)(82960400001)(83380400001)(26005)(9686003)(6512007)(38100700002)(86362001)(66946007)(110136005)(2906002)(66476007)(316002)(54906003)(66556008)(5660300002)(8936002)(44832011)(4326008)(8676002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: momsah3LATqOzkejOc7qv/vqZvilw9EgXpnTiqmidipAkRc5jcMI2Gs+7GTnltOefTle/EJU3i/dxYOTCDpWYrLsiwxBepg0+QoIj6jlV4q4jf2CIDiF0ESleKnfHAVusIY1qXq6QhUEx4Q1G4Af26SOfXXKpe5q7ibKuOvykGeydbP9h2nL9MtbZYI5osfyRwCC4UxP4AxFtg9oIrt8lhQlq7YpXuXtSawLjJsn48MowM8rhgrJ6NXLai3BQAGkS16xollI/vaDlN9KyBhDQQ2tDTB/J6tVF6+8YKucdrEnYcKhaVxjRtSEGhemroqi7s5GVg0Fv0nDLG58B13dVLeG5GfjBFLTHJvCwkX2S+qNIZjj4voZ2KHNY4ZeOF76z87w9Txeaa9af7hMs+MtBzJl0muyLLpOrQF+3tLJHYjvyLC/vm1F5gJUlpcc5MbZ/GL/RU7Wb2CZoZHAIBiJwcywnNSYhnkEssNJShnYBtzV7iBE6Y2qEF767f47UZhLpGfPLTpnW/6gHFDqCPdF4v7tUD5Sc7tgCQag5mCKKcf5DjNIwuTF4kxFngJS06X5
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(39860400002)(346002)(396003)(376002)(1800799009)(451199024)(186009)(2906002)(83380400001)(4744005)(53546011)(6506007)(6486002)(54906003)(6636002)(316002)(66556008)(110136005)(66476007)(66946007)(478600001)(6666004)(5660300002)(26005)(44832011)(41300700001)(6512007)(9686003)(8676002)(4326008)(8936002)(82960400001)(38100700002)(86362001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kVOnb3QxVSPLN6bwWDzS2UCgUQlo6sKVd2rGPFlrnsz9duaJ7LBL8mLnGwPp?=
- =?us-ascii?Q?ki43XT7CrxBF86aPDW0mner0Vu9DUSbKhoj8+YpOGp3CTg/3FgR8TjovLPe4?=
- =?us-ascii?Q?zF2xfSslShkOXxAnRVDKn8kwzd2XE0anaO7kxLTgNuHvbzFIgLEpRT3KjZni?=
- =?us-ascii?Q?FMAcpYBMU6a4V8cQaOtTnBbkM5wthc97b35B4+SB+2GcZVC8u3yUiqy69YNm?=
- =?us-ascii?Q?MzpWpK69a27K/P9Myy21Xe/5zzBg24Fi7mW33CLpVFL+f1iEHqaEaEfcRphZ?=
- =?us-ascii?Q?oHRPFUdF1e/ezZOQjCJnw485oMNNbcJ181h2+VRKPk6+OnwcKyotz6+LTG9J?=
- =?us-ascii?Q?k4exX3JMh54UtJB+/sP2KdmWj7urbOYacFhK6pr+kdZ4LqjlZuZ+bu8bzSlx?=
- =?us-ascii?Q?5WEdKoODotnxd4+FFpY0Der6UHqKTp6f0+/rQ2fAeiFhH0hqGN0I4dmF056a?=
- =?us-ascii?Q?ProkSfcEq2IK3WW9bXksb3iXLY7xVt1ebSBT6LR65/xaDceu9dOHC0GvSnab?=
- =?us-ascii?Q?T7a16X1b0cN1v+8VhGoLfKd8aWKvznyYRawAonvEwrKS5qiPhSIUk4MRH6VW?=
- =?us-ascii?Q?P+pDLyc4ctgSgdklulkkvla4vCR7h13SFpQgWbrU94bqK/+yjfNa7YnVRZ17?=
- =?us-ascii?Q?J0/YqJaNObC4Z/RgvZSe7RuQXcFsc+Hok/rCu/j9xPU63XIJ28bJv+6+V8SN?=
- =?us-ascii?Q?lHFxA6DDuHXgW2x5f8OzjXWVo/EgKoIj+Jxn4NvYIHJa+WUwhS3UgI/nQE9q?=
- =?us-ascii?Q?z71RZEklNeCSbhQU+wa/h9VqAus+sKLoXHVZ+R9d66BHeMKv9Ti9KhRqDGDx?=
- =?us-ascii?Q?OTjQo9EhKR1d+NZotOUOkIFt5hN9OoAvkohxl9kmJOkQzcfNLcUTeMqY0iTm?=
- =?us-ascii?Q?HgYvNEmh+BqKSadKqZhD3vM1A9Ttx2OekbLjNtzn79j/z/K7pQ+JozgAwqW4?=
- =?us-ascii?Q?CywVK9kTu8hN+eP6+S/6x0SxP/7Ab1kWJCDdcs+S5FZp/rjpw+TJWHFsWVYP?=
- =?us-ascii?Q?6daMxBVKQRDAFSPn4dd39W1+LfbWjvJQCk1jg45sk3TK8fKIVATqyB08037K?=
- =?us-ascii?Q?yKJreFU7wvw55liJ7GM8m+tA1YFJQZIb7nI0FshKQ983XkaW+kJCorqJIKd3?=
- =?us-ascii?Q?V7bKJVCmM9VLnu7vQNEqMh9mrjav1xu778U9Ji0CmMSZVEmLFlIieD43b2OH?=
- =?us-ascii?Q?xUEXthTQxva/+/bj6kIjUc4Feb7GHbjRkq4NfFSzhTe5klt6fHtTgk3X887w?=
- =?us-ascii?Q?boF7rmkIcdX1PnLKEr8eTGAMFVyC2nECf9jyadZL3/pNk4mglfZm4BooXg34?=
- =?us-ascii?Q?IWYYeNYufASV86EXdLnGTAMh6Q+psAkt5xH+qez9gfVmQPjlujLIaUq+W612?=
- =?us-ascii?Q?EzI3dZtujyGiR6KoJsnSlxcWqxqR8mmY9YwMD0SoYCHLAoawxVbr7pjuF7yT?=
- =?us-ascii?Q?j6LshpNv75mBAHsqEItfXycczHixNnT6JRcjC1ha6EBfx8+X+Ue/b+QGQuS4?=
- =?us-ascii?Q?s/w8KF6lL+GVJrMkIaIktOQPI42Dqx1QfLkRoWK9WiSN84VVuCRG40RrCgma?=
- =?us-ascii?Q?0xFt9vc4YVxCLyl+qALuoAswbEn4mZwZD3t0yj8U?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7895447c-89ec-48f8-2d46-08dbada3e5b7
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PrVVHHYDNzYmgpRrz7T+13B1A5uA1o+dG7AZ8mxQk+Imm9WmL2E9zOWlc9bc?=
+ =?us-ascii?Q?cw/v5BBYBinxux3VCIpfYqAb+HWIyyv7laLNsCV18glcqaLcynP5RA6IO5YO?=
+ =?us-ascii?Q?mId0iJ+CwSLS10qwSF5HTENT8Zz53OOFNaP3IwmePjt2Ic54hsBKspsMsure?=
+ =?us-ascii?Q?XxlRQUSi/aePGRrmEQoxD/Ma7lQTPKB49H1W4nWTs7cpITMvJ4eLVIdveLzd?=
+ =?us-ascii?Q?OCNRY6l98p97vDwEb8Q3OmsCW4w4cWWlZ0fd9IC1ml3zmRMGf18d4DELZ8ej?=
+ =?us-ascii?Q?EYi5rhYiApgMkSj6JPRgtvsvtBaPm7gmEKwZuO6E1yynQaMaMJth6xP/5+Qf?=
+ =?us-ascii?Q?9oJBm6Y/0zfcycs2tual9R1Q39vas3YTOynG9XWfo23RWIe+ao6hDp/B/mIw?=
+ =?us-ascii?Q?1J78hdwm1ciFzODpGrLMs8Dywy4fk2DYwSPDLjxlWwxdTYEp+L2tAKTCE+9U?=
+ =?us-ascii?Q?AOY1zW65B72dK1PuxMCrR9TAXumnkJWIW4aEsDdhKihjFJFBGkP8apb3avUr?=
+ =?us-ascii?Q?0+M1tAZIiukKo32PIWZEiER0Z4KBWakfayVpXbf74Hb/rBGBs9OUo9Y11gyE?=
+ =?us-ascii?Q?fDyQ6O69KmcY0sS/VOB2C1r7uC41BRVmQudXQCp12xyLNPQRj4oo0YCBJxgp?=
+ =?us-ascii?Q?swxyCfjW/hsMykzlj31hMHRWyhdeYM3oCN4ilN2m6E6LY50mpA44vPTh7Fgz?=
+ =?us-ascii?Q?KYZpLvinrT0MrSPA1JqU0ou+tq1i+dXNfiOAKmhCKGgQ0R5RerJ9uyyu0CeK?=
+ =?us-ascii?Q?TcQZ5aNAJe79LcsCrqzLNiBZYyIF42HYaYjxVXNFKP9FegRxJ20EmGwN+/zE?=
+ =?us-ascii?Q?wNg+abeLl2wmlAcfY5MP1k/sz71LlyEudgxM/Xo4m96BFzNv4D/CseBLWhwk?=
+ =?us-ascii?Q?sn4rFoRfj6ZLsfLdk+iPVhVoGHkOP+xMwItFy1EPfv5adNxuYWZSYy0k5Vxu?=
+ =?us-ascii?Q?/rqoAplDj0iHogICWwVVyB2e+xiNd3yJeAFHa/DPHfGLLlpfggYSs2PhrQDG?=
+ =?us-ascii?Q?AA6K0VaIvZ/WF/MCMYdxRkwP0ksA9wmNeopEHpi2F+6NeHUJrX23Q2Nsqrz/?=
+ =?us-ascii?Q?isTXsNxXLepReaNL/jDAT8DcUPrpO3oqGc9Ei+l+NDRtyEDk4QXnYL82CW76?=
+ =?us-ascii?Q?KMDZQ+DbeABKA5D7c5tg9Xqi+MBpwkc59Seatoe8RKVkExUGrCczqAvahXeh?=
+ =?us-ascii?Q?wSHOIIe0YXlbq3aYBlP/ra3CmdyRMRSglHP9lBSExmTOH7udMoIZt2k6gjtt?=
+ =?us-ascii?Q?8wdSnh5+izZhytDoFPhYTLj6EVv2Umxon1ADIhjwmO+F9kasboEVyoZ4pt+8?=
+ =?us-ascii?Q?yVgnWWqtlFzdu3Yy+Wq13geebA/7J2VNu8VMjqnqo1FNXIRcA8sTxQyXAe5b?=
+ =?us-ascii?Q?RC53rluUnz2WDc9abXzHFluPa8TOIE5VNuIIAeK+wCBKkUuswe+68F/Fghkx?=
+ =?us-ascii?Q?BtzrpukVk3oWe5q7xqx/pI9DccsF9CENZ0faZfJ7c4n/v42ciVM8yuFNTjk6?=
+ =?us-ascii?Q?pdVvYN3dFyxIcNniO+fgSneS/i6GKKW087SwS12QBT3OPukkFdjkeu/cTnjW?=
+ =?us-ascii?Q?o7lvFiMZ7vhtm2Sm/6Z3gC0YKyBc7sePbUSGtMhY?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b79f2df-398e-40fd-9625-08dbada5123c
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 00:06:05.0844
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 00:14:29.2372
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k4z+JP2ZsVNnzOv/nsnXAs2TcZ6I1XcA28r6FtPsW4ncEOtZLdE3pcI5Xt3kP0DDDsERjl3AT7ShMGsRcU/isg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5029
+X-MS-Exchange-CrossTenant-UserPrincipalName: vGvSdOpnRll0AwkSiO9QUq+HWOJzrn4aGcmhFqaBhG45Lj1MyTqi9H9hLEMKFOzf3zB4zlOJzKLFYei+zrkzVg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6250
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Jonathan Cameron wrote:
-> On Mon, 28 Aug 2023 22:20:56 -0700
-> Ira Weiny <ira.weiny@intel.com> wrote:
+Dave Jiang wrote:
 > 
-> > Endpoint decoders used to map Dynamic Capacity must be configured to
-> > point to the correct Dynamic Capacity (DC) Region.  The decoder mode
-> > currently represents the partition the decoder points to such as ram or
-> > pmem.
+> 
+> On 8/28/23 22:20, ira.weiny@intel.com wrote:
+> > From: Navneet Singh <navneet.singh@intel.com>
 > > 
-> > Expand the mode to include DC Regions.
+> > Devices can optionally support Dynamic Capacity (DC).  These devices are
+> > known as Dynamic Capacity Devices (DCD).
+> > 
+> > Implement the DC (opcode 48XXh) mailbox commands as specified in CXL 3.0
+> > section 8.2.9.8.9.  Read the DC configuration and store the DC region
+> > information in the device state.
 > > 
 > > Co-developed-by: Navneet Singh <navneet.singh@intel.com>
 > > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
 > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> I'm reading this in a linear fashion for now (and ideally that should
-> always make sense) so I don't currently see the reason for the loops
-> in here. If they are needed for a future patch, add something to the
-> description to indicate that.
-> 
-> > 
-> > ---
-> > Changes for v2:
-> > [iweiny: split from region creation patch]
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-cxl | 19 ++++++++++---------
-> >  drivers/cxl/core/hdm.c                  | 24 ++++++++++++++++++++++++
-> >  drivers/cxl/core/port.c                 | 16 ++++++++++++++++
-> >  3 files changed, 50 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> > index 6350dd82b9a9..2268ffcdb604 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> > @@ -257,22 +257,23 @@ Description:
-> >  
-> >  What:		/sys/bus/cxl/devices/decoderX.Y/mode
-> >  Date:		May, 2022
-> > -KernelVersion:	v6.0
-> > +KernelVersion:	v6.0, v6.6 (dcY)
-> >  Contact:	linux-cxl@vger.kernel.org
-> >  Description:
-> >  		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
-> >  		translates from a host physical address range, to a device local
-> >  		address range. Device-local address ranges are further split
-> > -		into a 'ram' (volatile memory) range and 'pmem' (persistent
-> > -		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
-> > -		'mixed', or 'none'. The 'mixed' indication is for error cases
-> > -		when a decoder straddles the volatile/persistent partition
-> > -		boundary, and 'none' indicates the decoder is not actively
-> > -		decoding, or no DPA allocation policy has been set.
-> > +		into a 'ram' (volatile memory) range, 'pmem' (persistent
-> > +		memory) range, or Dynamic Capacity (DC) range. The 'mode'
-> > +		attribute emits one of 'ram', 'pmem', 'dcY', 'mixed', or
-> > +		'none'. The 'mixed' indication is for error cases when a
-> > +		decoder straddles the volatile/persistent partition boundary,
-> > +		and 'none' indicates the decoder is not actively decoding, or
-> > +		no DPA allocation policy has been set.
-> >  
-> >  		'mode' can be written, when the decoder is in the 'disabled'
-> > -		state, with either 'ram' or 'pmem' to set the boundaries for the
-> > -		next allocation.
-> > +		state, with 'ram', 'pmem', or 'dcY' to set the boundaries for
-> > +		the next allocation.
-> >  
-> >  
-> >  What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index a254f79dd4e8..3f4af1f5fac8 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -267,6 +267,19 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
-> >  	__cxl_dpa_release(cxled);
-> >  }
-> >  
-> > +static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
-> > +{
-> > +	int index = 0;
-> > +
-> > +	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
-> As you are relying on them being in order and adjacent for the loop, why is
-> 
-> 	if (mode < CXL_DECODER_DC0 || mode > CXL_DECODER_DC7)
-> 		return -EINVAL;
-> 
-> 	return mode - CXL_DECODER_DC0;
-> 
-> Not sufficient?
+> Uncapitalize Dynamic in subject
 
-That would work yes.  There is no future need for a loop.  It was just
-implemented this way early on and I did not really think about it too
-much.
-
-Done.
+Fair enough.
 
 > 
-> > +		if (mode == i)
-> > +			return index;
-> > +		index++;
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> >  static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
-> >  			     resource_size_t base, resource_size_t len,
-> >  			     resource_size_t skipped)
-> > @@ -429,6 +442,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
-> >  	switch (mode) {
-> >  	case CXL_DECODER_RAM:
-> >  	case CXL_DECODER_PMEM:
-> > +	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
-> >  		break;
-> >  	default:
-> >  		dev_dbg(dev, "unsupported mode: %d\n", mode);
-> > @@ -456,6 +470,16 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
-> >  		goto out;
-> >  	}
-> >  
-> > +	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
-> > +		int index = dc_mode_to_region_index(i);
-> > +
-> > +		if (mode == i && !resource_size(&cxlds->dc_res[index])) {
-> 
-> Not obvious why we have the loop in this patch - perhaps it makes sense later.
+> Also, maybe split out the REGION vs DECODER as a prep patch.
 
-I think it was just walking through the DC regions like the previous code
-was walking through the PMEM/RAM 'regions'.
+Done per Jonathan.
 
-> If this is to enable later changes, then good to say that in the patch description.
-
-... nope...
-
-> otherwise, something like.
-> 
-> 	int index;
-> 	
-> 	rc = dc_mode_to_region_index(i);
-> 	if (rc < 0)
-> 		goto out;
-> 
-> 	index = rc;
-> 	if (!resource_size(&cxlds->dc_res[index]) {
-> 	....
-> 		
-
-Yea...  but that won't exactly work.  Something like this:
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index cf5d656c271b..f250d1566682 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -463,10 +463,12 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
-                goto out;
-        }
-
--       for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
--               int index = dc_mode_to_region_index(i);
-+       if (cxl_decoder_mode_is_dc(mode)) {
-+               rc = dc_mode_to_region_index(mode);
-+               if (rc < 0)
-+                       goto out;
-
--               if (mode == i && !resource_size(&cxlds->dc_res[index])) {
-+               if (!resource_size(&cxlds->dc_res[rc])) {
-                        dev_dbg(dev, "no available dynamic capacity\n");
-                        rc = -ENXIO;
-                        goto out;
-
-But looking at the function I think there could be a clean up patch before
-this.  I don't see the need to check the mode twice.
-
-...  Yes I think that looks cleaner.
-
-Thanks for the review!
+Thanks for the review.
 Ira
