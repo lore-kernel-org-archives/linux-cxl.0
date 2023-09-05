@@ -2,192 +2,149 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75865CA0FFA
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 17:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006BACA0FFA
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 18:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236348AbjIERqy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 13:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34536 "EHLO
+        id S239845AbjIESNy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Sep 2023 14:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238343AbjIERqf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 13:46:35 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837832C6DD
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 10:29:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693934989; x=1725470989;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6bArw/fGIA7yaLAINoWv+uHN2LGzvreGmvSL5JCBaxw=;
-  b=LUwHTXpvd4bJAP78PX4ybdbIETs15iG/kWypCXPpilVDNNLVVUy+IIIZ
-   0uCZcTNkZ6QNnkcjo4ONcHVajana0AA0EK0/X8GWSh9Z16SoeIy2P8sxG
-   QwfOVt08eIzLJTKz9nGrgDd1Qh0+H2euSMA2CI9mVaSO7CRKeJJpmDmQt
-   VYTD/gfoqsQCinxuJLIUa742f8BCvTT2SyN/UTjn2/b0e5qo8FnJeKb6h
-   08Z0MaS9TviDKjLcaIuaxCN1XlLGxP01CEbromYi9YcAllrZFTrbdFTrx
-   6Ll+fQ3uKlEf25rYI+lSJzBVWgSiHThKybhEhaXXb2RIPSgy+VW0dPDek
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="380663778"
-X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="380663778"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 10:29:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="741171611"
-X-IronPort-AV: E=Sophos;i="6.02,229,1688454000"; 
-   d="scan'208";a="741171611"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2) ([10.209.50.9])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 10:29:01 -0700
-Date:   Tue, 5 Sep 2023 10:29:00 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] cxl/region: Refactor granularity select in
- cxl_port_setup_targets()
-Message-ID: <ZPdlXLchNe9T4r5S@aschofie-mobl2>
-References: <20230822180928.117596-1-alison.schofield@intel.com>
- <20230829143240.000072d7@Huawei.com>
+        with ESMTP id S239826AbjIESNi (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 14:13:38 -0400
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12655B86
+        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 09:57:33 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99357737980so421166466b.2
+        for <linux-cxl@vger.kernel.org>; Tue, 05 Sep 2023 09:57:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1693932925; x=1694537725; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3AlzI1/zUkgHjINPB/60Bhf/bsRfn38JsFwy+xis2jA=;
+        b=LKdAnjFakELd+M4ORbusarOyo94XgreoFCbZCb0CzZLS40TUf3KslNG1QIiPqEjGkj
+         j9HOtn7oDntfIlizBGpFw6vUtks+jbQOYYgG3ZweyKy1CVZT2BwGXd8RQMz7xoNxozC6
+         qZjRWm5f53YkuHa4gA4JJDwDYTTahAwKgNXHuiUp11+N35bxL4GFc7LfpKuku/EiFbu5
+         bNDCZbOxNVZDP3yz+2LDxWgpptFTeyernzp/wduhKcsIk8DPll2qU4GPuWTGh29XQhM9
+         oijYKIeSkDKdumX82JSG0KLIa2ebj7zfwfi4FviKWI1o+sjXvgmQG20/kTv/i0RkmgjJ
+         nqCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693932925; x=1694537725;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3AlzI1/zUkgHjINPB/60Bhf/bsRfn38JsFwy+xis2jA=;
+        b=iWQJb0Pu5xfyz5aGN+nY7f87T1g9vDsP/pncY2fV08IJGUaiNuhOR5jZPwnfsbHLCc
+         jYmE0azO6fnJHHKW3IjljDErDUTTkLsKYUu0J1+R5XUP8GtbiVP4JfHPjTkQWNBjzecE
+         yMbAvhO9FqjFkK55cnADr+ra3iDNwFPxukg/H/gLJNinzmsSEdkOvQ+chPlQatwTeI79
+         Id+lsxAVSI259QX5knfu+sm8WcO3vzTZoQwFud4GShIQLSwaUzAyFtJmfUYOFobb7jpi
+         PxNnxwjq6NdfRWyq9kRwWpsFpQDFDAzi/dlutFzvkAXNXNHZxmRGNgGdw5VwzKMMrhhi
+         Gxyg==
+X-Gm-Message-State: AOJu0YxFTfDPxfIC82nk/QnDvmhpgYo7S+ZmnAqCBB/WyPtDwy8339k/
+        aalAKV+1P9HtIi5oakEeeVtCCA==
+X-Google-Smtp-Source: AGHT+IGJjFvazhbzDO72qsjE+5oyOKiJjYH9aNw64nxL/uDLtKPe8WhesihAPOy2FRDrol1fvQtvSQ==
+X-Received: by 2002:a17:907:7893:b0:99b:d580:546c with SMTP id ku19-20020a170907789300b0099bd580546cmr369290ejc.23.1693932925378;
+        Tue, 05 Sep 2023 09:55:25 -0700 (PDT)
+Received: from [192.168.69.115] (mst45-h01-176-184-47-79.dsl.sta.abo.bbox.fr. [176.184.47.79])
+        by smtp.gmail.com with ESMTPSA id f3-20020a170906824300b009786c8249d6sm7898364ejx.175.2023.09.05.09.55.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Sep 2023 09:55:24 -0700 (PDT)
+Message-ID: <d3e6506a-b553-d292-9428-25e784be0d4f@linaro.org>
+Date:   Tue, 5 Sep 2023 18:55:23 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230829143240.000072d7@Huawei.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.0
+Subject: Re: [PATCH 1/2] hw/cxl: Add utility functions decoder interleave ways
+ and target count.
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron via <qemu-devel@nongnu.org>
+Cc:     Michael Tsirkin <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>,
+        linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        linuxarm@huawei.com
+References: <20230904164704.18739-1-Jonathan.Cameron@huawei.com>
+ <20230904164704.18739-2-Jonathan.Cameron@huawei.com>
+ <89d5477c-ece0-b738-c64f-056242619d92@linaro.org>
+ <20230905155639.00000b3a@huawei.com> <20230905160607.0000366f@huawei.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230905160607.0000366f@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, Aug 29, 2023 at 02:32:40PM +0100, Jonathan Cameron wrote:
-> On Tue, 22 Aug 2023 11:09:28 -0700
-> alison.schofield@intel.com wrote:
+On 5/9/23 17:06, Jonathan Cameron wrote:
+> On Tue, 5 Sep 2023 15:56:39 +0100
+> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
 > 
-> > From: Alison Schofield <alison.schofield@intel.com>
-> > 
-> > In cxl_port_setup_targets() the region driver validates the
-> > configuration of auto-discovered region decoders, as well
-> > as decoders the driver is preparing to program.
-> > 
-> > The existing calculations use the encoded interleave granularity
-> > value to create an interleave granularity that properly fans out
-> > when routing an x1 interleave to a greater than x1 interleave.
-> > 
-> > That all worked well, until this config came along:
-> > Host Bridge: 2 way at 256 granularity
-> >     Switch Decoder_A:	1 way at 512
+>> On Mon, 4 Sep 2023 20:26:59 +0200
+>> Philippe Mathieu-Daudé <philmd@linaro.org> wrote:
+>>
+>>> On 4/9/23 18:47, Jonathan Cameron wrote:
+>>>> As an encoded version of these key configuration parameters is
+>>>> a register, provide functions to extract it again so as to avoid
+>>>> the need for duplicating the storage.
+>>>>
+>>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>> ---
+>>>>    include/hw/cxl/cxl_component.h | 14 ++++++++++++++
+>>>>    hw/cxl/cxl-component-utils.c   | 17 +++++++++++++++++
+>>>>    2 files changed, 31 insertions(+)
+>>>>
+>>>> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+>>>> index 42c7e581a7..f0ad9cf7de 100644
+>>>> --- a/include/hw/cxl/cxl_component.h
+>>>> +++ b/include/hw/cxl/cxl_component.h
+>>>> @@ -238,7 +238,21 @@ static inline int cxl_decoder_count_enc(int count)
+>>>>        return 0;
+>>>>    }
+>>>>    
+>>>> +static inline int cxl_decoder_count_dec(int enc_cnt)
+>>>> +{
+>>>> +    switch (enc_cnt) {
+>>>> +    case 0: return 1;
+>>>> +    case 1: return 2;
+>>>> +    case 2: return 4;
+>>>> +    case 3: return 6;
+>>>> +    case 4: return 8;
+>>>> +    case 5: return 10;
+>>>> +    }
+>>>> +    return 0;
+>>>> +}
+>>>
+>>> Why inline?
+>>>    
+>>
+>> Bad habit.
+> Nope. I'm being slow.  This is in a header so if I don't
+> mark it inline I get a bunch of defined but not used warnings.
 > 
-> Arguably doesn't matter what the granularity is for a 1 way
-> decode. Probably just drop that or does it matter for the
-> calculations somewhere?
-> 
->       Switch Decoder_A: 1 way
+> Obviously I could move the implementation of this and the matching
+> encoding routines out of the header. I haven't done so for now.
 
-I agree that the gran for a 1 way decode doesn't matter. The config
-offered is an example, so it includes actual gran.
+Inlined function in hw/ are hardly justifiable. They make the headers
+and debugging sessions harder to read in my experience. Compilers are
+becoming clever and clever, and we have LTO, so I rather privilege
+code maintainability. My 2 cents :)
 
-> 
-> Feel free to ignore the suggestion below.
+>>> Alternatively:
+>>>
+>>>     unsigned cxl_decoder_count_dec(unsigned enc_cnt)
+>>>     {
+>>>         return enc_cnt <= 5 ? 2 * enc_cnt : 0;
+>>
+>> It gets a little more fiddly than the code I'm proposing implies.
+>> For Switches and Host Bridges larger values are defined
+>> (we just don't emulate them yet and may never do so) and those
+>> don't have a sensible mapping.
+>>
+>> I guess there is no harm in adding the full decode however
+>> which will make it more obvious why it was a switch statement.
 
-see below -
+Right, no problem.
 
-> 
-> 
-> >         Endpoint_X:	2 way at 256
-> >     Switch Decoder_B:	1 way at 512
-> >         Endpoint_Y:	2 way at 256
-> > 
-> > When the Host Bridge interleave is greater than 1 and the root
-> > decoder interleave is exactly 1, the region driver needs to
-> > consider the number of targets in the region when calculating
-> > the expected granularity.
-> > 
-> > While examining the existing logic, and trying to cover the case
-> > above, a couple of simplifications appeared, hence this proposed
-> > refactoring.
-> > 
-> > The first simplification is to apply the logic to the nominal
-> > values and use the existing helper function granularity_to_eig() to
-> > translate the desired granularity to the encoded form. This means
-> > the comment and code regarding setting address bits is discarded.
-> > Although that logic is not wrong, it adds a level of complexity that
-> > is not required in the granularity selection. The eig and eiw are
-> > indeed part of the routing instructions programmed into the decoders.
-> > Up-level the discussion to nominal ways and granularity for clearer
-> > analysis.
-> > 
-> > The second simplification reduces the logic to a single granularity
-> > calculation that works for all cases. The new calculation doesn't
-> > care if parent_iw => 1 because parent_iw is used as a multiplier.
-> > 
-> > The refactor cleans up a useless assignment of eiw made after the
-> > iw is already calculated.
-> > 
-> > Regression testing included an examination of all of the ways and
-> > granularity selections made during a run of the cxl_test unit tests.
-> > There were no differences in selections before and after this patch.
-> > 
-> > Fixes: ("27b3f8d13830 cxl/region: Program target lists")
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> > 
-> > Changes in v2:
-> > - No changes to the code. Commit log fixups only.
-> > - Correct the commit log example. Endpoints are 2 * 256 (Jonathan)
-> > - Use 'encoded' and 'nominal' when referring to the interleave
-> >   granularity format (Dan, DaveJ) 
-> > - Commit log grammar & spelling fixups (Dan, DaveJ)
-> > - Add Fixes Tag (Dan)
-> > - v1: https://lore.kernel.org/linux-cxl/20230804232726.1672782-1-alison.schofield@intel.com/
-> > 
-> >  drivers/cxl/core/region.c | 17 ++++++++---------
-> >  1 file changed, 8 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e115ba382e04..5a1cc59cca99 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1154,16 +1154,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
-> >  	}
-> >  
-> >  	/*
-> > -	 * If @parent_port is masking address bits, pick the next unused address
-> > -	 * bit to route @port's targets.
-> > +	 * Interleave granularity is a multiple of @parent_port granularity.
-> > +	 * Multiplier is the parent port interleave ways.
-> >  	 */
-> > -	if (parent_iw > 1 && cxl_rr->nr_targets > 1) {
-> > -		u32 address_bit = max(peig + peiw, eiw + peig);
-> > -
-> > -		eig = address_bit - eiw + 1;
-> > -	} else {
-> > -		eiw = peiw;
-> 
-> This threw me briefly.   eiw isn't used before this patch.
-> You 'could' pull that out as a precursor to make this logic a tiny bit
-> more obvious but meh it may not be worth doing so.
+Preferably having this tiny function not inlined:
 
-I expect it will ease the backport of this fix to keep as is.
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
-Alison
-
-> 
-> I've not checked the maths (As interleave gives me headaches far too quickly
-> so will rely on the you and the other reviewers to ensure that was right :)
-> 
-> 
-> 
-> > -		eig = peig;
-> > +	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
-> > +	if (rc) {
-> > +		dev_dbg(&cxlr->dev,
-> > +			"%s: invalid granularity calculation (%d * %d)\n",
-> > +			dev_name(&parent_port->dev), parent_ig, parent_iw);
-> > +		return rc;
-> >  	}
-> >  
-> >  	rc = eig_to_granularity(eig, &ig);
-> > 
-> > base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
-> 
