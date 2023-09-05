@@ -2,82 +2,112 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE07CA0FF3
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEAACA0FF3
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231892AbjIEQXq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56546 "EHLO
+        id S1345176AbjIEQXr (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Sep 2023 12:23:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353961AbjIEIvK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 04:51:10 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9AC5BF
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 01:51:06 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-500b66f8b27so3688678e87.3
-        for <linux-cxl@vger.kernel.org>; Tue, 05 Sep 2023 01:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693903865; x=1694508665; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v79Vp67t0wu7INzTM9V9wUXCXrocS2Y+HNPF9qPRgWk=;
-        b=ziqZHIunAWU7p7K3xr9b8/3dg/MVVKQqoVki1FNfywZpUOZPGDqGVmGZZY950FQXjx
-         pxRW9yauexc2MoZL6FgVxLW3Z9fSU7JvysxWv5/I75AfOhekTNeP8Y0sVzrjto8XNHla
-         aR3//VJw864rswS6mpYTSMj9PGi4n/gBoLf5ZJSSE9+euS7cOa/Wb+WU3+FKVPmwi+uJ
-         /wwpjqCDF/SUkud3Dz6hjPkxrjAOop0ZY6BWIETGJhKcPMEigK+NVwUhdnNuzdowBtZy
-         NbEVMGlxYKshoGJwDm0RupnR22n22C7aUdvhjsDHnvDp7XxGpJj/Tsu1LntSSLbUGj2H
-         LlEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693903865; x=1694508665;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v79Vp67t0wu7INzTM9V9wUXCXrocS2Y+HNPF9qPRgWk=;
-        b=mG0Q/PISNSjnJI9jFauy7OkFSW8szjCDUEOZXDJ2S3LC995OUQCJ9CdSDeeJMksUl3
-         Ab5X8D1l2IcT7Njjpv//V+4rfqBdY5K6vmbUFFxLewiVdfn80yHFp8FVVv9vVnCwf97e
-         PzTssSm239p7WGJThMyogcRyd1Q5fiB4U8MHFEp4fCgbUoq3+1160DYKTIJZLm2mrMnQ
-         l+5b80LnWpykj+dM7+qkWlvTzzGBf2Zz8N7M2ti1oRy+owMrV/LmbKstQyaAkLnFSx8X
-         x+YjVxWs6ht9i1M8qTgjqdqCOBH89iYGDL2uZeG7ccDCALMiCw9HncaxpqkJMkcbDknH
-         Z7Yw==
-X-Gm-Message-State: AOJu0Yw+k3zekGyUC5mWYnp+LacYN+i8yCjDKefk5/G/vLB6PymLEA7b
-        fRfjCppEmoPhTzpcd06zY8ViiQ==
-X-Google-Smtp-Source: AGHT+IE3+mJ69nsks5sMq/kErs7OpOTeV9r2todNYkVk8DOjR9SXuZgA/BQYX7CysP4wbODCajNPtw==
-X-Received: by 2002:a05:6512:234a:b0:500:b872:7899 with SMTP id p10-20020a056512234a00b00500b8727899mr10427134lfu.62.1693903865146;
-        Tue, 05 Sep 2023 01:51:05 -0700 (PDT)
-Received: from [192.168.69.115] (mst45-h01-176-184-47-79.dsl.sta.abo.bbox.fr. [176.184.47.79])
-        by smtp.gmail.com with ESMTPSA id m18-20020a7bce12000000b00401dc20a070sm19330903wmc.43.2023.09.05.01.51.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Sep 2023 01:51:04 -0700 (PDT)
-Message-ID: <0318a8c1-2c04-1a7b-ccbf-892946cf29b8@linaro.org>
-Date:   Tue, 5 Sep 2023 10:51:03 +0200
+        with ESMTP id S1354833AbjIEOvN (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 10:51:13 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32D3113;
+        Tue,  5 Sep 2023 07:51:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 55995CE11D9;
+        Tue,  5 Sep 2023 14:51:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8973CC433C8;
+        Tue,  5 Sep 2023 14:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693925466;
+        bh=SIFsFjVXa4EVY6ryyNMcawtByWDU+9xvsMPj0ugRqMc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c6gxkkVF4yp8Y29+wdlhNzoudKMaSUGL4gbpGm0UW4ROenvqguTu3PRRw8M8CCqQc
+         Wq8Ut+Lyy5/G4v9hBR/G3bb/G4+xxb+e0HRgva5R0TohmdXmSKG7Og1zlMNPVsfIJN
+         5cYeuIRS4pzxVN5ojMdfa7z/bbiSJNKyfgitAhYLDpBOvvm+WrrBZ2HNTqOmgCoY9v
+         qS5wu6XugvSR/DtYXpa/81p13IWKPqHe49TJGG4TVMIf2DZYGRBSMh5Ig+UpYdLE7N
+         +9BE9cL1o0A8iNbFJyPNqtkpMzd0xco76M6rSHuIN0G0T3YSHeVyCCs0bCf3Fmhq48
+         gIXhb4BFEqIRw==
+Date:   Tue, 5 Sep 2023 15:51:00 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Jeongtae Park <jtp.park@samsung.com>, linux-cxl@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Wonjae Lee <wj28.lee@samsung.com>,
+        Hojin Nam <hj96.nam@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>
+Subject: Re: [PATCH] perf: CXL: fix mismatched number of counters mask
+Message-ID: <20230905145100.GC3322@willie-the-truck>
+References: <CGME20230905123044epcas2p2b1052956527cf63a03e2895d4b93e7e1@epcas2p2.samsung.com>
+ <20230905123309.775854-1-jtp.park@samsung.com>
+ <20230905142854.GA3322@willie-the-truck>
+ <20230905154634.000075c5@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH 2/5] cxl/type3: Cleanup multiple CXL_TYPE3() calls in
- read/write functions
-Content-Language: en-US
-To:     Gregory Price <gourry.memverge@gmail.com>, qemu-devel@nongnu.org
-Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
-        junhee.ryu@sk.com, kwangjin.ko@sk.com,
-        Gregory Price <gregory.price@memverge.com>
-References: <20230901012914.226527-1-gregory.price@memverge.com>
- <20230901012914.226527-3-gregory.price@memverge.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230901012914.226527-3-gregory.price@memverge.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230905154634.000075c5@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 1/9/23 03:29, Gregory Price wrote:
-> Call CXL_TYPE3 once at top of function to avoid multiple invocations.
+On Tue, Sep 05, 2023 at 03:46:34PM +0100, Jonathan Cameron wrote:
+> On Tue, 5 Sep 2023 15:28:54 +0100
+> Will Deacon <will@kernel.org> wrote:
 > 
-> Signed-off-by: Gregory Price <gregory.price@memverge.com>
-> ---
->   hw/mem/cxl_type3.c | 10 ++++++----
->   1 file changed, 6 insertions(+), 4 deletions(-)
+> > On Tue, Sep 05, 2023 at 09:33:09PM +0900, Jeongtae Park wrote:
+> > > The number of Count Units field is described as 6 bits long
+> > > in the CXL 3.0 specification. However, its mask value was
+> > > only declared as 5 bits long.
+> > > 
+> > > Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
+> > > ---
+> > >  drivers/perf/cxl_pmu.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> > > index 0a8f597e695b..365d964b0f6a 100644
+> > > --- a/drivers/perf/cxl_pmu.c
+> > > +++ b/drivers/perf/cxl_pmu.c
+> > > @@ -25,7 +25,7 @@
+> > >  #include "../cxl/pmu.h"
+> > >  
+> > >  #define CXL_PMU_CAP_REG			0x0
+> > > -#define   CXL_PMU_CAP_NUM_COUNTERS_MSK			GENMASK_ULL(4, 0)
+> > > +#define   CXL_PMU_CAP_NUM_COUNTERS_MSK			GENMASK_ULL(5, 0)
+> > >  #define   CXL_PMU_CAP_COUNTER_WIDTH_MSK			GENMASK_ULL(15, 8)
+> > >  #define   CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK		GENMASK_ULL(24, 20)
+> > >  #define   CXL_PMU_CAP_FILTERS_SUP_MSK			GENMASK_ULL(39, 32)  
+> > 
+> > I don't have access to the CXL spec, but widening this mask looks like
+> > it puts us out-of-whack with CXL_PMU_MAX_COUNTERS.
+> > 
+> > Did v3.0 of the spec bump the number of counters? If so, can you please
+> > check that this is a backwards-compatible change?
+> 
+> CXL Performance monitors were only introduced in CXL 3.0 so not that.
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Thanks for the information!
 
+> The max value that register can take is 0x3f (0 based, so 64 counters ==
+> CXL_PMU_MAX_COUNTERS)
+> So it should be 6 bits wide. I did some history digging and this isn't
+> even a draft spec / final spec issue - simple typo I guess.
+
+Heh, I blame the heat as I thought this was extending to 7 bits for some
+reason. Sorry about that.
+
+> Fix seems correct to me.
+> 
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+I'll pick it up, thanks again!
+
+Will
