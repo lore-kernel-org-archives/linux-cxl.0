@@ -2,142 +2,237 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F03FCA0FE2
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50846CA0FF8
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346179AbjIEQYJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33090 "EHLO
+        id S1346748AbjIEQYK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Sep 2023 12:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354544AbjIEMax (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 08:30:53 -0400
+        with ESMTP id S1353510AbjIEG0S (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 02:26:18 -0400
 Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189D91AE
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 05:30:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A644DCC4
+        for <linux-cxl@vger.kernel.org>; Mon,  4 Sep 2023 23:26:13 -0700 (PDT)
 Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230905123046epoutp0333b92d7d644ef38cc75d1ac04565e9cd~CAJQuHeoz0886408864epoutp03O
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 12:30:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230905123046epoutp0333b92d7d644ef38cc75d1ac04565e9cd~CAJQuHeoz0886408864epoutp03O
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230905062611epoutp033b0d794f625460a1fd9d6607a35122ac~B7K8CS-2a0907209072epoutp038
+        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 06:26:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230905062611epoutp033b0d794f625460a1fd9d6607a35122ac~B7K8CS-2a0907209072epoutp038
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1693917046;
-        bh=rLqwM4Ej3f3oZhrWdjzzrSXsgGVEz9lmXWNgeSgKxcE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ORkKzUFk1pBSEJKWktv5bn8LiKXl+KWIpSqi1mCq12Wd3MM5nDMXzx7HVLXasJAVy
-         dA0ElUsve4U9puvivBS8XLMHn+vCmU93RBNqw6nWsxWn7OJ3C+htuWbpaI8Prc8ne2
-         6+s855GhxHeYjgPFsII8zTJU2mgU+JTEhQAB0M58=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        s=mail20170921; t=1693895171;
+        bh=/5hrUhRUYLkyoSW8pcoFH8awEue7NyaLlUycgFX8lMo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AloKsvutEwRwB4ozkJC4qIqvHlPsycRptq0IMd+0/VHRmckR2XZlRGg0nS74nreWs
+         fWQdWw0ok4VgmHhP0wgI+tairxKX4F02xZ6AK+11U2ZYulWnAbFPVCmh0YNB9Ux3YM
+         chstjnylyT+fXWkU4hFq7z1Q030hv0prL/q+APno=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
         epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230905123045epcas2p2df9bc77971365fa77dd1951bb88cbd3f~CAJQC9xE92365023650epcas2p2N;
-        Tue,  5 Sep 2023 12:30:45 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.100]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4Rg4bn03vPz4x9Ps; Tue,  5 Sep
-        2023 12:30:45 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E4.F7.09660.47F17F46; Tue,  5 Sep 2023 21:30:44 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-        20230905123044epcas2p2b1052956527cf63a03e2895d4b93e7e1~CAJPLwH7_0040000400epcas2p2Z;
-        Tue,  5 Sep 2023 12:30:44 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230905123044epsmtrp2af65b649972140a11aaa80b5581b8aea~CAJPK3tKB2288222882epsmtrp2r;
-        Tue,  5 Sep 2023 12:30:44 +0000 (GMT)
-X-AuditID: b6c32a47-d5dfa700000025bc-6e-64f71f74fa11
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D3.8A.08649.47F17F46; Tue,  5 Sep 2023 21:30:44 +0900 (KST)
-Received: from jtpark-7920.dsn.sec.samsung.com (unknown [10.229.83.56]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230905123044epsmtip2d1c7615346598e5da35cb6d0a1e04879~CAJO530-z1816718167epsmtip2c;
-        Tue,  5 Sep 2023 12:30:44 +0000 (GMT)
-From:   Jeongtae Park <jtp.park@samsung.com>
-To:     linux-cxl@vger.kernel.org,
-        Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        20230905062610epcas2p2b212f5bf1e3bc14627a52345ec3372bd~B7K7j2bkD0286202862epcas2p2b;
+        Tue,  5 Sep 2023 06:26:10 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.90]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4RfwW61Hskz4x9Pp; Tue,  5 Sep
+        2023 06:26:10 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D9.89.09765.10AC6F46; Tue,  5 Sep 2023 15:26:09 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20230905062609epcas2p44455a5a18e77d1ee0b8f46c8f6b3af96~B7K6gUDMs1381413814epcas2p4c;
+        Tue,  5 Sep 2023 06:26:09 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230905062609epsmtrp1f7472c87e7680ede5256d89d15dc3c4e~B7K6cSIaq0778807788epsmtrp19;
+        Tue,  5 Sep 2023 06:26:09 +0000 (GMT)
+X-AuditID: b6c32a48-40fff70000002625-f3-64f6ca01216c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C4.7A.08788.10AC6F46; Tue,  5 Sep 2023 15:26:09 +0900 (KST)
+Received: from jehoon-Precision-7920-Tower (unknown [10.229.83.133]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20230905062609epsmtip18e1d31466abf18cba0818a1170f8ebce~B7K6LxyKE1637116371epsmtip1P;
+        Tue,  5 Sep 2023 06:26:09 +0000 (GMT)
+Date:   Tue, 5 Sep 2023 15:29:18 +0900
+From:   Jehoon Park <jehoon.park@samsung.com>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
         Kyungsan Kim <ks0204.kim@samsung.com>,
-        Wonjae Lee <wj28.lee@samsung.com>,
-        Hojin Nam <hj96.nam@samsung.com>,
-        Junhyeok Im <junhyeok.im@samsung.com>,
-        Jehoon Park <jehoon.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>
-Subject: [PATCH] perf: CXL: fix mismatched number of counters mask
-Date:   Tue,  5 Sep 2023 21:33:09 +0900
-Message-Id: <20230905123309.775854-1-jtp.park@samsung.com>
-X-Mailer: git-send-email 2.34.1
+        Junhyeok Im <junhyeok.im@samsung.com>
+Subject: Re: [ndctl PATCH v2 2/2] cxl: add 'set-alert-config' command to cxl
+ tool
+Message-ID: <20230905062918.GA8186@jehoon-Precision-7920-Tower>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmuW6J/PcUg10zrSw+vPnHYnHgdQO7
-        xaqF19gsjqy9ymSx+OgMZoujezgsNj2+xmpxftYpFovLu+awWSy9fpHJouWOqcXG++/YHHg8
-        1sxbw+jRcuQtq8emVZ1sHpuX1Hv0bVnF6PF5k1wAW1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8
-        c7ypmYGhrqGlhbmSQl5ibqqtkotPgK5bZg7QhUoKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OIS
-        W6XUgpScAvMCveLE3OLSvHS9vNQSK0MDAyNToMKE7IyOzrMsBXPYKzY9OszawNjG1sXIySEh
-        YCIxY10vYxcjF4eQwA5Gie/bm1ggnE+MEp/WNzFDON8YJWYu/swC09Jw8RITRGIvo0TjmWlQ
-        LX8YJdb9+coEUsUmoCUxfWYDaxcjB4eIgL/EpEtFIGFmgU9MEkuviYHYwgJOEm1Pn7GD2CwC
-        qhIzty4Ha+UVsJJoPbkXapm8xP6DZ5kh4oISJ2c+YYGYIy/RvHU22HUSAl/ZJX4uf8kO0eAi
-        cepxN1SzsMSr41ug4lISn9/tZYNoaGaUeP38CguE0wJ09e0dUFXGEu9uPge7mllAU2L9Ln0Q
-        U0JAWeLILajFfBIdh/+yQ4R5JTrahCAalSTmLZ3HDGFLSFyauwXK9pDYtH8a2HAhgViJ8wuP
-        MU9glJ+F5J1ZSN6ZhbB3ASPzKkax1ILi3PTUYqMCY3isJufnbmIEp1It9x2MM95+0DvEyMTB
-        eIhRgoNZSYT3nfy3FCHelMTKqtSi/Pii0pzU4kOMpsAAnsgsJZqcD0zmeSXxhiaWBiZmZobm
-        RqYG5krivPda56YICaQnlqRmp6YWpBbB9DFxcEo1ME24p2h2/e+pBW6318xbviZCS8VB7qTV
-        Tw0p5l9sP7RuLLAsu3DSt2F/+rR/L5+cNPC9nqO3+RfnOa9K74tTTgoJnZ9k4rDG02S62fs4
-        zfYp6iHuvxezXfky9/jE7Zwn/vx3OGYlofjZdduSxOZ94dNcfA7ozJ1yNEn/l6fJLok4bpmL
-        y4w2bN7Q3ume13fDwPCP+fQzd2ZkqB83Eiv0NWzxn37stJTPfAGfQ32fXM/v41wip7xysTCj
-        47ToP9PXS/o3vpvLcLT7TbnACosagdAz4fwBsqkV3xx1Q95lZ5RvlOtj4YqTS/V9fe98SOzR
-        zA0v5Y2/dW7wb7ZW1C5RevixWfhD+au65/3f2aeXnVRiKc5INNRiLipOBABZk7uhLgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsWy7bCSvG6J/PcUg21bZS0+vPnHYnHgdQO7
-        xaqF19gsjqy9ymSx+OgMZoujezgsNj2+xmpxftYpFovLu+awWSy9fpHJouWOqcXG++/YHHg8
-        1sxbw+jRcuQtq8emVZ1sHpuX1Hv0bVnF6PF5k1wAWxSXTUpqTmZZapG+XQJXRkfnWZaCOewV
-        mx4dZm1gbGPrYuTkkBAwkWi4eImpi5GLQ0hgN6PE11mtrBAJCYnlG14wQdjCEvdbjrBCFP1i
-        lNj19zQ7SIJNQEti+swGsAYRAX+J+a8PgDUwC/xhkvjVqAtiCws4SbQ9fQZWzyKgKjFz63Kw
-        Gl4BK4nWk3tZIBbIS+w/eJYZIi4ocXLmExaIOfISzVtnM09g5JuFJDULSWoBI9MqRsnUguLc
-        9NxkwwLDvNRyveLE3OLSvHS95PzcTYzg4NbS2MF4b/4/vUOMTByMhxglOJiVRHjfyX9LEeJN
-        SaysSi3Kjy8qzUktPsQozcGiJM5rOGN2ipBAemJJanZqakFqEUyWiYNTqoFJoEtg5aTjjrd2
-        X2ixFv0UsSku2Uxh2maRZc1n1+/b1aUr22KQdVT6hE1t0c4gU/Vvt96yOFqGlRZpX/qtc7g7
-        2iWjzdnGhvl/vs3hKn+Ro2qvGbn2TjwxcUEf67fQO1nz3cpmSvu/PNWs+1dl0a167wwheTu3
-        gBtRQv3nvhbdOr+mcm6RuXeC53x96e/fA1QsAnPf/MytSRed7n41xv4lR4TlrnnRfHFTNghz
-        rboQcHCR+NTvKZOYvCadn/U+4djd3mie9wv+MjAY/OUJV9uRwCvMtspq45OOX3PidI/zrI7r
-        0Obd/urFwg2felPa7whPNblcsysjfpb6R/FN2/Qy1hQwPF01PbpM0F86crsSS3FGoqEWc1Fx
-        IgA7IND73QIAAA==
-X-CMS-MailID: 20230905123044epcas2p2b1052956527cf63a03e2895d4b93e7e1
+In-Reply-To: <v76symilqy5onz6n3y7e47r5xqpaf53nunbb5kz2pcesvjocw7@42o6dotjncu5>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPJsWRmVeSWpSXmKPExsWy7bCmmS7TqW8pBtdPMVrcfXyBzWL61AuM
+        FiduNrJZrL65htFi/9PnLBarFl5js1h8dAazxdE9HBbnZ51isVj54w+rxa0Jx5gcuD1ajrxl
+        9Vi85yWTx4vNMxk9+rasYvSYOrve4/MmuQC2qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMz
+        A0NdQ0sLcyWFvMTcVFslF58AXbfMHKDrlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkF
+        KTkF5gV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGcdbrrAVnJGvmHi0nbGB8YNEFyMnh4SAiUTv
+        +0ssXYxcHEICOxglzsydzgbhfGKU6PmynwnC+cYocWnHFWaYloWXHjFDJPYySqxa0APl/GSU
+        +DVjIhtIFYuAisSDWcfBbDYBbYn72zeA2SIC6hLz1t5mBGlgFmhilpj55jE7SEJYIFji1M6v
+        TCA2r4C9xPzW92wQtqDEyZlPgC7k4OAU8JOYOacKJCwqoCxxYNtxsPMkBBZySNyct5YV4jwX
+        iStfe5kgbGGJV8e3sEPYUhIv+9ug7HyJnydvQdUXSHz68oEFwjaWeHfzOVicWSBD4s6Xw+wg
+        eyWAlh25xQIR5pPoOPwXKswr0dEmBNGpKtF1/AMjhC0tcfjKUWhgeUgcX9/KCAmfViaJg5Nn
+        s09glJ+F5LNZSLZB2DoSC3Z/YpsFtIIZaNbyfxwQpqbE+l36CxhZVzGKpRYU56anFhsVmMBj
+        Ozk/dxMjOOVqeexgnP32g94hRiYOxkOMEhzMSiK87+S/pQjxpiRWVqUW5ccXleakFh9iNAXG
+        00RmKdHkfGDSzyuJNzSxNDAxMzM0NzI1MFcS573XOjdFSCA9sSQ1OzW1ILUIpo+Jg1OqgUlG
+        ZVL4wd4d6VpXM0WPOi1ne194fv88DfHAz/GXp37yurQn1fmpQVPG9MOC6ody2RhbXuW9r1l/
+        6sGcCm9jweCip9uuPNII9uQX/vZ4LrOj+E6lVQXLZdc9W8RdvFP23uu6V5ris4vLAxgLU7ZU
+        mihNeqb4wVjTdJcwt6Qf75+vFdGGt7vmOb3mi5m3qPK/vVfDJ6Ebc6bxiMaf1ltR+P7wPIf+
+        hwI/ey1UDxsJuJp/Vs6Oc51zwtH60dcpHR/6I34kPmT+cPob//Hr0UfOVv3NfxTcnyebbnvl
+        u+QDKycZi9jZR/4bubOuX2PMU30ya2vqipNOLAH6DZPEy1OfaL7JeLB6//ppon0fa/fLBSix
+        FGckGmoxFxUnAgB/j5uSQgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSnC7jqW8pBq8mS1jcfXyBzWL61AuM
+        FiduNrJZrL65htFi/9PnLBarFl5js1h8dAazxdE9HBbnZ51isVj54w+rxa0Jx5gcuD1ajrxl
+        9Vi85yWTx4vNMxk9+rasYvSYOrve4/MmuQC2KC6blNSczLLUIn27BK6MvXvfsBb0yFacmvSO
+        pYHxpFgXIyeHhICJxMJLj5i7GLk4hAR2M0r8nHqbCSIhLXGv+Qo7hC0scb/lCCtE0XdGiZMf
+        D7OBJFgEVCQezDoOZrMJaEvc374BzBYRUJeYt/Y2I0gDs0AHs8TZL9dYQRLCAsESp3Z+BdvA
+        K2AvMb/1PRvE1FYmidYnG9khEoISJ2c+YQGxmQW0JG78ewnUwAFkS0ss/8cBYnIK+EnMnFMF
+        UiEqoCxxYNtxpgmMgrOQNM9C0jwLoXkBI/MqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95Pzc
+        TYzgmNHS2sG4Z9UHvUOMTByMhxglOJiVRHjfyX9LEeJNSaysSi3Kjy8qzUktPsQozcGiJM77
+        7XVvipBAemJJanZqakFqEUyWiYNTqoEpsfrk5Y8v57iuW2TMndN9/aZH/Vft4CiZcsHtkc3S
+        dgcdPu7uvnbwyNJpv5VruwIun9/wteWr8m0p5kv7N4ReWOsoz12Z7z5vo3OW+L1nz31KPgss
+        97JkPpV8Z5Wx4f7mZ4s3llhOLn7ZNCGorGMvy02log+M2WUT3z3JZDD817BHJG7+X49m026h
+        ovSf19+3bJsxzdbq3uHNnwWCT2+ZtmPfh42F9bUzrRlkOQ/PC2FlV7t23M7NlNv0fQqv7pZj
+        03Uehhydz82fPblk5/EZFzfOUL+4MGr9+v8C9++8zDHfsHzlSc3C6wm7Z2SJWHcL/dSbUihQ
+        4iSr8WHij/6rM85LXeRp2TvXXKp7UiFvhBJLcUaioRZzUXEiAFSs3zoIAwAA
+X-CMS-MailID: 20230905062609epcas2p44455a5a18e77d1ee0b8f46c8f6b3af96
 X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
+Content-Type: multipart/mixed;
+        boundary="----8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230905123044epcas2p2b1052956527cf63a03e2895d4b93e7e1
-References: <CGME20230905123044epcas2p2b1052956527cf63a03e2895d4b93e7e1@epcas2p2.samsung.com>
+X-CMS-RootMailID: 20230807063200epcas2p2c573a655c3b35de5aeb7e188430cca9a
+References: <20230807063335.5891-1-jehoon.park@samsung.com>
+        <CGME20230807063200epcas2p2c573a655c3b35de5aeb7e188430cca9a@epcas2p2.samsung.com>
+        <20230807063335.5891-3-jehoon.park@samsung.com>
+        <v76symilqy5onz6n3y7e47r5xqpaf53nunbb5kz2pcesvjocw7@42o6dotjncu5>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-The number of Count Units field is described as 6 bits long
-in the CXL 3.0 specification. However, its mask value was
-only declared as 5 bits long.
+------8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Jeongtae Park <jtp.park@samsung.com>
----
- drivers/perf/cxl_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, Sep 02, 2023 at 08:49:58PM -0700, Davidlohr Bueso wrote:
+> On Mon, 07 Aug 2023, Jehoon Park wrote:
+> 
+> > Add a new command: 'set-alert-config', which configures device's warning alert.
+> 
+> The example in the cover-letter should be here and also mention explicitly that
+> the get counterpart is via cxl-list -A, like you have in the manpage.
+> 
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 0a8f597e695b..365d964b0f6a 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -25,7 +25,7 @@
- #include "../cxl/pmu.h"
- 
- #define CXL_PMU_CAP_REG			0x0
--#define   CXL_PMU_CAP_NUM_COUNTERS_MSK			GENMASK_ULL(4, 0)
-+#define   CXL_PMU_CAP_NUM_COUNTERS_MSK			GENMASK_ULL(5, 0)
- #define   CXL_PMU_CAP_COUNTER_WIDTH_MSK			GENMASK_ULL(15, 8)
- #define   CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK		GENMASK_ULL(24, 20)
- #define   CXL_PMU_CAP_FILTERS_SUP_MSK			GENMASK_ULL(39, 32)
+Thank you for comments.
 
-base-commit: fe77cc2e5a6a7c85f5c6ef8a39d7694ffc7f41c9
--- 
-2.34.1
+I will reorganize and update cover letter and commit message for clear
+explanation about the patchset.
 
+> > 
+> > Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
+> > ---
+> > Documentation/cxl/cxl-set-alert-config.txt |  96 +++++++++
+> > Documentation/cxl/meson.build              |   1 +
+> > cxl/builtin.h                              |   1 +
+> > cxl/cxl.c                                  |   1 +
+> > cxl/memdev.c                               | 220 ++++++++++++++++++++-
+> > 5 files changed, 318 insertions(+), 1 deletion(-)
+> > create mode 100644 Documentation/cxl/cxl-set-alert-config.txt
+> > 
+> > diff --git a/Documentation/cxl/cxl-set-alert-config.txt b/Documentation/cxl/cxl-set-alert-config.txt
+> > new file mode 100644
+> > index 0000000..c905f7c
+> > --- /dev/null
+> > +++ b/Documentation/cxl/cxl-set-alert-config.txt
+> > @@ -0,0 +1,96 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +cxl-set-alert-config(1)
+> > +=======================
+> > +
+> > +NAME
+> > +----
+> > +cxl-set-alert-config - set the warning alert threshold on a CXL memdev
+> > +
+> > +SYNOPSIS
+> > +--------
+> > +[verse]
+> > +'cxl set-alert-config <mem0> [<mem1>..<memN>] [<options>]'
+> > +
+> > +DESCRIPTION
+> > +-----------
+> > +CXL device raises an alert when its health status is changed. Critical alert
+> > +shall automatically be configured by the device after a device reset.
+> > +If supported, programmable warning thresholds also be initialized to vendor
+> > +recommended defaults, then could be configured by the user.
+> > +
+> > +Use this command to configure warning alert thresholds of a device.
+> > +Having issued this command, the newly requested warning thresholds would
+> > +override the previously programmed warning thresholds.
+> > +
+> > +To enable warning alert, set both 'threshold=value' and 'alert=on'. To disable
+> > +warning alert, set only 'alert=off'. Other cases would cause errors.
+> 
+> So what's the point of having to use double parameter to enable the warning?
+> Just do alert=threshold if you've established that threshold=N and alert=off is
+> not valid.
+> 
+
+IMHO, using two separate parameters would be better because it would be safer
+by protecting a misuse out of an user. I think it is important to clearly
+interpret user's intention.
+Also, CXL spec (8.2.9.8.3.3) defines two payload fields, threshold and
+enablement, separetely.
+Please also remind that the 'ndctl-inject-smart' command already uses two
+parameters, threshold and alarm, to set smart threshold.
+
+> > +
+> > +Use "cxl list -m <memdev> -A" to examine the programming warning threshold
+> > +capabilities of a device.
+> > +
+> > +EXAMPLES
+> > +--------
+> > +Set warning threshold to 30 and enable alert for life used.
+> > +[verse]
+> > +cxl set-alert-config mem0 -L 30 --life-used-alert=on
+> > +
+> > +Disable warning alert for device over temperature.
+> > +[verse]
+> > +cxl set-alert-config mem0 --over-temperature-alert=off
+> > +
+> > +OPTIONS
+> > +-------
+> > +<memory device(s)>::
+> > +include::memdev-option.txt[]
+> > +
+> > +-v::
+> > +--verbose=::
+> > +        Turn on verbose debug messages in the library (if libcxl was built with
+> > +        logging and debug enabled).
+> 
+> Should be at the end.
+> 
+
+Agree
+
+> 
+> Thanks,
+> Davidlohr
+
+Sincerely,
+Jehoon
+
+------8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_
+Content-Type: text/plain; charset="utf-8"
+
+
+------8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_--
