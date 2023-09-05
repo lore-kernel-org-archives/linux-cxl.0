@@ -2,428 +2,325 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90110C71153
-	for <linux-cxl@archiver.kernel.org>; Mon,  4 Sep 2023 18:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80BDC71153
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 00:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350282AbjIDSgR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 4 Sep 2023 14:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46732 "EHLO
+        id S230416AbjIEAGT (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 4 Sep 2023 20:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348148AbjIDSgO (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Sep 2023 14:36:14 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D75E41
-        for <linux-cxl@vger.kernel.org>; Mon,  4 Sep 2023 11:36:06 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9a63b2793ecso254732866b.2
-        for <linux-cxl@vger.kernel.org>; Mon, 04 Sep 2023 11:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693852565; x=1694457365; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZZaQcp1gg5dOcTV2uoyYyCntn71E6WBjmp/X9bV/I/0=;
-        b=RzFaGMfY6IHY/Uta7P8DlDkxYdcIfxLACV1wbosjEU3gN74lkT9Kd546QlpltJil5x
-         vlFzcxC8XxQBGj1OLZDaPMvBYHl4dwgK98SyJIX4rlvoQpbZ1KzYFFW/3dcfdoW+XEYC
-         EAniKshX/LdmxUVzISC5kq6nLRW7Bjby5PsseG/gsr9qmyLG0YC7kQS2X6dMWTBjEhtL
-         bbD6ZshkH+MU67pH58/dLUSI09DjvQHzY4FoAHKDm6/qt6QpUNLecwgCmqEaQsGiA99u
-         5DiDjo9Kq++iRTqsZ19SUy9g9IHvS5eyE6wcF2FHZf7278kPnFGR03hplmDAYk0ucWT+
-         UCOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693852565; x=1694457365;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZZaQcp1gg5dOcTV2uoyYyCntn71E6WBjmp/X9bV/I/0=;
-        b=UNsLr7jleIF6R+44UscS2kn79FUhjHk/7OVmOjAoXAF4IfAOWU9UT73xS8vpuDvQHG
-         iarTKK1/OvOUNyideW9Ve00hvh8x+m/uPANQ/sdDvBLoucM3rlDLK57lSO3wTJvcuv/x
-         ysdXurzrMc7dUbs5TbzbjIHndspQaoiGs6pf4jPWZXjoiPfKCHT8NjO4Wf0tfUlCPDFp
-         Tr8PRRdgxRFO8zn3pSSS26G+JLESC5QPcUR3oDTdt686p4WsjebFLTS/csF4L92Uf1Wc
-         qImz2hZ8Tq3aF9RIViNzEP3IfqqPhUEZgu2F8YqlEQE+e8Lamneaq+a7A86LZrQM1gXi
-         1sow==
-X-Gm-Message-State: AOJu0YwOTE5XEblkWK6xXTqgXDsuejryhrHOQDek/IKHdxQyZGPJ5hMz
-        ZaMHtRs9182j8HiNAPkXY9Axrg==
-X-Google-Smtp-Source: AGHT+IH+/4NNgxbq3InTOAXYidoXidsF6NSjrvNBMxXClITpcw9VWD2f+CuZ75sSvCDr3EzVEMDA6g==
-X-Received: by 2002:a17:906:2d2:b0:9a1:b7ec:c8bd with SMTP id 18-20020a17090602d200b009a1b7ecc8bdmr8932455ejk.42.1693852564896;
-        Mon, 04 Sep 2023 11:36:04 -0700 (PDT)
-Received: from [192.168.69.115] ([176.187.209.227])
-        by smtp.gmail.com with ESMTPSA id p21-20020a170906b21500b0099bc8bd9066sm6503049ejz.150.2023.09.04.11.36.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Sep 2023 11:36:04 -0700 (PDT)
-Message-ID: <56291b02-5474-77b6-5563-6367bf5dcb4c@linaro.org>
-Date:   Mon, 4 Sep 2023 20:36:02 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH 2/2] hw/cxl: Support 4 HDM decoders at all levels of
- topology
-Content-Language: en-US
+        with ESMTP id S229810AbjIEAGS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 4 Sep 2023 20:06:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB7A1B4;
+        Mon,  4 Sep 2023 17:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693872374; x=1725408374;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=85yZgsLoQSgSzC3B+h9DrHitoPwVtb9Sa+bGVnaTL04=;
+  b=KRHeFXv0rFq1uN4R93cvG0ESJlrOOaKLWcA3PqyoMNtk6xm2SGz1sn2O
+   lJREL2a4dcMQkP3LT57lsfp3ZnclQlTDuSHVly9Ih+JToQRSsEo2XvAj8
+   eiWYPZypmXJ9rpHOQuvKAZy+vBCtwVmqCi+2vHNA1gSDgFZymQj4vSlIo
+   82JJIH7VheBQgNN30ELXOHRYYddnmNBJkDrAd6WYWqZ0666SUzhVm57wA
+   SE+fo8o8/EoFnlZ9zFlzMCSIQ84kBE70sRrBMJF4z7+x1ylcUgfrt4VXn
+   P9pibzt0Nr/ByM2JxUwIvf9RIPQOYouIurLbsa5UXFpPWav/4stfntTRQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="407658276"
+X-IronPort-AV: E=Sophos;i="6.02,227,1688454000"; 
+   d="scan'208";a="407658276"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 17:06:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10823"; a="806389309"
+X-IronPort-AV: E=Sophos;i="6.02,227,1688454000"; 
+   d="scan'208";a="806389309"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Sep 2023 17:06:11 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 4 Sep 2023 17:06:08 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Mon, 4 Sep 2023 17:06:08 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Mon, 4 Sep 2023 17:06:07 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QnmDeLAVXAml4xcYdOPAPrBw+bXlevI3xea6E+1c9LK17ywAfF+SvPEdYgfm+KusfhfZvXOrMeDue0iG37K2Mns1xWftHhjdRWQtEEs/lA0wL+K+pdNJ96xJaTzeGblmvJj6nA4hm18iCT/zkUPFroplmOhVlXlewTeFMWZFkTIo183rid5kQbhbYvffGQalSbuIZ2uBPiDslPiN2Oa3CSwEif53WT0NBlJ97x4n2VHCBJEC/GMMcVX6Tn9igx+seiw75kTHJkH7QVFEZjY7xMGz7HSFatbX8jHoRwOhjdlF62xa/N5Y4I+8Rsr6fS8CjZ/38Th+JywnJoaCtMd1Bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LiYk/xvGxs5WaaXiUI9u2arIhd+eq6u15Z9SoWqa5F8=;
+ b=ZWmK/A02AEA8/OJRJAfeasT5cF5VzRD3tzD3eWj74M9nuw4MSST50h8xM8q4/aGRLLxfXCd3Cr3EHvIeTqrQy0pxVXaZmYZKbh5um/yOsBcp4LklzoS4LXRcWIL6nIZHLtotabAE5nAahVmiOVnwdbrdhcuwsd0dBNUzYNGZpfNPzN60M3nbNfMBQwHJwbYeu8MbnwoXQPdCBUz36yTGAl5iWJ76fWPu0jx3QSRMRZv0evzXMx8eh8C4SIBqwH3HwuLKVslBxf7D98VmPK1Xq6lY/gIFNQbNjJmsE/p2R47Oa8IChIFDS88tztHcQOR9+fMwGD12xvJeApol681FsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by PH0PR11MB5029.namprd11.prod.outlook.com (2603:10b6:510:30::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.32; Tue, 5 Sep
+ 2023 00:06:05 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
+ 00:06:05 +0000
+Date:   Mon, 4 Sep 2023 17:05:59 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>, linuxarm@huawei.com
-References: <20230904164704.18739-1-Jonathan.Cameron@huawei.com>
- <20230904164704.18739-3-Jonathan.Cameron@huawei.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230904164704.18739-3-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 05/18] cxl/port: Add Dynamic Capacity mode support
+ to endpoint decoders
+Message-ID: <64f670e7d52e2_1e8e7829411@iweiny-mobl.notmuch>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+ <20230604-dcd-type2-upstream-v2-5-f740c47e7916@intel.com>
+ <20230829154945.00002870@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230829154945.00002870@Huawei.com>
+X-ClientProxiedBy: SJ0PR03CA0009.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::14) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB5029:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7895447c-89ec-48f8-2d46-08dbada3e5b7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PQ8ijpsdCB2OAXAmLHD/FykUhSCtKdkmY7k5IsBSXcTnXn0s4A5e4tulaJRW8mEQFZCM2MrhJblKPnxQO2QI3+07obgDa0QlmBPdk4IleOteTNlCk2bIO9T3tnncU6DAM6kgYCOZcJFHF2nACxbNY9HpoiTiVctVfnWtEpKzI03T/753d8B5X+Uc3wwTH0UODqYRrqH3CZJ8GRNjLxVsd7qClKkALb7m1j1GovuMgNrjo5Si396cC7znaT5ygeQQTAifnq0uiq+bXIc0EZ66CtpXQptELt70wYeRUhzwMZNPKcHnj79irGUQPXGBOf+7gFS4Hw0TqvcPZ6E/OkZZ60QC9Kh2RsMOI6L5wT+kRLQVbh67/LrHKpyBGXWTUvJJ1cfZIuLIjVuOWsr68tKKR7lyJonB2tSoroosT9TGr+BSrxODoNAuq5EUymKT8de8m1zOygU7X7X/alBTkeQca1yk+re/nk14aSxGjyPIXUwkRSezHJVmh/JiqPdIWcEj4Dfu8HsM0jI4fqG6Cm6n8nvFjcNL0Pe7Go9fENkQQ5frZzlftWSS5QZVBHN8oDyN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(39860400002)(136003)(346002)(376002)(186009)(1800799009)(451199024)(41300700001)(66899024)(6666004)(6486002)(6506007)(478600001)(82960400001)(83380400001)(26005)(9686003)(6512007)(38100700002)(86362001)(66946007)(110136005)(2906002)(66476007)(316002)(54906003)(66556008)(5660300002)(8936002)(44832011)(4326008)(8676002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kVOnb3QxVSPLN6bwWDzS2UCgUQlo6sKVd2rGPFlrnsz9duaJ7LBL8mLnGwPp?=
+ =?us-ascii?Q?ki43XT7CrxBF86aPDW0mner0Vu9DUSbKhoj8+YpOGp3CTg/3FgR8TjovLPe4?=
+ =?us-ascii?Q?zF2xfSslShkOXxAnRVDKn8kwzd2XE0anaO7kxLTgNuHvbzFIgLEpRT3KjZni?=
+ =?us-ascii?Q?FMAcpYBMU6a4V8cQaOtTnBbkM5wthc97b35B4+SB+2GcZVC8u3yUiqy69YNm?=
+ =?us-ascii?Q?MzpWpK69a27K/P9Myy21Xe/5zzBg24Fi7mW33CLpVFL+f1iEHqaEaEfcRphZ?=
+ =?us-ascii?Q?oHRPFUdF1e/ezZOQjCJnw485oMNNbcJ181h2+VRKPk6+OnwcKyotz6+LTG9J?=
+ =?us-ascii?Q?k4exX3JMh54UtJB+/sP2KdmWj7urbOYacFhK6pr+kdZ4LqjlZuZ+bu8bzSlx?=
+ =?us-ascii?Q?5WEdKoODotnxd4+FFpY0Der6UHqKTp6f0+/rQ2fAeiFhH0hqGN0I4dmF056a?=
+ =?us-ascii?Q?ProkSfcEq2IK3WW9bXksb3iXLY7xVt1ebSBT6LR65/xaDceu9dOHC0GvSnab?=
+ =?us-ascii?Q?T7a16X1b0cN1v+8VhGoLfKd8aWKvznyYRawAonvEwrKS5qiPhSIUk4MRH6VW?=
+ =?us-ascii?Q?P+pDLyc4ctgSgdklulkkvla4vCR7h13SFpQgWbrU94bqK/+yjfNa7YnVRZ17?=
+ =?us-ascii?Q?J0/YqJaNObC4Z/RgvZSe7RuQXcFsc+Hok/rCu/j9xPU63XIJ28bJv+6+V8SN?=
+ =?us-ascii?Q?lHFxA6DDuHXgW2x5f8OzjXWVo/EgKoIj+Jxn4NvYIHJa+WUwhS3UgI/nQE9q?=
+ =?us-ascii?Q?z71RZEklNeCSbhQU+wa/h9VqAus+sKLoXHVZ+R9d66BHeMKv9Ti9KhRqDGDx?=
+ =?us-ascii?Q?OTjQo9EhKR1d+NZotOUOkIFt5hN9OoAvkohxl9kmJOkQzcfNLcUTeMqY0iTm?=
+ =?us-ascii?Q?HgYvNEmh+BqKSadKqZhD3vM1A9Ttx2OekbLjNtzn79j/z/K7pQ+JozgAwqW4?=
+ =?us-ascii?Q?CywVK9kTu8hN+eP6+S/6x0SxP/7Ab1kWJCDdcs+S5FZp/rjpw+TJWHFsWVYP?=
+ =?us-ascii?Q?6daMxBVKQRDAFSPn4dd39W1+LfbWjvJQCk1jg45sk3TK8fKIVATqyB08037K?=
+ =?us-ascii?Q?yKJreFU7wvw55liJ7GM8m+tA1YFJQZIb7nI0FshKQ983XkaW+kJCorqJIKd3?=
+ =?us-ascii?Q?V7bKJVCmM9VLnu7vQNEqMh9mrjav1xu778U9Ji0CmMSZVEmLFlIieD43b2OH?=
+ =?us-ascii?Q?xUEXthTQxva/+/bj6kIjUc4Feb7GHbjRkq4NfFSzhTe5klt6fHtTgk3X887w?=
+ =?us-ascii?Q?boF7rmkIcdX1PnLKEr8eTGAMFVyC2nECf9jyadZL3/pNk4mglfZm4BooXg34?=
+ =?us-ascii?Q?IWYYeNYufASV86EXdLnGTAMh6Q+psAkt5xH+qez9gfVmQPjlujLIaUq+W612?=
+ =?us-ascii?Q?EzI3dZtujyGiR6KoJsnSlxcWqxqR8mmY9YwMD0SoYCHLAoawxVbr7pjuF7yT?=
+ =?us-ascii?Q?j6LshpNv75mBAHsqEItfXycczHixNnT6JRcjC1ha6EBfx8+X+Ue/b+QGQuS4?=
+ =?us-ascii?Q?s/w8KF6lL+GVJrMkIaIktOQPI42Dqx1QfLkRoWK9WiSN84VVuCRG40RrCgma?=
+ =?us-ascii?Q?0xFt9vc4YVxCLyl+qALuoAswbEn4mZwZD3t0yj8U?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7895447c-89ec-48f8-2d46-08dbada3e5b7
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 00:06:05.0844
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k4z+JP2ZsVNnzOv/nsnXAs2TcZ6I1XcA28r6FtPsW4ncEOtZLdE3pcI5Xt3kP0DDDsERjl3AT7ShMGsRcU/isg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5029
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Hi Jonathan,
-
-Few style comments inlined.
-
-On 4/9/23 18:47, Jonathan Cameron wrote:
-> Support these decoders in CXL host bridges (pxb-cxl), CXL Switch USP
-> and CXL Type 3 end points.
+Jonathan Cameron wrote:
+> On Mon, 28 Aug 2023 22:20:56 -0700
+> Ira Weiny <ira.weiny@intel.com> wrote:
 > 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> Note there is a fix in here for a wrong increment that had
-> no impact when there was only one HDM decoder.
+> > Endpoint decoders used to map Dynamic Capacity must be configured to
+> > point to the correct Dynamic Capacity (DC) Region.  The decoder mode
+> > currently represents the partition the decoder points to such as ram or
+> > pmem.
+> > 
+> > Expand the mode to include DC Regions.
+> > 
+> > Co-developed-by: Navneet Singh <navneet.singh@intel.com>
+> > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
->   include/hw/cxl/cxl_component.h |  7 +++
->   hw/cxl/cxl-component-utils.c   | 26 +++++----
->   hw/cxl/cxl-host.c              | 65 +++++++++++++++--------
->   hw/mem/cxl_type3.c             | 97 +++++++++++++++++++++++-----------
->   4 files changed, 133 insertions(+), 62 deletions(-)
+> I'm reading this in a linear fashion for now (and ideally that should
+> always make sense) so I don't currently see the reason for the loops
+> in here. If they are needed for a future patch, add something to the
+> description to indicate that.
 > 
-> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-> index f0ad9cf7de..c5a93b2cec 100644
-> --- a/include/hw/cxl/cxl_component.h
-> +++ b/include/hw/cxl/cxl_component.h
-> @@ -135,6 +135,10 @@ REG32(CXL_RAS_ERR_HEADER0, CXL_RAS_REGISTERS_OFFSET + 0x18)
->     REG32(CXL_HDM_DECODER##n##_TARGET_LIST_LO,                                   \
->           CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x24)                          \
->     REG32(CXL_HDM_DECODER##n##_TARGET_LIST_HI,                                   \
-> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x28)                          \
-> +  REG32(CXL_HDM_DECODER##n##_DPA_SKIP_LO,                                      \
-> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x24)                          \
-> +  REG32(CXL_HDM_DECODER##n##_DPA_SKIP_HI,                                      \
->           CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x28)
->   
->   REG32(CXL_HDM_DECODER_CAPABILITY, CXL_HDM_REGISTERS_OFFSET)
-> @@ -148,6 +152,9 @@ REG32(CXL_HDM_DECODER_GLOBAL_CONTROL, CXL_HDM_REGISTERS_OFFSET + 4)
->       FIELD(CXL_HDM_DECODER_GLOBAL_CONTROL, HDM_DECODER_ENABLE, 1, 1)
->   
->   HDM_DECODER_INIT(0);
-> +HDM_DECODER_INIT(1);
-> +HDM_DECODER_INIT(2);
-> +HDM_DECODER_INIT(3);
+> > 
+> > ---
+> > Changes for v2:
+> > [iweiny: split from region creation patch]
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-cxl | 19 ++++++++++---------
+> >  drivers/cxl/core/hdm.c                  | 24 ++++++++++++++++++++++++
+> >  drivers/cxl/core/port.c                 | 16 ++++++++++++++++
+> >  3 files changed, 50 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> > index 6350dd82b9a9..2268ffcdb604 100644
+> > --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> > @@ -257,22 +257,23 @@ Description:
+> >  
+> >  What:		/sys/bus/cxl/devices/decoderX.Y/mode
+> >  Date:		May, 2022
+> > -KernelVersion:	v6.0
+> > +KernelVersion:	v6.0, v6.6 (dcY)
+> >  Contact:	linux-cxl@vger.kernel.org
+> >  Description:
+> >  		(RW) When a CXL decoder is of devtype "cxl_decoder_endpoint" it
+> >  		translates from a host physical address range, to a device local
+> >  		address range. Device-local address ranges are further split
+> > -		into a 'ram' (volatile memory) range and 'pmem' (persistent
+> > -		memory) range. The 'mode' attribute emits one of 'ram', 'pmem',
+> > -		'mixed', or 'none'. The 'mixed' indication is for error cases
+> > -		when a decoder straddles the volatile/persistent partition
+> > -		boundary, and 'none' indicates the decoder is not actively
+> > -		decoding, or no DPA allocation policy has been set.
+> > +		into a 'ram' (volatile memory) range, 'pmem' (persistent
+> > +		memory) range, or Dynamic Capacity (DC) range. The 'mode'
+> > +		attribute emits one of 'ram', 'pmem', 'dcY', 'mixed', or
+> > +		'none'. The 'mixed' indication is for error cases when a
+> > +		decoder straddles the volatile/persistent partition boundary,
+> > +		and 'none' indicates the decoder is not actively decoding, or
+> > +		no DPA allocation policy has been set.
+> >  
+> >  		'mode' can be written, when the decoder is in the 'disabled'
+> > -		state, with either 'ram' or 'pmem' to set the boundaries for the
+> > -		next allocation.
+> > +		state, with 'ram', 'pmem', or 'dcY' to set the boundaries for
+> > +		the next allocation.
+> >  
+> >  
+> >  What:		/sys/bus/cxl/devices/decoderX.Y/dpa_resource
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index a254f79dd4e8..3f4af1f5fac8 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -267,6 +267,19 @@ static void devm_cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
+> >  	__cxl_dpa_release(cxled);
+> >  }
+> >  
+> > +static int dc_mode_to_region_index(enum cxl_decoder_mode mode)
+> > +{
+> > +	int index = 0;
+> > +
+> > +	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
+> As you are relying on them being in order and adjacent for the loop, why is
+> 
+> 	if (mode < CXL_DECODER_DC0 || mode > CXL_DECODER_DC7)
+> 		return -EINVAL;
+> 
+> 	return mode - CXL_DECODER_DC0;
+> 
+> Not sufficient?
 
-   #define HDM_DECODER_COUNT 4
+That would work yes.  There is no future need for a loop.  It was just
+implemented this way early on and I did not really think about it too
+much.
 
->   /* 8.2.5.13 - CXL Extended Security Capability Structure (Root complex only) */
->   #define EXTSEC_ENTRY_MAX        256
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index e96398e8af..79b9369756 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -42,6 +42,9 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
->   
->       switch (offset) {
->       case A_CXL_HDM_DECODER0_CTRL:
-> +    case A_CXL_HDM_DECODER1_CTRL:
-> +    case A_CXL_HDM_DECODER2_CTRL:
-> +    case A_CXL_HDM_DECODER3_CTRL:
->           should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
->           should_uncommit = !should_commit;
->           break;
-> @@ -81,7 +84,7 @@ static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
->       }
->   
->       if (offset >= A_CXL_HDM_DECODER_CAPABILITY &&
-> -        offset <= A_CXL_HDM_DECODER0_TARGET_LIST_HI) {
-> +        offset <= A_CXL_HDM_DECODER3_TARGET_LIST_HI) {
->           dumb_hdm_handler(cxl_cstate, offset, value);
->       } else {
->           cregs->cache_mem_registers[offset / sizeof(*cregs->cache_mem_registers)] = value;
-> @@ -161,7 +164,7 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
->   static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->                               enum reg_type type)
->   {
-> -    int decoder_count = 1;
-> +    int decoder_count = 4;
+Done.
 
-   unsigned decoder_count = HDM_DECODER_COUNT;
+> 
+> > +		if (mode == i)
+> > +			return index;
+> > +		index++;
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> >  static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+> >  			     resource_size_t base, resource_size_t len,
+> >  			     resource_size_t skipped)
+> > @@ -429,6 +442,7 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+> >  	switch (mode) {
+> >  	case CXL_DECODER_RAM:
+> >  	case CXL_DECODER_PMEM:
+> > +	case CXL_DECODER_DC0 ... CXL_DECODER_DC7:
+> >  		break;
+> >  	default:
+> >  		dev_dbg(dev, "unsupported mode: %d\n", mode);
+> > @@ -456,6 +470,16 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+> >  		goto out;
+> >  	}
+> >  
+> > +	for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
+> > +		int index = dc_mode_to_region_index(i);
+> > +
+> > +		if (mode == i && !resource_size(&cxlds->dc_res[index])) {
+> 
+> Not obvious why we have the loop in this patch - perhaps it makes sense later.
 
->       int i;
->   
->       ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, DECODER_COUNT,
-> @@ -174,19 +177,22 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->                        HDM_DECODER_ENABLE, 0);
->       write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
->       for (i = 0; i < decoder_count; i++) {
+I think it was just walking through the DC regions like the previous code
+was walking through the PMEM/RAM 'regions'.
 
-Alternatively:
+> If this is to enable later changes, then good to say that in the patch description.
 
-         for (i = 0; i < decoder_count; i++, write_msk += 8) {
-             write_msk[R_CXL_HDM_DECODER0_BASE_LO] = 0xf0000000;
+... nope...
 
-> -        write_msk[R_CXL_HDM_DECODER0_BASE_LO + i * 0x20] = 0xf0000000;
-> -        write_msk[R_CXL_HDM_DECODER0_BASE_HI + i * 0x20] = 0xffffffff;
-> -        write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20] = 0xf0000000;
-> -        write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20] = 0xffffffff;
-> -        write_msk[R_CXL_HDM_DECODER0_CTRL + i * 0x20] = 0x13ff;
-> +        write_msk[R_CXL_HDM_DECODER0_BASE_LO + i * 0x20 / 4] = 0xf0000000;
+> otherwise, something like.
+> 
+> 	int index;
+> 	
+> 	rc = dc_mode_to_region_index(i);
+> 	if (rc < 0)
+> 		goto out;
+> 
+> 	index = rc;
+> 	if (!resource_size(&cxlds->dc_res[index]) {
+> 	....
+> 		
 
-(this 0x20 / 4 bugs me a bit).
+Yea...  but that won't exactly work.  Something like this:
 
-> +        write_msk[R_CXL_HDM_DECODER0_BASE_HI + i * 0x20 / 4]  = 0xffffffff;
-> +        write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20 / 4] = 0xf0000000;
-> +        write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20 / 4] = 0xffffffff;
-> +        write_msk[R_CXL_HDM_DECODER0_CTRL + i * 0x20 / 4] = 0x13ff;
->           if (type == CXL2_DEVICE ||
->               type == CXL2_TYPE3_DEVICE ||
->               type == CXL2_LOGICAL_DEVICE) {
-> -            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xf0000000;
-> +            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20 / 4] =
-> +                0xf0000000;
->           } else {
-> -            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xffffffff;
-> +            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20 / 4] =
-> +                0xffffffff;
->           }
-> -        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_HI + i * 0x20] = 0xffffffff;
-> +        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_HI + i * 0x20 / 4] =
-> +            0xffffffff;
->       }
->   }
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index cf5d656c271b..f250d1566682 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -463,10 +463,12 @@ int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
+                goto out;
+        }
 
->   
-> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-> index f0920da956..e71b70d5b0 100644
-> --- a/hw/cxl/cxl-host.c
-> +++ b/hw/cxl/cxl-host.c
-> @@ -97,33 +97,56 @@ void cxl_fmws_link_targets(CXLState *cxl_state, Error **errp)
->       }
->   }
->   
-> -/* TODO: support, multiple hdm decoders */
->   static bool cxl_hdm_find_target(uint32_t *cache_mem, hwaddr addr,
->                                   uint8_t *target)
->   {
-> -    uint32_t ctrl;
-> -    uint32_t ig_enc;
-> -    uint32_t iw_enc;
-> -    uint32_t target_idx;
-> -
-> -    ctrl = cache_mem[R_CXL_HDM_DECODER0_CTRL];
-> -    if (!FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
-> -        return false;
-> -    }
-> -
-> -    ig_enc = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> -    iw_enc = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> -    target_idx = (addr / cxl_decode_ig(ig_enc)) % (1 << iw_enc);
-> +    bool found = false;
-> +    int i;
-> +    uint32_t cap;
-> +
-> +    cap = ldl_le_p(cache_mem + R_CXL_HDM_DECODER_CAPABILITY);
+-       for (int i = CXL_DECODER_DC0; i <= CXL_DECODER_DC7; i++) {
+-               int index = dc_mode_to_region_index(i);
++       if (cxl_decoder_mode_is_dc(mode)) {
++               rc = dc_mode_to_region_index(mode);
++               if (rc < 0)
++                       goto out;
 
-unsigned count = cxl_decoder_count_dec(FIELD_EX32(cap,
-                                              CXL_HDM_DECODER_CAPABILITY,
-                                              DECODER_COUNT));
+-               if (mode == i && !resource_size(&cxlds->dc_res[index])) {
++               if (!resource_size(&cxlds->dc_res[rc])) {
+                        dev_dbg(dev, "no available dynamic capacity\n");
+                        rc = -ENXIO;
+                        goto out;
 
-for (i = 0; i < count; ...)
+But looking at the function I think there could be a clean up patch before
+this.  I don't see the need to check the mode twice.
 
-> +    for (i = 0;
-> +         i < cxl_decoder_count_dec(FIELD_EX32(cap, CXL_HDM_DECODER_CAPABILITY,
-> +                                              DECODER_COUNT));
-> +         i++) {
-> +        uint32_t ctrl, ig_enc, iw_enc, target_idx;
-> +        uint32_t low, high;
-> +        uint64_t base, size;
-> +
-> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_LO + i * 0x20 / 4);
-> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_HI + i * 0x20 / 4);
-> +        base = (low & 0xf0000000) | ((uint64_t)high << 32);
-> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20 / 4);
-> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20 / 4);
-> +        size = (low & 0xf0000000) | ((uint64_t)high << 32);
-> +        if (addr < base || addr >= base + size) {
-> +            continue;
-> +        }
->   
-> -    if (target_idx < 4) {
-> -        *target = extract32(cache_mem[R_CXL_HDM_DECODER0_TARGET_LIST_LO],
-> -                            target_idx * 8, 8);
-> -    } else {
-> -        *target = extract32(cache_mem[R_CXL_HDM_DECODER0_TARGET_LIST_HI],
-> -                            (target_idx - 4) * 8, 8);
-> +        ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + i * 0x20 / 4);
-> +        if (!FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
-> +            return false;
-> +        }
-> +        found = true;
-> +        ig_enc = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> +        iw_enc = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> +        target_idx = (addr / cxl_decode_ig(ig_enc)) % (1 << iw_enc);
-> +
-> +        if (target_idx < 4) {
-> +            uint32_t val = ldl_le_p(cache_mem +
-> +                                    R_CXL_HDM_DECODER0_TARGET_LIST_LO +
-> +                                    i * 0x20 / 4);
-> +            *target = extract32(val, target_idx * 8, 8);
-> +        } else {
-> +            uint32_t val = ldl_le_p(cache_mem +
-> +                                    R_CXL_HDM_DECODER0_TARGET_LIST_HI +
-> +                                    i * 0x20 / 4);
-> +            *target = extract32(val, (target_idx - 4) * 8, 8);
-> +        }
-> +        break;
->       }
->   
-> -    return true;
-> +    return found;
->   }
->   
->   static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index 4e314748d3..fdfdb84813 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -381,14 +381,12 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
->       uint32_t *cache_mem = cregs->cache_mem_registers;
->       uint32_t ctrl;
->   
-> -    assert(which == 0);
-> -
-> -    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
-> +    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * 0x20 / 4);
->       /* TODO: Sanity checks that the decoder is possible */
->       ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
->       ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
->   
-> -    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
-> +    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * 0x20 / 4, ctrl);
->   }
->   
->   static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
-> @@ -397,14 +395,12 @@ static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
->       uint32_t *cache_mem = cregs->cache_mem_registers;
->       uint32_t ctrl;
->   
-> -    assert(which == 0);
-> -
-> -    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL);
-> +    ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * 0x20 / 4);
->   
->       ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
->       ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
->   
-> -    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL, ctrl);
-> +    stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * 0x20 / 4, ctrl);
->   }
->   
->   static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
-> @@ -487,6 +483,21 @@ static void ct3d_reg_write(void *opaque, hwaddr offset, uint64_t value,
->           should_uncommit = !should_commit;
->           which_hdm = 0;
->           break;
-> +    case A_CXL_HDM_DECODER1_CTRL:
-> +        should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-> +        should_uncommit = !should_commit;
-> +        which_hdm = 1;
-> +        break;
-> +    case A_CXL_HDM_DECODER2_CTRL:
-> +        should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-> +        should_uncommit = !should_commit;
-> +        which_hdm = 2;
-> +        break;
-> +    case A_CXL_HDM_DECODER3_CTRL:
-> +        should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-> +        should_uncommit = !should_commit;
-> +        which_hdm = 3;
-> +        break;
->       case A_CXL_RAS_UNC_ERR_STATUS:
->       {
->           uint32_t capctrl = ldl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL);
-> @@ -758,36 +769,60 @@ static void ct3_exit(PCIDevice *pci_dev)
->       }
->   }
->   
-> -/* TODO: Support multiple HDM decoders and DPA skip */
->   static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
->   {
->       uint32_t *cache_mem = ct3d->cxl_cstate.crb.cache_mem_registers;
-> -    uint64_t decoder_base, decoder_size, hpa_offset;
-> -    uint32_t hdm0_ctrl;
-> -    int ig, iw;
-> +    uint32_t cap;
-> +    uint64_t dpa_base = 0;
-> +    int i;
->   
-> -    decoder_base = (((uint64_t)cache_mem[R_CXL_HDM_DECODER0_BASE_HI] << 32) |
-> -                    cache_mem[R_CXL_HDM_DECODER0_BASE_LO]);
-> -    if ((uint64_t)host_addr < decoder_base) {
-> -        return false;
-> -    }
-> +    cap = ldl_le_p(cache_mem + R_CXL_HDM_DECODER_CAPABILITY);
-> +    for (i = 0; i < cxl_decoder_count_dec(FIELD_EX32(cap,
-> +                                                     CXL_HDM_DECODER_CAPABILITY,
-> +                                                     DECODER_COUNT));
-> +         i++) {
-> +        uint64_t decoder_base, decoder_size, hpa_offset, skip;
-> +        uint32_t hdm_ctrl, low, high;
-> +        int ig, iw;
-> +
-> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_LO + i * 0x20 / 4);
-> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_HI + i * 0x20 / 4);
-> +        decoder_base = ((uint64_t)high << 32) | (low & 0xf0000000);
-> +
-> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20 / 4);
-> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20 / 4);
-> +        decoder_size = ((uint64_t)high << 32) | (low & 0xf0000000);
-> +
-> +        low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_DPA_SKIP_LO +
-> +                       i * 0x20 / 4);
-> +        high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_DPA_SKIP_HI +
-> +                        i * 0x20 / 4);
-> +        skip = ((uint64_t)high << 32) | (low & 0xf0000000);
-> +        dpa_base += skip;
-> +
-> +        hpa_offset = (uint64_t)host_addr - decoder_base;
-> +
-> +        hdm_ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + i * 0x20 / 4);
-> +        iw = FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> +        ig = FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> +        if (!FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
-> +            return false;
-> +        }
-> +        if (((uint64_t)host_addr < decoder_base) ||
-> +            (hpa_offset >= decoder_size)) {
-> +            dpa_base += decoder_size /
-> +                cxl_interleave_ways_dec(iw, &error_fatal);
-> +            continue;
-> +        }
->   
-> -    hpa_offset = (uint64_t)host_addr - decoder_base;
-> +        *dpa = dpa_base +
-> +            ((MAKE_64BIT_MASK(0, 8 + ig) & hpa_offset) |
-> +             ((MAKE_64BIT_MASK(8 + ig + iw, 64 - 8 - ig - iw) & hpa_offset)
-> +              >> iw));
->   
-> -    decoder_size = ((uint64_t)cache_mem[R_CXL_HDM_DECODER0_SIZE_HI] << 32) |
-> -        cache_mem[R_CXL_HDM_DECODER0_SIZE_LO];
-> -    if (hpa_offset >= decoder_size) {
-> -        return false;
-> +        return true;
->       }
-> -
-> -    hdm0_ctrl = cache_mem[R_CXL_HDM_DECODER0_CTRL];
-> -    iw = FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> -    ig = FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> -
-> -    *dpa = (MAKE_64BIT_MASK(0, 8 + ig) & hpa_offset) |
-> -        ((MAKE_64BIT_MASK(8 + ig + iw, 64 - 8 - ig - iw) & hpa_offset) >> iw);
-> -
-> -    return true;
-> +    return false;
->   }
->   
->   static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
+...  Yes I think that looks cleaner.
 
+Thanks for the review!
+Ira
