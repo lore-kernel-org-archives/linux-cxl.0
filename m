@@ -2,159 +2,154 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C200FCA0FFA
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04459CA0FE2
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350223AbjIEQYa convert rfc822-to-8bit (ORCPT
+        id S230343AbjIEQqI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:24:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59218 "EHLO
+        Tue, 5 Sep 2023 12:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354904AbjIEPoV (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 11:44:21 -0400
+        with ESMTP id S1354407AbjIEQ3n (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 12:29:43 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394FDA8
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 08:44:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A560113
+        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 09:22:05 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rg8sV4Bgfz6HJRk;
-        Tue,  5 Sep 2023 23:42:54 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rg9jN3fjrz6K5lX;
+        Wed,  6 Sep 2023 00:20:56 +0800 (CST)
 Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 5 Sep
- 2023 16:44:14 +0100
-Date:   Tue, 5 Sep 2023 16:44:13 +0100
+ 2023 17:21:03 +0100
+Date:   Tue, 5 Sep 2023 17:21:02 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH 2/2] hw/cxl: Support 4 HDM decoders at all levels of
- topology
-Message-ID: <20230905164413.0000406c@huawei.com>
-In-Reply-To: <56291b02-5474-77b6-5563-6367bf5dcb4c@linaro.org>
-References: <20230904164704.18739-1-Jonathan.Cameron@huawei.com>
-        <20230904164704.18739-3-Jonathan.Cameron@huawei.com>
-        <56291b02-5474-77b6-5563-6367bf5dcb4c@linaro.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+CC:     Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        <qemu-devel@nongnu.org>, Fan Ni <fan.ni@samsung.com>,
+        <linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: Re: [PATCH] hw/pci-bridge/cxl-upstream: Add serial number extended
+ capability support
+Message-ID: <20230905172102.00006736@huawei.com>
+In-Reply-To: <20230905045849-mutt-send-email-mst@kernel.org>
+References: <20230904175752.17927-1-Jonathan.Cameron@huawei.com>
+        <ba7d895f-72d0-8a11-34ad-b5ca75f482bb@linaro.org>
+        <20230905045849-mutt-send-email-mst@kernel.org>
 Organization: Huawei Technologies R&D (UK) Ltd.
 X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, 4 Sep 2023 20:36:02 +0200
-Philippe Mathieu-Daudé <philmd@linaro.org> wrote:
+On Tue, 5 Sep 2023 05:02:47 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-> Hi Jonathan,
-> 
-> Few style comments inlined.
-> 
-> On 4/9/23 18:47, Jonathan Cameron wrote:
-> > Support these decoders in CXL host bridges (pxb-cxl), CXL Switch USP
-> > and CXL Type 3 end points.
+> On Tue, Sep 05, 2023 at 10:48:54AM +0200, Philippe Mathieu-Daudé wrote:
+> > Hi Jonathan,
 > > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-Hi Philippe,
+> > On 4/9/23 19:57, Jonathan Cameron wrote:  
+> > > Will be needed so there is a defined serial number for
+> > > information queries via the Switch CCI.
+> > > 
+> > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > > No ordering dependencies wrt to other CXL patch sets.
+> > > 
+> > > Whilst we 'need' it for the Switch CCI set it is valid without
+> > > it and aligns with existing EP serial number support. Seems sensible
+> > > to upstream this first and reduce my out of tree backlog a little!
+> > > 
+> > >   hw/pci-bridge/cxl_upstream.c | 15 +++++++++++++--
+> > >   1 file changed, 13 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+> > > index 2b9cf0cc97..15c4d84a56 100644
+> > > --- a/hw/pci-bridge/cxl_upstream.c
+> > > +++ b/hw/pci-bridge/cxl_upstream.c
+> > > @@ -14,6 +14,11 @@
+> > >   #include "hw/pci/msi.h"
+> > >   #include "hw/pci/pcie.h"
+> > >   #include "hw/pci/pcie_port.h"
+> > > +/*
+> > > + * Null value of all Fs suggested by IEEE RA guidelines for use of
+> > > + * EU, OUI and CID
+> > > + */
+> > > +#define UI64_NULL (~0ULL)  
+> > 
+> > Already defined in hw/mem/cxl_type3.c, can we move it to some common
+> > CXL header? Or include/qemu/units.h?  
+> 
+> not the last one I think - this is a cxl specific hack to detect that
+> user has changed the property.
 
-Thanks for the particularly quick reviews! 
+The chosen default is also the one that the relevant specifications says
+means 'NULL' for a EUI64 code so is at least a valid hack...
+https://standards.ieee.org/wp-content/uploads/import/documents/tutorials/eui.pdf
+"Unassigned and NULL EUI values"
+specifically recommend NULL values in that section.
 
-...
+However, it's obscure enough that we probably don't want it in a generic
+header.
 
-> > diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> > index e96398e8af..79b9369756 100644
-> > --- a/hw/cxl/cxl-component-utils.c
-> > +++ b/hw/cxl/cxl-component-utils.c
-> > @@ -42,6 +42,9 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cstate, hwaddr offset,
+> 
+> 
+> I think we really should have a variant of DEFINE_PROP_XXX that sets a
+> flag allowing us to detect whether a property has been set manually.
+> This would be a generalization of DEFINE_PROP_ON_OFF_AUTO.
+
+Agreed that would be generally useful but here there is a reasonable
+default value so I don't think we need this.
+
+> 
+> 
+> > >   #define CXL_UPSTREAM_PORT_MSI_NR_VECTOR 2
+> > > @@ -30,6 +35,7 @@ typedef struct CXLUpstreamPort {
+> > >       /*< public >*/
+> > >       CXLComponentState cxl_cstate;
+> > >       DOECap doe_cdat;
+> > > +    uint64_t sn;
+> > >   } CXLUpstreamPort;
+> > >   CXLComponentState *cxl_usp_to_cstate(CXLUpstreamPort *usp)
+> > > @@ -326,8 +332,12 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
+> > >       if (rc) {
+> > >           goto err_cap;
+> > >       }
+> > > -
+> > > -    cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
+> > > +    if (usp->sn != UI64_NULL) {
+> > > +        pcie_dev_ser_num_init(d, CXL_UPSTREAM_PORT_DVSEC_OFFSET, usp->sn);
+> > > +        cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET + 0x0c;  
+> > 
+> > Could it be clearer to have:
+> > 
+> > diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+> > @@ -23,2 +23,2 @@
+> > -#define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
+> > -    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
+> > +#define CXL_UPSTREAM_PORT_DVSEC_OFFSET(offset) \
+> > +    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF + offset)
+> > 
+> > ?
 > >   
-> >       switch (offset) {
-> >       case A_CXL_HDM_DECODER0_CTRL:
-> > +    case A_CXL_HDM_DECODER1_CTRL:
-> > +    case A_CXL_HDM_DECODER2_CTRL:
-> > +    case A_CXL_HDM_DECODER3_CTRL:
-> >           should_commit = FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMIT);
-> >           should_uncommit = !should_commit;
-> >           break;
-> > @@ -81,7 +84,7 @@ static void cxl_cache_mem_write_reg(void *opaque, hwaddr offset, uint64_t value,
-> >       }
-> >   
-> >       if (offset >= A_CXL_HDM_DECODER_CAPABILITY &&
-> > -        offset <= A_CXL_HDM_DECODER0_TARGET_LIST_HI) {
-> > +        offset <= A_CXL_HDM_DECODER3_TARGET_LIST_HI) {
-> >           dumb_hdm_handler(cxl_cstate, offset, value);
-> >       } else {
-> >           cregs->cache_mem_registers[offset / sizeof(*cregs->cache_mem_registers)] = value;
-> > @@ -161,7 +164,7 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
-> >   static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
-> >                               enum reg_type type)
-> >   {
-> > -    int decoder_count = 1;
-> > +    int decoder_count = 4;  
-> 
->    unsigned decoder_count = HDM_DECODER_COUNT;
-> 
-> >       int i;
-> >   
-> >       ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, DECODER_COUNT,
-> > @@ -174,19 +177,22 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
-> >                        HDM_DECODER_ENABLE, 0);
-> >       write_msk[R_CXL_HDM_DECODER_GLOBAL_CONTROL] = 0x3;
-> >       for (i = 0; i < decoder_count; i++) {  
-> 
-> Alternatively:
-> 
->          for (i = 0; i < decoder_count; i++, write_msk += 8) {
->              write_msk[R_CXL_HDM_DECODER0_BASE_LO] = 0xf0000000;
-
-That's a bit nasty and fragile given we are offsetting the base register than
-indexing into it (so applying a later offset).
-
-> 
-> > -        write_msk[R_CXL_HDM_DECODER0_BASE_LO + i * 0x20] = 0xf0000000;
-> > -        write_msk[R_CXL_HDM_DECODER0_BASE_HI + i * 0x20] = 0xffffffff;
-> > -        write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20] = 0xf0000000;
-> > -        write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20] = 0xffffffff;
-> > -        write_msk[R_CXL_HDM_DECODER0_CTRL + i * 0x20] = 0x13ff;
-> > +        write_msk[R_CXL_HDM_DECODER0_BASE_LO + i * 0x20 / 4] = 0xf0000000;  
-> 
-> (this 0x20 / 4 bugs me a bit).
-
-Instead, I've gone with a local variable which leaves me room for deriving
-this based on the step between the registers for decoders 0 and 1.
-
-hdm_inc = R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE_LO;
-
-I haven't added a define for this because it would probably have to be
-long enough that it will cause line length problems :(
-So it is replicated in a few different places which isn't ideal
-but definitely better than the 0x20 / 4
-
-> 
-> > +        write_msk[R_CXL_HDM_DECODER0_BASE_HI + i * 0x20 / 4]  = 0xffffffff;
-> > +        write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * 0x20 / 4] = 0xf0000000;
-> > +        write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * 0x20 / 4] = 0xffffffff;
-> > +        write_msk[R_CXL_HDM_DECODER0_CTRL + i * 0x20 / 4] = 0x13ff;
-> >           if (type == CXL2_DEVICE ||
-> >               type == CXL2_TYPE3_DEVICE ||
-> >               type == CXL2_LOGICAL_DEVICE) {
-> > -            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xf0000000;
-> > +            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20 / 4] =
-> > +                0xf0000000;
-> >           } else {
-> > -            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20] = 0xffffffff;
-> > +            write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_LO + i * 0x20 / 4] =
-> > +                0xffffffff;
-> >           }
-> > -        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_HI + i * 0x20] = 0xffffffff;
-> > +        write_msk[R_CXL_HDM_DECODER0_TARGET_LIST_HI + i * 0x20 / 4] =
-> > +            0xffffffff;
-> >       }
-> >   }  
+> > > +    } else {
+> > > +        cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
+> > > +    }
+> > >       cxl_cstate->pdev = d;
+> > >       build_dvsecs(cxl_cstate);
+> > >       cxl_component_register_block_init(OBJECT(d), cxl_cstate, TYPE_CXL_USP);
+> > > @@ -366,6 +376,7 @@ static void cxl_usp_exitfn(PCIDevice *d)
+> > >   }
+> > >   static Property cxl_upstream_props[] = {
+> > > +    DEFINE_PROP_UINT64("sn", CXLUpstreamPort, sn, UI64_NULL),
+> > >       DEFINE_PROP_STRING("cdat", CXLUpstreamPort, cxl_cstate.cdat.filename),
+> > >       DEFINE_PROP_END_OF_LIST()
+> > >   };  
 > 
 
