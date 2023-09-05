@@ -2,142 +2,119 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9777FCA100A
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 20:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B782CA100A
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 20:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243440AbjIEUWe convert rfc822-to-8bit (ORCPT
-        <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 16:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60766 "EHLO
+        id S231629AbjIEUYc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Sep 2023 16:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242451AbjIEUWe (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 16:22:34 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EEE8E
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 13:22:30 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rg9jD2MSSz67nmN;
-        Wed,  6 Sep 2023 00:20:48 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 5 Sep
- 2023 17:22:08 +0100
-Date:   Tue, 5 Sep 2023 17:22:07 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
-CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH] hw/pci-bridge/cxl-upstream: Add serial number extended
- capability support
-Message-ID: <20230905172207.00000aa8@huawei.com>
-In-Reply-To: <ba7d895f-72d0-8a11-34ad-b5ca75f482bb@linaro.org>
-References: <20230904175752.17927-1-Jonathan.Cameron@huawei.com>
-        <ba7d895f-72d0-8a11-34ad-b5ca75f482bb@linaro.org>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+        with ESMTP id S231949AbjIEUY1 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 16:24:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30AF12C;
+        Tue,  5 Sep 2023 13:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693945463; x=1725481463;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UFy2n3TxwS/KmbKsOKVVpz6t61msRHReKOMWJz59BNA=;
+  b=lJSMVUvkYs0oslF6BS21VvVfy1WHfeS1JTyJgc3YGO8gUoVTApt04dEf
+   VKfST9aFMm3N3TGgCSzIhV3F7PuR0QQ2CcTYgzyeaF9Xrc6jJnAdh2mgT
+   VaRA2sRuT2peYSpJyJhUSz3MUME/98Bx3ZZJV6XAeeVgi9ZXmqvfIFdih
+   RGnbdCiFe9+/wQo0EMA0xW8+w3Pzk3XpEi7hkNmVH1tH95WXysL4e0CS4
+   C28MSY714vEtDaq2cmseotRlElj8DTTb5oSEK+a+up0CIXc5YIa1J5e+j
+   LihwenW1a5/cwhmp0WPezXyny78CiATp6sHTTc+KcQ1W7AaCTsw6+i3jq
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="380702976"
+X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
+   d="scan'208";a="380702976"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 13:24:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="744410793"
+X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
+   d="scan'208";a="744410793"
+Received: from lkp-server02.sh.intel.com (HELO e0b2ea88afd5) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Sep 2023 13:24:04 -0700
+Received: from kbuild by e0b2ea88afd5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qdcaY-00022d-0L;
+        Tue, 05 Sep 2023 20:23:58 +0000
+Date:   Wed, 6 Sep 2023 04:22:45 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ben Cheatham <Benjamin.Cheatham@amd.com>, rafael@kernel.org,
+        dan.j.williams@intel.com, linux-cxl@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, bhelgaas@google.com,
+        benjamin.cheatham@amd.com, yazen.ghannam@amd.com
+Subject: Re: [PATCH v3 1/3] CXL, PCIE: Add cxl_rcrb_addr file to dport_dev
+Message-ID: <202309060435.NqPCZpql-lkp@intel.com>
+References: <20230905184406.135851-2-Benjamin.Cheatham@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230905184406.135851-2-Benjamin.Cheatham@amd.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 5 Sep 2023 10:48:54 +0200
-Philippe Mathieu-Daudé <philmd@linaro.org> wrote:
+Hi Ben,
 
-> Hi Jonathan,
-> 
-> On 4/9/23 19:57, Jonathan Cameron wrote:
-> > Will be needed so there is a defined serial number for
-> > information queries via the Switch CCI.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > No ordering dependencies wrt to other CXL patch sets.
-> > 
-> > Whilst we 'need' it for the Switch CCI set it is valid without
-> > it and aligns with existing EP serial number support. Seems sensible
-> > to upstream this first and reduce my out of tree backlog a little!
-> > 
-> >   hw/pci-bridge/cxl_upstream.c | 15 +++++++++++++--
-> >   1 file changed, 13 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-> > index 2b9cf0cc97..15c4d84a56 100644
-> > --- a/hw/pci-bridge/cxl_upstream.c
-> > +++ b/hw/pci-bridge/cxl_upstream.c
-> > @@ -14,6 +14,11 @@
-> >   #include "hw/pci/msi.h"
-> >   #include "hw/pci/pcie.h"
-> >   #include "hw/pci/pcie_port.h"
-> > +/*
-> > + * Null value of all Fs suggested by IEEE RA guidelines for use of
-> > + * EU, OUI and CID
-> > + */
-> > +#define UI64_NULL (~0ULL)  
-> 
-> Already defined in hw/mem/cxl_type3.c, can we move it to some common
-> CXL header? Or include/qemu/units.h?
-> 
-> >   #define CXL_UPSTREAM_PORT_MSI_NR_VECTOR 2
-> >   
-> > @@ -30,6 +35,7 @@ typedef struct CXLUpstreamPort {
-> >       /*< public >*/
-> >       CXLComponentState cxl_cstate;
-> >       DOECap doe_cdat;
-> > +    uint64_t sn;
-> >   } CXLUpstreamPort;
-> >   
-> >   CXLComponentState *cxl_usp_to_cstate(CXLUpstreamPort *usp)
-> > @@ -326,8 +332,12 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
-> >       if (rc) {
-> >           goto err_cap;
-> >       }
-> > -
-> > -    cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
-> > +    if (usp->sn != UI64_NULL) {
-> > +        pcie_dev_ser_num_init(d, CXL_UPSTREAM_PORT_DVSEC_OFFSET, usp->sn);
-> > +        cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET + 0x0c;  
-> 
-> Could it be clearer to have:
-> 
-> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-> @@ -23,2 +23,2 @@
-> -#define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
-> -    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
-> +#define CXL_UPSTREAM_PORT_DVSEC_OFFSET(offset) \
-> +    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF + offset)
-> 
-> ?
+kernel test robot noticed the following build warnings:
 
-The naming is going to be very confusing if we do as it becomes
-an offset of an offset.
+[auto build test WARNING on rafael-pm/linux-next]
+[also build test WARNING on linus/master v6.5 next-20230905]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Given we've never yet cared that much about keeping these devices
-looking stable to a guest, I can just leave a gap if this cap
-not defined and use fixed offsets instead thus avoiding this
-complexity.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ben-Cheatham/CXL-PCIE-Add-cxl_rcrb_addr-file-to-dport_dev/20230906-025405
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
+patch link:    https://lore.kernel.org/r/20230905184406.135851-2-Benjamin.Cheatham%40amd.com
+patch subject: [PATCH v3 1/3] CXL, PCIE: Add cxl_rcrb_addr file to dport_dev
+config: parisc-allyesconfig (https://download.01.org/0day-ci/archive/20230906/202309060435.NqPCZpql-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230906/202309060435.NqPCZpql-lkp@intel.com/reproduce)
 
-> 
-> > +    } else {
-> > +        cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
-> > +    }
-> >       cxl_cstate->pdev = d;
-> >       build_dvsecs(cxl_cstate);
-> >       cxl_component_register_block_init(OBJECT(d), cxl_cstate, TYPE_CXL_USP);
-> > @@ -366,6 +376,7 @@ static void cxl_usp_exitfn(PCIDevice *d)
-> >   }
-> >   
-> >   static Property cxl_upstream_props[] = {
-> > +    DEFINE_PROP_UINT64("sn", CXLUpstreamPort, sn, UI64_NULL),
-> >       DEFINE_PROP_STRING("cdat", CXLUpstreamPort, cxl_cstate.cdat.filename),
-> >       DEFINE_PROP_END_OF_LIST()
-> >   };  
-> 
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309060435.NqPCZpql-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
+
+   drivers/cxl/core/port.c: In function 'cxl_rcrb_addr_show':
+>> drivers/cxl/core/port.c:953:38: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 3 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
+     953 |         return sysfs_emit(buf, "0x%llx\n", dport->rcrb.base);
+         |                                   ~~~^     ~~~~~~~~~~~~~~~~
+         |                                      |                |
+         |                                      |                resource_size_t {aka unsigned int}
+         |                                      long long unsigned int
+         |                                   %x
+
+
+vim +953 drivers/cxl/core/port.c
+
+   940	
+   941	static ssize_t cxl_rcrb_addr_show(struct device *dev,
+   942					  struct device_attribute *attr, char *buf)
+   943	{
+   944		struct cxl_dport *dport;
+   945	
+   946		if (!cxl_root)
+   947			return -ENODEV;
+   948	
+   949		dport = cxl_find_dport_by_dev(cxl_root, dev);
+   950		if (!dport)
+   951			return -ENODEV;
+   952	
+ > 953		return sysfs_emit(buf, "0x%llx\n", dport->rcrb.base);
+   954	}
+   955	DEVICE_ATTR_RO(cxl_rcrb_addr);
+   956	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
