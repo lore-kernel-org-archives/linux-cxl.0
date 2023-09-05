@@ -2,149 +2,140 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006BACA0FFA
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 18:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F212BCA0FF7
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 18:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239845AbjIESNy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 14:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48742 "EHLO
+        id S233152AbjIESqK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Sep 2023 14:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239826AbjIESNi (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 14:13:38 -0400
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12655B86
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 09:57:33 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99357737980so421166466b.2
-        for <linux-cxl@vger.kernel.org>; Tue, 05 Sep 2023 09:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693932925; x=1694537725; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3AlzI1/zUkgHjINPB/60Bhf/bsRfn38JsFwy+xis2jA=;
-        b=LKdAnjFakELd+M4ORbusarOyo94XgreoFCbZCb0CzZLS40TUf3KslNG1QIiPqEjGkj
-         j9HOtn7oDntfIlizBGpFw6vUtks+jbQOYYgG3ZweyKy1CVZT2BwGXd8RQMz7xoNxozC6
-         qZjRWm5f53YkuHa4gA4JJDwDYTTahAwKgNXHuiUp11+N35bxL4GFc7LfpKuku/EiFbu5
-         bNDCZbOxNVZDP3yz+2LDxWgpptFTeyernzp/wduhKcsIk8DPll2qU4GPuWTGh29XQhM9
-         oijYKIeSkDKdumX82JSG0KLIa2ebj7zfwfi4FviKWI1o+sjXvgmQG20/kTv/i0RkmgjJ
-         nqCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693932925; x=1694537725;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3AlzI1/zUkgHjINPB/60Bhf/bsRfn38JsFwy+xis2jA=;
-        b=iWQJb0Pu5xfyz5aGN+nY7f87T1g9vDsP/pncY2fV08IJGUaiNuhOR5jZPwnfsbHLCc
-         jYmE0azO6fnJHHKW3IjljDErDUTTkLsKYUu0J1+R5XUP8GtbiVP4JfHPjTkQWNBjzecE
-         yMbAvhO9FqjFkK55cnADr+ra3iDNwFPxukg/H/gLJNinzmsSEdkOvQ+chPlQatwTeI79
-         Id+lsxAVSI259QX5knfu+sm8WcO3vzTZoQwFud4GShIQLSwaUzAyFtJmfUYOFobb7jpi
-         PxNnxwjq6NdfRWyq9kRwWpsFpQDFDAzi/dlutFzvkAXNXNHZxmRGNgGdw5VwzKMMrhhi
-         Gxyg==
-X-Gm-Message-State: AOJu0YxFTfDPxfIC82nk/QnDvmhpgYo7S+ZmnAqCBB/WyPtDwy8339k/
-        aalAKV+1P9HtIi5oakEeeVtCCA==
-X-Google-Smtp-Source: AGHT+IGJjFvazhbzDO72qsjE+5oyOKiJjYH9aNw64nxL/uDLtKPe8WhesihAPOy2FRDrol1fvQtvSQ==
-X-Received: by 2002:a17:907:7893:b0:99b:d580:546c with SMTP id ku19-20020a170907789300b0099bd580546cmr369290ejc.23.1693932925378;
-        Tue, 05 Sep 2023 09:55:25 -0700 (PDT)
-Received: from [192.168.69.115] (mst45-h01-176-184-47-79.dsl.sta.abo.bbox.fr. [176.184.47.79])
-        by smtp.gmail.com with ESMTPSA id f3-20020a170906824300b009786c8249d6sm7898364ejx.175.2023.09.05.09.55.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Sep 2023 09:55:24 -0700 (PDT)
-Message-ID: <d3e6506a-b553-d292-9428-25e784be0d4f@linaro.org>
-Date:   Tue, 5 Sep 2023 18:55:23 +0200
+        with ESMTP id S232792AbjIESqK (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 14:46:10 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on20604.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e83::604])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C36D2CFB;
+        Tue,  5 Sep 2023 11:45:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JDdJj3BHAQRDgCMyUKJktI28Q97hWAFEtEchl6ITb0wYHNB8N8Qw4+vdrrutfJgyvv4Ngyty3fgsQrMix222FKcEdu0MiJnNuBsaJmd87wDeGqoldW76mUbiwl/QYtIvby3utzft8/BabB4L3UN5Llz+SzbppBtN6JrfvYD7l1luFGnA+EkoM06KMZfbheRAV9GvDtc694gV2dnHCEwNKvRNa1X0dPiv+F9hTxLKQ6dI+zYISpGPUBuuGDkkj7aO+0/mE7KCqYl1a0q8uJDFz4jgJN7hxEQ0kJtfaU29pZyfQWgV4qMo+X55sE+F8ay1NjkSRtEqt7llO/psb4NpsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NwJYvfRlXToyD+xkMD/NcRPQ5+NlD12l9uuut6vBhy8=;
+ b=kEQjvSTJpPolwt+gpJtgf0V++vd1SUz0lVCfIT1Xuoira4Vj/yNdhBwYvSZH7bI9dW7xS4OEHNCgOzigUZfNiEQAvIS9GOAOgU9b75nIuZlHzZmw1TYSZTwgfJQT9eIMaJWzBX7HuZwTT8I3vY3WtQ7q/acQ1Di9fgFskYSUWGeJCoQGYJiljYHgXLLUjB7Pd6Voj53IJdukH6e73s0IYA3cpi/czKv9Um/04TVxIcj3fFvCKNiU/IMT+fyqctNpcoXwLy6dWTSkK/sctW7x3de6RN/XVtc/QrCVqzG+rA94rDkV0InMWG/YGhI+Ygn+OI9mzxWNAeilfV1F0kTXPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NwJYvfRlXToyD+xkMD/NcRPQ5+NlD12l9uuut6vBhy8=;
+ b=bD34RIBjx3bZpWPRKu893I2YRciEszL782XxbA/W4can58/R+VG/ppn4jETa4XJTxzB7ZRPtkvdP2l96jyEkYwJ+xtqEX0Pe4YPHZAiVME+R+qJ37+N2sBIUPo/iJ2J+2K1dxpetNa89vM13AxNEDQLzqmgtYiqY5ujMO2DLeIQ=
+Received: from MW4PR04CA0276.namprd04.prod.outlook.com (2603:10b6:303:89::11)
+ by MW4PR12MB7192.namprd12.prod.outlook.com (2603:10b6:303:22a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.32; Tue, 5 Sep
+ 2023 18:44:21 +0000
+Received: from CO1PEPF000044F5.namprd05.prod.outlook.com
+ (2603:10b6:303:89:cafe::11) by MW4PR04CA0276.outlook.office365.com
+ (2603:10b6:303:89::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33 via Frontend
+ Transport; Tue, 5 Sep 2023 18:44:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F5.mail.protection.outlook.com (10.167.241.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6768.25 via Frontend Transport; Tue, 5 Sep 2023 18:44:20 +0000
+Received: from bcheatha-HP-EliteBook-845-G8-Notebook-PC.amd.com
+ (10.180.168.240) by SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 5 Sep 2023 13:44:18 -0500
+From:   Ben Cheatham <Benjamin.Cheatham@amd.com>
+To:     <rafael@kernel.org>, <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC:     <bhelgaas@google.com>, <benjamin.cheatham@amd.com>,
+        <yazen.ghannam@amd.com>
+Subject: [PATCH v3 0/3] CXL, ACPI, APEI, EINJ: Update EINJ for CXL 1.1 error types
+Date:   Tue, 5 Sep 2023 13:44:03 -0500
+Message-ID: <20230905184406.135851-1-Benjamin.Cheatham@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH 1/2] hw/cxl: Add utility functions decoder interleave ways
- and target count.
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron via <qemu-devel@nongnu.org>
-Cc:     Michael Tsirkin <mst@redhat.com>, Fan Ni <fan.ni@samsung.com>,
-        linux-cxl@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        linuxarm@huawei.com
-References: <20230904164704.18739-1-Jonathan.Cameron@huawei.com>
- <20230904164704.18739-2-Jonathan.Cameron@huawei.com>
- <89d5477c-ece0-b738-c64f-056242619d92@linaro.org>
- <20230905155639.00000b3a@huawei.com> <20230905160607.0000366f@huawei.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230905160607.0000366f@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F5:EE_|MW4PR12MB7192:EE_
+X-MS-Office365-Filtering-Correlation-Id: c90bb555-0fd2-4a9f-8e23-08dbae401df7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pTC0x0gQtLv2j3tGNMDq8YG4atua0sTGno+Wn2IhqzssZhCR2l2J32FV5JhXuI1nIniCu8xYaMqRr2uPEoPnRjXUOk+fxtifGrqtIvl2A+/2sfxP22KEcwzVj8uroi3SosTZiGhIHEocWRPZP6NK6bKU/DT3GA8CWc2dRegWN5eB3fplZmxYi8YOgig3QFbOPL1I0s0kv7c+h8sejTj2aHnqtDI6lv+4MK0sW0l6xg1g3bQgnJ01Cgx8PhRUx4tVam5fw8EndXAFWPiFzsHXqSJdCIZorCgjq4a9OQDr3M6J/UbNDg4mSTK1Pc5dDIaYrTLwT89h+fys+XBla5ScOiWsqIij0+4kfUfhBimQh65YoHayBVR7O8dQhNwFVePettf6HoQqwtiIyOr3KaNVA2OdG7fDhCFof93AzK0o3QuEqseZ2DJQW6+a/sVkROz9WTu6rvKCXDaTbqkMDpZ4SLvljThKYWOF1RZuaPF13Kt4Ws/v40pAsCMB9uhwbWl+cIHrMv3atBqbRqJtLfAwI7JorhvupqF+/aFY4qFylzEat0Bn3r1IqwaSdZAagN/NrrYfpeSAULnDIIxZ38d3e3Nz18S5JaKj+VsfNg5ILlIwJIeShfEV4all7gCUQ6jWh3PCcs25NwTeqNay83mEZMjzPY1ZV7ZgeXpWpcY5QJmUjK2opUkk5Wp+4MtmpbcytAfxgY95dlkZD+7MkP+D+GpgQpNQ5Pe2X/wilIoO8VGRtP9Bqhwwu4BKr1jZI0Lm3q4IWO/0WmHgVK26y54LzQ5tq3nCWTIqXvFYVS8JSaI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(39860400002)(136003)(396003)(186009)(1800799009)(82310400011)(451199024)(40470700004)(36840700001)(46966006)(8676002)(8936002)(5660300002)(36756003)(316002)(54906003)(110136005)(2906002)(70586007)(70206006)(4326008)(36860700001)(41300700001)(40460700003)(7696005)(26005)(1076003)(16526019)(40480700001)(426003)(15650500001)(47076005)(336012)(82740400003)(6666004)(81166007)(356005)(478600001)(966005)(83380400001)(2616005)(86362001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 18:44:20.4772
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c90bb555-0fd2-4a9f-8e23-08dbae401df7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7192
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On 5/9/23 17:06, Jonathan Cameron wrote:
-> On Tue, 5 Sep 2023 15:56:39 +0100
-> Jonathan Cameron via <qemu-devel@nongnu.org> wrote:
-> 
->> On Mon, 4 Sep 2023 20:26:59 +0200
->> Philippe Mathieu-Daudé <philmd@linaro.org> wrote:
->>
->>> On 4/9/23 18:47, Jonathan Cameron wrote:
->>>> As an encoded version of these key configuration parameters is
->>>> a register, provide functions to extract it again so as to avoid
->>>> the need for duplicating the storage.
->>>>
->>>> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>> ---
->>>>    include/hw/cxl/cxl_component.h | 14 ++++++++++++++
->>>>    hw/cxl/cxl-component-utils.c   | 17 +++++++++++++++++
->>>>    2 files changed, 31 insertions(+)
->>>>
->>>> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
->>>> index 42c7e581a7..f0ad9cf7de 100644
->>>> --- a/include/hw/cxl/cxl_component.h
->>>> +++ b/include/hw/cxl/cxl_component.h
->>>> @@ -238,7 +238,21 @@ static inline int cxl_decoder_count_enc(int count)
->>>>        return 0;
->>>>    }
->>>>    
->>>> +static inline int cxl_decoder_count_dec(int enc_cnt)
->>>> +{
->>>> +    switch (enc_cnt) {
->>>> +    case 0: return 1;
->>>> +    case 1: return 2;
->>>> +    case 2: return 4;
->>>> +    case 3: return 6;
->>>> +    case 4: return 8;
->>>> +    case 5: return 10;
->>>> +    }
->>>> +    return 0;
->>>> +}
->>>
->>> Why inline?
->>>    
->>
->> Bad habit.
-> Nope. I'm being slow.  This is in a header so if I don't
-> mark it inline I get a bunch of defined but not used warnings.
-> 
-> Obviously I could move the implementation of this and the matching
-> encoding routines out of the header. I haven't done so for now.
+v3 Changes:
+	- Add sysfs files for finding valid CXL 1.1 downstream port
+	  MMIO addresses, along with validation of said addresses
+	- Update EINJ documentation to include relevant information
+	  for injecting CXL error types
+	- Dropped Yazen's from tag
 
-Inlined function in hw/ are hardly justifiable. They make the headers
-and debugging sessions harder to read in my experience. Compilers are
-becoming clever and clever, and we have LTO, so I rather privilege
-code maintainability. My 2 cents :)
+This patch is a follow up to the discussion at [1], and builds on Tony's
+CXL error patch at [2].
 
->>> Alternatively:
->>>
->>>     unsigned cxl_decoder_count_dec(unsigned enc_cnt)
->>>     {
->>>         return enc_cnt <= 5 ? 2 * enc_cnt : 0;
->>
->> It gets a little more fiddly than the code I'm proposing implies.
->> For Switches and Host Bridges larger values are defined
->> (we just don't emulate them yet and may never do so) and those
->> don't have a sensible mapping.
->>
->> I guess there is no harm in adding the full decode however
->> which will make it more obvious why it was a switch statement.
+The new CXL error types will use the Memory Address field in the
+SET_ERROR_TYPE_WITH_ADDRESS structure in order to target a CXL 1.1
+compliant memory-mapped downstream port. The value of the memory address
+will be in the port's MMIO range, and it will not represent physical
+(normal or persistent) memory.
 
-Right, no problem.
+In v2 [3], the user supplied the MMIO address for the downstream port, but
+per Dan Williams' suggestion [3], the addresses are predetermined and
+the user only picks the error type to inject and the downstream port to
+inject into. In order to inject an error, the user write the error type
+to the error_type file under the einj debugfs directory, then writes any
+integer into one of the files under the cxl directory.
 
-Preferably having this tiny function not inlined:
+[1]:
+Link: https://lore.kernel.org/linux-acpi/20221206205234.606073-1-Benjamin.Cheatham@amd.com/
+[2]:
+Link: https://lore.kernel.org/linux-cxl/CAJZ5v0hNQUfWViqxbJ5B4JCGJUuHpWWSpqpCFWPNpGuagoFbsQ@mail.gmail.com/T/#t
+[3]:
+Link: https://lore.kernel.org/linux-cxl/20230403151849.43408-1-Benjamin.Cheatham@amd.com/
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Ben Cheatham (3):
+  CXL, PCIE: Add cxl_rcrb_addr file to dport_dev
+  ACPI, APEI, EINJ: Add CXL 1.1 EINJ error type support
+  ACPI, APEI, EINJ: Update EINJ documentation
+
+ Documentation/ABI/testing/sysfs-bus-cxl       |  8 +++
+ .../firmware-guide/acpi/apei/einj.rst         | 26 ++++++++--
+ drivers/acpi/apei/einj.c                      | 26 +++++++++-
+ drivers/cxl/acpi.c                            |  2 +
+ drivers/cxl/core/port.c                       | 50 +++++++++++++++++++
+ drivers/cxl/cxl.h                             |  3 ++
+ include/linux/cxl.h                           | 18 +++++++
+ 7 files changed, 128 insertions(+), 5 deletions(-)
+ create mode 100644 include/linux/cxl.h
+
+-- 
+2.34.1
 
