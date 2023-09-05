@@ -2,237 +2,165 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50846CA0FF8
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BBECA0FFA
+	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 16:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346748AbjIEQYK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S241372AbjIEQYK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Tue, 5 Sep 2023 12:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45628 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353510AbjIEG0S (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 02:26:18 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A644DCC4
-        for <linux-cxl@vger.kernel.org>; Mon,  4 Sep 2023 23:26:13 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230905062611epoutp033b0d794f625460a1fd9d6607a35122ac~B7K8CS-2a0907209072epoutp038
-        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 06:26:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230905062611epoutp033b0d794f625460a1fd9d6607a35122ac~B7K8CS-2a0907209072epoutp038
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1693895171;
-        bh=/5hrUhRUYLkyoSW8pcoFH8awEue7NyaLlUycgFX8lMo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AloKsvutEwRwB4ozkJC4qIqvHlPsycRptq0IMd+0/VHRmckR2XZlRGg0nS74nreWs
-         fWQdWw0ok4VgmHhP0wgI+tairxKX4F02xZ6AK+11U2ZYulWnAbFPVCmh0YNB9Ux3YM
-         chstjnylyT+fXWkU4hFq7z1Q030hv0prL/q+APno=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230905062610epcas2p2b212f5bf1e3bc14627a52345ec3372bd~B7K7j2bkD0286202862epcas2p2b;
-        Tue,  5 Sep 2023 06:26:10 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.90]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4RfwW61Hskz4x9Pp; Tue,  5 Sep
-        2023 06:26:10 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D9.89.09765.10AC6F46; Tue,  5 Sep 2023 15:26:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-        20230905062609epcas2p44455a5a18e77d1ee0b8f46c8f6b3af96~B7K6gUDMs1381413814epcas2p4c;
-        Tue,  5 Sep 2023 06:26:09 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230905062609epsmtrp1f7472c87e7680ede5256d89d15dc3c4e~B7K6cSIaq0778807788epsmtrp19;
-        Tue,  5 Sep 2023 06:26:09 +0000 (GMT)
-X-AuditID: b6c32a48-40fff70000002625-f3-64f6ca01216c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C4.7A.08788.10AC6F46; Tue,  5 Sep 2023 15:26:09 +0900 (KST)
-Received: from jehoon-Precision-7920-Tower (unknown [10.229.83.133]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20230905062609epsmtip18e1d31466abf18cba0818a1170f8ebce~B7K6LxyKE1637116371epsmtip1P;
-        Tue,  5 Sep 2023 06:26:09 +0000 (GMT)
-Date:   Tue, 5 Sep 2023 15:29:18 +0900
-From:   Jehoon Park <jehoon.park@samsung.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Kyungsan Kim <ks0204.kim@samsung.com>,
-        Junhyeok Im <junhyeok.im@samsung.com>
-Subject: Re: [ndctl PATCH v2 2/2] cxl: add 'set-alert-config' command to cxl
- tool
-Message-ID: <20230905062918.GA8186@jehoon-Precision-7920-Tower>
+        with ESMTP id S1353994AbjIEJDp (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 05:03:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E8ABF
+        for <linux-cxl@vger.kernel.org>; Tue,  5 Sep 2023 02:02:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693904575;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ISCJw3a4nE7Oy0bGsYEJtXPHTQW8rqSf6hMib2Lt9no=;
+        b=C50k+/594HVPKJdC4SmxtYMDBuBBPW1TExYFpceOvcUX1gXOzBqRkTjATw4hSqPjTlaavl
+        +hc1r+N+3HQRh12cUKKXsXYc8q8kMIaZaE2fP9rjLpYkvAYIOcWQnO5GKUK6xI+FjeZiZl
+        4iuvwHMS6L4GbmtP4cj8E5dhiliDT+M=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-342-B_YxHvRrM12r5Pf3zzsZ0w-1; Tue, 05 Sep 2023 05:02:54 -0400
+X-MC-Unique: B_YxHvRrM12r5Pf3zzsZ0w-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-500a675a034so2369957e87.1
+        for <linux-cxl@vger.kernel.org>; Tue, 05 Sep 2023 02:02:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693904572; x=1694509372;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ISCJw3a4nE7Oy0bGsYEJtXPHTQW8rqSf6hMib2Lt9no=;
+        b=WK6jsiNbHpzpAzT8K9uFJzI5aulVFLWo9u26MT/mCdmkg6Bzc2sMOHvN4r170EMvln
+         yVUOazw4SodV9DUbwHUwIqAg0BzO4gWUjiIkB/apB5DJZR+xrPWKxJEk/zERO/ekWPUG
+         J6xXk8Yo8IPqQkQxLjLQqmrgQG1OaO/qboCkzeQpQB92z3A2M+za2E3aLnEuGDcjUCYt
+         lTZFJdZtOQ5IFRjfuksR5aILerFmd17pPmmgokKRT/YDFy91jnQ2Us3QhejKYV/+3/hP
+         xohs9d4qhrpV2egwBHTQz0dJXg9bj78m8qRoQhs7qShRptMxmDqUHXAdLenpak5Jswvs
+         nlJg==
+X-Gm-Message-State: AOJu0Yz+lDwvXWTHdmjS7sqeX+D8DTYwB6mz16PR7AX0bWAX6wDjmJ9g
+        E1sbhnQgzkXYqKvjU5fgNJ0a3msqXl9oIgKWarUNf6QcHCUi95mrqiTuVLl7zopDv2LNOWHJeVL
+        drCGEEkPq9hGDB75y950f
+X-Received: by 2002:a05:6512:3c9e:b0:500:c2d7:3ab4 with SMTP id h30-20020a0565123c9e00b00500c2d73ab4mr9606738lfv.8.1693904572556;
+        Tue, 05 Sep 2023 02:02:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE/9dQHVayD7xesewN/YbshyUMTnNpJKHVUrl3DJF98fIhjAByGAxJJLxlRcuurtPLbd+cfLg==
+X-Received: by 2002:a05:6512:3c9e:b0:500:c2d7:3ab4 with SMTP id h30-20020a0565123c9e00b00500c2d73ab4mr9606721lfv.8.1693904572214;
+        Tue, 05 Sep 2023 02:02:52 -0700 (PDT)
+Received: from redhat.com ([2.52.23.134])
+        by smtp.gmail.com with ESMTPSA id i19-20020a056402055300b005233609e39dsm6932710edx.30.2023.09.05.02.02.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 02:02:51 -0700 (PDT)
+Date:   Tue, 5 Sep 2023 05:02:47 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        qemu-devel@nongnu.org, Fan Ni <fan.ni@samsung.com>,
+        linux-cxl@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH] hw/pci-bridge/cxl-upstream: Add serial number extended
+ capability support
+Message-ID: <20230905045849-mutt-send-email-mst@kernel.org>
+References: <20230904175752.17927-1-Jonathan.Cameron@huawei.com>
+ <ba7d895f-72d0-8a11-34ad-b5ca75f482bb@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <v76symilqy5onz6n3y7e47r5xqpaf53nunbb5kz2pcesvjocw7@42o6dotjncu5>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPJsWRmVeSWpSXmKPExsWy7bCmmS7TqW8pBtdPMVrcfXyBzWL61AuM
-        FiduNrJZrL65htFi/9PnLBarFl5js1h8dAazxdE9HBbnZ51isVj54w+rxa0Jx5gcuD1ajrxl
-        9Vi85yWTx4vNMxk9+rasYvSYOrve4/MmuQC2qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMz
-        A0NdQ0sLcyWFvMTcVFslF58AXbfMHKDrlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkF
-        KTkF5gV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGcdbrrAVnJGvmHi0nbGB8YNEFyMnh4SAiUTv
-        +0ssXYxcHEICOxglzsydzgbhfGKU6PmynwnC+cYocWnHFWaYloWXHjFDJPYySqxa0APl/GSU
-        +DVjIhtIFYuAisSDWcfBbDYBbYn72zeA2SIC6hLz1t5mBGlgFmhilpj55jE7SEJYIFji1M6v
-        TCA2r4C9xPzW92wQtqDEyZlPgC7k4OAU8JOYOacKJCwqoCxxYNtxsPMkBBZySNyct5YV4jwX
-        iStfe5kgbGGJV8e3sEPYUhIv+9ug7HyJnydvQdUXSHz68oEFwjaWeHfzOVicWSBD4s6Xw+wg
-        eyWAlh25xQIR5pPoOPwXKswr0dEmBNGpKtF1/AMjhC0tcfjKUWhgeUgcX9/KCAmfViaJg5Nn
-        s09glJ+F5LNZSLZB2DoSC3Z/YpsFtIIZaNbyfxwQpqbE+l36CxhZVzGKpRYU56anFhsVmMBj
-        Ozk/dxMjOOVqeexgnP32g94hRiYOxkOMEhzMSiK87+S/pQjxpiRWVqUW5ccXleakFh9iNAXG
-        00RmKdHkfGDSzyuJNzSxNDAxMzM0NzI1MFcS573XOjdFSCA9sSQ1OzW1ILUIpo+Jg1OqgUlG
-        ZVL4wd4d6VpXM0WPOi1ne194fv88DfHAz/GXp37yurQn1fmpQVPG9MOC6ody2RhbXuW9r1l/
-        6sGcCm9jweCip9uuPNII9uQX/vZ4LrOj+E6lVQXLZdc9W8RdvFP23uu6V5ris4vLAxgLU7ZU
-        mihNeqb4wVjTdJcwt6Qf75+vFdGGt7vmOb3mi5m3qPK/vVfDJ6Ebc6bxiMaf1ltR+P7wPIf+
-        hwI/ey1UDxsJuJp/Vs6Oc51zwtH60dcpHR/6I34kPmT+cPob//Hr0UfOVv3NfxTcnyebbnvl
-        u+QDKycZi9jZR/4bubOuX2PMU30ya2vqipNOLAH6DZPEy1OfaL7JeLB6//ppon0fa/fLBSix
-        FGckGmoxFxUnAgB/j5uSQgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSnC7jqW8pBq8mS1jcfXyBzWL61AuM
-        FiduNrJZrL65htFi/9PnLBarFl5js1h8dAazxdE9HBbnZ51isVj54w+rxa0Jx5gcuD1ajrxl
-        9Vi85yWTx4vNMxk9+rasYvSYOrve4/MmuQC2KC6blNSczLLUIn27BK6MvXvfsBb0yFacmvSO
-        pYHxpFgXIyeHhICJxMJLj5i7GLk4hAR2M0r8nHqbCSIhLXGv+Qo7hC0scb/lCCtE0XdGiZMf
-        D7OBJFgEVCQezDoOZrMJaEvc374BzBYRUJeYt/Y2I0gDs0AHs8TZL9dYQRLCAsESp3Z+BdvA
-        K2AvMb/1PRvE1FYmidYnG9khEoISJ2c+YQGxmQW0JG78ewnUwAFkS0ss/8cBYnIK+EnMnFMF
-        UiEqoCxxYNtxpgmMgrOQNM9C0jwLoXkBI/MqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95Pzc
-        TYzgmNHS2sG4Z9UHvUOMTByMhxglOJiVRHjfyX9LEeJNSaysSi3Kjy8qzUktPsQozcGiJM77
-        7XVvipBAemJJanZqakFqEUyWiYNTqoEpsfrk5Y8v57iuW2TMndN9/aZH/Vft4CiZcsHtkc3S
-        dgcdPu7uvnbwyNJpv5VruwIun9/wteWr8m0p5kv7N4ReWOsoz12Z7z5vo3OW+L1nz31KPgss
-        97JkPpV8Z5Wx4f7mZ4s3llhOLn7ZNCGorGMvy02log+M2WUT3z3JZDD817BHJG7+X49m026h
-        ovSf19+3bJsxzdbq3uHNnwWCT2+ZtmPfh42F9bUzrRlkOQ/PC2FlV7t23M7NlNv0fQqv7pZj
-        03Uehhydz82fPblk5/EZFzfOUL+4MGr9+v8C9++8zDHfsHzlSc3C6wm7Z2SJWHcL/dSbUihQ
-        4iSr8WHij/6rM85LXeRp2TvXXKp7UiFvhBJLcUaioRZzUXEiAFSs3zoIAwAA
-X-CMS-MailID: 20230905062609epcas2p44455a5a18e77d1ee0b8f46c8f6b3af96
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-        boundary="----8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230807063200epcas2p2c573a655c3b35de5aeb7e188430cca9a
-References: <20230807063335.5891-1-jehoon.park@samsung.com>
-        <CGME20230807063200epcas2p2c573a655c3b35de5aeb7e188430cca9a@epcas2p2.samsung.com>
-        <20230807063335.5891-3-jehoon.park@samsung.com>
-        <v76symilqy5onz6n3y7e47r5xqpaf53nunbb5kz2pcesvjocw7@42o6dotjncu5>
+In-Reply-To: <ba7d895f-72d0-8a11-34ad-b5ca75f482bb@linaro.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-------8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-
-On Sat, Sep 02, 2023 at 08:49:58PM -0700, Davidlohr Bueso wrote:
-> On Mon, 07 Aug 2023, Jehoon Park wrote:
+On Tue, Sep 05, 2023 at 10:48:54AM +0200, Philippe Mathieu-Daudé wrote:
+> Hi Jonathan,
 > 
-> > Add a new command: 'set-alert-config', which configures device's warning alert.
-> 
-> The example in the cover-letter should be here and also mention explicitly that
-> the get counterpart is via cxl-list -A, like you have in the manpage.
-> 
-
-Thank you for comments.
-
-I will reorganize and update cover letter and commit message for clear
-explanation about the patchset.
-
+> On 4/9/23 19:57, Jonathan Cameron wrote:
+> > Will be needed so there is a defined serial number for
+> > information queries via the Switch CCI.
 > > 
-> > Signed-off-by: Jehoon Park <jehoon.park@samsung.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > > ---
-> > Documentation/cxl/cxl-set-alert-config.txt |  96 +++++++++
-> > Documentation/cxl/meson.build              |   1 +
-> > cxl/builtin.h                              |   1 +
-> > cxl/cxl.c                                  |   1 +
-> > cxl/memdev.c                               | 220 ++++++++++++++++++++-
-> > 5 files changed, 318 insertions(+), 1 deletion(-)
-> > create mode 100644 Documentation/cxl/cxl-set-alert-config.txt
+> > No ordering dependencies wrt to other CXL patch sets.
 > > 
-> > diff --git a/Documentation/cxl/cxl-set-alert-config.txt b/Documentation/cxl/cxl-set-alert-config.txt
-> > new file mode 100644
-> > index 0000000..c905f7c
-> > --- /dev/null
-> > +++ b/Documentation/cxl/cxl-set-alert-config.txt
-> > @@ -0,0 +1,96 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +cxl-set-alert-config(1)
-> > +=======================
-> > +
-> > +NAME
-> > +----
-> > +cxl-set-alert-config - set the warning alert threshold on a CXL memdev
-> > +
-> > +SYNOPSIS
-> > +--------
-> > +[verse]
-> > +'cxl set-alert-config <mem0> [<mem1>..<memN>] [<options>]'
-> > +
-> > +DESCRIPTION
-> > +-----------
-> > +CXL device raises an alert when its health status is changed. Critical alert
-> > +shall automatically be configured by the device after a device reset.
-> > +If supported, programmable warning thresholds also be initialized to vendor
-> > +recommended defaults, then could be configured by the user.
-> > +
-> > +Use this command to configure warning alert thresholds of a device.
-> > +Having issued this command, the newly requested warning thresholds would
-> > +override the previously programmed warning thresholds.
-> > +
-> > +To enable warning alert, set both 'threshold=value' and 'alert=on'. To disable
-> > +warning alert, set only 'alert=off'. Other cases would cause errors.
+> > Whilst we 'need' it for the Switch CCI set it is valid without
+> > it and aligns with existing EP serial number support. Seems sensible
+> > to upstream this first and reduce my out of tree backlog a little!
+> > 
+> >   hw/pci-bridge/cxl_upstream.c | 15 +++++++++++++--
+> >   1 file changed, 13 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+> > index 2b9cf0cc97..15c4d84a56 100644
+> > --- a/hw/pci-bridge/cxl_upstream.c
+> > +++ b/hw/pci-bridge/cxl_upstream.c
+> > @@ -14,6 +14,11 @@
+> >   #include "hw/pci/msi.h"
+> >   #include "hw/pci/pcie.h"
+> >   #include "hw/pci/pcie_port.h"
+> > +/*
+> > + * Null value of all Fs suggested by IEEE RA guidelines for use of
+> > + * EU, OUI and CID
+> > + */
+> > +#define UI64_NULL (~0ULL)
 > 
-> So what's the point of having to use double parameter to enable the warning?
-> Just do alert=threshold if you've established that threshold=N and alert=off is
-> not valid.
+> Already defined in hw/mem/cxl_type3.c, can we move it to some common
+> CXL header? Or include/qemu/units.h?
+
+not the last one I think - this is a cxl specific hack to detect that
+user has changed the property.
+
+
+I think we really should have a variant of DEFINE_PROP_XXX that sets a
+flag allowing us to detect whether a property has been set manually.
+This would be a generalization of DEFINE_PROP_ON_OFF_AUTO.
+
+
+> >   #define CXL_UPSTREAM_PORT_MSI_NR_VECTOR 2
+> > @@ -30,6 +35,7 @@ typedef struct CXLUpstreamPort {
+> >       /*< public >*/
+> >       CXLComponentState cxl_cstate;
+> >       DOECap doe_cdat;
+> > +    uint64_t sn;
+> >   } CXLUpstreamPort;
+> >   CXLComponentState *cxl_usp_to_cstate(CXLUpstreamPort *usp)
+> > @@ -326,8 +332,12 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
+> >       if (rc) {
+> >           goto err_cap;
+> >       }
+> > -
+> > -    cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
+> > +    if (usp->sn != UI64_NULL) {
+> > +        pcie_dev_ser_num_init(d, CXL_UPSTREAM_PORT_DVSEC_OFFSET, usp->sn);
+> > +        cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET + 0x0c;
 > 
-
-IMHO, using two separate parameters would be better because it would be safer
-by protecting a misuse out of an user. I think it is important to clearly
-interpret user's intention.
-Also, CXL spec (8.2.9.8.3.3) defines two payload fields, threshold and
-enablement, separetely.
-Please also remind that the 'ndctl-inject-smart' command already uses two
-parameters, threshold and alarm, to set smart threshold.
-
-> > +
-> > +Use "cxl list -m <memdev> -A" to examine the programming warning threshold
-> > +capabilities of a device.
-> > +
-> > +EXAMPLES
-> > +--------
-> > +Set warning threshold to 30 and enable alert for life used.
-> > +[verse]
-> > +cxl set-alert-config mem0 -L 30 --life-used-alert=on
-> > +
-> > +Disable warning alert for device over temperature.
-> > +[verse]
-> > +cxl set-alert-config mem0 --over-temperature-alert=off
-> > +
-> > +OPTIONS
-> > +-------
-> > +<memory device(s)>::
-> > +include::memdev-option.txt[]
-> > +
-> > +-v::
-> > +--verbose=::
-> > +        Turn on verbose debug messages in the library (if libcxl was built with
-> > +        logging and debug enabled).
+> Could it be clearer to have:
 > 
-> Should be at the end.
+> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+> @@ -23,2 +23,2 @@
+> -#define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
+> -    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
+> +#define CXL_UPSTREAM_PORT_DVSEC_OFFSET(offset) \
+> +    (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF + offset)
 > 
-
-Agree
-
+> ?
 > 
-> Thanks,
-> Davidlohr
+> > +    } else {
+> > +        cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
+> > +    }
+> >       cxl_cstate->pdev = d;
+> >       build_dvsecs(cxl_cstate);
+> >       cxl_component_register_block_init(OBJECT(d), cxl_cstate, TYPE_CXL_USP);
+> > @@ -366,6 +376,7 @@ static void cxl_usp_exitfn(PCIDevice *d)
+> >   }
+> >   static Property cxl_upstream_props[] = {
+> > +    DEFINE_PROP_UINT64("sn", CXLUpstreamPort, sn, UI64_NULL),
+> >       DEFINE_PROP_STRING("cdat", CXLUpstreamPort, cxl_cstate.cdat.filename),
+> >       DEFINE_PROP_END_OF_LIST()
+> >   };
 
-Sincerely,
-Jehoon
-
-------8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_
-Content-Type: text/plain; charset="utf-8"
-
-
-------8xN_tBFh1JRIvXNae0V60hp8Nl4-igzsNlrgW3zXOpEhlrtA=_5c3e2_--
