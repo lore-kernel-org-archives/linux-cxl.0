@@ -2,135 +2,123 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD60BEE14AA
-	for <linux-cxl@archiver.kernel.org>; Wed,  6 Sep 2023 23:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06454EE14C3
+	for <linux-cxl@archiver.kernel.org>; Wed,  6 Sep 2023 23:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237834AbjIFXtD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 6 Sep 2023 19:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
+        id S230205AbjIFXtG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 6 Sep 2023 19:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbjIFXtD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 6 Sep 2023 19:49:03 -0400
-Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87C810CF
-        for <linux-cxl@vger.kernel.org>; Wed,  6 Sep 2023 16:48:59 -0700 (PDT)
-Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-579de633419so4045117b3.3
-        for <linux-cxl@vger.kernel.org>; Wed, 06 Sep 2023 16:48:59 -0700 (PDT)
+        with ESMTP id S231502AbjIFXtF (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 6 Sep 2023 19:49:05 -0400
+Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D98210F9
+        for <linux-cxl@vger.kernel.org>; Wed,  6 Sep 2023 16:49:02 -0700 (PDT)
+Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-59231a1ca9eso4457927b3.1
+        for <linux-cxl@vger.kernel.org>; Wed, 06 Sep 2023 16:49:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694044079; x=1694648879; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J4nG8OGAmHGIu2LAdsS8Gsh+p3EeoyBi8CsqSTMWnPc=;
-        b=l2fp2yp3IKNhLhE9+9XdH7ZDQ2X7yien0L8FC7VLLqfNglQs5OsazFV5R1UqMXqJ9N
-         NlDWnQCVk0l6LfcgywYK0mZuoT5UV44/tSxK/mbm6mAx7rjmITcQDwYQjqGUuta9FVso
-         v/OrMcKU2Cl03+yRP7Xy4gqYfArCHJ+l1T9/F74BFKMdRnQ0Qj1vDoWIQNIFZtpKmdYP
-         OV7UDPRM+Un010BjCxFvYXWMQrNb/ciTlTqRdXPUDy7bJ10MtXKDSuZVu9c3g4STxOHC
-         uS8sg/v0ZSHBbUwFCG64Nn+OUNVXDAb1SnLNv7ddstR3hgsecPJDfYXuWaZxFQ9YetxT
-         JGFw==
+        d=gmail.com; s=20221208; t=1694044081; x=1694648881; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6pq4K1DRMCsdduEbuGuJ200122U1I+V8+TOdtq9hf9Q=;
+        b=oHKlFJv0RJ+6xM4/J2941T6+zBll47EaOC6mxw+dhVT0rdbm/5Dl9iLxoJBIUtfHYE
+         uJucGU09kMH4R1JWgtp/MtHizejGWBNM0haH3TnMJj4/0c7RLEej56b44pbxE4hjDwLn
+         t5BdhQiNLiwbAVxsJQieix72ug58WVL1662Tw6WftqALSI0FvzsnP800hKTZUYpGMZFV
+         EAhKD3dB+gMy120XKVOEetavI/gqIVkh6hVergqtOSnRnV/Jyt1I7GuT0fzdvEf+38UP
+         PGr0eF4OmZrUnN4I+HLvve+Q54j32m/DTLXGvhhwbb7DHxGlXAxsF1Gb9z0ZnC/U1Xoe
+         6DGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694044079; x=1694648879;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J4nG8OGAmHGIu2LAdsS8Gsh+p3EeoyBi8CsqSTMWnPc=;
-        b=YKmaHdF7DK4DnDG9shwwESJgOTnqERmTqclpEupo5mwokBbKpr86d4as3xD1b6gyXN
-         pAhS/f2S0fjM1pnyalG/qJHk91rv1NSsCMZ7FMda911wZL4lMMfySnsO2pvpmJpJiEcz
-         rZsdAGrTnSgiuntA8TimeME3xyc3uAr/prfgpYE+Y9xaTbuPfhjIpr3EDicdbig1iuzO
-         jaVk78zKrAvdRMQXfBH1NVfaOlUi94QKqXEwtI19d2Q8dO7HKgnQ5Ru+JcSFtWGe988X
-         1Uu2YU0ix32X9MnuNSma5gU1mry29CPUdtozXxNVyuSpQ6n3GsIMhVhZXjl4ZlEgkqLk
-         FZLw==
-X-Gm-Message-State: AOJu0YwkPuh9tSybp+EF1db8DWkT5itbi0qP9iYthIrxYu9mhUPHloC1
-        aW2WwaCcrIrsAbslDsFN1aK37vvpCN7D
-X-Google-Smtp-Source: AGHT+IHNvSjGbR2p4qbJK2NnbStjC57wh6s06URj06y93LD9nrT9T7veSbE7+WSF9cr17bT6hWq7hg==
-X-Received: by 2002:a0d:d341:0:b0:58c:b8b4:2785 with SMTP id v62-20020a0dd341000000b0058cb8b42785mr17413200ywd.45.1694044078966;
-        Wed, 06 Sep 2023 16:47:58 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1694044081; x=1694648881;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6pq4K1DRMCsdduEbuGuJ200122U1I+V8+TOdtq9hf9Q=;
+        b=hS4weyaGJWc3XnSmpxg+pdB3neurAvd//T/WEpAt6roj/Zxq+m5ynR4BfYoUe10kMS
+         rXz6SblWiZK9caB8+Y4ZmlflJSozWPBZiMZ+RGub/BSN1glt5SdkNmJfdCqOs0HwbYCy
+         GohkWPXq1dfUGGr8I9YgjZ5ELyucESiTCfQpXu63XLfx+TcGypjlQaVbq99tb/j4THog
+         sQiWQ5Z5iQ4P0OMqDkjPm0SAv44KaGuNxToaSrNfbtlFdD71sIQCzb5nmq3vdwXGu/fb
+         uZJbVwW4zU7b4B8qg6xf21IUaLYacpOiU43LeSKif8mcbt4l9WaZUIGEeGjp8XlaDOA7
+         ePeg==
+X-Gm-Message-State: AOJu0YxLkIV5Q75F7q6JiorBc+IaN46e2KWRaDep7mg2qOltFIIDBOi4
+        41jpOGZsSle/hoHl9CyykHjnr7RLRECf
+X-Google-Smtp-Source: AGHT+IH/ubpKztgn1qDvJM/VkrWOg2yBzVO3CflsLQdbMmkZBe+KAhcEoIrZzMeoczKFrs8vbymL6Q==
+X-Received: by 2002:a0d:d685:0:b0:589:db22:bfd6 with SMTP id y127-20020a0dd685000000b00589db22bfd6mr19575436ywd.40.1694044081583;
+        Wed, 06 Sep 2023 16:48:01 -0700 (PDT)
 Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id v191-20020a8148c8000000b005832fe29034sm332107ywa.89.2023.09.06.16.47.58
+        by smtp.gmail.com with ESMTPSA id v191-20020a8148c8000000b005832fe29034sm332107ywa.89.2023.09.06.16.48.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 16:47:58 -0700 (PDT)
+        Wed, 06 Sep 2023 16:48:01 -0700 (PDT)
 From:   Gregory Price <gourry.memverge@gmail.com>
 X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
 To:     qemu-devel@nongnu.org
 Cc:     jonathan.cameron@huawei.com, linux-cxl@vger.kernel.org,
         junhee.ryu@sk.com, kwangjin.ko@sk.com,
         Gregory Price <gregory.price@memverge.com>
-Subject: [PATCH v3 0/6] CXL: SK hynix Niagara MHSLD Device
-Date:   Tue,  5 Sep 2023 20:15:11 -0400
-Message-Id: <20230906001517.324380-1-gregory.price@memverge.com>
+Subject: [PATCH v3 2/6] cxl/type3: Cleanup multiple CXL_TYPE3() calls in read/write functions
+Date:   Tue,  5 Sep 2023 20:15:13 -0400
+Message-Id: <20230906001517.324380-3-gregory.price@memverge.com>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230906001517.324380-1-gregory.price@memverge.com>
+References: <20230906001517.324380-1-gregory.price@memverge.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-v3:
-- 6 patch series, first 5 are pull-aheads that can be merged separately
-- cci: added MHD back into main mailbox, but implemented a callback
-       pattern.  type-3 devices leave the callback null by default and
-       report unsupported if nothing implements it.
-- cleanup and formatting
-
-v2:
-- 5 patch series, first 4 are pull-aheads that can be merged separately
-- cci: rebased on 8-30 branch from jic23, dropped cci patches
-- mailbox: dropped MHD commands, integrated into niagara (for now)
-- mailbox: refactor CCI defines to avoid redefinition in niagara
-- type3: cleanup duplicate typecasting
-- type3: expose ct3 functions so inheriting devices may access them
-- type3: add optional mhd validation function for memory access
-- niagara: refactor to make niagara inherit type3 and override behavior
-- niagara: refactor command definitions and types into header to make
-           understanding the device a bit easier for users
-- style and formatting
-
-This patch set includes an emulation of the SK hynix Niagara MHSLD 
-platform with custom CCI commands that allow for isolation of memory
-blocks between attached hosts.
-
-This device allows hosts to request memory blocks directly from the
-device, rather than requiring full the DCD command set.  As a matter
-of simplicity, this is beneficial to for testing and applications of
-dynamic memory pooling on top of the 1.1 and 2.0 specification.
-
-Note that these CCI commands are not servicable without a proper
-driver or the kernel allowing raw CXL commands to be passed through
-the mailbox driver, so users should enable
-`CONFIG_CXL_MEM_RAW_COMMANDS=y` on the kernel of their QEMU instance
-if they wish to test it.
+Call CXL_TYPE3 once at top of function to avoid multiple invocations.
 
 Signed-off-by: Gregory Price <gregory.price@memverge.com>
+---
+ hw/mem/cxl_type3.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-
-Gregory Price (6):
-  cxl/mailbox: move mailbox effect definitions to a header
-  cxl/type3: Cleanup multiple CXL_TYPE3() calls in read/write functions
-  cxl/type3: Expose ct3 functions so that inheriters can call them
-  cxl/type3: add an optional mhd validation function for memory accesses
-  cxl/mailbox,type3: Implement MHD get info command callback
-  cxl/vendor: SK hynix Niagara Multi-Headed SLD Device
-
- hw/cxl/Kconfig                          |   4 +
- hw/cxl/cxl-mailbox-utils.c              |  51 ++-
- hw/cxl/meson.build                      |   2 +
- hw/cxl/vendor/meson.build               |   1 +
- hw/cxl/vendor/skhynix/.gitignore        |   1 +
- hw/cxl/vendor/skhynix/init_niagara.c    |  99 +++++
- hw/cxl/vendor/skhynix/meson.build       |   1 +
- hw/cxl/vendor/skhynix/skhynix_niagara.c | 514 ++++++++++++++++++++++++
- hw/cxl/vendor/skhynix/skhynix_niagara.h | 161 ++++++++
- hw/mem/cxl_type3.c                      |  32 +-
- include/hw/cxl/cxl_device.h             |  13 +
- include/hw/cxl/cxl_mailbox.h            |  18 +
- 12 files changed, 873 insertions(+), 24 deletions(-)
- create mode 100644 hw/cxl/vendor/meson.build
- create mode 100644 hw/cxl/vendor/skhynix/.gitignore
- create mode 100644 hw/cxl/vendor/skhynix/init_niagara.c
- create mode 100644 hw/cxl/vendor/skhynix/meson.build
- create mode 100644 hw/cxl/vendor/skhynix/skhynix_niagara.c
- create mode 100644 hw/cxl/vendor/skhynix/skhynix_niagara.h
- create mode 100644 include/hw/cxl/cxl_mailbox.h
-
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index fd9d134d46..80d596ee10 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -1248,17 +1248,18 @@ static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
+ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+                            unsigned size, MemTxAttrs attrs)
+ {
++    CXLType3Dev *ct3d = CXL_TYPE3(d);
+     uint64_t dpa_offset = 0;
+     AddressSpace *as = NULL;
+     int res;
+ 
+-    res = cxl_type3_hpa_to_as_and_dpa(CXL_TYPE3(d), host_addr, size,
++    res = cxl_type3_hpa_to_as_and_dpa(ct3d, host_addr, size,
+                                       &as, &dpa_offset);
+     if (res) {
+         return MEMTX_ERROR;
+     }
+ 
+-    if (sanitize_running(&CXL_TYPE3(d)->cci)) {
++    if (sanitize_running(&ct3d->cci)) {
+         qemu_guest_getrandom_nofail(data, size);
+         return MEMTX_OK;
+     }
+@@ -1268,16 +1269,17 @@ MemTxResult cxl_type3_read(PCIDevice *d, hwaddr host_addr, uint64_t *data,
+ MemTxResult cxl_type3_write(PCIDevice *d, hwaddr host_addr, uint64_t data,
+                             unsigned size, MemTxAttrs attrs)
+ {
++    CXLType3Dev *ct3d = CXL_TYPE3(d);
+     uint64_t dpa_offset = 0;
+     AddressSpace *as = NULL;
+     int res;
+ 
+-    res = cxl_type3_hpa_to_as_and_dpa(CXL_TYPE3(d), host_addr, size,
++    res = cxl_type3_hpa_to_as_and_dpa(ct3d, host_addr, size,
+                                       &as, &dpa_offset);
+     if (res) {
+         return MEMTX_ERROR;
+     }
+-    if (sanitize_running(&CXL_TYPE3(d)->cci)) {
++    if (sanitize_running(&ct3d->cci)) {
+         return MEMTX_OK;
+     }
+     return address_space_write(as, dpa_offset, attrs, &data, size);
 -- 
 2.39.1
 
