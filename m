@@ -2,80 +2,80 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27B6CCF9E9
-	for <linux-cxl@archiver.kernel.org>; Tue,  5 Sep 2023 23:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B13CEB8FAD
+	for <linux-cxl@archiver.kernel.org>; Wed,  6 Sep 2023 03:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235230AbjIEXtl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 5 Sep 2023 19:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        id S231299AbjIFDhW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 5 Sep 2023 23:37:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjIEXtj (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 19:49:39 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1971BE;
-        Tue,  5 Sep 2023 16:49:35 -0700 (PDT)
+        with ESMTP id S229783AbjIFDhV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 5 Sep 2023 23:37:21 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B73A128;
+        Tue,  5 Sep 2023 20:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693957775; x=1725493775;
+  t=1693971435; x=1725507435;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=NP5G6QvC2pGeBXcNJgadWRBzt0MIOFwOlugbqf1icZQ=;
-  b=dhmabb7FS0lWSX2X5yibYG8/V8NF7BVIZ7BNXH4OGAdysVLH4GgCpNvi
-   7XLFtmm6a6M1Tn2mFUciN4toS4QWHfi5GahWEDfIISgfXGdPz5uatrl+z
-   96vnJqQTZXIqKubh2yFB5XDf627LeQhilqQwxEyG7i4/jG1cKvEWwdWuH
-   iTt0QsdvxabBFjmMqexyX4+GnicfxxvQs+ed338cbIrFOaVCdiSpQEfCS
-   BzDTpQ3ObHu/qOywZ4S757vzW0stwG/J0yLA0BEpxlXEoxzT+P8zbCK3C
-   XMj1J2z4WYSmsukkDx3Zme9pFhqKy8ebHgUKN6zwK1OG4VcDRwb2KIlgK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="374321738"
-X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
-   d="scan'208";a="374321738"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 16:49:35 -0700
+  bh=BEhDvMys6aNAZ6aKLz07QUSQiYDm/jAne4aaaqGD91Y=;
+  b=nH4/zuXbrgO9AqmdRc+vXvKeJDO+rGFG5ffO+lTwb/WnSma2aLIi8Mgj
+   cImUIggJyi8bWRjFegYgnbkYOSgTmvYEwkoo96WUKPTY7RQBm4MqiP7GY
+   1RrxsH1uagTrL+Vgzz8UGp5rInnGuj+Pp1RtZTrgDj1vnJiWLiUn54glc
+   9d07ynyVEEou4+RpGD8DVLs+Wlz/b2Tr653eAY/QNSpw66qvu4y76QaQc
+   kjiWGkWvzh7Rt5mux/+7H7cF4sJrKq5DBjRXy/zkoYavvYzzjhAW7f/OJ
+   VU2cH3M45supmJrX+y08T5kryZ9A97l3tXav8+ocycVAT63aa9guyUFSx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="367179210"
+X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
+   d="scan'208";a="367179210"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2023 20:37:14 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="806801362"
-X-IronPort-AV: E=Sophos;i="6.02,230,1688454000"; 
-   d="scan'208";a="806801362"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Sep 2023 16:49:34 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 5 Sep 2023 16:49:34 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="776430874"
+X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
+   d="scan'208";a="776430874"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Sep 2023 20:36:55 -0700
 Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 5 Sep 2023 16:49:33 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ 15.1.2507.27; Tue, 5 Sep 2023 20:36:55 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 5 Sep 2023 20:36:54 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
  orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Tue, 5 Sep 2023 16:49:33 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.27 via Frontend Transport; Tue, 5 Sep 2023 20:36:54 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Tue, 5 Sep 2023 16:49:33 -0700
+ 15.1.2507.27; Tue, 5 Sep 2023 20:36:54 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jK2dp3LPNVIFbPcQiEl7phcvAvOnzJcKh+ufBAOiUM/JvDO2rMwlQC5O/4BMHcIEpmSXa1lGoxX/vAdSJoY6H85oGWukOxi2CsjX0P0btj2kQOvHzpGn7GkzfVD7nXY7WB5/B/Ncjan5U56o3hSTHDT9m1HEookalWZQFLqUBI7pTaq9rhrAfFXWwvhv6KNqxr/0L3mM6J3pjsciJugkjIErGjf0MvxD7udV3KZdl9eOfu2mr3gnEs3tHtASgGAVXEVUDjtv75iuZIQ+BF11tL8+0uTTsgJkMcWDL/PqsiwwdrtwbtIkFLLwh/vGDypPrhQr/1/ZpON4rJkH3nsWiQ==
+ b=QpOFCAIZJfypNgDAVCQLv85cxKfMQAZYAYXDhvaiaB6At0ng16iIarzFvI3VXSIcPMtV2GDNDzPtFJXpd7t0+t6LzD9Ixz+sA5mWRb+OjiwdohrdZLCgPcWfmfykI0KDrEx7Q3GXS0aCAEvkbkxQGeUMU/3DB7uni/ONkPqoU83nkYNwfTfYUi0tmdNIYFIfvqK1cxNfwPHmmSmwZrRnI6qZFB/shXSCxKFQFGzRZAxmPL/9gkWuEj+2xTT++ek+A5JsQopOPHd24b0OCGZDmvCvMVYQOA0LlUXPRuZA9ad33vNa/ThAkajz9f9GTX3OKp3GmSOrz3W/g23OyEfqlw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bpWJg4CccjlexYRJPh8z4RG27Q+nnfX7hZDIYgw17tY=;
- b=iEkLQBN9TGksvJJ5fxVZR5TsXJtuRZxkhbnYzIxfyt0obLgGxLp/6OuALPadQSo9E2gMWThSZ6ZUvNVwvJoEA7P40RzvNxY3V6eR62WQHFbxIgoi/SqCzYNXy7ZXPjfJpSplzRVPLSMpKfkcn/0ZnjFLrlO91SZ+37WKiTekJzwTh8e0Kg/dMW2TIxUvf/uRSTI4zj9VB8FS+Lt2Y9D4XAFGGyqKNDOO9CjelFqC7OPSzO7h80UyBgDFPvvLFGTDbhEtynQ5GrV3YZMGJ4+CT2KZNwUEtg4wzof9ehHlLkonKHB1li34jfrRIz1REWn3MuJCVKuCyhJM9xNK1rjnNw==
+ bh=cpFirkmfqh/oZD25egw8vXlVk3DSYmyze2gSrqf/RzY=;
+ b=eUU0tgypDdCXYkHC2t4XfcfiO159wog5D+Skgrox+Y8ikmhArciqIErQRa6aanF+IgEezrAtoOCdMC7ng62jOt+Uq6CAuIiCUd25JLpQfs/HULmZgJuUZBZB+weD9Nb7Y+p3fyPNrTH8/EI9DoVRAZXAmimBPaNvJV5WBFawjgwAmZb3jJRu1EQNG/kmyZ4QKt65lSrCftDf1PZFUIp+eULMeC+KC1uVTMIzNnoiNdWvcradk80qBUo1uInKyRvVqrokFigMXJGNZMrkPKCbZ8pE/F+ZXFc+hpPG5KF0b9UlzIIJDiNkk64oku9hBuVJt4+Mr7LdWRm/s/7C6QcigA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SN7PR11MB8281.namprd11.prod.outlook.com (2603:10b6:806:26b::20) with
+ by PH0PR11MB5048.namprd11.prod.outlook.com (2603:10b6:510:3d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Tue, 5 Sep
- 2023 23:49:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.33; Wed, 6 Sep
+ 2023 03:36:52 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6745.030; Tue, 5 Sep 2023
- 23:49:30 +0000
-Date:   Tue, 5 Sep 2023 16:49:25 -0700
+ ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6745.030; Wed, 6 Sep 2023
+ 03:36:52 +0000
+Date:   Tue, 5 Sep 2023 20:36:47 -0700
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Ira Weiny <ira.weiny@intel.com>
@@ -87,212 +87,184 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 10/18] cxl/mem: Handle DCD add and release
- capacity events.
-Message-ID: <64f7be8553587_1e8e782946e@iweiny-mobl.notmuch>
+Subject: Re: [PATCH RFC v2 11/18] cxl/region: Expose DC extents on region
+ driver load
+Message-ID: <64f7f3cf14b0e_1e8e78294e8@iweiny-mobl.notmuch>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
- <20230604-dcd-type2-upstream-v2-10-f740c47e7916@intel.com>
- <20230829165930.0000208c@Huawei.com>
+ <20230604-dcd-type2-upstream-v2-11-f740c47e7916@intel.com>
+ <20230829172048.000006fb@Huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230829165930.0000208c@Huawei.com>
-X-ClientProxiedBy: BYAPR05CA0045.namprd05.prod.outlook.com
- (2603:10b6:a03:74::22) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <20230829172048.000006fb@Huawei.com>
+X-ClientProxiedBy: BY5PR03CA0002.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::12) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SN7PR11MB8281:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3dc2e0c0-668b-465a-e8e2-08dbae6abf79
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB5048:EE_
+X-MS-Office365-Filtering-Correlation-Id: 796a443e-9e0d-431f-6dea-08dbae8a825d
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Rn0ie0sVqFp4Vqom3hvGJH0uCPshnfHozfcmDaXs1Sfe6eg7pIgKA3XeeOryRzjIE1fahH/7stWSPsVfDfrScARAf6cHxmc0cz+4urnQSSakb+f/6TKb2z0SZ/JvqzxKvYgTh7hPpTr1XjuQy3NHIfLAIAMNfc6IXi71GUxFlF7WJJPfAWbNxffj8pb1GeWDR/phXPoh0VObFAUGqRGd9HuOt7kS3j1jTUjA65V2RgsXMLJAummvtJE3evjeDLskNtZxo1qULNEtcA/xUmpSvN9EJGUzFPG9iUXLVG/PgqzpEPlh4O6UJzHNvdkxq+PcafBx71+FmCoKgibqawWYypFj8NLY5cgINTlB9hz4Drk+WkRO0/ZeTTWyw11RN7kiBQ9DTnBakUpgfnsxOLU07Z5yYh35fhrR3ioiSVw63M2lP4FlYurHYOffpDLD6yTcmnS7gyhzOXf4EpWx0/8Azyzr9CWb+FWElToQllxo22Upu1zjRO7BmoSMaksnDtJ9l+E8KLieLcPuOkuYQ81s7jKvca/m0QpYFY7CzaZhWZtbA4ymkeXTbdgJEjjdzAaK
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(376002)(396003)(346002)(1800799009)(186009)(451199024)(83380400001)(26005)(2906002)(8936002)(8676002)(478600001)(82960400001)(4326008)(5660300002)(44832011)(41300700001)(6666004)(316002)(86362001)(110136005)(54906003)(66476007)(66556008)(66946007)(6512007)(9686003)(6506007)(38100700002)(6486002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 0AEAvFqdndqTkde9K566F2Ep0/WTfV/Tem2/aKz1mHi2T/Owl25cvDHN4uB7Xy/yXnNW/k7fZTtgqJ0SbHUGVESDeqaifnp0XBviNDDg9/cvkbg6kyCg8crjuPfE5mTW+KV1A80ZxGg74Dp48VaXEkvcUtq8sdzGg2TEpDMz5QZh6uXlZLxBIULdWcWfmVYrhtMv39VUxnmY5vQ9lNyPthwzrIbto+fofr3c/YQcpn4H1uKtbIlX3cGBsbF0JRVI89dEe7gCUZSxQPUzQOf9pYxCBNwMQ19or2fsOAvyAijNoLeoAt/vSvNVm/vktwxJj1yujxytUwP+l+1yuzpXZDSibgowT6J+f7DSDx1vO9dPj2usmrOhBkrEMyMeoG8YI4lT+VDxdXHRxM0/vk2VzGsyXYukao52viIy1AvjaRI8EyM+m7Zy93IGscQHTIS66dMMdMkxMt16QEpQWqQHAyHw708VLqCm6/Hmki5FOC5RFg4ohagdRVc14HNyAc8GX/h78ODB3C2MBvr/CBn44bb0oGS8F216QphR4P5IXYS7KpvoHBKJtUAk3IHHoveP
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(366004)(376002)(39860400002)(136003)(186009)(1800799009)(451199024)(41300700001)(5660300002)(26005)(2906002)(86362001)(38100700002)(82960400001)(44832011)(8936002)(4326008)(8676002)(6666004)(6512007)(9686003)(6486002)(6506007)(478600001)(110136005)(316002)(66946007)(54906003)(66476007)(66556008);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hSwNgVHcgaNOFPPPhfQHVcCD9Kf47AhGo2UTfyG91gDV+CYqRrnWGjcmJc3Z?=
- =?us-ascii?Q?H3mMSnO9vw+ig7CefuxLjedvS98Jhdp9EXMcCDwRTiZfC7BvVmF/0SYpMTxX?=
- =?us-ascii?Q?j6nKHVQcIBxwEUbcGrD5yjAyktZxY0Uu6GxfMoGOOBhI7fOfWq6RGY/6+xpK?=
- =?us-ascii?Q?LBAD4XkgvJUhmDMQ9OofcMMcJm/RfuE80bdgxxtRSFhb73iu6TdAiYEHfsUo?=
- =?us-ascii?Q?Nh7wwKvySgEv64S3pf0LYR2VzzbbxE+oQPA97S+KieqtwuBSYWwRjjkr5U56?=
- =?us-ascii?Q?xzD+fdqzERdtgpNz/4yMGvaC63NPuLrviS49pXlbhv1nXi3isB33NKtU/ZE+?=
- =?us-ascii?Q?GTlgvJzfNfbdXDG0RJoTad2lwtuYQVknfO/YBuEh01b6mmRxG74WhBRW+vy+?=
- =?us-ascii?Q?cTmfl9tCLIkU9BJlp0k46yOA0EfuUG9MQiutrvksdqxeOw/i96uM2yN46BKb?=
- =?us-ascii?Q?KgesxkR1MOcmmer4gd5gbXgrgcjisJYVErk2hMQ1IbPyg5wNt1GZbbPgeAcI?=
- =?us-ascii?Q?BGNkmPULcPX8ayWT+TnvB9GqGYGAGKxwCoHfnAYC2Bkfh7kU4bTbpSy9mWDz?=
- =?us-ascii?Q?usU6mS8Ur5piQOofjwklk/Lk1wFCn1LrNndSonLSMhLcXQamT0wLT8OJS5kc?=
- =?us-ascii?Q?BdA5U730JkSo1T7bsLBy5DHHMdd+v59+j0+mT2uKV3x2R8H+OxSNtL+luAoH?=
- =?us-ascii?Q?BDXl5XCnYhCzccC+fPGsVqJaCRgcYMeTti+x2YuE8HR0W0sc5CFNTPIiPzNY?=
- =?us-ascii?Q?rXgya6ALoQmc8yb6gCEN/LEZwPO62T3HNaSI8lJrgcMLszY4SfxDsW1hIBSz?=
- =?us-ascii?Q?o41/9aCWAzujLepbgYiu09zYy98H7v2RviyPxvcIu9ClPCGcWFfX0XxVgb2d?=
- =?us-ascii?Q?V+lO+4JNPnOqYwryXS4ad+pGy9hVahBoQsOJ5iag+IXODv8z/DExbXDa84cd?=
- =?us-ascii?Q?5mYxH6gT971LUx5eMM1TklV/dkMrgfd3J13IhZe0vuAlTN974PjyaWVWJlFk?=
- =?us-ascii?Q?bssdZHjoNh9CWobXmc2Rz6CQmM/s/L6/jddxxi6Vatjjj3ona8BH6ggKhEpD?=
- =?us-ascii?Q?l/9fA+21Cv0p/kACt+FTSgK0yFQq7FRIoLNzM81eXBKiqT22o7HhYY5OFazp?=
- =?us-ascii?Q?pNAIOza70WjnwQPHVUe2MYQoRu0Cl6bdAeEL5VMSu2uPpuW2YpaTjuqF8uWJ?=
- =?us-ascii?Q?i5Y6kQm9pmxHk+RVqUyYfnNBS9pkuox6FNFSwLEzoSMavv3C3qL2PfHQzfsw?=
- =?us-ascii?Q?IzG7KpPxgQyfMQAgUnzwWOzr5HjJVZOrKtwd5ooUnki3wIdBVUxlU607AWbz?=
- =?us-ascii?Q?+q8EgyX+fWg1ORJdMEBcdBGI8kaBHmgiq/XJNP3/fJ74LY99+reTG1op8n6p?=
- =?us-ascii?Q?J1M1WJUM4DlIcBdUntSLRq/x3gb67ZI38krhfhSbw5xSgsf/frtP9aTOmKwL?=
- =?us-ascii?Q?WHfs31aYd3BJIVxagaX4sr6kykDUqFODrNgTjtEow5FLrEMSdy05WqTuCXx8?=
- =?us-ascii?Q?deiicosLr7cQzgsLogMMFOdHF5morQCJFL/f6zBQHnFKAhlRm1HCtXEup3lf?=
- =?us-ascii?Q?9UhAgxQpTltooUoBVLMs7oLW7opAyc0yP+oAh4hu?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dc2e0c0-668b-465a-e8e2-08dbae6abf79
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qDP+TbB6XlyKvvfmV29Vo82At7aRgL76Cst991zIpz8YFl8AiWKh0tOynJXl?=
+ =?us-ascii?Q?pvzdm53l1jpkoGNfPTo8XfGBblsWa3vMV84mGCLV8mCl1M48cPSlEKPcQH2t?=
+ =?us-ascii?Q?H7+9uxEWqNIlShDbMcXAEQIovM7ttOm3/dTSJRVBeiKbsqPWpEkOuZhy4X2R?=
+ =?us-ascii?Q?BjmFamtN1namATl4cORP7YNtmVD/oTTOx30jAue6XunOHufm01Nqw/SRdffV?=
+ =?us-ascii?Q?8xjK/zvDJ/9HGyYV3sHKFIYTttc48ItFGYy0VhCwqkyOps0MbHYB1c7hEu1c?=
+ =?us-ascii?Q?fCEVlCRViO4JqUbmtT2HJvynMvqRvKw+F4qrT4dpsGHcKiRN4fynmlLQggOk?=
+ =?us-ascii?Q?+46MDRd4NncMJu3lVQTxQ2CiDVP+FxA3pnzzISFVkJgnLiZM+yZnUhaaaaAC?=
+ =?us-ascii?Q?z95W+nKlLEl0Uz7WFTF3FbaVa2kYSpms+poJqMrGdA3N+i8zB5G0JzeIMOso?=
+ =?us-ascii?Q?8KIijSedvSTIcZu4QCzjKEfMzDKpQ+z+UzzrvRA5vcsTaweyVTuumX71//3K?=
+ =?us-ascii?Q?1fHRCcOQ69MxZ7UAtZ1nT7Kf3oFhZ/vxN6oSJHLqnYhN95L3amn5lAX7hxOd?=
+ =?us-ascii?Q?aiRX2AnY993Wuy0Ftt21ey5biID0G5ytcZB31kXVEHd9sHgk50CAOvbj759E?=
+ =?us-ascii?Q?kfCpgrkR632+N5UJQrPD9WROmXBF4spNZ+OX3LMdgnDBhY3fWTaxK1LlQkLi?=
+ =?us-ascii?Q?JKYFw3OGSCHXOUq3SfrYZKnhvoOZdGAgcIA/+VsHa1Y/fJ/pSyvrfqOAINLo?=
+ =?us-ascii?Q?h4UNmX5dMgOyoWQSo/gqSN8uYnUGjqoKFY4T6u7OQPyN4VtsguVAjB1D/owo?=
+ =?us-ascii?Q?/LHyYDhyYut2pjaS4oVDiKMKOGROHrZ7PCtL6cA1EIgmGoLUxWsDXtUvAVL1?=
+ =?us-ascii?Q?pS5cZYaB0tUh8OyKYgO7+9+gO7OTYaUg3VAGgeiewAW5FO3nGS8kB6jhL0Wx?=
+ =?us-ascii?Q?2jhTkGrmyFpaVo18URsVwQAP07iMtxUYXq/ALAWzkkEOwCkYgRvITcUwhQP6?=
+ =?us-ascii?Q?FQYVaJxgjn9S0fnYRNtzZ4ryPAurRt+D3PAhTcrWtnJ3vNJqxCg0jk742pYG?=
+ =?us-ascii?Q?m5Gz6ll1t0DDxR6fREMA6zbide1ss5ENtExV623hcq68Ni0Uuhk/tRYcr0Fv?=
+ =?us-ascii?Q?NunqPbC74QV7t77GCXRinv4XXybfm+pl7cR/CsNjS3K+B+0dUGPiKE9UpKpF?=
+ =?us-ascii?Q?GjKtGnMTWLthnG+igZvlWVqLUFBz3HsPatnLc0cxGeboqlK1TuNknXkR5ep5?=
+ =?us-ascii?Q?hRiDXCTdelKLov4dvhi1sj3tA0jUhTUt/4eP7tDveNnuLtJ3wNLMIi+7Umxl?=
+ =?us-ascii?Q?l130aF3ofZTFuDzrmk/YeNVBsvU0BXMOLTVfjXt+3abtdsX1VAiIUZZb6nae?=
+ =?us-ascii?Q?jKdNj0iS1W2u564iUBzZnjVxK6yAtxkom+ig1h/hW7pnH4AFR2cvWIaesI7N?=
+ =?us-ascii?Q?nOcQ/mwmigH0b1hVOLeJ89eTXWH4cgth0YOT4ct31J0G5LWzK+uoDrnE6l0y?=
+ =?us-ascii?Q?eBhGk1xOX9tIN4ZV2rHWhmMUVCMY6ktM2awG3a4Xe4pcTiOKZBCPbPFhcgZb?=
+ =?us-ascii?Q?5dh6ne7kRNtcRnUC75JN5x0MP4PSiBlRJQZQLSYr?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 796a443e-9e0d-431f-6dea-08dbae8a825d
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2023 23:49:30.7395
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2023 03:36:52.1582
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PQc0QHWd9HZPH95jby7ZhsMkogqoq7Dq1IxnJSBhvN8IyMpIlVU1WWLRCJQ9+nk2lnix5aguSCH94Nglg4u0cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB8281
+X-MS-Exchange-CrossTenant-UserPrincipalName: IOJ19PE9VKVVFaW73dc1oxSZpJa3iNeiGn00peSobETEHMVFiTJH+yehvdLFUDEhjEbAD6lrXMsNByULcL48Qg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5048
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 Jonathan Cameron wrote:
-> On Mon, 28 Aug 2023 22:21:01 -0700
+> On Mon, 28 Aug 2023 22:21:02 -0700
 > Ira Weiny <ira.weiny@intel.com> wrote:
 > 
-> > A Dynamic Capacity Device (DCD) utilizes events to signal the host about
-> > the changes to the allocation of Dynamic Capacity (DC) extents. The
-> > device communicates the state of DC extents through an extent list that
-> > describes the starting DPA, length, and meta data of the blocks the host
-> > can access.
+> > Ultimately user space must associate Dynamic Capacity (DC) extents with
+> > DAX devices.  Remember also that DCD extents may have been accepted
+> > previous to regions being created and must have references held until
+> > all higher level regions and DAX devices are done with the memory.
 > > 
-> > Process the dynamic capacity add and release events.  The addition or
-> > removal of extents can occur at any time.  Adding asynchronous memory is
-> > straight forward.  Also remember the host is under no obligation to
-> > respond to a release event until it is done with the memory.  Introduce
-> > extent kref's to handle the delay of extent release.
+> > On CXL region driver load scan existing device extents and create CXL
+> > DAX region extents as needed.
 > > 
-> > In the case of a force removal, access to the memory will fail and may
-> > cause a crash.  However, the extent tracking object is preserved for the
-> > region to safely tear down as long as the memory is not accessed.
+> > Create abstractions for the extents to be used in DAX region.  This
+> > includes a generic interface to take proper references on the lower
+> > level CXL region extents.
+> > 
+> > Also maintain separate objects for the DAX region extent device vs the
+> > DAX region extent.  The DAX region extent device has a shorter life span
+> > which corresponds to the removal of an extent while a DAX device is
+> > still using it.  In this case an extent continues to exist whilst the
+> > ability to create new DAX devices on that extent is prevented.
+> > 
+> > NOTE: Without interleaving; the device, CXL region, and DAX region
+> > extents have a 1:1:1 relationship.  Future support for interleaving will
+> > maintain a 1:N relationship between CXL region extents and the hardware
+> > extents.
+> > 
+> > While the ability to create DAX devices on an extent exists; expose the
+> > necessary details of DAX region extents by creating a device with the
+> > following sysfs entries.
+> > 
+> > /sys/bus/cxl/devices/dax_regionX/extentY
+> > /sys/bus/cxl/devices/dax_regionX/extentY/length
+> > /sys/bus/cxl/devices/dax_regionX/extentY/label
+> > 
+> > Label is a rough analogy to the DC extent tag.  As such the DC extent
+> > tag is used to initially populate the label.  However, the label is made
+> > writeable so that it can be adjusted in the future when forming a DAX
+> > device.
 > > 
 > > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> > Co-developed-by: Navneet Singh <navneet.singh@intel.com>
 > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Minor stuff inline.
+> > 
+> 
+> Trivial stuff inline.
 > 
 > 
-> > +static int cxl_prepare_ext_list(struct cxl_mbox_dc_response **res,
-> > +				int *n, struct range *extent)
+> 
+> > diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+> > index 27cf2daaaa79..4dab52496c3f 100644
+> > --- a/drivers/dax/dax-private.h
+> > +++ b/drivers/dax/dax-private.h
+> > @@ -5,6 +5,7 @@
+> >  #ifndef __DAX_PRIVATE_H__
+> >  #define __DAX_PRIVATE_H__
+> >  
+> > +#include <linux/pgtable.h>
+> >  #include <linux/device.h>
+> >  #include <linux/cdev.h>
+> >  #include <linux/idr.h>
+> > @@ -40,6 +41,58 @@ struct dax_region {
+> >  	struct device *youngest;
+> >  };
+> >  
+> > +/*
+> /**
+> 
+> as it's valid kernel doc so no disadvantage really.
+
+Sure. Done.
+
+> 
+> > + * struct dax_region_extent - extent data defined by the low level region
+> > + * driver.
+> > + * @private_data: lower level region driver data
+> > + * @ref: track number of dax devices which are using this extent
+> > + * @get: get reference to low level data
+> > + * @put: put reference to low level data
+> 
+> I'd like to understand when these are optional - perhaps comment on that?
+
+They are not optional in this implementation.  I got a bit carried away in
+extrapolating the dax_region away from the lower levels in thinking that
+some other implementation may not need these.
+
+I will still keep the helpers below though.
+
+> 
+> > + */
+> > +struct dax_region_extent {
+> > +	void *private_data;
+> > +	struct kref ref;
+> > +	void (*get)(struct dax_region_extent *dr_extent);
+> > +	void (*put)(struct dax_region_extent *dr_extent);
+> > +};
+> > +
+> > +static inline void dr_extent_get(struct dax_region_extent *dr_extent)
 > > +{
-> > +	struct cxl_mbox_dc_response *dc_res;
-> > +	unsigned int size;
-> > +
-> > +	if (!extent)
-> > +		size = struct_size(dc_res, extent_list, 0);
-> 
-> This is confusing as if you did have *n > 0 I'd kind of expect
-> this to just not extend the list rather than shortening it.
-> Now I guess that never happens, but locally it looks odd.
-> 
-> Maybe just handle that case in a separate function as it doesn't
-> share much code with the case where there is an extent and I would
-> assume we always know at the caller which one we want.
-
-Yea I forget why I left this alone.  I did not care for it during internal
-review and I think I got so busy with the other code that this just got
-left behind.
-
-Frankly this is a candidate for the __free() magic as well.  But in a
-helper function which handles sending the response...
-
-This needs some refactoring for sure...  :-/
-
-> 
-> 
-> > +	else
-> > +		size = struct_size(dc_res, extent_list, *n + 1);
-> 
-> Might be clearer with a local variable for the number of extents.
-> 
-> extents_count = *n;
-> 
-> if (extent)
-> 	extents_count++;
-> 
-> size = struct_size(dc_res, extent_list, extents_count);
-> 
-> Though I'm not sure that really helps.  Maybe this will just need
-> to be a little confusing :)
-
-Actually no.  IIRC the original idea was to have a running response data
-structure realloc'ed as events were processed from the log and then to
-send out a final large response...  But in my refactoring I did not do
-that.  The refactoring processes each event (extent) before going on to
-the next event.  I suppose this may be an issue later if large numbers
-of extents are added to the logs rapidly and the processing is not fast
-enough and the logs overflow.
-
-But I don't think the complexity is warranted at this time.  Especially
-because under that condition the size of the response needs to be
-contained within mds->payload_size.  So there is quite a bit more
-complexity there that I don't think was accounted for initially.
-
-I think cxl_send_dc_cap_response() should handle this allocation (using
-__free() magic) and then do the send all in 1 function.
-
-I'll refactor and see how it goes.
-
-> 
-> > +
-> > +	dc_res = krealloc(*res, size, GFP_KERNEL);
-> > +	if (!dc_res)
-> > +		return -ENOMEM;
-> > +
-> > +	if (extent) {
-> > +		dc_res->extent_list[*n].dpa_start = cpu_to_le64(extent->start);
-> > +		memset(dc_res->extent_list[*n].reserved, 0, 8);
-> > +		dc_res->extent_list[*n].length = cpu_to_le64(range_len(extent));
-> > +		(*n)++;
-> > +	}
-> > +
-> > +	*res = dc_res;
-> > +	return 0;
+> > +	if (dr_extent->get)
+> > +		dr_extent->get(dr_extent);
 > > +}
-> 
 > > +
-> > +/* Returns 0 if the event was handled successfully. */
-> > +static int cxl_handle_dcd_event_records(struct cxl_memdev_state *mds,
-> > +					struct cxl_event_record_raw *rec)
+> > +static inline void dr_extent_put(struct dax_region_extent *dr_extent)
 > > +{
-> > +	struct dcd_event_dyn_cap *record = (struct dcd_event_dyn_cap *)rec;
-> > +	uuid_t *id = &rec->hdr.id;
-> > +	int rc;
+> > +	if (dr_extent->put)
+> > +		dr_extent->put(dr_extent);
+> > +}
 > > +
-> > +	if (!uuid_equal(id, &dc_event_uuid))
-> > +		return -EINVAL;
-> > +
-> > +	switch (record->data.event_type) {
-> > +	case DCD_ADD_CAPACITY:
-> > +		rc = cxl_handle_dcd_add_event(mds, &record->data.extent);
-> > +		break;
+> > +#define DAX_EXTENT_LABEL_LEN 64
 > 
-> I guess it might not be consistent with local style...
-> 		return cxl_handle_dcd_add_event()  etc
+> blank line here.
 
-Sure.  That is cleaner.  Done.
+Sure.  Done
 
 Ira
-
-> 
-> > +	case DCD_RELEASE_CAPACITY:
-> > +        case DCD_FORCED_CAPACITY_RELEASE:
-> > +		rc = cxl_handle_dcd_release_event(mds, &record->data.extent);
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return rc;
-> > +}
-> > +
-> 
-> 
-
-
