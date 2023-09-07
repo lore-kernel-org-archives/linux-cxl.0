@@ -2,69 +2,69 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95966EC873A
-	for <linux-cxl@archiver.kernel.org>; Thu,  7 Sep 2023 15:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C681EC8740
+	for <linux-cxl@archiver.kernel.org>; Thu,  7 Sep 2023 16:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjIGPmh (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 7 Sep 2023 11:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34578 "EHLO
+        id S231195AbjIGQAl (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 7 Sep 2023 12:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241689AbjIGPYa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 7 Sep 2023 11:24:30 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C38ECDE
-        for <linux-cxl@vger.kernel.org>; Thu,  7 Sep 2023 08:24:17 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-52a1ce529fdso1499719a12.1
-        for <linux-cxl@vger.kernel.org>; Thu, 07 Sep 2023 08:24:17 -0700 (PDT)
+        with ESMTP id S240091AbjIGP7A (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 7 Sep 2023 11:59:00 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C3A63C23
+        for <linux-cxl@vger.kernel.org>; Thu,  7 Sep 2023 08:47:10 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-401da71b7c5so12447855e9.2
+        for <linux-cxl@vger.kernel.org>; Thu, 07 Sep 2023 08:47:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694100255; x=1694705055; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1694101254; x=1694706054; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PoBujJ/iXdoCMge3j3UDXvjqLVzFDD0TrTUoS71ns7E=;
-        b=BGkGsYml6uevVIlGGQDIxshLHlkVPnWI3ucMSwirqkkQpM7G0qJnn+QP6O5FM7Ec8M
-         Av1Z8cxFWpSQviPeni+y7M6Y5paZedgknUR/Kf/BMo5qwIheioE6amIlO1wOGCVK60B1
-         GFj7VDZzkW8Pytb6biqdeV68EsWckMK8+b2BjNodeY2Q1aEWsVEVrXk/sXX93dypbEYX
-         qDd6FysfCEnnfiH6GTDqnmT9pg74RRVy6e3BHv0BOz/MOrj2x8u3fMfKu7pm6rNhTbVB
-         NZa95aGx108ctCT/RZg/4wNdZ2meSlS6xymz5yIpPqC7cQECK0KKgh4bnRUiwWprYRBb
-         x8Cg==
+        bh=S5Zv2w57Pu5zvBv+RmRMWxTLLDD5033YVrG2FGo/z5Y=;
+        b=C31ANkf44g7HcM9XJiIYsT424Q1/1fJZzTVeMM8NkrIXKlHqTm/LwlYblXclYcvU/e
+         cBwv+It17PPC5iE2UKWkruKE35uBvoj5Jgb4MqQJoIfsJ9UkNoSzJLv79zJBklzxx8eh
+         Jbt27oQeXNShFKVPDdi8pzrd2VlwEKtvLlBArLDJ2fCKqH+zDJP4YPTUmFgJgbYF7d6L
+         oqI+rbcsiTLJc+CZ6WrIdUsmn98WI9S1rSFz6z7NAcAJGZWC/FCT5OQlfXscfO7d9EW6
+         alJmK3vloUc6zIWQZvYdGKEoblRRjlb7PKt/mPYCtfG3ndEnKpfbLC0l0T57g83/4cOg
+         zV6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694100255; x=1694705055;
+        d=1e100.net; s=20221208; t=1694101254; x=1694706054;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PoBujJ/iXdoCMge3j3UDXvjqLVzFDD0TrTUoS71ns7E=;
-        b=RIpLPLH1uON4+MkHm5swZ1VtrNrmiH7CrxxeILg4Bm9bGsuSTDiBEF1n3LnUhGB5Yc
-         0tXhUEHSIP/E/WLXIZrUSeV3MICFpwpQnURAo7GYzHLAiHQTC9qPdaXuRwakutSqInRk
-         5BgcyIA1PrdVUA1Wvz0i8fY47BVPbm2XGpuH/HQzkslAL6iyIh+hRj80yx5Rf+3CKpw/
-         2subWo5k6Uwsd7FEkZhGHGtGdkDYfmsbGsZ9aQLLQcFFpIiKfYrDs9HWvbGLM2oOxpjZ
-         wcGBeHX2O+IxIEUo7dNlyzDI2/LBU9l4o+PLYFvouVvJJR/evyLtjL8UB7zf1lZyKegu
-         /WWQ==
-X-Gm-Message-State: AOJu0Yyco7tah8g0yPWwu3AzHD6Wkb71QJkYCk+FTm6rKfcQTaj6mviQ
-        pMvwvox6VQJ0TWrzjt2mT/qMSIU2jVgKkqN/mSA=
-X-Google-Smtp-Source: AGHT+IEJBc6bLzdKEt+8aczqpH1jETGPkzQbTVPi0fsfGDqj+OEEylRFztpb+wnefd0GKDO7f4ukhA==
-X-Received: by 2002:a17:906:739e:b0:99c:6692:7f76 with SMTP id f30-20020a170906739e00b0099c66927f76mr4999604ejl.16.1694090143746;
-        Thu, 07 Sep 2023 05:35:43 -0700 (PDT)
+        bh=S5Zv2w57Pu5zvBv+RmRMWxTLLDD5033YVrG2FGo/z5Y=;
+        b=VXznBYVDF84LifjJ4NcDd289THo3uPrqH7C6EOFBPL5b6Boofnv2Wz/OTM5z5QauRq
+         fgdQo5/A10ddbEyRXrO2n+XLAwApu91hd9Dbt3RJCW/aMNerEe0/dpWfOFUKGQq9V5lC
+         qvl4wKjARZ6vTyB0VklVQcONCxutuiJqFemGUvvl/uy7v5COg6K4mKpvSbAfHsbs2vDg
+         YH9Dns97Ldv5FYlFnpUTKLFhEJd1S28eAomhN0PvsuXi0JfnvYuS2TaUWy3XXDatymSq
+         bwHfDH40aM4DcSILNZKV5MLJAT4pKn+/gqBOZ+LKE1AkL5COzzU7TNJbNaUzvliBOitH
+         aLhA==
+X-Gm-Message-State: AOJu0YxSsHPyIe6vIfvMjsKMkCt8Eg9f6NHQ1lF9tAbYVYAipX70FzOf
+        /MIRyVLH4pUKk3VNwrVs8PsrsZQxym1Z7Z3BwMU=
+X-Google-Smtp-Source: AGHT+IFiyeAxv+PcElS78SKV3hRLxkrNfqZ4f3aObhMItsMGt+ctJOtd8El6PUpyXS64y9sUPU6UFQ==
+X-Received: by 2002:aa7:c485:0:b0:525:7f37:e87a with SMTP id m5-20020aa7c485000000b005257f37e87amr4585262edq.16.1694090006446;
+        Thu, 07 Sep 2023 05:33:26 -0700 (PDT)
 Received: from [192.168.69.115] (176-131-222-226.abo.bbox.fr. [176.131.222.226])
-        by smtp.gmail.com with ESMTPSA id f27-20020a170906391b00b0099cd1c0cb21sm10222882eje.129.2023.09.07.05.35.42
+        by smtp.gmail.com with ESMTPSA id w13-20020aa7dccd000000b005256e0797acsm9717904edu.37.2023.09.07.05.33.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Sep 2023 05:35:43 -0700 (PDT)
-Message-ID: <f1694c9b-75ed-a8a3-6a05-91f796dfcf2b@linaro.org>
-Date:   Thu, 7 Sep 2023 14:35:41 +0200
+        Thu, 07 Sep 2023 05:33:26 -0700 (PDT)
+Message-ID: <760a2e78-9e8e-8c98-4c58-3e2c560bdd44@linaro.org>
+Date:   Thu, 7 Sep 2023 14:33:24 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH v2 2/3] hw/cxl: Add utility functions decoder interleave
- ways and target count.
+Subject: Re: [PATCH v2 1/3] hw/cxl: Push cxl_decoder_count_enc() and
+ cxl_decode_ig() into .c
 Content-Language: en-US
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         qemu-devel@nongnu.org, Michael Tsirkin <mst@redhat.com>,
         Fan Ni <fan.ni@samsung.com>, linux-cxl@vger.kernel.org
 Cc:     linuxarm@huawei.com
 References: <20230907113543.19760-1-Jonathan.Cameron@huawei.com>
- <20230907113543.19760-3-Jonathan.Cameron@huawei.com>
+ <20230907113543.19760-2-Jonathan.Cameron@huawei.com>
 From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
-In-Reply-To: <20230907113543.19760-3-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230907113543.19760-2-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -72,28 +72,15 @@ List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
 On 7/9/23 13:35, Jonathan Cameron wrote:
-> As an encoded version of these key configuration parameters is available
-> in a register, provide functions to extract it again so as to avoid
-> the need for duplicating the storage.
+> There is no strong justification for keeping these in the header
+> so push them down into the associated cxl-component-utils.c file.
 > 
-> Whilst here update the _enc() function to include additional values
-> as defined in the CXL 3.0 specification. Whilst they are not
-> currently used in the emulation, they may be in future and it is
-> easier to compare with the specification if all values are covered.
-> 
+> Suggested-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> v2: Thanks to Philippe Mathieu-Daudé
->   - Expand both enc() and dec() functions to include full set of values
->     defined in CXL r3.0
->   - Pushed implementation down into the .c file.
-> ---
->   include/hw/cxl/cxl_component.h |  2 ++
->   hw/cxl/cxl-component-utils.c   | 59 ++++++++++++++++++++++++++++++----
->   2 files changed, 55 insertions(+), 6 deletions(-)
-
-Hoping the values match the "CXL r3.0 Section 8.2.4.19.1 CXL
-HDM Decoder Capability Register":
+>   include/hw/cxl/cxl_component.h | 18 ++----------------
+>   hw/cxl/cxl-component-utils.c   | 18 ++++++++++++++++++
+>   2 files changed, 20 insertions(+), 16 deletions(-)
 
 Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
