@@ -2,34 +2,36 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10092EC8750
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FD5EC874D
 	for <linux-cxl@archiver.kernel.org>; Thu,  7 Sep 2023 18:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232923AbjIGStG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        id S232091AbjIGStG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
         Thu, 7 Sep 2023 14:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33522 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235414AbjIGStE (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 7 Sep 2023 14:49:04 -0400
+        with ESMTP id S231892AbjIGStG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 7 Sep 2023 14:49:06 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B9ABC4
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C330CA
         for <linux-cxl@vger.kernel.org>; Thu,  7 Sep 2023 11:49:00 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RhHFk627Gz6HJlX;
-        Thu,  7 Sep 2023 19:34:18 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RhHGv4l1Bz6HJlG;
+        Thu,  7 Sep 2023 19:35:19 +0800 (CST)
 Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
  lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Thu, 7 Sep 2023 12:35:44 +0100
+ 15.1.2507.31; Thu, 7 Sep 2023 12:36:44 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
         Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>
 CC:     =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
         <linuxarm@huawei.com>
-Subject: [PATCH v2 0/3] hw/cxl: Support emulating 4 HDM decoders throughout topology
-Date:   Thu, 7 Sep 2023 12:35:40 +0100
-Message-ID: <20230907113543.19760-1-Jonathan.Cameron@huawei.com>
+Subject: [PATCH v2 2/3] hw/cxl: Add utility functions decoder interleave ways and target count.
+Date:   Thu, 7 Sep 2023 12:35:42 +0100
+Message-ID: <20230907113543.19760-3-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230907113543.19760-1-Jonathan.Cameron@huawei.com>
+References: <20230907113543.19760-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -41,50 +43,121 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-v2:
- - New patch to push previously static inline functions out of cxl_component.h
- - Add the CXL r3.0 expanded set of decoder counts - making it more obviously why
-   a switch function makes sense.
- - Use computed difference in HDM1 and HDM0 decoder registers sets instead of
-   0x20 / 4.
- - Style changes suggested by Philippe.
+As an encoded version of these key configuration parameters is available
+in a register, provide functions to extract it again so as to avoid
+the need for duplicating the storage.
 
-For initial CXL emulation / kernel driver bring up a single Host-managed
-Device Memory (HDM) decoder instance was sufficient as it let us test the
-basic region creation code etc. More complex testing appropriate today
-requires a more realistic configuration with multiple decoders.
+Whilst here update the _enc() function to include additional values
+as defined in the CXL 3.0 specification. Whilst they are not
+currently used in the emulation, they may be in future and it is
+easier to compare with the specification if all values are covered.
 
-The Linux kernel will use separate decoders for each memory type (and
-shortly per DCD region) and for each interleave set within a memory type
-or DCD region. 4 decoders are sufficient for most test cases today but
-we may need to grow these further in future.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+v2: Thanks to Philippe Mathieu-Daudé
+ - Expand both enc() and dec() functions to include full set of values
+   defined in CXL r3.0
+ - Pushed implementation down into the .c file.
+---
+ include/hw/cxl/cxl_component.h |  2 ++
+ hw/cxl/cxl-component-utils.c   | 59 ++++++++++++++++++++++++++++++----
+ 2 files changed, 55 insertions(+), 6 deletions(-)
 
-This patch set already allowed us to identify one kernel bug which is
-now fixed.
-https://lore.kernel.org/linux-cxl/168696507968.3590522.14484000711718573626.stgit@dwillia2-xfh.jf.intel.com/
-
-Note that, whilst I'm proposing this series for upstream (based on
-priorities of what we have out of tree) it hasn't previously been posted
-so needs review. (I failed to send it out previously)
-
-Based on: [PATCH 0/4] hw/cxl: Minor CXL emulation fixes and cleanup
-Based on: [PATCH v2 0/3] hw/cxl: Add dummy ACPI QTG DSM
-
-Based on: Message ID: 20230904132806.6094-1-Jonathan.Cameron@huawei.com
-Based on: Message ID: 20230904161847.18468-1-Jonathan.Cameron@huawei.com
-
-Jonathan Cameron (3):
-  hw/cxl: Push cxl_decoder_count_enc() and cxl_decode_ig() into .c
-  hw/cxl: Add utility functions decoder interleave ways and target
-    count.
-  hw/cxl: Support 4 HDM decoders at all levels of topology
-
- include/hw/cxl/cxl_component.h |  30 +++++-----
- hw/cxl/cxl-component-utils.c   |  92 ++++++++++++++++++++++++++----
- hw/cxl/cxl-host.c              |  65 ++++++++++++++-------
- hw/mem/cxl_type3.c             | 100 +++++++++++++++++++++++----------
- 4 files changed, 209 insertions(+), 78 deletions(-)
-
+diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
+index bdb3881a6b..ef9e033919 100644
+--- a/include/hw/cxl/cxl_component.h
++++ b/include/hw/cxl/cxl_component.h
+@@ -226,8 +226,10 @@ void cxl_component_create_dvsec(CXLComponentState *cxl_cstate,
+                                 uint16_t type, uint8_t rev, uint8_t *body);
+ 
+ int cxl_decoder_count_enc(int count);
++int cxl_decoder_count_dec(int enc_cnt);
+ 
+ uint8_t cxl_interleave_ways_enc(int iw, Error **errp);
++int cxl_interleave_ways_dec(uint8_t iw_enc, Error **errp);
+ uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
+ 
+ hwaddr cxl_decode_ig(int ig);
+diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+index ea2d4770ec..352d0dace2 100644
+--- a/hw/cxl/cxl-component-utils.c
++++ b/hw/cxl/cxl-component-utils.c
+@@ -13,15 +13,45 @@
+ #include "hw/pci/pci.h"
+ #include "hw/cxl/cxl.h"
+ 
++/* CXL r3.0 Section 8.2.4.19.1 CXL HDM Decoder Capability Register */
+ int cxl_decoder_count_enc(int count)
+ {
+     switch (count) {
+-    case 1: return 0;
+-    case 2: return 1;
+-    case 4: return 2;
+-    case 6: return 3;
+-    case 8: return 4;
+-    case 10: return 5;
++    case 1: return 0x0;
++    case 2: return 0x1;
++    case 4: return 0x2;
++    case 6: return 0x3;
++    case 8: return 0x4;
++    case 10: return 0x5;
++    /* Switches and Host Bridges may have more than 10 decoders */
++    case 12: return 0x6;
++    case 14: return 0x7;
++    case 16: return 0x8;
++    case 20: return 0x9;
++    case 24: return 0xa;
++    case 28: return 0xb;
++    case 32: return 0xc;
++    }
++    return 0;
++}
++
++int cxl_decoder_count_dec(int enc_cnt)
++{
++    switch (enc_cnt) {
++    case 0x0: return 1;
++    case 0x1: return 2;
++    case 0x2: return 4;
++    case 0x3: return 6;
++    case 0x4: return 8;
++    case 0x5: return 10;
++    /* Switches and Host Bridges may have more than 10 decoders */
++    case 0x6: return 12;
++    case 0x7: return 14;
++    case 0x8: return 16;
++    case 0x9: return 20;
++    case 0xa: return 24;
++    case 0xb: return 28;
++    case 0xc: return 32;
+     }
+     return 0;
+ }
+@@ -410,6 +440,23 @@ uint8_t cxl_interleave_ways_enc(int iw, Error **errp)
+     }
+ }
+ 
++int cxl_interleave_ways_dec(uint8_t iw_enc, Error **errp)
++{
++    switch (iw_enc) {
++    case 0x0: return 1;
++    case 0x1: return 2;
++    case 0x2: return 4;
++    case 0x3: return 8;
++    case 0x4: return 16;
++    case 0x8: return 3;
++    case 0x9: return 6;
++    case 0xa: return 12;
++    default:
++        error_setg(errp, "Encoded interleave ways: %d not supported", iw_enc);
++        return 0;
++    }
++}
++
+ uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp)
+ {
+     switch (gran) {
 -- 
 2.39.2
 
