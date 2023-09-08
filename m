@@ -2,97 +2,171 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3F7EEB560
-	for <linux-cxl@archiver.kernel.org>; Fri,  8 Sep 2023 18:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC37EEB562
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Sep 2023 18:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235049AbjIHSqJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 8 Sep 2023 14:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41238 "EHLO
+        id S239057AbjIHSuO (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 8 Sep 2023 14:50:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234461AbjIHSqJ (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Sep 2023 14:46:09 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05ADF1705
-        for <linux-cxl@vger.kernel.org>; Fri,  8 Sep 2023 11:45:34 -0700 (PDT)
+        with ESMTP id S239561AbjIHSuO (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Sep 2023 14:50:14 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413141FE5
+        for <linux-cxl@vger.kernel.org>; Fri,  8 Sep 2023 11:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
- s=s31663417; t=1694198665; x=1694803465; i=fan.ni@gmx.us;
- bh=kST+ls3nKHZ/U/2j2Xqf7o6XZANd+WQVzYpVKm9BZrE=;
+ s=s31663417; t=1694198881; x=1694803681; i=fan.ni@gmx.us;
+ bh=GimAH50vXhARBTi+C4euhwGhrgTMsfErSCmhdWcKrv0=;
  h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=CDPL1MfusPKiU/8mGjdNGHGMEz69Wi24TrIrQPNq/AXfj4W3saBAYkpwz/0cTJLlPSeIu7K
- 8+OjyPYg13sxz7pC7KoLEFhL7CfC4ennwSpCrGEJHNhDwL06xGCESBFj7S/JfHa7t+7y9tQda
- /mju81Pm1vNaFPyPGSQ4lwWVVuJ4dwzyL+r/kvpPl4+f7sWoLYPl6QKvV/AEV0pSZTNfHO70c
- /4ytl/aXtJFGT3v0M8dv2BtHt8UqOJrF1wFJNRdzkXO25Zag03BuMTYo5QFcdtvVfh4D212rt
- UHMwnH2I8Bh0j8xGZ8rsU9Cestt/vnUDMAp6RpOnYwH791N7ZTpw==
+ b=opgMeXXt6KZy0JmQaAj/gYfV4Z1eVJyI3YFVu8oqA0Ib0npXqA0drvakGFU6jOL/i3NPPCz
+ uuiHuxKCObDz9EEd/pX4YSmRMfZTQy3N51G6ruwz8Oye/26HOwkk96oPmA1FuRiYWfarId0DB
+ lRdeNx/pb3q9D2SSvNs86NRPTeb0tDfsWyF8AfpCNQs6IeonqkvcCSq4RlJxxpytHu0fVV6W5
+ bES8bBNHOKOi3ds3aUWCNrGwkRTKN8d2BYUNkd0Aeu/RS16wQsifqAehaFRuDwcNuWyrlTW7/
+ /EO9SkFo4O+uiq+LtWvKgebUv14+CbXVeKwAUQ3uMJkHmxT3QxHQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mw9QC-1pp3eB0Htk-00s9I2; Fri, 08
- Sep 2023 20:37:47 +0200
-Date:   Fri, 8 Sep 2023 11:37:31 -0700
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MNKm0-1qFsVu0vQg-00OmCm; Fri, 08
+ Sep 2023 20:48:00 +0200
+Date:   Fri, 8 Sep 2023 11:47:49 -0700
 From:   Fan Ni <fan.ni@gmx.us>
 To:     Davidlohr Bueso <dave@stgolabs.net>
 Cc:     Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
         dan.j.williams@intel.com, alison.schofield@intel.com,
         ayush.m55@samsung.com, a.manzanares@samsung.com,
         linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 1/4] cxl/type3: Fix crash in set_cacheline()
-Message-ID: <ZPtp63VmaKHl+G+K@debian>
+Subject: Re: [PATCH 2/4] hw/cxl: Add get scan media capabilities cmd support
+Message-ID: <ZPtsVWGFo+BwMVk2@debian>
 References: <20230908073152.4386-1-dave@stgolabs.net>
- <20230908073152.4386-2-dave@stgolabs.net>
+ <20230908073152.4386-3-dave@stgolabs.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230908073152.4386-2-dave@stgolabs.net>
-X-Provags-ID: V03:K1:C6eFLosYfrC/b7MG0y0zadMzEtrR7ZjWWyrb+fzunEt5IaxVbLm
- SV0fzFYmjLOErC6D3wCOJDklfyW997u11JmXTSsMancIVb347afGcC/zITROWz/MhMEvUla
- 87IR71FszT0VAMeYDqsrmIvGf+5os0eX+sWsJNS7dP6X5/HGS1rNbS9zlnO9Ih40IYBPJjd
- aQ041tm+lcYavTO/d56KQ==
-UI-OutboundReport: notjunk:1;M01:P0:0Xdv2lzf6wg=;/M+MzfpwK5xnYIwLGWx2wMZFn0O
- 0nxKlDfYDh6nmZ/csqH/yIMnCcL1orsAY6d0nc40kTbECcpRGc1Fj9JR4oFXtZj0L4i4pi5Uv
- b3JJPaodT5qpQaG5cKq948OSv+jD0k5OGJaRDhO5F/5voQlRjKzIZGDVb9hBKL02jMyfYiemz
- ePlMUpRrf0ygE/7/1WUVka7bm8fERzgQvcpJVknQxLIYIhghXd7hECerSQBPV6WHb+zm1QMPx
- mA9ef66NBxmrUgstf6k7oQrKTyKtjJIyhG0vTaip+FJhs5HvbYZ/DWwm4vjFNwDiIWctlF4kl
- K5LAGIXUcerfFSBV8yb5bFAyTplxiAixP0d4eWIyvC/W3/RtPg2JWJDhd9Hq4z1p0S0ZJ3cw9
- O2YtdJ+WN7yU3K2xX8CBBU7MVlVuY+ALW3EK5CCTLm+Do408W5XAHO8P3JO8tSZhSAsD0lPo8
- 9uPH4p64v2e+PegdvxtOb31tHy3ChyHhz2UIKm98uQBqroxFIwNe/Ln2AbQmIwmgbQq+Xstwp
- 9KEM/wHFX1BlYtHmFQC9z000yMhnB/8QDAAzbPL1nzQrJmPRFyrd5BQtImmDIDOhoIzR7BPRG
- uJtcqlpZAZiBhc59RR4Nrrm4eWq+o5E1V9alrVZO6HHmmVRLawk0VfXJiGc47r6Xj/ri7ODSi
- xaqqHmOLT/OsEyiUrIZz29Myw4lbwmmavaJPuz9k0vvN7OuHs2h/jdpHf3/zwoIOlnKGJFuxi
- BXIALBgJLo8G3NORFaWD9xRyZ3BUTIQFJZvJmtYKg8ZTaYUYF4AWXUE9ITsVnBGStTrJEq+Vi
- woYGHeBqvcQEsJG1vGTPQNNrq4bzbPwIbAPSGOTOzgjOXaQZeAyATCz8Tq6BVKDc50YkHwLfE
- gUisKjHEo9sr2eUnQ9SCBG3sgGAFZEpAigIzfhTUlNkW9oT5CWone0BOxau2feIALgru0Bcg2
- 7ySKFnvIQ6Jdj8Rb5X3VSvVmMcc=
+In-Reply-To: <20230908073152.4386-3-dave@stgolabs.net>
+X-Provags-ID: V03:K1:x5tdV65kSUHvdguMNpXlsiss6aJk3ytSrZlPPOK5kJQoiMMR2jr
+ 6rNz4WZSTj0NCdzfp2U7Yx+U5svFGFYm8DfNXrhcRZgkIPeQxPjTzeYjukxhpGg4uzu7oLg
+ +Zv0cv5VQd/HUi9Z9qMnNV5Bka102dn/dpVTm519GQZ7FoA/5/oRnd9ZitJ+K/zrddEtSog
+ p4lQbvU1H/QPjRgGpq4DA==
+UI-OutboundReport: notjunk:1;M01:P0:ylS4Kq6j7CQ=;J04bPjndAQBy8ScBb/BrJu3UOqI
+ 2GvSitPV2hJ7HymfKBb2EZfZfsAjx0w4rBZWZjyU4jhGPudVZQon5QhmIwAKAGJr7lL9OM2+V
+ NehRW/Lc5iSoiuO4IvzxV9xBKHnPnsd7OJGHa61H0Wsp5VfD57fwmzgVspglVgnolejpuoeG6
+ 3s9gZ9FYO6W27Xu4M8kfAuJ4hCWfsQEdpB4lkyg2ROP6dTN1OCOsB7MeWeO2FvQ2sZYzhI8kR
+ p+LZ3Euox580rXpiV/QO58dw+p0tL3Hk8ePiJFOolWcxPZ4fV9zBVtotafUtJox5d55re9s/R
+ dZp5UOk0RhJEypZeteerXO8UFVbJ2M6ymA0qUvWLAIYNdjkXnDZ5QfT33sZ9Dnix6kadS2RFP
+ J3t2VbLliU0hzyn/QMqyV+s/hw/omwrzEpSd+XBnnBWOg3qladw3/rlY7EcfBhXiTilPH6poA
+ y2sEeIZtbXb++SIFUSp3esKOhPdyPxp9vahUrLBpTy0GxpOfIzrjhyj29WeWxcu5wulA0ZDm4
+ Cn+SYtNUj4sSlJzAP9BXO7K6jxQPiv54N6k7QarYTFSK83cOeBpQhPL0/MrBCKmziwcbi1SJK
+ idCU9yK3YXqagKsQwq5xvxbrDFZq3EtMfFbQ6wnXI04EkQH+HfnRqFkM4ERaqwT7HFKMXXe8X
+ 8j/W9jW5zExXJfMc9Owr2hs8mS5UXghew/AOV+tZ/SxAFA7u2ZzZ8DQlpiJ3bsWGTW3etZoyk
+ IguNzydSbsNByvbn265loWT1PfREP+H31U2SN7SiETFzGetikfwxptWapyfHfFXrvty4Yz1i3
+ oblMQ2ImPHyX0JP5cUTkjAJsOinz46u9Zo1AiWdUztKn1GSH/DTa41Ji80kTxuxK6EvXbtwFS
+ 1XCIoP5BFOeEOMTysrpHavZwWrU/ZjVwVlDxGhf8tBYNDMHScd2WI+UKzr/fMUrfQbz/E7ayJ
+ bd6+GjEKErjyv6YX/rrH4ND3JnU=
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 12:31:49AM -0700, Davidlohr Bueso wrote:
-> Use the correct vmr_size, otherwise a clear poison operation, for
-> example, can crash the emulator.
+On Fri, Sep 08, 2023 at 12:31:50AM -0700, Davidlohr Bueso wrote:
+> Use simple heuristics to determine the cost of scanning any given
+> chunk, assuming cost is equal across the whole device, without
+> differentiating between volatile or persistent partitions. This
+> is aligned to the fact that these constraints are not enforced
+> in respective poison query commands.
 >
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  hw/mem/cxl_type3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  hw/cxl/cxl-mailbox-utils.c | 53 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 >
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index fd9d134d468f..b90a7397d62f 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -1417,7 +1417,7 @@ static bool set_cacheline(CXLType3Dev *ct3d, uint6=
-4_t dpa_offset, uint8_t *data)
->          as =3D &ct3d->hostvmem_as;
->      } else if (dpa_offset < vmr_size + pmr_size) {
->          as =3D &ct3d->hostpmem_as;
-> -        dpa_offset -=3D vmr->size;
-> +        dpa_offset -=3D vmr_size;
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 4e8651ebe2e9..3073222060ab 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -80,6 +80,7 @@ enum {
+>          #define GET_POISON_LIST        0x0
+>          #define INJECT_POISON          0x1
+>          #define CLEAR_POISON           0x2
+> +        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+>      DCD_CONFIG  =3D 0x48,
+>          #define GET_DC_CONFIG          0x0
+>          #define GET_DYN_CAP_EXT_LIST   0x1
+> @@ -1174,6 +1175,56 @@ static CXLRetCode cmd_media_clear_poison(const st=
+ruct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>
+> +/*
+> + * CXL r3.0 section 8.2.9.8.4.4: Get Scan Media Capabilities
+> + */
+> +static CXLRetCode
+> +cmd_media_get_scan_media_capabilities(const struct cxl_cmd *cmd,
+> +                                      uint8_t *payload_in,
+> +                                      size_t len_in,
+> +                                      uint8_t *payload_out,
+> +                                      size_t *len_out,
+> +                                      CXLCCI *cci)
+> +{
+> +    struct get_scan_media_capabilities_pl {
+> +        uint64_t pa;
+> +        uint64_t length;
+> +    } QEMU_PACKED;
+> +
+> +    struct get_scan_media_capabilities_out_pl {
+> +        uint32_t estimated_runtime_ms;
+> +    } QEMU_PACKED;
+> +
+> +    CXLType3Dev *ct3d =3D CXL_TYPE3(cci->d);
+> +    CXLDeviceState *cxl_dstate =3D &ct3d->cxl_dstate;
+> +    struct get_scan_media_capabilities_pl *in =3D (void *)payload_in;
+> +    struct get_scan_media_capabilities_out_pl *out =3D (void *)payload_=
+out;
+> +    uint64_t query_start;
+> +    uint64_t query_length;
+> +
+> +    query_start =3D ldq_le_p(&in->pa);
+> +    /* 64 byte alignment required */
+> +    if (query_start & 0x3f) {
+> +        return CXL_MBOX_INVALID_INPUT;
 
-Good catch. It is a typo from my DCD patch, not upstreamed yet.
+=46rom the spec, it is not clear to me whether we should return invalid
+input or invalid PA.
 
 Fan
->      } else {
->          as =3D &ct3d->dc.host_dc_as;
->          dpa_offset -=3D (vmr_size + pmr_size);
+
+> +    }
+> +    query_length =3D ldq_le_p(&in->length) * CXL_CACHE_LINE_SIZE;
+> +
+> +    if (query_start + query_length > cxl_dstate->static_mem_size) {
+> +        return CXL_MBOX_INVALID_PA;
+> +    }
+> +
+> +    /*
+> +     * Just use 400 nanosecond access/read latency + 100 ns for
+> +     * the cost of updating the poison list. For small enough
+> +     * chunks return at least 1 ms.
+> +     */
+> +    stl_le_p(&out->estimated_runtime_ms,
+> +             MAX(1, query_length * (0.0005L/64)));
+> +
+> +    *len_out =3D sizeof(*out);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /*
+>   * CXL r3.0 section 8.2.9.8.9.1: Dynamic Capacity Configuration
+>   */
+> @@ -1602,6 +1653,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] =
+=3D {
+>          cmd_media_inject_poison, 8, 0 },
+>      [MEDIA_AND_POISON][CLEAR_POISON] =3D { "MEDIA_AND_POISON_CLEAR_POIS=
+ON",
+>          cmd_media_clear_poison, 72, 0 },
+> +    [MEDIA_AND_POISON][GET_SCAN_MEDIA_CAPABILITIES] =3D { "MEDIA_AND_PO=
+ISON_GET_SCAN_MEDIA_CAPABILITIES",
+> +        cmd_media_get_scan_media_capabilities, 16, 0 },
+>  };
+>
+>  static const struct cxl_cmd cxl_cmd_set_dcd[256][256] =3D {
 > --
 > 2.42.0
 >
