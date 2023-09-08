@@ -2,32 +2,32 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1E3EE801F
-	for <linux-cxl@archiver.kernel.org>; Fri,  8 Sep 2023 17:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEADEEB560
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Sep 2023 17:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240495AbjIHRPD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 8 Sep 2023 13:15:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
+        id S229600AbjIHRVy (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 8 Sep 2023 13:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjIHRPC (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Sep 2023 13:15:02 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE098CE6
-        for <linux-cxl@vger.kernel.org>; Fri,  8 Sep 2023 10:14:57 -0700 (PDT)
+        with ESMTP id S235888AbjIHRVx (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Sep 2023 13:21:53 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4AF1FC4
+        for <linux-cxl@vger.kernel.org>; Fri,  8 Sep 2023 10:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
- s=s31663417; t=1694193196; x=1694797996; i=fan.ni@gmx.us;
- bh=PyTtTSGkK0YDDu75CUsELW/zziVqpZYsIv90hJn8nFQ=;
+ s=s31663417; t=1694193609; x=1694798409; i=fan.ni@gmx.us;
+ bh=eTuAMCtxIep1hkQhE9WfgRxSJEMBNLNyy1WUCrC1IlY=;
  h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
- b=tb/TGIMYR7d2IQMDLkwwr2IjNhtMhbJ9RtZlihJ9+YJFHGaMrWNdpzi6JanCNOeVgihgkIl
- 0W0PAdYiIVPvXrBSKPxViYQJwq6xKglJVMYw5Mku8HKtEy5Dpi085d1txOd5LmZ3wMxq/LNLJ
- od1FcGzGNU3CLeK62mcR6mdNEDLUUswG6ORCYxw3fBcTikpI2qdA9WowpqZc2k3ito5n4zZz3
- BUkvj7cyBprGplSCpz/IDWtZNu/Ofrbm1Zi2I0HuFtE0J2jdfo1+PGXlTwo/Ce4F4pe5Uz5Im
- 4w1hxK7PEU5ZId3dPesBIFtaqS3xnfxkthhdSNSEqQHSgmJCLk7g==
+ b=UucjMoheG9kEHhtv7iyNw4nzNkbJ9koDQ+Y6Z/LmfyjRv4eFMZ9C27u7Hmw0xfLI2qhYusp
+ 0a4ZmhlNP/9sNyhj46UzD3N7uAk3IDpzO7qrC/NqGlF5g6+p3rShJN0gNMDHvKW2ug/tO27VZ
+ +ZEbPq6EHaoPROMpXDuJr1w1gvMJJtUQU4zk69mOp/AMBHsExTCPoSGQLD0QOP67scAO0DSjO
+ Ti8XuRv+WoWEzm8+78tY9btwHB4rn3tjW+59gCalf0agHb0Iijs2WJvp+tDC4u5qF25zp24S4
+ mGAFwsCX+IfmGC8UgRbQBHZpxSPw7k92ATGoC7LB67w0nnAVjYYg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1M1po0-1qcTBL3aIq-002Ets; Fri, 08
- Sep 2023 19:13:16 +0200
-Date:   Fri, 8 Sep 2023 10:12:58 -0700
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MbRfv-1q38PB2db7-00brwB; Fri, 08
+ Sep 2023 19:20:09 +0200
+Date:   Fri, 8 Sep 2023 10:19:55 -0700
 From:   Fan Ni <fan.ni@gmx.us>
 To:     J?rgen Hansen <Jorgen.Hansen@wdc.com>
 Cc:     Fan Ni <fan.ni@samsung.com>,
@@ -43,228 +43,384 @@ Cc:     Fan Ni <fan.ni@samsung.com>,
         "dave@stgolabs.net" <dave@stgolabs.net>,
         "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
         "nifan@outlook.com" <nifan@outlook.com>
-Subject: Re: [Qemu PATCH v2 6/9] hw/mem/cxl_type3: Add DC extent list
- representative and get DC extent list mailbox support
-Message-ID: <ZPtWGqBCISsaDbY/@debian>
+Subject: Re: [Qemu PATCH v2 7/9] hw/cxl/cxl-mailbox-utils: Add mailbox
+ commands to support add/release dynamic capacity response
+Message-ID: <ZPtXuyJkFKgBpL9A@debian>
 References: <20230725183939.2741025-1-fan.ni@samsung.com>
- <CGME20230725183957uscas1p28b38d294f90b97f99769466cc533b4de@uscas1p2.samsung.com>
- <20230725183939.2741025-7-fan.ni@samsung.com>
- <ca63022b-0447-74b8-06fc-0e6d47455ebc@wdc.com>
+ <CGME20230725183957uscas1p2a076b6f7b694d2e632a0b8025ec331d7@uscas1p2.samsung.com>
+ <20230725183939.2741025-8-fan.ni@samsung.com>
+ <e1640028-6b9d-3cdf-52fb-241f985c4bbb@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ca63022b-0447-74b8-06fc-0e6d47455ebc@wdc.com>
-X-Provags-ID: V03:K1:T3FLWp3hDCYbgtq2nkmqGqy0qgYjfFD0239x81DbBjfOZExWxBz
- 1QgCWvCHwgNaSZB0sS/mIy5Zl/0BWBLJHia9Vh2qNBMkxzHmVql+ZxcVwpAD/uOgGeVhQIV
- 9ZYfxCSLpB7s1mxsX6YupY1D+2NhRzjXGEh4yVAcp4+5JdE49TBVjskmpG3dekg497lOmpi
- 3AHoONQihpYQm67rSqO3g==
-UI-OutboundReport: notjunk:1;M01:P0:QCLOZH0v20k=;wkgkaIDRH6F4SSliiPwWT94LDKy
- vJkuNWCLhmuwIGIpnBZiuhJlk0gQg9vKpysXZmObQqMCCqf7Q/jyyQI+TT+Czjhy4mgphprfw
- Z0jst0VyY+P2OaZjLF8lM+pWXDCVy6zTE3T2BvNeUxM8gmqLNWxV4mNMaSRSrKaNHYa0QCIYV
- Xle3OlnjrFOAs+mYRsLANRVjiP40jaTsjRptage+Nh62XjXjnSREdj4vWbTCkhbOMtJUgVBOw
- bLs4NjtR1vc5TuHYMMUX2M+zQG5bqLD46ldZ8MYRoCfqlTCivdZQv6/AChK2bi1XYA4gJlh+5
- zjze6KPszKqyGLhIYRUTrVfUYoBeK6X9lfQs5uLYOzc2YKyJPacB7wxBt7UUuEwQLsXkVPOSL
- AYYLA1J3Uypx/0uyO/IBquTLVypSuQIo8oZpE3bwFhWxUE+w2TwOEqDHGMnO4eTPJcAIFFCrg
- /MwZO2mJqrhgjRGvhjWkp+FYhh7tiBCmqQvPwDvZnTTFv/7uHbkiWsoTJgcWfOZQCbqld4xcO
- 3UzhztUCEH4IYqyhABVMDhDwqWQdkHuXhC4o0PL2KHjtZoQ/kLX5nwJvFUeZwpnF+If4ewHLS
- 6tAQdn0kktSZMp6Q4owX3s9wHSfhY2nFvpUA99vpwiHBuMB2O6lvOd55Q8kZyXbwq8LH54jWr
- gdVAy/duxGAU/TL+mAXKG+n779U7alVniBLgiZXkgLSCutf0P0E08aQhPnPTkDHbM7FPPi+B/
- sF+qffAQ6FAla6RknEUcZww6sd7tiBWSkoVfhjD2ecu8SHPbEAbXVw+ndz+ChLYdpaeuMMHwD
- YAzs+y7xBb9yUJb0dQ9ZYRFp/PR8xRDZG8RJedhft11qdFJn4seuNQI9lWtTSljME4uc5bLu2
- crOZJVUxogND0wOIe7giWLsnNSrWSjtcmSK7oHaQapJ2aQWKVzsNxEFlOECSJLq87p+Tla9j1
- EoAq7Syr+y8QkzfvzWGeUDO1aIs=
+In-Reply-To: <e1640028-6b9d-3cdf-52fb-241f985c4bbb@wdc.com>
+X-Provags-ID: V03:K1:QOKSHZN38gt922xEcnREdH3Tslemuxy+b9ml1WlkVVpglkGkJqN
+ OPacRVz8/gO+I0m1ozpn2VbTQkV5EwMh9+xrMFLdKxolorY+Wdvbvtb3fhZL0F6VmTuGF5Q
+ zQHN28ur4vpp3a+E3QlGsLqerE3tpHpNORjDuT5DD2ALViwm2B3JvNBhIiJm2EGmgkXtQFL
+ 6vCI7t30MrkWwdviUNwFg==
+UI-OutboundReport: notjunk:1;M01:P0:cQMkAvkz3fM=;x3zDOCgKmb3VZDXqVcZ8tuoSEkM
+ M9HM4eT7Zdu2y+mljRzb64V/39LvZuXlU1AOoLPCtb9XOpjCdB/5yKc2FY6cmNlkOwcHg8cV2
+ 6WqSEIxzMJYPEfEP8madX72WuovzpvMh8CMlYc10mgpz7IjDu0qGE6Y9X4eRunNkOEVPU/tT+
+ VCavPghGkHTnDqBFGGX29xboaa8MCqDPwFyPv96VCShpFHIzgv23+ue8pC3Lwr7mz67uP3vIJ
+ fDqAF4r2Gae3ZrlUNa5/O6x2pt3jlT0YOvdrU+gSlNPyF+aQ+LvT2iDQFgVXQDVhy6fOM4NDV
+ LGmkHvjzuR4mmrhu1Ss0Bp7NQFFUQBpNBGJ/6gQ4sCMRGPb+/qmez717p3AyW58ZUBDJGp8U/
+ UTKf1v5OGsiyjN6dN51ntqLzpkqn0f4mRq5NXo3jlyR5WZ0keKkW7GYZKIXMH//2xCSxBd7su
+ SjoeIGJh/w3kBTKpFzF8Le0HCf02/Kp42GtS3aJT6sVFzwrSi5uBgnHm2fbB0/McvXWaxJkgi
+ +LtVtu90UAIctKpPXXRzP8eXvveThWYvN4iVevD9vYZjINXXRIObsBjSSuUVZ1OI+0fuX7psD
+ 8itWhby3I4bXk9NCuX34ExcA76TL2stpbeZy5GqExfBXLe0Fpo3Zl/t1/mmQymm1751YXw/zQ
+ qTkx7q3j0qffvqrwcc8vatpByI1Q7Z1Vw79FSpIdrY7xYahtEySof1RmYZgynyVUNnLRbhuJn
+ XzL4oBvWl03ziSBYusMlePPX+WJQ28frci64WEr3Vf56ShNMJP1ZbfwGc4qZ/7sANTu6d54MI
+ YDHvh7MJqRd0qyp6mI8DiCJ3Y4ThlzsAjOgZyAX1DFoA8hFgnnxMdCwz2dkyH3AjMxGPtn/XX
+ Lqz2U18isn0iK+ep9C4ZTCcDVHm7wUkq+FTfzLzqJWehngVwoIvZtOxsPTRGXXUdKiuxof5AZ
+ F6kkwsIbSD98I2d2eFrYujMQK0g=
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 01:12:45PM +0000, J?rgen Hansen wrote:
+On Fri, Sep 08, 2023 at 01:00:16PM +0000, J?rgen Hansen wrote:
 > On 7/25/23 20:39, Fan Ni wrote:
 > > From: Fan Ni <nifan@outlook.com>
 > >
-> > Add dynamic capacity extent list representative to the definition of
-> > CXLType3Dev and add get DC extent list mailbox command per
-> > CXL.spec.3.0:.8.2.9.8.9.2.
+> > Per CXL spec 3.0, two mailbox commands are implemented:
+> > Add Dynamic Capacity Response (Opcode 4802h) 8.2.9.8.9.3, and
+> > Release Dynamic Capacity (Opcode 4803h) 8.2.9.8.9.4.
 > >
 > > Signed-off-by: Fan Ni <fan.ni@samsung.com>
 > > ---
-> >   hw/cxl/cxl-mailbox-utils.c  | 71 +++++++++++++++++++++++++++++++++++=
+> >   hw/cxl/cxl-mailbox-utils.c  | 253 ++++++++++++++++++++++++++++++++++=
 ++
-> >   hw/mem/cxl_type3.c          |  1 +
-> >   include/hw/cxl/cxl_device.h | 23 ++++++++++++
-> >   3 files changed, 95 insertions(+)
+> >   include/hw/cxl/cxl_device.h |   3 +-
+> >   2 files changed, 255 insertions(+), 1 deletion(-)
 > >
 > > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-> > index 0511b8e6f7..3d25a9697e 100644
+> > index 3d25a9697e..1e4944da95 100644
 > > --- a/hw/cxl/cxl-mailbox-utils.c
 > > +++ b/hw/cxl/cxl-mailbox-utils.c
-> > @@ -83,6 +83,7 @@ enum {
-> >           #define CLEAR_POISON           0x2
+> > @@ -84,6 +84,8 @@ enum {
 > >       DCD_CONFIG  =3D 0x48, /*r3.0: 8.2.9.8.9*/
 > >           #define GET_DC_CONFIG          0x0
-> > +        #define GET_DYN_CAP_EXT_LIST   0x1
+> >           #define GET_DYN_CAP_EXT_LIST   0x1
+> > +        #define ADD_DYN_CAP_RSP        0x2
+> > +        #define RELEASE_DYN_CAP        0x3
 > >       PHYSICAL_SWITCH =3D 0x51
 > >           #define IDENTIFY_SWITCH_DEVICE      0x0
 > >   };
-> > @@ -1018,6 +1019,73 @@ static CXLRetCode cmd_dcd_get_dyn_cap_config(st=
-ruct cxl_cmd *cmd,
+> > @@ -1086,6 +1088,251 @@ static CXLRetCode cmd_dcd_get_dyn_cap_ext_list=
+(struct cxl_cmd *cmd,
 > >       return CXL_MBOX_SUCCESS;
 > >   }
 > >
 > > +/*
-> > + * cxl spec 3.0: 8.2.9.8.9.2
-> > + * Get Dynamic Capacity Extent List (Opcode 4810h)
+> > + * Check whether the bits at addr between [nr, nr+size) are all set,
+> > + * return 1 if all 1s, else return 0
 > > + */
-> > +static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(struct cxl_cmd *cmd,
-> > +        CXLDeviceState *cxl_dstate,
-> > +        uint16_t *len)
+> > +static inline int test_bits(const unsigned long *addr, int nr, int si=
+ze)
 > > +{
-> > +    struct get_dyn_cap_ext_list_in_pl {
-> > +        uint32_t extent_cnt;
-> > +        uint32_t start_extent_id;
-> > +    } QEMU_PACKED;
+> > +    unsigned long res =3D find_next_zero_bit(addr, size + nr, nr);
 > > +
-> > +    struct get_dyn_cap_ext_list_out_pl {
-> > +        uint32_t count;
-> > +        uint32_t total_extents;
-> > +        uint32_t generation_num;
-> > +        uint8_t rsvd[4];
-> > +        CXLDCExtent_raw records[];
-> > +    } QEMU_PACKED;
+> > +    return (res >=3D nr + size) ? 1 : 0;
+> > +}
 > > +
-> > +    struct get_dyn_cap_ext_list_in_pl *in =3D (void *)cmd->payload;
-> > +    struct get_dyn_cap_ext_list_out_pl *out =3D (void *)cmd->payload;
-> > +    struct CXLType3Dev *ct3d =3D container_of(cxl_dstate, CXLType3Dev=
-,
-> > +            cxl_dstate);
-> > +    uint16_t record_count =3D 0, i =3D 0, record_done =3D 0;
-> > +    CXLDCDExtentList *extent_list =3D &ct3d->dc.extents;
-> > +    CXLDCD_Extent *ent;
-> > +    uint16_t out_pl_len;
-> > +    uint32_t start_extent_id =3D in->start_extent_id;
+> > +/*
+> > + * Find dynamic capacity region id based on dpa range [dpa, dpa+len)
+> > + */
+> > +static uint8_t find_region_id(struct CXLType3Dev *dev, uint64_t dpa,
+> > +        uint64_t len)
+> > +{
+> > +    int8_t i =3D dev->dc.num_regions - 1;
 > > +
-> > +    if (start_extent_id > ct3d->dc.total_extent_count) {
-> > +        return CXL_MBOX_INVALID_INPUT;
+> > +    while (i > 0 && dpa < dev->dc.regions[i].base) {
+> > +        i--;
 > > +    }
 > > +
-> > +    record_count =3D MIN(in->extent_cnt,
-> > +            ct3d->dc.total_extent_count - start_extent_id);
+> > +    if (dpa < dev->dc.regions[i].base
+> > +            || dpa + len > dev->dc.regions[i].base + dev->dc.regions[=
+i].len) {
+> > +        return dev->dc.num_regions;
+> > +    }
 > > +
-> > +    out_pl_len =3D sizeof(*out) + record_count * sizeof(out->records[=
-0]);
-> > +    /* May need more processing here in the future */
-> > +    assert(out_pl_len <=3D CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> > +    return i;
+> > +}
 > > +
-> > +    memset(out, 0, out_pl_len);
-> > +    stl_le_p(&out->count, record_count);
-> > +    stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
-> > +    stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
+> > +static void insert_extent_to_extent_list(CXLDCDExtentList *list, uint=
+64_t dpa,
+> > +        uint64_t len, uint8_t *tag, uint16_t shared_seq)
+> > +{
+> > +    CXLDCD_Extent *extent;
+> > +    extent =3D g_new0(CXLDCD_Extent, 1);
+> > +    extent->start_dpa =3D dpa;
+> > +    extent->len =3D len;
+> > +    if (tag) {
+> > +        memcpy(extent->tag, tag, 0x10);
+> > +    } else {
+> > +        memset(extent->tag, 0, 0x10);
+> > +    }
+> > +    extent->shared_seq =3D shared_seq;
 > > +
-> > +    if (record_count > 0) {
-> > +        QTAILQ_FOREACH(ent, extent_list, node) {
-> > +            if (i++ < start_extent_id) {
-> > +                continue;
-> > +            }
-> > +            stq_le_p(&out->records[record_done].start_dpa, ent->start=
-_dpa);
-> > +            stq_le_p(&out->records[record_done].len, ent->len);
-> > +            memcpy(&out->records[record_done].tag, ent->tag, 0x10);
-> > +            stw_le_p(&out->records[record_done].shared_seq, ent->shar=
-ed_seq);
-> > +            record_done++;
-> > +            if (record_done =3D=3D record_count) {
-> > +                break;
-> > +            }
+> > +    QTAILQ_INSERT_TAIL(list, extent, node);
+> > +}
+> > +
+> > +typedef struct updated_dc_extent_list_in_pl {
+> > +    uint32_t num_entries_updated;
+> > +    uint8_t rsvd[4];
+> > +    struct { /* r3.0: Table 8-130 */
+> > +        uint64_t start_dpa;
+> > +        uint64_t len;
+> > +        uint8_t rsvd[8];
+> > +    } QEMU_PACKED updated_entries[];
+> > +} QEMU_PACKED updated_dc_extent_list_in_pl;
+> > +
+> > +/*
+> > + * The function only check the input extent list against itself.
+> > + */
+> > +static CXLRetCode detect_malformed_extent_list(CXLType3Dev *dev,
+> > +        const updated_dc_extent_list_in_pl *in)
+> > +{
+> > +    unsigned long *blk_bitmap;
+> > +    uint64_t min_block_size =3D dev->dc.regions[0].block_size;
+> > +    struct CXLDCD_Region *region =3D &dev->dc.regions[0];
+> > +    uint32_t i;
+> > +    uint64_t dpa, len;
+> > +    uint8_t rid;
+> > +    CXLRetCode ret;
+> > +
+> > +    for (i =3D 1; i < dev->dc.num_regions; i++) {
+> > +        region =3D &dev->dc.regions[i];
+> > +        if (min_block_size > region->block_size) {
+> > +            min_block_size =3D region->block_size;
 > > +        }
 > > +    }
 > > +
-> > +    *len =3D out_pl_len;
+> > +    blk_bitmap =3D bitmap_new((region->len + region->base
+> > +                - dev->dc.regions[0].base) / min_block_size);
+> > +
+> > +    for (i =3D 0; i < in->num_entries_updated; i++) {
+> > +        dpa =3D in->updated_entries[i].start_dpa;
+> > +        len =3D in->updated_entries[i].len;
+> > +
+> > +        rid =3D find_region_id(dev, dpa, len);
+> > +        if (rid =3D=3D dev->dc.num_regions) {
+> > +            ret =3D CXL_MBOX_INVALID_PA;
+> > +            goto out;
+> > +        }
+> > +
+> > +        region =3D &dev->dc.regions[rid];
+> > +        if (dpa % region->block_size || len % region->block_size) {
+> > +            ret =3D CXL_MBOX_INVALID_EXTENT_LIST;
+> > +            goto out;
+> > +        }
+>
+> Hi,
+>
+> The bitmap uses the dc region 0 base address as the baseline, so when
+> checking the dpa against the bitmap it needs to be adjusted for that
+> before the bitmap checks, e.g.,
+>
+> +        dpa -=3D dev->dc.regions[0].base;
+>
+> Thanks,
+> Jorgen
+
+Make sense. Will fix. Thanks.
+
+Fan
+>
+> > +        /* the dpa range already covered by some other extents in the=
+ list */
+> > +        if (test_bits(blk_bitmap, dpa / min_block_size, len / min_blo=
+ck_size)) {
+> > +            ret =3D CXL_MBOX_INVALID_EXTENT_LIST;
+> > +            goto out;
+> > +        }
+> > +        bitmap_set(blk_bitmap, dpa / min_block_size, len / min_block_=
+size);
+> > +   }
+> > +
+> > +    ret =3D CXL_MBOX_SUCCESS;
+> > +
+> > +out:
+> > +    g_free(blk_bitmap);
+> > +    return ret;
+> > +}
+> > +
+> > +/*
+> > + * cxl spec 3.0: 8.2.9.8.9.3
+> > + * Add Dynamic Capacity Response (opcode 4802h)
+> > + * Assume an extent is added only after the response is processed suc=
+cessfully
+> > + * TODO: for better extent list validation, a better solution would b=
+e
+> > + * maintaining a pending extent list and use it to verify the extent =
+list in
+> > + * the response.
+> > + */
+> > +static CXLRetCode cmd_dcd_add_dyn_cap_rsp(struct cxl_cmd *cmd,
+> > +        CXLDeviceState *cxl_dstate, uint16_t *len_unused)
+> > +{
+> > +    updated_dc_extent_list_in_pl *in =3D (void *)cmd->payload;
+> > +    struct CXLType3Dev *ct3d =3D container_of(cxl_dstate, CXLType3Dev=
+,
+> > +            cxl_dstate);
+> > +    CXLDCDExtentList *extent_list =3D &ct3d->dc.extents;
+> > +    CXLDCD_Extent *ent;
+> > +    uint32_t i;
+> > +    uint64_t dpa, len;
+> > +    CXLRetCode ret;
+> > +
+> > +    if (in->num_entries_updated =3D=3D 0) {
+> > +        ret =3D CXL_MBOX_SUCCESS;
+> > +        goto out;
+> > +    }
+> > +
+> > +    ret =3D detect_malformed_extent_list(ct3d, in);
+> > +    if (ret !=3D CXL_MBOX_SUCCESS) {
+> > +        goto out;
+> > +    }
+> > +
+> > +    for (i =3D 0; i < in->num_entries_updated; i++) {
+> > +        dpa =3D in->updated_entries[i].start_dpa;
+> > +        len =3D in->updated_entries[i].len;
+> > +
+> > +        /*
+> > +         * Check if the DPA range of the to-be-added extent overlaps =
+with
+> > +         * existing extent list maintained by the device.
+> > +         */
+> > +        QTAILQ_FOREACH(ent, extent_list, node) {
+> > +            if (ent->start_dpa =3D=3D dpa && ent->len =3D=3D len) {
+> > +                ret =3D CXL_MBOX_INVALID_PA;
+> > +                goto out;
+> > +            } else if (ent->start_dpa <=3D dpa
+> > +                    && dpa + len <=3D ent->start_dpa + ent->len) {
+> > +                ret =3D CXL_MBOX_INVALID_PA;
+> > +                goto out;
+> > +            } else if ((dpa < ent->start_dpa + ent->len
+> > +                        && dpa + len > ent->start_dpa + ent->len)
+> > +                    || (dpa < ent->start_dpa && dpa + len > ent->star=
+t_dpa)) {
+> > +                ret =3D CXL_MBOX_INVALID_PA;
+> > +                goto out;
+> > +            }
+> > +        }
+> > +
+> > +        /*
+> > +         * TODO: add a pending extent list based on event log record =
+and verify
+> > +         * the input response
+> > +         */
+> > +
+> > +        insert_extent_to_extent_list(extent_list, dpa, len, NULL, 0);
+> > +    }
+> > +    ret =3D CXL_MBOX_SUCCESS;
+> > +
+> > +out:
+> > +    return ret;
+> > +}
+> > +
+> > +/*
+> > + * Spec 3.0: 8.2.9.8.9.4
+> > + * Release Dynamic Capacity (opcode 4803h)
+> > + **/
+> > +static CXLRetCode cmd_dcd_release_dyn_cap(struct cxl_cmd *cmd,
+> > +        CXLDeviceState *cxl_dstate,
+> > +        uint16_t *len_unused)
+> > +{
+> > +    updated_dc_extent_list_in_pl *in =3D (void *)cmd->payload;
+> > +    struct CXLType3Dev *ct3d =3D container_of(cxl_dstate, CXLType3Dev=
+,
+> > +            cxl_dstate);
+> > +    CXLDCDExtentList *extent_list =3D &ct3d->dc.extents;
+> > +    CXLDCD_Extent *ent;
+> > +    uint32_t i;
+> > +    uint64_t dpa, len;
+> > +    CXLRetCode ret;
+> > +
+> > +    if (in->num_entries_updated =3D=3D 0) {
+> > +        return CXL_MBOX_INVALID_INPUT;
+> > +    }
+> > +
+> > +    ret =3D detect_malformed_extent_list(ct3d, in);
+> > +    if (ret !=3D CXL_MBOX_SUCCESS) {
+> > +        return ret;
+> > +    }
+> > +
+> > +    for (i =3D 0; i < in->num_entries_updated; i++) {
+> > +        dpa =3D in->updated_entries[i].start_dpa;
+> > +        len =3D in->updated_entries[i].len;
+> > +
+> > +        QTAILQ_FOREACH(ent, extent_list, node) {
+> > +            if (ent->start_dpa =3D=3D dpa && ent->len =3D=3D len) {
+> > +                break;
+> > +            } else if (ent->start_dpa < dpa
+> > +                    && dpa + len <=3D ent->start_dpa + ent->len) {
+> > +                /* remove partial extent */
+> > +                uint64_t len1 =3D dpa - ent->start_dpa;
+> > +                uint64_t len2 =3D ent->start_dpa + ent->len - dpa - l=
+en;
+> > +
+> > +                if (len1) {
+> > +                    insert_extent_to_extent_list(extent_list, ent->st=
+art_dpa,
+> > +                            len1, NULL, 0);
+> > +                }
+> > +                if (len2) {
+> > +                    insert_extent_to_extent_list(extent_list, dpa + l=
+en, len2,
+> > +                            NULL, 0);
+> > +                }
+> > +                break;
+> > +            } else if ((dpa < ent->start_dpa + ent->len
+> > +                        && dpa + len > ent->start_dpa + ent->len)
+> > +                    || (dpa < ent->start_dpa && dpa + len > ent->star=
+t_dpa))
+> > +                return CXL_MBOX_INVALID_EXTENT_LIST;
+> > +        }
+> > +
+> > +        if (ent) {
+> > +            QTAILQ_REMOVE(extent_list, ent, node);
+> > +            g_free(ent);
+> > +        } else {
+> > +            /* Try to remove a non-existing extent */
+> > +            return CXL_MBOX_INVALID_PA;
+> > +        }
+> > +    }
+> > +
 > > +    return CXL_MBOX_SUCCESS;
 > > +}
 > > +
 > >   #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
 > >   #define IMMEDIATE_DATA_CHANGE (1 << 2)
 > >   #define IMMEDIATE_POLICY_CHANGE (1 << 3)
-> > @@ -1058,6 +1126,9 @@ static struct cxl_cmd cxl_cmd_set[256][256] =3D =
-{
-> >           cmd_media_clear_poison, 72, 0 },
-> >       [DCD_CONFIG][GET_DC_CONFIG] =3D { "DCD_GET_DC_CONFIG",
-> >           cmd_dcd_get_dyn_cap_config, 2, 0 },
-> > +    [DCD_CONFIG][GET_DYN_CAP_EXT_LIST] =3D {
-> > +        "DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_e=
-xt_list,
-> > +        8, 0 },
+> > @@ -1129,6 +1376,12 @@ static struct cxl_cmd cxl_cmd_set[256][256] =3D=
+ {
+> >       [DCD_CONFIG][GET_DYN_CAP_EXT_LIST] =3D {
+> >           "DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_=
+ext_list,
+> >           8, 0 },
+> > +    [DCD_CONFIG][ADD_DYN_CAP_RSP] =3D {
+> > +        "ADD_DCD_DYNAMIC_CAPACITY_RESPONSE", cmd_dcd_add_dyn_cap_rsp,
+> > +        ~0, IMMEDIATE_DATA_CHANGE },
+> > +    [DCD_CONFIG][RELEASE_DYN_CAP] =3D {
+> > +        "RELEASE_DCD_DYNAMIC_CAPACITY", cmd_dcd_release_dyn_cap,
+> > +        ~0, IMMEDIATE_DATA_CHANGE },
 > >   };
 > >
 > >   static struct cxl_cmd cxl_cmd_set_sw[256][256] =3D {
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index 76bbd9f785..f1170b8047 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -789,6 +789,7 @@ static int cxl_create_dc_regions(CXLType3Dev *ct3d=
-)
-> >
-> >           region_base +=3D region->len;
-> >       }
-> > +    QTAILQ_INIT(&ct3d->dc.extents);
-> >
-> >       return 0;
-> >   }
 > > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-> > index 1c99b05a66..3a338b3b37 100644
+> > index 3a338b3b37..01a5eaca48 100644
 > > --- a/include/hw/cxl/cxl_device.h
 > > +++ b/include/hw/cxl/cxl_device.h
-> > @@ -385,6 +385,25 @@ typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+> > @@ -130,7 +130,8 @@ typedef enum {
+> >       CXL_MBOX_INCORRECT_PASSPHRASE =3D 0x14,
+> >       CXL_MBOX_UNSUPPORTED_MAILBOX =3D 0x15,
+> >       CXL_MBOX_INVALID_PAYLOAD_LENGTH =3D 0x16,
+> > -    CXL_MBOX_MAX =3D 0x17
+> > +    CXL_MBOX_INVALID_EXTENT_LIST =3D 0x1E, /* cxl r3.0: Table 8-34*/
+> > +    CXL_MBOX_MAX =3D 0x1F
+> >   } CXLRetCode;
 > >
-> >   #define DCD_MAX_REGION_NUM 8
-> >
-> > +typedef struct CXLDCD_Extent_raw {
-> > +    uint64_t start_dpa;
-> > +    uint64_t len;
-> > +    uint8_t tag[0x10];
-> > +    uint16_t shared_seq;
-> > +    uint8_t rsvd[0x6];
-> > +} QEMU_PACKED CXLDCExtent_raw;
-> > +
-> > +typedef struct CXLDCD_Extent {
-> > +    uint64_t start_dpa;
-> > +    uint64_t len;
-> > +    uint8_t tag[0x10];
-> > +    uint16_t shared_seq;
-> > +    uint8_t rsvd[0x6];
-> > +
-> > +    QTAILQ_ENTRY(CXLDCD_Extent) node;
-> > +} CXLDCD_Extent;
-> > +typedef QTAILQ_HEAD(, CXLDCD_Extent) CXLDCDExtentList;
-> > +
-> >   typedef struct CXLDCD_Region {
-> >       uint64_t base;
-> >       uint64_t decode_len; /* in multiples of 256MB */
-> > @@ -433,6 +452,10 @@ struct CXLType3Dev {
-> >
-> >           uint8_t num_regions; /* 0-8 regions */
-> >           struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
-> > +        CXLDCDExtentList extents;
-> > +
-> > +        uint32_t total_extent_count;
->
-> Hi,
->
-> I don't see total_extent_count being updated anywhere. Shouldn't this be
-> adjusted as part of cmd_dcd_add_dyn_cap_rsp()/cmd_dcd_release_dyn_cap()?
->
-> Thanks,
-> Jorgen
-
-Good catch. Thanks Jorgen, will fix in the next version.
-
-Fan
-
->
->
-> > +        uint32_t ext_list_gen_seq;
-> >       } dc;
-> >   };
-> >
+> >   struct cxl_cmd;
 > > --
 > > 2.25.1
