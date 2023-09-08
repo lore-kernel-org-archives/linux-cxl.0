@@ -2,409 +2,269 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B54DEC8756
-	for <linux-cxl@archiver.kernel.org>; Fri,  8 Sep 2023 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1E3EE801F
+	for <linux-cxl@archiver.kernel.org>; Fri,  8 Sep 2023 17:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245168AbjIHQoq (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 8 Sep 2023 12:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52760 "EHLO
+        id S240495AbjIHRPD (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 8 Sep 2023 13:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244177AbjIHQom (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Sep 2023 12:44:42 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDA41FD5;
-        Fri,  8 Sep 2023 09:44:37 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id 3f1490d57ef6-d801c83325fso975244276.0;
-        Fri, 08 Sep 2023 09:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694191477; x=1694796277; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=94ZndJQXH4f0WPgl5UOmwjlTxLPyJ6bAw+ixqralC30=;
-        b=UhtWvjt9cWI29CWsGiwVYNmScgrBCratVDNO4R8fwlkqrbpNnYQ75UwqB6P/nozVTB
-         GtJlLwgQB66L6AxRNGCp1ZlpG/RiydQrAFVNGmcI9HyQgdvY70c0UgQ8Gl4KFM8RcTH5
-         zbjE4MIbWWy4zG2Z3MoWztLb81pPnmXE2ZYmBOnz/EvGPgTEBZ0jeo8fZzAnOCGB8F+r
-         QLLSVTxEXlkq0VqHVf4mUGq3ofDvxieaVMt6aW6a3WCaad/MThwehFSDTDfrklqXk9nR
-         qVlIkXJmJdy+j7NGTeKpBAF2QWBnrzJG1nL9H84aN9i2gC0uxB+7VtWrVMVEDbwrViPJ
-         Fxdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694191477; x=1694796277;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=94ZndJQXH4f0WPgl5UOmwjlTxLPyJ6bAw+ixqralC30=;
-        b=Wet/ArkHIBjlTQZS2ez+VqybGgHUZFvb3NEcwT9+0ZvpXSTQWZQl63gQGqrBifm1w8
-         2/KvdkOdeattANlbP21cv8W4gnj68+9abZxvC33MUwEptR1hxGDAglCAGcxLVxRhTU9U
-         6vTZQdo3IejE+YxP+DH6/KlMYZewXqY9FDaZ3Qt8qEdy8ru/NIB48oHkKiCC97+S8hB5
-         +zrMOmfJ84eCW0jEJ84E/V4uK3YsCCknhxbLlWO3D3MV57XHVPVxfG6Yv7E4+u0kmnKp
-         rfbnmebGTys+ea9ErAJ3rjSRcrLiPP5IJYI1MpA3CaEl43Zfj4YNkqzDGDkyOB9Xdo8T
-         61bw==
-X-Gm-Message-State: AOJu0Yxlqr82x9rq/7AwNz0m+HVtZmyGvPRDI557lqGFq7gOYQwj6/ej
-        9Pm/U2+arUdTlagFdBr23pVNaQ+6/JV6
-X-Google-Smtp-Source: AGHT+IEXVPPbY0ZtvYADM/uaCH+HzpzYokt21eT1sYJm7VNHWg4hLx78Q2VNg1Q4YeCEVBm/zsZ43g==
-X-Received: by 2002:a25:aea1:0:b0:cfe:8cbf:5d28 with SMTP id b33-20020a25aea1000000b00cfe8cbf5d28mr2784936ybj.31.1694191476849;
-        Fri, 08 Sep 2023 09:44:36 -0700 (PDT)
-Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id e66-20020a253745000000b00d7ba7de90casm438858yba.51.2023.09.08.09.44.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Sep 2023 09:44:36 -0700 (PDT)
-From:   Gregory Price <gourry.memverge@gmail.com>
-X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
-To:     linux-mm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-cxl@vger.kernel.org,
-        luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        arnd@arndb.de, akpm@linux-foundation.org, x86@kernel.org,
-        Gregory Price <gregory.price@memverge.com>
-Subject: [RFC PATCH 3/3] mm/migrate: Create move_phys_pages syscall
-Date:   Thu,  7 Sep 2023 03:54:53 -0400
-Message-Id: <20230907075453.350554-4-gregory.price@memverge.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230907075453.350554-1-gregory.price@memverge.com>
-References: <20230907075453.350554-1-gregory.price@memverge.com>
+        with ESMTP id S229492AbjIHRPC (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 8 Sep 2023 13:15:02 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE098CE6
+        for <linux-cxl@vger.kernel.org>; Fri,  8 Sep 2023 10:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.us;
+ s=s31663417; t=1694193196; x=1694797996; i=fan.ni@gmx.us;
+ bh=PyTtTSGkK0YDDu75CUsELW/zziVqpZYsIv90hJn8nFQ=;
+ h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+ b=tb/TGIMYR7d2IQMDLkwwr2IjNhtMhbJ9RtZlihJ9+YJFHGaMrWNdpzi6JanCNOeVgihgkIl
+ 0W0PAdYiIVPvXrBSKPxViYQJwq6xKglJVMYw5Mku8HKtEy5Dpi085d1txOd5LmZ3wMxq/LNLJ
+ od1FcGzGNU3CLeK62mcR6mdNEDLUUswG6ORCYxw3fBcTikpI2qdA9WowpqZc2k3ito5n4zZz3
+ BUkvj7cyBprGplSCpz/IDWtZNu/Ofrbm1Zi2I0HuFtE0J2jdfo1+PGXlTwo/Ce4F4pe5Uz5Im
+ 4w1hxK7PEU5ZId3dPesBIFtaqS3xnfxkthhdSNSEqQHSgmJCLk7g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([99.13.228.231]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1M1po0-1qcTBL3aIq-002Ets; Fri, 08
+ Sep 2023 19:13:16 +0200
+Date:   Fri, 8 Sep 2023 10:12:58 -0700
+From:   Fan Ni <fan.ni@gmx.us>
+To:     J?rgen Hansen <Jorgen.Hansen@wdc.com>
+Cc:     Fan Ni <fan.ni@samsung.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "gregory.price@memverge.com" <gregory.price@memverge.com>,
+        "hchkuo@avery-design.com.tw" <hchkuo@avery-design.com.tw>,
+        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        "dave@stgolabs.net" <dave@stgolabs.net>,
+        "nmtadam.samsung@gmail.com" <nmtadam.samsung@gmail.com>,
+        "nifan@outlook.com" <nifan@outlook.com>
+Subject: Re: [Qemu PATCH v2 6/9] hw/mem/cxl_type3: Add DC extent list
+ representative and get DC extent list mailbox support
+Message-ID: <ZPtWGqBCISsaDbY/@debian>
+References: <20230725183939.2741025-1-fan.ni@samsung.com>
+ <CGME20230725183957uscas1p28b38d294f90b97f99769466cc533b4de@uscas1p2.samsung.com>
+ <20230725183939.2741025-7-fan.ni@samsung.com>
+ <ca63022b-0447-74b8-06fc-0e6d47455ebc@wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca63022b-0447-74b8-06fc-0e6d47455ebc@wdc.com>
+X-Provags-ID: V03:K1:T3FLWp3hDCYbgtq2nkmqGqy0qgYjfFD0239x81DbBjfOZExWxBz
+ 1QgCWvCHwgNaSZB0sS/mIy5Zl/0BWBLJHia9Vh2qNBMkxzHmVql+ZxcVwpAD/uOgGeVhQIV
+ 9ZYfxCSLpB7s1mxsX6YupY1D+2NhRzjXGEh4yVAcp4+5JdE49TBVjskmpG3dekg497lOmpi
+ 3AHoONQihpYQm67rSqO3g==
+UI-OutboundReport: notjunk:1;M01:P0:QCLOZH0v20k=;wkgkaIDRH6F4SSliiPwWT94LDKy
+ vJkuNWCLhmuwIGIpnBZiuhJlk0gQg9vKpysXZmObQqMCCqf7Q/jyyQI+TT+Czjhy4mgphprfw
+ Z0jst0VyY+P2OaZjLF8lM+pWXDCVy6zTE3T2BvNeUxM8gmqLNWxV4mNMaSRSrKaNHYa0QCIYV
+ Xle3OlnjrFOAs+mYRsLANRVjiP40jaTsjRptage+Nh62XjXjnSREdj4vWbTCkhbOMtJUgVBOw
+ bLs4NjtR1vc5TuHYMMUX2M+zQG5bqLD46ldZ8MYRoCfqlTCivdZQv6/AChK2bi1XYA4gJlh+5
+ zjze6KPszKqyGLhIYRUTrVfUYoBeK6X9lfQs5uLYOzc2YKyJPacB7wxBt7UUuEwQLsXkVPOSL
+ AYYLA1J3Uypx/0uyO/IBquTLVypSuQIo8oZpE3bwFhWxUE+w2TwOEqDHGMnO4eTPJcAIFFCrg
+ /MwZO2mJqrhgjRGvhjWkp+FYhh7tiBCmqQvPwDvZnTTFv/7uHbkiWsoTJgcWfOZQCbqld4xcO
+ 3UzhztUCEH4IYqyhABVMDhDwqWQdkHuXhC4o0PL2KHjtZoQ/kLX5nwJvFUeZwpnF+If4ewHLS
+ 6tAQdn0kktSZMp6Q4owX3s9wHSfhY2nFvpUA99vpwiHBuMB2O6lvOd55Q8kZyXbwq8LH54jWr
+ gdVAy/duxGAU/TL+mAXKG+n779U7alVniBLgiZXkgLSCutf0P0E08aQhPnPTkDHbM7FPPi+B/
+ sF+qffAQ6FAla6RknEUcZww6sd7tiBWSkoVfhjD2ecu8SHPbEAbXVw+ndz+ChLYdpaeuMMHwD
+ YAzs+y7xBb9yUJb0dQ9ZYRFp/PR8xRDZG8RJedhft11qdFJn4seuNQI9lWtTSljME4uc5bLu2
+ crOZJVUxogND0wOIe7giWLsnNSrWSjtcmSK7oHaQapJ2aQWKVzsNxEFlOECSJLq87p+Tla9j1
+ EoAq7Syr+y8QkzfvzWGeUDO1aIs=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Similar to the move_pages system call, instead of taking a pid and
-list of virtual addresses, this system call takes a list of physical
-addresses.
+On Fri, Sep 08, 2023 at 01:12:45PM +0000, J?rgen Hansen wrote:
+> On 7/25/23 20:39, Fan Ni wrote:
+> > From: Fan Ni <nifan@outlook.com>
+> >
+> > Add dynamic capacity extent list representative to the definition of
+> > CXLType3Dev and add get DC extent list mailbox command per
+> > CXL.spec.3.0:.8.2.9.8.9.2.
+> >
+> > Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> > ---
+> >   hw/cxl/cxl-mailbox-utils.c  | 71 +++++++++++++++++++++++++++++++++++=
+++
+> >   hw/mem/cxl_type3.c          |  1 +
+> >   include/hw/cxl/cxl_device.h | 23 ++++++++++++
+> >   3 files changed, 95 insertions(+)
+> >
+> > diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> > index 0511b8e6f7..3d25a9697e 100644
+> > --- a/hw/cxl/cxl-mailbox-utils.c
+> > +++ b/hw/cxl/cxl-mailbox-utils.c
+> > @@ -83,6 +83,7 @@ enum {
+> >           #define CLEAR_POISON           0x2
+> >       DCD_CONFIG  =3D 0x48, /*r3.0: 8.2.9.8.9*/
+> >           #define GET_DC_CONFIG          0x0
+> > +        #define GET_DYN_CAP_EXT_LIST   0x1
+> >       PHYSICAL_SWITCH =3D 0x51
+> >           #define IDENTIFY_SWITCH_DEVICE      0x0
+> >   };
+> > @@ -1018,6 +1019,73 @@ static CXLRetCode cmd_dcd_get_dyn_cap_config(st=
+ruct cxl_cmd *cmd,
+> >       return CXL_MBOX_SUCCESS;
+> >   }
+> >
+> > +/*
+> > + * cxl spec 3.0: 8.2.9.8.9.2
+> > + * Get Dynamic Capacity Extent List (Opcode 4810h)
+> > + */
+> > +static CXLRetCode cmd_dcd_get_dyn_cap_ext_list(struct cxl_cmd *cmd,
+> > +        CXLDeviceState *cxl_dstate,
+> > +        uint16_t *len)
+> > +{
+> > +    struct get_dyn_cap_ext_list_in_pl {
+> > +        uint32_t extent_cnt;
+> > +        uint32_t start_extent_id;
+> > +    } QEMU_PACKED;
+> > +
+> > +    struct get_dyn_cap_ext_list_out_pl {
+> > +        uint32_t count;
+> > +        uint32_t total_extents;
+> > +        uint32_t generation_num;
+> > +        uint8_t rsvd[4];
+> > +        CXLDCExtent_raw records[];
+> > +    } QEMU_PACKED;
+> > +
+> > +    struct get_dyn_cap_ext_list_in_pl *in =3D (void *)cmd->payload;
+> > +    struct get_dyn_cap_ext_list_out_pl *out =3D (void *)cmd->payload;
+> > +    struct CXLType3Dev *ct3d =3D container_of(cxl_dstate, CXLType3Dev=
+,
+> > +            cxl_dstate);
+> > +    uint16_t record_count =3D 0, i =3D 0, record_done =3D 0;
+> > +    CXLDCDExtentList *extent_list =3D &ct3d->dc.extents;
+> > +    CXLDCD_Extent *ent;
+> > +    uint16_t out_pl_len;
+> > +    uint32_t start_extent_id =3D in->start_extent_id;
+> > +
+> > +    if (start_extent_id > ct3d->dc.total_extent_count) {
+> > +        return CXL_MBOX_INVALID_INPUT;
+> > +    }
+> > +
+> > +    record_count =3D MIN(in->extent_cnt,
+> > +            ct3d->dc.total_extent_count - start_extent_id);
+> > +
+> > +    out_pl_len =3D sizeof(*out) + record_count * sizeof(out->records[=
+0]);
+> > +    /* May need more processing here in the future */
+> > +    assert(out_pl_len <=3D CXL_MAILBOX_MAX_PAYLOAD_SIZE);
+> > +
+> > +    memset(out, 0, out_pl_len);
+> > +    stl_le_p(&out->count, record_count);
+> > +    stl_le_p(&out->total_extents, ct3d->dc.total_extent_count);
+> > +    stl_le_p(&out->generation_num, ct3d->dc.ext_list_gen_seq);
+> > +
+> > +    if (record_count > 0) {
+> > +        QTAILQ_FOREACH(ent, extent_list, node) {
+> > +            if (i++ < start_extent_id) {
+> > +                continue;
+> > +            }
+> > +            stq_le_p(&out->records[record_done].start_dpa, ent->start=
+_dpa);
+> > +            stq_le_p(&out->records[record_done].len, ent->len);
+> > +            memcpy(&out->records[record_done].tag, ent->tag, 0x10);
+> > +            stw_le_p(&out->records[record_done].shared_seq, ent->shar=
+ed_seq);
+> > +            record_done++;
+> > +            if (record_done =3D=3D record_count) {
+> > +                break;
+> > +            }
+> > +        }
+> > +    }
+> > +
+> > +    *len =3D out_pl_len;
+> > +    return CXL_MBOX_SUCCESS;
+> > +}
+> > +
+> >   #define IMMEDIATE_CONFIG_CHANGE (1 << 1)
+> >   #define IMMEDIATE_DATA_CHANGE (1 << 2)
+> >   #define IMMEDIATE_POLICY_CHANGE (1 << 3)
+> > @@ -1058,6 +1126,9 @@ static struct cxl_cmd cxl_cmd_set[256][256] =3D =
+{
+> >           cmd_media_clear_poison, 72, 0 },
+> >       [DCD_CONFIG][GET_DC_CONFIG] =3D { "DCD_GET_DC_CONFIG",
+> >           cmd_dcd_get_dyn_cap_config, 2, 0 },
+> > +    [DCD_CONFIG][GET_DYN_CAP_EXT_LIST] =3D {
+> > +        "DCD_GET_DYNAMIC_CAPACITY_EXTENT_LIST", cmd_dcd_get_dyn_cap_e=
+xt_list,
+> > +        8, 0 },
+> >   };
+> >
+> >   static struct cxl_cmd cxl_cmd_set_sw[256][256] =3D {
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 76bbd9f785..f1170b8047 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -789,6 +789,7 @@ static int cxl_create_dc_regions(CXLType3Dev *ct3d=
+)
+> >
+> >           region_base +=3D region->len;
+> >       }
+> > +    QTAILQ_INIT(&ct3d->dc.extents);
+> >
+> >       return 0;
+> >   }
+> > diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> > index 1c99b05a66..3a338b3b37 100644
+> > --- a/include/hw/cxl/cxl_device.h
+> > +++ b/include/hw/cxl/cxl_device.h
+> > @@ -385,6 +385,25 @@ typedef QLIST_HEAD(, CXLPoison) CXLPoisonList;
+> >
+> >   #define DCD_MAX_REGION_NUM 8
+> >
+> > +typedef struct CXLDCD_Extent_raw {
+> > +    uint64_t start_dpa;
+> > +    uint64_t len;
+> > +    uint8_t tag[0x10];
+> > +    uint16_t shared_seq;
+> > +    uint8_t rsvd[0x6];
+> > +} QEMU_PACKED CXLDCExtent_raw;
+> > +
+> > +typedef struct CXLDCD_Extent {
+> > +    uint64_t start_dpa;
+> > +    uint64_t len;
+> > +    uint8_t tag[0x10];
+> > +    uint16_t shared_seq;
+> > +    uint8_t rsvd[0x6];
+> > +
+> > +    QTAILQ_ENTRY(CXLDCD_Extent) node;
+> > +} CXLDCD_Extent;
+> > +typedef QTAILQ_HEAD(, CXLDCD_Extent) CXLDCDExtentList;
+> > +
+> >   typedef struct CXLDCD_Region {
+> >       uint64_t base;
+> >       uint64_t decode_len; /* in multiples of 256MB */
+> > @@ -433,6 +452,10 @@ struct CXLType3Dev {
+> >
+> >           uint8_t num_regions; /* 0-8 regions */
+> >           struct CXLDCD_Region regions[DCD_MAX_REGION_NUM];
+> > +        CXLDCDExtentList extents;
+> > +
+> > +        uint32_t total_extent_count;
+>
+> Hi,
+>
+> I don't see total_extent_count being updated anywhere. Shouldn't this be
+> adjusted as part of cmd_dcd_add_dyn_cap_rsp()/cmd_dcd_release_dyn_cap()?
+>
+> Thanks,
+> Jorgen
 
-Because there is no task to validate the memory policy against, each
-page needs to be interrogated to determine whether the migration is
-valid, and all tasks that map it need to be interrogated.
+Good catch. Thanks Jorgen, will fix in the next version.
 
-This is accomplished via an rmap_walk on the folio containing
-the page, and interrogating all tasks that map the page.
+Fan
 
-Each page must be interrogated individually, which should be
-considered when using this to migrate shared regions.
-
-The remaining logic is the same as the move_pages syscall. One
-change to do_pages_move is made (to check whether an mm_struct is
-passed) in order to re-use the existing migration code.
-
-Signed-off-by: Gregory Price <gregory.price@memverge.com>
----
- arch/x86/entry/syscalls/syscall_32.tbl  |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl  |   1 +
- include/linux/syscalls.h                |   5 +
- include/uapi/asm-generic/unistd.h       |   8 +-
- kernel/sys_ni.c                         |   1 +
- mm/migrate.c                            | 178 +++++++++++++++++++++++-
- tools/include/uapi/asm-generic/unistd.h |   8 +-
- 7 files changed, 197 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 2d0b1bd866ea..25db6d71af0c 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -457,3 +457,4 @@
- 450	i386	set_mempolicy_home_node		sys_set_mempolicy_home_node
- 451	i386	cachestat		sys_cachestat
- 452	i386	fchmodat2		sys_fchmodat2
-+454	i386	move_phys_pages		sys_move_phys_pages
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 1d6eee30eceb..9676f2e7698c 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -375,6 +375,7 @@
- 451	common	cachestat		sys_cachestat
- 452	common	fchmodat2		sys_fchmodat2
- 453	64	map_shadow_stack	sys_map_shadow_stack
-+454	common	move_phys_pages		sys_move_phys_pages
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 22bc6bc147f8..6860675a942f 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -821,6 +821,11 @@ asmlinkage long sys_move_pages(pid_t pid, unsigned long nr_pages,
- 				const int __user *nodes,
- 				int __user *status,
- 				int flags);
-+asmlinkage long sys_move_phys_pages(unsigned long nr_pages,
-+				    const void __user * __user *pages,
-+				    const int __user *nodes,
-+				    int __user *status,
-+				    int flags);
- asmlinkage long sys_rt_tgsigqueueinfo(pid_t tgid, pid_t  pid, int sig,
- 		siginfo_t __user *uinfo);
- asmlinkage long sys_perf_event_open(
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index abe087c53b4b..8838fcfaf261 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -823,8 +823,14 @@ __SYSCALL(__NR_cachestat, sys_cachestat)
- #define __NR_fchmodat2 452
- __SYSCALL(__NR_fchmodat2, sys_fchmodat2)
- 
-+/* CONFIG_MMU only */
-+#ifndef __ARCH_NOMMU
-+#define __NR_move_phys_pages 454
-+__SYSCALL(__NR_move_phys_pages, sys_move_phys_pages)
-+#endif
-+
- #undef __NR_syscalls
--#define __NR_syscalls 453
-+#define __NR_syscalls 455
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index e137c1385c56..07441b10f92a 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -192,6 +192,7 @@ COND_SYSCALL(migrate_pages);
- COND_SYSCALL(move_pages);
- COND_SYSCALL(set_mempolicy_home_node);
- COND_SYSCALL(cachestat);
-+COND_SYSCALL(move_phys_pages);
- 
- COND_SYSCALL(perf_event_open);
- COND_SYSCALL(accept4);
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 3506b8202937..8a6f1eb6e512 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2161,6 +2161,101 @@ static int move_pages_and_store_status(int node,
- 	return store_status(status, start, node, i - start);
- }
- 
-+struct rmap_page_ctxt {
-+	bool found;
-+	bool migratable;
-+	bool node_allowed;
-+	int node;
-+};
-+
-+/*
-+ * Walks each vma mapping a given page and determines if those
-+ * vma's are both migratable, and that the target node is within
-+ * the allowed cpuset of the owning task.
-+ */
-+static bool phys_page_migratable(struct folio *folio,
-+				 struct vm_area_struct *vma,
-+				 unsigned long address,
-+				 void *arg)
-+{
-+	struct rmap_page_ctxt *ctxt = (struct rmap_page_ctxt *)arg;
-+	struct task_struct *owner = vma->vm_mm->owner;
-+	nodemask_t task_nodes = cpuset_mems_allowed(owner);
-+
-+	ctxt->found |= true;
-+	ctxt->migratable &= vma_migratable(vma);
-+	ctxt->node_allowed &= node_isset(ctxt->node, task_nodes);
-+
-+	return ctxt->migratable && ctxt->node_allowed;
-+}
-+
-+static struct folio *phys_migrate_get_folio(struct page *page)
-+{
-+	struct folio *folio;
-+
-+	folio = page_folio(page);
-+	if (!folio_test_lru(folio) || !folio_try_get(folio))
-+		return NULL;
-+	if (unlikely(page_folio(page) != folio || !folio_test_lru(folio))) {
-+		folio_put(folio);
-+		folio = NULL;
-+	}
-+	return folio;
-+}
-+
-+/*
-+ * Validates the physical address is online and migratable.  Walks the folio
-+ * containing the page to validate the vma is migratable and the cpuset node
-+ * restrictions.  Then calls add_page_for_migration to isolate it from the
-+ * LRU and place it into the given pagelist.
-+ * Returns:
-+ *     errno - if the page is not online, migratable, or can't be isolated
-+ *     0 - when it doesn't have to be migrated because it is already on the
-+ *         target node
-+ *     1 - when it has been queued
-+ */
-+static int add_phys_page_for_migration(const void __user *p, int node,
-+				       struct list_head *pagelist,
-+				       bool migrate_all)
-+{
-+	unsigned long pfn;
-+	struct page *page;
-+	struct folio *folio;
-+	int err;
-+	struct rmap_page_ctxt rmctxt = {
-+		.found = false,
-+		.migratable = true,
-+		.node_allowed = true,
-+		.node = node
-+	};
-+	struct rmap_walk_control rwc = {
-+		.rmap_one = phys_page_migratable,
-+		.arg = &rmctxt
-+	};
-+
-+	pfn = ((unsigned long)p) >> PAGE_SHIFT;
-+	page = pfn_to_online_page(pfn);
-+	if (!page || PageTail(page))
-+		return -ENOENT;
-+
-+	folio = phys_migrate_get_folio(page);
-+	if (folio) {
-+		rmap_walk(folio, &rwc);
-+		folio_put(folio);
-+	}
-+
-+	if (!rmctxt.found)
-+		err = -ENOENT;
-+	else if (!rmctxt.migratable)
-+		err = -EFAULT;
-+	else if (!rmctxt.node_allowed)
-+		err = -EACCES;
-+	else
-+		err = add_page_for_migration(page, node, pagelist, migrate_all);
-+
-+	return err;
-+}
-+
- /*
-  * Migrate an array of page address onto an array of nodes and fill
-  * the corresponding array of status.
-@@ -2214,8 +2309,13 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
- 		 * Errors in the page lookup or isolation are not fatal and we simply
- 		 * report them via status
- 		 */
--		err = add_virt_page_for_migration(mm, p, current_node, &pagelist,
--					     flags & MPOL_MF_MOVE_ALL);
-+		if (mm)
-+			err = add_virt_page_for_migration(mm, p, current_node, &pagelist,
-+						     flags & MPOL_MF_MOVE_ALL);
-+		else
-+			err = add_phys_page_for_migration(p, current_node, &pagelist,
-+					flags & MPOL_MF_MOVE_ALL);
-+
- 
- 		if (err > 0) {
- 			/* The page is successfully queued for migration */
-@@ -2303,6 +2403,36 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
- 	mmap_read_unlock(mm);
- }
- 
-+/*
-+ * Determine the nodes of an array of pages and store it in an array of status.
-+ */
-+static void do_phys_pages_stat_array(unsigned long nr_pages,
-+				     const void __user **pages, int *status)
-+{
-+	unsigned long i;
-+
-+	for (i = 0; i < nr_pages; i++) {
-+		unsigned long pfn = (unsigned long)(*pages) >> PAGE_SHIFT;
-+		struct page *page = pfn_to_online_page(pfn);
-+		int err = -ENOENT;
-+
-+		if (!page)
-+			goto set_status;
-+
-+		get_page(page);
-+
-+		if (!is_zone_device_page(page))
-+			err = page_to_nid(page);
-+
-+		put_page(page);
-+set_status:
-+		*status = err;
-+
-+		pages++;
-+		status++;
-+	}
-+}
-+
- static int get_compat_pages_array(const void __user *chunk_pages[],
- 				  const void __user * __user *pages,
- 				  unsigned long chunk_nr)
-@@ -2345,7 +2475,10 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
- 				break;
- 		}
- 
--		do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
-+		if (mm)
-+			do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
-+		else
-+			do_phys_pages_stat_array(chunk_nr, chunk_pages, chunk_status);
- 
- 		if (copy_to_user(status, chunk_status, chunk_nr * sizeof(*status)))
- 			break;
-@@ -2446,6 +2579,45 @@ SYSCALL_DEFINE6(move_pages, pid_t, pid, unsigned long, nr_pages,
- 	return kernel_move_pages(pid, nr_pages, pages, nodes, status, flags);
- }
- 
-+/*
-+ * Move a list of pages in the address space of the currently executing
-+ * process.
-+ */
-+static int kernel_move_phys_pages(unsigned long nr_pages,
-+				  const void __user * __user *pages,
-+				  const int __user *nodes,
-+				  int __user *status, int flags)
-+{
-+	int err;
-+	nodemask_t target_nodes;
-+
-+	/* Check flags */
-+	if (flags & ~(MPOL_MF_MOVE|MPOL_MF_MOVE_ALL))
-+		return -EINVAL;
-+
-+	if ((flags & MPOL_MF_MOVE_ALL) && !capable(CAP_SYS_NICE))
-+		return -EPERM;
-+
-+	/* All tasks mapping each page is checked in phys_page_migratable */
-+	nodes_setall(target_nodes);
-+	if (nodes)
-+		err = do_pages_move(NULL, target_nodes, nr_pages, pages,
-+			nodes, status, flags);
-+	else
-+		err = do_pages_stat(NULL, nr_pages, pages, status);
-+
-+	return err;
-+}
-+
-+SYSCALL_DEFINE5(move_phys_pages, unsigned long, nr_pages,
-+		const void __user * __user *, pages,
-+		const int __user *, nodes,
-+		int __user *, status, int, flags)
-+{
-+	return kernel_move_phys_pages(nr_pages, pages, nodes, status, flags);
-+}
-+
-+
- #ifdef CONFIG_NUMA_BALANCING
- /*
-  * Returns true if this is a safe migration target node for misplaced NUMA
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index fd6c1cb585db..b140ad444946 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -820,8 +820,14 @@ __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
- #define __NR_cachestat 451
- __SYSCALL(__NR_cachestat, sys_cachestat)
- 
-+/* CONFIG_MMU only */
-+#ifndef __ARCH_NOMMU
-+#define __NR_move_phys_pages 454
-+__SYSCALL(__NR_move_phys_pages, sys_move_phys_pages)
-+#endif
-+
- #undef __NR_syscalls
--#define __NR_syscalls 452
-+#define __NR_syscalls 455
- 
- /*
-  * 32 bit systems traditionally used different
--- 
-2.39.1
-
+>
+>
+> > +        uint32_t ext_list_gen_seq;
+> >       } dc;
+> >   };
+> >
+> > --
+> > 2.25.1
