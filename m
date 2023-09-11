@@ -2,121 +2,83 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13C6CA0EDE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AE6CA0EC7
 	for <linux-cxl@archiver.kernel.org>; Mon, 11 Sep 2023 22:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239207AbjIKWWL (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45608 "EHLO
+        id S239350AbjIKWWJ convert rfc822-to-8bit (ORCPT
+        <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 11 Sep 2023 18:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236938AbjIKLnv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Sep 2023 07:43:51 -0400
+        with ESMTP id S236923AbjIKLki (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Sep 2023 07:40:38 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C9CE40
-        for <linux-cxl@vger.kernel.org>; Mon, 11 Sep 2023 04:43:46 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RklDw00Vkz67FSP;
-        Mon, 11 Sep 2023 19:42:07 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 11 Sep 2023 12:43:44 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        <linux-cxl@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH v3 1/4] hw/cxl: Push cxl_decoder_count_enc() and cxl_decode_ig() into .c
-Date:   Mon, 11 Sep 2023 12:43:10 +0100
-Message-ID: <20230911114313.6144-2-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
-References: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DB612E
+        for <linux-cxl@vger.kernel.org>; Mon, 11 Sep 2023 04:40:33 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rkl9B1yRbz6HJq5;
+        Mon, 11 Sep 2023 19:38:54 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 11 Sep
+ 2023 12:40:30 +0100
+Date:   Mon, 11 Sep 2023 12:40:29 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>
+CC:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
+        <linuxarm@huawei.com>
+Subject: Re: [PATCH v2 3/3] hw/cxl: Support 4 HDM decoders at all levels of
+ topology
+Message-ID: <20230911124029.00000c37@Huawei.com>
+In-Reply-To: <b7b7ca18-ec98-d402-9ebd-6ebaf49f7243@linaro.org>
+References: <20230907113543.19760-1-Jonathan.Cameron@huawei.com>
+        <20230907113543.19760-4-Jonathan.Cameron@huawei.com>
+        <b7b7ca18-ec98-d402-9ebd-6ebaf49f7243@linaro.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-There is no strong justification for keeping these in the header
-so push them down into the associated cxl-component-utils.c file.
+On Thu, 7 Sep 2023 14:41:16 +0200
+Philippe Mathieu-Daud� <philmd@linaro.org> wrote:
 
-Suggested-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- include/hw/cxl/cxl_component.h | 18 ++----------------
- hw/cxl/cxl-component-utils.c   | 18 ++++++++++++++++++
- 2 files changed, 20 insertions(+), 16 deletions(-)
+> On 7/9/23 13:35, Jonathan Cameron wrote:
+> > Support these decoders in CXL host bridges (pxb-cxl), CXL Switch USP
+> > and CXL Type 3 end points.
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >   include/hw/cxl/cxl_component.h |  10 ++++
+> >   hw/cxl/cxl-component-utils.c   |  27 +++++----
+> >   hw/cxl/cxl-host.c              |  65 ++++++++++++++-------
+> >   hw/mem/cxl_type3.c             | 100 +++++++++++++++++++++++----------
+> >   4 files changed, 140 insertions(+), 62 deletions(-)  
+> 
+> If you ever have to respin, please split the 'hdm_inc' introduction
+> in a preliminary patch, to reduce the number of changes and the
+> probability of missing a bug.
+> 
 
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index 42c7e581a7..bdb3881a6b 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -225,26 +225,12 @@ void cxl_component_create_dvsec(CXLComponentState *cxl_cstate,
-                                 enum reg_type cxl_dev_type, uint16_t length,
-                                 uint16_t type, uint8_t rev, uint8_t *body);
- 
--static inline int cxl_decoder_count_enc(int count)
--{
--    switch (count) {
--    case 1: return 0;
--    case 2: return 1;
--    case 4: return 2;
--    case 6: return 3;
--    case 8: return 4;
--    case 10: return 5;
--    }
--    return 0;
--}
-+int cxl_decoder_count_enc(int count);
- 
- uint8_t cxl_interleave_ways_enc(int iw, Error **errp);
- uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
- 
--static inline hwaddr cxl_decode_ig(int ig)
--{
--    return 1ULL << (ig + 8);
--}
-+hwaddr cxl_decode_ig(int ig);
- 
- CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb);
- bool cxl_get_hb_passthrough(PCIHostState *hb);
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index 378f1082ce..ea2d4770ec 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -13,6 +13,24 @@
- #include "hw/pci/pci.h"
- #include "hw/cxl/cxl.h"
- 
-+int cxl_decoder_count_enc(int count)
-+{
-+    switch (count) {
-+    case 1: return 0;
-+    case 2: return 1;
-+    case 4: return 2;
-+    case 6: return 3;
-+    case 8: return 4;
-+    case 10: return 5;
-+    }
-+    return 0;
-+}
-+
-+hwaddr cxl_decode_ig(int ig)
-+{
-+    return 1ULL << (ig + 8);
-+}
-+
- static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
-                                        unsigned size)
- {
--- 
-2.39.2
+I didn't do this originally because it's a bit interleaved with the
+other changes.  I can make this separable by adding the register definitions
+for HDM decoder 1 and a note that it's only used for offset calcs.
 
+I've also pushed it into various other functions that before the
+other changes in here don't attempt to deal with multiple hdm decoders
+at all.
+
+Didn't end up looking too bad.
+
+Whilst changing this, I noticed a bug where in one place the encoded version
+of the hdm count was being used undecoded. So all good in the end :)
+
+Jonathan
