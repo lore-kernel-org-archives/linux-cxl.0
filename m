@@ -2,165 +2,192 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295DBCA0ECE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B40CA0ED0
 	for <linux-cxl@archiver.kernel.org>; Mon, 11 Sep 2023 22:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240476AbjIKWWR (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38984 "EHLO
+        id S239736AbjIKWWN (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 11 Sep 2023 18:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236947AbjIKLod (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Sep 2023 07:44:33 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C77EFCDD
-        for <linux-cxl@vger.kernel.org>; Mon, 11 Sep 2023 04:44:27 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RklH32zPzz6K6gx;
-        Mon, 11 Sep 2023 19:43:59 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 11 Sep 2023 12:44:15 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
-        <linux-cxl@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH v3 2/4] hw/cxl: Add utility functions decoder interleave ways and target count.
-Date:   Mon, 11 Sep 2023 12:43:11 +0100
-Message-ID: <20230911114313.6144-3-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
-References: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+        with ESMTP id S243645AbjIKR1R (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Sep 2023 13:27:17 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E3B125;
+        Mon, 11 Sep 2023 10:27:09 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6FB9E5C0165;
+        Mon, 11 Sep 2023 13:27:08 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Mon, 11 Sep 2023 13:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1694453228; x=1694539628; bh=Td
+        Gi7kVXEnEKoxN/ecGUPAlNClbuxU0h+eeQmE5muyU=; b=TPU3W6SYFJ7e/IDmmJ
+        xVpTiH4yGa4dS7/hYvgGW+IxFjo1AKWnWi0cxY73TQNDRBy95nX+2Ln16B8eX+uc
+        24420CK6I+1E3po3N/7w6h+xpUVQN5iakEs9SWqkGZzfaBWyS8mm6ZZcXDNM3Enj
+        DNcD+XPFH3/ihBtnnceAmRyohx2HuIkc5x0O3q3+DSBnjvcY+BkG+Ar6jfpTCZaC
+        MYz7GqU4CJ57CeyBG8ba0NMZMAqq9xuJb2lsZMjLUDlR55FsghaGUcXNfPHXYiMW
+        7BvR9RFZY0ARIWsZzZ1y0E+Ff1fiyeCC4tzrg5BS0lbP2yUy2A2/Za+2QGm0oS9a
+        Sg+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1694453228; x=1694539628; bh=TdGi7kVXEnEKo
+        xN/ecGUPAlNClbuxU0h+eeQmE5muyU=; b=IjBdVEQ0w4QnMwyv3KzHbk003lgrX
+        CryomNEZLcLZtWdU9qgXMjkgPVvkDx0seprWJ02+laI36Kw20IGYJqHv9LDinrGQ
+        JBNearY/wXoxxZXuVopKdKzhu95lW9UDS2VBu/3UjrRHzRAWm2ZtFC2p9pA78atd
+        ialY5pN3M6gfMqfiGa5aAVs3etQoeHcj3+V+JvcPNB61AakLSWOO+CZt7G2pzoln
+        zF3O891DCL6ZY5tksw8iHqFr2maJLJzUSVak2EOiqAow0PSq/nj7BFYQlROoMtlX
+        ErBVjE/jeBLlJzqURyFTJd2ImY+ltCXPj09M1PRQ2td2j4mbPC1MAzZoA==
+X-ME-Sender: <xms:6U3_ZDAItsKohJrpOX0uEMEkEAxzm3QjJajwzyjZxdmAKPDrYWEDaA>
+    <xme:6U3_ZJi4Eudh4S8_7fjb7Yj_G8MTc8o7F7iYINwrkvR1lyqcfR2cuFcM0w4Sw7BtA
+    NNurCDYAE0hbrSo_0c>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudeigedgudduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:6U3_ZOmAUShIz1HnYgmzBw2dyATGVeic8h1uMbmqjso3L3Sxe_HTOw>
+    <xmx:6U3_ZFylNI6c-B9sY4q6WZvBrRULVLHGeYUgy0FbbXzxh2U1dsV-LQ>
+    <xmx:6U3_ZITUDk4-y_jscr0qL5-f3PPv0XhwOAR7JoqXM3SVOFVH9MXQ3w>
+    <xmx:7E3_ZPLrOvvJLlcwP2woMLT2bK_I5P4HhJeKDGBmxqXR4N-uSRzmNg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C5A3EB60089; Mon, 11 Sep 2023 13:27:05 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-745-g95dd7bea33-fm-20230905.001-g95dd7bea
+Mime-Version: 1.0
+Message-Id: <e80f9c6f-d194-41c7-bdb5-e6a78751f543@app.fastmail.com>
+In-Reply-To: <ZP28D8dZXz3+4s9v@memverge.com>
+References: <20230907075453.350554-1-gregory.price@memverge.com>
+ <20230907075453.350554-4-gregory.price@memverge.com>
+ <f73d0495-f575-4b97-bc74-a57bd427df98@app.fastmail.com>
+ <ZPrRcJCjRBvJ9c3N@memverge.com>
+ <2fe03345-01a2-4cfe-9648-ae088493d1af@app.fastmail.com>
+ <ZP28D8dZXz3+4s9v@memverge.com>
+Date:   Mon, 11 Sep 2023 19:26:45 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Gregory Price" <gregory.price@memverge.com>
+Cc:     "Gregory Price" <gourry.memverge@gmail.com>,
+        linux-mm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-api@vger.kernel.org, linux-cxl@vger.kernel.org,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>, x86@kernel.org
+Subject: Re: [RFC PATCH 3/3] mm/migrate: Create move_phys_pages syscall
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-As an encoded version of these key configuration parameters is available
-in a register, provide functions to extract it again so as to avoid
-the need for duplicating the storage.
+On Sun, Sep 10, 2023, at 14:52, Gregory Price wrote:
+> On Sat, Sep 09, 2023 at 05:18:13PM +0200, Arnd Bergmann wrote:
+>> 
+>> I think a pointer to '__u64' is the most appropriate here,
+>> that is compatible between 32-bit and 64-bit architectures
+>> and covers all addresses until we get architectures with
+>> 128-bit addressing.
+>> 
+>> Thinking about it more, I noticed an existing bug in
+>> both sys_move_pages and your current version of
+>> sys_move_phys_pages: the 'pages' array is in fact not
+>> suitable for compat tasks and needs an is_compat_task
+>> check to load a 32-bit address from compat userspace on
+>> the "if (get_user(p, pages + i))" line.
+>>
+>
+> I'll clean up the current implementation for what I have on a v2 of an
+> RFC, and then look at adding some pull-ahead patches to fix both
+> move_pages and move_phys_pages for compat processes.  Might take me a
+> bit, I've only done compat work once before and I remember it being
+> annoying to get right.
 
-Whilst here update the _enc() function to include additional values
-as defined in the CXL 3.0 specification. Whilst they are not
-currently used in the emulation, they may be in future and it is
-easier to compare with the specification if all values are covered.
+I think what you want is roughly this (untested):
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
-v3: No changes, picked up tags.
-v2: Thanks to Philippe Mathieu-Daudé
- - Expand both enc() and dec() functions to include full set of values
-   defined in CXL r3.0
- - Pushed implementation down into the .c file.
----
- include/hw/cxl/cxl_component.h |  2 ++
- hw/cxl/cxl-component-utils.c   | 59 ++++++++++++++++++++++++++++++----
- 2 files changed, 55 insertions(+), 6 deletions(-)
-
-diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_component.h
-index bdb3881a6b..ef9e033919 100644
---- a/include/hw/cxl/cxl_component.h
-+++ b/include/hw/cxl/cxl_component.h
-@@ -226,8 +226,10 @@ void cxl_component_create_dvsec(CXLComponentState *cxl_cstate,
-                                 uint16_t type, uint8_t rev, uint8_t *body);
- 
- int cxl_decoder_count_enc(int count);
-+int cxl_decoder_count_dec(int enc_cnt);
- 
- uint8_t cxl_interleave_ways_enc(int iw, Error **errp);
-+int cxl_interleave_ways_dec(uint8_t iw_enc, Error **errp);
- uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
- 
- hwaddr cxl_decode_ig(int ig);
-diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-index ea2d4770ec..352d0dace2 100644
---- a/hw/cxl/cxl-component-utils.c
-+++ b/hw/cxl/cxl-component-utils.c
-@@ -13,15 +13,45 @@
- #include "hw/pci/pci.h"
- #include "hw/cxl/cxl.h"
- 
-+/* CXL r3.0 Section 8.2.4.19.1 CXL HDM Decoder Capability Register */
- int cxl_decoder_count_enc(int count)
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2159,6 +2159,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+                         const int __user *nodes,
+                         int __user *status, int flags)
  {
-     switch (count) {
--    case 1: return 0;
--    case 2: return 1;
--    case 4: return 2;
--    case 6: return 3;
--    case 8: return 4;
--    case 10: return 5;
-+    case 1: return 0x0;
-+    case 2: return 0x1;
-+    case 4: return 0x2;
-+    case 6: return 0x3;
-+    case 8: return 0x4;
-+    case 10: return 0x5;
-+    /* Switches and Host Bridges may have more than 10 decoders */
-+    case 12: return 0x6;
-+    case 14: return 0x7;
-+    case 16: return 0x8;
-+    case 20: return 0x9;
-+    case 24: return 0xa;
-+    case 28: return 0xb;
-+    case 32: return 0xc;
-+    }
-+    return 0;
-+}
-+
-+int cxl_decoder_count_dec(int enc_cnt)
-+{
-+    switch (enc_cnt) {
-+    case 0x0: return 1;
-+    case 0x1: return 2;
-+    case 0x2: return 4;
-+    case 0x3: return 6;
-+    case 0x4: return 8;
-+    case 0x5: return 10;
-+    /* Switches and Host Bridges may have more than 10 decoders */
-+    case 0x6: return 12;
-+    case 0x7: return 14;
-+    case 0x8: return 16;
-+    case 0x9: return 20;
-+    case 0xa: return 24;
-+    case 0xb: return 28;
-+    case 0xc: return 32;
-     }
-     return 0;
- }
-@@ -410,6 +440,23 @@ uint8_t cxl_interleave_ways_enc(int iw, Error **errp)
-     }
- }
++       struct compat_uptr_t __user *compat_pages = (void __user *)pages;
+        int current_node = NUMA_NO_NODE;
+        LIST_HEAD(pagelist);
+        int start, i;
+@@ -2171,8 +2172,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
+                int node;
  
-+int cxl_interleave_ways_dec(uint8_t iw_enc, Error **errp)
-+{
-+    switch (iw_enc) {
-+    case 0x0: return 1;
-+    case 0x1: return 2;
-+    case 0x2: return 4;
-+    case 0x3: return 8;
-+    case 0x4: return 16;
-+    case 0x8: return 3;
-+    case 0x9: return 6;
-+    case 0xa: return 12;
-+    default:
-+        error_setg(errp, "Encoded interleave ways: %d not supported", iw_enc);
-+        return 0;
-+    }
-+}
+                err = -EFAULT;
+-               if (get_user(p, pages + i))
+-                       goto out_flush;
++               if (in_compat_syscall() {
++                       compat_uptr_t cp;
 +
- uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp)
- {
-     switch (gran) {
--- 
-2.39.2
++                       if (get_user(cp, compat_pages + i))
++                               goto out_flush;
++
++                       p = compat_ptr(cp);
++               } else {
++                       if (get_user(p, pages + i))
++                               goto out_flush;
++               }
+                if (get_user(node, nodes + i))
+                        goto out_flush;
+ 
+alternatively you could use the get_compat_pages_array()
+helper that is already used in the do_pages_stat()
+function.
 
+> I did see other work on migrate.c hanging around on the list, I'll
+> double check this hasn't already been discovered/handled.
+
+It looks like I broke it, and it was working before my own
+5b1b561ba73c8 ("mm: simplify compat_sys_move_pages"), which
+only handled the nodes=NULL path.
+
+I suppose nobody noticed the regression because there are very
+few 32-bit NUMA systems, and even fewer cases in which one
+would run compat userspace to manage a 64-bit NUMA machine.
+
+>
+> This only requires plumbing new 2 flags through do_pages_move, and no
+> new user-exposed types or information.
+>
+> Is there an ick-factor with the idea of adding the following?
+>
+> MPOL_MF_PHYS_ADDR : Treat page migration addresses as physical
+> MPOL_MF_PFN : Treat page migration addresses as PFNs
+
+I would strongly prefer supporting only one of the two, and
+a 64-bit physical address seems like the logical choice here.
+
+>> These do not seem to be problematic from the ASLR perspective, so
+>> I guess it may still be useful without CAP_SYS_ADMIN.
+>
+> After reviewing the capabilities documentation it seems like
+> CAP_SYS_NICE is the appropriate capability.  My last meassage I said
+> CAP_SYS_ADMIN was probably correct, but I think using CAP_SYS_NICE
+> is more appropriate unless there are strong feelings due to the use of
+> PFN and Physcall Address.
+>
+> I'm not sure rowhammer is of great concern in this interface because you
+> can't choose the destination address, only the destination node. Though
+> I suppose someone could go nuts and try to "massage" a node in some way
+> to get a statistical likelihood of placement (similar heap grooming).
+
+I agree that this doesn't introduce any additional risk for rowhammer
+attacks, but it seems slightly more logical to me to use CAP_SYS_ADMIN
+if that is what the other interfaces use that handle physical addresses
+and may leak address information.
+
+     Arnd
