@@ -2,38 +2,36 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94E1CA0ECA
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 11:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B626CCA0ECA
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 11:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234570AbjILLAJ (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 07:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36428 "EHLO
+        id S233672AbjILLUc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 07:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233867AbjILK72 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 06:59:28 -0400
+        with ESMTP id S230223AbjILLU3 (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 07:20:29 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78AEDBE
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 03:59:23 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RlL7l59fJz6J7p0;
-        Tue, 12 Sep 2023 18:54:43 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 710D698
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 04:20:24 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RlLc01dG4z6J7n7;
+        Tue, 12 Sep 2023 19:15:44 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 12 Sep
- 2023 11:59:20 +0100
-Date:   Tue, 12 Sep 2023 11:59:19 +0100
+ 2023 12:20:21 +0100
+Date:   Tue, 12 Sep 2023 12:20:20 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Fan Ni <fan.ni@gmx.us>
-CC:     Davidlohr Bueso <dave@stgolabs.net>, <fan.ni@samsung.com>,
-        <dan.j.williams@intel.com>, <alison.schofield@intel.com>,
-        <ayush.m55@samsung.com>, <a.manzanares@samsung.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 1/4] cxl/type3: Fix crash in set_cacheline()
-Message-ID: <20230912115919.00005897@Huawei.com>
-In-Reply-To: <ZPtp63VmaKHl+G+K@debian>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+CC:     <fan.ni@samsung.com>, <dan.j.williams@intel.com>,
+        <alison.schofield@intel.com>, <ayush.m55@samsung.com>,
+        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 2/4] hw/cxl: Add get scan media capabilities cmd support
+Message-ID: <20230912122020.00007d28@Huawei.com>
+In-Reply-To: <20230908073152.4386-3-dave@stgolabs.net>
 References: <20230908073152.4386-1-dave@stgolabs.net>
-        <20230908073152.4386-2-dave@stgolabs.net>
-        <ZPtp63VmaKHl+G+K@debian>
+        <20230908073152.4386-3-dave@stgolabs.net>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -47,43 +45,111 @@ Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, 8 Sep 2023 11:37:31 -0700
-Fan Ni <fan.ni@gmx.us> wrote:
+On Fri,  8 Sep 2023 00:31:50 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> On Fri, Sep 08, 2023 at 12:31:49AM -0700, Davidlohr Bueso wrote:
-> > Use the correct vmr_size, otherwise a clear poison operation, for
-> > example, can crash the emulator.
-> >
-> > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> > ---
-> >  hw/mem/cxl_type3.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index fd9d134d468f..b90a7397d62f 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -1417,7 +1417,7 @@ static bool set_cacheline(CXLType3Dev *ct3d, uint64_t dpa_offset, uint8_t *data)
-> >          as = &ct3d->hostvmem_as;
-> >      } else if (dpa_offset < vmr_size + pmr_size) {
-> >          as = &ct3d->hostpmem_as;
-> > -        dpa_offset -= vmr->size;
-> > +        dpa_offset -= vmr_size;  
+> Use simple heuristics to determine the cost of scanning any given
+> chunk, assuming cost is equal across the whole device, without
+> differentiating between volatile or persistent partitions. This
+> is aligned to the fact that these constraints are not enforced
+> in respective poison query commands.
 > 
-> Good catch. It is a typo from my DCD patch, not upstreamed yet.
-In meantime I squish this into the version of your series I'm carrying and
-push out a new tree later today.
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Looks good to me I'll queue this up on my gitlab tree for now
+given it is dependent on the CCI rework at least.
 
-Thanks,
+I should figure out how to move that forward independent of
+solving the question of how to provide the MCTP hosts adapters.
+Still need the NVME series to land first though and seems that
+has had some more feedback today.
+
+I might shuffle the tree around to pull this ahead of DCD
+(possibly carrying the rename of static_mem_size along with
+ it to simplify the rebase).  I suspect this will be easier
+to get upstream as it is short and sweet.
 
 Jonathan
 
+> ---
+>  hw/cxl/cxl-mailbox-utils.c | 53 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 > 
-> Fan
-> >      } else {
-> >          as = &ct3d->dc.host_dc_as;
-> >          dpa_offset -= (vmr_size + pmr_size);
-> > --
-> > 2.42.0
-> >  
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index 4e8651ebe2e9..3073222060ab 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+> @@ -80,6 +80,7 @@ enum {
+>          #define GET_POISON_LIST        0x0
+>          #define INJECT_POISON          0x1
+>          #define CLEAR_POISON           0x2
+> +        #define GET_SCAN_MEDIA_CAPABILITIES 0x3
+>      DCD_CONFIG  = 0x48,
+>          #define GET_DC_CONFIG          0x0
+>          #define GET_DYN_CAP_EXT_LIST   0x1
+> @@ -1174,6 +1175,56 @@ static CXLRetCode cmd_media_clear_poison(const struct cxl_cmd *cmd,
+>      return CXL_MBOX_SUCCESS;
+>  }
+>  
+> +/*
+> + * CXL r3.0 section 8.2.9.8.4.4: Get Scan Media Capabilities
+> + */
+> +static CXLRetCode
+> +cmd_media_get_scan_media_capabilities(const struct cxl_cmd *cmd,
+> +                                      uint8_t *payload_in,
+> +                                      size_t len_in,
+> +                                      uint8_t *payload_out,
+> +                                      size_t *len_out,
+> +                                      CXLCCI *cci)
+> +{
+> +    struct get_scan_media_capabilities_pl {
+> +        uint64_t pa;
+> +        uint64_t length;
+> +    } QEMU_PACKED;
+> +
+> +    struct get_scan_media_capabilities_out_pl {
+> +        uint32_t estimated_runtime_ms;
+> +    } QEMU_PACKED;
+> +
+> +    CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+> +    CXLDeviceState *cxl_dstate = &ct3d->cxl_dstate;
+> +    struct get_scan_media_capabilities_pl *in = (void *)payload_in;
+> +    struct get_scan_media_capabilities_out_pl *out = (void *)payload_out;
+> +    uint64_t query_start;
+> +    uint64_t query_length;
+> +
+> +    query_start = ldq_le_p(&in->pa);
+> +    /* 64 byte alignment required */
+> +    if (query_start & 0x3f) {
+> +        return CXL_MBOX_INVALID_INPUT;
+> +    }
+> +    query_length = ldq_le_p(&in->length) * CXL_CACHE_LINE_SIZE;
+> +
+> +    if (query_start + query_length > cxl_dstate->static_mem_size) {
+> +        return CXL_MBOX_INVALID_PA;
+> +    }
+> +
+> +    /*
+> +     * Just use 400 nanosecond access/read latency + 100 ns for
+> +     * the cost of updating the poison list. For small enough
+> +     * chunks return at least 1 ms.
+> +     */
+> +    stl_le_p(&out->estimated_runtime_ms,
+> +             MAX(1, query_length * (0.0005L/64)));
+> +
+> +    *len_out = sizeof(*out);
+> +    return CXL_MBOX_SUCCESS;
+> +}
+> +
+>  /*
+>   * CXL r3.0 section 8.2.9.8.9.1: Dynamic Capacity Configuration
+>   */
+> @@ -1602,6 +1653,8 @@ static const struct cxl_cmd cxl_cmd_set[256][256] = {
+>          cmd_media_inject_poison, 8, 0 },
+>      [MEDIA_AND_POISON][CLEAR_POISON] = { "MEDIA_AND_POISON_CLEAR_POISON",
+>          cmd_media_clear_poison, 72, 0 },
+> +    [MEDIA_AND_POISON][GET_SCAN_MEDIA_CAPABILITIES] = { "MEDIA_AND_POISON_GET_SCAN_MEDIA_CAPABILITIES",
+> +        cmd_media_get_scan_media_capabilities, 16, 0 },
+>  };
+>  
+>  static const struct cxl_cmd cxl_cmd_set_dcd[256][256] = {
 
