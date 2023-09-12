@@ -2,213 +2,130 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94ECCA0EF2
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 16:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9414CA0EEB
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 16:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235267AbjILQeE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 12:34:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
+        id S237011AbjILQtM (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 12:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236801AbjILQeD (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 12:34:03 -0400
+        with ESMTP id S236062AbjILQtM (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 12:49:12 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9F510EF;
-        Tue, 12 Sep 2023 09:33:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 848C6110;
+        Tue, 12 Sep 2023 09:49:08 -0700 (PDT)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RlTfZ5lymz6H6rP;
-        Wed, 13 Sep 2023 00:33:26 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RlV034NmJz67g1D;
+        Wed, 13 Sep 2023 00:48:35 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 12 Sep
- 2023 17:33:56 +0100
-Date:   Tue, 12 Sep 2023 17:33:55 +0100
+ 2023 17:49:05 +0100
+Date:   Tue, 12 Sep 2023 17:49:04 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Cheatham <benjamin.cheatham@amd.com>
-CC:     <rafael@kernel.org>, <dan.j.williams@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <bhelgaas@google.com>, <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v4 1/3] CXL, PCIE: Add cxl_rcrb_addr file to dport_dev
-Message-ID: <20230912173355.000058f6@Huawei.com>
-In-Reply-To: <d96177aa-52ca-2015-7cb1-8d0a237b43fc@amd.com>
-References: <20230907191956.674833-1-Benjamin.Cheatham@amd.com>
-        <20230907191956.674833-2-Benjamin.Cheatham@amd.com>
-        <20230912151112.00007fe2@Huawei.com>
-        <d96177aa-52ca-2015-7cb1-8d0a237b43fc@amd.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 14/18] dax/region: Support DAX device creation on
+ dynamic DAX regions
+Message-ID: <20230912174904.00005fed@Huawei.com>
+In-Reply-To: <64f80177c2c21_1e8e7829487@iweiny-mobl.notmuch>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-14-f740c47e7916@intel.com>
+        <20230830125025.00000fea@Huawei.com>
+        <64f80177c2c21_1e8e7829487@iweiny-mobl.notmuch>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 12 Sep 2023 09:49:00 -0500
-Ben Cheatham <benjamin.cheatham@amd.com> wrote:
+On Tue, 5 Sep 2023 21:35:03 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-> Hi Jonathan, thanks for the review. Responses inline.
-> 
-> On 9/12/23 9:11 AM, Jonathan Cameron wrote:
-> > On Thu, 7 Sep 2023 14:19:54 -0500
-> > Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+> Jonathan Cameron wrote:
+> > On Mon, 28 Aug 2023 22:21:05 -0700
+> > Ira Weiny <ira.weiny@intel.com> wrote:
 > >   
-> >> Add cxl_rcrb_addr to the dport_dev (normally represented by a pcie
-> >> device) for CXL RCH root ports. The file will print the RCRB base
-> >> MMIO address of the root port when read and will be used by
-> >> users looking to inject CXL EINJ error types for RCH hosts.
-> >>
-> >> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>  
+> > > Dynamic Capacity (DC) DAX regions have a list of extents which define
+> > > the memory of the region which is available.
+> > > 
+> > > Now that DAX region extents are fully realized support DAX device
+> > > creation on dynamic regions by adjusting the allocation algorithms
+> > > to account for the extents.  Remember also references must be held on
+> > > the extents until the DAX devices are done with the memory.
+> > > 
+> > > Redefine the region available size to include only extent space.  Reuse
+> > > the size allocation algorithm by defining sub-resources for each extent
+> > > and limiting range allocation to those extents which have space.  Do not
+> > > support direct mapping of DAX devices on dynamic devices.
+> > > 
+> > > Enhance DAX device range objects to hold references on the extents until
+> > > the DAX device is destroyed.
+> > > 
+> > > NOTE: At this time all extents within a region are created equally.
+> > > However, labels are associated with extents which can be used with
+> > > future DAX device labels to group which extents are used.  
 > > 
-> > Can we use is_visble to control presence of the attribute rather than
-> > race condition special that is dynamic addition of a sysfs file.
-> >   
+> > This sound like a bad place to start to me as we are enabling something
+> > that is probably 'wrong' in the long term as opposed to just not enabling it
+> > until we have appropriate support.  
 > 
-> Yeah, I'll go ahead and change it. Not sure why I did it that way to be
-> honest.
+> I disagree.  I don't think the kernel should be trying to process tags at
+> the lower level.
 > 
-> > You are adding the file to the linked device which is a bit odd.
-> > Why there rather than in the portX?
-> >   
+> > I'd argue better to just reject any extents with different labels for now.  
 > 
-> I agree it's a bit odd. I went with adding the file to the linked device
-> because the ACPI spec specifies using downstream ports for EINJ. The
-> alternative was to have a file for each dport under portX (i.e. dportY_rcrb_addr)
-> which seemed messier to me. Now that I think about it though, I could just
-> have a single file under portX that you write the dport name/number to and
-> it returns the rcrb address. Let me know if you think that would be better.
+> Again I disagree.  This is less restrictive.  The idea is that labels can
+> be changed such that user space can ultimately decided which extents
+> should be used for which devices.  I have some work on that already.
+> (Basically it becomes quite easy to assign a label to a dax device and
+> have the extent search use only dax extents which match that label.)
 
-Ah. I was being half asleep.  I'd missed the point that a portX can have multiple
-dportY (which is obvious given the naming :) 
+That sounds good - but if someone expects that and uses it with an old
+kernel I'm not sure if it is better to say 'we don't support it yet' or
+do something different from a newer kernel.
 
-What makes here probably one for Dan or Bjorn to comment on..
 
-Jonathan
+> > > @@ -1400,8 +1507,10 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
+> > >  	device_initialize(dev);
+> > >  	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
+> > >  
+> > > +	dev_WARN_ONCE(parent, is_dynamic(dax_region) && data->size,
+> > > +		      "Dynamic DAX devices are created initially with 0 size");  
+> > 
+> > dev_info() maybe more appropriate?  
+> 
+> Unless I'm mistaken this can happen from userspace but only if something
+> in the code changes later.  Because the dax layer is trying to support
+> non-dynamic regions (which dynamic may be a bad name), I was worried that
+> the creation with a size might slip through...
+
+Fair enough - if strong chance userspace will control it at somepoitn then
+ONCE seems fine.
 
 > 
-> > I'd also normally expect the docs to call out the non-link path for that
-> > device which is somewhere in the PCI topology I think.
-> >   
+> > Is this common enough that we need the
+> > _ONCE?  
 > 
-> Yeah that makes sense, I'll go ahead and change that.
-> 
-> >> ---
-> >>  Documentation/ABI/testing/sysfs-bus-cxl |  8 ++++++
-> >>  drivers/cxl/acpi.c                      |  2 ++
-> >>  drivers/cxl/core/port.c                 | 33 +++++++++++++++++++++++++
-> >>  drivers/cxl/cxl.h                       |  2 ++
-> >>  4 files changed, 45 insertions(+)
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> >> index 087f762ebfd5..a7d169235543 100644
-> >> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> >> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> >> @@ -177,6 +177,14 @@ Description:
-> >>  		integer reflects the hardware port unique-id used in the
-> >>  		hardware decoder target list.
-> >>  
-> >> +What:		/sys/bus/cxl/devices/portX/dportY/cxl_rcrb_addr
-> >> +Date:		August, 2023
-> >> +KernelVersion:	v6.6
-> >> +Contact:	linux-cxl@vger.kernel.org
-> >> +Description:
-> >> +		(RO) The 'cxl_rcrb_addr' device file gives the MMIO base address
-> >> +		of the RCRB of the corresponding CXL 1.1 downstream port. Only
-> >> +		present for CXL 1.1 dports.
-> >>  
-> >>  What:		/sys/bus/cxl/devices/decoderX.Y
-> >>  Date:		June, 2021
-> >> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> >> index d1c559879dcc..3e2ca946bf47 100644
-> >> --- a/drivers/cxl/acpi.c
-> >> +++ b/drivers/cxl/acpi.c
-> >> @@ -676,6 +676,8 @@ static int cxl_acpi_probe(struct platform_device *pdev)
-> >>  	if (IS_ERR(root_port))
-> >>  		return PTR_ERR(root_port);
-> >>  
-> >> +	set_cxl_root(root_port);
-> >> +
-> >>  	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
-> >>  			      add_host_bridge_dport);
-> >>  	if (rc < 0)
-> >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> >> index 724be8448eb4..001ab8742e21 100644
-> >> --- a/drivers/cxl/core/port.c
-> >> +++ b/drivers/cxl/core/port.c
-> >> @@ -875,6 +875,14 @@ struct cxl_port *find_cxl_root(struct cxl_port *port)
-> >>  }
-> >>  EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
-> >>  
-> >> +static struct cxl_port *cxl_root;
-> >> +
-> >> +void set_cxl_root(struct cxl_port *root_port)
-> >> +{
-> >> +	cxl_root = root_port;
-> >> +}
-> >> +EXPORT_SYMBOL_NS_GPL(set_cxl_root, CXL);
-> >> +
-> >>  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
-> >>  {
-> >>  	struct cxl_dport *dport;
-> >> @@ -930,11 +938,30 @@ static void cond_cxl_root_unlock(struct cxl_port *port)
-> >>  		device_unlock(&port->dev);
-> >>  }
-> >>  
-> >> +static ssize_t cxl_rcrb_addr_show(struct device *dev,
-> >> +				  struct device_attribute *attr, char *buf)
-> >> +{
-> >> +	struct cxl_dport *dport;
-> >> +
-> >> +	if (!cxl_root)
-> >> +		return -ENODEV;
-> >> +
-> >> +	dport = cxl_find_dport_by_dev(cxl_root, dev);
-> >> +	if (!dport)
-> >> +		return -ENODEV;
-> >> +
-> >> +	return sysfs_emit(buf, "0x%llx\n", (u64) dport->rcrb.base);
-> >> +}
-> >> +DEVICE_ATTR_RO(cxl_rcrb_addr);
-> >> +
-> >>  static void cxl_dport_remove(void *data)
-> >>  {
-> >>  	struct cxl_dport *dport = data;
-> >>  	struct cxl_port *port = dport->port;
-> >>  
-> >> +	if (dport->rch)
-> >> +		device_remove_file(dport->dport_dev, &dev_attr_cxl_rcrb_addr);
-> >> +
-> >>  	xa_erase(&port->dports, (unsigned long) dport->dport_dev);
-> >>  	put_device(dport->dport_dev);
-> >>  }
-> >> @@ -1021,6 +1048,12 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
-> >>  	if (rc)
-> >>  		return ERR_PTR(rc);
-> >>  
-> >> +	if (dport->rch && dport->rcrb.base != CXL_RESOURCE_NONE) {
-> >> +		rc = device_create_file(dport_dev, &dev_attr_cxl_rcrb_addr);
-> >> +		if (rc)
-> >> +			return ERR_PTR(rc);
-> >> +	}
-> >> +
-> >>  	return dport;
-> >>  }
-> >>  
-> >> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> >> index 76d92561af29..4d5bce4bae7e 100644
-> >> --- a/drivers/cxl/cxl.h
-> >> +++ b/drivers/cxl/cxl.h
-> >> @@ -690,6 +690,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
-> >>  				   resource_size_t component_reg_phys,
-> >>  				   struct cxl_dport *parent_dport);
-> >>  struct cxl_port *find_cxl_root(struct cxl_port *port);
-> >> +void set_cxl_root(struct cxl_port *root_port);
-> >> +
-> >>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
-> >>  void cxl_bus_rescan(void);
-> >>  void cxl_bus_drain(void);  
-> >   
+> once is because it could end up spamming a log later if something got
+> coded up wrong.
+
+I'm not sure I care about bugs spamming the log.   Only things that
+are userspace controlled or likely hardware failures etc.
+
+
 
