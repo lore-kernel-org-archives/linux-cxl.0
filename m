@@ -2,479 +2,137 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3476AEE3F00
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 18:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260BFEE3F29
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 21:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231754AbjILSIw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 14:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
+        id S233846AbjILVDX (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 17:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237345AbjILSIv (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 14:08:51 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AA710E6
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 11:08:47 -0700 (PDT)
+        with ESMTP id S232814AbjILVDW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 17:03:22 -0400
+Received: from mailout1.w2.samsung.com (mailout1.w2.samsung.com [211.189.100.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 781F9199
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 14:03:18 -0700 (PDT)
 Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230912180846usoutp02505cce85f3ca7c010b2383ad857c1896~EORXmK49D2333423334usoutp02E;
-        Tue, 12 Sep 2023 18:08:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230912180846usoutp02505cce85f3ca7c010b2383ad857c1896~EORXmK49D2333423334usoutp02E
+        by mailout1.w2.samsung.com (KnoxPortal) with ESMTP id 20230912210316usoutp016e8a0d294b7fad66d9d1e0b9b93cd50b~EQpvV9rwA1837218372usoutp01Q;
+        Tue, 12 Sep 2023 21:03:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w2.samsung.com 20230912210316usoutp016e8a0d294b7fad66d9d1e0b9b93cd50b~EQpvV9rwA1837218372usoutp01Q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1694542126;
-        bh=jv0LV8utv1i7ApfFwqwNk7q1AKUz3NnBOj9mV7cQ+x0=;
+        s=mail20170921; t=1694552596;
+        bh=ZvLMB+y30ccT76VU0PrNOmSqEgDaEOXdFIgruoQyPro=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=hhOEgC2eVqGIoksPFw/7FDhSaebjeLTfVRKH5ruDh/7trA7KZfU1QiKAgIXE6mhmB
-         OpScjnTggTrhFXMmGixP93FmbithuohN3LS8B7wXcvkxYxSV5w08nVvOyoeP0boH5f
-         8BIamPuV3Tj7e8bNG1c/o5eDnklHzIjFE1YGu3TI=
+        b=DAP8/ysNHOml7DncuT71UdvhBA7E4MbYoavsjJdZjsuEA9mM7oi44n5vMgXNG4FsW
+         gYIAqkTGSey649QcwBQJj1xh45/eJuLI+boHZJrwxq1Vi0ABTb+mOyqBnDB6T3WSuQ
+         nFt+mJUvwr9FTKNlVYtT96PNyVnpJMH4QYlVdjqY=
 Received: from ussmges2new.samsung.com (u111.gpu85.samsung.co.kr
-        [203.254.195.111]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230912180845uscas1p254803e01094846b2579cb1772dd47b15~EORXeX8ON0142701427uscas1p2B;
-        Tue, 12 Sep 2023 18:08:45 +0000 (GMT)
+        [203.254.195.111]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230912210316uscas1p14b80871d9d5a33f776f410aeea931b06~EQpvPPmHs0916709167uscas1p1z;
+        Tue, 12 Sep 2023 21:03:16 +0000 (GMT)
 Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges2new.samsung.com (USCPEMTA) with SMTP id 70.9B.40279.D29A0056; Tue,
-        12 Sep 2023 14:08:45 -0400 (EDT)
+        ussmges2new.samsung.com (USCPEMTA) with SMTP id D4.F9.40279.412D0056; Tue,
+        12 Sep 2023 17:03:16 -0400 (EDT)
 Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
         [203.254.195.92]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230912180845uscas1p28e989eaff6b92939cfdb85886137354b~EORXQMVzD3243332433uscas1p2M;
-        Tue, 12 Sep 2023 18:08:45 +0000 (GMT)
-X-AuditID: cbfec36f-4cbfe70000009d57-b1-6500a92d93f4
-Received: from SSI-EX1.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id F8.B9.31410.D29A0056; Tue,
-        12 Sep 2023 14:08:45 -0400 (EDT)
+        20230912210316uscas1p24582c8c7b99778897fc1feb8276e6abb~EQpvB_gYn1163111631uscas1p2i;
+        Tue, 12 Sep 2023 21:03:16 +0000 (GMT)
+X-AuditID: cbfec36f-4cbfe70000009d57-4b-6500d214b3fb
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.145]) by
+        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 15.60.31410.412D0056; Tue,
+        12 Sep 2023 17:03:16 -0400 (EDT)
 Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX1.ssi.samsung.com (105.128.2.226) with Microsoft SMTP Server
+        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
         (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 12 Sep 2023 11:08:44 -0700
+        15.1.2375.24; Tue, 12 Sep 2023 14:03:15 -0700
 Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
         SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        12 Sep 2023 11:08:44 -0700
+        12 Sep 2023 14:03:15 -0700
 From:   Fan Ni <fan.ni@samsung.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
         Michael Tsirkin <mst@redhat.com>,
-        =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>,
         "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>,
         "linuxarm@huawei.com" <linuxarm@huawei.com>
-Subject: Re: [PATCH v3 4/4] hw/cxl: Support 4 HDM decoders at all levels of
- topology
-Thread-Topic: [PATCH v3 4/4] hw/cxl: Support 4 HDM decoders at all levels of
-        topology
-Thread-Index: AQHZ5KVz5ehTY0A1Q0y1rQVyt8XI/bAX9GMA
-Date:   Tue, 12 Sep 2023 18:08:44 +0000
-Message-ID: <20230912180844.GD319114@bgt-140510-bm03>
-In-Reply-To: <20230911114313.6144-5-Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/3] tests/acpi: Allow update of DSDT.cxl
+Thread-Topic: [PATCH v2 1/3] tests/acpi: Allow update of DSDT.cxl
+Thread-Index: AQHZ30uS7TzarmmB10ePZbZrHpBrCrAYL9MA
+Date:   Tue, 12 Sep 2023 21:03:15 +0000
+Message-ID: <20230912210305.GA2828853@sjcvldevvm72>
+In-Reply-To: <20230904161847.18468-2-Jonathan.Cameron@huawei.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-originating-ip: [105.128.2.176]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <5B1F8F0FB6CBEA4F930CE02189990A2A@ssi.samsung.com>
+Content-ID: <9805C316ECEC7144A755D2F4801557B1@ssi.samsung.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djXc7q6KxlSDdq/GlisWniNzeL8rFMs
-        Foc3nmGy+P/rFavFmhXCFsd7d7A4sHm0HHnL6nHn2h42jyfXNjN5vN93lc3j8ya5ANYoLpuU
-        1JzMstQifbsErozV6+4wF5zIrni0v4WlgXG/TxcjJ4eEgIlE29T9LF2MXBxCAisZJc51v2SF
-        cFqZJC4/7WWFqVrbf58dIrGWUeLz5V+MEM4nRoneNaugnGWMEkfuHgdrYRNQlNjXtZ0NxBYR
-        MJJ4d2MSWBGzQAOTxLV759hBEsICYRI93QuZIIrCJX5MaWSEaWiZuZwFxGYRUJV4dXcWWA2v
-        gKlEy7XpYL2cAg4SZ161MIPYjAJiEt9PrQGrYRYQl7j1ZD4TxN2CEotm72GGsMUk/u16yAZh
-        K0rc//6SHaJeT+LG1ClsELadxMv1y1khbG2JZQtfM0PsFZQ4OfMJC0SvpMTBFTfAISYhcIFD
-        4lzbBmgguUgcufUbqkhaYvqay0A2B5CdLLHqIxdEOEdi/pItUCXWEgv/rGeawKgyC8nZs5Cc
-        NAvJSbOQnDQLyUkLGFlXMYqXFhfnpqcWG+WllusVJ+YWl+al6yXn525iBKal0/8O5+9gvH7r
-        o94hRiYOxkOMEhzMSiK8JYf+pgjxpiRWVqUW5ccXleakFh9ilOZgURLnNbQ9mSwkkJ5Ykpqd
-        mlqQWgSTZeLglGpg4gxy8/JlNVzKciTtyNFYhfTgjcIquZvfFLi9MzrwOPaw16Svqinrj2uu
-        7/vc/b/TbNK6mz6pOz5mGzRVbH4sJy7ldDvVouLFhLjQX48nSZvXHX7sXf8zzHDq9h/1/ZpL
-        NWLuH3D0sL7Pz3ovu3VJ4QTrDJ2znKfV1Td80njhOjNLIz5NRHh6XKIow6kFvAt8eUu+zHlr
-        rrF+5q/FBYpWFwONXy7zL2Wq/JfH5ZKXv4j38KvMZVI7lso8Pb1e9n6Fb+EjTbajEV5bX6j5
-        ZZS/yKtv+8Z7WlRONSajMyLy/DbnuXYMm38tKqyTl5TeIfZ9a4Bghq3siad5Uk6Vjp0M/5Iq
-        xRezykj4PAmdqKbEUpyRaKjFXFScCAAB8awPugMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWS2cA0UVd3JUOqwb5f8harFl5jszg/6xSL
-        xeGNZ5gs/v96xWqxZoWwxfHeHSwObB4tR96yety5tofN48m1zUwe7/ddZfP4vEkugDWKyyYl
-        NSezLLVI3y6BK2P1ujvMBSeyKx7tb2FpYNzv08XIySEhYCKxtv8+excjF4eQwGpGibbj8xgh
-        nE+MErfPNkA5yxgl9v6eygrSwiagKLGvazsbiC0iYCTx7sYksCJmgQYmidZ7RxlBEsICYRI9
-        3QuZIIrCJX7dX8YO09AyczkLiM0ioCrx6u4ssBpeAVOJlmvTgWo4gLaVShzYHQ8S5hRwkDjz
-        qoUZxGYUEJP4fmoNWDmzgLjErSfzmSBeEJBYsuc8M4QtKvHy8T9WCFtR4v73l+wQ9XoSN6ZO
-        YYOw7SRerl/OCmFrSyxb+JoZ4gRBiZMzn7BA9EpKHFxxg2UCo8QsJOtmIRk1C8moWUhGzUIy
-        agEj6ypG8dLi4tz0imLjvNRyveLE3OLSvHS95PzcTYzAiD7973DMDsZ7tz7qHWJk4mA8xCjB
-        wawkwlty6G+KEG9KYmVValF+fFFpTmrxIUZpDhYlcd4dUy6mCAmkJ5akZqemFqQWwWSZODil
-        GphEWot89n54djB8qvA/Lq4J1us+mLk0/j4vvHz6IeXM+/ct72qqmb+3vLVLadse0UuBknt2
-        xYpX7Ux713stScLNUmXvAbubaw6Hi3Ve5p3z6vE3lbea9bK5fgw8WwOmvmJeprtsy8WG1JOC
-        j314P5musZ73xvGbS/Ne/id3xSf/tJ7lu3iV59lP1/xe5CgWRZcv2/Ph8Jk3fFYRpmkfJtwN
-        tLvC8Ouia8rTqNyzZ9UeT+Hz/PxASuzOhzvvL7TbGJncf+jzKX6389F5XtfPfP0mPaPuVpi2
-        +FzF1EKV+jPzInx27P96f+d5bosjguWS3q//sm8Ib9OX+BfCoSYm5Wq1fr3buxfFZxk0NzRK
-        ns3LVGIpzkg01GIuKk4EACBYQOhXAwAA
-X-CMS-MailID: 20230912180845uscas1p28e989eaff6b92939cfdb85886137354b
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djXc7oilxhSDeZN0rY4cbORzWLVwmts
+        FudnnWKxOLzxDJPF/1+vWC3WrBC2ON67g8WB3aPlyFtWj8V7XjJ53Lm2h83jybXNTB7v911l
+        8/i8SS6ALYrLJiU1J7MstUjfLoEr4+uDY8wFf1krPl79w9zA2MzaxcjBISFgItH7QryLkYtD
+        SGAlo8T/OXdZIJxWJokrX+4ydTFyghUt2DiRDSKxllHi5Z4t7BDOJ0aJXYc+skI4y4Cc3stg
+        LWwCihL7urazgdgiAkYS725MYgSxmQUWM0m0/60CsYUFHCQOHZ7ACFHjKPF11UEWmPqGe8fB
+        bBYBVYlLTfvZQWxeAWOJjd+eM4PYnED1125+AYszCohJfD+1hglivrjErSfzoc4WlFg0ew8z
+        hC0m8W/XQzYIW1Hi/veX7BD1ehI3pk5hg7DtJF7vm8YCYWtLLFv4mhlir6DEyZlPWCB6JSUO
+        rrgBDiMJgTscEn8m/2CESLhI3Lm6CGqBtMT0NZdZIAGcLLHqIxdEOEdi/pItUHOsJRb+Wc80
+        gVFlFpKzZyE5aRaSk2YhOWkWkpMWMLKuYhQvLS7OTU8tNspLLdcrTswtLs1L10vOz93ECExT
+        p/8dzt/BeP3WR71DjEwcjIcYJTiYlUR4Sw79TRHiTUmsrEotyo8vKs1JLT7EKM3BoiTOa2h7
+        MllIID2xJDU7NbUgtQgmy8TBKdXAFCHeNF9cJ9nw/T2vFez7wzL9GB1mx7yQ9vkUrP8otP2d
+        9U6lCTkfn+m4LGhb2iVsfOj2pEX7VpfeP2H61u/pHBH3F7enTVrbaGI9ceY6ddXEWy/+yF27
+        9il/wUyr6qg+zaAVBue+1B4SNIjd8bv9xulLSfZdMj2LTjOtTJOz1NM963/n9bOcX9cKHn5+
+        feex5uUm3cVPpl/KEvf8LTFrO9/qH0y37vx4qGJQ7nz0lWyGRlRdp8HEtSrLXCbNlLFWzHgV
+        9EFFc+pt53CmjX9LA3csX2hxgnvekmXaa9ZaJjgvu6ClcT1w3gqe77Kd3stj/3a80UhPWVqq
+        LaPSIvAtflOmQu+WEzH8pySDF3GbT1ZiKc5INNRiLipOBAD6pxJMwgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsWS2cA0UVfkEkOqwdr90hYnbjayWaxaeI3N
+        4vysUywWhzeeYbL4/+sVq8WaFcIWx3t3sDiwe7QcecvqsXjPSyaPO9f2sHk8ubaZyeP9vqts
+        Hp83yQWwRXHZpKTmZJalFunbJXBlfH1wjLngL2vFx6t/mBsYm1m7GDk5JARMJBZsnMjWxcjF
+        ISSwmlHiz5H9TBDOJ0aJF/O+MUM4yxglPs/YBdbCJqAosa9rOxuILSJgJPHuxiRGEJtZYDGT
+        RPvfKhBbWMBB4tDhCYwQNY4SX1cdZIGpb7h3HMxmEVCVuNS0nx3E5hUwltj47TkziC0kUC7x
+        ccthJhCbE6j32s0vYDWMAmIS30+tYYLYJS5x68l8JogXBCSW7DnPDGGLSrx8/A/qNUWJ+99f
+        skPU60ncmDqFDcK2k3i9bxoLhK0tsWzha2aIGwQlTs58wgLRKylxcMUNlgmMErOQrJuFZNQs
+        JKNmIRk1C8moBYysqxjFS4uLc9Mrio3zUsv1ihNzi0vz0vWS83M3MQKj/PS/wzE7GO/d+qh3
+        iJGJg/EQowQHs5IIb8mhvylCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeXdMuZgiJJCeWJKanZpa
+        kFoEk2Xi4JRqYDKv/iNU9WiaWC1XZffxSOOrrZy39+2u6cmfMvWq/TTpu4+zFKKZO5b/lwmZ
+        phmSHPPtFjtfeO7LpY6ZJol9Z9nueNicjyosm73A8J/oHLv3CavPVkzyOPzOzDYqUObVhvUi
+        iy488rtj9jHR+7fUlRMHbFeWbrur5Hr3CPO955zBm4L3aS/t/ZuUHb5s3dcf8xY3pWpM3DX7
+        16INNvd23U5LanT9EXWU4Zj/44Np279uq3VfU+2jUP7MMYFrfYoFn9ABT+/4uf/1ozZVbnga
+        vF980/91D95/DWjT3pM36/yJu78/5DN5ioalbVSqUVv/enl9hMOJiB7rmVE/0/3DljF7O5af
+        lkzicZz04jMP20olluKMREMt5qLiRAApg04NYQMAAA==
+X-CMS-MailID: 20230912210316uscas1p24582c8c7b99778897fc1feb8276e6abb
 CMS-TYPE: 301P
-X-CMS-RootMailID: 20230912180845uscas1p28e989eaff6b92939cfdb85886137354b
-References: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
-        <20230911114313.6144-5-Jonathan.Cameron@huawei.com>
-        <CGME20230912180845uscas1p28e989eaff6b92939cfdb85886137354b@uscas1p2.samsung.com>
+X-CMS-RootMailID: 20230912210316uscas1p24582c8c7b99778897fc1feb8276e6abb
+References: <20230904161847.18468-1-Jonathan.Cameron@huawei.com>
+        <20230904161847.18468-2-Jonathan.Cameron@huawei.com>
+        <CGME20230912210316uscas1p24582c8c7b99778897fc1feb8276e6abb@uscas1p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 12:43:13PM +0100, Jonathan Cameron wrote:
+On Mon, Sep 04, 2023 at 05:18:45PM +0100, Jonathan Cameron wrote:
 
-> Support these decoders in CXL host bridges (pxb-cxl), CXL Switch USP
-> and CXL Type 3 end points.
+> Addition of QTG in following patch requires an update to the test
+> data.
 >=20
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->=20
 > ---
 
-One comment inline, other than that, looks good to me.
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-
-> v3: Factor out the hdm_inc changes to previous patch.
->     Fix use of encoded hdm count as if it were decoded in cxl-host.
->     Minor refactoring to make that path and one in cxl_type3.c
->     look more similar.
-> ---
->  include/hw/cxl/cxl_component.h | 10 +++-
->  hw/cxl/cxl-component-utils.c   |  7 ++-
->  hw/cxl/cxl-host.c              | 67 ++++++++++++++++--------
->  hw/mem/cxl_type3.c             | 96 +++++++++++++++++++++++-----------
->  4 files changed, 124 insertions(+), 56 deletions(-)
+>  tests/qtest/bios-tables-test-allowed-diff.h | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_componen=
-t.h
-> index 7c864d2044..3c795a6278 100644
-> --- a/include/hw/cxl/cxl_component.h
-> +++ b/include/hw/cxl/cxl_component.h
-> @@ -135,6 +135,10 @@ REG32(CXL_RAS_ERR_HEADER0, CXL_RAS_REGISTERS_OFFSET =
-+ 0x18)
->    REG32(CXL_HDM_DECODER##n##_TARGET_LIST_LO,                            =
-       \
->          CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x24)                   =
-       \
->    REG32(CXL_HDM_DECODER##n##_TARGET_LIST_HI,                            =
-       \
-> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x28)                   =
-       \
-> +  REG32(CXL_HDM_DECODER##n##_DPA_SKIP_LO,                               =
-       \
-> +        CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x24)                   =
-       \
-> +  REG32(CXL_HDM_DECODER##n##_DPA_SKIP_HI,                               =
-       \
->          CXL_HDM_REGISTERS_OFFSET + (0x20 * n) + 0x28)
-> =20
->  REG32(CXL_HDM_DECODER_CAPABILITY, CXL_HDM_REGISTERS_OFFSET)
-> @@ -147,9 +151,13 @@ REG32(CXL_HDM_DECODER_GLOBAL_CONTROL, CXL_HDM_REGIST=
-ERS_OFFSET + 4)
->      FIELD(CXL_HDM_DECODER_GLOBAL_CONTROL, POISON_ON_ERR_EN, 0, 1)
->      FIELD(CXL_HDM_DECODER_GLOBAL_CONTROL, HDM_DECODER_ENABLE, 1, 1)
-> =20
-> +/* Support 4 decoders at all levels of topology */
-> +#define CXL_HDM_DECODER_COUNT 4
-> +
->  HDM_DECODER_INIT(0);
-> -/* Only used for HDM decoder registers block address increment */
->  HDM_DECODER_INIT(1);
-> +HDM_DECODER_INIT(2);
-> +HDM_DECODER_INIT(3);
-> =20
->  /* 8.2.5.13 - CXL Extended Security Capability Structure (Root complex o=
-nly) */
->  #define EXTSEC_ENTRY_MAX        256
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index aa011a8f34..3ecdad4a5e 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -90,6 +90,9 @@ static void dumb_hdm_handler(CXLComponentState *cxl_cst=
-ate, hwaddr offset,
-> =20
->      switch (offset) {
->      case A_CXL_HDM_DECODER0_CTRL:
-> +    case A_CXL_HDM_DECODER1_CTRL:
-> +    case A_CXL_HDM_DECODER2_CTRL:
-> +    case A_CXL_HDM_DECODER3_CTRL:
->          should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMI=
-T);
->          should_uncommit =3D !should_commit;
-
-So for the commit/uncommit flag, we always check decoder 0 control
-register? Or i read it wrong? I thought the commit bit is per control regis=
-ter
-thing?
-
-Fan
-
->          break;
-> @@ -129,7 +132,7 @@ static void cxl_cache_mem_write_reg(void *opaque, hwa=
-ddr offset, uint64_t value,
->      }
-> =20
->      if (offset >=3D A_CXL_HDM_DECODER_CAPABILITY &&
-> -        offset <=3D A_CXL_HDM_DECODER0_TARGET_LIST_HI) {
-> +        offset <=3D A_CXL_HDM_DECODER3_TARGET_LIST_HI) {
->          dumb_hdm_handler(cxl_cstate, offset, value);
->      } else {
->          cregs->cache_mem_registers[offset / sizeof(*cregs->cache_mem_reg=
-isters)] =3D value;
-> @@ -209,7 +212,7 @@ static void ras_init_common(uint32_t *reg_state, uint=
-32_t *write_msk)
->  static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
->                              enum reg_type type)
->  {
-> -    int decoder_count =3D 1;
-> +    int decoder_count =3D CXL_HDM_DECODER_COUNT;
->      int hdm_inc =3D R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE=
-_LO;
->      int i;
-> =20
-> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-> index 73c5426476..2aa776c79c 100644
-> --- a/hw/cxl/cxl-host.c
-> +++ b/hw/cxl/cxl-host.c
-> @@ -97,35 +97,58 @@ void cxl_fmws_link_targets(CXLState *cxl_state, Error=
- **errp)
->      }
->  }
-> =20
-> -/* TODO: support, multiple hdm decoders */
->  static bool cxl_hdm_find_target(uint32_t *cache_mem, hwaddr addr,
->                                  uint8_t *target)
->  {
->      int hdm_inc =3D R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE=
-_LO;
-> -    uint32_t ctrl;
-> -    uint32_t ig_enc;
-> -    uint32_t iw_enc;
-> -    uint32_t target_idx;
-> -    int i =3D 0;
-> -
-> -    ctrl =3D cache_mem[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc];
-> -    if (!FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
-> -        return false;
-> -    }
-> -
-> -    ig_enc =3D FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> -    iw_enc =3D FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> -    target_idx =3D (addr / cxl_decode_ig(ig_enc)) % (1 << iw_enc);
-> +    unsigned int hdm_count;
-> +    bool found =3D false;
-> +    int i;
-> +    uint32_t cap;
-> +
-> +    cap =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER_CAPABILITY);
-> +    hdm_count =3D cxl_decoder_count_dec(FIELD_EX32(cap,
-> +                                                 CXL_HDM_DECODER_CAPABIL=
-ITY,
-> +                                                 DECODER_COUNT));
-> +    for (i =3D 0; i < hdm_count; i++) {
-> +        uint32_t ctrl, ig_enc, iw_enc, target_idx;
-> +        uint32_t low, high;
-> +        uint64_t base, size;
-> +
-> +        low =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_LO + i * hd=
-m_inc);
-> +        high =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_HI + i * h=
-dm_inc);
-> +        base =3D (low & 0xf0000000) | ((uint64_t)high << 32);
-> +        low =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO + i * hd=
-m_inc);
-> +        high =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI + i * h=
-dm_inc);
-> +        size =3D (low & 0xf0000000) | ((uint64_t)high << 32);
-> +        if (addr < base || addr >=3D base + size) {
-> +            continue;
-> +        }
-> =20
-> -    if (target_idx < 4) {
-> -        *target =3D extract32(cache_mem[R_CXL_HDM_DECODER0_TARGET_LIST_L=
-O],
-> -                            target_idx * 8, 8);
-> -    } else {
-> -        *target =3D extract32(cache_mem[R_CXL_HDM_DECODER0_TARGET_LIST_H=
-I],
-> -                            (target_idx - 4) * 8, 8);
-> +        ctrl =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + i * hdm_=
-inc);
-> +        if (!FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
-> +            return false;
-> +        }
-> +        found =3D true;
-> +        ig_enc =3D FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> +        iw_enc =3D FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> +        target_idx =3D (addr / cxl_decode_ig(ig_enc)) % (1 << iw_enc);
-> +
-> +        if (target_idx < 4) {
-> +            uint32_t val =3D ldl_le_p(cache_mem +
-> +                                    R_CXL_HDM_DECODER0_TARGET_LIST_LO +
-> +                                    i * hdm_inc);
-> +            *target =3D extract32(val, target_idx * 8, 8);
-> +        } else {
-> +            uint32_t val =3D ldl_le_p(cache_mem +
-> +                                    R_CXL_HDM_DECODER0_TARGET_LIST_HI +
-> +                                    i * hdm_inc);
-> +            *target =3D extract32(val, (target_idx - 4) * 8, 8);
-> +        }
-> +        break;
->      }
-> =20
-> -    return true;
-> +    return found;
->  }
-> =20
->  static PCIDevice *cxl_cfmws_find_device(CXLFixedWindow *fw, hwaddr addr)
-> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> index cd92813436..1658e0cc59 100644
-> --- a/hw/mem/cxl_type3.c
-> +++ b/hw/mem/cxl_type3.c
-> @@ -382,8 +382,6 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int=
- which)
->      uint32_t *cache_mem =3D cregs->cache_mem_registers;
->      uint32_t ctrl;
-> =20
-> -    assert(which =3D=3D 0);
-> -
->      ctrl =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * hdm_=
-inc);
->      /* TODO: Sanity checks that the decoder is possible */
->      ctrl =3D FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> @@ -399,8 +397,6 @@ static void hdm_decoder_uncommit(CXLType3Dev *ct3d, i=
-nt which)
->      uint32_t *cache_mem =3D cregs->cache_mem_registers;
->      uint32_t ctrl;
-> =20
-> -    assert(which =3D=3D 0);
-> -
->      ctrl =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * hdm_=
-inc);
-> =20
->      ctrl =3D FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
-> @@ -489,6 +485,21 @@ static void ct3d_reg_write(void *opaque, hwaddr offs=
-et, uint64_t value,
->          should_uncommit =3D !should_commit;
->          which_hdm =3D 0;
->          break;
-> +    case A_CXL_HDM_DECODER1_CTRL:
-> +        should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMI=
-T);
-> +        should_uncommit =3D !should_commit;
-> +        which_hdm =3D 1;
-> +        break;
-> +    case A_CXL_HDM_DECODER2_CTRL:
-> +        should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMI=
-T);
-> +        should_uncommit =3D !should_commit;
-> +        which_hdm =3D 2;
-> +        break;
-> +    case A_CXL_HDM_DECODER3_CTRL:
-> +        should_commit =3D FIELD_EX32(value, CXL_HDM_DECODER0_CTRL, COMMI=
-T);
-> +        should_uncommit =3D !should_commit;
-> +        which_hdm =3D 3;
-> +        break;
->      case A_CXL_RAS_UNC_ERR_STATUS:
->      {
->          uint32_t capctrl =3D ldl_le_p(cache_mem + R_CXL_RAS_ERR_CAP_CTRL=
-);
-> @@ -760,40 +771,63 @@ static void ct3_exit(PCIDevice *pci_dev)
->      }
->  }
-> =20
-> -/* TODO: Support multiple HDM decoders and DPA skip */
->  static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t =
-*dpa)
->  {
->      int hdm_inc =3D R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE=
-_LO;
->      uint32_t *cache_mem =3D ct3d->cxl_cstate.crb.cache_mem_registers;
-> -    uint64_t decoder_base, decoder_size, hpa_offset;
-> -    uint32_t hdm0_ctrl;
-> -    int ig, iw;
-> -    int i =3D 0;
-> -
-> -    decoder_base =3D
-> -        (((uint64_t)cache_mem[R_CXL_HDM_DECODER0_BASE_HI + i * hdm_inc] =
-<< 32) |
-> -                    cache_mem[R_CXL_HDM_DECODER0_BASE_LO + i * hdm_inc])=
-;
-> -    if ((uint64_t)host_addr < decoder_base) {
-> -        return false;
-> -    }
-> -
-> -    hpa_offset =3D (uint64_t)host_addr - decoder_base;
-> -
-> -    decoder_size =3D
-> -        ((uint64_t)cache_mem[R_CXL_HDM_DECODER0_SIZE_HI + i * hdm_inc] <=
-< 32) |
-> -        cache_mem[R_CXL_HDM_DECODER0_SIZE_LO + i * hdm_inc];
-> -    if (hpa_offset >=3D decoder_size) {
-> -        return false;
-> -    }
-> +    unsigned int hdm_count;
-> +    uint32_t cap;
-> +    uint64_t dpa_base =3D 0;
-> +    int i;
-> =20
-> -    hdm0_ctrl =3D cache_mem[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc];
-> -    iw =3D FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> -    ig =3D FIELD_EX32(hdm0_ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> +    cap =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER_CAPABILITY);
-> +    hdm_count =3D cxl_decoder_count_dec(FIELD_EX32(cap,
-> +                                                 CXL_HDM_DECODER_CAPABIL=
-ITY,
-> +                                                 DECODER_COUNT));
-> +
-> +    for (i =3D 0; i < hdm_count; i++) {
-> +        uint64_t decoder_base, decoder_size, hpa_offset, skip;
-> +        uint32_t hdm_ctrl, low, high;
-> +        int ig, iw;
-> +
-> +        low =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_LO + i * hd=
-m_inc);
-> +        high =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_HI + i * h=
-dm_inc);
-> +        decoder_base =3D ((uint64_t)high << 32) | (low & 0xf0000000);
-> +
-> +        low =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO + i * hd=
-m_inc);
-> +        high =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI + i * h=
-dm_inc);
-> +        decoder_size =3D ((uint64_t)high << 32) | (low & 0xf0000000);
-> +
-> +        low =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_DPA_SKIP_LO +
-> +                       i * hdm_inc);
-> +        high =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_DPA_SKIP_HI +
-> +                        i * hdm_inc);
-> +        skip =3D ((uint64_t)high << 32) | (low & 0xf0000000);
-> +        dpa_base +=3D skip;
-> +
-> +        hpa_offset =3D (uint64_t)host_addr - decoder_base;
-> +
-> +        hdm_ctrl =3D ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + i * =
-hdm_inc);
-> +        iw =3D FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, IW);
-> +        ig =3D FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, IG);
-> +        if (!FIELD_EX32(hdm_ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
-> +            return false;
-> +        }
-> +        if (((uint64_t)host_addr < decoder_base) ||
-> +            (hpa_offset >=3D decoder_size)) {
-> +            dpa_base +=3D decoder_size /
-> +                cxl_interleave_ways_dec(iw, &error_fatal);
-> +            continue;
-> +        }
-> =20
-> -    *dpa =3D (MAKE_64BIT_MASK(0, 8 + ig) & hpa_offset) |
-> -        ((MAKE_64BIT_MASK(8 + ig + iw, 64 - 8 - ig - iw) & hpa_offset) >=
-> iw);
-> +        *dpa =3D dpa_base +
-> +            ((MAKE_64BIT_MASK(0, 8 + ig) & hpa_offset) |
-> +             ((MAKE_64BIT_MASK(8 + ig + iw, 64 - 8 - ig - iw) & hpa_offs=
-et)
-> +              >> iw));
-> =20
-> -    return true;
-> +        return true;
-> +    }
-> +    return false;
->  }
-> =20
->  static int cxl_type3_hpa_to_as_and_dpa(CXLType3Dev *ct3d,
+> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bi=
+os-tables-test-allowed-diff.h
+> index dfb8523c8b..9ce0f596cc 100644
+> --- a/tests/qtest/bios-tables-test-allowed-diff.h
+> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
+> @@ -1 +1,2 @@
+>  /* List of comma-separated changed AML files to ignore */
+> +"tests/data/acpi/q35/DSDT.cxl",
 > --=20
 > 2.39.2
 >=20
