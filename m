@@ -2,227 +2,200 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F3ECA0EF1
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 14:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218ECA0EEB
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 16:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236086AbjILOtV (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 10:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45642 "EHLO
+        id S229698AbjILQOs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 12:14:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236084AbjILOtS (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 10:49:18 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2086.outbound.protection.outlook.com [40.107.223.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC41115;
-        Tue, 12 Sep 2023 07:49:14 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AEUQBJKHNwsPEnPj5Xl89M9U08FMV9vaNLxonEKKgCkiHFiy1/q9WyA9Nc191iOfclqNXyRMatpynJ3RpYf8dU4Z19walfbm0nJbTUwGJmGa1dJm28wUIh5aAAWyImbcUmCuTUZIU7JdQXKcQ+nDsaMjoIB9t332ibQQfM3i+dq5BIuwTVEdYqWzP930LzvW4TVefF9kZYowd+wYj0pa1xfWUfTrmcxkXBhZzkrKIDuuNtuR85seiP+bEyEeph6cFGWiaGoO1hvhIXxDNhPXivNLUQGP3xuPLDpZJCsnS+9DFnrnYWcB3/IeMU8qgPl/RshVnr5qJ6vOZ7gh061RNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rf2fznrMOfdiUYOOPXtWXoQIBvD9fvrOSX+l7EiSNOk=;
- b=J78CyL4aajTQJJ21o3/VYlXNhrQTsZwfN94kVP0CGGNlbKbM4rcprd7jn0AjhsBO3qZfiRDvBwiMFYO8qwh8bOx1Lft9+2SzfDvuVxuCuaVQRX7FDIuPjD5H7gFsWhRisWsIcPl3jOVcKMsY6nKiM1GjXKPkAta6cV+BwH55ukFbEma8FsqvuCL8v1AoAqDNUgCkFTDjDcGSno9BgFdmQQV/c3D8SNqB8qno4iOxmf3zRSHPcAVbRhN8Gi4ImTo90D4E8onk4J4OLzu4XYWKJKNYKYNo5F3JMAPNvQmgoRd5e+7IqVs4NeopAciqPl1WhcY7VR9987lnCOa/Jj3pjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rf2fznrMOfdiUYOOPXtWXoQIBvD9fvrOSX+l7EiSNOk=;
- b=MuRg8Y6DxyzjkdCQopu1wPEugRXnI1kGUiigKf+7699VhoKp9NzG1gSgow/AQ/XeK3vfOZv0BOoekoHoS68wqg8zDanTdFRmxAYI5NeUDHc4WO4CYqEsLnPQfEhn5GVsHTmS61uQDiX4ibXrh7Yp8deQk0axuuMqC8k9PRhRkwY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3268.namprd12.prod.outlook.com (2603:10b6:408:6c::18)
- by PH7PR12MB8123.namprd12.prod.outlook.com (2603:10b6:510:2bb::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.31; Tue, 12 Sep
- 2023 14:49:12 +0000
-Received: from BN8PR12MB3268.namprd12.prod.outlook.com
- ([fe80::6d0d:ad1a:c6e7:816]) by BN8PR12MB3268.namprd12.prod.outlook.com
- ([fe80::6d0d:ad1a:c6e7:816%6]) with mapi id 15.20.6768.036; Tue, 12 Sep 2023
- 14:49:12 +0000
-Message-ID: <7b505232-1acb-2fe9-17b7-1f2540a6b4be@amd.com>
-Date:   Tue, 12 Sep 2023 09:49:09 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v4 2/3] ACPI, APEI, EINJ: Add CXL 1.1 EINJ error type
- support
+        with ESMTP id S235252AbjILQOr (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 12:14:47 -0400
+Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AAC10E5
+        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 09:14:43 -0700 (PDT)
+Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
+        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230912161442usoutp02493718226df949e658d1937e2f808bde~EMtxnM12p1898418984usoutp02P;
+        Tue, 12 Sep 2023 16:14:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230912161442usoutp02493718226df949e658d1937e2f808bde~EMtxnM12p1898418984usoutp02P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1694535282;
+        bh=wGkaSqDWm/FewYay7BQYkQVtoGPehXvrZCwE9w9U9Os=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=tF63ZyNIyWlJX8AA8dr6f27ABFi1cLV5enyJ8hZjFWGJBJMiEHL7KOvEVwNh7eDoK
+         eQrHOXuAT3AFfV6bpElxhHQVnmTnllYfq4hlRzGcSa3KqNgEu7s3YXidAsxVb8GwXQ
+         yRRdKjxItHoFDKkHxLUgiSI9N08dsHzEuIn1YH3g=
+Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
+        [203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230912161441uscas1p1ffa5f81cf76a1208bb751a1653bb8c91~EMtxhZLjJ3000230002uscas1p12;
+        Tue, 12 Sep 2023 16:14:41 +0000 (GMT)
+Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
+        ussmges3new.samsung.com (USCPEMTA) with SMTP id 4C.30.62237.17E80056; Tue,
+        12 Sep 2023 12:14:41 -0400 (EDT)
+Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
+        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230912161441uscas1p11618b32cdd50462c8267f12e1518e590~EMtxQHJb30825908259uscas1p1L;
+        Tue, 12 Sep 2023 16:14:41 +0000 (GMT)
+X-AuditID: cbfec370-b17ff7000001f31d-d5-65008e711c6f
+Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
+        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 10.97.28590.17E80056; Tue,
+        12 Sep 2023 12:14:41 -0400 (EDT)
+Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
+        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
+        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+        15.1.2375.24; Tue, 12 Sep 2023 09:14:40 -0700
+Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
+        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
+        12 Sep 2023 09:14:40 -0700
+From:   Fan Ni <fan.ni@samsung.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        Michael Tsirkin <mst@redhat.com>,
+        =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "linuxarm@huawei.com" <linuxarm@huawei.com>
+Subject: Re: [PATCH v3 1/4] hw/cxl: Push cxl_decoder_count_enc() and
+ cxl_decode_ig() into .c
+Thread-Topic: [PATCH v3 1/4] hw/cxl: Push cxl_decoder_count_enc() and
+        cxl_decode_ig() into .c
+Thread-Index: AQHZ5KU8sJTQo84yaEm3U62/PXpD0bAX1HyA
+Date:   Tue, 12 Sep 2023 16:14:40 +0000
+Message-ID: <20230912161343.GA319114@bgt-140510-bm03>
+In-Reply-To: <20230911114313.6144-2-Jonathan.Cameron@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     rafael@kernel.org, dan.j.williams@intel.com,
-        linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        bhelgaas@google.com, yazen.ghannam@amd.com
-References: <20230907191956.674833-1-Benjamin.Cheatham@amd.com>
- <20230907191956.674833-3-Benjamin.Cheatham@amd.com>
- <20230912150045.00004137@Huawei.com>
-From:   Ben Cheatham <benjamin.cheatham@amd.com>
-In-Reply-To: <20230912150045.00004137@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR17CA0036.namprd17.prod.outlook.com
- (2603:10b6:5:1b3::49) To BN8PR12MB3268.namprd12.prod.outlook.com
- (2603:10b6:408:6c::18)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [105.128.2.176]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <F6D7216C74B1BD4CA04EE2AD18F3AD8E@ssi.samsung.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3268:EE_|PH7PR12MB8123:EE_
-X-MS-Office365-Filtering-Correlation-Id: d69f1f66-00d1-48a0-310a-08dbb39f6d79
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ARzshNefXz3MhkxnvkohS26aaSwGBd7G1BmmQrlXrhlAhMDFzKf3wDvVFW0i9CJSttBdCdWSimzoXYXcSj7cAT+LkoLgYjcYwNVDuYyXsmWQebcWuu0ACi76okT0TFoAG6GQ0n/DR2vk0cGB/uUeNxa6xQ6rEFSER3a3ufmaZFMrQLA+v5y/c6yW5lIENSoXdDE/6W1OaYG1pioXOB0wk16yJA7AlDbMvWXT7nmNHcOBwpw5dNKcOpCx0TFpGdbdCOG99hmAFcRmu9qOpdsTrH+OKhsi3kj77U6JzQgedDS9dpjiboimcGXJA/IqnA59zYJRhz6T2TVPiuPpGqUEG8TS5Vdke0UOM9tPrzTGD/8FV6tNEvkpxdznrA3FxSM5BY+M0ZkyVFzECKuTlAyer8sc3FQKLAeEJ+y21Ihas3fYHrzynpUL0cs2mVepYGmMnvgwg5L3j0Zp3VDHNMl626/JskRKqQ7mC7LQlWRv5XIZVJoD/hsy/Skhdg/GlWRWrJGf8YA8Gm1tYze5XN9JFAs+ynpRxPybawJC5XvYakZh0EiYHfr508gJNGG7Uk66OZt+tOIWWGxbg9H1CMZeglBSJaS6IrgZ7YSCV7y2ydor/P38K21mhfXQFxD6BUcj/Sq5PWd+f/zArsRittrR9w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3268.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(39860400002)(376002)(396003)(451199024)(186009)(1800799009)(31686004)(53546011)(6486002)(6506007)(6666004)(31696002)(86362001)(38100700002)(36756003)(26005)(2906002)(6512007)(478600001)(4326008)(2616005)(41300700001)(8936002)(8676002)(5660300002)(66476007)(66946007)(66556008)(6916009)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?am5NUlpqM21XbmZRVUtKOG1XWUo3QlIzYzVBS00wUXlsWGZnejVQNWVRelha?=
- =?utf-8?B?cUpKd1lpZzB2eEU1KzlVbWJxb2dEQjJBUnNJVW5NVlp0T1NFeVdkZ1ZnTmRP?=
- =?utf-8?B?a1JEMWhya0ZJUFF4WXBya2wyRmZ3ZXVqS1NrL01UdHBMaHdJM29IYW9FVG9G?=
- =?utf-8?B?V0krQjdBR2tqVGtZN1dKTmYxdFN1MjFRcXQzUklLVVdUOUZLcEtVaks4L0NS?=
- =?utf-8?B?OGZWcGhueXgzM3BVU3FVYWNhL2tRVkdKNlpjcmxId0lUWDRPTy9DcTRLdjhG?=
- =?utf-8?B?ODMyZkxuK1lXaERjdXpCUWY3Y0dXTHhpeExGNEYrVTk3UWpSYzczSGNndVBs?=
- =?utf-8?B?R1JNMnJ2TWsxYmF1b2d3QWdUSmJtSGVzSHNDazRlN1VsaDJydzlZRmZra2Fp?=
- =?utf-8?B?QXoraDJUQXlRa29MYzgyQ2xzM2ZUYW1sbVBiVXVwU1l2RnUyMVAxQWNENkZp?=
- =?utf-8?B?UzQ4TzFqZlpJbUVveE1PdWZIVk11N0EzaXB5clRzWS9LQUVvTlZoRENNcHB6?=
- =?utf-8?B?VGJodGtnUGNQQ1RHM05ZYXA4dVpoaHNYMVZrTEhvbWtsZWZnV0VqZURwa29E?=
- =?utf-8?B?NGxjQ1dPQi9rVEU0WGRKaXhGSVpBQ0d6NU5TTUF1T0FwUVBrUGJtY3ZweUpt?=
- =?utf-8?B?WW5xc0N1dnRDNk01bC9aZkRwMXVrOWFuVEJjNEJNdGc1OTJxWXp2TzhCNDcr?=
- =?utf-8?B?ZWNIZnFnT0ZkRnI1WjdsYm8zY1paeXNVRmtQZ2E4blFpWTF5M01kOGFvd29m?=
- =?utf-8?B?V0tyOGM5aDlUbU5VeWYzbWJCRDVuYXpram1KRVRzL3JPck1LbzVVUnV0aU44?=
- =?utf-8?B?Q3ZwblFIV2VuclBLZURlQTR6UjlqalR3aytvbkxsbi9wWkt3Y1Z6WTFvUFJE?=
- =?utf-8?B?a3FxMFNSVmVCeGdkNG5PUDUwN0dxUm9UOHlzenRZT0VUdXE2UDlHYlExTmlW?=
- =?utf-8?B?dC8zYitOWU5mZjBSZXpXYmNxWUMxL2lOV2ZlVVV6b2lHTHlaL2JoZkt6Z2s1?=
- =?utf-8?B?WDBpMmhRWWZoZ3UyWE1STGFRVGRuUjhySFBPQjJBeU1JR001Tzd4MFhtbEps?=
- =?utf-8?B?ZTNKQUE0NnhDek5OQlRWdkt3MTJpcFM5YVB4YU1hRTNock9DN0FHRzJGRHYz?=
- =?utf-8?B?QTlxRE1VMHpKbCtRMDlVMlpJZHNLaVhNU294Q0tLQ0d5SEVOTXhzdEE3ckxr?=
- =?utf-8?B?Qk5NNXRMaGdCd3ljMXJYMTFZem5KNFpTcmRCbUhDaFNmMGZiTE5UOVQraHg0?=
- =?utf-8?B?R1psK1VoRnBRbEZ6VzYyRDhJU09vZmNVV2svckdUVktIc09UN3lmMUxjUVNN?=
- =?utf-8?B?aGdiajRJb01ZVjZpZHVYcFhHZGZTM2xZVFJrc2ZjWll3YmxOdlFHWEFiZnZX?=
- =?utf-8?B?QlFlbTFlbWU2ZmhRb2dQTXcycmNCT0tpNXEyU3NPZlRTUjc0VmNIU3crbHFv?=
- =?utf-8?B?LzhBOTVTOGRHRUlTeEl1VnZEYTJ1OFlCdHQxbFZST0htc0FGU1lRV3N2SzZh?=
- =?utf-8?B?KytBcUJROXBDN05wdHpDTlBBcnp2d3dZaFNDb2VtNFliYXRzaWpzSVZ2UTY4?=
- =?utf-8?B?ZFMvQ2tRZ0RyMWMyQnhKanIwRUFtNlc1L2h0NFIraUVsamdkcjVOK0dsRXYr?=
- =?utf-8?B?bnpGcmZuK3hCWFVwNk90YVQwVWsweTgvVURhRzJHUFU0MVpNcDArL1IrRHRX?=
- =?utf-8?B?cmhzZ054Yk1OVWR4Z0FyN1ZaNUt3eFdyV3BUU2Rna2xQYVQrZ2IxWUtnNXV0?=
- =?utf-8?B?TmxQOEtadEVsTTV6dDB0ZEJDVVovSk9qTngzY291azBCTHkxcjk1aVhRVzRw?=
- =?utf-8?B?cWc1OW1UU3lZb05QWjBQT3ZWVFhtWHQvU24xZFpZaE1HK3dSakhUcU94Vk9O?=
- =?utf-8?B?N2drWWJmcVhXZlYwa2VTNS9kSFNzdTQvaE9NOVIvMmtYNWZrV2RSWFc2TVky?=
- =?utf-8?B?dmVuWGt0VUgvZG1xTHk0SDZieFVMZ1YxOVhYNENWVHlmc01pdDNmZU1OKzhJ?=
- =?utf-8?B?eC9rSW1zTHpGbVdnWXhVNGc4TkFiNmp6Unl1WXNzeDVwbnBVS2oxZ1F4SWlT?=
- =?utf-8?B?eEQwclhwREEvWFZRQ0lDVkwzSWlNd0g4N2N6WTA5ZGVsVC9NdXZkNmN5Vlhs?=
- =?utf-8?Q?tOFxSDhCOibejllo9YSUDNLA6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d69f1f66-00d1-48a0-310a-08dbb39f6d79
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3268.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 14:49:12.2049
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sR7YeoVnyBHEcDGy/teKGNCNqBVxtfd8kVKCsGO0fwVNbARntqqnXVQjlzGyrja/m0aAISwqFUsE4Uku9o8V5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8123
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djX87qFfQypBptvG1isWniNzeL8rFMs
+        Foc3nmGy+P/rFavFmhXCFsd7d7A4sHm0HHnL6nHn2h42jyfXNjN5vN93lc3j8ya5ANYoLpuU
+        1JzMstQifbsEroxTJ0+zFKwUqeho/cTewHiAv4uRk0NCwETi44WHLF2MXBxCAisZJc50ToZy
+        Wpkk3jZ+Z4epmtGwAyqxllHixdIDbBDOJ0aJpf+boZxljBL3t3axgrSwCShK7OvazgZiiwgY
+        Sby7MYkRpIhZoIFJ4tq9c2BzhQXiJM5cO8gOURQvsXvRUaAdHGANx1tkQcIsAqoS2/ZPZAGx
+        eQVMJRZfP8QMUsIp4CBx64QKSJhRQEzi+6k1TCA2s4C4xK0n85kgrhaUWDR7DzOELSbxb9dD
+        NghbUeL+95fsEPV6EjemTmGDsO0kbk2dBWVrSyxb+JoZYq2gxMmZT1ggeiUlDq64AQ4JCYEr
+        HBK/drRAg8hF4tyvmawQtrTE1etTwe6UEEiWWPWRCyKcIzF/yRaoOdYSC/+sZ5rAqDILydmz
+        kJw0C8lJs5CcNAvJSQsYWVcxipcWF+empxYb56WW6xUn5haX5qXrJefnbmIEpqTT/w4X7GC8
+        deuj3iFGJg7GQ4wSHMxKIrwlh/6mCPGmJFZWpRblxxeV5qQWH2KU5mBREuc1tD2ZLCSQnliS
+        mp2aWpBaBJNl4uCUamDa9jw7j3mZWUTH1jVT3Zf96N/SaVXhrPHmtCfT9f1vHu4r/MjMdius
+        duuplb7vD+2337S+Z4b+7ffzl9dpbb/bbrqtKZ9zHs+lpFVe06V1/fYEcJhukJEykv53KUX2
+        6baWCVeyLbvD7tjX596zsIjeJ7fEOGN63II1mV3fdJet4zEOnFfLyn3WI9TasGBhM+d/zr07
+        1nNkbW1Zv73oSWbKGz6W1RHcSzz/zq0pb7K7c2VRxSwJt9lLggU6d96IFIy+oSwtpvXLlLl+
+        wZuYWYtOB02aX5uyiZf7zyPuZat3e07ma9vG4bpCc8es+ECx77POTNn6bLteXl9qlhR3zx2l
+        WP3w6D3/523ZsijGov6PEktxRqKhFnNRcSIAsXt9J7gDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsWS2cA0SbewjyHVYMNfWYtVC6+xWZyfdYrF
+        4vDGM0wW/3+9YrVYs0LY4njvDhYHNo+WI29ZPe5c28Pm8eTaZiaP9/uusnl83iQXwBrFZZOS
+        mpNZllqkb5fAlXHq5GmWgpUiFR2tn9gbGA/wdzFyckgImEjMaNjB0sXIxSEksJpRYvnNWewQ
+        zidGiQ99k5khnGWMEvsvPGcBaWETUJTY17WdDcQWETCSeHdjEiNIEbNAA5NE672jjCAJYYE4
+        iTPXDrJDFMVL/HszGaiZA6zheIssSJhFQFVi2/6JYDN5BUwlFl8/xAxiCwmUSqzavogNpJxT
+        wEHi1gkVkDCjgJjE91NrmEBsZgFxiVtP5jNBfCAgsWTPeWYIW1Ti5eN/rBC2osT97y/ZIer1
+        JG5MncIGYdtJ3Jo6C8rWlli28DUzxAmCEidnPmGB6JWUOLjiBssERolZSNbNQjJqFpJRs5CM
+        moVk1AJG1lWM4qXFxbnpFcWGeanlesWJucWleel6yfm5mxiB8Xz63+HIHYxHb33UO8TIxMF4
+        iFGCg1lJhLfk0N8UId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rw7plxMERJITyxJzU5NLUgtgsky
+        cXBKNTCderpq88OVMsyOfhxXpT6yRPVmnEjfP+nGefYzu/Ztf6Qh9sko53uBlPaJj/6fvO/8
+        EE7fks718fWftS1Z8zamFWSsiFnw4s/Gjx1m/NyVrXfDNqo3zjy5xJhz/5a5FlOvNpbrrTiY
+        mbYsVFk3PTP/udBfRiWOgNPSxuI26VfPrnzNGDNJ2fNUi5nC27Dba4X5Ot7xXk38bfVuvVIx
+        76HHYQxH/mRrLr9xqbjyhLFsy+bDrRGhh7tv+7244XYwoCg096fSUQ+WgIiGdFYbrZ4ogeDY
+        l0UBPhHzKgLtP57+d7nhG+fH38GBLPvPHeH7ebclq10wkl8yKm+y5NOlcnp3ZkV/Xvj6oLRC
+        iK/Jrr1KLMUZiYZazEXFiQDx5aYWVgMAAA==
+X-CMS-MailID: 20230912161441uscas1p11618b32cdd50462c8267f12e1518e590
+CMS-TYPE: 301P
+X-CMS-RootMailID: 20230912161441uscas1p11618b32cdd50462c8267f12e1518e590
+References: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
+        <20230911114313.6144-2-Jonathan.Cameron@huawei.com>
+        <CGME20230912161441uscas1p11618b32cdd50462c8267f12e1518e590@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
+On Mon, Sep 11, 2023 at 12:43:10PM +0100, Jonathan Cameron wrote:
 
+> There is no strong justification for keeping these in the header
+> so push them down into the associated cxl-component-utils.c file.
+>=20
+> Suggested-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
+> Reviewed-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
 
-On 9/12/23 9:00 AM, Jonathan Cameron wrote:
-> On Thu, 7 Sep 2023 14:19:55 -0500
-> Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
-> 
->> Add support for CXL EINJ error types for CXL 1.1 hosts added in ACPI
->> v6.5. Because these error types target memory-mapped CXL 1.1 compliant
->> downstream ports and not physical (normal/persistent) memory, these
->> error types are not currently  allowed through the memory range
->> validation done by the EINJ driver.
->>
->> The MMIO address of a CXL 1.1 downstream port can be found in the
->> cxl_rcrb_addr file in the corresponding dport directory under
->> /sys/bus/cxl/devices/portX. CXL 1.1 error types follow the same
->> procedure as a memory error type, but with param1 set to the
->> downstream port MMIO address.
->>
->> Example usage:
->> $ cd /sys/kernel/debug/apei/einj
->> $ cat available_error_type
->>     0x00000008      Memory Correctable
->>     0x00000010      Memory Uncorrectable non-fatal
->>     0x00000020      Memory Uncorrectable fatal
->>     0x00000040      PCI Express Correctable
->>     0x00000080      PCI Express Uncorrectable non-fatal
->>     0x00000100      PCI Express Uncorrectable fatal
->>     0x00008000      CXL.mem Protocol Correctable
->>     0x00020000      CXL.mem Protocol Uncorrectable fatal
->> $ echo 0x8000 > error_type
->> $ echo 0xfffffffffffff000 > param2
->> $ echo 0x3 > flags
-> 
-> From einj.rst (and the ACPI spec) bit 0 here is
-> Processor APIC field valid.  Why is that relevant here?
-> If it were you'd be writing param3 I think.  So probably
-> harmless, but I think this should be 0x2 > flags
-> 
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-I don't think it matters in this case, but I agree.
-I'll change it to use 0x2 instead.
-
->> $ cat /sys/bus/cxl/devices/portX/dportY/cxl_rcrb_addr
->> 0xb2f00000
->> $ echo 0xb2f00000 > param1
->> $ echo 1 > error_inject
->>
->> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
-> Hi Ben,
-> 
-> Why bother with the config dependent build?
-> It doesn't save that much in code built and right now there
-> are no non ACPI CXL systems so in reality it's always built
-> anyway.
-> 
-
-Ok, I'll remove the config dependencies. It'll make my life a
-lot easier :).
-
-> Otherwise this LGTM
-> 
-> 
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index 001ab8742e21..f8f300496140 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -1122,6 +1122,25 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->>  }
->>  EXPORT_SYMBOL_NS_GPL(devm_cxl_add_rch_dport, CXL);
->>  
->> +#if IS_ENABLED(CONFIG_CXL_ACPI)
-> I'm not a particular fan processor magic down in c files.
-> 
-> Do we really care about the saving of not having this in builds where
-> CONFIG_CXL_ACPI isn't set?  I'm thinking those don't really exist.
-> 
-
-I don't like it much either, I did it as a quick fix for the build errors
-from the kernel test bot.
-
-Thanks,
-Ben
-
->> +struct cxl_dport *cxl_find_rch_dport_by_rcrb(resource_size_t rcrb_base)
->> +{
->> +	struct cxl_dport *dport;
->> +	unsigned long index;
->> +
->> +	if (!cxl_root)
->> +		return ERR_PTR(-ENODEV);
->> +
->> +	xa_for_each(&cxl_root->dports, index, dport)
->> +		if ((dport->rch && dport->rcrb.base != CXL_RESOURCE_NONE)
->> +		    && dport->rcrb.base == rcrb_base)
->> +			return dport;
->> +
->> +	return NULL;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_find_rch_dport_by_rcrb, CXL);
->> +#endif
->> +
->>  static int add_ep(struct cxl_ep *new)
->>  {
->>  	struct cxl_port *port = new->dport->port;
-> 
+>  include/hw/cxl/cxl_component.h | 18 ++----------------
+>  hw/cxl/cxl-component-utils.c   | 18 ++++++++++++++++++
+>  2 files changed, 20 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_componen=
+t.h
+> index 42c7e581a7..bdb3881a6b 100644
+> --- a/include/hw/cxl/cxl_component.h
+> +++ b/include/hw/cxl/cxl_component.h
+> @@ -225,26 +225,12 @@ void cxl_component_create_dvsec(CXLComponentState *=
+cxl_cstate,
+>                                  enum reg_type cxl_dev_type, uint16_t len=
+gth,
+>                                  uint16_t type, uint8_t rev, uint8_t *bod=
+y);
+> =20
+> -static inline int cxl_decoder_count_enc(int count)
+> -{
+> -    switch (count) {
+> -    case 1: return 0;
+> -    case 2: return 1;
+> -    case 4: return 2;
+> -    case 6: return 3;
+> -    case 8: return 4;
+> -    case 10: return 5;
+> -    }
+> -    return 0;
+> -}
+> +int cxl_decoder_count_enc(int count);
+> =20
+>  uint8_t cxl_interleave_ways_enc(int iw, Error **errp);
+>  uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
+> =20
+> -static inline hwaddr cxl_decode_ig(int ig)
+> -{
+> -    return 1ULL << (ig + 8);
+> -}
+> +hwaddr cxl_decode_ig(int ig);
+> =20
+>  CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb);
+>  bool cxl_get_hb_passthrough(PCIHostState *hb);
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> index 378f1082ce..ea2d4770ec 100644
+> --- a/hw/cxl/cxl-component-utils.c
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -13,6 +13,24 @@
+>  #include "hw/pci/pci.h"
+>  #include "hw/cxl/cxl.h"
+> =20
+> +int cxl_decoder_count_enc(int count)
+> +{
+> +    switch (count) {
+> +    case 1: return 0;
+> +    case 2: return 1;
+> +    case 4: return 2;
+> +    case 6: return 3;
+> +    case 8: return 4;
+> +    case 10: return 5;
+> +    }
+> +    return 0;
+> +}
+> +
+> +hwaddr cxl_decode_ig(int ig)
+> +{
+> +    return 1ULL << (ig + 8);
+> +}
+> +
+>  static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
+>                                         unsigned size)
+>  {
+> --=20
+> 2.39.2
+>=20
+> =
