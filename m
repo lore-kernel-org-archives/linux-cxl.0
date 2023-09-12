@@ -2,200 +2,213 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218ECA0EEB
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 16:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E94ECCA0EF2
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 16:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbjILQOs (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 12:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
+        id S235267AbjILQeE (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 12:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235252AbjILQOr (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 12:14:47 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AAC10E5
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 09:14:43 -0700 (PDT)
-Received: from uscas1p2.samsung.com (unknown [182.198.245.207])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230912161442usoutp02493718226df949e658d1937e2f808bde~EMtxnM12p1898418984usoutp02P;
-        Tue, 12 Sep 2023 16:14:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230912161442usoutp02493718226df949e658d1937e2f808bde~EMtxnM12p1898418984usoutp02P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1694535282;
-        bh=wGkaSqDWm/FewYay7BQYkQVtoGPehXvrZCwE9w9U9Os=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=tF63ZyNIyWlJX8AA8dr6f27ABFi1cLV5enyJ8hZjFWGJBJMiEHL7KOvEVwNh7eDoK
-         eQrHOXuAT3AFfV6bpElxhHQVnmTnllYfq4hlRzGcSa3KqNgEu7s3YXidAsxVb8GwXQ
-         yRRdKjxItHoFDKkHxLUgiSI9N08dsHzEuIn1YH3g=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230912161441uscas1p1ffa5f81cf76a1208bb751a1653bb8c91~EMtxhZLjJ3000230002uscas1p12;
-        Tue, 12 Sep 2023 16:14:41 +0000 (GMT)
-Received: from uscas1p2.samsung.com ( [182.198.245.207]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id 4C.30.62237.17E80056; Tue,
-        12 Sep 2023 12:14:41 -0400 (EDT)
-Received: from ussmgxs1new.samsung.com (u89.gpu85.samsung.co.kr
-        [203.254.195.89]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230912161441uscas1p11618b32cdd50462c8267f12e1518e590~EMtxQHJb30825908259uscas1p1L;
-        Tue, 12 Sep 2023 16:14:41 +0000 (GMT)
-X-AuditID: cbfec370-b17ff7000001f31d-d5-65008e711c6f
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs1new.samsung.com (USCPEXMTA) with SMTP id 10.97.28590.17E80056; Tue,
-        12 Sep 2023 12:14:41 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 12 Sep 2023 09:14:40 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        12 Sep 2023 09:14:40 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>
-Subject: Re: [PATCH v3 1/4] hw/cxl: Push cxl_decoder_count_enc() and
- cxl_decode_ig() into .c
-Thread-Topic: [PATCH v3 1/4] hw/cxl: Push cxl_decoder_count_enc() and
-        cxl_decode_ig() into .c
-Thread-Index: AQHZ5KU8sJTQo84yaEm3U62/PXpD0bAX1HyA
-Date:   Tue, 12 Sep 2023 16:14:40 +0000
-Message-ID: <20230912161343.GA319114@bgt-140510-bm03>
-In-Reply-To: <20230911114313.6144-2-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <F6D7216C74B1BD4CA04EE2AD18F3AD8E@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S236801AbjILQeD (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 12:34:03 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9F510EF;
+        Tue, 12 Sep 2023 09:33:59 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RlTfZ5lymz6H6rP;
+        Wed, 13 Sep 2023 00:33:26 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 12 Sep
+ 2023 17:33:56 +0100
+Date:   Tue, 12 Sep 2023 17:33:55 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Cheatham <benjamin.cheatham@amd.com>
+CC:     <rafael@kernel.org>, <dan.j.williams@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <bhelgaas@google.com>, <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v4 1/3] CXL, PCIE: Add cxl_rcrb_addr file to dport_dev
+Message-ID: <20230912173355.000058f6@Huawei.com>
+In-Reply-To: <d96177aa-52ca-2015-7cb1-8d0a237b43fc@amd.com>
+References: <20230907191956.674833-1-Benjamin.Cheatham@amd.com>
+        <20230907191956.674833-2-Benjamin.Cheatham@amd.com>
+        <20230912151112.00007fe2@Huawei.com>
+        <d96177aa-52ca-2015-7cb1-8d0a237b43fc@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKKsWRmVeSWpSXmKPExsWy7djX87qFfQypBptvG1isWniNzeL8rFMs
-        Foc3nmGy+P/rFavFmhXCFsd7d7A4sHm0HHnL6nHn2h42jyfXNjN5vN93lc3j8ya5ANYoLpuU
-        1JzMstQifbsEroxTJ0+zFKwUqeho/cTewHiAv4uRk0NCwETi44WHLF2MXBxCAisZJc50ToZy
-        Wpkk3jZ+Z4epmtGwAyqxllHixdIDbBDOJ0aJpf+boZxljBL3t3axgrSwCShK7OvazgZiiwgY
-        Sby7MYkRpIhZoIFJ4tq9c2BzhQXiJM5cO8gOURQvsXvRUaAdHGANx1tkQcIsAqoS2/ZPZAGx
-        eQVMJRZfP8QMUsIp4CBx64QKSJhRQEzi+6k1TCA2s4C4xK0n85kgrhaUWDR7DzOELSbxb9dD
-        NghbUeL+95fsEPV6EjemTmGDsO0kbk2dBWVrSyxb+JoZYq2gxMmZT1ggeiUlDq64AQ4JCYEr
-        HBK/drRAg8hF4tyvmawQtrTE1etTwe6UEEiWWPWRCyKcIzF/yRaoOdYSC/+sZ5rAqDILydmz
-        kJw0C8lJs5CcNAvJSQsYWVcxipcWF+empxYb56WW6xUn5haX5qXrJefnbmIEpqTT/w4X7GC8
-        deuj3iFGJg7GQ4wSHMxKIrwlh/6mCPGmJFZWpRblxxeV5qQWH2KU5mBREuc1tD2ZLCSQnliS
-        mp2aWpBaBJNl4uCUamDa9jw7j3mZWUTH1jVT3Zf96N/SaVXhrPHmtCfT9f1vHu4r/MjMdius
-        duuplb7vD+2337S+Z4b+7ffzl9dpbb/bbrqtKZ9zHs+lpFVe06V1/fYEcJhukJEykv53KUX2
-        6baWCVeyLbvD7tjX596zsIjeJ7fEOGN63II1mV3fdJet4zEOnFfLyn3WI9TasGBhM+d/zr07
-        1nNkbW1Zv73oSWbKGz6W1RHcSzz/zq0pb7K7c2VRxSwJt9lLggU6d96IFIy+oSwtpvXLlLl+
-        wZuYWYtOB02aX5uyiZf7zyPuZat3e07ma9vG4bpCc8es+ECx77POTNn6bLteXl9qlhR3zx2l
-        WP3w6D3/523ZsijGov6PEktxRqKhFnNRcSIAsXt9J7gDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsWS2cA0SbewjyHVYMNfWYtVC6+xWZyfdYrF
-        4vDGM0wW/3+9YrVYs0LY4njvDhYHNo+WI29ZPe5c28Pm8eTaZiaP9/uusnl83iQXwBrFZZOS
-        mpNZllqkb5fAlXHq5GmWgpUiFR2tn9gbGA/wdzFyckgImEjMaNjB0sXIxSEksJpRYvnNWewQ
-        zidGiQ99k5khnGWMEvsvPGcBaWETUJTY17WdDcQWETCSeHdjEiNIEbNAA5NE672jjCAJYYE4
-        iTPXDrJDFMVL/HszGaiZA6zheIssSJhFQFVi2/6JYDN5BUwlFl8/xAxiCwmUSqzavogNpJxT
-        wEHi1gkVkDCjgJjE91NrmEBsZgFxiVtP5jNBfCAgsWTPeWYIW1Ti5eN/rBC2osT97y/ZIer1
-        JG5MncIGYdtJ3Jo6C8rWlli28DUzxAmCEidnPmGB6JWUOLjiBssERolZSNbNQjJqFpJRs5CM
-        moVk1AJG1lWM4qXFxbnpFcWGeanlesWJucWleel6yfm5mxiB8Xz63+HIHYxHb33UO8TIxMF4
-        iFGCg1lJhLfk0N8UId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rw7plxMERJITyxJzU5NLUgtgsky
-        cXBKNTCderpq88OVMsyOfhxXpT6yRPVmnEjfP+nGefYzu/Ztf6Qh9sko53uBlPaJj/6fvO/8
-        EE7fks718fWftS1Z8zamFWSsiFnw4s/Gjx1m/NyVrXfDNqo3zjy5xJhz/5a5FlOvNpbrrTiY
-        mbYsVFk3PTP/udBfRiWOgNPSxuI26VfPrnzNGDNJ2fNUi5nC27Dba4X5Ot7xXk38bfVuvVIx
-        76HHYQxH/mRrLr9xqbjyhLFsy+bDrRGhh7tv+7244XYwoCg096fSUQ+WgIiGdFYbrZ4ogeDY
-        l0UBPhHzKgLtP57+d7nhG+fH38GBLPvPHeH7ebclq10wkl8yKm+y5NOlcnp3ZkV/Xvj6oLRC
-        iK/Jrr1KLMUZiYZazEXFiQDx5aYWVgMAAA==
-X-CMS-MailID: 20230912161441uscas1p11618b32cdd50462c8267f12e1518e590
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230912161441uscas1p11618b32cdd50462c8267f12e1518e590
-References: <20230911114313.6144-1-Jonathan.Cameron@huawei.com>
-        <20230911114313.6144-2-Jonathan.Cameron@huawei.com>
-        <CGME20230912161441uscas1p11618b32cdd50462c8267f12e1518e590@uscas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 12:43:10PM +0100, Jonathan Cameron wrote:
+On Tue, 12 Sep 2023 09:49:00 -0500
+Ben Cheatham <benjamin.cheatham@amd.com> wrote:
 
-> There is no strong justification for keeping these in the header
-> so push them down into the associated cxl-component-utils.c file.
->=20
-> Suggested-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
-> Reviewed-by: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
+> Hi Jonathan, thanks for the review. Responses inline.
+> 
+> On 9/12/23 9:11 AM, Jonathan Cameron wrote:
+> > On Thu, 7 Sep 2023 14:19:54 -0500
+> > Ben Cheatham <Benjamin.Cheatham@amd.com> wrote:
+> >   
+> >> Add cxl_rcrb_addr to the dport_dev (normally represented by a pcie
+> >> device) for CXL RCH root ports. The file will print the RCRB base
+> >> MMIO address of the root port when read and will be used by
+> >> users looking to inject CXL EINJ error types for RCH hosts.
+> >>
+> >> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>  
+> > 
+> > Can we use is_visble to control presence of the attribute rather than
+> > race condition special that is dynamic addition of a sysfs file.
+> >   
+> 
+> Yeah, I'll go ahead and change it. Not sure why I did it that way to be
+> honest.
+> 
+> > You are adding the file to the linked device which is a bit odd.
+> > Why there rather than in the portX?
+> >   
+> 
+> I agree it's a bit odd. I went with adding the file to the linked device
+> because the ACPI spec specifies using downstream ports for EINJ. The
+> alternative was to have a file for each dport under portX (i.e. dportY_rcrb_addr)
+> which seemed messier to me. Now that I think about it though, I could just
+> have a single file under portX that you write the dport name/number to and
+> it returns the rcrb address. Let me know if you think that would be better.
 
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Ah. I was being half asleep.  I'd missed the point that a portX can have multiple
+dportY (which is obvious given the naming :) 
 
->  include/hw/cxl/cxl_component.h | 18 ++----------------
->  hw/cxl/cxl-component-utils.c   | 18 ++++++++++++++++++
->  2 files changed, 20 insertions(+), 16 deletions(-)
->=20
-> diff --git a/include/hw/cxl/cxl_component.h b/include/hw/cxl/cxl_componen=
-t.h
-> index 42c7e581a7..bdb3881a6b 100644
-> --- a/include/hw/cxl/cxl_component.h
-> +++ b/include/hw/cxl/cxl_component.h
-> @@ -225,26 +225,12 @@ void cxl_component_create_dvsec(CXLComponentState *=
-cxl_cstate,
->                                  enum reg_type cxl_dev_type, uint16_t len=
-gth,
->                                  uint16_t type, uint8_t rev, uint8_t *bod=
-y);
-> =20
-> -static inline int cxl_decoder_count_enc(int count)
-> -{
-> -    switch (count) {
-> -    case 1: return 0;
-> -    case 2: return 1;
-> -    case 4: return 2;
-> -    case 6: return 3;
-> -    case 8: return 4;
-> -    case 10: return 5;
-> -    }
-> -    return 0;
-> -}
-> +int cxl_decoder_count_enc(int count);
-> =20
->  uint8_t cxl_interleave_ways_enc(int iw, Error **errp);
->  uint8_t cxl_interleave_granularity_enc(uint64_t gran, Error **errp);
-> =20
-> -static inline hwaddr cxl_decode_ig(int ig)
-> -{
-> -    return 1ULL << (ig + 8);
-> -}
-> +hwaddr cxl_decode_ig(int ig);
-> =20
->  CXLComponentState *cxl_get_hb_cstate(PCIHostState *hb);
->  bool cxl_get_hb_passthrough(PCIHostState *hb);
-> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
-> index 378f1082ce..ea2d4770ec 100644
-> --- a/hw/cxl/cxl-component-utils.c
-> +++ b/hw/cxl/cxl-component-utils.c
-> @@ -13,6 +13,24 @@
->  #include "hw/pci/pci.h"
->  #include "hw/cxl/cxl.h"
-> =20
-> +int cxl_decoder_count_enc(int count)
-> +{
-> +    switch (count) {
-> +    case 1: return 0;
-> +    case 2: return 1;
-> +    case 4: return 2;
-> +    case 6: return 3;
-> +    case 8: return 4;
-> +    case 10: return 5;
-> +    }
-> +    return 0;
-> +}
-> +
-> +hwaddr cxl_decode_ig(int ig)
-> +{
-> +    return 1ULL << (ig + 8);
-> +}
-> +
->  static uint64_t cxl_cache_mem_read_reg(void *opaque, hwaddr offset,
->                                         unsigned size)
->  {
-> --=20
-> 2.39.2
->=20
-> =
+What makes here probably one for Dan or Bjorn to comment on..
+
+Jonathan
+
+> 
+> > I'd also normally expect the docs to call out the non-link path for that
+> > device which is somewhere in the PCI topology I think.
+> >   
+> 
+> Yeah that makes sense, I'll go ahead and change that.
+> 
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-bus-cxl |  8 ++++++
+> >>  drivers/cxl/acpi.c                      |  2 ++
+> >>  drivers/cxl/core/port.c                 | 33 +++++++++++++++++++++++++
+> >>  drivers/cxl/cxl.h                       |  2 ++
+> >>  4 files changed, 45 insertions(+)
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> >> index 087f762ebfd5..a7d169235543 100644
+> >> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> >> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> >> @@ -177,6 +177,14 @@ Description:
+> >>  		integer reflects the hardware port unique-id used in the
+> >>  		hardware decoder target list.
+> >>  
+> >> +What:		/sys/bus/cxl/devices/portX/dportY/cxl_rcrb_addr
+> >> +Date:		August, 2023
+> >> +KernelVersion:	v6.6
+> >> +Contact:	linux-cxl@vger.kernel.org
+> >> +Description:
+> >> +		(RO) The 'cxl_rcrb_addr' device file gives the MMIO base address
+> >> +		of the RCRB of the corresponding CXL 1.1 downstream port. Only
+> >> +		present for CXL 1.1 dports.
+> >>  
+> >>  What:		/sys/bus/cxl/devices/decoderX.Y
+> >>  Date:		June, 2021
+> >> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> >> index d1c559879dcc..3e2ca946bf47 100644
+> >> --- a/drivers/cxl/acpi.c
+> >> +++ b/drivers/cxl/acpi.c
+> >> @@ -676,6 +676,8 @@ static int cxl_acpi_probe(struct platform_device *pdev)
+> >>  	if (IS_ERR(root_port))
+> >>  		return PTR_ERR(root_port);
+> >>  
+> >> +	set_cxl_root(root_port);
+> >> +
+> >>  	rc = bus_for_each_dev(adev->dev.bus, NULL, root_port,
+> >>  			      add_host_bridge_dport);
+> >>  	if (rc < 0)
+> >> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> >> index 724be8448eb4..001ab8742e21 100644
+> >> --- a/drivers/cxl/core/port.c
+> >> +++ b/drivers/cxl/core/port.c
+> >> @@ -875,6 +875,14 @@ struct cxl_port *find_cxl_root(struct cxl_port *port)
+> >>  }
+> >>  EXPORT_SYMBOL_NS_GPL(find_cxl_root, CXL);
+> >>  
+> >> +static struct cxl_port *cxl_root;
+> >> +
+> >> +void set_cxl_root(struct cxl_port *root_port)
+> >> +{
+> >> +	cxl_root = root_port;
+> >> +}
+> >> +EXPORT_SYMBOL_NS_GPL(set_cxl_root, CXL);
+> >> +
+> >>  static struct cxl_dport *find_dport(struct cxl_port *port, int id)
+> >>  {
+> >>  	struct cxl_dport *dport;
+> >> @@ -930,11 +938,30 @@ static void cond_cxl_root_unlock(struct cxl_port *port)
+> >>  		device_unlock(&port->dev);
+> >>  }
+> >>  
+> >> +static ssize_t cxl_rcrb_addr_show(struct device *dev,
+> >> +				  struct device_attribute *attr, char *buf)
+> >> +{
+> >> +	struct cxl_dport *dport;
+> >> +
+> >> +	if (!cxl_root)
+> >> +		return -ENODEV;
+> >> +
+> >> +	dport = cxl_find_dport_by_dev(cxl_root, dev);
+> >> +	if (!dport)
+> >> +		return -ENODEV;
+> >> +
+> >> +	return sysfs_emit(buf, "0x%llx\n", (u64) dport->rcrb.base);
+> >> +}
+> >> +DEVICE_ATTR_RO(cxl_rcrb_addr);
+> >> +
+> >>  static void cxl_dport_remove(void *data)
+> >>  {
+> >>  	struct cxl_dport *dport = data;
+> >>  	struct cxl_port *port = dport->port;
+> >>  
+> >> +	if (dport->rch)
+> >> +		device_remove_file(dport->dport_dev, &dev_attr_cxl_rcrb_addr);
+> >> +
+> >>  	xa_erase(&port->dports, (unsigned long) dport->dport_dev);
+> >>  	put_device(dport->dport_dev);
+> >>  }
+> >> @@ -1021,6 +1048,12 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+> >>  	if (rc)
+> >>  		return ERR_PTR(rc);
+> >>  
+> >> +	if (dport->rch && dport->rcrb.base != CXL_RESOURCE_NONE) {
+> >> +		rc = device_create_file(dport_dev, &dev_attr_cxl_rcrb_addr);
+> >> +		if (rc)
+> >> +			return ERR_PTR(rc);
+> >> +	}
+> >> +
+> >>  	return dport;
+> >>  }
+> >>  
+> >> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> >> index 76d92561af29..4d5bce4bae7e 100644
+> >> --- a/drivers/cxl/cxl.h
+> >> +++ b/drivers/cxl/cxl.h
+> >> @@ -690,6 +690,8 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+> >>  				   resource_size_t component_reg_phys,
+> >>  				   struct cxl_dport *parent_dport);
+> >>  struct cxl_port *find_cxl_root(struct cxl_port *port);
+> >> +void set_cxl_root(struct cxl_port *root_port);
+> >> +
+> >>  int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
+> >>  void cxl_bus_rescan(void);
+> >>  void cxl_bus_drain(void);  
+> >   
+
