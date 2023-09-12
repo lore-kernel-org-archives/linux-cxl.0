@@ -2,201 +2,277 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C3CA0EC3
-	for <linux-cxl@archiver.kernel.org>; Mon, 11 Sep 2023 22:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427BCA0EC3
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 01:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240893AbjIKWWd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Mon, 11 Sep 2023 18:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
+        id S235880AbjILBn3 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 11 Sep 2023 21:43:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243803AbjIKRqP (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Sep 2023 13:46:15 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD758CC;
-        Mon, 11 Sep 2023 10:46:09 -0700 (PDT)
+        with ESMTP id S235737AbjILBnL (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 11 Sep 2023 21:43:11 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C0611EBD0;
+        Mon, 11 Sep 2023 18:19:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694481583; x=1726017583;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=BExOGv6tQSpQyfviRa02jiawODdESxLM3oo1hwYhE7U=;
+  b=lDCGkOOCVE4jYUVfBAvLxy4XK5okUfWVtfQCuLiXd9WRXqPrvIjDdBmc
+   2PtH91aiAVUxa7yk8rJUoyoynl177hWZRnpwiMGkzw/jKqK+Hxwpe+2ZP
+   xfqhCiY71H+xDzKRNUct0oEVbLbs3yQmfjKlvg9F9p1I/i2YjqLUwcaZe
+   sUfanUmxBkBFreo92lHK4WxJh3ZSSAo6bwWxW6lK0oIBNHt9RXoCm+LOL
+   J3KbTcwPVbT8FSGEgZYNgLEvxtR+fpYaFXOlQbZBtYj5FVzwaao8o0pzE
+   0zmsL+Q/O+9AUViKc73y7RO4QnvWZCDjD0BR1KUahxtmHBk2R58AcMgXx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="375581938"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="375581938"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 18:19:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="736951717"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="736951717"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Sep 2023 18:19:42 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 11 Sep 2023 18:19:41 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 11 Sep 2023 18:19:41 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Mon, 11 Sep 2023 18:19:41 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Mon, 11 Sep 2023 18:19:40 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dlzEEo1SQQUNINSRaM0wyBO3v3NIGHpCoAnwMjrFRJctvXb4NyAYS+237YzEyDd5uStb9d85n2RpXwMdTqeGtnA3kM45L7PCGS3wGqssyNgCMISMWBWbe09oiSFq1hNcOZDETIQm06eo6GUW2k+PkrHr28TXGg965TTZ33HaWr1EQiX64zNm5Xcj84ti6KYKE7KULu9OidRgbZIcR/aA69b8oIYoNfWL5gg6Nqnk/0JbaLfcdfi7FQV5AGM3S6dWF7v2115C7kYnI/gNZ0UgmNIkkPzofCngpmpSrNvdjZ2vxE+XNpda6rCjzmolPfTxiU6FjKBLjUoaAI6vE438KA==
+ b=CPlc/04hDWeXioeUDTrPoDMKlO3lZKz4qPACPASZkqnFTQdnpSy23ZS/graoH/a3QK4V7ln40PnWftKncQK0uPayAhoVJwV3Cw6yDkDABkCDFfMC4JgiDcA8nmZosFuOWMm7i/C+r5WGMUeKkFLOjY32v8PGQORXelETDZxEu7b/VxkIXMpLmFe14iReLoXA203hdRdbQMUWi3L1gD4BNppkesbyrZbYm71xGfR967uy2kelZViwmgAEhjEpzFr9O5Gg0qbtcnLmDCllmoy+q/N9Crj/lYenwRbKAQgYv/gDifAnfqSg8SFS0eGBh3Rz287OeD3zcY93AqE6Kpy2sg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HGg8/0LRoGgDU8yG4pUYzvvsPREN8d2mnBUWNiTEbQY=;
- b=P7sw0hfDBr9DpPUKwuan59jbRykdMVwBJ0uCI9IsbRK+3YFrOnw5ZQnWgOKSXtt53m3KYVgdd1iMFv7f/RcqU4hEdqpTvpZjkjpXnGkpNVaSNkW/hv0HmK+JSXuOjph5GQWcU8sxZAaWtiAVPPNgczLHL4/yoSPXOXWYHDE8CYMrLJKW9snI1MWCryOvy/0EnA85NkuSnwnrj+lqZ6NvAbGkIkzgcIG3d0xRlyzgW2HmnjHxqen8unuMiUwCocNpMZy7PZwNsgqSIG8aYOe+NP6j/kXjG+h7OGc7dQt+YyLAzCa13i+DdTVUt7pDh648gl2ETYc+zP202P4owzskxw==
+ bh=2bSe2jBZI3oq7pIvDuYH0vUYUID1i/Mr+iDojvDy3oY=;
+ b=XmklqWuJPdtgqjGu9QYxFHVQ2vImoN4AHUtFgQcAeW3mddDVa+vYd4+CHDrWRZxZonBal9AkoNScNgnh78/hsDah31fktcZ/mM01aufePJt31uhVnnWvuMq/x+p1ixAwp8z2Q6CchiKjVG07YOAIOkzYqDAJiz64rg2xXUZ356q9UJpEnmtcTjt93UDCBbpKRkgdOjezt14F4DcQ8PCYBahCck5ytLtmWLjGoUTTmzkW5br/gWEoirGDKFhrRs5niBzBMkDXbM0Jf/7T/4ioAiHh4ZPB/7xxl9ujCE5UDVR60Crz6As8n8x6yWjkmHzs7QcyTnFgs9/l0H1r5gOfPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HGg8/0LRoGgDU8yG4pUYzvvsPREN8d2mnBUWNiTEbQY=;
- b=Nsnh4gJhjhMyaVCv700fyfw05D+RXIpdOzn1nX44NgCQjzFI9/EEju+3cQFu9l4+Vu2yRwj+9Y8kEgYxf+78kOJugRlMxQRXh9YlUHoWOprZ8R3234okeffIUptZrluWjbzbI2YARpBZr40t5QW4MvdcGyE5vNh2cgIa2XTanWE=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by IA1PR17MB6695.namprd17.prod.outlook.com (2603:10b6:208:3d9::22) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by PH7PR11MB7478.namprd11.prod.outlook.com (2603:10b6:510:269::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.33; Mon, 11 Sep
- 2023 17:46:05 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::94b1:abab:838f:650e]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::94b1:abab:838f:650e%4]) with mapi id 15.20.6745.030; Mon, 11 Sep 2023
- 17:46:04 +0000
-Date:   Sun, 10 Sep 2023 11:01:35 -0400
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Gregory Price <gourry.memverge@gmail.com>,
-        linux-mm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-cxl@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org
-Subject: Re: [RFC PATCH 3/3] mm/migrate: Create move_phys_pages syscall
-Message-ID: <ZP3aT5/x72/q8JEP@memverge.com>
-References: <20230907075453.350554-1-gregory.price@memverge.com>
- <20230907075453.350554-4-gregory.price@memverge.com>
- <f73d0495-f575-4b97-bc74-a57bd427df98@app.fastmail.com>
- <ZPrRcJCjRBvJ9c3N@memverge.com>
- <2fe03345-01a2-4cfe-9648-ae088493d1af@app.fastmail.com>
- <ZP28D8dZXz3+4s9v@memverge.com>
- <e80f9c6f-d194-41c7-bdb5-e6a78751f543@app.fastmail.com>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.30; Tue, 12 Sep
+ 2023 01:19:38 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
+ 01:19:38 +0000
+Date:   Mon, 11 Sep 2023 18:18:37 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Alison Schofield <alison.schofield@intel.com>,
+        <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 03/18] cxl/mem: Read Dynamic capacity
+ configuration from the device
+Message-ID: <64ffbc6d449db_2f5aa329489@iweiny-mobl.notmuch>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+ <20230604-dcd-type2-upstream-v2-3-f740c47e7916@intel.com>
+ <ZPnwPDZrKYT7hp6X@aschofie-mobl2>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <e80f9c6f-d194-41c7-bdb5-e6a78751f543@app.fastmail.com>
-X-ClientProxiedBy: BYAPR06CA0003.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::16) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+In-Reply-To: <ZPnwPDZrKYT7hp6X@aschofie-mobl2>
+X-ClientProxiedBy: SJ0PR03CA0136.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::21) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|IA1PR17MB6695:EE_
-X-MS-Office365-Filtering-Correlation-Id: f915167e-137d-4ce2-8b64-08dbb2eef855
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH7PR11MB7478:EE_
+X-MS-Office365-Filtering-Correlation-Id: 437b3bc3-d44f-4732-1b78-08dbb32e5368
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Uwk4y4q2ZzJl3PuAzD6CvsBbBD0DTW02neicBzXYfVTFqslV5/wwrRsEv7U4AtlNCjtIMPV3Qyp8kuDvy8f8XHpOKAPQSXTrep2UdjK/bNl8+QxggVxEOfYP19rxQyOKyswTXCXJHSVeyD0OUls0yUFgQtlhRT5FlKCJ4BF4voB8TPoChHOR1LLzGZoxxiM9u4IelWS81xLXmyLYVLvypYVUnG5wyFd9eZS88Ixb4Ofja5f5j+jBsbLJTEsDTvm8iQF8+bv1A7XU6aKTFO+b+cEAwmjrb4oUOJ89a7YXyo+y9wBQDkPLa9hu/Brrfix9zOafnnTUFshmxy6rQQa012BXGoPFjmMLJwmwUIerx4AhjxvhlJOaR5YFOzyEUVypa5v1ZS+NvqQavmQtgnO4tbZZ/gYFnzTOQaS97Eml+E2SuI4bivR0MdSg3mKSSA0NlwCBgU9n9ouo0Q4Rz5s/1s7k+xszhfATjEBWb2MhD3qw5JXSXZa8/UJs3VGP2inm/jyfPYne4dkDA7JkG9/brlqTuIMe2GQ/QlQu6tBccu2YOOz6846eA2bKVPiOJ0rG
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(39850400004)(376002)(346002)(186009)(451199024)(1800799009)(41300700001)(6916009)(316002)(7416002)(26005)(8936002)(66556008)(44832011)(2906002)(8676002)(66946007)(4326008)(66476007)(54906003)(5660300002)(478600001)(6666004)(6486002)(6506007)(6512007)(36756003)(2616005)(83380400001)(38100700002)(86362001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 5DoLcr2eC0ky9eYkS1bzoxI8uuWDIlBEQd/CtWBq33NV9rdw92yb2YPq809L3X5EAR/D/5JEL0qx7UCEtTxWPiE2FtLCX+4eIa5UOQ/GIMLMjkwEX91v4nnV4sQVWRug7b/xbpAegs6o2ZoKBGPg0UvRHRRwiyLXO3kF8bG085D27GFagW1/kDAimtUagKlHnWIT2sqbJP4Zt/rnVvisHas4lsfJjLY8NTB2aI0KL5b4M3WLKlRzLF8Le2vbklUxq05zpsAsGFv5UyrwQD6g+DVfFMlkuEYxjwEsb0XuuQ/3jmVFGhiC6qfYkuJYjB28VLOVz+FSPKivBJfv5YPTZOSZklkE8jsVX1iXiNgpgqu+02IlAGsNAOjAGTs/z2DjGh8XUQgngt0CzM/bpF/3jskMWbk6GYpSo0GzSzzlc9OrptqFx4mzfPenbuJ1JsLgLD+kbYGkwJ4Q9z6EXTitv6HBHOfM3sinnyxsTg56jc7d6Lpu8Fgloca+l5UtOed0ZQTiQ96x44EpEOhNKueSzegK9YdVaCvSGV7q9rQ2CAbzup8fbaQ1LZO5GfGrpVCI
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(39860400002)(366004)(376002)(136003)(1800799009)(186009)(451199024)(6486002)(6506007)(41300700001)(316002)(478600001)(2906002)(86362001)(38100700002)(54906003)(66556008)(82960400001)(66946007)(66476007)(5660300002)(8936002)(8676002)(4326008)(44832011)(6512007)(9686003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?w83mbD8gWSREUDNn67MVgoYj51YWwpIvn4Ogkrs8wD9lBwAny+S7Ej4/zdqu?=
- =?us-ascii?Q?HQZOQWU89tODNjuqC6+v3uvBjIbuhrTnR+1FdMjHSQgK3B5fML5OXbqaZqtQ?=
- =?us-ascii?Q?c2PCfxP23S580guv0lOvRxxaPXlvIA+S6q1wZlFCzn/h+oqZQ32tt3WzpHJy?=
- =?us-ascii?Q?ejrpDYmRn1p2qG3jrbABxsRHyFfKb7MVPgB2E916SSjBSGCbKZNrWLt+KMNi?=
- =?us-ascii?Q?fT7grD9/p2NYuEdr+GjIgmyViy96WyH16KMtwqoGjX0Var9TEvwl1Csp36hP?=
- =?us-ascii?Q?CCtl4osXbLUrCWo85MhyMrbm/onYrfcHQz9MYuCOEwnaq/G/jinVLQXCj+KD?=
- =?us-ascii?Q?2VcxentT4O4S00QQoqdmHJkN1Sn48gEC8d0Ks0jCQ14zMFVsLxLONuSgs+KH?=
- =?us-ascii?Q?QuDA3qN1riXyZmjZ8JzEDa0I1ijqM599/ds8h8SrBisiOw7A59LzULtK/8ON?=
- =?us-ascii?Q?61Dmt3ojgigtx+3DRnGj5B6Lj6AOA5udNXwl4BTHRZm+TIFkHXuP61Iqc+t1?=
- =?us-ascii?Q?tkyfrG5g5isEGC9znYYgZUCmKGQGS6JpCe7nSEXckMcb8D7Pdowg80VOS5xw?=
- =?us-ascii?Q?IrLBqtGO0aq59Ev4rN0VYRLDLxmfb4JmXVR/Z2oVBjsSs4WYwchNRgTdz0B5?=
- =?us-ascii?Q?EEx6KnliD3ZvWO1tdr3YS9YOgFO0gdSqCP0qpahDToYuqNi3W5A2lsieNaoh?=
- =?us-ascii?Q?gOOnVPXLdgvrd9cFyKnXGRt16M5whKwAH+W35GOE6fDxpNRV8YwnFoxbxSUh?=
- =?us-ascii?Q?BFQksh3jE3+3s42eEYJ6LyAoTxnf7hNO70qSxN0K2KzDkTz50p/Hg6uFHiXv?=
- =?us-ascii?Q?9Fc14pq6+1mJ5LAdTvxZVNNgpxKYzzAkXYjigpNeN+ZQwIpPI5dn2O7cATVs?=
- =?us-ascii?Q?wgNHgAIL0kE39iebtaeyl4UuMPxrTpoLrVKvMrGAEbPkArtPwli7SjCIgIiv?=
- =?us-ascii?Q?FiqzHbWe6G/yqRSV+kIgAFtcROE7iuCrm1ZyvRsH94MQ/u7Ig8X47PJ2WqSp?=
- =?us-ascii?Q?qscTZpUQi9Wv6zfokojzxbdBu46enwkpPCuRn6S7mhZ2kEVttCDMSsblQPg+?=
- =?us-ascii?Q?ZBza/4aML/LTyV4/VOZAMCQCaY7JRlNkNK+gQXjirp+2fdjZL1szuGNcl5v+?=
- =?us-ascii?Q?P7CZKSPwX+5DqcgkP5WCzz1Zw0rgA1GCzRTiCyIc9TFm7ZCvaRBM0FUAABIZ?=
- =?us-ascii?Q?JGiuagAujAdn/j83zyBzF1EjsKwuZ+ESa2s9v6iWYYzkmyiEOeknHYk75dLU?=
- =?us-ascii?Q?50N3nx32YfCXgv/Th44XtOle1sZFm98+YOVTJscnpMhZ6wCNBhvmi2aIYxc4?=
- =?us-ascii?Q?EeN5K8doHk3dWnwHasCT6ygmnJ/7jAHO8GRTnZVFAG8YJq0JypwH23rbfw8S?=
- =?us-ascii?Q?HODQU823+UTLl52ywL8zuWg+7xNFW9hw+JT4UQGvVCwnh8Bo4n2nA6XmpQ9i?=
- =?us-ascii?Q?Wped8qOf0/2f0InpXw6JspxnImXcVvhNbQ/eYj2g0STQCikQZyHrpG+UaNYe?=
- =?us-ascii?Q?S8T1uO/JeQrIdibhbSj4JKygR4jYmiZa1IMyJCki1qJvK6eqXXeMyd5DRfj8?=
- =?us-ascii?Q?CgDkAbF0YQo5uPEVYoYCVkCPGZU9rLgK7uCEBHcsp5kTgRe22FF7c/TxrzBy?=
- =?us-ascii?Q?Kw=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f915167e-137d-4ce2-8b64-08dbb2eef855
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4ksMjL2U7wH4uMXTelkWlLmHCqWugQzFcBBEK0zhHMwtWKR1HHjQLbQc9HyW?=
+ =?us-ascii?Q?nYTK8bXmaV8m/dVzQlmjykJ/uM9PMtczv61wCPDTbwEfJTZBhqOZPwhEduDY?=
+ =?us-ascii?Q?jLhANbQoditau2UlZi6sjl746xUY9YsBAOHK9wYa+Tt7unlt272SFlOZeQtK?=
+ =?us-ascii?Q?VsxuCXt3n3dw1V9flz9yr0KCUBmoIPnDmb6iGUDiv92WbnmJ9OjeBTWLfH6W?=
+ =?us-ascii?Q?4wwUJe491DyKX8cDiecxPYbvCsPWaaRcELD0TIGlqGca+4WajYLD2zYNcQfo?=
+ =?us-ascii?Q?hUDflWo6b2IfKStgQe4yJK1KnwkuXC/qe9+TA9Ida4GGjvsS9do7cQsC2Y7E?=
+ =?us-ascii?Q?UReC4PhP3YaM591M5NZ2aUCge76zKt4rGISr0tTPK+IIyKfR0QhA6aGjLzFg?=
+ =?us-ascii?Q?wepN56WK6o5J7QAzDc8ksOgo6aH7/nGL94AFBhJTjax+8RSSRAf9Zb2zMuaz?=
+ =?us-ascii?Q?O9rX1MF3Y5IVr4eQrSAC8swZBsYP9m8uIhUMjzYhW06zL84FEGie0EWjB1Ej?=
+ =?us-ascii?Q?TE/g0ktpXSezkPS7GwSzvG7Xmhk8FvrlmrIKhp9FsDm7kgNPxrPrjoYg/x9i?=
+ =?us-ascii?Q?CJZhMF0gp8C2YGsVI/XSILs2atzAPK2C6k2l1Rfa+slGMsEURGbXQTdiyE5a?=
+ =?us-ascii?Q?/y8tDTXBJM5YCdFMcR99+SrA6h6mIrcFhM1fi0Bj910jy405N0FKBGUABpJw?=
+ =?us-ascii?Q?cK+7rbQQi/SzgolLcPvgFv3qUfoDD2WV9L9hjtSKJ5oTSRmt+uutjRhZ2RSt?=
+ =?us-ascii?Q?W6zuMN7cTNbeZXNfiOufeQDeuICiZaPWx8cnxXCBCG6NQ7Xvp3syYYUetK+4?=
+ =?us-ascii?Q?4b1p6ik+l+p8ygzYSSH5aPum0JdOV9CSWd/oBU0NxYuk2EJvsqPUtzGEIrvx?=
+ =?us-ascii?Q?QijJiQGtld9KuyGYcgGzH2PPuHu5u4t+shioutjJ0FihbxZGWDK6h7A2nknO?=
+ =?us-ascii?Q?OirSaX5iT4wsOYjDJ46i1a9dY8vin451dyWiVz/DjwIhiy0kbk/KrVE+oFof?=
+ =?us-ascii?Q?3VQGcSZ4g8Nw7TBYFv7U2ifZKD41SU/t0yrcyEX//OLhMfm3xRSRU76C4rK/?=
+ =?us-ascii?Q?62kXCxhMQLJrJYz/YhqLrZNVUmRkAYLVHqyaBg4+Z834AfG2bA+op1JTDHwL?=
+ =?us-ascii?Q?XlswuPC2rbVrGvdAW1oZuvV5nJwj17tQ4zn3GYIayHlYJZopmbe3EUbWok+5?=
+ =?us-ascii?Q?83VTu13yTf9ySMzpNb2QMqV7msq6+dZrqz20HXUhOBKYgNL0+TQrATUP6aBr?=
+ =?us-ascii?Q?Vdp/WZHxgZkdzKLp1ywlfu4nTsdS7kIDKkV/U6oFJTDpbch7u1MeioG9KZwx?=
+ =?us-ascii?Q?09x/XO9qMsr6asBzruo/2+p/cCsRUPy2XATOGaEM9G5+6Jbc0J31EIIRD5Sh?=
+ =?us-ascii?Q?F4Dy+wg2BdNKSWVg/CDWJ+T7NdsatS97/X2Xs0hYPIF+ZpSR07ZzwJhmYcH4?=
+ =?us-ascii?Q?zZROAk0whV2XcuJfYOu+xu4ZU7kEyrTLCY5GKx9imC+dQ6pjRZPNrPFBFTxy?=
+ =?us-ascii?Q?2FcSpgaCw166oEUFk+gG9MBuk8dFEAGGR82Co/dvZa+ejO3M/eTln5HiFZJy?=
+ =?us-ascii?Q?HxC118W4xZZtb2V6SssVavBombd1tQCjtER8eLWtT6qybT5MKtdgwWqL6Vv+?=
+ =?us-ascii?Q?MalwNATvbYWEBbJoxl8yg40Xz35TfwV7S3EAlwK0kJZK?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 437b3bc3-d44f-4732-1b78-08dbb32e5368
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Sep 2023 17:46:04.3475
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 01:19:38.5784
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RDvtOR4VIM5dBTql48CgO7Kko5sbdD6/MdI0iCvBIRF2LL1V37/DOhDwDOogAkSLKsdXYfZicILnn89MmB+NHVs58s95thdYFFkmkPgGjtY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR17MB6695
+X-MS-Exchange-CrossTenant-UserPrincipalName: oqPP0cu52mUH8io5nPuDFSUsQc72RpU8iYbf4jygwHtOVOaaV/Ck2CWL7P44ClSskW2IPad/qSmihFlIIZ1deg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7478
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 07:26:45PM +0200, Arnd Bergmann wrote:
-> On Sun, Sep 10, 2023, at 14:52, Gregory Price wrote:
-> > I'll clean up the current implementation for what I have on a v2 of an
-> > RFC, and then look at adding some pull-ahead patches to fix both
-> > move_pages and move_phys_pages for compat processes.  Might take me a
-> > bit, I've only done compat work once before and I remember it being
-> > annoying to get right.
+Alison Schofield wrote:
+> On Mon, Aug 28, 2023 at 10:20:54PM -0700, Ira Weiny wrote:
+> > From: Navneet Singh <navneet.singh@intel.com>
+> > 
+> > Devices can optionally support Dynamic Capacity (DC).  These devices are
+> > known as Dynamic Capacity Devices (DCD).
 > 
-> I think what you want is roughly this (untested):
+> snip
 > 
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -2159,6 +2159,7 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->                          const int __user *nodes,
->                          int __user *status, int flags)
->  {
-> +       struct compat_uptr_t __user *compat_pages = (void __user *)pages;
->         int current_node = NUMA_NO_NODE;
->         LIST_HEAD(pagelist);
->         int start, i;
-> @@ -2171,8 +2172,17 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
->                 int node;
->  
->                 err = -EFAULT;
-> -               if (get_user(p, pages + i))
-> -                       goto out_flush;
-> +               if (in_compat_syscall() {
-> +                       compat_uptr_t cp;
-> +
-> +                       if (get_user(cp, compat_pages + i))
-> +                               goto out_flush;
-> +
-> +                       p = compat_ptr(cp);
-> +               } else {
-> +                       if (get_user(p, pages + i))
-> +                               goto out_flush;
-> +               }
->                 if (get_user(node, nodes + i))
->                         goto out_flush;
->  
-> alternatively you could use the get_compat_pages_array()
-> helper that is already used in the do_pages_stat()
-> function.
+> > 
+> > +static enum cxl_region_mode
+> > +cxl_decoder_to_region_mode(enum cxl_decoder_mode mode)
+> > +{
+> > +	switch (mode) {
+> > +	case CXL_DECODER_NONE:
+> > +		return CXL_REGION_NONE;
+> > +	case CXL_DECODER_RAM:
+> > +		return CXL_REGION_RAM;
+> > +	case CXL_DECODER_PMEM:
+> > +		return CXL_REGION_PMEM;
+> > +	case CXL_DECODER_DEAD:
+> > +		return CXL_REGION_DEAD;
+> > +	case CXL_DECODER_MIXED:
+> > +	default:
+> > +		return CXL_REGION_MIXED;
+> > +	}
+> > +
+> > +	return CXL_REGION_MIXED;
 > 
+> Can the paths to return _MIXED be simplified here?
 
-Appreciated, i'll give it a hack before i submit V2.
+I suppose:
 
-Just to be clear, it sounds like you want move_pages to be converted
-from (const __user * __user *pages) to (const __u64 __user *pages) as
-well, correct?  That seems like a fairly trivial change.
+...
+	case CXL_DECODER_MIXED:
+	default:
+		break;
+	}
+	
+	return CXL_REGION_MIXED;
+...
+
+I don't think that makes things any better.
 
 > 
-> >
-> > This only requires plumbing new 2 flags through do_pages_move, and no
-> > new user-exposed types or information.
-> >
-> > Is there an ick-factor with the idea of adding the following?
-> >
-> > MPOL_MF_PHYS_ADDR : Treat page migration addresses as physical
-> > MPOL_MF_PFN : Treat page migration addresses as PFNs
 > 
-> I would strongly prefer supporting only one of the two, and
-> a 64-bit physical address seems like the logical choice here.
+> > +}
+> > +
+> snip
 > 
-> I agree that this doesn't introduce any additional risk for rowhammer
-> attacks, but it seems slightly more logical to me to use CAP_SYS_ADMIN
-> if that is what the other interfaces use that handle physical addresses
-> and may leak address information.
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index cd4a9ffdacc7..ed282dcd5cf5 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -374,6 +374,28 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+> >  	return "mixed";
+> >  }
+> >  
+> > +enum cxl_region_mode {
+> > +	CXL_REGION_NONE,
+> > +	CXL_REGION_RAM,
+> > +	CXL_REGION_PMEM,
+> > +	CXL_REGION_MIXED,
+> > +	CXL_REGION_DEAD,
+> > +};
 > 
->      Arnd
+> I'm concerned about _DEAD.
+> At first I was going to say name these as CXL_REGION_MODE_*, but it's
+> pretty obvious that these are mode words...except for DEAD. Is that 
+> an actual mode or is it some type of status? I don't think I see it
+> used yet.
 
-Fair enough, I'll swap to ADMIN and limit to phys_addr.
+My first reaction was to remove this.  But I had to go back and look.  It
+took me a minute to trace this.
 
-I suppose I could add /sys/kernel/mm/page_size accessible only by root
-for the same purpose, so that PFNs from idle and such can be useful.
+'Dead' is not used directly.  If a decoder happens to be dead
+(CXL_DECODER_DEAD) then it will eventually fail the creation of a region
+with CXL_REGION_DEAD as the mode.  CXL_REGION_MIXED fails the same way but
+only because mixed mode is not yet supported.  Therefore, decoder mode
+DEAD indicates something different and CXL_REGION_DEAD was added to convey
+this when converting.
 
-I don't know of another way for userland to determine the shift.
+The alternative is to be more explicit and check decoder mode to be !DEAD
+prior to trying to convert.  I think I like that but I'm going to sleep on
+it.
 
-~Gregory
+> 
+> > +
+> > +static inline const char *cxl_region_mode_name(enum cxl_region_mode mode)
+> > +{
+> > +	static const char * const names[] = {
+> > +		[CXL_REGION_NONE] = "none",
+> > +		[CXL_REGION_RAM] = "ram",
+> > +		[CXL_REGION_PMEM] = "pmem",
+> > +		[CXL_REGION_MIXED] = "mixed",
+> > +	};
+> > +
+> > +	if (mode >= CXL_REGION_NONE && mode <= CXL_REGION_MIXED)
+> > +		return names[mode];
+> > +	return "mixed";
+> > +}
+> 
+> snip
+> 
+> > +
+> >  /**
+> >   * struct cxl_memdev_state - Generic Type-3 Memory Device Class driver data
+> >   *
+> > @@ -449,6 +464,8 @@ struct cxl_dev_state {
+> >   * @enabled_cmds: Hardware commands found enabled in CEL.
+> >   * @exclusive_cmds: Commands that are kernel-internal only
+> >   * @total_bytes: sum of all possible capacities
+> > + * @static_cap: Sum of RAM and PMEM capacities
+> > + * @dynamic_cap: Complete DPA range occupied by DC regions
+> 
+> Wondering about renaming RAM and PMEM caps as 'static'.
+> They are changeable via set partition commands.
+
+True but they are static compared to dynamic capacity.  I'm open to other
+names but !dynamic is normally referred to as static.  :-/
+
+Thanks for the review!
+Ira
