@@ -2,271 +2,192 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF23EE3F31
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 21:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF4EE3F29
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 21:13:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230059AbjILVMw (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 17:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58144 "EHLO
+        id S231797AbjILVNc (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 17:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbjILVMw (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 17:12:52 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D31E10CA
-        for <linux-cxl@vger.kernel.org>; Tue, 12 Sep 2023 14:12:48 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230912211247usoutp0264d047a72e0f8c56d2d8c010abd4b02f~EQyCw7nWT2864628646usoutp02U;
-        Tue, 12 Sep 2023 21:12:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230912211247usoutp0264d047a72e0f8c56d2d8c010abd4b02f~EQyCw7nWT2864628646usoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1694553167;
-        bh=vrJ9Xv0nSeHw73RZ0ZY6/6CHdHdk1ntnj1JgD0HIubQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=WKfahQ2fjuf+EvrX5OzvqFk+ZbXDfYOqasKT2edRb5R/Ya6frFe2EmDTLYO/qYtIr
-         RVXefGlJlNHeGoWDEs/vP06z7LBvEXfEQEYPjTXFWo9MTNXqonhJkAY2z77xC4gVmb
-         3XCL5J1gxemyOCBkKcbrLEBYVi4lpkIy2ENTBLv0=
-Received: from ussmges3new.samsung.com (u112.gpu85.samsung.co.kr
-        [203.254.195.112]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230912211247uscas1p2dbe4c2433b7eac59b638b1d36ec72a45~EQyClPOHI0466504665uscas1p2X;
-        Tue, 12 Sep 2023 21:12:47 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges3new.samsung.com (USCPEMTA) with SMTP id 62.22.62237.F44D0056; Tue,
-        12 Sep 2023 17:12:47 -0400 (EDT)
-Received: from ussmgxs2new.samsung.com (u91.gpu85.samsung.co.kr
-        [203.254.195.91]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230912211246uscas1p168389b2f62884b970e348f8b94e550d2~EQyCRsahY1803918039uscas1p1E;
-        Tue, 12 Sep 2023 21:12:46 +0000 (GMT)
-X-AuditID: cbfec370-823ff7000001f31d-11-6500d44f192a
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.146]) by
-        ussmgxs2new.samsung.com (USCPEXMTA) with SMTP id 59.22.31200.E44D0056; Tue,
-        12 Sep 2023 17:12:46 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 12 Sep 2023 14:12:46 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        12 Sep 2023 14:12:46 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        Michael Tsirkin <mst@redhat.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        with ESMTP id S230052AbjILVNc (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 17:13:32 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C77610CC;
+        Tue, 12 Sep 2023 14:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694553208; x=1726089208;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=IKW+yxla06Oh/JZA2mlsMu+SpVRjKfFMhWlgbGAktzk=;
+  b=ko3+hJlcnXHAYBBaW8G5uf8jFNBQgbj5N5M9s2bGrnRdCxKDOpq09GmX
+   42rIfCq7rEFk6vF2BS/hrUxu+KvNILz7KIq5NOTD7ciTJRTl64qu4zCx5
+   YS58VJH3K3i1AJU013XkSJ+G6ZoujCE4edvHmuxe65UGvbpRaTKbSWPOI
+   tLokMU0qUixD4c70GvPPncj7viBHi3niKlYAH5um+cu4153VVPhntwlh0
+   NWB4rpaUUNjMk4gUZNv9s/6z6lFoMZI3A8mUtR3FkA2xx92bbx42pDqv5
+   aOB1s0DOiCYwpz4zfUkCH6CL6uZBt7rqHWv/iLSylsvaFB/tZdQPk1caa
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="357926077"
+X-IronPort-AV: E=Sophos;i="6.02,141,1688454000"; 
+   d="scan'208";a="357926077"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 14:13:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="887086884"
+X-IronPort-AV: E=Sophos;i="6.02,141,1688454000"; 
+   d="scan'208";a="887086884"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Sep 2023 14:12:59 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Tue, 12 Sep 2023 14:13:26 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Tue, 12 Sep 2023 14:13:26 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.104)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Tue, 12 Sep 2023 14:13:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AFwl7d+aMtNYt5OcYXxwhN6FMt47o5usZ2J1XLj3+dVxvEKfIBA7IKjNhhaB6B/JGiy7ql3Ze69X5ku2rTRE0iAKtyuGvX8XQgYoQNwy/x+thv0fFJ5N1rb0594GsZ0RkNzVveqZUj2Wp0D7UNkfYFPtptpN5GwxACXKgPShgJ/XC73WcHkx4JEdaxJmRBmJO+9wBgpmPvhuOpidMpGIxSkAUBg9rIkBd2ro7vlSq5WEz7V5Hhc4uM2VxGSXLmocYdZBbBbgN11hcnpa6RmrTfDPtSkPhkXrGcD3xh3Kutrw6iv7wRo2SFTJ13vywue3CwovIt/BugeUFnkydCmCGg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/hMisdHj/HpJamKUuTrWAoxlOMYR8L43lIvheRYtZzk=;
+ b=d4pSKm1px/WRXCv18MaNtCsHg5HgobrkUqzoHtNiiUo+Fu5oGHsSDoXZYW+5r3zLR/pydDmZ8930kqzI/r6SC4u///3H4RsLCTExQ+I/C0faIaNuWlHZm+kl0GMMpFlFOwh0yoMKaOOTSTDRegzcycSJ4Lh32cQbZKQOhsJO4nwFEarSZGp93kAA/ps6x2Z4519jXHlvU0SKO2iGK06QATn0nIUhhClLU3W1dYisViQMOmGacSNAenrQQysYc8DD77GCH8pSFNAnwFur/z1Na2P98DrHmcwcVa0J/tK5q1i9LSWzXXg+P10dyE1c8aeFcvuYDIj/9ZH7SfkfLti01g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB7042.namprd11.prod.outlook.com (2603:10b6:806:299::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6745.34; Tue, 12 Sep
+ 2023 21:13:24 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
+ 21:13:24 +0000
+Date:   Tue, 12 Sep 2023 14:13:20 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     <alison.schofield@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Len Brown" <lenb@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        =?iso-8859-1?Q?Philippe_Mathieu-Daud=E9?= <philmd@linaro.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 2/3] hw/cxl: Add QTG _DSM support for ACPI0017 device
-Thread-Topic: [PATCH v2 2/3] hw/cxl: Add QTG _DSM support for ACPI0017
-        device
-Thread-Index: AQHZ30ukYJg3kNCKi0GmQIpXWUW3L7AYMoGA
-Date:   Tue, 12 Sep 2023 21:12:45 +0000
-Message-ID: <20230912211245.GC2828853@sjcvldevvm72>
-In-Reply-To: <20230904161847.18468-3-Jonathan.Cameron@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <0470824E4FEA984DA883B903FA2F7BC7@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
+        Mike Rapoport <rppt@kernel.org>
+CC:     Alison Schofield <alison.schofield@intel.com>, <x86@kernel.org>,
+        <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Derick Marks <derick.w.marks@intel.com>
+Subject: RE: [PATCH v4 2/2] ACPI: NUMA: Apply SRAT proximity domain to entire
+ CFMWS window
+Message-ID: <6500d470d363f_19f612942b@dwillia2-xfh.jf.intel.com.notmuch>
+References: <cover.1689018477.git.alison.schofield@intel.com>
+ <eaa0b7cffb0951a126223eef3cbe7b55b8300ad9.1689018477.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <eaa0b7cffb0951a126223eef3cbe7b55b8300ad9.1689018477.git.alison.schofield@intel.com>
+X-ClientProxiedBy: MW4PR04CA0074.namprd04.prod.outlook.com
+ (2603:10b6:303:6b::19) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djXc7r+VxhSDZoP8lmcuNnIZrFq4TU2
-        i/OzTrFYHN54hsni/69XrBZrVghbHO/dweLA7tFy5C2rx+I9L5k87lzbw+bx5NpmJo/3+66y
-        eXzeJBfAFsVlk5Kak1mWWqRvl8CVsfzRH7aCDo2Kr4/uMDUw9kp3MXJySAiYSFyY9oC5i5GL
-        Q0hgJaPEp18PWCCcViaJTXcOssBUzWm8AFW1llHi2IY1rBDOJ0aJZ/8eQmWWMUpMebyUCaSF
-        TUBRYl/XdjYQW0TASOLdjUmMIDazwGImifa/VSC2sICPxPHfjYwQNf4S+5t+s8DUL371EMxm
-        EVCVaF66DKyGV8BY4uLDZ2A2p4CjxIZpb8HmMwqISXw/tYYJYr64xK0n85kgzhaUWDR7DzOE
-        LSbxb9dDNghbUeL+95fsEPV6EjemTmGDsO0kFrVfh7K1JZYtfM0MsVdQ4uTMJ9CgkJQ4uOIG
-        OIwkBO5wSHzvfgS1wEVi/Yxv7BC2tMTfu8uAjuAAspMlVn3kggjnSMxfsgVqjrXEwj/rmSYw
-        qsxCcvYsJCfNQnLSLCQnzUJy0gJG1lWM4qXFxbnpqcXGeanlesWJucWleel6yfm5mxiBier0
-        v8MFOxhv3fqod4iRiYPxEKMEB7OSCG/Job8pQrwpiZVVqUX58UWlOanFhxilOViUxHkNbU8m
-        CwmkJ5akZqemFqQWwWSZODilGpjydt2PsThlWywU4RM+e8FcTtc3O+89YAhwMj+otf/wFCa5
-        aVHWeldX3TjRcZf56Zn7Da/5WtyY2njKVM5xf84/1axy4fwq29t3W83FVup7OU83P+D9b5u9
-        xCGWz1umGEf4ajc1dwdZH562/rPxcafeKSumvvNanbRFSVVCTNTyaf6GvB3BPbcKH0a7d618
-        er2675bTivaQnXcXzGapzyzh2mOtpRV6X+f9l4hJ91XEFhp083QfbrMP2cv3hs9Ny6+qxlJd
-        PyygdE2zdPeSNIP0r7/s1rK+COlKnpu22uvbrzvNeULx5jGuezx+6uZMWz11Vrxx5pTQfb/2
-        Vy9tvdq71HpdZkfvbTFb4QNJd5VYijMSDbWYi4oTAXY4WfPDAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsWS2cA0SdfvCkOqwdkfRhYnbjayWaxaeI3N
-        4vysUywWhzeeYbL4/+sVq8WaFcIWx3t3sDiwe7QcecvqsXjPSyaPO9f2sHk8ubaZyeP9vqts
-        Hp83yQWwRXHZpKTmZJalFunbJXBlLH/0h62gQ6Pi66M7TA2MvdJdjJwcEgImEnMaLzB3MXJx
-        CAmsZpRofrCTHcL5xCjxbclPFghnGaPE+i/rmUFa2AQUJfZ1bWcDsUUEjCTe3ZjECGIzCyxm
-        kmj/WwViCwv4SBz/3cgIUeMr8XHuVHaY+sWvHrKA2CwCqhLNS5eB1fAKGEtcfPgMzBYSKJfo
-        mNXPCmJzCjhKbJj2FmwXo4CYxPdTa5ggdolL3HoynwniBQGJJXvOM0PYohIvH/9jhbAVJe5/
-        f8kOUa8ncWPqFDYI205iUft1KFtbYtnC18wQNwhKnJz5hAWiV1Li4IobLBMYJWYhWTcLyahZ
-        SEbNQjJqFpJRCxhZVzGKlxYX56ZXFBvlpZbrFSfmFpfmpesl5+duYgRG+el/h6N3MN6+9VHv
-        ECMTB+MhRgkOZiUR3pJDf1OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8+6YcjFFSCA9sSQ1OzW1
-        ILUIJsvEwSnVwGS24OIes7e6YUv/7v2yaenhIx1MZ7pTE85VyE8vqrHl2fru6GsJ14sXHgYq
-        LZmwW+5Ej43Cl2zHTZf1Cyd0+WgINm1vfNX878LLM/2v014vV2ucExi08Sxj7ZdKpbkJ/Fpn
-        t3/XurX8gdrsPd8yJqXmcSlsZTw3uUvGPbLIRqG2Yv3x6JcXqnwvPjZgU2xfeabwOlv6CcNj
-        dh+eBc3Sl3+1fnJMpUC393tlmZRSt6BF/ifVHJY3vergXeXOaOkeavfwl/nKb7xcEx0e+W05
-        +F38Taxw+zy1V5NZnNnddJJNjWMnJdyNyDjWz/b+/J78vYuO6Uc4TezPW+20dNH91FW/TjX5
-        uSyM7BAQlrXiaFFiKc5INNRiLipOBABCQuh7YQMAAA==
-X-CMS-MailID: 20230912211246uscas1p168389b2f62884b970e348f8b94e550d2
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230912211246uscas1p168389b2f62884b970e348f8b94e550d2
-References: <20230904161847.18468-1-Jonathan.Cameron@huawei.com>
-        <20230904161847.18468-3-Jonathan.Cameron@huawei.com>
-        <CGME20230912211246uscas1p168389b2f62884b970e348f8b94e550d2@uscas1p1.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7042:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ff25f85-e23b-4a5c-11b2-08dbb3d51958
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yEgMXtx7LvMQFncgc7g1x+sCgbqPkbXKYT5srF64RBPnmDl27UQUEjf6T0g9tMuwNtdH+dLM395sc4/AYNfwEpGbP6tGnIEsrrjL5Glq5VayUwfKp6VHinRG3yxQ+DxaF2xZe5w8Wfak1JEhxEvE/mtJiLEuo82hWP+RtP65K71In48O+qXnsW2mA9hD1GKT1mectT0YZZjonXlBhSmlEleRIj5NSn9DyNXohm/tv1TxVId+m5eZ3broE6Vl2COKmI/zlnj6wC1HL1HlNpmCwOW8Z6lixH6dSkZYZ499VC0eWBH80UYs7rMUBjpDOo1BDpn/EUVz7b0I7VxQoEz7qJC6if03bDNPtihSt8r3ANEC6hrKHP/2MzKwh1YrHGpe8QpZXDblxF7c7wRMxZ5oBHAJTVkruTGig9WjA6k8Cht0+mb131zSbysIXrDP95LHLZQphC/pIKGtfi5EumYbeUwpWdIINQeDIVxRR34Ly6Z7ppVxNh7uF6xfjIXAvuww4/7YWwvCF86ChDLODlslIzaWUFYDAApCfDpH9GGfyFpIpivRChlIEggNYsp0Qnnj3den9x/TdCL9sK40XlQ/O0De+/1QT/hrI3sEw5w0gfo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(366004)(136003)(376002)(396003)(1800799009)(451199024)(186009)(8936002)(921005)(6486002)(9686003)(6666004)(6506007)(38100700002)(66556008)(82960400001)(86362001)(5660300002)(26005)(2906002)(110136005)(83380400001)(66476007)(6512007)(7416002)(66946007)(8676002)(478600001)(54906003)(4326008)(316002)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xrU+HRLZkLs9drv/NoKmWmawtS5fq2mG19qUQKQUBh4Yi8NRwxGpnbrSPMoM?=
+ =?us-ascii?Q?mXKE1IaDWFmuiAJxG0kkG3G+5K7TOH4VyT/L94Vbw+jfPSQh6q/ZNr7RPkqH?=
+ =?us-ascii?Q?E33gwyUPD2bTY0HQPEXc8N38YzlwHibRWZv5JaHO7/ZLWTtuZCFKcaf4qwaF?=
+ =?us-ascii?Q?i/2ove0kKF3TZ31VMebjGh8Z1ncznVx0E0ZHL1cDdxBskjXVD92aGJn5hAvx?=
+ =?us-ascii?Q?89VCYE14rUDDo03kR1PqwzHMwc4/LKXzqNJJOUiUWbB6e2c/GMYdFATo4TsD?=
+ =?us-ascii?Q?OnJwVpujSHV0jzNORbxUvlWyb2chZYKRFPlCcKRWu4+b1vvyYc9TFJ/g9PxL?=
+ =?us-ascii?Q?Ps+i/IyGgTB1MQ77ZXN1P9edPMv736iv+TRewywpc//cKVABWyuTsESjg1yR?=
+ =?us-ascii?Q?MRfR5RPoqhg5hlycs7W3DI7VDAZ1qD0s4dO+KuRiYHULeIo12KPdaZpYiJ30?=
+ =?us-ascii?Q?w3DE0nRBVuSsB1QS6isX93Yk/CbykiE4+gVe31bVcvKidQQArNLvRviYLt4u?=
+ =?us-ascii?Q?V80U7WePUpl4p6GxNfE022X5T+Ik7FytrT+v9Xi/atPFD4sM7t4EwpRSzZsa?=
+ =?us-ascii?Q?/Bkyer122FIJdAKAaMWgZcNcVTwovMJO10pru/4bDSmDmwQsWoBEQgtaj+ST?=
+ =?us-ascii?Q?QChaq5APfsicCLBOnuwyyKKvTcz2rVk9VDfWBNGHiUOy9U05f0X3SEGKZNfB?=
+ =?us-ascii?Q?IY1Sisk1z3XAev/lWRsxvCRaXVmUYvE5pbtncikZTonOIzEFXDv4EFAQsBfE?=
+ =?us-ascii?Q?8u5L4LNh+2bRLU6/6Sm1QPYnmcJG9ig1YuSvReuG70EMS4CK5ijtDtjEniio?=
+ =?us-ascii?Q?IANvAq/cZlsrCbXBdTxQae1JfF941GBTxHIZQVUMnfPzpqG1CcR/cx1kvcQW?=
+ =?us-ascii?Q?ZJEr74qOn8udzdbl2EHS24lxANflAYHZhTjN3Y69J0cUMccH4pIGAJywdLD4?=
+ =?us-ascii?Q?8Xab+iDlipkVvt/rLotM4saaNGsilTuPoC1OmLZI9y5Ug5UbP27nv2+7hbJQ?=
+ =?us-ascii?Q?7n1fhssgHf22pnYplx7CxgpCuMepgVLUMmYS0PZ8HuKQ3q5J1xIyZleE5KWL?=
+ =?us-ascii?Q?nG2xplVzcHrNtBcq0d38we0SiCSJtZLeGTbchtINbrMS+yiyZOszjgdn4A3G?=
+ =?us-ascii?Q?vVquh/yTsTtfH5YActYyxqqrurAWc0HMLwkykits5vYAIj+hyimEEII6tv7j?=
+ =?us-ascii?Q?7gDyUYir6aN8sqCFvwocckiR6l6woqUwmN/I/I0WorTQ9nUvpoolTNcjcvY3?=
+ =?us-ascii?Q?iC7scWPGpstNGiHtE+lz/5DIuKRteSqglZplEe5+XPw05BfPSzHLZuXmYasf?=
+ =?us-ascii?Q?0SGgRQLzaMniWZVFkcEPZXfJqnZr0sPSjNeZDaoMyRdAmEH1iy+Fk36TMs9X?=
+ =?us-ascii?Q?X2ku2kXH0s7bvDFmhNy/kh5K0jrE2k5vmQvgI/syLQokqshrdfAzmumCDKjO?=
+ =?us-ascii?Q?wre2xi3K9qVjkexpwTFITpqo6tPH3dlNhTcYp3oRoKmRWRzy/ziOqy0r0PBn?=
+ =?us-ascii?Q?bOlivUE7xk83GMpEMXqbmzOl20Ci79V0sd4pIrYddPTNRXSlNh3gTb91A8GL?=
+ =?us-ascii?Q?k1Dnwq0JFGaKHqBHz2axlT8EvOzQhPNTLETu3XIAAVWr6g5aGH0XlSvLmimu?=
+ =?us-ascii?Q?Kw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ff25f85-e23b-4a5c-11b2-08dbb3d51958
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 21:13:23.9672
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KJhOCTPk9YzB+vQfqW68IXdQJ6Nv8Dm2vqLhNmEU+Dp1YJAuIBfaeUrO8E0isQVnUoTeWO+8j4ucKtkbJ9zr+ueE2g6PjdJD9il77TmwbPs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7042
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Mon, Sep 04, 2023 at 05:18:46PM +0100, Jonathan Cameron wrote:
+alison.schofield@ wrote:
+> From: Alison Schofield <alison.schofield@intel.com>
+> 
+> Commit fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each
+> CFMWS not in SRAT") did not account for the case where the BIOS
+> only partially describes a CFMWS Window in the SRAT. That means
+> the omitted address ranges, of a partially described CFMWS Window,
+> do not get assigned to a NUMA node.
+> 
+> Replace the call to phys_to_target_node() with numa_add_memblks().
+> Numa_add_memblks() searches an HPA range for existing memblk(s)
+> and extends those memblk(s) to fill the entire CFMWS Window.
+> 
+> Extending the existing memblks is a simple strategy that reuses
+> SRAT defined proximity domains from part of a window to fill out
+> the entire window, based on the knowledge* that all of a CFMWS
+> window is of a similar performance class.
+> 
+> *Note that this heuristic will evolve when CFMWS Windows present
+> a wider range of characteristics. The extension of the proximity
+> domain, implemented here, is likely a step in developing a more
+> sophisticated performance profile in the future.
+> 
+> There is no change in behavior when the SRAT does not describe
+> the CFMWS Window at all. In that case, a new NUMA node with a
+> single memblk covering the entire CFMWS Window is created.
+> 
+> Fixes: fd49f99c1809 ("ACPI: NUMA: Add a node and memblk for each CFMWS not in SRAT")
+> Reported-by: Derick Marks <derick.w.marks@intel.com>
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Tested-by: Derick Marks <derick.w.marks@intel.com>
 
-> From: Dave Jiang <dave.jiang@intel.com>
->=20
-> Add a simple _DSM call support for the ACPI0017 device to return a fake Q=
-TG
-> ID value of 0 in all cases. The enabling is for _DSM plumbing testing
-> from the OS.
->=20
-> Following edited for readbility only
->=20
-> Device (CXLM)
-> {
->     Name (_HID, "ACPI0017")  // _HID: Hardware ID
-> ...
->     Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
->     {
->         If ((Arg0 =3D=3D ToUUID ("f365f9a6-a7de-4071-a66a-b40c0b4f8e52"))=
-)
->         {
->             If ((Arg2 =3D=3D Zero))
->             {
->                 Return (Buffer (One) { 0x01 })
->             }
->=20
->             If ((Arg2 =3D=3D One))
->             {
->                 Return (Package (0x02)
->                 {
->                     Buffer (0x02)
->                     { 0x01, 0x00 },
->                     Package (0x01)
->                     {
->                         Buffer (0x02)
->                         { 0x00, 0x00 }
->                     }
->                 })
->             }
->         }
->     }
->=20
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Looks good to me. One minor comment inline.
->=20
-> --
-> v2: Minor edit to drop reference to switches in patch description.
-> ---
->  include/hw/acpi/cxl.h |  1 +
->  hw/acpi/cxl.c         | 57 +++++++++++++++++++++++++++++++++++++++++++
->  hw/i386/acpi-build.c  |  1 +
->  3 files changed, 59 insertions(+)
->=20
-> diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
-> index acf4418886..8f22c71530 100644
-> --- a/include/hw/acpi/cxl.h
-> +++ b/include/hw/acpi/cxl.h
-> @@ -25,5 +25,6 @@ void cxl_build_cedt(GArray *table_offsets, GArray *tabl=
-e_data,
->                      BIOSLinker *linker, const char *oem_id,
->                      const char *oem_table_id, CXLState *cxl_state);
->  void build_cxl_osc_method(Aml *dev);
-> +void build_cxl_dsm_method(Aml *dev);
-> =20
->  #endif
-> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-> index 92b46bc932..5e9039785a 100644
-> --- a/hw/acpi/cxl.c
-> +++ b/hw/acpi/cxl.c
-> @@ -30,6 +30,63 @@
->  #include "qapi/error.h"
->  #include "qemu/uuid.h"
-> =20
-> +void build_cxl_dsm_method(Aml *dev)
-
-Not a concern for now, I think, do we need to check the revision
-field?
-
-Fan
-> +{
-> +    Aml *method, *ifctx, *ifctx2;
-> +
-> +    method =3D aml_method("_DSM", 4, AML_SERIALIZED);
-> +    {
-> +        Aml *function, *uuid;
-> +
-> +        uuid =3D aml_arg(0);
-> +        function =3D aml_arg(2);
-> +        /* CXL spec v3.0 9.17.3.1 *, QTG ID _DSM */
-> +        ifctx =3D aml_if(aml_equal(
-> +            uuid, aml_touuid("F365F9A6-A7DE-4071-A66A-B40C0B4F8E52")));
-> +
-> +        /* Function 0, standard DSM query function */
-> +        ifctx2 =3D aml_if(aml_equal(function, aml_int(0)));
-> +        {
-> +            uint8_t byte_list[1] =3D { 0x01 }; /* functions 1 only */
-> +
-> +            aml_append(ifctx2,
-> +                       aml_return(aml_buffer(sizeof(byte_list), byte_lis=
-t)));
-> +        }
-> +        aml_append(ifctx, ifctx2);
-> +
-> +        /*
-> +         * Function 1
-> +         * A return value of {1, {0}} inciate that
-> +         * max supported QTG ID of 1 and recommended QTG is 0.
-> +         * The values here are faked to simplify emulation.
-> +         */
-> +        ifctx2 =3D aml_if(aml_equal(function, aml_int(1)));
-> +        {
-> +            uint16_t word_list[1] =3D { 0x01 };
-> +            uint16_t word_list2[1] =3D { 0 };
-> +            uint8_t *byte_list =3D (uint8_t *)word_list;
-> +            uint8_t *byte_list2 =3D (uint8_t *)word_list2;
-> +            Aml *pak, *pak1;
-> +
-> +            /*
-> +             * The return package is a package of a WORD and another pac=
-kage.
-> +             * The embedded package contains 0 or more WORDs for the
-> +             * recommended QTG IDs.
-> +             */
-> +            pak1 =3D aml_package(1);
-> +            aml_append(pak1, aml_buffer(sizeof(uint16_t), byte_list2));
-> +            pak =3D aml_package(2);
-> +            aml_append(pak, aml_buffer(sizeof(uint16_t), byte_list));
-> +            aml_append(pak, pak1);
-> +
-> +            aml_append(ifctx2, aml_return(pak));
-> +        }
-> +        aml_append(ifctx, ifctx2);
-> +    }
-> +    aml_append(method, ifctx);
-> +    aml_append(dev, method);
-> +}
-> +
->  static void cedt_build_chbs(GArray *table_data, PXBCXLDev *cxl)
->  {
->      PXBDev *pxb =3D PXB_DEV(cxl);
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index bb12b0ad43..d3bc5875eb 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -1422,6 +1422,7 @@ static void build_acpi0017(Aml *table)
->      method =3D aml_method("_STA", 0, AML_NOTSERIALIZED);
->      aml_append(method, aml_return(aml_int(0x01)));
->      aml_append(dev, method);
-> +    build_cxl_dsm_method(dev);
-> =20
->      aml_append(scope, dev);
->      aml_append(table, scope);
-> --=20
-> 2.39.2
->=20
-> =
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
