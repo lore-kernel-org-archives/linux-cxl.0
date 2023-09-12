@@ -2,221 +2,247 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB5DEE3F37
-	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 21:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47059EE3F3F
+	for <linux-cxl@archiver.kernel.org>; Tue, 12 Sep 2023 22:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233965AbjILVct (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Tue, 12 Sep 2023 17:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
+        id S230150AbjILWIW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Tue, 12 Sep 2023 18:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbjILVcs (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 17:32:48 -0400
-Received: from mailout2.w2.samsung.com (mailout2.w2.samsung.com [211.189.100.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0890F10D0;
-        Tue, 12 Sep 2023 14:32:45 -0700 (PDT)
-Received: from uscas1p1.samsung.com (unknown [182.198.245.206])
-        by mailout2.w2.samsung.com (KnoxPortal) with ESMTP id 20230912213244usoutp02abef0275c3abcc3cb5a187e4a5bc77af~ERDdOl2mR1550215502usoutp02t;
-        Tue, 12 Sep 2023 21:32:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w2.samsung.com 20230912213244usoutp02abef0275c3abcc3cb5a187e4a5bc77af~ERDdOl2mR1550215502usoutp02t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1694554364;
-        bh=QgJzk0LFw6AGu8v5Ju1ew6zxSY87McNCclcicOQTPz0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=iRVV4YwyIRtfKSq3XsWaO1+iXASqUexqg1MXXqDxfsa9jBhNnIfD4ta+gFOuP39+5
-         3zsn3NfnldKYXuTVCgVE8respffxDfq9bA5DmvwYV1G7JC4ovcx7vVwCTT1rWBLuLP
-         0wNQWXm8jrI+7QoEA61aSjPe/63SirVwQDg0NE1s=
-Received: from ussmges1new.samsung.com (u109.gpu85.samsung.co.kr
-        [203.254.195.109]) by uscas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20230912213243uscas1p2082313b51d35971208ee5bedb3e44ff2~ERDc73jUX1320613206uscas1p2p;
-        Tue, 12 Sep 2023 21:32:43 +0000 (GMT)
-Received: from uscas1p1.samsung.com ( [182.198.245.206]) by
-        ussmges1new.samsung.com (USCPEMTA) with SMTP id D7.CC.50148.BF8D0056; Tue,
-        12 Sep 2023 17:32:43 -0400 (EDT)
-Received: from ussmgxs3new.samsung.com (u92.gpu85.samsung.co.kr
-        [203.254.195.92]) by uscas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230912213243uscas1p17fa844630bf6caf6af9119c651e4759b~ERDcintwd2491324913uscas1p1N;
-        Tue, 12 Sep 2023 21:32:43 +0000 (GMT)
-X-AuditID: cbfec36d-7bdff7000002c3e4-73-6500d8fba816
-Received: from SSI-EX2.ssi.samsung.com ( [105.128.2.145]) by
-        ussmgxs3new.samsung.com (USCPEXMTA) with SMTP id 33.22.31410.BF8D0056; Tue,
-        12 Sep 2023 17:32:43 -0400 (EDT)
-Received: from SSI-EX2.ssi.samsung.com (105.128.2.227) by
-        SSI-EX2.ssi.samsung.com (105.128.2.227) with Microsoft SMTP Server
-        (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
-        15.1.2375.24; Tue, 12 Sep 2023 14:32:42 -0700
-Received: from SSI-EX2.ssi.samsung.com ([105.128.2.227]) by
-        SSI-EX2.ssi.samsung.com ([105.128.2.227]) with mapi id 15.01.2375.024; Tue,
-        12 Sep 2023 14:32:42 -0700
-From:   Fan Ni <fan.ni@samsung.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Fan Ni <fan.ni@gmx.us>, Dan Williams <dan.j.williams@intel.com>,
-        "Navneet Singh" <navneet.singh@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        with ESMTP id S229651AbjILWIV (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Tue, 12 Sep 2023 18:08:21 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C07F310D9;
+        Tue, 12 Sep 2023 15:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694556497; x=1726092497;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=VgfTeRHOaXeKq7GIXd4n1dbiMam+mhX7PrYOlYKyfas=;
+  b=UET1boJgRlcA7IWQSGpe7V9mb9ag2ENOpSJ3MhMYicqhKj/3wqiWE3vL
+   uJD30aQy27GjiaMLz8TjDIOwBk5WUz82NLN/RkdtPLvEjwky6DUz0VVUh
+   wDQlf+VLLbKAq3IQlYLKLiSLHe3RD7+Ukm6WLwEXglCrbQqjeB7LqjZe5
+   1//MLF8yCT2ESbBY7LUBFdjDJP4q8lKF7EZKPMiiXg46aaMYKVvXcovhH
+   sbsxyjzAVAY1obbRa/QwjvuYCLjQtk2FfxPBTz50RWrL1lnHvXliuEtaP
+   XbfGPh/a0tnDcQQUNivXG2WrJttaG2zsePFiRFl/T0HvNea+YtyH8/d6u
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="368770836"
+X-IronPort-AV: E=Sophos;i="6.02,141,1688454000"; 
+   d="scan'208";a="368770836"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 15:08:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="773206479"
+X-IronPort-AV: E=Sophos;i="6.02,141,1688454000"; 
+   d="scan'208";a="773206479"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Sep 2023 15:08:17 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Tue, 12 Sep 2023 15:08:17 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Tue, 12 Sep 2023 15:08:16 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Tue, 12 Sep 2023 15:08:16 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Tue, 12 Sep 2023 15:08:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=axZpCt8sEcwlvcPSToBx4kLDfHnp1f5pAhhsIc/2VXdKcpSfD5EifiBGFxuFrE6wYEg6p13QJjXKoL9t+84En7cRzcQl0vNxszlEzq7iGAp25wYPM0SA0ds7KqBdKzkPVyASRsHyb67EXKCejXtdr9JW0gljL3ZUmXwdD3Q+FgDBcUHC0bGkefqB/mKORGNQPVdpCsjjUazB8oRaLBQ6JxWBu4OPrwUuirl2PTdt73hcOjfSUaXEeDmLsK0Gn/qHskH7M9MpM5RKlaFTv//T8zKgGw8DN93mHdk1pp+HtM7RsbJMXTdiZxvX5daBby3YY4zo36FtolBRbTy//oS0NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ss04s1as/ZnlVqVCVi9GdC0RIXdpAAub5+AcQjprQAg=;
+ b=LhkSe0estXZr/pqtuAJ2P7szKhf+qc3j/L9sP+RiIyzDcDSCqr+2E7gBxmgaba5umF+e4ND+54eqifVxlOCOSnOVjDJGj3dtEbjEDQs8D5SyDHWKFZ4MagMgjUumpa8ydbS4aXTh2wsgF0cgjKMdroNffX3Wes9hQzOZJAZINRQIhP/XdiOD2Fym+Ecgzi6/rrgT5slS199u5gwGuNqZIr9ymXH4be2u3kMeXPY9hQJNIbOSwyNk0CRX/LHx/Uei1raFPn/e8fuyM96gDgYDvCW/xYU6G3JfTPN0POk8NrZ+nT67xnw12n22rmvmCh5JLBHYtNHLmKnOBq6VofClow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by BN9PR11MB5273.namprd11.prod.outlook.com (2603:10b6:408:132::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Tue, 12 Sep
+ 2023 22:08:14 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6768.029; Tue, 12 Sep 2023
+ 22:08:14 +0000
+Date:   Tue, 12 Sep 2023 15:08:10 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        "Dave Jiang" <dave.jiang@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 03/18] cxl/mem: Read Dynamic capacity
- configuration from the device
-Thread-Topic: [PATCH RFC v2 03/18] cxl/mem: Read Dynamic capacity
-        configuration from the device
-Thread-Index: AQHZ2jkK/pP/klWxW0KG5oR5AqJrLLAD1zsAgA435ICABjMaAA==
-Date:   Tue, 12 Sep 2023 21:32:42 +0000
-Message-ID: <20230912213242.GD2859961@sjcvldevvm72>
-In-Reply-To: <64fba59f73319_1e8e78294e2@iweiny-mobl.notmuch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [105.128.2.176]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E5E5A3975330C243BEF1F709F73946DF@ssi.samsung.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPKsWRmVeSWpSXmKPExsWy7djXc7q/bzCkGtz5rmtx9/EFNovpUy8w
-        Wpy42chmsfrmGkaLW6cOM1rsf/qcxWLVwmtsFudnnWKxuLxrDpvF8TUTWC1uTTjG5MDt8Wz3
-        OmaPliNvWT0W73nJ5DF1dr3H501yAaxRXDYpqTmZZalF+nYJXBmLZt1hLDgtU7H46UvWBsb5
-        Yl2MnBwSAiYSB39uYu1i5OIQEljJKLHo3EZGCKeVSeL49wOsMFXb3vVDJdYySnx++hTK+cQo
-        0XL6PpSzjFHi9J+JjCAtbAKKEvu6trOB2CICyhKn/11lAyliFjjCLHH1yFYmkISwQILEl7ub
-        oYoSJdqm/GTpYuQAsp0k1kxPBQmzCKhKvH33iB3E5hUwlnjQ0wdmcwrYSPxtuAhmMwqISXw/
-        tQZsJLOAuMStJ/OZIM4WlFg0ew8zhC0m8W/XQzYIW1Hi/veX7BD1OhILdn9ig7DtJB5s2MEM
-        YWtLLFv4mhlir6DEyZlPWCB6JSUOrrjBAvKLhMAXDommk/OglrlInJu0HGqBtMT0NZfBfpEQ
-        SJZY9ZELIpwjMX/JFqg51hIL/6xnmsCoMgvJ2bOQnDQLyUmzkJw0C8lJCxhZVzGKlxYX56an
-        FhvmpZbrFSfmFpfmpesl5+duYgSmsdP/DufuYNxx66PeIUYmDsZDjBIczEoivCWH/qYI8aYk
-        VlalFuXHF5XmpBYfYpTmYFES5zW0PZksJJCeWJKanZpakFoEk2Xi4JRqYNoYf1s+WU45u7Bb
-        bmGDpKTijSIVTYPzRcJhaWn53hufSlqwbt16VrbR5VxfdQH3Dj6l6umtxccDWQ8+urNw0o6s
-        qESHC2d/Lc1dsd/e/F7k9v+qDVeD6pZfuPFts+uhWyGnXZynT/0RXJN6fuFztyMsdTVGq1fW
-        dL0x+JsWe1jkamd/TJDQsf36G9dPEbuddSDwlMqnnYIuExdeZmrP3/jE2lrJxXytzJICszk/
-        27xNjkZqX2tm3rBlJ3dF0NzpO/7EFombvXt1KiZxGYuo+LZvLQlvMl3VX3EX3P0hdCUl65hy
-        9rGkwLr3u7jiEr6414t0B57IFb+zwCGpv0r80KK5zLtqG6oPqHG13RbJV2Ipzkg01GIuKk4E
-        AL1Y3SrSAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsWS2cA0Uff3DYZUg2cThS3uPr7AZjF96gVG
-        ixM3G9ksVt9cw2hx69RhRov9T5+zWKxaeI3N4vysUywWl3fNYbM4vmYCq8WtCceYHLg9nu1e
-        x+zRcuQtq8fiPS+ZPKbOrvf4vEkugDWKyyYlNSezLLVI3y6BK2PRrDuMBadlKhY/fcnawDhf
-        rIuRk0NCwERi27t+RhBbSGA1o8Tj7ypdjFxA9idGiSXTnrJBOMsYJbat+Q1WxSagKLGvazsb
-        iC0ioCxx+t9VsCJmgSPMEse23WcFSQgLJEi83vuQEaIoUWLL6adANgeQ7SSxZnoqSJhFQFXi
-        7btH7CA2r4CxxIOePnaIZYuZJF7f/AGW4BSwkfjbcBHMZhQQk/h+ag0TiM0sIC5x68l8JogX
-        BCSW7DnPDGGLSrx8/I8VwlaUuP/9JTtEvY7Egt2f2CBsO4kHG3YwQ9jaEssWvmaGOEJQ4uTM
-        JywQvZISB1fcYJnAKDELybpZSEbNQjJqFpJRs5CMWsDIuopRvLS4ODe9otg4L7Vcrzgxt7g0
-        L10vOT93EyMwBZz+dzhmB+O9Wx/1DjEycTAeYpTgYFYS4S059DdFiDclsbIqtSg/vqg0J7X4
-        EKM0B4uSOO+OKRdThATSE0tSs1NTC1KLYLJMHJxSDUzpa+fKd3rGXclVvCome3FCB3fBBZO1
-        UwQFrLLy2fmOtv9nUfVIWqYnX35ga9iJBwIVlS0WinHe+Wf8L6z56Hh8753jhXnSWy66F6/Y
-        5LS8eJqZOsd8Vsmbucqhrmli1lfal6jwB2tEe3JPyP+7Tm+Xk475C/l7XkFHlghcOLxZpWwX
-        8yfn/xUqPL+06hZXzF6zOOu5bMhKy+0MlZqn7c7+bv/X9eJEQs7WjBmvlvHN/i087wXnROFr
-        G2NelvyLZUhfF1a13oxry98TrdUBSZx/N2S8Su6/GJ2f+zXXcB2nVkrU2XUdfqy7C1yl2Hew
-        bOftcn/527OzN/Ke3oyuxA+aXPPKPtyMr6jZP2eFuRJLcUaioRZzUXEiAKq+4olwAwAA
-X-CMS-MailID: 20230912213243uscas1p17fa844630bf6caf6af9119c651e4759b
-CMS-TYPE: 301P
-X-CMS-RootMailID: 20230908225229uscas1p2f1013a8dd9977718cbd19e6433adef57
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 14/18] dax/region: Support DAX device creation on
+ dynamic DAX regions
+Message-ID: <6500e14a8588c_314b6629439@iweiny-mobl.notmuch>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-3-f740c47e7916@intel.com>
-        <ZO+4Qql0rOslp0bl@debian>
-        <CGME20230908225229uscas1p2f1013a8dd9977718cbd19e6433adef57@uscas1p2.samsung.com>
-        <64fba59f73319_1e8e78294e2@iweiny-mobl.notmuch>
+ <20230604-dcd-type2-upstream-v2-14-f740c47e7916@intel.com>
+ <20230830125025.00000fea@Huawei.com>
+ <64f80177c2c21_1e8e7829487@iweiny-mobl.notmuch>
+ <20230912174904.00005fed@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230912174904.00005fed@Huawei.com>
+X-ClientProxiedBy: BY5PR17CA0006.namprd17.prod.outlook.com
+ (2603:10b6:a03:1b8::19) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BN9PR11MB5273:EE_
+X-MS-Office365-Filtering-Correlation-Id: f55b5564-78f6-4092-d99b-08dbb3dcc288
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /BQzUWmT+d+Ei5Ocb3QrRlPY7wv1hGI/FhnwIEz1F/hdqR+oS/I96VNsampm0f6rDKfMbHjB7iQkYPyRx1rfSSfVtYHnCfBufnvdWtdS6P3XVRG3lJ4FrwUMjlrcr3M+Ir2BU/fAAdaksS8ejSTKmOWAOJviShe7X4fI/AqNnmn01cZIqWnKtfG4PWi3PP1NxphZfavOcD46lVdecxjR6visVqgMNXDp1zFBhjqJFxsIywX5v5bRK660NDvaWp8QOs0tkthUD/PNsO2PhGAeekUa15M+rrGS4PRYHA1JidK7JWf5z5Isr8toYuLzOTG/ez1UGVcMv4SdsB679JZYJ6AXJBXfE4ojp6hwDHR0d7FJkVCVmFVVowZmX0AwyfrGlTQKVES/uLVvAcQhRDfq3alLUTm41O8v9ALBI48PCuTsP0phzBkaR+whMHbOoFugiogE3h5VbFipY2NoAgglaGSyycgiwBSuPpRQHFxcPEMnvAXdpU7tc86AzM4j1jnCYLaiNvICe+yNJkBPFHDqSbh4ijD2FnxcQypYXXg3ABd7o97kapUAqDLNEM7GapUG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(39860400002)(366004)(396003)(376002)(451199024)(1800799009)(186009)(8676002)(8936002)(86362001)(4326008)(5660300002)(44832011)(2906002)(6666004)(38100700002)(83380400001)(82960400001)(6506007)(6512007)(9686003)(6486002)(26005)(478600001)(316002)(110136005)(54906003)(66476007)(66556008)(66946007)(41300700001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yHvKTDcRO691EVl9nWo7+xXbZVoDKb1ZbOTl4IDuU1gB1GZqXE60QCCykuSs?=
+ =?us-ascii?Q?/kmlr+l/j534zz4Z3MsYkP4gnLMNQ6IV0gn4P+2+u+8/9RU5C+PY/EP1tt0R?=
+ =?us-ascii?Q?JmDGHhbBnBPDMw4tPHCIVInrT00DZr00d6eldpEtHwi12CTk9nThGKt2gDR1?=
+ =?us-ascii?Q?yEWj4aXxu3J7GrBGyt1VvI8+0r4nNDwe9r6lqO/lzJTAolDufLDHpkIbuFgJ?=
+ =?us-ascii?Q?KxECewUZI+SqMnwMpPMiuXFOfsyxp1HtkV73mGzvLFhVUweR6NNXxLwD7MGw?=
+ =?us-ascii?Q?yQLDziZ5uVU6goceyzi3V9OJ8iVU8pUvNJzIpVDyBGLfPtajeIRP2mXYflJd?=
+ =?us-ascii?Q?qnSgI60ELys3gdSfSsAC/42tz4fcyE6JYCtiKZg1XkxhF+ij5x+5IFQW8Ybc?=
+ =?us-ascii?Q?O5EtD7kSFUnZSNcW5lLXdiMSPcaHxFxgT1t766J3uUVGJlYi1KraXaDKY8O2?=
+ =?us-ascii?Q?YsUDm8j29p9K1c40Tn402yZC+n9fNIUW4t4Hgn4oneJ07nie79eNoK9AkvbG?=
+ =?us-ascii?Q?3qAE90C42R6DuXJ9BxAkrM+cytprpDGAEK43NKOAwb4HhnWJzIl6r/VmfcF0?=
+ =?us-ascii?Q?pQYsG9MDvGryxgTqbvhGYvmw0iH76i0CPTLxONLTRGRENtF4ZgtuK1qcHHeC?=
+ =?us-ascii?Q?cOabshlS66BWH4xZ5tLlieB3aqyXxtv1rZzganZSGVLBA3rHfpiAr4IJd3QZ?=
+ =?us-ascii?Q?Ocrxt1/GskM5r/fYGnNnyjxxqXXp2UTcl2lUfvJ12tNS+W+rPTFLcy/vkurk?=
+ =?us-ascii?Q?uiiRpR2kZqjOAUKg8byxTGCS7Kyv2t2Z8nKzlKKMwhi9tEbbIKMqszmrRVM1?=
+ =?us-ascii?Q?syqGRoKcsmJJKByf5pB87dVHFMpd62Go653iBEmBZXLmRwyDyLnTi44xdxic?=
+ =?us-ascii?Q?lo4bCH3VJasNI8AtrT06As1tXMoFj+PGNCOdJWyJAYTBCgfZsDh+8+zrdd3m?=
+ =?us-ascii?Q?DDzKbt0yqCZu1r66q6sxlDMq/vZ/1Pq0li2Td63DpkoJBaw6pLCOLYrANffL?=
+ =?us-ascii?Q?4xemOy8VkxtZcQ3v/xL4Evx65tfw9LrvMkQVBT/5tNG9JYOQ4pMqu/PTy5fQ?=
+ =?us-ascii?Q?vmLb+cnT4QJzOzwk6H03CcXwSxnPQaYr8G4w/Bx50c4lKeFQofEFDD8tbgUg?=
+ =?us-ascii?Q?Lgu+6c5s0PzPi40h0Mim47OiHult2nw7YSqYbQ8I07+5OoKMLapnEexNkHl6?=
+ =?us-ascii?Q?mN92itU3G1FXLbS2y7PdadqyNF+CW/fCFHR0+KAn5CnoNagucnuEWWDSH/7O?=
+ =?us-ascii?Q?e73IM53bo3WT1eKMR6p/9syuNa0SUd9+j+7hYw5tpvdvgdLwneK/w38ZuHoS?=
+ =?us-ascii?Q?1LUiaS7sfmRF3E5S8nivXdeMc9w78PvUNWTvqyLu/OpB9A6V0/CV6PzsklUe?=
+ =?us-ascii?Q?ep8Z0KCQzhVkNPeqc1ntJqU4+kQoZpm+BKd7JaPQiA2a8AThVr+k6XMY3Nn5?=
+ =?us-ascii?Q?feskwBlEQ1WtTlbBw5RuQdwPGHLfUKdBv4Bp6hC1DlnMBX92/413vgAxTKr5?=
+ =?us-ascii?Q?R34yE+7M/4LlawPlHjdysS9gotzBDeKTfxK45YdjqYMYGmI6L1X18qoAmC/N?=
+ =?us-ascii?Q?QNdIQrPOkgaC55P5JHgoBie3p3hWXn4QmGwhCytM?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f55b5564-78f6-4092-d99b-08dbb3dcc288
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Sep 2023 22:08:14.2789
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zZ2D6kAQHhKk1Ms8pl3NVQnpJSfGahjKSdIdYI4lAQry4vzZBImybxpHiRAAmH4NQFU1n7+YEyOFrP4a6l0Gxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5273
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 03:52:15PM -0700, Ira Weiny wrote:
+Jonathan Cameron wrote:
+> On Tue, 5 Sep 2023 21:35:03 -0700
+> Ira Weiny <ira.weiny@intel.com> wrote:
+> 
+> > Jonathan Cameron wrote:
+> > > On Mon, 28 Aug 2023 22:21:05 -0700
+> > > Ira Weiny <ira.weiny@intel.com> wrote:
+> > >   
+> > > > Dynamic Capacity (DC) DAX regions have a list of extents which define
+> > > > the memory of the region which is available.
+> > > > 
+> > > > Now that DAX region extents are fully realized support DAX device
+> > > > creation on dynamic regions by adjusting the allocation algorithms
+> > > > to account for the extents.  Remember also references must be held on
+> > > > the extents until the DAX devices are done with the memory.
+> > > > 
+> > > > Redefine the region available size to include only extent space.  Reuse
+> > > > the size allocation algorithm by defining sub-resources for each extent
+> > > > and limiting range allocation to those extents which have space.  Do not
+> > > > support direct mapping of DAX devices on dynamic devices.
+> > > > 
+> > > > Enhance DAX device range objects to hold references on the extents until
+> > > > the DAX device is destroyed.
+> > > > 
+> > > > NOTE: At this time all extents within a region are created equally.
+> > > > However, labels are associated with extents which can be used with
+> > > > future DAX device labels to group which extents are used.  
+> > > 
+> > > This sound like a bad place to start to me as we are enabling something
+> > > that is probably 'wrong' in the long term as opposed to just not enabling it
+> > > until we have appropriate support.  
+> > 
+> > I disagree.  I don't think the kernel should be trying to process tags at
+> > the lower level.
+> > 
+> > > I'd argue better to just reject any extents with different labels for now.  
+> > 
+> > Again I disagree.  This is less restrictive.  The idea is that labels can
+> > be changed such that user space can ultimately decided which extents
+> > should be used for which devices.  I have some work on that already.
+> > (Basically it becomes quite easy to assign a label to a dax device and
+> > have the extent search use only dax extents which match that label.)
+> 
+> That sounds good - but if someone expects that and uses it with an old
+> kernel I'm not sure if it is better to say 'we don't support it yet' or
+> do something different from a newer kernel.
 
-> Fan Ni wrote:
-> > On Mon, Aug 28, 2023 at 10:20:54PM -0700, ira.weiny@intel.com wrote:
-> > > From: Navneet Singh <navneet.singh@intel.com>
-> > >
->=20
-> [snip]
->=20
-> > >
-> > > +static int cxl_dc_save_region_info(struct cxl_memdev_state *mds, int=
- index,
-> > > +				   struct cxl_dc_region_config *region_config)
-> > > +{
-> > > +	struct cxl_dc_region_info *dcr =3D &mds->dc_region[index];
-> > > +	struct device *dev =3D mds->cxlds.dev;
-> > > +
-> > > +	dcr->base =3D le64_to_cpu(region_config->region_base);
-> > > +	dcr->decode_len =3D le64_to_cpu(region_config->region_decode_length=
-);
-> > > +	dcr->decode_len *=3D CXL_CAPACITY_MULTIPLIER;
-> > > +	dcr->len =3D le64_to_cpu(region_config->region_length);
-> > > +	dcr->blk_size =3D le64_to_cpu(region_config->region_block_size);
-> > > +	dcr->dsmad_handle =3D le32_to_cpu(region_config->region_dsmad_handl=
-e);
-> > > +	dcr->flags =3D region_config->flags;
-> > > +	snprintf(dcr->name, CXL_DC_REGION_STRLEN, "dc%d", index);
-> > > +
-> > > +	/* Check regions are in increasing DPA order */
-> > > +	if (index > 0) {
-> > > +		struct cxl_dc_region_info *prev_dcr =3D &mds->dc_region[index - 1]=
-;
-> > > +
-> > > +		if ((prev_dcr->base + prev_dcr->decode_len) > dcr->base) {
-> > > +			dev_err(dev,
-> > > +				"DPA ordering violation for DC region %d and %d\n",
-> > > +				index - 1, index);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* Check the region is 256 MB aligned */
-> > > +	if (!IS_ALIGNED(dcr->base, SZ_256M)) {
-> > > +		dev_err(dev, "DC region %d not aligned to 256MB: %#llx\n",
-> > > +			index, dcr->base);
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	/* Check Region base and length are aligned to block size */
-> > > +	if (!IS_ALIGNED(dcr->base, dcr->blk_size) ||
-> > > +	    !IS_ALIGNED(dcr->len, dcr->blk_size)) {
-> > > +		dev_err(dev, "DC region %d not aligned to %#llx\n", index,
-> > > +			dcr->blk_size);
-> > > +		return -EINVAL;
-> > > +	}
-> >=20
-> > Based on on cxl 3.0 spec: Table 8-126, we may need some extra checks
-> > here:
-> > 1. region len <=3D decode_len
-> > 2. region block size should be power of 2 and a multiple of 40H.
->=20
-> Thanks for pointing these additional checks out!  I've added these.
->=20
-> >=20
-> > Also, if region len or block size is 0, it mentions that DC will not be
-> > available, we may also need to handle that.
->=20
-> I've just added checks for 0 in region length, length and block size.
->=20
-> I don't think we need to handle this in any special way.  Any of these
-> checks will fail the device probe.  From my interpretation of the spec
-> reading these values as 0 would indicate an invalid device configuration.
->=20
-> That said I think the spec is a bit vague here.  On the one hand the
-> number of DC regions should reflect the number of valid regions.
->=20
-> Table 8-125 'Number of Available Regions':
-> 	"This is the number of valid region configurations returned in
-> 	this payload."
->=20
-> But it also says:
-> 	"Each region may be unconfigured or configured with a different
-> 	block size and capacity."
->=20
-> I don't believe that a 0 in the Region Decode Length, Region Length, or
-> Region Block Size is going to happen with the code structured the way it
-> is.  I believe these values are used if the host specifically requests th=
-e
-> configuration of a region not indicated by 'Number of Available Regions'
-> through the Starting Region Index in Table 8-163.  This code does not do
-> that.
->=20
-> Would you agree with this?
+This does provide the 'we don't support that yet' in that dax device
+creation can't be associated with a label yet.  So surfacing the extents
+with the tag as a default label and letting those labels change is more
+informational at this point and not functional.  Simple use cases can use
+the label (from the tag) to detect that some extent with the wrong tag got
+in the region but can't correct it without going through the FM.
 
-Agreed.
+It is easy enough to remove the label sysfs and defer that until the dax
+device has a label and this support though.
 
-Fan
->=20
-> Thanks again,
-> Ira=
+> 
+> 
+> > > > @@ -1400,8 +1507,10 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
+> > > >  	device_initialize(dev);
+> > > >  	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
+> > > >  
+> > > > +	dev_WARN_ONCE(parent, is_dynamic(dax_region) && data->size,
+> > > > +		      "Dynamic DAX devices are created initially with 0 size");  
+> > > 
+> > > dev_info() maybe more appropriate?  
+> > 
+> > Unless I'm mistaken this can happen from userspace but only if something
+> > in the code changes later.  Because the dax layer is trying to support
+> > non-dynamic regions (which dynamic may be a bad name), I was worried that
+> > the creation with a size might slip through...
+> 
+> Fair enough - if strong chance userspace will control it at somepoitn then
+> ONCE seems fine.
+> 
+> > 
+> > > Is this common enough that we need the
+> > > _ONCE?  
+> > 
+> > once is because it could end up spamming a log later if something got
+> > coded up wrong.
+> 
+> I'm not sure I care about bugs spamming the log.   Only things that
+> are userspace controlled or likely hardware failures etc.
+> 
+
+Understood.  Let me trace them again but I think these can be triggered by
+user space.  If not I'll remove the ONCE.
+
+Thanks again,
+Ira
