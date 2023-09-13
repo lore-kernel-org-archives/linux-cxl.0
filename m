@@ -2,82 +2,115 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57BFEDEC50
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Sep 2023 13:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C04EDEC4D
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Sep 2023 13:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232437AbjIMNag (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Sep 2023 09:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49280 "EHLO
+        id S240991AbjIMNgY (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Sep 2023 09:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230414AbjIMNaf (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Sep 2023 09:30:35 -0400
+        with ESMTP id S240962AbjIMNgW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Sep 2023 09:36:22 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39E519B6
-        for <linux-cxl@vger.kernel.org>; Wed, 13 Sep 2023 06:30:31 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rm1W32D7hz6HJcl;
-        Wed, 13 Sep 2023 21:28:47 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Wed, 13 Sep
- 2023 14:30:29 +0100
-Date:   Wed, 13 Sep 2023 14:30:28 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <fan.ni@samsung.com>, <dan.j.williams@intel.com>,
-        <alison.schofield@intel.com>, <ayush.m55@samsung.com>,
-        <a.manzanares@samsung.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 4/4] hw/cxl: Add get scan media results cmd support
-Message-ID: <20230913143028.00003fec@Huawei.com>
-In-Reply-To: <kbznhylcg6qqltagnwrsidsvyetsdvmg4dftbsm2btjlwhqx2c@yy245lt2z6zd>
-References: <20230908073152.4386-1-dave@stgolabs.net>
-        <20230908073152.4386-5-dave@stgolabs.net>
-        <20230912130425.0000569b@Huawei.com>
-        <kbznhylcg6qqltagnwrsidsvyetsdvmg4dftbsm2btjlwhqx2c@yy245lt2z6zd>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1842019B9
+        for <linux-cxl@vger.kernel.org>; Wed, 13 Sep 2023 06:36:18 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Rm1g30SL8z6K6CF;
+        Wed, 13 Sep 2023 21:35:43 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Wed, 13 Sep 2023 14:36:16 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <qemu-devel@nongnu.org>, Michael Tsirkin <mst@redhat.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+        <linux-cxl@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH V2] hw/pci-bridge/cxl-upstream: Add serial number extended capability support
+Date:   Wed, 13 Sep 2023 14:36:15 +0100
+Message-ID: <20230913133615.29876-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 12 Sep 2023 20:33:52 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
+Will be needed so there is a defined serial number for
+information queries via the Switch CCI.
 
-> On Tue, 12 Sep 2023, Jonathan Cameron wrote:
-> 
-> >On Fri,  8 Sep 2023 00:31:52 -0700
-> >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> >  
-> >> Iterate over the list keeping the output payload size into account,
-> >> returning the results from a previous scan media operation. The
-> >> scan media operation does not fail prematurely due to device being
-> >> out of storage, so this implementation does not deal with the
-> >> retry/restart functionality.
-> >>
-> >> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>  
-> >A few comments inline but nothing to stop me carrying this on my
-> >staging tree. (gitlab.com/jic23/qemu cxl-*latestdate*
-> >
-> >So I'll apply it there.  Updates welcome or I'll act on comments when
-> >this gets to the top of our queue for upstreaming.  
-> 
-> I'll send follow up patches for this series once your new latest
-> branch is published.
-> 
-> Thanks,
-> Davidlohr
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+v2:  Thanks to Philippe for review.
+ - Keep to a fixed offset for the serial number capability.
+   If it's not present then there will be a hole which is fine
+   under the PCIE specification.
+ - As per reply to review of v1, I've not moved the Null definition
+   to a header and have kept it is a valid 'default'.
 
-https://gitlab.com/jic23/qemu/-/tree/cxl-2023-09-13
+hw/pci-bridge/cxl_upstream.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-Fresh and tasty.  Includes 3 series that I've posted with the hope
-of them merging soon and another one I'll post in a few mins to
-deal with over long lines...
+diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
+index 2b9cf0cc97..a57806fb31 100644
+--- a/hw/pci-bridge/cxl_upstream.c
++++ b/hw/pci-bridge/cxl_upstream.c
+@@ -14,14 +14,21 @@
+ #include "hw/pci/msi.h"
+ #include "hw/pci/pcie.h"
+ #include "hw/pci/pcie_port.h"
++/*
++ * Null value of all Fs suggested by IEEE RA guidelines for use of
++ * EU, OUI and CID
++ */
++#define UI64_NULL (~0ULL)
+ 
+ #define CXL_UPSTREAM_PORT_MSI_NR_VECTOR 2
+ 
+ #define CXL_UPSTREAM_PORT_MSI_OFFSET 0x70
+ #define CXL_UPSTREAM_PORT_PCIE_CAP_OFFSET 0x90
+ #define CXL_UPSTREAM_PORT_AER_OFFSET 0x100
+-#define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
++#define CXL_UPSTREAM_PORT_SN_OFFSET \
+     (CXL_UPSTREAM_PORT_AER_OFFSET + PCI_ERR_SIZEOF)
++#define CXL_UPSTREAM_PORT_DVSEC_OFFSET \
++    (CXL_UPSTREAM_PORT_SN_OFFSET + PCI_EXT_CAP_DSN_SIZEOF)
+ 
+ typedef struct CXLUpstreamPort {
+     /*< private >*/
+@@ -30,6 +37,7 @@ typedef struct CXLUpstreamPort {
+     /*< public >*/
+     CXLComponentState cxl_cstate;
+     DOECap doe_cdat;
++    uint64_t sn;
+ } CXLUpstreamPort;
+ 
+ CXLComponentState *cxl_usp_to_cstate(CXLUpstreamPort *usp)
+@@ -326,7 +334,9 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
+     if (rc) {
+         goto err_cap;
+     }
+-
++    if (usp->sn != UI64_NULL) {
++        pcie_dev_ser_num_init(d, CXL_UPSTREAM_PORT_SN_OFFSET, usp->sn);
++    }
+     cxl_cstate->dvsec_offset = CXL_UPSTREAM_PORT_DVSEC_OFFSET;
+     cxl_cstate->pdev = d;
+     build_dvsecs(cxl_cstate);
+@@ -366,6 +376,7 @@ static void cxl_usp_exitfn(PCIDevice *d)
+ }
+ 
+ static Property cxl_upstream_props[] = {
++    DEFINE_PROP_UINT64("sn", CXLUpstreamPort, sn, UI64_NULL),
+     DEFINE_PROP_STRING("cdat", CXLUpstreamPort, cxl_cstate.cdat.filename),
+     DEFINE_PROP_END_OF_LIST()
+ };
+-- 
+2.39.2
 
-Jonathan
