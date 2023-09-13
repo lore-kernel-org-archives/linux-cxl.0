@@ -2,79 +2,79 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF83FEE01F1
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Sep 2023 17:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96A4EE01FF
+	for <linux-cxl@archiver.kernel.org>; Wed, 13 Sep 2023 18:00:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbjIMRbC (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Sep 2023 13:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
+        id S231455AbjIMSAK (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Wed, 13 Sep 2023 14:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjIMRbB (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Sep 2023 13:31:01 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FDCDC1;
-        Wed, 13 Sep 2023 10:30:57 -0700 (PDT)
+        with ESMTP id S230205AbjIMSAH (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Sep 2023 14:00:07 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D5919AF;
+        Wed, 13 Sep 2023 11:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694626257; x=1726162257;
+  t=1694628003; x=1726164003;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=CeY+uqL86X6Cizk49EY9pSJr1OwumcVYxXdXN7aYyo4=;
-  b=FMemf+hQNACbzljrNE3ewsOH1vIRtn9cCu3KR9JRLFCzjG6MXxQ/LfOi
-   HiBYQxTtMMAYXQ0ZaEmXt9+QjJxR+oPmTPX0rhD7O4xJNl8OmOGAJEJYT
-   1A44Hvw24B7I3bYEweaiSLjkStCIe96WKHV5eRsRuxxZO5lzmMw2wfd65
-   Z3ej/WIkHgCAqif4weFSFhMilAR7NfjpNOZbQSGy9tmo7yWEwK62649RP
-   K1ppepT5pEQB7J9UTzJEDTqkoj624+uCFyELkY35+BABFNDTvy0EXgf3f
-   MNn5jMaraiinneqmNMV2876rs3+fSB/u4cCbvBL5ycyHzA6fko7YNG03O
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="445167023"
+  bh=VSu8qer4+Zfa1377Vtg0ju7FDckidDT3XqYYs+8/6ZA=;
+  b=hP5lOvxDDWtdLLDd/Rjsaxgf0vyBtIMzQ3ZzbVlRQ+pebXGo1cPkNGp2
+   mgxPdzIFPCbsjJKDzp9cR1eDsdc5bTDaAbaKBjk13HJ88TZj+iO0w3v6g
+   038XWLjmubeCBFmatvZJIiGtkVMaeBDRBFj+9wKFAmg6f3dVDiq5Nw3Cn
+   oj/4X5ilkha41ZK2BA8Q4i5idKd9a261MiY1H88FGNM8LkmrT9OAR3uO6
+   1iERqJZkVHJyjc+uyt+rZvAxNCbx1xQ5OK31igWnmfqbIDaSHIhtSfvD/
+   Z5rQUde91Cn+rbXntCQbfTLaOakT8GCme2A5QcYdBcsEMUJok/k7KkFri
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="378656462"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="445167023"
+   d="scan'208";a="378656462"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 10:30:56 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 11:00:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="834396551"
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="834408963"
 X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
-   d="scan'208";a="834396551"
+   d="scan'208";a="834408963"
 Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Sep 2023 10:30:56 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Sep 2023 11:00:02 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
  fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Wed, 13 Sep 2023 10:30:55 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.32; Wed, 13 Sep 2023 11:00:01 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Wed, 13 Sep 2023 10:30:55 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.109)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.32 via Frontend Transport; Wed, 13 Sep 2023 11:00:01 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Wed, 13 Sep 2023 10:30:54 -0700
+ 15.1.2507.32; Wed, 13 Sep 2023 11:00:01 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OAlHNU4UFSKeYwzBulXAtLazq6LN5OiVjcQO26V/uqOUC7+v4bklFv7IyDYoLOXve5Pc+r8iuaM5NdytYN4iGx3o5AW2CcVh2Ws7tT1R9e3l4gqpy8Qugp0HepVxOI/06iiKbU7KB6FsbvN6vB9zcZB8dhXn91tH9qPQRWR9mkudvqVHZmkE4TyQchsOqXvhtnuejJPtJnHFCEnJ5n+yRIh4trThJ7prdslZ8yQLiW6lKZ26Y8l2DZEUpHzsHCV5nx2cuNhi+S7TDPRp7rJlkWRA/jOsDV48UweNNIbLir7TIIRDpKTQWVW12WZzmZr9bbhWvFJXMpXgJvnwEUks5Q==
+ b=DXFkbmhW7Q7iFUb9sfwtCos1LdahhahU+nFipyWYmkxGvnLUZxyvHjmnEMw8N9mBjab2/IEaNRZ13Sjw8v39m6STPKWl8sEXHOnlqXS2jjJXuISj2tve9EdeRtfQWAvwYUTFJZvA6ZjpE+bsrkXsFVwDV+eWCsym7aXpR/KODwU4TfftMauACCHdiGCGNr3YeOwnIfTNT9L6Ww02s3vI6S66Z/24iAlRhF56p6Rg+q51uGWN+1uaiMxDd8CGahu2Mj8oZlAEy3nGd6wf7iGTm+DatkugewEaDWFQHBxKzyVfzDmmegjcEpPHQoHxZQtb3w5dS+Uj0mODTUo2Y0dY5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FUFak1FfbgMdHAmMlkQpodS7HixK42KQ2JjDEN4Wsto=;
- b=QIdNWYFbY9KW3SN7cystfCZHiHXrjV0u1EkgYNz/yuraPfL604pXdQJMrliorNiNkq1GaJ/YCE6gl1fhcuEcXJG97rV1UtPR9mjpatOPbQUpMOB1PFCgSRPPjKy6e2MxiVvgAtJyhovoIUw+1h1Dq7Rs1/DiP2WUpCX2HVPqtb020HjQm9ecQLH+gc9LSwONRjhhN/HKUN8ycapzVJ33M3FqaIU6MYBPw5NhdM8SHpVgboBWUQs4yeeEyuItkrKOZIdeuB9Bno0283tSGD2vpVrHWibsqvX6onwPH+BLZTxYMmiP+RtRdwwQJbWYOneu2YuCrNWNBYofqncA+nhjKw==
+ bh=ykRI8V2iEV85fL/Hq1MPPiEIuOycnxMSFB9y/7D1Rpc=;
+ b=CpKpKsMr1maCgRuV5B0PUYcjALQTK3Nms4rPC9oyimD8Z2h5ZoLlpDp6Gy/ccmJhrXUYhT2fJhszwDEFhlY/j6RRfMSAEeIngysDJMz1gYBb8SCI5L+JpNjn8Zu35/NOEH70hOudSbrTWNmHjpzwLjz2OxCoU5UZwmJWwviIWEZMPNFbWJkpiU4v6Z5oyEmm0kzWZm47TFACBf1cvfaVYoHBmwdiF0mN1eRB7GGyewtABJvo3qU9g4jha2NWFE+r6Q48mROKt7raV0LyW0qMOAXq8+rpzQbXnutiqEhejyC/QdrrKD+1Jym5hceJXX8OTD60iGAdowV+1P2DudG1eg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH7PR11MB7025.namprd11.prod.outlook.com (2603:10b6:510:208::12) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CY8PR11MB7268.namprd11.prod.outlook.com (2603:10b6:930:9b::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.19; Wed, 13 Sep
- 2023 17:30:47 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6768.029; Wed, 13 Sep 2023
- 17:30:47 +0000
-Date:   Wed, 13 Sep 2023 10:30:42 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.30; Wed, 13 Sep
+ 2023 17:59:59 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6768.029; Wed, 13 Sep 2023
+ 17:59:59 +0000
+Date:   Wed, 13 Sep 2023 10:59:56 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
         Navneet Singh <navneet.singh@intel.com>,
@@ -86,7 +86,7 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH RFC v2 14/18] dax/region: Support DAX device creation on
  dynamic DAX regions
-Message-ID: <6501f1c29a2c4_31df46294ec@iweiny-mobl.notmuch>
+Message-ID: <6501f89c9ef86_12747294bd@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
  <20230604-dcd-type2-upstream-v2-14-f740c47e7916@intel.com>
  <20230830125025.00000fea@Huawei.com>
@@ -94,322 +94,179 @@ References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
  <20230912174904.00005fed@Huawei.com>
  <6500e14a8588c_314b6629439@iweiny-mobl.notmuch>
  <6500e7cdac9dc_71e582945a@dwillia2-xfh.jf.intel.com.notmuch>
+ <6501f1c29a2c4_31df46294ec@iweiny-mobl.notmuch>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <6500e7cdac9dc_71e582945a@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: BYAPR02CA0006.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::19) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+In-Reply-To: <6501f1c29a2c4_31df46294ec@iweiny-mobl.notmuch>
+X-ClientProxiedBy: MW4PR04CA0107.namprd04.prod.outlook.com
+ (2603:10b6:303:83::22) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH7PR11MB7025:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c902936-eba7-4e0b-1786-08dbb47f2a91
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7268:EE_
+X-MS-Office365-Filtering-Correlation-Id: f2a54103-ef73-46c9-1d31-08dbb4833f12
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u/AtXd0RLmvgDoRd3Po+hwzVIQ3ggUaNT0pg8WKIId0EOb18u+oofSvV8HvRxL1VxZ6em2wqa3DeAjbBsZ2ABemVNIMuBjreyJQEOrPGJpucAj/X7yu4VqYWhOL0zd/eovU/5m06ffWV88pdOidRcxD9HJ+KiZgvEGB8nPUu0doK8P+5XiF2MviIGINKRZ5KqY3doKLC4/2DmPFDJpOJ6vEbsWGmUF82GvWL/YC0pIJDcyG/TKXO1S0iAh0w/ub2i2IfDa3xFRwvjHEiIhBMDecCERMGv1KWZqqvOMQTZX/VANOmhcIbHvSTn/EoZ56e02CpfDFmVRJ1ut0A/mBPKD6sIAFL4cM87HFH2TJm/h2KTuayDPxgOJNis2D+32G3xuqur8IHnQe3ut7w6alTO1bC8/YBqRWTlqixYvPBin7U1AU0HPKbvW8oOMOfvEMAxNxZVshk/dBByoFqvEn4PVb8eCF12p2J+1HjKQptfhOZtjWxx51zh+VkWjXL0TgvbV+gX60ZTeT1K6Mz1fuiHXwF99cLopPklYQ9VSssjK8Dycm2eyERHtB0gGAqF6d+
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(136003)(346002)(396003)(366004)(451199024)(1800799009)(186009)(86362001)(82960400001)(38100700002)(66899024)(66476007)(54906003)(41300700001)(66946007)(66556008)(8936002)(8676002)(4326008)(316002)(6666004)(26005)(6512007)(478600001)(9686003)(6486002)(6506007)(30864003)(2906002)(110136005)(83380400001)(44832011)(5660300002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: IP/7PC44sak3JAuphR55eKUCTyOzOlsRo9z2LIsMr86acGTLYaYD7qYVbBJRX+f711dAVHf2I5VhP4ogkNRJJBW6MCrUrk2hFysjmft0QFqOwd4RBfWdqzkz7Ya3mVoZDXdtho+fqdzAv8+6eHM+NFyFHUHZi21kSDqPwKiyGVNiLD3gjBsHdjBgFijeBLGz98KReV/S4ICqH46gut9fCxBHzqaDsiQ8vzlc9I2BKYsr8LY52/5c7J5TLYQc/90JhWIB9SCPnI16C7O9f9ZB62vDic25an0k73y8nuSuLVB8obd4VhONxfv9i4YzJ9OaljXBU8e0uBeHukLmrQ9og25dTTc0ghtTdjTYYrTPzeD2xYFWqYU+F0S0GLcUIqZ2xTPpl5HvAkSaWCQt38w2bBndLLdYmtp7TgYCB3paJz+e8g2fVZheFo4ZvorpTHmJUTOTJm5V1l2zos+gaK1Ejlo92mDhL3vQchsc5lOZpo5QtsTgr60DN+iBv+e9VhaPgTr6Yzt8Btqsr/bvbfbOvrOEMYkTTCfE65O9mw3o+Gp4PlSGEfX+j6XEBvn9Nwk5
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(376002)(346002)(396003)(39860400002)(451199024)(186009)(1800799009)(8936002)(8676002)(26005)(4326008)(5660300002)(83380400001)(9686003)(6512007)(6486002)(41300700001)(6506007)(66946007)(54906003)(66556008)(110136005)(6666004)(82960400001)(38100700002)(316002)(66476007)(86362001)(2906002)(478600001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3sa7e5MfjyLqRg5IKmMDjX/no7g5+x/66nwRJlhDJAr9aknodEkQdLjZfFPH?=
- =?us-ascii?Q?eKBPXM2gCOShPg5m4hXIEVf4ghUEBhkAi8EGzYxRj7Qe21RbdYV4g5Tdp9Cq?=
- =?us-ascii?Q?7yj2saxIQfvGsPN1WaTPaW3n7Z8aKxHbv+K/G4AcgzBZqdutzx+Y6m0QuorI?=
- =?us-ascii?Q?01GenA6yQXrdbyvdsTlceHVg6OxN1nfKqY1+0rffoOP8+ecwHVN+Cs9ASx5p?=
- =?us-ascii?Q?oGeiYpKwnOot0Alw9Pj1TXXTFB3SClKas0OgHve+iJUx/L/6wDFVLJo5vULw?=
- =?us-ascii?Q?BCVgzZdvflZUeaVgwEcDL+ag1b1zMriqdCY8d4lrKCknQI8k0xEy0YuqCe5m?=
- =?us-ascii?Q?LA2IbcEDYln71kIDq/XqMATudBaOT9s0f/3TSJdwdQimBWO0tkP3dpuz4YRu?=
- =?us-ascii?Q?V+A04NcJwm92ajGxU8EYZWtKNIznJRVg5IAlemF0VRz1rGZ863vzSHnnVADs?=
- =?us-ascii?Q?iL6vBBqFc+zxYXdJZYqcOQEa+ZHNwlBYcyyGGwOt9MtUCHjsz6+o1A/d6czH?=
- =?us-ascii?Q?VsgriFueadbdZVNvOcisSb0xXNLopd33gqDZvs3ZlEODz+3l5cTNosJ0zYFy?=
- =?us-ascii?Q?3VPxorgCrl67ZBapRe/BbxCbG4hKpVn8lXXMGnsRxqAZ/uaT+UHcVWXUwVMP?=
- =?us-ascii?Q?nrim0pVoY8A6V/KgOWdLbd7a7FxVxEPQ87EA5WxJyq33/YkDuS0XLvB50Wye?=
- =?us-ascii?Q?YfZJpRQm5eOAsa4LanIiFqwlf9Irj5zfirWX3XLSUW4Hsnp0tZLEDe6jsnTk?=
- =?us-ascii?Q?5PK2oLPqfHwiTfZsxwig3FkorGngdZd1nR77ykWDBApjP2y0+TBfjkfNiyrI?=
- =?us-ascii?Q?ZIcun0JNOMUSl7ObUISbQi6mcFjp5smHZNWLOZOPj5htGmc7/hbzQNuN17uA?=
- =?us-ascii?Q?FcAM3AsmKPJETMiWMdeRbztzWpeLGvuaBhBRtTeHNoc+t88owVVz/yflizWn?=
- =?us-ascii?Q?ORDji79DTYqaDqSCmdXMrvhmQu9Ep1no9/QJhNQ3HQjSdBUsTXKIqjvqRI87?=
- =?us-ascii?Q?oEguu/Dj8Oe2MZ0H5sVgKEA1jv17CtAQuOMoFyTyKy6yd5BztE41wUrXcEab?=
- =?us-ascii?Q?BqeVdK9b4zc7/zuodtX2B+fFGobvRNLb4f60ZQMIXBPcwH2WvucizFJEN1ka?=
- =?us-ascii?Q?CUvPPP3DGuB7aIVbsyj8wh9JHqmSVu1RAAbyqiCxP+IpWcRkzoYI+N/57gg6?=
- =?us-ascii?Q?D0Ssz7KAqQucG5qa3Cfo/TucMPCRzBSa2Ka7NzoDc01HqmvmWemlfm0pVfoG?=
- =?us-ascii?Q?mu6h8fdwGSQkhxZUgBWknXv3842ZgvsTSJLLgfEdfDfoAb29R4J0d7QI8YJF?=
- =?us-ascii?Q?etnjXhdeR7tz3zmyPnwN3mBD2gT+am2vop3Vsstrc8SetonbwcObWDqpD/+K?=
- =?us-ascii?Q?zmgbEgOkI52ytuyYsrdCOIrRf0k9eGryaUGfV1TvoIolfnY2ECiOce/J9CdO?=
- =?us-ascii?Q?uXbiv++Wf+nzeUOQ7R27GFf6mbJq4M9VSoP54edqi1iiAVd3/1tQ1R1aUAh5?=
- =?us-ascii?Q?NiAUhp6N0CJMKKNqIt6Q3X4I2MKau453KjqSnwrMiEZ/ltOWLZWQcAyr5Ne0?=
- =?us-ascii?Q?veQE0SfOWFznoRy6d18JpqaUDc5/8Oa0VvQcuchs?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c902936-eba7-4e0b-1786-08dbb47f2a91
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uvRIxWVff4yx0x2sf5uqRpb2HkgV8T4TUBnlUm3Vemv5JEsrKUglCvIVuP7n?=
+ =?us-ascii?Q?xxDjwjEWAqugELATI1oUj8eXxyt2sT3Yw9hYzfMXJRMWf9YLs7Sk8ck/wRew?=
+ =?us-ascii?Q?ZtV/XDWL1ok+OQFnwyfMPawX0iKOrIMRRmteKVhCceEqap9AK9AIMkPxVNcA?=
+ =?us-ascii?Q?yDhWdMtBMh3ajW72zBvk4Y6CeeDbJ3hcehbHiq49zr+ysKemK1dVkSt4nxVS?=
+ =?us-ascii?Q?wfCE5pEE+lr53yddMn3FglPvM/J9MQ9BOCeCoHR1uPP1l20Di0b7jUE58gkj?=
+ =?us-ascii?Q?xxWw8r7C0YgRpMcqGkgy6E0l3kK6Q20YFgVjevIOCpM1Xik7VUQXai/NM+Wn?=
+ =?us-ascii?Q?/rVf/KjfAu3g5q7YtPzRh4UFqUtmM0Tkwng83ggb/DBL/vtoyKl516Chogg/?=
+ =?us-ascii?Q?29VV5gP8z3mEx+6yVQN9XDB50sr3t31hkXrDgcWu0Qp3FRKw/+L7Sm7ztxC8?=
+ =?us-ascii?Q?42q9ClA4YH6iMAunr49hhkZuBa6EFhrLWhIqLmZuZMUXmGGCx+vC5zQB6eNe?=
+ =?us-ascii?Q?uS0ZssiKPPUi8YRLxQJkUVsD/3lQHn4LU6TnEpWvmZRkAE2Srthm3STrYTnE?=
+ =?us-ascii?Q?QNEkcALh9TefSYSPfhk+m4JIGww1LqYBA3RAgQxOab8fvvKDqM/pmB8o7K+l?=
+ =?us-ascii?Q?UhVLRDd4cV6b06LFBXHuch51xv1J/RnC1ixV87sJS+dheoNO92L5gaHhT/Ty?=
+ =?us-ascii?Q?9tF0XPq19yU1yT7Y5AXOAPG5Z9G1r5OFb+VoRP/mr1+EuC/xDqf6iHGaIpKh?=
+ =?us-ascii?Q?IZ33cR3TMIuAup/Y79Y3I/QQUPq1dOS0kvwgzmK5GSzC0N576lfZ04E9o6d6?=
+ =?us-ascii?Q?LZnmEgf016+Afql7a6VBNzMdpe9dC+HmAQwKrY06ucABzGI/4O/yJACKrSiI?=
+ =?us-ascii?Q?0F9aUD3fNhQHF5FZb6lMdYSxMki87vSwqsbJKb2o5OOi53BJLWnDkyyu7H+u?=
+ =?us-ascii?Q?iFNdQ/AnXPVBXNcmcoYprW27MwcI9JsLN9KiOQsBIhYPA1pWyBKUQnu5/1nS?=
+ =?us-ascii?Q?1W/f/WfMTuODNL0jy9ilcCzxcCrqp7vIyXeXlmHBCYoLHIvIWmOjnUFASoST?=
+ =?us-ascii?Q?Y2xAxG5zcb3/EuJCuWg6QNOywjpvHgw7ed2bMXngYbeV8Eq0MOS71hjAhb9t?=
+ =?us-ascii?Q?NNyjc2Xgjhoa+Xtm8gyVjB41E6c577yVA13FSUdIRhJo+5f4rkCduqIy8iCK?=
+ =?us-ascii?Q?tGripTCXGjPbShH89lcLXjD+i4brPJPQaFDmYRRWLp8RgauXaB788ynv693S?=
+ =?us-ascii?Q?Py/O5NqUf3OZ6YJbCLjh5fRlVJXDBGny3hkructubKHTsCjWmoxXMsrY3qM2?=
+ =?us-ascii?Q?PB88enaH+SJ8trUOWtHoEZebWR3Kp+sex1f6QDkqnIC163DmY8nm1M96JtCP?=
+ =?us-ascii?Q?4Gw7/M0ymPP9RyyYIlFxoPFeN//obYTOgNY63FaE3XJ6+ZNwcdidFefSeyq7?=
+ =?us-ascii?Q?6xjaGxMhfm2reAzCqTrFZW+ig/mDhmjfO27TELr+zgziUWflaffmiaJysH2F?=
+ =?us-ascii?Q?4JQ8TmgI0J5BUGY7LY99zz94lx7CVuZlUHtAOM3x5xtzAhui0WraWLOpLg7k?=
+ =?us-ascii?Q?opwcEykekXUM93Hkjqo+bbGkEusOyuNiGMQClA7rZJmO3hSGREDDuSQHjnCN?=
+ =?us-ascii?Q?3g=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2a54103-ef73-46c9-1d31-08dbb4833f12
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2023 17:30:47.3772
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2023 17:59:59.6350
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KkjfEyh+nJg+wYoDF3Z5NtvtFf+v7dk+MIqKdR1dzPI+3E9RUTUJi6v9MTz0Yn0wLC7k3bqMsW01YmfSrkJSvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7025
+X-MS-Exchange-CrossTenant-UserPrincipalName: jyOxmPndobwyegES2VjdC5McSfEo7naVYFzJLiYs6FOLx7hTH2RG3qeY9190Xi0hrNb6JgU/KPdL03o35jJjTbZCPlbYIMT/mlFo9cerDPQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7268
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dan Williams wrote:
-> Ira Weiny wrote:
-> > Jonathan Cameron wrote:
-> > > On Tue, 5 Sep 2023 21:35:03 -0700
-> > > Ira Weiny <ira.weiny@intel.com> wrote:
-> > > 
-> > > > Jonathan Cameron wrote:
-> > > > > On Mon, 28 Aug 2023 22:21:05 -0700
-> > > > > Ira Weiny <ira.weiny@intel.com> wrote:
-> > > > >   
-> > > > > > Dynamic Capacity (DC) DAX regions have a list of extents which define
-> > > > > > the memory of the region which is available.
-> > > > > > 
-> > > > > > Now that DAX region extents are fully realized support DAX device
-> > > > > > creation on dynamic regions by adjusting the allocation algorithms
-> > > > > > to account for the extents.  Remember also references must be held on
-> > > > > > the extents until the DAX devices are done with the memory.
-> > > > > > 
-> > > > > > Redefine the region available size to include only extent space.  Reuse
-> > > > > > the size allocation algorithm by defining sub-resources for each extent
-> > > > > > and limiting range allocation to those extents which have space.  Do not
-> > > > > > support direct mapping of DAX devices on dynamic devices.
-> > > > > > 
-> > > > > > Enhance DAX device range objects to hold references on the extents until
-> > > > > > the DAX device is destroyed.
-> > > > > > 
-> > > > > > NOTE: At this time all extents within a region are created equally.
-> > > > > > However, labels are associated with extents which can be used with
-> > > > > > future DAX device labels to group which extents are used.  
-> > > > > 
-> > > > > This sound like a bad place to start to me as we are enabling something
-> > > > > that is probably 'wrong' in the long term as opposed to just not enabling it
-> > > > > until we have appropriate support.  
-> > > > 
-> > > > I disagree.  I don't think the kernel should be trying to process tags at
-> > > > the lower level.
-> > > > 
-> > > > > I'd argue better to just reject any extents with different labels for now.  
-> > > > 
-> > > > Again I disagree.  This is less restrictive.  The idea is that labels can
-> > > > be changed such that user space can ultimately decided which extents
-> > > > should be used for which devices.  I have some work on that already.
-> > > > (Basically it becomes quite easy to assign a label to a dax device and
-> > > > have the extent search use only dax extents which match that label.)
-> > > 
-> > > That sounds good - but if someone expects that and uses it with an old
-> > > kernel I'm not sure if it is better to say 'we don't support it yet' or
-> > > do something different from a newer kernel.
+Ira Weiny wrote:
+[..]
 > > 
-> > This does provide the 'we don't support that yet' in that dax device
-> > creation can't be associated with a label yet.  So surfacing the extents
-> > with the tag as a default label and letting those labels change is more
-> > informational at this point and not functional.  Simple use cases can use
-> > the label (from the tag) to detect that some extent with the wrong tag got
-> > in the region but can't correct it without going through the FM.
-> > 
-> > It is easy enough to remove the label sysfs and defer that until the dax
-> > device has a label and this support though.
+> > Given that one of the expected DCD use cases is to provide just in time
+> > memory for specific jobs the "first-available" search for free capacity
+> > in a Sparse DAX Region collides with the need to keep allocations
+> > bounded by tag.
 > 
-> Catching up on just this point (still need to go through the whole
-> thing).  A Sparse DAX region is one where the extents need not be
-> present at DAX region instantiation and may be added/removed later. The
-> device-dax allocation scheme just takes a size to do a "first-available"
-> search for free capacity in the region.
-
-Agreed.  And this is the way things work now.
-
-Also your use of 'Sparse DAX region' seems better than the word 'dynamic'
-I have used now.  I know that static regions mean something else but I
-could not think of a better word.  I'll make adjustments to the
-code/commit messages.
-
+> How does it collide?
 > 
-> Given that one of the expected DCD use cases is to provide just in time
-> memory for specific jobs the "first-available" search for free capacity
-> in a Sparse DAX Region collides with the need to keep allocations
-> bounded by tag.
-
-How does it collide?
-
-My attempt here is to leave dax devices 'unlabeled'.  As such they will use
-space on a 'first-available' search regardless of extent labels.
-
-Effectively I have defined 'no label' as being 'any label'.  I apologize
-for this detail being implicit and not explicit.
-
-My envisioned path would be that older daxctl would continue to work like
-this because the kernel would not restrict unlabeled dax device creation.
-
-Newer daxctl could use dax device labels to control the extents used.  But
-only when dax device labeling is introduced in a future kernel.  Use of a
-newer daxctl on an older DCD kernel could continue to work sans label.
-
-In this way I envisioned a path where the policy is completely dictated by
-user space restricted only by the software available.
-
+> My attempt here is to leave dax devices 'unlabeled'.  As such they will use
+> space on a 'first-available' search regardless of extent labels.
 > 
-> I agree with Jonathan that unless and until the allocation scheme is
-> updated to be tag aware then there is no reason for allocate by tag to
-> exist in the interface.
-
-I will agree that it was perhaps premature to introduce labels on the
-extents.  However, I did so to give tags a space to be informationally
-surfaced.
-
-IMO we must have a plan forward or wait until that plan is fully formed
-and implemented.  The size of this set is rather large.  Therefore, I was
-hoping that a plan would be enough to move forward.
-
+> Effectively I have defined 'no label' as being 'any label'.  I apologize
+> for this detail being implicit and not explicit.
 > 
-> That said, the next question, "is DCD enabling considered a toy until
-> the ability to allocate by tag is present?" I think yes, to the point
-> where old daxctl binaries should be made fail to create device instances
-> by forcing a tag to be selected at allocation time for Sparse DAX
-> Regions.
-
-Interesting.  I was not considering allocate by label to be a requirement
-but rather an enhancement.  Labels IMO are a further refinement of the
-memory space allocation.  I can see a very valid use case (not toy use
-case) where all the DCD memory allocated to a node is dedicated to a
-singular job and is done without tags or even ignoring tags.  Many HPC
-sites run with singular jobs per host.
-
+> My envisioned path would be that older daxctl would continue to work like
+> this because the kernel would not restrict unlabeled dax device creation.
 > 
-> The last question is whether *writable* tags are needed to allow for
-> repurposing memory allocated to a host without needing to round trip it
-> through the FM to get it re-tagged. While that is something the host and
-> orchestrator can figure out on their own, it looks like a nice to have
-> until the above questions are answered.
-
-Needed?  No.  Of course not.  As you said the orchestrator software can
-keep iterating with the FM until it gets what it wants.  It was you who
-had the idea of a writable labels and I agreed.
-
-"Seemed like a good idea at the time..."  ;-)
-
-As I have reviewed and rewritten this message I worry that writable labels
-are a bad idea.  Interleaving will most likely depend on grouping extent
-tags into the CXL/DAX extent.  With this in mind adjusting extents is
-potentially going to require an FM interaction to get things set up
-anyway.
-
-	[Again re-reading my message I thought of another issue.  What
-	happens if the user decides to change the label on an extent after
-	some dax device with the old label?  That seems like an additional
-	complication which is best left out by not allowing extent labels
-	to be writable.]
-
-I think writable labels are orthogonal to the kernel behavior though.
-Allowing labels to change after the fact is a policy matter which is not
-something the kernel needs to manage.
-
-The kernel does need to manage how it allocates a dax device across the
-extents available.  Assigning a dax label and allocating to the extents
-matching that label is very straight forward.  The real issue is how to
-deal with the 'no label' case.
-
-As a path forward, I made a couple of assumptions.  First was the idea of
-'no dax device label' == 'any extent label'.  Second, was that current dax
-device creation was done as 'no dax device label'.
-
-In this way I did not see a requirement to fully implement label
-restriction on dax devices.  Labels are simply a nice to have thing to
-group extents later.  Also, if you want dax devices created with specific
-extents you have to assign them a label.  Otherwise they are allocated
-'first-available' like they have been in the past.
-
-I see a few ways forward.
-
-One is to define 'no dax device label' as 'any extent label' as I have it
-now.  IMO this provides the most backwards compatible dax device creation.
-The ndctl region code additions are minimal and there are no daxctl
-modifications required at all.
-
-A second is to define 'no dax device label' as 'no extent label' and go
-forward with this series but add a restriction on dax device creation to
-only extents without a label.  This is still pretty compatible but if tags
-are used then some extents would not be available without additional
-daxctl modifications.
-
-A third way forward is to fully implement label enabled dax device
-creation.  In this case I feel like the direction is to make 'no label' ==
-'no label'.  This is not hard but will take a couple more weeks to get the
-daxctl code and all the testing.
-
-It warrants mentioning that tags are an optional feature.  I feel like
-there is momentum in the community to not use tags initially.  And so I
-was targeting an initial implementation which really did not need tags at
-all.  Perhaps I am wrong in that assumption?  Or perhaps I was short
-sighted (possibly because interleaving becomes more straight forward)?
-
-To summarize I see the following fundamental questions.
-
-	1) Do we require DCD support to require dax device label
-	   management?
-	2) What does 'no dax device label' mean?
-		a) any extent label
-		b) no extent label
-	3) Should writable labels be allowed on extents?
-		a) this is more flexible
-		b) security issues?
-		c) does it just confuse things with interleaving?
-		d) nice to change the tag name to something easy to read?
-		e) other issues?
-	4) How should the available size for labels be communicated to the
-	   user?
-	   	a) currently available size reflects an 'any extent label'
-		   behavior when there is no label on the dax device.
-		b) this becomes an issue if labelless dax devices are
-		   restricted to labelless extents.
-
-My current view is:
-	1) No.  Current dax devices can be defined as 'no label'
-	2) I'm not sure.  I can see both ways having benefits.
-	3) No I think the ROI is not worth it.
-	4) The use of 'any extent label' in #2 means that available size
-	   retains it's meaning for no label dax devices.  Labeled dax
-	   devices would require a future enhancement to size information.
-
+> Newer daxctl could use dax device labels to control the extents used.  But
+> only when dax device labeling is introduced in a future kernel.  Use of a
+> newer daxctl on an older DCD kernel could continue to work sans label.
 > 
-> > > > > > @@ -1400,8 +1507,10 @@ struct dev_dax *devm_create_dev_dax(struct dev_dax_data *data)
-> > > > > >  	device_initialize(dev);
-> > > > > >  	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
-> > > > > >  
-> > > > > > +	dev_WARN_ONCE(parent, is_dynamic(dax_region) && data->size,
-> > > > > > +		      "Dynamic DAX devices are created initially with 0 size");  
-> > > > > 
-> > > > > dev_info() maybe more appropriate?  
-> > > > 
-> > > > Unless I'm mistaken this can happen from userspace but only if something
-> > > > in the code changes later.  Because the dax layer is trying to support
-> > > > non-dynamic regions (which dynamic may be a bad name), I was worried that
-> > > > the creation with a size might slip through...
-> > > 
-> > > Fair enough - if strong chance userspace will control it at somepoitn then
-> > > ONCE seems fine.
-> > > 
-> > > > 
-> > > > > Is this common enough that we need the
-> > > > > _ONCE?  
-> > > > 
-> > > > once is because it could end up spamming a log later if something got
-> > > > coded up wrong.
-> > > 
-> > > I'm not sure I care about bugs spamming the log.   Only things that
-> > > are userspace controlled or likely hardware failures etc.
-> > > 
-> > 
-> > Understood.  Let me trace them again but I think these can be triggered by
-> > user space.  If not I'll remove the ONCE.
+> In this way I envisioned a path where the policy is completely dictated by
+> user space restricted only by the software available.
+
+Tags are a core concept in DCD. "Allocate by tag" does not feel like
+something that can come later at least in terms of when the DCD ABI is
+ready for upstream. So, yes, it can remain out of this patchset, but the
+upstream merge of all of DCD would be gated on that facility arriving.
+
+> > I agree with Jonathan that unless and until the allocation scheme is
+> > updated to be tag aware then there is no reason for allocate by tag to
+> > exist in the interface.
 > 
-> Unless this is an unequivocal kernel bug if it fires, and there is a
-> significant potential for active development to do the wrong thing,
-> don't leave a panic_on_warn land mine.
+> I will agree that it was perhaps premature to introduce labels on the
+> extents.  However, I did so to give tags a space to be informationally
+> surfaced.
+> 
+> IMO we must have a plan forward or wait until that plan is fully formed
+> and implemented.  The size of this set is rather large.  Therefore, I was
+> hoping that a plan would be enough to move forward.
 
-Indeed.  I forgot about those panic on warn users.  I'll remove the warn
-altogether.
+Leave it out for now to focus on the core mechanisms and then we can
+circle back to it.
 
-Thanks,
-Ira
+> > That said, the next question, "is DCD enabling considered a toy until
+> > the ability to allocate by tag is present?" I think yes, to the point
+> > where old daxctl binaries should be made fail to create device instances
+> > by forcing a tag to be selected at allocation time for Sparse DAX
+> > Regions.
+> 
+> Interesting.  I was not considering allocate by label to be a requirement
+> but rather an enhancement.  Labels IMO are a further refinement of the
+> memory space allocation.  I can see a very valid use case (not toy use
+> case) where all the DCD memory allocated to a node is dedicated to a
+> singular job and is done without tags or even ignoring tags.  Many HPC
+> sites run with singular jobs per host.
+
+Is HPC going to use DCD? My impression is that HPC is statically
+provisioned per node and that DCD is more targeted at Cloud use cases
+where dynamic provisioning is common.
+
+> > The last question is whether *writable* tags are needed to allow for
+> > repurposing memory allocated to a host without needing to round trip it
+> > through the FM to get it re-tagged. While that is something the host and
+> > orchestrator can figure out on their own, it looks like a nice to have
+> > until the above questions are answered.
+> 
+> Needed?  No.  Of course not.  As you said the orchestrator software can
+> keep iterating with the FM until it gets what it wants.  It was you who
+> had the idea of a writable labels and I agreed.
+
+Yeah, it was an idea for how to solve the problem of repurposing tag
+without needing to round trip with the FM.
+
+> "Seemed like a good idea at the time..."  ;-)
+> 
+> As I have reviewed and rewritten this message I worry that writable labels
+> are a bad idea.  Interleaving will most likely depend on grouping extent
+> tags into the CXL/DAX extent.  With this in mind adjusting extents is
+> potentially going to require an FM interaction to get things set up
+> anyway.
+> 
+> 	[Again re-reading my message I thought of another issue.  What
+> 	happens if the user decides to change the label on an extent after
+> 	some dax device with the old label?  That seems like an additional
+> 	complication which is best left out by not allowing extent labels
+> 	to be writable.]
+
+At least for this point extents can not be relabeled while allocated to
+an instance.
+
+[..]
+> My current view is:
+> 	1) No.  Current dax devices can be defined as 'no label'
+> 	2) I'm not sure.  I can see both ways having benefits.
+> 	3) No I think the ROI is not worth it.
+> 	4) The use of 'any extent label' in #2 means that available size
+> 	   retains it's meaning for no label dax devices.  Labeled dax
+> 	   devices would require a future enhancement to size information.
+
+If the ABI is going to change in the future I don't want every debug
+session to start with "which version of daxctl were you using", or "do
+your scripts comprehend Sparse DAX Regions?". This stance is motivated
+by having seen the problems that the current ABI causes for people that want
+to do things like mitigate the "noisy neighbor" phenomenon in memory
+side caches. The allocation ABI is too simple and DCD seems to need
+more.
+
+The kernel enforced requirement for Sparse DAX Region aware tooling just
+makes it easier on us to maintain. If it means waiting until we ahve
+agreement on the allocation ABI I think that's a simple release valve.
+
+The fundamental mechanisms can be reviewed in the meantime.
