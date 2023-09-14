@@ -2,144 +2,284 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77BAEE0207
-	for <linux-cxl@archiver.kernel.org>; Wed, 13 Sep 2023 19:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC853EDE99C
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Sep 2023 10:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230424AbjIMTpd (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Wed, 13 Sep 2023 15:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43190 "EHLO
+        id S230198AbjINKc0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Sep 2023 06:32:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232600AbjIMTpa (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Wed, 13 Sep 2023 15:45:30 -0400
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1754F9B;
-        Wed, 13 Sep 2023 12:45:26 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 020C3C0F9A;
-        Wed, 13 Sep 2023 19:45:25 +0000 (UTC)
-Received: from pdx1-sub0-mail-a273.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 798FFC08C3;
-        Wed, 13 Sep 2023 19:45:24 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1694634324; a=rsa-sha256;
-        cv=none;
-        b=WEJGQ8JeXgDgigOb7Zb1nsZ3vsqBgwMWGZhzdqlsc0RZ+WOaGogL4Ey+CeuRM/XXZjyGM1
-        G6ozkzwiYz5p4S24qBuwtQi4WqLFKlG/FXN2zQHYwdyHX7QWDYsQTEJH5CyZPp6U8kqxwV
-        fKHA1phWW/u7bplee/aRjSsk7Jdrr9YsTT5OGVgRtyrmc/dSicdHB2On67TqiuUDjmLxdV
-        LIYomqpZUugpj7q1T3k4KQyAJZHkRkh9dgiJNL6EHtFc4Q4Bu+ESYzLm9f0h5cV+jf6L5U
-        RdoQseT0bYK1KzjSWgA3EubOGQymxY30RAzOiaRZNs1sejWaC6Nvz9okemH6og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1694634324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=t/4S28WbLLUM6kEPRkt99xCgd02PMnu1Es+2h6o9n6A=;
-        b=HoMwFZaeVNoDJzRhxrXBIqIK6fQ3qxh6uE8jKuEmJCkAlVS07MYJQ599a3kaIs/j14of1p
-        p+lRoFsYbCnlseMFQ5J+Uho75nL/9sBM6TJOVaLzxR8bV1rXklKt1MU57O7AIjGhMDBxf0
-        dchwmYnL0IcNJ0f4cCU9DTIz8pw7mFEMXJUnzdCIliYGthqtKBGBZFMf1+DGB2SBplcDwJ
-        VCNKhHSYASqyH5ZWCqkDqwkApxUcqTNPVf7KdJFfaPGrwZlvP9t3Et1K2qQw7t4rsz6aVT
-        gFFe4cD8opA7VhCTLxb0bjlpS1UB/uojN+0bR0hqgJTM3oLr0O245nnCXCwcPg==
-ARC-Authentication-Results: i=1;
-        rspamd-7d5dc8fd68-5s46g;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-White-Gusty: 29f3b477372f4be8_1694634324802_2187681599
-X-MC-Loop-Signature: 1694634324802:530843640
-X-MC-Ingress-Time: 1694634324801
-Received: from pdx1-sub0-mail-a273.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.115.138.83 (trex/6.9.1);
-        Wed, 13 Sep 2023 19:45:24 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a273.dreamhost.com (Postfix) with ESMTPSA id 4Rm9sb6GVgz36;
-        Wed, 13 Sep 2023 12:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1694634324;
-        bh=TRCLQlF2VO6s7nPtH5xn3QeQY4pWXTBPoW22AeYXlQo=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=V5ULnT0j8eDK0AOQbPCphfs36EIssoN2AA4BRb04c1LcF5ohNPAqfwN2fw3AaBQFA
-         hbEjKIzc4YFi76VEDdCsJFqgPn9i6ZrWsy7Kh1A/5eHXI+Df592I6xLcpJ0d4MkW4O
-         Dik0v6lYyGQOCj8G9SvgyPFeGSorZCxu2WCSnek5RuGIkXK58JZT+h0oZk5ti0P6Ue
-         ogiDoyrkmefSiBlBJ34tHhoGa+4IOC7AVu8rSRTYqNTyhT8te71Nf5wF+qgCD8lhlw
-         ua2+pIN9/mcnCLHnjBi4b/UFyaQRES/IzpOQlDuVrEpkCxLgD/9d76zvSS/c+jmnZX
-         sBWdoEz109sHQ==
-Date:   Wed, 13 Sep 2023 12:45:15 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        with ESMTP id S237100AbjINKcW (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Sep 2023 06:32:22 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B941FC2;
+        Thu, 14 Sep 2023 03:32:06 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RmYX01Fscz6K5pj;
+        Thu, 14 Sep 2023 18:31:28 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 14 Sep
+ 2023 11:32:03 +0100
+Date:   Thu, 14 Sep 2023 11:32:00 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Navneet Singh <navneet.singh@intel.com>,
+        Fan Ni <fan.ni@samsung.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Dave Jiang <dave.jiang@intel.com>,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cxl/mbox: Fix CEL logic for poison and security commands
-Message-ID: <madfnttjnm5spfc3jxnvcvcwccdz2q4yqqjsz7hiey7mqy3jfi@4siu67gqsp6f>
-References: <20230903-cxl-cel-fix-v1-1-e260c9467be3@intel.com>
- <6500e8a179440_12747294a3@dwillia2-xfh.jf.intel.com.notmuch>
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 14/18] dax/region: Support DAX device creation on
+ dynamic DAX regions
+Message-ID: <20230914113200.000060a8@Huawei.com>
+In-Reply-To: <65020d0264085_321c802941d@iweiny-mobl.notmuch>
+References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
+        <20230604-dcd-type2-upstream-v2-14-f740c47e7916@intel.com>
+        <20230830125025.00000fea@Huawei.com>
+        <64f80177c2c21_1e8e7829487@iweiny-mobl.notmuch>
+        <20230912174904.00005fed@Huawei.com>
+        <6500e14a8588c_314b6629439@iweiny-mobl.notmuch>
+        <6500e7cdac9dc_71e582945a@dwillia2-xfh.jf.intel.com.notmuch>
+        <6501f1c29a2c4_31df46294ec@iweiny-mobl.notmuch>
+        <6501f89c9ef86_12747294bd@dwillia2-xfh.jf.intel.com.notmuch>
+        <65020d0264085_321c802941d@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <6500e8a179440_12747294a3@dwillia2-xfh.jf.intel.com.notmuch>
-User-Agent: NeoMutt/20230517
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Tue, 12 Sep 2023, Dan Williams wrote:
+On Wed, 13 Sep 2023 12:26:58 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
->Ira Weiny wrote:
->> The following debug output was observed while testing CXL
->>
->> cxl_core:cxl_walk_cel:721: cxl_mock_mem cxl_mem.0: Opcode 0x4300 unsupported by driver
->>
->> opcode 0x4300 (Get Poison) is supported by the driver and the mock
->> device supports it.  The logic should be checking that the opcode is
->> both not poison and not security.
->>
->> Fix the logic to allow poison and security commands.
->>
->> Fixes: ad64f5952ce3 ("cxl/memdev: Only show sanitize sysfs files when supported")
->> Cc: Davidlohr Bueso <dave@stgolabs.net>
->> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
->> ---
->>  drivers/cxl/core/mbox.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
->> index ca60bb8114f2..b315bdab9197 100644
->> --- a/drivers/cxl/core/mbox.c
->> +++ b/drivers/cxl/core/mbox.c
->> @@ -716,8 +716,8 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
->>  		u16 opcode = le16_to_cpu(cel_entry[i].opcode);
->>  		struct cxl_mem_command *cmd = cxl_mem_find_command(opcode);
->>
->> -		if (!cmd && (!cxl_is_poison_command(opcode) ||
->> -			     !cxl_is_security_command(opcode))) {
->> +		if (!cmd && !cxl_is_poison_command(opcode) &&
->> +		    !cxl_is_security_command(opcode)) {
->
->Given that this is going to be a recurring pattern to add optional
->command support, I am not a fan of continuing to expand this boolean
->algebra eye exam.
->
->How about the following to only do the validation check and enabling in
->one place:
+> Dan Williams wrote:
+> > Ira Weiny wrote:
 
-Agreed.
+Jumping in on randomly selected points :)
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> > [..]  
+> > > > 
+> > > > Given that one of the expected DCD use cases is to provide just in time
+> > > > memory for specific jobs the "first-available" search for free capacity
+> > > > in a Sparse DAX Region collides with the need to keep allocations
+> > > > bounded by tag.  
+> > > 
+> > > How does it collide?
+> > > 
+> > > My attempt here is to leave dax devices 'unlabeled'.  As such they will use
+> > > space on a 'first-available' search regardless of extent labels.
+> > > 
+> > > Effectively I have defined 'no label' as being 'any label'.  I apologize
+> > > for this detail being implicit and not explicit.
+> > > 
+> > > My envisioned path would be that older daxctl would continue to work like
+> > > this because the kernel would not restrict unlabeled dax device creation.
+> > > 
+> > > Newer daxctl could use dax device labels to control the extents used.  But
+> > > only when dax device labeling is introduced in a future kernel.  Use of a
+> > > newer daxctl on an older DCD kernel could continue to work sans label.
+> > > 
+> > > In this way I envisioned a path where the policy is completely dictated by
+> > > user space restricted only by the software available.  
+> > 
+> > Tags are a core concept in DCD. "Allocate by tag" does not feel like
+> > something that can come later at least in terms of when the DCD ABI is
+> > ready for upstream. So, yes, it can remain out of this patchset, but the
+> > upstream merge of all of DCD would be gated on that facility arriving.  
+> 
+> I don't see how this can be left out of this patchset.  Without dax device
+> support on DCD there is no functionality and this patchset does nothing.
 
-... this also is a reminder of the need for regression testing/CI.
+Agreed - but I think one path you suggest is fine.
 
-Thanks,
-Davidlohr
+No label dax == no label DCD extents.
+
+That one should be true for ever (or until writeable tags added) so
+is safe and gets us going.
+
+> 
+> >   
+> > > > I agree with Jonathan that unless and until the allocation scheme is
+> > > > updated to be tag aware then there is no reason for allocate by tag to
+> > > > exist in the interface.  
+> > > 
+> > > I will agree that it was perhaps premature to introduce labels on the
+> > > extents.  However, I did so to give tags a space to be informationally
+> > > surfaced.
+> > > 
+> > > IMO we must have a plan forward or wait until that plan is fully formed
+> > > and implemented.  The size of this set is rather large.  Therefore, I was
+> > > hoping that a plan would be enough to move forward.  
+> > 
+> > Leave it out for now to focus on the core mechanisms and then we can  
+>        ^^^^
+>        it what?
+> > circle back to it.  
+> 
+> Again dax devices need to be created to full test this so I have to create
+> them in some way.  I'm going to assume you mean 'labelless' and deal with
+> labels later.
+> 
+> >   
+> > > > That said, the next question, "is DCD enabling considered a toy until
+> > > > the ability to allocate by tag is present?" I think yes, to the point
+> > > > where old daxctl binaries should be made fail to create device instances
+> > > > by forcing a tag to be selected at allocation time for Sparse DAX
+> > > > Regions.  
+> > > 
+> > > Interesting.  I was not considering allocate by label to be a requirement
+> > > but rather an enhancement.  Labels IMO are a further refinement of the
+> > > memory space allocation.  I can see a very valid use case (not toy use
+> > > case) where all the DCD memory allocated to a node is dedicated to a
+> > > singular job and is done without tags or even ignoring tags.  Many HPC
+> > > sites run with singular jobs per host.  
+> > 
+> > Is HPC going to use DCD? My impression is that HPC is statically
+> > provisioned per node and that DCD is more targeted at Cloud use cases
+> > where dynamic provisioning is common.  
+> 
+> I heard someone mention HPC in a call at some point.
+
+I'd not rule it out.  Some HPC systems run very mixed workloads in parallel
+so would benefit form Dynamic capacity - though maybe not with the same
+rate of change as cloud workloads.
+
+> 
+> >   
+> > > > The last question is whether *writable* tags are needed to allow for
+> > > > repurposing memory allocated to a host without needing to round trip it
+> > > > through the FM to get it re-tagged. While that is something the host and
+> > > > orchestrator can figure out on their own, it looks like a nice to have
+> > > > until the above questions are answered.  
+> > > 
+> > > Needed?  No.  Of course not.  As you said the orchestrator software can
+> > > keep iterating with the FM until it gets what it wants.  It was you who
+> > > had the idea of a writable labels and I agreed.  
+> > 
+> > Yeah, it was an idea for how to solve the problem of repurposing tag
+> > without needing to round trip with the FM.
+> >   
+> > > "Seemed like a good idea at the time..."  ;-)
+> > > 
+> > > As I have reviewed and rewritten this message I worry that writable labels
+> > > are a bad idea.  Interleaving will most likely depend on grouping extent
+> > > tags into the CXL/DAX extent.  With this in mind adjusting extents is
+> > > potentially going to require an FM interaction to get things set up
+> > > anyway.
+> > > 
+> > > 	[Again re-reading my message I thought of another issue.  What
+> > > 	happens if the user decides to change the label on an extent after
+> > > 	some dax device with the old label?  That seems like an additional
+> > > 	complication which is best left out by not allowing extent labels
+> > > 	to be writable.]  
+> > 
+> > At least for this point extents can not be relabeled while allocated to
+> > an instance.  
+> 
+> Sure but is having writeable labels worth this extra complexity?
+
+No. Or not yet anyway.
+
+
+> 
+> > 
+> > [..]  
+> > > My current view is:
+> > > 	1) No.  Current dax devices can be defined as 'no label'
+> > > 	2) I'm not sure.  I can see both ways having benefits.
+
+> 2) What does 'no dax device label' mean?
+> 		a) any extent label
+> 		b) no extent label
+(that bit got cropped)
+
+Option b seems something we can support for ever.  Not sure that works
+for option a.
+
+> > > 	3) No I think the ROI is not worth it.
+> > > 	4) The use of 'any extent label' in #2 means that available size
+> > > 	   retains it's meaning for no label dax devices.  Labeled dax
+> > > 	   devices would require a future enhancement to size information.  
+> > 
+> > If the ABI is going to change in the future I don't want every debug
+> > session to start with "which version of daxctl were you using", or "do
+> > your scripts comprehend Sparse DAX Regions?".  
+> 
+> Well then we are stuck.  Because at a minimum they will have to understand
+> Sparse DAX regions.  cxl create-region needs a new type to create such
+> regions.
+> 
+> I envisioned an ABI *extension* not change.  The current ABI supports dax
+> devices without a tag.  Even with DCD no tag is possible.  Unless you want
+> to restrict it, which it sounds like you do?
+> 
+> I'm ok with that but I know of at least 1 meeting where it was
+> emphatically mentioned that tags are _not_ required.  So I'd like some
+> community members to chime in here if requiring tags is ok.
+
+They are definitely not required and I don't think we want to make
+it a Linux requirement that tags are needed.
+
+
+> 
+> >
+> > This stance is motivated
+> > by having seen the problems that the current ABI causes for people that want
+> > to do things like mitigate the "noisy neighbor" phenomenon in memory
+> > side caches.  
+> 
+> Does a dax device need specific placement within the region?  That sounds
+> like control at the extent layer when the extent is mapped into the
+> region.
+> 
+> The mapping store interface does need to be resolved for DCD.  I could
+> envision the ability for user space to create extents...  Are you thinking
+> the same thing?
+> 
+> Conceptually from a top down approach _any_ dax region could be a sparse
+> dax region if I get what you are driving at?  Not just DCD?  In that case
+> extent creation is even more complicated in the DCD case.
+
+For now at least I'd push any clever noisy neighbour mess on to the
+Fabric manager once we have tags.  Not sure the OS even has the visibility to
+do this sort of fine tuning.  We could provide it of course, but that's
+a whole level of system description that we don't have today.
+
+> 
+> > The allocation ABI is too simple and DCD seems to need
+> > more.  
+> 
+> Are you advocating for an ABI which requires dax devices to be labeled?
+> It sounds like you don't want the current tool set to work on sparse dax
+> regions.  Is that correct?  I'm ok with that but I don't think a specific
+> check in the kernel is the proper way to do that.  Current dax devices are
+> unlabled.  So I envisioned them being supported with the current ABI.
+> 
+> > 
+> > The kernel enforced requirement for Sparse DAX Region aware tooling just
+> > makes it easier on us to maintain. If it means waiting until we ahve
+> > agreement on the allocation ABI I think that's a simple release valve.  
+> 
+> These statements imply to me you have additional requirements for this ABI
+> beyond what DCD does.  I've tried to make the dax layer DCD/CXL agnostic.
+> But beyond having the concept of region extents which are labeled and
+> matched to dax devices based on that label; what other requirements on dax
+> to region space allocations are there?
+> 
+> > 
+> > The fundamental mechanisms can be reviewed in the meantime.  
+> 
+> Sure,
+> Ira
+> 
+
