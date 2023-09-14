@@ -2,284 +2,255 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC853EDE99C
-	for <linux-cxl@archiver.kernel.org>; Thu, 14 Sep 2023 10:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFC4EEAA7F
+	for <linux-cxl@archiver.kernel.org>; Thu, 14 Sep 2023 23:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbjINKc0 (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Thu, 14 Sep 2023 06:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53232 "EHLO
+        id S230041AbjINXzG (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Thu, 14 Sep 2023 19:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237100AbjINKcW (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Sep 2023 06:32:22 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B941FC2;
-        Thu, 14 Sep 2023 03:32:06 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RmYX01Fscz6K5pj;
-        Thu, 14 Sep 2023 18:31:28 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Thu, 14 Sep
- 2023 11:32:03 +0100
-Date:   Thu, 14 Sep 2023 11:32:00 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Navneet Singh <navneet.singh@intel.com>,
-        Fan Ni <fan.ni@samsung.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 14/18] dax/region: Support DAX device creation on
- dynamic DAX regions
-Message-ID: <20230914113200.000060a8@Huawei.com>
-In-Reply-To: <65020d0264085_321c802941d@iweiny-mobl.notmuch>
-References: <20230604-dcd-type2-upstream-v2-0-f740c47e7916@intel.com>
-        <20230604-dcd-type2-upstream-v2-14-f740c47e7916@intel.com>
-        <20230830125025.00000fea@Huawei.com>
-        <64f80177c2c21_1e8e7829487@iweiny-mobl.notmuch>
-        <20230912174904.00005fed@Huawei.com>
-        <6500e14a8588c_314b6629439@iweiny-mobl.notmuch>
-        <6500e7cdac9dc_71e582945a@dwillia2-xfh.jf.intel.com.notmuch>
-        <6501f1c29a2c4_31df46294ec@iweiny-mobl.notmuch>
-        <6501f89c9ef86_12747294bd@dwillia2-xfh.jf.intel.com.notmuch>
-        <65020d0264085_321c802941d@iweiny-mobl.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229499AbjINXzG (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Thu, 14 Sep 2023 19:55:06 -0400
+Received: from mail-yw1-x1142.google.com (mail-yw1-x1142.google.com [IPv6:2607:f8b0:4864:20::1142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC1B62100;
+        Thu, 14 Sep 2023 16:55:01 -0700 (PDT)
+Received: by mail-yw1-x1142.google.com with SMTP id 00721157ae682-58dfe2d5b9aso22159847b3.1;
+        Thu, 14 Sep 2023 16:55:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694735701; x=1695340501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7qepxbzS5XdPD9xh3SwraLNxpPnShl/gUW6LA9HJxzw=;
+        b=ebfuDueMFHxSoIFDAOfrmrqR66OQKyRMDBOcJReddIyXMlA4erzvqQ9i0RKBTOPonD
+         Edmq7rpQEjEN+Fpw8++gz4nL23kb+Ixo4Ii0wANlGM4pVx1sgROKBtY3QDbf5E3L1oPa
+         ARQJh85ZzkfFsRG8uS7efh71WQWweFW5scx6WT629WXPBVRAt5JUeWeW1lt+MJglD4hA
+         5zFCrsVtJiuBfcN9NuTvlrRgHQ4I5n/dKAn1o9cdxPkcjjkC7SCBtMb3/lsxgtMGaJ+6
+         Zf2wVIng2pnlsZgyIOyskTi5NBsAxmIstfHJR+Fgcoz5RUGG/2/qQGhCFHeSyg/5K/Ug
+         OjAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694735701; x=1695340501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7qepxbzS5XdPD9xh3SwraLNxpPnShl/gUW6LA9HJxzw=;
+        b=XDsfqM4afX5bNk76FnCYrEhnnSZUVibaflg+JAPEg4zb83GA1gdjCAFdGwyzUlnRQ1
+         aXqckyNlz78oZJa2l+Nr33br56M6Ac7Zz98Ei+bRNTc0yE5EndQH/HyOfEVezUnmMcse
+         KHaIlU3+9zAIsbDO8xSo4vspzsCvn4c7KNd7XCejKZR0P1uuuNTvgt9shLamfvkWXGDE
+         2zu8z5hywXXP33SwFQlCqBgyB7dZXs0gVKILz5R9hID5myf8P5+i2VyGrq/cMlspqmm+
+         MhTQSO03IoTsimitCsYjuYWGemB5vU8EL4SXiSckexyLnXt7rFPqTut7YOkN6xr3QofY
+         frEw==
+X-Gm-Message-State: AOJu0YwTNidHDzfZfSBJZ8YQh4NynXoEpbck2XL13Bzorcitzz5akFUf
+        9stxouEPDt1TxNlF4zKvHq9PmxrHujEs
+X-Google-Smtp-Source: AGHT+IHFKkZVg1gZ7tlOPnP8R4Axfb1O5oFaflDfUS6HtaIhw+51ycjeiejirTGNzEgqLpH9GIxMPw==
+X-Received: by 2002:a0d:db94:0:b0:59b:b9fe:1838 with SMTP id d142-20020a0ddb94000000b0059bb9fe1838mr171547ywe.1.1694735700851;
+        Thu, 14 Sep 2023 16:55:00 -0700 (PDT)
+Received: from fedora.mshome.net (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id p188-20020a0dcdc5000000b005777a2c356asm586300ywd.65.2023.09.14.16.54.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Sep 2023 16:55:00 -0700 (PDT)
+From:   Gregory Price <gourry.memverge@gmail.com>
+X-Google-Original-From: Gregory Price <gregory.price@memverge.com>
+To:     linux-mm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-cxl@vger.kernel.org,
+        luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        arnd@arndb.de, akpm@linux-foundation.org, x86@kernel.org,
+        Gregory Price <gregory.price@memverge.com>
+Subject: [RFC PATCH 0/3] mm/mempolicy: set/get_mempolicy2
+Date:   Thu, 14 Sep 2023 19:54:54 -0400
+Message-Id: <20230914235457.482710-1-gregory.price@memverge.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-On Wed, 13 Sep 2023 12:26:58 -0700
-Ira Weiny <ira.weiny@intel.com> wrote:
+This patch set is a proposal for set_mempolicy2 and get_mempolicy2
+system calls.  This is an extension to the existing mempolicy
+syscalls that allow for a more extensible  mempolicy interface and
+new, complex memory policies.
 
-> Dan Williams wrote:
-> > Ira Weiny wrote:
+This RFC is broken into 3 patches for discussion:
 
-Jumping in on randomly selected points :)
+  1) A refactor of do_set_mempolicy that allows code reuse for
+     the new syscalls and centralizes the mempolicy swap code.
 
-> > [..]  
-> > > > 
-> > > > Given that one of the expected DCD use cases is to provide just in time
-> > > > memory for specific jobs the "first-available" search for free capacity
-> > > > in a Sparse DAX Region collides with the need to keep allocations
-> > > > bounded by tag.  
-> > > 
-> > > How does it collide?
-> > > 
-> > > My attempt here is to leave dax devices 'unlabeled'.  As such they will use
-> > > space on a 'first-available' search regardless of extent labels.
-> > > 
-> > > Effectively I have defined 'no label' as being 'any label'.  I apologize
-> > > for this detail being implicit and not explicit.
-> > > 
-> > > My envisioned path would be that older daxctl would continue to work like
-> > > this because the kernel would not restrict unlabeled dax device creation.
-> > > 
-> > > Newer daxctl could use dax device labels to control the extents used.  But
-> > > only when dax device labeling is introduced in a future kernel.  Use of a
-> > > newer daxctl on an older DCD kernel could continue to work sans label.
-> > > 
-> > > In this way I envisioned a path where the policy is completely dictated by
-> > > user space restricted only by the software available.  
-> > 
-> > Tags are a core concept in DCD. "Allocate by tag" does not feel like
-> > something that can come later at least in terms of when the DCD ABI is
-> > ready for upstream. So, yes, it can remain out of this patchset, but the
-> > upstream merge of all of DCD would be gated on that facility arriving.  
-> 
-> I don't see how this can be left out of this patchset.  Without dax device
-> support on DCD there is no functionality and this patchset does nothing.
+  2) The implementation of get_mempolicy2 and set_mempolicy2 which
+     includes a new uapi type: "struct mempolicy_args" and denotes
+     the original mempolicies as "legacy". This allows the existing
+     policies to be routed through the original interface.
 
-Agreed - but I think one path you suggest is fine.
+     (note: only implemented on x86 at this time, though can be
+      hacked into other architectures somewhat trivially)
 
-No label dax == no label DCD extents.
+  3) The implementation of a sample mempolicy ("partial-interleave")
+     which was not possible on the old interface.
 
-That one should be true for ever (or until writeable tags added) so
-is safe and gets us going.
-
-> 
-> >   
-> > > > I agree with Jonathan that unless and until the allocation scheme is
-> > > > updated to be tag aware then there is no reason for allocate by tag to
-> > > > exist in the interface.  
-> > > 
-> > > I will agree that it was perhaps premature to introduce labels on the
-> > > extents.  However, I did so to give tags a space to be informationally
-> > > surfaced.
-> > > 
-> > > IMO we must have a plan forward or wait until that plan is fully formed
-> > > and implemented.  The size of this set is rather large.  Therefore, I was
-> > > hoping that a plan would be enough to move forward.  
-> > 
-> > Leave it out for now to focus on the core mechanisms and then we can  
->        ^^^^
->        it what?
-> > circle back to it.  
-> 
-> Again dax devices need to be created to full test this so I have to create
-> them in some way.  I'm going to assume you mean 'labelless' and deal with
-> labels later.
-> 
-> >   
-> > > > That said, the next question, "is DCD enabling considered a toy until
-> > > > the ability to allocate by tag is present?" I think yes, to the point
-> > > > where old daxctl binaries should be made fail to create device instances
-> > > > by forcing a tag to be selected at allocation time for Sparse DAX
-> > > > Regions.  
-> > > 
-> > > Interesting.  I was not considering allocate by label to be a requirement
-> > > but rather an enhancement.  Labels IMO are a further refinement of the
-> > > memory space allocation.  I can see a very valid use case (not toy use
-> > > case) where all the DCD memory allocated to a node is dedicated to a
-> > > singular job and is done without tags or even ignoring tags.  Many HPC
-> > > sites run with singular jobs per host.  
-> > 
-> > Is HPC going to use DCD? My impression is that HPC is statically
-> > provisioned per node and that DCD is more targeted at Cloud use cases
-> > where dynamic provisioning is common.  
-> 
-> I heard someone mention HPC in a call at some point.
-
-I'd not rule it out.  Some HPC systems run very mixed workloads in parallel
-so would benefit form Dynamic capacity - though maybe not with the same
-rate of change as cloud workloads.
-
-> 
-> >   
-> > > > The last question is whether *writable* tags are needed to allow for
-> > > > repurposing memory allocated to a host without needing to round trip it
-> > > > through the FM to get it re-tagged. While that is something the host and
-> > > > orchestrator can figure out on their own, it looks like a nice to have
-> > > > until the above questions are answered.  
-> > > 
-> > > Needed?  No.  Of course not.  As you said the orchestrator software can
-> > > keep iterating with the FM until it gets what it wants.  It was you who
-> > > had the idea of a writable labels and I agreed.  
-> > 
-> > Yeah, it was an idea for how to solve the problem of repurposing tag
-> > without needing to round trip with the FM.
-> >   
-> > > "Seemed like a good idea at the time..."  ;-)
-> > > 
-> > > As I have reviewed and rewritten this message I worry that writable labels
-> > > are a bad idea.  Interleaving will most likely depend on grouping extent
-> > > tags into the CXL/DAX extent.  With this in mind adjusting extents is
-> > > potentially going to require an FM interaction to get things set up
-> > > anyway.
-> > > 
-> > > 	[Again re-reading my message I thought of another issue.  What
-> > > 	happens if the user decides to change the label on an extent after
-> > > 	some dax device with the old label?  That seems like an additional
-> > > 	complication which is best left out by not allowing extent labels
-> > > 	to be writable.]  
-> > 
-> > At least for this point extents can not be relabeled while allocated to
-> > an instance.  
-> 
-> Sure but is having writeable labels worth this extra complexity?
-
-No. Or not yet anyway.
+  x) next planned patches: selftest/ltp test/example programs/etc.
+     I wanted to start discussion before i went too deep.
 
 
-> 
-> > 
-> > [..]  
-> > > My current view is:
-> > > 	1) No.  Current dax devices can be defined as 'no label'
-> > > 	2) I'm not sure.  I can see both ways having benefits.
+Besides the obvious proposal of extending the mempolicy subsystem for
+new policies, the core proposal is the addition of the new uapi type
+"struct mempolicy". In this proposal, the get and set interfaces use
+the same structure, and some fields may be ignored depending on the
+requested operation.
 
-> 2) What does 'no dax device label' mean?
-> 		a) any extent label
-> 		b) no extent label
-(that bit got cropped)
+This sample implementation of get_mempolicy allows for the retrieval
+of all information that would have previously required multiple calls
+to get_mempolicy, and implements an area for per-policy information.
 
-Option b seems something we can support for ever.  Not sure that works
-for option a.
+The multiple err fields would allow for continuation of information
+retrieval should one or more failures occur (though notably this is
+probably not defensible, and should probably just error out - mostly
+a debugging interface for now).
 
-> > > 	3) No I think the ROI is not worth it.
-> > > 	4) The use of 'any extent label' in #2 means that available size
-> > > 	   retains it's meaning for no label dax devices.  Labeled dax
-> > > 	   devices would require a future enhancement to size information.  
-> > 
-> > If the ABI is going to change in the future I don't want every debug
-> > session to start with "which version of daxctl were you using", or "do
-> > your scripts comprehend Sparse DAX Regions?".  
-> 
-> Well then we are stuck.  Because at a minimum they will have to understand
-> Sparse DAX regions.  cxl create-region needs a new type to create such
-> regions.
-> 
-> I envisioned an ABI *extension* not change.  The current ABI supports dax
-> devices without a tag.  Even with DCD no tag is possible.  Unless you want
-> to restrict it, which it sounds like you do?
-> 
-> I'm ok with that but I know of at least 1 meeting where it was
-> emphatically mentioned that tags are _not_ required.  So I'd like some
-> community members to chime in here if requiring tags is ok.
+This allows for future extensibility, and would avoid the need for
+additional syscalls into the future, so long as the args structure
+is versioned or checked based on size.
 
-They are definitely not required and I don't think we want to make
-it a Linux requirement that tags are needed.
+struct mempolicy_args {
+  int err;
+  unsigned short mode;
+  unsigned long *nodemask;
+  unsigned long maxnode;
+  unsigned short flags;
+  struct {
+    /* Memory allowed */
+    struct {
+      int err;
+      unsigned long maxnode;
+      unsigned long *nodemask;
+    } allowed;
+    /* Address information */
+    struct {
+      int err;
+      unsigned long addr;
+      unsigned long node;
+      unsigned short mode;
+      unsigned short flags;
+    } addr;
+  } get;
+  union {
+    /* Interleave */
+    struct {
+    unsigned long next_node; /* get only */
+    } interleave;
+    /* Partial Interleave */
+    struct {
+      unsigned long interval;  /* get and set */
+      unsigned long next_node; /* get only */
+    } part_int;
+  };
+};
+
+In the third patch, we implement a sample Partial-Interleave
+mempolicy that is not possible to implement given the existing
+mempolicy interface - and would either require the exposure of
+new interfaces to set the value described.
+
+We extend the internal mempolicy structure to include to include
+a new union area which can be used to host complex policy data.
+
+Example:
+union {
+  /* Partial Interleave: Allocate local count, then interleave */
+  struct {
+    int interval; /* allocation interval at which to  interleave */
+    int count; /* the current allocation count */
+  } part_int;
+};
 
 
-> 
-> >
-> > This stance is motivated
-> > by having seen the problems that the current ABI causes for people that want
-> > to do things like mitigate the "noisy neighbor" phenomenon in memory
-> > side caches.  
-> 
-> Does a dax device need specific placement within the region?  That sounds
-> like control at the extent layer when the extent is mapped into the
-> region.
-> 
-> The mapping store interface does need to be resolved for DCD.  I could
-> envision the ability for user space to create extents...  Are you thinking
-> the same thing?
-> 
-> Conceptually from a top down approach _any_ dax region could be a sparse
-> dax region if I get what you are driving at?  Not just DCD?  In that case
-> extent creation is even more complicated in the DCD case.
+Summary of Partial Interleave:
+=============================
+nodeset=0,1,2
+interval=3
+cpunode=0
 
-For now at least I'd push any clever noisy neighbour mess on to the
-Fabric manager once we have tags.  Not sure the OS even has the visibility to
-do this sort of fine tuning.  We could provide it of course, but that's
-a whole level of system description that we don't have today.
+The preferred node (cpunode) is taken by default to be the node on
+which [interval] allocations are made before an interleave occurs.
 
-> 
-> > The allocation ABI is too simple and DCD seems to need
-> > more.  
-> 
-> Are you advocating for an ABI which requires dax devices to be labeled?
-> It sounds like you don't want the current tool set to work on sparse dax
-> regions.  Is that correct?  I'm ok with that but I don't think a specific
-> check in the kernel is the proper way to do that.  Current dax devices are
-> unlabled.  So I envisioned them being supported with the current ABI.
-> 
-> > 
-> > The kernel enforced requirement for Sparse DAX Region aware tooling just
-> > makes it easier on us to maintain. If it means waiting until we ahve
-> > agreement on the allocation ABI I think that's a simple release valve.  
-> 
-> These statements imply to me you have additional requirements for this ABI
-> beyond what DCD does.  I've tried to make the dax layer DCD/CXL agnostic.
-> But beyond having the concept of region extents which are labeled and
-> matched to dax devices based on that label; what other requirements on dax
-> to region space allocations are there?
-> 
-> > 
-> > The fundamental mechanisms can be reviewed in the meantime.  
-> 
-> Sure,
-> Ira
-> 
+Over 10 consecutive allocations, the following nodes will be selected:
+[0,0,0,1,2,0,0,0,1,2]
+
+In this example, there is a 60%/20%/20% distribution of memory across
+the node set.
+
+
+Some notes for discussion
+=========================
+0) Why?
+
+  In the coming age of CXL and a many-numa-node system with memory
+  hosted on the PCIe bus, new memory policies are likely to be
+  beneficial to experiment with and ultimately implement new
+  allocation-time placement policies.
+
+  Presently, much focus is placed on memory-usage monitoring and data
+  migration, but these methods steal performance to accomplish what
+  could be optimized for up-front.  For example, if maximum memory
+  bandwidth is required for an operation, then a statistical
+  distribution of memory can be calculated fairly easily based on
+  approximate expected memory usage.
+
+  Getting a fair approximation of distribution at allocation can help
+  reduce the migration load required after-the fact.  This is the
+  intent of the included partial-interleave example, which allows for
+  an approximate distribution of memory, where the local node is still
+  the preferred location for the majority of memory.
+
+1) Maybe this should be a set of sysfs interfaces?
+
+  This would involve adding a /proc/pid/mempolicy interface that
+  allows for external processes to interrogate and change the
+  mempolicy of running processes. This would be a fundamental
+  change to the mempolicy subsystem, as (so far as i can tell)
+  this is not possible as of present.
+
+  Additionally, the policy is per-thread, not per-pid. Making this
+  work on a per-thread, so it would be /proc/pid/task/tid/mempolicy.
+
+  I avoided that for this RFC as it seemed more radical than simply
+  proposing a set/get_mempolicy2 interface.  Though technically it
+  could be done.
+
+2) Do we need this level extensibility?
+
+   Presently the ability to dictate allocation-time placement is
+   limited to a few primitive mechanisms:
+     1) existing mempolicy, and those that can be implemented using
+        the existing interface.
+     2) numa-aware applications, requiring code changes.
+     3) LDPRELOAD methods, which have compability issues.
+
+   For the sake of compatibility, being able to extent numactl to
+   include newer, more complex policies would be beneficial.
+
+   While partial-interleave passes a simple interval as an interger,
+   more complex policies may want to pass multiple, complex pieces of
+   data. For example, a 'statistical-interleave' policy may pass a
+   list of integers that dictates exactly how many allocations should
+   happen per-node during interleave.  Another policy may take in one
+   or more nodemask's and do more complex distributions.
+
+
+Gregory Price (3):
+  mm/mempolicy: refactor do_set_mempolicy for code re-use
+  mm/mempolicy: Implement set_mempolicy2 and get_mempolicy2 syscalls
+  mm/mempolicy: implement a partial-interleave mempolicy
+
+ arch/x86/entry/syscalls/syscall_32.tbl |   2 +
+ arch/x86/entry/syscalls/syscall_64.tbl |   2 +
+ include/linux/mempolicy.h              |   8 +
+ include/linux/syscalls.h               |   2 +
+ include/uapi/asm-generic/unistd.h      |  10 +-
+ include/uapi/linux/mempolicy.h         |  37 +++
+ mm/mempolicy.c                         | 420 +++++++++++++++++++++++--
+ 7 files changed, 456 insertions(+), 25 deletions(-)
+
+-- 
+2.39.1
 
