@@ -2,397 +2,167 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B6DCD37AD
-	for <linux-cxl@archiver.kernel.org>; Fri, 15 Sep 2023 21:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572F6CD37AA
+	for <linux-cxl@archiver.kernel.org>; Fri, 15 Sep 2023 22:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233834AbjIOVxu (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
+        id S233599AbjIOWMA (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Fri, 15 Sep 2023 18:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233362AbjIOVx2 (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Sep 2023 17:53:28 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2064.outbound.protection.outlook.com [40.107.95.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF2C9193;
-        Fri, 15 Sep 2023 14:53:21 -0700 (PDT)
+        with ESMTP id S237489AbjIOWLt (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Fri, 15 Sep 2023 18:11:49 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88162105
+        for <linux-cxl@vger.kernel.org>; Fri, 15 Sep 2023 15:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694815903; x=1726351903;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=xJ98l8Ptis6T5KrcexS/f4DbNzRdatbVoWbowdz4b3g=;
+  b=fxr0DbcejXVnfzcOG3GqsJmvIj0oc3cC3E2Y7FxlZmbni0DJWJro6n5U
+   +K+a2SH32Jg8UOPyY5Iv5a0HAkc/rS5mBArQYxpfZ52pGrNApyXVC7RLH
+   6YRdJ9CN+IUslkVDKdtr6y8jMujElfbdoJFwH+1/JOghh+JQps5I5yIdp
+   rJDfgM0ay4ufLFxFFOGzPj71UbxRVmYh2h+/fVY8Kht9llxW9uyx3W5Ik
+   +qHOY0mL6VsCJnmebmzWYNvZUtXauDB1R+l0HTB3sLfPSwWEe/T6jcsLb
+   vwbtvUjGupM8Pr0C2cUUi3DOMX6Br4CwjITBKaOklF2amplRjf7cA/pUs
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="364403190"
+X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
+   d="scan'208";a="364403190"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 15:11:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="810668121"
+X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
+   d="scan'208";a="810668121"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Sep 2023 15:11:43 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 15 Sep 2023 15:11:42 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 15 Sep 2023 15:11:42 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Fri, 15 Sep 2023 15:11:42 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Fri, 15 Sep 2023 15:11:42 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aJVoTfFXytUt3XvVkBdT4zvjSGyfM8FRNatqdjxe2PR78j4rkZJv5N9VCVjBl1WQtuE9E3keNHvDc7IO/SciPh3jd1kDVCQ3TLDfYLLHB/SgG7gFVdx1ecidUwazuGe/6CkP3YsM4qQ1tAXseA/vnMAl5ONmTHy9gNF17NYY0MpXVydTJIcmUAuFiDjSFDH+QA/9zBvVeyEThAEZ8VsfhYXv4PPAOh0FR+o4uE+97nw/gpZU8BkhclvPeIiqCBqm/QqPryuxO91CdflA3qQOekghsLSEyW2jt1g1jzHfC4CYx/I6sANBVGXzVQpG4g3jrW15tz4rg073QyMAElZYhQ==
+ b=aScjxfYQId1ccmj7QHFqpcv+vzkbHOYuoZgcRp2CipaG2M/qKNQljBmXTFRSQSs0ToyDMCLGyBrSk6zlNwzad6hq0G9CQ7k82hq7Hdb3XPAxkRSGIRP3brAuqFfxChYkTMlkqDktNYvwXS/HlDo9Gu7LilGoZW0wZSaw2HI3boxbkoHjQldzB7IRGsYORhtJfem7G7H4yuI5TjcJIuufWuWnMDkk9Wd9U0ZQDyv6rWm7RzOVF7KU5W5hwNvmtzVbbfvN37hOHT2SlfhE+fZF/i008uqDsDRAMAQrrI3ZO89jDJbGO+3s3iES785BZnSlddE7eReBaBcn3FxSNQ4Ikw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TD9u2O1AQN1Whbs5d6j8wJxakAaBdZBTxeAvvNKfWG4=;
- b=QwhCS1vEQegq8k3tjVJmlJ5w9udBrijbUjO8bDBkpI16Bm+uMyZqBcT85vZoHhBv4XqIoDLp9tJ5D3FbEPEccd1mkwpBwEsopGwsbWSMQ85Iu943gn+CvHAJRmJYxAp5Mm+UyFZeCR8XKdaHjzYY2OEAc1BKJxI61D2Z5VpXLCe8Uh2kHNqTcUsl/zdCaeS8IIpJFqWL8VxEQCvSeGgMSeKz0XqHgXLvZk3DqZsinFNpITLibeHqr1FZTcAKjq+hwsJXVeI5XWdI7KAWqdin9SJ2HRUJXYnDIV9tLpmDlvGuX8OdUnGXuNo8T3q5GxCnfxASaHFtrwWPh/kAgWwL9w==
+ bh=X4gx6JTSQoCS3vLv3igzoiqPsC+0jM3losxH7fam0Z4=;
+ b=RPQsS9hbLdRhznrZtm5mEPhrP4KI/koZq4ZlzpadfzmJNxOhcVZ5f2o2m+ZLGhx3tsTh/iDZIN8QLyEI25+4du965QdgpI+8LkjuvhHL87ftrC93cgOTBymtaPrjvgTIT8QnVqiEAamSwyFVszeyjOmQ7+Nt1dexZ/UrDZa8SVZqo1GBZetQAXy/u09ELCvX6iZHqHPL+i7jcYOuZ7luiC6jvdO1R6jaenN6taSLhwajDntBF0vm7ov1dJTupUE6zl7sH6N9tvdWnLk6abwjSZCIYTd3GmG3ptBgSCeXUiMtDuAkmI2jt9y01csdQHEkwvgFoVgCGfJTPEv/vwupcg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TD9u2O1AQN1Whbs5d6j8wJxakAaBdZBTxeAvvNKfWG4=;
- b=2VPdsybi0VO0QjwKeKBDMU+E9a1V87Mugc4rTg1aXlQZzeuwVxSqugupOVHwHyAXl8vvaqamH7nf1/St7XJ8VBDcgREoTAVaJGJ1XftX31SqSHlK/LDgaU9GMgc9tzKUlWOOqUIoYBpUVpMRWuMJOE7YOUFqevm19BE2TCv7Zo0=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
- by SN7PR12MB6981.namprd12.prod.outlook.com (2603:10b6:806:263::22) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by DM4PR11MB7350.namprd11.prod.outlook.com (2603:10b6:8:105::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.33; Fri, 15 Sep
- 2023 21:53:19 +0000
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::1dc1:222:24b8:16b8]) by DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::1dc1:222:24b8:16b8%4]) with mapi id 15.20.6792.021; Fri, 15 Sep 2023
- 21:53:19 +0000
-Date:   Fri, 15 Sep 2023 23:53:10 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com
-Subject: Re: [PATCH v10 04/15] cxl/hdm: Use stored Component Register
- mappings to map HDM decoder capability
-Message-ID: <ZQTSRk6gOg41ybG1@rric.localdomain>
-References: <20230831152031.184295-1-terry.bowman@amd.com>
- <20230831152031.184295-5-terry.bowman@amd.com>
- <64f0dd4c8965e_31c2db2940@dwillia2-xfh.jf.intel.com.notmuch>
- <6503a23013cbf_12747294f9@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.21; Fri, 15 Sep
+ 2023 22:11:41 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::6da5:f747:ba54:6938%6]) with mapi id 15.20.6768.029; Fri, 15 Sep 2023
+ 22:11:40 +0000
+Date:   Fri, 15 Sep 2023 15:11:38 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>
+CC:     <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/2] cxl: Move command enumeration from dev_dbg() to
+ traceevent
+Message-ID: <6504d69a10453_37d9bb294a1@iweiny-mobl.notmuch>
+References: <169480882977.2690926.2796694282356938267.stgit@djiang5-mobl3>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <6503a23013cbf_12747294f9@dwillia2-xfh.jf.intel.com.notmuch>
-X-ClientProxiedBy: VI1PR03CA0076.eurprd03.prod.outlook.com
- (2603:10a6:803:50::47) To DM6PR12MB3657.namprd12.prod.outlook.com
- (2603:10b6:5:149::18)
+In-Reply-To: <169480882977.2690926.2796694282356938267.stgit@djiang5-mobl3>
+X-ClientProxiedBy: BY5PR03CA0029.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::39) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|SN7PR12MB6981:EE_
-X-MS-Office365-Filtering-Correlation-Id: d829c376-6858-486a-bba3-08dbb6362c1e
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM4PR11MB7350:EE_
+X-MS-Office365-Filtering-Correlation-Id: b60650f9-334c-449d-d3d7-08dbb638bce8
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RC0PsTWAikp2crU/BmcOj3Eg9ydd+RKuF/WK0Cmz30WKRB90RJxsFOxfamlMSq3FtLyP/FjKgJDvzaYAq1xRDMUp2K5gv2XWqxDRs9JPm9vf7qXZtbntK0vEJ9kNWXQZzm8T60JNw+Agp5hlx4ynYjgQjjIbtEZTbraBMxdcGj2e2qolL4zSB+UH576nE0q4C0o2T0nlPrpmuRf3UvKGLCF+vScxLjyvuvW1W7/dMmCvOWF6V60MXHkejmdMhtm4nvYGJjDr8v4mogFE0DOF+C2HMaPAPMS1LwxUf3K7Um/lvKM/PZtSWQ/alM551Kyg3LgijaFl1I/+gbXbX6vfeIEvTolg2ZxnblSRj9Y3Qh7gEp1+CtRMp1379wva4dO9GmR9e6aS3KheHb9vNNylvNu1RSUdOLhqzveNpfmK48M4gWw0buKR4gmWUn6ljTojITruu+Fw6iH2t/PXjexp9opYmY++p/3vkTTovihhL6IRy/1Uqj9/tre1b9CYglF8nIjurTau4yMEuFzm7wi1UgrhfmWRSM8ol2M99N9WcLwiQRvh+EA7J7JUHc35Nwps
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(366004)(346002)(396003)(376002)(451199024)(1800799009)(186009)(30864003)(2906002)(8936002)(4326008)(7416002)(41300700001)(5660300002)(66476007)(66556008)(8676002)(66946007)(9686003)(6916009)(316002)(6486002)(53546011)(6506007)(6512007)(83380400001)(6666004)(26005)(478600001)(38100700002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: oXQ+AYfMDgPvLX7IGXTf4bPrMP3wQ06RAZaaIUKuULSLuZEaArmTXpq+etwsye5BgwTFzURNHSpK65+tqONceyqG1eI4OTrrx3qd9KpZ81gr7KkH/9kbfPhCXXIKnVkZd/pl/Liz9gHYisf1bvZcKzu2e8GTVII1PWEY3Jo2/P8YJFaJwWTI0A/XwWUpjlIKoxz2SjMxA4ADSdoD37GNn0lYVAU7M9ooY5E15dc9Xiui85mIFXr40DkoN40UnmFnD5ZXM3pFohJF6nkCrtigZunyOOG8WDP4VDS92orL0RblOloeeiKmRCS71xirJmt5R1v0zVfhx4rgYu/JkWZk3JdB7vLHLSoyDIeBmOLYvSvpqID+KcRxPi5oQ0TYJSBFbnwhQCq443DLB7zggIDJgqLV2J5H7J9vNfxAfTU/pegDMI1La7LpXH2LStzYQ4MxZyX2b50laOZS/KAuHuYKQ74/ANCM2ecJu2mwNDz9bZ5MfgaiMP0o/OhMm4OT3xsCsggigPMARtjmAjK+xRvHojrkEO6w24earEaePR2VVX2ilF1IX94jIo/PwXM97kCd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(396003)(376002)(39860400002)(186009)(451199024)(1800799009)(478600001)(4326008)(8676002)(44832011)(8936002)(316002)(66476007)(66946007)(66556008)(5660300002)(41300700001)(2906002)(86362001)(26005)(107886003)(38100700002)(4744005)(82960400001)(9686003)(6512007)(6486002)(83380400001)(6506007);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qppW6BtNOLLTnXLd8M+aEQNaZWWu3ytooOBiU64t5gUKOzop+iA446OqndOf?=
- =?us-ascii?Q?I70600OToe5WC7Ils4aQ4WKthkuDQXwBiMTU/qvyjwBjU/50qkqef1hQyB/k?=
- =?us-ascii?Q?C80jFr5qt8n+8Mo5sJmv7VJJiSaC7ZOuwNTfRMlBZpmKAa3EoqNJHzdG0wxy?=
- =?us-ascii?Q?sQrsFUq3sDCnQpGfb4GZhbJ14pbYXz/O35w1q50iFxGcHumTArGl7czpjL5l?=
- =?us-ascii?Q?ZGY61z1/WRI+8CIaqoAkRQByucaIWCCZw1OQd5YJtqznCamYaKFctlXBENS5?=
- =?us-ascii?Q?E/b07ks1jOhNPy4q4mbVk6/HvXRNwychJGaVL7l/E61oN3ByJ/uypBBaPyIz?=
- =?us-ascii?Q?5sGPpCHs4BWum3bbnnmVtnk58iorNHXcQtSwpbk36qbNcQr6XHtL9g21YslW?=
- =?us-ascii?Q?MJ+Wmbuv5u25TFpcR5uGgt6KrWsiojZQBBWW/vnxPU9SEa+UmV1Bp4M1vtwY?=
- =?us-ascii?Q?DU/x/kV7s38R47VSsPE3w9IbjOg0+Dl8bc2a/6Wy1u12UFV5mu4+9I8jOaFM?=
- =?us-ascii?Q?fkcGUvOiun7Ii9ArEcDEuBa/MVo0rOrDLCXyHBMYgB+awHGzVrFCQ8ONxR7c?=
- =?us-ascii?Q?Xfi0N1AV/dLML/XNFmlmQ3/E2XS+xxPzMLMHQJan0hU4F/6dIlmmqmLeyAm4?=
- =?us-ascii?Q?hSCEqKCpI6Om8sd11U/WvtlxUfHZf0D/whrDAKgfNULJHm0SdiVetPeU5en5?=
- =?us-ascii?Q?jrQlqbb8iK1E/0D32jj/Fv5okxJEUpa/Gp/KU0bdruOCVuW69muCJk8f3Iax?=
- =?us-ascii?Q?znUPQk4wCe6zj+w+OPNvnzqPm3EiNON79EA807GTQAYhw+iTubAcwSTXqcjF?=
- =?us-ascii?Q?mK7UR+B0CfbH02q5LQQBzpcbQJaN7lj+Tt6gsaqtkTak0M/9JeUG2haIlZdS?=
- =?us-ascii?Q?r5mvYYOlTJDFWDVcabrwTLativCC1Tt0aA8w9CTpk/RnX2ZwY7GyBn+RUQ6U?=
- =?us-ascii?Q?i5j1T9R7q57ru2NunsOoh26d3WPNhPlgXHGIoiaaNaiEBwAwc4eQlN0VBdPh?=
- =?us-ascii?Q?Wvc1AtNpMA8mODV8lZaw/Zlj5s9F9fVef+aveF7ZS0V4m2R/gNRoQ/GtQVbw?=
- =?us-ascii?Q?K7/mzndWC2/0BTDrGiTzaxcwLBu3V7gwYjyr4izxFrbH0YUFK5o9lvaF2Ovu?=
- =?us-ascii?Q?DInSxAi/IqMhBkRlj82Cg9xdFoLw+fGRYq9biKE4h441GKqEeVWZuq91Caph?=
- =?us-ascii?Q?8sIwiZL2LqjWumW2uQzxVGISvx16pz9vevzFxK5o9SD9t7rrHizmx/mXks25?=
- =?us-ascii?Q?VdpOKRgZln/rg8Aoo1KqYwStGUcYyy4FVI/Aipdeg+DLKI1QNxujSzn/gi2u?=
- =?us-ascii?Q?m6ELitLG/vJ0jESguAuPAvBr84ObuV3wbdlDefNo7ONvFvNbi3gp0WmWiV94?=
- =?us-ascii?Q?Q1gom3rurTFucv+67nrtKfRpkgAL6yQ8jDB0SSoIH/sdutlcxYxnwEMxc+6D?=
- =?us-ascii?Q?s3gxpPuGO6rWNZZQiogpmFYvOztWlWbM3P4T2LWhqW1tb/a6cviw2/pt+nQl?=
- =?us-ascii?Q?a6lW6flFMIZC5mLY7ZMB8XL2xUkqB+CmHrZGQsSRslu77xBXLtS3WjeFdjA7?=
- =?us-ascii?Q?iHwGVQkOurgjYnKb1m4=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d829c376-6858-486a-bba3-08dbb6362c1e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mfaNVC4aZJWNiXlVbYdjPP7VoWmMpB8g7wtx+wV/KLkf+n/lPFtoXH8Hlt7Q?=
+ =?us-ascii?Q?xx5OCezZCxLM0Y47LpU3Ji/tYDwJGsCzC/lmODLsW3JrmIu4xsBW3bk6vNbt?=
+ =?us-ascii?Q?TPbYNplmq5jzj7X9DbNDdg3iHvWK5lyiZ/Z50dO4DVfkcsxckuuk6/hLvpCu?=
+ =?us-ascii?Q?Z1uXc7KwmuRd92MfEP40OLRpezOoPm+5QOhtxq2EsI//yoArkmW+8DDIZ/HK?=
+ =?us-ascii?Q?JW+9HnUGUPDvR3x0k/lBl1wR14fGkMiDrdfK0Sf00BTYmzgizDhFz4zaWrVJ?=
+ =?us-ascii?Q?cSYOCY+flM/sSAgKwRSqugzxsz2CYivaILQ6c9SrVCvF2/bV3z49pF91cD6b?=
+ =?us-ascii?Q?+dF8vYDOsQuz5MjkSbtx9nq+bKVSmqbOpdDc4RiZnAcLbVCkGK/86GDzr+vf?=
+ =?us-ascii?Q?LO4s489hzKci+obwLtHhjH+CtDlsmUr1JaetnAk5MnLhB1BjsIliBx2zj5Or?=
+ =?us-ascii?Q?VdgpOySvbjU5wOZ5TaBvCoZmHhPpMvaTBrwXkTrPi5Kabcqx9h9Q7Pc3kqKe?=
+ =?us-ascii?Q?vmda48rEBW1/bmYVexlne0qlLzsGLOyNZcpMdk8YFjhIBqaXFHVmAeLw3WMA?=
+ =?us-ascii?Q?KXZoRGcsB6NSV36DyTqnh0FOK2ZlDk0siMQVCR4B8bkiyDHXfHg+6wk5N5xR?=
+ =?us-ascii?Q?ZzR5ogDYBQfPYP/L/QJQkinY3CpokQzjP0yWPtTdZ+riizhUWn1oNnuLhTBL?=
+ =?us-ascii?Q?Fsz6FC6SqY7Ly72FOi9hImmys0LZEIx5hTEk0gnoBDZlwB2HYRb5rjZD8gxL?=
+ =?us-ascii?Q?/LtwdSnXKieBGExzIE8cqHBPxQ2b1Nksl28zbaWzv8EFwbu5eeLHTmNtEyaM?=
+ =?us-ascii?Q?B6hVOfZycuu7JwHc7CYklsFDUOMgT8SWkQoCfHXN8ncHheUZ1iHv4FXJD3Kh?=
+ =?us-ascii?Q?DnmcZCVhF0EO53amRy6IMStDVtrjkzMvJtkWGkZiFLnLMnoVCXTqF5auA03s?=
+ =?us-ascii?Q?z9VGbmeBmaz+uND6sPk6lYrRmX4K8ZPcPXVKhcE1a8+SHyFPTedeQ0rFY7Mb?=
+ =?us-ascii?Q?1t3eVI5ca6LbvrqPGdtGKBeqoQQmFNro38srSxAKQImti2KemIvitaJ0XM70?=
+ =?us-ascii?Q?m6FvuPaBPT+adKLy431Nd8oO4m/MeBmF5freZZaod8k2+67YjLjYitDz4/Qj?=
+ =?us-ascii?Q?FXctaqq2Ki/4zKnzWFy0hmmjvqZNffcIHiHbabXWN1xecAFnhOSkWwKerg/Y?=
+ =?us-ascii?Q?qtkDhyTK90ONFs365XQxOfOM1cW72g0tTKxv7eX5rmIbEa0/ujW6ZgVVLlsN?=
+ =?us-ascii?Q?wVnBflS1AbIhmwGmyGID7hNwcQ7Hj0iMdA4DUi6BtXtvkraXBdi1+vFxoAYE?=
+ =?us-ascii?Q?Yen069F+TntRqt1cI66fida01lcLoAL7y4z34kYv0Jx6bAF7defHNu/P9MFo?=
+ =?us-ascii?Q?3/p0GkSZ3rLYDJUpi0B3ag52D13M8dFu8liQk/k5UYq76gZEi5oPMRz/LOZ8?=
+ =?us-ascii?Q?FGFB5T3Y2dWe8DdIpGLMNZWupLSUjYReVwDAjOKXkB+AWajyhDaImOGrHqWJ?=
+ =?us-ascii?Q?0JTbBbvdgvDFkrye6kNjUZ8gyDk3snDwqX8hplRpG3UA/RtwWCnEtegSIhHC?=
+ =?us-ascii?Q?BNnKD2/wmBmhaoHJ4fzV2v1fSnFwDfXTBZ66W3gY?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b60650f9-334c-449d-d3d7-08dbb638bce8
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 21:53:19.0265
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2023 22:11:40.8508
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OL2RTFtSaSDki90faF96JcNRvNAlCGXZ9/oO3YcTDK7/7HrwhHRkbcYCtIuIuavSzdgeu8GYI+Va6eebeDvaMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6981
+X-MS-Exchange-CrossTenant-UserPrincipalName: You6IrTJF7qNOtxeHR4Stb0N3Ocosopfv++D7whJousd1SgpknIVRiCf5GYC3xzpQ0Ha3BJotJSevhLV/elecA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7350
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Dan,
-
-On 14.09.23 17:15:44, Dan Williams wrote:
-> Dan Williams wrote:
-> > Terry Bowman wrote:
-> > > From: Robert Richter <rrichter@amd.com>
-> > > 
-> > > Now, that the Component Register mappings are stored, use them to
-> > > enable and map the HDM decoder capabilities. The Component Registers
-> > > do not need to be probed again for this, remove probing code.
-> > > 
-> > > The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
-> > > Endpoint's component register mappings are located in the cxlds and
-> > > else in the port's structure. Provide a helper function
-> > > cxl_port_get_comp_map() to locate the mappings depending on the
-> > > component's type.
-> > > 
-> > > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---
-> > >  drivers/cxl/core/hdm.c | 65 +++++++++++++++++++++++-------------------
-> > >  1 file changed, 35 insertions(+), 30 deletions(-)
-> > > 
-> > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > > index 17c8ba8c75e0..892a1fb5e4c6 100644
-> > > --- a/drivers/cxl/core/hdm.c
-> > > +++ b/drivers/cxl/core/hdm.c
-> > > @@ -81,27 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
-> > >  		cxlhdm->interleave_mask |= GENMASK(14, 12);
-> > >  }
-> > >  
-> > > -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
-> > > -				struct cxl_component_regs *regs)
-> > > -{
-> > > -	struct cxl_register_map map = {
-> > > -		.dev = &port->dev,
-> > > -		.resource = port->component_reg_phys,
-> > > -		.base = crb,
-> > > -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
-> > > -	};
-> > > -
-> > > -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
-> > > -	if (!map.component_map.hdm_decoder.valid) {
-> > > -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
-> > > -		/* unique error code to indicate no HDM decoder capability */
-> > > -		return -ENODEV;
-> > > -	}
-> > > -
-> > > -	return cxl_map_component_regs(&map, &port->dev, regs,
-> > > -				      BIT(CXL_CM_CAP_CAP_ID_HDM));
-> > > -}
-> > > -
-> > >  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> > >  {
-> > >  	struct cxl_hdm *cxlhdm;
-> > > @@ -146,6 +125,22 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
-> > >  	return true;
-> > >  }
-> > >  
-> > > +static struct cxl_register_map *cxl_port_get_comp_map(struct cxl_port *port)
-> > > +{
-> > > +	/*
-> > > +	 * HDM capability applies to Endpoints, USPs and VH Host
-> > > +	 * Bridges. The Endpoint's component register mappings are
-> > > +	 * located in the cxlds.
-> > > +	 */
-> > > +	if (is_cxl_endpoint(port)) {
-> > > +		struct cxl_memdev *memdev = to_cxl_memdev(port->uport_dev);
-> > > +
-> > > +		return &memdev->cxlds->comp_map;
-> > > +	}
-> > > +
-> > > +	return &port->comp_map;
-> > > +}
-> > 
-> > This was the function I was hoping would disappear in the new version.
-> > cxl_pci and cxl_port care about different register blocks and have
-> > different mapping lifetimes. I think that justifies having the
-> > endpoint->comp_map be valid for everything that the cxl_port driver
-> > cares about even though it duplicates some informatiom from
-> > cxlds->comp_map.
+Dave Jiang wrote:
+> Given that event logs outputs are all emitted to traceevent, move the
+> enumeration of log types to traceevent as well in order to keep all the
+> outputs at the same location.
 > 
-> In the interest of time I went ahead and reflowed this patch to the
-> below and it is passing my tests. I also noticed some other @dev vs
-> @host confusion in some of the previous register conversion so perhaps I
-> should just send out v11 with this all rolled together...
+> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-just a quick update here.
+My gut reaction was to nak this patch because I'm not sure how to enable
+trace events prior to module load.  Then I realized that this is in the
+cxl_core and is only triggered by driver loads.  So I've not tested this
+patch but I think the following sequence will work for these 2 patches.
 
-We were going to send v11 a couple of days ago but I found an issue
-during testing, see below. If you don't mind I will send it out next
-week with a fix for that included.
+$ modprobe cxl_core
+$ echo 1 > /sys/kernel/tracing/events/cxl/cxl_log_type/enable
+$ modprobe cxl_pci
 
-> 
-> -- >8 --
-> Subject: cxl/hdm: Use stored Component Register mappings to map HDM decoder capability
-> 
-> From: Robert Richter <rrichter@amd.com>
-> 
-> Now, that the Component Register mappings are stored, use them to
-> enable and map the HDM decoder capabilities. The Component Registers
-> do not need to be probed again for this, remove probing code.
-> 
-> The HDM capability applies to Endpoints, USPs and VH Host Bridges. The
-> Endpoint's component register mappings are located in the cxlds and
-> else in the port's structure. Duplicate the cxlds->comp_map in
-> port->comp_map for endpoint ports.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> [rework to drop cxl_port_get_comp_map()]
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  drivers/cxl/core/hdm.c  |   48 +++++++++++++++++++----------------------------
->  drivers/cxl/core/port.c |   29 ++++++++++++++++++++++------
->  drivers/cxl/mem.c       |    5 ++---
->  3 files changed, 43 insertions(+), 39 deletions(-)
+Is that how you tested this?  It seems like a pain.  But perhaps that pain
+is fine because these debug messages are not as useful as others?
+Especially for all the unsupported messages mentioned in patch 2?
 
-Patch look good to me.
-
-I have a similar implementation, but did that with a
-cxl_port_clone_regs() function in cxl_endpoint_port_probe(). I can
-take this version instead.
-
-During testing I found an issue freeing IO resources with devm for RCH
-mode. The endpoint is not removed if the cxl_mem driver is
-unbound. Then, the resources of the endpoint that also holds the IO
-mappings are not freed. A subsequent IO map fails when rebinding the
-driver again. It looks like cxl_mem_find_port() is broken for RCDs
-preventing the port from being autoremoved. I am working on a fix for
-this and will test the whole series again.
-
-Thanks,
-
--Robert
-
-> 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 11d9971f3e8c..ced7801516d2 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -81,26 +81,6 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->interleave_mask |= GENMASK(14, 12);
->  }
->  
-> -static int map_hdm_decoder_regs(struct cxl_port *port, void __iomem *crb,
-> -				struct cxl_component_regs *regs)
-> -{
-> -	struct cxl_register_map map = {
-> -		.host = &port->dev,
-> -		.resource = port->component_reg_phys,
-> -		.base = crb,
-> -		.max_size = CXL_COMPONENT_REG_BLOCK_SIZE,
-> -	};
-> -
-> -	cxl_probe_component_regs(&port->dev, crb, &map.component_map);
-> -	if (!map.component_map.hdm_decoder.valid) {
-> -		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
-> -		/* unique error code to indicate no HDM decoder capability */
-> -		return -ENODEV;
-> -	}
-> -
-> -	return cxl_map_component_regs(&map, regs, BIT(CXL_CM_CAP_CAP_ID_HDM));
-> -}
-> -
->  static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
->  {
->  	struct cxl_hdm *cxlhdm;
-> @@ -155,7 +135,7 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
->  {
->  	struct device *dev = &port->dev;
->  	struct cxl_hdm *cxlhdm;
-> -	void __iomem *crb;
-> +	struct cxl_register_map *comp_map;
->  	int rc;
->  
->  	cxlhdm = devm_kzalloc(dev, sizeof(*cxlhdm), GFP_KERNEL);
-> @@ -164,19 +144,29 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
->  	cxlhdm->port = port;
->  	dev_set_drvdata(dev, cxlhdm);
->  
-> -	crb = ioremap(port->component_reg_phys, CXL_COMPONENT_REG_BLOCK_SIZE);
-> -	if (!crb && info && info->mem_enabled) {
-> -		cxlhdm->decoder_count = info->ranges;
-> -		return cxlhdm;
-> -	} else if (!crb) {
-> +	comp_map = &port->comp_map;
-> +	if (comp_map->resource == CXL_RESOURCE_NONE) {
-> +		if (info && info->mem_enabled) {
-> +			cxlhdm->decoder_count = info->ranges;
-> +			return cxlhdm;
-> +		}
-> +		WARN_ON(1);
->  		dev_err(dev, "No component registers mapped\n");
->  		return ERR_PTR(-ENXIO);
->  	}
->  
-> -	rc = map_hdm_decoder_regs(port, crb, &cxlhdm->regs);
-> -	iounmap(crb);
-> -	if (rc)
-> +	if (!comp_map->component_map.hdm_decoder.valid) {
-> +		dev_dbg(&port->dev, "HDM decoder registers not implemented\n");
-> +		/* unique error code to indicate no HDM decoder capability */
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	rc = cxl_map_component_regs(comp_map, &cxlhdm->regs,
-> +				    BIT(CXL_CM_CAP_CAP_ID_HDM));
-> +	if (rc) {
-> +		dev_dbg(dev, "Failed to map HDM capability.\n");
->  		return ERR_PTR(rc);
-> +	}
->  
->  	parse_hdm_decoder_caps(cxlhdm);
->  	if (cxlhdm->decoder_count == 0) {
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 3732925162e4..64fcb5b22372 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -741,16 +741,31 @@ static struct cxl_port *__devm_cxl_add_port(struct device *host,
->  		return port;
->  
->  	dev = &port->dev;
-> -	if (is_cxl_memdev(uport_dev))
-> +	if (is_cxl_memdev(uport_dev)) {
-> +		struct cxl_memdev *cxlmd = to_cxl_memdev(uport_dev);
-> +		struct cxl_dev_state *cxlds = cxlmd->cxlds;
-> +
->  		rc = dev_set_name(dev, "endpoint%d", port->id);
-> -	else if (parent_dport)
-> +		if (rc)
-> +			goto err;
-> +
-> +		/*
-> +		 * The endpoint driver already enumerated the component and RAS
-> +		 * registers. Reuse that enumeration while prepping them to be
-> +		 * mapped by the cxl_port driver.
-> +		 */
-> +		port->comp_map = cxlds->comp_map;
-> +		port->comp_map.host = &port->dev;
-> +	} else if (parent_dport) {
->  		rc = dev_set_name(dev, "port%d", port->id);
-> -	else
-> -		rc = dev_set_name(dev, "root%d", port->id);
-> -	if (rc)
-> -		goto err;
-> +		if (rc)
-> +			goto err;
->  
-> -	rc = cxl_port_setup_regs(port, component_reg_phys);
-> +		rc = cxl_port_setup_regs(port, component_reg_phys);
-> +		if (rc)
-> +			goto err;
-> +	} else
-> +		rc = dev_set_name(dev, "root%d", port->id);
->  	if (rc)
->  		goto err;
->  
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 317c7548e4e9..04107058739b 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -49,7 +49,6 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  				 struct cxl_dport *parent_dport)
->  {
->  	struct cxl_port *parent_port = parent_dport->port;
-> -	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  	struct cxl_port *endpoint, *iter, *down;
->  	int rc;
->  
-> @@ -65,8 +64,8 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  		ep->next = down;
->  	}
->  
-> -	endpoint = devm_cxl_add_port(host, &cxlmd->dev,
-> -				     cxlds->component_reg_phys,
-> +	/* Note: endpoint port component registers are derived from @cxlds */
-> +	endpoint = devm_cxl_add_port(host, &cxlmd->dev, CXL_RESOURCE_NONE,
->  				     parent_dport);
->  	if (IS_ERR(endpoint))
->  		return PTR_ERR(endpoint);
+Ira
