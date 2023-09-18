@@ -2,223 +2,158 @@ Return-Path: <linux-cxl-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BB1CD37B2
-	for <linux-cxl@archiver.kernel.org>; Sat, 16 Sep 2023 07:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0922ECD37B0
+	for <linux-cxl@archiver.kernel.org>; Mon, 18 Sep 2023 04:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238755AbjIPHER (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
-        Sat, 16 Sep 2023 03:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42644 "EHLO
+        id S233195AbjIREwW (ORCPT <rfc822;linux-cxl@archiver.kernel.org>);
+        Mon, 18 Sep 2023 00:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232518AbjIPHEK (ORCPT
-        <rfc822;linux-cxl@vger.kernel.org>); Sat, 16 Sep 2023 03:04:10 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA9DB8;
-        Sat, 16 Sep 2023 00:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694847843; x=1726383843;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=PFXC0kuqaySgX/gh4jv3ZmhRqeuF6FjxS0bI+KGjuOk=;
-  b=Pza328GxyOeF4Xa6jmtfZyVWv3VwjHlHAGRbaK7wiELR+AMT8r1fIby/
-   Jq0GWlEerZRTufi8XcqB9ePQUfXS8HnXlapkHVm/9mvyqwifmzFWEgi6N
-   mKyFdt3qHAiTVJ2g4RUdGV/1EN7iNbs0pB4xtVpgKcbbtHQX4POMvNlk/
-   lQe3WNUILbnQ1XllIN3pZA70zRhIkP6L8fO6D7fGVcsbian/JpaKvG1J1
-   BGXkZ6egGF30Z+EqoaK4SrHCRkHyzSt26AsDCJKcNQH93VJs6RzveiBA+
-   mqU19jHV773Wz5GNBUKtm+LLNaO1G4zTiTYQP4824bfmmDe7gsoGZkIcf
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="369712710"
-X-IronPort-AV: E=Sophos;i="6.02,151,1688454000"; 
-   d="scan'208";a="369712710"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2023 00:04:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="774571383"
-X-IronPort-AV: E=Sophos;i="6.02,151,1688454000"; 
-   d="scan'208";a="774571383"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 16 Sep 2023 00:04:03 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Sat, 16 Sep 2023 00:04:02 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Sat, 16 Sep 2023 00:04:02 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Sat, 16 Sep 2023 00:04:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G2VdaXpQiUvJforvw5Hv342nEsOznsTb/m756DjUw05pxTUJVawzGPOxTCeOwhTZPLLyxQTvPtIUQeOLcHFB+SqYWu0qcZr4vsPhgS4Nbfv4txOCMb6WV9fYFBn3/bUor6Jx2sJ7C0g8f9y/u9JbZS50mo4uKYoOik963878IvD9c9zxeOO2P/RmAMeGEtGrfcb4vFoJc9W4ypud7fgJKXSrwx9x5NFUi+hqRrCAkKNPRth5pj/G41gk/5zErJ26V7n6SaA2a0+kXwpSWb/l4brQD0wyl5pnSLhWKNUcSmddyy7NE0Q+bymF6lR7VqEVab0xG129NN4WlnYfBLEFvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V3b1b2BsyJQSTxyN9jpF8lXz+wjELlgXsBLssH2fd4E=;
- b=Yyc7hsM5rlIqk/OUF+K6xoQ+/D7PsrKbleldMHigX/+L0XpHCwC5hN6EdiVzZAlX60Iffvw6SDwvkf6g6Bz7VUdGSX8lvqCfgZMuX4zNixbe/zG46A8XxLNvttoPsERQ8H2V6LVB9g9EfRRVm+L621H/JwFmnc559OjdgvwMmwD4ApMj373CYUpeL/ANrlHXqf9Eu2UBuRxLfaoNKOz1U+YylzM0hjb6SBilTTBxU5IBDI3BZeRpVZsZfZedh5kJ/JrUN4HNIdkNOOb/6uID4klTpUm93KxpKXqLTrTEIzxABKDVaraGfkAQvss/4MA5pNMOGQyqoGYedU9vS3uKNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB4845.namprd11.prod.outlook.com (2603:10b6:a03:2d1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.23; Sat, 16 Sep
- 2023 07:03:53 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::acb0:6bd3:58a:c992%5]) with mapi id 15.20.6768.029; Sat, 16 Sep 2023
- 07:03:52 +0000
-Date:   Sat, 16 Sep 2023 00:03:48 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        with ESMTP id S239626AbjIREwS (ORCPT
+        <rfc822;linux-cxl@vger.kernel.org>); Mon, 18 Sep 2023 00:52:18 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6EA1103
+        for <linux-cxl@vger.kernel.org>; Sun, 17 Sep 2023 21:52:11 -0700 (PDT)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230918045210epoutp03e365395981f2c78fb56e63b77e98e167~F5Rj0cmI73042130421epoutp03C
+        for <linux-cxl@vger.kernel.org>; Mon, 18 Sep 2023 04:52:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230918045210epoutp03e365395981f2c78fb56e63b77e98e167~F5Rj0cmI73042130421epoutp03C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1695012730;
+        bh=wGIuuZgcO3xdRGPnPT99yIjCZBh1PNDhl+AJLqSthEU=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=CHzGos9AknthRQhiDSezn+j+dKzZlU+OuVRGye9MMbRzs/zxagLyTX0TE1fb9yQlF
+         OM0G+jPgzyh0rlm4cpCA4SLaAnVXlLcJgkaA9pDL+F+Vyh9KtnI3fGX3D6DhySxkmA
+         i/OquNV8G0z61GshSQb41T4JYFUQwo3FqZXG8kKI=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20230918045209epcas2p2e7f82d0486d5b770bc8e3e392f8cb6ca~F5RjE08Wo0240802408epcas2p2u;
+        Mon, 18 Sep 2023 04:52:09 +0000 (GMT)
+Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.99]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4Rpspc4xGtz4x9Py; Mon, 18 Sep
+        2023 04:52:08 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9D.2F.19471.877D7056; Mon, 18 Sep 2023 13:52:08 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230918045208epcas2p36f0c80940e86e5165a3036414a32d7f6~F5Rh8P1wr2951129511epcas2p3c;
+        Mon, 18 Sep 2023 04:52:08 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20230918045208epsmtrp257851a6db9b04c56c61d93739518197d~F5Rh7Vwxn2547925479epsmtrp2s;
+        Mon, 18 Sep 2023 04:52:08 +0000 (GMT)
+X-AuditID: b6c32a4d-dc5ff70000004c0f-a7-6507d778ddbc
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9E.A4.08742.777D7056; Mon, 18 Sep 2023 13:52:08 +0900 (KST)
+Received: from jehoon-Precision-7920-Tower.dsn.sec.samsung.com (unknown
+        [10.229.83.133]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20230918045207epsmtip1102bde8ffc92d4dfb71235b9781ecb58~F5Rhv3Icn1750417504epsmtip1G;
+        Mon, 18 Sep 2023 04:52:07 +0000 (GMT)
+From:   Jehoon Park <jehoon.park@samsung.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     nvdimm@lists.linux.dev,
         Alison Schofield <alison.schofield@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>
-Subject: RE: [PATCH 3/3] tools/testing/cxl: Document test configurations
-Message-ID: <650553545372e_d7cc829461@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230426-cxl-fixes-v1-0-870c4c8b463a@intel.com>
- <20230426-cxl-fixes-v1-3-870c4c8b463a@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230426-cxl-fixes-v1-3-870c4c8b463a@intel.com>
-X-ClientProxiedBy: MW4PR04CA0185.namprd04.prod.outlook.com
- (2603:10b6:303:86::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB4845:EE_
-X-MS-Office365-Filtering-Correlation-Id: 194b5bda-2e53-4b6f-f1d3-08dbb6831534
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1E6racT+Z8v+khLrUm7BJ6A/zZWCPXyQDyyfFev++lQa5Sm4UK/5o4xQPhbuAC9rRdeK/4nOW7l43mQICI/SlryUbsZO0ogy8+6M6AEjwwvV/jx0AYdDgDxggJxOAGHvThqBgBBT04FM75oVdK3YgQR2qgIabfN9z6s52Dk3gr92UEPfTncgiQRqxtwghnY61JrUuMO0W6xmoNl7KKFHDQdYOB0P8C3SoEzXmFgLAt082MWglhHikfSBV+3iecMTA6g5/4au714T1ajXmIqga7uyQbGEaff/z7sdd5VYTIGw+3OFiZUdcoWTc72oTJKYTavRlnndEf75/pVwCC/NzyhomT3M0x5a1eQTdx+cAPHWv6/zIeXtxvdvQgbMSYEQ9QTJ37n/RShyFeylxKug5SDvjvlNDVWetpabhK+14G8R22HQBfDaSS4ikC2oTvdyckMRj+PNoz3wN2sNG8VfPTwKvDSw5sHrs/jFqJmmQJPcYZcRJOu5man0n0O8zR+P7mcx51iUi21tVerH9ufUdircm5CG0CdAaswFP6TE9iM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(366004)(346002)(39860400002)(136003)(1800799009)(186009)(451199024)(6666004)(6486002)(6506007)(9686003)(6512007)(966005)(478600001)(83380400001)(26005)(107886003)(2906002)(66476007)(66556008)(66946007)(316002)(110136005)(4326008)(8676002)(5660300002)(8936002)(41300700001)(86362001)(82960400001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?u7qTQFM3g7uYXTw1W2sW/1RkqcfW37MCzpo67oto+OEah44FZ/UEHRJbIyGX?=
- =?us-ascii?Q?nkIxk3yLmeWcLvs/C3T9vlrtAJUqs00wR3c/GJyF95jbGMKCWnV9NfP4Iat5?=
- =?us-ascii?Q?z2zp/dMVRqlDKcZQOsY6B0+dp8tzFjqoH1fUiGT4nVWzUePMpVak1VqPWquT?=
- =?us-ascii?Q?zK2VtWr69tYIagJ2IaFx61fy9G2tidRhRyislyNrOIgY9xrJsrMWTqhKH5gD?=
- =?us-ascii?Q?yChIOkH4IgtXxAav9xtM3S/bgkufbH+GaEl5ynz0nI2582MrUKZ6M9OiKQSM?=
- =?us-ascii?Q?qQNNEIzBrEvoGIfPqJr0IDNc7mn6UXMEXjrS+V7jrAx101DCdtEfX3Gl5eUr?=
- =?us-ascii?Q?YPxiPemSon4ehm1XHo5eWCBhekXDjAhS3cnyEjDUr7A4EfY1c2IILjYVO2wE?=
- =?us-ascii?Q?4T8wzCyDsoxgb7Vpwmd0SO6AUDABVhvJWHpFhFkII/Sn/PMcEiWRB5WsrQtL?=
- =?us-ascii?Q?3p81QG16zmVUInTqGqShr8saakrM52rQpJLc7XoAvmqVU4atc73CL/2wy5F1?=
- =?us-ascii?Q?ZC4q/ZaxO7MIaFlXkWUVycVFLPkmz89uuz7HkTYWQJL+o3bOlw/KMlF1c6Pr?=
- =?us-ascii?Q?54ARDNuZLXTUceEz2CfopI35HlBOpFZ4tpNvwlLcTi1pkdSkXP/6jONYLqCI?=
- =?us-ascii?Q?x9V+L0b0KlfaOod5rJ8aq9AA8XoP6sjyNpr3E61ewkAWq9bPAtqbtFE28dpU?=
- =?us-ascii?Q?6+Kcz9JDCD2haPMTH5h7Rb3P80NbwV1el950dmqk2pZw9z0TrHL73rox3p/Y?=
- =?us-ascii?Q?e2IQNyVdmYNPolFFflwiC6Ejie3FCW0HjEsOjQeYM3qs6lczj/qTP3vhoka/?=
- =?us-ascii?Q?CkmJPO+jQbgMNP5Kgqk/dmrki4NmhWZohvoohHiOznZb1RUN5hIqf0sLRHpp?=
- =?us-ascii?Q?aIyL+i9fdpN/LiVTgtF7dNoogkGHltYQs5gbXNJfqdj6MNnScg87XyOk/CU2?=
- =?us-ascii?Q?U0YiAF1NBzRw+OoYaqn959bGf/2crPjh8J1KK2MorDI6knvR2ffk6xTBhMRD?=
- =?us-ascii?Q?LLm/vdCh8d3uvLZpiQB+7+72iSVduUEg6iofo+yFD7NuKZU+XVpT1zYNYKjd?=
- =?us-ascii?Q?uD6F3Mr1MdC5wvsMHDnIKHlvVNg5kueupC/yZ8a8jXOEJbsjuH5dnOCp6iH3?=
- =?us-ascii?Q?hWXNGueh69DQ3kLM+98clP/L1+XVZTJCICO9hYIAU3pIlAokpW2Jy9OEOp2l?=
- =?us-ascii?Q?2nZ8yige2SApcuE1N3fxLu2uQTq+qlAh5AB4tRAOLIngBpYGSaDhRZBa1ewB?=
- =?us-ascii?Q?Q9vdpEdiG0gOT3C41tU9WJsTyRxWBzOLleUTCXcJyLC0WJ2Ap7zRYx70y3C4?=
- =?us-ascii?Q?LrgLociIAKO/nYAZQhEXY5QF0UkiUpwPHmlnzKbZWz6IbldIGybHPNuExffk?=
- =?us-ascii?Q?rhdmyFirIYhvUBROhBySreTiAmZxu9DfQGLVOZqNMiKmBeOe9wShoPIVj/PG?=
- =?us-ascii?Q?uTQ8nre9/BJixN+IbEydXeL/vAtlcIL2c16kXXltSFjebMJTt+ne9XciyeUQ?=
- =?us-ascii?Q?fc5lbi/xdXN7TjgFSdW/4K4ntIY9zrPdSHAPFcprXMrlFaa3tEPFiHocqHXW?=
- =?us-ascii?Q?z57TCAITtqqJkxUlLBGibNAG7LQW2N/1w9IHm7m3k19TJH1bebk0UqaOx/7G?=
- =?us-ascii?Q?Og=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 194b5bda-2e53-4b6f-f1d3-08dbb6831534
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2023 07:03:51.7682
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fRRrBdE1sukkeb6X0384cbzU/45J0S9wRqc7FkDoE2PaNC6SR6hOG1DOPHBlmc8bx9wX7pNZXOsB/ndk5DqyyrEljwFqWuAjEYZB5suqnOU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4845
-X-OriginatorOrg: intel.com
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Kyungsan Kim <ks0204.kim@samsung.com>,
+        Junhyeok Im <junhyeok.im@samsung.com>,
+        Jehoon Park <jehoon.park@samsung.com>
+Subject: [ndctl PATCH v3 0/2] add support for Set Alert Configuration
+ mailbox command
+Date:   Mon, 18 Sep 2023 13:55:12 +0900
+Message-Id: <20230918045514.6709-1-jehoon.park@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLKsWRmVeSWpSXmKPExsWy7bCmqW7FdfZUg/WflSzuPr7AZjF96gVG
+        ixM3G9ksVt9cw2ix/+lzFosDrxvYLVYtvMZmsfjoDGaLo3s4LM7POsVisfLHH1aLWxOOMTnw
+        eLQcecvqsXjPSyaPF5tnMnr0bVnF6DF1dr3H501yAWxR2TYZqYkpqUUKqXnJ+SmZeem2St7B
+        8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QCcqKZQl5pQChQISi4uV9O1sivJLS1IVMvKL
+        S2yVUgtScgrMC/SKE3OLS/PS9fJSS6wMDQyMTIEKE7Iztt2Zx1owi6/i9J+5LA2My7i6GDk5
+        JARMJD78uscCYgsJ7GGUOPuuvouRC8j+xCjx+OMkdgjnG6PE1a2LWGA6Oq5/ZYVI7GWUmL5g
+        ORuE08sk0fSukw2kik1AW+L+9g1gtoiArETzugdMIEXMApuZJZbtPAeWEBYIl5hwpQUowcHB
+        IqAqsXGKAUiYV8Ba4vb/jewQ2+QlVm84wAzSKyFwjV3iRGMzI0TCReL0n59QRcISr45vgbKl
+        JD6/28sGYedL/Dx5ixXCLpD49OUD1AvGEu9uPmcF2cssoCmxfpc+iCkhoCxx5BZYBbMAn0TH
+        4b/sEGFeiY42IYhGVYmu4x+gDpCWOHzlKDNEiYdE54sySCDGStx8sYdxAqPsLITxCxgZVzFK
+        pRYU56anJhsVGOrmpZbDoyk5P3cTIzjdafnuYHy9/q/eIUYmDsZDjBIczEoivDMN2VKFeFMS
+        K6tSi/Lji0pzUosPMZoCA2wis5Rocj4w4eaVxBuaWBqYmJkZmhuZGpgrifPea52bIiSQnliS
+        mp2aWpBaBNPHxMEp1cBkOc+Lc0a6UPBz9UVLVWVK/ROEAtoqbFv0TqadrXtlrF+X8PL6vX22
+        VRYzRPN063c5N3bFx/W+eSn4kkV6ils8m7OYxPRVG2e/Kfhdc009Usp4U9POBzzcj6R/aH3m
+        FLbi0iypTOKJcW284bVXrSvvZIusWFq+Qkzr/imyLqplS/xEt4e76L8u038wfXnIRe8OL+M1
+        5ZPCs60uVrm+a/etUVq+PLHWSXBX3hx7sb6pcwVMlx/cfYJTQCT3uHruURmdVd7nSv1dGfye
+        K286ssaj/KzvqYdPZ7d+5lxju8jFUUfm9JNqizl8ZytlXpt/n2yQu13tr+rpjA2tLju3X73h
+        EjDh6t4i7g8Cc3Y9VGIpzkg01GIuKk4EAE3iBtQABAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLMWRmVeSWpSXmKPExsWy7bCSnG7FdfZUg9kZFncfX2CzmD71AqPF
+        iZuNbBarb65htNj/9DmLxYHXDewWqxZeY7NYfHQGs8XRPRwW52edYrFY+eMPq8WtCceYHHg8
+        Wo68ZfVYvOclk8eLzTMZPfq2rGL0mDq73uPzJrkAtigum5TUnMyy1CJ9uwSujG135rEWzOKr
+        OP1nLksD4zKuLkZODgkBE4mO619Zuxi5OIQEdjNKXNnzgBUiIS1xr/kKO4QtLHG/5QhUUTeT
+        xLdTs5lAEmwC2hL3t29gA7FFBGQlmtc9YAIpYhbYyyzRMfM82CRhgVCJHXOmAdkcHCwCqhIb
+        pxiAhHkFrCVu/98ItUBeYvWGA8wTGHkWMDKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P
+        3cQIDj4tzR2M21d90DvEyMTBeIhRgoNZSYR3piFbqhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe
+        8Re9KUIC6YklqdmpqQWpRTBZJg5OqQamLk7pknVXUh8ZVdxlczmm+kxrcf5EzenzfZcr7/q0
+        oizx1Ivmpf3bjq2+PfOylRRLyun1URHL4pbNyPu3TmPWDZvDmq5no8y06h1Xfg5U3ljymlN0
+        fuOqJYmFt5IC5OU0RHLVXzH9/BmrVpmf6imozi+ZIeC17IDWhar5Dtsmn9wrJ5srZP9Egp1D
+        pT5pU/U/v/WNur4TGAu2++0wWncmbF5JrWe85n6H+kPxAtW3neMa6lTFHryrjF5qtqw9K/UA
+        2+qnXqZly/3Co9sO3j039/jEOEP+EhUWrzq3P8dqxIt6TvxgUlLcOk1s2kOzzUydZ9qvpy+K
+        vHPx0bHuVfeOzLhQefOppVxOz4/K4nwlluKMREMt5qLiRACLUBJUrQIAAA==
+X-CMS-MailID: 20230918045208epcas2p36f0c80940e86e5165a3036414a32d7f6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230918045208epcas2p36f0c80940e86e5165a3036414a32d7f6
+References: <CGME20230918045208epcas2p36f0c80940e86e5165a3036414a32d7f6@epcas2p3.samsung.com>
 Precedence: bulk
 List-ID: <linux-cxl.vger.kernel.org>
 X-Mailing-List: linux-cxl@vger.kernel.org
 
-Ira Weiny wrote:
-> The devices created, their relationship, and intended testing purpose is
-> not extremely clear, especially for those unfamiliar with cxl-test.
-> 
-> Document the purpose of each hierarchy.  Add ASCII art to show the
-> relationship of devices.  Group the device declarations together based
-> on the hierarchies.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  tools/testing/cxl/test/cxl.c | 75 ++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 73 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index bf00dc52fe96..bd38a5fb60ae 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -23,6 +23,31 @@ static int interleave_arithmetic;
->  #define NR_CXL_PORT_DECODERS 8
->  #define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
->  
-> +/*
-> + * Interleave testing
-> + *
-> + *             +---------------+                            +---------------+
-> + *             | host_bridge[0]|                            | host_bridge[1]|
-> + *             +-/---------\---+                            +--/---------\--+
-> + *             /-           -\                               /-           -\
-> + *           /-               -\                           /-               -\
-> + *   +-------------+         +-------------+       +-------------+      +-------------+
-> + *   |root_port[0] |         |root_port[1] |       |root_port[2] |      |root_port[3] |
-> + *   +------|------+         +------|------+       +------|------+      +------|------+
-> + *          |                       |                     |                    |
-> + *  +-------|-------+       +-------|-------+     +-------|-------+    +-------|-------+
-> + *  |switch_uport[0]|       |switch_uport[1]|     |switch_uport[2]|    |switch_uport[3]|
-> + *  +---|-------|---+       +---/-------|---+     +---/-------|---+    +---|-------\---+
-> + *      |       \              /        \            /        \            /        \
-> + * +----|----++--|------++---------++----|----++---------++----|----++----|----++---------+
-> + * |switch   ||switch   ||switch   ||switch   ||switch   ||switch   ||switch   ||switch   |
-> + * |_dport[0]||_dport[1]||_dport[2]||_dport[3]||_dport[4]||_dport[5]||_dport[6]||_dport[7]|
-> + * +----|----++--|------++----|----++----|----++----|----++----|----++----|----++----|----+
-> + *      |        |            |          |          |          |          |          |
-> + *  +---|--+   +-|----+   +---|--+   +---|--+    +--|---+  +---|--+   +---|--+   +---|--+
-> + *  |mem[0]|   |mem[1]|   |mem[2]|   |mem[3]|    |mem[4]|  |mem[5]|   |mem[6]|   |mem[7]|
-> + *  +------+   +------+   +------+   +------+    +------+  +------+   +------+   +------+
-> + */
+CXL 3.0 Spec 8.2.9.8.3.3 defines Set Alert Configuration mailbox command,
+which configures device's warning alerts.
+This patchset adds support for the command.
 
-Circling back to merge this I realize that the numbering is off. For
-example a snippet from "cxl list -BPT -b cxl_test"
+The implementation is based on the 'ndctl-inject-smart'. Variable and function
+names are aligned with the implementation of 'Get Alert Configuration'.
 
-    "ports:root3":[
-      {
-        "port":"port5",
-        "host":"cxl_host_bridge.1",
-        "depth":1,
-        "nr_dports":2,
-        "dports":[
-          {
-            "dport":"cxl_root_port.1",
-            "id":1
-          },
-          {
-            "dport":"cxl_root_port.3",
-            "id":3
-          }
-        ],
+Changes in v3
+- Reorganize cover letter and commit message (Davidlohr)
+- Update details of the example in man page
+- Move 'verbose' option to the end in man page (Davidlohr)
+- Link to v2: https://lore.kernel.org/r/20230807063335.5891-1-jehoon.park@samsung.com
 
-This is due to the modulo math at setup time. I only noticed this
-because I wanted a diagram to refer to when doing some recent
-extensions.
+Changes in v2
+- Rebase on the latest pending branch
+- Remove full usage text in the commit message (Vishal)
+- Correct texts in document and log_info() (Vishal)
+- Change strncmp() to strcmp() for parsing params (Vishal)
+- Link to v1: https://lore.kernel.org/r/20230711071019.7151-1-jehoon.park@samsung.com
 
-I wonder if we could just use "cxl list" to maintain this diagram, or
-maybe circle back and use this to keep an image up to date on a web page
-somewhere:
+*** BLURB HERE ***
 
-https://lore.kernel.org/linux-cxl/cover.1660895649.git.sunfishho12@gmail.com/
+Jehoon Park (2):
+  libcxl: add support for Set Alert Configuration mailbox command
+  cxl: add 'set-alert-config' command to cxl tool
+
+ Documentation/cxl/cxl-set-alert-config.txt | 152 ++++++++++++++
+ Documentation/cxl/lib/libcxl.txt           |   1 +
+ Documentation/cxl/meson.build              |   1 +
+ cxl/builtin.h                              |   1 +
+ cxl/cxl.c                                  |   1 +
+ cxl/lib/libcxl.c                           |  21 ++
+ cxl/lib/libcxl.sym                         |  12 ++
+ cxl/lib/private.h                          |  12 ++
+ cxl/libcxl.h                               |  16 ++
+ cxl/memdev.c                               | 220 ++++++++++++++++++++-
+ 10 files changed, 436 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/cxl/cxl-set-alert-config.txt
+
+
+base-commit: 1db7dfb0bd1b14baffc7c6ac44ace9046d98a00d
+-- 
+2.17.1
+
